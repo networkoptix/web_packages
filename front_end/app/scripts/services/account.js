@@ -1,30 +1,21 @@
 (function () {
-
     'use strict';
-
     angular
         .module('cloudApp')
         .factory('account', AccountService);
-
     AccountService.$inject = ['cloudApi', '$q', '$location', '$localStorage',
         '$rootScope', '$base64', 'configService', 'dialogs', 'languageService'];
-
-    function AccountService(cloudApi, $q, $location, $localStorage,
-                            $rootScope, $base64, configService, dialogs, languageService) {
-
+    function AccountService(cloudApi, $q, $location, $localStorage, $rootScope, $base64, configService, dialogs, languageService) {
         $rootScope.session = $localStorage;
-
-        let requestingLogin: any;
+        let requestingLogin;
         let initialState = $rootScope.session.loginState;
         const CONFIG = configService.config;
         const lang = languageService.lang;
-
-        $rootScope.$watch('session.loginState', function (value) {  // Catch logout from other tabs
+        $rootScope.$watch('session.loginState', function (value) {
             if (initialState !== value) {
                 document.location.reload();
             }
         });
-
         let service = {
             checkLoginState: function () {
                 if ($rootScope.session.loginState) {
@@ -79,9 +70,8 @@
                     $location.path(CONFIG.redirectAuthorised);
                 }, function () {
                     $location.path(CONFIG.redirectUnauthorised);
-                })
+                });
             },
-
             setEmail: function (email) {
                 $rootScope.session.email = email;
             },
@@ -95,7 +85,6 @@
                     if (cloudApi.checkResponseHasError(result)) {
                         return $q.reject(result);
                     }
-
                     if (result.data.email) { // (result.data.resultCode === L.errorCodes.ok)
                         self.setEmail(result.data.email);
                         $rootScope.session.loginState = result.data.email; //Forcing changing loginState to reload interface
@@ -118,12 +107,7 @@
                 let self = this;
                 this.get().then(function () {
                     // logoutAuthorisedLogoutButton
-                    dialogs.confirm(null /*L.dialogs.logoutAuthorisedText*/,
-                        lang.dialogs.logoutAuthorisedTitle,
-                        lang.dialogs.logoutAuthorisedContinueButton,
-                        null,
-                        lang.dialogs.logoutAuthorisedLogoutButton
-                    ).then(function () {
+                    dialogs.confirm(null /*L.dialogs.logoutAuthorisedText*/, lang.dialogs.logoutAuthorisedTitle, lang.dialogs.logoutAuthorisedContinueButton, null, lang.dialogs.logoutAuthorisedLogoutButton).then(function () {
                         self.redirectAuthorised();
                     }, function () {
                         self.logout(true);
@@ -138,15 +122,14 @@
                 return true;
             }
         };
-
         // Check auth parameter in url
         let search = $location.search();
-        let auth: any;
-
+        let auth;
         if (search.auth) {
             try {
                 auth = $base64.decode(search.auth);
-            } catch (exception) {
+            }
+            catch (exception) {
                 auth = false;
                 console.error(exception);
             }
@@ -154,7 +137,6 @@
                 let index = auth.indexOf(':');
                 let tempLogin = auth.substring(0, index);
                 let tempPassword = auth.substring(index + 1);
-
                 requestingLogin = service.login(tempLogin, tempPassword, false).then(function () {
                     $location.search('auth', null);
                 }, function () {
@@ -162,7 +144,7 @@
                 });
             }
         }
-
         return service;
     }
 })();
+//# sourceMappingURL=account.js.map
