@@ -1,36 +1,37 @@
 <div class="container">
     <div ng-if="data.activateCode" process-loading="activate">
         <h1 class="process-success" ng-if="activate.success && !loading">
-            Váš účet byl úspěšně aktivován
+            Käyttäjätili aktivoitu onnistuneesti.
         </h1>
         <h1 class="process-success" ng-if="activate.success && !loading">
-            <a class="btn btn-default" href="/login">Přihlásit se</a>
+            <a class="btn btn-default" href="/login">Kirjaudu sisään</a>
         </h1>
 
         <h1 class="process-success" ng-if="!activate.success && !loading">
-            Účet je již aktivován, nebo potvrzovací kód je nesprávný
+            Tili on jo aktivoitu tai vahvistuskoodi on virheellinen
         </h1>
     </div>
 
     <div ng-if="!data.activateCode && activationSuccess">
         <h1 class="process-success">
-            Váš účet byl úspěšně aktivován
+            Käyttäjätili aktivoitu onnistuneesti.
         </h1>
         <h1 class="process-success">
-            <a class="btn btn-default" href="/login">Přihlásit se</a>
+            <a class="btn btn-default" href="/login">Kirjaudu sisään</a>
         </h1>
     </div>
 
     <div ng-if="reactivating" class="text-center">
         <div ng-if='data.email'>
-            <h1>Zaregistrovali jste se v %PRODUCT_NAME%</h1>
-            <p>Poslali jsme vám zprávu s aktivačním odkazem na {{data.email}}. <br>Prosím aktivujte svůj účet pomocí tohoto odkazu.</p>
+            <h1>Olet rekisteröitynyt %PRODUCT_NAME%</h1>
+            <p>Olemme lähettäneet sinulle viestin, joka sisältää aktivointi linkin {{data.email}}. <br>
+            Aktivoi tilisi käymällä tätä linkkiä.</p>
         </div>
-        <h1 ng-if="!data.email">Prosím, aktivujte si váš účet</h1>
+        <h1 ng-if="!data.email">Aktivoi tilisi</h1>
         <form name="reactivateAccount" class="form-horizontal" ng-if="!reactivate.success" novalidate>
             <div class="form-group" ng-if="!data.email" validate-field>
                 <div class="col-md-4 justify-content-start justify-content-md-end">
-                    <label for="emailReactivate" class="control-label">Email</label>
+                    <label for="emailReactivate" class="control-label">Sähköposti</label>
                 </div>
                 <div class="col-sm-4">
                     <input type="email" class="form-control"
@@ -42,9 +43,9 @@
                 </div>
                 <div class="col-sm-4">
                     <span class="help-block input-error"
-                          ng-if="reactivateAccount.email.$touched && reactivateAccount.email.$error.required"> Je vyžadován e-mail </span>
+                          ng-if="reactivateAccount.email.$touched && reactivateAccount.email.$error.required"> Sähköposti tarvitaan </span>
                     <span class="help-block input-error"
-                          ng-if="reactivateAccount.email.$touched && reactivateAccount.email.$error.email"> Zadejte prosím platný e-mail </span>
+                          ng-if="reactivateAccount.email.$touched && reactivateAccount.email.$error.email"> Anna oikea sähköposti </span>
                 </div>
             </div>
             <div class="form-group">
@@ -59,16 +60,16 @@
 
     <div ng-if="restoringSuccess">
         <h1 class="process-success">
-            Pokyny pro obnovení hesla jsou odeslány na email <br>{{data.email}}
+            Salasanan nollausohjeet lähetetään sähköpostitse{{data.email}}
         </h1>
     </div>
 
     <div ng-if="restoring">
-        <h1>Obnovit heslo</h1>
+        <h1>Vaihda salasana</h1>
         <form name="restorePassword" class="form-horizontal" novalidate>
             <div class="form-group" validate-field>
                 <div class="col-md-4 justify-content-start justify-content-md-end">
-                    <label for="email" class="col-sm-4 control-label">Email</label>
+                    <label for="email" class="col-sm-4 control-label">Sähköposti</label>
                 </div>
                 <div class="col-sm-4">
                     <input type="email" class="form-control" validate-email
@@ -79,9 +80,9 @@
                 </div>
                 <div class="col-sm-4">
                     <span class="help-block input-error"
-                          ng-if="restorePassword.email.$touched && restorePassword.email.$error.required"> Je vyžadován e-mail </span>
+                          ng-if="restorePassword.email.$touched && restorePassword.email.$error.required"> Sähköpostia tarvitaan </span>
                     <span class="help-block input-error"
-                          ng-if="restorePassword.email.$touched && restorePassword.email.$error.email"> Zadejte prosím platný e-mail </span>
+                          ng-if="restorePassword.email.$touched && restorePassword.email.$error.email"> Anna oikea sähköposti </span>
                 </div>
             </div>
             <div class="form-group">
@@ -95,15 +96,15 @@
     </div>
     <div ng-if="data.restoreCode">
         <h1 class="process-success" ng-if="change.success || changeSuccess" translate>
-            Heslo bylo úspěšně uloženo
+            Salasana tallennettu onnistuneesti
         </h1>
         <div class="process-success d-flex justify-content-center" ng-if="change.success || changeSuccess">
-            <a class="btn btn-default" href="/login" translate>Přihlásit se</a>
+            <a class="btn btn-default" href="/login" translate>Kirjaudu sisään</a>
         </div>
 
         <form name="restorePasswordWithCode" class="form-horizontal" ng-if="!change.success && !changeSuccess"
               novalidate>
-            <h1 translate>Nastavit nové heslo</h1>
+            <h1 translate>Aseta uusi salasana</h1>
 
             <password-input ng-model="data.newPassword"
                             id="'newPassword'"
