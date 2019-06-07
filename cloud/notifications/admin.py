@@ -8,6 +8,7 @@ import pytz
 from .models import *
 from .forms import *
 from django_celery_results.models import TaskResult
+from push_notifications.admin import GCMDeviceAdmin
 admin.site.unregister(TaskResult)
 
 
@@ -190,3 +191,12 @@ class TaskResultAdmin(admin.ModelAdmin):
 
     clean_old_tasks.short_description = "Remove tasks older than {} days"\
         .format(settings.CLEAR_HISTORY_RECORDS_OLDER_THAN_X_DAYS)
+
+
+class PushSubscriptionAdmin(admin.ModelAdmin):
+    form = PushSubscriptionForm
+
+
+admin.site.register(PushDevice, GCMDeviceAdmin)
+admin.site.register(PushSubscription, PushSubscriptionAdmin)
+admin.site.register(PushNotification)

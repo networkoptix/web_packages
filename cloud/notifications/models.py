@@ -2,7 +2,10 @@ from django.db import models
 from django.utils import timezone
 from jsonfield import JSONField
 from django.conf import settings
+from django.core.validators import MaxLengthValidator
 from django.db.models import Q
+from model_utils import Choices
+from push_notifications.models import GCMDevice, GCMDeviceManager
 from rest_framework import serializers
 from cms.models import Customization, Product
 from api.models import Account
@@ -170,3 +173,28 @@ class CloudNotification(models.Model):
 
     def __str__(self):
         return self.subject
+
+
+class PushDevice(GCMDevice):
+    model = models.CharField(max_length=255)
+    custom_device_id = models.CharField(max_length=255)
+
+
+class PushSubscription(models.Model):
+    SUB_TYPES = Choices((0, 'cloud', 'cloud'), (1, 'system', 'system'))
+    type = models.IntegerField(choices=SUB_TYPES, default=SUB_TYPES.cloud)
+
+    system_id = models.CharField(max_length=255)
+    active = models.BooleanField(default=True)
+    device = models.ForeignKey(PushDevice, on_delete=models.CASCADE)
+
+    account = models.ForeignKey(Account, blank=True, null=True, on_delete=models.CASCADE)
+    subscription_id = models.CharField(max_length=255, blank=True, null=True)
+    username = models.CharField(max_length=255, blank=True, null=True)
+
+
+class PushNotification(models.Model):
+    title = models.CharField(max_length=255)
+    body = models.TextField(max_length=1000, validators=[MaxLengthValidator(1000)])
+    payload = models.TextField(max_length=2000, blank=True, null=True, validators=[MaxLengthValidator(2000)])
+    subscriptions = models.ManyToManyField(PushSubscription)
