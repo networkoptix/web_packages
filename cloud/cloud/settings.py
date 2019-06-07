@@ -69,8 +69,8 @@ INSTALLED_APPS = (
     'rest_framework',
     'rest_hooks',
     'corsheaders',
-    'notifications',
     'api',
+    'notifications',
     'cms',
     'zapier',
     'tinymce'
