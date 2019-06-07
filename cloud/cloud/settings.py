@@ -69,6 +69,7 @@ INSTALLED_APPS = (
     'rest_framework',
     'rest_hooks',
     'corsheaders',
+    'push_notifications',
     'api',
     'notifications',
     'cms',
