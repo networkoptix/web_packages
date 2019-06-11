@@ -177,7 +177,6 @@ class CloudNotification(models.Model):
 
 class PushDevice(GCMDevice):
     model = models.CharField(max_length=255)
-    custom_device_id = models.CharField(max_length=255)
 
 
 class PushSubscription(models.Model):
@@ -186,7 +185,7 @@ class PushSubscription(models.Model):
 
     system_id = models.UUIDField()
     active = models.BooleanField(default=True)
-    device = models.ForeignKey(PushDevice, on_delete=models.CASCADE)
+    device = models.ForeignKey(PushDevice, on_delete=models.SET_NULL)
 
     account = models.ForeignKey(Account, blank=True, null=True, on_delete=models.CASCADE)
     subscription_id = models.UUIDField(blank=True, null=True)
@@ -195,6 +194,6 @@ class PushSubscription(models.Model):
 
 class PushNotification(models.Model):
     title = models.CharField(max_length=255)
-    body = models.TextField(max_length=1000, validators=[MaxLengthValidator(1000)])
-    payload = models.TextField(max_length=2000, blank=True, null=True, validators=[MaxLengthValidator(2000)])
+    body = models.TextField(max_length=4000, validators=[MaxLengthValidator(4000)])
+    payload = models.TextField(max_length=4000, blank=True, null=True, validators=[MaxLengthValidator(4000)])
     subscriptions = models.ManyToManyField(PushSubscription)
