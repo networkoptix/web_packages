@@ -181,15 +181,15 @@ class PushDevice(GCMDevice):
 
 
 class PushSubscription(models.Model):
-    SUB_TYPES = Choices((0, 'cloud', 'cloud'), (1, 'system', 'system'))
+    SUB_TYPES = Choices((0, 'cloud', 'cloud'), (1, 'local', 'local'))
     type = models.IntegerField(choices=SUB_TYPES, default=SUB_TYPES.cloud)
 
-    system_id = models.CharField(max_length=255)
+    system_id = models.UUIDField()
     active = models.BooleanField(default=True)
     device = models.ForeignKey(PushDevice, on_delete=models.CASCADE)
 
     account = models.ForeignKey(Account, blank=True, null=True, on_delete=models.CASCADE)
-    subscription_id = models.CharField(max_length=255, blank=True, null=True)
+    subscription_id = models.UUIDField(blank=True, null=True)
     username = models.CharField(max_length=255, blank=True, null=True)
 
 

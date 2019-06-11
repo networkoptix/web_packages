@@ -193,10 +193,10 @@ class TaskResultAdmin(admin.ModelAdmin):
         .format(settings.CLEAR_HISTORY_RECORDS_OLDER_THAN_X_DAYS)
 
 
+@admin.register(PushSubscription)
 class PushSubscriptionAdmin(admin.ModelAdmin):
     form = PushSubscriptionForm
 
 
 admin.site.register(PushDevice, GCMDeviceAdmin)
-admin.site.register(PushSubscription, PushSubscriptionAdmin)
 admin.site.register(PushNotification)
