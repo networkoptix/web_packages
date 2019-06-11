@@ -1,0 +1,155 @@
+<div class="container auth-hidden">
+    <h1 class="process-success d-flex align-items-center flex-column mt-5"
+        *ngIf="registerSuccess && !activated">
+        <span>Account is created.</span>
+        <span>Confirmation message is sent to</span>
+        <span><strong>{{account.email}}</strong></span>
+    </h1>
+
+    <h1 class="process-success d-flex align-items-center flex-column mt-5"
+        *ngIf="registerSuccess && activated">
+        <span>Account is successfully created.</span>
+    </h1>
+
+    <form id="registerForm" class="form-horizontal" #registerForm="ngForm"
+          *ngIf="!registerSuccess" novalidate autocomplete="off">
+
+        <!-- special hack to prevent autocompletion -->
+        <input type="text" style="display:none">
+        <input type="password" style="display:none">
+        <!-- /end of special hack -->
+
+        <div class="form-group row" validate-field>
+            <div class="col-md-4 justify-content-start justify-content-md-end">
+                <label for="firstName" class="text-left text-md-right control-label">First name</label>
+            </div>
+            <div class="col-md-4">
+                <input type="text" class="form-control"
+                       [(ngModel)]="account.firstName"
+                       #firstName="ngModel"
+                       id="firstName" name="firstName" maxlength="255"
+                       required autocomplete="off" autofocus>
+            </div>
+            <div class="col-md-4">
+                <span class="help-block input-error"
+                      *ngIf="firstName.touched && firstName.errors && firstName.errors.required">First name is required</span>
+            </div>
+        </div>
+        <div class="form-group row" validate-field>
+            <div class="col-md-4 justify-content-start justify-content-md-end">
+                <label for="lastName" class="text-left text-md-right control-label">Last name</label>
+            </div>
+            <div class="col-md-4">
+                <input type="text" class="form-control"
+                       [(ngModel)]="account.lastName"
+                       #lastName="ngModel"
+                       id="lastName" name="lastName" maxlength="255"
+                       required autocomplete="off">
+            </div>
+            <div class="col-md-4">
+                <span class="help-block input-error"
+                      *ngIf="lastName.touched && lastName.errors && lastName.errors.required">Last name is required</span>
+            </div>
+        </div>
+        <div class="form-group row" validate-field>
+            <div class="col-md-4 justify-content-start justify-content-md-end">
+                <label for="registerEmail" class="text-left text-md-right control-label">Email</label>
+            </div>
+            <div class="col-md-4">
+                <input [style.distlay]="lockEmail ? 'none' : 'inline'" type="email" class="form-control"
+                       [ngModel]="account.email"
+                       #registerEmail="ngModel"
+                       id="registerEmail" name="registerEmail" maxlength="255"
+                       required autocomplete="off" validate-email
+                       (ngModelChange)="hideAlreadyExists(registerEmail)">
+
+                <input type="text" *ngIf="lockEmail" name="registerEmailLocked"
+                       class="form-control" [(ngModel)]="account.email" readonly>
+            </div>
+            <div class="col-md-4">
+                <div>
+                    <span class="help-block input-error"
+                          *ngIf="registerEmail.touched && registerEmail.errors && registerEmail.errors.required">Email is required
+                    </span>
+                </div>
+                <div>
+                    <span class="help-block input-error"
+                          *ngIf="registerEmail.touched && registerEmail.errors && registerEmail.errors.email">Please enter a valid Email
+                    </span>
+                </div>
+                <div>
+                    <span class="help-block input-error"
+                          *ngIf="registerEmail.errors && registerEmail.errors.alreadyExists">This Email has been already registered in %PRODUCT_NAME%
+                    </span>
+                </div>
+            </div>
+        </div>
+
+<!--        <nx-password-input-->
+<!--                required-->
+<!--                name="password"-->
+<!--                [(ngModel)]="account.password">-->
+<!--        </nx-password-input>-->
+
+        <nx-test-input
+                required
+                name="password"
+                [(ngModel)]="account.password"
+                [inputErrors]="password"
+                #password="ngModel">
+        </nx-test-input>
+        form : {{password.valid}} / {{password.touched}} / {{password.errors | json}}
+
+        <div class="form-group row" validate-field>
+            <div class="offset-md-4 col-md-4">
+                <nx-checkbox
+                        name="accept"
+                        componentId="accept"
+                        [(ngModel)]="account.accept"
+                        #accept="ngModel"
+                        required>
+                </nx-checkbox>
+
+                <label for="accept" translate>I agree to the <a href="/content/eula" target="_blank">Terms &
+                    Conditions</a> and <a href="%PRIVACY_LINK%" target="_blank">Privacy policy</a>
+                </label>
+
+                <!--                <label class="checkbox mb-0 mb-md-3">-->
+                <!--                    <input type="checkbox"-->
+                <!--                           [(ngModel)]="account.accept"-->
+                <!--                           #accept="ngModel"-->
+                <!--                           id="accept" name="accept" required>-->
+                <!--                    <span class="checkmark">-->
+                <!--                        <svg viewBox="0 0 20 16">-->
+                <!--                            <polygon class="box" points="2.5,2.5 2.5,13.5 13.5,13.6 13.5,2.5"></polygon>-->
+                <!--                            <polyline class="box" points="12.5,2.5 2.5,2.5 2.5,13.5 13.5,13.6 13.5,8.5"></polyline>-->
+                <!--                            <polyline class="tick" points="5,7.5 8,10.5 15.5,3"></polyline>-->
+                <!--                            <line class="tristate" x1="5" y1="8" x2="11" y2="8"></line>-->
+                <!--                        </svg>-->
+                <!--                    </span>-->
+                <!--                    <span class="text">I agree to the <a href="/content/eula" target="_blank">Terms & Conditions</a> and <a-->
+                <!--                            href="%PRIVACY_LINK%" target="_blank">Privacy policy</a></span>-->
+                <!--                </label>-->
+            </div>
+            <div class="col-md-4">
+                <div>
+                    <span class="help-block input-error"
+                          *ngIf="accept.touched && accept.errors.required">
+                        Please review and agree to the Terms and Conditions and Privacy policy in order to proceed
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="offset-md-4 col-md-8 p-0 pl-md-2">
+                <nx-process-button
+                        [process]="register"
+                        [form]="registerForm"
+                        class="float-left"
+                        buttonText="{{'Create Account' | translate}}"></nx-process-button>
+            </div>
+        </div>
+    </form>
+
+</div>
