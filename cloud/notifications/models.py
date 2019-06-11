@@ -200,7 +200,7 @@ class PushNotification(models.Model):
     subscriptions = models.ManyToManyField(PushSubscription)
 
     def clean(self):
-        if len(self.title) + len(self.body) + len(self.payload) > 4000:
+        if len(self.title + self.body + self.payload) > 4000:
             raise ValidationError('Title, body, and payload cannot total more than 4000')
         super(PushNotification, self).clean()
 
