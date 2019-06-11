@@ -2,6 +2,7 @@ from django.db import models
 from django.utils import timezone
 from jsonfield import JSONField
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.core.validators import MaxLengthValidator
 from django.db.models import Q
 from model_utils import Choices
@@ -185,7 +186,7 @@ class PushSubscription(models.Model):
 
     system_id = models.UUIDField()
     active = models.BooleanField(default=True)
-    device = models.ForeignKey(PushDevice, on_delete=models.SET_NULL)
+    device = models.ForeignKey(PushDevice, blank=True, null=True, on_delete=models.SET_NULL)
 
     account = models.ForeignKey(Account, blank=True, null=True, on_delete=models.CASCADE)
     subscription_id = models.UUIDField(blank=True, null=True)
@@ -197,3 +198,12 @@ class PushNotification(models.Model):
     body = models.TextField(max_length=4000, validators=[MaxLengthValidator(4000)])
     payload = models.TextField(max_length=4000, blank=True, null=True, validators=[MaxLengthValidator(4000)])
     subscriptions = models.ManyToManyField(PushSubscription)
+
+    def clean(self):
+        if len(self.title) + len(self.body) + len(self.payload) > 4000:
+            raise ValidationError('Title, body, and payload cannot total more than 4000')
+        super(PushNotification, self).clean()
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super(PushNotification, self).save(*args, **kwargs)
