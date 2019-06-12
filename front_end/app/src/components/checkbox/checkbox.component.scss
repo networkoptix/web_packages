@@ -21,6 +21,7 @@ nx-checkbox {
 
     & + label {
         cursor : pointer;
+        margin-bottom : 0;
         
         & + div.input-error {
             display : none;

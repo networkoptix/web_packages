@@ -1,20 +1,21 @@
-import { NgModule }             from '@angular/core';
-import { CommonModule }         from '@angular/common';
-import { BrowserModule }        from '@angular/platform-browser';
-import { UpgradeModule }        from '@angular/upgrade/static';
-import { RouterModule, Routes } from '@angular/router';
-import { FormsModule }          from '@angular/forms';
+import { NgModule }                          from '@angular/core';
+import { CommonModule }                      from '@angular/common';
+import { BrowserModule }                     from '@angular/platform-browser';
+import { downgradeComponent, UpgradeModule } from '@angular/upgrade/static';
+import { RouterModule, Routes }              from '@angular/router';
+import { FormsModule }                       from '@angular/forms';
 
 import { NxRegisterComponent } from './register.component';
 
-import { TranslateModule }  from '@ngx-translate/core';
-import { ComponentsModule } from '../../components/components.module';
+import { TranslateModule }    from '@ngx-translate/core';
+import { ComponentsModule }   from '../../components/components.module';
+import { NxLanguageDropdown } from '../../components/dropdowns/language/language.component';
 
-const appRoutes: Routes = [
-    {
-        path: 'register', component: NxRegisterComponent,
-    }
-];
+// const appRoutes: Routes = [
+//     {
+//         path: 'register', component: NxRegisterComponent,
+//     }
+// ];
 
 // TODO: Remove it after test
 
@@ -27,7 +28,7 @@ const appRoutes: Routes = [
         ComponentsModule,
         FormsModule,
 
-        RouterModule.forChild(appRoutes)
+        // RouterModule.forChild(appRoutes)
     ],
     providers      : [],
     declarations   : [
@@ -43,3 +44,8 @@ const appRoutes: Routes = [
 })
 export class RegisterModule {
 }
+
+declare var angular: angular.IAngularStatic;
+angular
+        .module('cloudApp.directives')
+        .directive('nxRegisterComponent', downgradeComponent({ component: NxRegisterComponent }) as angular.IDirectiveFactory);

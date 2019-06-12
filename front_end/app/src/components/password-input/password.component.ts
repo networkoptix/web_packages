@@ -1,15 +1,15 @@
-import { Component, OnInit, Input, ViewChild, ElementRef, forwardRef } from '@angular/core';
-import { NxConfigService }                                             from '../../services/nx-config';
-import { NxLanguageProviderService }                                   from '../../services/nx-language-provider';
-import { NxCloudApiService }                                           from '../../services/nx-cloud-api';
-import { TranslateService }                                            from '@ngx-translate/core';
+import { Component, OnInit, Input, forwardRef, SimpleChanges, ViewEncapsulation } from '@angular/core';
+import { NxConfigService }                                                        from '../../services/nx-config';
+import { NxLanguageProviderService }                                              from '../../services/nx-language-provider';
+import { NxCloudApiService }                                                      from '../../services/nx-cloud-api';
+import { TranslateService }                                                       from '@ngx-translate/core';
 import {
     ControlValueAccessor,
     NG_VALUE_ACCESSOR,
     NG_VALIDATORS,
     Validator,
     FormControl
-}                                                                      from '@angular/forms';
+} from '@angular/forms';
 
 @Component({
     selector   : 'nx-password-input',
@@ -27,10 +27,11 @@ import {
             multi      : true,
         },
     ],
+    encapsulation: ViewEncapsulation.None
 })
 export class NxPasswordComponent implements OnInit, ControlValueAccessor, Validator {
 
-    @Input() required: any;
+    @Input() form: any;
 
     CONFIG: any = {};
     LANG: any = {};
@@ -38,7 +39,6 @@ export class NxPasswordComponent implements OnInit, ControlValueAccessor, Valida
     passwordToggle: boolean;
 
     private value: string;
-    private touched: boolean;
 
     // @ViewChild('registerPassword') input: ElementRef;
 
@@ -51,36 +51,30 @@ export class NxPasswordComponent implements OnInit, ControlValueAccessor, Valida
 
     // validates the form, returns null when valid else the validation object
     public validate(c: FormControl) {
-        // this.touched = c.touched;
-
-        const err = {
-            requiredError: {
+        if (!c.value) {
+            return {
                 required: true
-            }
-        };
+            };
+        }
 
-        const err2 = {
-            commonError: {
-                common: true
-            }
-        };
-
-        const err3 = {
-            weakError: {
-                weak: true
-            }
-        };
-
-        if (this.required && !c.value) {
-            return err;
+        // check length
+        if (c.value.length < this.CONFIG.passwordRequirements.minLength) {
+            return {
+                minlength: true
+            };
         }
 
         if (this.checkCommon(c.value)) {
-            return err2;
+            return {
+                common: true
+            };
         }
 
         if (this.checkComplexity(c.value)) {
-            return err3;
+            return {
+                fairPassword: this.fairPassword,
+                weak: true
+            };
         }
 
         return null; // valid
@@ -93,12 +87,12 @@ export class NxPasswordComponent implements OnInit, ControlValueAccessor, Valida
     }
 
     private loadCommonPasswords() {
-        // if (!this.CONFIG.commonPasswordsList) {
-        //     this.api.getCommonPasswords()
-        //         .subscribe(data => {
-        //             this.CONFIG.commonPasswordsList = data;
-        //         });
-        // }
+        if (!this.CONFIG.commonPasswordsList) {
+            this.api.getCommonPasswords()
+                .subscribe(data => {
+                    this.CONFIG.commonPasswordsList = data;
+                });
+        }
     }
 
     private checkCommon(value) {
@@ -130,29 +124,26 @@ export class NxPasswordComponent implements OnInit, ControlValueAccessor, Valida
             }
         }
 
-        return classesCount;
+        this.fairPassword = classesCount < this.CONFIG.passwordRequirements.strongClassesCount;
+
+        return this.fairPassword;
     }
 
-    setValue(ctrl) {
-        this.onTouchedCallback();
-        this.value = ctrl.value;
-        this.fairPassword = this.checkComplexity(this.value) >= this.CONFIG.passwordRequirements.strongClassesCount;
+    setValue() {
         // update the form
         this.onChangeCallback(this.value);
-        // var name = elm[0].id.replace(/'/g, '');
-        // scope.form[name].$setUntouched();
+        this.form.form.get('registerPassword').markAsUntouched();
     }
 
     ngOnInit() {
-        this.required = (this.required !== undefined);
         this.fairPassword = true;
-        this.passwordToggle = false;
+        this.passwordToggle = true;
 
         this.CONFIG = this.config.getConfig();
-        this.language
-            .translationsSubject
+        this.translate
+            .getTranslation(this.translate.currentLang)
             .subscribe((lang) => {
-                this.LANG = lang[this.language.getLang()];
+                this.LANG = lang;
             });
 
         this.loadCommonPasswords(); // Load most common passwords

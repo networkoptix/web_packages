@@ -11,35 +11,6 @@ import {
     FormControl
 }                                                                      from '@angular/forms';
 
-// export function createComplexityValidator() {
-//     return (c: FormControl) => {
-//         const classes = [
-//             '[0-9]+',
-//             '[a-z]+',
-//             '[A-Z]+',
-//             '[\\W_]+'
-//         ];
-//
-//         let classesCount = 0;
-//
-//         for (const classRegex of classes) {
-//             if (new RegExp(classRegex).test(c.value)) {
-//                 classesCount++;
-//             }
-//         }
-//
-//         debugger;
-//
-//         if (classesCount < 2) {
-//             return {
-//                 weak: true
-//             };
-//         }
-//
-//         return null;
-//     };
-// }
-
 @Component({
     selector   : 'nx-test-input',
     templateUrl: 'test.component.html',
@@ -125,10 +96,10 @@ export class NxTestComponent implements OnInit, ControlValueAccessor, Validator 
 
     private loadCommonPasswords() {
         if (!this.CONFIG.commonPasswordsList) {
-            // this.api.getCommonPasswords()
-            //     .subscribe(data => {
-            //         this.CONFIG.commonPasswordsList = data;
-            //     });
+            this.api.getCommonPasswords()
+                .subscribe(data => {
+                    this.CONFIG.commonPasswordsList = data;
+                });
         }
     }
 

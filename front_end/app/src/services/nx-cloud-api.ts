@@ -14,6 +14,10 @@ export class NxCloudApiService {
         this.CONFIG = config.getConfig();
     }
 
+    getCommonPasswords(): Observable<any> {
+        return this.http.get('/static/scripts/commonPasswordsList.json');
+    }
+
     getIntegrations(): Observable<any> {
         return this.http.get(this.CONFIG.apiBase + '/integrations');
     }

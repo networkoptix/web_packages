@@ -1,20 +1,20 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute }                       from '@angular/router';
-import { NxCloudApiService }                    from '../../services/nx-cloud-api';
-import { NxLanguageProviderService }            from '../../services/nx-language-provider';
 import { NxUriService }                         from '../../services/uri.service';
 import { TranslateService }                     from '@ngx-translate/core';
+import { NxRegisterService }                    from '../../services/register.service';
+import { NxPageService }                        from '../../services/page.service';
 
 @Component({
-    selector   : 'register-component',
+    selector   : 'nx-register-component',
     templateUrl: 'register.component.html',
-    styleUrls  : [ 'register.component.scss' ]
+    styleUrls  : ['register.component.scss']
 })
 
 export class NxRegisterComponent implements OnInit {
     LANG: any = {};
     accountInfo: any = {};
-    register: any;
+    // register: any;
     registerSuccess: any;
     activated: any;
     session: any;
@@ -26,28 +26,30 @@ export class NxRegisterComponent implements OnInit {
 
     private setupDefaults() {
         this.registerEmail = undefined;
+
+        this.translate
+            .getTranslation(this.translate.currentLang)
+            .subscribe((lang) => {
+                this.LANG = lang;
+                this.pageService.setPageTitle(this.LANG.pageTitles.register);
+            });
     }
 
-    constructor(@Inject('cloudApiService') private cloudApi: any,
-                @Inject('account') private account: any,
+    constructor(@Inject('account') private account: any,
                 @Inject('process') private process: any,
                 @Inject('urlProtocol') private urlProtocol: any,
                 @Inject('localStorageService') private localStorage: any,
                 @Inject('authorizationCheckService') private authorizationService: any,
                 private route: ActivatedRoute,
-                private api: NxCloudApiService,
+                private registerService: NxRegisterService,
                 private uri: NxUriService,
-                private translate : TranslateService,
-                private language: NxLanguageProviderService) {
+                private translate: TranslateService,
+                private pageService: NxPageService) {
         this.setupDefaults();
     }
 
     ngOnInit(): void {
-        this.language
-            .translationsSubject
-            .subscribe((lang) => {
-                this.LANG = lang;
-            });
+
 
         this.route.params.subscribe(params => {
             this.registerSuccess = params.registerSuccess;
@@ -75,6 +77,7 @@ export class NxRegisterComponent implements OnInit {
             };
 
             if (this.registerSuccess && this.context.process !== 'registerSuccess') {
+                this.pageService.setPageTitle(this.LANG.pageTitles.registerSuccess);
                 this.authorizationService.redirectToHome();
             }
         });
@@ -83,40 +86,45 @@ export class NxRegisterComponent implements OnInit {
         // this.context = $sessionStorage;
 
         this.session.fromClient = this.urlProtocol.source.isApp;
+    }
 
-        this.register = this.process.init(function () {
+    register() {
+        this.process.init(() => {
             this.account.setEmail(this.accountInfo.email);
-            return this.api.register(
-                    this.accountInfo.email,
-                    this.accountInfo.password,
-                    this.accountInfo.firstName,
-                    this.accountInfo.lastName,
-                    this.accountInfo.subscribe,
-                    this.accountInfo.code);
-        }, {
-            errorCodes : {
-                alreadyExists: error => {
-                    this.registerForm.registerEmail.$setValidity('alreadyExists', false);
-                    this.registerForm.registerEmail.$setTouched();
-                    return false;
-                },
-                portalError  : this.LANG[this.translate.currentLang].errorCodes.brokenAccount
-            },
-            holdAlerts : true,
-            errorPrefix: this.LANG[this.translate.currentLang].errorCodes.cantRegisterPrefix
-        }).then(function () {
-            this.context.process = 'registerSuccess';
-            this.registerSuccess = true;
+            return this.registerService
+                       .register(
+                           this.accountInfo.email,
+                           this.accountInfo.password,
+                           this.accountInfo.firstName,
+                           this.accountInfo.lastName,
+                           this.accountInfo.subscribe,
+                           this.accountInfo.code);
+                       }, {
+                           errorCodes : {
+                               alreadyExists: error => {
+                                   this.registerForm.registerEmail.$setValidity('alreadyExists', false);
+                                   this.registerForm.registerEmail.$setTouched();
+                                   return false;
+                               },
+                               portalError  : this.LANG.errorCodes.brokenAccount
+                           },
+                           holdAlerts : true,
+                           errorPrefix: this.LANG.errorCodes.cantRegisterPrefix
+                       })
+                       .run()
+                       .then(() => {
+                            this.context.process = 'registerSuccess';
+                            this.registerSuccess = true;
 
-            if (this.accountInfo.code) {
-                this.activated = true;
-                this.uri.updateURI('/register/successActivated', {}, true);
-                this.authorizationService.login(this.accountInfo.email, this.accountInfo.password);
-            } else {
-                this.uri.updateURI('/register/success', {}, true);
-                this.account.setEmail(this.accountInfo.email);
-            }
-        });
+                            if (this.accountInfo.code) {
+                                this.activated = true;
+                                this.uri.updateURI('/register/successActivated', {});
+                                this.authorizationService.login(this.accountInfo.email, this.accountInfo.password);
+                            } else {
+                                this.uri.updateURI('/register/success', {});
+                                this.account.setEmail(this.accountInfo.email);
+                            }
+                       });
     }
 
     hideAlreadyExists(ctrl) {

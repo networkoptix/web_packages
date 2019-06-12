@@ -31,6 +31,8 @@ import { NxSystemsDropdown }         from './dropdowns/systems/systems.component
 import { NxPermissionsDropdown }     from './dropdowns/permissions/permissions.component';
 import { NxMultiSelectDropdown }     from './dropdowns/multi-select/multi-select.component';
 import { NxLandingDisplayComponent } from './landing-display/landing-display.component';
+import { NxTestComponent }           from './test-input/test.component';
+import { NxPasswordComponent }       from './password-input/password.component';
 
 @NgModule({
     imports        : [
@@ -65,6 +67,8 @@ import { NxLandingDisplayComponent } from './landing-display/landing-display.com
         NxSearchComponent,
         NxFooterComponent,
         NxLandingDisplayComponent,
+        NxPasswordComponent,
+        NxTestComponent,  // TODO: remove after tests
     ],
     entryComponents: [
         NxGenericDropdown,
@@ -90,6 +94,8 @@ import { NxLandingDisplayComponent } from './landing-display/landing-display.com
         NxSearchComponent,
         NxFooterComponent,
         NxLandingDisplayComponent,
+        NxPasswordComponent,
+        NxTestComponent,  // TODO: remove after tests
     ],
     providers      : [
         NxProcessButtonComponent,
@@ -107,6 +113,8 @@ import { NxLandingDisplayComponent } from './landing-display/landing-display.com
         NxSearchComponent,
         NxFooterComponent,
         NxLandingDisplayComponent,
+        NxPasswordComponent,
+        NxTestComponent,  // TODO: remove after tests
 
         NxRibbonService,
     ],
@@ -134,6 +142,9 @@ import { NxLandingDisplayComponent } from './landing-display/landing-display.com
         NxSearchComponent,
         NxFooterComponent,
         NxLandingDisplayComponent,
+        NxPasswordComponent,
+        NxTestComponent,  // TODO: remove after tests
+
         MenuModule,
     ]
 })

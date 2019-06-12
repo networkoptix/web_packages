@@ -195,9 +195,12 @@ window.L = {};
                                 templateUrl: CONFIG.viewsDir + 'regActions.html',
                                 controller: 'RegisterCtrl'
                             })
+                            // .when('/register', {
+                            //     templateUrl: CONFIG.viewsDir + 'regActions.html',
+                            //     controller: 'RegisterCtrl'
+                            // })
                             .when('/register', {
-                                templateUrl: CONFIG.viewsDir + 'regActions.html',
-                                controller: 'RegisterCtrl'
+                                template: '<nx-register-component></nx-register-component>'
                             })
                             .when('/account/password', {
                                 templateUrl: CONFIG.viewsDir + 'account.html',
