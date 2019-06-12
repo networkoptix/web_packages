@@ -239,5 +239,8 @@
 		"common": "too common",
 		"commonMessage": "This password is in top most popular passwords in the world",
 		"missingMessage": "Password is required"
+	},
+	"registration": {
+		"agreement" : "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
 	}
 }

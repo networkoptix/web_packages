@@ -1,14 +1,14 @@
 <div class="container auth-hidden">
     <h1 class="process-success d-flex align-items-center flex-column mt-5"
         *ngIf="registerSuccess && !activated">
-        <span>Account is created.</span>
-        <span>Confirmation message is sent to</span>
+        <span translate>Account is created.</span>
+        <span translate>Confirmation message is sent to</span>
         <span><strong>{{account.email}}</strong></span>
     </h1>
 
     <h1 class="process-success d-flex align-items-center flex-column mt-5"
         *ngIf="registerSuccess && activated">
-        <span>Account is successfully created.</span>
+        <span translate>Account is successfully created.</span>
     </h1>
 
     <form id="registerForm" class="form-horizontal" #registerForm="ngForm"
@@ -23,7 +23,7 @@
 
         <div class="form-group row" validate-field>
             <div class="col-md-4 justify-content-start justify-content-md-end">
-                <label for="firstName" class="text-left text-md-right control-label">First name</label>
+                <label for="firstName" class="text-left text-md-right control-label" translate>First name</label>
             </div>
             <div class="col-md-4">
                 <input type="text" class="form-control"
@@ -34,12 +34,12 @@
             </div>
             <div class="col-md-4">
                 <span class="help-block input-error"
-                      *ngIf="firstName.touched && firstName.errors && firstName.errors.required">First name is required</span>
+                      *ngIf="firstName.touched && firstName.errors && firstName.errors.required" translate>First name is required</span>
             </div>
         </div>
         <div class="form-group row" validate-field>
             <div class="col-md-4 justify-content-start justify-content-md-end">
-                <label for="lastName" class="text-left text-md-right control-label">Last name</label>
+                <label for="lastName" class="text-left text-md-right control-label" translate>Last name</label>
             </div>
             <div class="col-md-4">
                 <input type="text" class="form-control"
@@ -50,12 +50,12 @@
             </div>
             <div class="col-md-4">
                 <span class="help-block input-error"
-                      *ngIf="lastName.touched && lastName.errors && lastName.errors.required">Last name is required</span>
+                      *ngIf="lastName.touched && lastName.errors && lastName.errors.required" translate>Last name is required</span>
             </div>
         </div>
         <div class="form-group row" validate-field>
             <div class="col-md-4 justify-content-start justify-content-md-end">
-                <label for="registerEmail" class="text-left text-md-right control-label">Email</label>
+                <label for="registerEmail" class="text-left text-md-right control-label" translate>Email</label>
             </div>
             <div class="col-md-4">
                 <input [style.distlay]="lockEmail ? 'none' : 'inline'" type="email" class="form-control"
@@ -182,14 +182,12 @@
                         required>
                 </nx-checkbox>
 
-                <label for="accept" translate>I agree to the <a href="/content/eula" target="_blank">Terms &
-                    Conditions</a> and <a href="%PRIVACY_LINK%" target="_blank">Privacy policy</a>
-                </label>
+                <label for="accept" [innerHTML]="'registration.agreement' | translate"></label>
             </div>
             <div class="col-md-4">
                 <div>
                     <span class="help-block input-error"
-                          *ngIf="accept.touched && accept.errors.required">
+                          *ngIf="accept.touched && accept.errors.required" translate>
                         Please review and agree to the Terms and Conditions and Privacy policy in order to proceed
                     </span>
                 </div>

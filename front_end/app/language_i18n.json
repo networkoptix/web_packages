@@ -1,6 +1,8 @@
 {
     "2-Way Audio": "2-Way Audio",
     "Account Settings": "Account Settings",
+    "Account is created.": "Account is created.",
+    "Account is successfully created.": "Account is successfully created.",
     "Account not activated": "Account not activated",
     "Account not found": "Account not found",
     "Administration": "Administration",
@@ -22,6 +24,7 @@
     "Choose which properties should be visible to customers:": "Choose which properties should be visible to customers:",
     "Close": "Close",
     "Codec": "Codec",
+    "Confirmation message is sent to": "Confirmation message is sent to",
     "Contact": "Contact",
     "Create Account": "Create Account",
     "Create account": "Create account",
@@ -43,6 +46,8 @@
     "Export all to CSV": "Export all to CSV",
     "FPS(max)": "FPS(max)",
     "Firmware version": "Firmware version",
+    "First name": "First name",
+    "First name is required": "First name is required",
     "Fisheye": "Fisheye",
     "Forgot password?": "Forgot password?",
     "Get in touch": "Get in touch",
@@ -52,6 +57,8 @@
     "I/O": "I/O",
     "In Review": "In Review",
     "In-Client Upgrade:": "In-Client Upgrade:",
+    "Last name": "Last name",
+    "Last name is required": "Last name is required",
     "Latest version": "Latest version",
     "Log In": "Log In",
     "Log Out": "Log Out",
@@ -71,6 +78,7 @@
     "Password is required": "Password is required",
     "Password:": "Password:",
     "Permissions": "Permissions",
+    "Please review and agree to the Terms and Conditions and Privacy policy in order to proceed": "Please review and agree to the Terms and Conditions and Privacy policy in order to proceed",
     "Popularity": "Popularity",
     "Release Notes": "Release Notes",
     "Release notes": "Release notes",
@@ -348,6 +356,10 @@
         "weak": "weak",
         "weakMessage": "Use numbers, upper and lower case letters and special characters to make your password stronger"
     },
+    "registration": {
+        "agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
+    },
+    "registration.agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>",
     "search": {
         "Any": "Any",
         "Search": "Search",
