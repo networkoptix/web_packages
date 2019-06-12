@@ -1,5 +1,5 @@
 from __future__ import unicode_literals
-from django.contrib import admin
+from django.contrib import admin, messages
 from django.contrib.admin import SimpleListFilter
 from django.conf.urls import url
 from django.db.models import Q, Case, When, Value, BooleanField
@@ -11,6 +11,45 @@ from cloud import settings
 from cms.forms import *
 from cms.controllers.modify_db import get_records_for_version
 from cms.views.product import page_editor, review
+
+
+def clone_product(request, product_id):
+    product = Product.objects.get(id=product_id)
+    clone_name = product.name + ' - copy'
+    created_by = request.user
+    customizations = product.customizations.all()
+
+    if Product.objects.filter(name=clone_name).first():
+        messages.error(request, "Copy already exists")
+        return None
+
+    if product.product_type.type == ProductType.PRODUCT_TYPES.cloud_portal:
+        messages.error(request, "Cannot clone cloud portal products")
+        return None
+
+    product.pk = product.id = None
+    product.name = clone_name
+    product.created_by = created_by
+    product.save()
+
+    old_product = Product.objects.get(id=product_id)
+    product.customizations.set(customizations)
+
+    data_structures = DataStructure.objects.filter(context__product_type=product.product_type)
+    for ds in data_structures:
+        datarecord = old_product.datarecord_set.filter(data_structure=ds).last()
+        if datarecord:
+            datarecord.pk = datarecord.id = None
+            datarecord.product = product
+            datarecord.version = None
+            datarecord.save()
+
+    if '_clone_copy_perms' in request.POST:
+        grouptoproducts = UserGroupsToProductPermissions.objects.filter(product=old_product)
+        for relation in grouptoproducts:
+            UserGroupsToProductPermissions.objects.create(group=relation.group, product=product)
+
+    return product.id
 
 
 class CustomizationFilter(SimpleListFilter):
@@ -96,7 +135,8 @@ class CMSAdmin(admin.ModelAdmin):
 
 
 class ProductTypeAdmin(CMSAdmin):
-    list_display = ('type', 'can_preview', 'single_customization',)
+    list_display = ('name', 'type', 'can_preview', 'single_customization',)
+    list_display_links = ('name', 'type')
 
 
 admin.site.register(ProductType, ProductTypeAdmin)
@@ -134,6 +174,9 @@ class ProductAdmin(CMSAdmin):
         extra_context['related_groups'] = Group.objects.filter(
             usergroupstoproductpermissions__product=product
         ).prefetch_related('permissions')
+
+        if self.has_clone_permission(request, product) and product.product_type.type != ProductType.PRODUCT_TYPES.cloud_portal:
+            extra_context['show_clone_asset'] = True
 
         return super(ProductAdmin, self).change_view(
             request, object_id, form_url, extra_context=extra_context,
@@ -174,8 +217,20 @@ class ProductAdmin(CMSAdmin):
         ]
         return my_urls + urls
 
+    def response_change(self, request, obj):
+        if '_clone' in request.POST and self.has_clone_permission(request, obj):
+            new_id = clone_product(request, obj.id)
+            if new_id:
+                return redirect(reverse('admin:cms_product_change', args=(new_id,)))
+            else:
+                return redirect('.')
+        return super().response_change(request, obj)
+
+    def has_clone_permission(self, request, obj=None):
+        return request.user.is_superuser
+
     def product_settings(self, obj):
-        if obj.product_type and not obj.product_type.single_customization:
+        if obj.product_type.type == ProductType.PRODUCT_TYPES.integration:
             return format_html('')
         return format_html('<a class="btn btn-sm" href="{}">Settings</a>',
                            reverse('product_settings', args=[obj.id]))

@@ -12,6 +12,7 @@ from django.http.response import HttpResponse, HttpResponseBadRequest
 import os
 import json
 from cloud import settings
+from api.helpers.exceptions import APIRequestException
 from api.helpers.permissions import make_customization_visible_to_user
 from cms.controllers import filldata, generate_structure, modify_db, structure
 from cms.forms import *
@@ -270,7 +271,7 @@ def product_settings(request, product_id):
             if not update_structure:
                 return HttpResponseBadRequest('json is acceptable only for Updating structure')
             cms_structure = json.load(file)
-            structure.update_from_object(cms_structure)
+            structure.update_from_object(cms_structure, product_type_name=product.product_type.name)
             messages.success(request, "Structure updated")
         else:
             if not file.name.endswith('zip'):
@@ -281,7 +282,8 @@ def product_settings(request, product_id):
                 for error in log_messages:
                     messages.error(request, "Error with {} problem with {}".format(error['file'], error['extension']))
                 return response_attachment(content, 'structure.json', 'application/json')
-            log_messages = structure.process_zip(file, request.user, product, update_structure, update_content)
+            else:
+                log_messages = structure.process_zip(file, request.user, product, update_structure, update_content)
             for item in log_messages:
                 log_type = {
                     'info': messages.INFO,
@@ -304,6 +306,17 @@ def product_settings(request, product_id):
                    'site_header': admin.site.site_header,
                    'site_title': admin.site.site_title,
                    'title': 'Settings for %s' % product.name})
+
+
+@require_http_methods(["GET"])
+def download_current_structure(request, product_id):
+    use_current_values = "get_values" in request.GET
+    product = Product.objects.filter(id=product_id).last()
+    if product_id and product:
+        data = generate_structure.from_database(product, use_current_values)
+        content = json.dumps(data, ensure_ascii=False, indent=4, separators=(',', ': '))
+        return response_attachment(content, 'structure.json', 'application/json')
+    return APIRequestException("Product not given or not found")
 
 
 @require_http_methods(["GET"])
