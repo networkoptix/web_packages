@@ -49,6 +49,20 @@
     }
 }
 
+.form-component {
+    &[class*="ng-invalid"]:not(.ng-untouched) {
+        input {
+            border-color : $error;
+            color        : $error;
+    
+            + .input-group-addon {
+                border-color     : transparent;
+                background-color : transparent;
+            }
+        }
+    }
+}
+
 .input-error {
     font-family : $font-family-regular;
     font-size   : rem(13px);

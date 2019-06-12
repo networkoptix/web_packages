@@ -97,7 +97,9 @@
             <div class="col-md-4">
                 <div class="input-group has-addon">
                     <nx-password-input
+                            class="form-component"
                             name="registerPassword"
+                            componentId="registerPassword"
                             [(ngModel)]="account.password"
                             [form]="registerForm"
                             #registerPassword="ngModel">
@@ -106,9 +108,9 @@
             </div>
 
             <div class="col-md-4">
-                <span class="help-block" *ngIf="registerPassword.valid">
-                    <span class="badge badge-success" *ngIf="registerPassword.errors && !registerPassword.errors.fairPassword">{{LANG.passwordRequirements.good}}</span>
-                    <span class="badge badge-warning" *ngIf="registerPassword.errors && registerPassword.errors.fairPassword"
+                <span class="help-block" *ngIf="registerPassword.valid && LANG">
+                    <span class="badge badge-success" *ngIf="!registerPassword.control.fairPassword">{{LANG.passwordRequirements.good}}</span>
+                    <span class="badge badge-warning" *ngIf="registerPassword.control.fairPassword"
                           title="{{ LANG.passwordRequirements.fairMessage}}">{{LANG.passwordRequirements.fair}}</span>
                 </span>
 

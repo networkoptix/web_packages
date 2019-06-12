@@ -25,6 +25,7 @@ export class NxRegisterComponent implements OnInit {
     @ViewChild('registerForm') registerForm: HTMLFormElement;
 
     private setupDefaults() {
+        this.LANG = undefined;
         this.registerEmail = undefined;
 
         this.translate
