@@ -11,6 +11,8 @@ from rest_framework import serializers
 from cms.models import Customization, Product
 from api.models import Account
 
+import json
+
 # When cloudportal is ran locally it uses amqp by default. BROKER_TRANSPORT_OPTIONS is related to sqs.
 # This allows cloud notifications to run locally without changing settings to use sqs.
 USE_SQS_FOR_CLOUD_NOTIFICATIONS = hasattr(settings, "BROKER_TRANSPORT_OPTIONS")
@@ -188,7 +190,7 @@ class PushSubscription(models.Model):
     active = models.BooleanField(default=True)
     device = models.ForeignKey(PushDevice, blank=True, null=True, on_delete=models.SET_NULL)
 
-    account = models.ForeignKey(Account, blank=True, null=True, on_delete=models.CASCADE)
+    account = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.CASCADE)
     subscription_id = models.UUIDField(blank=True, null=True)
     username = models.CharField(max_length=255, blank=True, null=True)
 
@@ -199,6 +201,10 @@ class PushNotification(models.Model):
     payload = models.TextField(max_length=4000, blank=True, null=True, validators=[MaxLengthValidator(4000)])
     subscriptions = models.ManyToManyField(PushSubscription)
 
+    raw_system_id = models.CharField(max_length=255, default='')
+    raw_targets = models.TextField(null=True)
+    result_data = models.TextField(null=True, blank=True)
+
     def clean(self):
         if len(self.title + self.body + self.payload) > 4000:
             raise ValidationError('Title, body, and payload cannot total more than 4000')
@@ -207,3 +213,19 @@ class PushNotification(models.Model):
     def save(self, *args, **kwargs):
         self.full_clean()
         super(PushNotification, self).save(*args, **kwargs)
+
+    def send_notifications(self, device_tokens=None):
+        if device_tokens:
+            devices = PushDevice.objects.filter(registration_id__in=device_tokens)
+        else:
+            active_subs = self.subscriptions.filter(active=True)
+            devices = PushDevice.objects.filter(pushsubscription__in=active_subs)
+
+        if self.payload:
+            payload = json.loads(self.payload)
+        else:
+            payload = dict()
+
+        return devices.send_message(self.body, title=self.title, extra=payload)
+
+

@@ -11,9 +11,11 @@ from django.utils import timezone
 
 from api.models import Account
 from notifications import notifications_api
-from notifications.models import Message
+from notifications.notifications_api import log_push_result, set_subscriptions_from_targets
+from notifications.models import Message, PushSubscription, PushNotification
 from util.helpers import get_language_for_email
 
+import json
 import traceback
 import logging
 logger = logging.getLogger(__name__)
@@ -90,6 +92,40 @@ def send_email(msg_id, queue="", attempt=1):
             'queue': queue,
             'attempt': attempt
         }
+
+
+@shared_task
+def send_push_notification(notification_id):
+    logger.info('Start processing push notification: {}'.format(notification_id))
+    notification_object = PushNotification.objects.get(id=notification_id)
+
+    system_id = notification_object.raw_system_id
+
+    try:
+        matching_subscriptions = set_subscriptions_from_targets(notification_object)
+
+        if matching_subscriptions:
+            notification_object.subscriptions.set(matching_subscriptions)
+
+            response = notification_object.send_notifications()
+            resend_tokens = notifications_api.process_push_response(response, notification_object)
+
+            if resend_tokens:
+                retry_send_push_notification.apply_async(countdown=20, args=[notification_object, resend_tokens, 1])
+        else:
+            log_push_result(notification_object, 'No matching subscriptions found')
+    except Exception as exception:
+        log_push_result(notification_object, 'Exception: {}'.format(exception), logging.ERROR)
+
+
+@shared_task
+def retry_send_push_notification(notification_object, device_tokens, count):
+    if count < 10:
+        response = notification_object.send_notifications(device_tokens)
+        resend_tokens = notifications_api.process_push_response(response, notification_object, device_tokens)
+
+        if resend_tokens:
+            retry_send_push_notification.apply_async(countdown=20, args=[notification_object, resend_tokens, count + 1])
 
 
 # For testing we dont want to send emails to everyone so we need to set
