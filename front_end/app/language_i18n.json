@@ -100,6 +100,7 @@
     "System will be accessible through local network with local administrator account.": "System will be accessible through local network with local administrator account.",
     "Systems": "Systems",
     "Systems of such size may work but will be unstable and have troubles with updates and synchronisation.": "Systems of such size may work but will be unstable and have troubles with updates and synchronisation.",
+    "Tags": "Tags",
     "Take the name and settings from": "Take the name and settings from",
     "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.": "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.",
     "There will be more than": "There will be more than",
@@ -116,7 +117,7 @@
     "You can only merge Systems where you are the owner.": "You can only merge Systems where you are the owner.",
     "Your Name": "Your Name",
     "Your browser is not supported": "Your browser is not supported",
-    "and_x_more": "... and {{value}} more",
+    "andXMore": "... and {{value}} more",
     "cameraFilters": {
         "H265": "H.265 Cameras",
         "IO": "I / O modules",
@@ -360,6 +361,7 @@
         "agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
     },
     "registration.agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>",
+    "phoneNumberWithLabel": "Tel: {{number}}",
     "search": {
         "Any": "Any",
         "Search": "Search",
