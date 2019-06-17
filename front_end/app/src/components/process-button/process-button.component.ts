@@ -43,7 +43,7 @@ export class NxProcessButtonComponent implements OnInit {
 
     checkForm() {
         if (this.form && !this.form.valid) {
-            //Set the form touched
+            // Set the form touched
             this.touchForm();
             this.setFocusToInvalid();
 

@@ -112,6 +112,9 @@ export class NxPasswordComponent implements OnInit, ControlValueAccessor, Valida
     }
 
     private checkCommon(value) {
+        if (!this.CONFIG.commonPasswordsList) {
+            return;
+        }
         // Check if password is directly in common list
         let commonPassword = this.CONFIG.commonPasswordsList[value];
 

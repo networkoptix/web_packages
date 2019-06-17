@@ -31,8 +31,8 @@ import { NxSystemsDropdown }         from './dropdowns/systems/systems.component
 import { NxPermissionsDropdown }     from './dropdowns/permissions/permissions.component';
 import { NxMultiSelectDropdown }     from './dropdowns/multi-select/multi-select.component';
 import { NxLandingDisplayComponent } from './landing-display/landing-display.component';
-import { NxTestComponent }           from './test-input/test.component';
 import { NxPasswordComponent }       from './password-input/password.component';
+import { NxEmailComponent }          from './email-input/email.component';
 
 @NgModule({
     imports        : [
@@ -68,7 +68,7 @@ import { NxPasswordComponent }       from './password-input/password.component';
         NxFooterComponent,
         NxLandingDisplayComponent,
         NxPasswordComponent,
-        NxTestComponent,  // TODO: remove after tests
+        NxEmailComponent,
     ],
     entryComponents: [
         NxGenericDropdown,
@@ -95,7 +95,7 @@ import { NxPasswordComponent }       from './password-input/password.component';
         NxFooterComponent,
         NxLandingDisplayComponent,
         NxPasswordComponent,
-        NxTestComponent,  // TODO: remove after tests
+        NxEmailComponent,
     ],
     providers      : [
         NxProcessButtonComponent,
@@ -114,7 +114,7 @@ import { NxPasswordComponent }       from './password-input/password.component';
         NxFooterComponent,
         NxLandingDisplayComponent,
         NxPasswordComponent,
-        NxTestComponent,  // TODO: remove after tests
+        NxEmailComponent,
 
         NxRibbonService,
     ],
@@ -143,7 +143,7 @@ import { NxPasswordComponent }       from './password-input/password.component';
         NxFooterComponent,
         NxLandingDisplayComponent,
         NxPasswordComponent,
-        NxTestComponent,  // TODO: remove after tests
+        NxEmailComponent,
 
         MenuModule,
     ]

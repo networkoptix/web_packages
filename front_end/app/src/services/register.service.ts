@@ -1,21 +1,20 @@
-import { Injectable }      from '@angular/core';
-import { HttpClient }      from '@angular/common/http';
-import { Observable }      from 'rxjs';
-import { NxConfigService } from './nx-config';
+import { Injectable }        from '@angular/core';
+import { HttpClient }        from '@angular/common/http';
+import { Observable }        from 'rxjs';
+import { NxCloudApiService } from './nx-cloud-api';
 
 @Injectable({
     providedIn: 'root'
 })
 export class NxRegisterService {
-    CONFIG: any;
 
     constructor(private http: HttpClient,
-                private config: NxConfigService) {
-        this.CONFIG = config.getConfig();
+                private api: NxCloudApiService) {
     }
 
-    register(email, password, firstName, lastName, subscribe, code): Observable<any> {
-        return this.http.post(this.CONFIG.apiBase + '/ipvd',
-                {email, password, firstName, lastName, subscribe, code});
+    register(email, password, firstName, lastName, subscribe, code): Promise<any> {
+        return this.api
+                   .registerUser(email, password, firstName, lastName, subscribe, code)
+                   .toPromise();
     }
 }

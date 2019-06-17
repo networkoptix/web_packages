@@ -173,34 +173,57 @@ window.L = {};
 
                         $routeProvider
                             .when('/register/success', {
-                                templateUrl: CONFIG.viewsDir + 'regActions.html',
-                                controller: 'RegisterCtrl',
+                                template: '<nx-register-component [uri-param]="uriParam"></nx-register-component>',
+                                controller: ['$scope', 'getParam', function ($scope, getParam) {
+                                    $scope.uriParam = getParam;
+                                }],
                                 resolve: {
-                                    test: ['$route', function ($route) {
-                                        $route.current.params.registerSuccess = true;
+                                    getParam: [function () {
+                                        return 'success';
                                     }]
                                 }
                             })
                             .when('/register/successActivated', {
-                                templateUrl: CONFIG.viewsDir + 'regActions.html',
-                                controller: 'RegisterCtrl',
+                                template: '<nx-register-component [uri-param]="uriParam"></nx-register-component>',
+                                controller: ['$scope', 'getParam', function ($scope, getParam) {
+                                    $scope.uriParam = getParam;
+                                }],
                                 resolve: {
-                                    test: ['$route', function ($route) {
-                                        $route.current.params.registerSuccess = true;
-                                        $route.current.params.activated = true;
+                                    getParam: [function () {
+                                        return 'successActivated';
                                     }]
                                 }
+                                // templateUrl: CONFIG.viewsDir + 'regActions.html',
+                                // controller: 'RegisterCtrl',
+                                // resolve: {
+                                //     test: ['$route', function ($route) {
+                                //         $route.current.params.registerSuccess = true;
+                                //         $route.current.params.activated = true;
+                                //     }]
+                                // }
                             })
                             .when('/register/:code', {
-                                templateUrl: CONFIG.viewsDir + 'regActions.html',
-                                controller: 'RegisterCtrl'
+                                template: '<nx-register-component [uri-param]="getParam" [uri-param-code]="getCode"></nx-register-component>',
+                                controller: ['$scope', 'getParam', function ($scope, getParam) {
+                                    $scope.uriParam = getParam;
+                                }],
+                                resolve: {
+                                    getParam: [function () {
+                                        return 'code';
+                                    }],
+                                    getCode: ['$route', function ($route) {
+                                        return $route.current.params.code;
+                                    }]
+                                }
+                                // templateUrl: CONFIG.viewsDir + 'regActions.html',
+                                // controller: 'RegisterCtrl'
                             })
                             // .when('/register', {
                             //     templateUrl: CONFIG.viewsDir + 'regActions.html',
                             //     controller: 'RegisterCtrl'
                             // })
                             .when('/register', {
-                                template: '<nx-register-component></nx-register-component>'
+                                template: '<nx-register-component [uri-param]="register">></nx-register-component>'
                             })
                             .when('/account/password', {
                                 templateUrl: CONFIG.viewsDir + 'account.html',

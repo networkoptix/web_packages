@@ -3,7 +3,7 @@
         *ngIf="registerSuccess && !activated">
         <span translate>Account is created.</span>
         <span translate>Confirmation message is sent to</span>
-        <span><strong>{{account.email}}</strong></span>
+        <span><strong>{{accountInfo.email}}</strong></span>
     </h1>
 
     <h1 class="process-success d-flex align-items-center flex-column mt-5"
@@ -27,7 +27,7 @@
             </div>
             <div class="col-md-4">
                 <input type="text" class="form-control"
-                       [(ngModel)]="account.firstName"
+                       [(ngModel)]="accountInfo.firstName"
                        #firstName="ngModel"
                        id="firstName" name="firstName" maxlength="255"
                        required autocomplete="off" autofocus>
@@ -43,7 +43,7 @@
             </div>
             <div class="col-md-4">
                 <input type="text" class="form-control"
-                       [(ngModel)]="account.lastName"
+                       [(ngModel)]="accountInfo.lastName"
                        #lastName="ngModel"
                        id="lastName" name="lastName" maxlength="255"
                        required autocomplete="off">
@@ -58,30 +58,32 @@
                 <label for="registerEmail" class="text-left text-md-right control-label" translate>Email</label>
             </div>
             <div class="col-md-4">
-                <input [style.distlay]="lockEmail ? 'none' : 'inline'" type="email" class="form-control"
-                       [ngModel]="account.email"
-                       #registerEmail="ngModel"
-                       id="registerEmail" name="registerEmail" maxlength="255"
-                       required autocomplete="off" validate-email
-                       (ngModelChange)="hideAlreadyExists(registerEmail)">
-
-                <input type="text" *ngIf="lockEmail" name="registerEmailLocked"
-                       class="form-control" [(ngModel)]="account.email" readonly>
+                <div class="input-group">
+                    <nx-email-input
+                            class="form-component"
+                            name="registerEmail"
+                            componentId="registerEmail"
+                            [(ngModel)]="accountInfo.email"
+                            [lockEmail]="lockEmail"
+                            [form]="registerForm"
+                            #registerEmail="ngModel">
+                    </nx-email-input>
+                </div>
             </div>
             <div class="col-md-4">
                 <div>
                     <span class="help-block input-error"
-                          *ngIf="registerEmail.touched && registerEmail.errors && registerEmail.errors.required">Email is required
+                          *ngIf="registerEmail.touched && registerEmail.errors && registerEmail.errors.required" translate>Email is required
                     </span>
                 </div>
                 <div>
                     <span class="help-block input-error"
-                          *ngIf="registerEmail.touched && registerEmail.errors && registerEmail.errors.email">Please enter a valid Email
+                          *ngIf="registerEmail.touched && registerEmail.errors && registerEmail.errors.pattern" translate>Please enter a valid Email
                     </span>
                 </div>
                 <div>
                     <span class="help-block input-error"
-                          *ngIf="registerEmail.errors && registerEmail.errors.alreadyExists">This Email has been already registered in %PRODUCT_NAME%
+                          *ngIf="registerEmail.errors && registerEmail.errors.alreadyExists" translate>This Email has been already registered in %PRODUCT_NAME%
                     </span>
                 </div>
             </div>
@@ -100,7 +102,7 @@
                             class="form-component"
                             name="registerPassword"
                             componentId="registerPassword"
-                            [(ngModel)]="account.password"
+                            [(ngModel)]="accountInfo.password"
                             [form]="registerForm"
                             #registerPassword="ngModel">
                     </nx-password-input>
@@ -108,9 +110,9 @@
             </div>
 
             <div class="col-md-4">
-                <span class="help-block" *ngIf="registerPassword.valid && LANG">
-                    <span class="badge badge-success" *ngIf="!registerPassword.control.fairPassword">{{LANG.passwordRequirements.good}}</span>
-                    <span class="badge badge-warning" *ngIf="registerPassword.control.fairPassword"
+                <span class="help-block" *ngIf="registerPassword.valid && LANG.passwordRequirements">
+                    <span class="badge badge-success" *ngIf="registerPassword.control && !registerPassword.control.fairPassword">{{LANG.passwordRequirements.good}}</span>
+                    <span class="badge badge-warning" *ngIf="registerPassword.control && registerPassword.control.fairPassword"
                           title="{{ LANG.passwordRequirements.fairMessage}}">{{LANG.passwordRequirements.fair}}</span>
                 </span>
 
@@ -177,7 +179,7 @@
                 <nx-checkbox
                         name="accept"
                         componentId="accept"
-                        [(ngModel)]="account.accept"
+                        [(ngModel)]="accountInfo.accept"
                         #accept="ngModel"
                         required>
                 </nx-checkbox>
@@ -185,9 +187,8 @@
                 <label for="accept" [innerHTML]="'registration.agreement' | translate"></label>
             </div>
             <div class="col-md-4">
-                <div>
-                    <span class="help-block input-error"
-                          *ngIf="accept.touched && accept.errors.required" translate>
+                <div *ngIf="accept.touched && accept.errors && accept.errors.requiredError">
+                    <span class="help-block input-error" translate>
                         Please review and agree to the Terms and Conditions and Privacy policy in order to proceed
                     </span>
                 </div>
