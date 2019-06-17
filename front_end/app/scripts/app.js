@@ -179,7 +179,7 @@ window.L = {};
                                 }],
                                 resolve: {
                                     getParam: [function () {
-                                        return 'success';
+                                        return 'registerSuccess';
                                     }]
                                 }
                             })
@@ -223,7 +223,7 @@ window.L = {};
                             //     controller: 'RegisterCtrl'
                             // })
                             .when('/register', {
-                                template: '<nx-register-component [uri-param]="register">></nx-register-component>'
+                                template: '<nx-register-component [uri-param]="register"></nx-register-component>'
                             })
                             .when('/account/password', {
                                 templateUrl: CONFIG.viewsDir + 'account.html',

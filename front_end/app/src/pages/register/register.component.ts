@@ -78,6 +78,7 @@ export class NxRegisterComponent implements OnInit {
                     } else {
                         this.locationProxy.path('/register/success', false);
                         this.account.setEmail(this.accountInfo.email);
+                        this.pageService.setPageTitle(this.LANG.pageTitles.registerSuccess);
                     }
                 });
             });
@@ -137,7 +138,6 @@ export class NxRegisterComponent implements OnInit {
         };
 
         if (this.registerSuccess && this.context.process !== 'registerSuccess') {
-            this.pageService.setPageTitle(this.LANG.pageTitles.registerSuccess);
             this.authorizationService.redirectToHome();
         }
 

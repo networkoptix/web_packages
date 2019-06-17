@@ -1,3 +1,10 @@
+<div *ngIf="!registerSuccess && session.fromClient">
+    <landing-component></landing-component>
+    <div class="container">
+        <hr style="margin-bottom: 40px;">
+    </div>
+</div>
+
 <div class="container auth-hidden">
     <h1 class="process-success d-flex align-items-center flex-column mt-5"
         *ngIf="registerSuccess && !activated">
@@ -14,7 +21,7 @@
     <form id="registerForm" class="form-horizontal" #registerForm="ngForm"
           *ngIf="!registerSuccess" novalidate autocomplete="off">
 
-        <h1 ng-if="!session.fromClient" translate>Create account</h1>
+        <h1 *ngIf="!session.fromClient" translate>Create account</h1>
 
         <!-- special hack to prevent autocompletion -->
         <input type="text" style="display:none">

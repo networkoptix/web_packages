@@ -9,6 +9,7 @@ import { NxRegisterComponent } from './register.component';
 
 import { TranslateModule }    from '@ngx-translate/core';
 import { ComponentsModule }   from '../../components/components.module';
+import { LandingModule } from '../landing/landing.module';
 import { NxLanguageDropdown } from '../../components/dropdowns/language/language.component';
 
 // const appRoutes: Routes = [
@@ -27,6 +28,7 @@ import { NxLanguageDropdown } from '../../components/dropdowns/language/language
         TranslateModule,
         ComponentsModule,
         FormsModule,
+        LandingModule
 
         // RouterModule.forChild(appRoutes)
     ],
