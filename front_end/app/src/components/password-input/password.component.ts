@@ -62,6 +62,13 @@ export class NxPasswordComponent implements OnInit, ControlValueAccessor, Valida
             };
         }
 
+        // check pattern
+        if (!new RegExp(this.CONFIG.passwordRequirements.requiredRegex).test(c.value)) {
+            return {
+                pattern: true
+            };
+        }
+
         // check length
         if (c.value.length < this.CONFIG.passwordRequirements.minLength) {
             return {
@@ -100,6 +107,7 @@ export class NxPasswordComponent implements OnInit, ControlValueAccessor, Valida
                 private translate: TranslateService,
                 private language: NxLanguageProviderService,
                 private api: NxCloudApiService) {
+        this.CONFIG = this.config.getConfig();
     }
 
     private loadCommonPasswords() {

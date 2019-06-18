@@ -145,7 +145,7 @@
                           *ngIf="registerPassword.errors &&
                                  registerPassword.errors.pattern &&
                                  !registerPassword.errors.minlength"
-                          title="{{ LANG.passwordRequirements.requiredMessage}}">{{LANG.passwordRequirements.required}}</span>
+                          title="{{ LANG.passwordRequirements.requiredMessage}}">{{LANG.passwordRequirements.incorect}}</span>
                 </span>
 
                 <span class="help-block" *ngIf="!registerPassword.valid && registerPassword.touched">
@@ -169,7 +169,7 @@
                     <span class="input-error"
                           *ngIf="registerPassword.errors &&
                                  registerPassword.errors.pattern &&
-                                 !registerPassword.errors.minlength">{{ LANG.passwordRequirements.requiredMessage}}
+                                 !registerPassword.errors.minlength">{{ LANG.passwordRequirements.incorectMessage}}
                     </span>
                     <span class="input-error"
                           *ngIf="registerPassword.errors &&
