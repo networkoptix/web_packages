@@ -80,18 +80,15 @@
             <div class="col-md-4">
                 <div>
                     <span class="help-block input-error"
-                          *ngIf="registerEmail.touched && registerEmail.errors && registerEmail.errors.required" translate>Email is required
-                    </span>
+                          *ngIf="registerEmail.touched && registerEmail.errors && registerEmail.errors.required" translate>Email is required</span>
                 </div>
                 <div>
                     <span class="help-block input-error"
-                          *ngIf="registerEmail.touched && registerEmail.errors && registerEmail.errors.pattern" translate>Please enter a valid Email
-                    </span>
+                          *ngIf="registerEmail.touched && registerEmail.errors && registerEmail.errors.pattern" translate>Please enter a valid Email</span>
                 </div>
                 <div>
                     <span class="help-block input-error"
-                          *ngIf="registerEmail.errors && registerEmail.errors.alreadyExists" translate>This Email has been already registered in %CLOUD_NAME%
-                    </span>
+                          *ngIf="registerEmail.errors && registerEmail.errors.alreadyExists" translate>This Email has been already registered in %CLOUD_NAME%</span>
                 </div>
             </div>
         </div>
