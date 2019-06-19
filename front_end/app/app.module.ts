@@ -16,7 +16,7 @@ import {
     cloudApiServiceModule, systemModule, systemsModule, languageServiceModule,
     accountServiceModule, processServiceModule, uuid2ServiceModule,
     ngToastModule, authorizationCheckServiceModule,
-    localStorageModule, locationProxyModule
+    localStorageModule, locationProxyModule, urlProtocolServiceModule
 } from './src/ajs-upgrade/ajs-upgraded-providers';
 
 import { AppComponent }              from './app.component';
@@ -42,10 +42,6 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
     shouldProcessUrl(url: UrlTree) {
         return url.toString().startsWith('/sandbox') ||
             url.toString().startsWith('/ipvd') ||
-            url.toString().startsWith('/main') ||
-            url.toString().startsWith('/other') ||
-            url.toString().startsWith('/servers') ||
-            url.toString().startsWith('/users') ||
             url.toString().startsWith('/new-content') ||
             url.toString().startsWith('/right') ||
             url.toString().startsWith('/integrations');
@@ -53,6 +49,7 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
 
         /* Temporary downgraded components - routing is handled by AJS */
         // url.toString().startsWith('/') ||
+        // url.toString().startsWith('/register') ||
         // url.toString().startsWith('/login') ||
         // url.toString().startsWith('/download') ||
         // url.toString().startsWith('/downloads') ||
@@ -82,6 +79,7 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
         languageServiceModule,
         accountServiceModule,
         processServiceModule,
+        urlProtocolServiceModule,
         systemModule,
         systemsModule,
         ngToastModule,

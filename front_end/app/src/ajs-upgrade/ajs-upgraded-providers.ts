@@ -21,6 +21,16 @@ const languageServiceProvider = {
     deps: ['$injector']
 };
 
+function urlProtocolFactory(i: any) {
+    return i.get('urlProtocol');
+}
+
+const urlProtocolServiceProvider = {
+    provide: 'urlProtocol',
+    useFactory: urlProtocolFactory,
+    deps: ['$injector']
+};
+
 function accountFactory(i: any) {
     return i.get('account');
 }
@@ -132,6 +142,13 @@ export class uuid2ServiceModule { }
     ]
 })
 export class languageServiceModule { }
+
+@NgModule({
+    providers: [
+        urlProtocolServiceProvider
+    ]
+})
+export class urlProtocolServiceModule { }
 
 @NgModule({
     providers: [
