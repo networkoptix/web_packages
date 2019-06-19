@@ -355,8 +355,8 @@
         "minLength": "too short",
         "minLengthMessage": "Password must contain at least 8 characters",
         "missingMessage": "Password is required",
-        "incorect": "incorrect",
-        "incorectMessage": "Use only latin letters, numbers and keyboard symbols, avoid leading and trailing spaces",
+        "required": "incorrect",
+        "requiredMessage": "Use only latin letters, numbers and keyboard symbols, avoid leading and trailing spaces",
         "strongMessage": "Strong password!",
         "weak": "weak",
         "weakMessage": "Use numbers, upper and lower case letters and special characters to make your password stronger"

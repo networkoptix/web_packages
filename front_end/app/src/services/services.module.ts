@@ -6,7 +6,6 @@ import { NxAppStateService }         from './nx-app-state.service';
 import { downgradeInjectable }       from '@angular/upgrade/static';
 import { NxUtilsService }            from './utils.service';
 import { NxPageService }             from './page.service';
-import { NxRegisterService }         from './register.service';
 
 
 @NgModule({
@@ -23,7 +22,6 @@ import { NxRegisterService }         from './register.service';
         NxConfigService,
         NxUtilsService,
         NxPageService,
-        NxRegisterService,
     ],
     exports        : []
 })

@@ -242,5 +242,13 @@
 	},
 	"registration": {
 		"agreement" : "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
+	},
+	"account": {
+		"accountSavedSuccess": "Your account is successfully saved",
+		"activationLinkSent": "Activation Link Sent",
+		"passwordChangedSuccess": "Your account is successfully saved",
+		"changePassword": "Change Password",
+		"newPasswordLabel": "New password",
+		"saveChanges": "Save"
 	}
 }

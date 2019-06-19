@@ -41,4 +41,14 @@ export class NxCloudApiService {
         return this.http.post(this.CONFIG.apiBase + '/account/register',
                 { email, password, first_name : firstName, last_name : lastName, subscribe, code });
     }
+
+    activateUser(code): Observable<any> {
+        return this.http.post(this.CONFIG.apiBase + '/account/activate',
+                { code });
+    }
+
+    reactivateUser(userEmail) {
+        return this.http.post(this.CONFIG.apiBase + '/account/activate',
+                { user_email: userEmail });
+    }
 }

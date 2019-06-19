@@ -5,16 +5,16 @@ import { downgradeComponent, UpgradeModule } from '@angular/upgrade/static';
 import { RouterModule, Routes }              from '@angular/router';
 import { FormsModule }                       from '@angular/forms';
 
+
 import { TranslateModule }    from '@ngx-translate/core';
 import { ComponentsModule }   from '../../components/components.module';
 
-import { LandingModule } from '../landing/landing.module';
-import { NxRegisterService } from './register.service';
-import { NxRegisterComponent } from './register.component';
+import { NxActivateService } from './activate.service';
+import { NxActivateComponent } from './activate.component';
 
 // const appRoutes: Routes = [
 //     {
-//         path: 'register', component: NxRegisterComponent,
+//         path: 'activate', component: NxActivateComponent,
 //     }
 // ];
 
@@ -28,26 +28,25 @@ import { NxRegisterComponent } from './register.component';
         TranslateModule,
         ComponentsModule,
         FormsModule,
-        LandingModule,
 
         // RouterModule.forChild(appRoutes)
     ],
     providers      : [],
     declarations   : [
-        NxRegisterComponent,
+        NxActivateComponent,
     ],
     bootstrap      : [],
     entryComponents: [
-        NxRegisterComponent
+        NxActivateComponent
     ],
     exports        : [
-        NxRegisterComponent
+        NxActivateComponent
     ]
 })
-export class RegisterModule {
+export class ActivateModule {
 }
 
 declare var angular: angular.IAngularStatic;
 angular
         .module('cloudApp.directives')
-        .directive('nxRegisterComponent', downgradeComponent({ component: NxRegisterComponent }) as angular.IDirectiveFactory);
+        .directive('nxActivateComponent', downgradeComponent({ component: NxActivateComponent }) as angular.IDirectiveFactory);

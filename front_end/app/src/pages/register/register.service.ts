@@ -1,7 +1,7 @@
 import { Injectable }        from '@angular/core';
 import { HttpClient }        from '@angular/common/http';
 import { Observable }        from 'rxjs';
-import { NxCloudApiService } from './nx-cloud-api';
+import { NxCloudApiService } from '../../services/nx-cloud-api';
 
 @Injectable({
     providedIn: 'root'

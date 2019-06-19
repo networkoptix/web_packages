@@ -193,14 +193,6 @@ window.L = {};
                                         return 'successActivated';
                                     }]
                                 }
-                                // templateUrl: CONFIG.viewsDir + 'regActions.html',
-                                // controller: 'RegisterCtrl',
-                                // resolve: {
-                                //     test: ['$route', function ($route) {
-                                //         $route.current.params.registerSuccess = true;
-                                //         $route.current.params.activated = true;
-                                //     }]
-                                // }
                             })
                             .when('/register/:code', {
                                 template: '<nx-register-component [uri-param]="getParam" [uri-param-code]="getCode"></nx-register-component>',
@@ -215,13 +207,7 @@ window.L = {};
                                         return $route.current.params.code;
                                     }]
                                 }
-                                // templateUrl: CONFIG.viewsDir + 'regActions.html',
-                                // controller: 'RegisterCtrl'
                             })
-                            // .when('/register', {
-                            //     templateUrl: CONFIG.viewsDir + 'regActions.html',
-                            //     controller: 'RegisterCtrl'
-                            // })
                             .when('/register', {
                                 template: '<nx-register-component [uri-param]="register"></nx-register-component>'
                             })
@@ -278,12 +264,23 @@ window.L = {};
                                     }]
                                 }
                             })
+                            // .when('/activate', {
+                            //     templateUrl: CONFIG.viewsDir + 'activeActions.html',
+                            //     controller: 'ActivateRestoreCtrl',
+                            //     resolve: {
+                            //         test: ['$route', function ($route) {
+                            //             $route.current.params.reactivating = true;
+                            //         }]
+                            //     }
+                            // })
                             .when('/activate', {
-                                templateUrl: CONFIG.viewsDir + 'activeActions.html',
-                                controller: 'ActivateRestoreCtrl',
+                                template: '<nx-activate-component [uri-param]="uriParam"></nx-activate-component>',
+                                controller: ['$scope', 'getParam', function ($scope, getParam) {
+                                    $scope.uriParam = getParam;
+                                }],
                                 resolve: {
-                                    test: ['$route', function ($route) {
-                                        $route.current.params.reactivating = true;
+                                    getParam: [function () {
+                                        return 'reactivating';
                                     }]
                                 }
                             })
@@ -297,9 +294,23 @@ window.L = {};
                                 }
                             })
                             .when('/activate/:activateCode', {
-                                templateUrl: CONFIG.viewsDir + 'activeActions.html',
-                                controller: 'ActivateRestoreCtrl'
+                                template: '<nx-activate-component [uri-param]="getParam" [uri-param-code]="getCode"></nx-activate-component>',
+                                controller: ['$scope', 'getParam', function ($scope, getParam) {
+                                    $scope.uriParam = getParam;
+                                }],
+                                resolve: {
+                                    getParam: [function () {
+                                        return 'activateByCode';
+                                    }],
+                                    getCode: ['$route', function ($route) {
+                                        return $route.current.params.activateCode;
+                                    }]
+                                }
                             })
+                            // .when('/activate/:activateCode', {
+                            //     templateUrl: CONFIG.viewsDir + 'activeActions.html',
+                            //     controller: 'ActivateRestoreCtrl'
+                            // })
                             .when('/restore_password', {
                                 templateUrl: CONFIG.viewsDir + 'activeActions.html',
                                 controller: 'ActivateRestoreCtrl',

@@ -9,6 +9,7 @@ import { DownloadHistoryModule }     from './download-history/download-history.m
 import { NonSupportedBrowserModule } from './non-supported-browser/non-supported-browser.module';
 
 import { RegisterModule }            from './register/register.module';
+import { ActivateModule }            from './activate/activate.module';
 
 import { RightMenuModule }        from './right-menu/right-menu.module';
 import { ContentModule }          from './content/content.module';
@@ -26,6 +27,7 @@ import { NxSetupModule }     from './integration/details/setup/setup.module';
         DownloadHistoryModule,
         NonSupportedBrowserModule,
         RegisterModule,
+        ActivateModule,
         IntegrationsModule,
         IntegrationsListModule,
         ContentModule,          // TODO: Remove it after test
@@ -46,6 +48,7 @@ import { NxSetupModule }     from './integration/details/setup/setup.module';
         DownloadHistoryModule,
         NonSupportedBrowserModule,
         RegisterModule,
+        ActivateModule,
         IntegrationsModule,
         IntegrationsListModule,
         ContentModule,          // TODO: Remove it after test
