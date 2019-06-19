@@ -124,7 +124,7 @@ Register Form Validation
     sleep    .1
     Input Text    ${REGISTER PASSWORD INPUT}    ${password}
     Run Keyword If    '''${password}'''!='''${EMPTY}'''     Check Password Badge    ${password}
-    Run Keyword If    "${checked}"=="True"    Click Element    ${TERMS AND CONDITIONS CHECKBOX REAL}
+    Run Keyword If    "${checked}"=="True"    Click Element    ${TERMS AND CONDITIONS CHECKBOX VISIBLE}
     Sleep    .1    #On Ubuntu it was going too fast
     click button    ${CREATE ACCOUNT BUTTON}
 
@@ -140,14 +140,14 @@ Check Password Badge
 
 Check Email Outline
     [Arguments]    ${email}
-    Wait Until Element Is Visible    ${REGISTER EMAIL INPUT}/parent::div/parent::div[contains(@class,"has-error")]
+    Wait Until Element Is Visible    ${REGISTER EMAIL INPUT}/parent::nx-email-input[contains(@class,"ng-invalid")]
     Run Keyword If    "${email}"=="${EMPTY}" or "${email}"=="${SPACE}"    Element Should Be Visible    ${EMAIL IS REQUIRED}
     Run Keyword If    "${email}"=="${existing email}"    Element Should Be Visible    ${EMAIL ALREADY REGISTERED}
     Run Keyword Unless    "${email}"=="${EMPTY}" or "${email}"=="${SPACE}" or "${email}"=="${existing email}"    Element Should Be Visible    ${EMAIL INVALID}
 
 Check Password Outline
     [Arguments]    ${pass}
-    Wait Until Element Is Visible    ${REGISTER PASSWORD INPUT}/../input[contains(@class,'ng-invalid')]
+    Wait Until Element Is Visible    ${REGISTER PASSWORD INPUT}/parent::nx-password-input[contains(@class,'ng-invalid')]
     Run Keyword If    '''${pass}'''=='''${EMPTY}''' or '''${pass}'''=='''${SPACE}'''    Element Should Be Visible    ${PASSWORD IS REQUIRED}
     Run Keyword If    '''${pass}'''=='''${7char password}'''    Element Should Be Visible    ${PASSWORD TOO SHORT}
     Run Keyword If    '''${pass}'''=='''${CYRILLIC TEXT}''' or '''${pass}'''=='''${SMILEY TEXT}''' or '''${pass}'''=='''${GLYPH TEXT}''' or '''${pass}'''=='''${TM TEXT}''' or '''${pass}'''=='''${SPACE}${BASE PASSWORD}''' or '''${pass}'''=='''${BASE PASSWORD}${SPACE}'''    Element Should Be Visible    ${PASSWORD SPECIAL CHARS}
@@ -156,12 +156,12 @@ Check Password Outline
 
 Check First Name Outline
     [Arguments]    ${first}
-    Wait Until Element Is Visible    ${REGISTER FIRST NAME INPUT}/parent::div/parent::div[contains(@class,"has-error")]
+    Wait Until Element Is Visible    ${REGISTER FIRST NAME INPUT}/parent::div/input[contains(@class,"ng-invalid")]
     Element Should Be Visible    ${FIRST NAME IS REQUIRED}
 
 Check Last Name Outline
     [Arguments]    ${last}
-    Wait Until Element Is Visible    ${REGISTER LAST NAME INPUT}/parent::div/parent::div[contains(@class,"has-error")]
+    Wait Until Element Is Visible    ${REGISTER LAST NAME INPUT}/parent::div/input[contains(@class,"ng-invalid")]
     Element Should Be Visible    ${LAST NAME IS REQUIRED}
 
 Check Terms and Conditions Error
