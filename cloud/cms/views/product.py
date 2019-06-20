@@ -8,11 +8,11 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib import admin
 from django.http.response import HttpResponse, HttpResponseBadRequest
-
+from rest_framework.decorators import api_view
 import os
 import json
 from cloud import settings
-from api.helpers.exceptions import APIRequestException
+from api.helpers.exceptions import APIRequestException, APINotFoundException, api_success
 from api.helpers.permissions import make_customization_visible_to_user
 from cms.controllers import filldata, generate_structure, modify_db, structure
 from cms.forms import *
@@ -370,3 +370,19 @@ def download_package(request, product_id):
     preview = 'draft' in request.GET
     zipped_data = filldata.get_zip_package(product, preview, version_id)
     return response_attachment(zipped_data, product.name + ".zip", "application/zip")
+
+
+@api_view(["GET"])
+@permission_required('cms.change_product')
+def get_product_ids_by_product_type(request):
+    name = request.GET["name"]
+    product_type_type = ProductType.get_type_by_name(request.GET["type"])
+    product_type = ProductType.objects.filter(name=name, type=product_type_type).first()
+    if not product_type:
+        raise APINotFoundException("Could not find a matching product type")
+
+    if UserGroupsToProductPermissions.check_permission(request.user, 'cms.force_update'):
+        product_ids = product_type.product_set.values_list('id', flat=True)
+    else:
+        product_ids = []
+    return api_success(product_ids)
