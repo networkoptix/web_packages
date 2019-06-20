@@ -37,13 +37,14 @@ function setup_db(){
 }
 
 function setup_env(){
-    printf "Setting up cloud portal locally"
+    printf "Setting up cloud portal locally\n\n"
     [[ ! -d "env" ]] && printf "Creating virtualenv named 'env'\n\n" && virtualenv env -p python3.7
 
     printf "Activating python3.7 env\n\n"
     . ./env/bin/activate
 
     printf "Installing pip packages for build_scripts and cloud\n\n"
+    export PYCURL_SSL_LIBRARY=openssl
     pip install -r build_scripts/requirements.txt
     pip install -r cloud/requirements.txt
 }

@@ -175,8 +175,8 @@ DATABASES = {
 }
 
 CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache'
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache"
     },
     "global": {
         "BACKEND": "django_redis.cache.RedisCache",
@@ -189,7 +189,9 @@ CACHES = {
 
 
 if LOCAL_ENVIRONMENT:
+    CACHES["global"]["LOCATION"] = "redis://localhost:6379/1"
     conf["cloud_db"]["url"] = 'https://cloud-test.hdw.mx/cdb'
+
 
     # BROKER_URL = 'sqs://...'
     # This setting is removed because every developer needs personal AWS credentials
