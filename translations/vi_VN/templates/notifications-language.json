@@ -3,7 +3,7 @@
     "emailSubject": "Kích hoạt tài khoản của bạn"
   },
   "cloud_invite": {
-    "emailSubject": "You have been invited to %CLOUD_NAME%"
+    "emailSubject": "Bạn đã được mời đến %CLOUD_NAME%"
   },
   "cloud_notification": {
     "emailSubject": "{{message.subject}}"
@@ -24,7 +24,7 @@
     "emailSubject": "Đặt lại mật khẩu của bạn"
   },
   "system_invite": {
-    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} invites you to %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}Video system {{message.system_name}} was shared with you{{/message.sharer_name}}"
+    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} mời bạn sử dụng hệ thống %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}hiện hệ thống {{message.system_name}} đã được chia sẻ với bạn{{/message.sharer_name}}"
   },
   "system_shared": {
     "emailSubject": "Hệ thống video {{message.system_name}} đã được chia sẻ với bạn"

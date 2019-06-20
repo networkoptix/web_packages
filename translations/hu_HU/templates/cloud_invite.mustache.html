@@ -1,14 +1,12 @@
 <h1>Üdvözöljük </h1>
 
-<p>You have been invited to %CLOUD_NAME%</p>
+<p>Meghívást kapott a %CLOUD_NAME%</p>
 
 {{#message.message}}
 <p>{{ message.message }}</p>
 {{/message.message}}
 
-<p>Please create account on
-    <a href="{{ config.portal_url }}">%CLOUD_NAME%</a>
-    using your current email address and follow further instructions.
+<p>Kérjük hozzon létre <a href="{{ config.portal_url }}">%CLOUD_NAME%</a> fiókot, az aktuális e-mail címével, és kövesse a további utasításokat.
 </p>
 
 <a class="btn" href="{{ config.portal_url }}/register/{{ message.code }}">Regisztráció</a>

@@ -16,12 +16,12 @@
 		"ptz": "PTZ cameras",
 		"aptz": "Cameras with advanced PTZ",
 		"fisheye": "Fisheye cameras",
-		"H265": "H.265 Cameras",
+		"H265": "Cámaras H.265",
 		"IO": "I / O modules",
 		"multiSensor": "Multi-sensor cameras",
-		"TwWayAudio": "2-way audio devices",
+		"TwWayAudio": "Dispositivos de audio de 2 vías",
 		"audio": "Cameras with audio",
-		"encoder": "Encoders",
+		"encoder": "Codificador",
 		"highRes": "Extra high resolution cameras"
 	},
 	"downloads": {
@@ -67,7 +67,7 @@
 			"sdk": {
 				"label": "SDK",
 				"shortLabel": "SDK",
-				"supported": "C++ cross platform SDK"
+				"supported": "C ++ multiplataforma SDK"
 			}
 		},
 		"platforms": {
@@ -146,18 +146,18 @@
 		"feedback": "Make sure you include your camera model and manufacturer..."
 	},
 	"pageTitles": {
-		"supportedDevices": "Supported Devices",
-		"integrations": "Integrations"
+		"supportedDevices": "Dispositivos soportados",
+		"integrations": "Integraciones"
 	},
 	"dialogs": {
 		"merge": {
-			"connectToCloud": "Connect System you want to merge with this one to <strong>{{cloudName}}</strong> or merge locally using <strong>{{vmsName}}</strong> Client.",
+			"connectToCloud": "Conectar el sistema que desea fusionar con este a <strong>{{cloudName}}</strong> o fusionar localmente usando <strong>{{vmsName}}</strong> Cliente.",
 			"mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from the <strong>{{primarySystem}}</strong>.",
 			"primaryCannotMerge": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} System.",
 			"primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}.",
 			"secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
-			"systemOffline": "System {{targetSystem}} is offline and cannot be merged with the current one.",
-			"systemUnavailable": "System {{targetSystem}} is currently unreachable. Try again in a few minutes or contact"
+			"systemOffline": "El sistema {{targetSystem}} está fuera de línea y no se puede combinar con el actual.",
+			"systemUnavailable": "El sistema {{targetSystem}} es actualmente inalcanzable. Inténtalo de nuevo en unos minutos o contacta"
 		}
 	}
 }

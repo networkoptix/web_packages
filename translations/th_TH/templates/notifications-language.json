@@ -3,16 +3,16 @@
     "emailSubject": "เปิดใช้งานบัญชีของคุณ"
   },
   "cloud_invite": {
-    "emailSubject": "You have been invited to %CLOUD_NAME%"
+    "emailSubject": "คุณได้ลงทะเบียนไว้ใน %CLOUD_NAME%"
   },
   "cloud_notification": {
     "emailSubject": "{{message.subject}}"
   },
   "contact_sales": {
-    "emailSubject": "Sales inquiry for {{message.product}}"
+    "emailSubject": "สอบถามรายละเอียดการขายสำหรับ {{message.product}}"
   },
   "contact_support": {
-    "emailSubject": "Support request for {{message.product}}"
+    "emailSubject": "ขอรับการสนับสนุนสำหรับ {{message.product}}"
   },
   "ipvd_feedback": {
     "emailSubject": "คำติชมหน้ากล้องสำหรับ {{message.product}}"
@@ -24,7 +24,7 @@
     "emailSubject": "รีเซ็ตรหัสผ่านของคุณ"
   },
   "system_invite": {
-    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} invites you to %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}Video system {{message.system_name}} was shared with you{{/message.sharer_name}}"
+    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} เชิญคุณไปที่ %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}ระบบวิดีโอ {{message.system_name}} ถูกแชร์กับคุณ{{/message.sharer_name}}"
   },
   "system_shared": {
     "emailSubject": "ใช้ระบบวีดีโอร่วมกัน {{message.system_name}}"

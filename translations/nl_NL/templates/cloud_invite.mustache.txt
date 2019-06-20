@@ -1,12 +1,12 @@
 Hallo,
 
-You have been invited to %CLOUD_NAME%.
+U bent uitgenodigd voor %CLOUD_NAME%.
 {{#message.message}}
 
 {{ message.message }}
 
 {{/message.message}}
-Please create account on %CLOUD_NAME%
+Maak een account aan op %CLOUD_NAME%
 gebruik je huidige e-mailadres en volg verdere instructies.
 
 Registreer uw account via deze link: {{ config.portal_url }}/ register /{{ message.code }}

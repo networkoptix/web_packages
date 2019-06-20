@@ -4,9 +4,9 @@
 		"search_ipvd": "Search by model or manufacturer",
 		"filter applied": "filter applied",
 		"filters applied": "filters applied",
-		"Any": "Any",
+		"Any": "รายการใดก็ได้",
 		"selected": "selected",
-		"vendor": "Manufacturer",
+		"vendor": "ผู้ผลิต",
 		"vendors": "manufacturers",
 		"hardwareType": "ประเภท",
 		"hardwareTypes": "types",
@@ -67,7 +67,7 @@
 			"sdk": {
 				"label": "SDK",
 				"shortLabel": "SDK",
-				"supported": "C++ cross platform SDK"
+				"supported": "C ++ SDK ข้ามแพลตฟอร์ม"
 			}
 		},
 		"platforms": {
@@ -97,27 +97,27 @@
 	},
 	"ipvd": {
 		"count": "Count",
-		"vendor": "Manufacturer",
+		"vendor": "ผู้ผลิต",
 		"model": "รุ่น",
 		"hardwareType": "ประเภท",
-		"maxResolution": "Max Resolution",
-		"maxFps": "Max FPS",
-		"primaryCodec": "Codec",
+		"maxResolution": "ความละเอียดสูงสุด",
+		"maxFps": "FPS สูงสุด",
+		"primaryCodec": "ตัวแปลงสัญญาณ",
 		"isAudioSupported": "เสียง",
-		"isTwAudioSupported": "2-way Audio",
+		"isTwAudioSupported": "เสียงสองทาง",
 		"isPtzSupported": "PTZ",
-		"isAptzSupported": "Advanced PTZ",
-		"isAptzSupportedShort": "Adv. PTZ",
+		"isAptzSupported": "PTZ ขั้นสูง",
+		"isAptzSupportedShort": "Adv PTZ",
 		"isFisheye": "ฟิชอาย",
 		"isMdSupported": "โมชั่น",
-		"isIoSupported": "I/O",
+		"isIoSupported": "I / O",
 		"isH265": "H.265",
-		"isMultiSensor": "Multi Sensor",
+		"isMultiSensor": "เซ็นเซอร์หลายตัว",
 		"camera": "กล้อง",
-		"multiSensorCamera": "Multi-Sensor Camera",
+		"multiSensorCamera": "กล้องหลายเซ็นเซอร์",
 		"encoder": "Encoder",
 		"dvr": "DVR",
-		"other": "Other",
+		"other": "อื่นๆ",
 		"PTZ cameras": "PTZ cameras",
 		"Advanced PTZ cameras": "Advanced PTZ cameras",
 		"Fisheye Cameras": "Fisheye Cameras",
@@ -133,11 +133,11 @@
 		}
 	},
 	"integration": {
-		"previewRibbonText": "This page is a preview of the latest changes, and it doesn't match publicly available version.",
-		"backToEditText": "Back to the editing interfaces",
-		"Access Control": "Access Control",
-		"Connector": "Connector",
-		"Data Analytics": "Data Analytics",
+		"previewRibbonText": "หน้านี้เป็นหน้าตัวอย่างของการเปลี่ยนแปลงล่าสุดและไม่ตรงกับรุ่นที่เผยแพร่สู่สาธารณะ",
+		"backToEditText": "กลับไปที่อินเทอร์เฟซการแก้ไข",
+		"Access Control": "การควบคุมการเข้าถึง",
+		"Connector": "เชื่อมต่อ",
+		"Data Analytics": "การวิเคราะห์ข้อมูล",
 		"Drone": "Drone",
 		"Health Monitor": "การตรวจสอบสุขภาพ",
 		"Storage": "พื้นที่จัดเก็บ"
@@ -146,18 +146,18 @@
 		"feedback": "Make sure you include your camera model and manufacturer..."
 	},
 	"pageTitles": {
-		"supportedDevices": "Supported Devices",
-		"integrations": "Integrations"
+		"supportedDevices": "อุปกรณ์ที่รองรับ",
+		"integrations": "การรวบรวม"
 	},
 	"dialogs": {
 		"merge": {
-			"connectToCloud": "Connect System you want to merge with this one to <strong>{{cloudName}}</strong> or merge locally using <strong>{{vmsName}}</strong> Client.",
+			"connectToCloud": "เชื่อมต่อระบบที่คุณต้องการผสานกับระบบนี้กับ <strong>{{cloudName}}</strong> หรือผสานภายในเครื่องโดยใช้ไคลเอ็นต์ <strong>{{vmsName}}</strong>",
 			"mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from the <strong>{{primarySystem}}</strong>.",
 			"primaryCannotMerge": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} System.",
 			"primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}.",
 			"secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
-			"systemOffline": "System {{targetSystem}} is offline and cannot be merged with the current one.",
-			"systemUnavailable": "System {{targetSystem}} is currently unreachable. Try again in a few minutes or contact"
+			"systemOffline": "ระบบ {{targetSystem}} เป็นแบบออฟไลน์และไม่สามารถผสานกับระบบปัจจุบันได้",
+			"systemUnavailable": "ระบบ {{targetSystem}} ไม่สามารถเข้าถึงได้ในขณะนี้ ลองอีกครั้งในไม่กี่นาทีหรือติดต่อ"
 		}
 	}
 }

@@ -146,18 +146,18 @@
 		"feedback": "Assicurati di includere il modello della telecamera e il produttore..."
 	},
 	"pageTitles": {
-		"supportedDevices": "Supported Devices",
-		"integrations": "Integrations"
+		"supportedDevices": "Dispositivi supportati",
+		"integrations": "Integrazioni"
 	},
 	"dialogs": {
 		"merge": {
-			"connectToCloud": "Connect System you want to merge with this one to <strong>{{cloudName}}</strong> or merge locally using <strong>{{vmsName}}</strong> Client.",
-			"mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from the <strong>{{primarySystem}}</strong>.",
-			"primaryCannotMerge": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} System.",
-			"primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}.",
-			"secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
-			"systemOffline": "System {{targetSystem}} is offline and cannot be merged with the current one.",
-			"systemUnavailable": "System {{targetSystem}} is currently unreachable. Try again in a few minutes or contact"
+			"connectToCloud": "Connetti il Sistema che vuoi unire con questo <strong>{{cloudName}}</strong> o unisci localmente usando <strong>{{vmsName}}</strong> il Client.",
+			"mergeConfirmation": "Stai per unire i Sistemi <strong>{{primarySystem}}</strong> e <strong>{{secondarySystem}}</strong>. Le impostazioni e il nome verranno presi da <strong>{{primarySystem}}</strong>.",
+			"primaryCannotMerge": "Il sistema {{targetSystem}} ha una versione più recente del software che è incompatibile con il sistema corrente. Aggiornare il sistema attuale alla <a href=\"/download\" target=\"_blank\" translate>versione più recente</a> per unirsi con il {{targetSystem}} sistema.",
+			"primarySystemOffline": "Il sistema {{primarySystem}} è offline e non può essere unito al sistema {{targetSystem}}.",
+			"secondaryCannotMerge": "Il sistema {{targetSystem}} ha una versione più recente del software che è incompatibile con il sistema corrente. Aggiornare il sistema attuale alla <a href=\"/download\" target=\"_blank\" translate>versione più recente</a> per unirsi con il {{targetSystem}} sistema corrente.",
+			"systemOffline": "Il sistema {{targetSystem}} è offline e non può essere unito a quello corrente.",
+			"systemUnavailable": "Il sistema {{targetSystem}} è attualmente irraggiungibile. Riprova tra qualche minuto o contatta"
 		}
 	}
 }

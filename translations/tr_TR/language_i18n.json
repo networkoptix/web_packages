@@ -26,7 +26,7 @@
     "Create Account": "Hesap oluştur",
     "Create account": "Hesap oluştur",
     "Disconnect": "Bağlantıyı kes",
-    "Disconnect System from %CLOUD_NAME%?": "Disconnect System from %CLOUD_NAME%?",
+    "Disconnect System from %CLOUD_NAME%?": "%CLOUD_NAME% den bağlantıyı kesmek istiyor musunuz?",
     "Download": "İndir",
     "Download %VMS_NAME%": "İndir %VMS_NAME%",
     "Download Chrome": "Chrome'u indir",
@@ -46,6 +46,7 @@
     "Fisheye": "Fish-Eye",
     "Forgot password?": "Parolayı mı unuttunuz?",
     "Get in touch": "Get in touch",
+    "How it works": "How it works",
     "How to install?": "How to install?",
     "I agree to the": "Kabul ediyorum",
     "I want you to contact me": "Benimle iletişime geçilmesini istiyorum",
@@ -55,7 +56,7 @@
     "Latest version": "Son Sürüm",
     "Log In": "Oturum Aç",
     "Log Out": "Oturumu Kapat",
-    "Log in to %CLOUD_NAME%": "Log in to %CLOUD_NAME%",
+    "Log in to %CLOUD_NAME%": "%CLOUD_NAME% e giriş yapın",
     "Merge Systems": "Sistemleri Birleştir",
     "Merge current System with": "Geçerli sistem ile birleştir",
     "Message": "Mesaj",
@@ -92,6 +93,7 @@
     "System will be accessible through local network with local administrator account.": "Sisteme yerel yönetici hesabı ile yerel ağ üzerinden erişilebilir.",
     "Systems": "Sistemler",
     "Systems of such size may work but will be unstable and have troubles with updates and synchronisation.": "Bu büyüklükteki sistemler belki çalışabilir ancak kararsız olabilir ve güncelleme senkroniyle ile ilgili sorunlar yaşayabilir.",
+    "Tags": "Etiketler",
     "Take the name and settings from": "Sistem adını ve ayarlarını al",
     "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.": "Bu kullanıcının kimlik bilgileri açıkta kalacak! Genel kullanım için seçilen kameralara yalnızca\n            erişimi olan ve yalnızca gerekli minimum görüntüleme izinleri atanan özel bir \"Genel Kullanıcı\" rolü oluşturmanız gerekir. Bu\n            \"Genel Kullanıcı\", sistem genelinde herhangi bir türde erişime sahip olmamalıdır.",
     "There will be more than": "Daha fazla olacak",
@@ -108,7 +110,7 @@
     "You can only merge Systems where you are the owner.": "Yalnızca sahip olduğunuz Sistemleri birleştirebilirsiniz.",
     "Your Name": "Adınız",
     "Your browser is not supported": "Tarayıcınız desteklenmiyor",
-    "and_x_more": "... ve {{value}} daha fazla",
+    "andXMore": "... ve {{value}} daha fazla",
     "cameraFilters": {
         "H265": "H.265 Kameralar",
         "IO": "G / Ç modülleri",
@@ -124,23 +126,23 @@
     "devices": "aygıtlar",
     "dialogs": {
         "merge": {
-            "connectToCloud": "Connect System you want to merge with this one to <strong>{{cloudName}}</strong> or merge locally using <strong>{{vmsName}}</strong> Client.",
+            "connectToCloud": "Birleştirmek istediğiniz <strong>{{cloudName}}</strong> sistemine bağlanın veya yerel sistemi {{vmsName}}</strong> kullanarak birleştirin.",
             "mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from the <strong>{{primarySystem}}</strong>.",
             "primaryCannotMerge": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} System.",
             "primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}.",
             "secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
-            "systemOffline": "System {{targetSystem}} is offline and cannot be merged with the current one.",
+            "systemOffline": "Sistem {{targetSystem}} çevrimdışı ve güncel sistemle birleştirilemez.",
             "systemUnavailable": "{{targetSystem}} sistemi erişilebilir değil. Birkaç dakika sonra tekrar deneyin"
         }
     },
-    "dialogs.merge.connectToCloud": "Connect System you want to merge with this one to <strong>{{cloudName}}</strong> or merge locally using <strong>{{vmsName}}</strong> Client.",
+    "dialogs.merge.connectToCloud": "Birleştirmek istediğiniz <strong>{{cloudName}}</strong> sistemine bağlanın veya yerel sistemi {{vmsName}}</strong> kullanarak birleştirin.",
     "dialogs.merge.mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from the <strong>{{primarySystem}}</strong>.",
     "dialogs.merge.primaryCannotMerge": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} System.",
     "dialogs.merge.primarySystemOffline": "dialogs.merge.primarySystemOffline",
     "dialogs.merge.secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
     "dialogs.merge.systemOffline": "dialogs.merge.systemOffline",
     "dialogs.merge.systemUnavailable": "{{targetSystem}} sistemi erişilebilir değil. Birkaç dakika sonra tekrar deneyin",
-    "disclaimer": "disclaimer",
+    "disclaimer": "Bu liste, anonim sistem kullanıcıları tarafından onaylandığı şekilde, verileri {{value}} ile otomatik olarak raporlayan gerçek cihazlarla sınırlıdır. Desteklenen üreticilerin ve modellerin tam listesi kapsam açısından daha büyüktür.",
     "downloads": {
         "appTypes": {
             "bundle": "İstemci ve sunucu",
@@ -265,9 +267,10 @@
         "feedback": "Kamera üreticisi ve modelinin olduğundan emin olun..."
     },
     "pageTitles": {
-        "integrations": "Integrations",
-        "supportedDevices": "Supported Devices"
+        "integrations": "Entegrasyonlar",
+        "supportedDevices": "Desteklenen cihazlar"
     },
+    "phoneNumberWithLabel": "Tel: {{number}}",
     "search": {
         "Any": "Herhangi",
         "Search": "Arama",

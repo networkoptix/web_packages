@@ -4,5 +4,5 @@ Hallo {{message.userFullName}},
 
 {{config.portal_url}}/aktivieren/{{message.code}}
 
-If you didn't register in %CLOUD_NAME%, just ignore this email.
+Wenn Sie sich nicht bei %CLOUD_NAME% registriert haben, ignorieren Sie diese E-Mail.
 Teilen Sie die Nachricht oder den Link nicht mit anderen Personen.

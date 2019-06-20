@@ -7,7 +7,7 @@
   "dialogs": {
     "okButton": "OK",
     "cancelButton": "Avbryt",
-    "loginTitle": "Log in to %CLOUD_NAME%",
+    "loginTitle": "Logga in på %CLOUD_NAME%",
     "loginButton": "Logga in",
     "logoutAuthorisedTitle": "Du är redan inloggad",
     "logoutAuthorisedContinueButton": "Fortsätt",
@@ -21,11 +21,11 @@
     "title": {
       "integration": "Email for {{product}}",
       "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Feedback about {{product}}"
+      "ipvd_feedback_device": "Feedback om {{product}}"
     },
     "topic": {
       "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Feedback about {{product}}",
+      "ipvd_feedback_device": "Feedback om {{product}}",
       "contact_sales": "Contact sales for {{product}}",
       "contact_support": "Contact support for {{product}}"
     }
@@ -203,7 +203,7 @@
     "confirmRenameTitle": "Systemets namn",
     "confirmRenameAction": "Spara",
     "successRename": "Systemnamnet sparat",
-    "confirmDisconnectTitle": "Disconnect System from %CLOUD_NAME%?",
+    "confirmDisconnectTitle": "Koppla bort systemet från %CLOUD_NAME%?",
     "confirmDisconnectAction": "Koppla från",
     "confirmUnshareFromMe": "Du håller på att koppla bort det här systemet från ditt konto. Du kommer inte längre få tillgång till det här systemet. Är du säker?",
     "confirmUnshareFromMeTitle": "Koppla ifrån systemet?",
@@ -211,7 +211,7 @@
     "confirmUnshare": "Den här användaren kan inte komma åt System. Är du säker?",
     "confirmUnshareTitle": "Radera användaren?",
     "confirmUnshareAction": "Radera",
-    "successDisconnected": "System is successfully disconnected from %CLOUD_NAME%",
+    "successDisconnected": "Systemet har kopplats bort från %CLOUD_NAME%",
     "successDeleted": "System {{systemName}} har tagits bort från ditt konto",
     "mergeFailed": "Systemsammanslagning misslyckades",
     "mergeStart": "System har börjat slås samman",

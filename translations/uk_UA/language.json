@@ -7,7 +7,7 @@
   "dialogs": {
     "okButton": "ОК",
     "cancelButton": "Відміна",
-    "loginTitle": "Log in to %CLOUD_NAME%",
+    "loginTitle": "Увійти до %CLOUD_NAME%",
     "loginButton": "Вхід",
     "logoutAuthorisedTitle": "Ви вже увійшли",
     "logoutAuthorisedContinueButton": "Продовжити",
@@ -19,15 +19,15 @@
   },
   "messageDialog": {
     "title": {
-      "integration": "Email for {{product}}",
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Feedback about {{product}}"
+      "integration": "Email для {{product}}",
+      "ipvd_feedback_page": "Зворотній зв’язок для сторінки камер",
+      "ipvd_feedback_device": "Відгук про {{product}}"
     },
     "topic": {
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Feedback about {{product}}",
-      "contact_sales": "Contact sales for {{product}}",
-      "contact_support": "Contact support for {{product}}"
+      "ipvd_feedback_page": "Зворотній зв’язок для сторінки камер",
+      "ipvd_feedback_device": "Відгук про {{product}}",
+      "contact_sales": "Зв'яжіться з відділом продажів за {{product}}",
+      "contact_support": "Зверніться до служби підтримки за {{product}}"
     }
   },
   "pageTitles": {
@@ -140,7 +140,7 @@
     "wrongParameters": "Деякі параметри у формі невірні",
     "wrongCode": "Обліковий запис вже активовано або код підтвердження невірний",
     "wrongCodeRestore": "Код підтвердження вже використовується або невірний",
-    "wrongAuthCode": "Code is expired or incorrect",
+    "wrongAuthCode": "Код закінчився або неправильний",
     "forbidden": "У вас немає дозволів для виконання цієї дії",
     "accountNotActivated": "Цей акаунт ще не активовано. <a href=\"/activate\">Надіслати посилання для активації ще раз</a>",
     "accountBlocked": "Цей обліковий запис тимчасово заблоковано. Будь ласка, спробуйте ще раз через декілька хвилин.",
@@ -162,7 +162,7 @@
     "mergedSystemIsOffline": "Система<strong>{{failedSystem}}</strong>офлайн.",
     "INCOMPATIBLE": "Системи мають різні версії програмного забезпечення. Будь ласка, поновіть їх до<a href=\"/download\">останньої збірки</a>.",
     "FAIL": "Система<strong>{{failedSystem}}</strong>в даний час недоступна.<br>Повторіть спробу через кілька хвилин або зверніться до <a href=\"%SUPPORT_LINK%\" target=\"_blank\">підтримки</a>.",
-    "unknownMergeError": "Unknown error. You can try to refresh the page and repeat attempt. If the problem persists – please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>."
+    "unknownMergeError": "Невідома помилка. Спробуйте оновити сторінку та повторити спробу. Якщо проблема не вирішена - зверніть в службу <a href=\"%SUPPORT_LINK%\" target=\"_blank\">підтримка</a>."
   },
   "merging": {
     "mergeFailedTitle": "Злиття систем невдалося",
@@ -203,7 +203,7 @@
     "confirmRenameTitle": "Назва системи",
     "confirmRenameAction": "Зберегти",
     "successRename": "Ім'я системи збережено",
-    "confirmDisconnectTitle": "Disconnect System from %CLOUD_NAME%?",
+    "confirmDisconnectTitle": "Відключити систему від %CLOUD_NAME%?",
     "confirmDisconnectAction": "Відключити",
     "confirmUnshareFromMe": "Ви збираєтеся відключити цю систему від свого облікового запису. Ви більше не зможете отримати доступ до цієї системи. Ти впевнений?",
     "confirmUnshareFromMeTitle": "Відключити систему?",
@@ -211,7 +211,7 @@
     "confirmUnshare": "Цей користувач не зможе отримати доступ до системи. Ти впевнений?",
     "confirmUnshareTitle": "Видалити користувача?",
     "confirmUnshareAction": "Видалити",
-    "successDisconnected": "System is successfully disconnected from %CLOUD_NAME%",
+    "successDisconnected": "Система успішно відключена від %CLOUD_NAME%",
     "successDeleted": "Система {{systemName}} успішно видалена з вашого облікового запису",
     "mergeFailed": "Не вдалося об’єднати систему",
     "mergeStart": "Злиття систем почалося",
@@ -253,7 +253,7 @@
     },
     "systemOffline": "Система знаходиться поза мережею",
     "systemHasNoCameras": "НЕМАЄ КАМЕР",
-    "systemUnreachable": "SYSTEM IS UNREACHABLE",
+    "systemUnreachable": "СИСТЕМА НЕДОСТУПНА",
     "cameraStates": {
       "offline": "Поза мережею",
       "error": "Помилка",
