@@ -181,7 +181,7 @@ if not LOCAL_ENVIRONMENT:
         },
         "global": {
             "BACKEND": "django_redis.cache.RedisCache",
-            "LOCATION": "redis://localhost:6379/1",
+            "LOCATION": "redis://redis:6379/1",
             "OPTIONS": {
                 "CLIENT_CLASS": "django_redis.client.DefaultClient",
             }
@@ -193,7 +193,11 @@ else:
             "BACKEND": "django.core.cache.backends.locmem.LocMemCache"
         },
         "global": {
-            "BACKEND": "django.core.cache.backends.locmem.LocMemCache"
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": "redis://localhost:6379/1",
+            "OPTIONS": {
+                "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            }
         }
     }
 
