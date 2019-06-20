@@ -174,22 +174,31 @@ DATABASES = {
     }
 }
 
-CACHES = {
-    "default": {
-        "BACKEND": "django.core.cache.backends.locmem.LocMemCache"
-    },
-    "global": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://redis:6379/1",
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+if not LOCAL_ENVIRONMENT:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.locmem.LocMemCache"
+        },
+        "global": {
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": "redis://localhost:6379/1",
+            "OPTIONS": {
+                "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            }
         }
     }
-}
+else:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.locmem.LocMemCache"
+        },
+        "global": {
+            "BACKEND": "django.core.cache.backends.locmem.LocMemCache"
+        }
+    }
 
 
 if LOCAL_ENVIRONMENT:
-    CACHES["global"]["LOCATION"] = "redis://localhost:6379/1"
     conf["cloud_db"]["url"] = 'https://cloud-test.hdw.mx/cdb'
 
 
