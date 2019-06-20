@@ -4,6 +4,8 @@ from django.core.exceptions import ValidationError
 import django
 from django.conf import settings
 
+from api.controllers import cloud_api
+from api.helpers import exceptions
 from api.models import Account
 from .models import PushDevice, PushSubscription
 
@@ -66,6 +68,8 @@ def send_feedback(event_type, product_id, data):
     feedback.send()
 
 
+# Push Notications
+
 def _read_push_result(notification_object):
     result_data = notification_object.result_data
     if result_data:
@@ -83,7 +87,8 @@ def _write_push_result(notification_object, result_data):
 
 def log_push_result(notification_object, message, level=logging.INFO, device_token=None):
     result_data = _read_push_result(notification_object)
-    logger.log(level, message)
+    log_message = f'Push Notification: {notification_object.id}, {message}'
+    logger.log(level, log_message)
 
     if device_token:
         if 'devices' not in result_data:
@@ -93,7 +98,6 @@ def log_push_result(notification_object, message, level=logging.INFO, device_tok
             result_data['devices'][device_token] += '\n' + message
         else:
             result_data['devices'][device_token] = message
-
     else:
         if 'log' in result_data:
             result_data['log'] += '\n' + message
@@ -103,19 +107,31 @@ def log_push_result(notification_object, message, level=logging.INFO, device_tok
     _write_push_result(notification_object, result_data)
 
 
-def process_push_response(response, notification_object, device_tokens=None):
-    if not device_tokens:
-        device_tokens = list(
-            notification_object.subscriptions.filter(active=True).values_list('device__registration_id', flat=True)
+def get_system(notification_object, request_data):
+    try:
+        system = cloud_api.System.get(
+            request_data['username'], request_data['password'], notification_object.raw_system_id
         )
+        return system['systems'][0]
+    except Exception as exception:
+        if isinstance(exception, exceptions.APINotAuthorisedException):
+            log_push_result(notification_object, 'Invalid cloud credentials for system')
+        elif isinstance(exception, exceptions.APILogicException):
+            log_push_result(
+                notification_object, f'APILogicException: ' +
+                'likely invalid system_id or cloud account not authorized for the system'
+            )
+        else:
+            raise exception
+
+
+def process_push_response(response, notification_object):
     resend_tokens = []
 
     for multicast in response:
         for result in multicast['results']:
-            logger.info(result)
             if 'error' in result:
                 token = result['original_registration_id']
-                device_tokens.remove(token)
                 if result['error'] in ('NotRegistered', 'MissingRegistration', 'InvalidRegistration'):
                     device = PushDevice.objects.filter(registration_id=token).first()
                     log_push_result(
@@ -131,27 +147,46 @@ def process_push_response(response, notification_object, device_tokens=None):
     return resend_tokens
 
 
-def set_subscriptions_from_targets(notification_object):
+def set_subscriptions_from_targets(notification_object, request_data):
     targets = notification_object.raw_targets
     targets = json.loads(targets)
-    system_id = notification_object.system_id
+    system_id = notification_object.raw_system_id
+    system = get_system(notification_object, request_data)
 
-    target_accounts = Account.objects.filter(email__in=targets)
-    valid_targets = []
-
-    for account in target_accounts:
-        if account.is_active:
-            valid_targets.append(account.email)
-            targets.remove(account.email)
-        else:
-            log_push_result(notification_object, 'User {} is not activated'.format(account.email), logging.WARNING)
-            targets.remove(account.email)
-
-    for target in targets:
-        log_push_result(notification_object, 'User {} not found in cloud'.format(target), logging.ERROR)
+    if not system:
+        return False
 
     matching_subscriptions = PushSubscription.objects.filter(
-        system_id=system_id, account__email__in=valid_targets
-    )
+        system_id=system_id, account__email__in=targets, active=True
+    ).distinct()
 
-    return matching_subscriptions
+    notification_object.subscriptions.set(matching_subscriptions)
+
+    for subscription in matching_subscriptions:
+        if subscription.account.email in targets:
+            targets.remove(subscription.account.email)
+
+    target_accounts = Account.objects.filter(email__in=targets).distinct()
+
+    for account in target_accounts:
+        targets.remove(account.email)
+        if account.is_active:
+            device = PushDevice.objects.filter(user__email=account.email).first()
+            if device:
+                if system['ownerAccountEmail'] == account.email:
+                    subscription = PushSubscription.objects.create(
+                        system_id=system_id, account=account, active=True, device=device
+                    )
+                else:
+                    # TODO: Use cms setting to determine status of new subscription
+                    subscription = PushSubscription.objects.create(
+                        system_id=system_id, account=account, active=True, device=device
+                    )
+                notification_object.subscriptions.add(subscription)
+        else:
+            log_push_result(notification_object, 'User {} is not activated'.format(account.email), logging.WARNING)
+
+    for target in targets:
+        log_push_result(notification_object, 'User {} not found'.format(target), logging.ERROR)
+
+    return notification_object.subscriptions.exists()

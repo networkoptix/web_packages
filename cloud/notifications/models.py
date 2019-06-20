@@ -219,7 +219,7 @@ class PushNotification(models.Model):
             devices = PushDevice.objects.filter(registration_id__in=device_tokens)
         else:
             active_subs = self.subscriptions.filter(active=True)
-            devices = PushDevice.objects.filter(pushsubscription__in=active_subs)
+            devices = PushDevice.objects.filter(pushsubscription__in=active_subs).distinct()
 
         if self.payload:
             payload = json.loads(self.payload)
@@ -227,5 +227,3 @@ class PushNotification(models.Model):
             payload = dict()
 
         return devices.send_message(self.body, title=self.title, extra=payload)
-
-
