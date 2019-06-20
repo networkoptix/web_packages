@@ -30,23 +30,29 @@ def download_packages(session, instance, product_ids):
 
 
 def get_cmd_args():
-    parser = argparse.ArgumentParser("get_zip_from_cloud")
+    description = "How to use this script:\n" \
+                  "- python get_zip_from_cloud.py noptix@networkoptix.com password123 " \
+                  "\t\t\t(Downloads all packages for products related to a product type with name=\"\"" \
+                  " and type=vms)\n" \
+                  "- python get_zip_from_cloud.py noptix@networkoptix.com password123 --product_id=30 " \
+                  "\t(Downloads a specific package base on the product_id)"
+    parser = argparse.ArgumentParser("get_zip_from_cloud", description=description,
+                                     formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument("email",  help="User Email")
     parser.add_argument("password", help="User Password")
-    parser.add_argument("-pi", "--product_id", nargs="?", help="The product id for the package you want to download. "
-                                                               "Do not use with type and name")
-    parser.add_argument("-t", "--product_type", nargs="?", help="The type of the ProductType you are trying to get. "
-                                                                "Must use with name.")
-    parser.add_argument("-n", "--name", nargs="?", help="The name of the ProductType you are trying to get. "
-                                                        "Must use with type")
+
+    parser.add_argument("-pi", "--product_id", nargs="?",
+                        help="The product id for the package you want to download. Do not use with type and name")
+    parser.add_argument("-t", "--product_type", nargs="?", default="vms",
+                        help="The type of the ProductType you are trying to get. Must use with name.")
+    parser.add_argument("-n", "--name", nargs="?", default="",
+                        help="The name of the ProductType you are trying to get. Must use with type")
 
     parser.add_argument("-i", "--instance", nargs="?", default=DEFAULT_INSTANCE,
                         help=f"The url of the instance that you want to download packages from. "
                         f"Default is {DEFAULT_INSTANCE}")
     args = parser.parse_args()
 
-    if not args.product_id and not(args.type and args.name):
-        raise Exception("Must provide either a product_id or both name and type arguments")
     return args.email, args.password, args.product_id, args.product_type, args.name, args.instance
 
 
