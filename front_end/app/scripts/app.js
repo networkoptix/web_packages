@@ -257,7 +257,7 @@ window.L = {};
                             })
                             .when('/systems/:systemId', {
                                 template: '<nx-system-settings-component [uri-param-system-id]="getSystemId"></nx-systemsettings-component-component>',
-                                controller: ['$scope', 'getParam', function ($scope, getParam) {
+                                controller: ['$scope', 'getSystemId', function ($scope, getSystemId) {
                                     $scope.uriParamSystemId = getSystemId;
                                 }],
                                 resolve: {

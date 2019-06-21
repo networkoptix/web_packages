@@ -1,10 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Location }                     from '@angular/common';
-import { ActivatedRoute }               from '@angular/router';
-import { DomSanitizer }                 from '@angular/platform-browser';
-import { NxConfigService }              from '../../../services/nx-config';
-import { NxLanguageProviderService }    from '../../../services/nx-language-provider';
-import { TranslateService }             from '@ngx-translate/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Location }                            from '@angular/common';
+import { ActivatedRoute }                      from '@angular/router';
+import { DomSanitizer }                        from '@angular/platform-browser';
+import { NxConfigService }                     from '../../../services/nx-config';
+import { NxLanguageProviderService }           from '../../../services/nx-language-provider';
+import { TranslateService }                    from '@ngx-translate/core';
 
 import { map }           from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
@@ -16,6 +16,8 @@ import { combineLatest } from 'rxjs';
 })
 
 export class NxSettingsComponent implements OnInit, OnDestroy {
+
+    @Input() uriParamSystemId;
 
     plugin: any;
     config: any = {};
