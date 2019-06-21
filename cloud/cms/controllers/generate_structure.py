@@ -128,6 +128,10 @@ def templatify_json(json_data, prefix=''):
             values.update(new_values)
             json_data[key] = new_template
         else:
+            if type(value) == str and re.match('^%[^%]+%$', value):
+                # it is already a tag
+                new_key = value
+                value = ''
             values[new_key] = value
             json_data[key] = new_key
     return values, json_data
