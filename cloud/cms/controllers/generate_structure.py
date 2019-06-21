@@ -208,6 +208,9 @@ def merge_object(obj1, obj2, obj_join, state=REC_STATE.same, parent_key=""):
             state = merge_object(obj1[key], obj2[key], obj_join[key], state, key)
 
         elif obj1[key] != obj2[key]:
+            if key == "value" and DataStructure.get_type_by_name(obj1["type"]) in [DataStructure.DATA_TYPES.file,
+                                                                                   DataStructure.DATA_TYPES.image]:
+                continue
             obj_join[key] = obj2[key]
             state = REC_STATE.updated
 
@@ -216,6 +219,9 @@ def merge_object(obj1, obj2, obj_join, state=REC_STATE.same, parent_key=""):
             continue
 
         if key not in obj1:
+            if key == "value" and DataStructure.get_type_by_name(obj2["type"]) in [DataStructure.DATA_TYPES.file,
+                                                                                   DataStructure.DATA_TYPES.image]:
+                continue
             obj_join[key] = obj2[key]
             state = REC_STATE.updated
 
