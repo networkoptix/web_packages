@@ -1,14 +1,19 @@
-from rest_framework import exceptions
+from django.http import Http404
+from rest_framework import exceptions, status
 from rest_framework.authentication import BasicAuthentication
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
+from rest_framework.generics import GenericAPIView
+from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, UpdateModelMixin
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
+
 from api.controllers.cloud_api import Account as Clouddb_Account
 from api.helpers.exceptions import handle_exceptions, APIRequestException, APIServiceException,\
-    api_success, get_client_ip, APINotAuthorisedException
+    api_success, get_client_ip, APINotAuthorisedException, ErrorCodes
 from api.models import Account
 from notifications.tasks import send_push_notification
-from notifications.models import PushNotification
-from notifications.serializers import NotificationSerializer
+from notifications.models import PushNotification, PushDevice, PushSubscription
+from notifications.serializers import NotificationSerializer, RegisterDeviceSerializer, SubscriptionSerializer
 
 import json
 
@@ -57,3 +62,110 @@ def push_notification(request):
     )
 
     return api_success({'notificationId': notification_object.id})
+
+
+@api_view(['POST'])
+@permission_classes((IsAuthenticated,))
+@authentication_classes((CloudBasicAuthentication,))
+@handle_exceptions
+def register_device(request):
+    serializer = RegisterDeviceSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    data = serializer.validated_data
+
+    error_data = dict()
+
+    if not PushDevice.objects.filter(registration_id=data['deviceToken']).exists():
+        device = PushDevice(
+            registration_id=data['deviceToken'], model=data['model'], name=data['name'], cloud_message_type='FCM',
+            user=request.user
+        )
+        response = device.send_message(message='', dry_run=True)
+        if response['success'] == 1:
+            device.save()
+        else:
+            error_data['deviceToken'] = "Token could not be validated"
+    else:
+        error_data['deviceToken'] = "Device with this deviceToken already exists"
+
+    if error_data:
+        raise APIRequestException('Invalid Parameters', error_code=ErrorCodes.not_acceptable, error_data=error_data)
+
+    return api_success()
+
+
+class Subscribe(UpdateModelMixin, CreateModelMixin, RetrieveModelMixin, GenericAPIView):
+    authentication_classes = (CloudBasicAuthentication, )
+    permission_classes = (IsAuthenticated, )
+    serializer_class = SubscriptionSerializer
+    lookup_fields = ('deviceToken', 'systemId')
+
+    def get_queryset(self):
+        return PushSubscription.objects.filter(account=self.request.user)
+
+    def get_object(self):
+        if self.request.method == 'GET':
+            for field in self.lookup_fields:
+                if field in self.kwargs:
+                    self.request.data[field] = self.kwargs[field]
+
+        serializer = self.get_serializer(data=self.request.data)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+
+        if data['deviceToken']:
+            return self.get_queryset().filter(
+                system_id=data['systemId'], device__registration_id=data['deviceToken']
+            ).first()
+
+        return None
+
+    def get_serializer(self, *args, **kwargs):
+        if 'data' not in kwargs or not kwargs['data'] and kwargs['instance']:
+            instance = kwargs['instance']
+            kwargs['data'] = {
+                'deviceToken': instance.device.registration_id,
+                'systemId': instance.system_id,
+                'isActive': instance.active
+            }
+        return super().get_serializer(*args, **kwargs)
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if not instance:
+            raise Http404
+        data = {
+            'systemId': instance.system_id,
+            'deviceToken': instance.device.registration_id,
+            'isActive': instance.active
+        }
+        return Response(data)
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data, authenticated=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        return Response({'message': 'created'}, status=status.HTTP_201_CREATED,)
+
+    def update(self, request, *args, **kwargs):
+        instance = kwargs.pop('object')
+        serializer = self.get_serializer(instance, data=request.data, authenticated=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.update(instance, request.data)
+
+        return Response({'message': 'ok'})
+
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        sub = self.get_object()
+
+        if sub or 'deviceToken' not in request.data or not request.data['deviceToken']:
+            kwargs['object'] = sub
+            return self.update(request, *args, **kwargs)
+        else:
+            return self.create(request, *args, **kwargs)
+
+
+
