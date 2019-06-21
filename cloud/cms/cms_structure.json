@@ -1,4 +1,4 @@
-[  
+[
   {
     "type": "cloud_portal",
     "can_preview": true,
@@ -794,7 +794,7 @@
               {
                 "name": "Privacy",
                 "url": "%PRIVACY_LINK%",
-                "newWindow": false,
+                "newWindow": true,
                 "enabled": true
               },
               {
