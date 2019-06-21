@@ -326,10 +326,10 @@ class Context(models.Model):
         )
         ordering = ['order', 'id']
     # TODO: Remove this after release of 19.1 - Task: CLOUD-2299
-    product = models.ForeignKey(Product, null=True, on_delete=models.SET_NULL)
+    product = models.ForeignKey(Product, null=True, on_delete=models.SET_NULL, blank=True)
     product_type = models.ForeignKey(ProductType, null=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=1024)
-    label = models.CharField(max_length=1024, default="")
+    label = models.CharField(max_length=1024, default="", blank=True)
     description = models.TextField(blank=True, default="")
     translatable = models.BooleanField(default=True)
     is_global = models.BooleanField(default=False)
@@ -396,7 +396,7 @@ class DataStructure(models.Model):
         ordering = ['order', 'id']
     context = models.ForeignKey(Context, on_delete=models.CASCADE)
     name = models.CharField(max_length=1024)
-    description = models.TextField()
+    description = models.TextField(blank=True)
     label = models.CharField(max_length=1024, blank=True, default='')
 
     DATA_TYPES = Choices((0, 'text', 'Text'),
