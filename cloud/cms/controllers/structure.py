@@ -5,6 +5,8 @@ import os
 import re
 
 from zipfile import ZipFile
+
+from ..controllers.generate_structure import templatify_json
 from ..models import Context, ContextTemplate, DataStructure, DataRecord, Product, ProductType
 
 
@@ -160,6 +162,11 @@ def process_zip(file_descriptor, user, product, update_structure, update_content
 
             if update_structure:
                 # Here we assume that there is only one template here
+                if name.endswith('json'):
+                    #JSON file
+                    values, template = templatify_json(json.loads(file_content))
+                    file_content = json.dumps(template, indent=4, separators=(',', ': '))
+                    pass
 
                 context_template = context.contexttemplate_set.first()
                 if not context_template:
