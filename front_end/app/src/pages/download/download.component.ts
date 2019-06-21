@@ -151,8 +151,7 @@ export class DownloadComponent implements OnInit, OnDestroy {
                 });
 
                 if (!this.sortedPlatforms.some(platform => platform.name === this.platform)) {
-                    const os = this.detectOS();
-                    this.platform = (os) ? os.toLowerCase() : '';
+                    this.platform = this.detectOS();
                 }
 
                 this.setTitle(this.platform);
