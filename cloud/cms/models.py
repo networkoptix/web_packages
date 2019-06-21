@@ -116,7 +116,7 @@ def slugify(name, lowercase=False):
 def rename_file(instance, filename):
     product_name = slugify(instance.product.name, True)
     structure_name = slugify(instance.data_structure.name, True)
-    file_info = "{}-{}".format(structure_name, instance.id, slugify(filename))
+    file_info = f"{structure_name}-{instance.id}"
     return os.path.join(product_name, file_info, filename)
 
 
@@ -242,7 +242,7 @@ class Product(models.Model):
 
     def __str__(self):
         if self.product_type and self.is_cloud_portal:
-            return "{} - {}".format(self.name, self.customizations.first())
+            return f"{self.name} - {self.customizations.first()}"
         return self.name
 
     @property
@@ -379,10 +379,10 @@ class ContextTemplate(models.Model):
     def __str__(self):
         if not self.language:
             return self.context.name
+        skin = f"{self.skin}/" if self.skin else ""
         if self.context.file_path:
-            return ('{0}/'.format(self.skin) if self.skin else '') + \
-                   self.context.file_path.replace("{{language}}", self.language.code)
-        return "{0}-{1}{2}".format(self.context.name, '{0}/'.format(self.skin) if self.skin else '', self.language.name)
+            return skin + self.context.file_path.replace("{{language}}", self.language.code)
+        return f"{self.context.name}-{skin}{self.language.name}"
 
 
 class DataStructure(models.Model):
@@ -641,9 +641,9 @@ class ProductCustomizationReview(models.Model):
                     review.reviewed_by = None
                     review.reviewed_date = None
             elif can_show_customization:
-                review.notes = "Automatically rejected by {}".format(self.customization)
+                review.notes = f"Automatically rejected by {self.customization}"
             else:
-                review.notes = "automatically rejected"
+                review.notes = "Automatically rejected"
 
             review.save()
             if review.state == ProductCustomizationReview.REVIEW_STATES.rejected or review.customization.trust_parent:
