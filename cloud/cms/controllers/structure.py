@@ -185,14 +185,20 @@ def process_zip(file_descriptor, user, product, update_structure, update_content
                 # here we have template for context and file_content - which are relatively close.
                 # Ideally, the only difference is specific data values
 
+                context_template = context.contexttemplate_set.first()
+                context_template_lines = context_template.template.split("\n")
+
+                # normalise json file
+                if name.endswith('json'):
+                    file_content = json.dumps(json.loads(file_content), indent=4, separators=(',', ': '))
+
                 for structure in context.datastructure_set.all():
                     if DataStructure.is_file_or_image(structure.type):
                         continue
 
-                    context_template = context.contexttemplate_set.first()
                     # find a line in template which has structure.name in it
-                    template_line = next((line for line in context_template.template.split("\n")
-                                          if structure.name in line), None)
+                    template_line = next((line for line in context_template_lines if structure.name in line), None)
+
                     if not template_line:
                         log_messages.append(('warning', f'No line in template {name}'
                                             f' for data structure {structure.name}'))
@@ -207,10 +213,12 @@ def process_zip(file_descriptor, user, product, update_structure, update_content
                     if structure.type != structure.DATA_TYPES.html:
                         template_line += "$"
 
+                    print(template_line)
+
                     # try to parse file_content with regex
-                    result = re.search(template_line, file_content)
+                    result = re.search(template_line, file_content, re.MULTILINE)
                     if not result:
-                        log_messages.append(('warning', f'No line in file {name} for data structure {structure.namee}'))
+                        log_messages.append(('warning', f'No line in file {name} for data structure {structure.name}'))
                         continue
 
                     # if there is a value - compare it with latest draft
