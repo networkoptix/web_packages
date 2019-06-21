@@ -114,7 +114,7 @@ def check_if_customizable(data, short_name, structure, product_name):
     # customizable file creates new structure
     context = find_context(short_name, short_name, structure, product_name)
     for match in strings:
-        find_structure(match[1], context, 'Text', description=match[0])
+        find_structure(match[1], context, 'Text', meta={"regex": ""}, description=match[0])
     return True
 
 
