@@ -309,6 +309,6 @@ def merge_db_with_archive(file_descriptor, product):
     return merge_structure(db_structure, archive_structure)
 
 
-def set_data_structure_state(context, state):
-    for ds in context["values"]:
+def set_data_structure_state(data_structures, state):
+    for ds in data_structures:
         ds["state"] = state

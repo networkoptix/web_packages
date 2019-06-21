@@ -4,20 +4,22 @@ from cms.models import Context, DataStructure, ProductType
 
 class BaseCMSSerializer(serializers.ModelSerializer):
     def __init__(self, *args, **kwargs):
-        self.query = {}
-        use_actual_values = False
+        self.query = {"use_actual_values": False}
         if "use_actual_values" in kwargs:
-            use_actual_values = kwargs.pop("use_actual_values")
+            self.query["use_actual_values"] = kwargs.pop("use_actual_values")
 
         if "product" in kwargs:
-            self.query["product"] = kwargs.pop("product") and use_actual_values
+            self.query["product"] = kwargs.pop("product")
         if "lang" in kwargs:
-            self.query["lang"] = kwargs.pop("lang") and use_actual_values
+            self.query["lang"] = kwargs.pop("lang")
         if "draft" in kwargs:
-            self.query["draft"] = kwargs.pop("draft") and use_actual_values
+            self.query["draft"] = kwargs.pop("draft")
 
         if "params" in kwargs:
             self.query.update(kwargs.pop("params"))
+
+        if not self.query["use_actual_values"]:
+            self.query = {}
 
         super().__init__(*args, **kwargs)
 
@@ -32,14 +34,13 @@ class DataStructureSerializer(BaseCMSSerializer):
     type = serializers.SerializerMethodField("get_nice_name")
 
     def get_value_for_datastructure(self, obj):
-        if self.query:
-            if obj.type in [DataStructure.DATA_TYPES.image, DataStructure.DATA_TYPES.file]:
-                return ""
+        is_file_or_image = obj.type in [DataStructure.DATA_TYPES.image, DataStructure.DATA_TYPES.file]
+        if self.query and not is_file_or_image:
 
             return obj.find_actual_value(product=self.query["product"],
                                          language=self.query["lang"],
                                          draft=self.query["draft"])
-        return obj.default
+        return obj.default if not is_file_or_image else ""
 
     def get_nice_name(self, obj):
         return DataStructure.DATA_TYPES[obj.type]

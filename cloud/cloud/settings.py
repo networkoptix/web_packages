@@ -205,7 +205,6 @@ else:
 if LOCAL_ENVIRONMENT:
     conf["cloud_db"]["url"] = 'https://cloud-test.hdw.mx/cdb'
 
-
     # BROKER_URL = 'sqs://...'
     # This setting is removed because every developer needs personal AWS credentials
     # Ask Ivan V to provide you with config and credentials files for AWS and save them to ~/.aws/ directory
