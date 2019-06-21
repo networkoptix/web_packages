@@ -115,7 +115,7 @@ def slugify(name, lowercase=False):
 def rename_file(instance, filename):
     product_name = slugify(instance.product.name, True)
     structure_name = slugify(instance.data_structure.name, True)
-    file_info = "{}-{}-{}".format(structure_name, instance.id, slugify(filename))
+    file_info = "{}-{}".format(structure_name, instance.id, slugify(filename))
     return os.path.join(product_name, file_info, filename)
 
 
@@ -672,7 +672,9 @@ class ProductCustomizationReview(models.Model):
 
 class ExternalFile(models.Model):
     data_structure = models.ForeignKey(DataStructure, default=None, null=True, on_delete=models.CASCADE)
-    file = models.FileField(upload_to=rename_file, storage=MediaStorage())
+    # Default limit is 100 chars. The new length comes from most paths being limited to 255 char.
+    # Since we slugify the product name, data structure name and file name we need a long length.
+    file = models.FileField(upload_to=rename_file, storage=MediaStorage(), max_length=1000)
     md5 = models.CharField(max_length=1024, default='')
     product = models.ForeignKey(Product, default=None, null=True, on_delete=models.CASCADE)
     size = models.FloatField(default=0.0)
