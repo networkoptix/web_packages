@@ -485,7 +485,7 @@ class DataStructure(models.Model):
             content_value = self.default
 
         if self.type == DataStructure.DATA_TYPES.check_box:
-            content_value = strtobool(content_value) == 1
+            content_value = strtobool(content_value) == 1 if content_value else False
 
         return content_value
 
