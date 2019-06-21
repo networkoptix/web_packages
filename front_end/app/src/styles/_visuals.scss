@@ -1,0 +1,8 @@
+@import '../../styles/custom/custom_palette';
+@import '../../styles/theme_palette';
+@import '../../styles/theme_variables';
+
+.highlighted {
+    display          : inline;
+    background-color : yellow;
+}

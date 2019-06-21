@@ -206,6 +206,7 @@ window.L = {};
                                 template: '<nx-register-component [uri-param]="getParam" [uri-param-code]="getCode"></nx-register-component>',
                                 controller: ['$scope', 'getParam', function ($scope, getParam) {
                                     $scope.uriParam = getParam;
+                                    $scope.uriParamCode = getCode;
                                 }],
                                 resolve: {
                                     getParam: [function () {
@@ -243,13 +244,27 @@ window.L = {};
                                     }]
                                 }
                             })
+                            // .when('/systems', {
+                            //     templateUrl: CONFIG.viewsDir + 'systems.html',
+                            //     controller: 'SystemsCtrl'
+                            // })
+                            // .when('/systems/:systemId', {
+                            //     templateUrl: CONFIG.viewsDir + 'system.html',
+                            //     controller: 'SystemCtrl'
+                            // })
                             .when('/systems', {
-                                templateUrl: CONFIG.viewsDir + 'systems.html',
-                                controller: 'SystemsCtrl'
+                                template: '<nx-systems-list-component></nx-systems-list-component>',
                             })
                             .when('/systems/:systemId', {
-                                templateUrl: CONFIG.viewsDir + 'system.html',
-                                controller: 'SystemCtrl'
+                                template: '<nx-system-settings-component [uri-param-system-id]="getSystemId"></nx-systemsettings-component-component>',
+                                controller: ['$scope', 'getParam', function ($scope, getParam) {
+                                    $scope.uriParamSystemId = getSystemId;
+                                }],
+                                resolve: {
+                                    getSystemId: ['$route', function ($route) {
+                                        return $route.current.params.systemId;
+                                    }]
+                                }
                             })
                             .when('/systems/:systemId/share', {
                                 title: lang.pageTitles.systemShare,

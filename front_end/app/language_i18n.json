@@ -380,5 +380,33 @@
         "vendors": "manufacturers"
     },
     "servers in the merged System.": "servers in the merged System.",
-    "support": "support"
+    "support": "support",
+    "system": {
+        "confirmDisconnectAction": "Disconnect",
+        "confirmDisconnectTitle": "Disconnect System from %CLOUD_NAME%?",
+        "confirmMergeAction": "Merge",
+        "confirmRenameAction": "Save",
+        "confirmRenameTitle": "System name",
+        "confirmUnshare": "This user will not be able to access System. Are you sure?",
+        "confirmUnshareAction": "Delete",
+        "confirmUnshareFromMe": "You are about to disconnect this System from your account. You will not be able to access this System anymore. Are you sure?",
+        "confirmUnshareFromMeAction": "Disconnect",
+        "confirmUnshareFromMeTitle": "Disconnect System?",
+        "confirmUnshareTitle": "Delete user?",
+        "mergeFailed": "System merge failed",
+        "mergeStart": "Systems have started merging",
+        "mergeSuccess": "System merge completed",
+        "mergeSystemTitle": "Merge Systems",
+        "mySystemSearch": "IMeMyMine",
+        "offline": "System is offline",
+        "openClient": "Open in %VMS_NAME%",
+        "openClientNoSystem": "Open %VMS_NAME%",
+        "permissionsRemoved": "Permissions were removed from {{email}}",
+        "successDeleted": "System {{systemName}} is successfully deleted from your account",
+        "successDisconnected": "System is successfully disconnected from %CLOUD_NAME%",
+        "successRename": "System name saved",
+        "unavailable": "System is unreachable",
+        "unknownName": "Unknown Name for System (Caused by cloud merge)",
+        "yourSystem": "Your System"
+    }
 }

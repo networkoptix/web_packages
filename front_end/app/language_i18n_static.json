@@ -242,5 +242,33 @@
 	},
 	"registration": {
 		"agreement" : "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
+	},
+	"system": {
+		"yourSystem": "Your System",
+		"mySystemSearch": "IMeMyMine",
+		"unavailable": "System is unreachable",
+		"offline": "System is offline",
+		"openClient": "Open in %VMS_NAME%",
+		"openClientNoSystem": "Open %VMS_NAME%",
+		"confirmMergeAction": "Merge",
+		"mergeSystemTitle": "Merge Systems",
+		"confirmRenameTitle": "System name",
+		"confirmRenameAction": "Save",
+		"successRename": "System name saved",
+		"confirmDisconnectTitle": "Disconnect System from %CLOUD_NAME%?",
+		"confirmDisconnectAction": "Disconnect",
+		"confirmUnshareFromMe": "You are about to disconnect this System from your account. You will not be able to access this System anymore. Are you sure?",
+		"confirmUnshareFromMeTitle": "Disconnect System?",
+		"confirmUnshareFromMeAction": "Disconnect",
+		"confirmUnshare": "This user will not be able to access System. Are you sure?",
+		"confirmUnshareTitle": "Delete user?",
+		"confirmUnshareAction": "Delete",
+		"successDisconnected": "System is successfully disconnected from %CLOUD_NAME%",
+		"successDeleted": "System {{systemName}} is successfully deleted from your account",
+		"mergeFailed": "System merge failed",
+		"mergeStart": "Systems have started merging",
+		"mergeSuccess": "System merge completed",
+		"permissionsRemoved": "Permissions were removed from {{email}}",
+		"unknownName": "Unknown Name for System (Caused by cloud merge)"
 	}
 }
