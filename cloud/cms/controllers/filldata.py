@@ -84,7 +84,7 @@ def process_context_structure(product, context, content, language,
             else:
                 content_value = datastructure.find_actual_value(product, language, version_id, draft=preview)
             # replace marker with value
-            if datastructure.type not in (DataStructure.DATA_TYPES.image, DataStructure.DATA_TYPES.file):
+            if not DataStructure.is_file_or_image(datastructure.type):
                 if type(content) == dict:
                     # Process language JSON file
                     replace_in(content, datastructure.name, content_value)

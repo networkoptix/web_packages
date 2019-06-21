@@ -88,7 +88,7 @@ def save_unrevisioned_records(product, context, language, data_structures,
             This will create a new record making images/files behave like the other data structure types
             Places to touch are here and cms/forms.py
         """
-        if data_structure.type in[DataStructure.DATA_TYPES.image, DataStructure.DATA_TYPES.file]:
+        if DataStructure.is_file_or_image(data_structure.type):
             # If a file has been uploaded try to save it
             if data_structure_name in request_files:
                 if request_files[data_structure_name]:
@@ -436,7 +436,7 @@ def check_meta_settings(data_structure, new_file):
             format(new_file.size/BYTES_TO_MEGABYTES, meta_settings['size']/BYTES_TO_MEGABYTES)
         return [(data_structure.name, error_msg)]
 
-    if data_structure.type in [DataStructure.DATA_TYPES.image, DataStructure.DATA_TYPES.external_image]:
+    if DataStructure.is_file_or_image(data_structure.type):
 
         try:
             image_dimensions = get_image_dimensions(new_file)

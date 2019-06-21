@@ -179,7 +179,7 @@ def process_zip(file_descriptor, user, product, update_structure, update_content
                 # Ideally, the only difference is specific data values
 
                 for structure in context.datastructure_set.all():
-                    if structure.type in (DataStructure.DATA_TYPES.image, DataStructure.DATA_TYPES.file):
+                    if DataStructure.is_file_or_image(structure.type):
                         continue
 
                     context_template = context.contexttemplate_set.first()
@@ -229,7 +229,7 @@ def process_zip(file_descriptor, user, product, update_structure, update_content
             continue
 
         # if data structure is not FILE or IMAGE - print to log and ignore
-        if structure.type not in (DataStructure.DATA_TYPES.image, DataStructure.DATA_TYPES.file):
+        if not DataStructure.is_file_or_image(structure.type):
             log_messages.append(('warning', f'Ignored: {name} (data structure type is {structure.type}'
                                 f', not a {DataStructure.DATA_TYPES.image} or {DataStructure.DATA_TYPES.file})'))
             continue

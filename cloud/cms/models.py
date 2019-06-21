@@ -489,6 +489,12 @@ class DataStructure(models.Model):
 
         return content_value
 
+    @staticmethod
+    def is_file_or_image(data_type):
+        if type(data_type) is not int:
+            data_type = DataStructure.get_type_by_name(data_type)
+        return data_type in [DataStructure.DATA_TYPES.image, DataStructure.DATA_TYPES.file]
+
 
 # CMS settings. Release engineer can change that
 class UserGroupsToProductPermissions(models.Model):

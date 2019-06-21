@@ -34,7 +34,7 @@ class DataStructureSerializer(BaseCMSSerializer):
     type = serializers.SerializerMethodField("get_nice_name")
 
     def get_value_for_datastructure(self, obj):
-        is_file_or_image = obj.type in [DataStructure.DATA_TYPES.image, DataStructure.DATA_TYPES.file]
+        is_file_or_image = DataStructure.is_file_or_image(obj.type)
         if self.query and not is_file_or_image:
 
             return obj.find_actual_value(product=self.query["product"],
