@@ -32,8 +32,7 @@ def download_packages(session, instance, product_ids):
 def get_cmd_args():
     description = "How to use this script:\n" \
                   "- python get_zip_from_cloud.py noptix@networkoptix.com password123 " \
-                  "\t\t\t(Downloads all packages for products related to a product type with name=\"\"" \
-                  " and type=vms)\n" \
+                  "\t\t\t(Downloads all packages for products related to the default vms ProductType)\n" \
                   "- python get_zip_from_cloud.py noptix@networkoptix.com password123 --product_id=30 " \
                   "\t(Downloads a specific package base on the product_id)"
     parser = argparse.ArgumentParser("get_zip_from_cloud", description=description,
