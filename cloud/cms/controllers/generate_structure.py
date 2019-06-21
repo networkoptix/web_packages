@@ -2,6 +2,7 @@
 import os
 import re
 import io
+import json
 from collections import OrderedDict
 from PIL import Image  # get Pillow
 from zipfile import ZipFile
@@ -64,13 +65,12 @@ def find_context(name, file_path, structure, product_name):
     return context
 
 
-def find_structure(name, context, structure_type, meta=None, description=""):
+def find_structure(name, context, structure_type, meta=None, description="", value=''):
     data_structure = next((structure for structure in context["values"] if structure["name"] == name), None)
     if not data_structure:
         # try to populate structure from database
         db_structure = DataStructure.objects.filter(name=name).first()
         label = ''
-        value = ''
         if db_structure:
             label = db_structure.label if db_structure.label != name else ''
             value = db_structure.default if not DataStructure.is_file_or_image(db_structure.type) else ""
@@ -106,6 +106,77 @@ def read_cms_strings(data):
         return None
 
 
+
+'''
+Ok, this is weird. 
+The goal of this function is to turn json object into a template:
+This function takes nested json object and flattens it: turns it into plain list, keeping values for later use
+At the same time it modifies original object to have tags inside - turns it into CMS-ready template
+Arrays are JSON-strigified in the process
+
+Later the parent function will parse values to determine data type for each of objects
+'''
+def templatify_json(json_data, prefix=''):
+    if type(json_data) != dict:
+        return None  # JSON files with arrays or plain values are not supported
+
+    values = {}
+    for key, value in json_data.items():
+        new_key = '%' + prefix + key + '%'
+        if type(value) == dict:
+            new_values, new_template = templatify_json(value, key + '.')
+            values.update(new_values)
+            json_data[key] = new_template
+        else:
+            values[new_key] = value
+            json_data[key] = new_key
+    return values, json_data
+
+
+def check_if_json (data, short_name, structure, product_name):
+    from cms.controllers.modify_db import GUID_REGEXP
+
+    if not short_name.lower().endswith('.json'):
+        return False
+
+    # here we parse json file and turn it into datastructures
+    try:
+        json_data = json.loads(data)
+    except json.JSONDecodeError as error:
+        raise json.JSONDecodeError('In file ' + short_name + ': ' + error.msg, error.doc, error.pos)
+
+    if type(json_data) != dict:
+        return False  # JSON files with arrays or plain values are not supported
+
+    values, template = templatify_json(json_data)
+
+    # Now we create context with that template
+    context = find_context(short_name, short_name, structure, product_name)
+
+    for key, value in values.items():
+        record_type = 'Text'
+        # trying to parse type
+        if type(value) == bool:
+            record_type = 'check_box'
+        elif type(value) == list:
+            record_type = 'array'
+            print(value)
+            value = json.dumps(value, indent=4, separators=(',', ': '))
+        elif type(value) == dict:
+            record_type = 'object'
+
+            print(value)
+            value = json.dumps(value, indent=4, separators=(',', ': '))
+        elif re.match(GUID_REGEXP, value):
+            record_type = 'guid'
+
+        find_structure(key, context, record_type , value=value)
+
+    print(template)
+
+    return True
+
+
 def check_if_customizable(data, short_name, structure, product_name):
     strings = read_cms_strings(data)
     if not strings:
@@ -129,6 +200,8 @@ def read_data(data, short_name, context, cms_structure, product_name):
         if not meta:
             return {'file': short_name, 'extension': extension}
         structure_type = 'image'
+    elif check_if_json(data, short_name, cms_structure, product_name):
+        return
     elif check_if_customizable(data, short_name, cms_structure, product_name):
         return
     find_structure(short_name, context, structure_type, meta=meta)

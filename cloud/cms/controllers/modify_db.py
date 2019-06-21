@@ -17,7 +17,7 @@ from ..models import *
 
 BYTES_TO_MEGABYTES = 1048576.0
 PENDING = ProductCustomizationReview.REVIEW_STATES[ProductCustomizationReview.REVIEW_STATES.pending].lower()
-
+GUID_REGEXP = '\{[\da-fA-F]{8}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{12}\}'
 
 def update_draft_state(review_id, target_state, user):
     review = ProductCustomizationReview.objects.filter(id=review_id, reviewed_by=None).last()
@@ -108,8 +108,7 @@ def save_unrevisioned_records(product, context, language, data_structures,
 
             # if the guid is valid it will go to the next set of checks
             new_record_value = request_data[data_structure_name] if data_structure_name in request_data else ""
-            is_guid = re.match('\{[\da-fA-F]{8}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{12}\}',
-                               new_record_value)
+            is_guid = re.match(GUID_REGEXP, new_record_value)
 
             # if its option and not a valid guid set error message and go to next DataStructure
             if new_record_value and not is_guid:
