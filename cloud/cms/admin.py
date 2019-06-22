@@ -342,6 +342,7 @@ admin.site.register(Product, ProductAdmin)
 class ContextAdmin(CMSAdmin):
     list_display = ('name', 'description', 'url', 'translatable', 'is_global', 'hidden')
     list_filter = ('product_type', 'translatable', 'is_global', 'hidden')
+    actions = ('delete_selected',)
 
 
 admin.site.register(Context, ContextAdmin)
@@ -360,7 +361,7 @@ class DataStructureAdmin(CMSAdmin):
     list_display = ('context', 'label', 'name', 'description', 'translatable', 'type', 'deprecated')
     list_filter = ('context', 'translatable', 'context__product_type', 'deprecated')
     search_fields = ('context__name', 'name', 'description', 'type')
-    actions = ['delete_selected']
+    actions = ('delete_selected',)
 
 
 admin.site.register(DataStructure, DataStructureAdmin)
