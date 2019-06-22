@@ -5,7 +5,7 @@ Suite Setup       Startup
 Test Setup        Restart
 Test Teardown     Run Keyword If Test Failed    reset state
 Suite Teardown    Remove Containers
-Force Tags        Threaded    merge
+Force Tags        Threaded File    merge
 
 *** Variables ***
 ${email}             ${EMAIL OWNER}
