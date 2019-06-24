@@ -8,6 +8,7 @@ from PIL import Image  # get Pillow
 from zipfile import ZipFile
 from ..models import Context, DataStructure, ProductType
 from cms.serializers import ProductTypeSerializer
+from cms.controllers.modify_db import GUID_REGEXP
 
 import logging
 logger = logging.getLogger(__name__)
@@ -107,39 +108,40 @@ def read_cms_strings(data):
 
 
 
-'''
-Ok, this is weird. 
-The goal of this function is to turn json object into a template:
-This function takes nested json object and flattens it: turns it into plain list, keeping values for later use
-At the same time it modifies original object to have tags inside - turns it into CMS-ready template
-Arrays are JSON-strigified in the process
-
-Later the parent function will parse values to determine data type for each of objects
-'''
 def templatify_json(json_data, prefix=''):
+    '''
+    Ok, this is weird.
+    The goal of this function is to turn json object into a template:
+    This function takes nested json object and flattens it: turns it into plain list, keeping values for later use
+    At the same time it modifies original object to have tags inside - turns it into CMS-ready template
+    Arrays are JSON-strigified in the process
+
+    Later the parent function will parse values to determine data type for each of objects
+    '''
+
     if type(json_data) != dict:
-        return None  # JSON files with arrays or plain values are not supported
+        raise ValueError('Arrays or plain values are not supported')
 
     values = {}
+    tag_regex = re.compile('^%[^%]+%$')
     for key, value in json_data.items():
-        new_key = '%' + prefix + key + '%'
         if type(value) == dict:
             new_values, new_template = templatify_json(value, key + '.')
             values.update(new_values)
             json_data[key] = new_template
         else:
-            if type(value) == str and re.match('^%[^%]+%$', value):
+            if type(value) == str and tag_regex.match(value):
                 # it is already a tag
                 new_key = value
                 value = ''
+            else:
+                new_key = f"%{prefix}{key}%"
             values[new_key] = value
             json_data[key] = new_key
     return values, json_data
 
 
 def check_if_json (data, short_name, structure, product_name):
-    from cms.controllers.modify_db import GUID_REGEXP
-
     if not short_name.lower().endswith('.json'):
         return False
 
@@ -147,7 +149,7 @@ def check_if_json (data, short_name, structure, product_name):
     try:
         json_data = json.loads(data)
     except json.JSONDecodeError as error:
-        raise json.JSONDecodeError('In file ' + short_name + ': ' + error.msg, error.doc, error.pos)
+        raise json.JSONDecodeError(f'In file {short_name}: {error.msg}', error.doc, error.pos)
 
     if type(json_data) != dict:
         return False  # JSON files with arrays or plain values are not supported
