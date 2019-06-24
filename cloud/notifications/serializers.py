@@ -34,6 +34,11 @@ class SubscriptionSerializer(serializers.Serializer):
         self.authenticated = kwargs.pop('authenticated', False)
         super().__init__(instance, data, **kwargs)
 
+    def validate_deviceToken(self, value):
+        if self.context['request'].method == 'GET' and not value:
+            raise serializers.ValidationError('Device Token is required')
+        return value
+
     def validate_systemId(self, value):
         request_data = self.context['request'].data
         if self.authenticated:

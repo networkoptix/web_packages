@@ -106,8 +106,8 @@ class Subscribe(UpdateModelMixin, CreateModelMixin, RetrieveModelMixin, GenericA
     def get_object(self):
         if self.request.method == 'GET':
             for field in self.lookup_fields:
-                if field in self.kwargs:
-                    self.request.data[field] = self.kwargs[field]
+                if field in self.request.GET:
+                    self.request.data[field] = self.request.GET[field]
 
         serializer = self.get_serializer(data=self.request.data)
         serializer.is_valid(raise_exception=True)
