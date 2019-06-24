@@ -61,6 +61,8 @@ def find_or_add_data_structure(name, old_name, context_id, has_language):
 
 
 def update_from_object(product_type_structure, product_type=None):
+    if type(product_type_structure) is list:
+        product_type_structure = product_type_structure[0]
     update_product_type(product_type, product_type_structure)
 
     order = 0
@@ -123,9 +125,9 @@ def process_zip(file_descriptor, user, product, update_structure, update_content
             data = zip_file.read(name)
             cms_structure = json.loads(data)
             if type(cms_structure) == list and len(cms_structure) > 1:
-                log_messages.warning('warning', 'You can only update one product_type at a time. '
-                                                'Only the first product type from structure.json was used.')
-            update_from_object(cms_structure[0], product.product_type)
+                log_messages.append(('warning', 'You can only update one product_type at a time. '
+                                                'Only the first product type from structure.json was used.'))
+            update_from_object(cms_structure, product.product_type)
             log_messages.append(('success', f'Updated from json using {name}'))
         else:
             log_messages.append(('warning', 'Not found structure.json file'))
