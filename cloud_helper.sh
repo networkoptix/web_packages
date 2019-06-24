@@ -8,6 +8,16 @@ function build_frontend(){
     ./build_scripts/build.sh
 }
 
+function modify_bashprofile(){
+    if [[ -z ${LOCAL_ENV} ]]; then
+        echo 'export LOCAL_ENV=True' >> ~/.bash_profile
+        echo 'Restart your terminal or run `source ~/.bash_profile` and rerun this script.'
+        exit 0
+    else
+        echo 'LOCAL_ENV exists'
+    fi
+}
+
 function setup_cms(){
     printf "Moving into cloud directory\n\n"
     pushd cloud
@@ -74,12 +84,18 @@ for command in $@
 do
     case "$command" in
         init)
+            modify_bashprofile
             start_docker_containers
             setup_env
             setup_db
             build_frontend
             setup_cms
             ;;
+
+        add_env)
+            modify_bashprofile
+            ;;
+
         build_frontend)
             build_frontend
             ;;
@@ -113,8 +129,9 @@ do
             stop_docker_containers
             ;;
         *)
-            echo Usage: cloud_shortcuts '[init|build_frontend|rebuild_frontend|setup_cms|setup_db|setup_env|start_docker|stop_docker]'
+            echo Usage: cloud_shortcuts '[init|add_env|build_frontend|rebuild_frontend|setup_cms|setup_db|setup_env|start_docker|stop_docker]'
             echo 'init - Does everything. Only run this once'
+            echo 'add_env - Adds LOCAL_ENV to your bash profile'
             echo 'build_frontend - Builds the frontend'
             echo 'generate_cms_docs - Creates an html file for each product in cms/cms_structure.json'
             echo 'rebuild_frontend - Rebuilds the frontend and runs readstructre and filldata commands'
