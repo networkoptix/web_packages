@@ -97,6 +97,7 @@
     "Take the name and settings from": "Take the name and settings from",
     "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.": "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.",
     "There will be more than": "There will be more than",
+    "To": "To",
     "Too many attempts. Try again in a minute.": "Too many attempts. Try again in a minute.",
     "Topic": "Topic",
     "Update them to the": "Update them to the",
@@ -108,6 +109,7 @@
     "Wrong password": "Wrong password",
     "You can merge only those cloud Systems, where you have the \"Owner\" permissions.": "You can merge only those cloud Systems, where you have the \"Owner\" permissions.",
     "You can only merge Systems where you are the owner.": "You can only merge Systems where you are the owner.",
+    "Your Email": "Your Email",
     "Your Name": "Your Name",
     "Your browser is not supported": "Your browser is not supported",
     "andXMore": "... and {{value}} more",
@@ -133,6 +135,22 @@
             "secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
             "systemOffline": "System {{targetSystem}} is offline and cannot be merged with the current one.",
             "systemUnavailable": "System {{targetSystem}} is currently unreachable. Try again in a few minutes or contact"
+        },
+        "message": {
+            "failedToSend": "Message has failed to send.",
+            "sent": "Message has been sent.",
+            "title": {
+                "integration": "Email for {{product}}",
+                "ipvd_feedback_device": "Feedback about {{product}}",
+                "ipvd_feedback_page": "Feedback for cameras page"
+            },
+            "topic": {
+                "contact_sales": "Contact sales for {{product}}",
+                "contact_support": "Contact support for {{product}}",
+                "integration_feedback": "Feedback for integration {{product}}",
+                "ipvd_feedback_device": "Feedback about {{product}}",
+                "ipvd_feedback_page": "Feedback for cameras page"
+            }
         }
     },
     "dialogs.merge.connectToCloud": "Connect System you want to merge with this one to <strong>{{cloudName}}</strong> or merge locally using <strong>{{vmsName}}</strong> Client.",

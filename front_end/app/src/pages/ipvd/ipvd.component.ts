@@ -385,7 +385,7 @@ export class NxIpvdComponent implements OnInit {
         const type = (param === 'device') ? this.CONFIG.messageType.ipvd_device : this.CONFIG.messageType.ipvd_page;
         const device = (this.activeCamera) ? this.activeCamera.model : '';
         this.messageDialog
-            .open(type, device, device)
+            .open(type, false, device)
             .then(() => {
             });
 

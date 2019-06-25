@@ -1,9 +1,8 @@
 import { Component, Inject, OnInit, Input, ViewEncapsulation, Renderer2, ViewChild } from '@angular/core';
-import { Location }                                                                  from '@angular/common';
 import { NgbModal, NgbActiveModal, NgbModalRef }                                     from '@ng-bootstrap/ng-bootstrap';
 import { EmailValidator, NgForm }                                                    from '@angular/forms';
 import { NxConfigService }                                                           from '../../services/nx-config';
-import {TranslateService} from "@ngx-translate/core";
+import { TranslateService }                                                          from '@ngx-translate/core';
 
 @Component({
     selector: 'nx-modal-message-content',
@@ -12,8 +11,9 @@ import {TranslateService} from "@ngx-translate/core";
 })
 export class MessageModalContent {
     @Input() messageType;
-    @Input() productId;
+    @Input() productName;
     @Input() product;
+    @Input() showTo;
     @Input() closable;
     @Input() config;
 
@@ -37,22 +37,22 @@ export class MessageModalContent {
                 @Inject('account') private account: any,
                 @Inject('process') private process: any,
                 @Inject('cloudApiService') private cloudApi: any,
-                @Inject('languageService') private language: any
                 ) {
-
-        this.lang = this.translation.translations[this.translation.currentLang];
         this.placeholder = '';
         this.topic = '';
     }
 
     ngOnInit() {
-        this.initForm();
-        this.sendMessage = this.process.init(() => {
-            return this.cloudApi.sendMessage(this.topic, this.productId, this.message, this.userName, this.userEmail, this.contact);
-        }, {
-            successMessage: this.language.lang.dialogs.messageSent
-        }).then(() => {
-            this.activeModal.close(true);
+        this.translation.getTranslation(this.translation.currentLang).subscribe((lang) => {
+            this.lang = lang;
+            this.initForm();
+            this.sendMessage = this.process.init(() => {
+                return this.cloudApi.sendMessage(this.topic, this.product.id, this.message, this.userName, this.userEmail, this.contact);
+            }, {
+                successMessage: this.lang.dialogs.message.sent
+            }).then(() => {
+                this.activeModal.close(true);
+            });
         });
     }
 
@@ -69,11 +69,11 @@ export class MessageModalContent {
                 this.placeholder = '';
         }
 
-        this.title = this.language.lang.messageDialog.title[this.messageType].replace('{{product}}', this.product);
+        this.title = this.lang.dialogs.message.title[this.messageType].replace('{{product}}', this.productName);
         this.topics = this.config.messageTopics[this.messageType].map((topic) => {
             return {
                 id: topic,
-                name: this.language.lang.messageDialog.topic[topic].replace('{{product}}', this.product)
+                name: this.lang.dialogs.message.topic[topic].replace('{{product}}', this.productName)
             };
         });
 
@@ -108,7 +108,7 @@ export class NxModalMessageComponent implements OnInit {
         this.config = configService.getConfig();
     }
 
-    private dialog(type, product, productId) {
+    private dialog(type, showTo, productName, product) {
         // TODO: Refactor dialog to use generic dialog
         // TODO: retire loading ModalContent (CLOUD-2493)
         this.modalRef = this.modalService.open(MessageModalContent,
@@ -118,23 +118,26 @@ export class NxModalMessageComponent implements OnInit {
                         });
         this.modalRef.componentInstance.closable = true;
         this.modalRef.componentInstance.messageType = type;
+        this.modalRef.componentInstance.productName = productName;
         this.modalRef.componentInstance.product = product;
-        this.modalRef.componentInstance.productId = productId;
+        this.modalRef.componentInstance.showTo = showTo;
         this.modalRef.componentInstance.config = this.config;
 
 
         return this.modalRef;
     }
 
-    open(type, product?, productId?) {
-        if (productId === undefined) {
-            productId = '';
+    open(type, showTo, productName, product?) {
+        if (productName === undefined) {
+            productName = '';
         }
         if (product === undefined) {
-            product = '';
+            product = {
+                id: productName
+            };
         }
 
-        return this.dialog(type, product, productId).result;
+        return this.dialog(type, showTo, productName, product).result;
     }
 
     ngOnInit() {

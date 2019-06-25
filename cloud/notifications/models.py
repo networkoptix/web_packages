@@ -15,6 +15,7 @@ USE_SQS_FOR_CLOUD_NOTIFICATIONS = hasattr(settings, "BROKER_TRANSPORT_OPTIONS")
 class MessageTypes(object):
     contact_sales = "contact_sales"
     contact_support = "contact_support"
+    integration_feedback = "integration_feedback"
     ipvd_feedback_page = "ipvd_feedback_page"
     ipvd_feedback_device = "ipvd_feedback_device"
 
@@ -149,6 +150,15 @@ class Feedback(models.Model):
                                          customization=contact_customization,
                                          message=data,
                                          event=event)
+            msg.send()
+
+        # Send a copy of the email to the sender
+        sender = Account.objects.filter(email=self.sender_email).last()
+        if sender:
+            msg = Message.objects.create(user_email=sender.email,
+                                         type=self.type,
+                                         customization=sender.customization,
+                                         message=data)
             msg.send()
 
 
