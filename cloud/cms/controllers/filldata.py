@@ -55,6 +55,7 @@ def process_context_structure(product, context, content, language,
                               version_id, preview, force_global_files, context_dict=None):
 
     def replace_in(adict, key, value):
+        # Here we process json files
         for dict_key in adict.keys():
             itm_type = type(adict[dict_key])
             if itm_type not in [str, dict, list] or type(value) in [bool]:
@@ -64,7 +65,13 @@ def process_context_structure(product, context, content, language,
                 for item in adict[dict_key]:
                     if type(item) is str:
                         idx = adict[dict_key].index(item)
-                        adict[dict_key][idx] = item.replace(key, value)
+
+                        if item == key:
+                            # special case if json value contains only the value - we don't treat it as a string,
+                            # we replace the whole thing
+                            adict[dict_key][idx] = value
+                        else:
+                            adict[dict_key][idx] = item.replace(key, value)
                     elif item in [dict, list]:
                         replace_in(item, key, value)
 
@@ -72,7 +79,12 @@ def process_context_structure(product, context, content, language,
                 replace_in(adict[dict_key], key, value)
 
             elif key in adict[dict_key]:
-                adict[dict_key] = adict[dict_key].replace(key, value)
+                # special case if json value contains only the value - we don't treat it as a string,
+                # we replace the whole thing
+                if adict[dict_key] == key:
+                    adict[dict_key] = value
+                else:
+                    adict[dict_key] = adict[dict_key].replace(key, value)
 
     default_language = product.default_language
     location = product.product_root

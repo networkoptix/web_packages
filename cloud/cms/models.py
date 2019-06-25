@@ -1,5 +1,6 @@
 import os
 import re
+import json
 from datetime import datetime
 from distutils.util import strtobool
 from django.db import models
@@ -492,7 +493,8 @@ class DataStructure(models.Model):
 
         if self.type == DataStructure.DATA_TYPES.check_box:
             content_value = strtobool(content_value) == 1 if content_value else False
-
+        if self.type in [DataStructure.DATA_TYPES.array, DataStructure.DATA_TYPES.object]:
+            content_value = json.loads(content_value) if content_value else None
         return content_value
 
     @staticmethod
