@@ -244,7 +244,7 @@ class ProductForm(forms.ModelForm):
                 self.initial['customizations'] = self.instance.customizations.all()
 
         if self.user and not self.user.is_superuser and not self.instance.pk:
-            self.fields['product_type'].queryset = ProductType.objects.exclude(type=ProductType.PRODUCT_TYPES.cloud_portal)
+            self.fields['product_type'].queryset = ProductType.objects.exclude(advanced=True)
             self.fields['created_by'] = forms.ModelChoiceField(
                 queryset=Account.objects.filter(id=self.user.id), empty_label=None
             )

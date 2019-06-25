@@ -204,6 +204,7 @@ class ProductType(models.Model):
     can_preview = models.BooleanField(default=False)
     single_customization = models.BooleanField(default=False)
     type = models.IntegerField(choices=PRODUCT_TYPES, default=PRODUCT_TYPES.cloud_portal)
+    advanced = models.BooleanField(default=True)
 
     def __str__(self):
         if self.name:
