@@ -1,4 +1,3 @@
-from __future__ import absolute_import
 from django.views.decorators.http import require_http_methods
 from django.views import defaults
 from django.contrib import messages
