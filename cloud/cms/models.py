@@ -376,7 +376,7 @@ class ContextTemplate(models.Model):
     context = models.ForeignKey(Context, on_delete=models.CASCADE)
     language = models.ForeignKey(Language, null=True, on_delete=models.CASCADE)
     template = models.TextField()
-    skin = models.CharField(max_length=16, default=settings.DEFAULT_SKIN, blank=True)
+    skin = models.CharField(max_length=16, default='', blank=True)
     # Skin is a bit hacky for now:
     # Skin cannot be mentioned in filename
     # Skin is supported only for file contexts
