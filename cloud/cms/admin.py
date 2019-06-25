@@ -263,6 +263,11 @@ class ProductAdmin(CMSAdmin):
                 return redirect('.')
         return super().response_change(request, obj)
 
+    def response_add(self, request, obj, post_url_continue=None):
+        if '_save' in request.POST and not request.user.is_superuser:
+            return redirect(reverse('admin:pages', args=[obj.id]))
+        return super().response_add(request, obj, post_url_continue)
+
     def product_settings(self, obj):
         if obj.product_type.type == ProductType.PRODUCT_TYPES.integration:
             return format_html('')
