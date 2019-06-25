@@ -66,10 +66,12 @@ def find_context(name, file_path, structure, product_name):
     return context
 
 
-def find_structure(name, context, structure_type, meta=None, description="", value=''):
+def find_structure(name, context, structure_type, meta=None, description="", value='', advanced=False, optional=False):
     data_structure = next((structure for structure in context["values"] if structure["name"] == name), None)
     if not data_structure:
         # try to populate structure from database
+        # Important: here we just find any datastrucure with the same name.
+        # The goal is to try to get label and description from another asset
         db_structure = DataStructure.objects.filter(name=name).first()
         label = ''
         if db_structure:
@@ -84,6 +86,8 @@ def find_structure(name, context, structure_type, meta=None, description="", val
                 description = db_structure.description
             if db_structure.type:
                 structure_type = DataStructure.DATA_TYPES[db_structure.type]
+            advanced = db_structure.advanced
+            optional = db_structure.optional
 
         data_structure = OrderedDict([
             ("label", label),
@@ -91,8 +95,8 @@ def find_structure(name, context, structure_type, meta=None, description="", val
             ("value", value),
             ("description", description),
             ("type", structure_type),
-            ("advanced", False),
-            ("optional", False),
+            ("advanced", advanced),
+            ("optional", optional),
             ("public", True)
         ])
         if meta:
@@ -166,17 +170,21 @@ def check_if_json (data, short_name, structure, product_name):
 
     for key, value in values.items():
         record_type = 'Text'
+        advanced = False
         # trying to parse type
         if type(value) == bool:
             record_type = 'check_box'
         elif type(value) == list:
             record_type = 'array'
+            advanced = True
         elif type(value) == dict:
             record_type = 'object'
+            advanced = True
         elif re.match(GUID_REGEXP, value):
             record_type = 'guid'
+            advanced = True
 
-        find_structure(key, context, record_type , value=value)
+        find_structure(key, context, record_type , value=value, advanced=advanced)
     return True
 
 
