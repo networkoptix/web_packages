@@ -191,6 +191,8 @@ def process_zip(file_descriptor, user, product, update_structure, update_content
                 context_template_lines = context_template.template.split("\n")
 
                 # normalise json file
+                # here is the problem: we parse json as text file to extract values, which might be not the best
+                # course of action, but it lets us parse any tags, not only json-name-based
                 if name.endswith('json'):
                     file_content = json.dumps(json.loads(file_content), indent=4, separators=(',', ': '))
 
@@ -214,8 +216,6 @@ def process_zip(file_descriptor, user, product, update_structure, update_content
 
                     if structure.type != structure.DATA_TYPES.html:
                         template_line += "$"
-
-                    print(template_line)
 
                     # try to parse file_content with regex
                     result = re.search(template_line, file_content, re.MULTILINE)
