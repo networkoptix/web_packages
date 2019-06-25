@@ -4,7 +4,7 @@ from jsonfield import JSONField
 from django.conf import settings
 from django.db.models import Q
 from rest_framework import serializers
-from cms.models import Customization, Product
+from cms.models import Customization, Product, DataStructure
 from api.models import Account
 
 # When cloudportal is ran locally it uses amqp by default. BROKER_TRANSPORT_OPTIONS is related to sqs.
@@ -131,9 +131,13 @@ class Feedback(models.Model):
         event.send()
 
         # Send email to the contact email for an integration.
-        if self.target_product.contact_email:
-            contact_email = self.target_product.contact_email
-
+        data_structure = DataStructure.objects.filter(
+            name='supportEmail', context__product_type=self.target_product.product_type, context__name='support'
+        ).last()
+        contact_email = data_structure.find_actual_value(
+            product=self.target_product, version_id=self.target_product.version_id()
+        )
+        if contact_email:
             contact_customization = Account.objects.filter(email=contact_email).first()
             if contact_customization:
                 contact_customization = contact_customization.customization

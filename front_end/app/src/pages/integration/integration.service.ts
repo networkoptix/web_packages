@@ -2,6 +2,7 @@ import { Injectable, OnDestroy }       from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { NxCloudApiService }           from '../../services/nx-cloud-api';
 import { NxConfigService }             from '../../services/nx-config';
+import { NxUtilsService }              from '../../services/utils.service';
 
 interface Platform {
     file: string;
@@ -51,27 +52,33 @@ export class IntegrationService implements OnDestroy {
         return this.api.getIntegrations();
     }
 
-    private setScreenshots(section) {
+    private formatScreenshots(section) {
         if (section) {
             section.screenshots = Object.keys(section).filter((element) => {
                 return element.match(/screenshot/i) && section[element];
             }).map((key) => {
-                return {id: key, value: section[key]};
+                const match = key.match(/([\d]+)/i);
+                return { id: key, value: section[key], sortKey: +match[0] };
             });
+
             if (section.screenshots.length < 1) {
                 delete section.screenshots;
+            } else {
+                section.screenshots.sort(NxUtilsService.byParam((elm) => {
+                    return elm.sortKey;
+                }, NxUtilsService.sortASC));
             }
         }
     }
 
-    private formatScreenshots(plugin) {
+    private formatOverviewScreenshots(plugin) {
         const processed: any = [];
 
         Object.entries(plugin.overview).forEach((item) => {
-            const matchScreenshot = item[0].match(/Screenshot[\d]+$/);
+            const matchScreenshot = item[0].match(/Screenshot([\d]+)$/);
 
             if (matchScreenshot) {
-                processed.push({ id: item[0].replace('overview', ''), value: item[1] });
+                processed.push({ id: item[0].replace('overview', ''), value: item[1], sortKey: +matchScreenshot[1] });
             }
         });
 
@@ -86,6 +93,10 @@ export class IntegrationService implements OnDestroy {
                 });
             }
         });
+
+        processed.sort(NxUtilsService.byParam((elm) => {
+            return elm.sortKey;
+        }, NxUtilsService.sortASC));
 
         plugin.overview.screenshots = processed;
     }
@@ -153,8 +164,8 @@ export class IntegrationService implements OnDestroy {
         plugin.versionDetails.version = (plugin.versionDetails.version) ? 'v.&nbsp;' + plugin.versionDetails.version : '&nbsp;';
         plugin.information.platforms.icons = this.setPlatformIcons(plugin);
 
-        this.setScreenshots(plugin.instructions);
-        this.formatScreenshots(plugin);
+        this.formatScreenshots(plugin.instructions);
+        this.formatOverviewScreenshots(plugin);
 
         return plugin;
     }

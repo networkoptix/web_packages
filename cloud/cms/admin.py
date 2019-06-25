@@ -220,7 +220,6 @@ class ProductAdmin(CMSAdmin):
         if obj and not request.user.is_superuser:
             readonly_fields = super().get_readonly_fields(request, obj)
             readonly_fields.remove('name')
-            readonly_fields.remove('contact_email')
             return readonly_fields
 
         return self.readonly_fields
