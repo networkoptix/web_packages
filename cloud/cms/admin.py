@@ -172,7 +172,7 @@ class ProductAdmin(CMSAdmin):
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)
         if not change and not request.user.is_superuser:
-            group = Group.objects.create(name=obj.name + ' Developer')
+            group = Group.objects.create(name=f'Developer: {obj.name}')
             permissions = Permission.objects.filter(
                 codename__in=['edit_content', 'change_product', 'change_productcustomizationreview']
             )
