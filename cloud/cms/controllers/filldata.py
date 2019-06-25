@@ -54,37 +54,29 @@ def global_contexts_to_dict(contexts, product):
 def process_context_structure(product, context, content, language,
                               version_id, preview, force_global_files, context_dict=None):
 
-    def replace_in(adict, key, value):
+    def replace_in(collection, key, value):
         # Here we process json files
-        for dict_key in adict.keys():
-            itm_type = type(adict[dict_key])
-            if itm_type not in [str, dict, list] or type(value) in [bool]:
-                continue
 
-            if itm_type is list:
-                for item in adict[dict_key]:
-                    if type(item) is str:
-                        idx = adict[dict_key].index(item)
+        if type(collection) is dict:
+            elements = collection.items()
+        elif type(collection) is list:
+            elements = enumerate(collection)
+        else:
+            raise ValueError(f"Cannot iterate through {type(collection)}")
 
-                        if item == key:
-                            # special case if json value contains only the value - we don't treat it as a string,
-                            # we replace the whole thing
-                            adict[dict_key][idx] = value
-                        else:
-                            adict[dict_key][idx] = item.replace(key, value)
-                    elif item in [dict, list]:
-                        replace_in(item, key, value)
-
-            elif itm_type is dict:
-                replace_in(adict[dict_key], key, value)
-
-            elif key in adict[dict_key]:
+        for key, item in elements:
+            item_type = type(item)
+            if item_type in [dict, list]:
+                replace_in(item, key, value)
+            elif item_type is str:
                 # special case if json value contains only the value - we don't treat it as a string,
                 # we replace the whole thing
-                if adict[dict_key] == key:
-                    adict[dict_key] = value
+                if collection[key] == key:
+                    collection[key] = value
                 else:
-                    adict[dict_key] = adict[dict_key].replace(key, value)
+                    if key in item:
+                        collection[key] = item.replace(key, str(value))
+
 
     default_language = product.default_language
     location = product.product_root
@@ -97,8 +89,8 @@ def process_context_structure(product, context, content, language,
                 content_value = datastructure.find_actual_value(product, language, version_id, draft=preview)
             # replace marker with value
             if not DataStructure.is_file_or_image(datastructure.type):
-                if type(content) == dict:
-                    # Process language JSON file
+                if type(content) in (dict, list):
+                    # Process json file
                     replace_in(content, datastructure.name, content_value)
                 else:
                     if datastructure.type == DataStructure.DATA_TYPES.check_box:
