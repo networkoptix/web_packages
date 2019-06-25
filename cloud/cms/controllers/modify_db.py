@@ -170,6 +170,11 @@ def save_unrevisioned_records(product, context, language, data_structures,
 
         elif data_structure.type in [DataStructure.DATA_TYPES.object, DataStructure.DATA_TYPES.array]:
             new_record_value = request_data[data_structure_name]
+            if not new_record_value:
+                if data_structure.type is DataStructure.DATA_TYPES.object:
+                    new_record_value = '{}'
+                elif data_structure.type is DataStructure.DATA_TYPES.array:
+                    new_record_value = '[]'
             try:
                 new_record_value = json.loads(new_record_value)
                 if data_structure.type == DataStructure.DATA_TYPES.array and type(new_record_value) != list:
