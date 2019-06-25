@@ -6,20 +6,11 @@ import { RouterModule, Routes }              from '@angular/router';
 import { FormsModule }                       from '@angular/forms';
 import { NgbModule }                         from '@ng-bootstrap/ng-bootstrap';
 
-import { DirectivesModule }       from '../../../directives/directives.module';
-import { NxSystemsListComponent } from './list.component';
+import { DirectivesModule }       from '../../../../directives/directives.module';
+import { NxSystemAdminComponent } from './admin.component';
 
 import { TranslateModule }     from '@ngx-translate/core';
-import { ComponentsModule }    from '../../../components/components.module';
-import { NxRegisterComponent } from '../../register/register.component';
-// import { NxOverviewComponent }  from './overview/overview.component';
-// import { NxSetupComponent }     from './setup/setup.component';
-
-const appRoutes: Routes = [
-    {
-        path    : 'systems', component: NxSystemsListComponent,
-    }
-];
+import { ComponentsModule }    from '../../../../components/components.module';
 
 @NgModule({
     imports        : [
@@ -32,25 +23,18 @@ const appRoutes: Routes = [
         TranslateModule,
         ComponentsModule,
         DirectivesModule,
-
-        RouterModule.forChild(appRoutes)
     ],
-    providers      : [
-    ],
+    providers      : [],
     declarations   : [
-        NxSystemsListComponent
+        NxSystemAdminComponent
     ],
     bootstrap      : [],
     entryComponents: [
+        NxSystemAdminComponent
     ],
     exports        : [
-        NxSystemsListComponent
+        NxSystemAdminComponent
     ]
 })
-export class NxSystemsListModule {
+export class NxSystemAdminModule {
 }
-
-declare var angular: angular.IAngularStatic;
-angular
-        .module('cloudApp.directives')
-        .directive('nxSystemsListComponent', downgradeComponent({ component: NxSystemsListComponent }) as angular.IDirectiveFactory);

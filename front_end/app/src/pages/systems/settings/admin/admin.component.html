@@ -1,0 +1,33 @@
+<nx-pre-loader type="page" *ngIf="!system"></nx-pre-loader>
+
+<div class="container" *ngIf="system">
+    <div class="col-12 col-lg-9" *ngIf="system.isMine">
+        <nx-block>
+            <header (click)="rename()">
+                {{system.info.name}}
+            </header>
+
+            <nx-section>
+                <button class="btn btn-default"
+                        [disabled]="(currentlyMerging || !system.isOnline || !system.isAvailable) && !(debugMode || betaMode)"
+                        (click)="mergeSystems()" translate>Merge with Another System</button>
+            </nx-section>
+        </nx-block>
+    </div>
+
+    <div class="col-12 col-lg-9 mt-3" *ngIf="system.isMine">
+        <nx-block>
+            <header translate>
+                Owner
+            </header>
+
+            <nx-section>
+                {{system.info.ownerFullName}}
+                {{system.info.ownerAccountEmail}}
+                <button [disabled]="currentlyMerging"
+                        class="btn btn-default"
+                        (click)="disconnect()">Disconnect from <span class="product-name">&nbsp;%CLOUD_NAME%</span></button>
+            </nx-section>
+        </nx-block>
+    </div>
+</div>

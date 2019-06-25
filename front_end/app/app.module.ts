@@ -42,6 +42,10 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
     shouldProcessUrl(url: UrlTree) {
         return url.toString().startsWith('/sandbox') ||
             url.toString().startsWith('/ipvd') ||
+            url.toString().startsWith('/systems') ||
+            url.toString().startsWith('/systems/:systemId') ||
+            url.toString().startsWith('/systems/:systemId/users') ||
+            url.toString().startsWith('/systems/:systemId/interfaces') ||
             url.toString().startsWith('/new-content') ||
             url.toString().startsWith('/right') ||
             url.toString().startsWith('/integrations');
@@ -49,7 +53,7 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
 
         /* Temporary downgraded components - routing is handled by AJS */
         // url.toString().startsWith('/') ||
-        // url.toString().startsWith('/systems') ||
+        //
         // url.toString().startsWith('/systems/:systemId') ||
         // url.toString().startsWith('/register') ||
         // url.toString().startsWith('/login') ||

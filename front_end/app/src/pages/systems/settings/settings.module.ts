@@ -6,19 +6,29 @@ import { RouterModule, Routes }              from '@angular/router';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
-import { NxSettingsComponent } from './settings.component';
+import { NxSystemSettingsComponent } from './settings.component';
 
-import { TranslateModule }        from '@ngx-translate/core';
-import { ComponentsModule }       from '../../../components/components.module';
-import { NxSystemsListComponent } from '../list/list.component';
-// import { NxOverviewComponent }  from './overview/overview.component';
-// import { NxSetupComponent }     from './setup/setup.component';
+import { TranslateModule }  from '@ngx-translate/core';
+import { ComponentsModule } from '../../../components/components.module';
 
-// const appRoutes: Routes = [
-//     {
-//         path    : 'systems/:systemId', component: NxSettingsComponent,
-//     }
-// ];
+import { NxSystemAdminModule }         from './admin/admin.module';
+import { NxSystemUsersModule }         from './users/users.module';
+import { NxSystemInterfacesModule }    from './interfaces/interfaces.module';
+import { NxSystemAdminComponent }      from './admin/admin.component';
+import { NxSystemUsersComponent }      from './users/users.component';
+import { NxSystemInterfacesComponent } from './interfaces/interfaces.component';
+
+const appRoutes: Routes = [
+    // root path is handles by AJS for now
+    {
+        path    : 'systems/:systemId', component: NxSystemSettingsComponent,
+        children: [
+            { path: '', component: NxSystemAdminComponent },
+            { path: 'users', component: NxSystemUsersComponent },
+            { path: 'interfaces', component: NxSystemInterfacesComponent },
+        ]
+    }
+];
 
 @NgModule({
     imports        : [
@@ -29,19 +39,22 @@ import { NxSystemsListComponent } from '../list/list.component';
         NgbModule,
         TranslateModule,
         ComponentsModule,
+        NxSystemAdminModule,
+        NxSystemUsersModule,
+        NxSystemInterfacesModule,
 
-        // RouterModule.forChild(appRoutes)
+        RouterModule.forChild(appRoutes)
     ],
     providers      : [],
     declarations   : [
-        NxSettingsComponent
+        NxSystemSettingsComponent
     ],
     bootstrap      : [],
     entryComponents: [
-        NxSettingsComponent
+        NxSystemSettingsComponent
     ],
     exports        : [
-        NxSettingsComponent
+        NxSystemSettingsComponent
     ]
 })
 export class NxSettingsModule {
@@ -50,4 +63,4 @@ export class NxSettingsModule {
 declare var angular: angular.IAngularStatic;
 angular
         .module('cloudApp.directives')
-        .directive('nxSettingsComponent', downgradeComponent({ component: NxSettingsComponent }) as angular.IDirectiveFactory);
+        .directive('nxSystemSettingsComponent', downgradeComponent({ component: NxSystemSettingsComponent }) as angular.IDirectiveFactory);

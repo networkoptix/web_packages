@@ -75,10 +75,12 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
             .requireLogin()
             .then((newAccount) => {
                 this.account = newAccount;
-                this.gettingSystems.run();
+                setTimeout(() => {
+                    this.gettingSystems.run();
+                }, 500);
             });
 
-        this.checkSystems = timer(0, 500).subscribe(() => {
+        this.checkSystems = timer(0, 1000).subscribe(() => {
             this.systems = this.systemsProvider.systems;
 
             if (this.systems.length === 1) {
@@ -91,7 +93,6 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
         });
 
         this.openClient = this.process.init(() => {
-            console.log('systemSelected ->', this.systemSelected);
             return this.urlProtocol
                        .open(this.systemSelected && this.systemSelected.id)
                        .then(() => {
