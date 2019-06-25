@@ -4,6 +4,7 @@ from datetime import datetime
 from distutils.util import strtobool
 from django.db import models
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from jsonfield import JSONField
 from model_utils import Choices
 from django.core.cache import cache, caches
@@ -299,6 +300,11 @@ class Product(models.Model):
         data_structure = DataStructure.objects.filter(name=record_name, context__in=global_contexts).last()
 
         return data_structure.find_actual_value(product=self, version_id=self.version_id()) if data_structure else None
+
+    def clean(self):
+        if self.product_type.type != ProductType.PRODUCT_TYPES.cloud_portal and \
+                Product.objects.filter(name=self.name, product_type=self.product_type).exclude(pk=self.pk).exists():
+            raise ValidationError({'name': 'Name already exists'})
 
     def save(self, *args, **kwargs):
         need_update = False
