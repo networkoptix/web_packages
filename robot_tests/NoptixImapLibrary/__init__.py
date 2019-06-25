@@ -113,7 +113,7 @@ class NoptixImapLibrary(object):
         Examples:
         | Delete Email | INDEX |
         """
-        self._imap.uid('store', email_index, '+FLAGS', r'(\DELETED)')
+        self._imap.uid('STORE', email_index, '+X-GM-LABELS', '\\Trash')
         self._imap.expunge()
 
     def get_email_body(self, email_index):
