@@ -75,6 +75,11 @@ def find_structure(name, context, structure_type, meta=None, description="", val
         if db_structure:
             label = db_structure.label if db_structure.label != name else ''
             value = db_structure.default if not DataStructure.is_file_or_image(db_structure.type) else ""
+            if db_structure.type in [DataStructure.DATA_TYPES.object, DataStructure.DATA_TYPES.array]:
+                if value:
+                    value = json.loads(value)
+                else:
+                    value = None
             if db_structure.description:
                 description = db_structure.description
             if db_structure.type:
@@ -166,20 +171,12 @@ def check_if_json (data, short_name, structure, product_name):
             record_type = 'check_box'
         elif type(value) == list:
             record_type = 'array'
-            print(value)
-            value = json.dumps(value, indent=4, separators=(',', ': '))
         elif type(value) == dict:
             record_type = 'object'
-
-            print(value)
-            value = json.dumps(value, indent=4, separators=(',', ': '))
         elif re.match(GUID_REGEXP, value):
             record_type = 'guid'
 
         find_structure(key, context, record_type , value=value)
-
-    print(template)
-
     return True
 
 
