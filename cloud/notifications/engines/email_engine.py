@@ -41,6 +41,10 @@ def email_cache(customization_name, cache_type, value=None, force=None):
 
 
 def send(email, msg_type, message, language_code, customization_name):
+    try:
+        email = json.loads(email)
+    except json.JSONDecodeError:
+        email = (email,)
 
     customization_cache = cloud_portal_customization_cache(customization_name, 'email')
 
@@ -70,7 +74,7 @@ def send(email, msg_type, message, language_code, customization_name):
     )
 
     msg = EmailMultiAlternatives(
-        subject, email_txt_body, email_from, to=(email,))
+        subject, email_txt_body, email_from, to=email)
     msg.content_subtype = 'plain'  # Main content is now text/html
     msg.attach_alternative(email_html_body, "text/html")
 

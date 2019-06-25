@@ -11,9 +11,7 @@ import { TranslateService }                                                     
 })
 export class MessageModalContent {
     @Input() messageType;
-    @Input() productName;
-    @Input() product;
-    @Input() showTo;
+    @Input() data;
     @Input() closable;
     @Input() config;
 
@@ -47,7 +45,7 @@ export class MessageModalContent {
             this.lang = lang;
             this.initForm();
             this.sendMessage = this.process.init(() => {
-                return this.cloudApi.sendMessage(this.topic, this.product.id, this.message, this.userName, this.userEmail, this.contact);
+                return this.cloudApi.sendMessage(this.topic, this.data.productId, this.message, this.userName, this.userEmail, this.contact);
             }, {
                 successMessage: this.lang.dialogs.message.sent
             }).then(() => {
@@ -69,11 +67,11 @@ export class MessageModalContent {
                 this.placeholder = '';
         }
 
-        this.title = this.lang.dialogs.message.title[this.messageType].replace('{{product}}', this.productName);
+        this.title = this.lang.dialogs.message.title[this.messageType].replace('{{product}}', this.data.productName);
         this.topics = this.config.messageTopics[this.messageType].map((topic) => {
             return {
                 id: topic,
-                name: this.lang.dialogs.message.topic[topic].replace('{{product}}', this.productName)
+                name: this.lang.dialogs.message.topic[topic].replace('{{product}}', this.data.productName)
             };
         });
 
@@ -108,7 +106,7 @@ export class NxModalMessageComponent implements OnInit {
         this.config = configService.getConfig();
     }
 
-    private dialog(type, showTo, productName, product) {
+    private dialog(type, data) {
         // TODO: Refactor dialog to use generic dialog
         // TODO: retire loading ModalContent (CLOUD-2493)
         this.modalRef = this.modalService.open(MessageModalContent,
@@ -118,26 +116,15 @@ export class NxModalMessageComponent implements OnInit {
                         });
         this.modalRef.componentInstance.closable = true;
         this.modalRef.componentInstance.messageType = type;
-        this.modalRef.componentInstance.productName = productName;
-        this.modalRef.componentInstance.product = product;
-        this.modalRef.componentInstance.showTo = showTo;
+        this.modalRef.componentInstance.data = data;
         this.modalRef.componentInstance.config = this.config;
 
 
         return this.modalRef;
     }
 
-    open(type, showTo, productName, product?) {
-        if (productName === undefined) {
-            productName = '';
-        }
-        if (product === undefined) {
-            product = {
-                id: productName
-            };
-        }
-
-        return this.dialog(type, showTo, productName, product).result;
+    open(type, data) {
+        return this.dialog(type, data).result;
     }
 
     ngOnInit() {

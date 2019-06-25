@@ -1,3 +1,4 @@
+import json
 from django.db import models
 from django.utils import timezone
 from jsonfield import JSONField
@@ -138,28 +139,16 @@ class Feedback(models.Model):
         contact_email = data_structure.find_actual_value(
             product=self.target_product, version_id=self.target_product.version_id()
         )
+        emails = [self.sender_email]
         if contact_email:
-            contact_customization = Account.objects.filter(email=contact_email).first()
-            if contact_customization:
-                contact_customization = contact_customization.customization
-            else:
-                contact_customization = settings.CUSTOMIZATION
+            emails.append(contact_email)
 
-            msg = Message.objects.create(user_email=contact_email,
-                                         type=self.type,
-                                         customization=contact_customization,
-                                         message=data,
-                                         event=event)
-            msg.send()
-
-        # Send a copy of the email to the sender
-        sender = Account.objects.filter(email=self.sender_email).last()
-        if sender:
-            msg = Message.objects.create(user_email=sender.email,
-                                         type=self.type,
-                                         customization=sender.customization,
-                                         message=data)
-            msg.send()
+        msg = Message.objects.create(user_email=json.dumps(emails),
+                                     type=self.type,
+                                     customization=settings.CUSTOMIZATION,
+                                     message=data,
+                                     event=event)
+        msg.send()
 
 
 class MessageStatusSerializer(serializers.ModelSerializer):  # model to use when checking on message status
