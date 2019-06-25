@@ -14,7 +14,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 IGNORE_DIRECTORIES = ('help',)
-IMAGES_EXTENSIONS = ('ico', 'png', 'bmp', 'icns', 'jpg', 'jpeg')
+IMAGES_EXTENSIONS = ('ico', 'png', 'bmp', 'jpg', 'jpeg')
 
 
 class RecordState(object):
