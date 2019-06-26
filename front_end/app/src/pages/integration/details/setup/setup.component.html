@@ -38,9 +38,7 @@
 
         <nx-block side-element type="gray"
                   *ngIf="plugin && plugin.requirementsAndCompatibility">
-            <header translate>
-                Additional requirement
-            </header>
+            <header translate>Requirements</header>
 
             <nx-section>
                 <div class="card--body-info">
@@ -51,7 +49,9 @@
                     </div>
 
                     <div class="section">
-                        <div translate>Tested on version(s)</div>
+                        <div>
+                            <label class="group-label" translate>Tested on version(s)</label>
+                        </div>
                         <div *ngFor="let platform of plugin.requirementsAndCompatibility.testedVersions">
                             <div>{{platform}}</div>
                         </div>
@@ -60,7 +60,7 @@
                     <div class="section"
                          *ngIf="plugin.requirementsAndCompatibility.additionalRequirements">
 
-                        <div translate>Additional Requirements</div>
+                        <div><label class="group-label" translate>Additional Requirements</label></div>
                         <div [innerHTML]="plugin.requirementsAndCompatibility.additionalRequirements"></div>
                     </div>
 
