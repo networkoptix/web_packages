@@ -95,7 +95,11 @@ def process_context_structure(product, context, content, language,
                 else:
                     if datastructure.type == DataStructure.DATA_TYPES.check_box:
                         content_value = str(content_value)
-                    content = content.replace(datastructure.name, content_value)
+
+                    if datastructure.name in content:
+                        if type(content_value) != str:
+                            content_value = json.dumps(content_value)
+                        content = content.replace(datastructure.name, content_value)
 
             elif content_value or datastructure.optional:
                 if context.is_global and not force_global_files:
