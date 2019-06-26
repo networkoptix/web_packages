@@ -14,6 +14,9 @@
   "contact_support": {
     "emailSubject": "Support request for {{message.product}}"
   },
+  "integration_feedback": {
+    "emailSubject": "Feedback for {{message.product}}"
+  },
   "ipvd_feedback": {
     "emailSubject": "Camera Page Feedback for {{message.product}}"
   },
