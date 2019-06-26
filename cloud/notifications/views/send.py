@@ -107,6 +107,7 @@ def send_event(request):
                 product_id = product.id
         else:
             request.data['product'] = request.data['productId']
+            request.data['type'] = MESSAGE_TYPES.ipvd_feedback
 
         request.data['sender_email'] = request.data['userEmail']
         request.data['sender_name'] = request.data['userName']

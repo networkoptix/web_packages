@@ -576,6 +576,17 @@
             "value": "false",
             "optional": true,
             "advanced": true
+          },
+          {
+            "name": "supportEmail",
+            "label": "Support E-mail",
+            "value": "",
+            "description": "E-mail that is used by contact forms.",
+            "type": "text",
+            "optional": true,
+            "meta": {
+              "regex": "^[a-zA-Z0-9\\.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$"
+            }
           }
         ]
       },

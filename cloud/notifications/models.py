@@ -19,6 +19,7 @@ class MessageTypes(object):
     integration_feedback = "integration_feedback"
     ipvd_feedback_page = "ipvd_feedback_page"
     ipvd_feedback_device = "ipvd_feedback_device"
+    ipvd_feedback = "ipvd_feedback"
 
 
 class Event(models.Model):
@@ -134,7 +135,8 @@ class Feedback(models.Model):
 
         # Send email to the contact email for an integration.
         data_structure = DataStructure.objects.filter(
-            name='supportEmail', context__product_type=self.target_product.product_type, context__name='support'
+            name='supportEmail', context__product_type=self.target_product.product_type,
+            context__name__in=['support', 'Settings']
         ).last()
         contact_email = data_structure.find_actual_value(
             product=self.target_product, version_id=self.target_product.version_id()

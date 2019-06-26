@@ -454,6 +454,9 @@ NOTIFICATIONS_CONFIG = {
     'integration_feedback': {
         'engine': 'email'
     },
+    'ipvd_feedback': {
+        'engine': 'email'
+    },
     'ipvd_feedback_page': {
         'engine': 'email'
     },
