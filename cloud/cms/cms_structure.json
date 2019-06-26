@@ -1874,7 +1874,6 @@
             "description": "Explaining any additional hardware or software requirements needed.",
             "type": "html",
             "optional": true,
-            "public": false,
             "meta": {
               "char_limit": 1000
             }

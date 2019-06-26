@@ -34,7 +34,10 @@ export class IntegrationService implements OnDestroy {
                         plugin.versionDetails.version = (plugin.versionDetails.version) ? 'v.&nbsp;' + plugin.versionDetails.version : '&nbsp;';
                     }
 
-                    plugin.information.platforms.icons = this.setPlatformIcons(plugin);
+                    if (plugin.requirementsAndCompatibility && plugin.requirementsAndCompatibility.platforms) {
+                        plugin.requirementsAndCompatibility.platforms.icons = this.setPlatformIcons(plugin);
+                    }
+
                     plugin.information.logo = plugin.information.logo || this.config.icons.default;
 
                     plugin.state = (plugin.pending) ? 'pending' : (plugin.draft) ? 'draft' : undefined;
@@ -105,13 +108,15 @@ export class IntegrationService implements OnDestroy {
         const platformIcons = [];
 
         this.config.icons.platforms.forEach(icon => {
-            const platform = plugin.information.platforms.find(platform => {
-                // 32 or 64 bit? ... it doesn't matter :)
-                return platform.toLowerCase().indexOf(icon.name) > -1;
-            });
-            if (platform) {
-                platformIcons.push({ name: platform, src: icon.src });
-            }
+            const platform = plugin.requirementsAndCompatibility
+                                   .platforms
+                                   .find(platform => {
+                                       // 32 or 64 bit? ... it doesn't matter :)
+                                       return platform.toLowerCase().indexOf(icon.name) > -1;
+                                   });
+                                   if (platform) {
+                                       platformIcons.push({ name: platform, src: icon.src });
+                                   }
         });
 
         return platformIcons;
@@ -162,7 +167,10 @@ export class IntegrationService implements OnDestroy {
         }
 
         plugin.versionDetails.version = (plugin.versionDetails.version) ? 'v.&nbsp;' + plugin.versionDetails.version : '&nbsp;';
-        plugin.information.platforms.icons = this.setPlatformIcons(plugin);
+
+        if (plugin.requirementsAndCompatibility && plugin.requirementsAndCompatibility.platforms) {
+            plugin.requirementsAndCompatibility.platforms.icons = this.setPlatformIcons(plugin);
+        }
 
         this.formatScreenshots(plugin.instructions);
         this.formatOverviewScreenshots(plugin);
