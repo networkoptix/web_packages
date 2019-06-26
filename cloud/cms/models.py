@@ -341,6 +341,7 @@ class Context(models.Model):
     is_global = models.BooleanField(default=False)
     hidden = models.BooleanField(default=False)
     order = models.IntegerField(default=100000)
+    deprecated = models.BooleanField(default=False)
 
     file_path = models.CharField(max_length=1024, blank=True, default='')
     url = models.CharField(max_length=1024, blank=True, default='')

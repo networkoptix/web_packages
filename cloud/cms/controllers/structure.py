@@ -10,10 +10,9 @@ from ..controllers.generate_structure import templatify_json
 from ..models import Context, ContextTemplate, DataStructure, DataRecord, Product, ProductType
 
 
-def deprecate_data_structures_for_product_type(product_type):
-    for ds in DataStructure.objects.filter(context__product_type=product_type):
-        ds.deprecated = True
-        ds.save()
+def deprecate_contexts_and_data_structures_for_product_type(product_type):
+    Context.objects.filter(product_type=product_type).update(deprecated=True)
+    DataStructure.objects.filter(context__product_type=product_type).update(deprecated=True)
 
 
 def find_or_add_product_type(product_type, name=""):
@@ -67,7 +66,7 @@ def update_from_object(product_type_structure, product_type=None):
 
     order = 0
     context_order = 0
-    deprecate_data_structures_for_product_type(product_type)
+    deprecate_contexts_and_data_structures_for_product_type(product_type)
 
     for context_data in product_type_structure['contexts']:
         context = update_context(context_data, product_type, context_order)
@@ -165,7 +164,7 @@ def process_zip(file_descriptor, user, product, update_structure, update_content
             if update_structure:
                 # Here we assume that there is only one template here
                 if name.endswith('json'):
-                    #JSON file
+                    # JSON file
                     values, template = templatify_json(json.loads(file_content))
                     file_content = json.dumps(template, indent=4, separators=(',', ': '))
                     pass
@@ -299,6 +298,7 @@ def update_context(context_data, product_type, order):
     context.label = context_data.get("label", "")
     context.hidden = context_data.get("hidden", False)
     context.order = order
+    context.deprecated = False
     context.save()
     return context
 
