@@ -64,18 +64,18 @@ def process_context_structure(product, context, content, language,
         else:
             raise ValueError(f"Cannot iterate through {type(collection)}")
 
-        for key, item in elements:
+        for index, item in elements:
             item_type = type(item)
             if item_type in [dict, list]:
                 replace_in(item, key, value)
             elif item_type is str:
                 # special case if json value contains only the value - we don't treat it as a string,
                 # we replace the whole thing
-                if collection[key] == key:
-                    collection[key] = value
+                if collection[index] == key:
+                    collection[index] = value
                 else:
                     if key in item:
-                        collection[key] = item.replace(key, str(value))
+                        collection[index] = item.replace(key, str(value))
 
 
     default_language = product.default_language
