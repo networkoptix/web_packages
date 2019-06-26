@@ -938,6 +938,39 @@
                 "Storage"
               ]
             }
+          },
+          {
+            "name": "companyName",
+            "label": "Company Name",
+            "value": "",
+            "description": "A company name. The company's name is visible in the detailed view page for the integration in the rightmost column.",
+            "type": "text",
+            "optional": false,
+            "meta": {
+              "char_limit": 64
+            }
+          },
+          {
+            "name": "companyWeb",
+            "label": "Company Web site",
+            "value": "",
+            "description": "Company's web address. Example: http://www.google.com, https://mail.yahoo.com",
+            "type": "text",
+            "optional": false,
+            "meta": {
+              "regex": "^https?:\\/\\/([\\da-z\\.-]+)\\.([a-z\\.]{2,6})([\\/\\w \\.-]*)*\\/?$"
+            }
+          },
+          {
+            "name": "companyPrivacyPolicyLink",
+            "label": "Company's privacy policy",
+            "value": "",
+            "description": "Link to company's privacy policy page.",
+            "type": "text",
+            "optional": false,
+            "meta": {
+              "regex": "^https?:\\/\\/([\\da-z\\.-]+)\\.([a-z\\.]{2,6})([\\/\\w \\.-]*)*\\/?$"
+            }
           }
         ]
       },
@@ -1540,83 +1573,6 @@
             "meta": {
               "char_limit": 10000,
               "brand_vars": true
-            }
-          }
-        ]
-      },
-      {
-        "name": "company",
-        "label": "Company",
-        "description": "General information about the company that appears in the rightmost column of the integration's page.",
-        "translatable": false,
-        "values": [
-          {
-            "name": "companyName",
-            "label": "Company Name",
-            "value": "",
-            "description": "A company name. The company's name is visible in the detailed view page for the integration in the rightmost column.",
-            "type": "text",
-            "optional": false,
-            "meta": {
-              "char_limit": 64
-            }
-          },
-          {
-            "name": "companyInfo",
-            "label": "Company Info",
-            "value": "",
-            "description": "A short description about the company. The company's info is visible in the detailed view page for the integration in the rightmost column.",
-            "type": "long_text",
-            "optional": true,
-            "meta": {
-              "char_limit": 250
-            }
-          },
-          {
-            "name": "companyLogo",
-            "label": "Company Logo",
-            "value": "",
-            "description": "Company logo.<br>Must have a transparent background.",
-            "type": "external_image",
-            "optional": true,
-            "meta": {
-              "size": 512000,
-              "format": "png",
-              "height_le": 250,
-              "width_le": 500
-            }
-          },
-          {
-            "name": "companyWeb",
-            "label": "Company URL",
-            "value": "",
-            "description": "Company's web address. Example: http://www.google.com, https://mail.yahoo.com",
-            "type": "text",
-            "optional": false,
-            "meta": {
-              "regex": "^https?:\\/\\/([\\da-z\\.-]+)\\.([a-z\\.]{2,6})([\\/\\w \\.-]*)*\\/?$"
-            }
-          },
-          {
-            "name": "companyWebTitle",
-            "label": "Company URL Title",
-            "value": "",
-            "description": "Human friendly title for company's web address. Example: 'Visit our web site'",
-            "type": "text",
-            "optional": true,
-            "meta": {
-              "char_limit": 64
-            }
-          },
-          {
-            "name": "companyPrivacyPolicyLink",
-            "label": "Company's privacy policy",
-            "value": "",
-            "description": "Link to company's privacy policy page.",
-            "type": "text",
-            "optional": false,
-            "meta": {
-              "regex": "^https?:\\/\\/([\\da-z\\.-]+)\\.([a-z\\.]{2,6})([\\/\\w \\.-]*)*\\/?$"
             }
           }
         ]

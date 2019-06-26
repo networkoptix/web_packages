@@ -129,12 +129,12 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
 
     openMessageDialog() {
         let disclaimer: string = this.lang.privacyPolicy.integration;
-        disclaimer = disclaimer.replace(/%INTEGRATION_COMPANY%/g, this.plugin.company.companyName);
-        disclaimer = disclaimer.replace(/%INTEGRATION_PRIVACY_POLICY%/g, this.plugin.company.companyPrivacyPolicyLink);
+        disclaimer = disclaimer.replace(/%INTEGRATION_COMPANY%/g, this.plugin.information.companyName);
+        disclaimer = disclaimer.replace(/%INTEGRATION_PRIVACY_POLICY%/g, this.plugin.information.companyPrivacyPolicyLink);
         const data = {
             productId: this.plugin.id,
             productName: this.plugin.information.name,
-            companyName: this.plugin.company.companyName,
+            companyName: this.plugin.information.companyName,
             supportEmail: this.plugin.support.supportEmail,
             disclaimerMsg: disclaimer
         };
