@@ -71,11 +71,10 @@ def process_context_structure(product, context, content, language,
             elif item_type is str:
                 # special case if json value contains only the value - we don't treat it as a string,
                 # we replace the whole thing
-                if collection[index] == key:
+                if item == key:
                     collection[index] = value
-                else:
-                    if key in item:
-                        collection[index] = item.replace(key, str(value))
+                elif key in item:
+                    collection[index] = item.replace(key, str(value))
 
 
     default_language = product.default_language
@@ -98,7 +97,7 @@ def process_context_structure(product, context, content, language,
 
                     if datastructure.name in content:
                         if type(content_value) != str:
-                            content_value = json.dumps(content_value)
+                            content_value = str(content_value)
                         content = content.replace(datastructure.name, content_value)
 
             elif content_value or datastructure.optional:
