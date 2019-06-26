@@ -55,7 +55,7 @@ export class IntegrationService implements OnDestroy {
     private formatScreenshots(section) {
         if (section) {
             section.screenshots = Object.keys(section).filter((element) => {
-                return element.match(/screenshot/i) && section[element];
+                return element.match(/screenshot[\d]+/i) && section[element];
             }).map((key) => {
                 const match = key.match(/([\d]+)/i);
                 return { id: key, value: section[key], sortKey: +match[0] };
