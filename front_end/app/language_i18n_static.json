@@ -163,7 +163,7 @@
 			"failedToSend": "Message has failed to send.",
     		"sent": "Message has been sent.",
 			"title": {
-				"integration": "Email for {{product}}",
+				"integration": "Get in touch with {{companyName}}",
 				"ipvd_feedback_page": "Feedback for cameras page",
 				"ipvd_feedback_device": "Feedback about {{product}}"
 			},

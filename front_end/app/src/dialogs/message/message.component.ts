@@ -67,7 +67,12 @@ export class MessageModalContent {
                 this.placeholder = '';
         }
 
-        this.title = this.lang.dialogs.message.title[this.messageType].replace('{{product}}', this.data.productName);
+        let title = this.lang.dialogs.message.title[this.messageType];
+        if (this.messageType !== this.config.messageType.integration) {
+            this.title = title.replace('{{product}}', this.data.productName);
+        } else {
+            this.title = title.replace('{{companyName}}', this.data.companyName);
+        }
         this.topics = this.config.messageTopics[this.messageType].map((topic) => {
             return {
                 id: topic,
