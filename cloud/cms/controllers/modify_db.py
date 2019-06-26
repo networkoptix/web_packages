@@ -125,10 +125,13 @@ def save_unrevisioned_records(product, context, language, data_structures,
 
         elif data_structure.type == DataStructure.DATA_TYPES.select:
             values = request_data.getlist(data_structure_name)
-            if 'multi' in data_structure.meta_settings and data_structure.meta_settings['multi']:
-                new_record_value = json.dumps(values)
+            if 'options' in data_structure.meta_settings and data_structure.meta_settings['options']:
+                if 'multi' in data_structure.meta_settings and data_structure.meta_settings['multi']:
+                    new_record_value = json.dumps(values)
+                else:
+                    new_record_value = values[0]
             else:
-                new_record_value = values[0]
+                new_record_value = ''
 
         elif data_structure.type in [DataStructure.DATA_TYPES.external_file, DataStructure.DATA_TYPES.external_image]:
 
