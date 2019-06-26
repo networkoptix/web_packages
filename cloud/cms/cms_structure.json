@@ -927,23 +927,6 @@
                 "Storage"
               ]
             }
-          },
-          {
-            "name": "platforms",
-            "label": "Supported OS and platforms",
-            "value": "",
-            "description": "",
-            "type": "select",
-            "meta": {
-              "multi": true,
-              "options": [
-                "Windows - x64",
-                "Linux - x64",
-                "ARM 64bit / Nvidia Jetson",
-                "ARM 32bit / Raspberry PI",
-                "MacOS"
-              ]
-            }
           }
         ]
       },
@@ -1834,9 +1817,10 @@
           }
         ]
       },
-      {"name":  "versionDetails",
-        "label": "Version Details",
-        "description": "Details about supported software version, plugin version and changelog.",
+      {
+        "name": "requirementsAndCompatibility",
+        "label": "Requirements and compatibility",
+        "description": "Details about hardware or software requirements.",
         "translatable": false,
         "values": [
           {
@@ -1845,6 +1829,7 @@
             "value": "",
             "description": "Latest supported version",
             "type": "select",
+            "optional": false,
             "meta": {
               "multi": true,
               "options": [
@@ -1853,6 +1838,43 @@
               ]
             }
           },
+          {
+            "name": "platforms",
+            "label": "Supported OS and platforms",
+            "value": "",
+            "description": "",
+            "type": "select",
+            "optional": false,
+            "meta": {
+              "multi": true,
+              "options": [
+                "Windows - x64",
+                "Linux - x64",
+                "ARM 64bit / Nvidia Jetson",
+                "ARM 32bit / Raspberry PI",
+                "MacOS"
+              ]
+            }
+          },
+          {
+            "name": "additionalRequirements",
+            "label": "Additional Requirements",
+            "value": "",
+            "description": "Explaining any additional hardware or software requirements needed.",
+            "type": "html",
+            "optional": true,
+            "public": false,
+            "meta": {
+              "char_limit": 1000
+            }
+          }
+        ]
+      },
+      {"name":  "versionDetails",
+        "label": "Version Details",
+        "description": "Details about supported software version, plugin version and changelog.",
+        "translatable": false,
+        "values": [
           {
             "name": "version",
             "label": "Integration version",
