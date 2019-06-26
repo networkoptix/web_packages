@@ -61,7 +61,7 @@ export class IntegrationService implements OnDestroy {
                 return element.match(/screenshot[\d]+/i) && section[element];
             }).map((key) => {
                 const match = key.match(/([\d]+)/i);
-                return { id: key, value: section[key], sortKey: +match[0] };
+                return { id: key, value: section[key], sortKey: parseInt(match[0], 10) };
             });
 
             if (section.screenshots.length < 1) {
@@ -81,7 +81,7 @@ export class IntegrationService implements OnDestroy {
             const matchScreenshot = item[0].match(/Screenshot([\d]+)$/);
 
             if (matchScreenshot) {
-                processed.push({ id: item[0].replace('overview', ''), value: item[1], sortKey: +matchScreenshot[1] });
+                processed.push({ id: item[0].replace('overview', ''), value: item[1], sortKey: parseInt(matchScreenshot[1], 10) });
             }
         });
 
