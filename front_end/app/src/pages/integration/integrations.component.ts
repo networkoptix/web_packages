@@ -3,7 +3,7 @@ import { Location }           from '@angular/common';
 import { IntegrationService } from './integration.service';
 import { NxUriService }       from '../../services/uri.service';
 import { NxConfigService }    from '../../services/nx-config';
-import { TranslateService }   from '@ngx-translate/core';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { Title }              from '@angular/platform-browser';
 
 @Component({
@@ -15,7 +15,6 @@ import { Title }              from '@angular/platform-browser';
 export class NxIntegrationsComponent implements OnInit {
     private CONFIG: any = {};
     private lang: any = {};
-    private searchBy: any;
     private allElements: any;
     private elements: any;
     private emptyFilter: any = {};
@@ -42,12 +41,18 @@ export class NxIntegrationsComponent implements OnInit {
         };
         this.filterModel = this.emptyFilter;
         this.filterModel.tags = [];
+        setTimeout(() => {
+            this.language.translationsSubject.subscribe((lang) => {
+                this.lang = lang;
+                this.title.setTitle(this.lang.pageTitles.integrations);
+            });
+        });
     }
 
     constructor(private uri: NxUriService,
                 private integrations: IntegrationService,
                 private config: NxConfigService,
-                private translate: TranslateService,
+                private language: NxLanguageProviderService,
                 private title: Title,
                 location: Location) {
         this.location = location;
@@ -83,11 +88,6 @@ export class NxIntegrationsComponent implements OnInit {
                 console.error('Integration plugins error -> ', error);
                 this.location.go('404');
             });
-
-        setTimeout(() => {
-            this.lang = this.translate.translations[this.translate.currentLang];
-            this.title.setTitle(this.lang.pageTitles.integrations);
-        });
     }
 
     setTags() {

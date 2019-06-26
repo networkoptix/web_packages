@@ -5,7 +5,6 @@ import {
 
 import { NxConfigService }           from '../../../services/nx-config';
 import { NxRibbonService }           from '../../../components/ribbon/ribbon.service';
-import { TranslateService }          from '@ngx-translate/core';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { IntegrationService }        from '../integration.service';
 
@@ -34,8 +33,7 @@ export class NxIntegrationsListComponent implements OnDestroy, OnChanges {
     constructor(private configService: NxConfigService,
                 private integrations: IntegrationService,
                 private ribbonService: NxRibbonService,
-                private language: NxLanguageProviderService,
-                private translate: TranslateService) {
+                private language: NxLanguageProviderService) {
 
         this.setupDefaults();
     }
@@ -57,8 +55,8 @@ export class NxIntegrationsListComponent implements OnDestroy, OnChanges {
 
             if (haveInReviewOrDraft) {
                 this.ribbonService.show(
-                        this.lang[this.translate.currentLang].integration.previewRibbonText,
-                        this.lang[this.translate.currentLang].integration.backToEditText,
+                        this.lang.integration.previewRibbonText,
+                        this.lang.integration.backToEditText,
                         this.config.links.admin.product.replace('%ID%/pages/', '')
                 );
             }

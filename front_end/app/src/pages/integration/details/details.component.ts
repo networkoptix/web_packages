@@ -28,11 +28,9 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
 
     private setupDefaults() {
         this.config = this.configService.getConfig();
-        this.language
-            .translationsSubject
-            .subscribe((lang) => {
-                this.lang = lang;
-            });
+        this.language.translationsSubject.subscribe((lang) => {
+            this.lang = lang;
+        });
 
 
     }
@@ -107,8 +105,8 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
 
                                     if (this.plugin.pending || this.plugin.draft) {
                                         this.ribbonService.show(
-                                                this.lang[this.translate.currentLang].integration.previewRibbonText,
-                                                this.lang[this.translate.currentLang].integration.backToEditText,
+                                                this.lang.integration.previewRibbonText,
+                                                this.lang.integration.backToEditText,
                                                 this.config.links.admin.product.replace('%ID%', this.plugin.id)
                                         );
                                     }
@@ -130,11 +128,15 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
     }
 
     openMessageDialog() {
+        let disclaimer: string = this.lang.privacyPolicy.integration;
+        disclaimer = disclaimer.replace(/%INTEGRATION_COMPANY%/g, this.plugin.company.companyName);
+        disclaimer = disclaimer.replace(/%INTEGRATION_PRIVACY_POLICY%/g, this.plugin.company.companyPrivacyPolicyLink);
         const data = {
             productId: this.plugin.id,
             productName: this.plugin.information.name,
             companyName: this.plugin.company.companyName,
-            supportEmail: this.plugin.support.supportEmail
+            supportEmail: this.plugin.support.supportEmail,
+            disclaimerMsg: disclaimer
         };
         this.messageDialog.open(this.config.messageType.integration, data).then(() => {});
     }

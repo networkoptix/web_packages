@@ -165,7 +165,7 @@ export class NxIpvdComponent implements OnInit {
     }
 
     addFilterResolutions() {
-        this.resolutions = JSON.parse(this.CONFIG.ipvd.supportedResolutions);
+        this.resolutions = this.CONFIG.ipvd.supportedResolutions;
 
         this.filterModel.selects = [
             {
@@ -186,12 +186,12 @@ export class NxIpvdComponent implements OnInit {
     }
 
     addFilterTags() {
-        this.filterModel.tags = JSON.parse(this.CONFIG.ipvd.searchTags);
+        this.filterModel.tags = this.CONFIG.ipvd.searchTags;
         this.filterModel.tags.forEach(tag => tag.label = this.lang.ipvd[tag.id]);
     }
 
     addFilterTypes() {
-        this.hardwareTypes = JSON.parse(this.CONFIG.ipvd.supportedHardwareTypes);
+        this.hardwareTypes = this.CONFIG.ipvd.supportedHardwareTypes;
         this.hardwareTypes.forEach(type => {
             type.label = this.lang.ipvd[type.id];
         });
@@ -349,7 +349,7 @@ export class NxIpvdComponent implements OnInit {
             }
 
             if (typeof this.activeCamera.firmwares === 'string') {
-                const firmwares = JSON.parse(this.activeCamera.firmwares);
+                const firmwares = this.activeCamera.firmwares;
                 let firmwaresArray = [];
 
                 let maxFirmwareCount = 0,
@@ -386,7 +386,8 @@ export class NxIpvdComponent implements OnInit {
         const device = (this.activeCamera) ? this.activeCamera.model : '';
         const data = {
             productId: device,
-            productName: device
+            productName: device,
+            disclaimerMsg: this.lang.privacyPolicy.ipvd
         };
         this.messageDialog
             .open(type, data)

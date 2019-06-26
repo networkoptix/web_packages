@@ -57,15 +57,7 @@
 
                 <label for="contact" translate>I want you to contact me</label>
             </div>
-            <div class="form-group">
-                <nx-checkbox
-                        name="agree"
-                        componentId="agree"
-                        [(ngModel)]="agree"
-                        required>
-                </nx-checkbox>
-
-                <label for="agree" translate>I agree to the <a target="_blank" [href]="config.privacyLink">Privacy Policy</a></label>
+            <div *ngIf="data.disclaimerMsg" class="form-group" [innerHTML]="data.disclaimerMsg">
             </div>
         </form>
     </div>

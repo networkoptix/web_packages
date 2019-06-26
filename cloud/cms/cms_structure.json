@@ -1613,6 +1613,17 @@
             "meta": {
               "char_limit": 64
             }
+          },
+          {
+            "name": "companyPrivacyPolicyLink",
+            "label": "Company's privacy policy",
+            "value": "",
+            "description": "Link to company's privacy policy page.",
+            "type": "text",
+            "optional": false,
+            "meta": {
+              "regex": "^https?:\\/\\/([\\da-z\\.-]+)\\.([a-z\\.]{2,6})([\\/\\w \\.-]*)*\\/?$"
+            }
           }
         ]
       },
