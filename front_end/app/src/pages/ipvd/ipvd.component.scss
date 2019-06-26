@@ -44,8 +44,8 @@
         
         .nx-table {
             th {
-                display : inline-block;
-                white-space: normal;
+                //display : inline-block;
+                //white-space: normal;
     
                 .caption {
                     line-height : 1rem;
@@ -143,9 +143,9 @@
             }
             
             td {
-                display : inline-block;
-                vertical-align : middle;
-                padding : rem(4px) 1rem rem(4px) 0;
+                //display : inline-block;
+                //vertical-align : middle;
+                //padding : rem(4px) 1rem rem(4px) 0;
     
                 &:nth-child(n+1) > div {
                     white-space : normal;

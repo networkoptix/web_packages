@@ -28,6 +28,7 @@
     "Contact": "Contact",
     "Create Account": "Create Account",
     "Create account": "Create account",
+    "Delete": "Delete",
     "Disconnect": "Disconnect",
     "Disconnect System from %CLOUD_NAME%?": "Disconnect System from %CLOUD_NAME%?",
     "Download": "Download",
@@ -38,6 +39,7 @@
     "Downloads": "Downloads",
     "Draft": "Draft",
     "Dual Streaming": "Dual Streaming",
+    "Edit": "Edit",
     "Email": "Email",
     "Email is required": "Email is required",
     "Embed": "Embed",
@@ -67,6 +69,7 @@
     "Log in to %CLOUD_NAME%": "Log in to %CLOUD_NAME%",
     "Merge Systems": "Merge Systems",
     "Merge current System with": "Merge current System with",
+    "Merge with Another System": "Merge with Another System",
     "Message": "Message",
     "Motion Detection": "Motion Detection",
     "Multi Sensor": "Multi Sensor",
@@ -75,6 +78,7 @@
     "Ok": "Ok",
     "Other packages:": "Other packages:",
     "Other releases, patches and beta versions": "Other releases, patches and beta versions",
+    "Owner": "Owner",
     "PTZ": "PTZ",
     "Password": "Password",
     "Password is required": "Password is required",
@@ -466,5 +470,14 @@
         "unavailable": "System is unreachable",
         "unknownName": "Unknown Name for System (Caused by cloud merge)",
         "yourSystem": "Your System"
+    },
+    "systemStatuses": {
+        "activated": "activated",
+        "incompatible": "incompatible",
+        "merging": "merging",
+        "notActivated": "not activated",
+        "offline": "offline",
+        "online": "online",
+        "unavailable": "unavailable"
     }
 }

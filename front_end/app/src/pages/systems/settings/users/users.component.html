@@ -1,5 +1,60 @@
-<!--<nx-pre-loader type="page" *ngIf="!systems"></nx-pre-loader>-->
+<nx-pre-loader type="page" *ngIf="!system.users"></nx-pre-loader>
 
 <div class="container auth-visible" >
-Users
+    <div class="col-12 col-lg-9">
+<!--        <nx-block>-->
+<!--            <header translate>Users</header>-->
+
+<!--            <nx-section>-->
+<!--                <div class="nx-table-wrapper" id="nx-table">-->
+                    <div class="table-wrapper">
+                        <table class="table table-hover nx-table">
+                            <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Permissions</th>
+                                <th class="button-cell"></th>
+                                <th class="button-cell"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr *ngFor="let user of system.users" class="hoverable" [ngClass]="{disabled:!user.isEnabled}">
+                                <td class="user-name">{{user.fullName}}</td>
+                                <td class="user-email">{{user.email}}</td>
+                                <td class="user-role">
+                                    <span class="inactive"
+                                          *ngIf="!system.isAvailable">{{LANG.accessRoles[user.accessRole].label || user.accessRole}}</span>
+                                    <span *ngIf="system.isAvailable">{{user.role.name || LANG.accessRoles[user.accessRole].label || user.accessRole}}</span>
+                                </td>
+                                <td class="button-cell">
+                                    <a href=''
+                                       class="hover-visible image-link"
+                                       *ngIf="system.isAvailable && user.canBeEdited && !system.currentlyMerging"
+                                       [ngClass]="{'disabled': locked[user.email]}"
+                                       title="Edit permissions"
+                                       (click)="editShare(user)">
+                                        <span class="glyphicon glyphicon-pencil"></span>
+                                        <span class="visible-lg-inline" translate>Edit</span>
+                                    </a>
+                                </td>
+                                <td class="button-cell">
+                                    <a href=''
+                                       class="hover-visible image-link"
+                                       *ngIf="system.isAvailable && user.canBeDeleted && !system.currentlyMerging"
+                                       [ngClass]="{ 'disabled': locked[user.email]}"
+                                       title="Delete"
+                                       (click)="unshare(user)">
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                        <span class="visible-lg-inline" translate>Delete</span>
+                                    </a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+<!--                </div>-->
+<!--            </nx-section>-->
+<!--        </nx-block>-->
+    </div>
 </div>

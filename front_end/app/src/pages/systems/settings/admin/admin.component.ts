@@ -18,7 +18,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     CONFIG: any = {};
     LANG: any = {};
     system: any;
-    systems; any;
+    systems;
+    any;
     location: any;
 
     userDisconnectSystem: any;
@@ -48,10 +49,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     }
 
     constructor(@Inject('account') private account: any,
-                @Inject('authorizationCheckService') private authorizationService: any,
                 @Inject('process') private process: any,
                 @Inject('systemsProvider') private systemsProvider: any,
-                @Inject('urlProtocol') private urlProtocol: any,
                 private route: ActivatedRoute,
                 private configService: NxConfigService,
                 private translate: TranslateService,
@@ -78,6 +77,20 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                         this.setMergeStatus(this.system.mergeInfo);
                     }
 
+                    if (this.system.mergeInfo) {
+                        this.setMergeStatus(this.system.mergeInfo);
+                    } else {
+                        if (this.currentlyMerging) {
+                            this.dialogs
+                                .notify(
+                                        this.LANG.system.mergeSuccess,
+                                        'success',
+                                        true
+                                );
+                        }
+                        this.currentlyMerging = false;
+                    }
+
                     this.deletingSystem = this.process.init(() => {
                         return this.system.deleteFromCurrentAccount();
                     }, {
@@ -85,12 +98,17 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                         errorPrefix   : this.LANG.errorCodes.cantUnshareWithMeSystemPrefix
                     }).then(this.updateAndGoToSystems);
                 }
-        });
+            });
 
     }
 
     ngOnDestroy(): void {
 
+    }
+
+    share() {
+        // Call share dialog, run process inside
+        this.settingsService.share();
     }
 
     disconnect() {
@@ -131,6 +149,10 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
     mergeSystems() {
         this.systems = this.systemsProvider.getMySystems(this.account.email, this.system.id);
+
+        this.system.currentlyMerging = true;
+        this.settingsService.setSystem(this.system);
+
         return this.dialogs
                    .merge(this.system, this.systems, this.account)
                    .then((mergeInfo) => {
@@ -157,7 +179,11 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                                this.LANG.merging.mergeFailedTitle,
                                this.LANG.dialogs.okButton,
                                'btn-primary',
-                               null);
+                               undefined);
+                   })
+                   .finally(() => {
+                       this.system.currentlyMerging = false;
+                       this.settingsService.setSystem(this.system);
                    });
     }
 
@@ -168,6 +194,9 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                        if (finalName) {
                            this.system.info.name = finalName;
                        }
+
+                       this.pageService.setPageTitle(this.system.info.name + ' -');
+                       this.systemsProvider.forceUpdateSystems();
                    });
     }
 

@@ -35,7 +35,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     systems: any;
     unsharing: any;
     deletingSystem: any;
-    locked: any;
 
     systemId: any;
     systemNoAccess: boolean;
@@ -60,8 +59,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.systemNoAccess = false;
         this.userDisconnectSystem = false;
         this.selectedUser = { email: '' };
-        this.system = { info : { name: '' }};
-        this.locked = {};
+        this.system = { info: { name: '' } };
 
         this.translate
             .getTranslation(this.translate.currentLang)
@@ -77,7 +75,9 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                                .getUsers()
                                .then((users) => {
                                    if (this.callShare) {
-                                       this.share().finally(this.cleanUrl);
+                                       this.settingsService
+                                           .share()
+                                           .finally(this.cleanUrl);
                                    }
                                }).finally(this.delayedUpdateSystemInfo);
                 }, {
@@ -101,42 +101,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                         },
                     },
                     errorPrefix: this.LANG.errorCodes.cantGetSystemInfoPrefix
-                }).then(() => {
-                    // this.canMerge = this.system.canMerge && this.system.isOnline || this.CONFIG.cloudMerge;
-                    // if (this.system.mergeInfo) {
-                    //     this.setMergeStatus(this.system.mergeInfo);
-                    // }
-                    this.systemNoAccess = false;
-
-                    this.loadUsers();
-
-                    if (this.system.permissions.editUsers) {
-                        this.gettingSystemUsers.run();
-                    } else {
-                        this.delayedUpdateSystemInfo();
-                    }
                 });
-
-                this.unsharing = this.process.init(() => {
-                    return this.system.deleteUser(this.selectedUser);
-                }, {
-                    successMessage: this.LANG.system.permissionsRemoved.replace('{{email}}', this.selectedUser.email),
-                    errorPrefix   : this.LANG.errorCodes.cantSharePrefix
-                }).then(() => {
-                    this.locked[this.selectedUser.email] = false;
-                    this.selectedUser = undefined;
-                    this.system.getUsers();
-                    this.delayedUpdateSystemInfo();
-                }, () => {
-                    this.locked[this.selectedUser.email] = false;
-                    this.selectedUser = undefined;
-                    this.system.getUsers();
-                    this.delayedUpdateSystemInfo();
-                });
-
-
-
-
             });
     }
 
@@ -176,15 +141,9 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         // });
     }
 
-    loadUsers() {
-        this.system.getUsers(true);
-    }
-
     cleanUrl() {
         this.location.path('/systems/' + this.systemId, false);
     }
-
-
 
     ngOnInit(): void {
         // this.systemId = this.uriParamSystemId;
@@ -200,18 +159,18 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             base           : '/systems/' + this.systemId,
             level1         : [
                 {
-                    id    : 'admin',
-                    label : 'admin',
-                    path: '',
-                } , {
+                    id   : 'admin',
+                    label: 'admin',
+                    path : '',
+                }, {
                     id   : 'users',
                     label: 'users',
-                    path: 'users',
-                }, {
-                    id   : 'interfaces',
-                    label: 'interfaces',
-                    path: 'interfaces',
-                }]
+                    path : 'users',
+                }/*, {
+                 id   : 'interfaces',
+                 label: 'interfaces',
+                 path: 'interfaces',
+                 }*/]
         };
 
         this.authorizationService
@@ -223,25 +182,23 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
                 setTimeout(() => {
                     this.gettingSystem.run().then(() => {
-                        this.settingsService.setSystem(this.system);
+                        this.systemNoAccess = false;
+
+                        this.settingsService
+                            .loadUsersFor(this.system)
+                            .then(() => {
+                                if (this.system.permissions.editUsers) {
+                                    this.gettingSystemUsers
+                                        .run()
+                                        .then(() => {
+                                            this.settingsService.setSystem(this.system);
+                                        });
+                                } else {
+                                    this.delayedUpdateSystemInfo();
+                                }
+                            });
                     });
                 });
-
-                // this.$watch('system.info.name', function (value) {
-                //     nxPageService.setPageTitle(value + ' -');
-                //     systemsProvider.forceUpdateSystems();
-                // });
-
-                // this.$watch('system.mergeInfo', function (mergeInfo) {
-                //     if (mergeInfo) {
-                //         setMergeStatus(mergeInfo);
-                //     } else {
-                //         if (this.currentlyMerging) {
-                //             dialogs.notify(this.LANG.system.mergeSuccess, 'success', true);
-                //         }
-                //         this.currentlyMerging = false;
-                //     }
-                // });
             });
 
 
@@ -271,61 +228,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         return permissions.split('|').sort().join('|');
     }
 
-    share() {
-        // Call share dialog, run process inside
-        return this.dialogs
-                .share(this.system)
-                .then((result) => {
-                    if (result) {
-                        this.loadUsers();
-                    }
-                }, (reason) => {
-                    // dialog was dismissed ... this handler is required if dialog is dismissible
-                    // if we don't handle it will raise a JS error
-                    // ERROR Error: Uncaught (in promise): [object Number]
-                });
-    }
 
-    editShare(user) {
-        // Pass user inside
-
-        if (this.locked[user.email]) {
-            return;
-        }
-        this.locked[user.email] = true;
-        return this.dialogs
-                .share(this.system, user)
-                .then(this.loadUsers)
-                .finally(() => {
-                    this.locked[user.email] = false;
-                });
-    }
-
-    unshare(user) {
-        if (this.account.email === user.email) {
-            // return this.delete();
-        }
-        if (this.locked[user.email]) {
-            return;
-        }
-        this.locked[user.email] = true;
-
-        this.dialogs.confirm(this.LANG.system.confirmUnshare,
-                this.LANG.system.confirmUnshareTitle,
-                this.LANG.system.confirmUnshareAction,
-                'btn-danger', this.LANG.dialogs.cancelButton)
-            .then((result) => {
-                if (result) {
-                    // Run a process of sharing
-                    // $poll.cancel(pollingSystemUpdate);
-                    this.selectedUser = user;
-                    this.unsharing.run();
-                } else {
-                    this.locked[user.email] = false;
-                }
-            }, () => {
-                this.locked[user.email] = false;
-            });
-    }
 }
 

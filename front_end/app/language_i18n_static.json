@@ -271,6 +271,15 @@
 		"permissionsRemoved": "Permissions were removed from {{email}}",
 		"unknownName": "Unknown Name for System (Caused by cloud merge)"
 	},
+	"systemStatuses": {
+		"activated": "activated",
+		"incompatible": "incompatible",
+		"merging": "merging",
+		"notActivated": "not activated",
+		"online": "online",
+		"offline": "offline",
+		"unavailable": "unavailable"
+	},
 	"accessRoles": {
 		"disabled": {
 			"label": "Disabled",
