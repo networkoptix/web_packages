@@ -11,7 +11,7 @@
     <div class="modal-body">
         <form #feedbackForm="ngForm" name="feedbackForm" novalidate>
             <div *ngIf="data.supportEmail" class="form-group">
-                <label for="to_email" translate>To: {{data.companyName}}</label>
+                <label for="to_email" translate [translateParams]="{companyName: data.companyName}">dialogs.message.sendTo</label>
                 <div id="to_email"><a href="mailto:{{data.supportEmail}}">{{data.supportEmail}}</a></div>
             </div>
 

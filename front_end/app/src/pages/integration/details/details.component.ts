@@ -134,7 +134,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
         const data = {
             productId: this.plugin.id,
             productName: this.plugin.information.name,
-            companyName: this.plugin.information.companyName,
+            companyName: this.plugin.company.companyName,
             supportEmail: this.plugin.support.supportEmail,
             disclaimerMsg: disclaimer
         };

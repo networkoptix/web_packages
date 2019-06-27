@@ -162,6 +162,7 @@
 		"message": {
 			"failedToSend": "Message has failed to send.",
     		"sent": "Message has been sent.",
+			"sendTo": "To: {{companyName}}",
 			"title": {
 				"integration": "Get in touch with {{companyName}}",
 				"ipvd_feedback_page": "Feedback for cameras page",
