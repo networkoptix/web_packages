@@ -226,6 +226,9 @@ class ProductType(models.Model):
                 return index
         return 0
 
+    def get_customizations(self):
+        return self.product_set.exclude(customizations=None).values_list('customizations__name', flat=True)
+
 
 class Product(models.Model):
     class Meta:

@@ -230,18 +230,13 @@ class ProductForm(forms.ModelForm):
         self.user = kwargs.pop('user', None)
         # Do the normal form initialisation.
         super(ProductForm, self).__init__(*args, **kwargs)
-        cloud_portal = ProductType.PRODUCT_TYPES.cloud_portal
         if self.instance.product_type and self.instance.product_type.single_customization:
-            cloud_customization = self.instance.customizations.first()
-            used_customizations = [product.customizations.first().name
-                                   for product in Product.objects.filter(product_type__type=cloud_portal)
-                                   if product.customizations.exists() and
-                                   product.customizations.first() != cloud_customization]
-
             # used for removing customizations that are already in use from the multiple choice field,
             if 'customizations' in [field.name for field in self.visible_fields()]:
-                self.fields['customizations'].queryset = Customization.objects.exclude(name__in=used_customizations)
-                self.initial['customizations'] = self.instance.customizations.all()
+                product_type_customizations = self.instance.product_type.get_customizations()\
+                    .exclude(customizations__name=self.instance.customizations.first())
+                self.fields['customizations'].queryset = Customization.objects.all(). \
+                    exclude(name__in=product_type_customizations)
 
         if self.user and not self.user.is_superuser and not self.instance.pk:
             self.fields['product_type'].queryset = ProductType.objects.exclude(advanced=True)
@@ -253,18 +248,15 @@ class ProductForm(forms.ModelForm):
     def clean_customizations(self):
         customizations = self.cleaned_data['customizations']
         product_type = ProductType.objects.get(id=self.data['product_type'])
-
-        if product_type and product_type.single_customization:
-            if len(customizations) > 1:
+        num_customizations = len(customizations)
+        if num_customizations > 0 and product_type and product_type.single_customization:
+            if num_customizations > 1:
                 raise forms.ValidationError("Too many customizations selected for product type.")
 
-            if customizations and product_type.type == ProductType.PRODUCT_TYPES.cloud_portal:
-                customization_portal_id = get_cloud_portal_product(customizations[0]).id
-                product_id = self.instance and self.instance.id
+            if customizations[0].name in product_type.get_customizations():
+                raise forms.ValidationError(f"Customization is already used for a "
+                                            f"{ProductType.PRODUCT_TYPES[product_type.type]} product.")
 
-                if customization_portal_id and product_id and product_id != customization_portal_id or \
-                        not product_id and customization_portal_id:
-                    raise forms.ValidationError("Customization is already used for a cloud portal product.")
         return customizations
 
     def clean(self):

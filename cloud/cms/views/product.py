@@ -368,7 +368,10 @@ def download_package(request, product_id):
     version_id = request.GET['version_id'] if 'version_id' in request.GET else None
     preview = 'draft' in request.GET
     zipped_data = filldata.get_zip_package(product, preview, version_id)
-    return response_attachment(zipped_data, product.name + ".zip", "application/zip")
+    file_name = f"{product.name}.zip"
+    if product.product_type.type == ProductType.PRODUCT_TYPES.vms:
+        file_name = f"{product.customizations.first()}.zip"
+    return response_attachment(zipped_data, file_name, "application/zip")
 
 
 @api_view(["GET"])
