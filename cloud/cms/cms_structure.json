@@ -831,6 +831,15 @@
         "translatable": false,
         "values": [
             {
+                "label": "Filter Option limitation",
+                "name": "%INTEGRATION_SHOW_FILTER_LIMITATION%",
+                "type": "text",
+                "value": "12",
+                "description": "How many integration should have to show the filter option.",
+                "advanced": true,
+                "optional": false
+            },
+            {
                 "label": "Tag Items",
                 "name": "%INTEGRATION_FILTER_ITEMS%",
                 "value": [

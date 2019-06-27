@@ -97,6 +97,7 @@ window.L = {};
                     appState.feedbackEnabled = response.feedbackEnabled;
                     appState.footerItems = response.footerItems;
                     appState.integrationFilterItems = response.integrationFilterItems;
+                    appState.integrationFilterLimitation = response.integrationFilterLimitation;
                     appState.integrationStoreEnabled = response.integrationStoreEnabled;
                     appState.publicDownloads = response.publicDownloads;
                     appState.publicReleases = response.publicReleases;
