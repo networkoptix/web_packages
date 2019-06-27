@@ -457,6 +457,8 @@ class ProductCustomizationReviewAdmin(CMSAdmin):
 
         extra_context['allowed'] = self.template_allowed(request, customization_review)
 
+        extra_context['can_preview'] = customization_review.can_preview_customization
+
         # Customization name should be visible in notes heading if developer has access or user has access
         customization_name = customization_review.customization.name
         if UserGroupsToProductPermissions.check_customization_access(request.user, customization_name) or \
