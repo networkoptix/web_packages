@@ -1408,7 +1408,7 @@
       {
         "name": "instructions",
         "old_name": "Instructions",
-        "label": "How to install?",
+        "label": "How to setup?",
         "description": "Instructions for setting up and/or using your integration. Here you can include a video, images, and text. The instructions block will appear either in the middle column of the integrations's page.",
         "translatable": false,
         "values": [
