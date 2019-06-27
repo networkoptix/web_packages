@@ -86,9 +86,9 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                                             query
                                         },
                                         {
-                                            id   : 'how-to-install',
-                                            label: 'How to install?',
-                                            path : 'how-to-install',
+                                            id   : 'how-to-setup',
+                                            label: 'How to setup?',
+                                            path : 'how-to-setup',
                                             query
                                         }]
                                 }]
