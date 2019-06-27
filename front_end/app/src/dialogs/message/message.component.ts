@@ -25,6 +25,7 @@ export class MessageModalContent {
     agree: boolean;
     title: string;
     topic: string;
+    topicMessage: string;
     topics: any;
 
     @ViewChild('feedbackForm') public feedbackForm: NgForm;
@@ -38,6 +39,7 @@ export class MessageModalContent {
                 ) {
         this.placeholder = '';
         this.topic = '';
+        this.topicMessage = '';
     }
 
     ngOnInit() {
@@ -92,6 +94,7 @@ export class MessageModalContent {
 
     setTopic(topic) {
         this.topic = topic.id;
+        this.topicMessage = topic.name;
     }
 }
 
