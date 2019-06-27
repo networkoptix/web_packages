@@ -49,6 +49,16 @@
 
             <div class="mt-3 clearfix">
                 <div>
+                    <label class="group-label">{{plugin.information.companyName}}</label>
+                </div>
+                <div *ngIf="plugin.information.companyWeb">
+                    <a [href]="plugin.information.companyWeb"
+                       target="_blank">{{plugin.information.companyWeb}}</a>
+                </div>
+            </div>
+
+            <div class="mt-3 clearfix">
+                <div>
                     <label class="group-label" translate>Support</label>
                 </div>
                 <div *ngIf="plugin.support.supportPhone"
