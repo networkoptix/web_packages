@@ -1815,6 +1815,17 @@
             }
           },
           {
+            "name": "testedBuild",
+            "label": "Tested software (VMS) build. Ex: 4.0.12345, 3.12.34567",
+            "value": "",
+            "description": "Custom build supported version",
+            "type": "text",
+            "optional": false,
+            "meta": {
+              "regex": "^(\\d)\\.(\\d){1,2}\\.(\\d){5}$$"
+            }
+          },
+          {
             "name": "platforms",
             "label": "Supported OS and platforms",
             "value": "",
@@ -1856,7 +1867,7 @@
             "value": "",
             "description": "",
             "type": "text",
-            "optional": true
+            "optional": false
           },
           {
             "name": "changelog",
