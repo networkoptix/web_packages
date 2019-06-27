@@ -77,11 +77,19 @@ export class IntegrationService implements OnDestroy {
     private formatOverviewScreenshots(plugin) {
         const processed: any = [];
 
+        if (!plugin.overview) {
+            return;
+        }
+
         Object.entries(plugin.overview).forEach((item) => {
             const matchScreenshot = item[0].match(/Screenshot([\d]+)$/);
 
             if (matchScreenshot) {
-                processed.push({ id: item[0].replace('overview', ''), value: item[1], sortKey: parseInt(matchScreenshot[1], 10) });
+                processed.push({
+                    id     : item[0].replace('overview', ''),
+                    value  : item[1],
+                    sortKey: parseInt(matchScreenshot[1], 10)
+                });
             }
         });
 
