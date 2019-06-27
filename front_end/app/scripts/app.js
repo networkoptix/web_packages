@@ -182,16 +182,6 @@ window.L = {};
                                     }]
                                 }
                             })
-                            .when('/register/successActivated', {
-                                templateUrl: CONFIG.viewsDir + 'regActions.html',
-                                controller: 'RegisterCtrl',
-                                resolve: {
-                                    test: ['$route', function ($route) {
-                                        $route.current.params.registerSuccess = true;
-                                        $route.current.params.activated = true;
-                                    }]
-                                }
-                            })
                             .when('/register/:code', {
                                 templateUrl: CONFIG.viewsDir + 'regActions.html',
                                 controller: 'RegisterCtrl'
