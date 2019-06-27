@@ -28,15 +28,10 @@ export class IntegrationService implements OnDestroy {
         this.getIntegrations()
             .subscribe(result => {
                 result.data.forEach(plugin => {
-                    if (!plugin.versionDetails.version || plugin.versionDetails.version &&
-                            plugin.versionDetails.version !== '&nbsp;' &&
-                            plugin.versionDetails.version.indexOf('v.') !== 0) {
-                        plugin.versionDetails.version = (plugin.versionDetails.version) ? 'v.&nbsp;' + plugin.versionDetails.version : '&nbsp;';
-                    }
-
-                    if (plugin.requirementsAndCompatibility && plugin.requirementsAndCompatibility.platforms) {
-                        plugin.requirementsAndCompatibility.platforms.icons = this.setPlatformIcons(plugin);
-                    }
+                    plugin.versionDetails = {
+                        version: (plugin.versionDetails) ? this.formatVersion(plugin.versionDetails.version) || '1.0' : '1.0'
+                    };
+                    this.formatRequirementsAndCompatibility(plugin);
 
                     plugin.information.logo = plugin.information.logo || this.config.icons.default;
 
@@ -53,6 +48,33 @@ export class IntegrationService implements OnDestroy {
 
     private getIntegrations(): Observable<any> {
         return this.api.getIntegrations();
+    }
+
+    formatVersion(elm) {
+        if (!elm || elm && elm !== '&nbsp;' && elm.indexOf('v.') !== 0) {
+            elm = (elm) ? 'v.&nbsp;' + elm : '&nbsp;';
+        }
+
+        return elm;
+    }
+
+    private formatRequirementsAndCompatibility (plugin) {
+        const section = plugin.requirementsAndCompatibility;
+        if (section) {
+            if (section.platforms) {
+                section.platforms.icons = this.setPlatformIcons(plugin);
+            }
+
+            if (section.testedVersions) {
+                section.testedOn = '';
+                section.testedVersions.map((version) => {
+                    section.testedOn += (section.testedOn.length) ? ',&nbsp;&nbsp;' : '';
+                    section.testedOn += this.formatVersion(version);
+                });
+            }
+
+            section.testedBuild = this.formatVersion(section.testedBuild);
+        }
     }
 
     private formatScreenshots(section) {
@@ -182,6 +204,7 @@ export class IntegrationService implements OnDestroy {
 
         this.formatScreenshots(plugin.instructions);
         this.formatOverviewScreenshots(plugin);
+        this.formatRequirementsAndCompatibility(plugin);
 
         return plugin;
     }

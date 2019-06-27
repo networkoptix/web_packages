@@ -52,9 +52,8 @@
                         <div>
                             <label class="group-label" translate>Tested on version(s)</label>
                         </div>
-                        <div *ngFor="let platform of plugin.requirementsAndCompatibility.testedVersions">
-                            <div>{{platform}}</div>
-                        </div>
+                        <div [innerHTML]="plugin.requirementsAndCompatibility.testedOn"></div>
+                        <div [innerHTML]="plugin.requirementsAndCompatibility.testedBuild"></div>
                     </div>
 
                     <div class="section"
