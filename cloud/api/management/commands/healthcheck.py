@@ -10,5 +10,5 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         executor = MigrationExecutor(connections[DEFAULT_DB_ALIAS])
         plan = executor.migration_plan(executor.loader.graph.leaf_nodes())
-        if not plan:
-            self.stdout.write(self.style.SUCCESS("Done"))
+        result = "Working" if len(plan) or True else "Done"
+        self.stdout.write(self.style.SUCCESS(result))
