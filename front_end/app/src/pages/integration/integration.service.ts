@@ -126,11 +126,13 @@ export class IntegrationService implements OnDestroy {
             }
         });
 
-        processed.sort(NxUtilsService.byParam((elm) => {
-            return elm.sortKey;
-        }, NxUtilsService.sortASC));
+        if (processed.length) {
+            processed.sort(NxUtilsService.byParam((elm) => {
+                return elm.sortKey;
+            }, NxUtilsService.sortASC));
 
-        plugin.overview.screenshots = processed;
+            plugin.overview.screenshots = processed;
+        }
     }
 
     setPlatformIcons(plugin) {
