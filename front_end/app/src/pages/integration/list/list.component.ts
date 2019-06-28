@@ -18,15 +18,15 @@ export class NxIntegrationsListComponent implements OnDestroy, OnChanges {
 
     @Input() list;
 
-    config: any;
-    lang: any;
+    CONFIG: any;
+    LANG: any;
 
     private setupDefaults() {
-        this.config = this.configService.getConfig();
         this.language
             .translationsSubject
             .subscribe((lang) => {
-                this.lang = lang;
+                this.LANG = lang;
+                this.CONFIG = this.configService.getConfig();
             });
     }
 
@@ -55,9 +55,9 @@ export class NxIntegrationsListComponent implements OnDestroy, OnChanges {
 
             if (haveInReviewOrDraft) {
                 this.ribbonService.show(
-                        this.lang.integration.previewRibbonText,
-                        this.lang.integration.backToEditText,
-                        this.config.links.admin.product.replace('%ID%/pages/', '')
+                        this.LANG.integration.previewRibbonText,
+                        this.LANG.integration.backToEditText,
+                        this.CONFIG.links.admin.product.replace('%ID%/pages/', '')
                 );
             }
         }

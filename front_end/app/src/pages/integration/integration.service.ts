@@ -27,6 +27,7 @@ export class IntegrationService implements OnDestroy {
 
         this.getIntegrations()
             .subscribe(result => {
+                this.config = this.configService.getConfig();
                 result.data.forEach(plugin => {
                     plugin.versionDetails = {
                         version: (plugin.versionDetails) ? this.formatVersion(plugin.versionDetails.version) || '1.0' : '1.0'
@@ -42,8 +43,6 @@ export class IntegrationService implements OnDestroy {
                 });
                 this.pluginsSubject.next(result.data);
             });
-
-        this.config = this.configService.getConfig();
     }
 
     private getIntegrations(): Observable<any> {
