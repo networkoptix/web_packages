@@ -284,7 +284,7 @@ def product_settings(request, product_id):
             if type(cms_structure) == list and len(cms_structure) > 1:
                 messages.warning(request, "You can only update one product_type at a time. "
                                           "Only the first product type from structure.json was used.")
-            structure.update_from_object(cms_structure, product_type=product.product_type)
+            structure.update_from_object(cms_structure, product_type=product.product_type, preserve_files=True)
             messages.success(request, "Structure updated")
         else:
             if not file.name.endswith('zip'):

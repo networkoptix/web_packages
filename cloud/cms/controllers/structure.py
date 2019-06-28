@@ -62,7 +62,7 @@ def find_or_add_data_structure(name, old_name, context_id, has_language):
     return data
 
 
-def update_from_object(product_type_structure, product_type=None):
+def update_from_object(product_type_structure, product_type=None, preserve_files=False):
     if type(product_type_structure) is list:
         product_type_structure = product_type_structure[0]
     update_product_type(product_type, product_type_structure)
@@ -76,7 +76,7 @@ def update_from_object(product_type_structure, product_type=None):
         context_order += 1
         has_language = context.translatable
         for record in context_data["values"]:
-            update_data_structure(context.id, has_language, record, order)
+            update_data_structure(context.id, has_language, record, order, preserve_files)
             order += 1
 
 
@@ -306,7 +306,7 @@ def update_context(context_data, product_type, order):
     return context
 
 
-def update_data_structure(context_id, has_lang, record, order):
+def update_data_structure(context_id, has_lang, record, order, preserve_file=False):
     name = record['name']
     label = record.get("label", "")
     old_name = record.get("old_name", None)
@@ -321,7 +321,8 @@ def update_data_structure(context_id, has_lang, record, order):
     data_structure.type = DataStructure.get_type_by_name(record.get("type", "text"))
 
     data_structure.meta_settings = record.get("meta", {})
-    data_structure.default = process_data_structure_type(data_structure, name, record.get("value", ""))
+    if data_structure.is_file_or_image(data_structure.type) and not preserve_file:
+        data_structure.default = process_data_structure_type(data_structure, name, record.get("value", ""))
     data_structure.deprecated = False
     data_structure.save()
 
