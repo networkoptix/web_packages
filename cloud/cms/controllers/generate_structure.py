@@ -37,11 +37,11 @@ def image_meta(data, extension):
         return None
 
 
-def find_context(name, file_path, structure, product_name):
+def find_context(name, file_path, structure, product_type):
     context = next((context for context in structure["contexts"]
                    if context["name"] == name or file_path and context["file_path"] == file_path), None)
     if not context:
-        db_context = Context.objects.filter(file_path=file_path, product__name=product_name).first()
+        db_context = Context.objects.filter(file_path=file_path, product_type=product_type).first()
         translatable = False
         hidden = True
         label = ""
@@ -72,7 +72,7 @@ def find_structure(name, context, structure_type, meta=None, description="", val
         # try to populate structure from database
         # Important: here we just find any datastrucure with the same name.
         # The goal is to try to get label and description from another asset
-        db_structure = DataStructure.objects.filter(name=name).first()
+        db_structure = DataStructure.objects.filter(name=name, context=context).first()
         label = ''
         if db_structure:
             label = db_structure.label if db_structure.label != name else ''
@@ -150,7 +150,7 @@ def templatify_json(json_data, prefix=''):
     return values, json_data
 
 
-def check_if_json (data, short_name, structure, product_name):
+def check_if_json (data, short_name, structure, product_type):
     if not short_name.lower().endswith('.json'):
         return False
 
@@ -166,7 +166,7 @@ def check_if_json (data, short_name, structure, product_name):
     values, template = templatify_json(json_data)
 
     # Now we create context with that template
-    context = find_context(short_name, short_name, structure, product_name)
+    context = find_context(short_name, short_name, structure, product_type)
 
     for key, value in values.items():
         record_type = 'Text'
@@ -188,19 +188,19 @@ def check_if_json (data, short_name, structure, product_name):
     return True
 
 
-def check_if_customizable(data, short_name, structure, product_name):
+def check_if_customizable(data, short_name, structure, product_type):
     strings = read_cms_strings(data)
     if not strings:
         return False
 
     # customizable file creates new structure
-    context = find_context(short_name, short_name, structure, product_name)
+    context = find_context(short_name, short_name, structure, product_type)
     for match in strings:
         find_structure(match[1], context, 'Text', meta={"regex": ""}, description=match[0])
     return True
 
 
-def read_data(data, short_name, context, cms_structure, product_name):
+def read_data(data, short_name, context, cms_structure, product_type):
     extension = os.path.splitext(short_name)[1][1:]
     if short_name.endswith('DS_Store'):
         return
@@ -211,9 +211,9 @@ def read_data(data, short_name, context, cms_structure, product_name):
         if not meta:
             return {'file': short_name, 'extension': extension}
         structure_type = 'image'
-    elif check_if_json(data, short_name, cms_structure, product_name):
+    elif check_if_json(data, short_name, cms_structure, product_type):
         return
-    elif check_if_customizable(data, short_name, cms_structure, product_name):
+    elif check_if_customizable(data, short_name, cms_structure, product_type):
         return
     find_structure(short_name, context, structure_type, meta=meta)
 
@@ -369,10 +369,10 @@ def process_files(file_iterator, product):
                              ('single_customization', product.product_type.single_customization),
                              ('can_preview', product.product_type.can_preview),
                              ('contexts', [])])
-    find_context('root', '.', structure, product.name)
+    find_context('root', '.', structure, product.product_type)
     for short_name, context_name, data in iterate_contexts(file_iterator):
-        context = find_context(context_name, context_name, structure, product.name)
-        error = read_data(data, short_name, context, structure, product.name)
+        context = find_context(context_name, context_name, structure, product.product_type)
+        error = read_data(data, short_name, context, structure, product.product_type)
         if error:
             log_errors.append(error)
     return [structure], log_errors

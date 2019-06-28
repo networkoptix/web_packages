@@ -9,6 +9,9 @@ from zipfile import ZipFile
 from ..controllers.generate_structure import templatify_json
 from ..models import Context, ContextTemplate, DataStructure, DataRecord, Product, ProductType
 
+import logging
+logger = logging.getLogger(__name__)
+
 
 def deprecate_contexts_and_data_structures_for_product_type(product_type):
     Context.objects.filter(product_type=product_type).update(deprecated=True)
@@ -117,6 +120,7 @@ def process_zip(file_descriptor, user, product, update_structure, update_content
     root = zip_file.namelist()[0]
     structures_changed = 0
     records_created = 0
+    product_type = product.product_type
 
     if update_structure:
         name = next((name for name in zip_file.namelist() if name.endswith('structure.json')), None)
@@ -132,7 +136,6 @@ def process_zip(file_descriptor, user, product, update_structure, update_content
             log_messages.append(('warning', 'Not found structure.json file'))
 
     for name in zip_file.namelist():
-        # log_messages.append(('info', 'Processing %s' % name))
         # Skip of directories
         if zip_file.getinfo(name).is_dir():
             continue
@@ -153,7 +156,7 @@ def process_zip(file_descriptor, user, product, update_structure, update_content
             name = name.replace(root, "")
 
         # try to find relevant context
-        context = Context.objects.filter(file_path=name).first()
+        context = Context.objects.filter(file_path=name, product_type=product_type).first()
         if context:
             try:
                 file_content = zip_file.read(zip_name).decode("utf-8")
@@ -239,7 +242,7 @@ def process_zip(file_descriptor, user, product, update_structure, update_content
             continue
 
         # try to find relevant data structure and update its default (maybe)
-        structure = DataStructure.objects.filter(name=name).first()
+        structure = DataStructure.objects.filter(name=name, context__product_type=product_type).first()
         if not structure:
             log_messages.append(('warning', f'Ignored: {name} (data structure {name} does not exist)'))
             continue
@@ -252,7 +255,7 @@ def process_zip(file_descriptor, user, product, update_structure, update_content
 
         data = zip_file.read(zip_name)
         data64 = base64.b64encode(data).decode('utf-8')
-
+        # logger.info(f"Name: {name}\tContext: {structure.context.name}\n\n")
         if update_structure:
             # if set_defaults or data structure has no default value - save it
             if structure.default != data64:

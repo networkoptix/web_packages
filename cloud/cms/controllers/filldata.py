@@ -179,7 +179,7 @@ def read_customized_file(filename, product, language_code=None,
 
     # 2. try to find datastructure for this file
     # TODO: name is not unique
-    data_structure = DataStructure.objects.filter(name=clean_name).first()
+    data_structure = DataStructure.objects.filter(name=clean_name, context__product_type=product.product_type).first()
     if data_structure:
         # success -> return actual value
         value = data_structure.find_actual_value(product, Language.by_code(language_code), version_id, draft=preview)
