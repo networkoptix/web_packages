@@ -10,12 +10,12 @@
 
     <div class="modal-body">
         <form #feedbackForm="ngForm" name="feedbackForm" novalidate>
-            <div *ngIf="data.supportEmail" class="form-group">
+            <div *ngIf="data.email" class="form-group">
                 <label for="to_email" translate>To</label>
                 <div id="to_email" class="form-control-plaintext">
-                    {{data.companyName}}&nbsp;
-                    <a href="mailto:{{data.supportEmail}}?subject={{topicMessage}}&body=I have a question about {{data.productName}}">
-                        {{data.supportEmail}}
+                    {{data.to}}&nbsp;
+                    <a href="mailto:{{data.email}}?subject={{topicMessage}}&body=I have a question about {{data.product}}%0D%0A%0D%0A Link: {{url}}">
+                        {{data.email}}
                     </a>
                 </div>
             </div>
@@ -62,7 +62,7 @@
 
                 <label for="contact" translate>I want you to contact me</label>
             </div>
-            <div *ngIf="data.disclaimerMsg" class="form-group" [innerHTML]="data.disclaimerMsg">
+            <div *ngIf="data.disclaimer" class="form-group" [innerHTML]="data.disclaimer">
             </div>
         </form>
     </div>

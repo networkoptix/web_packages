@@ -4,6 +4,20 @@ import { EmailValidator, NgForm }                                               
 import { NxConfigService }                                                           from '../../services/nx-config';
 import { TranslateService }                                                          from '@ngx-translate/core';
 
+
+export interface MessageParams {
+    disclaimer: string;
+    email?: string;
+    product: string;
+    productId?: string;
+    to?: string;
+}
+
+interface Topic {
+    id: string;
+    name: string;
+}
+
 @Component({
     selector: 'nx-modal-message-content',
     templateUrl: 'message.component.html',
@@ -26,7 +40,8 @@ export class MessageModalContent {
     title: string;
     topic: string;
     topicMessage: string;
-    topics: any;
+    topics: Topic[];
+    url: string;
 
     @ViewChild('feedbackForm') public feedbackForm: NgForm;
 
@@ -40,6 +55,7 @@ export class MessageModalContent {
         this.placeholder = '';
         this.topic = '';
         this.topicMessage = '';
+        this.url = window.location.href;
     }
 
     ngOnInit() {
@@ -47,7 +63,8 @@ export class MessageModalContent {
             this.lang = lang;
             this.initForm();
             this.sendMessage = this.process.init(() => {
-                return this.cloudApi.sendMessage(this.topic, this.data.productId, this.message, this.userName, this.userEmail, this.contact);
+                const product = this.data.productId || this.data.product;
+                return this.cloudApi.sendMessage(this.topic, product, this.message, this.userName, this.userEmail, this.contact);
             }, {
                 successMessage: this.lang.dialogs.message.sent
             }).then(() => {
@@ -69,16 +86,16 @@ export class MessageModalContent {
                 this.placeholder = '';
         }
 
-        let title = this.lang.dialogs.message.title[this.messageType];
+        const title = this.lang.dialogs.message.title[this.messageType];
         if (this.messageType !== this.config.messageType.integration) {
-            this.title = title.replace('{{product}}', this.data.productName);
+            this.title = title.replace('{{product}}', this.data.product);
         } else {
-            this.title = title.replace('{{companyName}}', this.data.companyName);
+            this.title = title.replace('{{companyName}}', this.data.to);
         }
         this.topics = this.config.messageTopics[this.messageType].map((topic) => {
             return {
                 id: topic,
-                name: this.lang.dialogs.message.topic[topic].replace('{{product}}', this.data.productName)
+                name: this.lang.dialogs.message.topic[topic].replace('{{product}}', this.data.product)
             };
         });
 
@@ -87,12 +104,12 @@ export class MessageModalContent {
         this.account
             .get()
             .then((account) => {
-                this.userName = account.first_name + ' ' + account.last_name ;
+                this.userName = `${account.first_name} ${account.last_name}`;
                 this.userEmail = account.email;
             });
     }
 
-    setTopic(topic) {
+    setTopic(topic: Topic) {
         this.topic = topic.id;
         this.topicMessage = topic.name;
     }
@@ -114,7 +131,7 @@ export class NxModalMessageComponent implements OnInit {
         this.config = configService.getConfig();
     }
 
-    private dialog(type, data) {
+    private dialog(type: string, data: MessageParams) {
         // TODO: Refactor dialog to use generic dialog
         // TODO: retire loading ModalContent (CLOUD-2493)
         this.modalRef = this.modalService.open(MessageModalContent,
@@ -131,7 +148,7 @@ export class NxModalMessageComponent implements OnInit {
         return this.modalRef;
     }
 
-    open(type, data) {
+    open(type: string, data: MessageParams) {
         return this.dialog(type, data).result;
     }
 

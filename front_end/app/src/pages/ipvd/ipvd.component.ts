@@ -9,7 +9,7 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { TranslateService }                      from '@ngx-translate/core';
 import { CamerasService }          from '../../services/cameras.service';
 import { IpvdSearchService }       from './ipvd-search.service';
-import { NxModalMessageComponent } from '../../dialogs/message/message.component';
+import { NxModalMessageComponent, MessageParams } from '../../dialogs/message/message.component';
 import { NxConfigService }         from '../../services/nx-config';
 import { NxUriService }            from '../../services/uri.service';
 import { NxUtilsService }          from '../../services/utils.service';
@@ -383,11 +383,10 @@ export class NxIpvdComponent implements OnInit {
 
     openFeedback(param) {
         const type = (param === 'device') ? this.CONFIG.messageType.ipvd_device : this.CONFIG.messageType.ipvd_page;
-        const device = (this.activeCamera) ? this.activeCamera.model : '';
-        const data = {
-            productId: device,
-            productName: device,
-            disclaimerMsg: this.lang.privacyPolicy.ipvd
+        const device: string = (param === 'device' && this.activeCamera) ? this.activeCamera.model : '';
+        const data: MessageParams = {
+            disclaimer: this.lang.privacyPolicy.ipvd,
+            product: device,
         };
         this.messageDialog
             .open(type, data)

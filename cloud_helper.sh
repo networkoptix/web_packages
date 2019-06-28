@@ -59,6 +59,12 @@ function setup_env(){
     pip install -r cloud/requirements.txt
 }
 
+function start_celery() {
+    pushd cloud
+    printf "Starting celery worker\n"
+    celery worker -A notifications -l debug --concurrency=1
+}
+
 function start_docker_containers() {
     if [[ -e ${DOCKER_COMPOSE} ]]; then
         printf "Starting mysql and redis containers\n\n"
@@ -122,6 +128,10 @@ do
         setup_env)
             setup_env
             ;;
+        start_celery)
+            . ./env/bin/activate
+            start_celery
+            ;;
         start_docker)
             start_docker_containers
             ;;
@@ -129,7 +139,7 @@ do
             stop_docker_containers
             ;;
         *)
-            echo Usage: cloud_shortcuts '[init|add_env|build_frontend|rebuild_frontend|setup_cms|setup_db|setup_env|start_docker|stop_docker]'
+            echo Usage: cloud_shortcuts '[init|add_env|build_frontend|rebuild_frontend|setup_cms|setup_db|setup_env|start_celery|start_docker|stop_docker]'
             echo 'init - Does everything. Only run this once'
             echo 'add_env - Adds LOCAL_ENV to your bash profile'
             echo 'build_frontend - Builds the frontend'
@@ -137,6 +147,7 @@ do
             echo 'rebuild_frontend - Rebuilds the frontend and runs readstructre and filldata commands'
             echo 'setup_cms - Fills in the cms. Runs migrate, readstructure and filldata commands'
             echo 'setup_db - Loads local db with sql file in ~/develop/nx_vms/cloud_portal/'
+            echo 'start_celery - Starts celery worker (This uses sqs queue based on local settings)'
             echo 'start_docker - Starts docker containers used by cloud'
             echo 'stop_docker - Stops docker containers used by cloud'
             ;;
