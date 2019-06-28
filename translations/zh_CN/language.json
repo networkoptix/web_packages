@@ -7,7 +7,7 @@
   "dialogs": {
     "okButton": "确定",
     "cancelButton": "取消",
-    "loginTitle": "Log in to %CLOUD_NAME%",
+    "loginTitle": "登录到 %CLOUD_NAME%",
     "loginButton": "登录",
     "logoutAuthorisedTitle": "您已经登录",
     "logoutAuthorisedContinueButton": "继续",
@@ -203,7 +203,7 @@
     "confirmRenameTitle": "系统名称",
     "confirmRenameAction": "保存",
     "successRename": "保存的系统名称",
-    "confirmDisconnectTitle": "Disconnect System from %CLOUD_NAME%?",
+    "confirmDisconnectTitle": "系统从 %CLOUD_NAME%断开 吗？",
     "confirmDisconnectAction": "断开连接",
     "confirmUnshareFromMe": "您将要断开此系统从您的帐户。你将无法再访问该系统。是否确定？",
     "confirmUnshareFromMeTitle": "断开系统吗？",

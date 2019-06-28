@@ -7,7 +7,7 @@
   "dialogs": {
     "okButton": "Tamam",
     "cancelButton": "İptal",
-    "loginTitle": "Log in to %CLOUD_NAME%",
+    "loginTitle": "%CLOUD_NAME% e giriş yapın",
     "loginButton": "Giriş yap",
     "logoutAuthorisedTitle": "Zaten giriş yapılmış",
     "logoutAuthorisedContinueButton": "Devam et",
@@ -21,11 +21,11 @@
     "title": {
       "integration": "Email for {{product}}",
       "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Feedback about {{product}}"
+      "ipvd_feedback_device": "{{product}} hakkında geri bildirim"
     },
     "topic": {
       "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Feedback about {{product}}",
+      "ipvd_feedback_device": "{{product}} hakkında geri bildirim",
       "contact_sales": "Contact sales for {{product}}",
       "contact_support": "Contact support for {{product}}"
     }
@@ -203,7 +203,7 @@
     "confirmRenameTitle": "Sistem Adı",
     "confirmRenameAction": "Kaydet",
     "successRename": "Sistem ismi kaydedildi",
-    "confirmDisconnectTitle": "Disconnect System from %CLOUD_NAME%?",
+    "confirmDisconnectTitle": "%CLOUD_NAME% den bağlantıyı kesmek istiyor musunuz?",
     "confirmDisconnectAction": "Bağlantıyı kes",
     "confirmUnshareFromMe": "Hesabınızın bu sistemle bağlantısını kesmek üzeresiniz. Bundan sonra bu sisteme erişim sağlayamayacaksınız. Emin misiniz?",
     "confirmUnshareFromMeTitle": "Sistemle bağlantıyı kes?",

@@ -7,7 +7,7 @@
   "dialogs": {
     "okButton": "אישור",
     "cancelButton": "ביטול",
-    "loginTitle": "Log in to %CLOUD_NAME%",
+    "loginTitle": "היכנס ל- %CLOUD_NAME%",
     "loginButton": "התחבר",
     "logoutAuthorisedTitle": "אתה כבר מחובר",
     "logoutAuthorisedContinueButton": "המשך",
@@ -21,11 +21,11 @@
     "title": {
       "integration": "Email for {{product}}",
       "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Feedback about {{product}}"
+      "ipvd_feedback_device": "משוב על {{product}}"
     },
     "topic": {
       "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Feedback about {{product}}",
+      "ipvd_feedback_device": "משוב על {{product}}",
       "contact_sales": "Contact sales for {{product}}",
       "contact_support": "Contact support for {{product}}"
     }
@@ -203,7 +203,7 @@
     "confirmRenameTitle": "שם מערכת",
     "confirmRenameAction": "שמור",
     "successRename": "שם המערכת נשמר",
-    "confirmDisconnectTitle": "Disconnect System from %CLOUD_NAME%?",
+    "confirmDisconnectTitle": "נתק את מערכת מ %CLOUD_NAME%?",
     "confirmDisconnectAction": "נתק",
     "confirmUnshareFromMe": "אתה עומד לנתק את המערכת מהחשבון שלך. לא תוכל עוד לגשת למערכת זו. האם להמשיך?",
     "confirmUnshareFromMeTitle": "נתק מערכת?",

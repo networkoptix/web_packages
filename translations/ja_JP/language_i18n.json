@@ -26,7 +26,7 @@
     "Create Account": "アカウント作成",
     "Create account": "アカウントを作成",
     "Disconnect": "切断",
-    "Disconnect System from %CLOUD_NAME%?": "Disconnect System from %CLOUD_NAME%?",
+    "Disconnect System from %CLOUD_NAME%?": "%CLOUD_NAME% からシステムを切断しますか？",
     "Download": "ダウンロード",
     "Download %VMS_NAME%": "%VMS_NAME% をダウンロード",
     "Download Chrome": "Chromeをダウンロード",
@@ -46,6 +46,7 @@
     "Fisheye": "魚眼",
     "Forgot password?": "パスワードを忘れましたか?",
     "Get in touch": "Get in touch",
+    "How it works": "How it works",
     "How to install?": "How to install?",
     "I agree to the": "同意します",
     "I want you to contact me": "連絡して下さい",
@@ -55,7 +56,7 @@
     "Latest version": "最新版",
     "Log In": "ログイン",
     "Log Out": "ログアウト",
-    "Log in to %CLOUD_NAME%": "Log in to %CLOUD_NAME%",
+    "Log in to %CLOUD_NAME%": "%CLOUD_NAME% にログイン",
     "Merge Systems": "システム統合",
     "Merge current System with": "現在のシステムと統合",
     "Message": "メッセージ",
@@ -92,6 +93,7 @@
     "System will be accessible through local network with local administrator account.": "システムにはローカルの管理者アカウントとローカル ネットワーク経由でアクセスできます",
     "Systems": "システム",
     "Systems of such size may work but will be unstable and have troubles with updates and synchronisation.": "このサイズのシステムは動作するかもしれませんが、不安定になり、更新や同期に問題があります",
+    "Tags": "タグ",
     "Take the name and settings from": "名称と設定を取得",
     "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.": "このユーザーの資格情報が公開されます\n公共使用のカメラを選択し、必要最小限のアクセスを「パブリック ユーザー」役割に作成します\nこの「パブリック ユーザー」はシステム全体に影響しないアクセスにして下さい",
     "There will be more than": "更にある",
@@ -108,7 +110,7 @@
     "You can only merge Systems where you are the owner.": "オーナーであるシステムのみを統合できます。",
     "Your Name": "名前",
     "Your browser is not supported": "お使いのブラウザーはサポートされていません",
-    "and_x_more": "... and {{value}} more",
+    "andXMore": "... and {{value}} more",
     "cameraFilters": {
         "H265": "H.265 Cameras",
         "IO": "I / O modules",
@@ -124,23 +126,23 @@
     "devices": "デバイス",
     "dialogs": {
         "merge": {
-            "connectToCloud": "Connect System you want to merge with this one to <strong>{{cloudName}}</strong> or merge locally using <strong>{{vmsName}}</strong> Client.",
+            "connectToCloud": "これと統合したいシステムを <strong>{{cloudName}}</strong> か、 <strong>{{vmsName}}</strong> クライアントを使用してローカルに統合します。",
             "mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from the <strong>{{primarySystem}}</strong>.",
             "primaryCannotMerge": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} System.",
             "primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}.",
             "secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
-            "systemOffline": "System {{targetSystem}} is offline and cannot be merged with the current one.",
+            "systemOffline": "システム {{targetSystem}} はオフラインのため、現在のシステムと統合することはできません。",
             "systemUnavailable": "システム {{targetSystem}} は現在到達不能です。数分後にもう一度試すか、連絡してください"
         }
     },
-    "dialogs.merge.connectToCloud": "Connect System you want to merge with this one to <strong>{{cloudName}}</strong> or merge locally using <strong>{{vmsName}}</strong> Client.",
+    "dialogs.merge.connectToCloud": "これと統合したいシステムを <strong>{{cloudName}}</strong> か、 <strong>{{vmsName}}</strong> クライアントを使用してローカルに統合します。",
     "dialogs.merge.mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from the <strong>{{primarySystem}}</strong>.",
     "dialogs.merge.primaryCannotMerge": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} System.",
     "dialogs.merge.primarySystemOffline": "dialogs.merge.primarySystemOffline",
     "dialogs.merge.secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
     "dialogs.merge.systemOffline": "dialogs.merge.systemOffline",
     "dialogs.merge.systemUnavailable": "システム {{targetSystem}} は現在到達不能です。数分後にもう一度試すか、連絡してください",
-    "disclaimer": "disclaimer",
+    "disclaimer": "This list is limited to actual devices auto-reporting data to {{value}}, as approved by anonymous system users. The complete list of supported manufacturers and models is greater in scope.",
     "downloads": {
         "appTypes": {
             "bundle": "クライアントとサーバー",
@@ -179,7 +181,7 @@
             "sdk": {
                 "label": "SDK",
                 "shortLabel": "SDK",
-                "supported": "C++ cross platform SDK"
+                "supported": "C ++クロスプラットフォームSDK"
             },
             "windows": {
                 "label": "ウィンドウズ",
@@ -265,9 +267,10 @@
         "feedback": "Make sure you include your camera model and manufacturer..."
     },
     "pageTitles": {
-        "integrations": "Integrations",
-        "supportedDevices": "Supported Devices"
+        "integrations": "インテグレーション",
+        "supportedDevices": "サポートされているデバイス"
     },
+    "phoneNumberWithLabel": "Tel: {{number}}",
     "search": {
         "Any": "全て",
         "Search": "検索",

@@ -26,7 +26,7 @@
     "Create Account": "Fiók létrehozása",
     "Create account": "Fiók létrehozása",
     "Disconnect": "Szétkapcsolás",
-    "Disconnect System from %CLOUD_NAME%?": "Disconnect System from %CLOUD_NAME%?",
+    "Disconnect System from %CLOUD_NAME%?": "Megszünteti a kapcsolatot %CLOUD_NAME% felhővel?",
     "Download": "Letöltés",
     "Download %VMS_NAME%": "%VMS_NAME% letöltése",
     "Download Chrome": "Chrome letöltése",
@@ -46,6 +46,7 @@
     "Fisheye": "Halszem",
     "Forgot password?": "Elfelejtette a jelszavát?",
     "Get in touch": "Get in touch",
+    "How it works": "How it works",
     "How to install?": "How to install?",
     "I agree to the": "Egyetértek a",
     "I want you to contact me": "I want you to contact me",
@@ -55,7 +56,7 @@
     "Latest version": "Legújabb verzió",
     "Log In": "Bejelentkezés",
     "Log Out": "Kijelentkezés",
-    "Log in to %CLOUD_NAME%": "Log in to %CLOUD_NAME%",
+    "Log in to %CLOUD_NAME%": "Bejelentkezés ide: %CLOUD_NAME%",
     "Merge Systems": "Rendszerek összevonása",
     "Merge current System with": "Az aktuális rendszer egyesítése",
     "Message": "Üzenet",
@@ -92,6 +93,7 @@
     "System will be accessible through local network with local administrator account.": "A rendszer a helyi hálózatból továbbra is elérhető lesz a helyi adminisztrátor fiókkal.",
     "Systems": "Rendszerek",
     "Systems of such size may work but will be unstable and have troubles with updates and synchronisation.": "Az ilyen méretű rendszerek működhetnek, de instabilak lesznek, és a frissítésekkel és szinkronizálással kapcsolatos problémákkal küzdenek.",
+    "Tags": "Címke",
     "Take the name and settings from": "Vegye ki a nevet és a beállításokat",
     "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.": "A felhasználó hitelesítő adatai kiszivárogtak! Egyéni \"Nyilvános felhasználó\" fiókot kell létrehoznia, ami csak\n             a nyilvános használatra kiválasztott kamerákhoz férhet hozzá, melyek csak a szükséges minimális megtekintési engedélyekkel rendelkezik. Ez a\n            \"nyilvános felhasználó\" semmilyen rendszerszintű hozzáféréssel nem rendelkezhet.",
     "There will be more than": "Több mint",
@@ -108,7 +110,7 @@
     "You can only merge Systems where you are the owner.": "Csak olyan felhő-rendszereket vonhat össze, ahol tulajdonos.",
     "Your Name": "Your Name",
     "Your browser is not supported": "Ez a böngésző nem támogatott",
-    "and_x_more": "... and {{value}} more",
+    "andXMore": "... and {{value}} more",
     "cameraFilters": {
         "H265": "H.265 Cameras",
         "IO": "I / O modules",
@@ -124,23 +126,23 @@
     "devices": "eszközök",
     "dialogs": {
         "merge": {
-            "connectToCloud": "Connect System you want to merge with this one to <strong>{{cloudName}}</strong> or merge locally using <strong>{{vmsName}}</strong> Client.",
+            "connectToCloud": "Csatlakoztassa az egyesíteni kívánt rendszert ezzel együtt <strong>{{cloudName}}</strong> vagy egyesítse helyileg <strong>{{vmsName}}</strong> klienst használva.",
             "mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from the <strong>{{primarySystem}}</strong>.",
             "primaryCannotMerge": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} System.",
             "primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}.",
             "secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
-            "systemOffline": "System {{targetSystem}} is offline and cannot be merged with the current one.",
+            "systemOffline": "A {{targetSystem}} rendszer offline állapotban van, emiatt nem lehet egyesíteni a meglévővel.",
             "systemUnavailable": "System {{targetSystem}} is currently unreachable. Try again in a few minutes or contact"
         }
     },
-    "dialogs.merge.connectToCloud": "Connect System you want to merge with this one to <strong>{{cloudName}}</strong> or merge locally using <strong>{{vmsName}}</strong> Client.",
+    "dialogs.merge.connectToCloud": "Csatlakoztassa az egyesíteni kívánt rendszert ezzel együtt <strong>{{cloudName}}</strong> vagy egyesítse helyileg <strong>{{vmsName}}</strong> klienst használva.",
     "dialogs.merge.mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from the <strong>{{primarySystem}}</strong>.",
     "dialogs.merge.primaryCannotMerge": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} System.",
     "dialogs.merge.primarySystemOffline": "dialogs.merge.primarySystemOffline",
     "dialogs.merge.secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
     "dialogs.merge.systemOffline": "dialogs.merge.systemOffline",
     "dialogs.merge.systemUnavailable": "System {{targetSystem}} is currently unreachable. Try again in a few minutes or contact",
-    "disclaimer": "disclaimer",
+    "disclaimer": "This list is limited to actual devices auto-reporting data to {{value}}, as approved by anonymous system users. The complete list of supported manufacturers and models is greater in scope.",
     "downloads": {
         "appTypes": {
             "bundle": "Kliens és szerver",
@@ -179,7 +181,7 @@
             "sdk": {
                 "label": "SDK",
                 "shortLabel": "SDK",
-                "supported": "C++ cross platform SDK"
+                "supported": "C ++ kereszt platform SDK"
             },
             "windows": {
                 "label": "Windows",
@@ -268,6 +270,7 @@
         "integrations": "Integrations",
         "supportedDevices": "Supported Devices"
     },
+    "phoneNumberWithLabel": "Tel: {{number}}",
     "search": {
         "Any": "Any",
         "Search": "Keresés",

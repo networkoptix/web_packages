@@ -64,7 +64,7 @@
 
 .carousel-img {
     display: flex;
-    align-content: center;
+    align-items: center;
     justify-content: center;
     height: 100%;
 }
@@ -85,7 +85,7 @@
 
         &:nth-child(odd) {
             transform     : rotate(-65deg);
-            top: 26%;
+            top: 30%;
         }
 
         &:nth-child(even) {
@@ -94,7 +94,7 @@
         }
     }
     &.right span {
-        left: 25% !important;
+        left: 30% !important;
 
         &:nth-child(even) {
             transform     : rotate(-65deg);
@@ -103,7 +103,7 @@
 
         &:nth-child(odd) {
             transform     : rotate(65deg);
-            top: 26%;
+            top: 30%;
         }
     }
 }

@@ -3,16 +3,16 @@
     "emailSubject": "הפעל את חשבונך"
   },
   "cloud_invite": {
-    "emailSubject": "You have been invited to %CLOUD_NAME%"
+    "emailSubject": "הוזמנת ל %CLOUD_NAME%"
   },
   "cloud_notification": {
     "emailSubject": "{{message.subject}}"
   },
   "contact_sales": {
-    "emailSubject": "Sales inquiry for {{message.product}}"
+    "emailSubject": "שאלת מכירות עבור {{message.product}}"
   },
   "contact_support": {
-    "emailSubject": "Support request for {{message.product}}"
+    "emailSubject": "בקשת תמיכה עבור {{message.product}}"
   },
   "ipvd_feedback": {
     "emailSubject": "משוב על דף מצלמה עבור {{message.product}}"
@@ -24,7 +24,7 @@
     "emailSubject": "אפס את סיסמתך"
   },
   "system_invite": {
-    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} invites you to %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}Video system {{message.system_name}} was shared with you{{/message.sharer_name}}"
+    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} מזמין אותך ל %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}מערכת וידאו {{message.system_name}} היה לשתף איתך{{/message.sharer_name}}"
   },
   "system_shared": {
     "emailSubject": "מערכת הווידאו {{message.system_name}} שותפה איתך"

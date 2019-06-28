@@ -1,8 +1,8 @@
-There is a new version for {{ message.product }}({{message.product_type}}) to review.
+Існує нова версія для перегляду {{ message.product }}({{message.product_type}}).
 
 Натисніть на посилання, щоб переглянути чернетку {{ message.id }} для {{ message.product }}
 
-Link to review: {{ config.portal_url }}/admin/cms/productcustomizationreview/{{ message.id }}/change/
+Посилання для перевірки: {{ config.portal_url }}/admin/cms/productcustomizationreview/{{ message.id }}/change/
 
 На цій сторінці ви можете
 1) Створити попередній перегляд, щоб переглянути останні зміни.

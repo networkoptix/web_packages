@@ -61,7 +61,7 @@ class AccountManager(models.Manager):
 
     @staticmethod
     def register_cloud_invite_user(email, password, data):
-        ip = data.pop("IP", "")
+        ip = data.get("IP", "")
         first_name = data.pop("first_name")
         last_name = data.pop("last_name")
 
@@ -91,6 +91,17 @@ class AccountManager(models.Manager):
         if mail_exists and not check_email_exists:
             raise APILogicException('User already registered', ErrorCodes.account_exists)
         return True
+
+    @staticmethod
+    def check_if_activated(email, password, ip):
+        activated = False
+        try:
+            cloud_api_account.get(email, password, ip)  # try to authenticate with clouddb to check if activated
+            activated = True
+        except APILogicException as exception:
+            if exception.error_code != ErrorCodes.account_not_activated:
+                raise exception
+        return activated
 
 
 class Account(AbstractBaseUser, PermissionsMixin):

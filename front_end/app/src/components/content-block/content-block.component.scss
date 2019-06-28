@@ -12,6 +12,7 @@
         background-color : $additional_light1;
         padding          : 0 1rem;
         border-bottom    : 1px solid $light3;
+        position         : relative;
         
         h4 {
             margin : 0;
@@ -39,6 +40,34 @@
         img {
             max-width : 100%;
             height    : auto;
+        }
+    
+        &-info {
+            .section {
+                margin-bottom: 1rem;
+                
+                &.flat {
+                    display         : flex;
+                    justify-content : flex-start;
+                }
+                
+                &:last-of-type {
+                    margin-bottom : 0;
+                }
+            
+                img {
+                    height      : 1rem;
+                    width       : 1rem;
+                    margin-left : .25rem;
+                    color       : $light12;
+                    font-size   : $font-size-sm;
+                    line-height : 1rem;
+                }
+                
+                p:last-of-type {
+                    margin-bottom: 0;
+                }
+            }
         }
     }
     
@@ -139,15 +168,13 @@
             }
             
             .second-row {
-                margin-top : 4px;
+                margin-top : 5px;
                 
                 .version {
                     font-family : $font-family-regular;
                     color       : $light16;
                     float       : left;
                     font-size   : 11px;
-                    position    : absolute;
-                    bottom      : 10px;
                 }
                 
                 .platforms {

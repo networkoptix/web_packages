@@ -7,7 +7,7 @@
   "dialogs": {
     "okButton": "Xác nhận",
     "cancelButton": "Hủy bỏ",
-    "loginTitle": "Log in to %CLOUD_NAME%",
+    "loginTitle": "Đăng nhập vào %CLOUD_NAME%",
     "loginButton": "Đăng nhập",
     "logoutAuthorisedTitle": "Bạn đã đăng nhập",
     "logoutAuthorisedContinueButton": "Tiếp tục",
@@ -203,7 +203,7 @@
     "confirmRenameTitle": "Tên hệ thống",
     "confirmRenameAction": "Tiết kiệm",
     "successRename": "Đã lưu tên hệ thống",
-    "confirmDisconnectTitle": "Disconnect System from %CLOUD_NAME%?",
+    "confirmDisconnectTitle": "Hệ thống đã ngắt kết nối từ %CLOUD_NAME%?",
     "confirmDisconnectAction": "Ngắt kết nối",
     "confirmUnshareFromMe": "Bạn sẽ ngắt kết nối Hệ thống này khỏi tài khoản của bạn. Bạn sẽ không thể truy cập Hệ thống này nữa. Bạn có chắc không?",
     "confirmUnshareFromMeTitle": "Ngắt kết nối hệ thống?",
@@ -215,7 +215,7 @@
     "successDeleted": "Tài khoản {{systemName}} đã xóa thành công từ hệ thống của bạn",
     "mergeFailed": "Hợp nhất hệ thống không thành công",
     "mergeStart": "Các hệ thống đã được hợp nhất",
-    "mergeSuccess": "System merge completed",
+    "mergeSuccess": "Hoàn thành hợp nhất hệ thống",
     "permissionsRemoved": "Các quyền đã bị xóa khỏi {{email}}",
     "unknownName": "Tên không xác định cho hệ thống (do hợp nhất Cloud)"
   },

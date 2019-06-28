@@ -5,7 +5,7 @@ import { IntegrationService }        from '../integration.service';
 import { DomSanitizer }              from '@angular/platform-browser';
 import { NxRibbonService }           from '../../../components/ribbon/ribbon.service';
 import { NxConfigService }           from '../../../services/nx-config';
-import { NxModalMessageComponent }   from '../../../dialogs/message/message.component';
+import { NxModalMessageComponent, MessageParams }   from '../../../dialogs/message/message.component';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { TranslateService }          from '@ngx-translate/core';
 
@@ -28,11 +28,9 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
 
     private setupDefaults() {
         this.config = this.configService.getConfig();
-        this.language
-            .translationsSubject
-            .subscribe((lang) => {
-                this.lang = lang;
-            });
+        this.language.translationsSubject.subscribe((lang) => {
+            this.lang = lang;
+        });
 
 
     }
@@ -88,9 +86,9 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                                             query
                                         },
                                         {
-                                            id   : 'how-to-install',
-                                            label: 'How to install?',
-                                            path : 'how-to-install',
+                                            id   : 'how-to-setup',
+                                            label: 'How to setup?',
+                                            path : 'how-to-setup',
                                             query
                                         }]
                                 }]
@@ -107,8 +105,8 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
 
                                     if (this.plugin.pending || this.plugin.draft) {
                                         this.ribbonService.show(
-                                                this.lang[this.translate.currentLang].integration.previewRibbonText,
-                                                this.lang[this.translate.currentLang].integration.backToEditText,
+                                                this.lang.integration.previewRibbonText,
+                                                this.lang.integration.backToEditText,
                                                 this.config.links.admin.product.replace('%ID%', this.plugin.id)
                                         );
                                     }
@@ -130,7 +128,17 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
     }
 
     openMessageDialog() {
-        this.messageDialog.open(this.config.messageType.integration, this.plugin.information.name, this.plugin.id).then(() => {});
+        let disclaimer: string = this.lang.privacyPolicy.integration;
+        disclaimer = disclaimer.replace(/%INTEGRATION_COMPANY%/g, this.plugin.information.companyName);
+        disclaimer = disclaimer.replace(/%INTEGRATION_PRIVACY_POLICY%/g, this.plugin.information.companyPrivacyPolicyLink);
+        const data: MessageParams = {
+            to: this.plugin.information.companyName,
+            email: this.plugin.support.supportEmail,
+            disclaimer,
+            productId: this.plugin.id,
+            product: this.plugin.information.name,
+        };
+        this.messageDialog.open(this.config.messageType.integration, data).then(() => {});
     }
 }
 

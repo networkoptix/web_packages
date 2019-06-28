@@ -19,7 +19,7 @@ module.exports = merge(common, {
         proxy             : [
             {
                 context: [ '/api/', '/gateway/' ],
-                //target : 'http://cloud-local',
+                // target : 'http://localhost:8000',
                 // target : 'https://cloud-dev2.hdw.mx',
                 target : 'https://cloud-test.hdw.mx',
                 changeOrigin: true,

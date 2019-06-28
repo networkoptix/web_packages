@@ -26,7 +26,7 @@
     "Create Account": "Skapa konto",
     "Create account": "Skapa konto",
     "Disconnect": "Koppla från",
-    "Disconnect System from %CLOUD_NAME%?": "Disconnect System from %CLOUD_NAME%?",
+    "Disconnect System from %CLOUD_NAME%?": "Koppla bort systemet från %CLOUD_NAME%?",
     "Download": "Ladda ner",
     "Download %VMS_NAME%": "Ladda ner %VMS_NAME%",
     "Download Chrome": "Hämta Chrome",
@@ -46,6 +46,7 @@
     "Fisheye": "Fisköga",
     "Forgot password?": "Glömt lösenord?",
     "Get in touch": "Get in touch",
+    "How it works": "How it works",
     "How to install?": "How to install?",
     "I agree to the": "I agree to the license terms and conditions",
     "I want you to contact me": "Jag vill att du ska kontakta mig",
@@ -55,7 +56,7 @@
     "Latest version": "Senaste version",
     "Log In": "Logga in",
     "Log Out": "Logga ut",
-    "Log in to %CLOUD_NAME%": "Log in to %CLOUD_NAME%",
+    "Log in to %CLOUD_NAME%": "Logga in på %CLOUD_NAME%",
     "Merge Systems": "Sammanfoga system",
     "Merge current System with": " Slå samman aktuellt system med ",
     "Message": "Meddelande",
@@ -92,6 +93,7 @@
     "System will be accessible through local network with local administrator account.": "Systemet kommer att vara tillgängligt via lokalt nätverk med lokalt administratörskonto.",
     "Systems": "System",
     "Systems of such size may work but will be unstable and have troubles with updates and synchronisation.": "System med sådan storlek kan fungera men kommer att vara instabila och ha problem med uppdateringar och synkronisering.",
+    "Tags": "Taggar",
     "Take the name and settings from": "Ta systemnamn och inställningar från",
     "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.": "Autentiseringsuppgifterna för den här användaren exponeras! Du måste skapa en anpassad ”offentliga” användarroll med tillgång endast\n            till kameror för offentlig användning och tilldelas endast minimikravet visningsbehörigheter. Detta\n            ”offentliga användare” bör inte ha systemomfattande åtkomst av något slag.",
     "There will be more than": "Det kommer att finnas mer än",
@@ -108,7 +110,7 @@
     "You can only merge Systems where you are the owner.": "Du kan slå samman cloud system där du är ägare.",
     "Your Name": "Ditt namn",
     "Your browser is not supported": "Din webbläsare stöds inte",
-    "and_x_more": "... och {{value}} mer",
+    "andXMore": "... och {{value}} mer",
     "cameraFilters": {
         "H265": "H.265 kameror",
         "IO": "I/O-moduler",
@@ -124,23 +126,23 @@
     "devices": "enheter",
     "dialogs": {
         "merge": {
-            "connectToCloud": "Connect System you want to merge with this one to <strong>{{cloudName}}</strong> or merge locally using <strong>{{vmsName}}</strong> Client.",
-            "mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from the <strong>{{primarySystem}}</strong>.",
-            "primaryCannotMerge": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} System.",
+            "connectToCloud": "Anslut system du vill slå samman med den här till <strong>{{cloudName}}</strong> eller slå ihop lokalt med <strong>{{vmsName}}</strong> Client.",
+            "mergeConfirmation": "Du håller på att slå samman system <strong>{{primarySystem}}</strong> och <strong>{{secondarySystem}}</strong>. Inställningar och namnet kommer att tas från <strong>{{primarySystem}}</strong>.",
+            "primaryCannotMerge": "System {{targetSystem}} har en nyare mjukvaruversion som inte är kompatibel med det aktuella systemet. Uppdatera det nuvarande systemet till <a href=\"/download\" target=\"_blank\" translate>senaste bygg</a> att slå samman det med {{targetSystem}} systemet.",
             "primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}.",
-            "secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
-            "systemOffline": "System {{targetSystem}} is offline and cannot be merged with the current one.",
+            "secondaryCannotMerge": "System {{targetSystem}} har en äldre programversion som inte är kompatibel med det aktuella systemet. Uppdatera {{targetSystem}} till <a href=\"/download\" target=\"_blank\" translate>senaste version</a> att slå samman den med den nuvarande.",
+            "systemOffline": "System {{targetSystem}} är offline och kan inte slås samman med det nuvarande.",
             "systemUnavailable": "System {{targetSystem}} är för närvarande inte tillgängligt. Försök igen om några minuter eller kontakta"
         }
     },
-    "dialogs.merge.connectToCloud": "Connect System you want to merge with this one to <strong>{{cloudName}}</strong> or merge locally using <strong>{{vmsName}}</strong> Client.",
-    "dialogs.merge.mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from the <strong>{{primarySystem}}</strong>.",
-    "dialogs.merge.primaryCannotMerge": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} System.",
+    "dialogs.merge.connectToCloud": "Anslut system du vill slå samman med den här till <strong>{{cloudName}}</strong> eller slå ihop lokalt med <strong>{{vmsName}}</strong> Client.",
+    "dialogs.merge.mergeConfirmation": "Du håller på att slå samman system <strong>{{primarySystem}}</strong> och <strong>{{secondarySystem}}</strong>. Inställningar och namnet kommer att tas från <strong>{{primarySystem}}</strong>.",
+    "dialogs.merge.primaryCannotMerge": "System {{targetSystem}} har en nyare mjukvaruversion som inte är kompatibel med det aktuella systemet. Uppdatera det nuvarande systemet till <a href=\"/download\" target=\"_blank\" translate>senaste bygg</a> att slå samman det med {{targetSystem}} systemet.",
     "dialogs.merge.primarySystemOffline": "dialogs.merge.primarySystemOffline",
-    "dialogs.merge.secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
+    "dialogs.merge.secondaryCannotMerge": "System {{targetSystem}} har en äldre programversion som inte är kompatibel med det aktuella systemet. Uppdatera {{targetSystem}} till <a href=\"/download\" target=\"_blank\" translate>senaste version</a> att slå samman den med den nuvarande.",
     "dialogs.merge.systemOffline": "dialogs.merge.systemOffline",
     "dialogs.merge.systemUnavailable": "System {{targetSystem}} är för närvarande inte tillgängligt. Försök igen om några minuter eller kontakta",
-    "disclaimer": "disclaimer",
+    "disclaimer": "Den här listan är begränsad till faktiska enheter för automatisk rapportering till {{value}}, som godkänd av anonyma systemanvändare. Den kompletta listan över stödda tillverkare och modeller är mer omfattande.",
     "downloads": {
         "appTypes": {
             "bundle": "Klient och Server",
@@ -265,9 +267,10 @@
         "feedback": "Se till att du inkluderar din kameramodell och tillverkare..."
     },
     "pageTitles": {
-        "integrations": "Integrations",
-        "supportedDevices": "Supported Devices"
+        "integrations": "Integrationer",
+        "supportedDevices": "Enheter som stöds"
     },
+    "phoneNumberWithLabel": "Tel: {{number}}",
     "search": {
         "Any": "Någon",
         "Search": "Sök",

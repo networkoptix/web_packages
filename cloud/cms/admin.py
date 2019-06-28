@@ -1,4 +1,3 @@
-from __future__ import unicode_literals
 from django.contrib import admin, messages
 from django.contrib.admin import SimpleListFilter
 from django.contrib.auth.models import Permission
@@ -173,7 +172,7 @@ class ProductAdmin(CMSAdmin):
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)
         if not change and not request.user.is_superuser:
-            group = Group.objects.create(name=obj.name + ' Developer')
+            group = Group.objects.create(name=f'Developer: {obj.name}')
             permissions = Permission.objects.filter(
                 codename__in=['edit_content', 'change_product', 'change_productcustomizationreview']
             )
@@ -221,7 +220,6 @@ class ProductAdmin(CMSAdmin):
         if obj and not request.user.is_superuser:
             readonly_fields = super().get_readonly_fields(request, obj)
             readonly_fields.remove('name')
-            readonly_fields.remove('contact_email')
             return readonly_fields
 
         return self.readonly_fields
@@ -264,6 +262,11 @@ class ProductAdmin(CMSAdmin):
             else:
                 return redirect('.')
         return super().response_change(request, obj)
+
+    def response_add(self, request, obj, post_url_continue=None):
+        if '_save' in request.POST and not request.user.is_superuser:
+            return redirect(reverse('admin:pages', args=[obj.id]))
+        return super().response_add(request, obj, post_url_continue)
 
     def product_settings(self, obj):
         if obj.product_type.type == ProductType.PRODUCT_TYPES.integration:
@@ -340,8 +343,9 @@ admin.site.register(Product, ProductAdmin)
 
 
 class ContextAdmin(CMSAdmin):
-    list_display = ('name', 'description', 'url', 'translatable', 'is_global', 'hidden')
-    list_filter = ('product_type', 'translatable', 'is_global', 'hidden')
+    list_display = ('name', 'description', 'url', 'translatable', 'is_global', 'hidden', 'deprecated')
+    list_filter = ('product_type', 'translatable', 'is_global', 'hidden', 'deprecated')
+    actions = ('delete_selected',)
 
 
 admin.site.register(Context, ContextAdmin)
@@ -360,7 +364,7 @@ class DataStructureAdmin(CMSAdmin):
     list_display = ('context', 'label', 'name', 'description', 'translatable', 'type', 'deprecated')
     list_filter = ('context', 'translatable', 'context__product_type', 'deprecated')
     search_fields = ('context__name', 'name', 'description', 'type')
-    actions = ['delete_selected']
+    actions = ('delete_selected',)
 
 
 admin.site.register(DataStructure, DataStructureAdmin)
@@ -452,6 +456,8 @@ class ProductCustomizationReviewAdmin(CMSAdmin):
         extra_context['DataStructureTypes'] = DataStructure.DATA_TYPES
 
         extra_context['allowed'] = self.template_allowed(request, customization_review)
+
+        extra_context['can_preview'] = customization_review.can_preview_customization
 
         # Customization name should be visible in notes heading if developer has access or user has access
         customization_name = customization_review.customization.name

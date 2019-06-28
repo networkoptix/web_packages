@@ -1,10 +1,11 @@
+import json
 from django.db import models
 from django.utils import timezone
 from jsonfield import JSONField
 from django.conf import settings
 from django.db.models import Q
 from rest_framework import serializers
-from cms.models import Customization, Product
+from cms.models import Customization, Product, DataStructure
 from api.models import Account
 
 # When cloudportal is ran locally it uses amqp by default. BROKER_TRANSPORT_OPTIONS is related to sqs.
@@ -15,8 +16,10 @@ USE_SQS_FOR_CLOUD_NOTIFICATIONS = hasattr(settings, "BROKER_TRANSPORT_OPTIONS")
 class MessageTypes(object):
     contact_sales = "contact_sales"
     contact_support = "contact_support"
+    integration_feedback = "integration_feedback"
     ipvd_feedback_page = "ipvd_feedback_page"
     ipvd_feedback_device = "ipvd_feedback_device"
+    ipvd_feedback = "ipvd_feedback"
 
 
 class Event(models.Model):
@@ -131,21 +134,23 @@ class Feedback(models.Model):
         event.send()
 
         # Send email to the contact email for an integration.
-        if self.target_product.contact_email:
-            contact_email = self.target_product.contact_email
+        data_structure = DataStructure.objects.filter(
+            name='supportEmail', context__product_type=self.target_product.product_type,
+            context__name__in=['support', 'Settings']
+        ).last()
+        contact_email = data_structure.find_actual_value(
+            product=self.target_product, version_id=self.target_product.version_id()
+        )
+        emails = [self.sender_email]
+        if contact_email:
+            emails.append(contact_email)
 
-            contact_customization = Account.objects.filter(email=contact_email).first()
-            if contact_customization:
-                contact_customization = contact_customization.customization
-            else:
-                contact_customization = settings.CUSTOMIZATION
-
-            msg = Message.objects.create(user_email=contact_email,
-                                         type=self.type,
-                                         customization=contact_customization,
-                                         message=data,
-                                         event=event)
-            msg.send()
+        msg = Message.objects.create(user_email=json.dumps(emails),
+                                     type=self.type,
+                                     customization=settings.CUSTOMIZATION,
+                                     message=data,
+                                     event=event)
+        msg.send()
 
 
 class MessageStatusSerializer(serializers.ModelSerializer):  # model to use when checking on message status

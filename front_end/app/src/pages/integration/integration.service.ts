@@ -2,6 +2,7 @@ import { Injectable, OnDestroy }       from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { NxCloudApiService }           from '../../services/nx-cloud-api';
 import { NxConfigService }             from '../../services/nx-config';
+import { NxUtilsService }              from '../../services/utils.service';
 
 interface Platform {
     file: string;
@@ -26,14 +27,13 @@ export class IntegrationService implements OnDestroy {
 
         this.getIntegrations()
             .subscribe(result => {
+                this.config = this.configService.getConfig();
                 result.data.forEach(plugin => {
-                    if (!plugin.versionDetails.version || plugin.versionDetails.version &&
-                            plugin.versionDetails.version !== '&nbsp;' &&
-                            plugin.versionDetails.version.indexOf('v.') !== 0) {
-                        plugin.versionDetails.version = (plugin.versionDetails.version) ? 'v.&nbsp;' + plugin.versionDetails.version : '&nbsp;';
-                    }
+                    plugin.versionDetails = {
+                        version: (plugin.versionDetails) ? this.formatVersion(plugin.versionDetails.version) || '1.0' : '1.0'
+                    };
+                    this.formatRequirementsAndCompatibility(plugin);
 
-                    plugin.information.platforms.icons = this.setPlatformIcons(plugin);
                     plugin.information.logo = plugin.information.logo || this.config.icons.default;
 
                     plugin.state = (plugin.pending) ? 'pending' : (plugin.draft) ? 'draft' : undefined;
@@ -43,35 +43,74 @@ export class IntegrationService implements OnDestroy {
                 });
                 this.pluginsSubject.next(result.data);
             });
-
-        this.config = this.configService.getConfig();
     }
 
     private getIntegrations(): Observable<any> {
         return this.api.getIntegrations();
     }
 
-    private setScreenshots(section) {
+    formatVersion(elm) {
+        if (!elm || elm && elm !== '&nbsp;' && elm.indexOf('v.') !== 0) {
+            elm = (elm) ? 'v.&nbsp;' + elm : '&nbsp;';
+        }
+
+        return elm;
+    }
+
+    private formatRequirementsAndCompatibility (plugin) {
+        const section = plugin.requirementsAndCompatibility;
+        if (section) {
+            if (section.platforms) {
+                section.platforms.icons = this.setPlatformIcons(plugin);
+            }
+
+            if (section.testedVersions) {
+                section.testedOn = '';
+                section.testedVersions.map((version) => {
+                    section.testedOn += (section.testedOn.length) ? ',&nbsp;&nbsp;' : '';
+                    section.testedOn += this.formatVersion(version);
+                });
+            }
+
+            section.testedBuild = this.formatVersion(section.testedBuild);
+        }
+    }
+
+    private formatScreenshots(section) {
         if (section) {
             section.screenshots = Object.keys(section).filter((element) => {
-                return element.match(/screenshot/i) && section[element];
-            }).sort().map((key) => {
-                return {id: key, value: section[key]};
+                return element.match(/screenshot[\d]+/i) && section[element];
+            }).map((key) => {
+                const match = key.match(/([\d]+)/i);
+                return { id: key, value: section[key], sortKey: parseInt(match[0], 10) };
             });
+
             if (section.screenshots.length < 1) {
                 delete section.screenshots;
+            } else {
+                section.screenshots.sort(NxUtilsService.byParam((elm) => {
+                    return elm.sortKey;
+                }, NxUtilsService.sortASC));
             }
         }
     }
 
-    private formatScreenshots(plugin) {
+    private formatOverviewScreenshots(plugin) {
         const processed: any = [];
 
+        if (!plugin.overview) {
+            return;
+        }
+
         Object.entries(plugin.overview).forEach((item) => {
-            const matchScreenshot = item[0].match(/Screenshot[\d]+$/);
+            const matchScreenshot = item[0].match(/Screenshot([\d]+)$/);
 
             if (matchScreenshot) {
-                processed.push({ id: item[0].replace('overview', ''), value: item[1] });
+                processed.push({
+                    id     : item[0].replace('overview', ''),
+                    value  : item[1],
+                    sortKey: parseInt(matchScreenshot[1], 10)
+                });
             }
         });
 
@@ -87,20 +126,28 @@ export class IntegrationService implements OnDestroy {
             }
         });
 
-        plugin.overview.screenshots = processed;
+        if (processed.length) {
+            processed.sort(NxUtilsService.byParam((elm) => {
+                return elm.sortKey;
+            }, NxUtilsService.sortASC));
+
+            plugin.overview.screenshots = processed;
+        }
     }
 
     setPlatformIcons(plugin) {
         const platformIcons = [];
 
         this.config.icons.platforms.forEach(icon => {
-            const platform = plugin.information.platforms.find(platform => {
-                // 32 or 64 bit? ... it doesn't matter :)
-                return platform.toLowerCase().indexOf(icon.name) > -1;
-            });
-            if (platform) {
-                platformIcons.push({ name: platform, src: icon.src });
-            }
+            const platform = plugin.requirementsAndCompatibility
+                                   .platforms
+                                   .find(platform => {
+                                       // 32 or 64 bit? ... it doesn't matter :)
+                                       return platform.toLowerCase().indexOf(icon.name) > -1;
+                                   });
+                                   if (platform) {
+                                       platformIcons.push({ name: platform, src: icon.src });
+                                   }
         });
 
         return platformIcons;
@@ -151,10 +198,14 @@ export class IntegrationService implements OnDestroy {
         }
 
         plugin.versionDetails.version = (plugin.versionDetails.version) ? 'v.&nbsp;' + plugin.versionDetails.version : '&nbsp;';
-        plugin.information.platforms.icons = this.setPlatformIcons(plugin);
 
-        this.setScreenshots(plugin.instructions);
-        this.formatScreenshots(plugin);
+        if (plugin.requirementsAndCompatibility && plugin.requirementsAndCompatibility.platforms) {
+            plugin.requirementsAndCompatibility.platforms.icons = this.setPlatformIcons(plugin);
+        }
+
+        this.formatScreenshots(plugin.instructions);
+        this.formatOverviewScreenshots(plugin);
+        this.formatRequirementsAndCompatibility(plugin);
 
         return plugin;
     }

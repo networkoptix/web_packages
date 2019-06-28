@@ -7,7 +7,7 @@
   "dialogs": {
     "okButton": "OK",
     "cancelButton": "Cancelar",
-    "loginTitle": "Log in to %CLOUD_NAME%",
+    "loginTitle": "Logar em %CLOUD_NAME%",
     "loginButton": "Entrar",
     "logoutAuthorisedTitle": "Já tem sessão iniciada",
     "logoutAuthorisedContinueButton": "Continuar",
@@ -211,7 +211,7 @@
     "confirmUnshare": "Este utilizador não será capaz de aceder ao sistema. Tem certeza?",
     "confirmUnshareTitle": "Apagar utilizador?",
     "confirmUnshareAction": "Apagar",
-    "successDisconnected": "System is successfully disconnected from %CLOUD_NAME%",
+    "successDisconnected": "O Sistema foi desconectado de %CLOUD_NAME% com sucesso",
     "successDeleted": "O sistema {{systemName}} foi apagado com sucesso da sua conta",
     "mergeFailed": "Falha na fusão de Sistemas",
     "mergeStart": "Systems have started merging",

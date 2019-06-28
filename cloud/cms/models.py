@@ -1,10 +1,11 @@
-from __future__ import unicode_literals
 import os
 import re
+import json
 from datetime import datetime
 from distutils.util import strtobool
 from django.db import models
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from jsonfield import JSONField
 from model_utils import Choices
 from django.core.cache import cache, caches
@@ -71,6 +72,7 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
                 'smtp_tls': product.read_global_value('%SMTP_TLS%')
             },
             'config': {
+                'available_downloads_platform': product.read_global_value('%AVAILABLE_DOWNLOADS_PLATFORM%'),
                 'cloud_merge': product.read_global_value("%CLOUD_MERGE%"),
                 'copyright_year': product.read_global_value("%COPYRIGHT_YEAR%"),
                 'company_name': product.read_global_value("%COMPANY_NAME%"),
@@ -78,6 +80,7 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
                 'feedback_enabled': product.read_global_value("%FEEDBACK_ENABLED%"),
                 'footer_items': footer_items,
                 'integration_filter_items': product.read_global_value("%INTEGRATION_FILTER_ITEMS%"),
+                'integration_filter_limitation': product.read_global_value("%INTEGRATION_SHOW_FILTER_LIMITATION%"),
                 'integration_store_enabled': integration_store_enabled,
                 'public_downloads': product.read_global_value("%PUBLIC_DOWNLOADS%"),
                 'public_releases': product.read_global_value("%PUBLIC_RELEASE_HISTORY%"),
@@ -115,7 +118,7 @@ def slugify(name, lowercase=False):
 def rename_file(instance, filename):
     product_name = slugify(instance.product.name, True)
     structure_name = slugify(instance.data_structure.name, True)
-    file_info = "{}-{}-{}".format(structure_name, instance.id, slugify(filename))
+    file_info = f"{structure_name}-{instance.id}"
     return os.path.join(product_name, file_info, filename)
 
 
@@ -204,6 +207,7 @@ class ProductType(models.Model):
     can_preview = models.BooleanField(default=False)
     single_customization = models.BooleanField(default=False)
     type = models.IntegerField(choices=PRODUCT_TYPES, default=PRODUCT_TYPES.cloud_portal)
+    advanced = models.BooleanField(default=True)
 
     def __str__(self):
         if self.name:
@@ -222,6 +226,9 @@ class ProductType(models.Model):
                 return index
         return 0
 
+    def get_customizations(self):
+        return self.product_set.exclude(customizations=None).values_list('customizations__name', flat=True)
+
 
 class Product(models.Model):
     class Meta:
@@ -232,7 +239,6 @@ class Product(models.Model):
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, null=True,
         blank=True, related_name='created_%(class)s', on_delete=models.CASCADE)
-    contact_email = models.CharField(max_length=255, blank=True, default='')
     customizations = models.ManyToManyField(Customization, default=None, blank=True)
     product_type = models.ForeignKey(ProductType, default=get_integration_type, null=True, on_delete=models.CASCADE)
 
@@ -241,7 +247,7 @@ class Product(models.Model):
 
     def __str__(self):
         if self.product_type and self.is_cloud_portal:
-            return "{} - {}".format(self.name, self.customizations.first())
+            return f"{self.name} - {self.customizations.first()}"
         return self.name
 
     @property
@@ -300,6 +306,11 @@ class Product(models.Model):
 
         return data_structure.find_actual_value(product=self, version_id=self.version_id()) if data_structure else None
 
+    def clean(self):
+        if self.product_type.type != ProductType.PRODUCT_TYPES.cloud_portal and \
+                Product.objects.filter(name=self.name, product_type=self.product_type).exclude(pk=self.pk).exists():
+            raise ValidationError({'name': 'Name already exists'})
+
     def save(self, *args, **kwargs):
         need_update = False
         if self.pk is None:
@@ -325,15 +336,16 @@ class Context(models.Model):
         )
         ordering = ['order', 'id']
     # TODO: Remove this after release of 19.1 - Task: CLOUD-2299
-    product = models.ForeignKey(Product, null=True, on_delete=models.SET_NULL)
+    product = models.ForeignKey(Product, null=True, on_delete=models.SET_NULL, blank=True)
     product_type = models.ForeignKey(ProductType, null=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=1024)
-    label = models.CharField(max_length=1024, default="")
+    label = models.CharField(max_length=1024, default="", blank=True)
     description = models.TextField(blank=True, default="")
     translatable = models.BooleanField(default=True)
     is_global = models.BooleanField(default=False)
     hidden = models.BooleanField(default=False)
     order = models.IntegerField(default=100000)
+    deprecated = models.BooleanField(default=False)
 
     file_path = models.CharField(max_length=1024, blank=True, default='')
     url = models.CharField(max_length=1024, blank=True, default='')
@@ -370,7 +382,7 @@ class ContextTemplate(models.Model):
     context = models.ForeignKey(Context, on_delete=models.CASCADE)
     language = models.ForeignKey(Language, null=True, on_delete=models.CASCADE)
     template = models.TextField()
-    skin = models.CharField(max_length=16, default=settings.DEFAULT_SKIN, blank=True)
+    skin = models.CharField(max_length=16, default='', blank=True)
     # Skin is a bit hacky for now:
     # Skin cannot be mentioned in filename
     # Skin is supported only for file contexts
@@ -378,10 +390,10 @@ class ContextTemplate(models.Model):
     def __str__(self):
         if not self.language:
             return self.context.name
+        skin = f"{self.skin}/" if self.skin else ""
         if self.context.file_path:
-            return ('{0}/'.format(self.skin) if self.skin else '') + \
-                   self.context.file_path.replace("{{language}}", self.language.code)
-        return "{0}-{1}{2}".format(self.context.name, '{0}/'.format(self.skin) if self.skin else '', self.language.name)
+            return skin + self.context.file_path.replace("{{language}}", self.language.code)
+        return f"{self.context.name}-{skin}{self.language.name}"
 
 
 class DataStructure(models.Model):
@@ -395,7 +407,7 @@ class DataStructure(models.Model):
         ordering = ['order', 'id']
     context = models.ForeignKey(Context, on_delete=models.CASCADE)
     name = models.CharField(max_length=1024)
-    description = models.TextField()
+    description = models.TextField(blank=True)
     label = models.CharField(max_length=1024, blank=True, default='')
 
     DATA_TYPES = Choices((0, 'text', 'Text'),
@@ -485,9 +497,16 @@ class DataStructure(models.Model):
             content_value = self.default
 
         if self.type == DataStructure.DATA_TYPES.check_box:
-            content_value = strtobool(content_value) == 1
-
+            content_value = strtobool(content_value) == 1 if content_value else False
+        if self.type in [DataStructure.DATA_TYPES.array, DataStructure.DATA_TYPES.object]:
+            content_value = json.loads(content_value) if content_value else None
         return content_value
+
+    @staticmethod
+    def is_file_or_image(data_type):
+        if type(data_type) is not int:
+            data_type = DataStructure.get_type_by_name(data_type)
+        return data_type in [DataStructure.DATA_TYPES.image, DataStructure.DATA_TYPES.file]
 
 
 # CMS settings. Release engineer can change that
@@ -634,9 +653,9 @@ class ProductCustomizationReview(models.Model):
                     review.reviewed_by = None
                     review.reviewed_date = None
             elif can_show_customization:
-                review.notes = "Automatically rejected by {}".format(self.customization)
+                review.notes = f"Automatically rejected by {self.customization}"
             else:
-                review.notes = "automatically rejected"
+                review.notes = "Automatically rejected"
 
             review.save()
             if review.state == ProductCustomizationReview.REVIEW_STATES.rejected or review.customization.trust_parent:
@@ -666,7 +685,9 @@ class ProductCustomizationReview(models.Model):
 
 class ExternalFile(models.Model):
     data_structure = models.ForeignKey(DataStructure, default=None, null=True, on_delete=models.CASCADE)
-    file = models.FileField(upload_to=rename_file, storage=MediaStorage())
+    # Default limit is 100 chars. The new length comes from most paths being limited to 255 char.
+    # Since we slugify the product name, data structure name and file name we need a long length.
+    file = models.FileField(upload_to=rename_file, storage=MediaStorage(), max_length=1000)
     md5 = models.CharField(max_length=1024, default='')
     product = models.ForeignKey(Product, default=None, null=True, on_delete=models.CASCADE)
     size = models.FloatField(default=0.0)

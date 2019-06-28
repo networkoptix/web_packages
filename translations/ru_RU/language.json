@@ -7,7 +7,7 @@
   "dialogs": {
     "okButton": "OK",
     "cancelButton": "Отмена",
-    "loginTitle": "Log in to %CLOUD_NAME%",
+    "loginTitle": "Войти в %CLOUD_NAME%",
     "loginButton": "Войти",
     "logoutAuthorisedTitle": "Вы уже выполнили вход",
     "logoutAuthorisedContinueButton": "Продолжить",
@@ -203,7 +203,7 @@
     "confirmRenameTitle": "Имя системы",
     "confirmRenameAction": "Сохранить",
     "successRename": "Имя системы сохранено",
-    "confirmDisconnectTitle": "Disconnect System from %CLOUD_NAME%?",
+    "confirmDisconnectTitle": "Отключить систему от %CLOUD_NAME%?",
     "confirmDisconnectAction": "Отключить",
     "confirmUnshareFromMe": "Вы собираетесь отключить эту систему от учетной записи. Вы не сможете больше иметь доступ к этой системе. Вы уверены?",
     "confirmUnshareFromMeTitle": "Отключить систему?",

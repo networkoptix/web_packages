@@ -7,7 +7,7 @@
   "dialogs": {
     "okButton": "OK",
     "cancelButton": "キャンセル",
-    "loginTitle": "Log in to %CLOUD_NAME%",
+    "loginTitle": "%CLOUD_NAME% にログイン",
     "loginButton": "ログイン",
     "logoutAuthorisedTitle": "すでにログインしています",
     "logoutAuthorisedContinueButton": "続行",
@@ -21,11 +21,11 @@
     "title": {
       "integration": "Email for {{product}}",
       "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Feedback about {{product}}"
+      "ipvd_feedback_device": "{{product}} についてのフィードバック"
     },
     "topic": {
       "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Feedback about {{product}}",
+      "ipvd_feedback_device": "{{product}} についてのフィードバック",
       "contact_sales": "Contact sales for {{product}}",
       "contact_support": "Contact support for {{product}}"
     }
@@ -203,7 +203,7 @@
     "confirmRenameTitle": "システム名",
     "confirmRenameAction": "保存",
     "successRename": "システム名は保存されました",
-    "confirmDisconnectTitle": "Disconnect System from %CLOUD_NAME%?",
+    "confirmDisconnectTitle": "%CLOUD_NAME% からシステムを切断しますか？",
     "confirmDisconnectAction": "切断",
     "confirmUnshareFromMe": "あなたのアカウントからこのシステムを切断しようとしています　もうこのシステムにアクセスすることはできません\n切断しますか？",
     "confirmUnshareFromMeTitle": "システムを切断しますか？",

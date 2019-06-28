@@ -26,7 +26,7 @@
     "Create Account": "สร้างบัญชี",
     "Create account": "สร้างบัญชี",
     "Disconnect": "ตัดการเชื่อมต่อ",
-    "Disconnect System from %CLOUD_NAME%?": "Disconnect System from %CLOUD_NAME%?",
+    "Disconnect System from %CLOUD_NAME%?": "ยกเลิกการเชื่อมต่อระบบจาก %CLOUD_NAME%?",
     "Download": "ดาวน์โหลด",
     "Download %VMS_NAME%": "ดาวน์โหลด %VMS_NAME%",
     "Download Chrome": "ดาวน์โหลด Chrome",
@@ -46,6 +46,7 @@
     "Fisheye": "ฟิชอาย",
     "Forgot password?": "ลืมรหัสผ่าน?",
     "Get in touch": "Get in touch",
+    "How it works": "How it works",
     "How to install?": "How to install?",
     "I agree to the": "ฉันยอมรับข้อกำหนดในการให้บริการ",
     "I want you to contact me": "ฉันต้องการให้คุณติดต่อฉัน",
@@ -55,7 +56,7 @@
     "Latest version": "เวอร์ชั่นล่าสุด",
     "Log In": "เข้าสู่ระบบ",
     "Log Out": "ออกจากระบบ",
-    "Log in to %CLOUD_NAME%": "Log in to %CLOUD_NAME%",
+    "Log in to %CLOUD_NAME%": "เข้าสู่ระบบ %CLOUD_NAME%",
     "Merge Systems": "รวมระบบ",
     "Merge current System with": "ผสานระบบปัจจุบันด้วย",
     "Message": "ข้อความ",
@@ -92,6 +93,7 @@
     "System will be accessible through local network with local administrator account.": "ระบบสามารถเข้าถึงได้ผ่านเครือข่ายท้องถิ่นด้วยบัญชีผู้ดูแลระบบภายใน",
     "Systems": "ระบบ",
     "Systems of such size may work but will be unstable and have troubles with updates and synchronisation.": "ระบบที่มีขนาดดังกล่าวอาจทำงานได้ แต่จะไม่เสถียรและมีปัญหากับการอัปเดตและการซิงโครไนซ์",
+    "Tags": "แท็ก",
     "Take the name and settings from": "ใช้ชื่อระบบและการตั้งค่าจาก",
     "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.": "ข้อมูลประจำตัวของผู้ใช้รายนี้จะเปิดเผย! คุณต้องสร้างบทบาท \"ผู้ใช้สาธารณะ\" ที่กำหนดเองโดยมีการเข้าถึงเฉพาะ\n            สำหรับกล้องที่เลือกเพื่อการใช้งานสาธารณะและกำหนดสิทธิ์การดูขั้นต่ำที่จำเป็นเท่านั้น นี้\n            \"ผู้ใช้ที่สาธารณะ\" ไม่ควรมีการเข้าถึงทั้งระบบใด ๆ",
     "There will be more than": "จะมีมากกว่านั้น",
@@ -108,7 +110,7 @@
     "You can only merge Systems where you are the owner.": "คุณสามารถผสานระบบคลาวด์ที่คุณเป็นเจ้าของได้",
     "Your Name": "ชื่อของคุณ",
     "Your browser is not supported": "เบราว์เซอร์ของคุณไม่สนับสนุนการทำงานของระบบ",
-    "and_x_more": "... and {{value}} more",
+    "andXMore": "... and {{value}} more",
     "cameraFilters": {
         "H265": "H.265 Cameras",
         "IO": "I / O modules",
@@ -124,23 +126,23 @@
     "devices": "อุุปกรณ์",
     "dialogs": {
         "merge": {
-            "connectToCloud": "Connect System you want to merge with this one to <strong>{{cloudName}}</strong> or merge locally using <strong>{{vmsName}}</strong> Client.",
+            "connectToCloud": "เชื่อมต่อระบบที่คุณต้องการผสานกับระบบนี้กับ <strong>{{cloudName}}</strong> หรือผสานภายในเครื่องโดยใช้ไคลเอ็นต์ <strong>{{vmsName}}</strong>",
             "mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from the <strong>{{primarySystem}}</strong>.",
             "primaryCannotMerge": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} System.",
             "primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}.",
             "secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
-            "systemOffline": "System {{targetSystem}} is offline and cannot be merged with the current one.",
+            "systemOffline": "ระบบ {{targetSystem}} เป็นแบบออฟไลน์และไม่สามารถผสานกับระบบปัจจุบันได้",
             "systemUnavailable": "ระบบ {{targetSystem}} ไม่สามารถเข้าถึงได้ในขณะนี้ ลองอีกครั้งในไม่กี่นาทีหรือติดต่อ"
         }
     },
-    "dialogs.merge.connectToCloud": "Connect System you want to merge with this one to <strong>{{cloudName}}</strong> or merge locally using <strong>{{vmsName}}</strong> Client.",
+    "dialogs.merge.connectToCloud": "เชื่อมต่อระบบที่คุณต้องการผสานกับระบบนี้กับ <strong>{{cloudName}}</strong> หรือผสานภายในเครื่องโดยใช้ไคลเอ็นต์ <strong>{{vmsName}}</strong>",
     "dialogs.merge.mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from the <strong>{{primarySystem}}</strong>.",
     "dialogs.merge.primaryCannotMerge": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} System.",
     "dialogs.merge.primarySystemOffline": "dialogs.merge.primarySystemOffline",
     "dialogs.merge.secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
     "dialogs.merge.systemOffline": "dialogs.merge.systemOffline",
     "dialogs.merge.systemUnavailable": "ระบบ {{targetSystem}} ไม่สามารถเข้าถึงได้ในขณะนี้ ลองอีกครั้งในไม่กี่นาทีหรือติดต่อ",
-    "disclaimer": "disclaimer",
+    "disclaimer": "This list is limited to actual devices auto-reporting data to {{value}}, as approved by anonymous system users. The complete list of supported manufacturers and models is greater in scope.",
     "downloads": {
         "appTypes": {
             "bundle": "ไคลเอ็นต์และเซิร์ฟเวอร์",
@@ -179,7 +181,7 @@
             "sdk": {
                 "label": "SDK",
                 "shortLabel": "SDK",
-                "supported": "C++ cross platform SDK"
+                "supported": "C ++ SDK ข้ามแพลตฟอร์ม"
             },
             "windows": {
                 "label": "วินโดวส์",
@@ -265,9 +267,10 @@
         "feedback": "Make sure you include your camera model and manufacturer..."
     },
     "pageTitles": {
-        "integrations": "Integrations",
-        "supportedDevices": "Supported Devices"
+        "integrations": "Integration",
+        "supportedDevices": "อุปกรณ์ที่รองรับ"
     },
+    "phoneNumberWithLabel": "Tel: {{number}}",
     "search": {
         "Any": "รายการใดก็ได้",
         "Search": "ค้นหา",

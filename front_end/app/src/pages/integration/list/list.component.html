@@ -18,9 +18,19 @@
                          [style.backgroundImage]="'url(' + plugin.information.logo + ')'">
                     </div>
                     <div class="card--header-info">
-                        <div class="version" [innerHTML]="plugin.versionDetails.version"></div>
-                        <div class="platforms">
-                            <div *ngFor="let icon of plugin.information.platforms.icons">
+
+                        <div class="version"
+                             *ngIf="plugin.requirementsAndCompatibility && plugin.requirementsAndCompatibility.testedBuild"
+                             [innerHTML]="plugin.requirementsAndCompatibility.testedOn">
+                        </div>
+
+                        <div class="version"
+                             *ngIf="plugin.requirementsAndCompatibility && plugin.requirementsAndCompatibility.testedBuild"
+                             [innerHTML]="plugin.requirementsAndCompatibility.testedBuild">
+                        </div>
+
+                        <div class="platforms" *ngIf="plugin.requirementsAndCompatibility">
+                            <div *ngFor="let icon of plugin.requirementsAndCompatibility.platforms.icons">
                                 <img [src]="icon.src">
                             </div>
                         </div>

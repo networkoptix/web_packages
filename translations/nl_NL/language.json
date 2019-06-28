@@ -7,7 +7,7 @@
   "dialogs": {
     "okButton": "Oké",
     "cancelButton": "Annuleren",
-    "loginTitle": "Log in to %CLOUD_NAME%",
+    "loginTitle": "Meld u aan bij %CLOUD_NAME%",
     "loginButton": "Log in",
     "logoutAuthorisedTitle": "U bent reeds ingelogd",
     "logoutAuthorisedContinueButton": "Doorgaan",
@@ -21,11 +21,11 @@
     "title": {
       "integration": "Email for {{product}}",
       "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Feedback about {{product}}"
+      "ipvd_feedback_device": "Feedback over {{product}}"
     },
     "topic": {
       "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Feedback about {{product}}",
+      "ipvd_feedback_device": "Feedback over {{product}}",
       "contact_sales": "Contact sales for {{product}}",
       "contact_support": "Contact support for {{product}}"
     }
@@ -57,7 +57,7 @@
   "systemStatuses": {
     "activated": "geactiveerd",
     "incompatible": "incompatibel",
-    "merging": "aan het samenvoegen",
+    "merging": "samenvoegen",
     "notActivated": "niet geactiveerd",
     "online": "online",
     "offline": "offline",
@@ -203,7 +203,7 @@
     "confirmRenameTitle": "Systeemnaam",
     "confirmRenameAction": "Opslaan",
     "successRename": "Systeemnaam opgeslagen",
-    "confirmDisconnectTitle": "Disconnect System from %CLOUD_NAME%?",
+    "confirmDisconnectTitle": "Ontkoppel het systeem van %CLOUD_NAME%?",
     "confirmDisconnectAction": "Verbinding verbreken",
     "confirmUnshareFromMe": "U staat op het punt om dit systeem uit uw account te verbreken. U kunt dit systeem niet meer gebruiken. Weet u het zeker?",
     "confirmUnshareFromMeTitle": "Systeem loskoppelen?",
@@ -211,7 +211,7 @@
     "confirmUnshare": "Deze gebruiker heeft geen toegang tot het systeem. Weet je het zeker?",
     "confirmUnshareTitle": "Gebruiker verwijderen?",
     "confirmUnshareAction": "Verwijder",
-    "successDisconnected": "System is successfully disconnected from %CLOUD_NAME%",
+    "successDisconnected": "Systeem is succesvol afgesloten van %CLOUD_NAME%",
     "successDeleted": "Systeem {{systemName}} is succesvol verwijderd van uw account",
     "mergeFailed": "Het samenvoegen van systemen is mislukt",
     "mergeStart": "Systemen zijn begonnen samen te voegen",

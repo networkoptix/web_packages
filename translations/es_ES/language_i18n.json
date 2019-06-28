@@ -26,7 +26,7 @@
     "Create Account": "Crear Cuenta",
     "Create account": "Crear Cuenta",
     "Disconnect": "Desconectar",
-    "Disconnect System from %CLOUD_NAME%?": "Disconnect System from %CLOUD_NAME%?",
+    "Disconnect System from %CLOUD_NAME%?": "¿Desconectar el Sistema de %CLOUD_NAME%?",
     "Download": "Descargar",
     "Download %VMS_NAME%": "Descargar %VMS_NAME%",
     "Download Chrome": "Descargar Chrome",
@@ -46,6 +46,7 @@
     "Fisheye": "Ojo de pez",
     "Forgot password?": "¿Has olvidado tu contraseña?",
     "Get in touch": "Get in touch",
+    "How it works": "How it works",
     "How to install?": "How to install?",
     "I agree to the": "Estoy de acuerdo con",
     "I want you to contact me": "Quiero que me contactes",
@@ -55,7 +56,7 @@
     "Latest version": "Última versión",
     "Log In": "Iniciar sesión",
     "Log Out": "Cerrar Sessión",
-    "Log in to %CLOUD_NAME%": "Log in to %CLOUD_NAME%",
+    "Log in to %CLOUD_NAME%": "Inicie sesión en %CLOUD_NAME%",
     "Merge Systems": "Unir Sistemas",
     "Merge current System with": "Combinar el sistema actual con",
     "Message": "Mensaje",
@@ -92,6 +93,7 @@
     "System will be accessible through local network with local administrator account.": "El sistema será accesible a través de la red local con la cuenta del administrador local.",
     "Systems": "Sistemas",
     "Systems of such size may work but will be unstable and have troubles with updates and synchronisation.": "Los sistemas de tal tamaño pueden funcionar pero serán inestables y tendrán problemas con las actualizaciones y la sincronización.",
+    "Tags": "Etiquetas",
     "Take the name and settings from": "Tome el nombre y la configuración de",
     "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.": "Las credenciales de este usuario serán expuestas! Debe crear un rol de \"Usuario público\" personalizado con acceso solo\n            a las cámaras seleccionadas para uso público, y asignado solo los permisos de visualización mínimos requeridos. Este\n            \"Usuario público\" no debe tener acceso a todo el sistema de ningún tipo.",
     "There will be more than": "Habrá más de",
@@ -108,7 +110,7 @@
     "You can only merge Systems where you are the owner.": "Sólo puede fusionar Sistemas donde usted es el propietario.",
     "Your Name": "Tu Nombre",
     "Your browser is not supported": "Tu navegador no es compatible",
-    "and_x_more": "... y {{value}} más",
+    "andXMore": "... y {{value}} más",
     "cameraFilters": {
         "H265": "Cámaras H.265",
         "IO": "I / O modules",
@@ -124,23 +126,23 @@
     "devices": "dispositivos",
     "dialogs": {
         "merge": {
-            "connectToCloud": "Connect System you want to merge with this one to <strong>{{cloudName}}</strong> or merge locally using <strong>{{vmsName}}</strong> Client.",
+            "connectToCloud": "Conectar el sistema que desea fusionar con este a <strong>{{cloudName}}</strong> o fusionar localmente usando <strong>{{vmsName}}</strong> Cliente.",
             "mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from the <strong>{{primarySystem}}</strong>.",
             "primaryCannotMerge": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} System.",
             "primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}.",
             "secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
-            "systemOffline": "System {{targetSystem}} is offline and cannot be merged with the current one.",
+            "systemOffline": "El sistema {{targetSystem}} está fuera de línea y no se puede combinar con el actual.",
             "systemUnavailable": "El sistema {{targetSystem}} es actualmente inalcanzable. Inténtalo de nuevo en unos minutos o contacta"
         }
     },
-    "dialogs.merge.connectToCloud": "Connect System you want to merge with this one to <strong>{{cloudName}}</strong> or merge locally using <strong>{{vmsName}}</strong> Client.",
+    "dialogs.merge.connectToCloud": "Conectar el sistema que desea fusionar con este a <strong>{{cloudName}}</strong> o fusionar localmente usando <strong>{{vmsName}}</strong> Cliente.",
     "dialogs.merge.mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from the <strong>{{primarySystem}}</strong>.",
     "dialogs.merge.primaryCannotMerge": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} System.",
     "dialogs.merge.primarySystemOffline": "dialogs.merge.primarySystemOffline",
     "dialogs.merge.secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
     "dialogs.merge.systemOffline": "dialogs.merge.systemOffline",
     "dialogs.merge.systemUnavailable": "El sistema {{targetSystem}} es actualmente inalcanzable. Inténtalo de nuevo en unos minutos o contacta",
-    "disclaimer": "disclaimer",
+    "disclaimer": "This list is limited to actual devices auto-reporting data to {{value}}, as approved by anonymous system users. The complete list of supported manufacturers and models is greater in scope.",
     "downloads": {
         "appTypes": {
             "bundle": "Cliente y Servidor",
@@ -179,7 +181,7 @@
             "sdk": {
                 "label": "SDK",
                 "shortLabel": "SDK",
-                "supported": "C++ cross platform SDK"
+                "supported": "C ++ multiplataforma SDK"
             },
             "windows": {
                 "label": "Windows",
@@ -265,9 +267,10 @@
         "feedback": "Make sure you include your camera model and manufacturer..."
     },
     "pageTitles": {
-        "integrations": "Integrations",
-        "supportedDevices": "Supported Devices"
+        "integrations": "Integraciones",
+        "supportedDevices": "Dispositivos soportados"
     },
+    "phoneNumberWithLabel": "Tel: {{number}}",
     "search": {
         "Any": "Cualquiera",
         "Search": "Búsqueda",

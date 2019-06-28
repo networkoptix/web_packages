@@ -1,11 +1,11 @@
-<nx-pre-loader type="page" *ngIf="!plugin"></nx-pre-loader>
+<nx-pre-loader type="page" *ngIf="!(plugin && lang)"></nx-pre-loader>
 
-<div *ngIf="plugin">
+<div *ngIf="plugin && lang">
     <div class="d-flex mt-3 m-0 pl-3" style="max-width: 1440px;">
         <div class="p-0" style="width: 300px;">
             <button class="btn btn-default btn-back mb-3" routerLink="/integrations">
                 <span class="back-arrow"></span>
-                <span translate>All integrations</span>
+                <span translate>All Integrations</span>
             </button>
 
             <nx-block header-style="slim" type="menu top">
@@ -14,12 +14,6 @@
                     <div class="second-row">
                         <div class="version"
                              [innerHTML]="plugin.versionDetails.version">
-                        </div>
-
-                        <div class="platforms">
-                            <div style="font-size: 0.75rem; width: 1rem; margin-left: 4px;" *ngFor="let icon of plugin.information.platforms.icons">
-                                <img [src]="icon.src">
-                            </div>
                         </div>
                     </div>
                 </header>
@@ -50,6 +44,16 @@
                 </div>
                 <div class="d-inline-flex flex-wrap justify-content-start w-100">
                     <button class="btn btn-primary" (click)="openMessageDialog()" translate>Get in touch</button>
+                </div>
+            </div>
+
+            <div class="mt-3 clearfix" *ngIf="plugin.information.companyName && plugin.information.companyWeb">
+                <div>
+                    <label class="group-label">{{plugin.information.companyName}}</label>
+                </div>
+                <div>
+                    <a [href]="plugin.information.companyWeb"
+                       target="_blank">{{plugin.information.companyWeb}}</a>
                 </div>
             </div>
 

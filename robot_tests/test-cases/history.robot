@@ -43,20 +43,22 @@ loop expanders
     ...    ELSE    Get WebElements    ${first section}/../..//div/a
     Run Keyword Unless    ${expandables}    Fail    Expandables was empty
     #open the expanders
-    : FOR    ${platform}    IN    @{expandables}
-    \    Click Link    ${platform}
-    \    ${downloads}=    Run Keyword If    ${FULL}==True    Get WebElements    //div[contains(@class,"active")]//div/a/../ul/li/a
-    \    ...    ELSE    Get WebElements    ${first section}/../..//div/ul/li/a
-    \    loop links    ${downloads}
+    FOR    ${platform}    IN    @{expandables}
+        Click Link    ${platform}
+        ${downloads}=    Run Keyword If    ${FULL}==True    Get WebElements    //div[contains(@class,"active")]//div/a/../ul/li/a
+        ...    ELSE    Get WebElements    ${first section}/../..//div/ul/li/a
+        loop links    ${downloads}
+    END
 
 #check each link in each expander for validity
 loop links
     [arguments]    ${downloads}
-    : FOR    ${download}    IN    @{downloads}
-    \    ${link}    Get Element Attribute    ${download}    href
-    \    ${matches}    Get Regexp Matches    ${link}    ${DOWNLOADS DOMAIN}
-    \    Run Keyword If    ${matches}    Check File Exists    ${link}
+    FOR    ${download}    IN    @{downloads}
+        ${link}    Get Element Attribute    ${download}    href
+        ${matches}    Get Regexp Matches    ${link}    ${DOWNLOADS DOMAIN}
+        Run Keyword If    ${matches}    Check File Exists    ${link}
     ...    ELSE    Fail    URL did not begin with ${DOWNLOADS DOMAIN}
+    END
 
 *** Test Cases ***
 History link is not in the downloads page for user without access

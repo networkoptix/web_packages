@@ -1,14 +1,12 @@
 <h1>Merhaba, </h1>
 
-<p>You have been invited to %CLOUD_NAME%</p>
+<p>%CLOUD_NAME% davet edildin</p>
 
 {{#message.message}}
 <p>{{ message.message }}</p>
 {{/message.message}}
 
-<p>Please create account on
-    <a href="{{ config.portal_url }}">%CLOUD_NAME%</a>
-    using your current email address and follow further instructions.
+<p><a href="{{ config.portal_url }}">%CLOUD_NAME%</a> Mail adresinle bir hesap oluştur ve sonraki adımları takip et.
 </p>
 
 <a class="btn" href="{{ config.portal_url }}/register/{{ message.code }}">Hesap Kaydı</a>

@@ -213,12 +213,12 @@ import * as angular from 'angular';
                     password: password
                 });
             },
-            sendMessage: function(type, productId, message, userName?, userEmail?, contact?) {
+            sendMessage: function(type, product, message, userName?, userEmail?, contact?) {
                 if (typeof(contact) === 'undefined') {
                     contact = false;
                 }
                 return $http.post(apiBase + '/feedback', {
-                    message, productId, type, userName, userEmail, contact
+                    message, product, type, userName, userEmail, contact
                 });
 
             },

@@ -1,4 +1,3 @@
-from __future__ import absolute_import
 from django.views.decorators.http import require_http_methods
 from django.views import defaults
 from django.contrib import messages
@@ -8,11 +7,11 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib import admin
 from django.http.response import HttpResponse, HttpResponseBadRequest
-
+from rest_framework.decorators import api_view
 import os
 import json
 from cloud import settings
-from api.helpers.exceptions import APIRequestException
+from api.helpers.exceptions import APIRequestException, APINotFoundException, api_success
 from api.helpers.permissions import make_customization_visible_to_user
 from cms.controllers import filldata, generate_structure, modify_db, structure
 from cms.forms import *
@@ -285,7 +284,7 @@ def product_settings(request, product_id):
             if type(cms_structure) == list and len(cms_structure) > 1:
                 messages.warning(request, "You can only update one product_type at a time. "
                                           "Only the first product type from structure.json was used.")
-            structure.update_from_object(cms_structure[0], product_type=product.product_type)
+            structure.update_from_object(cms_structure, product_type=product.product_type, preserve_files=True)
             messages.success(request, "Structure updated")
         else:
             if not file.name.endswith('zip'):
@@ -369,4 +368,23 @@ def download_package(request, product_id):
     version_id = request.GET['version_id'] if 'version_id' in request.GET else None
     preview = 'draft' in request.GET
     zipped_data = filldata.get_zip_package(product, preview, version_id)
-    return response_attachment(zipped_data, product.name + ".zip", "application/zip")
+    file_name = f"{product.name}.zip"
+    if product.product_type.type == ProductType.PRODUCT_TYPES.vms:
+        file_name = f"{product.customizations.first()}.zip"
+    return response_attachment(zipped_data, file_name, "application/zip")
+
+
+@api_view(["GET"])
+@permission_required('cms.change_product')
+def get_product_ids_by_product_type(request):
+    name = request.GET["name"]
+    product_type_type = ProductType.get_type_by_name(request.GET["type"])
+    product_type = ProductType.objects.filter(name=name, type=product_type_type).first()
+    if not product_type:
+        raise APINotFoundException("Could not find a matching product type")
+
+    if UserGroupsToProductPermissions.check_permission(request.user, 'cms.force_update'):
+        product_ids = product_type.product_set.values_list('id', flat=True)
+    else:
+        product_ids = []
+    return api_success(product_ids)
