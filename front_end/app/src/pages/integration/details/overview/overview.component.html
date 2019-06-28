@@ -13,12 +13,19 @@
                 <div [innerHtml]="plugin.overview.description"></div>
             </nx-section>
 
-            <nx-section *ngIf="plugin.versionDetails && plugin.versionDetails.whatsNew">
-                <div [innerHtml]="plugin.versionDetails.whatsNew"></div>
-            </nx-section>
-
             <nx-section *ngIf="plugin.overview && plugin.overview.screenshots">
                 <nx-carousel [screenshots]="plugin.overview.screenshots"></nx-carousel>
+            </nx-section>
+        </nx-block>
+
+        <nx-block *ngIf="plugin && plugin.versionDetails && plugin.versionDetails.whatsNew"
+                  class="d-block mt-3">
+            <header translate>
+                What's New?
+            </header>
+
+            <nx-section *ngIf="plugin.versionDetails && plugin.versionDetails.whatsNew">
+                <div [innerHtml]="plugin.versionDetails.whatsNew"></div>
             </nx-section>
         </nx-block>
     </div>

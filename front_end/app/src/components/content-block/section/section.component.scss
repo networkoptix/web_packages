@@ -7,8 +7,10 @@
         padding    : 1rem;
         
         &-subheader {
-            height     : 2rem;
-            margin-top : .5rem;
+            height      : 2rem;
+            margin-top  : .5rem;
+            display     : flex;
+            align-items : center;
             
             h3 {
                 margin : 0;
