@@ -5,7 +5,7 @@ Welcome to %CLOUD_NAME%
 {{/message.sharer_name}}
 
 {{^message.sharer_name}}
-You are invited you to join %CLOUD_NAME%.
+Você está convidado a juntar-se a %CLOUD_NAME%.
 Foi-lhe autorizado acesso a {{message.system_name}}.
 {{/message.sharer_name}}
 

@@ -46,6 +46,7 @@
     "Fisheye": "Fisheye",
     "Forgot password?": "Esqueceu a senha?",
     "Get in touch": "Get in touch",
+    "How it works": "How it works",
     "How to install?": "How to install?",
     "I agree to the": "Eu concordo com",
     "I want you to contact me": "Quero que me contacte",
@@ -55,7 +56,7 @@
     "Latest version": "Versão mais recente",
     "Log In": "Iniciar sessão",
     "Log Out": "Terminar sessão",
-    "Log in to %CLOUD_NAME%": "Log in to %CLOUD_NAME%",
+    "Log in to %CLOUD_NAME%": "Logar em %CLOUD_NAME%",
     "Merge Systems": "\"Merge\" dos Sistemas",
     "Merge current System with": "Efetuar o \"Merge\" do Sistema atual com",
     "Message": "Mensagem",
@@ -92,6 +93,7 @@
     "System will be accessible through local network with local administrator account.": "O sistema estará acessível através da rede local com conta de administrador local.",
     "Systems": "Sistemas",
     "Systems of such size may work but will be unstable and have troubles with updates and synchronisation.": "Sistemas de tamanho tal podem funcionar mas serão instáveis e terão problemas com atualizações e sincronização.",
+    "Tags": "Tags",
     "Take the name and settings from": "Pegue o nome e configurações de",
     "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.": "As credenciais deste utilizador serão expostas! Deve criar uma função \"Utilizador público\" personalizado apenas com acesso\n            às câmaras selecionadas para uso público e atribuídas apenas as permissões de visualização mínimas necessárias. Este\n            \"Utilizador Público\" não deve ter acesso a todo o sistema.",
     "There will be more than": "Haverá mais do que",
@@ -108,7 +110,7 @@
     "You can only merge Systems where you are the owner.": "Você só pode mesclar Sistemas onde você é o proprietário.",
     "Your Name": "Seu Nome",
     "Your browser is not supported": "O seu browser não é suportado",
-    "and_x_more": "... e {{value}} mais",
+    "andXMore": "... e {{value}} mais",
     "cameraFilters": {
         "H265": "Câmeras H.265",
         "IO": "Módulos I / O",
@@ -124,23 +126,23 @@
     "devices": "dispositivos",
     "dialogs": {
         "merge": {
-            "connectToCloud": "Connect System you want to merge with this one to <strong>{{cloudName}}</strong> or merge locally using <strong>{{vmsName}}</strong> Client.",
-            "mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from the <strong>{{primarySystem}}</strong>.",
-            "primaryCannotMerge": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} System.",
+            "connectToCloud": "Conecte o sistema que você deseja mesclar com este para <strong>{{cloudName}}</strong> ou mesclar localmente usando <strong>{{vmsName}}</strong> Cliente.",
+            "mergeConfirmation": "Está prestes a fundir os sistemas <strong>{{primarySystem}}</strong> e <strong>{{secondarySystem}}</strong>. As definições e o nome serão baseados a partir do <strong>{{primarySystem}}</strong>.",
+            "primaryCannotMerge": "O sistema {{targetSystem}} tem uma versão de software mais recente que é incompatível com o sistema atual. Atualize o sistema atual com o <a href=\"/download\" target=\"_blank\" translate>build</a> mais recente para efectuar a fusão com o Sistema {{targetSystem}}.",
             "primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}.",
-            "secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
-            "systemOffline": "System {{targetSystem}} is offline and cannot be merged with the current one.",
+            "secondaryCannotMerge": "O sistema {{targetSystem}} tem uma versão de software mais antiga que é incompatível com o sistema atual. Atualize o sistema {{targetSystem}} para o <a href=\"/download\" target=\"_blank\" translate>build</a> mais recente para efectuar a fusão com este Sistema.",
+            "systemOffline": "O sistema {{targetSystem}} está offline e não pode ser mesclado com o atual.",
             "systemUnavailable": "O sistema {{targetSystem}} está atualmente inacessível. Tente novamente em alguns minutos ou contato"
         }
     },
-    "dialogs.merge.connectToCloud": "Connect System you want to merge with this one to <strong>{{cloudName}}</strong> or merge locally using <strong>{{vmsName}}</strong> Client.",
-    "dialogs.merge.mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from the <strong>{{primarySystem}}</strong>.",
-    "dialogs.merge.primaryCannotMerge": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} System.",
+    "dialogs.merge.connectToCloud": "Conecte o sistema que você deseja mesclar com este para <strong>{{cloudName}}</strong> ou mesclar localmente usando <strong>{{vmsName}}</strong> Cliente.",
+    "dialogs.merge.mergeConfirmation": "Está prestes a fundir os sistemas <strong>{{primarySystem}}</strong> e <strong>{{secondarySystem}}</strong>. As definições e o nome serão baseados a partir do <strong>{{primarySystem}}</strong>.",
+    "dialogs.merge.primaryCannotMerge": "O sistema {{targetSystem}} tem uma versão de software mais recente que é incompatível com o sistema atual. Atualize o sistema atual com o <a href=\"/download\" target=\"_blank\" translate>build</a> mais recente para efectuar a fusão com o Sistema {{targetSystem}}.",
     "dialogs.merge.primarySystemOffline": "dialogs.merge.primarySystemOffline",
-    "dialogs.merge.secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
+    "dialogs.merge.secondaryCannotMerge": "O sistema {{targetSystem}} tem uma versão de software mais antiga que é incompatível com o sistema atual. Atualize o sistema {{targetSystem}} para o <a href=\"/download\" target=\"_blank\" translate>build</a> mais recente para efectuar a fusão com este Sistema.",
     "dialogs.merge.systemOffline": "dialogs.merge.systemOffline",
     "dialogs.merge.systemUnavailable": "O sistema {{targetSystem}} está atualmente inacessível. Tente novamente em alguns minutos ou contato",
-    "disclaimer": "disclaimer",
+    "disclaimer": "Esta lista é limitada a dados de auto-relatórios de dispositivos reais para {{value}}, conforme aprovado por usuários anônimos do sistema. A lista completa de fabricantes e modelos suportados é maior no escopo.",
     "downloads": {
         "appTypes": {
             "bundle": "Cliente e Servidor",
@@ -179,7 +181,7 @@
             "sdk": {
                 "label": "SDK",
                 "shortLabel": "SDK",
-                "supported": "C++ cross platform SDK"
+                "supported": "C++ cruzar plataforma SDK"
             },
             "windows": {
                 "label": "Windows",
@@ -226,11 +228,11 @@
         "Advanced PTZ cameras": "Advanced PTZ cameras",
         "Cameras supporting H.265": "Cameras supporting H.265",
         "Cameras with 2-way audio": "Cameras with 2-way audio",
-        "Extra high resolution cameras": "Extra high resolution cameras",
+        "Extra high resolution cameras": "Câmaras extra de alta resolução",
         "Fisheye Cameras": "Fisheye Cameras",
-        "I / O modules": "I / O modules",
+        "I / O modules": "Módulos I / O",
         "Multisensor Cameras": "Multisensor Cameras",
-        "PTZ cameras": "PTZ cameras",
+        "PTZ cameras": "Câmeras PTZ",
         "camera": "Câmara",
         "count": "Count",
         "dvr": "DVR",
@@ -241,7 +243,7 @@
             "c_Info": "for additional questions/concerns regarding supported devices."
         },
         "hardwareType": "Tipo",
-        "isAptzSupported": "Advanced PTZ",
+        "isAptzSupported": "PTZ avançado",
         "isAptzSupportedShort": "Adv. PTZ",
         "isAudioSupported": "Audio",
         "isFisheye": "Fisheye",
@@ -250,7 +252,7 @@
         "isMdSupported": "Movimento",
         "isMultiSensor": "Multi Sensor",
         "isPtzSupported": "PTZ",
-        "isTwAudioSupported": "2-way Audio",
+        "isTwAudioSupported": "áudio bidirecional",
         "maxFps": "Max FPS",
         "maxResolution": "Max Resolution",
         "model": "Modelo",
@@ -265,11 +267,12 @@
         "feedback": "Make sure you include your camera model and manufacturer..."
     },
     "pageTitles": {
-        "integrations": "Integrations",
-        "supportedDevices": "Supported Devices"
+        "integrations": "Integrações",
+        "supportedDevices": "Dispositivos suportados"
     },
+    "phoneNumberWithLabel": "Tel: {{number}}",
     "search": {
-        "Any": "Any",
+        "Any": "Qualquer",
         "Search": "Pesquisa",
         "filter applied": "filter applied",
         "filters applied": "filters applied",

@@ -54,25 +54,28 @@ def global_contexts_to_dict(contexts, product):
 def process_context_structure(product, context, content, language,
                               version_id, preview, force_global_files, context_dict=None):
 
-    def replace_in(adict, key, value):
-        for dict_key in adict.keys():
-            itm_type = type(adict[dict_key])
-            if itm_type not in [str, dict, list] or type(value) in [bool]:
-                continue
+    def replace_in(collection, key, value):
+        # Here we process json files
 
-            if itm_type is list:
-                for item in adict[dict_key]:
-                    if type(item) is str:
-                        idx = adict[dict_key].index(item)
-                        adict[dict_key][idx] = item.replace(key, value)
-                    elif item in [dict, list]:
-                        replace_in(item, key, value)
+        if type(collection) is dict:
+            elements = collection.items()
+        elif type(collection) is list:
+            elements = enumerate(collection)
+        else:
+            raise ValueError(f"Cannot iterate through {type(collection)}")
 
-            elif itm_type is dict:
-                replace_in(adict[dict_key], key, value)
+        for index, item in elements:
+            item_type = type(item)
+            if item_type in [dict, list]:
+                replace_in(item, key, value)
+            elif item_type is str:
+                # special case if json value contains only the value - we don't treat it as a string,
+                # we replace the whole thing
+                if item == key:
+                    collection[index] = value
+                elif key in item:
+                    collection[index] = item.replace(key, str(value))
 
-            elif key in adict[dict_key]:
-                adict[dict_key] = adict[dict_key].replace(key, value)
 
     default_language = product.default_language
     location = product.product_root
@@ -84,14 +87,18 @@ def process_context_structure(product, context, content, language,
             else:
                 content_value = datastructure.find_actual_value(product, language, version_id, draft=preview)
             # replace marker with value
-            if datastructure.type not in (DataStructure.DATA_TYPES.image, DataStructure.DATA_TYPES.file):
-                if type(content) == dict:
-                    # Process language JSON file
+            if not DataStructure.is_file_or_image(datastructure.type):
+                if type(content) in (dict, list):
+                    # Process json file
                     replace_in(content, datastructure.name, content_value)
                 else:
                     if datastructure.type == DataStructure.DATA_TYPES.check_box:
                         content_value = str(content_value)
-                    content = content.replace(datastructure.name, content_value)
+
+                    if datastructure.name in content:
+                        if type(content_value) != str:
+                            content_value = str(content_value)
+                        content = content.replace(datastructure.name, content_value)
 
             elif content_value or datastructure.optional:
                 if context.is_global and not force_global_files:
@@ -172,7 +179,7 @@ def read_customized_file(filename, product, language_code=None,
 
     # 2. try to find datastructure for this file
     # TODO: name is not unique
-    data_structure = DataStructure.objects.filter(name=clean_name).first()
+    data_structure = DataStructure.objects.filter(name=clean_name, context__product_type=product.product_type).first()
     if data_structure:
         # success -> return actual value
         value = data_structure.find_actual_value(product, Language.by_code(language_code), version_id, draft=preview)

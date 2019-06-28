@@ -146,18 +146,18 @@
 		"feedback": "Укажіть камеру та модель виробника..."
 	},
 	"pageTitles": {
-		"supportedDevices": "Supported Devices",
-		"integrations": "Integrations"
+		"supportedDevices": "Пристрої, що підтримуються",
+		"integrations": "Інтеграції"
 	},
 	"dialogs": {
 		"merge": {
-			"connectToCloud": "Connect System you want to merge with this one to <strong>{{cloudName}}</strong> or merge locally using <strong>{{vmsName}}</strong> Client.",
-			"mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from the <strong>{{primarySystem}}</strong>.",
-			"primaryCannotMerge": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} System.",
-			"primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}.",
-			"secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
-			"systemOffline": "System {{targetSystem}} is offline and cannot be merged with the current one.",
-			"systemUnavailable": "System {{targetSystem}} is currently unreachable. Try again in a few minutes or contact"
+			"connectToCloud": "Підключіть систему, яку хочете об’єднати з цією <strong>{{cloudName}}</strong> або об’єднайте локально з <strong>{{vmsName}}</strong> Клієнтом.",
+			"mergeConfirmation": "Ви збираєтеся об’єднати системи <strong>{{primarySystem}}</strong> та <strong>{{secondarySystem}}</strong>. Ім'я та налаштування будуть взяті з <strong>{{primarySystem}}</strong>.",
+			"primaryCannotMerge": "Система {{targetSystem}} має нову версію Пз, несумісну з поточною системою. Оновіть поточну Систему до <a href=\"/download\" target=\"_blank\" translate>останньої збірки</a> для об’єднання з {{targetSystem}} Системою.",
+			"primarySystemOffline": "Система {{primarySystem}} офлайн і не може бути об'єднана з Системою {{targetSystem}}.",
+			"secondaryCannotMerge": "Система {{targetSystem}} має стару версію Пз, несумісну з поточною системою. Оновіть {{targetSystem}} до <a href=\"/download\" target=\"_blank\" translate>останньої збірки</a> для об’єднання з поточною системою.",
+			"systemOffline": "Система {{targetSystem}} офлайн і не може бути об'єднана.",
+			"systemUnavailable": "Система {{targetSystem}} наразі недоступна. Повторіть спробу через декілька хвилин або зв'яжіться з нами"
 		}
 	}
 }

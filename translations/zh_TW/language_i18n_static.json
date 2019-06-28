@@ -67,7 +67,7 @@
 			"sdk": {
 				"label": "SDK",
 				"shortLabel": "SDK",
-				"supported": "C++ cross platform SDK"
+				"supported": "C ++跨平台SDK"
 			}
 		},
 		"platforms": {
@@ -151,13 +151,13 @@
 	},
 	"dialogs": {
 		"merge": {
-			"connectToCloud": "Connect System you want to merge with this one to <strong>{{cloudName}}</strong> or merge locally using <strong>{{vmsName}}</strong> Client.",
+			"connectToCloud": "請將要與此合併的系統連接到 <strong>{{cloudName}}</strong> 或使用 <strong>{{vmsName}}</strong> 客戶端進行本地合併。",
 			"mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from the <strong>{{primarySystem}}</strong>.",
 			"primaryCannotMerge": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} System.",
 			"primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}.",
 			"secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
-			"systemOffline": "System {{targetSystem}} is offline and cannot be merged with the current one.",
-			"systemUnavailable": "System {{targetSystem}} is currently unreachable. Try again in a few minutes or contact"
+			"systemOffline": "系統 {{targetSystem}} 處於離線狀態, 無法與當前系統合併。",
+			"systemUnavailable": "系統 {{targetSystem}} 目前無法連上。請在幾分鐘後再試一次"
 		}
 	}
 }

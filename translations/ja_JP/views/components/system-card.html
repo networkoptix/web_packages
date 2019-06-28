@@ -10,8 +10,7 @@
                     ng-click="mergeSystems()">別のシステムと統合する</button>
         </p>
         <hr />
-        <button ng-disabled="currentlyMerging" class="btn btn-default" ng-click="disconnect()">Disconnect from
-            <span class="product-name">&nbsp;%CLOUD_NAME%</span></button>
+        <button ng-disabled="currentlyMerging" class="btn btn-default" ng-click="disconnect()"><span class="product-name">&nbsp;%CLOUD_NAME%</span> から切断</button>
     </div>
 </div>
 <div class="card card-condensed" ng-if="!system.isMine">

@@ -151,13 +151,13 @@
 	},
 	"dialogs": {
 		"merge": {
-			"connectToCloud": "Connect System you want to merge with this one to <strong>{{cloudName}}</strong> or merge locally using <strong>{{vmsName}}</strong> Client.",
+			"connectToCloud": "Подключите систему, которую вы хотите объединить с этой, к <strong>{{cloudName}}</strong> или выполните объединение локально, используя <strong>{{vmsName}}</strong> Client.",
 			"mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from the <strong>{{primarySystem}}</strong>.",
 			"primaryCannotMerge": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} System.",
 			"primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}.",
 			"secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
-			"systemOffline": "System {{targetSystem}} is offline and cannot be merged with the current one.",
-			"systemUnavailable": "System {{targetSystem}} is currently unreachable. Try again in a few minutes or contact"
+			"systemOffline": "Система {{targetSystem}} не находится в сети и не может быть объединена с текущей.",
+			"systemUnavailable": "Система {{targetSystem}} в данный момент недоступна. Повторите попытку через несколько минут или свяжитесь с"
 		}
 	}
 }

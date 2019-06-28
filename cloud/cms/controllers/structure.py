@@ -5,13 +5,17 @@ import os
 import re
 
 from zipfile import ZipFile
+
+from ..controllers.generate_structure import templatify_json
 from ..models import Context, ContextTemplate, DataStructure, DataRecord, Product, ProductType
 
+import logging
+logger = logging.getLogger(__name__)
 
-def deprecate_data_structures_for_product_type(product_type):
-    for ds in DataStructure.objects.filter(context__product_type=product_type):
-        ds.deprecated = True
-        ds.save()
+
+def deprecate_contexts_and_data_structures_for_product_type(product_type):
+    Context.objects.filter(product_type=product_type).update(deprecated=True)
+    DataStructure.objects.filter(context__product_type=product_type).update(deprecated=True)
 
 
 def find_or_add_product_type(product_type, name=""):
@@ -58,19 +62,21 @@ def find_or_add_data_structure(name, old_name, context_id, has_language):
     return data
 
 
-def update_from_object(product_type_structure, product_type=None):
+def update_from_object(product_type_structure, product_type=None, preserve_files=False):
+    if type(product_type_structure) is list:
+        product_type_structure = product_type_structure[0]
     update_product_type(product_type, product_type_structure)
 
     order = 0
     context_order = 0
-    deprecate_data_structures_for_product_type(product_type)
+    deprecate_contexts_and_data_structures_for_product_type(product_type)
 
     for context_data in product_type_structure['contexts']:
         context = update_context(context_data, product_type, context_order)
         context_order += 1
         has_language = context.translatable
         for record in context_data["values"]:
-            update_data_structure(context.id, has_language, record, order)
+            update_data_structure(context.id, has_language, record, order, preserve_files)
             order += 1
 
 
@@ -114,24 +120,27 @@ def process_zip(file_descriptor, user, product, update_structure, update_content
     root = zip_file.namelist()[0]
     structures_changed = 0
     records_created = 0
+    product_type = product.product_type
 
     if update_structure:
         name = next((name for name in zip_file.namelist() if name.endswith('structure.json')), None)
         if name:
             data = zip_file.read(name)
             cms_structure = json.loads(data)
+            if type(cms_structure) == list and len(cms_structure) > 1:
+                log_messages.append(('warning', 'You can only update one product_type at a time. '
+                                                'Only the first product type from structure.json was used.'))
             update_from_object(cms_structure, product.product_type)
             log_messages.append(('success', f'Updated from json using {name}'))
         else:
             log_messages.append(('warning', 'Not found structure.json file'))
 
     for name in zip_file.namelist():
-        # log_messages.append(('info', 'Processing %s' % name))
         # Skip of directories
         if zip_file.getinfo(name).is_dir():
             continue
 
-        if name.startswith('__') or name.endswith('structure.json'):
+        if name.startswith('__') or name.endswith('structure.json') or '._' in name:
             # Ignore trash in archive from MACs or **structure.json files
             if not name.startswith('__MAC'):
                 log_messages.append(('info', 'Ignored: %s' % name))
@@ -147,7 +156,7 @@ def process_zip(file_descriptor, user, product, update_structure, update_content
             name = name.replace(root, "")
 
         # try to find relevant context
-        context = Context.objects.filter(file_path=name).first()
+        context = Context.objects.filter(file_path=name, product_type=product_type).first()
         if context:
             try:
                 file_content = zip_file.read(zip_name).decode("utf-8")
@@ -157,6 +166,11 @@ def process_zip(file_descriptor, user, product, update_structure, update_content
 
             if update_structure:
                 # Here we assume that there is only one template here
+                if name.endswith('json'):
+                    # JSON file
+                    values, template = templatify_json(json.loads(file_content))
+                    file_content = json.dumps(template, indent=4, separators=(',', ': '))
+                    pass
 
                 context_template = context.contexttemplate_set.first()
                 if not context_template:
@@ -175,14 +189,22 @@ def process_zip(file_descriptor, user, product, update_structure, update_content
                 # here we have template for context and file_content - which are relatively close.
                 # Ideally, the only difference is specific data values
 
+                context_template = context.contexttemplate_set.first()
+                context_template_lines = context_template.template.split("\n")
+
+                # normalise json file
+                # here is the problem: we parse json as text file to extract values, which might be not the best
+                # course of action, but it lets us parse any tags, not only json-name-based
+                if name.endswith('json'):
+                    file_content = json.dumps(json.loads(file_content), indent=4, separators=(',', ': '))
+
                 for structure in context.datastructure_set.all():
-                    if structure.type in (DataStructure.DATA_TYPES.image, DataStructure.DATA_TYPES.file):
+                    if DataStructure.is_file_or_image(structure.type):
                         continue
 
-                    context_template = context.contexttemplate_set.first()
                     # find a line in template which has structure.name in it
-                    template_line = next((line for line in context_template.template.split("\n")
-                                          if structure.name in line), None)
+                    template_line = next((line for line in context_template_lines if structure.name in line), None)
+
                     if not template_line:
                         log_messages.append(('warning', f'No line in template {name}'
                                             f' for data structure {structure.name}'))
@@ -198,9 +220,9 @@ def process_zip(file_descriptor, user, product, update_structure, update_content
                         template_line += "$"
 
                     # try to parse file_content with regex
-                    result = re.search(template_line, file_content)
+                    result = re.search(template_line, file_content, re.MULTILINE)
                     if not result:
-                        log_messages.append(('warning', f'No line in file {name} for data structure {structure.namee}'))
+                        log_messages.append(('warning', f'No line in file {name} for data structure {structure.name}'))
                         continue
 
                     # if there is a value - compare it with latest draft
@@ -220,20 +242,20 @@ def process_zip(file_descriptor, user, product, update_structure, update_content
             continue
 
         # try to find relevant data structure and update its default (maybe)
-        structure = DataStructure.objects.filter(name=name).first()
+        structure = DataStructure.objects.filter(name=name, context__product_type=product_type).first()
         if not structure:
             log_messages.append(('warning', f'Ignored: {name} (data structure {name} does not exist)'))
             continue
 
         # if data structure is not FILE or IMAGE - print to log and ignore
-        if structure.type not in (DataStructure.DATA_TYPES.image, DataStructure.DATA_TYPES.file):
+        if not DataStructure.is_file_or_image(structure.type):
             log_messages.append(('warning', f'Ignored: {name} (data structure type is {structure.type}'
                                 f', not a {DataStructure.DATA_TYPES.image} or {DataStructure.DATA_TYPES.file})'))
             continue
 
         data = zip_file.read(zip_name)
         data64 = base64.b64encode(data).decode('utf-8')
-
+        # logger.info(f"Name: {name}\tContext: {structure.context.name}\n\n")
         if update_structure:
             # if set_defaults or data structure has no default value - save it
             if structure.default != data64:
@@ -279,11 +301,12 @@ def update_context(context_data, product_type, order):
     context.label = context_data.get("label", "")
     context.hidden = context_data.get("hidden", False)
     context.order = order
+    context.deprecated = False
     context.save()
     return context
 
 
-def update_data_structure(context_id, has_lang, record, order):
+def update_data_structure(context_id, has_lang, record, order, preserve_file=False):
     name = record['name']
     label = record.get("label", "")
     old_name = record.get("old_name", None)
@@ -298,7 +321,8 @@ def update_data_structure(context_id, has_lang, record, order):
     data_structure.type = DataStructure.get_type_by_name(record.get("type", "text"))
 
     data_structure.meta_settings = record.get("meta", {})
-    data_structure.default = process_data_structure_type(data_structure, name, record.get("value", ""))
+    if not preserve_file or not DataStructure.is_file_or_image(data_structure.type):
+        data_structure.default = process_data_structure_type(data_structure, name, record.get("value", ""))
     data_structure.deprecated = False
     data_structure.save()
 

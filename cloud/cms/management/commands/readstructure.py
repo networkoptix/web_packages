@@ -128,7 +128,10 @@ def find_or_add_context_by_file(file_path, product_type, has_language):
     if not context:
         context = Context(name=file_path, file_path=file_path, product_type=product_type,
                           translatable=has_language, hidden=True, is_global=False)
-        context.save()
+    else:
+        context.deprecated=False
+
+    context.save()
     return context
 
 

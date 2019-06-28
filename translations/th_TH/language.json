@@ -7,7 +7,7 @@
   "dialogs": {
     "okButton": "ตกลง",
     "cancelButton": "ยกเลิก",
-    "loginTitle": "Log in to %CLOUD_NAME%",
+    "loginTitle": "เข้าสู่ระบบ %CLOUD_NAME%",
     "loginButton": "ลงชื่อเข้าสู่ระบบ",
     "logoutAuthorisedTitle": "คุณกำลังอยู่ในระบบ",
     "logoutAuthorisedContinueButton": "ดำเนิน​การ",
@@ -21,11 +21,11 @@
     "title": {
       "integration": "Email for {{product}}",
       "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Feedback about {{product}}"
+      "ipvd_feedback_device": "ข้อเสนอแนะเกี่ยวกับ {{product}}"
     },
     "topic": {
       "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Feedback about {{product}}",
+      "ipvd_feedback_device": "ข้อเสนอแนะเกี่ยวกับ {{product}}",
       "contact_sales": "Contact sales for {{product}}",
       "contact_support": "Contact support for {{product}}"
     }
@@ -203,7 +203,7 @@
     "confirmRenameTitle": "ชื่อระบบ",
     "confirmRenameAction": "บันทึก",
     "successRename": "ระบบเปลี่ยนชื่อ",
-    "confirmDisconnectTitle": "Disconnect System from %CLOUD_NAME%?",
+    "confirmDisconnectTitle": "ยกเลิกการเชื่อมต่อระบบจาก %CLOUD_NAME%?",
     "confirmDisconnectAction": "ตัดการเชื่อมต่อ",
     "confirmUnshareFromMe": "คุณกำลังจะยกเลิกการเชื่อมต่อระบบนี้จากบัญชีของคุณ คุณจะไม่สามารถเข้าถึงระบบนี้ได้อีกต่อไป คุณแน่ใจไหม?",
     "confirmUnshareFromMeTitle": "ยกเลิกการเชื่อมต่อระบบหรือไม่?",

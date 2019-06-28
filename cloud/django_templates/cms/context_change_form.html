@@ -44,7 +44,7 @@
             {% has_value field.name product original language as record_exists %}
             <label {% if data_structure.advanced %} class="text-danger" {% endif %}
                     for="id_{{ field.name }}">{{ field.label }}{% if not data_structure.optional %}*{% endif %}
-                <p class="help">{{ field.name }}</p>
+                {% if user.is_superuser %}<p class="help">{{ field.name }}</p>{% endif %}
                 {% if not data_structure.optional %} <p class="help">required</p> {% endif %}
             </label>
             <div id="{{ field.name }}" class="ml-160">

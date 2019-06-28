@@ -18,7 +18,7 @@ import sys
 from util.config import get_config
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-LOCAL_ENVIRONMENT = 'runserver' in sys.argv
+LOCAL_ENVIRONMENT = 'runserver' in sys.argv or os.getenv('LOCAL_ENV', False)
 conf = get_config()
 
 
@@ -174,18 +174,32 @@ DATABASES = {
     }
 }
 
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache'
-    },
-    "global": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://redis:6379/1",
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+if not LOCAL_ENVIRONMENT:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.locmem.LocMemCache"
+        },
+        "global": {
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": "redis://redis:6379/1",
+            "OPTIONS": {
+                "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            }
         }
     }
-}
+else:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.locmem.LocMemCache"
+        },
+        "global": {
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": "redis://localhost:6379/1",
+            "OPTIONS": {
+                "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            }
+        }
+    }
 
 
 if LOCAL_ENVIRONMENT:
@@ -435,6 +449,12 @@ NOTIFICATIONS_CONFIG = {
         'engine': 'email'
     },
     'contact_support': {
+        'engine': 'email'
+    },
+    'integration_feedback': {
+        'engine': 'email'
+    },
+    'ipvd_feedback': {
         'engine': 'email'
     },
     'ipvd_feedback_page': {

@@ -7,7 +7,7 @@
   "dialogs": {
     "okButton": "확인",
     "cancelButton": "취소",
-    "loginTitle": "Log in to %CLOUD_NAME%",
+    "loginTitle": "%CLOUD_NAME%에 로그인",
     "loginButton": "로그인",
     "logoutAuthorisedTitle": "이미 로그인 되어 있습니다",
     "logoutAuthorisedContinueButton": "계속",
@@ -203,7 +203,7 @@
     "confirmRenameTitle": "시스템 이름",
     "confirmRenameAction": "저장",
     "successRename": "시스템 이름 저장",
-    "confirmDisconnectTitle": "Disconnect System from %CLOUD_NAME%?",
+    "confirmDisconnectTitle": "%CLOUD_NAME%에서 시스템을 분리하실래요?",
     "confirmDisconnectAction": "연결 끊기",
     "confirmUnshareFromMe": "이 시스템을 당신의 계정과의 연결을 해제하려고합니다. 더 이상이 시스템에 액세스 할 수 없습니다. 확실합니까?",
     "confirmUnshareFromMeTitle": "시스템 연결을 끊으시겠습니까?",

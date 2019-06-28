@@ -26,7 +26,7 @@
     "Create Account": "צור חשבון",
     "Create account": "צור חשבון",
     "Disconnect": "נתק",
-    "Disconnect System from %CLOUD_NAME%?": "Disconnect System from %CLOUD_NAME%?",
+    "Disconnect System from %CLOUD_NAME%?": "נתק את מערכת מ %CLOUD_NAME%?",
     "Download": "הורדה",
     "Download %VMS_NAME%": "הורד %VMS_NAME%",
     "Download Chrome": "הורד כרום",
@@ -46,6 +46,7 @@
     "Fisheye": "עין הדג",
     "Forgot password?": "שכחת סיסמה?",
     "Get in touch": "Get in touch",
+    "How it works": "How it works",
     "How to install?": "How to install?",
     "I agree to the": "אני מסכים ל",
     "I want you to contact me": "פנה אלינו",
@@ -55,7 +56,7 @@
     "Latest version": "גרסא אחרונה",
     "Log In": "התחבר",
     "Log Out": "יציאה",
-    "Log in to %CLOUD_NAME%": "Log in to %CLOUD_NAME%",
+    "Log in to %CLOUD_NAME%": "היכנס ל- %CLOUD_NAME%",
     "Merge Systems": "מיזוג מערכות",
     "Merge current System with": "מזג את המערכת הנוכחית עם",
     "Message": "הודעה",
@@ -92,6 +93,7 @@
     "System will be accessible through local network with local administrator account.": "המערכת תהיה נגישה דרך הרשת המקומית עם חשבון מנהל מקומי.",
     "Systems": "מערכות",
     "Systems of such size may work but will be unstable and have troubles with updates and synchronisation.": "מערכות בגודל כזה עשויות לפעול, אך הן לא יהיו יציבות ויש להן בעיות עם עדכונים וסינכרון.",
+    "Tags": "תגיות",
     "Take the name and settings from": "קח את השם וההגדרות מ",
     "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.": "אישורי משתמש זה ייחשפו! עליך ליצור תפקיד \"משתמש ציבורי\" מותאם אישית עם גישה רק\n            אל המצלמות שנבחרו לשימוש ציבורי, והקצה רק את המינימום הנדרש הצפייה הרשאות.\n            \"משתמש ציבורי\" זה אינו צריך גישה מלאה מכל סוג שהוא למערכת.",
     "There will be more than": "יהיו יותר מ",
@@ -108,7 +110,7 @@
     "You can only merge Systems where you are the owner.": "ניתן למזג רק מערכות שבהן אתה הבעלים.",
     "Your Name": "השם שלך",
     "Your browser is not supported": "הדפדפן שלך אינו נתמך",
-    "and_x_more": "... ועוד {{value}}",
+    "andXMore": "... ועוד {{value}}",
     "cameraFilters": {
         "H265": "H.265 מצלמות",
         "IO": "מודולי קלט פלט",
@@ -124,23 +126,23 @@
     "devices": "מכשירים",
     "dialogs": {
         "merge": {
-            "connectToCloud": "Connect System you want to merge with this one to <strong>{{cloudName}}</strong> or merge locally using <strong>{{vmsName}}</strong> Client.",
+            "connectToCloud": "חבר מערכת שברצונך למזג עם מערכת זו <strong>{{cloudName}}</strong> או מזג מקומי באמצעות <strong>{{vmsName}}</strong> לקוח.",
             "mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from the <strong>{{primarySystem}}</strong>.",
             "primaryCannotMerge": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} System.",
             "primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}.",
             "secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
-            "systemOffline": "System {{targetSystem}} is offline and cannot be merged with the current one.",
+            "systemOffline": "מערכת {{targetSystem}} במצב לא מקוון ולא ניתן למזגה עם הנוכחית.",
             "systemUnavailable": "לא ניתן להגיע למערכת {{targetSystem}}. נסה שוב בעוד מספר דקות או צור קשר"
         }
     },
-    "dialogs.merge.connectToCloud": "Connect System you want to merge with this one to <strong>{{cloudName}}</strong> or merge locally using <strong>{{vmsName}}</strong> Client.",
+    "dialogs.merge.connectToCloud": "חבר מערכת שברצונך למזג עם מערכת זו <strong>{{cloudName}}</strong> או מזג מקומי באמצעות <strong>{{vmsName}}</strong> לקוח.",
     "dialogs.merge.mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from the <strong>{{primarySystem}}</strong>.",
     "dialogs.merge.primaryCannotMerge": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} System.",
     "dialogs.merge.primarySystemOffline": "dialogs.merge.primarySystemOffline",
     "dialogs.merge.secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
     "dialogs.merge.systemOffline": "dialogs.merge.systemOffline",
     "dialogs.merge.systemUnavailable": "לא ניתן להגיע למערכת {{targetSystem}}. נסה שוב בעוד מספר דקות או צור קשר",
-    "disclaimer": "disclaimer",
+    "disclaimer": "רשימה זו מוגבלת למכשירים עם דיווח מידע אוטומטי {{value}}, כפי שאושר על ידי משתמשי המערכת האנונימיים. הרשימה המלאה של היצרנים והדגמים הנתמכים גדולה יותר בהיקפה.",
     "downloads": {
         "appTypes": {
             "bundle": "לקוח ושרת",
@@ -265,16 +267,17 @@
         "feedback": "הקפד לכלול את דגם המצלמה והיצרן שלך..."
     },
     "pageTitles": {
-        "integrations": "Integrations",
-        "supportedDevices": "Supported Devices"
+        "integrations": "אינטגרציות",
+        "supportedDevices": "מכשירים נתמכים"
     },
+    "phoneNumberWithLabel": "Tel: {{number}}",
     "search": {
         "Any": "כל",
         "Search": "חיפוש",
         "filter applied": "מסננים הופעלו",
         "filters applied": "מסננים הופעלו",
         "hardwareType": "סוג",
-        "hardwareTypes": "סוג",
+        "hardwareTypes": "סוגים",
         "minResolution": "רזולוציה מינימלית",
         "search_ipvd": "חפש לפי דגם או יצרן",
         "selected": "נבחר",

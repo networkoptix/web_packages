@@ -1,3 +1,0 @@
-Witaj {{ message.userFullName }}
-{{ message.sender_name}} ({{ message.sender_email }}) ma następujące pytanie:
-<pre>{{ message.message }}</pre>

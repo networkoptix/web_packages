@@ -26,7 +26,7 @@
     "Create Account": "Vytvořit účet",
     "Create account": "Vytvořit účet",
     "Disconnect": "Odpojit",
-    "Disconnect System from %CLOUD_NAME%?": "Disconnect System from %CLOUD_NAME%?",
+    "Disconnect System from %CLOUD_NAME%?": "Odpojit systém od %CLOUD_NAME%?",
     "Download": "Stáhnout",
     "Download %VMS_NAME%": "Stáhnout %VMS_NAME%",
     "Download Chrome": "Stáhnout Chrome",
@@ -46,6 +46,7 @@
     "Fisheye": "Rybí oko",
     "Forgot password?": "Zapomněli jste heslo?",
     "Get in touch": "Get in touch",
+    "How it works": "How it works",
     "How to install?": "How to install?",
     "I agree to the": "Souhlasím s",
     "I want you to contact me": "I want you to contact me",
@@ -55,7 +56,7 @@
     "Latest version": "Nejnovější verze",
     "Log In": "Přihlásit se",
     "Log Out": "Odhlásit",
-    "Log in to %CLOUD_NAME%": "Log in to %CLOUD_NAME%",
+    "Log in to %CLOUD_NAME%": "Přihlaste se k %CLOUD_NAME%",
     "Merge Systems": "Sloučení systémů",
     "Merge current System with": "Sloučit stávající systém s",
     "Message": "Zpráva",
@@ -92,6 +93,7 @@
     "System will be accessible through local network with local administrator account.": "Systém bude přístupný prostřednictvím místní sítě s účtem místního správce.",
     "Systems": "Systémy",
     "Systems of such size may work but will be unstable and have troubles with updates and synchronisation.": "Systémy takové velikosti mohou fungovat, ale mohou být nestabilní a mít problémy s aktualizacemi a synchronizací.",
+    "Tags": "Značky",
     "Take the name and settings from": "Převzít název systému a nastavení z",
     "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.": "Pověření tohoto uživatele budou zveřejněna! Vytvořte vlastní účet „Veřejný uživatel“ s přístupem pouze\n            ke kamerám vybraným pro veřejné použití a přidělite pouze minimální požadovaná oprávnění ke sledování. Tento\n            \"veřejný uživatel\" by neměl mít systémový přístup jakéhokoli druhu.",
     "There will be more than": "Bude víc než",
@@ -108,7 +110,7 @@
     "You can only merge Systems where you are the owner.": "Systémy můžete sloučit pouze tam, kde jste vlastníkem.",
     "Your Name": "Your Name",
     "Your browser is not supported": "Verze vašeho prohlížeče není podporována",
-    "and_x_more": "... and {{value}} more",
+    "andXMore": "... and {{value}} more",
     "cameraFilters": {
         "H265": "H.265 Cameras",
         "IO": "I / O modules",
@@ -124,23 +126,23 @@
     "devices": "zařízení",
     "dialogs": {
         "merge": {
-            "connectToCloud": "Connect System you want to merge with this one to <strong>{{cloudName}}</strong> or merge locally using <strong>{{vmsName}}</strong> Client.",
+            "connectToCloud": "Připojit systém, který chcete sloučit s tímto na <strong>{{cloudName}}</strong> nebo sloučit lokálně pomocí <strong>{{vmsName}}</strong> Klienta.",
             "mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from the <strong>{{primarySystem}}</strong>.",
             "primaryCannotMerge": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} System.",
             "primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}.",
             "secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
-            "systemOffline": "System {{targetSystem}} is offline and cannot be merged with the current one.",
+            "systemOffline": "Systém {{targetSystem}} je offline a nelze jej sloučit se stávajícím systémem.",
             "systemUnavailable": "Systém {{targetSystem}} je v současné době nedostupný. Opakujte akci za několik minut nebo kontaktujte"
         }
     },
-    "dialogs.merge.connectToCloud": "Connect System you want to merge with this one to <strong>{{cloudName}}</strong> or merge locally using <strong>{{vmsName}}</strong> Client.",
+    "dialogs.merge.connectToCloud": "Připojit systém, který chcete sloučit s tímto na <strong>{{cloudName}}</strong> nebo sloučit lokálně pomocí <strong>{{vmsName}}</strong> Klienta.",
     "dialogs.merge.mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from the <strong>{{primarySystem}}</strong>.",
     "dialogs.merge.primaryCannotMerge": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} System.",
     "dialogs.merge.primarySystemOffline": "dialogs.merge.primarySystemOffline",
     "dialogs.merge.secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
     "dialogs.merge.systemOffline": "dialogs.merge.systemOffline",
     "dialogs.merge.systemUnavailable": "Systém {{targetSystem}} je v současné době nedostupný. Opakujte akci za několik minut nebo kontaktujte",
-    "disclaimer": "disclaimer",
+    "disclaimer": "This list is limited to actual devices auto-reporting data to {{value}}, as approved by anonymous system users. The complete list of supported manufacturers and models is greater in scope.",
     "downloads": {
         "appTypes": {
             "bundle": "Klient a server",
@@ -268,6 +270,7 @@
         "integrations": "Integrations",
         "supportedDevices": "Supported Devices"
     },
+    "phoneNumberWithLabel": "Tel: {{number}}",
     "search": {
         "Any": "Any",
         "Search": "Hledat",

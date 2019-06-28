@@ -7,7 +7,7 @@
   "dialogs": {
     "okButton": "OK",
     "cancelButton": "Mégse",
-    "loginTitle": "Log in to %CLOUD_NAME%",
+    "loginTitle": "Bejelentkezés ide: %CLOUD_NAME%",
     "loginButton": "Bejelentkezés",
     "logoutAuthorisedTitle": "Már bejelentkezett",
     "logoutAuthorisedContinueButton": "Folyatatás",
@@ -203,7 +203,7 @@
     "confirmRenameTitle": "Rendszer neve",
     "confirmRenameAction": "Mentés",
     "successRename": "Rendszer neve mentve",
-    "confirmDisconnectTitle": "Disconnect System from %CLOUD_NAME%?",
+    "confirmDisconnectTitle": "Megszünteti a kapcsolatot %CLOUD_NAME% felhővel?",
     "confirmDisconnectAction": "Szétkapcsolás",
     "confirmUnshareFromMe": "A rendszer leválasztására készül fiókjáról. Többé nem fog tudni kapcsolódni a rendszerhez. Folytatja?",
     "confirmUnshareFromMeTitle": "Leválasztja a rendszert?",

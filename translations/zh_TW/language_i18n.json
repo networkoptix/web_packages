@@ -26,7 +26,7 @@
     "Create Account": "新建帳號",
     "Create account": "新建帳號",
     "Disconnect": "斷線",
-    "Disconnect System from %CLOUD_NAME%?": "Disconnect System from %CLOUD_NAME%?",
+    "Disconnect System from %CLOUD_NAME%?": "是否從 %CLOUD_NAME% 中斷開系統?",
     "Download": "下載",
     "Download %VMS_NAME%": "下載 %VMS_NAME%",
     "Download Chrome": "下載 Chrome 瀏覽器",
@@ -46,6 +46,7 @@
     "Fisheye": "魚眼",
     "Forgot password?": "忘記密碼?",
     "Get in touch": "Get in touch",
+    "How it works": "How it works",
     "How to install?": "How to install?",
     "I agree to the": "我同意使用條款及條件",
     "I want you to contact me": "I want you to contact me",
@@ -55,7 +56,7 @@
     "Latest version": "最新版本",
     "Log In": "登入",
     "Log Out": "登出",
-    "Log in to %CLOUD_NAME%": "Log in to %CLOUD_NAME%",
+    "Log in to %CLOUD_NAME%": "登入到 %CLOUD_NAME%",
     "Merge Systems": "合併系統",
     "Merge current System with": "合併當前系統與",
     "Message": "訊息",
@@ -92,6 +93,7 @@
     "System will be accessible through local network with local administrator account.": "系統將可在本地網路中被本地管理者帳號存取.",
     "Systems": "系統",
     "Systems of such size may work but will be unstable and have troubles with updates and synchronisation.": "這種規模的系統可能可以運作, 但是不穩定而且有更新和同步的問題。",
+    "Tags": "標籤",
     "Take the name and settings from": "獲取系統名稱和設定",
     "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.": "此用戶的身分驗證資訊將被公開！您必須創建一個自定義的“一般用戶”角色，該角色僅限共用攝影機的存取權限\n            ，並且只能被分配所需的最低查看權限。\n此\n            “一般用戶”不應被交予任何的系統存取權限。",
     "There will be more than": "將有更多的",
@@ -108,7 +110,7 @@
     "You can only merge Systems where you are the owner.": "當您的權限為擁有者時, 就可以合併系統",
     "Your Name": "Your Name",
     "Your browser is not supported": "系統不支援您的瀏覽器",
-    "and_x_more": "... and {{value}} more",
+    "andXMore": "... and {{value}} more",
     "cameraFilters": {
         "H265": "H.265 Cameras",
         "IO": "I / O modules",
@@ -124,23 +126,23 @@
     "devices": "裝置",
     "dialogs": {
         "merge": {
-            "connectToCloud": "Connect System you want to merge with this one to <strong>{{cloudName}}</strong> or merge locally using <strong>{{vmsName}}</strong> Client.",
+            "connectToCloud": "請將要與此合併的系統連接到 <strong>{{cloudName}}</strong> 或使用 <strong>{{vmsName}}</strong> 客戶端進行本地合併。",
             "mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from the <strong>{{primarySystem}}</strong>.",
             "primaryCannotMerge": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} System.",
             "primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}.",
             "secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
-            "systemOffline": "System {{targetSystem}} is offline and cannot be merged with the current one.",
+            "systemOffline": "系統 {{targetSystem}} 處於離線狀態, 無法與當前系統合併。",
             "systemUnavailable": "系統 {{targetSystem}} 目前無法連上。請在幾分鐘後再試一次"
         }
     },
-    "dialogs.merge.connectToCloud": "Connect System you want to merge with this one to <strong>{{cloudName}}</strong> or merge locally using <strong>{{vmsName}}</strong> Client.",
+    "dialogs.merge.connectToCloud": "請將要與此合併的系統連接到 <strong>{{cloudName}}</strong> 或使用 <strong>{{vmsName}}</strong> 客戶端進行本地合併。",
     "dialogs.merge.mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from the <strong>{{primarySystem}}</strong>.",
     "dialogs.merge.primaryCannotMerge": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} System.",
     "dialogs.merge.primarySystemOffline": "dialogs.merge.primarySystemOffline",
     "dialogs.merge.secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
     "dialogs.merge.systemOffline": "dialogs.merge.systemOffline",
     "dialogs.merge.systemUnavailable": "系統 {{targetSystem}} 目前無法連上。請在幾分鐘後再試一次",
-    "disclaimer": "disclaimer",
+    "disclaimer": "This list is limited to actual devices auto-reporting data to {{value}}, as approved by anonymous system users. The complete list of supported manufacturers and models is greater in scope.",
     "downloads": {
         "appTypes": {
             "bundle": "用戶端和伺服器",
@@ -179,7 +181,7 @@
             "sdk": {
                 "label": "SDK",
                 "shortLabel": "SDK",
-                "supported": "C++ cross platform SDK"
+                "supported": "C ++跨平台SDK"
             },
             "windows": {
                 "label": "Windows",
@@ -268,6 +270,7 @@
         "integrations": "Integrations",
         "supportedDevices": "Supported Devices"
     },
+    "phoneNumberWithLabel": "Tel: {{number}}",
     "search": {
         "Any": "Any",
         "Search": "搜尋",

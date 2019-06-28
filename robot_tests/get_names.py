@@ -4,8 +4,7 @@ from os import path
 
 def get_threaded_names(tag):
 
-    suite = TestSuiteBuilder().build(path.join("C:\\", "develop", "nx_vms",
-                                               "cloud_portal", "robot_tests", "test-cases"))
+    suite = TestSuiteBuilder().build(path.join("test-cases"))
     if tag == "Threaded":
         suite.filter(included_tags=tag)
     elif tag == "Unthreaded":
@@ -15,10 +14,7 @@ def get_threaded_names(tag):
     theList = []
     for suite in suite.suites:
         for test in suite.tests:
-            theList.append((suite, test))
-    stuff = (item[0] for item in theList)
-    stuff = list(set(stuff))
-
+            theList.append((str.lower(str(suite)), test))
     return theList
 
 if __name__ == '__main__':

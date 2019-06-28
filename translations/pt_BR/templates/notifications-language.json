@@ -3,16 +3,16 @@
     "emailSubject": "Ativar a sua conta"
   },
   "cloud_invite": {
-    "emailSubject": "You have been invited to %CLOUD_NAME%"
+    "emailSubject": "Você foi convidado para %CLOUD_NAME%"
   },
   "cloud_notification": {
     "emailSubject": "{{message.subject}}"
   },
   "contact_sales": {
-    "emailSubject": "Sales inquiry for {{message.product}}"
+    "emailSubject": "Pesquisa de vendas para {{message.product}}"
   },
   "contact_support": {
-    "emailSubject": "Support request for {{message.product}}"
+    "emailSubject": "Pedido de suporte para {{message.product}}"
   },
   "ipvd_feedback": {
     "emailSubject": "Feedback da página da câmera para {{message.product}}"
@@ -24,7 +24,7 @@
     "emailSubject": "Reset da sua senha"
   },
   "system_invite": {
-    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} invites you to %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}Video system {{message.system_name}} was shared with you{{/message.sharer_name}}"
+    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} convida você para %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}Sistema de vídeo {{message.system_name}} foi compartilhado consigo{{/message.sharer_name}}"
   },
   "system_shared": {
     "emailSubject": "O sistema de vídeo {{message.system_name}} foi compartilhado consigo"

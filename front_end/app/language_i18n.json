@@ -5,12 +5,13 @@
     "Account is successfully created.": "Account is successfully created.",
     "Account not activated": "Account not activated",
     "Account not found": "Account not found",
+    "Additional Requirements": "Additional Requirements",
     "Administration": "Administration",
     "Advanced PTZ": "Advanced PTZ",
     "Advanced Search": "Advanced Search",
+    "All Integrations": "All Integrations",
     "All Systems": "All Systems",
     "All cloud users will be deleted.": "All cloud users will be deleted.",
-    "All integrations": "All integrations",
     "All results": "All results",
     "Any": "Any",
     "Audio": "Audio",
@@ -55,8 +56,7 @@
     "Forgot password?": "Forgot password?",
     "Get in touch": "Get in touch",
     "How it works": "How it works",
-    "How to install?": "How to install?",
-    "I agree to the": "I agree to the",
+    "How to setup?": "How to setup?",
     "I want you to contact me": "I want you to contact me",
     "I/O": "I/O",
     "In Review": "In Review",
@@ -90,6 +90,7 @@
     "Release Notes": "Release Notes",
     "Release notes": "Release notes",
     "Remember me": "Remember me",
+    "Requirements": "Requirements",
     "Resend activation email": "Resend activation email",
     "Resolution(max)": "Resolution(max)",
     "Save": "Save",
@@ -109,9 +110,11 @@
     "Systems of such size may work but will be unstable and have troubles with updates and synchronisation.": "Systems of such size may work but will be unstable and have troubles with updates and synchronisation.",
     "Tags": "Tags",
     "Take the name and settings from": "Take the name and settings from",
+    "Tested on version(s)": "Tested on version(s)",
     "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.": "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.",
     "There will be more than": "There will be more than",
     "This Email has been already registered in %CLOUD_NAME%": "This Email has been already registered in %CLOUD_NAME%",
+    "To": "To",
     "Too many attempts. Try again in a minute.": "Too many attempts. Try again in a minute.",
     "Topic": "Topic",
     "Update them to the": "Update them to the",
@@ -119,10 +122,11 @@
     "User": "User",
     "View": "View",
     "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.": "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.",
-    "What's new?": "What's new?",
+    "What's New?": "What's New?",
     "Wrong password": "Wrong password",
     "You can merge only those cloud Systems, where you have the \"Owner\" permissions.": "You can merge only those cloud Systems, where you have the \"Owner\" permissions.",
     "You can only merge Systems where you are the owner.": "You can only merge Systems where you are the owner.",
+    "Your Email": "Your Email",
     "Your Name": "Your Name",
     "Your browser is not supported": "Your browser is not supported",
     "accessRoles": {
@@ -206,6 +210,22 @@
             "secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
             "systemOffline": "System {{targetSystem}} is offline and cannot be merged with the current one.",
             "systemUnavailable": "System {{targetSystem}} is currently unreachable. Try again in a few minutes or contact"
+        },
+        "message": {
+            "failedToSend": "Message has failed to send.",
+            "sent": "Message has been sent.",
+            "title": {
+                "integration": "Get in touch with {{companyName}}",
+                "ipvd_feedback_device": "Feedback about {{product}}",
+                "ipvd_feedback_page": "Feedback for cameras page"
+            },
+            "topic": {
+                "contact_sales": "Contact sales for {{product}}",
+                "contact_support": "Contact support for {{product}}",
+                "integration_feedback": "Feedback for integration {{product}}",
+                "ipvd_feedback_device": "Feedback about {{product}}",
+                "ipvd_feedback_page": "Feedback for cameras page"
+            }
         }
     },
     "dialogs.merge.connectToCloud": "Connect System you want to merge with this one to <strong>{{cloudName}}</strong> or merge locally using <strong>{{vmsName}}</strong> Client.",
@@ -428,6 +448,10 @@
         "agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
     },
     "registration.agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>",
+    "privacyPolicy": {
+        "integration": "By submitting this form you agree to be contacted by %INTEGRATION_COMPANY% and/or %COMPANY_NAME%.\nYou will find %INTEGRATION_COMPANY% privacy policy <a href=\"%INTEGRATION_PRIVACY_POLICY%\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent.",
+        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent."
+    },
     "search": {
         "Any": "Any",
         "Search": "Search",

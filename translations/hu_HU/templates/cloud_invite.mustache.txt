@@ -1,12 +1,12 @@
 Üdvözöljük!
 
-You have been invited to %CLOUD_NAME%.
+Meghívást kapott a %CLOUD_NAME%.
 {{#message.message}}
 
 {{ message.message }}
 
 {{/message.message}}
-Please create account on %CLOUD_NAME%
+Kérjük, hozzon létre fiókot a %CLOUD_NAME%on
 használja az aktuális e-mail címét, és kövesse a további utasításokat.
 
 Regisztrálja fiókját ezen a linken: {{ config.portal_url }}/ register /{{ message.code }}

@@ -225,7 +225,7 @@ export class NxConfigService {
                 skipFramesRenderingTimeline: true
             },
             messageTopics: {
-                integration: ['contact_sales', 'contact_support'],
+                integration: ['contact_sales', 'contact_support', 'integration_feedback'],
                 ipvd_feedback_page: ['ipvd_feedback_page'],
                 ipvd_feedback_device: ['ipvd_feedback_device']
             },

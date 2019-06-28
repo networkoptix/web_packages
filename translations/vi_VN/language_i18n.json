@@ -26,7 +26,7 @@
     "Create Account": "Tạo tài khoản",
     "Create account": "Tạo tài khoản",
     "Disconnect": "Ngắt kết nối",
-    "Disconnect System from %CLOUD_NAME%?": "Disconnect System from %CLOUD_NAME%?",
+    "Disconnect System from %CLOUD_NAME%?": "Hệ thống đã ngắt kết nối từ %CLOUD_NAME%?",
     "Download": "Tải xuống",
     "Download %VMS_NAME%": "Tải xuống %VMS_NAME%",
     "Download Chrome": "Tải xuống chrome",
@@ -46,6 +46,7 @@
     "Fisheye": "Fisheye",
     "Forgot password?": "Quên Mật Khẩu?",
     "Get in touch": "Get in touch",
+    "How it works": "How it works",
     "How to install?": "How to install?",
     "I agree to the": "Tôi đồng ý với các",
     "I want you to contact me": "I want you to contact me",
@@ -55,7 +56,7 @@
     "Latest version": "Phiên bản mới nhất",
     "Log In": "Đăng nhập",
     "Log Out": "Đăng xuất",
-    "Log in to %CLOUD_NAME%": "Log in to %CLOUD_NAME%",
+    "Log in to %CLOUD_NAME%": "Đăng nhập vào %CLOUD_NAME%",
     "Merge Systems": "Hợp nhất hệ thống",
     "Merge current System with": "Hợp nhất các hệ thống hiện tại với",
     "Message": "Message",
@@ -92,6 +93,7 @@
     "System will be accessible through local network with local administrator account.": "Hệ thống sẽ được truy cập thông qua mạng cục bộ với tài khoản quản trị.",
     "Systems": "Hệ thống",
     "Systems of such size may work but will be unstable and have troubles with updates and synchronisation.": "Các hệ thống có kích thước như vậy có thể hoạt động nhưng sẽ không ổn định và gặp rắc rối với các bản cập nhật và đồng bộ hóa.",
+    "Tags": "Thẻ",
     "Take the name and settings from": "Lấy tên và cài đặt từ",
     "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.": "Thông tin đăng nhập của người dùng này sẽ được tiết lộ! Bạn phải tạo vai trò \"Public User\" tùy chỉnh chỉ với quyền truy cập\n            cho các camera được chọn để sử dụng công cộng và chỉ được gán các quyền xem tối thiểu được yêu cầu. Người dùng\n            \"Public User\" này không nên có quyền truy cập trên toàn hệ thống.",
     "There will be more than": "Sẽ có nhiều hơn",
@@ -108,7 +110,7 @@
     "You can only merge Systems where you are the owner.": "Bạn chỉ có thể hợp nhất Hệ thống nếu bạn là chủ sở hữu.",
     "Your Name": "Your Name",
     "Your browser is not supported": "Trình duyệt của bạn không được hỗ trợ",
-    "and_x_more": "... and {{value}} more",
+    "andXMore": "... and {{value}} more",
     "cameraFilters": {
         "H265": "H.265 Cameras",
         "IO": "I / O modules",
@@ -124,23 +126,23 @@
     "devices": "thiết bị",
     "dialogs": {
         "merge": {
-            "connectToCloud": "Connect System you want to merge with this one to <strong>{{cloudName}}</strong> or merge locally using <strong>{{vmsName}}</strong> Client.",
+            "connectToCloud": "Kết nối Hệ thống mà bạn muốn hợp nhất với hệ thống này thành <strong>{{cloudName}}</strong> hoặc hợp nhất cục bộ bằng <strong>{{vmsName}}</strong> Client.",
             "mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from the <strong>{{primarySystem}}</strong>.",
             "primaryCannotMerge": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} System.",
             "primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}.",
             "secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
-            "systemOffline": "System {{targetSystem}} is offline and cannot be merged with the current one.",
+            "systemOffline": "Hệ thống {{targetSystem}} đang ngoại tuyến và không thể hợp nhất với hệ thống hiện tại.",
             "systemUnavailable": "Hệ thống {{targetSystem}} hiện không thể truy cập được. Hãy thử lại sau vài phút hoặc liên hệ"
         }
     },
-    "dialogs.merge.connectToCloud": "Connect System you want to merge with this one to <strong>{{cloudName}}</strong> or merge locally using <strong>{{vmsName}}</strong> Client.",
+    "dialogs.merge.connectToCloud": "Kết nối Hệ thống mà bạn muốn hợp nhất với hệ thống này thành <strong>{{cloudName}}</strong> hoặc hợp nhất cục bộ bằng <strong>{{vmsName}}</strong> Client.",
     "dialogs.merge.mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from the <strong>{{primarySystem}}</strong>.",
     "dialogs.merge.primaryCannotMerge": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} System.",
     "dialogs.merge.primarySystemOffline": "dialogs.merge.primarySystemOffline",
     "dialogs.merge.secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
     "dialogs.merge.systemOffline": "dialogs.merge.systemOffline",
     "dialogs.merge.systemUnavailable": "Hệ thống {{targetSystem}} hiện không thể truy cập được. Hãy thử lại sau vài phút hoặc liên hệ",
-    "disclaimer": "disclaimer",
+    "disclaimer": "This list is limited to actual devices auto-reporting data to {{value}}, as approved by anonymous system users. The complete list of supported manufacturers and models is greater in scope.",
     "downloads": {
         "appTypes": {
             "bundle": "Máy chủ và Máy trạm",
@@ -179,7 +181,7 @@
             "sdk": {
                 "label": "SDK",
                 "shortLabel": "SDK",
-                "supported": "C++ cross platform SDK"
+                "supported": "SDK đa nền tảng C ++"
             },
             "windows": {
                 "label": "Windows",
@@ -268,6 +270,7 @@
         "integrations": "Integrations",
         "supportedDevices": "Supported Devices"
     },
+    "phoneNumberWithLabel": "Tel: {{number}}",
     "search": {
         "Any": "Any",
         "Search": "Tìm kiếm",

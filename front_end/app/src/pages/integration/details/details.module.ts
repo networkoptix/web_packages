@@ -18,7 +18,7 @@ const appRoutes: Routes = [
         path    : 'integrations/:id', component: NxIntegrationDetailsComponent,
         children: [
             { path: '', component: NxOverviewComponent },
-            { path: 'how-to-install', component: NxSetupComponent },
+            { path: 'how-to-setup', component: NxSetupComponent },
         ]
     }
 ];

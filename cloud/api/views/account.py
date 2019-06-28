@@ -34,19 +34,21 @@ def register(request):
     data['IP'] = get_ip(request)
 
     account = models.Account.objects.filter(email=data['email']).first()
-    if not (account and not account.is_active):
+    if not account or account.is_active:
         AccountManager.check_email_in_portal(data['email'], False)  # Check if account is in Cloud_db
+        serializer = CreateAccountSerializer(data=data)
+        if not serializer.is_valid():
+            raise APIRequestException('Wrong form parameters', ErrorCodes.wrong_parameters,
+                                      error_data=serializer.errors)
+        logger.debug('/api/account/register calling serializer.save')
+        serializer.save()
     else:
         AccountManager().register_cloud_invite_user(data['email'], data['password'], data)
-        logger.debug('/api/account/register completed')
-        return api_success()
-    serializer = CreateAccountSerializer(data=data)
-    if not serializer.is_valid():
-        raise APIRequestException('Wrong form parameters', ErrorCodes.wrong_parameters, error_data=serializer.errors)
-    logger.debug('/api/account/register calling serializer.save')
-    serializer.save()
+
+    logger.debug('/api/account/register checking if activated')
+    activated = AccountManager().check_if_activated(data['email'], data['password'], data.pop('IP', ''))
     logger.debug('/api/account/register completed')
-    return api_success()
+    return api_success({'activated': activated})
 
 
 @api_view(['POST'])

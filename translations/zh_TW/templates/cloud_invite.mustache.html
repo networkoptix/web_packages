@@ -1,14 +1,13 @@
 <h1>您好, </h1>
 
-<p>You have been invited to %CLOUD_NAME%</p>
+<p>您已被邀請到 %CLOUD_NAME%</p>
 
 {{#message.message}}
 <p>{{ message.message }}</p>
 {{/message.message}}
 
-<p>Please create account on
-    <a href="{{ config.portal_url }}">%CLOUD_NAME%</a>
-    using your current email address and follow further instructions.
+<p>請使用您當前的電子信箱並依指示在
+    <a href="{{ config.portal_url }}">%CLOUD_NAME%</a>上建立帳號
 </p>
 
 <a class="btn" href="{{ config.portal_url }}/register/{{ message.code }}">註冊帳號</a>

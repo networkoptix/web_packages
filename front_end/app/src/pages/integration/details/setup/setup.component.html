@@ -2,7 +2,7 @@
     <div class="col-12 col-lg-9">
         <nx-block first-element *ngIf="plugin && plugin.instructions">
             <header translate>
-                How to install?
+                How to setup?
             </header>
 
             <nx-section *ngIf="plugin.instructions.instructionVideo">
@@ -19,7 +19,9 @@
     </div>
 
     <div class="col-12 mt-3 col-lg-3 mt-lg-0">
-        <nx-block side-element type="gray" *ngIf="plugin && plugin.downloadFiles && plugin.downloadFiles.length > 0">
+        <nx-block side-element type="gray"
+                  class="d-block mb-3"
+                  *ngIf="plugin && plugin.downloadFiles && plugin.downloadFiles.length > 0">
             <header translate>
                 Downloads
             </header>
@@ -30,6 +32,37 @@
                     <div>
                         <a [href]="platform.url" [attr.rel]="platform.noFollow ? 'nofollow' : ''">{{platform.file}}</a>
                     </div>
+                </div>
+            </nx-section>
+        </nx-block>
+
+        <nx-block side-element type="gray"
+                  *ngIf="plugin && plugin.requirementsAndCompatibility">
+            <header translate>Requirements</header>
+
+            <nx-section>
+                <div class="card--body-info">
+                    <div class="section flat">
+                        <div *ngFor="let icon of plugin.requirementsAndCompatibility.platforms.icons">
+                            <img [src]="icon.src">
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <div>
+                            <label class="group-label" translate>Tested on version(s)</label>
+                        </div>
+                        <div [innerHTML]="plugin.requirementsAndCompatibility.testedOn"></div>
+                        <div [innerHTML]="plugin.requirementsAndCompatibility.testedBuild"></div>
+                    </div>
+
+                    <div class="section"
+                         *ngIf="plugin.requirementsAndCompatibility.additionalRequirements">
+
+                        <div><label class="group-label" translate>Additional Requirements</label></div>
+                        <div [innerHTML]="plugin.requirementsAndCompatibility.additionalRequirements"></div>
+                    </div>
+
                 </div>
             </nx-section>
         </nx-block>
