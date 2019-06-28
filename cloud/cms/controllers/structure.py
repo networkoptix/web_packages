@@ -140,7 +140,7 @@ def process_zip(file_descriptor, user, product, update_structure, update_content
         if zip_file.getinfo(name).is_dir():
             continue
 
-        if name.startswith('__') or name.endswith('structure.json'):
+        if name.startswith('__') or name.endswith('structure.json') or '._' in name:
             # Ignore trash in archive from MACs or **structure.json files
             if not name.startswith('__MAC'):
                 log_messages.append(('info', 'Ignored: %s' % name))

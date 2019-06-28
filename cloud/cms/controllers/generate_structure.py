@@ -117,7 +117,6 @@ def read_cms_strings(data):
         return None
 
 
-
 def templatify_json(json_data, prefix=''):
     '''
     Ok, this is weird.
@@ -378,6 +377,8 @@ def process_files(file_iterator, product):
                              ('contexts', [])])
     find_context('root', '.', structure, product.product_type)
     for short_name, context_name, data in iterate_contexts(file_iterator):
+        if "._" in short_name:
+            continue
         context = find_context(context_name, context_name, structure, product.product_type)
         error = read_data(data, short_name, context, structure, product.product_type)
         if error:
