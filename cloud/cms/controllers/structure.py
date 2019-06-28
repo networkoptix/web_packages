@@ -321,7 +321,7 @@ def update_data_structure(context_id, has_lang, record, order, preserve_file=Fal
     data_structure.type = DataStructure.get_type_by_name(record.get("type", "text"))
 
     data_structure.meta_settings = record.get("meta", {})
-    if data_structure.is_file_or_image(data_structure.type) and not preserve_file:
+    if not preserve_file or not DataStructure.is_file_or_image(data_structure.type):
         data_structure.default = process_data_structure_type(data_structure, name, record.get("value", ""))
     data_structure.deprecated = False
     data_structure.save()
