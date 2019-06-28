@@ -13,6 +13,10 @@
                 <div [innerHtml]="plugin.overview.description"></div>
             </nx-section>
 
+            <nx-section *ngIf="plugin.versionDetails && plugin.versionDetails.whatsNew">
+                <div [innerHtml]="plugin.versionDetails.whatsNew"></div>
+            </nx-section>
+
             <nx-section *ngIf="plugin.overview && plugin.overview.screenshots">
                 <nx-carousel [screenshots]="plugin.overview.screenshots"></nx-carousel>
             </nx-section>

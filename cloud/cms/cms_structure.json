@@ -1870,10 +1870,19 @@
             "optional": false
           },
           {
-            "name": "changelog",
-            "label": "Version Changelog",
+            "name": "whatsNew",
+            "label": "What's new?",
             "value": "",
-            "description": "This information is only visible to reviews and not users.",
+            "description": "Describe to the users what was changed/fixed/added in this release.",
+            "type": "html",
+            "optional": true
+          },
+          {
+            "name": "internalNotes",
+            "old_name": "changelog",
+            "label": "Internal notes",
+            "value": "",
+            "description": "This information is only visible to reviewers and not users. Describe what was changed/fixed/added in this release.",
             "type": "html",
             "optional": true,
             "public": false
