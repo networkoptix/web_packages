@@ -66,7 +66,8 @@ def find_context(name, file_path, structure, product_type):
     return context
 
 
-def find_structure(name, context, structure_type, product_type, meta=None, description="", value='', advanced=False, optional=False):
+def find_structure(name, context, structure_type, product_type, meta=None,
+                   description="", value='', advanced=False, optional=False):
     data_structure = next((structure for structure in context["values"] if structure["name"] == name), None)
     if not data_structure:
         # try to populate structure from database
@@ -171,9 +172,14 @@ def check_if_json (data, short_name, structure, product_type):
     for key, value in values.items():
         record_type = 'Text'
         advanced = False
+        default_value = None
+        description = "Example: " + json.dumps(value, indent=4, separators=(',', ': '))
+
         # trying to parse type
         if type(value) == bool:
             record_type = 'check_box'
+            default_value = value
+            description = ''
         elif type(value) == list:
             record_type = 'array'
             advanced = True
@@ -184,7 +190,8 @@ def check_if_json (data, short_name, structure, product_type):
             record_type = 'guid'
             advanced = True
 
-        find_structure(key, context, record_type, product_type, value=value, advanced=advanced)
+        find_structure(key, context, record_type, product_type,
+                       value=default_value, advanced=advanced, description=description)
     return True
 
 
