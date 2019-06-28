@@ -47,11 +47,11 @@
                 </div>
             </div>
 
-            <div class="mt-3 clearfix">
+            <div class="mt-3 clearfix" *ngIf="plugin.information.companyName && plugin.information.companyWeb">
                 <div>
                     <label class="group-label">{{plugin.information.companyName}}</label>
                 </div>
-                <div *ngIf="plugin.information.companyWeb">
+                <div>
                     <a [href]="plugin.information.companyWeb"
                        target="_blank">{{plugin.information.companyWeb}}</a>
                 </div>
