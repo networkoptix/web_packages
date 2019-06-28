@@ -66,13 +66,13 @@ def find_context(name, file_path, structure, product_type):
     return context
 
 
-def find_structure(name, context, structure_type, meta=None, description="", value='', advanced=False, optional=False):
+def find_structure(name, context, structure_type, product_type, meta=None, description="", value='', advanced=False, optional=False):
     data_structure = next((structure for structure in context["values"] if structure["name"] == name), None)
     if not data_structure:
         # try to populate structure from database
         # Important: here we just find any datastrucure with the same name.
         # The goal is to try to get label and description from another asset
-        db_structure = DataStructure.objects.filter(name=name, context=context).first()
+        db_structure = DataStructure.objects.filter(name=name, context__product_type=product_type).first()
         label = ''
         if db_structure:
             label = db_structure.label if db_structure.label != name else ''
@@ -184,7 +184,7 @@ def check_if_json (data, short_name, structure, product_type):
             record_type = 'guid'
             advanced = True
 
-        find_structure(key, context, record_type , value=value, advanced=advanced)
+        find_structure(key, context, record_type, product_type, value=value, advanced=advanced)
     return True
 
 
@@ -196,7 +196,7 @@ def check_if_customizable(data, short_name, structure, product_type):
     # customizable file creates new structure
     context = find_context(short_name, short_name, structure, product_type)
     for match in strings:
-        find_structure(match[1], context, 'Text', meta={"regex": ""}, description=match[0])
+        find_structure(match[1], context, 'Text', product_type, meta={"regex": ""}, description=match[0])
     return True
 
 
@@ -215,7 +215,7 @@ def read_data(data, short_name, context, cms_structure, product_type):
         return
     elif check_if_customizable(data, short_name, cms_structure, product_type):
         return
-    find_structure(short_name, context, structure_type, meta=meta)
+    find_structure(short_name, context, structure_type, product_type, meta=meta)
 
 
 def iterate_zip(file_descriptor):
@@ -357,7 +357,7 @@ def merge_structure(base_structure, new_structure):
         if key not in base_contexts:
             set_data_structure_state(new_context["values"], REC_STATE.new)
             new_context["status"] = REC_STATE.new
-            merged_structure["contexts"].append(new_context["values"])
+            merged_structure["contexts"].append(new_context)
 
     return merged_structure
 

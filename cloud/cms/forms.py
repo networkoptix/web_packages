@@ -253,11 +253,25 @@ class ProductForm(forms.ModelForm):
             if num_customizations > 1:
                 raise forms.ValidationError("Too many customizations selected for product type.")
 
-            if customizations[0].name in product_type.get_customizations():
+            if customizations[0].name in product_type.get_customizations() and \
+                    not(self.instance.pk and customizations[0] in self.instance.customizations.all()):
                 raise forms.ValidationError(f"Customization is already used for a "
                                             f"{ProductType.PRODUCT_TYPES[product_type.type]} product.")
 
         return customizations
+
+    def clean_product_type(self):
+        product_type = self.cleaned_data['product_type']
+        if product_type.single_customization:
+            product_customizations = self.instance.customizations
+            if len(product_customizations.all()) > 1:
+                raise forms.ValidationError("Too many customizations selected for product type.")
+
+            if product_customizations.filter(name__in=product_type.get_customizations()).exists():
+                raise forms.ValidationError(f"Customizations are already in use for this product type. Please remove "
+                                            f"all customizations and try to save again.")
+
+        return product_type
 
     def clean(self):
         cleaned_data = super().clean()
