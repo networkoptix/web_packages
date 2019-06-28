@@ -15,6 +15,7 @@ angular.module('cloudApp')
                   languageService, nxPageService) {
 
         $scope.registerSuccess = $routeParams.registerSuccess;
+        $scope.activated = $routeParams.activated;
         $scope.lang = languageService.lang;
         
         if ($scope.registerSuccess) {
@@ -25,6 +26,8 @@ angular.module('cloudApp')
 
         if(!$scope.registerSuccess){
             authorizationCheckService.logoutAuthorised();
+        }else if($scope.activated){
+            authorizationCheckService.redirectAuthorised();
         }
 
         $scope.session = $localStorage;
@@ -81,10 +84,16 @@ angular.module('cloudApp')
             },
             holdAlerts:true,
             errorPrefix: $scope.lang.errorCodes.cantRegisterPrefix
-        }).then(function(){
+        }).then(function(response){
             $scope.context.process = 'registerSuccess';
-            $location.path('/register/success',false);
-            account.setEmail($scope.account.email);
+            if (response.data.activated) {
+                $scope.activated = response.data.activated;
+                $location.path('/register/successActivated',false);
+                authorizationCheckService.login($scope.account.email, $scope.account.password);
+            } else {
+                $location.path('/register/success',false);
+                account.setEmail($scope.account.email);
+            }
         });
 
         $scope.$on('$destroy', function(){
