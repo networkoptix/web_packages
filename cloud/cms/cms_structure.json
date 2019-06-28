@@ -580,10 +580,11 @@
           {
             "name": "supportEmail",
             "label": "Support E-mail",
-            "value": "",
+            "value": "support@networkoptix.zendesk.com",
             "description": "E-mail that is used by contact forms.",
             "type": "text",
-            "optional": true,
+            "optional": false,
+            "advanced": true,
             "meta": {
               "regex": "^[a-zA-Z0-9\\.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$"
             }
