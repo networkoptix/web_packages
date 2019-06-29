@@ -135,12 +135,9 @@ def save_content(filename, content):
         file.write(content)
 
 
-def process_context(product, context, language_code,
+def process_context(product, context, language, skin,
                     preview, version_id, global_contexts, global_contexts_dict=None):
-    default_language = product.default_language
-    language = Language.by_code(language_code, default_language)
-    skin = product.read_global_value('%SKIN%')
-    context_template_text = context.template_for_language(language, default_language, skin)
+    context_template_text = context.template_for_language(language, product.default_language, skin)
 
     # check if the file is language JSON
     if context.file_path.endswith(".json") and isinstance(context_template_text, str):
@@ -169,20 +166,21 @@ def process_context(product, context, language_code,
 def read_customized_file(filename, product, language_code=None,
                          version_id=None, preview=False):
     # 1. try to find context for this file
-
+    skin = product.read_global_value("%SKIN%")
+    language = Language.by_code(language_code, product.default_language)
     clean_name = filename.replace(language_code, "{{language}}") if language_code else filename
     context = Context.objects.filter(file_path=clean_name, product_type=product.product_type).first()
     if context:
         # success -> return process_context
         global_contexts = Context.objects.filter(is_global=True, product_type=product.product_type)
-        return process_context(product, context, language_code, preview, version_id, global_contexts)
+        return process_context(product, context, language, skin, preview, version_id, global_contexts)
 
     # 2. try to find datastructure for this file
     # TODO: name is not unique
     data_structure = DataStructure.objects.filter(name=clean_name, context__product_type=product.product_type).first()
     if data_structure:
         # success -> return actual value
-        value = data_structure.find_actual_value(product, Language.by_code(language_code), version_id, draft=preview)
+        value = data_structure.find_actual_value(product, language, version_id, draft=preview)
         return base64.b64decode(value)
 
     # fail - try to read file from drive
@@ -201,16 +199,13 @@ def read_customized_file(filename, product, language_code=None,
         return None  # nothing helps
 
 
-def save_context(product, context, context_path, language_code,
+def save_context(product, context, context_path, language, skin,
                  preview, version_id, global_contexts, global_contexts_dict):
-    content = process_context(product, context, language_code,
+    content = process_context(product, context, language, skin,
                               preview, version_id, global_contexts, global_contexts_dict)
 
-    default_language = product.default_language
-    language = Language.by_code(language_code, default_language)
-    skin = product.read_global_value('%SKIN%')
-    if context.template_for_language(language, default_language, skin):  # if we have template - save context to file
-        target_file_name = target_file(context_path, product.product_root, language_code, preview)
+    if context.template_for_language(language, product.default_language, skin):  # if we have template - save context to file
+        target_file_name = target_file(context_path, product.product_root, language.code, preview)
         # print "save file: " + target_file_name
         save_content(target_file_name, content)
 
@@ -356,8 +351,11 @@ def fill_content(product,
     default_language_code = product.default_language.code
     languages_list = product.languages_list
 
+    changed_contexts = changed_contexts.exclude(name__icontains="templates/lang")
+
     thread_error = False
     # Creates a pool of thread works
+    skin = product.read_global_value('%SKIN%')
     with ThreadPoolExecutor(max_workers=workers) as executor:
         # Stores the tasks that the thread pool runs. This is needed for checking for exceptions
         futures = []
@@ -370,9 +368,10 @@ def fill_content(product,
                 if default_language_code in changed_languages:
                     # If default language changes - it can affect all languages in the context
                     changed_languages = languages_list
+            languages = Language.objects.filter(code__in=changed_languages)
             # Add the context to the list of tasks for the thread pool.
-            futures.append(executor.submit(thread_context, context, product, changed_languages, preview,
-                                           version_id, global_contexts, global_contexts_dict))
+            futures.append(executor.submit(thread_context, context, product, languages, skin,
+                                           preview, version_id, global_contexts, global_contexts_dict))
 
         # Catch any errors raise by thread workers.
         for future in futures:
@@ -388,14 +387,14 @@ def fill_content(product,
     return not thread_error
 
 
-def thread_context(context, product, changed_languages, preview, version_id, global_contexts, global_contexts_dict):
+def thread_context(context, product, changed_languages, skin, preview, version_id, global_contexts, global_contexts_dict):
     # update affected languages
     if context.translatable:
-        for language_code in changed_languages:
-            save_context(product, context, context.file_path, language_code, preview,
+        for language in changed_languages:
+            save_context(product, context, context.file_path, language, skin, preview,
                          version_id, global_contexts, global_contexts_dict)
     else:
-        save_context(product, context, context.file_path, None, preview,
+        save_context(product, context, context.file_path, product.default_language, skin, preview,
                      version_id, global_contexts, global_contexts_dict)
 
 
@@ -406,7 +405,7 @@ def zip_context(zip_file, product, context, language_code,
     root_dir = product.product_root
     skin = product.read_global_value('%SKIN%')
     if context.template_for_language(language, default_language, skin):  # if we have template - save context to file
-        data = process_context(product, context, language_code, preview, version_id, global_contexts)
+        data = process_context(product, context, language, skin, preview, version_id, global_contexts)
         name = context.file_path.replace("{{language}}", language_code) if language_code else context.file_path
         if add_root:
             name = os.path.join(root_dir, name)
@@ -414,7 +413,7 @@ def zip_context(zip_file, product, context, language_code,
     file_structures = context.datastructure_set.filter(type__in=(DataStructure.DATA_TYPES.image,
                                                                  DataStructure.DATA_TYPES.file))
     for file_structure in file_structures:
-        data = file_structure.find_actual_value(product, Language.by_code(language_code), version_id, draft=preview)
+        data = file_structure.find_actual_value(product, language, version_id, draft=preview)
         data = base64.b64decode(data)
         name = file_structure.name.replace("{{language}}", language_code) if language_code else file_structure.name
         if add_root:
