@@ -74,6 +74,8 @@ def find_structure(name, context, structure_type, product_type, meta=None,
         # Important: here we just find any datastrucure with the same name.
         # The goal is to try to get label and description from another asset
         db_structure = DataStructure.objects.filter(name=name, context__product_type=product_type).first()
+        if not db_structure:
+            db_structure = DataStructure.objects.filter(name=name).first()
         label = ''
         if db_structure:
             label = db_structure.label if db_structure.label != name else ''
@@ -171,7 +173,7 @@ def check_if_json (data, short_name, structure, product_type):
     for key, value in values.items():
         record_type = 'Text'
         advanced = False
-        default_value = None
+        default_value = ''
         description = "Example: " + json.dumps(value, indent=4, separators=(',', ': '))
 
         # trying to parse type
