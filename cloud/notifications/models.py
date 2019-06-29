@@ -49,14 +49,13 @@ class Event(models.Model):
         # 2. For each subscription create a message and send it
         for subscription in subscriptions.all():
             user = Account.objects.filter(email=subscription.user_email).first()
-            email = subscription.user_email
 
             if user:
                 self.data['userFullName'] = user.get_full_name()
 
             message = Message(
                 message=self.data,
-                user_email=email,
+                user_email=subscription.user_email,
                 customization=user.customization if user else settings.CUSTOMIZATION,
                 type=self.type,
                 event=self
