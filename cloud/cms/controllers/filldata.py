@@ -76,9 +76,6 @@ def process_context_structure(product, context, content, language,
                 elif key in item:
                     collection[index] = item.replace(key, str(value))
 
-
-    default_language = product.default_language
-    location = product.product_root
     for datastructure in context.datastructure_set.all():
         # noinspection PyBroadException
         try:
@@ -105,11 +102,11 @@ def process_context_structure(product, context, content, language,
                     # do not update files from global contexts all the time
                     continue
 
-                if not datastructure.translatable and language != default_language:
+                if not datastructure.translatable and language != product.default_language:
                     # if file itself is not translatable - update it only for default language
                     continue
 
-                image_storage = os.path.join('static', location)
+                image_storage = os.path.join('static', product.product_root)
                 if preview:
                     image_storage = os.path.join(image_storage, 'preview')
 
