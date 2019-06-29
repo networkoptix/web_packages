@@ -9,7 +9,7 @@ import { BehaviorSubject, Observable, of } from 'rxjs';
 export class NxLanguageProviderService {
 
     lang: any;
-    translationsSubject = new BehaviorSubject({});
+    translationsSubject = new BehaviorSubject(undefined);
 
     constructor(private translate: TranslateService) {
         this.lang = this.translate.getDefaultLang();

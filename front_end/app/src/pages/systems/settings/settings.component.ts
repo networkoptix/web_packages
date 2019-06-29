@@ -60,49 +60,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.userDisconnectSystem = false;
         this.selectedUser = { email: '' };
         this.system = { info: { name: '' } };
-
-        this.translate
-            .getTranslation(this.translate.currentLang)
-            .subscribe((lang) => {
-                this.LANG = lang;
-
-                this.pageService.setPageTitle(this.LANG.pageTitles.system);
-                this.pollingSystemUpdate = undefined;
-
-                // Retrieve users list
-                this.gettingSystemUsers = this.process.init(() => {
-                    return this.system
-                               .getUsers()
-                               .then((users) => {
-                                   if (this.callShare) {
-                                       this.settingsService
-                                           .share()
-                                           .finally(this.cleanUrl);
-                                   }
-                               }).finally(this.delayedUpdateSystemInfo);
-                }, {
-                    errorPrefix: this.LANG.errorCodes.cantGetUsersListPrefix
-                });
-
-                // Retrieve system info
-                this.gettingSystem = this.process.init(() => {
-                    return this.system.getInfo(true); // Force reload system info when opening page
-                }, {
-                    errorCodes : {
-                        forbidden: (error) => {
-                            // Special handling for not having an access to the system
-                            this.systemNoAccess = true;
-                            return false;
-                        },
-                        notFound : (error) => {
-                            // Special handling for not having an access to the system
-                            this.systemNoAccess = true;
-                            return false;
-                        },
-                    },
-                    errorPrefix: this.LANG.errorCodes.cantGetSystemInfoPrefix
-                });
-            });
     }
 
     constructor(@Inject('authorizationCheckService') private authorizationService: any,
@@ -111,7 +68,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 @Inject('process') private process: any,
                 private route: ActivatedRoute,
                 private configService: NxConfigService,
-                private translate: TranslateService,
+                private language: NxLanguageProviderService,
                 private pageService: NxPageService,
                 private dialogs: NxDialogsService,
                 private settingsService: NxSettingsService,
@@ -121,31 +78,22 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.setupDefaults();
     }
 
-    delayedUpdateSystemInfo() {
-        // An extra measure to prevent more intervals from being created.
-        // if (pollingSystemUpdate) {
-        //     $poll.cancel(pollingSystemUpdate);
-        // }
-        // pollingSystemUpdate = $poll(function () {
-        //     return this.system
-        //                  .update()
-        //                  .catch(function (error) {
-        //                      if (error.data.resultCode === 'forbidden' || error.data.resultCode === 'notFound') {
-        //                          connectionLost();
-        //                      }
-        //                  });
-        // }, Config.updateInterval);
-        //
-        // this.$on('$destroy', function (event) {
-        //     $poll.cancel(pollingSystemUpdate);
-        // });
-    }
-
-    cleanUrl() {
-        this.location.path('/systems/' + this.systemId, false);
-    }
-
     ngOnInit(): void {
+        this.pollingSystemUpdate = undefined;
+
+        this.language
+            .translationsSubject
+            .subscribe((lang) => {
+                this.LANG = lang;
+
+                if (this.LANG) {
+                    this.pageService.setPageTitle(this.LANG.pageTitles.system);
+                    this.init();
+                }
+            });
+    }
+
+    init(): void {
         // this.systemId = this.uriParamSystemId;
 
         this.route.params.subscribe(params => {
@@ -166,11 +114,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     id   : 'users',
                     label: 'users',
                     path : 'users',
-                }/*, {
-                 id   : 'interfaces',
-                 label: 'interfaces',
-                 path: 'interfaces',
-                 }*/]
+                }]
         };
 
         this.authorizationService
@@ -210,12 +154,70 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             });
         }
 
+        // Retrieve users list
+        this.gettingSystemUsers = this.process.init(() => {
+            return this.system
+                       .getUsers()
+                       .then((users) => {
+                           if (this.callShare) {
+                               this.settingsService
+                                   .share()
+                                   .finally(this.cleanUrl);
+                           }
+                       }).finally(this.delayedUpdateSystemInfo);
+        }, {
+            errorPrefix: this.LANG.errorCodes.cantGetUsersListPrefix
+        });
+
+        // Retrieve system info
+        this.gettingSystem = this.process.init(() => {
+            return this.system.getInfo(true); // Force reload system info when opening page
+        }, {
+            errorCodes : {
+                forbidden: (error) => {
+                    // Special handling for not having an access to the system
+                    this.systemNoAccess = true;
+                    return false;
+                },
+                notFound : (error) => {
+                    // Special handling for not having an access to the system
+                    this.systemNoAccess = true;
+                    return false;
+                },
+            },
+            errorPrefix: this.LANG.errorCodes.cantGetSystemInfoPrefix
+        });
+
         // var cancelSubscription = this.$on("unauthorized_" + $routeParams.systemId, connectionLost);
 
     }
 
     ngOnDestroy() {
 
+    }
+
+    delayedUpdateSystemInfo() {
+        // An extra measure to prevent more intervals from being created.
+        // if (pollingSystemUpdate) {
+        //     $poll.cancel(pollingSystemUpdate);
+        // }
+        // pollingSystemUpdate = $poll(function () {
+        //     return this.system
+        //                  .update()
+        //                  .catch(function (error) {
+        //                      if (error.data.resultCode === 'forbidden' || error.data.resultCode === 'notFound') {
+        //                          connectionLost();
+        //                      }
+        //                  });
+        // }, Config.updateInterval);
+        //
+        // this.$on('$destroy', function (event) {
+        //     $poll.cancel(pollingSystemUpdate);
+        // });
+    }
+
+    cleanUrl() {
+        this.location.path('/systems/' + this.systemId, false);
     }
 
     connectionLost() {

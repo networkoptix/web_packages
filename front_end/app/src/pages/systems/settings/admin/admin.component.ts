@@ -4,9 +4,10 @@ import { ActivatedRoute }                       from '@angular/router';
 import { NxConfigService }                      from '../../../../services/nx-config';
 import { TranslateService }                     from '@ngx-translate/core';
 
-import { NxPageService }     from '../../../../services/page.service';
-import { NxDialogsService }  from '../../../../dialogs/dialogs.service';
-import { NxSettingsService } from '../settings.service';
+import { NxPageService }             from '../../../../services/page.service';
+import { NxDialogsService }          from '../../../../dialogs/dialogs.service';
+import { NxSettingsService }         from '../settings.service';
+import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
 
 @Component({
     selector   : 'nx-system-admin-component',
@@ -37,15 +38,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         this.debugMode = this.CONFIG.allowDebugMode;
         this.betaMode = this.CONFIG.allowBetaMode;
         this.currentlyMerging = false;
-
-        this.translate
-            .getTranslation(this.translate.currentLang)
-            .subscribe((lang) => {
-                this.LANG = lang;
-                this.pageService.setPageTitle(this.LANG.pageTitles.systems);
-
-
-            });
     }
 
     constructor(@Inject('account') private account: any,
@@ -53,7 +45,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                 @Inject('systemsProvider') private systemsProvider: any,
                 private route: ActivatedRoute,
                 private configService: NxConfigService,
-                private translate: TranslateService,
+                private language: NxLanguageProviderService,
                 private pageService: NxPageService,
                 private dialogs: NxDialogsService,
                 private settingsService: NxSettingsService,
@@ -63,7 +55,21 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         this.setupDefaults();
     }
 
+
     ngOnInit(): void {
+        this.language
+            .translationsSubject
+            .subscribe((lang) => {
+                this.LANG = lang;
+
+                if (this.LANG) {
+                    this.pageService.setPageTitle(this.LANG.pageTitles.systems);
+                    this.init();
+                }
+            });
+    }
+
+    init(): void {
         this.CONFIG = this.configService.getConfig();
 
         this.settingsService

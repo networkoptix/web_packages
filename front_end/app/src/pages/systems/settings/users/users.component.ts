@@ -4,9 +4,10 @@ import { ActivatedRoute }                       from '@angular/router';
 import { NxConfigService }                      from '../../../../services/nx-config';
 import { TranslateService }                     from '@ngx-translate/core';
 
-import { NxPageService }     from '../../../../services/page.service';
-import { NxDialogsService }  from '../../../../dialogs/dialogs.service';
-import { NxSettingsService } from '../settings.service';
+import { NxPageService }             from '../../../../services/page.service';
+import { NxDialogsService }          from '../../../../dialogs/dialogs.service';
+import { NxSettingsService }         from '../settings.service';
+import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
 
 @Component({
     selector   : 'nx-system-user-component',
@@ -32,37 +33,12 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         this.selectedUser = {
             email: ''
         };
-
-        this.translate
-            .getTranslation(this.translate.currentLang)
-            .subscribe((lang) => {
-                this.LANG = lang;
-                this.pageService.setPageTitle(this.LANG.pageTitles.systems);
-
-                this.unsharing = this.process.init(() => {
-                    return this.system.deleteUser(this.selectedUser);
-                }, {
-                    successMessage: this.LANG.system.permissionsRemoved.replace('{{email}}', this.selectedUser.email),
-                    errorPrefix   : this.LANG.errorCodes.cantSharePrefix
-                }).then(() => {
-                    this.locked[this.selectedUser.email] = false;
-                    this.selectedUser = undefined;
-                    this.settingsService.loadUsers();
-                    // this.delayedUpdateSystemInfo();
-                }, () => {
-                    this.locked[this.selectedUser.email] = false;
-                    this.selectedUser = undefined;
-                    this.settingsService.loadUsers();
-                    // this.delayedUpdateSystemInfo();
-                });
-
-            });
     }
 
     constructor(@Inject('account') private account: any,
                 @Inject('process') private process: any,
                 private configService: NxConfigService,
-                private translate: TranslateService,
+                private language: NxLanguageProviderService,
                 private pageService: NxPageService,
                 private dialogs: NxDialogsService,
                 private settingsService: NxSettingsService,
@@ -73,6 +49,19 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        this.language
+            .translationsSubject
+            .subscribe((lang) => {
+                this.LANG = lang;
+
+                if (this.LANG) {
+                    this.pageService.setPageTitle(this.LANG.pageTitles.systems);
+                    this.init();
+                }
+            });
+    }
+
+    init(): void {
         this.CONFIG = this.configService.getConfig();
 
         this.settingsService
@@ -82,6 +71,23 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                     this.system = system;
                 }
             });
+
+        this.unsharing = this.process.init(() => {
+            return this.system.deleteUser(this.selectedUser);
+        }, {
+            successMessage: this.LANG.system.permissionsRemoved.replace('{{email}}', this.selectedUser.email),
+            errorPrefix   : this.LANG.errorCodes.cantSharePrefix
+        }).then(() => {
+            this.locked[this.selectedUser.email] = false;
+            this.selectedUser = undefined;
+            this.settingsService.loadUsers();
+            // this.delayedUpdateSystemInfo();
+        }, () => {
+            this.locked[this.selectedUser.email] = false;
+            this.selectedUser = undefined;
+            this.settingsService.loadUsers();
+            // this.delayedUpdateSystemInfo();
+        });
     }
 
     ngOnDestroy(): void {
