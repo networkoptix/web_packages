@@ -48,11 +48,16 @@ class Event(models.Model):
         subscriptions = subscriptions.filter(Q(enabled=True) | Q(enabled=1))
         # 2. For each subscription create a message and send it
         for subscription in subscriptions.all():
-            user = Account.objects.get(email=subscription.user_email)
-            self.data['userFullName'] = user.get_full_name()
+            user = Account.objects.filter(email=subscription.user_email).first()
+            email = subscription.user_email
+
+            if user:
+                self.data['userFullName'] = user.get_full_name()
+
             message = Message(
                 message=self.data,
-                user_email=user.email,
+                user_email=email,
+                customization=user.customization if user else settings.CUSTOMIZATION,
                 type=self.type,
                 event=self
             )
@@ -66,7 +71,7 @@ class Subscription(models.Model):
                               help_text="What's the target? (release type, customization or cloud instance)")
     type = models.CharField(max_length=255, default='', blank=True,
                             help_text="What's the event? (submitted_release, published_{{type}}, cloud_...)")
-    user_email = models.CharField(max_length=255)
+    user_email = models.EmailField()
     created_date = models.DateTimeField(auto_now_add=True)
     enabled = models.BooleanField(default=True)
 
