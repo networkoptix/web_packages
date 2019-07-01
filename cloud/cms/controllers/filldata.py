@@ -17,6 +17,8 @@ from api.helpers.exceptions import APIForbiddenException
 import logging
 logger = logging.getLogger(__name__)
 
+
+EMAIL_TEMPLATES = 'templates/lang'
 SOURCE_DIR = 'static/_source/{{skin}}'
 TARGET_DIR = 'static/{{customization}}'
 
@@ -348,7 +350,9 @@ def fill_content(product,
     default_language_code = product.default_language.code
     languages_list = product.languages_list
 
-    changed_contexts = changed_contexts.exclude(name__icontains="templates/lang")
+    # Email templates are loaded into the db during readstructure. When a email is sent, the celery worker retrieves
+    # the template from the database and fills the template with the correct datastructures.
+    changed_contexts = changed_contexts.exclude(name__startswith=EMAIL_TEMPLATES)
 
     thread_error = False
     # Creates a pool of thread works
