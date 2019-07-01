@@ -127,7 +127,7 @@
         {{ original.notes|linebreaks }}
     </div>
 
-    <form action="" enctype="multipart/form-data" method="post" novalidate>
+    <form action="" enctype="multipart/form-data" method="post" id="reviewForm" novalidate>
         {% csrf_token %}
         <input name="version_id" value="{{ version.id }}" hidden/>
         <input name="review_id" value="{{ original.id }}" hidden/>
@@ -238,8 +238,11 @@
                 noteButton.attr('name', button.data('action'));
                 noteButton.text(button.data('name'));
                 noteButton.attr('class', button.attr('class'));
-            })
+            });
 
+            $('#reviewForm').submit(function() {
+                $('#addNotes').modal('hide');
+            });
         })();
     </script>
     {% endwith %}

@@ -550,7 +550,7 @@ class ProductCustomizationReviewAdmin(CMSAdmin):
             request.user, customization_name, 'cms.publish_version'
         )
         developer_access_customization = UserGroupsToProductPermissions.check_customization_permission(
-            customization_review.version.created_by, customization_name, 'cms.publish_version')
+            customization_review.version.created_by, customization_name, 'cms.access_customization')
         can_delete = self.has_delete_permission(request, customization_review)
 
         allowed = dict()
@@ -569,7 +569,7 @@ class ProductCustomizationReviewAdmin(CMSAdmin):
         allowed['delete'] = can_delete
         allowed['submit_row'] = True in allowed.values()
 
-        allowed['access_customization_checkbox'] = not developer_access_customization
+        allowed['access_customization_checkbox'] = not developer_access_customization and can_publish_or_accept
 
         return allowed
 
