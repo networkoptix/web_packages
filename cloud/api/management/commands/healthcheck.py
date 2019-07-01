@@ -1,3 +1,4 @@
+import sys
 from django.core.management.base import BaseCommand
 
 from django.db import DEFAULT_DB_ALIAS, connections
@@ -10,5 +11,4 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         executor = MigrationExecutor(connections[DEFAULT_DB_ALIAS])
         plan = executor.migration_plan(executor.loader.graph.leaf_nodes())
-        result = "Working" if len(plan) else "Done"
-        self.stdout.write(self.style.SUCCESS(result))
+        sys.exit(0 if not len(plan) else 1)
