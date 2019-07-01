@@ -7,7 +7,7 @@ import re
 from zipfile import ZipFile
 
 from ..controllers.generate_structure import templatify_json
-from ..models import Context, ContextTemplate, DataStructure, DataRecord, Product, ProductType
+from ..models import Context, ContextTemplate, DataStructure, DataRecord, Product, ProductType, get_cloud_portal_product
 
 import logging
 logger = logging.getLogger(__name__)
@@ -23,9 +23,15 @@ def find_or_add_product_type(product_type, name=""):
     return ProductType.objects.get_or_create(name=name, type=product_type)[0]
 
 
-def find_or_add_product(name, customization, product_type_type, product_type_name):
+def find_or_add_product_with_single_customization(name, customization, product_type_type, product_type_name):
     product_type = find_or_add_product_type(ProductType.get_type_by_name(product_type_type), product_type_name)
-    product = Product.objects.get_or_create(name=name, product_type=product_type)[0]
+
+    if Product.objects.filter(customizations__in=[customization],
+                              product_type=product_type).exists():
+        product = get_cloud_portal_product()
+    else:
+        product = Product.objects.create(name=name, product_type=product_type)
+
     product.customizations.set([customization])
     return product
 
