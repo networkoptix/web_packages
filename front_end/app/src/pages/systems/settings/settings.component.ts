@@ -11,6 +11,7 @@ import { combineLatest }     from 'rxjs';
 import { NxPageService }     from '../../../services/page.service';
 import { NxDialogsService }  from '../../../dialogs/dialogs.service';
 import { NxSettingsService } from './settings.service';
+import { NxMenuService }     from '../../../components/menu/menu.service';
 
 @Component({
     selector   : 'nx-system-settings-component',
@@ -72,6 +73,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 private pageService: NxPageService,
                 private dialogs: NxDialogsService,
                 private settingsService: NxSettingsService,
+                private menuService: NxMenuService,
                 location: Location) {
 
         this.location = location;
@@ -108,14 +110,23 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             level1         : [
                 {
                     id   : 'admin',
-                    label: 'admin',
+                    icon : 'glyphicon-home',
+                    label: this.LANG.systemAdministration,
                     path : '',
                 }, {
                     id   : 'users',
-                    label: 'users',
+                    icon : 'glyphicon-user',
+                    label: this.LANG.users,
                     path : 'users',
                 }]
         };
+
+        this.menuService
+            .selectedSectionSubject
+            .subscribe(selection => {
+                this.content.selectedSection = selection;
+                this.content = { ...this.content }; // trigger onChange
+            });
 
         this.authorizationService
             .requireLogin()

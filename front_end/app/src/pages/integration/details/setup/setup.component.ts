@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { IntegrationService }           from '../../integration.service';
+import { NxMenuService }                from '../../../../components/menu/menu.service';
 
 @Component({
     selector: 'setup-component',
@@ -13,10 +14,12 @@ export class NxSetupComponent implements OnInit, OnDestroy {
 
     private setupDefaults() {
         this.plugin = this.integrationService.getIntegrationPlugin();
-        this.integrationService.setSection('how-to-setup');
+        this.menuService.setSection('how-to-setup');
     }
 
-    constructor(private integrationService: IntegrationService) {
+    constructor(private integrationService: IntegrationService,
+                private menuService: NxMenuService) {
+
         this.setupDefaults();
     }
 

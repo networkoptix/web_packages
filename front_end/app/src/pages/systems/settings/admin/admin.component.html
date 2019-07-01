@@ -3,11 +3,11 @@
 <div class="container" *ngIf="system">
     <div class="col-12 col-lg-9" *ngIf="system.isMine">
         <nx-block>
-            <header>
-                <div class="float-left d-flex align-items-center" style="line-height: 1.4rem;">
+            <nx-section>
+                <h3 class="float-left d-flex align-items-center">
                     <span>{{system.info.name}}</span>
                     <span class="glyphicon glyphicon-pencil ml-2" (click)="rename()"></span>
-                </div>
+                </h3>
                 <div class="float-right">
                     <span *ngIf="!system.isOnline" class="badge badge-info"
                           [ngClass]="CONFIG.systemStatuses[system.info.stateOfHealth].style || CONFIG.systemStatuses.default.style">
@@ -21,25 +21,16 @@
                           [ngClass]="CONFIG.systemStatuses.merging.style">
                         {{LANG.systemStatuses.merging}}</span>
                 </div>
-            </header>
+            </nx-section>
 
             <nx-section>
-                <div class="float-left mr-2 mb-2">
-                    <button class="btn btn-default"
-                            *ngIf="system.permissions.editUsers"
-                            [disabled]="!system.isAvailable || currentlyMerging"
-                            title="{{system.stateMessage}}"
-                            (click)="share()"
-                            translate><span class="glyphicon glyphicon-share"></span>Share</button>
-                </div>
-
-                <div class="float-left mr-2 mb-2">
+                <div class="float-left mr-2 mt-2">
                     <button class="btn btn-default"
                             [disabled]="(currentlyMerging || !system.isOnline || !system.isAvailable) && !(debugMode || betaMode)"
                             (click)="mergeSystems()" translate>Merge with Another System</button>
                 </div>
 
-                <div class="float-left">
+                <div class="float-left mt-2">
                     <nx-client-button [system]="system"></nx-client-button>
                 </div>
             </nx-section>
@@ -53,7 +44,7 @@
             </header>
 
             <nx-section>
-                <h5 class="m-0">{{system.info.ownerFullName}}</h5>
+                <h3 class="m-0">{{system.info.ownerFullName}}</h3>
                 <span>{{system.info.ownerAccountEmail}}</span>
 
                 <div class="mt-3">

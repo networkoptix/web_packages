@@ -18,7 +18,7 @@ interface Platform {
 export class IntegrationService implements OnDestroy {
     config: any = {};
     pluginsSubject = new BehaviorSubject(undefined);
-    selectedSectionSubject = new BehaviorSubject([]);
+    // selectedSectionSubject = new BehaviorSubject([]);
     plugin: any = {};
     inReview: boolean;
 
@@ -222,9 +222,9 @@ export class IntegrationService implements OnDestroy {
         return this.plugin;
     }
 
-    setSection(section) {
-        this.selectedSectionSubject.next(section);
-    }
+    // setSection(section) {
+    //     this.selectedSectionSubject.next(section);
+    // }
 
     ngOnDestroy() {
         this.pluginsSubject.unsubscribe();

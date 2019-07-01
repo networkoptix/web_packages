@@ -5,7 +5,6 @@
 
 .nx-table {
     table-layout  : auto;
-    // min-width     : 700px;
     white-space   : nowrap;
     margin-bottom : 0;
     
@@ -33,7 +32,7 @@
             &.table-title {
                 font-family : $font-family-regular;
                 line-height : rem(24px);
-                
+
                 .text-placeholder {
                     font-size : 1.25rem;
                     color     : $light16;
@@ -45,15 +44,15 @@
                 height   : 2rem;
                 
                 .sort-dir {
-                    //top: 0;
+                    top: 0;
                     right    : auto;
                     position : relative;
                     bottom   : 0;
-                    
+
                     &:after {
                         content : ' ';
                     }
-                    
+
                     &.asc {
                         &:after {
                             content : '+';
@@ -65,12 +64,10 @@
     }
     
     tbody {
-        padding : .5rem 0;
-        display : table-cell;
         background-color: $light1;
         
         tr {
-            display: block;
+            //display: block;
             height : rem(24px);
             
             &:hover {
@@ -78,20 +75,13 @@
                 background : transparentize($brand_core, 0.9);
             }
             
-            &.selected, &:active, &:focus {
-                background : $light16;
-                
-                td {
-                    color : $light1;
-                    
-                    .icon-negative {
-                        color : $light1;
-                    }
-                }
+            &.spacer {
+                height           : .5rem;
+                background-color : white;
             }
             
             td {
-                display        : inline-block;
+                display        : table-cell;
                 vertical-align : middle;
                 padding        : rem(4px) 1rem rem(4px) 0;
                 font-family : $font-family-regular;
@@ -101,7 +91,7 @@
                 border      : none;
                 
                 &:first-of-type {
-                    padding-left : .25rem;
+                    padding-left : .5rem;
                 }
             }
         }

@@ -495,6 +495,7 @@
         "unknownName": "Unknown Name for System (Caused by cloud merge)",
         "yourSystem": "Your System"
     },
+    "systemAdministration": "System Administration",
     "systemStatuses": {
         "activated": "activated",
         "incompatible": "incompatible",
@@ -503,5 +504,6 @@
         "offline": "offline",
         "online": "online",
         "unavailable": "unavailable"
-    }
+    },
+    "users": "Users"
 }
