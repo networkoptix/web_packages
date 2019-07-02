@@ -18,8 +18,11 @@ then
         pushd cloud_portal
             for entry in $(ls -A $VMS_REPOSITORY/cloud_portal/)
             do
-                if [ "$entry" = "front_end" ]
-                then
+                if [ "$entry" = "robot_tests" ] ; then
+                    continue
+                fi
+
+                if [ "$entry" = "front_end" ] ; then
                     pushd $entry
                     for element in $(ls -A $VMS_REPOSITORY/cloud_portal/$entry/)
                     do
