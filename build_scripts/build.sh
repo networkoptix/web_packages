@@ -10,19 +10,17 @@ VMS_REPOSITORY="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../.."
 [[ "$VMS_REPOSITORY" =~ (.*)\/cloud_portal.* ]]; REPO=${BASH_REMATCH[1]}
 
 #If we are not using the repository we should update necessary files
-if [[ ! $PWD =~ $REPO ]]
-then
+if [[ ! $PWD =~ $REPO ]]; then
     echo "Updating Cloud Portal sources"
-    if [ -e "cloud_portal" ]
-    then
+    if [ -e "cloud_portal" ]; then
         pushd cloud_portal
             for entry in $(ls -A $VMS_REPOSITORY/cloud_portal/)
             do
-                if [ "$entry" = "robot_tests" ] ; then
+                if [ "$entry" == "robot_tests" ]; then
                     continue
                 fi
 
-                if [ "$entry" = "front_end" ] ; then
+                if [ "$entry" == "front_end" ] ; then
                     pushd $entry
                     for element in $(ls -A $VMS_REPOSITORY/cloud_portal/$entry/)
                     do
@@ -39,7 +37,10 @@ then
             done
         popd
     else
+        echo "Blindly Copying cloud_portal"
         cp -pr $VMS_REPOSITORY/cloud_portal cloud_portal
+        echo "Removing robot_tests"
+        rm -rf cloud_portal/robot_tests
     fi
 
     mkdir -p webadmin
