@@ -350,8 +350,8 @@ def fill_content(product,
     default_language_code = product.default_language.code
     languages_list = product.languages_list
 
-    # Email templates are loaded into the db during readstructure. When a email is sent, the celery worker retrieves
-    # the template from the database and fills the template with the correct datastructures.
+    # Email templates are skipped here because when a email is sent, the celery worker retrieves
+    # the template from the database and fills the template with the correct values before sending the email.
     changed_contexts = changed_contexts.exclude(name__startswith=EMAIL_TEMPLATES)
 
     thread_error = False
