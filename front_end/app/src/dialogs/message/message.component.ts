@@ -3,6 +3,7 @@ import { NgbModal, NgbActiveModal, NgbModalRef }                                
 import { EmailValidator, NgForm }                                                    from '@angular/forms';
 import { NxConfigService }                                                           from '../../services/nx-config';
 import { TranslateService }                                                          from '@ngx-translate/core';
+import { WINDOW }                                                                    from '../../services/window-provider';
 
 
 export interface MessageParams {
@@ -51,11 +52,13 @@ export class MessageModalContent {
                 @Inject('account') private account: any,
                 @Inject('process') private process: any,
                 @Inject('cloudApiService') private cloudApi: any,
+                @Inject(WINDOW) private window: Window,
                 ) {
         this.placeholder = '';
         this.topic = '';
         this.topicMessage = '';
-        this.url = window.location.href;
+        this.url = this.window.location.href;
+        console.log(this.url)
     }
 
     ngOnInit() {
