@@ -378,6 +378,7 @@ def download_package(request, product_id):
 @permission_required('cms.change_product')
 def get_product_ids_by_product_type(request):
     name = request.GET["name"]
+    customization = request.GET["customization"]
     product_type_type = ProductType.get_type_by_name(request.GET["type"])
     product_type = ProductType.objects.filter(name=name, type=product_type_type).first()
     if not product_type:
@@ -385,6 +386,8 @@ def get_product_ids_by_product_type(request):
 
     if UserGroupsToProductPermissions.check_permission(request.user, 'cms.force_update'):
         product_ids = product_type.product_set.values_list('id', flat=True)
+        if customization:
+            product_ids = product_ids.filter(customizations__name__in=[customization])
     else:
         product_ids = []
     return api_success(product_ids)
