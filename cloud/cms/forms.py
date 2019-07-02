@@ -245,39 +245,25 @@ class ProductForm(forms.ModelForm):
             )
             self.fields['customizations'].queryset = Customization.objects.filter(name__in=self.user.customizations)
 
-    def clean_customizations(self):
-        customizations = self.cleaned_data['customizations']
-        product_type = ProductType.objects.get(id=self.data['product_type'])
-        num_customizations = len(customizations)
-        if num_customizations > 0 and product_type and product_type.single_customization:
-            if num_customizations > 1:
-                raise forms.ValidationError("Too many customizations selected for product type.")
-
-            if customizations[0].name in product_type.get_customizations() and \
-                    not(self.instance.pk and customizations[0] in self.instance.customizations.all()):
-                raise forms.ValidationError(f"Customization is already used for a "
-                                            f"{ProductType.PRODUCT_TYPES[product_type.type]} product.")
-
-        return customizations
-
-    def clean_product_type(self):
-        product_type = self.cleaned_data['product_type']
-        if product_type.single_customization:
-            product_customizations = self.instance.customizations
-            if len(product_customizations.all()) > 1:
-                raise forms.ValidationError("Too many customizations selected for product type.")
-
-            if product_customizations.filter(name__in=product_type.get_customizations()).exists():
-                raise forms.ValidationError(f"Customizations are already in use for this product type. Please remove "
-                                            f"all customizations and try to save again.")
-
-        return product_type
-
     def clean(self):
         cleaned_data = super().clean()
+        customizations = cleaned_data.get('customizations')
+        product_type = cleaned_data.get('product_type')
 
-        if 'publish_all_customizations' in cleaned_data and cleaned_data['publish_all_customizations']:
+        if 'publish_all_customizations' in cleaned_data and cleaned_data['publish_all_customizations'] and \
+                not product_type.single_customization:
             cleaned_data['customizations'] = Customization.objects.all()
+        else:
+            num_customizations = len(customizations)
+
+            if product_type.single_customization:
+                if num_customizations > 1:
+                    raise forms.ValidationError(f"Too many customizations selected for "
+                                                f"{ProductType.PRODUCT_TYPES[product_type.type]}.")
+
+                if customizations.filter(name__in=product_type.get_customizations()).exists():
+                    raise forms.ValidationError(f"Customization is already used for a "
+                                                f"{ProductType.PRODUCT_TYPES[product_type.type]} product.")
 
         return cleaned_data
 
