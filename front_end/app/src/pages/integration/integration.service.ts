@@ -25,9 +25,11 @@ export class IntegrationService implements OnDestroy {
     constructor(private api: NxCloudApiService,
                 private configService: NxConfigService) {
 
+        this.config = this.configService.getConfig();
+
         this.getIntegrations()
             .subscribe(result => {
-                this.config = this.configService.getConfig();
+
                 result.data.forEach(plugin => {
                     plugin.versionDetails = {
                         version: (plugin.versionDetails) ? this.formatVersion(plugin.versionDetails.version) || '1.0' : '1.0'
