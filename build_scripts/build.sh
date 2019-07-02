@@ -38,9 +38,7 @@ if [[ ! $PWD =~ $REPO ]]; then
         popd
     else
         echo "Blindly Copying cloud_portal"
-        cp -pr $VMS_REPOSITORY/cloud_portal cloud_portal
-        echo "Removing robot_tests"
-        rm -rf cloud_portal/robot_tests
+        rsync -pr --exclude="robot_tests" $VMS_REPOSITORY/cloud_portal .
     fi
 
     mkdir -p webadmin
