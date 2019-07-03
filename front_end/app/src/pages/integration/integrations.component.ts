@@ -31,8 +31,6 @@ export class NxIntegrationsComponent implements OnInit {
     };
 
     private setupDefaults() {
-        this.CONFIG = this.config.getConfig();
-
         this.allElements = [];
         this.elements = [];
 
@@ -60,6 +58,8 @@ export class NxIntegrationsComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.CONFIG = this.config.getConfig();
+
         // Example URI
         // /integrations?search=node
         this.uri
