@@ -269,7 +269,7 @@ class ProductAdmin(CMSAdmin):
         return super().response_add(request, obj, post_url_continue)
 
     def product_settings(self, obj):
-        if obj.product_type.type == ProductType.PRODUCT_TYPES.integration:
+        if not obj.product_type or obj.product_type.type == ProductType.PRODUCT_TYPES.integration:
             return format_html('')
         return format_html('<a class="btn btn-sm" href="{}">Settings</a>',
                            reverse('product_settings', args=[obj.id]))
