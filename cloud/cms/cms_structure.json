@@ -981,6 +981,17 @@
             "meta": {
               "regex": "^https?:\\/\\/([\\da-z\\.-]+)\\.([a-z\\.]{2,6})([\\/\\w \\.-]*)*\\/?$"
             }
+          },
+          {
+            "name": "termsOfUseLink",
+            "label": "Terms of Use for the integration",
+            "value": "",
+            "description": "Link to integration's Terms of Use page.",
+            "type": "text",
+            "optional": false,
+            "meta": {
+              "regex": "^https?:\\/\\/([\\da-z\\.-]+)\\.([a-z\\.]{2,6})([\\/\\w \\.-]*)*\\/?$"
+            }
           }
         ]
       },
