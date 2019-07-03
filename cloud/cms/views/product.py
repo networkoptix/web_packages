@@ -11,7 +11,7 @@ from rest_framework.decorators import api_view
 import os
 import json
 from cloud import settings
-from api.helpers.exceptions import APIRequestException, APINotFoundException, ErrorCodes, api_success
+from api.helpers.exceptions import APIRequestException, APINotFoundException, ErrorCodes, api_success, require_params
 from api.helpers.permissions import make_customization_visible_to_user
 from cms.controllers import filldata, generate_structure, modify_db, structure
 from cms.forms import *
@@ -392,16 +392,7 @@ def download_package(request, product_id):
 @api_view(["GET"])
 @permission_required('cms.change_product')
 def get_product_ids_by_product_type(request):
-    error_data = {}
-    if "name" not in request.GET:
-        error_data["name"] = ['This field is required.']
-
-    if "product_type" not in request.GET:
-        error_data["product_type"] = ['This field is required.']
-
-    if len(error_data.keys()) > 0:
-        raise APIRequestException('Not enough parameters in request', ErrorCodes.wrong_parameters,
-                                  error_data=error_data)
+    require_params(request, ("name", "product_type"))
 
     name = request.GET["name"]
     customization = request.GET["customization"]
