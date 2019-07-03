@@ -7,7 +7,7 @@ import re
 from zipfile import ZipFile
 
 from ..controllers.generate_structure import templatify_json
-from ..models import Context, ContextTemplate, DataStructure, DataRecord, Product, ProductType, get_cloud_portal_product
+from ..models import Context, ContextTemplate, DataStructure, DataRecord, Product, ProductType
 
 import logging
 logger = logging.getLogger(__name__)
@@ -25,11 +25,11 @@ def find_or_add_product_type(product_type, name=""):
 
 def find_or_add_product_with_single_customization(name, customization, product_type_type, product_type_name):
     product_type = find_or_add_product_type(ProductType.get_type_by_name(product_type_type), product_type_name)
+    if not product_type.single_customization:
+        raise ValueError("Product type must be single customization for this function.")
 
-    if Product.objects.filter(customizations__in=[customization],
-                              product_type=product_type).exists():
-        product = get_cloud_portal_product()
-    else:
+    product = Product.objects.filter(customizations__in=[customization], product_type=product_type).first()
+    if not product:
         product = Product.objects.create(name=name, product_type=product_type)
 
     product.customizations.set([customization])
