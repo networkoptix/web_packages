@@ -508,6 +508,10 @@ class DataStructure(models.Model):
             data_type = DataStructure.get_type_by_name(data_type)
         return data_type in [DataStructure.DATA_TYPES.image, DataStructure.DATA_TYPES.file]
 
+    @property
+    def is_image(self):
+        return self.type in [DataStructure.DATA_TYPES.image, DataStructure.DATA_TYPES.external_image]
+
 
 # CMS settings. Release engineer can change that
 class UserGroupsToProductPermissions(models.Model):

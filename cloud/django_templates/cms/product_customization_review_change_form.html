@@ -90,7 +90,13 @@
                             </span>
 
                             {% if data_structure.type == DataStructureTypes.image or data_structure.type == DataStructureTypes.external_image  %}
-                                <div><img class="preview-image review-preview"
+                                <div><img class="
+                                    {% if 'background' in data_structure.meta_settings and data_structure.meta_settings.background != 'transparent' %}
+                                        {{ data_structure.meta_settings.background }}
+                                    {% else %}
+                                        preview-image
+                                    {% endif %}
+                                    review-preview"
                                           {% if data_structure.type == DataStructureTypes.image %}
                                             src="data:image/png;base64,{{ record }}"
                                           {% else %}

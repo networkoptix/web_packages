@@ -102,8 +102,16 @@ def find_structure(name, context, structure_type, product_type, meta=None,
             ("optional", optional),
             ("public", True)
         ])
+
+        if db_structure.is_image:
+            if not meta:
+                meta = {'background': 'transparent'}
+            elif 'background' not in meta:
+                meta['background'] = 'transparent'
+
         if meta:
             data_structure.update({"meta": meta})
+
         context["values"].append(data_structure)
 
     return data_structure
