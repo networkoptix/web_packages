@@ -18,6 +18,7 @@ from cloud.storage_backend import MediaStorage
 
 def get_cloud_portal_product(customization=settings.CUSTOMIZATION):
     return Product.objects.get(customizations__name__in=[customization],
+                               product_type__name="",
                                product_type__type=ProductType.PRODUCT_TYPES.cloud_portal)
 
 
@@ -45,15 +46,14 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
         force = check_update_cache(customization_name, data['version_id'])[0]
 
     if not data or force:
-        from cms.controllers.filldata import process_context_structure
+        from cms.controllers.filldata import process_global_contexts
         customization = Customization.objects.get(name=customization_name)
         custom_config = get_config(customization.name)
 
         footer_items = product.read_global_value('%FOOTER_ITEMS%')
         if footer_items:
-            for context in Context.objects.filter(is_global=True):
-                footer_items = process_context_structure(product, context, footer_items,
-                                                         None, product.version_id(), False, True)
+            global_contexts = Context.objects.filter(is_global=True, product_type=product.product_type)
+            footer_items = process_global_contexts(product, footer_items, product.version_id(), False, global_contexts, {})
 
         integration_store_enabled = product.read_global_value("%INTEGRATION_STORE_ENABLED%")
 

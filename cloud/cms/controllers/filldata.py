@@ -1,4 +1,5 @@
 from ..models import *
+from cms.controllers.special_structures import SpecialStructures
 import os
 import json
 import codecs
@@ -21,6 +22,8 @@ logger = logging.getLogger(__name__)
 EMAIL_TEMPLATES = 'templates/lang'
 SOURCE_DIR = 'static/_source/{{skin}}'
 TARGET_DIR = 'static/{{customization}}'
+
+SPECIAL_STRUCTURES = SpecialStructures()
 
 
 def make_dir(filename):
@@ -53,30 +56,58 @@ def global_contexts_to_dict(contexts, product):
     return data_structure_dict
 
 
+def process_global_contexts(product, content, version_id, preview, global_contexts, global_contexts_dict):
+    for global_context in global_contexts.all():
+        content = process_context_structure(product, global_context, content, None,
+                                            version_id, preview, False, global_contexts_dict)
+
+    for tag in SPECIAL_STRUCTURES.function_dict:
+        content = process_data_structure(tag, DataStructure.DATA_TYPES.text, content,
+                                         SPECIAL_STRUCTURES.calc(tag, product))
+
+    return content
+
+
+def replace_in(collection, key, value):
+    # Here we process json files
+
+    if type(collection) is dict:
+        elements = collection.items()
+    elif type(collection) is list:
+        elements = enumerate(collection)
+    else:
+        raise ValueError(f"Cannot iterate through {type(collection)}")
+
+    for index, item in elements:
+        item_type = type(item)
+        if item_type in [dict, list]:
+            replace_in(item, key, value)
+        elif item_type is str:
+            # special case if json value contains only the value - we don't treat it as a string,
+            # we replace the whole thing
+            if item == key:
+                collection[index] = value
+            elif key in item:
+                collection[index] = item.replace(key, str(value))
+
+
+def process_data_structure(tag, data_structure_type, content, content_value):
+    if type(content) in (dict, list):
+        # Process json file
+        replace_in(content, tag, content_value)
+    else:
+        if data_structure_type == DataStructure.DATA_TYPES.check_box:
+            content_value = str(content_value)
+
+        if tag in content:
+            if type(content_value) != str:
+                content_value = str(content_value)
+            content = content.replace(tag, content_value)
+    return content
+
+
 def process_context_structure(product, context, content, language,
                               version_id, preview, force_global_files, context_dict=None):
-
-    def replace_in(collection, key, value):
-        # Here we process json files
-
-        if type(collection) is dict:
-            elements = collection.items()
-        elif type(collection) is list:
-            elements = enumerate(collection)
-        else:
-            raise ValueError(f"Cannot iterate through {type(collection)}")
-
-        for index, item in elements:
-            item_type = type(item)
-            if item_type in [dict, list]:
-                replace_in(item, key, value)
-            elif item_type is str:
-                # special case if json value contains only the value - we don't treat it as a string,
-                # we replace the whole thing
-                if item == key:
-                    collection[index] = value
-                elif key in item:
-                    collection[index] = item.replace(key, str(value))
 
     for datastructure in context.datastructure_set.all():
         # noinspection PyBroadException
@@ -87,17 +118,7 @@ def process_context_structure(product, context, content, language,
                 content_value = datastructure.find_actual_value(product, language, version_id, draft=preview)
             # replace marker with value
             if not DataStructure.is_file_or_image(datastructure.type):
-                if type(content) in (dict, list):
-                    # Process json file
-                    replace_in(content, datastructure.name, content_value)
-                else:
-                    if datastructure.type == DataStructure.DATA_TYPES.check_box:
-                        content_value = str(content_value)
-
-                    if datastructure.name in content:
-                        if type(content_value) != str:
-                            content_value = str(content_value)
-                        content = content.replace(datastructure.name, content_value)
+                content = process_data_structure(datastructure.name, datastructure.type, content, content_value)
 
             elif content_value or datastructure.optional:
                 if context.is_global and not force_global_files:
@@ -151,9 +172,8 @@ def process_context(product, context, language, skin,
     content = process_context_structure(product, context, context_template_text,
                                         language, version_id, preview, context.is_global)
     if not context.is_global:  # if current context is global - do not apply other contexts
-        for global_context in global_contexts.all():
-            content = process_context_structure(product, global_context, content, None,
-                                                version_id, preview, False, global_contexts_dict)
+        content = process_global_contexts(product, content, version_id, preview,
+                                          global_contexts, global_contexts_dict)
 
     # If json -> dump it to string
     if type(content) == dict:
