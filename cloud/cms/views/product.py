@@ -360,9 +360,6 @@ def download_file(request, path):
 @require_http_methods(["GET"])
 @permission_required('cms.change_product')
 def download_package(request, product_id):
-    if not product_id:
-        raise APIRequestException('Not enough parameters in request', ErrorCodes.wrong_parameters)
-
     product = Product.objects.get(id=product_id)
 
     if not UserGroupsToProductPermissions.check_permission(request.user, product, 'cms.edit_content'):
@@ -373,14 +370,12 @@ def download_package(request, product_id):
 
     if not version_id:
         latest_review = ProductCustomizationReview.objects.filter(product=product)
-        if latest_review:
-            if not preview:
-                latest_review = latest_review.filter(state=ProductCustomizationReview.REVIEW_STATES.accepted)
-                if not latest_review:
-                    raise APINotFoundException("There are no published versions for this product")
-            version_id = latest_review.last().version.id
-        else:
-            raise APINotFoundException("There are no versions for this product")
+        if not preview:
+            latest_review = latest_review.filter(state=ProductCustomizationReview.REVIEW_STATES.accepted)
+        if not latest_review.exists():
+            raise APINotFoundException("There are no versions available for this product")
+
+        version_id = latest_review.last().version.id
 
     zipped_data = filldata.get_zip_package(product, preview, version_id)
     file_name = f"{product.name}.zip"
