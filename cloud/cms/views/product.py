@@ -11,7 +11,7 @@ from rest_framework.decorators import api_view
 import os
 import json
 from cloud import settings
-from api.helpers.exceptions import APIRequestException, APINotFoundException, api_success
+from api.helpers.exceptions import APIRequestException, APINotFoundException, ErrorCodes, api_success
 from api.helpers.permissions import make_customization_visible_to_user
 from cms.controllers import filldata, generate_structure, modify_db, structure
 from cms.forms import *
@@ -360,6 +360,9 @@ def download_file(request, path):
 @require_http_methods(["GET"])
 @permission_required('cms.change_product')
 def download_package(request, product_id):
+    if not product_id:
+        raise APIRequestException('Not enough parameters in request', ErrorCodes.wrong_parameters)
+
     product = Product.objects.get(id=product_id)
 
     if not UserGroupsToProductPermissions.check_permission(request.user, product, 'cms.edit_content'):
@@ -367,6 +370,18 @@ def download_package(request, product_id):
 
     version_id = request.GET['version_id'] if 'version_id' in request.GET else None
     preview = 'draft' in request.GET
+
+    if not version_id:
+        latest_review = ProductCustomizationReview.objects.filter(product=product)
+        if latest_review:
+            if not preview:
+                latest_review = latest_review.filter(state=ProductCustomizationReview.REVIEW_STATES.accepted)
+                if not latest_review:
+                    raise APINotFoundException("There are no published versions for this product")
+            version_id = latest_review.last().version.id
+        else:
+            raise APINotFoundException("There are no versions for this product")
+
     zipped_data = filldata.get_zip_package(product, preview, version_id)
     file_name = f"{product.name}.zip"
     if product.product_type.type == ProductType.PRODUCT_TYPES.vms:
