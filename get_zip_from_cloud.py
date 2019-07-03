@@ -46,9 +46,9 @@ def get_cmd_args():
     description = f"This script will download zip packages for products. " \
         f"How to use this script:\n" \
         f"- python get_zip_from_cloud.py noptix@networkoptix.com password123 {FETCH_BY_TYPE}" \
-        f"\t\t\t(Downloads all packages for products related to the default vms ProductType)\n" \
+        f"\t\t\t(Downloads packages for all VMS Customizations)\n" \
         f"- python get_zip_from_cloud.py noptix@network.com password123 {FETCH_BY_TYPE} --customization=default" \
-        f"\t\t\t(Downloads a product that uses th default vms ProductType and has the matching customization" \
+        f"\t\t\t(Downloads a package for selected VMS customization)" \
         f"- python get_zip_from_cloud.py noptix@networkoptix.com password123 {FETCH_BY_ID} 30 " \
         f"\t(Downloads a specific package base on the product_id)"
     parser = argparse.ArgumentParser("get_zip_from_cloud", description=description,

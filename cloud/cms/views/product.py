@@ -392,6 +392,17 @@ def download_package(request, product_id):
 @api_view(["GET"])
 @permission_required('cms.change_product')
 def get_product_ids_by_product_type(request):
+    error_data = {}
+    if "name" not in request.GET:
+        error_data["name"] = ['This field is required.']
+
+    if "product_type" not in request.GET:
+        error_data["product_type"] = ['This field is required.']
+
+    if len(error_data.keys()) > 0:
+        raise APIRequestException('Not enough parameters in request', ErrorCodes.wrong_parameters,
+                                  error_data=error_data)
+
     name = request.GET["name"]
     customization = request.GET["customization"]
     product_type_type = ProductType.get_type_by_name(request.GET["type"])
