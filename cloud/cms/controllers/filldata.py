@@ -219,6 +219,10 @@ def generate_languages_json(save_location, language_codes, preview):
 def init_skin(product, preview=False, workers=2):
     if not product.is_cloud_portal:
         raise APIForbiddenException("Can not run update static files on non cloud_portal products")
+
+    if not product.can_preview_on_portal:
+        raise APIForbiddenException("Can not update static files for cloud portal on other customizations.")
+
     # 1. read skin for this customization
     customization_name = product.customizations.first().name
     skin = product.read_global_value('%SKIN%')
