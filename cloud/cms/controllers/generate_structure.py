@@ -137,7 +137,7 @@ def templatify_json(json_data, prefix=''):
     tag_regex = re.compile('^%[^%]+%$')
     for key, value in json_data.items():
         if type(value) == dict:
-            new_values, new_template = templatify_json(value, key + '.')
+            new_values, new_template = templatify_json(value, f"{prefix}{key}.")
             values.update(new_values)
             json_data[key] = new_template
         else:
