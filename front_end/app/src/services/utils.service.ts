@@ -64,7 +64,7 @@ export class NxUtilsService {
          *   hash     -> match[7]
          *
          * */
-        const match = href.match(/^(https?:)\/\/(([^:\/?#]*)(?::([0-9]+))?)([\/]{0,1}[^?#]*)(\?[^#]*|)(#.*|)$/);
-        return match && match[5] + match[6] + match[7];
+        const match = href.match(/^(https?:)?\/\/(([^:\/?#]*)(?::([0-9]+))?)([\/]{0,1}[^?#]*)(\?[^#]*|)(#.*|)$/);
+        return match && match[5] + match[6] + match[7] || '/';
     }
 }
