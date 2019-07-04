@@ -364,6 +364,56 @@
         ]
       },
       {
+        "name": "End user license agreement(VMS) page",
+        "label": "End user license agreement(VMS) page",
+        "file_path": "static/lang_{{language}}/views/static/eula-vms.html",
+        "url": "/content/eula-vms",
+        "translatable": true,
+        "values": [
+          {
+            "label": "End user license agreement(VMS) Title",
+            "name": "%TITLE%",
+            "value": "End user license agreement(VMS)",
+            "description": "Title for the End user license agreement(VMS) page",
+            "type": "text",
+            "advanced": true
+          },
+          {
+            "label": "End user license agreement(VMS) Page Content",
+            "name": "%CONTENT%",
+            "value": "",
+            "description": "Content for End user license agreement(VMS) page",
+            "type": "html",
+            "advanced": true
+          }
+        ]
+      },
+      {
+        "name": "Developer license agreement page",
+        "label": "Developer license agreement page",
+        "file_path": "static/lang_{{language}}/views/static/eula-developers.html",
+        "url": "/content/eula-developers",
+        "translatable": true,
+        "values": [
+          {
+            "label": "Developer license agreement Title",
+            "name": "%TITLE%",
+            "value": "Developer license agreement",
+            "description": "Title for the Developer license agreement page",
+            "type": "text",
+            "advanced": true
+          },
+          {
+            "label": "Developer license agreement Page Content",
+            "name": "%CONTENT%",
+            "value": "",
+            "description": "Content for Developer license agreement page",
+            "type": "html",
+            "advanced": true
+          }
+        ]
+      },
+      {
         "name": "Open Source Libraries Disclosure Page",
         "file_path": "static/lang_{{language}}/views/static/libraries.html",
         "url": "/content/libraries",
@@ -985,6 +1035,17 @@
           {
             "name": "termsOfUseLink",
             "label": "Terms of Use for the integration",
+            "value": "",
+            "description": "Link to integration's Terms of Use page.",
+            "type": "text",
+            "optional": false,
+            "meta": {
+              "regex": "^https?:\\/\\/([\\da-z\\.-]+)\\.([a-z\\.]{2,6})([\\/\\w \\.-]*)*\\/?$"
+            }
+          },
+          {
+            "name": "eulaVMS",
+            "label": "End user license agreement for the software",
             "value": "",
             "description": "Link to integration's Terms of Use page.",
             "type": "text",
