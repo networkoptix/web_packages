@@ -53,6 +53,10 @@ def global_contexts_to_dict(contexts, product):
     for context in contexts:
         for data_structure in context.datastructure_set.all():
             data_structure_dict[data_structure.name] = product.read_global_value(data_structure.name)
+
+    for tag in SPECIAL_STRUCTURES.function_dict:
+        data_structure_dict[tag] = SPECIAL_STRUCTURES.calc(tag, product)
+
     return data_structure_dict
 
 
@@ -62,8 +66,7 @@ def process_global_contexts(product, content, version_id, preview, global_contex
                                             version_id, preview, False, global_contexts_dict)
 
     for tag in SPECIAL_STRUCTURES.function_dict:
-        content = process_data_structure(tag, DataStructure.DATA_TYPES.text, content,
-                                         SPECIAL_STRUCTURES.calc(tag, product))
+        content = process_data_structure(content, tag, DataStructure.DATA_TYPES.text, global_contexts_dict[tag])
 
     return content
 
@@ -91,7 +94,7 @@ def replace_in(collection, key, value):
                 collection[index] = item.replace(key, str(value))
 
 
-def process_data_structure(tag, data_structure_type, content, content_value):
+def process_data_structure(content, tag, data_structure_type, content_value):
     if type(content) in (dict, list):
         # Process json file
         replace_in(content, tag, content_value)
@@ -118,7 +121,7 @@ def process_context_structure(product, context, content, language,
                 content_value = datastructure.find_actual_value(product, language, version_id, draft=preview)
             # replace marker with value
             if not DataStructure.is_file_or_image(datastructure.type):
-                content = process_data_structure(datastructure.name, datastructure.type, content, content_value)
+                content = process_data_structure(content, datastructure.name, datastructure.type, content_value)
 
             elif content_value or datastructure.optional:
                 if context.is_global and not force_global_files:
