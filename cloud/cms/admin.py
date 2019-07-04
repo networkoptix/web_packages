@@ -2,6 +2,7 @@ from django.contrib import admin, messages
 from django.contrib.admin import SimpleListFilter
 from django.contrib.auth.models import Permission
 from django.conf.urls import url
+from django.core.exceptions import PermissionDenied
 from django.db.models import Q, Case, When, Value, BooleanField
 from django.shortcuts import render, redirect
 from django.urls import reverse
@@ -50,6 +51,29 @@ def clone_product(request, product_id):
             UserGroupsToProductPermissions.objects.create(group=relation.group, product=product)
 
     return product.id
+
+
+class ContextFilter(SimpleListFilter):
+    title = 'Show Hidden Pages'
+    parameter_name = 'hidden'
+    default_state = 'false'
+
+    def lookups(self, request, model_admin):
+        return (
+            ('true', 'Yes'),
+            ('false', 'No')
+        )
+
+    def choices(self, cl):
+        for lookup, title in self.lookup_choices:
+            yield {
+                'selected': self.value() == lookup if self.value() else lookup == self.default_state,
+                'query_string': cl.get_query_string({self.parameter_name: lookup}, []),
+                'display': title,
+            }
+
+    def queryset(self, request, queryset):
+        return queryset
 
 
 class CustomizationFilter(SimpleListFilter):
@@ -237,6 +261,11 @@ class ProductAdmin(CMSAdmin):
         return queryset
 
     def get_list_filter(self, request):
+        if request.resolver_match.view_name == 'admin:pages':
+            if request.user.is_superuser:
+                return (ContextFilter,)
+            else:
+                return tuple()
         list_display = self.get_list_display(request)
         if 'customizations_list' not in list_display:
             list_filter = list(self.list_filter)
@@ -281,14 +310,21 @@ class ProductAdmin(CMSAdmin):
         context = {
             'title': 'Edit a page',
             'app_label': self.model._meta.app_label,
-            'opts': self.model._meta
+            'opts': self.model._meta,
+            'cl': self.get_changelist_instance(request),
+            'product': self.get_object(request, product_id, None)
         }
 
+        if not context['product']:
+            raise PermissionDenied()
+
         if product_id:
-            context['product'] = Product.objects.get(id=product_id)
             qs = context['product'].product_type.context_set.all()
-            if not request.user.is_superuser:
-                qs = qs.filter(hidden=False)  # only superuser sees hidden contexts
+            if request.user.is_superuser and request.GET.get('hidden') == 'true':
+                qs = qs.filter(hidden=True)
+            else:
+                qs = qs.filter(hidden=False)
+
             context['contexts'] = qs
 
         return render(request, 'cms/page_list_view.html', context)
