@@ -372,10 +372,12 @@ def download_package(request, product_id):
         latest_review = ProductCustomizationReview.objects.filter(product=product)
         if not preview:
             latest_review = latest_review.filter(state=ProductCustomizationReview.REVIEW_STATES.accepted)
-        if not latest_review.exists():
+
+        latest_review = latest_review.last()
+        if not latest_review:
             raise APINotFoundException("There are no versions available for this product")
 
-        version_id = latest_review.last().version.id
+        version_id = latest_review.version.id
 
     zipped_data = filldata.get_zip_package(product, preview, version_id)
     file_name = f"{product.name}.zip"
