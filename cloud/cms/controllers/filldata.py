@@ -66,7 +66,7 @@ def process_global_contexts(product, content, version_id, preview, global_contex
                                             version_id, preview, False, global_contexts_dict)
 
     for tag in SPECIAL_STRUCTURES.function_dict:
-        if tag in global_contexts_dict:
+        if global_contexts_dict and tag in global_contexts_dict:
             tag_value = global_contexts_dict[tag]
         else:
             tag_value = SPECIAL_STRUCTURES.calc(tag, product)
