@@ -238,6 +238,7 @@ class ProductAdmin(CMSAdmin):
                 fields.remove('customizations')
         else:
             fields.remove('preview_status')
+            fields.append(fields.pop(fields.index('customizations')))
         return fields
 
     def get_readonly_fields(self, request, obj=None):
