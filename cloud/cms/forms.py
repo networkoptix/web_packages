@@ -14,26 +14,27 @@ BYTES_TO_MEGABYTES = 1048576.0
 
 
 def convert_meta_to_description(meta):
-    meta_to_plain = {"char_limit": "Character limit: %s",
-                     "format": "Format:  %s",
-                     "height": "Height: %spx",
-                     "height_le": "Height: not greater than %spx",
-                     "height_ge": "Height: not less than %spx",
-                     "width": "Width: %spx",
-                     "width_le": "Width: not greater than %spx",
-                     "width_ge": "Width: not less than %spx",
-                     "size": "Size limit: %s MB",
-                     }
+    meta_to_plain = {
+        "char_limit": "Character limit: %s",
+        "format": "Format:  %s",
+        "width": "Width: %spx",
+        "width_le": "Width: not greater than %spx",
+        "width_ge": "Width: not less than %spx",
+        "height": "Height: %spx",
+        "height_le": "Height: not greater than %spx",
+        "height_ge": "Height: not less than %spx",
+        "size": "Size limit: %s MB",
+    }
     converted_msg = ""
     if 'size' in meta:
         meta['size'] = round(meta['size'] / BYTES_TO_MEGABYTES, 2)
-    for k in meta:
-        if k in meta_to_plain:
-            value = meta[k]
+    for meta_item in meta_to_plain:
+        if meta_item in meta:
+            value = meta[meta_item]
 
             if isinstance(value, list):
                 value = ", ".join(value)
-            converted_msg += "<br>" + meta_to_plain[k] % value
+            converted_msg += "<br>" + meta_to_plain[meta_item] % value
 
     return converted_msg
 
