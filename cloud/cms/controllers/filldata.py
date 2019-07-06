@@ -383,6 +383,7 @@ def fill_content(product,
 
     # Email templates are skipped here because when a email is sent, the celery worker retrieves
     # the template from the database and fills the template with the correct values before sending the email.
+    # If we pass in a changed context its not a queryset object so we cannot use filter or exclude it.
     if type(changed_contexts) is not list:
         changed_contexts = changed_contexts.exclude(name__startswith=EMAIL_TEMPLATES)
 
