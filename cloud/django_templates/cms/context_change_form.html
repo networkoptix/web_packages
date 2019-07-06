@@ -131,6 +131,8 @@
 </form>
 
 <script>
+    var bytesToMb = "{{ BYTES_TO_MB }}";
+
     {% if preview_link %}
         window.open("{{ preview_link }}");
     {% endif %}
@@ -198,6 +200,24 @@
         langSelector.addEventListener('change', languageChanged, false);
     }
     $('[data-toggle="tooltip"]').tooltip();
+
+    var files = $('[type=file]');
+    for(var i=0; i < files.length; ++i) {
+        var file = files[i];
+        file.addEventListener('change', function(e){
+            var upload_files = e.target.files;
+            if (upload_files.length) {
+                if (upload_files[0].size > file.size) {
+                    var errorList = e.target.parentElement.parentElement.parentElement.children[0];
+                    var errorMsg = "<li>The file's size it too large. Its size was ";
+                    errorMsg += (upload_files[0].size/bytesToMb).toFixed(2).toString();
+                    errorMsg += "MB but must be less than ";
+                    errorMsg += (file.size/bytesToMb).toFixed(2).toString() + "MB</li>";
+                    $(errorList).append(errorMsg);
+                }
+            }
+        });
+    }
 
     tinymce.init({
         selector: '.tinymce',

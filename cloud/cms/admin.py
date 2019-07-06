@@ -345,6 +345,7 @@ class ProductAdmin(CMSAdmin):
         context['language_code'] = Customization.objects.get(name=settings.CUSTOMIZATION).default_language
         context['EXTERNAL_IMAGE'] = DataStructure.DATA_TYPES[
             DataStructure.DATA_TYPES.external_image]
+        context['BYTES_TO_MB'] = BYTES_TO_MEGABYTES
 
         if 'admin_language' in request.session:
             context['language_code'] = request.session['admin_language']

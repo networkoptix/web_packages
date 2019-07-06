@@ -131,6 +131,9 @@ class CustomContextForm(forms.Form):
                                                                     initial=record_value,
                                                                     required=False,
                                                                     disabled=disabled)
+                if data_structure.meta_settings and 'size' in data_structure.meta_settings:
+                    file_size = data_structure.meta_settings['size'] * BYTES_TO_MEGABYTES
+                    self.fields[data_structure.name].widget.attrs['size'] = file_size
                 continue
 
             elif data_structure.type in [DataStructure.DATA_TYPES.file,
@@ -143,6 +146,10 @@ class CustomContextForm(forms.Form):
                                                                    initial=record_value,
                                                                    required=False,
                                                                    disabled=disabled)
+
+                if data_structure.meta_settings and 'size' in data_structure.meta_settings:
+                    file_size = data_structure.meta_settings['size'] * BYTES_TO_MEGABYTES
+                    self.fields[data_structure.name].widget.attrs['size'] = file_size
                 continue
 
             elif data_structure.type == DataStructure.DATA_TYPES.select:
