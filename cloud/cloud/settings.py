@@ -156,20 +156,22 @@ WSGI_APPLICATION = 'cloud.wsgi.application'
 
 cloud_db = conf['cloud_database']
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'HOST': cloud_db['host'],
-        'PORT': cloud_db['port'],
-        'USER': cloud_db['username'],
-        'PASSWORD': cloud_db['password'],
-        'NAME': cloud_db['database'],
-        'OPTIONS': {
-            'sql_mode': 'TRADITIONAL',
-            'charset': 'utf8mb4',
-            'init_command': 'SET \
-                character_set_server=utf8mb4,\
-                collation_server = utf8mb4_unicode_ci'
+if cloud_db and cloud_db['host'] != '$DB_HOST':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'HOST': cloud_db['host'],
+            'PORT': cloud_db['port'],
+            'USER': cloud_db['username'],
+            'PASSWORD': cloud_db['password'],
+            'NAME': cloud_db['database'],
+            'OPTIONS': {
+                'sql_mode': 'TRADITIONAL',
+                'charset': 'utf8mb4',
+                'init_command': 'SET \
+                    character_set_server=utf8mb4,\
+                    collation_server = utf8mb4_unicode_ci'
+            }
         }
     }
 }
