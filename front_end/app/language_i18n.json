@@ -97,7 +97,6 @@
     "Tags": "Tags",
     "Take the name and settings from": "Take the name and settings from",
     "Terms of Use": "Terms of Use",
-    "Tested on version(s)": "Tested on version(s)",
     "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.": "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.",
     "There will be more than": "There will be more than",
     "To": "To",
@@ -310,5 +309,6 @@
         "vendors": "manufacturers"
     },
     "servers in the merged System.": "servers in the merged System.",
-    "support": "support"
+    "support": "support",
+    "testedVersionsLabel": "Tested on {{vmsName}} version(s):"
 }
