@@ -61,20 +61,25 @@ export class IntegrationService implements OnDestroy {
 
     private formatRequirementsAndCompatibility (plugin) {
         const section = plugin.requirementsAndCompatibility;
+
         if (section) {
+            section.testedOn = '';
+
             if (section.platforms) {
                 section.platforms.icons = this.setPlatformIcons(plugin);
             }
 
+            section.testedVersionsString = section.testedBuild;
+
             if (section.testedVersions) {
-                section.testedOn = '';
                 section.testedVersions.map((version) => {
                     section.testedOn += (section.testedOn.length) ? ',&nbsp;&nbsp;' : '';
-                    section.testedOn += this.formatVersion(version);
+                    section.testedOn += version; // this.formatVersion(version);
                 });
             }
 
-            section.testedBuild = this.formatVersion(section.testedBuild);
+            section.testedVersionsString = (section.testedVersionsString.length) ? section.testedVersionsString + ',&nbsp;&nbsp;' + section.testedOn : section.testedOn;
+            section.testedVersionsString = this.formatVersion(section.testedVersionsString);
         }
     }
 

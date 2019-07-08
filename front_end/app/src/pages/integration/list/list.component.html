@@ -20,13 +20,17 @@
                     <div class="card--header-info">
 
                         <div class="version"
-                             *ngIf="plugin.requirementsAndCompatibility && plugin.requirementsAndCompatibility.testedBuild"
-                             [innerHTML]="plugin.requirementsAndCompatibility.testedOn">
+                             *ngIf="CONFIG && plugin.requirementsAndCompatibility && plugin.requirementsAndCompatibility.testedVersionsString">{{CONFIG.vmsName}}:
                         </div>
 
-                        <div class="version"
-                             *ngIf="plugin.requirementsAndCompatibility && plugin.requirementsAndCompatibility.testedBuild"
-                             [innerHTML]="plugin.requirementsAndCompatibility.testedBuild">
+<!--                        <div class="version"-->
+<!--                             *ngIf="plugin.requirementsAndCompatibility && plugin.requirementsAndCompatibility.testedBuild"-->
+<!--                             [innerHTML]="plugin.requirementsAndCompatibility.testedOn">-->
+<!--                        </div>-->
+
+                        <div class="version ellipsis" style="width: 95px;"
+                             *ngIf="plugin.requirementsAndCompatibility && plugin.requirementsAndCompatibility.testedVersionsString"
+                             [innerHTML]="plugin.requirementsAndCompatibility.testedVersionsString">
                         </div>
 
                         <div class="platforms" *ngIf="plugin.requirementsAndCompatibility">

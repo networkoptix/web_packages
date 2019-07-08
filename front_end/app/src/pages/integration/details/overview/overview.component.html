@@ -62,10 +62,9 @@
 
                     <div class="section">
                         <div>
-                            <label class="group-label" translate>Tested on version(s)</label>
+                            <label class="group-label" translate>Tested on {{CONFIG.vmsName}} version(s):</label>
                         </div>
-                        <div [innerHTML]="plugin.requirementsAndCompatibility.testedOn"></div>
-                        <div [innerHTML]="plugin.requirementsAndCompatibility.testedBuild"></div>
+                        <div [innerHTML]="plugin.requirementsAndCompatibility.testedVersionsString"></div>
                     </div>
 
                     <div class="section"
