@@ -702,7 +702,7 @@ class ExternalFile(models.Model):
 
 class DataRecord(models.Model):
     data_structure = models.ForeignKey(DataStructure, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, default=None, null=False, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, default=None, null=True, on_delete=models.CASCADE)
     language = models.ForeignKey(Language, null=True, blank=True, on_delete=models.CASCADE)
     # TODO: Remove this after release of 18.4 - Task: CLOUD-2299
     customization = models.ForeignKey(Customization, default=None, blank=True, null=True, on_delete=models.SET_NULL)
