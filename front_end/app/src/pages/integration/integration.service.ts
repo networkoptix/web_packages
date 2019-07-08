@@ -70,16 +70,24 @@ export class IntegrationService implements OnDestroy {
             }
 
             section.testedVersionsString = section.testedBuild;
+            section.testedVersionsStringFull = section.testedBuild;
 
             if (section.testedVersions) {
                 section.testedVersions.map((version) => {
                     section.testedOn += (section.testedOn.length) ? ',&nbsp;&nbsp;' : '';
-                    section.testedOn += version; // this.formatVersion(version);
+                    section.testedOn += version;
                 });
             }
 
-            section.testedVersionsString = (section.testedVersionsString.length) ? section.testedVersionsString + ',&nbsp;&nbsp;' + section.testedOn : section.testedOn;
+            if (section.testedVersionsString.length) {
+                section.testedVersionsString += (section.testedOn) ? ',&nbsp;&nbsp;...' : '';
+                section.testedVersionsStringFull += (section.testedVersionsStringFull) ? ',&nbsp;&nbsp;' + section.testedOn : section.testedOn;
+            } else {
+                section.testedVersionsString = section.testedOn;
+            }
+
             section.testedVersionsString = this.formatVersion(section.testedVersionsString);
+            section.testedVersionsStringFull = this.formatVersion(section.testedVersionsStringFull);
         }
     }
 
