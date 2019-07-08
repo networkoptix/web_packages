@@ -174,7 +174,6 @@ if cloud_db and cloud_db['host'] != '$DB_HOST':
             }
         }
     }
-}
 
 if not LOCAL_ENVIRONMENT:
     CACHES = {
