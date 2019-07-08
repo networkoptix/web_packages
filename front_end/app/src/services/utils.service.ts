@@ -65,6 +65,11 @@ export class NxUtilsService {
          *
          * */
         const match = href.match(/^(https?:)?\/\/(([^:\/?#]*)(?::([0-9]+))?)([\/]{0,1}[^?#]*)(\?[^#]*|)(#.*|)$/);
-        return match && match[5] + match[6] + match[7] || '/';
+        if (match) {
+            return match[5] + match[6] + match[7];
+        } else {
+            // href not recognized as valid url
+            return href;
+        }
     }
 }
