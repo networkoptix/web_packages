@@ -573,12 +573,10 @@ class ProductCustomizationReviewAdmin(CMSAdmin):
     def template_allowed(self, request, customization_review):
         customization_name = customization_review.customization.name
         matching_portal = customization_name == settings.CUSTOMIZATION
-        is_cloud_portal = customization_review.version.product.is_cloud_portal
+        product = customization_review.version.product
+        is_cloud_portal = product.is_cloud_portal
         state = customization_review.state
 
-        can_access_customization = UserGroupsToProductPermissions.check_customization_access(
-            request.user, customization_name
-        )
         can_force_update = UserGroupsToProductPermissions.check_customization_permission(
             request.user, customization_name, 'cms.force_update'
         )
@@ -588,6 +586,10 @@ class ProductCustomizationReviewAdmin(CMSAdmin):
         developer_access_customization = UserGroupsToProductPermissions.check_customization_permission(
             customization_review.version.created_by, customization_name, 'cms.access_customization')
         can_delete = self.has_delete_permission(request, customization_review)
+
+        can_publish_or_accept &= UserGroupsToProductType.check_product_type(
+            request.user, product.product_type, 'cms.publish_version'
+        )
 
         allowed = dict()
         allowed['force_update'] = \
@@ -601,7 +603,7 @@ class ProductCustomizationReviewAdmin(CMSAdmin):
             and can_publish_or_accept
         allowed['question'] = \
             (state == ProductCustomizationReview.REVIEW_STATES.pending or
-             state == ProductCustomizationReview.REVIEW_STATES.rejected) and can_access_customization
+             state == ProductCustomizationReview.REVIEW_STATES.rejected)
         allowed['delete'] = can_delete
         allowed['submit_row'] = True in allowed.values()
 
@@ -619,6 +621,14 @@ class UserGroupsToProductPermissionsAdmin(admin.ModelAdmin):
 
 
 admin.site.register(UserGroupsToProductPermissions, UserGroupsToProductPermissionsAdmin)
+
+
+class UserGroupsToProductTypeAdmin(admin.ModelAdmin):
+    list_display = ('id', 'group', 'product_type',)
+    list_filter = ('product_type', )
+
+
+admin.site.register(UserGroupsToProductType, UserGroupsToProductTypeAdmin)
 
 
 class ExternalFileAdmin(CMSAdmin):
