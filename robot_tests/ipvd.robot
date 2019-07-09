@@ -54,7 +54,7 @@ Text search correctly finds manufacturers
 #Export all to CSV works
 
 IPVD Request Form Basic Validations
-    [tags]    C48969
+    [tags]    C48969    IPVD
     Go To IPVD page
     Wait Until Element Is Visible    ${SUBMIT A REQUEST}
     Click Element    ${SUBMIT A REQUEST}
@@ -66,14 +66,13 @@ IPVD Request Form Basic Validations
     Validate Input Field State    ${IPVD FEEDBACK YOUR NAME}/../..    False
     Validate Input Field State    ${IPVD FEEDBACK EMAIL}/../..    False
     Validate Input Field State    ${IPVD FEEDBACK MESSAGE}/../..    False
-    Validate Input Field State    ${IPVD FEEDBACK AGREE}/../..    False
     Click Button    ${IPVD FEEDBACK CANCEL BUTTON}
     Click Element    ${SUBMIT A REQUEST}
     Wait Until Element Is Visible    ${IPVD FEEDBACK}
     Click Button    ${IPVD FEEDBACK CLOSE BUTTON}
 
 IPVD Feedback Form Basic Validations
-    [tags]    C54182
+    [tags]    C54182    IPVD
     #IPVD page    Login=True
     #Wait Until Element Is Not Visible    ${LOG IN MODAL}
     Open IPVD page and Log In
@@ -89,7 +88,6 @@ IPVD Feedback Form Basic Validations
     Validate Input Field State    ${IPVD FEEDBACK YOUR NAME}/../..    False
     Validate Input Field State    ${IPVD FEEDBACK EMAIL}/../..    False
     Validate Input Field State    ${IPVD FEEDBACK MESSAGE}/../..    False
-    Validate Input Field State    ${IPVD FEEDBACK AGREE}/../..    False
     Click Button    ${IPVD FEEDBACK CANCEL BUTTON}
     #TODO: Verify Table of devices and camera info panel did not change
     Click Element    ${SUBMIT A REQUEST}
