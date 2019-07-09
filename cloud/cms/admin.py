@@ -321,9 +321,7 @@ class ProductAdmin(CMSAdmin):
 
         if product_id:
             qs = context['product'].product_type.context_set.all()
-            if request.user.is_superuser and request.GET.get('hidden') == 'true':
-                qs = qs.filter(hidden=True)
-            else:
+            if not request.user.is_superuser or request.GET.get('hidden') != 'true':
                 qs = qs.filter(hidden=False)
 
             context['contexts'] = qs
