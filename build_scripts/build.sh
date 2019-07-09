@@ -60,11 +60,6 @@ echo "pip install requirements"
 . ./env/bin/activate
 pip install -r build_scripts/requirements.txt
 
-#echo "Checking if all required migrations are present"
-#if ! python cloud/manage.py makemigrations --check --dry-run; then
-#    echo "Error: Missing the migrations above"
-#    exit 1
-#fi
 
 pushd front_end
     echo "npm install cloud portal"

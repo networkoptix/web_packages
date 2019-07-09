@@ -9,10 +9,12 @@ from dal import autocomplete
 import base64
 from api.account_backend import AccountManager
 from api.models import Account
-from cms.models import Customization, Product, UserGroupsToProductPermissions
+from cms.models import Customization, Product, ProductType, UserGroupsToProductPermissions, UserGroupsToProductType
 from notifications import notifications_api
 
 User = get_user_model()
+product_types_help_text = "Allows this group to review the selected product_types. This field currently only affects " \
+                          "a users ability to review assets."
 
 
 class AccountAdminForm(forms.ModelForm):
@@ -47,7 +49,15 @@ class GroupAdminForm(forms.ModelForm):
     products = forms.ModelMultipleChoiceField(
         queryset=Product.objects.all(),
         required=False,
+        help_text="Binds the selected permissions from above to the selected products.",
         widget=FilteredSelectMultiple('products', False)
+    )
+
+    product_types = forms.ModelMultipleChoiceField(
+        queryset=ProductType.objects.all(),
+        required=False,
+        help_text=product_types_help_text,
+        widget=FilteredSelectMultiple('product_types', False)
     )
 
     def __init__(self, *args, **kwargs):
@@ -59,19 +69,32 @@ class GroupAdminForm(forms.ModelForm):
             self.fields['users'].initial = self.instance.user_set.all()
             self.fields['products'].initial = UserGroupsToProductPermissions.objects.filter(group=self.instance)\
                 .values_list('product', flat=True).distinct()
+            self.fields['product_types'].initial = UserGroupsToProductType.objects.filter(group=self.instance)\
+                .values_list('product_type', flat=True)
 
     def save_m2m(self):
         # Add the users to the Group.
         self.instance.user_set.set(self.cleaned_data['users'])
 
         for product in self.cleaned_data['products']:
-            if not UserGroupsToProductPermissions.objects.filter(group=self.instance, product=product).exists():
-                UserGroupsToProductPermissions(group=self.instance, product=product).save()
+            perm_group = UserGroupsToProductPermissions.objects.filter(group=self.instance, product=product).first()
+            if not perm_group:
+                UserGroupsToProductPermissions.objects.create(group=self.instance, product=product)
 
         remove_permissions = UserGroupsToProductPermissions.objects.filter(group=self.instance).\
             exclude(product__in=self.cleaned_data['products'])
         for product_group in remove_permissions:
             product_group.delete()
+
+        for product_type in self.cleaned_data['product_types']:
+            perm_group = UserGroupsToProductType.objects.filter(group=self.instance, product_type=product_type).first()
+            if not perm_group:
+                UserGroupsToProductType.objects.create(group=self.instance, product_type=product_type)
+
+        remove_product_types = UserGroupsToProductType.objects.filter(group=self.instance).\
+            exclude(product_type__in=self.cleaned_data['product_types'])
+        for product_type_group in remove_product_types:
+            product_type_group.delete()
 
     def save(self, *args, **kwargs):
         # Default save

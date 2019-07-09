@@ -528,10 +528,7 @@ class UserGroupsToProductPermissions(models.Model):
         groups = UserGroupsToProductPermissions.objects.filter(product=product,
                                                                group_id__in=user.groups.values_list('id', flat=True))
         if permission:
-            codename = permission
-            if permission.find('.') > -1:
-                # need to remove app_label to get codename
-                codename = permission[permission.find('.')+1:]
+            codename = UserGroupsToProductPermissions.convert_permission_to_codename(permission)
             groups = groups.filter(group__permissions__codename=codename)
         return groups.exists()
 
@@ -550,9 +547,33 @@ class UserGroupsToProductPermissions(models.Model):
         return UserGroupsToProductPermissions.\
             check_customization_permission(user, customization, 'cms.access_customization')
 
+    @staticmethod
+    def convert_permission_to_codename(permission):
+        if permission.find('.') > -1:
+            # need to remove app_label to get codename
+            permission = permission[permission.find('.') + 1:]
+        return permission
+
+
+class UserGroupsToProductType(models.Model):
+    group = models.ForeignKey(Group, on_delete=models.CASCADE)
+    product_type = models.ForeignKey(ProductType, default=None, null=True, on_delete=models.CASCADE)
+
+    @staticmethod
+    def check_product_type(user, product_type, permission):
+        if user.is_superuser:
+            return True
+
+        codename = UserGroupsToProductPermissions.convert_permission_to_codename(permission)
+        product_type_groups = UserGroupsToProductType.objects.\
+            filter(group_id__in=user.groups.values_list('id', flat=True),
+                   group__permissions__codename=codename,
+                   product_type=product_type).values_list('group__id', flat=True)
+
+        return UserGroupsToProductPermissions.objects.filter(group__id__in=product_type_groups).exists()
+
 
 # CMS data. Partners can change that
-
 class ContentVersion(models.Model):
 
     class Meta:
