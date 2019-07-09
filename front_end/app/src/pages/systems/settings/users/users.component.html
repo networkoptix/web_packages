@@ -2,9 +2,11 @@
 
 <div class="container auth-visible" >
     <div class="col-12 col-lg-9">
-        <div class="nx-table-wrapper" id="nx-table">
-            <div class="table-wrapper">
-                <table class="table table-hover nx-table">
+<!--        <div class="nx-table-wrapper" id="nx-table">-->
+<!--            <div class="table-wrapper">-->
+<!--                <table class="table table-hover nx-table">-->
+            <div class="table-responsive">
+                <table class="table table-hover" ng-if="system.users.length">
                     <thead>
                         <tr>
                             <th>Name</th>
@@ -26,7 +28,7 @@
                             </td>
                             <td class="button-cell">
                                 <a href=''
-                                   class="hover-visible image-link"
+                                   class="image-link"
                                    *ngIf="system.isAvailable && user.canBeEdited && !system.currentlyMerging"
                                    [ngClass]="{'disabled': locked[user.email]}"
                                    title="Edit permissions"
@@ -37,7 +39,7 @@
                             </td>
                             <td class="button-cell">
                                 <a href=''
-                                   class="hover-visible image-link"
+                                   class="image-link"
                                    *ngIf="system.isAvailable && user.canBeDeleted && !system.currentlyMerging"
                                    [ngClass]="{ 'disabled': locked[user.email]}"
                                    title="Delete"
@@ -51,7 +53,7 @@
                     </tbody>
                 </table>
             </div>
-        </div>
+<!--        </div>-->
 
         <nx-block class="d-block mt-3">
             <nx-section>

@@ -101,6 +101,10 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.route.params.subscribe(params => {
             if (params.systemId) {
                 this.systemId = params.systemId;
+                this.content.base = '/systems/' + this.systemId;
+                this.content = { ...this.content }; // trigger onChange
+
+                this.getSystemInfo();
             }
         });
 
@@ -128,34 +132,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 this.content = { ...this.content }; // trigger onChange
             });
 
-        this.authorizationService
-            .requireLogin()
-            .then((account) => {
-                this.account = account;
-                this.system = this.systemService(this.systemId, account.email);
-                this.systems = this.systemsProvider.systems;
-
-                setTimeout(() => {
-                    this.gettingSystem.run().then(() => {
-                        this.systemNoAccess = false;
-
-                        this.settingsService
-                            .loadUsersFor(this.system)
-                            .then(() => {
-                                if (this.system.permissions.editUsers) {
-                                    this.gettingSystemUsers
-                                        .run()
-                                        .then(() => {
-                                            this.settingsService.setSystem(this.system);
-                                        });
-                                } else {
-                                    this.delayedUpdateSystemInfo();
-                                }
-                            });
-                    });
-                });
-            });
-
+        this.getSystemInfo();
 
         if (this.CONFIG.accessRoles.options) {
             this.CONFIG.accessRoles.options.forEach((option) => {
@@ -204,6 +181,37 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
+
+    }
+
+    getSystemInfo() {
+        this.authorizationService
+            .requireLogin()
+            .then((account) => {
+                this.account = account;
+                this.system = this.systemService(this.systemId, account.email);
+                this.systems = this.systemsProvider.systems;
+
+                setTimeout(() => {
+                    this.gettingSystem.run().then(() => {
+                        this.systemNoAccess = false;
+
+                        this.settingsService
+                            .loadUsersFor(this.system)
+                            .then(() => {
+                                if (this.system.permissions.editUsers) {
+                                    this.gettingSystemUsers
+                                        .run()
+                                        .then(() => {
+                                            this.settingsService.setSystem(this.system);
+                                        });
+                                } else {
+                                    this.delayedUpdateSystemInfo();
+                                }
+                            });
+                    });
+                });
+            });
 
     }
 

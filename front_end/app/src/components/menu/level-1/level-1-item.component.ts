@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 
 /* Usage
 */
@@ -8,7 +8,7 @@ import { Component, Input, OnInit } from '@angular/core';
     templateUrl: 'level-1-item.component.html',
     styleUrls: ['level-1-item.component.scss']
 })
-export class NxLevel1ItemComponent implements OnInit {
+export class NxLevel1ItemComponent implements OnInit, OnChanges {
     @Input() base: any = {};
     @Input() item: any = {};
     @Input() selected: boolean;
@@ -21,5 +21,12 @@ export class NxLevel1ItemComponent implements OnInit {
     ngOnInit() {
         this.itemPath = this.base;
         this.itemPath += (this.item.path !== '') ? '/' + this.item.path : '';
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes.base && changes.base.currentValue) {
+            this.itemPath = changes.base.currentValue;
+            this.itemPath += (this.item.path !== '') ? '/' + this.item.path : '';
+        }
     }
 }
