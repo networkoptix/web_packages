@@ -1893,7 +1893,7 @@
             "value": "",
             "description": "Custom build supported version. Ex: 4.1.0.12345, 3.12.0.34567",
             "type": "text",
-            "optional": false,
+            "optional": true,
             "meta": {
               "regex": "^(\\d)\\.(\\d){1,2}\\.(\\d){1,2}\\.(\\d){5}$"
             }
