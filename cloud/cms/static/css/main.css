@@ -69,6 +69,22 @@ img.preview-image{
     background-image: url('/static/cms_images/transparent_bg.png');
 }
 
+img.black {
+    background-color: black;
+}
+
+img.white {
+    background-color: white;
+}
+
+img.dark {
+    background-color: #212a2f;
+}
+
+img.light {
+    background-color: #fafbfb;
+}
+
 .context-preview{
     max-height: 400px;
     max-width: 400px;

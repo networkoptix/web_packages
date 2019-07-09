@@ -1,12 +1,12 @@
-Hello,
+שלום,
 
-You have been invited to %PRODUCT_NAME%.
+הוזמנת ל %CLOUD_NAME%.
 {{#message.message}}
 
 {{ message.message }}
 
 {{/message.message}}
-Please create account on %PRODUCT_NAME%
-using your current email address and follow further instructions.
+אנא צור חשבון ב- %CLOUD_NAME%
+באמצעות כתובת הדוא"ל הנוכחית שלך ובצע הוראות נוספות.
 
-Register your account using this link: {{ config.portal_url }}/register/{{ message.code }}
+רשום את חשבונך באמצעות קישור זה: {{ config.portal_url }}/ register /{{ message.code }}

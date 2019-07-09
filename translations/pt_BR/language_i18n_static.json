@@ -4,7 +4,7 @@
 		"search_ipvd": "Search by model or manufacturer",
 		"filter applied": "filter applied",
 		"filters applied": "filters applied",
-		"Any": "Any",
+		"Any": "Qualquer",
 		"selected": "selected",
 		"vendor": "Manufacturer",
 		"vendors": "manufacturers",
@@ -13,16 +13,16 @@
 		"minResolution": "Minimum Resolution"
 	},
 	"cameraFilters": {
-		"ptz": "PTZ cameras",
-		"aptz": "Cameras with advanced PTZ",
-		"fisheye": "Fisheye cameras",
-		"H265": "H.265 Cameras",
-		"IO": "I / O modules",
-		"multiSensor": "Multi-sensor cameras",
-		"TwWayAudio": "2-way audio devices",
-		"audio": "Cameras with audio",
-		"encoder": "Encoders",
-		"highRes": "Extra high resolution cameras"
+		"ptz": "Câmeras PTZ",
+		"aptz": "Câmaras com PTZ avançado",
+		"fisheye": "Câmeras Fisheye",
+		"H265": "Câmeras H.265",
+		"IO": "Módulos I / O",
+		"multiSensor": "Câmeras de multisensor",
+		"TwWayAudio": "dispositivos de áudio de 2 vias",
+		"audio": "Câmeras com áudio",
+		"encoder": "Codificadores",
+		"highRes": "Câmaras extra de alta resolução"
 	},
 	"downloads": {
 		"mobile": {
@@ -62,19 +62,17 @@
 			"arm": {
 				"label": "ARM",
 				"shortLabel": "ARM",
-				"supported": "Debian/Ubuntu based"
+				"supported": "Baseado em Debian/Ubuntu"
 			},
 			"sdk": {
 				"label": "SDK",
 				"shortLabel": "SDK",
-				"supported": "C++ cross platform SDK"
+				"supported": "C++ cruzar plataforma SDK"
 			}
 		},
 		"platforms": {
 			"win64": "x64",
-			"win86": "x86",
 			"linux64": "x64",
-			"linux86": "x86",
 			"mac": "X",
 			"bananapi": "Banana Pi",
 			"bpi": "Nx1",
@@ -90,8 +88,8 @@
 		"releasesTypes": {
 			"beta": "Beta",
 			"betas": "Betas",
-			"rc": "Release Candidate",
-			"release": "Release",
+			"rc": "Candidato a lançamento",
+			"release": "Lançamento",
 			"releases": "Versões",
 			"patch": "Patch",
 			"patches": "Patches"
@@ -106,9 +104,9 @@
 		"maxFps": "Max FPS",
 		"primaryCodec": "Codec",
 		"isAudioSupported": "Audio",
-		"isTwAudioSupported": "2-way Audio",
+		"isTwAudioSupported": "áudio bidirecional",
 		"isPtzSupported": "PTZ",
-		"isAptzSupported": "Advanced PTZ",
+		"isAptzSupported": "PTZ avançado",
 		"isAptzSupportedShort": "Adv. PTZ",
 		"isFisheye": "Fisheye",
 		"isMdSupported": "Movimento",
@@ -120,14 +118,14 @@
 		"encoder": "Encoder",
 		"dvr": "DVR",
 		"other": "Other",
-		"PTZ cameras": "PTZ cameras",
+		"PTZ cameras": "Câmeras PTZ",
 		"Advanced PTZ cameras": "Advanced PTZ cameras",
 		"Fisheye Cameras": "Fisheye Cameras",
 		"Cameras supporting H.265": "Cameras supporting H.265",
-		"I / O modules": "I / O modules",
+		"I / O modules": "Módulos I / O",
 		"Multisensor Cameras": "Multisensor Cameras",
 		"Cameras with 2-way audio": "Cameras with 2-way audio",
-		"Extra high resolution cameras": "Extra high resolution cameras",
+		"Extra high resolution cameras": "Câmaras extra de alta resolução",
 		"feedback": {
 			"a_Please": "Please",
 			"b_Link": "submit a request",
@@ -147,11 +145,19 @@
 	"messageDialogPlaceholders": {
 		"feedback": "Make sure you include your camera model and manufacturer..."
 	},
-	"About %PRODUCT_NAME%": "Sobre %PRODUCT_NAME%",
-	"Download %VMS_NAME%": "Baixar %VMS_NAME%",
-	"Integrations": "Integrations",
-	"Support": "Suporte",
-	"Terms": "Termos",
-	"Privacy": "Privacidade",
-	"Supported Devices": "Supported Devices"
+	"pageTitles": {
+		"supportedDevices": "Dispositivos suportados",
+		"integrations": "Integrações"
+	},
+	"dialogs": {
+		"merge": {
+			"connectToCloud": "Conecte o sistema que você deseja mesclar com este para <strong>{{cloudName}}</strong> ou mesclar localmente usando <strong>{{vmsName}}</strong> Cliente.",
+			"mergeConfirmation": "Está prestes a fundir os sistemas <strong>{{primarySystem}}</strong> e <strong>{{secondarySystem}}</strong>. As definições e o nome serão baseados a partir do <strong>{{primarySystem}}</strong>.",
+			"primaryCannotMerge": "O sistema {{targetSystem}} tem uma versão de software mais recente que é incompatível com o sistema atual. Atualize o sistema atual com o <a href=\"/download\" target=\"_blank\" translate>build</a> mais recente para efectuar a fusão com o Sistema {{targetSystem}}.",
+			"primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}.",
+			"secondaryCannotMerge": "O sistema {{targetSystem}} tem uma versão de software mais antiga que é incompatível com o sistema atual. Atualize o sistema {{targetSystem}} para o <a href=\"/download\" target=\"_blank\" translate>build</a> mais recente para efectuar a fusão com este Sistema.",
+			"systemOffline": "O sistema {{targetSystem}} está offline e não pode ser mesclado com o atual.",
+			"systemUnavailable": "O sistema {{targetSystem}} está atualmente inacessível. Tente novamente em alguns minutos ou contato"
+		}
+	}
 }

@@ -1,11 +1,11 @@
-%PRODUCT_NAME%'e hoş geldiniz
+%CLOUD_NAME%'e hoş geldiniz
 
 {{#message.sharer_name}}
-{{message.sharer_name}} ({{message.sharer_email}}) sizi %PRODUCT_NAME% e katılmak için ve {{message.system_name}} için davet etti.
+{{message.sharer_name}} ({{message.sharer_email}}) sizi %CLOUD_NAME% e katılmak için ve {{message.system_name}} için davet etti.
 {{/message.sharer_name}}
 
 {{^message.sharer_name}}
-Sizi %PRODUCT_NAME%'e davet ettiniz.
+You are invited you to join %CLOUD_NAME%.
 {{message.system_name}} adresine erişim izni verildi.
 {{/message.sharer_name}}
 

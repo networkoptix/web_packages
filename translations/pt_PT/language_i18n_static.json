@@ -72,9 +72,7 @@
 		},
 		"platforms": {
 			"win64": "x64",
-			"win86": "x86",
 			"linux64": "x64",
-			"linux86": "x86",
 			"mac": "X",
 			"bananapi": "Banana Pi",
 			"bpi": "Nx1",
@@ -147,11 +145,19 @@
 	"messageDialogPlaceholders": {
 		"feedback": "Make sure you include your camera model and manufacturer..."
 	},
-	"About %PRODUCT_NAME%": "Sobre %PRODUCT_NAME%",
-	"Download %VMS_NAME%": "Baixar %VMS_NAME%",
-	"Integrations": "Integrations",
-	"Support": "Suporte",
-	"Terms": "Termos",
-	"Privacy": "Privacidade",
-	"Supported Devices": "Supported Devices"
+	"pageTitles": {
+		"supportedDevices": "Supported Devices",
+		"integrations": "Integrations"
+	},
+	"dialogs": {
+		"merge": {
+			"connectToCloud": "Ligar ao Sistema que deseja fazer a fusão com este para <strong>{{cloudName}}</strong> ou fazer a fusão localmente usando <strong>{{vmsName}}</strong> Client.",
+			"mergeConfirmation": "Está prestes a fundir os sistemas <strong>{{primarySystem}}</strong> e <strong>{{secondarySystem}}</strong>. As definições e o nome serão baseados a partir do <strong>{{primarySystem}}</strong>.",
+			"primaryCannotMerge": "O sistema {{targetSystem}} tem uma versão de software mais recente que é incompatível com o sistema atual. Atualize o sistema atual com o <a href=\"/download\" target=\"_blank\" translate>build</a> mais recente para efectuar a fusão com o Sistema {{targetSystem}}.",
+			"primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}.",
+			"secondaryCannotMerge": "O sistema {{targetSystem}} tem uma versão de software mais antiga que é incompatível com o sistema atual. Atualize o sistema {{targetSystem}} para o <a href=\"/download\" target=\"_blank\" translate>build</a> mais recente para efectuar a fusão com este Sistema.",
+			"systemOffline": "O sistema {{targetSystem}} está offline e não pode ser fundido com o atual.",
+			"systemUnavailable": "O sistema {{targetSystem}} está atualmente inacessível. Tente novamente em alguns minutos ou entre em contato"
+		}
+	}
 }

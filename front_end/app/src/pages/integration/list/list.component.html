@@ -17,10 +17,19 @@
                     <div class="card--header-logo"
                          [style.backgroundImage]="'url(' + plugin.information.logo + ')'">
                     </div>
-                    <div class="card--header-info">
-                        <div class="version" [innerHTML]="plugin.versionDetails.version"></div>
+                    <div class="card--header-info" *ngIf="plugin.requirementsAndCompatibility">
+
+                        <div class="version"
+                             *ngIf="CONFIG && plugin.requirementsAndCompatibility.testedVersionsString">{{CONFIG.vmsName}}:
+                        </div>
+
+                        <div class="version"
+                             *ngIf="plugin.requirementsAndCompatibility.testedVersionsString"
+                             [innerHTML]="plugin.requirementsAndCompatibility.testedVersionsString">
+                        </div>
+
                         <div class="platforms">
-                            <div *ngFor="let icon of plugin.information.platforms.icons">
+                            <div *ngFor="let icon of plugin.requirementsAndCompatibility.platforms.icons">
                                 <img [src]="icon.src">
                             </div>
                         </div>

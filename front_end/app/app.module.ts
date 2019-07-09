@@ -30,6 +30,7 @@ import { LayoutModule }              from '@angular/cdk/layout';
 import { downgradeInjectable }       from '@angular/upgrade/static';
 import { NxLanguageProviderService } from './src/services/nx-language-provider';
 import { NxAppStateService }         from './src/services/nx-app-state.service';
+import { WINDOWS_PROVIDERS } from './src/services/window-provider';
 
 
 
@@ -118,6 +119,7 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
         Title,
         CookieService,
         NxConfigService,
+        WINDOWS_PROVIDERS,
         { provide: LocationStrategy, useClass: PathLocationStrategy },
         { provide: UrlHandlingStrategy, useClass: HybridUrlHandlingStrategy },
     ],

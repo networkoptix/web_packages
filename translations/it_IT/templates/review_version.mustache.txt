@@ -1,8 +1,8 @@
-C'è una nuova revisione per {{ message.product }}
+C'è una nuova versione per {{ message.product }} ({{message.product_type}}) da revisionare.
 
 Clicchi sul link per rivedere il progetto {{ message.id }} per {{ message.product }}
 
-Link per la Revisione: {{ config.portal_url }}/admin/cms/version/{{ message.id }}
+Link per la Revisione: {{ config.portal_url }}/admin/cms/version/{{ message.id }}/
 
 Su questa pagina è possibile
 1) Creare un'anteprima per visualizzare le modifiche più recenti.

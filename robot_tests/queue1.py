@@ -1,3 +1,6 @@
+# This will only run properly on Ubuntu for now due to Docker.
+# You can run it on Windows or Mac but the Cloud-Merge tests will fail.
+
 import datetime
 import time
 import functools
@@ -11,7 +14,7 @@ ENVIRONMENT = "https://cloud-test.hdw.mx"
 
 CMD_LIST = []
 # list of files that are going to be run as a whole file, but threaded
-THREADABLE_FILE_LIST = ("activate", "register-form-validation", "login-form-validation",
+THREADABLE_FILE_LIST = ("activate", "cloud-merge", "register-form-validation", "login-form-validation",
                         "change-pass-form-validation", "restore-pass-form-validation-email",
                         "restore-pass-form-validation-password", "share-form-validation", 
                         "ipvd-form-feedback-validation", "ipvd-form-request-validation")
@@ -34,6 +37,7 @@ def do_stuff(q):
         system(q.get())
         q.task_done()
 
+# a simple decorator to print out actual run time. Robot prints the total run time of each case which isn't real time spent running
 def timer(func):
     @functools.wraps(func)
     def wrapper_timer(*args, **kwargs):
@@ -46,25 +50,23 @@ def timer(func):
 @timer
 def threaded_test_run(loc, lang):
 
-    # loop through the files and add a command to run each
+    # loop through the threadable files and add a command to run each
     for idx, file in enumerate(THREADABLE_FILE_LIST):
         CMD_LIST.append(
-            'robot --loglevel trace -v ENV:{} -v SCREENSHOTDIRECTORY:{} -V getvars.py:{} --output outputs\\{}multi{}.xml test-cases\\{}.robot'
-                .format(ENVIRONMENT, path.join(loc, 'combined-results'), lang, file, idx, file))
+            'robot --loglevel trace -v ENV:{} -v SCREENSHOTDIRECTORY:{} -V getvars.py:{} --output {}.xml {}.robot'
+                .format(ENVIRONMENT, path.join(loc, 'combined-results'), lang, path.join(loc, file+"multi"+str(idx)), path.join("test-cases",file)))
 
-    # loop through the files and add a command to run each test case
+    # loop through the threadable tests and add a command to run each
     for idx, file in enumerate(TEST_LIST):
         CMD_LIST.append(
-            'robot --loglevel trace -v ENV:{} -v SCREENSHOTDIRECTORY:{} -V getvars.py:{} -t "{}" --output outputs\\{}multi{}.xml  test-cases\\{}.robot"'
-                .format(ENVIRONMENT, path.join(loc, 'combined-results'),
-                    lang, str(file[1]), str(file[0]), idx, str(file[0])))
+            'robot --loglevel trace -v ENV:{} -v SCREENSHOTDIRECTORY:{} -V getvars.py:{} -t "{}" --output {}.xml  {}.robot'
+                .format(ENVIRONMENT, path.join(loc, "combined-results"), lang, file[1], path.join(loc, file[0]+"multi"+str(idx)), path.join("test-cases",file[0])))
 
     # loop through the serial tests and run them
     for idx, file in enumerate(SERIAL_LIST):
         system(
-            'robot --loglevel trace -v ENV:{} -v SCREENSHOTDIRECTORY:{} -V getvars.py:{} -e Threaded -e "Threaded File" --output outputs\\{}multi{}.xml  test-cases\\{}.robot'
-                .format(ENVIRONMENT, path.join(loc, 'combined-results'),
-                       lang, str(file), idx + 200, str(file)))
+            'robot --loglevel trace -v ENV:{} -v SCREENSHOTDIRECTORY:{} -V getvars.py:{} -e Threaded -e "Threaded File" --output {}.xml {}.robot'
+                .format(ENVIRONMENT, path.join(loc, 'combined-results'), lang, path.join(loc, file+"multi"+str(idx+200)), path.join("test-cases", file)))
 
     # fill the queue with all the commands
     for cmd in CMD_LIST:
@@ -87,10 +89,8 @@ def threaded_test_run(loc, lang):
     file_list = (test[0] for test in get_threaded_names(""))
     file_list = list(set(file_list))
     for idx, file in enumerate(file_list):
-        system('rebot -o outputs\\threadedRun{}.xml -R outputs\\{}multi*.xml'
-               .format(idx, str(file)))
-    system('rebot --loglevel info -o queuedRun.xml -N  {} outputs\\threadedRun*.xml'
-           .format(lang))
+        system('rebot -o {}.xml -R {}.xml'.format(path.join(loc,"threadedRun"+str(idx)), path.join(loc,file+"multi*")))
+    system('rebot --loglevel info -o queuedRun.xml -N {} {}.xml'.format(lang, path.join(loc, "threadedRun*")))
 
 if __name__ == '__main__':
     threaded_test_run("outputs", "en_US")

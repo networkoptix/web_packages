@@ -28,14 +28,11 @@ class Command(BaseCommand):
             customization.languages.add(en_us)
             customization.save()
 
-        if not Product.objects.filter(customizations__in=[customization],
-                                      product_type__type=ProductType.PRODUCT_TYPES.cloud_portal).exists():
-            product = structure.find_or_add_product('Cloud Portal', customization)
-        else:
-            product = get_cloud_portal_product(options['customization'])
+        product = structure.find_or_add_product_with_single_customization('Cloud Portal', customization,
+                                                                          'cloud_portal', '')
 
         for i in range(settings.FILLDATA_TRIES):
-            result = filldata.init_skin(product, options['preview'], workers=10)
+            result = filldata.init_skin(product, options['preview'], workers=1)
             if result:
                 break
 

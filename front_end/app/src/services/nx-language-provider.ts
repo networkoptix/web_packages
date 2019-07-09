@@ -14,8 +14,8 @@ export class NxLanguageProviderService {
     constructor(private translate: TranslateService) {
         this.lang = this.translate.getDefaultLang();
 
-        this.getTranslations().subscribe(lang => {
-            this.translationsSubject.next(lang);
+        setTimeout(() => {
+            this.setLang(this.lang);
         });
     }
 

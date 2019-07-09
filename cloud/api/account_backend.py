@@ -9,6 +9,7 @@ from api.models import *
 from api.controllers.cloud_api import Account as Clouddb_Account
 from api.helpers.exceptions import APILogicException, ErrorCodes, APINotAuthorisedException
 
+from cloud import settings
 
 logger = logging.getLogger(__name__)
 
@@ -17,6 +18,9 @@ IP_MAX_LENGTH = 255
 
 def get_ip(request):
     ip = request.META.get('HTTP_X_FORWARDED_FOR')
+    if settings.LOCAL_ENVIRONMENT and not ip:  # When ran locally there is no http_x_forwared_for
+        return ''
+
     return ip if len(ip) <= IP_MAX_LENGTH else ip[:IP_MAX_LENGTH]
 
 

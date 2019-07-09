@@ -4,5 +4,5 @@ Merhaba, {{message.userFullName}},
 
 {{config.portal_url}}/activate/{{message.code}}
 
-%PRODUCT_NAME%'e kaydolmadıysanız, bu e-postayı yok sayın.
+%CLOUD_NAME%'e kaydolmadıysanız, bu e-postayı yok sayın.
 İletiyi veya bağlantıyı kimseyle paylaşmayın.

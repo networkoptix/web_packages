@@ -16,12 +16,12 @@
 		"ptz": "PTZ cameras",
 		"aptz": "Cameras with advanced PTZ",
 		"fisheye": "Fisheye cameras",
-		"H265": "H.265 Cameras",
+		"H265": "Cámaras H.265",
 		"IO": "I / O modules",
 		"multiSensor": "Multi-sensor cameras",
-		"TwWayAudio": "2-way audio devices",
+		"TwWayAudio": "Dispositivos de audio de 2 vías",
 		"audio": "Cameras with audio",
-		"encoder": "Encoders",
+		"encoder": "Codificador",
 		"highRes": "Extra high resolution cameras"
 	},
 	"downloads": {
@@ -67,14 +67,12 @@
 			"sdk": {
 				"label": "SDK",
 				"shortLabel": "SDK",
-				"supported": "C++ cross platform SDK"
+				"supported": "C ++ multiplataforma SDK"
 			}
 		},
 		"platforms": {
 			"win64": "x64",
-			"win86": "x86",
 			"linux64": "x64",
-			"linux86": "x86",
 			"mac": "X",
 			"bananapi": "Banana Pi",
 			"bpi": "Nx1",
@@ -147,11 +145,19 @@
 	"messageDialogPlaceholders": {
 		"feedback": "Make sure you include your camera model and manufacturer..."
 	},
-	"About %PRODUCT_NAME%": "Sobre %PRODUCT_NAME%",
-	"Download %VMS_NAME%": "Descargar %VMS_NAME%",
-	"Integrations": "Integraciones",
-	"Support": "Asistencia",
-	"Terms": "Términos",
-	"Privacy": "Privacidad",
-	"Supported Devices": "Dispositivos soportados"
+	"pageTitles": {
+		"supportedDevices": "Dispositivos soportados",
+		"integrations": "Integraciones"
+	},
+	"dialogs": {
+		"merge": {
+			"connectToCloud": "Conectar el sistema que desea fusionar con este a <strong>{{cloudName}}</strong> o fusionar localmente usando <strong>{{vmsName}}</strong> Cliente.",
+			"mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from the <strong>{{primarySystem}}</strong>.",
+			"primaryCannotMerge": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} System.",
+			"primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}.",
+			"secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
+			"systemOffline": "El sistema {{targetSystem}} está fuera de línea y no se puede combinar con el actual.",
+			"systemUnavailable": "El sistema {{targetSystem}} es actualmente inalcanzable. Inténtalo de nuevo en unos minutos o contacta"
+		}
+	}
 }

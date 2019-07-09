@@ -62,7 +62,7 @@
 			"arm": {
 				"label": "ARM",
 				"shortLabel": "ARM",
-				"supported": "Debian/Ubuntu baserad"
+				"supported": "Debian/Ubuntu baserat"
 			},
 			"sdk": {
 				"label": "SDK",
@@ -72,9 +72,7 @@
 		},
 		"platforms": {
 			"win64": "x64",
-			"win86": "x86",
 			"linux64": "x64",
-			"linux86": "x86",
 			"mac": "X",
 			"bananapi": "Banana Pi",
 			"bpi": "Nx1",
@@ -147,11 +145,19 @@
 	"messageDialogPlaceholders": {
 		"feedback": "Se till att du inkluderar din kameramodell och tillverkare..."
 	},
-	"About %PRODUCT_NAME%": "Om %PRODUCT_NAME%",
-	"Download %VMS_NAME%": "Ladda ner %VMS_NAME%",
-	"Integrations": "Integrationer",
-	"Support": "Support",
-	"Terms": "Villkor",
-	"Privacy": "Sekretess",
-	"Supported Devices": "Enheter som stöds"
+	"pageTitles": {
+		"supportedDevices": "Enheter som stöds",
+		"integrations": "Integrationer"
+	},
+	"dialogs": {
+		"merge": {
+			"connectToCloud": "Anslut system du vill slå samman med den här till <strong>{{cloudName}}</strong> eller slå ihop lokalt med <strong>{{vmsName}}</strong> Client.",
+			"mergeConfirmation": "Du håller på att slå samman system <strong>{{primarySystem}}</strong> och <strong>{{secondarySystem}}</strong>. Inställningar och namnet kommer att tas från <strong>{{primarySystem}}</strong>.",
+			"primaryCannotMerge": "System {{targetSystem}} har en nyare mjukvaruversion som inte är kompatibel med det aktuella systemet. Uppdatera det nuvarande systemet till <a href=\"/download\" target=\"_blank\" translate>senaste bygg</a> att slå samman det med {{targetSystem}} systemet.",
+			"primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}.",
+			"secondaryCannotMerge": "System {{targetSystem}} har en äldre programversion som inte är kompatibel med det aktuella systemet. Uppdatera {{targetSystem}} till <a href=\"/download\" target=\"_blank\" translate>senaste version</a> att slå samman den med den nuvarande.",
+			"systemOffline": "System {{targetSystem}} är offline och kan inte slås samman med det nuvarande.",
+			"systemUnavailable": "System {{targetSystem}} är för närvarande inte tillgängligt. Försök igen om några minuter eller kontakta"
+		}
+	}
 }

@@ -1,11 +1,11 @@
-Välkommen till %PRODUCT_NAME%
+Välkommen till %CLOUD_NAME%
 
 {{#message.sharer_name}}
-{{message.sharer_name}} ({{message.sharer_email}}) uppmanar dig att gå med i %PRODUCT_NAME% och delade sitt system {{message.system_name}} med dig.
+{{message.sharer_name}} ({{message.sharer_email}}) uppmanar dig att gå med i %CLOUD_NAME% och delade sitt system {{message.system_name}} med dig.
 {{/message.sharer_name}}
 
 {{^message.sharer_name}}
-Du är inbjuden att delta i %PRODUCT_NAME%.
+Du är inbjuden att delta i %CLOUD_NAME%.
 Du har fått tillgång till {{message.system_name}}.
 {{/message.sharer_name}}
 

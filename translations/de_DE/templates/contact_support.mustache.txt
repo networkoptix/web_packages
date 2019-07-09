@@ -1,0 +1,6 @@
+Hello, {{ message.userFullName }}
+{{ message.sender_name}} ({{ message.sender_email }}) hat die folgende Frage für {{ message.product }}:
+<pre>{{ message.message }}</pre>
+
+------------------------------------------
+Kann der Benutzer kontaktiert werden: {{ message.sender_to_be_contacted}}

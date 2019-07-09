@@ -67,18 +67,16 @@
 			"sdk": {
 				"label": "SDK",
 				"shortLabel": "SDK",
-				"supported": "C++ wieloplatformowe SDK"
+				"supported": "C++ cross platform SDK"
 			}
 		},
 		"platforms": {
 			"win64": "x64",
-			"win86": "x86",
 			"linux64": "x64",
-			"linux86": "x86",
 			"mac": "X",
 			"bananapi": "Banana Pi",
 			"bpi": "Nx1",
-			"rpi": " Raspberry Pi"
+			"rpi": "Raspberry Pi"
 		},
 		"appTypes": {
 			"client": "Tylko klient",
@@ -121,7 +119,7 @@
 		"dvr": "DVR",
 		"other": "Inne",
 		"PTZ cameras": "Kamery PTZ",
-		"Advanced PTZ cameras": "Kamery z zaawansowanym PTZ",
+		"Advanced PTZ cameras": "Zaawansowane kamery PTZ",
 		"Fisheye Cameras": "Kamery fisheye",
 		"Cameras supporting H.265": "Kamery obsługujące H.265",
 		"I / O modules": "Moduły I/O",
@@ -147,11 +145,19 @@
 	"messageDialogPlaceholders": {
 		"feedback": "Proszę podać model kamery i producenta..."
 	},
-	"About %PRODUCT_NAME%": "Informacje o %PRODUCT_NAME%",
-	"Download %VMS_NAME%": "Pobierz %VMS_NAME%",
-	"Integrations": "Integracje",
-	"Support": "Wsparcie",
-	"Terms": "Warunki",
-	"Privacy": "Prywatność",
-	"Supported Devices": "Obsługiwane urządzenia"
+	"pageTitles": {
+		"supportedDevices": "Obsługiwane urządzenia",
+		"integrations": "Integracje"
+	},
+	"dialogs": {
+		"merge": {
+			"connectToCloud": "System, który chcesz złączyć z tym systemem, podłącz do <strong>{{cloudName}}</strong> lub złącz je lokalnie za pomocą klienta <strong>{{vmsName}}</strong>.",
+			"mergeConfirmation": "Zamierzasz złączyć systemy <strong>{{primarySystem}}</strong> i <strong>{{secondarySystem}}</strong>. Ustawienia i nazwa zostaną pobrane z <strong>{{primarySystem}}</strong>.",
+			"primaryCannotMerge": "System {{targetSystem}} ma nowszą wersję oprogramowania, która jest niezgodna z bieżącym systemem. Zaktualizuj bieżący system do <a href=\"/download\" target=\"_blank\" translate>najnowszej kompilacji</a>, aby złączyć go z systemem {{targetSystem}}.",
+			"primarySystemOffline": "System {{primarySystem}} jest w trybie offline i nie można go złączyć z systemem {{targetSystem}}.",
+			"secondaryCannotMerge": "System {{targetSystem}} ma starszą wersję oprogramowania, która jest niezgodna z bieżącym systemem. Zaktualizuj system {{targetSystem}} do <a href=\"/download\" target=\"_blank\" translate>najnowszej kompilacji</a>, aby złączyć go z bieżącym systemem.",
+			"systemOffline": "System {{targetSystem}} jest w trybie offline i nie można go złączyć z bieżącym systemem.",
+			"systemUnavailable": "System {{targetSystem}} jest obecnie niedostępny. Spróbuj ponownie za kilka minut lub skontaktuj się"
+		}
+	}
 }

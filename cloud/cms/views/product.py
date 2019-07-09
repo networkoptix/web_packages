@@ -1,4 +1,3 @@
-from __future__ import absolute_import
 from django.views.decorators.http import require_http_methods
 from django.views import defaults
 from django.contrib import messages
@@ -8,10 +7,11 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib import admin
 from django.http.response import HttpResponse, HttpResponseBadRequest
-
+from rest_framework.decorators import api_view
 import os
 import json
 from cloud import settings
+from api.helpers.exceptions import APIRequestException, APINotFoundException, ErrorCodes, api_success, require_params
 from api.helpers.permissions import make_customization_visible_to_user
 from cms.controllers import filldata, generate_structure, modify_db, structure
 from cms.forms import *
@@ -229,6 +229,12 @@ def make_preview(request):
     version_id = request.POST['version_id'] if 'version_id' in request.POST else None
     context = Context.objects.filter(id=request.POST['context_id']).first()
     product = get_product_by_revision(version_id)
+    cloud = get_cloud_portal_product()
+
+    if not UserGroupsToProductPermissions.check_permission(request.user, product, 'cms.edit_content') and \
+            not UserGroupsToProductPermissions.check_permission(request.user, cloud, 'cms.publish_version'):
+        raise PermissionDenied
+
     if product.can_preview_on_portal:
         redirect_url = modify_db.generate_preview(product, context, version_id=version_id, send_to_review=True)
         product.change_preview_status(product.PREVIEW_STATUS.review)
@@ -252,6 +258,10 @@ def response_attachment(data, filename, content_type):
 @permission_required('cms.change_product')
 def product_settings(request, product_id):
     product = Product.objects.get(pk=product_id)
+
+    if not UserGroupsToProductPermissions.check_permission(request.user, product, 'cms.edit_content'):
+        raise PermissionDenied
+
     form = None
     if request.method == "POST":
         form = ProductSettingsForm(request.POST, request.FILES)
@@ -261,6 +271,7 @@ def product_settings(request, product_id):
     if form:
         action = form.cleaned_data['action']
         generate_json = action == 'generate_json'
+        merge_with_db = action == 'merge_with_db'
         update_structure = action == 'update_structure'
         update_content = action == 'update_content'
 
@@ -270,7 +281,10 @@ def product_settings(request, product_id):
             if not update_structure:
                 return HttpResponseBadRequest('json is acceptable only for Updating structure')
             cms_structure = json.load(file)
-            structure.update_from_object(cms_structure)
+            if type(cms_structure) == list and len(cms_structure) > 1:
+                messages.warning(request, "You can only update one product_type at a time. "
+                                          "Only the first product type from structure.json was used.")
+            structure.update_from_object(cms_structure, product_type=product.product_type, preserve_files=True)
             messages.success(request, "Structure updated")
         else:
             if not file.name.endswith('zip'):
@@ -281,7 +295,13 @@ def product_settings(request, product_id):
                 for error in log_messages:
                     messages.error(request, "Error with {} problem with {}".format(error['file'], error['extension']))
                 return response_attachment(content, 'structure.json', 'application/json')
-            log_messages = structure.process_zip(file, request.user, product, update_structure, update_content)
+            elif merge_with_db:
+                data = generate_structure.merge_db_with_archive(file, product)
+                content = json.dumps(data, ensure_ascii=False, indent=4, separators=(',', ': '))
+                return response_attachment(content, 'structure.json', 'application/json')
+
+            else:
+                log_messages = structure.process_zip(file, request.user, product, update_structure, update_content)
             for item in log_messages:
                 log_type = {
                     'info': messages.INFO,
@@ -307,8 +327,26 @@ def product_settings(request, product_id):
 
 
 @require_http_methods(["GET"])
+@permission_required('cms.change_product')
+def download_current_structure(request, product_id):
+    use_actual_values = "get_values" in request.GET
+    product = Product.objects.filter(id=product_id).last()
+    if product_id and product:
+        if not UserGroupsToProductPermissions.check_permission(request.user, product, 'cms.edit_content'):
+            raise PermissionDenied
+        data = generate_structure.from_database(product, use_actual_values)
+        content = json.dumps(data, ensure_ascii=False, indent=4, separators=(',', ': '))
+        return response_attachment(content, 'structure.json', 'application/json')
+    return APIRequestException("Product not given or not found")
+
+
+@require_http_methods(["GET"])
+@permission_required('cms.change_product')
 def download_file(request, path):
     product = get_cloud_portal_product()
+
+    if not UserGroupsToProductPermissions.check_permission(request.user, product, 'cms.edit_content'):
+        raise PermissionDenied
 
     language_code = request.GET['lang'] if 'lang' in request.GET else None
     version_id = request.GET['version_id'] if 'version_id' in request.GET else None
@@ -320,10 +358,50 @@ def download_file(request, path):
 
 
 @require_http_methods(["GET"])
+@permission_required('cms.change_product')
 def download_package(request, product_id):
     product = Product.objects.get(id=product_id)
 
+    if not UserGroupsToProductPermissions.check_permission(request.user, product, 'cms.edit_content'):
+        raise PermissionDenied
+
     version_id = request.GET['version_id'] if 'version_id' in request.GET else None
     preview = 'draft' in request.GET
+
+    if not version_id:
+        latest_review = ProductCustomizationReview.objects.filter(product=product)
+        if not preview:
+            latest_review = latest_review.filter(state=ProductCustomizationReview.REVIEW_STATES.accepted)
+
+        latest_review = latest_review.last()
+        if not latest_review:
+            raise APINotFoundException("There are no versions available for this product")
+
+        version_id = latest_review.version.id
+
     zipped_data = filldata.get_zip_package(product, preview, version_id)
-    return response_attachment(zipped_data, product.name + ".zip", "application/zip")
+    file_name = f"{product.name}.zip"
+    if product.product_type.type == ProductType.PRODUCT_TYPES.vms:
+        file_name = f"{product.customizations.first()}.zip"
+    return response_attachment(zipped_data, file_name, "application/zip")
+
+
+@api_view(["GET"])
+@permission_required('cms.change_product')
+def get_product_ids_by_product_type(request):
+    require_params(request, ("name", "product_type"))
+
+    name = request.GET["name"]
+    customization = request.GET["customization"]
+    product_type_type = ProductType.get_type_by_name(request.GET["type"])
+    product_type = ProductType.objects.filter(name=name, type=product_type_type).first()
+    if not product_type:
+        raise APINotFoundException("Could not find a matching product type")
+
+    if UserGroupsToProductPermissions.check_permission(request.user, 'cms.force_update'):
+        product_ids = product_type.product_set.values_list('id', flat=True)
+        if customization:
+            product_ids = product_ids.filter(customizations__name__in=[customization])
+    else:
+        product_ids = []
+    return api_success(product_ids)

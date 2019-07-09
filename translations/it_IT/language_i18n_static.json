@@ -9,7 +9,7 @@
 		"vendor": "Produttore",
 		"vendors": "produttori",
 		"hardwareType": "Tipo",
-		"hardwareTypes": "tipi",
+		"hardwareTypes": "tipo",
 		"minResolution": "Risoluzione minima"
 	},
 	"cameraFilters": {
@@ -72,9 +72,7 @@
 		},
 		"platforms": {
 			"win64": "x64",
-			"win86": "x86",
 			"linux64": "x64",
-			"linux86": "x86",
 			"mac": "X",
 			"bananapi": "Banana Pi",
 			"bpi": "Nx1",
@@ -147,11 +145,19 @@
 	"messageDialogPlaceholders": {
 		"feedback": "Assicurati di includere il modello della telecamera e il produttore..."
 	},
-	"About %PRODUCT_NAME%": "Informazioni su %PRODUCT_NAME%",
-	"Download %VMS_NAME%": "Scarica %VMS_NAME%",
-	"Integrations": "Integrazioni",
-	"Support": "Supporto",
-	"Terms": "Termini di servizio",
-	"Privacy": "Privacy",
-	"Supported Devices": "Dispositivi supportati"
+	"pageTitles": {
+		"supportedDevices": "Dispositivi supportati",
+		"integrations": "Integrazioni"
+	},
+	"dialogs": {
+		"merge": {
+			"connectToCloud": "Connetti il Sistema che vuoi unire con questo <strong>{{cloudName}}</strong> o unisci localmente usando <strong>{{vmsName}}</strong> il Client.",
+			"mergeConfirmation": "Stai per unire i Sistemi <strong>{{primarySystem}}</strong> e <strong>{{secondarySystem}}</strong>. Le impostazioni e il nome verranno presi da <strong>{{primarySystem}}</strong>.",
+			"primaryCannotMerge": "Il sistema {{targetSystem}} ha una versione più recente del software che è incompatibile con il sistema corrente. Aggiornare il sistema attuale alla <a href=\"/download\" target=\"_blank\" translate>versione più recente</a> per unirsi con il {{targetSystem}} sistema.",
+			"primarySystemOffline": "Il sistema {{primarySystem}} è offline e non può essere unito al sistema {{targetSystem}}.",
+			"secondaryCannotMerge": "Il sistema {{targetSystem}} ha una versione più recente del software che è incompatibile con il sistema corrente. Aggiornare il sistema attuale alla <a href=\"/download\" target=\"_blank\" translate>versione più recente</a> per unirsi con il {{targetSystem}} sistema corrente.",
+			"systemOffline": "Il sistema {{targetSystem}} è offline e non può essere unito a quello corrente.",
+			"systemUnavailable": "Il sistema {{targetSystem}} è attualmente irraggiungibile. Riprova tra qualche minuto o contatta"
+		}
+	}
 }

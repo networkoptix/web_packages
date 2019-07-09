@@ -2,31 +2,31 @@
   "activate_account": {
     "emailSubject": "เปิดใช้งานบัญชีของคุณ"
   },
-  "restore_password": {
-    "emailSubject": "รีเซ็ตรหัสผ่านของคุณ"
-  },
-  "system_invite": {
-    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} เชิญคุณไปที่ %PRODUCT_NAME%{{/message.sharer_name}}{{^message.sharer_name}}ระบบวิดีโอ {{message.system_name}} ถูกแชร์กับคุณ{{/message.sharer_name}}"
-  },
-  "system_shared": {
-    "emailSubject": "ใช้ระบบวีดีโอร่วมกัน {{message.system_name}}"
-  },
-  "review_version": {
-    "emailSubject": "ตรวจสอบความพร้อมของ Version {{message.id}}"
+  "cloud_invite": {
+    "emailSubject": "คุณได้ลงทะเบียนไว้ใน %CLOUD_NAME%"
   },
   "cloud_notification": {
     "emailSubject": "{{message.subject}}"
   },
-  "cloud_invite": {
-    "emailSubject": "You have been invited to %PRODUCT_NAME%"
+  "contact_sales": {
+    "emailSubject": "สอบถามรายละเอียดการขายสำหรับ {{message.product}}"
+  },
+  "contact_support": {
+    "emailSubject": "ขอรับการสนับสนุนสำหรับ {{message.product}}"
   },
   "ipvd_feedback": {
-    "emailSubject": "Camera Page Feedback for {{message.product}}"
+    "emailSubject": "คำติชมหน้ากล้องสำหรับ {{message.product}}"
   },
-  "sales_inquiry": {
-    "emailSubject": "Sales inquiry for {{message.product}}"
+  "review_version": {
+    "emailSubject": "{{message.product_type}}: {{message.product}} has a new version to review"
   },
-  "support_request": {
-    "emailSubject": "Support request for {{message.product}}"
+  "restore_password": {
+    "emailSubject": "รีเซ็ตรหัสผ่านของคุณ"
+  },
+  "system_invite": {
+    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} เชิญคุณไปที่ %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}ระบบวิดีโอ {{message.system_name}} ถูกแชร์กับคุณ{{/message.sharer_name}}"
+  },
+  "system_shared": {
+    "emailSubject": "ใช้ระบบวีดีโอร่วมกัน {{message.system_name}}"
   }
 }

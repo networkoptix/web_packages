@@ -39,8 +39,7 @@ window.L = {};
             function($q, $rootScope) {
                 return {
                     responseError: function(error) {
-                        if (error.status === 401) {
-                            console.trace(error);
+                        if (error.status === 401 && $rootScope.session.loginState !== undefined) {
                             // Session expired - try to trigger browser reload
                             $rootScope.session.loginState = undefined;
                         }
@@ -91,34 +90,43 @@ window.L = {};
                     url: CONFIG.apiBase + '/utils/settings',
                     async: false,
                     dataType: 'json'
-                }).done(function(response){
-                    appState.companyLink = response.companyLink;
-                    appState.companyName = response.companyName;
-                    appState.copyrightYear = response.copyrightYear;
-                    appState.feedbackEnabled = response.feedbackEnabled;
-                    appState.footerItems = response.footerItems ? JSON.parse(response.footerItems) : {};
-                    appState.integrationFilterItems = response.integrationFilterItems ? JSON.parse(response.integrationFilterItems) : {};
-                    appState.integrationStoreEnabled = response.integrationStoreEnabled;
-                    appState.publicDownloads = response.publicDownloads;
-                    appState.publicReleases = response.publicReleases;
-                    appState.trafficRelayHost = response.trafficRelayHost;
-                    appState.supportLink = response.supportLink;
-                    appState.privacyLink = response.privacyLink;
-                    appState.cloudName = response.cloudName;
-                    appState.vmsName = response.vmsName;
-
-                    if (response.cloudMerge) {
-                        appState.cloudMerge = response.cloudMerge;
-                    }
-                    
-                    angular.extend(CONFIG, appState);
-                    
-                    CONFIG.ipvd.sortSupportedDevicesByPopularity = response.sortSupportedDevicesByPopularity;
-                    CONFIG.ipvd.supportedResolutions = response.supportedResolutions;
-                    CONFIG.ipvd.supportedHardwareTypes = response.supportedHardwareTypes;
-                    CONFIG.ipvd.searchTags = response.searchTags;
-                    CONFIG.ipvd.vendorsShown = +response.vendorsShown;
-                });
+                })
+                    .done(function(response){
+                        appState.companyLink = response.companyLink;
+                        appState.companyName = response.companyName;
+                        appState.copyrightYear = response.copyrightYear;
+                        appState.feedbackEnabled = response.feedbackEnabled;
+                        appState.footerItems = response.footerItems;
+                        appState.integrationFilterItems = response.integrationFilterItems;
+                        appState.integrationFilterLimitation = response.integrationFilterLimitation;
+                        appState.integrationStoreEnabled = response.integrationStoreEnabled;
+                        appState.publicDownloads = response.publicDownloads;
+                        appState.publicReleases = response.publicReleases;
+                        appState.trafficRelayHost = response.trafficRelayHost;
+                        appState.supportLink = response.supportLink;
+                        appState.privacyLink = response.privacyLink;
+                        appState.cloudName = response.cloudName;
+                        appState.vmsName = response.vmsName;
+    
+                        if (response.cloudMerge) {
+                            appState.cloudMerge = response.cloudMerge;
+                        }
+                        
+                        angular.extend(CONFIG, appState);
+                        
+                        CONFIG.ipvd.sortSupportedDevicesByPopularity = response.sortSupportedDevicesByPopularity;
+                        CONFIG.ipvd.supportedResolutions = response.supportedResolutions;
+                        CONFIG.ipvd.supportedHardwareTypes = response.supportedHardwareTypes;
+                        CONFIG.ipvd.searchTags = response.searchTags;
+                        CONFIG.ipvd.vendorsShown = +response.vendorsShown;
+                    })
+                    .fail(function (error) {
+                        if (PRODUCTION && error.status >= 500) {
+                            window.location.href = '/static/503.html';
+                        } else if (PRODUCTION) {
+                            window.location.href = '/';
+                        }
+                    });
 
                 $.ajax({
                     // url: 'static/views/language.json',
@@ -146,7 +154,7 @@ window.L = {};
                         // if request to api/utils/language fails then
                         // cloud_portal is under maintenance
                         // TODO: Causes IOS to not load sometimes but not sure why
-                        if (PRODUCTION && error.status > 500) {
+                        if (PRODUCTION && error.status >= 500) {
                             window.location.href = '/static/503.html';
                         } else if (PRODUCTION) {
                             window.location.href = '/';

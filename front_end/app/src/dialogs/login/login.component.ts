@@ -6,11 +6,12 @@ import {
     ViewEncapsulation,
     ViewChild,
     Renderer2
-} from '@angular/core';
+}                                                                     from '@angular/core';
 import { DOCUMENT, Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
-import { NgbModal, NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { NxModalGenericComponent } from '../generic/generic.component';
-import { NxConfigService } from '../../services/nx-config';
+import { NgbModal, NgbActiveModal, NgbModalRef }                      from '@ng-bootstrap/ng-bootstrap';
+import { NxModalGenericComponent }                                    from '../generic/generic.component';
+import { NxConfigService }                                            from '../../services/nx-config';
+import { NxUtilsService }                                             from '../../services/utils.service';
 
 @Component({
     selector: 'ngbd-modal-content',
@@ -155,6 +156,8 @@ export class LoginModalContent implements OnInit {
                     this.document.location.href = this.config.redirectAuthorised;
                 }
             } else if (this.next) {
+                // sanitize this.next
+                this.next = NxUtilsService.getRelativeLocation(this.next);
                 this.document.location.href = this.next;
             } else {
                 setTimeout(() => {

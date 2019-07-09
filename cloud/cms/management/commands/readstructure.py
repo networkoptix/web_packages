@@ -30,10 +30,10 @@ def create_new_cloudportals_for_each_customization(logger):
             logger.stdout.write(logger.style.SUCCESS("\tProduct name for {} is {}".
                                                      format(customization.name, product_name)))
         else:
-            product_name = "Nx Cloud"
-            logger.stdout.write(logger.style.SUCCESS("\tCouldnt find product name for {} using {}".
+            product_name = "Cloud Portal"
+            logger.stdout.write(logger.style.SUCCESS("\tCouldn't find product name for {} using {}".
                                                      format(customization.name, product_name)))
-        cloud = structure.find_or_add_product(product_name, customization)
+        cloud = structure.find_or_add_product_with_single_customization(product_name, customization, "cloud_portal", "")
         cloud.customizations.add(customization)
         cloud.save()
     logger.stdout.write(logger.style.SUCCESS("Done creating new cloud portals"))
@@ -128,7 +128,10 @@ def find_or_add_context_by_file(file_path, product_type, has_language):
     if not context:
         context = Context(name=file_path, file_path=file_path, product_type=product_type,
                           translatable=has_language, hidden=True, is_global=False)
-        context.save()
+    else:
+        context.deprecated=False
+
+    context.save()
     return context
 
 
@@ -225,6 +228,7 @@ class Command(BaseCommand):
             default_customization.save()
             default_customization.languages.add(Language.by_code('en_US'))
             default_customization.save()
+
         structure.read_structure_json('cms/cms_structure.json')
         read_structure(product_type)
         self.stdout.write(self.style.SUCCESS(

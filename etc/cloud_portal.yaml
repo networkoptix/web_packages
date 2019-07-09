@@ -1,4 +1,5 @@
 customization: 'default'
+debug: true
 
 host: '$CLOUD_PORTAL_HOST'
 

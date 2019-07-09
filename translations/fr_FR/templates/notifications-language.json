@@ -2,31 +2,31 @@
   "activate_account": {
     "emailSubject": "Activez votre compte"
   },
-  "restore_password": {
-    "emailSubject": "Réinitialisez votre mot de passe"
-  },
-  "system_invite": {
-    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} vous invite à %PRODUCT_NAME%{{/message.sharer_name}}{{^message.sharer_name}}Système Vidéo {{message.system_name}} a été partagé avec vous{{/message.sharer_name}}"
-  },
-  "system_shared": {
-    "emailSubject": "Système vidéo {{message.system_name}} a été partagé avec vous"
-  },
-  "review_version": {
-    "emailSubject": "Version {{message.id}} est prête à être révisé"
+  "cloud_invite": {
+    "emailSubject": "Vous avez été invité à %CLOUD_NAME%"
   },
   "cloud_notification": {
     "emailSubject": "{{message.subject}}"
   },
-  "cloud_invite": {
-    "emailSubject": "You have been invited to %PRODUCT_NAME%"
+  "contact_sales": {
+    "emailSubject": "Demande de vente pour {{message.product}}"
+  },
+  "contact_support": {
+    "emailSubject": "Demande de support pour {{message.product}}"
   },
   "ipvd_feedback": {
-    "emailSubject": "Camera Page Feedback for {{message.product}}"
+    "emailSubject": "Page des retours caméra pour {{message.product}}"
   },
-  "sales_inquiry": {
-    "emailSubject": "Sales inquiry for {{message.product}}"
+  "review_version": {
+    "emailSubject": "{{message.product_type}}: {{message.product}} has a new version to review"
   },
-  "support_request": {
-    "emailSubject": "Support request for {{message.product}}"
+  "restore_password": {
+    "emailSubject": "Réinitialisez votre mot de passe"
+  },
+  "system_invite": {
+    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} vous invite à %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}Système Vidéo {{message.system_name}} a été partagé avec vous{{/message.sharer_name}}"
+  },
+  "system_shared": {
+    "emailSubject": "Système vidéo {{message.system_name}} a été partagé avec vous"
   }
 }

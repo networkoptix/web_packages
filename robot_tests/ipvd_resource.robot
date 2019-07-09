@@ -86,13 +86,11 @@ Validate Request Form Initial State
     Wait Until Element Is Visible    ${IPVD FEEDBACK}
     ${result}=   Get Checkbox Value    ${IPVD FEEDBACK CONTACT ME}
     Should Be True    ${result}
-    ${result}=   Get Checkbox Value    ${IPVD FEEDBACK AGREE}
-    Should Not Be True    ${result}
 
 Validate Privacy Policy
     Element Should Be Visible    ${IPVD FEEDBACK PRIVACY POLICY}
     ${url}=   Get Element Attribute    ${IPVD FEEDBACK PRIVACY POLICY}    href
-    Should Contain    ${url}    /content/privacy    #TODO: CLOUD-2949
+    Should Contain    ${url}    privacy    #TODO: CLOUD-2949
     #Should Contain    ${url}    ${PRIVACY POLICY URL}
     Click Element    ${IPVD FEEDBACK PRIVACY POLICY}
     @{windows}=   Get Window Handles
@@ -106,7 +104,7 @@ Validate Privacy Policy
     Select Window    @{windows}[0]
 
 Submit Feedback/Request Form
-    [Arguments]    ${Your Name}    ${Email}    ${Message}    ${Contact Me}    ${Agree to Privacy Policy}
+    [Arguments]    ${Your Name}    ${Email}    ${Message}    ${Contact Me}
     Input Text    ${IPVD FEEDBACK YOUR NAME}    ${Your Name}
     Sleep    0.25
     Input Text    ${IPVD FEEDBACK EMAIL}    ${Email}
@@ -114,7 +112,6 @@ Submit Feedback/Request Form
     Input Text    ${IPVD FEEDBACK MESSAGE}    ${Message}
     Sleep    0.25
     Set Checkbox Value    ${IPVD FEEDBACK CONTACT ME}    ${Contact Me}
-    Set Checkbox Value    ${IPVD FEEDBACK AGREE}    ${Agree to Privacy Policy}
     Sleep    0.25
     Click Button    ${IPVD FEEDBACK SEND BUTTON}
     Sleep    2

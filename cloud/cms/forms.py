@@ -4,6 +4,7 @@ from django.core.validators import RegexValidator
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.template.loader import render_to_string
 from .models import *
+from api.models import Account
 
 from dal import autocomplete
 
@@ -13,26 +14,27 @@ BYTES_TO_MEGABYTES = 1048576.0
 
 
 def convert_meta_to_description(meta):
-    meta_to_plain = {"char_limit": "Character limit: %s",
-                     "format": "Format:  %s",
-                     "height": "Height: %spx",
-                     "height_le": "Height: not greater than %spx",
-                     "height_ge": "Height: not less than %spx",
-                     "width": "Width: %spx",
-                     "width_le": "Width: not greater than %spx",
-                     "width_ge": "Width: not less than %spx",
-                     "size": "Size limit: %s MB",
-                     }
+    meta_to_plain = {
+        "char_limit": "Character limit: %s",
+        "format": "Format:  %s",
+        "width": "Width: %spx",
+        "width_le": "Width: not greater than %spx",
+        "width_ge": "Width: not less than %spx",
+        "height": "Height: %spx",
+        "height_le": "Height: not greater than %spx",
+        "height_ge": "Height: not less than %spx",
+        "size": "Size limit: %s MB",
+    }
     converted_msg = ""
     if 'size' in meta:
         meta['size'] = round(meta['size'] / BYTES_TO_MEGABYTES, 2)
-    for k in meta:
-        if k in meta_to_plain:
-            value = meta[k]
+    for meta_item in meta_to_plain:
+        if meta_item in meta:
+            value = meta[meta_item]
 
             if isinstance(value, list):
                 value = ", ".join(value)
-            converted_msg += "<br>" + meta_to_plain[k] % value
+            converted_msg += "<br>" + meta_to_plain[meta_item] % value
 
     return converted_msg
 
@@ -78,7 +80,7 @@ class CustomContextForm(forms.Form):
         self.fields.pop('language')
 
     def add_fields(self, product, context, language, user):
-        data_structures = context.datastructure_set.order_by('order').all()
+        data_structures = context.datastructure_set.all()
 
         if len(data_structures) < 1:
             return
@@ -129,6 +131,9 @@ class CustomContextForm(forms.Form):
                                                                     initial=record_value,
                                                                     required=False,
                                                                     disabled=disabled)
+                if data_structure.meta_settings and 'size' in data_structure.meta_settings:
+                    file_size = data_structure.meta_settings['size'] * BYTES_TO_MEGABYTES
+                    self.fields[data_structure.name].widget.attrs['size'] = file_size
                 continue
 
             elif data_structure.type in [DataStructure.DATA_TYPES.file,
@@ -141,6 +146,10 @@ class CustomContextForm(forms.Form):
                                                                    initial=record_value,
                                                                    required=False,
                                                                    disabled=disabled)
+
+                if data_structure.meta_settings and 'size' in data_structure.meta_settings:
+                    file_size = data_structure.meta_settings['size'] * BYTES_TO_MEGABYTES
+                    self.fields[data_structure.name].widget.attrs['size'] = file_size
                 continue
 
             elif data_structure.type == DataStructure.DATA_TYPES.select:
@@ -200,6 +209,7 @@ class ProductSettingsForm(forms.Form):
         required=True,
         choices=(
             ('generate_json', 'Generate structure template based on archive'),
+            ('merge_with_db', 'Generate structure using archive and db'),
             ('update_structure',
              'Update CMS structure and default values based on archive with structure.json and product_type template'),
             ('update_content', 'Upload content files for product')
@@ -208,6 +218,8 @@ class ProductSettingsForm(forms.Form):
 
 
 class ProductForm(forms.ModelForm):
+    publish_all_customizations = forms.BooleanField(required=False, label='Publish to all Customizations', initial=True)
+
     class Meta:
         model = Product
         exclude = []
@@ -223,38 +235,45 @@ class ProductForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
         # Do the normal form initialisation.
         super(ProductForm, self).__init__(*args, **kwargs)
-        cloud_portal = ProductType.PRODUCT_TYPES.cloud_portal
         if self.instance.product_type and self.instance.product_type.single_customization:
-            cloud_customization = self.instance.customizations.first()
-            used_customizations = [product.customizations.first().name
-                                   for product in Product.objects.filter(product_type__type=cloud_portal)
-                                   if product.customizations.exists() and
-                                   product.customizations.first() != cloud_customization]
+            # used for removing customizations that are already in use from the multiple choice field,
+            if 'customizations' in [field.name for field in self.visible_fields()]:
+                product_type_customizations = self.instance.product_type.get_customizations()\
+                    .exclude(customizations__name=self.instance.customizations.first())
+                self.fields['customizations'].queryset = Customization.objects.all(). \
+                    exclude(name__in=product_type_customizations)
 
-            # if the form doesnt have the customizations field create it
-            if 'customizations' not in self.fields:
-                self.fields['customizations'] = forms.MultipleChoiceField()
-            self.fields['customizations'].queryset = Customization.objects.exclude(name__in=used_customizations)
-            self.initial['customizations'] = self.instance.customizations.all()
+        if self.user and not self.user.is_superuser and not self.instance.pk:
+            self.fields['product_type'].queryset = ProductType.objects.exclude(advanced=True)
+            self.fields['created_by'] = forms.ModelChoiceField(
+                queryset=Account.objects.filter(id=self.user.id), empty_label=None
+            )
+            self.fields['customizations'].queryset = Customization.objects.filter(name__in=self.user.customizations)
 
-    def clean_customizations(self):
-        customizations = self.cleaned_data['customizations']
-        product_type = ProductType.objects.get(id=self.data['product_type'])
+    def clean(self):
+        cleaned_data = super().clean()
+        customizations = cleaned_data.get('customizations')
+        product_type = cleaned_data.get('product_type')
 
-        if product_type and product_type.single_customization:
-            if len(customizations) > 1:
-                raise forms.ValidationError("Too many customizations selected for product type.")
+        if 'publish_all_customizations' in cleaned_data and cleaned_data['publish_all_customizations'] and \
+                not product_type.single_customization:
+            cleaned_data['customizations'] = Customization.objects.all()
+        else:
+            num_customizations = len(customizations)
 
-            if customizations and product_type.type == ProductType.PRODUCT_TYPES.cloud_portal:
-                customization_portal_id = get_cloud_portal_product(customizations[0]).id
-                product_id = self.instance and self.instance.id
+            if product_type.single_customization:
+                if num_customizations > 1:
+                    raise forms.ValidationError(f"Too many customizations selected for "
+                                                f"{ProductType.PRODUCT_TYPES[product_type.type]}.")
 
-                if customization_portal_id and product_id and product_id != customization_portal_id or \
-                        not product_id and customization_portal_id:
-                    raise forms.ValidationError("Customization is already used for a cloud portal product.")
-        return customizations
+                if customizations.filter(name__in=product_type.get_customizations()).exists():
+                    raise forms.ValidationError(f"Customization is already used for a "
+                                                f"{ProductType.PRODUCT_TYPES[product_type.type]} product.")
+
+        return cleaned_data
 
 
 class CustomizationForm(forms.ModelForm):

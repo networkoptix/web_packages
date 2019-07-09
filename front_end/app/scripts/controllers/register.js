@@ -84,13 +84,13 @@ angular.module('cloudApp')
             },
             holdAlerts:true,
             errorPrefix: $scope.lang.errorCodes.cantRegisterPrefix
-        }).then(function(){
+        }).then(function(response){
             $scope.context.process = 'registerSuccess';
-            if($scope.account.code){
-                $scope.activated = true;
+            if (response.data.activated) {
+                $scope.activated = response.data.activated;
                 $location.path('/register/successActivated',false);
                 authorizationCheckService.login($scope.account.email, $scope.account.password);
-            }else{
+            } else {
                 $location.path('/register/success',false);
                 account.setEmail($scope.account.email);
             }

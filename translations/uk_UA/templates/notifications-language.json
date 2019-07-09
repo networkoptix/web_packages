@@ -2,31 +2,31 @@
   "activate_account": {
     "emailSubject": "Активувати обліковий запис"
   },
-  "restore_password": {
-    "emailSubject": "Відновити пароль"
-  },
-  "system_invite": {
-    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} запрошує вас приєднатися до %PRODUCT_NAME%{{/message.sharer_name}}{{^message.sharer_name}}Вам відкритий досту до системи {{message.system_name}}{{/message.sharer_name}}"
-  },
-  "system_shared": {
-    "emailSubject": "Вам відкритий доступ до системи {{message.system_name}}"
-  },
-  "review_version": {
-    "emailSubject": "Версія {{message.id}} готова до розгляду"
+  "cloud_invite": {
+    "emailSubject": "Вас запросили до %CLOUD_NAME%"
   },
   "cloud_notification": {
     "emailSubject": "{{message.subject}}"
   },
-  "cloud_invite": {
-    "emailSubject": "Вас запросили до %PRODUCT_NAME%"
+  "contact_sales": {
+    "emailSubject": "Запит на продаж {{message.product}}"
+  },
+  "contact_support": {
+    "emailSubject": "Запит на підтримку для {{message.product}}"
   },
   "ipvd_feedback": {
     "emailSubject": "Зворотній зв'язок із сторінкою камери для {{message.product}}"
   },
-  "sales_inquiry": {
-    "emailSubject": "Запит на продаж {{message.product}}"
+  "review_version": {
+    "emailSubject": "{{message.product_type}}: {{message.product}} має нову версію для перегляду"
   },
-  "support_request": {
-    "emailSubject": "Запит на підтримку для {{message.product}}"
+  "restore_password": {
+    "emailSubject": "Відновити пароль"
+  },
+  "system_invite": {
+    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} запрошує вас приєднатися до %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}Вам відкритий досту до системи {{message.system_name}}{{/message.sharer_name}}"
+  },
+  "system_shared": {
+    "emailSubject": "Вам відкритий доступ до системи {{message.system_name}}"
   }
 }

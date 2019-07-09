@@ -1,11 +1,11 @@
-Ласкаво просимо на %PRODUCT_NAME%
+Ласкаво просимо на %CLOUD_NAME%
 
 {{#message.sharer_name}}
-{{message.sharer_name}} ({{message.sharer_email}}) запросив вас приєднатися до %PRODUCT_NAME% та відкрив вам доступ до системи {{message.system_name}}.
+{{message.sharer_name}} ({{message.sharer_email}}) запросив вас приєднатися до %CLOUD_NAME% та відкрив вам доступ до системи {{message.system_name}}.
 {{/message.sharer_name}}
 
 {{^message.sharer_name}}
-Вас запросили приєднатися до %PRODUCT_NAME%.
+Вас запросили приєднатися до %CLOUD_NAME%.
 Вам надано доступ до {{message.system_name}}.
 {{/message.sharer_name}}
 

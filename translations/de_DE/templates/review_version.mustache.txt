@@ -1,8 +1,8 @@
-Es gibt eine neue Version für {{ message.product }}
+Es gibt eine neue Version für {{ message.product }}({{message.product_type}}) zum Überprüfen.
 
 Klicken Sie auf den Link, um den Entwurf {{ message.id }} für {{ message.product }} zu überprüfen
 
-Link zur Rezension: {{ config.portal_url }}/admin/cms/version/{{ message.id }}
+Link zur Bewertung: {{ config.portal_url }}/admin/cms/productcustomizationreview/{{ message.id }}/change/
 
 Auf dieser Seite können Sie
 1) Erstellen Sie eine Vorschau, um die aktuellsten Änderungen zu sehen.

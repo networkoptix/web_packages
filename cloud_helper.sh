@@ -8,6 +8,16 @@ function build_frontend(){
     ./build_scripts/build.sh
 }
 
+function modify_bashprofile(){
+    if [[ -z ${LOCAL_ENV} ]]; then
+        echo 'export LOCAL_ENV=True' >> ~/.bash_profile
+        echo 'Restart your terminal or run `source ~/.bash_profile` and rerun this script.'
+        exit 0
+    else
+        echo 'LOCAL_ENV exists'
+    fi
+}
+
 function setup_cms(){
     printf "Moving into cloud directory\n\n"
     pushd cloud
@@ -37,15 +47,22 @@ function setup_db(){
 }
 
 function setup_env(){
-    printf "Setting up cloud portal locally"
+    printf "Setting up cloud portal locally\n\n"
     [[ ! -d "env" ]] && printf "Creating virtualenv named 'env'\n\n" && virtualenv env -p python3.7
 
     printf "Activating python3.7 env\n\n"
     . ./env/bin/activate
 
     printf "Installing pip packages for build_scripts and cloud\n\n"
+    export PYCURL_SSL_LIBRARY=openssl
     pip install -r build_scripts/requirements.txt
     pip install -r cloud/requirements.txt
+}
+
+function start_celery() {
+    pushd cloud
+    printf "Starting celery worker\n"
+    celery worker -A notifications -l debug --concurrency=1
 }
 
 function start_docker_containers() {
@@ -73,12 +90,18 @@ for command in $@
 do
     case "$command" in
         init)
+            modify_bashprofile
             start_docker_containers
             setup_env
             setup_db
             build_frontend
             setup_cms
             ;;
+
+        add_env)
+            modify_bashprofile
+            ;;
+
         build_frontend)
             build_frontend
             ;;
@@ -90,6 +113,11 @@ do
             popd
             echo 'Generated files are created in ./cloud/cms'
             ;;
+
+        rebuild_frontend)
+            build_frontend
+            setup_cms
+            ;;
         setup_cms)
             . ./env/bin/activate
             setup_cms
@@ -100,6 +128,10 @@ do
         setup_env)
             setup_env
             ;;
+        start_celery)
+            . ./env/bin/activate
+            start_celery
+            ;;
         start_docker)
             start_docker_containers
             ;;
@@ -107,12 +139,15 @@ do
             stop_docker_containers
             ;;
         *)
-            echo Usage: cloud_shortcuts '[init|build_frontend|setup_cms|setup_db|setup_env|start_docker|stop_docker]'
+            echo Usage: cloud_shortcuts '[init|add_env|build_frontend|rebuild_frontend|setup_cms|setup_db|setup_env|start_celery|start_docker|stop_docker]'
             echo 'init - Does everything. Only run this once'
+            echo 'add_env - Adds LOCAL_ENV to your bash profile'
             echo 'build_frontend - Builds the frontend'
             echo 'generate_cms_docs - Creates an html file for each product in cms/cms_structure.json'
+            echo 'rebuild_frontend - Rebuilds the frontend and runs readstructre and filldata commands'
             echo 'setup_cms - Fills in the cms. Runs migrate, readstructure and filldata commands'
             echo 'setup_db - Loads local db with sql file in ~/develop/nx_vms/cloud_portal/'
+            echo 'start_celery - Starts celery worker (This uses sqs queue based on local settings)'
             echo 'start_docker - Starts docker containers used by cloud'
             echo 'stop_docker - Stops docker containers used by cloud'
             ;;

@@ -9,7 +9,7 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { TranslateService }                      from '@ngx-translate/core';
 import { CamerasService }          from '../../services/cameras.service';
 import { IpvdSearchService }       from './ipvd-search.service';
-import { NxModalMessageComponent } from '../../dialogs/message/message.component';
+import { NxModalMessageComponent, MessageParams } from '../../dialogs/message/message.component';
 import { NxConfigService }         from '../../services/nx-config';
 import { NxUriService }            from '../../services/uri.service';
 import { NxUtilsService }          from '../../services/utils.service';
@@ -92,7 +92,6 @@ export class NxIpvdComponent implements OnInit {
     }
 
     constructor(private configService: NxConfigService,
-                private language: TranslateService,
                 private translate: TranslateService,
                 private cameraService: CamerasService,
                 private cameraSearchService: IpvdSearchService,
@@ -139,14 +138,23 @@ export class NxIpvdComponent implements OnInit {
                 }
             });
 
-        this.activate();
-
         setTimeout(() => {
-            this.lang = this.translate.translations[this.translate.currentLang];
-            this.title.setTitle(this.lang.pageTitles.supportedDevices);
+            this.translate
+                .getTranslation(this.translate.currentLang)
+                .subscribe((lang) => {
+                    this.lang = lang;
+                    this.title.setTitle(this.lang.pageTitles.supportedDevices);
 
-            this.company = this.CONFIG.companyName;
-            this.placeholder = this.lang.search.search_ipvd;
+                    this.company = this.CONFIG.companyName;
+                    this.placeholder = this.lang.search.search_ipvd;
+
+                    // add hardware types and tags
+                    this.addFilterTags();
+                    this.addFilterTypes();
+                    this.addFilterResolutions();
+
+                    this.activate();
+                });
         });
 
         this.breakpointObserver
@@ -157,7 +165,7 @@ export class NxIpvdComponent implements OnInit {
     }
 
     addFilterResolutions() {
-        this.resolutions = JSON.parse(this.CONFIG.ipvd.supportedResolutions);
+        this.resolutions = this.CONFIG.ipvd.supportedResolutions;
 
         this.filterModel.selects = [
             {
@@ -178,12 +186,12 @@ export class NxIpvdComponent implements OnInit {
     }
 
     addFilterTags() {
-        this.filterModel.tags = JSON.parse(this.CONFIG.ipvd.searchTags);
+        this.filterModel.tags = this.CONFIG.ipvd.searchTags;
         this.filterModel.tags.forEach(tag => tag.label = this.lang.ipvd[tag.id]);
     }
 
     addFilterTypes() {
-        this.hardwareTypes = JSON.parse(this.CONFIG.ipvd.supportedHardwareTypes);
+        this.hardwareTypes = this.CONFIG.ipvd.supportedHardwareTypes;
         this.hardwareTypes.forEach(type => {
             type.label = this.lang.ipvd[type.id];
         });
@@ -219,11 +227,6 @@ export class NxIpvdComponent implements OnInit {
                 this.vendors.sort(NxUtilsService.byParam((elm) => {
                     return elm.name.toLowerCase();
                 }, NxUtilsService.sortASC));
-
-                // add hardware types and tags
-                this.addFilterTags();
-                this.addFilterTypes();
-                this.addFilterResolutions();
 
                 // reformat vendors to fit the multiselect component
                 this.filterModel
@@ -346,7 +349,7 @@ export class NxIpvdComponent implements OnInit {
             }
 
             if (typeof this.activeCamera.firmwares === 'string') {
-                const firmwares = JSON.parse(this.activeCamera.firmwares);
+                const firmwares = this.activeCamera.firmwares;
                 let firmwaresArray = [];
 
                 let maxFirmwareCount = 0,
@@ -380,9 +383,13 @@ export class NxIpvdComponent implements OnInit {
 
     openFeedback(param) {
         const type = (param === 'device') ? this.CONFIG.messageType.ipvd_device : this.CONFIG.messageType.ipvd_page;
-        const device = (this.activeCamera) ? this.activeCamera.model : '';
+        const device: string = (param === 'device' && this.activeCamera) ? this.activeCamera.model : '';
+        const data: MessageParams = {
+            disclaimer: this.lang.privacyPolicy.ipvd,
+            product: device,
+        };
         this.messageDialog
-            .open(type, device, device)
+            .open(type, data)
             .then(() => {
             });
 

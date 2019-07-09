@@ -2,31 +2,31 @@
   "activate_account": {
     "emailSubject": "הפעל את חשבונך"
   },
-  "restore_password": {
-    "emailSubject": "אפס את סיסמתך"
-  },
-  "system_invite": {
-    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} מזמין אותך ל %PRODUCT_NAME%{{/message.sharer_name}}{{^message.sharer_name}}מערכת וידאו {{message.system_name}} היה לשתף איתך{{/message.sharer_name}}"
-  },
-  "system_shared": {
-    "emailSubject": "מערכת הווידאו {{message.system_name}} שותפה איתך"
-  },
-  "review_version": {
-    "emailSubject": "גרסה {{message.id}} מוכנה לבדיקה"
+  "cloud_invite": {
+    "emailSubject": "הוזמנת ל %CLOUD_NAME%"
   },
   "cloud_notification": {
     "emailSubject": "{{message.subject}}"
   },
-  "cloud_invite": {
-    "emailSubject": "You have been invited to %PRODUCT_NAME%"
+  "contact_sales": {
+    "emailSubject": "שאלת מכירות עבור {{message.product}}"
+  },
+  "contact_support": {
+    "emailSubject": "בקשת תמיכה עבור {{message.product}}"
   },
   "ipvd_feedback": {
-    "emailSubject": "Camera Page Feedback for {{message.product}}"
+    "emailSubject": "משוב על דף מצלמה עבור {{message.product}}"
   },
-  "sales_inquiry": {
-    "emailSubject": "Sales inquiry for {{message.product}}"
+  "review_version": {
+    "emailSubject": "{{message.product_type}}: {{message.product}} has a new version to review"
   },
-  "support_request": {
-    "emailSubject": "Support request for {{message.product}}"
+  "restore_password": {
+    "emailSubject": "אפס את סיסמתך"
+  },
+  "system_invite": {
+    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} מזמין אותך ל %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}מערכת וידאו {{message.system_name}} היה לשתף איתך{{/message.sharer_name}}"
+  },
+  "system_shared": {
+    "emailSubject": "מערכת הווידאו {{message.system_name}} שותפה איתך"
   }
 }

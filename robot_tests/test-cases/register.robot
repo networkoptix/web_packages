@@ -2,7 +2,7 @@
 Resource          ../resource.robot
 Suite Setup       Open Browser and go to URL    ${url}
 Test Setup        Restart
-Test Teardown     Run Keyword If Test Failed    Reset DB and Open New Browser On Failure
+Test Teardown     Open New Browser and Reset DB On Failure
 Suite Teardown    Close All Browsers
 Force Tags        Threaded
 
@@ -18,10 +18,10 @@ Restart
     Run Keyword If    ${status}    Log Out
     Go To    ${url}
 
-Reset DB and Open New Browser On Failure
+Open New Browser and Reset DB On Failure
     Close Browser
-    Clean up random emails
-    Clean up email noperm
+    Run Keyword If Test Failed    Clean up random emails
+    Run Keyword If Test Failed    Clean up email noperm
     Open Browser and go to URL    ${url}
 
 Clear Register Fields

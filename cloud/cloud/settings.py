@@ -18,7 +18,7 @@ import sys
 from util.config import get_config
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-LOCAL_ENVIRONMENT = 'runserver' in sys.argv
+LOCAL_ENVIRONMENT = 'runserver' in sys.argv or os.getenv('LOCAL_ENV', False)
 conf = get_config()
 
 
@@ -117,6 +117,7 @@ ADMIN_DASHBOARD = ('cms.models.ContentVersion',
                    'cms.models.Language',
                    'cms.models.ProductType',
                    'cms.models.UserGroupsToProductPermissions',
+                   'cms.models.UserGroupsToProductType',
                    'django_celery_results.*',
                    'notifications.models.*',
                    'rest_hooks.*',
@@ -157,36 +158,51 @@ WSGI_APPLICATION = 'cloud.wsgi.application'
 
 cloud_db = conf['cloud_database']
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'HOST': cloud_db['host'],
-        'PORT': cloud_db['port'],
-        'USER': cloud_db['username'],
-        'PASSWORD': cloud_db['password'],
-        'NAME': cloud_db['database'],
-        'OPTIONS': {
-            'sql_mode': 'TRADITIONAL',
-            'charset': 'utf8mb4',
-            'init_command': 'SET \
-                character_set_server=utf8mb4,\
-                collation_server = utf8mb4_unicode_ci'
+if cloud_db and cloud_db['host'] != '$DB_HOST':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'HOST': cloud_db['host'],
+            'PORT': cloud_db['port'],
+            'USER': cloud_db['username'],
+            'PASSWORD': cloud_db['password'],
+            'NAME': cloud_db['database'],
+            'OPTIONS': {
+                'sql_mode': 'TRADITIONAL',
+                'charset': 'utf8mb4',
+                'init_command': 'SET \
+                    character_set_server=utf8mb4,\
+                    collation_server = utf8mb4_unicode_ci'
+            }
         }
     }
-}
 
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache'
-    },
-    "global": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://redis:6379/1",
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+if not LOCAL_ENVIRONMENT:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.locmem.LocMemCache"
+        },
+        "global": {
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": "redis://redis:6379/1",
+            "OPTIONS": {
+                "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            }
         }
     }
-}
+else:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.locmem.LocMemCache"
+        },
+        "global": {
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": "redis://localhost:6379/1",
+            "OPTIONS": {
+                "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            }
+        }
+    }
 
 
 if LOCAL_ENVIRONMENT:
@@ -315,8 +331,15 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PERMISSION_CLASSES': (
        'rest_framework.permissions.AllowAny',
+    ),
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
     )
 }
+
+if DEBUG:
+    REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] += ('rest_framework.renderers.BrowsableAPIRenderer',)
+
 # Used for Zapier
 HOOK_EVENTS = {
     'user.send_zap_request': None
@@ -438,6 +461,12 @@ NOTIFICATIONS_CONFIG = {
     'contact_support': {
         'engine': 'email'
     },
+    'integration_feedback': {
+        'engine': 'email'
+    },
+    'ipvd_feedback': {
+        'engine': 'email'
+    },
     'ipvd_feedback_page': {
         'engine': 'email'
     },
@@ -472,8 +501,8 @@ CMS_MAX_FILE_SIZE = 9437184
 INTEGRATION_STORE_PAGE = '/integrations'
 
 # Filldata settings
-FILLDATA_TRIES = 10
-FILLDATA_TIMEOUT = 30
+FILLDATA_TRIES = 15
+FILLDATA_TIMEOUT = 60
 
 
 SUPERUSER_DOMAIN = '@networkoptix.com'  # Only user from this domain can have superuser permissions
