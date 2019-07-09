@@ -13,6 +13,8 @@ from cms.models import Customization, Product, ProductType, UserGroupsToProductP
 from notifications import notifications_api
 
 User = get_user_model()
+product_types_help_text = "Allows this group to review the selected product_types. This field currently only affects " \
+                          "a users ability to review assets."
 
 
 class AccountAdminForm(forms.ModelForm):
@@ -47,12 +49,14 @@ class GroupAdminForm(forms.ModelForm):
     products = forms.ModelMultipleChoiceField(
         queryset=Product.objects.all(),
         required=False,
+        help_text="Binds the selected permissions from above to the selected products.",
         widget=FilteredSelectMultiple('products', False)
     )
 
     product_types = forms.ModelMultipleChoiceField(
         queryset=ProductType.objects.all(),
         required=False,
+        help_text=product_types_help_text,
         widget=FilteredSelectMultiple('product_types', False)
     )
 
