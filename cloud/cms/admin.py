@@ -577,22 +577,19 @@ class ProductCustomizationReviewAdmin(CMSAdmin):
         is_cloud_portal = product.is_cloud_portal
         state = customization_review.state
 
-        can_force_update = UserGroupsToProductPermissions.check_customization_permission(
-            request.user, customization_name, 'cms.force_update'
-        )
-        can_publish_or_accept = UserGroupsToProductPermissions.check_customization_permission(
-            request.user, customization_name, 'cms.publish_version'
-        )
-        developer_access_customization = UserGroupsToProductPermissions.check_customization_permission(
-            customization_review.version.created_by, customization_name, 'cms.access_customization')
-        can_delete = self.has_delete_permission(request, customization_review)
-
         has_product_type_permission = UserGroupsToProductType.check_product_type(
             request.user, product.product_type, 'cms.publish_version'
         )
+        can_force_update = UserGroupsToProductPermissions.check_customization_permission(
+            request.user, customization_name, 'cms.force_update'
+        ) & has_product_type_permission
+        can_publish_or_accept = UserGroupsToProductPermissions.check_customization_permission(
+            request.user, customization_name, 'cms.publish_version'
+        ) & has_product_type_permission
 
-        can_publish_or_accept &= has_product_type_permission
-        can_force_update &= has_product_type_permission
+        developer_access_customization = UserGroupsToProductPermissions.check_customization_permission(
+            customization_review.version.created_by, customization_name, 'cms.access_customization')
+        can_delete = self.has_delete_permission(request, customization_review)
 
         allowed = dict()
         allowed['force_update'] = \
