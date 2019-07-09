@@ -587,9 +587,12 @@ class ProductCustomizationReviewAdmin(CMSAdmin):
             customization_review.version.created_by, customization_name, 'cms.access_customization')
         can_delete = self.has_delete_permission(request, customization_review)
 
-        can_publish_or_accept &= UserGroupsToProductType.check_product_type(
+        has_product_type_permission = UserGroupsToProductType.check_product_type(
             request.user, product.product_type, 'cms.publish_version'
         )
+
+        can_publish_or_accept &= has_product_type_permission
+        can_force_update &= has_product_type_permission
 
         allowed = dict()
         allowed['force_update'] = \
