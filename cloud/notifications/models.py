@@ -121,7 +121,6 @@ class Feedback(models.Model):
     product_name = models.CharField(max_length=255)
     sender_name = models.CharField(max_length=255)
     sender_email = models.CharField(max_length=255)
-    sender_to_be_contacted = models.BooleanField()
     target_product = models.ForeignKey(Product, on_delete=models.CASCADE)
     type = models.CharField(max_length=255)
 
@@ -130,7 +129,6 @@ class Feedback(models.Model):
         data = {
             'sender_name': self.sender_name,
             'sender_email': self.sender_email,
-            'sender_to_be_contacted': self.sender_to_be_contacted,
             'product': self.product_name,
             'message': self.message
         }

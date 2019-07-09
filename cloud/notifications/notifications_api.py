@@ -49,8 +49,7 @@ def send_feedback(event_type, product_id, data):
     else:
         product = Product.objects.get(id=product_id)
 
-    feedback = Feedback.objects.create(sender_to_be_contacted=data['contact'],
-                                       message=data['message'],
+    feedback = Feedback.objects.create(message=data['message'],
                                        product_name=data['product'],
                                        sender_name=data['sender_name'],
                                        sender_email=data['sender_email'],

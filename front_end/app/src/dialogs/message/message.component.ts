@@ -36,7 +36,6 @@ export class MessageModalContent {
     userName: string;
     userEmail: string;
     message: string;
-    contact: boolean;
     agree: boolean;
     title: string;
     topic: string;
@@ -67,7 +66,7 @@ export class MessageModalContent {
             this.initForm();
             this.sendMessage = this.process.init(() => {
                 const product = this.data.productId || this.data.product;
-                return this.cloudApi.sendMessage(this.topic, product, this.message, this.userName, this.userEmail, this.contact);
+                return this.cloudApi.sendMessage(this.topic, product, this.message, this.userName, this.userEmail);
             }, {
                 successMessage: this.lang.dialogs.message.sent
             }).then(() => {
