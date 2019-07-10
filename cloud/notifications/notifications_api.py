@@ -8,6 +8,7 @@ from api.controllers import cloud_api
 from api.helpers import exceptions
 from api.models import Account
 from .models import PushDevice, PushSubscription
+from cms.models import cloud_portal_customization_cache
 
 import logging, json
 logger = logging.getLogger(__name__)
@@ -143,6 +144,9 @@ def process_push_response(response, notification_object):
                     resend_tokens.append(token)
                     log_push_result(notification_object, f'FCM Error: {result["error"]}', device_token=token)
 
+    if not resend_tokens:
+        log_push_result(notification_object, 'Successfully completed')
+
     return resend_tokens
 
 
@@ -171,17 +175,16 @@ def set_subscriptions_from_targets(notification_object, request_data):
         targets.remove(account.email)
         if account.is_active:
             device = PushDevice.objects.filter(user__email=account.email).first()
-            if device:
-                if system['ownerAccountEmail'] == account.email:
-                    subscription = PushSubscription.objects.create(
-                        system_id=system_id, account=account, active=True, device=device
-                    )
-                else:
-                    # TODO: Use cms setting to determine status of new subscription
-                    subscription = PushSubscription.objects.create(
-                        system_id=system_id, account=account, active=True, device=device
-                    )
-                notification_object.subscriptions.add(subscription)
+            if device and not PushSubscription.objects.filter(device=device).exists():
+                active = system['ownerAccountEmail'] == account.email or cloud_portal_customization_cache(
+                    settings.CUSTOMIZATION, 'config'
+                )['push_subscription_auto_active']
+
+                subscription = PushSubscription.objects.create(
+                    system_id=system_id, account=account, active=active, device=device
+                )
+                if subscription.active:
+                    notification_object.subscriptions.add(subscription)
         else:
             log_push_result(notification_object, 'User {} is not activated'.format(account.email), logging.WARNING)
 
