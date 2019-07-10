@@ -241,7 +241,7 @@ class ProductForm(forms.ModelForm):
         if self.instance.product_type and self.instance.product_type.single_customization:
             # used for removing customizations that are already in use from the multiple choice field,
             if 'customizations' in [field.name for field in self.visible_fields()]:
-                product_type_customizations = self.instance.product_type.get_customizations()\
+                product_type_customizations = self.instance.product_type.get_customizations(self.instance)\
                     .exclude(customizations__name=self.instance.customizations.first())
                 self.fields['customizations'].queryset = Customization.objects.all(). \
                     exclude(name__in=product_type_customizations)
@@ -268,8 +268,7 @@ class ProductForm(forms.ModelForm):
                 if num_customizations > 1:
                     raise forms.ValidationError(f"Too many customizations selected for "
                                                 f"{ProductType.PRODUCT_TYPES[product_type.type]}.")
-
-                if customizations.filter(name__in=product_type.get_customizations()).exists():
+                if customizations.filter(name__in=product_type.get_customizations(self.instance)).exists():
                     raise forms.ValidationError(f"Customization is already used for a "
                                                 f"{ProductType.PRODUCT_TYPES[product_type.type]} product.")
 

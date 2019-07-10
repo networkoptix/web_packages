@@ -193,17 +193,6 @@ class ProductAdmin(CMSAdmin):
     def has_add_permission(self, request):
         return super(CMSAdmin, self).has_add_permission(request)
 
-    def save_model(self, request, obj, form, change):
-        super().save_model(request, obj, form, change)
-        if not change and not request.user.is_superuser:
-            group = Group.objects.create(name=f'Developer: {obj.name}')
-            permissions = Permission.objects.filter(
-                codename__in=['edit_content', 'change_product', 'change_productcustomizationreview']
-            )
-            group.user_set.add(request.user)
-            group.permissions.set(permissions)
-            UserGroupsToProductPermissions.objects.create(product=obj, group=group)
-
     def change_view(self, request, object_id, form_url='', extra_context=None):
         extra_context = extra_context or {}
         extra_context['current_versions'] = []
