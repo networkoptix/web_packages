@@ -259,8 +259,8 @@ class ProductForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        customizations = cleaned_data.get('customizations')
-        product_type = cleaned_data.get('product_type')
+        customizations = cleaned_data.get('customizations', self.instance.customizations.all())
+        product_type = cleaned_data.get('product_type', self.instance.product_type)
 
         if 'publish_all_customizations' in cleaned_data and cleaned_data['publish_all_customizations'] and \
                 not product_type.single_customization:
