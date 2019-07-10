@@ -642,7 +642,7 @@
           {
             "label": "Push Subscriptions Default State",
             "name": "%PUSH_SUB_ACTIVE%",
-            "description": "Subscriptions that automatically created when notifications are sent, default to active if this is checked",
+            "description": "Subscriptions that are automatically created when notifications are sent default to active if this is checked",
             "type": "check_box",
             "value": "true",
             "optional": false,

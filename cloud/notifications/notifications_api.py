@@ -152,7 +152,7 @@ def process_push_response(response, notification_object):
 
 def set_subscriptions_from_targets(notification_object, request_data):
     targets = notification_object.raw_targets
-    targets = json.loads(targets)
+    targets = set(json.loads(targets))
     system_id = notification_object.raw_system_id
     system = get_system(notification_object, request_data)
 
