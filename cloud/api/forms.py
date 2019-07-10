@@ -13,6 +13,11 @@ from cms.models import Customization, Product, ProductType, UserGroupsToProductP
 from notifications import notifications_api
 
 User = get_user_model()
+products_help_text = "Gives the permissions of this group to the selected products.<br>" \
+                     "If the product is a cloud portal this effectively gives permissions for the " \
+                     "portals's customization.<br>" \
+                     "Example: The user can review any products which have the same customization as their portal."
+
 product_types_help_text = "Allows this group to review the selected product_types. This field currently only affects " \
                           "a users ability to review assets."
 
@@ -49,7 +54,7 @@ class GroupAdminForm(forms.ModelForm):
     products = forms.ModelMultipleChoiceField(
         queryset=Product.objects.all(),
         required=False,
-        help_text="Binds the selected permissions from above to the selected products.",
+        help_text=products_help_text,
         widget=FilteredSelectMultiple('products', False)
     )
 
