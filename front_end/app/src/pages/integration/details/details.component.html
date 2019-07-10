@@ -1,6 +1,6 @@
-<nx-pre-loader type="page" *ngIf="!(plugin && lang)"></nx-pre-loader>
+<nx-pre-loader type="page" *ngIf="!(plugin && LANG)"></nx-pre-loader>
 
-<div *ngIf="plugin && lang">
+<div *ngIf="plugin && LANG">
     <div class="d-flex mt-3 m-0 pl-3" style="max-width: 1440px;">
         <div class="p-0" style="width: 300px;">
             <button class="btn btn-default btn-back mb-3" routerLink="/integrations">

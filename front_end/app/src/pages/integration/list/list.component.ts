@@ -37,16 +37,6 @@ export class NxIntegrationsListComponent implements OnDestroy, OnChanges {
         this.ribbonService.hide();
     }
 
-    ngOnInit() {
-        this.language
-            .translationsSubject
-            .subscribe((lang) => {
-                if (Object.keys(lang).length) {
-                    this.LANG = lang;
-                }
-            });
-    }
-
     ngOnChanges(changes: SimpleChanges) {
         let haveInReviewOrDraft = false;
         if (changes.list.currentValue) {
@@ -59,11 +49,19 @@ export class NxIntegrationsListComponent implements OnDestroy, OnChanges {
             });
 
             if (haveInReviewOrDraft) {
-                this.ribbonService.show(
-                        this.LANG.integration.previewRibbonText,
-                        this.LANG.integration.backToEditText,
-                        this.CONFIG.links.admin.product.replace('%ID%/pages/', '')
-                );
+                this.language
+                    .translationsSubject
+                    .subscribe((lang) => {
+                        if (Object.keys(lang).length) {
+                            this.LANG = lang;
+
+                            this.ribbonService.show(
+                                    this.LANG.integration.previewRibbonText,
+                                    this.LANG.integration.backToEditText,
+                                    this.CONFIG.links.admin.product.replace('%ID%/pages/', '')
+                            );
+                        }
+                    });
             }
         }
     }
