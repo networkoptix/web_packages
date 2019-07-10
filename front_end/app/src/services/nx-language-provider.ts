@@ -1,7 +1,6 @@
-import { Injectable }                      from '@angular/core';
-import { downgradeInjectable }             from '@angular/upgrade/static';
-import { TranslateService }                from '@ngx-translate/core';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { Injectable }       from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+import { Subject }          from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -9,7 +8,7 @@ import { BehaviorSubject, Observable, of } from 'rxjs';
 export class NxLanguageProviderService {
 
     lang: any;
-    translationsSubject = new BehaviorSubject({});
+    translationsSubject = new Subject();
 
     constructor(private translate: TranslateService) {
     }

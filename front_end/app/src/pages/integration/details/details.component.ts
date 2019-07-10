@@ -44,10 +44,8 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.language.translationsSubject.subscribe((lang) => {
-            if (Object.keys(lang).length) {
-                this.LANG = lang;
-                this.init();
-            }
+            this.LANG = lang;
+            this.init();
         });
     }
 

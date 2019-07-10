@@ -57,10 +57,8 @@ export class NxIntegrationsComponent implements OnInit {
         this.language
             .translationsSubject
             .subscribe((lang) => {
-                if (Object.keys(lang).length) {
-                    this.lang = lang;
-                    this.title.setTitle(this.lang.pageTitles.integrations);
-                }
+                this.lang = lang;
+                this.title.setTitle(this.lang.pageTitles.integrations);
             });
 
         // Example URI
