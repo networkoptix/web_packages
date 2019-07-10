@@ -18,33 +18,31 @@ from cloud.storage_backend import MediaStorage
 
 def create_default_permission_group(product):
     from django.contrib.auth.models import Permission
-    group = None
-    if product.is_cloud_portal and product.product_type.name == "":
+    if not (product.is_cloud_portal or product.is_integration):
+        return None
+
+    if product.is_cloud_portal:
+        group = Group.objects.create(name=f'Portal Manager - {product.name}')
         permissions = Permission.objects.filter(codename__in=['access_customization', 'change_account',
-                                                        'change_productcustomizationreview',
-                                                        'change_product', 'edit_content',
-                                                        'force_update', 'publish_version'])
-
-        portal_manager = Group.objects.create(name=f"{product.name} - Portal Manager")
-        portal_manager.permissions.set(permissions)
-
-        # Bind the Group to the product
-        UserGroupsToProductPermissions.objects.create(product=product, group=portal_manager)
+                                                              'change_productcustomizationreview',
+                                                              'change_product', 'edit_content',
+                                                              'force_update', 'publish_version'])
 
         # Bind the Group to the following product_types so that the portal managers can review them
         product_types = ProductType.objects.filter(name="",
                                                    type__in=[ProductType.PRODUCT_TYPES.cloud_portal,
                                                              ProductType.PRODUCT_TYPES.integration])
         for product_type in product_types:
-            UserGroupsToProductType.objects.create(product_type=product_type, group=portal_manager)
+            UserGroupsToProductType.objects.create(product_type=product_type, group=group)
 
-    elif product.is_integration:
-        group = Group.objects.create(name=f'{product.name} - Developer')
+    else:
+        group = Group.objects.create(name=f'Developer - {product.name}')
         permissions = Permission.objects.filter(
             codename__in=['edit_content', 'change_product', 'change_productcustomizationreview']
         )
-        group.permissions.set(permissions)
-        UserGroupsToProductPermissions.objects.create(product=product, group=group)
+
+    group.permissions.set(permissions)
+    UserGroupsToProductPermissions.objects.create(product=product, group=group)
 
     return group
 
@@ -364,7 +362,7 @@ class Product(models.Model):
 
         if create_permission_groups:
             group = create_default_permission_group(self)
-            if self.created_by:
+            if group and self.created_by and self.is_integration:
                 group.user_set.add(self.created_by)
 
 
