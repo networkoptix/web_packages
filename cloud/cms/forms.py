@@ -88,6 +88,9 @@ class CustomContextForm(forms.Form):
         if not context.translatable:
             self.remove_language()
 
+        is_published = product.version_id() > 0
+        can_edit_advanced = user.is_superuser or user.has_perm('cms.edit_advanced')
+
         for data_structure in data_structures:
             ds_label = data_structure.label if data_structure.label else data_structure.name
 
@@ -112,7 +115,8 @@ class CustomContextForm(forms.Form):
 
             widget_type = forms.TextInput(attrs={'size': 80, 'placeholder': data_structure.default})
 
-            disabled = data_structure.advanced and not (user.is_superuser or user.has_perm('cms.edit_advanced'))
+            # If the data_structure is protected and published require users to have the edit advanced permission
+            disabled = not can_edit_advanced and (data_structure.protected and is_published or data_structure.advanced)
 
             if data_structure.type in [DataStructure.DATA_TYPES.long_text,
                                        DataStructure.DATA_TYPES.object,

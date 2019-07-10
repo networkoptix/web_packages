@@ -71,12 +71,13 @@ def find_structure(name, context, structure_type, product_type, meta=None,
     data_structure = next((structure for structure in context["values"] if structure["name"] == name), None)
     if not data_structure:
         # try to populate structure from database
-        # Important: here we just find any datastrucure with the same name.
+        # Important: here we just find any datastructure with the same name.
         # The goal is to try to get label and description from another asset
         db_structure = DataStructure.objects.filter(name=name, context__product_type=product_type).first()
         if not db_structure:
             db_structure = DataStructure.objects.filter(name=name).first()
         label = ''
+        protected = False
         if db_structure:
             label = db_structure.label if db_structure.label != name else ''
             value = db_structure.default if not DataStructure.is_file_or_image(db_structure.type) else ""
@@ -91,6 +92,7 @@ def find_structure(name, context, structure_type, product_type, meta=None,
                 structure_type = DataStructure.DATA_TYPES[db_structure.type]
             advanced = db_structure.advanced
             optional = db_structure.optional
+            protected = db_structure.protected
 
         data_structure = OrderedDict([
             ("label", label),
@@ -100,7 +102,8 @@ def find_structure(name, context, structure_type, product_type, meta=None,
             ("type", structure_type),
             ("advanced", advanced),
             ("optional", optional),
-            ("public", True)
+            ("public", True),
+            ("protected", protected)
         ])
 
         if db_structure.is_image:

@@ -41,8 +41,9 @@
             {% get_data_structure field.name original as data_structure %}
             {% get_datastructure_type data_structure as data_structure_type %}
             {% is_external_file_or_image field.name original as is_external %}
+            {% is_protected data_structure product as protected %}
             {% has_value field.name product original language as record_exists %}
-            <label {% if data_structure.advanced %} class="text-danger" {% endif %}
+            <label {% if data_structure.advanced or protected %} class="text-danger" {% endif %}
                     for="id_{{ field.name }}">{{ field.label }}{% if not data_structure.optional %}*{% endif %}
                 {% if user.is_superuser %}<p class="help">{{ field.name }}</p>{% endif %}
                 {% if not data_structure.optional %} <p class="help">required</p> {% endif %}

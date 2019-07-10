@@ -321,6 +321,11 @@ class Product(models.Model):
         return self.product_type.type == product_type
 
     def version_id(self, customization=settings.CUSTOMIZATION):
+        if self.product_type.single_customization:
+            actual_customization = self.customizations.first()
+            if actual_customization:
+                customization = actual_customization.name
+
         accepted_review = ProductCustomizationReview.objects. \
             filter(customization__name=customization,
                    state=ProductCustomizationReview.REVIEW_STATES.accepted,
@@ -473,6 +478,7 @@ class DataStructure(models.Model):
     optional = models.BooleanField(default=False)
     public = models.BooleanField(default=True)
     deprecated = models.BooleanField(default=False)
+    protected = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
@@ -540,6 +546,9 @@ class DataStructure(models.Model):
         if self.type in [DataStructure.DATA_TYPES.array, DataStructure.DATA_TYPES.object]:
             content_value = json.loads(content_value) if content_value else None
         return content_value
+
+    def is_protected(self, product):
+        return self.protected and product.version_id() > 0
 
     @staticmethod
     def is_file_or_image(data_type):
