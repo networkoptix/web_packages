@@ -193,17 +193,6 @@ class ProductAdmin(CMSAdmin):
     def has_add_permission(self, request):
         return super(CMSAdmin, self).has_add_permission(request)
 
-    def save_model(self, request, obj, form, change):
-        super().save_model(request, obj, form, change)
-        if not change and not request.user.is_superuser:
-            group = Group.objects.create(name=f'Developer: {obj.name}')
-            permissions = Permission.objects.filter(
-                codename__in=['edit_content', 'change_product', 'change_productcustomizationreview']
-            )
-            group.user_set.add(request.user)
-            group.permissions.set(permissions)
-            UserGroupsToProductPermissions.objects.create(product=obj, group=group)
-
     def change_view(self, request, object_id, form_url='', extra_context=None):
         extra_context = extra_context or {}
         extra_context['current_versions'] = []
@@ -577,19 +566,19 @@ class ProductCustomizationReviewAdmin(CMSAdmin):
         is_cloud_portal = product.is_cloud_portal
         state = customization_review.state
 
+        has_product_type_permission = UserGroupsToProductType.check_product_type(
+            request.user, product.product_type, 'cms.publish_version'
+        )
         can_force_update = UserGroupsToProductPermissions.check_customization_permission(
             request.user, customization_name, 'cms.force_update'
-        )
+        ) & has_product_type_permission
         can_publish_or_accept = UserGroupsToProductPermissions.check_customization_permission(
             request.user, customization_name, 'cms.publish_version'
-        )
+        ) & has_product_type_permission
+
         developer_access_customization = UserGroupsToProductPermissions.check_customization_permission(
             customization_review.version.created_by, customization_name, 'cms.access_customization')
         can_delete = self.has_delete_permission(request, customization_review)
-
-        can_publish_or_accept &= UserGroupsToProductType.check_product_type(
-            request.user, product.product_type, 'cms.publish_version'
-        )
 
         allowed = dict()
         allowed['force_update'] = \

@@ -110,7 +110,6 @@ def send_event(request):
 
         request.data['sender_email'] = request.data['userEmail']
         request.data['sender_name'] = request.data['userName']
-        request.data['sender_to_be_contacted'] = request.data['contact']
 
         ip = get_client_ip(request)
         logging.info("ip: {}\t user: {}\nrequest data: {}".format(ip, request.user, request.data))

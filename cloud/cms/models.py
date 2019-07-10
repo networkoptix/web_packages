@@ -16,6 +16,39 @@ from django.template.defaultfilters import truncatechars
 from cloud.storage_backend import MediaStorage
 
 
+def create_default_permission_group(product):
+    from django.contrib.auth.models import Permission
+    group = None
+    if product.is_cloud_portal and product.product_type.name == "":
+        permissions = Permission.objects.filter(codename__in=['access_customization', 'change_account',
+                                                        'change_productcustomizationreview',
+                                                        'change_product', 'edit_content',
+                                                        'force_update', 'publish_version'])
+
+        portal_manager = Group.objects.create(name=f"{product.name} - Portal Manager")
+        portal_manager.permissions.set(permissions)
+
+        # Bind the Group to the product
+        UserGroupsToProductPermissions.objects.create(product=product, group=portal_manager)
+
+        # Bind the Group to the following product_types so that the portal managers can review them
+        product_types = ProductType.objects.filter(name="",
+                                                   type__in=[ProductType.PRODUCT_TYPES.cloud_portal,
+                                                             ProductType.PRODUCT_TYPES.integration])
+        for product_type in product_types:
+            UserGroupsToProductType.objects.create(product_type=product_type, group=portal_manager)
+
+    elif product.is_integration:
+        group = Group.objects.create(name=f'{product.name} - Developer')
+        permissions = Permission.objects.filter(
+            codename__in=['edit_content', 'change_product', 'change_productcustomizationreview']
+        )
+        group.permissions.set(permissions)
+        UserGroupsToProductPermissions.objects.create(product=product, group=group)
+
+    return group
+
+
 def get_cloud_portal_product(customization=settings.CUSTOMIZATION):
     return Product.objects.get(customizations__name__in=[customization],
                                product_type__name="",
@@ -226,8 +259,9 @@ class ProductType(models.Model):
                 return index
         return 0
 
-    def get_customizations(self):
-        return self.product_set.exclude(customizations=None).values_list('customizations__name', flat=True)
+    def get_customizations(self, product):
+        return self.product_set.exclude(id=product.id).exclude(customizations=None).\
+            values_list('customizations__name', flat=True)
 
 
 class Product(models.Model):
@@ -312,8 +346,10 @@ class Product(models.Model):
             raise ValidationError({'name': 'Name already exists'})
 
     def save(self, *args, **kwargs):
+        create_permission_groups = False
         need_update = False
         if self.pk is None:
+            create_permission_groups = True
             need_update = True
         else:
             orig = Product.objects.get(pk=self.pk)
@@ -325,6 +361,11 @@ class Product(models.Model):
                 and len(self.customizations.all()) == 1:
             cloud_portal_customization_cache(self.customizations.first().name, force=True)  # invalidate cache
             # TODO: need to update all static right here
+
+        if create_permission_groups:
+            group = create_default_permission_group(self)
+            if self.created_by:
+                group.user_set.add(self.created_by)
 
 
 class Context(models.Model):

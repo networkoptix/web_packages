@@ -22,12 +22,7 @@ export class NxIntegrationsListComponent implements OnDestroy, OnChanges {
     LANG: any;
 
     private setupDefaults() {
-        this.language
-            .translationsSubject
-            .subscribe((lang) => {
-                this.LANG = lang;
-                this.CONFIG = this.configService.getConfig();
-            });
+        this.CONFIG = this.configService.getConfig();
     }
 
     constructor(private configService: NxConfigService,
@@ -54,11 +49,19 @@ export class NxIntegrationsListComponent implements OnDestroy, OnChanges {
             });
 
             if (haveInReviewOrDraft) {
-                this.ribbonService.show(
-                        this.LANG.integration.previewRibbonText,
-                        this.LANG.integration.backToEditText,
-                        this.CONFIG.links.admin.product.replace('%ID%/pages/', '')
-                );
+                this.language
+                    .translationsSubject
+                    .subscribe((lang) => {
+                        if (Object.keys(lang).length) {
+                            this.LANG = lang;
+
+                            this.ribbonService.show(
+                                    this.LANG.integration.previewRibbonText,
+                                    this.LANG.integration.backToEditText,
+                                    this.CONFIG.links.admin.product.replace('%ID%/pages/', '')
+                            );
+                        }
+                    });
             }
         }
     }

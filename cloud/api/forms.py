@@ -13,6 +13,11 @@ from cms.models import Customization, Product, ProductType, UserGroupsToProductP
 from notifications import notifications_api
 
 User = get_user_model()
+products_help_text = "Gives the permissions of this group to the selected products.<br>" \
+                     "If the product is a cloud portal this effectively gives permissions for the " \
+                     "portals's customization.<br>" \
+                     "Example: The user can review any products which have the same customization as their portal."
+
 product_types_help_text = "Allows this group to review the selected product_types. This field currently only affects " \
                           "a users ability to review assets."
 
@@ -49,7 +54,7 @@ class GroupAdminForm(forms.ModelForm):
     products = forms.ModelMultipleChoiceField(
         queryset=Product.objects.all(),
         required=False,
-        help_text="Binds the selected permissions from above to the selected products.",
+        help_text=products_help_text,
         widget=FilteredSelectMultiple('products', False)
     )
 
@@ -70,15 +75,14 @@ class GroupAdminForm(forms.ModelForm):
             self.fields['products'].initial = UserGroupsToProductPermissions.objects.filter(group=self.instance)\
                 .values_list('product', flat=True).distinct()
             self.fields['product_types'].initial = UserGroupsToProductType.objects.filter(group=self.instance)\
-                .values_list('product_type', flat=True)
+                .values_list('product_type', flat=True).distinct()
 
     def save_m2m(self):
         # Add the users to the Group.
         self.instance.user_set.set(self.cleaned_data['users'])
 
         for product in self.cleaned_data['products']:
-            perm_group = UserGroupsToProductPermissions.objects.filter(group=self.instance, product=product).first()
-            if not perm_group:
+            if not UserGroupsToProductPermissions.objects.filter(group=self.instance, product=product).first():
                 UserGroupsToProductPermissions.objects.create(group=self.instance, product=product)
 
         remove_permissions = UserGroupsToProductPermissions.objects.filter(group=self.instance).\
@@ -87,8 +91,7 @@ class GroupAdminForm(forms.ModelForm):
             product_group.delete()
 
         for product_type in self.cleaned_data['product_types']:
-            perm_group = UserGroupsToProductType.objects.filter(group=self.instance, product_type=product_type).first()
-            if not perm_group:
+            if not UserGroupsToProductType.objects.filter(group=self.instance, product_type=product_type).first():
                 UserGroupsToProductType.objects.create(group=self.instance, product_type=product_type)
 
         remove_product_types = UserGroupsToProductType.objects.filter(group=self.instance).\

@@ -12,27 +12,15 @@ export class NxLanguageProviderService {
     translationsSubject = new BehaviorSubject({});
 
     constructor(private translate: TranslateService) {
-        this.lang = this.translate.getDefaultLang();
-
-        setTimeout(() => {
-            this.setLang(this.lang);
-        });
-    }
-
-    private getTranslations(): Observable<any> {
-        if (Object.keys(this.translate.translations).length) {
-            return of(this.translate.translations[this.translate.currentLang]);
-        }
-        return of(this.translate.translations);
     }
 
     setLang(lang) {
         this.lang = lang;
-        this.translate.use(lang);
-
-        this.getTranslations().subscribe(lang => {
-            this.translationsSubject.next(lang);
-        });
+        this.translate
+            .use(lang)
+            .subscribe((obj) => {
+                this.translationsSubject.next(obj);
+            });
     }
 
     getLang() {

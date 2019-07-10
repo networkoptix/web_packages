@@ -213,12 +213,9 @@ import * as angular from 'angular';
                     password: password
                 });
             },
-            sendMessage: function(type, product, message, userName?, userEmail?, contact?) {
-                if (typeof(contact) === 'undefined') {
-                    contact = false;
-                }
+            sendMessage: function(type, product, message, userName?, userEmail?) {
                 return $http.post(apiBase + '/feedback', {
-                    message, product, type, userName, userEmail, contact
+                    message, product, type, userName, userEmail
                 });
 
             },

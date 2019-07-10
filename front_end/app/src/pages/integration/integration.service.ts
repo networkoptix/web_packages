@@ -63,25 +63,16 @@ export class IntegrationService implements OnDestroy {
         const section = plugin.requirementsAndCompatibility;
 
         if (section) {
-            section.testedOn = '';
-
             if (section.platforms) {
                 section.platforms.icons = this.setPlatformIcons(plugin);
             }
 
-            section.testedVersionsString = section.testedBuild;
-            section.testedVersionsStringFull = section.testedBuild;
-
-            if (section.testedVersions) {
-                section.testedOn = section.testedVersions.join(',&nbsp;');
+            if (section.testedBuild) {
+                section.testedVersions.splice(0, 0, section.testedBuild);
             }
 
-            if (section.testedVersionsString.length) {
-                section.testedVersionsString += (section.testedOn) ? ',&nbsp;...' : '';
-                section.testedVersionsStringFull += (section.testedVersionsStringFull) ? ',&nbsp;' + section.testedOn : section.testedOn;
-            } else {
-                section.testedVersionsString = section.testedOn;
-            }
+            section.testedVersionsString = (section.testedVersions.length > 1) ? section.testedVersions[0] + ',&nbsp;...' : section.testedVersions[0];
+            section.testedVersionsStringFull = section.testedVersions.join(',&nbsp;');
 
             section.testedVersionsString = this.formatVersion(section.testedVersionsString);
             section.testedVersionsStringFull = this.formatVersion(section.testedVersionsStringFull);

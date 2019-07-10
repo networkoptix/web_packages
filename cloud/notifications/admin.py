@@ -66,8 +66,8 @@ class EventAdmin(NotificationAdmin):
 @admin.register(Feedback)
 class FeedbackAdmin(NotificationAdmin):
     list_display = ('product_name', 'target_product', 'type', 'sender_name', 'sender_email',
-                    'created_date', 'sender_to_be_contacted')
-    list_filter = ('sender_to_be_contacted', 'type', 'created_date')
+                    'created_date')
+    list_filter = ('type', 'created_date')
     list_display_links = ('target_product',)
     readonly_fields = ('message',)
     search_fields = ('product_name', 'sender_name', 'sender_email')
