@@ -22,12 +22,7 @@ export class NxIntegrationsListComponent implements OnDestroy, OnChanges {
     LANG: any;
 
     private setupDefaults() {
-        this.language
-            .translationsSubject
-            .subscribe((lang) => {
-                this.LANG = lang;
-                this.CONFIG = this.configService.getConfig();
-            });
+        this.CONFIG = this.configService.getConfig();
     }
 
     constructor(private configService: NxConfigService,
@@ -40,6 +35,16 @@ export class NxIntegrationsListComponent implements OnDestroy, OnChanges {
 
     ngOnDestroy() {
         this.ribbonService.hide();
+    }
+
+    ngOnInit() {
+        this.language
+            .translationsSubject
+            .subscribe((lang) => {
+                if (Object.keys(lang).length) {
+                    this.LANG = lang;
+                }
+            });
     }
 
     ngOnChanges(changes: SimpleChanges) {
