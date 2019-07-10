@@ -271,7 +271,6 @@ ${IPVD FEEDBACK FORM}                ${IPVD FEEDBACK}//form[@name='feedbackForm'
 ${IPVD FEEDBACK YOUR NAME}           ${IPVD FEEDBACK FORM}//input[@id='user_name']
 ${IPVD FEEDBACK EMAIL}               ${IPVD FEEDBACK FORM}//input[@id='user_email']
 ${IPVD FEEDBACK MESSAGE}             ${IPVD FEEDBACK FORM}//textarea[@id='message']
-${IPVD FEEDBACK CONTACT ME}          ${IPVD FEEDBACK FORM}//input[@type='checkbox' and @id='contact']
 ${IPVD FEEDBACK PRIVACY POLICY}      ${IPVD FEEDBACK FORM}//a[text()='here']
 ${IPVD FEEDBACK SEND BUTTON}         ${IPVD FEEDBACK}//button[text()='Send']
 ${IPVD FEEDBACK CANCEL BUTTON}       ${IPVD FEEDBACK}//button[text()='Cancel']

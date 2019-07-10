@@ -84,8 +84,6 @@ Restart
 
 Validate Request Form Initial State
     Wait Until Element Is Visible    ${IPVD FEEDBACK}
-    ${result}=   Get Checkbox Value    ${IPVD FEEDBACK CONTACT ME}
-    Should Be True    ${result}
 
 Validate Privacy Policy
     Element Should Be Visible    ${IPVD FEEDBACK PRIVACY POLICY}
@@ -104,14 +102,12 @@ Validate Privacy Policy
     Select Window    @{windows}[0]
 
 Submit Feedback/Request Form
-    [Arguments]    ${Your Name}    ${Email}    ${Message}    ${Contact Me}
+    [Arguments]    ${Your Name}    ${Email}    ${Message}
     Input Text    ${IPVD FEEDBACK YOUR NAME}    ${Your Name}
     Sleep    0.25
     Input Text    ${IPVD FEEDBACK EMAIL}    ${Email}
     Sleep    0.25
     Input Text    ${IPVD FEEDBACK MESSAGE}    ${Message}
-    Sleep    0.25
-    Set Checkbox Value    ${IPVD FEEDBACK CONTACT ME}    ${Contact Me}
     Sleep    0.25
     Click Button    ${IPVD FEEDBACK SEND BUTTON}
     Sleep    2
