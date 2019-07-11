@@ -29,8 +29,9 @@ export class IntegrationService implements OnDestroy {
 
         this.getIntegrations()
             .subscribe(result => {
+                const plugins = result && result.data || [];
 
-                result.data.forEach(plugin => {
+                plugins.forEach(plugin => {
                     plugin.versionDetails = {
                         version: (plugin.versionDetails) ? this.formatVersion(plugin.versionDetails.version) || '1.0' : '1.0'
                     };
@@ -43,7 +44,7 @@ export class IntegrationService implements OnDestroy {
                     plugin.link = '/integrations/' + plugin.id;
                     plugin.link += (plugin.state) ? '?state=' + plugin.state : '';
                 });
-                this.pluginsSubject.next(result.data);
+                this.pluginsSubject.next(plugins);
             });
     }
 
