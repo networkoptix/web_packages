@@ -18,7 +18,7 @@ def is_FileField(field):
 
 @register.simple_tag
 def is_protected(data_structure, product):
-    return data_structure.is_protected(product)
+    return data_structure.is_protected(product) if data_structure else False
 
 
 @register.simple_tag
