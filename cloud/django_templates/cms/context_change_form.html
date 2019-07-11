@@ -173,6 +173,44 @@
         document.getElementById('context_form').submit();
     }
 
+    var submitButtons = $('.submit-row button[type=submit]');
+    function disableSubmitButtons(state) {
+        for(var j=0; j < submitButtons.length; ++j) {
+            submitButtons[j].disabled = state;
+        }
+    }
+
+    var files = $('[type=file]');
+    function fileHandler(event){
+        var element = event.target;
+        var upload_files = element.files;
+        var errorList = element.parentElement.parentElement.parentElement.children[0];
+        $(errorList).html("");
+
+        if (upload_files.length > 0 && upload_files[0].size > element.size) {
+            var errorMsg = "<li>The file's size it too large. Its size was ";
+            errorMsg += (upload_files[0].size/bytesToMb).toFixed(2).toString();
+            errorMsg += "MB but must be less than ";
+            errorMsg += (element.size/bytesToMb).toFixed(2).toString() + "MB</li>";
+            $(errorList).append(errorMsg);
+            disableSubmitButtons(true);
+        } else {
+            // Check if all of the other files are valid.
+            for (var j = 0; j < files.length; ++j) {
+                // If any are invalid disable submit buttons
+                if(files[j].files.length > 0 && files[j].size < files[j].files[0].size) {
+                    disableSubmitButtons(true);
+                    return;
+                }
+            }
+            disableSubmitButtons(false);
+        }
+    }
+
+    for(var i = 0; i < files.length; ++i) {
+        files[i].addEventListener('change', fileHandler);
+    }
+
     var brandVariables = document.getElementsByClassName('brand-variable');
     for(var i = 0; i < brandVariables.length; i++) {
         var cv = brandVariables[i];
@@ -201,24 +239,6 @@
         langSelector.addEventListener('change', languageChanged, false);
     }
     $('[data-toggle="tooltip"]').tooltip();
-
-    var files = $('[type=file]');
-    for(var i=0; i < files.length; ++i) {
-        var file = files[i];
-        file.addEventListener('change', function(e){
-            var upload_files = e.target.files;
-            if (upload_files.length) {
-                if (upload_files[0].size > file.size) {
-                    var errorList = e.target.parentElement.parentElement.parentElement.children[0];
-                    var errorMsg = "<li>The file's size it too large. Its size was ";
-                    errorMsg += (upload_files[0].size/bytesToMb).toFixed(2).toString();
-                    errorMsg += "MB but must be less than ";
-                    errorMsg += (file.size/bytesToMb).toFixed(2).toString() + "MB</li>";
-                    $(errorList).append(errorMsg);
-                }
-            }
-        });
-    }
 
     tinymce.init({
         selector: '.tinymce',
