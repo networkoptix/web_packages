@@ -13,9 +13,9 @@ from cms.models import Customization, Product, ProductType, UserGroupsToProductP
 from notifications import notifications_api
 
 User = get_user_model()
-products_help_text = "Gives the permissions of this group to the selected products.<br>" \
-                     "If the product is a cloud portal this effectively gives permissions for the " \
-                     "portals's customization.<br>" \
+products_help_text = "Grants group permissions to the selected products.<br>" \
+                     "If the chosen product is a cloud portal, permissions for the portal's customization are " \
+                     "granted.<br>" \
                      "Example: The user can review any products which have the same customization as their portal."
 
 product_types_help_text = "Allows this group to review the selected product_types. This field currently only affects " \
