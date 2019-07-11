@@ -245,9 +245,12 @@ select {
 .badge {
     
     & {
-        background-color: $light4;
-        color: $light16;
-        height: 20px;
+        background-color : $light4;
+        color            : $light16;
+        height           : 20px;
+        font-family      : $font-family-regular;
+        font-weight      : 400;
+        line-height      : 12px;
         
         &.large {
             @extend #badge-large;

@@ -39,15 +39,15 @@
                 </nx-section>
 
                 <footer>
-                    <h3 class="float-left m-0 mt-1 mr-1" *ngIf="plugin.pending">
+                    <div class="float-left m-0 mt-1 mr-1" *ngIf="plugin.pending">
                         <span class="badge badge-danger" translate>In Review</span>
-                    </h3>
-                    <h3 class="float-left m-0 mt-1 mr-1" *ngIf="plugin.draft">
+                    </div>
+                    <div class="float-left m-0 mt-1 mr-1" *ngIf="plugin.draft">
                         <span class="badge badge-danger" translate>Draft</span>
-                    </h3>
-                    <h3 class="float-left m-0 mt-1 mr-1" *ngFor="let type of plugin.information.type">
+                    </div>
+                    <div class="float-left m-0 mt-1 mr-1" *ngFor="let type of plugin.information.type">
                         <span class="badge">{{type}}</span>
-                    </h3>
+                    </div>
                 </footer>
             </nx-block>
         </a>
