@@ -43,8 +43,10 @@ export class NxIntegrationsListComponent implements OnInit, OnDestroy, OnChanges
         this.language
             .translationsSubject
             .subscribe((lang) => {
-                if (Object.keys(lang).length) {
-                    this.LANG = lang;
+                this.LANG = lang;
+
+                if (this.haveInReviewOrDraft) {
+                    this.showRibbon();
                 }
             });
     }
@@ -52,7 +54,6 @@ export class NxIntegrationsListComponent implements OnInit, OnDestroy, OnChanges
     ngOnChanges(changes: SimpleChanges) {
         this.haveInReviewOrDraft = false;
         if (changes.list.currentValue) {
-            // inject platform icons info
             changes.list.currentValue.some(plugin => {
                 if (plugin.pending || plugin.draft) {
                     this.haveInReviewOrDraft = true;
@@ -60,14 +61,20 @@ export class NxIntegrationsListComponent implements OnInit, OnDestroy, OnChanges
                 }
             });
 
-            if (this.haveInReviewOrDraft) {
-                this.ribbonService.show(
-                        this.LANG.integration.previewRibbonText,
-                        this.LANG.integration.backToEditText,
-                        this.CONFIG.links.admin.product.replace('%ID%/pages/', '')
-                );
+            if (this.haveInReviewOrDraft && this.LANG) {
+                this.showRibbon();
+            } else {
+                this.ribbonService.hide();
             }
         }
+    }
+
+    private showRibbon(): void {
+        this.ribbonService.show(
+                this.LANG.integration.previewRibbonText,
+                this.LANG.integration.backToEditText,
+                this.CONFIG.links.admin.product.replace('%ID%/pages/', '')
+        );
     }
 }
 

@@ -1,6 +1,6 @@
-import { Injectable }       from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import { Subject }          from 'rxjs';
+import { Injectable }             from '@angular/core';
+import { TranslateService }       from '@ngx-translate/core';
+import { ReplaySubject, Subject } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -8,7 +8,8 @@ import { Subject }          from 'rxjs';
 export class NxLanguageProviderService {
 
     lang: any;
-    translationsSubject = new Subject();
+    translations: any;
+    translationsSubject = new ReplaySubject();
 
     constructor(private translate: TranslateService) {
     }
@@ -18,8 +19,13 @@ export class NxLanguageProviderService {
         this.translate
             .use(lang)
             .subscribe((obj) => {
+                this.translations = obj;
                 this.translationsSubject.next(obj);
             });
+    }
+
+    getTranstalions() {
+        return this.translations;
     }
 
     getLang() {

@@ -69,9 +69,12 @@ export class IntegrationService implements OnDestroy {
 
             if (section.testedBuild) {
                 section.testedVersions.splice(0, 0, section.testedBuild);
+                // testedVersions is required field so we'll have at least 2 items
+                section.testedVersionsString = section.testedVersions[0] + ',&nbsp;...';
+            } else {
+                section.testedVersionsString = section.testedVersions.join(',&nbsp;');
             }
 
-            section.testedVersionsString = (section.testedVersions.length > 1) ? section.testedVersions[0] + ',&nbsp;...' : section.testedVersions[0];
             section.testedVersionsStringFull = section.testedVersions.join(',&nbsp;');
 
             section.testedVersionsString = this.formatVersion(section.testedVersionsString);
@@ -200,7 +203,14 @@ export class IntegrationService implements OnDestroy {
             });
         }
 
-        plugin.versionDetails.version = (plugin.versionDetails.version) ? 'v.&nbsp;' + plugin.versionDetails.version : '&nbsp;';
+
+        if (plugin.versionDetails) {
+            plugin.versionDetails.version = this.formatVersion(plugin.versionDetails.version);
+        } else {
+            plugin.versionDetails = {
+                version: '&nbsp;'
+            };
+        }
 
         if (plugin.requirementsAndCompatibility && plugin.requirementsAndCompatibility.platforms) {
             plugin.requirementsAndCompatibility.platforms.icons = this.setPlatformIcons(plugin);
