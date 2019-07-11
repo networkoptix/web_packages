@@ -18,21 +18,18 @@
                          [style.backgroundImage]="'url(' + plugin.information.logo + ')'">
                     </div>
                     <div class="card--header-info" *ngIf="plugin.requirementsAndCompatibility">
-
-                        <div class="version"
-                             *ngIf="CONFIG && plugin.requirementsAndCompatibility.testedVersionsString">{{CONFIG.vmsName}}:
-                        </div>
-
-                        <div class="version"
-                             *ngIf="plugin.requirementsAndCompatibility.testedVersionsString"
-                             [innerHTML]="plugin.requirementsAndCompatibility.testedVersionsString">
-                        </div>
-
                         <div class="platforms">
                             <div *ngFor="let icon of plugin.requirementsAndCompatibility.platforms.icons">
                                 <img [src]="icon.src">
                             </div>
                         </div>
+
+                        <div class="version"
+                             *ngIf="plugin.requirementsAndCompatibility.testedVersionsString"
+                             [innerHTML]="plugin.requirementsAndCompatibility.testedVersionsString"></div>
+
+                        <div class="label"
+                             *ngIf="CONFIG && plugin.requirementsAndCompatibility.testedVersionsString">Works with:</div>
                     </div>
                 </header>
 

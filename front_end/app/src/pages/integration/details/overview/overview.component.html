@@ -60,7 +60,8 @@
                         </div>
                     </div>
 
-                    <div class="section">
+                    <div class="section"
+                         *ngIf="plugin.requirementsAndCompatibility.testedVersionsStringFull">
                         <div>
                             <label class="group-label" [translate]="'testedVersionsLabel'"
                                    [translateParams]="{ vmsName: CONFIG.vmsName }"></label>

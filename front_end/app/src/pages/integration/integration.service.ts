@@ -21,6 +21,7 @@ export class IntegrationService implements OnDestroy {
     selectedSectionSubject = new BehaviorSubject([]);
     plugin: any = {};
     inReview: boolean;
+    haveCustomBuild: boolean;
 
     constructor(private api: NxCloudApiService,
                 private configService: NxConfigService) {
@@ -53,8 +54,8 @@ export class IntegrationService implements OnDestroy {
     }
 
     formatVersion(elm) {
-        if (!elm || elm && elm !== '&nbsp;' && elm.indexOf('v.') !== 0) {
-            elm = (elm) ? 'v.&nbsp;' + elm : '&nbsp;';
+        if (!elm || elm && elm !== '' && elm.indexOf('v.') !== 0) {
+            elm = (elm) ? 'v.&nbsp;' + elm : '';
         }
 
         return elm;
@@ -64,16 +65,37 @@ export class IntegrationService implements OnDestroy {
         const section = plugin.requirementsAndCompatibility;
 
         if (section) {
+            this.haveCustomBuild = false;
+
             if (section.platforms) {
                 section.platforms.icons = this.setPlatformIcons(plugin);
             }
 
             if (section.testedBuild) {
                 section.testedVersions.splice(0, 0, section.testedBuild);
-                // testedVersions is required field so we'll have at least 2 items
-                section.testedVersionsString = section.testedVersions[0] + ',&nbsp;...';
-            } else {
-                section.testedVersionsString = section.testedVersions.join(',&nbsp;');
+                this.haveCustomBuild = true;
+            }
+
+            switch (section.testedVersions.length) {
+                case 0: break;
+                case 1:
+                    section.testedVersionsString = section.testedVersions[0];
+                    break;
+
+                case 2:
+                    if (this.haveCustomBuild) {
+                        section.testedVersionsString = section.testedVersions[0] + ',&nbsp;...';
+                    } else {
+                        section.testedVersionsString = section.testedVersions.join(',&nbsp;');
+                    }
+                    break;
+
+                default:
+                    if (this.haveCustomBuild) {
+                        section.testedVersionsString = section.testedVersions[0] + ',&nbsp;...';
+                    } else {
+                        section.testedVersionsString = section.testedVersions.slice(0, 2).join(',&nbsp;') + ',&nbsp;...';
+                    }
             }
 
             section.testedVersionsStringFull = section.testedVersions.join(',&nbsp;');
