@@ -184,7 +184,7 @@
     function fileHandler(event){
         var element = event.target;
         var upload_files = element.files;
-        var errorList = element.parentElement.parentElement.parentElement.children[0];
+        var errorList = $(element).parents('div').siblings('ul.errorlist');
         $(errorList).html("");
 
         if (upload_files.length > 0 && upload_files[0].size > element.size) {
