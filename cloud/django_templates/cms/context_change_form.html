@@ -239,6 +239,13 @@
         langSelector.addEventListener('change', languageChanged, false);
     }
     $('[data-toggle="tooltip"]').tooltip();
+    $('[type=reset]').click(function() {
+        var $errorLists =$('ul.errorlist');
+        for (var i=0; i < $errorLists.length; ++i) {
+            $($errorLists[i]).html("");
+        }
+        disableSubmitButtons(false);
+    });
 
     tinymce.init({
         selector: '.tinymce',
