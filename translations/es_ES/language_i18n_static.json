@@ -152,12 +152,33 @@
 	"dialogs": {
 		"merge": {
 			"connectToCloud": "Conectar el sistema que desea fusionar con este a <strong>{{cloudName}}</strong> o fusionar localmente usando <strong>{{vmsName}}</strong> Cliente.",
-			"mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from the <strong>{{primarySystem}}</strong>.",
-			"primaryCannotMerge": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} System.",
-			"primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}.",
-			"secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
+			"mergeConfirmation": "Estás a punto de fusionar sistemas <strong>{{primarySystem}}</strong> y <strong>{{secondarySystem}}</strong>. Los ajustes y el nombre serán tomados de los <strong>{{primarySystem}}</strong>.",
+			"primaryCannotMerge": "El sistema {{targetSystem}} tiene una versión de software más nueva que es incompatible con el sistema actual. Actualizar el sistema actual al <a href=\"/download\" target=\"_blank\" translate>última versión</a> de fusionarse con el {{targetSystem}} del sistema.",
+			"primarySystemOffline": "El sistema {{primarySystem}} está desconectado y no puede ser fusionado con el Sistema {{targetSystem}}.",
+			"secondaryCannotMerge": "El sistema {{targetSystem}} tiene una versión de software anterior que es incompatible con el sistema actual. Actualice {{targetSystem}} a la <a href=\"/download\" target=\"_blank\" translate>última compilación</a> para fusionarla con la actual.",
 			"systemOffline": "El sistema {{targetSystem}} está fuera de línea y no se puede combinar con el actual.",
 			"systemUnavailable": "El sistema {{targetSystem}} es actualmente inalcanzable. Inténtalo de nuevo en unos minutos o contacta"
+		},
+		"message": {
+			"failedToSend": "Message has failed to send.",
+			"sent": "Message has been sent.",
+			"title": {
+				"integration": "Get in touch with {{companyName}}",
+				"ipvd_feedback_page": "Feedback for cameras page",
+				"ipvd_feedback_device": "Feedback about {{product}}"
+			},
+			"topic": {
+				"contact_sales": "Contact sales for {{product}}",
+				"contact_support": "Contact support for {{product}}",
+				"integration_feedback": "Feedback for integration {{product}}",
+				"ipvd_feedback_page": "Feedback for cameras page",
+				"ipvd_feedback_device": "Feedback about {{product}}"
+			}
 		}
-	}
+	},
+	"privacyPolicy": {
+		"integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent.",
+		"ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent."
+	},
+	"testedVersionsLabel": "Tested on {{vmsName}} version(s):"
 }

@@ -48,7 +48,7 @@ def process_data_structure(data_structure):
         data_structure["value"] = f'<pre>{json.dumps(data_structure["value"], indent=4)}</pre>'
     data_structure["type"] = get_data_type_nice_name(data_structure["type"])
 
-    data_structure["description"] = data_structure["description"].replace("<br><br><br>", "")
+    data_structure["description"] = data_structure.get("description", "").replace("<br><br><br>", "")
 
 
 def process_cms_structure_json():

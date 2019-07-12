@@ -158,6 +158,27 @@
 			"secondaryCannotMerge": "System {{targetSystem}} ma starszą wersję oprogramowania, która jest niezgodna z bieżącym systemem. Zaktualizuj system {{targetSystem}} do <a href=\"/download\" target=\"_blank\" translate>najnowszej kompilacji</a>, aby złączyć go z bieżącym systemem.",
 			"systemOffline": "System {{targetSystem}} jest w trybie offline i nie można go złączyć z bieżącym systemem.",
 			"systemUnavailable": "System {{targetSystem}} jest obecnie niedostępny. Spróbuj ponownie za kilka minut lub skontaktuj się"
+		},
+		"message": {
+			"failedToSend": "Wysyłanie wiadomości nie powiodło się.",
+			"sent": "Wiadomość została wysłana.",
+			"title": {
+				"integration": "Skontaktuj się z {{companyName}}",
+				"ipvd_feedback_page": "Opinia dotycząca listy kamer",
+				"ipvd_feedback_device": "Opinia o {{product}}"
+			},
+			"topic": {
+				"contact_sales": "Kontakt do sprzedawcy {{product}}",
+				"contact_support": "Kontakt do wsparcia technicznego {{product}}",
+				"integration_feedback": "Opinia dotycząca integracji {{product}}",
+				"ipvd_feedback_page": "Opinia dotycząca listy kamer",
+				"ipvd_feedback_device": "Opinia o {{product}}"
+			}
 		}
-	}
+	},
+	"privacyPolicy": {
+		"integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent.",
+		"ipvd": "Przesyłając ten formularz zgadzasz się na kontakt przez %COMPANY_NAME%.\nPolitykę prywatności firmy %COMPANY_NAME% znajdziesz <a href=\"%PRIVACY_LINK%\">tutaj</a>. Zawiera ona instrukcje dotyczące wycofania zgody."
+	},
+	"testedVersionsLabel": "Tested on {{vmsName}} version(s):"
 }

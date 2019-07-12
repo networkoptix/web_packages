@@ -23,9 +23,15 @@ def find_or_add_product_type(product_type, name=""):
     return ProductType.objects.get_or_create(name=name, type=product_type)[0]
 
 
-def find_or_add_product(name, customization, product_type_type, product_type_name):
+def find_or_add_product_with_single_customization(name, customization, product_type_type, product_type_name):
     product_type = find_or_add_product_type(ProductType.get_type_by_name(product_type_type), product_type_name)
-    product = Product.objects.get_or_create(name=name, product_type=product_type)[0]
+    if not product_type.single_customization:
+        raise ValueError("Product type must be single customization for this function.")
+
+    product = Product.objects.filter(customizations__in=[customization], product_type=product_type).first()
+    if not product:
+        product = Product.objects.create(name=name, product_type=product_type)
+
     product.customizations.set([customization])
     return product
 
@@ -317,6 +323,7 @@ def update_data_structure(context_id, has_lang, record, order, preserve_file=Fal
     data_structure.advanced = record.get("advanced", False)
     data_structure.optional = record.get("optional", False)
     data_structure.public = record.get("public", True)
+    data_structure.protected = record.get("protected", False)
     data_structure.description = record.get("description", "")
     data_structure.type = DataStructure.get_type_by_name(record.get("type", "text"))
 

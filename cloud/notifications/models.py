@@ -48,11 +48,15 @@ class Event(models.Model):
         subscriptions = subscriptions.filter(Q(enabled=True) | Q(enabled=1))
         # 2. For each subscription create a message and send it
         for subscription in subscriptions.all():
-            user = Account.objects.get(email=subscription.user_email)
-            self.data['userFullName'] = user.get_full_name()
+            user = Account.objects.filter(email=subscription.user_email).first()
+
+            if user:
+                self.data['userFullName'] = user.get_full_name()
+
             message = Message(
                 message=self.data,
-                user_email=user.email,
+                user_email=subscription.user_email,
+                customization=user.customization if user else settings.CUSTOMIZATION,
                 type=self.type,
                 event=self
             )
@@ -66,7 +70,7 @@ class Subscription(models.Model):
                               help_text="What's the target? (release type, customization or cloud instance)")
     type = models.CharField(max_length=255, default='', blank=True,
                             help_text="What's the event? (submitted_release, published_{{type}}, cloud_...)")
-    user_email = models.CharField(max_length=255)
+    user_email = models.EmailField()
     created_date = models.DateTimeField(auto_now_add=True)
     enabled = models.BooleanField(default=True)
 
@@ -117,7 +121,6 @@ class Feedback(models.Model):
     product_name = models.CharField(max_length=255)
     sender_name = models.CharField(max_length=255)
     sender_email = models.CharField(max_length=255)
-    sender_to_be_contacted = models.BooleanField()
     target_product = models.ForeignKey(Product, on_delete=models.CASCADE)
     type = models.CharField(max_length=255)
 
@@ -126,7 +129,6 @@ class Feedback(models.Model):
         data = {
             'sender_name': self.sender_name,
             'sender_email': self.sender_email,
-            'sender_to_be_contacted': self.sender_to_be_contacted,
             'product': self.product_name,
             'message': self.message
         }

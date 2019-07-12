@@ -12,23 +12,8 @@
     "logoutAuthorisedTitle": "Bạn đã đăng nhập",
     "logoutAuthorisedContinueButton": "Tiếp tục",
     "logoutAuthorisedLogoutButton": "Đăng xuất",
-    "messageFailed": "Message has failed to send.",
-    "messageSent": "Message has been sent.",
     "noClientDetectedTitle": "Cài đặt %VMS_NAME% để xem Hệ thống của bạn",
     "download": "Tải xuống %VMS_NAME%"
-  },
-  "messageDialog": {
-    "title": {
-      "integration": "Email for {{product}}",
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Feedback about {{product}}"
-    },
-    "topic": {
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Feedback about {{product}}",
-      "contact_sales": "Contact sales for {{product}}",
-      "contact_support": "Contact support for {{product}}"
-    }
   },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",

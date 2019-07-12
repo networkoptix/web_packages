@@ -3,12 +3,13 @@
     "Account Settings": "Kontoinställningar",
     "Account not activated": "Kontot är inte aktiverat",
     "Account not found": "Kan inte hitta kontot",
+    "Additional Requirements": "Additional Requirements",
     "Administration": "Administrering",
     "Advanced PTZ": "Avancerad PTZ",
     "Advanced Search": "Advanced Search",
+    "All Integrations": "All Integrations",
     "All Systems": "Alla system",
     "All cloud users will be deleted.": "Alla molnanvändare kommer raderas.",
-    "All integrations": "Alla integreringar",
     "All results": "Alla resultat",
     "Any": "Någon",
     "Audio": "Ljud",
@@ -25,6 +26,7 @@
     "Contact": "Kontakt",
     "Create Account": "Skapa konto",
     "Create account": "Skapa konto",
+    "Developer": "Developer",
     "Disconnect": "Koppla från",
     "Disconnect System from %CLOUD_NAME%?": "Koppla bort systemet från %CLOUD_NAME%?",
     "Download": "Ladda ner",
@@ -47,9 +49,7 @@
     "Forgot password?": "Glömt lösenord?",
     "Get in touch": "Get in touch",
     "How it works": "How it works",
-    "How to install?": "How to install?",
-    "I agree to the": "I agree to the license terms and conditions",
-    "I want you to contact me": "Jag vill att du ska kontakta mig",
+    "How to setup?": "How to setup?",
     "I/O": "I/O",
     "In Review": "In Review",
     "In-Client Upgrade:": "Uppgradering av klient:",
@@ -76,6 +76,7 @@
     "Release Notes": "Ändringslogg",
     "Release notes": "Ändringslogg",
     "Remember me": "Kom ihåg mig",
+    "Requirements": "Requirements",
     "Resend activation email": "Skicka om aktiveringsmejl",
     "Resolution(max)": "Upplösning (max)",
     "Save": "Spara",
@@ -88,6 +89,8 @@
     "Show All": "Visa alla",
     "Some of your servers don't support cloud System merge because of outdated software version.": "Några av dina servrar stöder inte systemfusion i moln på grund av föråldrad programvaruversion.",
     "Support": "Support",
+    "Support E-mail": "Support E-mail",
+    "Support URL": "Support URL",
     "System name": "Systemets namn",
     "System name is required": "Systemnamn krävs",
     "System will be accessible through local network with local administrator account.": "Systemet kommer att vara tillgängligt via lokalt nätverk med lokalt administratörskonto.",
@@ -95,8 +98,10 @@
     "Systems of such size may work but will be unstable and have troubles with updates and synchronisation.": "System med sådan storlek kan fungera men kommer att vara instabila och ha problem med uppdateringar och synkronisering.",
     "Tags": "Taggar",
     "Take the name and settings from": "Ta systemnamn och inställningar från",
+    "Terms of Use": "Terms of Use",
     "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.": "Autentiseringsuppgifterna för den här användaren exponeras! Du måste skapa en anpassad ”offentliga” användarroll med tillgång endast\n            till kameror för offentlig användning och tilldelas endast minimikravet visningsbehörigheter. Detta\n            ”offentliga användare” bör inte ha systemomfattande åtkomst av något slag.",
     "There will be more than": "Det kommer att finnas mer än",
+    "To": "To",
     "Too many attempts. Try again in a minute.": "Alltför många försök. Försök igen om någon minut.",
     "Topic": "Topic",
     "Update them to the": "Uppdatera dem till",
@@ -104,10 +109,12 @@
     "User": "Användare",
     "View": "Visa",
     "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.": "Vi rekommenderar att du installerar de senaste versionerna av Google Chrome eller Mozilla Firefox, men du kan använda någon annan modern webbläsare.",
-    "What's new?": "Vad är nytt?",
+    "What's New?": "What's New?",
+    "Works with:": "Works with:",
     "Wrong password": "Fel lösenord",
     "You can merge only those cloud Systems, where you have the \"Owner\" permissions.": "Du kan sammanfoga endast de Cloud Systems, där du har behörigheterna \"Ägare\".",
     "You can only merge Systems where you are the owner.": "Du kan slå samman cloud system där du är ägare.",
+    "Your Email": "Your Email",
     "Your Name": "Ditt namn",
     "Your browser is not supported": "Din webbläsare stöds inte",
     "andXMore": "... och {{value}} mer",
@@ -133,6 +140,22 @@
             "secondaryCannotMerge": "System {{targetSystem}} har en äldre programversion som inte är kompatibel med det aktuella systemet. Uppdatera {{targetSystem}} till <a href=\"/download\" target=\"_blank\" translate>senaste version</a> att slå samman den med den nuvarande.",
             "systemOffline": "System {{targetSystem}} är offline och kan inte slås samman med det nuvarande.",
             "systemUnavailable": "System {{targetSystem}} är för närvarande inte tillgängligt. Försök igen om några minuter eller kontakta"
+        },
+        "message": {
+            "failedToSend": "Message has failed to send.",
+            "sent": "Message has been sent.",
+            "title": {
+                "integration": "Get in touch with {{companyName}}",
+                "ipvd_feedback_device": "Feedback about {{product}}",
+                "ipvd_feedback_page": "Feedback for cameras page"
+            },
+            "topic": {
+                "contact_sales": "Contact sales for {{product}}",
+                "contact_support": "Contact support for {{product}}",
+                "integration_feedback": "Feedback for integration {{product}}",
+                "ipvd_feedback_device": "Feedback about {{product}}",
+                "ipvd_feedback_page": "Feedback for cameras page"
+            }
         }
     },
     "dialogs.merge.connectToCloud": "Anslut system du vill slå samman med den här till <strong>{{cloudName}}</strong> eller slå ihop lokalt med <strong>{{vmsName}}</strong> Client.",
@@ -271,6 +294,10 @@
         "supportedDevices": "Enheter som stöds"
     },
     "phoneNumberWithLabel": "Tel: {{number}}",
+    "privacyPolicy": {
+        "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent.",
+        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent."
+    },
     "search": {
         "Any": "Någon",
         "Search": "Sök",
@@ -285,5 +312,6 @@
         "vendors": "tillverkare"
     },
     "servers in the merged System.": "servrar i det sammanslagna systemet.",
-    "support": "support"
+    "support": "support",
+    "testedVersionsLabel": "Tested on {{vmsName}} version(s):"
 }

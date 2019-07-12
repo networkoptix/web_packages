@@ -16,6 +16,7 @@ import re
 import json
 import sys
 from util.config import get_config
+from cloud.logger import downgrade_unauthorized_requests
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LOCAL_ENVIRONMENT = 'runserver' in sys.argv or os.getenv('LOCAL_ENV', False)
@@ -116,6 +117,7 @@ ADMIN_DASHBOARD = ('cms.models.ContentVersion',
                    'cms.models.Language',
                    'cms.models.ProductType',
                    'cms.models.UserGroupsToProductPermissions',
+                   'cms.models.UserGroupsToProductType',
                    'django_celery_results.*',
                    'notifications.models.*',
                    'rest_hooks.*',
@@ -156,23 +158,24 @@ WSGI_APPLICATION = 'cloud.wsgi.application'
 
 cloud_db = conf['cloud_database']
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'HOST': cloud_db['host'],
-        'PORT': cloud_db['port'],
-        'USER': cloud_db['username'],
-        'PASSWORD': cloud_db['password'],
-        'NAME': cloud_db['database'],
-        'OPTIONS': {
-            'sql_mode': 'TRADITIONAL',
-            'charset': 'utf8mb4',
-            'init_command': 'SET \
-                character_set_server=utf8mb4,\
-                collation_server = utf8mb4_unicode_ci'
+if cloud_db and cloud_db['host'] != '$DB_HOST':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'HOST': cloud_db['host'],
+            'PORT': cloud_db['port'],
+            'USER': cloud_db['username'],
+            'PASSWORD': cloud_db['password'],
+            'NAME': cloud_db['database'],
+            'OPTIONS': {
+                'sql_mode': 'TRADITIONAL',
+                'charset': 'utf8mb4',
+                'init_command': 'SET \
+                    character_set_server=utf8mb4,\
+                    collation_server = utf8mb4_unicode_ci'
+            }
         }
     }
-}
 
 if not LOCAL_ENVIRONMENT:
     CACHES = {
@@ -228,6 +231,12 @@ USE_TZ = False
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'filters': {
+        'downgrade_unauthorized': {
+            '()': 'django.utils.log.CallbackFilter',
+            'callback': downgrade_unauthorized_requests
+        }
+    },
     'formatters': {
         'verbose': {
             'format': '[%(levelname)s] %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
@@ -240,6 +249,7 @@ LOGGING = {
         'console': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
+            'filters': ['downgrade_unauthorized'],
             'formatter': 'verbose'
         },
         'mail_admins': {
@@ -328,8 +338,15 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PERMISSION_CLASSES': (
        'rest_framework.permissions.AllowAny',
+    ),
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
     )
 }
+
+if DEBUG:
+    REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] += ('rest_framework.renderers.BrowsableAPIRenderer',)
+
 # Used for Zapier
 HOOK_EVENTS = {
     'user.send_zap_request': None

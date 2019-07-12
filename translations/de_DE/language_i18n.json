@@ -3,12 +3,13 @@
     "Account Settings": "Accounteinstellungen",
     "Account not activated": "Konto nicht aktiviert",
     "Account not found": "Account nicht gefunden",
+    "Additional Requirements": "Zusätzliche Anforderungen",
     "Administration": "Administration",
     "Advanced PTZ": "Erweiterte PTZ",
     "Advanced Search": "Erweiterte Suche",
+    "All Integrations": "Alle Integrationen",
     "All Systems": "Alle Systeme",
     "All cloud users will be deleted.": "Alle Cloudbenutzer werden gelöscht.",
-    "All integrations": "Alle Integrationen",
     "All results": "Alle Ergebnisse",
     "Any": "Alle",
     "Audio": "Audio",
@@ -25,6 +26,7 @@
     "Contact": "Kontakt",
     "Create Account": "Account erstellen",
     "Create account": "Account erstellen",
+    "Developer": "Developer",
     "Disconnect": "Trennen",
     "Disconnect System from %CLOUD_NAME%?": "System von %CLOUD_NAME% trennen?",
     "Download": "Download",
@@ -46,10 +48,8 @@
     "Fisheye": "Fischaugenobjektiv",
     "Forgot password?": "Passwort vergessen?",
     "Get in touch": "Kontakt aufnehmen",
-    "How it works": "How it works",
-    "How to install?": "Wie wird installiert?",
-    "I agree to the": "Ich akzeptiere die",
-    "I want you to contact me": "Ich möchte, dass Sie mich kontaktieren",
+    "How it works": "So funktioniert es",
+    "How to setup?": "Wie wird es eingerichtet?",
     "I/O": "I/O",
     "In Review": "Im Review",
     "In-Client Upgrade:": "In-Client Upgrade:",
@@ -76,6 +76,7 @@
     "Release Notes": "Release Notes",
     "Release notes": "Release Notes",
     "Remember me": "Anmeldeinformationen merken",
+    "Requirements": "Anforderungen",
     "Resend activation email": "Aktivierungsmail erneut senden",
     "Resolution(max)": "Auflösung (max)",
     "Save": "Speichern",
@@ -88,6 +89,8 @@
     "Show All": "Alle anzeigen",
     "Some of your servers don't support cloud System merge because of outdated software version.": "Einige Ihrer Server unterstützen das Zusammenführen von Cloudsystemen aufgrund einer veralteten Softwareversion nicht.",
     "Support": "Support",
+    "Support E-mail": "Support E-mail",
+    "Support URL": "Support URL",
     "System name": "Systemname",
     "System name is required": "Systemname ist erforderlich",
     "System will be accessible through local network with local administrator account.": "System wird über das lokale Netzwerk mit dem lokalen Administratoraccount erreichbar sein.",
@@ -95,8 +98,10 @@
     "Systems of such size may work but will be unstable and have troubles with updates and synchronisation.": "Systeme dieser Größe funktionieren möglicherweise, sind jedoch instabil und haben Probleme mit Updates und Synchronisierung.",
     "Tags": "Tags",
     "Take the name and settings from": "Übernehmen Sie den Namen und die Einstellungen von",
+    "Terms of Use": "Allgemeine Geschäftsbedingungen",
     "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.": "Die Anmeldeinformationen dieses Benutzers werden angezeigt! Sie müssen eine benutzerdefinierte Rolle \"Öffentlicher Benutzer\" erstellen, die nur Zugriff \n            auf die für den öffentlichen Gebrauch ausgewählten Kameras hat und nur die minimal erforderlichen Ansichtsrechte hat. Dieser \n            \"Öffentliche Benutzer\" sollte keinen systemweiten Zugriff jeglicher Art haben.",
     "There will be more than": "Es wird mehr geben als",
+    "To": "Zu",
     "Too many attempts. Try again in a minute.": "Zu viele Versuche. Versuchen Sie es später erneut.",
     "Topic": "Thema",
     "Update them to the": "Aktualisieren Sie sie auf",
@@ -104,10 +109,12 @@
     "User": "Benutzer",
     "View": "Ansicht",
     "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.": "Wir empfehlen die Installation der neuesten Versionen von Google Chrome oder Mozilla Firefox, aber Sie können auch jeden anderen modernen Webbrowser verwenden.",
-    "What's new?": "Was ist neu?",
+    "What's New?": "Was ist neu?",
+    "Works with:": "Works with:",
     "Wrong password": "Falsches Passwort",
     "You can merge only those cloud Systems, where you have the \"Owner\" permissions.": "Sie können nur die Cloudsysteme zusammenführen, bei denen Sie die Berechtigungen \"Besitzer\" haben.",
     "You can only merge Systems where you are the owner.": "Sie können nur Cloudsysteme zusammenführen, in welchen Sie Besitzer sind.",
+    "Your Email": "Ihre Email",
     "Your Name": "Ihr Name",
     "Your browser is not supported": "Ihr Browser wird nicht unterstützt",
     "andXMore": "... und {{value}} mehr",
@@ -133,6 +140,22 @@
             "secondaryCannotMerge": "Das System {{targetSystem}} hat eine ältere Softwareversion, die mit dem aktuellen System nicht kompatibel ist. Aktualisieren Sie das System {{targetSystem}} auf die <a href=\"/download\" target=\"_blank\" translate>neueste Buildversion</a> um es mit dem aktuellen System zusammenzuführen.",
             "systemOffline": "System {{targetSystem}} ist offline und kann nicht mit dem aktuellen zusammengeführt werden.",
             "systemUnavailable": "System {{targetSystem}} ist derzeit nicht erreichbar. Versuchen Sie es in einigen Minuten erneut oder wenden Sie sich an"
+        },
+        "message": {
+            "failedToSend": "Nachricht konnte nicht gesendet werden.",
+            "sent": "Die Nachricht wurde gesendet.",
+            "title": {
+                "integration": "Kontaktieren Sie {{companyName}}",
+                "ipvd_feedback_device": "Feedback zu {{product}}",
+                "ipvd_feedback_page": "Feedback zur Kameraseite"
+            },
+            "topic": {
+                "contact_sales": "Kontaktiere Vertrieb für {{product}}",
+                "contact_support": "Kontaktiere Support für {{product}}",
+                "integration_feedback": "Feedback zur Integration {{product}}",
+                "ipvd_feedback_device": "Feedback zu {{product}}",
+                "ipvd_feedback_page": "Feedback zur Kameraseite"
+            }
         }
     },
     "dialogs.merge.connectToCloud": "Verbinden Sie das System, mit dem Sie fusionieren möchten, mit <strong>{{cloudName}}</strong> oder fusionieren Sie lokal mit dem <strong>{{vmsName}}</strong>-Client.",
@@ -271,6 +294,10 @@
         "supportedDevices": "Unterstützte Geräte"
     },
     "phoneNumberWithLabel": "Tel: {{number}}",
+    "privacyPolicy": {
+        "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent.",
+        "ipvd": "Mit dem Absenden dieses Formulars erklären Sie sich damit einverstanden, dass Sie von %COMPANY_NAME% kontaktiert werden.\nSie finden %COMPANY_NAME% Datenschutzerklärung <a href=\"%PRIVACY_LINK%\">hier</a>, die Anweisungen zum Widerruf Ihrer Einwilligung enthält."
+    },
     "search": {
         "Any": "Alle",
         "Search": "Suche",
@@ -285,5 +312,6 @@
         "vendors": "Hersteller"
     },
     "servers in the merged System.": "Server im zusammengeführten System.",
-    "support": "support"
+    "support": "support",
+    "testedVersionsLabel": "Tested on {{vmsName}} version(s):"
 }

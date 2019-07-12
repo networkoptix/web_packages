@@ -5,8 +5,8 @@ import requests
 import shutil
 from concurrent.futures import ThreadPoolExecutor
 
-COMMAND_ALL_PRODUCTS = 'all'
-COMMAND_PRODUCT = 'product'
+FETCH_BY_TYPE = 'type'
+FETCH_BY_ID = 'id'
 DEFAULT_INSTANCE = "https://cloud-test.hdw.mx"
 FILE_NAME_PATTERN = re.compile("filename=(.+).zip")
 
@@ -28,6 +28,10 @@ def download_package(session, instance, product_type, product_id):
 
 
 def download_packages(session, instance, product_type, product_ids):
+    if len(product_ids) == 1:
+        download_package(session, instance, product_type, product_ids[0])
+        return
+
     with ThreadPoolExecutor(max_workers=4) as executor:
         futures = []
         for product_id in product_ids:
@@ -39,12 +43,14 @@ def download_packages(session, instance, product_type, product_ids):
 
 
 def get_cmd_args():
-    description = "This script will download zip packages for products." \
-                  "How to use this script:\n" \
-                  "- python get_zip_from_cloud.py noptix@networkoptix.com password123 all" \
-                  "\t\t\t(Downloads all packages for products related to the default vms ProductType)\n" \
-                  "- python get_zip_from_cloud.py noptix@networkoptix.com password123 product 30 " \
-                  "\t(Downloads a specific package base on the product_id)"
+    description = f"This script will download zip packages for products. " \
+        f"How to use this script:\n" \
+        f"- python get_zip_from_cloud.py noptix@networkoptix.com password123 {FETCH_BY_TYPE}" \
+        f"\t\t\t(Downloads packages for all VMS Customizations)\n" \
+        f"- python get_zip_from_cloud.py noptix@network.com password123 {FETCH_BY_TYPE} --customization=default" \
+        f"\t\t\t(Downloads a package for selected VMS customization)" \
+        f"- python get_zip_from_cloud.py noptix@networkoptix.com password123 {FETCH_BY_ID} 30 " \
+        f"\t(Downloads a specific package base on the product_id)"
     parser = argparse.ArgumentParser("get_zip_from_cloud", description=description,
                                      formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument("login",  help="User's login")
@@ -55,23 +61,27 @@ def get_cmd_args():
 
     subparsers = parser.add_subparsers(dest="command", help='Decides how to fetch packages.',
                                        required=True)
-    all_products = subparsers.add_parser(COMMAND_ALL_PRODUCTS)
-    all_products.add_argument("-t", "--type", nargs="?", default="vms",
-                              help="The type of the ProductType you are trying to get")
-    all_products.add_argument("-n", "--name", nargs="?", default="",
-                              help="The name of the ProductType you are trying to get")
+    type_parser = subparsers.add_parser(FETCH_BY_TYPE)
+    type_parser.add_argument("-t", "--type", nargs="?", default="vms",
+                             help="The type of the ProductType you are trying to get")
+    type_parser.add_argument("-n", "--name", nargs="?", default="",
+                             help="The name of the ProductType you are trying to get")
+    type_parser.add_argument("-c", "--customization", nargs="?", default="",
+                             help="The name of the specific customization you want to fetch."
+                                  "If this is passed in it will return one product.")
 
-    specific_product = subparsers.add_parser(COMMAND_PRODUCT)
-    specific_product.add_argument("product_id", type=int,
-                                  help="The product id for the package you want to download.")
-    parser.set_defaults(type='other')
+    id_parser = subparsers.add_parser(FETCH_BY_ID)
+    id_parser.add_argument("product_id", type=int,
+                           help="The product id for the package you want to download.")
+    parser.set_defaults(type="other")
+    parser.set_defaults(customization="")
 
     args = parser.parse_args()
 
     product_types = ["cloud_portal", "vms", "integration", "other"]
-    if args.command == COMMAND_ALL_PRODUCTS and args.type not in product_types:
-        parser.error(f"You must either pass in a product id or use a type that is either {', '.join(product_types)}.")
-    elif args.command == COMMAND_PRODUCT and args.product_id is None:
+    if args.command == FETCH_BY_TYPE and args.type not in product_types:
+        parser.error(f"You must pass in a type that is either {', '.join(product_types)}.")
+    elif args.command == FETCH_BY_ID and args.product_id is None:
         parser.error("A product id is required.")
     return args
 
@@ -83,8 +93,9 @@ def main():
         session.post(f"{args.instance}/api/account/login", json={"email": args.login, "password": args.password})
 
         # Get all of the products of a specific product_type
-        if args.command == COMMAND_ALL_PRODUCTS:
-            url = f"{args.instance}/admin/cms/get_product_ids/?type={args.type}&name={args.name}"
+        if args.command == FETCH_BY_TYPE:
+            query = f"?type={args.type}&name={args.name}&customization={args.customization}"
+            url = f"{args.instance}/admin/cms/get_product_ids/{query}"
             res = session.get(url)
             product_ids = res.json()
         else:

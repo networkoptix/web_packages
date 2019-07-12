@@ -140,6 +140,7 @@ Reset state
     Validate Log Out
     Log In    ${EMAIL MERGE OWNER 2}    ${password}
     Validate Log In
+    ${state}    Run Keyword And Ignore Error    Element Should Be Visible    ${YOU HAVE NO SYSTEMS}
     ${count}    Run Keyword And Ignore Error    Get Element Count    ${SYSTEMS TILE}
     FOR    ${idx}    IN RANGE   ${count}[1]-1
         Click Element    ${SYSTEMS TILE}

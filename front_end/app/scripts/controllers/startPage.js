@@ -15,8 +15,17 @@
                        languageService, nxPageService, $base64) {
 
         if ($routeParams.callLogin) {
-            nxPageService.setPageTitle(languageService.lang.pageTitles.login);
-            dialogs.login(false);
+            authorizationCheckService
+                .checkLoginState()
+                .then(function() {
+                    authorizationCheckService.redirectAuthorised();
+    
+                })
+                .catch(function () {
+                    nxPageService.setPageTitle(languageService.lang.pageTitles.login);
+                    dialogs.login(false);
+                });
+            
             
         } else {
             var search = $location.search(),

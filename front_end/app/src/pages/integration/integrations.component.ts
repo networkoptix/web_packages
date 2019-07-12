@@ -31,8 +31,6 @@ export class NxIntegrationsComponent implements OnInit {
     };
 
     private setupDefaults() {
-        this.CONFIG = this.config.getConfig();
-
         this.allElements = [];
         this.elements = [];
 
@@ -41,12 +39,6 @@ export class NxIntegrationsComponent implements OnInit {
         };
         this.filterModel = this.emptyFilter;
         this.filterModel.tags = [];
-        setTimeout(() => {
-            this.language.translationsSubject.subscribe((lang) => {
-                this.lang = lang;
-                this.title.setTitle(this.lang.pageTitles.integrations);
-            });
-        });
     }
 
     constructor(private uri: NxUriService,
@@ -60,6 +52,15 @@ export class NxIntegrationsComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.CONFIG = this.config.getConfig();
+
+        this.language
+            .translationsSubject
+            .subscribe((lang) => {
+                this.lang = lang;
+                this.title.setTitle(this.lang.pageTitles.integrations);
+            });
+
         // Example URI
         // /integrations?search=node
         this.uri

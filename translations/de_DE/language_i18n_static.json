@@ -158,6 +158,27 @@
 			"secondaryCannotMerge": "Das System {{targetSystem}} hat eine ältere Softwareversion, die mit dem aktuellen System nicht kompatibel ist. Aktualisieren Sie das System {{targetSystem}} auf die <a href=\"/download\" target=\"_blank\" translate>neueste Buildversion</a> um es mit dem aktuellen System zusammenzuführen.",
 			"systemOffline": "System {{targetSystem}} ist offline und kann nicht mit dem aktuellen zusammengeführt werden.",
 			"systemUnavailable": "System {{targetSystem}} ist derzeit nicht erreichbar. Versuchen Sie es in einigen Minuten erneut oder wenden Sie sich an"
+		},
+		"message": {
+			"failedToSend": "Nachricht konnte nicht gesendet werden.",
+			"sent": "Die Nachricht wurde gesendet.",
+			"title": {
+				"integration": "Kontaktieren Sie {{companyName}}",
+				"ipvd_feedback_page": "Feedback zur Kameraseite",
+				"ipvd_feedback_device": "Feedback zu {{product}}"
+			},
+			"topic": {
+				"contact_sales": "Kontaktiere Vertrieb für {{product}}",
+				"contact_support": "Kontaktiere Support für {{product}}",
+				"integration_feedback": "Feedback zur Integration {{product}}",
+				"ipvd_feedback_page": "Feedback zur Kameraseite",
+				"ipvd_feedback_device": "Feedback zu {{product}}"
+			}
 		}
-	}
+	},
+	"privacyPolicy": {
+		"integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent.",
+		"ipvd": "Mit dem Absenden dieses Formulars erklären Sie sich damit einverstanden, dass Sie von %COMPANY_NAME% kontaktiert werden.\nSie finden %COMPANY_NAME% Datenschutzerklärung <a href=\"%PRIVACY_LINK%\">hier</a>, die Anweisungen zum Widerruf Ihrer Einwilligung enthält."
+	},
+	"testedVersionsLabel": "Tested on {{vmsName}} version(s):"
 }

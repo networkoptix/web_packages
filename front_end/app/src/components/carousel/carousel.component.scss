@@ -1,5 +1,4 @@
 @import '../../../styles/theme_palette';
-@import '../../../styles/theme_variables';
 
 .carousel {
     background-color: $additional_light1;
@@ -14,6 +13,10 @@
     &.active {
         height: 100%;
         visibility: visible;
+    }
+    
+    &-caption {
+        margin-top : 1rem;
     }
 }
 

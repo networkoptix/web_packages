@@ -6,9 +6,9 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from cloud import settings
 from api.helpers.exceptions import api_success, handle_exceptions
 
-from cms.controllers.filldata import global_contexts_to_dict, process_context_structure
+from cms.controllers.filldata import global_contexts_to_dict, process_global_contexts
 from cms.models import Context, DataStructure, Product, ProductCustomizationReview, ProductType,\
-    UserGroupsToProductPermissions, cloud_portal_customization_cache
+    UserGroupsToProductPermissions, cloud_portal_customization_cache, get_cloud_portal_product
 
 CLOUD_PORTAL = ProductType.PRODUCT_TYPES.cloud_portal
 INTEGRATION = ProductType.PRODUCT_TYPES.integration
@@ -22,11 +22,10 @@ def make_integrations_json(integrations, contexts=None, show_pending=False, show
     if not contexts:
         contexts = Context.objects.filter(product_type__type=INTEGRATION)
 
-    global_contexts = Context.objects.filter(product_type__type=CLOUD_PORTAL, is_global=True)
-    cloud_portal = Product.objects.filter(product_type__type=CLOUD_PORTAL,
-                                          customizations__name__in=[settings.CUSTOMIZATION]).first()
+    cloud_portal = get_cloud_portal_product()
 
     if cloud_portal:
+        global_contexts = Context.objects.filter(product_type=cloud_portal.product_type, is_global=True)
         global_contexts_dict = global_contexts_to_dict(global_contexts, cloud_portal)
 
         for integration in integrations:
@@ -93,10 +92,8 @@ def make_integrations_json(integrations, contexts=None, show_pending=False, show
             if not integration_dict:
                 continue
 
-            for global_context in global_contexts:
-                process_context_structure(cloud_portal, global_context, integration_dict, None,
-                                          current_version, False, False, context_dict=global_contexts_dict)
-
+            process_global_contexts(cloud_portal, integration_dict, current_version, False,
+                                    global_contexts, global_contexts_dict)
             integration_dict['id'] = integration.id
             integrations_json.append(integration_dict)
 

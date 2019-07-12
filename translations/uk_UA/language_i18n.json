@@ -3,12 +3,13 @@
     "Account Settings": "Параметри облікового запису",
     "Account not activated": "Обліковий запис ще не активовано",
     "Account not found": "Обліковий запис не знайдено",
+    "Additional Requirements": "Додаткові вимоги",
     "Administration": "Панель керування",
     "Advanced PTZ": "Розширений PTZ",
     "Advanced Search": "Розширений пошук",
+    "All Integrations": "Всі інтеграції",
     "All Systems": "Всі системи",
     "All cloud users will be deleted.": "Всі хмарні користувачі будуть видалені.",
-    "All integrations": "Всі інтеграції",
     "All results": "Всі результати",
     "Any": "Будь-які",
     "Audio": "Аудіо",
@@ -25,6 +26,7 @@
     "Contact": "Контакт",
     "Create Account": "Створити обліковий запис",
     "Create account": "Створити обліковий запис",
+    "Developer": "Developer",
     "Disconnect": "Відключити",
     "Disconnect System from %CLOUD_NAME%?": "Відключити систему від %CLOUD_NAME%?",
     "Download": "Завантажити",
@@ -46,10 +48,8 @@
     "Fisheye": "Риб'яче око",
     "Forgot password?": "Забули пароль?",
     "Get in touch": "Зв'язатися з нами",
-    "How it works": "How it works",
-    "How to install?": "Як встановити?",
-    "I agree to the": "Я погоджуюсь з",
-    "I want you to contact me": "Я хочу, щоб ви зв'язалися зі мною",
+    "How it works": "Як це працює",
+    "How to setup?": "Як налаштувати?",
     "I/O": "Ввід/вивід",
     "In Review": "В огляді",
     "In-Client Upgrade:": "Вбудоване оновлення клієнта:",
@@ -76,6 +76,7 @@
     "Release Notes": "Зауваження до релізу",
     "Release notes": "Список змін",
     "Remember me": "Запам'ятати мене",
+    "Requirements": "Вимоги",
     "Resend activation email": "Повторно вислати лист з активацією",
     "Resolution(max)": "Роздільна здатність(макс.)",
     "Save": "Зберегти",
@@ -88,6 +89,8 @@
     "Show All": "Показати всі",
     "Some of your servers don't support cloud System merge because of outdated software version.": "Деякі ваші сервери не підтримують злиття системної хмари через застарілу версію програмного забезпечення.",
     "Support": "Підтримка",
+    "Support E-mail": "Support E-mail",
+    "Support URL": "Support URL",
     "System name": "Назва системи",
     "System name is required": "Ім'я системи обов'язкове",
     "System will be accessible through local network with local administrator account.": "Система буде доступна через локальну мережу з локальним обліковим записом адміністратора.",
@@ -95,8 +98,10 @@
     "Systems of such size may work but will be unstable and have troubles with updates and synchronisation.": "Системи такого розміру можуть працювати, але будуть нестабільними і матимуть проблеми з оновленнями та синхронізацією.",
     "Tags": "Теги",
     "Take the name and settings from": "Візьміть ім’я та налаштування з",
+    "Terms of Use": "Умови використання",
     "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.": "Облікові дані цього користувача будуть розкриті! Ви повинні створити для користувача роль «Публічний користувач» з доступом тільки\n            до камер, обраним для загального користування, і призначити тільки мінімально необхідні дозволи для перегляду. роль\n            «Публічний користувач» не повинна мати доступ до налаштувань системи.",
     "There will be more than": "Там буде більше",
+    "To": "До",
     "Too many attempts. Try again in a minute.": "Забагато спроб. Спробуйте пізніше.",
     "Topic": "Тема",
     "Update them to the": "Оновіть іх до",
@@ -104,10 +109,12 @@
     "User": "Користувач",
     "View": "Вигляд",
     "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.": "Ми рекомендуємо встановлювати останні версії Google Chrome або Mozilla Firefox, але ви можете використовувати будь-який інший сучасний веб-браузер.",
-    "What's new?": "Що нового?",
+    "What's New?": "Що нового?",
+    "Works with:": "Works with:",
     "Wrong password": "Невірний пароль",
     "You can merge only those cloud Systems, where you have the \"Owner\" permissions.": "Ви можете обє’днати лише ті Хмарні системи, у який є дозволи Власника.",
     "You can only merge Systems where you are the owner.": "Ви можете об’єднати тільки ті системи, якими володієте.",
+    "Your Email": "Ваш E-Mail",
     "Your Name": "Ваше ім'я",
     "Your browser is not supported": "Ваш браузер не підтримується",
     "andXMore": "... і ще {{value}}",
@@ -133,6 +140,22 @@
             "secondaryCannotMerge": "Система {{targetSystem}} має стару версію Пз, несумісну з поточною системою. Оновіть {{targetSystem}} до <a href=\"/download\" target=\"_blank\" translate>останньої збірки</a> для об’єднання з поточною системою.",
             "systemOffline": "Система {{targetSystem}} офлайн і не може бути об'єднана.",
             "systemUnavailable": "Система {{targetSystem}} наразі недоступна. Повторіть спробу через декілька хвилин або зв'яжіться з нами"
+        },
+        "message": {
+            "failedToSend": "Не вдалося надіслати повідомлення.",
+            "sent": "Повідомлення відправлено.",
+            "title": {
+                "integration": "Зв’яжіться з {{companyName}}",
+                "ipvd_feedback_device": "Відгук про {{product}}",
+                "ipvd_feedback_page": "Зворотній зв’язок для сторінки камер"
+            },
+            "topic": {
+                "contact_sales": "Зв'яжіться з відділом продажів за {{product}}",
+                "contact_support": "Зверніться до служби підтримки за {{product}}",
+                "integration_feedback": "Зворотній зв'язок для інтеграції {{product}}",
+                "ipvd_feedback_device": "Відгук про {{product}}",
+                "ipvd_feedback_page": "Зворотній зв’язок для сторінки камер"
+            }
         }
     },
     "dialogs.merge.connectToCloud": "Підключіть систему, яку хочете об’єднати з цією <strong>{{cloudName}}</strong> або об’єднайте локально з <strong>{{vmsName}}</strong> Клієнтом.",
@@ -270,7 +293,11 @@
         "integrations": "Інтеграції",
         "supportedDevices": "Пристрої, що підтримуються"
     },
-    "phoneNumberWithLabel": "Tel: {{number}}",
+    "phoneNumberWithLabel": "Тел.: {{number}}",
+    "privacyPolicy": {
+        "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent.",
+        "ipvd": "Надсилаючи цю форму, ви погоджуєтесь зв'язатися з нами %COMPANY_NAME%.\nВи знайдете %COMPANY_NAME% політику конфіденційності <a href=\"%PRIVACY_LINK%\">тут</a> яка містить інструкцію про те, як скасувати вашу згоду."
+    },
     "search": {
         "Any": "Будь-які",
         "Search": "Пошук",
@@ -285,5 +312,6 @@
         "vendors": "виробники"
     },
     "servers in the merged System.": "серверів у об’єднаній системі.",
-    "support": "підтримка"
+    "support": "підтримка",
+    "testedVersionsLabel": "Tested on {{vmsName}} version(s):"
 }

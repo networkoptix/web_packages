@@ -35,25 +35,39 @@ export class NxCarouselComponent implements OnInit {
     private currentIndex = 0;
     private imageCount: number;
 
+    caption: string;
+
     constructor() {}
 
     ngOnInit() {
+        this.caption = '';
         this.imageCount = this.screenshots.length;
+
+        if (this.imageCount) {
+            this.setCaption();
+        }
     }
 
     private mod(n, m) {
         return ((n % m) + m) % m;
     }
 
-    previousElement() {
+    previousElement(): void {
         this.currentIndex = this.mod((this.currentIndex - 1), this.screenshots.length);
+        this.setCaption();
     }
 
-    nextElement() {
+    nextElement(): void {
         this.currentIndex = this.mod((this.currentIndex + 1), this.screenshots.length);
+        this.setCaption();
     }
 
-    setIndex(i) {
+    setIndex(i): void {
         this.currentIndex = i;
+        this.setCaption();
+    }
+
+    setCaption(): void {
+        this.caption = this.screenshots[this.currentIndex].caption;
     }
 }

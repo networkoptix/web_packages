@@ -7,7 +7,6 @@ import { NxRibbonService }           from '../../../components/ribbon/ribbon.ser
 import { NxConfigService }           from '../../../services/nx-config';
 import { NxModalMessageComponent, MessageParams }   from '../../../dialogs/message/message.component';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
-import { TranslateService }          from '@ngx-translate/core';
 
 import { map }           from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
@@ -20,19 +19,14 @@ import { combineLatest } from 'rxjs';
 
 export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
 
+    CONFIG: any = {};
+    LANG: any = {};
     plugin: any;
-    config: any = {};
     content: any = {};
-    lang: any = {};
     location: any;
 
     private setupDefaults() {
-        this.config = this.configService.getConfig();
-        this.language.translationsSubject.subscribe((lang) => {
-            this.lang = lang;
-        });
-
-
+        this.CONFIG = this.configService.getConfig();
     }
 
     constructor(public sanitizer: DomSanitizer,
@@ -43,13 +37,19 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                 // TODO: Use dialog service when it is not being downgraded
                 private messageDialog: NxModalMessageComponent,
                 private language: NxLanguageProviderService,
-                private translate: TranslateService,
                 location: Location) {
         this.location = location;
         this.setupDefaults();
     }
 
     ngOnInit(): void {
+        this.language.translationsSubject.subscribe((lang) => {
+            this.LANG = lang;
+            this.init();
+        });
+    }
+
+    init(): void {
         this.integrationService
             .selectedSectionSubject
             .subscribe(selection => {
@@ -105,9 +105,9 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
 
                                     if (this.plugin.pending || this.plugin.draft) {
                                         this.ribbonService.show(
-                                                this.lang.integration.previewRibbonText,
-                                                this.lang.integration.backToEditText,
-                                                this.config.links.admin.product.replace('%ID%', this.plugin.id)
+                                                this.LANG.integration.previewRibbonText,
+                                                this.LANG.integration.backToEditText,
+                                                this.CONFIG.links.admin.product.replace('%ID%', this.plugin.id)
                                         );
                                     }
 
@@ -128,9 +128,9 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
     }
 
     openMessageDialog() {
-        let disclaimer: string = this.lang.privacyPolicy.integration;
-        disclaimer = disclaimer.replace(/%INTEGRATION_COMPANY%/g, this.plugin.information.companyName);
-        disclaimer = disclaimer.replace(/%INTEGRATION_PRIVACY_POLICY%/g, this.plugin.information.companyPrivacyPolicyLink);
+        let disclaimer: string = this.LANG.privacyPolicy.integration;
+        disclaimer = disclaimer.replace(/{{INTEGRATION_COMPANY}}/g, this.plugin.information.companyName);
+        disclaimer = disclaimer.replace(/{{INTEGRATION_PRIVACY_POLICY}}/g, this.plugin.information.companyPrivacyPolicyLink);
         const data: MessageParams = {
             to: this.plugin.information.companyName,
             email: this.plugin.support.supportEmail,
@@ -138,7 +138,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
             productId: this.plugin.id,
             product: this.plugin.information.name,
         };
-        this.messageDialog.open(this.config.messageType.integration, data).then(() => {});
+        this.messageDialog.open(this.CONFIG.messageType.integration, data).then(() => {});
     }
 }
 

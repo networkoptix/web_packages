@@ -29,6 +29,7 @@
     "Contact": "Contact",
     "Create Account": "Create Account",
     "Create account": "Create account",
+    "Developer": "Developer",
     "Disconnect": "Disconnect",
     "Disconnect System from %CLOUD_NAME%?": "Disconnect System from %CLOUD_NAME%?",
     "Download": "Download",
@@ -55,7 +56,6 @@
     "Get in touch": "Get in touch",
     "How it works": "How it works",
     "How to setup?": "How to setup?",
-    "I want you to contact me": "I want you to contact me",
     "I/O": "I/O",
     "In Review": "In Review",
     "In-Client Upgrade:": "In-Client Upgrade:",
@@ -99,6 +99,8 @@
     "Show All": "Show All",
     "Some of your servers don't support cloud System merge because of outdated software version.": "Some of your servers don't support cloud System merge because of outdated software version.",
     "Support": "Support",
+    "Support E-mail": "Support E-mail",
+    "Support URL": "Support URL",
     "System name": "System name",
     "System name is required": "System name is required",
     "System will be accessible through local network with local administrator account.": "System will be accessible through local network with local administrator account.",
@@ -106,7 +108,7 @@
     "Systems of such size may work but will be unstable and have troubles with updates and synchronisation.": "Systems of such size may work but will be unstable and have troubles with updates and synchronisation.",
     "Tags": "Tags",
     "Take the name and settings from": "Take the name and settings from",
-    "Tested on version(s)": "Tested on version(s)",
+    "Terms of Use": "Terms of Use",
     "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.": "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.",
     "There will be more than": "There will be more than",
     "This Email has been already registered in %CLOUD_NAME%": "This Email has been already registered in %CLOUD_NAME%",
@@ -119,6 +121,7 @@
     "View": "View",
     "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.": "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.",
     "What's New?": "What's New?",
+    "Works with:": "Works with:",
     "Wrong password": "Wrong password",
     "You can merge only those cloud Systems, where you have the \"Owner\" permissions.": "You can merge only those cloud Systems, where you have the \"Owner\" permissions.",
     "You can only merge Systems where you are the owner.": "You can only merge Systems where you are the owner.",
@@ -387,7 +390,7 @@
     },
     "registration.agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>",
     "privacyPolicy": {
-        "integration": "By submitting this form you agree to be contacted by %INTEGRATION_COMPANY% and/or %COMPANY_NAME%.\nYou will find %INTEGRATION_COMPANY% privacy policy <a href=\"%INTEGRATION_PRIVACY_POLICY%\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent.",
+        "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent.",
         "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent."
     },
     "search": {
@@ -404,5 +407,6 @@
         "vendors": "manufacturers"
     },
     "servers in the merged System.": "servers in the merged System.",
-    "support": "support"
+    "support": "support",
+    "testedVersionsLabel": "Tested on {{vmsName}} version(s):"
 }

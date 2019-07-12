@@ -12,23 +12,8 @@
     "logoutAuthorisedTitle": "이미 로그인 되어 있습니다",
     "logoutAuthorisedContinueButton": "계속",
     "logoutAuthorisedLogoutButton": "로그 아웃",
-    "messageFailed": "Message has failed to send.",
-    "messageSent": "Message has been sent.",
     "noClientDetectedTitle": "시스템이 성공적으로 %VMS_NAME% 에서 분리 되었습니다",
     "download": "%VMS_NAME% 다운로드"
-  },
-  "messageDialog": {
-    "title": {
-      "integration": "Email for {{product}}",
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Feedback about {{product}}"
-    },
-    "topic": {
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Feedback about {{product}}",
-      "contact_sales": "Contact sales for {{product}}",
-      "contact_support": "Contact support for {{product}}"
-    }
   },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",

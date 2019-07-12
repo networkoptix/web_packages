@@ -3,12 +3,13 @@
     "Account Settings": "계정 설정",
     "Account not activated": "계정이 활성화되지 않았습니다",
     "Account not found": "계정을 찾을 수 없습니다",
+    "Additional Requirements": "Additional Requirements",
     "Administration": "Administration",
     "Advanced PTZ": "Advanced PTZ",
     "Advanced Search": "Advanced Search",
+    "All Integrations": "All Integrations",
     "All Systems": "모든 시스템",
     "All cloud users will be deleted.": "모든 클라우드 사용자가 삭제됩니다.",
-    "All integrations": "All integrations",
     "All results": "All results",
     "Any": "Any",
     "Audio": "오디오",
@@ -25,6 +26,7 @@
     "Contact": "Contact",
     "Create Account": "계정 만들기",
     "Create account": "계정 만들기",
+    "Developer": "Developer",
     "Disconnect": "연결 끊기",
     "Disconnect System from %CLOUD_NAME%?": "%CLOUD_NAME%에서 시스템을 분리하실래요?",
     "Download": "다운로드",
@@ -47,9 +49,7 @@
     "Forgot password?": "암호를 잊으셨나요?",
     "Get in touch": "Get in touch",
     "How it works": "How it works",
-    "How to install?": "How to install?",
-    "I agree to the": "에 동의 합니다",
-    "I want you to contact me": "I want you to contact me",
+    "How to setup?": "How to setup?",
     "I/O": "I/O",
     "In Review": "In Review",
     "In-Client Upgrade:": "클라이언트에서 업그레이드:",
@@ -76,6 +76,7 @@
     "Release Notes": "업데이트 내용",
     "Release notes": "업데이트 내용",
     "Remember me": "기억하기",
+    "Requirements": "Requirements",
     "Resend activation email": "활성화 이메일 재전송",
     "Resolution(max)": "Resolution(max)",
     "Save": "저장",
@@ -88,6 +89,8 @@
     "Show All": "모두 보이기",
     "Some of your servers don't support cloud System merge because of outdated software version.": "일부 서버는 오래된 소프트웨어 버전으로 인해 클라우드 시스템 머지를 지원하지 않습니다.",
     "Support": "지원",
+    "Support E-mail": "Support E-mail",
+    "Support URL": "Support URL",
     "System name": "시스템 이름",
     "System name is required": "시스템 이름이 필요합니다.",
     "System will be accessible through local network with local administrator account.": "로컬 관리자 계정으로 로컬 네트워크를 통해 시스템에 액세스 할 수 있습니다.",
@@ -95,8 +98,10 @@
     "Systems of such size may work but will be unstable and have troubles with updates and synchronisation.": "이러한 크기의 시스템은 작동하지만 불안정하고 업데이트 및 동기화에 문제가있을 수 있습니다.",
     "Tags": "태그",
     "Take the name and settings from": "에서 이름과 설정 가져 오기",
+    "Terms of Use": "Terms of Use",
     "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.": "이 사용자의 인증정보가 노출 될 것입니다! 지정한 공공 카메라들만 접근할 수 있는 사용자지정 공공사용자 역할계정을 만들고 보기만 할 수 있는 가장 촤소한의 권한을 주십시요. \n             이 \"공공 사용자\" 는 어떠한 시스템 기능을 액세스 하면 안됩니다.",
     "There will be more than": "이상이있을 것입니다.",
+    "To": "To",
     "Too many attempts. Try again in a minute.": "시도 횟수가 너무 많습니다. 1 분 후에 다시 시도하십시오.",
     "Topic": "Topic",
     "Update them to the": "로 업데이트",
@@ -104,10 +109,12 @@
     "User": "사용자:",
     "View": "보기",
     "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.": "Google 크롬 또는 Mozilla Firefox의 최신 버전을 설치하는 것을 권장하지만 다른 최신 웹 브라우저를 사용할 수 있습니다.",
-    "What's new?": "무엇이 새로운가?",
+    "What's New?": "What's New?",
+    "Works with:": "Works with:",
     "Wrong password": "패스워드가 틀립니다.",
     "You can merge only those cloud Systems, where you have the \"Owner\" permissions.": "\"소유자\"권한을 가진 클라우드 시스템 만 병합 할 수 있습니다.",
     "You can only merge Systems where you are the owner.": "소유자 인 시스템 만 머지 할 수 있습니다.",
+    "Your Email": "Your Email",
     "Your Name": "Your Name",
     "Your browser is not supported": "브라우저가 지원되지 않습니다.",
     "andXMore": "... and {{value}} more",
@@ -133,6 +140,22 @@
             "secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
             "systemOffline": "시스템 {{targetSystem}} 은 오프라인이며 현재 시스템과 머지 할 수 없습니다.",
             "systemUnavailable": "시스템 {{targetSystem}} 에 현재 연결할 수 없습니다. 몇 분 후에 다시 시도하거나 문의하십시오."
+        },
+        "message": {
+            "failedToSend": "Message has failed to send.",
+            "sent": "Message has been sent.",
+            "title": {
+                "integration": "Get in touch with {{companyName}}",
+                "ipvd_feedback_device": "Feedback about {{product}}",
+                "ipvd_feedback_page": "Feedback for cameras page"
+            },
+            "topic": {
+                "contact_sales": "Contact sales for {{product}}",
+                "contact_support": "Contact support for {{product}}",
+                "integration_feedback": "Feedback for integration {{product}}",
+                "ipvd_feedback_device": "Feedback about {{product}}",
+                "ipvd_feedback_page": "Feedback for cameras page"
+            }
         }
     },
     "dialogs.merge.connectToCloud": "이 시스템과 머지하려는 시스템을 <strong>{{cloudName}}</strong> 에 연결하거나 <strong>{{vmsName}}</strong> 클라이언트를 사용하여 로컬로 머지하십시오.",
@@ -271,6 +294,10 @@
         "supportedDevices": "Supported Devices"
     },
     "phoneNumberWithLabel": "Tel: {{number}}",
+    "privacyPolicy": {
+        "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent.",
+        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent."
+    },
     "search": {
         "Any": "Any",
         "Search": "검색",
@@ -285,5 +312,6 @@
         "vendors": "manufacturers"
     },
     "servers in the merged System.": "머지된 시스템에 있는 서버들입니다.",
-    "support": "지원"
+    "support": "지원",
+    "testedVersionsLabel": "Tested on {{vmsName}} version(s):"
 }

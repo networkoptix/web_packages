@@ -12,23 +12,8 @@
     "logoutAuthorisedTitle": "אתה כבר מחובר",
     "logoutAuthorisedContinueButton": "המשך",
     "logoutAuthorisedLogoutButton": "יציאה",
-    "messageFailed": "שליחת ההודעה נכשלה.",
-    "messageSent": "ההודעה נשלחה.",
     "noClientDetectedTitle": "התקן את %VMS_NAME% כדי לצפות במערכת שלך",
     "download": "הורד את %VMS_NAME%"
-  },
-  "messageDialog": {
-    "title": {
-      "integration": "Email for {{product}}",
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "משוב על {{product}}"
-    },
-    "topic": {
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "משוב על {{product}}",
-      "contact_sales": "Contact sales for {{product}}",
-      "contact_support": "Contact support for {{product}}"
-    }
   },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",

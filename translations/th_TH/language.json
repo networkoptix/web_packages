@@ -12,23 +12,8 @@
     "logoutAuthorisedTitle": "คุณกำลังอยู่ในระบบ",
     "logoutAuthorisedContinueButton": "ดำเนิน​การ",
     "logoutAuthorisedLogoutButton": "ออกจากระบบ",
-    "messageFailed": "ไม่สามารถส่งข้อความได้",
-    "messageSent": "ส่งข้อความแล้ว",
     "noClientDetectedTitle": "ติดตั้ง %VMS_NAME% เพื่อดูระบบของคุณ",
     "download": "ดาวน์โหลด %VMS_NAME%"
-  },
-  "messageDialog": {
-    "title": {
-      "integration": "Email for {{product}}",
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "ข้อเสนอแนะเกี่ยวกับ {{product}}"
-    },
-    "topic": {
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "ข้อเสนอแนะเกี่ยวกับ {{product}}",
-      "contact_sales": "Contact sales for {{product}}",
-      "contact_support": "Contact support for {{product}}"
-    }
   },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",

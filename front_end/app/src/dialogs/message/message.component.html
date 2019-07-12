@@ -52,16 +52,6 @@
                           name="message" type="text"
                           required nxFocusMe></textarea>
             </div>
-            <div class="form-group mb-0">
-                <nx-checkbox
-                        name="contact"
-                        componentId="contact"
-                        [(ngModel)]="contact"
-                        [checked]="true">
-                </nx-checkbox>
-
-                <label for="contact" translate>I want you to contact me</label>
-            </div>
             <div *ngIf="data.disclaimer" class="form-group" [innerHTML]="data.disclaimer">
             </div>
         </form>

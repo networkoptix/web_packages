@@ -14,8 +14,11 @@
   "contact_support": {
     "emailSubject": "{{message.product}} için Destek talebi"
   },
+  "integration_feedback": {
+    "emailSubject": "Feedback for {{message.product}}"
+  },
   "ipvd_feedback": {
-    "emailSubject": "{{message.product}} için Kamera Geribildirim Sayfası"
+    "emailSubject": "Camera Page Feedback{{#message.product}} for {{message.product}}{{/message.product}}"
   },
   "review_version": {
     "emailSubject": "{{message.product_type}}: {{message.product}} has a new version to review"

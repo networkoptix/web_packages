@@ -1,0 +1,184 @@
+{
+	"search": {
+		"Search": "Etsi",
+		"search_ipvd": "Hae mallin tai valmistajan mukaan",
+		"filter applied": "suodatinta käytetty",
+		"filters applied": "suodattimia käytetty",
+		"Any": "Mikä tahansa",
+		"selected": "valitut",
+		"vendor": "Valmistaja",
+		"vendors": "valmistajat",
+		"hardwareType": "Tyyppi",
+		"hardwareTypes": "tyypit",
+		"minResolution": "Pienin resoluutio"
+	},
+	"cameraFilters": {
+		"ptz": "PTZ-kamerat",
+		"aptz": "Kamerat, joissa on edistynyt PTZ",
+		"fisheye": "360-kamerat",
+		"H265": "H.265 Kamerat",
+		"IO": "I / O-moduulit",
+		"multiSensor": "Multi-sensor kamerat",
+		"TwWayAudio": "2-suuntaiset äänilaitteet",
+		"audio": "Kamerat, joissa on ääni",
+		"encoder": "Enkooderit",
+		"highRes": "Erittäin korkearesoluutioiset kamerat"
+	},
+	"downloads": {
+		"mobile": {
+			"ios": {
+				"link": "%IOS_APPLICATION_LINK%"
+			},
+			"android": {
+				"link": "%ANDROID_APPLICATION_LINK%"
+			}
+		},
+		"groups": {
+			"windows": {
+				"label": "Windows",
+				"supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+			},
+			"mac": {
+				"label": "Mac OS",
+				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+			},
+			"linux": {
+				"label": "Ubuntu Linux",
+				"shortLabel": "Ubuntu",
+				"supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+			},
+			"macos": {
+				"label": "Mac OS",
+				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+			},
+			"ios": {
+				"label": "iOS",
+				"shortLabel": "iOS"
+			},
+			"android": {
+				"label": "Android",
+				"shortLabel": "Android"
+			},
+			"arm": {
+				"label": "ARM",
+				"shortLabel": "ARM",
+				"supported": "Debian / Ubuntu pohjaiset"
+			},
+			"sdk": {
+				"label": "SDK",
+				"shortLabel": "SDK",
+				"supported": "C ++: n cross platform SDK"
+			}
+		},
+		"platforms": {
+			"win64": "x64",
+			"linux64": "x64",
+			"mac": "X",
+			"bananapi": "Banana Pi",
+			"bpi": "Nx1",
+			"rpi": " Raspberry Pi"
+		},
+		"appTypes": {
+			"client": "Vain Client-sovellus",
+			"server": "Vain palvelin-sovellus",
+			"bundle": "Client ja palvelin",
+			"servertool": "Konfigurointityökalu",
+			"package": "Paketti"
+		},
+		"releasesTypes": {
+			"beta": "Beta",
+			"betas": "Beta-versioita",
+			"rc": "Julkaisuehdokkaat",
+			"release": "Julkaisu",
+			"releases": "Julkaisut",
+			"patch": "Korjaus",
+			"patches": "Korjaukset"
+		}
+	},
+	"ipvd": {
+		"count": "Määrä",
+		"vendor": "Valmistaja",
+		"model": "Malli",
+		"hardwareType": "Tyyppi",
+		"maxResolution": "Maks. Resoluutio",
+		"maxFps": "Max FPS",
+		"primaryCodec": "Koodekki",
+		"isAudioSupported": "Ääni",
+		"isTwAudioSupported": "2-suuntainen ääni",
+		"isPtzSupported": "PTZ",
+		"isAptzSupported": "Kehittynyt PTZ",
+		"isAptzSupportedShort": "Kehittyneempi PTZ",
+		"isFisheye": "360-kamera",
+		"isMdSupported": "Liike",
+		"isIoSupported": "I/O",
+		"isH265": "H.265",
+		"isMultiSensor": "Multi Sensor",
+		"camera": "Kamera",
+		"multiSensorCamera": "Multi-Sensor-kamera",
+		"encoder": "Enkooderi",
+		"dvr": "DVR",
+		"other": "Muu",
+		"PTZ cameras": "PTZ-kamerat",
+		"Advanced PTZ cameras": "Edistyneemmät PTZ-kamerat",
+		"Fisheye Cameras": "360-kamerat",
+		"Cameras supporting H.265": "H.265 tuetut kamerat",
+		"I / O modules": "I / O-moduulit",
+		"Multisensor Cameras": "Multisensor kamerat",
+		"Cameras with 2-way audio": "Kamerat, joissa on kaksisuuntainen ääni",
+		"Extra high resolution cameras": "Erittäin korkearesoluutioiset kamerat",
+		"feedback": {
+			"a_Please": "Ole hyvä",
+			"b_Link": "lähetä pyyntö",
+			"c_Info": "lisäkysymyksiä / huolia tuetuista laitteista."
+		}
+	},
+	"integration": {
+		"previewRibbonText": "Tällä sivulla on esikatselu viimeisimmistä muutoksista, ja se ei kata yleisesti saatavilla olevia versioita.",
+		"backToEditText": "Takaisin muokkausliittymiin",
+		"Access Control": "Kulunvalvonta",
+		"Connector": "Connector",
+		"Data Analytics": "Data Analytiikka",
+		"Drone": "Drone",
+		"Health Monitor": "Laitteiden valvonta",
+		"Storage": "Tallennustila"
+	},
+	"messageDialogPlaceholders": {
+		"feedback": "Varmista, että määrität kameramallin ja valmistajan..."
+	},
+	"pageTitles": {
+		"supportedDevices": "Tuetut laitteet",
+		"integrations": "Integraatiot"
+	},
+	"dialogs": {
+		"merge": {
+			"connectToCloud": "Yhdistä järjestelmä, johon haluat yhdistää tämän, <strong>{{cloudName}}</strong> tai yhdistä paikallisesti <strong>{{vmsName}}</strong> -Client-sovelluksen avulla.",
+			"mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from the <strong>{{primarySystem}}</strong>.",
+			"primaryCannotMerge": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} System.",
+			"primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}.",
+			"secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
+			"systemOffline": "Järjestelmä {{targetSystem}} on offline-tilassa eikä sitä voi yhdistää nykyiseen.",
+			"systemUnavailable": "Järjestelmä {{targetSystem}} ei ole tällä hetkellä tavoitettavissa. Yritä uudelleen muutamassa minuutissa tai ota yhteyttä"
+		},
+		"message": {
+			"failedToSend": "Message has failed to send.",
+			"sent": "Message has been sent.",
+			"title": {
+				"integration": "Get in touch with {{companyName}}",
+				"ipvd_feedback_page": "Feedback for cameras page",
+				"ipvd_feedback_device": "Feedback about {{product}}"
+			},
+			"topic": {
+				"contact_sales": "Contact sales for {{product}}",
+				"contact_support": "Contact support for {{product}}",
+				"integration_feedback": "Feedback for integration {{product}}",
+				"ipvd_feedback_page": "Feedback for cameras page",
+				"ipvd_feedback_device": "Feedback about {{product}}"
+			}
+		}
+	},
+	"privacyPolicy": {
+		"integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent.",
+		"ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent."
+	},
+	"testedVersionsLabel": "Tested on {{vmsName}} version(s):"
+}
