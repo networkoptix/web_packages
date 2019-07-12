@@ -23,6 +23,10 @@ module.exports = merge(common, {
                 // before Boris update translations
                 from: '../app/language_i18n.json',
                 to: '../../translations/en_US/language_i18n.json'
+            },
+            {
+                from: '../app/language_compiled.json',
+                to: '../../translations/en_US/language_compiled.json'
             }
         ])
     ],

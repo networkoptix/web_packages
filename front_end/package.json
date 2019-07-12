@@ -139,10 +139,11 @@
         "setupTestFrameworkScriptFile": "<rootDir>/src/setupJest.ts"
     },
     "scripts": {
-        "serve": "npm run update-lang; npm run merge-lang; webpack-dev-server --config webpack.dev.js --open --hot --inline",
+        "serve": "npm run update-lang; npm run merge-lang; npm run compile-lang; webpack-dev-server --config webpack.dev.js --open --hot --inline",
         "build": "npm run update-lang; npm run merge-lang; webpack --config webpack.prod.js --progress --profile --bail",
         "setSkin": "node setSkin.js --skin",
         "merge-lang": "python merge-lang.py",
+        "compile-lang": "python compile-lang.py",
         "update-lang": "ngx-translate-extract -i ./app/src -o ./app/language_i18n.json --clean --sort --format json",
         "test": "jest",
         "test:watch": "jest --watch",

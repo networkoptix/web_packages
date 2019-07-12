@@ -86,11 +86,9 @@ def language(request):
     if request.method == 'GET':  # Get language for current user
         from util.helpers import detect_language_by_request
         lang = detect_language_by_request(request)
-        language_file = f'/static/lang_{lang}/language.json'
-        language_file_i18n = f'/static/lang_{lang}/language_i18n.json'
-        responce_json = {"ajs": language_file, "i18n": language_file_i18n}
+        language_file = f'/static/lang_{lang}/language_compiled.json'
         # Return: redirect to language.json file for selected language
-        response = redirect(responce_json)
+        response = redirect(language_file)
 
         request.session['language'] = lang
         response.set_cookie('language', lang, 60 * 60 * 24 * 7)  # Cookie for one week

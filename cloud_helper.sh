@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 DOCKER_COMPOSE='etc/docker-compose.yml'
+#SQL='./etc/cloud-dev2.sql'
 SQL='./etc/*.sql'
 
 

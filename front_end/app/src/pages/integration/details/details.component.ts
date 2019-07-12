@@ -27,6 +27,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
 
     private setupDefaults() {
         this.CONFIG = this.configService.getConfig();
+        this.LANG = this.language.getTranslations();
     }
 
     constructor(public sanitizer: DomSanitizer,
@@ -43,13 +44,6 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.language.translationsSubject.subscribe((lang) => {
-            this.LANG = lang;
-            this.init();
-        });
-    }
-
-    init(): void {
         this.integrationService
             .selectedSectionSubject
             .subscribe(selection => {

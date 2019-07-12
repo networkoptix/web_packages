@@ -1,9 +1,10 @@
-import { Location }              from '@angular/common';
-import { Component, OnInit }     from '@angular/core';
-import { TranslateService }      from '@ngx-translate/core';
-import { CookieService }         from 'ngx-cookie-service';
-import { DeviceDetectorService } from 'ngx-device-detector';
-import { Title }                 from '@angular/platform-browser';
+import { Location }                  from '@angular/common';
+import { Component, Inject }         from '@angular/core';
+import { CookieService }             from 'ngx-cookie-service';
+import { DeviceDetectorService }     from 'ngx-device-detector';
+import { Title }                     from '@angular/platform-browser';
+import { WINDOW }                    from './src/services/window-provider';
+import { NxLanguageProviderService } from './src/services/nx-language-provider';
 
 @Component({
     selector: 'nx-app',
@@ -22,7 +23,8 @@ export class AppComponent {
                 private deviceService: DeviceDetectorService,
                 private location: Location,
                 private titleService: Title,
-                translate: TranslateService) {
+                private language: NxLanguageProviderService,
+                @Inject(WINDOW) private window: Window) {
 
 
         // TODO: Componentize this
@@ -65,7 +67,7 @@ export class AppComponent {
 
         // this language will be used as a fallback when a translation
         // isn't found in the current language
-        translate.setDefaultLang('en_US');
+        this.language.setDefaultLang('en_US');
 
         // TODO: Uncomment after removal of AJS. Currently language will be set in app.js
         // the lang to use, if the lang isn't available, it will use *****
@@ -73,7 +75,12 @@ export class AppComponent {
         // ***************************************************************
         // const langCookie = this.cookieService.get('language');
         // const lang = langCookie || translate.getBrowserCultureLang().replace('-', '_');
-        translate.use('en_US');
+        debugger;
+        // @ts-ignore
+        // translate.set (window.LANG.ajs.languagex);
+        // @ts-ignore
+        this.language.setTranslations(window.LANG.ajs.language, window.LANG.i18n);
+        // translate.use('en_US');
     }
 
     public setTitle(newTitle: string) {

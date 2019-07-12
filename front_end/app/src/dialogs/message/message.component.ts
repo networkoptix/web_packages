@@ -1,9 +1,10 @@
 import { Component, Inject, OnInit, Input, ViewEncapsulation, Renderer2, ViewChild } from '@angular/core';
-import { NgbModal, NgbActiveModal, NgbModalRef }                                     from '@ng-bootstrap/ng-bootstrap';
-import { EmailValidator, NgForm }                                                    from '@angular/forms';
-import { NxConfigService }                                                           from '../../services/nx-config';
-import { TranslateService }                                                          from '@ngx-translate/core';
-import { WINDOW }                                                                    from '../../services/window-provider';
+import { NgbModal, NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { EmailValidator, NgForm }                from '@angular/forms';
+import { NxConfigService }                       from '../../services/nx-config';
+import { TranslateService }                      from '@ngx-translate/core';
+import { WINDOW }                                from '../../services/window-provider';
+import { NxLanguageProviderService }             from '../../services/nx-language-provider';
 
 
 export interface MessageParams {
@@ -30,7 +31,8 @@ export class MessageModalContent {
     @Input() closable;
     @Input() config;
 
-    lang: any;
+    LANG: any;
+
     placeholder: string;
     sendMessage: any;
     userName: string;
@@ -47,7 +49,7 @@ export class MessageModalContent {
 
     constructor(private activeModal: NgbActiveModal,
                 private renderer: Renderer2,
-                private translation: TranslateService,
+                private language: NxLanguageProviderService,
                 @Inject('account') private account: any,
                 @Inject('process') private process: any,
                 @Inject('cloudApiService') private cloudApi: any,
@@ -57,22 +59,21 @@ export class MessageModalContent {
         this.topic = '';
         this.topicMessage = '';
         this.url = this.window.location.href;
-        console.log(this.url)
     }
 
     ngOnInit() {
-        this.translation.getTranslation(this.translation.currentLang).subscribe((lang) => {
-            this.lang = lang;
-            this.initForm();
-            this.sendMessage = this.process.init(() => {
-                const product = this.data.productId || this.data.product;
-                return this.cloudApi.sendMessage(this.topic, product, this.message, this.userName, this.userEmail);
-            }, {
-                successMessage: this.lang.dialogs.message.sent
-            }).then(() => {
-                this.activeModal.close(true);
-            });
+        this.LANG = this.language.getTranslations();
+
+        this.initForm();
+        this.sendMessage = this.process.init(() => {
+            const product = this.data.productId || this.data.product;
+            return this.cloudApi.sendMessage(this.topic, product, this.message, this.userName, this.userEmail);
+        }, {
+            successMessage: this.LANG.dialogs.message.sent
+        }).then(() => {
+            this.activeModal.close(true);
         });
+
     }
 
     close() {
@@ -82,13 +83,13 @@ export class MessageModalContent {
     initForm() {
         switch (this.messageType) {
             case this.config.messageType.ipvd_page :
-                this.placeholder = this.lang.messageDialogPlaceholders.feedback;
+                this.placeholder = this.LANG.messageDialogPlaceholders.feedback;
                 break;
             default :
                 this.placeholder = '';
         }
 
-        const title = this.lang.dialogs.message.title[this.messageType];
+        const title = this.LANG.dialogs.message.title[this.messageType];
         if (this.messageType !== this.config.messageType.integration) {
             this.title = title.replace('{{product}}', this.data.product);
         } else {
@@ -97,7 +98,7 @@ export class MessageModalContent {
         this.topics = this.config.messageTopics[this.messageType].map((topic) => {
             return {
                 id: topic,
-                name: this.lang.dialogs.message.topic[topic].replace('{{product}}', this.data.product)
+                name: this.LANG.dialogs.message.topic[topic].replace('{{product}}', this.data.product)
             };
         });
 

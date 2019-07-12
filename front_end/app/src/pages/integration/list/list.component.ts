@@ -25,6 +25,7 @@ export class NxIntegrationsListComponent implements OnInit, OnDestroy, OnChanges
 
     private setupDefaults() {
         this.CONFIG = this.configService.getConfig();
+        this.LANG = this.language.getTranslations();
     }
 
     constructor(private configService: NxConfigService,
@@ -40,28 +41,19 @@ export class NxIntegrationsListComponent implements OnInit, OnDestroy, OnChanges
     }
 
     ngOnInit() {
-        this.language
-            .translationsSubject
-            .subscribe((lang) => {
-                this.LANG = lang;
-
-                if (this.haveInReviewOrDraft) {
-                    this.showRibbon();
-                }
-            });
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        this.haveInReviewOrDraft = false;
+        let haveInReviewOrDraft;
         if (changes.list.currentValue) {
             changes.list.currentValue.some(plugin => {
                 if (plugin.pending || plugin.draft) {
-                    this.haveInReviewOrDraft = true;
+                    haveInReviewOrDraft = true;
                     return true;
                 }
             });
 
-            if (this.haveInReviewOrDraft && this.LANG) {
+            if (haveInReviewOrDraft) {
                 this.showRibbon();
             } else {
                 this.ribbonService.hide();
