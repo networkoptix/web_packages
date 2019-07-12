@@ -203,9 +203,13 @@ class PushSubscription(models.Model):
 
 
 class PushNotification(models.Model):
+    SIZE_LIMIT = 4000
+
     title = models.CharField(max_length=255)
-    body = models.TextField(max_length=4000, validators=[MaxLengthValidator(4000)])
-    payload = models.TextField(max_length=4000, blank=True, null=True, validators=[MaxLengthValidator(4000)])
+    body = models.TextField(max_length=SIZE_LIMIT, validators=[MaxLengthValidator(SIZE_LIMIT)])
+    payload = models.TextField(
+        max_length=SIZE_LIMIT, blank=True, null=True, validators=[MaxLengthValidator(SIZE_LIMIT)]
+    )
     subscriptions = models.ManyToManyField(PushSubscription)
 
     raw_system_id = models.CharField(max_length=255, default='')
@@ -213,8 +217,8 @@ class PushNotification(models.Model):
     result_data = models.TextField(null=True, blank=True)
 
     def clean(self):
-        if len(self.title + self.body + self.payload) > 4000:
-            raise ValidationError('Title, body, and payload cannot total more than 4000')
+        if len(self.title + self.body + self.payload) > self.SIZE_LIMIT:
+            raise ValidationError(f'Title, body, and payload cannot total more than {self.SIZE_LIMIT}')
         super(PushNotification, self).clean()
 
     def save(self, *args, **kwargs):
