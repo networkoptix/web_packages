@@ -3,12 +3,13 @@
     "Account Settings": "アカウント設定",
     "Account not activated": "アカウントがまだ有効化されていません",
     "Account not found": "アカウントが見つかりません",
+    "Additional Requirements": "Additional Requirements",
     "Administration": "Administration",
     "Advanced PTZ": "アドバンスドPTZ",
     "Advanced Search": "Advanced Search",
+    "All Integrations": "All Integrations",
     "All Systems": "すべてのシステム",
     "All cloud users will be deleted.": "クラウドのすべてのユーザーが削除されます",
-    "All integrations": "全てのインテグレーション",
     "All results": "全ての結果",
     "Any": "全て",
     "Audio": "オーディオ",
@@ -25,6 +26,7 @@
     "Contact": "お問い合わせ",
     "Create Account": "アカウント作成",
     "Create account": "アカウントを作成",
+    "Developer": "Developer",
     "Disconnect": "切断",
     "Disconnect System from %CLOUD_NAME%?": "%CLOUD_NAME% からシステムを切断しますか？",
     "Download": "ダウンロード",
@@ -47,9 +49,7 @@
     "Forgot password?": "パスワードを忘れましたか?",
     "Get in touch": "Get in touch",
     "How it works": "How it works",
-    "How to install?": "How to install?",
-    "I agree to the": "同意します",
-    "I want you to contact me": "連絡して下さい",
+    "How to setup?": "How to setup?",
     "I/O": "I/O",
     "In Review": "In Review",
     "In-Client Upgrade:": "クライアント内アップグレード：",
@@ -76,6 +76,7 @@
     "Release Notes": "更新履歴",
     "Release notes": "更新履歴",
     "Remember me": "記憶する",
+    "Requirements": "Requirements",
     "Resend activation email": "アクティベーションメール再送信",
     "Resolution(max)": "解像度（最大）",
     "Save": "保存",
@@ -88,6 +89,8 @@
     "Show All": "すべて表示",
     "Some of your servers don't support cloud System merge because of outdated software version.": "ソフトウェアのバージョンが古いため、一部のサーバーはクラウドシステムの統合がサポートされません",
     "Support": "サポート",
+    "Support E-mail": "Support E-mail",
+    "Support URL": "Support URL",
     "System name": "システム名",
     "System name is required": "システム名が必要です",
     "System will be accessible through local network with local administrator account.": "システムにはローカルの管理者アカウントとローカル ネットワーク経由でアクセスできます",
@@ -95,8 +98,10 @@
     "Systems of such size may work but will be unstable and have troubles with updates and synchronisation.": "このサイズのシステムは動作するかもしれませんが、不安定になり、更新や同期に問題があります",
     "Tags": "タグ",
     "Take the name and settings from": "名称と設定を取得",
+    "Terms of Use": "Terms of Use",
     "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.": "このユーザーの資格情報が公開されます\n公共使用のカメラを選択し、必要最小限のアクセスを「パブリック ユーザー」役割に作成します\nこの「パブリック ユーザー」はシステム全体に影響しないアクセスにして下さい",
     "There will be more than": "更にある",
+    "To": "To",
     "Too many attempts. Try again in a minute.": "試行回数が多すぎます 暫くしてからもう一度お試しください",
     "Topic": "Topic",
     "Update them to the": "更新",
@@ -104,10 +109,12 @@
     "User": "ユーザー",
     "View": "表示",
     "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.": "Google ChromeやMozilla Firefoxの最新バージョンをインストールすることを推奨しますが、他の最新のWebブラウザを使用することもできます",
-    "What's new?": "新機能",
+    "What's New?": "What's New?",
+    "Works with:": "Works with:",
     "Wrong password": "間違ったパスワード",
     "You can merge only those cloud Systems, where you have the \"Owner\" permissions.": "オーナー権限のあるクラウドシステムのみを統合することができます",
     "You can only merge Systems where you are the owner.": "オーナーであるシステムのみを統合できます。",
+    "Your Email": "Your Email",
     "Your Name": "名前",
     "Your browser is not supported": "お使いのブラウザーはサポートされていません",
     "andXMore": "... and {{value}} more",
@@ -133,6 +140,22 @@
             "secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
             "systemOffline": "システム {{targetSystem}} はオフラインのため、現在のシステムと統合することはできません。",
             "systemUnavailable": "システム {{targetSystem}} は現在到達不能です。数分後にもう一度試すか、連絡してください"
+        },
+        "message": {
+            "failedToSend": "Message has failed to send.",
+            "sent": "Message has been sent.",
+            "title": {
+                "integration": "Get in touch with {{companyName}}",
+                "ipvd_feedback_device": "Feedback about {{product}}",
+                "ipvd_feedback_page": "Feedback for cameras page"
+            },
+            "topic": {
+                "contact_sales": "Contact sales for {{product}}",
+                "contact_support": "Contact support for {{product}}",
+                "integration_feedback": "Feedback for integration {{product}}",
+                "ipvd_feedback_device": "Feedback about {{product}}",
+                "ipvd_feedback_page": "Feedback for cameras page"
+            }
         }
     },
     "dialogs.merge.connectToCloud": "これと統合したいシステムを <strong>{{cloudName}}</strong> か、 <strong>{{vmsName}}</strong> クライアントを使用してローカルに統合します。",
@@ -271,6 +294,10 @@
         "supportedDevices": "サポートされているデバイス"
     },
     "phoneNumberWithLabel": "Tel: {{number}}",
+    "privacyPolicy": {
+        "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent.",
+        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent."
+    },
     "search": {
         "Any": "全て",
         "Search": "検索",
@@ -285,5 +312,6 @@
         "vendors": "manufacturers"
     },
     "servers in the merged System.": "結合されたシステム内のサーバー",
-    "support": "サポート"
+    "support": "サポート",
+    "testedVersionsLabel": "Tested on {{vmsName}} version(s):"
 }

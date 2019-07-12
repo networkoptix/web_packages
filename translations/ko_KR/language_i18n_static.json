@@ -158,6 +158,27 @@
 			"secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
 			"systemOffline": "시스템 {{targetSystem}} 은 오프라인이며 현재 시스템과 머지 할 수 없습니다.",
 			"systemUnavailable": "시스템 {{targetSystem}} 에 현재 연결할 수 없습니다. 몇 분 후에 다시 시도하거나 문의하십시오."
+		},
+		"message": {
+			"failedToSend": "Message has failed to send.",
+			"sent": "Message has been sent.",
+			"title": {
+				"integration": "Get in touch with {{companyName}}",
+				"ipvd_feedback_page": "Feedback for cameras page",
+				"ipvd_feedback_device": "Feedback about {{product}}"
+			},
+			"topic": {
+				"contact_sales": "Contact sales for {{product}}",
+				"contact_support": "Contact support for {{product}}",
+				"integration_feedback": "Feedback for integration {{product}}",
+				"ipvd_feedback_page": "Feedback for cameras page",
+				"ipvd_feedback_device": "Feedback about {{product}}"
+			}
 		}
-	}
+	},
+	"privacyPolicy": {
+		"integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent.",
+		"ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent."
+	},
+	"testedVersionsLabel": "Tested on {{vmsName}} version(s):"
 }

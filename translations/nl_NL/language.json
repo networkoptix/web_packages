@@ -12,23 +12,8 @@
     "logoutAuthorisedTitle": "U bent reeds ingelogd",
     "logoutAuthorisedContinueButton": "Doorgaan",
     "logoutAuthorisedLogoutButton": "Uitloggen",
-    "messageFailed": "Bericht versturen mislukt.",
-    "messageSent": "Het Bericht werd verstuurd.",
     "noClientDetectedTitle": "Installeer %VMS_NAME% om uw systeem te bekijken",
     "download": "Download %VMS_NAME%"
-  },
-  "messageDialog": {
-    "title": {
-      "integration": "Email for {{product}}",
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Feedback over {{product}}"
-    },
-    "topic": {
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Feedback over {{product}}",
-      "contact_sales": "Contact sales for {{product}}",
-      "contact_support": "Contact support for {{product}}"
-    }
   },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",

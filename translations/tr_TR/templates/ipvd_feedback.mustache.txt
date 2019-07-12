@@ -1,6 +1,3 @@
 Merhaba, {{ message.userFullName }}
-{{ message.sender_name}} ({{ message.sender_email }}) {{ message.product }}için şu geri bildirimi verdi:
+{{ message.sender_name}} ({{ message.sender_email }}) gave the following feedback{{#message.product}} for {{ message.product }}{{/message.product}}:
 <pre>{{ message.message }}</pre>
-
-------------------------------------------
-Kullanıcıyla iletişime geçilebilir: {{ message.sender_to_be_contacted}}

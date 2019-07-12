@@ -3,12 +3,13 @@
     "Account Settings": "Nastavení účtu",
     "Account not activated": "Účet není aktivován",
     "Account not found": "Účet nebyl nalezen",
+    "Additional Requirements": "Additional Requirements",
     "Administration": "Administration",
     "Advanced PTZ": "Advanced PTZ",
     "Advanced Search": "Advanced Search",
+    "All Integrations": "All Integrations",
     "All Systems": "Všechny systémy",
     "All cloud users will be deleted.": "Všichni uživatelé cloudu budou smazáni.",
-    "All integrations": "All integrations",
     "All results": "All results",
     "Any": "Any",
     "Audio": "Zvuk",
@@ -25,6 +26,7 @@
     "Contact": "Contact",
     "Create Account": "Vytvořit účet",
     "Create account": "Vytvořit účet",
+    "Developer": "Developer",
     "Disconnect": "Odpojit",
     "Disconnect System from %CLOUD_NAME%?": "Odpojit systém od %CLOUD_NAME%?",
     "Download": "Stáhnout",
@@ -47,9 +49,7 @@
     "Forgot password?": "Zapomněli jste heslo?",
     "Get in touch": "Get in touch",
     "How it works": "How it works",
-    "How to install?": "How to install?",
-    "I agree to the": "Souhlasím s",
-    "I want you to contact me": "I want you to contact me",
+    "How to setup?": "How to setup?",
     "I/O": "I/O",
     "In Review": "In Review",
     "In-Client Upgrade:": "Změny v klientovy:",
@@ -76,6 +76,7 @@
     "Release Notes": "Poznámky k vydání",
     "Release notes": "Poznámky k verzi",
     "Remember me": "Pamatovat si mě",
+    "Requirements": "Requirements",
     "Resend activation email": "Znovu poslat aktivační email",
     "Resolution(max)": "Resolution(max)",
     "Save": "Uložit",
@@ -88,6 +89,8 @@
     "Show All": "Zobrazit vše",
     "Some of your servers don't support cloud System merge because of outdated software version.": "Některé z vašich serverů nepodporují sloučení cloudového systému kvůli zastaralé verzi softwaru.",
     "Support": "Podpora",
+    "Support E-mail": "Support E-mail",
+    "Support URL": "Support URL",
     "System name": "Název systému",
     "System name is required": "Název systému je povinný",
     "System will be accessible through local network with local administrator account.": "Systém bude přístupný prostřednictvím místní sítě s účtem místního správce.",
@@ -95,8 +98,10 @@
     "Systems of such size may work but will be unstable and have troubles with updates and synchronisation.": "Systémy takové velikosti mohou fungovat, ale mohou být nestabilní a mít problémy s aktualizacemi a synchronizací.",
     "Tags": "Značky",
     "Take the name and settings from": "Převzít název systému a nastavení z",
+    "Terms of Use": "Terms of Use",
     "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.": "Pověření tohoto uživatele budou zveřejněna! Vytvořte vlastní účet „Veřejný uživatel“ s přístupem pouze\n            ke kamerám vybraným pro veřejné použití a přidělite pouze minimální požadovaná oprávnění ke sledování. Tento\n            \"veřejný uživatel\" by neměl mít systémový přístup jakéhokoli druhu.",
     "There will be more than": "Bude víc než",
+    "To": "To",
     "Too many attempts. Try again in a minute.": "Příliš mnoho pokusů. Zkuste to znovu za chvíli.",
     "Topic": "Topic",
     "Update them to the": "Aktualizujte je na",
@@ -104,10 +109,12 @@
     "User": "Uživatel",
     "View": "Zobrazení",
     "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.": "Doporučujeme nainstalovat nejnovější verze prohlížeče Google Chrome nebo Mozilla Firefox, ale můžete použít jakýkoli jiný moderní webový prohlížeč.",
-    "What's new?": "Co je nového?",
+    "What's New?": "What's New?",
+    "Works with:": "Works with:",
     "Wrong password": "Chybné heslo",
     "You can merge only those cloud Systems, where you have the \"Owner\" permissions.": "Můžete sloučit pouze ty cloud systémy, kde máte oprávnění \"Vlastník\".",
     "You can only merge Systems where you are the owner.": "Systémy můžete sloučit pouze tam, kde jste vlastníkem.",
+    "Your Email": "Your Email",
     "Your Name": "Your Name",
     "Your browser is not supported": "Verze vašeho prohlížeče není podporována",
     "andXMore": "... and {{value}} more",
@@ -133,6 +140,22 @@
             "secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
             "systemOffline": "Systém {{targetSystem}} je offline a nelze jej sloučit se stávajícím systémem.",
             "systemUnavailable": "Systém {{targetSystem}} je v současné době nedostupný. Opakujte akci za několik minut nebo kontaktujte"
+        },
+        "message": {
+            "failedToSend": "Message has failed to send.",
+            "sent": "Message has been sent.",
+            "title": {
+                "integration": "Get in touch with {{companyName}}",
+                "ipvd_feedback_device": "Feedback about {{product}}",
+                "ipvd_feedback_page": "Feedback for cameras page"
+            },
+            "topic": {
+                "contact_sales": "Contact sales for {{product}}",
+                "contact_support": "Contact support for {{product}}",
+                "integration_feedback": "Feedback for integration {{product}}",
+                "ipvd_feedback_device": "Feedback about {{product}}",
+                "ipvd_feedback_page": "Feedback for cameras page"
+            }
         }
     },
     "dialogs.merge.connectToCloud": "Připojit systém, který chcete sloučit s tímto na <strong>{{cloudName}}</strong> nebo sloučit lokálně pomocí <strong>{{vmsName}}</strong> Klienta.",
@@ -271,6 +294,10 @@
         "supportedDevices": "Supported Devices"
     },
     "phoneNumberWithLabel": "Tel: {{number}}",
+    "privacyPolicy": {
+        "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent.",
+        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent."
+    },
     "search": {
         "Any": "Any",
         "Search": "Hledat",
@@ -285,5 +312,6 @@
         "vendors": "manufacturers"
     },
     "servers in the merged System.": "servery na sloučeném systému.",
-    "support": "podpora"
+    "support": "podpora",
+    "testedVersionsLabel": "Tested on {{vmsName}} version(s):"
 }

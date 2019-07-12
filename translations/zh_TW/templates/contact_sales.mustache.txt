@@ -1,6 +1,3 @@
 您好, {{ message.userFullName }}
 {{ message.sender_name}} ({{ message.sender_email }}) has the following sales question about the {{ message.product }}:
 <pre>{{ message.message }}</pre>
-
-------------------------------------------
-可與使用者聯繫: {{ message.sender_to_be_contacted}}

@@ -1,0 +1,10 @@
+There is a new version for {{ message.product }}({{message.product_type}}) to review.
+
+Napsauta linkkiä, jolla voit tarkastella luonnosta {{ message.id }} {{ message.product }}
+
+Link to review: {{ config.portal_url }}/admin/cms/productcustomizationreview/{{ message.id }}/change/
+
+Tällä sivulla voit
+Luoda esikatselun nähdäksesi uusimmat muutokset.
+2) Julkaista tämän version, joka päivittää kaiken sisällön.
+3) Muokata sisältöä painamalla muokkaa tallennuspainiketta. Jos haluat nähdä muutokset, sinun täytyy luoda uusi versio.

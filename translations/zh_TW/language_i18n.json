@@ -3,12 +3,13 @@
     "Account Settings": "帳號設定",
     "Account not activated": "帳號未啟動",
     "Account not found": "未找到該帳戶",
+    "Additional Requirements": "Additional Requirements",
     "Administration": "Administration",
     "Advanced PTZ": "Advanced PTZ",
     "Advanced Search": "Advanced Search",
+    "All Integrations": "All Integrations",
     "All Systems": "所有系統",
     "All cloud users will be deleted.": "雲端上的所有使用者都將被刪除.",
-    "All integrations": "All integrations",
     "All results": "All results",
     "Any": "Any",
     "Audio": "音源",
@@ -25,6 +26,7 @@
     "Contact": "Contact",
     "Create Account": "新建帳號",
     "Create account": "新建帳號",
+    "Developer": "Developer",
     "Disconnect": "斷線",
     "Disconnect System from %CLOUD_NAME%?": "是否從 %CLOUD_NAME% 中斷開系統?",
     "Download": "下載",
@@ -47,9 +49,7 @@
     "Forgot password?": "忘記密碼?",
     "Get in touch": "Get in touch",
     "How it works": "How it works",
-    "How to install?": "How to install?",
-    "I agree to the": "我同意使用條款及條件",
-    "I want you to contact me": "I want you to contact me",
+    "How to setup?": "How to setup?",
     "I/O": "I/O",
     "In Review": "In Review",
     "In-Client Upgrade:": "用戶端升級:",
@@ -76,6 +76,7 @@
     "Release Notes": "版本更新說明",
     "Release notes": "更新說明",
     "Remember me": "記住登入資訊",
+    "Requirements": "Requirements",
     "Resend activation email": "重新發送啟用電子郵件",
     "Resolution(max)": "Resolution(max)",
     "Save": "儲存",
@@ -88,6 +89,8 @@
     "Show All": "顯示全部",
     "Some of your servers don't support cloud System merge because of outdated software version.": "由於軟體版本過舊, 您的某些伺服器不支援雲系統合併。",
     "Support": "支援",
+    "Support E-mail": "Support E-mail",
+    "Support URL": "Support URL",
     "System name": "系統名稱",
     "System name is required": "必須有系統名稱",
     "System will be accessible through local network with local administrator account.": "系統將可在本地網路中被本地管理者帳號存取.",
@@ -95,8 +98,10 @@
     "Systems of such size may work but will be unstable and have troubles with updates and synchronisation.": "這種規模的系統可能可以運作, 但是不穩定而且有更新和同步的問題。",
     "Tags": "標籤",
     "Take the name and settings from": "獲取系統名稱和設定",
+    "Terms of Use": "Terms of Use",
     "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.": "此用戶的身分驗證資訊將被公開！您必須創建一個自定義的“一般用戶”角色，該角色僅限共用攝影機的存取權限\n            ，並且只能被分配所需的最低查看權限。\n此\n            “一般用戶”不應被交予任何的系統存取權限。",
     "There will be more than": "將有更多的",
+    "To": "To",
     "Too many attempts. Try again in a minute.": "嘗試次數過多，請稍後再試。",
     "Topic": "Topic",
     "Update them to the": "更新到",
@@ -104,10 +109,12 @@
     "User": "使用者",
     "View": "瀏覽",
     "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.": "建議您安裝最新版本的 Google Chrome 或 Mozilla Firefox, 或可以使用任何其他最新的網頁瀏覽器。",
-    "What's new?": "最新消息!",
+    "What's New?": "What's New?",
+    "Works with:": "Works with:",
     "Wrong password": "密碼不正確",
     "You can merge only those cloud Systems, where you have the \"Owner\" permissions.": "您只能合併那些擁有“所有者”權限的雲系統。",
     "You can only merge Systems where you are the owner.": "當您的權限為擁有者時, 就可以合併系統",
+    "Your Email": "Your Email",
     "Your Name": "Your Name",
     "Your browser is not supported": "系統不支援您的瀏覽器",
     "andXMore": "... and {{value}} more",
@@ -133,6 +140,22 @@
             "secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
             "systemOffline": "系統 {{targetSystem}} 處於離線狀態, 無法與當前系統合併。",
             "systemUnavailable": "系統 {{targetSystem}} 目前無法連上。請在幾分鐘後再試一次"
+        },
+        "message": {
+            "failedToSend": "Message has failed to send.",
+            "sent": "Message has been sent.",
+            "title": {
+                "integration": "Get in touch with {{companyName}}",
+                "ipvd_feedback_device": "Feedback about {{product}}",
+                "ipvd_feedback_page": "Feedback for cameras page"
+            },
+            "topic": {
+                "contact_sales": "Contact sales for {{product}}",
+                "contact_support": "Contact support for {{product}}",
+                "integration_feedback": "Feedback for integration {{product}}",
+                "ipvd_feedback_device": "Feedback about {{product}}",
+                "ipvd_feedback_page": "Feedback for cameras page"
+            }
         }
     },
     "dialogs.merge.connectToCloud": "請將要與此合併的系統連接到 <strong>{{cloudName}}</strong> 或使用 <strong>{{vmsName}}</strong> 客戶端進行本地合併。",
@@ -271,6 +294,10 @@
         "supportedDevices": "Supported Devices"
     },
     "phoneNumberWithLabel": "Tel: {{number}}",
+    "privacyPolicy": {
+        "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent.",
+        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent."
+    },
     "search": {
         "Any": "Any",
         "Search": "搜尋",
@@ -285,5 +312,6 @@
         "vendors": "manufacturers"
     },
     "servers in the merged System.": "合併系統中的伺服器。",
-    "support": "支援"
+    "support": "支援",
+    "testedVersionsLabel": "Tested on {{vmsName}} version(s):"
 }

@@ -3,12 +3,13 @@
     "Account Settings": "Accountinstellingen",
     "Account not activated": "Account is niet geactiveerd",
     "Account not found": "Account niet gevonden",
+    "Additional Requirements": "Additional Requirements",
     "Administration": "Beheer",
     "Advanced PTZ": "Geavanceerde PTZ",
     "Advanced Search": "Advanced Search",
+    "All Integrations": "All Integrations",
     "All Systems": "Alle systemen",
     "All cloud users will be deleted.": "Alle cloud gebruikers zullen worden verwijderd.",
-    "All integrations": "Alle integraties",
     "All results": "Alle resultaten",
     "Any": "Elke",
     "Audio": "Audio",
@@ -25,6 +26,7 @@
     "Contact": "Contact",
     "Create Account": "Account aanmaken",
     "Create account": "Accounts aanmaken",
+    "Developer": "Developer",
     "Disconnect": "Verbinding verbreken",
     "Disconnect System from %CLOUD_NAME%?": "Ontkoppel het systeem van %CLOUD_NAME%?",
     "Download": "Download",
@@ -47,9 +49,7 @@
     "Forgot password?": "Wachtwoord vergeten?",
     "Get in touch": "Get in touch",
     "How it works": "How it works",
-    "How to install?": "How to install?",
-    "I agree to the": "Ik ga akkoord met de",
-    "I want you to contact me": "Ik wil dat u contact met mij opneemt",
+    "How to setup?": "How to setup?",
     "I/O": "I/O",
     "In Review": "In Review",
     "In-Client Upgrade:": "In-client-upgrade:",
@@ -76,6 +76,7 @@
     "Release Notes": "Release Notes",
     "Release notes": "Versiewijzigingen",
     "Remember me": "Onthoud mij",
+    "Requirements": "Requirements",
     "Resend activation email": "Stuur activeringsmail opnieuw",
     "Resolution(max)": "Resolutie(max)",
     "Save": "Opslaan",
@@ -88,6 +89,8 @@
     "Show All": "Toon alles",
     "Some of your servers don't support cloud System merge because of outdated software version.": "Sommige van uw servers bieden geen ondersteuning voor het samenvoegen van cloudsystemen vanwege een verouderde softwareversie.",
     "Support": "Ondersteuning",
+    "Support E-mail": "Support E-mail",
+    "Support URL": "Support URL",
     "System name": "Systeemnaam",
     "System name is required": "Systeemnaam is vereist",
     "System will be accessible through local network with local administrator account.": "Systeem is toegankelijk via lokaal netwerk met het lokale beheerdersaccount.",
@@ -95,8 +98,10 @@
     "Systems of such size may work but will be unstable and have troubles with updates and synchronisation.": "Systemen van dergelijke omvang kunnen werken, maar zullen onstabiel zijn en problemen hebben met updates en synchronisatie.",
     "Tags": "Tags",
     "Take the name and settings from": "Gebruik de systeemnaam en instellingen over van",
+    "Terms of Use": "Terms of Use",
     "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.": "De inloggegevens van deze gebruiker worden zichtbaar! U moet een aangepaste rol \"Openbare Gebruiker\" maken met alleen toegang voor de camera's die zijn geselecteerd voor openbaar gebruik en waaraan alleen de minimaal vereiste weergaverechten zijn toegewezen. Deze \"Openbare Gebruiker\" mag geen systeembrede toegang hebben.",
     "There will be more than": "Er zal meer zijn dan",
+    "To": "To",
     "Too many attempts. Try again in a minute.": "Te veel pogingen. Probeer het later opnieuw.",
     "Topic": "Topic",
     "Update them to the": "Werk ze bij naar de",
@@ -104,10 +109,12 @@
     "User": "Gebruiker",
     "View": "Toon",
     "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.": "We raden u aan de nieuwste versies van Google Chrome of Mozilla Firefox te installeren, maar u kunt elke andere moderne webbrowser gebruiken.",
-    "What's new?": "Wat is er nieuw?",
+    "What's New?": "What's New?",
+    "Works with:": "Works with:",
     "Wrong password": "Wachtwoord onjuist",
     "You can merge only those cloud Systems, where you have the \"Owner\" permissions.": "U kunt alleen die cloudsystemen samenvoegen, waarbij u de machtigingen \"Eigenaar\" hebt.",
     "You can only merge Systems where you are the owner.": "U kunt alleen cloud systemen samenvoegen, waarvan u de eigenaar bent.",
+    "Your Email": "Your Email",
     "Your Name": "Uw naam",
     "Your browser is not supported": "Uw browser wordt niet ondersteund",
     "andXMore": "... en nog {{value}} meer",
@@ -133,6 +140,22 @@
             "secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
             "systemOffline": "Systeem {{targetSystem}} is offline en kan niet worden samengevoegd met het huidige exemplaar.",
             "systemUnavailable": "Systeem {{targetSystem}} is momenteel niet bereikbaar. Probeer het over een paar minuten opnieuw of neem contact op met"
+        },
+        "message": {
+            "failedToSend": "Message has failed to send.",
+            "sent": "Message has been sent.",
+            "title": {
+                "integration": "Get in touch with {{companyName}}",
+                "ipvd_feedback_device": "Feedback about {{product}}",
+                "ipvd_feedback_page": "Feedback for cameras page"
+            },
+            "topic": {
+                "contact_sales": "Contact sales for {{product}}",
+                "contact_support": "Contact support for {{product}}",
+                "integration_feedback": "Feedback for integration {{product}}",
+                "ipvd_feedback_device": "Feedback about {{product}}",
+                "ipvd_feedback_page": "Feedback for cameras page"
+            }
         }
     },
     "dialogs.merge.connectToCloud": "Verbind het systeem dat u met deze wilt samenvoegen tot <strong>{{cloudName}}</strong> of plaats lokaal samen met behulp van de <strong>{{vmsName}}</strong> Client.",
@@ -271,6 +294,10 @@
         "supportedDevices": "Ondersteunde apparaten"
     },
     "phoneNumberWithLabel": "Tel: {{number}}",
+    "privacyPolicy": {
+        "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent.",
+        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent."
+    },
     "search": {
         "Any": "Elke",
         "Search": "Zoeken",
@@ -285,5 +312,6 @@
         "vendors": "fabrikanten"
     },
     "servers in the merged System.": "servers in het samengevoegde systeem.",
-    "support": "ondersteuning"
+    "support": "ondersteuning",
+    "testedVersionsLabel": "Tested on {{vmsName}} version(s):"
 }

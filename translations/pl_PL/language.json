@@ -12,23 +12,8 @@
     "logoutAuthorisedTitle": "Jesteś już zalogowany",
     "logoutAuthorisedContinueButton": "Kontynuuj",
     "logoutAuthorisedLogoutButton": "Wyloguj",
-    "messageFailed": "Wysyłanie wiadomości nie powiodło się.",
-    "messageSent": "Wiadomość została wysłana.",
     "noClientDetectedTitle": "Zainstaluj %VMS_NAME%, aby przejrzeć swój system",
     "download": "Pobierz %VMS_NAME%"
-  },
-  "messageDialog": {
-    "title": {
-      "integration": "E-mail dla {{product}}",
-      "ipvd_feedback_page": "Strona z opiniami dotyczącymi kamer",
-      "ipvd_feedback_device": "Opinie dotyczące {{product}}"
-    },
-    "topic": {
-      "ipvd_feedback_page": "Strona z opiniami dotyczącymi kamer",
-      "ipvd_feedback_device": "Opinie dotyczące {{product}}",
-      "contact_sales": "Kontakt do sprzedawcy {{product}}",
-      "contact_support": "Kontakt do wsparcia technicznego {{product}}"
-    }
   },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",

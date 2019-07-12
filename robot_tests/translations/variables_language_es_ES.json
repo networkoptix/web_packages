@@ -10,6 +10,7 @@
     "RESEND ACTIVATION LINK BUTTON TEXT": "Reenviar E-Mail de activación",
     "SYSTEM NO ACCESS TEXT": "Error al acceder al sistema",
     "DISCONNECT MODAL WARNING TEXT": "Está a punto de desconectar este sistema de su cuenta. Ya no podrás acceder a este sistema. ¿Estás seguro?",
+    "SUCCESSFULLY DISCONNECTED": "El sistema se desconecta con éxito de %PRODUCT_NAME%",
     "ALREADY ACTIVATED TEXT": "La cuenta ya está activada o el código de confirmación es incorrecto",
     "AUTOTESTS OFFLINE TEXT": "fuera de línea",
     "NEW PERMISSIONS SAVED": "Nuevos permisos guardados",
@@ -83,4 +84,6 @@
     "PASSWORD IS FAIR BADGE TEXT": "regular",
     "PASSWORD IS GOOD BADGE TEXT": "bueno",
     "PASSWORD INCORRECT BADGE TEXT": "incorrecto"
+    "IPVD ADVANCED SEARCH BUTTON TEXT": "Búsqueda Avanzada",
+    "CANNOT MERGE WITH OFFLINE SYSTEM TEXT": "%SYSTEM NAME% está desconectado y no se puede combinar con el actual.",
 }

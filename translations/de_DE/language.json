@@ -12,23 +12,8 @@
     "logoutAuthorisedTitle": "Sie sind bereits eingeloggt",
     "logoutAuthorisedContinueButton": "Fortfahren",
     "logoutAuthorisedLogoutButton": "Abmelden",
-    "messageFailed": "Nachricht konnte nicht gesendet werden.",
-    "messageSent": "Die Nachricht wurde gesendet.",
     "noClientDetectedTitle": "Installieren Sie %VMS_NAME%, um Ihr System anzusehen",
     "download": "%VMS_NAME% herunterladen"
-  },
-  "messageDialog": {
-    "title": {
-      "integration": "E-Mail für {{product}}",
-      "ipvd_feedback_page": "Feedback zur Kameraseite",
-      "ipvd_feedback_device": "Feedback zu {{product}}"
-    },
-    "topic": {
-      "ipvd_feedback_page": "Feedback zur Kameraseite",
-      "ipvd_feedback_device": "Feedback zu {{product}}",
-      "contact_sales": "Kontaktiere Vertrieb für {{product}}",
-      "contact_support": "Kontaktiere Support für {{product}}"
-    }
   },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",

@@ -12,23 +12,8 @@
     "logoutAuthorisedTitle": "您已经登录",
     "logoutAuthorisedContinueButton": "继续",
     "logoutAuthorisedLogoutButton": "退出登录",
-    "messageFailed": "Message has failed to send.",
-    "messageSent": "Message has been sent.",
     "noClientDetectedTitle": "安装 %VMS_NAME% 来查看您的系统",
     "download": "下载 %VMS_NAME%"
-  },
-  "messageDialog": {
-    "title": {
-      "integration": "Email for {{product}}",
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Feedback about {{product}}"
-    },
-    "topic": {
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Feedback about {{product}}",
-      "contact_sales": "Contact sales for {{product}}",
-      "contact_support": "Contact support for {{product}}"
-    }
   },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
@@ -215,7 +200,7 @@
     "successDeleted": "从您的帐户成功删除系统 {{systemName}}",
     "mergeFailed": "系统合并失败",
     "mergeStart": "系统开始合并中",
-    "mergeSuccess": "System merge completed",
+    "mergeSuccess": "系统合并完成",
     "permissionsRemoved": "权限从 {{email}} 被刪除",
     "unknownName": "未知的系统名称（由云合并引起）"
   },

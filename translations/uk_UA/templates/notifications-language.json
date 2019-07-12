@@ -14,8 +14,11 @@
   "contact_support": {
     "emailSubject": "Запит на підтримку для {{message.product}}"
   },
+  "integration_feedback": {
+    "emailSubject": "Зворотній зв'язок для {{message.product}}"
+  },
   "ipvd_feedback": {
-    "emailSubject": "Зворотній зв'язок із сторінкою камери для {{message.product}}"
+    "emailSubject": "Зворотній зв'язок зі сторінкою камери{{#message.product}} для {{message.product}}{{/message.product}}"
   },
   "review_version": {
     "emailSubject": "{{message.product_type}}: {{message.product}} має нову версію для перегляду"

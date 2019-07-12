@@ -12,23 +12,8 @@
     "logoutAuthorisedTitle": "すでにログインしています",
     "logoutAuthorisedContinueButton": "続行",
     "logoutAuthorisedLogoutButton": "ログアウト",
-    "messageFailed": "メッセージの送信に失敗しました",
-    "messageSent": "メッセージが送信されました",
     "noClientDetectedTitle": "システムを表示するには %VMS_NAME% をインストールします",
     "download": "%VMS_NAME% をダウンロード"
-  },
-  "messageDialog": {
-    "title": {
-      "integration": "Email for {{product}}",
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "{{product}} についてのフィードバック"
-    },
-    "topic": {
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "{{product}} についてのフィードバック",
-      "contact_sales": "Contact sales for {{product}}",
-      "contact_support": "Contact support for {{product}}"
-    }
   },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
