@@ -22,7 +22,7 @@ def create_default_permission_group(product):
         return None
 
     if product.is_cloud_portal:
-        group = Group.objects.create(name=f'Portal Manager - {product.name}')
+        group = Group.objects.create(name=f'Portal Manager - {product.name} - {product.id}')
         permissions = Permission.objects.filter(codename__in=['access_customization', 'change_account',
                                                               'change_productcustomizationreview',
                                                               'change_product', 'edit_content',
@@ -36,7 +36,7 @@ def create_default_permission_group(product):
             UserGroupsToProductType.objects.create(product_type=product_type, group=group)
 
     else:
-        group = Group.objects.create(name=f'Developer - {product.name}')
+        group = Group.objects.create(name=f'Developer - {product.name} - {product.id}')
         permissions = Permission.objects.filter(
             codename__in=['edit_content', 'change_product', 'change_productcustomizationreview']
         )
