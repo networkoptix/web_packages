@@ -82,22 +82,16 @@ class GroupAdminForm(forms.ModelForm):
         self.instance.user_set.set(self.cleaned_data['users'])
 
         for product in self.cleaned_data['products']:
-            if not UserGroupsToProductPermissions.objects.filter(group=self.instance, product=product).first():
-                UserGroupsToProductPermissions.objects.create(group=self.instance, product=product)
+            UserGroupsToProductPermissions.objects.get_or_create(group=self.instance, product=product)
 
-        remove_permissions = UserGroupsToProductPermissions.objects.filter(group=self.instance).\
-            exclude(product__in=self.cleaned_data['products'])
-        for product_group in remove_permissions:
-            product_group.delete()
+        UserGroupsToProductPermissions.objects.filter(group=self.instance).\
+            exclude(product__in=self.cleaned_data['products']).delete()
 
         for product_type in self.cleaned_data['product_types']:
-            if not UserGroupsToProductType.objects.filter(group=self.instance, product_type=product_type).first():
-                UserGroupsToProductType.objects.create(group=self.instance, product_type=product_type)
+            UserGroupsToProductType.objects.get_or_create(group=self.instance, product_type=product_type)
 
-        remove_product_types = UserGroupsToProductType.objects.filter(group=self.instance).\
-            exclude(product_type__in=self.cleaned_data['product_types'])
-        for product_type_group in remove_product_types:
-            product_type_group.delete()
+        UserGroupsToProductType.objects.filter(group=self.instance).\
+            exclude(product_type__in=self.cleaned_data['product_types']).delete()
 
     def save(self, *args, **kwargs):
         # Default save
