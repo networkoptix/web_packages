@@ -73,7 +73,7 @@ export class AppComponent {
         // ***************************************************************
         // const langCookie = this.cookieService.get('language');
         // const lang = langCookie || translate.getBrowserCultureLang().replace('-', '_');
-        // translate.use(lang);
+        translate.use('en_US');
     }
 
     public setTitle(newTitle: string) {
