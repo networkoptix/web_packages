@@ -74,7 +74,17 @@ window.L = {};
                 }
 
                 $locationProvider.html5Mode(true);
-
+    
+                if (!window.SETTINGS) {
+                    if (PRODUCTION && error.status >= 500) {
+                        window.location.href = '/static/503.html';
+                    } else if (PRODUCTION) {
+                        window.location.href = '/';
+                    }
+                    
+                    return;
+                }
+                
                 var CONFIG = nxConfigServiceProvider.$get().getConfig();
 
                 var appState = {
@@ -85,48 +95,6 @@ window.L = {};
                         publicDownloads: false,
                         showHeaderAndFooter: true
                     };
-
-                $.ajax({
-                    url: CONFIG.apiBase + '/utils/settings',
-                    async: false,
-                    dataType: 'json'
-                })
-                    .done(function(response){
-                        appState.companyLink = response.companyLink;
-                        appState.companyName = response.companyName;
-                        appState.copyrightYear = response.copyrightYear;
-                        appState.feedbackEnabled = response.feedbackEnabled;
-                        appState.footerItems = response.footerItems;
-                        appState.integrationFilterItems = response.integrationFilterItems;
-                        appState.integrationFilterLimitation = response.integrationFilterLimitation;
-                        appState.integrationStoreEnabled = response.integrationStoreEnabled;
-                        appState.publicDownloads = response.publicDownloads;
-                        appState.publicReleases = response.publicReleases;
-                        appState.trafficRelayHost = response.trafficRelayHost;
-                        appState.supportLink = response.supportLink;
-                        appState.privacyLink = response.privacyLink;
-                        appState.cloudName = response.cloudName;
-                        appState.vmsName = response.vmsName;
-    
-                        if (response.cloudMerge) {
-                            appState.cloudMerge = response.cloudMerge;
-                        }
-                        
-                        angular.extend(CONFIG, appState);
-                        
-                        CONFIG.ipvd.sortSupportedDevicesByPopularity = response.sortSupportedDevicesByPopularity;
-                        CONFIG.ipvd.supportedResolutions = response.supportedResolutions;
-                        CONFIG.ipvd.supportedHardwareTypes = response.supportedHardwareTypes;
-                        CONFIG.ipvd.searchTags = response.searchTags;
-                        CONFIG.ipvd.vendorsShown = parseInt(response.vendorsShown);
-                    })
-                    .fail(function (error) {
-                        if (PRODUCTION && error.status >= 500) {
-                            window.location.href = '/static/503.html';
-                        } else if (PRODUCTION) {
-                            window.location.href = '/';
-                        }
-                    });
                 
                 if (window.LANG.ajs) {
                     languageServiceProvider.setLanguage(window.LANG.ajs);
@@ -164,269 +132,269 @@ window.L = {};
 
                 var lang = languageServiceProvider.$get().lang;
 
-            // For compatibility with legacy modules *****
-            L = lang;
-            Config = CONFIG;
+                // For compatibility with legacy modules *****
+                L = lang;
+                Config = CONFIG;
+    
+                angular.extend(Config, appState);
+                // *******************************************
 
-            angular.extend(Config, appState);
-            // *******************************************
-
-            $routeProvider
-                .when('/register/success', {
-                    template: '<nx-register-component [uri-param]="uriParam"></nx-register-component>',
-                    controller: ['$scope', 'getParam', function ($scope, getParam) {
-                        $scope.uriParam = getParam;
-                    }],
-                    resolve: {
-                        getParam: [function () {
-                            return 'registerSuccess';
-                        }]
-                    }
-                })
-                .when('/register/successActivated', {
-                    template: '<nx-register-component [uri-param]="uriParam"></nx-register-component>',
-                    controller: ['$scope', 'getParam', function ($scope, getParam) {
-                        $scope.uriParam = getParam;
-                    }],
-                    resolve: {
-                        getParam: [function () {
-                            return 'successActivated';
-                        }]
-                    }
-                    // templateUrl: CONFIG.viewsDir + 'regActions.html',
-                    // controller: 'RegisterCtrl',
-                    // resolve: {
-                    //     test: ['$route', function ($route) {
-                    //         $route.current.params.registerSuccess = true;
-                    //         $route.current.params.activated = true;
-                    //     }]
-                    // }
-                })
-                .when('/register/:code', {
-                    template: '<nx-register-component [uri-param]="getParam" [uri-param-code]="getCode"></nx-register-component>',
-                    controller: ['$scope', 'getParam', function ($scope, getParam) {
-                        $scope.uriParam = getParam;
-                    }],
-                    resolve: {
-                        getParam: [function () {
-                            return 'code';
+                $routeProvider
+                    .when('/register/success', {
+                        template: '<nx-register-component [uri-param]="uriParam"></nx-register-component>',
+                        controller: ['$scope', 'getParam', function ($scope, getParam) {
+                            $scope.uriParam = getParam;
                         }],
-                        getCode: ['$route', function ($route) {
-                            return $route.current.params.code;
-                        }]
-                    }
-                    // templateUrl: CONFIG.viewsDir + 'regActions.html',
-                    // controller: 'RegisterCtrl'
-                })
-                // .when('/register', {
-                //     templateUrl: CONFIG.viewsDir + 'regActions.html',
-                //     controller: 'RegisterCtrl'
-                // })
-                .when('/register', {
-                    template: '<nx-register-component [uri-param]="register"></nx-register-component>'
-                })
-                .when('/account/password', {
-                    templateUrl: CONFIG.viewsDir + 'account.html',
-                    controller: 'AccountCtrl',
-                    resolve: {
-                        test: ['$route', function ($route) {
-                            $route.current.params.passwordMode = true;
-                        }]
-                    }
-                })
-                .when('/account', {
-                    templateUrl: CONFIG.viewsDir + 'account.html',
-                    controller: 'AccountCtrl',
-                    resolve: {
-                        test: ['$route', function ($route) {
-                            $route.current.params.accountMode = true;
-                        }]
-                    }
-                })
-                .when('/systems', {
-                    templateUrl: CONFIG.viewsDir + 'systems.html',
-                    controller: 'SystemsCtrl'
-                })
-                .when('/systems/:systemId', {
-                    templateUrl: CONFIG.viewsDir + 'system.html',
-                    controller: 'SystemCtrl'
-                })
-                .when('/systems/:systemId/share', {
-                    title: lang.pageTitles.systemShare,
-                    templateUrl: CONFIG.viewsDir + 'system.html',
-                    controller: 'SystemCtrl',
-                    resolve: {
-                        test: ['$route', function ($route) {
-                            $route.current.params.callShare = true;
-                        }]
-                    }
-                })
-                .when('/systems/:systemId/view', {
-                    templateUrl: CONFIG.viewsDir + 'view.html',
-                    controller: 'ViewPageCtrl'
-                })
-                .when('/systems/:systemId/view/:cameraId', {
-                    templateUrl: CONFIG.viewsDir + 'view.html',
-                    controller: 'ViewPageCtrl'
-                })
-                .when('/embed/:systemId/view/:cameraId', {
-                    templateUrl: CONFIG.viewsDir + 'view.html',
-                    controller : 'ViewPageCtrl',
-                    resolve: {
-                        cleanSlate: [function () {
-                            CONFIG.showHeaderAndFooter = false;
-                        }]
-                    }
-                })
-                .when('/activate', {
-                    templateUrl: CONFIG.viewsDir + 'activeActions.html',
-                    controller: 'ActivateRestoreCtrl',
-                    resolve: {
-                        test: ['$route', function ($route) {
-                            $route.current.params.reactivating = true;
-                        }]
-                    }
-                })
-                .when('/activate/success', {
-                    templateUrl: CONFIG.viewsDir + 'activeActions.html',
-                    controller: 'ActivateRestoreCtrl',
-                    resolve: {
-                        test: ['$route', function ($route) {
-                            $route.current.params.activationSuccess = true;
-                        }]
-                    }
-                })
-                .when('/activate/:activateCode', {
-                    templateUrl: CONFIG.viewsDir + 'activeActions.html',
-                    controller: 'ActivateRestoreCtrl'
-                })
-                .when('/restore_password', {
-                    templateUrl: CONFIG.viewsDir + 'activeActions.html',
-                    controller: 'ActivateRestoreCtrl',
-                    resolve: {
-                        test: ['$route', function ($route) {
-                            $route.current.params.restoring = true;
-                        }]
-                    }
-                })
-                .when('/restore_password/sent', {
-                    templateUrl: CONFIG.viewsDir + 'activeActions.html',
-                    controller: 'ActivateRestoreCtrl',
-                    resolve: {
-                        test: ['$route', function ($route) {
-                            $route.current.params.restoringSuccess = true;
-                        }]
-                    }
-                })
-                .when('/restore_password/success', {
-                    templateUrl: CONFIG.viewsDir + 'activeActions.html',
-                    controller: 'ActivateRestoreCtrl',
-                    resolve: {
-                        test: ['$route', function ($route) {
-                            $route.current.params.changeSuccess = true;
-                        }]
-                    }
-                })
-                .when('/restore_password/:restoreCode', {
-                    templateUrl: CONFIG.viewsDir + 'activeActions.html',
-                    controller: 'ActivateRestoreCtrl'
-                })
-                .when('/content/:page', {
-                    title: '' /*lang.pageTitles.contentPage*/,
-                    templateUrl: CONFIG.viewsDir + 'static.html',
-                    controller: 'StaticCtrl'
-                })
-                .when('/debug', {
-                    templateUrl: CONFIG.viewsDir + 'debug.html',
-                    controller: 'DebugCtrl'
-                })
-                .when('/login', {
-                    // TODO: revert when account service is moved to A7
-                    // template: '<landing-component></landing-component>'
-                    title: lang.pageTitles.login,
-                    templateUrl: CONFIG.viewsDir + 'startPage.html',
-                    controller: 'StartPageCtrl',
-                    resolve: {
-                        test: ['$route', function ($route) {
-                            $route.current.params.callLogin = true;
-                        }]
-                    }
-                })
-                .when('/admin', {
-                    resolve: {
-                        test: function(){
-                            window.location = '/admin/';
+                        resolve: {
+                            getParam: [function () {
+                                return 'registerSuccess';
+                            }]
                         }
-                    }})
-                // for history purpose
-                .when('/downloads/history', {
-                    template: '<download-history></download-history>'
-                })
-                .when('/downloads/:param?', {
-                    template: '<download-history [route-param]="uriParam"></download-history>',
-                    controller: [ '$scope', 'getParam', function ($scope, getParam) {
-                        $scope.uriParam = getParam;
-                    }],
-                    resolve: {
-                        getParam: [ '$route', function($route){
-                            return $route.current.params.param;
-                        }]
-                    }
-                })
-                .when('/download', {
-                    template: '<download-component></download-component>'
-                })
-                .when('/download/:platform', {
-                    template: '<download-component [route-param-platform]="platform"></download-component>',
-                    controller: [ '$scope', 'getPlatform', function ($scope, getPlatform) {
-                        $scope.platform = getPlatform;
-                    }],
-                    resolve: {
-                        getPlatform: [ '$route', function ($route) {
-                            return $route.current.params.platform;
-                        }]
-                    }
-                })
-                .when('/browser', {
-                    template: '<non-supported-browser></non-supported-browser>'
-                })
-                .when('/ipvd', {
-                    template: ''
-                })
-                .when('/sandbox', {
-                    template: ''
-                })
-                .when('/integrations/:id?', {
-                    template: ''
-                })
-                .when('/integrations/:id/:section', {
-                    template: ''
-                })
-                .when('/new-content', {
-                    template: ''
-                })
-                .when('/right', {
-                    template: ''
-                })
-                // **** routes for detail views should state full path ****
-                .when('/main/:route', {
-                    template: ''
-                })
-                // ********************************************************
-                .when('/main', {
-                    template: ''
-                })
-                .when('/', {
-                    // TODO: revert when account service is moved to A7
-                    // template: '<landing-component></landing-component>'
-                    title: ''/*lang.pageTitles.startPage*/,
-                    templateUrl: CONFIG.viewsDir + 'startPage.html',
-                    controller: 'StartPageCtrl'
-                })
-                .otherwise({
-                    title: lang.pageTitles.pageNotFound,
-                    controller: '404Ctrl',
-                    templateUrl: CONFIG.viewsDir + '404.html'
-                });
-            }]);
+                    })
+                    .when('/register/successActivated', {
+                        template: '<nx-register-component [uri-param]="uriParam"></nx-register-component>',
+                        controller: ['$scope', 'getParam', function ($scope, getParam) {
+                            $scope.uriParam = getParam;
+                        }],
+                        resolve: {
+                            getParam: [function () {
+                                return 'successActivated';
+                            }]
+                        }
+                        // templateUrl: CONFIG.viewsDir + 'regActions.html',
+                        // controller: 'RegisterCtrl',
+                        // resolve: {
+                        //     test: ['$route', function ($route) {
+                        //         $route.current.params.registerSuccess = true;
+                        //         $route.current.params.activated = true;
+                        //     }]
+                        // }
+                    })
+                    .when('/register/:code', {
+                        template: '<nx-register-component [uri-param]="getParam" [uri-param-code]="getCode"></nx-register-component>',
+                        controller: ['$scope', 'getParam', function ($scope, getParam) {
+                            $scope.uriParam = getParam;
+                        }],
+                        resolve: {
+                            getParam: [function () {
+                                return 'code';
+                            }],
+                            getCode: ['$route', function ($route) {
+                                return $route.current.params.code;
+                            }]
+                        }
+                        // templateUrl: CONFIG.viewsDir + 'regActions.html',
+                        // controller: 'RegisterCtrl'
+                    })
+                    // .when('/register', {
+                    //     templateUrl: CONFIG.viewsDir + 'regActions.html',
+                    //     controller: 'RegisterCtrl'
+                    // })
+                    .when('/register', {
+                        template: '<nx-register-component [uri-param]="register"></nx-register-component>'
+                    })
+                    .when('/account/password', {
+                        templateUrl: CONFIG.viewsDir + 'account.html',
+                        controller: 'AccountCtrl',
+                        resolve: {
+                            test: ['$route', function ($route) {
+                                $route.current.params.passwordMode = true;
+                            }]
+                        }
+                    })
+                    .when('/account', {
+                        templateUrl: CONFIG.viewsDir + 'account.html',
+                        controller: 'AccountCtrl',
+                        resolve: {
+                            test: ['$route', function ($route) {
+                                $route.current.params.accountMode = true;
+                            }]
+                        }
+                    })
+                    .when('/systems', {
+                        templateUrl: CONFIG.viewsDir + 'systems.html',
+                        controller: 'SystemsCtrl'
+                    })
+                    .when('/systems/:systemId', {
+                        templateUrl: CONFIG.viewsDir + 'system.html',
+                        controller: 'SystemCtrl'
+                    })
+                    .when('/systems/:systemId/share', {
+                        title: lang.pageTitles.systemShare,
+                        templateUrl: CONFIG.viewsDir + 'system.html',
+                        controller: 'SystemCtrl',
+                        resolve: {
+                            test: ['$route', function ($route) {
+                                $route.current.params.callShare = true;
+                            }]
+                        }
+                    })
+                    .when('/systems/:systemId/view', {
+                        templateUrl: CONFIG.viewsDir + 'view.html',
+                        controller: 'ViewPageCtrl'
+                    })
+                    .when('/systems/:systemId/view/:cameraId', {
+                        templateUrl: CONFIG.viewsDir + 'view.html',
+                        controller: 'ViewPageCtrl'
+                    })
+                    .when('/embed/:systemId/view/:cameraId', {
+                        templateUrl: CONFIG.viewsDir + 'view.html',
+                        controller : 'ViewPageCtrl',
+                        resolve: {
+                            cleanSlate: [function () {
+                                CONFIG.showHeaderAndFooter = false;
+                            }]
+                        }
+                    })
+                    .when('/activate', {
+                        templateUrl: CONFIG.viewsDir + 'activeActions.html',
+                        controller: 'ActivateRestoreCtrl',
+                        resolve: {
+                            test: ['$route', function ($route) {
+                                $route.current.params.reactivating = true;
+                            }]
+                        }
+                    })
+                    .when('/activate/success', {
+                        templateUrl: CONFIG.viewsDir + 'activeActions.html',
+                        controller: 'ActivateRestoreCtrl',
+                        resolve: {
+                            test: ['$route', function ($route) {
+                                $route.current.params.activationSuccess = true;
+                            }]
+                        }
+                    })
+                    .when('/activate/:activateCode', {
+                        templateUrl: CONFIG.viewsDir + 'activeActions.html',
+                        controller: 'ActivateRestoreCtrl'
+                    })
+                    .when('/restore_password', {
+                        templateUrl: CONFIG.viewsDir + 'activeActions.html',
+                        controller: 'ActivateRestoreCtrl',
+                        resolve: {
+                            test: ['$route', function ($route) {
+                                $route.current.params.restoring = true;
+                            }]
+                        }
+                    })
+                    .when('/restore_password/sent', {
+                        templateUrl: CONFIG.viewsDir + 'activeActions.html',
+                        controller: 'ActivateRestoreCtrl',
+                        resolve: {
+                            test: ['$route', function ($route) {
+                                $route.current.params.restoringSuccess = true;
+                            }]
+                        }
+                    })
+                    .when('/restore_password/success', {
+                        templateUrl: CONFIG.viewsDir + 'activeActions.html',
+                        controller: 'ActivateRestoreCtrl',
+                        resolve: {
+                            test: ['$route', function ($route) {
+                                $route.current.params.changeSuccess = true;
+                            }]
+                        }
+                    })
+                    .when('/restore_password/:restoreCode', {
+                        templateUrl: CONFIG.viewsDir + 'activeActions.html',
+                        controller: 'ActivateRestoreCtrl'
+                    })
+                    .when('/content/:page', {
+                        title: '' /*lang.pageTitles.contentPage*/,
+                        templateUrl: CONFIG.viewsDir + 'static.html',
+                        controller: 'StaticCtrl'
+                    })
+                    .when('/debug', {
+                        templateUrl: CONFIG.viewsDir + 'debug.html',
+                        controller: 'DebugCtrl'
+                    })
+                    .when('/login', {
+                        // TODO: revert when account service is moved to A7
+                        // template: '<landing-component></landing-component>'
+                        title: lang.pageTitles.login,
+                        templateUrl: CONFIG.viewsDir + 'startPage.html',
+                        controller: 'StartPageCtrl',
+                        resolve: {
+                            test: ['$route', function ($route) {
+                                $route.current.params.callLogin = true;
+                            }]
+                        }
+                    })
+                    .when('/admin', {
+                        resolve: {
+                            test: function(){
+                                window.location = '/admin/';
+                            }
+                        }})
+                    // for history purpose
+                    .when('/downloads/history', {
+                        template: '<download-history></download-history>'
+                    })
+                    .when('/downloads/:param?', {
+                        template: '<download-history [route-param]="uriParam"></download-history>',
+                        controller: [ '$scope', 'getParam', function ($scope, getParam) {
+                            $scope.uriParam = getParam;
+                        }],
+                        resolve: {
+                            getParam: [ '$route', function($route){
+                                return $route.current.params.param;
+                            }]
+                        }
+                    })
+                    .when('/download', {
+                        template: '<download-component></download-component>'
+                    })
+                    .when('/download/:platform', {
+                        template: '<download-component [route-param-platform]="platform"></download-component>',
+                        controller: [ '$scope', 'getPlatform', function ($scope, getPlatform) {
+                            $scope.platform = getPlatform;
+                        }],
+                        resolve: {
+                            getPlatform: [ '$route', function ($route) {
+                                return $route.current.params.platform;
+                            }]
+                        }
+                    })
+                    .when('/browser', {
+                        template: '<non-supported-browser></non-supported-browser>'
+                    })
+                    .when('/ipvd', {
+                        template: ''
+                    })
+                    .when('/sandbox', {
+                        template: ''
+                    })
+                    .when('/integrations/:id?', {
+                        template: ''
+                    })
+                    .when('/integrations/:id/:section', {
+                        template: ''
+                    })
+                    .when('/new-content', {
+                        template: ''
+                    })
+                    .when('/right', {
+                        template: ''
+                    })
+                    // **** routes for detail views should state full path ****
+                    .when('/main/:route', {
+                        template: ''
+                    })
+                    // ********************************************************
+                    .when('/main', {
+                        template: ''
+                    })
+                    .when('/', {
+                        // TODO: revert when account service is moved to A7
+                        // template: '<landing-component></landing-component>'
+                        title: ''/*lang.pageTitles.startPage*/,
+                        templateUrl: CONFIG.viewsDir + 'startPage.html',
+                        controller: 'StartPageCtrl'
+                    })
+                    .otherwise({
+                        title: lang.pageTitles.pageNotFound,
+                        controller: '404Ctrl',
+                        templateUrl: CONFIG.viewsDir + '404.html'
+                    });
+                }]);
 })();

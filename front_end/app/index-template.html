@@ -21,16 +21,7 @@
     <link rel="stylesheet" href="/static<%= htmlWebpackPlugin.files.css[key] %>" />
     <% } %>
 
-    <script>
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function () {
-            if (this.readyState == 4 && this.status == 200) {
-                window.LANG = JSON.parse(this.response);
-            }
-        };
-        xhttp.open("GET", "/api/utils/language", false);
-        xhttp.send();
-    </script>
+
 </head>
 <body class="loading">
 <!--[if lt IE 7]>
@@ -57,6 +48,26 @@
 </nx-app>
 
 <nx-footer ng-cloak></nx-footer>
+
+<script>
+    var xhttpLanguage = new XMLHttpRequest();
+    xhttpLanguage.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            window.LANG = JSON.parse(this.response);
+        }
+    };
+    xhttpLanguage.open("GET", "/api/utils/language", false);
+    xhttpLanguage.send();
+
+    var xhttpSettings = new XMLHttpRequest();
+    xhttpSettings.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            window.SETTINGS = JSON.parse(this.response);
+        }
+    };
+    xhttpSettings.open("GET", "/api/utils/settings", false);
+    xhttpSettings.send();
+</script>
 
 <% for (key in htmlWebpackPlugin.files.chunks) { %>
 <script type="text/javascript" src="/static<%= htmlWebpackPlugin.files.chunks[key].entry %>"></script>

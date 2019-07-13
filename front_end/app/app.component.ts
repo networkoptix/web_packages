@@ -5,6 +5,7 @@ import { DeviceDetectorService }     from 'ngx-device-detector';
 import { Title }                     from '@angular/platform-browser';
 import { WINDOW }                    from './src/services/window-provider';
 import { NxLanguageProviderService } from './src/services/nx-language-provider';
+import { NxConfigService }           from './src/services/nx-config';
 
 @Component({
     selector: 'nx-app',
@@ -15,6 +16,7 @@ import { NxLanguageProviderService } from './src/services/nx-language-provider';
 })
 
 export class AppComponent {
+    CONFIG: any;
     deviceInfo: any;
     allowedDevices: {};
     hlsIsSupported: boolean;
@@ -23,9 +25,11 @@ export class AppComponent {
                 private deviceService: DeviceDetectorService,
                 private location: Location,
                 private titleService: Title,
+                private config: NxConfigService,
                 private language: NxLanguageProviderService,
                 @Inject(WINDOW) private window: Window) {
 
+        this.CONFIG = this.config.getConfig();
 
         // TODO: Componentize this
         this.allowedDevices = {
@@ -69,18 +73,56 @@ export class AppComponent {
         // isn't found in the current language
         this.language.setDefaultLang('en_US');
 
-        // TODO: Uncomment after removal of AJS. Currently language will be set in app.js
-        // the lang to use, if the lang isn't available, it will use *****
-        // the current loader to get them
-        // ***************************************************************
-        // const langCookie = this.cookieService.get('language');
-        // const lang = langCookie || translate.getBrowserCultureLang().replace('-', '_');
-        debugger;
-        // @ts-ignore
-        // translate.set (window.LANG.ajs.languagex);
         // @ts-ignore
         this.language.setTranslations(window.LANG.ajs.language, window.LANG.i18n);
-        // translate.use('en_US');
+
+        // extend CONFIG ... arghhh ugly // @ts-ignore ... no implementation for // @ts-ignore-start/end
+        // @ts-ignore
+        this.CONFIG.companyLink = window.SETTINGS.companyLink;
+        // @ts-ignore
+        this.CONFIG.companyName = window.SETTINGS.companyName;
+        // @ts-ignore
+        this.CONFIG.copyrightYear = window.SETTINGS.copyrightYear;
+        // @ts-ignore
+        this.CONFIG.feedbackEnabled = window.SETTINGS.feedbackEnabled;
+        // @ts-ignore
+        this.CONFIG.footerItems = window.SETTINGS.footerItems;
+        // @ts-ignore
+        this.CONFIG.integrationFilterItems = window.SETTINGS.integrationFilterItems;
+        // @ts-ignore
+        this.CONFIG.integrationFilterLimitation = window.SETTINGS.integrationFilterLimitation;
+        // @ts-ignore
+        this.CONFIG.integrationStoreEnabled = window.SETTINGS.integrationStoreEnabled;
+        // @ts-ignore
+        this.CONFIG.publicDownloads = window.SETTINGS.publicDownloads;
+        // @ts-ignore
+        this.CONFIG.publicReleases = window.SETTINGS.publicReleases;
+        // @ts-ignore
+        this.CONFIG.trafficRelayHost = window.SETTINGS.trafficRelayHost;
+        // @ts-ignore
+        this.CONFIG.supportLink = window.SETTINGS.supportLink;
+        // @ts-ignore
+        this.CONFIG.privacyLink = window.SETTINGS.privacyLink;
+        // @ts-ignore
+        this.CONFIG.cloudName = window.SETTINGS.cloudName;
+        // @ts-ignore
+        this.CONFIG.vmsName = window.SETTINGS.vmsName;
+        // @ts-ignore
+        this.CONFIG.ipvd.sortSupportedDevicesByPopularity = window.SETTINGS.sortSupportedDevicesByPopularity;
+        // @ts-ignore
+        this.CONFIG.ipvd.supportedResolutions = window.SETTINGS.supportedResolutions;
+        // @ts-ignore
+        this.CONFIG.ipvd.supportedHardwareTypes = window.SETTINGS.supportedHardwareTypes;
+        // @ts-ignore
+        this.CONFIG.ipvd.searchTags = window.SETTINGS.searchTags;
+        // @ts-ignore
+        this.CONFIG.ipvd.vendorsShown = parseInt(window.SETTINGS.vendorsShown);
+
+        // @ts-ignore
+        if (window.SETTINGS.cloudMerge) {
+            // @ts-ignore
+            this.CONFIG.cloudMerge = window.SETTINGS.cloudMerge;
+        }
     }
 
     public setTitle(newTitle: string) {
