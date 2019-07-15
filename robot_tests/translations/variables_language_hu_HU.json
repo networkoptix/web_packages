@@ -99,5 +99,7 @@
     "MERGE CURRENT SYSTEM WITH TEXT": "Az aktuális rendszer egyesítése",
     "YOU CAN ONLY MERGE AS OWNER TEXT": "Csak olyan felhő-rendszereket vonhat össze, ahol tulajdonos.",
     "CHECKING TEXT": "Ellenőrzés...",
-    "ENTER PASSWORD TO CONTINUE TEXT": "Adja meg a fiókjának jelszavát a folytatáshoz"
+    "ENTER PASSWORD TO CONTINUE TEXT": "Adja meg a fiókjának jelszavát a folytatáshoz",
+    "INCOMPATIBLE": "Incompatible",
+    "CONNECTION TO SYSTEM LOST": "Connection to %SYSTEM NAME% lost"
 }

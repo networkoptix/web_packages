@@ -99,5 +99,7 @@
     "MERGE CURRENT SYSTEM WITH TEXT": "Fusionner le système actuel avec",
     "YOU CAN ONLY MERGE AS OWNER TEXT": "Vous ne pouvez fusionner que les systèmes où vous êtes le propriétaire.",
     "CHECKING TEXT": "Vérification...",
-    "ENTER PASSWORD TO CONTINUE TEXT": "Entrez mot de passe de votre compte pour continuer"
+    "ENTER PASSWORD TO CONTINUE TEXT": "Entrez mot de passe de votre compte pour continuer",
+    "INCOMPATIBLE": "Incompatible",
+    "CONNECTION TO SYSTEM LOST": "Connection to %SYSTEM NAME% lost"
 }

@@ -99,5 +99,7 @@
     "MERGE CURRENT SYSTEM WITH TEXT": "Geçerli sistem ile birleştir",
     "YOU CAN ONLY MERGE AS OWNER TEXT": "Yalnızca sahip olduğunuz Sistemleri birleştirebilirsiniz.",
     "CHECKING TEXT": "Kontrol Ediliyor...",
-    "ENTER PASSWORD TO CONTINUE TEXT": "Devam etmek için hesabınızın şifresini girin"
+    "ENTER PASSWORD TO CONTINUE TEXT": "Devam etmek için hesabınızın şifresini girin",
+    "INCOMPATIBLE": "Incompatible",
+    "CONNECTION TO SYSTEM LOST": "Connection to %SYSTEM NAME% lost"
 }

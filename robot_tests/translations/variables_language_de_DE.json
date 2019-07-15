@@ -99,5 +99,7 @@
     "MERGE CURRENT SYSTEM WITH TEXT": "Aktuelles System zusammenführen mit",
     "YOU CAN ONLY MERGE AS OWNER TEXT": "Sie können nur Cloudsysteme zusammenführen, in welchen Sie Besitzer sind.",
     "CHECKING TEXT": "Prüfung...",
-    "ENTER PASSWORD TO CONTINUE TEXT": "Geben Sie das Passwort für Ihr Konto ein, um fortzufahren"
+    "ENTER PASSWORD TO CONTINUE TEXT": "Geben Sie das Passwort für Ihr Konto ein, um fortzufahren",
+    "INCOMPATIBLE": "Incompatible",
+    "CONNECTION TO SYSTEM LOST": "Connection to %SYSTEM NAME% lost"
 }

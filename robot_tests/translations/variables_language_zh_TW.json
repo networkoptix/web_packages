@@ -99,5 +99,7 @@
     "MERGE CURRENT SYSTEM WITH TEXT": "合併當前系統與",
     "YOU CAN ONLY MERGE AS OWNER TEXT": "當您的權限為擁有者時, 就可以合併系統",
     "CHECKING TEXT": "檢查中...",
-    "ENTER PASSWORD TO CONTINUE TEXT": "輸入您帳戶的密碼以繼續"
+    "ENTER PASSWORD TO CONTINUE TEXT": "輸入您帳戶的密碼以繼續",
+    "INCOMPATIBLE": "Incompatible",
+    "CONNECTION TO SYSTEM LOST": "Connection to %SYSTEM NAME% lost"
 }

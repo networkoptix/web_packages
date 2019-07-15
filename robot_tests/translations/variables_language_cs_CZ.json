@@ -99,5 +99,7 @@
     "MERGE CURRENT SYSTEM WITH TEXT": "Sloučit stávající systém s",
     "YOU CAN ONLY MERGE AS OWNER TEXT": "Systémy můžete sloučit pouze tam, kde jste vlastníkem.",
     "CHECKING TEXT": "Kontrolování...",
-    "ENTER PASSWORD TO CONTINUE TEXT": "Chcete-li pokračovat, zadejte heslo"
+    "ENTER PASSWORD TO CONTINUE TEXT": "Chcete-li pokračovat, zadejte heslo",
+    "INCOMPATIBLE": "Incompatible",
+    "CONNECTION TO SYSTEM LOST": "Connection to %SYSTEM NAME% lost"
 }

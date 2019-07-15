@@ -99,5 +99,7 @@
     "MERGE CURRENT SYSTEM WITH TEXT": " Slå samman aktuellt system med ",
     "YOU CAN ONLY MERGE AS OWNER TEXT": "Du kan slå samman cloud system där du är ägare.",
     "CHECKING TEXT": "Kontrollerar...",
-    "ENTER PASSWORD TO CONTINUE TEXT": "Ange lösenord för ditt konto för att fortsätta"
+    "ENTER PASSWORD TO CONTINUE TEXT": "Ange lösenord för ditt konto för att fortsätta",
+    "INCOMPATIBLE": "Incompatible",
+    "CONNECTION TO SYSTEM LOST": "Connection to %SYSTEM NAME% lost"
 }

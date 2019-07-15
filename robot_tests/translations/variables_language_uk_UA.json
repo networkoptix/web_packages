@@ -99,5 +99,7 @@
     "MERGE CURRENT SYSTEM WITH TEXT": "Об'єднати поточну систему з",
     "YOU CAN ONLY MERGE AS OWNER TEXT": "Ви можете об’єднати тільки ті системи, якими володієте.",
     "CHECKING TEXT": "Перевірка...",
-    "ENTER PASSWORD TO CONTINUE TEXT": "Введіть пароль для продовження"
+    "ENTER PASSWORD TO CONTINUE TEXT": "Введіть пароль для продовження",
+    "INCOMPATIBLE": "Incompatible",
+    "CONNECTION TO SYSTEM LOST": "Connection to %SYSTEM NAME% lost"
 }

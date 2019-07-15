@@ -99,5 +99,7 @@
     "MERGE CURRENT SYSTEM WITH TEXT": "מזג את המערכת הנוכחית עם",
     "YOU CAN ONLY MERGE AS OWNER TEXT": "ניתן למזג רק מערכות שבהן אתה הבעלים.",
     "CHECKING TEXT": "בודק...",
-    "ENTER PASSWORD TO CONTINUE TEXT": "הזן את הסיסמה עבור החשבון שלך כדי להמשיך"
+    "ENTER PASSWORD TO CONTINUE TEXT": "הזן את הסיסמה עבור החשבון שלך כדי להמשיך",
+    "INCOMPATIBLE": "Incompatible",
+    "CONNECTION TO SYSTEM LOST": "Connection to %SYSTEM NAME% lost"
 }

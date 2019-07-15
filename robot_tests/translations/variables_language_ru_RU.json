@@ -99,5 +99,7 @@
     "MERGE CURRENT SYSTEM WITH TEXT": "Объединить текущую систему с",
     "YOU CAN ONLY MERGE AS OWNER TEXT": "Вы можете объединять только те облачные системы, где вы являетесь владельцем.",
     "CHECKING TEXT": "Проверка...",
-    "ENTER PASSWORD TO CONTINUE TEXT": "Введите пароль для своей учетной записи, чтобы продолжить"
+    "ENTER PASSWORD TO CONTINUE TEXT": "Введите пароль для своей учетной записи, чтобы продолжить",
+    "INCOMPATIBLE": "Incompatible",
+    "CONNECTION TO SYSTEM LOST": "Connection to %SYSTEM NAME% lost"
 }

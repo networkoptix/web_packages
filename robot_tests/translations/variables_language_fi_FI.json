@@ -99,5 +99,7 @@
     "MERGE CURRENT SYSTEM WITH TEXT": "Yhdistä nykyinen järjestelmä",
     "YOU CAN ONLY MERGE AS OWNER TEXT": "Voit yhdistää pilvijärjestelmät, joissa olet omistajana.",
     "CHECKING TEXT": "Tarkistetaan...",
-    "ENTER PASSWORD TO CONTINUE TEXT": "Syötä tilisi salasana jatkaaksesi"
+    "ENTER PASSWORD TO CONTINUE TEXT": "Syötä tilisi salasana jatkaaksesi",
+    "INCOMPATIBLE": "Incompatible",
+    "CONNECTION TO SYSTEM LOST": "Connection to %SYSTEM NAME% lost"
 }

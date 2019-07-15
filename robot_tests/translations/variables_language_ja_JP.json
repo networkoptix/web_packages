@@ -99,5 +99,7 @@
     "MERGE CURRENT SYSTEM WITH TEXT": "現在のシステムと統合",
     "YOU CAN ONLY MERGE AS OWNER TEXT": "オーナーであるシステムのみを統合できます。",
     "CHECKING TEXT": "チェック中...",
-    "ENTER PASSWORD TO CONTINUE TEXT": "アカウントのパスワードを入力して続行してください"
+    "ENTER PASSWORD TO CONTINUE TEXT": "アカウントのパスワードを入力して続行してください",
+    "INCOMPATIBLE": "Incompatible",
+    "CONNECTION TO SYSTEM LOST": "Connection to %SYSTEM NAME% lost"
 }

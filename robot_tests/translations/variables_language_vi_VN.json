@@ -99,5 +99,7 @@
     "MERGE CURRENT SYSTEM WITH TEXT": "Hợp nhất các hệ thống hiện tại với",
     "YOU CAN ONLY MERGE AS OWNER TEXT": "Bạn chỉ có thể hợp nhất Hệ thống nếu bạn là chủ sở hữu.",
     "CHECKING TEXT": "kiểm tra...",
-    "ENTER PASSWORD TO CONTINUE TEXT": "Nhập mật khẩu cho tài khoản của bạn để tiếp tục"
+    "ENTER PASSWORD TO CONTINUE TEXT": "Nhập mật khẩu cho tài khoản của bạn để tiếp tục",
+    "INCOMPATIBLE": "Incompatible",
+    "CONNECTION TO SYSTEM LOST": "Connection to %SYSTEM NAME% lost"
 }

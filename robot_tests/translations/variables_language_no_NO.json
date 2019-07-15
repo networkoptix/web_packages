@@ -99,5 +99,7 @@
     "MERGE CURRENT SYSTEM WITH TEXT": "Slå sammen nåværende system med",
     "YOU CAN ONLY MERGE AS OWNER TEXT": "Du kan bare slå sammen systemer der du er eieren.",
     "CHECKING TEXT": "Kontrollerer...",
-    "ENTER PASSWORD TO CONTINUE TEXT": "Skriv inn passord for kontoen din for å fortsette"
+    "ENTER PASSWORD TO CONTINUE TEXT": "Skriv inn passord for kontoen din for å fortsette",
+    "INCOMPATIBLE": "Incompatible",
+    "CONNECTION TO SYSTEM LOST": "Connection to %SYSTEM NAME% lost"
 }

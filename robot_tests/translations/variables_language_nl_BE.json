@@ -99,5 +99,7 @@
     "MERGE CURRENT SYSTEM WITH TEXT": "Huidig ​​systeem samenvoegen met",
     "YOU CAN ONLY MERGE AS OWNER TEXT": "Je kunt alleen systemen samenvoegen waarvan je eigenaar bent.",
     "CHECKING TEXT": "Controleer...",
-    "ENTER PASSWORD TO CONTINUE TEXT": "Voer het wachtwoord in voor uw account om door te gaan"
+    "ENTER PASSWORD TO CONTINUE TEXT": "Voer het wachtwoord in voor uw account om door te gaan",
+    "INCOMPATIBLE": "Incompatible",
+    "CONNECTION TO SYSTEM LOST": "Connection to %SYSTEM NAME% lost"
 }
