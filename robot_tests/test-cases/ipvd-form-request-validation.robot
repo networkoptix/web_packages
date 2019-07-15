@@ -33,8 +33,8 @@ Invalid email with all required data 6    False         ${name}         myemail@
 Test Submit Request Message
     [Arguments]    ${Expect Success}    ${Your Name}    ${Email}    ${Message}
     Go To IPVD page
-    Wait Until Element Is Visible    ${SUBMIT A REQUEST}
-    Click Element    ${SUBMIT A REQUEST}
+    Wait Until Element Is Visible    ${IPVD SUBMIT A REQUEST}
+    Click Element    ${IPVD SUBMIT A REQUEST}
     Wait Until Element Is Visible    ${IPVD FEEDBACK}
     Element Text Should Be    ${IPVD FEEDBACK TITLE}    Feedback for cameras page
     Submit Feedback/Request Form    ${Your Name}    ${Email}    ${Message}

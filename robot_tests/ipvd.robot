@@ -2,7 +2,7 @@
 Resource          ipvd_resource.robot
 Suite Setup       Open Browser and go to URL    ${url}/ipvd
 Test Setup        Restart
-Test Teardown     Close Browser    #Run Keyword If Test Failed    Reset DB and Open New Browser On Failure
+Test Teardown     NONE    #Close Browser    #Run Keyword If Test Failed    Reset DB and Open New Browser On Failure
 Suite Teardown    Close All Browsers
 Force Tags        Threaded File
 
@@ -56,8 +56,8 @@ Text search correctly finds manufacturers
 IPVD Request Form Basic Validations
     [tags]    C48969    IPVD
     Go To IPVD page
-    Wait Until Element Is Visible    ${SUBMIT A REQUEST}
-    Click Element    ${SUBMIT A REQUEST}
+    Wait Until Element Is Visible    ${IPVD SUBMIT A REQUEST}
+    Click Element    ${IPVD SUBMIT A REQUEST}
     Wait Until Element Is Visible    ${IPVD FEEDBACK}
     Validate Request Form Initial State
     Validate Privacy Policy
@@ -67,7 +67,7 @@ IPVD Request Form Basic Validations
     Validate Input Field State    ${IPVD FEEDBACK EMAIL}/../..    False
     Validate Input Field State    ${IPVD FEEDBACK MESSAGE}/../..    False
     Click Button    ${IPVD FEEDBACK CANCEL BUTTON}
-    Click Element    ${SUBMIT A REQUEST}
+    Click Element    ${IPVD SUBMIT A REQUEST}
     Wait Until Element Is Visible    ${IPVD FEEDBACK}
     Click Button    ${IPVD FEEDBACK CLOSE BUTTON}
 
@@ -78,8 +78,8 @@ IPVD Feedback Form Basic Validations
     Open IPVD page and Log In
     IPVD Text Search    Axis
     IPVD Select Device From Table Randomly
-    Wait Until Element Is Visible    ${SEND DEVICE FEEDBACK}
-    Click Element    ${SEND DEVICE FEEDBACK}
+    Wait Until Element Is Visible    ${IPVD SEND DEVICE FEEDBACK}
+    Click Element    ${IPVD SEND DEVICE FEEDBACK}
     Wait Until Element Is Visible    ${IPVD FEEDBACK}
     Validate Request Form Initial State
     Validate Privacy Policy
@@ -90,7 +90,7 @@ IPVD Feedback Form Basic Validations
     Validate Input Field State    ${IPVD FEEDBACK MESSAGE}/../..    False
     Click Button    ${IPVD FEEDBACK CANCEL BUTTON}
     #TODO: Verify Table of devices and camera info panel did not change
-    Click Element    ${SUBMIT A REQUEST}
+    Click Element    ${IPVD SUBMIT A REQUEST}
     Wait Until Element Is Visible    ${IPVD FEEDBACK}
     Click Button    ${IPVD FEEDBACK CLOSE BUTTON}
     #TODO: Verify Table of devices and camera info panel did not change
