@@ -98,7 +98,7 @@ export class IntegrationService implements OnDestroy {
                     }
             }
 
-            section.testedVersionsStringFull = section.testedVersions.join(',&nbsp;');
+            section.testedVersionsStringFull = section.testedVersions.join(', ');
 
             section.testedVersionsString = this.formatVersion(section.testedVersionsString);
             section.testedVersionsStringFull = this.formatVersion(section.testedVersionsStringFull);
