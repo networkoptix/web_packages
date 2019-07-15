@@ -43,6 +43,7 @@ def get_settings_from_cache():
         'trafficRelayHost': settings.TRAFFIC_RELAY_HOST,
         'publicDownloads': customization_cache['public_downloads'],
         'publicReleases': customization_cache['public_releases'],
+        'showAnalyticsEvents': customization_cache['show_analytics_events'],
         'sortSupportedDevicesByPopularity': customization_cache['sort_supported_devices_by_popularity'],
         'supportLink': customization_cache['support_link'],
         'privacyLink': customization_cache['privacy_link'],
@@ -286,10 +287,11 @@ def get_ipvd(request):
         # check cache and return cached item if any
         ipvd = cache.get("ipvd", dict())
 
-        if all(k in ipvd for k in ("cameras", "vendors", "num_cameras")):
+        if all(k in ipvd for k in ("cameras", "vendors", "analytics", "num_cameras")):
             return Response({
                 "cameras": ipvd["cameras"],
                 "vendors": ipvd["vendors"],
+                "analytics": ipvd["analytics"],
                 "num_cameras": ipvd["num_cameras"],
                 "cached": True
             })
@@ -299,6 +301,7 @@ def get_ipvd(request):
         cameras = requests.get(url, "[]").json()
 
         # build vendor list
+        analytics_events = set()
         vendors_dict = {}
         camera_names = []
 
@@ -329,6 +332,10 @@ def get_ipvd(request):
                     alias = alias.strip()
                     camera_names.append(camera["vendor"].replace(" ", "") + alias.replace(" ", ""))
 
+            for event in cameras['analyticsEvents']:
+                if event not in analytics_events:
+                    analytics_events.add(event)
+
         num_cameras = len(set(camera_names))
         # ---------------------
 
@@ -337,6 +344,7 @@ def get_ipvd(request):
         ipvd = {
             "cameras": cameras,
             "vendors": vendors,
+            "analytics": analytics_events,
             "num_cameras": num_cameras
         }
 

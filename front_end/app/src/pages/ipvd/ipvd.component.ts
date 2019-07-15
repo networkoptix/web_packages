@@ -37,6 +37,7 @@ export class NxIpvdComponent implements OnInit {
     itemsPerPage: number;
     query: string;
     cameras: any;
+    analytics: any;
     activeCamera: any;
     showAll: boolean;
     hardwareTypes: any[];
@@ -223,6 +224,9 @@ export class NxIpvdComponent implements OnInit {
             .getIPVD()
             .subscribe(data => {
                 this.cameras = data.cameras;
+                this.analytics = data.analytics;
+                this.analytics.sort(NxUtilsService.sortASC);
+
                 this.vendors = data.vendors;
                 this.vendors.sort(NxUtilsService.byParam((elm) => {
                     return elm.name.toLowerCase();

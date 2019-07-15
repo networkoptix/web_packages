@@ -650,6 +650,15 @@
         "translatable": false,
         "values": [
           {
+            "label": "Show analytics events",
+            "name": "%SHOW_ANALYTICS_EVENTS%",
+            "value": "false",
+            "description": "Show/hide analytics events data for cameras",
+            "advanced": true,
+            "optional": true,
+            "type": "check_box"
+          },
+          {
             "label": "Sort supported devices by popularity",
             "name": "%SORT_SUPPORTED_DEVICES_BY_POPULARITY%",
             "value": "false",
