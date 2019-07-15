@@ -273,7 +273,7 @@ ${IPVD FEEDBACK MESSAGE}             ${IPVD FEEDBACK FORM}//textarea[@id='messag
 ${IPVD FEEDBACK PRIVACY POLICY}      ${IPVD FEEDBACK FORM}//a[text()="${IPVD FEEDBACK PRIVACY POLICY TEXT}"]
 ${IPVD FEEDBACK SEND BUTTON}         ${IPVD FEEDBACK}//button[text()="${IPVD FEEDBACK SEND BUTTON TEXT}"]
 ${IPVD FEEDBACK CANCEL BUTTON}       ${IPVD FEEDBACK}//button[text()="${IPVD FEEDBACK CANCEL BUTTON TEXT}"]
-${IPVD FEEDBACK CLOSE BUTTON}        ${IPVD FEEDBACK}//button[@class="close"]
+${IPVD FEEDBACK CLOSE BUTTON}        ${IPVD FEEDBACK}//button[@class='close']
 
 #Footer
 ${FOOTER ABOUT LINK}                 //footer//a[contains(text(),"${ABOUT} ${PRODUCT_NAME}")]
