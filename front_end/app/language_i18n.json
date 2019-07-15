@@ -313,5 +313,6 @@
     },
     "servers in the merged System.": "servers in the merged System.",
     "support": "support",
-    "testedVersionsLabel": "Tested on {{vmsName}} version(s):"
+    "testedVersionLabel": "Tested on {{vmsName}} version:",
+    "testedVersionsLabel": "Tested on {{vmsName}} versions:"
 }
