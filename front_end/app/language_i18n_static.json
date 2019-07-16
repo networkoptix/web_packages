@@ -10,7 +10,8 @@
 		"vendors": "manufacturers",
 		"hardwareType": "Type",
 		"hardwareTypes": "types",
-		"minResolution": "Minimum Resolution"
+		"minResolution": "Minimum Resolution",
+		"analytics": "Analytics"
 	},
 	"cameraFilters": {
 		"ptz": "PTZ cameras",
