@@ -121,12 +121,9 @@ def get_integration(request, product_id=None):
     if not integration:
         return api_success("Integration not found.", status_code=status.HTTP_404_NOT_FOUND)
 
-    if draft or review:
-        if integration.id not in request.user.products:
-            return api_success(f"You do not have permission to view this {'draft' if draft else 'review'}", status_code=status.HTTP_403_FORBIDDEN)
-
-        if integration.preview_status != Product.PREVIEW_STATUS.draft:
-            return api_success(f"{'Draft' if draft else 'Review'} does not exist for this integration", status_code=status.HTTP_404_NOT_FOUND)
+    if not request.user.is_authenticated or integration.id not in request.user.products:
+        return api_success(f"You do not have permission to view this {'draft' if draft else 'review'}",
+                           status_code=status.HTTP_403_FORBIDDEN)
 
     return api_success(make_integrations_json([integration], show_pending=review, show_drafts=draft))
 
