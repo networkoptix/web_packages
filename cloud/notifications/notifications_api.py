@@ -173,9 +173,9 @@ def set_subscriptions_from_targets(notification_object, request_data):
 
     for account in target_accounts:
         targets.remove(account.email)
-        if account.is_active:
-            device = PushDevice.objects.filter(user__email=account.email).first()
-            if device and not PushSubscription.objects.filter(device=device).exists():
+        if account.is_active and not PushSubscription.objects.filter(account=account, system_id=system_id).exists():
+            devices = PushDevice.objects.filter(user__email=account.email)
+            for device in devices:
                 active = system['ownerAccountEmail'] == account.email or cloud_portal_customization_cache(
                     settings.CUSTOMIZATION, 'config'
                 )['push_subscription_auto_active']

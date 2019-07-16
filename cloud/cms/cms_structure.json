@@ -642,7 +642,7 @@
           {
             "label": "Push Notifications Auto-Enabled",
             "name": "%PUSH_SUB_ACTIVE%",
-            "description": "Enable push notifications from all systems by default",
+            "description": "Enable push notifications from all systems by default for existing devices. Otherwise, they are only enabled for system owners by default. A device's notification settings always take priority over this if they are set.",
             "type": "check_box",
             "value": "true",
             "optional": false,
