@@ -83,6 +83,18 @@ class CustomizationFilter(SimpleListFilter):
     ALL_CUSTOMIZATIONS = '0'
     OTHER_CUSTOMIZATIONS = '1000'
 
+    def __init__(self, request, params, model, model_admin):
+        super().__init__(request, params, model, model_admin)
+        self.request = request
+        self.model_admin = model_admin
+
+    def value(self):
+        value = self.used_parameters.get(self.parameter_name)
+        if not value and isinstance(self.model_admin, ProductCustomizationReviewAdmin) and \
+                self.request.user.is_portal_manager:
+            value = self.ALL_CUSTOMIZATIONS
+        return value
+
     def lookups(self, request, model_admin):
         # Temporary customization 0 is need for 'All' since we need to keep it,
         # but choose the customization for the current cloud portal as the default value
@@ -115,6 +127,93 @@ class CustomizationFilter(SimpleListFilter):
         else:
             return queryset.filter(**{field_name + '__id': self.default_customization})
         return queryset
+
+
+class ReviewStateFilter(SimpleListFilter):
+    title = 'State'
+    parameter_name = 'state'
+    ALL_STATES = 'all'
+
+    def __init__(self, request, params, model, model_admin):
+        super().__init__(request, params, model, model_admin)
+        self.request = request
+        self.model_admin = model_admin
+
+    def choices(self, cl):
+        for lookup, title in self.lookup_choices:
+            yield {
+                'selected': self.value() == lookup,
+                'query_string': cl.get_query_string({self.parameter_name: lookup}, []),
+                'display': title,
+            }
+
+    def lookups(self, request, model_admin):
+        states = [(self.ALL_STATES, 'All')]
+        states.extend(
+            [(str(i), ProductCustomizationReview.REVIEW_STATES[i])
+             for i in range(len(ProductCustomizationReview.REVIEW_STATES))]
+        )
+        return states
+
+    def queryset(self, request, queryset):
+        if self.value() is None or self.value() == self.ALL_STATES:
+            return queryset
+        else:
+            return queryset.filter(state__exact=self.value())
+
+    def value(self):
+        value = self.used_parameters.get(self.parameter_name)
+        if value is None:
+            if isinstance(self.model_admin, ProductCustomizationReviewAdmin) and \
+                    (self.request.user.is_superuser or self.request.user.is_portal_manager):
+                value = str(ProductCustomizationReview.REVIEW_STATES.pending)
+            else:
+                value = self.ALL_STATES
+        return value
+
+
+class ReviewVersionFilter(SimpleListFilter):
+    title = 'Version'
+    parameter_name = 'version'
+    ALL_VERSIONS = 'all'
+    LATEST_VERSION = 'latest'
+
+    def __init__(self, request, params, model, model_admin):
+        super().__init__(request, params, model, model_admin)
+        self.request = request
+        self.model_admin = model_admin
+
+    def choices(self, cl):
+        for lookup, title in self.lookup_choices:
+            yield {
+                'selected': self.value() == lookup,
+                'query_string': cl.get_query_string({self.parameter_name: lookup}, []),
+                'display': title,
+            }
+
+    def lookups(self, request, model_admin):
+        versions = [(self.ALL_VERSIONS, 'All'), (self.LATEST_VERSION, 'Latest')]
+        return versions
+
+    def queryset(self, request, queryset):
+        if self.value() == self.LATEST_VERSION:
+            product_ids = set(queryset.values_list('version__product', flat=True))
+            review_ids = []
+            for review in ProductCustomizationReview.objects.all().order_by('-pk').select_related('version__product'):
+                if review.version.product.id in product_ids:
+                    review_ids.append(review.id)
+                    product_ids.remove(review.version.product.id)
+            return queryset.filter(id__in=review_ids)
+        return queryset
+
+    def value(self):
+        value = self.used_parameters.get(self.parameter_name)
+        if value is None:
+            if isinstance(self.model_admin, ProductCustomizationReviewAdmin) and self.request.user.is_developer:
+                value = self.LATEST_VERSION
+            else:
+                value = self.ALL_VERSIONS
+        return value
 
 
 class ProductFilter(SimpleListFilter):
@@ -447,10 +546,13 @@ admin.site.register(ContentVersion, ContentVersionAdmin)
 
 
 class ProductCustomizationReviewAdmin(CMSAdmin):
-    list_display = ('product', 'version', 'customization_name', 'reviewer_email', 'reviewed_date', 'state', 'current_version')
+    list_display = (
+        'product', 'version', 'customization_name', 'reviewer_email', 'reviewed_date', 'state', 'current_version'
+    )
     readonly_fields = ('customization', 'version', 'reviewed_date', 'reviewed_by', 'notes',)
-
-    list_filter = ('version__product__product_type', 'state', ProductFilter, CustomizationFilter)
+    list_filter = (
+        'version__product__product_type', ReviewStateFilter, ProductFilter, CustomizationFilter, ReviewVersionFilter
+    )
 
     change_form_template = 'cms/product_customization_review_change_form.html'
     fieldsets = (

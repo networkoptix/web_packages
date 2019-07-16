@@ -189,6 +189,21 @@ class Account(AbstractBaseUser, PermissionsMixin):
                 products.append(product.id)
         return products
 
+    @property
+    def is_portal_manager(self):
+        permission_based_group = Group.objects.filter(user=self, permissions__codename='publish_version').exists()
+        named_group = Group.objects.filter(user=self, name__contains='Portal Manager').exists()
+        return permission_based_group or named_group
+
+    @property
+    def is_developer(self):
+        if self.is_portal_manager:
+            return False
+        else:
+            permission_based_group = Group.objects.filter(user=self, permissions__codename='edit_content').exists()
+            named_group = Group.objects.filter(user=self, name__contains='Developer').exists()
+            return permission_based_group or named_group
+
     def short_email(self):
         return format_html("<div class='truncate-email'><span>{}</span></div>", self.email)
 
