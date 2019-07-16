@@ -225,7 +225,7 @@ export class NxIpvdComponent implements OnInit {
             .subscribe(data => {
                 this.cameras = data.cameras;
                 this.analytics = data.analytics;
-                this.analytics.sort(NxUtilsService.sortASC);
+                this.analytics.sort();
 
                 this.vendors = data.vendors;
                 this.vendors.sort(NxUtilsService.byParam((elm) => {
