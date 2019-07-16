@@ -369,7 +369,7 @@ export class NxIpvdComponent implements OnInit {
             }
 
             if (typeof this.activeCamera.firmwares === 'string') {
-                const firmwares = this.activeCamera.firmwares;
+                const firmwares = JSON.parse(this.activeCamera.firmwares);
                 let firmwaresArray = [];
 
                 let maxFirmwareCount = 0,

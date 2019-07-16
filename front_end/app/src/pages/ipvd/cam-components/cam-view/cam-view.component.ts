@@ -61,8 +61,9 @@ export class CamViewComponent implements OnInit {
     }
 
     firmwareLength(count, maxFirmware) {
-        // Make sure we don't return 0
         const pow = maxFirmware > 200 ? Math.log2(200) / Math.log2(maxFirmware) : 1;
-        return Math.round(100 * Math.pow(count / maxFirmware, pow));
+        const length = Math.round(100 * Math.pow(count / maxFirmware, pow));
+
+        return (length >= 2) ? length : 2;
     }
 }
