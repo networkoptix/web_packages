@@ -339,7 +339,7 @@ class ProductAdmin(CMSAdmin):
 
     def get_list_display(self, request):
         if not request.user.is_superuser:
-            return self.list_display[1:3]
+            return self.list_display[1:4]
         return self.list_display
 
     def get_queryset(self, request):
