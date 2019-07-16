@@ -38,6 +38,7 @@ export class NxIpvdComponent implements OnInit {
     itemsPerPage: number;
     query: string;
     cameras: any;
+    analytics: any;
     activeCamera: any;
     showAll: boolean;
     hardwareTypes: any[];
@@ -162,14 +163,29 @@ export class NxIpvdComponent implements OnInit {
     addFilterResolutions() {
         this.resolutions = this.CONFIG.ipvd.supportedResolutions;
 
-        this.filterModel.selects = [
-            {
-                id      : 'resolution',
-                label   : this.LANG.search.minResolution,
-                items   : this.resolutions,
-                selected: this.resolutions[0]
-            }
-        ];
+        this.filterModel.selects.push(
+                {
+                    id      : 'resolution',
+                    label   : this.LANG.search.minResolution,
+                    items   : this.resolutions,
+                    selected: this.resolutions[0]
+                });
+    }
+
+    addAnalyticsEvents() {
+        this.analytics.sort();
+        this.analytics = this.analytics.map(v => (
+                { id: v.replace(/\s/g, ''), label: v }
+        ));
+
+        this.filterModel.multiselects.push(
+                {
+                    id      : 'analytics',
+                    label   : this.LANG.search.analytics,
+                    singular: this.LANG.search.analytics,
+                    items   : this.analytics,
+                    selected: []
+                });
     }
 
     setActiveCamera() {
@@ -218,6 +234,10 @@ export class NxIpvdComponent implements OnInit {
             .getIPVD()
             .subscribe(data => {
                 this.cameras = data.cameras;
+
+                this.analytics = data.analytics;
+                this.addAnalyticsEvents();
+
                 this.vendors = data.vendors;
                 this.vendors.sort(NxUtilsService.byParam((elm) => {
                     return elm.name.toLowerCase();

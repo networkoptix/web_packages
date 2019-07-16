@@ -36,8 +36,8 @@ Test Submit Feedback Message
     #Search for Axis and click any camera from list
     IPVD Text Search    Axis
     IPVD Select Device From Table Randomly
-    Wait Until Element Is Visible    ${SEND DEVICE FEEDBACK}
-    Click Element    ${SEND DEVICE FEEDBACK}
+    Wait Until Element Is Visible    ${IPVD SEND DEVICE FEEDBACK}
+    Click Element    ${IPVD SEND DEVICE FEEDBACK}
     Wait Until Element Is Visible    ${IPVD FEEDBACK}
     ${model}=   Get Text    ${IPVD DEVICE MODEL}
     Element Should Contain    ${IPVD FEEDBACK TITLE}    Feedback about ${model}

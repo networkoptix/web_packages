@@ -93,7 +93,7 @@ Validate Privacy Policy
     Click Element    ${IPVD FEEDBACK PRIVACY POLICY}
     @{windows}=   Get Window Handles
     ${numWindows}=   Get Length    ${windows}
-    Should Be True    ${numWindows} == 2
+    Should Be True    ${numWindows} == 2    Number of browser windows open after clicking Privacy Policy link should be 2, but is ${numWindows}. CLOUD-3315
     Select Window    @{windows}[1]
     Location Should Be    ${url}    #TODO: CLOUD-2949
     #Location Should Be    ${PRIVACY POLICY URL FULL}

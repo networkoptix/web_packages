@@ -13,6 +13,7 @@ export class IpvdSearchService {
     private static RESOLUTION = 'resolution';
     private static VENDORS = 'vendors';
     private static TYPES = 'hardwareTypes';
+    private static ANALYTICS = 'analytics';
 
     private _vendors: any;
 
@@ -49,6 +50,7 @@ export class IpvdSearchService {
         let resolution;
         let vendors;
         let types;
+        let events;
 
         if (filter.selects.find(x => x.id === IpvdSearchService.RESOLUTION) !== undefined) {
             resolution = filter.selects.find(x => x.id === IpvdSearchService.RESOLUTION).selected;
@@ -62,6 +64,15 @@ export class IpvdSearchService {
             const hardwareType = filter.multiselects.find(x => x.id === IpvdSearchService.TYPES);
             if (hardwareType.selected.length) {
                 types = hardwareType.items.filter(x => !hardwareType.selected.includes(x.id));
+            }
+        }
+
+        if (filter.multiselects.find(x => x.id === IpvdSearchService.ANALYTICS) !== undefined) {
+            const analyticsEvents = filter.multiselects.find(x => x.id === IpvdSearchService.ANALYTICS);
+            if (analyticsEvents.selected.length) {
+                events = analyticsEvents.items.filter(x => {
+                    return !analyticsEvents.selected.includes(x.id);
+                });
             }
         }
 
@@ -83,6 +94,15 @@ export class IpvdSearchService {
             if (types &&
                 types.length > 0 &&
                 types.find(type => type.label.toLowerCase() === camera.hardwareType.toLowerCase())) {
+
+                return false;
+            }
+
+            if (events &&
+                    events.length > 0 &&
+                    events.find(event => {
+                        return camera.analyticsEvents.indexOf(event.label) < 0;
+                    })) {
 
                 return false;
             }

@@ -249,8 +249,8 @@ ${RELEASE NUMBER}                     //div[contains(@class,"active")]//h1
 ${IPVD TITLE}                        //header//li[@class="active"]/a[contains(text(),"${IPVD TITLE TEXT}")]
 ${IPVD SEARCH BAR}                   //ipvd//input[@name="query"]
 ${IPVD ADVANCED SEARCH BUTTON}       //ipvd//span[contains(text(),"${IPVD ADVANCED SEARCH BUTTON TEXT}")]
-${IPVD MANFUACTURERS PANE}           //ipvd//header/span[contains(text(),"manufacturers")]/../../../..
-${IPVD DEVICES PANE}                 //ipvd//header/span[contains(text(),"devices")]/../../../..
+${IPVD MANFUACTURERS PANE}           //ipvd//header/span[contains(text(),"${IPVD MANUFACTURERS TEXT}")]/../../../..
+${IPVD DEVICES PANE}                 //ipvd//header/span[contains(text(),"${IPVD DEVICES TEXT}")]/../../../..
 ${IPVD DEVICE DETAILS}               //ipvd//nx-cam-view
 ${IPVD DEVICE MAKE}                  ${IPVD DEVICE DETAILS}//div[@class="camera-vendor-model"]//span[1]
 ${IPVD DEVICE MODEL}                 ${IPVD DEVICE DETAILS}//div[@class="camera-vendor-model"]//span[2]
@@ -258,22 +258,21 @@ ${IPVD CLEAR FILTERS BUTTON}         //ipvd//span[@class="close-button"]
 ${IPVD TABLE}                        //ipvd//table
 ${IPVD TABLE FIRST ITEM}             ${IPVD TABLE}/tbody/tr[1]
 ${IPVD TABLE LAST ITEM}              ${IPVD TABLE}/tbody/tr[0=count(following-sibling::tr)]//td
-${IPVD PREVIOUS BUTTON}              //ipvd//a/span[contains(text(),"«")]
-${IPVD NEXT BUTTON}                  //ipvd//a/span[contains(text(),"»")]
 ${IPVD LAST PAGE BUTTON}             //ipvd//ul/[@class="pagination"]/li[@class="page-item disabled"]/following-sibling::li/a
 ${IPVD CLOSE DETAILS BUTTON}         //ipvd//header//span[@class="glyphicon close-icon detailsClose"]
+
 #IPVD Feedback
-${SUBMIT A REQUEST}     //ipvd//a[contains(text(),'submit a request')]
-${SEND DEVICE FEEDBACK}     //ipvd//a[contains(text(),'Send feedback about this device')]
+${IPVD SUBMIT A REQUEST}             //ipvd//a[contains(text(),"${IPVD SUBMIT A REQUEST TEXT}")]
+${IPVD SEND DEVICE FEEDBACK}         //ipvd//a[contains(text(),"${IPVD SEND DEVICE FEEDBACK TEXT}")]
 ${IPVD FEEDBACK}                     //nx-modal-message-content//form[@name='messageForm']
 ${IPVD FEEDBACK TITLE}               ${IPVD FEEDBACK}//h1
 ${IPVD FEEDBACK FORM}                ${IPVD FEEDBACK}//form[@name='feedbackForm']
 ${IPVD FEEDBACK YOUR NAME}           ${IPVD FEEDBACK FORM}//input[@id='user_name']
 ${IPVD FEEDBACK EMAIL}               ${IPVD FEEDBACK FORM}//input[@id='user_email']
 ${IPVD FEEDBACK MESSAGE}             ${IPVD FEEDBACK FORM}//textarea[@id='message']
-${IPVD FEEDBACK PRIVACY POLICY}      ${IPVD FEEDBACK FORM}//a[text()='here']
-${IPVD FEEDBACK SEND BUTTON}         ${IPVD FEEDBACK}//button[text()='Send']
-${IPVD FEEDBACK CANCEL BUTTON}       ${IPVD FEEDBACK}//button[text()='Cancel']
+${IPVD FEEDBACK PRIVACY POLICY}      ${IPVD FEEDBACK FORM}//a[text()="${PRIVACY POLICY LINK TEXT}"]
+${IPVD FEEDBACK SEND BUTTON}         ${IPVD FEEDBACK}//button[text()="${SEND BUTTON TEXT}"]
+${IPVD FEEDBACK CANCEL BUTTON}       ${IPVD FEEDBACK}//button[text()="${CANCEL BUTTON TEXT}"]
 ${IPVD FEEDBACK CLOSE BUTTON}        ${IPVD FEEDBACK}//button[@class='close']
 
 #Footer

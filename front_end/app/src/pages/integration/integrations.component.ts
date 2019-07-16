@@ -32,6 +32,8 @@ export class NxIntegrationsComponent implements OnInit {
     };
 
     private setupDefaults() {
+        this.CONFIG = this.config.getConfig();
+
         this.allElements = [];
         this.elements = [];
 
@@ -70,13 +72,14 @@ export class NxIntegrationsComponent implements OnInit {
             .pluginsSubject
             .subscribe((result: any) => {
                 if (result) {
-                    if (!this.CONFIG.integrationStoreEnabled && !result.length) {
-                        this.location.go('404');
-                    } else {
-                        this.allElements = result;
-                        this.setTags();
-                        this.setFilter();
-                    }
+                    this.navigate404IfNoResult(result); // TODO: REMOVE in 19.2
+                    // if (!this.CONFIG.integrationStoreEnabled) {
+                    //     this.location.go('404');
+                    // } else {
+                    //     this.allElements = result;
+                    //     this.setTags();
+                    //     this.setFilter();
+                    // }
                 } else {
                     this.elements = undefined;
                 }
@@ -85,6 +88,24 @@ export class NxIntegrationsComponent implements OnInit {
                 console.error('Integration plugins error -> ', error);
                 this.location.go('404');
             });
+    }
+
+    // TODO: REMOVE in 19.2 as CONFIG is already moved to A6
+    // currently integrationStoreEnabled is populated in AJS and this creates
+    // an issue (not avail on page reload)
+    navigate404IfNoResult(result) {
+        if (!this.CONFIG && !this.CONFIG.integrationStoreEnabled) {
+            setTimeout(() => this.navigate404IfNoResult(result));
+            return;
+        }
+
+        if (!this.CONFIG.integrationStoreEnabled) {
+            this.location.go('404');
+        } else {
+            this.allElements = result;
+            this.setTags();
+            this.setFilter();
+        }
     }
 
     setTags() {

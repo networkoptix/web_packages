@@ -115,6 +115,7 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
                 'integration_store_enabled': integration_store_enabled,
                 'public_downloads': product.read_global_value("%PUBLIC_DOWNLOADS%"),
                 'public_releases': product.read_global_value("%PUBLIC_RELEASE_HISTORY%"),
+                'show_analytics_events': product.read_global_value("%SHOW_ANALYTICS_EVENTS%"),
                 'sort_supported_devices_by_popularity': product.read_global_value(
                     "%SORT_SUPPORTED_DEVICES_BY_POPULARITY%"),
                 'support_link': product.read_global_value("%SUPPORT_LINK%"),
@@ -710,6 +711,9 @@ class ProductCustomizationReview(models.Model):
             check_customization_access(self.version.created_by, self.customization)
 
         for review in reviews:
+            if review.state == ProductCustomizationReview.REVIEW_STATES.rejected:
+                continue
+
             review.reviewed_by = self.reviewed_by
             review.reviewed_date = self.reviewed_date
             review.state = self.state
