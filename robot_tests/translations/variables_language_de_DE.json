@@ -44,7 +44,7 @@
     "SAVE BUTTON TEXT": "Speichern",
     "SHARE BUTTON TEXT": "Freigeben",
     "DISCONNECT BUTTON TEXT": "Trennen",
-    "SEND BUTTON TEXT": "Send",
+    "SEND BUTTON TEXT": "Senden",
     "OWNER TEXT": "Besitzer",
     "ADMIN TEXT": "Administrator",
     "ADV VIEWER TEXT": "Erweiterter Betrachter",
@@ -93,7 +93,7 @@
     "IPVD DEVICES TEXT": "Geräte",
     "IPVD SUBMIT A REQUEST TEXT": "Anfrage abschicken",
     "IPVD SEND DEVICE FEEDBACK TEXT": "Feedback zu diesem Gerät senden",
-    "PRIVACY POLICY LINK TEXT": "here",
+    "PRIVACY POLICY LINK TEXT": "hier",
     "OK TEXT": "Ok",
     "MERGE SYSTEMS TEXT": "Systeme zusammenführen",
     "SYSTEM MERGING TEXT": "Systeme haben mit dem Zusammenführen begonnen",
@@ -106,6 +106,6 @@
     "YOU CAN ONLY MERGE AS OWNER TEXT": "Sie können nur Cloudsysteme zusammenführen, in welchen Sie Besitzer sind.",
     "CHECKING TEXT": "Prüfung...",
     "ENTER PASSWORD TO CONTINUE TEXT": "Geben Sie das Passwort für Ihr Konto ein, um fortzufahren",
-    "INCOMPATIBLE": "Incompatible",
-    "CONNECTION TO SYSTEM LOST": "Connection to %SYSTEM NAME% lost"
+    "INCOMPATIBLE": "Inkompatibel",
+    "CONNECTION TO SYSTEM LOST": "Verbindung zu %SYSTEM NAME% verloren"
 }

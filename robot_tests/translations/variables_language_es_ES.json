@@ -44,7 +44,7 @@
     "SAVE BUTTON TEXT": "Salvar",
     "SHARE BUTTON TEXT": "Compartir",
     "DISCONNECT BUTTON TEXT": "Desconectar",
-    "SEND BUTTON TEXT": "Send",
+    "SEND BUTTON TEXT": "Enviar",
     "OWNER TEXT": "Dueño",
     "ADMIN TEXT": "Administrador",
     "ADV VIEWER TEXT": "Visor avanzado",
@@ -107,5 +107,5 @@
     "CHECKING TEXT": "Comprobando...",
     "ENTER PASSWORD TO CONTINUE TEXT": "Introduzca la contraseña para que su cuenta continúe",
     "INCOMPATIBLE": "Incompatible",
-    "CONNECTION TO SYSTEM LOST": "Connection to %SYSTEM NAME% lost"
+    "CONNECTION TO SYSTEM LOST": "Conexión a %SYSTEM NAME% perdido"
 }

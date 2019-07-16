@@ -44,7 +44,7 @@
     "SAVE BUTTON TEXT": "Зберегти",
     "SHARE BUTTON TEXT": "Поділитися",
     "DISCONNECT BUTTON TEXT": "Відключити",
-    "SEND BUTTON TEXT": "Send",
+    "SEND BUTTON TEXT": "Надіслати",
     "OWNER TEXT": "Власник",
     "ADMIN TEXT": "Адміністратор",
     "ADV VIEWER TEXT": "Перегляд і налаштування",
@@ -93,7 +93,7 @@
     "IPVD DEVICES TEXT": "пристрої",
     "IPVD SUBMIT A REQUEST TEXT": "надіслати запит",
     "IPVD SEND DEVICE FEEDBACK TEXT": "Надіслати відгук про цей пристрій",
-    "PRIVACY POLICY LINK TEXT": "here",
+    "PRIVACY POLICY LINK TEXT": "тут",
     "OK TEXT": "ОК",
     "MERGE SYSTEMS TEXT": "Об'єднати системи",
     "SYSTEM MERGING TEXT": "Злиття систем почалося",
@@ -106,6 +106,6 @@
     "YOU CAN ONLY MERGE AS OWNER TEXT": "Ви можете об’єднати тільки ті системи, якими володієте.",
     "CHECKING TEXT": "Перевірка...",
     "ENTER PASSWORD TO CONTINUE TEXT": "Введіть пароль для продовження",
-    "INCOMPATIBLE": "Incompatible",
-    "CONNECTION TO SYSTEM LOST": "Connection to %SYSTEM NAME% lost"
+    "INCOMPATIBLE": "Несумісно",
+    "CONNECTION TO SYSTEM LOST": "Підключення до %SYSTEM NAME% втрачено"
 }
