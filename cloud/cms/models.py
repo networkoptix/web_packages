@@ -711,6 +711,9 @@ class ProductCustomizationReview(models.Model):
             check_customization_access(self.version.created_by, self.customization)
 
         for review in reviews:
+            if review.state == ProductCustomizationReview.REVIEW_STATES.rejected:
+                continue
+
             review.reviewed_by = self.reviewed_by
             review.reviewed_date = self.reviewed_date
             review.state = self.state

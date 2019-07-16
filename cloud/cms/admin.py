@@ -584,6 +584,10 @@ class ProductCustomizationReviewAdmin(CMSAdmin):
         allowed['force_update'] = \
             is_cloud_portal and state == ProductCustomizationReview.REVIEW_STATES.accepted and matching_portal \
             and can_force_update
+        allowed['reject'] = \
+            can_publish_or_accept and \
+            state in [ProductCustomizationReview.REVIEW_STATES.blocked,
+                      ProductCustomizationReview.REVIEW_STATES.pending]
         allowed['publish'] = \
             is_cloud_portal and state == ProductCustomizationReview.REVIEW_STATES.pending and matching_portal \
             and can_publish_or_accept
