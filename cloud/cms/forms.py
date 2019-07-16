@@ -242,6 +242,7 @@ class ProductForm(forms.ModelForm):
         self.user = kwargs.pop('user', None)
         # Do the normal form initialisation.
         super(ProductForm, self).__init__(*args, **kwargs)
+        self.publish_all = False
         if self.instance.product_type and self.instance.product_type.single_customization:
             # used for removing customizations that are already in use from the multiple choice field,
             if 'customizations' in [field.name for field in self.visible_fields()]:
@@ -256,6 +257,10 @@ class ProductForm(forms.ModelForm):
                 queryset=Account.objects.filter(id=self.user.id), empty_label=None
             )
             self.fields['customizations'].queryset = Customization.objects.filter(name__in=self.user.customizations)
+            if self.fields['customizations'].queryset.count() == 0:
+                self.publish_all = True
+                self.fields['customizations'].widget = forms.HiddenInput()
+                self.fields['publish_all_customizations'].widget = forms.HiddenInput()
 
     def clean(self):
         cleaned_data = super().clean()
@@ -268,8 +273,8 @@ class ProductForm(forms.ModelForm):
             if not product_type:
                 product_type = self.instance.product_type
 
-        if 'publish_all_customizations' in cleaned_data and cleaned_data['publish_all_customizations'] and \
-                not product_type.single_customization:
+        if ('publish_all_customizations' in cleaned_data and cleaned_data['publish_all_customizations']
+                or self.publish_all) and not product_type.single_customization:
             cleaned_data['customizations'] = Customization.objects.all()
         else:
             num_customizations = len(customizations)
