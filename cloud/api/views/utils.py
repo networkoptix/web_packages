@@ -332,19 +332,20 @@ def get_ipvd(request):
                     alias = alias.strip()
                     camera_names.append(camera["vendor"].replace(" ", "") + alias.replace(" ", ""))
 
-            for event in cameras['analyticsEvents']:
-                if event not in analytics_events:
-                    analytics_events.add(event)
+            for event in camera['analyticsEvents']:
+                analytics_events.add(event)
+
 
         num_cameras = len(set(camera_names))
         # ---------------------
 
         vendors = list(vendors_dict.values())
+        analytics = list(analytics_events)
 
         ipvd = {
             "cameras": cameras,
             "vendors": vendors,
-            "analytics": analytics_events,
+            "analytics": analytics,
             "num_cameras": num_cameras
         }
 
