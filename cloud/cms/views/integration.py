@@ -16,7 +16,8 @@ ACCEPTED = ProductCustomizationReview.REVIEW_STATES.accepted
 PENDING = ProductCustomizationReview.REVIEW_STATES.pending
 
 
-def make_integrations_json(integrations, contexts=None, show_pending=False, show_drafts=False):
+def make_integrations_json(integrations, contexts=None, show_pending=False, show_drafts=False, user=None):
+    user_products = user.products if user and not user.is_anonymous else []
     integrations_json = []
 
     if not contexts:
@@ -31,6 +32,7 @@ def make_integrations_json(integrations, contexts=None, show_pending=False, show
         for integration in integrations:
             integration_dict = {}
             current_version = integration.version_id()
+            integration_dict['mine'] = integration.id in user.products
 
             if show_pending:
                 pending_version = ProductCustomizationReview.objects.filter(version__id__gt=current_version,
@@ -128,7 +130,7 @@ def get_integration(request, product_id=None):
         if integration.preview_status != Product.PREVIEW_STATUS.draft:
             return api_success("Draft does not exist for this integration", status_code=status.HTTP_404_NOT_FOUND)
 
-    return api_success(make_integrations_json([integration], show_pending=review, show_drafts=draft))
+    return api_success(make_integrations_json([integration], show_pending=review, show_drafts=draft, user=request.user))
 
 
 @api_view(("GET", ))
@@ -153,20 +155,20 @@ def get_integrations(request):
                 check_customization_permission(request.user, settings.CUSTOMIZATION, 'cms.publish_version'):
             drafts = drafts.filter(id__in=request.user.products).distinct()
             integration_list = make_integrations_json(drafts.filter(preview_status=Product.PREVIEW_STATUS.draft),
-                                                      show_drafts=True)
+                                                      show_drafts=True, user=request.user)
             # If the integration store is disabled show developers their approved integrations
             if not is_enabled:
-                integration_list.extend(make_integrations_json(drafts))
+                integration_list.extend(make_integrations_json(drafts, user=request.user))
 
         # If the integration store is disabled Manager level users will see all accepted and pending integrations
         elif not is_enabled:
-            integration_list.extend(make_integrations_json(integrations))
+            integration_list.extend(make_integrations_json(integrations, user=request.user))
 
         # Shows pending reviews. If the users is not a manager they will only see their pending reviews
         # Otherwise they will see all of the pending reviews
         drafts = drafts.filter(contentversion__productcustomizationreview__state=PENDING)
-        integration_list.extend(make_integrations_json(drafts, show_pending=True))
+        integration_list.extend(make_integrations_json(drafts, show_pending=True, user=request.user))
 
     if is_enabled:
-        integration_list.extend(make_integrations_json(integrations))
+        integration_list.extend(make_integrations_json(integrations, user=request.user))
     return api_success({'data': integration_list})
