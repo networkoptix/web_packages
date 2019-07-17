@@ -64,14 +64,15 @@ def push_notification(request):
     serializer.is_valid(raise_exception=True)
     data = serializer.validated_data
 
-    payload = data['notification']['payload'] if 'payload' in data['notification'] else dict()
-    payload_str = ''
-    if payload:
-        payload_str = json.dumps(payload)
+    payload = data['notification'].get('payload', None)
+    payload_str = json.dumps(payload) if payload else ''
+    options = data['notification'].get('options', None)
+    options_str = json.dumps(options) if options else ''
 
     notification_object = PushNotification.objects.create(
         title=data['notification']['title'], body=data['notification']['body'],
-        payload=payload_str, raw_targets=json.dumps(data['targets']), raw_system_id=data['systemId']
+        payload=payload_str, options=options_str, raw_targets=json.dumps(data['targets']),
+        raw_system_id=data['systemId']
     )
 
     send_push_notification.apply_async(

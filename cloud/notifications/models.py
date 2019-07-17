@@ -195,7 +195,7 @@ class PushSubscription(models.Model):
 
     system_id = models.UUIDField()
     active = models.BooleanField(default=True)
-    device = models.ForeignKey(PushDevice, blank=True, null=True, on_delete=models.SET_NULL)
+    device = models.ForeignKey(PushDevice, blank=True, null=True, on_delete=models.CASCADE)
 
     account = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.CASCADE)
     subscription_id = models.UUIDField(blank=True, null=True)
@@ -210,6 +210,7 @@ class PushNotification(models.Model):
     payload = models.TextField(
         max_length=SIZE_LIMIT, blank=True, null=True, validators=[MaxLengthValidator(SIZE_LIMIT)]
     )
+    options = models.TextField(blank=True, null=True)
     subscriptions = models.ManyToManyField(PushSubscription)
 
     raw_system_id = models.CharField(max_length=255, default='')
@@ -232,9 +233,7 @@ class PushNotification(models.Model):
             active_subs = self.subscriptions.filter(active=True)
             devices = PushDevice.objects.filter(pushsubscription__in=active_subs).distinct()
 
-        if self.payload:
-            payload = json.loads(self.payload)
-        else:
-            payload = dict()
+        payload = json.loads(self.payload) if self.payload else {}
+        options = json.loads(self.options) if self.options else {}
 
-        return devices.send_message(self.body, title=self.title, extra=payload)
+        return devices.send_message(self.body, title=self.title, extra=payload, **options)

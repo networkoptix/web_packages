@@ -21,7 +21,8 @@ export class PushComponent implements OnInit {
         this.notification = {
             title: '',
             body: '',
-            payload: ''
+            payload: '',
+            options: ''
         };
         this.registered = undefined;
     }
@@ -107,6 +108,7 @@ export class PushComponent implements OnInit {
             .subscribe(
                 (token) => {
                     this.deviceToken = token;
+                    this.updateSubStates();
                 },
                 (error) => {
                     this.deviceToken = '';
@@ -148,8 +150,12 @@ export class PushComponent implements OnInit {
 
     onSendNotification() {
         let payload = '';
+        let options = '';
         if (this.notification.payload) {
             payload = JSON.parse(this.notification.payload);
+        }
+        if (this.notification.options) {
+            options = JSON.parse(this.notification.options);
         }
         const httpOptions = {
             headers: new HttpHeaders({
@@ -162,7 +168,8 @@ export class PushComponent implements OnInit {
             notification: {
                 title: this.notification.title,
                 body: this.notification.body,
-                payload
+                payload,
+                options
             }
         }, httpOptions).subscribe(
             (response: any) => {

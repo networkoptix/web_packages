@@ -57,6 +57,12 @@
                           [(ngModel)]="notification.payload"></textarea>
             </div>
 
+            <div class="form-group">
+                <label for="payload">Options (JSON)</label>
+                <textarea class="form-control" name="options" id="options"
+                          [(ngModel)]="notification.options"></textarea>
+            </div>
+
             <button [disabled]="!formNotification.valid" type="submit" class="btn btn-default"
                     (click)="onSendNotification()">Send Notification
             </button>
