@@ -149,7 +149,7 @@
             </div>
         </nx-section>
 
-        <nx-section *ngIf="activeCamera.analyticsEvents.length">
+        <nx-section *ngIf="(this.CONFIG.ipvd.showAnalyticsEvents || this.debug) && activeCamera.analyticsEvents.length">
             <div class="row">
                 <div class="col-7"><h4 translate>Analytics events</h4></div>
             </div>

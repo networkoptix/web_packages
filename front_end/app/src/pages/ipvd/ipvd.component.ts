@@ -178,18 +178,20 @@ export class NxIpvdComponent implements OnInit {
     }
 
     addAnalyticsEvents() {
-        this.analytics = this.analytics.map(v => (
-                { id: v.replace(/\s/g, ''), label: v }
-        ));
+        if (this.CONFIG.ipvd.showAnalyticsEvents || this.debug) {
+            this.analytics = this.analytics.map(v => (
+                    { id: v.replace(/\s/g, ''), label: v }
+            ));
 
-        this.filterModel.multiselects.push(
-                {
-                    id      : 'analytics',
-                    label   : this.lang.search.analytics,
-                    singular: this.lang.search.analytics,
-                    items   : this.analytics,
-                    selected: []
-                });
+            this.filterModel.multiselects.push(
+                    {
+                        id      : 'analytics',
+                        label   : this.lang.search.analytics,
+                        singular: this.lang.search.analytics,
+                        items   : this.analytics,
+                        selected: []
+                    });
+        }
     }
 
     setActiveCamera() {

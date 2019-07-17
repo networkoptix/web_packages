@@ -3,6 +3,7 @@ import {
     OnInit, Output, SimpleChanges
 }                          from '@angular/core';
 import { NxConfigService } from '../../../../services/nx-config';
+import { NxUriService }    from '../../../../services/uri.service';
 
 @Component({
     selector   : 'nx-cam-view',
@@ -20,12 +21,22 @@ export class CamViewComponent implements OnInit {
     firmwares: any = [];
     firmwaresToShow: number;
     showAll: boolean;
+    debug: any;
+    params: any;
 
-    constructor(private configService: NxConfigService) {
+    constructor(private configService: NxConfigService,
+                private uri: NxUriService) {
         this.CONFIG = this.configService.getConfig();
     }
 
     ngOnInit() {
+        this.uri
+            .getURI()
+            .subscribe(params => {
+                this.params = params;
+                this.debug = params.debug === '' || false;
+            });
+
         this.firmwareCleanUp();
         this.firmwaresToShow = this.CONFIG.ipvd.firmwaresToShow;
         this.showAll = false;
