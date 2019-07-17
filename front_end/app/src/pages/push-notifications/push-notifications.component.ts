@@ -82,6 +82,7 @@ export class PushComponent implements OnInit {
                 }
                 this.receivedMessages.push(message);
                 const _notify = new Notification(message.notification.title, {body: message.notification.body});
+                this.updateSubStates();
             });
     }
 
@@ -169,8 +170,7 @@ export class PushComponent implements OnInit {
             },
             (response: any) => {
                 this.sendStatus = 'Error: ' + JSON.stringify(response.error);
-            },
-            () => this.updateSubStates());
+            });
     }
 
     onToggleSubscribe(system) {
