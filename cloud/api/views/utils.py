@@ -340,7 +340,7 @@ def get_ipvd(request):
         # ---------------------
 
         vendors = list(vendors_dict.values())
-        analytics = list(analytics_events)
+        analytics = list(analytics_events).sort()
 
         ipvd = {
             "cameras": cameras,

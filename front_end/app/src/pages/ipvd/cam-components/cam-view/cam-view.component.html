@@ -149,6 +149,17 @@
             </div>
         </nx-section>
 
+        <nx-section *ngIf="activeCamera.analyticsEvents.length">
+            <div class="row">
+                <div class="col-7"><h4 translate>Analytics events</h4></div>
+            </div>
+            <div class="row">
+                <div class="col-7" *ngFor="let event of activeCamera.analyticsEvents">
+                    {{event}}
+                </div>
+            </div>
+        </nx-section>
+
         <nx-section>
             <div class="firmware-info">
                 <div class="row">

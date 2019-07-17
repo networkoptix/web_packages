@@ -178,7 +178,6 @@ export class NxIpvdComponent implements OnInit {
     }
 
     addAnalyticsEvents() {
-        this.analytics.sort();
         this.analytics = this.analytics.map(v => (
                 { id: v.replace(/\s/g, ''), label: v }
         ));
