@@ -178,7 +178,7 @@ export class NxIpvdComponent implements OnInit {
     }
 
     addAnalyticsEvents() {
-        if (this.CONFIG.ipvd.showAnalyticsEvents || this.debug) {
+        if ((this.CONFIG.ipvd.showAnalyticsEvents || this.debug) && this.analytics) {
             this.analytics = this.analytics.map(v => (
                     { id: v.replace(/\s/g, ''), label: v }
             ));
