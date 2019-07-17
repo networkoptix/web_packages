@@ -22,6 +22,7 @@ export class CamViewComponent implements OnInit {
     firmwaresToShow: number;
     showAll: boolean;
     debug: any;
+    beta: any;
     params: any;
 
     constructor(private configService: NxConfigService,
@@ -35,6 +36,7 @@ export class CamViewComponent implements OnInit {
             .subscribe(params => {
                 this.params = params;
                 this.debug = params.debug === '' || false;
+                this.beta = params.beta === '' || false;
             });
 
         this.firmwareCleanUp();

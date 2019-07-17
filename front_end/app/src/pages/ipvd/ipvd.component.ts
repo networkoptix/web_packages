@@ -51,6 +51,7 @@ export class NxIpvdComponent implements OnInit {
     noResult: boolean;
     hasNoSearch: boolean;
     debug: any;
+    beta: any;
     uriPath: string;
     breakpoint: string;
 
@@ -134,6 +135,7 @@ export class NxIpvdComponent implements OnInit {
             .subscribe(params => {
                 this.params = params;
                 this.debug = params.debug === '' || false;
+                this.beta = params.beta === '' || false;
                 if (Object.keys(this.params).length !== 0) {
                     this.hasNoSearch = false;
                 }
@@ -178,7 +180,7 @@ export class NxIpvdComponent implements OnInit {
     }
 
     addAnalyticsEvents() {
-        if ((this.CONFIG.ipvd.showAnalyticsEvents || this.debug) && this.analytics) {
+        if ((this.CONFIG.ipvd.showAnalyticsEvents || this.debug || this.beta) && this.analytics) {
             this.analytics = this.analytics.map(v => (
                     { id: v.replace(/\s/g, ''), label: v }
             ));
