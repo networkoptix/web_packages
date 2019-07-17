@@ -335,17 +335,16 @@ def get_ipvd(request):
             for event in camera['analyticsEvents']:
                 analytics_events.add(event)
 
-
         num_cameras = len(set(camera_names))
         # ---------------------
 
         vendors = list(vendors_dict.values())
-        analytics = list(analytics_events).sort()
+        analytics = list(analytics_events)
 
         ipvd = {
             "cameras": cameras,
             "vendors": vendors,
-            "analytics": analytics,
+            "analytics": analytics.sort(),
             "num_cameras": num_cameras
         }
 
