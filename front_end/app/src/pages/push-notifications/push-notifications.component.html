@@ -1,0 +1,84 @@
+<div class="container">
+<div class="ml-3 mr-3 pt-3">
+    <h2>Push Notification Test</h2>
+    <div class="mt-3">
+        <button *ngIf="deviceToken === null" class="btn btn-success"
+                (click)="onAllowNotifications()">Allow Notifications
+        </button>
+
+        <button *ngIf="deviceToken && registered === false" class="btn btn-success"
+                (click)="onRegisterDevice()">Register Device
+        </button>
+
+        <button *ngIf="deviceToken && registered" class="btn btn-danger"
+                (click)="onDeleteToken()">Unregister(Delete) Device
+        </button>
+    </div>
+
+    <div class="mt-3">
+        <h3>Subscriptions</h3>
+        <div *ngFor="let system of systems">
+            <label>
+                <input #checkElement [ngModel]="system.subState" [value]="system.id"
+                       [name]="system.id" (change)="onToggleSubscribe(system)" type="checkbox"
+                > {{ system.name }} ({{ system.id }}) <span class="text-warning" *ngIf="system.subState === undefined">(Not found)</span>
+            </label>
+        </div>
+    </div>
+
+    <div class="mt-3">
+        <h3>Send Notification</h3>
+        <form class="col-sm-4" #formNotification="ngForm">
+            <div class="form-group">
+                <label for="system">System</label>
+                <select class="form-control" name="system" id="system" required
+                        [(ngModel)]="notification.system">
+                    <option selected="selected" value="">Please select a system</option>
+                    <option *ngFor="let system of this.systems" [value]="system.id">{{ system.name }}
+                        ({{ system.id }}</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="title">Title*</label>
+                <input class="form-control" type="text" name="title" id="title" required
+                       [(ngModel)]="notification.title">
+            </div>
+
+            <div class="form-group">
+                <label for="body">Body* </label>
+                <textarea class="form-control" name="body" id="body" rows="10" required
+                          [(ngModel)]="notification.body"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="payload">Payload (JSON)</label>
+                <textarea class="form-control" name="payload" id="payload"
+                          [(ngModel)]="notification.payload"></textarea>
+            </div>
+
+            <button [disabled]="!formNotification.valid" type="submit" class="btn btn-default"
+                    (click)="onSendNotification()">Send Notification
+            </button>
+            {{ sendStatus }}
+        </form>
+
+    </div>
+
+    <div class="mt-5">
+        <h4>Debug Info</h4>
+        <p>Device Token: {{ deviceToken }}</p>
+        <p>Registered: {{ registered }}</p>
+        <p *ngIf="receivedMessages.length > 0">Received Foreground Messages:</p>
+        <ul>
+            <li *ngFor="let message of receivedMessages">
+                Title: {{ message.notification.title }}
+                <br>
+                Body: {{ message.notification.body }}
+                <span *ngIf="message.data"><br>Payload: {{ message.data }}</span>
+            </li>
+        </ul>
+    </div>
+</div>
+
+</div>

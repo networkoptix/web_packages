@@ -391,6 +391,9 @@ window.L = {};
                             .when('/right', {
                                 template: ''
                             })
+                            .when('/push-notifications', {
+                                template: '<push-component></push-component>'
+                            })
                             // **** routes for detail views should state full path ****
                             .when('/main/:route', {
                                 template: ''

@@ -16,6 +16,8 @@ class NotificationSerializer(serializers.Serializer):
             raise serializers.ValidationError('Title and body are required')
         elif not isinstance(value['title'], str) or not isinstance(value['body'], str):
             raise serializers.ValidationError('Title and body must be strings')
+        elif not value['title'] or not value['body']:
+            raise serializers.ValidationError('Title and body cannot be blank')
         return value
 
 
@@ -74,7 +76,7 @@ class SubscriptionSerializer(serializers.Serializer):
 
     def update(self, instance, validate_data):
         if instance:
-            active = validate_data['isActive']
+            active = validate_data.get('isActive', True)
             instance.active = active
             instance.save()
         elif not validate_data['isActive']:

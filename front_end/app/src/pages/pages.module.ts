@@ -17,6 +17,7 @@ import { ContentModule }          from './content/content.module';
 import { IntegrationsModule }     from './integration/integrations.module';
 import { IntegrationsListModule } from './integration/list/list.module';
 import { LandingModule }          from './landing/landing.module';
+import { PushNotificationsModule } from './push-notifications/push-notifications.module';
 
 import { NxOverviewModule }  from './integration/details/overview/overview.module';
 import { NxSetupModule }     from './integration/details/setup/setup.module';
@@ -35,6 +36,7 @@ import { NxSetupModule }     from './integration/details/setup/setup.module';
         IntegrationsListModule,
         ContentModule,          // TODO: Remove it after test
         RightMenuModule,        // TODO: Remove it after test
+        PushNotificationsModule,
         IpvdModule,
         Angular2CsvModule,
         LandingModule,
@@ -57,6 +59,7 @@ import { NxSetupModule }     from './integration/details/setup/setup.module';
         IntegrationsListModule,
         ContentModule,          // TODO: Remove it after test
         RightMenuModule,        // TODO: Remove it after test
+        PushNotificationsModule,
         IpvdModule,
         Angular2CsvModule,
         LandingModule,

@@ -1,7 +1,8 @@
 from django.http import Http404
 from rest_framework import exceptions, status
-from rest_framework.authentication import BasicAuthentication
+from rest_framework.authentication import BasicAuthentication, SessionAuthentication
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
+from rest_framework.exceptions import APIException
 from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, UpdateModelMixin
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -36,10 +37,28 @@ class CloudBasicAuthentication(BasicAuthentication):
         return (account, None)
 
 
+class CloudSessionAuthentication(SessionAuthentication):
+    def authenticate(self, request=None):
+        try:
+            ip = get_client_ip(request)
+            account = getattr(request._request, 'user', None)
+            clouddb_account = Clouddb_Account.get(request.session['login'], request.session['password'], ip)
+        except APINotAuthorisedException:
+            raise exceptions.AuthenticationFailed('Invalid email/password for cloud_db.')
+
+        if not account.email.endswith('@networkoptix.com'):
+            raise exceptions.AuthenticationFailed('Must authenticate with an @networkoptix.com account')
+
+        request.data['clouddb_account'] = clouddb_account
+        request.data['username'] = request.session['login']
+        request.data['password'] = request.session['password']
+
+        return (account, None)
+
+
 @api_view(['POST'])
 @permission_classes((AllowAny,))
-@authentication_classes((CloudBasicAuthentication,))
-@handle_exceptions
+@authentication_classes((CloudBasicAuthentication, CloudSessionAuthentication))
 def push_notification(request):
     serializer = NotificationSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
@@ -55,8 +74,6 @@ def push_notification(request):
         payload=payload_str, raw_targets=json.dumps(data['targets']), raw_system_id=data['systemId']
     )
 
-    # send_push_notification(notification_object.id, request_data=request.data)
-
     send_push_notification.apply_async(
         args=[notification_object.id], kwargs={'request_data': request.data}
     )
@@ -64,38 +81,46 @@ def push_notification(request):
     return api_success({'notificationId': notification_object.id})
 
 
-@api_view(['POST'])
+@api_view(['GET', 'POST'])
 @permission_classes((IsAuthenticated,))
-@authentication_classes((CloudBasicAuthentication,))
-@handle_exceptions
+@authentication_classes((CloudBasicAuthentication, CloudSessionAuthentication))
 def register_device(request):
-    serializer = RegisterDeviceSerializer(data=request.data)
-    serializer.is_valid(raise_exception=True)
-    data = serializer.validated_data
+    if request.method == 'GET':
+        serializer = RegisterDeviceSerializer(data=request.GET)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
 
-    error_data = dict()
+        registered = PushDevice.objects.filter(registration_id=data['deviceToken']).exists()
+        return api_success({'registered': registered})
 
-    if not PushDevice.objects.filter(registration_id=data['deviceToken']).exists():
-        device = PushDevice(
-            registration_id=data['deviceToken'], model=data['model'], name=data['name'], cloud_message_type='FCM',
-            user=request.user
-        )
-        response = device.send_message(message='', dry_run=True)
-        if response['success'] == 1:
-            device.save()
+    elif request.method == 'POST':
+        serializer = RegisterDeviceSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+
+        error_data = dict()
+
+        if not PushDevice.objects.filter(registration_id=data['deviceToken']).exists():
+            device = PushDevice(
+                registration_id=data['deviceToken'], model=data['model'], name=data['name'], cloud_message_type='FCM',
+                user=request.user
+            )
+            response = device.send_message(message='', dry_run=True)
+            if response['success'] == 1:
+                device.save()
+            else:
+                error_data['deviceToken'] = "Token could not be validated"
         else:
-            error_data['deviceToken'] = "Token could not be validated"
-    else:
-        error_data['deviceToken'] = "Device with this deviceToken already exists"
+            error_data['deviceToken'] = "Device with this deviceToken already exists"
 
-    if error_data:
-        raise APIRequestException('Invalid Parameters', error_code=ErrorCodes.not_acceptable, error_data=error_data)
+        if error_data:
+            raise APIRequestException('Invalid Parameters', error_code=ErrorCodes.not_acceptable, error_data=error_data)
 
-    return api_success()
+        return api_success()
 
 
 class Subscribe(UpdateModelMixin, CreateModelMixin, RetrieveModelMixin, GenericAPIView):
-    authentication_classes = (CloudBasicAuthentication, )
+    authentication_classes = (CloudBasicAuthentication, CloudSessionAuthentication)
     permission_classes = (IsAuthenticated, )
     serializer_class = SubscriptionSerializer
     lookup_fields = ('deviceToken', 'systemId')

@@ -19,7 +19,7 @@ import * as angular from 'angular';
                 this.systems = [];
 
                 this.forceUpdateSystems = function () {
-                    return cloudApi
+                    return new Promise((resolve, reject) => cloudApi
                         .systems()
                         .then(result => {
                             this.systems = this.sortSystems(result.data);
@@ -30,7 +30,8 @@ import * as angular from 'angular';
                                     || CONFIG.allowDebugMode
                                     || CONFIG.allowBetaMode);
                             });
-                        });
+                            resolve();
+                        }));
                 };
 
                 this.delayedUpdateSystems = function () {

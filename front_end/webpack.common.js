@@ -47,7 +47,16 @@ module.exports = {
     },
     plugins: [
         new webpack.DefinePlugin({
-            PRODUCTION: JSON.stringify(isProd)
+            PRODUCTION: JSON.stringify(isProd),
+            FIREBASE: JSON.stringify({
+                apiKey: 'AIzaSyA8bA6jCS4GnzmfGEg_I6mQyG5JIBKFrLI',
+                authDomain: 'nx-push-test.firebaseapp.com',
+                databaseURL: 'https://nx-push-test.firebaseio.com',
+                projectId: 'nx-push-test',
+                storageBucket: 'nx-push-test.appspot.com',
+                messagingSenderId: '627461092708',
+                appId: '1:627461092708:web:1b140238961b4213'
+            })
         }),
 
         //Development plugins
@@ -77,6 +86,10 @@ module.exports = {
                 from: '',
                 to: '',
                 ignore: thingsToIgnore
+            },
+            {
+                from: 'firebase-messaging-sw.js',
+                to: '',
             }
         ]),
 
