@@ -54,6 +54,7 @@ export class NxIpvdComponent implements OnInit {
     beta: any;
     uriPath: string;
     breakpoint: string;
+    showAnalytics: boolean;
 
 
     private setupDefaults() {
@@ -180,7 +181,8 @@ export class NxIpvdComponent implements OnInit {
     }
 
     addAnalyticsEvents() {
-        if ((this.CONFIG.ipvd.showAnalyticsEvents || this.debug || this.beta) && this.analytics) {
+        this.showAnalytics = (this.CONFIG.ipvd.showAnalyticsEvents || this.debug || this.beta) && this.analytics;
+        if (this.showAnalytics) {
             this.analytics = this.analytics.map(v => (
                     { id: v.replace(/\s/g, ''), label: v }
             ));

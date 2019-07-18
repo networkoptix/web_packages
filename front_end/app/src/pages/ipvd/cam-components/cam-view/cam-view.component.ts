@@ -24,6 +24,7 @@ export class CamViewComponent implements OnInit {
     debug: any;
     beta: any;
     params: any;
+    showAnalytics: boolean;
 
     constructor(private configService: NxConfigService,
                 private uri: NxUriService) {
@@ -37,6 +38,8 @@ export class CamViewComponent implements OnInit {
                 this.params = params;
                 this.debug = params.debug === '' || false;
                 this.beta = params.beta === '' || false;
+
+                this.showAnalytics = (this.CONFIG.ipvd.showAnalyticsEvents || this.debug || this.beta) && this.activeCamera.analyticsEvents.length;
             });
 
         this.firmwareCleanUp();
