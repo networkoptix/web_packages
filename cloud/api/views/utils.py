@@ -335,6 +335,7 @@ def get_ipvd(request):
                     camera_names.append(camera["vendor"].replace(" ", "") + alias.replace(" ", ""))
 
             for event in camera['analyticsEvents']:
+                camera['haveAnalytics'] = True
                 analytics_events.add(event)
 
         num_cameras = len(set(camera_names))

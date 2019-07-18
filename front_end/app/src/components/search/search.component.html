@@ -48,7 +48,7 @@
             <div class="drop-container row col-12 mt-3 m-0 p-0"
                  *ngIf="localFilter.selects && localFilter.selects.length || localFilter.multiselects && localFilter.multiselects.length">
 
-                <div class="drop col-12 col-md-4 mt-3 mt-md-0" *ngFor="let select of localFilter.selects">
+                <div class="drop col-12 col-md-3 mt-3 mt-md-0" *ngFor="let select of localFilter.selects">
                     <label style="text-transform: capitalize">{{ select.label }}</label>
                     <nx-select [name]="select.label"
                                [items]="select.items"
@@ -59,7 +59,7 @@
                     </nx-select>
                 </div>
 
-                <div class="drop col-12 col-md-4 mt-3 mt-md-0" *ngFor="let multiselect of localFilter.multiselects">
+                <div class="drop col-12 col-md-3 mt-3 mt-md-0" *ngFor="let multiselect of localFilter.multiselects">
                     <label style="text-transform: capitalize">{{ multiselect.label }}</label>
                     <nx-multi-select [name]="multiselect.label"
                                      [items]="multiselect.items"

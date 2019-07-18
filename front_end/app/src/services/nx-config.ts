@@ -271,7 +271,8 @@ export class NxConfigService {
             },
             ipvd: {
                 pagerMaxSize: 4,
-                firmwaresToShow: 5
+                firmwaresToShow: 4,
+                analyticsToShow: 4
             },
             search: {
                 maxLength   : 200,

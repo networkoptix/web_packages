@@ -151,11 +151,34 @@
 
         <nx-section *ngIf="showAnalytics">
             <div class="row">
-                <div class="col-7"><h4 translate>Analytics events</h4></div>
+                <div class="col-7 card--body-heading"><h4 translate>Analytics events</h4></div>
             </div>
-            <div class="row">
-                <div class="col-7" *ngFor="let event of activeCamera.analyticsEvents">
+            <div class="row" *ngIf="activeCamera.haveAnalytics">
+                <div class="analytics-label col-7" *ngFor="let event of activeCamera.analyticsEvents  | slice:0:analyticsToShow">
                     {{event}}
+                </div>
+            </div>
+
+            <div class="row mt-2" *ngIf="!showAllEvents && activeCamera.analyticsEvents.length > analyticsToShow">
+                <div class="col-12">
+                    <a href (click)="showAllEvents = true; analyticsToShow = activeCamera.analyticsEvents.length; false"
+                       translate>Show All</a>
+                </div>
+            </div>
+
+            <div class="row mt-2" *ngIf="showAllEvents">
+                <div class="col-12 mb-2 info-label" translate>
+                    Actual number of events supported by this camera may be bigger.
+                </div>
+                <div class="col-12">
+                    <a href (click)="showAllEvents = false; analyticsToShow = CONFIG.ipvd.analyticsToShow; false"
+                       translate>Collapse</a>
+                </div>
+            </div>
+
+            <div class="row" *ngIf="!activeCamera.haveAnalytics">
+                <div class="info-label col-12" translate>
+                    This device has reported to support some analytics events, but we don't have exact information about them.
                 </div>
             </div>
         </nx-section>
@@ -163,8 +186,8 @@
         <nx-section *ngIf="firmwares.length">
             <div class="firmware-info">
                 <div class="row">
-                    <div class="col-7"><h4 class="m-0" translate>Firmware version</h4></div>
-                    <div class="col-5"><h4 class="m-0" translate>Popularity</h4></div>
+                    <div class="col-7 card--body-heading"><h4 class="m-0" translate>Firmware version</h4></div>
+                    <div class="col-5 card--body-heading"><h4 class="m-0" translate>Popularity</h4></div>
                 </div>
 
                 <ng-container *ngFor="let firmware of firmwares | slice:0:firmwaresToShow">
@@ -184,9 +207,17 @@
                     </div>
                 </ng-container>
 
-                <div class="row" *ngIf="!showAll && firmwares.length > 5">
+                <div class="row" *ngIf="!showAllFirmware && firmwares.length > firmwaresToShow">
                     <div class="col-12">
-                        <a href (click)="showAll = true; firmwaresToShow = firmwares.length; false" translate>Show All</a>
+                        <a href (click)="showAllFirmware = true; firmwaresToShow = firmwares.length; false"
+                           translate>Show All</a>
+                    </div>
+                </div>
+
+                <div class="row" *ngIf="showAllFirmware">
+                    <div class="col-12">
+                        <a href (click)="showAllFirmware = false; firmwaresToShow = CONFIG.ipvd.firmwaresToShow; false"
+                           translate>Collapse</a>
                     </div>
                 </div>
             </div>

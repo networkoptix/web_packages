@@ -94,11 +94,10 @@
     
     .drop-container {
         @include media-breakpoint-up(md) {
-            max-width: $collapse-second-width; // medium break point
+            max-width: $collapse-first-width;
         }
         
         .drop {
-            
             padding : 0 1rem 0 0;
             @include media-breakpoint-down(sm) {
                 padding-right : 0;

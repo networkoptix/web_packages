@@ -20,6 +20,14 @@
         padding-bottom  : 8px;
     }
     
+    .info-label {
+        color : $light16;
+    }
+    
+    .analytics-label {
+        line-height : 20px;
+    }
+    
     .no-linewrap {
         text-overflow : ellipsis;
         overflow      : hidden;
@@ -34,7 +42,6 @@
     
     .active-camera-info, .firmware-info {
         .row {
-            height : 24px;
             display : flex;
             align-items: center;
             

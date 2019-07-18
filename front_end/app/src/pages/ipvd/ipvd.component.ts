@@ -152,6 +152,8 @@ export class NxIpvdComponent implements OnInit {
                     this.company = this.CONFIG.companyName;
                     this.placeholder = this.lang.search.search_ipvd;
 
+                    this.showAnalytics = this.CONFIG.ipvd.showAnalyticsEvents || this.debug || this.beta;
+
                     // add hardware types and tags
                     this.addFilterTags();
                     this.addFilterTypes();
@@ -181,8 +183,7 @@ export class NxIpvdComponent implements OnInit {
     }
 
     addAnalyticsEvents() {
-        this.showAnalytics = (this.CONFIG.ipvd.showAnalyticsEvents || this.debug || this.beta) && this.analytics;
-        if (this.showAnalytics) {
+        if (this.showAnalytics && this.analytics) {
             this.analytics = this.analytics.map(v => (
                     { id: v.replace(/\s/g, ''), label: v }
             ));
@@ -208,6 +209,11 @@ export class NxIpvdComponent implements OnInit {
 
     addFilterTags() {
         this.filterModel.tags = this.CONFIG.ipvd.searchTags;
+
+        if (!this.showAnalytics) {
+            this.filterModel.tags = this.filterModel.tags.filter((tag) => tag.id !== 'haveAnalytics');
+        }
+
         this.filterModel.tags.forEach(tag => tag.label = this.lang.ipvd[tag.id]);
     }
 

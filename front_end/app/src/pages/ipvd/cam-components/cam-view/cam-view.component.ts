@@ -20,7 +20,9 @@ export class CamViewComponent implements OnInit {
     CONFIG: any = {};
     firmwares: any = [];
     firmwaresToShow: number;
-    showAll: boolean;
+    analyticsToShow: number;
+    showAllFirmware: boolean;
+    showAllEvents: boolean;
     debug: any;
     beta: any;
     params: any;
@@ -39,19 +41,23 @@ export class CamViewComponent implements OnInit {
                 this.debug = params.debug === '' || false;
                 this.beta = params.beta === '' || false;
 
-                this.showAnalytics = (this.CONFIG.ipvd.showAnalyticsEvents || this.debug || this.beta) && this.activeCamera.analyticsEvents.length;
+                this.showAnalytics = this.CONFIG.ipvd.showAnalyticsEvents || this.debug || this.beta;
             });
 
         this.firmwareCleanUp();
-        this.firmwaresToShow = this.CONFIG.ipvd.firmwaresToShow;
-        this.showAll = false;
+        // this.firmwaresToShow = this.CONFIG.ipvd.firmwaresToShow;
+        // this.analyticsToShow = this.CONFIG.ipvd.analyticsToShow;
+        this.showAllFirmware = false;
+        this.showAllEvents = false;
     }
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes.activeCamera) {
             this.firmwareCleanUp();
             this.firmwaresToShow = this.CONFIG.ipvd.firmwaresToShow;
-            this.showAll = false;
+            this.analyticsToShow = this.CONFIG.ipvd.analyticsToShow;
+            this.showAllFirmware = false;
+            this.showAllEvents = false;
         }
     }
 

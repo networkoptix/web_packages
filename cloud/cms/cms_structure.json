@@ -815,6 +815,10 @@
               {
                 "id": "isMultiSensor",
                 "value": false
+              },
+              {
+                "id": "haveAnalytics",
+                "value": false
               }
             ]
           }
