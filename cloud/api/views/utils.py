@@ -306,6 +306,8 @@ def get_ipvd(request):
         camera_names = []
 
         for camera in cameras:
+            camera["firmwares"] = json.loads(camera["firmwares"]) if camera["firmwares"] else {}
+
             camera["isH265"] = camera["primaryCodec"] == 'H.265'
 
             if camera["hardwareType"] == "Camera" and camera["isMultiSensor"]:

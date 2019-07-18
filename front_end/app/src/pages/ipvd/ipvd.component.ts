@@ -373,33 +373,29 @@ export class NxIpvdComponent implements OnInit {
                 this.mobileDetailMode = true;
             }
 
-            if (typeof this.activeCamera.firmwares === 'string') {
-                const firmwares = JSON.parse(this.activeCamera.firmwares);
-                let firmwaresArray = [];
+            let firmwaresArray = [];
+            let maxFirmwareCount = 0;
+            let totalCameraCount = 0;
 
-                let maxFirmwareCount = 0,
-                    totalCameraCount = 0;
+            Object.keys(this.activeCamera.firmwares).forEach(key => {
+                const count = this.activeCamera.firmwares[key];
+                firmwaresArray.push({ name: key, count });
 
-                Object.keys(firmwares).forEach(key => {
-                    const count = firmwares[key];
-                    firmwaresArray.push({ name: key, count });
+                totalCameraCount += count;
+                if (count > maxFirmwareCount) {
+                    maxFirmwareCount = count;
+                }
+            });
 
-                    totalCameraCount += count;
-                    if (count > maxFirmwareCount) {
-                        maxFirmwareCount = count;
-                    }
-                });
+            firmwaresArray = firmwaresArray.sort((a, b) => {
+                return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+            });
 
-                firmwaresArray = firmwaresArray.sort((a, b) => {
-                    return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
-                });
+            firmwaresArray.reverse();
 
-                firmwaresArray.reverse();
-
-                this.activeCamera.maxFirmwareCount = maxFirmwareCount;
-                this.activeCamera.totalCameraCount = totalCameraCount;
-                this.activeCamera.firmwares = firmwaresArray;
-            }
+            this.activeCamera.maxFirmwareCount = maxFirmwareCount;
+            this.activeCamera.totalCameraCount = totalCameraCount;
+            this.activeCamera.firmwares = firmwaresArray;
 
             this.toggleCamview = true;
         }, 10);
