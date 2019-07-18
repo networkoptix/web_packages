@@ -76,8 +76,7 @@ class SubscriptionSerializer(serializers.Serializer):
 
     def update(self, instance, validate_data):
         if instance:
-            active = validate_data.get('isActive', True)
-            instance.active = active
+            instance.active = validate_data.get('isActive', True)
             instance.save()
         elif not validate_data['isActive']:
             subs = PushSubscription.objects.filter(
