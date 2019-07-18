@@ -53,8 +53,8 @@ def get_languages_list():
 
 def generate_branding_variables(datastructure):
     cloud_portal = Product.objects.get(customizations__name=settings.CUSTOMIZATION,
-                                       product_type__type=ProductType.PRODUCT_TYPES.cloud_portal)
-    branding_context = Context.objects.get(name='branding', product_type__type=ProductType.PRODUCT_TYPES.cloud_portal)
+                                       product_type=get_cloud_portal_product().product_type)
+    branding_context = Context.objects.get(name='branding', product_type=get_cloud_portal_product().product_type)
 
     brands = [
         (ds, ds.find_actual_value(product=cloud_portal))
