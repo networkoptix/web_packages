@@ -3,6 +3,7 @@
     "Account Settings": "Ustawienia konta",
     "Account not activated": "Konto nie jest aktywne",
     "Account not found": "Nie znaleziono konta",
+    "Actual number of events supported by this camera may be bigger.": "Actual number of events supported by this camera may be bigger.",
     "Additional Requirements": "Dodatkowe wymagania",
     "Administration": "Administracja",
     "Advanced PTZ": "Zaawansowane PTZ",
@@ -11,6 +12,7 @@
     "All Systems": "Wszystkie systemy",
     "All cloud users will be deleted.": "Wszyscy użytkownicy chmury zostaną usunięci.",
     "All results": "Wszystkie wyniki",
+    "Analytics events": "Analytics events",
     "Any": "Dowolny",
     "Audio": "Dźwięk",
     "Build Number:": "Numer kompilacji:",
@@ -23,10 +25,11 @@
     "Choose which properties should be visible to customers:": "Wybierz właściwości, które powinny być widoczne dla klientów:",
     "Close": "Zamknij",
     "Codec": "Kodek",
+    "Collapse": "Collapse",
     "Contact": "Kontakt",
     "Create Account": "Utwórz konto",
     "Create account": "Utwórz konto",
-    "Developer": "Developer",
+    "Developer": "Programista",
     "Disconnect": "Rozłącz",
     "Disconnect System from %CLOUD_NAME%?": "Odłączyć system od %CLOUD_NAME%?",
     "Download": "Pobiera",
@@ -89,8 +92,8 @@
     "Show All": "Pokaż wszystko",
     "Some of your servers don't support cloud System merge because of outdated software version.": "Niektóre serwery nie obsługują złączania w chmurze z powodu przestarzałej wersji oprogramowania.",
     "Support": "Wsparcie",
-    "Support E-mail": "Support E-mail",
-    "Support URL": "Support URL",
+    "Support E-mail": "E-mail do wsparcia technicznego",
+    "Support URL": "Adres WWW wsparcia technicznego",
     "System name": "Nazwa systemu",
     "System name is required": "Nazwa systemu jest wymagana",
     "System will be accessible through local network with local administrator account.": "System będzie dostępny w sieci lokalnej dla lokalnego konta administratora.",
@@ -101,6 +104,7 @@
     "Terms of Use": "Warunki użytkowania",
     "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.": "Dane logowania tego użytkownika zostaną ujawnione! Musisz utworzyć niestandardowy poziom uprawnień \"Użytkownik publiczny\" z dostępem tylko do kamer wybranych do użytku publicznego i przypisaną tylko minimalną wymaganą uprawnień. \"Użytkownik publiczny\" nie powinien mieć dostępu do całego systemu.",
     "There will be more than": "Będzie więcej niż",
+    "This device has reported to support some analytics events, but we don't have exact information about them.": "This device has reported to support some analytics events, but we don't have exact information about them.",
     "To": "Do",
     "Too many attempts. Try again in a minute.": "Zbyt wiele prób. Spróbuj ponownie za minutę.",
     "Topic": "Temat",
@@ -110,7 +114,7 @@
     "View": "Widok",
     "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.": "Zalecamy zainstalowanie najnowszych wersji Google Chrome lub Mozilla Firefox, ale możesz także użyć dowolnej innej nowoczesnej przeglądarki internetowej.",
     "What's New?": "Co nowego?",
-    "Works with:": "Works with:",
+    "Works with:": "Współpracuje z:",
     "Wrong password": "Nieprawidłowe hasło",
     "You can merge only those cloud Systems, where you have the \"Owner\" permissions.": "Można złączyć tylko te systemy w chmurze, których jesteś właścicielem.",
     "You can only merge Systems where you are the owner.": "Możesz złączać tylko takie systemy, których jesteś właścicielem.",
@@ -266,6 +270,7 @@
             "c_Info": "w przypadku dodatkowych pytań / wątpliwości dotyczących obsługiwanych urządzeń."
         },
         "hardwareType": "Typ",
+        "haveAnalytics": "Analytics",
         "isAptzSupported": "Zaawansowane PTZ",
         "isAptzSupportedShort": "Zaaw. PTZ",
         "isAudioSupported": "Dźwięk",
@@ -295,12 +300,13 @@
     },
     "phoneNumberWithLabel": "Tel: {{number}}",
     "privacyPolicy": {
-        "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent.",
-        "ipvd": "Przesyłając ten formularz zgadzasz się na kontakt przez %COMPANY_NAME%.\nPolitykę prywatności firmy %COMPANY_NAME% znajdziesz <a href=\"%PRIVACY_LINK%\">tutaj</a>. Zawiera ona instrukcje dotyczące wycofania zgody."
+        "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent.",
+        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent."
     },
     "search": {
         "Any": "Dowolny",
         "Search": "Szukaj",
+        "analytics": "Analytics",
         "filter applied": "zastosowany filtr",
         "filters applied": "zastosowane filtry",
         "hardwareType": "Typ",
@@ -313,5 +319,6 @@
     },
     "servers in the merged System.": "serwery złączone w systemie.",
     "support": "wsparcie",
-    "testedVersionsLabel": "Tested on {{vmsName}} version(s):"
+    "testedVersionLabel": "Tested on {{vmsName}} version:",
+    "testedVersionsLabel": "Tested on {{vmsName}} versions:"
 }

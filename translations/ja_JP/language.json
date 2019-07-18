@@ -125,7 +125,7 @@
     "wrongParameters": "フォーム上のいくつかのパラメーターが正しくありません",
     "wrongCode": "アカウントは既にアクティブ済か確認コードが正しくありません",
     "wrongCodeRestore": "確認コードは既に使用されているかまたは不正です",
-    "wrongAuthCode": "Code is expired or incorrect",
+    "wrongAuthCode": "期限切れまたは不正なコードです",
     "forbidden": "この操作を実行するアクセス権限がありません",
     "accountNotActivated": "このアカウントはまだアクティベートされていません <a href=\"/activate\"> 再度アクティベートリンクを送信</a>",
     "accountBlocked": "このアカウントは一時的にブロックされています。数分後にもう一度お試しください。",
@@ -147,7 +147,7 @@
     "mergedSystemIsOffline": "システム <strong>{{failedSystem}}</strong> はオフラインです。",
     "INCOMPATIBLE": "システムには異なるソフトウェアバージョンがあります。両方とも <a href=\"/download\">最新のビルド</a>を更新してください。",
     "FAIL": "システム <strong>{{failedSystem}}</strong> は現在到達不能です。<br>しばらくしてからもう一度試すか、<a href=\"%SUPPORT_LINK%\" target=\"_blank\">サポート</a>に連絡してください。",
-    "unknownMergeError": "Unknown error. You can try to refresh the page and repeat attempt. If the problem persists – please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>."
+    "unknownMergeError": "未知のエラー。あなたはページを更新して試行を繰り返すことができます。問題が解決しない場合 - <a href=\"%SUPPORT_LINK%\" target=\"_blank\">サポート</a>に連絡してください。"
   },
   "merging": {
     "mergeFailedTitle": "システムのマージに失敗しました",
@@ -196,7 +196,7 @@
     "confirmUnshare": "このユーザはシステムにアクセスすることができません　宜しいですか？",
     "confirmUnshareTitle": "ユーザーを削除しますか？",
     "confirmUnshareAction": "削除",
-    "successDisconnected": "System is successfully disconnected from %CLOUD_NAME%",
+    "successDisconnected": "システムは %CLOUD_NAME%から正常に切断されました",
     "successDeleted": "システム {{systemName}} はあなたのアカウントから正常に削除されました",
     "mergeFailed": "システム統合が失敗しました",
     "mergeStart": "システムが統合を開始しました",
@@ -238,7 +238,7 @@
     },
     "systemOffline": "システムはオフライン",
     "systemHasNoCameras": "カメラなし",
-    "systemUnreachable": "SYSTEM IS UNREACHABLE",
+    "systemUnreachable": "システムにアクセスできません",
     "cameraStates": {
       "offline": "オフライン",
       "error": "エラー",

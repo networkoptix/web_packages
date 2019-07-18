@@ -1,11 +1,11 @@
 Добро пожаловать в %CLOUD_NAME%
 
 {{#message.sharer_name}}
-{{message.sharer_name}} ({{message.sharer_email}}) is inviting you to join %CLOUD_NAME% and shared the system {{message.system_name}} with you.
+{{message.sharer_name}} ({{message.sharer_email}}) пригласил вас присоединиться к %CLOUD_NAME% и открыл вам доступ с системе {{message.system_name}}.
 {{/message.sharer_name}}
 
 {{^message.sharer_name}}
-You are invited you to join %CLOUD_NAME%.
+Приглашаем вас присоединиться к %CLOUD_NAME%.
 Вам был предоставлен доступ к {{message.system_name}}.
 {{/message.sharer_name}}
 

@@ -3,6 +3,7 @@
     "Account Settings": "Параметри облікового запису",
     "Account not activated": "Обліковий запис ще не активовано",
     "Account not found": "Обліковий запис не знайдено",
+    "Actual number of events supported by this camera may be bigger.": "Actual number of events supported by this camera may be bigger.",
     "Additional Requirements": "Додаткові вимоги",
     "Administration": "Панель керування",
     "Advanced PTZ": "Розширений PTZ",
@@ -11,6 +12,7 @@
     "All Systems": "Всі системи",
     "All cloud users will be deleted.": "Всі хмарні користувачі будуть видалені.",
     "All results": "Всі результати",
+    "Analytics events": "Analytics events",
     "Any": "Будь-які",
     "Audio": "Аудіо",
     "Build Number:": "Номер випуску:",
@@ -23,10 +25,11 @@
     "Choose which properties should be visible to customers:": "Виберіть, які властивості мають бути видимі для клієнтів:",
     "Close": "Закрити",
     "Codec": "Кодек",
+    "Collapse": "Collapse",
     "Contact": "Контакт",
     "Create Account": "Створити обліковий запис",
     "Create account": "Створити обліковий запис",
-    "Developer": "Developer",
+    "Developer": "Розробник",
     "Disconnect": "Відключити",
     "Disconnect System from %CLOUD_NAME%?": "Відключити систему від %CLOUD_NAME%?",
     "Download": "Завантажити",
@@ -89,8 +92,8 @@
     "Show All": "Показати всі",
     "Some of your servers don't support cloud System merge because of outdated software version.": "Деякі ваші сервери не підтримують злиття системної хмари через застарілу версію програмного забезпечення.",
     "Support": "Підтримка",
-    "Support E-mail": "Support E-mail",
-    "Support URL": "Support URL",
+    "Support E-mail": "Email підтримки",
+    "Support URL": "URL підтримки",
     "System name": "Назва системи",
     "System name is required": "Ім'я системи обов'язкове",
     "System will be accessible through local network with local administrator account.": "Система буде доступна через локальну мережу з локальним обліковим записом адміністратора.",
@@ -101,6 +104,7 @@
     "Terms of Use": "Умови використання",
     "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.": "Облікові дані цього користувача будуть розкриті! Ви повинні створити для користувача роль «Публічний користувач» з доступом тільки\n            до камер, обраним для загального користування, і призначити тільки мінімально необхідні дозволи для перегляду. роль\n            «Публічний користувач» не повинна мати доступ до налаштувань системи.",
     "There will be more than": "Там буде більше",
+    "This device has reported to support some analytics events, but we don't have exact information about them.": "This device has reported to support some analytics events, but we don't have exact information about them.",
     "To": "До",
     "Too many attempts. Try again in a minute.": "Забагато спроб. Спробуйте пізніше.",
     "Topic": "Тема",
@@ -110,7 +114,7 @@
     "View": "Вигляд",
     "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.": "Ми рекомендуємо встановлювати останні версії Google Chrome або Mozilla Firefox, але ви можете використовувати будь-який інший сучасний веб-браузер.",
     "What's New?": "Що нового?",
-    "Works with:": "Works with:",
+    "Works with:": "Працює з:",
     "Wrong password": "Невірний пароль",
     "You can merge only those cloud Systems, where you have the \"Owner\" permissions.": "Ви можете обє’днати лише ті Хмарні системи, у який є дозволи Власника.",
     "You can only merge Systems where you are the owner.": "Ви можете об’єднати тільки ті системи, якими володієте.",
@@ -266,6 +270,7 @@
             "c_Info": "додаткові питання / зауваження щодо підтримуваних пристроїв."
         },
         "hardwareType": "Тип",
+        "haveAnalytics": "Analytics",
         "isAptzSupported": "Розширений PTZ",
         "isAptzSupportedShort": "Розш. PTZ",
         "isAudioSupported": "Аудіо",
@@ -295,12 +300,13 @@
     },
     "phoneNumberWithLabel": "Тел.: {{number}}",
     "privacyPolicy": {
-        "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent.",
-        "ipvd": "Надсилаючи цю форму, ви погоджуєтесь зв'язатися з нами %COMPANY_NAME%.\nВи знайдете %COMPANY_NAME% політику конфіденційності <a href=\"%PRIVACY_LINK%\">тут</a> яка містить інструкцію про те, як скасувати вашу згоду."
+        "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent.",
+        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent."
     },
     "search": {
         "Any": "Будь-які",
         "Search": "Пошук",
+        "analytics": "Analytics",
         "filter applied": "застосований фільтр",
         "filters applied": "застосовані фільтри",
         "hardwareType": "Тип",
@@ -313,5 +319,6 @@
     },
     "servers in the merged System.": "серверів у об’єднаній системі.",
     "support": "підтримка",
-    "testedVersionsLabel": "Tested on {{vmsName}} version(s):"
+    "testedVersionLabel": "Tested on {{vmsName}} version:",
+    "testedVersionsLabel": "Tested on {{vmsName}} versions:"
 }

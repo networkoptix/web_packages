@@ -1,28 +1,29 @@
 {
 	"search": {
 		"Search": "검색",
-		"search_ipvd": "Search by model or manufacturer",
-		"filter applied": "filter applied",
-		"filters applied": "filters applied",
-		"Any": "Any",
-		"selected": "selected",
-		"vendor": "Manufacturer",
-		"vendors": "manufacturers",
+		"search_ipvd": "모델 또는 제조업체로 검색",
+		"filter applied": "필터 적용되었음",
+		"filters applied": "필터들이 적용되었음",
+		"Any": "아무거나",
+		"selected": "선택된",
+		"vendor": "제조사",
+		"vendors": "제조사들",
 		"hardwareType": "형식",
-		"hardwareTypes": "types",
-		"minResolution": "Minimum Resolution"
+		"hardwareTypes": "유형들",
+		"minResolution": "최소 해상도",
+		"analytics": "Analytics"
 	},
 	"cameraFilters": {
-		"ptz": "PTZ cameras",
-		"aptz": "Cameras with advanced PTZ",
-		"fisheye": "Fisheye cameras",
-		"H265": "H.265 Cameras",
-		"IO": "I / O modules",
-		"multiSensor": "Multi-sensor cameras",
-		"TwWayAudio": "2-way audio devices",
-		"audio": "Cameras with audio",
-		"encoder": "Encoders",
-		"highRes": "Extra high resolution cameras"
+		"ptz": "PTZ 카메라들",
+		"aptz": "고급 PTZ가 장착 된 카메라들",
+		"fisheye": "어안렌즈 카메라들",
+		"H265": "H.265 카메라들",
+		"IO": "I / O 모듈들",
+		"multiSensor": "다중 센서 카메라들",
+		"TwWayAudio": "양방향 오디오 기기들",
+		"audio": "오디오내장 카메라들",
+		"encoder": "인코더들",
+		"highRes": "초고해상도 카메라들"
 	},
 	"downloads": {
 		"mobile": {
@@ -43,8 +44,8 @@
 				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
 			},
 			"linux": {
-				"label": "Ubuntu Linux",
-				"shortLabel": "Ubuntu",
+				"label": "우분투 리눅스",
+				"shortLabel": "우분투",
 				"supported": "Ubuntu 14.04 LTS, 16.04 LTS"
 			},
 			"macos": {
@@ -62,7 +63,7 @@
 			"arm": {
 				"label": "ARM",
 				"shortLabel": "ARM",
-				"supported": "Debian/Ubuntu based"
+				"supported": "데비안 / 우분투 기반"
 			},
 			"sdk": {
 				"label": "SDK",
@@ -76,14 +77,14 @@
 			"mac": "X",
 			"bananapi": "Banana Pi",
 			"bpi": "Nx1",
-			"rpi": " Raspberry Pi"
+			"rpi": "Raspberry Pi"
 		},
 		"appTypes": {
 			"client": "클라이언트만",
 			"server": "서버 만",
 			"bundle": "클라이언트와 서버",
 			"servertool": "구성 도구",
-			"package": "Package"
+			"package": "패키지"
 		},
 		"releasesTypes": {
 			"beta": "베타",
@@ -96,47 +97,48 @@
 		}
 	},
 	"ipvd": {
-		"count": "Count",
-		"vendor": "Manufacturer",
+		"count": "개수",
+		"vendor": "제조사",
 		"model": "모델",
 		"hardwareType": "형식",
-		"maxResolution": "Max Resolution",
-		"maxFps": "Max FPS",
-		"primaryCodec": "Codec",
+		"maxResolution": "최대 해상도",
+		"maxFps": "최대 FPS",
+		"primaryCodec": "코덱",
 		"isAudioSupported": "오디오",
-		"isTwAudioSupported": "2-way Audio",
+		"isTwAudioSupported": "양방향 오디오",
 		"isPtzSupported": "PTZ",
-		"isAptzSupported": "Advanced PTZ",
+		"isAptzSupported": "고급 PTZ",
 		"isAptzSupportedShort": "Adv. PTZ",
 		"isFisheye": "Fisheye",
 		"isMdSupported": "움직임",
 		"isIoSupported": "I/O",
 		"isH265": "H.265",
-		"isMultiSensor": "Multi Sensor",
+		"isMultiSensor": "다중 센서",
+		"haveAnalytics": "Analytics",
 		"camera": "카메라",
-		"multiSensorCamera": "Multi-Sensor Camera",
-		"encoder": "Encoder",
+		"multiSensorCamera": "다중 센서 카메라들",
+		"encoder": "인코더",
 		"dvr": "DVR",
-		"other": "Other",
-		"PTZ cameras": "PTZ cameras",
-		"Advanced PTZ cameras": "Advanced PTZ cameras",
-		"Fisheye Cameras": "Fisheye Cameras",
-		"Cameras supporting H.265": "Cameras supporting H.265",
-		"I / O modules": "I / O modules",
-		"Multisensor Cameras": "Multisensor Cameras",
-		"Cameras with 2-way audio": "Cameras with 2-way audio",
-		"Extra high resolution cameras": "Extra high resolution cameras",
+		"other": "기타",
+		"PTZ cameras": "PTZ 카메라들",
+		"Advanced PTZ cameras": "고급 PTZ 카메라",
+		"Fisheye Cameras": "어안렌즈 카메라들",
+		"Cameras supporting H.265": "H.265를 지원하는 카메라들",
+		"I / O modules": "I / O 모듈들",
+		"Multisensor Cameras": "다중 센서 카메라들",
+		"Cameras with 2-way audio": "양방향 오디오가있는 카메라들",
+		"Extra high resolution cameras": "초고해상도 카메라들",
 		"feedback": {
-			"a_Please": "Please",
-			"b_Link": "submit a request",
-			"c_Info": "for additional questions/concerns regarding supported devices."
+			"a_Please": "부디",
+			"b_Link": "요청하기",
+			"c_Info": "지원되는 장치에 관한 추가 질문 / 문제"
 		}
 	},
 	"integration": {
-		"previewRibbonText": "This page is a preview of the latest changes, and it doesn't match publicly available version.",
-		"backToEditText": "Back to the editing interfaces",
-		"Access Control": "Access Control",
-		"Connector": "Connector",
+		"previewRibbonText": "이 페이지는 최신 변경 사항의 미리보기이며 공개적으로 사용 가능한 버전과 일치하지 않습니다.",
+		"backToEditText": "편집 인터페이스로 돌아 가기",
+		"Access Control": "접근 제어",
+		"Connector": "커넥터",
 		"Data Analytics": "Data Analytics",
 		"Drone": "Drone",
 		"Health Monitor": "상태 모니터",
@@ -146,7 +148,7 @@
 		"feedback": "Make sure you include your camera model and manufacturer..."
 	},
 	"pageTitles": {
-		"supportedDevices": "Supported Devices",
+		"supportedDevices": "지원되는 기기들",
 		"integrations": "Integrations"
 	},
 	"dialogs": {
@@ -177,8 +179,9 @@
 		}
 	},
 	"privacyPolicy": {
-		"integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent.",
-		"ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent."
+		"integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent.",
+		"ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent."
 	},
-	"testedVersionsLabel": "Tested on {{vmsName}} version(s):"
+	"testedVersionLabel": "Tested on {{vmsName}} version:",
+	"testedVersionsLabel": "Tested on {{vmsName}} versions:"
 }

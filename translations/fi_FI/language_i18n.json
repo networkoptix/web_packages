@@ -3,14 +3,16 @@
     "Account Settings": "Tilin asetukset",
     "Account not activated": "Tili ei ole aktivoitu",
     "Account not found": "Tiliä ei löytynyt",
-    "Additional Requirements": "Additional Requirements",
+    "Actual number of events supported by this camera may be bigger.": "Actual number of events supported by this camera may be bigger.",
+    "Additional Requirements": "Lisävaatimukset",
     "Administration": "Ylläpito",
     "Advanced PTZ": "Kehittynyt PTZ",
-    "Advanced Search": "Advanced Search",
-    "All Integrations": "All Integrations",
+    "Advanced Search": "Kehittynyt haku",
+    "All Integrations": "Kaikki integraatiot",
     "All Systems": "Kaikki järjestelmät",
     "All cloud users will be deleted.": "Kaikki pilvipalvelun käyttäjät poistetaan.",
     "All results": "Kaikki tulokset",
+    "Analytics events": "Analytics events",
     "Any": "Mikä tahansa",
     "Audio": "Ääni",
     "Build Number:": "Ohjelmistoversion numero:",
@@ -23,10 +25,11 @@
     "Choose which properties should be visible to customers:": "Valitse, mitkä ominaisuudet näkyvät asiakkaille:",
     "Close": "Sulje",
     "Codec": "Koodekki",
+    "Collapse": "Collapse",
     "Contact": "Yhteyshenkilö",
     "Create Account": "Luo tili",
     "Create account": "Luo tili",
-    "Developer": "Developer",
+    "Developer": "Kehittäjä",
     "Disconnect": "Katkaise yhteys",
     "Disconnect System from %CLOUD_NAME%?": "Irrota järjestelmä %CLOUD_NAME%?",
     "Download": "Lataa",
@@ -35,7 +38,7 @@
     "Download Firefox": "Lataa Firefox",
     "Download Links:": "Latauslinkit:",
     "Downloads": "Lataukset",
-    "Draft": "Draft",
+    "Draft": "Luonnos",
     "Dual Streaming": "Dual Streaming",
     "Email": "Sähköposti",
     "Embed": "Sulautettu",
@@ -47,11 +50,11 @@
     "Firmware version": "Firmware versio",
     "Fisheye": "360-kamera",
     "Forgot password?": "Unohditko salasanan?",
-    "Get in touch": "Get in touch",
-    "How it works": "How it works",
-    "How to setup?": "How to setup?",
+    "Get in touch": "Ota yhteyttä",
+    "How it works": "Kuinka se toimii",
+    "How to setup?": "Kuinka asennetaan?",
     "I/O": "I/O",
-    "In Review": "In Review",
+    "In Review": "Tarkistuksessa",
     "In-Client Upgrade:": "Client-sovelluksen päivitys:",
     "Latest version": "Uusin versio",
     "Log In": "Kirjaudu sisään",
@@ -76,7 +79,7 @@
     "Release Notes": "Julkaisutiedot",
     "Release notes": "Julkaisutiedot",
     "Remember me": "Muista minut",
-    "Requirements": "Requirements",
+    "Requirements": "Vaatimukset",
     "Resend activation email": "Lähetä vahvistussähköposti uudelleen",
     "Resolution(max)": "Resoluutio (max)",
     "Save": "Tallenna",
@@ -89,8 +92,8 @@
     "Show All": "Näytä kaikki",
     "Some of your servers don't support cloud System merge because of outdated software version.": "Jotkin palvelimet eivät tue pilvijärjestelmän yhdistämistä vanhentuneiden ohjelmistoversioiden vuoksi.",
     "Support": "Tuki",
-    "Support E-mail": "Support E-mail",
-    "Support URL": "Support URL",
+    "Support E-mail": "Tuen sähköposti",
+    "Support URL": "Tueni-URL-osoite",
     "System name": "Järjestelmänimi",
     "System name is required": "Järjestelmän nimi on pakollinen",
     "System will be accessible through local network with local administrator account.": "Järjestelmä on käytettävissä paikallisen verkon kautta paikallisen järjestelmänvalvojan tilillä.",
@@ -98,23 +101,24 @@
     "Systems of such size may work but will be unstable and have troubles with updates and synchronisation.": "Tällaisen kokoiset järjestelmät voivat toimia, mutta ne ovat epävakaita ja niillä on ongelmia päivitysten ja synkronoinnin kanssa.",
     "Tags": "Tunnisteet",
     "Take the name and settings from": "Ota nimi ja asetukset",
-    "Terms of Use": "Terms of Use",
+    "Terms of Use": "Käyttöehdot",
     "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.": "Tämän käyttäjän tunnukset tulevat näkyviin! Sinun on luotava muokattu\"Julkisen käyttäjän\" rooli, johon valittu vain julkisen käytön kamerat minimi katselu-oikeuksilla.\n            Tällä \"Julkisella käyttäjällä\" ei pitäisi olla minkäänlaista järjestelmällistä pääsyä.",
     "There will be more than": "Tulee olemaan enemmän kuin",
-    "To": "To",
+    "This device has reported to support some analytics events, but we don't have exact information about them.": "This device has reported to support some analytics events, but we don't have exact information about them.",
+    "To": "Jotta",
     "Too many attempts. Try again in a minute.": "Liian monta yritystä. Yritä myöhemmin uudelleen.",
-    "Topic": "Topic",
+    "Topic": "Aihe",
     "Update them to the": "Päivitä ne",
     "Updated": "Päivitetty",
     "User": "Käyttäjä",
     "View": "Näytä",
     "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.": "Suosittelemme asentamaan Google Chromen tai Mozilla Firefoxin uusimmat versiot, mutta voit käyttää mitä tahansa muuta modernia web-selainta.",
-    "What's New?": "What's New?",
-    "Works with:": "Works with:",
+    "What's New?": "Mitä uutta?",
+    "Works with:": "Toimii:",
     "Wrong password": "Väärä salasana",
     "You can merge only those cloud Systems, where you have the \"Owner\" permissions.": "Voit yhdistää vain niitä pilvijärjestelmiä, joissa sinulla on \"Omistaja\" -oikeudet.",
     "You can only merge Systems where you are the owner.": "Voit yhdistää pilvijärjestelmät, joissa olet omistajana.",
-    "Your Email": "Your Email",
+    "Your Email": "Sähköpostiosoitteesi",
     "Your Name": "Nimesi",
     "Your browser is not supported": "Selaimesi ei ole tuettu",
     "andXMore": "... ja vielä {{value}}",
@@ -134,35 +138,35 @@
     "dialogs": {
         "merge": {
             "connectToCloud": "Yhdistä järjestelmä, johon haluat yhdistää tämän, <strong>{{cloudName}}</strong> tai yhdistä paikallisesti <strong>{{vmsName}}</strong> -Client-sovelluksen avulla.",
-            "mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from the <strong>{{primarySystem}}</strong>.",
-            "primaryCannotMerge": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} System.",
-            "primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}.",
-            "secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
+            "mergeConfirmation": "Olet yhdistämässä järjestelmiä <strong>{{primarySystem}}</strong> ja <strong>{{secondarySystem}}</strong>. Asetukset ja nimi otetaan <strong>{{primarySystem}}</strong>.",
+            "primaryCannotMerge": "Järjestelmässä {{targetSystem}} on uudempi ohjelmistoversio, joka ei ole yhteensopiva nykyisen järjestelmän kanssa. Päivitä nykyinen järjestelmä <a href=\"/download\" target=\"_blank\" translate>uusimpaan</a>: een yhdistääksesi se {{targetSystem}} järjestelmään.",
+            "primarySystemOffline": "Järjestelmä {{primarySystem}} on offline-tilassa eikä sitä voi yhdistää nykyiseen.",
+            "secondaryCannotMerge": "Järjestelmässä {{targetSystem}} on vanhempi ohjelmistoversio, joka ei ole yhteensopiva nykyisen järjestelmän kanssa. Päivitä nykyinen järjestelmä <a href=\"/download\" target=\"_blank\" translate>uusimpaan</a>: een yhdistääksesi se {{targetSystem}} järjestelmään.",
             "systemOffline": "Järjestelmä {{targetSystem}} on offline-tilassa eikä sitä voi yhdistää nykyiseen.",
             "systemUnavailable": "Järjestelmä {{targetSystem}} ei ole tällä hetkellä tavoitettavissa. Yritä uudelleen muutamassa minuutissa tai ota yhteyttä"
         },
         "message": {
-            "failedToSend": "Message has failed to send.",
-            "sent": "Message has been sent.",
+            "failedToSend": "Viestin lähetys epäonnistui.",
+            "sent": "Viesti on lähetetty.",
             "title": {
-                "integration": "Get in touch with {{companyName}}",
-                "ipvd_feedback_device": "Feedback about {{product}}",
-                "ipvd_feedback_page": "Feedback for cameras page"
+                "integration": "Ota yhteyttä {{companyName}}",
+                "ipvd_feedback_device": "Palaute{{product}}",
+                "ipvd_feedback_page": "Palaute kameran sivulle"
             },
             "topic": {
-                "contact_sales": "Contact sales for {{product}}",
-                "contact_support": "Contact support for {{product}}",
-                "integration_feedback": "Feedback for integration {{product}}",
-                "ipvd_feedback_device": "Feedback about {{product}}",
-                "ipvd_feedback_page": "Feedback for cameras page"
+                "contact_sales": "Ota yhteyttä {{product}} myyntiin",
+                "contact_support": "Ota yhteyttä tukeen {{product}}",
+                "integration_feedback": "Palaute integraatiosta {{product}}",
+                "ipvd_feedback_device": "Palaute{{product}}",
+                "ipvd_feedback_page": "Palaute kameran sivulle"
             }
         }
     },
     "dialogs.merge.connectToCloud": "Yhdistä järjestelmä, johon haluat yhdistää tämän, <strong>{{cloudName}}</strong> tai yhdistä paikallisesti <strong>{{vmsName}}</strong> -Client-sovelluksen avulla.",
-    "dialogs.merge.mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from the <strong>{{primarySystem}}</strong>.",
-    "dialogs.merge.primaryCannotMerge": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} System.",
+    "dialogs.merge.mergeConfirmation": "Olet yhdistämässä järjestelmiä <strong>{{primarySystem}}</strong> ja <strong>{{secondarySystem}}</strong>. Asetukset ja nimi otetaan <strong>{{primarySystem}}</strong>.",
+    "dialogs.merge.primaryCannotMerge": "Järjestelmässä {{targetSystem}} on uudempi ohjelmistoversio, joka ei ole yhteensopiva nykyisen järjestelmän kanssa. Päivitä nykyinen järjestelmä <a href=\"/download\" target=\"_blank\" translate>uusimpaan</a>: een yhdistääksesi se {{targetSystem}} järjestelmään.",
     "dialogs.merge.primarySystemOffline": "dialogs.merge.primarySystemOffline",
-    "dialogs.merge.secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
+    "dialogs.merge.secondaryCannotMerge": "Järjestelmässä {{targetSystem}} on vanhempi ohjelmistoversio, joka ei ole yhteensopiva nykyisen järjestelmän kanssa. Päivitä nykyinen järjestelmä <a href=\"/download\" target=\"_blank\" translate>uusimpaan</a>: een yhdistääksesi se {{targetSystem}} järjestelmään.",
     "dialogs.merge.systemOffline": "dialogs.merge.systemOffline",
     "dialogs.merge.systemUnavailable": "Järjestelmä {{targetSystem}} ei ole tällä hetkellä tavoitettavissa. Yritä uudelleen muutamassa minuutissa tai ota yhteyttä",
     "disclaimer": "Tämä on osittainen luettelo automaattisen raportin tuottavista laitteista {{value}}, jotka hyväksytty anonyymeille verkonkäyttäjille. Täydellinen lista tuetuista valmistajista ja malleista on suurempi.",
@@ -194,7 +198,7 @@
                 "supported": "Ubuntu 14.04 LTS, 16.04 LTS"
             },
             "mac": {
-                "label": "Mac OS",
+                "label": "Mac OSX",
                 "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
             },
             "macos": {
@@ -208,7 +212,7 @@
             },
             "windows": {
                 "label": "Windows",
-                "supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+                "supported": "7, 8, 8,1, 10, Server 2008, Server 2012"
             }
         },
         "mobile": {
@@ -266,6 +270,7 @@
             "c_Info": "lisäkysymyksiä / huolia tuetuista laitteista."
         },
         "hardwareType": "Tyyppi",
+        "haveAnalytics": "Analytics",
         "isAptzSupported": "Kehittynyt PTZ",
         "isAptzSupportedShort": "Kehittyneempi PTZ",
         "isAudioSupported": "Ääni",
@@ -293,14 +298,15 @@
         "integrations": "Integraatiot",
         "supportedDevices": "Tuetut laitteet"
     },
-    "phoneNumberWithLabel": "Tel: {{number}}",
+    "phoneNumberWithLabel": "Puh: {{number}}",
     "privacyPolicy": {
-        "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent.",
-        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent."
+        "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent.",
+        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent."
     },
     "search": {
         "Any": "Mikä tahansa",
         "Search": "Etsi",
+        "analytics": "Analytics",
         "filter applied": "suodatinta käytetty",
         "filters applied": "suodattimia käytetty",
         "hardwareType": "Tyyppi",
@@ -313,5 +319,6 @@
     },
     "servers in the merged System.": "yhdistetyn järjestelmän palvelimet.",
     "support": "tuki",
-    "testedVersionsLabel": "Tested on {{vmsName}} version(s):"
+    "testedVersionLabel": "Tested on {{vmsName}} version:",
+    "testedVersionsLabel": "Tested on {{vmsName}} versions:"
 }

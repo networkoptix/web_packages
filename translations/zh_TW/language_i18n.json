@@ -3,6 +3,7 @@
     "Account Settings": "帳號設定",
     "Account not activated": "帳號未啟動",
     "Account not found": "未找到該帳戶",
+    "Actual number of events supported by this camera may be bigger.": "Actual number of events supported by this camera may be bigger.",
     "Additional Requirements": "Additional Requirements",
     "Administration": "Administration",
     "Advanced PTZ": "Advanced PTZ",
@@ -11,6 +12,7 @@
     "All Systems": "所有系統",
     "All cloud users will be deleted.": "雲端上的所有使用者都將被刪除.",
     "All results": "All results",
+    "Analytics events": "Analytics events",
     "Any": "Any",
     "Audio": "音源",
     "Build Number:": "版本號碼:",
@@ -23,6 +25,7 @@
     "Choose which properties should be visible to customers:": "請選擇客戶可享有哪些權限：",
     "Close": "關閉​​​",
     "Codec": "Codec",
+    "Collapse": "Collapse",
     "Contact": "Contact",
     "Create Account": "新建帳號",
     "Create account": "新建帳號",
@@ -101,6 +104,7 @@
     "Terms of Use": "Terms of Use",
     "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.": "此用戶的身分驗證資訊將被公開！您必須創建一個自定義的“一般用戶”角色，該角色僅限共用攝影機的存取權限\n            ，並且只能被分配所需的最低查看權限。\n此\n            “一般用戶”不應被交予任何的系統存取權限。",
     "There will be more than": "將有更多的",
+    "This device has reported to support some analytics events, but we don't have exact information about them.": "This device has reported to support some analytics events, but we don't have exact information about them.",
     "To": "To",
     "Too many attempts. Try again in a minute.": "嘗試次數過多，請稍後再試。",
     "Topic": "Topic",
@@ -266,6 +270,7 @@
             "c_Info": "for additional questions/concerns regarding supported devices."
         },
         "hardwareType": "型態",
+        "haveAnalytics": "Analytics",
         "isAptzSupported": "Advanced PTZ",
         "isAptzSupportedShort": "Adv. PTZ",
         "isAudioSupported": "音源",
@@ -295,12 +300,13 @@
     },
     "phoneNumberWithLabel": "Tel: {{number}}",
     "privacyPolicy": {
-        "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent.",
-        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent."
+        "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent.",
+        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent."
     },
     "search": {
         "Any": "Any",
         "Search": "搜尋",
+        "analytics": "Analytics",
         "filter applied": "filter applied",
         "filters applied": "filters applied",
         "hardwareType": "型態",
@@ -313,5 +319,6 @@
     },
     "servers in the merged System.": "合併系統中的伺服器。",
     "support": "支援",
-    "testedVersionsLabel": "Tested on {{vmsName}} version(s):"
+    "testedVersionLabel": "Tested on {{vmsName}} version:",
+    "testedVersionsLabel": "Tested on {{vmsName}} versions:"
 }

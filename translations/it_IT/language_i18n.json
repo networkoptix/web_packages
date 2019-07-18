@@ -3,6 +3,7 @@
     "Account Settings": "Impostazioni dell'account",
     "Account not activated": "Account non attivato",
     "Account not found": "Account non trovato",
+    "Actual number of events supported by this camera may be bigger.": "Actual number of events supported by this camera may be bigger.",
     "Additional Requirements": "Requisiti addizionali",
     "Administration": "Amministrazione",
     "Advanced PTZ": "PTZ avanzato",
@@ -11,6 +12,7 @@
     "All Systems": "Tutti i sistemi",
     "All cloud users will be deleted.": "Tutti gli utenti cloud saranno cancellati.",
     "All results": "Tutti i risultati",
+    "Analytics events": "Analytics events",
     "Any": "Qualsiasi",
     "Audio": "Audio",
     "Build Number:": "Numero build:",
@@ -23,6 +25,7 @@
     "Choose which properties should be visible to customers:": "Scegli quali proprietà dovrebbero essere visibili ai clienti:",
     "Close": "Chiudere",
     "Codec": "Codec",
+    "Collapse": "Collapse",
     "Contact": "Contatto",
     "Create Account": "Creare un account",
     "Create account": "Creare un account",
@@ -101,6 +104,7 @@
     "Terms of Use": "Condizioni d'uso",
     "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.": "Le credenziali di questo utente saranno esposte! È necessario creare un ruolo personalizzato \"Utente pubblico\" con accesso solo\n            alle telecamere selezionate per uso pubblico e assegnare solo le autorizzazioni di visualizzazione minime richieste. L'\n            \"utente pubblico\" non dovrebbe avere accesso a livello di sistema di alcun tipo.",
     "There will be more than": "Ci saranno più di",
+    "This device has reported to support some analytics events, but we don't have exact information about them.": "This device has reported to support some analytics events, but we don't have exact information about them.",
     "To": "A",
     "Too many attempts. Try again in a minute.": "Troppi tentativi. Riprova tra un minuto.",
     "Topic": "Argomento",
@@ -266,6 +270,7 @@
             "c_Info": "per ulteriori domande / dubbi sui dispositivi supportati."
         },
         "hardwareType": "Tipo",
+        "haveAnalytics": "Analytics",
         "isAptzSupported": "PTZ avanzato",
         "isAptzSupportedShort": "Adv. PTZ",
         "isAudioSupported": "Audio",
@@ -295,12 +300,13 @@
     },
     "phoneNumberWithLabel": "Tel: {{number}}",
     "privacyPolicy": {
-        "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent.",
-        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent."
+        "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent.",
+        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent."
     },
     "search": {
         "Any": "Qualsiasi",
         "Search": "Ricerca",
+        "analytics": "Analytics",
         "filter applied": "filtro applicato",
         "filters applied": "filtri applicati",
         "hardwareType": "Tipo",
@@ -313,5 +319,6 @@
     },
     "servers in the merged System.": "server nel sistema unito.",
     "support": "supporto",
-    "testedVersionsLabel": "Tested on {{vmsName}} version(s):"
+    "testedVersionLabel": "Tested on {{vmsName}} version:",
+    "testedVersionsLabel": "Tested on {{vmsName}} versions:"
 }

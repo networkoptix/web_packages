@@ -200,7 +200,7 @@
     "successDeleted": "{{systemName}} rendszer sikeresen törölve a fiókból",
     "mergeFailed": "A rendszeregyesítés sikertelen",
     "mergeStart": "A rendszerek egyesülnek",
-    "mergeSuccess": "System merge completed",
+    "mergeSuccess": "A rendszer egyesítése befejeződött",
     "permissionsRemoved": "{{email}} engedélyei vissavonva",
     "unknownName": "Ismeretlen név a rendszerhez (felhő egyesítése okozta)"
   },

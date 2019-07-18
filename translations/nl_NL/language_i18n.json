@@ -3,6 +3,7 @@
     "Account Settings": "Accountinstellingen",
     "Account not activated": "Account is niet geactiveerd",
     "Account not found": "Account niet gevonden",
+    "Actual number of events supported by this camera may be bigger.": "Actual number of events supported by this camera may be bigger.",
     "Additional Requirements": "Additional Requirements",
     "Administration": "Beheer",
     "Advanced PTZ": "Geavanceerde PTZ",
@@ -11,6 +12,7 @@
     "All Systems": "Alle systemen",
     "All cloud users will be deleted.": "Alle cloud gebruikers zullen worden verwijderd.",
     "All results": "Alle resultaten",
+    "Analytics events": "Analytics events",
     "Any": "Elke",
     "Audio": "Audio",
     "Build Number:": "Buildnummer:",
@@ -23,6 +25,7 @@
     "Choose which properties should be visible to customers:": "Kies welke eigenschappen zichtbaar moeten zijn voor klanten:",
     "Close": "Sluiten",
     "Codec": "Codec",
+    "Collapse": "Collapse",
     "Contact": "Contact",
     "Create Account": "Account aanmaken",
     "Create account": "Accounts aanmaken",
@@ -101,6 +104,7 @@
     "Terms of Use": "Terms of Use",
     "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.": "De inloggegevens van deze gebruiker worden zichtbaar! U moet een aangepaste rol \"Openbare Gebruiker\" maken met alleen toegang voor de camera's die zijn geselecteerd voor openbaar gebruik en waaraan alleen de minimaal vereiste weergaverechten zijn toegewezen. Deze \"Openbare Gebruiker\" mag geen systeembrede toegang hebben.",
     "There will be more than": "Er zal meer zijn dan",
+    "This device has reported to support some analytics events, but we don't have exact information about them.": "This device has reported to support some analytics events, but we don't have exact information about them.",
     "To": "To",
     "Too many attempts. Try again in a minute.": "Te veel pogingen. Probeer het later opnieuw.",
     "Topic": "Topic",
@@ -142,18 +146,18 @@
             "systemUnavailable": "Systeem {{targetSystem}} is momenteel niet bereikbaar. Probeer het over een paar minuten opnieuw of neem contact op met"
         },
         "message": {
-            "failedToSend": "Message has failed to send.",
-            "sent": "Message has been sent.",
+            "failedToSend": "Bericht versturen mislukt.",
+            "sent": "Het Bericht werd verstuurd.",
             "title": {
                 "integration": "Get in touch with {{companyName}}",
-                "ipvd_feedback_device": "Feedback about {{product}}",
+                "ipvd_feedback_device": "Feedback over {{product}}",
                 "ipvd_feedback_page": "Feedback for cameras page"
             },
             "topic": {
                 "contact_sales": "Contact sales for {{product}}",
                 "contact_support": "Contact support for {{product}}",
                 "integration_feedback": "Feedback for integration {{product}}",
-                "ipvd_feedback_device": "Feedback about {{product}}",
+                "ipvd_feedback_device": "Feedback over {{product}}",
                 "ipvd_feedback_page": "Feedback for cameras page"
             }
         }
@@ -266,6 +270,7 @@
             "c_Info": "voor aanvullende vragen/opmerkingen over ondersteunde apparaten."
         },
         "hardwareType": "Type",
+        "haveAnalytics": "Analytics",
         "isAptzSupported": "Geavanceerde PTZ",
         "isAptzSupportedShort": "Geav. PTZ",
         "isAudioSupported": "Audio",
@@ -295,12 +300,13 @@
     },
     "phoneNumberWithLabel": "Tel: {{number}}",
     "privacyPolicy": {
-        "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent.",
-        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent."
+        "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent.",
+        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent."
     },
     "search": {
         "Any": "Elke",
         "Search": "Zoeken",
+        "analytics": "Analytics",
         "filter applied": "filter toegepast",
         "filters applied": "filters toegepast",
         "hardwareType": "Type",
@@ -313,5 +319,6 @@
     },
     "servers in the merged System.": "servers in het samengevoegde systeem.",
     "support": "ondersteuning",
-    "testedVersionsLabel": "Tested on {{vmsName}} version(s):"
+    "testedVersionLabel": "Tested on {{vmsName}} version:",
+    "testedVersionsLabel": "Tested on {{vmsName}} versions:"
 }

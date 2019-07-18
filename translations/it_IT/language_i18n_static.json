@@ -10,7 +10,8 @@
 		"vendors": "produttori",
 		"hardwareType": "Tipo",
 		"hardwareTypes": "tipo",
-		"minResolution": "Risoluzione minima"
+		"minResolution": "Risoluzione minima",
+		"analytics": "Analytics"
 	},
 	"cameraFilters": {
 		"ptz": "Telecamere PTZ",
@@ -113,6 +114,7 @@
 		"isIoSupported": "I/O",
 		"isH265": "H.265",
 		"isMultiSensor": "Multi sensore",
+		"haveAnalytics": "Analytics",
 		"camera": "Telecamera / e",
 		"multiSensorCamera": "Telecamera multisensore",
 		"encoder": "Encoder",
@@ -160,25 +162,26 @@
 			"systemUnavailable": "Il sistema {{targetSystem}} è attualmente irraggiungibile. Riprova tra qualche minuto o contatta"
 		},
 		"message": {
-			"failedToSend": "Message has failed to send.",
-			"sent": "Message has been sent.",
+			"failedToSend": "Impossibile inviare il messaggio.",
+			"sent": "Il messaggio è stato inviato.",
 			"title": {
-				"integration": "Get in touch with {{companyName}}",
-				"ipvd_feedback_page": "Feedback for cameras page",
-				"ipvd_feedback_device": "Feedback about {{product}}"
+				"integration": "Contatta {{companyName}}",
+				"ipvd_feedback_page": "Feedback per la pagina delle telecamere",
+				"ipvd_feedback_device": "Feedback su {{product}}"
 			},
 			"topic": {
-				"contact_sales": "Contact sales for {{product}}",
-				"contact_support": "Contact support for {{product}}",
-				"integration_feedback": "Feedback for integration {{product}}",
-				"ipvd_feedback_page": "Feedback for cameras page",
-				"ipvd_feedback_device": "Feedback about {{product}}"
+				"contact_sales": "Contatta le vendite per {{product}}",
+				"contact_support": "Contatta l'assistenza per {{product}}",
+				"integration_feedback": "Feedback per l'integrazione {{product}}",
+				"ipvd_feedback_page": "Feedback per la pagina delle telecamere",
+				"ipvd_feedback_device": "Feedback su {{product}}"
 			}
 		}
 	},
 	"privacyPolicy": {
-		"integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent.",
-		"ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent."
+		"integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent.",
+		"ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent."
 	},
-	"testedVersionsLabel": "Tested on {{vmsName}} version(s):"
+	"testedVersionLabel": "Tested on {{vmsName}} version:",
+	"testedVersionsLabel": "Tested on {{vmsName}} versions:"
 }

@@ -3,6 +3,7 @@
     "Account Settings": "Nastavení účtu",
     "Account not activated": "Účet není aktivován",
     "Account not found": "Účet nebyl nalezen",
+    "Actual number of events supported by this camera may be bigger.": "Actual number of events supported by this camera may be bigger.",
     "Additional Requirements": "Additional Requirements",
     "Administration": "Administration",
     "Advanced PTZ": "Advanced PTZ",
@@ -11,6 +12,7 @@
     "All Systems": "Všechny systémy",
     "All cloud users will be deleted.": "Všichni uživatelé cloudu budou smazáni.",
     "All results": "All results",
+    "Analytics events": "Analytics events",
     "Any": "Any",
     "Audio": "Zvuk",
     "Build Number:": "Číslo sestavení:",
@@ -23,6 +25,7 @@
     "Choose which properties should be visible to customers:": "Vyberte, které vlastnosti mají být viditelné pro zákazníky:",
     "Close": "Zavřít",
     "Codec": "Codec",
+    "Collapse": "Collapse",
     "Contact": "Contact",
     "Create Account": "Vytvořit účet",
     "Create account": "Vytvořit účet",
@@ -101,6 +104,7 @@
     "Terms of Use": "Terms of Use",
     "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.": "Pověření tohoto uživatele budou zveřejněna! Vytvořte vlastní účet „Veřejný uživatel“ s přístupem pouze\n            ke kamerám vybraným pro veřejné použití a přidělite pouze minimální požadovaná oprávnění ke sledování. Tento\n            \"veřejný uživatel\" by neměl mít systémový přístup jakéhokoli druhu.",
     "There will be more than": "Bude víc než",
+    "This device has reported to support some analytics events, but we don't have exact information about them.": "This device has reported to support some analytics events, but we don't have exact information about them.",
     "To": "To",
     "Too many attempts. Try again in a minute.": "Příliš mnoho pokusů. Zkuste to znovu za chvíli.",
     "Topic": "Topic",
@@ -266,6 +270,7 @@
             "c_Info": "for additional questions/concerns regarding supported devices."
         },
         "hardwareType": "Typ",
+        "haveAnalytics": "Analytics",
         "isAptzSupported": "Advanced PTZ",
         "isAptzSupportedShort": "Adv. PTZ",
         "isAudioSupported": "Zvuk",
@@ -295,12 +300,13 @@
     },
     "phoneNumberWithLabel": "Tel: {{number}}",
     "privacyPolicy": {
-        "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent.",
-        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent."
+        "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent.",
+        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent."
     },
     "search": {
         "Any": "Any",
         "Search": "Hledat",
+        "analytics": "Analytics",
         "filter applied": "filter applied",
         "filters applied": "filters applied",
         "hardwareType": "Typ",
@@ -313,5 +319,6 @@
     },
     "servers in the merged System.": "servery na sloučeném systému.",
     "support": "podpora",
-    "testedVersionsLabel": "Tested on {{vmsName}} version(s):"
+    "testedVersionLabel": "Tested on {{vmsName}} version:",
+    "testedVersionsLabel": "Tested on {{vmsName}} versions:"
 }

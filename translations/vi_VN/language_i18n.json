@@ -3,6 +3,7 @@
     "Account Settings": "Cài đặt tài khoản",
     "Account not activated": "Tài khoản không được kích hoạt",
     "Account not found": "Không tìm thấy tài khoản",
+    "Actual number of events supported by this camera may be bigger.": "Actual number of events supported by this camera may be bigger.",
     "Additional Requirements": "Additional Requirements",
     "Administration": "Administration",
     "Advanced PTZ": "Advanced PTZ",
@@ -11,6 +12,7 @@
     "All Systems": "Tất cả Hệ thống",
     "All cloud users will be deleted.": "Tất cả các tài khoản đám mây sẽ bị xóa.",
     "All results": "All results",
+    "Analytics events": "Analytics events",
     "Any": "Any",
     "Audio": "Âm thanh",
     "Build Number:": "Số phiên bản:",
@@ -23,6 +25,7 @@
     "Choose which properties should be visible to customers:": "Chọn những thuộc tính sẽ được hiển thị cho khách hàng:",
     "Close": "Gần",
     "Codec": "Codec",
+    "Collapse": "Collapse",
     "Contact": "Contact",
     "Create Account": "Tạo tài khoản",
     "Create account": "Tạo tài khoản",
@@ -59,7 +62,7 @@
     "Log in to %CLOUD_NAME%": "Đăng nhập vào %CLOUD_NAME%",
     "Merge Systems": "Hợp nhất hệ thống",
     "Merge current System with": "Hợp nhất các hệ thống hiện tại với",
-    "Message": "Message",
+    "Message": "Tin nhắn",
     "Motion Detection": "Phát hiện chuyển động",
     "Multi Sensor": "Multi Sensor",
     "Nothing Found": "Nothing Found",
@@ -101,6 +104,7 @@
     "Terms of Use": "Terms of Use",
     "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.": "Thông tin đăng nhập của người dùng này sẽ được tiết lộ! Bạn phải tạo vai trò \"Public User\" tùy chỉnh chỉ với quyền truy cập\n            cho các camera được chọn để sử dụng công cộng và chỉ được gán các quyền xem tối thiểu được yêu cầu. Người dùng\n            \"Public User\" này không nên có quyền truy cập trên toàn hệ thống.",
     "There will be more than": "Sẽ có nhiều hơn",
+    "This device has reported to support some analytics events, but we don't have exact information about them.": "This device has reported to support some analytics events, but we don't have exact information about them.",
     "To": "To",
     "Too many attempts. Try again in a minute.": "Quá nhiều lần thử. Vui lòng thử lại sau một phút.",
     "Topic": "Topic",
@@ -266,6 +270,7 @@
             "c_Info": "for additional questions/concerns regarding supported devices."
         },
         "hardwareType": "Kiểu",
+        "haveAnalytics": "Analytics",
         "isAptzSupported": "Advanced PTZ",
         "isAptzSupportedShort": "Adv. PTZ",
         "isAudioSupported": "Âm thanh",
@@ -295,12 +300,13 @@
     },
     "phoneNumberWithLabel": "Tel: {{number}}",
     "privacyPolicy": {
-        "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent.",
-        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent."
+        "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent.",
+        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent."
     },
     "search": {
         "Any": "Any",
         "Search": "Tìm kiếm",
+        "analytics": "Analytics",
         "filter applied": "filter applied",
         "filters applied": "filters applied",
         "hardwareType": "Kiểu",
@@ -313,5 +319,6 @@
     },
     "servers in the merged System.": "các máy chủ trong Hệ thống được hợp nhất.",
     "support": "hỗ trợ",
-    "testedVersionsLabel": "Tested on {{vmsName}} version(s):"
+    "testedVersionLabel": "Tested on {{vmsName}} version:",
+    "testedVersionsLabel": "Tested on {{vmsName}} versions:"
 }

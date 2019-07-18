@@ -10,7 +10,8 @@
 		"vendors": "יצרנים",
 		"hardwareType": "סוג",
 		"hardwareTypes": "סוגים",
-		"minResolution": "רזולוציה מינימלית"
+		"minResolution": "רזולוציה מינימלית",
+		"analytics": "Analytics"
 	},
 	"cameraFilters": {
 		"ptz": "מצלמות PTZ",
@@ -113,6 +114,7 @@
 		"isIoSupported": "I / O",
 		"isH265": "H.265",
 		"isMultiSensor": "מרובה חיישנים",
+		"haveAnalytics": "Analytics",
 		"camera": "מצלמה",
 		"multiSensorCamera": "מצלמה עם מספר חיישנים",
 		"encoder": "דוחס",
@@ -152,33 +154,34 @@
 	"dialogs": {
 		"merge": {
 			"connectToCloud": "חבר מערכת שברצונך למזג עם מערכת זו <strong>{{cloudName}}</strong> או מזג מקומי באמצעות <strong>{{vmsName}}</strong> לקוח.",
-			"mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from the <strong>{{primarySystem}}</strong>.",
-			"primaryCannotMerge": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} System.",
-			"primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}.",
-			"secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
+			"mergeConfirmation": "אתה עומד למזג מערכות <strong>{{primarySystem}}</strong> ו - <strong>{{secondarySystem}}</strong>. ההגדרות והשם יילקחו מ <strong>{{primarySystem}}</strong>.",
+			"primaryCannotMerge": "למערכת {{targetSystem}} יש גרסת תוכנה חדשה יותר שאינה תואמת למערכת הנוכחית. עדכן את המערכת הנוכחית <a href=\"/download\" target=\"_blank\" translate>לגרסא המתאימה</a> כדי למזג אותו עם {{targetSystem}}.",
+			"primarySystemOffline": "מערכת {{primarySystem}} במצב לא מקוון ולא ניתן למזגה עם הנוכחית.",
+			"secondaryCannotMerge": "למערכת {{targetSystem}} יש גרסת תוכנה ישנה יותר שאינה תואמת למערכת הנוכחית. עדכן {{targetSystem}} ל <a href=\"/download\" target=\"_blank\" translate>לגרסא האחרונה</a> על מנת למזג אותו עם הנוכחי.",
 			"systemOffline": "מערכת {{targetSystem}} במצב לא מקוון ולא ניתן למזגה עם הנוכחית.",
 			"systemUnavailable": "לא ניתן להגיע למערכת {{targetSystem}}. נסה שוב בעוד מספר דקות או צור קשר"
 		},
 		"message": {
-			"failedToSend": "Message has failed to send.",
-			"sent": "Message has been sent.",
+			"failedToSend": "שליחת ההודעה נכשלה.",
+			"sent": "ההודעה נשלחה.",
 			"title": {
-				"integration": "Get in touch with {{companyName}}",
-				"ipvd_feedback_page": "Feedback for cameras page",
-				"ipvd_feedback_device": "Feedback about {{product}}"
+				"integration": "צור קשר עם {{companyName}}",
+				"ipvd_feedback_page": "משוב עבור דף מצלמות",
+				"ipvd_feedback_device": "משוב על {{product}}"
 			},
 			"topic": {
-				"contact_sales": "Contact sales for {{product}}",
-				"contact_support": "Contact support for {{product}}",
-				"integration_feedback": "Feedback for integration {{product}}",
-				"ipvd_feedback_page": "Feedback for cameras page",
-				"ipvd_feedback_device": "Feedback about {{product}}"
+				"contact_sales": "צור קשר עם מחלקת המכירות עבור {{product}}",
+				"contact_support": "צור קשר עם התמיכה בנוגע ל- {{product}}",
+				"integration_feedback": "משוב לאינטגרציה {{product}}",
+				"ipvd_feedback_page": "משוב עבור דף מצלמות",
+				"ipvd_feedback_device": "משוב על {{product}}"
 			}
 		}
 	},
 	"privacyPolicy": {
-		"integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent.",
-		"ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent."
+		"integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent.",
+		"ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent."
 	},
-	"testedVersionsLabel": "Tested on {{vmsName}} version(s):"
+	"testedVersionLabel": "Tested on {{vmsName}} version:",
+	"testedVersionsLabel": "Tested on {{vmsName}} versions:"
 }

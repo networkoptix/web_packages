@@ -1,8 +1,8 @@
-There is a new version for {{ message.product }}({{message.product_type}}) to review.
+Uusi versio {{ message.product }}({{message.product_type}}) on tarkistettavana.
 
 Napsauta linkkiä, jolla voit tarkastella luonnosta {{ message.id }} {{ message.product }}
 
-Link to review: {{ config.portal_url }}/admin/cms/productcustomizationreview/{{ message.id }}/change/
+Linkki tarkistettavaksi: {{ config.portal_url }}/ admin / cms / version /{{ message.id }}/
 
 Tällä sivulla voit
 Luoda esikatselun nähdäksesi uusimmat muutokset.

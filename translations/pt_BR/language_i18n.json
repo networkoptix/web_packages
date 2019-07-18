@@ -3,6 +3,7 @@
     "Account Settings": "Configurações da conta",
     "Account not activated": "Conta não ativada",
     "Account not found": "Conta não encontrada",
+    "Actual number of events supported by this camera may be bigger.": "Actual number of events supported by this camera may be bigger.",
     "Additional Requirements": "Additional Requirements",
     "Administration": "Administração",
     "Advanced PTZ": "PTZ avançado",
@@ -11,6 +12,7 @@
     "All Systems": "Todos os sistemas",
     "All cloud users will be deleted.": "All cloud users will be deleted.",
     "All results": "Todos os resultados",
+    "Analytics events": "Analytics events",
     "Any": "Qualquer",
     "Audio": "Audio",
     "Build Number:": "Número de compilação:",
@@ -23,6 +25,7 @@
     "Choose which properties should be visible to customers:": "Escolha quais propriedades devem estar visíveis para os clientes:",
     "Close": "Fechar",
     "Codec": "Codec",
+    "Collapse": "Collapse",
     "Contact": "Contato",
     "Create Account": "Criar Conta",
     "Create account": "Criar conta",
@@ -101,6 +104,7 @@
     "Terms of Use": "Terms of Use",
     "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.": "As credenciais deste utilizador serão expostas! Deve criar uma função \"Utilizador público\" personalizado apenas com acesso\n            às câmaras selecionadas para uso público e atribuídas apenas as permissões de visualização mínimas necessárias. Este\n            \"Utilizador Público\" não deve ter acesso a todo o sistema.",
     "There will be more than": "Haverá mais do que",
+    "This device has reported to support some analytics events, but we don't have exact information about them.": "This device has reported to support some analytics events, but we don't have exact information about them.",
     "To": "To",
     "Too many attempts. Try again in a minute.": "Muitas tentativas. Tente novamente em um minuto.",
     "Topic": "Topic",
@@ -142,18 +146,18 @@
             "systemUnavailable": "O sistema {{targetSystem}} está atualmente inacessível. Tente novamente em alguns minutos ou contato"
         },
         "message": {
-            "failedToSend": "Message has failed to send.",
-            "sent": "Message has been sent.",
+            "failedToSend": "Falha no envio da mensagem.",
+            "sent": "A mensagem foi enviada.",
             "title": {
                 "integration": "Get in touch with {{companyName}}",
-                "ipvd_feedback_device": "Feedback about {{product}}",
+                "ipvd_feedback_device": "Comentários sobre {{product}}",
                 "ipvd_feedback_page": "Feedback for cameras page"
             },
             "topic": {
                 "contact_sales": "Contact sales for {{product}}",
                 "contact_support": "Contact support for {{product}}",
                 "integration_feedback": "Feedback for integration {{product}}",
-                "ipvd_feedback_device": "Feedback about {{product}}",
+                "ipvd_feedback_device": "Comentários sobre {{product}}",
                 "ipvd_feedback_page": "Feedback for cameras page"
             }
         }
@@ -266,6 +270,7 @@
             "c_Info": "for additional questions/concerns regarding supported devices."
         },
         "hardwareType": "Tipo",
+        "haveAnalytics": "Analytics",
         "isAptzSupported": "PTZ avançado",
         "isAptzSupportedShort": "Adv. PTZ",
         "isAudioSupported": "Audio",
@@ -295,12 +300,13 @@
     },
     "phoneNumberWithLabel": "Tel: {{number}}",
     "privacyPolicy": {
-        "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent.",
-        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent."
+        "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent.",
+        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent."
     },
     "search": {
         "Any": "Qualquer",
         "Search": "Pesquisa",
+        "analytics": "Analytics",
         "filter applied": "filter applied",
         "filters applied": "filters applied",
         "hardwareType": "Tipo",
@@ -313,5 +319,6 @@
     },
     "servers in the merged System.": "servidores no sistema mesclado.",
     "support": "suporte",
-    "testedVersionsLabel": "Tested on {{vmsName}} version(s):"
+    "testedVersionLabel": "Tested on {{vmsName}} version:",
+    "testedVersionsLabel": "Tested on {{vmsName}} versions:"
 }

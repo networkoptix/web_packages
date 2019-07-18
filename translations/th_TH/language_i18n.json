@@ -3,6 +3,7 @@
     "Account Settings": "การตั้งค่าบัญชี",
     "Account not activated": "บัญชีไม่เปิดใช้งาน",
     "Account not found": "ไม่พบบัญชีนี้",
+    "Actual number of events supported by this camera may be bigger.": "Actual number of events supported by this camera may be bigger.",
     "Additional Requirements": "Additional Requirements",
     "Administration": "Administration",
     "Advanced PTZ": "PTZ ขั้นสูง",
@@ -11,6 +12,7 @@
     "All Systems": "ระบบทั้งหมด",
     "All cloud users will be deleted.": "ผู้ใช้ระบบคลาวด์ทั้งหมดจะถูกลบ",
     "All results": "ผลลัพธ์ทั้งหมด",
+    "Analytics events": "Analytics events",
     "Any": "รายการใดก็ได้",
     "Audio": "เสียง",
     "Build Number:": "หมายเลข:",
@@ -23,6 +25,7 @@
     "Choose which properties should be visible to customers:": "เลือกคุณสมบัติที่ควรจะมองเห็นได้สำหรับลูกค้า:",
     "Close": "ปิด",
     "Codec": "ตัวแปลงสัญญาณ",
+    "Collapse": "Collapse",
     "Contact": "รายชื่อผู้ติดต่อ",
     "Create Account": "สร้างบัญชี",
     "Create account": "สร้างบัญชี",
@@ -101,6 +104,7 @@
     "Terms of Use": "Terms of Use",
     "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.": "ข้อมูลประจำตัวของผู้ใช้รายนี้จะเปิดเผย! คุณต้องสร้างบทบาท \"ผู้ใช้สาธารณะ\" ที่กำหนดเองโดยมีการเข้าถึงเฉพาะ\n            สำหรับกล้องที่เลือกเพื่อการใช้งานสาธารณะและกำหนดสิทธิ์การดูขั้นต่ำที่จำเป็นเท่านั้น นี้\n            \"ผู้ใช้ที่สาธารณะ\" ไม่ควรมีการเข้าถึงทั้งระบบใด ๆ",
     "There will be more than": "จะมีมากกว่านั้น",
+    "This device has reported to support some analytics events, but we don't have exact information about them.": "This device has reported to support some analytics events, but we don't have exact information about them.",
     "To": "To",
     "Too many attempts. Try again in a minute.": "คุณพยายามเข้าระบบมากเกินไป กรุณารออีกสักพักแล้วเข้าใหม่",
     "Topic": "Topic",
@@ -142,18 +146,18 @@
             "systemUnavailable": "ระบบ {{targetSystem}} ไม่สามารถเข้าถึงได้ในขณะนี้ ลองอีกครั้งในไม่กี่นาทีหรือติดต่อ"
         },
         "message": {
-            "failedToSend": "Message has failed to send.",
-            "sent": "Message has been sent.",
+            "failedToSend": "ไม่สามารถส่งข้อความได้",
+            "sent": "ส่งข้อความแล้ว",
             "title": {
                 "integration": "Get in touch with {{companyName}}",
-                "ipvd_feedback_device": "Feedback about {{product}}",
+                "ipvd_feedback_device": "ข้อเสนอแนะเกี่ยวกับ {{product}}",
                 "ipvd_feedback_page": "Feedback for cameras page"
             },
             "topic": {
                 "contact_sales": "Contact sales for {{product}}",
                 "contact_support": "Contact support for {{product}}",
                 "integration_feedback": "Feedback for integration {{product}}",
-                "ipvd_feedback_device": "Feedback about {{product}}",
+                "ipvd_feedback_device": "ข้อเสนอแนะเกี่ยวกับ {{product}}",
                 "ipvd_feedback_page": "Feedback for cameras page"
             }
         }
@@ -266,6 +270,7 @@
             "c_Info": "for additional questions/concerns regarding supported devices."
         },
         "hardwareType": "ประเภท",
+        "haveAnalytics": "Analytics",
         "isAptzSupported": "PTZ ขั้นสูง",
         "isAptzSupportedShort": "Adv PTZ",
         "isAudioSupported": "เสียง",
@@ -295,12 +300,13 @@
     },
     "phoneNumberWithLabel": "Tel: {{number}}",
     "privacyPolicy": {
-        "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent.",
-        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent."
+        "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent.",
+        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent."
     },
     "search": {
         "Any": "รายการใดก็ได้",
         "Search": "ค้นหา",
+        "analytics": "Analytics",
         "filter applied": "filter applied",
         "filters applied": "filters applied",
         "hardwareType": "ประเภท",
@@ -313,5 +319,6 @@
     },
     "servers in the merged System.": "เซิร์ฟเวอร์ในระบบที่ถูกผสาน",
     "support": "ทีมช่วยเหลือ",
-    "testedVersionsLabel": "Tested on {{vmsName}} version(s):"
+    "testedVersionLabel": "Tested on {{vmsName}} version:",
+    "testedVersionsLabel": "Tested on {{vmsName}} versions:"
 }

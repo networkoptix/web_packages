@@ -10,7 +10,8 @@
 		"vendors": "manufacturers",
 		"hardwareType": "Tipo",
 		"hardwareTypes": "types",
-		"minResolution": "Minimum Resolution"
+		"minResolution": "Minimum Resolution",
+		"analytics": "Analytics"
 	},
 	"cameraFilters": {
 		"ptz": "Câmeras PTZ",
@@ -113,6 +114,7 @@
 		"isIoSupported": "I/O",
 		"isH265": "H.265",
 		"isMultiSensor": "Multi Sensor",
+		"haveAnalytics": "Analytics",
 		"camera": "Câmara",
 		"multiSensorCamera": "Multi-Sensor Camera",
 		"encoder": "Encoder",
@@ -160,25 +162,26 @@
 			"systemUnavailable": "O sistema {{targetSystem}} está atualmente inacessível. Tente novamente em alguns minutos ou contato"
 		},
 		"message": {
-			"failedToSend": "Message has failed to send.",
-			"sent": "Message has been sent.",
+			"failedToSend": "Falha no envio da mensagem.",
+			"sent": "A mensagem foi enviada.",
 			"title": {
 				"integration": "Get in touch with {{companyName}}",
 				"ipvd_feedback_page": "Feedback for cameras page",
-				"ipvd_feedback_device": "Feedback about {{product}}"
+				"ipvd_feedback_device": "Comentários sobre {{product}}"
 			},
 			"topic": {
 				"contact_sales": "Contact sales for {{product}}",
 				"contact_support": "Contact support for {{product}}",
 				"integration_feedback": "Feedback for integration {{product}}",
 				"ipvd_feedback_page": "Feedback for cameras page",
-				"ipvd_feedback_device": "Feedback about {{product}}"
+				"ipvd_feedback_device": "Comentários sobre {{product}}"
 			}
 		}
 	},
 	"privacyPolicy": {
-		"integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent.",
-		"ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent."
+		"integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent.",
+		"ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent."
 	},
-	"testedVersionsLabel": "Tested on {{vmsName}} version(s):"
+	"testedVersionLabel": "Tested on {{vmsName}} version:",
+	"testedVersionsLabel": "Tested on {{vmsName}} versions:"
 }
