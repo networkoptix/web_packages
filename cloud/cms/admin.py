@@ -401,7 +401,9 @@ class ProductAdmin(CMSAdmin):
             'app_label': self.model._meta.app_label,
             'opts': self.model._meta,
             'cl': self.get_changelist_instance(request),
-            'product': self.get_object(request, product_id, None)
+            'product': self.get_object(request, product_id, None),
+            'site_header': admin.site.site_header,
+            'site_title': admin.site.site_title
         }
 
         if not context['product']:
@@ -441,6 +443,8 @@ class ProductAdmin(CMSAdmin):
         context['opts'] = target_context._meta
         context['product_opts'] = product._meta
         context['original'] = target_context
+        context['site_header'] = admin.site.site_header
+        context['site_title'] = admin.site.site_title
 
         form = CustomContextForm(initial={'language': context['language_code'], 'context': context_id})
         form.add_fields(product, target_context, Language.objects.get(code=context['language_code']), request.user)
