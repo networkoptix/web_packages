@@ -401,6 +401,7 @@ class ProductAdmin(CMSAdmin):
             'app_label': self.model._meta.app_label,
             'opts': self.model._meta,
             'cl': self.get_changelist_instance(request),
+            'has_permission': admin.site.has_permission(request),
             'product': self.get_object(request, product_id, None),
             'site_header': admin.site.site_header,
             'site_title': admin.site.site_title
@@ -443,6 +444,7 @@ class ProductAdmin(CMSAdmin):
         context['opts'] = target_context._meta
         context['product_opts'] = product._meta
         context['original'] = target_context
+        context['has_permission'] = admin.site.has_permission(request)
         context['site_header'] = admin.site.site_header
         context['site_title'] = admin.site.site_title
 
