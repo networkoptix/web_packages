@@ -5,7 +5,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Component({
     selector: 'push-notifications-component',
-    templateUrl: 'push-notifications.component.html'
+    templateUrl: 'push-notifications.component.html',
+    styleUrls: ['push-notifications.component.scss']
 })
 
 export class PushComponent implements OnInit {
@@ -78,11 +79,11 @@ export class PushComponent implements OnInit {
         );
         this.afMessaging.messages.subscribe(
             (message: any) => {
+                this.receivedMessages.push(message);
+                const _notify = new Notification(message.notification.title, ...message.notification);
                 if (message.data) {
                     message.data = JSON.stringify(message.data);
                 }
-                this.receivedMessages.push(message);
-                const _notify = new Notification(message.notification.title, {body: message.notification.body});
                 this.updateSubStates();
             });
     }
@@ -148,15 +149,26 @@ export class PushComponent implements OnInit {
             });
     }
 
-    onSendNotification() {
-        let payload = '';
-        let options = '';
-        if (this.notification.payload) {
-            payload = JSON.parse(this.notification.payload);
+    validateJsonInput(control) {
+        if (control.value) {
+            try {
+                const val = JSON.parse(control.value);
+                if (typeof val === 'object' && !Array.isArray(val)) {
+                    return val;
+                } else {
+                    control.setErrors({incorrect: true});
+                }
+            } catch (error) {
+                control.setErrors({incorrect: true});
+            }
+        } else {
+            return '';
         }
-        if (this.notification.options) {
-            options = JSON.parse(this.notification.options);
-        }
+    }
+
+    onSendNotification(form) {
+        const payload = this.validateJsonInput(form.controls.payload);
+        const options = this.validateJsonInput(form.controls.options);
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
