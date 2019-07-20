@@ -3,7 +3,7 @@ from rest_framework import exceptions, status
 from rest_framework.authentication import BasicAuthentication, SessionAuthentication
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.exceptions import APIException
-from rest_framework.generics import GenericAPIView
+from rest_framework.generics import GenericAPIView, ListAPIView
 from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, UpdateModelMixin
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
@@ -14,7 +14,8 @@ from api.helpers.exceptions import handle_exceptions, APIRequestException, APISe
 from api.models import Account
 from notifications.tasks import send_push_notification
 from notifications.models import PushNotification, PushDevice, PushSubscription
-from notifications.serializers import NotificationSerializer, RegisterDeviceSerializer, SubscriptionSerializer
+from notifications.serializers import NotificationSerializer, RegisterDeviceSerializer, SubscriptionSerializer, \
+    DeviceSubscriptionsSerializer
 
 import json
 
@@ -118,6 +119,19 @@ def register_device(request):
             raise APIRequestException('Invalid Parameters', error_code=ErrorCodes.not_acceptable, error_data=error_data)
 
         return api_success()
+
+
+class DeviceSubscriptionListView(ListAPIView):
+    serializer_class = DeviceSubscriptionsSerializer
+    authentication_classes = (CloudBasicAuthentication, CloudSessionAuthentication)
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        queryset = PushDevice.objects.filter(user=self.request.user)
+        device_token = self.request.query_params.get('deviceToken', None)
+        if device_token is not None:
+            queryset = queryset.filter(registration_id=device_token)
+        return queryset
 
 
 class Subscribe(UpdateModelMixin, CreateModelMixin, RetrieveModelMixin, GenericAPIView):

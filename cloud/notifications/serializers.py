@@ -84,3 +84,18 @@ class SubscriptionSerializer(serializers.Serializer):
             )
             subs.update(active=False)
         return instance
+
+
+class SubscriptionModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PushSubscription
+        fields = ['system_id', 'active']
+
+
+class DeviceSubscriptionsSerializer(serializers.ModelSerializer):
+    subscriptions = SubscriptionModelSerializer(many=True, read_only=True, source='pushsubscription_set')
+    deviceToken = serializers.CharField(source='registration_id', read_only=True)
+
+    class Meta:
+        model = PushDevice
+        fields = ['name', 'model', 'deviceToken', 'subscriptions']

@@ -174,15 +174,16 @@ def set_subscriptions_from_targets(notification_object, request_data):
     )['push_subscription_auto_active']
     for account in target_accounts:
         targets.remove(account.email)
-        if account.is_active and not PushSubscription.objects.filter(account=account, system_id=system_id).exists():
-            devices = PushDevice.objects.filter(user__email=account.email)
-            for device in devices:
-                active = system['ownerAccountEmail'] == account.email or auto_active
-                subscription = PushSubscription.objects.create(
-                    system_id=system_id, account=account, active=active, device=device
-                )
-                if subscription.active:
-                    notification_object.subscriptions.add(subscription)
+        if account.is_active:
+            if not PushSubscription.objects.filter(account=account, system_id=system_id).exists():
+                devices = PushDevice.objects.filter(user__email=account.email)
+                for device in devices:
+                    active = system['ownerAccountEmail'] == account.email or auto_active
+                    subscription = PushSubscription.objects.create(
+                        system_id=system_id, account=account, active=active, device=device
+                    )
+                    if subscription.active:
+                        notification_object.subscriptions.add(subscription)
         else:
             log_push_result(notification_object, 'User {} is not activated'.format(account.email), logging.WARNING)
 

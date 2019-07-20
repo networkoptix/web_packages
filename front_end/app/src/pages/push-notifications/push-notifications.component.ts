@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { AngularFireMessaging } from '@angular/fire/messaging';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { timer } from 'rxjs/observable/timer';
 
 @Component({
     selector: 'push-notifications-component',
@@ -12,10 +13,12 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 export class PushComponent implements OnInit {
     private notification: any;
     private systems: any;
+    private devices: any;
+    private deviceSubscriptions: any;
     private deviceToken: any;
     private registered: boolean;
     private sendStatus: string;
-    private receivedMessages = [];
+    private receivedMessages: any;
     location: Location;
 
     private setupDefaults() {
@@ -26,6 +29,9 @@ export class PushComponent implements OnInit {
             options: ''
         };
         this.registered = undefined;
+        this.devices = [];
+        this.receivedMessages = [];
+        this.deviceSubscriptions = {};
     }
 
     constructor(@Inject('account') private account: any,
@@ -59,6 +65,7 @@ export class PushComponent implements OnInit {
     }
 
     setSystems() {
+        timer(10000, 10000).subscribe(() => this.updateSubStates());
         this.systemsProvider.forceUpdateSystems().then(
             () => {
                 this.systems = this.systemsProvider.systems;
@@ -89,19 +96,22 @@ export class PushComponent implements OnInit {
     }
 
     updateSubStates() {
-        this.systems.forEach((system) => {
-            this.http.get('/notifications/subscribe', {
-                params: {
-                    deviceToken: this.deviceToken,
-                    systemId: system.id
-                }
-            }).subscribe((response: any) => {
-                    system.subState = response.isActive;
-                },
-                error => {
-                    system.subState = undefined;
+        this.http.get('/notifications/subscriptions').subscribe(
+            (response: any) => {
+                this.devices = [];
+                this.deviceSubscriptions = {};
+                response.forEach((device) => {
+                    this.devices.push(device);
+                    this.deviceSubscriptions[device.deviceToken] = {};
+                    device.subscriptions.forEach((subscription) => {
+                        const system = this.systemsProvider.getSystem(subscription.system_id);
+                        this.deviceSubscriptions[device.deviceToken][subscription.system_id] = subscription.active;
+                    });
                 });
-        });
+            },
+            error => {
+                this.deviceSubscriptions = {};
+            });
     }
 
     onAllowNotifications() {
@@ -126,6 +136,7 @@ export class PushComponent implements OnInit {
             model: window.navigator.userAgent
         }, {headers}).subscribe(() => {
             this.registered = true;
+            this.updateSubStates();
         });
     }
 
@@ -192,17 +203,17 @@ export class PushComponent implements OnInit {
             });
     }
 
-    onToggleSubscribe(system) {
-        system.subState = system.subState !== undefined ? !system.subState : true;
+    onToggleSubscribe(deviceToken, systemId) {
+        const subState = this.deviceSubscriptions[deviceToken][systemId];
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
             })
         };
         this.http.post('/notifications/subscribe', {
-            systemId: system.id,
-            deviceToken: this.deviceToken,
-            isActive: system.subState
+            systemId: systemId,
+            deviceToken: deviceToken,
+            isActive: subState
         }, httpOptions).subscribe(
             (response: any) => {},
             (error: any) => {
