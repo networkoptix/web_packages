@@ -1,3 +1,6 @@
+import collections
+from math import log2
+
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from django.core.cache import cache, caches
@@ -308,6 +311,38 @@ def get_ipvd(request):
         for camera in cameras:
             camera["firmwares"] = json.loads(camera["firmwares"]) if camera["firmwares"] else {}
 
+            firmwares = []
+            max_firmware_count = 0
+            total_camera_count = 0
+
+            for firmware in camera["firmwares"]:
+                if re.match('[<>]+', firmware):
+                    continue
+
+                count = camera["firmwares"][firmware]
+
+                firmwares.append({'count': count, 'name': firmware})
+
+                total_camera_count += count
+                if count > max_firmware_count:
+                    max_firmware_count = count
+
+            for firmware in firmwares:
+                percentage = round((firmware["count"] / total_camera_count) * 100)
+                percentage = str(percentage) + "%" if percentage else "< 1"
+                firmware["percentage"] = percentage
+
+                pow_var = log2(200) / log2(max_firmware_count) if max_firmware_count > 200 else 1
+                length = round(100 * pow(firmware["count"] / max_firmware_count, pow_var))
+                length = length if length >= 2 else 2
+                firmware["barLength"] = length
+
+            firmwares.sort(key=lambda x: x["count"], reverse=True)
+
+            camera["firmwares"] = firmwares
+            camera["maxFirmwareCount"] = max_firmware_count
+            camera["totalCameraCount"] = total_camera_count
+
             camera["isH265"] = camera["primaryCodec"] == 'H.265'
 
             if camera["hardwareType"] == "Camera" and camera["isMultiSensor"]:
@@ -335,7 +370,6 @@ def get_ipvd(request):
                     camera_names.append(camera["vendor"].replace(" ", "") + alias.replace(" ", ""))
 
             for event in camera['analyticsEvents']:
-                camera['haveAnalytics'] = True
                 analytics_events.add(event)
 
         num_cameras = len(set(camera_names))

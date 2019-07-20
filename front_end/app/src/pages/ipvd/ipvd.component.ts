@@ -62,7 +62,7 @@ export class NxIpvdComponent implements OnInit {
             'vendor', 'model', 'hardwareType',
             'maxResolution', 'maxFps', 'primaryCodec', 'isAudioSupported',
             'isTwAudioSupported', 'isPtzSupported', 'isAptzSupported',
-            'isFisheye', 'isMdSupported', 'isIoSupported', 'count', 'resolutionArea'
+            'isFisheye', 'isMdSupported', 'isIoSupported', 'hasAnalytics', 'count', 'resolutionArea'
         ];
 
         this.breakpoint = '(max-width: 767px)';
@@ -211,7 +211,7 @@ export class NxIpvdComponent implements OnInit {
         this.filterModel.tags = this.CONFIG.ipvd.searchTags;
 
         if (!this.showAnalytics) {
-            this.filterModel.tags = this.filterModel.tags.filter((tag) => tag.id !== 'haveAnalytics');
+            this.filterModel.tags = this.filterModel.tags.filter((tag) => tag.id !== 'hasAnalytics');
         }
 
         this.filterModel.tags.forEach(tag => tag.label = this.lang.ipvd[tag.id]);
@@ -378,30 +378,6 @@ export class NxIpvdComponent implements OnInit {
             if (this.breakpointObserver.isMatched(this.breakpoint)) {
                 this.mobileDetailMode = true;
             }
-
-            let firmwaresArray = [];
-            let maxFirmwareCount = 0;
-            let totalCameraCount = 0;
-
-            Object.keys(this.activeCamera.firmwares).forEach(key => {
-                const count = this.activeCamera.firmwares[key];
-                firmwaresArray.push({ name: key, count });
-
-                totalCameraCount += count;
-                if (count > maxFirmwareCount) {
-                    maxFirmwareCount = count;
-                }
-            });
-
-            firmwaresArray = firmwaresArray.sort((a, b) => {
-                return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
-            });
-
-            firmwaresArray.reverse();
-
-            this.activeCamera.maxFirmwareCount = maxFirmwareCount;
-            this.activeCamera.totalCameraCount = totalCameraCount;
-            this.activeCamera.firmwares = firmwaresArray;
 
             this.toggleCamview = true;
         }, 10);

@@ -13,7 +13,6 @@ import { NxUriService }    from '../../../../services/uri.service';
 export class CamViewComponent implements OnInit {
 
     @Input() activeCamera: any;
-    // private _activeCamera: any;
     @Output() public onCloseView: EventEmitter<any> = new EventEmitter<any>();
     @Output() public onFeedbackClick: EventEmitter<any> = new EventEmitter<any>();
 
@@ -44,18 +43,15 @@ export class CamViewComponent implements OnInit {
                 this.showAnalytics = this.CONFIG.ipvd.showAnalyticsEvents || this.debug || this.beta;
             });
 
-        this.firmwareCleanUp();
-        // this.firmwaresToShow = this.CONFIG.ipvd.firmwaresToShow;
-        // this.analyticsToShow = this.CONFIG.ipvd.analyticsToShow;
+        this.firmwaresToShow = this.CONFIG.ipvd.firmwaresToShow;
+        this.analyticsToShow = this.CONFIG.ipvd.analyticsToShow;
         this.showAllFirmware = false;
         this.showAllEvents = false;
     }
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes.activeCamera) {
-            this.firmwareCleanUp();
-            this.firmwaresToShow = this.CONFIG.ipvd.firmwaresToShow;
-            this.analyticsToShow = this.CONFIG.ipvd.analyticsToShow;
+            this.firmwares = changes.activeCamera.currentValue.firmwares || [];
             this.showAllFirmware = false;
             this.showAllEvents = false;
         }
@@ -69,23 +65,5 @@ export class CamViewComponent implements OnInit {
     closeView() {
         this.activeCamera = undefined;
         this.onCloseView.emit(this.activeCamera);
-    }
-
-    firmwareCleanUp() {
-        if (this.activeCamera.firmwares) {
-            this.firmwares = this.activeCamera.firmwares.filter((fw) => !fw.name.match(/[<>]+/g));
-        }
-    }
-
-    firmwarePercentage(count, total) {
-        const percentage = Math.round((count / total) * 100);
-        return percentage ? percentage + '%' : '< 1';
-    }
-
-    firmwareLength(count, maxFirmware) {
-        const pow = maxFirmware > 200 ? Math.log2(200) / Math.log2(maxFirmware) : 1;
-        const length = Math.round(100 * Math.pow(count / maxFirmware, pow));
-
-        return (length >= 2) ? length : 2;
     }
 }

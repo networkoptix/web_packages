@@ -146,14 +146,30 @@
                         </nx-bool-icon>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-7" translate>Analytics</div>
+                    <div class="col-5">
+                        <nx-bool-icon
+                                param="hasAnalytics"
+                                [value]="activeCamera.hasAnalytics"
+                                align="left">
+                        </nx-bool-icon>
+                    </div>
+                </div>
             </div>
         </nx-section>
 
         <nx-section *ngIf="showAnalytics">
             <div class="row">
-                <div class="col-7 card--body-heading"><h4 translate>Analytics events</h4></div>
+                <div class="col-7 card--body-heading">
+                    <h4>
+                        <span *ngIf="activeCamera.analyticsEvents.length">{{activeCamera.analyticsEvents.length}}&nbsp;</span>
+                        <span *ngIf="activeCamera.analyticsEvents.length == 1" translate>Analytics Event</span>
+                        <span *ngIf="activeCamera.analyticsEvents.length > 1" translate>Analytics Events</span>
+                    </h4>
+                </div>
             </div>
-            <div class="row" *ngIf="activeCamera.haveAnalytics">
+            <div class="row" *ngIf="activeCamera.hasAnalytics">
                 <div class="analytics-label col-7" *ngFor="let event of activeCamera.analyticsEvents  | slice:0:analyticsToShow">
                     {{event}}
                 </div>
@@ -176,7 +192,7 @@
                 </div>
             </div>
 
-            <div class="row" *ngIf="!activeCamera.haveAnalytics">
+            <div class="row" *ngIf="!activeCamera.hasAnalytics">
                 <div class="info-label col-12" translate>
                     This device has reported to support some analytics events, but we don't have exact information about them.
                 </div>
@@ -193,12 +209,12 @@
                 <ng-container *ngFor="let firmware of firmwares | slice:0:firmwaresToShow">
                     <div class="row" *ngIf="firmware.name">
                         <div class="col-7 no-linewrap" title="{{ firmware.name }}">{{ firmware.name }}</div>
-                        <div class="col-5" title="{{ firmwarePercentage(firmware.count, activeCamera.totalCameraCount) }}">
+                        <div class="col-5" title="{{ firmware.percentage }}">
                             <div class="icon w-100" role="img" >
                                 <canvas class="icon-canvas" height="4"></canvas>
                                 <svg class="img-responsive icon-svg" height="4">
                                     <line x1="0" y1="8"
-                                          [attr.x2]="firmwareLength(firmware.count, activeCamera.maxFirmwareCount)"
+                                          [attr.x2]="firmware.barLength"
                                           y2="8" class="firmware-line"
                                           stroke-dasharray="8, 2"></line>
                                 </svg>

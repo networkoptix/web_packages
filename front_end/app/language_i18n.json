@@ -12,7 +12,9 @@
     "All Systems": "All Systems",
     "All cloud users will be deleted.": "All cloud users will be deleted.",
     "All results": "All results",
-    "Analytics events": "Analytics events",
+    "Analytics": "Analytics",
+    "Analytics Event": "Analytics Event",
+    "Analytics Events": "Analytics Events",
     "Any": "Any",
     "Audio": "Audio",
     "Build Number:": "Build Number:",
@@ -270,7 +272,7 @@
             "c_Info": "for additional questions/concerns regarding supported devices."
         },
         "hardwareType": "Type",
-        "haveAnalytics": "Analytics",
+        "hasAnalytics": "Analytics",
         "isAptzSupported": "Advanced PTZ",
         "isAptzSupportedShort": "Adv. PTZ",
         "isAudioSupported": "Audio",
@@ -287,6 +289,7 @@
         "multiSensorCamera": "Multi-Sensor Camera",
         "other": "Other",
         "primaryCodec": "Codec",
+        "resolutionArea": "Area",
         "vendor": "Manufacturer"
     },
     "latest build": "latest build",
