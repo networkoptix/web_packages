@@ -404,7 +404,8 @@ class ProductAdmin(CMSAdmin):
             'has_permission': admin.site.has_permission(request),
             'product': self.get_object(request, product_id, None),
             'site_header': admin.site.site_header,
-            'site_title': admin.site.site_title
+            'site_title': admin.site.site_title,
+            'site_url': admin.site.site_url
         }
 
         if not context['product']:
@@ -447,6 +448,7 @@ class ProductAdmin(CMSAdmin):
         context['has_permission'] = admin.site.has_permission(request)
         context['site_header'] = admin.site.site_header
         context['site_title'] = admin.site.site_title
+        context['site_url'] = admin.site.site_url
 
         form = CustomContextForm(initial={'language': context['language_code'], 'context': context_id})
         form.add_fields(product, target_context, Language.objects.get(code=context['language_code']), request.user)
