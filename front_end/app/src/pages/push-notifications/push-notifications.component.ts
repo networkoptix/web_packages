@@ -104,7 +104,6 @@ export class PushComponent implements OnInit {
                     this.devices.push(device);
                     this.deviceSubscriptions[device.deviceToken] = {};
                     device.subscriptions.forEach((subscription) => {
-                        const system = this.systemsProvider.getSystem(subscription.system_id);
                         this.deviceSubscriptions[device.deviceToken][subscription.system_id] = subscription.active;
                     });
                 });
