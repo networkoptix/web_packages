@@ -250,6 +250,7 @@ ${IPVD TITLE}                        //header//li[@class="active"]/a[contains(te
 ${IPVD SEARCH BAR}                   //ipvd//input[@name="query"]
 ${IPVD ADVANCED SEARCH BUTTON}       //ipvd//span[contains(text(),"${IPVD ADVANCED SEARCH BUTTON TEXT}")]
 ${IPVD MANFUACTURERS PANE}           //ipvd//header/span[contains(text(),"${IPVD MANUFACTURERS TEXT}")]/../../../..
+${IPVD AND MORE}                     ${IPVD MANFUACTURERS PANE}//div[@class="manufacture-info"]
 ${IPVD DEVICES PANE}                 //ipvd//header/span[contains(text(),"${IPVD DEVICES TEXT}")]/../../../..
 ${IPVD DEVICE DETAILS}               //ipvd//nx-cam-view
 ${IPVD DEVICE MAKE}                  ${IPVD DEVICE DETAILS}//div[@class="camera-vendor-model"]//span[1]

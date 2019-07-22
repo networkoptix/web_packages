@@ -67,6 +67,7 @@ Validate on IPVD page
     ...    ${IPVD SEARCH BAR}
     ...    ${IPVD ADVANCED SEARCH BUTTON}
     ...    ${IPVD MANFUACTURERS PANE}
+    ...    ${IPVD AND MORE}
     ...    ${IPVD DEVICES PANE}
 
 Open New Browser On Failure
