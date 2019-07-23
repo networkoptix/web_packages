@@ -93,9 +93,7 @@
     }
     
     .drop-container {
-        //@include media-breakpoint-up(lg) {
-            max-width: 992px;
-        //}
+        max-width: 992px;
         
         .drop {
             padding : 0 1rem 0 0;
@@ -105,10 +103,6 @@
         
             &:last-of-type {
                 padding-right : 0;
-
-            //    @include media-breakpoint-up(xxxl) {
-            //        padding-right : 1rem;
-            //    }
             }
         }
     }
