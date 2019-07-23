@@ -31,7 +31,8 @@ export class NxIpvdComponent implements OnInit {
     CONFIG: any = {};
     placeholder: string;
     data: any;
-    company: any;
+    company: string;
+    vmsName: string;
     vendors: any = [];
     resolution: string;
     itemsPerPage: number;
@@ -150,6 +151,7 @@ export class NxIpvdComponent implements OnInit {
                     this.title.setTitle(this.lang.pageTitles.supportedDevices);
 
                     this.company = this.CONFIG.companyName;
+                    this.vmsName = this.CONFIG.vmsName;
                     this.placeholder = this.lang.search.search_ipvd;
 
                     this.showAnalytics = this.CONFIG.ipvd.showAnalyticsEvents || this.debug || this.beta;

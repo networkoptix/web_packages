@@ -73,8 +73,8 @@
          *ngIf="vendors">
 
         <p *ngIf="CONFIG.feedbackEnabled && lang && lang.ipvd">
-            <span [translate]="'disclaimer'"
-                  [translateParams]="{value: company}">
+            <span [translate]="'ipvd.disclaimer'"
+                  [translateParams]="{companyName: company, vmsName: vmsName}">
             </span>
             <span>
                 {{lang.ipvd.feedback.a_Please}} <a href (click)="openFeedback('page')">{{lang.ipvd.feedback.b_Link}}</a> {{lang.ipvd.feedback.c_Info}}
