@@ -71,7 +71,7 @@ export class IpvdSearchService {
             const analyticsEvents = filter.multiselects.find(x => x.id === IpvdSearchService.ANALYTICS);
             if (analyticsEvents.selected.length) {
                 events = analyticsEvents.items.filter(x => {
-                    return !analyticsEvents.selected.includes(x.id);
+                    return analyticsEvents.selected.includes(x.id);
                 });
             }
         }
@@ -100,8 +100,8 @@ export class IpvdSearchService {
 
             if (events &&
                     events.length > 0 &&
-                    events.find(event => {
-                        return camera.analyticsEvents.indexOf(event.label) < 0;
+                    !events.some(event => {
+                        return camera.analyticsEvents.indexOf(event.label) >= 0;
                     })) {
 
                 return false;

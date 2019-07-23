@@ -272,7 +272,7 @@
             "c_Info": "for additional questions/concerns regarding supported devices."
         },
         "hardwareType": "Type",
-        "hasAnalytics": "Analytics",
+        "isAnalyticsSupported": "Analytics",
         "isAptzSupported": "Advanced PTZ",
         "isAptzSupportedShort": "Adv. PTZ",
         "isAudioSupported": "Audio",
@@ -310,15 +310,16 @@
         "Any": "Any",
         "Search": "Search",
         "analytics": "Analytics",
+        "analyticsSelected": "analytics events",
         "filter applied": "filter applied",
         "filters applied": "filters applied",
         "hardwareType": "Type",
-        "hardwareTypes": "types",
+        "hardwareTypes": "Types",
         "minResolution": "Minimum Resolution",
         "search_ipvd": "Search by model or manufacturer",
         "selected": "selected",
         "vendor": "Manufacturer",
-        "vendors": "manufacturers"
+        "vendors": "Manufacturers"
     },
     "servers in the merged System.": "servers in the merged System.",
     "support": "support",

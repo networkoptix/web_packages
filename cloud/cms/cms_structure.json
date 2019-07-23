@@ -817,7 +817,7 @@
                 "value": false
               },
               {
-                "id": "haveAnalytics",
+                "id": "isAnalyticsSupported",
                 "value": false
               }
             ]

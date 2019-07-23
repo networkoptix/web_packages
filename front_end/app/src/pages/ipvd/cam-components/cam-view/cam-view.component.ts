@@ -26,6 +26,7 @@ export class CamViewComponent implements OnInit {
     beta: any;
     params: any;
     showAnalytics: boolean;
+    showCameraAnalytics: boolean;
 
     constructor(private configService: NxConfigService,
                 private uri: NxUriService) {
@@ -41,6 +42,7 @@ export class CamViewComponent implements OnInit {
                 this.beta = params.beta === '' || false;
 
                 this.showAnalytics = this.CONFIG.ipvd.showAnalyticsEvents || this.debug || this.beta;
+                this.showCameraAnalytics = this.showAnalytics && this.activeCamera.isAnalyticsSupported
             });
 
         this.firmwaresToShow = this.CONFIG.ipvd.firmwaresToShow;
@@ -51,6 +53,7 @@ export class CamViewComponent implements OnInit {
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes.activeCamera) {
+            this.showCameraAnalytics = this.showAnalytics && changes.activeCamera.currentValue.isAnalyticsSupported;
             this.firmwares = changes.activeCamera.currentValue.firmwares || [];
             this.showAllFirmware = false;
             this.showAllEvents = false;

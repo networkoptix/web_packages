@@ -91,7 +91,9 @@ export class CamTableComponent implements OnChanges, OnInit {
             this.lang.ipvd.isFisheye,
             this.lang.ipvd.isMdSupported,
             this.lang.ipvd.isIoSupported,
-            this.lang.ipvd.count
+            this.lang.ipvd.isAnalyticsSupported,
+            this.lang.ipvd.count,
+            this.lang.ipvd.resolutionArea
         ];
 
         this.pagedItems = [];
@@ -124,14 +126,17 @@ export class CamTableComponent implements OnChanges, OnInit {
     toggleSort(param, keepURI) {
         let byParam;
 
-        if (param === 'maxResolution') {
-            byParam = NxUtilsService.byParam((elm) => {
-                return elm.resolutionArea;
-            }, !this.sortOrderASC);
+        if (param === 'maxResolution' ||
+                param === 'maxFps' ||
+                param === 'isAnalyticsSupported' ||
+                param === 'count') {
 
-        } else if (param === 'maxFps') {
             byParam = NxUtilsService.byParam((elm) => {
-                return elm[param];
+                if (param === 'maxResolution') {
+                    return elm.resolutionArea;
+                } else {
+                    return elm[param];
+                }
             }, !this.sortOrderASC);
 
         } else if (param === 'isFisheye' ||
@@ -201,7 +206,7 @@ export class CamTableComponent implements OnChanges, OnInit {
 
     filterAllowedParams() {
         // filter 'service' params
-        const serviceParams = ['count', 'resolutionArea'];
+        const serviceParams = ['count', 'resolutionArea', 'area'];
         this.allowedParameters = this.allowedParameters.filter((el) => !serviceParams.includes(el));
         this.cameraHeaders = this.cameraHeaders.filter((el) => !serviceParams.includes(el.toLowerCase()));
     }
@@ -329,6 +334,7 @@ export class CamTableComponent implements OnChanges, OnInit {
 
     setClickedRow(element) {
         if (element) {
+            this.uri.pageOffset = window.pageYOffset;
             this.selectedCamera = element.sortKey;
             this.onRowClick.emit(element);
         } else {

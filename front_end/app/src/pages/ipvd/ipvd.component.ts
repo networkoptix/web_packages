@@ -62,7 +62,7 @@ export class NxIpvdComponent implements OnInit {
             'vendor', 'model', 'hardwareType',
             'maxResolution', 'maxFps', 'primaryCodec', 'isAudioSupported',
             'isTwAudioSupported', 'isPtzSupported', 'isAptzSupported',
-            'isFisheye', 'isMdSupported', 'isIoSupported', 'hasAnalytics', 'count', 'resolutionArea'
+            'isFisheye', 'isMdSupported', 'isIoSupported', 'isAnalyticsSupported', 'count', 'resolutionArea'
         ];
 
         this.breakpoint = '(max-width: 767px)';
@@ -190,11 +190,12 @@ export class NxIpvdComponent implements OnInit {
 
             this.filterModel.multiselects.push(
                     {
-                        id      : 'analytics',
-                        label   : this.lang.search.analytics,
-                        singular: this.lang.search.analytics,
-                        items   : this.analytics,
-                        selected: []
+                        id                  : 'analytics',
+                        label               : this.lang.search.analytics,
+                        searchLabel         : this.lang.search.analyticsSelected,
+                        searchLabelSingular : '',
+                        items               : this.analytics,
+                        selected            : []
                     });
         }
     }
@@ -211,7 +212,7 @@ export class NxIpvdComponent implements OnInit {
         this.filterModel.tags = this.CONFIG.ipvd.searchTags;
 
         if (!this.showAnalytics) {
-            this.filterModel.tags = this.filterModel.tags.filter((tag) => tag.id !== 'hasAnalytics');
+            this.filterModel.tags = this.filterModel.tags.filter((tag) => tag.id !== 'isAnalyticsSupported');
         }
 
         this.filterModel.tags.forEach(tag => tag.label = this.lang.ipvd[tag.id]);

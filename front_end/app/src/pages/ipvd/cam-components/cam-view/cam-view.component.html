@@ -16,10 +16,11 @@
                 <pre class="no-padding" style="border:0;">{{ activeCamera.notes }}</pre>
             </div>
 
-            <a class="blue d-block" target="_blank"
-               href="https://www.google.com/search?q={{ activeCamera.vendor }}+{{ activeCamera.model }}">
-                <u translate>Search in google</u>
-            </a>
+            <div class="camview-link">
+                <a class="blue" target="_blank"
+                   href="https://www.google.com/search?q={{ activeCamera.vendor }}+{{ activeCamera.model }}"
+                    translate>Search in google</a>
+            </div>
 
             <div class="active-camera-info">
                 <div class="row">
@@ -150,8 +151,8 @@
                     <div class="col-7" translate>Analytics</div>
                     <div class="col-5">
                         <nx-bool-icon
-                                param="hasAnalytics"
-                                [value]="activeCamera.hasAnalytics"
+                                param="isAnalyticsSupported"
+                                [value]="activeCamera.isAnalyticsSupported"
                                 align="left">
                         </nx-bool-icon>
                     </div>
@@ -159,23 +160,23 @@
             </div>
         </nx-section>
 
-        <nx-section *ngIf="showAnalytics">
+        <nx-section *ngIf="showCameraAnalytics">
             <div class="row">
                 <div class="col-7 card--body-heading">
                     <h4>
                         <span *ngIf="activeCamera.analyticsEvents.length">{{activeCamera.analyticsEvents.length}}&nbsp;</span>
+                        <span *ngIf="activeCamera.analyticsEvents.length == 0 || activeCamera.analyticsEvents.length > 1" translate>Analytics Events</span>
                         <span *ngIf="activeCamera.analyticsEvents.length == 1" translate>Analytics Event</span>
-                        <span *ngIf="activeCamera.analyticsEvents.length > 1" translate>Analytics Events</span>
                     </h4>
                 </div>
             </div>
-            <div class="row" *ngIf="activeCamera.hasAnalytics">
+            <div class="row">
                 <div class="analytics-label col-7" *ngFor="let event of activeCamera.analyticsEvents  | slice:0:analyticsToShow">
                     {{event}}
                 </div>
             </div>
 
-            <div class="row mt-2" *ngIf="!showAllEvents && activeCamera.analyticsEvents.length > analyticsToShow">
+            <div class="row" *ngIf="!showAllEvents && activeCamera.analyticsEvents.length > analyticsToShow">
                 <div class="col-12">
                     <a href (click)="showAllEvents = true; analyticsToShow = activeCamera.analyticsEvents.length; false"
                        translate>Show All</a>
@@ -192,7 +193,7 @@
                 </div>
             </div>
 
-            <div class="row" *ngIf="!activeCamera.hasAnalytics">
+            <div class="row" *ngIf="!activeCamera.analyticsEvents.length">
                 <div class="info-label col-12" translate>
                     This device has reported to support some analytics events, but we don't have exact information about them.
                 </div>
@@ -240,7 +241,7 @@
         </nx-section>
 
         <nx-section>
-            <div>
+            <div class="camview-link">
                 <a href translate
                    (click)="sendFeedback()">Send feedback about this device
                 </a>

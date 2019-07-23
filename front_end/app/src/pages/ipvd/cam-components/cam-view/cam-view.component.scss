@@ -16,7 +16,8 @@
         color     : $dark9;
     }
     
-    a {
+    .camview-link {
+        height : 24px;
         padding-bottom  : 8px;
     }
     
@@ -40,13 +41,26 @@
         width   : 50%;
     }
     
-    .active-camera-info, .firmware-info {
-        .row {
-            display : flex;
-            align-items: center;
+    .active-camera-info {
+        & > .row {
+            display     : flex;
+            align-items : center;
+            line-height : 24px;
             
             & > div {
                 line-height : 24px;
+            }
+        }
+    }
+    
+    .firmware-info {
+        & > .row {
+            display     : flex;
+            align-items : center;
+            line-height : 20px;
+            
+            & > div {
+                line-height : 20px;
             }
         }
     }

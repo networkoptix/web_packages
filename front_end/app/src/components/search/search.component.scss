@@ -93,9 +93,9 @@
     }
     
     .drop-container {
-        @include media-breakpoint-up(md) {
-            max-width: $collapse-first-width;
-        }
+        //@include media-breakpoint-up(lg) {
+            max-width: 992px;
+        //}
         
         .drop {
             padding : 0 1rem 0 0;
@@ -105,12 +105,16 @@
         
             &:last-of-type {
                 padding-right : 0;
-                
-                @include media-breakpoint-up(xxl) {
-                    padding-right : 1rem;
-                }
+
+            //    @include media-breakpoint-up(xxxl) {
+            //        padding-right : 1rem;
+            //    }
             }
         }
+    }
+    
+    .search-tags {
+        margin-bottom: 4px !important;
     }
     
     .pagination {

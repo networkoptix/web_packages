@@ -7,11 +7,12 @@
 		"Any": "Any",
 		"selected": "selected",
 		"vendor": "Manufacturer",
-		"vendors": "manufacturers",
+		"vendors": "Manufacturers",
 		"hardwareType": "Type",
-		"hardwareTypes": "types",
+		"hardwareTypes": "Types",
 		"minResolution": "Minimum Resolution",
-		"analytics": "Analytics"
+		"analytics": "Analytics",
+		"analyticsSelected": "analytics events"
 	},
 	"cameraFilters": {
 		"ptz": "PTZ cameras",
@@ -115,7 +116,7 @@
 		"isIoSupported": "I/O",
 		"isH265": "H.265",
 		"isMultiSensor": "Multi Sensor",
-		"hasAnalytics": "Analytics",
+		"isAnalyticsSupported": "Analytics",
 		"camera": "Camera",
 		"multiSensorCamera": "Multi-Sensor Camera",
 		"encoder": "Encoder",
