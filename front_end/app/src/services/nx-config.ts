@@ -258,10 +258,10 @@ export class NxConfigService {
                 }
             },
             defaultPlatformNames                 : {
-                'arm-file'        : 'Arm',
+                'arm-64-file'        : 'ARM 64bit',
                 'linux-x64-file'  : 'Linux x64',
                 'macos-file'      : 'Mac OS',
-                'rpi-file'        : 'Raspberry Pi',
+                'arm-32-file'        : 'ARM 32bit',
                 'windows-x64-file': 'Windows x64',
                 'downloadableInstructions': 'Instructions / Manual'
             },
