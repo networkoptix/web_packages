@@ -82,10 +82,6 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
         custom_config = get_config(customization.name)
 
         footer_items = product.read_global_value('%FOOTER_ITEMS%')
-        if footer_items:
-            global_contexts = Context.objects.filter(is_global=True, product_type=product.product_type)
-            footer_items = process_global_contexts(product, footer_items, product.version_id(), False, global_contexts, {})
-
         integration_store_enabled = product.read_global_value("%INTEGRATION_STORE_ENABLED%")
 
         data = {

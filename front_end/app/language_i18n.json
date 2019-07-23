@@ -136,6 +136,15 @@
         "multiSensor": "Multi-sensor cameras",
         "ptz": "PTZ cameras"
     },
+    "defaultFooter": {
+        "About %CLOUD_NAME%": "About %CLOUD_NAME%",
+        "Download %VMS_NAME%": "Download %VMS_NAME%",
+        "Integrations": "Integrations",
+        "Privacy": "Privacy",
+        "Support": "Support",
+        "Supported Devices": "Supported Devices",
+        "Terms": "Terms"
+    },
     "devices": "devices",
     "dialogs": {
         "merge": {

@@ -26,6 +26,15 @@
 		"encoder": "Encoders",
 		"highRes": "Extra high resolution cameras"
 	},
+	"defaultFooter": {
+		"About %CLOUD_NAME%": "About %CLOUD_NAME%",
+		"Download %VMS_NAME%": "Download %VMS_NAME%",
+		"Integrations": "Integrations",
+		"Privacy": "Privacy",
+		"Support": "Support",
+		"Supported Devices": "Supported Devices",
+		"Terms": "Terms"
+	},
 	"downloads": {
 		"mobile": {
 			"ios": {
