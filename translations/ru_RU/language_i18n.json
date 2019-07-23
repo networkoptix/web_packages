@@ -12,7 +12,9 @@
     "All Systems": "Все системы",
     "All cloud users will be deleted.": "Все облачные пользователи будут удалены.",
     "All results": "Все результаты",
-    "Analytics events": "События аналитики",
+    "Analytics": "Analytics",
+    "Analytics Event": "Analytics Event",
+    "Analytics Events": "Analytics Events",
     "Any": "Любой",
     "Audio": "Аудио",
     "Build Number:": "Номер сборки:",
@@ -169,7 +171,6 @@
     "dialogs.merge.secondaryCannotMerge": "Система {{targetSystem}} имеет более старую версию программного обеспечения, несовместимую с текущей Системой. Обновите {{targetSystem}} до <a href=\"/download\" target=\"_blank\" translate>последней сборки</a> чтобы объединить ее с текущей.",
     "dialogs.merge.systemOffline": "dialogs.merge.systemOffline",
     "dialogs.merge.systemUnavailable": "Система {{targetSystem}} в данный момент недоступна. Повторите попытку через несколько минут или свяжитесь с",
-    "disclaimer": "Этот список ограничен устройствами, данные о которых автоматически предоставлены в {{value}} с согласия анонимных пользователей системы. Полный список поддерживаемых производителей и моделей может быть больше.",
     "downloads": {
         "appTypes": {
             "bundle": "Клиент и сервер",
@@ -262,6 +263,7 @@
         "PTZ cameras": "Камеры PTZ",
         "camera": "Камера",
         "count": "Кол-во",
+        "disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous.",
         "dvr": "DVR",
         "encoder": "Кодировщик",
         "feedback": {
@@ -270,7 +272,7 @@
             "c_Info": "с дополнительными вопросами/проблемами относительно поддерживаемых устройств."
         },
         "hardwareType": "Тип",
-        "haveAnalytics": "Аналитика",
+        "isAnalyticsSupported": "Analytics",
         "isAptzSupported": "Расширенный PTZ",
         "isAptzSupportedShort": "Расш. PTZ",
         "isAudioSupported": "Аудио",
@@ -287,8 +289,10 @@
         "multiSensorCamera": "Мультисенсорная камера",
         "other": "Другое",
         "primaryCodec": "Кодек",
+        "resolutionArea": "Area",
         "vendor": "Производитель"
     },
+    "ipvd.disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous.",
     "latest build": "последняя сборка",
     "manufacturers": "производители",
     "messageDialogPlaceholders": {
@@ -307,15 +311,16 @@
         "Any": "Любой",
         "Search": "Поиск",
         "analytics": "Аналитика",
+        "analyticsSelected": "analytics events",
         "filter applied": "фильтр применен",
         "filters applied": "фильтры применены",
         "hardwareType": "Тип",
-        "hardwareTypes": "типы",
+        "hardwareTypes": "Types",
         "minResolution": "Минимальное разрешение",
         "search_ipvd": "Поиск по модели или производителю",
         "selected": "выбраны",
         "vendor": "Производитель",
-        "vendors": "производители"
+        "vendors": "Manufacturers"
     },
     "servers in the merged System.": "серверы в объединенной системе.",
     "support": "техническая поддержка",

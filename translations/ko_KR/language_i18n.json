@@ -12,7 +12,9 @@
     "All Systems": "모든 시스템",
     "All cloud users will be deleted.": "모든 클라우드 사용자가 삭제됩니다.",
     "All results": "All results",
-    "Analytics events": "Analytics events",
+    "Analytics": "Analytics",
+    "Analytics Event": "Analytics Event",
+    "Analytics Events": "Analytics Events",
     "Any": "아무거나",
     "Audio": "오디오",
     "Build Number:": "빌드 번호:",
@@ -169,7 +171,6 @@
     "dialogs.merge.secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
     "dialogs.merge.systemOffline": "dialogs.merge.systemOffline",
     "dialogs.merge.systemUnavailable": "시스템 {{targetSystem}} 에 현재 연결할 수 없습니다. 몇 분 후에 다시 시도하거나 문의하십시오.",
-    "disclaimer": "This list is limited to actual devices auto-reporting data to {{value}}, as approved by anonymous system users. The complete list of supported manufacturers and models is greater in scope.",
     "downloads": {
         "appTypes": {
             "bundle": "클라이언트와 서버",
@@ -262,6 +263,7 @@
         "PTZ cameras": "PTZ 카메라들",
         "camera": "카메라",
         "count": "개수",
+        "disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous.",
         "dvr": "DVR",
         "encoder": "인코더",
         "feedback": {
@@ -270,7 +272,7 @@
             "c_Info": "지원되는 장치에 관한 추가 질문 / 문제"
         },
         "hardwareType": "형식",
-        "haveAnalytics": "Analytics",
+        "isAnalyticsSupported": "Analytics",
         "isAptzSupported": "고급 PTZ",
         "isAptzSupportedShort": "Adv. PTZ",
         "isAudioSupported": "오디오",
@@ -287,8 +289,10 @@
         "multiSensorCamera": "다중 센서 카메라들",
         "other": "기타",
         "primaryCodec": "코덱",
+        "resolutionArea": "Area",
         "vendor": "제조사"
     },
+    "ipvd.disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous.",
     "latest build": "최신 빌드",
     "manufacturers": "제조사들",
     "messageDialogPlaceholders": {
@@ -307,15 +311,16 @@
         "Any": "아무거나",
         "Search": "검색",
         "analytics": "Analytics",
+        "analyticsSelected": "analytics events",
         "filter applied": "필터 적용되었음",
         "filters applied": "필터들이 적용되었음",
         "hardwareType": "형식",
-        "hardwareTypes": "유형들",
+        "hardwareTypes": "Types",
         "minResolution": "최소 해상도",
         "search_ipvd": "모델 또는 제조업체로 검색",
         "selected": "선택된",
         "vendor": "제조사",
-        "vendors": "제조사들"
+        "vendors": "Manufacturers"
     },
     "servers in the merged System.": "머지된 시스템에 있는 서버들입니다.",
     "support": "지원",

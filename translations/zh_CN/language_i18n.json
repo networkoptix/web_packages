@@ -12,7 +12,9 @@
     "All Systems": "所有系统",
     "All cloud users will be deleted.": "所有云用户将被删除。",
     "All results": "All results",
-    "Analytics events": "Analytics events",
+    "Analytics": "Analytics",
+    "Analytics Event": "Analytics Event",
+    "Analytics Events": "Analytics Events",
     "Any": "Any",
     "Audio": "音频",
     "Build Number:": "版本号:",
@@ -169,7 +171,6 @@
     "dialogs.merge.secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
     "dialogs.merge.systemOffline": "dialogs.merge.systemOffline",
     "dialogs.merge.systemUnavailable": "系统 {{targetSystem}} 目前无法访问。请在几分钟后再试一次",
-    "disclaimer": "This list is limited to actual devices auto-reporting data to {{value}}, as approved by anonymous system users. The complete list of supported manufacturers and models is greater in scope.",
     "downloads": {
         "appTypes": {
             "bundle": "客户端和服务器",
@@ -262,6 +263,7 @@
         "PTZ cameras": "PTZ cameras",
         "camera": "摄像机",
         "count": "Count",
+        "disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous.",
         "dvr": "DVR",
         "encoder": "Encoder",
         "feedback": {
@@ -270,7 +272,7 @@
             "c_Info": "for additional questions/concerns regarding supported devices."
         },
         "hardwareType": "类型",
-        "haveAnalytics": "Analytics",
+        "isAnalyticsSupported": "Analytics",
         "isAptzSupported": "Advanced PTZ",
         "isAptzSupportedShort": "Adv. PTZ",
         "isAudioSupported": "音频",
@@ -287,8 +289,10 @@
         "multiSensorCamera": "Multi-Sensor Camera",
         "other": "Other",
         "primaryCodec": "Codec",
+        "resolutionArea": "Area",
         "vendor": "Manufacturer"
     },
+    "ipvd.disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous.",
     "latest build": "最新版本",
     "manufacturers": "manufacturers",
     "messageDialogPlaceholders": {
@@ -307,15 +311,16 @@
         "Any": "Any",
         "Search": "搜索",
         "analytics": "Analytics",
+        "analyticsSelected": "analytics events",
         "filter applied": "filter applied",
         "filters applied": "filters applied",
         "hardwareType": "类型",
-        "hardwareTypes": "types",
+        "hardwareTypes": "Types",
         "minResolution": "Minimum Resolution",
         "search_ipvd": "Search by model or manufacturer",
         "selected": "selected",
         "vendor": "Manufacturer",
-        "vendors": "manufacturers"
+        "vendors": "Manufacturers"
     },
     "servers in the merged System.": "合并系统中的服务器。",
     "support": "技术支持",

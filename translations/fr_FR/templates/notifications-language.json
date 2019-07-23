@@ -15,13 +15,13 @@
     "emailSubject": "Demande de support pour {{message.product}}"
   },
   "integration_feedback": {
-    "emailSubject": "Feedback for {{message.product}}"
+    "emailSubject": "Commentaires pour {{message.product}}"
   },
   "ipvd_feedback": {
-    "emailSubject": "Camera Page Feedback{{#message.product}} for {{message.product}}{{/message.product}}"
+    "emailSubject": "Commentaire page caméra {{#message.product}} pour {{message.product}}{{/message.product}}"
   },
   "review_version": {
-    "emailSubject": "{{message.product_type}}: {{message.product}} has a new version to review"
+    "emailSubject": "{{message.product_type}}: {{message.product}} a une nouvelle version à revoir"
   },
   "restore_password": {
     "emailSubject": "Réinitialisez votre mot de passe"

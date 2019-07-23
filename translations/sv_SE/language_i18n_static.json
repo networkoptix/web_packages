@@ -7,11 +7,12 @@
 		"Any": "Någon",
 		"selected": "vald",
 		"vendor": "Tillverkare",
-		"vendors": "tillverkare",
+		"vendors": "Manufacturers",
 		"hardwareType": "Typ",
-		"hardwareTypes": "typer",
+		"hardwareTypes": "Types",
 		"minResolution": "Minsta upplösning",
-		"analytics": "Analytics"
+		"analytics": "Analys",
+		"analyticsSelected": "analytics events"
 	},
 	"cameraFilters": {
 		"ptz": "PTZ-kameror",
@@ -97,6 +98,7 @@
 		}
 	},
 	"ipvd": {
+		"resolutionArea": "Area",
 		"count": "Räkna",
 		"vendor": "Tillverkare",
 		"model": "Modell",
@@ -114,7 +116,7 @@
 		"isIoSupported": "I/O",
 		"isH265": "H.265",
 		"isMultiSensor": "Multisensor",
-		"haveAnalytics": "Analytics",
+		"isAnalyticsSupported": "Analytics",
 		"camera": "Kamera",
 		"multiSensorCamera": "Multi-Sensor Kamera",
 		"encoder": "Encoder",
@@ -132,7 +134,8 @@
 			"a_Please": "Snälla",
 			"b_Link": "skicka förfrågan",
 			"c_Info": "för ytterligare frågor / problem angående stödda enheter."
-		}
+		},
+		"disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous."
 	},
 	"integration": {
 		"previewRibbonText": "Den här sidan är en förhandsvisning av de senaste ändringarna, och den matchar inte den offentligt tillgängliga versionen.",
@@ -179,9 +182,9 @@
 		}
 	},
 	"privacyPolicy": {
-		"integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent.",
-		"ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent."
+		"integration": "Genom att skicka in denna blankett accepterar du att du kontaktas av {{INTEGRATION_COMPANY}} och / eller %COMPANY_NAME%.\nDu hittar {{INTEGRATION_COMPANY}} sekretesspolicy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">här</a> och %COMPANY_NAME% sekretesspolicy <a href=\"%PRIVACY_LINK%\" target=\"blank\">här</a> som innehåller anvisningar om hur du återkallar ditt samtycke.",
+		"ipvd": "Genom att skicka in denna blankett accepterar du att du kontaktas av %COMPANY_NAME%.\nDu hittar %COMPANY_NAME% sekretesspolicy <a href=\"%PRIVACY_LINK%\" target=\"blank\">här</a> som innehåller instruktioner om hur du återkallar ditt samtycke."
 	},
-	"testedVersionLabel": "Tested on {{vmsName}} version:",
-	"testedVersionsLabel": "Tested on {{vmsName}} versions:"
+	"testedVersionLabel": "Testat på {{vmsName}} version:",
+	"testedVersionsLabel": "Testat på {{vmsName}} versioner:"
 }

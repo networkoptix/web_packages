@@ -12,7 +12,9 @@
     "All Systems": "ระบบทั้งหมด",
     "All cloud users will be deleted.": "ผู้ใช้ระบบคลาวด์ทั้งหมดจะถูกลบ",
     "All results": "ผลลัพธ์ทั้งหมด",
-    "Analytics events": "Analytics events",
+    "Analytics": "Analytics",
+    "Analytics Event": "Analytics Event",
+    "Analytics Events": "Analytics Events",
     "Any": "รายการใดก็ได้",
     "Audio": "เสียง",
     "Build Number:": "หมายเลข:",
@@ -169,7 +171,6 @@
     "dialogs.merge.secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
     "dialogs.merge.systemOffline": "dialogs.merge.systemOffline",
     "dialogs.merge.systemUnavailable": "ระบบ {{targetSystem}} ไม่สามารถเข้าถึงได้ในขณะนี้ ลองอีกครั้งในไม่กี่นาทีหรือติดต่อ",
-    "disclaimer": "This list is limited to actual devices auto-reporting data to {{value}}, as approved by anonymous system users. The complete list of supported manufacturers and models is greater in scope.",
     "downloads": {
         "appTypes": {
             "bundle": "ไคลเอ็นต์และเซิร์ฟเวอร์",
@@ -262,6 +263,7 @@
         "PTZ cameras": "PTZ cameras",
         "camera": "กล้อง",
         "count": "Count",
+        "disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous.",
         "dvr": "DVR",
         "encoder": "Encoder",
         "feedback": {
@@ -270,7 +272,7 @@
             "c_Info": "for additional questions/concerns regarding supported devices."
         },
         "hardwareType": "ประเภท",
-        "haveAnalytics": "Analytics",
+        "isAnalyticsSupported": "Analytics",
         "isAptzSupported": "PTZ ขั้นสูง",
         "isAptzSupportedShort": "Adv PTZ",
         "isAudioSupported": "เสียง",
@@ -287,8 +289,10 @@
         "multiSensorCamera": "กล้องหลายเซ็นเซอร์",
         "other": "อื่นๆ",
         "primaryCodec": "ตัวแปลงสัญญาณ",
+        "resolutionArea": "Area",
         "vendor": "ผู้ผลิต"
     },
+    "ipvd.disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous.",
     "latest build": "รุ่นล่าสุด",
     "manufacturers": "manufacturers",
     "messageDialogPlaceholders": {
@@ -307,15 +311,16 @@
         "Any": "รายการใดก็ได้",
         "Search": "ค้นหา",
         "analytics": "Analytics",
+        "analyticsSelected": "analytics events",
         "filter applied": "filter applied",
         "filters applied": "filters applied",
         "hardwareType": "ประเภท",
-        "hardwareTypes": "types",
+        "hardwareTypes": "Types",
         "minResolution": "Minimum Resolution",
         "search_ipvd": "Search by model or manufacturer",
         "selected": "selected",
         "vendor": "ผู้ผลิต",
-        "vendors": "manufacturers"
+        "vendors": "Manufacturers"
     },
     "servers in the merged System.": "เซิร์ฟเวอร์ในระบบที่ถูกผสาน",
     "support": "ทีมช่วยเหลือ",

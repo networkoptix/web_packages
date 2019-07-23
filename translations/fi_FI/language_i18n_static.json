@@ -7,11 +7,12 @@
 		"Any": "Mikä tahansa",
 		"selected": "valitut",
 		"vendor": "Valmistaja",
-		"vendors": "valmistajat",
+		"vendors": "Manufacturers",
 		"hardwareType": "Tyyppi",
-		"hardwareTypes": "tyypit",
+		"hardwareTypes": "Types",
 		"minResolution": "Pienin resoluutio",
-		"analytics": "Analytics"
+		"analytics": "Analytics",
+		"analyticsSelected": "analytics events"
 	},
 	"cameraFilters": {
 		"ptz": "PTZ-kamerat",
@@ -97,6 +98,7 @@
 		}
 	},
 	"ipvd": {
+		"resolutionArea": "Area",
 		"count": "Määrä",
 		"vendor": "Valmistaja",
 		"model": "Malli",
@@ -114,7 +116,7 @@
 		"isIoSupported": "I/O",
 		"isH265": "H.265",
 		"isMultiSensor": "Multi Sensor",
-		"haveAnalytics": "Analytics",
+		"isAnalyticsSupported": "Analytics",
 		"camera": "Kamera",
 		"multiSensorCamera": "Multi-Sensor-kamera",
 		"encoder": "Enkooderi",
@@ -132,7 +134,8 @@
 			"a_Please": "Ole hyvä",
 			"b_Link": "lähetä pyyntö",
 			"c_Info": "lisäkysymyksiä / huolia tuetuista laitteista."
-		}
+		},
+		"disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous."
 	},
 	"integration": {
 		"previewRibbonText": "Tällä sivulla on esikatselu viimeisimmistä muutoksista, ja se ei kata yleisesti saatavilla olevia versioita.",

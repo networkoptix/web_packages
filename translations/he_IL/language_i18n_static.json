@@ -7,11 +7,12 @@
 		"Any": "כל",
 		"selected": "נבחר",
 		"vendor": "יצרן",
-		"vendors": "יצרנים",
+		"vendors": "Manufacturers",
 		"hardwareType": "סוג",
-		"hardwareTypes": "סוגים",
+		"hardwareTypes": "Types",
 		"minResolution": "רזולוציה מינימלית",
-		"analytics": "Analytics"
+		"analytics": "Analytics",
+		"analyticsSelected": "analytics events"
 	},
 	"cameraFilters": {
 		"ptz": "מצלמות PTZ",
@@ -97,6 +98,7 @@
 		}
 	},
 	"ipvd": {
+		"resolutionArea": "Area",
 		"count": "ספירה",
 		"vendor": "יצרן",
 		"model": "מודל",
@@ -114,7 +116,7 @@
 		"isIoSupported": "I / O",
 		"isH265": "H.265",
 		"isMultiSensor": "מרובה חיישנים",
-		"haveAnalytics": "Analytics",
+		"isAnalyticsSupported": "Analytics",
 		"camera": "מצלמה",
 		"multiSensorCamera": "מצלמה עם מספר חיישנים",
 		"encoder": "דוחס",
@@ -132,7 +134,8 @@
 			"a_Please": "בבקשה",
 			"b_Link": "הגש בקשה",
 			"c_Info": "לשאלות / בקשות נוספות בנוגע להתקנים נתמכים."
-		}
+		},
+		"disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous."
 	},
 	"integration": {
 		"previewRibbonText": "דף זה הוא תצוגה מקדימה של השינויים האחרונים, והוא אינו תואם לגרסה הזמינה לציבור.",

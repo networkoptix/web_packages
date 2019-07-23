@@ -199,10 +199,10 @@
     "successDisconnected": "O Sistema foi desconectado de %CLOUD_NAME% com sucesso",
     "successDeleted": "O sistema {{systemName}} foi apagado com sucesso da sua conta",
     "mergeFailed": "Falha na fusão de Sistemas",
-    "mergeStart": "Systems have started merging",
-    "mergeSuccess": "System merge completed",
+    "mergeStart": "Os sistemas começaram a fusão",
+    "mergeSuccess": "Fusão do sistema concluída",
     "permissionsRemoved": "As permissões foram removidas de {{email}}",
-    "unknownName": "Unknown Name for System (Caused by cloud merge)"
+    "unknownName": "Nome do Sistema desconhecido (causado pela fusão pela cloud)"
   },
   "account": {
     "accountSavedSuccess": "A sua conta foi gravada com sucesso",

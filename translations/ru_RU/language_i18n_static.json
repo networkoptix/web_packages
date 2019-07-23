@@ -7,11 +7,12 @@
 		"Any": "Любой",
 		"selected": "выбрано",
 		"vendor": "Производитель",
-		"vendors": "производители",
+		"vendors": "Manufacturers",
 		"hardwareType": "Тип",
-		"hardwareTypes": "типы",
+		"hardwareTypes": "Types",
 		"minResolution": "Минимальное разрешение",
-		"analytics": "Аналитика"
+		"analytics": "Аналитика",
+		"analyticsSelected": "analytics events"
 	},
 	"cameraFilters": {
 		"ptz": "Камеры PTZ",
@@ -97,6 +98,7 @@
 		}
 	},
 	"ipvd": {
+		"resolutionArea": "Area",
 		"count": "Кол-во",
 		"vendor": "Производитель",
 		"model": "Модель",
@@ -114,7 +116,7 @@
 		"isIoSupported": "I/O",
 		"isH265": "H.265",
 		"isMultiSensor": "Мультисенсор",
-		"haveAnalytics": "Аналитика",
+		"isAnalyticsSupported": "Analytics",
 		"camera": "Камера",
 		"multiSensorCamera": "Мультисенсорная камера",
 		"encoder": "Кодировщик",
@@ -132,7 +134,8 @@
 			"a_Please": "Пожалуйста",
 			"b_Link": "отправить запрос",
 			"c_Info": "с дополнительными вопросами/проблемами относительно поддерживаемых устройств."
-		}
+		},
+		"disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous."
 	},
 	"integration": {
 		"previewRibbonText": "Эта страница является предварительным просмотром последних изменений и не соответствует общедоступной версии.",

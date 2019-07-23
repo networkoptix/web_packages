@@ -7,11 +7,12 @@
 		"Any": "아무거나",
 		"selected": "선택된",
 		"vendor": "제조사",
-		"vendors": "제조사들",
+		"vendors": "Manufacturers",
 		"hardwareType": "형식",
-		"hardwareTypes": "유형들",
+		"hardwareTypes": "Types",
 		"minResolution": "최소 해상도",
-		"analytics": "Analytics"
+		"analytics": "Analytics",
+		"analyticsSelected": "analytics events"
 	},
 	"cameraFilters": {
 		"ptz": "PTZ 카메라들",
@@ -97,6 +98,7 @@
 		}
 	},
 	"ipvd": {
+		"resolutionArea": "Area",
 		"count": "개수",
 		"vendor": "제조사",
 		"model": "모델",
@@ -114,7 +116,7 @@
 		"isIoSupported": "I/O",
 		"isH265": "H.265",
 		"isMultiSensor": "다중 센서",
-		"haveAnalytics": "Analytics",
+		"isAnalyticsSupported": "Analytics",
 		"camera": "카메라",
 		"multiSensorCamera": "다중 센서 카메라들",
 		"encoder": "인코더",
@@ -132,7 +134,8 @@
 			"a_Please": "부디",
 			"b_Link": "요청하기",
 			"c_Info": "지원되는 장치에 관한 추가 질문 / 문제"
-		}
+		},
+		"disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous."
 	},
 	"integration": {
 		"previewRibbonText": "이 페이지는 최신 변경 사항의 미리보기이며 공개적으로 사용 가능한 버전과 일치하지 않습니다.",

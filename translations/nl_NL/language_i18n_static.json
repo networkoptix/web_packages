@@ -7,11 +7,12 @@
 		"Any": "Elke",
 		"selected": "geselecteerd",
 		"vendor": "Fabrikanten",
-		"vendors": "fabrikanten",
+		"vendors": "Manufacturers",
 		"hardwareType": "Type",
-		"hardwareTypes": "types",
+		"hardwareTypes": "Types",
 		"minResolution": "Minimum Resolutie",
-		"analytics": "Analytics"
+		"analytics": "Analytics",
+		"analyticsSelected": "analytics events"
 	},
 	"cameraFilters": {
 		"ptz": "PTZ camera's",
@@ -97,6 +98,7 @@
 		}
 	},
 	"ipvd": {
+		"resolutionArea": "Area",
 		"count": "Aantal",
 		"vendor": "Fabrikant",
 		"model": "Model",
@@ -114,7 +116,7 @@
 		"isIoSupported": "I/O",
 		"isH265": "H.265",
 		"isMultiSensor": "Multi Sensor",
-		"haveAnalytics": "Analytics",
+		"isAnalyticsSupported": "Analytics",
 		"camera": "Camera",
 		"multiSensorCamera": "Multi-Sensor Camera",
 		"encoder": "Encoder",
@@ -132,7 +134,8 @@
 			"a_Please": "Alstublieft",
 			"b_Link": "een aanvraag indienen",
 			"c_Info": "voor aanvullende vragen/opmerkingen over ondersteunde apparaten."
-		}
+		},
+		"disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous."
 	},
 	"integration": {
 		"previewRibbonText": "Deze pagina is een voorbeeld van de laatste wijzigingen, en het komt niet overeen met de publiekelijk beschikbare versie.",

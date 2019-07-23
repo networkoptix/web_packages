@@ -7,11 +7,12 @@
 		"Any": "Herhangi",
 		"selected": "seçildi",
 		"vendor": "Üretici",
-		"vendors": "ureticiler",
+		"vendors": "Manufacturers",
 		"hardwareType": "Tür",
-		"hardwareTypes": "türler",
+		"hardwareTypes": "Types",
 		"minResolution": "Minimum Çözünürlük",
-		"analytics": "Analytics"
+		"analytics": "Analytics",
+		"analyticsSelected": "analytics events"
 	},
 	"cameraFilters": {
 		"ptz": "PTZ kameralar",
@@ -97,6 +98,7 @@
 		}
 	},
 	"ipvd": {
+		"resolutionArea": "Area",
 		"count": "Sayı",
 		"vendor": "Üretici",
 		"model": "Model",
@@ -114,7 +116,7 @@
 		"isIoSupported": "G/Ç",
 		"isH265": "H.265",
 		"isMultiSensor": "Çoklu sensör",
-		"haveAnalytics": "Analytics",
+		"isAnalyticsSupported": "Analytics",
 		"camera": "Kamera",
 		"multiSensorCamera": "Çok Sensörlü Kamera",
 		"encoder": "Kodlayıcı",
@@ -132,7 +134,8 @@
 			"a_Please": "Lütfen",
 			"b_Link": "destek talebi gönder",
 			"c_Info": "desteklenen cihazlarla ilgili ek sorularınız için."
-		}
+		},
+		"disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous."
 	},
 	"integration": {
 		"previewRibbonText": "Bu sayfa en son değişikliklerin önizlemesidir ve herkese açık kullanılabilir sürümle eşleşmiyor.",

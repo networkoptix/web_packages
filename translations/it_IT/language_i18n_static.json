@@ -7,11 +7,12 @@
 		"Any": "Qualsiasi",
 		"selected": "selezionato",
 		"vendor": "Produttore",
-		"vendors": "produttori",
+		"vendors": "Manufacturers",
 		"hardwareType": "Tipo",
-		"hardwareTypes": "tipo",
+		"hardwareTypes": "Types",
 		"minResolution": "Risoluzione minima",
-		"analytics": "Analytics"
+		"analytics": "Analitica",
+		"analyticsSelected": "analytics events"
 	},
 	"cameraFilters": {
 		"ptz": "Telecamere PTZ",
@@ -97,6 +98,7 @@
 		}
 	},
 	"ipvd": {
+		"resolutionArea": "Area",
 		"count": "Conteggio",
 		"vendor": "Produttore",
 		"model": "Modello",
@@ -114,7 +116,7 @@
 		"isIoSupported": "I/O",
 		"isH265": "H.265",
 		"isMultiSensor": "Multi sensore",
-		"haveAnalytics": "Analytics",
+		"isAnalyticsSupported": "Analytics",
 		"camera": "Telecamera / e",
 		"multiSensorCamera": "Telecamera multisensore",
 		"encoder": "Encoder",
@@ -132,7 +134,8 @@
 			"a_Please": "Si prega di",
 			"b_Link": "invia una richiesta",
 			"c_Info": "per ulteriori domande / dubbi sui dispositivi supportati."
-		}
+		},
+		"disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous."
 	},
 	"integration": {
 		"previewRibbonText": "Questa pagina è un'anteprima delle ultime modifiche e non corrisponde alla versione disponibile al pubblico.",
@@ -179,9 +182,9 @@
 		}
 	},
 	"privacyPolicy": {
-		"integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent.",
-		"ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent."
+		"integration": "Inviando questo modulo accetti di essere contattato da {{INTEGRATION_COMPANY}} e / o %COMPANY_NAME%.\nTroverai l'informativa sulla privacy {{INTEGRATION_COMPANY}} <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">qui</a> e %COMPANY_NAME% informativa sulla privacy <a href=\"%PRIVACY_LINK%\" target=\"blank\">qui</a> che includono istruzioni su come revocare il tuo consenso.",
+		"ipvd": "Inviando questo modulo accetti di essere contattato da %COMPANY_NAME%.\nTroverai l'informativa sulla privacy %COMPANY_NAME%<a href=\"%PRIVACY_LINK%\" target=\"blank\">qui</a> che includono istruzioni su come revocare il tuo consenso."
 	},
-	"testedVersionLabel": "Tested on {{vmsName}} version:",
-	"testedVersionsLabel": "Tested on {{vmsName}} versions:"
+	"testedVersionLabel": "Verificato sulla versione {{vmsName}}:",
+	"testedVersionsLabel": "Verificato sulle versioni {{vmsName}}:"
 }

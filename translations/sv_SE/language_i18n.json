@@ -3,7 +3,7 @@
     "Account Settings": "Kontoinställningar",
     "Account not activated": "Kontot är inte aktiverat",
     "Account not found": "Kan inte hitta kontot",
-    "Actual number of events supported by this camera may be bigger.": "Actual number of events supported by this camera may be bigger.",
+    "Actual number of events supported by this camera may be bigger.": "Det faktiska antalet händelser som stöds av den här kameran kan vara större.",
     "Additional Requirements": "Ytterligare krav",
     "Administration": "Administrering",
     "Advanced PTZ": "Avancerad PTZ",
@@ -12,7 +12,9 @@
     "All Systems": "Alla system",
     "All cloud users will be deleted.": "Alla molnanvändare kommer raderas.",
     "All results": "Alla resultat",
-    "Analytics events": "Analytics events",
+    "Analytics": "Analytics",
+    "Analytics Event": "Analytics Event",
+    "Analytics Events": "Analytics Events",
     "Any": "Någon",
     "Audio": "Ljud",
     "Build Number:": "Versionsnummer:",
@@ -25,7 +27,7 @@
     "Choose which properties should be visible to customers:": "Välj vilka egenskaper som ska vara synliga för kunderna:",
     "Close": "Stäng",
     "Codec": "Kodek",
-    "Collapse": "Collapse",
+    "Collapse": "Komprimera",
     "Contact": "Kontakt",
     "Create Account": "Skapa konto",
     "Create account": "Skapa konto",
@@ -104,7 +106,7 @@
     "Terms of Use": "Användarvillkor",
     "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.": "Autentiseringsuppgifterna för den här användaren exponeras! Du måste skapa en anpassad ”offentliga” användarroll med tillgång endast\n            till kameror för offentlig användning och tilldelas endast minimikravet visningsbehörigheter. Detta\n            ”offentliga användare” bör inte ha systemomfattande åtkomst av något slag.",
     "There will be more than": "Det kommer att finnas mer än",
-    "This device has reported to support some analytics events, but we don't have exact information about them.": "This device has reported to support some analytics events, but we don't have exact information about them.",
+    "This device has reported to support some analytics events, but we don't have exact information about them.": "Den här enheten har rapporterat stödja vissa analyshändelser, men vi har inte exakt information om dem.",
     "To": "Till",
     "Too many attempts. Try again in a minute.": "Alltför många försök. Försök igen om någon minut.",
     "Topic": "Ämne",
@@ -169,7 +171,6 @@
     "dialogs.merge.secondaryCannotMerge": "System {{targetSystem}} har en äldre programversion som inte är kompatibel med det aktuella systemet. Uppdatera {{targetSystem}} till <a href=\"/download\" target=\"_blank\" translate>senaste version</a> att slå samman den med den nuvarande.",
     "dialogs.merge.systemOffline": "dialogs.merge.systemOffline",
     "dialogs.merge.systemUnavailable": "System {{targetSystem}} är för närvarande inte tillgängligt. Försök igen om några minuter eller kontakta",
-    "disclaimer": "Den här listan är begränsad till faktiska enheter för automatisk rapportering till {{value}}, som godkänd av anonyma systemanvändare. Den kompletta listan över stödda tillverkare och modeller är mer omfattande.",
     "downloads": {
         "appTypes": {
             "bundle": "Klient och Server",
@@ -262,6 +263,7 @@
         "PTZ cameras": "PTZ-kameror",
         "camera": "Kamera",
         "count": "Räkna",
+        "disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous.",
         "dvr": "DVR",
         "encoder": "Encoder",
         "feedback": {
@@ -270,7 +272,7 @@
             "c_Info": "för ytterligare frågor / problem angående stödda enheter."
         },
         "hardwareType": "Typ",
-        "haveAnalytics": "Analytics",
+        "isAnalyticsSupported": "Analytics",
         "isAptzSupported": "Avancerad PTZ",
         "isAptzSupportedShort": "Adv. PTZ",
         "isAudioSupported": "Ljud",
@@ -287,8 +289,10 @@
         "multiSensorCamera": "Multi-Sensor Kamera",
         "other": "Annat",
         "primaryCodec": "Kodek",
+        "resolutionArea": "Area",
         "vendor": "Tillverkare"
     },
+    "ipvd.disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous.",
     "latest build": "senaste versionen",
     "manufacturers": "tillverkare",
     "messageDialogPlaceholders": {
@@ -300,25 +304,26 @@
     },
     "phoneNumberWithLabel": "Tel: {{number}}",
     "privacyPolicy": {
-        "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent.",
-        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent."
+        "integration": "Genom att skicka in denna blankett accepterar du att du kontaktas av {{INTEGRATION_COMPANY}} och / eller %COMPANY_NAME%.\nDu hittar {{INTEGRATION_COMPANY}} sekretesspolicy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">här</a> och %COMPANY_NAME% sekretesspolicy <a href=\"%PRIVACY_LINK%\" target=\"blank\">här</a> som innehåller anvisningar om hur du återkallar ditt samtycke.",
+        "ipvd": "Genom att skicka in denna blankett accepterar du att du kontaktas av %COMPANY_NAME%.\nDu hittar %COMPANY_NAME% sekretesspolicy <a href=\"%PRIVACY_LINK%\" target=\"blank\">här</a> som innehåller instruktioner om hur du återkallar ditt samtycke."
     },
     "search": {
         "Any": "Någon",
         "Search": "Sök",
-        "analytics": "Analytics",
+        "analytics": "Analys",
+        "analyticsSelected": "analytics events",
         "filter applied": "filter används",
         "filters applied": "filter används",
         "hardwareType": "Typ",
-        "hardwareTypes": "typer",
+        "hardwareTypes": "Types",
         "minResolution": "Minsta upplösning",
         "search_ipvd": "Sök efter modell eller tillverkare",
         "selected": "vald",
         "vendor": "Tillverkare",
-        "vendors": "tillverkare"
+        "vendors": "Manufacturers"
     },
     "servers in the merged System.": "servrar i det sammanslagna systemet.",
     "support": "support",
-    "testedVersionLabel": "Tested on {{vmsName}} version:",
-    "testedVersionsLabel": "Tested on {{vmsName}} versions:"
+    "testedVersionLabel": "Testat på {{vmsName}} version:",
+    "testedVersionsLabel": "Testat på {{vmsName}} versioner:"
 }

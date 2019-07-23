@@ -7,11 +7,12 @@
 		"Any": "Any",
 		"selected": "selected",
 		"vendor": "Manufacturer",
-		"vendors": "manufacturers",
+		"vendors": "Manufacturers",
 		"hardwareType": "Type",
-		"hardwareTypes": "types",
+		"hardwareTypes": "Types",
 		"minResolution": "Minimum Resolution",
-		"analytics": "Analytics"
+		"analytics": "Analytics",
+		"analyticsSelected": "analytics events"
 	},
 	"cameraFilters": {
 		"ptz": "PTZ cameras",
@@ -97,6 +98,7 @@
 		}
 	},
 	"ipvd": {
+		"resolutionArea": "Area",
 		"count": "Count",
 		"vendor": "Manufacturer",
 		"model": "Model",
@@ -114,7 +116,7 @@
 		"isIoSupported": "I/O",
 		"isH265": "H.265",
 		"isMultiSensor": "Multi Sensor",
-		"haveAnalytics": "Analytics",
+		"isAnalyticsSupported": "Analytics",
 		"camera": "Camera",
 		"multiSensorCamera": "Multi-Sensor Camera",
 		"encoder": "Encoder",
@@ -132,7 +134,8 @@
 			"a_Please": "Please",
 			"b_Link": "submit a request",
 			"c_Info": "for additional questions/concerns regarding supported devices."
-		}
+		},
+		"disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous."
 	},
 	"integration": {
 		"previewRibbonText": "This page is a preview of the latest changes, and it doesn't match publicly available version.",

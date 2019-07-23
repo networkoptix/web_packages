@@ -1,3 +1,3 @@
 こんにちは、{{ message.userFullName }}
-{{ message.sender_name}} ({{ message.sender_email }}) は{{ message.product }} についてのフィードバックがあります
+{{ message.sender_name}} ({{ message.sender_email }}) には{{ message.product }} についてのフィードバックがあります
 <pre>{{ message.message }}</pre>

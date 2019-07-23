@@ -12,7 +12,9 @@
     "All Systems": "Alle systemen",
     "All cloud users will be deleted.": "Alle cloud gebruikers zullen worden verwijderd.",
     "All results": "Alle resultaten",
-    "Analytics events": "Analytics events",
+    "Analytics": "Analytics",
+    "Analytics Event": "Analytics Event",
+    "Analytics Events": "Analytics Events",
     "Any": "Elke",
     "Audio": "Audio",
     "Build Number:": "Buildnummer:",
@@ -169,7 +171,6 @@
     "dialogs.merge.secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
     "dialogs.merge.systemOffline": "dialogs.merge.systemOffline",
     "dialogs.merge.systemUnavailable": "Systeem {{targetSystem}} is momenteel niet bereikbaar. Probeer het over een paar minuten opnieuw of neem contact op met",
-    "disclaimer": "Deze lijst is beperkt tot apparaten die automatisch rapportagegegevens delen naar {{value}}, zoals goedgekeurd door anonieme systeemgebruikers. De volledige lijst van ondersteunde fabrikanten en modellen zal groter zijn dan in deze lijst wordt vermeld.",
     "downloads": {
         "appTypes": {
             "bundle": "Client en Server",
@@ -262,6 +263,7 @@
         "PTZ cameras": "PTZ camera's",
         "camera": "Camera",
         "count": "Aantal",
+        "disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous.",
         "dvr": "DVR",
         "encoder": "Encoder",
         "feedback": {
@@ -270,7 +272,7 @@
             "c_Info": "voor aanvullende vragen/opmerkingen over ondersteunde apparaten."
         },
         "hardwareType": "Type",
-        "haveAnalytics": "Analytics",
+        "isAnalyticsSupported": "Analytics",
         "isAptzSupported": "Geavanceerde PTZ",
         "isAptzSupportedShort": "Geav. PTZ",
         "isAudioSupported": "Audio",
@@ -287,8 +289,10 @@
         "multiSensorCamera": "Multi-Sensor Camera",
         "other": "Overige",
         "primaryCodec": "Codec",
+        "resolutionArea": "Area",
         "vendor": "Fabrikant"
     },
+    "ipvd.disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous.",
     "latest build": "laatste build",
     "manufacturers": "fabrikanten",
     "messageDialogPlaceholders": {
@@ -307,15 +311,16 @@
         "Any": "Elke",
         "Search": "Zoeken",
         "analytics": "Analytics",
+        "analyticsSelected": "analytics events",
         "filter applied": "filter toegepast",
         "filters applied": "filters toegepast",
         "hardwareType": "Type",
-        "hardwareTypes": "types",
+        "hardwareTypes": "Types",
         "minResolution": "Minimum Resolutie",
         "search_ipvd": "Zoeken op model of fabrikant",
         "selected": "geselecteerd",
         "vendor": "Fabrikanten",
-        "vendors": "fabrikanten"
+        "vendors": "Manufacturers"
     },
     "servers in the merged System.": "servers in het samengevoegde systeem.",
     "support": "ondersteuning",

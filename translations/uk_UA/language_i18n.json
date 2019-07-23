@@ -12,7 +12,9 @@
     "All Systems": "Всі системи",
     "All cloud users will be deleted.": "Всі хмарні користувачі будуть видалені.",
     "All results": "Всі результати",
-    "Analytics events": "Analytics events",
+    "Analytics": "Analytics",
+    "Analytics Event": "Analytics Event",
+    "Analytics Events": "Analytics Events",
     "Any": "Будь-які",
     "Audio": "Аудіо",
     "Build Number:": "Номер випуску:",
@@ -169,7 +171,6 @@
     "dialogs.merge.secondaryCannotMerge": "Система {{targetSystem}} має стару версію Пз, несумісну з поточною системою. Оновіть {{targetSystem}} до <a href=\"/download\" target=\"_blank\" translate>останньої збірки</a> для об’єднання з поточною системою.",
     "dialogs.merge.systemOffline": "dialogs.merge.systemOffline",
     "dialogs.merge.systemUnavailable": "Система {{targetSystem}} наразі недоступна. Повторіть спробу через декілька хвилин або зв'яжіться з нами",
-    "disclaimer": "Цей список обмежується пристроями, які автоматично повідомляють дані на {{value}} після схвалення користувачами анонімних систем. Повний перелік підтримуваних моделей і виробників набагато більший.",
     "downloads": {
         "appTypes": {
             "bundle": "Клієнт і сервер",
@@ -262,6 +263,7 @@
         "PTZ cameras": "PTZ камери",
         "camera": "Камера",
         "count": "Підрахунок",
+        "disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous.",
         "dvr": "DVR",
         "encoder": "Енкодер",
         "feedback": {
@@ -270,7 +272,7 @@
             "c_Info": "додаткові питання / зауваження щодо підтримуваних пристроїв."
         },
         "hardwareType": "Тип",
-        "haveAnalytics": "Analytics",
+        "isAnalyticsSupported": "Analytics",
         "isAptzSupported": "Розширений PTZ",
         "isAptzSupportedShort": "Розш. PTZ",
         "isAudioSupported": "Аудіо",
@@ -287,8 +289,10 @@
         "multiSensorCamera": "Багатоканальна камера",
         "other": "Інші",
         "primaryCodec": "Кодек",
+        "resolutionArea": "Area",
         "vendor": "Виробник"
     },
+    "ipvd.disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous.",
     "latest build": "остання збірка",
     "manufacturers": "виробники",
     "messageDialogPlaceholders": {
@@ -307,15 +311,16 @@
         "Any": "Будь-які",
         "Search": "Пошук",
         "analytics": "Analytics",
+        "analyticsSelected": "analytics events",
         "filter applied": "застосований фільтр",
         "filters applied": "застосовані фільтри",
         "hardwareType": "Тип",
-        "hardwareTypes": "типи",
+        "hardwareTypes": "Types",
         "minResolution": "Мінімальна роздільна здатність",
         "search_ipvd": "Пошук за моделлю або виробником",
         "selected": "вибрано",
         "vendor": "Виробник",
-        "vendors": "виробники"
+        "vendors": "Manufacturers"
     },
     "servers in the merged System.": "серверів у об’єднаній системі.",
     "support": "підтримка",

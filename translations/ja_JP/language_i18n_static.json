@@ -7,16 +7,17 @@
 		"Any": "全て",
 		"selected": "選択済み",
 		"vendor": "製造メーカー",
-		"vendors": "メーカー",
+		"vendors": "Manufacturers",
 		"hardwareType": "タイプ",
-		"hardwareTypes": "タイプ",
+		"hardwareTypes": "Types",
 		"minResolution": "最小解像度",
-		"analytics": "Analytics"
+		"analytics": "解析",
+		"analyticsSelected": "analytics events"
 	},
 	"cameraFilters": {
 		"ptz": "PTZカメラ",
 		"aptz": "高度なPTZを搭載したカメラ",
-		"fisheye": "魚眼レンズカメラ",
+		"fisheye": "魚眼カメラ",
 		"H265": "H.265カメラ",
 		"IO": "I/Oモジュール",
 		"multiSensor": "マルチセンサーカメラ",
@@ -97,6 +98,7 @@
 		}
 	},
 	"ipvd": {
+		"resolutionArea": "Area",
 		"count": "カウント",
 		"vendor": "製造メーカー",
 		"model": "モデル",
@@ -107,32 +109,33 @@
 		"isAudioSupported": "オーディオ",
 		"isTwAudioSupported": "双方向オーディオ",
 		"isPtzSupported": "PTZ",
-		"isAptzSupported": "アドバンスドPTZ",
-		"isAptzSupportedShort": "アドバンスドPTZ",
+		"isAptzSupported": "高度なPTZ",
+		"isAptzSupportedShort": "高度なPTZ",
 		"isFisheye": "魚眼",
 		"isMdSupported": "モーション",
 		"isIoSupported": "I/O",
 		"isH265": "H.265",
 		"isMultiSensor": "マルチセンサー",
-		"haveAnalytics": "Analytics",
+		"isAnalyticsSupported": "Analytics",
 		"camera": "カメラ",
 		"multiSensorCamera": "マルチセンサーカメラ",
 		"encoder": "エンコーダー",
 		"dvr": "DVR",
 		"other": "その他",
 		"PTZ cameras": "PTZカメラ",
-		"Advanced PTZ cameras": "先進のPTZカメラ",
-		"Fisheye Cameras": "魚眼レンズカメラ",
+		"Advanced PTZ cameras": "高度なPTZカメラ",
+		"Fisheye Cameras": "魚眼カメラ",
 		"Cameras supporting H.265": "H.265対応カメラ",
 		"I / O modules": "I/Oモジュール",
 		"Multisensor Cameras": "マルチセンサーカメラ",
 		"Cameras with 2-way audio": "双方向オーディオ付きカメラ",
 		"Extra high resolution cameras": "超高解像度カメラ",
 		"feedback": {
-			"a_Please": "どうぞ",
+			"a_Please": "これを実行して下さい",
 			"b_Link": "リクエストを送信する",
 			"c_Info": "サポートされているデバイスに関するその他の質問/懸念事項については"
-		}
+		},
+		"disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous."
 	},
 	"integration": {
 		"previewRibbonText": "このページは最新の変更のプレビューです、一般的に利用可能なバージョンと一致しません",
@@ -141,7 +144,7 @@
 		"Connector": "コネクター",
 		"Data Analytics": "データ解析",
 		"Drone": "ドローン",
-		"Health Monitor": "ヘルスモニタ",
+		"Health Monitor": "ヘルスモニター",
 		"Storage": "ストレージ"
 	},
 	"messageDialogPlaceholders": {
@@ -149,21 +152,21 @@
 	},
 	"pageTitles": {
 		"supportedDevices": "サポートされているデバイス",
-		"integrations": "インテグレーション"
+		"integrations": "統合"
 	},
 	"dialogs": {
 		"merge": {
-			"connectToCloud": "これと統合したいシステムを <strong>{{cloudName}}</strong> か、 <strong>{{vmsName}}</strong> クライアントを使用してローカルに統合します。",
+			"connectToCloud": "これと統合したいシステムを <strong>{{cloudName}}</strong> に接続するか、 <strong>{{vmsName}}</strong> クライアントを使用してローカルに統合します。",
 			"mergeConfirmation": "システム <strong>{{primarySystem}}</strong> と <strong>{{secondarySystem}}</strong>を統合しようとしています。設定と名前は <strong>{{primarySystem}}</strong>から取得されます。",
-			"primaryCannotMerge": "システム {{targetSystem}} は、現在のシステムと互換性のない新しいソフトウェアバージョンがあります。現在のシステムを<a href=\"/download\" target=\"_blank\" translate>最新のビルド</a>にアップデートして、それを {{targetSystem}} システムと統合します。",
+			"primaryCannotMerge": "システム{{targetSystem}} には、現在のシステムと互換性のない新しいソフトウェアバージョンがあります。現在のシステムを<a href=\"/download\" target=\"_blank\" translate>最新のビルド</a>に更新し、{{targetSystem}} システムと統合します。",
 			"primarySystemOffline": "システム {{primarySystem}} はオフラインのため、システム{{targetSystem}} と統合することはできません。",
-			"secondaryCannotMerge": "システム {{targetSystem}} は、現在のシステムと互換性のない古いソフトウェアバージョンがあります。 {{targetSystem}} を <a href=\"/download\" target=\"_blank\" translate>最新のビルド</a> に更新して、現在のものと統合します。",
+			"secondaryCannotMerge": "システム {{targetSystem}} には、現在のシステムと互換性のない古いソフトウェアバージョンがあります。 {{targetSystem}} を <a href=\"/download\" target=\"_blank\" translate>最新のビルド</a> に更新して、現在のものと統合します。",
 			"systemOffline": "システム {{targetSystem}} はオフラインのため、現在のシステムと統合することはできません。",
 			"systemUnavailable": "システム {{targetSystem}} は現在到達不能です。数分後にもう一度試すか、連絡してください"
 		},
 		"message": {
 			"failedToSend": "メッセージを送信できませんでした。",
-			"sent": "メッセージが送信されました",
+			"sent": "メッセージが送信されました。",
 			"title": {
 				"integration": "{{companyName}} と連絡を取る",
 				"ipvd_feedback_page": "カメラページへのフィードバック",
@@ -179,9 +182,9 @@
 		}
 	},
 	"privacyPolicy": {
-		"integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent.",
-		"ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent."
+		"integration": "このフォームを送信することにより、あなたは {{INTEGRATION_COMPANY}} または %COMPANY_NAME%、あるいはその両方から連絡を受けることに同意します。\n{{INTEGRATION_COMPANY}} プライバシーポリシー <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">ここ</a> と %COMPANY_NAME% プライバシーポリシー <a href=\"%PRIVACY_LINK%\" target=\"blank\">ここ</a> には同意を撤回する方法に関する指示が含まれています。",
+		"ipvd": "このフォームを送信することにより、あなたは %COMPANY_NAME%から連絡を受けることに同意します。\n %COMPANY_NAME% プライバシーポリシー <a href=\"%PRIVACY_LINK%\" target=\"blank\">ここ</a>には同意を撤回する方法についての指示が含まれています。"
 	},
-	"testedVersionLabel": "Tested on {{vmsName}} version:",
-	"testedVersionsLabel": "Tested on {{vmsName}} versions:"
+	"testedVersionLabel": "{{vmsName}} バージョンでテスト済み：",
+	"testedVersionsLabel": "{{vmsName}} バージョンでテスト済み："
 }

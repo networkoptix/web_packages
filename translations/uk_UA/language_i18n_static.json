@@ -7,11 +7,12 @@
 		"Any": "Будь-які",
 		"selected": "вибрано",
 		"vendor": "Виробник",
-		"vendors": "виробники",
+		"vendors": "Manufacturers",
 		"hardwareType": "Тип",
-		"hardwareTypes": "типи",
+		"hardwareTypes": "Types",
 		"minResolution": "Мінімальна роздільна здатність",
-		"analytics": "Analytics"
+		"analytics": "Analytics",
+		"analyticsSelected": "analytics events"
 	},
 	"cameraFilters": {
 		"ptz": "PTZ камери",
@@ -97,6 +98,7 @@
 		}
 	},
 	"ipvd": {
+		"resolutionArea": "Area",
 		"count": "Підрахунок",
 		"vendor": "Виробник",
 		"model": "Модель",
@@ -114,7 +116,7 @@
 		"isIoSupported": "Ввід/вивід",
 		"isH265": "H.265",
 		"isMultiSensor": "Мультисенсор",
-		"haveAnalytics": "Analytics",
+		"isAnalyticsSupported": "Analytics",
 		"camera": "Камера",
 		"multiSensorCamera": "Багатоканальна камера",
 		"encoder": "Енкодер",
@@ -132,7 +134,8 @@
 			"a_Please": "Будь ласка",
 			"b_Link": "надіслати запит",
 			"c_Info": "додаткові питання / зауваження щодо підтримуваних пристроїв."
-		}
+		},
+		"disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous."
 	},
 	"integration": {
 		"previewRibbonText": "Ця сторінка є попереднім переглядом останніх змін і не відповідає загальнодоступній версії.",

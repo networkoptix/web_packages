@@ -12,7 +12,9 @@
     "All Systems": "Tüm sistemler",
     "All cloud users will be deleted.": "Tüm bulut kullanıcıları silinecek.",
     "All results": "Tüm sonuçlar",
-    "Analytics events": "Analytics events",
+    "Analytics": "Analytics",
+    "Analytics Event": "Analytics Event",
+    "Analytics Events": "Analytics Events",
     "Any": "Herhangi",
     "Audio": "Ses",
     "Build Number:": "Yapı numarası:",
@@ -169,7 +171,6 @@
     "dialogs.merge.secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
     "dialogs.merge.systemOffline": "dialogs.merge.systemOffline",
     "dialogs.merge.systemUnavailable": "{{targetSystem}} sistemi erişilebilir değil. Birkaç dakika sonra tekrar deneyin",
-    "disclaimer": "Bu liste, anonim sistem kullanıcıları tarafından onaylandığı şekilde, verileri {{value}} ile otomatik olarak raporlayan gerçek cihazlarla sınırlıdır. Desteklenen üreticilerin ve modellerin tam listesi kapsam açısından daha büyüktür.",
     "downloads": {
         "appTypes": {
             "bundle": "İstemci ve sunucu",
@@ -262,6 +263,7 @@
         "PTZ cameras": "PTZ kameralar",
         "camera": "Kamera",
         "count": "Sayım",
+        "disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous.",
         "dvr": "DVR",
         "encoder": "Kodlayıcı",
         "feedback": {
@@ -270,7 +272,7 @@
             "c_Info": "desteklenen cihazlarla ilgili ek sorularınız için."
         },
         "hardwareType": "Tür",
-        "haveAnalytics": "Analytics",
+        "isAnalyticsSupported": "Analytics",
         "isAptzSupported": "Gelişmiş PTZ",
         "isAptzSupportedShort": "Gelş. PTZ",
         "isAudioSupported": "Ses",
@@ -287,8 +289,10 @@
         "multiSensorCamera": "Çok Sensörlü Kamera",
         "other": "Diğer",
         "primaryCodec": "Kodek",
+        "resolutionArea": "Area",
         "vendor": "Üretici"
     },
+    "ipvd.disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous.",
     "latest build": "son yapı",
     "manufacturers": "ureticiler",
     "messageDialogPlaceholders": {
@@ -307,15 +311,16 @@
         "Any": "Herhangi",
         "Search": "Arama",
         "analytics": "Analytics",
+        "analyticsSelected": "analytics events",
         "filter applied": "filtre uygulandı",
         "filters applied": "filtreler uygulandı",
         "hardwareType": "Tür",
-        "hardwareTypes": "türler",
+        "hardwareTypes": "Types",
         "minResolution": "Minimum Çözünürlük",
         "search_ipvd": "Belirli bir üretici veya modele göre arama",
         "selected": "seçildi",
         "vendor": "Üretici",
-        "vendors": "ureticiler"
+        "vendors": "Manufacturers"
     },
     "servers in the merged System.": "birleştirilmiş sistemdeki sunucular.",
     "support": "destek",

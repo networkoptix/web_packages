@@ -3,7 +3,7 @@
     "Account Settings": "Accounteinstellungen",
     "Account not activated": "Konto nicht aktiviert",
     "Account not found": "Account nicht gefunden",
-    "Actual number of events supported by this camera may be bigger.": "Actual number of events supported by this camera may be bigger.",
+    "Actual number of events supported by this camera may be bigger.": "Die tatsächliche Anzahl der von dieser Kamera unterstützten Ereignisse ist möglicherweise größer.",
     "Additional Requirements": "Zusätzliche Anforderungen",
     "Administration": "Administration",
     "Advanced PTZ": "Erweiterte PTZ",
@@ -12,7 +12,9 @@
     "All Systems": "Alle Systeme",
     "All cloud users will be deleted.": "Alle Cloudbenutzer werden gelöscht.",
     "All results": "Alle Ergebnisse",
-    "Analytics events": "Analytics events",
+    "Analytics": "Analytics",
+    "Analytics Event": "Analytics Event",
+    "Analytics Events": "Analytics Events",
     "Any": "Alle",
     "Audio": "Audio",
     "Build Number:": "Versionsnummer:",
@@ -25,7 +27,7 @@
     "Choose which properties should be visible to customers:": "Wählen Sie aus, welche Eigenschaften für Kunden sichtbar sein sollen:",
     "Close": "Schließen",
     "Codec": "Codec",
-    "Collapse": "Collapse",
+    "Collapse": "Zusammenbruch",
     "Contact": "Kontakt",
     "Create Account": "Account erstellen",
     "Create account": "Account erstellen",
@@ -104,7 +106,7 @@
     "Terms of Use": "Allgemeine Geschäftsbedingungen",
     "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.": "Die Anmeldeinformationen dieses Benutzers werden angezeigt! Sie müssen eine benutzerdefinierte Rolle \"Öffentlicher Benutzer\" erstellen, die nur Zugriff \n            auf die für den öffentlichen Gebrauch ausgewählten Kameras hat und nur die minimal erforderlichen Ansichtsrechte hat. Dieser \n            \"Öffentliche Benutzer\" sollte keinen systemweiten Zugriff jeglicher Art haben.",
     "There will be more than": "Es wird mehr geben als",
-    "This device has reported to support some analytics events, but we don't have exact information about them.": "This device has reported to support some analytics events, but we don't have exact information about them.",
+    "This device has reported to support some analytics events, but we don't have exact information about them.": "Es wurde gemeldet, dass dieses Gerät einige Analytikereignisse unterstützt, wir haben jedoch keine genauen Informationen darüber.",
     "To": "Zu",
     "Too many attempts. Try again in a minute.": "Zu viele Versuche. Versuchen Sie es später erneut.",
     "Topic": "Thema",
@@ -169,7 +171,6 @@
     "dialogs.merge.secondaryCannotMerge": "Das System {{targetSystem}} hat eine ältere Softwareversion, die mit dem aktuellen System nicht kompatibel ist. Aktualisieren Sie das System {{targetSystem}} auf die <a href=\"/download\" target=\"_blank\" translate>neueste Buildversion</a> um es mit dem aktuellen System zusammenzuführen.",
     "dialogs.merge.systemOffline": "dialogs.merge.systemOffline",
     "dialogs.merge.systemUnavailable": "System {{targetSystem}} ist derzeit nicht erreichbar. Versuchen Sie es in einigen Minuten erneut oder wenden Sie sich an",
-    "disclaimer": "Diese Liste ist auf tatsächliche Geräte beschränkt, die Daten automatisch an {{value}} melden, wie von anonymen Systembenutzern genehmigt. Die vollständige Liste der unterstützten Hersteller und Modelle ist umfangreicher.",
     "downloads": {
         "appTypes": {
             "bundle": "Client und Server",
@@ -262,6 +263,7 @@
         "PTZ cameras": "PTZ-Kameras",
         "camera": "Kamera",
         "count": "Anzahl",
+        "disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous.",
         "dvr": "DVR",
         "encoder": "Encoder",
         "feedback": {
@@ -270,7 +272,7 @@
             "c_Info": "für weitere Fragen/Anliegen bezüglich der unterstützten Geräte."
         },
         "hardwareType": "Typ",
-        "haveAnalytics": "Analytics",
+        "isAnalyticsSupported": "Analytics",
         "isAptzSupported": "Erweiterte PTZ",
         "isAptzSupportedShort": "Erw. PTZ",
         "isAudioSupported": "Audio",
@@ -287,8 +289,10 @@
         "multiSensorCamera": "Multisensorkamera",
         "other": "Andere",
         "primaryCodec": "Codec",
+        "resolutionArea": "Area",
         "vendor": "Hersteller"
     },
+    "ipvd.disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous.",
     "latest build": "neueste Build",
     "manufacturers": "Hersteller",
     "messageDialogPlaceholders": {
@@ -300,25 +304,26 @@
     },
     "phoneNumberWithLabel": "Tel: {{number}}",
     "privacyPolicy": {
-        "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent.",
-        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent."
+        "integration": "Mit dem Absenden dieses Formulars erklären Sie sich damit einverstanden, dass Sie von {{INTEGRATION_COMPANY}}} und/oder %COMPANY_NAME% kontaktiert werden.\nSie finden die {{INTEGRATION_COMPANY}}} Datenschutzerklärung <a href=\"{{INTEGRATION_PRIVACY_POLICY}}}\" target=\"blank\">hier</a> und die %COMPANY_NAME% Datenschutzerklärung <a href=\"%PRIVACY_LINK%\" target=\"blank\">hier</a>, die Anweisungen enthalten, wie Sie Ihre Zustimmung widerrufen können.",
+        "ipvd": "Mit dem Absenden dieses Formulars erklären Sie sich damit einverstanden, dass Sie von %COMPANY_NAME% kontaktiert werden.\nSie finden %COMPANY_NAME% Datenschutzerklärung <a href=\"%PRIVACY_LINK%\" target=\"blank\">hier</a>, die Anweisungen zum Widerruf Ihrer Einwilligung enthält."
     },
     "search": {
         "Any": "Alle",
         "Search": "Suche",
-        "analytics": "Analytics",
+        "analytics": "Analytik",
+        "analyticsSelected": "analytics events",
         "filter applied": "Angewandte Filter",
         "filters applied": "Angewandte Filter",
         "hardwareType": "Typ",
-        "hardwareTypes": "Typen",
+        "hardwareTypes": "Types",
         "minResolution": "Minimale Auflösung",
         "search_ipvd": "Suche nach Modell oder Hersteller",
         "selected": "Ausgewählt",
         "vendor": "Hersteller",
-        "vendors": "Hersteller"
+        "vendors": "Manufacturers"
     },
     "servers in the merged System.": "Server im zusammengeführten System.",
     "support": "support",
-    "testedVersionLabel": "Tested on {{vmsName}} version:",
-    "testedVersionsLabel": "Tested on {{vmsName}} versions:"
+    "testedVersionLabel": "Getestet auf {{vmsName}} Version:",
+    "testedVersionsLabel": "Getestet auf {{vmsName}} Versionen:"
 }

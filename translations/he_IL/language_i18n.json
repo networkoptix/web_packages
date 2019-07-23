@@ -12,7 +12,9 @@
     "All Systems": "כל המערכות",
     "All cloud users will be deleted.": "כל משתמשי הענן יימחקו.",
     "All results": "כל התוצאות",
-    "Analytics events": "Analytics events",
+    "Analytics": "Analytics",
+    "Analytics Event": "Analytics Event",
+    "Analytics Events": "Analytics Events",
     "Any": "כל",
     "Audio": "אודיו",
     "Build Number:": "מספר Build:",
@@ -169,7 +171,6 @@
     "dialogs.merge.secondaryCannotMerge": "למערכת {{targetSystem}} יש גרסת תוכנה ישנה יותר שאינה תואמת למערכת הנוכחית. עדכן {{targetSystem}} ל <a href=\"/download\" target=\"_blank\" translate>לגרסא האחרונה</a> על מנת למזג אותו עם הנוכחי.",
     "dialogs.merge.systemOffline": "dialogs.merge.systemOffline",
     "dialogs.merge.systemUnavailable": "לא ניתן להגיע למערכת {{targetSystem}}. נסה שוב בעוד מספר דקות או צור קשר",
-    "disclaimer": "רשימה זו מוגבלת למכשירים עם דיווח מידע אוטומטי {{value}}, כפי שאושר על ידי משתמשי המערכת האנונימיים. הרשימה המלאה של היצרנים והדגמים הנתמכים גדולה יותר בהיקפה.",
     "downloads": {
         "appTypes": {
             "bundle": "לקוח ושרת",
@@ -262,6 +263,7 @@
         "PTZ cameras": "מצלמות PTZ",
         "camera": "מצלמה",
         "count": "ספירה",
+        "disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous.",
         "dvr": "DVR",
         "encoder": "דוחס",
         "feedback": {
@@ -270,7 +272,7 @@
             "c_Info": "לשאלות / בקשות נוספות בנוגע להתקנים נתמכים."
         },
         "hardwareType": "סוג",
-        "haveAnalytics": "Analytics",
+        "isAnalyticsSupported": "Analytics",
         "isAptzSupported": "מתקדם PTZ",
         "isAptzSupportedShort": "מתקדם PTZ",
         "isAudioSupported": "אודיו",
@@ -287,8 +289,10 @@
         "multiSensorCamera": "מצלמה עם מספר חיישנים",
         "other": "אחר",
         "primaryCodec": "מקודד",
+        "resolutionArea": "Area",
         "vendor": "יצרן"
     },
+    "ipvd.disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous.",
     "latest build": "גרסה האחרונה",
     "manufacturers": "יצרנים",
     "messageDialogPlaceholders": {
@@ -307,15 +311,16 @@
         "Any": "כל",
         "Search": "חיפוש",
         "analytics": "Analytics",
+        "analyticsSelected": "analytics events",
         "filter applied": "מסננים הופעלו",
         "filters applied": "מסננים הופעלו",
         "hardwareType": "סוג",
-        "hardwareTypes": "סוגים",
+        "hardwareTypes": "Types",
         "minResolution": "רזולוציה מינימלית",
         "search_ipvd": "חפש לפי דגם או יצרן",
         "selected": "נבחר",
         "vendor": "יצרן",
-        "vendors": "יצרנים"
+        "vendors": "Manufacturers"
     },
     "servers in the merged System.": "שרתים במערכת הממוזגת.",
     "support": "תמיכה",
