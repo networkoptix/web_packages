@@ -149,45 +149,34 @@ def process_push_response(response, notification_object):
 
 
 def set_subscriptions_from_targets(notification_object, request_data):
-    targets = notification_object.raw_targets
-    targets = set(json.loads(targets))
+    targets = set(json.loads(notification_object.raw_targets))
     system_id = notification_object.raw_system_id
     system = get_system(notification_object, request_data)
 
     if not system:
         return False
 
-    matching_subscriptions = PushSubscription.objects.filter(
-        system_id=system_id, account__email__in=targets, active=True
-    ).distinct()
-
-    notification_object.subscriptions.set(matching_subscriptions)
-
-    for subscription in matching_subscriptions:
-        if subscription.account.email in targets:
-            targets.remove(subscription.account.email)
-
     target_accounts = Account.objects.filter(email__in=targets).distinct()
 
-    auto_active = cloud_portal_customization_cache(
-        settings.CUSTOMIZATION, 'config'
-    )['push_subscription_auto_active']
     for account in target_accounts:
         targets.remove(account.email)
-        if account.is_active:
-            if not PushSubscription.objects.filter(account=account, system_id=system_id).exists():
-                devices = PushDevice.objects.filter(user__email=account.email)
-                for device in devices:
-                    active = system['ownerAccountEmail'] == account.email or auto_active
-                    subscription = PushSubscription.objects.create(
-                        system_id=system_id, account=account, active=active, device=device
-                    )
-                    if subscription.active:
-                        notification_object.subscriptions.add(subscription)
-        else:
+        if not account.is_active:
             log_push_result(notification_object, 'User {} is not activated'.format(account.email), logging.WARNING)
 
     for target in targets:
         log_push_result(notification_object, 'User {} not found'.format(target), logging.ERROR)
+
+    auto_active = cloud_portal_customization_cache(
+        settings.CUSTOMIZATION, 'config'
+    )['push_subscription_auto_active']
+    devices_without_sub = PushDevice.objects.filter(user__in=target_accounts, user__is_active=True).exclude(pushsubscription__system_id=system_id).select_related('user')
+    for device in devices_without_sub:
+        active = system['ownerAccountEmail'] == device.user.email or auto_active
+        PushSubscription.objects.create(system_id=system_id, account=device.user, active=active, device=device)
+
+    matching_subscriptions = PushSubscription.objects.filter(
+        system_id=system_id, account__in=target_accounts, active=True, account__is_active=True
+    ).distinct()
+    notification_object.subscriptions.set(matching_subscriptions)
 
     return notification_object.subscriptions.exists()
