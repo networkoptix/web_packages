@@ -77,7 +77,6 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
         force = check_update_cache(customization_name, data['version_id'])[0]
 
     if not data or force:
-        from cms.controllers.filldata import process_global_contexts
         customization = Customization.objects.get(name=customization_name)
         custom_config = get_config(customization.name)
 
