@@ -18,6 +18,30 @@
                     </button>
 
                 </nx-section>
+                <nx-section>
+                    <header>Add another Device</header>
+                    <form #formNewDevice="ngForm">
+                        <div class="form-group">
+                            <label for="newDeviceToken">Device Token*</label>
+                            <input class="form-control" type="text" name="newDeviceToken" id="newDeviceToken" required
+                            [(ngModel)]="newDevice.deviceToken">
+                            <div class="alert alert-danger" *ngIf="newDevice.deviceTokenError && !formNewDevice.valid" [innerText]="newDevice.deviceTokenError"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="deviceName">Name*</label>
+                            <input class="form-control" type="text" name="deviceName" id="deviceName" maxlength="255" required
+                            [(ngModel)]="newDevice.name">
+                        </div>
+                        <div class="form-group">
+                            <label for="deviceModel">Model</label>
+                            <input class="form-control" type="text" name="deviceModel" id="deviceModel"
+                            [(ngModel)]="newDevice.model">
+                        </div>
+                        <button [disabled]="!formNewDevice.valid" class="btn btn-success d-inline-block"
+                        (click)="onRegisterDevice(formNewDevice)">Register Device
+                        </button><span class="ml-2 text-success" *ngIf="newDevice.success && formNewDevice.untouched">Success!</span>
+                    </form>
+                </nx-section>
             </nx-block>
 
             <nx-block class="mt-3 d-block">

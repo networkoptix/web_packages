@@ -2,7 +2,7 @@ from django.http import Http404
 from rest_framework import exceptions, status
 from rest_framework.authentication import BasicAuthentication, SessionAuthentication
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
-from rest_framework.exceptions import APIException
+from rest_framework.exceptions import APIException, ValidationError
 from rest_framework.generics import GenericAPIView, ListAPIView
 from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, UpdateModelMixin
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -116,7 +116,7 @@ def register_device(request):
             error_data['deviceToken'] = "Device with this deviceToken already exists"
 
         if error_data:
-            raise APIRequestException('Invalid Parameters', error_code=ErrorCodes.not_acceptable, error_data=error_data)
+            raise ValidationError(error_data)
 
         return api_success()
 

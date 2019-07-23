@@ -14,6 +14,7 @@ export class PushComponent implements OnInit {
     private notification: any;
     private systems: any;
     private devices: any;
+    private newDevice: any;
     private deviceSubscriptions: any;
     private deviceToken: any;
     private registered: boolean;
@@ -27,6 +28,13 @@ export class PushComponent implements OnInit {
             body: '',
             payload: '',
             options: ''
+        };
+        this.newDevice = {
+            deviceToken: '',
+            deviceTokenError: '',
+            name: '',
+            model: '',
+            success: false
         };
         this.registered = undefined;
         this.devices = [];
@@ -126,17 +134,41 @@ export class PushComponent implements OnInit {
             );
     }
 
-    onRegisterDevice() {
+    onRegisterDevice(form?) {
+        let deviceToken = '';
+        let name = '';
+        let model = '';
+        if (form === undefined) {
+            deviceToken = this.deviceToken;
+            name = 'Browser';
+            model = window.navigator.userAgent;
+        } else {
+            deviceToken = this.newDevice.deviceToken;
+            name = this.newDevice.name;
+            model = this.newDevice.model ? this.newDevice.model : 'custom';
+        }
         const headers = new HttpHeaders()
             .set('Content-Type', 'application/json');
         this.http.post('/notifications/register_device', {
-            deviceToken: this.deviceToken,
-            name: 'Browser',
-            model: window.navigator.userAgent
-        }, {headers}).subscribe(() => {
-            this.registered = true;
-            this.updateSubStates();
-        });
+            deviceToken, name, model
+        }, {headers}).subscribe(
+            () => {
+                if (deviceToken === this.deviceToken) {
+                    this.registered = true;
+                }
+                if (form) {
+                    this.newDevice.success = true;
+                    form.reset();
+                }
+                this.updateSubStates();
+            },
+            error => {
+                this.newDevice.success = false;
+                if (error.error.deviceToken) {
+                    this.newDevice.deviceTokenError = error.error.deviceToken;
+                    form.controls.newDeviceToken.setErrors({invalid: true});
+                }
+            });
     }
 
     getRegistrationStatus() {
