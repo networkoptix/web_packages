@@ -7,7 +7,11 @@
 @import '~bootstrap/scss/mixins/breakpoints';
 
 .ipvd {
-    max-width : 1551px;
+    max-width : 1438px;
+    
+    &.extended {
+        max-width : 1551px;
+    }
     
     nx-vendor-list {
         .card {
@@ -35,7 +39,11 @@
     /*** overwrite default table of component cam-table ***/
     .nx-table-wrapper {
         margin : 0;
-        max-width: 1130px;
+        max-width: 1047px;
+    
+        &.extended {
+            max-width : 1130px;
+        }
         
         .nx-table-header {
             padding : .5rem .75rem;

@@ -92,6 +92,10 @@
         }
     }
     
+    .filter-label {
+        margin-right: 2px; // prevent flex overlap with next button's border
+    }
+    
     .drop-container {
         max-width: 992px;
         

@@ -41,6 +41,7 @@ export class CamTableComponent implements OnChanges, OnInit {
     private paramsShown;
     private lang;
     private debug: boolean;
+    private beta: boolean;
 
     offset: number;
     currentPage: number;
@@ -50,6 +51,7 @@ export class CamTableComponent implements OnChanges, OnInit {
     pagedItems: any[];
     pagerMaxSize: number;
     CONFIG: any = {};
+    showAnalytics: boolean;
 
     // Options for the Excel export
     public csvFilename: any;
@@ -65,6 +67,8 @@ export class CamTableComponent implements OnChanges, OnInit {
         useBom          : false,
         removeNewLines  : true
     };
+
+    SERVICE_PARAMS = ['count', 'resolutionArea', 'area'];
 
     constructor(private router: Router,
                 private translate: TranslateService,
@@ -204,11 +208,11 @@ export class CamTableComponent implements OnChanges, OnInit {
         });
     }
 
-    filterAllowedParams() {
+    filterAllowedParams(arr: any = []) {
         // filter 'service' params
-        const serviceParams = ['count', 'resolutionArea', 'area'];
-        this.allowedParameters = this.allowedParameters.filter((el) => !serviceParams.includes(el));
-        this.cameraHeaders = this.cameraHeaders.filter((el) => !serviceParams.includes(el.toLowerCase()));
+        this.allowedParameters = this.allowedParameters.filter((el) => !arr.includes(el));
+        this.cameraHeaders = this.cameraHeaders.filter((el) => !arr.includes(el.toLowerCase()));
+        this.showHeaders = this.cameraHeaders;
     }
 
     showParametersFor(item) {
@@ -272,13 +276,15 @@ export class CamTableComponent implements OnChanges, OnInit {
         }
 
         if (changes.params) {
-            this.debug = true;
+            this.debug = (this.params.debug !== undefined);
+            this.beta = (this.params.beta !== undefined);
 
-            if (this.params.debug === undefined) {
+            if (!this.debug && !this.beta) {
                 this.debug = false;
-                this.filterAllowedParams();
+                this.filterAllowedParams(this.SERVICE_PARAMS);
             }
 
+            this.showAnalytics = this.CONFIG.ipvd.showAnalyticsEvents || this.params.debug || this.params.beta;
             this.showHeaders = this.cameraHeaders;
 
             if (!changes.params.firstChange &&
@@ -330,6 +336,15 @@ export class CamTableComponent implements OnChanges, OnInit {
         this.results = this._elements.length;
         this.csvFilename = Date.now();
         this.csvCameraData = this.getCsvData();
+
+        this.debug = (this.params.debug !== undefined);
+        this.beta = (this.params.beta !== undefined);
+
+        this.showAnalytics = this.CONFIG.ipvd.showAnalyticsEvents || this.debug || this.beta;
+
+        if (!this.showAnalytics) {
+            this.filterAllowedParams(['isAnalyticsSupported', 'analytics']);
+        }
     }
 
     setClickedRow(element) {

@@ -136,10 +136,14 @@ export class NxIpvdComponent implements OnInit {
             .getURI()
             .subscribe(params => {
                 this.params = params;
-                this.debug = params.debug === '' || false;
-                this.beta = params.beta === '' || false;
-                if (Object.keys(this.params).length !== 0) {
-                    this.hasNoSearch = false;
+                this.debug = (params.debug !== undefined);
+                this.beta = (params.beta !== undefined);
+
+                const numParams = Object.keys(this.params).length;
+                if (numParams !== 0) {
+                    this.hasNoSearch = (numParams === 1 && (this.params.debug || this.params.beta));
+                } else {
+                    this.hasNoSearch = true;
                 }
             });
 
@@ -154,10 +158,7 @@ export class NxIpvdComponent implements OnInit {
                     this.vmsName = this.CONFIG.vmsName;
                     this.placeholder = this.lang.search.search_ipvd;
 
-                    this.showAnalytics = this.CONFIG.ipvd.showAnalyticsEvents || this.debug || this.beta;
-
-                    // add hardware types and tags
-                    this.addFilterTags();
+                    // add hardware types and resolutions
                     this.addFilterTypes();
                     this.addFilterResolutions();
 
@@ -255,7 +256,10 @@ export class NxIpvdComponent implements OnInit {
                 this.cameras = data.cameras;
 
                 this.analytics = data.analytics;
+
+                this.showAnalytics = this.CONFIG.ipvd.showAnalyticsEvents || this.debug || this.beta;
                 this.addAnalyticsEvents();
+                this.addFilterTags();
 
                 this.vendors = data.vendors;
                 this.vendors.sort(NxUtilsService.byParam((elm) => {
@@ -342,7 +346,12 @@ export class NxIpvdComponent implements OnInit {
                 this.noResult = false;
                 this.camerasTable = [];
                 this.resetActiveCamera();
-                this.uri.resetURI(this.uriPath);
+
+                const queryParams: Params = {};
+                // we need these to be only defined or undefined
+                queryParams.debug = (this.debug) ? true : undefined;
+                queryParams.beta = (this.beta) ? true : undefined;
+                this.uri.resetURI(this.uriPath, queryParams);
             }
         }
     }

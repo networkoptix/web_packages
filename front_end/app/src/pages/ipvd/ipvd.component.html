@@ -1,6 +1,6 @@
 <nx-pre-loader type="page" *ngIf="!cameras.length"></nx-pre-loader>
 
-<div class="ipvd">
+<div class="ipvd" [ngClass]="{'extended': showAnalytics}">
     <div class="row p-3 m-0" [style.display]="mobileDetailMode ? 'none' : 'block'">
         <nx-search
                 name="filterModel"
