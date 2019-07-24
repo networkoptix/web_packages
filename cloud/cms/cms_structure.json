@@ -988,13 +988,6 @@
             }
           },
           {
-            "name": "tags",
-            "label": "Tags",
-            "value": "",
-            "description": "",
-            "type": "text"
-          },
-          {
             "name": "type",
             "label": "Type(Category)",
             "value": "",
@@ -1011,6 +1004,14 @@
                 "Storage"
               ]
             }
+          },
+          {
+            "name": "tags",
+            "label": "Tags",
+            "value": "",
+            "description": "If Type does not have any relevant categories for you integration you may list some here. Eventually some might be added to type.<br>Please separate your list with commas. Ex AI, IoT",
+            "type": "text",
+            "optional": true
           },
           {
             "name": "companyName",
