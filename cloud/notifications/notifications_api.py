@@ -11,6 +11,7 @@ from .models import PushDevice, PushSubscription
 from cms.models import cloud_portal_customization_cache
 
 import logging, json
+
 logger = logging.getLogger(__name__)
 
 notifications_config = settings.NOTIFICATIONS_CONFIG
@@ -25,7 +26,6 @@ def find_message(external_id):
 
 
 def send(user_email, msg_type, message, customization, external_id=None):
-
     django.core.validators.validate_email(user_email)
 
     msg = Message(user_email=user_email, type=msg_type,
@@ -119,7 +119,7 @@ def get_system(notification_object, request_data):
         elif isinstance(exception, exceptions.APILogicException):
             log_push_result(
                 notification_object, f'APILogicException: ' +
-                'likely invalid system_id or cloud account not authorized for the system'
+                                     'likely invalid system_id or cloud account not authorized for the system'
             )
         else:
             raise exception
@@ -169,7 +169,15 @@ def set_subscriptions_from_targets(notification_object, request_data):
     auto_active = cloud_portal_customization_cache(
         settings.CUSTOMIZATION, 'config'
     )['push_subscription_auto_active']
-    devices_without_sub = PushDevice.objects.filter(user__in=target_accounts, user__is_active=True).exclude(pushsubscription__system_id=system_id).select_related('user')
+
+    # Check all related devices for valid tokens
+    device_check_response = PushDevice.objects.filter(user__in=target_accounts).send_message(
+        'Token check', title='Token check', dry_run=True
+    )
+    process_push_response(device_check_response, notification_object)
+
+    devices_without_sub = PushDevice.objects.filter(user__in=target_accounts, user__is_active=True).exclude(
+        pushsubscription__system_id=system_id).select_related('user')
     for device in devices_without_sub:
         active = system['ownerAccountEmail'] == device.user.email or auto_active
         PushSubscription.objects.create(system_id=system_id, account=device.user, active=active, device=device)
