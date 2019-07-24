@@ -106,6 +106,11 @@ export class CamTableComponent implements OnChanges, OnInit {
         this.pageSize = this.CONFIG.layout.tableLarge.rows;
     }
 
+    private setDebugAndBetaMode () {
+        this.debug = (this.params.debug !== undefined);
+        this.beta = (this.params.beta !== undefined);
+    }
+
     toggleHeaderSort(param) {
         let filter;
         for (const [key, value] of Object.entries(this.lang.ipvd)) {
@@ -276,11 +281,10 @@ export class CamTableComponent implements OnChanges, OnInit {
         }
 
         if (changes.params) {
-            this.debug = (this.params.debug !== undefined);
-            this.beta = (this.params.beta !== undefined);
+
+            this.setDebugAndBetaMode();
 
             if (!this.debug && !this.beta) {
-                this.debug = false;
                 this.filterAllowedParams(this.SERVICE_PARAMS);
             }
 
@@ -333,15 +337,13 @@ export class CamTableComponent implements OnChanges, OnInit {
     }
 
     ngOnInit() {
+        this.setDebugAndBetaMode();
+
         this.results = this._elements.length;
         this.csvFilename = Date.now();
         this.csvCameraData = this.getCsvData();
 
-        this.debug = (this.params.debug !== undefined);
-        this.beta = (this.params.beta !== undefined);
-
         this.showAnalytics = this.CONFIG.ipvd.showAnalyticsEvents || this.debug || this.beta;
-
         if (!this.showAnalytics) {
             this.filterAllowedParams(['isAnalyticsSupported', 'analytics']);
         }
