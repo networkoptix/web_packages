@@ -29,7 +29,10 @@ IPVD Text Search Expecting No Results
     Click Element    ${IPVD SEARCH BAR}
     Element Should Be Focused    ${IPVD SEARCH BAR}
     Input Text    ${IPVD SEARCH BAR}    ${SearchString}
-    Elements Should Not Be Visible    ${IPVD TABLE}
+    Elements Should Not Be Visible
+    ...    ${IPVD TABLE}
+    ...    ${IPVD PAGINATION}
+    ...    ${IPVD EXPORT TO CSV}
 
 IPVD Table Row Count
     [Arguments]    ${AllPages}=False
@@ -41,13 +44,20 @@ IPVD Table Row Count
 Validate IPVD Device Table Not Empty
     ${rowCount}=   IPVD Table Row Count
     Should Be True    ${rowCount} > 0    Table empty when rows were expected.
+    Wait Until Elements Are Visible
+    ...    ${IPVD CLEAR TEXT SEARCH BUTTON}
+    ...    ${IPVD PREVIOUS PAGE BUTTON}
+    ...    ${IPVD FIRST PAGE BUTTON}
+    ...    ${IPVD LAST PAGE BUTTON}
+    ...    ${IPVD NEXT PAGE BUTTON}
+    ...    ${IPVD EXPORT TO CSV}
     [Return]    ${rowCount}
 
 IPVD Select Device From Table Column By Value
     [Arguments]    ${column}    ${SearchString}
     ${rowNumber}=   Set Variable    0
     ${rowCount}=   Validate IPVD Device Table Not Empty
-    Table Column Should Contain    ${IPVD TABLE}    2    ${SearchString}
+    Table Column Should Contain    ${IPVD TABLE}    ${column}    ${SearchString}
     :FOR    ${rowIndex}    IN RANGE    1    ${rowCount}+1
     \    ${curText}=   Get Text    ${IPVD TABLE ROWS}\[${rowIndex}]/td\[${column}]/div
     \    ${rowNumber}=   Set Variable    ${rowIndex}
@@ -89,6 +99,10 @@ Validate on IPVD page
     ...    ${IPVD MANFUACTURERS PANE}
     ...    ${IPVD AND MORE}
     ...    ${IPVD DEVICES PANE}
+    Elements Should Not Be Visible
+    ...    ${IPVD TABLE}
+    ...    ${IPVD PAGINATION}
+    ...    ${IPVD EXPORT TO CSV}
     Validate Manufacturer More Count
 
 Validate Manufacturer More Count

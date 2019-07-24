@@ -261,6 +261,7 @@ ${IPVD DEVICE MODEL}                 ${IPVD DEVICE DETAILS}//div[@class="camera-
 ${IPVD DEVICE RESOLUTION}            ${IPVD DEVICE DETAILS}//div[text()='Resolution(max)']//following::div[1]
 ${IPVD TABLE}                        //ipvd//table
 ${IPVD TABLE HEADING MANUFACTURER}   ${IPVD TABLE}/thead//div[text()='Manufacturer']
+${IPVD TABLE HEADING LABEL SORT ARROW}    /../div[2]
 ${IPVD TABLE ROWS}                   ${IPVD TABLE}/tbody/tr
 ${IPVD TABLE FIRST ITEM}             ${IPVD TABLE}/tbody/tr[1]
 ${IPVD TABLE LAST ITEM}              ${IPVD TABLE}/tbody/tr[0=count(following-sibling::tr)]//td
@@ -285,6 +286,8 @@ ${IPVD FEEDBACK PRIVACY POLICY}      ${IPVD FEEDBACK FORM}//a[text()="${PRIVACY 
 ${IPVD FEEDBACK SEND BUTTON}         ${IPVD FEEDBACK}//button[text()="${SEND BUTTON TEXT}"]
 ${IPVD FEEDBACK CANCEL BUTTON}       ${IPVD FEEDBACK}//button[text()="${CANCEL BUTTON TEXT}"]
 ${IPVD FEEDBACK CLOSE BUTTON}        ${IPVD FEEDBACK}//button[@class='close']
+
+${NOTHING FOUND PLACEHOLDER}         //div[contains(@class,'text-placeholder') and contains(text(),"${NOTHING FOUND}")]
 
 #Footer
 ${FOOTER ABOUT LINK}                 //footer//a[contains(text(),"${ABOUT} ${PRODUCT_NAME}")]

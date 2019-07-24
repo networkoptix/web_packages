@@ -58,5 +58,3 @@ ${AUTOTESTS OFFLINE}                  //div[@ng-repeat='system in systems | filt
 ${AUTOTESTS OFFLINE OPEN NX}          //div[@ng-repeat='system in systems | filter:searchSystems as filtered track by system.id']//h2[contains(text(),'Auto Tests 2')]/..//button[@ng-click='checkForm()']
 
 ${OUTLINE ERROR COLOR}                rgb(217, 42, 42)
-
-${IPVD VENDORS SHOWN}                 30
