@@ -18,10 +18,17 @@ module.exports = merge(common, {
         port              : 9000,
         proxy             : [
             {
+                context: ['/api/utils/language'],
+                target: 'https://0.0.0.0:9000',
+                pathRewrite: { '^/api/utils/language': 'language_compiled.json'},
+                changeOrigin: true,
+                secure: false
+            },
+            {
                 context: [ '/api/', '/gateway/' ],
-                target : 'http://127.0.0.1:8000',
+                // target : 'http://127.0.0.1:8000',
                 // target : 'https://cloud-dev2.hdw.mx',
-                // target : 'https://cloud-test.hdw.mx',
+                target : 'https://cloud-test.hdw.mx',
                 changeOrigin: true,
                 //secure: false
 
