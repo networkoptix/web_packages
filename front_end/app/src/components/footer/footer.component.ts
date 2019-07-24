@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { DomSanitizer }      from '@angular/platform-browser';
 import { NxConfigService }   from '../../services/nx-config';
 import { NxAppStateService } from '../../services/nx-app-state.service';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
 
 @Component({
     selector: 'nx-footer',
@@ -20,8 +19,7 @@ import { NxLanguageProviderService } from '../../services/nx-language-provider';
 
     constructor(private sanitizer: DomSanitizer,
                 private _config: NxConfigService,
-                private appState: NxAppStateService,
-                private language: NxLanguageProviderService) {
+                private appState: NxAppStateService) {
         this.config = this._config.getConfig();
     }
 
@@ -29,17 +27,9 @@ import { NxLanguageProviderService } from '../../services/nx-language-provider';
         this.companyLink = this.config.companyLink;
         this.companyName = this.config.companyName;
         this.copyrightYear = this.config.copyrightYear;
-        this.language
-            .translationsSubject
-            .subscribe((lang) => {
-                this.lang = lang;
-                this.footerItems = this.config.footerItems.map((item) => {
-                    item.name = this.lang.defaultFooter[item.name] || item.name;
-                    return item;
-                });
-                this.appState.footerVisibleObservable.subscribe((visible) => {
-                    this.viewFooter = visible;
-                });
-            });
+        this.footerItems = this.config.footerItems;
+        this.appState.footerVisibleObservable.subscribe((visible) => {
+            this.viewFooter = visible;
+        });
     }
 }
