@@ -164,7 +164,7 @@ export class PushComponent implements OnInit {
             },
             error => {
                 this.newDevice.success = false;
-                if (error.error.deviceToken) {
+                if (error.error.deviceToken && form) {
                     this.newDevice.deviceTokenError = error.error.deviceToken;
                     form.controls.newDeviceToken.setErrors({invalid: true});
                 }
