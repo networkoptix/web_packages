@@ -38,11 +38,11 @@ export class CamViewComponent implements OnInit {
             .getURI()
             .subscribe(params => {
                 this.params = params;
-                this.debug = params.debug === '' || false;
-                this.beta = params.beta === '' || false;
+                this.debug = (params.debug !== undefined);
+                this.beta = (params.beta !== undefined);
 
                 this.showAnalytics = this.CONFIG.ipvd.showAnalyticsEvents || this.debug || this.beta;
-                this.showCameraAnalytics = this.showAnalytics && this.activeCamera.isAnalyticsSupported
+                this.showCameraAnalytics = this.showAnalytics && this.activeCamera.isAnalyticsSupported;
             });
 
         this.firmwaresToShow = this.CONFIG.ipvd.firmwaresToShow;
