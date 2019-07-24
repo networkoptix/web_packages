@@ -170,8 +170,8 @@
   },
   "sharing": {
     "confirmOwner": "If you change System owner, you will revoke ownership from the current account. This action is irreversible. Are you sure?",
-    "shareTitle": "Share",
-    "shareConfirmButton": "Share",
+    "shareTitle": "Add",
+    "shareConfirmButton": "Add",
     "editShareTitle": "Edit Permissions",
     "editShareConfirmButton": "Save",
     "permissionsSaved": "New permissions saved"
@@ -193,9 +193,8 @@
     "confirmUnshareFromMe": "You will not be able to lgo into this System anymore.",
     "confirmUnshareFromMeTitle": "Disconnect System from your Account?",
     "confirmUnshareFromMeAction": "Disconnect",
-    "confirmUnshare": "This user will not be able to access System. Are you sure?",
-    "confirmUnshareTitle": "Delete user?",
-    "confirmUnshareAction": "Delete",
+    "confirmUnshareTitle": "Remove user?",
+    "confirmUnshareAction": "Remove",
     "successDisconnected": "System is successfully disconnected from %CLOUD_NAME%",
     "successDeleted": "System {{systemName}} is successfully deleted from your account",
     "mergeFailed": "System merge failed",
