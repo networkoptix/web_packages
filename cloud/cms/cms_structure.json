@@ -567,7 +567,7 @@
           {
             "label": "Public Downloads",
             "name": "%PUBLIC_DOWNLOADS%",
-            "value": "true",
+            "value": true,
             "description": "Allows all users to view the downloads page. If unchecked users must have a special permission to view the downloads page.",
             "advanced": true,
             "optional": true,
@@ -576,7 +576,7 @@
           {
             "label": "Public Release History",
             "name": "%PUBLIC_RELEASE_HISTORY%",
-            "value": "false",
+            "value": false,
             "description": "Allows all users to view the release history page. If unchecked users must have a special permission to view the release history page.",
             "advanced": true,
             "optional": true,
@@ -605,7 +605,7 @@
             "name": "%CLOUD_MERGE%",
             "description": "Shows the cloud merge button for all systems.",
             "type": "check_box",
-            "value": "false",
+            "value": false,
             "optional": true,
             "advanced": true
           },
@@ -614,7 +614,7 @@
             "name": "%FEEDBACK_ENABLED%",
             "description": "If feedback is being abused disable this setting to block all feedback",
             "type": "check_box",
-            "value": "true",
+            "value": true,
             "optional": true,
             "advanced": true
           },
@@ -623,7 +623,7 @@
             "name": "%INTEGRATION_STORE_ENABLED%",
             "description": "Lets the desktop client know if the integration store is enabled.",
             "type": "check_box",
-            "value": "false",
+            "value": false,
             "optional": true,
             "advanced": true
           },
@@ -652,7 +652,7 @@
           {
             "label": "Show analytics events",
             "name": "%SHOW_ANALYTICS_EVENTS%",
-            "value": "false",
+            "value": false,
             "description": "Show/hide analytics events data for cameras",
             "advanced": true,
             "optional": true,
@@ -661,7 +661,7 @@
           {
             "label": "Sort supported devices by popularity",
             "name": "%SORT_SUPPORTED_DEVICES_BY_POPULARITY%",
-            "value": "false",
+            "value": false,
             "description": "Sets supported devices (camera page) sorting order by popularity",
             "advanced": true,
             "optional": true,
@@ -814,6 +814,10 @@
               },
               {
                 "id": "isMultiSensor",
+                "value": false
+              },
+              {
+                "id": "isAnalyticsSupported",
                 "value": false
               }
             ]
@@ -984,13 +988,6 @@
             }
           },
           {
-            "name": "tags",
-            "label": "Tags",
-            "value": "",
-            "description": "",
-            "type": "text"
-          },
-          {
             "name": "type",
             "label": "Type(Category)",
             "value": "",
@@ -1007,6 +1004,14 @@
                 "Storage"
               ]
             }
+          },
+          {
+            "name": "tags",
+            "label": "Tags",
+            "value": "",
+            "description": "If Type does not have any relevant categories for you integration you may list some here. Eventually some might be added to type.<br>Please separate your list with commas. Ex AI, IoT",
+            "type": "text",
+            "optional": true
           },
           {
             "name": "companyName",

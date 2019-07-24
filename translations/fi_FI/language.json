@@ -125,7 +125,7 @@
     "wrongParameters": "Jotkin lomakkeen parametrit ovat virheellisiä",
     "wrongCode": "Tili on jo aktivoitu tai vahvistuskoodi on virheellinen",
     "wrongCodeRestore": "Vahvistuskoodi on jo käytetty tai virheellinen",
-    "wrongAuthCode": "Code is expired or incorrect",
+    "wrongAuthCode": "Koodi on vanhentunut tai virheellinen",
     "forbidden": "Sinulla ei ole oikeuksia tämän toiminnon suorittamiseen",
     "accountNotActivated": "Tätä tiliä ei ole vielä aktivoitu. <a href=\"/activate\">Lähetä aktivointilinkki uudelleen</a>",
     "accountBlocked": "Tämä tili on estetty tilapäisesti. Yritä uudelleen muutaman minuutin.",
@@ -147,7 +147,7 @@
     "mergedSystemIsOffline": "Järjestelmä <strong>{{failedSystem}}</strong> on offline-tilassa.",
     "INCOMPATIBLE": "Järjestelmissä on erilaisia ohjelmistoversioita. Päivitä molemmat <a href=\"/download\">viimeisin versio</a>kohdalle.",
     "FAIL": "Järjestelmä <strong>{{failedSystem}}</strong> ei ole tällä hetkellä saavutettavissa.<br>Yritä uudelleen hetken kuluttua tai ota yhteys <a href=\"%SUPPORT_LINK%\" target=\"_blank\">tukeen</a>.",
-    "unknownMergeError": "Unknown error. You can try to refresh the page and repeat attempt. If the problem persists – please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>."
+    "unknownMergeError": "Tuntematon virhe. Voit yrittää päivittää sivua ja toistaa yrityksen. Jos ongelma jatkuu - ota yhteyttä <a href=\"%SUPPORT_LINK%\" target=\"_blank\">tukeen</a>."
   },
   "merging": {
     "mergeFailedTitle": "Järjestelmien yhdistäminen epäonnistui",
@@ -238,7 +238,7 @@
     },
     "systemOffline": "Järjestelmä offline-tilassa",
     "systemHasNoCameras": "Ei kameroita",
-    "systemUnreachable": "SYSTEM IS UNREACHABLE",
+    "systemUnreachable": "JÄRJESTELMÄÄN EI SAADA YHTEYTTÄ",
     "cameraStates": {
       "offline": "Offline-tilassa",
       "error": "Virhe",

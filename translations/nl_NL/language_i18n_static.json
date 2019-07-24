@@ -7,10 +7,12 @@
 		"Any": "Elke",
 		"selected": "geselecteerd",
 		"vendor": "Fabrikanten",
-		"vendors": "fabrikanten",
+		"vendors": "Manufacturers",
 		"hardwareType": "Type",
-		"hardwareTypes": "types",
-		"minResolution": "Minimum Resolutie"
+		"hardwareTypes": "Types",
+		"minResolution": "Minimum Resolutie",
+		"analytics": "Analytics",
+		"analyticsSelected": "analytics events"
 	},
 	"cameraFilters": {
 		"ptz": "PTZ camera's",
@@ -96,6 +98,7 @@
 		}
 	},
 	"ipvd": {
+		"resolutionArea": "Area",
 		"count": "Aantal",
 		"vendor": "Fabrikant",
 		"model": "Model",
@@ -113,6 +116,7 @@
 		"isIoSupported": "I/O",
 		"isH265": "H.265",
 		"isMultiSensor": "Multi Sensor",
+		"isAnalyticsSupported": "Analytics",
 		"camera": "Camera",
 		"multiSensorCamera": "Multi-Sensor Camera",
 		"encoder": "Encoder",
@@ -130,7 +134,8 @@
 			"a_Please": "Alstublieft",
 			"b_Link": "een aanvraag indienen",
 			"c_Info": "voor aanvullende vragen/opmerkingen over ondersteunde apparaten."
-		}
+		},
+		"disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous."
 	},
 	"integration": {
 		"previewRibbonText": "Deze pagina is een voorbeeld van de laatste wijzigingen, en het komt niet overeen met de publiekelijk beschikbare versie.",
@@ -160,25 +165,26 @@
 			"systemUnavailable": "Systeem {{targetSystem}} is momenteel niet bereikbaar. Probeer het over een paar minuten opnieuw of neem contact op met"
 		},
 		"message": {
-			"failedToSend": "Message has failed to send.",
-			"sent": "Message has been sent.",
+			"failedToSend": "Bericht versturen mislukt.",
+			"sent": "Het Bericht werd verstuurd.",
 			"title": {
 				"integration": "Get in touch with {{companyName}}",
 				"ipvd_feedback_page": "Feedback for cameras page",
-				"ipvd_feedback_device": "Feedback about {{product}}"
+				"ipvd_feedback_device": "Feedback over {{product}}"
 			},
 			"topic": {
 				"contact_sales": "Contact sales for {{product}}",
 				"contact_support": "Contact support for {{product}}",
 				"integration_feedback": "Feedback for integration {{product}}",
 				"ipvd_feedback_page": "Feedback for cameras page",
-				"ipvd_feedback_device": "Feedback about {{product}}"
+				"ipvd_feedback_device": "Feedback over {{product}}"
 			}
 		}
 	},
 	"privacyPolicy": {
-		"integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent.",
-		"ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent."
+		"integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent.",
+		"ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent."
 	},
-	"testedVersionsLabel": "Tested on {{vmsName}} version(s):"
+	"testedVersionLabel": "Tested on {{vmsName}} version:",
+	"testedVersionsLabel": "Tested on {{vmsName}} versions:"
 }

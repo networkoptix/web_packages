@@ -16,8 +16,8 @@ ${email viewer no reg}    noptixautoqa+viewerunreg@gmail.com
 ${email client custom no reg}    noptixautoqa+clientcustomunreg@gmail.com
 &{users dict 1}      cloudAdmin=${EMAIL ADMIN}    Viewer=${EMAIL VIEWER}    Custom=${EMAIL CLIENT CUSTOM}    liveViewer=${EMAIL LIVE VIEWER}
 &{users dict 2}      cloudAdmin=${email admin no reg}     Viewer=${email viewer no reg}    Custom=${email client custom no reg}    liveViewer=${EMAIL LIVE VIEWER}
-&{all users dict}    Administrator=${EMAIL ADMIN}    Viewer=${EMAIL VIEWER}    ClientCustom=${EMAIL CLIENT CUSTOM}
-...                  Administrator=${email admin no reg}     Viewer=${email viewer no reg}    ClientCustom=${email client custom no reg}
+&{all users dict}    ${ADMIN TEXT}=${EMAIL ADMIN}    ${VIEWER TEXT}=${EMAIL VIEWER}    ClientCustom=${EMAIL CLIENT CUSTOM}
+...                  ${ADMIN TEXT}=${email admin no reg}     ${VIEWER TEXT}=${email viewer no reg}    ClientCustom=${email client custom no reg}
 
 *** Keywords ***
 Merge
@@ -215,7 +215,7 @@ Only one system connected to Cloud Account
     Wait Until Element Is Enabled    ${MERGE BUTTON SYSTEM}    180
     Click Button    ${MERGE BUTTON SYSTEM}
     Sleep    2
-    Get Text    ${MERGE DIALOG}//p[contains(text(),"${MERGE NOT OWNER MESSAGE 2 TEXT}")]
+
     Wait Until Elements Are Visible    ${MERGE NOT OWNER MESSAGE 2}    ${MERGE DIALOG}//p[contains(text(),'${MERGE NOT OWNER MESSAGE 1 TEXT}')]    ${MERGE OK BUTTON}    ${MERGE X BUTTON}
     Element Text Should Be    ${MERGE NOT OWNER MESSAGE 2}    ${MERGE NOT OWNER MESSAGE 2 TEXT}
     Click Button    ${MERGE OK BUTTON}
@@ -280,7 +280,7 @@ Merge with 3.0
     Wait Until Element Is Enabled    ${MERGE BUTTON SYSTEM}
     Click Button    ${MERGE BUTTON SYSTEM}
     Wait Until Elements Are Visible    ${MERGE FORM}    ${MERGE SYSTEM DROPDOWN}    ${MERGE OK BUTTON}    ${MERGE CANCEL BUTTON}    ${MERGE X BUTTON}
-    Wait Until Element Is Visible    ${MERGE SYSTEM DROPDOWN}//span[contains(text()," – incompatible")]
+    Wait Until Element Is Visible    ${MERGE SYSTEM DROPDOWN}//span[contains(text(),"– ${INCOMPATIBLE}")]
     Click Button    ${MERGE CANCEL BUTTON}
     Disconnect from cloud
 
@@ -322,14 +322,14 @@ Merge with 3.0
 
     Merge    API made system 1    API made system 2    API made system 2
 
-    Check For Alert    System merge failed
+    Check For Alert    ${SYSTEMS MERGE FAILED TEXT}
     Wait Until Element Is Visible    ${MERGE FAILED DIALOG HEADER}
     Click Button    ${MERGE FAILED OK BUTTON}
     Element Should Not Be Visible    ${MERGE FAILED DIALOG HEADER}
 
     Merge    API made system 1    API made system 2    API made system 2
 
-    Check For Alert    System merge failed
+    Check For Alert    ${SYSTEMS MERGE FAILED TEXT}
     Wait Until Element Is Visible    ${MERGE FAILED DIALOG HEADER}
     Click Button    ${MERGE FAILED X BUTTON}
     Element Should Not Be Visible    ${MERGE FAILED DIALOG HEADER}

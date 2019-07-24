@@ -67,9 +67,9 @@
     "DISCONNECT FORM HEADER TEXT": "Odpojit systém od %PRODUCT_NAME%?",
     "FIRST NAME IS REQUIRED TEXT": "Jméno je povinné",
     "LAST NAME IS REQUIRED TEXT": "Příjmení je povinné",
-    "EMAIL IS REQUIRED TEXT": "Email je povinný",
+    "EMAIL IS REQUIRED TEXT": "Je vyžadován e-mail",
     "EMAIL ALREADY REGISTERED TEXT": "Tento Email je již zaregistrován v %PRODUCT_NAME%",
-    "EMAIL INVALID TEXT": "Prosím zadejte platný email",
+    "EMAIL INVALID TEXT": "Zadejte prosím platný e-mail",
     "PASSWORD IS REQUIRED TEXT": "Heslo je vyžadováno",
     "CURRENT PASSWORD IS REQUIRED TEXT": "Aktuální heslo je vyžadováno",
     "PASSWORD SPECIAL CHARS TEXT": "Používejte pouze latinskou abecedu, číslice a symboly na klávesnici, vyhněte se použití mezery na počátku a konci",
@@ -106,6 +106,6 @@
     "YOU CAN ONLY MERGE AS OWNER TEXT": "Systémy můžete sloučit pouze tam, kde jste vlastníkem.",
     "CHECKING TEXT": "Kontrolování...",
     "ENTER PASSWORD TO CONTINUE TEXT": "Chcete-li pokračovat, zadejte heslo",
-    "INCOMPATIBLE": "Incompatible",
+    "INCOMPATIBLE": "Nekompatibilní",
     "CONNECTION TO SYSTEM LOST": "Connection to %SYSTEM NAME% lost"
 }

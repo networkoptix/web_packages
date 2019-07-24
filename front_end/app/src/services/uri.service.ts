@@ -41,9 +41,11 @@ export class NxUriService {
         });
     }
 
-    resetURI(navigateTo: string) {
+    resetURI(navigateTo: string, queryParams: any = {}) {
         this.router.navigate([navigateTo], {
-            queryParams: {}
+            queryParams,
+            relativeTo: this.route,
+            replaceUrl: false,
         });
     }
 }

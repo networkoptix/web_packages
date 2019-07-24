@@ -3,6 +3,7 @@
     "Account Settings": "Impostazioni dell'account",
     "Account not activated": "Account non attivato",
     "Account not found": "Account non trovato",
+    "Actual number of events supported by this camera may be bigger.": "Il numero effettivo di eventi supportati da questa telecamera potrebbe essere maggiore.",
     "Additional Requirements": "Requisiti addizionali",
     "Administration": "Amministrazione",
     "Advanced PTZ": "PTZ avanzato",
@@ -11,6 +12,9 @@
     "All Systems": "Tutti i sistemi",
     "All cloud users will be deleted.": "Tutti gli utenti cloud saranno cancellati.",
     "All results": "Tutti i risultati",
+    "Analytics": "Analytics",
+    "Analytics Event": "Analytics Event",
+    "Analytics Events": "Analytics Events",
     "Any": "Qualsiasi",
     "Audio": "Audio",
     "Build Number:": "Numero build:",
@@ -23,10 +27,11 @@
     "Choose which properties should be visible to customers:": "Scegli quali proprietà dovrebbero essere visibili ai clienti:",
     "Close": "Chiudere",
     "Codec": "Codec",
+    "Collapse": "Comprimi",
     "Contact": "Contatto",
     "Create Account": "Creare un account",
     "Create account": "Creare un account",
-    "Developer": "Developer",
+    "Developer": "Sviluppatori",
     "Disconnect": "Scollegamento",
     "Disconnect System from %CLOUD_NAME%?": "Scollegare il sistema da %CLOUD_NAME%?",
     "Download": "Scaricare",
@@ -89,8 +94,8 @@
     "Show All": "Mostra tutto",
     "Some of your servers don't support cloud System merge because of outdated software version.": "Alcuni dei tuoi server non supportano l'unione del sistema cloud a causa della versione obsoleta del software.",
     "Support": "Supporto",
-    "Support E-mail": "Support E-mail",
-    "Support URL": "Support URL",
+    "Support E-mail": "Email di supporto",
+    "Support URL": "URL di supporto",
     "System name": "Nome del sistema",
     "System name is required": "Il nome del sistema è richiesto",
     "System will be accessible through local network with local administrator account.": "Il sistema sarà accessibile attraverso la rete locale con l'account dell'amministratore locale.",
@@ -101,6 +106,7 @@
     "Terms of Use": "Condizioni d'uso",
     "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.": "Le credenziali di questo utente saranno esposte! È necessario creare un ruolo personalizzato \"Utente pubblico\" con accesso solo\n            alle telecamere selezionate per uso pubblico e assegnare solo le autorizzazioni di visualizzazione minime richieste. L'\n            \"utente pubblico\" non dovrebbe avere accesso a livello di sistema di alcun tipo.",
     "There will be more than": "Ci saranno più di",
+    "This device has reported to support some analytics events, but we don't have exact information about them.": "Questo dispositivo ha segnalato di supportare alcuni eventi di analisi, ma non abbiamo informazioni precise su di essi.",
     "To": "A",
     "Too many attempts. Try again in a minute.": "Troppi tentativi. Riprova tra un minuto.",
     "Topic": "Argomento",
@@ -110,7 +116,7 @@
     "View": "Mostra",
     "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.": "Consigliamo di installare le ultime versioni di Google Chrome o Mozilla Firefox, ma è possibile utilizzare qualsiasi altro browser web moderno.",
     "What's New?": "Cosa c'è di nuovo?",
-    "Works with:": "Works with:",
+    "Works with:": "Funziona con:",
     "Wrong password": "Password errata",
     "You can merge only those cloud Systems, where you have the \"Owner\" permissions.": "È possibile unire solo i sistemi cloud, in cui si dispone delle autorizzazione \"Proprietario\".",
     "You can only merge Systems where you are the owner.": "Puoi solo unire i sistemi in cui sei il proprietario.",
@@ -165,7 +171,6 @@
     "dialogs.merge.secondaryCannotMerge": "Il sistema {{targetSystem}} ha una versione più recente del software che è incompatibile con il sistema corrente. Aggiornare il sistema attuale alla <a href=\"/download\" target=\"_blank\" translate>versione più recente</a> per unirsi con il {{targetSystem}} sistema corrente.",
     "dialogs.merge.systemOffline": "dialogs.merge.systemOffline",
     "dialogs.merge.systemUnavailable": "Il sistema {{targetSystem}} è attualmente irraggiungibile. Riprova tra qualche minuto o contatta",
-    "disclaimer": "Questo elenco è limitato ai dati di segnalazione automatica dei dispositivi effettivi su {{value}}, come approvati dagli utenti anonimi del sistema. L'elenco completo dei produttori e dei modelli supportati e' maggiore.",
     "downloads": {
         "appTypes": {
             "bundle": "Client e Server",
@@ -258,6 +263,7 @@
         "PTZ cameras": "Telecamere PTZ",
         "camera": "Telecamera / e",
         "count": "Conteggio",
+        "disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous.",
         "dvr": "DVR",
         "encoder": "Encoder",
         "feedback": {
@@ -266,6 +272,7 @@
             "c_Info": "per ulteriori domande / dubbi sui dispositivi supportati."
         },
         "hardwareType": "Tipo",
+        "isAnalyticsSupported": "Analytics",
         "isAptzSupported": "PTZ avanzato",
         "isAptzSupportedShort": "Adv. PTZ",
         "isAudioSupported": "Audio",
@@ -282,8 +289,10 @@
         "multiSensorCamera": "Telecamera multisensore",
         "other": "Altro",
         "primaryCodec": "Codec",
+        "resolutionArea": "Area",
         "vendor": "Produttore"
     },
+    "ipvd.disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous.",
     "latest build": "ultima Build",
     "manufacturers": "produttori",
     "messageDialogPlaceholders": {
@@ -295,23 +304,26 @@
     },
     "phoneNumberWithLabel": "Tel: {{number}}",
     "privacyPolicy": {
-        "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent.",
-        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent."
+        "integration": "Inviando questo modulo accetti di essere contattato da {{INTEGRATION_COMPANY}} e / o %COMPANY_NAME%.\nTroverai l'informativa sulla privacy dal {{INTEGRATION_COMPANY}} <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">qui</a> e %COMPANY_NAME% informativa sulla privacy <a href=\"%PRIVACY_LINK%\" target=\"blank\">qui</a> che includono istruzioni su come revocare il tuo consenso.",
+        "ipvd": "Inviando questo modulo accetti di essere contattato da %COMPANY_NAME%.\nTroverai l'informativa sulla privacy %COMPANY_NAME%<a href=\"%PRIVACY_LINK%\" target=\"blank\">qui</a> che includono istruzioni su come revocare il tuo consenso."
     },
     "search": {
         "Any": "Qualsiasi",
         "Search": "Ricerca",
+        "analytics": "Analitica",
+        "analyticsSelected": "analytics events",
         "filter applied": "filtro applicato",
         "filters applied": "filtri applicati",
         "hardwareType": "Tipo",
-        "hardwareTypes": "tipi",
+        "hardwareTypes": "Types",
         "minResolution": "Risoluzione minima",
         "search_ipvd": "Cerca per modello o produttore",
         "selected": "selezionato",
         "vendor": "Produttore",
-        "vendors": "produttori"
+        "vendors": "Manufacturers"
     },
     "servers in the merged System.": "server nel sistema unito.",
     "support": "supporto",
-    "testedVersionsLabel": "Tested on {{vmsName}} version(s):"
+    "testedVersionLabel": "Verificato sulla versione {{vmsName}}:",
+    "testedVersionsLabel": "Verificato sulle versioni {{vmsName}}:"
 }

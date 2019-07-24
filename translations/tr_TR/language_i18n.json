@@ -3,6 +3,7 @@
     "Account Settings": "Hesap Ayarları",
     "Account not activated": "Hesap etkin değil",
     "Account not found": "Hesap bulunamadı",
+    "Actual number of events supported by this camera may be bigger.": "Actual number of events supported by this camera may be bigger.",
     "Additional Requirements": "Additional Requirements",
     "Administration": "Yönetim",
     "Advanced PTZ": "Gelişmiş PTZ",
@@ -11,6 +12,9 @@
     "All Systems": "Tüm sistemler",
     "All cloud users will be deleted.": "Tüm bulut kullanıcıları silinecek.",
     "All results": "Tüm sonuçlar",
+    "Analytics": "Analytics",
+    "Analytics Event": "Analytics Event",
+    "Analytics Events": "Analytics Events",
     "Any": "Herhangi",
     "Audio": "Ses",
     "Build Number:": "Yapı numarası:",
@@ -23,6 +27,7 @@
     "Choose which properties should be visible to customers:": "Müşterilere hangi özelliklerin görünmesi gerektiğini seçin:",
     "Close": "Kapat",
     "Codec": "Kodek",
+    "Collapse": "Collapse",
     "Contact": "İletişim",
     "Create Account": "Hesap oluştur",
     "Create account": "Hesap oluştur",
@@ -101,6 +106,7 @@
     "Terms of Use": "Terms of Use",
     "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.": "Bu kullanıcının kimlik bilgileri açıkta kalacak! Genel kullanım için seçilen kameralara yalnızca\n            erişimi olan ve yalnızca gerekli minimum görüntüleme izinleri atanan özel bir \"Genel Kullanıcı\" rolü oluşturmanız gerekir. Bu\n            \"Genel Kullanıcı\", sistem genelinde herhangi bir türde erişime sahip olmamalıdır.",
     "There will be more than": "Daha fazla olacak",
+    "This device has reported to support some analytics events, but we don't have exact information about them.": "This device has reported to support some analytics events, but we don't have exact information about them.",
     "To": "To",
     "Too many attempts. Try again in a minute.": "Çok fazla deneme yapıldı. Bir dakika sonra tekrar deneyiniz.",
     "Topic": "Topic",
@@ -142,18 +148,18 @@
             "systemUnavailable": "{{targetSystem}} sistemi erişilebilir değil. Birkaç dakika sonra tekrar deneyin"
         },
         "message": {
-            "failedToSend": "Message has failed to send.",
-            "sent": "Message has been sent.",
+            "failedToSend": "Mesaj gönderilemedi.",
+            "sent": "Mesaj gönderildi.",
             "title": {
                 "integration": "Get in touch with {{companyName}}",
-                "ipvd_feedback_device": "Feedback about {{product}}",
+                "ipvd_feedback_device": "{{product}} hakkında geri bildirim",
                 "ipvd_feedback_page": "Feedback for cameras page"
             },
             "topic": {
                 "contact_sales": "Contact sales for {{product}}",
                 "contact_support": "Contact support for {{product}}",
                 "integration_feedback": "Feedback for integration {{product}}",
-                "ipvd_feedback_device": "Feedback about {{product}}",
+                "ipvd_feedback_device": "{{product}} hakkında geri bildirim",
                 "ipvd_feedback_page": "Feedback for cameras page"
             }
         }
@@ -165,7 +171,6 @@
     "dialogs.merge.secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
     "dialogs.merge.systemOffline": "dialogs.merge.systemOffline",
     "dialogs.merge.systemUnavailable": "{{targetSystem}} sistemi erişilebilir değil. Birkaç dakika sonra tekrar deneyin",
-    "disclaimer": "Bu liste, anonim sistem kullanıcıları tarafından onaylandığı şekilde, verileri {{value}} ile otomatik olarak raporlayan gerçek cihazlarla sınırlıdır. Desteklenen üreticilerin ve modellerin tam listesi kapsam açısından daha büyüktür.",
     "downloads": {
         "appTypes": {
             "bundle": "İstemci ve sunucu",
@@ -258,6 +263,7 @@
         "PTZ cameras": "PTZ kameralar",
         "camera": "Kamera",
         "count": "Sayım",
+        "disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous.",
         "dvr": "DVR",
         "encoder": "Kodlayıcı",
         "feedback": {
@@ -266,6 +272,7 @@
             "c_Info": "desteklenen cihazlarla ilgili ek sorularınız için."
         },
         "hardwareType": "Tür",
+        "isAnalyticsSupported": "Analytics",
         "isAptzSupported": "Gelişmiş PTZ",
         "isAptzSupportedShort": "Gelş. PTZ",
         "isAudioSupported": "Ses",
@@ -282,8 +289,10 @@
         "multiSensorCamera": "Çok Sensörlü Kamera",
         "other": "Diğer",
         "primaryCodec": "Kodek",
+        "resolutionArea": "Area",
         "vendor": "Üretici"
     },
+    "ipvd.disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous.",
     "latest build": "son yapı",
     "manufacturers": "ureticiler",
     "messageDialogPlaceholders": {
@@ -295,23 +304,26 @@
     },
     "phoneNumberWithLabel": "Tel: {{number}}",
     "privacyPolicy": {
-        "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent.",
-        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent."
+        "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent.",
+        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent."
     },
     "search": {
         "Any": "Herhangi",
         "Search": "Arama",
+        "analytics": "Analytics",
+        "analyticsSelected": "analytics events",
         "filter applied": "filtre uygulandı",
         "filters applied": "filtreler uygulandı",
         "hardwareType": "Tür",
-        "hardwareTypes": "türler",
+        "hardwareTypes": "Types",
         "minResolution": "Minimum Çözünürlük",
         "search_ipvd": "Belirli bir üretici veya modele göre arama",
         "selected": "seçildi",
         "vendor": "Üretici",
-        "vendors": "ureticiler"
+        "vendors": "Manufacturers"
     },
     "servers in the merged System.": "birleştirilmiş sistemdeki sunucular.",
     "support": "destek",
-    "testedVersionsLabel": "Tested on {{vmsName}} version(s):"
+    "testedVersionLabel": "Tested on {{vmsName}} version:",
+    "testedVersionsLabel": "Tested on {{vmsName}} versions:"
 }

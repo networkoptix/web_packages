@@ -53,8 +53,8 @@ def get_languages_list():
 
 def generate_branding_variables(datastructure):
     cloud_portal = Product.objects.get(customizations__name=settings.CUSTOMIZATION,
-                                       product_type__type=ProductType.PRODUCT_TYPES.cloud_portal)
-    branding_context = Context.objects.get(name='branding', product_type__type=ProductType.PRODUCT_TYPES.cloud_portal)
+                                       product_type=get_cloud_portal_product().product_type)
+    branding_context = Context.objects.get(name='branding', product_type=get_cloud_portal_product().product_type)
 
     brands = [
         (ds, ds.find_actual_value(product=cloud_portal))
@@ -121,6 +121,9 @@ class CustomContextForm(forms.Form):
             if data_structure.type in [DataStructure.DATA_TYPES.long_text,
                                        DataStructure.DATA_TYPES.object,
                                        DataStructure.DATA_TYPES.array]:
+                if data_structure.type in [DataStructure.DATA_TYPES.object,
+                                           DataStructure.DATA_TYPES.array]:
+                    record_value = json.dumps(record_value, indent=4)
                 widget_type = forms.Textarea(attrs={'placeholder': data_structure.default})
 
             if data_structure.type == DataStructure.DATA_TYPES.html:

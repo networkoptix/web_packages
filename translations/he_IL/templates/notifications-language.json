@@ -15,13 +15,13 @@
     "emailSubject": "בקשת תמיכה עבור {{message.product}}"
   },
   "integration_feedback": {
-    "emailSubject": "Feedback for {{message.product}}"
+    "emailSubject": "משוב על {{message.product}}"
   },
   "ipvd_feedback": {
-    "emailSubject": "Camera Page Feedback{{#message.product}} for {{message.product}}{{/message.product}}"
+    "emailSubject": "משוב דף מצלמה {{#message.product}} עבור {{message.product}}{{/message.product}}"
   },
   "review_version": {
-    "emailSubject": "{{message.product_type}}: {{message.product}} has a new version to review"
+    "emailSubject": "{{message.product_type}}: ל {{message.product}} יש גרסה חדשה לסקירה"
   },
   "restore_password": {
     "emailSubject": "אפס את סיסמתך"

@@ -3,14 +3,18 @@
     "Account Settings": "Ajustes de cuenta",
     "Account not activated": "Cuenta no activada",
     "Account not found": "Cuenta no encontrada",
-    "Additional Requirements": "Additional Requirements",
+    "Actual number of events supported by this camera may be bigger.": "El número real de eventos soportados por esta cámara puede ser mayor.",
+    "Additional Requirements": "Requerimientos adicionales",
     "Administration": "Administración",
     "Advanced PTZ": "PTZ Avanzado",
-    "Advanced Search": "Advanced Search",
-    "All Integrations": "All Integrations",
+    "Advanced Search": "Búsqueda Avanzada",
+    "All Integrations": "Todas las integraciones",
     "All Systems": "Todos los Sistemas",
     "All cloud users will be deleted.": "Se eliminarán todos los usuarios de la nube.",
     "All results": "Todos los resultados",
+    "Analytics": "Analytics",
+    "Analytics Event": "Analytics Event",
+    "Analytics Events": "Analytics Events",
     "Any": "Cualquiera",
     "Audio": "Audio",
     "Build Number:": "Número de compilación:",
@@ -23,10 +27,11 @@
     "Choose which properties should be visible to customers:": "Elija qué propiedades deben ser visibles para los clientes:",
     "Close": "Cerrar",
     "Codec": "Codec",
+    "Collapse": "Colapsar",
     "Contact": "Contacto",
     "Create Account": "Crear Cuenta",
     "Create account": "Crear Cuenta",
-    "Developer": "Developer",
+    "Developer": "Desarrollador",
     "Disconnect": "Desconectar",
     "Disconnect System from %CLOUD_NAME%?": "¿Desconectar el Sistema de %CLOUD_NAME%?",
     "Download": "Descargar",
@@ -49,7 +54,7 @@
     "Forgot password?": "¿Has olvidado tu contraseña?",
     "Get in touch": "Contactar",
     "How it works": "Cómo funciona",
-    "How to setup?": "How to setup?",
+    "How to setup?": "¿Cómo configurar?",
     "I/O": "E/S",
     "In Review": "En revisión",
     "In-Client Upgrade:": "Actualización en el cliente:",
@@ -76,7 +81,7 @@
     "Release Notes": "Notas de la versión",
     "Release notes": "Notas de la versión",
     "Remember me": "Recuérdame",
-    "Requirements": "Requirements",
+    "Requirements": "Requerimientos",
     "Resend activation email": "Reenviar E-Mail de activación",
     "Resolution(max)": "Resolución(max)",
     "Save": "Guardar",
@@ -89,8 +94,8 @@
     "Show All": "Mostrar todo",
     "Some of your servers don't support cloud System merge because of outdated software version.": "Algunos de sus servidores no admiten la combinación de sistemas en la nube debido a una versión de software desactualizada.",
     "Support": "Asistencia",
-    "Support E-mail": "Support E-mail",
-    "Support URL": "Support URL",
+    "Support E-mail": "Correo electrónico de soporte",
+    "Support URL": "URL de soporte",
     "System name": "Nombre del sistema",
     "System name is required": "Nombre del sistema es requierido",
     "System will be accessible through local network with local administrator account.": "El sistema será accesible a través de la red local con la cuenta del administrador local.",
@@ -98,10 +103,11 @@
     "Systems of such size may work but will be unstable and have troubles with updates and synchronisation.": "Los sistemas de tal tamaño pueden funcionar pero serán inestables y tendrán problemas con las actualizaciones y la sincronización.",
     "Tags": "Etiquetas",
     "Take the name and settings from": "Tome el nombre y la configuración de",
-    "Terms of Use": "Terms of Use",
+    "Terms of Use": "Términos de Uso",
     "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.": "Las credenciales de este usuario serán expuestas! Debe crear un rol de \"Usuario público\" personalizado con acceso solo\n            a las cámaras seleccionadas para uso público, y asignado solo los permisos de visualización mínimos requeridos. Este\n            \"Usuario público\" no debe tener acceso a todo el sistema de ningún tipo.",
     "There will be more than": "Habrá más de",
-    "To": "To",
+    "This device has reported to support some analytics events, but we don't have exact information about them.": "Se ha informado que este dispositivo es compatible con algunos eventos de analíticas, pero no tenemos información exacta sobre ellos.",
+    "To": "A",
     "Too many attempts. Try again in a minute.": "Demasiados intentos. Inténtalo de nuevo en un minuto.",
     "Topic": "Tema",
     "Update them to the": "Actualizarlos a",
@@ -109,12 +115,12 @@
     "User": "Usuario",
     "View": "Vista",
     "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.": "Recomendamos instalar las últimas versiones de Google Chrome o Mozilla Firefox, pero puede usar cualquier otro navegador web moderno.",
-    "What's New?": "What's New?",
-    "Works with:": "Works with:",
+    "What's New?": "¿Qué hay de nuevo?",
+    "Works with:": "Funciona con:",
     "Wrong password": "Contraseña incorrecta",
     "You can merge only those cloud Systems, where you have the \"Owner\" permissions.": "Puede fusionar esos sistemas en la nube, solo cuando tiene los permisos de \"Propietario\".",
     "You can only merge Systems where you are the owner.": "Sólo puede fusionar Sistemas donde usted es el propietario.",
-    "Your Email": "Your Email",
+    "Your Email": "Tu correo electrónico",
     "Your Name": "Tu Nombre",
     "Your browser is not supported": "Tu navegador no es compatible",
     "andXMore": "... y {{value}} más",
@@ -142,19 +148,19 @@
             "systemUnavailable": "El sistema {{targetSystem}} es actualmente inalcanzable. Inténtalo de nuevo en unos minutos o contacta"
         },
         "message": {
-            "failedToSend": "Message has failed to send.",
-            "sent": "Message has been sent.",
+            "failedToSend": "El mensaje no se ha podido enviar.",
+            "sent": "El mensaje ha sido enviado.",
             "title": {
-                "integration": "Get in touch with {{companyName}}",
-                "ipvd_feedback_device": "Feedback about {{product}}",
-                "ipvd_feedback_page": "Feedback for cameras page"
+                "integration": "Ponte en contacto con {{companyName}}",
+                "ipvd_feedback_device": "Comentarios sobre {{product}}",
+                "ipvd_feedback_page": "Comentarios sobre la página de cámaras"
             },
             "topic": {
-                "contact_sales": "Contact sales for {{product}}",
-                "contact_support": "Contact support for {{product}}",
-                "integration_feedback": "Feedback for integration {{product}}",
-                "ipvd_feedback_device": "Feedback about {{product}}",
-                "ipvd_feedback_page": "Feedback for cameras page"
+                "contact_sales": "Póngase en contacto con ventas para {{product}}",
+                "contact_support": "Contactar a soporte para {{product}}",
+                "integration_feedback": "Comentarios para la integración {{product}}",
+                "ipvd_feedback_device": "Comentarios sobre {{product}}",
+                "ipvd_feedback_page": "Comentarios sobre la página de cámaras"
             }
         }
     },
@@ -165,7 +171,6 @@
     "dialogs.merge.secondaryCannotMerge": "El sistema {{targetSystem}} tiene una versión de software anterior que es incompatible con el sistema actual. Actualice {{targetSystem}} a la <a href=\"/download\" target=\"_blank\" translate>última compilación</a> para fusionarla con la actual.",
     "dialogs.merge.systemOffline": "dialogs.merge.systemOffline",
     "dialogs.merge.systemUnavailable": "El sistema {{targetSystem}} es actualmente inalcanzable. Inténtalo de nuevo en unos minutos o contacta",
-    "disclaimer": "Esta lista está limitada a los datosde dispositivos reales que reportan automáticamente a {{value}}, como han sido aprobados por usuarios anónimos del sistema. La lista completa de fabricantes y modelos soportados es mayor.",
     "downloads": {
         "appTypes": {
             "bundle": "Cliente y Servidor",
@@ -258,6 +263,7 @@
         "PTZ cameras": "Cámaras PTZ",
         "camera": "Camara",
         "count": "Contar",
+        "disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous.",
         "dvr": "DVR",
         "encoder": "Codificador",
         "feedback": {
@@ -266,6 +272,7 @@
             "c_Info": "para preguntas adicionales relacionadas a dispositivos soportados."
         },
         "hardwareType": "Tipo",
+        "isAnalyticsSupported": "Analytics",
         "isAptzSupported": "PTZ Avanzado",
         "isAptzSupportedShort": "PTZ Av.",
         "isAudioSupported": "Audio",
@@ -282,12 +289,14 @@
         "multiSensorCamera": "Cámara multisensor",
         "other": "Otro",
         "primaryCodec": "Codec",
+        "resolutionArea": "Area",
         "vendor": "Fabricante"
     },
+    "ipvd.disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous.",
     "latest build": "última versión",
     "manufacturers": "fabricantes",
     "messageDialogPlaceholders": {
-        "feedback": "Make sure you include your camera model and manufacturer..."
+        "feedback": "Asegúrate de incluir el modelo y el fabricante de tu cámara..."
     },
     "pageTitles": {
         "integrations": "Integraciones",
@@ -295,23 +304,26 @@
     },
     "phoneNumberWithLabel": "Tel: {{number}}",
     "privacyPolicy": {
-        "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent.",
-        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\">here</a> which include instruction on how to withdraw your consent."
+        "integration": "Al enviar este formulario, usted acepta ser contactado por {{INTEGRATION_COMPANY}} y / o %COMPANY_NAME%.\nEncontrará {{INTEGRATION_COMPANY}} política de privacidad <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">aquí</a> y %COMPANY_NAME% política de privacidad <a href=\"%PRIVACY_LINK%\" target=\"blank\">aquí</a> que incluyen instrucciones sobre cómo retirar su consentimiento.",
+        "ipvd": "Al enviar este formulario, usted acepta ser contactado por %COMPANY_NAME%.\nEncontrará %COMPANY_NAME% política de privacidad <a href=\"%PRIVACY_LINK%\" target=\"blank\">aquí</a> que incluye instrucciones sobre cómo retirar su consentimiento."
     },
     "search": {
         "Any": "Cualquiera",
         "Search": "Búsqueda",
-        "filter applied": "filter applied",
-        "filters applied": "filters applied",
+        "analytics": "Analítica",
+        "analyticsSelected": "analytics events",
+        "filter applied": "filtro aplicado",
+        "filters applied": "filtros aplicados",
         "hardwareType": "Tipo",
-        "hardwareTypes": "types",
-        "minResolution": "Minimum Resolution",
-        "search_ipvd": "Search by model or manufacturer",
-        "selected": "selected",
+        "hardwareTypes": "Types",
+        "minResolution": "Resolución mínima",
+        "search_ipvd": "Búsqueda por modelo o fabricante",
+        "selected": "seleccionado",
         "vendor": "Fabricante",
-        "vendors": "manufacturers"
+        "vendors": "Manufacturers"
     },
     "servers in the merged System.": "servidores en el Sistema fusionado.",
     "support": "asistencia",
-    "testedVersionsLabel": "Tested on {{vmsName}} version(s):"
+    "testedVersionLabel": "Probado en la versión {{vmsName}}:",
+    "testedVersionsLabel": "Probado en {{vmsName}} versiones:"
 }

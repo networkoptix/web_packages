@@ -18,9 +18,12 @@ def deprecate_contexts_and_data_structures_for_product_type(product_type):
     DataStructure.objects.filter(context__product_type=product_type).update(deprecated=True)
 
 
-def find_or_add_product_type(product_type, name=""):
-
-    return ProductType.objects.get_or_create(name=name, type=product_type)[0]
+def find_or_add_product_type(product_type_type, name="", single_customization=True):
+    product_type, created = ProductType.objects.get_or_create(name=name, type=product_type_type)
+    if created:
+        product_type.single_customization = single_customization
+        product_type.save()
+    return product_type
 
 
 def find_or_add_product_with_single_customization(name, customization, product_type_type, product_type_name):

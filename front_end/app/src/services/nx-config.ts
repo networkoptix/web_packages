@@ -257,11 +257,11 @@ export class NxConfigService {
                     regex: '^https?:\\/\\/(?:www\\.youtube\\.com\\/(?:embed\\/|watch\\?v=)|youtu\\.be\\/)([\\w\-]+)$'
                 }
             },
-            defaultPlatformNames          : {
-                'arm-file'                : 'Arm',
+            defaultPlatformNames: {
+                'arm-64-file'             : 'ARM 64bit',
                 'linux-x64-file'          : 'Linux x64',
                 'macos-file'              : 'Mac OS',
-                'rpi-file'                : 'Raspberry Pi',
+                'arm-32-file'             : 'ARM 32bit',
                 'windows-x64-file'        : 'Windows x64',
                 'downloadableInstructions': 'Instructions / Manual'
             },
@@ -271,7 +271,8 @@ export class NxConfigService {
             },
             ipvd: {
                 pagerMaxSize                    : 4,
-                firmwaresToShow                 : 5,
+                firmwaresToShow                 : 4,
+                analyticsToShow                 : 4,
                 sortSupportedDevicesByPopularity: '',
                 supportedResolutions            : '',
                 supportedHardwareTypes          : '',

@@ -18,9 +18,6 @@ class NotificationAdmin(admin.ModelAdmin):
     def has_delete_permission(self, request, obj=None):
         return False
 
-    def has_view_permission(self, request, obj=None):
-        return False
-
 
 @admin.register(Subscription)
 class SubscriptionAdmin(admin.ModelAdmin):

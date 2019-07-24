@@ -44,7 +44,7 @@
     "SAVE BUTTON TEXT": "Lưu",
     "SHARE BUTTON TEXT": "Chia sẻ",
     "DISCONNECT BUTTON TEXT": "Ngắt kết nối",
-    "SEND BUTTON TEXT": "Send",
+    "SEND BUTTON TEXT": "Gửi",
     "OWNER TEXT": "Chủ nhân",
     "ADMIN TEXT": "Giám sát viên",
     "ADV VIEWER TEXT": "Trình xem nâng cao",
@@ -106,6 +106,6 @@
     "YOU CAN ONLY MERGE AS OWNER TEXT": "Bạn chỉ có thể hợp nhất Hệ thống nếu bạn là chủ sở hữu.",
     "CHECKING TEXT": "kiểm tra...",
     "ENTER PASSWORD TO CONTINUE TEXT": "Nhập mật khẩu cho tài khoản của bạn để tiếp tục",
-    "INCOMPATIBLE": "Incompatible",
+    "INCOMPATIBLE": "không tương thích",
     "CONNECTION TO SYSTEM LOST": "Connection to %SYSTEM NAME% lost"
 }

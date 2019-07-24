@@ -44,7 +44,7 @@
     "SAVE BUTTON TEXT": "Mentés",
     "SHARE BUTTON TEXT": "Megosztás",
     "DISCONNECT BUTTON TEXT": "Szétkapcsolás",
-    "SEND BUTTON TEXT": "Send",
+    "SEND BUTTON TEXT": "Küldés",
     "OWNER TEXT": "Tulajdonos",
     "ADMIN TEXT": "Adminisztrátor",
     "ADV VIEWER TEXT": "Speciális felhasználó",
@@ -106,6 +106,6 @@
     "YOU CAN ONLY MERGE AS OWNER TEXT": "Csak olyan felhő-rendszereket vonhat össze, ahol tulajdonos.",
     "CHECKING TEXT": "Ellenőrzés...",
     "ENTER PASSWORD TO CONTINUE TEXT": "Adja meg a fiókjának jelszavát a folytatáshoz",
-    "INCOMPATIBLE": "Incompatible",
+    "INCOMPATIBLE": "Inkompatibilis",
     "CONNECTION TO SYSTEM LOST": "Connection to %SYSTEM NAME% lost"
 }

@@ -94,7 +94,8 @@ export class NxIntegrationsComponent implements OnInit {
     // currently integrationStoreEnabled is populated in AJS and this creates
     // an issue (not avail on page reload)
     navigate404IfNoResult(result) {
-        if (!this.CONFIG && !this.CONFIG.integrationStoreEnabled) {
+        // CONFIG is not avail or integrationStoreEnabled is not initialized (AJS dependency)
+        if (!this.CONFIG || this.CONFIG.integrationStoreEnabled === undefined) {
             setTimeout(() => this.navigate404IfNoResult(result));
             return;
         }

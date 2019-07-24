@@ -44,7 +44,7 @@
     "SAVE BUTTON TEXT": "Tallenna",
     "SHARE BUTTON TEXT": "Jaa",
     "DISCONNECT BUTTON TEXT": "Katkaise yhteys",
-    "SEND BUTTON TEXT": "Send",
+    "SEND BUTTON TEXT": "Lähetä",
     "OWNER TEXT": "Omistaja",
     "ADMIN TEXT": "Järjestelmänvalvoja",
     "ADV VIEWER TEXT": "Edistyneempi katselu",
@@ -106,6 +106,6 @@
     "YOU CAN ONLY MERGE AS OWNER TEXT": "Voit yhdistää pilvijärjestelmät, joissa olet omistajana.",
     "CHECKING TEXT": "Tarkistetaan...",
     "ENTER PASSWORD TO CONTINUE TEXT": "Syötä tilisi salasana jatkaaksesi",
-    "INCOMPATIBLE": "Incompatible",
+    "INCOMPATIBLE": "yhteensopimaton",
     "CONNECTION TO SYSTEM LOST": "Connection to %SYSTEM NAME% lost"
 }

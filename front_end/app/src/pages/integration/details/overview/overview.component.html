@@ -62,11 +62,11 @@
 
                     <div class="section"
                          *ngIf="plugin.requirementsAndCompatibility.testedVersionsStringFull">
-                        <div *ngIf="plugin.requirementsAndCompatibility.testedVersions == 1">
+                        <div *ngIf="plugin.requirementsAndCompatibility.testedVersions.length == 1">
                             <label class="group-label" [translate]="'testedVersionLabel'"
                                    [translateParams]="{ vmsName: CONFIG.vmsName }"></label>
                         </div>
-                        <div *ngIf="plugin.requirementsAndCompatibility.testedVersions > 1">
+                        <div *ngIf="plugin.requirementsAndCompatibility.testedVersions.length > 1">
                             <label class="group-label" [translate]="'testedVersionsLabel'"
                                    [translateParams]="{ vmsName: CONFIG.vmsName }"></label>
                         </div>

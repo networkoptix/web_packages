@@ -15,13 +15,13 @@
     "emailSubject": "Tukipyyntö {{message.product}}"
   },
   "integration_feedback": {
-    "emailSubject": "Feedback for {{message.product}}"
+    "emailSubject": "Palaute{{message.product}}"
   },
   "ipvd_feedback": {
-    "emailSubject": "Camera Page Feedback{{#message.product}} for {{message.product}}{{/message.product}}"
+    "emailSubject": "Kameran sivun palaute{{#message.product}} {{message.product}}{{/message.product}}"
   },
   "review_version": {
-    "emailSubject": "{{message.product_type}}: {{message.product}} has a new version to review"
+    "emailSubject": "{{message.product_type}}: {{message.product}} on uusi versio tarkistettavaksi"
   },
   "restore_password": {
     "emailSubject": "Nollaa salasanasi"

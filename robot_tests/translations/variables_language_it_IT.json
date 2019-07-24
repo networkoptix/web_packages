@@ -44,7 +44,7 @@
     "SAVE BUTTON TEXT": "Salva",
     "SHARE BUTTON TEXT": "Condividere",
     "DISCONNECT BUTTON TEXT": "Disconnetti",
-    "SEND BUTTON TEXT": "Send",
+    "SEND BUTTON TEXT": "Invia",
     "OWNER TEXT": "Proprietario",
     "ADMIN TEXT": "Amministratore",
     "ADV VIEWER TEXT": "Visualizzatore avanzato",
@@ -93,7 +93,7 @@
     "IPVD DEVICES TEXT": "dispositivi",
     "IPVD SUBMIT A REQUEST TEXT": "invia una richiesta",
     "IPVD SEND DEVICE FEEDBACK TEXT": "Invia feedback sul dispositivo",
-    "PRIVACY POLICY LINK TEXT": "here",
+    "PRIVACY POLICY LINK TEXT": "qui",
     "OK TEXT": "Ok",
     "MERGE SYSTEMS TEXT": "Unione dei sistemi",
     "SYSTEM MERGING TEXT": "I sistemi hanno iniziato ad unirsi",
@@ -106,6 +106,6 @@
     "YOU CAN ONLY MERGE AS OWNER TEXT": "Puoi solo unire i sistemi in cui sei il proprietario.",
     "CHECKING TEXT": "Controllo...",
     "ENTER PASSWORD TO CONTINUE TEXT": "Inserisci la password per il tuo account per continuare",
-    "INCOMPATIBLE": "Incompatible",
-    "CONNECTION TO SYSTEM LOST": "Connection to %SYSTEM NAME% lost"
+    "INCOMPATIBLE": "non compatibile",
+    "CONNECTION TO SYSTEM LOST": "Connessione persa al %SYSTEM NAME%"
 }

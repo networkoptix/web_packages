@@ -44,7 +44,7 @@
     "SAVE BUTTON TEXT": "저장",
     "SHARE BUTTON TEXT": "공유",
     "DISCONNECT BUTTON TEXT": "연결 끊기",
-    "SEND BUTTON TEXT": "Send",
+    "SEND BUTTON TEXT": "보내기",
     "OWNER TEXT": "소유자",
     "ADMIN TEXT": "관리자",
     "ADV VIEWER TEXT": "고급 뷰어",
@@ -93,7 +93,7 @@
     "IPVD DEVICES TEXT": "기기들",
     "IPVD SUBMIT A REQUEST TEXT": "요청하기",
     "IPVD SEND DEVICE FEEDBACK TEXT": "이 기기에 대한 의견 보내기",
-    "PRIVACY POLICY LINK TEXT": "here",
+    "PRIVACY POLICY LINK TEXT": "여기",
     "OK TEXT": "확인",
     "MERGE SYSTEMS TEXT": "시스템 병합",
     "SYSTEM MERGING TEXT": "시스템이 머지를 시작했습니다.",
@@ -106,6 +106,6 @@
     "YOU CAN ONLY MERGE AS OWNER TEXT": "소유자 인 시스템 만 머지 할 수 있습니다.",
     "CHECKING TEXT": "확인...",
     "ENTER PASSWORD TO CONTINUE TEXT": "계속 하려면 귀하의 계정에 대 한 패스워드를 입력하십시요",
-    "INCOMPATIBLE": "Incompatible",
-    "CONNECTION TO SYSTEM LOST": "Connection to %SYSTEM NAME% lost"
+    "INCOMPATIBLE": "호환 되지 않음",
+    "CONNECTION TO SYSTEM LOST": "%SYSTEM NAME % 연결 끊김"
 }

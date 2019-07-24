@@ -1,8 +1,8 @@
-There is a new version for {{ message.product }}({{message.product_type}}) to review.
+Новая версия {{ message.product }} ({{message.product_type}}) ожидает проверки.
 
 Щелкните по ссылке чтобы просмотреть черновик {{ message.id }} для {{ message.product }}
 
-Link to review: {{ config.portal_url }}/admin/cms/productcustomizationreview/{{ message.id }}/change/
+Ссылка для проверки: {{ config.portal_url }}/admin/cms/productcustomizationreview/{{ message.id }}/change/
 
 На этой странице можно
 1) Просмотреть последние изменения.

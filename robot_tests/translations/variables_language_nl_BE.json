@@ -44,7 +44,7 @@
     "SAVE BUTTON TEXT": "Opslaan",
     "SHARE BUTTON TEXT": "Delen",
     "DISCONNECT BUTTON TEXT": "Verbinding verbreken",
-    "SEND BUTTON TEXT": "Send",
+    "SEND BUTTON TEXT": "Verzenden",
     "OWNER TEXT": "Eigenaar",
     "ADMIN TEXT": "Beheerder",
     "ADV VIEWER TEXT": "Geavanceerde Viewer",
@@ -106,6 +106,6 @@
     "YOU CAN ONLY MERGE AS OWNER TEXT": "Je kunt alleen systemen samenvoegen waarvan je eigenaar bent.",
     "CHECKING TEXT": "Controleer...",
     "ENTER PASSWORD TO CONTINUE TEXT": "Voer het wachtwoord in voor uw account om door te gaan",
-    "INCOMPATIBLE": "Incompatible",
+    "INCOMPATIBLE": "niet compatibel",
     "CONNECTION TO SYSTEM LOST": "Connection to %SYSTEM NAME% lost"
 }

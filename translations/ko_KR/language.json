@@ -196,11 +196,11 @@
     "confirmUnshare": "이 사용자는 시스템에 액세스 할 수 없게 됩니다. 확실합니까?",
     "confirmUnshareTitle": "사용자 삭제?",
     "confirmUnshareAction": "삭제",
-    "successDisconnected": "System is successfully disconnected from %CLOUD_NAME%",
+    "successDisconnected": "시스템이 %CLOUD_NAME%에서 성공적으로 연결 해제되었습니다.",
     "successDeleted": "시스템 {{systemName}} 이 (가) 귀하의 계정에서 성공적으로 삭제되었습니다.",
     "mergeFailed": "시스템 머지에 실패했습니다.",
     "mergeStart": "시스템이 머지를 시작했습니다.",
-    "mergeSuccess": "System merge completed",
+    "mergeSuccess": "시스템 머지가 완료되었습니다.",
     "permissionsRemoved": "권한이 {{email}} 에서 제거 되었습니다.",
     "unknownName": "시스템의 알 수없는 이름 (클라우드 머지로 인해 발생)"
   },

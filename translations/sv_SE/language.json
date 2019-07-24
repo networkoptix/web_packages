@@ -125,7 +125,7 @@
     "wrongParameters": "Vissa parametrar på formuläret är felaktiga",
     "wrongCode": "Kontot är redan aktiverat eller bekräftelsekoden är felaktig",
     "wrongCodeRestore": "Bekräftelsekoden är redan använd eller felaktig",
-    "wrongAuthCode": "Code is expired or incorrect",
+    "wrongAuthCode": "Koden är utgått eller felaktig",
     "forbidden": "Du har inte behörighet att utföra denna åtgärd",
     "accountNotActivated": "Det här kontot är inte aktiverat än. <a href=\"/activate\">Skicka aktiveringslänk igen</a>",
     "accountBlocked": "Det här kontot är tillfälligt blockerat. Vänligen försök igen om några minuter.",
@@ -147,7 +147,7 @@
     "mergedSystemIsOffline": "Systemet <strong>{{failedSystem}}</strong> är offline.",
     "INCOMPATIBLE": "Systemen har olika mjukvaruversioner. Vänligen uppdatera dem båda till <a href=\"/download\">senaste version</a>.",
     "FAIL": "System <strong>{{failedSystem}}</strong> är för närvarande oåtkomligt.<br>Försök igen om några minuter eller kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-    "unknownMergeError": "Unknown error. You can try to refresh the page and repeat attempt. If the problem persists – please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>."
+    "unknownMergeError": "Okänt fel. Du kan försöka uppdatera sidan och upprepa försöket. Om problemet kvarstår - kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>."
   },
   "merging": {
     "mergeFailedTitle": "Systemsammanslagning misslyckades",
@@ -238,7 +238,7 @@
     },
     "systemOffline": "System Offline",
     "systemHasNoCameras": "INGA KAMEROR",
-    "systemUnreachable": "SYSTEM IS UNREACHABLE",
+    "systemUnreachable": "SYSTEMET är inte tillgängligt",
     "cameraStates": {
       "offline": "Offline",
       "error": "Fel",
