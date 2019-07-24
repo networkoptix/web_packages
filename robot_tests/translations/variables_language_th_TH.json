@@ -106,6 +106,6 @@
     "YOU CAN ONLY MERGE AS OWNER TEXT": "คุณสามารถผสานระบบคลาวด์ที่คุณเป็นเจ้าของได้",
     "CHECKING TEXT": "กำลังตรวจสอบ...",
     "ENTER PASSWORD TO CONTINUE TEXT": "ป้อนรหัสผ่านสำหรับบัญชีของคุณเพื่อดำเนินการต่อ",
-    "INCOMPATIBLE": "Incompatible",
+    "INCOMPATIBLE": "เข้ากันไม่ได้",
     "CONNECTION TO SYSTEM LOST": "Connection to %SYSTEM NAME% lost"
 }

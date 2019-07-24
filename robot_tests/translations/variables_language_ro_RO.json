@@ -106,6 +106,6 @@
     "YOU CAN ONLY MERGE AS OWNER TEXT": "You can only merge Systems where you are the owner.",
     "CHECKING TEXT": "Checking...",
     "ENTER PASSWORD TO CONTINUE TEXT": "Enter password for your account to continue",
-    "INCOMPATIBLE": "Incompatible",
+    "INCOMPATIBLE": "incompatible",
     "CONNECTION TO SYSTEM LOST": "Connection to %SYSTEM NAME% lost"
 }

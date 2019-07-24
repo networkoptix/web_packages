@@ -106,6 +106,6 @@
     "YOU CAN ONLY MERGE AS OWNER TEXT": "Du kan slå samman cloud system där du är ägare.",
     "CHECKING TEXT": "Kontrollerar...",
     "ENTER PASSWORD TO CONTINUE TEXT": "Ange lösenord för ditt konto för att fortsätta",
-    "INCOMPATIBLE": "Inkompatibel",
+    "INCOMPATIBLE": "oförenlig",
     "CONNECTION TO SYSTEM LOST": "Anslutning till %SYSTEM NAME% förlorad"
 }

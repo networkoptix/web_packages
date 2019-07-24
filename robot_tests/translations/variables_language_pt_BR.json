@@ -88,7 +88,7 @@
     "PASSWORD IS GOOD BADGE TEXT": "boa",
     "PASSWORD INCORRECT BADGE TEXT": "incorreta",
     "IPVD TITLE TEXT": "Dispositivos de vídeo IP suportados",
-    "IPVD ADVANCED SEARCH BUTTON TEXT": "Advanced Search",
+    "IPVD ADVANCED SEARCH BUTTON TEXT": "Pesquisa avançada",
     "IPVD MANUFACTURERS TEXT": "manufacturers",
     "IPVD DEVICES TEXT": "dispositivos",
     "IPVD SUBMIT A REQUEST TEXT": "submit a request",
@@ -99,13 +99,13 @@
     "SYSTEM MERGING TEXT": "Sistemas começaram a se fundir",
     "MERGE NOT OWNER MESSAGE 1 TEXT": "Você pode fazer o \"Merge\" dos sistemas em Cloud apenas onde você tiver as permissões de \"Proprietário\".",
     "MERGE NOT OWNER MESSAGE 2 TEXT": "Ligue o Sistema que deseja fazer o \"Merge\" a %PRODUCT_NAME% ou faça o \"Merge\" localmente usando o Cliente %VMS_NAME%.",
-    "CANNOT MERGE WITH OFFLINE SYSTEM TEXT": "%SYSTEM NAME% is offline and cannot be merged with the current one.",
+    "CANNOT MERGE WITH OFFLINE SYSTEM TEXT": "O sistema %SYSTEM NAME% está offline e não pode ser feita a fusão com o actual.",
     "SYSTEMS MERGE FAILED TEXT": "Falha na fusão de Sistemas",
     "SYSTEM MERGE COMPLETED TEXT": "Mesclagem de sistema concluída",
     "MERGE CURRENT SYSTEM WITH TEXT": "Efetuar o \"Merge\" do Sistema atual com",
     "YOU CAN ONLY MERGE AS OWNER TEXT": "Você só pode mesclar Sistemas onde você é o proprietário.",
     "CHECKING TEXT": "A verificar...",
     "ENTER PASSWORD TO CONTINUE TEXT": "Insira a senha da sua conta para continuar",
-    "INCOMPATIBLE": "Incompatible",
-    "CONNECTION TO SYSTEM LOST": "Connection to %SYSTEM NAME% lost"
+    "INCOMPATIBLE": "incompatível",
+    "CONNECTION TO SYSTEM LOST": "Perdida a conexão com %SYSTEM NAME%"
 }

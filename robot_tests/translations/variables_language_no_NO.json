@@ -106,6 +106,6 @@
     "YOU CAN ONLY MERGE AS OWNER TEXT": "Du kan bare slå sammen systemer der du er eieren.",
     "CHECKING TEXT": "Kontrollerer...",
     "ENTER PASSWORD TO CONTINUE TEXT": "Skriv inn passord for kontoen din for å fortsette",
-    "INCOMPATIBLE": "Ikke kompatibel",
+    "INCOMPATIBLE": "uforenlig",
     "CONNECTION TO SYSTEM LOST": "Tilkobling til %SYSTEM NAME% mistet"
 }

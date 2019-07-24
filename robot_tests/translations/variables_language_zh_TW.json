@@ -10,7 +10,7 @@
     "RESEND ACTIVATION LINK BUTTON TEXT": "重新發送啟用電子郵件",
     "SYSTEM NO ACCESS TEXT": "存取系統失敗",
     "DISCONNECT MODAL WARNING TEXT": "您正要從您的帳號斷開此系統. 您將再也無法存取此系統. 確定?",
-    "SUCCESSFULLY DISCONNECTED": "System is successfully disconnected from %PRODUCT_NAME%",
+    "SUCCESSFULLY DISCONNECTED": "系統已成功從 %PRODUCT_NAME%斷線",
     "ALREADY ACTIVATED TEXT": "帳號已經啟動或確認碼不正確",
     "AUTOTESTS OFFLINE TEXT": "離線",
     "NEW PERMISSIONS SAVED": "新權限已儲存",
@@ -60,7 +60,7 @@
     "TERMS": "條款",
     "PRIVACY": "隱私政策",
     "COPYRIGHT": "版權",
-    "SUPPORTED DEVICES": "Supported Devices",
+    "SUPPORTED DEVICES": "支持設備",
     "ACTIVATE YOUR ACCOUNT EMAIL SUBJECT": "啟動您的帳號",
     "RESET PASSWORD EMAIL SUBJECT": "重設您的密碼",
     "INVITED TO SYSTEM EMAIL SUBJECT": "有人分享影像 {{message.system_name}} 給您",
@@ -106,6 +106,6 @@
     "YOU CAN ONLY MERGE AS OWNER TEXT": "當您的權限為擁有者時, 就可以合併系統",
     "CHECKING TEXT": "檢查中...",
     "ENTER PASSWORD TO CONTINUE TEXT": "輸入您帳戶的密碼以繼續",
-    "INCOMPATIBLE": "Incompatible",
+    "INCOMPATIBLE": "不相容",
     "CONNECTION TO SYSTEM LOST": "Connection to %SYSTEM NAME% lost"
 }

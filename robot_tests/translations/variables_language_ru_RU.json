@@ -98,7 +98,7 @@
     "MERGE SYSTEMS TEXT": "Объединить системы",
     "SYSTEM MERGING TEXT": "Объединение систем началось",
     "MERGE NOT OWNER MESSAGE 1 TEXT": "Вы можете объединить только те облачные системы, где у вас есть полномочия «Владелец».",
-    "MERGE NOT OWNER MESSAGE 2 TEXT": "Подключите объединяемую систему к %PRODUCT_NAME% или объедините локально с помощью клиентского приложения %VMS_NAME%.",
+    "MERGE NOT OWNER MESSAGE 2 TEXT": "Подключите систему, которую вы хотите объединить с этой, к %PRODUCT_NAME% или выполните объединение локально, используя %VMS_NAME% Client.",
     "CANNOT MERGE WITH OFFLINE SYSTEM TEXT": "%SYSTEM NAME% не находится в сети и не может быть объединена с текущей.",
     "SYSTEMS MERGE FAILED TEXT": "Объединение систем не удалось",
     "SYSTEM MERGE COMPLETED TEXT": "Слияние системы завершено",
@@ -106,6 +106,6 @@
     "YOU CAN ONLY MERGE AS OWNER TEXT": "Вы можете объединять только те облачные системы, где вы являетесь владельцем.",
     "CHECKING TEXT": "Проверка...",
     "ENTER PASSWORD TO CONTINUE TEXT": "Введите пароль для своей учетной записи, чтобы продолжить",
-    "INCOMPATIBLE": "Несовместима",
-    "CONNECTION TO SYSTEM LOST": "Соединение с %SYSTEM NAME% потеряно"
+    "INCOMPATIBLE": "несовместима",
+    "CONNECTION TO SYSTEM LOST": "Подключение к %SYSTEM NAME% потеряно"
 }
