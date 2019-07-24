@@ -14,7 +14,6 @@ import { NxAppStateService } from '../../services/nx-app-state.service';
     copyrightYear: string;
     config: any;
     footerItems: any;
-    lang: any;
     viewFooter: boolean;
 
     constructor(private sanitizer: DomSanitizer,
