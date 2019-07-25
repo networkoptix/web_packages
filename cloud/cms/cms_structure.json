@@ -958,7 +958,7 @@
             "label": "Integration name",
             "value": "",
             "description": "Visible on the tile for the integrations page and the card header for the detailed view.",
-            "placeholder": "Your integrations name",
+            "placeholder": "Test integration",
             "type": "text",
             "meta": {
               "char_limit": 64
@@ -982,7 +982,7 @@
             "label": "Description",
             "value": "",
             "description": "A short description for the integration tile located on the integrations page. The short description should be no more than 300 characters because the space is limited.",
-            "placeholder": "A short description of the integration.",
+            "placeholder": "An example integration.",
             "type": "long_text",
             "meta": {
               "char_limit": 500,
@@ -1021,7 +1021,7 @@
             "label": "Company Name",
             "value": "",
             "description": "A company name. The company's name is visible in the detailed view page for the integration in the rightmost column.",
-            "placeholder": "Example Company",
+            "placeholder": "Fictional Company",
             "type": "text",
             "optional": false,
             "meta": {
@@ -1090,7 +1090,7 @@
             "label": "Full functionality overview",
             "value": "",
             "description": "A description about what the integration does. The overview appears on the detailed view page for the integration in the leftmost column. Recommended length 1000 characters.",
-            "placeholder": "A description about the integration.",
+            "placeholder": "The integration is just for show.",
             "type": "html",
             "optional": true,
             "meta": {
@@ -1118,7 +1118,6 @@
             "label": "Screenshot 1 caption",
             "value": "",
             "description": "Screenshot caption.",
-            "placeholder": "Caption 1",
             "type": "text",
             "optional": true,
             "meta": {
@@ -1145,7 +1144,6 @@
             "label": "Screenshot 2 caption",
             "value": "",
             "description": "Screenshot caption.",
-            "placeholder": "Caption 2",
             "type": "text",
             "optional": true,
             "meta": {
@@ -1172,7 +1170,6 @@
             "label": "Screenshot 3 caption",
             "value": "",
             "description": "Screenshot caption.",
-            "placeholder": "Caption 3",
             "type": "text",
             "optional": true,
             "meta": {
@@ -1199,7 +1196,6 @@
             "label": "Screenshot 4 caption",
             "value": "",
             "description": "Screenshot caption.",
-            "placeholder": "Caption 4",
             "type": "text",
             "optional": true,
             "meta": {
@@ -1226,7 +1222,6 @@
             "label": "Screenshot 5 caption",
             "value": "",
             "description": "Screenshot caption.",
-            "placeholder": "Caption 5",
             "type": "text",
             "optional": true,
             "meta": {
@@ -1253,7 +1248,6 @@
             "label": "Screenshot 6 caption",
             "value": "",
             "description": "Screenshot caption.",
-            "placeholder": "Caption 6",
             "type": "text",
             "optional": true,
             "meta": {
@@ -1280,7 +1274,6 @@
             "label": "Screenshot 7 caption",
             "value": "",
             "description": "Screenshot caption.",
-            "placeholder": "Caption 7",
             "type": "text",
             "optional": true,
             "meta": {
@@ -1307,7 +1300,6 @@
             "label": "Screenshot 8 caption",
             "value": "",
             "description": "Screenshot caption.",
-            "placeholder": "Caption 8",
             "type": "text",
             "optional": true,
             "meta": {
@@ -1334,7 +1326,6 @@
             "label": "Screenshot 9 caption",
             "value": "",
             "description": "Screenshot caption.",
-            "placeholder": "Caption 9",
             "type": "text",
             "optional": true,
             "meta": {
@@ -1361,7 +1352,6 @@
             "label": "Screenshot 10 caption",
             "value": "",
             "description": "Screenshot caption.",
-            "placeholder": "Caption 10",
             "type": "text",
             "optional": true,
             "meta": {
@@ -1388,7 +1378,6 @@
             "label": "Screenshot 11 caption",
             "value": "",
             "description": "Screenshot caption.",
-            "placeholder": "Caption 11",
             "type": "text",
             "optional": true,
             "meta": {
@@ -1415,7 +1404,6 @@
             "label": "Screenshot 12 caption",
             "value": "",
             "description": "Screenshot caption.",
-            "placeholder": "Caption 12",
             "type": "text",
             "optional": true,
             "meta": {
@@ -1442,7 +1430,6 @@
             "label": "Screenshot 13 caption",
             "value": "",
             "description": "Screenshot caption.",
-            "placeholder": "Caption 13",
             "type": "text",
             "optional": true,
             "meta": {
@@ -1469,7 +1456,6 @@
             "label": "Screenshot 14 caption",
             "value": "",
             "description": "Screenshot caption.",
-            "placeholder": "Caption 14",
             "type": "text",
             "optional": true,
             "meta": {
@@ -1496,7 +1482,6 @@
             "label": "Screenshot 15 caption",
             "value": "",
             "description": "Screenshot caption.",
-            "placeholder": "Caption 15",
             "type": "text",
             "optional": true,
             "meta": {
@@ -1807,7 +1792,7 @@
             "label": "Additional File 1 Name",
             "value": "",
             "description": "Name for additional file 1.",
-            "placeholder": "Custom file 1",
+            "placeholder": "Custom Installers",
             "type": "text",
             "optional": true
           },
@@ -1828,7 +1813,7 @@
             "label": "Additional File 2 Name",
             "value": "",
             "description": "Name for additional file 2.",
-            "placeholder": "Custom file 2",
+            "placeholder": "Virtual machine",
             "type": "text",
             "optional": true
           },
@@ -1849,7 +1834,7 @@
             "label": "Additional File 3 Name",
             "value": "",
             "description": "Name for additional file 3.",
-            "placeholder": "Custom file 3",
+            "placeholder": "Extra documentation",
             "type": "text",
             "optional": true
           },
@@ -1961,7 +1946,7 @@
             "label": "Additional Requirements",
             "value": "",
             "description": "Explaining any additional hardware or software requirements needed.",
-            "placeholder": "Mention any additional requirements",
+            "placeholder": "You will need the following...",
             "type": "html",
             "optional": true,
             "meta": {
@@ -1999,7 +1984,7 @@
             "label": "Internal notes",
             "value": "",
             "description": "This information is only visible to reviewers and not users. Describe what was changed/fixed/added in this release.",
-            "placeholder": "An internal change log that helps reviews know whats new",
+            "placeholder": "The description was updated so that...",
             "type": "html",
             "optional": true,
             "public": false
