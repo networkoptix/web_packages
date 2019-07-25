@@ -67,7 +67,7 @@ class AccountAdmin(CMSAdmin, CSVExportAdmin):
 
     exclude = ("user_permissions",)
 
-    list_filter = ('is_staff', 'created_date', 'last_login', CustomizationFilter, GroupFilter, )
+    list_filter = ['is_staff', 'created_date', 'last_login', CustomizationFilter]
     search_fields = ('email', 'first_name', 'last_name', 'customization', 'language', 'groups__name')
 
     csv_fields = ('email', 'first_name', 'last_name', 'created_date', 'last_login',
@@ -93,6 +93,13 @@ class AccountAdmin(CMSAdmin, CSVExportAdmin):
             show_customizations = request.user.customizations_with_permission(permission='api.change_account')
             qs = qs.filter(customization__in=show_customizations).distinct()
         return qs
+
+    def get_list_filter(self, request):
+        if request.user.is_superuser or UserGroupsToProductPermissions.check_customization_permission(
+                request.user, settings.CUSTOMIZATION, 'api.change_proxygroup'
+        ):
+            return self.list_filter + [GroupFilter]
+        return self.list_filter
 
     def has_add_permission(self, request):  # Only superuser can add users
         return False
