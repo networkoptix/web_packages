@@ -28,7 +28,7 @@ IPVD page loads while logged in
 Text search correctly finds manufacturers
     Go To IPVD page
     IPVD Text Search    hanwha
-    Element Text Should Be    ${IPVD TABLE FIRST ITEM}/td[1]/div     Hanwha Techwin (Samsung)
+    Validate IPVD Device Table Column Contains Desired Value in all Rows on all Pages    1    Hanwha Techwin (Samsung)
 
 
 #Text search correctly finds models
@@ -53,7 +53,7 @@ Text search correctly finds manufacturers
 #Page can be changed by next, previous, and clicking on visible numbers
 #Export all to CSV works
 
-IPVD Request Form Basic Validations
+Request Form Basic Validations
     [tags]    C48969    IPVD
     Go To IPVD page
     Wait Until Element Is Visible    ${IPVD SUBMIT A REQUEST}
@@ -71,7 +71,7 @@ IPVD Request Form Basic Validations
     Wait Until Element Is Visible    ${IPVD FEEDBACK}
     Click Button    ${IPVD FEEDBACK CLOSE BUTTON}
 
-IPVD Feedback Form Basic Validations
+Feedback Form Basic Validations
     [tags]    C54182    IPVD
     #IPVD page    Login=True
     #Wait Until Element Is Not Visible    ${LOG IN MODAL}
@@ -200,3 +200,22 @@ Text search
     ${make3}=   Get Text    ${IPVD DEVICE MAKE}
     Should Be Equal As Strings    ${make1}    ${make2}    1st "${make1}" and 2nd "${make2}" selected device should be the same manufacturers, but weren't.
     Should Be True    '${make2}' < '${make3}'    2nd "${make2}" selected device should be lexographically less than 3rd "${make3}" selected device, but wasn't.
+
+Text in search input is kept after clicking X on applied Features filter indicator
+    [tags]    C49362    IPVD
+    #Step 1
+    Go To IPVD page
+    Click Element    ${IPVD DEVS FILTER PTZ CAMERAS}
+    IPVD Text Search    Axis
+    ${numberOfFiltersApplied}=   Get Text    ${IPVD FILTERS APPLIED BUTTON}
+    Should Be Equal As Strings    ${numberOfFiltersApplied}    2 ${IPVD FILTERS APPLIED TEXT}
+    Validate IPVD Device Table Column Contains Desired Value in all Rows on all Pages    1    Axis
+    Validate IPVD Device Table Column Contains Desired Value in all Rows on all Pages    8    ●
+    #Step 2
+    Click Element    ${IPVD ADV SEARCH BUTTON}
+    Click Element    ${IPVD ADV FEATURES PTZ}${IPVD ADV FEATURES CLOSE BUTTON}
+    ${numberOfFiltersApplied}=   Get Text    ${IPVD FILTERS APPLIED BUTTON}
+    Should Be Equal As Strings    ${numberOfFiltersApplied}    ${IPVD ADV FILTER TYPE} – ${IPVD ADV TYPE CAMERA}
+    ${filterText}=   Get Element Attribute    ${IPVD SEARCH BAR}    value
+    Should Be Equal As Strings    ${filterText}    Axis
+    Validate IPVD Device Table Column Contains Desired Value in all Rows on all Pages    1    Axis

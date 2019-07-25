@@ -246,57 +246,92 @@ ${BETAS TAB}                          //span[@class='tab-heading' and text()='Be
 ${RELEASE NUMBER}                     //div[contains(@class,"active")]//h1
 
 #IPVD
-${IPVD TITLE}                        //header//li[@class="active"]/a[contains(text(),"${IPVD TITLE TEXT}")]
-${IPVD SEARCH BAR}                   //ipvd//input[@name="query"]
-${IPVD CLEAR TEXT SEARCH BUTTON}     ${IPVD SEARCH BAR}/../button
-${IPVD ADVANCED SEARCH BUTTON}       //ipvd//span[contains(text(),"${IPVD ADVANCED SEARCH BUTTON TEXT}")]
-#${IPVD MANFUACTURERS PANE}           //ipvd//header/span[contains(text(),"${IPVD MANUFACTURERS TEXT}")]/../../../..
-${IPVD MANFUACTURERS PANE}           //ipvd//nx-vendor-list/nx-block[@id='vendors']
-${IPVD AND MORE}                     ${IPVD MANFUACTURERS PANE}//div[@class="manufacture-info"]
-#${IPVD DEVICES PANE}                 //ipvd//header/span[contains(text(),"${IPVD DEVICES TEXT}")]/../../../..
-${IPVD DEVICES PANE}                 //ipvd//nx-vendor-list/nx-block[@id='cameras']
-${IPVD DEVICE DETAILS}               //ipvd//nx-cam-view
-${IPVD DEVICE MAKE}                  ${IPVD DEVICE DETAILS}//div[@class="camera-vendor-model"]//span[1]
-${IPVD DEVICE MODEL}                 ${IPVD DEVICE DETAILS}//div[@class="camera-vendor-model"]//span[2]
-${IPVD DEVICE RESOLUTION}            ${IPVD DEVICE DETAILS}//div[text()='Resolution(max)']//following::div[1]
-${IPVD TABLE}                        //ipvd//table
-${IPVD TABLE HEADING MANUFACTURER}   ${IPVD TABLE}/thead//div[text()='Manufacturer']
+${IPVD TITLE}                         //header//li[@class="active"]/a[contains(text(),"${IPVD TITLE TEXT}")]
+#IPVD Filters
+${IPVD FILTERS}                       //ipvd//nx-search/div/div
+${IPVD FILTERS BASIC}                 ${IPVD FILTERS}/div[1]/div
+${IPVD SEARCH BAR}                    ${IPVD FILTERS BASIC}/div[1]/input[@name="query"]
+${IPVD CLEAR TEXT SEARCH BUTTON}      ${IPVD SEARCH BAR}/../button
+${IPVD FILTERS APPLIED BUTTON}        ${IPVD FILTERS BASIC}/div[2]${IPVD ADV FEATURES CLOSE BUTTON}/..
+${IPVD ADV SEARCH BUTTON}             ${IPVD FILTERS BASIC}/div/span[contains(text(),'${IPVD ADV SEARCH BUTTON TEXT}')]/..
+#IPVD Advanced Filters
+${IPVD ADV FILTERS}                   ${IPVD FILTERS}/div[2]/div
+${IPVD ADV FILTERS MIN RES}           ${IPVD ADV FILTERS}//nx-select/../label[contains(text(),'${IPVD ADV FILTER MIN RES}')]/..//button[1]
+${IPVD ADV FILTERS MFRS}              ${IPVD ADV FILTERS}//nx-multi-select/../label[contains(text(),'${IPVD ADV FILTER MFRS}')]/..//button[1]
+${IPVD ADV FILTERS TYPES}             ${IPVD ADV FILTERS}//nx-multi-select/../label[contains(text(),'${IPVD ADV FILTER TYPES}')]/..//button[1]
+${IPVD ADV FILTERS DROPDOWN MENU}     /../div[@class='dropdown-menu']
+#IPVD Advanced Filters Features
+${IPVD ADV FEATURES}                  ${IPVD ADV FILTERS}//div/label[text()='Features']/..
+${IPVD ADV FEATURES AUDIO}            ${IPVD ADV FEATURES}//nx-tag/div[contains(text(),'${IPVD ADV FEATURE AUDIO}') and not(contains(text(),'${IPVD ADV FEATURE 2-WAY AUDIO}'))]/..
+${IPVD ADV FEATURES 2-WAY AUDIO}      ${IPVD ADV FEATURES}//nx-tag/div[contains(text(),'${IPVD ADV FEATURE 2-WAY AUDIO}')]/..
+${IPVD ADV FEATURES PTZ}              ${IPVD ADV FEATURES}//nx-tag/div[contains(text(),'${IPVD ADV FEATURE PTZ}') and not(contains(text(),'${IPVD ADV FEATURE ADV PTZ}'))]/..
+${IPVD ADV FEATURES ADV PTZ}          ${IPVD ADV FEATURES}//nx-tag/div[contains(text(),'${IPVD ADV FEATURE ADV PTZ}')]/..
+${IPVD ADV FEATURES FISHEYE}          ${IPVD ADV FEATURES}//nx-tag/div[contains(text(),'${IPVD ADV FEATURE FISHEYE}')]/..
+${IPVD ADV FEATURES MOTION}           ${IPVD ADV FEATURES}//nx-tag/div[contains(text(),'${IPVD ADV FEATURE MOTION}')]/..
+${IPVD ADV FEATURES I/O}              ${IPVD ADV FEATURES}//nx-tag/div[contains(text(),'${IPVD ADV FEATURE I/O}')]/..
+${IPVD ADV FEATURES H.265}            ${IPVD ADV FEATURES}//nx-tag/div[contains(text(),'${IPVD ADV FEATURE H.265}')]/..
+${IPVD ADV FEATURES MULTI SENSOR}     ${IPVD ADV FEATURES}//nx-tag/div[contains(text(),'${IPVD ADV FEATURE MULTI SENSOR}')]/..
+${IPVD ADV FEATURES CLOSE BUTTON}     //span[@class='close-button']
+#IPVD Manufacturers
+${IPVD MANFUACTURERS PANE}            //ipvd//nx-vendor-list/nx-block[@id='vendors']
+${IPVD AND MORE}                      ${IPVD MANFUACTURERS PANE}//div[@class="manufacture-info"]
+#IPVD Devices
+${IPVD DEVICES PANE}                  //ipvd//nx-vendor-list/nx-block[@id='cameras']
+${IPVD DEVS FILTER EXTRA HIGH RES CAMERAS}    ${IPVD DEVICES PANE}//nx-tag/div[contains(text(),'${IPVD DEV FILTER EXTRA HIGH RES CAMERAS}')]/..
+${IPVD DEVS FILTER CAMERAS WITH ADV PTZ}      ${IPVD DEVICES PANE}//nx-tag/div[contains(text(),'${IPVD DEV FILTER CAMERAS WITH ADV PTZ}')]/..
+${IPVD DEVS FILTER PTZ CAMERAS}               ${IPVD DEVICES PANE}//nx-tag/div[contains(text(),'${IPVD DEV FILTER PTZ CAMERAS}')]/..
+${IPVD DEVS FILTER CAMERAS WITH AUDIO}        ${IPVD DEVICES PANE}//nx-tag/div[contains(text(),'${IPVD DEV FILTER CAMERAS WITH AUDIO}')]/..
+${IPVD DEVS FILTER H.265 CAMERAS}             ${IPVD DEVICES PANE}//nx-tag/div[contains(text(),'${IPVD DEV FILTER H.265 CAMERAS}')]/..
+${IPVD DEVS FILTER ENCODERS}                  ${IPVD DEVICES PANE}//nx-tag/div[contains(text(),'${IPVD DEV FILTER ENCODERS}')]/..
+${IPVD DEVS FILTER 2-WAY AUDIO DEVICES}       ${IPVD DEVICES PANE}//nx-tag/div[contains(text(),'${IPVD DEV FILTER 2-WAY AUDIO DEVICES}')]/..
+${IPVD DEVS FILTER MULTI-SENSOR CAMERAS}      ${IPVD DEVICES PANE}//nx-tag/div[contains(text(),'${IPVD DEV FILTER MULTI-SENSOR CAMERAS}')]/..
+${IPVD DEVS FILTER FISHEYE CAMERAS}           ${IPVD DEVICES PANE}//nx-tag/div[contains(text(),'${IPVD DEV FILTER FISHEYE CAMERAS}')]/..
+${IPVD DEVS FILTER I/O MODULES}               ${IPVD DEVICES PANE}//nx-tag/div[contains(text(),'${IPVD DEV FILTER I/O MODULES}')]/..
+#IPVD Details
+${IPVD DEVICE DETAILS}                //ipvd//nx-cam-view
+${IPVD DEVICE MAKE}                   ${IPVD DEVICE DETAILS}//div[@class="camera-vendor-model"]//span[1]
+${IPVD DEVICE MODEL}                  ${IPVD DEVICE DETAILS}//div[@class="camera-vendor-model"]//span[2]
+${IPVD DEVICE RESOLUTION}             ${IPVD DEVICE DETAILS}//div[text()='Resolution(max)']//following::div[1]
+${IPVD CLOSE DETAILS BUTTON}          //ipvd//header//span[@class="glyphicon close-icon detailsClose"]
+#IPVD Table
+${IPVD TABLE}                         //ipvd//table
+${IPVD TABLE HEADING MANUFACTURER}    ${IPVD TABLE}/thead//div[text()='Manufacturer']
 ${IPVD TABLE HEADING LABEL SORT ARROW}    /../div[2]
-${IPVD TABLE ROWS}                   ${IPVD TABLE}/tbody/tr
-${IPVD TABLE FIRST ITEM}             ${IPVD TABLE}/tbody/tr[1]
-${IPVD TABLE LAST ITEM}              ${IPVD TABLE}/tbody/tr[0=count(following-sibling::tr)]//td
-${IPVD PAGINATION}                   //ipvd//ngb-pagination/ul
-${IPVD PREVIOUS PAGE BUTTON}         ${IPVD PAGINATION}/li[1]
-${IPVD FIRST PAGE BUTTON}            ${IPVD PAGINATION}/li[1]/following::li[1]
-${IPVD LAST PAGE BUTTON}             ${IPVD PAGINATION}/li[last()]/preceding::li[1]
-${IPVD NEXT PAGE BUTTON}             ${IPVD PAGINATION}/li[last()]
-${IPVD EXPORT TO CSV}                //ipvd//div[@class='export-button']
-${IPVD CLOSE DETAILS BUTTON}         //ipvd//header//span[@class="glyphicon close-icon detailsClose"]
-
+${IPVD TABLE ROWS}                    ${IPVD TABLE}/tbody/tr
+${IPVD TABLE FIRST ITEM}              ${IPVD TABLE}/tbody/tr[1]
+${IPVD TABLE LAST ITEM}               ${IPVD TABLE}/tbody/tr[0=count(following-sibling::tr)]//td
+#IPVD Pagination
+${IPVD PAGINATION}                    //ipvd//ngb-pagination/ul
+${IPVD PREVIOUS PAGE BUTTON}          ${IPVD PAGINATION}/li[1]
+${IPVD FIRST PAGE BUTTON}             ${IPVD PAGINATION}/li[1]/following::li[1]
+${IPVD LAST PAGE BUTTON}              ${IPVD PAGINATION}/li[last()]/preceding::li[1]
+${IPVD NEXT PAGE BUTTON}              ${IPVD PAGINATION}/li[last()]
+#IPVD Expport
+${IPVD EXPORT TO CSV}                 //ipvd//div[@class='export-button']
 #IPVD Feedback
-${IPVD SUBMIT A REQUEST}             //ipvd//a[contains(text(),"${IPVD SUBMIT A REQUEST TEXT}")]
-${IPVD SEND DEVICE FEEDBACK}         //ipvd//a[contains(text(),"${IPVD SEND DEVICE FEEDBACK TEXT}")]
-${IPVD FEEDBACK}                     //nx-modal-message-content//form[@name='messageForm']
-${IPVD FEEDBACK TITLE}               ${IPVD FEEDBACK}//h1
-${IPVD FEEDBACK FORM}                ${IPVD FEEDBACK}//form[@name='feedbackForm']
-${IPVD FEEDBACK YOUR NAME}           ${IPVD FEEDBACK FORM}//input[@id='user_name']
-${IPVD FEEDBACK EMAIL}               ${IPVD FEEDBACK FORM}//input[@id='user_email']
-${IPVD FEEDBACK MESSAGE}             ${IPVD FEEDBACK FORM}//textarea[@id='message']
-${IPVD FEEDBACK PRIVACY POLICY}      ${IPVD FEEDBACK FORM}//a[text()="${PRIVACY POLICY LINK TEXT}"]
-${IPVD FEEDBACK SEND BUTTON}         ${IPVD FEEDBACK}//button[text()="${SEND BUTTON TEXT}"]
-${IPVD FEEDBACK CANCEL BUTTON}       ${IPVD FEEDBACK}//button[text()="${CANCEL BUTTON TEXT}"]
-${IPVD FEEDBACK CLOSE BUTTON}        ${IPVD FEEDBACK}//button[@class='close']
+${IPVD SUBMIT A REQUEST}              //ipvd//a[contains(text(),"${IPVD SUBMIT A REQUEST TEXT}")]
+${IPVD SEND DEVICE FEEDBACK}          //ipvd//a[contains(text(),"${IPVD SEND DEVICE FEEDBACK TEXT}")]
+${IPVD FEEDBACK}                      //nx-modal-message-content//form[@name='messageForm']
+${IPVD FEEDBACK TITLE}                ${IPVD FEEDBACK}//h1
+${IPVD FEEDBACK FORM}                 ${IPVD FEEDBACK}//form[@name='feedbackForm']
+${IPVD FEEDBACK YOUR NAME}            ${IPVD FEEDBACK FORM}//input[@id='user_name']
+${IPVD FEEDBACK EMAIL}                ${IPVD FEEDBACK FORM}//input[@id='user_email']
+${IPVD FEEDBACK MESSAGE}              ${IPVD FEEDBACK FORM}//textarea[@id='message']
+${IPVD FEEDBACK PRIVACY POLICY}       ${IPVD FEEDBACK FORM}//a[text()="${PRIVACY POLICY LINK TEXT}"]
+${IPVD FEEDBACK SEND BUTTON}          ${IPVD FEEDBACK}//button[text()="${SEND BUTTON TEXT}"]
+${IPVD FEEDBACK CANCEL BUTTON}        ${IPVD FEEDBACK}//button[text()="${CANCEL BUTTON TEXT}"]
+${IPVD FEEDBACK CLOSE BUTTON}         ${IPVD FEEDBACK}//button[@class='close']
 
-${NOTHING FOUND PLACEHOLDER}         //div[contains(@class,'text-placeholder') and contains(text(),"${NOTHING FOUND}")]
+${NOTHING FOUND PLACEHOLDER}          //div[contains(@class,'text-placeholder') and contains(text(),"${NOTHING FOUND}")]
 
 #Footer
-${FOOTER ABOUT LINK}                 //footer//a[contains(text(),"${ABOUT} ${PRODUCT_NAME}")]
-${FOOTER KNOWN LIMITS LINK}          //footer//a[contains(text(),"${KNOWN LIMITATIONS}")]
-${FOOTER SUPPORT LINK}               //footer//a[contains(text(),"${SUPPORT}")]
-${FOOTER TERMS LINK}                 //footer//a[contains(text(),"${TERMS}")]
-${FOOTER PRIVACY LINK}               //footer//a[contains(text(),"${PRIVACY}")]
-${FOOTER COPYRIGHT LINK}             //footer//a[contains(text(),"${COPYRIGHT SYMBOL}") and contains(text(),"${YEAR}") and contains(text(),"${COMPANY}")]
-${FOOTER SUPPORTED DEVICES LINK}     //footer//a[contains(text(),"${SUPPORTED DEVICES}"]
+${FOOTER ABOUT LINK}                  //footer//a[contains(text(),"${ABOUT} ${PRODUCT_NAME}")]
+${FOOTER KNOWN LIMITS LINK}           //footer//a[contains(text(),"${KNOWN LIMITATIONS}")]
+${FOOTER SUPPORT LINK}                //footer//a[contains(text(),"${SUPPORT}")]
+${FOOTER TERMS LINK}                  //footer//a[contains(text(),"${TERMS}")]
+${FOOTER PRIVACY LINK}                //footer//a[contains(text(),"${PRIVACY}")]
+${FOOTER COPYRIGHT LINK}              //footer//a[contains(text(),"${COPYRIGHT SYMBOL}") and contains(text(),"${YEAR}") and contains(text(),"${COMPANY}")]
+${FOOTER SUPPORTED DEVICES LINK}      //footer//a[contains(text(),"${SUPPORTED DEVICES}"]
 
 #Misc
 ${PAGE NOT FOUND}                     //h1[contains(text(), '${PAGE NOT FOUND TEXT}')]

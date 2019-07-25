@@ -53,37 +53,78 @@ Validate IPVD Device Table Not Empty
     ...    ${IPVD EXPORT TO CSV}
     [Return]    ${rowCount}
 
-IPVD Select Device From Table Column By Value
+Validate IPVD Device Table Column Contains Desired Value in all Rows on all Pages
     [Arguments]    ${column}    ${SearchString}
-    ${rowNumber}=   Set Variable    0
+    ${rowCount}=   Validate IPVD Device Table Not Empty
+    Click Element    ${IPVD FIRST PAGE BUTTON}
+    ${lastPage}=   IPVD Last Page Number
+    :FOR    ${pageNumber}    IN RANGE    1    ${lastPage}+1
+    \    Validate IPVD Device Table Column Contains Desired Value in all Rows    ${column}    ${SearchString}
+    \    Run Keyword If    ${pageNumber} < ${lastPage}    Click Element    ${IPVD NEXT PAGE BUTTON}
+
+Validate IPVD Device Table Column Contains Desired Value in all Rows
+    [Arguments]    ${column}    ${SearchString}
     ${rowCount}=   Validate IPVD Device Table Not Empty
     Table Column Should Contain    ${IPVD TABLE}    ${column}    ${SearchString}
-    :FOR    ${rowIndex}    IN RANGE    1    ${rowCount}+1
-    \    ${curText}=   Get Text    ${IPVD TABLE ROWS}\[${rowIndex}]/td\[${column}]/div
-    \    ${rowNumber}=   Set Variable    ${rowIndex}
+    :FOR    ${rowNumber}    IN RANGE    1    ${rowCount}+1
+    \    ${rowHidden}=   IPVD Table Row Hidden    ${rowNumber}
+    \    Continue For Loop If    ${rowHidden}
+    \    Element Should Be Visible    ${IPVD TABLE ROWS}\[${rowNumber}]/td\[${column}]//div[contains(text(),'${SearchString}')]
+
+IPVD Select Device From Table Column By Value
+    [Arguments]    ${column}    ${SearchString}
+    ${rowCount}=   Validate IPVD Device Table Not Empty
+    ${firstRowHidden}=   IPVD Table Row Hidden    1
+    ${rowStart}=   Set Variable If    ${firstRowHidden}    2    1
+    ${rowCountBump}=   Evaluate    ${rowCount}-1
+    ${rowCount}=   Set Variable If    ${firstRowHidden}    ${rowCountBump}    ${rowCount}
+    Table Column Should Contain    ${IPVD TABLE}    ${column}    ${SearchString}
+    :FOR    ${rowNumber}    IN RANGE    ${rowStart}    ${rowCount}+1
+    \    ${curText}=   Get Text    ${IPVD TABLE ROWS}\[${rowNumber}]/td\[${column}]/div
     \    Exit For Loop If    '${curText}' == '${SearchString}'
+    ${rowNumberBump}=   Evaluate    ${rowNumber}-1
+    ${rowNumber}=   Set Variable If    ${firstRowHidden}    ${rowNumberBump}    ${rowNumber}
     IPVD Select Device From Table By Row Number    ${rowNumber}
     [Return]    ${rowNumber}
 
 IPVD Select Device From Table Randomly
     ${rowCount}=   Validate IPVD Device Table Not Empty
-    ${rows}=   Get WebElements    ${IPVD TABLE ROWS}
-    ${RowNumber}=   Evaluate    random.randint(1,${rowCount}-1)    modules=random
+    ${firstRowHidden}=   IPVD Table Row Hidden    1
+    ${rowOffset}=   Set Variable If    ${firstRowHidden}    2    1
+    ${rowNumber}=   Evaluate    random.randint(${rowOffset},${rowCount}-${rowOffset})    modules=random
     IPVD Select Device From Table By Row Number    ${rowNumber}
     [Return]    ${rowNumber}
 
 IPVD Select Device From Table By Row Number
-    [Arguments]    ${RowNumber}=1
+    [Arguments]    ${rowNumber}=1
     ${rowCount}=   Validate IPVD Device Table Not Empty
+    ${firstRowHidden}=   IPVD Table Row Hidden    1
+    ${rowNumberBump}=   Evaluate    ${rowNumber}+1
+    #${rowCountBump}=   Evaluate    ${rowCount}-2
+    #${rowNumber}=   Set Variable If    ${firstRowHidden}    ${rowNumberBump}    ${rowNumber}
+    #${rowCount}=   Set Variable If    ${firstRowHidden}    ${rowCountBump}    ${rowCount}
+    Should Be True    ${rowCount} >= ${rowNumberBump}
+    #${rowNumber}=   Evaluate    ${rowNumber}-1
     ${rows}=   Get WebElements    ${IPVD TABLE ROWS}
-    Should Be True    ${rowCount}>=${RowNumber}
-    ${RowNumber}=   Evaluate    ${RowNumber}-1
-    Click Element    ${rows}[${RowNumber}]
+    Click Element    ${rows}[${rowNumber}]
     Sleep    2
+    [Return]    ${rowNumberBump}
+
+IPVD Table Row Hidden
+    [Arguments]    ${rowNumber}=1
+    ${rowClass}=   Get Element Attribute    ${IPVD TABLE ROWS}\[${rowNumber}]    class
+    ${result}=    Evaluate    '${rowClass}' == 'table-row-spacer'
+    [Return]    ${result}
 
 IPVD Active Page Number
     Wait Until Element Is Visible    ${IPVD PAGINATION}
     ${page}=   Get Text    ${IPVD PAGINATION}/li[contains(@class,'active')]
+    ${page}=   Remove String Using Regexp    ${page}    \\n\\(current\\)
+    [Return]    ${page}
+
+IPVD Last Page Number
+    Wait Until Element Is Visible    ${IPVD PAGINATION}
+    ${page}=   Get Text    ${IPVD LAST PAGE BUTTON}
     ${page}=   Remove String Using Regexp    ${page}    \\n\\(current\\)
     [Return]    ${page}
 
@@ -95,7 +136,7 @@ Validate on IPVD page
     Wait Until Elements Are Visible
     ...    ${IPVD TITLE}
     ...    ${IPVD SEARCH BAR}
-    ...    ${IPVD ADVANCED SEARCH BUTTON}
+    ...    ${IPVD ADV SEARCH BUTTON}
     ...    ${IPVD MANFUACTURERS PANE}
     ...    ${IPVD AND MORE}
     ...    ${IPVD DEVICES PANE}
