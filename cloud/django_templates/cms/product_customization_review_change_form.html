@@ -35,19 +35,16 @@
                     <tbody>
                     {% for review in customization_reviews %}
                         {% get_review_state review.state as state %}
-                        {% has_customization_permission user review.customization.name 'cms.access_customization' as access_customization %}
                         <tr>
                             <td>
-                            {% if access_customization %}
                                 {% if review == original %}
                                 <strong>{{ review.customization }}</strong>
                                 {% else %}
                                 <a href="{% url 'admin:cms_productcustomizationreview_change' review.id %}">{{ review.customization }}</a>
                                 {% endif %}
-                            {% endif %}
                             </td>
                             <td><span class="label {% if state == 'Rejected' %} label-danger {% elif state == "Accepted" %} label-success {% else %} label-default{% endif %}">{{ state }}</span></td>
-                            <td> {% if access_customization %}{{ review.reviewed_by }}{% endif %}</td>
+                            <td> {{ review.reviewed_by }}</td>
                             <td> {{ review.reviewed_date }}</td>
                             <td> {{ review.notes | linebreaks }}</td>
                         </tr>
@@ -129,7 +126,8 @@
         {% else %}
         <div>There are no changes to review</div>
         {% endif %}
-        <h2>Review Notes {% if customization_name %}for {{ customization_name }}{% endif %}</h2>
+        {% has_customization_permission user original.customization.name 'cms.access_customization' as access_customization %}
+        <h2>Review Notes {% if access_customization %}for {{ originalcustomization.name }}{% endif %}</h2>
         {{ original.notes|linebreaks }}
     </div>
 

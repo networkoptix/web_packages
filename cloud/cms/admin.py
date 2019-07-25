@@ -578,14 +578,12 @@ class ProductCustomizationReviewAdmin(CMSAdmin):
         extra_context['contexts'] = get_records_for_version(version.product,
                                                             version,
                                                             customization_review.customization)
-
         extra_context['title'] = f"Changes for {version.product.name} - Version: {version.id}"
 
         extra_context['review_states'] = ProductCustomizationReview.REVIEW_STATES
-        if UserGroupsToProductPermissions.check_permission(request.user, version.product, 'cms.edit_content'):
-            extra_context['customization_reviews'] = version.productcustomizationreview_set.all()
-        else:
-            extra_context['customization_reviews'] = version.productcustomizationreview_set.\
+        extra_context['customization_reviews'] = version.productcustomizationreview_set.all()
+        if not request.user.is_superuser:
+            extra_context['customization_reviews'] = extra_context['customization_reviews'].\
                 filter(customization__name__in=request.user.customizations)
 
         extra_context['DataStructureTypes'] = DataStructure.DATA_TYPES
@@ -596,19 +594,15 @@ class ProductCustomizationReviewAdmin(CMSAdmin):
 
         # Customization name should be visible in notes heading if developer has access or user has access
         customization_name = customization_review.customization.name
-        if UserGroupsToProductPermissions.check_customization_access(request.user, customization_name) or \
-                UserGroupsToProductPermissions.check_customization_access(version.created_by, customization_name):
+        if UserGroupsToProductPermissions.check_customization_access(request.user, customization_name):
             extra_context['customization_name'] = customization_name
+        else:
+            extra_context["title"] = format_html(f"{extra_context['title']} – "
+                                                 f"{self.state_tag(customization_review.state)}")
 
         return super(ProductCustomizationReviewAdmin, self).change_view(
             request, object_id, form_url, extra_context=extra_context,
         )
-
-    def get_object(self, request, object_id, from_field=None):
-        review = self.get_queryset(request).get(id=object_id)
-        if not UserGroupsToProductPermissions.check_customization_access(request.user, review.customization.name):
-            review.customization = None
-        return review
 
     # TODO: filter visible reviews
     def get_queryset(self, request):
@@ -709,10 +703,19 @@ class ProductCustomizationReviewAdmin(CMSAdmin):
              state == ProductCustomizationReview.REVIEW_STATES.rejected)
         allowed['delete'] = can_delete
         allowed['submit_row'] = True in allowed.values()
-
         allowed['access_customization_checkbox'] = not developer_access_customization and can_publish_or_accept
 
         return allowed
+
+    @staticmethod
+    def state_tag(state):
+        name = ProductCustomizationReview.REVIEW_STATES[state]
+        label_type = "label-default"
+        if state == ProductCustomizationReview.REVIEW_STATES.rejected:
+            label_type = "label-danger"
+        elif state == ProductCustomizationReview.REVIEW_STATES.accepted:
+            label_type = "label-success"
+        return f"<span class=\"label {label_type}\">{name}</span>"
 
 
 admin.site.register(ProductCustomizationReview, ProductCustomizationReviewAdmin)
