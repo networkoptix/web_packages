@@ -1,13 +1,14 @@
 {
     "2-Way Audio": "2-Way Audio",
     "About %CLOUD_NAME%": "About %CLOUD_NAME%",
+    "Access Level": "Access Level",
     "Account Settings": "Account Settings",
     "Account is created.": "Account is created.",
     "Account is successfully created.": "Account is successfully created.",
     "Account not activated": "Account not activated",
     "Account not found": "Account not found",
-    "Add User": "Add User",
     "Actual number of events supported by this camera may be bigger.": "Actual number of events supported by this camera may be bigger.",
+    "Add User": "Add User",
     "Additional Requirements": "Additional Requirements",
     "Administration": "Administration",
     "Advanced PTZ": "Advanced PTZ",
@@ -31,8 +32,8 @@
     "Choose which properties should be visible to customers:": "Choose which properties should be visible to customers:",
     "Close": "Close",
     "Codec": "Codec",
-    "Confirmation message is sent to": "Confirmation message is sent to",
     "Collapse": "Collapse",
+    "Confirmation message is sent to": "Confirmation message is sent to",
     "Contact": "Contact",
     "Create Account": "Create Account",
     "Create account": "Create account",
@@ -68,9 +69,9 @@
     "I/O": "I/O",
     "In Review": "In Review",
     "In-Client Upgrade:": "In-Client Upgrade:",
+    "Integrations": "Integrations",
     "Last name": "Last name",
     "Last name is required": "Last name is required",
-    "Integrations": "Integrations",
     "Latest version": "Latest version",
     "Log In": "Log In",
     "Log Out": "Log Out",
@@ -91,7 +92,6 @@
     "Password": "Password",
     "Password is required": "Password is required",
     "Password:": "Password:",
-    "Permissions": "Permissions",
     "Please enter a valid Email": "Please enter a valid Email",
     "Please review and agree to the Terms and Conditions and Privacy policy in order to proceed": "Please review and agree to the Terms and Conditions and Privacy policy in order to proceed",
     "Popularity": "Popularity",
@@ -108,6 +108,7 @@
     "Send": "Send",
     "Send feedback about this device": "Send feedback about this device",
     "Settings": "Settings",
+    "Share": "Share",
     "Show All": "Show All",
     "Some of your servers don't support cloud System merge because of outdated software version.": "Some of your servers don't support cloud System merge because of outdated software version.",
     "Support": "Support",
@@ -485,10 +486,7 @@
         "vendors": "Manufacturers"
     },
     "servers in the merged System.": "servers in the merged System.",
-
     "support": "support",
-    "testedVersionLabel": "Tested on {{vmsName}} version:",
-    "testedVersionsLabel": "Tested on {{vmsName}} versions:",
     "system": {
         "confirmDisconnectAction": "Disconnect",
         "confirmDisconnectTitle": "Disconnect System from %CLOUD_NAME%?",
@@ -527,5 +525,7 @@
         "online": "online",
         "unavailable": "unavailable"
     },
+    "testedVersionLabel": "Tested on {{vmsName}} version:",
+    "testedVersionsLabel": "Tested on {{vmsName}} versions:",
     "users": "Users"
 }

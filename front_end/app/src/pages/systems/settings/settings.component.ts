@@ -83,16 +83,9 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.pollingSystemUpdate = undefined;
 
-        this.language
-            .translationsSubject
-            .subscribe((lang) => {
-                this.LANG = lang;
-
-                if (this.LANG) {
-                    this.pageService.setPageTitle(this.LANG.pageTitles.system);
-                    this.init();
-                }
-            });
+        this.LANG = this.language.getTranslations();
+        this.pageService.setPageTitle(this.LANG.pageTitles.system);
+        this.init();
     }
 
     init(): void {

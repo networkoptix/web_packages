@@ -58,16 +58,9 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
 
     ngOnInit(): void {
-        this.language
-            .translationsSubject
-            .subscribe((lang) => {
-                this.LANG = lang;
-
-                if (this.LANG) {
-                    this.pageService.setPageTitle(this.LANG.pageTitles.systems);
-                    this.init();
-                }
-            });
+        this.LANG = this.language.getTranslations();
+        this.pageService.setPageTitle(this.LANG.pageTitles.systems);
+        this.init();
     }
 
     init(): void {
