@@ -264,10 +264,107 @@
 	"registration": {
 		"agreement" : "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
 	},
+	"system": {
+		"yourSystem": "Your System",
+		"mySystemSearch": "IMeMyMine",
+		"unavailable": "System is unreachable",
+		"offline": "System is offline",
+		"openClient": "Open in %VMS_NAME%",
+		"openClientNoSystem": "Open %VMS_NAME%",
+		"confirmMergeAction": "Merge",
+		"mergeSystemTitle": "Merge Systems",
+		"confirmRenameTitle": "System name",
+		"confirmRenameAction": "Save",
+		"successRename": "System name saved",
+		"confirmDisconnectTitle": "Disconnect System from %CLOUD_NAME%?",
+		"confirmDisconnectAction": "Disconnect",
+		"confirmUnshareFromMe": "You are about to disconnect this System from your account. You will not be able to access this System anymore. Are you sure?",
+		"confirmUnshareFromMeTitle": "Disconnect System?",
+		"confirmUnshareFromMeAction": "Disconnect",
+		"confirmUnshare": "This user will not be able to access System. Are you sure?",
+		"confirmUnshareTitle": "Delete user?",
+		"confirmUnshareAction": "Delete",
+		"successDisconnected": "System is successfully disconnected from %CLOUD_NAME%",
+		"successDeleted": "System {{systemName}} is successfully deleted from your account",
+		"mergeFailed": "System merge failed",
+		"mergeStart": "Systems have started merging",
+		"mergeSuccess": "System merge completed",
+		"permissionsRemoved": "Permissions were removed from {{email}}",
+		"unknownName": "Unknown Name for System (Caused by cloud merge)"
+	},
+	"systemStatuses": {
+		"activated": "activated",
+		"incompatible": "incompatible",
+		"merging": "merging",
+		"notActivated": "not activated",
+		"online": "online",
+		"offline": "offline",
+		"unavailable": "unavailable"
+	},
+	"accessRoles": {
+		"disabled": {
+			"label": "Disabled",
+			"description": "User is disabled and cannot log in to System"
+		},
+		"Owner": {
+			"label": "Owner",
+			"description": "Unrestricted access including the ability to share and connect/disconnect System from cloud"
+		},
+		"Viewer": {
+			"label": "Viewer",
+			"description": "Can view live video and browse the archive"
+		},
+		"Live Viewer": {
+			"label": "Live Viewer",
+			"description": "Can only view live video"
+		},
+		"Advanced Viewer": {
+			"label": "Advanced Viewer",
+			"description": "Can view live video, browse the archive, control PTZ etc"
+		},
+		"Administrator": {
+			"label": "Administrator",
+			"description": "Unrestricted access including the ability to share"
+		},
+		"Custom": {
+			"label": "Custom",
+			"description": "Use the %VMS_NAME% Client application to set up custom permissions"
+		},
+		"cloudAdmin": {
+			"label": "Administrator",
+			"description": "Can configure System and share it"
+		},
+		"customRole": {
+			"label": "Custom role",
+			"description": "Custom user role specified in System"
+		},
+		"owner": {
+			"label": "Owner",
+			"description": "Unrestricted access including the ability to share and connect/disconnect System from cloud"
+		},
+		"viewer": {
+			"label": "Viewer",
+			"description": "Can view live video and browse the archive"
+		},
+		"liveViewer": {
+			"label": "Live Viewer",
+			"description": "Can only view live video"
+		},
+		"advancedViewer": {
+			"label": "Advanced Viewer",
+			"description": "Can view live video, browse the archive, configure cameras, control PTZ etc"
+		},
+		"custom": {
+			"label": "Custom",
+			"description": "Use the %VMS_NAME% Client application to set up custom permissions"
+		}
+	},
 	"privacyPolicy": {
 		"integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent.",
 		"ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent."
 	},
+	"systemAdministration": "System Administration",
+	"users": "Users",
 	"testedVersionLabel": "Tested on {{vmsName}} version:",
 	"testedVersionsLabel": "Tested on {{vmsName}} versions:",
 	"About %CLOUD_NAME%": "About %CLOUD_NAME%",

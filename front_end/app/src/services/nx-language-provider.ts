@@ -9,7 +9,7 @@ export class NxLanguageProviderService {
 
     lang: any;
     translations: any;
-    translationsSubject = new ReplaySubject();
+    // translationsSubject = new ReplaySubject();
 
     constructor(private translate: TranslateService) {
     }
@@ -43,6 +43,6 @@ export class NxLanguageProviderService {
 
 
     ngOnDestroy(): void {
-        this.translationsSubject.unsubscribe();
+        // this.translationsSubject.unsubscribe();
     }
 }

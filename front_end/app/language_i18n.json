@@ -36,6 +36,7 @@
     "Contact": "Contact",
     "Create Account": "Create Account",
     "Create account": "Create account",
+    "Delete": "Delete",
     "Developer": "Developer",
     "Disconnect": "Disconnect",
     "Disconnect System from %CLOUD_NAME%?": "Disconnect System from %CLOUD_NAME%?",
@@ -47,6 +48,7 @@
     "Downloads": "Downloads",
     "Draft": "Draft",
     "Dual Streaming": "Dual Streaming",
+    "Edit": "Edit",
     "Email": "Email",
     "Email is required": "Email is required",
     "Embed": "Embed",
@@ -75,6 +77,7 @@
     "Log in to %CLOUD_NAME%": "Log in to %CLOUD_NAME%",
     "Merge Systems": "Merge Systems",
     "Merge current System with": "Merge current System with",
+    "Merge with Another System": "Merge with Another System",
     "Message": "Message",
     "Motion Detection": "Motion Detection",
     "Multi Sensor": "Multi Sensor",
@@ -83,6 +86,7 @@
     "Ok": "Ok",
     "Other packages:": "Other packages:",
     "Other releases, patches and beta versions": "Other releases, patches and beta versions",
+    "Owner": "Owner",
     "PTZ": "PTZ",
     "Password": "Password",
     "Password is required": "Password is required",
@@ -139,6 +143,64 @@
     "Your Email": "Your Email",
     "Your Name": "Your Name",
     "Your browser is not supported": "Your browser is not supported",
+    "accessRoles": {
+        "Administrator": {
+            "description": "Unrestricted access including the ability to share",
+            "label": "Administrator"
+        },
+        "Advanced Viewer": {
+            "description": "Can view live video, browse the archive, control PTZ etc",
+            "label": "Advanced Viewer"
+        },
+        "Custom": {
+            "description": "Use the %VMS_NAME% Client application to set up custom permissions",
+            "label": "Custom"
+        },
+        "Live Viewer": {
+            "description": "Can only view live video",
+            "label": "Live Viewer"
+        },
+        "Owner": {
+            "description": "Unrestricted access including the ability to share and connect/disconnect System from cloud",
+            "label": "Owner"
+        },
+        "Viewer": {
+            "description": "Can view live video and browse the archive",
+            "label": "Viewer"
+        },
+        "advancedViewer": {
+            "description": "Can view live video, browse the archive, configure cameras, control PTZ etc",
+            "label": "Advanced Viewer"
+        },
+        "cloudAdmin": {
+            "description": "Can configure System and share it",
+            "label": "Administrator"
+        },
+        "custom": {
+            "description": "Use the %VMS_NAME% Client application to set up custom permissions",
+            "label": "Custom"
+        },
+        "customRole": {
+            "description": "Custom user role specified in System",
+            "label": "Custom role"
+        },
+        "disabled": {
+            "description": "User is disabled and cannot log in to System",
+            "label": "Disabled"
+        },
+        "liveViewer": {
+            "description": "Can only view live video",
+            "label": "Live Viewer"
+        },
+        "owner": {
+            "description": "Unrestricted access including the ability to share and connect/disconnect System from cloud",
+            "label": "Owner"
+        },
+        "viewer": {
+            "description": "Can view live video and browse the archive",
+            "label": "Viewer"
+        }
+    },
     "andXMore": "... and {{value}} more",
     "cameraFilters": {
         "H265": "H.265 Cameras",
@@ -423,7 +485,47 @@
         "vendors": "Manufacturers"
     },
     "servers in the merged System.": "servers in the merged System.",
+
     "support": "support",
     "testedVersionLabel": "Tested on {{vmsName}} version:",
-    "testedVersionsLabel": "Tested on {{vmsName}} versions:"
+    "testedVersionsLabel": "Tested on {{vmsName}} versions:",
+    "system": {
+        "confirmDisconnectAction": "Disconnect",
+        "confirmDisconnectTitle": "Disconnect System from %CLOUD_NAME%?",
+        "confirmMergeAction": "Merge",
+        "confirmRenameAction": "Save",
+        "confirmRenameTitle": "System name",
+        "confirmUnshare": "This user will not be able to access System. Are you sure?",
+        "confirmUnshareAction": "Delete",
+        "confirmUnshareFromMe": "You are about to disconnect this System from your account. You will not be able to access this System anymore. Are you sure?",
+        "confirmUnshareFromMeAction": "Disconnect",
+        "confirmUnshareFromMeTitle": "Disconnect System?",
+        "confirmUnshareTitle": "Delete user?",
+        "mergeFailed": "System merge failed",
+        "mergeStart": "Systems have started merging",
+        "mergeSuccess": "System merge completed",
+        "mergeSystemTitle": "Merge Systems",
+        "mySystemSearch": "IMeMyMine",
+        "offline": "System is offline",
+        "openClient": "Open in %VMS_NAME%",
+        "openClientNoSystem": "Open %VMS_NAME%",
+        "permissionsRemoved": "Permissions were removed from {{email}}",
+        "successDeleted": "System {{systemName}} is successfully deleted from your account",
+        "successDisconnected": "System is successfully disconnected from %CLOUD_NAME%",
+        "successRename": "System name saved",
+        "unavailable": "System is unreachable",
+        "unknownName": "Unknown Name for System (Caused by cloud merge)",
+        "yourSystem": "Your System"
+    },
+    "systemAdministration": "System Administration",
+    "systemStatuses": {
+        "activated": "activated",
+        "incompatible": "incompatible",
+        "merging": "merging",
+        "notActivated": "not activated",
+        "offline": "offline",
+        "online": "online",
+        "unavailable": "unavailable"
+    },
+    "users": "Users"
 }

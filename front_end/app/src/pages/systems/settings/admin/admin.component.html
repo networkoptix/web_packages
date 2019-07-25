@@ -1,0 +1,58 @@
+<nx-pre-loader type="page" *ngIf="!system"></nx-pre-loader>
+
+<div class="container" *ngIf="system">
+    <div class="col-12 col-lg-9" *ngIf="system.isMine">
+        <nx-block>
+            <nx-section>
+                <h3 class="float-left d-flex align-items-center">
+                    <span>{{system.info.name}}</span>
+                    <span class="glyphicon glyphicon-pencil ml-2" (click)="rename()"></span>
+                </h3>
+                <div class="float-right">
+                    <span *ngIf="!system.isOnline" class="badge badge-info"
+                          [ngClass]="CONFIG.systemStatuses[system.info.stateOfHealth].style || CONFIG.systemStatuses.default.style">
+                        {{LANG.systemStatuses[system.info.stateOfHealth] || system.info.stateOfHealth}}</span>
+
+                    <span *ngIf="system.isOnline && !system.isAvailable" class="badge badge-info"
+                          [ngClass]="CONFIG.systemStatuses.unavailable.style">
+                        {{LANG.systemStatuses.unavailable}}</span>
+
+                    <span *ngIf="currentlyMerging && !isMaster" class="badge badge-info"
+                          [ngClass]="CONFIG.systemStatuses.merging.style">
+                        {{LANG.systemStatuses.merging}}</span>
+                </div>
+            </nx-section>
+
+            <nx-section>
+                <div class="float-left mr-2 mt-2">
+                    <button class="btn btn-default"
+                            [disabled]="(currentlyMerging || !system.isOnline || !system.isAvailable) && !(debugMode || betaMode)"
+                            (click)="mergeSystems()" translate>Merge with Another System</button>
+                </div>
+
+                <div class="float-left mt-2">
+                    <nx-client-button [system]="system"></nx-client-button>
+                </div>
+            </nx-section>
+        </nx-block>
+    </div>
+
+    <div class="col-12 col-lg-9 mt-3" *ngIf="system.isMine">
+        <nx-block>
+            <header translate>
+                Owner
+            </header>
+
+            <nx-section>
+                <h3 class="m-0">{{system.info.ownerFullName}}</h3>
+                <span>{{system.info.ownerAccountEmail}}</span>
+
+                <div class="mt-3">
+                    <button [disabled]="currentlyMerging"
+                            class="btn btn-default"
+                            (click)="disconnect()">Disconnect from <span class="product-name">&nbsp;%CLOUD_NAME%</span></button>
+                </div>
+            </nx-section>
+        </nx-block>
+    </div>
+</div>

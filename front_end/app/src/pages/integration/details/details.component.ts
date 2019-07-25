@@ -1,20 +1,22 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Location }                     from '@angular/common';
-import { ActivatedRoute }               from '@angular/router';
-import { IntegrationService }        from '../integration.service';
-import { DomSanitizer }              from '@angular/platform-browser';
-import { NxRibbonService }           from '../../../components/ribbon/ribbon.service';
-import { NxConfigService }           from '../../../services/nx-config';
-import { NxModalMessageComponent, MessageParams }   from '../../../dialogs/message/message.component';
+import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { Location }                                        from '@angular/common';
+import { ActivatedRoute }                                  from '@angular/router';
+import { IntegrationService }                              from '../integration.service';
+import { DomSanitizer }                                    from '@angular/platform-browser';
+import { NxRibbonService }                                 from '../../../components/ribbon/ribbon.service';
+import { NxConfigService }                                 from '../../../services/nx-config';
+import { NxModalMessageComponent, MessageParams }          from '../../../dialogs/message/message.component';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 
 import { map }           from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
+import { NxMenuService } from '../../../components/menu/menu.service';
 
 @Component({
     selector   : 'integration-detail-component',
     templateUrl: 'details.component.html',
-    styleUrls  : ['details.component.scss']
+    styleUrls  : ['details.component.scss'],
+    encapsulation: ViewEncapsulation.None,
 })
 
 export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
@@ -38,13 +40,14 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                 // TODO: Use dialog service when it is not being downgraded
                 private messageDialog: NxModalMessageComponent,
                 private language: NxLanguageProviderService,
+                private menuService: NxMenuService,
                 location: Location) {
         this.location = location;
         this.setupDefaults();
     }
 
     ngOnInit(): void {
-        this.integrationService
+        this.menuService
             .selectedSectionSubject
             .subscribe(selection => {
                 this.content.selectedSection = selection;

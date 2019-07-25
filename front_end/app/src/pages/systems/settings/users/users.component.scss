@@ -1,0 +1,26 @@
+@import '../../../../styles/mixins';
+
+.user-name {
+    @include ellipsis;
+    
+    //width     : 20%;
+    max-width : 175px;
+}
+
+.user-email {
+    @include ellipsis;
+    //width     : 30%;
+    max-width : 240px;
+}
+
+.user-role {
+    @include ellipsis;
+    //width     : 20%;
+    max-width : 120px;
+}
+
+.button-cell {
+    padding-right : 6px !important;
+    padding-left  : 6px !important;
+    text-align    : center;
+}

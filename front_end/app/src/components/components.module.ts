@@ -33,6 +33,7 @@ import { NxMultiSelectDropdown }     from './dropdowns/multi-select/multi-select
 import { NxLandingDisplayComponent } from './landing-display/landing-display.component';
 import { NxPasswordComponent }       from './password-input/password.component';
 import { NxEmailComponent }          from './email-input/email.component';
+import { NxClientButtonComponent }   from './open-client-button/client-button.component';
 
 @NgModule({
     imports        : [
@@ -69,6 +70,7 @@ import { NxEmailComponent }          from './email-input/email.component';
         NxLandingDisplayComponent,
         NxPasswordComponent,
         NxEmailComponent,
+        NxClientButtonComponent,
     ],
     entryComponents: [
         NxGenericDropdown,
@@ -96,6 +98,7 @@ import { NxEmailComponent }          from './email-input/email.component';
         NxLandingDisplayComponent,
         NxPasswordComponent,
         NxEmailComponent,
+        NxClientButtonComponent,
     ],
     providers      : [
         NxProcessButtonComponent,
@@ -115,6 +118,7 @@ import { NxEmailComponent }          from './email-input/email.component';
         NxLandingDisplayComponent,
         NxPasswordComponent,
         NxEmailComponent,
+        NxClientButtonComponent,
 
         NxRibbonService,
     ],
@@ -144,6 +148,7 @@ import { NxEmailComponent }          from './email-input/email.component';
         NxLandingDisplayComponent,
         NxPasswordComponent,
         NxEmailComponent,
+        NxClientButtonComponent,
 
         MenuModule,
     ]
@@ -155,6 +160,7 @@ declare var angular: angular.IAngularStatic;
 angular
         .module('cloudApp.directives')
         .directive('nxLanguageSelect', downgradeComponent({ component: NxLanguageDropdown }) as angular.IDirectiveFactory)
+        .directive('nxClientButton', downgradeComponent({ component: NxClientButtonComponent }) as angular.IDirectiveFactory)
         .directive('nxSelect', downgradeComponent({ component: NxGenericDropdown }) as angular.IDirectiveFactory)
         .directive('nxMultiSelect', downgradeComponent({ component: NxMultiSelectDropdown }) as angular.IDirectiveFactory)
         .directive('nxAccountSettingsSelect', downgradeComponent({ component: NxAccountSettingsDropdown }) as angular.IDirectiveFactory)

@@ -1,0 +1,15 @@
+<nx-pre-loader type="page" *ngIf="!system"></nx-pre-loader>
+
+<div *ngIf="system">
+    <div class="d-flex mt-3 m-0 pl-3" style="max-width: 1440px;">
+        <div class="p-0" style="width: 300px;">
+
+            <nx-menu [content]="content"></nx-menu>
+
+        </div>
+
+        <div class="w-100 p-0" style="flex-shrink: 12;">
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+</div>

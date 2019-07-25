@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { ActivatedRoute }                                     from '@angular/router';
-import { NxUriService }                                       from '../../services/uri.service';
+import { ActivatedRoute }                                                        from '@angular/router';
+import { NxUriService }                                                          from '../../services/uri.service';
 
 /* Usage
 <nx-menu>

@@ -1,0 +1,53 @@
+<nx-pre-loader type="page" *ngIf="!systems"></nx-pre-loader>
+
+<div class="container auth-visible" *ngIf="systems">
+<!--    <ng-include *ngIf="fetchComplete && !systems.length" src="CONFIG.viewsDir + 'static/no-systems.html'"></ng-include>-->
+
+    <div class="search-block row border-bottom" *ngIf="showSearch">
+        <div class="col-sm-9 col-md-8 col-lg-6 input-overlay">
+            <span class="form-control-static input-overlay-left"><span class="glyphicon glyphicon-search"></span></span>
+            <a href="" *ngIf="search.value" (click)="search.value=''"
+               class="form-control-static input-overlay-right"><span class="glyphicon glyphicon-remove"></span></a>
+            <input type="text"
+                   class="form-control"
+                   [(ngModel)]="search.value"
+                   (ngModelChange)="searchSystems"
+                   [ngModelOptions]="{debounceTime : CONFIG.search.debounceTime}"
+                   placeholder="Search">
+        </div>
+    </div>
+
+    <div *ngIf="systems.length">
+        <h1 class="p-0">{{search.value && filteredSystems.length}}&nbsp;<span
+                translate>Systems</span>&nbsp;{{search.value && 'found'}}</h1>
+        <div class="row">
+            <div *ngFor="let system of filteredSystems"
+                 class="col-sm-12 col-md-6 col-lg-4 col-xl-3 mb-3 mb-lg-0 system-button">
+                <div class="card card-condensed hoverable">
+                    <div class="card-body" (click)="openSystem(system)">
+                        <h2 [innerHTML]="system.name | highlight:search.value"></h2>
+                        <span class="user-name"
+                              [innerHTML]="getSystemOwnerName(system, account.email) | highlight:search.value"></span>
+
+                        <span style="margin-top: 24px;"
+                              class="badge badge-info"
+                              *ngIf="system.stateOfHealth != CONFIG.systemStatuses.onlineStatus"
+                              [ngClass]="CONFIG.systemStatuses[system.stateOfHealth].style || CONFIG.systemStatuses.default.style"
+                              [innerHTML]="LANG.systemStatuses[system.stateOfHealth] || system.stateOfHealth | highlight:search.value">
+                        </span>
+
+                        <nx-process-button
+                                title="{{system.stateMessage}}"
+                                (click)="systemSelected = system; $event.stopPropagation();"
+                                *ngIf="LANG.system && system.stateOfHealth == CONFIG.systemStatuses.onlineStatus"
+                                [process]="openClient"
+                                [buttonText]="(system) ? LANG.system.openClient : LANG.system.openClientNoSystem"
+                                [actionType]="(system) ? 'default' : 'primary'"
+                                [buttonDisabled]="(system) ? !system.isOnline && system.stateOfHealth !== CONFIG.systemStatuses.onlineStatus : false">
+                        </nx-process-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

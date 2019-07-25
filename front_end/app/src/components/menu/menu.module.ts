@@ -6,6 +6,7 @@ import { NgbModule }       from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { RouterModule }    from '@angular/router';
 
+import { NxMenuService }         from './menu.service';
 import { NxMenuComponent }       from './menu.component';
 import { NxLevel1ItemComponent } from './level-1/level-1-item.component';
 import { NxLevel2ItemComponent } from './level-2/level-2-item.component';

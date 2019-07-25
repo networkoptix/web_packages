@@ -131,12 +131,12 @@ window.L = {};
                 }
 
                 var lang = languageServiceProvider.$get().lang;
-
+                
                 // For compatibility with legacy modules *****
-                L = lang;
-                Config = CONFIG;
-    
-                angular.extend(Config, appState);
+                window.L = lang;
+                window.Config = CONFIG;
+
+                angular.extend(window.Config, appState);
                 // *******************************************
 
                 $routeProvider
@@ -174,6 +174,7 @@ window.L = {};
                         template: '<nx-register-component [uri-param]="getParam" [uri-param-code]="getCode"></nx-register-component>',
                         controller: ['$scope', 'getParam', function ($scope, getParam) {
                             $scope.uriParam = getParam;
+                            $scope.uriParamCode = getCode;
                         }],
                         resolve: {
                             getParam: [function () {
@@ -211,31 +212,79 @@ window.L = {};
                             }]
                         }
                     })
-                    .when('/systems', {
-                        templateUrl: CONFIG.viewsDir + 'systems.html',
-                        controller: 'SystemsCtrl'
+                    // .when('/systems', {
+                    //     templateUrl: CONFIG.viewsDir + 'systems.html',
+                    //     controller: 'SystemsCtrl'
+                    // })
+                    // .when('/systems/:systemId', {
+                    //     templateUrl: CONFIG.viewsDir + 'system.html',
+                    //     controller: 'SystemCtrl'
+                    // })
+                    .when('/systems/:systemId/interfaces', {
+                        template: ''
                     })
+                    .when('/systems/:systemId/users', {
+                        template: ''
+                        // template: '<nx-system-settings-component [uri-param-system-id]="uriParamSystemId" [param]="callShare"></nx-system-settings-component>',
+                        // controller: ['$scope', 'getSystemId', 'getCallShare', function ($scope, getSystemId, getCallShare) {
+                        //     $scope.uriParamSystemId = getSystemId;
+                        //     $scope.param = getParam;
+                        // }],
+                        // resolve: {
+                        //     getSystemId: ['$route', function ($route) {
+                        //         return $route.current.params.systemId;
+                        //     }],
+                        //     getparam: ['$route', function ($route) {
+                        //         return 'users';
+                        //     }]
+                        // }
+                    })
+                    // .when('/systems/:systemId/share', {
+                    //     // title: lang.pageTitles.systemShare,
+                    //     // templateUrl: CONFIG.viewsDir + 'system.html',
+                    //     // controller: 'SystemCtrl',
+                    //     // resolve: {
+                    //     //     test: ['$route', function ($route) {
+                    //     //         $route.current.params.callShare = true;
+                    //     //     }]
+                    //     // }
+                    //     template: '<nx-system-settings-component [uri-param-system-id]="uriParamSystemId" [call-share]="callShare"></nx-system-settings-component>',
+                    //     controller: ['$scope', 'getSystemId', 'getCallShare', function ($scope, getSystemId, getCallShare) {
+                    //         $scope.uriParamSystemId = getSystemId;
+                    //         $scope.callShare = getCallShare;
+                    //     }],
+                    //     resolve: {
+                    //         getSystemId: ['$route', function ($route) {
+                    //             return $route.current.params.systemId;
+                    //         }],
+                    //         getCallShare: ['$route', function ($route) {
+                    //             return true;
+                    //         }]
+                    //     }
+                    // })
+                    // .when('/systems/:systemId/view', {
+                    //     templateUrl: CONFIG.viewsDir + 'view.html',
+                    //     controller: 'ViewPageCtrl'
+                    // })
+                    // .when('/systems/:systemId/view/:cameraId', {
+                    //     templateUrl: CONFIG.viewsDir + 'view.html',
+                    //     controller: 'ViewPageCtrl'
+                    // })
                     .when('/systems/:systemId', {
-                        templateUrl: CONFIG.viewsDir + 'system.html',
-                        controller: 'SystemCtrl'
+                        template: ''
+                        // template: '<nx-system-settings-component [uri-param-system-id]="uriParamSystemId" ></nx-system-settings-component>',
+                        // controller: ['$scope', 'getSystemId', function ($scope, getSystemId) {
+                        //     $scope.uriParamSystemId = getSystemId;
+                        // }],
+                        // resolve: {
+                        //     getSystemId: ['$route', function ($route) {
+                        //         return $route.current.params.systemId;
+                        //     }]
+                        // }
                     })
-                    .when('/systems/:systemId/share', {
-                        title: lang.pageTitles.systemShare,
-                        templateUrl: CONFIG.viewsDir + 'system.html',
-                        controller: 'SystemCtrl',
-                        resolve: {
-                            test: ['$route', function ($route) {
-                                $route.current.params.callShare = true;
-                            }]
-                        }
-                    })
-                    .when('/systems/:systemId/view', {
-                        templateUrl: CONFIG.viewsDir + 'view.html',
-                        controller: 'ViewPageCtrl'
-                    })
-                    .when('/systems/:systemId/view/:cameraId', {
-                        templateUrl: CONFIG.viewsDir + 'view.html',
-                        controller: 'ViewPageCtrl'
+                    .when('/systems', {
+                        template: ''
+                        // template: '<nx-systems-list-component></nx-systems-list-component>',
                     })
                     .when('/embed/:systemId/view/:cameraId', {
                         templateUrl: CONFIG.viewsDir + 'view.html',
@@ -396,5 +445,5 @@ window.L = {};
                         controller: '404Ctrl',
                         templateUrl: CONFIG.viewsDir + '404.html'
                     });
-                }]);
+            }]);
 })();

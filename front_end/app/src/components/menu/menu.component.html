@@ -2,6 +2,7 @@
 <div class="menu">
     <div *ngFor="let item of content.level1">
         <nx-level-1-item [item]="item"
+                         [base]="content.base"
                          [selected]="selected == item.id">
         </nx-level-1-item>
 
@@ -13,6 +14,7 @@
 
             <div *ngFor="let details of subitem.level3">
                 <nx-level-3-item [item]="details"
+                                 [base]="content.base"
                                  [selected]="selected == details.id">
                 </nx-level-3-item>
             </div>
@@ -20,6 +22,7 @@
 
         <div *ngFor="let details of item.level3">
             <nx-level-3-item [item]="details"
+                             [base]="content.base"
                              [selected]="selected == details.id">
             </nx-level-3-item>
         </div>
