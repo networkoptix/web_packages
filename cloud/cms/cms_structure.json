@@ -35,6 +35,7 @@
             "type": "image",
             "description": "Image for page. Image goes above text on page",
             "meta": {
+              "background": "light",
               "format": "png"
             }
           },
@@ -44,6 +45,7 @@
             "type": "image",
             "description": "High res image for page. Image goes above text on page",
             "meta": {
+              "background": "light",
               "format": "png"
             }
           }
@@ -214,6 +216,7 @@
             "description": "Favicon for browser tabs",
             "type": "image",
             "meta": {
+              "background": "transparent",
               "format": "ico"
             }
           },
@@ -224,6 +227,7 @@
             "description": "Logo for branding. ",
             "type": "image",
             "meta": {
+              "background": "white",
               "format": "png",
               "height_le": 72,
               "height_ge": 64
@@ -236,6 +240,7 @@
             "description": "Logo for email. ",
             "type": "image",
             "meta": {
+              "background": "white",
               "format": "png",
               "height_ge": 32,
               "height_le": 64,
@@ -267,6 +272,7 @@
             "description": "Image for the front page. Image must have transparent background.",
             "type": "image",
             "meta": {
+              "background": "light",
               "format": "png",
               "height_ge": 220
             }
@@ -971,6 +977,7 @@
             "type": "external_image",
             "optional": true,
             "meta": {
+              "background": "light",
               "size": 512000,
               "format": "png",
               "height_ge": 128
@@ -1098,6 +1105,7 @@
             "optional": true,
             "public": true,
             "meta": {
+              "background": "light",
               "size": 5242880,
               "height_le": 1080,
               "width_le": 1920,
@@ -1124,6 +1132,7 @@
             "optional": true,
             "public": true,
             "meta": {
+              "background": "light",
               "size": 5242880,
               "height_le": 1080,
               "width_le": 1920,
@@ -1150,6 +1159,7 @@
             "optional": true,
             "public": true,
             "meta": {
+              "background": "light",
               "size": 5242880,
               "height_le": 1080,
               "width_le": 1920,
@@ -1176,6 +1186,7 @@
             "optional": true,
             "public": true,
             "meta": {
+              "background": "light",
               "size": 5242880,
               "height_le": 1080,
               "width_le": 1920,
@@ -1202,6 +1213,7 @@
             "optional": true,
             "public": true,
             "meta": {
+              "background": "light",
               "size": 5242880,
               "height_le": 1080,
               "width_le": 1920,
@@ -1228,6 +1240,7 @@
             "optional": true,
             "public": true,
             "meta": {
+              "background": "light",
               "size": 5242880,
               "height_le": 1080,
               "width_le": 1920,
@@ -1254,6 +1267,7 @@
             "optional": true,
             "public": true,
             "meta": {
+              "background": "light",
               "size": 5242880,
               "height_le": 1080,
               "width_le": 1920,
@@ -1280,6 +1294,7 @@
             "optional": true,
             "public": true,
             "meta": {
+              "background": "light",
               "size": 5242880,
               "height_le": 1080,
               "width_le": 1920,
@@ -1306,6 +1321,7 @@
             "optional": true,
             "public": true,
             "meta": {
+              "background": "light",
               "size": 5242880,
               "height_le": 1080,
               "width_le": 1920,
@@ -1332,6 +1348,7 @@
             "optional": true,
             "public": true,
             "meta": {
+              "background": "light",
               "size": 5242880,
               "height_le": 1080,
               "width_le": 1920,
@@ -1358,6 +1375,7 @@
             "optional": true,
             "public": true,
             "meta": {
+              "background": "light",
               "size": 5242880,
               "height_le": 1080,
               "width_le": 1920,
@@ -1384,6 +1402,7 @@
             "optional": true,
             "public": true,
             "meta": {
+              "background": "light",
               "size": 5242880,
               "height_le": 1080,
               "width_le": 1920,
@@ -1410,6 +1429,7 @@
             "optional": true,
             "public": true,
             "meta": {
+              "background": "light",
               "size": 5242880,
               "height_le": 1080,
               "width_le": 1920,
@@ -1436,6 +1456,7 @@
             "optional": true,
             "public": true,
             "meta": {
+              "background": "light",
               "size": 5242880,
               "height_le": 1080,
               "width_le": 1920,
@@ -1462,6 +1483,7 @@
             "optional": true,
             "public": true,
             "meta": {
+              "background": "light",
               "size": 5242880,
               "height_le": 1080,
               "width_le": 1920,
@@ -1508,6 +1530,7 @@
             "optional": true,
             "public": true,
             "meta": {
+              "background": "light",
               "size": 5242880,
               "height_le": 1080,
               "width_le": 1920,
@@ -1523,6 +1546,7 @@
             "optional": true,
             "public": true,
             "meta": {
+              "background": "light",
               "size": 5242880,
               "height_le": 1080,
               "width_le": 1920,
@@ -1538,6 +1562,7 @@
             "optional": true,
             "public": true,
             "meta": {
+              "background": "light",
               "size": 5242880,
               "height_le": 1080,
               "width_le": 1920,
@@ -1553,6 +1578,7 @@
             "optional": true,
             "public": true,
             "meta": {
+              "background": "light",
               "size": 5242880,
               "height_le": 1080,
               "width_le": 1920,
@@ -1568,6 +1594,7 @@
             "optional": true,
             "public": true,
             "meta": {
+              "background": "light",
               "size": 5242880,
               "height_le": 1080,
               "width_le": 1920,
@@ -1583,6 +1610,7 @@
             "optional": true,
             "public": true,
             "meta": {
+              "background": "light",
               "size": 5242880,
               "height_le": 1080,
               "width_le": 1920,
@@ -1598,6 +1626,7 @@
             "optional": true,
             "public": true,
             "meta": {
+              "background": "light",
               "size": 5242880,
               "height_le": 1080,
               "width_le": 1920,
@@ -1613,6 +1642,7 @@
             "optional": true,
             "public": true,
             "meta": {
+              "background": "light",
               "size": 5242880,
               "height_le": 1080,
               "width_le": 1920,
@@ -1628,6 +1658,7 @@
             "optional": true,
             "public": true,
             "meta": {
+              "background": "light",
               "size": 5242880,
               "height_le": 1080,
               "width_le": 1920,
@@ -1643,6 +1674,7 @@
             "optional": true,
             "public": true,
             "meta": {
+              "background": "light",
               "size": 5242880,
               "height_le": 1080,
               "width_le": 1920,
