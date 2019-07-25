@@ -465,6 +465,7 @@ class DataStructure(models.Model):
 
     type = models.IntegerField(choices=DATA_TYPES, default=DATA_TYPES.text)
     default = models.TextField(default='', blank=True)
+    placeholder = models.TextField(default="", blank=True)
     translatable = models.BooleanField(default=True)
     meta_settings = JSONField(default=dict(),
                               blank=True,

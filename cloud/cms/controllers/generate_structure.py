@@ -77,7 +77,8 @@ def find_structure(name, context, structure_type, product_type, meta=None,
         db_structure = DataStructure.objects.filter(name=name, context__product_type=product_type).first()
         if not db_structure:
             db_structure = DataStructure.objects.filter(name=name).first()
-        label = ''
+        label = ""
+        placeholder = ""
         protected = False
         if db_structure:
             label = db_structure.label if db_structure.label != name else ''
@@ -97,12 +98,14 @@ def find_structure(name, context, structure_type, product_type, meta=None,
             advanced = db_structure.advanced
             optional = db_structure.optional
             protected = db_structure.protected
+            placeholder = db_structure.placeholder
 
         data_structure = OrderedDict([
             ("label", label),
             ("name", name),
             ("value", value),
             ("description", description),
+            ("placeholder", placeholder)
             ("type", structure_type),
             ("advanced", advanced),
             ("optional", optional),
