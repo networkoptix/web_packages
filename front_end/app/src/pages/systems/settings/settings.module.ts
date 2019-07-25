@@ -13,6 +13,7 @@ import { ComponentsModule } from '../../../components/components.module';
 
 import { NxSystemAdminModule }         from './admin/admin.module';
 import { NxSystemUsersModule }         from './users/users.module';
+import { NxSystemMergeStatusModule }   from './merge-status/merge-status.module';
 import { NxSystemInterfacesModule }    from './interfaces/interfaces.module';
 import { NxSystemAdminComponent }      from './admin/admin.component';
 import { NxSystemUsersComponent }      from './users/users.component';
@@ -39,6 +40,7 @@ const appRoutes: Routes = [
         NgbModule,
         TranslateModule,
         ComponentsModule,
+        NxSystemMergeStatusModule,
         NxSystemAdminModule,
         NxSystemUsersModule,
         NxSystemInterfacesModule,
