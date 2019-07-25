@@ -48,12 +48,17 @@
                         </div>
                     </div>
 
-                    <div class="section">
-                        <div>
-                            <label class="group-label" translate>Tested on version(s)</label>
+                    <div class="section"
+                         *ngIf="plugin.requirementsAndCompatibility.testedVersionsStringFull">
+                        <div *ngIf="plugin.requirementsAndCompatibility.testedVersions.length == 1">
+                            <label class="group-label" [translate]="'testedVersionLabel'"
+                                   [translateParams]="{ vmsName: CONFIG.vmsName }"></label>
                         </div>
-                        <div [innerHTML]="plugin.requirementsAndCompatibility.testedOn"></div>
-                        <div [innerHTML]="plugin.requirementsAndCompatibility.testedBuild"></div>
+                        <div *ngIf="plugin.requirementsAndCompatibility.testedVersions.length > 1">
+                            <label class="group-label" [translate]="'testedVersionsLabel'"
+                                   [translateParams]="{ vmsName: CONFIG.vmsName }"></label>
+                        </div>
+                        <div [innerHTML]="plugin.requirementsAndCompatibility.testedVersionsStringFull"></div>
                     </div>
 
                     <div class="section"

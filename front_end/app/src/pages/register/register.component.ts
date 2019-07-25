@@ -1,9 +1,10 @@
 import { AfterViewInit, Component, Inject, Input, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute }                                             from '@angular/router';
-import { NxUriService }                                               from '../../services/uri.service';
-import { TranslateService }                                           from '@ngx-translate/core';
-import { NxRegisterService }                                          from '../../services/register.service';
-import { NxPageService }                                              from '../../services/page.service';
+import { ActivatedRoute }            from '@angular/router';
+import { NxUriService }              from '../../services/uri.service';
+import { TranslateService }          from '@ngx-translate/core';
+import { NxRegisterService }         from '../../services/register.service';
+import { NxPageService }             from '../../services/page.service';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
 
 @Component({
     selector   : 'nx-register-component',
@@ -17,6 +18,7 @@ export class NxRegisterComponent implements OnInit {
     @Input() uriParamCode;
 
     LANG: any = {};
+
     accountInfo: any = {};
     register: any;
     registerSuccess: any;
@@ -34,54 +36,50 @@ export class NxRegisterComponent implements OnInit {
             process : ''
         };
 
-        this.translate
-            .getTranslation(this.translate.currentLang)
-            .subscribe((lang) => {
-                this.LANG = lang;
-                this.pageService.setPageTitle(this.LANG.pageTitles.register);
+        this.LANG = this.language.getTranslations();
+        this.pageService.setPageTitle(this.LANG.pageTitles.register);
 
-                this.register = this.process.init(() => {
-                    this.account.setEmail(this.accountInfo.email);
+        this.register = this.process.init(() => {
+            this.account.setEmail(this.accountInfo.email);
 
-                    return this.registerService
-                               .register(
-                                       this.accountInfo.email,
-                                       this.accountInfo.password,
-                                       this.accountInfo.firstName,
-                                       this.accountInfo.lastName,
-                                       this.accountInfo.accept,
-                                       this.accountInfo.code);
-                }, {
-                    errorCodes : {
-                        alreadyExists: error => {
-                            this.registerForm.controls.registerEmail.setErrors({ alreadyExists: true });
-                            this.registerForm.registerEmail.$setTouched();
-                            return false;
-                        },
-                        portalError  : this.LANG.errorCodes.brokenAccount
-                    },
-                    holdAlerts : true,
-                    errorPrefix: this.LANG.errorCodes.cantRegisterPrefix
-                })
-                .then((response) => {
-                    if (response.resultCode === 'alreadyExists') {
-                        this.registerForm.controls.registerEmail.setErrors({ alreadyExists: true });
-                        return;
-                    }
-                    this.context.process = 'registerSuccess';
-                    this.registerSuccess = true;
+            return this.registerService
+                       .register(
+                               this.accountInfo.email,
+                               this.accountInfo.password,
+                               this.accountInfo.firstName,
+                               this.accountInfo.lastName,
+                               this.accountInfo.accept,
+                               this.accountInfo.code);
+        }, {
+            errorCodes : {
+                alreadyExists: error => {
+                    this.registerForm.controls.registerEmail.setErrors({ alreadyExists: true });
+                    this.registerForm.registerEmail.$setTouched();
+                    return false;
+                },
+                portalError  : this.LANG.errorCodes.brokenAccount
+            },
+            holdAlerts : true,
+            errorPrefix: this.LANG.errorCodes.cantRegisterPrefix
+        })
+        .then((response) => {
+            if (response.resultCode === 'alreadyExists') {
+                this.registerForm.controls.registerEmail.setErrors({ alreadyExists: true });
+                return;
+            }
+            this.context.process = 'registerSuccess';
+            this.registerSuccess = true;
 
-                    if (this.accountInfo.code) {
-                        this.activated = true;
-                        this.locationProxy.path('/register/successActivated', false);
-                        this.authorizationService.login(this.accountInfo.email, this.accountInfo.password);
-                    } else {
-                        this.locationProxy.path('/register/success', false);
-                        this.account.setEmail(this.accountInfo.email);
-                        this.pageService.setPageTitle(this.LANG.pageTitles.registerSuccess);
-                    }
-                });
-            });
+            if (this.accountInfo.code) {
+                this.activated = true;
+                this.locationProxy.path('/register/successActivated', false);
+                this.authorizationService.login(this.accountInfo.email, this.accountInfo.password);
+            } else {
+                this.locationProxy.path('/register/success', false);
+                this.account.setEmail(this.accountInfo.email);
+                this.pageService.setPageTitle(this.LANG.pageTitles.registerSuccess);
+            }
+        });
     }
 
     constructor(@Inject('account') private account: any,
@@ -92,7 +90,7 @@ export class NxRegisterComponent implements OnInit {
                 @Inject('locationProxyService') private locationProxy: any,
                 private route: ActivatedRoute,
                 private registerService: NxRegisterService,
-                private translate: TranslateService,
+                private language: NxLanguageProviderService,
                 private pageService: NxPageService) {
         this.setupDefaults();
     }

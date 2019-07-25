@@ -1,0 +1,3 @@
+Здравствуйте, {{ message.userFullName }}
+{{ message.sender_name}} ({{ message.sender_email }}) отозвался о {{ message.product }}:
+<pre>{{ message.message }}</pre>

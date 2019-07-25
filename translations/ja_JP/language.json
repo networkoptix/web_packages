@@ -12,23 +12,8 @@
     "logoutAuthorisedTitle": "すでにログインしています",
     "logoutAuthorisedContinueButton": "続行",
     "logoutAuthorisedLogoutButton": "ログアウト",
-    "messageFailed": "メッセージの送信に失敗しました",
-    "messageSent": "メッセージが送信されました",
     "noClientDetectedTitle": "システムを表示するには %VMS_NAME% をインストールします",
     "download": "%VMS_NAME% をダウンロード"
-  },
-  "messageDialog": {
-    "title": {
-      "integration": "Email for {{product}}",
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "{{product}} についてのフィードバック"
-    },
-    "topic": {
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "{{product}} についてのフィードバック",
-      "contact_sales": "Contact sales for {{product}}",
-      "contact_support": "Contact support for {{product}}"
-    }
   },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
@@ -40,13 +25,13 @@
     "systems": "システム -",
     "system": "システム -",
     "systemShare": "共有システム -",
-    "activate": "アクティベート アカウント -",
-    "activateSent": "アクティベート アカウント -",
-    "activateSuccess": "アカウント アクティベート -",
-    "activateCode": "アクティベート アカウント -",
-    "restorePassword": "パスワードリセット -",
-    "restorePasswordSuccess": "パスワードを保存 -",
-    "restorePasswordCode": "パスワードリセット -",
+    "activate": "アカウントを有効にする -",
+    "activateSent": "アカウントを有効にする -",
+    "activateSuccess": "アカウントを有効にしました -",
+    "activateCode": "アカウントを有効にする -",
+    "restorePassword": "パスワードを再設定する -",
+    "restorePasswordSuccess": "パスワードを保存しました -",
+    "restorePasswordCode": "パスワードを再設定する -",
     "view": "カメラを表示 - ",
     "debug": "デバッグ",
     "login": "ログイン -",
@@ -69,23 +54,23 @@
       "description": "ユーザーが無効の為にシステムにログインできません"
     },
     "Owner": {
-      "label": "オーナー",
+      "label": "管理者",
       "description": "クラウドから、共有とシステムの接続/切断を含む無制限のアクセス"
     },
     "Viewer": {
       "label": "ビューアー",
-      "description": "ライブ ビデオとアーカイブを参照できます"
+      "description": "ライブ ビデオとアーカイブを閲覧できます"
     },
     "Live Viewer": {
       "label": "ライブビューアー",
-      "description": "ライブ表示のみ可能"
+      "description": "ライブビデオのみ閲覧可能"
     },
     "Advanced Viewer": {
       "label": "拡張ビューアー",
       "description": "ライブ表示、アーカイブ表示、PTZコントロール 等"
     },
     "Administrator": {
-      "label": "アドミニストレーター",
+      "label": "管理者",
       "description": "共有する機能を含む無制限のアクセス"
     },
     "Custom": {
@@ -93,20 +78,20 @@
       "description": "%VMS_NAME% クライアント アプリケーションを使用してカスタム権限を設定する"
     },
     "cloudAdmin": {
-      "label": "アドミニストレーター",
-      "description": "システムを構成し共有することができます"
+      "label": "管理者",
+      "description": "システムを設定して共有することができます"
     },
     "customRole": {
       "label": "カスタムの役割",
       "description": "システムで指定されたカスタムのユーザーの役割"
     },
     "owner": {
-      "label": "オーナー",
+      "label": "管理者",
       "description": "クラウドから、共有とシステムの接続/切断を含む無制限のアクセス"
     },
     "viewer": {
       "label": "ビューアー",
-      "description": "ライブ ビデオとアーカイブを参照できます"
+      "description": "ライブ ビデオとアーカイブを閲覧できます"
     },
     "liveViewer": {
       "label": "ライブビューアー",
@@ -114,7 +99,7 @@
     },
     "advancedViewer": {
       "label": "拡張ビューアー",
-      "description": "ライブ表示、アーカイブ表示、カメラ設定、PTZコントロール 等"
+      "description": "ライブ表示、アーカイブ表示、カメラ設定、PTZコントロール 等ができます"
     },
     "custom": {
       "label": "カスタム",
@@ -127,21 +112,21 @@
     "cantDisconnectSystemPrefix": "システムを削除できません",
     "cantUnshareWithMeSystemPrefix": "システムを削除できません",
     "cantSharePrefix": "システムを共有できません",
-    "cantGetUsersListPrefix": "ユーザーのリストは使用できません",
-    "cantGetSystemsListPrefix": "システム リストは使用できません",
+    "cantGetUsersListPrefix": "ユーザーリストは使用できません",
+    "cantGetSystemsListPrefix": "システムリストは使用できません",
     "cantRegisterPrefix": "エラーが発生しました",
-    "cantGetSystemInfoPrefix": "システム情報はありません",
+    "cantGetSystemInfoPrefix": "システム情報は利用できません",
     "cantChangeAccountPrefix": "変更を保存できません",
     "cantChangePasswordPrefix": "パスワードを保存できません",
-    "cantActivatePrefix": "アカウントをアクティベートできません",
+    "cantActivatePrefix": "アカウントを有効にできません",
     "cantSendConfirmationPrefix": "確認メールを送信できません",
-    "notAuthorized": "間違ったパスワード",
+    "notAuthorized": "パスワードが間違っています",
     "brokenAccount": "次のアカウントで予期しない問題 <a href=\"/restore_password\"> アカウントの復元</a>",
     "wrongParameters": "フォーム上のいくつかのパラメーターが正しくありません",
-    "wrongCode": "アカウントは既にアクティブ済か確認コードが正しくありません",
-    "wrongCodeRestore": "確認コードは既に使用されているかまたは不正です",
-    "wrongAuthCode": "Code is expired or incorrect",
-    "forbidden": "この操作を実行するアクセス権限がありません",
+    "wrongCode": "アカウントは既に有効化されているか、確認コードが正しくありません",
+    "wrongCodeRestore": "確認コードは既に使用されているか間違っています",
+    "wrongAuthCode": "期限切れまたは不正なコードです",
+    "forbidden": "この操作を実行する権限がありません",
     "accountNotActivated": "このアカウントはまだアクティベートされていません <a href=\"/activate\"> 再度アクティベートリンクを送信</a>",
     "accountBlocked": "このアカウントは一時的にブロックされています。数分後にもう一度お試しください。",
     "notFound": "見つかりません",
@@ -150,19 +135,19 @@
     "accountAlreadyActivated": "このアカウントは既にアクティベートされています",
     "emailNotFound": "アカウントが存在しません.",
     "EmailAlreadyExists": "このEmailは既に登録されています",
-    "oldPasswordMistmatch": "パスワードが違います.",
-    "passwordMismatch": "間違ったパスワード",
-    "cantEditYourself": "自分のアクセス権限を変更することはできません",
+    "oldPasswordMistmatch": "パスワードが違います。",
+    "passwordMismatch": "パスワードが違います",
+    "cantEditYourself": "自分の権限を変更することはできません",
     "cantEditAdmin": "このユーザーは管理者権限を持っています",
     "cantOpenClient": "%VMS_NAME% アプリケーションが検出されません<a href=\"/download\"> ダウンロード</a>",
     "lostConnection": "{{systemName}} への接続が失われました",
     "thisSystem": "システム",
-    "oldSafariNotSupported": "Safariのバージョン10以前はサポートされません",
+    "oldSafariNotSupported": "バージョン10以前のSafariはサポートされません",
     "DUPLICATE_MEDIASERVER_FOUND": "選択したものと現在のもの両方のシステムに存在するサーバーリストがあります。<br>各システムからオフラインで互換性のないサーバーを削除してやり直してください。",
     "mergedSystemIsOffline": "システム <strong>{{failedSystem}}</strong> はオフラインです。",
     "INCOMPATIBLE": "システムには異なるソフトウェアバージョンがあります。両方とも <a href=\"/download\">最新のビルド</a>を更新してください。",
     "FAIL": "システム <strong>{{failedSystem}}</strong> は現在到達不能です。<br>しばらくしてからもう一度試すか、<a href=\"%SUPPORT_LINK%\" target=\"_blank\">サポート</a>に連絡してください。",
-    "unknownMergeError": "Unknown error. You can try to refresh the page and repeat attempt. If the problem persists – please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>."
+    "unknownMergeError": "未知のエラー。ページを更新して試行を繰り返すことができます。問題が解決しない場合は <a href=\"%SUPPORT_LINK%\" target=\"_blank\">サポート</a>に連絡してください。"
   },
   "merging": {
     "mergeFailedTitle": "システムのマージに失敗しました",
@@ -171,31 +156,31 @@
   "passwordRequirements": {
     "good": "良い",
     "fair": "可",
-    "fairMessage": "大文字と小文字の文字、特殊記号を使用して、強固なパスワードを作る",
+    "fairMessage": "パスワードをより強力にするために、数字、大文字と小文字、特殊文字を使用してください",
     "minLength": "短すぎます",
     "minLengthMessage": "パスワードは8文字以上必要です",
     "required": "無効",
-    "requiredMessage": "英数字とキーボードの記号のみを使用して、先頭と末尾の空白を避けます",
+    "requiredMessage": "英数字、キーボード記号のみを使用し、前後のスペースを避けてください。",
     "weak": "弱",
-    "weakMessage": "大文字と小文字の文字、特殊記号を使用して、強固なパスワードを作る",
-    "strongMessage": "強力なパスワード!",
+    "weakMessage": "パスワードをより強力にするために、数字、大文字と小文字、特殊文字を使用してください",
+    "strongMessage": "強力なパスワードです",
     "common": "あまりにも一般的",
-    "commonMessage": "このパスワードは、世界で最も人気のあるパスワード",
-    "missingMessage": "パスワードが必要"
+    "commonMessage": "このパスワードは、世界で最も人気のあるパスワードです",
+    "missingMessage": "パスワードが必要です"
   },
   "sharing": {
-    "confirmOwner": "システムオーナーを変更すると現在のアカウントから所有権を失効します　この操作は元に戻せません　宜しいですか？",
+    "confirmOwner": "システムの所有者を変更すると、現在のアカウントから所有権を取り消します。この動作は元に戻せません。よろしいですか？",
     "shareTitle": "共有",
     "shareConfirmButton": "共有",
     "editShareTitle": "権限を編集",
     "editShareConfirmButton": "保存",
-    "permissionsSaved": "新しい権限の保存"
+    "permissionsSaved": "新しい権限が保存されました"
   },
   "system": {
     "yourSystem": "ご利用のシステム",
     "mySystemSearch": "IMeMyMine",
     "unavailable": "システムに到達できません",
-    "offline": "システムはオフライン",
+    "offline": "システムはオフラインです",
     "openClient": "%VMS_NAME% で開く",
     "openClientNoSystem": "%VMS_NAME% を開く",
     "confirmMergeAction": "統合",
@@ -211,26 +196,26 @@
     "confirmUnshare": "このユーザはシステムにアクセスすることができません　宜しいですか？",
     "confirmUnshareTitle": "ユーザーを削除しますか？",
     "confirmUnshareAction": "削除",
-    "successDisconnected": "System is successfully disconnected from %CLOUD_NAME%",
+    "successDisconnected": "システムは %CLOUD_NAME%から正常に切断されました",
     "successDeleted": "システム {{systemName}} はあなたのアカウントから正常に削除されました",
     "mergeFailed": "システム統合が失敗しました",
     "mergeStart": "システムが統合を開始しました",
     "mergeSuccess": "システムが統合されました",
-    "permissionsRemoved": "{{email}} からアクセス権限が削除されました",
+    "permissionsRemoved": "{{email}} から権限が削除されました",
     "unknownName": "システムの名前が不明です（クラウド統合が原因）"
   },
   "account": {
     "accountSavedSuccess": "あなたのアカウントは正常に保存されました",
-    "activationLinkSent": "アクティベートリンク送信",
+    "activationLinkSent": "アクティベーションリンクが送信されました",
     "passwordChangedSuccess": "あなたのアカウントは正常に保存されました",
     "changePassword": "パスワードを変更",
     "newPasswordLabel": "新規パスワード",
     "saveChanges": "保存"
   },
   "activeActions": {
-    "sendConfirm": "アクティベートリンク再送",
-    "resetPassword": "パスワードリセット",
-    "setNewPassword": "パスワードを保存",
+    "sendConfirm": "アクティベーションリンクを再送信",
+    "resetPassword": "パスワードを再設定する",
+    "setNewPassword": "パスワードを保存する",
     "setNewPasswordLabel": "新規パスワード"
   },
   "regActions": {
@@ -253,7 +238,7 @@
     },
     "systemOffline": "システムはオフライン",
     "systemHasNoCameras": "カメラなし",
-    "systemUnreachable": "SYSTEM IS UNREACHABLE",
+    "systemUnreachable": "システムにアクセスできません",
     "cameraStates": {
       "offline": "オフライン",
       "error": "エラー",

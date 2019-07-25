@@ -1,6 +1,3 @@
 Hola {{ message.userFullName }}
-{{ message.sender_name}} ({{ message.sender_email }}) has the following sales question about the {{ message.product }}:
+{{ message.sender_name}} ({{ message.sender_email }}) tiene la siguiente pregunta de ventas sobre el {{ message.product }}:
 <pre>{{ message.message }}</pre>
-
-------------------------------------------
-Se puede contactar al usuario: {{ message.sender_to_be_contacted}}

@@ -7,8 +7,6 @@ import {
 } from '@angular/core';
 import { NxConfigService }           from '../../services/nx-config';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxCloudApiService }         from '../../services/nx-cloud-api';
-import { TranslateService }          from '@ngx-translate/core';
 import {
     ControlValueAccessor,
     NG_VALUE_ACCESSOR,
@@ -73,7 +71,7 @@ export class NxEmailComponent implements OnInit, ControlValueAccessor, Validator
     }
 
     constructor(private config: NxConfigService,
-                private translate: TranslateService) {
+                private language: NxLanguageProviderService) {
     }
 
     setValue() {
@@ -84,11 +82,7 @@ export class NxEmailComponent implements OnInit, ControlValueAccessor, Validator
 
     ngOnInit() {
         this.CONFIG = this.config.getConfig();
-        this.translate
-            .getTranslation(this.translate.currentLang)
-            .subscribe((lang) => {
-                this.LANG = lang;
-            });
+        this.LANG = this.language.getTranslations();
     }
 
     /**

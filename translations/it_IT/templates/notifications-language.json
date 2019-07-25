@@ -14,8 +14,11 @@
   "contact_support": {
     "emailSubject": "Richiesta di supporto per {{message.product}}"
   },
+  "integration_feedback": {
+    "emailSubject": "Feedback per {{message.product}}"
+  },
   "ipvd_feedback": {
-    "emailSubject": "Feedback della pagina della telecamera per {{message.product}}"
+    "emailSubject": "Feedback pagina telecamera{{#message.product}} per {{message.product}}{{/message.product}}"
   },
   "review_version": {
     "emailSubject": "{{message.product_type}}: {{message.product}} ha una nuova versione da revisionare"

@@ -12,23 +12,8 @@
     "logoutAuthorisedTitle": "Já tem sessão iniciada",
     "logoutAuthorisedContinueButton": "Continuar",
     "logoutAuthorisedLogoutButton": "Terminar sessão",
-    "messageFailed": "Message has failed to send.",
-    "messageSent": "Message has been sent.",
     "noClientDetectedTitle": "Instalar %VMS_NAME% para visualizar o seu sistema",
     "download": "Baixar %VMS_NAME%"
-  },
-  "messageDialog": {
-    "title": {
-      "integration": "Email for {{product}}",
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Feedback about {{product}}"
-    },
-    "topic": {
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Feedback about {{product}}",
-      "contact_sales": "Contact sales for {{product}}",
-      "contact_support": "Contact support for {{product}}"
-    }
   },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
@@ -214,10 +199,10 @@
     "successDisconnected": "O Sistema foi desconectado de %CLOUD_NAME% com sucesso",
     "successDeleted": "O sistema {{systemName}} foi apagado com sucesso da sua conta",
     "mergeFailed": "Falha na fusão de Sistemas",
-    "mergeStart": "Systems have started merging",
-    "mergeSuccess": "System merge completed",
+    "mergeStart": "Os sistemas começaram a fusão",
+    "mergeSuccess": "Fusão do sistema concluída",
     "permissionsRemoved": "As permissões foram removidas de {{email}}",
-    "unknownName": "Unknown Name for System (Caused by cloud merge)"
+    "unknownName": "Nome do Sistema desconhecido (causado pela fusão pela cloud)"
   },
   "account": {
     "accountSavedSuccess": "A sua conta foi gravada com sucesso",

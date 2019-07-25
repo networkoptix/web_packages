@@ -6,9 +6,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { NxConfigService }           from '../../services/nx-config';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxCloudApiService }         from '../../services/nx-cloud-api';
-import { TranslateService }          from '@ngx-translate/core';
 import {
     ControlValueAccessor,
     NG_VALUE_ACCESSOR,
@@ -104,8 +102,6 @@ export class NxPasswordComponent implements OnInit, ControlValueAccessor, Valida
     }
 
     constructor(private config: NxConfigService,
-                private translate: TranslateService,
-                private language: NxLanguageProviderService,
                 private api: NxCloudApiService) {
         this.CONFIG = this.config.getConfig();
     }
@@ -165,11 +161,6 @@ export class NxPasswordComponent implements OnInit, ControlValueAccessor, Valida
         this.passwordToggle = true;
 
         this.CONFIG = this.config.getConfig();
-        this.translate
-            .getTranslation(this.translate.currentLang)
-            .subscribe((lang) => {
-                this.LANG = lang;
-            });
 
         this.loadCommonPasswords(); // Load most common passwords
 

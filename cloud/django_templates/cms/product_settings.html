@@ -12,6 +12,7 @@
     {{ block.super }}
 {% endblock %}
 
+
 {% block content%}
 <div>
     <h3>Download package for product</h3>
@@ -58,6 +59,7 @@ Example for vms
     {% endfor %}
 
     <div class="submit-row">
+        <a href="{% url 'admin:pages' product.id %}" class="btn btn-sm btn-default">Edit Content</a>
         <button class="btn btn-sm btn-primary" type="submit" name="Upload" onclick="cookieInterval()">Upload</button>
     </div>
     <script>

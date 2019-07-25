@@ -16,8 +16,8 @@ ${email viewer no reg}    noptixautoqa+viewerunreg@gmail.com
 ${email client custom no reg}    noptixautoqa+clientcustomunreg@gmail.com
 &{users dict 1}      cloudAdmin=${EMAIL ADMIN}    Viewer=${EMAIL VIEWER}    Custom=${EMAIL CLIENT CUSTOM}    liveViewer=${EMAIL LIVE VIEWER}
 &{users dict 2}      cloudAdmin=${email admin no reg}     Viewer=${email viewer no reg}    Custom=${email client custom no reg}    liveViewer=${EMAIL LIVE VIEWER}
-&{all users dict}    Administrator=${EMAIL ADMIN}    Viewer=${EMAIL VIEWER}    ClientCustom=${EMAIL CLIENT CUSTOM}
-...                  Administrator=${email admin no reg}     Viewer=${email viewer no reg}    ClientCustom=${email client custom no reg}
+&{all users dict}    ${ADMIN TEXT}=${EMAIL ADMIN}    ${VIEWER TEXT}=${EMAIL VIEWER}    ClientCustom=${EMAIL CLIENT CUSTOM}
+...                  ${ADMIN TEXT}=${email admin no reg}     ${VIEWER TEXT}=${email viewer no reg}    ClientCustom=${email client custom no reg}
 
 *** Keywords ***
 Merge
@@ -140,6 +140,7 @@ Reset state
     Validate Log Out
     Log In    ${EMAIL MERGE OWNER 2}    ${password}
     Validate Log In
+    ${state}    Run Keyword And Ignore Error    Element Should Be Visible    ${YOU HAVE NO SYSTEMS}
     ${count}    Run Keyword And Ignore Error    Get Element Count    ${SYSTEMS TILE}
     FOR    ${idx}    IN RANGE   ${count}[1]-1
         Click Element    ${SYSTEMS TILE}
@@ -204,7 +205,7 @@ Only one system connected to Cloud Account
     Validate Log in
     Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${SHARE BUTTON SYSTEMS}    ${OPEN IN NX BUTTON}    ${RENAME SYSTEM}
     Wait Until Element Is Enabled    ${SHARE BUTTON SYSTEMS}    180
-    Share To    ${EMAIL MERGE OWNER 2}    Administrator
+    Share To    ${EMAIL MERGE OWNER 2}    ${ADMIN TEXT}
     Log Out
     Log In    ${EMAIL MERGE OWNER 2}    ${password}
     Validate Log In
@@ -214,7 +215,7 @@ Only one system connected to Cloud Account
     Wait Until Element Is Enabled    ${MERGE BUTTON SYSTEM}    180
     Click Button    ${MERGE BUTTON SYSTEM}
     Sleep    2
-    Get Text    ${MERGE DIALOG}//p[contains(text(),"Connect System you want to merge with this one to")]
+
     Wait Until Elements Are Visible    ${MERGE NOT OWNER MESSAGE 2}    ${MERGE DIALOG}//p[contains(text(),'${MERGE NOT OWNER MESSAGE 1 TEXT}')]    ${MERGE OK BUTTON}    ${MERGE X BUTTON}
     Element Text Should Be    ${MERGE NOT OWNER MESSAGE 2}    ${MERGE NOT OWNER MESSAGE 2 TEXT}
     Click Button    ${MERGE OK BUTTON}
@@ -279,7 +280,7 @@ Merge with 3.0
     Wait Until Element Is Enabled    ${MERGE BUTTON SYSTEM}
     Click Button    ${MERGE BUTTON SYSTEM}
     Wait Until Elements Are Visible    ${MERGE FORM}    ${MERGE SYSTEM DROPDOWN}    ${MERGE OK BUTTON}    ${MERGE CANCEL BUTTON}    ${MERGE X BUTTON}
-    Wait Until Element Is Visible    ${MERGE SYSTEM DROPDOWN}//span[contains(text()," – incompatible")]
+    Wait Until Element Is Visible    ${MERGE SYSTEM DROPDOWN}//span[contains(text(),"– ${INCOMPATIBLE}")]
     Click Button    ${MERGE CANCEL BUTTON}
     Disconnect from cloud
 
@@ -321,14 +322,14 @@ Merge with 3.0
 
     Merge    API made system 1    API made system 2    API made system 2
 
-    Check For Alert    System merge failed
+    Check For Alert    ${SYSTEMS MERGE FAILED TEXT}
     Wait Until Element Is Visible    ${MERGE FAILED DIALOG HEADER}
     Click Button    ${MERGE FAILED OK BUTTON}
     Element Should Not Be Visible    ${MERGE FAILED DIALOG HEADER}
 
     Merge    API made system 1    API made system 2    API made system 2
 
-    Check For Alert    System merge failed
+    Check For Alert    ${SYSTEMS MERGE FAILED TEXT}
     Wait Until Element Is Visible    ${MERGE FAILED DIALOG HEADER}
     Click Button    ${MERGE FAILED X BUTTON}
     Element Should Not Be Visible    ${MERGE FAILED DIALOG HEADER}
@@ -361,7 +362,8 @@ From secondary system merge to primary with no other systems
     Merge    API made system 1    API made system 1    API made system 1
     Validate Merge
 
-    Check for alert    Connection to API made system 2 lost    timeout=120
+    ${alert message}    Replace String    ${CONNECTION TO SYSTEM LOST}    %SYSTEM NAME%    API made system 2
+    Check for alert    ${alert message}    timeout=120
     Wait Until Element Is Visible    ${USERS LIST}
     Wait Until Element Is Not Visible    ${CURRENTLY MERGING CARD}    120
     Validate system available    API made system 1
@@ -390,7 +392,8 @@ From secondary system merge to primary with other systems
     Merge    API made system 1    API made system 1    API made system 1
     Validate Merge
 
-    Check for alert    Connection to API made system 3 lost    timeout=120
+    ${alert message}    Replace String    ${CONNECTION TO SYSTEM LOST}    %SYSTEM NAME%    API made system 3
+    Check for alert    ${alert message}    timeout=120
     Wait Until Elements Are Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
     Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
     Validate system available    API made system 1
@@ -440,7 +443,8 @@ Merge with different types of users
     Merge    API made system 1    API made system 1    API made system 1
     Validate Merge
 
-    Check for alert    Connection to API made system 2 lost    timeout=120
+    ${alert message}    Replace String    ${CONNECTION TO SYSTEM LOST}    %SYSTEM NAME%    API made system 2
+    Check for alert    ${alert message}    timeout=120
     Validate system available    API made system 1
     FOR     ${idx}  IN RANGE  90
         ${result}    Run Keyword And Ignore Error    Wait Until Element Is Visible    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${email admin no reg}')]

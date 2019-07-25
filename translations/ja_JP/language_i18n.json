@@ -3,13 +3,18 @@
     "Account Settings": "アカウント設定",
     "Account not activated": "アカウントがまだ有効化されていません",
     "Account not found": "アカウントが見つかりません",
-    "Administration": "Administration",
-    "Advanced PTZ": "アドバンスドPTZ",
-    "Advanced Search": "Advanced Search",
+    "Actual number of events supported by this camera may be bigger.": "このカメラでサポートされている実際のイベント数はもっと大きい可能性があります。",
+    "Additional Requirements": "追加の要件",
+    "Administration": "管理",
+    "Advanced PTZ": "高度なPTZ",
+    "Advanced Search": "詳細検索",
+    "All Integrations": "すべての統合",
     "All Systems": "すべてのシステム",
     "All cloud users will be deleted.": "クラウドのすべてのユーザーが削除されます",
-    "All integrations": "全てのインテグレーション",
     "All results": "全ての結果",
+    "Analytics": "Analytics",
+    "Analytics Event": "Analytics Event",
+    "Analytics Events": "Analytics Events",
     "Any": "全て",
     "Audio": "オーディオ",
     "Build Number:": "ビルド番号:",
@@ -22,9 +27,11 @@
     "Choose which properties should be visible to customers:": "表示するプロパティをを選択：",
     "Close": "閉じる",
     "Codec": "コー​​デック",
+    "Collapse": "閉じる",
     "Contact": "お問い合わせ",
     "Create Account": "アカウント作成",
     "Create account": "アカウントを作成",
+    "Developer": "開発者",
     "Disconnect": "切断",
     "Disconnect System from %CLOUD_NAME%?": "%CLOUD_NAME% からシステムを切断しますか？",
     "Download": "ダウンロード",
@@ -33,25 +40,23 @@
     "Download Firefox": "Firefoxをダウンロード",
     "Download Links:": "ダウンロードリンク：",
     "Downloads": "ダウンロード",
-    "Draft": "Draft",
+    "Draft": "下書き",
     "Dual Streaming": "デュアルストリーミング",
     "Email": "Email",
     "Embed": "埋め込み",
     "Enter \"Public User\" credentials:": "「パブリックユーザー」資格情報を入力:",
     "Enter password for your account to continue": "アカウントのパスワードを入力して続行してください",
     "Enter password to continue.": "続行するにはパスワードを入力してください",
-    "Export all to CSV": "CSV にエクスポート",
+    "Export all to CSV": "CSV にすべてエクスポート",
     "FPS(max)": "FPS（最大）",
     "Firmware version": "ファームウェアバージョン",
     "Fisheye": "魚眼",
     "Forgot password?": "パスワードを忘れましたか?",
-    "Get in touch": "Get in touch",
-    "How it works": "How it works",
-    "How to install?": "How to install?",
-    "I agree to the": "同意します",
-    "I want you to contact me": "連絡して下さい",
+    "Get in touch": "連絡する",
+    "How it works": "使い方",
+    "How to setup?": "設定方法",
     "I/O": "I/O",
-    "In Review": "In Review",
+    "In Review": "審査中",
     "In-Client Upgrade:": "クライアント内アップグレード：",
     "Latest version": "最新版",
     "Log In": "ログイン",
@@ -76,6 +81,7 @@
     "Release Notes": "更新履歴",
     "Release notes": "更新履歴",
     "Remember me": "記憶する",
+    "Requirements": "条件",
     "Resend activation email": "アクティベーションメール再送信",
     "Resolution(max)": "解像度（最大）",
     "Save": "保存",
@@ -88,6 +94,8 @@
     "Show All": "すべて表示",
     "Some of your servers don't support cloud System merge because of outdated software version.": "ソフトウェアのバージョンが古いため、一部のサーバーはクラウドシステムの統合がサポートされません",
     "Support": "サポート",
+    "Support E-mail": "サポート Eメール",
+    "Support URL": "サポートURL",
     "System name": "システム名",
     "System name is required": "システム名が必要です",
     "System will be accessible through local network with local administrator account.": "システムにはローカルの管理者アカウントとローカル ネットワーク経由でアクセスできます",
@@ -95,71 +103,91 @@
     "Systems of such size may work but will be unstable and have troubles with updates and synchronisation.": "このサイズのシステムは動作するかもしれませんが、不安定になり、更新や同期に問題があります",
     "Tags": "タグ",
     "Take the name and settings from": "名称と設定を取得",
+    "Terms of Use": "利用規約",
     "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.": "このユーザーの資格情報が公開されます\n公共使用のカメラを選択し、必要最小限のアクセスを「パブリック ユーザー」役割に作成します\nこの「パブリック ユーザー」はシステム全体に影響しないアクセスにして下さい",
     "There will be more than": "更にある",
+    "This device has reported to support some analytics events, but we don't have exact information about them.": "このデバイスはいくつかの分析イベントをサポートすることが報告されていますが、正確な情報はありません。",
+    "To": "宛先",
     "Too many attempts. Try again in a minute.": "試行回数が多すぎます 暫くしてからもう一度お試しください",
-    "Topic": "Topic",
+    "Topic": "トピック",
     "Update them to the": "更新",
     "Updated": "更新",
     "User": "ユーザー",
     "View": "表示",
     "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.": "Google ChromeやMozilla Firefoxの最新バージョンをインストールすることを推奨しますが、他の最新のWebブラウザを使用することもできます",
-    "What's new?": "新機能",
+    "What's New?": "新着情報",
+    "Works with:": "で動作します：",
     "Wrong password": "間違ったパスワード",
     "You can merge only those cloud Systems, where you have the \"Owner\" permissions.": "オーナー権限のあるクラウドシステムのみを統合することができます",
     "You can only merge Systems where you are the owner.": "オーナーであるシステムのみを統合できます。",
+    "Your Email": "あなたのEメール",
     "Your Name": "名前",
     "Your browser is not supported": "お使いのブラウザーはサポートされていません",
-    "andXMore": "... and {{value}} more",
+    "andXMore": "... さらに {{value}}",
     "cameraFilters": {
-        "H265": "H.265 Cameras",
-        "IO": "I / O modules",
-        "TwWayAudio": "2-way audio devices",
-        "aptz": "Cameras with advanced PTZ",
-        "audio": "Cameras with audio",
-        "encoder": "Encoders",
-        "fisheye": "Fisheye cameras",
-        "highRes": "Extra high resolution cameras",
-        "multiSensor": "Multi-sensor cameras",
-        "ptz": "PTZ cameras"
+        "H265": "H.265カメラ",
+        "IO": "I/Oモジュール",
+        "TwWayAudio": "双方向オーディオ機器",
+        "aptz": "高度なPTZを搭載したカメラ",
+        "audio": "音声付きカメラ",
+        "encoder": "エンコーダー",
+        "fisheye": "魚眼レンズカメラ",
+        "highRes": "超高解像度カメラ",
+        "multiSensor": "マルチセンサーカメラ",
+        "ptz": "PTZカメラ"
     },
     "devices": "デバイス",
     "dialogs": {
         "merge": {
-            "connectToCloud": "これと統合したいシステムを <strong>{{cloudName}}</strong> か、 <strong>{{vmsName}}</strong> クライアントを使用してローカルに統合します。",
-            "mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from the <strong>{{primarySystem}}</strong>.",
-            "primaryCannotMerge": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} System.",
-            "primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}.",
-            "secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
+            "connectToCloud": "これと統合したいシステムを <strong>{{cloudName}}</strong> に接続するか、 <strong>{{vmsName}}</strong> クライアントを使用してローカルに統合します。",
+            "mergeConfirmation": "<strong>{{primarySystem}}</strong> と <strong>{{secondarySystem}}</strong>を統合しようとしています。設定と名前は <strong>{{primarySystem}}</strong>から取得されます。",
+            "primaryCannotMerge": "システム{{targetSystem}} には、現在のシステムと互換性のない新しいソフトウェアバージョンがあります。現在のシステムを<a href=\"/download\" target=\"_blank\" translate>最新のビルド</a>に更新し、{{targetSystem}} システムと統合します。",
+            "primarySystemOffline": "システム {{primarySystem}} はオフラインのため、システム{{targetSystem}} と統合することはできません。",
+            "secondaryCannotMerge": "システム {{targetSystem}} には、現在のシステムと互換性のない古いソフトウェアバージョンがあります。{{targetSystem}} を <a href=\"/download\" target=\"_blank\" translate>最新のビルド</a> に更新して、現在のものと統合します。",
             "systemOffline": "システム {{targetSystem}} はオフラインのため、現在のシステムと統合することはできません。",
             "systemUnavailable": "システム {{targetSystem}} は現在到達不能です。数分後にもう一度試すか、連絡してください"
+        },
+        "message": {
+            "failedToSend": "メッセージを送信できませんでした。",
+            "sent": "メッセージが送信されました。",
+            "title": {
+                "integration": "{{companyName}} と連絡を取る",
+                "ipvd_feedback_device": "{{product}} についてのフィードバック",
+                "ipvd_feedback_page": "カメラページへのフィードバック"
+            },
+            "topic": {
+                "contact_sales": "{{product}} についてセールスに連絡する",
+                "contact_support": "{{product}} についてサポートに連絡する",
+                "integration_feedback": "{{product}} 統合のためのフィードバック",
+                "ipvd_feedback_device": "{{product}} についてのフィードバック",
+                "ipvd_feedback_page": "カメラページへのフィードバック"
+            }
         }
     },
-    "dialogs.merge.connectToCloud": "これと統合したいシステムを <strong>{{cloudName}}</strong> か、 <strong>{{vmsName}}</strong> クライアントを使用してローカルに統合します。",
-    "dialogs.merge.mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from the <strong>{{primarySystem}}</strong>.",
-    "dialogs.merge.primaryCannotMerge": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} System.",
+    "dialogs.merge.connectToCloud": "これと統合したいシステムを <strong>{{cloudName}}</strong> に接続するか、 <strong>{{vmsName}}</strong> クライアントを使用してローカルに統合します。",
+    "dialogs.merge.mergeConfirmation": "システム <strong>{{primarySystem}}</strong> と <strong>{{secondarySystem}}</strong>を統合しようとしています。設定と名前は <strong>{{primarySystem}}</strong>から取得されます。",
+    "dialogs.merge.primaryCannotMerge": "システム{{targetSystem}} には、現在のシステムと互換性のない新しいソフトウェアバージョンがあります。現在のシステムを<a href=\"/download\" target=\"_blank\" translate>最新のビルド</a>に更新し、{{targetSystem}} システムと統合します。",
     "dialogs.merge.primarySystemOffline": "dialogs.merge.primarySystemOffline",
-    "dialogs.merge.secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
+    "dialogs.merge.secondaryCannotMerge": "システム {{targetSystem}} には、現在のシステムと互換性のない古いソフトウェアバージョンがあります。 {{targetSystem}} を <a href=\"/download\" target=\"_blank\" translate>最新のビルド</a> に更新して、現在のものと統合します。",
     "dialogs.merge.systemOffline": "dialogs.merge.systemOffline",
     "dialogs.merge.systemUnavailable": "システム {{targetSystem}} は現在到達不能です。数分後にもう一度試すか、連絡してください",
-    "disclaimer": "This list is limited to actual devices auto-reporting data to {{value}}, as approved by anonymous system users. The complete list of supported manufacturers and models is greater in scope.",
     "downloads": {
         "appTypes": {
             "bundle": "クライアントとサーバー",
             "client": "クライアントのみ",
-            "package": "Package",
+            "package": "パッケージ",
             "server": "サーバーのみ",
             "servertool": "構成ツール"
         },
         "groups": {
             "android": {
-                "label": "Android",
-                "shortLabel": "Android"
+                "label": "アンドロイド",
+                "shortLabel": "アンドロイド"
             },
             "arm": {
                 "label": "ARM",
                 "shortLabel": "ARM",
-                "supported": "Debian/Ubuntu based"
+                "supported": "Debian / Ubuntuベース"
             },
             "ios": {
                 "label": "iOS",
@@ -168,15 +196,15 @@
             "linux": {
                 "label": "Ubuntu Linux",
                 "shortLabel": "Ubuntu",
-                "supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+                "supported": "Ubuntu 14.04 LTS、16.04 LTS"
             },
             "mac": {
                 "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "supported": "OSX 10.11 El Capitan、OSX 10.12 Sierra、OSX 10.13 High Sierra"
             },
             "macos": {
                 "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "supported": "OSX 10.11 El Capitan、OSX 10.12 Sierra、OSX 10.13 High Sierra"
             },
             "sdk": {
                 "label": "SDK",
@@ -185,7 +213,7 @@
             },
             "windows": {
                 "label": "ウィンドウズ",
-                "supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+                "supported": "7、8、8.1、10、Server 2008、Server 2012"
             }
         },
         "mobile": {
@@ -198,53 +226,55 @@
         },
         "platforms": {
             "bananapi": "Banana Pi",
-            "bpi": "Nx1",
+            "bpi": "N×1",
             "linux64": "x64",
             "mac": "X",
             "rpi": " Raspberry Pi",
             "win64": "x64"
         },
         "releasesTypes": {
-            "beta": "Beta",
+            "beta": "ベータ",
             "betas": "ベータ",
-            "patch": "Patch",
+            "patch": "パッチ",
             "patches": "パッチ",
-            "rc": "Release Candidate",
-            "release": "Release",
+            "rc": "リリース候補版",
+            "release": "リリース",
             "releases": "リリース"
         }
     },
     "integration": {
         "Access Control": "アクセスコントロール",
-        "Connector": "コネクター",
+        "Connector": "コネクタ",
         "Data Analytics": "データ解析",
         "Drone": "ドローン",
-        "Health Monitor": "ヘルスモニタ",
+        "Health Monitor": "ヘルスモニター",
         "Storage": "ストレージ",
         "backToEditText": "編集インターフェースに戻る",
-        "previewRibbonText": "このページは最新の変更のプレビューです、一般的に利用可能なバージョンと一致しません"
+        "previewRibbonText": "このページは最新の変更のプレビューです、一般的に利用可能なバージョンと一致しません。"
     },
     "ipvd": {
-        "Advanced PTZ cameras": "Advanced PTZ cameras",
-        "Cameras supporting H.265": "Cameras supporting H.265",
-        "Cameras with 2-way audio": "Cameras with 2-way audio",
-        "Extra high resolution cameras": "Extra high resolution cameras",
-        "Fisheye Cameras": "Fisheye Cameras",
-        "I / O modules": "I / O modules",
-        "Multisensor Cameras": "Multisensor Cameras",
-        "PTZ cameras": "PTZ cameras",
+        "Advanced PTZ cameras": "高度なPTZカメラ",
+        "Cameras supporting H.265": "H.265対応カメラ",
+        "Cameras with 2-way audio": "双方向オーディオ付きカメラ",
+        "Extra high resolution cameras": "超高解像度カメラ",
+        "Fisheye Cameras": "魚眼カメラ",
+        "I / O modules": "I/Oモジュール",
+        "Multisensor Cameras": "マルチセンサーカメラ",
+        "PTZ cameras": "PTZカメラ",
         "camera": "カメラ",
-        "count": "Count",
+        "count": "カウント",
+        "disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous.",
         "dvr": "DVR",
         "encoder": "エンコーダー",
         "feedback": {
-            "a_Please": "Please",
-            "b_Link": "submit a request",
-            "c_Info": "for additional questions/concerns regarding supported devices."
+            "a_Please": "これを実行して下さい",
+            "b_Link": "リクエストを送信する",
+            "c_Info": "サポートされているデバイスに関するその他の質問/懸念事項については"
         },
         "hardwareType": "タイプ",
-        "isAptzSupported": "アドバンスドPTZ",
-        "isAptzSupportedShort": "アドバンスドPTZ",
+        "isAnalyticsSupported": "Analytics",
+        "isAptzSupported": "高度なPTZ",
+        "isAptzSupportedShort": "高度なPTZ",
         "isAudioSupported": "オーディオ",
         "isFisheye": "魚眼",
         "isH265": "H.265",
@@ -259,31 +289,41 @@
         "multiSensorCamera": "マルチセンサーカメラ",
         "other": "その他",
         "primaryCodec": "コー​​デック",
+        "resolutionArea": "Area",
         "vendor": "製造メーカー"
     },
+    "ipvd.disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous.",
     "latest build": "最新のビルド",
-    "manufacturers": "manufacturers",
+    "manufacturers": "製造メーカー",
     "messageDialogPlaceholders": {
-        "feedback": "Make sure you include your camera model and manufacturer..."
+        "feedback": "カメラのモデルと製造元を必ず含めてください。"
     },
     "pageTitles": {
-        "integrations": "インテグレーション",
+        "integrations": "統合",
         "supportedDevices": "サポートされているデバイス"
     },
-    "phoneNumberWithLabel": "Tel: {{number}}",
+    "phoneNumberWithLabel": "電話： {{number}}",
+    "privacyPolicy": {
+        "integration": "このフォームを送信することにより、あなたは {{INTEGRATION_COMPANY}} または %COMPANY_NAME%、あるいはその両方から連絡を受けることに同意します。\n{{INTEGRATION_COMPANY}} プライバシーポリシー <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">ここ</a> と %COMPANY_NAME% プライバシーポリシー <a href=\"%PRIVACY_LINK%\" target=\"blank\">ここ</a> には同意を撤回する方法に関する指示が含まれています。",
+        "ipvd": "このフォームを送信することにより、あなたは %COMPANY_NAME%から連絡を受けることに同意します。\n %COMPANY_NAME% プライバシーポリシー <a href=\"%PRIVACY_LINK%\" target=\"blank\">ここ</a>には同意を撤回する方法についての指示が含まれています。"
+    },
     "search": {
         "Any": "全て",
         "Search": "検索",
-        "filter applied": "filter applied",
-        "filters applied": "filters applied",
+        "analytics": "解析",
+        "analyticsSelected": "analytics events",
+        "filter applied": "フィルターが適用されました",
+        "filters applied": "フィルターが適用されました",
         "hardwareType": "タイプ",
-        "hardwareTypes": "types",
-        "minResolution": "Minimum Resolution",
-        "search_ipvd": "Search by model or manufacturer",
-        "selected": "selected",
+        "hardwareTypes": "Types",
+        "minResolution": "最小解像度",
+        "search_ipvd": "モデルまたはメーカーで検索",
+        "selected": "選択済み",
         "vendor": "製造メーカー",
-        "vendors": "manufacturers"
+        "vendors": "Manufacturers"
     },
     "servers in the merged System.": "結合されたシステム内のサーバー",
-    "support": "サポート"
+    "support": "サポート",
+    "testedVersionLabel": "{{vmsName}} バージョンでテスト済み：",
+    "testedVersionsLabel": "{{vmsName}} バージョンでテスト済み："
 }

@@ -30,10 +30,10 @@ def create_new_cloudportals_for_each_customization(logger):
             logger.stdout.write(logger.style.SUCCESS("\tProduct name for {} is {}".
                                                      format(customization.name, product_name)))
         else:
-            product_name = "Nx Cloud"
-            logger.stdout.write(logger.style.SUCCESS("\tCouldnt find product name for {} using {}".
+            product_name = "Cloud Portal"
+            logger.stdout.write(logger.style.SUCCESS("\tCouldn't find product name for {} using {}".
                                                      format(customization.name, product_name)))
-        cloud = structure.find_or_add_product(product_name, customization, "cloud_portal")
+        cloud = structure.find_or_add_product_with_single_customization(product_name, customization, "cloud_portal", "")
         cloud.customizations.add(customization)
         cloud.save()
     logger.stdout.write(logger.style.SUCCESS("Done creating new cloud portals"))

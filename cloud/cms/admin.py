@@ -2,6 +2,7 @@ from django.contrib import admin, messages
 from django.contrib.admin import SimpleListFilter
 from django.contrib.auth.models import Permission
 from django.conf.urls import url
+from django.core.exceptions import PermissionDenied
 from django.db.models import Q, Case, When, Value, BooleanField
 from django.shortcuts import render, redirect
 from django.urls import reverse
@@ -52,12 +53,47 @@ def clone_product(request, product_id):
     return product.id
 
 
+class ContextFilter(SimpleListFilter):
+    title = 'Show Hidden Pages'
+    parameter_name = 'hidden'
+    default_state = 'false'
+
+    def lookups(self, request, model_admin):
+        return (
+            ('true', 'Yes'),
+            ('false', 'No')
+        )
+
+    def choices(self, cl):
+        for lookup, title in self.lookup_choices:
+            yield {
+                'selected': self.value() == lookup if self.value() else lookup == self.default_state,
+                'query_string': cl.get_query_string({self.parameter_name: lookup}, []),
+                'display': title,
+            }
+
+    def queryset(self, request, queryset):
+        return queryset
+
+
 class CustomizationFilter(SimpleListFilter):
     title = 'Customization'
     parameter_name = 'customization'
     default_customization = None
     ALL_CUSTOMIZATIONS = '0'
     OTHER_CUSTOMIZATIONS = '1000'
+
+    def __init__(self, request, params, model, model_admin):
+        super().__init__(request, params, model, model_admin)
+        self.request = request
+        self.model_admin = model_admin
+
+    def value(self):
+        value = self.used_parameters.get(self.parameter_name)
+        if not value and isinstance(self.model_admin, ProductCustomizationReviewAdmin) and \
+                self.request.user.is_portal_manager:
+            value = self.ALL_CUSTOMIZATIONS
+        return value
 
     def lookups(self, request, model_admin):
         # Temporary customization 0 is need for 'All' since we need to keep it,
@@ -91,6 +127,93 @@ class CustomizationFilter(SimpleListFilter):
         else:
             return queryset.filter(**{field_name + '__id': self.default_customization})
         return queryset
+
+
+class ReviewStateFilter(SimpleListFilter):
+    title = 'State'
+    parameter_name = 'state'
+    ALL_STATES = 'all'
+
+    def __init__(self, request, params, model, model_admin):
+        super().__init__(request, params, model, model_admin)
+        self.request = request
+        self.model_admin = model_admin
+
+    def choices(self, cl):
+        for lookup, title in self.lookup_choices:
+            yield {
+                'selected': self.value() == lookup,
+                'query_string': cl.get_query_string({self.parameter_name: lookup}, []),
+                'display': title,
+            }
+
+    def lookups(self, request, model_admin):
+        states = [(self.ALL_STATES, 'All')]
+        states.extend(
+            [(str(i), ProductCustomizationReview.REVIEW_STATES[i])
+             for i in range(len(ProductCustomizationReview.REVIEW_STATES))]
+        )
+        return states
+
+    def queryset(self, request, queryset):
+        if self.value() is None or self.value() == self.ALL_STATES:
+            return queryset
+        else:
+            return queryset.filter(state__exact=self.value())
+
+    def value(self):
+        value = self.used_parameters.get(self.parameter_name)
+        if value is None:
+            if isinstance(self.model_admin, ProductCustomizationReviewAdmin) and \
+                    (self.request.user.is_superuser or self.request.user.is_portal_manager):
+                value = str(ProductCustomizationReview.REVIEW_STATES.pending)
+            else:
+                value = self.ALL_STATES
+        return value
+
+
+class ReviewVersionFilter(SimpleListFilter):
+    title = 'Version'
+    parameter_name = 'version'
+    ALL_VERSIONS = 'all'
+    LATEST_VERSION = 'latest'
+
+    def __init__(self, request, params, model, model_admin):
+        super().__init__(request, params, model, model_admin)
+        self.request = request
+        self.model_admin = model_admin
+
+    def choices(self, cl):
+        for lookup, title in self.lookup_choices:
+            yield {
+                'selected': self.value() == lookup,
+                'query_string': cl.get_query_string({self.parameter_name: lookup}, []),
+                'display': title,
+            }
+
+    def lookups(self, request, model_admin):
+        versions = [(self.ALL_VERSIONS, 'All'), (self.LATEST_VERSION, 'Latest')]
+        return versions
+
+    def queryset(self, request, queryset):
+        if self.value() == self.LATEST_VERSION:
+            product_ids = set(queryset.values_list('version__product', flat=True))
+            review_ids = []
+            for review in ProductCustomizationReview.objects.all().order_by('-pk').select_related('version__product'):
+                if review.version.product.id in product_ids:
+                    review_ids.append(review.id)
+                    product_ids.remove(review.version.product.id)
+            return queryset.filter(id__in=review_ids)
+        return queryset
+
+    def value(self):
+        value = self.used_parameters.get(self.parameter_name)
+        if value is None:
+            if isinstance(self.model_admin, ProductCustomizationReviewAdmin) and self.request.user.is_developer:
+                value = self.LATEST_VERSION
+            else:
+                value = self.ALL_VERSIONS
+        return value
 
 
 class ProductFilter(SimpleListFilter):
@@ -169,17 +292,6 @@ class ProductAdmin(CMSAdmin):
     def has_add_permission(self, request):
         return super(CMSAdmin, self).has_add_permission(request)
 
-    def save_model(self, request, obj, form, change):
-        super().save_model(request, obj, form, change)
-        if not change and not request.user.is_superuser:
-            group = Group.objects.create(name=f'Developer: {obj.name}')
-            permissions = Permission.objects.filter(
-                codename__in=['edit_content', 'change_product', 'change_productcustomizationreview']
-            )
-            group.user_set.add(request.user)
-            group.permissions.set(permissions)
-            UserGroupsToProductPermissions.objects.create(product=obj, group=group)
-
     def change_view(self, request, object_id, form_url='', extra_context=None):
         extra_context = extra_context or {}
         extra_context['current_versions'] = []
@@ -214,6 +326,7 @@ class ProductAdmin(CMSAdmin):
                 fields.remove('customizations')
         else:
             fields.remove('preview_status')
+            fields.append(fields.pop(fields.index('customizations')))
         return fields
 
     def get_readonly_fields(self, request, obj=None):
@@ -226,7 +339,7 @@ class ProductAdmin(CMSAdmin):
 
     def get_list_display(self, request):
         if not request.user.is_superuser:
-            return self.list_display[1:3]
+            return self.list_display[1:4]
         return self.list_display
 
     def get_queryset(self, request):
@@ -237,6 +350,11 @@ class ProductAdmin(CMSAdmin):
         return queryset
 
     def get_list_filter(self, request):
+        if request.resolver_match.view_name == 'admin:pages':
+            if request.user.is_superuser:
+                return (ContextFilter,)
+            else:
+                return tuple()
         list_display = self.get_list_display(request)
         if 'customizations_list' not in list_display:
             list_filter = list(self.list_filter)
@@ -269,7 +387,7 @@ class ProductAdmin(CMSAdmin):
         return super().response_add(request, obj, post_url_continue)
 
     def product_settings(self, obj):
-        if obj.product_type.type == ProductType.PRODUCT_TYPES.integration:
+        if not obj.product_type or obj.product_type.type == ProductType.PRODUCT_TYPES.integration:
             return format_html('')
         return format_html('<a class="btn btn-sm" href="{}">Settings</a>',
                            reverse('product_settings', args=[obj.id]))
@@ -281,14 +399,23 @@ class ProductAdmin(CMSAdmin):
         context = {
             'title': 'Edit a page',
             'app_label': self.model._meta.app_label,
-            'opts': self.model._meta
+            'opts': self.model._meta,
+            'cl': self.get_changelist_instance(request),
+            'has_permission': admin.site.has_permission(request),
+            'product': self.get_object(request, product_id, None),
+            'site_header': admin.site.site_header,
+            'site_title': admin.site.site_title,
+            'site_url': admin.site.site_url
         }
 
+        if not context['product']:
+            raise PermissionDenied()
+
         if product_id:
-            context['product'] = Product.objects.get(id=product_id)
             qs = context['product'].product_type.context_set.all()
-            if not request.user.is_superuser:
-                qs = qs.filter(hidden=False)  # only superuser sees hidden contexts
+            if not request.user.is_superuser or request.GET.get('hidden') != 'true':
+                qs = qs.filter(hidden=False)
+
             context['contexts'] = qs
 
         return render(request, 'cms/page_list_view.html', context)
@@ -308,6 +435,7 @@ class ProductAdmin(CMSAdmin):
         context['language_code'] = Customization.objects.get(name=settings.CUSTOMIZATION).default_language
         context['EXTERNAL_IMAGE'] = DataStructure.DATA_TYPES[
             DataStructure.DATA_TYPES.external_image]
+        context['BYTES_TO_MB'] = BYTES_TO_MEGABYTES
 
         if 'admin_language' in request.session:
             context['language_code'] = request.session['admin_language']
@@ -317,6 +445,10 @@ class ProductAdmin(CMSAdmin):
         context['opts'] = target_context._meta
         context['product_opts'] = product._meta
         context['original'] = target_context
+        context['has_permission'] = admin.site.has_permission(request)
+        context['site_header'] = admin.site.site_header
+        context['site_title'] = admin.site.site_title
+        context['site_url'] = admin.site.site_url
 
         form = CustomContextForm(initial={'language': context['language_code'], 'context': context_id})
         form.add_fields(product, target_context, Language.objects.get(code=context['language_code']), request.user)
@@ -422,10 +554,13 @@ admin.site.register(ContentVersion, ContentVersionAdmin)
 
 
 class ProductCustomizationReviewAdmin(CMSAdmin):
-    list_display = ('product', 'version', 'customization_name', 'reviewer_email', 'reviewed_date', 'state', 'current_version')
+    list_display = (
+        'product', 'version', 'customization_name', 'reviewer_email', 'reviewed_date', 'state', 'current_version'
+    )
     readonly_fields = ('customization', 'version', 'reviewed_date', 'reviewed_by', 'notes',)
-
-    list_filter = ('version__product__product_type', 'state', ProductFilter, CustomizationFilter)
+    list_filter = (
+        'version__product__product_type', ReviewStateFilter, ProductFilter, CustomizationFilter, ReviewVersionFilter
+    )
 
     change_form_template = 'cms/product_customization_review_change_form.html'
     fieldsets = (
@@ -537,26 +672,32 @@ class ProductCustomizationReviewAdmin(CMSAdmin):
     def template_allowed(self, request, customization_review):
         customization_name = customization_review.customization.name
         matching_portal = customization_name == settings.CUSTOMIZATION
-        is_cloud_portal = customization_review.version.product.is_cloud_portal
+        product = customization_review.version.product
+        is_cloud_portal = product.is_cloud_portal
         state = customization_review.state
 
-        can_access_customization = UserGroupsToProductPermissions.check_customization_access(
-            request.user, customization_name
+        has_product_type_permission = UserGroupsToProductType.check_product_type(
+            request.user, product.product_type, 'cms.publish_version'
         )
         can_force_update = UserGroupsToProductPermissions.check_customization_permission(
             request.user, customization_name, 'cms.force_update'
-        )
+        ) & has_product_type_permission
         can_publish_or_accept = UserGroupsToProductPermissions.check_customization_permission(
             request.user, customization_name, 'cms.publish_version'
-        )
+        ) & has_product_type_permission
+
         developer_access_customization = UserGroupsToProductPermissions.check_customization_permission(
-            customization_review.version.created_by, customization_name, 'cms.publish_version')
+            customization_review.version.created_by, customization_name, 'cms.access_customization')
         can_delete = self.has_delete_permission(request, customization_review)
 
         allowed = dict()
         allowed['force_update'] = \
             is_cloud_portal and state == ProductCustomizationReview.REVIEW_STATES.accepted and matching_portal \
             and can_force_update
+        allowed['reject'] = \
+            can_publish_or_accept and \
+            state in [ProductCustomizationReview.REVIEW_STATES.blocked,
+                      ProductCustomizationReview.REVIEW_STATES.pending]
         allowed['publish'] = \
             is_cloud_portal and state == ProductCustomizationReview.REVIEW_STATES.pending and matching_portal \
             and can_publish_or_accept
@@ -565,11 +706,11 @@ class ProductCustomizationReviewAdmin(CMSAdmin):
             and can_publish_or_accept
         allowed['question'] = \
             (state == ProductCustomizationReview.REVIEW_STATES.pending or
-             state == ProductCustomizationReview.REVIEW_STATES.rejected) and can_access_customization
+             state == ProductCustomizationReview.REVIEW_STATES.rejected)
         allowed['delete'] = can_delete
         allowed['submit_row'] = True in allowed.values()
 
-        allowed['access_customization_checkbox'] = not developer_access_customization
+        allowed['access_customization_checkbox'] = not developer_access_customization and can_publish_or_accept
 
         return allowed
 
@@ -583,6 +724,14 @@ class UserGroupsToProductPermissionsAdmin(admin.ModelAdmin):
 
 
 admin.site.register(UserGroupsToProductPermissions, UserGroupsToProductPermissionsAdmin)
+
+
+class UserGroupsToProductTypeAdmin(admin.ModelAdmin):
+    list_display = ('id', 'group', 'product_type',)
+    list_filter = ('product_type', )
+
+
+admin.site.register(UserGroupsToProductType, UserGroupsToProductTypeAdmin)
 
 
 class ExternalFileAdmin(CMSAdmin):

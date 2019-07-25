@@ -248,34 +248,46 @@ ${RELEASE NUMBER}                     //div[contains(@class,"active")]//h1
 #IPVD
 ${IPVD TITLE}                        //header//li[@class="active"]/a[contains(text(),"${IPVD TITLE TEXT}")]
 ${IPVD SEARCH BAR}                   //ipvd//input[@name="query"]
+${IPVD CLEAR TEXT SEARCH BUTTON}     ${IPVD SEARCH BAR}/../button
 ${IPVD ADVANCED SEARCH BUTTON}       //ipvd//span[contains(text(),"${IPVD ADVANCED SEARCH BUTTON TEXT}")]
-${IPVD MANFUACTURERS PANE}           //ipvd//header/span[contains(text(),"manufacturers")]/../../../..
-${IPVD DEVICES PANE}                 //ipvd//header/span[contains(text(),"devices")]/../../../..
+#${IPVD MANFUACTURERS PANE}           //ipvd//header/span[contains(text(),"${IPVD MANUFACTURERS TEXT}")]/../../../..
+${IPVD MANFUACTURERS PANE}           //ipvd//nx-vendor-list/nx-block[@id='vendors']
+${IPVD AND MORE}                     ${IPVD MANFUACTURERS PANE}//div[@class="manufacture-info"]
+#${IPVD DEVICES PANE}                 //ipvd//header/span[contains(text(),"${IPVD DEVICES TEXT}")]/../../../..
+${IPVD DEVICES PANE}                 //ipvd//nx-vendor-list/nx-block[@id='cameras']
 ${IPVD DEVICE DETAILS}               //ipvd//nx-cam-view
 ${IPVD DEVICE MAKE}                  ${IPVD DEVICE DETAILS}//div[@class="camera-vendor-model"]//span[1]
 ${IPVD DEVICE MODEL}                 ${IPVD DEVICE DETAILS}//div[@class="camera-vendor-model"]//span[2]
-${IPVD CLEAR FILTERS BUTTON}         //ipvd//span[@class="close-button"]
+${IPVD DEVICE RESOLUTION}            ${IPVD DEVICE DETAILS}//div[text()='Resolution(max)']//following::div[1]
 ${IPVD TABLE}                        //ipvd//table
+${IPVD TABLE HEADING MANUFACTURER}   ${IPVD TABLE}/thead//div[text()='Manufacturer']
+${IPVD TABLE HEADING LABEL SORT ARROW}    /../div[2]
+${IPVD TABLE ROWS}                   ${IPVD TABLE}/tbody/tr
 ${IPVD TABLE FIRST ITEM}             ${IPVD TABLE}/tbody/tr[1]
 ${IPVD TABLE LAST ITEM}              ${IPVD TABLE}/tbody/tr[0=count(following-sibling::tr)]//td
-${IPVD PREVIOUS BUTTON}              //ipvd//a/span[contains(text(),"«")]
-${IPVD NEXT BUTTON}                  //ipvd//a/span[contains(text(),"»")]
-${IPVD LAST PAGE BUTTON}             //ipvd//ul/[@class="pagination"]/li[@class="page-item disabled"]/following-sibling::li/a
+${IPVD PAGINATION}                   //ipvd//ngb-pagination/ul
+${IPVD PREVIOUS PAGE BUTTON}         ${IPVD PAGINATION}/li[1]
+${IPVD FIRST PAGE BUTTON}            ${IPVD PAGINATION}/li[1]/following::li[1]
+${IPVD LAST PAGE BUTTON}             ${IPVD PAGINATION}/li[last()]/preceding::li[1]
+${IPVD NEXT PAGE BUTTON}             ${IPVD PAGINATION}/li[last()]
+${IPVD EXPORT TO CSV}                //ipvd//div[@class='export-button']
 ${IPVD CLOSE DETAILS BUTTON}         //ipvd//header//span[@class="glyphicon close-icon detailsClose"]
+
 #IPVD Feedback
-${SUBMIT A REQUEST}     //ipvd//a[contains(text(),'submit a request')]
-${SEND DEVICE FEEDBACK}     //ipvd//a[contains(text(),'Send feedback about this device')]
+${IPVD SUBMIT A REQUEST}             //ipvd//a[contains(text(),"${IPVD SUBMIT A REQUEST TEXT}")]
+${IPVD SEND DEVICE FEEDBACK}         //ipvd//a[contains(text(),"${IPVD SEND DEVICE FEEDBACK TEXT}")]
 ${IPVD FEEDBACK}                     //nx-modal-message-content//form[@name='messageForm']
 ${IPVD FEEDBACK TITLE}               ${IPVD FEEDBACK}//h1
-${IPVD FEEDBACK YOUR NAME}           ${IPVD FEEDBACK}//form[@name='feedbackForm']//input[@id='user_name']
-${IPVD FEEDBACK EMAIL}               ${IPVD FEEDBACK}//form[@name='feedbackForm']//input[@id='user_email']
-${IPVD FEEDBACK MESSAGE}             ${IPVD FEEDBACK}//form[@name='feedbackForm']//textarea[@id='message']
-${IPVD FEEDBACK CONTACT ME}          ${IPVD FEEDBACK}//form[@name='feedbackForm']//input[@type='checkbox' and @id='contact']
-${IPVD FEEDBACK AGREE}               ${IPVD FEEDBACK}//form[@name='feedbackForm']//input[@type='checkbox' and @id='agree']
-${IPVD FEEDBACK PRIVACY POLICY}      ${IPVD FEEDBACK}//form[@name='feedbackForm']//a[text()='Privacy Policy']
-${IPVD FEEDBACK SEND BUTTON}         ${IPVD FEEDBACK}//button[text()='Send']
-${IPVD FEEDBACK CANCEL BUTTON}       ${IPVD FEEDBACK}//button[text()='Cancel']
+${IPVD FEEDBACK FORM}                ${IPVD FEEDBACK}//form[@name='feedbackForm']
+${IPVD FEEDBACK YOUR NAME}           ${IPVD FEEDBACK FORM}//input[@id='user_name']
+${IPVD FEEDBACK EMAIL}               ${IPVD FEEDBACK FORM}//input[@id='user_email']
+${IPVD FEEDBACK MESSAGE}             ${IPVD FEEDBACK FORM}//textarea[@id='message']
+${IPVD FEEDBACK PRIVACY POLICY}      ${IPVD FEEDBACK FORM}//a[text()="${PRIVACY POLICY LINK TEXT}"]
+${IPVD FEEDBACK SEND BUTTON}         ${IPVD FEEDBACK}//button[text()="${SEND BUTTON TEXT}"]
+${IPVD FEEDBACK CANCEL BUTTON}       ${IPVD FEEDBACK}//button[text()="${CANCEL BUTTON TEXT}"]
 ${IPVD FEEDBACK CLOSE BUTTON}        ${IPVD FEEDBACK}//button[@class='close']
+
+${NOTHING FOUND PLACEHOLDER}         //div[contains(@class,'text-placeholder') and contains(text(),"${NOTHING FOUND}")]
 
 #Footer
 ${FOOTER ABOUT LINK}                 //footer//a[contains(text(),"${ABOUT} ${PRODUCT_NAME}")]

@@ -11,7 +11,7 @@ from rest_framework.decorators import api_view
 import os
 import json
 from cloud import settings
-from api.helpers.exceptions import APIRequestException, APINotFoundException, api_success
+from api.helpers.exceptions import APIRequestException, APINotFoundException, ErrorCodes, api_success, require_params
 from api.helpers.permissions import make_customization_visible_to_user
 from cms.controllers import filldata, generate_structure, modify_db, structure
 from cms.forms import *
@@ -367,6 +367,18 @@ def download_package(request, product_id):
 
     version_id = request.GET['version_id'] if 'version_id' in request.GET else None
     preview = 'draft' in request.GET
+
+    if not version_id:
+        latest_review = ProductCustomizationReview.objects.filter(product=product)
+        if not preview:
+            latest_review = latest_review.filter(state=ProductCustomizationReview.REVIEW_STATES.accepted)
+
+        latest_review = latest_review.last()
+        if not latest_review:
+            raise APINotFoundException("There are no versions available for this product")
+
+        version_id = latest_review.version.id
+
     zipped_data = filldata.get_zip_package(product, preview, version_id)
     file_name = f"{product.name}.zip"
     if product.product_type.type == ProductType.PRODUCT_TYPES.vms:
@@ -377,7 +389,10 @@ def download_package(request, product_id):
 @api_view(["GET"])
 @permission_required('cms.change_product')
 def get_product_ids_by_product_type(request):
+    require_params(request, ("name", "product_type"))
+
     name = request.GET["name"]
+    customization = request.GET["customization"]
     product_type_type = ProductType.get_type_by_name(request.GET["type"])
     product_type = ProductType.objects.filter(name=name, type=product_type_type).first()
     if not product_type:
@@ -385,6 +400,8 @@ def get_product_ids_by_product_type(request):
 
     if UserGroupsToProductPermissions.check_permission(request.user, 'cms.force_update'):
         product_ids = product_type.product_set.values_list('id', flat=True)
+        if customization:
+            product_ids = product_ids.filter(customizations__name__in=[customization])
     else:
         product_ids = []
     return api_success(product_ids)

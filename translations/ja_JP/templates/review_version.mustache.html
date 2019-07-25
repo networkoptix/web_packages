@@ -1,9 +1,9 @@
-<h1>There is a new version for {{ message.product }} ({{ message.product_type }}) to review</h1>
-<p>リンクをクリックして、{{ message.product }}のドラフト{{ message.id }}を確認してください</p>
-<a class="btn" href="{{ config.portal_url }}/admin/cms/productcustomizationreview/{{ message.id }}/change/">レビュー バージョン</a>
+<h1>{{ message.product }}（{{ message.product_type }}）の新しいバージョンをレビューできます</h1>
+<p>{{ message.product }}のドラフト {{ message.id }} を確認するにはリンクをクリックしてください</p>
+<a class="btn" href="{{ config.portal_url }}/admin/cms/productcustomizationreview/{{ message.id }}/change/">バージョンの確認</a>
 <h4>このページでは</h4>
 <ul>
-	<li>最近の変更を表示するプレビューを作成します</li>
+	<li>最新の変更を確認するためにプレビューを作成します。</li>
 	<li>このバージョンを公開すると、すべてのコンテンツが更新されます</li>
 	<li>編集ボタンをクリックしてコンテキストを編集します <br> これらの変更を確認するには、新しいバージョンを作成する必要があります</li>
 </ul>

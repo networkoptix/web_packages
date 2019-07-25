@@ -392,10 +392,14 @@ a.disabled {
     display: none;
 }
 
-.ellipsis{
-  overflow: hidden;
-  text-overflow: ellipsis;
+.ellipsis {
+    overflow      : hidden;
+    text-overflow : ellipsis;
+    white-space   : nowrap;
+    max-width     : 100%;
+    line-height   : initial;
 }
+
 @mixin ellipsis{
   overflow: hidden;
   text-overflow: ellipsis;

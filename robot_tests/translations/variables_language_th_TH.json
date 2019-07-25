@@ -44,6 +44,7 @@
     "SAVE BUTTON TEXT": "บันทึก",
     "SHARE BUTTON TEXT": "แชร์",
     "DISCONNECT BUTTON TEXT": "ตัดการเชื่อมต่อ",
+    "SEND BUTTON TEXT": "ส่ง",
     "OWNER TEXT": "เจ้าของ",
     "ADMIN TEXT": "ผู้ดูแลระบบ",
     "ADV VIEWER TEXT": "แสดงขั้นสูง",
@@ -88,6 +89,11 @@
     "PASSWORD INCORRECT BADGE TEXT": "ไม่ถูกต้อง",
     "IPVD TITLE TEXT": "อุปกรณ์วิดีโอ IP ที่รองรับ",
     "IPVD ADVANCED SEARCH BUTTON TEXT": "Advanced Search",
+    "IPVD MANUFACTURERS TEXT": "manufacturers",
+    "IPVD DEVICES TEXT": "อุุปกรณ์",
+    "IPVD SUBMIT A REQUEST TEXT": "submit a request",
+    "IPVD SEND DEVICE FEEDBACK TEXT": "ส่งข้อเสนอแนะเกี่ยวกับอุปกรณ์นี้",
+    "PRIVACY POLICY LINK TEXT": "here",
     "OK TEXT": "ตกลง",
     "MERGE SYSTEMS TEXT": "รวมระบบ",
     "SYSTEM MERGING TEXT": "ระบบได้รวมเข้าด้วยกันเรียบร้อยแล้ว",
@@ -99,5 +105,7 @@
     "MERGE CURRENT SYSTEM WITH TEXT": "ผสานระบบปัจจุบันด้วย",
     "YOU CAN ONLY MERGE AS OWNER TEXT": "คุณสามารถผสานระบบคลาวด์ที่คุณเป็นเจ้าของได้",
     "CHECKING TEXT": "กำลังตรวจสอบ...",
-    "ENTER PASSWORD TO CONTINUE TEXT": "ป้อนรหัสผ่านสำหรับบัญชีของคุณเพื่อดำเนินการต่อ"
+    "ENTER PASSWORD TO CONTINUE TEXT": "ป้อนรหัสผ่านสำหรับบัญชีของคุณเพื่อดำเนินการต่อ",
+    "INCOMPATIBLE": "เข้ากันไม่ได้",
+    "CONNECTION TO SYSTEM LOST": "Connection to %SYSTEM NAME% lost"
 }

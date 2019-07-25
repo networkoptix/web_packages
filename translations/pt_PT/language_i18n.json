@@ -3,13 +3,18 @@
     "Account Settings": "Configurações da conta",
     "Account not activated": "Conta não activada",
     "Account not found": "Conta não encontrada",
+    "Actual number of events supported by this camera may be bigger.": "O número real de eventos suportados por esta câmara pode ser maior.",
+    "Additional Requirements": "Additional Requirements",
     "Administration": "Administration",
     "Advanced PTZ": "Advanced PTZ",
     "Advanced Search": "Advanced Search",
+    "All Integrations": "All Integrations",
     "All Systems": "Todos os sistemas",
     "All cloud users will be deleted.": "All cloud users will be deleted.",
-    "All integrations": "All integrations",
     "All results": "All results",
+    "Analytics": "Analytics",
+    "Analytics Event": "Analytics Event",
+    "Analytics Events": "Analytics Events",
     "Any": "Any",
     "Audio": "Audio",
     "Build Number:": "Número de compilação:",
@@ -22,9 +27,11 @@
     "Choose which properties should be visible to customers:": "Escolha quais propriedades devem estar visíveis para os clientes:",
     "Close": "Fechar",
     "Codec": "Codec",
+    "Collapse": "Ocultar",
     "Contact": "Contact",
     "Create Account": "Criar conta",
     "Create account": "Criar conta",
+    "Developer": "Developer",
     "Disconnect": "Desconectar",
     "Disconnect System from %CLOUD_NAME%?": "Disconnect System from %CLOUD_NAME%?",
     "Download": "Descarregar",
@@ -47,9 +54,7 @@
     "Forgot password?": "Esqueceu a senha?",
     "Get in touch": "Get in touch",
     "How it works": "How it works",
-    "How to install?": "How to install?",
-    "I agree to the": "Eu concordo com",
-    "I want you to contact me": "I want you to contact me",
+    "How to setup?": "How to setup?",
     "I/O": "I/O",
     "In Review": "In Review",
     "In-Client Upgrade:": "Atualização dentro do Cliente:",
@@ -76,6 +81,7 @@
     "Release Notes": "Release notes",
     "Release notes": "Notas de lançamento",
     "Remember me": "Lembrar de mim",
+    "Requirements": "Requirements",
     "Resend activation email": "Reenviar Email de Activação",
     "Resolution(max)": "Resolution(max)",
     "Save": "Gravar",
@@ -86,8 +92,10 @@
     "Settings": "Definições",
     "Share": "Partilhar",
     "Show All": "Mostrar Tudo",
-    "Some of your servers don't support cloud System merge because of outdated software version.": "Some of your servers don't support cloud System merge because of outdated software version.",
+    "Some of your servers don't support cloud System merge because of outdated software version.": "Alguns de seus servidores não suportam a fusão do sistema em cloud devido à versão desactualizada do software.",
     "Support": "Suporte",
+    "Support E-mail": "Support E-mail",
+    "Support URL": "Support URL",
     "System name": "Nome do Sistema",
     "System name is required": "É necessário o nome do Sistema",
     "System will be accessible through local network with local administrator account.": "O sistema estará acessível através da rede local com conta de administrador local.",
@@ -95,8 +103,11 @@
     "Systems of such size may work but will be unstable and have troubles with updates and synchronisation.": "Systems of such size may work but will be unstable and have troubles with updates and synchronisation.",
     "Tags": "Tags",
     "Take the name and settings from": "Usar o nome e definições do",
+    "Terms of Use": "Terms of Use",
     "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.": "As credenciais deste utilizador serão expostas! Deve criar uma função \"Utilizador público\" personalizado apenas com acesso\n            às câmaras seleccionadas para uso público e atribuídas apenas as permissões de visualização mínimas necessárias. Este\n            \"Utilizador Público\" não deve ter acesso a todo o sistema.",
     "There will be more than": "There will be more than",
+    "This device has reported to support some analytics events, but we don't have exact information about them.": "Este dispositivo reportou que suporta alguns eventos de analytics, mas não temos informações exatas sobre eles.",
+    "To": "To",
     "Too many attempts. Try again in a minute.": "Demasiadas tentativas. Tente novamente mais tarde.",
     "Topic": "Topic",
     "Update them to the": "Update them to the",
@@ -104,10 +115,12 @@
     "User": "Utilizador",
     "View": "Ver",
     "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.": "Recomendamos instalar as versões mais recentes do Google Chrome ou do Mozilla Firefox, mas pode usar qualquer outro browser moderno.",
-    "What's new?": "O que há de novo?",
+    "What's New?": "What's New?",
+    "Works with:": "Works with:",
     "Wrong password": "Senha incorrecta",
     "You can merge only those cloud Systems, where you have the \"Owner\" permissions.": "Você pode fazer o \"Merge\" dos sistemas em Cloud apenas onde você tiver as permissões de \"Proprietário\".",
     "You can only merge Systems where you are the owner.": "Só pode fazer a Fusão de Sistemas de onde seja o proprietário.",
+    "Your Email": "Your Email",
     "Your Name": "Your Name",
     "Your browser is not supported": "O seu browser não é suportado",
     "andXMore": "... and {{value}} more",
@@ -133,6 +146,22 @@
             "secondaryCannotMerge": "O sistema {{targetSystem}} tem uma versão de software mais antiga que é incompatível com o sistema atual. Atualize o sistema {{targetSystem}} para o <a href=\"/download\" target=\"_blank\" translate>build</a> mais recente para efectuar a fusão com este Sistema.",
             "systemOffline": "O sistema {{targetSystem}} está offline e não pode ser fundido com o atual.",
             "systemUnavailable": "O sistema {{targetSystem}} está atualmente inacessível. Tente novamente em alguns minutos ou entre em contato"
+        },
+        "message": {
+            "failedToSend": "Message has failed to send.",
+            "sent": "Message has been sent.",
+            "title": {
+                "integration": "Get in touch with {{companyName}}",
+                "ipvd_feedback_device": "Feedback about {{product}}",
+                "ipvd_feedback_page": "Feedback for cameras page"
+            },
+            "topic": {
+                "contact_sales": "Contact sales for {{product}}",
+                "contact_support": "Contact support for {{product}}",
+                "integration_feedback": "Feedback for integration {{product}}",
+                "ipvd_feedback_device": "Feedback about {{product}}",
+                "ipvd_feedback_page": "Feedback for cameras page"
+            }
         }
     },
     "dialogs.merge.connectToCloud": "Ligar ao Sistema que deseja fazer a fusão com este para <strong>{{cloudName}}</strong> ou fazer a fusão localmente usando <strong>{{vmsName}}</strong> Client.",
@@ -142,7 +171,6 @@
     "dialogs.merge.secondaryCannotMerge": "O sistema {{targetSystem}} tem uma versão de software mais antiga que é incompatível com o sistema atual. Atualize o sistema {{targetSystem}} para o <a href=\"/download\" target=\"_blank\" translate>build</a> mais recente para efectuar a fusão com este Sistema.",
     "dialogs.merge.systemOffline": "dialogs.merge.systemOffline",
     "dialogs.merge.systemUnavailable": "O sistema {{targetSystem}} está atualmente inacessível. Tente novamente em alguns minutos ou entre em contato",
-    "disclaimer": "This list is limited to actual devices auto-reporting data to {{value}}, as approved by anonymous system users. The complete list of supported manufacturers and models is greater in scope.",
     "downloads": {
         "appTypes": {
             "bundle": "Cliente e Servidor",
@@ -235,6 +263,7 @@
         "PTZ cameras": "PTZ cameras",
         "camera": "Câmara",
         "count": "Count",
+        "disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous.",
         "dvr": "DVR",
         "encoder": "Encoder",
         "feedback": {
@@ -243,6 +272,7 @@
             "c_Info": "for additional questions/concerns regarding supported devices."
         },
         "hardwareType": "Tipo",
+        "isAnalyticsSupported": "Analytics",
         "isAptzSupported": "Advanced PTZ",
         "isAptzSupportedShort": "Adv. PTZ",
         "isAudioSupported": "Audio",
@@ -259,8 +289,10 @@
         "multiSensorCamera": "Multi-Sensor Camera",
         "other": "Other",
         "primaryCodec": "Codec",
+        "resolutionArea": "Area",
         "vendor": "Manufacturer"
     },
+    "ipvd.disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous.",
     "latest build": "latest build",
     "manufacturers": "manufacturers",
     "messageDialogPlaceholders": {
@@ -271,19 +303,27 @@
         "supportedDevices": "Supported Devices"
     },
     "phoneNumberWithLabel": "Tel: {{number}}",
+    "privacyPolicy": {
+        "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent.",
+        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent."
+    },
     "search": {
         "Any": "Any",
         "Search": "Pesquisar",
+        "analytics": "Analytics",
+        "analyticsSelected": "analytics events",
         "filter applied": "filter applied",
         "filters applied": "filters applied",
         "hardwareType": "Tipo",
-        "hardwareTypes": "types",
+        "hardwareTypes": "Types",
         "minResolution": "Minimum Resolution",
         "search_ipvd": "Search by model or manufacturer",
         "selected": "selected",
         "vendor": "Manufacturer",
-        "vendors": "manufacturers"
+        "vendors": "Manufacturers"
     },
     "servers in the merged System.": "servers in the merged System.",
-    "support": "suporte"
+    "support": "suporte",
+    "testedVersionLabel": "Tested on {{vmsName}} version:",
+    "testedVersionsLabel": "Tested on {{vmsName}} versions:"
 }

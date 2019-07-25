@@ -2,7 +2,7 @@
 Resource          resource.robot
 
 *** Variables ***
-${IPVD TABLE ROWS}    ${IPVD TABLE}//tr
+
 
 *** Keywords ***
 Go To IPVD page
@@ -24,38 +24,68 @@ IPVD Text Search
     Input Text    ${IPVD SEARCH BAR}    ${SearchString}
     Wait Until Element Is Visible    ${IPVD TABLE FIRST ITEM}
 
+IPVD Text Search Expecting No Results
+    [Arguments]    ${SearchString}
+    Click Element    ${IPVD SEARCH BAR}
+    Element Should Be Focused    ${IPVD SEARCH BAR}
+    Input Text    ${IPVD SEARCH BAR}    ${SearchString}
+    Elements Should Not Be Visible
+    ...    ${IPVD TABLE}
+    ...    ${IPVD PAGINATION}
+    ...    ${IPVD EXPORT TO CSV}
+
 IPVD Table Row Count
     [Arguments]    ${AllPages}=False
     Wait Until Element Is Visible    ${IPVD TABLE}
     #TODO: Implement call to paginator if ${AllPages}=True
-    ${rowCount}=   Get Element Count    ${IPVD TABLE}//tr
-    [return]    ${rowCount}
+    ${rowCount}=   Get Element Count    ${IPVD TABLE ROWS}
+    [Return]    ${rowCount}
 
-IPVD Select Device From Table By Value
-    [Arguments]    ${SearchString}
-    Wait Until Element Is Visible    ${IPVD TABLE}
-    Element Text Should Contain    ${IPVD TABLE}    ${SearchString}
-    ${rowLocator}=   ${IPVD TABLE}
-    : FOR ${rowIndex} IN RANGE 1 ${rowCount}+1
-    \ ${curText} Get Text ${rowLocator}[${rowIndex}]/td[${column}]/a
-    \ Exit For Loop If '${curText}' == '${cellText}'
-    \ ${rowNumber} Set Variable ${rowIndex}
-    Click Element ${rowLocator}[${rowIndex}]/td[${column}]/a
+Validate IPVD Device Table Not Empty
+    ${rowCount}=   IPVD Table Row Count
+    Should Be True    ${rowCount} > 0    Table empty when rows were expected.
+    Wait Until Elements Are Visible
+    ...    ${IPVD CLEAR TEXT SEARCH BUTTON}
+    ...    ${IPVD PREVIOUS PAGE BUTTON}
+    ...    ${IPVD FIRST PAGE BUTTON}
+    ...    ${IPVD LAST PAGE BUTTON}
+    ...    ${IPVD NEXT PAGE BUTTON}
+    ...    ${IPVD EXPORT TO CSV}
+    [Return]    ${rowCount}
+
+IPVD Select Device From Table Column By Value
+    [Arguments]    ${column}    ${SearchString}
+    ${rowNumber}=   Set Variable    0
+    ${rowCount}=   Validate IPVD Device Table Not Empty
+    Table Column Should Contain    ${IPVD TABLE}    ${column}    ${SearchString}
+    :FOR    ${rowIndex}    IN RANGE    1    ${rowCount}+1
+    \    ${curText}=   Get Text    ${IPVD TABLE ROWS}\[${rowIndex}]/td\[${column}]/div
+    \    ${rowNumber}=   Set Variable    ${rowIndex}
+    \    Exit For Loop If    '${curText}' == '${SearchString}'
+    IPVD Select Device From Table By Row Number    ${rowNumber}
+    [Return]    ${rowNumber}
+
+IPVD Select Device From Table Randomly
+    ${rowCount}=   Validate IPVD Device Table Not Empty
+    ${rows}=   Get WebElements    ${IPVD TABLE ROWS}
+    ${RowNumber}=   Evaluate    random.randint(1,${rowCount}-1)    modules=random
+    IPVD Select Device From Table By Row Number    ${rowNumber}
     [Return]    ${rowNumber}
 
 IPVD Select Device From Table By Row Number
     [Arguments]    ${RowNumber}=1
-    Wait Until Element Is Visible    ${IPVD TABLE}
+    ${rowCount}=   Validate IPVD Device Table Not Empty
     ${rows}=   Get WebElements    ${IPVD TABLE ROWS}
-    ${rowCount}=   Get Element Count    ${IPVD TABLE ROWS}
-    Run Keyword If    ${rowCount}-1>=${RowNumber}    Click Element    ${rows}[${RowNumber}]
+    Should Be True    ${rowCount}>=${RowNumber}
+    ${RowNumber}=   Evaluate    ${RowNumber}-1
+    Click Element    ${rows}[${RowNumber}]
+    Sleep    2
 
-IPVD Select Device From Table Randomly
-    Wait Until Element Is Visible    ${IPVD TABLE}
-    ${rows}=   Get WebElements    ${IPVD TABLE ROWS}
-    ${rowCount}=   Get Element Count    ${IPVD TABLE ROWS}
-    ${RowNumber}=   Evaluate    random.randint(1,${rowCount}-1)    modules=random
-    Run Keyword If    ${rowCount}-1>=${RowNumber}    Click Element    ${rows}[${RowNumber}]
+IPVD Active Page Number
+    Wait Until Element Is Visible    ${IPVD PAGINATION}
+    ${page}=   Get Text    ${IPVD PAGINATION}/li[contains(@class,'active')]
+    ${page}=   Remove String Using Regexp    ${page}    \\n\\(current\\)
+    [Return]    ${page}
 
 Advaced search filters text
     [Arguments]    ${filters}
@@ -67,7 +97,23 @@ Validate on IPVD page
     ...    ${IPVD SEARCH BAR}
     ...    ${IPVD ADVANCED SEARCH BUTTON}
     ...    ${IPVD MANFUACTURERS PANE}
+    ...    ${IPVD AND MORE}
     ...    ${IPVD DEVICES PANE}
+    Elements Should Not Be Visible
+    ...    ${IPVD TABLE}
+    ...    ${IPVD PAGINATION}
+    ...    ${IPVD EXPORT TO CSV}
+    Validate Manufacturer More Count
+
+Validate Manufacturer More Count
+    Wait Until Elements Are Visible
+    ...    ${IPVD MANFUACTURERS PANE}
+    ...    ${IPVD AND MORE}
+    ${count}=   Get Text    ${IPVD MANFUACTURERS PANE}//h4/header
+    ${count}=   Remove String Using Regexp    ${count}    \\ ${IPVD MANUFACTURERS TEXT}
+    ${more}=   Get Text    ${IPVD AND MORE}
+    ${more}=   Remove String Using Regexp    ${more}    (\\.\\.\\.\\ and\\ )|(\\ more)
+    Should Be True    ${more} == ${count}-${IPVD VENDORS SHOWN}    Expected ${more} to be ${count} minus ${IPVD VENDORS SHOWN}.
 
 Open New Browser On Failure
     Close Browser
@@ -80,24 +126,20 @@ Restart
     ${status}=   Run Keyword And Return Status    Validate Log In
     Register Keyword To Run On Failure    Failure Tasks
     Run Keyword If    ${status}    Log Out
-    Go To    ${url}/ipvd
+    # Go To    ${url}/ipvd
 
 Validate Request Form Initial State
     Wait Until Element Is Visible    ${IPVD FEEDBACK}
-    ${result}=   Get Checkbox Value    ${IPVD FEEDBACK CONTACT ME}
-    Should Be True    ${result}
-    ${result}=   Get Checkbox Value    ${IPVD FEEDBACK AGREE}
-    Should Not Be True    ${result}
 
 Validate Privacy Policy
     Element Should Be Visible    ${IPVD FEEDBACK PRIVACY POLICY}
     ${url}=   Get Element Attribute    ${IPVD FEEDBACK PRIVACY POLICY}    href
-    Should Contain    ${url}    /content/privacy    #TODO: CLOUD-2949
+    Should Contain    ${url}    privacy    #TODO: CLOUD-2949
     #Should Contain    ${url}    ${PRIVACY POLICY URL}
     Click Element    ${IPVD FEEDBACK PRIVACY POLICY}
     @{windows}=   Get Window Handles
     ${numWindows}=   Get Length    ${windows}
-    Should Be True    ${numWindows} == 2
+    Should Be True    ${numWindows} == 2    Number of browser windows open after clicking Privacy Policy link should be 2, but is ${numWindows}. CLOUD-3315
     Select Window    @{windows}[1]
     Location Should Be    ${url}    #TODO: CLOUD-2949
     #Location Should Be    ${PRIVACY POLICY URL FULL}
@@ -106,15 +148,12 @@ Validate Privacy Policy
     Select Window    @{windows}[0]
 
 Submit Feedback/Request Form
-    [Arguments]    ${Your Name}    ${Email}    ${Message}    ${Contact Me}    ${Agree to Privacy Policy}
+    [Arguments]    ${Your Name}    ${Email}    ${Message}
     Input Text    ${IPVD FEEDBACK YOUR NAME}    ${Your Name}
     Sleep    0.25
     Input Text    ${IPVD FEEDBACK EMAIL}    ${Email}
     Sleep    0.25
     Input Text    ${IPVD FEEDBACK MESSAGE}    ${Message}
-    Sleep    0.25
-    Set Checkbox Value    ${IPVD FEEDBACK CONTACT ME}    ${Contact Me}
-    Set Checkbox Value    ${IPVD FEEDBACK AGREE}    ${Agree to Privacy Policy}
     Sleep    0.25
     Click Button    ${IPVD FEEDBACK SEND BUTTON}
     Sleep    2

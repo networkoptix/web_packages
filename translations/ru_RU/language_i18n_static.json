@@ -1,28 +1,30 @@
 {
 	"search": {
 		"Search": "Поиск",
-		"search_ipvd": "Search by model or manufacturer",
-		"filter applied": "filter applied",
-		"filters applied": "filters applied",
-		"Any": "Any",
-		"selected": "selected",
-		"vendor": "Manufacturer",
-		"vendors": "manufacturers",
+		"search_ipvd": "Поиск по модели или производителю",
+		"filter applied": "фильтр применен",
+		"filters applied": "фильтры применены",
+		"Any": "Любой",
+		"selected": "выбрано",
+		"vendor": "Производитель",
+		"vendors": "Manufacturers",
 		"hardwareType": "Тип",
-		"hardwareTypes": "types",
-		"minResolution": "Minimum Resolution"
+		"hardwareTypes": "Types",
+		"minResolution": "Минимальное разрешение",
+		"analytics": "Аналитика",
+		"analyticsSelected": "analytics events"
 	},
 	"cameraFilters": {
-		"ptz": "PTZ cameras",
-		"aptz": "Cameras with advanced PTZ",
-		"fisheye": "Fisheye cameras",
-		"H265": "H.265 Cameras",
-		"IO": "I / O modules",
-		"multiSensor": "Multi-sensor cameras",
-		"TwWayAudio": "2-way audio devices",
-		"audio": "Cameras with audio",
-		"encoder": "Encoders",
-		"highRes": "Extra high resolution cameras"
+		"ptz": "Камеры PTZ",
+		"aptz": "Камеры с расширенным PTZ",
+		"fisheye": "Камеры \"рыбий глаз\"",
+		"H265": "Камеры H.265",
+		"IO": "Модули ввода/вывода",
+		"multiSensor": "Мультисенсорные камеры",
+		"TwWayAudio": "Устройства с 2х-сторонним звуком",
+		"audio": "Камеры со звуком",
+		"encoder": "Кодировщики",
+		"highRes": "Камеры сверхвысокого разрешения"
 	},
 	"downloads": {
 		"mobile": {
@@ -67,7 +69,7 @@
 			"sdk": {
 				"label": "SDK",
 				"shortLabel": "SDK",
-				"supported": "C++ cross platform SDK"
+				"supported": "Кроссплатформенный SDK C++"
 			}
 		},
 		"platforms": {
@@ -83,81 +85,106 @@
 			"server": "Только сервер",
 			"bundle": "Клиент и сервер",
 			"servertool": "Инструмент настройки",
-			"package": "Package"
+			"package": "Пакет"
 		},
 		"releasesTypes": {
-			"beta": "Beta",
+			"beta": "Бета",
 			"betas": "Бета",
-			"rc": "Release Candidate",
-			"release": "Release",
+			"rc": "Релиз-кандидат",
+			"release": "Релиз",
 			"releases": "Релизы",
 			"patch": "Patch",
 			"patches": "Патчи"
 		}
 	},
 	"ipvd": {
-		"count": "Count",
-		"vendor": "Manufacturer",
+		"resolutionArea": "Area",
+		"count": "Кол-во",
+		"vendor": "Производитель",
 		"model": "Модель",
 		"hardwareType": "Тип",
-		"maxResolution": "Max Resolution",
-		"maxFps": "Max FPS",
-		"primaryCodec": "Codec",
+		"maxResolution": "Максимальное разрешение",
+		"maxFps": "Макс. FPS",
+		"primaryCodec": "Кодек",
 		"isAudioSupported": "Аудио",
-		"isTwAudioSupported": "2-way Audio",
+		"isTwAudioSupported": "двухсторонний звук",
 		"isPtzSupported": "PTZ",
-		"isAptzSupported": "Advanced PTZ",
-		"isAptzSupportedShort": "Adv. PTZ",
+		"isAptzSupported": "Расширенный PTZ",
+		"isAptzSupportedShort": "Расш. PTZ",
 		"isFisheye": "Рыбий глаз",
 		"isMdSupported": "Движение",
 		"isIoSupported": "I/O",
 		"isH265": "H.265",
-		"isMultiSensor": "Multi Sensor",
+		"isMultiSensor": "Мультисенсор",
+		"isAnalyticsSupported": "Analytics",
 		"camera": "Камера",
-		"multiSensorCamera": "Multi-Sensor Camera",
-		"encoder": "Encoder",
+		"multiSensorCamera": "Мультисенсорная камера",
+		"encoder": "Кодировщик",
 		"dvr": "DVR",
-		"other": "Other",
-		"PTZ cameras": "PTZ cameras",
-		"Advanced PTZ cameras": "Advanced PTZ cameras",
-		"Fisheye Cameras": "Fisheye Cameras",
-		"Cameras supporting H.265": "Cameras supporting H.265",
-		"I / O modules": "I / O modules",
-		"Multisensor Cameras": "Multisensor Cameras",
-		"Cameras with 2-way audio": "Cameras with 2-way audio",
-		"Extra high resolution cameras": "Extra high resolution cameras",
+		"other": "Другое",
+		"PTZ cameras": "Камеры PTZ",
+		"Advanced PTZ cameras": "Камеры с расширенным PTZ",
+		"Fisheye Cameras": "Камеры \"рыбий глаз\"",
+		"Cameras supporting H.265": "Камеры с поддержкой H.265",
+		"I / O modules": "Модули ввода/вывода",
+		"Multisensor Cameras": "Мультисенсорные камеры",
+		"Cameras with 2-way audio": "Камеры с 2х-сторонним звуком",
+		"Extra high resolution cameras": "Камеры сверхвысокого разрешения",
 		"feedback": {
-			"a_Please": "Please",
-			"b_Link": "submit a request",
-			"c_Info": "for additional questions/concerns regarding supported devices."
-		}
+			"a_Please": "Пожалуйста",
+			"b_Link": "отправить запрос",
+			"c_Info": "с дополнительными вопросами/проблемами относительно поддерживаемых устройств."
+		},
+		"disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous."
 	},
 	"integration": {
-		"previewRibbonText": "This page is a preview of the latest changes, and it doesn't match publicly available version.",
-		"backToEditText": "Back to the editing interfaces",
-		"Access Control": "Access Control",
-		"Connector": "Connector",
-		"Data Analytics": "Data Analytics",
-		"Drone": "Drone",
+		"previewRibbonText": "Эта страница является предварительным просмотром последних изменений и не соответствует общедоступной версии.",
+		"backToEditText": "Вернуться к интерфейсам редактирования",
+		"Access Control": "Контроль доступа",
+		"Connector": "Коннектор",
+		"Data Analytics": "Аналитика данных",
+		"Drone": "Дрон",
 		"Health Monitor": "Мониторинг ресурсов",
 		"Storage": "Хранилища"
 	},
 	"messageDialogPlaceholders": {
-		"feedback": "Make sure you include your camera model and manufacturer..."
+		"feedback": "Убедитесь, что вы указали модель и производителя вашей камеры..."
 	},
 	"pageTitles": {
-		"supportedDevices": "Supported Devices",
-		"integrations": "Integrations"
+		"supportedDevices": "Поддерживаемые устройства",
+		"integrations": "Интеграции"
 	},
 	"dialogs": {
 		"merge": {
 			"connectToCloud": "Подключите систему, которую вы хотите объединить с этой, к <strong>{{cloudName}}</strong> или выполните объединение локально, используя <strong>{{vmsName}}</strong> Client.",
-			"mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from the <strong>{{primarySystem}}</strong>.",
-			"primaryCannotMerge": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} System.",
-			"primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}.",
-			"secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
+			"mergeConfirmation": "Вы собираетесь объединить системы <strong>{{primarySystem}}</strong> и <strong>{{secondarySystem}}</strong>. Настройки и название будут взяты из <strong>{{primarySystem}}</strong>.",
+			"primaryCannotMerge": "Система {{targetSystem}} имеет более новую версию программного обеспечения, несовместимую с текущей Системой. Обновите текущую Систему до <a href=\"/download\" target=\"_blank\" translate>последней сборки</a> чтобы объединить ее с Системой {{targetSystem}}.",
+			"primarySystemOffline": "Система {{primarySystem}} не находится в сети и не может быть объединена с системой {{targetSystem}}.",
+			"secondaryCannotMerge": "Система {{targetSystem}} имеет более старую версию программного обеспечения, несовместимую с текущей Системой. Обновите {{targetSystem}} до <a href=\"/download\" target=\"_blank\" translate>последней сборки</a> чтобы объединить ее с текущей.",
 			"systemOffline": "Система {{targetSystem}} не находится в сети и не может быть объединена с текущей.",
 			"systemUnavailable": "Система {{targetSystem}} в данный момент недоступна. Повторите попытку через несколько минут или свяжитесь с"
+		},
+		"message": {
+			"failedToSend": "Не удалось отправить сообщение.",
+			"sent": "Сообщение отправлено.",
+			"title": {
+				"integration": "Связаться с {{companyName}}",
+				"ipvd_feedback_page": "Отзыв о странице камер",
+				"ipvd_feedback_device": "Отзыв о {{product}}"
+			},
+			"topic": {
+				"contact_sales": "Связаться с отделом продаж по поводу {{product}}",
+				"contact_support": "Обратитесь в службу поддержки по поводу {{product}}",
+				"integration_feedback": "Отзыв об интеграции {{product}}",
+				"ipvd_feedback_page": "Отзыв о странице камер",
+				"ipvd_feedback_device": "Отзыв о {{product}}"
+			}
 		}
-	}
+	},
+	"privacyPolicy": {
+		"integration": "Отправляя эту форму, вы соглашаетесь на получение информации от {{INTEGRATION_COMPANY}} и/или %COMPANY_NAME%.\nПолитика конфиденциальности {{INTEGRATION_COMPANY}} с инструкциями о том, как отозвать ваше согласие, доступна <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">здесь</a>, а %COMPANY_NAME% - <a href=\"%PRIVACY_LINK%\" target=\"blank\">здесь</a>.",
+		"ipvd": "Отправляя эту форму, вы соглашаетесь на получение информации от %COMPANY_NAME%.\nПолитика конфиденциальности %COMPANY_NAME% с инструкциями о том, как отозвать ваше согласие, доступна <a href=\"%PRIVACY_LINK%\" target=\"blank\">здесь</a>."
+	},
+	"testedVersionLabel": "Проверено на версии {{vmsName}}:",
+	"testedVersionsLabel": "Проверено на версиях {{vmsName}}:"
 }

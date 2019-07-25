@@ -35,13 +35,13 @@
     "ACCOUNT DOES NOT EXIST"               :    "Account does not exist.",
     "CODE USED/INCORRECT"                  :    "Confirmation code is already used or incorrect",
 
-    "SHARE PERMISSIONS HINT ADMINISTRATOR"         :    "Unrestricted access including the ability to share",
+    "SHARE PERMISSIONS HINT ADMINISTRATOR" :    "Unrestricted access including the ability to share",
     "SHARE PERMISSIONS HINT ADVANCED VIEWER"    :    "Can view live video, browse the archive, control PTZ etc",
     "SHARE PERMISSIONS HINT VIEWER"        :    "Can view live video and browse the archive",
     "SHARE PERMISSIONS HINT LIVE VIEWER"   :    "Can only view live video",
     "SHARE PERMISSIONS HINT CUSTOM"        :    "Use the %VMS_NAME% Client application to set up custom permissions",
 
-    "SYSTEM NAME IS REQUIRED TEXT"      :    "System name is required",
+    "SYSTEM NAME IS REQUIRED TEXT"         :    "System name is required",
 
     "ACCOUNT TEXT"                         :    "Account",
 
@@ -51,6 +51,7 @@
     "SAVE BUTTON TEXT"                     :    "Save",
     "SHARE BUTTON TEXT"                    :    "Share",
     "DISCONNECT BUTTON TEXT"               :    "Disconnect",
+    "SEND BUTTON TEXT"                     :    "Send",
 
     "OWNER TEXT"                           :    "Owner",
     "ADMIN TEXT"                           :    "Administrator",
@@ -104,6 +105,14 @@
 
     "IPVD TITLE TEXT"                      :    "Supported IP Video Devices",
     "IPVD ADVANCED SEARCH BUTTON TEXT"     :    "Advanced Search",
+    "IPVD MANUFACTURERS TEXT"              :    "manufacturers",
+    "IPVD DEVICES TEXT"                    :    "devices",
+    "IPVD SUBMIT A REQUEST TEXT"           :    "submit a request",
+    "IPVD SEND DEVICE FEEDBACK TEXT"       :    "Send feedback about this device",
+
+    "PRIVACY POLICY LINK TEXT"             :    "here",
+
+    "NOTHING FOUND"                        :    "Nothing Found",
 
     "OK TEXT"                              :    "OK",
     "MERGE SYSTEMS TEXT"                   :    "Merge Systems",
@@ -116,5 +125,7 @@
     "MERGE CURRENT SYSTEM WITH TEXT"       :    "Merge current System with",
     "YOU CAN ONLY MERGE AS OWNER TEXT"     :    "You can only merge Systems where you are the owner.",
     "CHECKING TEXT"                        :    "Checking...",
-    "ENTER PASSWORD TO CONTINUE TEXT"      :    "Enter password for your account to continue"
+    "ENTER PASSWORD TO CONTINUE TEXT"      :    "Enter password for your account to continue",
+    "INCOMPATIBLE"                         :    "incompatible",
+    "CONNECTION TO SYSTEM LOST"            :    "Connection to %SYSTEM NAME% lost"
 }

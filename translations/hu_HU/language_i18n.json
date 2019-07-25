@@ -3,13 +3,18 @@
     "Account Settings": "Fiókbeállítások",
     "Account not activated": "Felhasználói fiók nincs aktiválva",
     "Account not found": "A fiók nem található",
+    "Actual number of events supported by this camera may be bigger.": "Actual number of events supported by this camera may be bigger.",
+    "Additional Requirements": "Additional Requirements",
     "Administration": "Administration",
     "Advanced PTZ": "Advanced PTZ",
     "Advanced Search": "Advanced Search",
+    "All Integrations": "All Integrations",
     "All Systems": "Minden rendszer",
     "All cloud users will be deleted.": "Minden felhő felhasználó törlésre kerül.",
-    "All integrations": "All integrations",
     "All results": "All results",
+    "Analytics": "Analytics",
+    "Analytics Event": "Analytics Event",
+    "Analytics Events": "Analytics Events",
     "Any": "Any",
     "Audio": "Audio",
     "Build Number:": "Verziószám:",
@@ -22,9 +27,11 @@
     "Choose which properties should be visible to customers:": "Válassza ki, hogy mely tulajdonságok láthatók az ügyfelek számára:",
     "Close": "Bezárás",
     "Codec": "Codec",
+    "Collapse": "Collapse",
     "Contact": "Contact",
     "Create Account": "Fiók létrehozása",
     "Create account": "Fiók létrehozása",
+    "Developer": "Developer",
     "Disconnect": "Szétkapcsolás",
     "Disconnect System from %CLOUD_NAME%?": "Megszünteti a kapcsolatot %CLOUD_NAME% felhővel?",
     "Download": "Letöltés",
@@ -47,9 +54,7 @@
     "Forgot password?": "Elfelejtette a jelszavát?",
     "Get in touch": "Get in touch",
     "How it works": "How it works",
-    "How to install?": "How to install?",
-    "I agree to the": "Egyetértek a",
-    "I want you to contact me": "I want you to contact me",
+    "How to setup?": "How to setup?",
     "I/O": "I/O",
     "In Review": "In Review",
     "In-Client Upgrade:": "In-Kliens frissítés:",
@@ -76,6 +81,7 @@
     "Release Notes": "Verzóinfók",
     "Release notes": "Megjegyzések",
     "Remember me": "Emlékezzen rám",
+    "Requirements": "Requirements",
     "Resend activation email": "Aktiváló e-mail újraküldése",
     "Resolution(max)": "Resolution(max)",
     "Save": "Mentés",
@@ -88,6 +94,8 @@
     "Show All": "Mindet mutat",
     "Some of your servers don't support cloud System merge because of outdated software version.": "A szerverek némelyike nem támogatja a felhő rendszer egyesítését, az elavult szoftver verziója miatt.",
     "Support": "Támogatás",
+    "Support E-mail": "Support E-mail",
+    "Support URL": "Support URL",
     "System name": "Rendszer neve",
     "System name is required": "Adja meg a rendszer nevét",
     "System will be accessible through local network with local administrator account.": "A rendszer a helyi hálózatból továbbra is elérhető lesz a helyi adminisztrátor fiókkal.",
@@ -95,8 +103,11 @@
     "Systems of such size may work but will be unstable and have troubles with updates and synchronisation.": "Az ilyen méretű rendszerek működhetnek, de instabilak lesznek, és a frissítésekkel és szinkronizálással kapcsolatos problémákkal küzdenek.",
     "Tags": "Címke",
     "Take the name and settings from": "Vegye ki a nevet és a beállításokat",
+    "Terms of Use": "Terms of Use",
     "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.": "A felhasználó hitelesítő adatai kiszivárogtak! Egyéni \"Nyilvános felhasználó\" fiókot kell létrehoznia, ami csak\n             a nyilvános használatra kiválasztott kamerákhoz férhet hozzá, melyek csak a szükséges minimális megtekintési engedélyekkel rendelkezik. Ez a\n            \"nyilvános felhasználó\" semmilyen rendszerszintű hozzáféréssel nem rendelkezhet.",
     "There will be more than": "Több mint",
+    "This device has reported to support some analytics events, but we don't have exact information about them.": "This device has reported to support some analytics events, but we don't have exact information about them.",
+    "To": "To",
     "Too many attempts. Try again in a minute.": "Túl sok próbálkozás. Próbálja újra később.",
     "Topic": "Topic",
     "Update them to the": "Frissítse azokat a",
@@ -104,10 +115,12 @@
     "User": "Felhasználó",
     "View": "Nézet",
     "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.": "Javasoljuk, hogy telepítse a Google Chrome vagy a Mozilla Firefox legújabb verzióit, de bármilyen más modern webböngészőt is használhat.",
-    "What's new?": "Mik az újdonságok?",
+    "What's New?": "What's New?",
+    "Works with:": "Works with:",
     "Wrong password": "Hibás jelszó",
     "You can merge only those cloud Systems, where you have the \"Owner\" permissions.": "Csak azokat a felhőrendszereket egyesítheti, amelyekben a \"Tulajdonos\" jogosultságok vannak.",
     "You can only merge Systems where you are the owner.": "Csak olyan felhő-rendszereket vonhat össze, ahol tulajdonos.",
+    "Your Email": "Your Email",
     "Your Name": "Your Name",
     "Your browser is not supported": "Ez a böngésző nem támogatott",
     "andXMore": "... and {{value}} more",
@@ -132,7 +145,23 @@
             "primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}.",
             "secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
             "systemOffline": "A {{targetSystem}} rendszer offline állapotban van, emiatt nem lehet egyesíteni a meglévővel.",
-            "systemUnavailable": "System {{targetSystem}} is currently unreachable. Try again in a few minutes or contact"
+            "systemUnavailable": "A {{targetSystem}} rendszer jelenleg nem érhető el. Néhány perc múlva próbálkozzon újra"
+        },
+        "message": {
+            "failedToSend": "Message has failed to send.",
+            "sent": "Message has been sent.",
+            "title": {
+                "integration": "Get in touch with {{companyName}}",
+                "ipvd_feedback_device": "Feedback about {{product}}",
+                "ipvd_feedback_page": "Feedback for cameras page"
+            },
+            "topic": {
+                "contact_sales": "Contact sales for {{product}}",
+                "contact_support": "Contact support for {{product}}",
+                "integration_feedback": "Feedback for integration {{product}}",
+                "ipvd_feedback_device": "Feedback about {{product}}",
+                "ipvd_feedback_page": "Feedback for cameras page"
+            }
         }
     },
     "dialogs.merge.connectToCloud": "Csatlakoztassa az egyesíteni kívánt rendszert ezzel együtt <strong>{{cloudName}}</strong> vagy egyesítse helyileg <strong>{{vmsName}}</strong> klienst használva.",
@@ -141,8 +170,7 @@
     "dialogs.merge.primarySystemOffline": "dialogs.merge.primarySystemOffline",
     "dialogs.merge.secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
     "dialogs.merge.systemOffline": "dialogs.merge.systemOffline",
-    "dialogs.merge.systemUnavailable": "System {{targetSystem}} is currently unreachable. Try again in a few minutes or contact",
-    "disclaimer": "This list is limited to actual devices auto-reporting data to {{value}}, as approved by anonymous system users. The complete list of supported manufacturers and models is greater in scope.",
+    "dialogs.merge.systemUnavailable": "A {{targetSystem}} rendszer jelenleg nem érhető el. Néhány perc múlva próbálkozzon újra",
     "downloads": {
         "appTypes": {
             "bundle": "Kliens és szerver",
@@ -235,6 +263,7 @@
         "PTZ cameras": "PTZ cameras",
         "camera": "Kamera",
         "count": "Count",
+        "disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous.",
         "dvr": "DVR",
         "encoder": "Encoder",
         "feedback": {
@@ -243,6 +272,7 @@
             "c_Info": "for additional questions/concerns regarding supported devices."
         },
         "hardwareType": "Típus",
+        "isAnalyticsSupported": "Analytics",
         "isAptzSupported": "Advanced PTZ",
         "isAptzSupportedShort": "Adv. PTZ",
         "isAudioSupported": "Audio",
@@ -259,8 +289,10 @@
         "multiSensorCamera": "Multi-Sensor Camera",
         "other": "Other",
         "primaryCodec": "Codec",
+        "resolutionArea": "Area",
         "vendor": "Manufacturer"
     },
+    "ipvd.disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous.",
     "latest build": "legutolsó verzió",
     "manufacturers": "manufacturers",
     "messageDialogPlaceholders": {
@@ -271,19 +303,27 @@
         "supportedDevices": "Supported Devices"
     },
     "phoneNumberWithLabel": "Tel: {{number}}",
+    "privacyPolicy": {
+        "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent.",
+        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent."
+    },
     "search": {
         "Any": "Any",
         "Search": "Keresés",
+        "analytics": "Analytics",
+        "analyticsSelected": "analytics events",
         "filter applied": "filter applied",
         "filters applied": "filters applied",
         "hardwareType": "Típus",
-        "hardwareTypes": "types",
+        "hardwareTypes": "Types",
         "minResolution": "Minimum Resolution",
         "search_ipvd": "Search by model or manufacturer",
         "selected": "selected",
         "vendor": "Manufacturer",
-        "vendors": "manufacturers"
+        "vendors": "Manufacturers"
     },
-    "servers in the merged System.": "servers in the merged System.",
-    "support": "támogatás"
+    "servers in the merged System.": "szerverek az egyesített rendszerben.",
+    "support": "támogatás",
+    "testedVersionLabel": "Tested on {{vmsName}} version:",
+    "testedVersionsLabel": "Tested on {{vmsName}} versions:"
 }

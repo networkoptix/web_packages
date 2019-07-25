@@ -1,6 +1,6 @@
 import {
     Component, OnDestroy,
-    Input, SimpleChanges, OnChanges
+    Input, SimpleChanges, OnChanges, OnInit
 } from '@angular/core';
 
 import { NxConfigService }           from '../../../services/nx-config';
@@ -14,20 +14,18 @@ import { IntegrationService }        from '../integration.service';
     styleUrls  : ['list.component.scss']
 })
 
-export class NxIntegrationsListComponent implements OnDestroy, OnChanges {
+export class NxIntegrationsListComponent implements OnInit, OnDestroy, OnChanges {
 
     @Input() list;
 
     CONFIG: any;
     LANG: any;
 
+    haveInReviewOrDraft: boolean;
+
     private setupDefaults() {
-        this.language
-            .translationsSubject
-            .subscribe((lang) => {
-                this.LANG = lang;
-                this.CONFIG = this.configService.getConfig();
-            });
+        this.CONFIG = this.configService.getConfig();
+        this.LANG = this.language.getTranslations();
     }
 
     constructor(private configService: NxConfigService,
@@ -42,10 +40,12 @@ export class NxIntegrationsListComponent implements OnDestroy, OnChanges {
         this.ribbonService.hide();
     }
 
+    ngOnInit() {
+    }
+
     ngOnChanges(changes: SimpleChanges) {
-        let haveInReviewOrDraft = false;
+        let haveInReviewOrDraft;
         if (changes.list.currentValue) {
-            // inject platform icons info
             changes.list.currentValue.some(plugin => {
                 if (plugin.pending || plugin.draft) {
                     haveInReviewOrDraft = true;
@@ -54,13 +54,19 @@ export class NxIntegrationsListComponent implements OnDestroy, OnChanges {
             });
 
             if (haveInReviewOrDraft) {
-                this.ribbonService.show(
-                        this.LANG.integration.previewRibbonText,
-                        this.LANG.integration.backToEditText,
-                        this.CONFIG.links.admin.product.replace('%ID%/pages/', '')
-                );
+                this.showRibbon();
+            } else {
+                this.ribbonService.hide();
             }
         }
+    }
+
+    private showRibbon(): void {
+        this.ribbonService.show(
+                this.LANG.integration.previewRibbonText,
+                this.LANG.integration.backToEditText,
+                this.CONFIG.links.admin.product.replace('%ID%/pages/', '')
+        );
     }
 }
 

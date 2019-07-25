@@ -33,6 +33,15 @@
             margin-top : 1rem;
         }
         
+        &-heading {
+            margin-bottom: .5rem !important;
+            
+            h4 {
+                margin      : 0;
+                line-height : 24px;
+            }
+        }
+        
         &.section {
             padding-top : 0;
         }

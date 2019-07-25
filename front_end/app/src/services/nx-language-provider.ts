@@ -1,7 +1,6 @@
-import { Injectable }                      from '@angular/core';
-import { downgradeInjectable }             from '@angular/upgrade/static';
-import { TranslateService }                from '@ngx-translate/core';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { Injectable }             from '@angular/core';
+import { TranslateService }       from '@ngx-translate/core';
+import { ReplaySubject, Subject } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -9,38 +8,41 @@ import { BehaviorSubject, Observable, of } from 'rxjs';
 export class NxLanguageProviderService {
 
     lang: any;
-    translationsSubject = new BehaviorSubject(undefined);
+    translations: any;
+    // translationsSubject = new ReplaySubject();
 
     constructor(private translate: TranslateService) {
-        this.lang = this.translate.getDefaultLang();
-
-        setTimeout(() => {
-            this.setLang(this.lang);
-        });
     }
 
-    private getTranslations(): Observable<any> {
-        if (Object.keys(this.translate.translations).length) {
-            return of(this.translate.translations[this.translate.currentLang]);
-        }
-        return of(this.translate.translations);
+    // setLang(lang) {
+    //     this.lang = lang;
+    //     this.translate
+    //         .use(lang)
+    //         .subscribe((obj) => {
+    //             this.translations = obj;
+    //             this.translationsSubject.next(obj);
+    //         });
+    // }
+
+    setDefaultLang(lang: string): void {
+        this.translate.setDefaultLang(lang);
     }
 
-    setLang(lang) {
-        this.lang = lang;
-        this.translate.use(lang);
-
-        this.getTranslations().subscribe(lang => {
-            this.translationsSubject.next(lang);
-        });
+    setTranslations(lang, json): void {
+        this.translate.setTranslation(lang, json);
+        this.translate.currentLang = lang;
     }
 
-    getLang() {
+    getTranslations(): any {
+        return this.translate.translations[this.translate.currentLang];
+    }
+
+    getLang(): string {
         return this.lang;
     }
 
 
-    ngOnDestroy() {
-        this.translationsSubject.unsubscribe();
+    ngOnDestroy(): void {
+        // this.translationsSubject.unsubscribe();
     }
 }

@@ -12,23 +12,8 @@
     "logoutAuthorisedTitle": "אתה כבר מחובר",
     "logoutAuthorisedContinueButton": "המשך",
     "logoutAuthorisedLogoutButton": "יציאה",
-    "messageFailed": "שליחת ההודעה נכשלה.",
-    "messageSent": "ההודעה נשלחה.",
     "noClientDetectedTitle": "התקן את %VMS_NAME% כדי לצפות במערכת שלך",
     "download": "הורד את %VMS_NAME%"
-  },
-  "messageDialog": {
-    "title": {
-      "integration": "Email for {{product}}",
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "משוב על {{product}}"
-    },
-    "topic": {
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "משוב על {{product}}",
-      "contact_sales": "Contact sales for {{product}}",
-      "contact_support": "Contact support for {{product}}"
-    }
   },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
@@ -140,7 +125,7 @@
     "wrongParameters": "פרמטרים מסוימים בטופס אינם נכונים",
     "wrongCode": "החשבון כבר הופעל או שקוד האישור שגוי",
     "wrongCodeRestore": "קוד האישור כבר בשימוש או שגוי",
-    "wrongAuthCode": "Code is expired or incorrect",
+    "wrongAuthCode": "קוד האימות פג או שגוי",
     "forbidden": "אין לך הרשאות לביצוע פעולה זו",
     "accountNotActivated": "חשבון זה אינו פעיל עדיין. <a href=\"/activate\"> שלח שוב קישור להפעלה </a>",
     "accountBlocked": "חשבון זה נחסם באופן זמני. נסה שוב בעוד מספר דקות.",
@@ -162,7 +147,7 @@
     "mergedSystemIsOffline": "מערכת <strong>{{failedSystem}}</strong> לא מקוונת.",
     "INCOMPATIBLE": "למערכות יש גרסאות תוכנה שונות. אנא עדכן את שניהם ל <a href=\"/download\">לגרסא האחרונה</a>.",
     "FAIL": "המערכת <strong>{{failedSystem}}</strong> אינה זמינה כעת.<br>נסה שוב בעוד מספר דקות או צור קשר עם <a href=\"%SUPPORT_LINK%\" target=\"_blank\">תמיכה</a>.",
-    "unknownMergeError": "Unknown error. You can try to refresh the page and repeat attempt. If the problem persists – please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>."
+    "unknownMergeError": "שגיאה לא ידועה, באפשרותך לנסות לרענן את הדף ולנסות שוב. אם הבעיה נמשכת, צור קשר עם <a href=\"%SUPPORT_LINK%\" target=\"_blank\">התמיכה</a>."
   },
   "merging": {
     "mergeFailedTitle": "מיזוג המערכות נכשל",
@@ -211,7 +196,7 @@
     "confirmUnshare": "משתמש זה לא יוכל לגשת למערכת. האם אתה בטוח?",
     "confirmUnshareTitle": "מחק משתמש?",
     "confirmUnshareAction": "מחק",
-    "successDisconnected": "System is successfully disconnected from %CLOUD_NAME%",
+    "successDisconnected": "המערכת התנתקה בהצלחה מ %CLOUD_NAME%",
     "successDeleted": "המערכת {{systemName}} נמחקה בהצלחה מהחשבון שלך",
     "mergeFailed": "מיזוג המערכת נכשל",
     "mergeStart": "מיזוג מערכות החל",
@@ -253,7 +238,7 @@
     },
     "systemOffline": "השרת אינו זמין",
     "systemHasNoCameras": ". אין מצלמות",
-    "systemUnreachable": "SYSTEM IS UNREACHABLE",
+    "systemUnreachable": "אי אפשר להגיע למערכת",
     "cameraStates": {
       "offline": "לא מקוון",
       "error": "שגיאה",

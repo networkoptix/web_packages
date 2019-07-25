@@ -1,0 +1,3 @@
+Hei, {{ message.userFullName }}
+{{ message.sender_name}} ({{ message.sender_email }}): llä on palautetta {{ message.product }}: sta:
+<pre>{{ message.message }}</pre>

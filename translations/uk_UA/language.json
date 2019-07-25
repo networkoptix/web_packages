@@ -12,23 +12,8 @@
     "logoutAuthorisedTitle": "Ви вже увійшли",
     "logoutAuthorisedContinueButton": "Продовжити",
     "logoutAuthorisedLogoutButton": "Вийти",
-    "messageFailed": "Не вдалося надіслати повідомлення.",
-    "messageSent": "Повідомлення відправлено.",
     "noClientDetectedTitle": "Встановіть %VMS_NAME% для роботи з системою",
     "download": "Завантажити %VMS_NAME%"
-  },
-  "messageDialog": {
-    "title": {
-      "integration": "Email для {{product}}",
-      "ipvd_feedback_page": "Зворотній зв’язок для сторінки камер",
-      "ipvd_feedback_device": "Відгук про {{product}}"
-    },
-    "topic": {
-      "ipvd_feedback_page": "Зворотній зв’язок для сторінки камер",
-      "ipvd_feedback_device": "Відгук про {{product}}",
-      "contact_sales": "Зв'яжіться з відділом продажів за {{product}}",
-      "contact_support": "Зверніться до служби підтримки за {{product}}"
-    }
   },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",

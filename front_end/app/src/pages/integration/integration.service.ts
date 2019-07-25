@@ -21,14 +21,18 @@ export class IntegrationService implements OnDestroy {
     // selectedSectionSubject = new BehaviorSubject([]);
     plugin: any = {};
     inReview: boolean;
+    haveCustomBuild: boolean;
 
     constructor(private api: NxCloudApiService,
                 private configService: NxConfigService) {
 
+        this.config = this.configService.getConfig();
+
         this.getIntegrations()
             .subscribe(result => {
-                this.config = this.configService.getConfig();
-                result.data.forEach(plugin => {
+                const plugins = result && result.data || [];
+
+                plugins.forEach(plugin => {
                     plugin.versionDetails = {
                         version: (plugin.versionDetails) ? this.formatVersion(plugin.versionDetails.version) || '1.0' : '1.0'
                     };
@@ -41,7 +45,7 @@ export class IntegrationService implements OnDestroy {
                     plugin.link = '/integrations/' + plugin.id;
                     plugin.link += (plugin.state) ? '?state=' + plugin.state : '';
                 });
-                this.pluginsSubject.next(result.data);
+                this.pluginsSubject.next(plugins);
             });
     }
 
@@ -50,8 +54,8 @@ export class IntegrationService implements OnDestroy {
     }
 
     formatVersion(elm) {
-        if (!elm || elm && elm !== '&nbsp;' && elm.indexOf('v.') !== 0) {
-            elm = (elm) ? 'v.&nbsp;' + elm : '&nbsp;';
+        if (!elm || elm && elm !== '' && elm.indexOf('v.') !== 0) {
+            elm = (elm) ? 'v.&nbsp;' + elm : '';
         }
 
         return elm;
@@ -59,20 +63,45 @@ export class IntegrationService implements OnDestroy {
 
     private formatRequirementsAndCompatibility (plugin) {
         const section = plugin.requirementsAndCompatibility;
+
         if (section) {
+            this.haveCustomBuild = false;
+
             if (section.platforms) {
                 section.platforms.icons = this.setPlatformIcons(plugin);
             }
 
-            if (section.testedVersions) {
-                section.testedOn = '';
-                section.testedVersions.map((version) => {
-                    section.testedOn += (section.testedOn.length) ? ',&nbsp;&nbsp;' : '';
-                    section.testedOn += this.formatVersion(version);
-                });
+            if (section.testedBuild) {
+                section.testedVersions.splice(0, 0, section.testedBuild);
+                this.haveCustomBuild = true;
             }
 
-            section.testedBuild = this.formatVersion(section.testedBuild);
+            switch (section.testedVersions.length) {
+                case 0: break;
+                case 1:
+                    section.testedVersionsString = section.testedVersions[0];
+                    break;
+
+                case 2:
+                    if (this.haveCustomBuild) {
+                        section.testedVersionsString = section.testedVersions[0] + ',&nbsp;...';
+                    } else {
+                        section.testedVersionsString = section.testedVersions.join(',&nbsp;');
+                    }
+                    break;
+
+                default:
+                    if (this.haveCustomBuild) {
+                        section.testedVersionsString = section.testedVersions[0] + ',&nbsp;...';
+                    } else {
+                        section.testedVersionsString = section.testedVersions.slice(0, 2).join(',&nbsp;') + ',&nbsp;...';
+                    }
+            }
+
+            section.testedVersionsStringFull = section.testedVersions.join(', ');
+
+            section.testedVersionsString = this.formatVersion(section.testedVersionsString);
+            section.testedVersionsStringFull = this.formatVersion(section.testedVersionsStringFull);
         }
     }
 
@@ -197,7 +226,14 @@ export class IntegrationService implements OnDestroy {
             });
         }
 
-        plugin.versionDetails.version = (plugin.versionDetails.version) ? 'v.&nbsp;' + plugin.versionDetails.version : '&nbsp;';
+
+        if (plugin.versionDetails) {
+            plugin.versionDetails.version = this.formatVersion(plugin.versionDetails.version);
+        } else {
+            plugin.versionDetails = {
+                version: '&nbsp;'
+            };
+        }
 
         if (plugin.requirementsAndCompatibility && plugin.requirementsAndCompatibility.platforms) {
             plugin.requirementsAndCompatibility.platforms.icons = this.setPlatformIcons(plugin);

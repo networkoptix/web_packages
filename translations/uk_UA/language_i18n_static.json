@@ -7,10 +7,12 @@
 		"Any": "Будь-які",
 		"selected": "вибрано",
 		"vendor": "Виробник",
-		"vendors": "виробники",
+		"vendors": "Manufacturers",
 		"hardwareType": "Тип",
-		"hardwareTypes": "типи",
-		"minResolution": "Мінімальна роздільна здатність"
+		"hardwareTypes": "Types",
+		"minResolution": "Мінімальна роздільна здатність",
+		"analytics": "Analytics",
+		"analyticsSelected": "analytics events"
 	},
 	"cameraFilters": {
 		"ptz": "PTZ камери",
@@ -96,6 +98,7 @@
 		}
 	},
 	"ipvd": {
+		"resolutionArea": "Area",
 		"count": "Підрахунок",
 		"vendor": "Виробник",
 		"model": "Модель",
@@ -113,6 +116,7 @@
 		"isIoSupported": "Ввід/вивід",
 		"isH265": "H.265",
 		"isMultiSensor": "Мультисенсор",
+		"isAnalyticsSupported": "Analytics",
 		"camera": "Камера",
 		"multiSensorCamera": "Багатоканальна камера",
 		"encoder": "Енкодер",
@@ -130,7 +134,8 @@
 			"a_Please": "Будь ласка",
 			"b_Link": "надіслати запит",
 			"c_Info": "додаткові питання / зауваження щодо підтримуваних пристроїв."
-		}
+		},
+		"disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous."
 	},
 	"integration": {
 		"previewRibbonText": "Ця сторінка є попереднім переглядом останніх змін і не відповідає загальнодоступній версії.",
@@ -158,6 +163,28 @@
 			"secondaryCannotMerge": "Система {{targetSystem}} має стару версію Пз, несумісну з поточною системою. Оновіть {{targetSystem}} до <a href=\"/download\" target=\"_blank\" translate>останньої збірки</a> для об’єднання з поточною системою.",
 			"systemOffline": "Система {{targetSystem}} офлайн і не може бути об'єднана.",
 			"systemUnavailable": "Система {{targetSystem}} наразі недоступна. Повторіть спробу через декілька хвилин або зв'яжіться з нами"
+		},
+		"message": {
+			"failedToSend": "Не вдалося надіслати повідомлення.",
+			"sent": "Повідомлення відправлено.",
+			"title": {
+				"integration": "Зв’яжіться з {{companyName}}",
+				"ipvd_feedback_page": "Зворотній зв’язок для сторінки камер",
+				"ipvd_feedback_device": "Відгук про {{product}}"
+			},
+			"topic": {
+				"contact_sales": "Зв'яжіться з відділом продажів за {{product}}",
+				"contact_support": "Зверніться до служби підтримки за {{product}}",
+				"integration_feedback": "Зворотній зв'язок для інтеграції {{product}}",
+				"ipvd_feedback_page": "Зворотній зв’язок для сторінки камер",
+				"ipvd_feedback_device": "Відгук про {{product}}"
+			}
 		}
-	}
+	},
+	"privacyPolicy": {
+		"integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent.",
+		"ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent."
+	},
+	"testedVersionLabel": "Tested on {{vmsName}} version:",
+	"testedVersionsLabel": "Tested on {{vmsName}} versions:"
 }

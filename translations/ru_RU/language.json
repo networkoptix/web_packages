@@ -12,23 +12,8 @@
     "logoutAuthorisedTitle": "Вы уже выполнили вход",
     "logoutAuthorisedContinueButton": "Продолжить",
     "logoutAuthorisedLogoutButton": "Выход",
-    "messageFailed": "Message has failed to send.",
-    "messageSent": "Message has been sent.",
     "noClientDetectedTitle": "Установите %VMS_NAME% для работы с системой",
     "download": "Скачать %VMS_NAME%"
-  },
-  "messageDialog": {
-    "title": {
-      "integration": "Email for {{product}}",
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Feedback about {{product}}"
-    },
-    "topic": {
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Feedback about {{product}}",
-      "contact_sales": "Contact sales for {{product}}",
-      "contact_support": "Contact support for {{product}}"
-    }
   },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
@@ -140,7 +125,7 @@
     "wrongParameters": "Некоторые параметры в форме неверны",
     "wrongCode": "Учетная запись уже активирована или неверный код подтверждения",
     "wrongCodeRestore": "Код подтверждения уже используется или неверен",
-    "wrongAuthCode": "Code is expired or incorrect",
+    "wrongAuthCode": "Код устарел или неверен",
     "forbidden": "Отсутствуют полномочия на выполнение этого действия",
     "accountNotActivated": "Эта учетная запись еще не активирована. <a href=\"/activate\">Отправить ссылку активации снова</a>",
     "accountBlocked": "Эта учетная запись заблокирована. Пожалуйста, повторите попытку через несколько минут.",
@@ -162,7 +147,7 @@
     "mergedSystemIsOffline": "Система <strong>{{failedSystem}}</strong> не в сети.",
     "INCOMPATIBLE": "Системы имеют разные версии программного обеспечения. Пожалуйста, обновите их на <a href=\"/download\">последнюю версию</a>.",
     "FAIL": "Система <strong>{{failedSystem}}</strong> в настоящее время недоступна.<br>Повторите попытку через несколько минут или обратитесь в <a href=\"%SUPPORT_LINK%\" target=\"_blank\">поддержку</a>.",
-    "unknownMergeError": "Unknown error. You can try to refresh the page and repeat attempt. If the problem persists – please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>."
+    "unknownMergeError": "Неизвестная ошибка. Вы можете попробовать обновить страницу и повторить попытку. Если проблема не устранена, обратитесь в <a href=\"%SUPPORT_LINK%\" target=\"_blank\">службу поддержки</a>."
   },
   "merging": {
     "mergeFailedTitle": "Объединение систем не удалось",
@@ -211,7 +196,7 @@
     "confirmUnshare": "Этот пользователь не сможет получить доступ к системе. Вы уверены?",
     "confirmUnshareTitle": "Удалить пользователя?",
     "confirmUnshareAction": "Удалить",
-    "successDisconnected": "System is successfully disconnected from %CLOUD_NAME%",
+    "successDisconnected": "Система успешно отключена от %CLOUD_NAME%",
     "successDeleted": "Система {{systemName}} успешно удалена из вашей учетной записи",
     "mergeFailed": "Объединение систем не удалось",
     "mergeStart": "Объединение систем началось",
@@ -253,7 +238,7 @@
     },
     "systemOffline": "Система не в сети",
     "systemHasNoCameras": "НЕТ КАМЕР",
-    "systemUnreachable": "SYSTEM IS UNREACHABLE",
+    "systemUnreachable": "СИСТЕМА НЕДОСТУПНА",
     "cameraStates": {
       "offline": "Не в сети",
       "error": "Ошибка",

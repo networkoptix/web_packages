@@ -15,7 +15,7 @@
             top             : 12px;
             bottom          : 12px;
             display         : flex;
-            flex-direction  : column;
+            flex-direction  : column-reverse;
             align-items     : flex-end;
             justify-content : space-between;
             
@@ -23,10 +23,7 @@
                 color       : $light12;
                 font-size   : $font-size-sm;
                 line-height : 1rem;
-            }
-            
-            .release_date {
-                margin-top : rem(2px);
+                font-family : $font-family-regular;
             }
             
             .platforms {
@@ -68,4 +65,8 @@
     font-family : $font-family-regular;
     font-size   : 20px;
     height      : 32px;
+}
+
+.row {
+    max-width : 1600px;
 }
