@@ -67,54 +67,33 @@ Validate IPVD Device Table Column Contains Desired Value in all Rows
     ${rowCount}=   Validate IPVD Device Table Not Empty
     Table Column Should Contain    ${IPVD TABLE}    ${column}    ${SearchString}
     :FOR    ${rowNumber}    IN RANGE    1    ${rowCount}+1
-    \    ${rowHidden}=   IPVD Table Row Hidden    ${rowNumber}
-    \    Continue For Loop If    ${rowHidden}
     \    Element Should Be Visible    ${IPVD TABLE ROWS}\[${rowNumber}]/td\[${column}]//div[contains(text(),'${SearchString}')]
 
 IPVD Select Device From Table Column By Value
     [Arguments]    ${column}    ${SearchString}
     ${rowCount}=   Validate IPVD Device Table Not Empty
-    ${firstRowHidden}=   IPVD Table Row Hidden    1
-    ${rowStart}=   Set Variable If    ${firstRowHidden}    2    1
-    ${rowCountBump}=   Evaluate    ${rowCount}-1
-    ${rowCount}=   Set Variable If    ${firstRowHidden}    ${rowCountBump}    ${rowCount}
     Table Column Should Contain    ${IPVD TABLE}    ${column}    ${SearchString}
-    :FOR    ${rowNumber}    IN RANGE    ${rowStart}    ${rowCount}+1
+    :FOR    ${rowNumber}    IN RANGE    1    ${rowCount}+1
     \    ${curText}=   Get Text    ${IPVD TABLE ROWS}\[${rowNumber}]/td\[${column}]/div
     \    Exit For Loop If    '${curText}' == '${SearchString}'
-    ${rowNumberBump}=   Evaluate    ${rowNumber}-1
-    ${rowNumber}=   Set Variable If    ${firstRowHidden}    ${rowNumberBump}    ${rowNumber}
     IPVD Select Device From Table By Row Number    ${rowNumber}
     [Return]    ${rowNumber}
 
 IPVD Select Device From Table Randomly
     ${rowCount}=   Validate IPVD Device Table Not Empty
-    ${firstRowHidden}=   IPVD Table Row Hidden    1
-    ${rowOffset}=   Set Variable If    ${firstRowHidden}    2    1
-    ${rowNumber}=   Evaluate    random.randint(${rowOffset},${rowCount}-${rowOffset})    modules=random
+    ${rowNumber}=   Evaluate    random.randint(1,${rowCount}-1)    modules=random
     IPVD Select Device From Table By Row Number    ${rowNumber}
     [Return]    ${rowNumber}
 
 IPVD Select Device From Table By Row Number
     [Arguments]    ${rowNumber}=1
     ${rowCount}=   Validate IPVD Device Table Not Empty
-    ${firstRowHidden}=   IPVD Table Row Hidden    1
-    ${rowNumberBump}=   Evaluate    ${rowNumber}+1
-    #${rowCountBump}=   Evaluate    ${rowCount}-2
-    #${rowNumber}=   Set Variable If    ${firstRowHidden}    ${rowNumberBump}    ${rowNumber}
-    #${rowCount}=   Set Variable If    ${firstRowHidden}    ${rowCountBump}    ${rowCount}
-    Should Be True    ${rowCount} >= ${rowNumberBump}
-    #${rowNumber}=   Evaluate    ${rowNumber}-1
+    Should Be True    ${rowCount} >= ${rowNumber}
     ${rows}=   Get WebElements    ${IPVD TABLE ROWS}
-    Click Element    ${rows}[${rowNumber}]
+    ${rowNumberOffset}=   Evaluate    ${rowNumber}-1
+    Click Element    ${rows}[${rowNumberOffset}]
     Sleep    2
-    [Return]    ${rowNumberBump}
-
-IPVD Table Row Hidden
-    [Arguments]    ${rowNumber}=1
-    ${rowClass}=   Get Element Attribute    ${IPVD TABLE ROWS}\[${rowNumber}]    class
-    ${result}=    Evaluate    '${rowClass}' == 'table-row-spacer'
-    [Return]    ${result}
+    [Return]    ${rowNumber}
 
 IPVD Active Page Number
     Wait Until Element Is Visible    ${IPVD PAGINATION}
@@ -145,6 +124,44 @@ Validate on IPVD page
     ...    ${IPVD PAGINATION}
     ...    ${IPVD EXPORT TO CSV}
     Validate Manufacturer More Count
+
+Verify IPVD Advanced Search is Closed
+    Wait Until Element Has Style    ${IPVD ADV SEARCH BUTTON}    background-color    rgb(205, 215, 220)
+    Verify Button Arrow Direction    ${IPVD ADV SEARCH BUTTON}    Down
+    Elements Should Not Be Visible
+    #IPVD Advanced Filters
+    ...    ${IPVD ADV FILTERS MIN RES}
+    ...    ${IPVD ADV FILTERS MFRS}
+    ...    ${IPVD ADV FILTERS TYPES}
+    #IPVD Advanced Filters Features
+    ...    ${IPVD ADV FEATURES AUDIO}
+    ...    ${IPVD ADV FEATURES 2-WAY AUDIO}
+    ...    ${IPVD ADV FEATURES PTZ}
+    ...    ${IPVD ADV FEATURES ADV PTZ}
+    ...    ${IPVD ADV FEATURES FISHEYE}
+    ...    ${IPVD ADV FEATURES MOTION}
+    ...    ${IPVD ADV FEATURES I/O}
+    ...    ${IPVD ADV FEATURES H.265}
+    ...    ${IPVD ADV FEATURES MULTI SENSOR}
+
+Verify IPVD Advanced Search is Open
+    Wait Until Element Has Style    ${IPVD ADV SEARCH BUTTON}    background-color    rgb(105, 135, 150)
+    Verify Button Arrow Direction    ${IPVD ADV SEARCH BUTTON}    Up
+    Wait Until Elements Are Visible
+    #IPVD Advanced Filters
+    ...    ${IPVD ADV FILTERS MIN RES}
+    ...    ${IPVD ADV FILTERS MFRS}
+    ...    ${IPVD ADV FILTERS TYPES}
+    #IPVD Advanced Filters Features
+    ...    ${IPVD ADV FEATURES AUDIO}
+    ...    ${IPVD ADV FEATURES 2-WAY AUDIO}
+    ...    ${IPVD ADV FEATURES PTZ}
+    ...    ${IPVD ADV FEATURES ADV PTZ}
+    ...    ${IPVD ADV FEATURES FISHEYE}
+    ...    ${IPVD ADV FEATURES MOTION}
+    ...    ${IPVD ADV FEATURES I/O}
+    ...    ${IPVD ADV FEATURES H.265}
+    ...    ${IPVD ADV FEATURES MULTI SENSOR}
 
 Validate Manufacturer More Count
     Wait Until Elements Are Visible

@@ -297,9 +297,9 @@ ${IPVD CLOSE DETAILS BUTTON}          //ipvd//header//span[@class="glyphicon clo
 ${IPVD TABLE}                         //ipvd//table
 ${IPVD TABLE HEADING MANUFACTURER}    ${IPVD TABLE}/thead//div[text()='Manufacturer']
 ${IPVD TABLE HEADING LABEL SORT ARROW}    /../div[2]
-${IPVD TABLE ROWS}                    ${IPVD TABLE}/tbody/tr
-${IPVD TABLE FIRST ITEM}              ${IPVD TABLE}/tbody/tr[1]
-${IPVD TABLE LAST ITEM}               ${IPVD TABLE}/tbody/tr[0=count(following-sibling::tr)]//td
+${IPVD TABLE ROWS}                    ${IPVD TABLE}/tbody/tr[not(@class='table-row-spacer')]
+${IPVD TABLE FIRST ITEM}              ${IPVD TABLE}/tbody/tr[not(@class='table-row-spacer')][1]
+${IPVD TABLE LAST ITEM}               ${IPVD TABLE}/tbody/tr[not(@class='table-row-spacer')][last()]
 #IPVD Pagination
 ${IPVD PAGINATION}                    //ipvd//ngb-pagination/ul
 ${IPVD PREVIOUS PAGE BUTTON}          ${IPVD PAGINATION}/li[1]
