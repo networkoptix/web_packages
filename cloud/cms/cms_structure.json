@@ -958,7 +958,7 @@
             "label": "Integration name",
             "value": "",
             "description": "Visible on the tile for the integrations page and the card header for the detailed view.",
-            "placeholder": "Test integration",
+            "placeholder": "New integration",
             "type": "text",
             "meta": {
               "char_limit": 64
@@ -1090,7 +1090,7 @@
             "label": "Full functionality overview",
             "value": "",
             "description": "A description about what the integration does. The overview appears on the detailed view page for the integration in the leftmost column. Recommended length 1000 characters.",
-            "placeholder": "The integration is just for show.",
+            "placeholder": "Tell us what your integration does...",
             "type": "html",
             "optional": true,
             "meta": {
