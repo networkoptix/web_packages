@@ -373,5 +373,6 @@
 	"Privacy": "Privacy",
 	"Support": "Support",
 	"Supported Devices": "Supported Devices",
-	"Terms": "Terms"
+	"Terms": "Terms",
+	"WHEN_MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{{targetSystemName}}</strong> System, and this system will be deleted."
 }

@@ -14,10 +14,8 @@ import { ComponentsModule } from '../../../components/components.module';
 import { NxSystemAdminModule }         from './admin/admin.module';
 import { NxSystemUsersModule }         from './users/users.module';
 import { NxSystemMergeStatusModule }   from './merge-status/merge-status.module';
-import { NxSystemInterfacesModule }    from './interfaces/interfaces.module';
 import { NxSystemAdminComponent }      from './admin/admin.component';
 import { NxSystemUsersComponent }      from './users/users.component';
-import { NxSystemInterfacesComponent } from './interfaces/interfaces.component';
 
 const appRoutes: Routes = [
     // root path is handles by AJS for now
@@ -26,7 +24,6 @@ const appRoutes: Routes = [
         children: [
             { path: '', component: NxSystemAdminComponent },
             { path: 'users', component: NxSystemUsersComponent },
-            { path: 'interfaces', component: NxSystemInterfacesComponent },
         ]
     }
 ];
@@ -43,7 +40,6 @@ const appRoutes: Routes = [
         NxSystemMergeStatusModule,
         NxSystemAdminModule,
         NxSystemUsersModule,
-        NxSystemInterfacesModule,
 
         RouterModule.forChild(appRoutes)
     ],

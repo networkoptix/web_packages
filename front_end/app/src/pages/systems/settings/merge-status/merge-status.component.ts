@@ -1,8 +1,8 @@
-import {Component, Inject, Input, OnInit} from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { NxSettingsService } from '../settings.service';
-import {NxConfigService} from '../../../../services/nx-config';
-import {NxLanguageProviderService} from '../../../../services/nx-language-provider';
+import { NxConfigService } from '../../../../services/nx-config';
+import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
 
 
 @Component({
@@ -34,9 +34,6 @@ export class NxSystemMergeStatusComponent implements OnInit {
                 return;
             }
             this.system = system;
-            this.system.mergeInfo = {
-                anotherSystemId: '196cea71-0bb5-43dd-a8d1-06f6b9484e9a'
-            };
             this.setMergeStatus(this.system.mergeInfo);
         });
     }
