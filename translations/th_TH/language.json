@@ -233,7 +233,7 @@
       "transcoding": "การแปลงรหัส",
       "unknown": "ม่รู้จัก",
       "copyToClipboard": "คัดลอกไปยังคลิปบอร์ด",
-      "copyDefaultText": "สำเนา",
+      "copyDefaultText": "คัดลอก",
       "copyActiveText": "คัดลอกไปยังคลิปบอร์ด"
     },
     "systemOffline": "ระบบออฟไลน์",

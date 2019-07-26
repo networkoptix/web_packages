@@ -6,7 +6,7 @@
   "clientProtocol": "%CLIENT_PROTOCOL%:",
   "dialogs": {
     "okButton": "OK",
-    "cancelButton": "Mégse",
+    "cancelButton": "Mégsem",
     "loginTitle": "Bejelentkezés ide: %CLOUD_NAME%",
     "loginButton": "Bejelentkezés",
     "logoutAuthorisedTitle": "Már bejelentkezett",
@@ -255,15 +255,15 @@
     },
     "searchCamPlaceholder": "Keresés",
     "resolution": {
-      "auto": "Auto",
-      "high": "Elsődleges",
+      "auto": "Autómatikus",
+      "high": "Magas",
       "low": "Alacsony"
     },
     "chromeCastWarning": "A Chromecast erőforrás-igényes, és problémákat okozhat a kiszolgálón.",
     "voiceCommands": {
       "play": "letjátszás",
       "pause": "szünet",
-      "live": "élőbe menni | mutatsd élőben",
+      "live": "go to live | show me live",
       "view": "nézet + [kamera neve]",
       "search": "keresés + [szöveg a keresősávhoz]",
       "clear search": "keresés törlése",

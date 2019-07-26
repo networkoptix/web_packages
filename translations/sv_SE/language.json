@@ -240,7 +240,7 @@
     "systemHasNoCameras": "INGA KAMEROR",
     "systemUnreachable": "SYSTEMET är inte tillgängligt",
     "cameraStates": {
-      "offline": "Offline",
+      "offline": "Frånkopplade",
       "error": "Fel",
       "unauthorized": "Autentisering krävs",
       "noData": "Data saknas",

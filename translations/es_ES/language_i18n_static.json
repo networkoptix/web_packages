@@ -7,12 +7,12 @@
 		"Any": "Cualquiera",
 		"selected": "seleccionado",
 		"vendor": "Fabricante",
-		"vendors": "Manufacturers",
+		"vendors": "Fabricantes",
 		"hardwareType": "Tipo",
-		"hardwareTypes": "Types",
+		"hardwareTypes": "Tipos",
 		"minResolution": "Resolución mínima",
 		"analytics": "Analítica",
-		"analyticsSelected": "analytics events"
+		"analyticsSelected": "evento de analiticas"
 	},
 	"cameraFilters": {
 		"ptz": "Camaras PTZ",
@@ -98,7 +98,7 @@
 		}
 	},
 	"ipvd": {
-		"resolutionArea": "Area",
+		"resolutionArea": "Área",
 		"count": "Contar",
 		"vendor": "Fabricante",
 		"model": "Modelo",
@@ -116,7 +116,7 @@
 		"isIoSupported": "E/S",
 		"isH265": "H.265",
 		"isMultiSensor": "Multi Sensor",
-		"isAnalyticsSupported": "Analytics",
+		"isAnalyticsSupported": "Analíticas",
 		"camera": "Camara",
 		"multiSensorCamera": "Cámara multisensor",
 		"encoder": "Codificador",
@@ -135,7 +135,7 @@
 			"b_Link": "enviar una solicitud",
 			"c_Info": "para preguntas / preocupaciones adicionales con respecto a los dispositivos compatibles."
 		},
-		"disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous."
+		"disclaimer": "Esta lista se limita a los dispositivos que se encuentran en {{vmsName}} donde los usuarios han permitido el informe automático de las especificaciones del dispositivo a {{companyName}}. No se recopila información personal y cada usuario permanece completamente anónimo."
 	},
 	"integration": {
 		"previewRibbonText": "Esta página es una vista previa de los últimos cambios y no coincide con la versión de acceso público.",
@@ -186,5 +186,12 @@
 		"ipvd": "Al enviar este formulario, usted acepta ser contactado por %COMPANY_NAME%.\nEncontrará %COMPANY_NAME% política de privacidad <a href=\"%PRIVACY_LINK%\" target=\"blank\">aquí</a> que incluye instrucciones sobre cómo retirar su consentimiento."
 	},
 	"testedVersionLabel": "Probado en la versión {{vmsName}}:",
-	"testedVersionsLabel": "Probado en {{vmsName}} versiones:"
+	"testedVersionsLabel": "Probado en {{vmsName}} versiones:",
+	"About %CLOUD_NAME%": "About %CLOUD_NAME%",
+	"Download %VMS_NAME%": "Descargar %VMS_NAME%",
+	"Integrations": "Integraciones",
+	"Privacy": "Privacidad",
+	"Support": "Asistencia",
+	"Supported Devices": "Dispositivos soportados",
+	"Terms": "Condiciones"
 }

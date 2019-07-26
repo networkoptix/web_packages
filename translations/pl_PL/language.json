@@ -256,8 +256,8 @@
     "searchCamPlaceholder": "Szukaj",
     "resolution": {
       "auto": "Auto",
-      "high": "Wysoki",
-      "low": "Niski"
+      "high": "Wysoka",
+      "low": "Niska"
     },
     "chromeCastWarning": "Chromecast wymaga dużej ilości zasobów i może powodować problemy na serwerze.",
     "voiceCommands": {

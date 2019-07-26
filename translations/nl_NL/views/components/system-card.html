@@ -5,9 +5,9 @@
             <button ng-disabled="currentlyMerging && !isMaster" class="btn btn-default" ng-click="rename()">Wijzig de naam van het systeem</button>
         </p>
         <p ng-if="systems.length > 1 && system.canMerge || configCanMerge || debugMode || betaMode">
-            <button class="btn btn-default"
+            <button class="btn btn-default mw-100"
                     ng-disabled="(currentlyMerging || !system.isOnline || !system.isAvailable) && !(debugMode || betaMode)"
-                    ng-click="mergeSystems()">Samenvoegen met een ander systeem</button>
+                    ng-click="mergeSystems()"><div class="ellipsis">Merge with Another System</div></button>
         </p>
         <hr />
         <button ng-disabled="currentlyMerging" class="btn btn-default" ng-click="disconnect()">Onttkoppel van
@@ -21,8 +21,8 @@
         <a ng-href="mailto:{{system.info.ownerAccountEmail}}">{{system.info.ownerAccountEmail}}</a>
         <hr>
         <p>
-            Uw gebruikersrechten:
-            <b>{{$root.L.accessRoles[system.accessRole].label || system.accessRole}}</b>
+            Your permissions:
+            <b>{{permission}}</b>
         </p>
 
         <p ng-if="system.permissions.isAdmin">

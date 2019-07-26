@@ -1,6 +1,6 @@
 {
   "activate_account": {
-    "emailSubject": "Fiók aktiválása"
+    "emailSubject": "Aktiváld a fiókod"
   },
   "cloud_invite": {
     "emailSubject": "Meghívást kapott a %CLOUD_NAME%"

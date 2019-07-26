@@ -87,7 +87,7 @@
     },
     "owner": {
       "label": "Omistaja",
-      "description": "Rajoittamaton pääsy, mukaan lukien oikeus jakaa ja yhdistää / irrottaa järjestelmä pilvestä"
+      "description": "Rajoittamaton pääsy, mukaan lukien kyky jakaa ja yhdistää / irroittaa järjestelmää pilvestä"
     },
     "viewer": {
       "label": "Katsoja",
@@ -95,14 +95,14 @@
     },
     "liveViewer": {
       "label": "Reaaliaikainen katselu",
-      "description": "Voi katsella vain reaaliaikaista videota"
+      "description": "Voit katsella vain reaaliaikaista videota"
     },
     "advancedViewer": {
       "label": "Edistyneempi katselu",
       "description": "Voi katsella reaaliaikasta videota, selata arkistoa, määrittää kameroita, ohjata PTZ: tä jne"
     },
     "custom": {
-      "label": "Muokattu",
+      "label": "Asiakassuhde",
       "description": "Käytä %VMS_NAME% Client -sovellusta mukautettujen käyttöoikeuksien määrittämiseen"
     }
   },
@@ -232,11 +232,11 @@
       "lowStream": "Low stream",
       "transcoding": "Transkoodaus",
       "unknown": "Tuntematon",
-      "copyToClipboard": "kopioi leikepöydälle",
-      "copyDefaultText": "kopio",
-      "copyActiveText": "kopioitu leikepöydälle"
+      "copyToClipboard": "Kopioi leikepöydälle",
+      "copyDefaultText": "Kopioi",
+      "copyActiveText": "Kopioitu leikepöydälle"
     },
-    "systemOffline": "Järjestelmä offline-tilassa",
+    "systemOffline": "Järjestelmään ei saada yhteyttä",
     "systemHasNoCameras": "Ei kameroita",
     "systemUnreachable": "JÄRJESTELMÄÄN EI SAADA YHTEYTTÄ",
     "cameraStates": {
@@ -246,7 +246,7 @@
       "noData": "Ei dataa",
       "iosVideoTooLarge": "iOS ei tue videota, joka on suurempi kuin fullHD (2MP: 1920x1080).",
       "flashRequired": "Siirry<a href='https://get.adobe.com/flashplayer/' target='_blank'>Asenna Adobe Flash</a> videoiden toistamiseen.",
-      "flashOrWebmRequired": "Siirry <a href='https://get.adobe.com/flashplayer/' target='_blank'>Asenna Adobe Flash</a> tai<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM koodekin</a> videon toistamiseen Internet Explorer:ssa.",
+      "flashOrWebmRequired": "Ota <a href='https://get.adobe.com/flashplayer/' target='_blank'>Asenna Adobe Flash</a> tai<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM koodekin</a> videon toistamiseen Internet Explorer.",
       "noArmSupport": "Tämä selain tai laite ei tue videotoistoa ARM-pohjaisista palvelimista.",
       "noFormat": "Tämä selain ei tue videon toistoa tästä kamerasta.",
       "ieNoWebm": "Asenna <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM-koodekki</a> Internet Exploreriin.",
@@ -261,17 +261,17 @@
     },
     "chromeCastWarning": "Chromecast on resursseja kuormittava ja saattaa aiheuttaa ongelmia palvelimellasi.",
     "voiceCommands": {
-      "play": "toista",
-      "pause": "tauko",
+      "play": "Toista",
+      "pause": "Tauko",
       "live": "go to live | show me live",
       "view": "view + [camera name]",
       "search": "find + [text for searchbar]",
-      "clear search": "tyhjennä haku",
+      "clear search": "Tyhjennä haku",
       "expand server": "expand server + [server name]",
       "collapse server": "collapse server + [server name]",
       "expand all servers": "laajenna kaikki palvelimet",
-      "collapse all servers": "kokoa kaikki palvelimet",
-      "stop listening": "lopeta kuuntelu",
+      "collapse all servers": "Kokoa kaikki palvelimet",
+      "stop listening": "Lopeta kuuntelu",
       "help": "help | show commands"
     }
   },

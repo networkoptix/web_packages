@@ -7,12 +7,12 @@
 		"Any": "Någon",
 		"selected": "vald",
 		"vendor": "Tillverkare",
-		"vendors": "Manufacturers",
+		"vendors": "Tillverkare",
 		"hardwareType": "Typ",
-		"hardwareTypes": "Types",
+		"hardwareTypes": "Typer",
 		"minResolution": "Minsta upplösning",
 		"analytics": "Analys",
-		"analyticsSelected": "analytics events"
+		"analyticsSelected": "analyshändelse"
 	},
 	"cameraFilters": {
 		"ptz": "PTZ-kameror",
@@ -98,7 +98,7 @@
 		}
 	},
 	"ipvd": {
-		"resolutionArea": "Area",
+		"resolutionArea": "Område",
 		"count": "Räkna",
 		"vendor": "Tillverkare",
 		"model": "Modell",
@@ -116,7 +116,7 @@
 		"isIoSupported": "I/O",
 		"isH265": "H.265",
 		"isMultiSensor": "Multisensor",
-		"isAnalyticsSupported": "Analytics",
+		"isAnalyticsSupported": "Analys",
 		"camera": "Kamera",
 		"multiSensorCamera": "Multi-Sensor Kamera",
 		"encoder": "Encoder",
@@ -135,7 +135,7 @@
 			"b_Link": "skicka förfrågan",
 			"c_Info": "för ytterligare frågor / problem angående stödda enheter."
 		},
-		"disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous."
+		"disclaimer": "Denna lista är begränsad till enheter som finns på {{vmsName}} där användare har tillåtit automatisk rapportering av enhetsspecifikationer till {{companyName}}. Ingen personlig information samlas in och varje användare förblir helt anonym."
 	},
 	"integration": {
 		"previewRibbonText": "Den här sidan är en förhandsvisning av de senaste ändringarna, och den matchar inte den offentligt tillgängliga versionen.",
@@ -186,5 +186,12 @@
 		"ipvd": "Genom att skicka in denna blankett accepterar du att du kontaktas av %COMPANY_NAME%.\nDu hittar %COMPANY_NAME% sekretesspolicy <a href=\"%PRIVACY_LINK%\" target=\"blank\">här</a> som innehåller instruktioner om hur du återkallar ditt samtycke."
 	},
 	"testedVersionLabel": "Testat på {{vmsName}} version:",
-	"testedVersionsLabel": "Testat på {{vmsName}} versioner:"
+	"testedVersionsLabel": "Testat på {{vmsName}} versioner:",
+	"About %CLOUD_NAME%": "About %CLOUD_NAME%",
+	"Download %VMS_NAME%": "Ladda ner %VMS_NAME%",
+	"Integrations": "Integrationer",
+	"Privacy": "Sekretess",
+	"Support": "Support",
+	"Supported Devices": "Enheter som stöds",
+	"Terms": "Villkor"
 }

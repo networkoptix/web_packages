@@ -58,15 +58,15 @@
       "description": "不受限權限包括共用及從雲端連接/斷開系統的能力"
     },
     "Viewer": {
-      "label": "瀏覽",
+      "label": "瀏覽者",
       "description": "可以瀏覽即時影像和回放錄影資料"
     },
     "Live Viewer": {
-      "label": "即時影像瀏覽",
+      "label": "即時影像瀏覽者",
       "description": "只能瀏覽即時影像"
     },
     "Advanced Viewer": {
-      "label": "進階瀏覽",
+      "label": "進階瀏覽者",
       "description": "可以瀏覽即時影像, 回放錄影資料, 控制 PTZ 等"
     },
     "Administrator": {
@@ -90,11 +90,11 @@
       "description": "不受限權限包括共用及從雲端連接/斷開系統的能力"
     },
     "viewer": {
-      "label": "瀏覽",
+      "label": "瀏覽者",
       "description": "可以瀏覽即時影像和回放錄影資料"
     },
     "liveViewer": {
-      "label": "即時影像瀏覽",
+      "label": "即時影像瀏覽者",
       "description": "只能瀏覽即時影像"
     },
     "advancedViewer": {
@@ -264,7 +264,7 @@
       "play": "播放",
       "pause": "暫停",
       "live": "go to live | show me live",
-      "view": "瀏覽 + [攝影機名稱]",
+      "view": "view + [camera name]",
       "search": "find + [text for searchbar]",
       "clear search": "清除搜尋",
       "expand server": "expand server + [server name]",

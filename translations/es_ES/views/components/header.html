@@ -18,13 +18,13 @@
 
                 <ul ng-if="active.integrations" class="nav navbar-nav d-none d-sm-flex">
                     <li class="active">
-                        <a class="inset" href=1>Integraciones</a>
+                        <a class="inset" href="">Integraciones</a>
                     </li>
                 </ul>
 
                 <ul ng-if="active.ipvd" class="nav navbar-nav d-none d-sm-flex">
                     <li class="active">
-                        <a class="inset" href=1>Dispositivos de video IP soportados</a>
+                        <a class="inset" href="">Dispositivos de video IP soportados</a>
                     </li>
                 </ul>
 
@@ -35,7 +35,7 @@
                         <a class="inset" ng-href="/systems/{{activeSystem.id}}/view">Vista</a>
                     </li>
                     <li ng-class="{ 'active' :active.settings}">
-                        <a class="inset" ng-href="/systems/{{activeSystem.id}}">Configuraciones</a>
+                        <a class="inset" ng-href="/systems/{{activeSystem.id}}">Configuración</a>
                     </li>
                 </ul>
             </div>
@@ -44,17 +44,17 @@
                 <ul class="nav navbar-nav navbar-right auth-hidden margin-right">
                     <li>
                         <span>
-                            <a href class="btn btn-default" ng-click="login()">Iniciar sesión</a>
+                            <a href="" class="btn btn-default" ng-click="login()">Log In</a>
                         </span>
                         <span>
-                            <a href="/register" class="btn btn-primary">Crear cuenta</a>
+                            <a href="/register" class="btn btn-primary">Create Account</a>
                         </span>
                     </li>
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right auth-visible">
                     <li ng-if="singleSystem" class="no-hover collapse-second hidden-collapse">
-                        <a href =1 class="m-0 border-0">
+                        <a href="" class="m-0 border-0">
                             <span class="glyphicon glyphicon-home"></span>
                             <span class="ellipsis">{{activeSystem.name}}</span>
                         </a>

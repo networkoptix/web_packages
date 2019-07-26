@@ -98,7 +98,7 @@
 		}
 	},
 	"ipvd": {
-		"resolutionArea": "Area",
+		"resolutionArea": "Terület",
 		"count": "Count",
 		"vendor": "Manufacturer",
 		"model": "Modell",
@@ -186,5 +186,12 @@
 		"ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent."
 	},
 	"testedVersionLabel": "Tested on {{vmsName}} version:",
-	"testedVersionsLabel": "Tested on {{vmsName}} versions:"
+	"testedVersionsLabel": "Tested on {{vmsName}} versions:",
+	"About %CLOUD_NAME%": "About %CLOUD_NAME%",
+	"Download %VMS_NAME%": "%VMS_NAME% letöltése",
+	"Integrations": "Integrations",
+	"Privacy": "Biztonság",
+	"Support": "Támogatás",
+	"Supported Devices": "Supported Devices",
+	"Terms": "Feltételek"
 }

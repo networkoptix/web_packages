@@ -7,12 +7,12 @@
 		"Any": "아무거나",
 		"selected": "선택된",
 		"vendor": "제조사",
-		"vendors": "Manufacturers",
+		"vendors": "제조사들",
 		"hardwareType": "형식",
-		"hardwareTypes": "Types",
+		"hardwareTypes": "유형들",
 		"minResolution": "최소 해상도",
 		"analytics": "Analytics",
-		"analyticsSelected": "analytics events"
+		"analyticsSelected": "분석 이벤트"
 	},
 	"cameraFilters": {
 		"ptz": "PTZ 카메라들",
@@ -98,7 +98,7 @@
 		}
 	},
 	"ipvd": {
-		"resolutionArea": "Area",
+		"resolutionArea": "영역",
 		"count": "개수",
 		"vendor": "제조사",
 		"model": "모델",
@@ -116,7 +116,7 @@
 		"isIoSupported": "I/O",
 		"isH265": "H.265",
 		"isMultiSensor": "다중 센서",
-		"isAnalyticsSupported": "Analytics",
+		"isAnalyticsSupported": "분석",
 		"camera": "카메라",
 		"multiSensorCamera": "다중 센서 카메라들",
 		"encoder": "인코더",
@@ -135,7 +135,7 @@
 			"b_Link": "요청하기",
 			"c_Info": "지원되는 장치에 관한 추가 질문 / 문제"
 		},
-		"disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous."
+		"disclaimer": "이 목록은 사용자가 {{companyName}} 에 자동보고 되도록 허용 하였을 경우 {{vmsName}} 에 있는 기기들에 제한됩니다. 개인 정보는 수집되지 않으며 각 사용자는 완전히 익명으로 처리됩니다."
 	},
 	"integration": {
 		"previewRibbonText": "이 페이지는 최신 변경 사항의 미리보기이며 공개적으로 사용 가능한 버전과 일치하지 않습니다.",
@@ -186,5 +186,12 @@
 		"ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent."
 	},
 	"testedVersionLabel": "Tested on {{vmsName}} version:",
-	"testedVersionsLabel": "Tested on {{vmsName}} versions:"
+	"testedVersionsLabel": "Tested on {{vmsName}} versions:",
+	"About %CLOUD_NAME%": "About %CLOUD_NAME%",
+	"Download %VMS_NAME%": "%VMS_NAME% 다운로드",
+	"Integrations": "Integrations",
+	"Privacy": "개인 정보 보호 정책",
+	"Support": "지원",
+	"Supported Devices": "지원되는 기기들",
+	"Terms": "이용 약관"
 }

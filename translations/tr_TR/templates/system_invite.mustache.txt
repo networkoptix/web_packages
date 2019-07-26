@@ -5,7 +5,7 @@
 {{/message.sharer_name}}
 
 {{^message.sharer_name}}
-You are invited you to join %CLOUD_NAME%.
+%CLOUD_NAME% e katılmaya davet edildiniz.
 {{message.system_name}} adresine erişim izni verildi.
 {{/message.sharer_name}}
 

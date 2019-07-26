@@ -5,7 +5,7 @@
   "vmsName": "%VMS_NAME%",
   "clientProtocol": "%CLIENT_PROTOCOL%:",
   "dialogs": {
-    "okButton": "Xác nhận",
+    "okButton": "Xác định",
     "cancelButton": "Hủy bỏ",
     "loginTitle": "Đăng nhập vào %CLOUD_NAME%",
     "loginButton": "Đăng nhập",
@@ -231,7 +231,7 @@
       "highStream": "Luồng tốc độ cao",
       "lowStream": "Luồng tốc độ thấp",
       "transcoding": "Đang chuyển mã",
-      "unknown": "Không xác định",
+      "unknown": "Không biết",
       "copyToClipboard": "chép vào bảng nháp",
       "copyDefaultText": "sao chép",
       "copyActiveText": "sao chép vào clipboard"

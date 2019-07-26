@@ -1,6 +1,6 @@
 {
   "activate_account": {
-    "emailSubject": "Aktivujte svůj účet"
+    "emailSubject": "Prosím, aktivujte si váš účet"
   },
   "cloud_invite": {
     "emailSubject": "Byli jste pozváni do %CLOUD_NAME%"
