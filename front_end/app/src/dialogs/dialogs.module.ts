@@ -9,7 +9,7 @@ import { NxModalLoginComponent, LoginModalContent }           from './login/logi
 import { GenericModalContent, NxModalGenericComponent }       from './generic/generic.component';
 import { DisconnectModalContent, NxModalDisconnectComponent } from './disconnect/disconnect.component';
 import { RenameModalContent, NxModalRenameComponent }         from './rename/rename.component';
-import { ShareModalContent, NxModalShareComponent }           from './share/share.component';
+import { AddUserModalContent, NxModalAddUserComponent }       from './add-user/add-user.component';
 import { MergeModalContent, NxModalMergeComponent }           from './merge/merge.component';
 import { MessageModalContent, NxModalMessageComponent }       from './message/message.component';
 import { EmbedModalContent, NxModalEmbedComponent }           from './embed/embed.component';
@@ -33,7 +33,7 @@ import { ClipboardModule }                                    from 'ngx-clipboar
         GenericModalContent, NxModalGenericComponent,
         DisconnectModalContent, NxModalDisconnectComponent,
         RenameModalContent, NxModalRenameComponent,
-        ShareModalContent, NxModalShareComponent,
+        AddUserModalContent, NxModalAddUserComponent,
         MergeModalContent, NxModalMergeComponent,
         MessageModalContent, NxModalMessageComponent,
         EmbedModalContent, NxModalEmbedComponent,
@@ -43,7 +43,7 @@ import { ClipboardModule }                                    from 'ngx-clipboar
         GenericModalContent, NxModalGenericComponent,
         DisconnectModalContent, NxModalDisconnectComponent,
         RenameModalContent, NxModalRenameComponent,
-        ShareModalContent, NxModalShareComponent,
+        AddUserModalContent, NxModalAddUserComponent,
         MergeModalContent, NxModalMergeComponent,
         MessageModalContent, NxModalMessageComponent,
         EmbedModalContent, NxModalEmbedComponent,
@@ -54,7 +54,7 @@ import { ClipboardModule }                                    from 'ngx-clipboar
         NxModalGenericComponent,
         NxModalDisconnectComponent,
         NxModalRenameComponent,
-        NxModalShareComponent,
+        NxModalAddUserComponent,
         NxModalMergeComponent,
         NxModalMessageComponent,
         NxModalEmbedComponent,

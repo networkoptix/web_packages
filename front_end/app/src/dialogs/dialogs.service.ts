@@ -2,7 +2,7 @@ import { Inject, Injectable }         from '@angular/core';
 import './../dialogs/dialogs.scss';
 import { NxModalLoginComponent }      from './login/login.component';
 import { NxModalGenericComponent }    from './generic/generic.component';
-import { NxModalShareComponent }      from './share/share.component';
+import { NxModalAddUserComponent}     from './add-user/add-user.component';
 import { NxModalDisconnectComponent } from './disconnect/disconnect.component';
 import { NxModalRenameComponent }     from './rename/rename.component';
 import { NxModalMergeComponent }      from './merge/merge.component';
@@ -20,7 +20,7 @@ export class NxDialogsService {
                 private mergeModal: NxModalMergeComponent,
                 private messageModel: NxModalMessageComponent,
                 private embedModal: NxModalEmbedComponent,
-                private shareModal: NxModalShareComponent) {
+                private addUserModal: NxModalAddUserComponent) {
     }
 
     dismiss() {
@@ -51,8 +51,8 @@ export class NxDialogsService {
         return this.loginModal.open(keepPage);
     }
 
-    share(system?, user?) {
-        return this.shareModal.open(system, user);
+    addUser(system?, user?) {
+        return this.addUserModal.open(system, user);
     }
 
     disconnect(systemId) {

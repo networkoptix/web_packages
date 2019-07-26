@@ -142,7 +142,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                        .then((users) => {
                            if (this.callShare) {
                                this.settingsService
-                                   .share()
+                                   .addUser()
                                    .finally(this.cleanUrl);
                            }
                        }).finally(this.delayedUpdateSystemInfo);

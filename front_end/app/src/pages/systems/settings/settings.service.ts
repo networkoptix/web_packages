@@ -37,10 +37,10 @@ export class NxSettingsService implements OnDestroy {
         return system.getUsers(true);
     }
 
-    share() {
+    addUser() {
         // Call share dialog, run process inside
         return this.dialogs
-                   .share(this.systemSubject.getValue())
+                   .addUser(this.systemSubject.getValue())
                    .then((result) => {
                        if (result) {
                            this.loadUsers();

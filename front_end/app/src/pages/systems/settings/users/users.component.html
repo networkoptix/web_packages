@@ -68,8 +68,8 @@
                             *ngIf="system.permissions.editUsers"
                             [disabled]="!system.isAvailable || currentlyMerging"
                             title="{{system.stateMessage}}"
-                            (click)="share()"
-                            translate><span class="glyphicon glyphicon-share"></span>Share</button>
+                            (click)="addUser()"
+                            translate><span class="glyphicon glyphicon-share"></span>Add user</button>
                 </div>
             </nx-section>
         </nx-block>

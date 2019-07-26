@@ -14,11 +14,11 @@ import { NxModalGenericComponent }               from '../generic/generic.compon
 import { NxConfigService }                       from '../../services/nx-config';
 
 @Component({
-    selector   : 'nx-modal-share-content',
-    templateUrl: 'share.component.html',
+    selector   : 'nx-modal-add-user-content',
+    templateUrl: 'add-user.component.html',
     styleUrls  : []
 })
-export class ShareModalContent {
+export class AddUserModalContent {
     @Input() language;
     @Input() system;
     @Input() user;
@@ -166,7 +166,7 @@ export class ShareModalContent {
     styleUrls    : []
 })
 
-export class NxModalShareComponent implements OnInit {
+export class NxModalAddUserComponent implements OnInit {
     modalRef: NgbModalRef;
 
     constructor(@Inject('languageService') private language: any,
@@ -176,7 +176,7 @@ export class NxModalShareComponent implements OnInit {
     private dialog(system?, user?) {
         // TODO: Refactor dialog to use generic dialog
         // TODO: retire loading ModalContent (CLOUD-2493)
-        this.modalRef = this.modalService.open(ShareModalContent,
+        this.modalRef = this.modalService.open(AddUserModalContent,
                 {
                             windowClass: 'modal-holder',
                             backdrop: 'static'

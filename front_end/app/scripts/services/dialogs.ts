@@ -139,7 +139,7 @@
                         //     }}).result;
                     },
                     share: function (system?, user?) {
-                        return NxDialogsService.share(system, user);
+                        return NxDialogsService.addUser(system, user);
 
                         // var url = 'share';
                         // var title = L.sharing.shareTitle;

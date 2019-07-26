@@ -172,9 +172,9 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                    });
     }
 
-    share() {
+    addUser() {
         // Call share dialog, run process inside
-        this.settingsService.share();
+        this.settingsService.addUser();
     }
 
     editShare(user) {
@@ -186,7 +186,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         this.locked[user.email] = true;
 
         return this.dialogs
-                   .share(this.system, user)
+                   .addUser(this.system, user)
                    .then(this.settingsService.loadUsers)
                    .finally(() => {
                        this.locked[user.email] = false;
