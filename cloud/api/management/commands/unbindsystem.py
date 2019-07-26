@@ -5,7 +5,7 @@ from api.controllers.cloud_api import System
 
 
 class Command(BaseCommand):
-    help = "Adds an account to api_accounts. (This is for local dev only)"
+    help = "Unbinds a System from cloud. (This is for local dev only)"
 
     def add_arguments(self, parser):
         default_email = os.environ.get("UNBIND_EMAIL", "")
