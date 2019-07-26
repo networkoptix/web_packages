@@ -186,7 +186,7 @@
 		"ipvd": "Надсилаючи цю форму, ви погоджуєтесь зв'язатися з нами %COMPANY_NAME%.\nВи знайдете %COMPANY_NAME% політику конфіденційності <a href=\"%PRIVACY_LINK%\" target=\"blank\">тут</a> яка містить інструкцію про те, як скасувати вашу згоду."
 	},
 	"testedVersionLabel": "Протестовано за {{vmsName}} версій:",
-	"testedVersionsLabel": "Протестовано за {{vmsName}} версій:",
+	"testedVersionsLabel": "Протестовано за {{vmsName}} версій:"
 	"About %CLOUD_NAME%": "About %CLOUD_NAME%",
 	"Download %VMS_NAME%": "Завантажити %VMS_NAME%",
 	"Integrations": "Інтеграції",
