@@ -63,10 +63,9 @@
                     <div>
                         {% with context_url=records.0.data_structure.context.url %}
                             {{ context_name }}
-                            {% if can_preview and version.state == 'in review'%}
+                            {% if can_preview %}
                                 <a class="float-right preview" href="{% url 'preview' %}"
-                                   value="{{records.0.data_structure.context.id}}"
-                                   target="_blank">Preview</a>
+                                   value="{{records.0.data_structure.context.id}}">Preview</a>
                             {% endif %}
                         {% endwith %}
                     </div>
@@ -127,7 +126,7 @@
         <div>There are no changes to review</div>
         {% endif %}
         {% has_customization_permission user original.customization.name 'cms.access_customization' as access_customization %}
-        <h2>Review Notes {% if access_customization %}for {{ originalcustomization.name }}{% endif %}</h2>
+        <h2>Review Notes {% if access_customization %}for {{ original.customization.name }}{% endif %}</h2>
         {{ original.notes|linebreaks }}
     </div>
 
@@ -225,7 +224,7 @@
                     $("#alert").css({display: 'block'});
                     posting.done(function(data){
                         $("#alert").css({display: 'none'});
-                        window.open(data, '_blank');
+                        window.open(data, '', '_blank,noopeneer,noreferrer');
                     });
                     posting.fail(function(){
                         $("#alert-error").css({display: 'block'});

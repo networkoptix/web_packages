@@ -752,7 +752,10 @@ class ProductCustomizationReview(models.Model):
 
     @property
     def can_preview_customization(self):
-        return self.customization.name == settings.CUSTOMIZATION and self.version.product.product_type.can_preview
+        can_preview = self.version.product.product_type.can_preview
+        in_review = self.state in [self.REVIEW_STATES.pending, self.REVIEW_STATES.blocked]
+        is_current_customization = self.customization.name == settings.CUSTOMIZATION
+        return can_preview and in_review and is_current_customization
 
 
 class ExternalFile(models.Model):

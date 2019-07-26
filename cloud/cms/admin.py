@@ -578,7 +578,6 @@ class ProductCustomizationReviewAdmin(CMSAdmin):
         extra_context['contexts'] = get_records_for_version(version.product,
                                                             version,
                                                             customization_review.customization)
-        extra_context['title'] = f"Changes for {version.product.name} - Version: {version.id}"
 
         extra_context['review_states'] = ProductCustomizationReview.REVIEW_STATES
         extra_context['customization_reviews'] = version.productcustomizationreview_set.all()
@@ -589,17 +588,20 @@ class ProductCustomizationReviewAdmin(CMSAdmin):
         extra_context['DataStructureTypes'] = DataStructure.DATA_TYPES
 
         extra_context['allowed'] = self.template_allowed(request, customization_review)
-
-        extra_context['can_preview'] = customization_review.can_preview_customization
+        is_integration = version.product.product_type.type == ProductType.PRODUCT_TYPES.integration
+        extra_context['can_preview'] = customization_review.can_preview_customization and not is_integration
 
         # Customization name should be visible in notes heading if developer has access or user has access
         customization_name = customization_review.customization.name
+        title = f"Changes for {version.product.name} - Version: {version.id}"
         if UserGroupsToProductPermissions.check_customization_access(request.user, customization_name):
             extra_context['customization_name'] = customization_name
         else:
-            extra_context["title"] = format_html(f"{extra_context['title']} – "
-                                                 f"{self.state_tag(customization_review.state)}")
+            title = f"{title} – {self.state_tag(customization_review.state)}"
+        if customization_review.can_preview_customization and is_integration:
+            title = f"{title} <a class=\"float-right preview\" href=\"{reverse('preview')}\" value=\"0\">Preview</a>"
 
+        extra_context["title"] = format_html(title)
         return super(ProductCustomizationReviewAdmin, self).change_view(
             request, object_id, form_url, extra_context=extra_context,
         )
