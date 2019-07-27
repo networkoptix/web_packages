@@ -309,6 +309,7 @@ ${IPVD NEXT PAGE BUTTON}              ${IPVD PAGINATION}/li[last()]
 #IPVD Expport
 ${IPVD EXPORT TO CSV}                 //ipvd//div[@class='export-button']
 #IPVD Feedback
+${IPVD SUBMIT A REQUEST LINK}        ${IPVD LANDING PAGE TEXT}//a
 ${IPVD SUBMIT A REQUEST}              //ipvd//a[contains(text(),"${IPVD SUBMIT A REQUEST TEXT}")]
 ${IPVD SEND DEVICE FEEDBACK}          //ipvd//a[contains(text(),"${IPVD SEND DEVICE FEEDBACK TEXT}")]
 ${IPVD FEEDBACK}                      //nx-modal-message-content//form[@name='messageForm']

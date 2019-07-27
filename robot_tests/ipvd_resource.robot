@@ -17,6 +17,52 @@ Open IPVD page and Log In
     Wait Until Element Is Not Visible    ${LOG IN MODAL}
     Go To IPVD page  #Have to call it a 2nd time to get back onto the IPVD page after logging in
 
+### Landing Page keywords - start ###
+
+Validate Landing Page Contents
+    ${search_placeholder} =  Get Element Attribute   ${IPVD SEARCH BAR}    placeholder
+    Go To IPVD page
+    Validate on IPVD Page
+    Should Be Equal as Strings  ${search_placeholder}   Search by model or manufacturer    ignore_case=true
+    Element should contain      ${IPVD ADVANCED SEARCH BUTTON}  ${IPVD ADVANCED SEARCH BUTTON TEXT}
+    Element should contain      ${IPVD MANUFACTURERS PANE}//header/span  manufacturers  ignore_case=true
+    Validate Manufacturers Pane is Not Empty
+    Element should contain      ${IPVD DEVICES PANE}//header/span  devices  ignore_case=true
+    Validate Devices Pane is Not Empty
+    Element should contain      ${IPVD LANDING PAGE TEXT}  submit a request  ignore_case=true
+
+
+Validate Filtering by Manufacturer
+    ${vendor} =  Set variable   Axis
+    Click Element    ${IPVD MANUFACTURERS PANE}//div[contains(text(), '${vendor}')]
+    Element Text Should Be  //nx-search/div/div/div[1]/div/div[2]/span[1]    Manufacturer – ${vendor}
+    Element Text Should Be  ${IPVD TABLE FIRST ITEM}/td[1]     ${vendor}
+    Validate Landing Page Objects are not Visible
+
+Validate Filtering by Device Type
+    ${device} =  Set variable  Encoder
+    Click Element    ${IPVD DEVICES PANE}//div[contains(text(), '${device}s')]
+    Element Text Should Be  //ipvd/div/div[1]/nx-search/div/div/div[1]/div/div[2]/span[1]    Type – ${device}
+    Element Text Should Be  ${IPVD TABLE FIRST ITEM}/td[3]     ${device}
+    Validate Landing Page Objects are not Visible
+
+Validate Landing Page Objects are not Visible
+    Elements Should Not Be Visible
+    ...    ${IPVD MANUFACTURERS PANE}
+    ...    ${IPVD AND MORE}
+    ...    ${IPVD DEVICES PANE}
+
+Validate Manufacturers Pane is Not Empty
+    ${numVendors} =    Get Element Count    ${IPVD MANUFACTURERS PANE ITEM}
+    Should Not Be Equal As Numbers  ${numVendors}   0
+
+Validate Devices Pane is Not Empty
+    ${numDeviceTypes} =    Get Element Count    ${IPVD DEVICES PANE}//*[@class="float-left mr-1 mb-1"]
+    Should Not Be Equal As Numbers  ${numDeviceTypes}   0
+
+### Landing Page keywords - end ###
+
+
 IPVD Text Search
     [Arguments]    ${SearchString}
     Click Element    ${IPVD SEARCH BAR}
@@ -45,7 +91,7 @@ Validate IPVD Device Table Not Empty
     ${rowCount}=   IPVD Table Row Count
     Should Be True    ${rowCount} > 0    Table empty when rows were expected.
     Wait Until Elements Are Visible
-    ...    ${IPVD CLEAR TEXT SEARCH BUTTON}
+#    ...    ${IPVD CLEAR TEXT SEARCH BUTTON} # Commented by Kamil: clear text button is not
     ...    ${IPVD PREVIOUS PAGE BUTTON}
     ...    ${IPVD FIRST PAGE BUTTON}
     ...    ${IPVD LAST PAGE BUTTON}
@@ -107,7 +153,6 @@ IPVD Last Page Number
     ${page}=   Remove String Using Regexp    ${page}    \\n\\(current\\)
     [Return]    ${page}
 
-Advaced search filters text
     [Arguments]    ${filters}
     Return From Keyword    //ipvd/span[contains(text(),"${filters}"]
 
@@ -116,9 +161,10 @@ Validate on IPVD page
     ...    ${IPVD TITLE}
     ...    ${IPVD SEARCH BAR}
     ...    ${IPVD ADV SEARCH BUTTON}
-    ...    ${IPVD MANFUACTURERS PANE}
+    ...    ${IPVD MANUFACTURERS PANE}
     ...    ${IPVD AND MORE}
     ...    ${IPVD DEVICES PANE}
+    ...    ${IPVD LANDING PAGE TEXT}
     Elements Should Not Be Visible
     ...    ${IPVD TABLE}
     ...    ${IPVD PAGINATION}
@@ -165,9 +211,9 @@ Verify IPVD Advanced Search is Open
 
 Validate Manufacturer More Count
     Wait Until Elements Are Visible
-    ...    ${IPVD MANFUACTURERS PANE}
+    ...    ${IPVD MANUFACTURERS PANE}
     ...    ${IPVD AND MORE}
-    ${count}=   Get Text    ${IPVD MANFUACTURERS PANE}//h4/header
+    ${count}=   Get Text    ${IPVD MANUFACTURERS PANE}//h4/header
     ${count}=   Remove String Using Regexp    ${count}    \\ ${IPVD MANUFACTURERS TEXT}
     ${more}=   Get Text    ${IPVD AND MORE}
     ${more}=   Remove String Using Regexp    ${more}    (\\.\\.\\.\\ and\\ )|(\\ more)
