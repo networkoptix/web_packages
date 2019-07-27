@@ -35,6 +35,6 @@ export class NxAccountSettingsDropdown implements OnInit {
     }
 
     logout(): void {
-        this.account.logout();
+        this.account.logout(true);
     }
 }

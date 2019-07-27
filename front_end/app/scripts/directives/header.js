@@ -36,10 +36,10 @@
                 }
 
                 scope.login = function () {
-                    NxDialogsService.login(false);
+                    NxDialogsService.login(true);
                 };
                 scope.logout = function () {
-                    account.logout();
+                    account.logout(true);
                 };
 
                 scope.systemsProvider = systemsProvider;

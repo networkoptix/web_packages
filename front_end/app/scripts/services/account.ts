@@ -134,7 +134,7 @@
             },
             checkUnauthorized: function (data) {
                 if (data && data.data && data.data.resultCode == 'notAuthorized') {
-                    this.logout();
+                    this.logout(true);
                     return false;
                 }
                 return true;
