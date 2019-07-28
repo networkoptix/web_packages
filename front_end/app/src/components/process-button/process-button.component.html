@@ -1,4 +1,4 @@
-<div class="process-button">
+<div class="process-button" [ngClass]="['process-button', customClass]">
     <div class="btn active focus loading" [ngClass]="buttonClass" *ngIf="process && process.processing">
         <div>
             <span class="dot1"></span><span class="dot2"></span><span class="dot3"></span>

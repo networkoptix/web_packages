@@ -1,4 +1,5 @@
 <nx-process-button
+        [customClass]="customClass"
         [process]="openClient" *ngIf="system && LANG.system"
         [actionType]="'default'"
         title="{{system.stateMessage}}"
@@ -6,7 +7,8 @@
         (click)="$event.stopPropagation();"
         [buttonText]="LANG.system.openClient"></nx-process-button>
 
-<nx-process-button
+<nx-process-button class="systems-dropdown"
+        [customClass]="customClass"
         [process]="openClient" *ngIf="!system && LANG.system"
         [actionType]="'primary'"
         [buttonDisabled]="false"

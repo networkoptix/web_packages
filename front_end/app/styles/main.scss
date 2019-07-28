@@ -217,7 +217,40 @@ nx-app {
     }
   }
 
+  &.dropdown-process-btn {
+    width: 100%;
+    margin-top: 8px;
+    margin-bottom: 12px;
 
+    .loading {
+      max-width: calc(100% - 24px);
+      margin: 0 12px;
+      border: 1px solid $light6;
+    }
+
+    button {
+      box-sizing: border-box;
+      min-width: calc(100% - 24px);
+      background: none;
+      border: 1px solid $light6;
+      box-shadow: none;
+      color: $dark9 !important;
+      height: 28px;
+      font-family: $font-family-medium;
+      font-size: 13px;
+      margin: 0 12px !important;
+
+      &:hover {
+        box-shadow: none !important;
+        background-color: $light5 !important;
+      }
+
+      &:active {
+        box-shadow: none !important;
+        background-color: $light6 !important;
+      }
+    }
+  }
 }
 
 a.disabled {

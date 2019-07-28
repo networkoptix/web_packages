@@ -53,14 +53,7 @@
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right auth-visible">
-                    <li ng-if="singleSystem" class="no-hover collapse-second hidden-collapse">
-                        <a href class="m-0 border-0">
-                            <span class="glyphicon glyphicon-home"></span>
-                            <span class="ellipsis">{{activeSystem.name}}</span>
-                        </a>
-                    </li>
-
-                    <li ng-if="systemCounter && !singleSystem" class="collapse-second">
+                    <li ng-if="systemCounter" class="collapse-second">
                         <nx-systems
                                 [endpoint]="active"
                                 [systems]="systems"

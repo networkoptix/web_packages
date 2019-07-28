@@ -18,6 +18,7 @@ import { NxDialogsService } from '../../dialogs/dialogs.service';
 export class NxClientButtonComponent implements OnInit {
 
     @Input() system: any;
+    @Input() customClass: any;
 
     CONFIG: any = {};
     LANG: any = {};
