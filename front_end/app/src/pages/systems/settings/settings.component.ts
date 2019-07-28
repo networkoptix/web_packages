@@ -199,7 +199,8 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                                             this.settingsService.setSystem(this.system);
                                         });
                                 } else {
-                                    this.delayedUpdateSystemInfo();
+                                    // this.delayedUpdateSystemInfo();
+                                    this.settingsService.setSystem(this.system);
                                 }
                             });
                     });

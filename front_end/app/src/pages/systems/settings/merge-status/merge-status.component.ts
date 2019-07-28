@@ -3,6 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { NxSettingsService } from '../settings.service';
 import { NxConfigService } from '../../../../services/nx-config';
 import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
+import { NxDialogsService } from '../../../../dialogs/dialogs.service';
 
 
 @Component({
@@ -23,7 +24,8 @@ export class NxSystemMergeStatusComponent implements OnInit {
                 private _config: NxConfigService,
                 private language: NxLanguageProviderService,
                 private settingsService: NxSettingsService,
-                private translate: TranslateService) {
+                private translate: TranslateService,
+                private dialogs: NxDialogsService) {
         this.config = this._config.getConfig();
     }
 
@@ -34,7 +36,19 @@ export class NxSystemMergeStatusComponent implements OnInit {
                 return;
             }
             this.system = system;
-            this.setMergeStatus(this.system.mergeInfo);
+            if (this.system.mergeInfo) {
+                this.setMergeStatus(this.system.mergeInfo);
+            } else {
+                if (this.currentlyMerging) {
+                    this.dialogs
+                        .notify(
+                            this.LANG.system.mergeSuccess,
+                            'success',
+                            true
+                        );
+                }
+                this.currentlyMerging = false;
+            }
         });
     }
 

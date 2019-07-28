@@ -43,6 +43,8 @@
     "Developer": "Developer",
     "Disconnect": "Disconnect",
     "Disconnect System from %CLOUD_NAME%?": "Disconnect System from %CLOUD_NAME%?",
+    "Disconnect from": "Disconnect from",
+    "Disconnect from My Account": "Disconnect from My Account",
     "Download": "Download",
     "Download %VMS_NAME%": "Download %VMS_NAME%",
     "Download Chrome": "Download Chrome",
@@ -90,7 +92,7 @@
     "Ok": "Ok",
     "Other packages:": "Other packages:",
     "Other releases, patches and beta versions": "Other releases, patches and beta versions",
-    "Owner": "Owner",
+    "Owner \u2013": "Owner \u2013",
     "PTZ": "PTZ",
     "Password": "Password",
     "Password is required": "Password is required",
@@ -102,6 +104,7 @@
     "Release Notes": "Release Notes",
     "Release notes": "Release notes",
     "Remember me": "Remember me",
+    "Rename": "Rename",
     "Requirements": "Requirements",
     "Resend activation email": "Resend activation email",
     "Resolution(max)": "Resolution(max)",
@@ -531,5 +534,6 @@
     },
     "testedVersionLabel": "Tested on {{vmsName}} version:",
     "testedVersionsLabel": "Tested on {{vmsName}} versions:",
-    "users": "Users"
+    "users": "Users",
+    "you": "you"
 }

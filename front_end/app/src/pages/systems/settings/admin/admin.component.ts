@@ -1,4 +1,4 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { Location }                             from '@angular/common';
 import { ActivatedRoute }                       from '@angular/router';
 import { NxConfigService }                      from '../../../../services/nx-config';
@@ -20,7 +20,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     CONFIG: any = {};
     LANG: any = {};
     system: any;
-    // systems: any;
+    systems: any;
     location: any;
 
     userDisconnectSystem: any;
@@ -133,6 +133,46 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
                        this.pageService.setPageTitle(this.system.info.name + ' -');
                        this.systemsProvider.forceUpdateSystems();
+                   });
+    }
+
+    mergeSystems() {
+        this.systems = this.systemsProvider.getMySystems(this.account.email, this.system.id);
+
+        this.system.currentlyMerging = true;
+        this.settingsService.setSystem(this.system);
+
+        return this.dialogs
+                   .merge(this.system, this.systems, this.account)
+                   .then((mergeInfo) => {
+                       if (mergeInfo) {
+                           this.system.mergeInfo = mergeInfo;
+                       }
+                   }, (error) => {
+                       if (!error.primarySystemName && !error.secondarySystemName) {
+                           return;
+                       }
+                       const commonErrorMsg = this.LANG.merging.commonText
+                                                  .replace('{{primarySystem}}', error.primarySystemName)
+                                                  .replace('{{secondarySystem}}', error.secondarySystemName);
+                       let dialogBody = '<p>' + commonErrorMsg + '</p>';
+                       let responseError = this.LANG.errorCodes[error.errorText] || this.LANG.errorCodes[error.responseCode];
+                       if (!responseError) {
+                           responseError = this.LANG.errorCodes.unknownMergeError;
+                       } else {
+                           responseError = responseError.replace('{{failedSystem}}', error.failedSystemName);
+                       }
+                       dialogBody += '<p>' + responseError + '</p>';
+                       this.dialogs.confirm(
+                               dialogBody,
+                               this.LANG.merging.mergeFailedTitle,
+                               this.LANG.dialogs.okButton,
+                               'btn-primary',
+                               undefined);
+                   })
+                   .finally(() => {
+                       this.system.currentlyMerging = false;
+                       this.settingsService.setSystem(this.system);
                    });
     }
 }

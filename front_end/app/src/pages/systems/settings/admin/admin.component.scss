@@ -1,0 +1,16 @@
+@import '../../../../styles/typography';
+
+nx-block {
+  .system-name {
+    font-family: $font-family-medium;
+  }
+
+  .system-owner {
+    font-family: $font-family-base;
+    font-size: $font-size-base;
+  }
+
+  .name {
+    font-family: $font-family-bold;
+  }
+}

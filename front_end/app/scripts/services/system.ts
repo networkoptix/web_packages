@@ -131,16 +131,19 @@ import * as angular from 'angular';
                         this.isAvailable = false;
                         this.updateSystemState();
                         return cloudApi.users(this.id).then((result) => {
+                            if (result.data && result.data.resultCode === 'forbidden') {
+                                return result.data;
+                            }
                             _.each(result.data, (user) => {
                                 user.permissions = normalizePermissionString(user.customPermissions);
                                 user.email = user.accountEmail;
-                                if (user.email == this.currentUserEmail) {
+                                if (user.email === this.currentUserEmail) {
                                     this.currentUserRecord = user;
                                     this.checkPermissions(true);
                                 }
                             });
                             return result.data;
-                        })
+                        });
                     };
 
                     function normalizePermissionString(permissions) {

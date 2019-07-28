@@ -68,33 +68,6 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
     init(): void {
         this.CONFIG = this.configService.getConfig();
 
-        this.settingsService
-            .systemSubject
-            .subscribe((system) => {
-                if (system) {
-                    this.system = system;
-
-                    this.canMerge = this.system.canMerge && this.system.isOnline || this.CONFIG.cloudMerge;
-                    if (this.system.mergeInfo) {
-                        this.setMergeStatus(this.system.mergeInfo);
-                    }
-
-                    if (this.system.mergeInfo) {
-                        this.setMergeStatus(this.system.mergeInfo);
-                    } else {
-                        if (this.currentlyMerging) {
-                            this.dialogs
-                                .notify(
-                                        this.LANG.system.mergeSuccess,
-                                        'success',
-                                        true
-                                );
-                        }
-                        this.currentlyMerging = false;
-                    }
-                }
-            });
-
         this.unsharing = this.process.init(() => {
             return this.system.deleteUser(this.selectedUser);
         }, {
