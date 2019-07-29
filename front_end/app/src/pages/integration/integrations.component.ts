@@ -102,7 +102,7 @@ export class NxIntegrationsComponent implements OnInit {
             return;
         }
 
-        if (!this.CONFIG.integrationStoreEnabled) {
+        if (!this.CONFIG.integrationStoreEnabled && result.length === 0) {
             this.location.go('404');
         } else {
             this.allElements = result;
