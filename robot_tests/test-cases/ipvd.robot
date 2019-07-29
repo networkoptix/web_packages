@@ -1,5 +1,5 @@
 *** Settings ***
-Resource          ipvd_resource.robot
+Resource          ../ipvd_resource.robot
 Suite Setup       Open Browser and go to URL    ${url}/ipvd
 Test Setup        Restart
 Test Teardown     NONE    #Close Browser    #Run Keyword If Test Failed    Reset DB and Open New Browser On Failure
@@ -20,25 +20,6 @@ IPVD page loads while logged in
     Log In    ${EMAIL OWNER}    ${BASE PASSWORD}
     Validate Log In
     Go To IPVD page
-
-IPVD landing page actions
-    [tags]  C48791  IPVD
-    # Step 1
-    Go To IPVD Page
-    Validate Landing Page Contents
-    # Step 2
-    Validate Filtering by Manufacturer
-    # Step 3
-    Click Element   ${IPVD ADV FEATURES CLOSE BUTTON}
-    Validate on IPVD page
-    # Step 4
-    Validate Filtering by Device Type
-    # Step 5
-    Click Element   ${IPVD ADV FEATURES CLOSE BUTTON}
-    Validate on IPVD page
-    # Step 6
-    Click Link   ${IPVD SUBMIT A REQUEST LINK}
-    Wait Until Element Is Visible   ${IPVD FEEDBACK}
 
 #Submit request can be closed by 'X', cancel, and escape
 #Submit request cannot be close by clicking outside the form
