@@ -36,7 +36,8 @@
                 }
 
                 scope.login = function () {
-                    NxDialogsService.login(true);
+                    var url = $location.$$path;
+                    NxDialogsService.login(!(url === '/' || url === '/404'));
                 };
                 scope.logout = function () {
                     account.logout(true);
