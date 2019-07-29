@@ -15,13 +15,11 @@ ${url}         ${ENV}
 *** Test Cases ***
 IPVD page loads without login
     Go To IPVD page
-    Sleep  0.5
 
 IPVD page loads while logged in
     Log In    ${EMAIL OWNER}    ${BASE PASSWORD}
     Validate Log In
     Go To IPVD page
-    Sleep  0.5
 
 IPVD landing page actions
     [tags]  C48791  IPVD
@@ -31,12 +29,12 @@ IPVD landing page actions
     # Step 2
     Validate Filtering by Manufacturer
     # Step 3
-    Click Element   ${IPVD CLOSE SIDE SEARCH BUTTON}
+    Click Element   ${IPVD ADV FEATURES CLOSE BUTTON}
     Validate on IPVD page
     # Step 4
     Validate Filtering by Device Type
     # Step 5
-    Click Element   ${IPVD CLOSE SIDE SEARCH BUTTON}
+    Click Element   ${IPVD ADV FEATURES CLOSE BUTTON}
     Validate on IPVD page
     # Step 6
     Click Link   ${IPVD SUBMIT A REQUEST LINK}

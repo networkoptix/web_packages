@@ -24,7 +24,7 @@ Validate Landing Page Contents
     Go To IPVD page
     Validate on IPVD Page
     Should Be Equal as Strings  ${search_placeholder}   Search by model or manufacturer    ignore_case=true
-    Element should contain      ${IPVD ADVANCED SEARCH BUTTON}  ${IPVD ADVANCED SEARCH BUTTON TEXT}
+    Element should contain      ${IPVD ADV SEARCH BUTTON}  ${IPVD ADV SEARCH BUTTON TEXT}
     Element should contain      ${IPVD MANUFACTURERS PANE}//header/span  manufacturers  ignore_case=true
     Validate Manufacturers Pane is Not Empty
     Element should contain      ${IPVD DEVICES PANE}//header/span  devices  ignore_case=true
@@ -91,7 +91,7 @@ Validate IPVD Device Table Not Empty
     ${rowCount}=   IPVD Table Row Count
     Should Be True    ${rowCount} > 0    Table empty when rows were expected.
     Wait Until Elements Are Visible
-#    ...    ${IPVD CLEAR TEXT SEARCH BUTTON} # Commented by Kamil: clear text button is not
+#    ...    ${IPVD CLEAR TEXT SEARCH BUTTON}
     ...    ${IPVD PREVIOUS PAGE BUTTON}
     ...    ${IPVD FIRST PAGE BUTTON}
     ...    ${IPVD LAST PAGE BUTTON}

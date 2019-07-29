@@ -247,6 +247,8 @@ ${RELEASE NUMBER}                     //div[contains(@class,"active")]//h1
 
 #IPVD
 ${IPVD TITLE}                         //header//li[@class="active"]/a[contains(text(),"${IPVD TITLE TEXT}")]
+${IPVD LANDING PAGE TEXT}             //ipvd//p
+
 #IPVD Filters
 ${IPVD FILTERS}                       //ipvd//nx-search/div/div
 ${IPVD FILTERS BASIC}                 ${IPVD FILTERS}/div[1]/div
@@ -273,8 +275,9 @@ ${IPVD ADV FEATURES H.265}            ${IPVD ADV FEATURES}//nx-tag/div[contains(
 ${IPVD ADV FEATURES MULTI SENSOR}     ${IPVD ADV FEATURES}//nx-tag/div[contains(text(),'${IPVD ADV FEATURE MULTI SENSOR}')]/..
 ${IPVD ADV FEATURES CLOSE BUTTON}     //span[@class='close-button']
 #IPVD Manufacturers
-${IPVD MANFUACTURERS PANE}            //ipvd//nx-vendor-list/nx-block[@id='vendors']
-${IPVD AND MORE}                      ${IPVD MANFUACTURERS PANE}//div[@class="manufacture-info"]
+${IPVD MANUFACTURERS PANE}            //ipvd//nx-vendor-list/nx-block[@id='vendors']
+${IPVD MANUFACTURERS PANE ITEM}       ${IPVD MANUFACTURERS PANE}//*[@class="float-left mr-1 mb-1"]
+${IPVD AND MORE}                      ${IPVD MANUFACTURERS PANE}//div[@class="manufacture-info"]
 #IPVD Devices
 ${IPVD DEVICES PANE}                  //ipvd//nx-vendor-list/nx-block[@id='cameras']
 ${IPVD DEVS FILTER EXTRA HIGH RES CAMERAS}    ${IPVD DEVICES PANE}//nx-tag/div[contains(text(),'${IPVD DEV FILTER EXTRA HIGH RES CAMERAS}')]/..
@@ -306,7 +309,7 @@ ${IPVD PREVIOUS PAGE BUTTON}          ${IPVD PAGINATION}/li[1]
 ${IPVD FIRST PAGE BUTTON}             ${IPVD PAGINATION}/li[1]/following::li[1]
 ${IPVD LAST PAGE BUTTON}              ${IPVD PAGINATION}/li[last()]/preceding::li[1]
 ${IPVD NEXT PAGE BUTTON}              ${IPVD PAGINATION}/li[last()]
-#IPVD Expport
+#IPVD Export
 ${IPVD EXPORT TO CSV}                 //ipvd//div[@class='export-button']
 #IPVD Feedback
 ${IPVD SUBMIT A REQUEST LINK}        ${IPVD LANDING PAGE TEXT}//a
