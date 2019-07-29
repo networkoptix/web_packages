@@ -133,7 +133,7 @@
     "MERGE NOT OWNER MESSAGE 2 TEXT": "Připojte systém, který chcete sloučit s tímto systémem do %PRODUCT_NAME% nebo sloučení proveďte lokálně pomocí %VMS_NAME% klienta.",
     "CANNOT MERGE WITH OFFLINE SYSTEM TEXT": "%SYSTEM NAME% is offline and cannot be merged with the current one.",
     "SYSTEMS MERGE FAILED TEXT": "Spojení systémů selhalo",
-    "SYSTEM MERGE COMPLETED TEXT": "System merge completed",
+    "SYSTEM MERGE COMPLETED TEXT": "Sloučení systému bylo dokončeno",
     "MERGE CURRENT SYSTEM WITH TEXT": "Sloučit stávající systém s",
     "YOU CAN ONLY MERGE AS OWNER TEXT": "Systémy můžete sloučit pouze tam, kde jste vlastníkem.",
     "CHECKING TEXT": "Kontrolování...",

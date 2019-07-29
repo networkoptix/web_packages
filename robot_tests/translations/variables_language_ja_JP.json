@@ -61,7 +61,7 @@
     "PRIVACY": "プライバシー",
     "COPYRIGHT": "著作権",
     "SUPPORTED DEVICES": "サポートされているデバイス",
-    "ACTIVATE YOUR ACCOUNT EMAIL SUBJECT": "アカウントの有効化",
+    "ACTIVATE YOUR ACCOUNT EMAIL SUBJECT": "アカウントを有効にする",
     "RESET PASSWORD EMAIL SUBJECT": "パスワードをリセット",
     "INVITED TO SYSTEM EMAIL SUBJECT": "ビデオ システム {{message.system_name}} が共有されました",
     "DISCONNECT FORM HEADER TEXT": "%PRODUCT_NAME%からシステムを切断しますか？",
