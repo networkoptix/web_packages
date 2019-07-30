@@ -158,7 +158,7 @@ class NoptixImapLibrary(object):
         body = self.get_email_body(email_index)
         # body = body.decode('utf-8')
         url = r'href=[\'\"]?'
-        r'(https:\/\/\S*(\.mx\/|host\/|\.com\/)({})\/[^\'\" >]+)'
+        url = url + r'(https:\/\/\S*(\.mx\/|host\/|\.com\/)({})\/[^\'\" >]+)'
         url = url.format(path)
         res = findall(url, str(body))
         return str(res[0][0])
