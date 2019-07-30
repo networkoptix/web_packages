@@ -220,9 +220,6 @@ window.L = {};
                     //     templateUrl: CONFIG.viewsDir + 'system.html',
                     //     controller: 'SystemCtrl'
                     // })
-                    .when('/systems/:systemId/interfaces', {
-                        template: ''
-                    })
                     .when('/systems/:systemId/users', {
                         template: ''
                         // template: '<nx-system-settings-component [uri-param-system-id]="uriParamSystemId" [param]="callShare"></nx-system-settings-component>',

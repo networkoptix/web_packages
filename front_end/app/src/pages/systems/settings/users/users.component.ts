@@ -24,13 +24,10 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
     systems: any;
     isMaster: boolean;
     mergeTargetSystem: boolean;
-    currentlyMerging: boolean;
-    canMerge: boolean;
-    unsharing: any;
+    removingUser: any;
     system: any;
     locked: any;
     selectedUser: any;
-    userDisconnectSystem: boolean;
 
     private setupDefaults() {
         this.CONFIG = this.configService.getConfig();
@@ -39,8 +36,6 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         this.selectedUser = {
             email: ''
         };
-
-        this.currentlyMerging = false;
         this.menuService.setSection('users');
     }
 
@@ -67,8 +62,11 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
 
     init(): void {
         this.CONFIG = this.configService.getConfig();
+        this.settingsService.systemSubject.subscribe((system) => {
+            this.system = system;
+        });
 
-        this.unsharing = this.process.init(() => {
+        this.removingUser = this.process.init(() => {
             return this.system.deleteUser(this.selectedUser);
         }, {
             successMessage: this.LANG.system.permissionsRemoved.replace('{{email}}', this.selectedUser.email),
@@ -77,72 +75,11 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             this.locked[this.selectedUser.email] = false;
             this.selectedUser = undefined;
             this.settingsService.loadUsers();
-            // this.delayedUpdateSystemInfo();
-        }, () => {
-            this.locked[this.selectedUser.email] = false;
-            this.selectedUser = undefined;
-            this.settingsService.loadUsers();
-            // this.delayedUpdateSystemInfo();
         });
     }
 
     ngOnDestroy(): void {
 
-    }
-
-    getMergeTarget(targetSystemId) {
-        return this.systemsProvider.systems.filter((system) => {
-            return targetSystemId === system.id;
-        });
-    }
-
-    setMergeStatus(mergeInfo) {
-        if (!mergeInfo || Object.keys(mergeInfo).length === 0) {
-            return;
-        }
-        this.currentlyMerging = true;
-        this.isMaster = mergeInfo.role ? mergeInfo.role !== this.CONFIG.systemStatuses.slave : mergeInfo.masterSystemId === this.system.id;
-        this.mergeTargetSystem = this.getMergeTarget(mergeInfo.anotherSystemId) || this.LANG.system.unknownName;
-    }
-
-    mergeSystems() {
-        this.systems = this.systemsProvider.getMySystems(this.account.email, this.system.id);
-
-        this.system.currentlyMerging = true;
-        this.settingsService.setSystem(this.system);
-
-        return this.dialogs
-                   .merge(this.system, this.systems, this.account)
-                   .then((mergeInfo) => {
-                       if (mergeInfo) {
-                           this.system.mergeInfo = mergeInfo;
-                       }
-                   }, (error) => {
-                       if (!error.primarySystemName && !error.secondarySystemName) {
-                           return;
-                       }
-                       const commonErrorMsg = this.LANG.merging.commonText
-                                                  .replace('{{primarySystem}}', error.primarySystemName)
-                                                  .replace('{{secondarySystem}}', error.secondarySystemName);
-                       let dialogBody = '<p>' + commonErrorMsg + '</p>';
-                       let responseError = this.LANG.errorCodes[error.errorText] || this.LANG.errorCodes[error.responseCode];
-                       if (!responseError) {
-                           responseError = this.LANG.errorCodes.unknownMergeError;
-                       } else {
-                           responseError = responseError.replace('{{failedSystem}}', error.failedSystemName);
-                       }
-                       dialogBody += '<p>' + responseError + '</p>';
-                       this.dialogs.confirm(
-                               dialogBody,
-                               this.LANG.merging.mergeFailedTitle,
-                               this.LANG.dialogs.okButton,
-                               'btn-primary',
-                               undefined);
-                   })
-                   .finally(() => {
-                       this.system.currentlyMerging = false;
-                       this.settingsService.setSystem(this.system);
-                   });
     }
 
     addUser() {
@@ -166,7 +103,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                    });
     }
 
-    unshare(user) {
+    removeUser(user) {
         this.selectedUser = user;
         if (this.account.email === user.email) {
             // return this.delete();
@@ -185,7 +122,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                     // Run a process of sharing
                     // $poll.cancel(pollingSystemUpdate);
                     this.selectedUser = user;
-                    this.unsharing.run();
+                    this.removingUser.run();
                 } else {
                     this.locked[user.email] = false;
                 }

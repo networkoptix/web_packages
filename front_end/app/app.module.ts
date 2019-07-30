@@ -46,7 +46,6 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
             url.toString().startsWith('/systems') ||
             url.toString().startsWith('/systems/:systemId') ||
             url.toString().startsWith('/systems/:systemId/users') ||
-            url.toString().startsWith('/systems/:systemId/interfaces') ||
             url.toString().startsWith('/new-content') ||
             url.toString().startsWith('/right') ||
             url.toString().startsWith('/integrations');

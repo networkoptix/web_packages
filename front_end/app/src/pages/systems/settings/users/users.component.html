@@ -1,6 +1,6 @@
-<nx-pre-loader type="page" *ngIf="!system.users"></nx-pre-loader>
+<nx-pre-loader type="page" *ngIf=" !system || !system.users"></nx-pre-loader>
 
-<div class="container auth-visible" >
+<div *ngIf="system" class="container auth-visible" >
     <div class="col-12 col-lg-9">
 <!--        <div class="nx-table-wrapper" id="nx-table">-->
 <!--            <div class="table-wrapper">-->
@@ -16,7 +16,7 @@
                             <th class="button-cell"></th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody *ngIf="system.users">
                         <tr class="spacer"><td colspan="5"></td></tr>
                         <tr *ngFor="let user of system.users" class="hoverable" [ngClass]="{disabled:!user.isEnabled}">
                             <td class="user-name">{{user.fullName}}</td>
@@ -43,7 +43,7 @@
                                    *ngIf="system.isAvailable && user.canBeDeleted && !system.currentlyMerging"
                                    [ngClass]="{ 'disabled': locked[user.email]}"
                                    title="Delete"
-                                   (click)="unshare(user)">
+                                   (click)="removeUser(user)">
                                     <span class="glyphicon glyphicon-remove"></span>
                                     <span class="visible-lg-inline" translate>Delete</span>
                                 </a>
