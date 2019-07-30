@@ -665,9 +665,14 @@ Merge with different types of users
     FOR    ${key}    IN    @{all users dict.keys()}
         Check User Permissions    ${all users dict["${key}"]}    ${key}    timeout=120
     END
-    Mouse Over    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${email admin no reg}')]
-    Wait Until Element Is Visible
-    ...    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${email admin no reg}')]/following-sibling::td/a[@ng-click='unshare(user)']/span[contains(text(),'${DELETE USER BUTTON TEXT}')]
-    Wait Until Element Is Visible
-    ...    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${email admin no reg}')]/following-sibling::td/a[@ng-click='editShare(user)']/span[contains(text(),'${EDIT USER BUTTON TEXT}')]/..
+    ${user row}=
+    ...    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${email admin no reg}')]
+    ${delete user button}=
+    ...    /following-sibling::td/a[@ng-click='unshare(user)']/span[contains(text(),'${DELETE USER BUTTON TEXT}')]
+    ${edit user button}=
+    ...    /following-sibling::td/a[@ng-click='editShare(user)']/span[contains(text(),'${EDIT USER BUTTON TEXT}')]/..
+    Mouse Over    ${user row}
+    Wait Until Elements are Visible
+    ...    ${user row}${delete user button}
+    ...    ${user row}${edit user button}
     Disconnect from cloud
