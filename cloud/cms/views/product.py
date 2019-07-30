@@ -369,7 +369,7 @@ def download_package(request, product_id):
     preview = 'draft' in request.GET
 
     if not version_id:
-        latest_review = ProductCustomizationReview.objects.filter(product=product)
+        latest_review = ProductCustomizationReview.objects.filter(version__product=product)
         if not preview:
             latest_review = latest_review.filter(state=ProductCustomizationReview.REVIEW_STATES.accepted)
 
@@ -389,7 +389,7 @@ def download_package(request, product_id):
 @api_view(["GET"])
 @permission_required('cms.change_product')
 def get_product_ids_by_product_type(request):
-    require_params(request, ("name", "product_type"))
+    require_params(request, ("name", "type"))
 
     name = request.GET["name"]
     customization = request.GET["customization"]
