@@ -21,7 +21,7 @@ IMAP Library - a IMAP email testing library.
 import quopri
 from email import message_from_string
 from imaplib import IMAP4, IMAP4_SSL
-from re import findall  # , sub
+from re import findall, sub
 from time import sleep, time
 try:
     from urllib.request import urlopen
@@ -34,39 +34,36 @@ __version__ = get_version()
 
 
 class NoptixImapLibrary(object):
-    """ImapLibrary is an email testing library for Robot Framework.
-    https://robotframework.org/
+    """ImapLibrary is an email testing library for [http://goo.gl/lES6WM|Robot Framework].
 
     *Deprecated Keywords Warning*
 
     These keywords will be removed in the future 3 to 5 releases.
-    | *Deprecated Keyword*  | *Alternative Keyword*   |
-    | Open Link From Mail   | Open Link From Email    |
-    | Mark As Read          | Mark All Emails As Read |
-    | Wait For Mail         | Wait For Email          |
+    | *Deprecated Keyword*  | *Alternative Keyword*     |
+    | `Open Link From Mail` | `Open Link From Email`    |
+    | `Mark As Read`        | `Mark All Emails As Read` |
+    | `Wait For Mail`       | `Wait For Email`          |
 
     Example:
-    Open Mailbox   host=imap.domain.com    user=email@domain.com
-    ...    password=secret
-    ${LATEST}=   Wait For Email    sender=noreply@domain.com    timeout=300
-    ${HTML}=   Open Link From Email    ${LATEST}
-    Should Contain    ${HTML}    address has been updated
-    Close Mailbox
+    | `Open Mailbox`   | host=imap.domain.com   | user=email@domain.com        | password=secret |
+    | ${LATEST} =      | `Wait For Email`       | sender=noreply@domain.com    | timeout=300     |
+    | ${HTML} =        | `Open Link From Email` | ${LATEST}                    |                 |
+    | `Should Contain` | ${HTML}                | address has been updated     |                 |
+    | `Close Mailbox`  |                        |                              |                 |
 
     Multipart Email Example:
-    Open Mailbox    host=imap.domain.com    user=email@domain.com
-    ...    password=secret
-    ${LATEST}=   Wait For Email    sender=noreply@domain.com    timeout=300
-    ${parts}=   Walk Multipart Email    ${LATEST}
-    :FOR    ${i}    IN RANGE    ${parts}
-    ...    Walk Multipart Email    ${LATEST}
-    ...    ${ctype}=   Get Multipart Content Type
-    ...    Continue For Loop If    '${ctype}' != 'text/html'
-    ...    ${payload}=   Get Multipart Payload    decode=True
-    ...    Should Contain    ${payload}    your email
-    ...    ${HTML}=   Open Link From Email    ${LATEST}
-    ...    Should Contain    ${HTML}    Your email
-    Close Mailbox
+    | `Open Mailbox`   | host=imap.domain.com   | user=email@domain.com        | password=secret |
+    | ${LATEST} =      | `Wait For Email`       | sender=noreply@domain.com    | timeout=300     |
+    | ${parts} =       | `Walk Multipart Email` | ${LATEST}                    |                 |
+    | :FOR             | ${i}                   | IN RANGE                     | ${parts}        |
+    | \\               | `Walk Multipart Email` | ${LATEST}                    |                 |
+    | \\               | ${ctype} =             | `Get Multipart Content Type` |                 |
+    | \\               | `Continue For Loop If` | '${ctype}' != 'text/html'    |                 |
+    | \\               | ${payload} =           | `Get Multipart Payload`      | decode=True     |
+    | \\               | `Should Contain`       | ${payload}                   | your email      |
+    | \\               | ${HTML} =              | `Open Link From Email`       | ${LATEST}       |
+    | \\               | `Should Contain`       | ${HTML}                      | Your email      |
+    | `Close Mailbox`  |                        |                              |                 |
     """
 
     PORT = 143
@@ -79,8 +76,8 @@ class NoptixImapLibrary(object):
         """ImapLibrary can be imported without argument.
 
         Examples:
-        | *Keyword Definition* | *Description*                     |
-        | Library              | ImapLibrary Initiate Imap library |
+        | = Keyword Definition =  | = Description =       |
+        | Library `|` ImapLibrary | Initiate Imap library |
         """
         self._email_index = None
         self._imap = None
@@ -93,7 +90,7 @@ class NoptixImapLibrary(object):
         """Close IMAP email client session.
 
         Examples:
-        Close Mailbox
+        | Close Mailbox |
         """
         self._imap.close()
 
@@ -101,7 +98,7 @@ class NoptixImapLibrary(object):
         """Delete all emails.
 
         Examples:
-        Delete All Emails
+        | Delete All Emails |
         """
         for mail in self._mails:
             self.delete_email(mail)
@@ -114,7 +111,7 @@ class NoptixImapLibrary(object):
         - ``email_index``: An email index to identity the email message.
 
         Examples:
-        Delete Email INDEX
+        | Delete Email | INDEX |
         """
         self._imap.uid('STORE', email_index, '+X-GM-LABELS', '\\Trash')
         self._imap.expunge()
@@ -127,7 +124,7 @@ class NoptixImapLibrary(object):
         - ``email_index``: An email index to identity the email message.
 
         Examples:
-        Get Email Body INDEX
+        | Get Email Body | INDEX |
         """
         if self._is_walking_multipart(email_index):
             body = self.get_multipart_payload(decode=True)
@@ -139,29 +136,27 @@ class NoptixImapLibrary(object):
         return body
 
     def get_links_from_email(self, email_index):
-        """Returns all links found in the email body from given
-        ``email_index``.
+        """Returns all links found in the email body from given ``email_index``.
 
         Arguments:
         - ``email_index``: An email index to identity the email message.
 
         Examples:
-        Get Links From Email INDEX
+        | Get Links From Email | INDEX |
         """
         body = self.get_email_body(email_index)
-        # body = body.decode('utf-8')
+        #body = body.decode('utf-8')
         print (body)
         res = findall(r'href=[\'"]?([^\'" >]+)', str(body))
         return res
 
     def get_nx_links_from_email(self, email_index, path):
         body = self.get_email_body(email_index)
-        # body = body.decode('utf-8')
-        url = r'href=[\'\"]?'
-        url = url + r'(https:\/\/\S*(\.mx\/|host\/|\.com\/)({})\/[^\'\" >]+)'
-        url = url.format(path)
+        #body = body.decode('utf-8')
+        url = r'href=[\'\"]?(https:\/\/\S*(\.mx\/|host\/|\.com\/)({})\/[^\'\" >]+)'.format(path)
         res = findall(url, str(body))
         return str(res[0][0])
+
 
     def get_matches_from_email(self, email_index, pattern):
         """Returns all Regular Expression ``pattern`` found in the email body
@@ -169,21 +164,19 @@ class NoptixImapLibrary(object):
 
         Arguments:
         - ``email_index``: An email index to identity the email message.
-        - ``pattern``: It consists of one or more character literals,
-            operators, or constructs.
+        - ``pattern``: It consists of one or more character literals, operators, or constructs.
 
         Examples:
-        Get Matches From Email INDEX PATTERN
+        | Get Matches From Email | INDEX | PATTERN |
         """
         body = self.get_email_body(email_index)
         return findall(pattern, body)
 
     def get_multipart_content_type(self):
-        """Returns the content type of current part of selected multipart
-           email message.
+        """Returns the content type of current part of selected multipart email message.
 
         Examples:
-        Get Multipart Content Type
+        | Get Multipart Content Type |
         """
         return self._part.get_content_type()
 
@@ -191,37 +184,32 @@ class NoptixImapLibrary(object):
         """Returns the value of given header ``field`` name.
 
         Arguments:
-        - ``field``: A header field name: ``From``, ``To``, ``Subject``,
-            ``Date``, etc.
-
-            All available header field names of an email message can be found
-            by running Get Multipart Field Names` keyword.
+        - ``field``: A header field name: ``From``, ``To``, ``Subject``, ``Date``, etc.
+                     All available header field names of an email message can be found by running
+                     `Get Multipart Field Names` keyword.
 
         Examples:
-        Get Multipart Field Subject
+        | Get Multipart Field | Subject |
         """
         return self._mp_msg[field]
 
     def get_multipart_field_names(self):
-        """Returns all available header field names of selected multipart
-        email message.
+        """Returns all available header field names of selected multipart email message.
 
         Examples:
-        Get Multipart Field Names
+        | Get Multipart Field Names |
         """
         return list(self._mp_msg.keys())
 
     def get_multipart_payload(self, decode=False):
-        """Returns the payload of current part of selected multipart email
-        message.
+        """Returns the payload of current part of selected multipart email message.
 
         Arguments:
-        - ``decode``: An indicator flag to decode the email message.
-            (Default False)
+        - ``decode``: An indicator flag to decode the email message. (Default False)
 
         Examples:
-        Get Multipart Payload
-        Get Multipart Payload decode=True
+        | Get Multipart Payload |
+        | Get Multipart Payload | decode=True |
         """
         payload = self._part.get_payload(decode=decode)
         charset = self._part.get_content_charset()
@@ -233,7 +221,7 @@ class NoptixImapLibrary(object):
         """Mark all received emails as read.
 
         Examples:
-        Mark All Emails As Read
+        | Mark All Emails As Read |
         """
         for mail in self._mails:
             self._imap.uid('store', mail, '+FLAGS', r'\SEEN')
@@ -251,21 +239,21 @@ class NoptixImapLibrary(object):
         - ``email_index``: An email index to identity the email message.
 
         Examples:
-        Mark Email As Read INDEX
+        | Mark Email As Read | INDEX |
         """
         self._imap.uid('store', email_index, '+FLAGS', r'\SEEN')
 
     def open_link_from_email(self, email_index, link_index=0):
-        """Open link URL from given ``link_index`` in email message body of
-        given ``email_index``. Returns HTML content of opened link URL.
+        """Open link URL from given ``link_index`` in email message body of given ``email_index``.
+        Returns HTML content of opened link URL.
 
         Arguments:
         - ``email_index``: An email index to identity the email message.
         - ``link_index``: The link index to be open. (Default 0)
 
         Examples:
-        Open Link From Email
-        Open Link From Email    1
+        | Open Link From Email |
+        | Open Link From Email | 1 |
         """
         urls = self.get_links_from_email(email_index)
 
@@ -287,37 +275,28 @@ class NoptixImapLibrary(object):
         return self.open_link_from_email(email_index, link_index)
 
     def open_mailbox(self, **kwargs):
-        """Open IMAP email client session to given ``host`` with given ``user``
-        and ``password``.
+        """Open IMAP email client session to given ``host`` with given ``user`` and ``password``.
 
         Arguments:
         - ``host``: The IMAP host server. (Default None)
-        - ``is_secure``: An indicator flag to connect to IMAP host securely or
-            not. (Default True)
-        - ``password``: The plaintext password to be use to authenticate
-            mailbox on given ``host``.
+        - ``is_secure``: An indicator flag to connect to IMAP host securely or not. (Default True)
+        - ``password``: The plaintext password to be use to authenticate mailbox on given ``host``.
         - ``port``: The IMAP port number. (Default None)
-        - ``user``: The username to be use to authenticate mailbox on given
-            ``host``.
+        - ``user``: The username to be use to authenticate mailbox on given ``host``.
         - ``folder``: The email folder to read from. (Default INBOX)
 
         Examples:
-        Open Mailbox    host=HOST    user=USER    password=SECRET
-        Open Mailbox    host=HOST    user=USER    password=SECRET
-        ...    is_secure=False
-        Open Mailbox    host=HOST    user=USER    password=SECRET
-        ...    port=8000
-        Open Mailbox    host=HOST    user=USER    password=SECRET
-        ...    folder=Drafts
+        | Open Mailbox | host=HOST | user=USER | password=SECRET |
+        | Open Mailbox | host=HOST | user=USER | password=SECRET | is_secure=False |
+        | Open Mailbox | host=HOST | user=USER | password=SECRET | port=8000 |
+        | Open Mailbox | host=HOST | user=USER | password=SECRET | folder=Drafts
         """
         host = kwargs.pop('host', kwargs.pop('server', None))
         is_secure = kwargs.pop('is_secure', 'True') == 'True'
-        port = kwargs.pop('port', self.PORT_SECURE if is_secure else self.PORT)
-        port = int(port)
+        port = int(kwargs.pop('port', self.PORT_SECURE if is_secure else self.PORT))
         folder = '"%s"' % str(kwargs.pop('folder', self.FOLDER))
         self._imap = IMAP4_SSL(host, port) if is_secure else IMAP4(host, port)
-        self._imap.login(
-            kwargs.pop('user', None), kwargs.pop('password', None))
+        self._imap.login(kwargs.pop('user', None), kwargs.pop('password', None))
         self._imap.select(folder)
         self._init_multipart_walk()
 
@@ -326,23 +305,22 @@ class NoptixImapLibrary(object):
         Returns email index of the latest email message received.
 
         Arguments:
-        - ``poll_frequency``: The delay value in seconds to retry the mailbox
-            check. (Default 10)
+        - ``poll_frequency``: The delay value in seconds to retry the mailbox check. (Default 10)
         - ``recipient``: Email recipient. (Default None)
         - ``sender``: Email sender. (Default None)
-        - ``status``: A mailbox status filter: ``MESSAGES``, ``RECENT``,
-                      ``UIDNEXT``, ``UIDVALIDITY``, and ``UNSEEN``.
-                      Please see [https://goo.gl/3KKHoY|Mailbox Status] for
-                      more information. (Default None)
+        - ``status``: A mailbox status filter: ``MESSAGES``, ``RECENT``, ``UIDNEXT``,
+                      ``UIDVALIDITY``, and ``UNSEEN``.
+                      Please see [https://goo.gl/3KKHoY|Mailbox Status] for more information.
+                      (Default None)
         - ``subject``: Email subject. (Default None)
         - ``text``: Email body text. (Default None)
-        - ``timeout``: The maximum value in seconds to wait for email message
-                      to arrived. (Default 60)
+        - ``timeout``: The maximum value in seconds to wait for email message to arrived.
+                       (Default 60)
         - ``folder``: The email folder to check for emails. (Default INBOX)
 
         Examples:
-        Wait For Email sender=noreply@domain.com
-        Wait For Email sender=noreply@domain.com folder=OUTBOX
+        | Wait For Email | sender=noreply@domain.com |
+        | Wait For Email | sender=noreply@domain.com | folder=OUTBOX
         """
         poll_frequency = float(kwargs.pop('poll_frequency', 10))
         timeout = int(kwargs.pop('timeout', 60))
@@ -362,18 +340,16 @@ class NoptixImapLibrary(object):
         return self.wait_for_email(**kwargs)
 
     def walk_multipart_email(self, email_index):
-        """Returns total parts of a multipart email message on given
-        ``email_index``. Email message is cache internally to be used by other
-        multipart keywords:
-        `Get Multipart Content Type`, `Get Multipart Field`,
-        `Get Multipart Field Names`, `Get Multipart Field`, and
-        `Get Multipart Payload`.
+        """Returns total parts of a multipart email message on given ``email_index``.
+        Email message is cache internally to be used by other multipart keywords:
+        `Get Multipart Content Type`, `Get Multipart Field`, `Get Multipart Field Names`,
+        `Get Multipart Field`, and `Get Multipart Payload`.
 
         Arguments:
         - ``email_index``: An email index to identity the email message.
 
         Examples:
-        Walk Multipart Email INDEX
+        | Walk Multipart Email | INDEX |
         """
         if not self._is_walking_multipart(email_index):
             data = self._imap.uid('fetch', email_index, '(RFC822)')[1][0][1]
@@ -397,18 +373,15 @@ class NoptixImapLibrary(object):
             raise Exception("imap.select error: %s, %s" % (status, data))
         typ, msgnums = self._imap.uid('search', None, *criteria)
         if typ != 'OK':
-            raise Exception('imap.search error: %s, %s, criteria=%s' % (
-                typ, msgnums, criteria))
+            raise Exception('imap.search error: %s, %s, criteria=%s' % (typ, msgnums, criteria))
         return msgnums[0].split()
 
     @staticmethod
     def _criteria(**kwargs):
         """Returns email criteria."""
         criteria = []
-        recipient = kwargs.pop(
-            'recipient', kwargs.pop('to_email', kwargs.pop('toEmail', None)))
-        sender = kwargs.pop(
-            'sender', kwargs.pop('from_email', kwargs.pop('fromEmail', None)))
+        recipient = kwargs.pop('recipient', kwargs.pop('to_email', kwargs.pop('toEmail', None)))
+        sender = kwargs.pop('sender', kwargs.pop('from_email', kwargs.pop('fromEmail', None)))
         status = kwargs.pop('status', None)
         subject = kwargs.pop('subject', None)
         text = kwargs.pop('text', None)
@@ -433,8 +406,7 @@ class NoptixImapLibrary(object):
         self._part = None
 
     def _is_walking_multipart(self, email_index):
-        """Returns boolean value whether the multipart email walk is in-
-        progress or not."""
+        """Returns boolean value whether the multipart email walk is in-progress or not."""
         return self._mp_msg is not None and self._email_index == email_index
 
     def _start_multipart_walk(self, email_index, msg):

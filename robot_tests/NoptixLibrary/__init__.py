@@ -4,20 +4,20 @@
 import docker
 import email.header
 import imaplib
-# import os.path
+import os.path
 import re
 import time
-# from email.parser import HeaderParser
+from email.parser import HeaderParser
 from platform import system
 from random import *
 from requests import head
 from robot.libraries.BuiltIn import BuiltIn
 
-# from selenium import webdriver
+from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
-# from SeleniumLibrary.utils import (is_falsy, is_truthy, secs_to_timestr,
-#                                    timestr_to_secs, SELENIUM_VERSION)
+from SeleniumLibrary.utils import (is_falsy, is_truthy, secs_to_timestr,
+                                   timestr_to_secs, SELENIUM_VERSION)
 
 
 class NoptixLibrary(object):
@@ -58,14 +58,12 @@ class NoptixLibrary(object):
                 value = element.get_attribute('value')
                 if value == expected:
                     return
-            except NoSuchElementException:
-                not_found = "No element found with text " + expected
+            except:
                 pass
             time.sleep(.2)
-        raise Exception(not_found)
+        raise Exception("No element found with text " + expected)
 
-    def wait_until_element_has_style(self, locator, styleAttribute, expected,
-                                     timeout=10):
+    def wait_until_element_has_style(self, locator, styleAttribute, expected, timeout=10):
         seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
         timeout = timeout + time.time()
         not_found = None
@@ -76,9 +74,8 @@ class NoptixLibrary(object):
                 value = element.value_of_css_property(styleAttribute)
                 if value == expected:
                     return
-            except NoSuchElementException:
-                not_found = "No element found with style "
-                + styleAttribute + "=" + expected
+            except:
+                not_found = "No element found with style " + expected
             time.sleep(.2)
         raise AssertionError(not_found)
 
@@ -93,16 +90,15 @@ class NoptixLibrary(object):
                 classAttribute = element.get_attribute('class')
                 if expected in classAttribute:
                     return
-            except NoSuchElementException:
+            except:
                 not_found = "No element found with class " + expected
             time.sleep(.2)
         raise AssertionError(not_found)
 
-    def wait_until_element_does_not_have_class(self, locator, expected,
-                                               timeout=10):
+    def wait_until_element_does_not_have_class(self, locator, expected, timeout=10):
         seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
         timeout = timeout + time.time()
-        found = None
+        not_found = None
 
         while time.time() < timeout:
             try:
@@ -110,67 +106,41 @@ class NoptixLibrary(object):
                 classAttribute = element.get_attribute('class')
                 if expected not in classAttribute:
                     return
-            except NoSuchElementException:
+            except:
                 found = "Element found with class " + expected
             time.sleep(.2)
         raise AssertionError(found)
 
-    def verify_button_arrow_direction(self, locator, expected, timeout=10):
-        # expected is 'Up' or 'Down'
-        not_found = None
-
-        while time.time() < timeout:
-            try:
-                element = seleniumlib.find_element(locator)
-                navArrows = element.find_element_by_xpath(
-                    '/div[@class="nav-arrow"').find_element_by_xpath('/span')
-                span1 = navArrows[0].getCssValue('transform')
-                span2 = navArrows[1].getCssValue('transform')
-
-                if expected.strip().lower() == 'up':
-                    if span1 == 'rotate(-45deg)' and span2 == 'rotate(45deg)':
-                        return
-                elif expected.strip().lower() == 'down':
-                    if span1 == 'rotate(45deg)' and span2 == 'rotate(-45deg)':
-                        return
-            except NoSuchElementException:
-                not_found = "No button arrow elements found "
-            time.sleep(.2)
-        raise AssertionError(not_found)
-
     def check_online_or_offline(self, elements, offlineText):
-        onlineXPath = ".//button[@ng-click='checkForm()']"
-        offlineXPath = ".//span[contains(text(),'" + offlineText + "')]"
-
         for element in elements:
             try:
-                if element.find_element_by_xpath(onlineXPath):
+                if element.find_element_by_xpath(".//button[@ng-click='checkForm()']"):
                     print("online")
             except NoSuchElementException:
                 try:
-                    if element.find_element_by_xpath(offlineXPath):
+                    if element.find_element_by_xpath(".//span[contains(text(),'" + offlineText + "')]"):
                         print("offline")
                 except:
                     raise NoSuchElementException
 
-    def check_email_subject(self, email_id, sub_text, email_address, password,
-                            host, port):
-        ''' Get the email subject from an email in other languages
+    ''' Get the email subject from an email in other languages
 
-        Takes the email UID and the expected text of the email subject.
-        The important part of this is in the for loop.  First we take the 2nd
-        item in the subject, which is the actual subject text, and decode it
-        from ascii so that it is not a byte string.  Then use decode_header to
-        decode the base64 string into unicode bytes.  Then finally we take that
-        string and decode with UTF-8 to get the actual text.  Note that in some
-        cases decoding UTF-8 is unnecessary (english, spanish, etc.) so the
-        else statement clears any remaining junk.  Here is the process:
+    Takes the email UID and the expected text of the email subject.
+    The important part of this is in the for loop.  First we take the 2nd item
+    in the subject, which is the actual subject text, and decode it from ascii
+    so that it is not a byte string.  Then use decode_header to decode the
+    base64 string into unicode bytes.  Then finally we take that string and
+    decode with UTF-8 to get the actual text.  Note that in some cases decoding
+    UTF-8 is unnecessary (english, spanish, etc.) so the else statement clears 
+    any remaining junk.  Here is the process:
+    
+    1.  Initial value:  b'Subject: =?utf-8?b?INCQ0LrRgtC40LLQuNGA0YPQudGC0LUg0YPRh9C10YLQvdGD0Y4g0LfQsNC/?=\r\n =?utf-8?b?0LjRgdGM?=\r\n\r\n'
+    2.  Decoded ASCII:  Subject: =?utf-8?b?INCQ0LrRgtC40LLQuNGA0YPQudGC0LUg0YPRh9C10YLQvdGD0Y4g0LfQsNC/?= =?utf-8?b?0LjRgdGM?=
+    3.  Decoded header: [(b'Subject: ', None), (b' \xd0\x90\xd0\xba\xd1\x82\xd0\xb8\xd0\xb2\xd0\xb8\xd1\x80\xd1\x83\xd0\xb9\xd1\x82\xd0\xb5 \xd1\x83\xd1\x87\xd0\xb5\xd1\x82\xd0\xbd\xd1\x83\xd1\x8e \xd0\xb7\xd0\xb0\xd0\xbf\xd0\xb8\xd1\x81\xd1\x8c', 'utf-8')]
+    4.  Decoded UTF-8 and subbed:  Активируйте учетную запись
+    '''
 
-        1. Initial value:  b'Subject: =?utf-8?b?INCQ0LrRgtC40LLQuNGA0YPQudGC0LUg0YPRh9C10YLQvdGD0Y4g0LfQsNC/?=\r\n =?utf-8?b?0LjRgdGM?=\r\n\r\n'
-        2. Decoded ASCII:  Subject: =?utf-8?b?INCQ0LrRgtC40LLQuNGA0YPQudGC0LUg0YPRh9C10YLQvdGD0Y4g0LfQsNC/?= =?utf-8?b?0LjRgdGM?=
-        3. Decoded header: [(b'Subject: ', None), (b' \xd0\x90\xd0\xba\xd1\x82\xd0\xb8\xd0\xb2\xd0\xb8\xd1\x80\xd1\x83\xd0\xb9\xd1\x82\xd0\xb5 \xd1\x83\xd1\x87\xd0\xb5\xd1\x82\xd0\xbd\xd1\x83\xd1\x8e \xd0\xb7\xd0\xb0\xd0\xbf\xd0\xb8\xd1\x81\xd1\x8c', 'utf-8')]
-        4. Decoded UTF-8 and subbed:  Активируйте учетную запись
-        '''
+    def check_email_subject(self, email_id, sub_text, email_address, password, host, port):
         conn = imaplib.IMAP4_SSL(host, int(port))
         conn.login(email_address, password)
         conn.select()
@@ -183,8 +153,7 @@ class NoptixLibrary(object):
                     res[1].decode('ascii').strip())
                 # Decoding utf-8
                 header_str = "".join([x[0].decode(
-                    'utf-8').strip() if x[1] else re.sub("(^b\'|\')", "", str(
-                        x[0])) for x in header])
+                    'utf-8').strip() if x[1] else re.sub("(^b\'|\')", "", str(x[0])) for x in header])
                 # Removing the word "Subject:" from the string
                 header_str = re.sub("Subject:", "", header_str)
                 if sub_text != header_str.strip():
@@ -197,8 +166,7 @@ class NoptixLibrary(object):
 
     def check_file_exists(self, url):
         linkInfo = head(url)
-        if int(linkInfo.status_code) == 200:
-            # and int(linkInfo.headers['Content-Length']) > 1000:
+        if int(linkInfo.status_code) == 200: #and int(linkInfo.headers['Content-Length']) > 1000:
             return
         else:
             raise Exception("File does not appear to be available.")
@@ -223,46 +191,41 @@ class NoptixLibrary(object):
             raise Exception("Mismatched platform")
 
     def check_email_button(self, body, env, color):
-        pat = '(<a class="btn" href="{})(.[^>]*)(background-color: {};)'
-        pat = pat.format(env, color)
-        if re.search(pat, body) is None:
+        pat = '(<a class="btn" href="{})(.[^>]*)(background-color: {};)'.format(
+            env, color)
+        if re.search(pat, body) == None:
             raise Exception("Button background-color was not found.")
 
     def check_email_user_names(self, body, fName, lName):
         pat = '(<h1.*>).*({} {}.*</h1>)'.format(fName, lName)
-        if re.search(pat, body) is None:
+        if re.search(pat, body) == None:
             raise Exception("User name was not in the email.")
 
     def check_email_cloud_name(self, body, cloudName):
         pat = '(<p).*({}).*(</p>)'.format(cloudName)
-        if re.search(pat, body) is None:
+        if re.search(pat, body) == None:
             raise Exception("Cloud name was not in the email.")
 
     def check_for_blank_target(self, body, url):
         pat = '(<a class="btn" href="{})(.[^>]*)(target=_blank)'.format(url)
-        if re.search(pat, body) is None:
+        if re.search(pat, body) == None:
             raise Exception("Button target was not 'blank'.")
 
     def build_image(self):
         client = docker.from_env()
-        return client.images.build(
-            path="/home/kyle/develop/nx_vms/cloud_portal/robot_tests/Docker",
-            tag="mediaserver",
-            buildargs={
-                "mediaserver_deb":
-                "nxwitness-server-4.0.0.28541-linux64-beta-test.deb"})
+        return client.images.build(path="/home/kyle/develop/nx_vms/cloud_portal/robot_tests/Docker", 
+                            tag="mediaserver", 
+                            buildargs={"mediaserver_deb":"nxwitness-server-4.0.0.28541-linux64-beta-test.deb"})
 
     def run_container(self, image, port, network):
-        tmp = {'/run': '', '/run/lock': ''}
+        tmp = {'/run':'', '/run/lock':''}
         vol = {'/sys/fs/cgroup': {
-            'bind': '/sys/fs/cgroup',
-            'mode': 'rw'}
-        }
-        prt = {7001: port}
+                    'bind':'/sys/fs/cgroup',
+                    'mode':'rw'}
+                }
+        prt = {7001:port}
         client = docker.from_env()
-        cont = client.containers.run(
-            image[0].id, detach=True, tmpfs=tmp, volumes=vol, ports=prt,
-            network_mode=network, name=time.time())
+        cont = client.containers.run(image[0].id, detach=True, tmpfs=tmp, volumes=vol, ports=prt, network_mode=network, name=time.time())
         return cont
 
     def stop_containers(self, allContainers=True):
