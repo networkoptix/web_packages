@@ -446,12 +446,12 @@ Merge with different types of users
     ${alert message}    Replace String    ${CONNECTION TO SYSTEM LOST}    %SYSTEM NAME%    API made system 2
     Check for alert    ${alert message}    timeout=120
     Validate system available    API made system 1
-    FOR     ${idx}  IN RANGE  90
+    FOR     ${idx}    IN RANGE    90
         ${result}    Run Keyword And Ignore Error    Wait Until Element Is Visible    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${email admin no reg}')]
         Reload Page
         Exit For Loop If    '${result[0]}'=='PASS'
     END
-    FOR    ${key}  IN  @{all users dict.keys()}
+    FOR    ${key}    IN    @{all users dict.keys()}
         Check User Permissions    ${all users dict["${key}"]}    ${key}    timeout=120
     END
     Mouse Over    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${email admin no reg}')]
