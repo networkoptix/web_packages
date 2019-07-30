@@ -17,7 +17,7 @@
         </div>
     </div>
 
-    <div *ngIf="systems.length">
+    <div *ngIf="systems.length" class="mb-1">
         <h1 class="p-0">{{search.value && filteredSystems.length}}&nbsp;<span
                 translate>Systems</span>&nbsp;{{search.value && 'found'}}</h1>
         <div class="row">
@@ -31,7 +31,7 @@
 
                         <span style="margin-top: 24px;"
                               class="badge badge-info"
-                              *ngIf="system.stateOfHealth != CONFIG.systemStatuses.onlineStatus"
+                              *ngIf="system.stateOfHealth != CONFIG.systemStatuses.onlineStatus && LANG.systemStatuses"
                               [ngClass]="CONFIG.systemStatuses[system.stateOfHealth].style || CONFIG.systemStatuses.default.style"
                               [innerHTML]="LANG.systemStatuses[system.stateOfHealth] || system.stateOfHealth | highlight:search.value">
                         </span>
@@ -50,4 +50,5 @@
             </div>
         </div>
     </div>
+    <nx-footer></nx-footer>
 </div>

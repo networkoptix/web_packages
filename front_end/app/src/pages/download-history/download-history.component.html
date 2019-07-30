@@ -2,8 +2,8 @@
     <h1 translate>Release notes</h1>
 
     <div class="col-12 p-0" style="min-height: 80px;">
-        <nx-pre-loader type="page" *ngIf="!activeBuilds"></nx-pre-loader>
-        <ngb-tabset *ngIf="noteTypes"
+        <nx-pre-loader *ngIf="!activeBuilds"></nx-pre-loader>
+        <ngb-tabset *ngIf="activeBuilds && noteTypes"
                     (tabChange)="beforeChange($event)" #tabs>
 
             <ngb-tab *ngFor="let type of noteTypes"
@@ -23,4 +23,5 @@
             </ngb-tab>
         </ngb-tabset>
     </div>
+    <nx-footer></nx-footer>
 </div>
