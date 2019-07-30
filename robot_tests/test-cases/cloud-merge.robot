@@ -151,8 +151,7 @@ Set user to client custom
     FOR    ${user}    IN    @{users list}
         ${user id}    Set Variable    ${user["id"]}
         log    ${user["email"]}
-        Exit For Loop If    "${user["email"]}"=="${EMAIL CLIENT CUSTOM}"
-        ... or "${user["email"]}"=="noptixautoqa+clientcustomunreg@gmail.com"
+        Exit For Loop If    "${user["email"]}"=="${EMAIL CLIENT CUSTOM}" or "${user["email"]}"=="noptixautoqa+clientcustomunreg@gmail.com"
     END
     &{Save User json}=    Save User    ${auth}    https://localhost:${port}    ${user id}    ${role id}
 
@@ -621,7 +620,7 @@ From primary system
 Merge with different types of users
     [tags]    C53946
     ${user}    Set Variable    ${EMAIL MERGE OWNER 2}
-    ${auth}=    Create List    ${user}    ${password}
+    ${auth}=   Create List    ${user}    ${password}
     Prepare System With Users
     ...    ${user}
     ...    ${auth}
@@ -665,11 +664,11 @@ Merge with different types of users
     FOR    ${key}    IN    @{all users dict.keys()}
         Check User Permissions    ${all users dict["${key}"]}    ${key}    timeout=120
     END
-    ${user row}=
+    ${user row}=    Set Variable
     ...    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${email admin no reg}')]
-    ${delete user button}=
+    ${delete user button}=    Set Variable
     ...    /following-sibling::td/a[@ng-click='unshare(user)']/span[contains(text(),'${DELETE USER BUTTON TEXT}')]
-    ${edit user button}=
+    ${edit user button}=    Set Variable
     ...    /following-sibling::td/a[@ng-click='editShare(user)']/span[contains(text(),'${EDIT USER BUTTON TEXT}')]/..
     Mouse Over    ${user row}
     Wait Until Elements are Visible
