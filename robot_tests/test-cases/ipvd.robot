@@ -13,22 +13,24 @@ ${url}         ${ENV}
 
 
 *** Test Cases ***
-IPVD page loads without login
-    Go To IPVD page
+IPVD Page loads without Login
+    Go To IPVD Page
 
-IPVD page loads while logged in
+IPVD Page loads while Logged in
     Log In    ${EMAIL OWNER}    ${BASE PASSWORD}
     Validate Log In
-    Go To IPVD page
+    Go To IPVD Page
 
 #Submit request can be closed by 'X', cancel, and escape
 #Submit request cannot be close by clicking outside the form
 #Submit request correctly sends request
 
-Text search correctly finds manufacturers
-    Go To IPVD page
+Text search correctly finds Manufacturers
+    Go To IPVD Page
     IPVD Text Search    hanwha
-    Validate IPVD Device Table Column Contains Desired Value in all Rows on all Pages    1    Hanwha Techwin (Samsung)
+    Validate IPVD Device Table Column Contains Desired Value in all Rows on all Pages
+    ...    1
+    ...    Hanwha Techwin (Samsung)
 
 
 #Text search correctly finds models
@@ -55,7 +57,7 @@ Text search correctly finds manufacturers
 
 Request Form Basic Validations
     [tags]    C48969    IPVD
-    Go To IPVD page
+    Go To IPVD Page
     Wait Until Element Is Visible    ${IPVD SUBMIT A REQUEST}
     Click Element    ${IPVD SUBMIT A REQUEST}
     Wait Until Element Is Visible    ${IPVD FEEDBACK}
@@ -73,9 +75,9 @@ Request Form Basic Validations
 
 Feedback Form Basic Validations
     [tags]    C54182    IPVD
-    #IPVD page    Login=True
+    #IPVD Page    Login=True
     #Wait Until Element Is Not Visible    ${LOG IN MODAL}
-    Open IPVD page and Log In
+    Open IPVD Page and Log In
     IPVD Text Search    Axis
     IPVD Select Device From Table Randomly
     Wait Until Element Is Visible    ${IPVD SEND DEVICE FEEDBACK}
@@ -98,7 +100,7 @@ Feedback Form Basic Validations
 Text search
     [tags]    C48967    IPVD
     #Step 1
-    Go To IPVD page
+    Go To IPVD Page
     ${baseurl}=   Set Variable    ${ENV}/ipvd
     #Wait Until Element Has Style    ${IPVD SEARCH BAR}    background-color    rgba(0, 0, 0, 0)    #transparent
     Click Element    ${IPVD SEARCH BAR}
@@ -112,7 +114,9 @@ Text search
     Wait Until Element Has Class    ${IPVD PREVIOUS PAGE BUTTON}    disabled
     Click Element    ${IPVD NEXT PAGE BUTTON}
     Location Should Be    ${baseurl}?search=h&page=2
-    Wait Until Element Does Not Have Class    ${IPVD PREVIOUS PAGE BUTTON}    disabled
+    Wait Until Element Does Not Have Class
+    ...    ${IPVD PREVIOUS PAGE BUTTON}
+    ...    disabled
     #Step 4
     Click Element    ${IPVD PREVIOUS PAGE BUTTON}
     Location Should Be    ${baseurl}?search=h
@@ -121,15 +125,19 @@ Text search
     Click Element    ${IPVD LAST PAGE BUTTON}
     Wait Until Element Has Class    ${IPVD NEXT PAGE BUTTON}    disabled
     #Step 6
-    Wait Until Element Does Not Have Class    ${IPVD PREVIOUS PAGE BUTTON}    disabled
+    Wait Until Element Does Not Have Class
+    ...    ${IPVD PREVIOUS PAGE BUTTON}
+    ...    disabled
     ${page1}=   IPVD Active Page Number
     Click Element    ${IPVD PREVIOUS PAGE BUTTON}
     ${page2}=   IPVD Active Page Number
-    Should Be True    ${page2}-${page1} == -1    Problem selecting Previous page of results
+    Should Be True
+    ...    ${page2}-${page1} == -1
+    ...    Problem selecting Previous page of results
     #Step 7
     Click Element    ${IPVD CLEAR TEXT SEARCH BUTTON}
     Location Should Be    ${baseurl}
-    Validate on IPVD page
+    Validate on IPVD Page
     #Step 8
     IPVD Text Search    h
     Location Should Be    ${baseurl}?search=h
@@ -139,16 +147,20 @@ Text search
     Location Should Be    ${baseurl}?search=hi
     Validate IPVD Device Table Not Empty
     ${lastPage2}=   Get Text    ${IPVD LAST PAGE BUTTON}
-    Should Be True    ${lastPage2} < ${lastPage1}    Page 2 results should be fewer than Page 1 results
+    Should Be True
+    ...    ${lastPage2} < ${lastPage1}
+    ...    Page 2 results should be fewer than Page 1 results
     IPVD Text Search    hik
     Location Should Be    ${baseurl}?search=hik
     Validate IPVD Device Table Not Empty
     ${lastPage3}=   Get Text    ${IPVD LAST PAGE BUTTON}
-    Should Be True    ${lastPage3} < ${lastPage2}    Page 3 results should be fewer than Page 2 results
+    Should Be True
+    ...    ${lastPage3} < ${lastPage2}
+    ...    Page 3 results should be fewer than Page 2 results
     #Step 9
     Click Element    ${IPVD CLEAR TEXT SEARCH BUTTON}
     Location Should Be    ${baseurl}
-    Validate on IPVD page
+    Validate on IPVD Page
     #Step 10
     IPVD Text Search Expecting No Results    aaaaaaaa
     Location Should Be    ${baseurl}?search=aaaaaaaa
@@ -160,7 +172,10 @@ Text search
     Location Should Be    ${baseurl}?search=${desiredText}
     IPVD Select Device From Table Randomly
     ${make}=   Get Text    ${IPVD DEVICE MAKE}
-    Should Be Equal As Strings    ${make}    ${desiredText}    Device selected expected to be "${desiredText}" but is "${make}"
+    Should Be Equal As Strings
+    ...    ${make}
+    ...    ${desiredText}
+    ...    Device selected expected to be "${desiredText}" but is "${make}"
     #Step 12
     Click Element    ${IPVD CLEAR TEXT SEARCH BUTTON}
     ${desiredText}=   Set Variable    SNC-CH120
@@ -168,7 +183,10 @@ Text search
     Location Should Be    ${baseurl}?search=${desiredText}
     IPVD Select Device From Table Column By Value    2    ${desiredText}
     ${model}=   Get Text    ${IPVD DEVICE MODEL}
-    Should Be Equal As Strings    ${model}    ${desiredText}    Device selected expected to be "${desiredText}" but is "${model}"
+    Should Be Equal As Strings
+    ...    ${model}
+    ...    ${desiredText}
+    ...    Device selected expected to be "${desiredText}" but is "${model}"
     #Step 13
     Click Element    ${IPVD CLEAR TEXT SEARCH BUTTON}
     ${desiredText}=   Set Variable    Digital Watchdog DWCA
@@ -178,7 +196,10 @@ Text search
     IPVD Select Device From Table Randomly
     ${make}=   Get Text    ${IPVD DEVICE MAKE}
     ${model}=   Get Text    ${IPVD DEVICE MODEL}
-    Should Contain    ${make} ${model}    ${desiredText}    Device selected expected to be "${desiredText}" but is "${make} ${model}"
+    Should Contain
+    ...    ${make} ${model}
+    ...    ${desiredText}
+    ...    Device selected expected to be "${desiredText}" but is "${make} ${model}"
     #Step 14
     Click Element    ${IPVD CLEAR TEXT SEARCH BUTTON}
     ${desiredText}=   Set Variable    1920x1080
@@ -186,36 +207,60 @@ Text search
     Location Should Be    ${baseurl}?search=${desiredText}
     IPVD Select Device From Table By Row Number    1
     ${make1}=   Get Text    ${IPVD DEVICE MAKE}
-    Elements Should Not Be Visible    ${IPVD TABLE HEADING MANUFACTURER}${IPVD TABLE HEADING LABEL SORT ARROW}
+    Elements Should Not Be Visible
+    ...    ${IPVD TABLE HEADING MANUFACTURER}${IPVD TABLE HEADING LABEL SORT ARROW}
     Click Element    ${IPVD TABLE HEADING MANUFACTURER}
     IPVD Select Device From Table By Row Number    1
     ${make2}=   Get Text    ${IPVD DEVICE MAKE}
-    Element Should Be Visible    ${IPVD TABLE HEADING MANUFACTURER}${IPVD TABLE HEADING LABEL SORT ARROW}
+    Element Should Be Visible
+    ...    ${IPVD TABLE HEADING MANUFACTURER}${IPVD TABLE HEADING LABEL SORT ARROW}
     ${u}=   Get Location
-    Should Contain    ${u}    &sortBy=vendor,ASC    URL parameters should include &sortBy=vendor,ASC, but doesn't seem to. URL: "${u}"
+    Should Contain
+    ...    ${u}
+    ...    &sortBy=vendor,ASC
+    ...    URL parameters should include &sortBy=vendor,ASC, but doesn't seem to. URL: "${u}"
     Click Element    ${IPVD TABLE HEADING MANUFACTURER}
     ${u}=   Get Location
-    Should Contain    ${u}    &sortBy=vendor,DESC    URL parameters should include &sortBy=vendor,DESC, but doesn't seem to. URL: "${u}"
+    Should Contain
+    ...    ${u}
+    ...    &sortBy=vendor,DESC
+    ...    URL parameters should include &sortBy=vendor,DESC, but doesn't seem to. URL: "${u}"
     IPVD Select Device From Table By Row Number    1
     ${make3}=   Get Text    ${IPVD DEVICE MAKE}
-    Should Be Equal As Strings    ${make1}    ${make2}    1st "${make1}" and 2nd "${make2}" selected device should be the same manufacturers, but weren't.
-    Should Be True    '${make2}' < '${make3}'    2nd "${make2}" selected device should be lexographically less than 3rd "${make3}" selected device, but wasn't.
+    Should Be Equal As Strings
+    ...    ${make1}
+    ...    ${make2}
+    ...    1st "${make1}" and 2nd "${make2}" selected device should be the same manufacturers, but weren't.
+    Should Be True
+    ...    '${make2}' < '${make3}'
+    ...    2nd "${make2}" selected device should be lexographically less than 3rd "${make3}" selected device, but wasn't.
 
-Text in search input is kept after clicking X on applied Features filter indicator
+Text in Search Input is kept after clicking X on Applied Features filter indicator
     [tags]    C49362    IPVD
     #Step 1
-    Go To IPVD page
+    Go To IPVD Page
     Click Element    ${IPVD DEVS FILTER PTZ CAMERAS}
     IPVD Text Search    Axis
     ${numberOfFiltersApplied}=   Get Text    ${IPVD FILTERS APPLIED BUTTON}
-    Should Be Equal As Strings    ${numberOfFiltersApplied}    2 ${IPVD FILTERS APPLIED TEXT}
-    Validate IPVD Device Table Column Contains Desired Value in all Rows on all Pages    1    Axis
-    Validate IPVD Device Table Column Contains Desired Value in all Rows on all Pages    8    ●
+    Should Be Equal As Strings
+    ...    ${numberOfFiltersApplied}
+    ...    2 ${IPVD FILTERS APPLIED TEXT}
+    Validate IPVD Device Table Column Contains Desired Value in all Rows on all Pages
+    ...    1
+    ...    Axis
+    Validate IPVD Device Table Column Contains Desired Value in all Rows on all Pages
+    ...    8
+    ...    ●
     #Step 2
     Click Element    ${IPVD ADV SEARCH BUTTON}
-    Click Element    ${IPVD ADV FEATURES PTZ}${IPVD ADV FEATURES CLOSE BUTTON}
+    Click Element
+    ...    ${IPVD ADV FEATURES PTZ}${IPVD ADV FEATURES CLOSE BUTTON}
     ${numberOfFiltersApplied}=   Get Text    ${IPVD FILTERS APPLIED BUTTON}
-    Should Be Equal As Strings    ${numberOfFiltersApplied}    ${IPVD ADV FILTER TYPE} – ${IPVD ADV TYPE CAMERA}
+    Should Be Equal As Strings
+    ...    ${numberOfFiltersApplied}
+    ...    ${IPVD ADV FILTER TYPE} – ${IPVD ADV TYPE CAMERA}
     ${filterText}=   Get Element Attribute    ${IPVD SEARCH BAR}    value
     Should Be Equal As Strings    ${filterText}    Axis
-    Validate IPVD Device Table Column Contains Desired Value in all Rows on all Pages    1    Axis
+    Validate IPVD Device Table Column Contains Desired Value in all Rows on all Pages
+    ...    1
+    ...    Axis

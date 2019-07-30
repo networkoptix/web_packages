@@ -5,17 +5,19 @@ Resource          resource.robot
 
 
 *** Keywords ***
-Go To IPVD page
+Go To IPVD Page
     Go To    ${url}/ipvd
     Validate on IPVD page
 
-Open IPVD page and Log In
+Open IPVD Page and Log In
     Open Browser and go to URL    ${url}/ipvd
     Validate on IPVD page
     Log In    ${EMAIL OWNER}    ${BASE PASSWORD}
     Validate Log In
     Wait Until Element Is Not Visible    ${LOG IN MODAL}
-    Go To IPVD page  #Have to call it a 2nd time to get back onto the IPVD page after logging in
+    # Have to call it a 2nd time to get back onto the IPVD page after logging in until the following issue is resolved:
+    # CLOUD-3386 Logging into or out of an account should not redirect to site root
+    Go To IPVD page
 
 ### Landing Page keywords - start ###
 
@@ -23,19 +25,34 @@ Validate Landing Page Contents
     ${search_placeholder} =  Get Element Attribute   ${IPVD SEARCH BAR}    placeholder
     Go To IPVD page
     Validate on IPVD Page
-    Should Be Equal as Strings  ${search_placeholder}   Search by model or manufacturer    ignore_case=true
-    Element should contain      ${IPVD ADV SEARCH BUTTON}  ${IPVD ADV SEARCH BUTTON TEXT}
-    Element should contain      ${IPVD MANUFACTURERS PANE}//header/span  manufacturers  ignore_case=true
+    Should Be Equal as Strings
+    ...    ${search_placeholder}
+    ...    Search by model or manufacturer
+    ...    ignore_case=true
+    Element should contain
+    ...    ${IPVD ADV SEARCH BUTTON}
+    ...    ${IPVD ADV SEARCH BUTTON TEXT}
+    Element should contain
+    ...    ${IPVD MANUFACTURERS PANE}//header/span
+    ...    manufacturers
+    ...    ignore_case=true
     Validate Manufacturers Pane is Not Empty
-    Element should contain      ${IPVD DEVICES PANE}//header/span  devices  ignore_case=true
+    Element should contain
+    ...    ${IPVD DEVICES PANE}//header/span
+    ...    devices
+    ...    ignore_case=true
     Validate Devices Pane is Not Empty
-    Element should contain      ${IPVD LANDING PAGE TEXT}  submit a request  ignore_case=true
+    Element should contain
+    ...    ${IPVD LANDING PAGE TEXT}
+    ...    submit a request
+    ...    ignore_case=true
 
 
 Validate Filtering by Manufacturer
     ${vendor} =  Set variable   Axis
     Click Element    ${IPVD MANUFACTURERS PANE}//div[contains(text(), '${vendor}')]
-    Element Text Should Be  //nx-search/div/div/div[1]/div/div[2]/span[1]    Manufacturer – ${vendor}
+    Element Text Should Be    //nx-search/div/div/div[1]/div/div[2]/span[1]
+    ...    Manufacturer – ${vendor}
     Element Text Should Be  ${IPVD TABLE FIRST ITEM}/td[1]     ${vendor}
     Validate Landing Page Objects are not Visible
 
@@ -46,7 +63,7 @@ Validate Filtering by Device Type
     Element Text Should Be  ${IPVD TABLE FIRST ITEM}/td[3]     ${device}
     Validate Landing Page Objects are not Visible
 
-Validate Landing Page Objects are not Visible
+Validate Landing Page Objects are Not Visible
     Elements Should Not Be Visible
     ...    ${IPVD MANUFACTURERS PANE}
     ...    ${IPVD AND MORE}
@@ -99,7 +116,7 @@ Validate IPVD Device Table Not Empty
     ...    ${IPVD EXPORT TO CSV}
     [Return]    ${rowCount}
 
-Validate IPVD Device Table Column Contains Desired Value in all Rows on all Pages
+Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages
     [Arguments]    ${column}    ${SearchString}
     ${rowCount}=   Validate IPVD Device Table Not Empty
     Click Element    ${IPVD FIRST PAGE BUTTON}
@@ -108,14 +125,17 @@ Validate IPVD Device Table Column Contains Desired Value in all Rows on all Page
     \    Validate IPVD Device Table Column Contains Desired Value in all Rows    ${column}    ${SearchString}
     \    Run Keyword If    ${pageNumber} < ${lastPage}    Click Element    ${IPVD NEXT PAGE BUTTON}
 
-Validate IPVD Device Table Column Contains Desired Value in all Rows
+Validate IPVD Device Table Column contains Desired Value in all Rows
     [Arguments]    ${column}    ${SearchString}
     ${rowCount}=   Validate IPVD Device Table Not Empty
-    Table Column Should Contain    ${IPVD TABLE}    ${column}    ${SearchString}
+    Table Column Should Contain
+    ...    ${IPVD TABLE}
+    ...    ${column}
+    ...    ${SearchString}
     :FOR    ${rowNumber}    IN RANGE    1    ${rowCount}+1
     \    Element Should Be Visible    ${IPVD TABLE ROWS}\[${rowNumber}]/td\[${column}]//div[contains(text(),'${SearchString}')]
 
-IPVD Select Device From Table Column By Value
+IPVD Select Device from Table Column by Value
     [Arguments]    ${column}    ${SearchString}
     ${rowCount}=   Validate IPVD Device Table Not Empty
     Table Column Should Contain    ${IPVD TABLE}    ${column}    ${SearchString}
@@ -125,13 +145,15 @@ IPVD Select Device From Table Column By Value
     IPVD Select Device From Table By Row Number    ${rowNumber}
     [Return]    ${rowNumber}
 
-IPVD Select Device From Table Randomly
+IPVD Select Device from Table Randomly
     ${rowCount}=   Validate IPVD Device Table Not Empty
-    ${rowNumber}=   Evaluate    random.randint(1,${rowCount}-1)    modules=random
+    ${rowNumber}=   Evaluate
+    ...    random.randint(1,${rowCount}-1)
+    ...    modules=random
     IPVD Select Device From Table By Row Number    ${rowNumber}
     [Return]    ${rowNumber}
 
-IPVD Select Device From Table By Row Number
+IPVD Select Device from Table by Row Number
     [Arguments]    ${rowNumber}=1
     ${rowCount}=   Validate IPVD Device Table Not Empty
     Should Be True    ${rowCount} >= ${rowNumber}
@@ -153,10 +175,11 @@ IPVD Last Page Number
     ${page}=   Remove String Using Regexp    ${page}    \\n\\(current\\)
     [Return]    ${page}
 
+Advaced Search Filters Text
     [Arguments]    ${filters}
     Return From Keyword    //ipvd/span[contains(text(),"${filters}"]
 
-Validate on IPVD page
+Validate on IPVD Page
     Wait Until Elements Are Visible
     ...    ${IPVD TITLE}
     ...    ${IPVD SEARCH BAR}
@@ -172,7 +195,10 @@ Validate on IPVD page
     Validate Manufacturer More Count
 
 Verify IPVD Advanced Search is Closed
-    Wait Until Element Has Style    ${IPVD ADV SEARCH BUTTON}    background-color    rgb(205, 215, 220)
+    Wait Until Element Has Style
+    ...    ${IPVD ADV SEARCH BUTTON}
+    ...    background-color
+    ...    rgb(225, 231, 234)
     Verify Button Arrow Direction    ${IPVD ADV SEARCH BUTTON}    Down
     Elements Should Not Be Visible
     #IPVD Advanced Filters
@@ -191,7 +217,10 @@ Verify IPVD Advanced Search is Closed
     ...    ${IPVD ADV FEATURES MULTI SENSOR}
 
 Verify IPVD Advanced Search is Open
-    Wait Until Element Has Style    ${IPVD ADV SEARCH BUTTON}    background-color    rgb(105, 135, 150)
+    Wait Until Element Has Style
+    ...    ${IPVD ADV SEARCH BUTTON}
+    ...    background-color
+    ...    rgb(105, 135, 150)
     Verify Button Arrow Direction    ${IPVD ADV SEARCH BUTTON}    Up
     Wait Until Elements Are Visible
     #IPVD Advanced Filters
@@ -214,12 +243,17 @@ Validate Manufacturer More Count
     ...    ${IPVD MANUFACTURERS PANE}
     ...    ${IPVD AND MORE}
     ${count}=   Get Text    ${IPVD MANUFACTURERS PANE}//h4/header
-    ${count}=   Remove String Using Regexp    ${count}    \\ ${IPVD MANUFACTURERS TEXT}
+    ${count}=   Remove String Using Regexp
+    ...    ${count}
+    ...    \\ ${IPVD MANUFACTURERS TEXT}
     ${more}=   Get Text    ${IPVD AND MORE}
-    ${more}=   Remove String Using Regexp    ${more}    (\\.\\.\\.\\ and\\ )|(\\ more)
-    Should Be True    ${more} == ${count}-${IPVD VENDORS SHOWN}    Expected ${more} to be ${count} minus ${IPVD VENDORS SHOWN}.
+    ${more}=   Remove String Using Regexp
+    ...    ${more}
+    ...    (\\.\\.\\.\\ and\\ )|(\\ more)
+    Should Be True    ${more} == ${count}-${IPVD VENDORS SHOWN}
+    ...    Expected ${more} to be ${count} minus ${IPVD VENDORS SHOWN}.
 
-Open New Browser On Failure
+Open New Browser on Failure
     Close Browser
     #Open Browser and go to URL    ${url}/ipvd
     Open Browser
@@ -237,13 +271,17 @@ Validate Request Form Initial State
 
 Validate Privacy Policy
     Element Should Be Visible    ${IPVD FEEDBACK PRIVACY POLICY}
-    ${url}=   Get Element Attribute    ${IPVD FEEDBACK PRIVACY POLICY}    href
+    ${url}=   Get Element Attribute
+    ...    ${IPVD FEEDBACK PRIVACY POLICY}
+    ...    href
     Should Contain    ${url}    privacy    #TODO: CLOUD-2949
     #Should Contain    ${url}    ${PRIVACY POLICY URL}
     Click Element    ${IPVD FEEDBACK PRIVACY POLICY}
     @{windows}=   Get Window Handles
     ${numWindows}=   Get Length    ${windows}
-    Should Be True    ${numWindows} == 2    Number of browser windows open after clicking Privacy Policy link should be 2, but is ${numWindows}. CLOUD-3315
+    Should Be True
+    ...    ${numWindows} == 2
+    ...    Number of browser windows open after clicking Privacy Policy link should be 2, but is ${numWindows}. CLOUD-3315
     Select Window    @{windows}[1]
     Location Should Be    ${url}    #TODO: CLOUD-2949
     #Location Should Be    ${PRIVACY POLICY URL FULL}
