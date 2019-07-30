@@ -338,7 +338,7 @@ def download_current_structure(request, product_id):
         data = generate_structure.from_database(product, use_actual_values)
         content = json.dumps(data, ensure_ascii=False, indent=4, separators=(',', ': '))
         return response_attachment(content, 'structure.json', 'application/json')
-    return APIRequestException("Product not given or not found")
+    return HttpResponseBadRequest("Product not given or not found")
 
 
 @require_http_methods(["GET"])
@@ -360,7 +360,6 @@ def download_file(request, path):
 
 @require_http_methods(["GET"])
 @permission_required('cms.change_product')
-@handle_exceptions
 def download_package(request, product_id):
     product = Product.objects.get(id=product_id)
 
@@ -377,7 +376,7 @@ def download_package(request, product_id):
 
         latest_review = latest_review.last()
         if not latest_review:
-            raise APIRequestException("There are no versions available for this product")
+            return HttpResponseBadRequest("There are no version available for this product")
 
         version_id = latest_review.version.id
 
