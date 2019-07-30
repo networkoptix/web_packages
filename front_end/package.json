@@ -127,7 +127,7 @@
         "webpack": "3.12.0",
         "webpack-bundle-analyzer": "3.3.2",
         "webpack-dev-middleware": "1.12.2",
-        "webpack-dev-server": "^3.7.2",
+        "webpack-dev-server": "2.11.2",
         "webpack-hot-middleware": "2.22.3",
         "webpack-inline-manifest-plugin": "4.0.1",
         "webpack-merge": "4.1.4"
