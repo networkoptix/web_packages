@@ -21,13 +21,15 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
     LANG: any = {};
     location: any;
 
-    systems: any;
-    isMaster: boolean;
-    mergeTargetSystem: boolean;
-    removingUser: any;
-    system: any;
+    accessDescription: string;
     locked: any;
+    removingUserProcess: any;
     selectedUser: any;
+    selectedPermission: {
+        name: ''
+    };
+    system: any;
+    systemAvailable: boolean;
 
     private setupDefaults() {
         this.CONFIG = this.configService.getConfig();
@@ -41,7 +43,6 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
 
     constructor(@Inject('account') private account: any,
                 @Inject('process') private process: any,
-                @Inject('systemsProvider') private systemsProvider: any,
                 private configService: NxConfigService,
                 private language: NxLanguageProviderService,
                 private pageService: NxPageService,
@@ -64,9 +65,13 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         this.CONFIG = this.configService.getConfig();
         this.settingsService.systemSubject.subscribe((system) => {
             this.system = system;
+            if (this.system.users.length > 0) {
+                this.setUser(this.system.users[0]);
+            }
+            this.systemAvailable = this.system.isAvailable && this.system.mergeInfo !== 'undefined';
         });
 
-        this.removingUser = this.process.init(() => {
+        this.removingUserProcess = this.process.init(() => {
             return this.system.deleteUser(this.selectedUser);
         }, {
             successMessage: this.LANG.system.permissionsRemoved.replace('{{email}}', this.selectedUser.email),
@@ -122,13 +127,26 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                     // Run a process of sharing
                     // $poll.cancel(pollingSystemUpdate);
                     this.selectedUser = user;
-                    this.removingUser.run();
+                    this.removingUserProcess.run();
                 } else {
                     this.locked[user.email] = false;
                 }
             }, () => {
                 this.locked[user.email] = false;
             });
+    }
+
+    setUser(user) {
+        this.selectedUser = user;
+        console.log(user);
+        this.setPermission(this.selectedUser.role);
+    }
+
+    setPermission(role: any) {
+        this.selectedPermission = role;
+        this.accessDescription = this.LANG.accessRoles[this.selectedPermission.name] ?
+                this.LANG.accessRoles[this.selectedPermission.name].description :
+                this.LANG.accessRoles.customRole.description;
     }
 }
 

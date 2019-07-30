@@ -2,10 +2,7 @@
 
 <div *ngIf="system" class="container auth-visible" >
     <div class="col-12 col-lg-9">
-<!--        <div class="nx-table-wrapper" id="nx-table">-->
-<!--            <div class="table-wrapper">-->
-<!--                <table class="table table-hover nx-table">-->
-            <div class="table-responsive">
+        <div class="table-responsive">
                 <table class="table table-hover" ng-if="system.users.length">
                     <thead>
                         <tr>
@@ -18,7 +15,7 @@
                     </thead>
                     <tbody *ngIf="system.users">
                         <tr class="spacer"><td colspan="5"></td></tr>
-                        <tr *ngFor="let user of system.users" class="hoverable" [ngClass]="{disabled:!user.isEnabled}">
+                        <tr *ngFor="let user of system.users" class="hoverable" [ngClass]="{disabled:!user.isEnabled}" (click)="setUser(user)">
                             <td class="user-name">{{user.fullName}}</td>
                             <td class="user-email">{{user.email}}</td>
                             <td class="user-role">
@@ -53,23 +50,34 @@
                     </tbody>
                 </table>
             </div>
-<!--        </div>-->
 
-        <nx-block class="d-block mt-3">
+        <nx-block *ngIf="selectedUser" header-style="extended">
+            <header>
+                <nx-switch class="float-right"></nx-switch>
+                <h2 class="users-email mb-2">{{selectedUser.email}}</h2>
+                <span class="users-name">{{selectedUser.fullName}}</span>
+                <span class="float-right">{{selectedUser.isEnabled}}</span>
+            </header>
+
             <nx-section>
-                <h3 class="float-left d-flex align-items-center">
-                    <span>{{system.info.name}}</span>
-                </h3>
+                <div *ngIf="systemAvailable && selectedUser.canBeEdited" class="mr-2 my-2" style="width: 200px">
+                    <label for="permissionsSelect" translate>Access level</label>
+                    <nx-permissions-select
+                            id="permissionsSelect"
+                            [user]="selectedUser"
+                            [system]="system"
+                            [roles]="system.accessRoles"
+                            [selected]="selectedUser.role"
+                            (onSelected)="setPermission($event)">
+                    </nx-permissions-select>
+                </div>
+                <div>
+                    <span class="help-block" [innerHtml]="accessDescription"></span>
+                </div>
             </nx-section>
-
-            <nx-section>
+            <nx-section *ngIf="systemAvailable && selectedUser.canBeDeleted">
                 <div class="float-left mr-2 mt-2">
-                    <button class="btn btn-default"
-                            *ngIf="system.permissions.editUsers"
-                            [disabled]="!system.isAvailable || currentlyMerging"
-                            title="{{system.stateMessage}}"
-                            (click)="addUser()"
-                            translate><span class="glyphicon glyphicon-share"></span>Add user</button>
+                    <button class="btn btn-default" (click)="removeUser(selectedUser)">Remove User</button>
                 </div>
             </nx-section>
         </nx-block>

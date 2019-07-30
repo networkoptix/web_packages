@@ -84,6 +84,10 @@ export class NxPermissionsDropdown implements OnInit {
                 this.changePermission(role);
             }
         }
+
+        if (changes.selected.currentValue) {
+            this.selection = changes.selected.currentValue.name;
+        }
     }
 
     changePermission(role) {

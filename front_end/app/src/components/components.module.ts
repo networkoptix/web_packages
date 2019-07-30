@@ -34,6 +34,7 @@ import { NxLandingDisplayComponent } from './landing-display/landing-display.com
 import { NxPasswordComponent }       from './password-input/password.component';
 import { NxEmailComponent }          from './email-input/email.component';
 import { NxClientButtonComponent }   from './open-client-button/client-button.component';
+import { NxSwitchComponent }         from './switch/switch.component';
 
 @NgModule({
     imports        : [
@@ -71,6 +72,7 @@ import { NxClientButtonComponent }   from './open-client-button/client-button.co
         NxPasswordComponent,
         NxEmailComponent,
         NxClientButtonComponent,
+        NxSwitchComponent
     ],
     entryComponents: [
         NxGenericDropdown,
@@ -99,6 +101,7 @@ import { NxClientButtonComponent }   from './open-client-button/client-button.co
         NxPasswordComponent,
         NxEmailComponent,
         NxClientButtonComponent,
+        NxSwitchComponent
     ],
     providers      : [
         NxProcessButtonComponent,
@@ -119,6 +122,7 @@ import { NxClientButtonComponent }   from './open-client-button/client-button.co
         NxPasswordComponent,
         NxEmailComponent,
         NxClientButtonComponent,
+        NxSwitchComponent,
 
         NxRibbonService,
     ],
@@ -149,6 +153,7 @@ import { NxClientButtonComponent }   from './open-client-button/client-button.co
         NxPasswordComponent,
         NxEmailComponent,
         NxClientButtonComponent,
+        NxSwitchComponent,
 
         MenuModule,
     ]
