@@ -2,7 +2,7 @@
 Resource          ../ipvd_resource.robot
 Suite Setup       Open Browser and go to URL    ${url}/ipvd
 Test Setup        Restart
-Test Teardown     NONE    #Close Browser    #Run Keyword If Test Failed    Reset DB and Open New Browser On Failure
+Test Teardown     NONE    #Close Browser    #Run Keyword If Test Failed    Reset DB and Open New Browser on Failure
 Suite Teardown    Close All Browsers
 Force Tags        Threaded File
 
@@ -28,7 +28,7 @@ IPVD Page loads while Logged in
 Text search correctly finds Manufacturers
     Go To IPVD Page
     IPVD Text Search    hanwha
-    Validate IPVD Device Table Column Contains Desired Value in all Rows on all Pages
+    Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages
     ...    1
     ...    Hanwha Techwin (Samsung)
 
@@ -79,7 +79,7 @@ Feedback Form Basic Validations
     #Wait Until Element Is Not Visible    ${LOG IN MODAL}
     Open IPVD Page and Log In
     IPVD Text Search    Axis
-    IPVD Select Device From Table Randomly
+    IPVD Select Device from Table Randomly
     Wait Until Element Is Visible    ${IPVD SEND DEVICE FEEDBACK}
     Click Element    ${IPVD SEND DEVICE FEEDBACK}
     Wait Until Element Is Visible    ${IPVD FEEDBACK}
@@ -170,7 +170,7 @@ Text search
     ${desiredText}=   Set Variable    Dahua
     IPVD Text Search    ${desiredText}
     Location Should Be    ${baseurl}?search=${desiredText}
-    IPVD Select Device From Table Randomly
+    IPVD Select Device from Table Randomly
     ${make}=   Get Text    ${IPVD DEVICE MAKE}
     Should Be Equal As Strings
     ...    ${make}
@@ -181,7 +181,7 @@ Text search
     ${desiredText}=   Set Variable    SNC-CH120
     IPVD Text Search    ${desiredText}
     Location Should Be    ${baseurl}?search=${desiredText}
-    IPVD Select Device From Table Column By Value    2    ${desiredText}
+    IPVD Select Device from Table Column by Value    2    ${desiredText}
     ${model}=   Get Text    ${IPVD DEVICE MODEL}
     Should Be Equal As Strings
     ...    ${model}
@@ -193,7 +193,7 @@ Text search
     IPVD Text Search    ${desiredText}
     ${t}=   Replace String Using Regexp    ${desiredText}    \(\\ \)    %20
     Location Should Be    ${baseurl}?search=${t}
-    IPVD Select Device From Table Randomly
+    IPVD Select Device from Table Randomly
     ${make}=   Get Text    ${IPVD DEVICE MAKE}
     ${model}=   Get Text    ${IPVD DEVICE MODEL}
     Should Contain
@@ -205,12 +205,12 @@ Text search
     ${desiredText}=   Set Variable    1920x1080
     IPVD Text Search    ${desiredText}
     Location Should Be    ${baseurl}?search=${desiredText}
-    IPVD Select Device From Table By Row Number    1
+    IPVD Select Device from Table by Row Number    1
     ${make1}=   Get Text    ${IPVD DEVICE MAKE}
     Elements Should Not Be Visible
     ...    ${IPVD TABLE HEADING MANUFACTURER}${IPVD TABLE HEADING LABEL SORT ARROW}
     Click Element    ${IPVD TABLE HEADING MANUFACTURER}
-    IPVD Select Device From Table By Row Number    1
+    IPVD Select Device from Table by Row Number    1
     ${make2}=   Get Text    ${IPVD DEVICE MAKE}
     Element Should Be Visible
     ...    ${IPVD TABLE HEADING MANUFACTURER}${IPVD TABLE HEADING LABEL SORT ARROW}
@@ -225,7 +225,7 @@ Text search
     ...    ${u}
     ...    &sortBy=vendor,DESC
     ...    URL parameters should include &sortBy=vendor,DESC, but doesn't seem to. URL: "${u}"
-    IPVD Select Device From Table By Row Number    1
+    IPVD Select Device from Table by Row Number    1
     ${make3}=   Get Text    ${IPVD DEVICE MAKE}
     Should Be Equal As Strings
     ...    ${make1}
@@ -245,10 +245,10 @@ Text in Search Input is kept after clicking X on Applied Features filter indicat
     Should Be Equal As Strings
     ...    ${numberOfFiltersApplied}
     ...    2 ${IPVD FILTERS APPLIED TEXT}
-    Validate IPVD Device Table Column Contains Desired Value in all Rows on all Pages
+    Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages
     ...    1
     ...    Axis
-    Validate IPVD Device Table Column Contains Desired Value in all Rows on all Pages
+    Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages
     ...    8
     ...    ●
     #Step 2
@@ -261,7 +261,7 @@ Text in Search Input is kept after clicking X on Applied Features filter indicat
     ...    ${IPVD ADV FILTER TYPE} – ${IPVD ADV TYPE CAMERA}
     ${filterText}=   Get Element Attribute    ${IPVD SEARCH BAR}    value
     Should Be Equal As Strings    ${filterText}    Axis
-    Validate IPVD Device Table Column Contains Desired Value in all Rows on all Pages
+    Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages
     ...    1
     ...    Axis
 
