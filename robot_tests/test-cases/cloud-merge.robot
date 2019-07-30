@@ -285,7 +285,7 @@ Only one system connected to Cloud Account
     Validate Log in
     Wait Until Elements Are Visible
     ...    ${DISCONNECT FROM NX}
-    ...   ${SHARE BUTTON SYSTEMS}
+    ...    ${SHARE BUTTON SYSTEMS}
     ...    ${OPEN IN NX BUTTON}
     ...    ${RENAME SYSTEM}
     Wait Until Element Is Enabled    ${SHARE BUTTON SYSTEMS}    180
@@ -657,7 +657,8 @@ Merge with different types of users
     Check for alert    ${alert message}    timeout=120
     Validate system available    API made system 1
     FOR     ${idx}    IN RANGE    90
-        ${result}    Run Keyword And Ignore Error    Wait Until Element Is Visible    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${email admin no reg}')]
+        ${result}    Run Keyword And Ignore Error    Wait Until Element Is Visible
+        ...    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${email admin no reg}')]
         Reload Page
         Exit For Loop If    '${result[0]}'=='PASS'
     END
