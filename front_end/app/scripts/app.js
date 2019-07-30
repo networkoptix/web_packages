@@ -91,7 +91,6 @@ window.L = {};
                         viewsDir: 'static/views/', //'static/lang_' + lang + '/views/';
                         previewPath: '',
                         viewsDirCommon: 'static/web_common/views/',
-                        trafficRelayHost: '{host}/gateway/{systemId}',
                         publicDownloads: false,
                         showHeaderAndFooter: true
                     };
