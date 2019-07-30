@@ -11,7 +11,7 @@ from rest_framework.decorators import api_view
 import os
 import json
 from cloud import settings
-from api.helpers.exceptions import APIRequestException, APINotFoundException, ErrorCodes, api_success, require_params
+from api.helpers.exceptions import APIRequestException, APINotFoundException, api_success, handle_exceptions, require_params
 from api.helpers.permissions import make_customization_visible_to_user
 from cms.controllers import filldata, generate_structure, modify_db, structure
 from cms.forms import *
@@ -328,6 +328,7 @@ def product_settings(request, product_id):
 
 @require_http_methods(["GET"])
 @permission_required('cms.change_product')
+@handle_exceptions
 def download_current_structure(request, product_id):
     use_actual_values = "get_values" in request.GET
     product = Product.objects.filter(id=product_id).last()
@@ -359,6 +360,7 @@ def download_file(request, path):
 
 @require_http_methods(["GET"])
 @permission_required('cms.change_product')
+@handle_exceptions
 def download_package(request, product_id):
     product = Product.objects.get(id=product_id)
 
@@ -375,7 +377,7 @@ def download_package(request, product_id):
 
         latest_review = latest_review.last()
         if not latest_review:
-            raise APINotFoundException("There are no versions available for this product")
+            raise APIRequestException("There are no versions available for this product")
 
         version_id = latest_review.version.id
 
@@ -388,6 +390,7 @@ def download_package(request, product_id):
 
 @api_view(["GET"])
 @permission_required('cms.change_product')
+@handle_exceptions
 def get_product_ids_by_product_type(request):
     require_params(request, ("name", "type"))
 
