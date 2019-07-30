@@ -195,6 +195,10 @@ Validate on IPVD Page
     Validate Manufacturer More Count
 
 Verify IPVD Advanced Search is Closed
+    Wait Until Elements Are Visible    ${IPVD ADV SEARCH BUTTON}
+    ${style}=   Get Element Attribute
+    ...    ${IPVD ADV SEARCH BUTTON}
+    ...    style
     Wait Until Element Has Style
     ...    ${IPVD ADV SEARCH BUTTON}
     ...    background-color
@@ -217,6 +221,7 @@ Verify IPVD Advanced Search is Closed
     ...    ${IPVD ADV FEATURES MULTI SENSOR}
 
 Verify IPVD Advanced Search is Open
+    Wait Until Elements Are Visible    ${IPVD ADV SEARCH BUTTON}
     Wait Until Element Has Style
     ...    ${IPVD ADV SEARCH BUTTON}
     ...    background-color

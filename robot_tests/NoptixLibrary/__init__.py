@@ -18,6 +18,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
 from SeleniumLibrary.utils import (is_falsy, is_truthy, secs_to_timestr,
                                    timestr_to_secs, SELENIUM_VERSION)
+from selenium.webdriver.support.color import Color
 
 
 class NoptixLibrary(object):
@@ -47,6 +48,20 @@ class NoptixLibrary(object):
             "+!#$%'*-/=?^_`{|}~" + str(time.time()) + email[index:]
         return email
 
+    def get_element_style(self, locator, styleAttribute):
+        seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
+        not_found = None
+
+        try:
+            element = seleniumlib.find_element(locator)
+            print('element: ' + element)
+            value = element.value_of_css_property(styleAttribute)
+            print('value: ' + value)
+            return value
+        except:
+            not_found = "No element found with style attribute " + styleAttribute
+            raise AssertionError(not_found)
+
     def wait_until_textfield_contains(self, locator, expected, timeout=10):
         seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
         timeout = timeout + time.time()
@@ -64,14 +79,13 @@ class NoptixLibrary(object):
         raise Exception("No element found with text " + expected)
 
     def wait_until_element_has_style(self, locator, styleAttribute, expected, timeout=10):
-        seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
         timeout = timeout + time.time()
         not_found = None
 
         while time.time() < timeout:
             try:
-                element = seleniumlib.find_element(locator)
-                value = element.value_of_css_property(styleAttribute)
+                value = get_element_style(locator, styleAttribute)
+                print(value)
                 if value == expected:
                     return
             except:
@@ -110,6 +124,34 @@ class NoptixLibrary(object):
                 found = "Element found with class " + expected
             time.sleep(.2)
         raise AssertionError(found)
+
+    def verify_colors_same(self, color_string_1, color_string_2):
+        color1 = Color.from_string(color_string_1).rgba
+        color2 = Color.from_string(color_string_2).rgba
+        return color1 == color2
+
+    def verify_button_arrow_direction(self, locator, expected, timeout=10):
+        # expected is 'Up' or 'Down'
+        not_found = None
+
+        while time.time() < timeout:
+            try:
+                element = seleniumlib.find_element(locator)
+                navArrows = element.find_element_by_xpath(
+                    '/div[@class="nav-arrow"').find_element_by_xpath('/span')
+                span1 = navArrows[0].getCssValue('transform')
+                span2 = navArrows[1].getCssValue('transform')
+
+                if expected.strip().lower() == 'up':
+                    if span1 == 'rotate(-45deg)' and span2 == 'rotate(45deg)':
+                        return
+                elif expected.strip().lower() == 'down':
+                    if span1 == 'rotate(45deg)' and span2 == 'rotate(-45deg)':
+                        return
+            except NoSuchElementException:
+                not_found = "No button arrow elements found "
+            time.sleep(.2)
+        raise AssertionError(not_found)
 
     def check_online_or_offline(self, elements, offlineText):
         for element in elements:
