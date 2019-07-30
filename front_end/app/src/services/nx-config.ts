@@ -203,7 +203,7 @@ export class NxConfigService {
                 useServerTime: true,
                 useSystemTime: true,
                 disableVolume: true,
-                reloadInterval: 5 * 1000,
+                reloadInterval: 30 * 1000,
                 leftPanelPreviewHeight: 128,
                 resetDisplayedTextTimer: 3 * 1000,
                 hlsLoadingTimeout: 90 * 1000,
