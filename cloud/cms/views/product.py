@@ -338,7 +338,7 @@ def download_current_structure(request, product_id):
         data = generate_structure.from_database(product, use_actual_values)
         content = json.dumps(data, ensure_ascii=False, indent=4, separators=(',', ': '))
         return response_attachment(content, 'structure.json', 'application/json')
-    return HttpResponseBadRequest("Product not given or not found")
+    return HttpResponseBadRequest("Product not given or found")
 
 
 @require_http_methods(["GET"])
@@ -376,7 +376,7 @@ def download_package(request, product_id):
 
         latest_review = latest_review.last()
         if not latest_review:
-            return HttpResponseBadRequest("There are no version available for this product")
+            return HttpResponseBadRequest("There are no versions available for this product")
 
         version_id = latest_review.version.id
 
