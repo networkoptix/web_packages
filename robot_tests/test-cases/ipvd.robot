@@ -21,6 +21,48 @@ IPVD page loads while logged in
     Validate Log In
     Go To IPVD page
 
+IPVD landing page actions
+    [tags]  C48791  IPVD
+
+    # Step 1 -  Validate Landing Page Contents
+    Go To IPVD Page
+    ${search_placeholder}=   Get Element Attribute    ${IPVD SEARCH BAR}    placeholder
+    Validate on IPVD Page
+    Should Be Equal as Strings    ${search_placeholder}    Search by model or manufacturer    ignore_case=true
+    Element should contain    ${IPVD ADV SEARCH BUTTON}  ${IPVD ADV SEARCH BUTTON TEXT}
+    Element should contain    ${IPVD MANUFACTURERS PANE}//header/span    manufacturers    ignore_case=true
+    ${numVendors}=   Get Element Count    ${IPVD MANUFACTURERS PANE ITEM}
+    Should Not Be Equal As Numbers  ${numVendors}   0
+    Element should contain      ${IPVD DEVICES PANE}//header/span    devices    ignore_case=true
+    ${numDeviceTypes}=   Get Element Count    ${IPVD DEVICES PANE}//*[@class="float-left mr-1 mb-1"]
+    Element should contain    ${IPVD LANDING PAGE TEXT}    submit a request    ignore_case=true
+
+    # Step 2 - Validate filtering by manufacturer
+    ${vendor}=  Set variable    Axis
+    Click Element    ${IPVD MANUFACTURERS PANE}//div[contains(text(), '${vendor}')]
+    Element Text Should Be    //nx-search/div/div/div[1]/div/div[2]/span[1]    Manufacturer – ${vendor}
+    Element Text Should Be    ${IPVD TABLE FIRST ITEM}/td[1]    ${vendor}
+    Validate Landing Page Objects are not Visible
+
+    # Step 3
+    Click Element    ${IPVD ADV FEATURES CLOSE BUTTON}
+    Validate on IPVD page
+
+    # Step 4 - Validate filtering by device type
+    ${device}=   Set variable    Encoder
+    Click Element    ${IPVD DEVICES PANE}//div[contains(text(), '${device}s')]
+    Element Text Should Be    //ipvd/div/div[1]/nx-search/div/div/div[1]/div/div[2]/span[1]    Type – ${device}
+    Element Text Should Be    ${IPVD TABLE FIRST ITEM}/td[3]    ${device}
+    Validate Landing Page Objects are not Visible
+
+    # Step 5 - Back to the landing page
+    Click Element    ${IPVD ADV FEATURES CLOSE BUTTON}
+    Validate on IPVD page
+
+    # Step 6 - Verify IPVD feedback link opens correct dialog
+    Click Link    ${IPVD SUBMIT A REQUEST LINK}
+    Wait Until Element Is Visible    ${IPVD FEEDBACK}
+    
 #Submit request can be closed by 'X', cancel, and escape
 #Submit request cannot be close by clicking outside the form
 #Submit request correctly sends request
