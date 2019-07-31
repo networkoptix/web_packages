@@ -328,7 +328,6 @@ def product_settings(request, product_id):
 
 @require_http_methods(["GET"])
 @permission_required('cms.change_product')
-@handle_exceptions
 def download_current_structure(request, product_id):
     use_actual_values = "get_values" in request.GET
     product = Product.objects.filter(id=product_id).last()
@@ -337,7 +336,7 @@ def download_current_structure(request, product_id):
             raise PermissionDenied
         data = generate_structure.from_database(product, use_actual_values)
         content = json.dumps(data, ensure_ascii=False, indent=4, separators=(',', ': '))
-        return response_attachment(content, 'structure.json', 'application/json')
+        return response_attachment(content, 'structure.json', 'application')
     return HttpResponseBadRequest("Product not given or found")
 
 
