@@ -17,9 +17,13 @@ export class PushComponent implements OnInit {
     private newDevice: any;
     private deviceSubscriptions: any;
     private deviceToken: any;
+    private deviceName: string;
+    private currentDeviceName: any;
     private registered: boolean;
     private sendStatus: string;
     private receivedMessages: any;
+    private subChanges: boolean;
+    private account: any;
     location: Location;
 
     private setupDefaults() {
@@ -40,34 +44,28 @@ export class PushComponent implements OnInit {
         this.devices = [];
         this.receivedMessages = [];
         this.deviceSubscriptions = {};
+        this.subChanges = false;
     }
 
-    constructor(@Inject('account') private account: any,
-                @Inject('system') private systemService: any,
+    constructor(@Inject('system') private systemService: any,
                 @Inject('systemsProvider') private systemsProvider: any,
                 @Inject('authorizationCheckService') private authorizationService: any,
                 private afMessaging: AngularFireMessaging,
-                private http: HttpClient,
-                location: Location) {
+                private http: HttpClient) {
         this.setupDefaults();
-        this.location = location;
     }
 
     ngOnInit(): void {
-        this.authorizationService.requireLogin().then(result => {
-            if (!result) {
+        this.authorizationService.requireLogin().then(account => {
+            if (!account) {
                 this.location.go('404');
                 return;
+            } else if (!account.email.endsWith('@networkoptix.com')) {
+                this.authorizationService.redirectToHome();
             } else {
-                this.account.get().then(
-                    (account) => {
-                        if (account.email.endsWith('@networkoptix.com')) {
-                            this.setSystems();
-                            this.setFirebase();
-                        } else {
-                            this.authorizationService.redirectToHome();
-                        }
-                    });
+                this.account = account;
+                this.setSystems();
+                this.setFirebase();
             }
         });
     }
@@ -106,15 +104,23 @@ export class PushComponent implements OnInit {
     updateSubStates() {
         this.http.get('/notifications/subscriptions').subscribe(
             (response: any) => {
-                this.devices = [];
-                this.deviceSubscriptions = {};
-                response.forEach((device) => {
-                    this.devices.push(device);
-                    this.deviceSubscriptions[device.deviceToken] = {};
-                    device.subscriptions.forEach((subscription) => {
-                        this.deviceSubscriptions[device.deviceToken][subscription.system_id] = subscription.active;
+                if (!this.subChanges) {
+                    this.devices = [];
+                    this.deviceSubscriptions = {};
+                    response.forEach((device) => {
+                        if (device.deviceToken === this.deviceToken) {
+                            this.deviceName = device.name;
+                        }
+                        this.devices.push(device);
+                        this.deviceSubscriptions[device.deviceToken] = {};
+                        device.subscriptions.forEach((subscription) => {
+                            this.deviceSubscriptions[device.deviceToken][subscription.system_id] = subscription.active;
+                        });
                     });
-                });
+                } else {
+                    this.subChanges = false;
+                    this.updateSubStates();
+                }
             },
             error => {
                 this.deviceSubscriptions = {};
@@ -140,7 +146,7 @@ export class PushComponent implements OnInit {
         let model = '';
         if (form === undefined) {
             deviceToken = this.deviceToken;
-            name = 'Browser';
+            name = this.currentDeviceName ? this.currentDeviceName : 'Browser';
             model = window.navigator.userAgent;
         } else {
             deviceToken = this.newDevice.deviceToken;
@@ -188,6 +194,7 @@ export class PushComponent implements OnInit {
             () => {
                 this.onAllowNotifications();
                 this.registered = false;
+                this.deviceName = '';
             });
     }
 
@@ -218,7 +225,7 @@ export class PushComponent implements OnInit {
         };
         this.http.post('/notifications/push_notification', {
             systemId: this.notification.system,
-            targets: [this.account.getEmail()],
+            targets: [this.account.email],
             notification: {
                 title: this.notification.title,
                 body: this.notification.body,
@@ -235,6 +242,7 @@ export class PushComponent implements OnInit {
     }
 
     onToggleSubscribe(deviceToken, systemId) {
+        this.subChanges = true;
         const subState = this.deviceSubscriptions[deviceToken][systemId];
         const httpOptions = {
             headers: new HttpHeaders({

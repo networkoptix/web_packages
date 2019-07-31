@@ -125,7 +125,7 @@ def get_system(notification_object, request_data):
             raise exception
 
 
-def process_push_response(response, notification_object):
+def process_push_response(response, notification_object, dry_run=False):
     resend_tokens = []
 
     for multicast in response:
@@ -142,7 +142,7 @@ def process_push_response(response, notification_object):
                     resend_tokens.append(token)
                     log_push_result(notification_object, f'FCM Error: {result["error"]}', device_token=token)
 
-    if not resend_tokens:
+    if not resend_tokens and not dry_run:
         log_push_result(notification_object, 'Successfully completed')
 
     return resend_tokens
@@ -174,7 +174,7 @@ def set_subscriptions_from_targets(notification_object, request_data):
     device_check_response = PushDevice.objects.filter(user__in=target_accounts).send_message(
         'Token check', title='Token check', dry_run=True
     )
-    process_push_response(device_check_response, notification_object)
+    process_push_response(device_check_response, notification_object, dry_run=True)
 
     devices_without_sub = PushDevice.objects.filter(user__in=target_accounts, user__is_active=True).exclude(
         pushsubscription__system_id=system_id).select_related('user')
