@@ -18,6 +18,7 @@ from notifications.serializers import NotificationSerializer, RegisterDeviceSeri
     DeviceSubscriptionsSerializer
 
 import json
+from django.conf import settings
 
 
 class CloudBasicAuthentication(BasicAuthentication):
@@ -77,7 +78,8 @@ def push_notification(request):
     )
 
     send_push_notification.apply_async(
-        args=[notification_object.id], kwargs={'request_data': request.data}
+        args=[notification_object.id], kwargs={'request_data': request.data},
+        queue=settings.NOTIFICATIONS_CONFIG['push_notification']['queue']
     )
 
     return api_success({'notificationId': notification_object.id})

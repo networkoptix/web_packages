@@ -120,6 +120,7 @@ ADMIN_DASHBOARD = ('cms.models.ContentVersion',
                    'cms.models.UserGroupsToProductType',
                    'django_celery_results.*',
                    'notifications.models.*',
+                   'push_notifications.models.*',
                    'rest_hooks.*',
                    'zapier.models.*'
                    )
@@ -472,6 +473,9 @@ NOTIFICATIONS_CONFIG = {
     },
     'ipvd_feedback_detail': {
         'engine': 'email'
+    },
+    'push_notification': {
+        'queue': 'push-notification'
     },
     'restore_password': {
         'engine': 'email'
