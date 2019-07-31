@@ -193,7 +193,7 @@ def process_zip(file_descriptor, user, product, update_structure, update_content
             if update_content:
                 # try to parse datastructures from the file using template
                 if not context.contexttemplate_set.exists():  # no template - nothing we can do
-                    log_messages.append(('error', f'Ignored: {name} (context has to template)'))
+                    log_messages.append(('error', f'Ignored: {name} (context has no template)'))
                     continue
                 # here we have template for context and file_content - which are relatively close.
                 # Ideally, the only difference is specific data values

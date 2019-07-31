@@ -520,7 +520,7 @@ admin.site.register(Customization, CustomizationAdmin)
 class DataRecordAdmin(CMSAdmin):
     list_display = ('product', 'language', 'context',
                     'data_structure', 'short_description', 'version')
-    list_filter = (ProductFilter, 'language', 'data_structure__context', 'data_structure')
+    list_filter = ('product', 'language', 'data_structure__context', 'data_structure')
     search_fields = ('data_structure__context__name', 'data_structure__name',
                      'data_structure__description', 'value', 'language__code')
     readonly_fields = ('created_by',)

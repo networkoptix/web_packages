@@ -375,10 +375,8 @@ def download_package(request, product_id):
             latest_review = latest_review.filter(state=ProductCustomizationReview.REVIEW_STATES.accepted)
 
         latest_review = latest_review.last()
-        if not latest_review:
-            return HttpResponseBadRequest("There are no versions available for this product")
-
-        version_id = latest_review.version.id
+        if latest_review:
+            version_id = latest_review.version.id
 
     zipped_data = filldata.get_zip_package(product, preview, version_id)
     file_name = f"{product.name}.zip"
