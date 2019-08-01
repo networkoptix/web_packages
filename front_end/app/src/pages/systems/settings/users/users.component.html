@@ -53,10 +53,9 @@
 
         <nx-block *ngIf="selectedUser" header-style="extended">
             <header>
-                <nx-switch class="float-right"></nx-switch>
+                <nx-switch class="float-right" [value]="selectedUser.isEnabled" (onClick)="updateEnabled($event)"></nx-switch>
                 <h2 class="users-email mb-2">{{selectedUser.email}}</h2>
                 <span class="users-name">{{selectedUser.fullName}}</span>
-                <span class="float-right">{{selectedUser.isEnabled}}</span>
             </header>
 
             <nx-section>
