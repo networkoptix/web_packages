@@ -91,7 +91,7 @@ angular.module('cloudApp')
             $scope.$watch('system', function () {
                 // system.accessRole set by backend my differ by key in LANG
                 // don't show it before system.accessRoles are defined by user's permissions
-                if ($scope.system && $scope.system.accessRoles) {
+                if ($scope.system && $scope.system.accessRole) {
                     $scope.permission = L.accessRoles[$scope.system.accessRole].label || $scope.system.accessRole;
                 }
             }, true);
