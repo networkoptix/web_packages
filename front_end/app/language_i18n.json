@@ -2,6 +2,7 @@
     "2-Way Audio": "2-Way Audio",
     "About %CLOUD_NAME%": "About %CLOUD_NAME%",
     "Access Level": "Access Level",
+    "Access level": "Access level",
     "Account Settings": "Account Settings",
     "Account is created.": "Account is created.",
     "Account is successfully created.": "Account is successfully created.",
@@ -9,7 +10,6 @@
     "Account not found": "Account not found",
     "Actual number of events supported by this camera may be bigger.": "Actual number of events supported by this camera may be bigger.",
     "Add User": "Add User",
-    "Add user": "Add user",
     "Additional Requirements": "Additional Requirements",
     "Administration": "Administration",
     "Advanced PTZ": "Advanced PTZ",
@@ -92,7 +92,7 @@
     "Ok": "Ok",
     "Other packages:": "Other packages:",
     "Other releases, patches and beta versions": "Other releases, patches and beta versions",
-    "Owner \u2013": "Owner \u2013",
+    "Owner": "Owner",
     "PTZ": "PTZ",
     "Password": "Password",
     "Password is required": "Password is required",
@@ -150,6 +150,7 @@
     "You can only merge Systems where you are the owner.": "You can only merge Systems where you are the owner.",
     "Your Email": "Your Email",
     "Your Name": "Your Name",
+    "Your access level": "Your access level",
     "Your browser is not supported": "Your browser is not supported",
     "accessRoles": {
         "Administrator": {
