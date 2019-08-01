@@ -1,5 +1,4 @@
 from django.views.decorators.http import require_http_methods
-from django.views import defaults
 from django.contrib import messages
 from django.contrib.auth.decorators import permission_required
 from django.core.exceptions import PermissionDenied
@@ -343,7 +342,7 @@ def download_current_structure(request, product_id):
 @require_http_methods(["GET"])
 @permission_required('cms.change_product')
 def download_file(request, path):
-    product = get_cloud_portal_product()
+    product = Product.objects.filter(id=request.GET.get("product_id")).first()
 
     if not UserGroupsToProductPermissions.check_permission(request.user, product, 'cms.edit_content'):
         raise PermissionDenied
@@ -354,7 +353,7 @@ def download_file(request, path):
     file = filldata.read_customized_file(path, product, language_code, version_id, preview)
     if file:
         return response_attachment(file, os.path.basename(path), "application")
-    raise defaults.page_not_found("File does not exist")
+    raise HttpResponseBadRequest("File does not exist")
 
 
 @require_http_methods(["GET"])

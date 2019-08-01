@@ -99,7 +99,7 @@
                                             src="{{ record }}"
                                           {% endif %}></div>
                             {% elif data_structure.type == DataStructureTypes.file %}
-                                <a href="{% url 'download_file' data_structure.name %}?version_id={{ version.id }}&lang={{ language.code }}&draft"
+                                <a href="{% url 'download_file' data_structure.name %}?version_id={{ version.id }}&product_id={{ product.id }}&lang={{ language.code }}&draft"
                                    download>Download</a>
                             {% elif data_structure.type == DataStructureTypes.external_file %}
                                 <a href="{{ record }}">Download</a>
