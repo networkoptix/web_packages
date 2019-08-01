@@ -187,7 +187,7 @@
 	},
 	"testedVersionLabel": "Tested on {{vmsName}} version:",
 	"testedVersionsLabel": "Tested on {{vmsName}} versions:",
-	"About %CLOUD_NAME%": "About %CLOUD_NAME%",
+	"About %CLOUD_NAME%": "%CLOUD_NAME% 정보",
 	"Download %VMS_NAME%": "%VMS_NAME% 다운로드",
 	"Integrations": "Integrations",
 	"Privacy": "개인 정보 보호 정책",

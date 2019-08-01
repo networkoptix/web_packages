@@ -1,6 +1,6 @@
 {
     "2-Way Audio": "אודיו דו כיווני",
-    "About %CLOUD_NAME%": "About %CLOUD_NAME%",
+    "About %CLOUD_NAME%": "אודות %CLOUD_NAME%",
     "Account Settings": "הגדרות החשבון",
     "Account not activated": "חשבון לא הופעל",
     "Account not found": "החשבון לא נמצא",
@@ -107,7 +107,7 @@
     "Systems of such size may work but will be unstable and have troubles with updates and synchronisation.": "מערכות בגודל כזה עשויות לפעול, אך הן לא יהיו יציבות ויש להן בעיות עם עדכונים וסינכרון.",
     "Tags": "תגיות",
     "Take the name and settings from": "קח את השם וההגדרות מ",
-    "Terms of Use": "תנאי השימוש",
+    "Terms": "תנאי שימוש",
     "Terms of Use": "תנאי השימוש",
     "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.": "אישורי משתמש זה ייחשפו! עליך ליצור תפקיד \"משתמש ציבורי\" מותאם אישית עם גישה רק\n            אל המצלמות שנבחרו לשימוש ציבורי, והקצה רק את המינימום הנדרש הצפייה הרשאות.\n            \"משתמש ציבורי\" זה אינו צריך גישה מלאה מכל סוג שהוא למערכת.",
     "There will be more than": "יהיו יותר מ",

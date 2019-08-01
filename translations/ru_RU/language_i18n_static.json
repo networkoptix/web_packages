@@ -7,12 +7,12 @@
 		"Any": "Любой",
 		"selected": "выбрано",
 		"vendor": "Производитель",
-		"vendors": "Manufacturers",
+		"vendors": "Производители",
 		"hardwareType": "Тип",
-		"hardwareTypes": "Types",
+		"hardwareTypes": "Типы",
 		"minResolution": "Минимальное разрешение",
 		"analytics": "Аналитика",
-		"analyticsSelected": "analytics events"
+		"analyticsSelected": "события аналитики"
 	},
 	"cameraFilters": {
 		"ptz": "Камеры PTZ",
@@ -135,7 +135,7 @@
 			"b_Link": "отправить запрос",
 			"c_Info": "с дополнительными вопросами/проблемами относительно поддерживаемых устройств."
 		},
-		"disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous."
+		"disclaimer": "Этот список ограничен устройствами, найденными на {{vmsName}}, где пользователи разрешили автоматическую отправку данных по устройствам в {{companyName}}. Личная информация не собирается, и каждый пользователь остается полностью анонимным."
 	},
 	"integration": {
 		"previewRibbonText": "Эта страница является предварительным просмотром последних изменений и не соответствует общедоступной версии.",
@@ -187,7 +187,7 @@
 	},
 	"testedVersionLabel": "Проверено на версии {{vmsName}}:",
 	"testedVersionsLabel": "Проверено на версиях {{vmsName}}:",
-	"About %CLOUD_NAME%": "About %CLOUD_NAME%",
+	"About %CLOUD_NAME%": "О %CLOUD_NAME%",
 	"Download %VMS_NAME%": "Скачать %VMS_NAME%",
 	"Integrations": "Интеграции",
 	"Privacy": "Политика конфиденциальности",

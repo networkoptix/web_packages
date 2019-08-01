@@ -200,7 +200,7 @@
     "successDeleted": "Systém {{systemName}} byl úspěšně odstraněna z Vašeho účtu",
     "mergeFailed": "Spojení systémů selhalo",
     "mergeStart": "Systémy se spojují",
-    "mergeSuccess": "System merge completed",
+    "mergeSuccess": "Sloučení systému bylo dokončeno",
     "permissionsRemoved": "Oprávnění byla odstraněna z adresy {{email}}",
     "unknownName": "Neznámý název systému (problém s cloudovým spojením)"
   },

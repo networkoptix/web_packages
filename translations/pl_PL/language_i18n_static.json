@@ -187,7 +187,7 @@
 	},
 	"testedVersionLabel": "Testowane na {{vmsName}} w wersji:",
 	"testedVersionsLabel": "Testowane na {{vmsName}} w wersjach:",
-	"About %CLOUD_NAME%": "About %CLOUD_NAME%",
+	"About %CLOUD_NAME%": "Informacje o %CLOUD_NAME%",
 	"Download %VMS_NAME%": "Pobierz %VMS_NAME%",
 	"Integrations": "Integracje",
 	"Privacy": "Prywatność",
