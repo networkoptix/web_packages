@@ -149,7 +149,7 @@ export class LoginModalContent implements OnInit {
                 },
                 wrongParameters: () => {
                 },
-                portalError: this.language.lang.errorCodes.brokenAccount
+                portalError: this.LANG.errorCodes.brokenAccount
             }
         }).then(() => {
             if (this.keepPage) {

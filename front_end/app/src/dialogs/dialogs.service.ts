@@ -83,9 +83,10 @@ export class NxDialogsService {
         // });
     }
 
-    createModel(modal, options, inputs) {
+    createModal(modal, options, inputs) {
         const modalRef = this.modalService.open(modal, options);
-        return Object.assign(modalRef.componentInstance, inputs);
+        Object.assign(modalRef.componentInstance, inputs);
+        return modalRef.result;
     }
 
     alert(message, title) {
@@ -106,8 +107,7 @@ export class NxDialogsService {
             closable   : true,
         };
 
-        return this.createModel(GenericModalContent, options, params)
-                .result;
+        return this.createModal(GenericModalContent, options, params);
     }
 
     confirm(message, title, actionLabel, actionType?, cancelLabel?) {
@@ -128,8 +128,7 @@ export class NxDialogsService {
             closable : true,
         };
 
-        return this.createModel(GenericModalContent, options, params)
-                .result;
+        return this.createModal(GenericModalContent, options, params);
     }
 
     login(keepPage?) {
@@ -148,8 +147,7 @@ export class NxDialogsService {
         };
 
         let closeResult: any;
-        return this.createModel(LoginModalContent, options, params)
-                   .result
+        return this.createModal(LoginModalContent, options, params)
                     // handle how the dialog was closed
                     // required if we need to have dismissible dialog otherwise
                     // will raise a JS error ( Uncaught [in promise] )
@@ -172,8 +170,7 @@ export class NxDialogsService {
             closable   : true,
         };
 
-        return this.createModel(AddUserModalContent, options, params)
-                .result;
+        return this.createModal(AddUserModalContent, options, params);
     }
 
     disconnect(systemId) {
@@ -187,8 +184,7 @@ export class NxDialogsService {
             closable: true,
         };
 
-        return this.createModel(DisconnectModalContent, options, params)
-                .result;
+        return this.createModal(DisconnectModalContent, options, params);
     }
 
     rename(systemId, systemName) {
@@ -203,8 +199,7 @@ export class NxDialogsService {
             closable: true,
         };
 
-        return this.createModel(RenameModalContent, options, params)
-                .result;
+        return this.createModal(RenameModalContent, options, params);
     }
 
     merge(system, systems, user) {
@@ -220,8 +215,7 @@ export class NxDialogsService {
             closable   : true,
         };
 
-        return this.createModel(MergeModalContent, options, params)
-                .result;
+        return this.createModal(MergeModalContent, options, params);
     }
 
     message(type, data) {
@@ -236,8 +230,7 @@ export class NxDialogsService {
             closable: true,
         };
 
-        return this.createModel(MessageModalContent, options, params)
-                .result;
+        return this.createModal(MessageModalContent, options, params);
     }
 
     embed(systemId) {
@@ -250,7 +243,6 @@ export class NxDialogsService {
             closable   : true,
         };
 
-        return this.createModel(EmbedModalContent, options, params)
-                .result;
+        return this.createModal(EmbedModalContent, options, params);
     }
 }

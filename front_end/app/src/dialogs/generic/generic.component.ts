@@ -1,7 +1,8 @@
-import { Component, OnInit, Input, ViewEncapsulation, Inject } from '@angular/core';
-import { NgbActiveModal, NgbModal, NgbModalRef }               from '@ng-bootstrap/ng-bootstrap';
-import { NxLanguageProviderService }                           from '../../services/nx-language-provider';
-import { DomSanitizer }                                        from '@angular/platform-browser';
+import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
+import { Location }                                    from '@angular/common';
+import { NgbActiveModal, NgbModal, NgbModalRef }       from '@ng-bootstrap/ng-bootstrap';
+import { NxLanguageProviderService }                   from '../../services/nx-language-provider';
+import { DomSanitizer }                                from '@angular/platform-browser';
 
 @Component({
     selector: 'nx-modal-generic-content',
