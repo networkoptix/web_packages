@@ -254,6 +254,7 @@ import * as angular from 'angular';
                         }, () => {
                             this.isAvailable = false;
                             this.updateSystemState();
+                            return Promise.reject();
                         });
                     };
 
@@ -261,11 +262,13 @@ import * as angular from 'angular';
                         if (!this.usersPromise || reload) {
                             let promise = null;
                             if (this.isOnline) { // Two separate cases - either we get info from the system (presuming it has actual names)
-                                promise = this.getUsersDataFromTheSystem(this.id).catch(() => {
-                                    return this.getUsersCachedInCloud(this.id);
-                                });
+                                promise = this.getUsersDataFromTheSystem(this.id)
+                                    .then(() => {})
+                                    .catch(() => {
+                                        return this.getUsersCachedInCloud();
+                                    });
                             } else { // or we get old cached data from the cloud
-                                promise = this.getUsersCachedInCloud(this.id);
+                                promise = this.getUsersCachedInCloud();
                             }
 
                             this.usersPromise = promise.then((users) => {
