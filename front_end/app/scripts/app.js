@@ -22,7 +22,6 @@ window.L = {};
             'ngStorage',
             'base64',
             'nxCommon',
-            'ngToast',
             'angular-clipboard',
 
             // cloudApp modules
@@ -52,17 +51,17 @@ window.L = {};
             $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
             $httpProvider.interceptors.push('httpResponseInterceptor');
         }])
-        .config(['ngToastProvider', 'nxConfigServiceProvider', function (ngToastProvider, nxConfigServiceProvider) {
+        .config(['nxConfigServiceProvider', function (nxConfigServiceProvider) {
             var CONFIG = nxConfigServiceProvider.$get().getConfig();
 
-            ngToastProvider.configure({
-                timeout: CONFIG.alertTimeout,
-                animation: 'fade',
-                horizontalPosition: 'center',
-                maxNumber: CONFIG.alertsMaxCount,
-                combineDuplications: true,
-                newestOnTop: false
-            });
+            // ngToastProvider.configure({
+            //     timeout: CONFIG.alertTimeout,
+            //     animation: 'fade',
+            //     horizontalPosition: 'center',
+            //     maxNumber: CONFIG.alertsMaxCount,
+            //     combineDuplications: true,
+            //     newestOnTop: false
+            // });
         }])
         .config(['$routeProvider', '$locationProvider', '$compileProvider',
             'languageServiceProvider', 'nxConfigServiceProvider',

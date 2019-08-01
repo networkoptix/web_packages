@@ -4,6 +4,7 @@ import { TranslateModule }                         from '@ngx-translate/core';
 import { downgradeComponent, downgradeInjectable } from '@angular/upgrade/static';
 import { RouterModule }                            from '@angular/router';
 import { FormsModule }                             from '@angular/forms';
+import { NgbToastModule }                from '@ng-bootstrap/ng-bootstrap';
 
 import { DirectivesModule }               from '../directives/directives.module';
 import { NxProcessButtonComponent }       from './process-button/process-button.component';
@@ -35,15 +36,17 @@ import { NxPasswordComponent }       from './password-input/password.component';
 import { NxEmailComponent }          from './email-input/email.component';
 import { NxClientButtonComponent }   from './open-client-button/client-button.component';
 import { NxSwitchComponent }         from './switch/switch.component';
+import { ToastsContainer }         from './toast/toast.component';
 
 @NgModule({
-    imports        : [
+    imports: [
         CommonModule,
         DirectivesModule,
         TranslateModule,
         RouterModule,
         FormsModule,
-        MenuModule
+        MenuModule,
+        NgbToastModule
     ],
     declarations   : [
         NxGenericDropdown,
@@ -72,7 +75,8 @@ import { NxSwitchComponent }         from './switch/switch.component';
         NxPasswordComponent,
         NxEmailComponent,
         NxClientButtonComponent,
-        NxSwitchComponent
+        NxSwitchComponent,
+        ToastsContainer
     ],
     entryComponents: [
         NxGenericDropdown,
@@ -101,7 +105,8 @@ import { NxSwitchComponent }         from './switch/switch.component';
         NxPasswordComponent,
         NxEmailComponent,
         NxClientButtonComponent,
-        NxSwitchComponent
+        NxSwitchComponent,
+        ToastsContainer
     ],
     providers      : [
         NxProcessButtonComponent,
@@ -123,6 +128,7 @@ import { NxSwitchComponent }         from './switch/switch.component';
         NxEmailComponent,
         NxClientButtonComponent,
         NxSwitchComponent,
+        ToastsContainer,
 
         NxRibbonService,
     ],
@@ -154,6 +160,7 @@ import { NxSwitchComponent }         from './switch/switch.component';
         NxEmailComponent,
         NxClientButtonComponent,
         NxSwitchComponent,
+        ToastsContainer,
 
         MenuModule,
     ]

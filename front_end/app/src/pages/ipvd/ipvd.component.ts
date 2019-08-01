@@ -8,12 +8,13 @@ import { BreakpointObserver, BreakpointState }   from '@angular/cdk/layout';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { CamerasService }                         from '../../services/cameras.service';
 import { IpvdSearchService }                      from './ipvd-search.service';
-import { NxModalMessageComponent, MessageParams } from '../../dialogs/message/message.component';
-import { NxConfigService }                        from '../../services/nx-config';
-import { NxUriService }                           from '../../services/uri.service';
-import { NxUtilsService }                         from '../../services/utils.service';
-import { Title }                                  from '@angular/platform-browser';
-import { NxLanguageProviderService }              from '../../services/nx-language-provider';
+import { MessageParams }             from '../../dialogs/message/message.component';
+import { NxConfigService }           from '../../services/nx-config';
+import { NxUriService }              from '../../services/uri.service';
+import { NxUtilsService }            from '../../services/utils.service';
+import { Title }                     from '@angular/platform-browser';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxDialogsService }          from '../../dialogs/dialogs.service';
 
 interface Params {
     [key: string]: any;
@@ -101,7 +102,7 @@ export class NxIpvdComponent implements OnInit {
                 private cameraService: CamerasService,
                 private cameraSearchService: IpvdSearchService,
                 // TODO: Use dialog service when it is not being downgraded
-                private messageDialog: NxModalMessageComponent,
+                private dialogs: NxDialogsService,
                 private uri: NxUriService,
                 private route: ActivatedRoute,
                 private location: Location,
@@ -396,8 +397,8 @@ export class NxIpvdComponent implements OnInit {
             disclaimer: this.LANG.privacyPolicy.ipvd,
             product: device,
         };
-        this.messageDialog
-            .open(type, data)
+        this.dialogs
+            .message(type, data)
             .then(() => {
             });
 

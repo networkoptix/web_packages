@@ -24,7 +24,6 @@ export class NxSystemMergeStatusComponent implements OnInit {
                 private _config: NxConfigService,
                 private language: NxLanguageProviderService,
                 private settingsService: NxSettingsService,
-                private translate: TranslateService,
                 private dialogs: NxDialogsService) {
         this.config = this._config.getConfig();
     }

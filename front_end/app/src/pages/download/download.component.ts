@@ -4,7 +4,7 @@ import {
 }                                            from '@angular/core';
 import { ActivatedRoute, Router }       from '@angular/router';
 import { Title }                        from '@angular/platform-browser';
-import { DOCUMENT, Location }           from '@angular/common';
+import { Location }           from '@angular/common';
 import { NgbTabChangeEvent, NgbTabset } from '@ng-bootstrap/ng-bootstrap';
 import { DeviceDetectorService }        from 'ngx-device-detector';
 import { NxConfigService }              from '../../services/nx-config';
@@ -37,7 +37,7 @@ export class DownloadComponent implements OnInit, OnDestroy {
 
     location: Location;
 
-    @ViewChild('tabs')
+    @ViewChild('tabs', { static: true })
     public tabs: NgbTabset;
 
     // TODO: Fix arm supported. It says the same thing as linux
@@ -72,7 +72,7 @@ export class DownloadComponent implements OnInit, OnDestroy {
                 @Inject('account') private account: any,
                 @Inject('authorizationCheckService') private authorizationService: any,
                 @Inject('locationProxyService') private locationProxy: any,
-                @Inject(DOCUMENT) private document: any,
+                // @Inject(DOCUMENT) private document: Document,
                 private configService: NxConfigService,
                 private deviceService: DeviceDetectorService,
                 private route: ActivatedRoute,
@@ -110,7 +110,7 @@ export class DownloadComponent implements OnInit, OnDestroy {
             for (const mobile in this.downloads.mobile) {
                 if (this.downloads.mobile[ mobile ].os === this.activeOs) {
                     if (this.LANG.downloads.mobile[ this.downloads.mobile[ mobile ].name ].link !== 'disabled') {
-                        this.document.location.href = this.LANG.downloads.mobile[ this.downloads.mobile[ mobile ].name ].link;
+                        document.location.href = this.LANG.downloads.mobile[ this.downloads.mobile[ mobile ].name ].link;
                         return;
                     }
                     break;
@@ -191,7 +191,7 @@ export class DownloadComponent implements OnInit, OnDestroy {
                 .requireLogin()
                 .then(result => {
                     if (!result) {
-                        this.document.location.href = this.CONFIG.redirectUnauthorised;
+                        document.location.href = this.CONFIG.redirectUnauthorised;
                         return;
                     }
 

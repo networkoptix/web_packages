@@ -22,8 +22,8 @@ import { BrowserModule }   from '@angular/platform-browser';
 export class NxLandingDisplayComponent implements AfterViewInit, OnInit {
     CONFIG: any = {};
 
-    @ViewChild('dynamicTemplate', { read: ViewContainerRef }) dynamicTemplate;
-    @ViewChild('dynamicImage', { read: ViewContainerRef }) dynamicImage;
+    @ViewChild('dynamicTemplate', { read: ViewContainerRef, static: true }) dynamicTemplate;
+    @ViewChild('dynamicImage', { read: ViewContainerRef, static: true }) dynamicImage;
 
     constructor(private _compiler: Compiler,
                 private _injector: Injector,

@@ -28,7 +28,7 @@ export class NxRegisterComponent implements OnInit {
     context: any;
     lockEmail: boolean;
 
-    @ViewChild('registerForm') registerForm: HTMLFormElement;
+    @ViewChild('registerForm', { static: true }) registerForm: HTMLFormElement;
 
     private setupDefaults() {
 

@@ -8,10 +8,12 @@ import {
     Renderer2
 }                                                                     from '@angular/core';
 import { DOCUMENT, Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
-import { NgbModal, NgbActiveModal, NgbModalRef }                      from '@ng-bootstrap/ng-bootstrap';
-import { NxModalGenericComponent }                                    from '../generic/generic.component';
+import { NgbActiveModal }                                             from '@ng-bootstrap/ng-bootstrap';
 import { NxConfigService }                                            from '../../services/nx-config';
 import { NxUtilsService }                                             from '../../services/utils.service';
+import { NxLanguageProviderService }                                  from '../../services/nx-language-provider';
+import { NxModalGenericComponent }                                    from '../generic/generic.component';
+// import { NxDialogsService }                                 from '../dialogs.service';
 
 @Component({
     selector: 'ngbd-modal-content',
@@ -20,13 +22,13 @@ import { NxUtilsService }                                             from '../.
     providers: [Location, { provide: LocationStrategy, useClass: PathLocationStrategy }]
 })
 export class LoginModalContent implements OnInit {
-    @Input() language;
     @Input() login;
     @Input() cancellable;
     @Input() closable;
     @Input() location;
     @Input() keepPage;
 
+    LANG: any;
     config: any;
     auth: any;
     next: string;
@@ -36,7 +38,7 @@ export class LoginModalContent implements OnInit {
     wrongPassword: boolean;
     accountBlocked: boolean;
 
-    @ViewChild('loginForm') loginForm: HTMLFormElement;
+    @ViewChild('loginForm', { static: true }) loginForm: HTMLFormElement;
 
     constructor(public activeModal: NgbActiveModal,
                 @Inject('account') private account: any,
@@ -45,15 +47,17 @@ export class LoginModalContent implements OnInit {
                 @Inject('localStorageService') private localStorage: any,
                 @Inject(DOCUMENT) private document: any,
                 private configService: NxConfigService,
+                private language: NxLanguageProviderService,
+                private genericModal: NxModalGenericComponent,
                 private renderer: Renderer2,
-                private genericModal: NxModalGenericComponent) {
-
+    ) {
         this.auth = this.localStorage;
         this.next = '';
         this.password = '';
         this.remember = true;
         this.wrongPassword = false;
         this.config = configService.getConfig();
+        this.LANG = this.language.getTranslations();
     }
 
     resendActivation(email) {
@@ -63,19 +67,19 @@ export class LoginModalContent implements OnInit {
             return this.cloudApi.reactivate(email);
         }, {
             errorCodes: {
-                forbidden: this.language.lang.errorCodes.accountAlreadyActivated,
-                notFound: this.language.lang.errorCodes.emailNotFound
+                forbidden: this.LANG.errorCodes.accountAlreadyActivated,
+                notFound: this.LANG.errorCodes.emailNotFound
             },
             holdAlerts: true,
-            errorPrefix: this.language.lang.errorCodes.cantSendConfirmationPrefix
+            errorPrefix: this.LANG.errorCodes.cantSendConfirmationPrefix
         })
-                .run()
-                .then(() => {
-                    this.genericModal.openConfirm(
-                            'Check your inbox and visit provided link to activate account',
-                            'Activation email sent',
-                            'OK');
-                });
+        .run()
+        .then(() => {
+            this.genericModal.openConfirm(
+                    'Check your inbox and visit provided link to activate account',
+                    'Activation email sent',
+                    'OK');
+        });
     }
 
     gotoRegister() {
@@ -183,58 +187,59 @@ export class LoginModalContent implements OnInit {
     }
 }
 
-@Component({
-    selector: 'nx-modal-login',
-    template: '',
-    encapsulation: ViewEncapsulation.None,
-    styleUrls: []
-})
-export class NxModalLoginComponent implements OnInit {
-    login: any;
-    modalRef: NgbModalRef;
-    location: Location;
-    closeResult: string;
-
-    constructor(@Inject('languageService') private language: any,
-                private modalService: NgbModal,
-                location: Location) {
-
-        this.location = location;
-    }
-
-    private dialog(keepPage?) {
-        // TODO: Refactor dialog to use generic dialog
-        // TODO: retire loading ModalContent (CLOUD-2493)
-        this.modalRef = this.modalService.open(LoginModalContent,
-                {
-                            windowClass: 'modal-holder',
-                            backdrop: 'static',
-                            size: 'sm'
-                        });
-        this.modalRef.componentInstance.language = this.language;
-        this.modalRef.componentInstance.login = this.login;
-        this.modalRef.componentInstance.cancellable = !keepPage || false;
-        this.modalRef.componentInstance.closable = true;
-        this.modalRef.componentInstance.location = this.location;
-        this.modalRef.componentInstance.keepPage = (keepPage !== undefined) ? keepPage : true;
-
-        return this.modalRef;
-    }
-
-    open(keepPage?) {
-        return this.dialog(keepPage)
-                .result
-                // handle how the dialog was closed
-                // required if we need to have dismissible dialog otherwise
-                // will raise a JS error ( Uncaught [in promise] )
-                .then((result) => {
-                    this.closeResult = `Closed with: ${result}`;
-                }, (reason) => {
-                    this.closeResult = 'Dismissed';
-                });
-    }
-
-    ngOnInit() {
-        // Initialization should be in LoginModalContent.ngOnInit()
-    }
-}
+// @Component({
+//     selector: 'nx-modal-login',
+//     template: '',
+//     encapsulation: ViewEncapsulation.None,
+//     styleUrls: []
+// })
+// export class NxModalLoginComponent implements OnInit {
+//     login: any;
+//     modalRef: NgbModalRef;
+//     location: Location;
+//     closeResult: string;
+//
+//     constructor(@Inject('languageService') private language: any,
+//                 private modalService: NgbModal,
+//                 // private dialogs: NxDialogsService,
+//                 location: Location) {
+//
+//         this.location = location;
+//     }
+//
+//     private dialog(keepPage?) {
+//         // TODO: Refactor dialog to use generic dialog
+//         // TODO: retire loading ModalContent (CLOUD-2493)
+//         this.modalRef = this.modalService.open(LoginModalContent,
+//                 {
+//                             windowClass: 'modal-holder',
+//                             backdrop: 'static',
+//                             size: 'sm'
+//                         });
+//         this.modalRef.componentInstance.language = this.language;
+//         this.modalRef.componentInstance.login = this.login;
+//         this.modalRef.componentInstance.cancellable = !keepPage || false;
+//         this.modalRef.componentInstance.closable = true;
+//         this.modalRef.componentInstance.location = this.location;
+//         this.modalRef.componentInstance.keepPage = (keepPage !== undefined) ? keepPage : true;
+//
+//         return this.modalRef;
+//     }
+//
+//     open(keepPage?) {
+//         return this.dialog(keepPage)
+//                 .result
+//                 // handle how the dialog was closed
+//                 // required if we need to have dismissible dialog otherwise
+//                 // will raise a JS error ( Uncaught [in promise] )
+//                 .then((result) => {
+//                     this.closeResult = `Closed with: ${result}`;
+//                 }, (reason) => {
+//                     this.closeResult = 'Dismissed';
+//                 });
+//     }
+//
+//     ngOnInit() {
+//         // Initialization should be in LoginModalContent.ngOnInit()
+//     }
+// }

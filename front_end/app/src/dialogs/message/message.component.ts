@@ -2,7 +2,6 @@ import { Component, Inject, OnInit, Input, ViewEncapsulation, Renderer2, ViewChi
 import { NgbModal, NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { EmailValidator, NgForm }                from '@angular/forms';
 import { NxConfigService }                       from '../../services/nx-config';
-import { TranslateService }                      from '@ngx-translate/core';
 import { WINDOW }                                from '../../services/window-provider';
 import { NxLanguageProviderService }             from '../../services/nx-language-provider';
 
@@ -29,10 +28,10 @@ export class MessageModalContent {
     @Input() messageType;
     @Input() data;
     @Input() closable;
-    @Input() config;
 
     LANG: any;
 
+    config: any;
     placeholder: string;
     sendMessage: any;
     userName: string;
@@ -45,11 +44,12 @@ export class MessageModalContent {
     topics: Topic[];
     url: string;
 
-    @ViewChild('feedbackForm') public feedbackForm: NgForm;
+    @ViewChild('feedbackForm', { static: true }) public feedbackForm: NgForm;
 
     constructor(private activeModal: NgbActiveModal,
                 private renderer: Renderer2,
                 private language: NxLanguageProviderService,
+                private configService: NxConfigService,
                 @Inject('account') private account: any,
                 @Inject('process') private process: any,
                 @Inject('cloudApiService') private cloudApi: any,
@@ -59,6 +59,7 @@ export class MessageModalContent {
         this.topic = '';
         this.topicMessage = '';
         this.url = this.window.location.href;
+        this.config = configService.getConfig();
     }
 
     ngOnInit() {
@@ -118,43 +119,42 @@ export class MessageModalContent {
     }
 }
 
-@Component({
-    selector: 'nx-modal-message',
-    template: '',
-    encapsulation: ViewEncapsulation.None,
-    styleUrls: []
-})
-
-export class NxModalMessageComponent implements OnInit {
-    config: any;
-    modalRef: NgbModalRef;
-
-    constructor(private configService: NxConfigService,
-                private modalService: NgbModal) {
-        this.config = configService.getConfig();
-    }
-
-    private dialog(type: string, data: MessageParams) {
-        // TODO: Refactor dialog to use generic dialog
-        // TODO: retire loading ModalContent (CLOUD-2493)
-        this.modalRef = this.modalService.open(MessageModalContent,
-                {
-                            windowClass: 'modal-holder',
-                            backdrop: 'static'
-                        });
-        this.modalRef.componentInstance.closable = true;
-        this.modalRef.componentInstance.messageType = type;
-        this.modalRef.componentInstance.data = data;
-        this.modalRef.componentInstance.config = this.config;
-
-
-        return this.modalRef;
-    }
-
-    open(type: string, data: MessageParams) {
-        return this.dialog(type, data).result;
-    }
-
-    ngOnInit() {
-    }
-}
+// @Component({
+//     selector: 'nx-modal-message',
+//     template: '',
+//     encapsulation: ViewEncapsulation.None,
+//     styleUrls: []
+// })
+// export class NxModalMessageComponent implements OnInit {
+//     config: any;
+//     modalRef: NgbModalRef;
+//
+//     constructor(private configService: NxConfigService,
+//                 private modalService: NgbModal) {
+//         this.config = configService.getConfig();
+//     }
+//
+//     private dialog(type: string, data: MessageParams) {
+//         // TODO: Refactor dialog to use generic dialog
+//         // TODO: retire loading ModalContent (CLOUD-2493)
+//         this.modalRef = this.modalService.open(MessageModalContent,
+//                 {
+//                             windowClass: 'modal-holder',
+//                             backdrop: 'static'
+//                         });
+//         this.modalRef.componentInstance.closable = true;
+//         this.modalRef.componentInstance.messageType = type;
+//         this.modalRef.componentInstance.data = data;
+//         this.modalRef.componentInstance.config = this.config;
+//
+//
+//         return this.modalRef;
+//     }
+//
+//     open(type: string, data: MessageParams) {
+//         return this.dialog(type, data).result;
+//     }
+//
+//     ngOnInit() {
+//     }
+// }

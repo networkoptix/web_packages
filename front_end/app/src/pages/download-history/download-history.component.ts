@@ -4,7 +4,7 @@ import {
 }                                            from '@angular/core';
 import { ActivatedRoute, Router }            from '@angular/router';
 import { Title }                             from '@angular/platform-browser';
-import { DOCUMENT, Location, TitleCasePipe } from '@angular/common';
+import { Location, TitleCasePipe } from '@angular/common';
 import { isNumeric }                         from 'rxjs/util/isNumeric';
 import { NgbTabChangeEvent, NgbTabset }      from '@ng-bootstrap/ng-bootstrap';
 
@@ -39,14 +39,13 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
 
     location: Location;
 
-    @ViewChild('tabs')
+    @ViewChild('tabs', { static: true })
     public tabs: NgbTabset;
 
     constructor(@Inject('cloudApiService') private cloudApi: any,
                 @Inject('authorizationCheckService') private authorizationService: any,
                 @Inject('account') private account: any,
                 @Inject('locationProxyService') private locationProxy: any,
-                @Inject(DOCUMENT) private document: any,
                 private configService: NxConfigService,
                 private route: ActivatedRoute,
                 private router: Router,

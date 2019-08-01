@@ -4,10 +4,10 @@
 
     angular
         .module('cloudApp')
-        .factory('process', ['$q', 'ngToast', 'cloudApi', 'account', 'languageService',
-            function ($q, ngToast, cloudApi, account, languageService) {
+        .factory('process', ['$q', 'cloudApi', 'account', 'languageService', 'nxDialogsService',
+            function ($q, cloudApi, account, languageService, nxDialogsService) {
 
-                let lang = languageService.lang;
+                const lang = languageService.lang;
 
                 function formatError(error, errorCodes) {
                     if (!error || !error.resultCode) {
@@ -15,7 +15,7 @@
                     }
                     if (errorCodes && typeof(errorCodes[error.resultCode]) != 'undefined') {
                         if (angular.isFunction(errorCodes[error.resultCode])) {
-                            let result = (errorCodes[error.resultCode])(error) || false;
+                            const result = (errorCodes[error.resultCode])(error) || false;
                             if (result !== true) {
                                 return result;
                             }
@@ -100,15 +100,7 @@
                                     if (formatted !== false) {
                                         self.errorMessage = formatted;
                                         // Error handler here
-                                        // Circular dependencies ... keep ngToast for no -- TT
-                                        // nxDialogsService.notify(errorPrefix + self.errorMessage, 'danger', holdAlerts);
-                                        ngToast.create({
-                                            className: 'danger',
-                                            content: errorPrefix + self.errorMessage,
-                                            dismissOnTimeout: !holdAlerts,
-                                            dismissOnClick: !holdAlerts,
-                                            dismissButton: holdAlerts
-                                        });
+                                        nxDialogsService.notify(errorPrefix + self.errorMessage, 'danger', holdAlerts);
                                     }
                                     deferred.reject(data);
                                 }
@@ -124,15 +116,7 @@
                                         self.success = true;
 
                                         if (successMessage && data !== false) {
-                                            // nxDialogsService.notify(successMessage, 'success', holdAlerts);
-                                            // Circular dependencies ... keep ngToast for no -- TT
-                                            ngToast.create({
-                                                className: 'success',
-                                                content: successMessage,
-                                                dismissOnTimeout: !holdAlerts,
-                                                dismissOnClick: !holdAlerts,
-                                                dismissButton: holdAlerts
-                                            });
+                                            nxDialogsService.notify(successMessage, 'success', holdAlerts);
                                         }
                                         deferred.resolve(data);
                                     }

@@ -5,10 +5,10 @@ import { UpgradeModule }        from '@angular/upgrade/static';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule }          from '@angular/forms';
 import { NgbModule }            from '@ng-bootstrap/ng-bootstrap';
-import { TranslateModule }      from '@ngx-translate/core';
 
 import { NxSandboxComponent } from './sandbox.component';
 import { ComponentsModule }   from '../../components/components.module';
+import { DialogsModule }   from '../../dialogs/dialogs.module';
 
 const appRoutes: Routes = [
     { path: 'sandbox', component: NxSandboxComponent }
@@ -16,12 +16,12 @@ const appRoutes: Routes = [
 
 @NgModule({
     imports        : [
+        DialogsModule,
         CommonModule,
         BrowserModule,
         UpgradeModule,
         NgbModule,
         FormsModule,
-        TranslateModule,
         ComponentsModule,
 
         RouterModule.forChild(appRoutes)

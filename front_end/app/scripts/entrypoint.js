@@ -1,5 +1,4 @@
 import 'angular';
-import 'ng-toast';
 import 'ngstorage';
 import 'angular-route';
 import 'angular-base64';
@@ -11,8 +10,6 @@ import 'angular-clipboard';
 import 'jquery-mousewheel';
 import 'what-input';
 
-import 'ng-toast/dist/ngToast.css';
-import 'ng-toast/dist/ngToast-animations.css';
 import '../styles/main.scss';
 import '../app.component.scss';
 

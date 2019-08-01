@@ -5,12 +5,13 @@ import { IntegrationService }                              from '../integration.
 import { DomSanitizer }                                    from '@angular/platform-browser';
 import { NxRibbonService }                                 from '../../../components/ribbon/ribbon.service';
 import { NxConfigService }                                 from '../../../services/nx-config';
-import { NxModalMessageComponent, MessageParams }          from '../../../dialogs/message/message.component';
+import { MessageParams }          from '../../../dialogs/message/message.component';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 
-import { map }           from 'rxjs/operators';
-import { combineLatest } from 'rxjs';
-import { NxMenuService } from '../../../components/menu/menu.service';
+import { map }              from 'rxjs/operators';
+import { combineLatest }    from 'rxjs';
+import { NxMenuService }    from '../../../components/menu/menu.service';
+import { NxDialogsService } from '../../../dialogs/dialogs.service';
 
 @Component({
     selector   : 'integration-detail-component',
@@ -38,7 +39,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                 private ribbonService: NxRibbonService,
                 private configService: NxConfigService,
                 // TODO: Use dialog service when it is not being downgraded
-                private messageDialog: NxModalMessageComponent,
+                private dialogs: NxDialogsService,
                 private language: NxLanguageProviderService,
                 private menuService: NxMenuService,
                 location: Location) {
@@ -135,7 +136,9 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
             productId: this.plugin.id,
             product: this.plugin.information.name,
         };
-        this.messageDialog.open(this.CONFIG.messageType.integration, data).then(() => {});
+        this.dialogs
+            .message(this.CONFIG.messageType.integration, data)
+            .then(() => {});
     }
 }
 

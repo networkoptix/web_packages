@@ -1,7 +1,7 @@
-import { Component, Inject, OnInit, Input, ViewEncapsulation, Renderer2 } from '@angular/core';
-import { Location }                                                       from '@angular/common';
-import { NgbModal, NgbActiveModal, NgbModalRef }                          from '@ng-bootstrap/ng-bootstrap';
-import { EmailValidator }                                                 from '@angular/forms';
+import { Component, Inject, Input, Renderer2 } from '@angular/core';
+import { NgbActiveModal }                      from '@ng-bootstrap/ng-bootstrap';
+import { EmailValidator }                      from '@angular/forms';
+import { NxLanguageProviderService }           from '../../services/nx-language-provider';
 
 @Component({
     selector: 'nx-modal-rename-content',
@@ -11,23 +11,25 @@ import { EmailValidator }                                                 from '
 export class RenameModalContent {
     @Input() systemId;
     @Input() systemName;
-    @Input() language;
     @Input() closable;
 
+    LANG: any;
     rename: any;
 
     constructor(private activeModal: NgbActiveModal,
                 private renderer: Renderer2,
+                private language: NxLanguageProviderService,
                 @Inject('process') private process: any,
-                @Inject('cloudApiService') private cloudApi: any) {
-
+                @Inject('cloudApiService') private cloudApi: any,
+    ) {
+        this.LANG = this.language.getTranslations();
     }
 
     ngOnInit() {
         this.rename = this.process.init(() => {
             return this.cloudApi.renameSystem(this.systemId, this.systemName);
         }, {
-            successMessage: this.language.system.successRename
+            successMessage: this.LANG.system.successRename
         }).then(() => {
             this.activeModal.close(this.systemName);
         });
@@ -38,40 +40,39 @@ export class RenameModalContent {
     }
 }
 
-@Component({
-    selector: 'nx-modal-rename',
-    template: '',
-    encapsulation: ViewEncapsulation.None,
-    styleUrls: []
-})
-
-export class NxModalRenameComponent implements OnInit {
-    modalRef: NgbModalRef;
-
-    constructor(@Inject('languageService') private language: any,
-                private modalService: NgbModal) {
-    }
-
-    private dialog(systemId, systemName) {
-        // TODO: Refactor dialog to use generic dialog
-        // TODO: retire loading ModalContent (CLOUD-2493)
-        this.modalRef = this.modalService.open(RenameModalContent,
-                {
-                            windowClass: 'modal-holder',
-                            backdrop: 'static'
-                        });
-        this.modalRef.componentInstance.language = this.language.lang;
-        this.modalRef.componentInstance.systemId = systemId;
-        this.modalRef.componentInstance.systemName = systemName;
-        this.modalRef.componentInstance.closable = true;
-
-        return this.modalRef;
-    }
-
-    open(systemId, systemName) {
-        return this.dialog(systemId, systemName).result;
-    }
-
-    ngOnInit() {
-    }
-}
+// @Component({
+//     selector: 'nx-modal-rename',
+//     template: '',
+//     encapsulation: ViewEncapsulation.None,
+//     styleUrls: []
+// })
+// export class NxModalRenameComponent implements OnInit {
+//     modalRef: NgbModalRef;
+//
+//     constructor(@Inject('languageService') private language: any,
+//                 private modalService: NgbModal) {
+//     }
+//
+//     private dialog(systemId, systemName) {
+//         // TODO: Refactor dialog to use generic dialog
+//         // TODO: retire loading ModalContent (CLOUD-2493)
+//         this.modalRef = this.modalService.open(RenameModalContent,
+//                 {
+//                             windowClass: 'modal-holder',
+//                             backdrop: 'static'
+//                         });
+//         this.modalRef.componentInstance.language = this.language.lang;
+//         this.modalRef.componentInstance.systemId = systemId;
+//         this.modalRef.componentInstance.systemName = systemName;
+//         this.modalRef.componentInstance.closable = true;
+//
+//         return this.modalRef;
+//     }
+//
+//     open(systemId, systemName) {
+//         return this.dialog(systemId, systemName).result;
+//     }
+//
+//     ngOnInit() {
+//     }
+// }

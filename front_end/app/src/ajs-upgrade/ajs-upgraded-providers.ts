@@ -51,16 +51,6 @@ const processServiceProvider = {
     deps: ['$injector']
 };
 
-function ngToastFactory(i: any) {
-    return i.get('ngToast');
-}
-
-const ngToastProvider = {
-    provide: 'ngToast',
-    useFactory: ngToastFactory,
-    deps: ['$injector']
-};
-
 function systemsServiceFactory(i: any) {
     return i.get('systemsProvider');
 }
@@ -164,14 +154,6 @@ export class accountServiceModule {
     ]
 })
 export class processServiceModule {
-}
-
-@NgModule({
-    providers: [
-        ngToastProvider
-    ]
-})
-export class ngToastModule {
 }
 
 @NgModule({

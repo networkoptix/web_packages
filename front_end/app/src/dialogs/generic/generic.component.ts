@@ -1,8 +1,7 @@
-import { Component, Inject, OnInit, Input, ViewEncapsulation } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
-import { Location } from '@angular/common';
-import { NgbModal, NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { EmailValidator } from '@angular/forms';
+import { Component, OnInit, Input, ViewEncapsulation, Inject } from '@angular/core';
+import { NgbActiveModal, NgbModal, NgbModalRef }               from '@ng-bootstrap/ng-bootstrap';
+import { NxLanguageProviderService }                           from '../../services/nx-language-provider';
+import { DomSanitizer }                                        from '@angular/platform-browser';
 
 @Component({
     selector: 'nx-modal-generic-content',
@@ -10,7 +9,6 @@ import { EmailValidator } from '@angular/forms';
     styleUrls: []
 })
 export class GenericModalContent implements OnInit {
-    @Input() language;
     @Input() message;
     @Input() title;
     @Input() actionLabel;
@@ -21,8 +19,8 @@ export class GenericModalContent implements OnInit {
     @Input() cancellable;
     @Input() closable;
 
-    constructor(public activeModal: NgbActiveModal) {
-    }
+    constructor(public activeModal: NgbActiveModal,
+    ) {}
 
     ngOnInit() {
         this.buttonClass = this.buttonClass || '';
@@ -47,11 +45,14 @@ export class GenericModalContent implements OnInit {
 
 export class NxModalGenericComponent implements OnInit {
     modalRef: NgbModalRef;
+    LANG: any;
 
-    constructor(@Inject('languageService') private language: any,
-                private domSanitizer: DomSanitizer,
+    constructor(private domSanitizer: DomSanitizer,
                 private location: Location,
-                private modalService: NgbModal) {
+                private modalService: NgbModal,
+                private language: NxLanguageProviderService,
+    ) {
+        this.LANG = this.language.getTranslations();
     }
 
     private dialog(message, title, actionLabel, actionType?, cancelLabel?,
@@ -61,7 +62,6 @@ export class NxModalGenericComponent implements OnInit {
                             windowClass: 'modal-holder',
                             backdrop: 'static'
                         });
-        this.modalRef.componentInstance.language = this.language.lang;
 
         this.modalRef.componentInstance.message = this.domSanitizer.bypassSecurityTrustHtml(message);
         this.modalRef.componentInstance.title = title;
@@ -89,9 +89,9 @@ export class NxModalGenericComponent implements OnInit {
 
     openAlert(message, title) {
         return this.dialog(message, title,
-            this.language.lang.dialogs.okButton,
+            this.LANG.dialogs.okButton,
             null,
-            this.language.lang.dialogs.cancelButton,
+            this.LANG.dialogs.cancelButton,
             true,
             true,
             true)

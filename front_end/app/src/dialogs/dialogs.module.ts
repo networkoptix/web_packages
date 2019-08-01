@@ -4,20 +4,20 @@ import { CommonModule } from '@angular/common';
 import { ComponentsModule } from '../components/components.module';
 import { DirectivesModule } from '../directives/directives.module';
 
-import { NxDialogsService }                                   from './dialogs.service';
-import { NxModalLoginComponent, LoginModalContent }           from './login/login.component';
-import { GenericModalContent, NxModalGenericComponent }       from './generic/generic.component';
-import { DisconnectModalContent, NxModalDisconnectComponent } from './disconnect/disconnect.component';
-import { RenameModalContent, NxModalRenameComponent }         from './rename/rename.component';
-import { AddUserModalContent, NxModalAddUserComponent }       from './add-user/add-user.component';
-import { MergeModalContent, NxModalMergeComponent }           from './merge/merge.component';
-import { MessageModalContent, NxModalMessageComponent }       from './message/message.component';
-import { EmbedModalContent, NxModalEmbedComponent }           from './embed/embed.component';
-import { downgradeInjectable }                                from '@angular/upgrade/static';
-import { FormsModule, EmailValidator }                        from '@angular/forms';
-import { TranslateModule }                                    from '@ngx-translate/core';
-import { ClipboardModule }                                    from 'ngx-clipboard';
+import { NxDialogsService }            from './dialogs.service';
+import { LoginModalContent }           from './login/login.component';
+import { DisconnectModalContent }      from './disconnect/disconnect.component';
+import { RenameModalContent }          from './rename/rename.component';
+import { AddUserModalContent }         from './add-user/add-user.component';
+import { MergeModalContent }           from './merge/merge.component';
+import { MessageModalContent }         from './message/message.component';
+import { EmbedModalContent }           from './embed/embed.component';
+import { downgradeInjectable }         from '@angular/upgrade/static';
+import { FormsModule, EmailValidator } from '@angular/forms';
+import { TranslateModule }             from '@ngx-translate/core';
+import { ClipboardModule }             from 'ngx-clipboard';
 
+import { GenericModalContent, NxModalGenericComponent } from './generic/generic.component';
 
 @NgModule({
     imports        : [
@@ -29,35 +29,30 @@ import { ClipboardModule }                                    from 'ngx-clipboar
         DirectivesModule,
     ],
     declarations   : [
-        LoginModalContent, NxModalLoginComponent,
-        GenericModalContent, NxModalGenericComponent,
-        DisconnectModalContent, NxModalDisconnectComponent,
-        RenameModalContent, NxModalRenameComponent,
-        AddUserModalContent, NxModalAddUserComponent,
-        MergeModalContent, NxModalMergeComponent,
-        MessageModalContent, NxModalMessageComponent,
-        EmbedModalContent, NxModalEmbedComponent,
+        LoginModalContent,
+        DisconnectModalContent,
+        RenameModalContent,
+        AddUserModalContent,
+        MergeModalContent,
+        MessageModalContent,
+        EmbedModalContent,
+        GenericModalContent,
+        NxModalGenericComponent,
     ],
     entryComponents: [
-        LoginModalContent, NxModalLoginComponent,
-        GenericModalContent, NxModalGenericComponent,
-        DisconnectModalContent, NxModalDisconnectComponent,
-        RenameModalContent, NxModalRenameComponent,
-        AddUserModalContent, NxModalAddUserComponent,
-        MergeModalContent, NxModalMergeComponent,
-        MessageModalContent, NxModalMessageComponent,
-        EmbedModalContent, NxModalEmbedComponent,
+        LoginModalContent,
+        DisconnectModalContent,
+        RenameModalContent,
+        AddUserModalContent,
+        MergeModalContent,
+        MessageModalContent,
+        EmbedModalContent,
+        GenericModalContent,
+        NxModalGenericComponent,
     ],
     providers      : [
         NxDialogsService,
-        NxModalLoginComponent,
         NxModalGenericComponent,
-        NxModalDisconnectComponent,
-        NxModalRenameComponent,
-        NxModalAddUserComponent,
-        NxModalMergeComponent,
-        NxModalMessageComponent,
-        NxModalEmbedComponent,
     ],
     exports        : []
 })
@@ -67,5 +62,5 @@ export class DialogsModule {
 declare var angular: angular.IAngularStatic;
 angular
     .module('cloudApp.services')
-    .service('NxDialogsService', downgradeInjectable(NxDialogsService));
+    .service('nxDialogsService', downgradeInjectable(NxDialogsService));
 

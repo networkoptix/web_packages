@@ -2,7 +2,7 @@
 
     'use strict';
 
-    function NxHeader(NxDialogsService, cloudApi, account, $location, $route,
+    function NxHeader(nxDialogsService, cloudApi, account, $location, $route,
                       systemsProvider, nxConfigService, $rootScope) {
 
         const CONFIG = nxConfigService.getConfig();
@@ -36,7 +36,7 @@
                 }
 
                 scope.login = function () {
-                    NxDialogsService.login(false);
+                    nxDialogsService.login(false);
                 };
                 scope.logout = function () {
                     account.logout();
@@ -101,7 +101,7 @@
         };
     }
     
-    NxHeader.$inject = ['NxDialogsService', 'cloudApi', 'account', '$location', '$route',
+    NxHeader.$inject = ['nxDialogsService', 'cloudApi', 'account', '$location', '$route',
         'systemsProvider', 'nxConfigService', '$rootScope'];
     
     angular

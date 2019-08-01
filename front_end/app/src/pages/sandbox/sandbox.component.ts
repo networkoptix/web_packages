@@ -1,5 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { NgForm }               from '@angular/forms';
+import { NxDialogsService }     from '../../dialogs/dialogs.service';
 
 @Component({
     selector   : 'sandbox-component',
@@ -23,7 +24,7 @@ export class NxSandboxComponent {
 
     submitted = false;
 
-    @ViewChild('testForm') public testForm: NgForm;
+    @ViewChild('testForm', { static: true }) public testForm: NgForm;
 
     private setupDefaults() {
 
@@ -123,7 +124,7 @@ export class NxSandboxComponent {
 
     }
 
-    constructor() {
+    constructor(private dialogs: NxDialogsService) {
         this.setupDefaults();
     }
 
@@ -150,6 +151,10 @@ export class NxSandboxComponent {
     modelChanged(result: any) {
         // ensure 'change' will be triggered
         this.itemsSelected = [...result];
+    }
+
+    notify(type?: string) {
+        this.dialogs.notify(type, type);
     }
 }
 

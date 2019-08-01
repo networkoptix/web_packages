@@ -118,7 +118,8 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         }
         this.locked[user.email] = true;
 
-        this.dialogs.confirm(this.LANG.system.confirmUnshare,
+        this.dialogs
+            .confirm(this.LANG.system.confirmUnshare,
                 this.LANG.system.confirmUnshareTitle,
                 this.LANG.system.confirmUnshareAction,
                 'btn-danger', this.LANG.dialogs.cancelButton)
@@ -138,7 +139,6 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
 
     setUser(user) {
         this.selectedUser = user;
-        console.log(user);
         this.setPermission(this.selectedUser.role);
     }
 

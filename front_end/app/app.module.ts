@@ -1,21 +1,23 @@
 import { NgModule }                                                       from '@angular/core';
-import { Location, PathLocationStrategy, LocationStrategy, CommonModule } from '@angular/common';
 import { BrowserModule, Title }                                           from '@angular/platform-browser';
 import { BrowserAnimationsModule }                                        from '@angular/platform-browser/animations';
+import { Location, PathLocationStrategy, LocationStrategy, CommonModule } from '@angular/common';
 import { RouterModule, UrlHandlingStrategy, UrlTree }                     from '@angular/router';
 import { HttpClient, HttpClientModule }                                   from '@angular/common/http';
+import { FormsModule }                                                    from '@angular/forms';
 
-import { NgbModule, NgbModal }              from '@ng-bootstrap/ng-bootstrap';
+import { NgbToast, NgbModal }              from '@ng-bootstrap/ng-bootstrap';
 import { OrderModule }                      from 'ngx-order-pipe';
 import { DeviceDetectorModule }             from 'ngx-device-detector';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader }              from '@ngx-translate/http-loader';
 import { CookieService }                    from 'ngx-cookie-service';
+// import { ToastrModule }                     from 'ngx-toastr';
 
 import {
     cloudApiServiceModule, systemModule, systemsModule, languageServiceModule,
     accountServiceModule, processServiceModule, uuid2ServiceModule,
-    ngToastModule, authorizationCheckServiceModule,
+    authorizationCheckServiceModule,
     localStorageModule, locationProxyModule, urlProtocolServiceModule
 } from './src/ajs-upgrade/ajs-upgraded-providers';
 
@@ -27,12 +29,10 @@ import { DirectivesModule }          from './src/directives/directives.module';
 import { NxConfigService }           from './src/services/nx-config';
 import { ServiceModule }             from './src/services/services.module';
 import { LayoutModule }              from '@angular/cdk/layout';
-import { downgradeInjectable }       from '@angular/upgrade/static';
-import { NxLanguageProviderService } from './src/services/nx-language-provider';
-import { NxAppStateService }         from './src/services/nx-app-state.service';
+// import { downgradeInjectable }       from '@angular/upgrade/static';
+// import { NxLanguageProviderService } from './src/services/nx-language-provider';
+// import { NxAppStateService }         from './src/services/nx-app-state.service';
 import { WINDOWS_PROVIDERS } from './src/services/window-provider';
-
-
 
 // AoT requires an exported function for factories
 export function createTranslateLoader(http: HttpClient) {
@@ -75,8 +75,9 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
     imports        : [
         CommonModule,
         BrowserModule,
-        LayoutModule,
         BrowserAnimationsModule,
+        FormsModule,
+        LayoutModule,
         HttpClientModule,
         OrderModule,
         cloudApiServiceModule,
@@ -88,7 +89,6 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
         urlProtocolServiceModule,
         systemModule,
         systemsModule,
-        ngToastModule,
         authorizationCheckServiceModule,
         locationProxyModule,
         ComponentsModule,
@@ -105,7 +105,12 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
             }
         }),
         DeviceDetectorModule.forRoot(),
-        NgbModule.forRoot(),
+        // NgbModule.forRoot(),
+        // ToastrModule.forRoot({
+        //     timeOut          : 3 * 1000,
+        //     positionClass    : 'toast-top-center',
+        //     preventDuplicates: true,
+        // }),
         RouterModule.forRoot([], {
             initialNavigation: true,
             scrollPositionRestoration: 'enabled',
@@ -114,9 +119,9 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
         })
     ],
     entryComponents: [
-
     ],
     providers      : [
+        NgbToast,
         NgbModal,
         Location,
         Title,

@@ -7,10 +7,10 @@
             .factory('authorizationCheckService', AuthorizationCheckService);
 
         AuthorizationCheckService.$inject = ['$rootScope', '$q', '$localStorage',
-            'cloudApi', 'nxConfigService', 'NxDialogsService', 'languageService', '$location'];
+            'cloudApi', 'nxConfigService', 'nxDialogsService', 'languageService', '$location'];
 
         function AuthorizationCheckService($rootScope, $q, $localStorage,
-                                           cloudApi, nxConfigService, NxDialogsService, languageService, $location) {
+                                           cloudApi, nxConfigService, nxDialogsService, languageService, $location) {
 
             const CONFIG = nxConfigService.getConfig();
 
@@ -88,7 +88,7 @@
                                  });
 
                         }, () => {
-                            NxDialogsService.notify(languageService.lang.errorCodes.wrongAuthCode, 'danger');
+                            nxDialogsService.notify(languageService.lang.errorCodes.wrongAuthCode, 'danger');
                         });
             }
 
@@ -108,7 +108,7 @@
 
             function requireLogin() {
                 return get().catch(() => {
-                    return NxDialogsService.login(true);
+                    return nxDialogsService.login(true);
                 });
             }
 
@@ -129,7 +129,7 @@
             function logoutAuthorised() {
                 get().then(() => {
                     // logoutAuthorisedLogoutButton
-                    NxDialogsService
+                    nxDialogsService
                         .confirm('', languageService.lang.dialogs.logoutAuthorisedTitle,
                             languageService.lang.dialogs.logoutAuthorisedContinueButton, 'btn-primary',
                             languageService.lang.dialogs.logoutAuthorisedLogoutButton

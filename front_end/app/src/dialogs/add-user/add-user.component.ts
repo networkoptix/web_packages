@@ -1,17 +1,11 @@
 import {
-    Component,
-    Inject,
-    OnInit,
-    Input,
-    ViewEncapsulation,
-    Renderer2,
-    SimpleChanges,
-    OnChanges
-}                                                from '@angular/core';
-import { NgbModal, NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { EmailValidator }                        from '@angular/forms';
-import { NxModalGenericComponent }               from '../generic/generic.component';
-import { NxConfigService }                       from '../../services/nx-config';
+    Component, Inject, Input, Renderer2
+}                                    from '@angular/core';
+import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
+import { EmailValidator }            from '@angular/forms';
+import { NxConfigService }           from '../../services/nx-config';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxModalGenericComponent }   from '../generic/generic.component';
 
 @Component({
     selector   : 'nx-modal-add-user-content',
@@ -19,11 +13,11 @@ import { NxConfigService }                       from '../../services/nx-config'
     styleUrls  : []
 })
 export class AddUserModalContent {
-    @Input() language;
     @Input() system;
     @Input() user;
     @Input() closable;
 
+    LANG: any;
     config: any;
     title: string;
     sharing: any;
@@ -40,35 +34,35 @@ export class AddUserModalContent {
     constructor(public activeModal: NgbActiveModal,
                 private renderer: Renderer2,
                 private configService: NxConfigService,
+                private genericModal: NxModalGenericComponent,
+                private language: NxLanguageProviderService,
                 @Inject('account') private account: any,
                 @Inject('process') private process: any,
-                @Inject('ngToast') private toast: any,
-                private genericModal: NxModalGenericComponent) {
-
+    ) {
         this.url = 'share';
         this.accessRoles = [];
         this.config = configService.getConfig();
+        this.LANG = this.language.getTranslations();
     }
-
 
     private getRoleDescription() {
         if (this.user.role.description) {
             return this.user.role.description;
         }
         if (this.user.role.userRoleId) {
-            return this.language.accessRoles.customRole.description;
+            return this.LANG.accessRoles.customRole.description;
         }
-        if (this.language.accessRoles[ this.user.role.name ]) {
-            return this.language.accessRoles[ this.user.role.name ].description;
+        if (this.LANG.accessRoles[ this.user.role.name ]) {
+            return this.LANG.accessRoles[ this.user.role.name ].description;
         }
-        return this.language.accessRoles.customRole.description;
+        return this.LANG.accessRoles.customRole.description;
     }
 
     setPermission(role: any) {
         this.selectedPermission = role;
-        this.accessDescription = this.language.accessRoles[this.selectedPermission.name] ?
-                this.language.accessRoles[this.selectedPermission.name].description :
-                this.language.accessRoles.customRole.description;
+        this.accessDescription = this.LANG.accessRoles[this.selectedPermission.name] ?
+                this.LANG.accessRoles[this.selectedPermission.name].description :
+                this.LANG.accessRoles.customRole.description;
     }
 
     formatUserName() {
@@ -86,8 +80,8 @@ export class AddUserModalContent {
     }
 
     ngOnInit() {
-        this.title = (!this.user) ? this.language.sharing.shareTitle : this.language.sharing.editShareTitle;
-        this.buttonText = this.language.sharing.shareConfirmButton;
+        this.title = (!this.user) ? this.LANG.sharing.shareTitle : this.LANG.sharing.editShareTitle;
+        this.buttonText = this.LANG.sharing.shareConfirmButton;
         this.isNewShare = false;
 
         if (!this.user) {
@@ -116,29 +110,29 @@ export class AddUserModalContent {
                 .then((account) => {
                     if (account.email === this.user.email) {
                         this.activeModal.close();
-                        this.toast.create({
-                            className       : 'error',
-                            content         : this.language.share.cantEditYourself,
-                            dismissOnTimeout: true,
-                            dismissOnClick  : true,
-                            dismissButton   : false
-                        });
+                        // this.toast.create({
+                        //     className       : 'error',
+                        //     content         : this.language.share.cantEditYourself,
+                        //     dismissOnTimeout: true,
+                        //     dismissOnClick  : true,
+                        //     dismissButton   : false
+                        // });
                     }
 
                     this.accessDescription = this.getRoleDescription();
                 });
 
-            this.buttonText = this.language.sharing.editShareConfirmButton;
+            this.buttonText = this.LANG.sharing.editShareConfirmButton;
         }
 
         this.sharing = this.process.init(() => {
             if (this.user.role.isOwner) {
                 return this.genericModal
-                    .openConfirm(this.language.sharing.confirmOwner,
-                        this.language.sharing.shareTitle,
-                        this.language.sharing.shareConfirmButton,
+                    .openConfirm(this.LANG.sharing.confirmOwner,
+                        this.LANG.sharing.shareTitle,
+                        this.LANG.sharing.shareConfirmButton,
                         null,
-                        this.language.dialogs.cancelButton)
+                        this.LANG.dialogs.cancelButton)
                     .then((result) => {
                         if (result) {
                             this.doShare();
@@ -148,7 +142,7 @@ export class AddUserModalContent {
                 return this.doShare();
             }
         }, {
-            successMessage: this.language.sharing.permissionsSaved
+            successMessage: this.LANG.sharing.permissionsSaved
         }).then(() => {
             this.activeModal.close(true);
         });
@@ -159,40 +153,39 @@ export class AddUserModalContent {
     }
 }
 
-@Component({
-    selector     : 'nx-modal-share',
-    template     : '',
-    encapsulation: ViewEncapsulation.None,
-    styleUrls    : []
-})
-
-export class NxModalAddUserComponent implements OnInit {
-    modalRef: NgbModalRef;
-
-    constructor(@Inject('languageService') private language: any,
-                private modalService: NgbModal) {
-    }
-
-    private dialog(system?, user?) {
-        // TODO: Refactor dialog to use generic dialog
-        // TODO: retire loading ModalContent (CLOUD-2493)
-        this.modalRef = this.modalService.open(AddUserModalContent,
-                {
-                            windowClass: 'modal-holder',
-                            backdrop: 'static'
-                        });
-        this.modalRef.componentInstance.language = this.language.lang;
-        this.modalRef.componentInstance.system = system;
-        this.modalRef.componentInstance.user = user;
-        this.modalRef.componentInstance.closable = true;
-
-        return this.modalRef;
-    }
-
-    open(system?, user?) {
-        return this.dialog(system, user).result;
-    }
-
-    ngOnInit() {
-    }
-}
+// @Component({
+//     selector     : 'nx-modal-share',
+//     template     : '',
+//     encapsulation: ViewEncapsulation.None,
+//     styleUrls    : []
+// })
+// export class NxModalAddUserComponent implements OnInit {
+//     modalRef: NgbModalRef;
+//
+//     constructor(@Inject('languageService') private language: any,
+//                 private modalService: NgbModal) {
+//     }
+//
+//     private dialog(system?, user?) {
+//         // TODO: Refactor dialog to use generic dialog
+//         // TODO: retire loading ModalContent (CLOUD-2493)
+//         this.modalRef = this.modalService.open(AddUserModalContent,
+//                 {
+//                             windowClass: 'modal-holder',
+//                             backdrop: 'static'
+//                         });
+//         this.modalRef.componentInstance.language = this.language.lang;
+//         this.modalRef.componentInstance.system = system;
+//         this.modalRef.componentInstance.user = user;
+//         this.modalRef.componentInstance.closable = true;
+//
+//         return this.modalRef;
+//     }
+//
+//     open(system?, user?) {
+//         return this.dialog(system, user).result;
+//     }
+//
+//     ngOnInit() {
+//     }
+// }
