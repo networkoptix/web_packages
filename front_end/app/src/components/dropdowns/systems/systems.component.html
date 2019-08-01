@@ -22,9 +22,13 @@
         aria-labelledby="systemsDropdown">
 
         <ul class="dropdown-menu--list">
-            <li *ngIf="activeSystem" class="dropdown-item-container" [style.marginBottom]="systems.length === 1 ? '0' : 'inherit'">
+            <li *ngIf="activeSystem" class="dropdown-item-container">
                 <div class="d-flex">
-                    <nx-client-button class="w-100" customClass="dropdown-process-btn" [system]="activeSystem"></nx-client-button>
+                    <nx-client-button class="w-100"
+                                      customClass="dropdown-process-btn"
+                                      actionType="clear"
+                                      [system]="activeSystem"
+                    ></nx-client-button>
                 </div>
             </li>
             <ng-container *ngIf="systems.length > 1">

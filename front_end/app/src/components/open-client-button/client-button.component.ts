@@ -19,6 +19,7 @@ export class NxClientButtonComponent implements OnInit {
 
     @Input() system: any;
     @Input() customClass: any;
+    @Input() actionType: any;
 
     CONFIG: any = {};
     LANG: any = {};
