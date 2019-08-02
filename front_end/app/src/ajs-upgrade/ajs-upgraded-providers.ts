@@ -148,14 +148,6 @@ export class processServiceModule {
 
 @NgModule({
     providers: [
-        systemsServiceProvider
-    ]
-})
-export class systemsModule {
-}
-
-@NgModule({
-    providers: [
         systemService
     ]
 })
