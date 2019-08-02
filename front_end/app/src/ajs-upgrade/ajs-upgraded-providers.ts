@@ -51,16 +51,6 @@ const processServiceProvider = {
     deps: ['$injector']
 };
 
-function systemsServiceFactory(i: any) {
-    return i.get('systemsProvider');
-}
-
-const systemsServiceProvider = {
-    provide: 'systemsProvider',
-    useFactory: systemsServiceFactory,
-    deps: ['$injector']
-};
-
 function systemServiceFactory(i: any){
     return i.get('system');
 }
