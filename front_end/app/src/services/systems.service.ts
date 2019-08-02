@@ -34,6 +34,10 @@ export class NxSystemsService implements OnDestroy {
         }));
     }
 
+    forceUpdateSystemsAsPromise() {
+        return this.forceUpdateSystems().toPromise();
+    }
+
     getSystemOwnerName (system, currentUserEmail, forOrder?) {
         if (system.ownerAccountEmail === currentUserEmail) {
             if (forOrder) {

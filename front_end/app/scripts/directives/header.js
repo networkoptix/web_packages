@@ -43,6 +43,7 @@
                 };
 
                 scope.nxSystemsService = nxSystemsService;
+                scope.nxSystemsService.forceUpdateSystemsAsPromise();
                 scope.active = {};
                 // scope.activeSystem = {};
 
