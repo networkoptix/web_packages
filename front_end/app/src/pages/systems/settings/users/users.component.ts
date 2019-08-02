@@ -25,9 +25,6 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
     locked: any;
     removingUserProcess: any;
     selectedUser: any;
-    selectedPermission: {
-        name: ''
-    };
     system: any;
     systemAvailable: boolean;
 
@@ -89,7 +86,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
 
     addUser() {
         // Call share dialog, run process inside
-        this.settingsService.addUser();
+        this.settingsService.addUser().then(() => {});
     }
 
     editShare(user) {
@@ -139,13 +136,13 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
 
     setUser(user) {
         this.selectedUser = user;
-        this.setPermission(this.selectedUser.role);
+        this.setRole(this.selectedUser);
     }
 
-    setPermission(role: any) {
-        this.selectedPermission = role;
-        this.accessDescription = this.LANG.accessRoles[this.selectedPermission.name] ?
-                this.LANG.accessRoles[this.selectedPermission.name].description :
+    setRole(user: any) {
+        const userRole = user.role && user.role.name ? user.role : user.accessRole;
+        this.accessDescription = this.LANG.accessRoles[userRole] ?
+                this.LANG.accessRoles[userRole].description :
                 this.LANG.accessRoles.customRole.description;
     }
     updateEnabled(state) {
