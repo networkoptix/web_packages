@@ -41,4 +41,11 @@ export class NxCloudApiService {
         return this.http.post(this.CONFIG.apiBase + '/account/register',
                 { email, password, first_name : firstName, last_name : lastName, subscribe, code });
     }
+
+    systems (systemId?: string) {
+        if (systemId) {
+            return this.http.get(this.CONFIG.apiBase + '/systems/' + systemId);
+        }
+        return this.http.get(this.CONFIG.apiBase + '/systems');
+    }
 }

@@ -3,7 +3,7 @@
     'use strict';
 
     function NxHeader(nxDialogsService, cloudApi, account, $location, $route,
-                      systemsProvider, nxConfigService, $rootScope) {
+                      nxSystemsService, nxConfigService, $rootScope) {
 
         const CONFIG = nxConfigService.getConfig();
     
@@ -42,7 +42,7 @@
                     account.logout();
                 };
 
-                scope.systemsProvider = systemsProvider;
+                scope.nxSystemsService = nxSystemsService;
                 scope.active = {};
                 // scope.activeSystem = {};
 
@@ -83,15 +83,18 @@
                 
                 scope.$on('$locationChangeSuccess', function (next, current) {
                     if ($route.current.params.systemId && !scope.systems) {
-                            scope.systemsProvider.forceUpdateSystems();
+                            scope.nxSystemsService.forceUpdateSystems();
                     }
 
                     updateActiveSystem();
                     updateActive();
                 });
     
-                scope.$watch('systemsProvider.systems', function () {
-                    scope.systems = scope.systemsProvider.systems;
+                scope.$watch('nxSystemsService.systems', function () {
+                    if (!scope.nxSystemsService.systems) {
+                        return;
+                    }
+                    scope.systems = scope.nxSystemsService.systems;
                     scope.singleSystem = (scope.systems.length === 1);
                     scope.systemCounter = scope.systems.length;
         
@@ -102,7 +105,7 @@
     }
     
     NxHeader.$inject = ['nxDialogsService', 'cloudApi', 'account', '$location', '$route',
-        'systemsProvider', 'nxConfigService', '$rootScope'];
+        'nxSystemsService', 'nxConfigService', '$rootScope'];
     
     angular
         .module('cloudApp')

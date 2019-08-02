@@ -16,15 +16,15 @@ import * as angular from 'angular';
                 const CONFIG = nxConfigService.getConfig();
                 this.pollingSystemsUpdate = undefined;
 
-                this.systems = [];
+                this.__DEPRECATED_systems = [];
 
                 this.forceUpdateSystems = function () {
                     return cloudApi
-                        .systems()
+                        .__DEPRECATED_systems()
                         .then(result => {
-                            this.systems = this.sortSystems(result.data);
+                            this.__DEPRECATED_systems = this.sortSystems(result.data);
                             const currentUserEmail = account.getEmail();
-                            this.systems.forEach((system) => {
+                            this.__DEPRECATED_systems.forEach((system) => {
                                 system.isMine = system.ownerAccountEmail === currentUserEmail;
                                 system.canMerge = system.isMine && (system.capabilities && system.capabilities.indexOf(CONFIG.systemCapabilities.cloudMerge) > -1
                                     || CONFIG.allowDebugMode
@@ -46,14 +46,14 @@ import * as angular from 'angular';
                 };
 
                 this.getSystem = function (systemId) {
-                    const system = this.systems.find((system) => {
+                    const system = this.__DEPRECATED_systems.find((system) => {
                         return system.id === systemId;
                     });
 
                     if (system) { // Cache success
                         return $q.resolve({ data: [ system ] });
                     } else { // Cache miss
-                        return cloudApi.systems(systemId);
+                        return cloudApi.__DEPRECATED_systems(systemId);
                     }
                 };
 
@@ -84,7 +84,7 @@ import * as angular from 'angular';
                 };
 
                 this.getMySystems = function (currentUserEmail, currentSystemId) {
-                    return this.systems.filter((system) => {
+                    return this.__DEPRECATED_systems.filter((system) => {
                         return system.ownerAccountEmail === currentUserEmail && system.id !== currentSystemId;
                     }).sort((a, b) => {
                         return a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1;

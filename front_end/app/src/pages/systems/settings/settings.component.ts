@@ -1,17 +1,14 @@
 import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { Location }                                    from '@angular/common';
 import { ActivatedRoute }                              from '@angular/router';
-import { DomSanitizer }                                from '@angular/platform-browser';
 import { NxConfigService }                             from '../../../services/nx-config';
 import { NxLanguageProviderService }                   from '../../../services/nx-language-provider';
-import { TranslateService }                            from '@ngx-translate/core';
 
-import { map }               from 'rxjs/operators';
-import { combineLatest }     from 'rxjs';
 import { NxPageService }     from '../../../services/page.service';
 import { NxDialogsService }  from '../../../dialogs/dialogs.service';
 import { NxSettingsService } from './settings.service';
 import { NxMenuService }     from '../../../components/menu/menu.service';
+import { NxSystemsService } from '../../../services/systems.service';
 
 @Component({
     selector   : 'nx-system-settings-component',
@@ -64,7 +61,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     constructor(@Inject('authorizationCheckService') private authorizationService: any,
-                @Inject('systemsProvider') private systemsProvider: any,
                 @Inject('system') private systemService: any,
                 @Inject('process') private process: any,
                 private route: ActivatedRoute,
@@ -72,6 +68,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 private language: NxLanguageProviderService,
                 private pageService: NxPageService,
                 private dialogs: NxDialogsService,
+                private systemsService: NxSystemsService,
                 private settingsService: NxSettingsService,
                 private menuService: NxMenuService,
                 location: Location) {
@@ -184,7 +181,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             .then((account) => {
                 this.account = account;
                 this.system = this.systemService(this.systemId, account.email);
-                this.systems = this.systemsProvider.systems;
+                this.systems = this.systemsService.systems;
 
                 setTimeout(() => {
                     this.gettingSystem.run().then(() => {

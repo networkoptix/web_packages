@@ -1,14 +1,14 @@
-import { Component, Inject, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { Location }                             from '@angular/common';
 import { ActivatedRoute }                       from '@angular/router';
 import { NxConfigService }                      from '../../../../services/nx-config';
-import { TranslateService }                     from '@ngx-translate/core';
 
 import { NxPageService }             from '../../../../services/page.service';
 import { NxDialogsService }          from '../../../../dialogs/dialogs.service';
 import { NxSettingsService }         from '../settings.service';
 import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
 import { NxMenuService }             from '../../../../components/menu/menu.service';
+import { NxSystemsService } from '../../../../services/systems.service';
 
 @Component({
     selector   : 'nx-system-admin-component',
@@ -42,12 +42,12 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
     constructor(@Inject('account') private account: any,
                 @Inject('process') private process: any,
-                @Inject('systemsProvider') private systemsProvider: any,
                 private route: ActivatedRoute,
                 private configService: NxConfigService,
                 private language: NxLanguageProviderService,
                 private pageService: NxPageService,
                 private dialogs: NxDialogsService,
+                private systemsService: NxSystemsService,
                 private settingsService: NxSettingsService,
                 private menuService: NxMenuService,
                 location: Location) {
@@ -101,9 +101,9 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
     updateAndGoToSystems() {
         this.userDisconnectSystem = true;
-        this.systemsProvider
+        this.systemsService
             .forceUpdateSystems()
-            .then(() => {
+            .subscribe(() => {
                 setTimeout(() => {
                     this.location.path('/systems');
                 });
@@ -131,12 +131,12 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                        }
 
                        this.pageService.setPageTitle(this.system.info.name + ' -');
-                       this.systemsProvider.forceUpdateSystems();
+                       this.systemsService.forceUpdateSystems();
                    });
     }
 
     mergeSystems() {
-        this.systems = this.systemsProvider.getMySystems(this.account.email, this.system.id);
+        this.systems = this.systemsService.getMySystems(this.account.email, this.system.id);
 
         this.system.currentlyMerging = true;
         this.settingsService.setSystem(this.system);

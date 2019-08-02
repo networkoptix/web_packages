@@ -1,14 +1,13 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { Location }                             from '@angular/common';
 import { ActivatedRoute }                       from '@angular/router';
-import { DomSanitizer }                         from '@angular/platform-browser';
 import { NxConfigService }                      from '../../../services/nx-config';
 import { NxLanguageProviderService }            from '../../../services/nx-language-provider';
 import { TranslateService }                     from '@ngx-translate/core';
-import { timer }                                from 'rxjs';
 
 import { NxPageService }    from '../../../services/page.service';
 import { NxDialogsService } from '../../../dialogs/dialogs.service';
+import { NxSystemsService } from '../../../services/systems.service';
 
 @Component({
     selector   : 'nx-systems-list-component',
@@ -40,7 +39,7 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
 
                 this.gettingSystems = this.process.init(() => {
                     this.fetchComplete = true;
-                    return this.systemsProvider.forceUpdateSystems();
+                    return this.systemsService.forceUpdateSystems().subscribe(_ => {});
                 }, {
                     errorPrefix    : this.LANG.errorCodes.cantGetSystemsListPrefix,
                     logoutForbidden: true
@@ -51,7 +50,6 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
     constructor(@Inject('account') private account: any,
                 @Inject('authorizationCheckService') private authorizationService: any,
                 @Inject('process') private process: any,
-                @Inject('systemsProvider') private systemsProvider: any,
                 @Inject('urlProtocol') private urlProtocol: any,
                 private route: ActivatedRoute,
                 private configService: NxConfigService,
@@ -59,6 +57,7 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
                 private translate: TranslateService,
                 private pageService: NxPageService,
                 private dialogs: NxDialogsService,
+                private systemsService: NxSystemsService,
                 location: Location) {
 
         this.location = location;
@@ -75,13 +74,14 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
             .requireLogin()
             .then((newAccount) => {
                 this.account = newAccount;
-                setTimeout(() => {
-                    this.gettingSystems.run();
-                }, 500);
+                this.systemsService.getSystems(this.account.email);
             });
 
-        this.checkSystems = timer(0, 1000).subscribe(() => {
-            this.systems = this.systemsProvider.systems;
+        this.systemsService.systemsSubject.subscribe((systems) => {
+            this.systems = systems;
+            if (this.systems === undefined) {
+                return;
+            }
 
             if (this.systems.length === 1) {
                 this.openSystem(this.systems[0]);
@@ -105,7 +105,7 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
     }
 
     getSystemOwnerName(system, currentEmail) {
-        return this.systemsProvider.getSystemOwnerName(system, currentEmail);
+        return this.systemsService.getSystemOwnerName(system, currentEmail);
     }
 
     hasMatch(str, search) {
@@ -133,7 +133,7 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.checkSystems.unsubscribe();
+        this.systemsService.stopPoll();
     }
 
 }

@@ -1,9 +1,9 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import { Component, OnInit } from '@angular/core';
 import { NxSettingsService } from '../settings.service';
 import { NxConfigService } from '../../../../services/nx-config';
 import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
 import { NxDialogsService } from '../../../../dialogs/dialogs.service';
+import { NxSystemsService } from '../../../../services/systems.service';
 
 
 @Component({
@@ -20,11 +20,11 @@ export class NxSystemMergeStatusComponent implements OnInit {
     mergeTargetSystem: any;
     system: any;
 
-    constructor(@Inject('systemsProvider') private systemsProvider: any,
-                private _config: NxConfigService,
+    constructor(private _config: NxConfigService,
                 private language: NxLanguageProviderService,
                 private settingsService: NxSettingsService,
-                private dialogs: NxDialogsService) {
+                private dialogs: NxDialogsService,
+                private systemsSerivce: NxSystemsService) {
         this.config = this._config.getConfig();
     }
 
@@ -52,7 +52,7 @@ export class NxSystemMergeStatusComponent implements OnInit {
     }
 
     getMergeTarget(targetSystemId) {
-        return this.systemsProvider.systems.find((system) => targetSystemId === system.id);
+        return this.systemsSerivce.systems.find((system) => targetSystemId === system.id);
     }
 
     setMergeStatus(mergeInfo) {

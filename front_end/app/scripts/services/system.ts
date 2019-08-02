@@ -7,8 +7,8 @@ import * as angular from 'angular';
 // Special service for operating with systems at high-level
 
     angular.module('cloudApp')
-            .factory('system', ['cloudApi', 'systemAPI', '$q', 'uuid2', '$log', 'systemsProvider', 'nxConfigService', 'languageService',
-                function (cloudApi, systemAPI, $q, uuid2, $log, systemsProvider, nxConfigService, languageService) {
+            .factory('system', ['cloudApi', 'systemAPI', '$q', 'uuid2', '$log', 'nxSystemsService', 'nxConfigService', 'languageService',
+                function (cloudApi, systemAPI, $q, uuid2, $log, nxSystemsService, nxConfigService, languageService) {
 
                     let systems = {};
                     const CONFIG = nxConfigService.getConfig();
@@ -88,25 +88,25 @@ import * as angular from 'angular';
                     };
 
                     System.prototype.getInfoAndPermissions = function () {
-                        return systemsProvider.getSystem(this.id).then((result) => {
+                        return nxSystemsService.getSystemAsPromise(this.id).then((system) => {
                             let error = false;
-                            if (error = cloudApi.checkResponseHasError(result)) {
+                            if (error = cloudApi.checkResponseHasError(system)) {
                                 return $q.reject(error);
                             }
 
-                            if (!result.data.length) {
+                            if (!system) {
                                 return $q.reject({ data: { resultCode: 'forbidden' } });
                             }
                             if (this.info) {
-                                _.extend(this.info, result.data[0]); // Update
+                                _.extend(this.info, system); // Update
                             } else {
-                                this.info = result.data[0];
+                                this.info = system;
                             }
 
                             this.isOnline = this.info.stateOfHealth == CONFIG.systemStatuses.onlineStatus;
                             this.isMine = this.info.ownerAccountEmail == this.currentUserEmail;
                             this.canMerge = this.isMine && (this.info.capabilities && this.info.capabilities.indexOf(CONFIG.systemCapabilities.cloudMerge) > -1);
-                            this.mergeInfo = result.data[0].mergeInfo;
+                            this.mergeInfo = system.mergeInfo;
 
                             this.checkPermissions();
 

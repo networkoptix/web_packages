@@ -4,6 +4,7 @@ import { Location }                                       from '@angular/common'
 import { EmailValidator }                                 from '@angular/forms';
 import { NxConfigService }                                from '../../services/nx-config';
 import { NxLanguageProviderService }                      from '../../services/nx-language-provider';
+import {NxSystemsService} from "../../services/systems.service";
 
 @Component({
     selector   : 'nx-modal-merge-content',
@@ -44,9 +45,9 @@ export class MergeModalContent {
                 @Inject('process') private process: any,
                 @Inject('account') private account: any,
                 @Inject('system') private systemService: any,
-                @Inject('systemsProvider') private systemsProvider: any,
                 @Inject('cloudApiService') private cloudApi: any,
-                private language: NxLanguageProviderService
+                private language: NxLanguageProviderService,
+                private systemsService: NxSystemsService
     ) {
         this.config = this.configService.getConfig();
         this.checking = false;
@@ -86,7 +87,7 @@ export class MergeModalContent {
             },
             successMessage: this.LANG.system.mergeStart
         }).then(() => {
-            this.systemsProvider.forceUpdateSystems();
+            this.systemsService.forceUpdateSystems();
             this.activeModal.close({
                 anotherSystemId: this.targetSystem.id,
                 role: this.primarySystem.id === this.system.id ?
