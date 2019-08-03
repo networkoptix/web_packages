@@ -1,10 +1,12 @@
+@import '../../styles/typography';
+
 .foreground-messages-content {
   max-height: 800px;
 }
 
 .footnote {
   font-style: italic;
-  color: #c1c1c1;
+  color: $gray-light;
   font-size: 11px;
 }
 

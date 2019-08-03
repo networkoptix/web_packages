@@ -24,7 +24,7 @@
 
                         <div *ngIf="deviceToken && registered">
                             <button class="btn btn-danger"
-                                    (click)="onDeleteToken()">Invalidate browser
+                                    (click)="onDeleteToken()">Invalidate Browser
                             </button>
                             <p class="footnote">Browser token invalidation occurs on your device, no API request is
                                 involved. The next push notification you send notifies the server that your token is
@@ -130,7 +130,7 @@
                                     [(ngModel)]="notification.system">
                                 <option selected="selected" value="">Please select a system</option>
                                 <option *ngFor="let system of this.systems" [value]="system.id">{{ system.name }}
-                                    ({{ system.id }}</option>
+                                    ({{ system.id }})</option>
                             </select>
                         </div>
 
