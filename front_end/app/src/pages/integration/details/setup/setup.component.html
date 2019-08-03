@@ -1,78 +1,16 @@
-<div class="row m-0 pl-2 pr-2 pt-0">
-    <div class="col-12 col-lg-9">
-        <nx-block first-element *ngIf="plugin && plugin.instructions">
-            <header translate>
-                How to setup?
-            </header>
+<nx-block first-element *ngIf="plugin && plugin.instructions">
+    <header translate>
+        How to setup?
+    </header>
 
-            <nx-section *ngIf="plugin.instructions.instructionVideo">
-                <nx-external-video [src]="plugin.instructions.instructionVideo"></nx-external-video>
-            </nx-section>
-            <nx-section *ngIf="plugin.instructions.screenshots">
-                <nx-carousel [screenshots]="plugin.instructions.screenshots"></nx-carousel>
-            </nx-section>
+    <nx-section *ngIf="plugin.instructions.instructionVideo">
+        <nx-external-video [src]="plugin.instructions.instructionVideo"></nx-external-video>
+    </nx-section>
+    <nx-section *ngIf="plugin.instructions.screenshots">
+        <nx-carousel [screenshots]="plugin.instructions.screenshots"></nx-carousel>
+    </nx-section>
 
-            <nx-section>
-                <div [innerHtml]="plugin.instructions.installationInstructions"></div>
-            </nx-section>
-        </nx-block>
-        <nx-footer class="d-none d-lg-block"></nx-footer>
-    </div>
-
-    <div class="col-12 mt-3 col-lg-3 mt-lg-0">
-        <nx-block side-element type="gray"
-                  class="d-block mb-3"
-                  *ngIf="plugin && plugin.downloadFiles && plugin.downloadFiles.length > 0">
-            <header translate>
-                Downloads
-            </header>
-
-            <nx-section>
-                <div *ngFor="let platform of plugin.downloadFiles" class="mt-3">
-                    <div *ngIf="platform.name">{{ platform.name}}</div>
-                    <div>
-                        <a [href]="platform.url" [attr.rel]="platform.noFollow ? 'nofollow' : ''">{{platform.file}}</a>
-                    </div>
-                </div>
-            </nx-section>
-        </nx-block>
-
-        <nx-block side-element type="gray"
-                  *ngIf="plugin && plugin.requirementsAndCompatibility">
-            <header translate>Requirements</header>
-
-            <nx-section>
-                <div class="card--body-info">
-                    <div class="section flat">
-                        <div *ngFor="let icon of plugin.requirementsAndCompatibility.platforms.icons">
-                            <img [src]="icon.src">
-                        </div>
-                    </div>
-
-                    <div class="section"
-                         *ngIf="plugin.requirementsAndCompatibility.testedVersionsStringFull">
-                        <div *ngIf="plugin.requirementsAndCompatibility.testedVersions.length == 1">
-                            <label class="group-label" [translate]="'testedVersionLabel'"
-                                   [translateParams]="{ vmsName: CONFIG.vmsName }"></label>
-                        </div>
-                        <div *ngIf="plugin.requirementsAndCompatibility.testedVersions.length > 1">
-                            <label class="group-label" [translate]="'testedVersionsLabel'"
-                                   [translateParams]="{ vmsName: CONFIG.vmsName }"></label>
-                        </div>
-                        <div [innerHTML]="plugin.requirementsAndCompatibility.testedVersionsStringFull"></div>
-                    </div>
-
-                    <div class="section"
-                         *ngIf="plugin.requirementsAndCompatibility.additionalRequirements">
-
-                        <div><label class="group-label" translate>Additional Requirements</label></div>
-                        <div [innerHTML]="plugin.requirementsAndCompatibility.additionalRequirements"></div>
-                    </div>
-
-                </div>
-            </nx-section>
-        </nx-block>
-        <nx-footer class="d-block d-lg-none"></nx-footer>
-    </div>
-</div>
-
+    <nx-section>
+        <div [innerHtml]="plugin.instructions.installationInstructions"></div>
+    </nx-section>
+</nx-block>
