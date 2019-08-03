@@ -1,6 +1,6 @@
 {
     "2-Way Audio": "Двухсторонний звук",
-    "About %CLOUD_NAME%": "About %CLOUD_NAME%",
+    "About %CLOUD_NAME%": "О %CLOUD_NAME%",
     "Account Settings": "Настройки учётной записи",
     "Account not activated": "Учетная запись еще не активирована",
     "Account not found": "Учетная запись не найдена",
@@ -15,7 +15,7 @@
     "All results": "Все результаты",
     "Analytics": "Аналитика",
     "Analytics Event": "Событие аналитики",
-    "Analytics Events": "Analytics Events",
+    "Analytics Events": "События аналитики",
     "Any": "Любой",
     "Audio": "Аудио",
     "Build Number:": "Номер сборки:",
@@ -268,7 +268,7 @@
         "PTZ cameras": "Камеры PTZ",
         "camera": "Камера",
         "count": "Кол-во",
-        "disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous.",
+        "disclaimer": "Этот список ограничен устройствами, найденными на {{vmsName}}, где пользователи разрешили автоматическую отправку данных по устройствам в {{companyName}}. Личная информация не собирается, и каждый пользователь остается полностью анонимным.",
         "dvr": "DVR",
         "encoder": "Кодировщик",
         "feedback": {
@@ -297,7 +297,7 @@
         "resolutionArea": "Область",
         "vendor": "Производитель"
     },
-    "ipvd.disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous.",
+    "ipvd.disclaimer": "Этот список ограничен устройствами, найденными на {{vmsName}}, где пользователи разрешили автоматическую отправку данных по устройствам в {{companyName}}. Личная информация не собирается, и каждый пользователь остается полностью анонимным.",
     "latest build": "последняя сборка",
     "manufacturers": "производители",
     "messageDialogPlaceholders": {
@@ -316,16 +316,16 @@
         "Any": "Любой",
         "Search": "Поиск",
         "analytics": "Аналитика",
-        "analyticsSelected": "analytics events",
+        "analyticsSelected": "события аналитики",
         "filter applied": "фильтр применен",
         "filters applied": "фильтры применены",
         "hardwareType": "Тип",
-        "hardwareTypes": "Types",
+        "hardwareTypes": "Типы",
         "minResolution": "Минимальное разрешение",
         "search_ipvd": "Поиск по модели или производителю",
         "selected": "выбраны",
         "vendor": "Производитель",
-        "vendors": "Manufacturers"
+        "vendors": "Производители"
     },
     "servers in the merged System.": "серверы в объединенной системе.",
     "support": "техническая поддержка",

@@ -1,8 +1,8 @@
-There is a new version for {{ message.product }}({{message.product_type}}) to review.
+มีรุ่นใหม่สำหรับการตรวจสอบ {{ message.product }}({{message.product_type}})
 
 คลิกที่ลิงก์เพื่อดูร่าง {{ message.id }} สำหรับ {{ message.product }}
 
-Link to review: {{ config.portal_url }}/admin/cms/productcustomizationreview/{{ message.id }}/change/
+ลิงก์ไปยังบทวิจารณ์: {{ config.portal_url }}/ admin / cms / productcustomizationreviewreview /{{ message.id }}/ change /
 
 ในหน้านี้คุณสามารถทำได้
 1) สร้างตัวอย่างเพื่อดูการเปลี่ยนแปลงล่าสุด

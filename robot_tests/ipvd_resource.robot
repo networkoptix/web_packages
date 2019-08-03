@@ -113,6 +113,7 @@ IPVD Last Page Number
     ${page}=   Remove String Using Regexp    ${page}    \\n\\(current\\)
     [Return]    ${page}
 
+Advaced search filters text
     [Arguments]    ${filters}
     Return From Keyword    //ipvd/span[contains(text(),"${filters}"]
 

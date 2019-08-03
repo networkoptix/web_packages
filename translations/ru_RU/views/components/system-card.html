@@ -7,7 +7,7 @@
         <p ng-if="systems.length > 1 && system.canMerge || configCanMerge || debugMode || betaMode">
             <button class="btn btn-default mw-100"
                     ng-disabled="(currentlyMerging || !system.isOnline || !system.isAvailable) && !(debugMode || betaMode)"
-                    ng-click="mergeSystems()"><div class="ellipsis">Merge with Another System</div></button>
+                    ng-click="mergeSystems()"><div class="ellipsis">Объединить с другой системой</div></button>
         </p>
         <hr />
         <button ng-disabled="currentlyMerging" class="btn btn-default" ng-click="disconnect()">Отсоединить от <span class="product-name">&nbsp;%CLOUD_NAME%</span></button>
@@ -20,7 +20,7 @@
         <a ng-href="mailto:{{system.info.ownerAccountEmail}}">{{system.info.ownerAccountEmail}}</a>
         <hr>
         <p>
-            Your permissions:
+            Ваши полномочия:
             <b>{{permission}}</b>
         </p>
 

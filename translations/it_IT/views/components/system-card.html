@@ -7,7 +7,7 @@
         <p ng-if="systems.length > 1 && system.canMerge || configCanMerge || debugMode || betaMode">
             <button class="btn btn-default mw-100"
                     ng-disabled="(currentlyMerging || !system.isOnline || !system.isAvailable) && !(debugMode || betaMode)"
-                    ng-click="mergeSystems()"><div class="ellipsis">Merge with Another System</div></button>
+                    ng-click="mergeSystems()"><div class="ellipsis"> Unisci con un altro sistema </div></button>
         </p>
         <hr />
         <button ng-disabled="currentlyMerging" class="btn btn-default" ng-click="disconnect()">Disconnetti da
@@ -21,8 +21,7 @@
         <a ng-href="mailto:{{system.info.ownerAccountEmail}}">{{system.info.ownerAccountEmail}}</a>
         <hr>
         <p>
-            Your permissions:
-            <b>{{permission}}</b>
+            Le tue autorizzazioni: <b>  </b>
         </p>
 
         <p ng-if="system.permissions.isAdmin">

@@ -28,18 +28,6 @@ import { NxAppStateService } from '../../services/nx-app-state.service';
         this.copyrightYear = this.config.copyrightYear;
         this.footerItems = this.config.footerItems;
 
-        this.footerItems.forEach((item) => {
-            switch (item.url) {
-                case '%SUPPORT_LINK%':
-                    item.url = this.config.supportLink;
-                    break;
-                case '%PRIVACY_LINK%':
-                    item.url = this.config.privacyLink;
-                    break;
-                default:
-            }
-        });
-
         this.appState.footerVisibleObservable.subscribe((visible) => {
             this.viewFooter = visible;
         });

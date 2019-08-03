@@ -187,7 +187,7 @@
 	},
 	"testedVersionLabel": "{{vmsName}} バージョンでテスト済み：",
 	"testedVersionsLabel": "{{vmsName}} バージョンでテスト済み：",
-	"About %CLOUD_NAME%": "About %CLOUD_NAME%",
+	"About %CLOUD_NAME%": "%CLOUD_NAME%について",
 	"Download %VMS_NAME%": "%VMS_NAME% をダウンロード",
 	"Integrations": "統合",
 	"Privacy": "プライバシー",

@@ -1,8 +1,8 @@
-There is a new version for {{ message.product }}({{message.product_type}}) to review.
+{{ message.product }}{{message.product_type}}有新版本可供檢視.
 
 點擊連接以查看{{ message.product }}的{{ message.id }}草稿
 
-Link to review: {{ config.portal_url }}/admin/cms/productcustomizationreview/{{ message.id }}/change/
+連接到評論: {{ config.portal_url }}/admin/cms/version/{{ message.id }}//change/
 
 你可以在此頁:
 1) 建立預覽以查看最新的變更.

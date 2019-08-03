@@ -1,5 +1,4 @@
 from django.views.decorators.http import require_http_methods
-from django.views import defaults
 from django.contrib import messages
 from django.contrib.auth.decorators import permission_required
 from django.core.exceptions import PermissionDenied
@@ -328,7 +327,6 @@ def product_settings(request, product_id):
 
 @require_http_methods(["GET"])
 @permission_required('cms.change_product')
-@handle_exceptions
 def download_current_structure(request, product_id):
     use_actual_values = "get_values" in request.GET
     product = Product.objects.filter(id=product_id).last()
@@ -337,14 +335,14 @@ def download_current_structure(request, product_id):
             raise PermissionDenied
         data = generate_structure.from_database(product, use_actual_values)
         content = json.dumps(data, ensure_ascii=False, indent=4, separators=(',', ': '))
-        return response_attachment(content, 'structure.json', 'application/json')
+        return response_attachment(content, 'structure.json', 'application')
     return HttpResponseBadRequest("Product not given or found")
 
 
 @require_http_methods(["GET"])
 @permission_required('cms.change_product')
 def download_file(request, path):
-    product = get_cloud_portal_product()
+    product = Product.objects.filter(id=request.GET.get("product_id")).first()
 
     if not UserGroupsToProductPermissions.check_permission(request.user, product, 'cms.edit_content'):
         raise PermissionDenied
@@ -355,7 +353,7 @@ def download_file(request, path):
     file = filldata.read_customized_file(path, product, language_code, version_id, preview)
     if file:
         return response_attachment(file, os.path.basename(path), "application")
-    raise defaults.page_not_found("File does not exist")
+    raise HttpResponseBadRequest("File does not exist")
 
 
 @require_http_methods(["GET"])
@@ -375,10 +373,8 @@ def download_package(request, product_id):
             latest_review = latest_review.filter(state=ProductCustomizationReview.REVIEW_STATES.accepted)
 
         latest_review = latest_review.last()
-        if not latest_review:
-            return HttpResponseBadRequest("There are no versions available for this product")
-
-        version_id = latest_review.version.id
+        if latest_review:
+            version_id = latest_review.version.id
 
     zipped_data = filldata.get_zip_package(product, preview, version_id)
     file_name = f"{product.name}.zip"
