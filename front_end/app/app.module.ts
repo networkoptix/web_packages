@@ -15,7 +15,7 @@ import { CookieService }                    from 'ngx-cookie-service';
 // import { ToastrModule }                     from 'ngx-toastr';
 
 import {
-    cloudApiServiceModule, systemModule, systemsModule, languageServiceModule,
+    cloudApiServiceModule, systemModule, languageServiceModule,
     accountServiceModule, processServiceModule, uuid2ServiceModule,
     authorizationCheckServiceModule,
     localStorageModule, locationProxyModule, urlProtocolServiceModule
@@ -88,7 +88,6 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
         processServiceModule,
         urlProtocolServiceModule,
         systemModule,
-        systemsModule,
         authorizationCheckServiceModule,
         locationProxyModule,
         ComponentsModule,
