@@ -108,7 +108,9 @@
 
             function requireLogin() {
                 return get().catch(() => {
-                    return NxDialogsService.login(true);
+                    const url = $location.$$path;
+                    const redirect = CONFIG.redirectPaths.some((path) => path === url);
+                    return NxDialogsService.login(!redirect);
                 });
             }
 

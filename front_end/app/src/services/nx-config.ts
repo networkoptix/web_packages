@@ -37,6 +37,7 @@ export class NxConfigService {
 
             redirectAuthorised  : '/systems', // Page for redirecting all authorised users
             redirectUnauthorised: '/', // Page for redirecting all unauthorised users by default
+            redirectPaths: ['/account', '/register', '/restore_password', '/activate', '/404'],
 
             links: {
                 admin: {

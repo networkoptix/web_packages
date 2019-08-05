@@ -170,9 +170,9 @@ export class LoginModalContent implements OnInit {
         });
     }
 
-    close(redirect?) {
+    close() {
         // prevent unnecessary reload
-        if (redirect && this.document.location.pathname !== this.config.redirectUnauthorised) {
+        if (!this.keepPage && this.account.email === undefined) {
             // TODO: Repace this once 'register' page is moved to A5
             // AJS and A5 routers freak out about route change *****
             // this.location.go(this.config.redirectUnauthorised);
