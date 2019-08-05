@@ -125,10 +125,8 @@ class NoptixLibrary(object):
             time.sleep(.2)
         raise AssertionError(found)
 
-    def verify_colors_same(self, color_string_1, color_string_2):
-        color1 = Color.from_string(color_string_1).rgba
-        color2 = Color.from_string(color_string_2).rgba
-        return color1 == color2
+    def colors_are_same(self, color1, color2):
+        return (Color.from_string(color1).rgba == Color.from_string(color2).rgba)
 
     def verify_button_arrow_direction(self, locator, expected, timeout=10):
         # expected is 'Up' or 'Down'
