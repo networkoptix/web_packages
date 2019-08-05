@@ -145,8 +145,9 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 this.LANG.accessRoles[userRole].description :
                 this.LANG.accessRoles.customRole.description;
     }
-    updateEnabled(state) {
-        this.selectedUser.isEnabled = state;
+
+    updateEnabled(value) {
+        this.selectedUser.isEnabled = value;
     }
 }
 

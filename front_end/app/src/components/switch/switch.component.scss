@@ -64,11 +64,7 @@ input:checked + .slider:before {
   position: absolute;
   color: $additional_light1;
 
-  user-select: none;
-  -moz-user-select: none;
-  -khtml-user-select: none;
-  -webkit-user-select: none;
-  -o-user-select: none;
+  pointer-events: None;
 }
 
 .bar {

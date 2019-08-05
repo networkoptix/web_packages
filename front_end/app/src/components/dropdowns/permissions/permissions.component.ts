@@ -85,7 +85,7 @@ export class NxPermissionsDropdown implements OnInit {
             }
         }
 
-        if (changes.selected.currentValue) {
+        if (changes.selected && changes.selected.currentValue) {
             this.selection = changes.selected.currentValue.name;
         }
     }
