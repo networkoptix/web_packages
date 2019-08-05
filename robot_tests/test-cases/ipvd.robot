@@ -272,10 +272,19 @@ Advanced search
     Verify IPVD Advanced Search is Closed
     Click Element    ${IPVD ADV SEARCH BUTTON}
     Verify IPVD Advanced Search is Open
+
+    #Step 2
     Click Element    ${IPVD ADV FEATURES PTZ}
-    Wait Until Element Has Style
-    ...    ${IPVD ADV FEATURES PTZ}
-    ...    background-color
-    ...    rgb(105, 135, 150)
+    # Wait Until Element Has Style
+    # ...    ${IPVD ADV FEATURES PTZ}
+    # ...    background-color
+    # ...    rgb(105, 135, 150)
     Wait Until Elements Are Visible
     ...    ${IPVD ADV FEATURES PTZ}${IPVD ADV FEATURES CLOSE BUTTON}
+
+    #Step 3
+    Click Element    ${IPVD ADV FILTERS MIN RES}
+    # ${style}=   Get Element Style
+    # ...    ${IPVD ADV FEATURES PTZ}
+    # ...    background-color
+    # Log    ${style}

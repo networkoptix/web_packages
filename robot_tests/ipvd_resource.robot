@@ -199,11 +199,14 @@ Verify IPVD Advanced Search is Closed
     ${style}=   Get Element Attribute
     ...    ${IPVD ADV SEARCH BUTTON}
     ...    style
-    Wait Until Element Has Style
+    # Wait Until Element Has Style
+    # ...    ${IPVD ADV SEARCH BUTTON}
+    # ...    background-color
+    # ...    rgb(225, 231, 234)
+    # Verify Button Arrow Direction    ${IPVD ADV SEARCH BUTTON}    Down
+    Wait until Element does Not have Class
     ...    ${IPVD ADV SEARCH BUTTON}
-    ...    background-color
-    ...    rgb(225, 231, 234)
-    Verify Button Arrow Direction    ${IPVD ADV SEARCH BUTTON}    Down
+    ...    selected
     Elements Should Not Be Visible
     #IPVD Advanced Filters
     ...    ${IPVD ADV FILTERS MIN RES}
@@ -222,11 +225,14 @@ Verify IPVD Advanced Search is Closed
 
 Verify IPVD Advanced Search is Open
     Wait Until Elements Are Visible    ${IPVD ADV SEARCH BUTTON}
-    Wait Until Element Has Style
+    # Wait Until Element Has Style
+    # ...    ${IPVD ADV SEARCH BUTTON}
+    # ...    background-color
+    # ...    rgb(105, 135, 150)
+    # Verify Button Arrow Direction    ${IPVD ADV SEARCH BUTTON}    Up
+    Wait until Element has Class
     ...    ${IPVD ADV SEARCH BUTTON}
-    ...    background-color
-    ...    rgb(105, 135, 150)
-    Verify Button Arrow Direction    ${IPVD ADV SEARCH BUTTON}    Up
+    ...    selected
     Wait Until Elements Are Visible
     #IPVD Advanced Filters
     ...    ${IPVD ADV FILTERS MIN RES}
