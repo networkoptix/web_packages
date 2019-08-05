@@ -50,7 +50,6 @@ export class NxSwitchComponent implements OnInit, ControlValueAccessor, Validato
     }
 
     ngOnInit() {
-        console.log(this.value);
         this.disabled = (this.disabled !== undefined);  // optional param
         this.required = (this.required !== undefined);  // optional param
 

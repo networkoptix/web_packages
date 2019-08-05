@@ -136,11 +136,11 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
 
     setUser(user) {
         this.selectedUser = user;
-        this.setRole(this.selectedUser);
+        this.setPermission(this.selectedUser.role);
     }
 
-    setRole(user: any) {
-        const userRole = user.role && user.role.name ? user.role : user.accessRole;
+    setPermission(role: any) {
+        const userRole = role && role.name ? role.name : this.selectedUser.accessRole;
         this.accessDescription = this.LANG.accessRoles[userRole] ?
                 this.LANG.accessRoles[userRole].description :
                 this.LANG.accessRoles.customRole.description;
