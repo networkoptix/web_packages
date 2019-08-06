@@ -37,8 +37,8 @@
 
                 scope.login = function () {
                     var url = $location.$$path;
-                    var redirect_paths = ['/', '/register', '/restore_password', '/activate', '/404'].some((path) => path == url)
-                    NxDialogsService.login(!redirect_paths);
+                    var redirect = CONFIG.redirectPaths.some((path) => url.indexOf(path) > -1);
+                    NxDialogsService.login(!redirect);
                 };
                 scope.logout = function () {
                     account.logout(true);

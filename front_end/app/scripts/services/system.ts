@@ -263,8 +263,7 @@ import * as angular from 'angular';
                         if (!this.usersPromise || reload) {
                             let promise = null;
                             if (this.isOnline) { // Two separate cases - either we get info from the system (presuming it has actual names)
-                                promise = this.getUsersDataFromTheSystem(this.id)
-                                    .then(() => {})
+                                promise = this.getUsersDataFromTheSystem()
                                     .catch(() => {
                                         return this.getUsersCachedInCloud();
                                     });
