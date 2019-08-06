@@ -92,9 +92,9 @@
     "IPVD ADV SEARCH BUTTON TEXT": "Kehittynyt haku",
     "IPVD ADV FILTER MIN RES": "Pienin resoluutio",
     "IPVD ADV FILTER MFR": "Valmistaja",
-    "IPVD ADV FILTER MFRS": "Manufacturers",
+    "IPVD ADV FILTER MFRS": "Valmistajat",
     "IPVD ADV FILTER TYPE": "Tyyppi",
-    "IPVD ADV FILTER TYPES": "Types",
+    "IPVD ADV FILTER TYPES": "Tyypit",
     "IPVD ADV FEATURE AUDIO": "Ääni",
     "IPVD ADV FEATURE 2-WAY AUDIO": "2-suuntainen ääni",
     "IPVD ADV FEATURE PTZ": "PTZ",
@@ -124,7 +124,7 @@
     "IPVD EXPORT ALL TO CSV": "Vie tiedot CSV-muotoon",
     "IPVD SUBMIT A REQUEST TEXT": "lähetä pyyntö",
     "IPVD SEND DEVICE FEEDBACK TEXT": "Lähetä palautetta tästä laitteesta",
-    "PRIVACY POLICY LINK TEXT": "here",
+    "PRIVACY POLICY LINK TEXT": "tässä",
     "NOTHING FOUND": "Mitään ei löytynyt",
     "OK TEXT": "OK",
     "MERGE SYSTEMS TEXT": "Yhdistä järjestelmät",
@@ -139,5 +139,5 @@
     "CHECKING TEXT": "Tarkistetaan...",
     "ENTER PASSWORD TO CONTINUE TEXT": "Syötä tilisi salasana jatkaaksesi",
     "INCOMPATIBLE": "yhteensopimaton",
-    "CONNECTION TO SYSTEM LOST": "Connection to %SYSTEM NAME% lost"
+    "CONNECTION TO SYSTEM LOST": "Yhteys %SYSTEM NAME% katkesi"
 }
