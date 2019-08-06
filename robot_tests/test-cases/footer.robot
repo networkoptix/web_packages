@@ -42,6 +42,8 @@ Privacy leads to the proper page
     [tags]    C41546    Threaded
     Wait Until Element Is Visible    ${FOOTER PRIVACY LINK}
     Click Link    ${FOOTER PRIVACY LINK}
+    @{tabs}=   Get Window Handles
+    Select Window    @{tabs}[1]
     Location Should Be    ${PRIVACY POLICY URL FULL}
 
 Copyright leads to the proper site
