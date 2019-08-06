@@ -4,11 +4,13 @@ import { ActivatedRoute }                              from '@angular/router';
 import { NxConfigService }                             from '../../../services/nx-config';
 import { NxLanguageProviderService }                   from '../../../services/nx-language-provider';
 
-import { NxPageService }     from '../../../services/page.service';
-import { NxDialogsService }  from '../../../dialogs/dialogs.service';
-import { NxSettingsService } from './settings.service';
-import { NxMenuService }     from '../../../components/menu/menu.service';
-import { NxSystemsService } from '../../../services/systems.service';
+import { NxPageService }           from '../../../services/page.service';
+import { NxDialogsService }        from '../../../dialogs/dialogs.service';
+import { NxSettingsService }       from './settings.service';
+import { NxMenuService }           from '../../../components/menu/menu.service';
+import { NxSystemsService }        from '../../../services/systems.service';
+import { NxModalAddUserComponent } from '../../../dialogs/add-user/add-user.component';
+import { NxModalGenericComponent } from '../../../dialogs/generic/generic.component';
 
 @Component({
     selector   : 'nx-system-settings-component',
@@ -71,7 +73,8 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 private systemsService: NxSystemsService,
                 private settingsService: NxSettingsService,
                 private menuService: NxMenuService,
-                location: Location) {
+                location: Location,
+                private addUserModal: NxModalAddUserComponent) {
 
         this.location = location;
         this.setupDefaults();
@@ -99,19 +102,35 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         });
 
         this.content = {
-            selectedSection: '',        // updated by selectedSectionSubject
-            base           : '/systems/' + this.systemId,
-            level1         : [
+            selectedSection   : '',         // updated by selectedSectionSubject
+            selectedSubSection: '',         // updated by selectedSubSectionSubject
+            system            : {},         // updated by getSystemInfo
+            base              : '/systems/' + this.systemId,
+            level1            : [
                 {
                     id   : 'admin',
                     icon : 'glyphicon-home',
                     label: this.LANG.systemAdministration,
                     path : '',
                 }, {
-                    id   : 'users',
-                    icon : 'glyphicon-user',
-                    label: this.LANG.users,
-                    path : 'users',
+                    id    : 'users',
+                    icon  : 'glyphicon-users',
+                    label : this.LANG.users,
+                    path  : 'users',
+                    level2: [
+                        {
+                            id   : 'buttons',
+                            items: [
+                                {
+                                    id: 'addUser',
+                                    label: this.LANG['Add User'],
+                                    action: {
+                                        callback: this.addUserModal.open.bind(this.addUserModal)
+                                    }
+                                }
+                            ]
+                        }
+                    ]
                 }]
         };
 
@@ -119,6 +138,13 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             .selectedSectionSubject
             .subscribe(selection => {
                 this.content.selectedSection = selection;
+                this.content = { ...this.content }; // trigger onChange
+            });
+
+        this.menuService
+            .selectedSubSectionSubject
+            .subscribe(selection => {
+                this.content.selectedSubSection = selection;
                 this.content = { ...this.content }; // trigger onChange
             });
 
@@ -174,6 +200,10 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
     }
 
+    getSystem() {
+        return this.system;
+    }
+
     getSystemInfo() {
         this.settingsService.setSystem(undefined);
         this.authorizationService
@@ -195,6 +225,27 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                                         .run()
                                         .then(() => {
                                             this.settingsService.setSystem(this.system);
+                                            this.content.system = this.system;
+                                            const usersNode = this.content.level1.filter((node) => node.id === 'users')[0];
+
+                                            // Retain buttons
+                                            if (usersNode.level2.length && usersNode.level2[0].id === 'buttons') {
+                                                usersNode.level2 = [usersNode.level2[0]];
+                                            } else {
+                                                usersNode.level2 = [];
+                                            }
+                                            this.system.users.forEach((user) => {
+                                                const id = user.id.replace(/{|}/g, '');
+                                                usersNode.level2.push({
+                                                    id,
+                                                    icon : 'glyphicon-cloud',
+                                                    label: user.email,
+                                                    additionalLabel: '<span class="menu-level-2-additional">&ndash;&nbsp;' + user.role.name + '</span>',
+                                                    path : 'users/' + id,
+                                                });
+                                            });
+
+                                            this.content = {...this.content};
                                         });
                                 } else {
                                     // this.delayedUpdateSystemInfo();

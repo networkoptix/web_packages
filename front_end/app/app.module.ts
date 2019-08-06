@@ -41,14 +41,13 @@ export function createTranslateLoader(http: HttpClient) {
 
 class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
     shouldProcessUrl(url: UrlTree) {
-        return url.toString().startsWith('/sandbox') ||
+        return (url.toString().startsWith('/sandbox') ||
             url.toString().startsWith('/ipvd') ||
             url.toString().startsWith('/systems') ||
-            url.toString().startsWith('/systems/:systemId') ||
-            url.toString().startsWith('/systems/:systemId/users') ||
             url.toString().startsWith('/new-content') ||
             url.toString().startsWith('/right') ||
-            url.toString().startsWith('/integrations');
+            url.toString().startsWith('/integrations')) &&
+            !url.toString().endsWith('/view');
         // return false;
 
         /* Temporary downgraded components - routing is handled by AJS */

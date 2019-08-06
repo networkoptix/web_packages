@@ -234,6 +234,9 @@ window.L = {};
                         //     }]
                         // }
                     })
+                    .when('/systems/:systemId/users/:userId', {
+                        template: ''
+                    })
                     // .when('/systems/:systemId/share', {
                     //     // title: lang.pageTitles.systemShare,
                     //     // templateUrl: CONFIG.viewsDir + 'system.html',
@@ -257,14 +260,14 @@ window.L = {};
                     //         }]
                     //     }
                     // })
-                    // .when('/systems/:systemId/view', {
-                    //     templateUrl: CONFIG.viewsDir + 'view.html',
-                    //     controller: 'ViewPageCtrl'
-                    // })
-                    // .when('/systems/:systemId/view/:cameraId', {
-                    //     templateUrl: CONFIG.viewsDir + 'view.html',
-                    //     controller: 'ViewPageCtrl'
-                    // })
+                    .when('/systems/:systemId/view', {
+                        templateUrl: CONFIG.viewsDir + 'view.html',
+                        controller: 'ViewPageCtrl'
+                    })
+                    .when('/systems/:systemId/view/:cameraId', {
+                        templateUrl: CONFIG.viewsDir + 'view.html',
+                        controller: 'ViewPageCtrl'
+                    })
                     .when('/systems/:systemId', {
                         template: ''
                         // template: '<nx-system-settings-component [uri-param-system-id]="uriParamSystemId" ></nx-system-settings-component>',

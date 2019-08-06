@@ -3,22 +3,52 @@
 @import '../../../styles/mixins';
 
 .menu-level-2 {
+    position         : relative;
     background-color : $light5;
     font-family      : $font-family-medium;
     font-size        : $font-size-base;
     color            : $dark9;
     border-radius    : 0;
     text-decoration  : none;
-    padding-left     : rem(12px);
+    padding-left     : .75rem;
+    padding-right    : .75rem;
     display          : block;
+    white-space      : nowrap;
+    overflow         : hidden;
+    line-height      : 26px;
     
     &:hover {
         background-color : $light6;
     }
     
+    & > div {
+        line-height: 26px;
+    }
+    
+    &-icon {
+        float           : left;
+        margin-right    : .5rem;
+        display         : flex;
+        align-items     : center;
+        justify-content : center;
+        width           : 26px;
+        height          : 26px;
+    }
+    
     &.selected {
         background-color : $light16 !important;
         color            : $light1;
+    
+        span {
+            color : $light1;
+        }
+    }
+    
+    span {
+        color : $light16;
     }
 }
 
+.menu-level-2-additional {
+    color : $light16;
+}

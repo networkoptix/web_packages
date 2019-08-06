@@ -1,6 +1,6 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { Location }                             from '@angular/common';
-import { ActivatedRoute }                       from '@angular/router';
+import { ActivatedRoute, Router }               from '@angular/router';
 import { NxConfigService }                      from '../../../../services/nx-config';
 import { TranslateService }                     from '@ngx-translate/core';
 
@@ -20,7 +20,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
     CONFIG: any = {};
     LANG: any = {};
     location: any;
-
+    paramUser: any;
     accessDescription: string;
     locked: any;
     removingUserProcess: any;
@@ -40,6 +40,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
 
     constructor(@Inject('account') private account: any,
                 @Inject('process') private process: any,
+                private route: ActivatedRoute,
                 private configService: NxConfigService,
                 private language: NxLanguageProviderService,
                 private pageService: NxPageService,
@@ -55,6 +56,18 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.LANG = this.language.getTranslations();
         this.pageService.setPageTitle(this.LANG.pageTitles.systems);
+
+        this.route
+            .params
+            .subscribe(params => {
+                if (params.userId) {
+                    this.menuService.setSubSection(params.userId);
+                    this.paramUser = params.userId;
+                    this.setUser();
+                }
+            });
+
+
         this.init();
     }
 
@@ -62,9 +75,8 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         this.CONFIG = this.configService.getConfig();
         this.settingsService.systemSubject.subscribe((system) => {
             this.system = system;
-            if (this.system.users.length > 0) {
-                this.setUser(this.system.users[0]);
-            }
+            this.setUser();
+
             this.systemAvailable = this.system.isAvailable && this.system.mergeInfo !== 'undefined';
         });
 
@@ -134,9 +146,21 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             });
     }
 
-    setUser(user) {
-        this.selectedUser = user;
-        this.setPermission(this.selectedUser.role);
+    setUser() {
+        if (this.system && this.system.users.length > 0) {
+            if (this.paramUser) {
+                this.selectedUser = this.system.users.filter((user) => {
+                    if (user.id === '{' + this.paramUser + '}') {
+                        return true;
+                    }
+                })[0];
+            } else {
+                this.selectedUser = this.system.users[0];
+            }
+
+            this.menuService.setSubSection(this.selectedUser.id.replace(/{|}/g, ''));
+            this.setPermission(this.selectedUser.role);
+        }
     }
 
     setPermission(role: any) {
@@ -145,9 +169,8 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 this.LANG.accessRoles[userRole].description :
                 this.LANG.accessRoles.customRole.description;
     }
-
-    updateEnabled(value) {
-        this.selectedUser.isEnabled = value;
+    updateEnabled(state) {
+        this.selectedUser.isEnabled = state;
     }
 }
 

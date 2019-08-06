@@ -4,17 +4,6 @@
   "cloudName": "%CLOUD_NAME%",
   "vmsName": "%VMS_NAME%",
   "clientProtocol": "%CLIENT_PROTOCOL%:",
-  "dialogs": {
-    "okButton": "OK",
-    "cancelButton": "Cancel",
-    "loginTitle": "Log in to %CLOUD_NAME%",
-    "loginButton": "Log in",
-    "logoutAuthorisedTitle": "You are already logged in",
-    "logoutAuthorisedContinueButton": "Continue",
-    "logoutAuthorisedLogoutButton": "Log Out",
-    "noClientDetectedTitle": "Install %VMS_NAME% to view your System",
-    "download": "Download %VMS_NAME%"
-  },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
     "default": "%CLOUD_NAME%",
@@ -167,14 +156,6 @@
     "common": "too common",
     "commonMessage": "This password is in top most popular passwords in the world",
     "missingMessage": "Password is required"
-  },
-  "sharing": {
-    "confirmOwner": "If you change System owner, you will revoke ownership from the current account. This action is irreversible. Are you sure?",
-    "shareTitle": "Add",
-    "shareConfirmButton": "Add",
-    "editShareTitle": "Edit Permissions",
-    "editShareConfirmButton": "Save",
-    "permissionsSaved": "New permissions saved"
   },
   "system": {
     "yourSystem": "Your System",

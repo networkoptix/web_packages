@@ -4,18 +4,18 @@ import { CommonModule } from '@angular/common';
 import { ComponentsModule } from '../components/components.module';
 import { DirectivesModule } from '../directives/directives.module';
 
-import { NxDialogsService }            from './dialogs.service';
-import { LoginModalContent }           from './login/login.component';
-import { DisconnectModalContent }      from './disconnect/disconnect.component';
-import { RenameModalContent }          from './rename/rename.component';
-import { AddUserModalContent }         from './add-user/add-user.component';
-import { MergeModalContent }           from './merge/merge.component';
-import { MessageModalContent }         from './message/message.component';
-import { EmbedModalContent }           from './embed/embed.component';
-import { downgradeInjectable }         from '@angular/upgrade/static';
-import { FormsModule, EmailValidator } from '@angular/forms';
-import { TranslateModule }             from '@ngx-translate/core';
-import { ClipboardModule }             from 'ngx-clipboard';
+import { NxDialogsService }                             from './dialogs.service';
+import { LoginModalContent }                            from './login/login.component';
+import { DisconnectModalContent }                       from './disconnect/disconnect.component';
+import { RenameModalContent }                           from './rename/rename.component';
+import { AddUserModalContent, NxModalAddUserComponent } from './add-user/add-user.component';
+import { MergeModalContent }                            from './merge/merge.component';
+import { MessageModalContent }                          from './message/message.component';
+import { EmbedModalContent }                            from './embed/embed.component';
+import { downgradeInjectable }                          from '@angular/upgrade/static';
+import { FormsModule, EmailValidator }                  from '@angular/forms';
+import { TranslateModule }                              from '@ngx-translate/core';
+import { ClipboardModule }                              from 'ngx-clipboard';
 
 import { GenericModalContent, NxModalGenericComponent } from './generic/generic.component';
 
@@ -38,6 +38,7 @@ import { GenericModalContent, NxModalGenericComponent } from './generic/generic.
         EmbedModalContent,
         GenericModalContent,
         NxModalGenericComponent,
+        NxModalAddUserComponent,
     ],
     entryComponents: [
         LoginModalContent,
@@ -49,10 +50,12 @@ import { GenericModalContent, NxModalGenericComponent } from './generic/generic.
         EmbedModalContent,
         GenericModalContent,
         NxModalGenericComponent,
+        NxModalAddUserComponent,
     ],
     providers      : [
         NxDialogsService,
         NxModalGenericComponent,
+        NxModalAddUserComponent,
     ],
     exports        : []
 })

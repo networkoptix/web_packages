@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 
+import { DirectivesModule }  from '../directives/directives.module';
 import { SandboxModule }     from './sandbox/sandbox.module';
 import { IpvdModule }        from './ipvd/ipvd.module';
 import { Angular2CsvModule } from 'angular2-csv';
@@ -23,6 +24,7 @@ import { NxSystemsListModule }      from './systems/list/list.module';
 
 @NgModule({
     imports        : [
+        DirectivesModule,
         SandboxModule,
         DownloadModule,
         DownloadHistoryModule,

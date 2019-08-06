@@ -1,8 +1,10 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { Location }                             from '@angular/common';
-import { ActivatedRoute }                       from '@angular/router';
-import { NxConfigService }                      from '../../../../services/nx-config';
-
+import {
+    Component, Inject,
+    OnDestroy, OnInit
+}                                    from '@angular/core';
+import { Location }                  from '@angular/common';
+import { ActivatedRoute }            from '@angular/router';
+import { NxConfigService }           from '../../../../services/nx-config';
 import { NxPageService }             from '../../../../services/page.service';
 import { NxDialogsService }          from '../../../../dialogs/dialogs.service';
 import { NxSettingsService }         from '../settings.service';

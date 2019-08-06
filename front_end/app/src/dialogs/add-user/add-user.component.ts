@@ -1,11 +1,11 @@
 import {
-    Component, Inject, Input, Renderer2
-}                                    from '@angular/core';
-import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
-import { EmailValidator }            from '@angular/forms';
-import { NxConfigService }           from '../../services/nx-config';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxModalGenericComponent }   from '../generic/generic.component';
+    Component, Inject, Input, OnInit, Renderer2, ViewEncapsulation
+}                                                from '@angular/core';
+import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { EmailValidator }                        from '@angular/forms';
+import { NxConfigService }                       from '../../services/nx-config';
+import { NxLanguageProviderService }             from '../../services/nx-language-provider';
+import { NxModalGenericComponent }               from '../generic/generic.component';
 
 @Component({
     selector   : 'nx-modal-add-user-content',
@@ -80,8 +80,8 @@ export class AddUserModalContent {
     }
 
     ngOnInit() {
-        this.title = (!this.user) ? this.LANG.sharing.shareTitle : this.LANG.sharing.editShareTitle;
-        this.buttonText = this.LANG.sharing.shareConfirmButton;
+        this.title = (!this.user) ? this.LANG.dialogs.sharing.shareTitle : this.LANG.dialogs.sharing.editShareTitle;
+        this.buttonText = this.LANG.dialogs.sharing.shareConfirmButton;
         this.isNewShare = false;
 
         if (!this.user) {
@@ -128,9 +128,9 @@ export class AddUserModalContent {
         this.sharing = this.process.init(() => {
             if (this.user.role.isOwner) {
                 return this.genericModal
-                    .openConfirm(this.LANG.sharing.confirmOwner,
-                        this.LANG.sharing.shareTitle,
-                        this.LANG.sharing.shareConfirmButton,
+                    .openConfirm(this.LANG.dialogs.sharing.confirmOwner,
+                        this.LANG.dialogs.sharing.shareTitle,
+                        this.LANG.dialogs.sharing.shareConfirmButton,
                         null,
                         this.LANG.dialogs.cancelButton)
                     .then((result) => {
@@ -142,7 +142,7 @@ export class AddUserModalContent {
                 return this.doShare();
             }
         }, {
-            successMessage: this.LANG.sharing.permissionsSaved
+            successMessage: this.LANG.dialogs.sharing.permissionsSaved
         }).then(() => {
             this.activeModal.close(true);
         });
@@ -153,39 +153,38 @@ export class AddUserModalContent {
     }
 }
 
-// @Component({
-//     selector     : 'nx-modal-share',
-//     template     : '',
-//     encapsulation: ViewEncapsulation.None,
-//     styleUrls    : []
-// })
-// export class NxModalAddUserComponent implements OnInit {
-//     modalRef: NgbModalRef;
-//
-//     constructor(@Inject('languageService') private language: any,
-//                 private modalService: NgbModal) {
-//     }
-//
-//     private dialog(system?, user?) {
-//         // TODO: Refactor dialog to use generic dialog
-//         // TODO: retire loading ModalContent (CLOUD-2493)
-//         this.modalRef = this.modalService.open(AddUserModalContent,
-//                 {
-//                             windowClass: 'modal-holder',
-//                             backdrop: 'static'
-//                         });
-//         this.modalRef.componentInstance.language = this.language.lang;
-//         this.modalRef.componentInstance.system = system;
-//         this.modalRef.componentInstance.user = user;
-//         this.modalRef.componentInstance.closable = true;
-//
-//         return this.modalRef;
-//     }
-//
-//     open(system?, user?) {
-//         return this.dialog(system, user).result;
-//     }
-//
-//     ngOnInit() {
-//     }
-// }
+@Component({
+    selector     : 'nx-modal-add-user',
+    template     : '',
+    encapsulation: ViewEncapsulation.None,
+    styleUrls    : []
+})
+export class NxModalAddUserComponent implements OnInit {
+    modalRef: NgbModalRef;
+
+    constructor(private modalService: NgbModal) {
+    }
+
+    private dialog(system?, user?) {
+        // TODO: Refactor dialog to use generic dialog
+        // TODO: retire loading ModalContent (CLOUD-2493)
+        this.modalRef = this.modalService.open(AddUserModalContent,
+                {
+                            windowClass: 'modal-holder',
+                            backdrop: 'static'
+                        });
+
+        this.modalRef.componentInstance.system = system;
+        this.modalRef.componentInstance.user = user;
+        this.modalRef.componentInstance.closable = true;
+
+        return this.modalRef;
+    }
+
+    open(system?, user?) {
+        return this.dialog(system, user).result;
+    }
+
+    ngOnInit() {
+    }
+}

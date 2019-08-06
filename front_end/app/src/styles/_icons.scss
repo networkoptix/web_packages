@@ -1,0 +1,92 @@
+@mixin icon {
+    display          : inline-block;
+    background-size  : 144px 80px;
+    width            : 16px;
+    height           : 16px;
+    margin-right     : 5px;
+    background-image : url('/static/images/sprite_common.png');
+    @media only screen and (-webkit-min-device-pixel-ratio : 2), only screen and (min-device-pixel-ratio : 2) {
+        background-image : url('/static/images/sprite_common@2x.png');
+    }
+}
+
+@mixin kill-glyphicon {
+    @include icon;
+    &:before {
+        content : none;
+    }
+}
+
+.glyphicon-home {
+    @include kill-glyphicon;
+    width               : 24px;
+    height              : 24px;
+    background-position : -24px -32px;
+}
+
+.glyphicon-user {
+    @include kill-glyphicon;
+    width               : 24px;
+    height              : 24px;
+    background-position : 3px -32px;
+}
+
+.glyphicon-users {
+    @include kill-glyphicon;
+    width               : 24px;
+    height              : 24px;
+    background-position : -48px -55px;
+}
+
+.glyphicon-cloud {
+    @include kill-glyphicon;
+    width               : 24px;
+    height              : 24px;
+    background-position : -72px -55px;
+    
+    &.selected {
+        background-position : -120px -55px;
+    }
+}
+
+.glyphicon-menu-hamburger {
+    @include kill-glyphicon;
+    width               : 20px;
+    height              : 18px;
+    background-position : -50px -34px;
+}
+
+.glyphicon-share {
+    @include kill-glyphicon;
+    background-position : -16px 0;
+}
+
+.glyphicon-eye-open {
+    @include kill-glyphicon;
+    background-position : -80px 0;
+}
+
+.glyphicon-eye-close {
+    @include kill-glyphicon;
+    background-position : -80px -16px;
+}
+
+.glyphicon-pencil {
+    @include kill-glyphicon;
+    background-position : -47px 0;
+}
+
+.glyphicon-remove {
+    @include kill-glyphicon;
+    background-position : -64px 0;
+}
+
+.close-icon {
+    @include icon;
+    background-position : -32px 0;
+}
+
+.tag-close-icon {
+    @include icon;
+    background-position : -96px 0;
+}

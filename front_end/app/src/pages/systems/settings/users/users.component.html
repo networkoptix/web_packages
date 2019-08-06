@@ -1,90 +1,39 @@
 <nx-pre-loader type="page" *ngIf=" !system || !system.users"></nx-pre-loader>
 
 <div *ngIf="system" class="container auth-visible" >
-    <div class="col-12 col-lg-9">
-        <div class="table-responsive">
-                <table class="table table-hover" ng-if="system.users.length">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Permissions</th>
-                            <th class="button-cell"></th>
-                            <th class="button-cell"></th>
-                        </tr>
-                    </thead>
-                    <tbody *ngIf="system.users">
-                        <tr class="spacer"><td colspan="5"></td></tr>
-                        <tr *ngFor="let user of system.users" class="hoverable" [ngClass]="{disabled:!user.isEnabled}" (click)="setUser(user)">
-                            <td class="user-name">{{user.fullName}}</td>
-                            <td class="user-email">{{user.email}}</td>
-                            <td class="user-role">
-                                <span class="inactive"
-                                      *ngIf="!system.isAvailable">{{LANG.accessRoles[user.accessRole].label || user.accessRole}}</span>
-                                <span *ngIf="system.isAvailable">{{user.role.name || LANG.accessRoles[user.accessRole].label || user.accessRole}}</span>
-                            </td>
-                            <td class="button-cell">
-                                <a href=''
-                                   class="image-link"
-                                   *ngIf="system.isAvailable && user.canBeEdited && !system.currentlyMerging"
-                                   [ngClass]="{'disabled': locked[user.email]}"
-                                   title="Edit permissions"
-                                   (click)="editShare(user)">
-                                    <span class="glyphicon glyphicon-pencil"></span>
-                                    <span class="visible-lg-inline" translate>Edit</span>
-                                </a>
-                            </td>
-                            <td class="button-cell">
-                                <a href=''
-                                   class="image-link"
-                                   *ngIf="system.isAvailable && user.canBeDeleted && !system.currentlyMerging"
-                                   [ngClass]="{ 'disabled': locked[user.email]}"
-                                   title="Delete"
-                                   (click)="removeUser(user)">
-                                    <span class="glyphicon glyphicon-remove"></span>
-                                    <span class="visible-lg-inline" translate>Delete</span>
-                                </a>
-                            </td>
-                        </tr>
-                        <tr class="spacer"><td colspan="5"></td></tr>
-                    </tbody>
-                </table>
+    <nx-block *ngIf="selectedUser" header-style="extended">
+        <header>
+            <div class="float-right d-flex">
+                <span *ngIf="!selectedUser.isEnabled"
+                      class="text-danger" [ngClass]="{'pr-2': selectedUser.canBeEdited}"
+                      translate>User disabled</span>
+                <nx-switch *ngIf="selectedUser.canBeEdited"
+                           [ngModel]="selectedUser.isEnabled" (ngModelChange)="updateEnabled($event)"></nx-switch>
             </div>
+            <h2 class="users-email mb-2">{{selectedUser.email}}</h2>
+            <span class="users-name">{{selectedUser.fullName}}</span>
+        </header>
 
-        <nx-block *ngIf="selectedUser" header-style="extended">
-            <header>
-                <div class="float-right d-flex">
-                    <span *ngIf="!selectedUser.isEnabled"
-                          class="text-danger" [ngClass]="{'pr-2': selectedUser.canBeEdited}"
-                          translate>User disabled</span>
-                    <nx-switch *ngIf="selectedUser.canBeEdited"
-                               [ngModel]="selectedUser.isEnabled" (ngModelChange)="updateEnabled($event)"></nx-switch>
-                </div>
-                <h2 class="users-email mb-2">{{selectedUser.email}}</h2>
-                <span class="users-name">{{selectedUser.fullName}}</span>
-            </header>
-
-            <nx-section>
-                <div *ngIf="systemAvailable && selectedUser.canBeEdited" class="mr-2 my-2" style="width: 200px">
-                    <label for="permissionsSelect" translate>Access level</label>
-                    <nx-permissions-select
-                            id="permissionsSelect"
-                            [user]="selectedUser"
-                            [system]="system"
-                            [roles]="system.accessRoles"
-                            [selected]="selectedUser.role"
-                            (onSelected)="setPermission($event)">
-                    </nx-permissions-select>
-                </div>
-                <div>
-                    <span class="help-block" [innerHtml]="accessDescription"></span>
-                </div>
-            </nx-section>
-            <nx-section *ngIf="systemAvailable && selectedUser.canBeDeleted">
-                <div class="float-left mr-2 mt-2">
-                    <button class="btn btn-default" (click)="removeUser(selectedUser)">Remove User</button>
-                </div>
-            </nx-section>
-        </nx-block>
-    </div>
+        <nx-section>
+            <div *ngIf="systemAvailable && selectedUser.canBeEdited" class="mr-2 my-2" style="width: 200px">
+                <label for="permissionsSelect" translate>Access level</label>
+                <nx-permissions-select
+                        id="permissionsSelect"
+                        [user]="selectedUser"
+                        [system]="system"
+                        [roles]="system.accessRoles"
+                        [selected]="selectedUser.role"
+                        (onSelected)="setPermission($event)">
+                </nx-permissions-select>
+            </div>
+            <div>
+                <span class="help-block" [innerHtml]="accessDescription"></span>
+            </div>
+        </nx-section>
+        <nx-section *ngIf="systemAvailable && selectedUser.canBeDeleted">
+            <div class="float-left mr-2 mt-2">
+                <button class="btn btn-default" (click)="removeUser(selectedUser)">Remove User</button>
+            </div>
+        </nx-section>
+    </nx-block>
 </div>

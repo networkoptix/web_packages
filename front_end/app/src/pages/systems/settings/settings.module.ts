@@ -24,6 +24,7 @@ const appRoutes: Routes = [
         children: [
             { path: '', component: NxSystemAdminComponent },
             { path: 'users', component: NxSystemUsersComponent },
+            { path: 'users/:userId', component: NxSystemUsersComponent },
         ]
     }
 ];

@@ -38,7 +38,6 @@
     "Contact": "Contact",
     "Create Account": "Create Account",
     "Create account": "Create account",
-    "Delete": "Delete",
     "Depending of the size of the database it may take up to several hours.": "Depending of the size of the database it may take up to several hours.",
     "Developer": "Developer",
     "Disconnect": "Disconnect",
@@ -53,7 +52,6 @@
     "Downloads": "Downloads",
     "Draft": "Draft",
     "Dual Streaming": "Dual Streaming",
-    "Edit": "Edit",
     "Email": "Email",
     "Email is required": "Email is required",
     "Embed": "Embed",
@@ -225,6 +223,13 @@
     },
     "devices": "devices",
     "dialogs": {
+        "cancelButton": "Cancel",
+        "download": "Download %VMS_NAME%",
+        "loginButton": "Log in",
+        "loginTitle": "Log in to %CLOUD_NAME%",
+        "logoutAuthorisedContinueButton": "Continue",
+        "logoutAuthorisedLogoutButton": "Log Out",
+        "logoutAuthorisedTitle": "You are already logged in",
         "merge": {
             "connectToCloud": "Connect System you want to merge with this one to <strong>{{cloudName}}</strong> or merge locally using <strong>{{vmsName}}</strong> Client.",
             "mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from the <strong>{{primarySystem}}</strong>.",
@@ -249,6 +254,16 @@
                 "ipvd_feedback_device": "Feedback about {{product}}",
                 "ipvd_feedback_page": "Feedback for cameras page"
             }
+        },
+        "noClientDetectedTitle": "Install %VMS_NAME% to view your System",
+        "okButton": "OK",
+        "sharing": {
+            "confirmOwner": "If you change System owner, you will revoke ownership from the current account. This action is irreversible. Are you sure?",
+            "editShareConfirmButton": "Save",
+            "editShareTitle": "Edit Permissions",
+            "permissionsSaved": "New permissions saved",
+            "shareConfirmButton": "Add",
+            "shareTitle": "Add"
         }
     },
     "dialogs.merge.connectToCloud": "Connect System you want to merge with this one to <strong>{{cloudName}}</strong> or merge locally using <strong>{{vmsName}}</strong> Client.",

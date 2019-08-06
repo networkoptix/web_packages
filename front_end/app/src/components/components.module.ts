@@ -76,7 +76,7 @@ import { ToastsContainer }         from './toast/toast.component';
         NxEmailComponent,
         NxClientButtonComponent,
         NxSwitchComponent,
-        ToastsContainer
+        ToastsContainer,
     ],
     entryComponents: [
         NxGenericDropdown,
@@ -106,7 +106,7 @@ import { ToastsContainer }         from './toast/toast.component';
         NxEmailComponent,
         NxClientButtonComponent,
         NxSwitchComponent,
-        ToastsContainer
+        ToastsContainer,
     ],
     providers      : [
         NxProcessButtonComponent,

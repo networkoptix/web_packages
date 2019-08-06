@@ -18,7 +18,7 @@ import { HighlightPipe }             from './nx-highlight-text';
         NxArrowNavDirective,
         NxClickElsewhereDirective,
         NxFocusMeDirective,
-        HighlightPipe
+        HighlightPipe,
     ]
 })
 export class DirectivesModule {

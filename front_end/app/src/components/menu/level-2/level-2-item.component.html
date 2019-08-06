@@ -2,5 +2,9 @@
    [ngClass]="{'selected': selected }"
    [id]="item.id"
    [routerLink]="[itemPath]"
-   [queryParams]="item.query"
-   [innerHtml]="item.label"></a>
+   [queryParams]="item.query">
+    <div class="menu-level-2-icon" *ngIf="item.icon">
+        <span class="m-0 glyphicon {{item.icon}}" [ngClass]="{'selected': selected}"></span>
+    </div>
+    <div class="ellipsis" [innerHTML]="item.label"></div>
+</a>
