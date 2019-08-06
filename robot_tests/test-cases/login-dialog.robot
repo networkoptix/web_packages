@@ -105,7 +105,7 @@ Passes email from email input to Restore password page, even without clicking 'L
     Click Link    ${LOG IN NAV BAR}
     Wait Until Element is Visible    ${EMAIL INPUT}
     Input Text    ${EMAIL INPUT}    ${email}
-#the transition animations causes bad targeting on the link.  This is tentative.
+# the transition animations causes bad targeting on the link.  This is tentative.
     sleep    .15
     Wait Until Element is Visible    ${FORGOT PASSWORD}
     Click Link    ${FORGOT PASSWORD}
@@ -171,7 +171,7 @@ Allows copy-paste in input fields
     Paste Text    ${locator}
     Textfield Should Contain    ${EMAIL INPUT}    Copy Paste Test
 
-Chould respond to Esc key and close dialog
+Should respond to Esc key and close dialog
     [tags]    Threaded
     Wait Until Element is Visible    ${LOG IN NAV BAR}
     Click Link    ${LOG IN NAV BAR}
@@ -220,16 +220,16 @@ Handles two tabs, updates second tab state if logout is done on first
     ...    ${REGISTER PASSWORD INPUT}
     ...   ${CREATE ACCOUNT BUTTON}
     Click Link    ${TERMS AND CONDITIONS LINK}
-    #This is specifically for Ubuntu Firefox because the new page
-    #isn't created fast enough and Get Window Handles only gets 1 item.
+    # This is specifically for Ubuntu Firefox because the new page
+    # isn't created fast enough and Get Window Handles only gets 1 item.
     Sleep    2
     ${tabs}    Get Window Handles
     Select Window    @{tabs}[1]
     Location Should Be    ${url}/content/eula
     Go To    ${url}
     Validate Log Out
-    #This is specifically for Ubuntu Firefox as the JS seems to
-    #load slowly and doesn't redirect correctly after login.
+    # This is specifically for Ubuntu Firefox as the JS seems to
+    # load slowly and doesn't redirect correctly after login.
     Sleep    5
     Log In    ${email}    ${password}
     Validate Log In
@@ -296,7 +296,7 @@ User is logged out of browser after a password change in another browser
     Click Button    ${CHANGE PASSWORD BUTTON}
     Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
     Switch Browser    2
-    #wait for server to disconnect user
+    # wait for server to disconnect user
     sleep    30
     Wait Until Element is Visible    ${LOG IN MODAL}
     Click Element    ${LOG IN CLOSE BUTTON}
