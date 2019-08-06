@@ -56,7 +56,7 @@
             }
 
             function login(email, password, remember) {
-                setEmail(email);
+                setEmail($rootScope.session.loginState);
 
                 return cloudApi
                         .login(email, password, remember)
