@@ -7,10 +7,16 @@
     <script>window.$ = django.jQuery;</script>
     <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
 {% endblock %}
-{% block content %}
+{% block content_title %}
+<h1 style="display: flex; justify-content: space-between;">
+    <div>{{ page_title }}</div>
     {% if original.can_preview_customization and is_integration %}
-    <div class="float-right" style="margin-top: -7rem"><h1><a class="float-right preview" href="{% url 'preview' %}" value="0">Preview</a></h1></div>
+    <a class="preview" href="{% url 'preview' %}" value="0">Preview</a>
     {% endif %}
+</h1>
+{% endblock %}
+
+{% block content %}
     {% with version=original.version product=original.version.product %}
     <div id="alert" style="display:none" class="alert alert-warning"
          title="Preview being generated">Currently making the preview for you. A new tab
@@ -127,7 +133,6 @@
         {% else %}
         <div>There are no changes to review</div>
         {% endif %}
-        {% has_customization_permission user original.customization.name 'cms.access_customization' as access_customization %}
         <h2>Review Notes {% if access_customization %}for {{ original.customization.name }}{% endif %}</h2>
         {{ original.notes|linebreaks }}
     </div>
