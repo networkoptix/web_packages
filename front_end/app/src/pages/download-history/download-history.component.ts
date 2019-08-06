@@ -4,7 +4,7 @@ import {
 }                                            from '@angular/core';
 import { ActivatedRoute, Router }            from '@angular/router';
 import { Title }                             from '@angular/platform-browser';
-import { Location, TitleCasePipe } from '@angular/common';
+import { DOCUMENT, Location, TitleCasePipe } from '@angular/common';
 import { isNumeric }                         from 'rxjs/util/isNumeric';
 import { NgbTabChangeEvent, NgbTabset }      from '@ng-bootstrap/ng-bootstrap';
 
@@ -42,7 +42,8 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
     @ViewChild('tabs', { static: true })
     public tabs: NgbTabset;
 
-    constructor(@Inject('cloudApiService') private cloudApi: any,
+    constructor(@Inject(DOCUMENT) private document: any,
+                @Inject('cloudApiService') private cloudApi: any,
                 @Inject('authorizationCheckService') private authorizationService: any,
                 @Inject('account') private account: any,
                 @Inject('locationProxyService') private locationProxy: any,
@@ -129,7 +130,7 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
                 .requireLogin()
                 .then(result => {
                     if (!result) {
-                        this.document.location.href = this.config.redirect404;
+                        this.document.location.href = this.CONFIG.redirect404;
                         return;
                     }
 
@@ -141,7 +142,7 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
                                 if (this.canViewRelease) {
                                     this.getData();
                                 } else {
-                                    this.document.location.href = this.config.redirect404;
+                                    this.document.location.href = this.CONFIG.redirect404;
                                     return;
                                 }
                             });
