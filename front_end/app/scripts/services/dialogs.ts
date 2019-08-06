@@ -125,8 +125,8 @@
                         //     buttonType : actionType
                         // }).result;
                     },
-                    login: function (keepPage?) {
-                        return NxDialogsService.login(keepPage);
+                    login: function (keepPage?, redirectClose?) {
+                        return NxDialogsService.login(keepPage, redirectClose);
                         // return openDialog({
                         //     title: L.dialogs.loginTitle,
                         //     template: CONFIG.viewsDir + 'dialogs/login.html',

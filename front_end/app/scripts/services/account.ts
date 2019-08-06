@@ -63,7 +63,7 @@
             requireLogin: function () {
                 var res = this.get();
                 res.catch(function () {
-                    dialogs.login(true).catch(function () {
+                    dialogs.login(true, true).catch(function () {
                         $location.path(CONFIG.redirectUnauthorised);
                     });
                 });
