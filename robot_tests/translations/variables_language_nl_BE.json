@@ -92,7 +92,7 @@
     "IPVD ADV SEARCH BUTTON TEXT": "Geavanceerd zoeken",
     "IPVD ADV FILTER MIN RES": "Minimale resolutie",
     "IPVD ADV FILTER MFR": "Fabrikant",
-    "IPVD ADV FILTER MFRS": "Manufacturers",
+    "IPVD ADV FILTER MFRS": "Fabrikanten",
     "IPVD ADV FILTER TYPE": "Type",
     "IPVD ADV FILTER TYPES": "Types",
     "IPVD ADV FEATURE AUDIO": "Audio",
@@ -124,7 +124,7 @@
     "IPVD EXPORT ALL TO CSV": "Alles exporteren naar CSV",
     "IPVD SUBMIT A REQUEST TEXT": "een aanvraag indienen",
     "IPVD SEND DEVICE FEEDBACK TEXT": "Stuur feedback over dit apparaat",
-    "PRIVACY POLICY LINK TEXT": "here",
+    "PRIVACY POLICY LINK TEXT": "hier",
     "NOTHING FOUND": "Niets gevonden",
     "OK TEXT": "Oké",
     "MERGE SYSTEMS TEXT": "Systemen Samenvoegen",
@@ -139,5 +139,5 @@
     "CHECKING TEXT": "Controleer...",
     "ENTER PASSWORD TO CONTINUE TEXT": "Voer het wachtwoord in voor uw account om door te gaan",
     "INCOMPATIBLE": "niet compatibel",
-    "CONNECTION TO SYSTEM LOST": "Connection to %SYSTEM NAME% lost"
+    "CONNECTION TO SYSTEM LOST": "Verbinding met %SYSTEM NAME% is verbroken"
 }
