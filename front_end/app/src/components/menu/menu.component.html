@@ -9,10 +9,14 @@
         <div *ngIf="selectedLevel1 == item.id">
             <div class="container-buttons"
                  *ngIf="buttons && buttons.length">
-                <button class="btn btn-menu btn-clear"
-                        [id]="button.id"
-                        (click)="button.action.callback(content.system)"
-                        *ngFor="let button of buttons">{{button.label}}</button>
+                <nx-menu-button
+                    *ngFor="let button of buttons"
+                    [button]="button"></nx-menu-button>
+
+<!--                <button class="btn btn-menu btn-clear"-->
+<!--                        [id]="button.id"-->
+<!--                        (click)="button.action.callback(content.system)"-->
+<!--                        *ngFor="let button of buttons">{{button.label}}</button>-->
             </div>
             <div *ngFor="let subitem of level2.items; let last = last">
                 <nx-level-2-item [item]="subitem"

@@ -124,9 +124,9 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                                 {
                                     id: 'addUser',
                                     label: this.LANG['Add User'],
-                                    action: {
-                                        callback: this.addUserModal.open.bind(this.addUserModal)
-                                    }
+                                    // action: {
+                                    //     callback: this.addUserModal.open.bind(this.addUserModal)
+                                    // }
                                 }
                             ]
                         }
