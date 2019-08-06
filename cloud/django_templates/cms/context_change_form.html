@@ -249,6 +249,13 @@
 
     tinymce.init({
         selector: '.tinymce',
+        paste_postprocess: function(plugin, args) {
+            $(args.node).find('img').each(function () {
+                $(this).on('error', function() {
+                    tinymce.activeEditor.dom.remove(tinymce.activeEditor.dom.select('img[src="' + this.currentSrc +'"]'));
+                });
+            });
+        },
         menubar: false,
         resize: 'both',
         theme: 'advanced',
