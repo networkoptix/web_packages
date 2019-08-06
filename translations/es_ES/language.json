@@ -5,7 +5,7 @@
   "vmsName": "%VMS_NAME%",
   "clientProtocol": "%CLIENT_PROTOCOL%:",
   "dialogs": {
-    "okButton": "Aceptar",
+    "okButton": "OK",
     "cancelButton": "Cancelar",
     "loginTitle": "Inicie sesión en %CLOUD_NAME%",
     "loginButton": "Inicia sesión",
@@ -90,7 +90,7 @@
       "description": "Acceso sin restricciones, incluyendo la capacidad para compartir y conectar/desconectar el sistema de la nube"
     },
     "viewer": {
-      "label": "Observador",
+      "label": "Espectador",
       "description": "Puede ver video en vivo y ver el archivo"
     },
     "liveViewer": {
@@ -98,7 +98,7 @@
       "description": "Sólo puede ver vídeo en vivo"
     },
     "advancedViewer": {
-      "label": "Observador avanzado",
+      "label": "Visor avanzado",
       "description": "Puede ver el vídeo vivo, hojear el archivo, configurar cámaras, controlar PTZ etc"
     },
     "custom": {
@@ -231,7 +231,7 @@
       "highStream": "Corriente de alta",
       "lowStream": "Corriente de baja",
       "transcoding": "Transcodificación",
-      "unknown": "Uesconocido",
+      "unknown": "Desconocido",
       "copyToClipboard": "copiar al portapapeles",
       "copyDefaultText": "copiar",
       "copyActiveText": "copiado al portapapeles"
@@ -256,7 +256,7 @@
     "searchCamPlaceholder": "Búsqueda",
     "resolution": {
       "auto": "Auto",
-      "high": "Elevado",
+      "high": "Alto",
       "low": "Bajo"
     },
     "chromeCastWarning": "Chromecast consume muchos recursos y puede causar problemas en tu servidor.",
@@ -264,7 +264,7 @@
       "play": "reproducir",
       "pause": "pausa",
       "live": "go to live | show me live",
-      "view": "vista + [nombre de la cámara]",
+      "view": "view + [camera name]",
       "search": "find + [text for searchbar]",
       "clear search": "borrar búsqueda",
       "expand server": "expand server + [server name]",

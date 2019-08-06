@@ -8,7 +8,7 @@
     "okButton": "OK",
     "cancelButton": "Zrušit",
     "loginTitle": "Přihlaste se k %CLOUD_NAME%",
-    "loginButton": "Přihlásit se",
+    "loginButton": "Přihlásit",
     "logoutAuthorisedTitle": "Již jste přihlášen",
     "logoutAuthorisedContinueButton": "Pokračovat",
     "logoutAuthorisedLogoutButton": "Odhlásit se",
@@ -66,7 +66,7 @@
       "description": "Můžete zobrazit pouze živé video"
     },
     "Advanced Viewer": {
-      "label": "Pokročilý prohlížeč",
+      "label": "Rozšířený prohlížeč",
       "description": "Lze sledovat živé video, procházet archiv, ovládat PTZ atd"
     },
     "Administrator": {
@@ -98,7 +98,7 @@
       "description": "Můžete zobrazit pouze živé video"
     },
     "advancedViewer": {
-      "label": "Pokročilý prohlížeč",
+      "label": "Rozšířený prohlížeč",
       "description": "Můžete sledovat živé video, prohlížet archiv, konfigurovat kamery, ovládat PTZ atd"
     },
     "custom": {
@@ -200,7 +200,7 @@
     "successDeleted": "Systém {{systemName}} byl úspěšně odstraněna z Vašeho účtu",
     "mergeFailed": "Spojení systémů selhalo",
     "mergeStart": "Systémy se spojují",
-    "mergeSuccess": "System merge completed",
+    "mergeSuccess": "Sloučení systému bylo dokončeno",
     "permissionsRemoved": "Oprávnění byla odstraněna z adresy {{email}}",
     "unknownName": "Neznámý název systému (problém s cloudovým spojením)"
   },
@@ -242,7 +242,7 @@
     "cameraStates": {
       "offline": "Offline",
       "error": "Chyba",
-      "unauthorized": "Ověření je vyžadováno",
+      "unauthorized": "Autentifikace je vyžadována",
       "noData": "Žádná data",
       "iosVideoTooLarge": "iOS nepodporuje video větší než fullHD (2MP: 1920 × 1080).",
       "flashRequired": "Pro přehrání videa si prosím <a href='https://get.adobe.com/flashplayer/' target='_blank'>nainstalujte Adobe Flash</a>.",
@@ -257,12 +257,12 @@
     "resolution": {
       "auto": "Auto",
       "high": "Vysoká",
-      "low": "Nízká"
+      "low": "Nízký"
     },
     "chromeCastWarning": "Chromecast je náročný na systémové zdroje a může způsobit problémy na vašem serveru.",
     "voiceCommands": {
       "play": "přehrát",
-      "pause": "pauza",
+      "pause": "pozastavit",
       "live": "go to live | show me live",
       "view": "view + [camera name]",
       "search": "find + [text for searchbar]",

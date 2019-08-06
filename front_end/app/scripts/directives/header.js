@@ -36,10 +36,12 @@
                 }
 
                 scope.login = function () {
-                    nxDialogsService.login(false);
+                    var url = $location.$$path;
+                    var redirect = CONFIG.redirectPaths.some((path) => url.indexOf(path) > -1);
+                    nxDialogsService.login(!redirect);
                 };
                 scope.logout = function () {
-                    account.logout();
+                    account.logout(true);
                 };
 
                 scope.nxSystemsService = nxSystemsService;

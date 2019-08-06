@@ -520,7 +520,7 @@ admin.site.register(Customization, CustomizationAdmin)
 class DataRecordAdmin(CMSAdmin):
     list_display = ('product', 'language', 'context',
                     'data_structure', 'short_description', 'version')
-    list_filter = (ProductFilter, 'language', 'data_structure__context', 'data_structure')
+    list_filter = ('product', 'language', 'data_structure__context', 'data_structure')
     search_fields = ('data_structure__context__name', 'data_structure__name',
                      'data_structure__description', 'value', 'language__code')
     readonly_fields = ('created_by',)
@@ -579,36 +579,29 @@ class ProductCustomizationReviewAdmin(CMSAdmin):
                                                             version,
                                                             customization_review.customization)
 
-        extra_context['title'] = f"Changes for {version.product.name} - Version: {version.id}"
-
         extra_context['review_states'] = ProductCustomizationReview.REVIEW_STATES
-        if UserGroupsToProductPermissions.check_permission(request.user, version.product, 'cms.edit_content'):
-            extra_context['customization_reviews'] = version.productcustomizationreview_set.all()
-        else:
-            extra_context['customization_reviews'] = version.productcustomizationreview_set.\
+        extra_context['customization_reviews'] = version.productcustomizationreview_set.all()
+        if not request.user.is_superuser:
+            extra_context['customization_reviews'] = extra_context['customization_reviews'].\
                 filter(customization__name__in=request.user.customizations)
 
         extra_context['DataStructureTypes'] = DataStructure.DATA_TYPES
 
         extra_context['allowed'] = self.template_allowed(request, customization_review)
-
-        extra_context['can_preview'] = customization_review.can_preview_customization
+        is_integration = version.product.product_type.type == ProductType.PRODUCT_TYPES.integration
+        extra_context['can_preview'] = customization_review.can_preview_customization and not is_integration
+        extra_context['is_integration'] = is_integration
 
         # Customization name should be visible in notes heading if developer has access or user has access
         customization_name = customization_review.customization.name
-        if UserGroupsToProductPermissions.check_customization_access(request.user, customization_name) or \
-                UserGroupsToProductPermissions.check_customization_access(version.created_by, customization_name):
-            extra_context['customization_name'] = customization_name
+        title = f"Changes for {version.product.name} - Version: {version.id}"
+        if not UserGroupsToProductPermissions.check_customization_access(request.user, customization_name):
+            title = f"{title} – {self.state_tag(customization_review.state)}"
 
+        extra_context["page_title"] = format_html(title)
         return super(ProductCustomizationReviewAdmin, self).change_view(
             request, object_id, form_url, extra_context=extra_context,
         )
-
-    def get_object(self, request, object_id, from_field=None):
-        review = self.get_queryset(request).get(id=object_id)
-        if not UserGroupsToProductPermissions.check_customization_access(request.user, review.customization.name):
-            review.customization = None
-        return review
 
     # TODO: filter visible reviews
     def get_queryset(self, request):
@@ -709,10 +702,19 @@ class ProductCustomizationReviewAdmin(CMSAdmin):
              state == ProductCustomizationReview.REVIEW_STATES.rejected)
         allowed['delete'] = can_delete
         allowed['submit_row'] = True in allowed.values()
-
         allowed['access_customization_checkbox'] = not developer_access_customization and can_publish_or_accept
 
         return allowed
+
+    @staticmethod
+    def state_tag(state):
+        name = ProductCustomizationReview.REVIEW_STATES[state]
+        label_type = "label-default"
+        if state == ProductCustomizationReview.REVIEW_STATES.rejected:
+            label_type = "label-danger"
+        elif state == ProductCustomizationReview.REVIEW_STATES.accepted:
+            label_type = "label-success"
+        return f"<span class=\"label {label_type}\">{name}</span>"
 
 
 admin.site.register(ProductCustomizationReview, ProductCustomizationReviewAdmin)

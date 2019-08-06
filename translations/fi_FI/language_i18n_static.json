@@ -98,7 +98,7 @@
 		}
 	},
 	"ipvd": {
-		"resolutionArea": "Area",
+		"resolutionArea": "Alue",
 		"count": "Määrä",
 		"vendor": "Valmistaja",
 		"model": "Malli",
@@ -186,5 +186,12 @@
 		"ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent."
 	},
 	"testedVersionLabel": "Tested on {{vmsName}} version:",
-	"testedVersionsLabel": "Tested on {{vmsName}} versions:"
+	"testedVersionsLabel": "Tested on {{vmsName}} versions:",
+	"About %CLOUD_NAME%": "About %CLOUD_NAME%",
+	"Download %VMS_NAME%": "Lataa %VMS_NAME%",
+	"Integrations": "Integraatiot",
+	"Privacy": "Tietosuoja",
+	"Support": "Tuki",
+	"Supported Devices": "Tuetut laitteet",
+	"Terms": "Ehdot"
 }

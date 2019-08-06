@@ -7,12 +7,12 @@
 		"Any": "Будь-які",
 		"selected": "вибрано",
 		"vendor": "Виробник",
-		"vendors": "Manufacturers",
+		"vendors": "Виробники",
 		"hardwareType": "Тип",
-		"hardwareTypes": "Types",
+		"hardwareTypes": "Типи",
 		"minResolution": "Мінімальна роздільна здатність",
-		"analytics": "Analytics",
-		"analyticsSelected": "analytics events"
+		"analytics": "Аналітика",
+		"analyticsSelected": "аналітика подій"
 	},
 	"cameraFilters": {
 		"ptz": "PTZ камери",
@@ -98,7 +98,7 @@
 		}
 	},
 	"ipvd": {
-		"resolutionArea": "Area",
+		"resolutionArea": "Площа",
 		"count": "Підрахунок",
 		"vendor": "Виробник",
 		"model": "Модель",
@@ -116,7 +116,7 @@
 		"isIoSupported": "Ввід/вивід",
 		"isH265": "H.265",
 		"isMultiSensor": "Мультисенсор",
-		"isAnalyticsSupported": "Analytics",
+		"isAnalyticsSupported": "Аналітика",
 		"camera": "Камера",
 		"multiSensorCamera": "Багатоканальна камера",
 		"encoder": "Енкодер",
@@ -135,7 +135,7 @@
 			"b_Link": "надіслати запит",
 			"c_Info": "додаткові питання / зауваження щодо підтримуваних пристроїв."
 		},
-		"disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous."
+		"disclaimer": "Цей список обмежується пристроями, знайденими в {{vmsName}} де користувачі дозволили автоматичну звітність характеристик пристрою до {{companyName}}. Жодна особиста інформація не збирається і кожен користувач залишається повністю анонімним."
 	},
 	"integration": {
 		"previewRibbonText": "Ця сторінка є попереднім переглядом останніх змін і не відповідає загальнодоступній версії.",
@@ -182,9 +182,16 @@
 		}
 	},
 	"privacyPolicy": {
-		"integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent.",
-		"ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent."
+		"integration": "Надіславши цю форму, ви погоджуєтеся зв'язатися з {{INTEGRATION_COMPANY}} та / або %COMPANY_NAME%.\nВи знайдете {{INTEGRATION_COMPANY}} Політику конфіденційності <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">тут</a> і %COMPANY_NAME% Політика конфіденційності <a href=\"%PRIVACY_LINK%\" target=\"blank\">тут</a> які містять інструкцію про те, як зняти вашу згоду.",
+		"ipvd": "Надсилаючи цю форму, ви погоджуєтесь зв'язатися з нами %COMPANY_NAME%.\nВи знайдете %COMPANY_NAME% політику конфіденційності <a href=\"%PRIVACY_LINK%\" target=\"blank\">тут</a> яка містить інструкцію про те, як скасувати вашу згоду."
 	},
-	"testedVersionLabel": "Tested on {{vmsName}} version:",
-	"testedVersionsLabel": "Tested on {{vmsName}} versions:"
+	"testedVersionLabel": "Протестовано за {{vmsName}} версій:",
+	"testedVersionsLabel": "Протестовано за {{vmsName}} версій:",
+	"About %CLOUD_NAME%": "Про %CLOUD_NAME%",
+	"Download %VMS_NAME%": "Завантажити %VMS_NAME%",
+	"Integrations": "Інтеграції",
+	"Privacy": "Приватність",
+	"Support": "Підтримка",
+	"Supported Devices": "Пристрої, що підтримуються",
+	"Terms": "Умови"
 }

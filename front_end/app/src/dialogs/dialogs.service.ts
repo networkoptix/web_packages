@@ -1,17 +1,9 @@
-import { Injectable } from '@angular/core';
-import { Location } from '@angular/common';
-import { DomSanitizer } from '@angular/platform-browser';
+import { Inject, Injectable } from '@angular/core';
+import { DOCUMENT, Location } from '@angular/common';
+import { DomSanitizer }       from '@angular/platform-browser';
 
 import './../dialogs/dialogs.scss';
-// import { NxModalLoginComponent }      from './login/login.component';
-// import { NxModalGenericComponent }    from './generic/generic.component';
-// import { NxModalAddUserComponent }    from './add-user/add-user.component';
-// import { NxModalDisconnectComponent } from './disconnect/disconnect.component';
-// import { NxModalRenameComponent }     from './rename/rename.component';
-// import { NxModalMergeComponent }      from './merge/merge.component';
-// import { NxModalEmbedComponent }      from './embed/embed.component';
-// import { NxModalMessageComponent }    from './message/message.component';
-// import { DefaultGlobalConfig, ToastrService } from 'ngx-toastr';
+
 import { ToastService }              from './toast.service';
 import { LoginModalContent }         from './login/login.component';
 import { NgbModal }                  from '@ng-bootstrap/ng-bootstrap';
@@ -23,28 +15,26 @@ import { RenameModalContent }        from './rename/rename.component';
 import { MessageModalContent }       from './message/message.component';
 import { EmbedModalContent }         from './embed/embed.component';
 import { MergeModalContent }         from './merge/merge.component';
+import { NxConfigService }           from '../services/nx-config';
 
 @Injectable({ providedIn: 'root' })
 export class NxDialogsService {
 
     LANG: any = {};
+    CONFIG: any = {};
     location: any;
+    closeResult: any;
 
-    constructor(private toastService: ToastService,
+    constructor(@Inject(DOCUMENT) private document: any,
+                private toastService: ToastService,
                 private modalService: NgbModal,
                 private language: NxLanguageProviderService,
                 private domSanitizer: DomSanitizer,
                 location: Location,
-                // private loginModal: NxModalLoginComponent,
-                // private genericModal: NxModalGenericComponent,
-                // private disconnectModal: NxModalDisconnectComponent,
-                // private renameModal: NxModalRenameComponent,
-                // private mergeModal: NxModalMergeComponent,
-                // private messageModel: NxModalMessageComponent,
-                // private embedModal: NxModalEmbedComponent,
-                // private addUserModal: NxModalAddUserComponent
+                private configService: NxConfigService,
     ) {
         this.LANG = this.language.getTranslations();
+        this.CONFIG = this.configService.getConfig();
         this.location = location;
     }
 
@@ -131,7 +121,7 @@ export class NxDialogsService {
         return this.createModal(GenericModalContent, options, params);
     }
 
-    login(keepPage?) {
+    login(keepPage?, redirectClose?) {
         const options: any = {
             windowClass: 'modal-holder',
             backdrop   : 'static',
@@ -139,22 +129,26 @@ export class NxDialogsService {
         };
 
         const params: any = {
-            login      : this.login,
-            cancellable: !keepPage || false,
-            closable   : true,
-            location   : this.location,
-            keepPage   : (keepPage !== undefined) ? keepPage : true,
+            login        : this.login,
+            cancellable  : !keepPage || false,
+            closable     : true,
+            location     : this.location,
+            keepPage     : (keepPage !== undefined) ? keepPage : true,
+            redirectClose: redirectClose || false
         };
 
-        let closeResult: any;
         return this.createModal(LoginModalContent, options, params)
                     // handle how the dialog was closed
                     // required if we need to have dismissible dialog otherwise
                     // will raise a JS error ( Uncaught [in promise] )
                    .then((result) => {
-                       closeResult = `Closed with: ${result}`;
+                       this.closeResult = `Closed with: ${result}`;
+
+                       if (redirectClose && result === 'canceled') {
+                           this.document.location.href = this.CONFIG.redirectUnauthorised;
+                       }
                    }, (reason) => {
-                       closeResult = 'Dismissed';
+                       this.closeResult = 'Dismissed';
                    });
     }
 

@@ -125,7 +125,7 @@
     "wrongParameters": "พารามิเตอร์บางอย่างในแบบฟอร์มไม่ถูกต้อง",
     "wrongCode": "บัญชีถูกเปิดใช้งานหรือรหัสยืนยันไม่ถูกต้อง",
     "wrongCodeRestore": "ใช้รหัสยืนยันแล้วหรือไม่ถูกต้อง",
-    "wrongAuthCode": "Code is expired or incorrect",
+    "wrongAuthCode": "รหัสหมดอายุหรือไม่ถูกต้อง",
     "forbidden": "การเข้าถึงถูกปฏิเสธ คุณไม่มีสิทธิ์ดำเนินการนี้.",
     "accountNotActivated": "บัญชีนี้ยังไม่เปิดใช้งาน <a href=\"/activate\"> ส่งลิงก์การเปิดใช้งานอีกครั้ง </a>",
     "accountBlocked": "บัญชีนี้ถูกปิดแล้ว โปรดลองอีกครั้งในไม่กี่นาที.",
@@ -147,7 +147,7 @@
     "mergedSystemIsOffline": "ระบบ <strong>{{failedSystem}}</strong> ออฟไลน์",
     "INCOMPATIBLE": "ระบบมีเวอร์ชั่นซอฟต์แวร์ที่ต่างกัน โปรดอัปเดตไปที่ <a href=\"/download\">รุ่นล่าสุด</a>",
     "FAIL": "ระบบ <strong>{{failedSystem}}</strong> ไม่สามารถเข้าถึงได้ในขณะนี้<br>ลองอีกครั้งในภายหลังหรือติดต่อฝ่ายสนับสนุน <a href=\"%SUPPORT_LINK%\" target=\"_blank\"></a>",
-    "unknownMergeError": "Unknown error. You can try to refresh the page and repeat attempt. If the problem persists – please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>."
+    "unknownMergeError": "ข้อผิดพลาดที่ไม่รู้จัก. คุณสามารถลองรีเฟรชหน้าและพยายามซ้ำ หากปัญหายังคงมีอยู่ - กรุณาติดต่อ <a href=\"%SUPPORT_LINK%\" target=\"_blank\">สนับสนุน</a>"
   },
   "merging": {
     "mergeFailedTitle": "การรวมระบบล้มเหลว",
@@ -196,7 +196,7 @@
     "confirmUnshare": "ผู้ใช้รายนี้จะไม่สามารถเข้าใช้งานระบบได้ คุณแน่ใจไหม?",
     "confirmUnshareTitle": "ลบผู้ใช้หรือไม่?",
     "confirmUnshareAction": "ลบ",
-    "successDisconnected": "System is successfully disconnected from %CLOUD_NAME%",
+    "successDisconnected": "ระบบถูกตัดการเชื่อมต่อเรียบร้อยแล้วจาก {{PRODUCT_NAME}}",
     "successDeleted": "ระบบ {{systemName}} จะถูกลบออกจากบัญชีของคุณเรียบร้อยแล้ว",
     "mergeFailed": "การผสานระบบล้มเหลว",
     "mergeStart": "ระบบได้รวมเข้าด้วยกันเรียบร้อยแล้ว",
@@ -233,12 +233,12 @@
       "transcoding": "การแปลงรหัส",
       "unknown": "ม่รู้จัก",
       "copyToClipboard": "คัดลอกไปยังคลิปบอร์ด",
-      "copyDefaultText": "สำเนา",
+      "copyDefaultText": "คัดลอก",
       "copyActiveText": "คัดลอกไปยังคลิปบอร์ด"
     },
     "systemOffline": "ระบบออฟไลน์",
     "systemHasNoCameras": "ไม่พบกล้อง",
-    "systemUnreachable": "SYSTEM IS UNREACHABLE",
+    "systemUnreachable": "ระบบไม่สามารถเข้าถึงได้",
     "cameraStates": {
       "offline": "ออฟไลน์",
       "error": "ข้อผิดพลาด",

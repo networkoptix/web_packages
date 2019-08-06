@@ -129,7 +129,7 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
                 .requireLogin()
                 .then(result => {
                     if (!result) {
-                        this.location.go('404');
+                        this.document.location.href = this.config.redirect404;
                         return;
                     }
 
@@ -141,7 +141,7 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
                                 if (this.canViewRelease) {
                                     this.getData();
                                 } else {
-                                    this.location.go('404');
+                                    this.document.location.href = this.config.redirect404;
                                     return;
                                 }
                             });

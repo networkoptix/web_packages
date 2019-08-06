@@ -56,7 +56,7 @@
             }
 
             function login(email, password, remember) {
-                setEmail(email);
+                setEmail($rootScope.session.loginState);
 
                 return cloudApi
                         .login(email, password, remember)
@@ -108,7 +108,9 @@
 
             function requireLogin() {
                 return get().catch(() => {
-                    return nxDialogsService.login(true);
+                    const url = $location.$$path;
+                    const redirect = CONFIG.redirectPaths.some((path) => url.indexOf(path) > -1);
+                    return nxDialogsService.login(!redirect, true);
                 });
             }
 

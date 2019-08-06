@@ -8,7 +8,7 @@
     "okButton": "אישור",
     "cancelButton": "ביטול",
     "loginTitle": "היכנס ל- %CLOUD_NAME%",
-    "loginButton": "התחבר",
+    "loginButton": "התחברות",
     "logoutAuthorisedTitle": "אתה כבר מחובר",
     "logoutAuthorisedContinueButton": "המשך",
     "logoutAuthorisedLogoutButton": "יציאה",
@@ -94,7 +94,7 @@
       "description": "ניתן להציג וידאו חי ולעיין בארכיון"
     },
     "liveViewer": {
-      "label": "צופה בוידאו חי",
+      "label": "צופה בשידור חי",
       "description": "יכול לצפות רק בוידאו חי"
     },
     "advancedViewer": {
@@ -192,10 +192,10 @@
     "confirmDisconnectAction": "נתק",
     "confirmUnshareFromMe": "אתה עומד לנתק את המערכת מהחשבון שלך. לא תוכל עוד לגשת למערכת זו. האם להמשיך?",
     "confirmUnshareFromMeTitle": "נתק מערכת?",
-    "confirmUnshareFromMeAction": "התנתק",
+    "confirmUnshareFromMeAction": "נתק",
     "confirmUnshare": "משתמש זה לא יוכל לגשת למערכת. האם אתה בטוח?",
     "confirmUnshareTitle": "מחק משתמש?",
-    "confirmUnshareAction": "מחק",
+    "confirmUnshareAction": "מחיקה",
     "successDisconnected": "המערכת התנתקה בהצלחה מ %CLOUD_NAME%",
     "successDeleted": "המערכת {{systemName}} נמחקה בהצלחה מהחשבון שלך",
     "mergeFailed": "מיזוג המערכת נכשל",
@@ -248,7 +248,7 @@
       "flashRequired": "אנא התקן <a href='https://get.adobe.com/flashplayer/' target='_blank'> את Adobe Flash</a> להפעלת וידאו משרתים מבוססי Arm.",
       "flashOrWebmRequired": "יש <a href='https://get.adobe.com/flashplayer/' target='_blank'> להתקין Adobe Flash</a> או <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'> WebM codec</a> עבור הצגת וידאו ב- Internet Explorer.",
       "noArmSupport": "דפדפן או התקן זה אינו תומך בהפעלת וידאו משרתים מבוססי ARM.",
-      "noFormat": "דפדפן זה אינו תומך בשחזור וידאו ממצלמה זו.",
+      "noFormat": "דפדפן זה אינו תומך בשיחזור וידאו ממצלמה זו.",
       "ieNoWebm": "התקן את <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> עבור Internet Explorer.",
       "ieWin10": "השתמש ב- Microsoft Edge או בדפדפן Google Chrome.",
       "ubuntuNX": "דפדפן זה אינו תומך בווידאו משרתים מבוססי ARM. בבקשה, השתמש בדפדפן Chromium במקום זאת."

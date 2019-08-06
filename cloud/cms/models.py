@@ -83,6 +83,14 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
         footer_items = product.read_global_value('%FOOTER_ITEMS%')
         integration_store_enabled = product.read_global_value("%INTEGRATION_STORE_ENABLED%")
 
+        if footer_items:
+            from cms.controllers.filldata import process_global_contexts
+            global_contexts = Context.objects.filter(is_global=True, product_type=product.product_type)
+            # Replaces cms tags. If you add the key as itself in the global_context_dict it effectively is not replaced
+            footer_items = process_global_contexts(product, footer_items, product.version_id(),
+                                                   False, global_contexts, {"%CLOUD_NAME%": "%CLOUD_NAME%",
+                                                                            "%VMS_NAME%": "%VMS_NAME%"})
+
         data = {
             'version_id': product.version_id(),
             'languages': customization.languages_list,
@@ -753,7 +761,10 @@ class ProductCustomizationReview(models.Model):
 
     @property
     def can_preview_customization(self):
-        return self.customization.name == settings.CUSTOMIZATION and self.version.product.product_type.can_preview
+        can_preview = self.version.product.product_type.can_preview
+        in_review = self.state in [self.REVIEW_STATES.pending, self.REVIEW_STATES.blocked]
+        is_current_customization = self.customization.name == settings.CUSTOMIZATION
+        return can_preview and in_review and is_current_customization
 
 
 class ExternalFile(models.Model):

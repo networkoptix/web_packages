@@ -1,13 +1,13 @@
 <div class="card card-condensed" ng-if="system.isMine">
     <div class="card-body">
-        <h2 class="mb-3">ご利用のシステム</h2>
+        <h2 class="mb-3">お使いのシステム</h2>
         <p>
             <button ng-disabled="currentlyMerging && !isMaster" class="btn btn-default" ng-click="rename()">システム名を変更</button>
         </p>
         <p ng-if="systems.length > 1 && system.canMerge || configCanMerge || debugMode || betaMode">
-            <button class="btn btn-default"
+            <button class="btn btn-default mw-100"
                     ng-disabled="(currentlyMerging || !system.isOnline || !system.isAvailable) && !(debugMode || betaMode)"
-                    ng-click="mergeSystems()">別のシステムと統合する</button>
+                    ng-click="mergeSystems()"><div class="ellipsis">他のシステムと統合する</div></button>
         </p>
         <hr />
         <button ng-disabled="currentlyMerging" class="btn btn-default" ng-click="disconnect()"><span class="product-name">&nbsp;%CLOUD_NAME%</span> から切断</button>
@@ -15,13 +15,13 @@
 </div>
 <div class="card card-condensed" ng-if="!system.isMine">
     <div class="card-body">
-        <h2>管理者</h2>
+        <h2>オーナー</h2>
         <h3 class="user-name">{{system.info.ownerFullName}}</h3>
         <a ng-href="mailto:{{system.info.ownerAccountEmail}}">{{system.info.ownerAccountEmail}}</a>
         <hr>
         <p>
-            アクセス許可:
-            <b>{{$root.L.accessRoles[system.accessRole].label || system.accessRole}}</b>
+            アクセス許可：
+            <b>{{permission}}</b>
         </p>
 
         <p ng-if="system.permissions.isAdmin">
@@ -55,7 +55,7 @@
             <hr />
             <div class="merge-info-text light-text">
                 <p>データベースのサイズによっては、数時間かかる場合があります。</p>
-                <p>システムにログインして映像を表示する事はできますが、統合が完了するまで設定を変更することはできません</p>
+                <p>システムにログインして映像を表示する事はできますが、統合が完了するまで設定を変更することはできません。</p>
                 <p>統合が終了すると、すべてのユーザーとカメラがシステム「<strong>{{mergeTargetSystem.name}}</strong>」で利用できるようになり、このシステムは削除されます。</p>
             </div>
         </div>

@@ -18,13 +18,13 @@
 
                 <ul ng-if="active.integrations" class="nav navbar-nav d-none d-sm-flex">
                     <li class="active">
-                        <a class="inset" href=1>연동</a>
+                        <a class="inset" href="">연동</a>
                     </li>
                 </ul>
 
                 <ul ng-if="active.ipvd" class="nav navbar-nav d-none d-sm-flex">
                     <li class="active">
-                        <a class="inset" href=1>지원되는 IP 비디오 장치들</a>
+                        <a class="inset" href="">지원되는 IP 비디오 장치들</a>
                     </li>
                 </ul>
 
@@ -44,17 +44,17 @@
                 <ul class="nav navbar-nav navbar-right auth-hidden margin-right">
                     <li>
                         <span>
-                            <a href class="btn btn-default" ng-click="login()">접속 하기</a>
+                            <a href="" class="btn btn-default" ng-click="login()"> 로그인 </a>
                         </span>
                         <span>
-                            <a href="/register" class="btn btn-primary">계정 생성</a>
+                            <a href="/register" class="btn btn-primary"> 계정 생성 </a>
                         </span>
                     </li>
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right auth-visible">
                     <li ng-if="singleSystem" class="no-hover collapse-second hidden-collapse">
-                        <a href =1 class="m-0 border-0">
+                        <a href="" class="m-0 border-0">
                             <span class="glyphicon glyphicon-home"></span>
                             <span class="ellipsis">{{activeSystem.name}}</span>
                         </a>

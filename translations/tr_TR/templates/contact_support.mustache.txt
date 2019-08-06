@@ -1,3 +1,3 @@
 Merhaba, {{ message.userFullName }}
-{{ message.sender_name}} ({{ message.sender_email }}) has the following support question for the {{ message.product }}:
+{{ message.sender_name}} ({{ message.sender_email }}) {{ message.product }}ilgili aşağıdaki satış sorusuna sahip:
 <pre>{{ message.message }}</pre>

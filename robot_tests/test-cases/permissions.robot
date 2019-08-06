@@ -10,10 +10,11 @@ Force Tags        System
 ${email}           ${EMAIL OWNER}
 ${password}        ${BASE PASSWORD}
 ${url}             ${ENV}
-${DELETE USER BUTTON ADMIN}               //tr[@ng-repeat='user in system.users']//td[contains(text(), '${EMAIL ADMIN}')]/following-sibling::td/a[@ng-click='unshare(user)']/span[text()='${DELETE USER BUTTON TEXT}']
-${EDIT USER BUTTON ADMIN}                 //tr[@ng-repeat='user in system.users']//td[contains(text(), '${EMAIL ADMIN}')]/following-sibling::td/a[@ng-click='editShare(user)']/span[contains(text(),'${EDIT USER BUTTON TEXT}')]/..
-${ADMIN USER IN LIST}                     //tr[@ng-repeat='user in system.users']//td[contains(text(), '${EMAIL ADMIN}')]
-${share dialogue}
+${admin user in list}          //tr[@ng-repeat='user in system.users']//td[contains(text(), '${EMAIL ADMIN}')]
+${delete user x button}          /following-sibling::td/a[@ng-click='unshare(user)']/span[contains(text(),'${DELETE USER BUTTON TEXT}')]
+${edit user button}            /following-sibling::td/a[@ng-click='editShare(user)']/span[contains(text(),'${EDIT USER BUTTON TEXT}')]/..
+${delete user button admin}    ${ADMIN USER IN LIST}${delete user x button}
+${edit user button admin}      ${ADMIN USER IN LIST}${edit user button}
 
 *** Keywords ***
 Log in to Auto Tests System
@@ -21,20 +22,33 @@ Log in to Auto Tests System
     Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
     Log In    ${email}    ${password}    None
     Validate Log In
-    Run Keyword If    '${email}' == '${EMAIL OWNER}'    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${SHARE BUTTON SYSTEMS}    ${OPEN IN NX BUTTON}    ${RENAME SYSTEM}    //div[@ng-if\='gettingSystem.success']//h2[@class\='card-title']
-    Run Keyword If    '${email}' == '${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${SHARE BUTTON SYSTEMS}    ${OPEN IN NX BUTTON}    ${RENAME SYSTEM}    //div[@ng-if\='gettingSystem.success']
-    Run Keyword Unless    '${email}' == '${EMAIL OWNER}' or '${email}' == '${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${OPEN IN NX BUTTON}
+    Run Keyword If    '${email}' == '${EMAIL OWNER}'    Wait Until Elements are Visible
+    ...    ${DISCONNECT FROM NX}
+    ...    ${SHARE BUTTON SYSTEMS}
+    ...    ${OPEN IN NX BUTTON}
+    ...    ${RENAME SYSTEM}
+    ...    //div[@ng-if\='gettingSystem.success']//h2[@class\='card-title']
+    Run Keyword If    '${email}' == '${EMAIL ADMIN}'    Wait Until Elements are Visible
+    ...    ${DISCONNECT FROM MY ACCOUNT}
+    ...    ${SHARE BUTTON SYSTEMS}
+    ...    ${OPEN IN NX BUTTON}
+    ...    ${RENAME SYSTEM}
+    ...    //div[@ng-if\='gettingSystem.success']
+    Run Keyword Unless
+    ...    '${email}' == '${EMAIL OWNER}' or '${email}' == '${EMAIL ADMIN}'
+    ...    Wait Until Elements are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${OPEN IN NX BUTTON}
 
 Share with Adminstrator
     [arguments]    ${random email}
-    Wait Until Element Is Visible    ${SHARE BUTTON SYSTEMS}
+    Wait Until Element is Visible    ${SHARE BUTTON SYSTEMS}
     Click Button    ${SHARE BUTTON SYSTEMS}
-    Wait Until Elements Are Visible    ${SHARE EMAIL}    ${SHARE BUTTON MODAL}
+    Wait Until Elements are Visible    ${SHARE EMAIL}    ${SHARE BUTTON MODAL}
     Input Text    ${SHARE EMAIL}    ${random email}
-    Wait Until Element Is Visible    ${SHARE PERMISSIONS DROPDOWN}
+    Wait Until Element is Visible    ${SHARE PERMISSIONS DROPDOWN}
     Click Button    ${SHARE PERMISSIONS DROPDOWN}
-    Wait Until Element Is Visible    ${SHARE PERMISSIONS DROPDOWN}/following-sibling::div/button/span[text()='${ADMIN TEXT}']
-    Click Button    ${SHARE PERMISSIONS DROPDOWN}/following-sibling::div/button/span[text()='${ADMIN TEXT}']/..
+    ${admin selector}=   /following-sibling::div/button/span[text()='${ADMIN TEXT}']
+    Wait Until Element is Visible    ${SHARE PERMISSIONS DROPDOWN}${admin selector}
+    Click Button    ${SHARE PERMISSIONS DROPDOWN}${admin selector}/..
     Click Button    ${SHARE BUTTON MODAL}
 
 Check Log In
@@ -45,18 +59,23 @@ Check Log In
 
 Check Special Hint
     [arguments]    ${type}
-    Wait Until Element Is Visible    ${SHARE PERMISSIONS DROPDOWN}
+    Wait Until Element is Visible    ${SHARE PERMISSIONS DROPDOWN}
     Click Button    ${SHARE PERMISSIONS DROPDOWN}
     Set Suite Variable    ${dropdown type}    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${type}']
     Run Keyword If    "${LANGUAGE}"=="nl_NL"    Set Suite Variable    ${dropdown type}    ${SHARE MODAL}//nx-permissions-select//li//span[text()="${type}"]
-    Wait Until Element Is Visible    ${dropdown type}
+    Wait Until Element is Visible    ${dropdown type}
     Click Link    ${dropdown type}/..
     ${type}    Convert To Uppercase    ${type}
-    Run Keyword If    "${type}"=="${ADMIN TEXT}"          Wait Until Element Contains    ${SHARE PERMISSIONS HINT}    ${SHARE PERMISSIONS HINT ADMINISTRATOR}
-    ...    ELSE IF    "${type}"=="${ADV VIEWER TEXT}"     Wait Until Element Contains    ${SHARE PERMISSIONS HINT}    ${SHARE PERMISSIONS HINT ADVANCED VIEWER}
-    ...    ELSE IF    "${type}"=="${VIEWER TEXT}"         Wait Until Element Contains    ${SHARE PERMISSIONS HINT}    ${SHARE PERMISSIONS HINT VIEWER}
-    ...    ELSE IF    "${type}"=="${LIVE VIEWER TEXT}"    Wait Until Element Contains    ${SHARE PERMISSIONS HINT}    ${SHARE PERMISSIONS HINT LIVE VIEWER}
-    ...    ELSE IF    "${type}"=="${CUSTOM TEXT}"         Wait Until Element Contains    ${SHARE PERMISSIONS HINT}    ${SHARE PERMISSIONS HINT CUSTOM}
+    Run Keyword If    "${type}"=="${ADMIN TEXT}"          Wait Until Element Contains
+    ...    ${SHARE PERMISSIONS HINT}    ${SHARE PERMISSIONS HINT ADMINISTRATOR}
+    ...    ELSE IF    "${type}"=="${ADV VIEWER TEXT}"     Wait Until Element Contains
+    ...    ${SHARE PERMISSIONS HINT}    ${SHARE PERMISSIONS HINT ADVANCED VIEWER}
+    ...    ELSE IF    "${type}"=="${VIEWER TEXT}"         Wait Until Element Contains
+    ...    ${SHARE PERMISSIONS HINT}    ${SHARE PERMISSIONS HINT VIEWER}
+    ...    ELSE IF    "${type}"=="${LIVE VIEWER TEXT}"    Wait Until Element Contains
+    ...    ${SHARE PERMISSIONS HINT}    ${SHARE PERMISSIONS HINT LIVE VIEWER}
+    ...    ELSE IF    "${type}"=="${CUSTOM TEXT}"         Wait Until Element Contains
+    ...    ${SHARE PERMISSIONS HINT}    ${SHARE PERMISSIONS HINT CUSTOM}
 
 Restart
     Register Keyword To Run On Failure    NONE
@@ -64,7 +83,7 @@ Restart
     Register Keyword To Run On Failure    Failure Tasks
     Run Keyword If    ${status}    Log Out
 
-Reset DB and Open New Browser On Failure
+Reset DB and Open New Browser on Failure
     Close Browser
     Clean up random emails
     Clean up email noperm
@@ -74,9 +93,9 @@ Reset DB and Open New Browser On Failure
 Share button - opens dialog
     [tags]    C41888    Threaded
     Log in to Auto Tests System    ${email}
-    Wait Until Element Is Enabled    ${SHARE BUTTON SYSTEMS}
+    Wait Until Element is Enabled    ${SHARE BUTTON SYSTEMS}
     Click Button    ${SHARE BUTTON SYSTEMS}
-    Wait Until Element Is Visible    ${SHARE MODAL}
+    Wait Until Element is Visible    ${SHARE MODAL}
     Click Button    ${SHARE CLOSE}
     Wait Until Page Does Not Contain Element    ${SHARE MODAL}
 
@@ -85,7 +104,7 @@ Sharing link /systems/{system_id}/share - opens dialog
     Log in to Auto Tests System    ${email}
     ${location}    Get Location
     Go To    ${location}/share
-    Wait Until Element Is Visible    ${SHARE MODAL}
+    Wait Until Element is Visible    ${SHARE MODAL}
     Click Button    ${SHARE CLOSE}
     Wait Until Page Does Not Contain Element    ${SHARE MODAL}
 
@@ -96,7 +115,7 @@ Sharing link for anonymous - first ask login, then show share dialog
     Log Out
     Go To    ${location}/share
     Log In    ${email}    ${password}    button=None
-    Wait Until Element Is Visible    ${SHARE MODAL}
+    Wait Until Element is Visible    ${SHARE MODAL}
     Click Button    ${SHARE CLOSE}
     Wait Until Page Does Not Contain Element    ${SHARE MODAL}
 
@@ -108,34 +127,34 @@ After closing dialog, called by link - clear link
 
 #Check Cancel Button
     Go To    ${location}/share
-    Wait Until Elements Are Visible    ${SHARE MODAL}    ${SHARE CANCEL}
+    Wait Until Elements are Visible    ${SHARE MODAL}    ${SHARE CANCEL}
     Click Button    ${SHARE CANCEL}
-    Wait Until Element Is Not Visible    ${SHARE MODAL}
+    Wait Until Element is Not Visible    ${SHARE MODAL}
     Location Should Be    ${location}
 
 #Check 'X' Button
     Go To    ${location}/share
-    Wait Until Elements Are Visible    ${SHARE MODAL}    ${SHARE CLOSE}
-    Wait Until Element Is Visible    ${SHARE CLOSE}
+    Wait Until Elements are Visible    ${SHARE MODAL}    ${SHARE CLOSE}
+    Wait Until Element is Visible    ${SHARE CLOSE}
     Click Button    ${SHARE CLOSE}
-    Wait Until Element Is Not Visible    ${SHARE MODAL}
+    Wait Until Element is Not Visible    ${SHARE MODAL}
     Location Should Be    ${location}
 
 Sharing roles are ordered: more access is on top of the list with options
     [tags]    Threaded
     Log in to Auto Tests System    ${email}
-    Wait Until Element Is Enabled    ${SHARE BUTTON SYSTEMS}
+    Wait Until Element is Enabled    ${SHARE BUTTON SYSTEMS}
     Click Button    ${SHARE BUTTON SYSTEMS}
-    Wait Until Element Is Visible    ${SHARE PERMISSIONS DROPDOWN}
+    Wait Until Element is Visible    ${SHARE PERMISSIONS DROPDOWN}
     Click Element    ${SHARE PERMISSIONS DROPDOWN}
-    Wait Until Element Is Visible    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${ADMIN TEXT}']/../../following-sibling::li/a/span[text()="${ADV VIEWER TEXT}"]/../../following-sibling::li/a/span[text()="${VIEWER TEXT}"]/../../following-sibling::li/a/span[text()="${LIVE VIEWER TEXT}"]/../../following-sibling::li/a/span[text()="Client Custom"]/../../following-sibling::li/a/span[text()="${CUSTOM TEXT}"]
+    Wait Until Element is Visible    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${ADMIN TEXT}']/../../following-sibling::li/a/span[text()="${ADV VIEWER TEXT}"]/../../following-sibling::li/a/span[text()="${VIEWER TEXT}"]/../../following-sibling::li/a/span[text()="${LIVE VIEWER TEXT}"]/../../following-sibling::li/a/span[text()="Client Custom"]/../../following-sibling::li/a/span[text()="${CUSTOM TEXT}"]
     Click Button    ${SHARE CLOSE}
     Wait Until Page Does Not Contain Element    ${SHARE MODAL}
 
 When user selects role - special hint appears
     [tags]    C41901    Threaded
     Log in to Auto Tests System    ${email}
-    Wait Until Element Is Enabled    ${SHARE BUTTON SYSTEMS}
+    Wait Until Element is Enabled    ${SHARE BUTTON SYSTEMS}
     Click Button    ${SHARE BUTTON SYSTEMS}
     :FOR    ${type}    IN    @{USER TYPE LIST}
     \  Run Keyword Unless    "${type}"=="${OWNER TEXT}"    Check Special Hint    ${type}
@@ -148,63 +167,73 @@ Sharing works
     Check User Permissions    ${random email}    ${ADMIN TEXT}
     Remove User Permissions    ${random email}
 
-displays pencil and cross links for each user only on hover
+Displays pencil and cross links for each user only on hover
     Maximize Browser Window
     ${random email}    Get Random Email    ${BASE EMAIL}
     Maximize Browser Window
     Log in to Auto Tests System    ${email}
     Share To    ${random email}    ${CUSTOM TEXT}
-    Element Should Not Be Visible    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${random email}')]/following-sibling::td/a[@ng-click='unshare(user)']/span[contains(text(),'${DELETE USER BUTTON TEXT}')]
-    Element Should Not Be Visible    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${random email}')]/following-sibling::td/a[@ng-click='editShare(user)']/span[contains(text(),'${EDIT USER BUTTON TEXT}')]/..
+    ${user row}=    Set Variable
+    ...    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${random email}')]
+    ${delete user x button}=   Set Variable
+    ...    /following-sibling::td/a[@ng-click='unshare(user)']/span[contains(text(),'${DELETE USER BUTTON TEXT}')]
+    ${edit user button}=   Set Variable
+    ...    /following-sibling::td/a[@ng-click='editShare(user)']/span[contains(text(),'${EDIT USER BUTTON TEXT}')]/..
+    Element Should Not Be Visible    ${user row}${delete user x button}
+    Element Should Not Be Visible    ${user row}${edit user button}
     Mouse Over    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${random email}')]
-    Wait Until Element Is Visible    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${random email}')]/following-sibling::td/a[@ng-click='unshare(user)']/span[contains(text(),'${DELETE USER BUTTON TEXT}')]
-    Wait Until Element Is Visible    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${random email}')]/following-sibling::td/a[@ng-click='editShare(user)']/span[contains(text(),'${EDIT USER BUTTON TEXT}')]/..
+    Wait Until Element is Visible    ${user row}${delete user x button}
+    Wait Until Element is Visible    ${user row}${edit user button}
     Remove User Permissions    ${random email}
 
-admin cannot delete or edit self
+Admin cannot delete or edit self
     [tags]    C41904    Threaded
     Log in to Auto Tests System    ${EMAIL ADMIN}
-    Element Should Not Be Visible    ${DELETE USER BUTTON ADMIN}
-    Element Should Not Be Visible    ${EDIT USER BUTTON ADMIN}
-    Wait Until Element Is Visible    ${ADMIN USER IN LIST}
-    Mouse Over    ${ADMIN USER IN LIST}
-    Element Should Not Be Visible    ${DELETE USER BUTTON ADMIN}
-    Element Should Not Be Visible    ${EDIT USER BUTTON ADMIN}
+    Element Should Not Be Visible    ${delete user button admin}
+    Element Should Not Be Visible    ${edit user button admin}
+    Wait Until Element is Visible    ${admin user in list}
+    Mouse Over    ${admin user in list}
+    Element Should Not Be Visible    ${delete user button admin}
+    Element Should Not Be Visible    ${edit user button admin}
 
 Admin cannot edit self via share
     [tags]    C41904    Threaded
     Log in to Auto Tests System    ${EMAIL ADMIN}
-    Wait Until Element Is Enabled    ${OPEN IN NX BUTTON}
-    Wait Until Element Is Enabled    ${SHARE BUTTON SYSTEMS}
+    Wait Until Element is Enabled    ${OPEN IN NX BUTTON}
+    Wait Until Element is Enabled    ${SHARE BUTTON SYSTEMS}
     Click Button    ${SHARE BUTTON SYSTEMS}
-    Wait Until Elements Are Visible    ${SHARE EMAIL}    ${SHARE BUTTON MODAL}
+    Wait Until Elements are Visible    ${SHARE EMAIL}    ${SHARE BUTTON MODAL}
     Input Text    ${SHARE EMAIL}    ${EMAIL ADMIN}
-    Wait Until Element Is Visible    ${SHARE PERMISSIONS DROPDOWN}
+    Wait Until Element is Visible    ${SHARE PERMISSIONS DROPDOWN}
     Click Button    ${SHARE PERMISSIONS DROPDOWN}
-    Wait Until Element Is Visible    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${VIEWER TEXT}']
-    Click Link    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${VIEWER TEXT}']/..
+    Wait Until Element is Visible
+    ...    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${VIEWER TEXT}']
+    Click Link
+    ...    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${VIEWER TEXT}']/..
     Click Button    ${SHARE BUTTON MODAL}
     Check For Alert    ${CHANGING OWN PERMISSIONS IS NOT ALLOWED}
-    Wait Until Element Is Visible    ${SHARE CANCEL}
+    Wait Until Element is Visible    ${SHARE CANCEL}
     Click Button    ${SHARE CANCEL}
 
 Owner cannot edit self via share
     [tags]    C41904    Threaded
     Log in to Auto Tests System    ${EMAIL OWNER}
-    Wait Until Element Is Enabled    ${OPEN IN NX BUTTON}
-    Wait Until Element Is Enabled    ${SHARE BUTTON SYSTEMS}
+    Wait Until Element is Enabled    ${OPEN IN NX BUTTON}
+    Wait Until Element is Enabled    ${SHARE BUTTON SYSTEMS}
     Click Button    ${SHARE BUTTON SYSTEMS}
-    Wait Until Elements Are Visible    ${SHARE EMAIL}    ${SHARE BUTTON MODAL}
+    Wait Until Elements are Visible    ${SHARE EMAIL}    ${SHARE BUTTON MODAL}
     Input Text    ${SHARE EMAIL}    ${EMAIL OWNER}
-    Wait Until Element Is Visible    ${SHARE PERMISSIONS DROPDOWN}
+    Wait Until Element is Visible    ${SHARE PERMISSIONS DROPDOWN}
     Click Button    ${SHARE PERMISSIONS DROPDOWN}
-    Wait Until Element Is Visible    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${VIEWER TEXT}']
-    Click Link    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${VIEWER TEXT}']/..
+    Wait Until Element is Visible
+    ...    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${VIEWER TEXT}']
+    Click Link
+    ...    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${VIEWER TEXT}']/..
     Click Button    ${SHARE BUTTON MODAL}
     Click Button    ${SHARE CLOSE}
     Check For Alert    ${CHANGING OWN PERMISSIONS IS NOT ALLOWED}
 
-admin cannot delete or edit other admins
+Admin cannot delete or edit other admins
     [tags]    C41905
     Go To    ${url}/register
     ${random email}    Get Random Email    ${BASE EMAIL}
@@ -214,29 +243,35 @@ admin cannot delete or edit other admins
     Share To    ${random email}    ${ADMIN TEXT}
     Log Out
     Log in to Auto Tests System    ${random email}
-    Element Should Not Be Visible    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${random email}')]/following-sibling::td/a[@ng-click='unshare(user)']/span[text()='${DELETE USER BUTTON TEXT}']
-    Element Should Not Be Visible    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${random email}')]/following-sibling::td/a[@ng-click='editShare(user)']/span[contains(text(),'${EDIT USER BUTTON TEXT}')]/..
-    Wait Until Element Is Visible    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${random email}')]
+    ${user row}=    Set Variable
+    ...    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${random email}')]
+    ${delete user x button}=   Set Variable
+    ...    /following-sibling::td/a[@ng-click='unshare(user)']/span[contains(text(),'${DELETE USER BUTTON TEXT}')]
+    ${edit user button}=   Set Variable
+    ...    /following-sibling::td/a[@ng-click='editShare(user)']/span[contains(text(),'${EDIT USER BUTTON TEXT}')]/..
+    Element Should Not Be Visible    ${user row}${delete user x button}
+    Element Should Not Be Visible    ${user row}${edit user button}
+    Wait Until Element is Visible    ${user row}
     Mouse Over    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${random email}')]
-    Element Should Not Be Visible    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${random email}')]/following-sibling::td/a[@ng-click='unshare(user)']/span[text()='${DELETE USER BUTTON TEXT}']
-    Element Should Not Be Visible    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${random email}')]/following-sibling::td/a[@ng-click='editShare(user)']/span[contains(text(),'${EDIT USER BUTTON TEXT}')]/..
+    Element Should Not Be Visible    ${user row}${delete user x button}
+    Element Should Not Be Visible    ${user row}${edit user button}
     Log Out
     Log in to Auto Tests System    ${email}
     Remove User Permissions    ${random email}
 
-admin cannot invite another admin
+Admin cannot invite another admin
     [tags]    C41905    Threaded
     Log in to Auto Tests System    ${EMAIL ADMIN}
     Click Button    ${SHARE BUTTON SYSTEMS}
-    Wait Until Element Is Visible    ${SHARE PERMISSIONS DROPDOWN}
+    Wait Until Element is Visible    ${SHARE PERMISSIONS DROPDOWN}
     Sleep    2
     Click Button    ${SHARE PERMISSIONS DROPDOWN}
-    Wait Until Element Is Visible    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${VIEWER TEXT}']
-    Element Should Not Be Visible    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${ADMIN TEXT}']
+    Wait Until Element is Visible
+    ...    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${VIEWER TEXT}']
+    Element Should Not Be Visible
+    ...    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${ADMIN TEXT}']
     Click Button    ${SHARE PERMISSIONS DROPDOWN}
     Click Button    ${SHARE CANCEL}
-
-
 
 Edit permission works
     [tags]    C41900
@@ -264,16 +299,22 @@ Delete user works
     Log in to Auto Tests System    ${random email}
     Log Out
     Log in to Auto Tests System    ${email}
-    Wait Until Element Is Visible    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${random email}')]
-    Mouse Over    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${random email}')]
-    Wait Until Element Is Visible    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${random email}')]/following-sibling::td/a[@ng-click='unshare(user)']/span['&nbsp&nbspDelete']
-    Click Element    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${random email}')]/following-sibling::td/a[@ng-click='unshare(user)']/span['&nbsp&nbspDelete']
-    Wait Until Element Is Visible    ${DELETE USER CANCEL BUTTON}
+    ${user row}=    Set Variable
+    ...    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${random email}')]
+    ${delete user x button}=   Set Variable
+    ...    /following-sibling::td/a[@ng-click='unshare(user)']/span[contains(text(),'${DELETE USER BUTTON TEXT}')]
+    ${edit user button}=   Set Variable
+    ...    /following-sibling::td/a[@ng-click='editShare(user)']/span[contains(text(),'${EDIT USER BUTTON TEXT}')]/..
+    Wait Until Element is Visible    ${user row}
+    Mouse Over    ${user row}
+    Wait Until Element is Visible    ${user row}${delete user x button}
+    Click Element    ${user row}${delete user x button}
+    Wait Until Element is Visible    ${DELETE USER CANCEL BUTTON}
     Click Button    ${DELETE USER CANCEL BUTTON}
     Remove User Permissions    ${random email}
     Log Out
     Log In    ${random email}    ${password}
-    Wait Until Element Is Visible    ${YOU HAVE NO SYSTEMS}
+    Wait Until Element is Visible    ${YOU HAVE NO SYSTEMS}
 
 Share with registered user works and sends him notification
     [tags]    email    C41888
@@ -287,10 +328,24 @@ Share with registered user works and sends him notification
     Verify In System    Auto Tests
     Share To    ${EMAIL NO PERM}    ${ADMIN TEXT}
     Check User Permissions    ${EMAIL NOPERM}    ${ADMIN TEXT}
-    Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
-    ${INVITED TO SYSTEM EMAIL SUBJECT}    Replace String    ${INVITED TO SYSTEM EMAIL SUBJECT}    {{message.system_name}}    ${AUTO TESTS}
+    Open Mailbox
+    ...    host=${BASE HOST}
+    ...    password=${BASE EMAIL PASSWORD}
+    ...    port=${BASE PORT}
+    ...    user=${BASE EMAIL}
+    ...    is_secure=True
+    ${INVITED TO SYSTEM EMAIL SUBJECT}    Replace String
+    ...    ${INVITED TO SYSTEM EMAIL SUBJECT}
+    ...    {{message.system_name}}
+    ...    ${AUTO TESTS}
     ${emailID}    Wait For Email    recipient=${EMAIL NOPERM}    timeout=120
-    Check Email Subject    ${emailID}    ${INVITED TO SYSTEM EMAIL SUBJECT}    ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}
+    Check Email Subject
+    ...    ${emailID}
+    ...    ${INVITED TO SYSTEM EMAIL SUBJECT}
+    ...    ${BASE EMAIL}
+    ...    ${BASE EMAIL PASSWORD}
+    ...    ${BASE HOST}
+    ...    ${BASE PORT}
     Delete All Emails
     Close Mailbox
     Log Out
@@ -311,7 +366,11 @@ Share with unregistered user - brings them to registration page with code with c
     Validate Log Out
     ${link}    Get Email Link    ${random email}    register
     Go To    ${link}
-    Register    ${TEST FIRST NAME}    ${TEST LAST NAME}    ${random email}    ${password}
+    Register
+    ...    ${TEST FIRST NAME}
+    ...    ${TEST LAST NAME}
+    ...    ${random email}
+    ...    ${password}
     Validate Log In
 
 Sharing system with a user who is already in the list updates their permissions
@@ -320,7 +379,12 @@ Sharing system with a user who is already in the list updates their permissions
     Log in to Auto Tests System    ${email}
     Verify In System    Auto Tests
     Share To    ${random email}    ${ADMIN TEXT}
-    Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
+    Open Mailbox
+    ...    host=${BASE HOST}
+    ...    password=${BASE EMAIL PASSWORD}
+    ...    port=${BASE PORT}
+    ...    user=${BASE EMAIL}
+    ...    is_secure=True
     Run Keyword And Expect Error    *    Wait For Email    recipient=${EMAIL ADMIN}    timeout=30
     Delete All Emails
     Check User Permissions    ${random email}    ${ADMIN TEXT}
@@ -342,15 +406,33 @@ Check share email for registered user
     Verify In System    Auto Tests
     Share To    ${EMAIL NO PERM}    ${ADMIN TEXT}
     Check User Permissions    ${EMAIL NOPERM}    ${ADMIN TEXT}
-    Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
-    ${INVITED TO SYSTEM EMAIL SUBJECT}    Replace String    ${INVITED TO SYSTEM EMAIL SUBJECT}    {{message.system_name}}    ${AUTO TESTS}
+    Open Mailbox
+    ...    host=${BASE HOST}
+    ...    password=${BASE EMAIL PASSWORD}
+    ...    port=${BASE PORT}
+    ...    user=${BASE EMAIL}
+    ...    is_secure=True
+    ${INVITED TO SYSTEM EMAIL SUBJECT}    Replace String
+    ...    ${INVITED TO SYSTEM EMAIL SUBJECT}
+    ...    {{message.system_name}}
+    ...    ${AUTO TESTS}
     ${email}    Wait For Email    recipient=${EMAIL NOPERM}    timeout=120
     ${email text}    Get Email Body    ${email}
     ${email text}    Decode Bytes To String    ${email text}    UTF-8
-    Check Email Subject    ${email}    ${INVITED TO SYSTEM EMAIL SUBJECT}    ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}
+    Check Email Subject
+    ...    ${email}
+    ...    ${INVITED TO SYSTEM EMAIL SUBJECT}
+    ...    ${BASE EMAIL}    ${BASE EMAIL PASSWORD}
+    ...    ${BASE HOST}
+    ...    ${BASE PORT}
     Check Email Button    ${email text}    ${ENV}    ${THEME COLOR}
     ${links}    Get Links From Email    ${email}
-    @{expected links}    Set Variable    ${SUPPORT URL}    ${WEBSITE URL}    ${ENV}    ${ENV}/systems/${AUTO_TESTS SYSTEM ID}    mailto:${EMAIL OWNER}
+    @{expected links}    Set Variable
+    ...    ${SUPPORT URL}
+    ...    ${WEBSITE URL}
+    ...    ${ENV}
+    ...    ${ENV}/systems/${AUTO_TESTS SYSTEM ID}
+    ...    mailto:${EMAIL OWNER}
     : FOR    ${link}  IN  @{links}
     \    check in list    ${expected links}    ${link}
     Delete All Emails

@@ -7,12 +7,12 @@
 		"Any": "כל",
 		"selected": "נבחר",
 		"vendor": "יצרן",
-		"vendors": "Manufacturers",
+		"vendors": "יצרנים",
 		"hardwareType": "סוג",
-		"hardwareTypes": "Types",
+		"hardwareTypes": "סוגים",
 		"minResolution": "רזולוציה מינימלית",
-		"analytics": "Analytics",
-		"analyticsSelected": "analytics events"
+		"analytics": "אנליטיקה",
+		"analyticsSelected": "אירועי אנליטיקה"
 	},
 	"cameraFilters": {
 		"ptz": "מצלמות PTZ",
@@ -98,7 +98,7 @@
 		}
 	},
 	"ipvd": {
-		"resolutionArea": "Area",
+		"resolutionArea": "אזור",
 		"count": "ספירה",
 		"vendor": "יצרן",
 		"model": "מודל",
@@ -116,7 +116,7 @@
 		"isIoSupported": "I / O",
 		"isH265": "H.265",
 		"isMultiSensor": "מרובה חיישנים",
-		"isAnalyticsSupported": "Analytics",
+		"isAnalyticsSupported": "אנליטיקה",
 		"camera": "מצלמה",
 		"multiSensorCamera": "מצלמה עם מספר חיישנים",
 		"encoder": "דוחס",
@@ -135,7 +135,7 @@
 			"b_Link": "הגש בקשה",
 			"c_Info": "לשאלות / בקשות נוספות בנוגע להתקנים נתמכים."
 		},
-		"disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous."
+		"disclaimer": "רשימה זו מוגבלת למכשירים שנמצאים ב- {{vmsName}} בהם המשתמשים התירו דיווח אוטומטי של מפרט המכשירים ל {{companyName}}. לא נאסף מידע אישי וכל משתמש נשאר אנונימי לחלוטין."
 	},
 	"integration": {
 		"previewRibbonText": "דף זה הוא תצוגה מקדימה של השינויים האחרונים, והוא אינו תואם לגרסה הזמינה לציבור.",
@@ -182,9 +182,16 @@
 		}
 	},
 	"privacyPolicy": {
-		"integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent.",
-		"ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent."
+		"integration": "על ידי שליחת טופס זה אתה מסכים ליצור קשר עם {{INTEGRATION_COMPANY}} ו / או %COMPANY_NAME%.\nתקרא את מדיניות הפרטיות של {{INTEGRATION_COMPANY}} <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">כאן</a> ומדיניות הפרטיות של %COMPANY_NAME% <a href=\"%PRIVACY_LINK%\" target=\"blank\">כאן</a> הכוללים הדרכה על איך למשוך את הסכמתך לתנאים בה.",
+		"ipvd": "על ידי שליחת טופס זה אתה מסכים ליצור קשר עם %COMPANY_NAME%.\nתוכלו למצוא את מדיניות פרטיות של %COMPANY_NAME% <a href=\"%PRIVACY_LINK%\" target=\"blank\">כאן</a> הכוללים הדרכה על איך למשוך את הסכמתך לתנאים."
 	},
-	"testedVersionLabel": "Tested on {{vmsName}} version:",
-	"testedVersionsLabel": "Tested on {{vmsName}} versions:"
+	"testedVersionLabel": "נבדק על {{vmsName}} בגרסאות הבאות:",
+	"testedVersionsLabel": "נבדק על {{vmsName}} בגרסאות הבאות:",
+	"About %CLOUD_NAME%": "אודות %CLOUD_NAME%",
+	"Download %VMS_NAME%": "הורד את %VMS_NAME%",
+	"Integrations": "אינטגרציות",
+	"Privacy": "פרטיות",
+	"Support": "תמיכה",
+	"Supported Devices": "מכשירים נתמכים",
+	"Terms": "תנאי שימוש"
 }

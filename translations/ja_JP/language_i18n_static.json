@@ -7,12 +7,12 @@
 		"Any": "全て",
 		"selected": "選択済み",
 		"vendor": "製造メーカー",
-		"vendors": "Manufacturers",
+		"vendors": "製造メーカー",
 		"hardwareType": "タイプ",
-		"hardwareTypes": "Types",
+		"hardwareTypes": "タイプ",
 		"minResolution": "最小解像度",
-		"analytics": "解析",
-		"analyticsSelected": "analytics events"
+		"analytics": "分析",
+		"analyticsSelected": "分析イベント"
 	},
 	"cameraFilters": {
 		"ptz": "PTZカメラ",
@@ -98,7 +98,7 @@
 		}
 	},
 	"ipvd": {
-		"resolutionArea": "Area",
+		"resolutionArea": "領域",
 		"count": "カウント",
 		"vendor": "製造メーカー",
 		"model": "モデル",
@@ -116,7 +116,7 @@
 		"isIoSupported": "I/O",
 		"isH265": "H.265",
 		"isMultiSensor": "マルチセンサー",
-		"isAnalyticsSupported": "Analytics",
+		"isAnalyticsSupported": "分析",
 		"camera": "カメラ",
 		"multiSensorCamera": "マルチセンサーカメラ",
 		"encoder": "エンコーダー",
@@ -135,7 +135,7 @@
 			"b_Link": "リクエストを送信する",
 			"c_Info": "サポートされているデバイスに関するその他の質問/懸念事項については"
 		},
-		"disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous."
+		"disclaimer": "このリストは、ユーザーが{{companyName}} へのデバイススペックの自動報告を許可した{{vmsName}} において検出されたデバイスに限定されています。個人情報は収集されず、各ユーザーは完全に匿名のままです。"
 	},
 	"integration": {
 		"previewRibbonText": "このページは最新の変更のプレビューです、一般的に利用可能なバージョンと一致しません",
@@ -186,5 +186,12 @@
 		"ipvd": "このフォームを送信することにより、あなたは %COMPANY_NAME%から連絡を受けることに同意します。\n %COMPANY_NAME% プライバシーポリシー <a href=\"%PRIVACY_LINK%\" target=\"blank\">ここ</a>には同意を撤回する方法についての指示が含まれています。"
 	},
 	"testedVersionLabel": "{{vmsName}} バージョンでテスト済み：",
-	"testedVersionsLabel": "{{vmsName}} バージョンでテスト済み："
+	"testedVersionsLabel": "{{vmsName}} バージョンでテスト済み：",
+	"About %CLOUD_NAME%": "%CLOUD_NAME%について",
+	"Download %VMS_NAME%": "%VMS_NAME% をダウンロード",
+	"Integrations": "統合",
+	"Privacy": "プライバシー",
+	"Support": "サポート",
+	"Supported Devices": "サポートされているデバイス",
+	"Terms": "利用規約"
 }

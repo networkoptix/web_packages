@@ -7,7 +7,7 @@
 		"Any": "Elke",
 		"selected": "geselecteerd",
 		"vendor": "Fabrikanten",
-		"vendors": "Manufacturers",
+		"vendors": "Fabrikanten",
 		"hardwareType": "Type",
 		"hardwareTypes": "Types",
 		"minResolution": "Minimum Resolutie",
@@ -98,7 +98,7 @@
 		}
 	},
 	"ipvd": {
-		"resolutionArea": "Area",
+		"resolutionArea": "Gebied",
 		"count": "Aantal",
 		"vendor": "Fabrikant",
 		"model": "Model",
@@ -135,7 +135,7 @@
 			"b_Link": "een aanvraag indienen",
 			"c_Info": "voor aanvullende vragen/opmerkingen over ondersteunde apparaten."
 		},
-		"disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous."
+		"disclaimer": "Deze lijst is beperkt tot apparaten die gevonden zijn op {{vmsName}}, waar gebruikers automatisch rapporteren van gebruiksinformatie naar {{companyName}} hebben toegestaan. Geen persoonlijke informatie wordt verzameld en elke gebruiker blijft volledig anoniem."
 	},
 	"integration": {
 		"previewRibbonText": "Deze pagina is een voorbeeld van de laatste wijzigingen, en het komt niet overeen met de publiekelijk beschikbare versie.",
@@ -157,10 +157,10 @@
 	"dialogs": {
 		"merge": {
 			"connectToCloud": "Verbind het systeem dat u met deze wilt samenvoegen tot <strong>{{cloudName}}</strong> of plaats lokaal samen met behulp van de <strong>{{vmsName}}</strong> Client.",
-			"mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from the <strong>{{primarySystem}}</strong>.",
-			"primaryCannotMerge": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} System.",
-			"primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}.",
-			"secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
+			"mergeConfirmation": "U staat op het punt Systems <strong>{{primarySystem}}</strong> en <strong>{{secondarySystem}}</strong>samen te voegen. Instellingen en de naam worden overgenomen van de <strong>{{primarySystem}}</strong>.",
+			"primaryCannotMerge": "Systeem {{targetSystem}} heeft een nieuwere softwareversie die niet compatibel is met het huidige systeem. Werk het huidige systeem bij naar de laatste <a href=\"/download\" target=\"_blank\" translate>build</a> om het samen te voegen met het {{targetSystem}} systeem.",
+			"primarySystemOffline": "Systeem {{primarySystem}} is offline en kan niet worden samengevoegd met systeem {{targetSystem}}.",
+			"secondaryCannotMerge": "Systeem {{targetSystem}} heeft een oudere softwareversie die niet compatibel is met het huidige systeem. Update {{targetSystem}} naar de <a href=\"/download\" target=\"_blank\" translate>laatste build</a> om deze samen te voegen met de huidige.",
 			"systemOffline": "Systeem {{targetSystem}} is offline en kan niet worden samengevoegd met het huidige exemplaar.",
 			"systemUnavailable": "Systeem {{targetSystem}} is momenteel niet bereikbaar. Probeer het over een paar minuten opnieuw of neem contact op met"
 		},
@@ -168,23 +168,30 @@
 			"failedToSend": "Bericht versturen mislukt.",
 			"sent": "Het Bericht werd verstuurd.",
 			"title": {
-				"integration": "Get in touch with {{companyName}}",
-				"ipvd_feedback_page": "Feedback for cameras page",
+				"integration": "Neem contact op met {{companyName}}",
+				"ipvd_feedback_page": "Feedback voor de camerapagina",
 				"ipvd_feedback_device": "Feedback over {{product}}"
 			},
 			"topic": {
-				"contact_sales": "Contact sales for {{product}}",
-				"contact_support": "Contact support for {{product}}",
-				"integration_feedback": "Feedback for integration {{product}}",
-				"ipvd_feedback_page": "Feedback for cameras page",
+				"contact_sales": "Neem contact op met sales voor {{product}}",
+				"contact_support": "Neem contact op met ondersteuning voor {{product}}",
+				"integration_feedback": "Feedback voor integratie {{product}}",
+				"ipvd_feedback_page": "Feedback voor de camerapagina",
 				"ipvd_feedback_device": "Feedback over {{product}}"
 			}
 		}
 	},
 	"privacyPolicy": {
-		"integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent.",
-		"ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent."
+		"integration": "Door dit formulier in te dienen, ga je akkoord met contactering door {{INTEGRATION_COMPANY}} en/of %COMPANY_NAME%.\nJe vindt {{INTEGRATION_COMPANY}} privacybeleid <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">hier</a> en %COMPANY_NAME% privacybeleid <a href=\"%PRIVACY_LINK%\" target=\"blank\">hier</a> welke instructies bevat over hoe je toestemming kan intrekken.",
+		"ipvd": "Door dit formulier in te dienen, ga je akkoord met contactering door %COMPANY_NAME%.\nJe vindt %COMPANY_NAME% privacy beleid <a href=\"%PRIVACY_LINK%\" target=\"blank\">hier</a> welke instructies bevat over hoe je toestemming moet intrekken."
 	},
-	"testedVersionLabel": "Tested on {{vmsName}} version:",
-	"testedVersionsLabel": "Tested on {{vmsName}} versions:"
+	"testedVersionLabel": "Getest op {{vmsName}} versie:",
+	"testedVersionsLabel": "Getest op {{vmsName}} versies:",
+	"About %CLOUD_NAME%": "Over %CLOUD_NAME%",
+	"Download %VMS_NAME%": "Download %VMS_NAME%",
+	"Integrations": "Integraties",
+	"Privacy": "Privacy",
+	"Support": "Ondersteuning",
+	"Supported Devices": "Ondersteunde apparaten",
+	"Terms": "Voorwaarden"
 }

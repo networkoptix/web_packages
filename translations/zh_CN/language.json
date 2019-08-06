@@ -6,7 +6,7 @@
   "clientProtocol": "%CLIENT_PROTOCOL%",
   "dialogs": {
     "okButton": "确定",
-    "cancelButton": "取消",
+    "cancelButton": "撤消",
     "loginTitle": "登录到 %CLOUD_NAME%",
     "loginButton": "登录",
     "logoutAuthorisedTitle": "您已经登录",
@@ -58,15 +58,15 @@
       "description": "不受限制地的访问包括共享和从云连接或断开系统的能力"
     },
     "Viewer": {
-      "label": "操作员",
+      "label": "浏览者",
       "description": "可以查看实时视频和浏览存档"
     },
     "Live Viewer": {
-      "label": "实时操作员",
+      "label": "实时浏览者",
       "description": "只能查看实时视频"
     },
     "Advanced Viewer": {
-      "label": "高级操作员",
+      "label": "高级浏览者",
       "description": "可以查看实时视频，浏览存档，控制云台等"
     },
     "Administrator": {
@@ -125,7 +125,7 @@
     "wrongParameters": "窗体上的一些参数不正确",
     "wrongCode": "已经激活帐户或确认码不正确",
     "wrongCodeRestore": "确认代码已使用或不正确",
-    "wrongAuthCode": "Code is expired or incorrect",
+    "wrongAuthCode": "代码已过期或不正确",
     "forbidden": "您没有权限执行此操作",
     "accountNotActivated": "此帐户尚未激活。<a href=\"/activate\"> 发送激活链接，再一次</a>",
     "accountBlocked": "此帐户被阻止。请在几分钟后再试一次。",
@@ -147,7 +147,7 @@
     "mergedSystemIsOffline": "系统 <strong>{{failedSystem}}</strong> 处于离线状态。",
     "INCOMPATIBLE": "系统有不同的软件版本。请将它们更新到 <a href=\"/download\">最新版本</a>。",
     "FAIL": "系统 <strong>{{failedSystem}}</strong> 目前无法连上。<br>请稍后再试一次, 或联系 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">支持</a>。",
-    "unknownMergeError": "Unknown error. You can try to refresh the page and repeat attempt. If the problem persists – please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>."
+    "unknownMergeError": "不明错误。您可以尝试刷新页面并重复尝试。如果问题仍然存在 - 请联系 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">支持</a>。"
   },
   "merging": {
     "mergeFailedTitle": "系统合并失败",
@@ -196,7 +196,7 @@
     "confirmUnshare": "此用户不能访问系统。是否确定？",
     "confirmUnshareTitle": "删除用户？",
     "confirmUnshareAction": "删除",
-    "successDisconnected": "System is successfully disconnected from %CLOUD_NAME%",
+    "successDisconnected": "系统已成功从 %CLOUD_NAME%断线",
     "successDeleted": "从您的帐户成功删除系统 {{systemName}}",
     "mergeFailed": "系统合并失败",
     "mergeStart": "系统开始合并中",
@@ -238,7 +238,7 @@
     },
     "systemOffline": "系统处于离线状态",
     "systemHasNoCameras": "无摄像机",
-    "systemUnreachable": "SYSTEM IS UNREACHABLE",
+    "systemUnreachable": "系统无法连接",
     "cameraStates": {
       "offline": "离线",
       "error": "错误",
@@ -264,7 +264,7 @@
       "play": "播放",
       "pause": "暂停",
       "live": "go to live | show me live",
-      "view": "查看+ [相机名称]",
+      "view": "view + [camera name]",
       "search": "find + [text for searchbar]",
       "clear search": "清除搜索",
       "expand server": "expand server + [server name]",

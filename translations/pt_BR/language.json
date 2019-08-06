@@ -74,7 +74,7 @@
       "description": "Acesso não restrito incluindo a capacidade de partilhar"
     },
     "Custom": {
-      "label": "Personalizadas",
+      "label": "Personalizado",
       "description": "Use a aplicação Cliente %VMS_NAME% para configurar permissões personalizadas"
     },
     "cloudAdmin": {
@@ -102,7 +102,7 @@
       "description": "Pode ver vídeos ao vivo, navegar no arquivo, configurar câmaras, controlar PTZ etc"
     },
     "custom": {
-      "label": "Personalizadas",
+      "label": "Personalizado",
       "description": "Use a aplicação Cliente %VMS_NAME% para configurar permissões personalizadas"
     }
   },
@@ -119,7 +119,7 @@
     "cantChangeAccountPrefix": "Não é possível guardar as alterações",
     "cantChangePasswordPrefix": "Não é possível guardar a senha",
     "cantActivatePrefix": "Não é possível ativar a sua conta",
-    "cantSendConfirmationPrefix": "Não é possível enviar o email de confirmação",
+    "cantSendConfirmationPrefix": "Não é possível enviar um email de confirmação",
     "notAuthorized": "Senha incorreta",
     "brokenAccount": "Problema inesperado com a conta. <a href=\"/restore_password\">Restaurar conta</a>",
     "wrongParameters": "Alguns parâmetros no formulário estão incorretos",
@@ -166,7 +166,7 @@
     "strongMessage": "Senha forte!",
     "common": "muito comum",
     "commonMessage": "Esta senha está principais senhas mais populares no mundo",
-    "missingMessage": "A senha é necessária"
+    "missingMessage": "A senha é obrigatória"
   },
   "sharing": {
     "confirmOwner": "Se alterar o proprietário do sistema, você revogará a propriedade da conta atual. Esta ação é irreversível. Tem certeza?",
@@ -184,7 +184,7 @@
     "openClient": "Abrir em %VMS_NAME%",
     "openClientNoSystem": "Abrir %VMS_NAME%",
     "confirmMergeAction": "\"Merge\"",
-    "mergeSystemTitle": "Fundir Sistemas",
+    "mergeSystemTitle": "\"Merge\" dos Sistemas",
     "confirmRenameTitle": "Nome do Sistema",
     "confirmRenameAction": "Gravar",
     "successRename": "Nome do sistema guardado",
@@ -251,7 +251,7 @@
       "noFormat": "Este browser não suporta a reprodução de vídeo desta câmara.",
       "ieNoWebm": "Por favor, instale <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>codec WebM</a> para o Internet Explorer.",
       "ieWin10": "Por favor, utilize browsers Microsoft Edge ou Google Chrome.",
-      "ubuntuNX": "Este navegador não suporta vídeo de servidores baseados em ARM. Por favor, use o navegador Chromium."
+      "ubuntuNX": "Este browser não suporta vídeo a partir de servidores baseados em ARM. Por favor, use o browser Chromium."
     },
     "searchCamPlaceholder": "Pesquisar",
     "resolution": {

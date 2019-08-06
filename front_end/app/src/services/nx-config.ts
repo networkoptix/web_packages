@@ -37,6 +37,8 @@ export class NxConfigService {
 
             redirectAuthorised  : '/systems', // Page for redirecting all authorised users
             redirectUnauthorised: '/', // Page for redirecting all unauthorised users by default
+            redirect404: '/404',
+            redirectPaths: ['/register', '/restore_password', '/activate', '/404'],
 
             links: {
                 admin: {
@@ -203,10 +205,11 @@ export class NxConfigService {
                 useServerTime              : true,
                 useSystemTime              : true,
                 disableVolume              : true,
-                reloadInterval             : 5 * 1000,
+                reloadInterval             : 30 * 1000,
                 leftPanelPreviewHeight     : 128,
                 resetDisplayedTextTimer    : 3 * 1000,
                 hlsLoadingTimeout          : 90 * 1000,
+
                 // One minute timeout for manifest:
                 // * 30 seconds for gateway to open connection
                 // * 30 seconds for server to init camera

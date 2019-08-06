@@ -191,13 +191,16 @@ class Account(AbstractBaseUser, PermissionsMixin):
 
     @property
     def is_portal_manager(self):
-        permission_based_group = Group.objects.filter(user=self, permissions__codename='publish_version').exists()
-        named_group = Group.objects.filter(user=self, name__contains='Portal Manager').exists()
-        return permission_based_group or named_group
+        if self.is_superuser:
+            return False
+        else:
+            permission_based_group = Group.objects.filter(user=self, permissions__codename='publish_version').exists()
+            named_group = Group.objects.filter(user=self, name__contains='Portal Manager').exists()
+            return permission_based_group or named_group
 
     @property
     def is_developer(self):
-        if self.is_portal_manager:
+        if self.is_portal_manager or self.is_superuser:
             return False
         else:
             permission_based_group = Group.objects.filter(user=self, permissions__codename='edit_content').exists()

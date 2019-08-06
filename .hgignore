@@ -44,7 +44,6 @@ env
 env3
 cloud/.idea
 cloud/static
-cloud/api/management/commands/unbindsystem.py
 cloud/notifications/static/templates/*.mustache
 cloud/notifications/static/templates/email_logo.png
 .DS_Store

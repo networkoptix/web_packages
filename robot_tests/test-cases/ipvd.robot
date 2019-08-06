@@ -1,5 +1,5 @@
 *** Settings ***
-Resource          ipvd_resource.robot
+Resource          ../ipvd_resource.robot
 Suite Setup       Open Browser and go to URL    ${url}/ipvd
 Test Setup        Restart
 Test Teardown     NONE    #Close Browser    #Run Keyword If Test Failed    Reset DB and Open New Browser On Failure
@@ -21,6 +21,48 @@ IPVD page loads while logged in
     Validate Log In
     Go To IPVD page
 
+IPVD landing page actions
+    [tags]  C48791  IPVD
+
+    # Step 1 -  Validate Landing Page Contents
+    Go To IPVD Page
+    ${search_placeholder}=   Get Element Attribute    ${IPVD SEARCH BAR}    placeholder
+    Validate on IPVD Page
+    Should Be Equal as Strings    ${search_placeholder}    Search by model or manufacturer    ignore_case=true
+    Element should contain    ${IPVD ADV SEARCH BUTTON}  ${IPVD ADV SEARCH BUTTON TEXT}
+    Element should contain    ${IPVD MANUFACTURERS PANE}//header/span    manufacturers    ignore_case=true
+    ${numVendors}=   Get Element Count    ${IPVD MANUFACTURERS PANE ITEM}
+    Should Not Be Equal As Numbers  ${numVendors}   0
+    Element should contain      ${IPVD DEVICES PANE}//header/span    devices    ignore_case=true
+    ${numDeviceTypes}=   Get Element Count    ${IPVD DEVICES PANE}//*[@class="float-left mr-1 mb-1"]
+    Element should contain    ${IPVD LANDING PAGE TEXT}    submit a request    ignore_case=true
+
+    # Step 2 - Validate filtering by manufacturer
+    ${vendor}=  Set variable    Axis
+    Click Element    ${IPVD MANUFACTURERS PANE}//div[contains(text(), '${vendor}')]
+    Element Text Should Be    //nx-search/div/div/div[1]/div/div[2]/span[1]    Manufacturer – ${vendor}
+    Element Text Should Be    ${IPVD TABLE FIRST ITEM}/td[1]    ${vendor}
+    Validate Landing Page Objects are not Visible
+
+    # Step 3
+    Click Element    ${IPVD ADV FEATURES CLOSE BUTTON}
+    Validate on IPVD page
+
+    # Step 4 - Validate filtering by device type
+    ${device}=   Set variable    Encoder
+    Click Element    ${IPVD DEVICES PANE}//div[contains(text(), '${device}s')]
+    Element Text Should Be    //ipvd/div/div[1]/nx-search/div/div/div[1]/div/div[2]/span[1]    Type – ${device}
+    Element Text Should Be    ${IPVD TABLE FIRST ITEM}/td[3]    ${device}
+    Validate Landing Page Objects are not Visible
+
+    # Step 5 - Back to the landing page
+    Click Element    ${IPVD ADV FEATURES CLOSE BUTTON}
+    Validate on IPVD page
+
+    # Step 6 - Verify IPVD feedback link opens correct dialog
+    Click Link    ${IPVD SUBMIT A REQUEST LINK}
+    Wait Until Element Is Visible    ${IPVD FEEDBACK}
+    
 #Submit request can be closed by 'X', cancel, and escape
 #Submit request cannot be close by clicking outside the form
 #Submit request correctly sends request
@@ -28,7 +70,7 @@ IPVD page loads while logged in
 Text search correctly finds manufacturers
     Go To IPVD page
     IPVD Text Search    hanwha
-    Element Text Should Be    ${IPVD TABLE FIRST ITEM}/td[1]/div     Hanwha Techwin (Samsung)
+    Validate IPVD Device Table Column Contains Desired Value in all Rows on all Pages    1    Hanwha Techwin (Samsung)
 
 
 #Text search correctly finds models
@@ -53,7 +95,7 @@ Text search correctly finds manufacturers
 #Page can be changed by next, previous, and clicking on visible numbers
 #Export all to CSV works
 
-IPVD Request Form Basic Validations
+Request Form Basic Validations
     [tags]    C48969    IPVD
     Go To IPVD page
     Wait Until Element Is Visible    ${IPVD SUBMIT A REQUEST}
@@ -71,7 +113,7 @@ IPVD Request Form Basic Validations
     Wait Until Element Is Visible    ${IPVD FEEDBACK}
     Click Button    ${IPVD FEEDBACK CLOSE BUTTON}
 
-IPVD Feedback Form Basic Validations
+Feedback Form Basic Validations
     [tags]    C54182    IPVD
     #IPVD page    Login=True
     #Wait Until Element Is Not Visible    ${LOG IN MODAL}
@@ -200,3 +242,22 @@ Text search
     ${make3}=   Get Text    ${IPVD DEVICE MAKE}
     Should Be Equal As Strings    ${make1}    ${make2}    1st "${make1}" and 2nd "${make2}" selected device should be the same manufacturers, but weren't.
     Should Be True    '${make2}' < '${make3}'    2nd "${make2}" selected device should be lexographically less than 3rd "${make3}" selected device, but wasn't.
+
+Text in search input is kept after clicking X on applied Features filter indicator
+    [tags]    C49362    IPVD
+    #Step 1
+    Go To IPVD page
+    Click Element    ${IPVD DEVS FILTER PTZ CAMERAS}
+    IPVD Text Search    Axis
+    ${numberOfFiltersApplied}=   Get Text    ${IPVD FILTERS APPLIED BUTTON}
+    Should Be Equal As Strings    ${numberOfFiltersApplied}    2 ${IPVD FILTERS APPLIED TEXT}
+    Validate IPVD Device Table Column Contains Desired Value in all Rows on all Pages    1    Axis
+    Validate IPVD Device Table Column Contains Desired Value in all Rows on all Pages    8    ●
+    #Step 2
+    Click Element    ${IPVD ADV SEARCH BUTTON}
+    Click Element    ${IPVD ADV FEATURES PTZ}${IPVD ADV FEATURES CLOSE BUTTON}
+    ${numberOfFiltersApplied}=   Get Text    ${IPVD FILTERS APPLIED BUTTON}
+    Should Be Equal As Strings    ${numberOfFiltersApplied}    ${IPVD ADV FILTER TYPE} – ${IPVD ADV TYPE CAMERA}
+    ${filterText}=   Get Element Attribute    ${IPVD SEARCH BAR}    value
+    Should Be Equal As Strings    ${filterText}    Axis
+    Validate IPVD Device Table Column Contains Desired Value in all Rows on all Pages    1    Axis

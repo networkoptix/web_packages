@@ -15,13 +15,13 @@
     "emailSubject": "{{message.product}} için Destek talebi"
   },
   "integration_feedback": {
-    "emailSubject": "Feedback for {{message.product}}"
+    "emailSubject": "{{message.product}} hakkında geri bildirim"
   },
   "ipvd_feedback": {
-    "emailSubject": "Camera Page Feedback{{#message.product}} for {{message.product}}{{/message.product}}"
+    "emailSubject": "Kamera Sayfa Görüşleri{{#message.product}} için {{message.product}}{{/message.product}}"
   },
   "review_version": {
-    "emailSubject": "{{message.product_type}}: {{message.product}} has a new version to review"
+    "emailSubject": "{{message.product_type}}: {{message.product}} incelemesi gereken yeni bir sürümü var"
   },
   "restore_password": {
     "emailSubject": "Parolanızı sıfırlayın"

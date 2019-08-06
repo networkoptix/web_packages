@@ -18,13 +18,13 @@
 
                 <ul ng-if="active.integrations" class="nav navbar-nav d-none d-sm-flex">
                     <li class="active">
-                        <a class="inset" href=1>Intégrations</a>
+                        <a class="inset" href="">Intégrations</a>
                     </li>
                 </ul>
 
                 <ul ng-if="active.ipvd" class="nav navbar-nav d-none d-sm-flex">
                     <li class="active">
-                        <a class="inset" href=1>Périphériques vidéo IP supportés</a>
+                        <a class="inset" href="">Périphériques vidéo IP supportés</a>
                     </li>
                 </ul>
 
@@ -44,7 +44,7 @@
                 <ul class="nav navbar-nav navbar-right auth-hidden margin-right">
                     <li>
                         <span>
-                            <a href class="btn btn-default" ng-click="login()">Connexion</a>
+                            <a href="" class="btn btn-default" ng-click="login()">Connexion</a>
                         </span>
                         <span>
                             <a href="/register" class="btn btn-primary">Créer Compte</a>
@@ -54,7 +54,7 @@
 
                 <ul class="nav navbar-nav navbar-right auth-visible">
                     <li ng-if="singleSystem" class="no-hover collapse-second hidden-collapse">
-                        <a href =1 class="m-0 border-0">
+                        <a href="" class="m-0 border-0">
                             <span class="glyphicon glyphicon-home"></span>
                             <span class="ellipsis">{{activeSystem.name}}</span>
                         </a>

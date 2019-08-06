@@ -7,12 +7,12 @@
 		"Any": "Qualsiasi",
 		"selected": "selezionato",
 		"vendor": "Produttore",
-		"vendors": "Manufacturers",
+		"vendors": "Produttori",
 		"hardwareType": "Tipo",
-		"hardwareTypes": "Types",
+		"hardwareTypes": "Tipi",
 		"minResolution": "Risoluzione minima",
 		"analytics": "Analitica",
-		"analyticsSelected": "analytics events"
+		"analyticsSelected": "eventi di Analitica"
 	},
 	"cameraFilters": {
 		"ptz": "Telecamere PTZ",
@@ -116,7 +116,7 @@
 		"isIoSupported": "I/O",
 		"isH265": "H.265",
 		"isMultiSensor": "Multi sensore",
-		"isAnalyticsSupported": "Analytics",
+		"isAnalyticsSupported": "Analitica",
 		"camera": "Telecamera / e",
 		"multiSensorCamera": "Telecamera multisensore",
 		"encoder": "Encoder",
@@ -135,7 +135,7 @@
 			"b_Link": "invia una richiesta",
 			"c_Info": "per ulteriori domande / dubbi sui dispositivi supportati."
 		},
-		"disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous."
+		"disclaimer": "Questa lista è limitata ai dispositivi trovati su {{vmsName}} dove gli utenti hanno consentito la segnalazione automatica delle spec del dispositivo a {{companyName}}. Nessuna informazione personale è stata raccolta e ogni utente rimane completamente anonimo."
 	},
 	"integration": {
 		"previewRibbonText": "Questa pagina è un'anteprima delle ultime modifiche e non corrisponde alla versione disponibile al pubblico.",
@@ -186,5 +186,12 @@
 		"ipvd": "Inviando questo modulo accetti di essere contattato da %COMPANY_NAME%.\nTroverai l'informativa sulla privacy %COMPANY_NAME%<a href=\"%PRIVACY_LINK%\" target=\"blank\">qui</a> che includono istruzioni su come revocare il tuo consenso."
 	},
 	"testedVersionLabel": "Verificato sulla versione {{vmsName}}:",
-	"testedVersionsLabel": "Verificato sulle versioni {{vmsName}}:"
+	"testedVersionsLabel": "Verificato sulle versioni {{vmsName}}:",
+	"About %CLOUD_NAME%": "Informazioni su %CLOUD_NAME%",
+	"Download %VMS_NAME%": "Scarica %VMS_NAME%",
+	"Integrations": "Integrazioni",
+	"Privacy": "Privacy",
+	"Support": "Supporto",
+	"Supported Devices": "Dispositivi supportati",
+	"Terms": "Termini di servizio"
 }

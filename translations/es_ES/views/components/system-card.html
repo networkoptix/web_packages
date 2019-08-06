@@ -5,9 +5,9 @@
             <button ng-disabled="currentlyMerging && !isMaster" class="btn btn-default" ng-click="rename()">Cambiar Nombre del Sistema</button>
         </p>
         <p ng-if="systems.length > 1 && system.canMerge || configCanMerge || debugMode || betaMode">
-            <button class="btn btn-default"
+            <button class="btn btn-default mw-100"
                     ng-disabled="(currentlyMerging || !system.isOnline || !system.isAvailable) && !(debugMode || betaMode)"
-                    ng-click="mergeSystems()">Fusionar con otro sistema</button>
+                    ng-click="mergeSystems()"><div class="ellipsis"> Fusionar con otro sistema </div></button>
         </p>
         <hr />
         <button ng-disabled="currentlyMerging" class="btn btn-default" ng-click="disconnect()">Desconectar de
@@ -22,7 +22,7 @@
         <hr>
         <p>
             Sus permisos:
-            <b>{{$root.L.accessRoles[system.accessRole].label || system.accessRole}}</b>
+            <b>{{permission}}</b>
         </p>
 
         <p ng-if="system.permissions.isAdmin">

@@ -7,12 +7,12 @@
 		"Any": "Herhangi",
 		"selected": "seçildi",
 		"vendor": "Üretici",
-		"vendors": "Manufacturers",
+		"vendors": "Üreticiler",
 		"hardwareType": "Tür",
-		"hardwareTypes": "Types",
+		"hardwareTypes": "Türler",
 		"minResolution": "Minimum Çözünürlük",
-		"analytics": "Analytics",
-		"analyticsSelected": "analytics events"
+		"analytics": "Analiz",
+		"analyticsSelected": "analiz Etkinliği"
 	},
 	"cameraFilters": {
 		"ptz": "PTZ kameralar",
@@ -98,7 +98,7 @@
 		}
 	},
 	"ipvd": {
-		"resolutionArea": "Area",
+		"resolutionArea": "Alan",
 		"count": "Sayı",
 		"vendor": "Üretici",
 		"model": "Model",
@@ -116,7 +116,7 @@
 		"isIoSupported": "G/Ç",
 		"isH265": "H.265",
 		"isMultiSensor": "Çoklu sensör",
-		"isAnalyticsSupported": "Analytics",
+		"isAnalyticsSupported": "Analiz",
 		"camera": "Kamera",
 		"multiSensorCamera": "Çok Sensörlü Kamera",
 		"encoder": "Kodlayıcı",
@@ -135,7 +135,7 @@
 			"b_Link": "destek talebi gönder",
 			"c_Info": "desteklenen cihazlarla ilgili ek sorularınız için."
 		},
-		"disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous."
+		"disclaimer": "Bu liste, {{vmsName}} bulunan, kullanıcıların cihaz özelliklerinin {{companyName}} otomatik raporlanmasına izin verdiği yerlerdedir. Hiçbir kişisel bilgi toplanmaz ve her kullanıcı tamamen adsız kalır."
 	},
 	"integration": {
 		"previewRibbonText": "Bu sayfa en son değişikliklerin önizlemesidir ve herkese açık kullanılabilir sürümle eşleşmiyor.",
@@ -157,10 +157,10 @@
 	"dialogs": {
 		"merge": {
 			"connectToCloud": "Birleştirmek istediğiniz <strong>{{cloudName}}</strong> sistemine bağlanın veya yerel sistemi {{vmsName}}</strong> kullanarak birleştirin.",
-			"mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from the <strong>{{primarySystem}}</strong>.",
-			"primaryCannotMerge": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} System.",
-			"primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}.",
-			"secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
+			"mergeConfirmation": "<strong>{{primarySystem}}</strong> sistemi ile <strong>{{secondarySystem}}</strong> sistemini birleştirmek üzeresiniz. İsim ve ayarlar <strong>{{primarySystem}}</strong> sisteminden alınacaktır.",
+			"primaryCannotMerge": "Sistem {{targetSystem}}, mevcut sistemle uyumlu olmayan daha yeni bir yazılım sürümüne sahip. Geçerli sistemi, {{targetSystem}} Sistemle birleştirmek için en son <a href=\"/download\" target=\"_blank\" translate>derleme</a> güncelleyin.",
+			"primarySystemOffline": "Sistem {{primarySystem}} çevrimdışıdır ve Sistem {{targetSystem}} ile birleştirilemez.",
+			"secondaryCannotMerge": "Sistem {{targetSystem}}, mevcut sistemle uyumlu olmayan daha eski bir yazılım sürümüne sahip. Geçerli olanla birleştirmek için {{targetSystem}} en son <a href=\"/download\" target=\"_blank\" translate>derleme</a> güncelleyin.",
 			"systemOffline": "Sistem {{targetSystem}} çevrimdışı ve güncel sistemle birleştirilemez.",
 			"systemUnavailable": "{{targetSystem}} sistemi erişilebilir değil. Birkaç dakika sonra tekrar deneyin"
 		},
@@ -168,23 +168,30 @@
 			"failedToSend": "Mesaj gönderilemedi.",
 			"sent": "Mesaj gönderildi.",
 			"title": {
-				"integration": "Get in touch with {{companyName}}",
-				"ipvd_feedback_page": "Feedback for cameras page",
+				"integration": "{{companyName}} ile iletişime geçin",
+				"ipvd_feedback_page": "Kameralar sayfası için geri bildirim",
 				"ipvd_feedback_device": "{{product}} hakkında geri bildirim"
 			},
 			"topic": {
-				"contact_sales": "Contact sales for {{product}}",
-				"contact_support": "Contact support for {{product}}",
-				"integration_feedback": "Feedback for integration {{product}}",
-				"ipvd_feedback_page": "Feedback for cameras page",
+				"contact_sales": "Satış için {{product}} iletişime geçin",
+				"contact_support": "{{product}} için Destek İste",
+				"integration_feedback": "Entegrasyon için geri bildirim {{product}}",
+				"ipvd_feedback_page": "Kameralar sayfası için geri bildirim",
 				"ipvd_feedback_device": "{{product}} hakkında geri bildirim"
 			}
 		}
 	},
 	"privacyPolicy": {
-		"integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent.",
-		"ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent."
+		"integration": "Bu formu göndererek, {{INTEGRATION_COMPANY}} ve / veya %COMPANY_NAME%ile irtibata geçmeyi kabul edersiniz.\nSen bulacaksınız {{INTEGRATION_COMPANY}} gizlilik politikasını <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">burada</a> ve %COMPANY_NAME% gizlilik politikasını <a href=\"%PRIVACY_LINK%\" target=\"blank\">Burada</a> onayınızı geri çekmek konusunda talimat içerir.",
+		"ipvd": "Bu formu göndererek, %COMPANY_NAME%ile iletişime geçmeyi kabul edersiniz.\nBurada, onayınızı nasıl geri çekeceğinizle ilgili talimatları içeren %COMPANY_NAME% gizlilik politikasını <a href=\"%PRIVACY_LINK%\" target=\"blank\">burada</a> bulacaksınız."
 	},
-	"testedVersionLabel": "Tested on {{vmsName}} version:",
-	"testedVersionsLabel": "Tested on {{vmsName}} versions:"
+	"testedVersionLabel": "{{vmsName}} versiyonda test edildi:",
+	"testedVersionsLabel": "{{vmsName}} versiyonda test edildi:",
+	"About %CLOUD_NAME%": "%CLOUD_NAME% Hakkında",
+	"Download %VMS_NAME%": "İndir %VMS_NAME%",
+	"Integrations": "Entegrasyonlar",
+	"Privacy": "Gizlilik",
+	"Support": "Destek",
+	"Supported Devices": "Desteklenen cihazlar",
+	"Terms": "Şartlar"
 }

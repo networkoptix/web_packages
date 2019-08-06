@@ -68,7 +68,7 @@ def find_context(name, file_path, structure, product_type):
 
 
 def find_structure(name, context, structure_type, product_type, meta=None,
-                   description="", value='', advanced=False, optional=False):
+                   description="", value="", advanced=False, optional=False):
     data_structure = next((structure for structure in context["values"] if structure["name"] == name), None)
     if not data_structure:
         # try to populate structure from database
@@ -113,7 +113,8 @@ def find_structure(name, context, structure_type, product_type, meta=None,
             ("protected", protected)
         ])
 
-        if db_structure.is_image:
+        if DataStructure.get_type_by_name(structure_type) == DataStructure.DATA_TYPES.image or\
+                db_structure and db_structure.is_image:
             if not meta:
                 meta = {'background': 'transparent'}
             elif 'background' not in meta:
