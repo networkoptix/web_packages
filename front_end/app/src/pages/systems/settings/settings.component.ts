@@ -242,6 +242,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                                                     label: user.email,
                                                     additionalLabel: '<span class="menu-level-2-additional">&ndash;&nbsp;' + user.role.name + '</span>',
                                                     path : 'users/' + id,
+                                                    isEnabled: user.isEnabled,
                                                 });
                                             });
 
