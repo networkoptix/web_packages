@@ -595,12 +595,10 @@ class ProductCustomizationReviewAdmin(CMSAdmin):
         # Customization name should be visible in notes heading if developer has access or user has access
         customization_name = customization_review.customization.name
         title = f"Changes for {version.product.name} - Version: {version.id}"
-        if UserGroupsToProductPermissions.check_customization_access(request.user, customization_name):
-            extra_context['customization_name'] = customization_name
-        else:
+        if not UserGroupsToProductPermissions.check_customization_access(request.user, customization_name):
             title = f"{title} – {self.state_tag(customization_review.state)}"
 
-        extra_context["title"] = format_html(title)
+        extra_context["page_title"] = format_html(title)
         return super(ProductCustomizationReviewAdmin, self).change_view(
             request, object_id, form_url, extra_context=extra_context,
         )
