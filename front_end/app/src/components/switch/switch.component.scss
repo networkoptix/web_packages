@@ -5,12 +5,12 @@
   display: inline-block;
   width: 33px;
   height: 17px;
-}
-
-.switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
+  
+  & input {
+    opacity : 0;
+    width   : 0;
+    height  : 0;
+  }
 }
 
 .slider {
@@ -23,22 +23,22 @@
   background-color: $red_l2;
   -webkit-transition: .4s;
   transition: .4s;
+  
+  &:before {
+    position           : absolute;
+    content            : "";
+    height             : 15px;
+    width              : 15px;
+    left               : 1px;
+    bottom             : 1px;
+    background-color   : white;
+    -webkit-transition : .4s;
+    transition         : .4s;
+    z-index            : 1;
+  }
 }
 
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 15px;
-  width: 15px;
-  left: 1px;
-  bottom: 1px;
-  background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
-  z-index: 1;
-}
-
-input:checked + .slider {
+input.selected + .slider {
   background-color: $brand-success;
 }
 
@@ -46,7 +46,7 @@ input:focus + .slider {
   box-shadow: 0 0 1px $brand-success;
 }
 
-input:checked + .slider:before {
+input.selected + .slider:before {
   -webkit-transform: translateX(16px);
   -ms-transform: translateX(16px);
   transform: translateX(16px);

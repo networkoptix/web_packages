@@ -8,7 +8,8 @@
                       class="text-danger" [ngClass]="{'pr-2': selectedUser.canBeEdited}"
                       translate>User disabled</span>
                 <nx-switch *ngIf="selectedUser.canBeEdited"
-                           [ngModel]="selectedUser.isEnabled" (ngModelChange)="updateEnabled($event)"></nx-switch>
+                           [ngModel]="selectedUser.isEnabled"
+                           (ngModelChange)="updateEnabled($event)"></nx-switch>
             </div>
             <h2 class="users-email mb-2">{{selectedUser.email}}</h2>
             <span class="users-name">{{selectedUser.fullName}}</span>
