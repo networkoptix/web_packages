@@ -4,7 +4,7 @@
 
 .menu-level-2 {
     position         : relative;
-    background-color : $light5;
+    background-color : $light4;
     font-family      : $font-family-medium;
     font-size        : $font-size-base;
     color            : $dark9;
@@ -18,6 +18,10 @@
     line-height      : 26px;
     
     &:hover {
+        background-color : $light5;
+    }
+    
+    &:active {
         background-color : $light6;
     }
     

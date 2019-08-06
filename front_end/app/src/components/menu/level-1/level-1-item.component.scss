@@ -21,6 +21,10 @@ $item_height : 40px;
         background-color : $additional_light3;
     }
     
+    &:active {
+        background-color : $light5;
+    }
+    
     &-icon {
         position        : absolute;
         left            : 0;
