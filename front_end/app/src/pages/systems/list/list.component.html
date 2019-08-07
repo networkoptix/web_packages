@@ -27,7 +27,7 @@
                     <div class="card-body" (click)="openSystem(system)">
                         <h2 [innerHTML]="system.name | highlight:search.value"></h2>
                         <span class="user-name"
-                              [innerHTML]="getSystemOwnerName(system, account.email) | highlight:search.value"></span>
+                              [innerHTML]="getSystemOwnerName(system, userEmail) | highlight:search.value"></span>
 
                         <span style="margin-top: 24px;"
                               class="badge badge-info"

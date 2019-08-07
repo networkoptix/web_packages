@@ -10,7 +10,8 @@ import { NxDialogsService }          from '../../../../dialogs/dialogs.service';
 import { NxSettingsService }         from '../settings.service';
 import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
 import { NxMenuService }             from '../../../../components/menu/menu.service';
-import { NxSystemsService } from '../../../../services/systems.service';
+import { NxSystemsService }          from '../../../../services/systems.service';
+import { NxAccountService }          from '../../../../services/account.service';
 
 @Component({
     selector   : 'nx-system-admin-component',
@@ -42,7 +43,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         this.menuService.setSection('admin');
     }
 
-    constructor(@Inject('account') private account: any,
+    constructor(private accountService: NxAccountService,
                 @Inject('process') private process: any,
                 private route: ActivatedRoute,
                 private configService: NxConfigService,
@@ -52,8 +53,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                 private systemsService: NxSystemsService,
                 private settingsService: NxSettingsService,
                 private menuService: NxMenuService,
-                location: Location) {
-
+                location: Location,
+    ) {
         this.location = location;
         this.setupDefaults();
     }
@@ -66,8 +67,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     }
 
     init(): void {
-        this.CONFIG = this.configService.getConfig();
-
         this.settingsService
             .systemSubject
             .subscribe((system) => {
@@ -138,13 +137,13 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     }
 
     mergeSystems() {
-        this.systems = this.systemsService.getMySystems(this.account.email, this.system.id);
+        this.systems = this.systemsService.getMySystems(this.accountService.getEmail(), this.system.id);
 
         this.system.currentlyMerging = true;
         this.settingsService.setSystem(this.system);
 
         return this.dialogs
-                   .merge(this.system, this.systems, this.account)
+                   .merge(this.system, this.systems, this.accountService)
                    .then((mergeInfo) => {
                        if (mergeInfo) {
                            this.system.mergeInfo = mergeInfo;

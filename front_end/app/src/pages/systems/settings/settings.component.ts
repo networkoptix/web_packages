@@ -12,6 +12,7 @@ import { NxSystemService } from '../../../services/system.service';
 import { NxSystemsService }        from '../../../services/systems.service';
 import { NxModalAddUserComponent } from '../../../dialogs/add-user/add-user.component';
 import { NxModalGenericComponent } from '../../../dialogs/generic/generic.component';
+import { NxAccountService }        from '../../../services/account.service';
 
 @Component({
     selector   : 'nx-system-settings-component',
@@ -62,10 +63,9 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.selectedUser = { email: '' };
     }
 
-    constructor(@Inject('authorizationCheckService') private authorizationService: any,
-                // @Inject('system') private systemService: any,
-                @Inject('process') private process: any,
+    constructor(@Inject('process') private process: any,
                 private route: ActivatedRoute,
+                private accountService: NxAccountService,
                 private configService: NxConfigService,
                 private language: NxLanguageProviderService,
                 private pageService: NxPageService,
@@ -75,8 +75,8 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 private settingsService: NxSettingsService,
                 private menuService: NxMenuService,
                 location: Location,
-                private addUserModal: NxModalAddUserComponent) {
-
+                private addUserModal: NxModalAddUserComponent,
+    ) {
         this.location = location;
         this.setupDefaults();
     }
@@ -91,7 +91,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
     init(): void {
         // this.systemId = this.uriParamSystemId;
-
         this.route.params.subscribe(params => {
             if (params.systemId) {
                 this.systemId = params.systemId;
@@ -214,7 +213,8 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     getSystemInfo() {
-        this.authorizationService
+        this.settingsService.setSystem(undefined);
+        this.accountService
             .requireLogin()
             .then((account) => {
                 this.account = account;

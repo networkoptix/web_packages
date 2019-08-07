@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('cloudApp')
-    .factory('urlProtocol', ['$base64', '$location', 'account', '$q', '$timeout',
-    function ($base64, $location, account, $q, $timeout) {
+    .factory('urlProtocol', ['$base64', '$location', 'nxAccountService', '$q', '$timeout',
+    function ($base64, $location, nxAccountService, $q, $timeout) {
 
         function parseSource() {
             var search = $location.search();
@@ -34,7 +34,7 @@ angular.module('cloudApp')
 
                 $.extend(settings,linkSettings);
 
-                var protocol = settings.native?L.clientProtocol:location.protocol;
+                var protocol = settings.native ? L.clientProtocol : location.protocol;
                 var host = location.host;
 
                 var getParams = $.extend({},settings.actionParameters);
@@ -64,19 +64,20 @@ angular.module('cloudApp')
             getLink:function(linkSettings){
                 var defer = $q.defer();
                 var self = this;
-                account.authKey().then(function(authKey){
-                    linkSettings.auth = authKey;
-                    defer.resolve({
-                        link: self.generateLink(linkSettings),
-                        authKey: authKey
-                    })
-                },function(no_account){
-                    defer.resolve({
-                        link: self.generateLink(linkSettings),
-                        authKey: null
+                nxAccountService.authKey()
+                    .then(function(authKey){
+                        linkSettings.auth = authKey;
+                        defer.resolve({
+                            link: self.generateLink(linkSettings),
+                            authKey: authKey
+                        })
+                    },function(no_account){
+                        defer.resolve({
+                            link: self.generateLink(linkSettings),
+                            authKey: null
+                        });
+                        // defer.reject(null);
                     });
-                    // defer.reject(null);
-                });
                 return defer.promise;
             },
             open:function(systemId){
@@ -93,14 +94,15 @@ angular.module('cloudApp')
                     // see CLOUD-716 for more information
 
                     window.protocolCheck(link);
-
-                    return $timeout(function(){
-                        return account.checkVisitedKey(authKey).then(function(visited){
-                            if(!visited){
-                                return $q.reject(visited);
-                            }
-                            return visited;
-                        });
+    
+                    return $timeout(function () {
+                        return nxAccountService.checkVisitedKey(authKey)
+                            .then(function (visited) {
+                                if (!visited) {
+                                    return $q.reject(visited);
+                                }
+                                return visited;
+                            });
                     }, Config.openClientTimeout);
                 });
             },

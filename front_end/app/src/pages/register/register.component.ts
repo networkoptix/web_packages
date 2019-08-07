@@ -1,10 +1,12 @@
 import { AfterViewInit, Component, Inject, Input, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute }            from '@angular/router';
-import { NxUriService }              from '../../services/uri.service';
+import { ActivatedRoute }                                             from '@angular/router';
+import { NxUriService }                                               from '../../services/uri.service';
 import { TranslateService }          from '@ngx-translate/core';
 import { NxRegisterService }         from '../../services/register.service';
 import { NxPageService }             from '../../services/page.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxAccountService }          from '../../services/account.service';
+import { LocalStorageService }       from 'ngx-store';
 
 @Component({
     selector   : 'nx-register-component',
@@ -40,7 +42,7 @@ export class NxRegisterComponent implements OnInit {
         this.pageService.setPageTitle(this.LANG.pageTitles.register);
 
         this.register = this.process.init(() => {
-            this.account.setEmail(this.accountInfo.email);
+            this.accountService.setEmail(this.accountInfo.email);
 
             return this.registerService
                        .register(
@@ -73,22 +75,21 @@ export class NxRegisterComponent implements OnInit {
             if (this.accountInfo.code) {
                 this.activated = true;
                 this.locationProxy.path('/register/successActivated', false);
-                this.authorizationService.login(this.accountInfo.email, this.accountInfo.password);
+                this.accountService.login(this.accountInfo.email, this.accountInfo.password, true);
             } else {
                 this.locationProxy.path('/register/success', false);
-                this.account.setEmail(this.accountInfo.email);
+                this.accountService.setEmail(this.accountInfo.email);
                 this.pageService.setPageTitle(this.LANG.pageTitles.registerSuccess);
             }
         });
     }
 
-    constructor(@Inject('account') private account: any,
-                @Inject('process') private process: any,
+    constructor(@Inject('process') private process: any,
                 @Inject('urlProtocol') private urlProtocol: any,
-                @Inject('localStorageService') private localStorage: any,
-                @Inject('authorizationCheckService') private authorizationService: any,
+                private localStorage: LocalStorageService,
                 @Inject('locationProxyService') private locationProxy: any,
                 private route: ActivatedRoute,
+                private accountService: NxAccountService,
                 private registerService: NxRegisterService,
                 private language: NxLanguageProviderService,
                 private pageService: NxPageService) {
@@ -115,9 +116,9 @@ export class NxRegisterComponent implements OnInit {
         }
 
         if (!this.registerSuccess) {
-            this.authorizationService.logoutAuthorised();
+            this.accountService.logoutAuthorised();
         } else if (this.activated) {
-            this.authorizationService.redirectAuthorised();
+            this.accountService.redirectAuthorised();
         }
 
         if (this.code) {
@@ -127,7 +128,7 @@ export class NxRegisterComponent implements OnInit {
         }
 
         this.accountInfo = {
-            email    : this.accountInfo.email || this.account.getEmail(),
+            email    : this.accountInfo.email || this.accountService.getEmail(),
             password : '',
             firstName: '',
             lastName : '',
@@ -136,7 +137,7 @@ export class NxRegisterComponent implements OnInit {
         };
 
         if (this.registerSuccess && this.context.process !== 'registerSuccess') {
-            this.authorizationService.redirectToHome();
+            this.accountService.redirectToHome();
         }
 
         this.session = this.localStorage;

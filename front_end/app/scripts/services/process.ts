@@ -4,8 +4,8 @@
 
     angular
         .module('cloudApp')
-        .factory('process', ['$q', 'cloudApi', 'account', 'languageService', 'nxDialogsService',
-            function ($q, cloudApi, account, languageService, nxDialogsService) {
+        .factory('process', ['$q', 'cloudApi', 'nxAccountService', 'languageService', 'nxDialogsService',
+            function ($q, cloudApi, nxAccountService, languageService, nxDialogsService) {
 
                 const lang = languageService.lang;
 
@@ -91,7 +91,7 @@
                                             // we need to handle this like user was not authorised
                                             data.data.resultCode == 'notAuthorized' ||
                                             data.data.resultCode == 'forbidden' && settings.logoutForbidden)) {
-                                        account.logout();
+                                        nxAccountService.logout();
                                         deferred.reject(data);
                                         return;
                                     }

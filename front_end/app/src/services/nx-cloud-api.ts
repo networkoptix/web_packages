@@ -53,7 +53,7 @@ export class NxCloudApiService {
                 { email, password, first_name : firstName, last_name : lastName, subscribe, code });
     }
 
-    systems (systemId?: string) {
+    systems (systemId?: string): Observable<any> {
         if (systemId) {
             return this.http.get(this.CONFIG.apiBase + '/systems/' + systemId);
         }
@@ -69,5 +69,36 @@ export class NxCloudApiService {
             user_email: userEmail,
             role: this.CONFIG.accessRoles.unshare
         });
+    }
+
+    authKey(): Observable<any> {
+        return this.http.post(this.CONFIG.apiBase + '/account/authKey', {});
+    }
+
+    visitedKey(key): Observable<any> {
+        return this.http.get(this.CONFIG.apiBase + '/utils/visitedKey/?key=' + encodeURIComponent(key));
+    }
+
+    checkCode(code): Observable<any> {
+        return this.http.post(this.CONFIG.apiBase + '/account/checkCode', { code });
+    }
+
+    login(email, password, remember): Observable<any> {
+        // clearCache();
+        return this.http.post(this.CONFIG.apiBase + '/account/login', {
+            email,
+            password,
+            remember,
+            timezone: Intl && Intl.DateTimeFormat().resolvedOptions().timeZone || ''
+        });
+    }
+
+    logout(): Observable<any> {
+        // clearCache();
+        return this.http.post(this.CONFIG.apiBase + '/account/logout', {});
+    }
+
+    account(): Observable<any> {
+        return this.http.get(this.CONFIG.apiBase + '/account');
     }
 }

@@ -6,6 +6,7 @@ import { EmailValidator }                        from '@angular/forms';
 import { NxConfigService }                       from '../../services/nx-config';
 import { NxLanguageProviderService }             from '../../services/nx-language-provider';
 import { NxModalGenericComponent }               from '../generic/generic.component';
+import { NxAccountService }                      from '../../services/account.service';
 
 @Component({
     selector   : 'nx-modal-add-user-content',
@@ -36,7 +37,7 @@ export class AddUserModalContent {
                 private configService: NxConfigService,
                 private genericModal: NxModalGenericComponent,
                 private language: NxLanguageProviderService,
-                @Inject('account') private account: any,
+                private accountService: NxAccountService,
                 @Inject('process') private process: any,
     ) {
         this.url = 'share';
@@ -105,7 +106,7 @@ export class AddUserModalContent {
         }
 
         if (!this.isNewShare) {
-            this.account
+            this.accountService
                 .get()
                 .then((account) => {
                     if (account.email === this.user.email) {

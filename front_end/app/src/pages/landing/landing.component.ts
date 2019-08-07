@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { NxConfigService }           from '../../services/nx-config';
 import { NxDialogsService }          from '../../dialogs/dialogs.service';
 import { Title }                     from '@angular/platform-browser';
+import { NxAccountService }          from '../../services/account.service';
 
 @Component({
     selector   : 'landing-component',
@@ -21,8 +22,8 @@ export class NxLandingComponent implements OnInit {
 
     constructor(private config: NxConfigService,
                 private dialogs: NxDialogsService,
-                @Inject('account') private account: any,
-                @Inject('authorizationCheckService') private authorizationService: any,
+                private accountService: NxAccountService,
+                // @Inject('authorizationCheckService') private authorizationService: any,
                 private title: Title) {
 
         this.setupDefaults();
@@ -34,8 +35,8 @@ export class NxLandingComponent implements OnInit {
         if (window.location.pathname === '/login') {
             this.dialogs.login(false, false);
         } else {
-            this.authorizationService.redirectAuthorised();
-            this.userEmail = this.account.getEmail();
+            this.accountService.redirectAuthorised();
+            this.userEmail = this.accountService.getEmail();
         }
     }
 }

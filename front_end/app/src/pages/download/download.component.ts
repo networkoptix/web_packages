@@ -1,14 +1,15 @@
 import {
     Component, OnInit, OnDestroy,
     ViewChild, Inject, Input
-}                                            from '@angular/core';
+}                                       from '@angular/core';
 import { ActivatedRoute, Router }       from '@angular/router';
 import { Title }                        from '@angular/platform-browser';
-import { Location }           from '@angular/common';
+import { Location }                     from '@angular/common';
 import { NgbTabChangeEvent, NgbTabset } from '@ng-bootstrap/ng-bootstrap';
 import { DeviceDetectorService }        from 'ngx-device-detector';
 import { NxConfigService }              from '../../services/nx-config';
 import { NxLanguageProviderService }    from '../../services/nx-language-provider';
+import { NxAccountService }             from '../../services/account.service';
 
 @Component({
     selector   : 'download-component',
@@ -69,8 +70,7 @@ export class DownloadComponent implements OnInit, OnDestroy {
     }
 
     constructor(@Inject('cloudApiService') private cloudApi: any,
-                @Inject('account') private account: any,
-                @Inject('authorizationCheckService') private authorizationService: any,
+                private accountService: NxAccountService,
                 @Inject('locationProxyService') private locationProxy: any,
                 // @Inject(DOCUMENT) private document: Document,
                 private configService: NxConfigService,
@@ -178,7 +178,7 @@ export class DownloadComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.LANG = this.language.getTranslations();
 
-        this.account
+        this.accountService
             .get()
             .then(result => {
                 this.canSeeHistory = (this.CONFIG.publicReleases ||
@@ -187,7 +187,7 @@ export class DownloadComponent implements OnInit, OnDestroy {
             });
 
         if (!this.CONFIG.publicDownloads) {
-            this.authorizationService
+            this.accountService
                 .requireLogin()
                 .then(result => {
                     if (!result) {

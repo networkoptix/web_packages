@@ -3,11 +3,11 @@ import { Location }                             from '@angular/common';
 import { ActivatedRoute }                       from '@angular/router';
 import { NxConfigService }                      from '../../../services/nx-config';
 import { NxLanguageProviderService }            from '../../../services/nx-language-provider';
-import { TranslateService }                     from '@ngx-translate/core';
 
 import { NxPageService }    from '../../../services/page.service';
 import { NxDialogsService } from '../../../dialogs/dialogs.service';
 import { NxSystemsService } from '../../../services/systems.service';
+import { NxAccountService } from '../../../services/account.service';
 
 @Component({
     selector   : 'nx-systems-list-component',
@@ -28,38 +28,26 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
     filteredSystems: any;
     checkSystems: any;
     systemSelected: any;
+    userEmail: string;
 
     private setupDefaults() {
         this.CONFIG = this.configService.getConfig();
-        this.translate
-            .getTranslation(this.translate.currentLang)
-            .subscribe((lang) => {
-                this.LANG = lang;
-                this.pageService.setPageTitle(this.LANG.pageTitles.systems);
+        this.LANG = this.language.getTranslations();
 
-                this.gettingSystems = this.process.init(() => {
-                    this.fetchComplete = true;
-                    return this.systemsService.forceUpdateSystems().subscribe(_ => {});
-                }, {
-                    errorPrefix    : this.LANG.errorCodes.cantGetSystemsListPrefix,
-                    logoutForbidden: true
-                });
-            });
+        this.pageService.setPageTitle(this.LANG.pageTitles.systems);
     }
 
-    constructor(@Inject('account') private account: any,
-                @Inject('authorizationCheckService') private authorizationService: any,
-                @Inject('process') private process: any,
+    constructor(@Inject('process') private process: any,
                 @Inject('urlProtocol') private urlProtocol: any,
                 private route: ActivatedRoute,
                 private configService: NxConfigService,
                 private language: NxLanguageProviderService,
-                private translate: TranslateService,
                 private pageService: NxPageService,
                 private dialogs: NxDialogsService,
                 private systemsService: NxSystemsService,
-                location: Location) {
-
+                private accountService: NxAccountService,
+                location: Location,
+    ) {
         this.location = location;
         this.setupDefaults();
     }
@@ -70,11 +58,11 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
         this.fetchComplete = false;
         this.search = { value: '' };
 
-        this.authorizationService
+        this.accountService
             .requireLogin()
-            .then((newAccount) => {
-                this.account = newAccount;
-                this.systemsService.getSystems(this.account.email);
+            .then((account) => {
+                this.userEmail = account.email;
+                this.systemsService.getSystems(account.email);
             });
 
         this.systemsService.systemsSubject.subscribe((systems) => {
@@ -102,6 +90,15 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
                                    return true;
                                });
         }, {});
+
+        this.gettingSystems = this.process.init(() => {
+            this.fetchComplete = true;
+            return this.systemsService.forceUpdateSystems().subscribe(_ => {
+            });
+        }, {
+            errorPrefix    : this.LANG.errorCodes.cantGetSystemsListPrefix,
+            logoutForbidden: true
+        });
     }
 
     getSystemOwnerName(system, currentEmail) {
@@ -118,7 +115,7 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
         if (search) {
             this.filteredSystems = this.systems.filter((system) => {
                 return !search ||
-                        this.hasMatch(this.LANG.system.mySystemSearch, search) && (system.ownerAccountEmail === this.account.email) ||
+                        this.hasMatch(this.LANG.system.mySystemSearch, search) && (system.ownerAccountEmail === this.accountService.getEmail()) ||
                         this.hasMatch(system.name, search) ||
                         this.hasMatch(system.ownerFullName, search) ||
                         this.hasMatch(system.ownerAccountEmail, search);

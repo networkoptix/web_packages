@@ -35,12 +35,12 @@ window.L = {};
 
         ])
         .factory('httpResponseInterceptor', ['$q', '$rootScope',
-            function($q, $rootScope) {
+            function($q, $rootScope, nxAccountServiceProvider) {
                 return {
                     responseError: function(error) {
-                        if (error.status === 401 && $rootScope.session.loginState !== undefined) {
+                        if (error.status === 401 && nxAccountServiceProvider.loginState !== undefined) {
                             // Session expired - try to trigger browser reload
-                            $rootScope.session.loginState = undefined;
+                            nxAccountServiceProvider.clearLoginState();
                         }
                         return $q.reject(error);
                     }

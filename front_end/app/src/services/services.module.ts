@@ -7,8 +7,8 @@ import { downgradeInjectable }       from '@angular/upgrade/static';
 import { NxUtilsService }            from './utils.service';
 import { NxPageService }             from './page.service';
 import { NxRegisterService }         from './register.service';
-import { NxSystemsService } from './systems.service';
-
+import { NxSystemsService }          from './systems.service';
+import { NxAccountService }          from './account.service';
 
 @NgModule({
     imports        : [
@@ -26,6 +26,7 @@ import { NxSystemsService } from './systems.service';
         NxPageService,
         NxRegisterService,
         NxSystemsService,
+        NxAccountService,
     ],
     exports        : []
 })
@@ -39,5 +40,6 @@ angular
     .service('nxConfigService', downgradeInjectable(NxConfigService))
     .service('nxPageService', downgradeInjectable(NxPageService))
     .service('nxAppStateService', downgradeInjectable(NxAppStateService))
+    .service('nxAccountService', downgradeInjectable(NxAccountService))
     .service('nxSystemsService', downgradeInjectable(NxSystemsService));
 

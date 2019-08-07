@@ -38,7 +38,7 @@ require('./directives/validateWeakPassword.js');
 require('./filters/escape.js');
 
 //Services
-require('./services/account.ts');
+// require('./services/account.ts');
 require('./services/angular-uuid2.ts');
 require('./services/cloud_api.ts');
 require('./services/dialogs.ts');
@@ -50,7 +50,7 @@ require('./services/process.ts');
 require('./services/system.ts');
 // require('./services/systems.js');
 require('./services/urlProtocol.js');
-require('./services/authorizationCheckService.ts');
+// require('./services/authorizationCheckService.ts');
 require('./services/location-proxy.ts');
 
 //Controllers

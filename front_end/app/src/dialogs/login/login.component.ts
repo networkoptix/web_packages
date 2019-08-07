@@ -13,6 +13,8 @@ import { NxConfigService }                                            from '../.
 import { NxUtilsService }                                             from '../../services/utils.service';
 import { NxLanguageProviderService }                                  from '../../services/nx-language-provider';
 import { NxModalGenericComponent }                                    from '../generic/generic.component';
+import { NxAccountService }                                           from '../../services/account.service';
+import { LocalStorageService }                                        from 'ngx-store';
 // import { NxDialogsService }                                 from '../dialogs.service';
 
 @Component({
@@ -41,17 +43,17 @@ export class LoginModalContent implements OnInit {
     @ViewChild('loginForm', { static: true }) loginForm: HTMLFormElement;
 
     constructor(public activeModal: NgbActiveModal,
-                @Inject('account') private account: any,
                 @Inject('process') private process: any,
                 @Inject('cloudApiService') private cloudApi: any,
-                @Inject('localStorageService') private localStorage: any,
+                private localStorage: LocalStorageService,
                 @Inject(DOCUMENT) private document: any,
+                private account: NxAccountService,
                 private configService: NxConfigService,
                 private language: NxLanguageProviderService,
                 private genericModal: NxModalGenericComponent,
                 private renderer: Renderer2,
     ) {
-        this.auth = this.localStorage;
+        this.auth = { email: this.localStorage.get('email') };
         this.next = '';
         this.password = '';
         this.remember = true;
@@ -176,7 +178,7 @@ export class LoginModalContent implements OnInit {
 
     close() {
         // prevent unnecessary reload
-        if (!this.keepPage && this.account.email === undefined) {
+        if (!this.keepPage && this.account.getEmail() === undefined) {
             // TODO: Repace this once 'register' page is moved to A5
             // AJS and A5 routers freak out about route change *****
             // this.location.go(this.config.redirectUnauthorised);

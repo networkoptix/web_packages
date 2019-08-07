@@ -2,8 +2,8 @@
 
     'use strict';
 
-    function NxHeader(nxDialogsService, cloudApi, account, $location, $route,
-                      nxSystemsService, nxConfigService, $rootScope) {
+    function NxHeader($rootScope, nxDialogsService, cloudApi, $location, $route,
+                      nxSystemsService, nxConfigService, nxAccountService) {
 
         const CONFIG = nxConfigService.getConfig();
     
@@ -72,8 +72,8 @@
 
                 updateActive();
     
-                scope.$watch('$rootScope.session.loginState', function () {
-                    if ($rootScope.session.loginState) {
+                nxAccountService.loginStateSubject.subscribe((loginState) => {
+                    if (loginState) {
                         $('body').removeClass('loading');
                         $('body').removeClass('anonymous');
                         $('body').addClass('authorized');
@@ -94,10 +94,10 @@
                 });
     
                 scope.$watch('nxSystemsService.systems', function () {
-                    if (!scope.nxSystemsService.systems) {
+                    if (!nxSystemsService.systems) {
                         return;
                     }
-                    scope.systems = scope.nxSystemsService.systems;
+                    scope.systems = nxSystemsService.systems;
                     scope.singleSystem = (scope.systems.length === 1);
                     scope.systemCounter = scope.systems.length;
         
@@ -107,8 +107,8 @@
         };
     }
     
-    NxHeader.$inject = ['nxDialogsService', 'cloudApi', 'account', '$location', '$route',
-        'nxSystemsService', 'nxConfigService', '$rootScope'];
+    NxHeader.$inject = ['$rootScope', 'nxDialogsService', 'cloudApi', '$location', '$route',
+        'nxSystemsService', 'nxConfigService', 'nxAccountService'];
     
     angular
         .module('cloudApp')

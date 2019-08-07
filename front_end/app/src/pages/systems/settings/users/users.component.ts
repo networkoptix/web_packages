@@ -2,14 +2,14 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { Location }                             from '@angular/common';
 import { ActivatedRoute, Router }               from '@angular/router';
 import { NxConfigService }                      from '../../../../services/nx-config';
-import { TranslateService }                     from '@ngx-translate/core';
 
 import { NxPageService }             from '../../../../services/page.service';
 import { NxDialogsService }          from '../../../../dialogs/dialogs.service';
 import { NxSettingsService }         from '../settings.service';
 import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
 import { NxMenuService }             from '../../../../components/menu/menu.service';
-import { NxSystemService } from '../../../../services/system.service';
+import { NxAccountService }          from '../../../../services/account.service';
+import { NxSystemService }           from '../../../../services/system.service';
 
 @Component({
     selector   : 'nx-system-user-component',
@@ -39,9 +39,9 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         this.menuService.setSection('users');
     }
 
-    constructor(@Inject('account') private account: any,
-                @Inject('process') private process: any,
+    constructor(@Inject('process') private process: any,
                 private route: ActivatedRoute,
+                private accountService: NxAccountService,
                 private configService: NxConfigService,
                 private language: NxLanguageProviderService,
                 private pageService: NxPageService,
@@ -121,7 +121,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
 
     removeUser(user) {
         this.selectedUser = user;
-        if (this.account.email === user.email) {
+        if (this.accountService.getEmail() === user.email) {
             // return this.delete();
         }
         if (this.locked[user.email]) {

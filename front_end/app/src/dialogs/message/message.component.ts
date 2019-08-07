@@ -1,9 +1,10 @@
 import { Component, Inject, OnInit, Input, ViewEncapsulation, Renderer2, ViewChild } from '@angular/core';
-import { NgbModal, NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { EmailValidator, NgForm }                from '@angular/forms';
-import { NxConfigService }                       from '../../services/nx-config';
-import { WINDOW }                                from '../../services/window-provider';
-import { NxLanguageProviderService }             from '../../services/nx-language-provider';
+import { NgbModal, NgbActiveModal, NgbModalRef }                                     from '@ng-bootstrap/ng-bootstrap';
+import { EmailValidator, NgForm }                                                    from '@angular/forms';
+import { NxConfigService }                                                           from '../../services/nx-config';
+import { WINDOW }                                                                    from '../../services/window-provider';
+import { NxLanguageProviderService }                                                 from '../../services/nx-language-provider';
+import { NxAccountService }                                                          from '../../services/account.service';
 
 
 export interface MessageParams {
@@ -50,7 +51,7 @@ export class MessageModalContent {
                 private renderer: Renderer2,
                 private language: NxLanguageProviderService,
                 private configService: NxConfigService,
-                @Inject('account') private account: any,
+                private accountService: NxAccountService,
                 @Inject('process') private process: any,
                 @Inject('cloudApiService') private cloudApi: any,
                 @Inject(WINDOW) private window: Window,
@@ -105,7 +106,7 @@ export class MessageModalContent {
 
         this.setTopic(this.topics[0]);
 
-        this.account
+        this.accountService
             .get()
             .then((account) => {
                 this.userName = `${account.first_name} ${account.last_name}`;

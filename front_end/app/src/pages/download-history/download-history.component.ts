@@ -12,6 +12,7 @@ import isArray = require('core-js/fn/array/is-array');
 import angular = require('angular');
 import { NxConfigService }                   from '../../services/nx-config';
 import { NxLanguageProviderService }         from '../../services/nx-language-provider';
+import { NxAccountService }                  from '../../services/account.service';
 
 @Component({
     selector   : 'download-history',
@@ -44,9 +45,8 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
 
     constructor(@Inject(DOCUMENT) private document: any,
                 @Inject('cloudApiService') private cloudApi: any,
-                @Inject('authorizationCheckService') private authorizationService: any,
-                @Inject('account') private account: any,
                 @Inject('locationProxyService') private locationProxy: any,
+                private accountService: NxAccountService,
                 private configService: NxConfigService,
                 private route: ActivatedRoute,
                 private router: Router,
@@ -126,7 +126,7 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
                 this.section = this.routeParam;
             }
 
-            this.authorizationService
+            this.accountService
                 .requireLogin()
                 .then(result => {
                     if (!result) {
@@ -135,7 +135,7 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
                     }
 
                     if (!this.CONFIG.publicReleases) {
-                        this.account
+                        this.accountService
                             .get()
                             .then(result => {
                                 this.canViewRelease = result.is_superuser || result.permissions.indexOf(this.CONFIG.permissions.canViewRelease) > -1;

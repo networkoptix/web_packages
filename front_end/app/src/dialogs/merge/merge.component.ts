@@ -1,10 +1,11 @@
 import { Component, Inject, Input, Renderer2, ViewChild } from '@angular/core';
-import { NgbActiveModal }                                 from '@ng-bootstrap/ng-bootstrap';
-import { Location }                                       from '@angular/common';
-import { EmailValidator }                                 from '@angular/forms';
-import { NxConfigService }                                from '../../services/nx-config';
-import { NxLanguageProviderService }                      from '../../services/nx-language-provider';
-import {NxSystemsService} from "../../services/systems.service";
+import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
+import { Location }                  from '@angular/common';
+import { EmailValidator }            from '@angular/forms';
+import { NxConfigService }           from '../../services/nx-config';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import {NxSystemsService}            from "../../services/systems.service";
+import { NxAccountService }          from '../../services/account.service';
 
 @Component({
     selector   : 'nx-modal-merge-content',
@@ -42,8 +43,8 @@ export class MergeModalContent {
     constructor(public activeModal: NgbActiveModal,
                 public renderer: Renderer2,
                 private configService: NxConfigService,
+                private account: NxAccountService,
                 @Inject('process') private process: any,
-                @Inject('account') private account: any,
                 @Inject('system') private systemService: any,
                 @Inject('cloudApiService') private cloudApi: any,
                 private language: NxLanguageProviderService,
