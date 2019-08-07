@@ -14,6 +14,13 @@ export class NxCloudApiService {
         this.CONFIG = config.getConfig();
     }
 
+    checkResponseHasError(data: any) {
+        if (data && data.resultCode && data.resultCode !== this.CONFIG.responseOk) {
+            return data;
+        }
+        return false;
+    }
+
     getCommonPasswords(): Observable<any> {
         return this.http.get('/static/scripts/commonPasswordsList.json');
     }
@@ -33,6 +40,10 @@ export class NxCloudApiService {
         return this.http.get(this.CONFIG.apiBase + '/ipvd');
     }
 
+    getSystemAuth(systemId) {
+        return this.http.get(`${this.CONFIG.apiBase}/systems/${systemId}/auth`);
+    }
+
     reloadIPVD(): Observable<any> {
         return this.http.post(this.CONFIG.apiBase + '/ipvd', {});
     }
@@ -47,5 +58,16 @@ export class NxCloudApiService {
             return this.http.get(this.CONFIG.apiBase + '/systems/' + systemId);
         }
         return this.http.get(this.CONFIG.apiBase + '/systems');
+    }
+
+    users(systemId) {
+        return this.http.get(`${this.CONFIG.apiBase}/systems/${systemId}/users`);
+    }
+
+    unshare(systemId, userEmail) {
+        return this.http.post(this.CONFIG.apiBase + '/systems/' + systemId + '/users', {
+            user_email: userEmail,
+            role: this.CONFIG.accessRoles.unshare
+        });
     }
 }

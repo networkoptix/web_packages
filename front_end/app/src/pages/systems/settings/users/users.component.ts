@@ -9,6 +9,7 @@ import { NxDialogsService }          from '../../../../dialogs/dialogs.service';
 import { NxSettingsService }         from '../settings.service';
 import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
 import { NxMenuService }             from '../../../../components/menu/menu.service';
+import { NxSystemService } from '../../../../services/system.service';
 
 @Component({
     selector   : 'nx-system-user-component',
@@ -25,8 +26,8 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
     locked: any;
     removingUserProcess: any;
     selectedUser: any;
-    system: any;
     systemAvailable: boolean;
+    system: any;
 
     private setupDefaults() {
         this.CONFIG = this.configService.getConfig();
@@ -46,6 +47,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 private pageService: NxPageService,
                 private dialogs: NxDialogsService,
                 private settingsService: NxSettingsService,
+                private systemService: NxSystemService,
                 private menuService: NxMenuService,
                 location: Location) {
 
@@ -75,13 +77,13 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         this.CONFIG = this.configService.getConfig();
         this.settingsService.systemSubject.subscribe((system) => {
             this.system = system;
-            this.setUser();
-
-            this.systemAvailable = this.system.isAvailable && this.system.mergeInfo !== 'undefined';
+            this.systemAvailable = this.system.isAvailable && this.system.mergeInfo === undefined;
+            if (!this.selectedUser || !this.selectedUser.email) {
+                this.setUser();
+            }
         });
-
         this.removingUserProcess = this.process.init(() => {
-            return this.system.deleteUser(this.selectedUser);
+            return this.systemService.deleteUser(this.selectedUser);
         }, {
             successMessage: this.LANG.system.permissionsRemoved.replace('{{email}}', this.selectedUser.email),
             errorPrefix   : this.LANG.errorCodes.cantSharePrefix
@@ -149,8 +151,8 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
     setUser() {
         if (this.system && this.system.users.length > 0) {
             if (this.paramUser) {
-                this.selectedUser = this.system.users.filter((user) => {
-                    if (user.id === '{' + this.paramUser + '}') {
+                this.selectedUser = this.system.users.filter((user: any) => {
+                    if (user.id.replace(/{|}/g, '') === this.paramUser) {
                         return true;
                     }
                 })[0];
