@@ -134,7 +134,7 @@
     "CANNOT MERGE WITH OFFLINE SYSTEM TEXT": "%SYSTEM NAME% är offline och kan inte slås samman med den nuvarande.",
     "SYSTEMS MERGE FAILED TEXT": "Systemsammanslagning misslyckades",
     "SYSTEM MERGE COMPLETED TEXT": "Systemsammanslagning slutförd",
-    "MERGE CURRENT SYSTEM WITH TEXT": " Slå samman aktuellt system med ",
+    "MERGE CURRENT SYSTEM WITH TEXT": "Slå samman aktuellt system med",
     "YOU CAN ONLY MERGE AS OWNER TEXT": "Du kan slå samman cloud system där du är ägare.",
     "CHECKING TEXT": "Kontrollerar...",
     "ENTER PASSWORD TO CONTINUE TEXT": "Ange lösenord för ditt konto för att fortsätta",

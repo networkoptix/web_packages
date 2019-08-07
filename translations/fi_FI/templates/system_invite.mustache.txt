@@ -6,7 +6,7 @@ Tervetuloa %CLOUD_NAME%
 
 {{^message.sharer_name}}
 Sinua pyydetään liittymään %CLOUD_NAME%.
-Sinulle on myönnetty pääsy kohteeseen %{verification_name}.
+Sinulle on myönnetty pääsy kohteeseen {{message.system_name}}.
 {{/message.sharer_name}}
 
 Rekisteröi ja tarkastele järjestelmää: {{config.portal_url}}/Register/{{message.code}}

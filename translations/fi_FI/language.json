@@ -9,7 +9,7 @@
     "cancelButton": "Peruuta",
     "loginTitle": "Kirjaudu sisään %CLOUD_NAME%",
     "loginButton": "Kirjaudu sisään",
-    "logoutAuthorisedTitle": "Olet jo kirjautunut sisään.",
+    "logoutAuthorisedTitle": "Olet jo kirjautunut sisään",
     "logoutAuthorisedContinueButton": "Jatka",
     "logoutAuthorisedLogoutButton": "Kirjaudu ulos",
     "noClientDetectedTitle": "Asenna %VMS_NAME% nähdäksesi järjestelmän",
@@ -40,13 +40,13 @@
     "pageNotFound": "Sivua ei löydy"
   },
   "systemStatuses": {
-    "activated": "Aktivoitu",
+    "activated": "aktivoitu",
     "incompatible": "yhteensopimaton",
     "merging": "liitetään",
-    "notActivated": "Ei aktivoitu",
-    "online": "Yhteys muodostettu",
-    "offline": "Ei yhteyttä",
-    "unavailable": "Ei saatavilla"
+    "notActivated": "ei aktivoitu",
+    "online": "yhteys muodostettu",
+    "offline": "ei yhteyttä",
+    "unavailable": "ei saatavilla"
   },
   "accessRoles": {
     "disabled": {
@@ -194,7 +194,7 @@
     "confirmUnshareFromMeTitle": "Katkaise yhteys järjestelmään?",
     "confirmUnshareFromMeAction": "Katkaise yhteys",
     "confirmUnshare": "Tämä käyttäjä ei voi käyttää järjestelmää. Oletko varma?",
-    "confirmUnshareTitle": "Poista käyttäjä",
+    "confirmUnshareTitle": "Poista käyttäjä?",
     "confirmUnshareAction": "Poista",
     "successDisconnected": "Järjestelmä irrotetaan onnistuneesti %CLOUD_NAME%",
     "successDeleted": "Järjestelmä {{systemName}} poistetaan onnistuneesti tililtäsi",
@@ -205,9 +205,9 @@
     "unknownName": "Järjestelmän tuntematon nimi (pilviliitoksen aiheuttama)"
   },
   "account": {
-    "accountSavedSuccess": "Tilisi on onnistuneesti päivitetty.",
+    "accountSavedSuccess": "Tilisi on onnistuneesti päivitetty",
     "activationLinkSent": "Aktivointilinkki lähetetty",
-    "passwordChangedSuccess": "Tilisi on onnistuneesti päivitetty.",
+    "passwordChangedSuccess": "Tilisi on onnistuneesti päivitetty",
     "changePassword": "Vaihda salasana",
     "newPasswordLabel": "Uusi salasana",
     "saveChanges": "Tallenna"
@@ -232,9 +232,9 @@
       "lowStream": "Low stream",
       "transcoding": "Transkoodaus",
       "unknown": "Tuntematon",
-      "copyToClipboard": "Kopioi leikepöydälle",
-      "copyDefaultText": "Kopioi",
-      "copyActiveText": "Kopioitu leikepöydälle"
+      "copyToClipboard": "kopioi leikepöydälle",
+      "copyDefaultText": "kopioi",
+      "copyActiveText": "kopioitu leikepöydälle"
     },
     "systemOffline": "Järjestelmään ei saada yhteyttä",
     "systemHasNoCameras": "Ei kameroita",
@@ -261,17 +261,17 @@
     },
     "chromeCastWarning": "Chromecast on resursseja kuormittava ja saattaa aiheuttaa ongelmia palvelimellasi.",
     "voiceCommands": {
-      "play": "Toista",
-      "pause": "Tauko",
+      "play": "toista",
+      "pause": "tauko",
       "live": "go to live | show me live",
       "view": "view + [camera name]",
       "search": "find + [text for searchbar]",
-      "clear search": "Tyhjennä haku",
+      "clear search": "tyhjennä haku",
       "expand server": "expand server + [server name]",
       "collapse server": "collapse server + [server name]",
       "expand all servers": "laajenna kaikki palvelimet",
-      "collapse all servers": "Kokoa kaikki palvelimet",
-      "stop listening": "Lopeta kuuntelu",
+      "collapse all servers": "kokoa kaikki palvelimet",
+      "stop listening": "lopeta kuuntelu",
       "help": "help | show commands"
     }
   },

@@ -10,7 +10,8 @@
                     ng-click="mergeSystems()"><div class="ellipsis"> ผสานกับระบบอื่น </div></button>
         </p>
         <hr />
-        <button ng-disabled="currentlyMerging" class="btn btn-default" ng-click="disconnect()">ตัดการเชื่อมต่อจาก <span class="product-name"> {{PRODUCT_NAME}} </span></button>
+        <button ng-disabled="currentlyMerging" class="btn btn-default" ng-click="disconnect()">ตัดการเชื่อมต่อจาก
+<span class="product-name">&nbsp;%CLOUD_NAME%</span></button>
     </div>
 </div>
 <div class="card card-condensed" ng-if="!system.isMine">

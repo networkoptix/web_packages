@@ -196,7 +196,7 @@
     "confirmUnshare": "ผู้ใช้รายนี้จะไม่สามารถเข้าใช้งานระบบได้ คุณแน่ใจไหม?",
     "confirmUnshareTitle": "ลบผู้ใช้หรือไม่?",
     "confirmUnshareAction": "ลบ",
-    "successDisconnected": "ระบบถูกตัดการเชื่อมต่อเรียบร้อยแล้วจาก {{PRODUCT_NAME}}",
+    "successDisconnected": "ระบบถูกตัดการเชื่อมต่อเรียบร้อยแล้วจาก %CLOUD_NAME%",
     "successDeleted": "ระบบ {{systemName}} จะถูกลบออกจากบัญชีของคุณเรียบร้อยแล้ว",
     "mergeFailed": "การผสานระบบล้มเหลว",
     "mergeStart": "ระบบได้รวมเข้าด้วยกันเรียบร้อยแล้ว",
