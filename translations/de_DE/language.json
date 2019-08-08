@@ -12,23 +12,8 @@
     "logoutAuthorisedTitle": "Sie sind bereits eingeloggt",
     "logoutAuthorisedContinueButton": "Fortfahren",
     "logoutAuthorisedLogoutButton": "Abmelden",
-    "messageFailed": "Nachricht konnte nicht gesendet werden.",
-    "messageSent": "Die Nachricht wurde gesendet.",
     "noClientDetectedTitle": "Installieren Sie %VMS_NAME%, um Ihr System anzusehen",
     "download": "%VMS_NAME% herunterladen"
-  },
-  "messageDialog": {
-    "title": {
-      "integration": "E-Mail für {{product}}",
-      "ipvd_feedback_page": "Feedback zur Kameraseite",
-      "ipvd_feedback_device": "Feedback zu {{product}}"
-    },
-    "topic": {
-      "ipvd_feedback_page": "Feedback zur Kameraseite",
-      "ipvd_feedback_device": "Feedback zu {{product}}",
-      "contact_sales": "Kontaktiere Vertrieb für {{product}}",
-      "contact_support": "Kontaktiere Support für {{product}}"
-    }
   },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
@@ -56,7 +41,7 @@
   },
   "systemStatuses": {
     "activated": "aktiviert",
-    "incompatible": "Inkompatibel",
+    "incompatible": "inkompatibel",
     "merging": "zusammenführen",
     "notActivated": "nicht aktiviert",
     "online": "online",
@@ -248,7 +233,7 @@
       "transcoding": "Umkodierung",
       "unknown": "Unbekannt",
       "copyToClipboard": "in zwischenablage kopieren",
-      "copyDefaultText": "copieren",
+      "copyDefaultText": "kopieren",
       "copyActiveText": "in die zwischenablage kopiert"
     },
     "systemOffline": "System offline",
@@ -276,18 +261,18 @@
     },
     "chromeCastWarning": "Chromecast ist ressourcenintensiv und kann Probleme auf Ihrem Server verursachen.",
     "voiceCommands": {
-      "play": "abspielen",
-      "pause": "pause",
-      "live": "live gehen | live anzeigen",
-      "view": "ansicht + [kameraname]",
-      "search": "finden + [text für suchleiste]",
-      "clear search": "suche zurücksetzen",
-      "expand server": "server erweitern + [Servername]",
-      "collapse server": "server zusammenklappen + [Servername]",
-      "expand all servers": "alle Server erweitern",
-      "collapse all servers": "alle server zusammenklappen",
-      "stop listening": "abhören stoppen",
-      "help": "hilfe | befehle anzeigen"
+      "play": "Abspielen",
+      "pause": "Pause",
+      "live": "Live gehen | Live anzeigen",
+      "view": "Ansicht + [Kameraname]",
+      "search": "Finden + [Text für Suchleiste]",
+      "clear search": "Suche zurücksetzen",
+      "expand server": "Server erweitern + [Servername]",
+      "collapse server": "Server zusammenklappen + [Servername]",
+      "expand all servers": "Alle Server erweitern",
+      "collapse all servers": "Alle Server zusammenklappen",
+      "stop listening": "Abhören stoppen",
+      "help": "Hilfe | Befehle anzeigen"
     }
   },
   "recommendSupport": {

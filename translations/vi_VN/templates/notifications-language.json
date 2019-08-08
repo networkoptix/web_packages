@@ -9,16 +9,19 @@
     "emailSubject": "{{message.subject}}"
   },
   "contact_sales": {
-    "emailSubject": "Sales inquiry for {{message.product}}"
+    "emailSubject": "Yêu cầu bán hàng cho {{message.product}}"
   },
   "contact_support": {
-    "emailSubject": "Support request for {{message.product}}"
+    "emailSubject": "Yêu cầu hỗ trợ cho {{message.product}}"
+  },
+  "integration_feedback": {
+    "emailSubject": "Phản hồi cho {{message.product}}"
   },
   "ipvd_feedback": {
-    "emailSubject": "Camera Page Feedback for {{message.product}}"
+    "emailSubject": "Phản hồi Trang camera{{#message.product}} cho {{message.product}}{{/message.product}}"
   },
   "review_version": {
-    "emailSubject": "{{message.product_type}}: {{message.product}} has a new version to review"
+    "emailSubject": "{{message.product_type}}: {{message.product}} có phiên bản mới để xem xét"
   },
   "restore_password": {
     "emailSubject": "Đặt lại mật khẩu của bạn"

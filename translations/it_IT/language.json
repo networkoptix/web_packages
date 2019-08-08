@@ -5,30 +5,15 @@
   "vmsName": "%VMS_NAME%",
   "clientProtocol": "%CLIENT_PROTOCOL%:",
   "dialogs": {
-    "okButton": "Ok",
+    "okButton": "OK",
     "cancelButton": "Annulla",
     "loginTitle": "Accedi a %CLOUD_NAME%",
     "loginButton": "Accesso",
     "logoutAuthorisedTitle": "Ha già effettuato l'accesso",
     "logoutAuthorisedContinueButton": "Continua",
     "logoutAuthorisedLogoutButton": "Disconnetti",
-    "messageFailed": "Impossibile inviare il messaggio.",
-    "messageSent": "Il messaggio è stato inviato.",
     "noClientDetectedTitle": "Installa %VMS_NAME% per visualizzare il suo sistema",
     "download": "Scarica %VMS_NAME%"
-  },
-  "messageDialog": {
-    "title": {
-      "integration": "Email per {{product}}",
-      "ipvd_feedback_page": "Feedback per la pagina delle telecamere",
-      "ipvd_feedback_device": "Feedback su {{product}}"
-    },
-    "topic": {
-      "ipvd_feedback_page": "Feedback per la pagina delle telecamere",
-      "ipvd_feedback_device": "Feedback su {{product}}",
-      "contact_sales": "Contatta le vendite per {{product}}",
-      "contact_support": "Contatta l'assistenza per {{product}}"
-    }
   },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",

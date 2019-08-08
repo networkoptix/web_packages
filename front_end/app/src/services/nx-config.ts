@@ -37,6 +37,8 @@ export class NxConfigService {
 
             redirectAuthorised  : '/systems', // Page for redirecting all authorised users
             redirectUnauthorised: '/', // Page for redirecting all unauthorised users by default
+            redirect404: '/404',
+            redirectPaths: ['/register', '/restore_password', '/activate', '/404'],
 
             links: {
                 admin: {
@@ -203,7 +205,7 @@ export class NxConfigService {
                 useServerTime: true,
                 useSystemTime: true,
                 disableVolume: true,
-                reloadInterval: 5 * 1000,
+                reloadInterval: 30 * 1000,
                 leftPanelPreviewHeight: 128,
                 resetDisplayedTextTimer: 3 * 1000,
                 hlsLoadingTimeout: 90 * 1000,
@@ -258,10 +260,10 @@ export class NxConfigService {
                 }
             },
             defaultPlatformNames                 : {
-                'arm-file'        : 'Arm',
+                'arm-64-file'        : 'ARM 64bit',
                 'linux-x64-file'  : 'Linux x64',
                 'macos-file'      : 'Mac OS',
-                'rpi-file'        : 'Raspberry Pi',
+                'arm-32-file'        : 'ARM 32bit',
                 'windows-x64-file': 'Windows x64',
                 'downloadableInstructions': 'Instructions / Manual'
             },
@@ -271,7 +273,8 @@ export class NxConfigService {
             },
             ipvd: {
                 pagerMaxSize: 4,
-                firmwaresToShow: 5
+                firmwaresToShow: 4,
+                analyticsToShow: 4
             },
             search: {
                 maxLength   : 200,

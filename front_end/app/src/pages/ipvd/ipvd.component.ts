@@ -31,12 +31,14 @@ export class NxIpvdComponent implements OnInit {
     CONFIG: any = {};
     placeholder: string;
     data: any;
-    company: any;
+    company: string;
+    vmsName: string;
     vendors: any = [];
     resolution: string;
     itemsPerPage: number;
     query: string;
     cameras: any;
+    analytics: any;
     activeCamera: any;
     showAll: boolean;
     hardwareTypes: any[];
@@ -50,8 +52,10 @@ export class NxIpvdComponent implements OnInit {
     noResult: boolean;
     hasNoSearch: boolean;
     debug: any;
+    beta: any;
     uriPath: string;
     breakpoint: string;
+    showAnalytics: boolean;
 
 
     private setupDefaults() {
@@ -59,7 +63,7 @@ export class NxIpvdComponent implements OnInit {
             'vendor', 'model', 'hardwareType',
             'maxResolution', 'maxFps', 'primaryCodec', 'isAudioSupported',
             'isTwAudioSupported', 'isPtzSupported', 'isAptzSupported',
-            'isFisheye', 'isMdSupported', 'isIoSupported', 'count', 'resolutionArea'
+            'isFisheye', 'isMdSupported', 'isIoSupported', 'isAnalyticsSupported', 'count', 'resolutionArea'
         ];
 
         this.breakpoint = '(max-width: 767px)';
@@ -132,9 +136,14 @@ export class NxIpvdComponent implements OnInit {
             .getURI()
             .subscribe(params => {
                 this.params = params;
-                this.debug = params.debug === '' || false;
-                if (Object.keys(this.params).length !== 0) {
-                    this.hasNoSearch = false;
+                this.debug = (params.debug !== undefined);
+                this.beta = (params.beta !== undefined);
+
+                const numParams = Object.keys(this.params).length;
+                if (numParams !== 0) {
+                    this.hasNoSearch = (numParams === 1 && (this.params.debug || this.params.beta));
+                } else {
+                    this.hasNoSearch = true;
                 }
             });
 
@@ -146,10 +155,10 @@ export class NxIpvdComponent implements OnInit {
                     this.title.setTitle(this.lang.pageTitles.supportedDevices);
 
                     this.company = this.CONFIG.companyName;
+                    this.vmsName = this.CONFIG.vmsName;
                     this.placeholder = this.lang.search.search_ipvd;
 
-                    // add hardware types and tags
-                    this.addFilterTags();
+                    // add hardware types and resolutions
                     this.addFilterTypes();
                     this.addFilterResolutions();
 
@@ -167,14 +176,31 @@ export class NxIpvdComponent implements OnInit {
     addFilterResolutions() {
         this.resolutions = this.CONFIG.ipvd.supportedResolutions;
 
-        this.filterModel.selects = [
-            {
-                id      : 'resolution',
-                label   : this.lang.search.minResolution,
-                items   : this.resolutions,
-                selected: this.resolutions[0]
-            }
-        ];
+        this.filterModel.selects.push(
+                {
+                    id      : 'resolution',
+                    label   : this.lang.search.minResolution,
+                    items   : this.resolutions,
+                    selected: this.resolutions[0]
+                });
+    }
+
+    addAnalyticsEvents() {
+        if (this.showAnalytics && this.analytics) {
+            this.analytics = this.analytics.map(v => (
+                    { id: v.replace(/\s/g, ''), label: v }
+            ));
+
+            this.filterModel.multiselects.push(
+                    {
+                        id                  : 'analytics',
+                        label               : this.lang.search.analytics,
+                        searchLabel         : this.lang.search.analyticsSelected,
+                        searchLabelSingular : '',
+                        items               : this.analytics,
+                        selected            : []
+                    });
+        }
     }
 
     setActiveCamera() {
@@ -187,6 +213,11 @@ export class NxIpvdComponent implements OnInit {
 
     addFilterTags() {
         this.filterModel.tags = this.CONFIG.ipvd.searchTags;
+
+        if (!this.showAnalytics) {
+            this.filterModel.tags = this.filterModel.tags.filter((tag) => tag.id !== 'isAnalyticsSupported');
+        }
+
         this.filterModel.tags.forEach(tag => tag.label = this.lang.ipvd[tag.id]);
     }
 
@@ -223,6 +254,13 @@ export class NxIpvdComponent implements OnInit {
             .getIPVD()
             .subscribe(data => {
                 this.cameras = data.cameras;
+
+                this.analytics = data.analytics;
+
+                this.showAnalytics = this.CONFIG.ipvd.showAnalyticsEvents || this.debug || this.beta;
+                this.addAnalyticsEvents();
+                this.addFilterTags();
+
                 this.vendors = data.vendors;
                 this.vendors.sort(NxUtilsService.byParam((elm) => {
                     return elm.name.toLowerCase();
@@ -308,7 +346,12 @@ export class NxIpvdComponent implements OnInit {
                 this.noResult = false;
                 this.camerasTable = [];
                 this.resetActiveCamera();
-                this.uri.resetURI(this.uriPath);
+
+                const queryParams: Params = {};
+                // we need these to be only defined or undefined
+                queryParams.debug = (this.debug) ? true : undefined;
+                queryParams.beta = (this.beta) ? true : undefined;
+                this.uri.resetURI(this.uriPath, queryParams);
             }
         }
     }
@@ -346,34 +389,6 @@ export class NxIpvdComponent implements OnInit {
 
             if (this.breakpointObserver.isMatched(this.breakpoint)) {
                 this.mobileDetailMode = true;
-            }
-
-            if (typeof this.activeCamera.firmwares === 'string') {
-                const firmwares = this.activeCamera.firmwares;
-                let firmwaresArray = [];
-
-                let maxFirmwareCount = 0,
-                    totalCameraCount = 0;
-
-                Object.keys(firmwares).forEach(key => {
-                    const count = firmwares[key];
-                    firmwaresArray.push({ name: key, count });
-
-                    totalCameraCount += count;
-                    if (count > maxFirmwareCount) {
-                        maxFirmwareCount = count;
-                    }
-                });
-
-                firmwaresArray = firmwaresArray.sort((a, b) => {
-                    return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
-                });
-
-                firmwaresArray.reverse();
-
-                this.activeCamera.maxFirmwareCount = maxFirmwareCount;
-                this.activeCamera.totalCameraCount = totalCameraCount;
-                this.activeCamera.firmwares = firmwaresArray;
             }
 
             this.toggleCamview = true;

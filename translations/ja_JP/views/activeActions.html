@@ -8,7 +8,7 @@
         </h1>
 
         <h1 class="process-success" ng-if="!activate.success && !loading">
-            アカウントは既にアクティブ済か確認コードが正しくありません
+            アカウントは既に有効化されているか、確認コードが正しくありません
         </h1>
     </div>
 
@@ -48,8 +48,8 @@
                           ng-if="reactivateAccount.email.$touched && reactivateAccount.email.$error.email">有効なEmailを入力してください</span>
                 </div>
             </div>
-            <div class="form-group">
-                <div class="offset-sm-2 col-sm-10" ng-class="{ 'offset-sm-4 col-sm-8' : data.email}" >
+            <div class="form-group mt-3">
+                <div class="offset-sm-2 col-sm-10 offset-sm-4 col-sm-8" >
                     <process-button process="reactivate"
                                     form="reactivateAccount"
                                     button-text="$root.L.activeActions.sendConfirm"></process-button>
@@ -65,7 +65,7 @@
     </div>
 
     <div ng-if="restoring">
-        <h1>パスワードリセット</h1>
+        <h1>パスワードを再設定する</h1>
         <form name="restorePassword" class="form-horizontal" novalidate>
             <div class="form-group" validate-field>
                 <div class="col-md-4 justify-content-start justify-content-md-end">

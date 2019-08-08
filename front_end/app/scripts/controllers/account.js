@@ -6,10 +6,10 @@
         .module('cloudApp')
         .controller('AccountCtrl', AccountCtrl);
 
-    AccountCtrl.$inject = [ '$scope', 'cloudApi', 'process', '$routeParams', 'account', 'languageService',
+    AccountCtrl.$inject = [ '$scope', '$base64', '$location', 'cloudApi', 'process', '$routeParams', 'account', 'languageService',
         'systemsProvider', 'authorizationCheckService', '$localStorage', 'dialogs', 'nxPageService' ];
 
-    function AccountCtrl($scope, cloudApi, process, $routeParams, account, languageService,
+    function AccountCtrl($scope, $base64, $location, cloudApi, process, $routeParams, account, languageService,
                          systemsProvider, authorizationCheckService, $localStorage, dialogs, nxPageService) {
 
         $scope.lang = languageService.lang;
@@ -19,15 +19,41 @@
             $localStorage.langChanged = false;
             dialogs.notify(languageService.lang.account.accountSavedSuccess, 'success', false);
         }
-
-        authorizationCheckService
-            .requireLogin()
-            .then(function (account) {
-                $scope.account = account;
-            });
-
+    
         $scope.accountMode = $routeParams.accountMode;
         $scope.passwordMode = $routeParams.passwordMode;
+
+        var auth;
+        if ($routeParams.auth) {
+            try {
+                auth = $base64.decode($routeParams.auth);
+            } catch (exception) {
+                auth = false;
+                console.error(exception);
+            }
+            if (auth) {
+                const index = auth.indexOf(':');
+                const tempLogin = auth.substring(0, index);
+                const tempPassword = auth.substring(index + 1);
+            
+                authorizationCheckService
+                    .login(tempLogin, tempPassword, false)
+                    .then(function () {
+                        $scope.userEmail = account.getEmail();
+                        $scope.account = account;
+                    })
+                    .finally(function () {
+                        $location.search('auth', undefined);
+                    });
+            }
+        } else {
+            authorizationCheckService
+                .checkLoginState()
+                .then(function () {
+                    $scope.account = account;
+                    $scope.userEmail = account.getEmail();
+                })
+        }
     
         if ($scope.accountMode) {
             nxPageService.setPageTitle($scope.lang.pageTitles.account);

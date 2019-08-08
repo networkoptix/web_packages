@@ -1,3 +1,6 @@
+import collections
+from math import log2
+
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from django.core.cache import cache, caches
@@ -43,6 +46,7 @@ def get_settings_from_cache():
         'trafficRelayHost': settings.TRAFFIC_RELAY_HOST,
         'publicDownloads': customization_cache['public_downloads'],
         'publicReleases': customization_cache['public_releases'],
+        'showAnalyticsEvents': customization_cache['show_analytics_events'],
         'sortSupportedDevicesByPopularity': customization_cache['sort_supported_devices_by_popularity'],
         'supportLink': customization_cache['support_link'],
         'privacyLink': customization_cache['privacy_link'],
@@ -286,10 +290,11 @@ def get_ipvd(request):
         # check cache and return cached item if any
         ipvd = cache.get("ipvd", dict())
 
-        if all(k in ipvd for k in ("cameras", "vendors", "num_cameras")):
+        if all(k in ipvd for k in ("cameras", "vendors", "analytics", "num_cameras")):
             return Response({
                 "cameras": ipvd["cameras"],
                 "vendors": ipvd["vendors"],
+                "analytics": ipvd["analytics"],
                 "num_cameras": ipvd["num_cameras"],
                 "cached": True
             })
@@ -299,10 +304,45 @@ def get_ipvd(request):
         cameras = requests.get(url, "[]").json()
 
         # build vendor list
+        analytics_events = set()
         vendors_dict = {}
         camera_names = []
 
         for camera in cameras:
+            camera["firmwares"] = json.loads(camera["firmwares"]) if camera["firmwares"] else {}
+
+            firmwares = []
+            max_firmware_count = 0
+            total_camera_count = 0
+
+            for firmware in camera["firmwares"]:
+                if re.match('[<>]+', firmware):
+                    continue
+
+                count = camera["firmwares"][firmware]
+
+                firmwares.append({'count': count, 'name': firmware})
+
+                total_camera_count += count
+                if count > max_firmware_count:
+                    max_firmware_count = count
+
+            for firmware in firmwares:
+                percentage = round((firmware["count"] / total_camera_count) * 100)
+                percentage = str(percentage) + "%" if percentage else "< 1"
+                firmware["percentage"] = percentage
+
+                pow_var = log2(200) / log2(max_firmware_count) if max_firmware_count > 200 else 1
+                length = round(100 * pow(firmware["count"] / max_firmware_count, pow_var))
+                length = length if length >= 2 else 2
+                firmware["barLength"] = length
+
+            firmwares.sort(key=lambda x: x["count"], reverse=True)
+
+            camera["firmwares"] = firmwares
+            camera["maxFirmwareCount"] = max_firmware_count
+            camera["totalCameraCount"] = total_camera_count
+
             camera["isH265"] = camera["primaryCodec"] == 'H.265'
 
             if camera["hardwareType"] == "Camera" and camera["isMultiSensor"]:
@@ -329,14 +369,20 @@ def get_ipvd(request):
                     alias = alias.strip()
                     camera_names.append(camera["vendor"].replace(" ", "") + alias.replace(" ", ""))
 
+            for event in camera['analyticsEvents']:
+                analytics_events.add(event)
+
         num_cameras = len(set(camera_names))
         # ---------------------
 
         vendors = list(vendors_dict.values())
+        analytics = list(analytics_events)
+        analytics.sort()
 
         ipvd = {
             "cameras": cameras,
             "vendors": vendors,
+            "analytics": analytics,
             "num_cameras": num_cameras
         }
 

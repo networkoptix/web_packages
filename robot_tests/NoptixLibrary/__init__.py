@@ -79,6 +79,38 @@ class NoptixLibrary(object):
             time.sleep(.2)
         raise AssertionError(not_found)
 
+    def wait_until_element_has_class(self, locator, expected, timeout=10):
+        seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
+        timeout = timeout + time.time()
+        not_found = None
+
+        while time.time() < timeout:
+            try:
+                element = seleniumlib.find_element(locator)
+                classAttribute = element.get_attribute('class')
+                if expected in classAttribute:
+                    return
+            except:
+                not_found = "No element found with class " + expected
+            time.sleep(.2)
+        raise AssertionError(not_found)
+
+    def wait_until_element_does_not_have_class(self, locator, expected, timeout=10):
+        seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
+        timeout = timeout + time.time()
+        not_found = None
+
+        while time.time() < timeout:
+            try:
+                element = seleniumlib.find_element(locator)
+                classAttribute = element.get_attribute('class')
+                if expected not in classAttribute:
+                    return
+            except:
+                found = "Element found with class " + expected
+            time.sleep(.2)
+        raise AssertionError(found)
+
     def check_online_or_offline(self, elements, offlineText):
         for element in elements:
             try:

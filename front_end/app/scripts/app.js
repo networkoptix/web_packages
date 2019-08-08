@@ -114,6 +114,7 @@ window.L = {};
                         
                         angular.extend(CONFIG, appState);
                         
+                        CONFIG.ipvd.showAnalyticsEvents = response.showAnalyticsEvents;
                         CONFIG.ipvd.sortSupportedDevicesByPopularity = response.sortSupportedDevicesByPopularity;
                         CONFIG.ipvd.supportedResolutions = response.supportedResolutions;
                         CONFIG.ipvd.supportedHardwareTypes = response.supportedHardwareTypes;

@@ -63,7 +63,7 @@
             requireLogin: function () {
                 var res = this.get();
                 res.catch(function () {
-                    dialogs.login(true).catch(function () {
+                    dialogs.login(true, true).catch(function () {
                         $location.path(CONFIG.redirectUnauthorised);
                     });
                 });
@@ -134,7 +134,7 @@
             },
             checkUnauthorized: function (data) {
                 if (data && data.data && data.data.resultCode == 'notAuthorized') {
-                    this.logout();
+                    this.logout(true);
                     return false;
                 }
                 return true;

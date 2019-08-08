@@ -1,5 +1,4 @@
 from django.views.decorators.http import require_http_methods
-from django.views import defaults
 from django.contrib import messages
 from django.contrib.auth.decorators import permission_required
 from django.core.exceptions import PermissionDenied
@@ -11,7 +10,7 @@ from rest_framework.decorators import api_view
 import os
 import json
 from cloud import settings
-from api.helpers.exceptions import APIRequestException, APINotFoundException, ErrorCodes, api_success, require_params
+from api.helpers.exceptions import APIRequestException, APINotFoundException, api_success, handle_exceptions, require_params
 from api.helpers.permissions import make_customization_visible_to_user
 from cms.controllers import filldata, generate_structure, modify_db, structure
 from cms.forms import *
@@ -336,14 +335,14 @@ def download_current_structure(request, product_id):
             raise PermissionDenied
         data = generate_structure.from_database(product, use_actual_values)
         content = json.dumps(data, ensure_ascii=False, indent=4, separators=(',', ': '))
-        return response_attachment(content, 'structure.json', 'application/json')
-    return APIRequestException("Product not given or not found")
+        return response_attachment(content, 'structure.json', 'application')
+    return HttpResponseBadRequest("Product not given or found")
 
 
 @require_http_methods(["GET"])
 @permission_required('cms.change_product')
 def download_file(request, path):
-    product = get_cloud_portal_product()
+    product = Product.objects.filter(id=request.GET.get("product_id")).first()
 
     if not UserGroupsToProductPermissions.check_permission(request.user, product, 'cms.edit_content'):
         raise PermissionDenied
@@ -354,7 +353,7 @@ def download_file(request, path):
     file = filldata.read_customized_file(path, product, language_code, version_id, preview)
     if file:
         return response_attachment(file, os.path.basename(path), "application")
-    raise defaults.page_not_found("File does not exist")
+    raise HttpResponseBadRequest("File does not exist")
 
 
 @require_http_methods(["GET"])
@@ -368,16 +367,14 @@ def download_package(request, product_id):
     version_id = request.GET['version_id'] if 'version_id' in request.GET else None
     preview = 'draft' in request.GET
 
-    if not version_id:
-        latest_review = ProductCustomizationReview.objects.filter(product=product)
+    if not version_id and not preview:
+        latest_review = ProductCustomizationReview.objects.filter(version__product=product)
         if not preview:
             latest_review = latest_review.filter(state=ProductCustomizationReview.REVIEW_STATES.accepted)
 
         latest_review = latest_review.last()
-        if not latest_review:
-            raise APINotFoundException("There are no versions available for this product")
-
-        version_id = latest_review.version.id
+        if latest_review:
+            version_id = latest_review.version.id
 
     zipped_data = filldata.get_zip_package(product, preview, version_id)
     file_name = f"{product.name}.zip"
@@ -388,8 +385,9 @@ def download_package(request, product_id):
 
 @api_view(["GET"])
 @permission_required('cms.change_product')
+@handle_exceptions
 def get_product_ids_by_product_type(request):
-    require_params(request, ("name", "product_type"))
+    require_params(request, ("name", "type"))
 
     name = request.GET["name"]
     customization = request.GET["customization"]

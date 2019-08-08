@@ -14,11 +14,14 @@
   "contact_support": {
     "emailSubject": "Support aanvraag voor {{message.product}}"
   },
+  "integration_feedback": {
+    "emailSubject": "Feedback over {{message.product}}"
+  },
   "ipvd_feedback": {
-    "emailSubject": "Camera pagina feedback voor {{message.product}}"
+    "emailSubject": "Feedback over de camera pagina{{#message.product}} voor {{message.product}}{{/message.product}}"
   },
   "review_version": {
-    "emailSubject": "{{message.product_type}}: {{message.product}} has a new version to review"
+    "emailSubject": "{{message.product_type}}: {{message.product}} heeft een nieuwe versie om te beoordelen"
   },
   "restore_password": {
     "emailSubject": "Stel je wachtwoord opnieuw in"

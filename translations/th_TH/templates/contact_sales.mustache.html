@@ -1,9 +1,4 @@
 <h1>สวัสดี {{ message.userFullName }}</h1>
 
-<a href="mailto:{{ message.sender_email }}">{{ message.sender_name }}</a>has the following sales question about the {{ message.product }}:
+<a href="mailto:{{ message.sender_email }}">{{ message.sender_name }}</a>มีคำถามเกี่ยวกับการขายดังต่อไปนี้เกี่ยวกับ {{ message.product }}:
 <div>{{ message.message }}</div>
-<br />
-<hr />
-<div>
-    ผู้ใช้สามารถติดต่อได้: {{ message.sender_to_be_contacted}}
-</div>

@@ -1,28 +1,30 @@
 {
 	"search": {
 		"Search": "搜尋",
-		"search_ipvd": "Search by model or manufacturer",
-		"filter applied": "filter applied",
-		"filters applied": "filters applied",
-		"Any": "Any",
-		"selected": "selected",
-		"vendor": "Manufacturer",
-		"vendors": "manufacturers",
+		"search_ipvd": "按型號或製造商搜尋",
+		"filter applied": "已使用的篩選條件",
+		"filters applied": "已使用的篩選條件",
+		"Any": "任何",
+		"selected": "已選取",
+		"vendor": "製造商",
+		"vendors": "製造商",
 		"hardwareType": "型態",
-		"hardwareTypes": "types",
-		"minResolution": "Minimum Resolution"
+		"hardwareTypes": "類型",
+		"minResolution": "最低解析度",
+		"analytics": "分析",
+		"analyticsSelected": "分析事件"
 	},
 	"cameraFilters": {
-		"ptz": "PTZ cameras",
-		"aptz": "Cameras with advanced PTZ",
-		"fisheye": "Fisheye cameras",
-		"H265": "H.265 Cameras",
-		"IO": "I / O modules",
-		"multiSensor": "Multi-sensor cameras",
-		"TwWayAudio": "2-way audio devices",
-		"audio": "Cameras with audio",
-		"encoder": "Encoders",
-		"highRes": "Extra high resolution cameras"
+		"ptz": "PTZ攝影機",
+		"aptz": "含進階PTZ功能攝影機",
+		"fisheye": "魚眼攝影機",
+		"H265": "H.265攝影機",
+		"IO": "I/O 模組",
+		"multiSensor": "多感測器攝影機",
+		"TwWayAudio": "雙向語音設備",
+		"audio": "含語音功能攝影機",
+		"encoder": "編碼器",
+		"highRes": "超高解析度攝影機"
 	},
 	"downloads": {
 		"mobile": {
@@ -83,7 +85,7 @@
 			"server": "僅伺服器",
 			"bundle": "用戶端和伺服器",
 			"servertool": "設定工具",
-			"package": "Package"
+			"package": "套件"
 		},
 		"releasesTypes": {
 			"beta": "Beta",
@@ -96,68 +98,100 @@
 		}
 	},
 	"ipvd": {
-		"count": "Count",
-		"vendor": "Manufacturer",
+		"resolutionArea": "區域",
+		"count": "總計",
+		"vendor": "製造商",
 		"model": "型號",
 		"hardwareType": "型態",
-		"maxResolution": "Max Resolution",
-		"maxFps": "Max FPS",
-		"primaryCodec": "Codec",
+		"maxResolution": "最大解析度",
+		"maxFps": "每秒最大幀數（FPS）",
+		"primaryCodec": "編碼器",
 		"isAudioSupported": "音源",
-		"isTwAudioSupported": "2-way Audio",
+		"isTwAudioSupported": "雙向語音",
 		"isPtzSupported": "PTZ",
-		"isAptzSupported": "Advanced PTZ",
-		"isAptzSupportedShort": "Adv. PTZ",
+		"isAptzSupported": "進階PTZ",
+		"isAptzSupportedShort": "進階PTZ",
 		"isFisheye": "魚眼",
 		"isMdSupported": "位移",
 		"isIoSupported": "I/O",
 		"isH265": "H.265",
-		"isMultiSensor": "Multi Sensor",
+		"isMultiSensor": "多感測器",
+		"isAnalyticsSupported": "分析",
 		"camera": "攝影機",
-		"multiSensorCamera": "Multi-Sensor Camera",
-		"encoder": "Encoder",
+		"multiSensorCamera": "多感測器攝影機",
+		"encoder": "編碼器",
 		"dvr": "DVR",
-		"other": "Other",
-		"PTZ cameras": "PTZ cameras",
-		"Advanced PTZ cameras": "Advanced PTZ cameras",
-		"Fisheye Cameras": "Fisheye Cameras",
-		"Cameras supporting H.265": "Cameras supporting H.265",
-		"I / O modules": "I / O modules",
-		"Multisensor Cameras": "Multisensor Cameras",
-		"Cameras with 2-way audio": "Cameras with 2-way audio",
-		"Extra high resolution cameras": "Extra high resolution cameras",
+		"other": "其它",
+		"PTZ cameras": "PTZ攝影機",
+		"Advanced PTZ cameras": "進階PTZ攝影機",
+		"Fisheye Cameras": "魚眼攝影機",
+		"Cameras supporting H.265": "支援H.265攝影機",
+		"I / O modules": "I/O 模組",
+		"Multisensor Cameras": "多感測器攝影機",
+		"Cameras with 2-way audio": "雙向語音攝影機",
+		"Extra high resolution cameras": "超高解析度攝影機",
 		"feedback": {
-			"a_Please": "Please",
-			"b_Link": "submit a request",
-			"c_Info": "for additional questions/concerns regarding supported devices."
-		}
+			"a_Please": "請",
+			"b_Link": "提交申請",
+			"c_Info": "有關支援設備的其他問題/疑慮。"
+		},
+		"disclaimer": "此列表僅限於在 {{vmsName}} 上找到的設備，使用者已同意將設備規格自動回報給 {{companyName}}。不會收集任何個人信息，每個使用者都將完全匿名。"
 	},
 	"integration": {
-		"previewRibbonText": "This page is a preview of the latest changes, and it doesn't match publicly available version.",
-		"backToEditText": "Back to the editing interfaces",
-		"Access Control": "Access Control",
-		"Connector": "Connector",
-		"Data Analytics": "Data Analytics",
-		"Drone": "Drone",
+		"previewRibbonText": "此頁面可預覽最新版本的更新，與公開版本不相符。",
+		"backToEditText": "返回編輯頁面",
+		"Access Control": "門禁管理",
+		"Connector": "連接器",
+		"Data Analytics": "數據分析",
+		"Drone": "無人機",
 		"Health Monitor": "資源檢視器",
 		"Storage": "儲存裝置"
 	},
 	"messageDialogPlaceholders": {
-		"feedback": "Make sure you include your camera model and manufacturer..."
+		"feedback": "請確認已包含您的攝影機型號和製造商......"
 	},
 	"pageTitles": {
-		"supportedDevices": "Supported Devices",
-		"integrations": "Integrations"
+		"supportedDevices": "支援設備",
+		"integrations": "整合"
 	},
 	"dialogs": {
 		"merge": {
 			"connectToCloud": "請將要與此合併的系統連接到 <strong>{{cloudName}}</strong> 或使用 <strong>{{vmsName}}</strong> 客戶端進行本地合併。",
-			"mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from the <strong>{{primarySystem}}</strong>.",
-			"primaryCannotMerge": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} System.",
-			"primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}.",
-			"secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
+			"mergeConfirmation": "您即將合併系統 <strong>{{primarySystem}}</strong> 和 <strong>{{secondarySystem}}</strong>。設定和名稱將取自 <strong>{{primarySystem}}</strong>。",
+			"primaryCannotMerge": "系統 {{targetSystem}} 具有較新的軟件版本，與當前系統不相容。將當前系統更新至<a href=\"/download\" target=\"_blank\" translate>最新版本</a>，以將其與 {{targetSystem}} 系統合併。",
+			"primarySystemOffline": "系統 {{primarySystem}} 處於離線狀態, 無法合併系統{{targetSystem}}。",
+			"secondaryCannotMerge": "系統 {{targetSystem}} 具有較舊的軟件版本，與當前系統不相容。請將 {{targetSystem}} 更新到 <a href=\"/download\" target=\"_blank\" translate>最新版本</a>, 以將與其當前版本合併。",
 			"systemOffline": "系統 {{targetSystem}} 處於離線狀態, 無法與當前系統合併。",
 			"systemUnavailable": "系統 {{targetSystem}} 目前無法連上。請在幾分鐘後再試一次"
+		},
+		"message": {
+			"failedToSend": "訊息發送失敗",
+			"sent": "訊息已發送",
+			"title": {
+				"integration": "與 {{companyName}} 聯繫",
+				"ipvd_feedback_page": "攝影機頁面的回饋意見",
+				"ipvd_feedback_device": "{{product}} 的回饋意見"
+			},
+			"topic": {
+				"contact_sales": "聯繫 {{product}} 業務",
+				"contact_support": "聯繫 {{product}} 技術支援",
+				"integration_feedback": "整合 {{product}} 的回饋意見",
+				"ipvd_feedback_page": "攝影機頁面的回饋意見",
+				"ipvd_feedback_device": "{{product}} 的回饋意見"
+			}
 		}
-	}
+	},
+	"privacyPolicy": {
+		"integration": "提交表單即表示您同意與{{INTEGRATION_COMPANY}} 和/或 %COMPANY_NAME%聯繫。\n您可在<a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">瀏覽 {{INTEGRATION_COMPANY}} 隱私政策 </a> 和 %COMPANY_NAME% 隱私政策 <a href=\"%PRIVACY_LINK%\" target=\"blank\">這裡</a> 可了解如何撤銷您的同意。",
+		"ipvd": "提交表單即表示同意 %COMPANY_NAME%與您聯繫。\n您可在<a href=\"%PRIVACY_LINK%\" target=\"blank\">瀏覽 %COMPANY_NAME% 隱私政策</a> ，其中包含如何撤回同意。"
+	},
+	"testedVersionLabel": "測試 {{vmsName}} 版本：",
+	"testedVersionsLabel": "測試 {{vmsName}} 版本：",
+	"About %CLOUD_NAME%": "關於 %CLOUD_NAME%",
+	"Download %VMS_NAME%": "下載 %VMS_NAME%",
+	"Integrations": "整合",
+	"Privacy": "隱私政策",
+	"Support": "支援",
+	"Supported Devices": "支援設備",
+	"Terms": "條款"
 }

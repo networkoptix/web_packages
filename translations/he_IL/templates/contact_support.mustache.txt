@@ -1,6 +1,3 @@
 שלום, {{ message.userFullName }}
-{{ message.sender_name}} ({{ message.sender_email }}) has the following support question for the {{ message.product }}:
+{{ message.sender_name}} ({{ message.sender_email }}) יש שאלה מיועדת למחלקת התמיכה הנוגעת ל {{ message.product }}:
 <pre>{{ message.message }}</pre>
-
-------------------------------------------
-ניתן ליצור קשר עם המשתמש: {{ message.sender_to_be_contacted}}

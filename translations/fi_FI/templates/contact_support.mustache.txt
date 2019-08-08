@@ -1,0 +1,3 @@
+Hei, {{ message.userFullName }}
+{{ message.sender_name}} ({{ message.sender_email }}): llä on seuraava tukeen liittyvä kysymys {{ message.product }}: lle:
+<pre>{{ message.message }}</pre>

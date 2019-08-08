@@ -16,6 +16,7 @@ import re
 import json
 import sys
 from util.config import get_config
+from cloud.logger import downgrade_unauthorized_requests
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LOCAL_ENVIRONMENT = 'runserver' in sys.argv or os.getenv('LOCAL_ENV', False)
@@ -232,6 +233,12 @@ USE_TZ = False
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'filters': {
+        'downgrade_unauthorized': {
+            '()': 'django.utils.log.CallbackFilter',
+            'callback': downgrade_unauthorized_requests
+        }
+    },
     'formatters': {
         'verbose': {
             'format': '[%(levelname)s] %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
@@ -244,6 +251,7 @@ LOGGING = {
         'console': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
+            'filters': ['downgrade_unauthorized'],
             'formatter': 'verbose'
         },
         'mail_admins': {
@@ -420,6 +428,7 @@ CSRF_COOKIE_SECURE = not LOCAL_ENVIRONMENT
 USE_ASYNC_QUEUE = True
 
 ADMINS = conf['admins']
+LOGOUT_REDIRECT_URL = "/"
 
 EMAIL_SUBJECT_PREFIX = ''
 EMAIL_HOST = conf['smtp']['host']

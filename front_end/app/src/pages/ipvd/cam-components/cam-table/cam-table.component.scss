@@ -50,6 +50,10 @@
     white-space   : nowrap;
     margin-bottom : 0;
     
+    .table-row-spacer {
+      height : .5rem;
+    }
+    
     thead {
       background-color : $additional_light1;
       border-bottom    : 1px solid $light3;
@@ -104,8 +108,8 @@
     }
     
     tbody {
-      padding : .5rem 0;
-      display : table-cell;
+      //padding : .5rem 0;
+      //display : table-cell;
       
       tr {
         height : rem(24px);

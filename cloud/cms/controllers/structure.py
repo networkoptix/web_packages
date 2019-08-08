@@ -18,9 +18,12 @@ def deprecate_contexts_and_data_structures_for_product_type(product_type):
     DataStructure.objects.filter(context__product_type=product_type).update(deprecated=True)
 
 
-def find_or_add_product_type(product_type, name=""):
-
-    return ProductType.objects.get_or_create(name=name, type=product_type)[0]
+def find_or_add_product_type(product_type_type, name="", single_customization=True):
+    product_type, created = ProductType.objects.get_or_create(name=name, type=product_type_type)
+    if created:
+        product_type.single_customization = single_customization
+        product_type.save()
+    return product_type
 
 
 def find_or_add_product_with_single_customization(name, customization, product_type_type, product_type_name):
@@ -190,7 +193,7 @@ def process_zip(file_descriptor, user, product, update_structure, update_content
             if update_content:
                 # try to parse datastructures from the file using template
                 if not context.contexttemplate_set.exists():  # no template - nothing we can do
-                    log_messages.append(('error', f'Ignored: {name} (context has to template)'))
+                    log_messages.append(('error', f'Ignored: {name} (context has no template)'))
                     continue
                 # here we have template for context and file_content - which are relatively close.
                 # Ideally, the only difference is specific data values
@@ -323,6 +326,7 @@ def update_data_structure(context_id, has_lang, record, order, preserve_file=Fal
     data_structure.advanced = record.get("advanced", False)
     data_structure.optional = record.get("optional", False)
     data_structure.public = record.get("public", True)
+    data_structure.protected = record.get("protected", False)
     data_structure.description = record.get("description", "")
     data_structure.type = DataStructure.get_type_by_name(record.get("type", "text"))
 

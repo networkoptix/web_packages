@@ -170,16 +170,16 @@ export class LoginModalContent implements OnInit {
         });
     }
 
-    close(redirect?) {
+    close() {
         // prevent unnecessary reload
-        if (redirect && this.document.location.pathname !== this.config.redirectUnauthorised) {
+        if (!this.keepPage && this.account.email === undefined) {
             // TODO: Repace this once 'register' page is moved to A5
             // AJS and A5 routers freak out about route change *****
             // this.location.go(this.config.redirectUnauthorised);
             this.document.location.href = this.config.redirectUnauthorised;
         }
 
-        this.activeModal.close();
+        this.activeModal.close('canceled');
     }
 }
 
@@ -191,14 +191,17 @@ export class LoginModalContent implements OnInit {
 })
 export class NxModalLoginComponent implements OnInit {
     login: any;
+    config: any;
     modalRef: NgbModalRef;
     location: Location;
     closeResult: string;
 
     constructor(@Inject('languageService') private language: any,
+                @Inject(DOCUMENT) private document: any,
                 private modalService: NgbModal,
+                private configService: NxConfigService,
                 location: Location) {
-
+        this.config = configService.getConfig();
         this.location = location;
     }
 
@@ -221,7 +224,7 @@ export class NxModalLoginComponent implements OnInit {
         return this.modalRef;
     }
 
-    open(keepPage?) {
+    open(keepPage?, redirectClose?) {
         return this.dialog(keepPage)
                 .result
                 // handle how the dialog was closed
@@ -229,6 +232,10 @@ export class NxModalLoginComponent implements OnInit {
                 // will raise a JS error ( Uncaught [in promise] )
                 .then((result) => {
                     this.closeResult = `Closed with: ${result}`;
+
+                    if (redirectClose && result === 'canceled') {
+                        this.document.location.href = this.config.redirectUnauthorised;
+                    }
                 }, (reason) => {
                     this.closeResult = 'Dismissed';
                 });

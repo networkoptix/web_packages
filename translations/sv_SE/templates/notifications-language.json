@@ -14,11 +14,14 @@
   "contact_support": {
     "emailSubject": "Supportansökan för {{message.product}}"
   },
+  "integration_feedback": {
+    "emailSubject": "Feedback för {{message.product}}"
+  },
   "ipvd_feedback": {
-    "emailSubject": "Kamerasidor för återkoppling av {{message.product}}"
+    "emailSubject": "Kamerasida återkoppling{{#message.product}} för {{message.product}}{{/message.product}}"
   },
   "review_version": {
-    "emailSubject": "{{message.product_type}}: {{message.product}} has a new version to review"
+    "emailSubject": "{{message.product_type}}: {{message.product}} har en ny version att granska"
   },
   "restore_password": {
     "emailSubject": "Återställ ditt lösenord"

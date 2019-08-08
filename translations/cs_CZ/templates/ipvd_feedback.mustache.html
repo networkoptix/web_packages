@@ -1,9 +1,4 @@
 <h1>Dobrý den, {{ message.userFullName }}</h1>
 
-<a href="mailto:{{ message.sender_email }}">{{ message.sender_name }}</a>poskytnout zpětnou vazbu pro {{ message.product }}:
+<a href="mailto:{{ message.sender_email }}">{{ message.sender_name }}</a>dal následující zpětnou vazbu{{#message.product}} pro {{ message.product }}{{/message.product}}:
 <div>{{ message.message }}</div>
-<br />
-<hr />
-<div>
-    Kontaktovat uživatele: {{ message.sender_to_be_contacted}}
-</div>

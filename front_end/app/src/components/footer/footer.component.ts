@@ -27,6 +27,7 @@ import { NxAppStateService } from '../../services/nx-app-state.service';
         this.companyName = this.config.companyName;
         this.copyrightYear = this.config.copyrightYear;
         this.footerItems = this.config.footerItems;
+
         this.appState.footerVisibleObservable.subscribe((visible) => {
             this.viewFooter = visible;
         });

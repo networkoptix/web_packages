@@ -1,6 +1,6 @@
 {
   "activate_account": {
-    "emailSubject": "Attivazione Account"
+    "emailSubject": "Attivi il suo Account"
   },
   "cloud_invite": {
     "emailSubject": "Sei stato invitato a %CLOUD_NAME%"
@@ -14,8 +14,11 @@
   "contact_support": {
     "emailSubject": "Richiesta di supporto per {{message.product}}"
   },
+  "integration_feedback": {
+    "emailSubject": "Feedback per {{message.product}}"
+  },
   "ipvd_feedback": {
-    "emailSubject": "Feedback della pagina della telecamera per {{message.product}}"
+    "emailSubject": "Feedback pagina telecamera{{#message.product}} per {{message.product}}{{/message.product}}"
   },
   "review_version": {
     "emailSubject": "{{message.product_type}}: {{message.product}} ha una nuova versione da revisionare"
@@ -24,7 +27,7 @@
     "emailSubject": "Reimpostare la password"
   },
   "system_invite": {
-    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} ti invita a %CLOUD_NAME%{{/message.sharer_name}}{{=message.sharer_name}}Il sistema video {{message.system_name}} e' stato condiviso con te {{/ message.sharer_name}}"
+    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} ti invita a %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}Il sistema video {{message.system_name}} è stato condiviso con te{/message.sharer_name}}"
   },
   "system_shared": {
     "emailSubject": "Sistema video {{message.system_name}} è stato condiviso con te"

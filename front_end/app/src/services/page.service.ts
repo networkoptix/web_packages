@@ -15,6 +15,7 @@ export class NxPageService {
     }
 
     setPageTitle(value: string) {
-        this.title.setTitle(value + ' ' + this.CONFIG.cloudName);
+        const title = (this.CONFIG.cloudName) ? value + ' ' + this.CONFIG.cloudName : value;
+        this.title.setTitle(title);
     }
 }

@@ -105,7 +105,7 @@ def check_integration_store_enabled():
 
 
 @api_view(("GET", ))
-@permission_classes((IsAuthenticated, ))
+@permission_classes((AllowAny, ))
 @handle_exceptions
 def get_integration(request, product_id=None):
     draft = "draft" in request.GET
@@ -121,12 +121,18 @@ def get_integration(request, product_id=None):
     if not integration:
         return api_success("Integration not found.", status_code=status.HTTP_404_NOT_FOUND)
 
-    if draft:
+    if draft or review:
+        if not request.user.is_authenticated:
+            return api_success(f"You do not have permission to view this integration",
+                               status_code=status.HTTP_403_FORBIDDEN)
         if integration.id not in request.user.products:
-            return api_success("You do not have permission to view this draft", status_code=status.HTTP_403_FORBIDDEN)
-
-        if integration.preview_status != Product.PREVIEW_STATUS.draft:
-            return api_success("Draft does not exist for this integration", status_code=status.HTTP_404_NOT_FOUND)
+            if draft:
+                return api_success(f"You do not have permission to view this draft.",
+                                   status_code=status.HTTP_403_FORBIDDEN)
+            if not UserGroupsToProductPermissions.\
+                    check_customization_permission(request.user, settings.CUSTOMIZATION, 'cms.publish_version'):
+                return api_success(f"You do not have permission to view this review.",
+                                   status_code=status.HTTP_403_FORBIDDEN)
 
     return api_success(make_integrations_json([integration], show_pending=review, show_drafts=draft))
 

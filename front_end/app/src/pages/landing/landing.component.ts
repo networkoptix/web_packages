@@ -32,7 +32,7 @@ export class NxLandingComponent implements OnInit {
         // TODO: Replace this once this component is not routed by AJS
         // if (this.router.url === '/login') {
         if (window.location.pathname === '/login') {
-            this.dialogs.login(false);
+            this.dialogs.login(false, false);
         } else {
             this.authorizationService.redirectAuthorised();
             this.userEmail = this.account.getEmail();

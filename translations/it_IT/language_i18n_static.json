@@ -7,10 +7,12 @@
 		"Any": "Qualsiasi",
 		"selected": "selezionato",
 		"vendor": "Produttore",
-		"vendors": "produttori",
+		"vendors": "Produttori",
 		"hardwareType": "Tipo",
-		"hardwareTypes": "tipo",
-		"minResolution": "Risoluzione minima"
+		"hardwareTypes": "Tipi",
+		"minResolution": "Risoluzione minima",
+		"analytics": "Analitica",
+		"analyticsSelected": "eventi di Analitica"
 	},
 	"cameraFilters": {
 		"ptz": "Telecamere PTZ",
@@ -96,6 +98,7 @@
 		}
 	},
 	"ipvd": {
+		"resolutionArea": "Area",
 		"count": "Conteggio",
 		"vendor": "Produttore",
 		"model": "Modello",
@@ -113,6 +116,7 @@
 		"isIoSupported": "I/O",
 		"isH265": "H.265",
 		"isMultiSensor": "Multi sensore",
+		"isAnalyticsSupported": "Analitica",
 		"camera": "Telecamera / e",
 		"multiSensorCamera": "Telecamera multisensore",
 		"encoder": "Encoder",
@@ -130,7 +134,8 @@
 			"a_Please": "Si prega di",
 			"b_Link": "invia una richiesta",
 			"c_Info": "per ulteriori domande / dubbi sui dispositivi supportati."
-		}
+		},
+		"disclaimer": "Questa lista è limitata ai dispositivi trovati su {{vmsName}} dove gli utenti hanno consentito la segnalazione automatica delle spec del dispositivo a {{companyName}}. Nessuna informazione personale è stata raccolta e ogni utente rimane completamente anonimo."
 	},
 	"integration": {
 		"previewRibbonText": "Questa pagina è un'anteprima delle ultime modifiche e non corrisponde alla versione disponibile al pubblico.",
@@ -158,6 +163,35 @@
 			"secondaryCannotMerge": "Il sistema {{targetSystem}} ha una versione più recente del software che è incompatibile con il sistema corrente. Aggiornare il sistema attuale alla <a href=\"/download\" target=\"_blank\" translate>versione più recente</a> per unirsi con il {{targetSystem}} sistema corrente.",
 			"systemOffline": "Il sistema {{targetSystem}} è offline e non può essere unito a quello corrente.",
 			"systemUnavailable": "Il sistema {{targetSystem}} è attualmente irraggiungibile. Riprova tra qualche minuto o contatta"
+		},
+		"message": {
+			"failedToSend": "Impossibile inviare il messaggio.",
+			"sent": "Il messaggio è stato inviato.",
+			"title": {
+				"integration": "Contatta {{companyName}}",
+				"ipvd_feedback_page": "Feedback per la pagina delle telecamere",
+				"ipvd_feedback_device": "Feedback su {{product}}"
+			},
+			"topic": {
+				"contact_sales": "Contatta le vendite per {{product}}",
+				"contact_support": "Contatta l'assistenza per {{product}}",
+				"integration_feedback": "Feedback per l'integrazione {{product}}",
+				"ipvd_feedback_page": "Feedback per la pagina delle telecamere",
+				"ipvd_feedback_device": "Feedback su {{product}}"
+			}
 		}
-	}
+	},
+	"privacyPolicy": {
+		"integration": "Inviando questo modulo accetti di essere contattato da {{INTEGRATION_COMPANY}} e / o %COMPANY_NAME%.\nTroverai l'informativa sulla privacy {{INTEGRATION_COMPANY}} <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">qui</a> e %COMPANY_NAME% informativa sulla privacy <a href=\"%PRIVACY_LINK%\" target=\"blank\">qui</a> che includono istruzioni su come revocare il tuo consenso.",
+		"ipvd": "Inviando questo modulo accetti di essere contattato da %COMPANY_NAME%.\nTroverai l'informativa sulla privacy %COMPANY_NAME%<a href=\"%PRIVACY_LINK%\" target=\"blank\">qui</a> che includono istruzioni su come revocare il tuo consenso."
+	},
+	"testedVersionLabel": "Verificato sulla versione {{vmsName}}:",
+	"testedVersionsLabel": "Verificato sulle versioni {{vmsName}}:",
+	"About %CLOUD_NAME%": "Informazioni su %CLOUD_NAME%",
+	"Download %VMS_NAME%": "Scarica %VMS_NAME%",
+	"Integrations": "Integrazioni",
+	"Privacy": "Privacy",
+	"Support": "Supporto",
+	"Supported Devices": "Dispositivi supportati",
+	"Terms": "Termini di servizio"
 }

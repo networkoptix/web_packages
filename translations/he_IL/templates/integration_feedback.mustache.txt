@@ -1,0 +1,3 @@
+שלום, {{ message.userFullName }}
+ל {{ message.sender_name}}{{ message.sender_email }} יש משוב עבור {{ message.product }}:
+<pre>{{ message.message }}</pre>

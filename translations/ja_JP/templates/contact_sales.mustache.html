@@ -1,9 +1,4 @@
 <h1>こんにちは、{{ message.userFullName }}</h1>
 
-<a href="mailto:{{ message.sender_email }}">{{ message.sender_name }}</a>has the following sales question about the {{ message.product }}:
+<a href="mailto:{{ message.sender_email }}">{{ message.sender_name }}</a>{{ message.product }}について次の販売質問があります：
 <div>{{ message.message }}</div>
-<br />
-<hr />
-<div>
-    ユーザー： {{ message.sender_to_be_contacted}}
-</div>

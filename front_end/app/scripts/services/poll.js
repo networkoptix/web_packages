@@ -55,11 +55,12 @@ angular.module('cloudApp')
             runPoll();
             return promise;
         }
+        
         poll.cancel = function( promise ){
-
-            promise.abort();
-        }
-
+            if (promise) {
+                promise.abort();
+            }
+        };
 
         return poll;
     }]);

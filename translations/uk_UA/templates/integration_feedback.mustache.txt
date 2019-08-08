@@ -1,0 +1,3 @@
+Привіт, {{ message.userFullName }}
+{{ message.sender_name}} ({{ message.sender_email }}) має відгук про {{ message.product }}:
+<pre>{{ message.message }}</pre>

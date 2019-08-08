@@ -12,23 +12,8 @@
     "logoutAuthorisedTitle": "Zaten giriş yapılmış",
     "logoutAuthorisedContinueButton": "Devam et",
     "logoutAuthorisedLogoutButton": "Oturumu Kapat",
-    "messageFailed": "Mesaj gönderilemedi.",
-    "messageSent": "Mesaj gönderildi.",
     "noClientDetectedTitle": "Sisteminizi görüntülemek için %VMS_NAME%'i yükleyin",
     "download": "İndir %VMS_NAME%"
-  },
-  "messageDialog": {
-    "title": {
-      "integration": "Email for {{product}}",
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "{{product}} hakkında geri bildirim"
-    },
-    "topic": {
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "{{product}} hakkında geri bildirim",
-      "contact_sales": "Contact sales for {{product}}",
-      "contact_support": "Contact support for {{product}}"
-    }
   },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
@@ -73,7 +58,7 @@
       "description": "Sistem'i buluttan paylaşma / bağlanma ve bağlantıyı kesme gibi sınırsız erişim"
     },
     "Viewer": {
-      "label": "İzleyici",
+      "label": "İzleyiciler",
       "description": "Canlı video görüntüleyebilir ve arşive gözatabilir"
     },
     "Live Viewer": {
@@ -105,11 +90,11 @@
       "description": "Sistem'i buluttan paylaşma / bağlanma ve bağlantıyı kesme gibi sınırsız erişim"
     },
     "viewer": {
-      "label": "İzleyici",
+      "label": "İzleyiciler",
       "description": "Canlı video görüntüleyebilir ve arşive gözatabilir"
     },
     "liveViewer": {
-      "label": "Canlı İzleme",
+      "label": "Canlı İzleyici",
       "description": "Sadece canlı vidyo izleyebilir"
     },
     "advancedViewer": {
@@ -140,7 +125,7 @@
     "wrongParameters": "Formdaki bazı parametreler yanlış",
     "wrongCode": "Hesap zaten etkinleştirildi veya onay kodu yanlış",
     "wrongCodeRestore": "Onay kodu zaten kullanılmış veya yanlış",
-    "wrongAuthCode": "Code is expired or incorrect",
+    "wrongAuthCode": "Kodun süresi dolmuş veya yanlış",
     "forbidden": "Bu işlemi gerçekleştirecek izinlere sahip değilsiniz",
     "accountNotActivated": "Bu hesap henüz etkinleştirilmedi. <a href=\"/activate\">Yalnızca etkinleştirme bağlantısını gönder</a>",
     "accountBlocked": "Bu hesap geçici olarak kilitlendi. Lütfen bir süre sonra tekrar deneyin.",
@@ -162,7 +147,7 @@
     "mergedSystemIsOffline": "Sistem <strong>{{failedSystem}}</strong> çevrimdışı.",
     "INCOMPATIBLE": "Sistemler farklı yazılım sürümlerine sahiptir. Lütfen her ikisini de en son <a href=\"/download\">sürümüne</a>.",
     "FAIL": "Sistem <strong>{{failedSystem}}</strong> şu anda erişilemiyor.<br>Birkaç dakika sonra tekrar deneyin veya iletişim <a href=\"%SUPPORT_LINK%\" target=\"_blank\">destek</a>.",
-    "unknownMergeError": "Unknown error. You can try to refresh the page and repeat attempt. If the problem persists – please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>."
+    "unknownMergeError": "Bilinmeyen hata. Sayfayı yenilemeyi deneyebilir ve denemeyi tekrarlayabilirsiniz. Sorun devam ederse, lütfen <a href=\"%SUPPORT_LINK%\" target=\"_blank\">destek</a>iletişim kurun."
   },
   "merging": {
     "mergeFailedTitle": "Sistem birleştirme işlemi başarısız oldu",
@@ -211,7 +196,7 @@
     "confirmUnshare": "Bu kullanıcı Sistem'e erişemez. Emin misiniz?",
     "confirmUnshareTitle": "Kullanıcıyı sil?",
     "confirmUnshareAction": "Sil",
-    "successDisconnected": "System is successfully disconnected from %CLOUD_NAME%",
+    "successDisconnected": "Sistem %CLOUD_NAME%'den başarıyla çıkarıldı",
     "successDeleted": "{{systemName}} sistemi hesabınızdan başarıyla silindi",
     "mergeFailed": "Sistem birleştirme işlemi başarısız oldu",
     "mergeStart": "Sistemler birleştirilmeye başlandı",
@@ -247,13 +232,13 @@
       "lowStream": "Düşük çözünürlük",
       "transcoding": "Dönüştürme",
       "unknown": "Bilinmeyen",
-      "copyToClipboard": "panoya kopyala",
+      "copyToClipboard": "panoya yapıştır",
       "copyDefaultText": "kopyala",
       "copyActiveText": "panoya kopyalandı"
     },
     "systemOffline": "Sistem çevrimdışı",
     "systemHasNoCameras": "KAMERA YOK",
-    "systemUnreachable": "SYSTEM IS UNREACHABLE",
+    "systemUnreachable": "SİSTEM KULLANILAMAZ",
     "cameraStates": {
       "offline": "Çevrimdışı",
       "error": "Hata",
@@ -263,9 +248,9 @@
       "flashRequired": "Videoları oynatmak için lütfen <a href='https://get.adobe.com/flashplayer/' target='_blank'>Adobe Flash</a>'i yükleyin.",
       "flashOrWebmRequired": "Internet Explorer'da video oynatmak için lütfen <a href='https://get.adobe.com/flashplayer/' target='_blank'> Adobe Flash</a> veya<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec'i</a> yükleyin.",
       "noArmSupport": "Bu tarayıcı veya aygıt, ARM tabanlı sunuculardan video oynatmayı desteklemez.",
-      "noFormat": "Bu tarayıcı bu kameradan video oynatmayı desteklemiyor.",
+      "noFormat": "Bu tarayıcı veya cihaz bu kameradan video oynatmayı desteklemez.",
       "ieNoWebm": "Internet Explorer için <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> yükleyin.",
-      "ieWin10": "Lütfen Microsoft Edge veya Google Chrome tarayıcılarını kullanın.",
+      "ieWin10": "Lütfen, Microsoft Edge veya Google Chrome tarayıcılarını kullanın.",
       "ubuntuNX": "Bu tarayıcı, ARM tabanlı sunuculardan gelen videoyu desteklemez. Bunun yerine, Chromium tarayıcıyı kullanın."
     },
     "searchCamPlaceholder": "Arama",
@@ -274,12 +259,12 @@
       "high": "Yüksek",
       "low": "Düşük"
     },
-    "chromeCastWarning": "Chromecast kaynak kullanımını arttırabilir ve sunucunuzda sorunlara neden olabilir.",
+    "chromeCastWarning": "Chromecast kaynak yoğunluğudur ve sunucunuzda sorunlara neden olabilir.",
     "voiceCommands": {
       "play": "oynat",
       "pause": "duraklat",
       "live": "go to live | show me live",
-      "view": "görüntüle + [kamera adı]",
+      "view": "view + [camera name]",
       "search": "find + [text for searchbar]",
       "clear search": "aramayı temizle",
       "expand server": "expand server + [server name]",

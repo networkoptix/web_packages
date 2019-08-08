@@ -41,6 +41,7 @@ export class CamTableComponent implements OnChanges, OnInit {
     private paramsShown;
     private lang;
     private debug: boolean;
+    private beta: boolean;
 
     offset: number;
     currentPage: number;
@@ -50,6 +51,7 @@ export class CamTableComponent implements OnChanges, OnInit {
     pagedItems: any[];
     pagerMaxSize: number;
     CONFIG: any = {};
+    showAnalytics: boolean;
 
     // Options for the Excel export
     public csvFilename: any;
@@ -65,6 +67,8 @@ export class CamTableComponent implements OnChanges, OnInit {
         useBom          : false,
         removeNewLines  : true
     };
+
+    SERVICE_PARAMS = ['count', 'resolutionArea', 'area'];
 
     constructor(private router: Router,
                 private translate: TranslateService,
@@ -91,13 +95,20 @@ export class CamTableComponent implements OnChanges, OnInit {
             this.lang.ipvd.isFisheye,
             this.lang.ipvd.isMdSupported,
             this.lang.ipvd.isIoSupported,
-            this.lang.ipvd.count
+            this.lang.ipvd.isAnalyticsSupported,
+            this.lang.ipvd.count,
+            this.lang.ipvd.resolutionArea
         ];
 
         this.pagedItems = [];
         this.pagerMaxSize = this.CONFIG.ipvd.pagerMaxSize;
         this.currentPage = 1;
         this.pageSize = this.CONFIG.layout.tableLarge.rows;
+    }
+
+    private setDebugAndBetaMode () {
+        this.debug = (this.params.debug !== undefined);
+        this.beta = (this.params.beta !== undefined);
     }
 
     toggleHeaderSort(param) {
@@ -124,14 +135,17 @@ export class CamTableComponent implements OnChanges, OnInit {
     toggleSort(param, keepURI) {
         let byParam;
 
-        if (param === 'maxResolution') {
-            byParam = NxUtilsService.byParam((elm) => {
-                return elm.resolutionArea;
-            }, !this.sortOrderASC);
+        if (param === 'maxResolution' ||
+                param === 'maxFps' ||
+                param === 'isAnalyticsSupported' ||
+                param === 'count') {
 
-        } else if (param === 'maxFps') {
             byParam = NxUtilsService.byParam((elm) => {
-                return elm[param];
+                if (param === 'maxResolution') {
+                    return elm.resolutionArea;
+                } else {
+                    return elm[param];
+                }
             }, !this.sortOrderASC);
 
         } else if (param === 'isFisheye' ||
@@ -199,11 +213,11 @@ export class CamTableComponent implements OnChanges, OnInit {
         });
     }
 
-    filterAllowedParams() {
+    filterAllowedParams(arr: any = []) {
         // filter 'service' params
-        const serviceParams = ['count', 'resolutionArea'];
-        this.allowedParameters = this.allowedParameters.filter((el) => !serviceParams.includes(el));
-        this.cameraHeaders = this.cameraHeaders.filter((el) => !serviceParams.includes(el.toLowerCase()));
+        this.allowedParameters = this.allowedParameters.filter((el) => !arr.includes(el));
+        this.cameraHeaders = this.cameraHeaders.filter((el) => !arr.includes(el.toLowerCase()));
+        this.showHeaders = this.cameraHeaders;
     }
 
     showParametersFor(item) {
@@ -267,13 +281,14 @@ export class CamTableComponent implements OnChanges, OnInit {
         }
 
         if (changes.params) {
-            this.debug = true;
 
-            if (this.params.debug === undefined) {
-                this.debug = false;
-                this.filterAllowedParams();
+            this.setDebugAndBetaMode();
+
+            if (!this.debug && !this.beta) {
+                this.filterAllowedParams(this.SERVICE_PARAMS);
             }
 
+            this.showAnalytics = this.CONFIG.ipvd.showAnalyticsEvents || this.params.debug || this.params.beta;
             this.showHeaders = this.cameraHeaders;
 
             if (!changes.params.firstChange &&
@@ -322,13 +337,21 @@ export class CamTableComponent implements OnChanges, OnInit {
     }
 
     ngOnInit() {
+        this.setDebugAndBetaMode();
+
         this.results = this._elements.length;
         this.csvFilename = Date.now();
         this.csvCameraData = this.getCsvData();
+
+        this.showAnalytics = this.CONFIG.ipvd.showAnalyticsEvents || this.debug || this.beta;
+        if (!this.showAnalytics) {
+            this.filterAllowedParams(['isAnalyticsSupported', 'analytics']);
+        }
     }
 
     setClickedRow(element) {
         if (element) {
+            this.uri.pageOffset = window.pageYOffset;
             this.selectedCamera = element.sortKey;
             this.onRowClick.emit(element);
         } else {

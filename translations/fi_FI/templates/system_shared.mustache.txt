@@ -1,0 +1,11 @@
+Hei, {{message.userFullName}}
+
+{{#message.sharer_name}}
+{{message.sharer_name}} ({{message.sharer_email}}) on jakanut pääsyn videonhallintajärjestelmään "{{message.system_name}}" kanssasi.
+{{/message.sharer_name}}
+
+{{^message.sharer_name}}
+Sinulle on myönnetty pääsy videonhallintajärjestelmään "{{message.system_name}}".
+{{/message.sharer_name}}
+
+Näytä %CLOUD_NAME% portaalissa: {{config.portal_url}}/ systems /{{message.system_id}}

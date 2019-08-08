@@ -5,30 +5,15 @@
   "vmsName": "%VMS_NAME%",
   "clientProtocol": "%CLIENT_PROTOCOL%:",
   "dialogs": {
-    "okButton": "Aceptar",
+    "okButton": "OK",
     "cancelButton": "Cancelar",
     "loginTitle": "Inicie sesión en %CLOUD_NAME%",
     "loginButton": "Inicia sesión",
     "logoutAuthorisedTitle": "Ya se ha conectado",
     "logoutAuthorisedContinueButton": "Continuar",
     "logoutAuthorisedLogoutButton": "Cerrar Sessión",
-    "messageFailed": "El mensaje no se ha podido enviar.",
-    "messageSent": "El mensaje ha sido enviado.",
     "noClientDetectedTitle": "Instalar %VMS_NAME% para ver su sistema",
     "download": "Descargar %VMS_NAME%"
-  },
-  "messageDialog": {
-    "title": {
-      "integration": "Email for {{product}}",
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Comentarios sobre {{product}}"
-    },
-    "topic": {
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Comentarios sobre {{product}}",
-      "contact_sales": "Contact sales for {{product}}",
-      "contact_support": "Contact support for {{product}}"
-    }
   },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
@@ -105,7 +90,7 @@
       "description": "Acceso sin restricciones, incluyendo la capacidad para compartir y conectar/desconectar el sistema de la nube"
     },
     "viewer": {
-      "label": "Observador",
+      "label": "Espectador",
       "description": "Puede ver video en vivo y ver el archivo"
     },
     "liveViewer": {
@@ -113,7 +98,7 @@
       "description": "Sólo puede ver vídeo en vivo"
     },
     "advancedViewer": {
-      "label": "Observador avanzado",
+      "label": "Visor avanzado",
       "description": "Puede ver el vídeo vivo, hojear el archivo, configurar cámaras, controlar PTZ etc"
     },
     "custom": {
@@ -140,7 +125,7 @@
     "wrongParameters": "Algunos parámetros en el formulario son incorrectos",
     "wrongCode": "Ya está activada la cuenta o el código de confirmación es incorrecto",
     "wrongCodeRestore": "Código de confirmación ya sea usado o está incorrecta",
-    "wrongAuthCode": "Code is expired or incorrect",
+    "wrongAuthCode": "El código ha caducado o es incorrecto",
     "forbidden": "No tiene permisos para realizar esta acción",
     "accountNotActivated": "Esta cuenta no ha sido activada. <a href=\"/activate\"> Enviar enlace de activación de nuevo</a>",
     "accountBlocked": "Esta cuenta está bloqueada. Por favor, intente nuevamente en unos minutos.",
@@ -162,7 +147,7 @@
     "mergedSystemIsOffline": "El sistema <strong>{{failedSystem}}</strong> está desconectado.",
     "INCOMPATIBLE": "Los sistemas tienen diferentes versiones de software. Por favor, actualice ambos a la <a href=\"/download\">última versión</a>.",
     "FAIL": "El sistema <strong>{{failedSystem}}</strong> es actualmente inalcanzable.<br>Vuelva a intentarlo en unos momentos o póngase en contacto con <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-    "unknownMergeError": "Unknown error. You can try to refresh the page and repeat attempt. If the problem persists – please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>."
+    "unknownMergeError": "Error desconocido. Puede intentar actualizar la página y repetir el intento. Si el problema persiste, por favor contacte con el soporte <a href=\"%SUPPORT_LINK%\" target=\"_blank\"></a>."
   },
   "merging": {
     "mergeFailedTitle": "La fusión de sistemas falló",
@@ -211,7 +196,7 @@
     "confirmUnshare": "Este usuario no podrá acceder el sistema. ¿Está seguro?",
     "confirmUnshareTitle": "¿Eliminar el usuario?",
     "confirmUnshareAction": "Borrar",
-    "successDisconnected": "System is successfully disconnected from %CLOUD_NAME%",
+    "successDisconnected": "El sistema se desconecta con éxito de %CLOUD_NAME%",
     "successDeleted": "Sistema {{systemName}} se ha eliminado de su cuenta",
     "mergeFailed": "La fusión de sistemas falló",
     "mergeStart": "Los sistemas han comenzado a fusionarse",
@@ -246,14 +231,14 @@
       "highStream": "Corriente de alta",
       "lowStream": "Corriente de baja",
       "transcoding": "Transcodificación",
-      "unknown": "Uesconocido",
+      "unknown": "Desconocido",
       "copyToClipboard": "copiar al portapapeles",
       "copyDefaultText": "copiar",
       "copyActiveText": "copiado al portapapeles"
     },
     "systemOffline": "Sistema está desconectado",
     "systemHasNoCameras": "NO CÁMARAS",
-    "systemUnreachable": "SYSTEM IS UNREACHABLE",
+    "systemUnreachable": "SISTEMA ILOCALIZABLE",
     "cameraStates": {
       "offline": "Desconectado",
       "error": "Error",
@@ -271,7 +256,7 @@
     "searchCamPlaceholder": "Búsqueda",
     "resolution": {
       "auto": "Auto",
-      "high": "Elevado",
+      "high": "Alto",
       "low": "Bajo"
     },
     "chromeCastWarning": "Chromecast consume muchos recursos y puede causar problemas en tu servidor.",
@@ -279,7 +264,7 @@
       "play": "reproducir",
       "pause": "pausa",
       "live": "go to live | show me live",
-      "view": "vista + [nombre de la cámara]",
+      "view": "view + [camera name]",
       "search": "find + [text for searchbar]",
       "clear search": "borrar búsqueda",
       "expand server": "expand server + [server name]",

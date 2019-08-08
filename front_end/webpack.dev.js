@@ -71,6 +71,10 @@ module.exports = merge(common, {
                 from: 'images',
                 to  : 'static/images'
             },
+            {
+                from: 'language_i18n.json',
+                to: '../../translations/en_US/language_i18n.json'
+            },
             // Local test for i18n *********************
             {
                 from: '../../translations/ru_RU/',
@@ -107,7 +111,6 @@ module.exports = merge(common, {
                             loader : 'css-loader',
                             options: {
                                 url      : false,
-                                //minimize : true,
                                 sourceMap: true
                             }
                         },

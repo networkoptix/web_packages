@@ -1,10 +1,10 @@
-There is a new version for {{ message.product }}({{message.product_type}}) to review.
+Det finns en ny version av {{ message.product }} ({{message.product_type}}) för att granska.
 
 Klicka på länken för att se utkast {{ message.id }} för {{ message.product }}
 
-Link to review: {{ config.portal_url }}/admin/cms/productcustomizationreview/{{ message.id }}/change/
+Länk till granskning: {{ config.portal_url }}/ admin / cms / productcustomizationreview /{{ message.id }}/ change /
 
-På denna sida kan du
+På den här sidan kan du
 1) Skapa en förhandsgranskning för att se de senaste ändringarna.
 2) Publicera den här versionen som uppdaterar allt innehåll.
 3) Redigera sammanhang genom att klicka på redigera inspelningsknappen. För att se dessa ändringar måste du skapa en ny version.

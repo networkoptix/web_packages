@@ -1,6 +1,6 @@
 {
   "activate_account": {
-    "emailSubject": "Activar a sua conta"
+    "emailSubject": "Ative sua conta"
   },
   "cloud_invite": {
     "emailSubject": "You have been invited to %CLOUD_NAME%"
@@ -14,8 +14,11 @@
   "contact_support": {
     "emailSubject": "Support request for {{message.product}}"
   },
+  "integration_feedback": {
+    "emailSubject": "Feedback for {{message.product}}"
+  },
   "ipvd_feedback": {
-    "emailSubject": "Camera Page Feedback for {{message.product}}"
+    "emailSubject": "Camera Page Feedback{{#message.product}} for {{message.product}}{{/message.product}}"
   },
   "review_version": {
     "emailSubject": "{{message.product_type}}: {{message.product}} has a new version to review"

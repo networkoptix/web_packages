@@ -18,13 +18,13 @@
 
                 <ul ng-if="active.integrations" class="nav navbar-nav d-none d-sm-flex">
                     <li class="active">
-                        <a class="inset" href=1>Integration</a>
+                        <a class="inset" href="">Integration</a>
                     </li>
                 </ul>
 
                 <ul ng-if="active.ipvd" class="nav navbar-nav d-none d-sm-flex">
                     <li class="active">
-                        <a class="inset" href=1>อุปกรณ์วิดีโอ IP ที่รองรับ</a>
+                        <a class="inset" href="">อุปกรณ์วิดีโอ IP ที่รองรับ</a>
                     </li>
                 </ul>
 
@@ -43,13 +43,18 @@
             <div class="app-header-right">
                 <ul class="nav navbar-nav navbar-right auth-hidden margin-right">
                     <li>
-                        <span> <a href class="btn btn-default" ng-click="login()"> เข้าสู่ระบบ </a></span> <span> <a href="/register" class="btn btn-primary"> สร้างบัญชี </a></span>
+                        <span>
+                            <a href="" class="btn btn-default" ng-click="login()"> ลงชื่อเข้าใช้ </a>
+                        </span>
+                        <span>
+                            <a href="/register" class="btn btn-primary"> สร้างบัญชี </a>
+                        </span>
                     </li>
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right auth-visible">
                     <li ng-if="singleSystem" class="no-hover collapse-second hidden-collapse">
-                        <a href class="m-0 border-0">
+                        <a href="" class="m-0 border-0">
                             <span class="glyphicon glyphicon-home"></span>
                             <span class="ellipsis">{{activeSystem.name}}</span>
                         </a>

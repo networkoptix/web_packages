@@ -14,11 +14,14 @@
   "contact_support": {
     "emailSubject": "ขอรับการสนับสนุนสำหรับ {{message.product}}"
   },
+  "integration_feedback": {
+    "emailSubject": "ข้อเสนอแนะเกี่ยวกับ {{message.product}}"
+  },
   "ipvd_feedback": {
-    "emailSubject": "คำติชมหน้ากล้องสำหรับ {{message.product}}"
+    "emailSubject": "คำติชมหน้ากล้อง{{#message.product}} สำหรับ {{message.product}}{{/message.product}}"
   },
   "review_version": {
-    "emailSubject": "{{message.product_type}}: {{message.product}} has a new version to review"
+    "emailSubject": "{{message.product_type}}: {{message.product}} มีรุ่นใหม่ให้ตรวจสอบ"
   },
   "restore_password": {
     "emailSubject": "รีเซ็ตรหัสผ่านของคุณ"

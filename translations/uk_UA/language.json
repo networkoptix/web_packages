@@ -6,29 +6,14 @@
   "clientProtocol": "%CLIENT_PROTOCOL%:",
   "dialogs": {
     "okButton": "ОК",
-    "cancelButton": "Відміна",
+    "cancelButton": "Відмінити",
     "loginTitle": "Увійти до %CLOUD_NAME%",
-    "loginButton": "Вхід",
+    "loginButton": "Увійти",
     "logoutAuthorisedTitle": "Ви вже увійшли",
     "logoutAuthorisedContinueButton": "Продовжити",
     "logoutAuthorisedLogoutButton": "Вийти",
-    "messageFailed": "Не вдалося надіслати повідомлення.",
-    "messageSent": "Повідомлення відправлено.",
     "noClientDetectedTitle": "Встановіть %VMS_NAME% для роботи з системою",
     "download": "Завантажити %VMS_NAME%"
-  },
-  "messageDialog": {
-    "title": {
-      "integration": "Email для {{product}}",
-      "ipvd_feedback_page": "Зворотній зв’язок для сторінки камер",
-      "ipvd_feedback_device": "Відгук про {{product}}"
-    },
-    "topic": {
-      "ipvd_feedback_page": "Зворотній зв’язок для сторінки камер",
-      "ipvd_feedback_device": "Відгук про {{product}}",
-      "contact_sales": "Зв'яжіться з відділом продажів за {{product}}",
-      "contact_support": "Зверніться до служби підтримки за {{product}}"
-    }
   },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
@@ -246,7 +231,7 @@
       "highStream": "Висока якість",
       "lowStream": "Низька якість",
       "transcoding": "Перекодування",
-      "unknown": "Невідомо",
+      "unknown": "Невідомий",
       "copyToClipboard": "копіювати в буфер обміну",
       "copyDefaultText": "копіювати",
       "copyActiveText": "скопійовано до буфера обміну"
@@ -257,7 +242,7 @@
     "cameraStates": {
       "offline": "Поза мережею",
       "error": "Помилка",
-      "unauthorized": "Потрібна авторизація",
+      "unauthorized": "Потрібна аутентифікація",
       "noData": "Немає даних",
       "iosVideoTooLarge": "iOS не підтримує відео з розшиненням більшим за fullHD (2MP: 1920x1080).",
       "flashRequired": "Будь ласка, <a href='https://get.adobe.com/flashplayer/' target='_blank'>встановіть Adobe Flash</a> для відтворення відео.",
@@ -276,7 +261,7 @@
     },
     "chromeCastWarning": "Chromecast ресурсоємний і може спричинити проблеми на вашому сервері.",
     "voiceCommands": {
-      "play": "відтворити",
+      "play": "відтворення",
       "pause": "пауза",
       "live": "go to live | show me live",
       "view": "view + [camera name]",

@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 
+import os
 from ...models import *
-from cloud import settings
 
 
 class Command(BaseCommand):
@@ -11,7 +11,7 @@ class Command(BaseCommand):
         parser.add_argument('--email', nargs='?', type=str)
 
     def handle(self, *args, **options):
-        if not settings.DEBUG:
+        if not os.environ.get("LOCAL_ENV"):
             raise RuntimeError("This command can only be ran locally!")
         if not options['email']:
             raise ValueError("Missing email!")

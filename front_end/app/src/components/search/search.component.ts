@@ -265,13 +265,32 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
                 if (select.selected.length > 0) {
                     flag++;
 
+                    let label;
                     if (select.selected.length === 1) {
-                        const label = select.singular || select.label;
-                        multiSelectsSelected = label + ' &ndash; ' + select.items.find(item => {
+                        label = select.label;
+
+                        if (select.singular) {
+                            label = select.singular;
+                        }
+
+                        label += ' &ndash; ';
+
+                        if (select.searchLabelSingular || select.searchLabelSingular === '') {
+                            label = select.searchLabelSingular;
+                        }
+
+                        multiSelectsSelected = label + select.items.find(item => {
                             return (item.label.name || item.id) === select.selected[0];
                         }).label;
+
                     } else {
-                        multiSelectsSelected = select.selected.length + ' ' + select.label.toLowerCase();
+                        if (select.searchLabel || select.searchLabel === '') {
+                            label = select.searchLabel;
+                        } else {
+                            label = select.label.toLowerCase();
+                        }
+
+                        multiSelectsSelected = select.selected.length + ' ' + label;
                     }
                 }
             });

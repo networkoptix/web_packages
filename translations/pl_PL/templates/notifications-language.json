@@ -14,8 +14,11 @@
   "contact_support": {
     "emailSubject": "Prośba o wsparcie do {{message.product}}"
   },
+  "integration_feedback": {
+    "emailSubject": "Opinie dotyczące {{message.product}}"
+  },
   "ipvd_feedback": {
-    "emailSubject": "Opinia o stronie z kamerami dla {{message.product}}"
+    "emailSubject": "Opinia {{#message.product}} dla {{message.product}}{{/message.product}}"
   },
   "review_version": {
     "emailSubject": "{{message.product_type}}: {{message.product}} ma nową wersję do przejrzenia"

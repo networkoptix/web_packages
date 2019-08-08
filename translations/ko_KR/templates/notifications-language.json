@@ -1,6 +1,6 @@
 {
   "activate_account": {
-    "emailSubject": "귀하의 계정을 활성화합니다"
+    "emailSubject": "귀하의 계정을 활성화 합니다"
   },
   "cloud_invite": {
     "emailSubject": "%CLOUD_NAME%에 초대되었습니다."
@@ -14,8 +14,11 @@
   "contact_support": {
     "emailSubject": "Support request for {{message.product}}"
   },
+  "integration_feedback": {
+    "emailSubject": "Feedback for {{message.product}}"
+  },
   "ipvd_feedback": {
-    "emailSubject": "Camera Page Feedback for {{message.product}}"
+    "emailSubject": "Camera Page Feedback{{#message.product}} for {{message.product}}{{/message.product}}"
   },
   "review_version": {
     "emailSubject": "{{message.product_type}}: {{message.product}} has a new version to review"

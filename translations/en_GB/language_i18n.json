@@ -1,15 +1,21 @@
 {
     "2-Way Audio": "2-Way Audio",
+    "About %CLOUD_NAME%": "About %CLOUD_NAME%",
     "Account Settings": "Account Settings",
     "Account not activated": "Account not activated",
     "Account not found": "Account not found",
+    "Actual number of events supported by this camera may be bigger.": "Actual number of events supported by this camera may be bigger.",
+    "Additional Requirements": "Additional Requirements",
     "Administration": "Administration",
     "Advanced PTZ": "Advanced PTZ",
     "Advanced Search": "Advanced Search",
+    "All Integrations": "All Integrations",
     "All Systems": "All Systems",
     "All cloud users will be deleted.": "All cloud users will be deleted.",
-    "All integrations": "All integrations",
     "All results": "All results",
+    "Analytics": "Analytics",
+    "Analytics Event": "Analytics Event",
+    "Analytics Events": "Analytics Events",
     "Any": "Any",
     "Audio": "Audio",
     "Build Number:": "Build Number:",
@@ -22,9 +28,11 @@
     "Choose which properties should be visible to customers:": "Choose which properties should be visible to customers:",
     "Close": "Close",
     "Codec": "Codec",
+    "Collapse": "Collapse",
     "Contact": "Contact",
     "Create Account": "Create Account",
     "Create account": "Create account",
+    "Developer": "Developer",
     "Disconnect": "Disconnect",
     "Disconnect System from %CLOUD_NAME%?": "Disconnect System from %CLOUD_NAME%?",
     "Download": "Download",
@@ -47,12 +55,11 @@
     "Forgot password?": "Forgot password?",
     "Get in touch": "Get in touch",
     "How it works": "How it works",
-    "How to install?": "How to install?",
-    "I agree to the": "I agree to the license terms and conditions",
-    "I want you to contact me": "I want you to contact me",
+    "How to setup?": "How to setup?",
     "I/O": "I/O",
     "In Review": "In Review",
     "In-Client Upgrade:": "In-Client Upgrade:",
+    "Integrations": "Integrations",
     "Latest version": "Latest version",
     "Log In": "Log In",
     "Log Out": "Log Out",
@@ -73,9 +80,11 @@
     "Password:": "Password:",
     "Permissions": "Permissions",
     "Popularity": "Popularity",
+    "Privacy": "Privacy",
     "Release Notes": "Release Notes",
     "Release notes": "Release notes",
     "Remember me": "Remember me",
+    "Requirements": "Requirements",
     "Resend activation email": "Resend activation email",
     "Resolution(max)": "Resolution(max)",
     "Save": "Save",
@@ -88,6 +97,9 @@
     "Show All": "Show All",
     "Some of your servers don't support cloud System merge because of outdated software version.": "Some of your servers don't support cloud System merge because of outdated software version.",
     "Support": "Support",
+    "Support E-mail": "Support E-mail",
+    "Support URL": "Support URL",
+    "Supported Devices": "Supported Devices",
     "System name": "System name",
     "System name is required": "System name is required",
     "System will be accessible through local network with local administrator account.": "System will be accessible through local network with local administrator account.",
@@ -95,8 +107,12 @@
     "Systems of such size may work but will be unstable and have troubles with updates and synchronisation.": "Systems of such size may work but will be unstable and have troubles with updates and synchronisation.",
     "Tags": "Tags",
     "Take the name and settings from": "Take the name and settings from",
+    "Terms": "Terms",
+    "Terms of Use": "Terms of Use",
     "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.": "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.",
     "There will be more than": "There will be more than",
+    "This device has reported to support some analytics events, but we don't have exact information about them.": "This device has reported to support some analytics events, but we don't have exact information about them.",
+    "To": "To",
     "Too many attempts. Try again in a minute.": "Too many attempts. Try again in a minute.",
     "Topic": "Topic",
     "Update them to the": "Update them to the",
@@ -104,10 +120,12 @@
     "User": "User",
     "View": "View",
     "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.": "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.",
-    "What's new?": "What's new?",
+    "What's New?": "What's New?",
+    "Works with:": "Works with:",
     "Wrong password": "Wrong password",
     "You can merge only those cloud Systems, where you have the \"Owner\" permissions.": "You can merge only those cloud Systems, where you have the \"Owner\" permissions.",
     "You can only merge Systems where you are the owner.": "You can only merge Systems where you are the owner.",
+    "Your Email": "Your Email",
     "Your Name": "Your Name",
     "Your browser is not supported": "Your browser is not supported",
     "andXMore": "... and {{value}} more",
@@ -133,6 +151,22 @@
             "secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
             "systemOffline": "System {{targetSystem}} is offline and cannot be merged with the current one.",
             "systemUnavailable": "System {{targetSystem}} is currently unreachable. Try again in a few minutes or contact"
+        },
+        "message": {
+            "failedToSend": "Message has failed to send.",
+            "sent": "Message has been sent.",
+            "title": {
+                "integration": "Get in touch with {{companyName}}",
+                "ipvd_feedback_device": "Feedback about {{product}}",
+                "ipvd_feedback_page": "Feedback for cameras page"
+            },
+            "topic": {
+                "contact_sales": "Contact sales for {{product}}",
+                "contact_support": "Contact support for {{product}}",
+                "integration_feedback": "Feedback for integration {{product}}",
+                "ipvd_feedback_device": "Feedback about {{product}}",
+                "ipvd_feedback_page": "Feedback for cameras page"
+            }
         }
     },
     "dialogs.merge.connectToCloud": "Connect System you want to merge with this one to <strong>{{cloudName}}</strong> or merge locally using <strong>{{vmsName}}</strong> Client.",
@@ -142,7 +176,6 @@
     "dialogs.merge.secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
     "dialogs.merge.systemOffline": "dialogs.merge.systemOffline",
     "dialogs.merge.systemUnavailable": "System {{targetSystem}} is currently unreachable. Try again in a few minutes or contact",
-    "disclaimer": "This list is limited to actual devices auto-reporting data to {{value}}, as approved by anonymous system users. The complete list of supported manufacturers and models is greater in scope.",
     "downloads": {
         "appTypes": {
             "bundle": "Client and Server",
@@ -235,6 +268,7 @@
         "PTZ cameras": "PTZ cameras",
         "camera": "Camera",
         "count": "Count",
+        "disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous.",
         "dvr": "DVR",
         "encoder": "Encoder",
         "feedback": {
@@ -243,6 +277,7 @@
             "c_Info": "for additional questions/concerns regarding supported devices."
         },
         "hardwareType": "Type",
+        "isAnalyticsSupported": "Analytics",
         "isAptzSupported": "Advanced PTZ",
         "isAptzSupportedShort": "Adv. PTZ",
         "isAudioSupported": "Audio",
@@ -259,8 +294,10 @@
         "multiSensorCamera": "Multi-Sensor Camera",
         "other": "Other",
         "primaryCodec": "Codec",
+        "resolutionArea": "Area",
         "vendor": "Manufacturer"
     },
+    "ipvd.disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous.",
     "latest build": "latest build",
     "manufacturers": "manufacturers",
     "messageDialogPlaceholders": {
@@ -271,19 +308,27 @@
         "supportedDevices": "Supported Devices"
     },
     "phoneNumberWithLabel": "Tel: {{number}}",
+    "privacyPolicy": {
+        "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent.",
+        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent."
+    },
     "search": {
         "Any": "Any",
         "Search": "Search",
+        "analytics": "Analytics",
+        "analyticsSelected": "analytics events",
         "filter applied": "filter applied",
         "filters applied": "filters applied",
         "hardwareType": "Type",
-        "hardwareTypes": "types",
+        "hardwareTypes": "Types",
         "minResolution": "Minimum Resolution",
         "search_ipvd": "Search by model or manufacturer",
         "selected": "selected",
         "vendor": "Manufacturer",
-        "vendors": "manufacturers"
+        "vendors": "Manufacturers"
     },
     "servers in the merged System.": "servers in the merged System.",
-    "support": "support"
+    "support": "support",
+    "testedVersionLabel": "Tested on {{vmsName}} version:",
+    "testedVersionsLabel": "Tested on {{vmsName}} versions:"
 }
