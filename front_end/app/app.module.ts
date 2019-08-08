@@ -17,7 +17,7 @@ import { WebStorageModule }                 from 'ngx-store';
 import {
     cloudApiServiceModule, systemModule, languageServiceModule,
     processServiceModule, uuid2ServiceModule,
-    locationProxyModule, urlProtocolServiceModule
+    locationProxyModule,
 } from './src/ajs-upgrade/ajs-upgraded-providers';
 
 import { AppComponent }              from './app.component';
@@ -88,7 +88,6 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
         uuid2ServiceModule,
         languageServiceModule,
         processServiceModule,
-        urlProtocolServiceModule,
         systemModule,
         locationProxyModule,
         ComponentsModule,

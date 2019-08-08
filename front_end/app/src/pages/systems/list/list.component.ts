@@ -4,10 +4,11 @@ import { ActivatedRoute }                       from '@angular/router';
 import { NxConfigService }                      from '../../../services/nx-config';
 import { NxLanguageProviderService }            from '../../../services/nx-language-provider';
 
-import { NxPageService }    from '../../../services/page.service';
-import { NxDialogsService } from '../../../dialogs/dialogs.service';
-import { NxSystemsService } from '../../../services/systems.service';
-import { NxAccountService } from '../../../services/account.service';
+import { NxPageService }        from '../../../services/page.service';
+import { NxDialogsService }     from '../../../dialogs/dialogs.service';
+import { NxSystemsService }     from '../../../services/systems.service';
+import { NxAccountService }     from '../../../services/account.service';
+import { NxUrlProtocolService } from '../../../services/url-protocol.service';
 
 @Component({
     selector   : 'nx-systems-list-component',
@@ -38,7 +39,7 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
     }
 
     constructor(@Inject('process') private process: any,
-                @Inject('urlProtocol') private urlProtocol: any,
+                private urlProtocol: NxUrlProtocolService,
                 private route: ActivatedRoute,
                 private configService: NxConfigService,
                 private language: NxLanguageProviderService,

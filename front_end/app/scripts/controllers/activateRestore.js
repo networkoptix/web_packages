@@ -2,10 +2,10 @@
 
 angular.module('cloudApp')
     .controller('ActivateRestoreCtrl',['$scope', 'cloudApi', '$routeParams', 'process', '$localStorage', '$timeout',
-        '$sessionStorage', 'nxAccountService', '$location', 'urlProtocol', 'dialogs',
+        '$sessionStorage', 'nxAccountService', '$location', 'nxUrlProtocolService', 'dialogs',
         'languageService', 'nxPageService',
         function ($scope, cloudApi, $routeParams, process, $localStorage, $timeout,
-                  $sessionStorage, nxAccountService, $location, urlProtocol, dialogs,
+                  $sessionStorage, nxAccountService, $location, nxUrlProtocolService, dialogs,
                   languageService, nxPageService) {
 
             $scope.session = $localStorage;
@@ -120,7 +120,7 @@ angular.module('cloudApp')
             });
 
             $scope.openClient = function(){
-                urlProtocol.open();
+                nxUrlProtocolService.open();
             };
 
             $scope.activate = process.init(function(){

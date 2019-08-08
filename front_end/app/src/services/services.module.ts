@@ -9,6 +9,7 @@ import { NxPageService }             from './page.service';
 import { NxRegisterService }         from './register.service';
 import { NxSystemsService }          from './systems.service';
 import { NxAccountService }          from './account.service';
+import { NxUrlProtocolService }      from './url-protocol.service';
 
 @NgModule({
     imports        : [
@@ -27,6 +28,7 @@ import { NxAccountService }          from './account.service';
         NxRegisterService,
         NxSystemsService,
         NxAccountService,
+        NxUrlProtocolService,
     ],
     exports        : []
 })
@@ -41,5 +43,6 @@ angular
     .service('nxPageService', downgradeInjectable(NxPageService))
     .service('nxAppStateService', downgradeInjectable(NxAppStateService))
     .service('nxAccountService', downgradeInjectable(NxAccountService))
+    .service('nxUrlProtocolService', downgradeInjectable(NxUrlProtocolService))
     .service('nxSystemsService', downgradeInjectable(NxSystemsService));
 

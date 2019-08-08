@@ -1,12 +1,13 @@
 import { AfterViewInit, Component, Inject, Input, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute }                                             from '@angular/router';
-import { NxUriService }                                               from '../../services/uri.service';
+import { NxUriService }              from '../../services/uri.service';
 import { TranslateService }          from '@ngx-translate/core';
 import { NxRegisterService }         from '../../services/register.service';
 import { NxPageService }             from '../../services/page.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxAccountService }          from '../../services/account.service';
 import { LocalStorageService }       from 'ngx-store';
+import { NxUrlProtocolService }      from '../../services/url-protocol.service';
 
 @Component({
     selector   : 'nx-register-component',
@@ -85,9 +86,9 @@ export class NxRegisterComponent implements OnInit {
     }
 
     constructor(@Inject('process') private process: any,
-                @Inject('urlProtocol') private urlProtocol: any,
-                private localStorage: LocalStorageService,
                 @Inject('locationProxyService') private locationProxy: any,
+                private urlProtocol: NxUrlProtocolService,
+                private localStorage: LocalStorageService,
                 private route: ActivatedRoute,
                 private accountService: NxAccountService,
                 private registerService: NxRegisterService,
@@ -143,7 +144,7 @@ export class NxRegisterComponent implements OnInit {
         this.session = this.localStorage;
         // this.context = $sessionStorage;
 
-        this.session.fromClient = this.urlProtocol.source.isApp;
+        this.session.set('fromClient', this.urlProtocol.getSource().isApp);
     }
 }
 
