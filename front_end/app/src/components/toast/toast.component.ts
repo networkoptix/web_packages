@@ -49,9 +49,6 @@ export class ToastsContainer {
     }
 
     remove(toast) {
-        // toast.hide = true;
-        setTimeout(() => {
-            this.toastService.remove(toast);
-        }, 500);
+        this.toastService.remove(toast);
     }
 }

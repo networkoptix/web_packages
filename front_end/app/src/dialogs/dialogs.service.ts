@@ -47,24 +47,12 @@ export class NxDialogsService {
         hold = hold || false;
 
         const options = {
-            closeButton   : hold,
-            tapToDismiss  : !hold,
             autohide: !hold,
             classname: type,
             delay: this.CONFIG.alertTimeout
         };
 
         return this.toastService.show(message, options);
-
-
-        // return this.toast.create({
-        //     additionalClasses: 'button-fix',
-        //     className        : type,
-        //     content          : message,
-        //     dismissOnTimeout : !hold,
-        //     dismissOnClick   : !hold,
-        //     dismissButton    : hold
-        // });
     }
 
     createModal(modal, options, inputs) {

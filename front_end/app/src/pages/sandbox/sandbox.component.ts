@@ -154,7 +154,7 @@ export class NxSandboxComponent {
     }
 
     notify(msg: string, type: string) {
-        this.dialogs.notify(msg, type);
+        this.dialogs.notify(msg, type, true);
     }
 }
 
