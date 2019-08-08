@@ -105,7 +105,7 @@ IPVD Text Search Expecting No Results
 IPVD Table Row Count
     [Arguments]    ${AllPages}=False
     Wait until Element is Visible    ${IPVD TABLE}
-    #TODO: Implement call to paginator if ${AllPages}=True
+    # TODO: Implement call to paginator if ${AllPages}=True
     ${rowCount}=   Get Element Count    ${IPVD TABLE ROWS}
     [Return]    ${rowCount}
 
@@ -113,7 +113,7 @@ Validate IPVD Device Table Not Empty
     ${rowCount}=   IPVD Table Row Count
     Should be True    ${rowCount} > 0    Table empty when rows were expected.
     Wait until Elements are Visible
-#    ...    ${IPVD CLEAR TEXT SEARCH BUTTON}
+    #...    ${IPVD CLEAR TEXT SEARCH BUTTON}
     ...    ${IPVD PREVIOUS PAGE BUTTON}
     ...    ${IPVD FIRST PAGE BUTTON}
     ...    ${IPVD LAST PAGE BUTTON}
@@ -202,23 +202,21 @@ Validate on IPVD Page
 
 Verify IPVD Advanced Search is Closed
     Wait until Elements are Visible    ${IPVD ADV SEARCH BUTTON}
-    ${style}=   Get Element Attribute
+    Click Element    ${IPVD SEARCH BAR}
+    Wait Until Element Has Style
     ...    ${IPVD ADV SEARCH BUTTON}
-    ...    style
-    # Wait Until Element Has Style
-    # ...    ${IPVD ADV SEARCH BUTTON}
-    # ...    background-color
-    # ...    rgb(225, 231, 234)
+    ...    background-color
+    ...    ${COLOR LIGHT4 RGB}
     # Verify Button Arrow Direction    ${IPVD ADV SEARCH BUTTON}    Down
     Wait until Element does Not have Class
     ...    ${IPVD ADV SEARCH BUTTON}
     ...    selected
     Elements should Not be Visible
-    #IPVD Advanced Filters
+    # IPVD Advanced Filters
     ...    ${IPVD ADV FILTERS MIN RES}
     ...    ${IPVD ADV FILTERS MFRS}
     ...    ${IPVD ADV FILTERS TYPES}
-    #IPVD Advanced Filters Features
+    # IPVD Advanced Filters Features
     ...    ${IPVD ADV FEATURES AUDIO}
     ...    ${IPVD ADV FEATURES 2-WAY AUDIO}
     ...    ${IPVD ADV FEATURES PTZ}
@@ -231,20 +229,21 @@ Verify IPVD Advanced Search is Closed
 
 Verify IPVD Advanced Search is Open
     Wait until Elements are Visible    ${IPVD ADV SEARCH BUTTON}
-    # Wait Until Element Has Style
-    # ...    ${IPVD ADV SEARCH BUTTON}
-    # ...    background-color
-    # ...    rgb(105, 135, 150)
+    Click Element    ${IPVD SEARCH BAR}
+    Wait Until Element Has Style
+    ...    ${IPVD ADV SEARCH BUTTON}
+    ...    background-color
+    ...    ${COLOR LIGHT16 RGB}
     # Verify Button Arrow Direction    ${IPVD ADV SEARCH BUTTON}    Up
     Wait until Element has Class
     ...    ${IPVD ADV SEARCH BUTTON}
     ...    selected
     Wait until Elements are Visible
-    #IPVD Advanced Filters
+    # IPVD Advanced Filters
     ...    ${IPVD ADV FILTERS MIN RES}
     ...    ${IPVD ADV FILTERS MFRS}
     ...    ${IPVD ADV FILTERS TYPES}
-    #IPVD Advanced Filters Features
+    # IPVD Advanced Filters Features
     ...    ${IPVD ADV FEATURES AUDIO}
     ...    ${IPVD ADV FEATURES 2-WAY AUDIO}
     ...    ${IPVD ADV FEATURES PTZ}
@@ -272,7 +271,6 @@ Validate Manufacturer More Count
 
 Open New Browser on Failure
     Close Browser
-    #Open Browser and go to URL    ${url}/ipvd
     Open Browser
     Go To IPVD page
 
@@ -291,8 +289,8 @@ Validate Privacy Policy
     ${url}=   Get Element Attribute
     ...    ${IPVD FEEDBACK PRIVACY POLICY}
     ...    href
-    Should Contain    ${url}    privacy    #TODO: CLOUD-2949
-    #Should Contain    ${url}    ${PRIVACY POLICY URL}
+    Should Contain    ${url}    privacy    # TODO: CLOUD-2949
+    # Should Contain    ${url}    ${PRIVACY POLICY URL}
     Click Element    ${IPVD FEEDBACK PRIVACY POLICY}
     @{windows}=   Get Window Handles
     ${numWindows}=   Get Length    ${windows}
@@ -300,8 +298,8 @@ Validate Privacy Policy
     ...    ${numWindows} == 2
     ...    Number of browser windows open after clicking Privacy Policy link should be 2, but is ${numWindows}. CLOUD-3315
     Select Window    @{windows}[1]
-    Location should be    ${url}    #TODO: CLOUD-2949
-    #Location should be    ${PRIVACY POLICY URL FULL}
+    Location should be    ${url}    # TODO: CLOUD-2949
+    # Location should be    ${PRIVACY POLICY URL FULL}
     Wait until Element is Visible    ${PRIVACY POLICY HEADER}
     Close Window
     Select Window    @{windows}[0]
@@ -320,7 +318,7 @@ Submit Feedback/Request Form
 Validate Message Sent
     Page should Not contain Element    ${IPVD FEEDBACK}
     Check For Alert    Message has been sent.
-    #TODO: Check email and verify submitted data received
+    # TODO: Check email and verify submitted data received
 
 Validate Message Not Sent
     Page should contain Element    ${IPVD FEEDBACK}

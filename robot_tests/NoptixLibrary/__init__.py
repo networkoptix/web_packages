@@ -54,9 +54,8 @@ class NoptixLibrary(object):
 
         try:
             element = seleniumlib.find_element(locator)
-            print('element: ' + element)
             value = element.value_of_css_property(styleAttribute)
-            print('value: ' + value)
+            print('style: ' + styleAttribute + ', value: ' + value)
             return value
         except:
             not_found = "No element found with style attribute " + styleAttribute
@@ -80,16 +79,15 @@ class NoptixLibrary(object):
 
     def wait_until_element_has_style(self, locator, styleAttribute, expected, timeout=10):
         timeout = timeout + time.time()
-        not_found = None
+        not_found = "No element found with style " + expected
 
         while time.time() < timeout:
             try:
-                value = get_element_style(locator, styleAttribute)
-                print(value)
+                value = self.get_element_style(locator, styleAttribute)
                 if value == expected:
                     return
             except:
-                not_found = "No element found with style " + expected
+                pass
             time.sleep(.2)
         raise AssertionError(not_found)
 

@@ -103,16 +103,16 @@ Text search
     Log    Step 1
     Go To IPVD Page
     ${baseurl}=   Set Variable    ${ENV}/ipvd
-    #Wait Until Element Has Style    ${IPVD SEARCH BAR}    background-color    rgba(0, 0, 0, 0)    #transparent
+    # transparent
+    Wait Until Element Has Style    ${IPVD SEARCH BAR}    background-color    rgba(0, 0, 0, 0)
     Click Element    ${IPVD SEARCH BAR}
-    #Wait Until Element Has Style    ${IPVD SEARCH BAR}    background-color    rgb(255, 255, 255)    #rgb(255, 255, 255)  #white  #FFFFFF
+    # white
+    Wait Until Element Has Style    ${IPVD SEARCH BAR}    background-color    rgba(255, 255, 255, 1)
 
     Log    Step 2
     IPVD Text Search    h
     Location should be    ${baseurl}?search=h
     Validate IPVD Device Table Not Empty
-    #${IPVD SEARCH BAR}/../following-sibling::div       #All Buttons to right of Text Search bar (Advanced Search or Applied Filters)
-    #${IPVD SEARCH BAR}/../following-sibling::div[1]    #First Button to right of Text Search bar (Advanced Search or Applied Filters)
 
     Log    Step 3
     Wait Until Element Has Class    ${IPVD PREVIOUS PAGE BUTTON}    disabled
@@ -293,10 +293,10 @@ Advanced search
 
     Log    Step 2
     Click Element    ${IPVD ADV FEATURES PTZ}
-    # Wait Until Element Has Style
-    # ...    ${IPVD ADV FEATURES PTZ}
-    # ...    background-color
-    # ...    rgb(105, 135, 150)
+    Wait Until Element Has Style
+    ...    ${IPVD ADV FEATURES PTZ}/div
+    ...    background-color
+    ...    ${COLOR LIGHT16 RGB}
     Wait until Elements are Visible
     ...    ${IPVD ADV FEATURES PTZ}${IPVD ADV FEATURES CLOSE BUTTON}
     Wait until Element has Class
@@ -305,10 +305,10 @@ Advanced search
 
     Log    Step 3
     Click Element    ${IPVD ADV FILTERS MIN RES}
-    # ${style}=   Get Element Style
-    # ...    ${IPVD ADV FEATURES PTZ}
-    # ...    background-color
-    # Log    ${style}
+    ${style}=   Get Element Style
+    ...    ${IPVD ADV FEATURES PTZ}
+    ...    background-color
+    Log    ${style}
     Click Element
     ...    ${IPVD ADV FILTERS MIN RES}${IPVD ADV FILTERS DROPDOWN MENU ITEMS}/a/span[text()='1080p']
     Element Text should be
