@@ -217,7 +217,26 @@ nx-app {
     }
   }
 
+  &.dropdown-process-btn {
+    width: 100%;
+    margin-top: 8px;
+    margin-bottom: 12px;
 
+    .loading {
+      max-width: calc(100% - 24px);
+      margin: 0 12px;
+      border: 1px solid $light6;
+    }
+
+    button {
+      min-width: calc(100% - 24px);
+      border: 1px solid $light6;
+      height: 28px;
+      font-size: $font-size-base;
+      margin: 0 12px !important;
+      white-space: nowrap;
+    }
+  }
 }
 
 a.disabled {
@@ -407,27 +426,7 @@ a.disabled {
   max-width: 100%;
   line-height: initial;
 }
-.user-name{
-  @include ellipsis;
-}
-td{
-    &.user-name{
-      max-width: 175px;
-    }
-    &.user-email{
-      @include ellipsis;
-      max-width: 240px;
-    }
-    &.user-role{
-      @include ellipsis;
-      max-width: 120px;
-    }
-}
-.button-cell{
-    padding-right: 6px !important;
-    padding-left: 6px !important;
-    text-align: center;
-}
+
 .system-button {
   user-select: none;
   cursor: pointer;
@@ -821,80 +820,6 @@ h1 .badge {
     -webkit-column-count: 2;
     /* Safari and Chrome */
     column-count: 2;
-}
-
-@mixin icon{
-  display: inline-block;
-  background-size: 112px 80px;
-  width: 16px;
-  height: 16px;
-  margin-right: 5px;
-  background-image: url('/static/images/portal_icons.png');
-  @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min-device-pixel-ratio: 2) {
-    background-image: url('/static/images/portal_icons@2x.png');
-  }
-}
-
-@mixin kill-glyphicon{
-  @include icon;
-  &:before{
-    content:none;
-  }
-}
-
-.glyphicon-home{
-    @include kill-glyphicon;
-    width: 24px;
-    height: 24px;
-    background-position: -24px -32px;
-}
-
-.glyphicon-user{
-    @include kill-glyphicon;
-    width: 24px;
-    height: 24px;
-    background-position: 0 -32px;
-}
-
-.glyphicon-menu-hamburger{
-    @include kill-glyphicon;
-    width: 20px;
-    height: 18px;
-    background-position: -50px -34px;
-}
-
-.glyphicon-share{
-    @include kill-glyphicon;
-    background-position: -16px 0;
-}
-
-.glyphicon-eye-open{
-    @include kill-glyphicon;
-    background-position: -80px 0;
-}
-
-.glyphicon-eye-close{
-    @include kill-glyphicon;
-    background-position: -80px -16px;
-}
-
-.glyphicon-pencil {
-    @include kill-glyphicon;
-    background-position: -47px 0;
-}
-
-.glyphicon-remove {
-    @include kill-glyphicon;
-    background-position: -64px 0;
-}
-
-.close-icon {
-  @include icon;
-  background-position: -32px 0;
-}
-.tag-close-icon {
-    @include icon;
-    background-position: -96px 0;
 }
 
 .wide-button {

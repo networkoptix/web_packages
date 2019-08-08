@@ -15,7 +15,7 @@ import { TranslateModule }  from '@ngx-translate/core';
 import { ComponentsModule } from '../../components/components.module';
 
 @Injectable()
-export class OsResolver implements Resolve<Observable<string>> {
+export class OsResolver implements Resolve<any> {
 
     deviceInfo: any;
     platform: string;
@@ -27,17 +27,17 @@ export class OsResolver implements Resolve<Observable<string>> {
         this.deviceInfo = this.deviceService.getDeviceInfo();
 
         this.platformMatch = {
-            'unix': 'Linux',
-            'linux': 'Linux',
-            'mac': 'MacOS',
-            'windows': 'Windows',
-            'arm': 'ARM',
-            'skd': 'SDK'
+            unix: 'Linux',
+            linux: 'Linux',
+            mac: 'MacOS',
+            windows: 'Windows',
+            arm: 'ARM',
+            skd: 'SDK'
         };
     }
 
     resolve() {
-        this.platform = this.platformMatch[this.deviceInfo.os];
+        this.platform = this.platformMatch[this.deviceInfo.os.toLowerCase()];
         if (this.platform) {
             this.router.navigate(['/download/' + this.platform]);
             return empty;
@@ -50,7 +50,7 @@ export class OsResolver implements Resolve<Observable<string>> {
 const appRoutes: Routes = [
     // {path: 'downloads', component: DownloadComponent},
     {path: '', redirectTo: 'download', pathMatch: 'full'},
-    {path: 'download', component: DownloadComponent, resolve: {platform: OsResolver}},
+    {path: 'download', component: DownloadComponent, resolve: { platform: OsResolver }},
     {path: 'download/:platform', component: DownloadComponent}
 ];
 
@@ -67,7 +67,7 @@ const appRoutes: Routes = [
         // RouterModule.forChild(appRoutes)
     ],
     providers: [
-        OsResolver
+        // OsResolver
     ],
     declarations: [
         DownloadComponent,

@@ -1,6 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { Location }                  from '@angular/common';
 import { NxConfigService }           from '../../../services/nx-config';
+import { NxAccountService }          from '../../../services/account.service';
 
 @Component({
     selector: 'nx-account-settings-select',
@@ -17,7 +18,7 @@ export class NxAccountSettingsDropdown implements OnInit {
     };
     show: boolean;
 
-    constructor(@Inject('account') private account: any,
+    constructor(private account: NxAccountService,
                 private _config: NxConfigService,
                 private location: Location) {
         this.config = this._config.getConfig();

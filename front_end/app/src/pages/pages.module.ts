@@ -1,16 +1,15 @@
 import { NgModule } from '@angular/core';
 
+import { DirectivesModule }  from '../directives/directives.module';
 import { SandboxModule }     from './sandbox/sandbox.module';
 import { IpvdModule }        from './ipvd/ipvd.module';
 import { Angular2CsvModule } from 'angular2-csv';
 
-import { MainModule }                from './main/main.module';
 import { DownloadModule }            from './download/download.module';
 import { DownloadHistoryModule }     from './download-history/download-history.module';
 import { NonSupportedBrowserModule } from './non-supported-browser/non-supported-browser.module';
-import { ServersDetailModule }       from './details/servers/servers.module';
-import { UsersDetailModule }         from './details/users/users.module';
-import { OtherDetailsModule }        from './details/others/others.module';
+
+import { RegisterModule } from './register/register.module';
 
 import { RightMenuModule }        from './right-menu/right-menu.module';
 import { ContentModule }          from './content/content.module';
@@ -19,21 +18,20 @@ import { IntegrationsListModule } from './integration/list/list.module';
 import { LandingModule }          from './landing/landing.module';
 import { PushNotificationsModule } from './push-notifications/push-notifications.module';
 
-import { NxOverviewModule }  from './integration/details/overview/overview.module';
-import { NxSetupModule }     from './integration/details/setup/setup.module';
+import { NxOverviewModule }         from './integration/details/overview/overview.module';
+import { NxSetupModule }            from './integration/details/setup/setup.module';
+import { NxSettingsModule }         from './systems/settings/settings.module';
+import { NxSystemsListModule }      from './systems/list/list.module';
 
 @NgModule({
     imports        : [
+        DirectivesModule,
         SandboxModule,
-        MainModule,
         DownloadModule,
         DownloadHistoryModule,
         NonSupportedBrowserModule,
-        ServersDetailModule,    // TODO: Remove it after test
-        UsersDetailModule,      // TODO: Remove it after test
-        OtherDetailsModule,     // TODO: Remove it after test
+        RegisterModule,
         IntegrationsModule,
-        IntegrationsListModule,
         ContentModule,          // TODO: Remove it after test
         RightMenuModule,        // TODO: Remove it after test
         PushNotificationsModule,
@@ -42,21 +40,20 @@ import { NxSetupModule }     from './integration/details/setup/setup.module';
         LandingModule,
         NxOverviewModule,
         NxSetupModule,
+        NxSettingsModule,
+        NxSystemsListModule,
     ],
     declarations   : [],
     entryComponents: [],
     providers      : [],
     exports        : [
         SandboxModule,
-        MainModule,
         DownloadModule,
         DownloadHistoryModule,
         NonSupportedBrowserModule,
-        ServersDetailModule,    // TODO: Remove it after test
-        UsersDetailModule,      // TODO: Remove it after test
-        OtherDetailsModule,     // TODO: Remove it after test
+        RegisterModule,
         IntegrationsModule,
-        IntegrationsListModule,
+        NxSettingsModule,
         ContentModule,          // TODO: Remove it after test
         RightMenuModule,        // TODO: Remove it after test
         PushNotificationsModule,
@@ -67,3 +64,4 @@ import { NxSetupModule }     from './integration/details/setup/setup.module';
 })
 export class PagesModule {
 }
+

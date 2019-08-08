@@ -14,7 +14,8 @@ import { Title }              from '@angular/platform-browser';
 
 export class NxIntegrationsComponent implements OnInit {
     private CONFIG: any = {};
-    private lang: any = {};
+    private LANG: any = {};
+
     private allElements: any;
     private elements: any;
     private emptyFilter: any = {};
@@ -54,12 +55,9 @@ export class NxIntegrationsComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.language
-            .translationsSubject
-            .subscribe((lang) => {
-                this.lang = lang;
-                this.title.setTitle(this.lang.pageTitles.integrations);
-            });
+        this.CONFIG = this.config.getConfig();
+        this.LANG = this.language.getTranslations();
+        this.title.setTitle(this.LANG.pageTitles.integrations);
 
         // Example URI
         // /integrations?search=node

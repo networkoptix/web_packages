@@ -1,6 +1,7 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { ActivatedRoute }                                     from '@angular/router';
-import { NxUriService }                                       from '../../services/uri.service';
+import {
+    Component, ElementRef, Input, OnChanges,
+    OnInit, SimpleChanges
+} from '@angular/core';
 
 /* Usage
 <nx-menu>
@@ -15,9 +16,21 @@ import { NxUriService }                                       from '../../servic
 export class NxMenuComponent implements OnInit, OnChanges {
     @Input() content: any;
 
-    selected: string;
+    systemId: any;
+    selectedLevel1: string;
+    selectedLevel2: string;
+    selectedLevel3: string;
 
-    constructor() {
+    section: any;
+    buttons: any;
+
+    level2: any = [];
+
+    constructor(private elementRef: ElementRef) {
+        this.buttons = {};
+        this.level2 = {
+            items : []
+        };
     }
 
     ngOnInit() {
@@ -25,8 +38,38 @@ export class NxMenuComponent implements OnInit, OnChanges {
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes.content.currentValue.selectedSection) {
-            this.selected = changes.content.currentValue.selectedSection;
+            this.systemId = changes.content.currentValue.systemId;
+            this.selectedLevel1 = changes.content.currentValue.selectedSection;
+            this.selectedLevel2 = changes.content.currentValue.selectedSubSection;
+            this.selectedLevel3 = changes.content.currentValue.selectedDetailsSection;
+        }
 
+        if (changes.content.currentValue) {
+            this.section = changes.content.currentValue.level1.filter((level) => {
+                if (level.id === changes.content.currentValue.selectedSection) {
+                    return true;
+                }
+            })[0];
+
+            if (this.section && this.section.level2) {
+                this.buttons = this.section.level2.filter((subSection) => {
+                    if (subSection.id === 'buttons') {
+                        return true;
+                    }
+                })[0] || [];
+
+                if (this.buttons.items && this.buttons.items.length) {
+                    this.buttons = this.buttons.items;
+                }
+                this.level2.items = this.section.level2.filter((subSection) => {
+                    if (subSection.id !== 'buttons') {
+                        return true;
+                    }
+                });
+            } else {
+                this.buttons = [];
+                this.level2.items = [];
+            }
         }
     }
 

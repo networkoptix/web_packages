@@ -973,6 +973,7 @@
             "label": "Integration name",
             "value": "",
             "description": "Visible on the tile for the integrations page and the card header for the detailed view.",
+            "placeholder": "New integration",
             "type": "text",
             "meta": {
               "char_limit": 64
@@ -997,6 +998,7 @@
             "label": "Description",
             "value": "",
             "description": "A short description for the integration tile located on the integrations page. The short description should be no more than 300 characters because the space is limited.",
+            "placeholder": "An example integration.",
             "type": "long_text",
             "meta": {
               "char_limit": 500,
@@ -1026,6 +1028,7 @@
             "label": "Tags",
             "value": "",
             "description": "If Type does not have any relevant categories for you integration you may list some here. Eventually some might be added to type.<br>Please separate your list with commas. Ex AI, IoT",
+            "placeholder": "AI, IoT",
             "type": "text",
             "optional": true
           },
@@ -1034,6 +1037,7 @@
             "label": "Company Name",
             "value": "",
             "description": "A company name. The company's name is visible in the detailed view page for the integration in the rightmost column.",
+            "placeholder": "Fictional Company",
             "type": "text",
             "optional": false,
             "meta": {
@@ -1045,6 +1049,7 @@
             "label": "Company Web site",
             "value": "",
             "description": "Company's web address. Example: http://www.google.com, https://mail.yahoo.com",
+            "placeholder": "https://example.com",
             "type": "text",
             "optional": false,
             "meta": {
@@ -1056,6 +1061,7 @@
             "label": "Company's privacy policy",
             "value": "",
             "description": "Link to company's privacy policy page.",
+            "placeholder": "https://example.com",
             "type": "text",
             "optional": false,
             "meta": {
@@ -1067,6 +1073,7 @@
             "label": "Terms of Use for the integration",
             "value": "",
             "description": "Link to integration's Terms of Use page.",
+            "placeholder": "https://www.example.com",
             "type": "text",
             "optional": false,
             "meta": {
@@ -1087,6 +1094,7 @@
             "label": "Overview Video",
             "value": "",
             "description": "<br><br><br>A youtube or vimeo link for a overview video.<br>Links can be:<br>https://www.youtube.com/watch?v={video id}<br>https://www.youtube.com/embed/{video id}<br>https://youtu.be/{video id}<br>https://vimeo.com/{video id}",
+            "placeholder": "https://www.youtube.com/example",
             "type": "text",
             "optional": true,
             "meta": {
@@ -1098,6 +1106,7 @@
             "label": "Full functionality overview",
             "value": "",
             "description": "A description about what the integration does. The overview appears on the detailed view page for the integration in the leftmost column. Recommended length 1000 characters.",
+            "placeholder": "Tell us what your integration does...",
             "type": "html",
             "optional": true,
             "meta": {
@@ -1524,6 +1533,7 @@
             "label": "Instruction Video",
             "value": "",
             "description": "<br><br><br>A youtube or vimeo link for a instruction video.<br>Links can be:<br>https://www.youtube.com/watch?v={video id}<br>https://www.youtube.com/embed/{video id}<br>https://youtu.be/{video id}<br>https://vimeo.com/{video id}",
+            "placeholder": "https://www.youtube.com/example",
             "type": "text",
             "optional": true,
             "meta": {
@@ -1695,6 +1705,7 @@
             "label": "Installation Instructions",
             "value": "",
             "description": "This section is visible in the detailed view page for the integration in the middle column. Recommended length 1500 characters. If you need more text its recommended that you create a pdf and add it to the download files section.",
+            "placeholder": "Detailed instructions for installing the integration.",
             "type": "html",
             "meta": {
               "char_limit": 10000,
@@ -1715,6 +1726,7 @@
             "label": "Support E-mail",
             "value": "",
             "description": "E-mail customers should use for support.",
+            "placeholder": "support@example.com",
             "type": "text",
             "optional": false,
             "meta": {
@@ -1726,6 +1738,7 @@
             "label": "Support phone",
             "value": "",
             "description": "Phone number customers should use for support. (Ex. (573) 884-1878 | +1 (573) 884-1878 | +(591) 7433433 | 0591 74339296 | +1 555 555 5554)",
+            "placeholder": "+1 800 800 8000",
             "type": "text",
             "optional": true,
             "meta": {
@@ -1737,6 +1750,7 @@
             "label": "Support URL",
             "value": "",
             "description": "Web address customers should use for support. Example: http://support.google.com, https://www.yahoo.com/support",
+            "placeholder": "https://support.google.com",
             "type": "text",
             "optional": true,
             "meta": {
@@ -1819,6 +1833,7 @@
             "label": "Additional File 1 Name",
             "value": "",
             "description": "Name for additional file 1.",
+            "placeholder": "Custom Installers",
             "type": "text",
             "optional": true
           },
@@ -1839,6 +1854,7 @@
             "label": "Additional File 2 Name",
             "value": "",
             "description": "Name for additional file 2.",
+            "placeholder": "Virtual machine",
             "type": "text",
             "optional": true
           },
@@ -1859,6 +1875,7 @@
             "label": "Additional File 3 Name",
             "value": "",
             "description": "Name for additional file 3.",
+            "placeholder": "Extra documentation",
             "type": "text",
             "optional": true
           },
@@ -1879,6 +1896,7 @@
             "label": "External link name",
             "value": "",
             "description": "Name for external link.",
+            "placeholder": "Dropbox link",
             "type": "text",
             "optional": true
           },
@@ -1887,6 +1905,7 @@
             "label": "External link",
             "value": "",
             "description": "External link. Use of this field is discouraged. If you do want to use it contact a superuser to change it.",
+            "placeholder": "https://dropbox.com",
             "type": "text",
             "advanced": true,
             "optional": true,
@@ -1938,6 +1957,7 @@
             "label": "Tested software (VMS) build",
             "value": "",
             "description": "Custom build supported version. Ex: 4.1.0.12345, 3.12.0.34567",
+            "placeholder": "4.1.0.12345",
             "type": "text",
             "optional": true,
             "meta": {
@@ -1967,6 +1987,7 @@
             "label": "Additional Requirements",
             "value": "",
             "description": "Explaining any additional hardware or software requirements needed.",
+            "placeholder": "You will need the following...",
             "type": "html",
             "optional": true,
             "meta": {
@@ -1985,6 +2006,7 @@
             "label": "Integration version",
             "value": "",
             "description": "",
+            "placeholder": "1.0",
             "type": "text",
             "optional": false
           },
@@ -1993,6 +2015,7 @@
             "label": "What's new?",
             "value": "",
             "description": "Describe to the users what was changed/fixed/added in this release.",
+            "placeholder": "<h2>ChangedList</h2><ul><li>Added some features</li><li>Removed some features</li></ul>",
             "type": "html",
             "optional": true
           },
@@ -2002,6 +2025,7 @@
             "label": "Internal notes",
             "value": "",
             "description": "This information is only visible to reviewers and not users. Describe what was changed/fixed/added in this release.",
+            "placeholder": "The description was updated so that...",
             "type": "html",
             "optional": true,
             "public": false
@@ -2011,4 +2035,3 @@
     ]
   }
 ]
-

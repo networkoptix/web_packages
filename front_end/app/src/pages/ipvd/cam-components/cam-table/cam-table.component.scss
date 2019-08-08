@@ -45,19 +45,13 @@
   }
   
   .nx-table {
-    table-layout  : auto;
-    min-width     : 700px;
-    white-space   : nowrap;
-    margin-bottom : 0;
+    min-width : 700px;
     
     .table-row-spacer {
       height : .5rem;
     }
     
     thead {
-      background-color : $additional_light1;
-      border-bottom    : 1px solid $light3;
-      
       th {
         padding          : .5rem 0;
         color            : $dark9;

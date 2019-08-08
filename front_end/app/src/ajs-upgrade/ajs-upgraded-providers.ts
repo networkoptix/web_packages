@@ -21,15 +21,25 @@ const languageServiceProvider = {
     deps: ['$injector']
 };
 
-function accountFactory(i: any) {
-    return i.get('account');
+function urlProtocolFactory(i: any) {
+    return i.get('urlProtocol');
 }
 
-const accountServiceProvider = {
-    provide: 'account',
-    useFactory: accountFactory,
+const urlProtocolServiceProvider = {
+    provide: 'urlProtocol',
+    useFactory: urlProtocolFactory,
     deps: ['$injector']
 };
+
+// function accountFactory(i: any) {
+//     return i.get('account');
+// }
+//
+// const accountServiceProvider = {
+//     provide: 'account',
+//     useFactory: accountFactory,
+//     deps: ['$injector']
+// };
 
 function processFactory(i: any) {
     return i.get('process');
@@ -41,27 +51,7 @@ const processServiceProvider = {
     deps: ['$injector']
 };
 
-function ngToastFactory(i: any) {
-    return i.get('ngToast');
-}
-
-const ngToastProvider = {
-    provide: 'ngToast',
-    useFactory: ngToastFactory,
-    deps: ['$injector']
-};
-
-function systemsServiceFactory(i: any) {
-    return i.get('systemsProvider');
-}
-
-const systemsServiceProvider = {
-    provide: 'systemsProvider',
-    useFactory: systemsServiceFactory,
-    deps: ['$injector']
-};
-
-function systemServiceFactory(i: any){
+function systemServiceFactory(i: any) {
     return i.get('system');
 }
 
@@ -71,15 +61,15 @@ const systemService = {
     deps: ['$injector']
 };
 
-function authorizationCheckServiceFactory(i: any) {
-    return i.get('authorizationCheckService');
-}
-
-const authorizationCheckServiceProvider = {
-    provide: 'authorizationCheckService',
-    useFactory: authorizationCheckServiceFactory,
-    deps: ['$injector']
-};
+// function authorizationCheckServiceFactory(i: any) {
+//     return i.get('authorizationCheckService');
+// }
+//
+// const authorizationCheckServiceProvider = {
+//     provide: 'authorizationCheckService',
+//     useFactory: authorizationCheckServiceFactory,
+//     deps: ['$injector']
+// };
 
 function uuid2Factory(i: any) {
     return i.get('uuid2');
@@ -91,15 +81,15 @@ const uuid2ServiceProvider = {
     deps: ['$injector']
 };
 
-function localStorageFactory(i: any) {
-    return i.get('$localStorage');
-}
-
-const localStorageProvider = {
-    provide: 'localStorageService',
-    useFactory: localStorageFactory,
-    deps: ['$injector']
-};
+// function localStorageFactory(i: any) {
+//     return i.get('$localStorage');
+// }
+//
+// const localStorageProvider = {
+//     provide: 'localStorageService',
+//     useFactory: localStorageFactory,
+//     deps: ['$injector']
+// };
 
 function locationProxyFactory(i: any) {
     return i.get('locationProxyService');
@@ -135,11 +125,18 @@ export class languageServiceModule { }
 
 @NgModule({
     providers: [
-        accountServiceProvider
+        urlProtocolServiceProvider
     ]
 })
-export class accountServiceModule {
-}
+export class urlProtocolServiceModule { }
+
+// @NgModule({
+//     providers: [
+//         accountServiceProvider
+//     ]
+// })
+// export class accountServiceModule {
+// }
 
 @NgModule({
     providers: [
@@ -151,43 +148,27 @@ export class processServiceModule {
 
 @NgModule({
     providers: [
-        ngToastProvider
-    ]
-})
-export class ngToastModule {
-}
-
-@NgModule({
-    providers: [
-        systemsServiceProvider
-    ]
-})
-export class systemsModule {
-}
-
-@NgModule({
-    providers: [
         systemService
     ]
 })
 export class systemModule {
 }
 
-@NgModule({
-    providers: [
-        authorizationCheckServiceProvider
-    ]
-})
-export class authorizationCheckServiceModule {
-}
+// @NgModule({
+//     providers: [
+//         authorizationCheckServiceProvider
+//     ]
+// })
+// export class authorizationCheckServiceModule {
+// }
 
-@NgModule({
-    providers: [
-        localStorageProvider
-    ]
-})
-export class localStorageModule {
-}
+// @NgModule({
+//     providers: [
+//         localStorageProvider
+//     ]
+// })
+// export class localStorageModule {
+// }
 
 @NgModule({
     providers: [
@@ -196,3 +177,4 @@ export class localStorageModule {
 })
 export class locationProxyModule {
 }
+

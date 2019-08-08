@@ -1,14 +1,14 @@
 'use strict';
 
 angular.module('cloudApp')
-    .controller('DebugCtrl', ['$scope', 'cloudApi', 'account', 'process', '$q', '$timeout',
-                'dialogs', 'urlProtocol', '$base64', 'systemsProvider', 'authorizationCheckService', '$http',
+    .controller('DebugCtrl', ['$scope', 'cloudApi', 'nxAccountService', 'process', '$q', '$timeout',
+                'dialogs', 'urlProtocol', '$base64', 'nxSystemsService', '$http',
                 'languageService', 'nxPageService',
-        function ($scope, cloudApi, account, process, $q, $timeout,
-                  dialogs, urlProtocol, $base64, systemsProvider, authorizationCheckService, $http,
+        function ($scope, cloudApi, nxAccountService, process, $q, $timeout,
+                  dialogs, urlProtocol, $base64, nxSystemsService, $http,
                   languageService, nxPageService) {
-
-            authorizationCheckService.requireLogin();
+    
+            nxAccountService.requireLogin();
             nxPageService.setPageTitle(languageService.lang.pageTitles.debug);
 
         $scope.user_email = 'ebalashov@networkoptix.com';
@@ -131,23 +131,22 @@ angular.module('cloudApp')
         };
 
         $scope.getTempKey = function(){
-            account.authKey().then(function(authKey){
+            nxAccountService.authKey().then(function(authKey){
                 $scope.linkSettings.auth = authKey;
             },function(no_account){
                 console.error('couldn\'t retrieve temporary auth_key from cloud_portal',no_account);
                 $scope.linkSettings.auth = 'couldn\'t retrieve temporary auth_key from cloud_portal';
             });
         };
-
-        $scope.systemsProvider = systemsProvider;
-        $scope.$watch('systemsProvider.systems', function(){
-            $scope.systems = $scope.systemsProvider.systems;
+        
+        $scope.$watch('nxSystemsService.systems', function(){
+            $scope.systems = nxSystemsService.systems;
             if(!$scope.debugProxySettings.systemId && $scope.systems[0]) {
                 $scope.debugProxySettings.systemId = $scope.systems[0].id;
             }
         });
 
-        $scope.systemsProvider.forceUpdateSystems();
+        nxSystemsService.forceUpdateSystems();
 
         $scope.mergeSettings={
             masterSystemId:null,

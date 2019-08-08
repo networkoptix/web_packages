@@ -5,8 +5,8 @@
 
     angular
         .module('cloudApp.services')
-        .factory('dialogs', ['$http', 'NgbModal', '$q', '$location', 'NxDialogsService', 'languageService',
-            function ($http, NgbModal, $q, $location, NxDialogsService, languageService) {
+        .factory('dialogs', ['$http', 'NgbModal', '$q', '$location', 'nxDialogsService', 'languageService',
+            function ($http, NgbModal, $q, $location, nxDialogsService, languageService) {
 
                 let lang = languageService.lang;
 
@@ -86,7 +86,7 @@
 
                 return {
                     notify: function (message, type, hold) {
-                        return NxDialogsService.notify(message, type, hold);
+                        return nxDialogsService.notify(message, type, hold);
                         // type = type || 'info';
                         //
                         // return ngToast.create({
@@ -98,11 +98,10 @@
                         // });
                     },
                     dismissNotifications: function () {
-                        return NxDialogsService.dismiss();
-                        // return ngToast.dismiss();
+                        return nxDialogsService.dismiss();
                     },
                     alert: function (message, title) {
-                        return NxDialogsService.openAlert(message, title);
+                        return nxDialogsService.alert(message, title);
                         // return openDialog({
                         //     title      : title,
                         //     content    : message,
@@ -113,7 +112,7 @@
                     },
                     confirm: function (message, title, actionLabel, actionType, cancelLabel) {
                         // title, template, url, content, hasFooter, cancellable, params, closable, actionLabel, buttonType, size
-                        return NxDialogsService.confirm(message, title, actionLabel, actionType, cancelLabel);
+                        return nxDialogsService.confirm(message, title, actionLabel, actionType, cancelLabel);
                         // return openDialog({
                         //     title      : title,
                         //     content    : message,
@@ -126,7 +125,7 @@
                         // }).result;
                     },
                     login: function (keepPage?, redirectClose?) {
-                        return NxDialogsService.login(keepPage, redirectClose);
+                        return nxDialogsService.login(keepPage, redirectClose);
                         // return openDialog({
                         //     title: L.dialogs.loginTitle,
                         //     template: CONFIG.viewsDir + 'dialogs/login.html',
@@ -139,7 +138,7 @@
                         //     }}).result;
                     },
                     share: function (system?, user?) {
-                        return NxDialogsService.share(system, user);
+                        return nxDialogsService.addUser(system, user);
 
                         // var url = 'share';
                         // var title = L.sharing.shareTitle;
@@ -161,7 +160,7 @@
                     },
 
                     disconnect: function (systemId) {
-                        return NxDialogsService.disconnect(systemId);
+                        return nxDialogsService.disconnect(systemId);
 
                         // var title = lang.system.confirmDisconnectTitle;
                         //
@@ -176,7 +175,7 @@
                         // }).result;
                     },
                     rename: function (systemId, systemName) {
-                        return NxDialogsService.rename(systemId, systemName);
+                        return nxDialogsService.rename(systemId, systemName);
 
                         // var title = lang.system.confirmRenameTitle;
                         //
@@ -192,7 +191,7 @@
                         // }).result;
                     },
                     merge: function (system, systems, user) {
-                        return NxDialogsService.merge(system, systems, user);
+                        return nxDialogsService.merge(system, systems, user);
 
                         // var title = lang.system.mergeSystemTitle;
                         //
@@ -207,7 +206,7 @@
                         // }).result;
                     },
                     embed: function (system) {
-                        return NxDialogsService.embed();
+                        return nxDialogsService.embed();
                     },
                     noClientDetected: function () {
                         // message, title, actionLabel, actionType

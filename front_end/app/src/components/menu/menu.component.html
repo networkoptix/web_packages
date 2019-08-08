@@ -2,25 +2,37 @@
 <div class="menu">
     <div *ngFor="let item of content.level1">
         <nx-level-1-item [item]="item"
-                         [selected]="selected == item.id">
+                         [base]="content.base"
+                         [selected]="selectedLevel1 == item.id">
         </nx-level-1-item>
 
-        <div *ngFor="let subitem of item.level2">
-            <nx-level-2-item [item]="subitem"
-                             [base]="content.base"
-                             [selected]="selected == subitem.id">
-            </nx-level-2-item>
+        <div *ngIf="selectedLevel1 == item.id">
+            <div class="container-buttons"
+                 *ngIf="buttons && buttons.length">
+                <nx-menu-button
+                    *ngFor="let button of buttons"
+                    [button]="button"></nx-menu-button>
+            </div>
+            <div *ngFor="let subitem of level2.items; let last = last">
+                <nx-level-2-item [item]="subitem"
+                                 [ngClass]="{ last: last }"
+                                 [base]="content.base"
+                                 [selected]="selectedLevel2 == subitem.id">
+                </nx-level-2-item>
 
-            <div *ngFor="let details of subitem.level3">
-                <nx-level-3-item [item]="details"
-                                 [selected]="selected == details.id">
-                </nx-level-3-item>
+                <div *ngFor="let details of subitem.level3">
+                    <nx-level-3-item [item]="details"
+                                     [base]="content.base"
+                                     [selected]="selectedLevel3 == details.id">
+                    </nx-level-3-item>
+                </div>
             </div>
         </div>
 
         <div *ngFor="let details of item.level3">
             <nx-level-3-item [item]="details"
-                             [selected]="selected == details.id">
+                             [base]="content.base"
+                             [selected]="selectedLevel3 == details.id">
             </nx-level-3-item>
         </div>
     </div>

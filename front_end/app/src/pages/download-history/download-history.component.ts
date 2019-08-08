@@ -11,7 +11,8 @@ import { NgbTabChangeEvent, NgbTabset }      from '@ng-bootstrap/ng-bootstrap';
 import isArray = require('core-js/fn/array/is-array');
 import angular = require('angular');
 import { NxConfigService }                   from '../../services/nx-config';
-import { TranslateService } from '@ngx-translate/core';
+import { NxLanguageProviderService }         from '../../services/nx-language-provider';
+import { NxAccountService }                  from '../../services/account.service';
 
 @Component({
     selector   : 'download-history',
@@ -27,8 +28,9 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
     private build: any;
     private canViewRelease: boolean;
 
-    config: any;
-    lang: any;
+    CONFIG: any;
+    LANG: any;
+
     user: any;
     downloads: any;
     activeBuilds: any;
@@ -38,26 +40,24 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
 
     location: Location;
 
-    @ViewChild('tabs')
+    @ViewChild('tabs', { static: true })
     public tabs: NgbTabset;
 
-    constructor(@Inject('languageService') private language: any,
+    constructor(@Inject(DOCUMENT) private document: any,
                 @Inject('cloudApiService') private cloudApi: any,
-                @Inject('authorizationCheckService') private authorizationService: any,
-                @Inject('account') private account: any,
                 @Inject('locationProxyService') private locationProxy: any,
-                @Inject(DOCUMENT) private document: any,
+                private accountService: NxAccountService,
                 private configService: NxConfigService,
                 private route: ActivatedRoute,
                 private router: Router,
                 private titleService: Title,
-                private translate: TranslateService,
+                private language: NxLanguageProviderService,
                 location: Location) {
 
         this.location = location;
         this.canViewRelease = false;
         this.noteTypes = [];
-        this.config = configService.getConfig();
+        this.CONFIG = configService.getConfig();
     }
 
     private getAvailableDownloadTypes(data) {
@@ -114,9 +114,8 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.translate.getTranslation(this.translate.currentLang).subscribe((lang) => {
-            this.lang = lang;
-        });
+        this.LANG = this.language.getTranslations();
+
         this.sub = this.route.params.subscribe(params => {
             // this.build = params['build'];
 
@@ -127,23 +126,23 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
                 this.section = this.routeParam;
             }
 
-            this.authorizationService
+            this.accountService
                 .requireLogin()
                 .then(result => {
                     if (!result) {
-                        this.document.location.href = this.config.redirect404;
+                        this.document.location.href = this.CONFIG.redirect404;
                         return;
                     }
 
-                    if (!this.config.publicReleases) {
-                        this.account
+                    if (!this.CONFIG.publicReleases) {
+                        this.accountService
                             .get()
                             .then(result => {
-                                this.canViewRelease = result.is_superuser || result.permissions.indexOf(this.config.permissions.canViewRelease) > -1;
+                                this.canViewRelease = result.is_superuser || result.permissions.indexOf(this.CONFIG.permissions.canViewRelease) > -1;
                                 if (this.canViewRelease) {
                                     this.getData();
                                 } else {
-                                    this.document.location.href = this.config.redirect404;
+                                    this.document.location.href = this.CONFIG.redirect404;
                                     return;
                                 }
                             });

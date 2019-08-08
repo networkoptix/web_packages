@@ -1,14 +1,15 @@
 import {
     Component, OnInit, OnDestroy,
     ViewChild, Inject, Input
-}                                            from '@angular/core';
-import { ActivatedRoute, Router }            from '@angular/router';
-import { Title }                             from '@angular/platform-browser';
-import { DOCUMENT, Location }                from '@angular/common';
-import { NgbTabChangeEvent, NgbTabset }      from '@ng-bootstrap/ng-bootstrap';
-import { DeviceDetectorService }             from 'ngx-device-detector';
-import { NxConfigService }                   from '../../services/nx-config';
-import { TranslateService }                  from '@ngx-translate/core';
+}                                       from '@angular/core';
+import { ActivatedRoute, Router }       from '@angular/router';
+import { Title }                        from '@angular/platform-browser';
+import { Location }                     from '@angular/common';
+import { NgbTabChangeEvent, NgbTabset } from '@ng-bootstrap/ng-bootstrap';
+import { DeviceDetectorService }        from 'ngx-device-detector';
+import { NxConfigService }              from '../../services/nx-config';
+import { NxLanguageProviderService }    from '../../services/nx-language-provider';
+import { NxAccountService }             from '../../services/account.service';
 
 @Component({
     selector   : 'download-component',
@@ -25,10 +26,11 @@ export class DownloadComponent implements OnInit, OnDestroy {
     private routeData: any;
     private canViewDownloads: boolean;
 
-    config: any;
+    CONFIG: any;
+    LANG: any;
+
     downloads: any;
     downloadsData: any;
-    lang: any;
     platformMatch: {};
     canSeeHistory: boolean;
     tabsVisible: boolean;
@@ -36,18 +38,18 @@ export class DownloadComponent implements OnInit, OnDestroy {
 
     location: Location;
 
-    @ViewChild('tabs')
+    @ViewChild('tabs', { static: true })
     public tabs: NgbTabset;
 
     // TODO: Fix arm supported. It says the same thing as linux
 
     private setupDefaults() {
 
-        this.config = this.configService.getConfig();
+        this.CONFIG = this.configService.getConfig();
 
         this.canViewDownloads = false;
         this.tabsVisible = false;
-        this.downloads = {... this.config.downloads};
+        this.downloads = {... this.CONFIG.downloads};
 
         this.downloadsData = {
             version   : '',
@@ -67,18 +69,16 @@ export class DownloadComponent implements OnInit, OnDestroy {
         };
     }
 
-    constructor(@Inject('languageService') private language: any,
-                @Inject('cloudApiService') private cloudApi: any,
-                @Inject('account') private account: any,
-                @Inject('authorizationCheckService') private authorizationService: any,
+    constructor(@Inject('cloudApiService') private cloudApi: any,
+                private accountService: NxAccountService,
                 @Inject('locationProxyService') private locationProxy: any,
-                @Inject(DOCUMENT) private document: any,
+                // @Inject(DOCUMENT) private document: Document,
                 private configService: NxConfigService,
                 private deviceService: DeviceDetectorService,
                 private route: ActivatedRoute,
                 private router: Router,
                 private titleService: Title,
-                private translate: TranslateService,
+                private language: NxLanguageProviderService,
                 location: Location) {
 
         this.location = location;
@@ -109,8 +109,8 @@ export class DownloadComponent implements OnInit, OnDestroy {
 
             for (const mobile in this.downloads.mobile) {
                 if (this.downloads.mobile[ mobile ].os === this.activeOs) {
-                    if (this.lang.downloads.mobile[ this.downloads.mobile[ mobile ].name ].link !== 'disabled') {
-                        this.document.location.href = this.lang.downloads.mobile[ this.downloads.mobile[ mobile ].name ].link;
+                    if (this.LANG.downloads.mobile[ this.downloads.mobile[ mobile ].name ].link !== 'disabled') {
+                        document.location.href = this.LANG.downloads.mobile[ this.downloads.mobile[ mobile ].name ].link;
                         return;
                     }
                     break;
@@ -123,8 +123,8 @@ export class DownloadComponent implements OnInit, OnDestroy {
             .then(data => {
                 this.downloadsData = data.data;
                 // Sorts platforms based on order defined in nx-config service
-                Object.keys(this.config.downloads.groups).forEach((key) => {
-                    const checkPlatform = this.config.downloads.groups[key];
+                Object.keys(this.CONFIG.downloads.groups).forEach((key) => {
+                    const checkPlatform = this.CONFIG.downloads.groups[key];
                     const platform = this.downloadsData.platforms.find((downloadsPlatform) => {
                         return downloadsPlatform.name === checkPlatform.name;
                     });
@@ -137,8 +137,8 @@ export class DownloadComponent implements OnInit, OnDestroy {
                                     return this.downloads.groups[platform.name].appTypes.includes(installer.appType);
                             }
                         }).map((installer) => {
-                            const translatedPlatform = this.lang.downloads.platforms[installer.platform] || installer.platform;
-                            const translatedAppType = this.lang.downloads.appTypes[installer.appType] || this.lang.downloads.appTypes.package;
+                            const translatedPlatform = this.LANG.downloads.platforms[installer.platform] || installer.platform;
+                            const translatedAppType = this.LANG.downloads.appTypes[installer.appType] || this.LANG.downloads.appTypes.package;
                             installer.formatName = `${translatedPlatform} - ${translatedAppType}`;
                             installer.url = `${this.downloadsData.releaseUrl}${installer.path}`;
                             return installer;
@@ -168,31 +168,30 @@ export class DownloadComponent implements OnInit, OnDestroy {
     setTitle(platform) {
         let title;
         if (platform) {
-            title = this.language.lang.pageTitles.downloadPlatform + platform;
+            title = this.LANG.pageTitles.downloadPlatform + platform;
         } else {
-            title = this.language.lang.pageTitles.download;
+            title = this.LANG.pageTitles.download;
         }
         this.titleService.setTitle(title);
     }
 
     ngOnInit(): void {
-        this.translate.getTranslation(this.translate.currentLang).subscribe((lang) => {
-            this.lang = lang;
-        });
-        this.account
+        this.LANG = this.language.getTranslations();
+
+        this.accountService
             .get()
             .then(result => {
-                this.canSeeHistory = (this.config.publicReleases ||
+                this.canSeeHistory = (this.CONFIG.publicReleases ||
                     result.is_superuser ||
-                    result.permissions.indexOf(this.config.permissions.canViewRelease) > -1);
+                    result.permissions.indexOf(this.CONFIG.permissions.canViewRelease) > -1);
             });
 
-        if (!this.config.publicDownloads) {
-            this.authorizationService
+        if (!this.CONFIG.publicDownloads) {
+            this.accountService
                 .requireLogin()
                 .then(result => {
                     if (!result) {
-                        this.document.location.href = this.config.redirectUnauthorised;
+                        document.location.href = this.CONFIG.redirectUnauthorised;
                         return;
                     }
 

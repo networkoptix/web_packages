@@ -2,10 +2,10 @@
 
 angular.module('cloudApp')
     .controller('ActivateRestoreCtrl',['$scope', 'cloudApi', '$routeParams', 'process', '$localStorage', '$timeout',
-        '$sessionStorage', 'account', 'authorizationCheckService', '$location', 'urlProtocol', 'dialogs',
+        '$sessionStorage', 'nxAccountService', '$location', 'urlProtocol', 'dialogs',
         'languageService', 'nxPageService',
         function ($scope, cloudApi, $routeParams, process, $localStorage, $timeout,
-                  $sessionStorage, account, authorizationCheckService, $location, urlProtocol, dialogs,
+                  $sessionStorage, nxAccountService, $location, urlProtocol, dialogs,
                   languageService, nxPageService) {
 
             $scope.session = $localStorage;
@@ -30,7 +30,7 @@ angular.module('cloudApp')
             $scope.loading = true;
 
             if($scope.reactivating){
-                authorizationCheckService.redirectAuthorised();
+                nxAccountService.redirectAuthorised();
             }
             function checkActivate(){
                 if($scope.data.activateCode){
@@ -40,12 +40,12 @@ angular.module('cloudApp')
                 }
             }
             function init(){
-                $scope.data.email = account.getEmail();
+                $scope.data.email = nxAccountService.getEmail();
 
                 if($scope.data.restoreCode || $scope.data.activateCode){
-                    authorizationCheckService.logoutAuthorised();
+                    nxAccountService.logoutAuthorised();
                     var code = $scope.data.restoreCode || $scope.data.activateCode;
-                    account.checkCode(code).then(function(registered){
+                    nxAccountService.checkCode(code).then(function(registered){
                         if(!registered){
                             // send to registration form with the code
                             $location.path('/register/' + code);
@@ -68,7 +68,7 @@ angular.module('cloudApp')
                     return false;
                 }
                 if( $scope.context.process !== name ){
-                    authorizationCheckService.redirectToHome();
+                    nxAccountService.redirectToHome();
                 }
                 return true;
             }

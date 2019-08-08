@@ -24,6 +24,7 @@ body {
         padding : rem(16px);
         h2 {
             font-size: rem(20px);
+            display: inline;
         }
     }
 
@@ -230,6 +231,7 @@ select {
         position         : absolute;
         right            : 2px;
         z-index          : 9;
+        top              : 0;
 
         .glyphicon {
             margin : 0;

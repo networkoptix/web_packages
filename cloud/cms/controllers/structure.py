@@ -328,6 +328,7 @@ def update_data_structure(context_id, has_lang, record, order, preserve_file=Fal
     data_structure.public = record.get("public", True)
     data_structure.protected = record.get("protected", False)
     data_structure.description = record.get("description", "")
+    data_structure.placeholder = record.get("placeholder", "")
     data_structure.type = DataStructure.get_type_by_name(record.get("type", "text"))
 
     data_structure.meta_settings = record.get("meta", {})

@@ -1,4 +1,5 @@
 <div class="container">
     <ng-include src="page_url"></ng-include>
     <ng-include src="'/static/views/404.html'" ng-if="notFound"></ng-include>
+    <nx-footer ng-if="!notFound"></nx-footer>
 </div>

@@ -12,6 +12,7 @@ export class NxProcessButtonComponent implements OnInit {
     @Input() buttonDisabled: boolean;
     @Input() actionType: any;
     @Input() form: any;
+    @Input() customClass: any = '';
 
     buttonClass: string;
 
@@ -43,7 +44,7 @@ export class NxProcessButtonComponent implements OnInit {
 
     checkForm() {
         if (this.form && !this.form.valid) {
-            //Set the form touched
+            // Set the form touched
             this.touchForm();
             this.setFocusToInvalid();
 

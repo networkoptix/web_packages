@@ -2,8 +2,8 @@
 
     'use strict';
 
-    function NxHeader(NxDialogsService, cloudApi, account, $location, $route,
-                      systemsProvider, nxConfigService, $rootScope) {
+    function NxHeader($rootScope, nxDialogsService, cloudApi, $location, $route,
+                      nxSystemsService, nxConfigService, nxAccountService) {
 
         const CONFIG = nxConfigService.getConfig();
     
@@ -38,13 +38,14 @@
                 scope.login = function () {
                     var url = $location.$$path;
                     var redirect = CONFIG.redirectPaths.some((path) => url.indexOf(path) > -1);
-                    NxDialogsService.login(!redirect);
+                    nxDialogsService.login(!redirect);
                 };
                 scope.logout = function () {
                     account.logout(true);
                 };
 
-                scope.systemsProvider = systemsProvider;
+                scope.nxSystemsService = nxSystemsService;
+                scope.nxSystemsService.forceUpdateSystemsAsPromise();
                 scope.active = {};
                 // scope.activeSystem = {};
 
@@ -71,8 +72,8 @@
 
                 updateActive();
     
-                scope.$watch('$rootScope.session.loginState', function () {
-                    if ($rootScope.session.loginState) {
+                nxAccountService.loginStateSubject.subscribe((loginState) => {
+                    if (loginState) {
                         $('body').removeClass('loading');
                         $('body').removeClass('anonymous');
                         $('body').addClass('authorized');
@@ -85,15 +86,18 @@
                 
                 scope.$on('$locationChangeSuccess', function (next, current) {
                     if ($route.current.params.systemId && !scope.systems) {
-                            scope.systemsProvider.forceUpdateSystems();
+                            scope.nxSystemsService.forceUpdateSystems();
                     }
 
                     updateActiveSystem();
                     updateActive();
                 });
     
-                scope.$watch('systemsProvider.systems', function () {
-                    scope.systems = scope.systemsProvider.systems;
+                scope.$watch('nxSystemsService.systems', function () {
+                    if (!nxSystemsService.systems) {
+                        return;
+                    }
+                    scope.systems = nxSystemsService.systems;
                     scope.singleSystem = (scope.systems.length === 1);
                     scope.systemCounter = scope.systems.length;
         
@@ -103,8 +107,8 @@
         };
     }
     
-    NxHeader.$inject = ['NxDialogsService', 'cloudApi', 'account', '$location', '$route',
-        'systemsProvider', 'nxConfigService', '$rootScope'];
+    NxHeader.$inject = ['$rootScope', 'nxDialogsService', 'cloudApi', '$location', '$route',
+        'nxSystemsService', 'nxConfigService', 'nxAccountService'];
     
     angular
         .module('cloudApp')

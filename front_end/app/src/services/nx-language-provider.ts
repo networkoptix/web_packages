@@ -9,31 +9,40 @@ export class NxLanguageProviderService {
 
     lang: any;
     translations: any;
-    translationsSubject = new ReplaySubject();
+    // translationsSubject = new ReplaySubject();
 
     constructor(private translate: TranslateService) {
     }
 
-    setLang(lang) {
-        this.lang = lang;
-        this.translate
-            .use(lang)
-            .subscribe((obj) => {
-                this.translations = obj;
-                this.translationsSubject.next(obj);
-            });
+    // setLang(lang) {
+    //     this.lang = lang;
+    //     this.translate
+    //         .use(lang)
+    //         .subscribe((obj) => {
+    //             this.translations = obj;
+    //             this.translationsSubject.next(obj);
+    //         });
+    // }
+
+    setDefaultLang(lang: string): void {
+        this.translate.setDefaultLang(lang);
     }
 
-    getTranstalions() {
-        return this.translations;
+    setTranslations(lang, json): void {
+        this.translate.setTranslation(lang, json);
+        this.translate.currentLang = lang;
     }
 
-    getLang() {
+    getTranslations(): any {
+        return this.translate.translations[this.translate.currentLang];
+    }
+
+    getLang(): string {
         return this.lang;
     }
 
 
-    ngOnDestroy() {
-        this.translationsSubject.unsubscribe();
+    ngOnDestroy(): void {
+        // this.translationsSubject.unsubscribe();
     }
 }

@@ -1,0 +1,50 @@
+@import '../../../../styles/mixins';
+
+.user-name {
+    @include ellipsis;
+    
+    //width     : 20%;
+    max-width : 175px;
+}
+
+.user-email {
+    @include ellipsis;
+    //width     : 30%;
+    max-width : 240px;
+}
+
+.user-role {
+    @include ellipsis;
+    //width     : 20%;
+    max-width : 120px;
+}
+
+.button-cell {
+    padding-right : 6px !important;
+    padding-left  : 6px !important;
+    text-align    : center;
+}
+
+@import '../../../../styles/typography';
+
+nx-block {
+  .users-email {
+    font-family: $font-family-medium;
+  }
+
+  .users-name {
+    font-family: $font-family-base;
+    font-size: $font-size-base;
+  }
+
+  .name {
+    font-family: $font-family-bold;
+  }
+}
+
+.help-block {
+    display          : block;
+    background-color : transparent;
+    color            : $light16;
+    padding          : .5rem 0 0;
+}

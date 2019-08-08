@@ -26,14 +26,14 @@ export class NxConfigService {
             updateInterval   : 30 * 1000, // Update content on pages every 30 seconds
             openClientTimeout: 20 * 1000, // 20 seconds we wait for client to open
 
-            openMobileClientTimeout: 300, // 300ms for mobile browsers
+            openMobileClientTimeout  : 300, // 300ms for mobile browsers
             timelineMouseEventTimeout: 300, // milliseconds
 
             alertTimeout       : 3 * 1000,  // Alerts are shown for 3 seconds
             alertsMaxCount     : 5,
             minSystemsToSearch : 9, // We need at least 9 system to enable search
             maxSystemsForHeader: 6, // Dropdown at the top is limited in terms of number of cameras to display
-            maxServers: 100, // The maximum amount of server that can be in a system
+            maxServers         : 100, // The maximum amount of server that can be in a system
 
             redirectAuthorised  : '/systems', // Page for redirecting all authorised users
             redirectUnauthorised: '/', // Page for redirecting all unauthorised users by default
@@ -47,7 +47,7 @@ export class NxConfigService {
             },
 
             layout: {
-                table: {
+                table     : {
                     rows: 10
                 },
                 tableLarge: {
@@ -165,35 +165,35 @@ export class NxConfigService {
                 ],
                 groups: {
                     windows: {
-                        name: 'windows',
-                        os: 'windows',
+                        name    : 'windows',
+                        os      : 'windows',
                         appTypes: ['bundle', 'client', 'server'],
                     },
-                    linux: {
-                        name: 'linux',
-                        os: 'linux',
+                    linux  : {
+                        name    : 'linux',
+                        os      : 'linux',
                         appTypes: ['bundle', 'client', 'server']
                     },
-                    macos: {
-                        name: 'macos',
-                        os: 'MacOS',
+                    macos  : {
+                        name    : 'macos',
+                        os      : 'MacOS',
                         appTypes: ['client']
                     },
-                    arm: {
-                        name: 'arm',
-                        os: '',
+                    arm    : {
+                        name    : 'arm',
+                        os      : '',
                         appTypes: ['client', 'server']
                     },
-                    sdk: {
-                        name: 'sdk',
-                        os: '',
+                    sdk    : {
+                        name    : 'sdk',
+                        os      : '',
                         appTypes: []
                     }
                 }
             },
-            icons : {
-                default : '/static/icons/integration_tile_preview_plugin.svg',
-                platforms : [
+            icons                         : {
+                default  : '/static/icons/integration_tile_preview_plugin.svg',
+                platforms: [
                     { name: 'mac', src: '/static/icons/integration_tile_os_mac.svg' },
                     { name: 'android', src: '/static/icons/integration_tile_os_android.svg' },
                     { name: 'arm', src: '/static/icons/integration_tile_os_arm.svg' },
@@ -202,40 +202,41 @@ export class NxConfigService {
                 ]
             },
             webclient                     : {
-                useServerTime: true,
-                useSystemTime: true,
-                disableVolume: true,
-                reloadInterval: 30 * 1000,
-                leftPanelPreviewHeight: 128,
-                resetDisplayedTextTimer: 3 * 1000,
-                hlsLoadingTimeout: 90 * 1000,
+                useServerTime              : true,
+                useSystemTime              : true,
+                disableVolume              : true,
+                reloadInterval             : 30 * 1000,
+                leftPanelPreviewHeight     : 128,
+                resetDisplayedTextTimer    : 3 * 1000,
+                hlsLoadingTimeout          : 90 * 1000,
+
                 // One minute timeout for manifest:
                 // * 30 seconds for gateway to open connection
                 // * 30 seconds for server to init camera
                 // * 20 seconds for chunks
                 // * 10 seconds extra
-                updateArchiveStateTimeout: 60 * 1000,
+                updateArchiveStateTimeout  : 60 * 1000,
                 updateArchiveRecordsTimeout: 2 * 1000,
-                flashChromelessPath: 'components/flashlsChromeless.swf',
-                flashChromelessDebugPath: 'components/flashlsChromeless_debug.swf',
-                staticResources: 'static/web_common/',
-                maxCrashCount: 2,
-                nativeTimeout: 60 * 1000,
-                playerReadyTimeout: 100,
-                endOfArchiveTime: 30 * 1000,
-                chunksToCheckFatal: 30, // This is used in short cache when requesting chunks for jumpToPosition in timeline directive
+                flashChromelessPath        : 'components/flashlsChromeless.swf',
+                flashChromelessDebugPath   : 'components/flashlsChromeless_debug.swf',
+                staticResources            : 'static/web_common/',
+                maxCrashCount              : 2,
+                nativeTimeout              : 60 * 1000,
+                playerReadyTimeout         : 100,
+                endOfArchiveTime           : 30 * 1000,
+                chunksToCheckFatal         : 30, // This is used in short cache when requesting chunks for jumpToPosition in timeline directive
                 skipFramesRenderingTimeline: true
             },
-            messageTopics: {
-                integration: ['contact_sales', 'contact_support', 'integration_feedback'],
-                ipvd_feedback_page: ['ipvd_feedback_page'],
+            messageTopics                 : {
+                integration         : ['contact_sales', 'contact_support', 'integration_feedback'],
+                ipvd_feedback_page  : ['ipvd_feedback_page'],
                 ipvd_feedback_device: ['ipvd_feedback_device']
             },
-            messageType: {
-                ipvd_page: 'ipvd_feedback_page',
+            messageType                   : {
+                ipvd_page  : 'ipvd_feedback_page',
                 ipvd_device: 'ipvd_feedback_device',
                 integration: 'integration',
-                unknown: 'unknown'
+                unknown    : 'unknown'
             },
             permissions                   : {
                 canViewRelease: 'can_view_release'
@@ -250,36 +251,56 @@ export class NxConfigService {
             },
             responseOk                    : 'ok',
             embedInfo                     : {
-                vimeo : {
+                vimeo  : {
                     link : 'https://player.vimeo.com/video/',
-                    regex : '^https?:\\/\\/vimeo\\.com\\/([\\d]+)$'
+                    regex: '^https?:\\/\\/vimeo\\.com\\/([\\d]+)$'
                 },
-                youtube : {
-                    link: 'https://www.youtube.com/embed/',
+                youtube: {
+                    link : 'https://www.youtube.com/embed/',
                     regex: '^https?:\\/\\/(?:www\\.youtube\\.com\\/(?:embed\\/|watch\\?v=)|youtu\\.be\\/)([\\w\-]+)$'
                 }
             },
-            defaultPlatformNames                 : {
-                'arm-64-file'        : 'ARM 64bit',
-                'linux-x64-file'  : 'Linux x64',
-                'macos-file'      : 'Mac OS',
-                'arm-32-file'        : 'ARM 32bit',
-                'windows-x64-file': 'Windows x64',
+            defaultPlatformNames: {
+                'arm-64-file'             : 'ARM 64bit',
+                'linux-x64-file'          : 'Linux x64',
+                'macos-file'              : 'Mac OS',
+                'arm-32-file'             : 'ARM 32bit',
+                'windows-x64-file'        : 'Windows x64',
                 'downloadableInstructions': 'Instructions / Manual'
             },
-            animation: {
+            animation                     : {
                 carouselImageEnter: '0.25s ease-in',
                 carouselImageLeave: '0.25s ease-out'
             },
             ipvd: {
-                pagerMaxSize: 4,
-                firmwaresToShow: 4,
-                analyticsToShow: 4
+                pagerMaxSize                    : 4,
+                firmwaresToShow                 : 4,
+                analyticsToShow                 : 4,
+                sortSupportedDevicesByPopularity: '',
+                supportedResolutions            : '',
+                supportedHardwareTypes          : '',
+                searchTags                      : '',
+                vendorsShown                    : '',
             },
-            search: {
+            search                        : {
                 maxLength   : 200,
                 debounceTime: 500 // ms
-            }
+            },
+            companyLink                   : '',
+            companyName                   : '',
+            copyrightYear                 : '',
+            feedbackEnabled               : '',
+            footerItems                   : '',
+            integrationFilterItems        : '',
+            integrationFilterLimitation   : '',
+            integrationStoreEnabled       : '',
+            publicDownloads               : '',
+            publicReleases                : '',
+            trafficRelayHost              : '',
+            supportLink                   : '',
+            privacyLink                   : '',
+            cloudName                     : '',
+            vmsName                       : '',
         };
     }
 

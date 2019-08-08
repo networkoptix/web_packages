@@ -1,4 +1,5 @@
 from django import forms
+from django.conf import settings
 from django.core.validators import EmailValidator
 from django.contrib import messages
 from django.contrib.auth import get_user_model
@@ -103,7 +104,7 @@ class GroupAdminForm(forms.ModelForm):
 
 class UserInviteFrom(forms.Form):
     email = forms.CharField(max_length=100, validators=[EmailValidator()])
-    customization = forms.ChoiceField(choices=[])
+    customization = forms.ChoiceField(choices=[], initial=settings.CUSTOMIZATION)
     message = forms.CharField(widget=forms.Textarea)
 
     def __init__(self, *args, **kwargs):

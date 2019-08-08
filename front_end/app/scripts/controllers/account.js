@@ -6,11 +6,11 @@
         .module('cloudApp')
         .controller('AccountCtrl', AccountCtrl);
 
-    AccountCtrl.$inject = [ '$scope', '$base64', '$location', 'cloudApi', 'process', '$routeParams', 'account', 'languageService',
-        'systemsProvider', 'authorizationCheckService', '$localStorage', 'dialogs', 'nxPageService' ];
+    AccountCtrl.$inject = [ '$scope', '$base64', '$location', 'cloudApi', 'process', '$routeParams', 'nxAccountService', 'languageService',
+        'nxSystemsService', '$localStorage', 'dialogs', 'nxPageService' ];
 
-    function AccountCtrl($scope, $base64, $location, cloudApi, process, $routeParams, account, languageService,
-                         systemsProvider, authorizationCheckService, $localStorage, dialogs, nxPageService) {
+    function AccountCtrl($scope, $base64, $location, cloudApi, process, $routeParams, nxAccountService, languageService,
+                         nxSystemsService, $localStorage, dialogs, nxPageService) {
 
         $scope.lang = languageService.lang;
         var currentLanguageCode = $scope.lang.language;
@@ -35,23 +35,23 @@
                 const index = auth.indexOf(':');
                 const tempLogin = auth.substring(0, index);
                 const tempPassword = auth.substring(index + 1);
-            
-                authorizationCheckService
+    
+                nxAccountService
                     .login(tempLogin, tempPassword, false)
                     .then(function () {
-                        $scope.userEmail = account.getEmail();
-                        $scope.account = account;
+                        $scope.userEmail = nxAccountService.getEmail();
+                        $scope.account = nxAccountService.get();
                     })
                     .finally(function () {
                         $location.search('auth', undefined);
                     });
             }
         } else {
-            authorizationCheckService
+            nxAccountService
                 .checkLoginState()
                 .then(function () {
-                    $scope.account = account;
-                    $scope.userEmail = account.getEmail();
+                    $scope.account = nxAccountService.get();
+                    $scope.userEmail = nxAccountService.getEmail();
                 })
         }
     
@@ -84,7 +84,7 @@
                                 window.location.reload(); // reload window to catch new language
                             });
                     } else {
-                        systemsProvider.forceUpdateSystems();
+                        nxSystemsService.forceUpdateSystems();
                     }
 
                     return result;

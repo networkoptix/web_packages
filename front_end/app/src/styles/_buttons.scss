@@ -122,6 +122,18 @@ button, .btn {
     }
 }
 
+.btn.btn-menu {
+    height           : 28px;
+    color            : $dark9;
+    border           : 1px solid $light10;
+    background-color : transparent;
+    max-width        : 180px;
+    display          : flex;
+    align-content    : center;
+    justify-content  : center;
+    border-radius    : $border-radius-base !important;
+}
+
 .btn.btn-clear {
     color            : $dark9;
     background-color : transparent;

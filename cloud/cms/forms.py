@@ -113,7 +113,7 @@ class CustomContextForm(forms.Form):
 
             record_value = data_structure.find_actual_value(product, ds_language, draft=True)
 
-            widget_type = forms.TextInput(attrs={'size': 80, 'placeholder': data_structure.default})
+            widget_type = forms.TextInput(attrs={'size': 80, 'placeholder': data_structure.placeholder})
 
             # If the data_structure is protected and published require users to have the edit advanced permission
             disabled = not can_edit_advanced and (data_structure.protected and is_published or data_structure.advanced)
@@ -124,7 +124,7 @@ class CustomContextForm(forms.Form):
                 if data_structure.type in [DataStructure.DATA_TYPES.object,
                                            DataStructure.DATA_TYPES.array]:
                     record_value = json.dumps(record_value, indent=4)
-                widget_type = forms.Textarea(attrs={'placeholder': data_structure.default})
+                widget_type = forms.Textarea(attrs={'placeholder': data_structure.placeholder})
 
             if data_structure.type == DataStructure.DATA_TYPES.html:
                 widget_type = forms.Textarea(
