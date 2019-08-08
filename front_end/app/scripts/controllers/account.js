@@ -52,6 +52,8 @@
                 .then(function () {
                     $scope.account = account;
                     $scope.userEmail = account.getEmail();
+                }, function () {
+                    dialogs.login(false);
                 })
         }
     
