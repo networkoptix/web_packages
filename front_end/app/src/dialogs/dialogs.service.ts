@@ -46,22 +46,16 @@ export class NxDialogsService {
         type = type || 'info';
         hold = hold || false;
 
-        const opt = {
-            closeButton: hold,
-            tapToDismiss: !hold,
-            disableTimeOut: hold
+        const options = {
+            closeButton   : hold,
+            tapToDismiss  : !hold,
+            autohide: !hold,
+            classname: type,
+            delay: this.CONFIG.alertTimeout
         };
 
-        switch (type) {
-            case 'info':
-                return this.toastService.show('I am a standard toast');
-            case 'error':
-            case 'danger':
-            case 'warning':
-                return this.toastService.show('I am a standard toast');
-            case 'success':
-                return this.toastService.show('I am a standard toast');
-        }
+        return this.toastService.show(message, options);
+
 
         // return this.toast.create({
         //     additionalClasses: 'button-fix',
