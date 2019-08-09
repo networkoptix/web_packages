@@ -76,10 +76,12 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
     init(): void {
         this.CONFIG = this.configService.getConfig();
         this.settingsService.systemSubject.subscribe((system) => {
-            this.system = system;
-            this.systemAvailable = this.system.isAvailable && this.system.mergeInfo === undefined;
-            if (!this.selectedUser || !this.selectedUser.email) {
-                this.setUser();
+            if (system) {
+                this.system = system;
+                this.systemAvailable = this.system.isAvailable && this.system.mergeInfo === undefined;
+                if (!this.selectedUser || !this.selectedUser.email) {
+                    this.setUser();
+                }
             }
         });
         this.removingUserProcess = this.process.init(() => {

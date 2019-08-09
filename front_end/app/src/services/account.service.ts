@@ -45,11 +45,14 @@ export class NxAccountService {
         this.loginStateSubject.next(undefined);
     }
 
-    checkLoginState() {
-        if (this.loginStateSubject.getValue()) {
-            return Promise.resolve(true);
-        }
-        return Promise.reject(false);
+    checkLoginState(): Promise<boolean> {
+            return new Promise<boolean>((resolve, reject) => {
+                if (this.loginStateSubject.getValue()) {
+                    resolve(true);
+                }
+
+                reject(false);
+            });
     }
 
     get() {
@@ -62,35 +65,35 @@ export class NxAccountService {
                        });
         }
         return this.cloudApi
-            .account().toPromise()
-            .then((account) => {
-                return account;
-            })
-            .catch(() => {
-                return undefined;
-            });
+                   .account()
+                   .then((account) => {
+                       return account;
+                   })
+                   .catch(() => {
+                       return undefined;
+                   });
     }
 
     authKey() {
         return this.cloudApi
-                   .authKey().toPromise()
-                   .then((result) => {
+                   .authKey()
+                   .then((result: any) => {
                        return result.data.auth_key;
                    });
     }
 
     checkVisitedKey(key) {
         return this.cloudApi
-                   .visitedKey(key).toPromise()
-                   .then((result) => {
+                   .visitedKey(key)
+                   .then((result: any) => {
                        return result.data.visited;
                    });
     }
 
     checkCode(code) {
         return this.cloudApi
-                   .checkCode(code).toPromise()
-                   .then((result) => {
+                   .checkCode(code)
+                   .then((result: any) => {
                        return result.data.emailExists;
                    });
     }
@@ -129,14 +132,16 @@ export class NxAccountService {
         return this.session.email;
     }
 
-    login(email, password, remember) {
+    login(email, password, remember): Promise<any> {
         this.setEmail(email);
 
         return this.cloudApi
                    .login(email, password, remember).toPromise()
                    .then((result) => {
                        if (this.cloudApi.checkResponseHasError(result)) {
-                           return Promise.reject(result);
+                           return new Promise<any>((resolve, reject) => {
+                               reject(result);
+                           });
                        }
 
                        if (result.email) { // (result.data.resultCode === L.errorCodes.ok)
@@ -150,7 +155,7 @@ export class NxAccountService {
 
     logout(doNotRedirect) {
         this.cloudApi
-            .logout().toPromise()
+            .logout()
             .finally(() => {
                 this.session.clear('all'); // Clear session
                 if (!doNotRedirect) {
