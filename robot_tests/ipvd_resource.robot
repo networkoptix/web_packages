@@ -207,7 +207,9 @@ Verify IPVD Advanced Search is Closed
     ...    ${IPVD ADV SEARCH BUTTON}
     ...    background-color
     ...    ${COLOR LIGHT4 RGB}
-    # Verify Button Arrow Direction    ${IPVD ADV SEARCH BUTTON}    Down
+    Verify Button Arrow Direction
+    ...    ${IPVD ADV SEARCH BUTTON}
+    ...    Down
     Wait until Element does Not have Class
     ...    ${IPVD ADV SEARCH BUTTON}
     ...    selected
@@ -234,7 +236,9 @@ Verify IPVD Advanced Search is Open
     ...    ${IPVD ADV SEARCH BUTTON}
     ...    background-color
     ...    ${COLOR LIGHT16 RGB}
-    # Verify Button Arrow Direction    ${IPVD ADV SEARCH BUTTON}    Up
+    Verify Button Arrow Direction
+    ...    ${IPVD ADV SEARCH BUTTON}
+    ...    Up
     Wait until Element has Class
     ...    ${IPVD ADV SEARCH BUTTON}
     ...    selected

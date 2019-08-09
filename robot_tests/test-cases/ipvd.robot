@@ -304,13 +304,22 @@ Advanced search
     ...    badge-selected
 
     Log    Step 3
+    Verify Button Arrow Direction
+    ...    ${IPVD ADV FILTERS MIN RES}
+    ...    Down
     Click Element    ${IPVD ADV FILTERS MIN RES}
+    Verify Button Arrow Direction
+    ...    ${IPVD ADV FILTERS MIN RES}
+    ...    Up
     ${style}=   Get Element Style
     ...    ${IPVD ADV FEATURES PTZ}
     ...    background-color
     Log    ${style}
     Click Element
     ...    ${IPVD ADV FILTERS MIN RES}${IPVD ADV FILTERS DROPDOWN MENU ITEMS}/a/span[text()='1080p']
+    Verify Button Arrow Direction
+    ...    ${IPVD ADV FILTERS MIN RES}
+    ...    Down
     Element Text should be
     ...    ${IPVD ADV FILTERS MIN RES}
     ...    1080p
@@ -351,10 +360,19 @@ Advanced search
     ...    Axis
 
     Log    Step 6
+    Verify Button Arrow Direction
+    ...    ${IPVD ADV FILTERS MFRS}
+    ...    Down
     Click Element    ${IPVD ADV FILTERS MFRS}
+    Verify Button Arrow Direction
+    ...    ${IPVD ADV FILTERS MFRS}
+    ...    Up
     Click Element
     ...    ${IPVD ADV FILTERS MFRS}${IPVD ADV FILTERS DROPDOWN MENU ITEMS}/div/label[text()='Hikvision']
     Click Element    ${IPVD ADV FILTERS MFRS}
+    Verify Button Arrow Direction
+    ...    ${IPVD ADV FILTERS MFRS}
+    ...    Down
     Element Text should be
     ...    ${IPVD ADV FILTERS MFRS}
     ...    2 selected
@@ -364,7 +382,13 @@ Advanced search
     Validate IPVD Device Table Not Empty
 
     Log    Step 7
+    Verify Button Arrow Direction
+    ...    ${IPVD ADV FILTERS TYPES}
+    ...    Down
     Click Element    ${IPVD ADV FILTERS TYPES}
+    Verify Button Arrow Direction
+    ...    ${IPVD ADV FILTERS TYPES}
+    ...    Up
     Click Element
     ...    ${IPVD ADV FILTERS TYPES}${IPVD ADV FILTERS DROPDOWN MENU ITEMS}/div/label[text()='Camera']
     Element Text should be
@@ -381,6 +405,9 @@ Advanced search
     ...    ${IPVD ADV FILTERS TYPES}
     ...    3 selected
     Click Element    ${IPVD ADV FILTERS TYPES}
+    Verify Button Arrow Direction
+    ...    ${IPVD ADV FILTERS TYPES}
+    ...    Down
     Element Text should be
     ...    ${IPVD ADV FILTERS TYPES}
     ...    3 selected

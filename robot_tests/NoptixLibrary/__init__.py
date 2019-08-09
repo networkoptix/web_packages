@@ -12,6 +12,7 @@ from platform import system
 from random import *
 from requests import head
 from robot.libraries.BuiltIn import BuiltIn
+from robot.api import logger
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -110,7 +111,7 @@ class NoptixLibrary(object):
     def wait_until_element_does_not_have_class(self, locator, expected, timeout=10):
         seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
         timeout = timeout + time.time()
-        not_found = None
+        found = None
 
         while time.time() < timeout:
             try:
@@ -119,7 +120,7 @@ class NoptixLibrary(object):
                 if expected not in classAttribute:
                     return
             except:
-                found = "Element found with class " + expected
+                found = "Element found with class '" + expected + "' when it was not expected"
             time.sleep(.2)
         raise AssertionError(found)
 
@@ -127,27 +128,82 @@ class NoptixLibrary(object):
         return (Color.from_string(color1).rgba == Color.from_string(color2).rgba)
 
     def verify_button_arrow_direction(self, locator, expected, timeout=10):
+        seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
+        not_found = "No button arrow elements found"
         # expected is 'Up' or 'Down'
-        not_found = None
+        expected = expected.strip().lower()
+        logger.debug('expected: ' + expected)
 
-        while time.time() < timeout:
+        logger.debug('locator: ' + locator)
+
+        navArrows = "//div[@class='nav-arrow']/span"
+        logger.debug('navArrows: ' + navArrows)
+
+        locators = locator+navArrows
+        logger.debug('locators: ' + locators)
+
+        # 'rotate(45deg)'
+        pos = 'matrix(0.707107, 0.707107, -0.707107, 0.707107, 0, 0)'
+        # 'rotate(-45deg)'
+        neg = 'matrix(0.707107, -0.707107, 0.707107, 0.707107, 0, 0)'
+
+        logger.debug('pos: '+pos)
+        logger.debug('neg: '+neg)
+
+        # First, find parent element
+        timeout = timeout + time.time()
+        element = None
+        while (time.time() < timeout and element is None):
             try:
                 element = seleniumlib.find_element(locator)
-                navArrows = element.find_element_by_xpath(
-                    '/div[@class="nav-arrow"').find_element_by_xpath('/span')
-                span1 = navArrows[0].getCssValue('transform')
-                span2 = navArrows[1].getCssValue('transform')
-
-                if expected.strip().lower() == 'up':
-                    if span1 == 'rotate(-45deg)' and span2 == 'rotate(45deg)':
-                        return
-                elif expected.strip().lower() == 'down':
-                    if span1 == 'rotate(45deg)' and span2 == 'rotate(-45deg)':
-                        return
-            except NoSuchElementException:
-                not_found = "No button arrow elements found "
+                logger.debug('element: ' + str(element))
+            except:
+                pass
             time.sleep(.2)
-        raise AssertionError(not_found)
+        if (element is None):
+            raise AssertionError(not_found)
+
+        # Next, find child arrow elements
+        timeout = timeout + time.time()
+        elements = None
+        while (time.time() < timeout and elements is None):
+            try:
+                elements = seleniumlib.find_elements(locators)
+                logger.debug('elements count: ' + str(len(elements)))
+                logger.debug('elements: ' + str(elements))
+            except:
+                pass
+            time.sleep(.2)
+        if (len(elements) == 0):
+            raise AssertionError(not_found)
+
+        logger.debug('elements[0]: ' + str(elements[0]))
+        logger.debug('elements[1]: ' + str(elements[1]))
+
+        # Then, determine the transform values
+        span1 = elements[0].value_of_css_property('transform')
+        span2 = elements[1].value_of_css_property('transform')
+
+        logger.debug('span1: ' + str(span1))
+        logger.debug('span2: ' + str(span2))
+
+        # Finally, check that the values match expectation
+        if expected == 'up':
+            logger.debug('span1?=' + neg)
+            logger.debug('span2?=' + pos)
+            if span1 == neg and span2 == pos:
+                logger.debug('result: ' + expected)
+                return
+            else:
+                raise AssertionError(not_found)
+        elif expected == 'down':
+            logger.debug('span1?=' + pos)
+            logger.debug('span2?=' + neg)
+            if span1 == pos and span2 == neg:
+                logger.debug('result: ' + expected)
+                return
+            else:
+                raise AssertionError(not_found)
 
     def check_online_or_offline(self, elements, offlineText):
         for element in elements:
