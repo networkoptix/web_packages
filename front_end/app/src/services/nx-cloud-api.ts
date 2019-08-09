@@ -71,16 +71,16 @@ export class NxCloudApiService {
         });
     }
 
-    authKey(): Observable<any> {
-        return this.http.post(this.CONFIG.apiBase + '/account/authKey', {});
+    authKey() {
+        return this.http.post(this.CONFIG.apiBase + '/account/authKey', {}).toPromise();
     }
 
-    visitedKey(key): Observable<any> {
-        return this.http.get(this.CONFIG.apiBase + '/utils/visitedKey/?key=' + encodeURIComponent(key));
+    visitedKey(key) {
+        return this.http.get(this.CONFIG.apiBase + '/utils/visitedKey/?key=' + encodeURIComponent(key)).toPromise();
     }
 
-    checkCode(code): Observable<any> {
-        return this.http.post(this.CONFIG.apiBase + '/account/checkCode', { code });
+    checkCode(code) {
+        return this.http.post(this.CONFIG.apiBase + '/account/checkCode', { code }).toPromise();
     }
 
     login(email, password, remember): Observable<any> {
@@ -93,12 +93,12 @@ export class NxCloudApiService {
         });
     }
 
-    logout(): Observable<any> {
+    logout() {
         // clearCache();
-        return this.http.post(this.CONFIG.apiBase + '/account/logout', {});
+        return this.http.post(this.CONFIG.apiBase + '/account/logout', {}).toPromise();
     }
 
-    account(): Observable<any> {
-        return this.http.get(this.CONFIG.apiBase + '/account');
+    account() {
+        return this.http.get(this.CONFIG.apiBase + '/account').toPromise();
     }
 }

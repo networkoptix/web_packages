@@ -129,10 +129,6 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
         WINDOWS_PROVIDERS,
         { provide: LocationStrategy, useClass: PathLocationStrategy },
         { provide: UrlHandlingStrategy, useClass: HybridUrlHandlingStrategy },
-        {
-            provide : XSRFStrategy,
-            useValue: new CookieXSRFStrategy('csrftoken', 'X-CSRFToken')
-        }
     ],
     declarations   : [
         AppComponent

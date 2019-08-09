@@ -93,7 +93,7 @@ export class NxUrlProtocolService {
         return url;
     }
 
-    getLink(linkSettings) {
+    getLink(linkSettings): Promise<any> {
         return new Promise((resolve, reject) => {
             this.accountService
                     .authKey()
