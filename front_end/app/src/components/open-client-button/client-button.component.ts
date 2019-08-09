@@ -3,11 +3,12 @@ import {
     OnInit,
     Input,
     ViewEncapsulation, Inject
-}                           from '@angular/core';
-import { Location }         from '@angular/common';
-import { NxConfigService }  from '../../services/nx-config';
-import { TranslateService } from '@ngx-translate/core';
-import { NxDialogsService } from '../../dialogs/dialogs.service';
+}                               from '@angular/core';
+import { Location }             from '@angular/common';
+import { NxConfigService }      from '../../services/nx-config';
+import { TranslateService }     from '@ngx-translate/core';
+import { NxDialogsService }     from '../../dialogs/dialogs.service';
+import { NxUrlProtocolService } from '../../services/url-protocol.service';
 
 @Component({
     selector     : 'nx-client-button',
@@ -28,7 +29,7 @@ export class NxClientButtonComponent implements OnInit {
     openClient: any;
 
     constructor(@Inject('process') private process: any,
-                @Inject('urlProtocol') private urlProtocol: any,
+                private urlProtocol: NxUrlProtocolService,
                 private config: NxConfigService,
                 private translate: TranslateService,
                 private dialogs: NxDialogsService,

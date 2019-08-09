@@ -153,8 +153,8 @@ export class NxSandboxComponent {
         this.itemsSelected = [...result];
     }
 
-    notify(type?: string) {
-        this.dialogs.notify(type, type);
+    notify(msg: string, type: string) {
+        this.dialogs.notify(msg, type, true);
     }
 }
 

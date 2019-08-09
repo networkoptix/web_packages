@@ -1,33 +1,54 @@
 import { Component, TemplateRef } from '@angular/core';
 
-import { ToastService } from '../../dialogs/toast.service';
-
-
+import { ToastService }                        from '../../dialogs/toast.service';
+import { animate, style, transition, trigger } from '@angular/animations';
 
 @Component({
     selector: 'app-toasts',
     template: `
-    <ngb-toast
-      *ngFor="let toast of toastService.toasts"
-      [class]="toast.classname"
-      [autohide]="true"
-      [delay]="toast.delay || 5000"
-      (hide)="toastService.remove()"
-    >
-      <ng-template [ngIf]="isTemplate(toast)" [ngIfElse]="text">
-        <ng-template [ngTemplateOutlet]="toast.textOrTpl"></ng-template>
-      </ng-template>
-
-      <ng-template #text>{{ toast.textOrTpl }}</ng-template>
-    </ngb-toast>
-  `,
-    host    : { '[class.ngb-toasts]': 'true' }
+            <div *ngFor="let toast of toastService.toasts;" @fadeInOut>
+                <ngb-toast
+                    class="alert alert-{{toast.classname}} fade"
+                    [ngClass]="{'alert-dismissible': !toast.autohide}"
+                    [autohide]="toast.autohide"
+                    [delay]="toast.delay"
+                    (hide)="remove(toast)">
+                    <ng-template [ngIf]="isTemplate(toast)" [ngIfElse]="text">
+                        <ng-template [ngTemplateOutlet]="toast.textOrTpl"></ng-template>
+                    </ng-template>
+                    
+                    <ng-template #text>{{ toast.textOrTpl }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"
+                                *ngIf="!toast.autohide" (click)="remove(toast)">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </ng-template>
+                </ngb-toast>
+            </div>`,
+    styleUrls: ['toast.component.scss'],
+    host    : { '[class.nx-toasts]': 'true' },
+    animations: [
+        trigger('fadeInOut', [
+            transition(':enter', [
+                style({ opacity: 0 }),
+                animate('.2s ease-in', style({ opacity: 1 })),
+            ]),
+            transition(':leave', [
+                animate('.5s ease-out', style({ opacity: 0 }))
+            ])
+        ]),
+    ],
 })
 export class ToastsContainer {
+
     constructor(public toastService: ToastService) {
     }
 
     isTemplate(toast) {
         return toast.textOrTpl instanceof TemplateRef;
+    }
+
+    remove(toast) {
+        this.toastService.remove(toast);
     }
 }

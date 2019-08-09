@@ -12,6 +12,7 @@ import { NxConfigService }           from './src/services/nx-config';
     template: `
         <router-outlet></router-outlet>
         <div ng-view="" ng-model-options="{ updateOn: 'blur' }"></div>
+        <app-toasts aria-live="polite" aria-atomic="true"></app-toasts>
     `
 })
 

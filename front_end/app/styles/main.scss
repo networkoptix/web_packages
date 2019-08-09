@@ -492,42 +492,6 @@ a.disabled {
   display: inline-block;
 }
 
-
-.ng-toast {
-  margin-top: 34px;
-
-  .alert {
-    margin-bottom: 8px;
-
-      @include media-breakpoint-down(sm) {
-      min-width: 100%;
-    }
-
-      @include media-breakpoint-up(sm) {
-      min-width: 600px;
-    }
-
-
-    &.ng-animate {
-      transition: 0.5s linear all;
-
-      &.ng-enter {
-        opacity: 0;
-      }
-      &.ng-enter-active{
-        opacity: 1;
-      }
-
-      &.ng-leave {
-        opacity: 1;
-      }
-      &.ng-leave-active{
-        opacity: 0;
-      }
-    }
-  }
-}
-
 .alert-top{
   position:fixed;
   top: 34px;

@@ -2,10 +2,10 @@
 
 angular.module('cloudApp')
     .controller('DebugCtrl', ['$scope', 'cloudApi', 'nxAccountService', 'process', '$q', '$timeout',
-                'dialogs', 'urlProtocol', '$base64', 'nxSystemsService', '$http',
+                'dialogs', 'nxUrlProtocolService', '$base64', 'nxSystemsService', '$http',
                 'languageService', 'nxPageService',
         function ($scope, cloudApi, nxAccountService, process, $q, $timeout,
-                  dialogs, urlProtocol, $base64, nxSystemsService, $http,
+                  dialogs, nxUrlProtocolService, $base64, nxSystemsService, $http,
                   languageService, nxPageService) {
     
             nxAccountService.requireLogin();

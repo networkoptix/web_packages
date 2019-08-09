@@ -49,7 +49,7 @@ require('./services/poll.js');
 require('./services/process.ts');
 require('./services/system.ts');
 // require('./services/systems.js');
-require('./services/urlProtocol.js');
+// require('./services/urlProtocol.js');
 // require('./services/authorizationCheckService.ts');
 require('./services/location-proxy.ts');
 
