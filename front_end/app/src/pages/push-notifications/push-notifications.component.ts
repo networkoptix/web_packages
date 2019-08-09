@@ -103,7 +103,7 @@ export class PushComponent implements OnInit {
     }
 
     updateSubStates() {
-        this.http.get('/notifications/subscriptions').subscribe(
+        this.http.get('/api/notifications/subscriptions').subscribe(
             (response: any) => {
                 if (!this.subChanges) {
                     this.devices = [];
@@ -156,7 +156,7 @@ export class PushComponent implements OnInit {
         }
         const headers = new HttpHeaders()
             .set('Content-Type', 'application/json');
-        this.http.post('/notifications/register_device', {
+        this.http.post('/api/notifications/register_device', {
             deviceToken, name, model
         }, {headers}).subscribe(
             () => {
@@ -179,7 +179,7 @@ export class PushComponent implements OnInit {
     }
 
     getRegistrationStatus() {
-        this.http.get('/notifications/register_device', {
+        this.http.get('/api/notifications/register_device', {
             params: {
                 deviceToken: this.deviceToken,
                 name: 'Browser',
@@ -224,7 +224,7 @@ export class PushComponent implements OnInit {
                 'Content-Type': 'application/json',
             })
         };
-        this.http.post('/notifications/push_notification', {
+        this.http.post('/api/notifications/push_notification', {
             systemId: this.notification.system,
             targets: [this.account.email],
             notification: {
@@ -250,7 +250,7 @@ export class PushComponent implements OnInit {
                 'Content-Type': 'application/json',
             })
         };
-        this.http.post('/notifications/subscribe', {
+        this.http.post('/api/notifications/subscribe', {
             systemId: systemId,
             deviceToken: deviceToken,
             isActive: subState

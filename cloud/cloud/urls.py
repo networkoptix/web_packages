@@ -23,6 +23,7 @@ from django.conf.urls.static import static
 from django.db import DEFAULT_DB_ALIAS, connections
 from django.db.migrations.executor import MigrationExecutor
 from django.http import HttpResponse
+from notifications import urls as notifications_urls
 
 admin.site.disable_action('delete_selected')  # Remove delete action from all models in admin
 admin.site.index_template = 'admin/index.html'
@@ -53,6 +54,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^api/', include('api.urls')),
     url(r'^api/', include('cms.urls')),
+    url(r'^api/notifications/', include(notifications_urls.public_patterns)),
     url(r'^notifications/', include('notifications.urls')),
     url(r'^admin_tools/', include('admin_tools.urls')),
     url(r'^zapier/', include('zapier.urls')),
