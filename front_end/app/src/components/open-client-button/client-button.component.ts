@@ -3,12 +3,12 @@ import {
     OnInit,
     Input,
     ViewEncapsulation, Inject
-}                               from '@angular/core';
-import { Location }             from '@angular/common';
-import { NxConfigService }      from '../../services/nx-config';
-import { TranslateService }     from '@ngx-translate/core';
-import { NxDialogsService }     from '../../dialogs/dialogs.service';
-import { NxUrlProtocolService } from '../../services/url-protocol.service';
+}                                    from '@angular/core';
+import { Location }                  from '@angular/common';
+import { NxConfigService }           from '../../services/nx-config';
+import { NxDialogsService }          from '../../dialogs/dialogs.service';
+import { NxUrlProtocolService }      from '../../services/url-protocol.service';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
 
 @Component({
     selector     : 'nx-client-button',
@@ -31,7 +31,7 @@ export class NxClientButtonComponent implements OnInit {
     constructor(@Inject('process') private process: any,
                 private urlProtocol: NxUrlProtocolService,
                 private config: NxConfigService,
-                private translate: TranslateService,
+                private language: NxLanguageProviderService,
                 private dialogs: NxDialogsService,
                 location: Location) {
 
@@ -40,11 +40,7 @@ export class NxClientButtonComponent implements OnInit {
 
     ngOnInit() {
         this.CONFIG = this.config.getConfig();
-        this.translate
-            .getTranslation(this.translate.currentLang)
-            .subscribe((lang) => {
-                this.LANG = lang;
-            });
+        this.LANG = this.language.getTranslations();
 
         this.openClient = this.process.init(() => {
             this.urlProtocol

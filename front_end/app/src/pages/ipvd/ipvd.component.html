@@ -72,12 +72,12 @@
     <div class="row px-3 m-0"
          *ngIf="vendors">
 
-        <p *ngIf="CONFIG.feedbackEnabled && lang && lang.ipvd">
+        <p *ngIf="CONFIG.feedbackEnabled && LANG && LANG.ipvd">
             <span [translate]="'ipvd.disclaimer'"
                   [translateParams]="{companyName: company, vmsName: vmsName}">
             </span>
             <span>
-                {{lang.ipvd.feedback.a_Please}} <a href (click)="openFeedback('page')">{{lang.ipvd.feedback.b_Link}}</a> {{lang.ipvd.feedback.c_Info}}
+                {{LANG.ipvd.feedback.a_Please}} <a href (click)="openFeedback('page')">{{LANG.ipvd.feedback.b_Link}}</a> {{LANG.ipvd.feedback.c_Info}}
             </span>
         </p>
         <button *ngIf="debug" (click)="reset()">reset</button>

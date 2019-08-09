@@ -1,7 +1,6 @@
 import { AfterViewInit, Component, Inject, Input, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute }                                             from '@angular/router';
 import { NxUriService }              from '../../services/uri.service';
-import { TranslateService }          from '@ngx-translate/core';
 import { NxRegisterService }         from '../../services/register.service';
 import { NxPageService }             from '../../services/page.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';

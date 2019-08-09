@@ -14,16 +14,6 @@ export class NxLanguageProviderService {
     constructor(private translate: TranslateService) {
     }
 
-    // setLang(lang) {
-    //     this.lang = lang;
-    //     this.translate
-    //         .use(lang)
-    //         .subscribe((obj) => {
-    //             this.translations = obj;
-    //             this.translationsSubject.next(obj);
-    //         });
-    // }
-
     setDefaultLang(lang: string): void {
         this.translate.setDefaultLang(lang);
     }
@@ -38,7 +28,7 @@ export class NxLanguageProviderService {
     }
 
     getLang(): string {
-        return this.lang;
+        return this.translate.currentLang;
     }
 
 

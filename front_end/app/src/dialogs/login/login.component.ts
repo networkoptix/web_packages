@@ -31,7 +31,8 @@ export class LoginModalContent implements OnInit {
     @Input() keepPage;
 
     LANG: any;
-    config: any;
+    CONFIG: any;
+
     auth: any;
     next: string;
     password: string;
@@ -42,24 +43,28 @@ export class LoginModalContent implements OnInit {
 
     @ViewChild('loginForm', { static: true }) loginForm: HTMLFormElement;
 
-    constructor(public activeModal: NgbActiveModal,
-                @Inject('process') private process: any,
+    private setupDefaults() {
+        this.auth = { email: this.localStorage.get('email') };
+        this.next = '';
+        this.password = '';
+        this.remember = true;
+        this.wrongPassword = false;
+        this.CONFIG = this.configService.getConfig();
+        this.LANG = this.language.getTranslations();
+    }
+
+    constructor(@Inject('process') private process: any,
                 @Inject('cloudApiService') private cloudApi: any,
-                private localStorage: LocalStorageService,
                 @Inject(DOCUMENT) private document: any,
+                private localStorage: LocalStorageService,
+                public activeModal: NgbActiveModal,
                 private account: NxAccountService,
                 private configService: NxConfigService,
                 private language: NxLanguageProviderService,
                 private genericModal: NxModalGenericComponent,
                 private renderer: Renderer2,
     ) {
-        this.auth = { email: this.localStorage.get('email') };
-        this.next = '';
-        this.password = '';
-        this.remember = true;
-        this.wrongPassword = false;
-        this.config = configService.getConfig();
-        this.LANG = this.language.getTranslations();
+        this.setupDefaults();
     }
 
     resendActivation(email) {
@@ -159,7 +164,7 @@ export class LoginModalContent implements OnInit {
                     // TODO: Repace this once 'register' page is moved to A5
                     // AJS and A5 routers freak out about route change *****
                     // this.location.go(this.config.redirectAuthorised);
-                    this.document.location.href = this.config.redirectAuthorised;
+                    this.document.location.href = this.CONFIG.redirectAuthorised;
                 }
             } else if (this.next) {
                 // sanitize this.next
@@ -170,7 +175,7 @@ export class LoginModalContent implements OnInit {
                     // TODO: Repace this once 'register' page is moved to A5
                     // AJS and A5 routers freak out about route change *****
                     // this.location.go(this.config.redirectAuthorised);
-                    this.document.location.href = this.config.redirectAuthorised;
+                    this.document.location.href = this.CONFIG.redirectAuthorised;
                 });
             }
         });
@@ -182,7 +187,7 @@ export class LoginModalContent implements OnInit {
             // TODO: Repace this once 'register' page is moved to A5
             // AJS and A5 routers freak out about route change *****
             // this.location.go(this.config.redirectUnauthorised);
-            this.document.location.href = this.config.redirectUnauthorised;
+            this.document.location.href = this.CONFIG.redirectUnauthorised;
         }
 
         this.activeModal.close('canceled');
