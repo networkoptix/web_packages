@@ -4,11 +4,11 @@ import {
     OnInit, ViewEncapsulation, Inject, PLATFORM_ID
 } from '@angular/core';
 
-import { NxConfigService }       from '../../../../services/nx-config';
-import { TranslateService }      from '@ngx-translate/core';
-import { NxUriService }          from '../../../../services/uri.service';
-import { NxUtilsService }        from '../../../../services/utils.service';
-import { Router }                from '@angular/router';
+import { NxConfigService }           from '../../../../services/nx-config';
+import { NxUriService }              from '../../../../services/uri.service';
+import { NxUtilsService }            from '../../../../services/utils.service';
+import { Router }                    from '@angular/router';
+import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
 
 interface Params {
     [key: string]: any;
@@ -39,7 +39,7 @@ export class CamTableComponent implements OnChanges, OnInit {
     private results;
     private cameraHeaders;
     private paramsShown;
-    private lang;
+    // private lang;
     private debug: boolean;
     private beta: boolean;
 
@@ -51,6 +51,7 @@ export class CamTableComponent implements OnChanges, OnInit {
     pagedItems: any[];
     pagerMaxSize: number;
     CONFIG: any = {};
+    LANG: any = {};
     showAnalytics: boolean;
 
     // Options for the Excel export
@@ -71,12 +72,12 @@ export class CamTableComponent implements OnChanges, OnInit {
     SERVICE_PARAMS = ['count', 'resolutionArea', 'area'];
 
     constructor(private router: Router,
-                private translate: TranslateService,
+                private language: NxLanguageProviderService,
                 private uri: NxUriService,
-                config: NxConfigService,
+                private config: NxConfigService,
                 @Inject(PLATFORM_ID) private platformId: object) {
 
-        this.lang = this.translate.translations[this.translate.currentLang];
+        this.LANG = this.language.getTranslations();
         this.CONFIG = config.getConfig();
 
         this.sortOrderASC = true;
@@ -84,20 +85,20 @@ export class CamTableComponent implements OnChanges, OnInit {
 
         this.paramsShown = 6;
         this.cameraHeaders = [
-            this.lang.ipvd.vendor,
-            this.lang.ipvd.model,
-            this.lang.ipvd.hardwareType,
-            this.lang.ipvd.maxResolution,
-            this.lang.ipvd.maxFps,
-            this.lang.ipvd.primaryCodec,
-            this.lang.ipvd.isAudioSupported,
-            this.lang.ipvd.isPtzSupported,
-            this.lang.ipvd.isFisheye,
-            this.lang.ipvd.isMdSupported,
-            this.lang.ipvd.isIoSupported,
-            this.lang.ipvd.isAnalyticsSupported,
-            this.lang.ipvd.count,
-            this.lang.ipvd.resolutionArea
+            this.LANG.ipvd.vendor,
+            this.LANG.ipvd.model,
+            this.LANG.ipvd.hardwareType,
+            this.LANG.ipvd.maxResolution,
+            this.LANG.ipvd.maxFps,
+            this.LANG.ipvd.primaryCodec,
+            this.LANG.ipvd.isAudioSupported,
+            this.LANG.ipvd.isPtzSupported,
+            this.LANG.ipvd.isFisheye,
+            this.LANG.ipvd.isMdSupported,
+            this.LANG.ipvd.isIoSupported,
+            this.LANG.ipvd.isAnalyticsSupported,
+            this.LANG.ipvd.count,
+            this.LANG.ipvd.resolutionArea
         ];
 
         this.pagedItems = [];
@@ -113,14 +114,14 @@ export class CamTableComponent implements OnChanges, OnInit {
 
     toggleHeaderSort(param) {
         let filter;
-        for (const [key, value] of Object.entries(this.lang.ipvd)) {
+        for (const [key, value] of Object.entries(this.LANG.ipvd)) {
             if (value === param) {
                 filter = key;
                 break;
             }
         }
 
-        this.sortOrderASC = (this.lang.ipvd[filter] === this.selectedHeader) ? !this.sortOrderASC : true;
+        this.sortOrderASC = (this.LANG.ipvd[filter] === this.selectedHeader) ? !this.sortOrderASC : true;
         this.toggleSort(filter, false /* reset camera and page params in uri */);
 
         const queryParams: Params = {};
@@ -209,7 +210,7 @@ export class CamTableComponent implements OnChanges, OnInit {
         }
 
         this.selectedHeader = this.cameraHeaders.find(x => {
-            return x === this.lang.ipvd[param];
+            return x === this.LANG.ipvd[param];
         });
     }
 
@@ -305,7 +306,7 @@ export class CamTableComponent implements OnChanges, OnInit {
                 const sortBy = this.params.sortBy.split(',');
                 const direction = (sortBy[1] === 'ASC');
                 const column = this.cameraHeaders.find(x => {
-                    return x === this.lang.ipvd[sortBy[0]];
+                    return x === this.LANG.ipvd[sortBy[0]];
                 });
 
                 if (this.sortOrderASC === direction && column === this.selectedHeader) {

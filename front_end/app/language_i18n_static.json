@@ -138,6 +138,7 @@
 		"disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous."
 	},
 	"integration": {
+		"myIntegrationsLabel" : "Mine",
 		"previewRibbonText": "This page is a preview of the latest changes, and it doesn't match publicly available version.",
 		"backToEditText": "Back to the editing interfaces",
 		"Access Control": "Access Control",
@@ -391,5 +392,6 @@
 	"Support": "Support",
 	"Supported Devices": "Supported Devices",
 	"Terms": "Terms",
+	"pleaseSelect": "Please select...",
 	"WHEN_MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{{targetSystemName}}</strong> System, and this system will be deleted."
 }

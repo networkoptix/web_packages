@@ -83,6 +83,7 @@
     "Merge current System with": "Merge current System with",
     "Merge with Another System": "Merge with Another System",
     "Message": "Message",
+    "Mine": "Mine",
     "Motion Detection": "Motion Detection",
     "Multi Sensor": "Multi Sensor",
     "Nothing Found": "Nothing Found",
@@ -396,6 +397,7 @@
         "Health Monitor": "Health Monitor",
         "Storage": "Storage",
         "backToEditText": "Back to the editing interfaces",
+        "myIntegrationsLabel": "Mine",
         "previewRibbonText": "This page is a preview of the latest changes, and it doesn't match publicly available version."
     },
     "ipvd": {
@@ -486,6 +488,7 @@
         "weakMessage": "Use numbers, upper and lower case letters and special characters to make your password stronger"
     },
     "phoneNumberWithLabel": "Tel: {{number}}",
+    "pleaseSelect": "Please select...",
     "privacyPolicy": {
         "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent.",
         "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent."

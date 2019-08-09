@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject, ViewEncapsulation, Input, Output, EventEmitter } from '@angular/core';
-import { TranslateService }                                                          from '@ngx-translate/core';
 import { NxUtilsService }                                                            from '../../../services/utils.service';
+import { NxLanguageProviderService }                                                 from '../../../services/nx-language-provider';
 
 @Component({
     selector: 'nx-language-select',
@@ -15,6 +15,7 @@ export class NxLanguageDropdown implements OnInit {
     @Input() short: any;
     @Output() onSelected = new EventEmitter<string>();
 
+    currentLang: string;
     show: boolean;
     direction: string;
     activeLanguage = {
@@ -26,9 +27,9 @@ export class NxLanguageDropdown implements OnInit {
     languagesCol2 = [];
 
     constructor(@Inject('cloudApiService') private cloudApi: any,
-                @Inject('languageService') private language: any,
-                private translate: TranslateService) {
-
+                private language: NxLanguageProviderService,
+    ) {
+        this.currentLang = this.language.getLang();
         this.show = false;
     }
 
@@ -84,7 +85,7 @@ export class NxLanguageDropdown implements OnInit {
                 this.splitLanguages();
 
                 this.activeLanguage = this.languages.find(lang => {
-                    return (lang.language === this.language.lang.language);
+                    return (lang.language === this.currentLang);
                 });
             });
     }

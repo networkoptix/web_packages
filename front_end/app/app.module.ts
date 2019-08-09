@@ -35,9 +35,6 @@ import { WINDOWS_PROVIDERS }                from './src/services/window-provider
 import { CookieXSRFStrategy, XSRFStrategy } from '@angular/http';
 
 // AoT requires an exported function for factories
-export function createTranslateLoader(http: HttpClient) {
-    return new TranslateHttpLoader(http, 'static/lang_', '/language_i18n.json');
-}
 
 class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
     shouldProcessUrl(url: UrlTree) {
@@ -52,8 +49,6 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
 
         /* Temporary downgraded components - routing is handled by AJS */
         // url.toString().startsWith('/') ||
-        //
-        // url.toString().startsWith('/systems/:systemId') ||
         // url.toString().startsWith('/register') ||
         // url.toString().startsWith('/login') ||
         // url.toString().startsWith('/download') ||
@@ -95,21 +90,8 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
         PagesModule,
         DirectivesModule,
         ServiceModule,
-
-        TranslateModule.forRoot({
-            loader: {
-                provide   : TranslateLoader,
-                useFactory: (createTranslateLoader),
-                deps      : [ HttpClient ]
-            }
-        }),
+        TranslateModule.forRoot(),
         DeviceDetectorModule.forRoot(),
-        // NgbModule.forRoot(),
-        // ToastrModule.forRoot({
-        //     timeOut          : 3 * 1000,
-        //     positionClass    : 'toast-top-center',
-        //     preventDuplicates: true,
-        // }),
         RouterModule.forRoot([], {
             initialNavigation: true,
             scrollPositionRestoration: 'enabled',

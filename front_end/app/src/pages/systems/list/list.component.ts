@@ -19,7 +19,7 @@ import { NxUrlProtocolService } from '../../../services/url-protocol.service';
 export class NxSystemsListComponent implements OnInit, OnDestroy {
     CONFIG: any = {};
     LANG: any = {};
-    location: any;
+    // location: any;
     showSearch: any;
     fetchComplete: any;
     search: any;
@@ -47,9 +47,9 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
                 private dialogs: NxDialogsService,
                 private systemsService: NxSystemsService,
                 private accountService: NxAccountService,
-                location: Location,
+                private location: Location,
     ) {
-        this.location = location;
+        // this.location = location;
         this.setupDefaults();
     }
 
@@ -62,8 +62,10 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
         this.accountService
             .requireLogin()
             .then((account) => {
-                this.userEmail = account.email;
-                this.systemsService.getSystems(account.email);
+                if (account) {
+                    this.userEmail = account.email;
+                    this.systemsService.getSystems(account.email);
+                }
             });
 
         this.systemsService.systemsSubject.subscribe((systems) => {
@@ -72,13 +74,15 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
                 return;
             }
 
-            if (this.systems.length === 1) {
-                this.openSystem(this.systems[0]);
+            if (this.location.path().indexOf('/systems') === 0) {
+                if (this.systems.length === 1) {
+                    this.openSystem(this.systems[0]);
+                }
+
+                this.showSearch = this.systems.length >= this.CONFIG.minSystemsToSearch;
+
+                this.searchSystems();
             }
-
-            this.showSearch = this.systems.length >= this.CONFIG.minSystemsToSearch;
-
-            this.searchSystems();
         });
 
         this.openClient = this.process.init(() => {
