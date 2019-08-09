@@ -53,6 +53,7 @@
                     $scope.account = nxAccountService.get();
                     $scope.userEmail = nxAccountService.getEmail();
                 })
+                .catch(() => {});
         }
     
         if ($scope.accountMode) {
