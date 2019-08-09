@@ -60,6 +60,10 @@
                         $scope.userEmail = nxAccountService.getEmail();
                         nxAccountService.redirectAuthorised();
                     })
+                    .catch(function () {
+                        nxPageService.setPageTitle(languageService.lang.pageTitles.login);
+                        dialogs.login(false);
+                    });
             }
         }
     }

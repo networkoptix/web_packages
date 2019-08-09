@@ -62,10 +62,13 @@ export class NxAccountService {
                        });
         }
         return this.cloudApi
-                   .account().toPromise()
-                   .then((account) => {
-                       return account;
-                   });
+            .account().toPromise()
+            .then((account) => {
+                return account;
+            })
+            .catch(() => {
+                return undefined;
+            });
     }
 
     authKey() {

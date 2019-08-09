@@ -36,7 +36,8 @@ export class NxAccountSettingsDropdown implements OnInit {
                         this.settings.is_staff = result.is_staff;
                         this.settings.is_superuser = result.is_superuser;
                     });
-            });
+            })
+            .catch(() => {});
     }
 
     logout(): void {
