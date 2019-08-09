@@ -192,7 +192,7 @@ class NoptixLibrary(object):
             logger.debug('span1?=' + neg)
             logger.debug('span2?=' + pos)
             if span1 == neg and span2 == pos:
-                logger.debug('result: ' + expected)
+                logger.info('result: ' + expected)
                 return
             else:
                 raise AssertionError(not_found)
@@ -200,7 +200,7 @@ class NoptixLibrary(object):
             logger.debug('span1?=' + pos)
             logger.debug('span2?=' + neg)
             if span1 == pos and span2 == neg:
-                logger.debug('result: ' + expected)
+                logger.info('result: ' + expected)
                 return
             else:
                 raise AssertionError(not_found)
