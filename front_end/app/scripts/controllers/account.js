@@ -53,7 +53,7 @@
                     $scope.account = account;
                     $scope.userEmail = account.getEmail();
                 }, function () {
-                    dialogs.login(false);
+                    dialogs.login(true);
                 })
         }
     
