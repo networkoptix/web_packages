@@ -525,3 +525,22 @@ SUPERUSER_DOMAIN = '@networkoptix.com'  # Only user from this domain can have su
 DJANGO_EXPORTS_REQUIRE_PERM = False
 # Use if you want to disable the global django admin action. This setting is set to True by default.
 DJANGO_CSV_GLOBAL_EXPORTS_ENABLED = False
+
+# Push Notifications
+# Ask Roman Barsegian for config if you need push to work locally
+fcm = conf.get('fcm')
+if fcm:
+    PUSH_NOTIFICATIONS_SETTINGS = {
+        'FCM_API_KEY': fcm.get('priv_key'),
+        'MAX_RETRIES': 3,
+        'RETRY_INTERVAL': 20,
+        'PUBLIC': {
+            'apiKey': fcm.get('pub_key'),
+            'authDomain': fcm.get('auth_domain'),
+            'databaseURL': fcm.get('db_url'),
+            'projectId': fcm.get('project_id'),
+            'storageBucket': fcm.get('storage_bucket'),
+            'messagingSenderId': fcm.get('messaging_sender_id'),
+            'appId': fcm.get('app_id')
+        }
+    }

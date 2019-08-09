@@ -3,6 +3,8 @@ import { Location } from '@angular/common';
 import { AngularFireMessaging } from '@angular/fire/messaging';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { timer } from 'rxjs/observable/timer';
+import { NxSystemsService } from '../../services/systems.service';
+import { NxAccountService } from '../../services/account.service';
 
 @Component({
     selector: 'push-notifications-component',
@@ -47,34 +49,33 @@ export class PushComponent implements OnInit {
         this.subChanges = false;
     }
 
-    constructor(@Inject('system') private systemService: any,
-                @Inject('systemsProvider') private systemsProvider: any,
-                @Inject('authorizationCheckService') private authorizationService: any,
+    constructor(private accountService: NxAccountService,
+                private systemsService: NxSystemsService,
                 private afMessaging: AngularFireMessaging,
+                location: Location,
                 private http: HttpClient) {
         this.setupDefaults();
+        this.location = location;
     }
 
     ngOnInit(): void {
-        this.authorizationService.requireLogin().then(account => {
-            if (!account) {
-                this.location.go('404');
+        this.accountService.requireLogin().then(account => {
+            if (!(account && account.email.endsWith('@networkoptix.com'))) {
+                this.location.go('/');
                 return;
-            } else if (!account.email.endsWith('@networkoptix.com')) {
-                this.authorizationService.redirectToHome();
             } else {
                 this.account = account;
                 this.setSystems();
                 this.setFirebase();
             }
-        });
+        })
     }
 
     setSystems() {
         timer(10000, 10000).subscribe(() => this.updateSubStates());
-        this.systemsProvider.forceUpdateSystems().then(
+        this.systemsService.forceUpdateSystemsAsPromise().then(
             () => {
-                this.systems = this.systemsProvider.systems;
+                this.systems = this.systemsService.systems;
                 this.notification.system = '';
                 this.updateSubStates();
             });

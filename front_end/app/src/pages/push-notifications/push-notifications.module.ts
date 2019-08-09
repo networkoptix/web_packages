@@ -2,22 +2,27 @@ import { NgModule }             from '@angular/core';
 import { CommonModule }         from '@angular/common';
 import { BrowserModule }        from '@angular/platform-browser';
 import { downgradeComponent, UpgradeModule } from '@angular/upgrade/static';
-import { Routes } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { FormsModule }          from '@angular/forms';
 
-import { AngularFireModule } from '@angular/fire';
+import { AngularFireModule, FirebaseOptionsToken } from '@angular/fire';
 import { AngularFireMessagingModule } from '@angular/fire/messaging';
 
 import { PushComponent } from './push-notifications.component';
 
 import { TranslateModule }  from '@ngx-translate/core';
 import { ComponentsModule } from '../../components/components.module';
+import { NxConfigService } from '../../services/nx-config';
 
 const appRoutes: Routes = [
     {
-        // path: 'push-notifications', component: PushComponent,
+        path: 'push-notifications', component: PushComponent,
     }
 ];
+
+export function initializeApp(CONFIG: NxConfigService) {
+  return CONFIG.getConfig().pushConfig;
+}
 
 @NgModule({
     imports        : [
@@ -27,12 +32,18 @@ const appRoutes: Routes = [
         TranslateModule,
         ComponentsModule,
         FormsModule,
-        AngularFireModule.initializeApp(FIREBASE),
-        AngularFireMessagingModule
+        AngularFireModule,
+        AngularFireMessagingModule,
 
-        // RouterModule.forChild(appRoutes)
+        RouterModule.forChild(appRoutes)
     ],
-    providers      : [],
+    providers      : [
+        {
+            provide: FirebaseOptionsToken,
+            deps: [NxConfigService],
+            useFactory: initializeApp
+        }
+    ],
     declarations   : [
         PushComponent,
     ],
@@ -46,9 +57,3 @@ const appRoutes: Routes = [
 })
 export class PushNotificationsModule {
 }
-
-declare var angular: angular.IAngularStatic;
-angular
-    .module('cloudApp.directives')
-    .directive('pushComponent', downgradeComponent({component: PushComponent}) as angular.IDirectiveFactory);
-

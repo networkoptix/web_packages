@@ -129,7 +129,8 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
                 'vendors_shown': product.read_global_value("%VENDORS_SHOWN%"),
                 'cloud_name': product.read_global_value("%CLOUD_NAME%"),
                 'vms_name': product.read_global_value("%VMS_NAME%"),
-                'push_subscription_auto_active': product.read_global_value("%PUSH_SUB_ACTIVE%")
+                'push_subscription_auto_active': product.read_global_value("%PUSH_SUB_ACTIVE%"),
+                'push_config': getattr(settings, 'PUSH_NOTIFICATIONS_SETTINGS', {}).get('PUBLIC')
             },
             'cloud_capabilities': {
                 'integration_store_enabled': integration_store_enabled

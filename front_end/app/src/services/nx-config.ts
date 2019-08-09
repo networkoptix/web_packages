@@ -301,6 +301,7 @@ export class NxConfigService {
             privacyLink                   : '',
             cloudName                     : '',
             vmsName                       : '',
+            pushConfig                    : '',
         };
     }
 

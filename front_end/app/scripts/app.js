@@ -412,7 +412,7 @@ window.L = {};
                         template: ''
                     })
                     .when('/push-notifications', {
-                        template: '<push-component></push-component>'
+                        template: ''
                     })
                     // **** routes for detail views should state full path ****
                     .when('/main/:route', {
