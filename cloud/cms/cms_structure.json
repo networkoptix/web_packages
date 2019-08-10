@@ -914,27 +914,38 @@
                 "name": "%INTEGRATION_FILTER_ITEMS%",
                 "value": [
                     {
+                        "id": "access",
                         "name": "Access Control",
                         "enabled": false
                     },
                     {
+                        "id": "connector",
                         "name": "Connector",
                         "enabled": false
                     },
                     {
+                        "id": "analytics",
                         "name": "Data Analytics",
                         "enabled": false
                     },
                     {
+                        "id": "drone",
                         "name": "Drone",
                         "enabled": false
                     },
                     {
+                        "id": "health",
                         "name": "Health Monitor",
                         "enabled": false
                     },
                     {
+                        "id": "storage",
                         "name": "Storage",
+                        "enabled": false
+                    },
+                    {
+                        "id": "mine",
+                        "name": "My Integrations",
                         "enabled": false
                     }
                 ],
@@ -1005,12 +1016,25 @@
             "meta": {
               "multi": true,
               "options": [
-                "Access Control",
-                "Connector",
-                "Data Analytics",
-                "Drone",
-                "Health Monitor",
-                "Storage"
+                {
+                  "id": "access",
+                  "label": "Access Control"
+                }, {
+                  "id": "connector",
+                  "label": "Connector"
+                }, {
+                  "id": "analytics",
+                  "label": "Data Analytics"
+                }, {
+                  "id": "drone",
+                  "label": "Drone"
+                }, {
+                  "id": "health",
+                  "label": "Health Monitor"
+                }, {
+                  "id": "storage",
+                  "label": "Storage"
+                }
               ]
             }
           },

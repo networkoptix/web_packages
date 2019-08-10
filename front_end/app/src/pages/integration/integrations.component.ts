@@ -143,12 +143,11 @@ export class NxIntegrationsComponent implements OnInit {
 
         if (this.filterModel.tags.length) {
             const hasTagSelection = this.filterModel.tags.some((tag) => tag.value);
-
             if (hasTagSelection) {
                 this.elements = this.elements.filter(item => {
                     return item.information.type.find((type) => {
                         return this.filterModel.tags.some(tag => {
-                            if (tag.label === type && tag.value) {
+                            if (tag.id === type.id && tag.value) {
                                 return item;
                             }
                         });
