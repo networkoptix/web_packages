@@ -184,7 +184,7 @@ def process_context(product, context, language, skin,
 
     # If json -> dump it to string
     if type(content) == dict:
-        content = json.dumps(content)
+        content = json.dumps(content, indent=4, separators=(',', ': '))
 
     return content
 
