@@ -130,7 +130,7 @@
     "MERGE SYSTEMS TEXT": "Sistemleri Birleştir",
     "SYSTEM MERGING TEXT": "Sistemler birleştirilmeye başlandı",
     "MERGE NOT OWNER MESSAGE 1 TEXT": "Yalnızca \"Sahip\" izinlerine sahip olduğunuz bulut Sistemlerini birleştirebilirsiniz.",
-    "MERGE NOT OWNER MESSAGE 2 TEXT": "%PRODUCT_NAME% yada client kullanarak sistemleri birleştirmek için istediğiniz sistemi bağlayın.",
+    "MERGE NOT OWNER MESSAGE 2 TEXT": "%PRODUCT_NAME% yada client kullanarak sistemleri birleştirmek için istediğiniz %VMS_NAME% bağlayın.",
     "CANNOT MERGE WITH OFFLINE SYSTEM TEXT": "%SYSTEM NAME% çevrimdışı ve geçerli olanla birleştirilemez.",
     "SYSTEMS MERGE FAILED TEXT": "Sistem birleştirme işlemi başarısız oldu",
     "SYSTEM MERGE COMPLETED TEXT": "Sistem birleştirme tamamlandı",

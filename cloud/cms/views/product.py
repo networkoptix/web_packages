@@ -367,7 +367,7 @@ def download_package(request, product_id):
     version_id = request.GET['version_id'] if 'version_id' in request.GET else None
     preview = 'draft' in request.GET
 
-    if not version_id:
+    if not version_id and not preview:
         latest_review = ProductCustomizationReview.objects.filter(version__product=product)
         if not preview:
             latest_review = latest_review.filter(state=ProductCustomizationReview.REVIEW_STATES.accepted)

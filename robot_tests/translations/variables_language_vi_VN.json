@@ -131,13 +131,13 @@
     "SYSTEM MERGING TEXT": "Các hệ thống đã được hợp nhất",
     "MERGE NOT OWNER MESSAGE 1 TEXT": "Bạn chỉ có thể hợp nhất các Hệ thống đám mây mà bạn có quyền \"Owner\".",
     "MERGE NOT OWNER MESSAGE 2 TEXT": "Kết nối Hệ thống bạn muốn kết hợp với hệ thống này với %PRODUCT_NAME% hoặc hợp nhất cục bộ bằng %VMS_NAME% Client.",
-    "CANNOT MERGE WITH OFFLINE SYSTEM TEXT": "%STÊN YEC% ngoại tuyến và không thể hợp nhất với tên hiện tại.",
+    "CANNOT MERGE WITH OFFLINE SYSTEM TEXT": "%SYSTEM NAME% ngoại tuyến và không thể hợp nhất với tên hiện tại.",
     "SYSTEMS MERGE FAILED TEXT": "Hợp nhất hệ thống không thành công",
     "SYSTEM MERGE COMPLETED TEXT": "Hoàn thành hợp nhất hệ thống",
     "MERGE CURRENT SYSTEM WITH TEXT": "Hợp nhất các hệ thống hiện tại với",
     "YOU CAN ONLY MERGE AS OWNER TEXT": "Bạn chỉ có thể hợp nhất Hệ thống nếu bạn là chủ sở hữu.",
-    "CHECKING TEXT": "kiểm tra...",
+    "CHECKING TEXT": "Kiểm tra...",
     "ENTER PASSWORD TO CONTINUE TEXT": "Nhập mật khẩu cho tài khoản của bạn để tiếp tục",
     "INCOMPATIBLE": "không tương thích",
-    "CONNECTION TO SYSTEM LOST": "Mất kết nối với %SYEC NAME%"
+    "CONNECTION TO SYSTEM LOST": "Mất kết nối với %SYSTEM NAME%"
 }
