@@ -13,6 +13,8 @@ import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader }              from '@ngx-translate/http-loader';
 import { CookieService }                    from 'ngx-cookie-service';
 import { WebStorageModule }                 from 'ngx-store';
+import { AngularFireModule, FirebaseOptionsToken } from '@angular/fire';
+import { AngularFireMessagingModule } from '@angular/fire/messaging';
 
 import {
     cloudApiServiceModule, systemModule, languageServiceModule,
@@ -33,6 +35,7 @@ import { LayoutModule }                     from '@angular/cdk/layout';
 // import { NxAppStateService }         from './src/services/nx-app-state.service';
 import { WINDOWS_PROVIDERS }                from './src/services/window-provider';
 import { CookieXSRFStrategy, XSRFStrategy } from '@angular/http';
+import {initializeApp} from "./src/pages/push-notifications/push-notifications.module";
 
 // AoT requires an exported function for factories
 
@@ -91,6 +94,8 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
         PagesModule,
         DirectivesModule,
         ServiceModule,
+        AngularFireModule,
+        AngularFireMessagingModule,
         TranslateModule.forRoot(),
         DeviceDetectorModule.forRoot(),
         RouterModule.forRoot([], {
@@ -112,6 +117,11 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
         WINDOWS_PROVIDERS,
         { provide: LocationStrategy, useClass: PathLocationStrategy },
         { provide: UrlHandlingStrategy, useClass: HybridUrlHandlingStrategy },
+        {
+            provide: FirebaseOptionsToken,
+            deps: [NxConfigService],
+            useFactory: initializeApp
+        }
     ],
     declarations   : [
         AppComponent

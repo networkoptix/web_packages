@@ -5,9 +5,6 @@ import { downgradeComponent, UpgradeModule } from '@angular/upgrade/static';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule }          from '@angular/forms';
 
-import { AngularFireModule, FirebaseOptionsToken } from '@angular/fire';
-import { AngularFireMessagingModule } from '@angular/fire/messaging';
-
 import { PushComponent } from './push-notifications.component';
 
 import { TranslateModule }  from '@ngx-translate/core';
@@ -32,17 +29,9 @@ export function initializeApp(CONFIG: NxConfigService) {
         TranslateModule,
         ComponentsModule,
         FormsModule,
-        AngularFireModule,
-        AngularFireMessagingModule,
-
         RouterModule.forChild(appRoutes)
     ],
     providers      : [
-        {
-            provide: FirebaseOptionsToken,
-            deps: [NxConfigService],
-            useFactory: initializeApp
-        }
     ],
     declarations   : [
         PushComponent,
