@@ -1,0 +1,84 @@
+<header *ngIf="viewHeader">
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="app-header-left">
+                <ul *ngIf="activeSystem" class="nav navbar-nav navbar-left auth-visible d-block d-sm-none">
+                    <li>
+                        <nx-active-system [activeSystem]="activeSystem"></nx-active-system>
+                    </li>
+                </ul>
+
+                <div class="navbar-header">
+                    <a class="inset navbar-brand product-name add-version" href="/"
+                       [ngClass]="{'ml-sm-0': true}">
+                        <img src="{{CONFIG.previewPath}}/static/images/logo.png">
+                    </a>
+                </div>
+
+                <ul *ngIf="active.integrations" class="nav navbar-nav d-none d-sm-flex">
+                    <li class="active">
+                        <a class="inset" href="">Integrations</a>
+                    </li>
+                </ul>
+
+                <ul *ngIf="active.ipvd" class="nav navbar-nav d-none d-sm-flex">
+                    <li class="active">
+                        <a class="inset" href="">Supported IP Video Devices</a>
+                    </li>
+                </ul>
+
+                <ul *ngIf="activeSystem && !active.integrations && !active.ipvd"
+                    class="nav navbar-nav auth-visible d-none d-sm-flex">
+
+                    <li [ngClass]="{ 'active' :active.view }">
+                        <a class="inset" href="/systems/{{activeSystem.id}}/view">View</a>
+                    </li>
+                    <li [ngClass]="{ 'active' :active.settings}">
+                        <a class="inset" href="/systems/{{activeSystem.id}}">Settings</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="app-header-right">
+                <ul class="nav navbar-nav navbar-right auth-hidden">
+                    <li>
+                        <span>
+                            <a href="/register" class="btn btn-primary">Create Account</a>
+                        </span>
+                        <span>
+                            <a href="" class="btn btn-default" (click)="login()">Log In</a>
+                        </span>
+                        <span>
+                            <nx-language-select
+                                    short="true" altStyle="true"
+                                    instantReload="true"></nx-language-select>
+                        </span>
+                    </li>
+                </ul>
+
+                <ul class="nav navbar-nav navbar-right auth-visible">
+                    <li *ngIf="singleSystem" class="no-hover collapse-second hidden-collapse">
+                        <a href="/systems/{{activeSystem.id}}" class="m-0 border-0">
+                            <span class="glyphicon glyphicon-home"></span>
+                            <span class="ellipsis">{{activeSystem.name}}</span>
+                        </a>
+                    </li>
+
+                    <li *ngIf="systemCounter && !singleSystem" class="collapse-second">
+                        <nx-systems
+                                [endpoint]="active"
+                                [systems]="systems"
+                                [activeSystem]="activeSystem">
+                        </nx-systems>
+                    </li>
+
+                    <li class="vertical-bar"></li>
+
+                    <li class="collapse-first">
+                        <nx-account-settings-select></nx-account-settings-select>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>

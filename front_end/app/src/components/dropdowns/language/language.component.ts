@@ -13,6 +13,7 @@ export class NxLanguageDropdown implements OnInit {
     @Input() instantReload: any;
     @Input() dropup: any;
     @Input() short: any;
+    @Input() altStyle: any;
     @Output() onSelected = new EventEmitter<string>();
 
     currentLang: string;

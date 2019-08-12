@@ -17,7 +17,7 @@ export class NxAccountService {
     session: any;
     location: any;
     requestingLogin: any;
-    loginStateSubject = new BehaviorSubject([]);
+    loginStateSubject = new BehaviorSubject(undefined);
 
     constructor(@Inject(DOCUMENT) private document: any,
                 private config: NxConfigService,

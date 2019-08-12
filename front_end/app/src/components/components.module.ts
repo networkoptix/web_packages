@@ -36,7 +36,8 @@ import { NxPasswordComponent }       from './password-input/password.component';
 import { NxEmailComponent }          from './email-input/email.component';
 import { NxClientButtonComponent }   from './open-client-button/client-button.component';
 import { NxSwitchComponent }         from './switch/switch.component';
-import { ToastsContainer }         from './toast/toast.component';
+import { ToastsContainer }           from './toast/toast.component';
+import { NxHeaderComponent }         from './header/header.component';
 
 @NgModule({
     imports: [
@@ -70,6 +71,7 @@ import { ToastsContainer }         from './toast/toast.component';
         NxRibbonComponent,
         NxVendorListComponent,
         NxSearchComponent,
+        NxHeaderComponent,
         NxFooterComponent,
         NxLandingDisplayComponent,
         NxPasswordComponent,
@@ -100,6 +102,7 @@ import { ToastsContainer }         from './toast/toast.component';
         NxRibbonComponent,
         NxVendorListComponent,
         NxSearchComponent,
+        NxHeaderComponent,
         NxFooterComponent,
         NxLandingDisplayComponent,
         NxPasswordComponent,
@@ -122,6 +125,7 @@ import { ToastsContainer }         from './toast/toast.component';
         NxRibbonComponent,
         NxVendorListComponent,
         NxSearchComponent,
+        NxHeaderComponent,
         NxFooterComponent,
         NxLandingDisplayComponent,
         NxPasswordComponent,
@@ -154,6 +158,7 @@ import { ToastsContainer }         from './toast/toast.component';
         NxRibbonComponent,
         NxVendorListComponent,
         NxSearchComponent,
+        NxHeaderComponent,
         NxFooterComponent,
         NxLandingDisplayComponent,
         NxPasswordComponent,
@@ -183,6 +188,7 @@ angular
         .directive('nxPreLoader', downgradeComponent({ component: NxPreLoaderComponent }) as angular.IDirectiveFactory)
         .directive('nxRibbon', downgradeComponent({ component: NxRibbonComponent }) as angular.IDirectiveFactory)
         .directive('nxFooter', downgradeComponent({component: NxFooterComponent}) as angular.IDirectiveFactory)
+        .directive('nxHeader', downgradeComponent({component: NxHeaderComponent}) as angular.IDirectiveFactory)
         .directive('nxLandingDisplay', downgradeComponent({component: NxLandingDisplayComponent}) as angular.IDirectiveFactory);
 
 angular

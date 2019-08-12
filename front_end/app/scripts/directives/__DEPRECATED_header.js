@@ -84,6 +84,9 @@
                     }
                 });
                 
+                
+                
+                
                 scope.$on('$locationChangeSuccess', function (next, current) {
                     if ($route.current.params.systemId && !scope.systems) {
                             scope.nxSystemsService.forceUpdateSystems();
