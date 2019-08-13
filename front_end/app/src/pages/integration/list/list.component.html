@@ -48,7 +48,7 @@
                     </div>
                     <div *ngFor="let type of plugin.information.type">
                         <div class="float-left m-0 mt-1 mr-1" *ngIf="type.id != 'mine'">
-                            <span class="badge">{{type.value}}</span>
+                            <span class="badge">{{type.label}}</span>
                         </div>
                     </div>
                     <div class="float-left m-0 mt-1 mr-1" *ngIf="plugin.mine">

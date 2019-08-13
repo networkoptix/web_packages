@@ -34,7 +34,10 @@
                     <span class="badge large badge-danger" translate>Draft</span>
                 </h3>
                 <h3 class="float-left m-0 mt-1 mr-1" *ngFor="let type of plugin.information.type">
-                    <span class="badge large">{{type}}</span>
+                    <span class="badge large" *ngIf="type.id != 'mine'">{{type.label}}</span>
+                </h3>
+                <h3 class="float-left m-0 mt-1 mr-1" *ngIf="plugin.mine">
+                    <span class="badge large badge-brand" translate>Mine</span>
                 </h3>
             </div>
 

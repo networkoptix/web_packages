@@ -110,9 +110,10 @@ export class NxIntegrationsComponent implements OnInit {
     }
 
     setTags() {
+        const haveMyIntegration = this.allElements.find((elm) => elm.mine);
         this.CONFIG.integrationFilterItems.forEach(item => {
-            if (item.enabled) {
-                    this.filterModel.tags.push({ id: item.name, label: item.name, value: false });
+            if (item.enabled || (item.id === 'mine' && haveMyIntegration)) {
+                    this.filterModel.tags.push({ id: item.id, label: item.name, value: false });
             }
         });
 
@@ -167,4 +168,3 @@ export class NxIntegrationsComponent implements OnInit {
         item.name = item.name.replace(pattern, '<span class="marked">' + text + '</span>');
     }
 }
-
