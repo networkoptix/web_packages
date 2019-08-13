@@ -1,6 +1,7 @@
 import { Component, OnInit, Inject, ViewEncapsulation, Input, Output, EventEmitter } from '@angular/core';
 import { NxUtilsService }                                                            from '../../../services/utils.service';
 import { NxLanguageProviderService }                                                 from '../../../services/nx-language-provider';
+import { NxCloudApiService }                                                         from '../../../services/nx-cloud-api';
 
 @Component({
     selector: 'nx-language-select',
@@ -27,7 +28,7 @@ export class NxLanguageDropdown implements OnInit {
     languagesCol1 = [];
     languagesCol2 = [];
 
-    constructor(@Inject('cloudApiService') private cloudApi: any,
+    constructor(private cloudApi: NxCloudApiService,
                 private language: NxLanguageProviderService,
     ) {
         this.currentLang = this.language.getLang();
@@ -57,11 +58,10 @@ export class NxLanguageDropdown implements OnInit {
                 return (lang.language === langCode);
             });
             this.onSelected.emit(langCode);
-
             if (this.instantReload) {
                 this.cloudApi
                     .changeLanguage(langCode)
-                    .then(() => {
+                    .then((response) => {
                         window.location.reload();
                         return false; // return false so event will not bubble to HREF
                     });
@@ -78,7 +78,7 @@ export class NxLanguageDropdown implements OnInit {
         this.cloudApi
             .getLanguages()
             .then((data: any) => {
-                this.languages = data.data;
+                this.languages = data;
                 this.languages.sort(NxUtilsService.byParam((lang) => {
                     return lang.language;
                 }, NxUtilsService.sortASC));

@@ -43,7 +43,6 @@ import { ActivatedRoute, NavigationEnd, Event, Router, RoutesRecognized } from '
     }
 
     ngOnInit() {
-        // this.inline = this.location.path().search['inline'] !== 'undefined';
         this.viewHeader = this.CONFIG.showHeaderAndFooter;
         this.active = {};
 
@@ -52,7 +51,9 @@ import { ActivatedRoute, NavigationEnd, Event, Router, RoutesRecognized } from '
         this.router.events
               .subscribe((event: Event) => {
                   if (event instanceof RoutesRecognized) {
+                      debugger;
                       this.systemId = event.state.root.firstChild.params.systemId;
+                      this.inline = event.state.root.firstChild.params.inline !== 'undefined';
                   }
 
                   if (event instanceof NavigationEnd) {

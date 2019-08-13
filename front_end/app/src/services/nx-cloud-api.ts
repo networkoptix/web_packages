@@ -101,4 +101,14 @@ export class NxCloudApiService {
     account() {
         return this.http.get(this.CONFIG.apiBase + '/account').toPromise();
     }
+
+    getLanguages() {
+        return this.http.get('/static/languages.json').toPromise();
+    }
+
+    changeLanguage(language) {
+        return this.http.post(this.CONFIG.apiBase + '/utils/language/', {
+            language
+        }).toPromise();
+    }
 }

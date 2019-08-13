@@ -17,13 +17,13 @@
 
                 <ul *ngIf="active.integrations" class="nav navbar-nav d-none d-sm-flex">
                     <li class="active">
-                        <a class="inset" href="">Integrations</a>
+                        <a class="inset" href="" translate>Integrations</a>
                     </li>
                 </ul>
 
                 <ul *ngIf="active.ipvd" class="nav navbar-nav d-none d-sm-flex">
                     <li class="active">
-                        <a class="inset" href="">Supported IP Video Devices</a>
+                        <a class="inset" href="" translate>Supported IP Video Devices</a>
                     </li>
                 </ul>
 
@@ -31,10 +31,10 @@
                     class="nav navbar-nav auth-visible d-none d-sm-flex">
 
                     <li [ngClass]="{ 'active' :active.view }">
-                        <a class="inset" href="/systems/{{activeSystem.id}}/view">View</a>
+                        <a class="inset" href="/systems/{{activeSystem.id}}/view" translate>View</a>
                     </li>
                     <li [ngClass]="{ 'active' :active.settings}">
-                        <a class="inset" href="/systems/{{activeSystem.id}}">Settings</a>
+                        <a class="inset" href="/systems/{{activeSystem.id}}" translate>Settings</a>
                     </li>
                 </ul>
             </div>
@@ -43,10 +43,10 @@
                 <ul class="nav navbar-nav navbar-right auth-hidden">
                     <li>
                         <span>
-                            <a href="/register" class="btn btn-primary">Create Account</a>
+                            <a href="/register" class="btn btn-primary" translate>Create Account</a>
                         </span>
                         <span>
-                            <a href="" class="btn btn-default" (click)="login()">Log In</a>
+                            <a href="" class="btn btn-default" (click)="login()" translate>Log In</a>
                         </span>
                         <span>
                             <nx-language-select
