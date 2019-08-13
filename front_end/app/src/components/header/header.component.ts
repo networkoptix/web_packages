@@ -1,11 +1,15 @@
-import { Component, Inject, OnInit, Renderer2 }  from '@angular/core';
-import { DOCUMENT, Location }                                             from '@angular/common';
-import { NxConfigService }                                                from '../../services/nx-config';
-import { NxAppStateService }                                              from '../../services/nx-app-state.service';
-import { NxAccountService }                                               from '../../services/account.service';
-import { NxDialogsService }                                               from '../../dialogs/dialogs.service';
-import { NxSystemsService }                                               from '../../services/systems.service';
-import { ActivatedRoute, NavigationEnd, Event, Router, RoutesRecognized } from '@angular/router';
+import { Component, Inject, OnInit, Renderer2 } from '@angular/core';
+import {
+    ActivatedRoute, NavigationEnd, Event,
+    Router, RoutesRecognized
+}                                               from '@angular/router';
+import { DOCUMENT, Location }                   from '@angular/common';
+import { NxConfigService }                      from '../../services/nx-config';
+import { NxAppStateService }                    from '../../services/nx-app-state.service';
+import { NxAccountService }                     from '../../services/account.service';
+import { NxDialogsService }                     from '../../dialogs/dialogs.service';
+import { NxSystemsService }                     from '../../services/systems.service';
+
 @Component({
     selector: 'nx-header',
     templateUrl: 'header.component.html',
@@ -23,11 +27,12 @@ import { ActivatedRoute, NavigationEnd, Event, Router, RoutesRecognized } from '
     inline: any;
     viewHeader: boolean;
     systemCounter: number;
+    location: any;
 
     constructor(private renderer: Renderer2,
                 private _config: NxConfigService,
                 private appState: NxAppStateService,
-                private location: Location,
+                location: Location,
                 private route: ActivatedRoute,
                 private systemsService: NxSystemsService,
                 private dialogs: NxDialogsService,
@@ -35,6 +40,7 @@ import { ActivatedRoute, NavigationEnd, Event, Router, RoutesRecognized } from '
                 private router: Router,
     ) {
         this.CONFIG = this._config.getConfig();
+        this.location = location;
     }
 
     private isActive(val) {
@@ -43,6 +49,14 @@ import { ActivatedRoute, NavigationEnd, Event, Router, RoutesRecognized } from '
     }
 
     ngOnInit() {
+        // TODO: root route is maintained by AJS - replace this once we get rid of it.
+        setTimeout(() => {
+            this.inline = this.location.path().indexOf('inline') > 0;
+        });
+        // this.route.queryParams.subscribe(params => {
+        //     this.inline = params['inline'] !== 'undefined';
+        // });
+
         this.viewHeader = this.CONFIG.showHeaderAndFooter;
         this.active = {};
 
@@ -51,9 +65,7 @@ import { ActivatedRoute, NavigationEnd, Event, Router, RoutesRecognized } from '
         this.router.events
               .subscribe((event: Event) => {
                   if (event instanceof RoutesRecognized) {
-                      debugger;
                       this.systemId = event.state.root.firstChild.params.systemId;
-                      this.inline = event.state.root.firstChild.params.inline !== 'undefined';
                   }
 
                   if (event instanceof NavigationEnd) {
