@@ -151,9 +151,9 @@ class NoptixLibrary(object):
         logger.debug('neg: '+neg)
 
         # First, find parent element
-        timeout = timeout + time.time()
+        to = timeout + time.time()
         element = None
-        while (time.time() < timeout and element is None):
+        while (time.time() < to and element is None):
             try:
                 element = seleniumlib.find_element(locator)
                 logger.debug('element: ' + str(element))
@@ -164,9 +164,9 @@ class NoptixLibrary(object):
             raise AssertionError(not_found)
 
         # Next, find child arrow elements
-        timeout = timeout + time.time()
+        to = timeout + time.time()
         elements = None
-        while (time.time() < timeout and elements is None):
+        while (time.time() < to and elements is None):
             try:
                 elements = seleniumlib.find_elements(locators)
                 logger.debug('elements count: ' + str(len(elements)))
