@@ -311,10 +311,10 @@ Advanced search
     Verify Button Arrow Direction
     ...    ${IPVD ADV FILTERS MIN RES}
     ...    Up
-    ${style}=   Get Element Style
-    ...    ${IPVD ADV FEATURES PTZ}
+    Wait Until Element Has Style
+    ...    ${IPVD ADV FEATURES PTZ}/div
     ...    background-color
-    Log    ${style}
+    ...    ${COLOR LIGHT16 RGB}
     Click Element
     ...    ${IPVD ADV FILTERS MIN RES}${IPVD ADV FILTERS DROPDOWN MENU ITEMS}/a/span[text()='1080p']
     Verify Button Arrow Direction
