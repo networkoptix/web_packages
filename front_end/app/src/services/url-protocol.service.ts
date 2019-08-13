@@ -1,8 +1,5 @@
 import { Inject, Injectable }        from '@angular/core';
-import { HttpClient }                from '@angular/common/http';
-import { Observable }                from 'rxjs';
 import { NxConfigService }           from './nx-config';
-import { Location }                  from '@angular/common';
 import { NxLanguageProviderService } from './nx-language-provider';
 import { NxAccountService }          from './account.service';
 import { WINDOW }                    from './window-provider';
@@ -14,25 +11,38 @@ export class NxUrlProtocolService {
     CONFIG: any;
     LANG: any;
 
-    location: any;
-
-
     constructor(@Inject(WINDOW) private window: Window,
                 private config: NxConfigService,
                 private language: NxLanguageProviderService,
                 private accountService: NxAccountService,
-                location: Location,
     ) {
         this.CONFIG = config.getConfig();
         this.LANG = this.language.getTranslations();
-        this.location = location;
     }
 
     private parseSource() {
-        const search = this.location.search();
+        // TODO: Clean up this after we retire AJS
+        const search = this.window.location.search.replace('?', '').split('&');
+
+        let fromLocation = '';
+        const from = search.find((param) => {
+            return param.indexOf('from') >= 0;
+        });
+        if (from) {
+            fromLocation = from.split('=')[1];
+        }
+
+        let contextParam = '';
+        const context = search.find((param) => {
+            return param.indexOf('context') >= 0;
+        });
+        if (context) {
+            contextParam = from.split('=')[1];
+        }
+
         const source = {
-            from   : search.from || 'portal',
-            context: search.context || 'none',
+            from   : fromLocation || 'portal',
+            context: contextParam || 'none',
             isApp  : false
         };
         source.isApp = (source.from === 'client' || source.from === 'mobile');
@@ -58,8 +68,8 @@ export class NxUrlProtocolService {
 
         settings = {...settings, ...linkSettings};
 
-        const protocol = settings.native ? this.LANG.clientProtocol : this.location.protocol;
-        const host = this.location.host;
+        const protocol = settings.native ? this.LANG.clientProtocol : this.window.location.protocol;
+        const host = this.window.location.host;
 
         let getParams;
         getParams = { actionParameters: settings.actionParameters };
