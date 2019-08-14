@@ -136,20 +136,19 @@ export class NxAccountService {
         this.setEmail(email);
 
         return this.cloudApi
-                   .login(email, password, remember).toPromise()
-                   .then((result) => {
-                       if (this.cloudApi.checkResponseHasError(result)) {
-                           return new Promise<any>((resolve, reject) => {
-                               reject(result);
-                           });
-                       }
-
+                   .login(email, password, remember)
+                   .then((result: any) => {
                        if (result.email) { // (result.data.resultCode === L.errorCodes.ok)
                            this.setEmail(result.email);
                            this.session.set('loginState', result.email); // Forcing changing loginState to reload interface
                            this.loginStateSubject.next(result.email);
                        }
                        return result;
+                   })
+                   .catch((response) => {
+                       if (this.cloudApi.checkResponseHasError(response.error)) {
+                           return response.error;
+                       }
                    });
     }
 
