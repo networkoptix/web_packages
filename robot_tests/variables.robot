@@ -261,7 +261,9 @@ ${IPVD ADV FILTERS}                   ${IPVD FILTERS}/div[2]/div
 ${IPVD ADV FILTERS MIN RES}           ${IPVD ADV FILTERS}//nx-select/../label[contains(text(),'${IPVD ADV FILTER MIN RES}')]/..//button[1]
 ${IPVD ADV FILTERS MFRS}              ${IPVD ADV FILTERS}//nx-multi-select/../label[contains(text(),'${IPVD ADV FILTER MFRS}')]/..//button[1]
 ${IPVD ADV FILTERS TYPES}             ${IPVD ADV FILTERS}//nx-multi-select/../label[contains(text(),'${IPVD ADV FILTER TYPES}')]/..//button[1]
+${IPVD ADV FILTERS ANALYTICS}         ${IPVD ADV FILTERS}//nx-multi-select/../label[contains(text(),'${IPVD ADV FILTER ANALYTICS}')]/..//button[1]
 ${IPVD ADV FILTERS DROPDOWN MENU}     /../div[@class='dropdown-menu']
+${IPVD ADV FILTERS DROPDOWN MENU ITEMS}    ${IPVD ADV FILTERS DROPDOWN MENU}/ul/li
 #IPVD Advanced Filters Features
 ${IPVD ADV FEATURES}                  ${IPVD ADV FILTERS}//div/label[text()='Features']/..
 ${IPVD ADV FEATURES AUDIO}            ${IPVD ADV FEATURES}//nx-tag/div[contains(text(),'${IPVD ADV FEATURE AUDIO}') and not(contains(text(),'${IPVD ADV FEATURE 2-WAY AUDIO}'))]/..

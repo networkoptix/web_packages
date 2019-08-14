@@ -182,7 +182,7 @@ Should respond to tab and go in the correct order
     Sleep    2    #wait for the language to change
     Check For Alert    ${CZECH ALERT}
 
-Langauge is changeable on the account page
+Language is changeable on the account page
     [tags]    C41574
     Go To    ${url}/account
     Log In    ${EMAIL NOPERM}    ${password}    button=None
