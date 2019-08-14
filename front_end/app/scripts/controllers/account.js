@@ -41,6 +41,7 @@
                     .then(function () {
                         $scope.userEmail = nxAccountService.getEmail();
                         $scope.account = nxAccountService.get();
+
                     })
                     .finally(function () {
                         $location.search('auth', undefined);
@@ -52,8 +53,9 @@
                 .then(function () {
                     $scope.account = nxAccountService.get();
                     $scope.userEmail = nxAccountService.getEmail();
-                })
-                .catch(() => {});
+                }, function () {
+                    dialogs.login(true);
+                });
         }
     
         if ($scope.accountMode) {

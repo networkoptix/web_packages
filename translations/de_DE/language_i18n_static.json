@@ -2,10 +2,10 @@
 	"search": {
 		"Search": "Suche",
 		"search_ipvd": "Suche nach Modell oder Hersteller",
-		"filter applied": "Angewandte Filter",
-		"filters applied": "Angewandte Filter",
+		"filter applied": "angewandte filter",
+		"filters applied": "angewandte filter",
 		"Any": "Alle",
-		"selected": "Ausgewählt",
+		"selected": "ausgewählt",
 		"vendor": "Hersteller",
 		"vendors": "Hersteller",
 		"hardwareType": "Typ",
@@ -132,7 +132,7 @@
 		"Extra high resolution cameras": "Extra hochauflösende Kameras",
 		"feedback": {
 			"a_Please": "Bitte",
-			"b_Link": "Anfrage abschicken",
+			"b_Link": "anfrage abschicken",
 			"c_Info": "für weitere Fragen/Anliegen bezüglich der unterstützten Geräte."
 		},
 		"disclaimer": "Diese Liste ist auf Geräte beschränkt, die auf {{vmsName}} gefunden wurden, wo Benutzer das automatische Berichten von Gerätespezifikationen an {{companyName}}} erlaubt haben. Es werden keine personenbezogenen Daten erhoben und jeder Nutzer bleibt völlig anonym."

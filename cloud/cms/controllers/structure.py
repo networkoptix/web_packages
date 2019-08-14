@@ -117,7 +117,7 @@ def process_data_structure_type(data_structure, name, value):
         data_structure.optional = True
 
     elif data_structure.type in [DataStructure.DATA_TYPES.object, DataStructure.DATA_TYPES.array]:
-        value = json.dumps(value, indent=4)
+        value = json.dumps(value, indent=4, separators=(',', ': '))
 
     return value
 
