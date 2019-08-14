@@ -1,6 +1,6 @@
 {
     "2-Way Audio": "Çift Yönlü Ses",
-    "About %CLOUD_NAME%": "About %CLOUD_NAME%",
+    "About %CLOUD_NAME%": "%CLOUD_NAME% Hakkında",
     "Account Settings": "Hesap Ayarları",
     "Account not activated": "Hesap etkin değil",
     "Account not found": "Hesap bulunamadı",
@@ -144,7 +144,7 @@
     "devices": "aygıtlar",
     "dialogs": {
         "merge": {
-            "connectToCloud": "Birleştirmek istediğiniz <strong>{{cloudName}}</strong> sistemine bağlanın veya yerel sistemi {{vmsName}}</strong> kullanarak birleştirin.",
+            "connectToCloud": "Birleştirmek istediğiniz <strong>{{cloudName}}</strong> sistemine bağlanın veya yerel sistemi <strong>{{vmsName}}</strong> kullanarak birleştirin.",
             "mergeConfirmation": "<strong>{{primarySystem}}</strong> sistemi ile <strong>{{secondarySystem}}</strong> sistemini birleştirmek üzeresiniz. İsim ve ayarlar <strong>{{primarySystem}}</strong> sisteminden alınacaktır.",
             "primaryCannotMerge": "Sistem {{targetSystem}}, mevcut sistemle uyumlu olmayan daha yeni bir yazılım sürümüne sahip. Geçerli sistemi, {{targetSystem}} Sistemle birleştirmek için en son <a href=\"/download\" target=\"_blank\" translate>derleme</a> güncelleyin.",
             "primarySystemOffline": "Sistem {{primarySystem}} çevrimdışıdır ve Sistem {{targetSystem}} ile birleştirilemez.",
@@ -169,7 +169,7 @@
             }
         }
     },
-    "dialogs.merge.connectToCloud": "Birleştirmek istediğiniz <strong>{{cloudName}}</strong> sistemine bağlanın veya yerel sistemi {{vmsName}}</strong> kullanarak birleştirin.",
+    "dialogs.merge.connectToCloud": "Birleştirmek istediğiniz <strong>{{cloudName}}</strong> sistemine bağlanın veya yerel sistemi <strong>{{vmsName}}</strong> kullanarak birleştirin.",
     "dialogs.merge.mergeConfirmation": "<strong>{{primarySystem}}</strong> ve <strong>{{secondarySystem}}</strong>sistemlerini birleştirmek üzeresiniz. Ayarlar ve isim <strong>{{primarySystem}}</strong>alınacaktır.",
     "dialogs.merge.primaryCannotMerge": "Sistem {{targetSystem}}, mevcut sistemle uyumlu olmayan daha yeni bir yazılım sürümüne sahip. Geçerli sistemi, {{targetSystem}} Sistemle birleştirmek için en son <a href=\"/download\" target=\"_blank\" translate>derleme</a> güncelleyin.",
     "dialogs.merge.primarySystemOffline": "dialogs.merge.primarySystemOffline",

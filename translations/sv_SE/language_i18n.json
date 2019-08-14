@@ -1,6 +1,6 @@
 {
     "2-Way Audio": "2-Vägs ljud",
-    "About %CLOUD_NAME%": "About %CLOUD_NAME%",
+    "About %CLOUD_NAME%": "Om %CLOUD_NAME%",
     "Account Settings": "Kontoinställningar",
     "Account not activated": "Kontot är inte aktiverat",
     "Account not found": "Kan inte hitta kontot",
@@ -65,7 +65,7 @@
     "Log Out": "Logga ut",
     "Log in to %CLOUD_NAME%": "Logga in på %CLOUD_NAME%",
     "Merge Systems": "Sammanfoga system",
-    "Merge current System with": " Slå samman aktuellt system med ",
+    "Merge current System with": "Slå samman aktuellt system med",
     "Message": "Meddelande",
     "Motion Detection": "Rörelsedetektering",
     "Multi Sensor": "Multisensor",

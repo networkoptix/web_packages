@@ -196,7 +196,7 @@
     "confirmUnshare": "Bu kullanıcı Sistem'e erişemez. Emin misiniz?",
     "confirmUnshareTitle": "Kullanıcıyı sil?",
     "confirmUnshareAction": "Sil",
-    "successDisconnected": "Sistem {{CLOUD_NAME}}'den başarıyla çıkarıldı",
+    "successDisconnected": "Sistem %CLOUD_NAME%'den başarıyla çıkarıldı",
     "successDeleted": "{{systemName}} sistemi hesabınızdan başarıyla silindi",
     "mergeFailed": "Sistem birleştirme işlemi başarısız oldu",
     "mergeStart": "Sistemler birleştirilmeye başlandı",

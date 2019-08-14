@@ -91,7 +91,7 @@ angular.module('cloudApp')
             $scope.$watch('system', function () {
                 // system.accessRole set by backend my differ by key in LANG
                 // don't show it before system.accessRoles are defined by user's permissions
-                if ($scope.system && $scope.system.accessRoles) {
+                if ($scope.system && $scope.system.accessRole) {
                     $scope.permission = L.accessRoles[$scope.system.accessRole].label || $scope.system.accessRole;
                 }
             }, true);
@@ -165,7 +165,12 @@ angular.module('cloudApp')
             $scope.delete = function () {
                 if (!$scope.system.isMine) {
                     // User is not owner. Deleting means he'll lose access to it
-                    dialogs.confirm(L.system.confirmUnshareFromMe, L.system.confirmUnshareFromMeTitle, L.system.confirmUnshareFromMeAction, 'btn-danger', 'Cancel')
+                    dialogs.confirm(
+                        L.system.confirmUnshareFromMe,
+                        L.system.confirmUnshareFromMeTitle,
+                        L.system.confirmUnshareFromMeAction,
+                        'btn-danger',
+                        L.dialogs.cancelButton)
                         .then(function (result) {
                             if (result) {
                                 $scope.deletingSystem = process.init(function () {

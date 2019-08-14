@@ -520,7 +520,7 @@ admin.site.register(Customization, CustomizationAdmin)
 class DataRecordAdmin(CMSAdmin):
     list_display = ('product', 'language', 'context',
                     'data_structure', 'short_description', 'version')
-    list_filter = (ProductFilter, 'language', 'data_structure__context', 'data_structure')
+    list_filter = ('product', 'language', 'data_structure__context', 'data_structure')
     search_fields = ('data_structure__context__name', 'data_structure__name',
                      'data_structure__description', 'value', 'language__code')
     readonly_fields = ('created_by',)
@@ -590,18 +590,15 @@ class ProductCustomizationReviewAdmin(CMSAdmin):
         extra_context['allowed'] = self.template_allowed(request, customization_review)
         is_integration = version.product.product_type.type == ProductType.PRODUCT_TYPES.integration
         extra_context['can_preview'] = customization_review.can_preview_customization and not is_integration
+        extra_context['is_integration'] = is_integration
 
         # Customization name should be visible in notes heading if developer has access or user has access
         customization_name = customization_review.customization.name
         title = f"Changes for {version.product.name} - Version: {version.id}"
-        if UserGroupsToProductPermissions.check_customization_access(request.user, customization_name):
-            extra_context['customization_name'] = customization_name
-        else:
+        if not UserGroupsToProductPermissions.check_customization_access(request.user, customization_name):
             title = f"{title} – {self.state_tag(customization_review.state)}"
-        if customization_review.can_preview_customization and is_integration:
-            title = f"{title} <a class=\"float-right preview\" href=\"{reverse('preview')}\" value=\"0\">Preview</a>"
 
-        extra_context["title"] = format_html(title)
+        extra_context["page_title"] = format_html(title)
         return super(ProductCustomizationReviewAdmin, self).change_view(
             request, object_id, form_url, extra_context=extra_context,
         )

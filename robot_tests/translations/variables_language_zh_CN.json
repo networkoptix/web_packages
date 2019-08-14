@@ -131,7 +131,7 @@
     "SYSTEM MERGING TEXT": "系统开始合并中",
     "MERGE NOT OWNER MESSAGE 1 TEXT": "您只能合并那些拥有“所有者”权限的云系统。",
     "MERGE NOT OWNER MESSAGE 2 TEXT": "请至%PRODUCT_NAME%云连接您要与此系统合并的另一系统，或透过%VMS_NAME%客户端应用程式于本地合并",
-    "CANNOT MERGE WITH OFFLINE SYSTEM TEXT": "%SYSTEM NAME% is offline and cannot be merged with the current one.",
+    "CANNOT MERGE WITH OFFLINE SYSTEM TEXT": "%SYSTEM NAME% 处于离线状态，无法与当前系统合并。",
     "SYSTEMS MERGE FAILED TEXT": "系统合并失败",
     "SYSTEM MERGE COMPLETED TEXT": "系统合并完成",
     "MERGE CURRENT SYSTEM WITH TEXT": "合并当前系统",
@@ -139,5 +139,5 @@
     "CHECKING TEXT": "检查中...",
     "ENTER PASSWORD TO CONTINUE TEXT": "输入您帐户的密码以继续",
     "INCOMPATIBLE": "不兼容",
-    "CONNECTION TO SYSTEM LOST": "Connection to %SYSTEM NAME% lost"
+    "CONNECTION TO SYSTEM LOST": "与%SYSTEM NAME％的连线断开"
 }

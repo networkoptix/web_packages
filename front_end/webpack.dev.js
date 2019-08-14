@@ -20,8 +20,8 @@ module.exports = merge(common, {
             {
                 context: [ '/api/', '/gateway/' ],
                 // target : 'http://localhost:8000',
-                target : 'https://cloud-dev2.hdw.mx',
-                // target : 'https://cloud-test.hdw.mx',
+                // target : 'https://cloud-dev2.hdw.mx',
+                target : 'https://cloud-test.hdw.mx',
                 changeOrigin: true,
                 //secure: false
 
@@ -111,7 +111,6 @@ module.exports = merge(common, {
                             loader : 'css-loader',
                             options: {
                                 url      : false,
-                                //minimize : true,
                                 sourceMap: true
                             }
                         },

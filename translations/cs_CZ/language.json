@@ -41,7 +41,7 @@
   },
   "systemStatuses": {
     "activated": "aktivováno",
-    "incompatible": "Nekompatibilní",
+    "incompatible": "nekompatibilní",
     "merging": "#merging",
     "notActivated": "neaktivováno",
     "online": "online",
@@ -125,7 +125,7 @@
     "wrongParameters": "Některé parametry ve formuláři jsou nesprávné",
     "wrongCode": "Účet je již aktivován, nebo potvrzovací kód je nesprávný",
     "wrongCodeRestore": "Potvrzovací kód je již použit nebo nesprávný",
-    "wrongAuthCode": "Code is expired or incorrect",
+    "wrongAuthCode": "Kód je nesprávný nebo vypršela jeho platnost",
     "forbidden": "K provedení této akce nemáte oprávnění",
     "accountNotActivated": "Tento účet není ještě aktivován. <a href=\"/activate\">Odeslat znovu aktivační odkaz</a>",
     "accountBlocked": "Tento účet je dočasně zablokován. Zkuste to prosím znovu za pár minut.",
@@ -147,7 +147,7 @@
     "mergedSystemIsOffline": "Systém <strong>{{failedSystem}}</strong> je offline.",
     "INCOMPATIBLE": "Systémy mají různé verze softwaru. Prosím aktualizujte oba na <a href=\"/download\">nejnovější verzi</a>.",
     "FAIL": "Systém <strong>{{failedSystem}}</strong> je momentálně nedostupný.<br>zkuste to znovu za okamžik nebo se obraťte na podporu <a href=\"%SUPPORT_LINK%\" target=\"_blank\"></a>.",
-    "unknownMergeError": "Unknown error. You can try to refresh the page and repeat attempt. If the problem persists – please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>."
+    "unknownMergeError": "Neznámá chyba. POkuste se stránku obnovit a zopakovat pokus. Pokud problém přetrvává - kontaktujte <a href=\"%SUPPORT_LINK%\" target=\"_blank\">podporu</a>."
   },
   "merging": {
     "mergeFailedTitle": "Spojení systémů selhalo",
@@ -200,7 +200,7 @@
     "successDeleted": "Systém {{systemName}} byl úspěšně odstraněna z Vašeho účtu",
     "mergeFailed": "Spojení systémů selhalo",
     "mergeStart": "Systémy se spojují",
-    "mergeSuccess": "System merge completed",
+    "mergeSuccess": "Sloučení systému bylo dokončeno",
     "permissionsRemoved": "Oprávnění byla odstraněna z adresy {{email}}",
     "unknownName": "Neznámý název systému (problém s cloudovým spojením)"
   },
@@ -238,7 +238,7 @@
     },
     "systemOffline": "Systém je offline",
     "systemHasNoCameras": "ŽÁDNÉ KAMERY",
-    "systemUnreachable": "SYSTEM IS UNREACHABLE",
+    "systemUnreachable": "SYSTÉM JE NEDOSTUPNÝ",
     "cameraStates": {
       "offline": "Offline",
       "error": "Chyba",

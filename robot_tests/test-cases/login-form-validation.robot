@@ -8,10 +8,10 @@ Force Tags        form    Threaded File
 
 *** Variables ***
 ${url}    ${ENV}
-${good email}                   ${EMAIL VIEWER}
-${good email unregistered}      ${EMAIL UNREGISTERED}
-${good password}                ${BASE PASSWORD}
-${bad password}                 adrhartjad
+${good email}                 ${EMAIL VIEWER}
+${good email unregistered}    ${EMAIL UNREGISTERED}
+${good password}              ${BASE PASSWORD}
+${bad password}               adrhartjad
 
 *** Test Cases ***            EMAIL                         PASS
 Empty Email and Password      ${EMPTY}                      ${EMPTY}
@@ -47,8 +47,10 @@ Test Login Invalid
     Wait Until Elements Are Visible    ${EMAIL INPUT}    ${PASSWORD INPUT}    ${LOG IN BUTTON}
     Log In Form Validation    ${email}    ${pass}
     Outline Error    ${email}    ${pass}
-    Run Keyword If    "${email}"=="${good email}" and "${pass}"=="${bad password}"    Wait Until Element Is Visible    ${WRONG PASSWORD MESSAGE}
-    Run Keyword If    "${email}"=="${good email unregistered}" and "${pass}"=="${good password}"    Wait Until Element Is Visible    ${ACCOUNT NOT FOUND}
+    Run Keyword If    "${email}"=="${good email}" and "${pass}"=="${bad password}"
+    ...    Wait Until Element Is Visible    ${WRONG PASSWORD MESSAGE}
+    Run Keyword If    "${email}"=="${good email unregistered}" and "${pass}"=="${good password}"
+    ...    Wait Until Element Is Visible    ${ACCOUNT NOT FOUND}
 
 Log In Form Validation
     [Arguments]    ${email}    ${pass}
@@ -59,7 +61,9 @@ Log In Form Validation
 Outline Error
     [Arguments]    ${email}    ${pass}
     Run Keyword If    "${pass}" == "${EMPTY}"    Check Password Outline
-    Run Keyword Unless    "${email}" == "${good email}" or "${email}" == "${good email unregistered}"    Check Email Outline
+    Run Keyword Unless
+    ...    "${email}" == "${good email}" or "${email}" == "${good email unregistered}"
+    ...    Check Email Outline
 
 Check Email Outline
     Wait Until Element Has Style    ${EMAIL INPUT}    border-color    ${OUTLINE ERROR COLOR}

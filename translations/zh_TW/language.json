@@ -125,7 +125,7 @@
     "wrongParameters": "表單上的一些參數不正確",
     "wrongCode": "帳號已經啟動或確認碼不正確",
     "wrongCodeRestore": "確認代碼已使用或不正確",
-    "wrongAuthCode": "Code is expired or incorrect",
+    "wrongAuthCode": "代碼已過期或不正確",
     "forbidden": "您沒有權限執行此操作",
     "accountNotActivated": "此帳號尚未啟動. <a href=\"/activate\"> 再發送一次啟動連結</a>",
     "accountBlocked": "此帳號已被封鎖。請在幾分鐘後再試一次。",
@@ -147,7 +147,7 @@
     "mergedSystemIsOffline": "系統 <strong>{{failedSystem}}</strong> 處於離線狀態。",
     "INCOMPATIBLE": "系統有不同的軟體版本。請將它們更新到 <a href=\"/download\">最新版本</a>。",
     "FAIL": "系統 <strong>{{failedSystem}}</strong> 目前無法連上。<br>請稍後再試一次, 或聯繫 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">支援</a>。",
-    "unknownMergeError": "Unknown error. You can try to refresh the page and repeat attempt. If the problem persists – please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>."
+    "unknownMergeError": "不明錯誤。您可以嘗試刷新頁面並重複嘗試。如果問題仍然存在 - 請聯繫 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">支援</a>。"
   },
   "merging": {
     "mergeFailedTitle": "系統合併失敗",
@@ -196,7 +196,7 @@
     "confirmUnshare": "此使用者將無法存取系統. 確定?",
     "confirmUnshareTitle": "刪除使用者?",
     "confirmUnshareAction": "刪除",
-    "successDisconnected": "System is successfully disconnected from %CLOUD_NAME%",
+    "successDisconnected": "系統已成功從 %CLOUD_NAME%斷線",
     "successDeleted": "從您的帳號成功刪除系統 {{systemName}}",
     "mergeFailed": "系統合併失敗",
     "mergeStart": "系統開始合併中",
@@ -238,7 +238,7 @@
     },
     "systemOffline": "系統處於離線狀態",
     "systemHasNoCameras": "無攝影機",
-    "systemUnreachable": "SYSTEM IS UNREACHABLE",
+    "systemUnreachable": "系統無法連接",
     "cameraStates": {
       "offline": "離線",
       "error": "錯誤",

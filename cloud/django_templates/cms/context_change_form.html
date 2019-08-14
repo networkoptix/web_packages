@@ -83,7 +83,7 @@
                                  src="{{ field.value }}">
                         {% else %}
                         <a href={% if not is_external %}
-                                    "{% url 'download_file' field.name %}?lang={{ language_code }}&draft"
+                                    "{% url 'download_file' field.name %}?product_id={{ product.id }}&lang={{ language_code }}&draft"
                                 {% else %}
                                     "{{ field.value }}"
                                 {% endif %} download>
@@ -117,7 +117,7 @@
             {% endif %}
             {% if user.is_superuser and context.file_path %}
                 <a class="btn btn-sm btn-default"
-                   href="{% url 'download_file' context.file_path %}?lang={{ language.code }}&draft"
+                   href="{% url 'download_file' context.file_path %}?product_id={{ product.id }}&lang={{ language.code }}&draft"
                    download>Download Draft</a>
             {% endif %}
             {% if product.can_preview_on_portal %}

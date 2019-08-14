@@ -99,7 +99,7 @@
     },
     "advancedViewer": {
       "label": "Trình xem nâng cao",
-      "description": "Có thể xem video trực tiếp, duyệt các kho lưu trữ, cấu hình máy ảnh, điều khiển PTZ vv"
+      "description": "Có thể xem video trực tiếp, duyệt các kho lưu trữ, cấu hình camera, điều khiển PTZ vv"
     },
     "custom": {
       "label": "Tùy chỉnh",
@@ -125,7 +125,7 @@
     "wrongParameters": "Một số thông số trên biểu mẫu không chính xác",
     "wrongCode": "Tài khoản đã được kích hoạt hoặc mã xác nhận không chính xác",
     "wrongCodeRestore": "Mã xác nhận đã được sử dụng hoặc không chính xác",
-    "wrongAuthCode": "Code is expired or incorrect",
+    "wrongAuthCode": "Mã đã hết hạn hoặc không chính xác",
     "forbidden": "Bạn không có quyền thực hiện công việc này",
     "accountNotActivated": "Tài khoản này chưa được kích hoạt. <a href=\"/activate\">Gửi liên kết kích hoạt lại</a>",
     "accountBlocked": "Tài khoản này tạm thời bị chặn, xin vui lòng thử lại sau vài phút.",
@@ -147,7 +147,7 @@
     "mergedSystemIsOffline": "Hệ thống <strong>{{failedSystem}}</strong> đang ngoại tuyến.",
     "INCOMPATIBLE": "Hệ thống đang có các phiên bản phần mềm khác nhau. Vui lòng cập nhật tất cả lên <a href=\"/download\">phiên bản mới nhất</a>.",
     "FAIL": "Hệ thống <strong>{{failedSystem}}</strong> hiện không thể truy cập được.<br>Vu lòng thử lại sau vài phút hoặc liên hệ với <a href=\"%SUPPORT_LINK%\" target=\"_blank\"> để được hỗ trợ</a>.",
-    "unknownMergeError": "Unknown error. You can try to refresh the page and repeat attempt. If the problem persists – please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>."
+    "unknownMergeError": "Lỗi không rõ. Bạn có thể thử làm mới trang và lặp lại thử. Nếu vấn đề vẫn còn - vui lòng liên hệ với <a href=\"%SUPPORT_LINK%\" target=\"_blank\">hỗ trợ</a>."
   },
   "merging": {
     "mergeFailedTitle": "Hợp nhất hệ thống không thành công",
@@ -196,7 +196,7 @@
     "confirmUnshare": "Người dùng này sẽ không thể truy cập vào Hệ thống. Bạn có chắc không?",
     "confirmUnshareTitle": "Xóa người dùng?",
     "confirmUnshareAction": "Xóa bỏ",
-    "successDisconnected": "System is successfully disconnected from %CLOUD_NAME%",
+    "successDisconnected": "Hệ thống được ngắt kết nối thành công từ %CLOUD_NAME%",
     "successDeleted": "Tài khoản {{systemName}} đã xóa thành công từ hệ thống của bạn",
     "mergeFailed": "Hợp nhất hệ thống không thành công",
     "mergeStart": "Các hệ thống đã được hợp nhất",
@@ -237,8 +237,8 @@
       "copyActiveText": "sao chép vào clipboard"
     },
     "systemOffline": "Hệ thống offline",
-    "systemHasNoCameras": "KHÔNG CÓ MÁY ẢNH",
-    "systemUnreachable": "SYSTEM IS UNREACHABLE",
+    "systemHasNoCameras": "KHÔNG CÓ CAMERA",
+    "systemUnreachable": "HỆ THỐNG KHÔNG GIỚI HẠN",
     "cameraStates": {
       "offline": "Ẩn",
       "error": "Lỗi",

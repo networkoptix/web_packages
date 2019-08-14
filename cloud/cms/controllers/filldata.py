@@ -184,7 +184,7 @@ def process_context(product, context, language, skin,
 
     # If json -> dump it to string
     if type(content) == dict:
-        content = json.dumps(content)
+        content = json.dumps(content, indent=4, separators=(',', ': '))
 
     return content
 
@@ -448,11 +448,12 @@ def zip_context(zip_file, product, context, language_code,
                                                                  DataStructure.DATA_TYPES.file))
     for file_structure in file_structures:
         data = file_structure.find_actual_value(product, language, version_id, draft=preview)
-        data = base64.b64decode(data)
-        name = file_structure.name.replace("{{language}}", language_code) if language_code else file_structure.name
-        if add_root:
-            name = os.path.join(root_dir, name)
-        zip_file.writestr(name, data)
+        if data != file_structure.default or not file_structure.optional:
+            data = base64.b64decode(data)
+            name = file_structure.name.replace("{{language}}", language_code) if language_code else file_structure.name
+            if add_root:
+                name = os.path.join(root_dir, name)
+            zip_file.writestr(name, data)
 
 
 def get_zip_package(product, preview=True, version_id=None, add_root=True):

@@ -1,8 +1,8 @@
-There is a new version for {{ message.product }}({{message.product_type}}) to review.
+Có một phiên bản mới cho {{ message.product }}({{message.product_type}}) để xem xét.
 
 Nhấp vào liên kết để xem lại dự thảo {{ message.id }} cho {{ message.product }}
 
-Link to review: {{ config.portal_url }}/admin/cms/productcustomizationreview/{{ message.id }}/change/
+Liên kết để đánh giá: {{ config.portal_url }}/ admin / cms / Productcustomizationreview /{{ message.id }}/ thay đổi /
 
 Trên trang này bạn có thể
 1) Tạo bản xem trước để xem các thay đổi gần đây nhất.

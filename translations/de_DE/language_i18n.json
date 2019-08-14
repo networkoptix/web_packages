@@ -1,6 +1,6 @@
 {
     "2-Way Audio": "Zweiwege-Audio",
-    "About %CLOUD_NAME%": "About %CLOUD_NAME%",
+    "About %CLOUD_NAME%": "Über %CLOUD_NAME%",
     "Account Settings": "Accounteinstellungen",
     "Account not activated": "Konto nicht aktiviert",
     "Account not found": "Account nicht gefunden",
@@ -141,7 +141,7 @@
         "multiSensor": "Multisensorkameras",
         "ptz": "PTZ-Kameras"
     },
-    "devices": "Geräte",
+    "devices": "geräte",
     "dialogs": {
         "merge": {
             "connectToCloud": "Verbinden Sie das System, mit dem Sie fusionieren möchten, mit <strong>{{cloudName}}</strong> oder fusionieren Sie lokal mit dem <strong>{{vmsName}}</strong>-Client.",
@@ -273,7 +273,7 @@
         "encoder": "Encoder",
         "feedback": {
             "a_Please": "Bitte",
-            "b_Link": "Anfrage abschicken",
+            "b_Link": "anfrage abschicken",
             "c_Info": "für weitere Fragen/Anliegen bezüglich der unterstützten Geräte."
         },
         "hardwareType": "Typ",
@@ -299,7 +299,7 @@
     },
     "ipvd.disclaimer": "Diese Liste ist auf Geräte beschränkt, die auf {{vmsName}} gefunden wurden, wo Benutzer das automatische Berichten von Gerätespezifikationen an {{companyName}}} erlaubt haben. Es werden keine personenbezogenen Daten erhoben und jeder Nutzer bleibt völlig anonym.",
     "latest build": "neueste Build",
-    "manufacturers": "Hersteller",
+    "manufacturers": "hersteller",
     "messageDialogPlaceholders": {
         "feedback": "Achten Sie darauf, dass Sie Ihr Kameramodell und Ihren Hersteller angeben..."
     },
@@ -317,17 +317,17 @@
         "Search": "Suche",
         "analytics": "Analytik",
         "analyticsSelected": "analytik-Ereignisse",
-        "filter applied": "Angewandte Filter",
-        "filters applied": "Angewandte Filter",
+        "filter applied": "angewandte filter",
+        "filters applied": "angewandte filter",
         "hardwareType": "Typ",
         "hardwareTypes": "Typen",
         "minResolution": "Minimale Auflösung",
         "search_ipvd": "Suche nach Modell oder Hersteller",
-        "selected": "Ausgewählt",
+        "selected": "ausgewählt",
         "vendor": "Hersteller",
         "vendors": "Hersteller"
     },
-    "servers in the merged System.": "Server im zusammengeführten System.",
+    "servers in the merged System.": "server im zusammengeführten System.",
     "support": "support",
     "testedVersionLabel": "Getestet auf {{vmsName}} Version:",
     "testedVersionsLabel": "Getestet auf {{vmsName}} Versionen:"

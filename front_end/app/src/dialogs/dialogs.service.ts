@@ -47,8 +47,8 @@ export class NxDialogsService {
     }
 
 
-    login(keepPage?) {
-        return this.loginModal.open(keepPage);
+    login(keepPage?, redirectClose?) {
+        return this.loginModal.open(keepPage, redirectClose);
     }
 
     share(system?, user?) {

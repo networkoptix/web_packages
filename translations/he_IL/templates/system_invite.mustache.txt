@@ -1,7 +1,7 @@
 ברוכים הבאים ל %CLOUD_NAME%
 
 {{#message.sharer_name}}
-{{message.sharer_name}} ({{message.sharer_email}}) מזמין אותך להצטרף אל {{PRODUCT_NAME}} ושיתף את המערכת שלו {{message.system_name}} איתך.
+{{message.sharer_name}} ({{message.sharer_email}}) מזמין אותך להצטרף אל %CLOUD_NAME% ושיתף את המערכת שלו {{message.system_name}} איתך.
 {{/message.sharer_name}}
 
 {{^message.sharer_name}}
