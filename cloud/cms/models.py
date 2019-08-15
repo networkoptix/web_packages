@@ -555,7 +555,7 @@ class DataStructure(models.Model):
             content_value = json.loads(content_value) if content_value else None
 
             if self.type == DataStructure.DATA_TYPES.multiselect:
-                # If an option has an id, chang the value to a dict with the id and the value
+                # If an option has an id, change the value to a dict with the id and the value
                 for choice in self.meta_settings['options']:
                     if type(choice) == dict:
                         for i in range(len(content_value)):
