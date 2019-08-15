@@ -34,9 +34,6 @@ def process_data_structure(data_structure):
     if "meta" in data_structure:
         data_structure["nice_meta"] += convert_meta_to_description(data_structure["meta"])
 
-        if data_structure["meta"].get("multi", False):
-            data_structure["nice_meta"] += f"<br><b>Multi-select</b>"
-
         if "options" in data_structure["meta"]:
             data_structure["nice_meta"] += f'<br>Options:<ul style="list-style: none"><li>' \
                 f'{"</li><li>".join(data_structure["meta"]["options"])}</li></ul>'

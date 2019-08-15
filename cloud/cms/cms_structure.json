@@ -77,7 +77,6 @@
             "advanced": true,
             "type": "select",
             "meta": {
-              "multi": false,
               "options": [
                 "blue",
                 "green",
@@ -593,10 +592,9 @@
             "name": "%AVAILABLE_DOWNLOADS_PLATFORM%",
             "description": "Platforms that are visible on the downloads page.",
             "advanced": true,
-            "type": "select",
-            "value": "[\"macos\", \"linux\", \"windows\"]",
+            "type": "multiselect",
+            "value": ["macos", "linux", "windows"],
             "meta": {
-              "multi": true,
               "options": [
                 "arm",
                 "linux",
@@ -1010,11 +1008,10 @@
           {
             "name": "type",
             "label": "Type(Category)",
-            "value": "",
+            "value": [],
             "description": "",
-            "type": "select",
+            "type": "multiselect",
             "meta": {
-              "multi": true,
               "options": [
                 {
                   "id": "access",
@@ -1953,12 +1950,11 @@
           {
             "name": "testedVersions",
             "label": "Tested software (VMS) versions",
-            "value": "",
+            "value": [],
             "description": "Latest supported version",
-            "type": "select",
+            "type": "multiselect",
             "optional": true,
             "meta": {
-              "multi": true,
               "options": [
                 "4.0",
                 "3.2",
@@ -1982,12 +1978,11 @@
           {
             "name": "platforms",
             "label": "Supported OS and platforms",
-            "value": "",
+            "value": [],
             "description": "",
-            "type": "select",
+            "type": "multiselect",
             "optional": false,
             "meta": {
-              "multi": true,
               "options": [
                 "Windows - x64",
                 "Linux - x64",

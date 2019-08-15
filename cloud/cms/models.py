@@ -469,7 +469,8 @@ class DataStructure(models.Model):
                          (8, 'external_image', 'External Image'),
                          (9, 'check_box', 'Check Box'),
                          (10, 'object', 'Object'),
-                         (11, 'array', 'Array'))
+                         (11, 'array', 'Array'),
+                         (12, 'multiselect', 'Multiselect'))
 
     type = models.IntegerField(choices=DATA_TYPES, default=DATA_TYPES.text)
     default = models.TextField(default='', blank=True)
@@ -543,13 +544,25 @@ class DataStructure(models.Model):
                                                                   DataStructure.DATA_TYPES.image,
                                                                   DataStructure.DATA_TYPES.external_file,
                                                                   DataStructure.DATA_TYPES.external_image,
-                                                                  DataStructure.DATA_TYPES.check_box]):
+                                                                  DataStructure.DATA_TYPES.check_box,
+                                                                  DataStructure.DATA_TYPES.multiselect]):
             content_value = self.default
 
         if self.type == DataStructure.DATA_TYPES.check_box:
             content_value = strtobool(content_value) == 1 if content_value else False
-        if self.type in [DataStructure.DATA_TYPES.array, DataStructure.DATA_TYPES.object]:
+        if self.type in [DataStructure.DATA_TYPES.array, DataStructure.DATA_TYPES.object,
+                         DataStructure.DATA_TYPES.multiselect]:
             content_value = json.loads(content_value) if content_value else None
+
+            if self.type == DataStructure.DATA_TYPES.multiselect:
+                # If an option has an id, chang the value to a dict with the id and the value
+                for choice in self.meta_settings['options']:
+                    if type(choice) == dict:
+                        for i in range(len(content_value)):
+                            if content_value[i] == choice['label']:
+                                content_value[i] = choice
+                                break
+
         return content_value
 
     def is_protected(self, product):

@@ -36,11 +36,6 @@ export class IntegrationService implements OnDestroy {
                 const plugins = result && result.data || [];
 
                 plugins.forEach(plugin => {
-                    // TODO: Currently CMS doesn't support array of objects for select
-                    plugin.information.type = plugin.information.type.map((type) => {
-                        return JSON.parse(type.replace(/'/g, '"'));
-                    });
-
                     if (plugin.mine) {
                         plugin.information.type.push({ id: 'mine', label: 'mine'}); // label is not important - filter by ID
                     }
@@ -250,10 +245,6 @@ export class IntegrationService implements OnDestroy {
         if (plugin.requirementsAndCompatibility && plugin.requirementsAndCompatibility.platforms) {
             plugin.requirementsAndCompatibility.platforms.icons = this.setPlatformIcons(plugin);
         }
-
-        plugin.information.type = plugin.information.type.map((type) => {
-            return JSON.parse(type.replace(/'/g, '"'));
-        });
 
         this.formatScreenshots(plugin.instructions);
         this.formatOverviewScreenshots(plugin);

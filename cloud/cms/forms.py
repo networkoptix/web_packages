@@ -159,16 +159,20 @@ class CustomContextForm(forms.Form):
                     self.fields[data_structure.name].widget.attrs['size'] = file_size
                 continue
 
-            elif data_structure.type == DataStructure.DATA_TYPES.select:
-                queryset = data_structure.meta_settings['options'] if 'options' in data_structure.meta_settings else []
-                queryset = [(choice, choice) for choice in queryset]
-                if 'multi' in data_structure.meta_settings and data_structure.meta_settings['multi']:
-                    if record_value:
-                        record_value = json.loads(record_value)
+            elif data_structure.type in [DataStructure.DATA_TYPES.select, DataStructure.DATA_TYPES.multiselect]:
+                options = data_structure.meta_settings['options'] if 'options' in data_structure.meta_settings else []
+                choices = []
+                for choice in options:
+                    if type(choice) == dict:
+                        choices.append((choice['label'], choice['label']))
+                    else:
+                        choices.append((choice, choice))
+
+                if data_structure.type == DataStructure.DATA_TYPES.multiselect:
                     self.fields[data_structure.name] = forms.MultipleChoiceField(label=ds_label,
                                                                                  help_text=ds_description,
                                                                                  initial=record_value,
-                                                                                 choices=queryset,
+                                                                                 choices=choices,
                                                                                  required=False,
                                                                                  disabled=disabled,
                                                                                  widget=forms.CheckboxSelectMultiple(attrs={'class': 'nodots'}))
@@ -176,7 +180,7 @@ class CustomContextForm(forms.Form):
                     self.fields[data_structure.name] = forms.ChoiceField(label=ds_label,
                                                                          help_text=ds_description,
                                                                          initial=record_value,
-                                                                         choices=queryset,
+                                                                         choices=choices,
                                                                          required=False,
                                                                          disabled=disabled)
                 continue
