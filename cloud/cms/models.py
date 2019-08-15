@@ -423,10 +423,12 @@ class Context(models.Model):
                     None)
 
     def get_state(self, product):
+        # (State, order) In order of importance. Only update a state if the new state is more important
         INCOMPLETE = ('Incomplete', 0)
         DRAFT = ('Draft', 1)
         IN_REVIEW = ('In review', 2)
-        PUBLISHED = ('Published', 3)
+        REJECTED = ('Rejected', 3)
+        PUBLISHED = ('Published', 4)
 
         state = PUBLISHED
         for datastructure in self.datastructure_set.all():
@@ -444,11 +446,14 @@ class Context(models.Model):
                 if last_record.version:
                     review = last_record.version.productcustomizationreview_set.filter(
                         customization__name=settings.CUSTOMIZATION).first()
-                    if review and review.state in [ProductCustomizationReview.REVIEW_STATES.pending,
-                                                   ProductCustomizationReview.REVIEW_STATES.blocked,
-                                                   ProductCustomizationReview.REVIEW_STATES.rejected]:
-                        if state[1] > IN_REVIEW[1]:
+                    if review:
+                        if review.state in [ProductCustomizationReview.REVIEW_STATES.pending,
+                                            ProductCustomizationReview.REVIEW_STATES.blocked] and \
+                                state[1] > IN_REVIEW[1]:
                             state = IN_REVIEW
+                        elif review.state == ProductCustomizationReview.REVIEW_STATES.rejected and \
+                                state[1] > REJECTED[1]:
+                            state = REJECTED
                 elif state[1] > DRAFT[1]:
                     state = DRAFT
 
