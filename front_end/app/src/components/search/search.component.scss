@@ -94,6 +94,11 @@
     
     .filter-label {
         margin-right: 2px; // prevent flex overlap with next button's border
+        white-space: nowrap;
+        
+        &:hover {
+            color: $light1;
+        }
     }
     
     .drop-container {
