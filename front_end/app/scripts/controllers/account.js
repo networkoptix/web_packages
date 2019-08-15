@@ -57,8 +57,8 @@
                     });
                     $scope.userEmail = account.getEmail();
                 }, function () {
-                    dialogs.login(true);
-                })
+                    dialogs.login(true, true);
+                });
         }
     
         if ($scope.accountMode) {
