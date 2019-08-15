@@ -34,6 +34,7 @@
                             <th>Description</th>
                             <th>Url</th>
                             <th>Global</th>
+                            <th>Status</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -43,6 +44,7 @@
                                 <td>{% autoescape off%}{{ context.description }}{% endautoescape %}</td>
                                 <td>{{ context.url }}</td>
                                 <td>{% include 'admin/boolean.html' with value=context.is_global %}</td>
+                                <td>{{ context.state }}</td>
                             </tr>
                         {% endfor %}
                         </tbody>

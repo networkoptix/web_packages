@@ -422,6 +422,38 @@ class Context(models.Model):
         return next((context_template.first().template for context_template in contexts if context_template.exists()),
                     None)
 
+    def get_state(self, product):
+        INCOMPLETE = ('Incomplete', 0)
+        DRAFT = ('Draft', 1)
+        IN_REVIEW = ('In review', 2)
+        PUBLISHED = ('Published', 3)
+
+        state = PUBLISHED
+        for datastructure in self.datastructure_set.all():
+            records = datastructure.datarecord_set.filter(product=product)
+            last_record = records.last()
+            last_record_value = last_record.value if last_record else None
+            if last_record_value and datastructure.type in [DataStructure.DATA_TYPES.select,
+                                                            DataStructure.DATA_TYPES.array,
+                                                            DataStructure.DATA_TYPES.multiselect]:
+                last_record_value = json.loads(last_record_value)
+            if not datastructure.optional and (not records.exists() or not last_record_value):
+                return INCOMPLETE[0]
+
+            if last_record:
+                if last_record.version:
+                    review = last_record.version.productcustomizationreview_set.filter(
+                        customization__name=settings.CUSTOMIZATION).first()
+                    if review and review.state in [ProductCustomizationReview.REVIEW_STATES.pending,
+                                                   ProductCustomizationReview.REVIEW_STATES.blocked,
+                                                   ProductCustomizationReview.REVIEW_STATES.rejected]:
+                        if state[1] > IN_REVIEW[1]:
+                            state = IN_REVIEW
+                elif state[1] > DRAFT[1]:
+                    state = DRAFT
+
+        return state[0]
+
 
 class ContextTemplate(models.Model):
     class Meta:

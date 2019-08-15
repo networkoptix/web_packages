@@ -416,6 +416,8 @@ class ProductAdmin(CMSAdmin):
             if not request.user.is_superuser or request.GET.get('hidden') != 'true':
                 qs = qs.filter(hidden=False)
 
+            for page in qs:
+                page.state = page.get_state(context['product'])
             context['contexts'] = qs
 
         return render(request, 'cms/page_list_view.html', context)
