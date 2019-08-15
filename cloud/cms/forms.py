@@ -168,6 +168,10 @@ class CustomContextForm(forms.Form):
                     else:
                         choices.append((choice, choice))
 
+                for i in range(len(record_value)):
+                    if type(record_value[i]) == dict:
+                        record_value[i] = record_value[i]['label']
+
                 if data_structure.type == DataStructure.DATA_TYPES.multiselect:
                     self.fields[data_structure.name] = forms.MultipleChoiceField(label=ds_label,
                                                                                  help_text=ds_description,
