@@ -24,7 +24,7 @@ export class NxLanguageProviderService {
             });
     }
 
-    getTranstalions() {
+    getTranslations() {
         return this.translations;
     }
 
