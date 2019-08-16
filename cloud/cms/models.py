@@ -486,8 +486,7 @@ class Context(models.Model):
                             customization__name=settings.CUSTOMIZATION).first()
                         if review:
                             if review.state in [ProductCustomizationReview.REVIEW_STATES.pending,
-                                                ProductCustomizationReview.REVIEW_STATES.blocked] and \
-                                    state[1] > IN_REVIEW[1]:
+                                                ProductCustomizationReview.REVIEW_STATES.blocked]:
                                 state = IN_REVIEW
                             elif review.state == ProductCustomizationReview.REVIEW_STATES.rejected and \
                                     state[1] > REJECTED[1]:
