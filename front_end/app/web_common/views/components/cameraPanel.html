@@ -1,7 +1,6 @@
 <div class="cameras-panel" ng-if="showCameraPanel">
     <div class="cameras-search" ng-class="{active:panel.filter!=''}">
-        <input type="search"
-               placeholder="{{inputPlaceholder}}"
+        <input placeholder="{{inputPlaceholder}}"
                ng-class="{active:panel.filter!=''}"
                ng-model="panel.filter"
                ng-model-options="{ updateOn: 'default', debounce: 0 }">

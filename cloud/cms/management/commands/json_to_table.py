@@ -45,7 +45,7 @@ def process_data_structure(data_structure):
             data_structure["nice_meta"] = data_structure["nice_meta"].replace("<br>", "", 1)
 
     if "value" in data_structure and type(data_structure["value"]) in [list, dict]:
-        data_structure["value"] = f'<pre>{json.dumps(data_structure["value"], indent=4)}</pre>'
+        data_structure["value"] = f'<pre>{json.dumps(data_structure["value"], indent=4, separators=(",", ": "))}</pre>'
     data_structure["type"] = get_data_type_nice_name(data_structure["type"])
 
     data_structure["description"] = data_structure.get("description", "").replace("<br><br><br>", "")

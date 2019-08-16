@@ -40,7 +40,9 @@
                     .login(tempLogin, tempPassword, false)
                     .then(function () {
                         $scope.userEmail = account.getEmail();
-                        $scope.account = account;
+                        account.get().then(function (result) {
+                            $scope.account = result;
+                        });
                     })
                     .finally(function () {
                         $location.search('auth', undefined);
@@ -50,11 +52,13 @@
             authorizationCheckService
                 .checkLoginState()
                 .then(function () {
-                    $scope.account = account;
+                    account.get().then(function (result) {
+                        $scope.account = result;
+                    });
                     $scope.userEmail = account.getEmail();
                 }, function () {
-                    dialogs.login(true);
-                })
+                    dialogs.login(true, true);
+                });
         }
     
         if ($scope.accountMode) {
