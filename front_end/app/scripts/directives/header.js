@@ -35,18 +35,14 @@
                     $('body').addClass('inline-portal');
                 }
 
-                scope.login = function () {
-                    var url = $location.$$path;
-                    var redirect = CONFIG.redirectPaths.some((path) => url.indexOf(path) > -1);
-                    NxDialogsService.login(!redirect);
-                };
-                scope.logout = function () {
-                    account.logout(true);
-                };
-
                 scope.systemsProvider = systemsProvider;
                 scope.active = {};
                 // scope.activeSystem = {};
+
+                function checkRedirectRoute() {
+                    var url = $location.$$path;
+                    return CONFIG.redirectPaths.some((path) => url.indexOf(path) > -1);
+                }
 
                 function updateActive() {
                     scope.active.ipvd = isActive('/ipvd');
@@ -70,6 +66,13 @@
                 }
 
                 updateActive();
+
+                scope.login = function () {
+                    NxDialogsService.login(!checkRedirectRoute());
+                };
+                scope.logout = function () {
+                    account.logout(!checkRedirectRoute());
+                };
     
                 scope.$watch('$rootScope.session.loginState', function () {
                     if ($rootScope.session.loginState) {

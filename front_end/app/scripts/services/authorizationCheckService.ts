@@ -96,12 +96,11 @@
                 cloudApi
                     .logout()
                     .finally(() => {
-                        $rootScope.session.$reset(); // Clear session
                         if (!doNotRedirect) {
                             $location.path(CONFIG.redirectUnauthorised);
                         }
                         setTimeout(() => {
-                            document.location.reload();
+                            $rootScope.session.$reset(); // Clear session
                         });
                     });
             }
