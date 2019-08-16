@@ -47,6 +47,14 @@ def create_default_permission_group(product):
     return group
 
 
+def rename_permission_group(group, product):
+    if product.is_cloud_portal:
+        group.name = f'Portal Manager - {product.name} - {product.id}'
+    else:
+        group.name = f'Developer - {product.name} - {product.id}'
+    group.save()
+
+
 def get_cloud_portal_product(customization=settings.CUSTOMIZATION):
     return Product.objects.get(customizations__name__in=[customization],
                                product_type__name="",
@@ -280,6 +288,7 @@ class Product(models.Model):
 
     PREVIEW_STATUS = Choices((0, 'draft', 'draft'), (1, 'review', 'review'))
     preview_status = models.IntegerField(choices=PREVIEW_STATUS, default=PREVIEW_STATUS.draft)
+    primary_group = models.OneToOneField(Group, unique=True, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         if self.product_type and self.is_cloud_portal:
@@ -353,15 +362,22 @@ class Product(models.Model):
             raise ValidationError({'name': 'Name already exists'})
 
     def save(self, *args, **kwargs):
-        create_permission_groups = False
+        create_group = False
+        update_group = False
+        rename_group = False
         need_update = False
+        orig = None
         if self.pk is None:
-            create_permission_groups = True
+            create_group = True
             need_update = True
         else:
             orig = Product.objects.get(pk=self.pk)
             if self.customizations.exists():
                 need_update = self.preview_status == orig.preview_status
+            if orig.created_by != self.created_by:
+                update_group = True
+            if orig.name != self.name:
+                rename_group = True
 
         super(Product, self).save(*args, **kwargs)
         if need_update and self.is_cloud_portal \
@@ -369,10 +385,18 @@ class Product(models.Model):
             cloud_portal_customization_cache(self.customizations.first().name, force=True)  # invalidate cache
             # TODO: need to update all static right here
 
-        if create_permission_groups:
-            group = create_default_permission_group(self)
-            if group and self.created_by and self.is_integration:
-                group.user_set.add(self.created_by)
+        if create_group or update_group:
+            if create_group:
+                group = create_default_permission_group(orig or self)
+                self.primary_group = group
+                super(Product, self).save(*args, **kwargs)
+            if self.primary_group and self.created_by:
+                self.primary_group.user_set.add(self.created_by)
+                self.created_by.is_staff = True
+                self.created_by.save()
+
+        if self.primary_group and rename_group:
+            rename_permission_group(self.primary_group, self)
 
 
 class Context(models.Model):
