@@ -24,6 +24,13 @@
     background-position : -24px -32px;
 }
 
+.glyphicon-home--light {
+    @include kill-glyphicon;
+    width               : 24px;
+    height              : 24px;
+    background-position : 0 -56px;
+}
+
 .glyphicon-user {
     @include kill-glyphicon;
     width               : 24px;

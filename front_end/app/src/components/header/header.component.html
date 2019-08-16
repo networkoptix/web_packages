@@ -8,6 +8,13 @@
                     </li>
                 </ul>
 
+                <ul *ngIf="active.integrations || active.ipvd"
+                    class="nav navbar-nav navbar-left d-block d-sm-none">
+                    <li>
+                        <nx-nav-location [location]="active"></nx-nav-location>
+                    </li>
+                </ul>
+
                 <div class="navbar-header">
                     <a class="inset navbar-brand product-name add-version" href="/"
                        [ngClass]="{'ml-sm-0': true}">
@@ -43,10 +50,16 @@
                 <ul class="nav navbar-nav navbar-right auth-hidden">
                     <li>
                         <span>
-                            <a href="/register" class="btn btn-primary" translate>Create Account</a>
+                            <a href="/register" class="btn btn-primary btn-collapse">
+                                <span class="glyphicon glyphicon-home--light"></span>
+                                <span class="btn-caption" translate>Create Account</span>
+                            </a>
                         </span>
                         <span>
-                            <a href="" class="btn btn-default" (click)="login()" translate>Log In</a>
+                            <a href="" class="btn btn-default btn-collapse" (click)="login()">
+                                <span class="glyphicon glyphicon-home"></span>
+                                <span class="btn-caption" translate>Log In</span>
+                            </a>
                         </span>
                         <span>
                             <nx-language-select
