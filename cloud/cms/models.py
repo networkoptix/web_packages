@@ -454,30 +454,44 @@ class Context(models.Model):
         REJECTED = ('Rejected', 3)
         PUBLISHED = ('Published', 4)
 
-        state = PUBLISHED
+        reviews = ProductCustomizationReview.objects.filter(version__product=product,
+                                                            customization__name=settings.CUSTOMIZATION)
+        # Starting point so we don't get incorrect status with unpublished assets
+        if reviews.filter(state=ProductCustomizationReview.REVIEW_STATES.accepted).first():
+            state = PUBLISHED
+        elif reviews.filter(state__in=[ProductCustomizationReview.REVIEW_STATES.pending,
+                                       ProductCustomizationReview.REVIEW_STATES.blocked]).first():
+            state = IN_REVIEW
+        elif reviews.filter(state=ProductCustomizationReview.REVIEW_STATES.rejected).first():
+            state = REJECTED
+        else:
+            state = DRAFT
+
         for datastructure in self.datastructure_set.all():
             records = datastructure.datarecord_set.filter(product=product)
             last_record = records.last()
             last_record_value = last_record.value if last_record else None
-            if last_record_value and datastructure.type in [DataStructure.DATA_TYPES.select,
+            if last_record_value and datastructure.type in [DataStructure.DATA_TYPES.object,
                                                             DataStructure.DATA_TYPES.array,
                                                             DataStructure.DATA_TYPES.multiselect]:
                 last_record_value = json.loads(last_record_value)
-            if not datastructure.optional and (not records.exists() or not last_record_value):
+            if not datastructure.optional and not datastructure.default and \
+                    (not records.exists() or not last_record_value):
                 return INCOMPLETE[0]
 
             if last_record:
                 if last_record.version:
-                    review = last_record.version.productcustomizationreview_set.filter(
-                        customization__name=settings.CUSTOMIZATION).first()
-                    if review:
-                        if review.state in [ProductCustomizationReview.REVIEW_STATES.pending,
-                                            ProductCustomizationReview.REVIEW_STATES.blocked] and \
-                                state[1] > IN_REVIEW[1]:
-                            state = IN_REVIEW
-                        elif review.state == ProductCustomizationReview.REVIEW_STATES.rejected and \
-                                state[1] > REJECTED[1]:
-                            state = REJECTED
+                    if state[1] > IN_REVIEW[1]:
+                        review = last_record.version.productcustomizationreview_set.filter(
+                            customization__name=settings.CUSTOMIZATION).first()
+                        if review:
+                            if review.state in [ProductCustomizationReview.REVIEW_STATES.pending,
+                                                ProductCustomizationReview.REVIEW_STATES.blocked] and \
+                                    state[1] > IN_REVIEW[1]:
+                                state = IN_REVIEW
+                            elif review.state == ProductCustomizationReview.REVIEW_STATES.rejected and \
+                                    state[1] > REJECTED[1]:
+                                state = REJECTED
                 elif state[1] > DRAFT[1]:
                     state = DRAFT
 
