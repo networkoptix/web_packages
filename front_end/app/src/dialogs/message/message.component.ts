@@ -26,6 +26,7 @@ interface Topic {
     styleUrls: []
 })
 export class MessageModalContent {
+    @Input() account;
     @Input() messageType;
     @Input() data;
     @Input() closable;
@@ -51,11 +52,10 @@ export class MessageModalContent {
                 private renderer: Renderer2,
                 private language: NxLanguageProviderService,
                 private configService: NxConfigService,
-                private accountService: NxAccountService,
                 @Inject('process') private process: any,
                 @Inject('cloudApiService') private cloudApi: any,
                 @Inject(WINDOW) private window: Window,
-                ) {
+    ) {
         this.placeholder = '';
         this.topic = '';
         this.topicMessage = '';
@@ -106,7 +106,7 @@ export class MessageModalContent {
 
         this.setTopic(this.topics[0]);
 
-        this.accountService
+        this.account
             .get()
             .then((account) => {
                 this.userName = `${account.first_name} ${account.last_name}`;

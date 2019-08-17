@@ -3,7 +3,6 @@ import {
     Inject,
     OnInit,
     Input,
-    ViewEncapsulation,
     ViewChild,
     Renderer2
 }                                                                     from '@angular/core';
@@ -13,9 +12,7 @@ import { NxConfigService }                                            from '../.
 import { NxUtilsService }                                             from '../../services/utils.service';
 import { NxLanguageProviderService }                                  from '../../services/nx-language-provider';
 import { NxModalGenericComponent }                                    from '../generic/generic.component';
-import { NxAccountService }                                           from '../../services/account.service';
 import { LocalStorageService }                                        from 'ngx-store';
-// import { NxDialogsService }                                 from '../dialogs.service';
 
 @Component({
     selector: 'ngbd-modal-content',
@@ -24,6 +21,7 @@ import { LocalStorageService }                                        from 'ngx-
     providers: [Location, { provide: LocationStrategy, useClass: PathLocationStrategy }]
 })
 export class LoginModalContent implements OnInit {
+    @Input() account;
     @Input() login;
     @Input() cancellable;
     @Input() closable;
@@ -58,7 +56,6 @@ export class LoginModalContent implements OnInit {
                 @Inject(DOCUMENT) private document: any,
                 private localStorage: LocalStorageService,
                 public activeModal: NgbActiveModal,
-                private account: NxAccountService,
                 private configService: NxConfigService,
                 private language: NxLanguageProviderService,
                 private genericModal: NxModalGenericComponent,
@@ -120,6 +117,7 @@ export class LoginModalContent implements OnInit {
             this.accountBlocked = false;
 
             return this.account.login(this.auth.email, this.password, this.remember);
+            // return Promise.resolve({});
         }, {
             ignoreUnauthorized: true,
             errorCodes: {
@@ -183,7 +181,7 @@ export class LoginModalContent implements OnInit {
 
     close() {
         // prevent unnecessary reload
-        if (!this.keepPage && this.account.getEmail() === undefined) {
+        if (!this.keepPage) { // && this.accountService.getEmail() === undefined) {
             // TODO: Repace this once 'register' page is moved to A5
             // AJS and A5 routers freak out about route change *****
             // this.location.go(this.config.redirectUnauthorised);

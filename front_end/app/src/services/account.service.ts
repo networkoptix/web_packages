@@ -1,11 +1,12 @@
 import { Inject, Injectable }        from '@angular/core';
 import { DOCUMENT, Location }        from '@angular/common';
+import { BehaviorSubject }           from 'rxjs';
+import { LocalStorageService }       from 'ngx-store';
+
 import { NxConfigService }           from './nx-config';
+import { NxCloudApiService }         from './nx-cloud-api';
 import { NxLanguageProviderService } from './nx-language-provider';
 import { NxDialogsService }          from '../dialogs/dialogs.service';
-import { NxCloudApiService }         from './nx-cloud-api';
-import { LocalStorageService }       from 'ngx-store';
-import { BehaviorSubject }           from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -13,22 +14,21 @@ import { BehaviorSubject }           from 'rxjs';
 export class NxAccountService {
     CONFIG: any;
     LANG: any;
-
-    session: any;
     location: any;
+    session: any;
     requestingLogin: any;
     loginStateSubject = new BehaviorSubject(undefined);
 
     constructor(@Inject(DOCUMENT) private document: any,
                 private config: NxConfigService,
                 private language: NxLanguageProviderService,
-                // private dialogs: NxDialogsService,
                 private cloudApi: NxCloudApiService,
-                localStorageService: LocalStorageService,
-                location: Location,
+                private localStorageService: LocalStorageService,
+                private locationService: Location,
+                private dialogs: NxDialogsService,
     ) {
-        this.session = localStorageService;
-        this.location = location;
+        this.session = this.localStorageService;
+        this.location = this.locationService;
         this.loginStateSubject.next(this.session.get('loginState'));
         this.CONFIG = this.config.getConfig();
         this.LANG = this.language.getTranslations();
@@ -101,11 +101,11 @@ export class NxAccountService {
     requireLogin() {
         const res = this.get();
         res.catch(() => {
-            // this.dialogs
-            //     .login(true, true)
-            //     .catch(() => {
-            //         this.location.path(this.CONFIG.redirectUnauthorised);
-            //     });
+            this.dialogs
+                .login(this, true, true)
+                .catch(() => {
+                    this.location.path(this.CONFIG.redirectUnauthorised);
+                });
         });
         return res;
     }
@@ -169,16 +169,16 @@ export class NxAccountService {
     logoutAuthorised() {
         this.get().then(() => {
             // logoutAuthorisedLogoutButton
-            // this.dialogs.confirm('',
-            //         this.LANG.dialogs.logoutAuthorisedTitle,
-            //         this.LANG.dialogs.logoutAuthorisedContinueButton,
-            //         undefined,
-            //         this.LANG.dialogs.logoutAuthorisedLogoutButton
-            // ).then(() => {
-            //     this.redirectAuthorised();
-            // }, () => {
-            //     this.logout(true);
-            // });
+            this.dialogs.confirm('',
+                    this.LANG.dialogs.logoutAuthorisedTitle,
+                    this.LANG.dialogs.logoutAuthorisedContinueButton,
+                    undefined,
+                    this.LANG.dialogs.logoutAuthorisedLogoutButton
+            ).then(() => {
+                this.redirectAuthorised();
+            }, () => {
+                this.logout(true);
+            });
         });
     }
 

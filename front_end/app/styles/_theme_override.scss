@@ -161,13 +161,13 @@ hr {
 
 @mixin kill-glyphicon {
     background-size  : 112px 80px;
-    background-image : url('/static/images/portal_icons.png') !important;
+    background-image : url('/static/images/sprite_common.png') !important;
     &:before {
         content : none;
     }
 
     @media only screen and (-webkit-min-device-pixel-ratio : 2), only screen and (min-device-pixel-ratio : 2) {
-        background-image : url('/static/images/portal_icons@2x.png');
+        background-image : url('/static/images/sprite_common@2x.png');
     }
 }
 

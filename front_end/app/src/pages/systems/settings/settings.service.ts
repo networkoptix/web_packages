@@ -3,6 +3,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { NxCloudApiService }           from '../../../services/nx-cloud-api';
 import { NxConfigService }             from '../../../services/nx-config';
 import { NxDialogsService }            from '../../../dialogs/dialogs.service';
+import { NxAccountService }            from '../../../services/account.service';
 
 @Injectable({
     providedIn: 'root'
@@ -16,8 +17,9 @@ export class NxSettingsService implements OnDestroy {
 
     constructor(private api: NxCloudApiService,
                 private configService: NxConfigService,
-                private dialogs: NxDialogsService) {
-
+                private dialogs: NxDialogsService,
+                private accountService: NxAccountService,
+    ) {
         this.config = this.configService.getConfig();
     }
 
@@ -40,7 +42,7 @@ export class NxSettingsService implements OnDestroy {
     addUser() {
         // Call share dialog, run process inside
         return this.dialogs
-                   .addUser(this.systemSubject.getValue())
+                   .addUser(this.accountService, this.systemSubject.getValue())
                    .then((result) => {
                        if (result) {
                            this.loadUsers();

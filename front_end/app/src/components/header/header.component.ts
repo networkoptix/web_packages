@@ -108,7 +108,7 @@ import { NxSystemsService }                     from '../../services/systems.ser
     login () {
         const url = this.location.path();
         const redirect = this.CONFIG.redirectPaths.some((path) => url.indexOf(path) > -1);
-        this.dialogs.login(!redirect);
+        this.dialogs.login(this.accountService, !redirect);
     }
 
     logout () {

@@ -1,21 +1,22 @@
 import { Inject, Injectable } from '@angular/core';
 import { DOCUMENT, Location } from '@angular/common';
 import { DomSanitizer }       from '@angular/platform-browser';
+import { NgbModal }                  from '@ng-bootstrap/ng-bootstrap';
 
 import './../dialogs/dialogs.scss';
 
 import { ToastService }              from './toast.service';
 import { LoginModalContent }         from './login/login.component';
-import { NgbModal }                  from '@ng-bootstrap/ng-bootstrap';
 import { NxLanguageProviderService } from '../services/nx-language-provider';
 import { GenericModalContent }       from './generic/generic.component';
-import { AddUserModalContent }       from './add-user/add-user.component';
-import { DisconnectModalContent }    from './disconnect/disconnect.component';
-import { RenameModalContent }        from './rename/rename.component';
-import { MessageModalContent }       from './message/message.component';
-import { EmbedModalContent }         from './embed/embed.component';
-import { MergeModalContent }         from './merge/merge.component';
-import { NxConfigService }           from '../services/nx-config';
+import { AddUserModalContent }    from './add-user/add-user.component';
+import { DisconnectModalContent } from './disconnect/disconnect.component';
+import { RenameModalContent }     from './rename/rename.component';
+import { MessageModalContent }    from './message/message.component';
+import { EmbedModalContent }      from './embed/embed.component';
+import { MergeModalContent }      from './merge/merge.component';
+import { NxConfigService }        from '../services/nx-config';
+import { NxAccountService }       from '../services/account.service';
 
 @Injectable({ providedIn: 'root' })
 export class NxDialogsService {
@@ -26,8 +27,8 @@ export class NxDialogsService {
     closeResult: any;
 
     constructor(@Inject(DOCUMENT) private document: any,
-                private toastService: ToastService,
                 private modalService: NgbModal,
+                private toastService: ToastService,
                 private language: NxLanguageProviderService,
                 private domSanitizer: DomSanitizer,
                 location: Location,
@@ -103,7 +104,7 @@ export class NxDialogsService {
         return this.createModal(GenericModalContent, options, params);
     }
 
-    login(keepPage?, redirectClose?) {
+    login(account: NxAccountService, keepPage?, redirectClose?) {
         const options: any = {
             windowClass: 'modal-holder',
             backdrop   : 'static',
@@ -111,6 +112,7 @@ export class NxDialogsService {
         };
 
         const params: any = {
+            account,
             login        : this.login,
             cancellable  : !keepPage || false,
             closable     : true,
@@ -134,13 +136,14 @@ export class NxDialogsService {
                    });
     }
 
-    addUser(system?, user?) {
+    addUser(account: NxAccountService, system?, user?) {
         const options: any = {
             windowClass: 'modal-holder',
             backdrop   : 'static'
         };
 
         const params: any = {
+            account,
             system,
             user,
             closable   : true,
@@ -194,13 +197,14 @@ export class NxDialogsService {
         return this.createModal(MergeModalContent, options, params);
     }
 
-    message(type, data) {
+    message(account: NxAccountService, type, data): Promise<any> {
         const options: any = {
             windowClass: 'modal-holder',
             backdrop   : 'static'
         };
 
         const params: any = {
+            account,
             messageType : type,
             data,
             closable: true,
