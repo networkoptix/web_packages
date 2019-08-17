@@ -1,11 +1,9 @@
 import {
-    Component, Inject, OnInit, Input,
-    ViewEncapsulation, Renderer2, ViewChild }    from '@angular/core';
-import { Location }                              from '@angular/common';
-import { NgbModal, NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { EmailValidator }                        from '@angular/forms';
-import { NxLanguageProviderService }             from '../../services/nx-language-provider';
-import { NxAccountService }                      from '../../services/account.service';
+    Component, Inject, Input,
+    Renderer2, ViewChild
+}                                    from '@angular/core';
+import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
 
 @Component({
     selector: 'nx-modal-disconnect-content',
@@ -28,7 +26,6 @@ export class DisconnectModalContent {
 
     constructor(private activeModal: NgbActiveModal,
                 private language: NxLanguageProviderService,
-                private account: NxAccountService,
                 @Inject('process') private process: any,
                 @Inject('cloudApiService') private cloudApi: any,
                 private renderer: Renderer2,

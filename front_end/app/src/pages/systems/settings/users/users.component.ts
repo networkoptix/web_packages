@@ -114,7 +114,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         this.locked[user.email] = true;
 
         return this.dialogs
-                   .addUser(this.system, user)
+                   .addUser(this.accountService, this.system, user)
                    .then(this.settingsService.loadUsers)
                    .finally(() => {
                        this.locked[user.email] = false;

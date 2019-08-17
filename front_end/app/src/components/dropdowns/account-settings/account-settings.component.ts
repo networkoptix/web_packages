@@ -1,7 +1,7 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { Location }                  from '@angular/common';
-import { NxConfigService }           from '../../../services/nx-config';
-import { NxAccountService }          from '../../../services/account.service';
+import { Component, OnInit } from '@angular/core';
+import { Location }          from '@angular/common';
+import { NxConfigService }   from '../../../services/nx-config';
+import { NxAccountService }  from '../../../services/account.service';
 
 @Component({
     selector: 'nx-account-settings-select',
@@ -18,7 +18,7 @@ export class NxAccountSettingsDropdown implements OnInit {
     };
     show: boolean;
 
-    constructor(private account: NxAccountService,
+    constructor(private accountService: NxAccountService,
                 private _config: NxConfigService,
                 private location: Location) {
         this.config = this._config.getConfig();
@@ -26,10 +26,10 @@ export class NxAccountSettingsDropdown implements OnInit {
     }
 
     ngOnInit(): void {
-        this.account
+        this.accountService
             .checkLoginState()
             .then(() => {
-                this.account
+                this.accountService
                     .get()
                     .then(result => {
                         if (result) {
@@ -47,6 +47,6 @@ export class NxAccountSettingsDropdown implements OnInit {
         const stay = url.startsWith('/systems') ||
                      url.startsWith('/account') ||
                      url.startsWith('/download') && !(this.config.publicDownloads || this.config.publicReleases);
-        this.account.logout(!stay);
+        this.accountService.logout(!stay);
     }
 }

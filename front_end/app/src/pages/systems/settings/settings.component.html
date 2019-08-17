@@ -1,16 +1,16 @@
 <nx-pre-loader type="page" *ngIf="!system"></nx-pre-loader>
 
 <div *ngIf="system">
-    <div class="d-flex mt-3 m-0 pl-3" style="max-width: 1440px;">
+    <div class="d-flex mt-3 m-0 pl-3" style="max-width: 1440px; min-width: 991px">
         <div class="p-0" style="width: 350px;">
             <nx-system-merge></nx-system-merge>
             <nx-menu [content]="content"></nx-menu>
 
         </div>
 
-        <div class="col-lg-8" style="flex-shrink: 12;">
+        <div class="col-lg-8 pl-3" style="flex-shrink: 12;">
             <router-outlet></router-outlet>
-            <div class="container">
+            <div class="">
                 <nx-footer></nx-footer>
             </div>
         </div>
