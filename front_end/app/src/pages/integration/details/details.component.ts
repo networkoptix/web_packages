@@ -12,6 +12,7 @@ import { map }              from 'rxjs/operators';
 import { combineLatest }    from 'rxjs';
 import { NxMenuService }    from '../../../components/menu/menu.service';
 import { NxDialogsService } from '../../../dialogs/dialogs.service';
+import { NxAccountService } from '../../../services/account.service';
 
 @Component({
     selector   : 'integration-detail-component',
@@ -42,7 +43,9 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                 private dialogs: NxDialogsService,
                 private language: NxLanguageProviderService,
                 private menuService: NxMenuService,
-                location: Location) {
+                private accountService: NxAccountService,
+                location: Location,
+    ) {
         this.location = location;
         this.setupDefaults();
     }
@@ -137,7 +140,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
             product: this.plugin.information.name,
         };
         this.dialogs
-            .message(this.CONFIG.messageType.integration, data)
+            .message(this.accountService, this.CONFIG.messageType.integration, data)
             .then(() => {});
     }
 }

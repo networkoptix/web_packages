@@ -4,8 +4,7 @@ import { Location }                  from '@angular/common';
 import { EmailValidator }            from '@angular/forms';
 import { NxConfigService }           from '../../services/nx-config';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import {NxSystemsService}            from "../../services/systems.service";
-import { NxAccountService }          from '../../services/account.service';
+import { NxSystemsService }          from '../../services/systems.service';
 
 @Component({
     selector   : 'nx-modal-merge-content',
@@ -43,7 +42,6 @@ export class MergeModalContent {
     constructor(public activeModal: NgbActiveModal,
                 public renderer: Renderer2,
                 private configService: NxConfigService,
-                private account: NxAccountService,
                 @Inject('process') private process: any,
                 @Inject('system') private systemService: any,
                 @Inject('cloudApiService') private cloudApi: any,

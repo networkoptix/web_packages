@@ -107,7 +107,7 @@ import { WINDOW }            from '../../services/window-provider';
     login () {
         const url = this.window.location.pathname;
         const redirect = this.CONFIG.redirectPaths.some((path) => url.indexOf(path) > -1);
-        this.dialogs.login(!redirect);
+        this.dialogs.login(this.accountService, !redirect);
     }
 
     logout () {

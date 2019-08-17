@@ -14,6 +14,7 @@ import { NxAccountService }                      from '../../services/account.se
     styleUrls  : []
 })
 export class AddUserModalContent {
+    @Input() account;
     @Input() system;
     @Input() user;
     @Input() closable;
@@ -37,7 +38,7 @@ export class AddUserModalContent {
                 private configService: NxConfigService,
                 private genericModal: NxModalGenericComponent,
                 private language: NxLanguageProviderService,
-                private accountService: NxAccountService,
+                // private accountService: NxAccountService,
                 @Inject('process') private process: any,
     ) {
         this.url = 'share';
@@ -106,7 +107,7 @@ export class AddUserModalContent {
         }
 
         if (!this.isNewShare) {
-            this.accountService
+            this.account
                 .get()
                 .then((account) => {
                     if (account.email === this.user.email) {

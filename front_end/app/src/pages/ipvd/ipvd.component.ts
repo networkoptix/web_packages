@@ -15,6 +15,7 @@ import { NxUtilsService }            from '../../services/utils.service';
 import { Title }                     from '@angular/platform-browser';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxDialogsService }          from '../../dialogs/dialogs.service';
+import { NxAccountService }          from '../../services/account.service';
 
 interface Params {
     [key: string]: any;
@@ -109,8 +110,9 @@ export class NxIpvdComponent implements OnInit {
                 private breakpointObserver: BreakpointObserver,
                 private router: Router,
                 private title: Title,
-                @Inject(PLATFORM_ID) private platformId: object) {
-
+                private accountService: NxAccountService,
+                @Inject(PLATFORM_ID) private platformId: object,
+    ) {
         this.setupDefaults();
 
         if (isPlatformBrowser(this.platformId)) {
@@ -398,7 +400,7 @@ export class NxIpvdComponent implements OnInit {
             product: device,
         };
         this.dialogs
-            .message(type, data)
+            .message(this.accountService, type, data)
             .then(() => {
             });
 

@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { ComponentsModule } from '../components/components.module';
 import { DirectivesModule } from '../directives/directives.module';
 
-import { NxDialogsService }                             from './dialogs.service';
+// import { NxDialogsService }                             from './dialogs.service';
 import { LoginModalContent }                            from './login/login.component';
 import { DisconnectModalContent }                       from './disconnect/disconnect.component';
 import { RenameModalContent }                           from './rename/rename.component';
@@ -18,6 +18,7 @@ import { TranslateModule }                              from '@ngx-translate/cor
 import { ClipboardModule }                              from 'ngx-clipboard';
 
 import { GenericModalContent, NxModalGenericComponent } from './generic/generic.component';
+import { NxDialogsService }                             from './dialogs.service';
 
 @NgModule({
     imports        : [
