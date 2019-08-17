@@ -27,7 +27,8 @@ class BaseCMSSerializer(serializers.ModelSerializer):
 class DataStructureSerializer(BaseCMSSerializer):
     class Meta:
         model = DataStructure
-        fields = ("label", "name", "value", "description", "type", "advanced", "optional", "public", "meta")
+        fields = ("label", "name", "value", "description", "type", "advanced", "optional", "public", "protected",
+                  "meta")
 
     value = serializers.SerializerMethodField('get_value_for_datastructure')
     meta = serializers.JSONField(source="meta_settings")

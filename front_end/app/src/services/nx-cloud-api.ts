@@ -83,14 +83,14 @@ export class NxCloudApiService {
         return this.http.post(this.CONFIG.apiBase + '/account/checkCode', { code }).toPromise();
     }
 
-    login(email, password, remember): Observable<any> {
+    login(email, password, remember) {
         // clearCache();
         return this.http.post(this.CONFIG.apiBase + '/account/login', {
             email,
             password,
             remember,
             timezone: Intl && Intl.DateTimeFormat().resolvedOptions().timeZone || ''
-        });
+        }).toPromise();
     }
 
     logout() {
@@ -100,5 +100,15 @@ export class NxCloudApiService {
 
     account() {
         return this.http.get(this.CONFIG.apiBase + '/account').toPromise();
+    }
+
+    getLanguages() {
+        return this.http.get('/static/languages.json').toPromise();
+    }
+
+    changeLanguage(language) {
+        return this.http.post(this.CONFIG.apiBase + '/utils/language/', {
+            language
+        }).toPromise();
     }
 }

@@ -31,6 +31,7 @@ def clone_product(request, product_id):
     product.pk = product.id = None
     product.name = clone_name
     product.created_by = created_by
+    product.primary_group = None
     product.save()
 
     old_product = Product.objects.get(id=product_id)
@@ -48,7 +49,8 @@ def clone_product(request, product_id):
     if '_clone_copy_perms' in request.POST or not request.user.is_superuser:
         grouptoproducts = UserGroupsToProductPermissions.objects.filter(product=old_product)
         for relation in grouptoproducts:
-            UserGroupsToProductPermissions.objects.create(group=relation.group, product=product)
+            if relation.group != old_product.primary_group:
+                UserGroupsToProductPermissions.objects.create(group=relation.group, product=product)
 
     return product.id
 
@@ -416,6 +418,8 @@ class ProductAdmin(CMSAdmin):
             if not request.user.is_superuser or request.GET.get('hidden') != 'true':
                 qs = qs.filter(hidden=False)
 
+            for page in qs:
+                page.state = page.get_state(context['product'])
             context['contexts'] = qs
 
         return render(request, 'cms/page_list_view.html', context)

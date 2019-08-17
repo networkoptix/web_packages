@@ -116,8 +116,9 @@ def process_data_structure_type(data_structure, name, value):
     elif data_structure.type == DataStructure.DATA_TYPES.check_box:
         data_structure.optional = True
 
-    elif data_structure.type in [DataStructure.DATA_TYPES.object, DataStructure.DATA_TYPES.array]:
-        value = json.dumps(value, indent=4)
+    elif data_structure.type in [DataStructure.DATA_TYPES.object, DataStructure.DATA_TYPES.array,
+                                 DataStructure.DATA_TYPES.multiselect]:
+        value = json.dumps(value, indent=4, separators=(',', ': '))
 
     return value
 

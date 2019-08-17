@@ -119,6 +119,7 @@
     "Support E-mail": "Support E-mail",
     "Support URL": "Support URL",
     "Supported Devices": "Supported Devices",
+    "Supported IP Video Devices": "Supported IP Video Devices",
     "System name": "System name",
     "System name is required": "System name is required",
     "System will be accessible through local network with local administrator account.": "System will be accessible through local network with local administrator account.",
@@ -291,7 +292,7 @@
             "arm": {
                 "label": "ARM",
                 "shortLabel": "ARM",
-                "supported": "Debian/Ubuntu based"
+                "supported": "<a href='/content/arm'>ARM based servers support policy</a>"
             },
             "ios": {
                 "label": "iOS",

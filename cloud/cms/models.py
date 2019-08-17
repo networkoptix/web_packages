@@ -47,6 +47,14 @@ def create_default_permission_group(product):
     return group
 
 
+def rename_permission_group(group, product):
+    if product.is_cloud_portal:
+        group.name = f'Portal Manager - {product.name} - {product.id}'
+    else:
+        group.name = f'Developer - {product.name} - {product.id}'
+    group.save()
+
+
 def get_cloud_portal_product(customization=settings.CUSTOMIZATION):
     return Product.objects.get(customizations__name__in=[customization],
                                product_type__name="",
@@ -282,6 +290,7 @@ class Product(models.Model):
 
     PREVIEW_STATUS = Choices((0, 'draft', 'draft'), (1, 'review', 'review'))
     preview_status = models.IntegerField(choices=PREVIEW_STATUS, default=PREVIEW_STATUS.draft)
+    primary_group = models.OneToOneField(Group, unique=True, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         if self.product_type and self.is_cloud_portal:
@@ -355,15 +364,22 @@ class Product(models.Model):
             raise ValidationError({'name': 'Name already exists'})
 
     def save(self, *args, **kwargs):
-        create_permission_groups = False
+        create_group = False
+        update_group = False
+        rename_group = False
         need_update = False
+        orig = None
         if self.pk is None:
-            create_permission_groups = True
+            create_group = True
             need_update = True
         else:
             orig = Product.objects.get(pk=self.pk)
             if self.customizations.exists():
                 need_update = self.preview_status == orig.preview_status
+            if orig.created_by != self.created_by:
+                update_group = True
+            if orig.name != self.name:
+                rename_group = True
 
         super(Product, self).save(*args, **kwargs)
         if need_update and self.is_cloud_portal \
@@ -371,10 +387,18 @@ class Product(models.Model):
             cloud_portal_customization_cache(self.customizations.first().name, force=True)  # invalidate cache
             # TODO: need to update all static right here
 
-        if create_permission_groups:
-            group = create_default_permission_group(self)
-            if group and self.created_by and self.is_integration:
-                group.user_set.add(self.created_by)
+        if create_group or update_group:
+            if create_group:
+                group = create_default_permission_group(orig or self)
+                self.primary_group = group
+                super(Product, self).save(*args, **kwargs)
+            if self.primary_group and self.created_by:
+                self.primary_group.user_set.add(self.created_by)
+                self.created_by.is_staff = True
+                self.created_by.save()
+
+        if self.primary_group and rename_group:
+            rename_permission_group(self.primary_group, self)
 
 
 class Context(models.Model):
@@ -424,6 +448,56 @@ class Context(models.Model):
         return next((context_template.first().template for context_template in contexts if context_template.exists()),
                     None)
 
+    def get_state(self, product):
+        # (State, order) In order of importance. Only update a state if the new state is more important
+        INCOMPLETE = ('Incomplete', 0)
+        DRAFT = ('Draft', 1)
+        IN_REVIEW = ('In review', 2)
+        REJECTED = ('Rejected', 3)
+        PUBLISHED = ('Published', 4)
+
+        reviews = ProductCustomizationReview.objects.filter(version__product=product,
+                                                            customization__name=settings.CUSTOMIZATION)
+        # Starting point so we don't get incorrect status with unpublished assets
+        if reviews.filter(state=ProductCustomizationReview.REVIEW_STATES.accepted).first():
+            state = PUBLISHED
+        elif reviews.filter(state__in=[ProductCustomizationReview.REVIEW_STATES.pending,
+                                       ProductCustomizationReview.REVIEW_STATES.blocked]).first():
+            state = IN_REVIEW
+        elif reviews.filter(state=ProductCustomizationReview.REVIEW_STATES.rejected).first():
+            state = REJECTED
+        else:
+            state = DRAFT
+
+        for datastructure in self.datastructure_set.all():
+            records = datastructure.datarecord_set.filter(product=product)
+            last_record = records.last()
+            last_record_value = last_record.value if last_record else None
+            if last_record_value and datastructure.type in [DataStructure.DATA_TYPES.object,
+                                                            DataStructure.DATA_TYPES.array,
+                                                            DataStructure.DATA_TYPES.multiselect]:
+                last_record_value = json.loads(last_record_value)
+            if not datastructure.optional and not datastructure.default and \
+                    (not records.exists() or not last_record_value):
+                return INCOMPLETE[0]
+
+            if last_record:
+                if last_record.version:
+                    if state[1] > IN_REVIEW[1]:
+                        review = last_record.version.productcustomizationreview_set.filter(
+                            customization__name=settings.CUSTOMIZATION).first()
+                        if review:
+                            if review.state in [ProductCustomizationReview.REVIEW_STATES.pending,
+                                                ProductCustomizationReview.REVIEW_STATES.blocked]:
+                                state = IN_REVIEW
+                            elif review.state == ProductCustomizationReview.REVIEW_STATES.rejected and \
+                                    state[1] > REJECTED[1]:
+                                state = REJECTED
+                elif state[1] > DRAFT[1]:
+                    state = DRAFT
+
+        return state[0]
+
 
 class ContextTemplate(models.Model):
     class Meta:
@@ -471,7 +545,8 @@ class DataStructure(models.Model):
                          (8, 'external_image', 'External Image'),
                          (9, 'check_box', 'Check Box'),
                          (10, 'object', 'Object'),
-                         (11, 'array', 'Array'))
+                         (11, 'array', 'Array'),
+                         (12, 'multiselect', 'Multiselect'))
 
     type = models.IntegerField(choices=DATA_TYPES, default=DATA_TYPES.text)
     default = models.TextField(default='', blank=True)
@@ -545,13 +620,25 @@ class DataStructure(models.Model):
                                                                   DataStructure.DATA_TYPES.image,
                                                                   DataStructure.DATA_TYPES.external_file,
                                                                   DataStructure.DATA_TYPES.external_image,
-                                                                  DataStructure.DATA_TYPES.check_box]):
+                                                                  DataStructure.DATA_TYPES.check_box,
+                                                                  DataStructure.DATA_TYPES.multiselect]):
             content_value = self.default
 
         if self.type == DataStructure.DATA_TYPES.check_box:
             content_value = strtobool(content_value) == 1 if content_value else False
-        if self.type in [DataStructure.DATA_TYPES.array, DataStructure.DATA_TYPES.object]:
+        if self.type in [DataStructure.DATA_TYPES.array, DataStructure.DATA_TYPES.object,
+                         DataStructure.DATA_TYPES.multiselect]:
             content_value = json.loads(content_value) if content_value else None
+
+            if self.type == DataStructure.DATA_TYPES.multiselect:
+                # If an option has an id, change the value to a dict with the id and the value
+                for choice in self.meta_settings['options']:
+                    if type(choice) == dict:
+                        for i in range(len(content_value)):
+                            if content_value[i] == choice['label']:
+                                content_value[i] = choice
+                                break
+
         return content_value
 
     def is_protected(self, product):

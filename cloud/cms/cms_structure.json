@@ -77,7 +77,6 @@
             "advanced": true,
             "type": "select",
             "meta": {
-              "multi": false,
               "options": [
                 "blue",
                 "green",
@@ -593,10 +592,9 @@
             "name": "%AVAILABLE_DOWNLOADS_PLATFORM%",
             "description": "Platforms that are visible on the downloads page.",
             "advanced": true,
-            "type": "select",
-            "value": "[\"macos\", \"linux\", \"windows\"]",
+            "type": "multiselect",
+            "value": ["macos", "linux", "windows"],
             "meta": {
-              "multi": true,
               "options": [
                 "arm",
                 "linux",
@@ -923,27 +921,38 @@
                 "name": "%INTEGRATION_FILTER_ITEMS%",
                 "value": [
                     {
+                        "id": "access",
                         "name": "Access Control",
                         "enabled": false
                     },
                     {
+                        "id": "connector",
                         "name": "Connector",
                         "enabled": false
                     },
                     {
+                        "id": "analytics",
                         "name": "Data Analytics",
                         "enabled": false
                     },
                     {
+                        "id": "drone",
                         "name": "Drone",
                         "enabled": false
                     },
                     {
+                        "id": "health",
                         "name": "Health Monitor",
                         "enabled": false
                     },
                     {
+                        "id": "storage",
                         "name": "Storage",
+                        "enabled": false
+                    },
+                    {
+                        "id": "mine",
+                        "name": "My Integrations",
                         "enabled": false
                     }
                 ],
@@ -1008,18 +1017,30 @@
           {
             "name": "type",
             "label": "Type(Category)",
-            "value": "",
+            "value": [],
             "description": "",
-            "type": "select",
+            "type": "multiselect",
             "meta": {
-              "multi": true,
               "options": [
-                "Access Control",
-                "Connector",
-                "Data Analytics",
-                "Drone",
-                "Health Monitor",
-                "Storage"
+                {
+                  "id": "access",
+                  "label": "Access Control"
+                }, {
+                  "id": "connector",
+                  "label": "Connector"
+                }, {
+                  "id": "analytics",
+                  "label": "Data Analytics"
+                }, {
+                  "id": "drone",
+                  "label": "Drone"
+                }, {
+                  "id": "health",
+                  "label": "Health Monitor"
+                }, {
+                  "id": "storage",
+                  "label": "Storage"
+                }
               ]
             }
           },
@@ -1938,12 +1959,11 @@
           {
             "name": "testedVersions",
             "label": "Tested software (VMS) versions",
-            "value": "",
+            "value": [],
             "description": "Latest supported version",
-            "type": "select",
+            "type": "multiselect",
             "optional": true,
             "meta": {
-              "multi": true,
               "options": [
                 "4.0",
                 "3.2",
@@ -1967,12 +1987,11 @@
           {
             "name": "platforms",
             "label": "Supported OS and platforms",
-            "value": "",
+            "value": [],
             "description": "",
-            "type": "select",
+            "type": "multiselect",
             "optional": false,
             "meta": {
-              "multi": true,
               "options": [
                 "Windows - x64",
                 "Linux - x64",

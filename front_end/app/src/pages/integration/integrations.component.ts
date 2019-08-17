@@ -110,9 +110,10 @@ export class NxIntegrationsComponent implements OnInit {
     }
 
     setTags() {
+        const haveMyIntegration = this.allElements.find((elm) => elm.mine);
         this.CONFIG.integrationFilterItems.forEach(item => {
-            if (item.enabled) {
-                    this.filterModel.tags.push({ id: item.name, label: item.name, value: false });
+            if (item.enabled || (item.id === 'mine' && haveMyIntegration)) {
+                    this.filterModel.tags.push({ id: item.id, label: item.name, value: false });
             }
         });
 
@@ -143,12 +144,11 @@ export class NxIntegrationsComponent implements OnInit {
 
         if (this.filterModel.tags.length) {
             const hasTagSelection = this.filterModel.tags.some((tag) => tag.value);
-
             if (hasTagSelection) {
                 this.elements = this.elements.filter(item => {
                     return item.information.type.find((type) => {
                         return this.filterModel.tags.some(tag => {
-                            if (tag.label === type && tag.value) {
+                            if (tag.id === type.id && tag.value) {
                                 return item;
                             }
                         });
@@ -168,4 +168,3 @@ export class NxIntegrationsComponent implements OnInit {
         item.name = item.name.replace(pattern, '<span class="marked">' + text + '</span>');
     }
 }
-

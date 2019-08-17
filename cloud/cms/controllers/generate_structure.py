@@ -83,7 +83,8 @@ def find_structure(name, context, structure_type, product_type, meta=None,
         if db_structure:
             label = db_structure.label if db_structure.label != name else ''
             value = db_structure.default if not DataStructure.is_file_or_image(db_structure.type) else ""
-            if db_structure.type in [DataStructure.DATA_TYPES.object, DataStructure.DATA_TYPES.array]:
+            if db_structure.type in [DataStructure.DATA_TYPES.object, DataStructure.DATA_TYPES.array,
+                                     DataStructure.DATA_TYPES.multiselect]:
                 if value:
                     value = json.loads(value)
                 else:
@@ -105,7 +106,7 @@ def find_structure(name, context, structure_type, product_type, meta=None,
             ("name", name),
             ("value", value),
             ("description", description),
-            ("placeholder", placeholder)
+            ("placeholder", placeholder),
             ("type", structure_type),
             ("advanced", advanced),
             ("optional", optional),
@@ -171,7 +172,7 @@ def templatify_json(json_data, prefix=''):
     return values, json_data
 
 
-def check_if_json (data, short_name, structure, product_type):
+def check_if_json(data, short_name, structure, product_type):
     if not short_name.lower().endswith('.json'):
         return False
 

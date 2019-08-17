@@ -164,12 +164,12 @@ import * as angular from 'angular';
             getSystemAuth: function (systemId) {
                 return $http.get(apiBase + '/systems/' + systemId + '/auth');
             },
-            getLanguages: cacheGet('/static/languages.json', true),
-            changeLanguage: function (language) {
-                return $http.post(apiBase + '/utils/language/', {
-                    language: language
-                });
-            },
+            // getLanguages: cacheGet('/static/languages.json', true),
+            // changeLanguage: function (language) {
+            //     return $http.post(apiBase + '/utils/language/', {
+            //         language: language
+            //     });
+            // },
             getDownloads: function () {
                 return $http.get(apiBase + '/utils/downloads');
             },

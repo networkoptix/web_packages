@@ -46,8 +46,13 @@
                     <div class="float-left m-0 mt-1 mr-1" *ngIf="plugin.draft">
                         <span class="badge badge-danger" translate>Draft</span>
                     </div>
-                    <div class="float-left m-0 mt-1 mr-1" *ngFor="let type of plugin.information.type">
-                        <span class="badge">{{type}}</span>
+                    <div *ngFor="let type of plugin.information.type">
+                        <div class="float-left m-0 mt-1 mr-1" *ngIf="type.id != 'mine'">
+                            <span class="badge">{{type.label}}</span>
+                        </div>
+                    </div>
+                    <div class="float-left m-0 mt-1 mr-1" *ngIf="plugin.mine">
+                        <span class="badge badge-brand" translate>Mine</span>
                     </div>
                 </footer>
             </nx-block>

@@ -24,7 +24,7 @@ require('./downgraded-providers.ts');
 
 //Directives
 require('./directives/autofocus.js');
-require('./directives/header.js');
+// require('./directives/header.js');
 // require('./directives/openClientButton.js');
 require('./directives/passwordInput.js');
 require('./directives/process.js');

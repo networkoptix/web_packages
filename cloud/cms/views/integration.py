@@ -70,18 +70,10 @@ def make_integrations_json(integrations, contexts=None, show_pending=False, show
                                                                    version_id=current_version,
                                                                    draft=show_pending or show_drafts)
 
-                    if not record_value:
+                    if not record_value and datastructure.type != DataStructure.DATA_TYPES.multiselect:
                         continue
 
                     context_dict[ds_name] = record_value
-
-                    # If the DataStructure type is select and the multi flag is true we need to make the value an array
-                    if datastructure.type == DataStructure.DATA_TYPES.select and\
-                            'multi' in datastructure.meta_settings and\
-                            datastructure.meta_settings['multi']:
-                        # Starts as a stringified list then turned into a list of strings
-                        # "['1', '2', '3']" -> [u'1', u'2', u'3'] -> ['1', '2', '3']
-                        context_dict[ds_name] = map(str, json.loads(context_dict[ds_name]))
 
                 if context_dict:
                     integration_dict[context_name] = context_dict
