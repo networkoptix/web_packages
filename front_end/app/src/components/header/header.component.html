@@ -9,7 +9,7 @@
                 </ul>
 
                 <ul *ngIf="active.integrations || active.ipvd"
-                    class="nav navbar-nav navbar-left d-block d-sm-none">
+                    class="nav navbar-nav navbar-left d-block d-md-none">
                     <li>
                         <nx-nav-location [location]="active"></nx-nav-location>
                     </li>
@@ -22,20 +22,20 @@
                     </a>
                 </div>
 
-                <ul *ngIf="active.integrations" class="nav navbar-nav d-none d-sm-flex">
+                <ul *ngIf="active.integrations" class="nav navbar-nav d-none d-md-flex">
                     <li class="active">
                         <a class="inset" href="" translate>Integrations</a>
                     </li>
                 </ul>
 
-                <ul *ngIf="active.ipvd" class="nav navbar-nav d-none d-sm-flex">
+                <ul *ngIf="active.ipvd" class="nav navbar-nav d-none d-md-flex">
                     <li class="active">
                         <a class="inset" href="" translate>Supported IP Video Devices</a>
                     </li>
                 </ul>
 
                 <ul *ngIf="activeSystem && !active.integrations && !active.ipvd"
-                    class="nav navbar-nav auth-visible d-none d-sm-flex">
+                    class="nav navbar-nav auth-visible d-none d-md-flex">
 
                     <li [ngClass]="{ 'active' :active.view }">
                         <a class="inset" href="/systems/{{activeSystem.id}}/view" translate>View</a>
@@ -51,13 +51,13 @@
                     <li>
                         <span>
                             <a href="/register" class="btn btn-primary btn-collapse">
-                                <span class="glyphicon glyphicon-home--light"></span>
+                                <span class="glyphicon glyphicon-create-user"></span>
                                 <span class="btn-caption" translate>Create Account</span>
                             </a>
                         </span>
                         <span>
                             <a href="" class="btn btn-default btn-collapse" (click)="login()">
-                                <span class="glyphicon glyphicon-home"></span>
+                                <span class="glyphicon glyphicon-login"></span>
                                 <span class="btn-caption" translate>Log In</span>
                             </a>
                         </span>

@@ -25,6 +25,7 @@ $collapse-second-width-max : $collapse-second-width - 1px;
 $header-collapsing-width-1 : 1px;
 
 .navbar {
+    min-width     : 550px;
     height        : $header-height;
     border-top    : none;
     border-left   : none;

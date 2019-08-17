@@ -3,6 +3,11 @@
 @import '../../../../styles/theme_variables';
 
 integration-detail-component {
+    
+    .integration-details {
+        min-width : 550px;
+    }
+    
     .menu {
         background-color : $light5;
         padding          : .5rem 0;
