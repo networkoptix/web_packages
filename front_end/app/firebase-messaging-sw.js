@@ -1,4 +1,6 @@
 // Firebase messaging service worker
+importScripts('/static/firebase-app.js');
+importScripts('/static/firebase-messaging.js');
 
 // Get environment config
 fetch('/api/utils/settings')

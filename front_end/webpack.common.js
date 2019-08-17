@@ -79,7 +79,7 @@ module.exports = {
                 ignore: thingsToIgnore
             },
             {
-                from: 'firebase-messaging-sw.js',
+                from: 'firebase*.js',
                 to: '',
             }
         ]),
