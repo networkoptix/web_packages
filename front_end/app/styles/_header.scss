@@ -18,6 +18,7 @@ $collapse-second-width-max: $collapse-second-width - 1px;
 $header-collapsing-width-1: 1px;
 
 .navbar{
+    min-width: 550px; // 19.1 fix ... in 19.2 on small screens we'll have icons and buttons will not be pushed
     height: $header-height;
     border-top:none;
     border-left:none;
