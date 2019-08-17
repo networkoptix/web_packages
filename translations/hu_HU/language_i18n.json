@@ -27,7 +27,7 @@
     "Checking...": "Ellenőrzés...",
     "Choose which properties should be visible to customers:": "Válassza ki, hogy mely tulajdonságok láthatók az ügyfelek számára:",
     "Close": "Bezárás",
-    "Codec": "Codec",
+    "Codec": "Kodek",
     "Collapse": "Collapse",
     "Contact": "Contact",
     "Create Account": "Fiók létrehozása",
@@ -192,7 +192,7 @@
             "arm": {
                 "label": "ARM",
                 "shortLabel": "ARM",
-                "supported": "Debian/Ubuntu based"
+                "supported": "<a href='/content/arm'>ARM based servers support policy</a>"
             },
             "ios": {
                 "label": "iOS",
@@ -293,7 +293,7 @@
         "model": "Modell",
         "multiSensorCamera": "Multi-Sensor Camera",
         "other": "Other",
-        "primaryCodec": "Codec",
+        "primaryCodec": "Kodek",
         "resolutionArea": "Terület",
         "vendor": "Manufacturer"
     },

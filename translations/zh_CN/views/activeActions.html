@@ -26,10 +26,13 @@
             <h1>您已在 %CLOUD_NAME% 中注册</h1>
             <p>我们已将激活链接发信给{{data.email}}。<br>
             请通过访问此链接激活您的帐户。</p>
+            <process-button process="reactivate"
+                            form="reactivateAccount"
+                            button-text="$root.L.activeActions.sendConfirm"></process-button>
         </div>
         <h1 ng-if="!data.email">激活您的帐户</h1>
-        <form name="reactivateAccount" class="form-horizontal" ng-if="!reactivate.success" novalidate>
-            <div class="form-group" ng-if="!data.email" validate-field>
+        <form name="reactivateAccount" class="form-horizontal" ng-if="!reactivate.success && !data.email" novalidate>
+            <div class="form-group" validate-field>
                 <div class="col-md-4 justify-content-start justify-content-md-end">
                     <label for="emailReactivate" class="control-label">邮箱</label>
                 </div>

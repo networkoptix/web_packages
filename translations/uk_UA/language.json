@@ -242,9 +242,10 @@
     "cameraStates": {
       "offline": "Поза мережею",
       "error": "Помилка",
+      "errorLoading": "An error occurred while loading this video.",
       "unauthorized": "Потрібна аутентифікація",
       "noData": "Немає даних",
-      "iosVideoTooLarge": "iOS не підтримує відео з розшиненням більшим за fullHD (2MP: 1920x1080).",
+      "iOSVideoTooLarge": "iOS не підтримує відео з розшиненням більшим за fullHD (2MP: 1920x1080).",
       "flashRequired": "Будь ласка, <a href='https://get.adobe.com/flashplayer/' target='_blank'>встановіть Adobe Flash</a> для відтворення відео.",
       "flashOrWebmRequired": "Відео не може бути відтворено. Можливо, потрібно <a href='https://get.adobe.com/flashplayer/' target='_blank'>встановитиAdobe Flash</a> або<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>кодек WebM</a> для відтворення відео в Internet Explorer.",
       "noArmSupport": "Цей браузер або пристрій не підтримує відтворення відео з серверів на базі ARM.",

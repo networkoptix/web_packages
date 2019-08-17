@@ -1,18 +1,18 @@
 {
 	"search": {
 		"Search": "Pesquisa",
-		"search_ipvd": "Search by model or manufacturer",
-		"filter applied": "filter applied",
-		"filters applied": "filters applied",
+		"search_ipvd": "Pesquisar por modelo ou fabricante",
+		"filter applied": "filtro aplicado",
+		"filters applied": "filtros aplicados",
 		"Any": "Qualquer",
-		"selected": "selected",
-		"vendor": "Manufacturer",
-		"vendors": "Manufacturers",
+		"selected": "selecionado",
+		"vendor": "Fabricante",
+		"vendors": "Fabricantes",
 		"hardwareType": "Tipo",
-		"hardwareTypes": "Types",
-		"minResolution": "Minimum Resolution",
-		"analytics": "Analytics",
-		"analyticsSelected": "analytics events"
+		"hardwareTypes": "Tipos",
+		"minResolution": "Resolução mínima",
+		"analytics": "Análises",
+		"analyticsSelected": "eventos analíticos"
 	},
 	"cameraFilters": {
 		"ptz": "Câmeras PTZ",
@@ -64,7 +64,7 @@
 			"arm": {
 				"label": "ARM",
 				"shortLabel": "ARM",
-				"supported": "Baseado em Debian/Ubuntu"
+				"supported": "<a href='/content/arm'>ARM based servers support policy</a>"
 			},
 			"sdk": {
 				"label": "SDK",
@@ -85,7 +85,7 @@
 			"server": "Somente servidor",
 			"bundle": "Cliente e Servidor",
 			"servertool": "Ferramenta de configuração",
-			"package": "Package"
+			"package": "Pacote"
 		},
 		"releasesTypes": {
 			"beta": "Beta",
@@ -99,56 +99,56 @@
 	},
 	"ipvd": {
 		"resolutionArea": "Área",
-		"count": "Count",
-		"vendor": "Manufacturer",
+		"count": "Contagem",
+		"vendor": "Fabricante",
 		"model": "Modelo",
 		"hardwareType": "Tipo",
-		"maxResolution": "Max Resolution",
-		"maxFps": "Max FPS",
+		"maxResolution": "Resolução Máxima",
+		"maxFps": "FPS Máximo",
 		"primaryCodec": "Codec",
 		"isAudioSupported": "Audio",
 		"isTwAudioSupported": "áudio bidirecional",
 		"isPtzSupported": "PTZ",
 		"isAptzSupported": "PTZ avançado",
-		"isAptzSupportedShort": "Adv. PTZ",
+		"isAptzSupportedShort": "Avançar PTZ",
 		"isFisheye": "Fisheye",
 		"isMdSupported": "Movimento",
 		"isIoSupported": "I/O",
 		"isH265": "H.265",
 		"isMultiSensor": "Multi Sensor",
-		"isAnalyticsSupported": "Analytics",
+		"isAnalyticsSupported": "Análises",
 		"camera": "Câmara",
-		"multiSensorCamera": "Multi-Sensor Camera",
-		"encoder": "Encoder",
+		"multiSensorCamera": "Câmera Multi-Sensor",
+		"encoder": "Codificador",
 		"dvr": "DVR",
-		"other": "Other",
+		"other": "Outro",
 		"PTZ cameras": "Câmeras PTZ",
-		"Advanced PTZ cameras": "Advanced PTZ cameras",
-		"Fisheye Cameras": "Fisheye Cameras",
-		"Cameras supporting H.265": "Cameras supporting H.265",
+		"Advanced PTZ cameras": "Câmeras PTZ avançadas",
+		"Fisheye Cameras": "Câmeras Fisheye",
+		"Cameras supporting H.265": "Câmeras que suportam H.265",
 		"I / O modules": "Módulos I / O",
-		"Multisensor Cameras": "Multisensor Cameras",
-		"Cameras with 2-way audio": "Cameras with 2-way audio",
+		"Multisensor Cameras": "Câmeras Multisensor",
+		"Cameras with 2-way audio": "Câmeras com áudio bidirecional",
 		"Extra high resolution cameras": "Câmaras extra de alta resolução",
 		"feedback": {
-			"a_Please": "Please",
-			"b_Link": "submit a request",
-			"c_Info": "for additional questions/concerns regarding supported devices."
+			"a_Please": "Por favor",
+			"b_Link": "enviar um pedido",
+			"c_Info": "para perguntas/preocupações adicionais sobre dispositivos suportados."
 		},
-		"disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous."
+		"disclaimer": "Esta lista é limitada a dispositivos encontrados em {{vmsName}} onde os usuários permitem o auto-relatório de especificações do dispositivo para {{companyName}}. Nenhuma informação pessoal é coletada e cada usuário permanece totalmente anônimo."
 	},
 	"integration": {
-		"previewRibbonText": "This page is a preview of the latest changes, and it doesn't match publicly available version.",
-		"backToEditText": "Back to the editing interfaces",
-		"Access Control": "Access Control",
-		"Connector": "Connector",
-		"Data Analytics": "Data Analytics",
+		"previewRibbonText": "Esta página é uma pré-visualização das últimas alterações, e não corresponde à versão disponível publicamente.",
+		"backToEditText": "Voltar às interfaces de edição",
+		"Access Control": "Controle de Acesso",
+		"Connector": "Conector",
+		"Data Analytics": "Análise de dados",
 		"Drone": "Drone",
 		"Health Monitor": "Monitor de Saúde",
 		"Storage": "Armazenamento"
 	},
 	"messageDialogPlaceholders": {
-		"feedback": "Make sure you include your camera model and manufacturer..."
+		"feedback": "Certifique-se de incluir seu modelo de câmera e fabricante..."
 	},
 	"pageTitles": {
 		"supportedDevices": "Dispositivos suportados",
@@ -157,10 +157,10 @@
 	"dialogs": {
 		"merge": {
 			"connectToCloud": "Conecte o sistema que você deseja mesclar com este para <strong>{{cloudName}}</strong> ou mesclar localmente usando <strong>{{vmsName}}</strong> Cliente.",
-			"mergeConfirmation": "Está prestes a fundir os sistemas <strong>{{primarySystem}}</strong> e <strong>{{secondarySystem}}</strong>. As definições e o nome serão baseados a partir do <strong>{{primarySystem}}</strong>.",
-			"primaryCannotMerge": "O sistema {{targetSystem}} tem uma versão de software mais recente que é incompatível com o sistema atual. Atualize o sistema atual com o <a href=\"/download\" target=\"_blank\" translate>build</a> mais recente para efectuar a fusão com o Sistema {{targetSystem}}.",
-			"primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}.",
-			"secondaryCannotMerge": "O sistema {{targetSystem}} tem uma versão de software mais antiga que é incompatível com o sistema atual. Atualize o sistema {{targetSystem}} para o <a href=\"/download\" target=\"_blank\" translate>build</a> mais recente para efectuar a fusão com este Sistema.",
+			"mergeConfirmation": "Você está prestes a mesclar sistemas <strong>{{primarySystem}}</strong> e <strong>{{secondarySystem}}</strong>. As configurações e o nome serão tiradas do <strong>{{primarySystem}}</strong>.",
+			"primaryCannotMerge": "O sistema {{targetSystem}} tem uma versão de software mais recente que é incompatível com o sistema atual. Atualize o sistema atual para a versão mais recente <a href=\"/download\" target=\"_blank\" translate></a> para mesclar com o sistema {{targetSystem}}.",
+			"primarySystemOffline": "O sistema {{primarySystem}} está offline e não pode ser mesclado com o sistema {{targetSystem}}.",
+			"secondaryCannotMerge": "O sistema {{targetSystem}} tem uma versão mais antiga do software que é incompatível com o sistema atual. Atualize {{targetSystem}} para a versão mais recente <a href=\"/download\" target=\"_blank\" translate></a> para mesclar com o atual.",
 			"systemOffline": "O sistema {{targetSystem}} está offline e não pode ser mesclado com o atual.",
 			"systemUnavailable": "O sistema {{targetSystem}} está atualmente inacessível. Tente novamente em alguns minutos ou contato"
 		},
@@ -168,26 +168,26 @@
 			"failedToSend": "Falha no envio da mensagem.",
 			"sent": "A mensagem foi enviada.",
 			"title": {
-				"integration": "Get in touch with {{companyName}}",
-				"ipvd_feedback_page": "Feedback for cameras page",
+				"integration": "Entre em contato com {{companyName}}",
+				"ipvd_feedback_page": "Feedback para página de câmaras",
 				"ipvd_feedback_device": "Comentários sobre {{product}}"
 			},
 			"topic": {
-				"contact_sales": "Contact sales for {{product}}",
-				"contact_support": "Contact support for {{product}}",
-				"integration_feedback": "Feedback for integration {{product}}",
-				"ipvd_feedback_page": "Feedback for cameras page",
+				"contact_sales": "Entre em contato com vendas para {{product}}",
+				"contact_support": "Contate o suporte para {{product}}",
+				"integration_feedback": "Feedback para integração {{product}}",
+				"ipvd_feedback_page": "Feedback para página de câmaras",
 				"ipvd_feedback_device": "Comentários sobre {{product}}"
 			}
 		}
 	},
 	"privacyPolicy": {
-		"integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent.",
-		"ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent."
+		"integration": "Ao enviar este formulário você concorda em ser contatado por {{INTEGRATION_COMPANY}} e/ou %COMPANY_NAME%.\nVocê encontrará {{INTEGRATION_COMPANY}} política de privacidade <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">aqui</a> e %COMPANY_NAME% Política de Privacidade aqui <a href=\"%PRIVACY_LINK%\" target=\"blank\">aqui</a> que incluem instruções sobre como retirar seu consentimento.",
+		"ipvd": "Ao enviar este formulário você concorda em ser contatado por %COMPANY_NAME%.\nVocê encontrará %COMPANY_NAME% política de privacidade <a href=\"%PRIVACY_LINK%\" target=\"blank\">aqui</a> que inclui instruções sobre como retirar seu consentimento."
 	},
-	"testedVersionLabel": "Tested on {{vmsName}} version:",
-	"testedVersionsLabel": "Tested on {{vmsName}} versions:",
-	"About %CLOUD_NAME%": "About %CLOUD_NAME%",
+	"testedVersionLabel": "Testado em versão {{vmsName}}:",
+	"testedVersionsLabel": "Testado em versões de {{vmsName}}:",
+	"About %CLOUD_NAME%": "Sobre %CLOUD_NAME%",
 	"Download %VMS_NAME%": "Baixar %VMS_NAME%",
 	"Integrations": "Integrações",
 	"Privacy": "Privacidade",

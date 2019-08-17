@@ -242,9 +242,10 @@
     "cameraStates": {
       "offline": "Offline",
       "error": "Chyba",
+      "errorLoading": "An error occurred while loading this video.",
       "unauthorized": "Autentifikace je vyžadována",
       "noData": "Žádná data",
-      "iosVideoTooLarge": "iOS nepodporuje video větší než fullHD (2MP: 1920 × 1080).",
+      "iOSVideoTooLarge": "iOS nepodporuje video větší než fullHD (2MP: 1920 × 1080).",
       "flashRequired": "Pro přehrání videa si prosím <a href='https://get.adobe.com/flashplayer/' target='_blank'>nainstalujte Adobe Flash</a>.",
       "flashOrWebmRequired": "Pro přehrávání videa v aplikaci Internet Explorer si prosím <a href='https://get.adobe.com/flashplayer/' target='_blank'>nainstalujte Adobe Flash</a> nebo<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM kodek</a>.",
       "noArmSupport": "Tento prohlížeč nebo zařízení nepodporuje přehrávání videa ze serverů se systémem ARM.",

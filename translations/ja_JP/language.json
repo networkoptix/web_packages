@@ -242,9 +242,10 @@
     "cameraStates": {
       "offline": "オフライン",
       "error": "エラー",
+      "errorLoading": "An error occurred while loading this video.",
       "unauthorized": "認証が必要です",
       "noData": "データがありません",
-      "iosVideoTooLarge": "iOSはfullHD(2MP：1920x1080)より大きいビデオをサポートしていません",
+      "iOSVideoTooLarge": "iOSはfullHD(2MP：1920x1080)より大きいビデオをサポートしていません",
       "flashRequired": "動画を再生するには <a href='https://get.adobe.com/flashplayer/' target='_blank'> Adobe Flash をインストール</a> をしてください。",
       "flashOrWebmRequired": "ビデオを再生することはできません<br>\nIeで再生するには<a href='https://get.adobe.com/flashplayer/' target='_blank'>Adobe Flash</a> or<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a>をインストールして下さい",
       "noArmSupport": "このブラウザまたはデバイスは、ARMベースのサーバーからのビデオ再生をサポートしていません。",

@@ -26,10 +26,13 @@
             <h1>Vous avez enregistré dans%CLOUD_NAME%</h1>
             <p>Nous vous avons envoyé une lettre avec le lien d'activation à {{data.email}}.<br>
                 Veuillez activer votre compte en visitant ce lien.</p>
+            <process-button process="reactivate"
+                            form="reactivateAccount"
+                            button-text="$root.L.activeActions.sendConfirm"></process-button>
         </div>
         <h1 ng-if="!data.email">Activez votre compte</h1>
-        <form name="reactivateAccount" class="form-horizontal" ng-if="!reactivate.success" novalidate>
-            <div class="form-group" ng-if="!data.email" validate-field>
+        <form name="reactivateAccount" class="form-horizontal" ng-if="!reactivate.success && !data.email" novalidate>
+            <div class="form-group" validate-field>
                 <div class="col-md-4 justify-content-start justify-content-md-end">
                     <label for="emailReactivate" class="control-label">Courriel</label>
                 </div>

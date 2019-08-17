@@ -16,20 +16,20 @@
                     </a>
                 </div>
 
-                <ul ng-if="active.integrations" class="nav navbar-nav d-none d-sm-flex">
+                <ul ng-if="active.integrations" class="nav navbar-nav d-none d-md-flex">
                     <li class="active">
                         <a class="inset" href="">Integrações</a>
                     </li>
                 </ul>
 
-                <ul ng-if="active.ipvd" class="nav navbar-nav d-none d-sm-flex">
+                <ul ng-if="active.ipvd" class="nav navbar-nav d-none d-md-flex">
                     <li class="active">
                         <a class="inset" href="">Dispositivos de vídeo IP suportados</a>
                     </li>
                 </ul>
 
                 <ul ng-if="activeSystem && !active.integrations && !active.ipvd"
-                    class="nav navbar-nav auth-visible d-none d-sm-flex">
+                    class="nav navbar-nav auth-visible d-none d-md-flex">
 
                     <li ng-class="{ 'active' :active.view }">
                         <a class="inset" ng-href="/systems/{{activeSystem.id}}/view">Ver</a>
@@ -44,10 +44,10 @@
                 <ul class="nav navbar-nav navbar-right auth-hidden margin-right">
                     <li>
                         <span>
-                            <a href="" class="btn btn-default" ng-click="login()">Log In</a>
+                            <a href="" class="btn btn-default" ng-click="login()">Entrar em</a>
                         </span>
                         <span>
-                            <a href="/register" class="btn btn-primary">Create Account</a>
+                            <a href="/register" class="btn btn-primary">Criar conta</a>
                         </span>
                     </li>
                 </ul>
