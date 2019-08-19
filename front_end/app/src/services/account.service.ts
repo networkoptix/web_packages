@@ -138,22 +138,33 @@ export class NxAccountService {
         return this.session.email;
     }
 
-    login(email, password, remember): Promise<any> {
+    login(email, password, remember) {
         this.setEmail(email);
 
         return this.cloudApi
                    .login(email, password, remember)
                    .then((result: any) => {
+                       if (this.session.loginState) {
+                           // If the user that logged in matches the current session there's no need to show
+                           // the logout dialog.
+                           if (result.data.email !== this.session.loginState) {
+                               this.logoutAuthorised();
+                           }
+
+                           return Promise.resolve({ data: { resultCode: 'ok' } });
+                       }
+
                        if (result.email) { // (result.data.resultCode === L.errorCodes.ok)
                            this.setEmail(result.email);
                            this.session.set('loginState', result.email); // Forcing changing loginState to reload interface
                            this.loginStateSubject.next(result.email);
                        }
-                       return result;
+
+                       return Promise.resolve({ data : { resultCode: 'ok' }});
                    })
-                   .catch((response) => {
-                       if (this.cloudApi.checkResponseHasError(response.error)) {
-                           return response.error;
+                   .catch((result: any) => {
+                       if (this.cloudApi.checkResponseHasError(result.error)) {
+                           return Promise.reject({ resultCode: result.error.resultCode });
                        }
                    });
     }
