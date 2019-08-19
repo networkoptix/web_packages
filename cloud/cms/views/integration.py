@@ -17,7 +17,7 @@ PENDING = ProductCustomizationReview.REVIEW_STATES.pending
 
 
 def make_integrations_json(integrations, contexts=None, show_pending=False, show_drafts=False, user=None):
-    user_products = user.products if user and not user.is_anonymous else []
+    user_products = user.products if user and user.is_authenticated else []
     integrations_json = []
 
     if not contexts:
@@ -32,7 +32,7 @@ def make_integrations_json(integrations, contexts=None, show_pending=False, show
         for integration in integrations:
             integration_dict = {}
             current_version = integration.version_id()
-            integration_dict['mine'] = integration.id in user.products
+            integration_dict['mine'] = integration.id in user_products
 
             if show_pending:
                 pending_version = ProductCustomizationReview.objects.filter(version__id__gt=current_version,
