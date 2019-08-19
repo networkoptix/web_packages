@@ -111,14 +111,20 @@ export class NxAccountService {
     }
 
     redirectAuthorised() {
-        this.get().then(() => {
-            this.location.go(this.CONFIG.redirectAuthorised);
+        this.get().then((account) => {
+            if (account) {
+                this.location.go(this.CONFIG.redirectAuthorised);
+            }
         });
     }
 
     redirectToHome() {
-        this.get().then(() => {
-            this.location.path(this.CONFIG.redirectAuthorised);
+        this.get().then((account) => {
+            if (account) {
+                this.location.path(this.CONFIG.redirectAuthorised);
+            } else {
+                this.location.path(this.CONFIG.redirectUnauthorised);
+            }
         }, () => {
             this.location.path(this.CONFIG.redirectUnauthorised);
         });
@@ -167,18 +173,20 @@ export class NxAccountService {
     }
 
     logoutAuthorised() {
-        this.get().then(() => {
+        this.get().then((account) => {
             // logoutAuthorisedLogoutButton
-            this.dialogs.confirm('',
-                    this.LANG.dialogs.logoutAuthorisedTitle,
-                    this.LANG.dialogs.logoutAuthorisedContinueButton,
-                    undefined,
-                    this.LANG.dialogs.logoutAuthorisedLogoutButton
-            ).then(() => {
-                this.redirectAuthorised();
-            }, () => {
-                this.logout(true);
-            });
+            if (account) {
+                this.dialogs.confirm('',
+                        this.LANG.dialogs.logoutAuthorisedTitle,
+                        this.LANG.dialogs.logoutAuthorisedContinueButton,
+                        undefined,
+                        this.LANG.dialogs.logoutAuthorisedLogoutButton
+                ).then(() => {
+                    this.redirectAuthorised();
+                }, () => {
+                    this.logout(true);
+                });
+            }
         });
     }
 
