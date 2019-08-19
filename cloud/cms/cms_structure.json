@@ -912,28 +912,38 @@
                 "name": "%INTEGRATION_FILTER_ITEMS%",
                 "value": [
                     {
-                        "id": "access",
-                        "name": "Access Control",
+                        "id": "automation",
+                        "name": "Automation",
                         "enabled": false
                     },
                     {
-                        "id": "connector",
-                        "name": "Connector",
+                        "id": "videoAnalytics",
+                        "name": "Video Analytics",
                         "enabled": false
                     },
                     {
-                        "id": "analytics",
-                        "name": "Data Analytics",
+                        "id": "objectDetection",
+                        "name": "Object Detection",
                         "enabled": false
                     },
                     {
-                        "id": "drone",
-                        "name": "Drone",
+                        "id": "eventDetection",
+                        "name": "Event Detection",
+                        "enabled": false
+                    },
+                    {
+                        "id": "faceRecognition",
+                        "name": "Face Recognition",
+                        "enabled": false
+                    },
+                    {
+                        "id": "licensePlateRecognition",
+                        "name": "License Plate Recognition",
                         "enabled": false
                     },
                     {
                         "id": "health",
-                        "name": "Health Monitor",
+                        "name": "Health Monitoring",
                         "enabled": false
                     },
                     {
@@ -1014,20 +1024,26 @@
             "meta": {
               "options": [
                 {
-                  "id": "access",
-                  "label": "Access Control"
+                  "id": "automation",
+                  "label": "Automation"
                 }, {
-                  "id": "connector",
-                  "label": "Connector"
+                  "id": "videoAnalytics",
+                  "label": "Video Analytics"
                 }, {
-                  "id": "analytics",
-                  "label": "Data Analytics"
+                  "id": "objectDetection",
+                  "label": "Object Detection"
                 }, {
-                  "id": "drone",
-                  "label": "Drone"
+                  "id": "eventDetection",
+                  "label": "Event Detection"
+                }, {
+                  "id": "faceRecognition",
+                  "label": "Face Recognition"
+                }, {
+                  "id": "licensePlateRecognition",
+                  "label": "License Plate Recognition"
                 }, {
                   "id": "health",
-                  "label": "Health Monitor"
+                  "label": "Health Monitoring"
                 }, {
                   "id": "storage",
                   "label": "Storage"
