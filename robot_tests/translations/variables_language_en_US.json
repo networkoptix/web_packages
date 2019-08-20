@@ -105,6 +105,9 @@
 
     "IPVD TITLE TEXT"                      :    "Supported IP Video Devices",
     "IPVD FILTERS APPLIED TEXT"            :    "filters applied",
+    "IPVD FILTERS ANALYTICS TEXT"          :    "analytics events",
+    "IPVD FILTERS SELECTED TEXT"           :    "selected",
+    "IPVD FILTERS ANY TEXT"                :    "Any",
     "IPVD ADV SEARCH BUTTON TEXT"          :    "Advanced Search",
     "IPVD ADV FILTER MIN RES"              :    "Minimum Resolution",
     "IPVD ADV FILTER MFR"                  :    "Manufacturer",

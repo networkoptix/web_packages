@@ -62,7 +62,7 @@ IPVD landing page actions
     # Step 6 - Verify IPVD feedback link opens correct dialog
     Click Link    ${IPVD SUBMIT A REQUEST LINK}
     Wait Until Element Is Visible    ${IPVD FEEDBACK}
-    
+
 #Submit request can be closed by 'X', cancel, and escape
 #Submit request cannot be close by clicking outside the form
 #Submit request correctly sends request
@@ -369,7 +369,7 @@ Advanced search
     ...    ${IPVD ADV FEATURES PTZ}${IPVD ADV FEATURES CLOSE BUTTON}
     Element Text should be
     ...    ${IPVD FILTERS APPLIED BUTTON}
-    ...    2 filters applied
+    ...    2 ${IPVD FILTERS APPLIED TEXT}
     Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages
     ...    8
     ...    ●
@@ -382,9 +382,12 @@ Advanced search
     Wait until Element does Not have Class
     ...    ${IPVD ADV FEATURES PTZ}/div
     ...    badge-selected
-    Element Text should be
+    Element Should Contain
     ...    ${IPVD FILTERS APPLIED BUTTON}
-    ...    Minimum Resolution – 1080p
+    ...    ${IPVD ADV FILTER MIN RES}
+    Element Should Contain
+    ...    ${IPVD FILTERS APPLIED BUTTON}
+    ...    1080
 
     Log    Step 5
     Click Element    ${IPVD ADV FILTERS MFRS}
@@ -396,7 +399,7 @@ Advanced search
     ...    Axis
     Element Text should be
     ...    ${IPVD FILTERS APPLIED BUTTON}
-    ...    2 filters applied
+    ...    2 ${IPVD FILTERS APPLIED TEXT}
     Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages
     ...    1
     ...    Axis
@@ -417,10 +420,10 @@ Advanced search
     ...    Down
     Element Text should be
     ...    ${IPVD ADV FILTERS MFRS}
-    ...    2 selected
+    ...    2 ${IPVD FILTERS SELECTED TEXT}
     Element Text should be
     ...    ${IPVD FILTERS APPLIED BUTTON}
-    ...    3 filters applied
+    ...    3 ${IPVD FILTERS APPLIED TEXT}
     Validate IPVD Device Table Not Empty
 
     Log    Step 7
@@ -432,30 +435,30 @@ Advanced search
     ...    ${IPVD ADV FILTERS TYPES}
     ...    Up
     Click Element
-    ...    ${IPVD ADV FILTERS TYPES}${IPVD ADV FILTERS DROPDOWN MENU ITEMS}/div/label[text()='Camera']
+    ...    ${IPVD ADV FILTERS TYPES}${IPVD ADV FILTERS DROPDOWN MENU ITEMS}/div/label[text()='${IPVD ADV TYPE CAMERA}']
     Element Text should be
     ...    ${IPVD ADV FILTERS TYPES}
-    ...    Camera
+    ...    ${IPVD ADV TYPE CAMERA}
     Click Element
-    ...    ${IPVD ADV FILTERS TYPES}${IPVD ADV FILTERS DROPDOWN MENU ITEMS}/div/label[text()='Encoder']
+    ...    ${IPVD ADV FILTERS TYPES}${IPVD ADV FILTERS DROPDOWN MENU ITEMS}/div/label[text()='${IPVD ADV TYPE ENCODER}']
     Element Text should be
     ...    ${IPVD ADV FILTERS TYPES}
-    ...    2 selected
+    ...    2 ${IPVD FILTERS SELECTED TEXT}
     Click Element
-    ...    ${IPVD ADV FILTERS TYPES}${IPVD ADV FILTERS DROPDOWN MENU ITEMS}/div/label[text()='DVR']
+    ...    ${IPVD ADV FILTERS TYPES}${IPVD ADV FILTERS DROPDOWN MENU ITEMS}/div/label[text()='${IPVD ADV TYPE DVR}']
     Element Text should be
     ...    ${IPVD ADV FILTERS TYPES}
-    ...    3 selected
+    ...    3 ${IPVD FILTERS SELECTED TEXT}
     Click Element    ${IPVD ADV FILTERS TYPES}
     Verify Button Arrow Direction
     ...    ${IPVD ADV FILTERS TYPES}
     ...    Down
     Element Text should be
     ...    ${IPVD ADV FILTERS TYPES}
-    ...    3 selected
+    ...    3 ${IPVD FILTERS SELECTED TEXT}
     Element Text should be
     ...    ${IPVD FILTERS APPLIED BUTTON}
-    ...    6 filters applied
+    ...    6 ${IPVD FILTERS APPLIED TEXT}
     Validate IPVD Device Table Not Empty
 
     Log    Step 8
@@ -463,7 +466,7 @@ Advanced search
     Verify IPVD Advanced Search is Closed
     Element Text should be
     ...    ${IPVD FILTERS APPLIED BUTTON}
-    ...    6 filters applied
+    ...    6 ${IPVD FILTERS APPLIED TEXT}
     Validate IPVD Device Table Not Empty
 
     Log    Step 9
@@ -485,7 +488,7 @@ Advanced search
     ...    ${IPVD ADV FEATURES PTZ}${IPVD ADV FEATURES CLOSE BUTTON}
     Element Text should be
     ...    ${IPVD FILTERS APPLIED BUTTON}
-    ...    2 filters applied
+    ...    2 ${IPVD FILTERS APPLIED TEXT}
     Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages
     ...    7
     ...    2-way
@@ -498,7 +501,7 @@ Advanced search
     ...    ${IPVD ADV FEATURES ADV PTZ}
     Element Text should be
     ...    ${IPVD FILTERS APPLIED BUTTON}
-    ...    3 filters applied
+    ...    3 ${IPVD FILTERS APPLIED TEXT}
     Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages
     ...    8
     ...    Adv.
@@ -513,7 +516,7 @@ Advanced search
     ...    badge-selected
     Element Text should be
     ...    ${IPVD FILTERS APPLIED BUTTON}
-    ...    2 filters applied
+    ...    2 ${IPVD FILTERS APPLIED TEXT}
     Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages
     ...    8
     ...    Adv.
@@ -546,10 +549,10 @@ Advanced search
     Click Element    ${IPVD ADV FILTERS ANALYTICS}
     Element Text should be
     ...    ${IPVD ADV FILTERS ANALYTICS}
-    ...    2 selected
+    ...    2 ${IPVD FILTERS SELECTED TEXT}
     Element Text should be
     ...    ${IPVD FILTERS APPLIED BUTTON}
-    ...    2 analytics events
+    ...    2 ${IPVD FILTERS ANALYTICS TEXT}
     Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages
     ...    10
     ...    ●
@@ -559,7 +562,7 @@ Advanced search
     ...    ${IPVD ADV FEATURES PTZ}
     Element Text should be
     ...    ${IPVD FILTERS APPLIED BUTTON}
-    ...    3 filters applied
+    ...    3 ${IPVD FILTERS APPLIED TEXT}
     Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages
     ...    8
     ...    ●
@@ -577,7 +580,7 @@ Advanced search
     ...    Entering the area
     Element Text should be
     ...    ${IPVD FILTERS APPLIED BUTTON}
-    ...    2 filters applied
+    ...    2 ${IPVD FILTERS APPLIED TEXT}
     Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages
     ...    8
     ...    ●
