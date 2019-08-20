@@ -144,6 +144,7 @@ export class NxIpvdComponent implements OnInit {
                     this.hasNoSearch = (numParams === 1 && (this.params.debug || this.params.beta));
                 } else {
                     this.hasNoSearch = true;
+                    this.resetFilterModel();
                 }
             });
 
@@ -171,6 +172,29 @@ export class NxIpvdComponent implements OnInit {
             .subscribe((state: BreakpointState) => {
                 this.mobileDetailMode = (state.matches && this.activeCamera);
             });
+    }
+
+    resetFilterModel() {
+        this.filterModel.search = '';
+        if (this.filterModel.tags) {
+            this.filterModel.tags.forEach((filter) => {
+                filter.value = false;
+            });
+        }
+
+        if (this.filterModel.selects) {
+            this.filterModel.selects.forEach((filter) => {
+                filter.selected = filter.items[0];
+            });
+        }
+
+        if (this.filterModel.multiselects) {
+            this.filterModel.multiselects.forEach((filter) => {
+                filter.selected = [];
+            });
+        }
+
+        this.filterModel = {...this.filterModel};
     }
 
     addFilterResolutions() {

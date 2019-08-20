@@ -996,7 +996,7 @@
           },
           {
             "name": "type",
-            "label": "Type(Category)",
+            "label": "Type (Category)",
             "value": "",
             "description": "",
             "type": "select",
@@ -1004,10 +1004,13 @@
               "multi": true,
               "options": [
                 "Access Control",
-                "Connector",
-                "Data Analytics",
-                "Drone",
-                "Health Monitor",
+                "Automation",
+                "Video Analytics",
+                "Object Detection",
+                "Event Detection",
+                "Face Recognition",
+                "License Plate Recognition",
+                "Health Monitoring",
                 "Storage"
               ]
             }

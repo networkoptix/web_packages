@@ -125,7 +125,7 @@
     "wrongParameters": "Alguns parâmetros no formulário estão incorretos",
     "wrongCode": "A conta já está ativada ou o código de confirmação está incorreto",
     "wrongCodeRestore": "O código de confirmação já foi usado ou está incorreto",
-    "wrongAuthCode": "Code is expired or incorrect",
+    "wrongAuthCode": "O código expirou ou está incorreto",
     "forbidden": "Não tem permissões para efetuar esta ação",
     "accountNotActivated": "Esta conta ainda não está ativada. <a href=\"/activate\">Enviar link de ativação novamente</a>",
     "accountBlocked": "Esta conta está temporariamente bloqueada. Por favor, tente novamente dentro de alguns minutos.",
@@ -147,7 +147,7 @@
     "mergedSystemIsOffline": "O sistema <strong>{{failedSystem}}</strong> está offline.",
     "INCOMPATIBLE": "Os sistemas têm diferentes versões de software. Por favor, atualize os dois para o <a href=\"/download\">mais recente build</a>.",
     "FAIL": "O sistema <strong>{{failedSystem}}</strong> está atualmente inacessível.<br>Tente novamente em alguns instantes ou entre em contato com o suporte <a href=\"%SUPPORT_LINK%\" target=\"_blank\"></a>.",
-    "unknownMergeError": "Unknown error. You can try to refresh the page and repeat attempt. If the problem persists – please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>."
+    "unknownMergeError": "Erro desconhecido. Você pode tentar atualizar a página e repetir a tentativa. Se o problema persistir - por favor, contate o suporte <a href=\"%SUPPORT_LINK%\" target=\"_blank\"></a>."
   },
   "merging": {
     "mergeFailedTitle": "Falha na fusão de Sistemas",
@@ -238,13 +238,14 @@
     },
     "systemOffline": "Sistema Offline",
     "systemHasNoCameras": "SEM CÂMARAS",
-    "systemUnreachable": "SYSTEM IS UNREACHABLE",
+    "systemUnreachable": "SISTEMA INACESSÍVEL",
     "cameraStates": {
       "offline": "Desligado",
       "error": "Erro",
+      "errorLoading": "An error occurred while loading this video.",
       "unauthorized": "Necessária autenticação",
       "noData": "Sem dados",
-      "iosVideoTooLarge": "O iOS não suporta vídeos maiores que fullHD (2MP: 1920x1080).",
+      "iOSVideoTooLarge": "O iOS não suporta vídeos maiores que fullHD (2MP: 1920x1080).",
       "flashRequired": "Por favor, <a href='https://get.adobe.com/flashplayer/' target='_blank'>instale o Adobe Flash</a> para reproduzir vídeos.",
       "flashOrWebmRequired": "Por favor <a href='https://get.adobe.com/flashplayer/' target='_blank'>instale o Adobe Flash</a> ou o <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>codec WebM</a> para reproduzir vídeo no Internet Explorer.",
       "noArmSupport": "Este navegador ou dispositivo não suporta a reprodução de vídeo a partir de servidores baseados em ARM.",

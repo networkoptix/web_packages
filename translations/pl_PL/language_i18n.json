@@ -192,7 +192,7 @@
             "arm": {
                 "label": "ARM",
                 "shortLabel": "ARM",
-                "supported": "Debian/Ubuntu lub zgodny"
+                "supported": "<a href='/content/arm'>ARM based servers support policy</a>"
             },
             "ios": {
                 "label": "iOS",
