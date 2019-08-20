@@ -28,6 +28,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
     userDisconnectSystem: any;
     deletingSystem: any;
+    userRole: string;
     // isMaster: boolean;
     // mergeTargetSystem: boolean;
     // currentlyMerging: boolean;
@@ -72,6 +73,10 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             .subscribe((system) => {
                 this.system = system;
                 if (system) {
+                    this.userRole = system.accessRole;
+                    if (system.accessRole in this.LANG.accessRoles) {
+                        this.userRole = this.LANG.accessRoles[system.accessRole].label;
+                    }
                     this.deletingSystem = this.process.init(() => {
                         return this.system.deleteFromCurrentAccount();
                     }, {

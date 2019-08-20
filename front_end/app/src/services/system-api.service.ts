@@ -20,10 +20,7 @@ interface User {
 }
 
 
-@Injectable({
-    providedIn: 'root'
-})
-export class NxSystemAPI {
+class NxSystemAPI {
     /*
     * System API is a unified service for making API requests to media servers
     *
@@ -59,7 +56,9 @@ export class NxSystemAPI {
     readonly emptyId = '{00000000-0000-0000-0000-000000000000}';
 
     CONFIG: any;
+    http: any;
     location: any;
+
     abortReason: string;
     serverId: string;
     systemId: string;
@@ -69,11 +68,11 @@ export class NxSystemAPI {
     urlBase: string;
     unauthorizedCallback: any;
 
-    constructor(private http: HttpClient,
-                private config: NxConfigService,
-                location: Location) {
-        this.CONFIG = this.config.getConfig();
+    constructor(http, config, location, userEmail, systemId, serverId, unauthorizedCallback) {
+        this.http = http;
+        this.CONFIG = config;
         this.location = location;
+        this.init(userEmail, systemId, serverId, unauthorizedCallback);
     }
 
     private getUrlBase() {
@@ -450,5 +449,25 @@ export class NxSystemAPI {
             }
         }
         this.location.path(`${systemLink}/view/${this.cleanId(cameraId)}`, false);
+    }
+}
+
+
+@Injectable({
+    providedIn: 'root'
+})
+export class NxSystemAPIService {
+    CONFIG: any;
+    location: any;
+
+    constructor(private http: HttpClient,
+                private config: NxConfigService,
+                location: Location) {
+        this.location = location;
+        this.CONFIG = this.config.getConfig();
+    }
+
+    createConnection(user, systemId, serverId, unauthorizedCallback) {
+        return new NxSystemAPI(this.http, this.CONFIG, this.location, user, systemId, serverId, unauthorizedCallback);
     }
 }

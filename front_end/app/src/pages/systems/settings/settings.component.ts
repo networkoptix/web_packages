@@ -49,7 +49,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     userDisconnectSystem: boolean;
     mergeTargetSystem: any;
     gettingSystemUsers: any;
-    pollingSystemUpdate: any;
     selectedUser: any;
 
     private setupDefaults() {
@@ -63,7 +62,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.selectedUser = { email: '' };
     }
 
-    constructor(@Inject('process') private process: any,
+    constructor(// @Inject('process') private process: any,
                 private route: ActivatedRoute,
                 private accountService: NxAccountService,
                 private configService: NxConfigService,
@@ -82,8 +81,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.pollingSystemUpdate = undefined;
-
         this.LANG = this.language.getTranslations();
         this.pageService.setPageTitle(this.LANG.pageTitles.system);
         this.init();
@@ -96,6 +93,9 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 this.systemId = params.systemId;
                 this.content.base = '/systems/' + this.systemId;
                 this.content = {...this.content}; // trigger onChange
+                if (this.system) {
+                    this.system.stopPoll();
+                }
                 this.system = undefined;
                 this.getSystemInfo();
             }
@@ -133,14 +133,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     ]
                 }]
         };
-
-        this.systemService.systemSubject.subscribe((system) => {
-            if (system !== undefined) {
-                this.system = system;
-                this.settingsService.setSystem(system);
-                this.updateSomething();
-            }
-        });
 
         this.menuService
             .selectedSectionSubject
@@ -204,8 +196,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.system = undefined;
-        this.systemService.stopPoll();
+        this.system.stopPoll();
     }
 
     getSystem() {
@@ -218,9 +209,16 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             .requireLogin()
             .then((account) => {
                 this.account = account;
-                this.systemService.initSystem(this.systemId, this.account.email);
+                this.system = this.systemService.createSystem(this.systemId, this.account.email);
                 this.systems = this.systemsService.systems;
-                this.systemService.startPoll();
+                this.settingsService.setSystem(this.system);
+
+                this.system.systemSubject.subscribe((system) => {
+                    if (system !== undefined) {
+                        this.settingsService.setSystem(system);
+                        this.updateSomething();
+                    }
+                });
             });
 
     }

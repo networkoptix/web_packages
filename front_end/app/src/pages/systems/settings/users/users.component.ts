@@ -1,6 +1,6 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { Location }                             from '@angular/common';
-import { ActivatedRoute, Router }               from '@angular/router';
+import { ActivatedRoute }                       from '@angular/router';
 import { NxConfigService }                      from '../../../../services/nx-config';
 
 import { NxPageService }             from '../../../../services/page.service';
@@ -9,7 +9,6 @@ import { NxSettingsService }         from '../settings.service';
 import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
 import { NxMenuService }             from '../../../../components/menu/menu.service';
 import { NxAccountService }          from '../../../../services/account.service';
-import { NxSystemService }           from '../../../../services/system.service';
 
 @Component({
     selector   : 'nx-system-user-component',
@@ -47,7 +46,6 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 private pageService: NxPageService,
                 private dialogs: NxDialogsService,
                 private settingsService: NxSettingsService,
-                private systemService: NxSystemService,
                 private menuService: NxMenuService,
                 location: Location) {
 
@@ -76,8 +74,8 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
     init(): void {
         this.CONFIG = this.configService.getConfig();
         this.settingsService.systemSubject.subscribe((system) => {
+            this.system = system;
             if (system) {
-                this.system = system;
                 this.systemAvailable = this.system.isAvailable && this.system.mergeInfo === undefined;
                 if (!this.selectedUser || !this.selectedUser.email) {
                     this.setUser();
@@ -85,7 +83,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             }
         });
         this.removingUserProcess = this.process.init(() => {
-            return this.systemService.deleteUser(this.selectedUser);
+            return this.system.deleteUser(this.selectedUser);
         }, {
             successMessage: this.LANG.system.permissionsRemoved.replace('{{email}}', this.selectedUser.email),
             errorPrefix   : this.LANG.errorCodes.cantSharePrefix
