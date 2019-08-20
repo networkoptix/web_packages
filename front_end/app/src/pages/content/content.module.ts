@@ -10,7 +10,7 @@ import { TranslateModule }  from '@ngx-translate/core';
 import { ComponentsModule } from '../../components/components.module';
 
 const appRoutes: Routes = [
-    { path    : 'new-content/:article_param', component: NxContentComponent }
+    { path    : 'content/:article_param', component: NxContentComponent }
 ];
 
 @NgModule({

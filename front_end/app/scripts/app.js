@@ -335,9 +335,7 @@ window.L = {};
                         controller: 'ActivateRestoreCtrl'
                     })
                     .when('/content/:page', {
-                        title: '' /*lang.pageTitles.contentPage*/,
-                        templateUrl: CONFIG.viewsDir + 'static.html',
-                        controller: 'StaticCtrl'
+                        template: '',
                     })
                     .when('/debug', {
                         templateUrl: CONFIG.viewsDir + 'debug.html',
@@ -403,9 +401,6 @@ window.L = {};
                         template: ''
                     })
                     .when('/integrations/:id/:section', {
-                        template: ''
-                    })
-                    .when('/new-content/:article_param', {
                         template: ''
                     })
                     .when('/right', {
