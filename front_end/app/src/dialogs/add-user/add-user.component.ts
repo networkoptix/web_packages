@@ -7,6 +7,8 @@ import { NxConfigService }                       from '../../services/nx-config'
 import { NxLanguageProviderService }             from '../../services/nx-language-provider';
 import { NxModalGenericComponent }               from '../generic/generic.component';
 import { NxAccountService }                      from '../../services/account.service';
+import { NxDialogsService }                      from '../dialogs.service';
+import { NxToastService }                        from '../toast.service';
 
 @Component({
     selector   : 'nx-modal-add-user-content',
@@ -20,7 +22,8 @@ export class AddUserModalContent {
     @Input() closable;
 
     LANG: any;
-    config: any;
+    CONFIG: any;
+
     title: string;
     sharing: any;
     url: string;
@@ -39,11 +42,12 @@ export class AddUserModalContent {
                 private genericModal: NxModalGenericComponent,
                 private language: NxLanguageProviderService,
                 // private accountService: NxAccountService,
+                private toastService: NxToastService,
                 @Inject('process') private process: any,
     ) {
         this.url = 'share';
         this.accessRoles = [];
-        this.config = configService.getConfig();
+        this.CONFIG = this.configService.getConfig();
         this.LANG = this.language.getTranslations();
     }
 
@@ -88,14 +92,14 @@ export class AddUserModalContent {
 
         if (!this.user) {
             this.isNewShare = true;
-            const predefinedRole = this.config.accessRoles.predefinedRoles.filter(role => {
-                return role.name === this.config.accessRoles.default;
+            const predefinedRole = this.CONFIG.accessRoles.predefinedRoles.filter(role => {
+                return role.name === this.CONFIG.accessRoles.default;
             })[0];
             this.user = {
                 email    : '',
                 isEnabled: true,
                 role     : {
-                    name       : this.config.accessRoles.default,
+                    name       : this.CONFIG.accessRoles.default,
                     permissions: ''     // permissions will be updated within permissions component as it depends
                                         // on system's accessRoles
                 }
@@ -110,18 +114,21 @@ export class AddUserModalContent {
             this.account
                 .get()
                 .then((account) => {
-                    if (account.email === this.user.email) {
-                        this.activeModal.close();
-                        // this.toast.create({
-                        //     className       : 'error',
-                        //     content         : this.language.share.cantEditYourself,
-                        //     dismissOnTimeout: true,
-                        //     dismissOnClick  : true,
-                        //     dismissButton   : false
-                        // });
-                    }
+                    if (account) {
+                        if (account.email === this.user.email) {
+                            this.activeModal.close();
 
-                    this.accessDescription = this.getRoleDescription();
+                            const options = {
+                                autohide : true,
+                                classname: 'error',
+                                delay    : this.CONFIG.alertTimeout
+                            };
+
+                            return this.toastService.show(this.LANG.share.cantEditYourself, options);
+                        }
+
+                        this.accessDescription = this.getRoleDescription();
+                    }
                 });
 
             this.buttonText = this.LANG.sharing.editShareConfirmButton;

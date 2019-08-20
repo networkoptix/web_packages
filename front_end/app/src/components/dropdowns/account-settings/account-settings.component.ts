@@ -31,11 +31,11 @@ export class NxAccountSettingsDropdown implements OnInit {
             .then(() => {
                 this.accountService
                     .get()
-                    .then(result => {
-                        if (result) {
-                            this.settings.email = result.email;
-                            this.settings.is_staff = result.is_staff;
-                            this.settings.is_superuser = result.is_superuser;
+                    .then(account => {
+                        if (account) {
+                            this.settings.email = account.email;
+                            this.settings.is_staff = account.is_staff;
+                            this.settings.is_superuser = account.is_superuser;
                         }
                     });
             })
