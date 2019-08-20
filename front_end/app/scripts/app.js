@@ -405,7 +405,7 @@ window.L = {};
                     .when('/integrations/:id/:section', {
                         template: ''
                     })
-                    .when('/new-content', {
+                    .when('/new-content/:article_param', {
                         template: ''
                     })
                     .when('/right', {
