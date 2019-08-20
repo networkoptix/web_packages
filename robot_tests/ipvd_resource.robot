@@ -269,7 +269,7 @@ Validate Manufacturer More Count
     ${more}=   Get Text    ${IPVD AND MORE}
     ${more}=   Remove String Using Regexp
     ...    ${more}
-    ...    (\\.\\.\\.\\ and\\ )|(\\ more)
+    ...    \\D
     Should be True    ${more} == ${count}-${IPVD VENDORS SHOWN}
     ...    Expected ${more} to be ${count} minus ${IPVD VENDORS SHOWN}.
 
