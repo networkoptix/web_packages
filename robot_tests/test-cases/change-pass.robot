@@ -17,6 +17,7 @@ Open browser and set user language to current
     Open Browser and go to URL    ${url}
     Log In    ${email}    ${password}
     Validate Log In
+    sleep    3
     Log Out
 
 Log In To Change Password Page

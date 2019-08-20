@@ -31,7 +31,7 @@ Open Browser and go to URL
 Regular Open Browser
     Set Screenshot Directory    ${SCREENSHOT_DIRECTORY}
     ${chrome_options}=    Set Chrome Options
-    Create Webdriver    Chrome    chrome_options=${chrome_options}
+    Create Webdriver    ${BROWSER}    chrome_options=${chrome_options}
     Maximize Browser Window
     Go To    ${ENV}
 

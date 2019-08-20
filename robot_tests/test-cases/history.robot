@@ -80,11 +80,11 @@ History link is in the downloads page for user with access and takes you to /dow
     Click Link    ${RELEASE HISTORY BUTTON}
     Location Should Be    ${url}/downloads/history
 
-Going to the history page anonymous asks for login and closing takes you back to home
+Going to the history page anonymous asks for login and closing takes you to 404
     Go To    ${url}/downloads/history
     Wait Until Element Is Visible    ${LOG IN CLOSE BUTTON}
     Click Button    ${LOG IN CLOSE BUTTON}
-    Location Should Be    ${url}/
+    Location Should Be    ${url}/404
 
 Going to the history page anonymous asks for login and login shows history page
     Go To    ${url}/downloads/history
