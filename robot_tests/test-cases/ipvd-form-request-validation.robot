@@ -36,7 +36,7 @@ Test Submit Request Message
     Wait Until Element Is Visible    ${IPVD SUBMIT A REQUEST}
     Click Element    ${IPVD SUBMIT A REQUEST}
     Wait Until Element Is Visible    ${IPVD FEEDBACK}
-    Element Text Should Be    ${IPVD FEEDBACK TITLE}    Feedback for cameras page
+    Element Text Should Be    ${IPVD FEEDBACK TITLE}    ${IPVD FEEDBACK FOR CAMERAS PAGE}
     Submit Feedback/Request Form    ${Your Name}    ${Email}    ${Message}
     Run Keyword If    ${Expect Success}==True    Validate Message Sent
     ...    ELSE IF    ${Expect Success}==False   Validate Message Not Sent

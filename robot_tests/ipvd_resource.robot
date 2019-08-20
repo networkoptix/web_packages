@@ -310,6 +310,7 @@ Validate Privacy Policy
 
 Submit Feedback/Request Form
     [Arguments]    ${Your Name}    ${Email}    ${Message}
+    Sleep    0.25
     Input Text    ${IPVD FEEDBACK YOUR NAME}    ${Your Name}
     Sleep    0.25
     Input Text    ${IPVD FEEDBACK EMAIL}    ${Email}
@@ -321,7 +322,7 @@ Submit Feedback/Request Form
 
 Validate Message Sent
     Page should Not contain Element    ${IPVD FEEDBACK}
-    Check For Alert    Message has been sent.
+    Check For Alert    ${IPVD FEEDBACK MESSAGE SENT}
     # TODO: Check email and verify submitted data received
 
 Validate Message Not Sent
