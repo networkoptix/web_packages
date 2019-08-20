@@ -62,9 +62,12 @@ export class NxSystemsService implements OnDestroy {
     }
 
     getSystem(systemId) {
-        const system = this.systems.find((system) => {
-            return system.id === systemId;
-        });
+        let system;
+        if (this.systems && this.systems.length > 0) {
+            system = this.systems.find((system) => {
+                return system.id === systemId;
+            });
+        }
 
         if (system) { // Cache success
             return of(system);

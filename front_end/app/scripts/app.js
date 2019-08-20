@@ -78,7 +78,6 @@ window.L = {};
                         viewsDir: 'static/views/', //'static/lang_' + lang + '/views/';
                         previewPath: '',
                         viewsDirCommon: 'static/web_common/views/',
-                        publicDownloads: false,
                         showHeaderAndFooter: true
                     };
 
@@ -377,18 +376,10 @@ window.L = {};
                         }
                     })
                     .when('/download', {
-                        template: '<download-component></download-component>'
+                        template: ''
                     })
                     .when('/download/:platform', {
-                        template: '<download-component [route-param-platform]="platform"></download-component>',
-                        controller: [ '$scope', 'getPlatform', function ($scope, getPlatform) {
-                            $scope.platform = getPlatform;
-                        }],
-                        resolve: {
-                            getPlatform: [ '$route', function ($route) {
-                                return $route.current.params.platform;
-                            }]
-                        }
+                        template: ''
                     })
                     .when('/browser', {
                         template: '<non-supported-browser></non-supported-browser>'

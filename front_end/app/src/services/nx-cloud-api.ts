@@ -111,4 +111,13 @@ export class NxCloudApiService {
             language
         }).toPromise();
     }
+
+    getDownloads() {
+        return this.http.get(this.CONFIG.apiBase + '/utils/downloads').toPromise();
+    }
+
+    getDownloadsHistory(build) {
+        return this.http.get(this.CONFIG.apiBase + '/utils/downloads/' + (build || 'history')).toPromise();
+    }
+
 }

@@ -1,6 +1,6 @@
 import { Component, TemplateRef } from '@angular/core';
 
-import { ToastService }                        from '../../dialogs/toast.service';
+import { NxToastService }                      from '../../dialogs/toast.service';
 import { animate, style, transition, trigger } from '@angular/animations';
 
 @Component({
@@ -41,7 +41,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
 })
 export class ToastsContainer {
 
-    constructor(public toastService: ToastService) {
+    constructor(public toastService: NxToastService) {
     }
 
     isTemplate(toast) {

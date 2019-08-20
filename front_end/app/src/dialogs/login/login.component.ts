@@ -117,7 +117,6 @@ export class LoginModalContent implements OnInit {
             this.accountBlocked = false;
 
             return this.account.login(this.auth.email, this.password, this.remember);
-            // return Promise.resolve({});
         }, {
             ignoreUnauthorized: true,
             errorCodes: {

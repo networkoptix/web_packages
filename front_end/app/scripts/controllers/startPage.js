@@ -61,7 +61,7 @@
                         nxAccountService.redirectAuthorised();
                     })
                     .catch(function () {
-                        nxPageService.setPageTitle(languageService.lang.pageTitles.login);
+                        nxPageService.setPageTitle(languageService.lang.pageTitles.default);
                     });
             }
         }

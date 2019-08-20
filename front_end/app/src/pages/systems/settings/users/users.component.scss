@@ -2,7 +2,6 @@
 
 .user-name {
     @include ellipsis;
-    
     //width     : 20%;
     max-width : 175px;
 }
@@ -23,23 +22,6 @@
     padding-right : 6px !important;
     padding-left  : 6px !important;
     text-align    : center;
-}
-
-@import '../../../../styles/typography';
-
-nx-block {
-  .users-email {
-    font-family: $font-family-medium;
-  }
-
-  .users-name {
-    font-family: $font-family-base;
-    font-size: $font-size-base;
-  }
-
-  .name {
-    font-family: $font-family-bold;
-  }
 }
 
 .help-block {

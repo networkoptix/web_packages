@@ -1,7 +1,7 @@
 import { NgModule }                          from '@angular/core';
 import { CommonModule }                      from '@angular/common';
 import { BrowserModule }                     from '@angular/platform-browser';
-import { downgradeComponent, UpgradeModule } from '@angular/upgrade/static';
+import { UpgradeModule } from '@angular/upgrade/static';
 import { RouterModule, Routes }              from '@angular/router';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -58,8 +58,3 @@ const appRoutes: Routes = [
 })
 export class NxSettingsModule {
 }
-
-declare var angular: angular.IAngularStatic;
-angular
-        .module('cloudApp.directives')
-        .directive('nxSystemSettingsComponent', downgradeComponent({ component: NxSystemSettingsComponent }) as angular.IDirectiveFactory);

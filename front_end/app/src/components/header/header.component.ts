@@ -1,14 +1,17 @@
-import { Component, Inject, OnInit, Renderer2 } from '@angular/core';
+import {
+    Component, Inject, OnInit,
+    Renderer2
+}                            from '@angular/core';
 import {
     ActivatedRoute, NavigationEnd, Event,
     Router, RoutesRecognized
-}                                               from '@angular/router';
-import { DOCUMENT, Location }                   from '@angular/common';
-import { NxConfigService }                      from '../../services/nx-config';
-import { NxAppStateService }                    from '../../services/nx-app-state.service';
-import { NxAccountService }                     from '../../services/account.service';
-import { NxDialogsService }                     from '../../dialogs/dialogs.service';
-import { NxSystemsService }                     from '../../services/systems.service';
+}                            from '@angular/router';
+import { NxConfigService }   from '../../services/nx-config';
+import { NxAppStateService } from '../../services/nx-app-state.service';
+import { NxAccountService }  from '../../services/account.service';
+import { NxDialogsService }  from '../../dialogs/dialogs.service';
+import { NxSystemsService }  from '../../services/systems.service';
+import { WINDOW }            from '../../services/window-provider';
 
 @Component({
     selector: 'nx-header',
@@ -27,12 +30,11 @@ import { NxSystemsService }                     from '../../services/systems.ser
     inline: any;
     viewHeader: boolean;
     systemCounter: number;
-    location: any;
 
-    constructor(private renderer: Renderer2,
+    constructor(@Inject(WINDOW) private window: Window,
+                private renderer: Renderer2,
                 private _config: NxConfigService,
                 private appState: NxAppStateService,
-                location: Location,
                 private route: ActivatedRoute,
                 private systemsService: NxSystemsService,
                 private dialogs: NxDialogsService,
@@ -40,25 +42,22 @@ import { NxSystemsService }                     from '../../services/systems.ser
                 private router: Router,
     ) {
         this.CONFIG = this._config.getConfig();
-        this.location = location;
     }
 
     private isActive(val) {
-        const currentPath = this.location.path();
-        return currentPath.indexOf(val) >= 0;
+        return this.window.location.pathname.indexOf(val) >= 0;
     }
 
     ngOnInit() {
         // TODO: root route is maintained by AJS - replace this once we get rid of it.
-        setTimeout(() => {
-            this.inline = this.location.path().indexOf('inline') > 0;
-        });
+        this.inline = this.window.location.search.indexOf('inline') > 0;
         // this.route.queryParams.subscribe(params => {
         //     this.inline = params['inline'] !== 'undefined';
         // });
 
         this.viewHeader = this.CONFIG.showHeaderAndFooter;
         this.active = {};
+        this.updateActive();
 
         this.systemsService.forceUpdateSystemsAsPromise().then(() => this.updateActive());
 
@@ -106,7 +105,7 @@ import { NxSystemsService }                     from '../../services/systems.ser
     }
 
     login () {
-        const url = this.location.path();
+        const url = this.window.location.pathname;
         const redirect = this.CONFIG.redirectPaths.some((path) => url.indexOf(path) > -1);
         this.dialogs.login(this.accountService, !redirect);
     }

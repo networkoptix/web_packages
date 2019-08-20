@@ -57,7 +57,8 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
         this.location = location;
         this.canViewRelease = false;
         this.noteTypes = [];
-        this.CONFIG = configService.getConfig();
+        this.CONFIG = this.configService.getConfig();
+        this.LANG = this.language.getTranslations();
     }
 
     private getAvailableDownloadTypes(data) {
@@ -114,8 +115,6 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.LANG = this.language.getTranslations();
-
         this.sub = this.route.params.subscribe(params => {
             // this.build = params['build'];
 
@@ -126,31 +125,23 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
                 this.section = this.routeParam;
             }
 
-            this.accountService
-                .requireLogin()
-                .then(result => {
-                    if (!result) {
-                        this.document.location.href = this.CONFIG.redirect404;
-                        return;
-                    }
+            if (!this.CONFIG.publicReleases) {
+                this.accountService
+                    .get()
+                    .then(account => {
+                        this.canViewRelease = account && (account.is_superuser || account.permissions.indexOf(this.CONFIG.permissions.canViewRelease) > -1);
 
-                    if (!this.CONFIG.publicReleases) {
-                        this.accountService
-                            .get()
-                            .then(result => {
-                                this.canViewRelease = result.is_superuser || result.permissions.indexOf(this.CONFIG.permissions.canViewRelease) > -1;
-                                if (this.canViewRelease) {
-                                    this.getData();
-                                } else {
-                                    this.document.location.href = this.CONFIG.redirect404;
-                                    return;
-                                }
-                            });
-                    } else {
-                        this.canViewRelease = true;
-                        this.getData();
-                    }
-                });
+                        if (this.canViewRelease) {
+                            this.getData();
+                        } else {
+                            this.document.location.href = this.CONFIG.redirect404;
+                            return;
+                        }
+                    });
+            } else {
+                this.canViewRelease = true;
+                this.getData();
+            }
         });
     }
 

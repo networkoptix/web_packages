@@ -38,6 +38,7 @@ import { NxClientButtonComponent }   from './open-client-button/client-button.co
 import { NxSwitchComponent }         from './switch/switch.component';
 import { ToastsContainer }           from './toast/toast.component';
 import { NxHeaderComponent }         from './header/header.component';
+import { NxNavLocationDropdown }     from './dropdowns/nav-location/nav.component';
 
 @NgModule({
     imports: [
@@ -54,6 +55,7 @@ import { NxHeaderComponent }         from './header/header.component';
         NxLanguageDropdown,
         NxAccountSettingsDropdown,
         NxActiveSystemDropdown,
+        NxNavLocationDropdown,
         NxSystemsDropdown,
         NxPermissionsDropdown,
         NxMultiSelectDropdown,
@@ -85,6 +87,7 @@ import { NxHeaderComponent }         from './header/header.component';
         NxLanguageDropdown,
         NxAccountSettingsDropdown,
         NxActiveSystemDropdown,
+        NxNavLocationDropdown,
         NxSystemsDropdown,
         NxPermissionsDropdown,
         NxMultiSelectDropdown,
@@ -141,6 +144,7 @@ import { NxHeaderComponent }         from './header/header.component';
         NxLanguageDropdown,
         NxAccountSettingsDropdown,
         NxActiveSystemDropdown,
+        NxNavLocationDropdown,
         NxSystemsDropdown,
         NxPermissionsDropdown,
         NxMultiSelectDropdown,

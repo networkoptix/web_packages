@@ -70,7 +70,15 @@ import * as angular from 'angular';
 
         return {
             checkResponseHasError: function (data) {
-                if (data && data.data && data.data.resultCode && data.data.resultCode != CONFIG.responseOk) {
+                var result = false;
+                if (data && data.resultCode) {
+                    result = data.resultCode;
+                }
+                if (data.data && data.data.resultCode) {
+                    result = data.data.resultCode;
+                }
+
+                if (result !== CONFIG.responseOk) {
                     return data;
                 }
                 return false;
