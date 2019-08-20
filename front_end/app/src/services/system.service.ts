@@ -185,28 +185,30 @@ export class NxSystem extends System implements OnDestroy {
     }
 
     getInfoAndPermissions() {
-        return this.systemsService.getSystemAsPromise(this.id).then((systemInfo: System) => {
-            const error = this.cloudApi.checkResponseHasError(systemInfo);
-            if (error) {
-                return Promise.reject(error);
-            }
+        return this.systemsService
+                   .getSystemAsPromise(this.id)
+                   .then((response: any) => {
+                       const error = this.cloudApi.checkResponseHasError(response);
+                       if (error) {
+                           return Promise.reject(error);
+                       }
 
-            if (!systemInfo) {
-                return Promise.reject({ data: { resultCode: 'forbidden' } });
-            }
-            if (this.info) {
-                _.extend(this.info, systemInfo); // Update
-            } else {
-                this.info = systemInfo;
-            }
-            this.isOnline = this.info.stateOfHealth === this.CONFIG.systemStatuses.onlineStatus;
-            this.isMine = this.info.ownerAccountEmail === this.currentUserEmail;
-            this.canMerge = this.isMine && (this.info.capabilities && this.info.capabilities.indexOf(this.CONFIG.systemCapabilities.cloudMerge) > -1);
-            this.mergeInfo = systemInfo.mergeInfo;
+                       if (!response) {
+                           return Promise.reject({ data: { resultCode: 'forbidden' } });
+                       }
+                       if (this.info) {
+                           _.extend(this.info, response); // Update
+                       } else {
+                           this.info = response;
+                       }
+                       this.isOnline = this.info.stateOfHealth === this.CONFIG.systemStatuses.onlineStatus;
+                       this.isMine = this.info.ownerAccountEmail === this.currentUserEmail;
+                       this.canMerge = this.isMine && (this.info.capabilities && this.info.capabilities.indexOf(this.CONFIG.systemCapabilities.cloudMerge) > -1);
+                       this.mergeInfo = response.mergeInfo;
 
-            this.checkPermissions();
-            return this.info;
-        });
+                       this.checkPermissions();
+                       return this.info;
+                   });
     }
 
     getInfo(force?) {
