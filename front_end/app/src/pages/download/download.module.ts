@@ -37,7 +37,7 @@ export class OsResolver implements Resolve<any> {
     }
 
     resolve() {
-        this.platform = this.platformMatch[this.deviceInfo.os.toLowerCase()];
+        this.platform = this.platformMatch[this.deviceInfo.os.toLowerCase()].toLowerCase();
         if (this.platform) {
             this.router.navigate(['/download/' + this.platform]);
             return empty;
@@ -64,10 +64,10 @@ const appRoutes: Routes = [
         TranslateModule,
         ComponentsModule,
 
-        // RouterModule.forChild(appRoutes)
+        RouterModule.forChild(appRoutes)
     ],
     providers: [
-        // OsResolver
+        OsResolver
     ],
     declarations: [
         DownloadComponent,

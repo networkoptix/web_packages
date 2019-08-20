@@ -1,15 +1,18 @@
 import {
     Component, OnInit, OnDestroy,
-    ViewChild, Inject, Input
-}                                       from '@angular/core';
-import { ActivatedRoute, Router }       from '@angular/router';
-import { Title }                        from '@angular/platform-browser';
-import { Location }                     from '@angular/common';
-import { NgbTabChangeEvent, NgbTabset } from '@ng-bootstrap/ng-bootstrap';
-import { DeviceDetectorService }        from 'ngx-device-detector';
-import { NxConfigService }              from '../../services/nx-config';
-import { NxLanguageProviderService }    from '../../services/nx-language-provider';
-import { NxAccountService }             from '../../services/account.service';
+    ViewChild, Inject, Input, PLATFORM_ID
+}                                                from '@angular/core';
+import { ActivatedRoute, ActivationEnd, Router } from '@angular/router';
+import { Title }                                 from '@angular/platform-browser';
+import { isPlatformBrowser, Location }           from '@angular/common';
+import { filter }                                from 'rxjs/operators';
+import { NgbTabChangeEvent, NgbTabset }          from '@ng-bootstrap/ng-bootstrap';
+import { DeviceDetectorService }                 from 'ngx-device-detector';
+import { NxConfigService }                       from '../../services/nx-config';
+import { NxLanguageProviderService }             from '../../services/nx-language-provider';
+import { NxAccountService }                      from '../../services/account.service';
+import { NxCloudApiService }                     from '../../services/nx-cloud-api';
+import { NxUriService }                          from '../../services/uri.service';
 
 @Component({
     selector   : 'download-component',
@@ -36,16 +39,14 @@ export class DownloadComponent implements OnInit, OnDestroy {
     tabsVisible: boolean;
     sortedPlatforms: any;
 
-    location: Location;
-
-    @ViewChild('tabs', { static: true })
+    @ViewChild('tabs', { static: false })
     public tabs: NgbTabset;
 
     // TODO: Fix arm supported. It says the same thing as linux
 
     private setupDefaults() {
-
         this.CONFIG = this.configService.getConfig();
+        this.LANG = this.language.getTranslations();
 
         this.canViewDownloads = false;
         this.tabsVisible = false;
@@ -62,47 +63,53 @@ export class DownloadComponent implements OnInit, OnDestroy {
         this.platformMatch = {
             unix   : 'Linux',
             linux  : 'Linux',
-            mac  : 'MacOS',
+            mac    : 'MacOS',
             windows: 'Windows',
             arm    : 'Arm',
             sdk    : 'SDK'
         };
     }
 
-    constructor(@Inject('cloudApiService') private cloudApi: any,
+    constructor(private cloudApi: NxCloudApiService,
                 private accountService: NxAccountService,
-                @Inject('locationProxyService') private locationProxy: any,
-                // @Inject(DOCUMENT) private document: Document,
                 private configService: NxConfigService,
                 private deviceService: DeviceDetectorService,
                 private route: ActivatedRoute,
                 private router: Router,
                 private titleService: Title,
                 private language: NxLanguageProviderService,
-                location: Location) {
-
-        this.location = location;
+                private uriService: NxUriService,
+                private location: Location,
+                @Inject(PLATFORM_ID) private platformId: object,
+    ) {
         this.setupDefaults();
+
+        if (isPlatformBrowser(this.platformId)) {
+            this.router.events.pipe(
+                    filter(event => event instanceof ActivationEnd)
+            ).subscribe((event: ActivationEnd) => {
+                if (this.tabs && event.snapshot.params.platform) {
+                    this.tabs.select(event.snapshot.params.platform);
+                }
+            });
+        }
     }
 
     private detectOS(): string {
-        return this.platformMatch[this.deviceService.getDeviceInfo().os];
+        return this.platformMatch[this.deviceService.getDeviceInfo().os.toLowerCase()];
     }
 
     public beforeChange($event: NgbTabChangeEvent) {
         this.setTitle($event.nextId);
-        this.locationProxy.path('/download/' + $event.nextId, false);
+        this.uriService.updateURI('/download/' + $event.nextId, {});
     }
 
     private getDownloads() {
         // TODO: Commented until we ged rid of AJS
-        // this.routeData = this.route.snapshot.data;
+        this.routeData = this.route.snapshot.data;
 
         this.sub = this.route.params.subscribe(params => {
-            // TODO: Commented until we ged rid of AJS
-            // this.platform = params['platform'];
-            this.routeParamPlatform = this.routeParamPlatform && this.routeParamPlatform.toLowerCase();
-            this.platform = (this.routeParamPlatform in this.platformMatch ? this.platformMatch[this.routeParamPlatform] : this.detectOS()).toLowerCase();
+            this.platform = params.platform;
 
             // TODO: Commented until we ged rid of AJS
             // this.activeOs = this.platform || this.platformMatch[this.routeData.platform.os];
@@ -120,8 +127,8 @@ export class DownloadComponent implements OnInit, OnDestroy {
 
         this.cloudApi
             .getDownloads()
-            .then(data => {
-                this.downloadsData = data.data;
+            .then((response: any) => {
+                this.downloadsData = response;
                 // Sorts platforms based on order defined in nx-config service
                 Object.keys(this.CONFIG.downloads.groups).forEach((key) => {
                     const checkPlatform = this.CONFIG.downloads.groups[key];
@@ -159,7 +166,7 @@ export class DownloadComponent implements OnInit, OnDestroy {
                 setTimeout(() => {
                     this.tabsVisible = true;
                     if (this.tabs) {
-                        this.tabs.select(this.platform);
+                        this.tabs.select(this.platform.toLowerCase());
                     }
                 });
             });
@@ -176,14 +183,13 @@ export class DownloadComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.LANG = this.language.getTranslations();
-
         this.accountService
             .get()
-            .then(result => {
+            .then(account => {
                 this.canSeeHistory = (this.CONFIG.publicReleases ||
-                    result.is_superuser ||
-                    result.permissions.indexOf(this.CONFIG.permissions.canViewRelease) > -1);
+                        account &&
+                        (account.is_superuser ||
+                        account.permissions.indexOf(this.CONFIG.permissions.canViewRelease) > -1));
             });
 
         if (!this.CONFIG.publicDownloads) {
