@@ -21,6 +21,13 @@ export class NxCloudApiService {
         return false;
     }
 
+    disconnect(systemId, password) {
+        return this.http.post(this.CONFIG.apiBase + '/systems/disconnect', {
+            system_id: systemId,
+            password
+        });
+    }
+
     getCommonPasswords(): Observable<any> {
         return this.http.get('/static/scripts/commonPasswordsList.json');
     }
@@ -51,6 +58,15 @@ export class NxCloudApiService {
     registerUser(email, password, firstName, lastName, subscribe, code): Observable<any> {
         return this.http.post(this.CONFIG.apiBase + '/account/register',
                 { email, password, first_name : firstName, last_name : lastName, subscribe, code });
+    }
+
+    renameSystem(systemId, systemName) {
+        return this.http.post(this.CONFIG.apiBase + '/systems/' + systemId + '/name', {
+            name: systemName
+        }).toPromise().then((result) => {
+            this.systems('clearCache');
+            return result;
+        });
     }
 
     systems (systemId?: string): Observable<any> {
