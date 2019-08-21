@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { NxLanguageProviderService } from './nx-language-provider';
-import { NxAccountService } from './account.service';
 import { NxToastService } from '../dialogs/toast.service';
 import { NxCloudApiService } from './nx-cloud-api';
 
@@ -17,7 +16,6 @@ interface ProcessSettings {
 
 class Process {
     LANG: any;
-    accountService: any;
     cloudApiService: any;
     toastService: any;
 
@@ -38,9 +36,8 @@ class Process {
     processHandler: any;
 
 
-    constructor(LANG, accountService, cloudApiService, toastService, caller, settings) {
+    constructor(LANG, cloudApiService, toastService, caller, settings) {
         this.LANG = LANG;
-        this.accountService = accountService;
         this.cloudApiService = cloudApiService;
         this.toastService = toastService;
         this.init(caller, settings);
@@ -60,7 +57,7 @@ class Process {
          */
         if (settings) {
             if (settings.errorPrefix) {
-                settings.errorPrefix = `(${settings.errorPrefix}: )`;
+                settings.errorPrefix = `(${settings.errorPrefix}): `;
             }
             this.settings = {... this.settings, ... settings};
         }
@@ -73,7 +70,7 @@ class Process {
         this.success = false;
         this.finished = false;
 
-        this.deferredPromise = this.createDeferedPromise();
+        this.deferredPromise = this.createDeferredPromise();
         this.deferredPromise.promise.then(this.successHandler, this.errorHandler, this.processHandler);
         return this.caller().then((data) => {
             this.processing = false;
@@ -109,7 +106,7 @@ class Process {
         return this;
     }
 
-    private createDeferedPromise() {
+    private createDeferredPromise() {
         return (() => {
             let resolve;
             let reject;
@@ -126,7 +123,8 @@ class Process {
             };
         })();
     }
-    private formatError(error, errorCodes) {
+
+    private formatError({error}, errorCodes) {
         if (!error || !error.resultCode) {
             return this.LANG.errorCodes.unknownError;
         }
@@ -156,7 +154,6 @@ class Process {
                 // we need to handle this like user was not authorised
                 data.data.resultCode === 'notAuthorized' ||
                 data.data.resultCode === 'forbidden' && this.settings.logoutForbidden)) {
-            this.accountService.logout();
             this.deferredPromise.reject(data);
             return;
         }
@@ -168,7 +165,7 @@ class Process {
             // nxDialogsService.notify(errorPrefix + this.errorMessage, 'danger', holdAlerts);
             const message = `${this.settings.errorPrefix} ${this.settings.errorMessage}`;
             const options = {
-                className: 'danger',
+                classname: 'danger',
                 autoHide: !this.settings.holdAlerts,
             };
             this.toastService.show(message, options);
@@ -184,13 +181,12 @@ class Process {
 export class NxProcessService {
     LANG: any;
     constructor(private languageService: NxLanguageProviderService,
-                private accountService: NxAccountService,
                 private cloudApiService: NxCloudApiService,
                 private toastService: NxToastService) {
-        this.LANG = this.languageService.getLang();
+        this.LANG = this.languageService.getTranslations();
     }
 
     createProcess(caller, settings?) {
-        return new Process(this.LANG, this.accountService, this.cloudApiService, this.toastService, caller, settings);
+        return new Process(this.LANG,  this.cloudApiService, this.toastService, caller, settings);
     }
 }

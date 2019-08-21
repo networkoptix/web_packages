@@ -4,6 +4,8 @@ import {
 }                                    from '@angular/core';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import {NxProcessService} from "../../services/process.service";
+import {NxCloudApiService} from "../../services/nx-cloud-api";
 
 @Component({
     selector: 'nx-modal-disconnect-content',
@@ -26,8 +28,8 @@ export class DisconnectModalContent {
 
     constructor(private activeModal: NgbActiveModal,
                 private language: NxLanguageProviderService,
-                @Inject('process') private process: any,
-                @Inject('cloudApiService') private cloudApi: any,
+                private processService: NxProcessService,
+                private cloudApiService: NxCloudApiService,
                 private renderer: Renderer2,
     ) {
         this.LANG = this.language.getTranslations();
@@ -36,11 +38,11 @@ export class DisconnectModalContent {
     ngOnInit() {
         this.auth.password = '';
 
-        this.disconnect = this.process.init(() => {
-            this.disconnectForm.controls.password.setErrors(null);
+        this.disconnect = this.processService.createProcess(() => {
+            this.disconnectForm.controls.password.setErrors(undefined);
             this.wrongPassword = false;
 
-            return this.cloudApi.disconnect(this.systemId, this.auth.password);
+            return this.cloudApiService.disconnect(this.systemId, this.auth.password).toPromise();
         }, {
             ignoreUnauthorized: true,
             errorCodes: {
@@ -49,12 +51,12 @@ export class DisconnectModalContent {
                     this.auth.password = '';
 
                     this.renderer.selectRootElement('#password').focus();
-
                 },
             },
             successMessage: this.LANG.system.successDisconnected,
             errorPrefix: this.LANG.errorCodes.cantDisconnectSystemPrefix
-        }).then(() => {
+        });
+        this.disconnect.then(() => {
             this.activeModal.close(true);
         });
     }
