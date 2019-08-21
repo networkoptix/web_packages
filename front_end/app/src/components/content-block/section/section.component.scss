@@ -7,8 +7,10 @@
         padding    : 1rem;
         
         &-subheader {
-            height     : 2rem;
-            margin-top : .5rem;
+            height      : 2rem;
+            margin-top  : .5rem;
+            display     : flex;
+            align-items : center;
             
             h3 {
                 margin : 0;
@@ -29,6 +31,15 @@
         
         &-spacer {
             margin-top : 1rem;
+        }
+        
+        &-heading {
+            margin-bottom: .5rem !important;
+            
+            h4 {
+                margin      : 0;
+                line-height : 24px;
+            }
         }
         
         &.section {

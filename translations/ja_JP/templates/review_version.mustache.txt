@@ -1,10 +1,10 @@
-There is a new version for {{ message.product }}({{message.product_type}}) to review.
+{{ message.product }} （{{message.product_type}}） の新しいバージョンをレビューできます。
 
-リンクをクリックして、{{ message.product }}のドラフト{{ message.id }}を確認してください
+{{ message.product }}のドラフト {{ message.id }} を確認するにはリンクをクリックしてください
 
-Link to review: {{ config.portal_url }}/admin/cms/productcustomizationreview/{{ message.id }}/change/
+レビューへのリンク： {{ config.portal_url }}/admin/cms/productcustomizationreview/{{ message.id }}/change/
 
 このページでは
-1) 最近の変更を表示するプレビューを作成します
-2) このバージョンを公開すると、すべてのコンテンツが更新されます
-3) レコードの編集ボタンをクリックしてコンテキストを編集します これらの変更を確認するには、新しいバージョンを作成する必要があります
+1) 最新の変更を表示するプレビューを作成します。
+2) このバージョンを公開すると、すべてのコンテンツが更新されます。
+3) レコード編集ボタンをクリックしてコンテキストを編集します これらの変更を確認するには、新しいバージョンを作成する必要があります。

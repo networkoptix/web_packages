@@ -12,6 +12,7 @@ export class NxProcessButtonComponent implements OnInit {
     @Input() buttonDisabled: boolean;
     @Input() actionType: any;
     @Input() form: any;
+    @Input() customClass: any = '';
 
     buttonClass: string;
 
@@ -26,17 +27,21 @@ export class NxProcessButtonComponent implements OnInit {
     }
 
     touchForm() {
-        for (let ctrl in this.form.form.controls) {
-            this.form.form.get(ctrl).markAsTouched();
+        for (const ctrl in this.form.form.controls) {
+            if (this.form.form.controls.hasOwnProperty(ctrl)) {
+                this.form.form.get(ctrl).markAsTouched();
+            }
         }
     }
 
     setFocusToInvalid() {
-        for(let ctrl in this.form.form.controls) {
-            if (this.form.form.get(ctrl).invalid) {
-                // TODO : find how to set element's focus
-                // control.focused = true;
-                return;
+        for (const ctrl in this.form.form.controls) {
+            if (this.form.form.controls.hasOwnProperty(ctrl)) {
+                if (this.form.form.get(ctrl).invalid) {
+                    // TODO : find how to set element's focus
+                    // control.focused = true;
+                    return;
+                }
             }
         }
     }

@@ -6,14 +6,16 @@ import {
 import { isPlatformBrowser, Location }           from '@angular/common';
 import { BreakpointObserver, BreakpointState }   from '@angular/cdk/layout';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { TranslateService }                      from '@ngx-translate/core';
-import { CamerasService }          from '../../services/cameras.service';
-import { IpvdSearchService }       from './ipvd-search.service';
-import { NxModalMessageComponent } from '../../dialogs/message/message.component';
-import { NxConfigService }         from '../../services/nx-config';
-import { NxUriService }            from '../../services/uri.service';
-import { NxUtilsService }          from '../../services/utils.service';
-import { Title }                   from '@angular/platform-browser';
+import { CamerasService }                         from '../../services/cameras.service';
+import { IpvdSearchService }                      from './ipvd-search.service';
+import { MessageParams }             from '../../dialogs/message/message.component';
+import { NxConfigService }           from '../../services/nx-config';
+import { NxUriService }              from '../../services/uri.service';
+import { NxUtilsService }            from '../../services/utils.service';
+import { Title }                     from '@angular/platform-browser';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxDialogsService }          from '../../dialogs/dialogs.service';
+import { NxAccountService }          from '../../services/account.service';
 
 interface Params {
     [key: string]: any;
@@ -27,16 +29,19 @@ interface Params {
 })
 
 export class NxIpvdComponent implements OnInit {
-    lang: any = {};
+    LANG: any = {};
     CONFIG: any = {};
+
     placeholder: string;
     data: any;
-    company: any;
+    company: string;
+    vmsName: string;
     vendors: any = [];
     resolution: string;
     itemsPerPage: number;
     query: string;
     cameras: any;
+    analytics: any;
     activeCamera: any;
     showAll: boolean;
     hardwareTypes: any[];
@@ -50,8 +55,10 @@ export class NxIpvdComponent implements OnInit {
     noResult: boolean;
     hasNoSearch: boolean;
     debug: any;
+    beta: any;
     uriPath: string;
     breakpoint: string;
+    showAnalytics: boolean;
 
 
     private setupDefaults() {
@@ -59,7 +66,7 @@ export class NxIpvdComponent implements OnInit {
             'vendor', 'model', 'hardwareType',
             'maxResolution', 'maxFps', 'primaryCodec', 'isAudioSupported',
             'isTwAudioSupported', 'isPtzSupported', 'isAptzSupported',
-            'isFisheye', 'isMdSupported', 'isIoSupported', 'count', 'resolutionArea'
+            'isFisheye', 'isMdSupported', 'isIoSupported', 'isAnalyticsSupported', 'count', 'resolutionArea'
         ];
 
         this.breakpoint = '(max-width: 767px)';
@@ -92,19 +99,20 @@ export class NxIpvdComponent implements OnInit {
     }
 
     constructor(private configService: NxConfigService,
-                private translate: TranslateService,
+                private language: NxLanguageProviderService,
                 private cameraService: CamerasService,
                 private cameraSearchService: IpvdSearchService,
                 // TODO: Use dialog service when it is not being downgraded
-                private messageDialog: NxModalMessageComponent,
+                private dialogs: NxDialogsService,
                 private uri: NxUriService,
                 private route: ActivatedRoute,
                 private location: Location,
                 private breakpointObserver: BreakpointObserver,
                 private router: Router,
                 private title: Title,
-                @Inject(PLATFORM_ID) private platformId: object) {
-
+                private accountService: NxAccountService,
+                @Inject(PLATFORM_ID) private platformId: object,
+    ) {
         this.setupDefaults();
 
         if (isPlatformBrowser(this.platformId)) {
@@ -132,30 +140,31 @@ export class NxIpvdComponent implements OnInit {
             .getURI()
             .subscribe(params => {
                 this.params = params;
-                this.debug = params.debug === '' || false;
-                if (Object.keys(this.params).length !== 0) {
-                    this.hasNoSearch = false;
+                this.debug = (params.debug !== undefined);
+                this.beta = (params.beta !== undefined);
+
+                const numParams = Object.keys(this.params).length;
+                if (numParams !== 0) {
+                    this.hasNoSearch = (numParams === 1 && (this.params.debug || this.params.beta));
+                } else {
+                    this.hasNoSearch = true;
                 }
             });
 
-        setTimeout(() => {
-            this.translate
-                .getTranslation(this.translate.currentLang)
-                .subscribe((lang) => {
-                    this.lang = lang;
-                    this.title.setTitle(this.lang.pageTitles.supportedDevices);
 
-                    this.company = this.CONFIG.companyName;
-                    this.placeholder = this.lang.search.search_ipvd;
+        this.LANG = this.language.getTranslations();
+        this.title.setTitle(this.LANG.pageTitles.supportedDevices);
 
-                    // add hardware types and tags
-                    this.addFilterTags();
-                    this.addFilterTypes();
-                    this.addFilterResolutions();
+        this.company = this.CONFIG.companyName;
+        this.vmsName = this.CONFIG.vmsName;
+        this.placeholder = this.LANG.search.search_ipvd;
 
-                    this.activate();
-                });
-        });
+        // add hardware types and tags
+        this.addFilterTags();
+        this.addFilterTypes();
+        this.addFilterResolutions();
+
+        this.activate();
 
         this.breakpointObserver
             .observe([this.breakpoint])
@@ -165,16 +174,29 @@ export class NxIpvdComponent implements OnInit {
     }
 
     addFilterResolutions() {
-        this.resolutions = JSON.parse(this.CONFIG.ipvd.supportedResolutions);
+        this.resolutions = this.CONFIG.ipvd.supportedResolutions;
 
-        this.filterModel.selects = [
-            {
-                id      : 'resolution',
-                label   : this.lang.search.minResolution,
-                items   : this.resolutions,
-                selected: this.resolutions[0]
-            }
-        ];
+        this.filterModel.selects.push(
+                {
+                    id      : 'resolution',
+                    label   : this.LANG.search.minResolution,
+                    items   : this.resolutions,
+                    selected: this.resolutions[0]
+                });
+    }
+
+    addAnalyticsEvents() {
+        if (this.showAnalytics && this.analytics) {
+            this.filterModel.multiselects.push(
+                    {
+                        id                 : 'analytics',
+                        label              : this.LANG.search.analytics,
+                        searchLabel        : this.LANG.search.analyticsSelected,
+                        searchLabelSingular: '',
+                        items              : this.analytics,
+                        selected           : []
+                    });
+        }
     }
 
     setActiveCamera() {
@@ -186,21 +208,26 @@ export class NxIpvdComponent implements OnInit {
     }
 
     addFilterTags() {
-        this.filterModel.tags = JSON.parse(this.CONFIG.ipvd.searchTags);
-        this.filterModel.tags.forEach(tag => tag.label = this.lang.ipvd[tag.id]);
+        this.filterModel.tags = this.CONFIG.ipvd.searchTags;
+
+        if (!this.showAnalytics) {
+            this.filterModel.tags = this.filterModel.tags.filter((tag) => tag.id !== 'isAnalyticsSupported');
+        }
+
+        this.filterModel.tags.forEach(tag => tag.label = this.LANG.ipvd[tag.id]);
     }
 
     addFilterTypes() {
-        this.hardwareTypes = JSON.parse(this.CONFIG.ipvd.supportedHardwareTypes);
+        this.hardwareTypes = this.CONFIG.ipvd.supportedHardwareTypes;
         this.hardwareTypes.forEach(type => {
-            type.label = this.lang.ipvd[type.id];
+            type.label = this.LANG.ipvd[type.id];
         });
 
         this.filterModel.multiselects = [
             {
                 id      : 'hardwareTypes',
-                label   : this.lang.search.hardwareTypes,
-                singular: this.lang.search.hardwareType,
+                label   : this.LANG.search.hardwareTypes,
+                singular: this.LANG.search.hardwareType,
                 items   : this.hardwareTypes,
                 selected: []
             }
@@ -223,6 +250,13 @@ export class NxIpvdComponent implements OnInit {
             .getIPVD()
             .subscribe(data => {
                 this.cameras = data.cameras;
+
+                this.analytics = data.analytics;
+
+                this.showAnalytics = this.CONFIG.ipvd.showAnalyticsEvents || this.debug || this.beta;
+                this.addAnalyticsEvents();
+                this.addFilterTags();
+
                 this.vendors = data.vendors;
                 this.vendors.sort(NxUtilsService.byParam((elm) => {
                     return elm.name.toLowerCase();
@@ -233,8 +267,8 @@ export class NxIpvdComponent implements OnInit {
                     .multiselects.unshift(
                         {
                             id      : 'vendors',
-                            label   : this.lang.search.vendors,
-                            singular: this.lang.search.vendor,
+                            label   : this.LANG.search.vendors,
+                            singular: this.LANG.search.vendor,
                             items   : this.vendors.map(v => (
                                     { id: v.name, label: v.name }
                             )),
@@ -308,7 +342,12 @@ export class NxIpvdComponent implements OnInit {
                 this.noResult = false;
                 this.camerasTable = [];
                 this.resetActiveCamera();
-                this.uri.resetURI(this.uriPath);
+
+                const queryParams: Params = {};
+                // we need these to be only defined or undefined
+                queryParams.debug = (this.debug) ? true : undefined;
+                queryParams.beta = (this.beta) ? true : undefined;
+                this.uri.resetURI(this.uriPath, queryParams);
             }
         }
     }
@@ -348,34 +387,6 @@ export class NxIpvdComponent implements OnInit {
                 this.mobileDetailMode = true;
             }
 
-            if (typeof this.activeCamera.firmwares === 'string') {
-                const firmwares = JSON.parse(this.activeCamera.firmwares);
-                let firmwaresArray = [];
-
-                let maxFirmwareCount = 0,
-                    totalCameraCount = 0;
-
-                Object.keys(firmwares).forEach(key => {
-                    const count = firmwares[key];
-                    firmwaresArray.push({ name: key, count });
-
-                    totalCameraCount += count;
-                    if (count > maxFirmwareCount) {
-                        maxFirmwareCount = count;
-                    }
-                });
-
-                firmwaresArray = firmwaresArray.sort((a, b) => {
-                    return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
-                });
-
-                firmwaresArray.reverse();
-
-                this.activeCamera.maxFirmwareCount = maxFirmwareCount;
-                this.activeCamera.totalCameraCount = totalCameraCount;
-                this.activeCamera.firmwares = firmwaresArray;
-            }
-
             this.toggleCamview = true;
         }, 10);
     }
@@ -383,9 +394,13 @@ export class NxIpvdComponent implements OnInit {
 
     openFeedback(param) {
         const type = (param === 'device') ? this.CONFIG.messageType.ipvd_device : this.CONFIG.messageType.ipvd_page;
-        const device = (this.activeCamera) ? this.activeCamera.model : '';
-        this.messageDialog
-            .open(type, device, device)
+        const device: string = (param === 'device' && this.activeCamera) ? this.activeCamera.model : '';
+        const data: MessageParams = {
+            disclaimer: this.LANG.privacyPolicy.ipvd,
+            product: device,
+        };
+        this.dialogs
+            .message(this.accountService, type, data)
             .then(() => {
             });
 

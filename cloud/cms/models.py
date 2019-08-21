@@ -1,10 +1,11 @@
-from __future__ import unicode_literals
 import os
 import re
+import json
 from datetime import datetime
 from distutils.util import strtobool
 from django.db import models
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from jsonfield import JSONField
 from model_utils import Choices
 from django.core.cache import cache, caches
@@ -15,8 +16,48 @@ from django.template.defaultfilters import truncatechars
 from cloud.storage_backend import MediaStorage
 
 
+def create_default_permission_group(product):
+    from django.contrib.auth.models import Permission
+    if not (product.is_cloud_portal or product.is_integration):
+        return None
+
+    if product.is_cloud_portal:
+        group = Group.objects.create(name=f'Portal Manager - {product.name} - {product.id}')
+        permissions = Permission.objects.filter(codename__in=['access_customization', 'change_account',
+                                                              'change_productcustomizationreview',
+                                                              'change_product', 'edit_content',
+                                                              'force_update', 'publish_version'])
+
+        # Bind the Group to the following product_types so that the portal managers can review them
+        product_types = ProductType.objects.filter(name="",
+                                                   type__in=[ProductType.PRODUCT_TYPES.cloud_portal,
+                                                             ProductType.PRODUCT_TYPES.integration])
+        for product_type in product_types:
+            UserGroupsToProductType.objects.create(product_type=product_type, group=group)
+
+    else:
+        group = Group.objects.create(name=f'Developer - {product.name} - {product.id}')
+        permissions = Permission.objects.filter(
+            codename__in=['edit_content', 'change_product', 'change_productcustomizationreview']
+        )
+
+    group.permissions.set(permissions)
+    UserGroupsToProductPermissions.objects.create(product=product, group=group)
+
+    return group
+
+
+def rename_permission_group(group, product):
+    if product.is_cloud_portal:
+        group.name = f'Portal Manager - {product.name} - {product.id}'
+    else:
+        group.name = f'Developer - {product.name} - {product.id}'
+    group.save()
+
+
 def get_cloud_portal_product(customization=settings.CUSTOMIZATION):
     return Product.objects.get(customizations__name__in=[customization],
+                               product_type__name="",
                                product_type__type=ProductType.PRODUCT_TYPES.cloud_portal)
 
 
@@ -44,17 +85,19 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
         force = check_update_cache(customization_name, data['version_id'])[0]
 
     if not data or force:
-        from cms.controllers.filldata import process_context_structure
         customization = Customization.objects.get(name=customization_name)
         custom_config = get_config(customization.name)
 
         footer_items = product.read_global_value('%FOOTER_ITEMS%')
-        if footer_items:
-            for context in Context.objects.filter(is_global=True):
-                footer_items = process_context_structure(product, context, footer_items,
-                                                         None, product.version_id(), False, True)
-
         integration_store_enabled = product.read_global_value("%INTEGRATION_STORE_ENABLED%")
+
+        if footer_items:
+            from cms.controllers.filldata import process_global_contexts
+            global_contexts = Context.objects.filter(is_global=True, product_type=product.product_type)
+            # Replaces cms tags. If you add the key as itself in the global_context_dict it effectively is not replaced
+            footer_items = process_global_contexts(product, footer_items, product.version_id(),
+                                                   False, global_contexts, {"%CLOUD_NAME%": "%CLOUD_NAME%",
+                                                                            "%VMS_NAME%": "%VMS_NAME%"})
 
         data = {
             'version_id': product.version_id(),
@@ -71,6 +114,7 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
                 'smtp_tls': product.read_global_value('%SMTP_TLS%')
             },
             'config': {
+                'available_downloads_platform': product.read_global_value('%AVAILABLE_DOWNLOADS_PLATFORM%'),
                 'cloud_merge': product.read_global_value("%CLOUD_MERGE%"),
                 'copyright_year': product.read_global_value("%COPYRIGHT_YEAR%"),
                 'company_name': product.read_global_value("%COMPANY_NAME%"),
@@ -78,9 +122,11 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
                 'feedback_enabled': product.read_global_value("%FEEDBACK_ENABLED%"),
                 'footer_items': footer_items,
                 'integration_filter_items': product.read_global_value("%INTEGRATION_FILTER_ITEMS%"),
+                'integration_filter_limitation': product.read_global_value("%INTEGRATION_SHOW_FILTER_LIMITATION%"),
                 'integration_store_enabled': integration_store_enabled,
                 'public_downloads': product.read_global_value("%PUBLIC_DOWNLOADS%"),
                 'public_releases': product.read_global_value("%PUBLIC_RELEASE_HISTORY%"),
+                'show_analytics_events': product.read_global_value("%SHOW_ANALYTICS_EVENTS%"),
                 'sort_supported_devices_by_popularity': product.read_global_value(
                     "%SORT_SUPPORTED_DEVICES_BY_POPULARITY%"),
                 'support_link': product.read_global_value("%SUPPORT_LINK%"),
@@ -115,7 +161,7 @@ def slugify(name, lowercase=False):
 def rename_file(instance, filename):
     product_name = slugify(instance.product.name, True)
     structure_name = slugify(instance.data_structure.name, True)
-    file_info = "{}-{}-{}".format(structure_name, instance.id, slugify(filename))
+    file_info = f"{structure_name}-{instance.id}"
     return os.path.join(product_name, file_info, filename)
 
 
@@ -156,10 +202,6 @@ class Customization(models.Model):
     languages = models.ManyToManyField(Language)
     filter_horizontal = ('languages',)
 
-    public_release_history = models.BooleanField(default=False,
-                                                 help_text="""Any user can view the release history page.""")
-    public_downloads = models.BooleanField(default=True, help_text="""Any user can view the downloads page.""")
-    reveal_cloud_merge = models.BooleanField(default=False, help_text="Shows the cloud merge button for all systems.")
     parent = models.ForeignKey('Customization', default=None, null=True, blank=True,
                                related_name='children_customizations',
                                help_text="""Parent is the customization that the current customization depends on.<br>
@@ -204,6 +246,7 @@ class ProductType(models.Model):
     can_preview = models.BooleanField(default=False)
     single_customization = models.BooleanField(default=False)
     type = models.IntegerField(choices=PRODUCT_TYPES, default=PRODUCT_TYPES.cloud_portal)
+    advanced = models.BooleanField(default=True)
 
     def __str__(self):
         if self.name:
@@ -222,6 +265,10 @@ class ProductType(models.Model):
                 return index
         return 0
 
+    def get_customizations(self, product):
+        return self.product_set.exclude(id=product.id).exclude(customizations=None).\
+            values_list('customizations__name', flat=True)
+
 
 class Product(models.Model):
     class Meta:
@@ -232,16 +279,16 @@ class Product(models.Model):
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, null=True,
         blank=True, related_name='created_%(class)s', on_delete=models.CASCADE)
-    contact_email = models.CharField(max_length=255, blank=True, default='')
     customizations = models.ManyToManyField(Customization, default=None, blank=True)
     product_type = models.ForeignKey(ProductType, default=get_integration_type, null=True, on_delete=models.CASCADE)
 
     PREVIEW_STATUS = Choices((0, 'draft', 'draft'), (1, 'review', 'review'))
     preview_status = models.IntegerField(choices=PREVIEW_STATUS, default=PREVIEW_STATUS.draft)
+    primary_group = models.OneToOneField(Group, unique=True, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         if self.product_type and self.is_cloud_portal:
-            return "{} - {}".format(self.name, self.customizations.first())
+            return f"{self.name} - {self.customizations.first()}"
         return self.name
 
     @property
@@ -283,6 +330,11 @@ class Product(models.Model):
         return self.product_type.type == product_type
 
     def version_id(self, customization=settings.CUSTOMIZATION):
+        if self.product_type.single_customization:
+            actual_customization = self.customizations.first()
+            if actual_customization:
+                customization = actual_customization.name
+
         accepted_review = ProductCustomizationReview.objects. \
             filter(customization__name=customization,
                    state=ProductCustomizationReview.REVIEW_STATES.accepted,
@@ -300,20 +352,47 @@ class Product(models.Model):
 
         return data_structure.find_actual_value(product=self, version_id=self.version_id()) if data_structure else None
 
+    def clean(self):
+        if self.product_type.type != ProductType.PRODUCT_TYPES.cloud_portal and \
+                Product.objects.filter(name=self.name, product_type=self.product_type).exclude(pk=self.pk).exists():
+            raise ValidationError({'name': 'Name already exists'})
+
     def save(self, *args, **kwargs):
+        create_group = False
+        update_group = False
+        rename_group = False
         need_update = False
+        orig = None
         if self.pk is None:
+            create_group = True
             need_update = True
         else:
             orig = Product.objects.get(pk=self.pk)
             if self.customizations.exists():
                 need_update = self.preview_status == orig.preview_status
+            if orig.created_by != self.created_by:
+                update_group = True
+            if orig.name != self.name:
+                rename_group = True
 
         super(Product, self).save(*args, **kwargs)
         if need_update and self.is_cloud_portal \
                 and len(self.customizations.all()) == 1:
             cloud_portal_customization_cache(self.customizations.first().name, force=True)  # invalidate cache
             # TODO: need to update all static right here
+
+        if create_group or update_group:
+            if create_group:
+                group = create_default_permission_group(orig or self)
+                self.primary_group = group
+                super(Product, self).save(*args, **kwargs)
+            if self.primary_group and self.created_by:
+                self.primary_group.user_set.add(self.created_by)
+                self.created_by.is_staff = True
+                self.created_by.save()
+
+        if self.primary_group and rename_group:
+            rename_permission_group(self.primary_group, self)
 
 
 class Context(models.Model):
@@ -324,16 +403,15 @@ class Context(models.Model):
             ("edit_content", "Can edit content and send for review"),
         )
         ordering = ['order', 'id']
-    # TODO: Remove this after release of 19.1 - Task: CLOUD-2299
-    product = models.ForeignKey(Product, null=True, on_delete=models.SET_NULL)
     product_type = models.ForeignKey(ProductType, null=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=1024)
-    label = models.CharField(max_length=1024, default="")
+    label = models.CharField(max_length=1024, default="", blank=True)
     description = models.TextField(blank=True, default="")
     translatable = models.BooleanField(default=True)
     is_global = models.BooleanField(default=False)
     hidden = models.BooleanField(default=False)
     order = models.IntegerField(default=100000)
+    deprecated = models.BooleanField(default=False)
 
     file_path = models.CharField(max_length=1024, blank=True, default='')
     url = models.CharField(max_length=1024, blank=True, default='')
@@ -362,6 +440,58 @@ class Context(models.Model):
         return next((context_template.first().template for context_template in contexts if context_template.exists()),
                     None)
 
+    def get_state(self, product):
+        # (State, order) In order of importance. Only update a state if the new state is more important
+        INCOMPLETE = ('Incomplete', 0)
+        DRAFT = ('Draft', 1)
+        IN_REVIEW = ('In review', 2)
+        REJECTED = ('Rejected', 3)
+        PUBLISHED = ('Published', 4)
+
+        reviews = ProductCustomizationReview.objects.filter(version__product=product,
+                                                            customization__name=settings.CUSTOMIZATION)
+        # Starting point so we don't get incorrect status with unpublished assets
+        if reviews.filter(state=ProductCustomizationReview.REVIEW_STATES.accepted).first():
+            state = PUBLISHED
+        elif reviews.filter(state__in=[ProductCustomizationReview.REVIEW_STATES.pending,
+                                       ProductCustomizationReview.REVIEW_STATES.blocked]).first():
+            state = IN_REVIEW
+        elif reviews.filter(state=ProductCustomizationReview.REVIEW_STATES.rejected).first():
+            state = REJECTED
+        else:
+            state = DRAFT
+
+        for datastructure in self.datastructure_set.all():
+            records = datastructure.datarecord_set.filter(product=product)
+            last_record = records.last()
+            last_record_value = last_record.value if last_record else None
+            if datastructure.type in [DataStructure.DATA_TYPES.object,
+                                      DataStructure.DATA_TYPES.array,
+                                      DataStructure.DATA_TYPES.multiselect]:
+                datastructure.default = json.loads(datastructure.default)
+                if last_record_value:
+                    last_record_value = json.loads(last_record_value)
+            if not datastructure.optional and not datastructure.default and \
+                    (not records.exists() or not last_record_value):
+                return INCOMPLETE[0]
+
+            if last_record:
+                if last_record.version:
+                    if state[1] > IN_REVIEW[1]:
+                        review = last_record.version.productcustomizationreview_set.filter(
+                            customization__name=settings.CUSTOMIZATION).first()
+                        if review:
+                            if review.state in [ProductCustomizationReview.REVIEW_STATES.pending,
+                                                ProductCustomizationReview.REVIEW_STATES.blocked]:
+                                state = IN_REVIEW
+                            elif review.state == ProductCustomizationReview.REVIEW_STATES.rejected and \
+                                    state[1] > REJECTED[1]:
+                                state = REJECTED
+                elif state[1] > DRAFT[1]:
+                    state = DRAFT
+
+        return state[0]
+
 
 class ContextTemplate(models.Model):
     class Meta:
@@ -370,7 +500,7 @@ class ContextTemplate(models.Model):
     context = models.ForeignKey(Context, on_delete=models.CASCADE)
     language = models.ForeignKey(Language, null=True, on_delete=models.CASCADE)
     template = models.TextField()
-    skin = models.CharField(max_length=16, default=settings.DEFAULT_SKIN, blank=True)
+    skin = models.CharField(max_length=16, default='', blank=True)
     # Skin is a bit hacky for now:
     # Skin cannot be mentioned in filename
     # Skin is supported only for file contexts
@@ -378,10 +508,10 @@ class ContextTemplate(models.Model):
     def __str__(self):
         if not self.language:
             return self.context.name
+        skin = f"{self.skin}/" if self.skin else ""
         if self.context.file_path:
-            return ('{0}/'.format(self.skin) if self.skin else '') + \
-                   self.context.file_path.replace("{{language}}", self.language.code)
-        return "{0}-{1}{2}".format(self.context.name, '{0}/'.format(self.skin) if self.skin else '', self.language.name)
+            return skin + self.context.file_path.replace("{{language}}", self.language.code)
+        return f"{self.context.name}-{skin}{self.language.name}"
 
 
 class DataStructure(models.Model):
@@ -395,7 +525,7 @@ class DataStructure(models.Model):
         ordering = ['order', 'id']
     context = models.ForeignKey(Context, on_delete=models.CASCADE)
     name = models.CharField(max_length=1024)
-    description = models.TextField()
+    description = models.TextField(blank=True)
     label = models.CharField(max_length=1024, blank=True, default='')
 
     DATA_TYPES = Choices((0, 'text', 'Text'),
@@ -409,10 +539,12 @@ class DataStructure(models.Model):
                          (8, 'external_image', 'External Image'),
                          (9, 'check_box', 'Check Box'),
                          (10, 'object', 'Object'),
-                         (11, 'array', 'Array'))
+                         (11, 'array', 'Array'),
+                         (12, 'multiselect', 'Multiselect'))
 
     type = models.IntegerField(choices=DATA_TYPES, default=DATA_TYPES.text)
     default = models.TextField(default='', blank=True)
+    placeholder = models.TextField(default="", blank=True)
     translatable = models.BooleanField(default=True)
     meta_settings = JSONField(default=dict(),
                               blank=True,
@@ -422,6 +554,7 @@ class DataStructure(models.Model):
     optional = models.BooleanField(default=False)
     public = models.BooleanField(default=True)
     deprecated = models.BooleanField(default=False)
+    protected = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
@@ -481,13 +614,39 @@ class DataStructure(models.Model):
                                                                   DataStructure.DATA_TYPES.image,
                                                                   DataStructure.DATA_TYPES.external_file,
                                                                   DataStructure.DATA_TYPES.external_image,
-                                                                  DataStructure.DATA_TYPES.check_box]):
+                                                                  DataStructure.DATA_TYPES.check_box,
+                                                                  DataStructure.DATA_TYPES.multiselect]):
             content_value = self.default
 
         if self.type == DataStructure.DATA_TYPES.check_box:
-            content_value = strtobool(content_value) == 1
+            content_value = strtobool(content_value) == 1 if content_value else False
+        if self.type in [DataStructure.DATA_TYPES.array, DataStructure.DATA_TYPES.object,
+                         DataStructure.DATA_TYPES.multiselect]:
+            content_value = json.loads(content_value) if content_value else None
+
+            if self.type == DataStructure.DATA_TYPES.multiselect:
+                # If an option has an id, change the value to a dict with the id and the value
+                for choice in self.meta_settings['options']:
+                    if type(choice) == dict:
+                        for i in range(len(content_value)):
+                            if content_value[i] == choice['label']:
+                                content_value[i] = choice
+                                break
 
         return content_value
+
+    def is_protected(self, product):
+        return self.protected and product.version_id() > 0
+
+    @staticmethod
+    def is_file_or_image(data_type):
+        if type(data_type) is not int:
+            data_type = DataStructure.get_type_by_name(data_type)
+        return data_type in [DataStructure.DATA_TYPES.image, DataStructure.DATA_TYPES.file]
+
+    @property
+    def is_image(self):
+        return self.type in [DataStructure.DATA_TYPES.image, DataStructure.DATA_TYPES.external_image]
 
 
 # CMS settings. Release engineer can change that
@@ -505,10 +664,7 @@ class UserGroupsToProductPermissions(models.Model):
         groups = UserGroupsToProductPermissions.objects.filter(product=product,
                                                                group_id__in=user.groups.values_list('id', flat=True))
         if permission:
-            codename = permission
-            if permission.find('.') > -1:
-                # need to remove app_label to get codename
-                codename = permission[permission.find('.')+1:]
+            codename = UserGroupsToProductPermissions.convert_permission_to_codename(permission)
             groups = groups.filter(group__permissions__codename=codename)
         return groups.exists()
 
@@ -527,9 +683,33 @@ class UserGroupsToProductPermissions(models.Model):
         return UserGroupsToProductPermissions.\
             check_customization_permission(user, customization, 'cms.access_customization')
 
+    @staticmethod
+    def convert_permission_to_codename(permission):
+        if permission.find('.') > -1:
+            # need to remove app_label to get codename
+            permission = permission[permission.find('.') + 1:]
+        return permission
+
+
+class UserGroupsToProductType(models.Model):
+    group = models.ForeignKey(Group, on_delete=models.CASCADE)
+    product_type = models.ForeignKey(ProductType, default=None, null=True, on_delete=models.CASCADE)
+
+    @staticmethod
+    def check_product_type(user, product_type, permission):
+        if user.is_superuser:
+            return True
+
+        codename = UserGroupsToProductPermissions.convert_permission_to_codename(permission)
+        product_type_groups = UserGroupsToProductType.objects.\
+            filter(group_id__in=user.groups.values_list('id', flat=True),
+                   group__permissions__codename=codename,
+                   product_type=product_type).values_list('group__id', flat=True)
+
+        return UserGroupsToProductPermissions.objects.filter(group__id__in=product_type_groups).exists()
+
 
 # CMS data. Partners can change that
-
 class ContentVersion(models.Model):
 
     class Meta:
@@ -618,6 +798,9 @@ class ProductCustomizationReview(models.Model):
             check_customization_access(self.version.created_by, self.customization)
 
         for review in reviews:
+            if review.state == ProductCustomizationReview.REVIEW_STATES.rejected:
+                continue
+
             review.reviewed_by = self.reviewed_by
             review.reviewed_date = self.reviewed_date
             review.state = self.state
@@ -634,9 +817,9 @@ class ProductCustomizationReview(models.Model):
                     review.reviewed_by = None
                     review.reviewed_date = None
             elif can_show_customization:
-                review.notes = "Automatically rejected by {}".format(self.customization)
+                review.notes = f"Automatically rejected by {self.customization}"
             else:
-                review.notes = "automatically rejected"
+                review.notes = "Automatically rejected"
 
             review.save()
             if review.state == ProductCustomizationReview.REVIEW_STATES.rejected or review.customization.trust_parent:
@@ -661,12 +844,17 @@ class ProductCustomizationReview(models.Model):
 
     @property
     def can_preview_customization(self):
-        return self.customization.name == settings.CUSTOMIZATION and self.version.product.product_type.can_preview
+        can_preview = self.version.product.product_type.can_preview
+        in_review = self.state in [self.REVIEW_STATES.pending, self.REVIEW_STATES.blocked]
+        is_current_customization = self.customization.name == settings.CUSTOMIZATION
+        return can_preview and in_review and is_current_customization
 
 
 class ExternalFile(models.Model):
     data_structure = models.ForeignKey(DataStructure, default=None, null=True, on_delete=models.CASCADE)
-    file = models.FileField(upload_to=rename_file, storage=MediaStorage())
+    # Default limit is 100 chars. The new length comes from most paths being limited to 255 char.
+    # Since we slugify the product name, data structure name and file name we need a long length.
+    file = models.FileField(upload_to=rename_file, storage=MediaStorage(), max_length=1000)
     md5 = models.CharField(max_length=1024, default='')
     product = models.ForeignKey(Product, default=None, null=True, on_delete=models.CASCADE)
     size = models.FloatField(default=0.0)

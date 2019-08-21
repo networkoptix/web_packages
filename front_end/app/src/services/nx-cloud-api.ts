@@ -14,6 +14,20 @@ export class NxCloudApiService {
         this.CONFIG = config.getConfig();
     }
 
+    checkResponseHasError(data: any) {
+        if (data && data.resultCode && data.resultCode !== this.CONFIG.responseOk) {
+            return data;
+        }
+        return false;
+    }
+
+    disconnect(systemId, password) {
+        return this.http.post(this.CONFIG.apiBase + '/systems/disconnect', {
+            system_id: systemId,
+            password
+        });
+    }
+
     getCommonPasswords(): Observable<any> {
         return this.http.get('/static/scripts/commonPasswordsList.json');
     }
@@ -33,6 +47,10 @@ export class NxCloudApiService {
         return this.http.get(this.CONFIG.apiBase + '/ipvd');
     }
 
+    getSystemAuth(systemId) {
+        return this.http.get(`${this.CONFIG.apiBase}/systems/${systemId}/auth`);
+    }
+
     reloadIPVD(): Observable<any> {
         return this.http.post(this.CONFIG.apiBase + '/ipvd', {});
     }
@@ -50,5 +68,98 @@ export class NxCloudApiService {
     reactivateUser(userEmail) {
         return this.http.post(this.CONFIG.apiBase + '/account/activate',
                 { user_email: userEmail });
+    }
+
+    renameSystem(systemId, systemName) {
+        return this.http.post(this.CONFIG.apiBase + '/systems/' + systemId + '/name', {
+            name: systemName
+        }).toPromise().then((result) => {
+            this.systems('clearCache');
+            return result;
+        });
+    }
+
+    systems (systemId?: string): Observable<any> {
+        if (systemId) {
+            return this.http.get(this.CONFIG.apiBase + '/systems/' + systemId);
+        }
+        return this.http.get(this.CONFIG.apiBase + '/systems');
+    }
+
+    users(systemId) {
+        return this.http.get(`${this.CONFIG.apiBase}/systems/${systemId}/users`);
+    }
+
+    unshare(systemId, userEmail) {
+        return this.http.post(this.CONFIG.apiBase + '/systems/' + systemId + '/users', {
+            user_email: userEmail,
+            role: this.CONFIG.accessRoles.unshare
+        });
+    }
+
+    authKey() {
+        return this.http.post(this.CONFIG.apiBase + '/account/authKey', {}).toPromise();
+    }
+
+    visitedKey(key) {
+        return this.http.get(this.CONFIG.apiBase + '/utils/visitedKey/?key=' + encodeURIComponent(key)).toPromise();
+    }
+
+    checkCode(code) {
+        return this.http.post(this.CONFIG.apiBase + '/account/checkCode', { code }).toPromise();
+    }
+
+    login(email, password, remember) {
+        // clearCache();
+        return this.http.post(this.CONFIG.apiBase + '/account/login', {
+            email,
+            password,
+            remember,
+            timezone: Intl && Intl.DateTimeFormat().resolvedOptions().timeZone || ''
+        }).toPromise();
+    }
+
+    logout() {
+        // clearCache();
+        return this.http.post(this.CONFIG.apiBase + '/account/logout', {}).toPromise();
+    }
+
+    account() {
+        return this.http.get(this.CONFIG.apiBase + '/account').toPromise();
+    }
+
+    getLanguages() {
+        return this.http.get('/static/languages.json').toPromise();
+    }
+
+    changeLanguage(language) {
+        return this.http.post(this.CONFIG.apiBase + '/utils/language/', {
+            language
+        }).toPromise();
+    }
+
+    getDownloads() {
+        return this.http.get(this.CONFIG.apiBase + '/utils/downloads').toPromise();
+    }
+
+    getDownloadsHistory(build) {
+        return this.http.get(this.CONFIG.apiBase + '/utils/downloads/' + (build || 'history')).toPromise();
+    }
+
+    accountPost(account) {
+        return this.http.post(this.CONFIG.apiBase + '/account', account).toPromise();
+    }
+
+    changePassword(newPassword, oldPassword) {
+        return this.http.post(this.CONFIG.apiBase + '/account/changePassword', {
+            new_password: newPassword,
+            old_password: oldPassword
+        }).toPromise();
+    }
+
+    reactivate(userEmail) {
+        return this.http.post(this.CONFIG.apiBase + '/account/activate', {
+            user_email: userEmail
+        });
     }
 }

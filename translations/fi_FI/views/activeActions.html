@@ -1,7 +1,7 @@
 <div class="container">
     <div ng-if="data.activateCode" process-loading="activate">
         <h1 class="process-success" ng-if="activate.success && !loading">
-            Käyttäjätili aktivoitu onnistuneesti.
+            Käyttäjätili aktivoitu onnistuneesti
         </h1>
         <h1 class="process-success" ng-if="activate.success && !loading">
             <a class="btn btn-default" href="/login">Kirjaudu sisään</a>
@@ -14,7 +14,7 @@
 
     <div ng-if="!data.activateCode && activationSuccess">
         <h1 class="process-success">
-            Käyttäjätili aktivoitu onnistuneesti.
+            Käyttäjätili aktivoitu onnistuneesti
         </h1>
         <h1 class="process-success">
             <a class="btn btn-default" href="/login">Kirjaudu sisään</a>
@@ -23,7 +23,7 @@
 
     <div ng-if="reactivating" class="text-center">
         <div ng-if='data.email'>
-            <h1>Olet rekisteröitynyt %PRODUCT_NAME%</h1>
+            <h1>Olet rekisteröitynyt %CLOUD_NAME%</h1>
             <p>Olemme lähettäneet sinulle viestin, joka sisältää aktivointi linkin {{data.email}}. <br>
             Aktivoi tilisi käymällä tätä linkkiä.</p>
         </div>
@@ -48,8 +48,8 @@
                           ng-if="reactivateAccount.email.$touched && reactivateAccount.email.$error.email"> Anna oikea sähköposti </span>
                 </div>
             </div>
-            <div class="form-group">
-                <div class="offset-sm-2 col-sm-10" ng-class="{ 'offset-sm-4 col-sm-8' : data.email}" >
+            <div class="form-group mt-3">
+                <div class="offset-sm-2 col-sm-10 offset-sm-4 col-sm-8" >
                     <process-button process="reactivate"
                                     form="reactivateAccount"
                                     button-text="$root.L.activeActions.sendConfirm"></process-button>
@@ -60,7 +60,7 @@
 
     <div ng-if="restoringSuccess">
         <h1 class="process-success">
-            Salasanan nollausohjeet lähetetään sähköpostitse{{data.email}}
+            Salasanan nollausohjeet lähetetään sähköpostitse <br>{{data.email}}
         </h1>
     </div>
 
@@ -94,12 +94,14 @@
             </div>
         </form>
     </div>
-    <div ng-if="data.restoreCode">
-        <h1 class="process-success" ng-if="change.success || changeSuccess" translate>
-            Salasana tallennettu onnistuneesti
-        </h1>
-        <div class="process-success d-flex justify-content-center" ng-if="change.success || changeSuccess">
-            <a class="btn btn-default" href="/login" translate>Kirjaudu sisään</a>
+    <div ng-if="data.restoreCode || changeSuccess">
+        <div ng-if="change.success || changeSuccess">
+            <h1 class="process-success"  translate>
+                Salasana tallennettu onnistuneesti
+            </h1>
+            <div class="process-success d-flex justify-content-center">
+                <a class="btn btn-default" href="/login" translate>Kirjaudu sisään</a>
+            </div>
         </div>
 
         <form name="restorePasswordWithCode" class="form-horizontal" ng-if="!change.success && !changeSuccess"

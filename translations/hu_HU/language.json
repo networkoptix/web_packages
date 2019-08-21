@@ -6,29 +6,14 @@
   "clientProtocol": "%CLIENT_PROTOCOL%:",
   "dialogs": {
     "okButton": "OK",
-    "cancelButton": "Mégse",
-    "loginTitle": "Log in to %CLOUD_NAME%",
+    "cancelButton": "Mégsem",
+    "loginTitle": "Bejelentkezés ide: %CLOUD_NAME%",
     "loginButton": "Bejelentkezés",
     "logoutAuthorisedTitle": "Már bejelentkezett",
     "logoutAuthorisedContinueButton": "Folyatatás",
     "logoutAuthorisedLogoutButton": "Kijelentkezés",
-    "messageFailed": "Message has failed to send.",
-    "messageSent": "Message has been sent.",
     "noClientDetectedTitle": "Telepítse a %VMS_NAME% alkalmazást a rendszer megtekintéshez",
     "download": "%VMS_NAME% letöltése"
-  },
-  "messageDialog": {
-    "title": {
-      "integration": "Email for {{product}}",
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Feedback about {{product}}"
-    },
-    "topic": {
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Feedback about {{product}}",
-      "contact_sales": "Contact sales for {{product}}",
-      "contact_support": "Contact support for {{product}}"
-    }
   },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
@@ -56,7 +41,7 @@
   },
   "systemStatuses": {
     "activated": "aktiválva",
-    "incompatible": "Inkompatibilis",
+    "incompatible": "inkompatibilis",
     "merging": "egyesülő",
     "notActivated": "nincs aktiválva",
     "online": "online",
@@ -203,7 +188,7 @@
     "confirmRenameTitle": "Rendszer neve",
     "confirmRenameAction": "Mentés",
     "successRename": "Rendszer neve mentve",
-    "confirmDisconnectTitle": "Disconnect System from %CLOUD_NAME%?",
+    "confirmDisconnectTitle": "Megszünteti a kapcsolatot %CLOUD_NAME% felhővel?",
     "confirmDisconnectAction": "Szétkapcsolás",
     "confirmUnshareFromMe": "A rendszer leválasztására készül fiókjáról. Többé nem fog tudni kapcsolódni a rendszerhez. Folytatja?",
     "confirmUnshareFromMeTitle": "Leválasztja a rendszert?",
@@ -215,7 +200,7 @@
     "successDeleted": "{{systemName}} rendszer sikeresen törölve a fiókból",
     "mergeFailed": "A rendszeregyesítés sikertelen",
     "mergeStart": "A rendszerek egyesülnek",
-    "mergeSuccess": "System merge completed",
+    "mergeSuccess": "A rendszer egyesítése befejeződött",
     "permissionsRemoved": "{{email}} engedélyei vissavonva",
     "unknownName": "Ismeretlen név a rendszerhez (felhő egyesítése okozta)"
   },
@@ -270,15 +255,15 @@
     },
     "searchCamPlaceholder": "Keresés",
     "resolution": {
-      "auto": "Auto",
-      "high": "Elsődleges",
+      "auto": "Autómatikus",
+      "high": "Magas",
       "low": "Alacsony"
     },
     "chromeCastWarning": "A Chromecast erőforrás-igényes, és problémákat okozhat a kiszolgálón.",
     "voiceCommands": {
       "play": "letjátszás",
       "pause": "szünet",
-      "live": "élőbe menni | mutatsd élőben",
+      "live": "go to live | show me live",
       "view": "nézet + [kamera neve]",
       "search": "keresés + [szöveg a keresősávhoz]",
       "clear search": "keresés törlése",

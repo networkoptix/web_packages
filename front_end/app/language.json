@@ -4,32 +4,6 @@
   "cloudName": "%CLOUD_NAME%",
   "vmsName": "%VMS_NAME%",
   "clientProtocol": "%CLIENT_PROTOCOL%:",
-  "dialogs": {
-    "okButton": "OK",
-    "cancelButton": "Cancel",
-    "loginTitle": "Log in to %CLOUD_NAME%",
-    "loginButton": "Log in",
-    "logoutAuthorisedTitle": "You are already logged in",
-    "logoutAuthorisedContinueButton": "Continue",
-    "logoutAuthorisedLogoutButton": "Log Out",
-    "messageFailed": "Message has failed to send.",
-    "messageSent": "Message has been sent.",
-    "noClientDetectedTitle": "Install %VMS_NAME% to view your System",
-    "download": "Download %VMS_NAME%"
-  },
-  "messageDialog": {
-    "title": {
-      "integration": "Email for {{product}}",
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Feedback about {{product}}"
-    },
-    "topic": {
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Feedback about {{product}}",
-      "contact_sales": "Contact sales for {{product}}",
-      "contact_support": "Contact support for {{product}}"
-    }
-  },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
     "default": "%CLOUD_NAME%",
@@ -183,14 +157,6 @@
     "commonMessage": "This password is in top most popular passwords in the world",
     "missingMessage": "Password is required"
   },
-  "sharing": {
-    "confirmOwner": "If you change System owner, you will revoke ownership from the current account. This action is irreversible. Are you sure?",
-    "shareTitle": "Share",
-    "shareConfirmButton": "Share",
-    "editShareTitle": "Edit Permissions",
-    "editShareConfirmButton": "Save",
-    "permissionsSaved": "New permissions saved"
-  },
   "system": {
     "yourSystem": "Your System",
     "mySystemSearch": "IMeMyMine",
@@ -205,12 +171,11 @@
     "successRename": "System name saved",
     "confirmDisconnectTitle": "Disconnect System from %CLOUD_NAME%?",
     "confirmDisconnectAction": "Disconnect",
-    "confirmUnshareFromMe": "You are about to disconnect this System from your account. You will not be able to access this System anymore. Are you sure?",
-    "confirmUnshareFromMeTitle": "Disconnect System?",
+    "confirmUnshareFromMe": "You will not be able to lgo into this System anymore.",
+    "confirmUnshareFromMeTitle": "Disconnect System from your Account?",
     "confirmUnshareFromMeAction": "Disconnect",
-    "confirmUnshare": "This user will not be able to access System. Are you sure?",
-    "confirmUnshareTitle": "Delete user?",
-    "confirmUnshareAction": "Delete",
+    "confirmUnshareTitle": "Remove user?",
+    "confirmUnshareAction": "Remove",
     "successDisconnected": "System is successfully disconnected from %CLOUD_NAME%",
     "successDeleted": "System {{systemName}} is successfully deleted from your account",
     "mergeFailed": "System merge failed",

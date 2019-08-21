@@ -7,10 +7,12 @@
 		"Any": "Dowolny",
 		"selected": "wybrane",
 		"vendor": "Producent",
-		"vendors": "producenci",
+		"vendors": "Producenci",
 		"hardwareType": "Rodzaj",
-		"hardwareTypes": "typy",
-		"minResolution": "Minimalna rozdzielczość"
+		"hardwareTypes": "Typy",
+		"minResolution": "Minimalna rozdzielczość",
+		"analytics": "Analityka",
+		"analyticsSelected": "zdarzenia analityczne"
 	},
 	"cameraFilters": {
 		"ptz": "Kamery PTZ",
@@ -67,7 +69,7 @@
 			"sdk": {
 				"label": "SDK",
 				"shortLabel": "SDK",
-				"supported": "C++ wieloplatformowe SDK"
+				"supported": "C++ cross platform SDK"
 			}
 		},
 		"platforms": {
@@ -96,6 +98,7 @@
 		}
 	},
 	"ipvd": {
+		"resolutionArea": "Obszar",
 		"count": "Liczba",
 		"vendor": "Producent",
 		"model": "Model",
@@ -113,6 +116,7 @@
 		"isIoSupported": "I/O",
 		"isH265": "H.265",
 		"isMultiSensor": "Multi Sensor",
+		"isAnalyticsSupported": "Analityka",
 		"camera": "Kamera",
 		"multiSensorCamera": "Kamera multi-sensor",
 		"encoder": "Enkoder",
@@ -130,7 +134,8 @@
 			"a_Please": "Proszę",
 			"b_Link": "wyślij zapytanie",
 			"c_Info": "w przypadku dodatkowych pytań / wątpliwości dotyczących obsługiwanych urządzeń."
-		}
+		},
+		"disclaimer": "Ta lista jest ograniczona do urządzeń znalezionych przez serwer {{vmsName}}, na którym administrator zezwolił na automatyczne raportowanie specyfikacji urządzeń do firmy {{companyName}}. Żadne dane osobowe nie są gromadzone, a każdy użytkownik pozostaje całkowicie anonimowy."
 	},
 	"integration": {
 		"previewRibbonText": "Ta strona to podgląd najnowszych zmian i nie jest zgodna z publicznie dostępną wersją.",
@@ -146,18 +151,47 @@
 		"feedback": "Proszę podać model kamery i producenta..."
 	},
 	"pageTitles": {
-		"supportedDevices": "Supported Devices",
-		"integrations": "Integrations"
+		"supportedDevices": "Obsługiwane urządzenia",
+		"integrations": "Integracje"
 	},
 	"dialogs": {
 		"merge": {
-			"connectToCloud": "Connect System you want to merge with this one to <strong>{{cloudName}}</strong> or merge locally using <strong>{{vmsName}}</strong> Client.",
-			"mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from the <strong>{{primarySystem}}</strong>.",
-			"primaryCannotMerge": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} System.",
-			"primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}.",
-			"secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
-			"systemOffline": "System {{targetSystem}} is offline and cannot be merged with the current one.",
-			"systemUnavailable": "System {{targetSystem}} is currently unreachable. Try again in a few minutes or contact"
+			"connectToCloud": "System, który chcesz złączyć z tym systemem, podłącz do <strong>{{cloudName}}</strong> lub złącz je lokalnie za pomocą klienta <strong>{{vmsName}}</strong>.",
+			"mergeConfirmation": "Zamierzasz złączyć systemy <strong>{{primarySystem}}</strong> i <strong>{{secondarySystem}}</strong>. Ustawienia i nazwa zostaną pobrane z <strong>{{primarySystem}}</strong>.",
+			"primaryCannotMerge": "System {{targetSystem}} ma nowszą wersję oprogramowania, która jest niezgodna z bieżącym systemem. Zaktualizuj bieżący system do <a href=\"/download\" target=\"_blank\" translate>najnowszej kompilacji</a>, aby złączyć go z systemem {{targetSystem}}.",
+			"primarySystemOffline": "System {{primarySystem}} jest w trybie offline i nie można go złączyć z systemem {{targetSystem}}.",
+			"secondaryCannotMerge": "System {{targetSystem}} ma starszą wersję oprogramowania, która jest niezgodna z bieżącym systemem. Zaktualizuj system {{targetSystem}} do <a href=\"/download\" target=\"_blank\" translate>najnowszej kompilacji</a>, aby złączyć go z bieżącym systemem.",
+			"systemOffline": "System {{targetSystem}} jest w trybie offline i nie można go złączyć z bieżącym systemem.",
+			"systemUnavailable": "System {{targetSystem}} jest obecnie niedostępny. Spróbuj ponownie za kilka minut lub skontaktuj się"
+		},
+		"message": {
+			"failedToSend": "Wysyłanie wiadomości nie powiodło się.",
+			"sent": "Wiadomość została wysłana.",
+			"title": {
+				"integration": "Skontaktuj się z {{companyName}}",
+				"ipvd_feedback_page": "Opinia dotycząca listy kamer",
+				"ipvd_feedback_device": "Opinia o {{product}}"
+			},
+			"topic": {
+				"contact_sales": "Kontakt do sprzedawcy {{product}}",
+				"contact_support": "Kontakt do wsparcia technicznego {{product}}",
+				"integration_feedback": "Opinia dotycząca integracji {{product}}",
+				"ipvd_feedback_page": "Opinia dotycząca listy kamer",
+				"ipvd_feedback_device": "Opinia o {{product}}"
+			}
 		}
-	}
+	},
+	"privacyPolicy": {
+		"integration": "Przesyłając ten formularz, zgadzasz się na kontakt od %INTEGRATION_COMPANY% i/lub %COMPANY_NAME%.\nPolitykę prywatności firmy %INTEGRATION_COMPANY% znajdziesz <a href=\"%INTEGRATION_PRIVACY_POLICY%\" target=\"blank\">tutaj</a>, a politykę prywatności firmy %COMPANY_NAME% <a href=\"%PRIVACY_LINK%\" target=\"blank\">tutaj</a>. Zawierają one instrukcje dotyczące wycofania zgody.",
+		"ipvd": "Przesyłając ten formularz zgadzasz się na kontakt przez %COMPANY_NAME%.\nPolitykę prywatności firmy %COMPANY_NAME% znajdziesz <a href=\"%PRIVACY_LINK%\" target=\"blank\">tutaj</a>. Zawiera ona instrukcje dotyczące wycofania zgody."
+	},
+	"testedVersionLabel": "Testowane na {{vmsName}} w wersji:",
+	"testedVersionsLabel": "Testowane na {{vmsName}} w wersjach:",
+	"About %CLOUD_NAME%": "Informacje o %CLOUD_NAME%",
+	"Download %VMS_NAME%": "Pobierz %VMS_NAME%",
+	"Integrations": "Integracje",
+	"Privacy": "Prywatność",
+	"Support": "Wsparcie",
+	"Supported Devices": "Obsługiwane urządzenia",
+	"Terms": "Warunki"
 }

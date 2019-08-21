@@ -23,7 +23,7 @@
 
     <div ng-if="reactivating" class="text-center">
         <div ng-if='data.email'>
-            <h1>You have registered in %CLOUD_NAME%</h1>
+            <h1>Você registou em %CLOUD_NAME%</h1>
             <p>Enviámos uma carta com o link de activação para {{data.email}}. <br>
                 Por favor, active a sua conta visitando este link.</p>
         </div>
@@ -48,8 +48,8 @@
                           ng-if="reactivateAccount.email.$touched && reactivateAccount.email.$error.email">Por favor insira um Email válido</span>
                 </div>
             </div>
-            <div class="form-group">
-                <div class="offset-sm-2 col-sm-10" ng-class="{ 'offset-sm-4 col-sm-8' : data.email}" >
+            <div class="form-group mt-3">
+                <div class="offset-sm-2 col-sm-10 offset-sm-4 col-sm-8" >
                     <process-button process="reactivate"
                                     form="reactivateAccount"
                                     button-text="$root.L.activeActions.sendConfirm"></process-button>

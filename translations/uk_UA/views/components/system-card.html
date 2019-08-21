@@ -5,13 +5,12 @@
             <button ng-disabled="currentlyMerging && !isMaster" class="btn btn-default" ng-click="rename()">Перейменувати систему</button>
         </p>
         <p ng-if="systems.length > 1 && system.canMerge || configCanMerge || debugMode || betaMode">
-            <button class="btn btn-default"
+            <button class="btn btn-default mw-100"
                     ng-disabled="(currentlyMerging || !system.isOnline || !system.isAvailable) && !(debugMode || betaMode)"
-                    ng-click="mergeSystems()">Об’єднати з іншою системою</button>
+                    ng-click="mergeSystems()"><div class="ellipsis"> Злиття з іншою системою </div></button>
         </p>
         <hr />
-        <button ng-disabled="currentlyMerging" class="btn btn-default" ng-click="disconnect()">Disconnect from
-            <span class="product-name">&nbsp;%CLOUD_NAME%</span></button>
+        <button ng-disabled="currentlyMerging" class="btn btn-default" ng-click="disconnect()">Від’єднатися від <span class="product-name">&nbsp;%CLOUD_NAME%</span></button>
     </div>
 </div>
 <div class="card card-condensed" ng-if="!system.isMine">
@@ -21,7 +20,7 @@
         <a ng-href="mailto:{{system.info.ownerAccountEmail}}">{{system.info.ownerAccountEmail}}</a>
         <hr>
         <p>
-            Ваші права доступу: <b>{{$root.L.accessRoles[system.accessRole].label || system.accessRole}}</b>
+            Ваші права доступу: <b>{{permission}}</b>
         </p>
 
         <p ng-if="system.permissions.isAdmin">

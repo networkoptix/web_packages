@@ -1,6 +1,4 @@
-<nx-pre-loader type="page" *ngIf="!cameras.length"></nx-pre-loader>
-
-<div class="ipvd">
+<div class="ipvd" [ngClass]="{'extended': showAnalytics}">
     <div class="row p-3 m-0" [style.display]="mobileDetailMode ? 'none' : 'block'">
         <nx-search
                 name="filterModel"
@@ -11,7 +9,9 @@
         </nx-search>
     </div>
 
-    <div class="row pl-3 pr-3 m-0 d-flex">
+    <nx-pre-loader *ngIf="!cameras.length"></nx-pre-loader>
+
+    <div class="row px-3 m-0 d-flex">
 
         <div class="text-placeholder order-1 order-md-0 m-0 p-0 pr-2 col-md-7 col-xl-9"
              *ngIf="!camerasTable.length && activeCamera" translate>
@@ -53,12 +53,12 @@
         </div>
     </div>
 
-    <div class="row pl-3 pr-3 m-0 mb-3 text-placeholder d-flex align-items-center"
+    <div class="row px-3 m-0 mb-3 text-placeholder d-flex align-items-center"
          *ngIf="noResult && !activeCamera" translate>
         Nothing Found
     </div>
 
-    <div class="row pl-3 pr-3 m-0"
+    <div class="row px-3 m-0"
          *ngIf="vendors && !camerasTable.length && !noResult && hasNoSearch">
 
         <nx-vendor-list
@@ -69,17 +69,21 @@
         </nx-vendor-list>
     </div>
 
-    <div class="row pl-3 pr-3 m-0"
+    <div class="row px-3 m-0"
          *ngIf="vendors">
 
-        <p *ngIf="CONFIG.feedbackEnabled && lang && lang.ipvd">
-            <span [translate]="'disclaimer'"
-                  [translateParams]="{value: company}">
+        <p *ngIf="CONFIG.feedbackEnabled && LANG && LANG.ipvd">
+            <span [translate]="'ipvd.disclaimer'"
+                  [translateParams]="{companyName: company, vmsName: vmsName}">
             </span>
             <span>
-                {{lang.ipvd.feedback.a_Please}} <a href (click)="openFeedback('page')">{{lang.ipvd.feedback.b_Link}}</a> {{lang.ipvd.feedback.c_Info}}
+                {{LANG.ipvd.feedback.a_Please}} <a href (click)="openFeedback('page')">{{LANG.ipvd.feedback.b_Link}}</a> {{LANG.ipvd.feedback.c_Info}}
             </span>
         </p>
         <button *ngIf="debug" (click)="reset()">reset</button>
+    </div>
+
+    <div class="row px-3 m-0">
+        <nx-footer></nx-footer>
     </div>
 </div>

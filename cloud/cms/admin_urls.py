@@ -13,4 +13,6 @@ urlpatterns = [
 
     url(r'product_settings/(?P<product_id>.+?)/$', product.product_settings, name="product_settings"),
 
+    url(r'get_product_ids/?$', product.get_product_ids_by_product_type, name="product_ids_by_type")
+
 ]

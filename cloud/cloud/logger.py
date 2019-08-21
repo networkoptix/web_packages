@@ -7,6 +7,7 @@ from rest_framework import status
 
 import logging
 logger = logging.getLogger(__name__)
+DOWNGRADE_ROUTES = ['/api/account', '/api/systems']
 
 
 class LimitAdminEmailHandler(AdminEmailHandler):
@@ -52,3 +53,13 @@ class CatchExceptionMiddleware(object):
                                                           traceback.format_exc().replace("Traceback", "")))
         if not settings.DEBUG:
             return HttpResponse("Error with request", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+def downgrade_unauthorized_requests(record):
+    """Downgrades the loglevel of unauthenticated requests to info.
+    Routes are defined in the {DOWNGRADE_ROUTES} variable."""
+    if record.name == 'django.request' and record.status_code == 401 and not record.request.user.is_authenticated:
+        if record.request.path in DOWNGRADE_ROUTES:
+            logger.info(record.getMessage())
+            return False
+    return True

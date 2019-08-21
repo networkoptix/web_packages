@@ -1,4 +1,12 @@
 {
+	"account": {
+		"accountSavedSuccess": "Your account is successfully saved",
+		"activationLinkSent": "Activation Link Sent",
+		"passwordChangedSuccess": "Your account is successfully saved",
+		"changePassword": "Change Password",
+		"newPasswordLabel": "New password",
+		"saveChanges": "Save"
+	},
 	"search": {
 		"Search" : "Search",
 		"search_ipvd": "Search by model or manufacturer",
@@ -7,10 +15,12 @@
 		"Any": "Any",
 		"selected": "selected",
 		"vendor": "Manufacturer",
-		"vendors": "manufacturers",
+		"vendors": "Manufacturers",
 		"hardwareType": "Type",
-		"hardwareTypes": "types",
-		"minResolution": "Minimum Resolution"
+		"hardwareTypes": "Types",
+		"minResolution": "Minimum Resolution",
+		"analytics": "Analytics",
+		"analyticsSelected": "analytics events"
 	},
 	"cameraFilters": {
 		"ptz": "PTZ cameras",
@@ -62,7 +72,7 @@
 			"arm": {
 				"label": "ARM",
 				"shortLabel": "ARM",
-				"supported": "Debian/Ubuntu based"
+				"supported": "<a href='/content/arm'>ARM based servers support policy</a>"
 			},
 			"sdk": {
 				"label": "SDK",
@@ -96,6 +106,7 @@
 		}
 	},
 	"ipvd": {
+		"resolutionArea": "Area",
 		"count": "Count",
 		"vendor": "Manufacturer",
 		"model": "Model",
@@ -113,6 +124,7 @@
 		"isIoSupported": "I/O",
 		"isH265": "H.265",
 		"isMultiSensor": "Multi Sensor",
+		"isAnalyticsSupported": "Analytics",
 		"camera": "Camera",
 		"multiSensorCamera": "Multi-Sensor Camera",
 		"encoder": "Encoder",
@@ -130,9 +142,11 @@
 			"a_Please": "Please",
 			"b_Link": "submit a request",
 			"c_Info": "for additional questions/concerns regarding supported devices."
-		}
+		},
+		"disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous."
 	},
 	"integration": {
+		"myIntegrationsLabel" : "Mine",
 		"previewRibbonText": "This page is a preview of the latest changes, and it doesn't match publicly available version.",
 		"backToEditText": "Back to the editing interfaces",
 		"Access Control": "Access Control",
@@ -172,6 +186,15 @@
 		"integrations": "Integrations"
 	},
 	"dialogs": {
+		"okButton": "OK",
+		"cancelButton": "Cancel",
+		"loginTitle": "Log in to %CLOUD_NAME%",
+		"loginButton": "Log in",
+		"logoutAuthorisedTitle": "You are already logged in",
+		"logoutAuthorisedContinueButton": "Continue",
+		"logoutAuthorisedLogoutButton": "Log Out",
+		"noClientDetectedTitle": "Install %VMS_NAME% to view your System",
+		"download": "Download %VMS_NAME%",
 		"merge": {
 			"connectToCloud": "Connect System you want to merge with this one to <strong>{{cloudName}}</strong> or merge locally using <strong>{{vmsName}}</strong> Client.",
 			"mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from the <strong>{{primarySystem}}</strong>.",
@@ -180,6 +203,30 @@
 			"secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
 			"systemOffline": "System {{targetSystem}} is offline and cannot be merged with the current one.",
 			"systemUnavailable": "System {{targetSystem}} is currently unreachable. Try again in a few minutes or contact"
+		},
+		"message": {
+			"failedToSend": "Message has failed to send.",
+    		"sent": "Message has been sent.",
+			"title": {
+				"integration": "Get in touch with {{companyName}}",
+				"ipvd_feedback_page": "Feedback for cameras page",
+				"ipvd_feedback_device": "Feedback about {{product}}"
+			},
+			"topic": {
+				"contact_sales": "Contact sales for {{product}}",
+				"contact_support": "Contact support for {{product}}",
+				"integration_feedback": "Feedback for integration {{product}}",
+				"ipvd_feedback_page": "Feedback for cameras page",
+				"ipvd_feedback_device": "Feedback about {{product}}"
+			}
+		},
+		"sharing": {
+			"confirmOwner": "If you change System owner, you will revoke ownership from the current account. This action is irreversible. Are you sure?",
+			"shareTitle": "Add",
+			"shareConfirmButton": "Add",
+			"editShareTitle": "Edit Permissions",
+			"editShareConfirmButton": "Save",
+			"permissionsSaved": "New permissions saved"
 		}
 	},
 	"errorCodes": {
@@ -243,12 +290,117 @@
 	"registration": {
 		"agreement" : "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
 	},
-	"account": {
-		"accountSavedSuccess": "Your account is successfully saved",
-		"activationLinkSent": "Activation Link Sent",
-		"passwordChangedSuccess": "Your account is successfully saved",
-		"changePassword": "Change Password",
-		"newPasswordLabel": "New password",
-		"saveChanges": "Save"
-	}
+	"system": {
+		"yourSystem": "Your System",
+		"mySystemSearch": "IMeMyMine",
+		"unavailable": "System is unreachable",
+		"offline": "System is offline",
+		"openClient": "Open in %VMS_NAME%",
+		"openClientNoSystem": "Open %VMS_NAME%",
+		"confirmMergeAction": "Merge",
+		"mergeSystemTitle": "Merge Systems",
+		"confirmRenameTitle": "System name",
+		"confirmRenameAction": "Save",
+		"successRename": "System name saved",
+		"confirmDisconnectTitle": "Disconnect System from %CLOUD_NAME%?",
+		"confirmDisconnectAction": "Disconnect",
+		"confirmUnshareFromMe": "You are about to disconnect this System from your account. You will not be able to access this System anymore. Are you sure?",
+		"confirmUnshareFromMeTitle": "Disconnect System?",
+		"confirmUnshareFromMeAction": "Disconnect",
+		"confirmUnshare": "This user will not be able to access System. Are you sure?",
+		"confirmUnshareTitle": "Delete user?",
+		"confirmUnshareAction": "Delete",
+		"successDisconnected": "System is successfully disconnected from %CLOUD_NAME%",
+		"successDeleted": "System {{systemName}} is successfully deleted from your account",
+		"mergeFailed": "System merge failed",
+		"mergeStart": "Systems have started merging",
+		"mergeSuccess": "System merge completed",
+		"permissionsRemoved": "Permissions were removed from {{email}}",
+		"unknownName": "Unknown Name for System (Caused by cloud merge)"
+	},
+	"systemStatuses": {
+		"activated": "activated",
+		"incompatible": "incompatible",
+		"merging": "merging",
+		"notActivated": "not activated",
+		"online": "online",
+		"offline": "offline",
+		"unavailable": "unavailable"
+	},
+	"accessRoles": {
+		"disabled": {
+			"label": "Disabled",
+			"description": "User is disabled and cannot log in to System"
+		},
+		"Owner": {
+			"label": "Owner",
+			"description": "Unrestricted access including the ability to share and connect/disconnect System from cloud"
+		},
+		"Viewer": {
+			"label": "Viewer",
+			"description": "Can view live video and browse the archive"
+		},
+		"Live Viewer": {
+			"label": "Live Viewer",
+			"description": "Can only view live video"
+		},
+		"Advanced Viewer": {
+			"label": "Advanced Viewer",
+			"description": "Can view live video, browse the archive, control PTZ etc"
+		},
+		"Administrator": {
+			"label": "Administrator",
+			"description": "Unrestricted access including the ability to share"
+		},
+		"Custom": {
+			"label": "Custom",
+			"description": "Use the %VMS_NAME% Client application to set up custom permissions"
+		},
+		"cloudAdmin": {
+			"label": "Administrator",
+			"description": "Can configure System and share it"
+		},
+		"customRole": {
+			"label": "Custom role",
+			"description": "Custom user role specified in System"
+		},
+		"owner": {
+			"label": "Owner",
+			"description": "Unrestricted access including the ability to share and connect/disconnect System from cloud"
+		},
+		"viewer": {
+			"label": "Viewer",
+			"description": "Can view live video and browse the archive"
+		},
+		"liveViewer": {
+			"label": "Live Viewer",
+			"description": "Can only view live video"
+		},
+		"advancedViewer": {
+			"label": "Advanced Viewer",
+			"description": "Can view live video, browse the archive, configure cameras, control PTZ etc"
+		},
+		"custom": {
+			"label": "Custom",
+			"description": "Use the %VMS_NAME% Client application to set up custom permissions"
+		}
+	},
+	"privacyPolicy": {
+		"integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent.",
+		"ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent."
+	},
+	"systemAdministration": "System Administration",
+	"users": "Users",
+	"testedVersionLabel": "Tested on {{vmsName}} version:",
+	"testedVersionsLabel": "Tested on {{vmsName}} versions:",
+	"About %CLOUD_NAME%": "About %CLOUD_NAME%",
+	"Download %VMS_NAME%": "Download %VMS_NAME%",
+	"Integrations": "Integrations",
+	"Privacy": "Privacy",
+	"Support": "Support",
+	"Supported Devices": "Supported Devices",
+	"Terms": "Terms",
+	"pleaseSelect": "Please select...",
+	"WHEN_MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{{targetSystemName}}</strong> System, and this system will be deleted.",
+	"FAILED_SYSTEM_DESCR": "This link is broken,<br>System may be disconnected from %CLOUD_NAME%,<br>Access to this System may be revoked, <br>or you may be logged into a different account."
 }

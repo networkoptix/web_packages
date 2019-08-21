@@ -1,5 +1,5 @@
 {% extends "admin/change_list.html" %}s
-{% load i18n admin_urls static admin_modify %}
+{% load i18n admin_urls static admin_list admin_modify %}
 {% load cms_filters %}
 
 <{% block breadcrumbs %}
@@ -11,29 +11,47 @@
         &rsaquo; {% trans 'Pages' %}
     </div>
 {% endblock %}
+
 {% block content %}
-    <div class="results" id="changelist">
-        <table>
-            <thead>
-            <tr>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Url</th>
-                <th>Translatable</th>
-                <th>Global</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for context in contexts %}
-                <tr class="row{{ forloop.counter0 | modulo:2 | add:1 }}">
-                    <th><a href="{% url 'admin:change_page' product.id context.id %}">{{ context.get_nice_name }}</a></th>
-                    <td>{% autoescape off%}{{ context.description }}{% endautoescape %}</td>
-                    <td>{{ context.url }}</td>
-                    <td>{% include 'admin/boolean.html' with value=context.translatable %}</td>
-                    <td>{% include 'admin/boolean.html' with value=context.is_global %}</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+    <div id="content-main">
+        <div class="module{% if cl.has_filters %} filtered{% endif %}" id="changelist">
+            {% block filters %}
+                {% if cl.has_filters %}
+                    <div id="changelist-filter">
+                        <h2>{% trans 'Filter' %}</h2>
+                        {% for spec in cl.filter_specs %}{% admin_list_filter cl spec %}{% endfor %}
+                    </div>
+                {% endif %}
+            {% endblock %}
+
+            <form id="changelist-form" method="post"{% if cl.formset and cl.formset.is_multipart %} enctype="multipart/form-data"{% endif %} novalidate>{% csrf_token %}
+            {% block result_list %}
+                <div class="results">
+                    <table id="result_list">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Url</th>
+                            <th>Global</th>
+                            <th>Status</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for context in contexts %}
+                            <tr class="row{{ forloop.counter0 | modulo:2 | add:1 }}">
+                                <th><a href="{% url 'admin:change_page' product.id context.id %}">{{ context.get_nice_name }}</a></th>
+                                <td>{% autoescape off%}{{ context.description }}{% endautoescape %}</td>
+                                <td>{{ context.url }}</td>
+                                <td>{% include 'admin/boolean.html' with value=context.is_global %}</td>
+                                <td>{{ context.state }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endblock %}
+            </form>
+        </div>
     </div>
 {% endblock %}

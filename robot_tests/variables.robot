@@ -80,25 +80,25 @@ ${CHANGE PASSWORD FORM}               //form[@name='passwordForm']
 ${CURRENT PASSWORD INPUT}             //form[@name='passwordForm']//input[@ng-model='pass.password']
 ${NEW PASSWORD INPUT}                 //form[@name='passwordForm']//password-input[@ng-model='pass.newPassword']//input
 ${CHANGE PASSWORD BUTTON}             //form[@name='passwordForm']//button[@ng-click='checkForm()']
-${PASSWORD IS REQUIRED}               //span[@ng-if='form[id].$error.required']
+${PASSWORD IS REQUIRED}               //span[@class='input-error' and contains(text(),"${PASSWORD IS REQUIRED TEXT}")]
 ${CHANGE PASS EYE ICON OPEN}          ${CHANGE PASSWORD FORM}${EYE ICON OPEN}
 ${CHANGE PASS EYE ICON CLOSED}        ${CHANGE PASSWORD FORM}${EYE ICON CLOSED}
 
 #Register Form Elements
-${REGISTER FORM}                      //form[@name= 'registerForm']
-${REGISTER FIRST NAME INPUT}          //form[@name= 'registerForm']//input[@ng-model='account.firstName']
-${REGISTER LAST NAME INPUT}           //form[@name= 'registerForm']//input[@ng-model='account.lastName']
-${REGISTER EMAIL INPUT}               //form[@name= 'registerForm']//input[@ng-model='account.email']
-${REGISTER EMAIL INPUT LOCKED}        //form[@name= 'registerForm']//input['readOnly' and @ng-if='lockEmail']
-${REGISTER PASSWORD INPUT}            //form[@name= 'registerForm']//password-input[@ng-model='account.password']//input
+${REGISTER FORM}                      //form[@id='registerForm']
+${REGISTER FIRST NAME INPUT}          ${REGISTER FORM}//input[@id='firstName']
+${REGISTER LAST NAME INPUT}           ${REGISTER FORM}//input[@id='lastName']
+${REGISTER EMAIL INPUT}               ${REGISTER FORM}//input[@id='registerEmail']
+${REGISTER EMAIL INPUT LOCKED}        ${REGISTER FORM}//input['readOnly' and @ng-if='lockEmail']
+${REGISTER PASSWORD INPUT}            ${REGISTER FORM}//input[@id='registerPassword']
 
-${TERMS AND CONDITIONS CHECKBOX VISIBLE}    //form[@name= 'registerForm']//input[@ng-model='account.accept']/following-sibling::span[@class="checkmark"]
-${TERMS AND CONDITIONS CHECKBOX REAL}       //form[@name= 'registerForm']//input[@ng-model='account.accept']
+${TERMS AND CONDITIONS CHECKBOX VISIBLE}    ${REGISTER FORM}//label[@class="nx-checkbox"]/span[contains(@class,"tick")]//*[local-name() = 'svg']
+${TERMS AND CONDITIONS CHECKBOX REAL}       ${REGISTER FORM}//input[@id='accept']
 
-${CREATE ACCOUNT BUTTON}              //form[@name= 'registerForm']//button[contains(text(), "${CREATE ACCOUNT BUTTON TEXT}")]
-${TERMS AND CONDITIONS LINK}          //form[@name= 'registerForm']//a[@href='/content/eula']
-${TERMS AND CONDITIONS ERROR}         //form[@name= 'registerForm']//span[@ng-if='registerForm.accept.$dirty && registerForm.accept.$error.required' and contains(text(), "${TERMS AND CONDITIONS ERROR TEXT}")]
-${PRIVACY POLICY LINK}                //form[@name= 'registerForm']//a[@href='${PRIVACY POLICY URL FULL}']
+${CREATE ACCOUNT BUTTON}              ${REGISTER FORM}//button[contains(text(), "${CREATE ACCOUNT BUTTON TEXT}")]
+${TERMS AND CONDITIONS LINK}          ${REGISTER FORM}//a[@href='/content/eula']
+${TERMS AND CONDITIONS ERROR}         ${REGISTER FORM}//span[@class='help-block input-error' and contains(text(), "${TERMS AND CONDITIONS ERROR TEXT}")]
+${PRIVACY POLICY LINK}                ${REGISTER FORM}//a[@href='${PRIVACY POLICY URL}']
 ${RESEND ACTIVATION LINK BUTTON}      //form[@name= 'loginForm']//a[contains(text(), "${RESEND ACTIVATION LINK BUTTON TEXT}")]
 ${REGISTER EYE ICON OPEN}             ${REGISTER FORM}${EYE ICON OPEN}
 ${REGISTER EYE ICON CLOSED}           ${REGISTER FORM}${EYE ICON CLOSED}
@@ -106,15 +106,15 @@ ${REGISTER EYE ICON CLOSED}           ${REGISTER FORM}${EYE ICON CLOSED}
 ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    {{message.sharer_name}} invites you to %PRODUCT_NAME%
 
 #Register form errors
-${FIRST NAME IS REQUIRED}             //span[@ng-if='registerForm.firstName.$touched && registerForm.firstName.$error.required' and contains(text(),"${FIRST NAME IS REQUIRED TEXT}")]
-${LAST NAME IS REQUIRED}              //span[@ng-if='registerForm.lastName.$touched && registerForm.lastName.$error.required' and contains(text(),"${LAST NAME IS REQUIRED TEXT}")]
-${EMAIL IS REQUIRED}                  //span[@ng-if="registerForm.registerEmail.$touched && registerForm.registerEmail.$error.required" and contains(text(),"${EMAIL IS REQUIRED TEXT}")]
-${EMAIL ALREADY REGISTERED}           //span[@ng-if='registerForm.registerEmail.$error.alreadyExists' and contains(text(),"${EMAIL ALREADY REGISTERED TEXT}")]
-${EMAIL INVALID}                      //span[@ng-if='registerForm.registerEmail.$touched && registerForm.registerEmail.$error.email' and contains(text(),"${EMAIL INVALID TEXT}")]
+${FIRST NAME IS REQUIRED}             //span[@class='help-block input-error' and contains(text(),"${FIRST NAME IS REQUIRED TEXT}")]
+${LAST NAME IS REQUIRED}              //span[@class='help-block input-error' and contains(text(),"${LAST NAME IS REQUIRED TEXT}")]
+${EMAIL IS REQUIRED}                  //span[@class='help-block input-error' and contains(text(),"${EMAIL IS REQUIRED TEXT}")]
+${EMAIL ALREADY REGISTERED}           //span[@class='help-block input-error' and contains(text(),"${EMAIL ALREADY REGISTERED TEXT}")]
+${EMAIL INVALID}                      //span[@class='help-block input-error' and contains(text(),"${EMAIL INVALID TEXT}")]
 ${PASSWORD SPECIAL CHARS}             //span[contains(@ng-if,'form[id].$error.pattern &&') and contains(@ng-if,'!form[id].$error.minlength') and contains(text(),'${PASSWORD SPECIAL CHARS TEXT}')]
-${PASSWORD TOO SHORT}                 //span[contains(@ng-if,'form[id].$error.minlength') and contains(text(),'${PASSWORD TOO SHORT TEXT}')]
-${PASSWORD TOO COMMON}                //span[contains(@ng-if,'form[id].$error.common &&') and contains(@ng-if,'form[id].$error.required') and contains(text(),'${PASSWORD TOO COMMON TEXT}')]
-${PASSWORD IS WEAK}                   //span[contains(@ng-if,'form[id].$error.weak &&') and contains(@ng-if,'form[id].$error.common &&') and contains(@ng-if,'!form[id].$error.pattern &&') and contains(@ng-if,'!form[id].$error.required &&') and contains(@ng-if,'!form[id].$error.minlength') and contains(text(),'${PASSWORD IS WEAK TEXT}')]
+${PASSWORD TOO SHORT}                 //span[contains(@class,'input-error') and contains(text(),'${PASSWORD TOO SHORT TEXT}')]
+${PASSWORD TOO COMMON}                //span[contains(@class,'input-error') and contains(text(),'${PASSWORD TOO COMMON TEXT}')]
+${PASSWORD IS WEAK}                   //span[contains(@class,'input-error') and contains(text(),'${PASSWORD IS WEAK TEXT}')]
 
 ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    {{message.sharer_name}} invites you to %PRODUCT_NAME%
 
@@ -122,7 +122,7 @@ ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    {{message.sharer_name}} invit
 ${OPEN NX WITNESS BUTTON FROM =}      //button[text()="${OPEN NX WITNESS BUTTON TEXT}"]
 
 
-${ACCOUNT CREATION SUCCESS}           //h1[@ng-if='(register.success || registerSuccess) && !activated']
+${ACCOUNT CREATION SUCCESS}           //h1[@class="process-success d-flex align-items-center flex-column mt-5"]
 ${ACTIVATION SUCCESS}                 //h1[@ng-if='activate.success && !loading' and contains(text(), "${ACCOUNT SUCCESSFULLY ACTIVATED TEXT}")]
 ${SUCCESS LOG IN BUTTON}              //h1[@ng-if='activate.success && !loading' and contains(text(), "${ACCOUNT SUCCESSFULLY ACTIVATED TEXT}")]/following-sibling::h1/a[@href="/login"]
 #In system settings
@@ -246,45 +246,98 @@ ${BETAS TAB}                          //span[@class='tab-heading' and text()='Be
 ${RELEASE NUMBER}                     //div[contains(@class,"active")]//h1
 
 #IPVD
-${IPVD TITLE}                        //header//li[@class="active"]/a[contains(text(),"${IPVD TITLE TEXT}")]
-${IPVD SEARCH BAR}                   //ipvd//input[@name="query"]
-${IPVD ADVANCED SEARCH BUTTON}       //ipvd//span[contains(text(),"${IPVD ADVANCED SEARCH BUTTON TEXT}")]
-${IPVD MANFUACTURERS PANE}           //ipvd//header/span[contains(text(),"manufacturers")]/../../../..
-${IPVD DEVICES PANE}                 //ipvd//header/span[contains(text(),"devices")]/../../../..
-${IPVD DEVICE DETAILS}               //ipvd//nx-cam-view
-${IPVD DEVICE MAKE}                  ${IPVD DEVICE DETAILS}//div[@class="camera-vendor-model"]//span[1]
-${IPVD DEVICE MODEL}                 ${IPVD DEVICE DETAILS}//div[@class="camera-vendor-model"]//span[2]
-${IPVD CLEAR FILTERS BUTTON}         //ipvd//span[@class="close-button"]
-${IPVD TABLE}                        //ipvd//table
-${IPVD TABLE FIRST ITEM}             ${IPVD TABLE}/tbody/tr[1]
-${IPVD TABLE LAST ITEM}              ${IPVD TABLE}/tbody/tr[0=count(following-sibling::tr)]//td
-${IPVD PREVIOUS BUTTON}              //ipvd//a/span[contains(text(),"«")]
-${IPVD NEXT BUTTON}                  //ipvd//a/span[contains(text(),"»")]
-${IPVD LAST PAGE BUTTON}             //ipvd//ul/[@class="pagination"]/li[@class="page-item disabled"]/following-sibling::li/a
-${IPVD CLOSE DETAILS BUTTON}         //ipvd//header//span[@class="glyphicon close-icon detailsClose"]
+${IPVD TITLE}                         //header//li[@class="active"]/a[contains(text(),"${IPVD TITLE TEXT}")]
+${IPVD LANDING PAGE TEXT}             //ipvd//p
+
+#IPVD Filters
+${IPVD FILTERS}                       //ipvd//nx-search/div/div
+${IPVD FILTERS BASIC}                 ${IPVD FILTERS}/div[1]/div
+${IPVD SEARCH BAR}                    ${IPVD FILTERS BASIC}/div[1]/input[@name="query"]
+${IPVD CLEAR TEXT SEARCH BUTTON}      ${IPVD SEARCH BAR}/../button
+${IPVD FILTERS APPLIED BUTTON}        ${IPVD FILTERS BASIC}/div[2]${IPVD ADV FEATURES CLOSE BUTTON}/..
+${IPVD ADV SEARCH BUTTON}             ${IPVD FILTERS BASIC}/div/span[contains(text(),'${IPVD ADV SEARCH BUTTON TEXT}')]/..
+#IPVD Advanced Filters
+${IPVD ADV FILTERS}                   ${IPVD FILTERS}/div[2]/div
+${IPVD ADV FILTERS MIN RES}           ${IPVD ADV FILTERS}//nx-select/../label[contains(text(),'${IPVD ADV FILTER MIN RES}')]/..//button[1]
+${IPVD ADV FILTERS MFRS}              ${IPVD ADV FILTERS}//nx-multi-select/../label[contains(text(),'${IPVD ADV FILTER MFRS}')]/..//button[1]
+${IPVD ADV FILTERS TYPES}             ${IPVD ADV FILTERS}//nx-multi-select/../label[contains(text(),'${IPVD ADV FILTER TYPES}')]/..//button[1]
+${IPVD ADV FILTERS ANALYTICS}         ${IPVD ADV FILTERS}//nx-multi-select/../label[contains(text(),'${IPVD ADV FILTER ANALYTICS}')]/..//button[1]
+${IPVD ADV FILTERS DROPDOWN MENU}     /../div[@class='dropdown-menu']
+${IPVD ADV FILTERS DROPDOWN MENU ITEMS}    ${IPVD ADV FILTERS DROPDOWN MENU}/ul/li
+#IPVD Advanced Filters Features
+${IPVD ADV FEATURES}                  ${IPVD ADV FILTERS}//div/label[text()='Features']/..
+${IPVD ADV FEATURES AUDIO}            ${IPVD ADV FEATURES}//nx-tag/div[contains(text(),'${IPVD ADV FEATURE AUDIO}') and not(contains(text(),'${IPVD ADV FEATURE 2-WAY AUDIO}'))]/..
+${IPVD ADV FEATURES 2-WAY AUDIO}      ${IPVD ADV FEATURES}//nx-tag/div[contains(text(),'${IPVD ADV FEATURE 2-WAY AUDIO}')]/..
+${IPVD ADV FEATURES PTZ}              ${IPVD ADV FEATURES}//nx-tag/div[contains(text(),'${IPVD ADV FEATURE PTZ}') and not(contains(text(),'${IPVD ADV FEATURE ADV PTZ}'))]/..
+${IPVD ADV FEATURES ADV PTZ}          ${IPVD ADV FEATURES}//nx-tag/div[contains(text(),'${IPVD ADV FEATURE ADV PTZ}')]/..
+${IPVD ADV FEATURES FISHEYE}          ${IPVD ADV FEATURES}//nx-tag/div[contains(text(),'${IPVD ADV FEATURE FISHEYE}')]/..
+${IPVD ADV FEATURES MOTION}           ${IPVD ADV FEATURES}//nx-tag/div[contains(text(),'${IPVD ADV FEATURE MOTION}')]/..
+${IPVD ADV FEATURES I/O}              ${IPVD ADV FEATURES}//nx-tag/div[contains(text(),'${IPVD ADV FEATURE I/O}')]/..
+${IPVD ADV FEATURES H.265}            ${IPVD ADV FEATURES}//nx-tag/div[contains(text(),'${IPVD ADV FEATURE H.265}')]/..
+${IPVD ADV FEATURES MULTI SENSOR}     ${IPVD ADV FEATURES}//nx-tag/div[contains(text(),'${IPVD ADV FEATURE MULTI SENSOR}')]/..
+${IPVD ADV FEATURES CLOSE BUTTON}     //span[@class='close-button']
+#IPVD Manufacturers
+${IPVD MANUFACTURERS PANE}            //ipvd//nx-vendor-list/nx-block[@id='vendors']
+${IPVD MANUFACTURERS PANE ITEM}       ${IPVD MANUFACTURERS PANE}//*[@class="float-left mr-1 mb-1"]
+${IPVD AND MORE}                      ${IPVD MANUFACTURERS PANE}//div[@class="manufacture-info"]
+#IPVD Devices
+${IPVD DEVICES PANE}                  //ipvd//nx-vendor-list/nx-block[@id='cameras']
+${IPVD DEVS FILTER EXTRA HIGH RES CAMERAS}    ${IPVD DEVICES PANE}//nx-tag/div[contains(text(),'${IPVD DEV FILTER EXTRA HIGH RES CAMERAS}')]/..
+${IPVD DEVS FILTER CAMERAS WITH ADV PTZ}      ${IPVD DEVICES PANE}//nx-tag/div[contains(text(),'${IPVD DEV FILTER CAMERAS WITH ADV PTZ}')]/..
+${IPVD DEVS FILTER PTZ CAMERAS}               ${IPVD DEVICES PANE}//nx-tag/div[contains(text(),'${IPVD DEV FILTER PTZ CAMERAS}')]/..
+${IPVD DEVS FILTER CAMERAS WITH AUDIO}        ${IPVD DEVICES PANE}//nx-tag/div[contains(text(),'${IPVD DEV FILTER CAMERAS WITH AUDIO}')]/..
+${IPVD DEVS FILTER H.265 CAMERAS}             ${IPVD DEVICES PANE}//nx-tag/div[contains(text(),'${IPVD DEV FILTER H.265 CAMERAS}')]/..
+${IPVD DEVS FILTER ENCODERS}                  ${IPVD DEVICES PANE}//nx-tag/div[contains(text(),'${IPVD DEV FILTER ENCODERS}')]/..
+${IPVD DEVS FILTER 2-WAY AUDIO DEVICES}       ${IPVD DEVICES PANE}//nx-tag/div[contains(text(),'${IPVD DEV FILTER 2-WAY AUDIO DEVICES}')]/..
+${IPVD DEVS FILTER MULTI-SENSOR CAMERAS}      ${IPVD DEVICES PANE}//nx-tag/div[contains(text(),'${IPVD DEV FILTER MULTI-SENSOR CAMERAS}')]/..
+${IPVD DEVS FILTER FISHEYE CAMERAS}           ${IPVD DEVICES PANE}//nx-tag/div[contains(text(),'${IPVD DEV FILTER FISHEYE CAMERAS}')]/..
+${IPVD DEVS FILTER I/O MODULES}               ${IPVD DEVICES PANE}//nx-tag/div[contains(text(),'${IPVD DEV FILTER I/O MODULES}')]/..
+#IPVD Details
+${IPVD DEVICE DETAILS}                //ipvd//nx-cam-view
+${IPVD DEVICE MAKE}                   ${IPVD DEVICE DETAILS}//div[@class="camera-vendor-model"]//span[1]
+${IPVD DEVICE MODEL}                  ${IPVD DEVICE DETAILS}//div[@class="camera-vendor-model"]//span[2]
+${IPVD DEVICE RESOLUTION}             ${IPVD DEVICE DETAILS}//div[text()='Resolution(max)']//following::div[1]
+${IPVD CLOSE DETAILS BUTTON}          //ipvd//header//span[@class="glyphicon close-icon detailsClose"]
+#IPVD Table
+${IPVD TABLE}                         //ipvd//table
+${IPVD TABLE HEADING MANUFACTURER}    ${IPVD TABLE}/thead//div[text()='Manufacturer']
+${IPVD TABLE HEADING LABEL SORT ARROW}    /../div[2]
+${IPVD TABLE ROWS}                    ${IPVD TABLE}/tbody/tr[not(@class='table-row-spacer')]
+${IPVD TABLE FIRST ITEM}              ${IPVD TABLE}/tbody/tr[not(@class='table-row-spacer')][1]
+${IPVD TABLE LAST ITEM}               ${IPVD TABLE}/tbody/tr[not(@class='table-row-spacer')][last()]
+#IPVD Pagination
+${IPVD PAGINATION}                    //ipvd//ngb-pagination/ul
+${IPVD PREVIOUS PAGE BUTTON}          ${IPVD PAGINATION}/li[1]
+${IPVD FIRST PAGE BUTTON}             ${IPVD PAGINATION}/li[1]/following::li[1]
+${IPVD LAST PAGE BUTTON}              ${IPVD PAGINATION}/li[last()]/preceding::li[1]
+${IPVD NEXT PAGE BUTTON}              ${IPVD PAGINATION}/li[last()]
+#IPVD Export
+${IPVD EXPORT TO CSV}                 //ipvd//div[@class='export-button']
 #IPVD Feedback
-${SUBMIT A REQUEST}     //ipvd//a[contains(text(),'submit a request')]
-${SEND DEVICE FEEDBACK}     //ipvd//a[contains(text(),'Send feedback about this device')]
-${IPVD FEEDBACK}                     //nx-modal-message-content//form[@name='messageForm']
-${IPVD FEEDBACK TITLE}               ${IPVD FEEDBACK}//h1
-${IPVD FEEDBACK YOUR NAME}           ${IPVD FEEDBACK}//form[@name='feedbackForm']//input[@id='user_name']
-${IPVD FEEDBACK EMAIL}               ${IPVD FEEDBACK}//form[@name='feedbackForm']//input[@id='user_email']
-${IPVD FEEDBACK MESSAGE}             ${IPVD FEEDBACK}//form[@name='feedbackForm']//textarea[@id='message']
-${IPVD FEEDBACK CONTACT ME}          ${IPVD FEEDBACK}//form[@name='feedbackForm']//input[@type='checkbox' and @id='contact']
-${IPVD FEEDBACK AGREE}               ${IPVD FEEDBACK}//form[@name='feedbackForm']//input[@type='checkbox' and @id='agree']
-${IPVD FEEDBACK PRIVACY POLICY}      ${IPVD FEEDBACK}//form[@name='feedbackForm']//a[text()='Privacy Policy']
-${IPVD FEEDBACK SEND BUTTON}         ${IPVD FEEDBACK}//button[text()='Send']
-${IPVD FEEDBACK CANCEL BUTTON}       ${IPVD FEEDBACK}//button[text()='Cancel']
-${IPVD FEEDBACK CLOSE BUTTON}        ${IPVD FEEDBACK}//button[@class='close']
+${IPVD SUBMIT A REQUEST LINK}        ${IPVD LANDING PAGE TEXT}//a
+${IPVD SUBMIT A REQUEST}              //ipvd//a[contains(text(),"${IPVD SUBMIT A REQUEST TEXT}")]
+${IPVD SEND DEVICE FEEDBACK}          //ipvd//a[contains(text(),"${IPVD SEND DEVICE FEEDBACK TEXT}")]
+${IPVD FEEDBACK}                      //nx-modal-message-content//form[@name='messageForm']
+${IPVD FEEDBACK TITLE}                ${IPVD FEEDBACK}//h1
+${IPVD FEEDBACK FORM}                 ${IPVD FEEDBACK}//form[@name='feedbackForm']
+${IPVD FEEDBACK YOUR NAME}            ${IPVD FEEDBACK FORM}//input[@id='user_name']
+${IPVD FEEDBACK EMAIL}                ${IPVD FEEDBACK FORM}//input[@id='user_email']
+${IPVD FEEDBACK MESSAGE}              ${IPVD FEEDBACK FORM}//textarea[@id='message']
+${IPVD FEEDBACK PRIVACY POLICY}       ${IPVD FEEDBACK FORM}//a[text()="${PRIVACY POLICY LINK TEXT}"]
+${IPVD FEEDBACK SEND BUTTON}          ${IPVD FEEDBACK}//button[text()="${SEND BUTTON TEXT}"]
+${IPVD FEEDBACK CANCEL BUTTON}        ${IPVD FEEDBACK}//button[text()="${CANCEL BUTTON TEXT}"]
+${IPVD FEEDBACK CLOSE BUTTON}         ${IPVD FEEDBACK}//button[@class='close']
+
+${NOTHING FOUND PLACEHOLDER}          //div[contains(@class,'text-placeholder') and contains(text(),"${NOTHING FOUND}")]
 
 #Footer
-${FOOTER ABOUT LINK}                 //footer//a[contains(text(),"${ABOUT} ${PRODUCT_NAME}")]
-${FOOTER KNOWN LIMITS LINK}          //footer//a[contains(text(),"${KNOWN LIMITATIONS}")]
-${FOOTER SUPPORT LINK}               //footer//a[contains(text(),"${SUPPORT}")]
-${FOOTER TERMS LINK}                 //footer//a[contains(text(),"${TERMS}")]
-${FOOTER PRIVACY LINK}               //footer//a[contains(text(),"${PRIVACY}")]
-${FOOTER COPYRIGHT LINK}             //footer//a[contains(text(),"${COPYRIGHT SYMBOL}") and contains(text(),"${YEAR}") and contains(text(),"${COMPANY}")]
-${FOOTER SUPPORTED DEVICES LINK}     //footer//a[contains(text(),"${SUPPORTED DEVICES}"]
+${FOOTER ABOUT LINK}                  //footer//a[contains(text(),"${ABOUT} ${PRODUCT_NAME}")]
+${FOOTER KNOWN LIMITS LINK}           //footer//a[contains(text(),"${KNOWN LIMITATIONS}")]
+${FOOTER SUPPORT LINK}                //footer//a[contains(text(),"${SUPPORT}")]
+${FOOTER TERMS LINK}                  //footer//a[contains(text(),"${TERMS}")]
+${FOOTER PRIVACY LINK}                //footer//a[contains(text(),"${PRIVACY}")]
+${FOOTER COPYRIGHT LINK}              //footer//a[contains(text(),"${COPYRIGHT SYMBOL}") and contains(text(),"${YEAR}") and contains(text(),"${COMPANY}")]
+${FOOTER SUPPORTED DEVICES LINK}      //footer//a[contains(text(),"${SUPPORTED DEVICES}"]
 
 #Misc
 ${PAGE NOT FOUND}                     //h1[contains(text(), '${PAGE NOT FOUND TEXT}')]
@@ -318,8 +371,8 @@ ${300CHARS}                           QWErtyuiopasdfghhkljzxcvbnmqwertyuiopasdfg
 ${255CHARS}                           QWErtyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopas
 
 #Eye icons for password forms
-${EYE ICON OPEN}             //span[@ng-if="!passwordVisible"]
-${EYE ICON CLOSED}           //span[@ng-if="passwordVisible"]
+${EYE ICON OPEN}             //span[@class="glyphicon glyphicon-eye-open"]
+${EYE ICON CLOSED}           //span[@class="glyphicon glyphicon-eye-close"]
 
 #ASCII
 ${ESCAPE}                             \\27

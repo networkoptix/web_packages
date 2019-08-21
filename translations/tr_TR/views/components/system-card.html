@@ -5,12 +5,12 @@
             <button ng-disabled="currentlyMerging && !isMaster" class="btn btn-default" ng-click="rename()">Sistemi yeniden adlandır</button>
         </p>
         <p ng-if="systems.length > 1 && system.canMerge || configCanMerge || debugMode || betaMode">
-            <button class="btn btn-default"
+            <button class="btn btn-default mw-100"
                     ng-disabled="(currentlyMerging || !system.isOnline || !system.isAvailable) && !(debugMode || betaMode)"
-                    ng-click="mergeSystems()">Başka bir sistemle birleştir</button>
+                    ng-click="mergeSystems()"><div class="ellipsis"> Başka Bir Sistemle Birleştir </div></button>
         </p>
         <hr />
-        <button ng-disabled="currentlyMerging" class="btn btn-default" ng-click="disconnect()">Disconnect from
+        <button ng-disabled="currentlyMerging" class="btn btn-default" ng-click="disconnect()">Çıkış yap
             <span class="product-name">&nbsp;%CLOUD_NAME%</span></button>
     </div>
 </div>
@@ -21,7 +21,8 @@
         <a ng-href="mailto:{{system.info.ownerAccountEmail}}">{{system.info.ownerAccountEmail}}</a>
         <hr>
         <p>
-            İzinleriniz: <b> {{$root.L.accessRoles[system.accessRole].label || System.accessRole}} </b>
+            İzinleriniz:
+            <b>{{permission}}</b>
         </p>
 
         <p ng-if="system.permissions.isAdmin">

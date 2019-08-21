@@ -41,10 +41,11 @@
             {% get_data_structure field.name original as data_structure %}
             {% get_datastructure_type data_structure as data_structure_type %}
             {% is_external_file_or_image field.name original as is_external %}
+            {% is_protected data_structure product as protected %}
             {% has_value field.name product original language as record_exists %}
-            <label {% if data_structure.advanced %} class="text-danger" {% endif %}
+            <label {% if data_structure.advanced or protected %} class="text-danger" {% endif %}
                     for="id_{{ field.name }}">{{ field.label }}{% if not data_structure.optional %}*{% endif %}
-                <p class="help">{{ field.name }}</p>
+                {% if user.is_superuser %}<p class="help">{{ field.name }}</p>{% endif %}
                 {% if not data_structure.optional %} <p class="help">required</p> {% endif %}
             </label>
             <div id="{{ field.name }}" class="ml-160">
@@ -55,7 +56,13 @@
                                           name="delete_{{ field.name }}" value="false"/>&nbsp;Clear Value</label>
                             <br><br>
                         {% endif %}
-                        <img class="preview-image context-preview {% if data_structure.optional and not record_exists %} optional-image {% endif %}"
+                        <img class="
+                            {% if 'background' in data_structure.meta_settings and data_structure.meta_settings.background != 'transparent' %}
+                                {{ data_structure.meta_settings.background }}
+                            {% else %}
+                                preview-image
+                            {% endif %}
+                            context-preview {% if data_structure.optional and not record_exists %} optional-image {% endif %}"
                              src="data:image/png;base64,{{ field.value }}">
                     </div>
 
@@ -66,11 +73,17 @@
                                           value="false"/>&nbsp;Clear Value</label>
                         {% endif %}
                         {% if data_structure_type == EXTERNAL_IMAGE %}
-                            <img class="preview-image context-preview {% if data_structure.optional and not record_exists %} optional-image {% endif %}"
+                            <img class="
+                                {% if 'background' in data_structure.meta_settings and data_structure.meta_settings.background != 'transparent' %}
+                                    {{ data_structure.meta_settings.background }}
+                                {% else %}
+                                    preview-image
+                                {% endif %}
+                                context-preview {% if data_structure.optional and not record_exists %} optional-image {% endif %}"
                                  src="{{ field.value }}">
                         {% else %}
                         <a href={% if not is_external %}
-                                    "{% url 'download_file' field.name %}?lang={{ language_code }}&draft"
+                                    "{% url 'download_file' field.name %}?product_id={{ product.id }}&lang={{ language_code }}&draft"
                                 {% else %}
                                     "{{ field.value }}"
                                 {% endif %} download>
@@ -104,7 +117,7 @@
             {% endif %}
             {% if user.is_superuser and context.file_path %}
                 <a class="btn btn-sm btn-default"
-                   href="{% url 'download_file' context.file_path %}?lang={{ language.code }}&draft"
+                   href="{% url 'download_file' context.file_path %}?product_id={{ product.id }}&lang={{ language.code }}&draft"
                    download>Download Draft</a>
             {% endif %}
             {% if product.can_preview_on_portal %}
@@ -119,12 +132,14 @@
 </form>
 
 <script>
+    var bytesToMb = "{{ BYTES_TO_MB }}";
+
     {% if preview_link %}
-        window.open("{{ preview_link }}");
+        window.open("{{ preview_link }}", '', '_blank,noopener,noreferrer');
     {% endif %}
 
     function openPreview() {
-        window.open("{{ preview_link }}");
+        window.open("{{ preview_link }}", '', '_blank,noopener,noreferrer');
     }
 
     function wasTouched() {
@@ -158,6 +173,44 @@
         document.getElementById('context_form').submit();
     }
 
+    var submitButtons = $('.submit-row button[type=submit]');
+    function disableSubmitButtons(state) {
+        for(var j=0; j < submitButtons.length; ++j) {
+            submitButtons[j].disabled = state;
+        }
+    }
+
+    var files = $('[type=file]');
+    function fileHandler(event){
+        var element = event.target;
+        var upload_files = element.files;
+        var errorList = $(element).parents('div').siblings('ul.errorlist');
+        $(errorList).html("");
+
+        if (upload_files.length > 0 && upload_files[0].size > element.size) {
+            var errorMsg = "<li>The file's size it too large. Its size was ";
+            errorMsg += (upload_files[0].size/bytesToMb).toFixed(2).toString();
+            errorMsg += "MB but must be less than ";
+            errorMsg += (element.size/bytesToMb).toFixed(2).toString() + "MB</li>";
+            $(errorList).append(errorMsg);
+            disableSubmitButtons(true);
+        } else {
+            // Check if all of the other files are valid.
+            for (var j = 0; j < files.length; ++j) {
+                // If any are invalid disable submit buttons
+                if(files[j].files.length > 0 && files[j].size < files[j].files[0].size) {
+                    disableSubmitButtons(true);
+                    return;
+                }
+            }
+            disableSubmitButtons(false);
+        }
+    }
+
+    for(var i = 0; i < files.length; ++i) {
+        files[i].addEventListener('change', fileHandler);
+    }
+
     var brandVariables = document.getElementsByClassName('brand-variable');
     for(var i = 0; i < brandVariables.length; i++) {
         var cv = brandVariables[i];
@@ -186,9 +239,23 @@
         langSelector.addEventListener('change', languageChanged, false);
     }
     $('[data-toggle="tooltip"]').tooltip();
+    $('[type=reset]').click(function() {
+        var $errorLists =$('ul.errorlist');
+        for (var i=0; i < $errorLists.length; ++i) {
+            $($errorLists[i]).html("");
+        }
+        disableSubmitButtons(false);
+    });
 
     tinymce.init({
         selector: '.tinymce',
+        paste_postprocess: function(plugin, args) {
+            $(args.node).find('img').each(function () {
+                $(this).on('error', function() {
+                    tinymce.activeEditor.dom.remove(tinymce.activeEditor.dom.select('img[src="' + this.currentSrc +'"]'));
+                });
+            });
+        },
         menubar: false,
         resize: 'both',
         theme: 'advanced',

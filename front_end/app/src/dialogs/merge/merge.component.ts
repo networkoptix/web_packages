@@ -1,9 +1,10 @@
-import { Component, Inject, Input, Renderer2, ViewChild, ViewEncapsulation } from '@angular/core';
-import { NgbModal, NgbActiveModal, NgbModalRef }       from '@ng-bootstrap/ng-bootstrap';
-import { TranslateService } from '@ngx-translate/core';
-import { Location }                              from '@angular/common';
-import { EmailValidator }                        from '@angular/forms';
-import { NxConfigService }                       from '../../services/nx-config';
+import { Component, Inject, Input, Renderer2, ViewChild } from '@angular/core';
+import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
+import { Location }                  from '@angular/common';
+import { EmailValidator }            from '@angular/forms';
+import { NxConfigService }           from '../../services/nx-config';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxSystemsService }          from '../../services/systems.service';
 
 @Component({
     selector   : 'nx-modal-merge-content',
@@ -14,14 +15,13 @@ export class MergeModalContent {
     @Input() system;
     @Input() systems;
     @Input() systemName;
-    @Input() language;
     @Input() closable;
     @Input() user;
 
+    LANG: any;
     checking: boolean;
     checkMergeabilityProcess: any;
     config: any;
-    lang: any;
     mergingProcess: any;
     multipleSystems: boolean;
     outOfDate: boolean;
@@ -37,25 +37,22 @@ export class MergeModalContent {
     tooManySystems: boolean;
     wrongPassword: boolean;
 
-    @ViewChild('mergeForm') mergeForm: HTMLFormElement;
+    @ViewChild('mergeForm', { static: true }) mergeForm: HTMLFormElement;
 
     constructor(public activeModal: NgbActiveModal,
                 public renderer: Renderer2,
                 private configService: NxConfigService,
                 @Inject('process') private process: any,
-                @Inject('account') private account: any,
                 @Inject('system') private systemService: any,
-                @Inject('systemsProvider') private systemsProvider: any,
                 @Inject('cloudApiService') private cloudApi: any,
-                public translateService: TranslateService) {
+                private language: NxLanguageProviderService,
+                private systemsService: NxSystemsService
+    ) {
         this.config = this.configService.getConfig();
         this.checking = false;
         this.state = 'select';
         this.wrongPassword = false;
-        this.translateService.getTranslation(this.translateService.currentLang)
-            .subscribe((translations) => {
-                this.lang = translations;
-        });
+        this.LANG = this.language.getTranslations();
     }
 
     ngOnInit() {
@@ -74,10 +71,10 @@ export class MergeModalContent {
         }, {
             errorCodes: {
                 mergedSystemIsOffline: () => {
-                    return this.language.system.mergeFailed;
+                    return this.LANG.system.mergeFailed;
                 },
                 vmsRequestFailure: () => {
-                    return this.language.system.mergeFailed;
+                    return this.LANG.system.mergeFailed;
                 },
                 wrongPassword: () => {
                     this.mergeForm.controls['mergePassword'].setErrors({ 'wrongPassword': true });
@@ -87,9 +84,9 @@ export class MergeModalContent {
                     this.wrongPassword = true;
                 },
             },
-            successMessage: this.language.system.mergeStart
+            successMessage: this.LANG.system.mergeStart
         }).then(() => {
-            this.systemsProvider.forceUpdateSystems();
+            this.systemsService.forceUpdateSystems();
             this.activeModal.close({
                 anotherSystemId: this.targetSystem.id,
                 role: this.primarySystem.id === this.system.id ?
@@ -119,7 +116,7 @@ export class MergeModalContent {
                 }
 
                 // Check the state of health
-                var primaryState = this.primarySystem.stateOfHealth;
+                let primaryState = this.primarySystem.stateOfHealth;
                 // If stateOfHealth is undefined check in info for stateOfHealth.
                 if (primaryState === undefined) {
                     primaryState = this.primarySystem.info && this.primarySystem.info.stateOfHealth;
@@ -152,9 +149,9 @@ export class MergeModalContent {
 
     addStatus(system) {
         let status = '';
-        const statusIncompatible = ` – ${this.language.systemStatuses.incompatible}`;
-        const statusUnavailable = ` – ${this.language.systemStatuses.unavailable}`;
-        const statusOffline = ` – ${this.language.systemStatuses.offline}`;
+        const statusIncompatible = ` – ${this.LANG.systemStatuses.incompatible}`;
+        const statusUnavailable = ` – ${this.LANG.systemStatuses.unavailable}`;
+        const statusOffline = ` – ${this.LANG.systemStatuses.offline}`;
         const stateOfHealth = system.info && system.info.stateOfHealth || system.stateOfHealth || system.stateMessage || '';
         switch (stateOfHealth) {
             case 'online':
@@ -269,42 +266,41 @@ export class MergeModalContent {
     }
 }
 
-@Component({
-    selector     : 'nx-modal-merge',
-    template     : '',
-    encapsulation: ViewEncapsulation.None,
-    styleUrls    : []
-})
-
-export class NxModalMergeComponent {
-    modalRef: NgbModalRef;
-
-    constructor(@Inject('languageService') private language: any,
-                private modalService: NgbModal) {
-    }
-
-    private dialog(system, systems, user) {
-        // TODO: Refactor dialog to use generic dialog
-        // TODO: retire loading ModalContent (CLOUD-2493)
-        this.modalRef = this.modalService.open(MergeModalContent,
-            {
-                backdrop: 'static',
-                windowClass: 'modal-holder'
-            });
-        this.modalRef.componentInstance.language = this.language.lang;
-        this.modalRef.componentInstance.user = user;
-        this.modalRef.componentInstance.system = system;
-        this.modalRef.componentInstance.systems = systems;
-        this.modalRef.componentInstance.closable = true;
-
-        return this.modalRef;
-    }
-
-    open(system, systems, user) {
-        return this.dialog(system, systems, user).result;
-    }
-
-    close() {
-        this.modalRef.close({});
-    }
-}
+// @Component({
+//     selector     : 'nx-modal-merge',
+//     template     : '',
+//     encapsulation: ViewEncapsulation.None,
+//     styleUrls    : []
+// })
+// export class NxModalMergeComponent {
+//     modalRef: NgbModalRef;
+//
+//     constructor(@Inject('languageService') private language: any,
+//                 private modalService: NgbModal) {
+//     }
+//
+//     private dialog(system, systems, user) {
+//         // TODO: Refactor dialog to use generic dialog
+//         // TODO: retire loading ModalContent (CLOUD-2493)
+//         this.modalRef = this.modalService.open(MergeModalContent,
+//             {
+//                 backdrop: 'static',
+//                 windowClass: 'modal-holder'
+//             });
+//         this.modalRef.componentInstance.language = this.language.lang;
+//         this.modalRef.componentInstance.user = user;
+//         this.modalRef.componentInstance.system = system;
+//         this.modalRef.componentInstance.systems = systems;
+//         this.modalRef.componentInstance.closable = true;
+//
+//         return this.modalRef;
+//     }
+//
+//     open(system, systems, user) {
+//         return this.dialog(system, systems, user).result;
+//     }
+//
+//     close() {
+//         this.modalRef.close({});
+//     }
+// }

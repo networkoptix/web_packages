@@ -3,28 +3,31 @@
     "emailSubject": "Aktivieren Sie Ihr Konto"
   },
   "cloud_invite": {
-    "emailSubject": "You have been invited to %CLOUD_NAME%"
+    "emailSubject": "Sie wurden zu %CLOUD_NAME% eingeladen"
   },
   "cloud_notification": {
     "emailSubject": "{{message.subject}}"
   },
   "contact_sales": {
-    "emailSubject": "Sales inquiry for {{message.product}}"
+    "emailSubject": "Verkaufsanfrage für {{message.product}}"
   },
   "contact_support": {
-    "emailSubject": "Support request for {{message.product}}"
+    "emailSubject": "Supportanfrage für {{message.product}}"
+  },
+  "integration_feedback": {
+    "emailSubject": "Feedback zu {{message.product}}"
   },
   "ipvd_feedback": {
-    "emailSubject": "Rückmeldung der Kameraseite für {{message.product}}"
+    "emailSubject": "Feedback zur Kameraseite{{#message.product}} für {{message.product}}{{/message.product}}"
   },
   "review_version": {
-    "emailSubject": "{{message.product_type}}: {{message.product}} has a new version to review"
+    "emailSubject": "{{message.product_type}}: {{message.product}} hat eine neue Version zum Überprüfen"
   },
   "restore_password": {
     "emailSubject": "Passwort zurücksetzen"
   },
   "system_invite": {
-    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} invites you to %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}Video system {{message.system_name}} was shared with you{{/message.sharer_name}}"
+    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} lädt Sie zu %CLOUD_NAME%{{/message.sharer_name}} ein {{^message.sharer_name}}Videosystem {{message.system_name}} wurde mit Ihnen geteilt{{/message.sharer_name}}"
   },
   "system_shared": {
     "emailSubject": "Videosystem {{message.system_name}} wurde mit Ihnen geteilt"

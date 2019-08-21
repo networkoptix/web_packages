@@ -1,0 +1,27 @@
+<nx-pre-loader type="page" *ngIf="!system"></nx-pre-loader>
+
+<div *ngIf="system">
+    <div *ngIf="!system.forbidden"
+         class="d-flex mt-3 m-0 pl-3" style="max-width: 1440px; min-width: 991px">
+        <div class="p-0" style="width: 350px;">
+            <nx-system-merge></nx-system-merge>
+            <nx-menu [content]="content"></nx-menu>
+
+        </div>
+
+        <div class="col-lg-8 pl-3" style="flex-shrink: 12;">
+            <router-outlet></router-outlet>
+            <div class="">
+                <nx-footer></nx-footer>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="system.forbidden" class="text-center">
+        <h1 class="d-flex justify-content-center" translate>Failed to access System</h1>
+        <h3 class="d-flex justify-content-center" [innerHTML]="'FAILED_SYSTEM_DESCR' | translate"></h3>
+        <p class="mt-4 d-flex justify-content-center">
+            <a href="/systems" class="btn btn-primary" translate>Available Systems list</a>
+        </p>
+    </div>
+</div>

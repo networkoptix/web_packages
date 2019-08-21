@@ -7,7 +7,9 @@ Suite Teardown    Close All Browsers
 *** Variables ***
 ${url}         ${ENV}
 ${password}    ${BASE PASSWORD}
-@{emails}      ${EMAIL VIEWER}    ${EMAIL ADV VIEWER}    ${EMAIL LIVE VIEWER}    ${EMAIL OWNER}    ${EMAIL NOT OWNER}   ${EMAIL ADMIN}    ${EMAIL NOPERM}    ${EMAIL CUSTOM}    ${EMAIL CLIENT CUSTOM}    ${EMAIL AUTO TESTS ANCHOR}    ${EMAIL AUTO TESTS 2 ANCHOR}
+@{emails}      ${EMAIL VIEWER}    ${EMAIL ADV VIEWER}    ${EMAIL LIVE VIEWER}    ${EMAIL OWNER}    ${EMAIL NOT OWNER}
+...            ${EMAIL ADMIN}    ${EMAIL NOPERM}    ${EMAIL CUSTOM}    ${EMAIL CLIENT CUSTOM}    ${EMAIL AUTO TESTS ANCHOR}
+...            ${EMAIL AUTO TESTS 2 ANCHOR}    ${EMAIL MERGE OWNER 1}    ${EMAIL MERGE OWNER 2}    ${EMAIL MERGE OWNER 3.0}
 
 *** Keywords ***
 register and activate

@@ -8,7 +8,11 @@
 @import 'src/styles/_labels';
 @import 'src/styles/_navs';
 @import 'src/styles/_elements';
+@import 'src/styles/_visuals';
+@import 'src/styles/_tables';
+@import 'src/styles/_icons';
 
 // Components (common)
 @import './src/dialogs/dialogs';
 @import './src/components/dropdowns/dropdowns';
+@import './src/components/toast/toast.component';

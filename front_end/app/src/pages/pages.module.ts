@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 
+import { DirectivesModule }  from '../directives/directives.module';
 import { SandboxModule }     from './sandbox/sandbox.module';
 import { IpvdModule }        from './ipvd/ipvd.module';
 import { Angular2CsvModule } from 'angular2-csv';
@@ -7,21 +8,22 @@ import { Angular2CsvModule } from 'angular2-csv';
 import { DownloadModule }            from './download/download.module';
 import { DownloadHistoryModule }     from './download-history/download-history.module';
 import { NonSupportedBrowserModule } from './non-supported-browser/non-supported-browser.module';
-
 import { RegisterModule }            from './register/register.module';
 import { ActivateModule }            from './activate/activate.module';
-
-import { RightMenuModule }        from './right-menu/right-menu.module';
-import { ContentModule }          from './content/content.module';
-import { IntegrationsModule }     from './integration/integrations.module';
-import { IntegrationsListModule } from './integration/list/list.module';
-import { LandingModule }          from './landing/landing.module';
-
-import { NxOverviewModule }  from './integration/details/overview/overview.module';
-import { NxSetupModule }     from './integration/details/setup/setup.module';
+import { RightMenuModule }           from './right-menu/right-menu.module';
+import { ContentModule }             from './content/content.module';
+import { IntegrationsModule }        from './integration/integrations.module';
+import { IntegrationsListModule }    from './integration/list/list.module';
+import { LandingModule }             from './landing/landing.module';
+import { NxOverviewModule }          from './integration/details/overview/overview.module';
+import { NxSetupModule }             from './integration/details/setup/setup.module';
+import { NxSettingsModule }          from './systems/settings/settings.module';
+import { NxSystemsListModule }       from './systems/list/list.module';
+import { NxAccountModule }           from './account/account.module';
 
 @NgModule({
     imports        : [
+        DirectivesModule,
         SandboxModule,
         DownloadModule,
         DownloadHistoryModule,
@@ -37,10 +39,12 @@ import { NxSetupModule }     from './integration/details/setup/setup.module';
         LandingModule,
         NxOverviewModule,
         NxSetupModule,
+        NxSettingsModule,
+        NxSystemsListModule,
+        NxAccountModule,
     ],
     declarations   : [],
-    entryComponents: [
-    ],
+    entryComponents: [],
     providers      : [],
     exports        : [
         SandboxModule,
@@ -51,6 +55,7 @@ import { NxSetupModule }     from './integration/details/setup/setup.module';
         ActivateModule,
         IntegrationsModule,
         IntegrationsListModule,
+        NxSettingsModule,
         ContentModule,          // TODO: Remove it after test
         RightMenuModule,        // TODO: Remove it after test
         IpvdModule,

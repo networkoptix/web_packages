@@ -7,16 +7,25 @@
         .controller('StartPageCtrl', StartPage);
 
     StartPage.$inject = [ '$scope', 'cloudApi', '$location', '$routeParams',
-        'dialogs', 'account', 'authorizationCheckService',
+        'dialogs', 'nxAccountService',
         'languageService', 'nxPageService', '$base64' ];
 
     function StartPage($scope, cloudApi, $location, $routeParams,
-                       dialogs, account, authorizationCheckService,
+                       dialogs, nxAccountService,
                        languageService, nxPageService, $base64) {
 
         if ($routeParams.callLogin) {
-            nxPageService.setPageTitle(languageService.lang.pageTitles.login);
-            dialogs.login(false);
+            nxAccountService
+                .checkLoginState()
+                .then(function() {
+                    nxAccountService.redirectAuthorised();
+    
+                })
+                .catch(function () {
+                    nxPageService.setPageTitle(languageService.lang.pageTitles.login);
+                    dialogs.login(false);
+                });
+            
             
         } else {
             var search = $location.search(),
@@ -33,24 +42,27 @@
                     const index = auth.indexOf(':');
                     const tempLogin = auth.substring(0, index);
                     const tempPassword = auth.substring(index + 1);
-                    
-                    authorizationCheckService
+    
+                    nxAccountService
                         .login(tempLogin, tempPassword, false)
                         .then(function () {
-                            authorizationCheckService.redirectAuthorised();
-                            $scope.userEmail = account.getEmail();
+                            $scope.userEmail = nxAccountService.getEmail();
+                            nxAccountService.redirectAuthorised();
                         })
                         .finally(function () {
                             $location.search('auth', undefined);
                         });
                 }
             } else {
-                authorizationCheckService
+                nxAccountService
                     .checkLoginState()
                     .then(function () {
-                        authorizationCheckService.redirectAuthorised();
-                        $scope.userEmail = account.getEmail();
+                        $scope.userEmail = nxAccountService.getEmail();
+                        nxAccountService.redirectAuthorised();
                     })
+                    .catch(function () {
+                        nxPageService.setPageTitle(languageService.lang.pageTitles.default);
+                    });
             }
         }
     }

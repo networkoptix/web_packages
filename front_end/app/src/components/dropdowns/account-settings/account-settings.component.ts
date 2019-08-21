@@ -1,6 +1,7 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { NxLanguageProviderService } from '../../../services/nx-language-provider';
-import { TranslateService }          from '@ngx-translate/core';
+import { Component, OnInit } from '@angular/core';
+import { Location }          from '@angular/common';
+import { NxConfigService }   from '../../../services/nx-config';
+import { NxAccountService }  from '../../../services/account.service';
 
 @Component({
     selector: 'nx-account-settings-select',
@@ -9,6 +10,7 @@ import { TranslateService }          from '@ngx-translate/core';
 })
 
 export class NxAccountSettingsDropdown implements OnInit {
+    config: any;
     settings = {
         email: '',
         is_staff: false,
@@ -16,25 +18,35 @@ export class NxAccountSettingsDropdown implements OnInit {
     };
     show: boolean;
 
-    constructor(@Inject('account') private account: any) {
+    constructor(private accountService: NxAccountService,
+                private _config: NxConfigService,
+                private location: Location) {
+        this.config = this._config.getConfig();
         this.show = false;
     }
 
     ngOnInit(): void {
-        this.account
+        this.accountService
             .checkLoginState()
             .then(() => {
-                this.account
+                this.accountService
                     .get()
-                    .then(result => {
-                        this.settings.email = result.email;
-                        this.settings.is_staff = result.is_staff;
-                        this.settings.is_superuser = result.is_superuser;
+                    .then(account => {
+                        if (account) {
+                            this.settings.email = account.email;
+                            this.settings.is_staff = account.is_staff;
+                            this.settings.is_superuser = account.is_superuser;
+                        }
                     });
-            });
+            })
+            .catch(() => {});
     }
 
     logout(): void {
-        this.account.logout();
+        const url = this.location.path();
+        const stay = url.startsWith('/systems') ||
+                     url.startsWith('/account') ||
+                     url.startsWith('/download') && !(this.config.publicDownloads || this.config.publicReleases);
+        this.accountService.logout(!stay);
     }
 }

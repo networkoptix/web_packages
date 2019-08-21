@@ -1,0 +1,471 @@
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { NxConfigService } from './nx-config';
+import { Observable, of, throwError} from 'rxjs';
+import { finalize, retryWhen } from 'rxjs/operators';
+import { Location } from '@angular/common';
+
+
+interface User {
+    canBeEdited: boolean;
+    canBeDeleted: boolean;
+    email: string;
+    isCloud: boolean;
+    isEnabled: boolean;
+    userRoleId: string;
+    permissions: string;
+    // TODO: Remove the trash below after #VMS-2968
+    name: string;
+    fullName: string;
+}
+
+
+class NxSystemAPI {
+    /*
+    * System API is a unified service for making API requests to media servers
+    *
+    * There are several modes for this service:
+    * 1. Upper level: working locally (no systemId) or through the cloud (with systemId)
+    * 2. Lower level: workgin with default server (no serverID) or through the proxy (with serverId)
+    *
+    * Service supports authentification methods for all these cases
+    * 1. working locally we use cookie authentification on server
+    * 2. working through cloud we use cloudAPI method to get auth keys
+    *
+    * Service also supports re-authentification?
+    *
+    *
+    * Service also should support global handlers for responses:
+    * 1. Not authorised
+    * 2. Server offline
+    * 3. Server not available
+    *
+    * Other error handling is done outside. For example, in process service, or in model
+    * No http cache here - caching is handled either by browser or by upper-level model
+    *
+    * Service is initialised to work with specific system and server.
+    * Each instance representing a single connection and is cached
+    *
+    *
+    * TODO (v 3.2): Support websocket connection to server as well
+    * */
+    private authGet: string;
+    private authPost: string;
+    private authPlay: string;
+
+    readonly emptyId = '{00000000-0000-0000-0000-000000000000}';
+
+    CONFIG: any;
+    http: any;
+    location: any;
+
+    abortReason: string;
+    serverId: string;
+    systemId: string;
+    currentUser: any;
+    userEmail: string;
+    userRequest: any;
+    urlBase: string;
+    unauthorizedCallback: any;
+
+    constructor(http, config, location, userEmail, systemId, serverId, unauthorizedCallback) {
+        this.http = http;
+        this.CONFIG = config;
+        this.location = location;
+        this.init(userEmail, systemId, serverId, unauthorizedCallback);
+    }
+
+    private getUrlBase() {
+        let urlBase = '';
+        if (this.systemId) {
+            urlBase = window.location.protocol + '//' +
+            (this.CONFIG.trafficRelayHost.replace('{host}', window.location.host).replace('{systemId}', this.systemId));
+        }
+        urlBase += '/web';
+        if (this.serverId) {
+            urlBase += '/proxy/' + this.serverId;
+        }
+        return urlBase;
+    }
+
+    private generateGetUrl(url: string, data: any, absUrl?: boolean) {
+        const params = new HttpParams(data);
+        if (absUrl) {
+            const proto = window.location.protocol;
+            const hostName = window.location.hostname;
+            const usePort = window.location.port;
+            const port = usePort ? `:${usePort}` : '';
+            url = `${proto}//${hostName}${port}${url}`;
+        } else {
+            url = `${this.urlBase}${url}`;
+        }
+        return `${url}/${params}`;
+    }
+
+    private get(url: string, params?: any) {
+        params = params || {};
+        params.auth = this.authGet;
+        const fullUrl = `${this.urlBase}${url}`;
+        return this.http.get(fullUrl, {params}).pipe(
+            retryWhen((error) => {
+                return this.retryHandler(error);
+            })
+        );
+    }
+
+    private post(url: string, data?: any) {
+        data = data || {};
+        const fullUrl = `${this.urlBase}${url}`;
+        return this.http.post(fullUrl, data, {params: {auth: this.authPost}}).pipe(
+            retryWhen((error) => {
+                return this.retryHandler(error);
+            })
+        );
+    }
+
+    private retryHandler(error) {
+        if (error.status === 401 || error.status === 403  || error.resultCode === 'forbidden') {
+            return this.unauthorizedCallback(error).subscribe(() => {
+                return throwError(error);
+            }, () => {
+                return of();
+            });
+        } else if (error.status === 503) { // Repeat the request once again for 503 error
+            return throwError(error); // this.wrapRequest(method, url, data, true);
+        }
+
+        return of();
+    }
+
+    init(userEmail, systemId, serverId, unauthorizedCallback) {
+        this.setAuthKeys('', '', '');
+        this.userEmail = userEmail;
+        this.systemId = systemId;
+        this.serverId = serverId;
+        this.unauthorizedCallback = unauthorizedCallback;
+        this.urlBase = this.getUrlBase();
+    }
+
+    cleanId(id) {
+        return id.replace('{', '').replace('}', '');
+    }
+
+    // private wrapRequest (method, url, data, repeat) {
+    //     const auth = method === 'GET' ? this.authGet : this.authPost;
+    //     const getData = method === 'GET' ? data : undefined;
+    //     const postData = method === 'POST' ? data : undefined;
+    //     const requestUrl = this._setGetParams(url, getData, this.systemId && auth);
+    //
+    //     let canceler = new Promise();
+    //     const request = this.http.request({
+    //         method: method,
+    //         url: requestUrl,
+    //         data: postData,
+    //         timeout: canceler.promise
+    //     });
+    //
+    //     const promise = request.catch((error) => {
+    //         if (error.status === 401 || error.status === 403  || error.data && error.data.resultCode === 'forbidden') {
+    //             if (!repeat && this.unauthorizedCallback) { // first attempt
+    //                 // Here we call a handler for unauthorised request. If handler promises success - we repeat the request once again.
+    //                 // Handler is supposed to try and update auth keys
+    //                 return this.unauthorizedCallback(error).then(function() {
+    //                     return this.wrapRequest(method, url, data, true);
+    //                 }, () => {
+    //                     // $rootScope.$broadcast('unauthorized_' + self.systemId);
+    //                     return Promise.reject(error);
+    //                 });
+    //             }
+    //             // Not authorised request - we lost connection to the system, broadcast this for active controller to handle the situation if needed
+    //             // $rootScope.$broadcast('unauthorized_' + self.systemId);
+    //         }
+    //         if (!repeat && error.status === 503) { // Repeat the request once again for 503 error
+    //             return this.wrapRequest(method, url, data, true);
+    //         }
+    //
+    //         return Promise.reject(error); // We cannot handle the problem at this level, pass it up
+    //     });
+    //
+    //     promise.then(() => {
+    //         canceler = undefined;
+    //     }, () => {
+    //         canceler = undefined;
+    //     });
+    //     promise.abort((reason) => {
+    //         this.abortReason = reason; // Save this information for the promise handler
+    //         if (canceler) {
+    //             canceler.resolve('abort request: ' + reason);
+    //         }
+    //     });
+    //
+    //     return promise;
+    // }
+
+    apiHost() {
+        if (this.systemId) {
+            return this.CONFIG.trafficRelayHost.replace('{host}', window.location.host).replace('{systemId}', this.systemId);
+        }
+        return window.location.host;
+    }
+
+    /* Authentication */
+    getCurrentUser (forceReload?: boolean): Observable<any> {
+        if (forceReload) { // Clean cache to
+            this.currentUser = undefined;
+            this.userRequest = undefined;
+        }
+        if (this.currentUser) { // We have user - return him right away
+            return of(this.currentUser);
+        }
+        if (this.userRequest) { // Currently requesting user
+            return this.userRequest;
+        }
+        if (this.userEmail) { // Cloud portal mode - getCurrentUser is not working
+            this.userRequest = this.get('/ec2/getUsers').pipe(
+                finalize(() => {
+                    this.userRequest = undefined;
+                })
+            ).subscribe((result: any) => {
+                this.currentUser = result.find((user) => {
+                    return user.name.toLowerCase() === this.userEmail.toLowerCase();
+                });
+                return this.currentUser;
+            });
+        } else { // Local system mode ???
+            this.userRequest = this.get('/api/getCurrentUser').pipe(
+                finalize(() => {
+                    this.userRequest = undefined;
+                })
+            ).subscribe((result) => {
+                this.currentUser = result;
+                return this.currentUser;
+            });
+        }
+
+        this.userRequest.finally(function() {
+            this.userRequest = undefined; // Clear cache in case of errors
+        });
+        return this.userRequest;
+    }
+
+    getRolePermissions(roleId) {
+        return this.get('/ec2/getUserRoles', {id: roleId});
+    }
+
+    checkPermissions(flag) {
+        // TODO: getCurrentUser will not work on portal for 3.0 systems, think of something
+        return this.getCurrentUser().subscribe((user: any) => {
+            if (!user.isAdmin && this.isEmptyId(user.userRoleId)) {
+                return this.getRolePermissions(user.userRoleId).subscribe((role: any) => {
+                    return role.permissions.indexOf(flag) > -1;
+                });
+            }
+            return user.isAdmin || user.permissions.indexOf(flag) > -1;
+        });
+    }
+
+    setAuthKeys(authGet, authPost, authPlay) {
+        this.authGet = authGet;
+        this.authPost = authPost;
+        this.authPlay = authPlay;
+    }
+    /* End of Authentication  */
+
+    /* Server settings */
+    getServerTimes() {
+        return this.get('/ec2/getTimeOfServers');
+    }
+
+    getSystemTime () {
+        return this.get('/api/synchronizedTime');
+    }
+    /* End of Server settings */
+
+    /* Working with users*/
+    getAggregatedUsersData() {
+        return this.get('/api/aggregator?exec_cmd=ec2%2FgetUsers&exec_cmd=ec2%2FgetPredefinedRoles&exec_cmd=ec2%2FgetUserRoles');
+    }
+
+    saveUser(user) {
+        return this.post('/ec2/saveUser', this.cleanUserObject(user));
+    }
+
+    deleteUser(userId) {
+        return this.post('/ec2/removeUser', {id: userId});
+    }
+
+    isEmptyId(id) {
+        return !id || id === this.emptyId;
+    }
+
+    cleanUserObject(user) { // Remove unnesesary fields from the object
+        const cleanedUser: any = {};
+        if (user.id) {
+            cleanedUser.id = user.id;
+        }
+        const supportedFields = ['email', 'name', 'fullName', 'userId', 'userRoleId', 'permissions', 'isCloud', 'isEnabled'];
+        supportedFields.forEach((field: string) => {
+            if (field in user) {
+                cleanedUser[field] = user[field];
+            }
+        });
+        if (!cleanedUser.userRoleId) {
+            cleanedUser.userRoleId = this.emptyId;
+        }
+        cleanedUser.email = cleanedUser.email.toLowerCase();
+        cleanedUser.name = cleanedUser.name.toLowerCase();
+        return cleanedUser;
+    }
+
+    userObject(fullName, email): User {
+        return {
+            canBeEdited : true,
+            canBeDeleted : true,
+            email,
+            isCloud: true,
+            isEnabled: true,
+            userRoleId: this.emptyId,
+            permissions: '',
+            // TODO: Remove the trash below after #VMS-2968
+            name: email,
+            fullName,
+        };
+    }
+    /* End of Working with users */
+
+    /* Cameras and Servers */
+    getCameras(id) {
+        const params = id ? {id: this.cleanId(id)} : {};
+        return this.get('/ec2/getCamerasEx', params);
+    }
+
+    getMediaServers(id) {
+        const params = id ? {id: this.cleanId(id)} : {};
+        return this.get('/ec2/getMediaServersEx', params);
+    }
+
+    getMediaServersAndCameras() {
+        return this.get('/api/aggregator?exec_cmd=ec2%2FgetMediaServersEx&exec_cmd=ec2%2FgetCamerasEx');
+    }
+
+    getResourceTypes() {
+        return this.get('/ec2/getResourceTypes');
+    }
+    /* End of Cameras and Servers */
+
+    /* Formatting urls */
+    previewUrl(cameraId, time, width, height) {
+        const data: any = {
+            cameraId: this.cleanId(cameraId)
+        };
+        let endpoint = '/ec2/cameraThumbnail';
+
+        if (time) {
+            data.time = time;
+        } else {
+            endpoint += '?ignoreExternalArchive';
+            data.time = 'LATEST';
+        }
+
+        if (width) {
+            data.width = width;
+        }
+
+        if (height) {
+            data.height = height;
+        }
+        if (this.systemId) {
+            data.auth = this.authGet;
+        }
+        return this.generateGetUrl(endpoint, data);
+    }
+
+    hlsUrl(cameraId, position, resolution) {
+        const data: any = {
+            auth: this.authGet
+        };
+        if (position) {
+            data.pos = position;
+        }
+        const url = `/hls/${this.cleanId(cameraId)}.m3u8?${resolution}`;
+        return this.generateGetUrl(url, data, true);
+    }
+
+    webmUrl(cameraId, position, resolution, force) {
+        const data: any = {
+            auth: this.authGet,
+            resolution
+        };
+        if (position) {
+            data.pos = position;
+        }
+        const url = `/media/${this.cleanId(cameraId)}.webm?rt`;
+        return this.generateGetUrl(url, data, force);
+    }
+    /* End of formatting urls */
+
+    /* Working with archive*/
+    getRecords(cameraId, startTime, endTime, detail, limit, label, periodsType) {
+        const date = new Date();
+        if (typeof(startTime) === 'undefined') {
+            startTime = date.getTime() - 30 * 24 * 60 * 60 * 1000;
+        }
+        if (typeof(endTime) === 'undefined') {
+            endTime = date.getTime() + 100 * 1000;
+        }
+        if (typeof(detail) === 'undefined') {
+            detail = (endTime - startTime) / 1000;
+        }
+
+        if (typeof(periodsType) === 'undefined') {
+            periodsType = 0;
+        }
+        const params: any = {
+            cameraId: this.cleanId(cameraId),
+            detail,
+            endTime,
+            periodsType,
+            startTime
+        };
+        if (limit) {
+            params.limit = limit;
+        }
+        // RecordedTimePeriods
+        return this.get(`/ec2/recordedTimePeriods?flat&keepSmallChunks&${label || ''}`, params);
+    }
+    /* End of Working with archive*/
+
+    setCameraPath(cameraId) {
+        let systemLink = '';
+        const route = this.location.path().indexOf('/embed') === 0 ? '/embed/' : '';
+
+        if (this.systemId) {
+            if (route !== '') {
+                systemLink = route + this.systemId;
+            } else {
+                systemLink = `/systems/${this.systemId}`;
+            }
+        }
+        this.location.path(`${systemLink}/view/${this.cleanId(cameraId)}`, false);
+    }
+}
+
+
+@Injectable({
+    providedIn: 'root'
+})
+export class NxSystemAPIService {
+    CONFIG: any;
+    location: any;
+
+    constructor(private http: HttpClient,
+                private config: NxConfigService,
+                location: Location) {
+        this.location = location;
+        this.CONFIG = this.config.getConfig();
+    }
+
+    createConnection(user, systemId, serverId, unauthorizedCallback) {
+        return new NxSystemAPI(this.http, this.CONFIG, this.location, user, systemId, serverId, unauthorizedCallback);
+    }
+}

@@ -7,28 +7,13 @@
   "dialogs": {
     "okButton": "OK",
     "cancelButton": "Anuluj",
-    "loginTitle": "Log in to %CLOUD_NAME%",
+    "loginTitle": "Zaloguj do %CLOUD_NAME%",
     "loginButton": "Zaloguj",
     "logoutAuthorisedTitle": "Jesteś już zalogowany",
     "logoutAuthorisedContinueButton": "Kontynuuj",
     "logoutAuthorisedLogoutButton": "Wyloguj",
-    "messageFailed": "Wysyłanie wiadomości nie powiodło się.",
-    "messageSent": "Wiadomość została wysłana.",
     "noClientDetectedTitle": "Zainstaluj %VMS_NAME%, aby przejrzeć swój system",
     "download": "Pobierz %VMS_NAME%"
-  },
-  "messageDialog": {
-    "title": {
-      "integration": "Email for {{product}}",
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Feedback about {{product}}"
-    },
-    "topic": {
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Feedback about {{product}}",
-      "contact_sales": "Contact sales for {{product}}",
-      "contact_support": "Contact support for {{product}}"
-    }
   },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
@@ -140,7 +125,7 @@
     "wrongParameters": "Niektóre parametry na formularzu są niepoprawne",
     "wrongCode": "Konto jest już aktywne lub kod potwierdzenia jest nieprawidłowy",
     "wrongCodeRestore": "Kod potwierdzenia został już użyty lub jest nieprawidłowy",
-    "wrongAuthCode": "Code is expired or incorrect",
+    "wrongAuthCode": "Kod wygasł lub jest nieprawidłowy",
     "forbidden": "Nie masz uprawnień do wykonania tej operacji",
     "accountNotActivated": "To konto nie jest jeszcze aktywne. <a href=\"/activate\">Wyślij ponownie link aktywacyjny</a>",
     "accountBlocked": "Konto jest tymczasowo zablokowane. Prosimy spróbować ponownie za kilka minut.",
@@ -162,7 +147,7 @@
     "mergedSystemIsOffline": "System <strong>{{failedSystem}}</strong> jest w trybie offline.",
     "INCOMPATIBLE": "Systemy mają różne wersje oprogramowania. Zaktualizuj oba z nich do <a href=\"/download\">najnowszej wersji</a>.",
     "FAIL": "System <strong>{{failedSystem}}</strong> jest obecnie niedostępny.<br>Spróbuj ponownie za kilka minut lub skontaktuj się z <a href=\"%SUPPORT_LINK%\" target=\"_blank\">działem wsparcia technicznego</a>.",
-    "unknownMergeError": "Unknown error. You can try to refresh the page and repeat attempt. If the problem persists – please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>."
+    "unknownMergeError": "Nieznany błąd. Można odświeżyć stronę i spróbować ponownie. Jeśli problem będzie się powtarzał - proszę skontaktować się z <a href=\"%SUPPORT_LINK%\" target=\"_blank\">działem wsparcia technicznego</a>."
   },
   "merging": {
     "mergeFailedTitle": "Łączenie systemów nie powiodło się",
@@ -203,7 +188,7 @@
     "confirmRenameTitle": "Nazwa systemu",
     "confirmRenameAction": "Zachowaj",
     "successRename": "Zapisana nazwa systemu",
-    "confirmDisconnectTitle": "Disconnect System from %CLOUD_NAME%?",
+    "confirmDisconnectTitle": "Odłączyć system od %CLOUD_NAME%?",
     "confirmDisconnectAction": "Rozłącz",
     "confirmUnshareFromMe": "Zamierzasz odłączyć ten system od swojego konta. Nie będziesz już mieć dostępu do tego systemu. Czy na pewno kontynuować?",
     "confirmUnshareFromMeTitle": "Odłączyć system?",
@@ -211,7 +196,7 @@
     "confirmUnshare": "Ten użytkownik nie będzie mógł uzyskać dostępu do systemu. Czy na pewno kontynuować?",
     "confirmUnshareTitle": "Usunąć użytkownika?",
     "confirmUnshareAction": "Usuń",
-    "successDisconnected": "System is successfully disconnected from %CLOUD_NAME%",
+    "successDisconnected": "System został pomyślnie odłączony od %CLOUD_NAME%",
     "successDeleted": "System {{systemName}} został pomyślnie usunięty z Twojego konta",
     "mergeFailed": "Łączenie systemu nie powiodło się",
     "mergeStart": "Rozpoczęto złączanie systemów",
@@ -253,7 +238,7 @@
     },
     "systemOffline": "Serwer jest odłączony",
     "systemHasNoCameras": "BRAK KAMER",
-    "systemUnreachable": "SYSTEM IS UNREACHABLE",
+    "systemUnreachable": "SYSTEM JEST NIEDOSTĘPNY",
     "cameraStates": {
       "offline": "Offline",
       "error": "Błąd",
@@ -271,8 +256,8 @@
     "searchCamPlaceholder": "Szukaj",
     "resolution": {
       "auto": "Auto",
-      "high": "Wysoki",
-      "low": "Niski"
+      "high": "Wysoka",
+      "low": "Niska"
     },
     "chromeCastWarning": "Chromecast wymaga dużej ilości zasobów i może powodować problemy na serwerze.",
     "voiceCommands": {

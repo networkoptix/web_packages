@@ -35,6 +35,7 @@
             "type": "image",
             "description": "Image for page. Image goes above text on page",
             "meta": {
+              "background": "light",
               "format": "png"
             }
           },
@@ -44,6 +45,7 @@
             "type": "image",
             "description": "High res image for page. Image goes above text on page",
             "meta": {
+              "background": "light",
               "format": "png"
             }
           }
@@ -75,7 +77,6 @@
             "advanced": true,
             "type": "select",
             "meta": {
-              "multi": false,
               "options": [
                 "blue",
                 "green",
@@ -214,6 +215,7 @@
             "description": "Favicon for browser tabs",
             "type": "image",
             "meta": {
+              "background": "transparent",
               "format": "ico"
             }
           },
@@ -224,6 +226,7 @@
             "description": "Logo for branding. ",
             "type": "image",
             "meta": {
+              "background": "white",
               "format": "png",
               "height_le": 72,
               "height_ge": 64
@@ -236,6 +239,7 @@
             "description": "Logo for email. ",
             "type": "image",
             "meta": {
+              "background": "white",
               "format": "png",
               "height_ge": 32,
               "height_le": 64,
@@ -267,6 +271,7 @@
             "description": "Image for the front page. Image must have transparent background.",
             "type": "image",
             "meta": {
+              "background": "light",
               "format": "png",
               "height_ge": 220
             }
@@ -358,6 +363,78 @@
             "name": "%CONTENT%",
             "value": "",
             "description": "Content for ARM support policy page",
+            "type": "html",
+            "advanced": true
+          }
+        ]
+      },
+      {
+        "name": "End user license agreement(VMS) page",
+        "label": "End user license agreement(VMS) page",
+        "file_path": "static/lang_{{language}}/views/static/eula-vms.html",
+        "url": "/content/eula-vms",
+        "translatable": true,
+        "values": [
+          {
+            "label": "End user license agreement(VMS) Title",
+            "name": "%TITLE%",
+            "value": "End user license agreement(VMS)",
+            "description": "Title for the End user license agreement(VMS) page",
+            "type": "text",
+            "advanced": true
+          },
+          {
+            "label": "End user license agreement(VMS) Page Content",
+            "name": "%CONTENT%",
+            "value": "",
+            "description": "Content for End user license agreement(VMS) page",
+            "type": "html",
+            "advanced": true
+          }
+        ]
+      },
+      {
+        "name": "Developer license agreement page",
+        "label": "Developer license agreement page",
+        "file_path": "static/lang_{{language}}/views/static/eula-developers.html",
+        "url": "/content/eula-developers",
+        "translatable": true,
+        "values": [
+          {
+            "label": "Developer license agreement Title",
+            "name": "%TITLE%",
+            "value": "Developer license agreement",
+            "description": "Title for the Developer license agreement page",
+            "type": "text",
+            "advanced": true
+          },
+          {
+            "label": "Developer license agreement Page Content",
+            "name": "%CONTENT%",
+            "value": "",
+            "description": "Content for Developer license agreement page",
+            "type": "html",
+            "advanced": true
+          }
+        ]
+      },
+      {
+        "name": "Open Source Libraries Disclosure Page",
+        "file_path": "static/lang_{{language}}/views/static/libraries.html",
+        "url": "/content/libraries",
+        "translatable": true,
+        "values":[
+          {
+            "label": "Libraries Page Title",
+            "name": "%TITLE%",
+            "value": "OPEN SOURCE SOFTWARE DISCLOSURE FOR %VMS_NAME% and %CLOUD_NAME%",
+            "type": "text",
+            "advanced": true
+          },
+          {
+            "label": "Libraries Page Content",
+            "name": "%CONTENT%",
+            "value": "<p>%VMS_NAME% and %CLOUD_NAME% include third-party code licensed for use and redistribution under open-source licenses. Below is a list of disclosures and disclaimers in connection with %VMS_NAME% and %CLOUD_NAME% incorporation of certain open-source licensed software into its services. Notwithstanding any of the terms and conditions of your license agreement with %COMPANY_NAME%, the terms of certain open-source licenses may be applicable to your use of the %VMS_NAME% and %CLOUD_NAME% software, as set forth below.</p> <p>This list of open-source code was compiled with reference to third-party software incorporated into the services as of the date the list was generated. This list may be updated from time to time and may not be complete.</p> <p>ALL INFORMATION HERE IS PROVIDED 'AS IS.' %VMS_NAME%, %CLOUD_NAME% AND ITS SUPPLIERS MAKE NO REPRESENTATIONS OR WARRANTIES, EXPRESS OR IMPLIED, WITH REGARD TO THIS LIST OR ITS ACCURACY OR COMPLETENESS, OR WITH RESPECT TO ANY RESULTS TO BE OBTAINED FROM USE OR DISTRIBUTION OF THE LIST. BY USING OR DISTRIBUTING THIS LIST, YOU AGREE THAT IN NO EVENT SHALL %COMPANY_NAME% BE HELD LIABLE FOR ANY DAMAGES WHATSOEVER RESULTING FROM ANY USE OR DISTRIBUTION OF THIS LIST, INCLUDING, WITHOUT LIMITATION, ANY SPECIAL, CONSEQUENTIAL, INCIDENTAL OR OTHER DIRECT OR INDIRECT DAMAGES.</p> <ol start='1'> <li>Qt<br /><a href='https://www.google.com/url?q=https://www.qt.io/download&amp;sa=D&amp;ust=1561147779757000'>https://www.qt.io/download</a>&nbsp;<br />Copyright &copy; The Qt Company Ltd.<br />Licensed under the GNU Lesser General Public License (LGPL) version 3, which is available at <a href='https://www.google.com/url?q=https://doc.qt.io/qt-5/lgpl.html&amp;sa=D&amp;ust=1561147779757000'>https://doc.qt.io/qt-5/lgpl.html</a></li> <li>QtWebkit<br /><a href='https://www.google.com/url?q=https://github.com/qt/qtwebkit&amp;sa=D&amp;ust=1561147779757000'>https://github.com/qt/qtwebkit</a>&nbsp;<br />Copyright &copy; The Qt Company Ltd.<br />Licensed under the GNU Lesser General Public License (LGPL) version 2.1, which is available at <a href='https://www.google.com/url?q=https://github.com/qt/qtwebkit/blob/5.212/LICENSE.LGPLv21&amp;sa=D&amp;ust=1561147779757000'>https://github.com/qt/qtwebkit/blob/5.212/LICENSE.LGPLv21</a></li> <li>Boost<br /><a href='https://www.google.com/url?q=https://github.com/zeroclipboard/zeroclipboard&amp;sa=D&amp;ust=1561147779758000'>https://github.com/zeroclipboard/zeroclipboard</a>&nbsp;<br />Copyright Beman Dawes, David Abrahams, 1998-2005. Copyright Rene Rivera 2004-2007.<br />Licensed under the Boost Software License, Version 1.0, which is available at <a href='https://www.google.com/url?q=https://www.boost.org/users/license.html&amp;sa=D&amp;ust=1561147779758000'>https://www.boost.org/users/license.html</a></li> <li>Festival<br /><a href='https://www.google.com/url?q=http://www.cstr.ed.ac.uk/projects/festival/&amp;sa=D&amp;ust=1561147779759000'>http://www.cstr.ed.ac.uk/projects/festival/</a><br />Copyright &copy; The University of Edinburgh.<br />Licensed under the free X11-type License, which is available at the %VMS_NAME% installation folder (Client/&lt;version&gt;/vox/dicts).</li> <li>Qt Solutions (QtService, QtSingleApplication)<br /><a href='https://www.google.com/url?q=https://github.com/qtproject/qt-solutions&amp;sa=D&amp;ust=1561147779759000'>https://github.com/qtproject/qt-solutions</a><br />Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies)<br />Licensed under the BSD License, which is available below:</li> </ol> <p>Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).</p> <p>Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:</p> <ul> <li>Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.</li> <li>Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.</li> <li>Neither the name of Digia Plc and its Subsidiary(-ies) nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.</li> </ul> <p>** THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 'AS IS' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</p> <ol start='6'> <li>Roboto Font<br /><a href='https://www.google.com/url?q=https://www.fontsquirrel.com/fonts/roboto&amp;sa=D&amp;ust=1561147779760000'>https://www.fontsquirrel.com/fonts/roboto</a>&nbsp;<br />Copyright Beman Dawes, David Abrahams, 1998-2005. Copyright Rene Rivera 2004-2007.<br />Licensed under the Apache License, Version 2.0, which is available at <a href='https://www.google.com/url?q=https://www.fontsquirrel.com/license/roboto&amp;sa=D&amp;ust=1561147779761000'>https://www.fontsquirrel.com/license/roboto</a></li> <li>FFMpeg (with libogg, libvorbis)<br /><a href='https://www.google.com/url?q=http://ffmpeg.org/&amp;sa=D&amp;ust=1561147779761000'>http://ffmpeg.org/</a>&nbsp;<br />FFmpeg is a trademark of Fabrice Bellard, originator of the FFmpeg project.<br />Licensed under GNU Lesser General Public License (LGPL) version 2.1, available at <a href='https://www.google.com/url?q=http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html&amp;sa=D&amp;ust=1561147779761000'>http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html</a></li> <li>GTest, GMock<br /><a href='https://www.google.com/url?q=https://github.com/google/googletest&amp;sa=D&amp;ust=1561147779762000'>https://github.com/google/googletest</a>, <a href='https://www.google.com/url?q=https://github.com/google/googlemock&amp;sa=D&amp;ust=1561147779762000'>https://github.com/google/googlemock</a>&nbsp;<br />Copyright 2008, Google Inc.<br />Licensed under the Google License, which is available at <a href='https://www.google.com/url?q=https://github.com/google/googletest/blob/master/googletest/LICENSE&amp;sa=D&amp;ust=1561147779762000'>https://github.com/google/googletest/blob/master/googletest/LICENSE</a></li> <li>ICU<br /><a href='https://www.google.com/url?q=http://site.icu-project.org/home&amp;sa=D&amp;ust=1561147779763000'>http://site.icu-project.org/home</a>&nbsp;<br />Copyright &copy; 1991-2019 Unicode, Inc.<br />Licensed under the Unicode Open Source License, Version 1.0, which is available at <a href='https://www.google.com/url?q=http://www.unicode.org/copyright.html%23License&amp;sa=D&amp;ust=1561147779763000'>http://www.unicode.org/copyright.html#License</a></li> <li>OpenAL Soft<br /><a href='https://www.google.com/url?q=https://openal-soft.org/&amp;sa=D&amp;ust=1561147779763000'>https://openal-soft.org/</a>&nbsp;<br />Copyright Beman Dawes, David Abrahams, 1998-2005. Copyright Rene Rivera 2004-2007.<br />Licensed under the GNU Lesser General Public License, version 2.1, which is available at <a href='https://www.google.com/url?q=https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html&amp;sa=D&amp;ust=1561147779764000'>https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html</a></li> <li>Sigar<br /><a href='https://www.google.com/url?q=https://github.com/hyperic/sigar&amp;sa=D&amp;ust=1561147779764000'>https://github.com/hyperic/sigar</a><br />Licensed under the Apache License, version 2.0, which is available at <a href='https://www.google.com/url?q=https://github.com/hyperic/sigar/blob/master/LICENSE&amp;sa=D&amp;ust=1561147779764000'>https://github.com/hyperic/sigar/blob/master/LICENSE</a></li> <li>OpenSSL<br /><a href='https://www.google.com/url?q=https://www.openssl.org&amp;sa=D&amp;ust=1561147779765000'>https://www.openssl.org</a><br />Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com).<br />Licensed under the dual OpenSSL and SSLeay License, which is available at <a href='https://www.google.com/url?q=https://www.openssl.org/source/license-openssl-ssleay.txt&amp;sa=D&amp;ust=1561147779765000'>https://www.openssl.org/source/license-openssl-ssleay.txt</a></li> <li>QuaZip<br /><a href='https://www.google.com/url?q=https://sourceforge.net/projects/quazip/&amp;sa=D&amp;ust=1561147779766000'>https://sourceforge.net/projects/quazip/</a><br />Licensed under the GNU Lesser General Public License, version 2.1, which is available at <a href='https://www.google.com/url?q=https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html&amp;sa=D&amp;ust=1561147779766000'>https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html</a></li> <li>Angular<br /><a href='https://www.google.com/url?q=https://angular.io&amp;sa=D&amp;ust=1561147779766000'>https://angular.io</a>&nbsp;<br />Copyright (c) 2010-2019 Google LLC.<br />Licensed under the MIT License, which is available at <a href='https://www.google.com/url?q=https://angular.io/license&amp;sa=D&amp;ust=1561147779766000'>https://angular.io/license</a></li> <li>bootstrap-sass<br /><a href='https://www.google.com/url?q=https://github.com/twbs/bootstrap-sass&amp;sa=D&amp;ust=1561147779766000'>https://github.com/twbs/bootstrap-sass</a><br />Copyright (c) 2011-2016 Twitter, Inc, Copyright (c) 2011-2016 The Bootstrap Authors<br />Licensed under the MIT License, which is available at <a href='https://www.google.com/url?q=https://github.com/twbs/bootstrap-sass/blob/master/LICENSE&amp;sa=D&amp;ust=1561147779767000'>https://github.com/twbs/bootstrap-sass/blob/master/LICENSE</a></li> <li>base-64<br /><a href='https://www.google.com/url?q=https://github.com/mathiasbynens/base64&amp;sa=D&amp;ust=1561147779767000'>https://github.com/mathiasbynens/base64</a>&nbsp;<br />Copyright Mathias Bynens<br />Licensed under the MIT License, which is available at <a href='https://www.google.com/url?q=https://github.com/mathiasbynens/base64/blob/master/LICENSE-MIT.txt&amp;sa=D&amp;ust=1561147779767000'>https://github.com/mathiasbynens/base64/blob/master/LICENSE-MIT.txt</a></li> <li>ChartJS<br /><a href='https://www.google.com/url?q=https://www.chartjs.org&amp;sa=D&amp;ust=1561147779767000'>https://www.chartjs.org</a><br />Copyright (c) 2018 Chart.js Contributors<br />Licensed under the MIT License, which is available at <a href='https://www.google.com/url?q=https://github.com/chartjs/Chart.js/blob/master/LICENSE.md&amp;sa=D&amp;ust=1561147779767000'>https://github.com/chartjs/Chart.js/blob/master/LICENSE.md</a></li> <li>hls.js<br /><a href='https://www.google.com/url?q=https://github.com/video-dev/hls.js/&amp;sa=D&amp;ust=1561147779768000'>https://github.com/video-dev/hls.js/</a><br />Copyright (c) 2017 Dailymotion (http://www.dailymotion.com)<br />Licensed under the Apache License, which is available at <a href='https://www.google.com/url?q=https://github.com/video-dev/hls.js/blob/master/LICENSE&amp;sa=D&amp;ust=1561147779768000'>https://github.com/video-dev/hls.js/blob/master/LICENSE</a></li> <li>jquery<br /><a href='https://www.google.com/url?q=https://jquery.com/&amp;sa=D&amp;ust=1561147779768000'>https://jquery.com/</a>&nbsp;<br />Copyright 2019 The jQuery Foundation<br />Licensed under the MIT License, which is available at <a href='https://www.google.com/url?q=https://jquery.org/license/&amp;sa=D&amp;ust=1561147779768000'>https://jquery.org/license/</a></li> <li>json3<br /><a href='https://www.google.com/url?q=https://bestiejs.github.io/json3/&amp;sa=D&amp;ust=1561147779769000'>https://bestiejs.github.io/json3/</a>&nbsp;<br />Copyright 2012-2015 Kit Cambridge, Benjamin Tan<br />Licensed under the MIT License, which is available at <a href='https://www.google.com/url?q=https://opensource.org/licenses/MIT&amp;sa=D&amp;ust=1561147779769000'>https://opensource.org/licenses/MIT</a></li> <li>md5<br /><a href='https://www.google.com/url?q=https://www.npmjs.com/package/md5&amp;sa=D&amp;ust=1561147779769000'>https://www.npmjs.com/package/md5</a><br />Copyright &copy; 2011-2015, Paul Vorbach. Copyright &copy; 2009, Jeff Mott.</li> <li>ngstorage<br /><a href='https://www.google.com/url?q=https://github.com/gsklee/ngStorage/&amp;sa=D&amp;ust=1561147779769000'>https://github.com/gsklee/ngStorage/</a><br />Copyright (c) 2015 Gias Kay Lee<br />Licensed under the MIT License, which is available at <a href='https://www.google.com/url?q=https://github.com/gsklee/ngStorage/blob/master/LICENSE&amp;sa=D&amp;ust=1561147779770000'>https://github.com/gsklee/ngStorage/blob/master/LICENSE</a></li> <li>qwebchannel<br /><a href='https://www.google.com/url?q=https://github.com/qt/qtwebchannel&amp;sa=D&amp;ust=1561147779770000'>https://github.com/qt/qtwebchannel</a>&nbsp;<br />Copyright (C) 2007 Free Software Foundation, Inc. &lt;http://fsf.org/&gt;<br />Licensed under the GNU Lesser General Public License, version 3, which is available at <a href='https://www.google.com/url?q=https://github.com/qt/qtwebchannel/blob/5.12/LICENSE.LGPL3&amp;sa=D&amp;ust=1561147779770000'>https://github.com/qt/qtwebchannel/blob/5.12/LICENSE.LGPL3</a></li> <li>rangeslider<br /><a href='https://www.google.com/url?q=https://rangeslider.js.org/&amp;sa=D&amp;ust=1561147779770000'>https://rangeslider.js.org/</a>&nbsp;<br />Copyright (c) 2016 Andr&eacute; Ruffert, http://andreruffert.com<br />Licensed under the MIT License, which is available at <a href='https://www.google.com/url?q=https://github.com/andreruffert/rangeslider.js/blob/develop/LICENSE.md&amp;sa=D&amp;ust=1561147779771000'>https://github.com/andreruffert/rangeslider.js/blob/develop/LICENSE.md</a></li> <li>screenfull<br /><a href='https://www.google.com/url?q=https://github.com/sindresorhus/screenfull.js&amp;sa=D&amp;ust=1561147779771000'>https://github.com/sindresorhus/screenfull.js</a>&nbsp;<br />Copyright (c) Sindre Sorhus &lt;sindresorhus@gmail.com&gt; (sindresorhus.com)<br />Licensed under the MIT License, which is available at <a href='https://www.google.com/url?q=https://github.com/sindresorhus/screenfull.js/blob/gh-pages/license&amp;sa=D&amp;ust=1561147779771000'>https://github.com/sindresorhus/screenfull.js/blob/gh-pages/license</a></li> <li>tc-anguar-charts<br /><a href='https://www.google.com/url?q=https://github.com/carlcraig/tc-angular-chartjs&amp;sa=D&amp;ust=1561147779771000'>https://github.com/carlcraig/tc-angular-chartjs</a>&nbsp;<br />Copyright (c) 2014 Carl Craig<br />Licensed under the MIT License, which is available at <a href='https://www.google.com/url?q=https://github.com/carlcraig/tc-angular-chartjs/blob/master/LICENSE-MIT&amp;sa=D&amp;ust=1561147779771000'>https://github.com/carlcraig/tc-angular-chartjs/blob/master/LICENSE-MIT</a></li> <li>underscore.js<br /><a href='https://www.google.com/url?q=https://github.com/jashkenas/underscore/&amp;sa=D&amp;ust=1561147779772000'>https://github.com/jashkenas/underscore/</a><br />Copyright (c) 2009-2018 Jeremy Ashkenas, DocumentCloud and Investigative Reporters &amp; Editors<br />Licensed under the MIT License, which is available at <a href='https://www.google.com/url?q=https://github.com/jashkenas/underscore/blob/master/LICENSE&amp;sa=D&amp;ust=1561147779772000'>https://github.com/jashkenas/underscore/blob/master/LICENSE</a></li> </ol>",
             "type": "html",
             "advanced": true
           }
@@ -495,7 +572,7 @@
           {
             "label": "Public Downloads",
             "name": "%PUBLIC_DOWNLOADS%",
-            "value": "true",
+            "value": true,
             "description": "Allows all users to view the downloads page. If unchecked users must have a special permission to view the downloads page.",
             "advanced": true,
             "optional": true,
@@ -504,7 +581,7 @@
           {
             "label": "Public Release History",
             "name": "%PUBLIC_RELEASE_HISTORY%",
-            "value": "false",
+            "value": false,
             "description": "Allows all users to view the release history page. If unchecked users must have a special permission to view the release history page.",
             "advanced": true,
             "optional": true,
@@ -515,10 +592,9 @@
             "name": "%AVAILABLE_DOWNLOADS_PLATFORM%",
             "description": "Platforms that are visible on the downloads page.",
             "advanced": true,
-            "type": "select",
-            "value": "[\"macos\", \"linux\", \"windows\"]",
+            "type": "multiselect",
+            "value": ["macos", "linux", "windows"],
             "meta": {
-              "multi": true,
               "options": [
                 "arm",
                 "linux",
@@ -533,7 +609,7 @@
             "name": "%CLOUD_MERGE%",
             "description": "Shows the cloud merge button for all systems.",
             "type": "check_box",
-            "value": "false",
+            "value": false,
             "optional": true,
             "advanced": true
           },
@@ -542,7 +618,7 @@
             "name": "%FEEDBACK_ENABLED%",
             "description": "If feedback is being abused disable this setting to block all feedback",
             "type": "check_box",
-            "value": "true",
+            "value": true,
             "optional": true,
             "advanced": true
           },
@@ -551,9 +627,21 @@
             "name": "%INTEGRATION_STORE_ENABLED%",
             "description": "Lets the desktop client know if the integration store is enabled.",
             "type": "check_box",
-            "value": "false",
+            "value": false,
             "optional": true,
             "advanced": true
+          },
+          {
+            "name": "supportEmail",
+            "label": "Support E-mail",
+            "value": "support@networkoptix.zendesk.com",
+            "description": "E-mail that is used by contact forms.",
+            "type": "text",
+            "optional": false,
+            "advanced": true,
+            "meta": {
+              "regex": "^[a-zA-Z0-9\\.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$"
+            }
           }
         ]
       },
@@ -566,9 +654,18 @@
         "translatable": false,
         "values": [
           {
+            "label": "Show analytics events",
+            "name": "%SHOW_ANALYTICS_EVENTS%",
+            "value": false,
+            "description": "Show/hide analytics events data for cameras",
+            "advanced": true,
+            "optional": true,
+            "type": "check_box"
+          },
+          {
             "label": "Sort supported devices by popularity",
             "name": "%SORT_SUPPORTED_DEVICES_BY_POPULARITY%",
-            "value": "false",
+            "value": false,
             "description": "Sets supported devices (camera page) sorting order by popularity",
             "advanced": true,
             "optional": true,
@@ -722,6 +819,10 @@
               {
                 "id": "isMultiSensor",
                 "value": false
+              },
+              {
+                "id": "isAnalyticsSupported",
+                "value": false
               }
             ]
           }
@@ -772,7 +873,7 @@
               {
                 "name": "Privacy",
                 "url": "%PRIVACY_LINK%",
-                "newWindow": false,
+                "newWindow": true,
                 "enabled": true
               },
               {
@@ -798,31 +899,61 @@
         "translatable": false,
         "values": [
             {
+                "label": "Filter Option limitation",
+                "name": "%INTEGRATION_SHOW_FILTER_LIMITATION%",
+                "type": "text",
+                "value": "12",
+                "description": "How many integration should have to show the filter option.",
+                "advanced": true,
+                "optional": false
+            },
+            {
                 "label": "Tag Items",
                 "name": "%INTEGRATION_FILTER_ITEMS%",
                 "value": [
                     {
-                        "name": "Access Control",
+                        "id": "automation",
+                        "name": "Automation",
                         "enabled": false
                     },
                     {
-                        "name": "Connector",
+                        "id": "videoAnalytics",
+                        "name": "Video Analytics",
                         "enabled": false
                     },
                     {
-                        "name": "Data Analytics",
+                        "id": "objectDetection",
+                        "name": "Object Detection",
                         "enabled": false
                     },
                     {
-                        "name": "Drone",
+                        "id": "eventDetection",
+                        "name": "Event Detection",
                         "enabled": false
                     },
                     {
-                        "name": "Health Monitor",
+                        "id": "faceRecognition",
+                        "name": "Face Recognition",
                         "enabled": false
                     },
                     {
+                        "id": "licensePlateRecognition",
+                        "name": "License Plate Recognition",
+                        "enabled": false
+                    },
+                    {
+                        "id": "health",
+                        "name": "Health Monitoring",
+                        "enabled": false
+                    },
+                    {
+                        "id": "storage",
                         "name": "Storage",
+                        "enabled": false
+                    },
+                    {
+                        "id": "mine",
+                        "name": "My Integrations",
                         "enabled": false
                     }
                 ],
@@ -852,6 +983,7 @@
             "label": "Integration name",
             "value": "",
             "description": "Visible on the tile for the integrations page and the card header for the detailed view.",
+            "placeholder": "New integration",
             "type": "text",
             "meta": {
               "char_limit": 64
@@ -865,6 +997,7 @@
             "type": "external_image",
             "optional": true,
             "meta": {
+              "background": "light",
               "size": 512000,
               "format": "png",
               "height_ge": 128
@@ -875,6 +1008,7 @@
             "label": "Description",
             "value": "",
             "description": "A short description for the integration tile located on the integrations page. The short description should be no more than 300 characters because the space is limited.",
+            "placeholder": "An example integration.",
             "type": "long_text",
             "meta": {
               "char_limit": 500,
@@ -882,45 +1016,96 @@
             }
           },
           {
-            "name": "tags",
-            "label": "Tags",
-            "value": "",
-            "description": "",
-            "type": "text"
-          },
-          {
             "name": "type",
             "label": "Type(Category)",
-            "value": "",
+            "value": [],
             "description": "",
-            "type": "select",
+            "type": "multiselect",
             "meta": {
-              "multi": true,
               "options": [
-                "Access Control",
-                "Connector",
-                "Data Analytics",
-                "Drone",
-                "Health Monitor",
-                "Storage"
+                {
+                  "id": "automation",
+                  "label": "Automation"
+                }, {
+                  "id": "videoAnalytics",
+                  "label": "Video Analytics"
+                }, {
+                  "id": "objectDetection",
+                  "label": "Object Detection"
+                }, {
+                  "id": "eventDetection",
+                  "label": "Event Detection"
+                }, {
+                  "id": "faceRecognition",
+                  "label": "Face Recognition"
+                }, {
+                  "id": "licensePlateRecognition",
+                  "label": "License Plate Recognition"
+                }, {
+                  "id": "health",
+                  "label": "Health Monitoring"
+                }, {
+                  "id": "storage",
+                  "label": "Storage"
+                }
               ]
             }
           },
           {
-            "name": "platforms",
-            "label": "Supported OS and platforms",
+            "name": "tags",
+            "label": "Tags",
             "value": "",
-            "description": "",
-            "type": "select",
+            "description": "If Type does not have any relevant categories for you integration you may list some here. Eventually some might be added to type.<br>Please separate your list with commas. Ex AI, IoT",
+            "placeholder": "AI, IoT",
+            "type": "text",
+            "optional": true
+          },
+          {
+            "name": "companyName",
+            "label": "Company Name",
+            "value": "",
+            "description": "A company name. The company's name is visible in the detailed view page for the integration in the rightmost column.",
+            "placeholder": "Fictional Company",
+            "type": "text",
+            "optional": false,
             "meta": {
-              "multi": true,
-              "options": [
-                "Windows - x64",
-                "Linux - x64",
-                "ARM 64bit / Nvidia Jetson",
-                "ARM 32bit / Raspberry PI",
-                "MacOS"
-              ]
+              "char_limit": 64
+            }
+          },
+          {
+            "name": "companyWeb",
+            "label": "Company Web site",
+            "value": "",
+            "description": "Company's web address. Example: http://www.google.com, https://mail.yahoo.com",
+            "placeholder": "https://example.com",
+            "type": "text",
+            "optional": false,
+            "meta": {
+              "regex": "^https?:\\/\\/([\\da-z\\.-]+)\\.([a-z\\.]{2,6})([\\/\\w \\.-]*)*\\/?$"
+            }
+          },
+          {
+            "name": "companyPrivacyPolicyLink",
+            "label": "Company's privacy policy",
+            "value": "",
+            "description": "Link to company's privacy policy page.",
+            "placeholder": "https://example.com",
+            "type": "text",
+            "optional": false,
+            "meta": {
+              "regex": "^https?:\\/\\/([\\da-z\\.-]+)\\.([a-z\\.]{2,6})([\\/\\w \\.-]*)*\\/?$"
+            }
+          },
+          {
+            "name": "termsOfUseLink",
+            "label": "Terms of Use for the integration",
+            "value": "",
+            "description": "Link to integration's Terms of Use page.",
+            "placeholder": "https://www.example.com",
+            "type": "text",
+            "optional": false,
+            "meta": {
+              "regex": "^https?:\\/\\/([\\da-z\\.-]+)\\.([a-z\\.]{2,6})([\\/\\w \\.-]*)*\\/?$"
             }
           }
         ]
@@ -937,6 +1122,7 @@
             "label": "Overview Video",
             "value": "",
             "description": "<br><br><br>A youtube or vimeo link for a overview video.<br>Links can be:<br>https://www.youtube.com/watch?v={video id}<br>https://www.youtube.com/embed/{video id}<br>https://youtu.be/{video id}<br>https://vimeo.com/{video id}",
+            "placeholder": "https://www.youtube.com/example",
             "type": "text",
             "optional": true,
             "meta": {
@@ -948,6 +1134,7 @@
             "label": "Full functionality overview",
             "value": "",
             "description": "A description about what the integration does. The overview appears on the detailed view page for the integration in the leftmost column. Recommended length 1000 characters.",
+            "placeholder": "Tell us what your integration does...",
             "type": "html",
             "optional": true,
             "meta": {
@@ -964,6 +1151,7 @@
             "optional": true,
             "public": true,
             "meta": {
+              "background": "light",
               "size": 5242880,
               "height_le": 1080,
               "width_le": 1920,
@@ -990,6 +1178,7 @@
             "optional": true,
             "public": true,
             "meta": {
+              "background": "light",
               "size": 5242880,
               "height_le": 1080,
               "width_le": 1920,
@@ -1016,6 +1205,7 @@
             "optional": true,
             "public": true,
             "meta": {
+              "background": "light",
               "size": 5242880,
               "height_le": 1080,
               "width_le": 1920,
@@ -1042,6 +1232,7 @@
             "optional": true,
             "public": true,
             "meta": {
+              "background": "light",
               "size": 5242880,
               "height_le": 1080,
               "width_le": 1920,
@@ -1068,6 +1259,7 @@
             "optional": true,
             "public": true,
             "meta": {
+              "background": "light",
               "size": 5242880,
               "height_le": 1080,
               "width_le": 1920,
@@ -1094,6 +1286,7 @@
             "optional": true,
             "public": true,
             "meta": {
+              "background": "light",
               "size": 5242880,
               "height_le": 1080,
               "width_le": 1920,
@@ -1120,6 +1313,7 @@
             "optional": true,
             "public": true,
             "meta": {
+              "background": "light",
               "size": 5242880,
               "height_le": 1080,
               "width_le": 1920,
@@ -1146,6 +1340,7 @@
             "optional": true,
             "public": true,
             "meta": {
+              "background": "light",
               "size": 5242880,
               "height_le": 1080,
               "width_le": 1920,
@@ -1172,6 +1367,7 @@
             "optional": true,
             "public": true,
             "meta": {
+              "background": "light",
               "size": 5242880,
               "height_le": 1080,
               "width_le": 1920,
@@ -1198,6 +1394,7 @@
             "optional": true,
             "public": true,
             "meta": {
+              "background": "light",
               "size": 5242880,
               "height_le": 1080,
               "width_le": 1920,
@@ -1224,6 +1421,7 @@
             "optional": true,
             "public": true,
             "meta": {
+              "background": "light",
               "size": 5242880,
               "height_le": 1080,
               "width_le": 1920,
@@ -1250,6 +1448,7 @@
             "optional": true,
             "public": true,
             "meta": {
+              "background": "light",
               "size": 5242880,
               "height_le": 1080,
               "width_le": 1920,
@@ -1276,6 +1475,7 @@
             "optional": true,
             "public": true,
             "meta": {
+              "background": "light",
               "size": 5242880,
               "height_le": 1080,
               "width_le": 1920,
@@ -1302,6 +1502,7 @@
             "optional": true,
             "public": true,
             "meta": {
+              "background": "light",
               "size": 5242880,
               "height_le": 1080,
               "width_le": 1920,
@@ -1328,6 +1529,7 @@
             "optional": true,
             "public": true,
             "meta": {
+              "background": "light",
               "size": 5242880,
               "height_le": 1080,
               "width_le": 1920,
@@ -1350,7 +1552,7 @@
       {
         "name": "instructions",
         "old_name": "Instructions",
-        "label": "How to install?",
+        "label": "How to setup?",
         "description": "Instructions for setting up and/or using your integration. Here you can include a video, images, and text. The instructions block will appear either in the middle column of the integrations's page.",
         "translatable": false,
         "values": [
@@ -1359,6 +1561,7 @@
             "label": "Instruction Video",
             "value": "",
             "description": "<br><br><br>A youtube or vimeo link for a instruction video.<br>Links can be:<br>https://www.youtube.com/watch?v={video id}<br>https://www.youtube.com/embed/{video id}<br>https://youtu.be/{video id}<br>https://vimeo.com/{video id}",
+            "placeholder": "https://www.youtube.com/example",
             "type": "text",
             "optional": true,
             "meta": {
@@ -1374,6 +1577,7 @@
             "optional": true,
             "public": true,
             "meta": {
+              "background": "light",
               "size": 5242880,
               "height_le": 1080,
               "width_le": 1920,
@@ -1389,6 +1593,7 @@
             "optional": true,
             "public": true,
             "meta": {
+              "background": "light",
               "size": 5242880,
               "height_le": 1080,
               "width_le": 1920,
@@ -1404,6 +1609,7 @@
             "optional": true,
             "public": true,
             "meta": {
+              "background": "light",
               "size": 5242880,
               "height_le": 1080,
               "width_le": 1920,
@@ -1419,6 +1625,7 @@
             "optional": true,
             "public": true,
             "meta": {
+              "background": "light",
               "size": 5242880,
               "height_le": 1080,
               "width_le": 1920,
@@ -1434,6 +1641,7 @@
             "optional": true,
             "public": true,
             "meta": {
+              "background": "light",
               "size": 5242880,
               "height_le": 1080,
               "width_le": 1920,
@@ -1449,6 +1657,7 @@
             "optional": true,
             "public": true,
             "meta": {
+              "background": "light",
               "size": 5242880,
               "height_le": 1080,
               "width_le": 1920,
@@ -1464,6 +1673,7 @@
             "optional": true,
             "public": true,
             "meta": {
+              "background": "light",
               "size": 5242880,
               "height_le": 1080,
               "width_le": 1920,
@@ -1479,6 +1689,7 @@
             "optional": true,
             "public": true,
             "meta": {
+              "background": "light",
               "size": 5242880,
               "height_le": 1080,
               "width_le": 1920,
@@ -1494,6 +1705,7 @@
             "optional": true,
             "public": true,
             "meta": {
+              "background": "light",
               "size": 5242880,
               "height_le": 1080,
               "width_le": 1920,
@@ -1509,6 +1721,7 @@
             "optional": true,
             "public": true,
             "meta": {
+              "background": "light",
               "size": 5242880,
               "height_le": 1080,
               "width_le": 1920,
@@ -1520,76 +1733,11 @@
             "label": "Installation Instructions",
             "value": "",
             "description": "This section is visible in the detailed view page for the integration in the middle column. Recommended length 1500 characters. If you need more text its recommended that you create a pdf and add it to the download files section.",
+            "placeholder": "Detailed instructions for installing the integration.",
             "type": "html",
             "meta": {
               "char_limit": 10000,
               "brand_vars": true
-            }
-          }
-        ]
-      },
-      {
-        "name": "company",
-        "label": "Company",
-        "description": "General information about the company that appears in the rightmost column of the integration's page.",
-        "translatable": false,
-        "values": [
-          {
-            "name": "companyName",
-            "label": "Company Name",
-            "value": "",
-            "description": "A company name. The company's name is visible in the detailed view page for the integration in the rightmost column.",
-            "type": "text",
-            "optional": false,
-            "meta": {
-              "char_limit": 64
-            }
-          },
-          {
-            "name": "companyInfo",
-            "label": "Company Info",
-            "value": "",
-            "description": "A short description about the company. The company's info is visible in the detailed view page for the integration in the rightmost column.",
-            "type": "long_text",
-            "optional": true,
-            "meta": {
-              "char_limit": 250
-            }
-          },
-          {
-            "name": "companyLogo",
-            "label": "Company Logo",
-            "value": "",
-            "description": "Company logo.<br>Must have a transparent background.",
-            "type": "external_image",
-            "optional": true,
-            "meta": {
-              "size": 512000,
-              "format": "png",
-              "height_le": 250,
-              "width_le": 500
-            }
-          },
-          {
-            "name": "companyWeb",
-            "label": "Company URL",
-            "value": "",
-            "description": "Company's web address. Example: http://www.google.com, https://mail.yahoo.com",
-            "type": "text",
-            "optional": false,
-            "meta": {
-              "regex": "^https?:\\/\\/([\\da-z\\.-]+)\\.([a-z\\.]{2,6})([\\/\\w \\.-]*)*\\/?$"
-            }
-          },
-          {
-            "name": "companyWebTitle",
-            "label": "Company URL Title",
-            "value": "",
-            "description": "Human friendly title for company's web address. Example: 'Visit our web site'",
-            "type": "text",
-            "optional": true,
-            "meta": {
-              "char_limit": 64
             }
           }
         ]
@@ -1606,6 +1754,7 @@
             "label": "Support E-mail",
             "value": "",
             "description": "E-mail customers should use for support.",
+            "placeholder": "support@example.com",
             "type": "text",
             "optional": false,
             "meta": {
@@ -1617,6 +1766,7 @@
             "label": "Support phone",
             "value": "",
             "description": "Phone number customers should use for support. (Ex. (573) 884-1878 | +1 (573) 884-1878 | +(591) 7433433 | 0591 74339296 | +1 555 555 5554)",
+            "placeholder": "+1 800 800 8000",
             "type": "text",
             "optional": true,
             "meta": {
@@ -1628,6 +1778,7 @@
             "label": "Support URL",
             "value": "",
             "description": "Web address customers should use for support. Example: http://support.google.com, https://www.yahoo.com/support",
+            "placeholder": "https://support.google.com",
             "type": "text",
             "optional": true,
             "meta": {
@@ -1710,6 +1861,7 @@
             "label": "Additional File 1 Name",
             "value": "",
             "description": "Name for additional file 1.",
+            "placeholder": "Custom Installers",
             "type": "text",
             "optional": true
           },
@@ -1730,6 +1882,7 @@
             "label": "Additional File 2 Name",
             "value": "",
             "description": "Name for additional file 2.",
+            "placeholder": "Virtual machine",
             "type": "text",
             "optional": true
           },
@@ -1750,6 +1903,7 @@
             "label": "Additional File 3 Name",
             "value": "",
             "description": "Name for additional file 3.",
+            "placeholder": "Extra documentation",
             "type": "text",
             "optional": true
           },
@@ -1770,6 +1924,7 @@
             "label": "External link name",
             "value": "",
             "description": "Name for external link.",
+            "placeholder": "Dropbox link",
             "type": "text",
             "optional": true
           },
@@ -1778,6 +1933,7 @@
             "label": "External link",
             "value": "",
             "description": "External link. Use of this field is discouraged. If you do want to use it contact a superuser to change it.",
+            "placeholder": "https://dropbox.com",
             "type": "text",
             "advanced": true,
             "optional": true,
@@ -1801,38 +1957,101 @@
           }
         ]
       },
+      {
+        "name": "requirementsAndCompatibility",
+        "label": "Requirements and compatibility",
+        "description": "Details about hardware or software requirements.",
+        "translatable": false,
+        "values": [
+          {
+            "name": "testedVersions",
+            "label": "Tested software (VMS) versions",
+            "value": [],
+            "description": "Latest supported version",
+            "type": "multiselect",
+            "optional": true,
+            "meta": {
+              "options": [
+                "4.0",
+                "3.2",
+                "3.1",
+                "3.0"
+              ]
+            }
+          },
+          {
+            "name": "testedBuild",
+            "label": "Tested software (VMS) build",
+            "value": "",
+            "description": "Custom build supported version. Ex: 4.1.0.12345, 3.12.0.34567",
+            "placeholder": "4.1.0.12345",
+            "type": "text",
+            "optional": true,
+            "meta": {
+              "regex": "^(\\d)\\.(\\d){1,2}\\.(\\d){1,2}\\.(\\d){5}$"
+            }
+          },
+          {
+            "name": "platforms",
+            "label": "Supported OS and platforms",
+            "value": [],
+            "description": "",
+            "type": "multiselect",
+            "optional": false,
+            "meta": {
+              "options": [
+                "Windows - x64",
+                "Linux - x64",
+                "ARM 64bit / Nvidia Jetson",
+                "ARM 32bit / Raspberry PI",
+                "MacOS"
+              ]
+            }
+          },
+          {
+            "name": "additionalRequirements",
+            "label": "Additional Requirements",
+            "value": "",
+            "description": "Explaining any additional hardware or software requirements needed.",
+            "placeholder": "You will need the following...",
+            "type": "html",
+            "optional": true,
+            "meta": {
+              "char_limit": 1000
+            }
+          }
+        ]
+      },
       {"name":  "versionDetails",
         "label": "Version Details",
         "description": "Details about supported software version, plugin version and changelog.",
         "translatable": false,
         "values": [
           {
-            "name": "testedVersions",
-            "label": "Tested software (VMS) versions",
-            "value": "",
-            "description": "Latest supported version",
-            "type": "select",
-            "meta": {
-              "multi": true,
-              "options": [
-                "4.0.0",
-                "3.2"
-              ]
-            }
-          },
-          {
             "name": "version",
             "label": "Integration version",
             "value": "",
             "description": "",
+            "placeholder": "1.0",
             "type": "text",
+            "optional": false
+          },
+          {
+            "name": "whatsNew",
+            "label": "What's new?",
+            "value": "",
+            "description": "Describe to the users what was changed/fixed/added in this release.",
+            "placeholder": "<h2>ChangedList</h2><ul><li>Added some features</li><li>Removed some features</li></ul>",
+            "type": "html",
             "optional": true
           },
           {
-            "name": "changelog",
-            "label": "Version Changelog",
+            "name": "internalNotes",
+            "old_name": "changelog",
+            "label": "Internal notes",
             "value": "",
-            "description": "This information is only visible to reviews and not users.",
+            "description": "This information is only visible to reviewers and not users. Describe what was changed/fixed/added in this release.",
+            "placeholder": "The description was updated so that...",
             "type": "html",
             "optional": true,
             "public": false
@@ -1842,4 +2061,3 @@
     ]
   }
 ]
-

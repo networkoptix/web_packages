@@ -5,11 +5,11 @@ build_scripts/stage
 build_scripts/*.ts
 
 front_end/node_modules
-front_end/app/styles/custom 
-front_end/dist 
+front_end/app/styles/custom
+front_end/dist
 front_end/config.json
-front_end/.tmp 
-front_end/.idea 
+front_end/.tmp
+front_end/.idea
 front_end/.sass-cache
 front_end/bower_components
 front_end/app/bower_components
@@ -25,6 +25,8 @@ front_end/bower_components
 front_end/test/visual
 front_end/**/*.js.map
 front_end/app/src/**/*.js
+front_end/app/language_compiled.json
+
 
 front_end/app/scripts/services/{language,dialogs,systems,process,nx-config,cloud_api,account,angular-uuid2,authorizationCheckService}.js
 front_end/app/scripts/downgraded-providers.js

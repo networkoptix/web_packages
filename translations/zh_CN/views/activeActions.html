@@ -23,7 +23,7 @@
 
     <div ng-if="reactivating" class="text-center">
         <div ng-if='data.email'>
-            <h1>You have registered in %CLOUD_NAME%</h1>
+            <h1>您已在 %CLOUD_NAME% 中注册</h1>
             <p>我们已将激活链接发信给{{data.email}}。<br>
             请通过访问此链接激活您的帐户。</p>
         </div>
@@ -48,8 +48,8 @@
                           ng-if="reactivateAccount.email.$touched && reactivateAccount.email.$error.email">请输入一个有效的电子邮件</span>
                 </div>
             </div>
-            <div class="form-group">
-                <div class="offset-sm-2 col-sm-10" ng-class="{ 'offset-sm-4 col-sm-8' : data.email}" >
+            <div class="form-group mt-3">
+                <div class="offset-sm-2 col-sm-10 offset-sm-4 col-sm-8" >
                     <process-button process="reactivate"
                                     form="reactivateAccount"
                                     button-text="$root.L.activeActions.sendConfirm"></process-button>

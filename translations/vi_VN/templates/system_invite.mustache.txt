@@ -1,11 +1,11 @@
-Welcome to %CLOUD_NAME%
+Chào mừng bạn đến với %CLOUD_NAME%
 
 {{#message.sharer_name}}
-{{message.sharer_name}} ({{message.sharer_email}}) is inviting you to join %CLOUD_NAME% and shared the system {{message.system_name}} with you.
+{{message.sharer_name}} ({{message.sharer_email}}) đang mời bạn tham gia %CLOUD_NAME% và chia sẻ hệ thống {{message.system_name}} với bạn.
 {{/message.sharer_name}}
 
 {{^message.sharer_name}}
-You are invited you to join %CLOUD_NAME%.
+Bạn được mời bạn tham gia %CLOUD_NAME%.
 Bạn đã được cấp quyền truy cập vào {{message.system_name}}.
 {{/message.sharer_name}}
 

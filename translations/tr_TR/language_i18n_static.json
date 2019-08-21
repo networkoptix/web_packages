@@ -7,10 +7,12 @@
 		"Any": "Herhangi",
 		"selected": "seçildi",
 		"vendor": "Üretici",
-		"vendors": "ureticiler",
+		"vendors": "Üreticiler",
 		"hardwareType": "Tür",
-		"hardwareTypes": "türler",
-		"minResolution": "Minimum Çözünürlük"
+		"hardwareTypes": "Türler",
+		"minResolution": "Minimum Çözünürlük",
+		"analytics": "Analiz",
+		"analyticsSelected": "analiz Etkinliği"
 	},
 	"cameraFilters": {
 		"ptz": "PTZ kameralar",
@@ -96,6 +98,7 @@
 		}
 	},
 	"ipvd": {
+		"resolutionArea": "Alan",
 		"count": "Sayı",
 		"vendor": "Üretici",
 		"model": "Model",
@@ -113,6 +116,7 @@
 		"isIoSupported": "G/Ç",
 		"isH265": "H.265",
 		"isMultiSensor": "Çoklu sensör",
+		"isAnalyticsSupported": "Analiz",
 		"camera": "Kamera",
 		"multiSensorCamera": "Çok Sensörlü Kamera",
 		"encoder": "Kodlayıcı",
@@ -130,7 +134,8 @@
 			"a_Please": "Lütfen",
 			"b_Link": "destek talebi gönder",
 			"c_Info": "desteklenen cihazlarla ilgili ek sorularınız için."
-		}
+		},
+		"disclaimer": "Bu liste, {{vmsName}} bulunan, kullanıcıların cihaz özelliklerinin {{companyName}} otomatik raporlanmasına izin verdiği yerlerdedir. Hiçbir kişisel bilgi toplanmaz ve her kullanıcı tamamen adsız kalır."
 	},
 	"integration": {
 		"previewRibbonText": "Bu sayfa en son değişikliklerin önizlemesidir ve herkese açık kullanılabilir sürümle eşleşmiyor.",
@@ -146,18 +151,47 @@
 		"feedback": "Kamera üreticisi ve modelinin olduğundan emin olun..."
 	},
 	"pageTitles": {
-		"supportedDevices": "Supported Devices",
-		"integrations": "Integrations"
+		"supportedDevices": "Desteklenen cihazlar",
+		"integrations": "Entegrasyonlar"
 	},
 	"dialogs": {
 		"merge": {
-			"connectToCloud": "Connect System you want to merge with this one to <strong>{{cloudName}}</strong> or merge locally using <strong>{{vmsName}}</strong> Client.",
-			"mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from the <strong>{{primarySystem}}</strong>.",
-			"primaryCannotMerge": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} System.",
-			"primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}.",
-			"secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
-			"systemOffline": "System {{targetSystem}} is offline and cannot be merged with the current one.",
-			"systemUnavailable": "System {{targetSystem}} is currently unreachable. Try again in a few minutes or contact"
+			"connectToCloud": "Birleştirmek istediğiniz <strong>{{cloudName}}</strong> sistemine bağlanın veya yerel sistemi <strong>{{vmsName}}</strong> kullanarak birleştirin.",
+			"mergeConfirmation": "<strong>{{primarySystem}}</strong> sistemi ile <strong>{{secondarySystem}}</strong> sistemini birleştirmek üzeresiniz. İsim ve ayarlar <strong>{{primarySystem}}</strong> sisteminden alınacaktır.",
+			"primaryCannotMerge": "Sistem {{targetSystem}}, mevcut sistemle uyumlu olmayan daha yeni bir yazılım sürümüne sahip. Geçerli sistemi, {{targetSystem}} Sistemle birleştirmek için en son <a href=\"/download\" target=\"_blank\" translate>derleme</a> güncelleyin.",
+			"primarySystemOffline": "Sistem {{primarySystem}} çevrimdışıdır ve Sistem {{targetSystem}} ile birleştirilemez.",
+			"secondaryCannotMerge": "Sistem {{targetSystem}}, mevcut sistemle uyumlu olmayan daha eski bir yazılım sürümüne sahip. Geçerli olanla birleştirmek için {{targetSystem}} en son <a href=\"/download\" target=\"_blank\" translate>derleme</a> güncelleyin.",
+			"systemOffline": "Sistem {{targetSystem}} çevrimdışı ve güncel sistemle birleştirilemez.",
+			"systemUnavailable": "{{targetSystem}} sistemi erişilebilir değil. Birkaç dakika sonra tekrar deneyin"
+		},
+		"message": {
+			"failedToSend": "Mesaj gönderilemedi.",
+			"sent": "Mesaj gönderildi.",
+			"title": {
+				"integration": "{{companyName}} ile iletişime geçin",
+				"ipvd_feedback_page": "Kameralar sayfası için geri bildirim",
+				"ipvd_feedback_device": "{{product}} hakkında geri bildirim"
+			},
+			"topic": {
+				"contact_sales": "Satış için {{product}} iletişime geçin",
+				"contact_support": "{{product}} için Destek İste",
+				"integration_feedback": "Entegrasyon için geri bildirim {{product}}",
+				"ipvd_feedback_page": "Kameralar sayfası için geri bildirim",
+				"ipvd_feedback_device": "{{product}} hakkında geri bildirim"
+			}
 		}
-	}
+	},
+	"privacyPolicy": {
+		"integration": "Bu formu göndererek, {{INTEGRATION_COMPANY}} ve / veya %COMPANY_NAME%ile irtibata geçmeyi kabul edersiniz.\nSen bulacaksınız {{INTEGRATION_COMPANY}} gizlilik politikasını <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">burada</a> ve %COMPANY_NAME% gizlilik politikasını <a href=\"%PRIVACY_LINK%\" target=\"blank\">Burada</a> onayınızı geri çekmek konusunda talimat içerir.",
+		"ipvd": "Bu formu göndererek, %COMPANY_NAME%ile iletişime geçmeyi kabul edersiniz.\nBurada, onayınızı nasıl geri çekeceğinizle ilgili talimatları içeren %COMPANY_NAME% gizlilik politikasını <a href=\"%PRIVACY_LINK%\" target=\"blank\">burada</a> bulacaksınız."
+	},
+	"testedVersionLabel": "{{vmsName}} versiyonda test edildi:",
+	"testedVersionsLabel": "{{vmsName}} versiyonda test edildi:",
+	"About %CLOUD_NAME%": "%CLOUD_NAME% Hakkında",
+	"Download %VMS_NAME%": "İndir %VMS_NAME%",
+	"Integrations": "Entegrasyonlar",
+	"Privacy": "Gizlilik",
+	"Support": "Destek",
+	"Supported Devices": "Desteklenen cihazlar",
+	"Terms": "Şartlar"
 }

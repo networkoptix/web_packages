@@ -3,7 +3,7 @@ import { Location }           from '@angular/common';
 import { IntegrationService } from './integration.service';
 import { NxUriService }       from '../../services/uri.service';
 import { NxConfigService }    from '../../services/nx-config';
-import { TranslateService }   from '@ngx-translate/core';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { Title }              from '@angular/platform-browser';
 
 @Component({
@@ -14,8 +14,8 @@ import { Title }              from '@angular/platform-browser';
 
 export class NxIntegrationsComponent implements OnInit {
     private CONFIG: any = {};
-    private lang: any = {};
-    private searchBy: any;
+    private LANG: any = {};
+
     private allElements: any;
     private elements: any;
     private emptyFilter: any = {};
@@ -47,7 +47,7 @@ export class NxIntegrationsComponent implements OnInit {
     constructor(private uri: NxUriService,
                 private integrations: IntegrationService,
                 private config: NxConfigService,
-                private translate: TranslateService,
+                private language: NxLanguageProviderService,
                 private title: Title,
                 location: Location) {
         this.location = location;
@@ -55,6 +55,10 @@ export class NxIntegrationsComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.CONFIG = this.config.getConfig();
+        this.LANG = this.language.getTranslations();
+        this.title.setTitle(this.LANG.pageTitles.integrations);
+
         // Example URI
         // /integrations?search=node
         this.uri
@@ -68,7 +72,7 @@ export class NxIntegrationsComponent implements OnInit {
             .pluginsSubject
             .subscribe((result: any) => {
                 if (result) {
-                    if (!this.CONFIG.integrationStoreEnabled && !result.length) {
+                    if (!this.CONFIG.integrationStoreEnabled) {
                         this.location.go('404');
                     } else {
                         this.allElements = result;
@@ -83,17 +87,15 @@ export class NxIntegrationsComponent implements OnInit {
                 console.error('Integration plugins error -> ', error);
                 this.location.go('404');
             });
-
-        setTimeout(() => {
-            this.lang = this.translate.translations[this.translate.currentLang];
-            this.title.setTitle(this.lang.pageTitles.integrations);
-        });
     }
 
     setTags() {
+        const found = this.allElements.find((elm) => elm.mine);
+        const haveMyIntegration = (found && found.mine) || false;
+
         this.CONFIG.integrationFilterItems.forEach(item => {
-            if (item.enabled) {
-                    this.filterModel.tags.push({ id: item.name, label: item.name, value: false });
+            if (item.enabled || (item.id === this.CONFIG.myIntegrationTagId && haveMyIntegration)) {
+                    this.filterModel.tags.push({ id: item.id, label: item.name, value: false });
             }
         });
 
@@ -106,7 +108,7 @@ export class NxIntegrationsComponent implements OnInit {
             return (item.information.name && item.information.name.toLowerCase().indexOf(query) > -1 ||
                     item.information.companyName && item.information.companyName.toLowerCase().indexOf(query) > -1 ||
                     item.information.shortDescription && item.information.shortDescription.toLowerCase().indexOf(query) > -1 ||
-                    item.overview.description && item.overview.description.toLowerCase().indexOf(query) > -1);
+                    item.overview && item.overview.description && item.overview.description.toLowerCase().indexOf(query) > -1);
         }
 
         this.elements = this.allElements.map(obj => ({ ...obj }));
@@ -124,12 +126,11 @@ export class NxIntegrationsComponent implements OnInit {
 
         if (this.filterModel.tags.length) {
             const hasTagSelection = this.filterModel.tags.some((tag) => tag.value);
-
             if (hasTagSelection) {
                 this.elements = this.elements.filter(item => {
                     return item.information.type.find((type) => {
                         return this.filterModel.tags.some(tag => {
-                            if (tag.label === type && tag.value) {
+                            if (tag.id === type.id && tag.value) {
                                 return item;
                             }
                         });
@@ -149,4 +150,3 @@ export class NxIntegrationsComponent implements OnInit {
         item.name = item.name.replace(pattern, '<span class="marked">' + text + '</span>');
     }
 }
-

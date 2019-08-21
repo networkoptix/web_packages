@@ -2,15 +2,17 @@
 	"search": {
 		"Search": "Suche",
 		"search_ipvd": "Suche nach Modell oder Hersteller",
-		"filter applied": "Angewandte Filter",
-		"filters applied": "Angewandte Filter",
+		"filter applied": "angewandte filter",
+		"filters applied": "angewandte filter",
 		"Any": "Alle",
-		"selected": "Ausgewählt",
+		"selected": "ausgewählt",
 		"vendor": "Hersteller",
 		"vendors": "Hersteller",
 		"hardwareType": "Typ",
 		"hardwareTypes": "Typen",
-		"minResolution": "Minimale Auflösung"
+		"minResolution": "Minimale Auflösung",
+		"analytics": "Analytik",
+		"analyticsSelected": "analytik-Ereignisse"
 	},
 	"cameraFilters": {
 		"ptz": "PTZ-Kameras",
@@ -96,6 +98,7 @@
 		}
 	},
 	"ipvd": {
+		"resolutionArea": "Bereich",
 		"count": "Anzahl",
 		"vendor": "Hersteller",
 		"model": "Modell",
@@ -113,6 +116,7 @@
 		"isIoSupported": "I/O",
 		"isH265": "H.265",
 		"isMultiSensor": "Multisensor",
+		"isAnalyticsSupported": "Analytik",
 		"camera": "Kamera",
 		"multiSensorCamera": "Multisensorkamera",
 		"encoder": "Encoder",
@@ -128,9 +132,10 @@
 		"Extra high resolution cameras": "Extra hochauflösende Kameras",
 		"feedback": {
 			"a_Please": "Bitte",
-			"b_Link": "Anfrage abschicken",
+			"b_Link": "anfrage abschicken",
 			"c_Info": "für weitere Fragen/Anliegen bezüglich der unterstützten Geräte."
-		}
+		},
+		"disclaimer": "Diese Liste ist auf Geräte beschränkt, die auf {{vmsName}} gefunden wurden, wo Benutzer das automatische Berichten von Gerätespezifikationen an {{companyName}}} erlaubt haben. Es werden keine personenbezogenen Daten erhoben und jeder Nutzer bleibt völlig anonym."
 	},
 	"integration": {
 		"previewRibbonText": "Diese Seite ist eine Vorschau auf die neuesten Änderungen und entspricht nicht der öffentlich zugänglichen Version.",
@@ -146,18 +151,47 @@
 		"feedback": "Achten Sie darauf, dass Sie Ihr Kameramodell und Ihren Hersteller angeben..."
 	},
 	"pageTitles": {
-		"supportedDevices": "Supported Devices",
-		"integrations": "Integrations"
+		"supportedDevices": "Unterstützte Geräte",
+		"integrations": "Integrationen"
 	},
 	"dialogs": {
 		"merge": {
-			"connectToCloud": "Connect System you want to merge with this one to <strong>{{cloudName}}</strong> or merge locally using <strong>{{vmsName}}</strong> Client.",
-			"mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from the <strong>{{primarySystem}}</strong>.",
-			"primaryCannotMerge": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} System.",
-			"primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}.",
-			"secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
-			"systemOffline": "System {{targetSystem}} is offline and cannot be merged with the current one.",
-			"systemUnavailable": "System {{targetSystem}} is currently unreachable. Try again in a few minutes or contact"
+			"connectToCloud": "Verbinden Sie das System, mit dem Sie fusionieren möchten, mit <strong>{{cloudName}}</strong> oder fusionieren Sie lokal mit dem <strong>{{vmsName}}</strong>-Client.",
+			"mergeConfirmation": "Sie sind dabei, die Systeme <strong>{{primarySystem}}</strong> und <strong>{{secondarySystem}}</strong> zusammenzuführen. Die Einstellungen und der Name werden von diesem System <strong>{{primarySystem}}</strong>verwendet.",
+			"primaryCannotMerge": "Das System {{targetSystem}} hat eine neuere Softwareversion, die mit dem aktuellen System nicht kompatibel ist. Aktualisieren Sie das aktuelle System auf die <a href=\"/download\" target=\"_blank\" translate>neueste Buildversion</a> um es mit diesem System {{targetSystem}} zusammenzuführen.",
+			"primarySystemOffline": "System {{primarySystem}} ist offline und kann nicht mit dem System {{targetSystem}} zusammengeführt werden.",
+			"secondaryCannotMerge": "Das System {{targetSystem}} hat eine ältere Softwareversion, die mit dem aktuellen System nicht kompatibel ist. Aktualisieren Sie das System {{targetSystem}} auf die <a href=\"/download\" target=\"_blank\" translate>neueste Buildversion</a> um es mit dem aktuellen System zusammenzuführen.",
+			"systemOffline": "System {{targetSystem}} ist offline und kann nicht mit dem aktuellen zusammengeführt werden.",
+			"systemUnavailable": "System {{targetSystem}} ist derzeit nicht erreichbar. Versuchen Sie es in einigen Minuten erneut oder wenden Sie sich an"
+		},
+		"message": {
+			"failedToSend": "Nachricht konnte nicht gesendet werden.",
+			"sent": "Die Nachricht wurde gesendet.",
+			"title": {
+				"integration": "Kontaktieren Sie {{companyName}}",
+				"ipvd_feedback_page": "Feedback zur Kameraseite",
+				"ipvd_feedback_device": "Feedback zu {{product}}"
+			},
+			"topic": {
+				"contact_sales": "Kontaktiere Vertrieb für {{product}}",
+				"contact_support": "Kontaktiere Support für {{product}}",
+				"integration_feedback": "Feedback zur Integration {{product}}",
+				"ipvd_feedback_page": "Feedback zur Kameraseite",
+				"ipvd_feedback_device": "Feedback zu {{product}}"
+			}
 		}
-	}
+	},
+	"privacyPolicy": {
+		"integration": "Mit dem Absenden dieses Formulars erklären Sie sich damit einverstanden, dass Sie von {{INTEGRATION_COMPANY}}} und/oder %COMPANY_NAME% kontaktiert werden.\nSie finden die {{INTEGRATION_COMPANY}}} Datenschutzerklärung <a href=\"{{INTEGRATION_PRIVACY_POLICY}}}\" target=\"blank\">hier</a> und die %COMPANY_NAME% Datenschutzerklärung <a href=\"%PRIVACY_LINK%\" target=\"blank\">hier</a>, die Anweisungen enthalten, wie Sie Ihre Zustimmung widerrufen können.",
+		"ipvd": "Mit dem Absenden dieses Formulars erklären Sie sich damit einverstanden, dass Sie von %COMPANY_NAME% kontaktiert werden.\nSie finden %COMPANY_NAME% Datenschutzerklärung <a href=\"%PRIVACY_LINK%\" target=\"blank\">hier</a>, die Anweisungen zum Widerruf Ihrer Einwilligung enthält."
+	},
+	"testedVersionLabel": "Getestet auf {{vmsName}} Version:",
+	"testedVersionsLabel": "Getestet auf {{vmsName}} Versionen:",
+	"About %CLOUD_NAME%": "Über %CLOUD_NAME%",
+	"Download %VMS_NAME%": "%VMS_NAME% herunterladen",
+	"Integrations": "Integrationen",
+	"Privacy": "Datenschutz",
+	"Support": "Support",
+	"Supported Devices": "Unterstützte Geräte",
+	"Terms": "Bedingungen"
 }

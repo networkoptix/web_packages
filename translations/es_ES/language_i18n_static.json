@@ -1,28 +1,30 @@
 {
 	"search": {
 		"Search": "Búsqueda",
-		"search_ipvd": "Search by model or manufacturer",
-		"filter applied": "filter applied",
-		"filters applied": "filters applied",
+		"search_ipvd": "Búsqueda por modelo o fabricante",
+		"filter applied": "filtro aplicado",
+		"filters applied": "filtros aplicados",
 		"Any": "Cualquiera",
-		"selected": "selected",
+		"selected": "seleccionado",
 		"vendor": "Fabricante",
-		"vendors": "manufacturers",
+		"vendors": "Fabricantes",
 		"hardwareType": "Tipo",
-		"hardwareTypes": "types",
-		"minResolution": "Minimum Resolution"
+		"hardwareTypes": "Tipos",
+		"minResolution": "Resolución mínima",
+		"analytics": "Analítica",
+		"analyticsSelected": "evento de analiticas"
 	},
 	"cameraFilters": {
-		"ptz": "PTZ cameras",
-		"aptz": "Cameras with advanced PTZ",
-		"fisheye": "Fisheye cameras",
-		"H265": "H.265 Cameras",
-		"IO": "I / O modules",
-		"multiSensor": "Multi-sensor cameras",
-		"TwWayAudio": "2-way audio devices",
-		"audio": "Cameras with audio",
-		"encoder": "Encoders",
-		"highRes": "Extra high resolution cameras"
+		"ptz": "Camaras PTZ",
+		"aptz": "Cámaras con PTZ avanzado",
+		"fisheye": "Camaras de ojo de pez",
+		"H265": "Cámaras H.265",
+		"IO": "Módulos de E / S",
+		"multiSensor": "Cámaras multisensor",
+		"TwWayAudio": "Dispositivos de audio de 2 vías",
+		"audio": "Camaras con audio",
+		"encoder": "Codificador",
+		"highRes": "Cámaras de extra alta resolución"
 	},
 	"downloads": {
 		"mobile": {
@@ -36,11 +38,11 @@
 		"groups": {
 			"windows": {
 				"label": "Windows",
-				"supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+				"supported": "7, 8, 8.1, 10, Servidor 2008, Servidor 2012"
 			},
 			"mac": {
 				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"supported": "OSX 10.11 El Capitán, OSX 10.12 Sierra, OSX 10.13 High Sierra"
 			},
 			"linux": {
 				"label": "Ubuntu Linux",
@@ -49,7 +51,7 @@
 			},
 			"macos": {
 				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"supported": "OSX 10.11 El Capitán, OSX 10.12 Sierra, OSX 10.13 High Sierra"
 			},
 			"ios": {
 				"label": "iOS",
@@ -62,12 +64,12 @@
 			"arm": {
 				"label": "ARM",
 				"shortLabel": "ARM",
-				"supported": "Debian/Ubuntu based"
+				"supported": "Basado en Debian / Ubuntu"
 			},
 			"sdk": {
 				"label": "SDK",
 				"shortLabel": "SDK",
-				"supported": "C++ cross platform SDK"
+				"supported": "C ++ multiplataforma SDK"
 			}
 		},
 		"platforms": {
@@ -83,7 +85,7 @@
 			"server": "Servidor solamente",
 			"bundle": "Cliente y Servidor",
 			"servertool": "Herramienta de configuración",
-			"package": "Package"
+			"package": "Paquete"
 		},
 		"releasesTypes": {
 			"beta": "Beta",
@@ -96,7 +98,8 @@
 		}
 	},
 	"ipvd": {
-		"count": "Count",
+		"resolutionArea": "Área",
+		"count": "Contar",
 		"vendor": "Fabricante",
 		"model": "Modelo",
 		"hardwareType": "Tipo",
@@ -113,24 +116,26 @@
 		"isIoSupported": "E/S",
 		"isH265": "H.265",
 		"isMultiSensor": "Multi Sensor",
+		"isAnalyticsSupported": "Analíticas",
 		"camera": "Camara",
 		"multiSensorCamera": "Cámara multisensor",
 		"encoder": "Codificador",
 		"dvr": "DVR",
 		"other": "Otro",
-		"PTZ cameras": "PTZ cameras",
-		"Advanced PTZ cameras": "Advanced PTZ cameras",
-		"Fisheye Cameras": "Fisheye Cameras",
-		"Cameras supporting H.265": "Cameras supporting H.265",
-		"I / O modules": "I / O modules",
-		"Multisensor Cameras": "Multisensor Cameras",
-		"Cameras with 2-way audio": "Cameras with 2-way audio",
-		"Extra high resolution cameras": "Extra high resolution cameras",
+		"PTZ cameras": "Camaras PTZ",
+		"Advanced PTZ cameras": "Cámaras PTZ avanzadas",
+		"Fisheye Cameras": "Cámaras de ojo de pez",
+		"Cameras supporting H.265": "Cámaras de soporte H.265",
+		"I / O modules": "Módulos de E / S",
+		"Multisensor Cameras": "Camaras multisensor",
+		"Cameras with 2-way audio": "Cámaras con audio de 2 vías",
+		"Extra high resolution cameras": "Cámaras de extra alta resolución",
 		"feedback": {
-			"a_Please": "Please",
-			"b_Link": "submit a request",
-			"c_Info": "for additional questions/concerns regarding supported devices."
-		}
+			"a_Please": "Por favor",
+			"b_Link": "enviar una solicitud",
+			"c_Info": "para preguntas / preocupaciones adicionales con respecto a los dispositivos compatibles."
+		},
+		"disclaimer": "Esta lista se limita a los dispositivos que se encuentran en {{vmsName}} donde los usuarios han permitido el informe automático de las especificaciones del dispositivo a {{companyName}}. No se recopila información personal y cada usuario permanece completamente anónimo."
 	},
 	"integration": {
 		"previewRibbonText": "Esta página es una vista previa de los últimos cambios y no coincide con la versión de acceso público.",
@@ -143,21 +148,50 @@
 		"Storage": "Almacenamiento"
 	},
 	"messageDialogPlaceholders": {
-		"feedback": "Make sure you include your camera model and manufacturer..."
+		"feedback": "Asegúrate de incluir el modelo y el fabricante de tu cámara..."
 	},
 	"pageTitles": {
-		"supportedDevices": "Supported Devices",
-		"integrations": "Integrations"
+		"supportedDevices": "Dispositivos soportados",
+		"integrations": "Integraciones"
 	},
 	"dialogs": {
 		"merge": {
-			"connectToCloud": "Connect System you want to merge with this one to <strong>{{cloudName}}</strong> or merge locally using <strong>{{vmsName}}</strong> Client.",
-			"mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from the <strong>{{primarySystem}}</strong>.",
-			"primaryCannotMerge": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} System.",
-			"primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}.",
-			"secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
-			"systemOffline": "System {{targetSystem}} is offline and cannot be merged with the current one.",
-			"systemUnavailable": "System {{targetSystem}} is currently unreachable. Try again in a few minutes or contact"
+			"connectToCloud": "Conectar el sistema que desea fusionar con este a <strong>{{cloudName}}</strong> o fusionar localmente usando <strong>{{vmsName}}</strong> Cliente.",
+			"mergeConfirmation": "Estás a punto de fusionar sistemas <strong>{{primarySystem}}</strong> y <strong>{{secondarySystem}}</strong>. Los ajustes y el nombre serán tomados de los <strong>{{primarySystem}}</strong>.",
+			"primaryCannotMerge": "El sistema {{targetSystem}} tiene una versión de software más nueva que es incompatible con el sistema actual. Actualizar el sistema actual al <a href=\"/download\" target=\"_blank\" translate>última versión</a> de fusionarse con el {{targetSystem}} del sistema.",
+			"primarySystemOffline": "El sistema {{primarySystem}} está desconectado y no puede ser fusionado con el Sistema {{targetSystem}}.",
+			"secondaryCannotMerge": "El sistema {{targetSystem}} tiene una versión de software anterior que es incompatible con el sistema actual. Actualice {{targetSystem}} a la <a href=\"/download\" target=\"_blank\" translate>última compilación</a> para fusionarla con la actual.",
+			"systemOffline": "El sistema {{targetSystem}} está fuera de línea y no se puede combinar con el actual.",
+			"systemUnavailable": "El sistema {{targetSystem}} es actualmente inalcanzable. Inténtalo de nuevo en unos minutos o contacta"
+		},
+		"message": {
+			"failedToSend": "El mensaje no se ha podido enviar.",
+			"sent": "El mensaje ha sido enviado.",
+			"title": {
+				"integration": "Ponte en contacto con {{companyName}}",
+				"ipvd_feedback_page": "Comentarios sobre la página de cámaras",
+				"ipvd_feedback_device": "Comentarios sobre {{product}}"
+			},
+			"topic": {
+				"contact_sales": "Póngase en contacto con ventas para {{product}}",
+				"contact_support": "Póngase en contacto con soporte para {{product}}",
+				"integration_feedback": "Comentarios para la integración {{product}}",
+				"ipvd_feedback_page": "Comentarios sobre la página de cámaras",
+				"ipvd_feedback_device": "Comentarios sobre {{product}}"
+			}
 		}
-	}
+	},
+	"privacyPolicy": {
+		"integration": "Al enviar este formulario, usted acepta ser contactado por {{INTEGRATION_COMPANY}} y / o %COMPANY_NAME%.\nEncontrará {{INTEGRATION_COMPANY}} política de privacidad <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">aquí</a> y %COMPANY_NAME% política de privacidad <a href=\"%PRIVACY_LINK%\" target=\"blank\">aquí</a> que incluyen instrucciones sobre cómo retirar su consentimiento.",
+		"ipvd": "Al enviar este formulario, usted acepta ser contactado por %COMPANY_NAME%.\nEncontrará %COMPANY_NAME% política de privacidad <a href=\"%PRIVACY_LINK%\" target=\"blank\">aquí</a> que incluye instrucciones sobre cómo retirar su consentimiento."
+	},
+	"testedVersionLabel": "Probado en la versión {{vmsName}}:",
+	"testedVersionsLabel": "Probado en {{vmsName}} versiones:",
+	"About %CLOUD_NAME%": "Sobre %CLOUD_NAME%",
+	"Download %VMS_NAME%": "Descargar %VMS_NAME%",
+	"Integrations": "Integraciones",
+	"Privacy": "Privacidad",
+	"Support": "Asistencia",
+	"Supported Devices": "Dispositivos soportados",
+	"Terms": "Condiciones"
 }

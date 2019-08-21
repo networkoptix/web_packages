@@ -78,9 +78,9 @@ def send_event(request):
         if 'type' in request.data\
             and request.data['type'] not in [MESSAGE_TYPES.ipvd_feedback_page,
                                              MESSAGE_TYPES.ipvd_feedback_device]\
-                and 'productId' not in request.data:
+                and 'product' not in request.data:
             validation_error = True
-            error_data['productId'] = ['This field is required.']
+            error_data['product'] = ['This field is required.']
 
         if 'message' not in request.data:
             validation_error = True
@@ -101,16 +101,15 @@ def send_event(request):
         product_id = ''
         if request.data['type'] not in [MESSAGE_TYPES.ipvd_feedback_page,
                                         MESSAGE_TYPES.ipvd_feedback_device]:
-            product = Product.objects.filter(id=request.data['productId']).first()
+            product = Product.objects.filter(id=request.data['product']).first()
             if product:
                 request.data['product'] = product.name
                 product_id = product.id
         else:
-            request.data['product'] = request.data['productId']
+            request.data['type'] = MESSAGE_TYPES.ipvd_feedback
 
         request.data['sender_email'] = request.data['userEmail']
         request.data['sender_name'] = request.data['userName']
-        request.data['sender_to_be_contacted'] = request.data['contact']
 
         ip = get_client_ip(request)
         logging.info("ip: {}\t user: {}\nrequest data: {}".format(ip, request.user, request.data))

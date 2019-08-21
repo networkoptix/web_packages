@@ -3,28 +3,31 @@
     "emailSubject": "啟動您的帳號"
   },
   "cloud_invite": {
-    "emailSubject": "You have been invited to %CLOUD_NAME%"
+    "emailSubject": "您已被邀請到 %CLOUD_NAME%"
   },
   "cloud_notification": {
     "emailSubject": "{{message.subject}}"
   },
   "contact_sales": {
-    "emailSubject": "Sales inquiry for {{message.product}}"
+    "emailSubject": "{{message.product}}的產品諮詢"
   },
   "contact_support": {
-    "emailSubject": "Support request for {{message.product}}"
+    "emailSubject": "{{message.product}}的技術支援"
+  },
+  "integration_feedback": {
+    "emailSubject": "{{message.product}} 的回饋意見"
   },
   "ipvd_feedback": {
-    "emailSubject": "Camera Page Feedback for {{message.product}}"
+    "emailSubject": "關於 {{message.product}}{{/message.product}} 攝影機頁面回饋意見{{#message.product}}"
   },
   "review_version": {
-    "emailSubject": "{{message.product_type}}: {{message.product}} has a new version to review"
+    "emailSubject": "{{message.product_type}}： {{message.product}} 有新版本可供檢視"
   },
   "restore_password": {
     "emailSubject": "重設您的密碼"
   },
   "system_invite": {
-    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} invites you to %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}Video system {{message.system_name}} was shared with you{{/message.sharer_name}}"
+    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} 邀請您加入 %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}V影像系統 {{message.system_name}} 與您共享{{/message.sharer_name}}"
   },
   "system_shared": {
     "emailSubject": "有人分享影像 {{message.system_name}} 給您"

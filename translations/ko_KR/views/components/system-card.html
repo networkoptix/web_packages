@@ -5,13 +5,12 @@
             <button ng-disabled="currentlyMerging && !isMaster" class="btn btn-default" ng-click="rename()">시스템 이름 바꾸기</button>
         </p>
         <p ng-if="systems.length > 1 && system.canMerge || configCanMerge || debugMode || betaMode">
-            <button class="btn btn-default"
+            <button class="btn btn-default mw-100"
                     ng-disabled="(currentlyMerging || !system.isOnline || !system.isAvailable) && !(debugMode || betaMode)"
-                    ng-click="mergeSystems()">다른 시스템과 병합</button>
+                    ng-click="mergeSystems()"><div class="ellipsis"> 다른 시스템과 머지 </div></button>
         </p>
         <hr />
-        <button ng-disabled="currentlyMerging" class="btn btn-default" ng-click="disconnect()">Disconnect from
-            <span class="product-name">&nbsp;%CLOUD_NAME%</span></button>
+        <button ng-disabled="currentlyMerging" class="btn btn-default" ng-click="disconnect()"><span class="product-name">&nbsp;%CLOUD_NAME% 에서 연결 해제</span></button>
     </div>
 </div>
 <div class="card card-condensed" ng-if="!system.isMine">
@@ -21,8 +20,7 @@
         <a ng-href="mailto:{{system.info.ownerAccountEmail}}">{{system.info.ownerAccountEmail}}</a>
         <hr>
         <p>
-            당신의 권한:
-<b>{{$root.L.accessRoles[system.accessRole].label || system.accessRole}}</b>
+            당신의 권한: <b>{{permission}}</b>
         </p>
 
         <p ng-if="system.permissions.isAdmin">

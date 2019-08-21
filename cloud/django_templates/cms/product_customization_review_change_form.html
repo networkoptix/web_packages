@@ -7,8 +7,17 @@
     <script>window.$ = django.jQuery;</script>
     <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
 {% endblock %}
+{% block content_title %}
+<h1 style="display: flex; justify-content: space-between;">
+    <div>{{ page_title }}</div>
+    {% if original.can_preview_customization and is_integration %}
+    <a class="preview" href="{% url 'preview' %}" value="0">Preview</a>
+    {% endif %}
+</h1>
+{% endblock %}
+
 {% block content %}
-    {% with can_preview=original.can_preview_customization version=original.version product=original.version.product %}
+    {% with version=original.version product=original.version.product %}
     <div id="alert" style="display:none" class="alert alert-warning"
          title="Preview being generated">Currently making the preview for you. A new tab
         will open shortly.
@@ -16,7 +25,6 @@
     <div id="alert-error" style="display:none" class="alert alert-error"
          title="Error generating preview">There was an error making the preview
     </div>
-
     <div class="module custom-block">
         {% if customization_reviews %}
         <div style="margin-bottom: 20px;">
@@ -35,19 +43,16 @@
                     <tbody>
                     {% for review in customization_reviews %}
                         {% get_review_state review.state as state %}
-                        {% has_customization_permission review.version.created_by review.customization.name 'cms.access_customization' as access_customization %}
                         <tr>
                             <td>
-                            {% if access_customization %}
                                 {% if review == original %}
                                 <strong>{{ review.customization }}</strong>
                                 {% else %}
                                 <a href="{% url 'admin:cms_productcustomizationreview_change' review.id %}">{{ review.customization }}</a>
                                 {% endif %}
-                            {% endif %}
                             </td>
                             <td><span class="label {% if state == 'Rejected' %} label-danger {% elif state == "Accepted" %} label-success {% else %} label-default{% endif %}">{{ state }}</span></td>
-                            <td> {% if access_customization %}{{ review.reviewed_by }}{% endif %}</td>
+                            <td> {{ review.reviewed_by }}</td>
                             <td> {{ review.reviewed_date }}</td>
                             <td> {{ review.notes | linebreaks }}</td>
                         </tr>
@@ -66,10 +71,9 @@
                     <div>
                         {% with context_url=records.0.data_structure.context.url %}
                             {{ context_name }}
-                            {% if can_preview and version.state == 'in review'%}
+                            {% if can_preview %}
                                 <a class="float-right preview" href="{% url 'preview' %}"
-                                   value="{{records.0.data_structure.context.id}}"
-                                   target="_blank">Preview</a>
+                                   value="{{records.0.data_structure.context.id}}">Preview</a>
                             {% endif %}
                         {% endwith %}
                     </div>
@@ -90,14 +94,20 @@
                             </span>
 
                             {% if data_structure.type == DataStructureTypes.image or data_structure.type == DataStructureTypes.external_image  %}
-                                <div><img class="preview-image review-preview"
+                                <div><img class="
+                                    {% if 'background' in data_structure.meta_settings and data_structure.meta_settings.background != 'transparent' %}
+                                        {{ data_structure.meta_settings.background }}
+                                    {% else %}
+                                        preview-image
+                                    {% endif %}
+                                    review-preview"
                                           {% if data_structure.type == DataStructureTypes.image %}
                                             src="data:image/png;base64,{{ record }}"
                                           {% else %}
                                             src="{{ record }}"
                                           {% endif %}></div>
                             {% elif data_structure.type == DataStructureTypes.file %}
-                                <a href="{% url 'download_file' data_structure.name %}?version_id={{ version.id }}&lang={{ language.code }}&draft"
+                                <a href="{% url 'download_file' data_structure.name %}?version_id={{ version.id }}&product_id={{ product.id }}&lang={{ language.code }}&draft"
                                    download>Download</a>
                             {% elif data_structure.type == DataStructureTypes.external_file %}
                                 <a href="{{ record }}">Download</a>
@@ -123,11 +133,11 @@
         {% else %}
         <div>There are no changes to review</div>
         {% endif %}
-        <h2>Review Notes {% if customization_name %}for {{ customization_name }}{% endif %}</h2>
+        <h2>Review Notes {% if access_customization %}for {{ original.customization.name }}{% endif %}</h2>
         {{ original.notes|linebreaks }}
     </div>
 
-    <form action="" enctype="multipart/form-data" method="post" novalidate>
+    <form action="" enctype="multipart/form-data" method="post" id="reviewForm" novalidate>
         {% csrf_token %}
         <input name="version_id" value="{{ version.id }}" hidden/>
         <input name="review_id" value="{{ original.id }}" hidden/>
@@ -149,7 +159,7 @@
                 </button>
                 {% endif %}
 
-                {% if allowed.publish or allowed.accept %}
+                {% if allowed.reject %}
                 <button class="btn btn-sm btn-danger" data-action="reject" data-name="Reject"
                         data-toggle="modal" data-target="#addNotes" onclick="return false;">Reject</button>
                 {% endif %}
@@ -221,7 +231,7 @@
                     $("#alert").css({display: 'block'});
                     posting.done(function(data){
                         $("#alert").css({display: 'none'});
-                        window.open(data, '_blank');
+                        window.open(data, '', '_blank,noopener,noreferrer');
                     });
                     posting.fail(function(){
                         $("#alert-error").css({display: 'block'});
@@ -238,8 +248,11 @@
                 noteButton.attr('name', button.data('action'));
                 noteButton.text(button.data('name'));
                 noteButton.attr('class', button.attr('class'));
-            })
+            });
 
+            $('#reviewForm').submit(function() {
+                $('#addNotes').modal('hide');
+            });
         })();
     </script>
     {% endwith %}

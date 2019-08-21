@@ -1,9 +1,9 @@
 {
   "activate_account": {
-    "emailSubject": "Fiók aktiválása"
+    "emailSubject": "Aktiváld a fiókod"
   },
   "cloud_invite": {
-    "emailSubject": "You have been invited to %CLOUD_NAME%"
+    "emailSubject": "Meghívást kapott a %CLOUD_NAME%"
   },
   "cloud_notification": {
     "emailSubject": "{{message.subject}}"
@@ -14,8 +14,11 @@
   "contact_support": {
     "emailSubject": "Support request for {{message.product}}"
   },
+  "integration_feedback": {
+    "emailSubject": "Feedback for {{message.product}}"
+  },
   "ipvd_feedback": {
-    "emailSubject": "Camera Page Feedback for {{message.product}}"
+    "emailSubject": "Camera Page Feedback{{#message.product}} for {{message.product}}{{/message.product}}"
   },
   "review_version": {
     "emailSubject": "{{message.product_type}}: {{message.product}} has a new version to review"
@@ -24,7 +27,7 @@
     "emailSubject": "A jelszó alaphelyzetbe állítása"
   },
   "system_invite": {
-    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} invites you to %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}Video system {{message.system_name}} was shared with you{{/message.sharer_name}}"
+    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} meghívja Önt %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}Hozzáférést kapott {{message.system_name}} videó rendszerhez{{/message.sharer_name}}"
   },
   "system_shared": {
     "emailSubject": "Hozzáférést kapott {{message.system_name}} videó rendszerhez"

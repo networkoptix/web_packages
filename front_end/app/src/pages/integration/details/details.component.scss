@@ -1,0 +1,19 @@
+@import '../../../../styles/custom/custom_palette';
+@import '../../../../styles/theme_palette';
+@import '../../../../styles/theme_variables';
+
+integration-detail-component {
+    
+    .integration-details {
+        min-width : 550px;
+    }
+    
+    .menu {
+        background-color : $light5;
+        padding          : .5rem 0;
+        
+        .menu-level-2 {
+            border-radius: 2px;
+        }
+    }
+}

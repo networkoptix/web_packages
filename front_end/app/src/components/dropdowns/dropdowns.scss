@@ -52,6 +52,26 @@ header {
         }
     }
     
+    &.alt-style {
+        .dropdown-toggle {
+            height : 32px;
+    
+            .nav-arrow {
+                @media (max-width : $collapse-second-width) {
+                    right : 26px;
+                    bottom: 12px;
+                }
+            }
+        }
+    
+        .multi-column {
+            &.columns-2 {
+                left: auto;
+                right: 0;
+            }
+        }
+    }
+    
     .dropdown-toggle {
         display          : flex;
         justify-content  : flex-start;

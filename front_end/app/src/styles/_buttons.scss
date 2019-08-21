@@ -2,6 +2,7 @@
 @import '../../styles/theme_palette';
 @import '../../styles/theme_variables';
 @import '../styles/mixins';
+@import '~bootstrap/scss/mixins';
 
 #button {
     height        : 2rem;
@@ -120,6 +121,18 @@ button, .btn {
         color            : $light1;
         background-color : $light16 !important;
     }
+}
+
+.btn.btn-menu {
+    height           : 28px;
+    color            : $dark9;
+    border           : 1px solid $light10;
+    background-color : transparent;
+    max-width        : 180px;
+    display          : flex;
+    align-content    : center;
+    justify-content  : center;
+    border-radius    : $border-radius-base !important;
 }
 
 .btn.btn-clear {
@@ -313,5 +326,26 @@ button, .btn {
     
     &:active, &:focus {
         color : $light16;
+    }
+}
+
+.btn-collapse {
+    @include media-breakpoint-down(md) {
+        padding : 0 .75rem;
+    }
+    
+    .glyphicon {
+        display : block;
+        margin: 0;
+        @include media-breakpoint-up(md) {
+            display : none;
+        }
+    }
+    
+    .btn-caption {
+        display : none;
+        @include media-breakpoint-up(md) {
+            display : block;
+        }
     }
 }

@@ -5,12 +5,12 @@
             <button ng-disabled="currentlyMerging && !isMaster" class="btn btn-default" ng-click="rename()">שינוי שם מערכת</button>
         </p>
         <p ng-if="systems.length > 1 && system.canMerge || configCanMerge || debugMode || betaMode">
-            <button class="btn btn-default"
+            <button class="btn btn-default mw-100"
                     ng-disabled="(currentlyMerging || !system.isOnline || !system.isAvailable) && !(debugMode || betaMode)"
-                    ng-click="mergeSystems()">מיזוג עם מערכת אחרת</button>
+                    ng-click="mergeSystems()"><div class="ellipsis">להתמזג עם מערכת אחרת</div></button>
         </p>
         <hr />
-        <button ng-disabled="currentlyMerging" class="btn btn-default" ng-click="disconnect()">Disconnect from
+        <button ng-disabled="currentlyMerging" class="btn btn-default" ng-click="disconnect()">התנתק מ
             <span class="product-name">&nbsp;%CLOUD_NAME%</span></button>
     </div>
 </div>
@@ -21,7 +21,8 @@
         <a ng-href="mailto:{{system.info.ownerAccountEmail}}">{{system.info.ownerAccountEmail}}</a>
         <hr>
         <p>
-            ההרשאות שלך: <b> {{$root.L.accessRoles[system.accessRole].label || System.accessRole}} </b>
+            ההרשאות שלך:
+            <b>{{permission}}</b>
         </p>
 
         <p ng-if="system.permissions.isAdmin">

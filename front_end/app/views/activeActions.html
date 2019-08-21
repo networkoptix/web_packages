@@ -26,10 +26,13 @@
             <h1>You have registered in %CLOUD_NAME%</h1>
             <p>We've sent you a letter with activation link to {{data.email}}.<br>
                 Please activate your account by visiting this link.</p>
+            <process-button process="reactivate"
+                            form="reactivateAccount"
+                            button-text="$root.L.activeActions.sendConfirm"></process-button>
         </div>
         <h1 ng-if="!data.email">Activate your account</h1>
-        <form name="reactivateAccount" class="form-horizontal" ng-if="!reactivate.success" novalidate>
-            <div class="form-group" ng-if="!data.email" validate-field>
+        <form name="reactivateAccount" class="form-horizontal" ng-if="!reactivate.success && !data.email" novalidate>
+            <div class="form-group" validate-field>
                 <div class="col-md-4 justify-content-start justify-content-md-end">
                     <label for="emailReactivate" class="control-label">Email</label>
                 </div>
@@ -48,8 +51,8 @@
                           ng-if="reactivateAccount.email.$touched && reactivateAccount.email.$error.email">Please enter a valid Email</span>
                 </div>
             </div>
-            <div class="form-group">
-                <div class="offset-sm-2 col-sm-10" ng-class="{ 'offset-sm-4 col-sm-8' : data.email}" >
+            <div class="form-group mt-3">
+                <div class="offset-sm-2 col-sm-10 offset-sm-4 col-sm-8" >
                     <process-button process="reactivate"
                                     form="reactivateAccount"
                                     button-text="$root.L.activeActions.sendConfirm"></process-button>
@@ -123,4 +126,6 @@
             </div>
         </form>
     </div>
+
+    <nx-footer></nx-footer>
 </div>

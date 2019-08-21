@@ -1,7 +1,7 @@
 {
     "PRODUCT_NAME"             :    "VMS Demo Cloud",
     "VMS_NAME"                 :    "VMS Demonstration",
-    "PRIVACY POLICY URL"       :    "/content/privacy",
+    "PRIVACY POLICY URL HREF"  :    "/content/privacy",
     "PRIVACY POLICY URL FULL"  :    "https://vm201.la.hdw.mx/content/privacy",
     "SUPPORT URL"              :    "https://vm201.la.hdw.mx/content/support",
     "WEBSITE URL"              :    "http://networkoptix.com/",
@@ -14,6 +14,7 @@
     "COMPANY"                  :    "Network Optix",
     "THEME COLOR"              :    "#2FA2DB",
     "THEME COLOR RGB"          :    "rgba(47, 162, 219, 1)",
-    "ITUNES STORE LINK"        :    "https://itunes.apple.com/eg/app/hd-witness/id1050899754",
-    "PLAY STORE LINK"          :    "https://play.google.com/store/apps/details?id=com.networkoptix.nxwitness"
+    "ITUNES STORE LINK"        :    "https://apps.apple.com/eg/app/hd-witness/id1050899754",
+    "PLAY STORE LINK"          :    "https://play.google.com/store/apps/details?id=com.networkoptix.nxwitness",
+    "IPVD VENDORS SHOWN"       :    "30"
 }

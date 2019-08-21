@@ -17,7 +17,7 @@ from ..models import *
 
 BYTES_TO_MEGABYTES = 1048576.0
 PENDING = ProductCustomizationReview.REVIEW_STATES[ProductCustomizationReview.REVIEW_STATES.pending].lower()
-
+GUID_REGEXP = '\{[\da-fA-F]{8}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{12}\}'
 
 def update_draft_state(review_id, target_state, user):
     review = ProductCustomizationReview.objects.filter(id=review_id, reviewed_by=None).last()
@@ -75,7 +75,7 @@ def save_unrevisioned_records(product, context, language, data_structures,
         new_record_value = ""
         external_file = None
         delete_file = False
-        latest_value = data_structure.find_actual_value(product, ds_language)
+        latest_value = data_structure.find_actual_value(product, ds_language, draft=True)
         # If the DataStructure is supposed to be an image convert to base64 and
         # error check
         # TODO: Refactor image/file logic - CLOUD-1524
@@ -88,7 +88,7 @@ def save_unrevisioned_records(product, context, language, data_structures,
             This will create a new record making images/files behave like the other data structure types
             Places to touch are here and cms/forms.py
         """
-        if data_structure.type in[DataStructure.DATA_TYPES.image, DataStructure.DATA_TYPES.file]:
+        if DataStructure.is_file_or_image(data_structure.type):
             # If a file has been uploaded try to save it
             if data_structure_name in request_files:
                 if request_files[data_structure_name]:
@@ -108,8 +108,7 @@ def save_unrevisioned_records(product, context, language, data_structures,
 
             # if the guid is valid it will go to the next set of checks
             new_record_value = request_data[data_structure_name] if data_structure_name in request_data else ""
-            is_guid = re.match('\{[\da-fA-F]{8}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{12}\}',
-                               new_record_value)
+            is_guid = re.match(GUID_REGEXP, new_record_value)
 
             # if its option and not a valid guid set error message and go to next DataStructure
             if new_record_value and not is_guid:
@@ -124,12 +123,18 @@ def save_unrevisioned_records(product, context, language, data_structures,
                                       'No submitted GUID or default value. GUID has been generated as {}'
                                       .format(new_record_value)))
 
-        elif data_structure.type == DataStructure.DATA_TYPES.select:
+        elif data_structure.type in [DataStructure.DATA_TYPES.select, DataStructure.DATA_TYPES.multiselect]:
             values = request_data.getlist(data_structure_name)
-            if 'multi' in data_structure.meta_settings and data_structure.meta_settings['multi']:
-                new_record_value = json.dumps(values)
+            if 'options' in data_structure.meta_settings and data_structure.meta_settings['options']:
+                if data_structure.type == DataStructure.DATA_TYPES.multiselect:
+                    new_record_value = json.dumps(values)
+                else:
+                    new_record_value = values[0]
             else:
-                new_record_value = values[0]
+                if data_structure.type == DataStructure.DATA_TYPES.multiselect:
+                    new_record_value = '[]'
+                else:
+                    new_record_value = ''
 
         elif data_structure.type in [DataStructure.DATA_TYPES.external_file, DataStructure.DATA_TYPES.external_image]:
 
@@ -171,6 +176,11 @@ def save_unrevisioned_records(product, context, language, data_structures,
 
         elif data_structure.type in [DataStructure.DATA_TYPES.object, DataStructure.DATA_TYPES.array]:
             new_record_value = request_data[data_structure_name]
+            if not new_record_value:
+                if data_structure.type is DataStructure.DATA_TYPES.object:
+                    new_record_value = '{}'
+                elif data_structure.type is DataStructure.DATA_TYPES.array:
+                    new_record_value = '[]'
             try:
                 new_record_value = json.loads(new_record_value)
                 if data_structure.type == DataStructure.DATA_TYPES.array and type(new_record_value) != list:
@@ -178,7 +188,7 @@ def save_unrevisioned_records(product, context, language, data_structures,
                 elif data_structure.type == DataStructure.DATA_TYPES.object and type(new_record_value) != dict:
                     raise ValueError
 
-                new_record_value = json.dumps(new_record_value, indent=4)
+                new_record_value = json.dumps(new_record_value, indent=4, separators=(',', ': '))
             except ValueError:
                 upload_errors.append((data_structure_name, "Json was incorrectly formatted."))
                 continue
@@ -309,7 +319,8 @@ def integration_has_required_data(product):
         records = datastructure.datarecord_set.filter(product=product)
         last_record_value = records.last().value if records.last() else None
         if last_record_value and datastructure.type in [DataStructure.DATA_TYPES.select,
-                                                        DataStructure.DATA_TYPES.array]:
+                                                        DataStructure.DATA_TYPES.array,
+                                                        DataStructure.DATA_TYPES.multiselect]:
             last_record_value = json.loads(last_record_value)
         if not datastructure.optional and (not records.exists() or not last_record_value):
             ds_name = datastructure.label if datastructure.label else datastructure.name
@@ -436,7 +447,7 @@ def check_meta_settings(data_structure, new_file):
             format(new_file.size/BYTES_TO_MEGABYTES, meta_settings['size']/BYTES_TO_MEGABYTES)
         return [(data_structure.name, error_msg)]
 
-    if data_structure.type in [DataStructure.DATA_TYPES.image, DataStructure.DATA_TYPES.external_image]:
+    if DataStructure.is_file_or_image(data_structure.type):
 
         try:
             image_dimensions = get_image_dimensions(new_file)

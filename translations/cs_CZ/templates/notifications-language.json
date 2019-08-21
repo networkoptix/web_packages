@@ -1,30 +1,33 @@
 {
   "activate_account": {
-    "emailSubject": "Aktivujte svůj účet"
+    "emailSubject": "Prosím, aktivujte si váš účet"
   },
   "cloud_invite": {
-    "emailSubject": "You have been invited to %CLOUD_NAME%"
+    "emailSubject": "Byli jste pozváni do %CLOUD_NAME%"
   },
   "cloud_notification": {
     "emailSubject": "{{message.subject}}"
   },
   "contact_sales": {
-    "emailSubject": "Sales inquiry for {{message.product}}"
+    "emailSubject": "Dotaz na prodejce o {{message.product}}"
   },
   "contact_support": {
-    "emailSubject": "Support request for {{message.product}}"
+    "emailSubject": "Žádost o podporu {{message.product}}"
+  },
+  "integration_feedback": {
+    "emailSubject": "Zpětná vazba pro {{message.product}}"
   },
   "ipvd_feedback": {
-    "emailSubject": "Camera Page Feedback for {{message.product}}"
+    "emailSubject": "Zpětná vazba stránky kamery{{#message.product}} pro {{message.product}}{{/message.product}}"
   },
   "review_version": {
-    "emailSubject": "{{message.product_type}}: {{message.product}} has a new version to review"
+    "emailSubject": "{{message.product_type}}: {{message.product}} má novou verzi ke kontrole"
   },
   "restore_password": {
     "emailSubject": "Resetovat heslo"
   },
   "system_invite": {
-    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} invites you to %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}Video system {{message.system_name}} was shared with you{{/message.sharer_name}}"
+    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} vás zve na %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}Video systém {{message.system_name}} byl s vámi sdílen{{/message.sharer_name}}"
   },
   "system_shared": {
     "emailSubject": "Byl s vámi sdílí video systém {{message.system_name}}"

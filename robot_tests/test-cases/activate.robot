@@ -1,6 +1,6 @@
 *** Settings ***
 Resource          ../resource.robot
-Suite Setup       Open Browser and go to URL    ${url}
+Suite Setup       Clear Emails
 Test Setup        Restart
 Test Teardown     Run Keyword If Test Failed    Open New Browser On Failure
 Suite Teardown    Close All Browsers
@@ -12,7 +12,14 @@ ${url}         ${ENV}
 ${symbol password}    pass!@#$%^&*()_-+=;:'"`~,./\|?[]{}
 
 *** Keywords ***
+Clear emails
+    Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
+    ${emails}    Run Keyword And Ignore Error    Wait For Email    timeout=120
+    Run Keyword And Ignore Error    Delete all emails
+    Close Mailbox
+
 Restart
+    Open Browser and go to URL    ${url}
     Register Keyword To Run On Failure    NONE
     ${status}    Run Keyword And Return Status    Validate Log Out
     Register Keyword To Run On Failure    Failure Tasks

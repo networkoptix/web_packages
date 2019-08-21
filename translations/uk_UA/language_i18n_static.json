@@ -7,10 +7,12 @@
 		"Any": "Будь-які",
 		"selected": "вибрано",
 		"vendor": "Виробник",
-		"vendors": "виробники",
+		"vendors": "Виробники",
 		"hardwareType": "Тип",
-		"hardwareTypes": "типи",
-		"minResolution": "Мінімальна роздільна здатність"
+		"hardwareTypes": "Типи",
+		"minResolution": "Мінімальна роздільна здатність",
+		"analytics": "Аналітика",
+		"analyticsSelected": "аналітика подій"
 	},
 	"cameraFilters": {
 		"ptz": "PTZ камери",
@@ -96,6 +98,7 @@
 		}
 	},
 	"ipvd": {
+		"resolutionArea": "Площа",
 		"count": "Підрахунок",
 		"vendor": "Виробник",
 		"model": "Модель",
@@ -113,6 +116,7 @@
 		"isIoSupported": "Ввід/вивід",
 		"isH265": "H.265",
 		"isMultiSensor": "Мультисенсор",
+		"isAnalyticsSupported": "Аналітика",
 		"camera": "Камера",
 		"multiSensorCamera": "Багатоканальна камера",
 		"encoder": "Енкодер",
@@ -130,7 +134,8 @@
 			"a_Please": "Будь ласка",
 			"b_Link": "надіслати запит",
 			"c_Info": "додаткові питання / зауваження щодо підтримуваних пристроїв."
-		}
+		},
+		"disclaimer": "Цей список обмежується пристроями, знайденими в {{vmsName}} де користувачі дозволили автоматичну звітність характеристик пристрою до {{companyName}}. Жодна особиста інформація не збирається і кожен користувач залишається повністю анонімним."
 	},
 	"integration": {
 		"previewRibbonText": "Ця сторінка є попереднім переглядом останніх змін і не відповідає загальнодоступній версії.",
@@ -146,18 +151,47 @@
 		"feedback": "Укажіть камеру та модель виробника..."
 	},
 	"pageTitles": {
-		"supportedDevices": "Supported Devices",
-		"integrations": "Integrations"
+		"supportedDevices": "Пристрої, що підтримуються",
+		"integrations": "Інтеграції"
 	},
 	"dialogs": {
 		"merge": {
-			"connectToCloud": "Connect System you want to merge with this one to <strong>{{cloudName}}</strong> or merge locally using <strong>{{vmsName}}</strong> Client.",
-			"mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from the <strong>{{primarySystem}}</strong>.",
-			"primaryCannotMerge": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} System.",
-			"primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}.",
-			"secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
-			"systemOffline": "System {{targetSystem}} is offline and cannot be merged with the current one.",
-			"systemUnavailable": "System {{targetSystem}} is currently unreachable. Try again in a few minutes or contact"
+			"connectToCloud": "Підключіть систему, яку хочете об’єднати з цією <strong>{{cloudName}}</strong> або об’єднайте локально з <strong>{{vmsName}}</strong> Клієнтом.",
+			"mergeConfirmation": "Ви збираєтеся об’єднати системи <strong>{{primarySystem}}</strong> та <strong>{{secondarySystem}}</strong>. Ім'я та налаштування будуть взяті з <strong>{{primarySystem}}</strong>.",
+			"primaryCannotMerge": "Система {{targetSystem}} має нову версію Пз, несумісну з поточною системою. Оновіть поточну Систему до <a href=\"/download\" target=\"_blank\" translate>останньої збірки</a> для об’єднання з {{targetSystem}} Системою.",
+			"primarySystemOffline": "Система {{primarySystem}} офлайн і не може бути об'єднана з Системою {{targetSystem}}.",
+			"secondaryCannotMerge": "Система {{targetSystem}} має стару версію Пз, несумісну з поточною системою. Оновіть {{targetSystem}} до <a href=\"/download\" target=\"_blank\" translate>останньої збірки</a> для об’єднання з поточною системою.",
+			"systemOffline": "Система {{targetSystem}} офлайн і не може бути об'єднана.",
+			"systemUnavailable": "Система {{targetSystem}} наразі недоступна. Повторіть спробу через декілька хвилин або зв'яжіться з нами"
+		},
+		"message": {
+			"failedToSend": "Не вдалося надіслати повідомлення.",
+			"sent": "Повідомлення відправлено.",
+			"title": {
+				"integration": "Зв’яжіться з {{companyName}}",
+				"ipvd_feedback_page": "Зворотній зв’язок для сторінки камер",
+				"ipvd_feedback_device": "Відгук про {{product}}"
+			},
+			"topic": {
+				"contact_sales": "Зв'яжіться з відділом продажів за {{product}}",
+				"contact_support": "Зверніться до служби підтримки за {{product}}",
+				"integration_feedback": "Зворотній зв'язок для інтеграції {{product}}",
+				"ipvd_feedback_page": "Зворотній зв’язок для сторінки камер",
+				"ipvd_feedback_device": "Відгук про {{product}}"
+			}
 		}
-	}
+	},
+	"privacyPolicy": {
+		"integration": "Надіславши цю форму, ви погоджуєтеся зв'язатися з {{INTEGRATION_COMPANY}} та / або %COMPANY_NAME%.\nВи знайдете {{INTEGRATION_COMPANY}} Політику конфіденційності <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">тут</a> і %COMPANY_NAME% Політика конфіденційності <a href=\"%PRIVACY_LINK%\" target=\"blank\">тут</a> які містять інструкцію про те, як зняти вашу згоду.",
+		"ipvd": "Надсилаючи цю форму, ви погоджуєтесь зв'язатися з нами %COMPANY_NAME%.\nВи знайдете %COMPANY_NAME% політику конфіденційності <a href=\"%PRIVACY_LINK%\" target=\"blank\">тут</a> яка містить інструкцію про те, як скасувати вашу згоду."
+	},
+	"testedVersionLabel": "Протестовано за {{vmsName}} версій:",
+	"testedVersionsLabel": "Протестовано за {{vmsName}} версій:",
+	"About %CLOUD_NAME%": "Про %CLOUD_NAME%",
+	"Download %VMS_NAME%": "Завантажити %VMS_NAME%",
+	"Integrations": "Інтеграції",
+	"Privacy": "Приватність",
+	"Support": "Підтримка",
+	"Supported Devices": "Пристрої, що підтримуються",
+	"Terms": "Умови"
 }

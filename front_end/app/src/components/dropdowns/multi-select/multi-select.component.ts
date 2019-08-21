@@ -1,9 +1,10 @@
 import {
     Component, OnInit, ViewEncapsulation,
-    Input, forwardRef, OnChanges, SimpleChanges, ViewChild, ElementRef, Output, EventEmitter
+    Input, forwardRef, OnChanges, SimpleChanges,
+    ViewChild, ElementRef, Output, EventEmitter
 }                                                  from '@angular/core';
-import { TranslateService }                        from '@ngx-translate/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { NxLanguageProviderService }               from '../../../services/nx-language-provider';
 
 const noop = () => {
 };
@@ -43,18 +44,20 @@ export class NxMultiSelectDropdown implements OnInit, ControlValueAccessor, OnCh
     public filter: string;
     public show: boolean;
     public textSelected: any = {};
+
+    LANG: any = {};
+
     private innerValue: any;
-    private lang: any = {};
 
     // Placeholders for the callbacks which are later provided
     // by the Control Value Accessor
     private onTouchedCallback: () => void = noop;
     private onChangeCallback: (_: any) => void = noop;
 
-    constructor(private translate: TranslateService) {
+    constructor(private language: NxLanguageProviderService) {
+        this.LANG = this.language.getTranslations();
         this.show = false;
         this.filter = '';
-        this.lang = this.translate.translations[this.translate.currentLang];
     }
 
     // TODO: Bind ngModel to the component and eliminate EventEmitter
@@ -125,11 +128,11 @@ export class NxMultiSelectDropdown implements OnInit, ControlValueAccessor, OnCh
             }
             case 0:
             case this.items.length: {
-                this.textSelected = this.lang.search.Any;
+                this.textSelected = this.LANG.search.Any;
                 break;
             }
             default: {
-                this.textSelected = this.innerValue.length + ' ' + this.lang.search.selected;
+                this.textSelected = this.innerValue.length + ' ' + this.LANG.search.selected;
                 break;
             }
         }

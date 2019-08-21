@@ -59,15 +59,15 @@ class GroupFilter(SimpleListFilter):
 
 @admin.register(Account)
 class AccountAdmin(CMSAdmin, CSVExportAdmin):
-    list_display = ('short_email', 'short_first_name', 'short_last_name', 'created_date', 'last_login',
-                    'is_staff', 'language', 'customization', 'user_groups')
+    list_display = ['short_email', 'short_first_name', 'short_last_name', 'created_date', 'last_login',
+                    'is_staff', 'language', 'customization']
     # forbid changing all fields which can be edited by user in cloud portal except sub
     readonly_fields = ('email', 'first_name', 'last_name', 'created_date', 'activated_date', 'last_login',
                        'language', 'customization')
 
     exclude = ("user_permissions",)
 
-    list_filter = ('is_staff', 'created_date', 'last_login', CustomizationFilter, GroupFilter, )
+    list_filter = ['is_staff', 'created_date', 'last_login', CustomizationFilter]
     search_fields = ('email', 'first_name', 'last_name', 'customization', 'language', 'groups__name')
 
     csv_fields = ('email', 'first_name', 'last_name', 'created_date', 'last_login',
@@ -93,6 +93,20 @@ class AccountAdmin(CMSAdmin, CSVExportAdmin):
             show_customizations = request.user.customizations_with_permission(permission='api.change_account')
             qs = qs.filter(customization__in=show_customizations).distinct()
         return qs
+
+    def get_list_filter(self, request):
+        if UserGroupsToProductPermissions.check_customization_permission(
+                request.user, settings.CUSTOMIZATION, 'api.change_proxygroup'
+        ):
+            return self.list_filter + [GroupFilter]
+        return self.list_filter
+
+    def get_list_display(self, request):
+        if UserGroupsToProductPermissions.check_customization_permission(
+                request.user, settings.CUSTOMIZATION, 'api.change_proxygroup'
+        ):
+            return self.list_display + ['user_groups']
+        return self.list_display
 
     def has_add_permission(self, request):  # Only superuser can add users
         return False

@@ -7,10 +7,12 @@
 		"Any": "Tout",
 		"selected": "sélectionné",
 		"vendor": "Fabricant",
-		"vendors": "fabricants",
+		"vendors": "Fabricants",
 		"hardwareType": "Type",
-		"hardwareTypes": "types",
-		"minResolution": "Résolution minimale"
+		"hardwareTypes": "Types",
+		"minResolution": "Résolution minimale",
+		"analytics": "Analytiques",
+		"analyticsSelected": "événements analytiques"
 	},
 	"cameraFilters": {
 		"ptz": "Caméras PTZ",
@@ -67,7 +69,7 @@
 			"sdk": {
 				"label": "SDK",
 				"shortLabel": "SDK",
-				"supported": "SDK multi-plateformes C ++"
+				"supported": "C++ cross platform SDK"
 			}
 		},
 		"platforms": {
@@ -96,6 +98,7 @@
 		}
 	},
 	"ipvd": {
+		"resolutionArea": "Zone",
 		"count": "Nombre",
 		"vendor": "Fabricant",
 		"model": "Modèle",
@@ -113,6 +116,7 @@
 		"isIoSupported": "E/S",
 		"isH265": "H.265",
 		"isMultiSensor": "Multi capteur",
+		"isAnalyticsSupported": "Analytiques",
 		"camera": "Caméra",
 		"multiSensorCamera": "Caméra multi-capteur",
 		"encoder": "Encodeur",
@@ -130,7 +134,8 @@
 			"a_Please": "S.V.P.",
 			"b_Link": "soumettre une requête",
 			"c_Info": "pour questions/préoccupations supplémentaires concernant les périphériques pris en charge."
-		}
+		},
+		"disclaimer": "Cette liste est limitée aux périphériques trouvés sur {{vmsName}} où les utilisateurs ont autorisé la création automatique de rapports sur les spécifications du périphérique sur {{companyName}}. Aucune information personnelle n'est collectée et chaque utilisateur reste totalement anonyme."
 	},
 	"integration": {
 		"previewRibbonText": "Cette page est un aperçu des dernières modifications et ne correspond pas à la version publique.",
@@ -146,18 +151,47 @@
 		"feedback": "Assurez-vous d'inclure le modèle et le fabricant de votre caméra..."
 	},
 	"pageTitles": {
-		"supportedDevices": "Supported Devices",
-		"integrations": "Integrations"
+		"supportedDevices": "Périphériques supportés",
+		"integrations": "Intégrations"
 	},
 	"dialogs": {
 		"merge": {
-			"connectToCloud": "Connect System you want to merge with this one to <strong>{{cloudName}}</strong> or merge locally using <strong>{{vmsName}}</strong> Client.",
-			"mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from the <strong>{{primarySystem}}</strong>.",
-			"primaryCannotMerge": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} System.",
-			"primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}.",
-			"secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
-			"systemOffline": "System {{targetSystem}} is offline and cannot be merged with the current one.",
-			"systemUnavailable": "System {{targetSystem}} is currently unreachable. Try again in a few minutes or contact"
+			"connectToCloud": "Connectez le système que vous souhaitez fusionner avec celui-ci à <strong>{{cloudName}}</strong> ou fusionner localement à l'aide de <strong>{{vmsName}}</strong> Client.",
+			"mergeConfirmation": "Vous êtes sur le point de fusionner les systèmes <strong>{{primarySystem}}</strong> et <strong>{{secondarySystem}}</strong>. Les réglages et le nom seront pris à partir du <strong>{{primarySystem}}</strong>.",
+			"primaryCannotMerge": "Système {{targetSystem}} a une version logicielle plus récente incompatible avec le système actuel. Mettre à jour le système actuel a la <a href=\"/download\" target=\"_blank\" translate>dernière version</a> pour fusionner avec le {{targetSystem}} système.",
+			"primarySystemOffline": "Le système {{primarySystem}} est hors ligne et ne peut pas être fusionné avec le système {{targetSystem}}.",
+			"secondaryCannotMerge": "Système {{targetSystem}} a une version de logiciel plus ancienne incompatible avec le système actuel. Mettre à jour {{targetSystem}} à <a href=\"/download\" target=\"_blank\" translate>dernière version</a> pour fusionner avec l'actuel.",
+			"systemOffline": "Système {{targetSystem}} est hors ligne et ne peut pas être fusionné avec le système actuel.",
+			"systemUnavailable": "Système {{targetSystem}} est actuellement inaccessible. Réessayez dans quelques minutes ou contactez"
+		},
+		"message": {
+			"failedToSend": "Échec d’envoi du message.",
+			"sent": "Message a été envoyé.",
+			"title": {
+				"integration": "Entrez en contact avec {{companyName}}",
+				"ipvd_feedback_page": "Commentaires sur la page des caméras",
+				"ipvd_feedback_device": "Commentaires sur {{product}}"
+			},
+			"topic": {
+				"contact_sales": "Contacter les ventes pour {{product}}",
+				"contact_support": "Contacter le support pour {{product}}",
+				"integration_feedback": "Commentaires pour l'intégration {{product}}",
+				"ipvd_feedback_page": "Commentaires sur la page des caméras",
+				"ipvd_feedback_device": "Commentaires sur {{product}}"
+			}
 		}
-	}
+	},
+	"privacyPolicy": {
+		"integration": "En soumettant ce formulaire, vous acceptez d'être contacté par {{INTEGRATION_COMPANY}} et / ou %COMPANY_NAME%.\nVous trouverez la politique de confidentialité {{INTEGRATION_COMPANY}} <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">ici</a> et %COMPANY_NAME% politique de confidentialité <a href=\"%PRIVACY_LINK%\" target=\"blank\">ici</a> qui incluent des instructions sur la procédure à suivre pour retirer votre consentement.",
+		"ipvd": "En soumettant ce formulaire, vous acceptez d'être contacté par %COMPANY_NAME%.\nVous trouverez la politique de confidentialité %COMPANY_NAME% <a href=\"%PRIVACY_LINK%\" target=\"blank\">ici</a> qui comprend des instructions sur la procédure à suivre pour retirer votre consentement."
+	},
+	"testedVersionLabel": "Testé sur la version {{vmsName}}:",
+	"testedVersionsLabel": "Testé sur {{vmsName}} versions:",
+	"About %CLOUD_NAME%": "À propos de %CLOUD_NAME%",
+	"Download %VMS_NAME%": "Télécharger %VMS_NAME%",
+	"Integrations": "Intégrations",
+	"Privacy": "Confidentialité",
+	"Support": "Support",
+	"Supported Devices": "Périphériques supportés",
+	"Terms": "Conditions"
 }

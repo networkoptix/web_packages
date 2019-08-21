@@ -1,4 +1,4 @@
-<div class="process-button">
+<div class="process-button" [ngClass]="customClass">
     <div class="btn active focus loading" [ngClass]="buttonClass" *ngIf="process && process.processing">
         <div>
             <span class="dot1"></span><span class="dot2"></span><span class="dot3"></span>
@@ -6,8 +6,7 @@
     </div>
 
     <button class="btn"
-            [innerHTML]="buttonText"
             [ngClass]="process && process.processing ? 'processing' : buttonClass"
             [disabled]="buttonDisabled"
-            (click)="checkForm()"></button>
+            (click)="checkForm()">{{buttonText}}</button>
 </div>

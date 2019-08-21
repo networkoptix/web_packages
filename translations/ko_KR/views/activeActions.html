@@ -23,7 +23,7 @@
 
     <div ng-if="reactivating" class="text-center">
         <div ng-if='data.email'>
-            <h1>You have registered in %CLOUD_NAME%</h1>
+            <h1>%CLOUD_NAME% 에 등록했습니다.</h1>
             <p>계정 활성화 링크를 {{data.email}} 로 이메일로 보냈습니다.<br>
             링크를 방문 하여 계정을 활성화 하시기 바랍니다.</p>
         </div>
@@ -47,8 +47,8 @@
                           ng-if="reactivateAccount.email.$touched && reactivateAccount.email.$error.email"> 유효한 이메일을 입력하십시오. </span>
                 </div>
             </div>
-            <div class="form-group">
-                <div class="offset-sm-2 col-sm-10" ng-class="{ 'offset-sm-4 col-sm-8' : data.email}" >
+            <div class="form-group mt-3">
+                <div class="offset-sm-2 col-sm-10 offset-sm-4 col-sm-8" >
                     <process-button process="reactivate"
                                     form="reactivateAccount"
                                     button-text="$root.L.activeActions.sendConfirm"></process-button>

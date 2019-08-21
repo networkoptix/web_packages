@@ -1,0 +1,119 @@
+(function () {
+
+    'use strict';
+
+    function NxHeader($rootScope, nxDialogsService, cloudApi, $location, $route,
+                      nxSystemsService, nxConfigService, nxAccountService) {
+
+        const CONFIG = nxConfigService.getConfig();
+    
+        function isActive(val) {
+            var currentPath = $location.path();
+            return currentPath.indexOf(val) >= 0;
+        }
+
+        return {
+            restrict   : 'E',
+            templateUrl: CONFIG.viewsDir + 'components/header.html',
+            link       : function (scope) {
+                scope.config = CONFIG;
+                scope.inline = typeof($location.search().inline) !== 'undefined';
+
+                scope.viewHeader = scope.config.showHeaderAndFooter;
+                
+                $rootScope.$on('nx.layout.header', function (event, opt) {
+                    // An event to control visibility of the header
+                    // ... i.e. when in view camera in embed
+                    // ... and check if Config.showHeaderAndFooter is false
+                    // as view controller resets header and footer on destroy
+                    if (CONFIG.showHeaderAndFooter) {
+                        scope.viewHeader = !opt.state;
+                    }
+                });
+
+                if (scope.inline) {
+                    $('body').addClass('inline-portal');
+                }
+
+                scope.login = function () {
+                    var url = $location.$$path;
+                    var redirect = CONFIG.redirectPaths.some((path) => url.indexOf(path) > -1);
+                    nxDialogsService.login(!redirect);
+                };
+                scope.logout = function () {
+                    account.logout(true);
+                };
+
+                scope.nxSystemsService = nxSystemsService;
+                scope.nxSystemsService.forceUpdateSystemsAsPromise();
+                scope.active = {};
+                // scope.activeSystem = {};
+
+                function updateActive() {
+                    scope.active.ipvd = isActive('/ipvd');
+                    scope.active.integrations = isActive('/integrations');
+                    scope.active.register = isActive('/register');
+                    scope.active.view = isActive('/view');
+                    scope.active.settings = $route.current.params.systemId && !isActive('/view');
+                }
+
+                function updateActiveSystem() {
+                    if (!scope.systems) {
+                        return;
+                    }
+
+                    scope.activeSystem = _.find(scope.systems, function (system) {
+                        return $route.current.params.systemId === system.id;
+                    });
+                    if (scope.singleSystem) { // Special case for a single system - it always active
+                        scope.activeSystem = scope.systems[ 0 ];
+                    }
+                }
+
+                updateActive();
+    
+                nxAccountService.loginStateSubject.subscribe((loginState) => {
+                    if (loginState) {
+                        $('body').removeClass('loading');
+                        $('body').removeClass('anonymous');
+                        $('body').addClass('authorized');
+                    } else {
+                        $('body').removeClass('loading');
+                        $('body').removeClass('authorized');
+                        $('body').addClass('anonymous');
+                    }
+                });
+                
+                
+                
+                
+                scope.$on('$locationChangeSuccess', function (next, current) {
+                    if ($route.current.params.systemId && !scope.systems) {
+                            scope.nxSystemsService.forceUpdateSystems();
+                    }
+
+                    updateActiveSystem();
+                    updateActive();
+                });
+    
+                scope.$watch('nxSystemsService.systems', function () {
+                    if (!nxSystemsService.systems) {
+                        return;
+                    }
+                    scope.systems = nxSystemsService.systems;
+                    scope.singleSystem = (scope.systems.length === 1);
+                    scope.systemCounter = scope.systems.length;
+        
+                    updateActiveSystem();
+                });
+            }
+        };
+    }
+    
+    NxHeader.$inject = ['$rootScope', 'nxDialogsService', 'cloudApi', '$location', '$route',
+        'nxSystemsService', 'nxConfigService', 'nxAccountService'];
+    
+    angular
+        .module('cloudApp')
+        .directive('nxHeader', NxHeader);
+})();

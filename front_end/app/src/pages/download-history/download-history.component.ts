@@ -11,7 +11,8 @@ import { NgbTabChangeEvent, NgbTabset }      from '@ng-bootstrap/ng-bootstrap';
 import isArray = require('core-js/fn/array/is-array');
 import angular = require('angular');
 import { NxConfigService }                   from '../../services/nx-config';
-import { TranslateService } from '@ngx-translate/core';
+import { NxLanguageProviderService }         from '../../services/nx-language-provider';
+import { NxAccountService }                  from '../../services/account.service';
 
 @Component({
     selector   : 'download-history',
@@ -27,8 +28,9 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
     private build: any;
     private canViewRelease: boolean;
 
-    config: any;
-    lang: any;
+    CONFIG: any;
+    LANG: any;
+
     user: any;
     downloads: any;
     activeBuilds: any;
@@ -38,26 +40,25 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
 
     location: Location;
 
-    @ViewChild('tabs')
+    @ViewChild('tabs', { static: true })
     public tabs: NgbTabset;
 
-    constructor(@Inject('languageService') private language: any,
+    constructor(@Inject(DOCUMENT) private document: any,
                 @Inject('cloudApiService') private cloudApi: any,
-                @Inject('authorizationCheckService') private authorizationService: any,
-                @Inject('account') private account: any,
                 @Inject('locationProxyService') private locationProxy: any,
-                @Inject(DOCUMENT) private document: any,
+                private accountService: NxAccountService,
                 private configService: NxConfigService,
                 private route: ActivatedRoute,
                 private router: Router,
                 private titleService: Title,
-                private translate: TranslateService,
+                private language: NxLanguageProviderService,
                 location: Location) {
 
         this.location = location;
         this.canViewRelease = false;
         this.noteTypes = [];
-        this.config = configService.getConfig();
+        this.CONFIG = this.configService.getConfig();
+        this.LANG = this.language.getTranslations();
     }
 
     private getAvailableDownloadTypes(data) {
@@ -114,9 +115,6 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.translate.getTranslation(this.translate.currentLang).subscribe((lang) => {
-            this.lang = lang;
-        });
         this.sub = this.route.params.subscribe(params => {
             // this.build = params['build'];
 
@@ -127,31 +125,23 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
                 this.section = this.routeParam;
             }
 
-            this.authorizationService
-                .requireLogin()
-                .then(result => {
-                    if (!result) {
-                        this.location.go('404');
-                        return;
-                    }
+            if (!this.CONFIG.publicReleases) {
+                this.accountService
+                    .get()
+                    .then(account => {
+                        this.canViewRelease = account && (account.is_superuser || account.permissions.indexOf(this.CONFIG.permissions.canViewRelease) > -1);
 
-                    if (!this.config.publicReleases) {
-                        this.account
-                            .get()
-                            .then(result => {
-                                this.canViewRelease = result.is_superuser || result.permissions.indexOf(this.config.permissions.canViewRelease) > -1;
-                                if (this.canViewRelease) {
-                                    this.getData();
-                                } else {
-                                    this.location.go('404');
-                                    return;
-                                }
-                            });
-                    } else {
-                        this.canViewRelease = true;
-                        this.getData();
-                    }
-                });
+                        if (this.canViewRelease) {
+                            this.getData();
+                        } else {
+                            this.document.location.href = this.CONFIG.redirect404;
+                            return;
+                        }
+                    });
+            } else {
+                this.canViewRelease = true;
+                this.getData();
+            }
         });
     }
 

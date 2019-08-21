@@ -5,12 +5,12 @@
             <button ng-disabled="currentlyMerging && !isMaster" class="btn btn-default" ng-click="rename()">Đổi tên hệ thống</button>
         </p>
         <p ng-if="systems.length > 1 && system.canMerge || configCanMerge || debugMode || betaMode">
-            <button class="btn btn-default"
+            <button class="btn btn-default mw-100"
                     ng-disabled="(currentlyMerging || !system.isOnline || !system.isAvailable) && !(debugMode || betaMode)"
-                    ng-click="mergeSystems()">Hợp nhất với một hệ thống khác</button>
+                    ng-click="mergeSystems()"><div class="ellipsis"> Hợp nhất với hệ thống khác </div></button>
         </p>
         <hr />
-        <button ng-disabled="currentlyMerging" class="btn btn-default" ng-click="disconnect()">Disconnect from
+        <button ng-disabled="currentlyMerging" class="btn btn-default" ng-click="disconnect()">Ngắt kết nối với
             <span class="product-name">&nbsp;%CLOUD_NAME%</span></button>
     </div>
 </div>
@@ -21,7 +21,8 @@
         <a ng-href="mailto:{{system.info.ownerAccountEmail}}">{{system.info.ownerAccountEmail}}</a>
         <hr>
         <p>
-            Bạn được phép: <b> {{$root.L.accessRoles[system.accessRole].label || System.accessRole}} </b>
+            Quyền của bạn:
+            <b>{{permission}}</b>
         </p>
 
         <p ng-if="system.permissions.isAdmin">
@@ -56,7 +57,7 @@
             <div class="merge-info-text light-text">
                 <p>Tùy thuộc vào kích thước của cơ sở dữ liệu có thể mất đến vài giờ.</p>
                 <p>Cho đến khi hợp nhất xong bạn có thể đăng nhập vào hệ thống này và xem video, nhưng không thể thay đổi bất kỳ cài đặt.</p>
-                <p>Khi hợp nhất kết thúc, tất cả người dùng và máy ảnh từ hệ thống này sẽ sẵn sàng
+                <p>Khi hợp nhất kết thúc, tất cả người dùng và camera từ hệ thống này sẽ sẵn sàng
                     trong <strong>{{mergeTargetSystem.name}}</strong> Hệ thống, và hệ thống này sẽ bị xóa.</p>
             </div>
         </div>
