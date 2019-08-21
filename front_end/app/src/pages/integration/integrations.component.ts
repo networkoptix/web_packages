@@ -90,7 +90,9 @@ export class NxIntegrationsComponent implements OnInit {
     }
 
     setTags() {
-        const haveMyIntegration = this.allElements.find((elm) => elm.mine);
+        const found = this.allElements.find((elm) => elm.mine);
+        const haveMyIntegration = (found && found.mine) || false;
+
         this.CONFIG.integrationFilterItems.forEach(item => {
             if (item.enabled || (item.id === 'mine' && haveMyIntegration)) {
                     this.filterModel.tags.push({ id: item.id, label: item.name, value: false });
