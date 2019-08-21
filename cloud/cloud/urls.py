@@ -66,7 +66,7 @@ urlpatterns = [
         TemplateView.as_view(template_name="static/apple-app-site-association",
                              content_type='application/json')),
     url(r'^firebase-messaging-sw.js$',
-        TemplateView.as_view(template_name='static/firebase-messaging-sw.js',
+        TemplateView.as_view(template_name='static/scripts/vendor/firebase-messaging-sw.js',
                              content_type='application/javascript')),
     url(r'^(?!static).*',
         TemplateView.as_view(template_name="static/index.html"))

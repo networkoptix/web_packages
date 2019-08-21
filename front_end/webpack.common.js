@@ -79,7 +79,7 @@ module.exports = {
                 ignore: thingsToIgnore
             },
             {
-                from: 'firebase*.js',
+                from: 'scripts/vendor/firebase*.js',
                 to: '',
             }
         ]),
