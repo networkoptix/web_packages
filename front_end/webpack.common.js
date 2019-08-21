@@ -78,6 +78,7 @@ module.exports = {
                 to: '',
                 ignore: thingsToIgnore
             },
+            // Firebase service worker runs separately from angular, these scripts need to be available to it
             {
                 from: 'scripts/vendor/firebase*.js',
                 to: '',
