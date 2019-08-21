@@ -136,4 +136,21 @@ export class NxCloudApiService {
         return this.http.get(this.CONFIG.apiBase + '/utils/downloads/' + (build || 'history')).toPromise();
     }
 
+    accountPost(account) {
+        return this.http.post(this.CONFIG.apiBase + '/account', account).toPromise();
+    }
+
+    changePassword(newPassword, oldPassword) {
+        return this.http.post(this.CONFIG.apiBase + '/account/changePassword', {
+            new_password: newPassword,
+            old_password: oldPassword
+        }).toPromise();
+    }
+
+    reactivate(userEmail) {
+        return this.http.post(this.CONFIG.apiBase + '/account/activate', {
+            user_email: userEmail
+        });
+    }
+
 }

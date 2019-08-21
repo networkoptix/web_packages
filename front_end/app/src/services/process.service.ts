@@ -86,7 +86,7 @@ class Process {
                     // Circular dependencies ... keep ngToast for no -- TT
                     const options = {
                         classname: 'success',
-                        autoHide: !this.settings.holdAlerts
+                        autohide: !this.settings.holdAlerts
                     };
                     this.toastService.show(this.settings.successMessage, options);
                 }
@@ -166,7 +166,7 @@ class Process {
             const message = `${this.settings.errorPrefix} ${this.settings.errorMessage}`;
             const options = {
                 classname: 'danger',
-                autoHide: !this.settings.holdAlerts,
+                autohide: !this.settings.holdAlerts,
             };
             this.toastService.show(message, options);
         }

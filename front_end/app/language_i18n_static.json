@@ -1,4 +1,12 @@
 {
+	"account": {
+		"accountSavedSuccess": "Your account is successfully saved",
+		"activationLinkSent": "Activation Link Sent",
+		"passwordChangedSuccess": "Your account is successfully saved",
+		"changePassword": "Change Password",
+		"newPasswordLabel": "New password",
+		"saveChanges": "Save"
+	},
 	"search": {
 		"Search" : "Search",
 		"search_ipvd": "Search by model or manufacturer",

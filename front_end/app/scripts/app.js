@@ -180,22 +180,24 @@ window.L = {};
                         template: '<nx-register-component [uri-param]="register"></nx-register-component>'
                     })
                     .when('/account/password', {
-                        templateUrl: CONFIG.viewsDir + 'account.html',
-                        controller: 'AccountCtrl',
-                        resolve: {
-                            test: ['$route', function ($route) {
-                                $route.current.params.passwordMode = true;
-                            }]
-                        }
+                        template: ''
+                        // templateUrl: CONFIG.viewsDir + 'account.html',
+                        // controller: 'AccountCtrl',
+                        // resolve: {
+                        //     test: ['$route', function ($route) {
+                        //         $route.current.params.passwordMode = true;
+                        //     }]
+                        // }
                     })
                     .when('/account', {
-                        templateUrl: CONFIG.viewsDir + 'account.html',
-                        controller: 'AccountCtrl',
-                        resolve: {
-                            test: ['$route', function ($route) {
-                                $route.current.params.accountMode = true;
-                            }]
-                        }
+                        template: ''
+                        // templateUrl: CONFIG.viewsDir + 'account.html',
+                        // controller: 'AccountCtrl',
+                        // resolve: {
+                        //     test: ['$route', function ($route) {
+                        //         $route.current.params.accountMode = true;
+                        //     }]
+                        // }
                     })
                     // .when('/systems', {
                     //     templateUrl: CONFIG.viewsDir + 'systems.html',
