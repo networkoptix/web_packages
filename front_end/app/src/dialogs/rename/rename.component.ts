@@ -31,8 +31,7 @@ export class RenameModalContent {
             return this.cloudApiService.renameSystem(this.systemId, this.systemName);
         }, {
             successMessage: this.LANG.system.successRename
-        });
-        this.rename.then(() => {
+        }).then(() => {
             this.activeModal.close(this.systemName);
         });
     }

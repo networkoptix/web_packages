@@ -190,8 +190,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 },
             },
             errorPrefix: this.LANG.errorCodes.cantGetSystemInfoPrefix
-        });
-        this.gettingSystem.then(() => {
+        }).then(() => {
             this.gettingSystemUsers.run();
         });
 

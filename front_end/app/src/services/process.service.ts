@@ -56,9 +56,7 @@ class Process {
         settings.successMessage
          */
         if (settings) {
-            if (settings.errorPrefix) {
-                settings.errorPrefix = `(${settings.errorPrefix}): `;
-            }
+            settings.errorPrefix = settings.errorPrefix ? `(${settings.errorPrefix}): `: '';
             this.settings = {... this.settings, ... settings};
         }
         this.caller = caller;
@@ -99,10 +97,10 @@ class Process {
         });
     }
 
-    then(successHandler, errorHandler, processHandler) {
+    then(successHandler, errorHandler?, processHandler?) {
         this.successHandler = successHandler;
-        this.errorHandler = errorHandler;
-        this.processHandler = processHandler;
+        this.errorHandler = errorHandler || (() => {});
+        this.processHandler = processHandler || (() => {});
         return this;
     }
 
@@ -124,7 +122,7 @@ class Process {
         })();
     }
 
-    private formatError({error}, errorCodes) {
+    private formatError(error, errorCodes) {
         if (!error || !error.resultCode) {
             return this.LANG.errorCodes.unknownError;
         }
@@ -147,17 +145,16 @@ class Process {
         this.error = true;
         this.errorData = data;
         if (!this.settings.ignoreUnauthorized && data &&
-            data.data &&
-            (data.data.detail ||
-                // detail appears only when django rest framewrok declines request with
+            (data.detail ||
+                // detail appears only when django rest framework declines request with
                 // {"detail":"Authentication credentials were not provided."}
                 // we need to handle this like user was not authorised
-                data.data.resultCode === 'notAuthorized' ||
-                data.data.resultCode === 'forbidden' && this.settings.logoutForbidden)) {
+                data.resultCode === 'notAuthorized' ||
+                data.resultCode === 'forbidden' && this.settings.logoutForbidden)) {
             this.deferredPromise.reject(data);
             return;
         }
-        const formatted = this.formatError(data && data.data || data, this.settings.errorCodes);
+        const formatted = this.formatError(data, this.settings.errorCodes);
         if (formatted !== false) {
             this.settings.errorMessage = formatted;
             // Error handler here

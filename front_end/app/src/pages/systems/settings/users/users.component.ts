@@ -9,6 +9,7 @@ import { NxSettingsService }         from '../settings.service';
 import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
 import { NxMenuService }             from '../../../../components/menu/menu.service';
 import { NxAccountService }          from '../../../../services/account.service';
+import { NxProcessService }          from '../../../../services/process.service';
 
 @Component({
     selector   : 'nx-system-user-component',
@@ -32,14 +33,10 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         this.CONFIG = this.configService.getConfig();
 
         this.locked = {};
-        this.selectedUser = {
-            email: ''
-        };
         this.menuService.setSection('users');
     }
 
-    constructor(@Inject('process') private process: any,
-                private route: ActivatedRoute,
+    constructor(private route: ActivatedRoute,
                 private accountService: NxAccountService,
                 private configService: NxConfigService,
                 private language: NxLanguageProviderService,
@@ -47,6 +44,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 private dialogs: NxDialogsService,
                 private settingsService: NxSettingsService,
                 private menuService: NxMenuService,
+                private processService: NxProcessService,
                 location: Location) {
 
         this.location = location;
@@ -82,10 +80,10 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 }
             }
         });
-        this.removingUserProcess = this.process.init(() => {
+        this.removingUserProcess = this.processService.createProcess(() => {
             return this.system.deleteUser(this.selectedUser);
         }, {
-            successMessage: this.LANG.system.permissionsRemoved.replace('{{email}}', this.selectedUser.email),
+            successMessage: this.LANG.system.permissionsRemoved.replace('{{email}}', this.selectedUser ? this.selectedUser.email : ''),
             errorPrefix   : this.LANG.errorCodes.cantSharePrefix
         }).then(() => {
             this.locked[this.selectedUser.email] = false;
@@ -156,10 +154,15 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                         return true;
                     }
                 })[0];
-            } else {
+            }
+            if (typeof(this.selectedUser) === 'undefined') {
                 this.selectedUser = this.system.users[0];
             }
 
+            // If there's no users skip setting section and permissions
+            if (typeof(this.selectedUser) === 'undefined') {
+                return;
+            }
             this.menuService.setSubSection(this.selectedUser.id.replace(/{|}/g, ''));
             this.setPermission(this.selectedUser.role);
         }
