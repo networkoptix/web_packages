@@ -202,10 +202,6 @@ class Customization(models.Model):
     languages = models.ManyToManyField(Language)
     filter_horizontal = ('languages',)
 
-    public_release_history = models.BooleanField(default=False,
-                                                 help_text="""Any user can view the release history page.""")
-    public_downloads = models.BooleanField(default=True, help_text="""Any user can view the downloads page.""")
-    reveal_cloud_merge = models.BooleanField(default=False, help_text="Shows the cloud merge button for all systems.")
     parent = models.ForeignKey('Customization', default=None, null=True, blank=True,
                                related_name='children_customizations',
                                help_text="""Parent is the customization that the current customization depends on.<br>
