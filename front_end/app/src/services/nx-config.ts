@@ -282,9 +282,25 @@ export class NxConfigService {
                 searchTags                      : '',
                 vendorsShown                    : '',
             },
-            search                        : {
+            search: {
                 maxLength   : 200,
                 debounceTime: 500 // ms
+            },
+            menu  : {
+                baseUrl: '/systems/',
+                admin  : {
+                    id  : 'admin',
+                    icon: 'glyphicon-home',
+                    path: ''
+                },
+                users: {
+                    id  : 'users',
+                    icon: 'glyphicon-users',
+                    path: 'users'
+                },
+                buttons: {
+                    id  : 'buttons'
+                }
             },
             myIntegrationTagId            : 'mine',
             companyLink                   : '',
