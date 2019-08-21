@@ -286,6 +286,7 @@ export class NxConfigService {
                 maxLength   : 200,
                 debounceTime: 500 // ms
             },
+            myIntegrationTagId            : 'mine',
             companyLink                   : '',
             companyName                   : '',
             copyrightYear                 : '',

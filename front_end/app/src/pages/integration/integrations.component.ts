@@ -94,7 +94,7 @@ export class NxIntegrationsComponent implements OnInit {
         const haveMyIntegration = (found && found.mine) || false;
 
         this.CONFIG.integrationFilterItems.forEach(item => {
-            if (item.enabled || (item.id === 'mine' && haveMyIntegration)) {
+            if (item.enabled || (item.id === this.CONFIG.myIntegrationTagId && haveMyIntegration)) {
                     this.filterModel.tags.push({ id: item.id, label: item.name, value: false });
             }
         });
