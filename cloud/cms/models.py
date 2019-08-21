@@ -202,10 +202,6 @@ class Customization(models.Model):
     languages = models.ManyToManyField(Language)
     filter_horizontal = ('languages',)
 
-    public_release_history = models.BooleanField(default=False,
-                                                 help_text="""Any user can view the release history page.""")
-    public_downloads = models.BooleanField(default=True, help_text="""Any user can view the downloads page.""")
-    reveal_cloud_merge = models.BooleanField(default=False, help_text="Shows the cloud merge button for all systems.")
     parent = models.ForeignKey('Customization', default=None, null=True, blank=True,
                                related_name='children_customizations',
                                help_text="""Parent is the customization that the current customization depends on.<br>
@@ -408,8 +404,6 @@ class Context(models.Model):
             ("edit_content", "Can edit content and send for review"),
         )
         ordering = ['order', 'id']
-    # TODO: Remove this after release of 19.1 - Task: CLOUD-2299
-    product = models.ForeignKey(Product, null=True, on_delete=models.SET_NULL, blank=True)
     product_type = models.ForeignKey(ProductType, null=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=1024)
     label = models.CharField(max_length=1024, default="", blank=True)
@@ -472,10 +466,12 @@ class Context(models.Model):
             records = datastructure.datarecord_set.filter(product=product)
             last_record = records.last()
             last_record_value = last_record.value if last_record else None
-            if last_record_value and datastructure.type in [DataStructure.DATA_TYPES.object,
-                                                            DataStructure.DATA_TYPES.array,
-                                                            DataStructure.DATA_TYPES.multiselect]:
-                last_record_value = json.loads(last_record_value)
+            if datastructure.type in [DataStructure.DATA_TYPES.object,
+                                      DataStructure.DATA_TYPES.array,
+                                      DataStructure.DATA_TYPES.multiselect]:
+                datastructure.default = json.loads(datastructure.default)
+                if last_record_value:
+                    last_record_value = json.loads(last_record_value)
             if not datastructure.optional and not datastructure.default and \
                     (not records.exists() or not last_record_value):
                 return INCOMPLETE[0]

@@ -5,18 +5,18 @@ import { NgbModal }                  from '@ng-bootstrap/ng-bootstrap';
 
 import './../dialogs/dialogs.scss';
 
-import { ToastService }              from './toast.service';
+import { NxToastService }            from './toast.service';
 import { LoginModalContent }         from './login/login.component';
 import { NxLanguageProviderService } from '../services/nx-language-provider';
 import { GenericModalContent }       from './generic/generic.component';
-import { AddUserModalContent }    from './add-user/add-user.component';
-import { DisconnectModalContent } from './disconnect/disconnect.component';
-import { RenameModalContent }     from './rename/rename.component';
-import { MessageModalContent }    from './message/message.component';
-import { EmbedModalContent }      from './embed/embed.component';
-import { MergeModalContent }      from './merge/merge.component';
-import { NxConfigService }        from '../services/nx-config';
-import { NxAccountService }       from '../services/account.service';
+import { AddUserModalContent }       from './add-user/add-user.component';
+import { DisconnectModalContent }    from './disconnect/disconnect.component';
+import { RenameModalContent }        from './rename/rename.component';
+import { MessageModalContent }       from './message/message.component';
+import { EmbedModalContent }         from './embed/embed.component';
+import { MergeModalContent }         from './merge/merge.component';
+import { NxConfigService }           from '../services/nx-config';
+import { NxAccountService }          from '../services/account.service';
 
 @Injectable({ providedIn: 'root' })
 export class NxDialogsService {
@@ -28,7 +28,7 @@ export class NxDialogsService {
 
     constructor(@Inject(DOCUMENT) private document: any,
                 private modalService: NgbModal,
-                private toastService: ToastService,
+                private toastService: NxToastService,
                 private language: NxLanguageProviderService,
                 private domSanitizer: DomSanitizer,
                 location: Location,

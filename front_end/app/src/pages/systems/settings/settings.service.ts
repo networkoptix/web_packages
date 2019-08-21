@@ -16,9 +16,9 @@ export class NxSettingsService implements OnDestroy {
     inReview: boolean;
 
     constructor(private api: NxCloudApiService,
-                private configService: NxConfigService,
-                private dialogs: NxDialogsService,
                 private accountService: NxAccountService,
+                private configService: NxConfigService,
+                private dialogs: NxDialogsService
     ) {
         this.config = this.configService.getConfig();
     }

@@ -1,7 +1,8 @@
-import { Component, Inject, Input, Renderer2 } from '@angular/core';
+import { Component, Input, Renderer2 } from '@angular/core';
 import { NgbActiveModal }                      from '@ng-bootstrap/ng-bootstrap';
-import { EmailValidator }                      from '@angular/forms';
 import { NxLanguageProviderService }           from '../../services/nx-language-provider';
+import { NxProcessService }                    from '../../services/process.service';
+import { NxCloudApiService }                   from '../../services/nx-cloud-api';
 
 @Component({
     selector: 'nx-modal-rename-content',
@@ -19,18 +20,19 @@ export class RenameModalContent {
     constructor(private activeModal: NgbActiveModal,
                 private renderer: Renderer2,
                 private language: NxLanguageProviderService,
-                @Inject('process') private process: any,
-                @Inject('cloudApiService') private cloudApi: any,
+                private processService: NxProcessService,
+                private cloudApiService: NxCloudApiService,
     ) {
         this.LANG = this.language.getTranslations();
     }
 
     ngOnInit() {
-        this.rename = this.process.init(() => {
-            return this.cloudApi.renameSystem(this.systemId, this.systemName);
+        this.rename = this.processService.createProcess(() => {
+            return this.cloudApiService.renameSystem(this.systemId, this.systemName);
         }, {
             successMessage: this.LANG.system.successRename
-        }).then(() => {
+        });
+        this.rename.then(() => {
             this.activeModal.close(this.systemName);
         });
     }

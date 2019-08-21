@@ -9,6 +9,7 @@ import { NxDialogsService }     from '../../../dialogs/dialogs.service';
 import { NxSystemsService }     from '../../../services/systems.service';
 import { NxAccountService }     from '../../../services/account.service';
 import { NxUrlProtocolService } from '../../../services/url-protocol.service';
+import { NxProcessService }     from '../../../services/process.service';
 
 @Component({
     selector   : 'nx-systems-list-component',
@@ -38,7 +39,7 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
         this.pageService.setPageTitle(this.LANG.pageTitles.systems);
     }
 
-    constructor(@Inject('process') private process: any,
+    constructor(
                 private urlProtocol: NxUrlProtocolService,
                 private route: ActivatedRoute,
                 private configService: NxConfigService,
@@ -47,6 +48,7 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
                 private dialogs: NxDialogsService,
                 private systemsService: NxSystemsService,
                 private accountService: NxAccountService,
+                private processService: NxProcessService,
                 private location: Location,
     ) {
         // this.location = location;
@@ -85,7 +87,7 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
             }
         });
 
-        this.openClient = this.process.init(() => {
+        this.openClient = this.processService.createProcess(() => {
             return this.urlProtocol
                        .open(this.systemSelected && this.systemSelected.id)
                        .then(() => {
@@ -96,7 +98,7 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
                                });
         }, {});
 
-        this.gettingSystems = this.process.init(() => {
+        this.gettingSystems = this.processService.createProcess(() => {
             this.fetchComplete = true;
             return this.systemsService.forceUpdateSystems().subscribe(_ => {
             });

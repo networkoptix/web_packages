@@ -109,8 +109,10 @@ export class MessageModalContent {
         this.account
             .get()
             .then((account) => {
-                this.userName = `${account.first_name} ${account.last_name}`;
-                this.userEmail = account.email;
+                if (account) {
+                    this.userName = `${account.first_name} ${account.last_name}`;
+                    this.userEmail = account.email;
+                }
             });
     }
 

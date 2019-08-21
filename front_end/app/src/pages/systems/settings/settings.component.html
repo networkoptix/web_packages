@@ -1,7 +1,8 @@
 <nx-pre-loader type="page" *ngIf="!system"></nx-pre-loader>
 
 <div *ngIf="system">
-    <div class="d-flex mt-3 m-0 pl-3" style="max-width: 1440px; min-width: 991px">
+    <div *ngIf="!system.forbidden"
+         class="d-flex mt-3 m-0 pl-3" style="max-width: 1440px; min-width: 991px">
         <div class="p-0" style="width: 350px;">
             <nx-system-merge></nx-system-merge>
             <nx-menu [content]="content"></nx-menu>
@@ -14,5 +15,17 @@
                 <nx-footer></nx-footer>
             </div>
         </div>
+    </div>
+
+    <div *ngIf="system.forbidden" class="text-center">
+        <h1 class="d-flex justify-content-center" translate>Failed to access System</h1>
+        <h3 class="d-flex justify-content-center" translate>This link is broken,<br>
+            System may be disconnected from %CLOUD_NAME%,<br>
+            Access to this System may be revoked, <br>
+            or you may be logged into a different account
+        </h3>
+        <p class="mt-4 d-flex justify-content-center">
+            <a href="/systems" class="btn btn-primary" translate>Available Systems list</a>
+        </p>
     </div>
 </div>

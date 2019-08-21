@@ -40,6 +40,8 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
     shouldProcessUrl(url: UrlTree) {
         return (url.toString().startsWith('/sandbox') ||
             url.toString().startsWith('/ipvd') ||
+            url.toString().startsWith('/download') ||
+            url.toString().startsWith('/account') ||
             url.toString().startsWith('/systems') ||
             url.toString().startsWith('/new-content') ||
             url.toString().startsWith('/right') ||
@@ -52,7 +54,6 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
         // url.toString().startsWith('/') ||
         // url.toString().startsWith('/register') ||
         // url.toString().startsWith('/login') ||
-        // url.toString().startsWith('/download') ||
         // url.toString().startsWith('/downloads') ||
         // url.toString().startsWith('/browser');
     }

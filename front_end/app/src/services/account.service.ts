@@ -100,12 +100,14 @@ export class NxAccountService {
 
     requireLogin() {
         const res = this.get();
-        res.catch(() => {
-            this.dialogs
-                .login(this, true, true)
-                .catch(() => {
-                    this.location.path(this.CONFIG.redirectUnauthorised);
-                });
+        res.then((account) => {
+            if (!account) {
+                this.dialogs
+                    .login(this, true, true)
+                    .catch(() => {
+                        this.location.path(this.CONFIG.redirectUnauthorised);
+                    });
+            }
         });
         return res;
     }

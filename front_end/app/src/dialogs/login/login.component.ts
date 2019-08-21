@@ -1,31 +1,31 @@
 import {
-    Component,
-    Inject,
-    OnInit,
-    Input,
-    ViewChild,
-    Renderer2
-}                                                                     from '@angular/core';
-import { DOCUMENT, Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
-import { NgbActiveModal }                                             from '@ng-bootstrap/ng-bootstrap';
-import { NxConfigService }                                            from '../../services/nx-config';
-import { NxUtilsService }                                             from '../../services/utils.service';
-import { NxLanguageProviderService }                                  from '../../services/nx-language-provider';
-import { NxModalGenericComponent }                                    from '../generic/generic.component';
-import { LocalStorageService }                                        from 'ngx-store';
+    Component, Inject, OnInit,
+    Input, ViewChild, Renderer2
+}                                    from '@angular/core';
+import {
+    DOCUMENT, Location,
+    LocationStrategy,
+    PathLocationStrategy
+}                                    from '@angular/common';
+import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
+import { NxConfigService }           from '../../services/nx-config';
+import { NxUtilsService }            from '../../services/utils.service';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxModalGenericComponent }   from '../generic/generic.component';
+import { LocalStorageService }       from 'ngx-store';
+import { NxProcessService }          from '../../services/process.service';
+import { NxCloudApiService }         from '../../services/nx-cloud-api';
 
 @Component({
     selector: 'ngbd-modal-content',
     templateUrl: 'login.component.html',
     styleUrls: [],
-    providers: [Location, { provide: LocationStrategy, useClass: PathLocationStrategy }]
 })
 export class LoginModalContent implements OnInit {
     @Input() account;
     @Input() login;
     @Input() cancellable;
     @Input() closable;
-    @Input() location;
     @Input() keepPage;
 
     LANG: any;
@@ -35,6 +35,7 @@ export class LoginModalContent implements OnInit {
     next: string;
     password: string;
     remember: boolean;
+    location: any;
 
     wrongPassword: boolean;
     accountBlocked: boolean;
@@ -51,24 +52,27 @@ export class LoginModalContent implements OnInit {
         this.LANG = this.language.getTranslations();
     }
 
-    constructor(@Inject('process') private process: any,
-                @Inject('cloudApiService') private cloudApi: any,
-                @Inject(DOCUMENT) private document: any,
+    constructor(private processService: NxProcessService,
+                private cloudApiService: NxCloudApiService,
                 private localStorage: LocalStorageService,
                 public activeModal: NgbActiveModal,
                 private configService: NxConfigService,
                 private language: NxLanguageProviderService,
                 private genericModal: NxModalGenericComponent,
                 private renderer: Renderer2,
+                location: Location,
+                @Inject(DOCUMENT) private document: any,
     ) {
         this.setupDefaults();
+
+        this.location = location;
     }
 
     resendActivation(email) {
         this.activeModal.close();
 
-        this.process.init(() => {
-            return this.cloudApi.reactivate(email);
+        this.processService.createProcess(() => {
+            return this.cloudApiService.reactivate(email);
         }, {
             errorCodes: {
                 forbidden: this.LANG.errorCodes.accountAlreadyActivated,
@@ -110,7 +114,7 @@ export class LoginModalContent implements OnInit {
         }
         this.password = '';
 
-        this.login = this.process.init(() => {
+        this.login = this.processService.createProcess(() => {
             this.loginForm.controls['login_email'].setErrors(null);
             this.loginForm.controls['login_password'].setErrors(null);
             this.wrongPassword = false;
@@ -155,7 +159,8 @@ export class LoginModalContent implements OnInit {
                 },
                 portalError: this.LANG.errorCodes.brokenAccount
             }
-        }).then(() => {
+        });
+        this.login.then(() => {
             if (this.keepPage) {
                 if (this.location.path() === '') {
                     // TODO: Repace this once 'register' page is moved to A5

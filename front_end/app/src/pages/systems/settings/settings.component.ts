@@ -8,11 +8,12 @@ import { NxPageService }     from '../../../services/page.service';
 import { NxDialogsService }  from '../../../dialogs/dialogs.service';
 import { NxSettingsService } from './settings.service';
 import { NxMenuService }     from '../../../components/menu/menu.service';
-import { NxSystemService } from '../../../services/system.service';
+import { NxSystemService }   from '../../../services/system.service';
 import { NxSystemsService }        from '../../../services/systems.service';
 import { NxModalAddUserComponent } from '../../../dialogs/add-user/add-user.component';
 import { NxModalGenericComponent } from '../../../dialogs/generic/generic.component';
 import { NxAccountService }        from '../../../services/account.service';
+import { NxProcessService }        from '../../../services/process.service';
 
 @Component({
     selector   : 'nx-system-settings-component',
@@ -49,7 +50,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     userDisconnectSystem: boolean;
     mergeTargetSystem: any;
     gettingSystemUsers: any;
-    pollingSystemUpdate: any;
     selectedUser: any;
 
     private setupDefaults() {
@@ -63,8 +63,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.selectedUser = { email: '' };
     }
 
-    constructor(@Inject('process') private process: any,
-                private route: ActivatedRoute,
+    constructor(private route: ActivatedRoute,
                 private accountService: NxAccountService,
                 private configService: NxConfigService,
                 private language: NxLanguageProviderService,
@@ -73,6 +72,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 private systemService: NxSystemService,
                 private systemsService: NxSystemsService,
                 private settingsService: NxSettingsService,
+                private processService: NxProcessService,
                 private menuService: NxMenuService,
                 location: Location,
                 private addUserModal: NxModalAddUserComponent,
@@ -82,8 +82,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.pollingSystemUpdate = undefined;
-
         this.LANG = this.language.getTranslations();
         this.pageService.setPageTitle(this.LANG.pageTitles.system);
         this.init();
@@ -96,6 +94,9 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 this.systemId = params.systemId;
                 this.content.base = '/systems/' + this.systemId;
                 this.content = {...this.content}; // trigger onChange
+                if (this.system) {
+                    this.system.stopPoll();
+                }
                 this.system = undefined;
                 this.getSystemInfo();
             }
@@ -134,14 +135,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 }]
         };
 
-        this.systemService.systemSubject.subscribe((system) => {
-            if (system !== undefined) {
-                this.system = system;
-                this.settingsService.setSystem(system);
-                this.updateSomething();
-            }
-        });
-
         this.menuService
             .selectedSectionSubject
             .subscribe(selection => {
@@ -166,46 +159,48 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
         // TODO: add processes back
         // Retrieve users list
-        // this.gettingSystemUsers = this.process.init(() => {
-        //     return this.systemService
-        //                .getUsers()
-        //                .then(() => {
-        //                    if (this.callShare) {
-        //                        this.settingsService
-        //                            .addUser()
-        //                            .finally(this.cleanUrl);
-        //                    }
-        //                });
-        // }, {
-        //     errorPrefix: this.LANG.errorCodes.cantGetUsersListPrefix
-        // });
+        this.gettingSystemUsers = this.processService.createProcess(() => {
+            return this.system
+                       .getUsers()
+                       .then(() => {
+                           if (this.callShare) {
+                               this.settingsService
+                                   .addUser()
+                                   .finally(this.cleanUrl);
+                           }
+                       });
+        }, {
+            errorPrefix: this.LANG.errorCodes.cantGetUsersListPrefix
+        });
 
         // Retrieve system info
-        // this.gettingSystem = this.process.init(() => {
-        //     return this.systemService.getInfo(true); // Force reload system info when opening page
-        // }, {
-        //     errorCodes : {
-        //         forbidden: (error) => {
-        //             // Special handling for not having an access to the system
-        //             this.systemNoAccess = true;
-        //             return false;
-        //         },
-        //         notFound : (error) => {
-        //             // Special handling for not having an access to the system
-        //             this.systemNoAccess = true;
-        //             return false;
-        //         },
-        //     },
-        //     errorPrefix: this.LANG.errorCodes.cantGetSystemInfoPrefix
-        // });
+        this.gettingSystem = this.processService.createProcess(() => {
+            return this.system.getInfo(true); // Force reload system info when opening page
+        }, {
+            errorCodes : {
+                forbidden: (error) => {
+                    // Special handling for not having an access to the system
+                    this.systemNoAccess = true;
+                    return false;
+                },
+                notFound : (error) => {
+                    // Special handling for not having an access to the system
+                    this.systemNoAccess = true;
+                    return false;
+                },
+            },
+            errorPrefix: this.LANG.errorCodes.cantGetSystemInfoPrefix
+        });
+        this.gettingSystem.then(() => {
+            this.gettingSystemUsers.run();
+        });
 
         // var cancelSubscription = this.$on("unauthorized_" + $routeParams.systemId, connectionLost);
 
     }
 
     ngOnDestroy() {
-        this.system = undefined;
-        this.systemService.stopPoll();
+        this.system.stopPoll();
     }
 
     getSystem() {
@@ -217,10 +212,28 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.accountService
             .requireLogin()
             .then((account) => {
-                this.account = account;
-                this.systemService.initSystem(this.systemId, this.account.email);
-                this.systems = this.systemsService.systems;
-                this.systemService.startPoll();
+                if (account) {
+                    this.account = account;
+                    this.system = this.systemService.createSystem(this.systemId, this.account.email);
+                    this.gettingSystem.run();
+
+                    this.system
+                        .getInfo(true)
+                        .then(() => {
+                            this.settingsService.setSystem(this.system);
+                        })
+                        .catch((response) => {
+                            this.system.forbidden = true;
+                        });
+
+
+                    this.system.systemSubject.subscribe((system) => {
+                        if (system !== undefined) {
+                            this.settingsService.setSystem(system);
+                            this.updateSomething();
+                        }
+                    });
+                }
             });
 
     }
