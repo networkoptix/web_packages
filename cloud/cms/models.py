@@ -469,10 +469,12 @@ class Context(models.Model):
             records = datastructure.datarecord_set.filter(product=product)
             last_record = records.last()
             last_record_value = last_record.value if last_record else None
-            if last_record_value and datastructure.type in [DataStructure.DATA_TYPES.object,
-                                                            DataStructure.DATA_TYPES.array,
-                                                            DataStructure.DATA_TYPES.multiselect]:
-                last_record_value = json.loads(last_record_value)
+            if datastructure.type in [DataStructure.DATA_TYPES.object,
+                                      DataStructure.DATA_TYPES.array,
+                                      DataStructure.DATA_TYPES.multiselect]:
+                datastructure.default = json.loads(datastructure.default)
+                if last_record_value:
+                    last_record_value = json.loads(last_record_value)
             if not datastructure.optional and not datastructure.default and \
                     (not records.exists() or not last_record_value):
                 return INCOMPLETE[0]
