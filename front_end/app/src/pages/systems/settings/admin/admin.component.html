@@ -24,7 +24,7 @@
                         </div>
                         <div class="float-left mr-2" *ngIf="system.isMine">
                             <button class="btn btn-default"
-                                    [disabled]="(system.currentlyMerging || !system.isOnline || !system.isAvailable) && !(debugMode || betaMode)"
+                                    [disabled]="(currentlyMerging || !system.isOnline || !system.isAvailable) && !(debugMode || betaMode)"
                                     (click)="mergeSystems()"><span class="ellipsis"
                                                                    translate>Merge with Another System</span>
                             </button>
@@ -32,7 +32,7 @@
                     </div>
                     <div class="col-xl-5 mt-2 mt-xl-0">
                         <div class="float-xl-right" *ngIf="system.isMine">
-                            <button [disabled]="system.currentlyMerging"
+                            <button [disabled]="currentlyMerging"
                                     class="btn btn-default"
                                     (click)="disconnect()"><span class="ellipsis" translate>Disconnect from<span
                                     class="product-name">&nbsp;%CLOUD_NAME%</span></span>
@@ -50,7 +50,7 @@
                     <span class="name">{{ userRole }}</span>
                 </span>
                 <div class="mt-2">
-                    <button [disabled]="system.currentlyMerging"
+                    <button [disabled]="currentlyMerging"
                             class="btn btn-default"
                             (click)="delete()" translate>Disconnect from My Account
                     </button>

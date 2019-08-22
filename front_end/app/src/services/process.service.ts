@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { NxLanguageProviderService } from './nx-language-provider';
 import { NxToastService } from '../dialogs/toast.service';
 import { NxCloudApiService } from './nx-cloud-api';
+import { NxConfigService } from './nx-config';
 
 interface ProcessSettings {
     errorCodes: any;
@@ -15,6 +16,7 @@ interface ProcessSettings {
 
 
 class Process {
+    CONFIG: any;
     LANG: any;
     cloudApiService: any;
     toastService: any;
@@ -36,7 +38,8 @@ class Process {
     processHandler: any;
 
 
-    constructor(LANG, cloudApiService, toastService, caller, settings) {
+    constructor(CONFIG, LANG, cloudApiService, toastService, caller, settings) {
+        this.CONFIG = CONFIG;
         this.LANG = LANG;
         this.cloudApiService = cloudApiService;
         this.toastService = toastService;
@@ -84,13 +87,17 @@ class Process {
                     // Circular dependencies ... keep ngToast for no -- TT
                     const options = {
                         classname: 'success',
-                        autohide: !this.settings.holdAlerts
+                        autohide: !this.settings.holdAlerts,
+                        delay: this.CONFIG.alertTimeout
                     };
                     this.toastService.show(this.settings.successMessage, options);
                 }
                 this.deferredPromise.resolve(data);
             }
         }, (error) => {
+            if (error.error) {
+                error = error.error;
+            }
             this.handleError(error);
         }, (progress) => {
             this.deferredPromise.notify(progress);
@@ -157,13 +164,11 @@ class Process {
         const formatted = this.formatError(data, this.settings.errorCodes);
         if (formatted !== false) {
             this.settings.errorMessage = formatted;
-            // Error handler here
-            // Circular dependencies ... keep ngToast for no -- TT
-            // nxDialogsService.notify(errorPrefix + this.errorMessage, 'danger', holdAlerts);
             const message = `${this.settings.errorPrefix} ${this.settings.errorMessage}`;
             const options = {
-                classname: 'danger',
                 autohide: !this.settings.holdAlerts,
+                classname: 'danger',
+                delay: this.CONFIG.alertTimeout
             };
             this.toastService.show(message, options);
         }
@@ -176,14 +181,17 @@ class Process {
     providedIn: 'root'
 })
 export class NxProcessService {
+    CONFIG: any;
     LANG: any;
-    constructor(private languageService: NxLanguageProviderService,
+    constructor(private configService: NxConfigService,
+                private languageService: NxLanguageProviderService,
                 private cloudApiService: NxCloudApiService,
                 private toastService: NxToastService) {
+        this.CONFIG = this.configService.getConfig()
         this.LANG = this.languageService.getTranslations();
     }
 
     createProcess(caller, settings?) {
-        return new Process(this.LANG,  this.cloudApiService, this.toastService, caller, settings);
+        return new Process(this.CONFIG, this.LANG, this.cloudApiService, this.toastService, caller, settings);
     }
 }
