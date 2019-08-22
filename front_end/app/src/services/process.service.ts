@@ -3,7 +3,7 @@ import { NxLanguageProviderService } from './nx-language-provider';
 import { NxToastService } from '../dialogs/toast.service';
 import { NxCloudApiService } from './nx-cloud-api';
 import { NxConfigService } from './nx-config';
-import { NxAccountService } from './account.service';
+import { NxSessionService } from './session.service';
 
 interface ProcessSettings {
     errorCodes: any;
@@ -20,6 +20,7 @@ class Process {
     CONFIG: any;
     LANG: any;
     cloudApiService: any;
+    sessionService: any;
     toastService: any;
 
     caller: any;
@@ -39,10 +40,11 @@ class Process {
     processHandler: any;
 
 
-    constructor(CONFIG, LANG, cloudApiService, toastService, caller, settings) {
+    constructor(CONFIG, LANG, sessionService, cloudApiService, toastService, caller, settings) {
         this.CONFIG = CONFIG;
         this.LANG = LANG;
         this.cloudApiService = cloudApiService;
+        this.sessionService = sessionService;
         this.toastService = toastService;
         this.init(caller, settings);
         return this;
@@ -60,7 +62,7 @@ class Process {
         settings.successMessage
          */
         if (settings) {
-            settings.errorPrefix = settings.errorPrefix ? `(${settings.errorPrefix}): `: '';
+            settings.errorPrefix = settings.errorPrefix ? `(${settings.errorPrefix}): ` : '';
             this.settings = {... this.settings, ... settings};
         }
         this.caller = caller;
@@ -152,7 +154,7 @@ class Process {
         this.finished = true;
         this.error = true;
         this.errorData = data;
-        if (!this.settings.ignoreUnauthorized && data &&
+        if (true || !this.settings.ignoreUnauthorized && data &&
             (data.detail ||
                 // detail appears only when django rest framework declines request with
                 // {"detail":"Authentication credentials were not provided."}
@@ -160,6 +162,7 @@ class Process {
                 data.resultCode === 'notAuthorized' ||
                 data.resultCode === 'forbidden' && this.settings.logoutForbidden)) {
             this.deferredPromise.reject(data);
+            this.sessionService.invalidateSession();
             return;
         }
         const formatted = this.formatError(data, this.settings.errorCodes);
@@ -186,14 +189,14 @@ export class NxProcessService {
     LANG: any;
     constructor(private configService: NxConfigService,
                 private languageService: NxLanguageProviderService,
-                private accountService: NxAccountService,
                 private cloudApiService: NxCloudApiService,
+                private sessionService: NxSessionService,
                 private toastService: NxToastService) {
         this.CONFIG = this.configService.getConfig();
         this.LANG = this.languageService.getTranslations();
     }
 
     createProcess(caller, settings?) {
-        return new Process(this.CONFIG, this.LANG, this.cloudApiService, this.toastService, caller, settings);
+        return new Process(this.CONFIG, this.LANG, this.sessionService, this.cloudApiService, this.toastService, caller, settings);
     }
 }

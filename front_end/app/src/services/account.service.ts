@@ -31,7 +31,7 @@ export class NxAccountService {
         this.LANG = this.language.getTranslations();
 
         this.sessionService.loginStateSubject.subscribe((loginState) => {
-            // if (!$routeParams.next && this.sessionService.loginState !== loginState) {
+            // if (this.sessionService.loginState !== loginState) {
             //     this.document.location.reload();
             // }
         });
@@ -133,7 +133,7 @@ export class NxAccountService {
     }
 
     getEmail() {
-        return this.session.email;
+        return this.sessionService.email;
     }
 
     login(email, password, remember) {
