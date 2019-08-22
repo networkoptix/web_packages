@@ -94,6 +94,9 @@ import { WINDOW }            from '../../services/window-provider';
             if (!systems) {
                 return;
             }
+            if (!this.systemId && this.route.firstChild && this.route.firstChild.snapshot.params.systemId) {
+                this.systemId = this.route.firstChild.snapshot.params.systemId;
+            }
             this.systems = systems;
             this.singleSystem = (this.systems.length === 1);
             this.systemCounter = this.systems.length;
@@ -107,7 +110,7 @@ import { WINDOW }            from '../../services/window-provider';
     login () {
         const url = this.window.location.pathname;
         const redirect = this.CONFIG.redirectPaths.some((path) => url.indexOf(path) > -1);
-        this.dialogs.login(this.accountService, !redirect);
+        this.dialogs.login(this.accountService, !redirect).catch(() => {});
     }
 
     logout () {
@@ -127,12 +130,14 @@ import { WINDOW }            from '../../services/window-provider';
             return;
         }
 
+        if (this.singleSystem) { // Special case for a single system - it always active
+            this.activeSystem = this.systems[0];
+            return;
+        }
+
         this.activeSystem = this.systems.find((system) => {
             return this.systemId === system.id;
         });
-        if (this.singleSystem) { // Special case for a single system - it always active
-            this.activeSystem = this.systems[0];
-        }
     }
 
 

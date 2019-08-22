@@ -55,8 +55,7 @@ export class DisconnectModalContent {
             },
             successMessage: this.LANG.system.successDisconnected,
             errorPrefix: this.LANG.errorCodes.cantDisconnectSystemPrefix
-        });
-        this.disconnect.then(() => {
+        }).then(() => {
             this.activeModal.close(true);
         });
     }

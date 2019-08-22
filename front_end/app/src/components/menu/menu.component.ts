@@ -1,7 +1,8 @@
 import {
     Component, ElementRef, Input, OnChanges,
     OnInit, SimpleChanges
-} from '@angular/core';
+}                          from '@angular/core';
+import { NxConfigService } from '../../services/nx-config';
 
 /* Usage
 <nx-menu>
@@ -21,12 +22,14 @@ export class NxMenuComponent implements OnInit, OnChanges {
     selectedLevel2: string;
     selectedLevel3: string;
 
+    CONFIG: any;
+
     section: any;
     buttons: any;
 
     level2: any = [];
 
-    constructor(private elementRef: ElementRef) {
+    constructor(private configService: NxConfigService) {
         this.buttons = {};
         this.level2 = {
             items : []
@@ -34,6 +37,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
     }
 
     ngOnInit() {
+        this.CONFIG = this.configService.getConfig();
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -53,7 +57,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
 
             if (this.section && this.section.level2) {
                 this.buttons = this.section.level2.filter((subSection) => {
-                    if (subSection.id === 'buttons') {
+                    if (subSection.id === this.CONFIG.menu.buttons.id) {
                         return true;
                     }
                 })[0] || [];
@@ -62,7 +66,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
                     this.buttons = this.buttons.items;
                 }
                 this.level2.items = this.section.level2.filter((subSection) => {
-                    if (subSection.id !== 'buttons') {
+                    if (subSection.id !== this.CONFIG.menu.buttons.id) {
                         return true;
                     }
                 });

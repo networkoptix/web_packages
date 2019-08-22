@@ -92,7 +92,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.route.params.subscribe(params => {
             if (params.systemId) {
                 this.systemId = params.systemId;
-                this.content.base = '/systems/' + this.systemId;
+                this.content.base = this.CONFIG.menu.baseUrl + this.systemId;
                 this.content = {...this.content}; // trigger onChange
                 if (this.system) {
                     this.system.stopPoll();
@@ -106,41 +106,31 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             selectedSection   : '',         // updated by selectedSectionSubject
             selectedSubSection: '',         // updated by selectedSubSectionSubject
             system            : {},         // updated by getSystemInfo
-            base              : '/systems/' + this.systemId,
+            base              : this.CONFIG.menu.baseUrl + this.systemId,
             level1            : [
                 {
-                    id   : 'admin',
-                    icon : 'glyphicon-home',
+                    id   : this.CONFIG.menu.admin.id,
+                    icon : this.CONFIG.menu.admin.icon,
                     label: this.LANG.systemAdministration,
-                    path : '',
+                    path : this.CONFIG.menu.admin.path,
                 }, {
-                    id    : 'users',
-                    icon  : 'glyphicon-users',
-                    label : this.LANG.users,
-                    path  : 'users',
+                    id   : this.CONFIG.menu.users.id,
+                    icon : this.CONFIG.menu.users.icon,
+                    label: this.LANG.users,
+                    path : this.CONFIG.menu.users.path,
                     level2: [
                         {
-                            id   : 'buttons',
+                            id   : this.CONFIG.menu.buttons.id,
                             items: [
                                 {
                                     id: 'addUser',
                                     label: this.LANG['Add User'],
-                                    // action: {
-                                    //     callback: this.addUserModal.open.bind(this.addUserModal)
-                                    // }
                                 }
                             ]
                         }
                     ]
                 }]
         };
-
-        this.menuService
-            .selectedSectionSubject
-            .subscribe(selection => {
-                this.content.selectedSection = selection;
-                this.content = { ...this.content }; // trigger onChange
-            });
 
         this.menuService
             .selectedSubSectionSubject

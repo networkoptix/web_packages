@@ -1,14 +1,12 @@
 import {
-    Component, Inject, Input, OnInit, Renderer2, ViewEncapsulation
+    Component, Input, OnInit, Renderer2, ViewEncapsulation
 }                                                from '@angular/core';
 import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { EmailValidator }                        from '@angular/forms';
 import { NxConfigService }                       from '../../services/nx-config';
 import { NxLanguageProviderService }             from '../../services/nx-language-provider';
 import { NxModalGenericComponent }               from '../generic/generic.component';
-import { NxAccountService }                      from '../../services/account.service';
-import { NxDialogsService }                      from '../dialogs.service';
 import { NxToastService }                        from '../toast.service';
+import { NxProcessService }                      from '../../services/process.service';
 
 @Component({
     selector   : 'nx-modal-add-user-content',
@@ -41,9 +39,8 @@ export class AddUserModalContent {
                 private configService: NxConfigService,
                 private genericModal: NxModalGenericComponent,
                 private language: NxLanguageProviderService,
-                // private accountService: NxAccountService,
                 private toastService: NxToastService,
-                @Inject('process') private process: any,
+                private processService: NxProcessService
     ) {
         this.url = 'share';
         this.accessRoles = [];
@@ -134,17 +131,17 @@ export class AddUserModalContent {
             this.buttonText = this.LANG.sharing.editShareConfirmButton;
         }
 
-        this.sharing = this.process.init(() => {
+        this.sharing = this.processService.createProcess(() => {
             if (this.user.role.isOwner) {
                 return this.genericModal
                     .openConfirm(this.LANG.dialogs.sharing.confirmOwner,
                         this.LANG.dialogs.sharing.shareTitle,
                         this.LANG.dialogs.sharing.shareConfirmButton,
-                        null,
+                        undefined,
                         this.LANG.dialogs.cancelButton)
                     .then((result) => {
                         if (result) {
-                            this.doShare();
+                            return this.doShare();
                         }
                     });
             } else {
@@ -153,6 +150,7 @@ export class AddUserModalContent {
         }, {
             successMessage: this.LANG.dialogs.sharing.permissionsSaved
         }).then(() => {
+            this.system.getUsers();
             this.activeModal.close(true);
         });
     }

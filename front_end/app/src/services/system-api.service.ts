@@ -90,7 +90,6 @@ class NxSystemAPI {
 
     private generateGetUrl(url: string, data: any, absUrl?: boolean) {
         const params = new HttpParams(data);
-        // console.log(params);
         if (absUrl) {
             const proto = window.location.protocol;
             const hostName = window.location.hostname;
@@ -116,9 +115,8 @@ class NxSystemAPI {
 
     private post(url: string, data?: any) {
         data = data || {};
-        data.auth = this.authPost;
         const fullUrl = `${this.urlBase}${url}`;
-        return this.http.post(fullUrl, data, {}).pipe(
+        return this.http.post(fullUrl, data, {params: {auth: this.authPost}}).pipe(
             retryWhen((error) => {
                 return this.retryHandler(error);
             })

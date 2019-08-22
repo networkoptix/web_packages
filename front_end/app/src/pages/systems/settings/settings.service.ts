@@ -40,6 +40,7 @@ export class NxSettingsService implements OnDestroy {
     }
 
     addUser() {
+        // Todo: when user is added cant click on them for side menu. Need to click on another user first.
         // Call share dialog, run process inside
         return this.dialogs
                    .addUser(this.accountService, this.systemSubject.getValue())
