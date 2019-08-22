@@ -25,7 +25,7 @@ module.exports = merge(common, {
                 secure: false
             },
             {
-                context: [ '/api/', '/gateway/' ],
+                context: [ '/api/', '/gateway/', '/notifications/', '/preview/'],
                 // target : 'http://localhost:8000',
                 target : 'https://cloud-dev2.hdw.mx',
                 // target : 'https://cloud-test.hdw.mx',

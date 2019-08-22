@@ -63,8 +63,10 @@ urlpatterns = [
     url(r'^\.well-known/apple-app-site-association',
         TemplateView.as_view(template_name="static/apple-app-site-association",
                              content_type='application/json')),
-    url(r'^(?!static).*',
+    url(r'^(?!static|preview).*',
         TemplateView.as_view(template_name="static/index.html"))
+]
 
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+if settings.LOCAL_ENVIRONMENT:
+    urlpatterns += static(settings.PREVIEW_URL, document_root=settings.PREVIEW_LOCATION)
 

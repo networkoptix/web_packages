@@ -1,5 +1,5 @@
-<div class="container" *ngIf="title || body || staticHTML; else preloader">
-    <ng-container *ngIf="title || body; else staticContent">
+<div class="container">
+    <ng-container *ngIf="title || body">
         <h1 set-title>{{ title }}</h1>
         <div class="card">
             <div class="card-body"
@@ -7,9 +7,9 @@
             </div>
         </div>
     </ng-container>
-    <ng-template #staticContent>
-        <div [innerHTML]="staticHTML"></div>
-    </ng-template>
+    <ng-container #dynamicTemplate></ng-container>
     <nx-footer></nx-footer>
 </div>
-<ng-template #preloader><nx-pre-loader></nx-pre-loader></ng-template>
+<ng-template #preloader>
+    <nx-pre-loader></nx-pre-loader>
+</ng-template>

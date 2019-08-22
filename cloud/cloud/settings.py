@@ -103,6 +103,8 @@ if LOCAL_ENVIRONMENT:
         os.path.join(STATIC_LOCATION, CUSTOMIZATION, "static"),
         os.path.join(STATIC_LOCATION, CUSTOMIZATION, "static/lang_en_US"),
     )
+    PREVIEW_URL = '/preview/'
+    PREVIEW_LOCATION = os.path.join(STATIC_LOCATION, CUSTOMIZATION, "preview")
 
 ADMIN_TOOLS_INDEX_DASHBOARD = 'cloud.dashboard.CustomIndexDashboard'
 ADMIN_TOOLS_MENU = 'cms.menu.CustomMenu'
