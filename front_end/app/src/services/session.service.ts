@@ -11,7 +11,7 @@ export class NxSessionService {
 
     constructor(private localStorageService: LocalStorageService) {
         this.session = this.localStorageService;
-        this.loginStateSubject.next(this.loginState);
+        this.loginStateSubject.next(this.loginState || '');
     }
 
     invalidateSession() {
@@ -20,7 +20,7 @@ export class NxSessionService {
     }
 
     get email() {
-        return this.session.get('email');
+        return this.session.get('email') || '';
     }
 
     set email(email: string) {

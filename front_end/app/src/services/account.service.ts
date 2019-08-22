@@ -31,9 +31,9 @@ export class NxAccountService {
         this.LANG = this.language.getTranslations();
 
         this.sessionService.loginStateSubject.subscribe((loginState) => {
-            // if (this.sessionService.loginState !== loginState) {
-            //     this.document.location.reload();
-            // }
+            if (loginState === null) {
+                this.logout();
+            }
         });
     }
 
@@ -166,7 +166,7 @@ export class NxAccountService {
                    });
     }
 
-    logout(doNotRedirect) {
+    logout(doNotRedirect?) {
         this.cloudApi
             .logout()
             .finally(() => {

@@ -154,15 +154,15 @@ class Process {
         this.finished = true;
         this.error = true;
         this.errorData = data;
-        if (true || !this.settings.ignoreUnauthorized && data &&
+        if (!this.settings.ignoreUnauthorized && data &&
             (data.detail ||
                 // detail appears only when django rest framework declines request with
                 // {"detail":"Authentication credentials were not provided."}
                 // we need to handle this like user was not authorised
                 data.resultCode === 'notAuthorized' ||
                 data.resultCode === 'forbidden' && this.settings.logoutForbidden)) {
-            this.deferredPromise.reject(data);
             this.sessionService.invalidateSession();
+            this.deferredPromise.reject(data);
             return;
         }
         const formatted = this.formatError(data, this.settings.errorCodes);
