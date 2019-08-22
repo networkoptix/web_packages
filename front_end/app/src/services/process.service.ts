@@ -3,6 +3,7 @@ import { NxLanguageProviderService } from './nx-language-provider';
 import { NxToastService } from '../dialogs/toast.service';
 import { NxCloudApiService } from './nx-cloud-api';
 import { NxConfigService } from './nx-config';
+import { NxAccountService } from './account.service';
 
 interface ProcessSettings {
     errorCodes: any;
@@ -185,9 +186,10 @@ export class NxProcessService {
     LANG: any;
     constructor(private configService: NxConfigService,
                 private languageService: NxLanguageProviderService,
+                private accountService: NxAccountService,
                 private cloudApiService: NxCloudApiService,
                 private toastService: NxToastService) {
-        this.CONFIG = this.configService.getConfig()
+        this.CONFIG = this.configService.getConfig();
         this.LANG = this.languageService.getTranslations();
     }
 
