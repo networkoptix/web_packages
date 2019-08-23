@@ -593,9 +593,11 @@ class ProductCustomizationReviewAdmin(CMSAdmin):
         extra_context['DataStructureTypes'] = DataStructure.DATA_TYPES
 
         extra_context['allowed'] = self.template_allowed(request, customization_review)
-        is_integration = version.product.product_type.type == ProductType.PRODUCT_TYPES.integration
-        extra_context['can_preview'] = customization_review.can_preview_customization and not is_integration
-        extra_context['is_integration'] = is_integration
+        is_integration = version.product.is_integration
+        is_article = version.product.is_product_type(ProductType.PRODUCT_TYPES.article)
+        extra_context['partial_preview'] = customization_review.can_preview_customization and not (
+                    is_integration or is_article)
+        extra_context['whole_preview'] = is_integration or is_article
 
         # Customization name should be visible in notes heading if developer has access or user has access
         customization_name = customization_review.customization.name

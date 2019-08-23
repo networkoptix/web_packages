@@ -4,16 +4,8 @@ import { Location } from '@angular/common';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxConfigService } from '../../services/nx-config';
 import { Title } from '@angular/platform-browser';
-import {
-    Component,
-    OnInit,
-    AfterViewInit,
-    Directive,
-    ElementRef,
-    Compiler,
-    Injector,
-    NgModuleRef, NgModule, ViewChild, ViewContainerRef
-} from '@angular/core';
+import { Component, OnInit, Compiler, NgModule, ViewChild, ViewContainerRef } from '@angular/core';
+import { ComponentsModule } from '../../components/components.module';
 
 @Component({
     selector : 'content-component',
@@ -26,7 +18,7 @@ export class NxContentComponent implements OnInit {
     private body: string;
     private staticHTML: string;
     private articleParam: string;
-    private queryParamMap: any;
+    private state: string;
     private langCode: string;
     private CONFIG: any;
 
@@ -45,9 +37,7 @@ export class NxContentComponent implements OnInit {
                 private language: NxLanguageProviderService,
                 private config: NxConfigService,
                 private titleService: Title,
-                private _compiler: Compiler,
-                private _injector: Injector,
-                private _m: NgModuleRef<any>) {
+                private _compiler: Compiler) {
         this.setupDefaults();
         this.langCode = this.language.getLang();
         this.CONFIG = config.getConfig();
@@ -55,7 +45,7 @@ export class NxContentComponent implements OnInit {
 
     ngOnInit(): void {
         this.articleParam = this.route.snapshot.paramMap.get('article_param');
-        this.queryParamMap = this.route.snapshot.queryParamMap;
+        this.state = this.route.snapshot.queryParamMap.get('state');
     }
 
     ngAfterViewInit(): void {
@@ -74,8 +64,8 @@ export class NxContentComponent implements OnInit {
     }
 
     getArticle() {
-        const uri = `${this.CONFIG.apiBase}/article/${this.articleParam}/`;
-        // uri += (status) ? '?' + status : '' ;
+        let uri = `${this.CONFIG.apiBase}/article/${this.articleParam}/`;
+        uri += (this.state) ? '?' + this.state : '';
         return this.http.get(uri).subscribe(
             (data: any) => {
                 this.title = data.title;
@@ -102,35 +92,16 @@ export class NxContentComponent implements OnInit {
     }
 
     compileStaticArticle(template) {
-        const tmpCmp = Component({
-            moduleId: module.id,
-            template
-        })(class {
-        });
+        @Component({template})
+        class TemplateComponent {}
 
-        const tmpModule = NgModule({
-            declarations: [tmpCmp]
-        })(class {
-        });
+        @NgModule({declarations: [TemplateComponent], imports: [ComponentsModule]})
+        class TemplateModule {}
 
-        this._compiler.compileModuleAndAllComponentsAsync(tmpModule)
-            .then((factories) => {
-                const factory = factories.componentFactories[0];
-                const compRef = factory.create(this._injector, [], undefined, this._m);
-                compRef.instance.name = 'dynamic';
+        const mod = this._compiler.compileModuleAndAllComponentsSync(TemplateModule);
+        const factory = mod.componentFactories.find((comp) => comp.componentType === TemplateComponent);
 
-                if (this.CONFIG.previewPath) {
-                    // Image src is already compiled with full path
-                    // .. so it needs some massaging
-                    const images = compRef.location.nativeElement.querySelectorAll('img');
-                    images.forEach((img) => {
-                        const position = img.src.indexOf('/static');
-                        img.src = [img.src.slice(0, position), '/' + this.CONFIG.previewPath, img.src.slice(position)].join('');
-                    });
-                }
-
-                this.dynamicTemplate.insert(compRef.hostView);
-            });
+        this.dynamicTemplate.createComponent(factory);
     }
 }
 
