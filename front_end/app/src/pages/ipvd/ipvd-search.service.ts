@@ -62,7 +62,6 @@ export class IpvdSearchService {
 
         if (filter.multiselects.find(x => x.id === IpvdSearchService.TYPES) !== undefined) {
             const hardwareType = filter.multiselects.find(x => x.id === IpvdSearchService.TYPES);
-            debugger;
             if (hardwareType.selected.length) {
                 types = hardwareType.items.filter(x => !hardwareType.selected.includes(x.id));
             }
