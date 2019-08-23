@@ -21,6 +21,7 @@ export class NxContentComponent implements OnInit {
     private state: string;
     private langCode: string;
     private CONFIG: any;
+    private loaded: boolean;
 
     @ViewChild('dynamicTemplate', { read: ViewContainerRef, static: true }) dynamicTemplate;
     @ViewChild('dynamicImage', { read: ViewContainerRef, static: true }) dynamicImage;
@@ -66,11 +67,12 @@ export class NxContentComponent implements OnInit {
     getArticle() {
         let uri = `${this.CONFIG.apiBase}/article/${this.articleParam}/`;
         uri += (this.state) ? '?' + this.state : '';
-        return this.http.get(uri).subscribe(
+        this.http.get(uri).subscribe(
             (data: any) => {
                 this.title = data.title;
                 this.body = data.body;
                 this.titleService.setTitle(this.title);
+                this.loaded = true;
             },
             () => {
                 this.loadStaticArticle();
@@ -102,6 +104,7 @@ export class NxContentComponent implements OnInit {
         const factory = mod.componentFactories.find((comp) => comp.componentType === TemplateComponent);
 
         this.dynamicTemplate.createComponent(factory);
+        this.loaded = true;
     }
 }
 

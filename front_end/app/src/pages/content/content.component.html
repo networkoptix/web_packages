@@ -8,8 +8,6 @@
         </div>
     </ng-container>
     <ng-container #dynamicTemplate></ng-container>
+    <nx-pre-loader *ngIf="!loaded"></nx-pre-loader>
     <nx-footer></nx-footer>
 </div>
-<ng-template #preloader>
-    <nx-pre-loader></nx-pre-loader>
-</ng-template>

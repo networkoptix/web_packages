@@ -3,6 +3,7 @@ from cms.controllers.filldata import global_contexts_to_dict, process_global_con
 from cms.models import Context, Product, ProductType, get_cloud_portal_product, Language, ProductCustomizationReview, \
     DataStructure
 from django.conf import settings
+from django.db.models import Count
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from util.helpers import detect_language_by_request
@@ -14,10 +15,20 @@ from util.helpers import detect_language_by_request
 def get_article(request, url_param, **kwargs):
     draft = "draft" in request.GET
     review = "pending" in request.GET
-    article = Product.objects.filter(
+    article = Product.objects.annotate(num_customizations=Count('customizations')).filter(
+        num_customizations=1, datarecord__value=url_param,
         datarecord__data_structure__context__product_type__type=ProductType.PRODUCT_TYPES.article,
         datarecord__data_structure__name='url', customizations__name=settings.CUSTOMIZATION,
-        datarecord__value=url_param).last()
+    ).last()
+
+    if not article:
+        review = ProductCustomizationReview.objects.filter(
+            version__product__datarecord__value=url_param, version__product__datarecord__data_structure__name='url',
+            version__product__product_type__type=ProductType.PRODUCT_TYPES.article,
+            state=ProductCustomizationReview.REVIEW_STATES.accepted, customization__name=settings.CUSTOMIZATION
+        ).order_by('-reviewed_date').first()
+        if review:
+            article = review.version.product
 
     # If article is not found, then return a 404
     if article:
