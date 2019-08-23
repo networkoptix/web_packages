@@ -242,7 +242,7 @@
     "cameraStates": {
       "offline": "Не в сети",
       "error": "Ошибка",
-      "errorLoading": "An error occurred while loading this video.",
+      "errorLoading": "При загрузке этого видео произошла ошибка.",
       "unauthorized": "Требуется аутентификация",
       "noData": "Нет данных",
       "iOSVideoTooLarge": "iOS не поддерживает видео с разрешением больше чем fullHD (2MP: 1920x1080).",

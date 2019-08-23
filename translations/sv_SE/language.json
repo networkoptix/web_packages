@@ -242,7 +242,7 @@
     "cameraStates": {
       "offline": "Frånkopplade",
       "error": "Fel",
-      "errorLoading": "An error occurred while loading this video.",
+      "errorLoading": "Ett fel uppstod vid laddning av den här videon.",
       "unauthorized": "Autentisering krävs",
       "noData": "Data saknas",
       "iOSVideoTooLarge": "ios stöder inte video större än fullHD (2MP: 1920x1080).",

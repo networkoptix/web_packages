@@ -242,7 +242,7 @@
     "cameraStates": {
       "offline": "Поза мережею",
       "error": "Помилка",
-      "errorLoading": "An error occurred while loading this video.",
+      "errorLoading": "Під час завантаження цього відео сталася помилка.",
       "unauthorized": "Потрібна аутентифікація",
       "noData": "Немає даних",
       "iOSVideoTooLarge": "iOS не підтримує відео з розшиненням більшим за fullHD (2MP: 1920x1080).",

@@ -4,7 +4,7 @@
         <p>
             <button class="btn btn-default mw-100"
                     ng-disabled="currentlyMerging && !isMaster"
-                    ng-click="rename()"><div class="ellipsis">Rename System</div></button>
+                    ng-click="rename()"><div class="ellipsis">System umbenennen</div></button>
         </p>
         <p ng-if="systems.length > 1 && system.canMerge || configCanMerge || debugMode || betaMode">
             <button class="btn btn-default mw-100"
@@ -15,7 +15,7 @@
         <button class="btn btn-default mw-100"
                 ng-disabled="currentlyMerging"
                 ng-click="disconnect()">
-            <div class="ellipsis">Disconnect from <span class="product-name">&nbsp;%CLOUD_NAME%</span></div></button>
+            <div class="ellipsis"> Verbindung zu <span class="product-name">&nbsp;%CLOUD_NAME%</span> trennen </div></button>
     </div>
 </div>
 <div class="card card-condensed" ng-if="!system.isMine">
@@ -33,12 +33,12 @@
             <button class="btn btn-default mw-100"
                     ng-click="rename()"
                     ng-disabled="currentlyMerging && !isMaster">
-                <div class="ellipsis">Rename System</div></button>
+                <div class="ellipsis">System umbenennen</div></button>
         </p>
         <button class="btn btn-default mw-100"
                 ng-click="delete()"
                 ng-disabled="currentlyMerging">
-            <div class="ellipsis">Disconnect from my account</div></button>
+            <div class="ellipsis">Verbindung zu meinem Konto trennen</div></button>
     </div>
 </div>
 <div class="mt-3 card card-default" ng-if="currentlyMerging">

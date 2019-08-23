@@ -242,7 +242,7 @@
     "cameraStates": {
       "offline": "離線",
       "error": "錯誤",
-      "errorLoading": "An error occurred while loading this video.",
+      "errorLoading": "載入影片時發生錯誤",
       "unauthorized": "需要身份驗證",
       "noData": "無資料",
       "iOSVideoTooLarge": "iOS不支援大於 fullHD (2MP：1920x1080) 的影像。",
