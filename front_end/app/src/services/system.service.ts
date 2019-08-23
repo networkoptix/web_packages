@@ -6,7 +6,7 @@ import { NxSystemsService } from './systems.service';
 import { Injectable, OnDestroy } from '@angular/core';
 import { NxSystemAPIService } from './system-api.service';
 import { from, of, ReplaySubject } from 'rxjs';
-import { flatMap, tap } from 'rxjs/operators';
+import { flatMap } from 'rxjs/operators';
 import { NxPollService } from './poll.service';
 
 
@@ -135,7 +135,7 @@ export class NxSystem extends System implements OnDestroy {
              */
             return this.updateSystemAuth(true);
         });
-        this.updateSystemAuth(true);
+        this.updateSystemAuth(true).catch(() => {});
         this.updateSystemState();
         this.systemPoll = this.pollService.createPoll(this.update(), 10000); // this.CONFIG.updateInterval);
     }
@@ -349,7 +349,7 @@ export class NxSystem extends System implements OnDestroy {
             }
 
             this.usersPromise = usersPromise.then((users) => {
-                if (false && !Array.isArray(users)) {
+                if (!Array.isArray(users)) {
                     return false;
                 }
                 // Sort users here
@@ -429,7 +429,7 @@ export class NxSystem extends System implements OnDestroy {
 
     deleteFromCurrentAccount() {
         if (this.currentUser && this.isAvailable) {
-            this.mediaserver.deleteUser(this.currentUser.id).catch(() => {}); // Try to remove me from the system directly
+            this.mediaserver.deleteUser(this.currentUser.id).toPromise.catch(() => {}); // Try to remove me from the system directly
         }
         // Anyway - send another request to cloud_db to remove my this
         return this.cloudApi.unshare(this.id, this.currentUserEmail).toPromise();
