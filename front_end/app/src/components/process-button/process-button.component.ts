@@ -8,6 +8,7 @@ import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
 })
 export class NxProcessButtonComponent implements OnInit {
     @Input() process: any;
+    @Input() clickFn: any;
     @Input() buttonText: string;
     @Input() buttonDisabled: boolean;
     @Input() actionType: any;
@@ -20,6 +21,10 @@ export class NxProcessButtonComponent implements OnInit {
     }
 
     ngOnInit() {
+        if (!this.clickFn) {
+            this.clickFn = () => {};
+        }
+
         this.buttonClass = 'btn-primary';
         if (this.actionType) {
             this.buttonClass = 'btn-' + this.actionType;

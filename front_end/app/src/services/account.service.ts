@@ -74,7 +74,7 @@ export class NxAccountService {
         return this.cloudApi
                    .authKey()
                    .then((result: any) => {
-                       return result.data.auth_key;
+                       return result.auth_key;
                    });
     }
 
@@ -82,7 +82,7 @@ export class NxAccountService {
         return this.cloudApi
                    .visitedKey(key)
                    .then((result: any) => {
-                       return result.data.visited;
+                       return result.visited;
                    });
     }
 
@@ -90,7 +90,7 @@ export class NxAccountService {
         return this.cloudApi
                    .checkCode(code)
                    .then((result: any) => {
-                       return result.data.emailExists;
+                       return result.emailExists;
                    });
     }
 
@@ -145,7 +145,7 @@ export class NxAccountService {
                        if (this.sessionService.loginState) {
                            // If the user that logged in matches the current session there's no need to show
                            // the logout dialog.
-                           if (result.data.email !== this.sessionService.loginState) {
+                           if (result.email !== this.sessionService.loginState) {
                                this.logoutAuthorised();
                            }
 
@@ -199,7 +199,7 @@ export class NxAccountService {
     }
 
     checkUnauthorized(data) {
-        if (data && data.data && data.data.resultCode === 'notAuthorized') {
+        if (data && data.resultCode === 'notAuthorized') {
             this.logout(true);
             return false;
         }
