@@ -1,6 +1,5 @@
 import {
-    Component, Inject,
-    OnDestroy, OnInit
+    Component, OnDestroy, OnInit
 }                                    from '@angular/core';
 import { Location }                  from '@angular/common';
 import { ActivatedRoute }            from '@angular/router';
@@ -81,7 +80,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                     }, {
                         successMessage: this.LANG.system.successDeleted.replace('{{systemName}}', this.system.info.name),
                         errorPrefix   : this.LANG.errorCodes.cantUnshareWithMeSystemPrefix
-                    }).then(this.updateAndGoToSystems, (error) => error);
+                    }).then(() => this.updateAndGoToSystems(), (error) => error);
                 }
             });
 
@@ -110,7 +109,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             .forceUpdateSystems()
             .subscribe(() => {
                 setTimeout(() => {
-                    this.location.path('/systems');
+                    window.location.href = '/systems';
                 });
             });
     }
@@ -172,7 +171,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                                this.LANG.merging.mergeFailedTitle,
                                this.LANG.dialogs.okButton,
                                'btn-primary',
-                               undefined);
+                               undefined).catch(() => {});
                    })
                    .finally(() => {
                        this.currentlyMerging = false;
