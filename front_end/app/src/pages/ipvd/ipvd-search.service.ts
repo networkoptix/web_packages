@@ -62,6 +62,7 @@ export class IpvdSearchService {
 
         if (filter.multiselects.find(x => x.id === IpvdSearchService.TYPES) !== undefined) {
             const hardwareType = filter.multiselects.find(x => x.id === IpvdSearchService.TYPES);
+            debugger;
             if (hardwareType.selected.length) {
                 types = hardwareType.items.filter(x => !hardwareType.selected.includes(x.id));
             }
@@ -93,7 +94,7 @@ export class IpvdSearchService {
 
             if (types &&
                 types.length > 0 &&
-                types.find(type => type.id.toLowerCase() === camera.hardwareType.toLowerCase())) {
+                types.find(type => type.id === camera.hardwareTypeId)) {
 
                 return false;
             }
