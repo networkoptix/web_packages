@@ -1,0 +1,11 @@
+Hei, {{message.userFullName}}
+
+{{#message.sharer_name}}
+{{message.sharer_name}} ({{message.sharer_email}}) har delt tilgang til videohåndteringssystem "{{message.system_name}}" med deg.
+{{/message.sharer_name}}
+
+{{^message.sharer_name}}
+Du har fått tilgang til videohåndteringssystem "{{message.system_name}}".
+{{/message.sharer_name}}
+
+Se i %CLOUD_NAME% Portal: {{config.portal_url}}/ systems /{{message.system_id}}

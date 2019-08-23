@@ -1,0 +1,11 @@
+<h1>Hei, {{message.userFullName}}</h1>
+
+{{#message.sharer_name}}
+<p><a href="mailto:{{message.sharer_email}}">{{message.sharer_name}}</a> har delt tilgang til videohåndteringssystem "{{message.system_name}}" med deg.</p>
+{{/message.sharer_name}}
+
+{{^message.sharer_name}}
+<p>Du har fått tilgang til videohåndteringssystem "{{message.system_name}}".</p>
+{{/message.sharer_name}}
+
+<a class="btn" href="{{config.portal_url}}/systems/{{message.system_id}}"> Vis i %CLOUD_NAME% Portal </a>
