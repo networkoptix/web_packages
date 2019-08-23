@@ -64,7 +64,6 @@ class System implements SystemInterface {
 
 
 export class NxSystem extends System implements OnDestroy {
-    private systems: any;
     private CONFIG: any;
     private LANG: any;
     private cloudApi: any;
@@ -137,7 +136,7 @@ export class NxSystem extends System implements OnDestroy {
         });
         this.updateSystemAuth(true).catch(() => {});
         this.updateSystemState();
-        this.systemPoll = this.pollService.createPoll(this.update(), 10000); // this.CONFIG.updateInterval);
+        this.systemPoll = this.pollService.createPoll(this.update(), this.CONFIG.updateInterval);
     }
 
     updateSystemAuth(force?) {
@@ -322,7 +321,6 @@ export class NxSystem extends System implements OnDestroy {
 
         return this.mediaserver.getAggregatedUsersData().toPromise().then((result: any) => {
             if (!result) {
-                console.error('Aggregated request to server has failed', result);
                 return Promise.reject(`Aggregated request to server has failed ${result}`);
             }
             const data = result.reply;
@@ -476,6 +474,7 @@ export class NxSystem extends System implements OnDestroy {
 export class NxSystemService {
     CONFIG: any;
     LANG: any;
+    private systemsCache: { [key: string]: System };
 
     constructor(private config: NxConfigService,
                 private languageService: NxLanguageProviderService,
@@ -485,16 +484,22 @@ export class NxSystemService {
                 private systemsService: NxSystemsService) {
         this.CONFIG = this.config.getConfig();
         this.LANG = this.languageService.getTranslations();
+        this.systemsCache = {};
     }
 
     createSystem(systemId, currentUserEmail) {
-        const system = new NxSystem(
-            this.CONFIG, this.LANG,
-            this.cloudApi, this.systemApiService,
-            this.pollService, this.systemsService,
-            systemId, currentUserEmail
-        );
-
+        let system;
+        if (systemId in this.systemsCache) {
+            system = this.systemsCache[systemId];
+        } else {
+            system = new NxSystem(
+                this.CONFIG, this.LANG,
+                this.cloudApi, this.systemApiService,
+                this.pollService, this.systemsService,
+                systemId, currentUserEmail
+            );
+            this.systemsCache[systemId] = system;
+        }
         system.startPoll();
         return system;
     }
