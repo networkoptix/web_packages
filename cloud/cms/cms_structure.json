@@ -2066,26 +2066,6 @@
     "single_customization": false,
     "contexts": [
       {
-        "name": "settings",
-        "label": "Settings",
-        "description": "Article settings",
-        "translatable": false,
-        "values": [
-          {
-            "name": "url",
-            "label": "URL",
-            "value": "",
-            "description": "URL to access the article, access by going to /content/{custom url}",
-            "type": "text",
-            "optional": false,
-            "advanced": true,
-            "meta": {
-              "regex": "^[A-Za-z0-9._~()'!*:@,;+?-]+$"
-            }
-          }
-        ]
-      },
-      {
         "name": "content",
         "label": "Content",
         "description": "Article content",
@@ -2098,6 +2078,19 @@
             "description": "This will be used as the title of the article",
             "type": "text",
             "optional": false
+          },
+          {
+            "name": "url",
+            "label": "URL",
+            "value": "",
+            "description": "URL to access the article, access by going to /content/{custom url}",
+            "type": "text",
+            "optional": false,
+            "advanced": true,
+            "translatable": false,
+            "meta": {
+              "regex": "^[A-Za-z0-9._~()'!*:@,;+?-]+$"
+            }
           },
           {
             "name": "description",
