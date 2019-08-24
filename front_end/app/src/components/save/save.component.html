@@ -1,0 +1,6 @@
+<div *ngIf="needToSave" class="d-flex pt-3">
+    <nx-process-button [process]="save"
+                       [actionType]="'primary wide-button'"
+                       buttonText="{{ 'Save' | translate }}"></nx-process-button>
+    <button type="button" class="btn btn-default ml-2" translate>Cancel</button>
+</div>

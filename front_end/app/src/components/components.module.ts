@@ -39,6 +39,7 @@ import { NxSwitchComponent }         from './switch/switch.component';
 import { ToastsContainer }           from './toast/toast.component';
 import { NxHeaderComponent }         from './header/header.component';
 import { NxNavLocationDropdown }     from './dropdowns/nav-location/nav.component';
+import { NxSaveComponent }           from './save/save.component';
 
 @NgModule({
     imports: [
@@ -80,6 +81,7 @@ import { NxNavLocationDropdown }     from './dropdowns/nav-location/nav.componen
         NxEmailComponent,
         NxClientButtonComponent,
         NxSwitchComponent,
+        NxSaveComponent,
         ToastsContainer,
     ],
     entryComponents: [
@@ -112,6 +114,7 @@ import { NxNavLocationDropdown }     from './dropdowns/nav-location/nav.componen
         NxEmailComponent,
         NxClientButtonComponent,
         NxSwitchComponent,
+        NxSaveComponent,
         ToastsContainer,
     ],
     providers      : [
@@ -135,6 +138,7 @@ import { NxNavLocationDropdown }     from './dropdowns/nav-location/nav.componen
         NxEmailComponent,
         NxClientButtonComponent,
         NxSwitchComponent,
+        NxSaveComponent,
         ToastsContainer,
 
         NxRibbonService,
@@ -169,6 +173,7 @@ import { NxNavLocationDropdown }     from './dropdowns/nav-location/nav.componen
         NxEmailComponent,
         NxClientButtonComponent,
         NxSwitchComponent,
+        NxSaveComponent,
         ToastsContainer,
 
         MenuModule,
