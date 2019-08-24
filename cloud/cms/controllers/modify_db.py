@@ -389,6 +389,13 @@ def is_not_valid_file_type(file_type, meta_types):
     return True
 
 
+def is_not_valid_file_extension(file_name, meta_types):
+    for meta_type in meta_types.split(','):
+        if file_name.endswith(f'.{meta_type.strip()}'):
+            return False
+    return True
+
+
 def get_image_dimensions(image_file):
     new_image = Image.open(image_file)
     width, height = new_image.size
@@ -436,7 +443,8 @@ def check_image_dimensions(data_structure_name,
 
 def check_meta_settings(data_structure, new_file):
     meta_settings = data_structure.meta_settings
-    if 'format' in meta_settings and is_not_valid_file_type(new_file.content_type, meta_settings['format']):
+    if 'format' in meta_settings and is_not_valid_file_extension(new_file.name, meta_settings['format']) and \
+            is_not_valid_file_type(new_file.content_type, meta_settings['format']):
         error_msg = "Invalid file type. Uploaded file is {}. It should be {}." \
             .format(new_file.content_type,
                     data_structure.meta_settings['format'].replace(',', ' or '))
@@ -447,8 +455,7 @@ def check_meta_settings(data_structure, new_file):
             format(new_file.size/BYTES_TO_MEGABYTES, meta_settings['size']/BYTES_TO_MEGABYTES)
         return [(data_structure.name, error_msg)]
 
-    if DataStructure.is_file_or_image(data_structure.type):
-
+    if data_structure.is_image:
         try:
             image_dimensions = get_image_dimensions(new_file)
         except (IOError, TypeError):
@@ -461,7 +468,6 @@ def check_meta_settings(data_structure, new_file):
 
 # End of file upload helpers
 def upload_file(data_structure, new_file):
-    encoded_file = base64.b64encode(new_file.read()).decode('utf8')
     if new_file.size >= settings.CMS_MAX_FILE_SIZE:
         return None, [(data_structure.name, 'Its size was {0:.2f}MB but must be less than {1:.2f} MB'.
                        format(new_file.size/BYTES_TO_MEGABYTES, settings.CMS_MAX_FILE_SIZE/BYTES_TO_MEGABYTES))]
@@ -469,4 +475,5 @@ def upload_file(data_structure, new_file):
     file_errors = check_meta_settings(data_structure, new_file)
     if file_errors:
         return None, file_errors
+    encoded_file = base64.b64encode(new_file.read()).decode('utf8')
     return encoded_file, []
