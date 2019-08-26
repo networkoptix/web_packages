@@ -1,4 +1,4 @@
-There is a new version for {{ message.product }}({{message.product_type}}) to review.
+검토 할 {{ message.product }}({{message.product_type}})의 새 버전이 있습니다.
 
 {{ message.id }}링크를 선택하여 {{ message.product }}에 대한 내용을 검토를 하세요.
 

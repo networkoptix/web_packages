@@ -1,0 +1,197 @@
+{
+	"search": {
+		"Search": "Zoek",
+		"search_ipvd": "Zoeken op model of fabrikant",
+		"filter applied": "filter toegepast",
+		"filters applied": "filters toegepast",
+		"Any": "Elk",
+		"selected": "gekozen",
+		"vendor": "Fabrikant",
+		"vendors": "Fabrikanten",
+		"hardwareType": "Type",
+		"hardwareTypes": "Types",
+		"minResolution": "Minimale resolutie",
+		"analytics": "Analytics",
+		"analyticsSelected": "analytics evenementen"
+	},
+	"cameraFilters": {
+		"ptz": "PTZ camera's",
+		"aptz": "Camera's met geavanceerde PTZ",
+		"fisheye": "Fisheye camera 's",
+		"H265": "H.265 Cameras",
+		"IO": "I/O modules",
+		"multiSensor": "Multi-Sensor Camera's",
+		"TwWayAudio": "2-weg audio-apparaten",
+		"audio": "Camera's met audio",
+		"encoder": "Encoders",
+		"highRes": "Extra hoge resolutie camera's"
+	},
+	"downloads": {
+		"mobile": {
+			"ios": {
+				"link": "%IOS_APPLICATION_LINK%"
+			},
+			"android": {
+				"link": "%ANDROID_APPLICATION_LINK%"
+			}
+		},
+		"groups": {
+			"windows": {
+				"label": "Windows",
+				"supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+			},
+			"mac": {
+				"label": "Mac OS",
+				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+			},
+			"linux": {
+				"label": "Ubuntu Linux",
+				"shortLabel": "Ubuntu",
+				"supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+			},
+			"macos": {
+				"label": "Mac OS",
+				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+			},
+			"ios": {
+				"label": "iOS",
+				"shortLabel": "iOS"
+			},
+			"android": {
+				"label": "Android",
+				"shortLabel": "Android"
+			},
+			"arm": {
+				"label": "ARM",
+				"shortLabel": "ARM",
+				"supported": "<a href='/content/arm'>ARM gebaseerde servers ondersteunen beleid</a>"
+			},
+			"sdk": {
+				"label": "SDK",
+				"shortLabel": "SDK",
+				"supported": "C ++ cross-platform SDK"
+			}
+		},
+		"platforms": {
+			"win64": "x64",
+			"linux64": "x64",
+			"mac": "X",
+			"bananapi": "Banana Pi",
+			"bpi": "Nx1",
+			"rpi": " Raspberry Pi"
+		},
+		"appTypes": {
+			"client": "Alleen client",
+			"server": "Alleen server",
+			"bundle": "Client en Server",
+			"servertool": "Configuratie tool",
+			"package": "Pakket"
+		},
+		"releasesTypes": {
+			"beta": "Beta",
+			"betas": "Betas",
+			"rc": "Release Kandidaat",
+			"release": "Release",
+			"releases": "Releases",
+			"patch": "Update",
+			"patches": "Updates"
+		}
+	},
+	"ipvd": {
+		"resolutionArea": "Gebied",
+		"count": "Tellen",
+		"vendor": "Fabrikant",
+		"model": "Model",
+		"hardwareType": "Type",
+		"maxResolution": "Max. Resolutie",
+		"maxFps": "Max. FPS",
+		"primaryCodec": "Codec",
+		"isAudioSupported": "Audio",
+		"isTwAudioSupported": "2-weg audio",
+		"isPtzSupported": "PTZ",
+		"isAptzSupported": "Geavanceerde PTZ",
+		"isAptzSupportedShort": "Adv. PTZ",
+		"isFisheye": "Fisheye",
+		"isMdSupported": "Beweging",
+		"isIoSupported": "I/O",
+		"isH265": "H.265",
+		"isMultiSensor": "Multi Sensor",
+		"isAnalyticsSupported": "Analytics",
+		"camera": "Camera",
+		"multiSensorCamera": "Multi-Sensor Camera",
+		"encoder": "Encoder",
+		"dvr": "DVR",
+		"other": "Andere",
+		"PTZ cameras": "PTZ camera's",
+		"Advanced PTZ cameras": "Geavanceerde PTZ-camera's",
+		"Fisheye Cameras": "Fisheye camera 's",
+		"Cameras supporting H.265": "Camera's die H.265 ondersteunen",
+		"I / O modules": "I/O modules",
+		"Multisensor Cameras": "Multisensor camera's",
+		"Cameras with 2-way audio": "Camera's met 2-weg audio",
+		"Extra high resolution cameras": "Extra hoge resolutie camera's",
+		"feedback": {
+			"a_Please": "Alstublieft",
+			"b_Link": "een aanvraag indienen",
+			"c_Info": "voor aanvullende vragen / opmerkingen over ondersteunde apparaten."
+		},
+		"disclaimer": "Deze lijst is beperkt tot apparaten die gevonden zijn op {{vmsName}}, waar gebruikers automatisch rapporteren van gebruiksinformatie naar {{companyName}} hebben toegestaan. Geen persoonlijke informatie wordt verzameld en elke gebruiker blijft volledig anoniem."
+	},
+	"integration": {
+		"previewRibbonText": "Deze pagina is een voorbeeld van de nieuwste wijzigingen en komt niet overeen met de openbaar beschikbare versie.",
+		"backToEditText": "Terug naar de bewerkingsinterfaces",
+		"Access Control": "Toegangscontrole",
+		"Connector": "Connector",
+		"Data Analytics": "Data Analyse",
+		"Drone": "Drone",
+		"Health Monitor": "Server monitor",
+		"Storage": "Opslag"
+	},
+	"messageDialogPlaceholders": {
+		"feedback": "Zorg ervoor dat je uw camera model en fabrikant bij de hand hebt..."
+	},
+	"pageTitles": {
+		"supportedDevices": "Ondersteunde apparaten",
+		"integrations": "Integraties"
+	},
+	"dialogs": {
+		"merge": {
+			"connectToCloud": "Verbind het systeem dat u met deze wilt samenvoegen tot <strong>{{cloudName}}</strong> of plaats lokaal samen met behulp van de <strong>{{vmsName}}</strong> Client.",
+			"mergeConfirmation": "U staat op het punt om systemen <strong>{{primarySystem}}</strong> en <strong>{{secondarySystem}}</strong>samen te voegen. Instellingen en de naam worden overgenomen van de <strong>{{primarySystem}}</strong>.",
+			"primaryCannotMerge": "Systeem {{targetSystem}} heeft een nieuwere softwareversie die niet compatibel is met het huidige systeem. Werk het huidige systeem bij naar de laatste <a href=\"/download\" target=\"_blank\" translate>build</a> om het samen te voegen met het {{targetSystem}} systeem.",
+			"primarySystemOffline": "Systeem {{primarySystem}} is offline en kan niet worden samengevoegd met {{targetSystem}}.",
+			"secondaryCannotMerge": "Systeem {{targetSystem}} heeft een oudere softwareversie die niet compatibel is met het huidige systeem. Update {{targetSystem}} naar de <a href=\"/download\" target=\"_blank\" translate>nieuwste versie</a> om deze samen te voegen met de huidige versie.",
+			"systemOffline": "Systeem {{targetSystem}} is offline en kan niet worden samengevoegd met de huidige.",
+			"systemUnavailable": "Systeem {{targetSystem}} is momenteel niet bereikbaar. Probeer het over een paar minuten opnieuw of neem contact op met"
+		},
+		"message": {
+			"failedToSend": "Bericht kan niet worden verzonden.",
+			"sent": "Bericht is verzonden.",
+			"title": {
+				"integration": "Neem contact op met {{companyName}}",
+				"ipvd_feedback_page": "Feedback voor camera's pagina",
+				"ipvd_feedback_device": "Feedback over {{product}}"
+			},
+			"topic": {
+				"contact_sales": "Contacteer verkoop voor {{product}}",
+				"contact_support": "Contacteer support voor {{product}}",
+				"integration_feedback": "Feedback voor integratie {{product}}",
+				"ipvd_feedback_page": "Feedback voor pagina van de camera's",
+				"ipvd_feedback_device": "Feedback over {{product}}"
+			}
+		}
+	},
+	"privacyPolicy": {
+		"integration": "Door dit formulier in te dienen, ga je akkoord met contactering door {{INTEGRATION_COMPANY}} en/of %COMPANY_NAME%.\nJe vindt {{INTEGRATION_COMPANY}} privacybeleid <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">hier</a> en %COMPANY_NAME% privacybeleid <a href=\"%PRIVACY_LINK%\" target=\"blank\">hier</a> welke instructies bevat over hoe je toestemming kan intrekken.",
+		"ipvd": "Door dit formulier in te dienen, ga je akkoord met contactering door %COMPANY_NAME%.\nJe vindt %COMPANY_NAME% privacy beleid <a href=\"%PRIVACY_LINK%\" target=\"blank\">hier</a> welke instructies bevat over hoe je toestemming moet intrekken."
+	},
+	"testedVersionLabel": "Getest op {{vmsName}} versie:",
+	"testedVersionsLabel": "Getest op {{vmsName}} versies:",
+	"About %CLOUD_NAME%": "Over %CLOUD_NAME%",
+	"Download %VMS_NAME%": "Download %VMS_NAME%",
+	"Integrations": "Integraties",
+	"Privacy": "Privacy",
+	"Support": "Ondersteuning",
+	"Supported Devices": "Ondersteunde apparaten",
+	"Terms": "Voorwaarden"
+}

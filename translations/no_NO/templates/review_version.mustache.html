@@ -1,0 +1,10 @@
+<h1>Det er en ny versjon for {{ message.product }} ({{ message.product_type }}) å se gjennom</h1>
+<p>Klikk på lenken for å se utkast {{ message.id }} for {{ message.product }}</p>
+<a class="btn" href="{{ config.portal_url }}/admin/cms/productcustomizationreview/{{ message.id }}/change/">Review Versjon</a>
+<h4>På denne siden kan du</h4>
+<ul>
+	<li>Opprett en forhåndsvisning for å se de nyeste endringene.</li>
+	<li>Publiser denne versjonen som vil oppdatere alt innhold.</li>
+	<li>Rediger sammenhenger ved å klikke på redigeringsopptaksknappen. <br>
+		For å se disse endringene må du opprette en ny versjon</li>
+</ul>

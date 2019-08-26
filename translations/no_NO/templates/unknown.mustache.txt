@@ -1,0 +1,6 @@
+Ny melding
+
+Type: {{message.type}}
+Data: {{{message.data}}}
+
+Det er ingen spesifikk mal for denne typen melding

@@ -1,3 +1,3 @@
 안녕하세요, {{ message.userFullName }}
-{{ message.sender_name}} ({{ message.sender_email }}) gave the following feedback{{#message.product}} for {{ message.product }}{{/message.product}}:
+{{ message.sender_name}} ({{ message.sender_email }})은 {{ message.product }}{{/message.product}}대해 다음과 같은 피드백{{#message.product}} 를주었습니다 :
 <pre>{{ message.message }}</pre>

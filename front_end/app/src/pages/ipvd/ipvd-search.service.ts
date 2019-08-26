@@ -93,7 +93,7 @@ export class IpvdSearchService {
 
             if (types &&
                 types.length > 0 &&
-                types.find(type => type.label.toLowerCase() === camera.hardwareType.toLowerCase())) {
+                types.find(type => type.id === camera.hardwareTypeId)) {
 
                 return false;
             }

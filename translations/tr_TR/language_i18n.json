@@ -192,7 +192,7 @@
             "arm": {
                 "label": "ARM",
                 "shortLabel": "ARM",
-                "supported": "<a href='/content/arm'>ARM based servers support policy</a>"
+                "supported": "<a href='/content/arm'>ARM tabanlı sunucular destek politikası</a>"
             },
             "ios": {
                 "label": "iOS",
