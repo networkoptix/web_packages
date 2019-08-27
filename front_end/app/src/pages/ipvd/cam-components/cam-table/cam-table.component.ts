@@ -402,6 +402,11 @@ export class CamTableComponent implements OnChanges, OnInit {
         );
     }
 
+    getCleanTitle(text: string): string {
+        return text.replace(/\<br\>/g, ' ')
+                   .replace(/\<\/?span\>/g, '');
+    }
+
     isBoolean(x: any): boolean {
         return !(typeof x === 'string' || typeof x === 'number');
     }
