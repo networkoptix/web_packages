@@ -84,7 +84,12 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         });
 
         this.init();
-        this.applyService.initPageWatcher(this.viewContainerRef, this.editUser, () => {});
+        this.applyService.initPageWatcher(this.viewContainerRef, this.editUser, () => {
+            const user = this.system.users.find(user => {
+                return user.id === this.selectedUser.id;
+            });
+            this.setPermission(user && user.role);
+        });
     }
 
     init(): void {
