@@ -52,7 +52,6 @@
                     <label style="text-transform: capitalize">{{ select.label }}</label>
                     <nx-select [name]="select.label"
                                [items]="select.items"
-                               label="optionLabel"
                                [(ngModel)]="select.selected"
                                (ngModelChange)="modelChanged()"
                                [selected]="select.selected ? select.selected : null">
