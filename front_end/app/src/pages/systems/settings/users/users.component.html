@@ -9,7 +9,7 @@
                       translate>User disabled</span>
                 <nx-switch *ngIf="selectedUser.canBeEdited"
                            [ngModel]="selectedUser.isEnabled"
-                           (ngModelChange)="updateEnabled($event)" (change)="touched('disabled')"
+                           (ngModelChange)="updateEnabled($event);"
                 ></nx-switch>
             </div>
             <h2 class="users-email mb-2">{{selectedUser.email}}</h2>
@@ -25,7 +25,7 @@
                         [system]="system"
                         [roles]="system.accessRoles"
                         [selected]="selectedUser.role"
-                        (onSelected)="setPermission($event); touched($event)">
+                        (onSelected)="setPermission($event);">
                 </nx-permissions-select>
             </div>
             <div>

@@ -19,6 +19,7 @@ import { ClipboardModule }                              from 'ngx-clipboard';
 
 import { GenericModalContent, NxModalGenericComponent } from './generic/generic.component';
 import { NxDialogsService }                             from './dialogs.service';
+import { ApplyModalContent, NxModalApplyComponent }     from './apply/apply.component';
 
 @NgModule({
     imports        : [
@@ -40,6 +41,8 @@ import { NxDialogsService }                             from './dialogs.service'
         GenericModalContent,
         NxModalGenericComponent,
         NxModalAddUserComponent,
+        ApplyModalContent,
+        NxModalApplyComponent,
     ],
     entryComponents: [
         LoginModalContent,
@@ -52,11 +55,14 @@ import { NxDialogsService }                             from './dialogs.service'
         GenericModalContent,
         NxModalGenericComponent,
         NxModalAddUserComponent,
+        ApplyModalContent,
+        NxModalApplyComponent,
     ],
     providers      : [
         NxDialogsService,
         NxModalGenericComponent,
         NxModalAddUserComponent,
+        NxModalApplyComponent,
     ],
     exports        : []
 })

@@ -11,6 +11,7 @@ import { NxRegisterService }         from './register.service';
 import { NxSystemsService }          from './systems.service';
 import { NxAccountService }          from './account.service';
 import { NxUrlProtocolService }      from './url-protocol.service';
+import { NxApplyService }            from './apply.service';
 
 @NgModule({
     imports        : [
@@ -22,6 +23,7 @@ import { NxUrlProtocolService }      from './url-protocol.service';
     ],
     providers      : [
         NxAppStateService,
+        NxApplyService,
         NxLanguageProviderService,
         NxConfigService,
         NxUtilsService,

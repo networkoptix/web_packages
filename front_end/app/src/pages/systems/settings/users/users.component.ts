@@ -1,8 +1,6 @@
-import {
-    Component, Inject, OnDestroy, OnInit, ViewContainerRef, ComponentFactoryResolver
-} from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, ViewContainerRef } from '@angular/core';
 import { Location }                             from '@angular/common';
-import { ActivatedRoute }                       from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { NxConfigService }                      from '../../../../services/nx-config';
 
 import { NxPageService }             from '../../../../services/page.service';
@@ -13,7 +11,7 @@ import { NxMenuService }             from '../../../../components/menu/menu.serv
 import { NxAccountService }          from '../../../../services/account.service';
 import { NxProcessService }          from '../../../../services/process.service';
 import { NxSystem }                  from '../../../../services/system.service';
-import { SaveChanges }               from '../../../../components/save/save.component';
+import { NxApplyService }   from '../../../../services/apply.service';
 
 @Component({
     selector   : 'nx-system-user-component',
@@ -21,7 +19,7 @@ import { SaveChanges }               from '../../../../components/save/save.comp
     styleUrls  : ['users.component.scss'],
 })
 
-export class NxSystemUsersComponent extends SaveChanges implements OnInit, OnDestroy {
+export class NxSystemUsersComponent implements OnInit, OnDestroy {
     CONFIG: any = {};
     LANG: any = {};
     location: any;
@@ -33,6 +31,7 @@ export class NxSystemUsersComponent extends SaveChanges implements OnInit, OnDes
     selectedUser: any;
     systemAvailable: boolean;
     system: NxSystem;
+    viewContainerRef: ViewContainerRef;
 
     private setupDefaults() {
         this.CONFIG = this.configService.getConfig();
@@ -41,10 +40,10 @@ export class NxSystemUsersComponent extends SaveChanges implements OnInit, OnDes
         this.menuService.setSection('users');
     }
 
-    constructor(@Inject(ComponentFactoryResolver) factoryResolver,
-                @Inject(ViewContainerRef) viewContainerRef,
+    constructor(@Inject(ViewContainerRef) viewContainerRef,
                 private route: ActivatedRoute,
                 private accountService: NxAccountService,
+                private applyService: NxApplyService,
                 private configService: NxConfigService,
                 private language: NxLanguageProviderService,
                 private pageService: NxPageService,
@@ -53,9 +52,9 @@ export class NxSystemUsersComponent extends SaveChanges implements OnInit, OnDes
                 private menuService: NxMenuService,
                 private processService: NxProcessService,
                 location: Location) {
-        super(factoryResolver, viewContainerRef);
         this.location = location;
         this.setupDefaults();
+        this.viewContainerRef = viewContainerRef;
     }
 
     ngOnInit(): void {
@@ -80,12 +79,12 @@ export class NxSystemUsersComponent extends SaveChanges implements OnInit, OnDes
             return this.system.saveUser(this.selectedUser, this.selectedUser.role);
         }, {}).then(() => {
             this.locked[this.selectedUser.email] = false;
+            this.applyService.reset();
             return this.system.getUsers();
         });
 
-
         this.init();
-        this.setSaveFunction(this.editUser);
+        this.applyService.initPageWatcher(this.viewContainerRef, this.editUser, () => {});
     }
 
     init(): void {
@@ -146,28 +145,31 @@ export class NxSystemUsersComponent extends SaveChanges implements OnInit, OnDes
 
     setUser() {
         if (this.system && this.system.users.length > 0) {
+            let user;
             if (this.paramUser) {
-                this.selectedUser = this.system.users.filter((user: any) => {
-                    if (user.id.replace(/{|}/g, '') === this.paramUser) {
-                        return true;
-                    }
-                })[0];
+                 user = this.system.users.find((user: any) => {
+                    return user.id.replace(/{|}/g, '') === this.paramUser;
+                });
             }
-            if (typeof(this.selectedUser) === 'undefined') {
-                this.selectedUser = this.system.users[0];
+            if (typeof(user) === 'undefined') {
+                user = this.system.users[0];
             }
 
             // If there's no users skip setting section and permissions
-            if (typeof(this.selectedUser) === 'undefined') {
+            if (typeof(user) === 'undefined') {
                 return;
             }
+            this.selectedUser = {... user};
             this.menuService.setSubSection(this.selectedUser.id.replace(/{|}/g, ''));
             this.setPermission(this.selectedUser.role);
-            this.reset();
+            this.applyService.reset();
         }
     }
 
     setPermission(role: any) {
+        if (role !== this.selectedUser.role) {
+            this.applyService.touched();
+        }
         const userRole = role && role.name ? role.name : this.selectedUser.accessRole;
         this.accessDescription = this.LANG.accessRoles[userRole] ?
                 this.LANG.accessRoles[userRole].description :
@@ -176,6 +178,9 @@ export class NxSystemUsersComponent extends SaveChanges implements OnInit, OnDes
     }
 
     updateEnabled(state) {
+        if (this.selectedUser.isEnabled !== state) {
+            this.applyService.touched();
+        }
         this.selectedUser.isEnabled = state;
     }
 }
