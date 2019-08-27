@@ -2,14 +2,14 @@
 
 <div *ngIf="system">
     <div *ngIf="!system.forbidden"
-         class="d-flex mt-3 m-0 pl-3" style="max-width: 1440px; min-width: 991px">
-        <div class="p-0" style="width: 350px;">
+         class="d-flex mt-3 m-0 pl-3" style="max-width: 1440px;">
+        <div class="p-0 col-3" style="width: 350px;min-width: 120px">
             <nx-system-merge></nx-system-merge>
             <nx-menu [content]="content"></nx-menu>
 
         </div>
 
-        <div class="col-lg-8 pl-3" style="flex-shrink: 12;">
+        <div class="col-9 pl-3 pr-3" style="max-width: 700px">
             <router-outlet></router-outlet>
             <div class="">
                 <nx-footer></nx-footer>
