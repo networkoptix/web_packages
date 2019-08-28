@@ -68,6 +68,7 @@ export class NxApplyService {
                     this.locked = false;
                     setTimeout(() => {
                         this.router.navigateByUrl(next).catch((error) => {});
+                        this.reset();
                     });
                 }, (reason) => {
                     console.log(reason);

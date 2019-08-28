@@ -79,8 +79,11 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             return this.system.saveUser(this.selectedUser, this.selectedUser.role);
         }, {}).then(() => {
             this.locked[this.selectedUser.email] = false;
-            this.applyService.reset();
-            return this.system.getUsers();
+            return this.system.getUsers(true).then(_ => {
+                setTimeout(_ => {
+                    this.applyService.reset();
+                });
+            });
         });
 
         this.init();
@@ -167,7 +170,9 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             this.selectedUser = {... user};
             this.menuService.setSubSection(this.selectedUser.id.replace(/{|}/g, ''));
             this.setPermission(this.selectedUser.role);
-            this.applyService.reset();
+            setTimeout(() => {
+                this.applyService.reset();
+            });
         }
     }
 

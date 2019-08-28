@@ -416,6 +416,7 @@ export class NxSystem extends System implements OnDestroy {
         return this.mediaserver.saveUser(user).toPromise().then((result) => {
             user.role = role;
             user.accessRole = accessRole;
+            return result;
         });
     }
 
