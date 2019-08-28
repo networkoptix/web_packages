@@ -8,7 +8,6 @@
 
 .ipvd {
     max-width : 1438px;
-    min-width : 550px;
     
     &.extended {
         max-width : 1551px;
@@ -66,27 +65,45 @@
     
                 &:nth-child(1) {
                     padding-left : 1rem;
-                    width : 175px;
+                    max-width : 175px;
+    
+                    .caption {
+                        div:first-of-type {
+                            width : 80%;
+                        }
+                    }
                 }
     
                 &.debug {
                     &:nth-child(1) {
-                        width : 130px;
+                        max-width : 130px;
                     }
                 }
 
                 &:nth-child(2) {
-                    width : 150px;
+                    max-width : 150px;
+    
+                    .caption {
+                        div:first-of-type {
+                            max-width : 80%;
+                        }
+                    }
                 }
     
                 &.debug {
                     &:nth-child(2) {
-                        width : 130px;
+                        max-width : 130px;
                     }
                 }
                 
                 &:nth-child(3) {
-                    width : 110px;
+                    max-width : 110px;
+    
+                    .caption {
+                        div:first-of-type {
+                            width : 80%;
+                        }
+                    }
                 }
     
                 &:nth-child(4) {

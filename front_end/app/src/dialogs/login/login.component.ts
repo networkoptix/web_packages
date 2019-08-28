@@ -3,9 +3,7 @@ import {
     Input, ViewChild, Renderer2
 }                                    from '@angular/core';
 import {
-    DOCUMENT, Location,
-    LocationStrategy,
-    PathLocationStrategy
+    DOCUMENT, Location
 }                                    from '@angular/common';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
 import { NxConfigService }           from '../../services/nx-config';
@@ -161,23 +159,22 @@ export class LoginModalContent implements OnInit {
             }
         });
         this.login.then(() => {
+            this.activeModal.close();
             if (this.keepPage) {
                 if (this.location.path() === '') {
-                    // TODO: Repace this once 'register' page is moved to A5
-                    // AJS and A5 routers freak out about route change *****
-                    // this.location.go(this.config.redirectAuthorised);
-                    this.document.location.href = this.CONFIG.redirectAuthorised;
+                    this.location.go(this.CONFIG.redirectAuthorised);
+                } else {
+                    // TODO: remove window reload once we separate session state from account service
+                    window.location.reload();
+                    // this.location.go(this.location.path());
                 }
             } else if (this.next) {
                 // sanitize this.next
                 this.next = NxUtilsService.getRelativeLocation(this.next);
-                this.document.location.href = this.next;
+                this.location.go(this.next);
             } else {
                 setTimeout(() => {
-                    // TODO: Repace this once 'register' page is moved to A5
-                    // AJS and A5 routers freak out about route change *****
-                    // this.location.go(this.config.redirectAuthorised);
-                    this.document.location.href = this.CONFIG.redirectAuthorised;
+                    this.location.go(this.CONFIG.redirectAuthorised);
                 });
             }
         });
@@ -186,10 +183,7 @@ export class LoginModalContent implements OnInit {
     close() {
         // prevent unnecessary reload
         if (!this.keepPage) { // && this.accountService.getEmail() === undefined) {
-            // TODO: Repace this once 'register' page is moved to A5
-            // AJS and A5 routers freak out about route change *****
-            // this.location.go(this.config.redirectUnauthorised);
-            this.document.location.href = this.CONFIG.redirectUnauthorised;
+            this.location.go(this.CONFIG.redirectUnauthorised);
         }
 
         this.activeModal.close('canceled');

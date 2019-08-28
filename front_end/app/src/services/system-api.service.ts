@@ -457,15 +457,22 @@ class NxSystemAPI {
 export class NxSystemAPIService {
     CONFIG: any;
     location: any;
+    systemConnections: { [key: string]: NxSystemAPI };
 
     constructor(private http: HttpClient,
                 private config: NxConfigService,
                 location: Location) {
         this.location = location;
         this.CONFIG = this.config.getConfig();
+        this.systemConnections = {};
     }
 
     createConnection(user, systemId, serverId, unauthorizedCallback) {
+        if (systemId in this.systemConnections) {
+            return this.systemConnections[systemId];
+        } else if (serverId in this.systemConnections) {
+            return this.systemConnections[serverId];
+        }
         return new NxSystemAPI(this.http, this.CONFIG, this.location, user, systemId, serverId, unauthorizedCallback);
     }
 }

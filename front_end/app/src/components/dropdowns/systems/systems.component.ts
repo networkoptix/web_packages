@@ -26,8 +26,7 @@ export class NxSystemsDropdown implements OnInit, OnChanges {
     params: any;
     show: boolean;
 
-    constructor(@Inject('languageService') private language: any,
-                private configService: NxConfigService,
+    constructor(private configService: NxConfigService,
                 private location: Location,
                 private route: ActivatedRoute) {
 

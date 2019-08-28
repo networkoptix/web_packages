@@ -79,6 +79,12 @@ export class NxCloudApiService {
         });
     }
 
+    sendMessage(type, product, message, userName?, userEmail?) {
+        return this.http.post(this.CONFIG.apiBase + '/feedback', {
+            message, product, type, userName, userEmail
+        });
+    }
+
     systems (systemId?: string): Observable<any> {
         if (systemId) {
             return this.http.get(this.CONFIG.apiBase + '/systems/' + systemId);

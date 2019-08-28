@@ -1,6 +1,5 @@
 import {
-    Component, Inject,
-    OnDestroy, OnInit
+    Component, OnDestroy, OnInit
 }                                    from '@angular/core';
 import { Location }                  from '@angular/common';
 import { ActivatedRoute }            from '@angular/router';
@@ -12,6 +11,8 @@ import { NxLanguageProviderService } from '../../../../services/nx-language-prov
 import { NxMenuService }             from '../../../../components/menu/menu.service';
 import { NxSystemsService }          from '../../../../services/systems.service';
 import { NxAccountService }          from '../../../../services/account.service';
+import { NxProcessService }          from '../../../../services/process.service';
+import { NxSystem }                  from '../../../../services/system.service';
 
 @Component({
     selector   : 'nx-system-admin-component',
@@ -22,17 +23,14 @@ import { NxAccountService }          from '../../../../services/account.service'
 export class NxSystemAdminComponent implements OnInit, OnDestroy {
     CONFIG: any = {};
     LANG: any = {};
-    system: any;
+    system: NxSystem;
     systems: any;
     location: any;
 
     userDisconnectSystem: any;
     deletingSystem: any;
     userRole: string;
-    // isMaster: boolean;
-    // mergeTargetSystem: boolean;
-    // currentlyMerging: boolean;
-    // canMerge: boolean;
+    currentlyMerging: boolean;
     debugMode: boolean;
     betaMode: boolean;
 
@@ -45,7 +43,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     }
 
     constructor(private accountService: NxAccountService,
-                @Inject('process') private process: any,
+                private processService: NxProcessService,
                 private route: ActivatedRoute,
                 private configService: NxConfigService,
                 private language: NxLanguageProviderService,
@@ -77,12 +75,12 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                     if (system.accessRole in this.LANG.accessRoles) {
                         this.userRole = this.LANG.accessRoles[system.accessRole].label;
                     }
-                    this.deletingSystem = this.process.init(() => {
+                    this.deletingSystem = this.processService.createProcess(() => {
                         return this.system.deleteFromCurrentAccount();
                     }, {
                         successMessage: this.LANG.system.successDeleted.replace('{{systemName}}', this.system.info.name),
                         errorPrefix   : this.LANG.errorCodes.cantUnshareWithMeSystemPrefix
-                    }).then(this.updateAndGoToSystems);
+                    }).then(() => this.updateAndGoToSystems(), (error) => error);
                 }
             });
 
@@ -111,7 +109,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             .forceUpdateSystems()
             .subscribe(() => {
                 setTimeout(() => {
-                    this.location.path('/systems');
+                    window.location.href = '/systems';
                 });
             });
     }
@@ -144,7 +142,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     mergeSystems() {
         this.systems = this.systemsService.getMySystems(this.accountService.getEmail(), this.system.id);
 
-        this.system.currentlyMerging = true;
+        this.currentlyMerging = true;
         this.settingsService.setSystem(this.system);
 
         return this.dialogs
@@ -173,10 +171,10 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                                this.LANG.merging.mergeFailedTitle,
                                this.LANG.dialogs.okButton,
                                'btn-primary',
-                               undefined);
+                               undefined).catch(() => {});
                    })
                    .finally(() => {
-                       this.system.currentlyMerging = false;
+                       this.currentlyMerging = false;
                        this.settingsService.setSystem(this.system);
                    });
     }

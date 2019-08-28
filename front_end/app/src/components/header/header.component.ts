@@ -10,6 +10,7 @@ import { NxConfigService }   from '../../services/nx-config';
 import { NxAppStateService } from '../../services/nx-app-state.service';
 import { NxAccountService }  from '../../services/account.service';
 import { NxDialogsService }  from '../../dialogs/dialogs.service';
+import { NxSessionService }  from '../../services/session.service';
 import { NxSystemsService }  from '../../services/systems.service';
 import { WINDOW }            from '../../services/window-provider';
 
@@ -39,6 +40,7 @@ import { WINDOW }            from '../../services/window-provider';
                 private systemsService: NxSystemsService,
                 private dialogs: NxDialogsService,
                 private accountService: NxAccountService,
+                private sessionService: NxSessionService,
                 private router: Router,
     ) {
         this.CONFIG = this._config.getConfig();
@@ -78,7 +80,7 @@ import { WINDOW }            from '../../services/window-provider';
                   }
               });
 
-        this.accountService.loginStateSubject.subscribe((loginState) => {
+        this.sessionService.loginStateSubject.subscribe((loginState) => {
             if (loginState) {
                 this.renderer.removeClass(document.body, 'loading');
                 this.renderer.removeClass(document.body, 'anonymous');

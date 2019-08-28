@@ -1,6 +1,6 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, ViewContainerRef } from '@angular/core';
 import { Location }                             from '@angular/common';
-import { ActivatedRoute }                       from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { NxConfigService }                      from '../../../../services/nx-config';
 
 import { NxPageService }             from '../../../../services/page.service';
@@ -10,11 +10,13 @@ import { NxLanguageProviderService } from '../../../../services/nx-language-prov
 import { NxMenuService }             from '../../../../components/menu/menu.service';
 import { NxAccountService }          from '../../../../services/account.service';
 import { NxProcessService }          from '../../../../services/process.service';
+import { NxSystem }                  from '../../../../services/system.service';
+import { NxApplyService }   from '../../../../services/apply.service';
 
 @Component({
     selector   : 'nx-system-user-component',
     templateUrl: 'users.component.html',
-    styleUrls  : ['users.component.scss']
+    styleUrls  : ['users.component.scss'],
 })
 
 export class NxSystemUsersComponent implements OnInit, OnDestroy {
@@ -23,11 +25,13 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
     location: any;
     paramUser: any;
     accessDescription: string;
+    editUser: any;
     locked: any;
     removingUserProcess: any;
     selectedUser: any;
     systemAvailable: boolean;
-    system: any;
+    system: NxSystem;
+    viewContainerRef: ViewContainerRef;
 
     private setupDefaults() {
         this.CONFIG = this.configService.getConfig();
@@ -36,8 +40,10 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         this.menuService.setSection('users');
     }
 
-    constructor(private route: ActivatedRoute,
+    constructor(@Inject(ViewContainerRef) viewContainerRef,
+                private route: ActivatedRoute,
                 private accountService: NxAccountService,
+                private applyService: NxApplyService,
                 private configService: NxConfigService,
                 private language: NxLanguageProviderService,
                 private pageService: NxPageService,
@@ -46,9 +52,9 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 private menuService: NxMenuService,
                 private processService: NxProcessService,
                 location: Location) {
-
         this.location = location;
         this.setupDefaults();
+        this.viewContainerRef = viewContainerRef;
     }
 
     ngOnInit(): void {
@@ -65,8 +71,25 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 }
             });
 
+        this.editUser = this.processService.createProcess(() => {
+            if (this.locked[this.selectedUser.email]) {
+                return;
+            }
+            this.locked[this.selectedUser.email] = true;
+            return this.system.saveUser(this.selectedUser, this.selectedUser.role);
+        }, {}).then(() => {
+            this.locked[this.selectedUser.email] = false;
+            this.applyService.reset();
+            return this.system.getUsers();
+        });
 
         this.init();
+        this.applyService.initPageWatcher(this.viewContainerRef, this.editUser, () => {
+            const user = this.system.users.find(user => {
+                return user.id === this.selectedUser.id;
+            });
+            this.setPermission(user && user.role);
+        });
     }
 
     init(): void {
@@ -94,27 +117,6 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
 
-    }
-
-    addUser() {
-        // Call share dialog, run process inside
-        this.settingsService.addUser().then(() => {});
-    }
-
-    editShare(user) {
-        this.selectedUser = user;
-        // Pass user inside
-        if (this.locked[user.email]) {
-            return;
-        }
-        this.locked[user.email] = true;
-
-        return this.dialogs
-                   .addUser(this.accountService, this.system, user)
-                   .then(this.settingsService.loadUsers)
-                   .finally(() => {
-                       this.locked[user.email] = false;
-                   });
     }
 
     removeUser(user) {
@@ -148,33 +150,42 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
 
     setUser() {
         if (this.system && this.system.users.length > 0) {
+            let user;
             if (this.paramUser) {
-                this.selectedUser = this.system.users.filter((user: any) => {
-                    if (user.id.replace(/{|}/g, '') === this.paramUser) {
-                        return true;
-                    }
-                })[0];
+                 user = this.system.users.find((user: any) => {
+                    return user.id.replace(/{|}/g, '') === this.paramUser;
+                });
             }
-            if (typeof(this.selectedUser) === 'undefined') {
-                this.selectedUser = this.system.users[0];
+            if (typeof(user) === 'undefined') {
+                user = this.system.users[0];
             }
 
             // If there's no users skip setting section and permissions
-            if (typeof(this.selectedUser) === 'undefined') {
+            if (typeof(user) === 'undefined') {
                 return;
             }
+            this.selectedUser = {... user};
             this.menuService.setSubSection(this.selectedUser.id.replace(/{|}/g, ''));
             this.setPermission(this.selectedUser.role);
+            this.applyService.reset();
         }
     }
 
     setPermission(role: any) {
+        if (role !== this.selectedUser.role) {
+            this.applyService.touched();
+        }
         const userRole = role && role.name ? role.name : this.selectedUser.accessRole;
         this.accessDescription = this.LANG.accessRoles[userRole] ?
                 this.LANG.accessRoles[userRole].description :
                 this.LANG.accessRoles.customRole.description;
+        this.selectedUser.role = role;
     }
+
     updateEnabled(state) {
+        if (this.selectedUser.isEnabled !== state) {
+            this.applyService.touched();
+        }
         this.selectedUser.isEnabled = state;
     }
 }

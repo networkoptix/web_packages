@@ -133,6 +133,13 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         };
 
         this.menuService
+            .selectedSectionSubject
+            .subscribe(selection => {
+                this.content.selectedSection = selection;
+                this.content = { ...this.content }; // trigger onChange
+            });
+
+       this.menuService
             .selectedSubSectionSubject
             .subscribe(selection => {
                 this.content.selectedSubSection = selection;
@@ -180,8 +187,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 },
             },
             errorPrefix: this.LANG.errorCodes.cantGetSystemInfoPrefix
-        });
-        this.gettingSystem.then(() => {
+        }).then(() => {
             this.gettingSystemUsers.run();
         });
 

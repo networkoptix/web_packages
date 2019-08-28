@@ -8,5 +8,5 @@
     <button class="btn"
             [ngClass]="process && process.processing ? 'processing' : buttonClass"
             [disabled]="buttonDisabled"
-            (click)="checkForm()">{{buttonText}}</button>
+            (click)="clickFn(); checkForm(); $event.stopPropagation();">{{buttonText}}</button>
 </div>

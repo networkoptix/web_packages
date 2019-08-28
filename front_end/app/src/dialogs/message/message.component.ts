@@ -4,7 +4,8 @@ import { EmailValidator, NgForm }                                               
 import { NxConfigService }                                                           from '../../services/nx-config';
 import { WINDOW }                                                                    from '../../services/window-provider';
 import { NxLanguageProviderService }                                                 from '../../services/nx-language-provider';
-import { NxAccountService }                                                          from '../../services/account.service';
+import { NxProcessService }                                                          from '../../services/process.service';
+import { NxCloudApiService }                                                         from '../../services/nx-cloud-api';
 
 
 export interface MessageParams {
@@ -52,8 +53,8 @@ export class MessageModalContent {
                 private renderer: Renderer2,
                 private language: NxLanguageProviderService,
                 private configService: NxConfigService,
-                @Inject('process') private process: any,
-                @Inject('cloudApiService') private cloudApi: any,
+                private processService: NxProcessService,
+                private cloudApiService: NxCloudApiService,
                 @Inject(WINDOW) private window: Window,
     ) {
         this.placeholder = '';
@@ -67,9 +68,9 @@ export class MessageModalContent {
         this.LANG = this.language.getTranslations();
 
         this.initForm();
-        this.sendMessage = this.process.init(() => {
+        this.sendMessage = this.processService.createProcess(() => {
             const product = this.data.productId || this.data.product;
-            return this.cloudApi.sendMessage(this.topic, product, this.message, this.userName, this.userEmail);
+            return this.cloudApiService.sendMessage(this.topic, product, this.message, this.userName, this.userEmail).toPromise();
         }, {
             successMessage: this.LANG.dialogs.message.sent
         }).then(() => {

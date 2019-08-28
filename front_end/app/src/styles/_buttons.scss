@@ -219,6 +219,10 @@ button, .btn {
         padding : 0;
     }
     
+    &:hover {
+        color: $light1;
+    }
+    
     .close-button {
         position        : absolute;
         right           : 0;
@@ -349,3 +353,4 @@ button, .btn {
         }
     }
 }
+

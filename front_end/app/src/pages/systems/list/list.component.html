@@ -38,7 +38,7 @@
 
                         <nx-process-button
                                 title="{{system.stateMessage}}"
-                                (click)="systemSelected = system; $event.stopPropagation();"
+                                [clickFn]="openInClient(system)"
                                 *ngIf="LANG.system && system.stateOfHealth == CONFIG.systemStatuses.onlineStatus"
                                 [process]="openClient"
                                 [buttonText]="(system) ? LANG.system.openClient : LANG.system.openClientNoSystem"
