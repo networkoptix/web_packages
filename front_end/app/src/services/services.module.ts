@@ -7,7 +7,7 @@ import { NxConfigService }           from './nx-config';
 import { NxAppStateService }         from './nx-app-state.service';
 import { NxUtilsService }            from './utils.service';
 import { NxPageService }             from './page.service';
-import { NxRegisterService }         from './register.service';
+import { NxRegisterService }         from '../pages/register/register.service';
 import { NxSystemsService }          from './systems.service';
 import { NxAccountService }          from './account.service';
 import { NxUrlProtocolService }      from './url-protocol.service';

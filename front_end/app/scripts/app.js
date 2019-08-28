@@ -114,7 +114,7 @@ window.L = {};
                             languageServiceProvider.setLanguage(response);
                         });
                 }
-
+                
                 var lang = languageServiceProvider.$get().lang;
                 
                 // For compatibility with legacy modules *****
