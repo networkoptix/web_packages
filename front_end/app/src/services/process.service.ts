@@ -37,7 +37,6 @@ class Process {
     /* process handlers */
     successHandler: any;
     errorHandler: any;
-    processHandler: any;
 
 
     constructor(CONFIG, LANG, sessionService, cloudApiService, toastService, caller, settings) {
@@ -75,8 +74,16 @@ class Process {
         this.finished = false;
 
         this.deferredPromise = this.createDeferredPromise();
-        this.deferredPromise.promise.then(this.successHandler, this.errorHandler, this.processHandler);
-        return this.caller().then((data) => {
+        this.deferredPromise.promise.then(this.successHandler, this.errorHandler);
+
+        /* There is a weird issue when executing a process that is passed into a modal.
+         * After the first execution then caller function becomes undefined when the run
+         * returns this.caller(). Wrapping it in a promise fixes the issue.
+         */
+        const wrapper = new Promise((resolve) => {
+            return resolve(this.caller());
+        });
+        return wrapper.then((data) => {
             this.processing = false;
             this.finished = true;
 
@@ -97,20 +104,18 @@ class Process {
                 }
                 this.deferredPromise.resolve(data);
             }
+            return;
         }, (error) => {
             if (error.error) {
                 error = error.error;
             }
             this.handleError(error);
-        }, (progress) => {
-            this.deferredPromise.notify(progress);
         });
     }
 
-    then(successHandler, errorHandler?, processHandler?) {
+    then(successHandler, errorHandler?) {
         this.successHandler = successHandler;
         this.errorHandler = errorHandler || (() => {});
-        this.processHandler = processHandler || (() => {});
         return this;
     }
 
