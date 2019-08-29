@@ -48,6 +48,7 @@ export class NxApplyService {
         this.lockedSubject.next(value);
     }
 
+    // Resets all watchers to undefined
     hardReset() {
         if (this.watchers) {
             this.watchers.forEach((watcher) => {
@@ -57,6 +58,7 @@ export class NxApplyService {
         this.locked = false;
     }
 
+    // Resets all watchers to their first value that wasn't undefined
     reset() {
         if (this.watchers) {
             this.watchers.forEach((watcher) => {
@@ -100,18 +102,18 @@ export class NxApplyService {
         });
     }
 
-    createComponent() {
+    private createComponent() {
         const compFactory = this.factoryResolver.resolveComponentFactory(NxApplyComponent);
         this.component.clear();
         this.applyComponentRef = this.component.createComponent(compFactory);
     }
 
-    setDiscardFunction(func: any) {
+    private setDiscardFunction(func: any) {
         this.discardFunction = func;
         (<NxApplyComponent>this.applyComponentRef.instance).discard = func;
     }
 
-    setSaveFunction(func: any) {
+    private setSaveFunction(func: any) {
         this.applyFunction = func;
         (<NxApplyComponent>this.applyComponentRef.instance).save = func;
     }
@@ -122,8 +124,7 @@ export class NxApplyService {
             return watcher.valueSubject.pipe(
                 distinctUntilChanged(),
                 filter((watcher) => watcher !== undefined));
-        }));
-        this.watchersSubscription.pipe(
+        })).pipe(
             skip(this.watchers.length)
         ).subscribe((res) => {
             this.touched();

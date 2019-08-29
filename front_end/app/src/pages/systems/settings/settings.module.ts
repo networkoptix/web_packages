@@ -22,11 +22,13 @@ import { ApplyActivateGuard, ApplyDeactivateGuard } from '../../../routeGuards/a
 const appRoutes: Routes = [
     // root path is handles by AJS for now
     {
-        path    : 'systems/:systemId', component: NxSystemSettingsComponent, canDeactivate: [ApplyDeactivateGuard],
+        path    : 'systems/:systemId', component: NxSystemSettingsComponent,
         children: [
             { path: '', component: NxSystemAdminComponent },
             { path: 'users', component: NxSystemUsersComponent },
-            { path: 'users/:userId', component: NxSystemUsersComponent, canActivate: [ApplyActivateGuard] },
+            { path: 'users/:userId', component: NxSystemUsersComponent,
+                canActivate: [ApplyActivateGuard], canDeactivate: [ApplyDeactivateGuard]
+            },
         ]
     }
 ];
