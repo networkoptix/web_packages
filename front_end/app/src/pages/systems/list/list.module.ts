@@ -12,6 +12,7 @@ import { NxSystemsListComponent } from './list.component';
 import { TranslateModule }     from '@ngx-translate/core';
 import { ComponentsModule }    from '../../../components/components.module';
 import { NxRegisterComponent } from '../../register/register.component';
+import { NxSettingsModule }    from '../settings/settings.module';
 // import { NxOverviewComponent }  from './overview/overview.component';
 // import { NxSetupComponent }     from './setup/setup.component';
 
@@ -22,7 +23,7 @@ const appRoutes: Routes = [
 ];
 
 @NgModule({
-    imports        : [
+    imports: [
         CommonModule,
         BrowserModule,
         UpgradeModule,
@@ -33,7 +34,8 @@ const appRoutes: Routes = [
         ComponentsModule,
         DirectivesModule,
 
-        RouterModule.forChild(appRoutes)
+        RouterModule.forChild(appRoutes),
+        NxSettingsModule
     ],
     providers      : [
     ],

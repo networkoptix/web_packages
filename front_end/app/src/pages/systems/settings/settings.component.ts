@@ -10,6 +10,7 @@ import { NxSettingsService } from './settings.service';
 import { NxMenuService }     from '../../../components/menu/menu.service';
 import { NxSystemService }   from '../../../services/system.service';
 import { NxSystemsService }        from '../../../services/systems.service';
+import { NxNoSystemsComponent }    from '../no-systems/no-systems.component';
 import { NxModalAddUserComponent } from '../../../dialogs/add-user/add-user.component';
 import { NxModalGenericComponent } from '../../../dialogs/generic/generic.component';
 import { NxAccountService }        from '../../../services/account.service';

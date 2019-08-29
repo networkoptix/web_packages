@@ -16,6 +16,7 @@ import { NxSystemUsersModule }         from './users/users.module';
 import { NxSystemMergeStatusModule }   from './merge-status/merge-status.module';
 import { NxSystemAdminComponent }      from './admin/admin.component';
 import { NxSystemUsersComponent }      from './users/users.component';
+import { NxNoSystemsComponent }        from '../no-systems/no-systems.component';
 import { ApplyGuard }                  from '../../../services/apply.service';
 
 const appRoutes: Routes = [
@@ -47,14 +48,16 @@ const appRoutes: Routes = [
     ],
     providers      : [ApplyGuard],
     declarations   : [
-        NxSystemSettingsComponent
+        NxSystemSettingsComponent,
+        NxNoSystemsComponent,
     ],
     bootstrap      : [],
     entryComponents: [
         NxSystemSettingsComponent
     ],
-    exports        : [
-        NxSystemSettingsComponent
+    exports: [
+        NxSystemSettingsComponent,
+        NxNoSystemsComponent
     ]
 })
 export class NxSettingsModule {
