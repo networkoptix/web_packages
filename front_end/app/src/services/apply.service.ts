@@ -1,10 +1,29 @@
 import { ComponentFactoryResolver, Injectable, ViewContainerRef } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, NavigationStart, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { filter, tap } from 'rxjs/operators';
+import { BehaviorSubject, merge } from 'rxjs';
+import { distinctUntilChanged, filter, skip } from 'rxjs/operators';
 import { NxDialogsService } from '../dialogs/dialogs.service';
 import { NxApplyComponent } from '../components/apply/apply.component';
 
+export class Watcher<T> {
+    originalValue: T;
+    valueSubject = new BehaviorSubject<T>(undefined);
+
+    get value() {
+        return this.valueSubject.getValue();
+    }
+    set value(data) {
+        if (this.value === undefined) {
+            this.originalValue = data;
+        }
+        if (this.value !== data) {
+            this.valueSubject.next(data);
+        }
+    }
+
+    reset() {
+        this.valueSubject.next(this.originalValue);
+    }
+}
 
 @Injectable({
     providedIn: 'root'
@@ -14,14 +33,13 @@ export class NxApplyService {
     applyFunction: any;
     component: ViewContainerRef;
     discardFunction: any;
-    lockedSubject = new BehaviorSubject<boolean>(undefined);
-    lockedSubscription: any;
+    private lockedSubject = new BehaviorSubject<boolean>(undefined);
+    private lockedSubscription: any;
+    private watchers: any;
+    private watchersSubscription: any;
 
     constructor(private factoryResolver: ComponentFactoryResolver,
-                private router: Router,
-                private dialogsService: NxDialogsService) {
-        this.initRouteListener();
-    }
+                private dialogsService: NxDialogsService) {}
 
     get locked() {
         return this.lockedSubject.getValue();
@@ -29,7 +47,22 @@ export class NxApplyService {
     set locked(value) {
         this.lockedSubject.next(value);
     }
+
+    hardReset() {
+        if (this.watchers) {
+            this.watchers.forEach((watcher) => {
+                watcher.value = undefined;
+            });
+        }
+        this.locked = false;
+    }
+
     reset() {
+        if (this.watchers) {
+            this.watchers.forEach((watcher) => {
+                watcher.reset();
+            });
+        }
         this.locked = false;
     }
 
@@ -37,43 +70,33 @@ export class NxApplyService {
         this.locked = true;
     }
 
-    initPageWatcher(component, saveFunction, discardFunction) {
+    initPageWatcher(component, saveFunction, discardFunction, watchers) {
         if (this.lockedSubscription) {
             this.lockedSubscription.unsubscribe();
         }
+        if (this.watchersSubscription) {
+            this.watchersSubscription.unsubscribe();
+        }
         this.component = component;
-        this.locked = false;
 
         this.createComponent();
         this.setSaveFunction(saveFunction);
         this.setDiscardFunction(discardFunction);
+        this.addWatchers(watchers);
         this.lockedSubscription = this.lockedSubject.subscribe((value) => {
             (<NxApplyComponent>this.applyComponentRef.instance).show = value;
         });
     }
 
-    initRouteListener() {
-        this.router.events.pipe(
-            tap((event) => {
-                // console.log(event);
-            }),
-            filter(event => event instanceof NavigationStart),
-        ).subscribe((route: NavigationStart) => {
-            const next = route.url;
-            if (this.locked) {
-                this.dialogsService.apply(this.applyFunction, this.discardFunction).then((status) => {
-                    if (status !== 'applied' && status !== 'discarded') {
-                        return;
-                    }
-                    this.locked = false;
-                    setTimeout(() => {
-                        this.router.navigateByUrl(next).catch((error) => {});
-                        this.reset();
-                    });
-                }, (reason) => {
-                    console.log(reason);
-                });
+    showDialog() {
+        return this.dialogsService.apply(this.applyFunction, this.discardFunction).then((status) => {
+            if (status !== 'applied' && status !== 'discarded') {
+                return false;
             }
+            this.reset();
+            return true;
+        }, () => {
+            return false;
         });
     }
 
@@ -92,16 +115,18 @@ export class NxApplyService {
         this.applyFunction = func;
         (<NxApplyComponent>this.applyComponentRef.instance).save = func;
     }
-}
 
-
-@Injectable()
-export class ApplyGuard implements CanActivate {
-    constructor(private applyService: NxApplyService) {}
-
-    canActivate(route: ActivatedRouteSnapshot,
-                state: RouterStateSnapshot
-    ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-        return ! this.applyService.locked;
+    private addWatchers(watchers: Watcher<any>[]) {
+        this.watchers = watchers;
+        this.watchersSubscription = merge(...watchers.map(watcher => {
+            return watcher.valueSubject.pipe(
+                distinctUntilChanged(),
+                filter((watcher) => watcher !== undefined));
+        }));
+        this.watchersSubscription.pipe(
+            skip(this.watchers.length)
+        ).subscribe((res) => {
+            this.touched();
+        });
     }
 }

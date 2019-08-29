@@ -17,16 +17,16 @@ import { NxSystemMergeStatusModule }   from './merge-status/merge-status.module'
 import { NxSystemAdminComponent }      from './admin/admin.component';
 import { NxSystemUsersComponent }      from './users/users.component';
 import { NxNoSystemsComponent }        from '../no-systems/no-systems.component';
-import { ApplyGuard }                  from '../../../services/apply.service';
+import { ApplyActivateGuard, ApplyDeactivateGuard } from '../../../routeGuards/applyGuard';
 
 const appRoutes: Routes = [
     // root path is handles by AJS for now
     {
-        path    : 'systems/:systemId', component: NxSystemSettingsComponent,
+        path    : 'systems/:systemId', component: NxSystemSettingsComponent, canDeactivate: [ApplyDeactivateGuard],
         children: [
             { path: '', component: NxSystemAdminComponent },
             { path: 'users', component: NxSystemUsersComponent },
-            { path: 'users/:userId', component: NxSystemUsersComponent, canActivate: [ApplyGuard] },
+            { path: 'users/:userId', component: NxSystemUsersComponent, canActivate: [ApplyActivateGuard] },
         ]
     }
 ];
@@ -46,7 +46,7 @@ const appRoutes: Routes = [
 
         RouterModule.forChild(appRoutes)
     ],
-    providers      : [ApplyGuard],
+    providers      : [ApplyActivateGuard, ApplyDeactivateGuard],
     declarations   : [
         NxSystemSettingsComponent,
         NxNoSystemsComponent,

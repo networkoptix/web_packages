@@ -11,7 +11,8 @@ import { NxMenuService }             from '../../../../components/menu/menu.serv
 import { NxAccountService }          from '../../../../services/account.service';
 import { NxProcessService }          from '../../../../services/process.service';
 import { NxSystem }                  from '../../../../services/system.service';
-import { NxApplyService }   from '../../../../services/apply.service';
+import { NxApplyService, Watcher }   from '../../../../services/apply.service';
+import { filter } from 'rxjs/operators';
 
 @Component({
     selector   : 'nx-system-user-component',
@@ -33,9 +34,11 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
     system: NxSystem;
     viewContainerRef: ViewContainerRef;
 
+    userEnabled = new Watcher<boolean>();
+    userRole = new Watcher<string>();
+
     private setupDefaults() {
         this.CONFIG = this.configService.getConfig();
-
         this.locked = {};
         this.menuService.setSection('users');
     }
@@ -53,8 +56,8 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 private processService: NxProcessService,
                 location: Location) {
         this.location = location;
-        this.setupDefaults();
         this.viewContainerRef = viewContainerRef;
+        this.setupDefaults();
     }
 
     ngOnInit(): void {
@@ -71,6 +74,26 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 }
             });
 
+        this.settingsService.systemSubject
+            .pipe(filter(data => data !== undefined))
+            .subscribe((system) => {
+                this.system = system;
+                this.systemAvailable = this.system.isAvailable && this.system.mergeInfo === undefined;
+                if (!this.selectedUser || !this.selectedUser.email) {
+                    this.setUser();
+                }
+            });
+
+        this.initProcesses();
+
+        this.applyService.initPageWatcher(this.viewContainerRef, this.editUser, () => {
+            this.selectedUser.isEnabled = this.userEnabled.originalValue;
+            this.selectedUser.role = this.system.accessRoles.find(role => role.name === this.userRole.originalValue);
+            this.applyService.reset();
+        }, [this.userEnabled, this.userRole]);
+    }
+
+    initProcesses(): void {
         this.editUser = this.processService.createProcess(() => {
             if (this.locked[this.selectedUser.email]) {
                 return;
@@ -86,26 +109,6 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             });
         });
 
-        this.init();
-        this.applyService.initPageWatcher(this.viewContainerRef, this.editUser, () => {
-            const user = this.system.users.find(user => {
-                return user.id === this.selectedUser.id;
-            });
-            this.setPermission(user && user.role);
-        });
-    }
-
-    init(): void {
-        this.CONFIG = this.configService.getConfig();
-        this.settingsService.systemSubject.subscribe((system) => {
-            this.system = system;
-            if (system) {
-                this.systemAvailable = this.system.isAvailable && this.system.mergeInfo === undefined;
-                if (!this.selectedUser || !this.selectedUser.email) {
-                    this.setUser();
-                }
-            }
-        });
         this.removingUserProcess = this.processService.createProcess(() => {
             return this.system.deleteUser(this.selectedUser);
         }, {
@@ -167,31 +170,26 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             if (typeof(user) === 'undefined') {
                 return;
             }
+            this.applyService.hardReset();
             this.selectedUser = {... user};
             this.menuService.setSubSection(this.selectedUser.id.replace(/{|}/g, ''));
             this.setPermission(this.selectedUser.role);
-            setTimeout(() => {
-                this.applyService.reset();
-            });
+            this.applyService.reset();
         }
     }
 
     setPermission(role: any) {
-        if (role !== this.selectedUser.role) {
-            this.applyService.touched();
-        }
         const userRole = role && role.name ? role.name : this.selectedUser.accessRole;
         this.accessDescription = this.LANG.accessRoles[userRole] ?
                 this.LANG.accessRoles[userRole].description :
                 this.LANG.accessRoles.customRole.description;
         this.selectedUser.role = role;
+        this.userRole.value = role.name;
     }
 
     updateEnabled(state) {
-        if (this.selectedUser.isEnabled !== state) {
-            this.applyService.touched();
-        }
         this.selectedUser.isEnabled = state;
+        this.userEnabled.value = state;
     }
 }
 
