@@ -58,7 +58,7 @@ IPVD landing page actions
     Click Element    ${IPVD DEVICES PANE}//div[contains(text(), '${IPVD DEV FILTER ENCODERS}')]
     Element Text Should Be    //ipvd/div/div[1]/nx-search/div/div/div[1]/div/div[2]/span[1]
     ...    ${IPVD ADV FILTER TYPE} – ${IPVD ADV TYPE ENCODER}
-    Element Text Should Be    ${IPVD TABLE FIRST ITEM}/td[3]    ${IPVD ADV TYPE ENCODER}
+    Element Text Should Be    ${IPVD TABLE FIRST ITEM}/td[3]    Encoder
     Validate Landing Page Objects are not Visible
 
     Log    Step 5 - Back to the landing page

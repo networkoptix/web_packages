@@ -1,6 +1,6 @@
 *** Settings ***
 Resource          ../ipvd_resource.robot
-Suite Setup       Open Browser and go to URL    ${url}/ipvd
+Suite Setup       Open IPVD Page
 Test Template     Test Submit Request Message
 Test Teardown     NONE
 Suite Teardown    Close All Browsers

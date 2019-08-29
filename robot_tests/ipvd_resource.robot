@@ -14,6 +14,10 @@ Go To IPVD Page with arguments
     Go To    ${url}/ipvd${urlParameters}
     Validate on IPVD page
 
+Open IPVD Page
+    Open Browser and go to URL    ${url}/ipvd
+    Validate on IPVD page
+
 Open IPVD Page and Log In
     Open Browser and go to URL    ${url}/ipvd
     Validate on IPVD page

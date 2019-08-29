@@ -1,6 +1,6 @@
 *** Settings ***
 Resource          ../ipvd_resource.robot
-Suite Setup       Open IPVD page and Log In
+Suite Setup       Open IPVD Page
 Test Template     Test Submit Feedback Message
 Test Teardown     NONE
 Suite Teardown    Close All Browsers
