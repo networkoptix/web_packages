@@ -22,5 +22,6 @@
     "COLOR LIGHT16 RGB"        :    "rgba(105, 135, 150, 1)",
     "ITUNES STORE LINK"        :    "https://apps.apple.com/eg/app/hd-witness/id1050899754",
     "PLAY STORE LINK"          :    "https://play.google.com/store/apps/details?id=com.networkoptix.nxwitness",
-    "IPVD VENDORS SHOWN"       :    "30"
+    "IPVD VENDORS SHOWN"       :    "30",
+    "SYSTEMS DROPDOWN SHOWN"   :    "12"
 }

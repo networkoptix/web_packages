@@ -1,7 +1,8 @@
 *** Settings ***
 Library           SeleniumLibrary    run_on_failure=Failure Tasks
-Library           NoptixImapLibrary/
 Library           String
+Library           Collections
+Library           NoptixImapLibrary/
 Library           NoptixLibrary/
 Resource          variables.robot
 Resource          ${variables_file}
@@ -423,3 +424,21 @@ Set Checkbox Value
     Should Not Be Empty    ${id}    'The specified checkbox element "${CHECKBOX ELEMENT}" does not have an id attribute and cannot be used with the Set Checkbox Value Keyword.'
     ${checked}    Get Checkbox Value    ${CHECKBOX ELEMENT}
     Run Keyword If    ${checked} != ${Desired Bool Value}    Execute Javascript    window.document.getElementById('${id}').click()
+
+Get Child WebElements
+    [arguments]    ${locator}
+    ${element}=   Get WebElement    ${locator}
+    ${children}=    Call Method
+    ...    ${element}
+    ...    find_elements
+    ...    by=xpath    value=child::*
+    [return]    ${children}
+
+Get Parent WebElement
+    [arguments]    ${locator}
+    ${element}=   Get WebElement    ${locator}
+    ${parent}=   Call Method
+    ...    ${element}
+    ...    find_element
+    ...    by=xpath    value=parent::*
+    [return]    ${parent}

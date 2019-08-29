@@ -262,8 +262,8 @@ ${IPVD ADV FILTERS MIN RES}           ${IPVD ADV FILTERS}//nx-select/../label[co
 ${IPVD ADV FILTERS MFRS}              ${IPVD ADV FILTERS}//nx-multi-select/../label[contains(text(),'${IPVD ADV FILTER MFRS}')]/..//button[1]
 ${IPVD ADV FILTERS TYPES}             ${IPVD ADV FILTERS}//nx-multi-select/../label[contains(text(),'${IPVD ADV FILTER TYPES}')]/..//button[1]
 ${IPVD ADV FILTERS ANALYTICS}         ${IPVD ADV FILTERS}//nx-multi-select/../label[contains(text(),'${IPVD ADV FILTER ANALYTICS}')]/..//button[1]
-${IPVD ADV FILTERS DROPDOWN MENU}     /../div[@class='dropdown-menu']
-${IPVD ADV FILTERS DROPDOWN MENU ITEMS}    ${IPVD ADV FILTERS DROPDOWN MENU}/ul/li
+${IPVD ADV FILTERS DROPDOWN MENU}     ${DROPDOWN MENU}
+${IPVD ADV FILTERS DROPDOWN MENU ITEMS}    ${DROPDOWN MENU ITEMS}
 #IPVD Advanced Filters Features
 ${IPVD ADV FEATURES}                  ${IPVD ADV FILTERS}//div/label[text()='Features']/..
 ${IPVD ADV FEATURES AUDIO}            ${IPVD ADV FEATURES}//nx-tag/div[contains(text(),'${IPVD ADV FEATURE AUDIO}') and not(contains(text(),'${IPVD ADV FEATURE 2-WAY AUDIO}'))]/..
@@ -350,6 +350,9 @@ ${MAC OS TAB}                         //a[@ng-click="select()"]//span[text()="Ma
 ${RELEASE NUMBER}                     //div[contains(@class,"active")]//div[@ng-repeat="release in activeBuilds"]//h1/b
 
 ${PRIVACY POLICY HEADER}              //h1[contains(text(),'Personal data and privacy policy')]
+
+${DROPDOWN MENU}                      /../div[@class='dropdown-menu']
+${DROPDOWN MENU ITEMS}                ${DROPDOWN MENU}/ul[@class='dropdown-menu--list']/li[@class='dropdown-item-container']
 
 #Password badges
 ${PASSWORD BADGE}                     //span[contains(@class,"badge")]
