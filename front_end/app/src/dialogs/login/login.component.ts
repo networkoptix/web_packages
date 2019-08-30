@@ -53,7 +53,7 @@ export class LoginModalContent implements OnInit {
     constructor(private processService: NxProcessService,
                 private cloudApiService: NxCloudApiService,
                 private localStorage: LocalStorageService,
-                public activeModal: NgbActiveModal,
+                private activeModal: NgbActiveModal,
                 private configService: NxConfigService,
                 private language: NxLanguageProviderService,
                 private genericModal: NxModalGenericComponent,

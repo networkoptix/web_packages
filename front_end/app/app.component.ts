@@ -124,6 +124,18 @@ export class AppComponent {
             // @ts-ignore
             this.CONFIG.cloudMerge = window.SETTINGS.cloudMerge;
         }
+        // @ts-ignore
+        this.CONFIG.viewsDir = 'static/lang_' + window.LANG.ajs.language + '/views/';
+        // @ts-ignore
+        this.CONFIG.viewsDirCommon = 'static/lang_' + window.LANG.ajs.language + '/web_common/views/';
+
+        // detect preview mode
+        if (window.location.href.indexOf('preview') >= 0) {
+            this.CONFIG.previewPath = 'preview';
+            this.CONFIG.viewsDir = this.CONFIG.previewPath + '/' + this.CONFIG.viewsDir;
+        }
+
+        this.CONFIG.showHeaderAndFooter = true;
     }
 
     public setTitle(newTitle: string) {

@@ -73,26 +73,12 @@ window.L = {};
                 }
                 
                 var CONFIG = nxConfigServiceProvider.$get().getConfig();
-
-                var appState = {
-                        viewsDir: 'static/views/', //'static/lang_' + lang + '/views/';
-                        previewPath: '',
-                        viewsDirCommon: 'static/web_common/views/',
-                        showHeaderAndFooter: true
-                    };
                 
                 if (window.LANG.ajs) {
                     languageServiceProvider.setLanguage(window.LANG.ajs);
                     // set local variables as providers cannot get values in config phase
-                    appState.viewsDir = 'static/lang_' + window.LANG.ajs.language + '/views/'; //'static/lang_' + lang + '/views/';
-                    appState.viewsDirCommon = 'static/lang_' + window.LANG.ajs.language + '/web_common/views/';
-    
-                    // detect preview mode
-                    var preview = window.location.href.indexOf('preview') >= 0;
-                    if (preview) {
-                        appState.viewsDir = 'preview/' + appState.viewsDir;
-                        appState.previewPath = 'preview';
-                    }
+                    // viewsDir, previewPath, viewsDirCommon and showHeaderAndFooter initialization
+                    // is moved to A8 app component
                 } else {
                     // Fallback to default language
     
@@ -120,8 +106,6 @@ window.L = {};
                 // For compatibility with legacy modules *****
                 window.L = lang;
                 window.Config = CONFIG;
-
-                angular.extend(window.Config, appState);
                 // *******************************************
 
                 $routeProvider
@@ -364,16 +348,15 @@ window.L = {};
                         controller: 'DebugCtrl'
                     })
                     .when('/login', {
-                        // TODO: revert when account service is moved to A7
-                        // template: '<landing-component></landing-component>'
-                        title: lang.pageTitles.login,
-                        templateUrl: CONFIG.viewsDir + 'startPage.html',
-                        controller: 'StartPageCtrl',
-                        resolve: {
-                            test: ['$route', function ($route) {
-                                $route.current.params.callLogin = true;
-                            }]
-                        }
+                        template: ''
+                        // title: lang.pageTitles.login,
+                        // templateUrl: CONFIG.viewsDir + 'startPage.html',
+                        // controller: 'StartPageCtrl',
+                        // resolve: {
+                        //     test: ['$route', function ($route) {
+                        //         $route.current.params.callLogin = true;
+                        //     }]
+                        // }
                     })
                     .when('/admin', {
                         resolve: {
@@ -432,11 +415,11 @@ window.L = {};
                         template: ''
                     })
                     .when('/', {
-                        // TODO: revert when account service is moved to A7
-                        // template: '<landing-component></landing-component>'
-                        title: ''/*lang.pageTitles.startPage*/,
-                        templateUrl: CONFIG.viewsDir + 'startPage.html',
-                        controller: 'StartPageCtrl'
+                        // // TODO: keep until we retire AJS
+                        template: '<landing-component></landing-component>'
+                        // title: ''/*lang.pageTitles.startPage*/,
+                        // templateUrl: CONFIG.viewsDir + 'startPage.html',
+                        // controller: 'StartPageCtrl'
                     })
                     .otherwise({
                         title: lang.pageTitles.pageNotFound,
