@@ -7,6 +7,11 @@ register = template.Library()
 
 
 @register.filter
+def portal_name(customization):
+    return get_cloud_portal_product(customization).name
+
+
+@register.filter
 def is_ImageField(field):
     return type(field.field).__name__ == "ImageField"
 
