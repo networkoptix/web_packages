@@ -14,6 +14,7 @@ export class NxLevel2ItemComponent implements OnInit {
     @Input() selected: boolean;
 
     itemPath: string;
+    isEnabled: boolean;
 
     constructor() {
     }
@@ -21,6 +22,7 @@ export class NxLevel2ItemComponent implements OnInit {
     ngOnInit() {
         this.itemPath = this.base;
         this.itemPath += (this.item.path !== '') ? '/' + this.item.path : '';
+        this.isEnabled = this.item.isEnabled === undefined ? true : this.item.isEnabled;
 
         if (this.item.additionalLabel) {
             this.item.label += '&nbsp;' + this.item.additionalLabel;

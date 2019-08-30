@@ -1,0 +1,90 @@
+<ng-container *ngIf="account.email; else preloader">
+    <div class="row d-flex align-items-start">
+        <div class="col-12 col-xxxl-6">
+            <nx-block>
+                <header>
+                    <span translate>Account Information</span>
+                </header>
+
+                <nx-section>
+                    <form #accountForm="ngForm" name="accountForm" class="form d-flex" novalidate>
+                        <div class="d-none d-md-block labels mr-2 align-top">
+                            <div class="label d-flex align-items-center form-group justify-content-end">
+                                <label for="firstName" class="d-inline-block m-0 text-right text-md-right control-label"
+                                       translate>First Name</label>
+                            </div>
+                            <div class="label d-flex align-items-center form-group justify-content-end">
+                                <label for="lastName" class="d-inline-block m-0 text-right text-md-right control-label"
+                                       translate>Last Name</label>
+                            </div>
+                        </div>
+
+                        <div class="inputs flex-grow-1 mr-2">
+                            <div class="form-group">
+                                <div class="d-block d-md-none">
+                                    <label for="firstName" class="control-label" translate>First Name</label>
+                                </div>
+                                <input type="text" class="form-control"
+                                       [ngModel]="account.first_name"
+                                       (ngModelChange)="changeFirstName($event)"
+                                       name="firstName" id="firstName" #firstName="ngModel"
+                                       maxlength="255"
+                                       required
+                                       autofocus>
+                                <div class="d-block d-md-none">
+                                    <span class="error-text" *ngIf="firstName.invalid && firstName.touched"
+                                          translate>First name is required</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="d-block d-md-none">
+                                    <label for="firstName" class="control-label" translate>Last Name</label>
+                                </div>
+                                <input type="text" class="form-control"
+                                       [ngModel]="account.last_name"
+                                       (ngModelChange)="changeLastName($event)"
+                                       name="lastName" id="lastName" #lastName="ngModel"
+                                       maxlength="255" required>
+                                <div class="d-block d-md-none">
+                                    <span class="error-text"
+                                          *ngIf="lastName.invalid && lastName.touched"
+                                          translate>Last name is required</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="errors d-none d-md-block mr-2 align-top">
+                            <div class="error form-group d-flex align-items-center">
+                                <span class="error-text"
+                                      *ngIf="firstName.invalid && firstName.touched"
+                                      translate>First name is required</span>
+                            </div>
+                            <div class="error form-group d-flex align-items-center">
+                                <span class="error-text"
+                                      *ngIf="lastName.invalid && lastName.touched"
+                                      translate>Last name is required</span>
+                            </div>
+                        </div>
+                    </form>
+                </nx-section>
+            </nx-block>
+        </div>
+
+        <div class="align-self-start col-12 col-xxxl-6 mt-3 mt-xxxl-0">
+            <nx-block>
+                <header>
+                    <span translate>Language</span>
+                </header>
+
+                <nx-section>
+                    <div class="col-sm-5 pl-0">
+                        <nx-language-select
+                        [ngModel]="langCode"
+                        (ngModelChange)="changeLanguage($event)"></nx-language-select>
+                    </div>
+                </nx-section>
+            </nx-block>
+        </div>
+    </div>
+</ng-container>
+
+<ng-template #preloader><nx-pre-loader></nx-pre-loader></ng-template>

@@ -10,6 +10,7 @@ import { LocalStorageService }       from 'ngx-store';
 import { NxProcessService }          from '../../services/process.service';
 import { NxCloudApiService }         from '../../services/nx-cloud-api';
 import { NxSystemsService }          from '../../services/systems.service';
+import { NxMenuService }             from '../../components/menu/menu.service';
 
 @Component({
     selector   : 'account',
@@ -22,8 +23,8 @@ export class NxAccountComponent implements OnInit {
     CONFIG: any;
     LANG: any;
 
-    passwordMode: any;
-    accountMode: any;
+    content: any = {};
+    menuReady = false;
 
     account: any = {};
     pass: any = {};
@@ -52,15 +53,13 @@ export class NxAccountComponent implements OnInit {
                 private dialogs: NxDialogsService,
                 private uriService: NxUriService,
                 private pageService: NxPageService,
+                private menuService: NxMenuService
     ) {
         this.setupDefaults();
     }
 
     ngOnInit(): void {
         const mode = this.route.snapshot.data.passwordMode;
-
-        this.accountMode = !mode;
-        this.passwordMode = mode;
 
         const title = (!mode) ? this.LANG.pageTitles.account : this.LANG.pageTitles.changePassword;
         this.pageService.setPageTitle(title);
@@ -85,6 +84,7 @@ export class NxAccountComponent implements OnInit {
                             .get()
                             .then((account) => {
                                 this.account = account;
+                                this.init();
                             });
 
                     })
@@ -100,6 +100,7 @@ export class NxAccountComponent implements OnInit {
                         .get()
                         .then((account) => {
                             this.account = account;
+                            this.init();
                         });
 
                 })
@@ -107,51 +108,42 @@ export class NxAccountComponent implements OnInit {
                     this.dialogs.login(this.accountService, true);
                 });
         }
-
-        if (this.localStorage && this.localStorage.get('langChanged')) {
-            this.localStorage.set('langChanged', false);
-            this.dialogs.notify(this.LANG.account.accountSavedSuccess, 'success', false);
-        }
-
-        this.save = this.processService.createProcess(() => {
-            return this.cloudApiService
-                       .accountPost(this.account)
-                       .then((result) => {
-                           if (this.language.getLang() !== this.account.language) {
-                               this.cloudApiService
-                                   .changeLanguage(this.account.language)
-                                   .then(() => {
-                                       this.localStorage.set('langChanged', true);
-                                       window.location.reload(); // reload window to catch new language
-                                   });
-                           } else {
-                               this.systemsService.forceUpdateSystems();
-                           }
-
-                           return result;
-                       });
-        }, {
-            successMessage : this.LANG.account.accountSavedSuccess,
-            errorPrefix    : this.LANG.errorCodes.cantChangeAccountPrefix,
-            logoutForbidden: true
-        });
-
-        this.changePassword = this.processService.createProcess(() => {
-            return this.cloudApiService
-                       .changePassword(this.pass.newPassword, this.pass.password);
-        }, {
-            errorCodes        : {
-                notAuthorized   : this.LANG.errorCodes.oldPasswordMistmatch,
-                wrongOldPassword: this.LANG.errorCodes.oldPasswordMistmatch
-            },
-            successMessage    : this.LANG.account.passwordChangedSuccess,
-            errorPrefix       : this.LANG.errorCodes.cantChangePasswordPrefix,
-            ignoreUnauthorized: true
-        });
     }
 
-    changeLanguage(langCode) {
-        this.account.language = langCode;
+    init(): void {
+        this.content = {
+            base: '/account',
+            selectedSection   : 'account',
+            selectedDetailsSection: '',
+            level1            : [
+                {
+                    id   : 'account',
+                    icon : 'glyphicon-user',
+                    label: this.account.email,
+                    path : '',
+                    level3: [
+                        {
+                            id: 'settings',
+                            label: 'Account Settings',
+                            path: ''
+                        },
+                        {
+                            id: 'password',
+                            label: 'Password',
+                            path: 'password'
+                        }
+                    ]
+                }
+            ]
+        };
+
+        this.menuService
+            .selectedDetailsSection
+            .subscribe(selection => {
+                this.content.selectedDetailsSection = selection;
+                this.content = {...this.content}; // trigger onChange
+                this.menuReady = true;
+            });
     }
 }
 
