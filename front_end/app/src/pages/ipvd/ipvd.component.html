@@ -72,7 +72,7 @@
     <div class="row px-3 m-0"
          *ngIf="vendors">
 
-        <p *ngIf="CONFIG.feedbackEnabled && LANG && LANG.ipvd">
+        <p *ngIf="CONFIG.feedbackEnabled && LANG && LANG.ipvd" dir="auto">
             <span [translate]="'ipvd.disclaimer'"
                   [translateParams]="{companyName: company, vmsName: vmsName}">
             </span>
