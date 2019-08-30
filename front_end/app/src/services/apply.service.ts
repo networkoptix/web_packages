@@ -35,6 +35,7 @@ export class NxApplyService {
     discardFunction: any;
     private lockedSubject = new BehaviorSubject<boolean>(undefined);
     private lockedSubscription: any;
+    popupActive = false;
     private watchers: any;
     private watchersSubscription: any;
 
@@ -91,6 +92,10 @@ export class NxApplyService {
     }
 
     showDialog() {
+        if (this.popupActive) {
+            return Promise.resolve(false);
+        }
+        this.popupActive = true;
         return this.dialogsService.apply(this.applyFunction, this.discardFunction).then((status) => {
             if (status !== 'applied' && status !== 'discarded') {
                 return false;
@@ -99,6 +104,8 @@ export class NxApplyService {
             return true;
         }, () => {
             return false;
+        }).finally(() => {
+            this.popupActive = false;
         });
     }
 
