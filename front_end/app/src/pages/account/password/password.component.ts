@@ -79,7 +79,6 @@ export class NxAccountPasswordComponent implements OnInit {
         this.applyService.initPageWatcher(this.viewContainerRef, this.changePassword, () => {
             this.form.reset();
             this.applyService.reset();
-            this.form.controls.newPassword.reset();
         }, Object.values(this.watchers));
 
         this.accountService
