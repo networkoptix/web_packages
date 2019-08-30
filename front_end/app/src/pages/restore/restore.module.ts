@@ -6,32 +6,44 @@ import { Resolve, RouterModule, Routes } from '@angular/router';
 import { FormsModule }                   from '@angular/forms';
 import { ComponentsModule }              from '../../components/components.module';
 
-import { NxActivateComponent } from './activate.component';
-import { TranslateModule }     from '@ngx-translate/core';
+import { DirectivesModule }   from '../../directives/directives.module';
+import { NxRestoreComponent } from './restore.component';
+import { TranslateDirective } from '@ngx-translate/core';
 
 export class ParamResolver implements Resolve<any> {
     constructor() {
     }
 
     resolve() {
-        return 'reactivating';
+        return 'restoring';
     }
 }
 
 @Injectable()
-export class ActivatedResolver implements Resolve<any> {
+export class SentResolver implements Resolve<any> {
     constructor() {
     }
 
     resolve() {
-        return 'activationSuccess';
+        return 'restoringSuccess';
+    }
+}
+
+@Injectable()
+export class SuccessResolver implements Resolve<any> {
+    constructor() {
+    }
+
+    resolve() {
+        return 'changeSuccess';
     }
 }
 
 const appRoutes: Routes = [
-    { path: 'activate', component: NxActivateComponent, resolve: { uriParam: ParamResolver} },
-    { path: 'activate/success', component: NxActivateComponent, resolve: { uriParam: ActivatedResolver } },
-    { path: 'activate/:code', component: NxActivateComponent }
+    { path: 'restore_password', component: NxRestoreComponent, resolve: { uriParam: ParamResolver} },
+    { path: 'restore_password/sent', component: NxRestoreComponent, resolve: { uriParam: SentResolver } },
+    { path: 'restore_password/success', component: NxRestoreComponent, resolve: { uriParam: SuccessResolver } },
+    { path: 'restore_password/:code', component: NxRestoreComponent }
 ];
 
 // TODO: Remove it after test
@@ -43,24 +55,24 @@ const appRoutes: Routes = [
         UpgradeModule,
         ComponentsModule,
         FormsModule,
-
         RouterModule.forChild(appRoutes),
-        TranslateModule
+        DirectivesModule
     ],
     providers      : [
         ParamResolver,
-        ActivatedResolver,
+        SentResolver,
+        SuccessResolver,
     ],
     declarations   : [
-        NxActivateComponent,
+        NxRestoreComponent,
     ],
     bootstrap      : [],
     entryComponents: [
-        NxActivateComponent
+        NxRestoreComponent
     ],
     exports        : [
-        NxActivateComponent
+        NxRestoreComponent
     ]
 })
-export class NxActivateModule {
+export class NxRestoreModule {
 }

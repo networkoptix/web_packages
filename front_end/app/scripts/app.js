@@ -126,26 +126,28 @@ window.L = {};
 
                 $routeProvider
                     .when('/register/success', {
-                        template: '<nx-register-component [uri-param]="uriParam"></nx-register-component>',
-                        controller: ['$scope', 'getParam', function ($scope, getParam) {
-                            $scope.uriParam = getParam;
-                        }],
-                        resolve: {
-                            getParam: [function () {
-                                return 'registerSuccess';
-                            }]
-                        }
+                        template: ''
+                        // template: '<nx-register-component [uri-param]="uriParam"></nx-register-component>',
+                        // controller: ['$scope', 'getParam', function ($scope, getParam) {
+                        //     $scope.uriParam = getParam;
+                        // }],
+                        // resolve: {
+                        //     getParam: [function () {
+                        //         return 'registerSuccess';
+                        //     }]
+                        // }
                     })
                     .when('/register/successActivated', {
-                        template: '<nx-register-component [uri-param]="uriParam"></nx-register-component>',
-                        controller: ['$scope', 'getParam', function ($scope, getParam) {
-                            $scope.uriParam = getParam;
-                        }],
-                        resolve: {
-                            getParam: [function () {
-                                return 'successActivated';
-                            }]
-                        }
+                        template: ''
+                        // template: '<nx-register-component [uri-param]="uriParam"></nx-register-component>',
+                        // controller: ['$scope', 'getParam', function ($scope, getParam) {
+                        //     $scope.uriParam = getParam;
+                        // }],
+                        // resolve: {
+                        //     getParam: [function () {
+                        //         return 'successActivated';
+                        //     }]
+                        // }
                         // templateUrl: CONFIG.viewsDir + 'regActions.html',
                         // controller: 'RegisterCtrl',
                         // resolve: {
@@ -156,19 +158,20 @@ window.L = {};
                         // }
                     })
                     .when('/register/:code', {
-                        template: '<nx-register-component [uri-param]="getParam" [uri-param-code]="getCode"></nx-register-component>',
-                        controller: ['$scope', 'getParam', function ($scope, getParam) {
-                            $scope.uriParam = getParam;
-                            $scope.uriParamCode = getCode;
-                        }],
-                        resolve: {
-                            getParam: [function () {
-                                return 'code';
-                            }],
-                            getCode: ['$route', function ($route) {
-                                return $route.current.params.code;
-                            }]
-                        }
+                        template: ''
+                        // template: '<nx-register-component [uri-param]="getParam" [uri-param-code]="getCode"></nx-register-component>',
+                        // controller: ['$scope', 'getParam', function ($scope, getParam) {
+                        //     $scope.uriParam = getParam;
+                        //     $scope.uriParamCode = getCode;
+                        // }],
+                        // resolve: {
+                        //     getParam: [function () {
+                        //         return 'code';
+                        //     }],
+                        //     getCode: ['$route', function ($route) {
+                        //         return $route.current.params.code;
+                        //     }]
+                        // }
                         // templateUrl: CONFIG.viewsDir + 'regActions.html',
                         // controller: 'RegisterCtrl'
                     })
@@ -177,7 +180,8 @@ window.L = {};
                     //     controller: 'RegisterCtrl'
                     // })
                     .when('/register', {
-                        template: '<nx-register-component [uri-param]="register"></nx-register-component>'
+                        template: ''
+                        // template: '<nx-register-component [uri-param]="register"></nx-register-component>'
                     })
                     .when('/account/password', {
                         template: ''
@@ -282,59 +286,74 @@ window.L = {};
                             }]
                         }
                     })
+                    
+                    
                     .when('/activate', {
-                        templateUrl: CONFIG.viewsDir + 'activeActions.html',
-                        controller: 'ActivateRestoreCtrl',
-                        resolve: {
-                            test: ['$route', function ($route) {
-                                $route.current.params.reactivating = true;
-                            }]
-                        }
+                        template: ''
+                        // templateUrl: CONFIG.viewsDir + 'activeActions.html',
+                        // controller: 'ActivateRestoreCtrl',
+                        // resolve: {
+                        //     test: ['$route', function ($route) {
+                        //         $route.current.params.reactivating = true;
+                        //     }]
+                        // }
                     })
                     .when('/activate/success', {
-                        templateUrl: CONFIG.viewsDir + 'activeActions.html',
-                        controller: 'ActivateRestoreCtrl',
-                        resolve: {
-                            test: ['$route', function ($route) {
-                                $route.current.params.activationSuccess = true;
-                            }]
-                        }
+                        template: ''
+                        // templateUrl: CONFIG.viewsDir + 'activeActions.html',
+                        // controller: 'ActivateRestoreCtrl',
+                        // resolve: {
+                        //     test: ['$route', function ($route) {
+                        //         $route.current.params.activationSuccess = true;
+                        //     }]
+                        // }
                     })
                     .when('/activate/:activateCode', {
-                        templateUrl: CONFIG.viewsDir + 'activeActions.html',
-                        controller: 'ActivateRestoreCtrl'
+                        template: ''
+                        // templateUrl: CONFIG.viewsDir + 'activeActions.html',
+                        // controller: 'ActivateRestoreCtrl'
                     })
+                    
+                    
+                    
                     .when('/restore_password', {
-                        templateUrl: CONFIG.viewsDir + 'activeActions.html',
-                        controller: 'ActivateRestoreCtrl',
-                        resolve: {
-                            test: ['$route', function ($route) {
-                                $route.current.params.restoring = true;
-                            }]
-                        }
+                        template: ''
+                        // templateUrl: CONFIG.viewsDir + 'activeActions.html',
+                        // controller: 'ActivateRestoreCtrl',
+                        // resolve: {
+                        //     test: ['$route', function ($route) {
+                        //         $route.current.params.restoring = true;
+                        //     }]
+                        // }
                     })
                     .when('/restore_password/sent', {
-                        templateUrl: CONFIG.viewsDir + 'activeActions.html',
-                        controller: 'ActivateRestoreCtrl',
-                        resolve: {
-                            test: ['$route', function ($route) {
-                                $route.current.params.restoringSuccess = true;
-                            }]
-                        }
+                        template: ''
+                        // templateUrl: CONFIG.viewsDir + 'activeActions.html',
+                        // controller: 'ActivateRestoreCtrl',
+                        // resolve: {
+                        //     test: ['$route', function ($route) {
+                        //         $route.current.params.restoringSuccess = true;
+                        //     }]
+                        // }
                     })
                     .when('/restore_password/success', {
-                        templateUrl: CONFIG.viewsDir + 'activeActions.html',
-                        controller: 'ActivateRestoreCtrl',
-                        resolve: {
-                            test: ['$route', function ($route) {
-                                $route.current.params.changeSuccess = true;
-                            }]
-                        }
+                        template: ''
+                        // templateUrl: CONFIG.viewsDir + 'activeActions.html',
+                        // controller: 'ActivateRestoreCtrl',
+                        // resolve: {
+                        //     test: ['$route', function ($route) {
+                        //         $route.current.params.changeSuccess = true;
+                        //     }]
+                        // }
                     })
                     .when('/restore_password/:restoreCode', {
-                        templateUrl: CONFIG.viewsDir + 'activeActions.html',
-                        controller: 'ActivateRestoreCtrl'
+                        template: ''
+                        // templateUrl: CONFIG.viewsDir + 'activeActions.html',
+                        // controller: 'ActivateRestoreCtrl'
                     })
+                    
+                    
+                    
                     .when('/content/:page', {
                         title: '' /*lang.pageTitles.contentPage*/,
                         templateUrl: CONFIG.viewsDir + 'static.html',

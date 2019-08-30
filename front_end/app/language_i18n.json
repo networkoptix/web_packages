@@ -102,6 +102,7 @@
     "NO_SYSTEMS_GOTO_ADMINISTRATION": "Go to the \"Cloud\" tab in the \"System Administration\" dialog",
     "NO_SYSTEMS_LOGIN": "Log in to your System using %VMS_NAME%",
     "NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "You have no Systems connected to %CLOUD_NAME%",
+    "New Password": "New Password",
     "New password": "New password",
     "Nothing Found": "Nothing Found",
     "OK": "OK",
@@ -112,6 +113,7 @@
     "PTZ": "PTZ",
     "Password": "Password",
     "Password is required": "Password is required",
+    "Password successfully saved": "Password successfully saved",
     "Password:": "Password:",
     "Please enter a valid Email": "Please enter a valid Email",
     "Please review and agree to the Terms and Conditions and Privacy policy in order to proceed": "Please review and agree to the Terms and Conditions and Privacy policy in order to proceed",
@@ -130,6 +132,7 @@
     "Secondary Stream": "Secondary Stream",
     "Send": "Send",
     "Send feedback about this device": "Send feedback about this device",
+    "Set New Password": "Set New Password",
     "Settings": "Settings",
     "Show All": "Show All",
     "Some of your servers don't support cloud System merge because of outdated software version.": "Some of your servers don't support cloud System merge because of outdated software version.",
@@ -238,6 +241,12 @@
         "newPasswordLabel": "New password",
         "passwordChangedSuccess": "Your account is successfully saved",
         "saveChanges": "Save"
+    },
+    "activeActions": {
+        "resetPassword": "Reset Password",
+        "sendConfirm": "Resend activation link",
+        "setNewPassword": "Save password",
+        "setNewPasswordLabel": "New password"
     },
     "andXMore": "... and {{value}} more",
     "cameraFilters": {

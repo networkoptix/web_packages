@@ -3,12 +3,14 @@ import {
     Input, OnInit, ViewChild
 }                                    from '@angular/core';
 import { ActivatedRoute }            from '@angular/router';
-import { NxRegisterService }         from './register.service';
 import { NxPageService }             from '../../services/page.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxAccountService }          from '../../services/account.service';
 import { LocalStorageService }       from 'ngx-store';
 import { NxUrlProtocolService }      from '../../services/url-protocol.service';
+import { NxProcessService }          from '../../services/process.service';
+import { NxUriService }              from '../../services/uri.service';
+import { NxCloudApiService }         from '../../services/nx-cloud-api';
 
 @Component({
     selector   : 'nx-register-component',
@@ -18,11 +20,11 @@ import { NxUrlProtocolService }      from '../../services/url-protocol.service';
 
 export class NxRegisterComponent implements OnInit {
 
-    @Input() uriParam;
     @Input() uriParamCode;
 
     LANG: any = {};
 
+    mode: string;
     accountInfo: any = {};
     register: any;
     registerSuccess: any;
@@ -32,10 +34,9 @@ export class NxRegisterComponent implements OnInit {
     context: any;
     lockEmail: boolean;
 
-    @ViewChild('registerForm', { static: true }) registerForm: HTMLFormElement;
+    @ViewChild('registerForm', { static: false }) registerForm: HTMLFormElement;
 
     private setupDefaults() {
-
         this.context = {
             process : ''
         };
@@ -43,11 +44,11 @@ export class NxRegisterComponent implements OnInit {
         this.LANG = this.language.getTranslations();
         this.pageService.setPageTitle(this.LANG.pageTitles.register);
 
-        this.register = this.process.init(() => {
+        this.register = this.processService.createProcess(() => {
             this.accountService.setEmail(this.accountInfo.email);
 
-            return this.registerService
-                       .register(
+            return this.cloudApiService
+                       .registerUser(
                                this.accountInfo.email,
                                this.accountInfo.password,
                                this.accountInfo.firstName,
@@ -58,7 +59,7 @@ export class NxRegisterComponent implements OnInit {
             errorCodes : {
                 alreadyExists: error => {
                     this.registerForm.controls.registerEmail.setErrors({ alreadyExists: true });
-                    this.registerForm.registerEmail.$setTouched();
+                    this.registerForm.controls.registerEmail.markAsTouched();
                     return false;
                 },
                 portalError  : this.LANG.errorCodes.brokenAccount
@@ -76,45 +77,47 @@ export class NxRegisterComponent implements OnInit {
 
             if (this.accountInfo.code) {
                 this.activated = true;
-                this.locationProxy.path('/register/successActivated', false);
+                this.uriService.updateURI('/register/successActivated', {}, true);
                 this.accountService.login(this.accountInfo.email, this.accountInfo.password, true);
+                this.registerSuccess = true;
+                this.activated = true;
             } else {
-                this.locationProxy.path('/register/success', false);
-                this.accountService.setEmail(this.accountInfo.email);
-                this.pageService.setPageTitle(this.LANG.pageTitles.registerSuccess);
+                this.uriService.updateURI('/register/success', {}, true);
+                setTimeout(() => {
+                    this.accountService.setEmail(this.accountInfo.email);
+                    this.pageService.setPageTitle(this.LANG.pageTitles.registerSuccess);
+                    this.registerSuccess = true;
+                });
             }
         });
     }
 
-    constructor(@Inject('process') private process: any,
-                @Inject('locationProxyService') private locationProxy: any,
+    constructor(private processService: NxProcessService,
+                private cloudApiService: NxCloudApiService,
+                private uriService: NxUriService,
                 private urlProtocol: NxUrlProtocolService,
                 private localStorage: LocalStorageService,
                 private route: ActivatedRoute,
                 private accountService: NxAccountService,
-                private registerService: NxRegisterService,
                 private language: NxLanguageProviderService,
                 private pageService: NxPageService) {
         this.setupDefaults();
     }
 
     ngOnInit(): void {
+        this.mode = this.route.snapshot.data.uriParam;
 
-        if (this.uriParam === 'registerSuccess') {
+        if (this.route.snapshot.params.code) {
+            this.code = this.route.snapshot.params.code;
+        }
+
+        if (this.mode === 'registerSuccess') {
             this.registerSuccess = true;
         }
 
-        if (this.uriParam === 'activated') {
+        if (this.mode === 'activated') {
             this.activated = true;
-        }
-
-        if (this.uriParam === 'code') {
-            this.code = this.uriParamCode;
-        }
-
-        if (this.uriParam === 'successActivated') {
             this.registerSuccess = true;
-            this.activated = true;
         }
 
         if (!this.registerSuccess) {
@@ -124,11 +127,15 @@ export class NxRegisterComponent implements OnInit {
         }
 
         if (this.code) {
-            const decoded = atob(this.uriParamCode);
-            this.accountInfo.email = decoded.substring(decoded.indexOf(':') + 1);
-            this.lockEmail = true;
+            let decoded;
+            try {
+                decoded = atob(this.uriParamCode);
+                this.accountInfo.email = decoded.substring(decoded.indexOf(':') + 1);
+                this.lockEmail = true;
+            } catch (ex) {}
         }
 
+        // TODO: UNCOMMENT after done with test data
         this.accountInfo = {
             email    : this.accountInfo.email || this.accountService.getEmail(),
             password : '',
@@ -140,12 +147,17 @@ export class NxRegisterComponent implements OnInit {
 
         if (this.registerSuccess && this.context.process !== 'registerSuccess') {
             this.accountService.redirectToHome();
+            return;
         }
 
         this.session = this.localStorage;
         // this.context = $sessionStorage;
 
         this.session.set('fromClient', this.urlProtocol.getSource().isApp);
+    }
+
+    init() {
+
     }
 }
 

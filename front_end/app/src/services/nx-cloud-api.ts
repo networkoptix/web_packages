@@ -60,14 +60,9 @@ export class NxCloudApiService {
                 { email, password, first_name : firstName, last_name : lastName, subscribe, code });
     }
 
-    activateUser(code): Observable<any> {
-        return this.http.post(this.CONFIG.apiBase + '/account/activate',
-                { code });
-    }
-
     reactivateUser(userEmail) {
         return this.http.post(this.CONFIG.apiBase + '/account/activate',
-                { user_email: userEmail });
+                { user_email: userEmail }).toPromise();
     }
 
     renameSystem(systemId, systemName) {
@@ -168,4 +163,24 @@ export class NxCloudApiService {
             user_email: userEmail
         });
     }
+
+    activate(code) {
+        return this.http.post(this.CONFIG.apiBase + '/account/activate', {
+            code
+        }).toPromise();
+    }
+
+    restorePasswordRequest(userEmail) {
+        return this.http.post(this.CONFIG.apiBase + '/account/restorePassword', {
+            user_email: userEmail
+        }).toPromise();
+    }
+
+    restorePassword(code, newPassword) {
+        return this.http.post(this.CONFIG.apiBase + '/account/restorePassword', {
+            code,
+            new_password: newPassword
+        }).toPromise();
+    }
+
 }

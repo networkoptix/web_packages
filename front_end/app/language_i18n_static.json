@@ -7,6 +7,12 @@
 		"newPasswordLabel": "New password",
 		"saveChanges": "Save"
 	},
+	"activeActions": {
+		"sendConfirm": "Resend activation link",
+		"resetPassword": "Reset Password",
+		"setNewPassword": "Save password",
+		"setNewPasswordLabel": "New password"
+	},
 	"search": {
 		"Search" : "Search",
 		"search_ipvd": "Search by model or manufacturer",

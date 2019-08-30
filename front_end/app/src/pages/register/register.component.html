@@ -37,7 +37,7 @@
                        [(ngModel)]="accountInfo.firstName"
                        #firstName="ngModel"
                        id="firstName" name="firstName" maxlength="255"
-                       required autocomplete="off" autofocus>
+                       required autocomplete="off" nxFocusMe>
             </div>
             <div class="col-md-4">
                 <span class="help-block input-error"
@@ -53,7 +53,7 @@
                        [(ngModel)]="accountInfo.lastName"
                        #lastName="ngModel"
                        id="lastName" name="lastName" maxlength="255"
-                       required autocomplete="off">
+                       required autocomplete="off" value="Tsolov">
             </div>
             <div class="col-md-4">
                 <span class="help-block input-error"
@@ -115,33 +115,33 @@
 
             <div class="col-md-4">
                 <span class="help-block" *ngIf="registerPassword.valid && LANG.passwordRequirements">
-                    <span class="badge badge-success" *ngIf="registerPassword.control && !registerPassword.control.fairPassword">{{LANG.passwordRequirements.good}}</span>
-                    <span class="badge badge-warning" *ngIf="registerPassword.control && registerPassword.control.fairPassword"
+                    <span class="badge badge-success mt-2 mt-md-0" *ngIf="registerPassword.control && !registerPassword.control.fairPassword">{{LANG.passwordRequirements.good}}</span>
+                    <span class="badge badge-warning mt-2 mt-md-0" *ngIf="registerPassword.control && registerPassword.control.fairPassword"
                           title="{{ LANG.passwordRequirements.fairMessage}}">{{LANG.passwordRequirements.fair}}</span>
                 </span>
 
                 <span class="help-block" *ngIf="!registerPassword.valid && !registerPassword.touched">
 
-                    <span class="badge badge-danger"
+                    <span class="badge badge-danger mt-2 mt-md-0"
                           *ngIf="registerPassword.errors &&
                                  registerPassword.errors.weak &&
                                  !registerPassword.errors.common &&
                                  !registerPassword.errors.pattern &&
                                  !registerPassword.errors.minlength"
                           title="{{ LANG.passwordRequirements.weakMessage}}">{{LANG.passwordRequirements.weak}}</span>
-                    <span class="badge badge-danger"
+                    <span class="badge badge-danger mt-2 mt-md-0"
                           *ngIf="registerPassword.errors &&
                                  registerPassword.errors.common &&
                                  !registerPassword.errors.pattern &&
                                  !registerPassword.errors.minlength &&
                                  !registerPassword.errors.required"
                           title="{{ LANG.passwordRequirements.commonMessage}}">{{LANG.passwordRequirements.common}}</span>
-                    <span class="badge badge-danger"
+                    <span class="badge badge-danger mt-2 mt-md-0"
                           *ngIf="registerPassword.errors &&
                                  registerPassword.errors.minlength &&
                                  !registerPassword.errors.pattern"
                           title="{{ LANG.passwordRequirements.minLengthMessage}}">{{LANG.passwordRequirements.minLength}}</span>
-                    <span class="badge badge-danger"
+                    <span class="badge badge-danger mt-2 mt-md-0"
                           *ngIf="registerPassword.errors &&
                                  registerPassword.errors.pattern &&
                                  !registerPassword.errors.minlength"
