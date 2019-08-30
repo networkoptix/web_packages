@@ -77,7 +77,7 @@
     "PASSWORD TOO COMMON TEXT": "このパスワードは、世界で最も人気のあるパスワードです",
     "PASSWORD IS WEAK TEXT": "パスワードをより強力にするために、数字、大文字と小文字、特殊文字を使用してください",
     "TERMS AND CONDITIONS ERROR TEXT": "続行するには、利用規約とプライバシーポリシーを確認して同意してください",
-    "THIS LINK IS BROKEN TEXT": "このリンクは壊れています<br>\n            システムは%PRODUCT_NAME% から切断します<br>\n            このシステムへのアクセスは取り消されたか<br>\n            または別のアカウントにログインしている可能性があります",
+    "THIS LINK IS BROKEN TEXT": "このリンクは壊れています<br>\n            システムは%PRODUCT_NAME% から切断します<br>\n            このシステムへのアクセスが取り消されたか<br>\n            または別のアカウントにログインしている可能性があります",
     "PAGE NOT FOUND TEXT": "ページが見つかりません",
     "TAKE ME HOME TEXT": "ホームに移動する",
     "OPEN NX WITNESS BUTTON TEXT": "%VMS_NAME% を開く",
