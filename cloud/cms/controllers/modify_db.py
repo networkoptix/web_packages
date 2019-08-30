@@ -17,7 +17,8 @@ from ..models import *
 
 BYTES_TO_MEGABYTES = 1048576.0
 PENDING = ProductCustomizationReview.REVIEW_STATES[ProductCustomizationReview.REVIEW_STATES.pending].lower()
-GUID_REGEXP = '\{[\da-fA-F]{8}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{12}\}'
+GUID_REGEXP = r'\{[\da-fA-F]{8}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{12}\}$'
+
 
 def update_draft_state(review_id, target_state, user):
     review = ProductCustomizationReview.objects.filter(id=review_id, reviewed_by=None).last()
