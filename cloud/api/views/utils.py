@@ -116,7 +116,7 @@ def language(request):
 
 
 @api_view(['GET'])
-@permission_classes((IsAuthenticated, ))
+@permission_classes((AllowAny, ))
 @handle_exceptions
 def downloads_history(request):
     # TODO: later we can check specific permissions

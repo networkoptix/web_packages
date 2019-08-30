@@ -38,7 +38,7 @@ window.L = {};
             function($q, $rootScope, nxAccountServiceProvider) {
                 return {
                     responseError: function(error) {
-                        if (error.status === 401 && nxAccountServiceProvider.loginState !== undefined) {
+                        if (error.status === 401 && nxAccountServiceProvider && nxAccountServiceProvider.loginState !== undefined) {
                             // Session expired - try to trigger browser reload
                             nxAccountServiceProvider.clearLoginState();
                         }
