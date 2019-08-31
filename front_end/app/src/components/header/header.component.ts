@@ -61,8 +61,6 @@ import { WINDOW }            from '../../services/window-provider';
         this.active = {};
         this.updateActive();
 
-        this.systemsService.forceUpdateSystemsAsPromise().then(() => this.updateActive());
-
         this.router.events
               .subscribe((event: Event) => {
                   if (event instanceof RoutesRecognized) {
@@ -85,6 +83,7 @@ import { WINDOW }            from '../../services/window-provider';
                 this.renderer.removeClass(document.body, 'loading');
                 this.renderer.removeClass(document.body, 'anonymous');
                 this.renderer.addClass(document.body, 'authorized');
+                this.systemsService.forceUpdateSystemsAsPromise().then(() => this.updateActive());
             } else {
                 this.renderer.removeClass(document.body, 'loading');
                 this.renderer.removeClass(document.body, 'authorized');
