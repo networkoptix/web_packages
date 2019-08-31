@@ -51,6 +51,22 @@ export class NxCloudApiService {
         return this.http.get(`${this.CONFIG.apiBase}/systems/${systemId}/auth`);
     }
 
+    merge(masterSystemId, slaveSystemId, password) {
+        return this.http.post(`${this.CONFIG.apiBase}/systems/merge`, {
+            master_system_id: masterSystemId,
+            slave_system_id: slaveSystemId,
+            password
+        }).toPromise();
+    }
+
+    notification_send(userEmail, type, message) {
+        return this.http.post(`${this.CONFIG.apiBase.replace('/api', '/notifications')}/send`, {
+            user_email: userEmail,
+            type,
+            message
+        }).toPromise();
+    }
+
     reloadIPVD(): Observable<any> {
         return this.http.post(this.CONFIG.apiBase + '/ipvd', {});
     }

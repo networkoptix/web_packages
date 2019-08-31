@@ -58,7 +58,7 @@ require('./services/location-proxy.ts');
 // require('./controllers/__DEPRECATED__404.js');
 // require('./controllers/account.js');
 // require('./controllers/activateRestore.js');
-require('./controllers/debug.js');
+// require('./controllers/debug.js');
 require('./controllers/static.js');
 // require('./controllers/system.js');
 // require('./controllers/systems.js');

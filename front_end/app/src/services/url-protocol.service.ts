@@ -68,7 +68,7 @@ export class NxUrlProtocolService {
 
         settings = {...settings, ...linkSettings};
 
-        const protocol = settings.native ? this.LANG.clientProtocol : this.window.location.protocol;
+        const protocol = settings.native && this.LANG.clientProtocol ? this.LANG.clientProtocol : this.window.location.protocol;
         const host = this.window.location.host;
 
         let getParams;

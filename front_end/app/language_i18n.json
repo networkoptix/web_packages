@@ -264,6 +264,7 @@
         "multiSensor": "Multi-sensor cameras",
         "ptz": "PTZ cameras"
     },
+    "clientProtocol": "%CLIENT_PROTOCOL%:",
     "devices": "devices",
     "dialogs": {
         "cancelButton": "Cancel",

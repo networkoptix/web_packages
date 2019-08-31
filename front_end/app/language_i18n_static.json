@@ -13,6 +13,7 @@
 		"setNewPassword": "Save password",
 		"setNewPasswordLabel": "New password"
 	},
+	"clientProtocol": "%CLIENT_PROTOCOL%:",
 	"search": {
 		"Search" : "Search",
 		"search_ipvd": "Search by model or manufacturer",
