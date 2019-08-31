@@ -422,9 +422,7 @@ window.L = {};
                         // controller: 'StartPageCtrl'
                     })
                     .otherwise({
-                        title: lang.pageTitles.pageNotFound,
-                        controller: '404Ctrl',
-                        templateUrl: CONFIG.viewsDir + '404.html'
+                        template: '<nx-404></nx-404>'
                     });
             }]);
 })();

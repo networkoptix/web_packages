@@ -39,6 +39,7 @@ import { CookieXSRFStrategy, XSRFStrategy } from '@angular/http';
 class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
     shouldProcessUrl(url: UrlTree) {
         return (url.toString().startsWith('/sandbox') ||
+            url.toString().startsWith('/404') ||
             url.toString().startsWith('/login') ||
             url.toString().startsWith('/ipvd') ||
             (url.toString().startsWith('/download') && !url.toString().startsWith('/downloads')) ||
