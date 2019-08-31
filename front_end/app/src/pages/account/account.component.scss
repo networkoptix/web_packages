@@ -4,19 +4,8 @@
 @import '~bootstrap/scss/mixins/breakpoints';
 
 .label, .error {
-  height: 32px;
-}
-
-.errors {
-  max-width: 50%;
-}
-
-.inputs {
-  max-width: 300px;
-
-  @include media-breakpoint-down(sm) {
-        max-width: 100%;
-    }
+  width: 1px;
+  border-spacing: 5px;
 }
 
 .error-text {

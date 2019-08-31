@@ -7,61 +7,50 @@
                 </header>
 
                 <nx-section>
-                    <form #accountForm="ngForm" name="accountForm" class="form d-flex" novalidate>
-                        <div class="d-none d-md-block labels mr-2 align-top">
-                            <div class="label d-flex align-items-center form-group justify-content-end">
-                                <label for="firstName" class="d-inline-block m-0 text-right text-md-right control-label"
-                                       translate>First Name</label>
-                            </div>
-                            <div class="label d-flex align-items-center form-group justify-content-end">
-                                <label for="lastName" class="d-inline-block m-0 text-right text-md-right control-label"
-                                       translate>Last Name</label>
-                            </div>
-                        </div>
-
-                        <div class="inputs flex-grow-1 mr-2">
-                            <div class="form-group">
-                                <div class="d-block d-md-none">
-                                    <label for="firstName" class="control-label" translate>First Name</label>
+                    <form #accountForm="ngForm" name="accountForm" class="form" novalidate>
+                        <div class="inputs d-block d-md-table w-100 mw-100">
+                            <div class="form-group d-block d-md-table-row">
+                                <div class="label d-block d-md-table-cell text-nowrap text-right pr-md-2">
+                                    <label for="firstName" class="control-label m-0 pb-md-2" translate>First Name</label>
                                 </div>
-                                <input type="text" class="form-control"
-                                       [ngModel]="account.first_name"
-                                       (ngModelChange)="changeFirstName($event)"
-                                       name="firstName" id="firstName" #firstName="ngModel"
-                                       maxlength="255"
-                                       required
-                                       autofocus>
-                                <div class="d-block d-md-none">
-                                    <span class="error-text" *ngIf="firstName.invalid && firstName.touched"
-                                          translate>First name is required</span>
+                                <div class="d-block d-md-table-cell">
+                                    <div class="row pb-md-2">
+                                        <div class="col-12 col-md-7">
+                                            <input type="text" class="form-control"
+                                                   [ngModel]="account.first_name"
+                                                   (ngModelChange)="changeFirstName($event)"
+                                                   name="firstName" id="firstName" #firstName="ngModel"
+                                                   maxlength="255"
+                                                   required
+                                                   autofocus>
+                                        </div>
+                                        <div class="col-12 col-md-5 d-block d-md-flex ml-md-n2 align-items-center">
+                                            <span class="error-text" *ngIf="firstName.invalid && firstName.touched"
+                                                  translate>First name is required</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <div class="d-block d-md-none">
-                                    <label for="firstName" class="control-label" translate>Last Name</label>
+                            <div class="form-group d-block d-md-table-row">
+                                <div class="label d-block d-md-table-cell text-right pr-md-2">
+                                    <label for="firstName" class="control-label m-0 pb-md-2" translate>Last Name</label>
                                 </div>
-                                <input type="text" class="form-control"
-                                       [ngModel]="account.last_name"
-                                       (ngModelChange)="changeLastName($event)"
-                                       name="lastName" id="lastName" #lastName="ngModel"
-                                       maxlength="255" required>
-                                <div class="d-block d-md-none">
-                                    <span class="error-text"
-                                          *ngIf="lastName.invalid && lastName.touched"
-                                          translate>Last name is required</span>
+                                <div class="d-block d-md-table-cell">
+                                    <div class="row pb-md-2">
+                                        <div class="col-12 col-md-7">
+                                            <input type="text" class="form-control"
+                                                   [ngModel]="account.last_name"
+                                                   (ngModelChange)="changeLastName($event)"
+                                                   name="lastName" id="lastName" #lastName="ngModel"
+                                                   maxlength="255" required>
+                                        </div>
+                                        <div class="col-12 col-md-5 d-block d-md-flex ml-md-n2 align-items-center">
+                                            <span class="error-text"
+                                                  *ngIf="lastName.invalid && lastName.touched"
+                                                  translate>Last name is required</span>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="errors d-none d-md-block mr-2 align-top">
-                            <div class="error form-group d-flex align-items-center">
-                                <span class="error-text"
-                                      *ngIf="firstName.invalid && firstName.touched"
-                                      translate>First name is required</span>
-                            </div>
-                            <div class="error form-group d-flex align-items-center">
-                                <span class="error-text"
-                                      *ngIf="lastName.invalid && lastName.touched"
-                                      translate>Last name is required</span>
                             </div>
                         </div>
                     </form>
