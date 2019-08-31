@@ -63,6 +63,16 @@ class Process {
         if (settings) {
             settings.errorPrefix = settings.errorPrefix ? `(${settings.errorPrefix}): ` : '';
             this.settings = {... this.settings, ... settings};
+        } else {
+            this.settings = {
+                errorCodes: {},
+                errorMessage: '',
+                errorPrefix: '',
+                holdAlerts: false,
+                ignoreUnauthorized: false,
+                logoutForbidden: false,
+                successMessage: '',
+            };
         }
         this.caller = caller;
     }
