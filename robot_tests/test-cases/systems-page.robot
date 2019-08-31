@@ -113,26 +113,23 @@ User have several systems linked to his account
     Wait Until Elements Are Visible
     ...    ${SYSTEMS DROPDOWN}${DROPDOWN MENU}
     ...    ${SYSTEMS DROPDOWN}${DROPDOWN MENU ITEMS}
+    ...    ${ALL SYSTEMS}
+    ${count2}=   Get Element Count
+    ...    ${SYSTEMS DROPDOWN}${DROPDOWN MENU ITEMS}
+    Should Be Equal As Integers
+    ...    ${count1}
+    ...    ${count2}
     ${elements}=   Get WebElements
     ...    ${SYSTEMS DROPDOWN}${DROPDOWN MENU ITEMS}
-    ${x}=   Set Variable    0
-    FOR    ${element}    IN    @{elements}
-        ${x}=   Evaluate    ${x}+1
-        ${n}=   Get Text    ${element}
-        Log    Item: ${x}, Name: ${n}
-        Run Keyword If
-        ...    ${x} <= 12
-        ...    Wait Until Element Is Visible
-        ...    ${element}
-        Run Keyword If
-        ...    ${x} > 12
-        ...    Wait Until Element Is Visible
-        #...    Wait Until Element Is Not Visible
-        ...    ${element}
-    END
+    # Confirm height of dropdown menu list is less than total height of all list items within
+    ${ulWidth}    ${ulHeight}=   Get Element Size
+    ...    ${SYSTEMS DROPDOWN}${DROPDOWN MENU LIST}
+    ${e}=   Get From List    ${elements}    0
+    ${liWidth}    ${liHeight}=   Get Element Size    ${e}
+    Should be True    ${ulHeight} < (${liHeight}*${count1})
 
     Log    Step 3
-    ${r}=   Evaluate    random.randint(0, ${x})    modules=random
+    ${r}=   Evaluate    random.randint(0, ${count1})    modules=random
     ${r1}=   Evaluate    ${r}+1
     Log    r1: ${r1}
     ${x}=   Get From List    ${elements}    ${r}
@@ -180,16 +177,16 @@ User have several systems linked to his account
     ${l}=   Get Location
     Should End With    ${l}    /systems
     Wait Until Element Is Visible    ${SYSTEMS DROPDOWN}
-    ${count2}=   Get Text    ${SYSTEMS DROPDOWN}
-    ${count2}=   Remove String Using Regexp
-    ...    ${count2}
+    ${count3}=   Get Text    ${SYSTEMS DROPDOWN}
+    ${count3}=   Remove String Using Regexp
+    ...    ${count3}
     ...    \\D
     Should Be True
-    ...    ${count2} > 12
-    ...    The Systems count was expected to be more than 12, but is ${count2}.
+    ...    ${count3} > 12
+    ...    The Systems count was expected to be more than 12, but is ${count3}.
     Should Be Equal As Integers
     ...    ${count1}
-    ...    ${count2}
+    ...    ${count3}
 
 should show the system page instead of all systems when user only has one
     [tags]    C41878

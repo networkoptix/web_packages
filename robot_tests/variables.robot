@@ -352,7 +352,8 @@ ${RELEASE NUMBER}                     //div[contains(@class,"active")]//div[@ng-
 ${PRIVACY POLICY HEADER}              //h1[contains(text(),'Personal data and privacy policy')]
 
 ${DROPDOWN MENU}                      /../div[@class='dropdown-menu']
-${DROPDOWN MENU ITEMS}                ${DROPDOWN MENU}/ul[@class='dropdown-menu--list']/li[@class='dropdown-item-container']
+${DROPDOWN MENU LIST}                 ${DROPDOWN MENU}/ul[@class='dropdown-menu--list']
+${DROPDOWN MENU ITEMS}                ${DROPDOWN MENU LIST}/li[@class='dropdown-item-container']
 
 #Password badges
 ${PASSWORD BADGE}                     //span[contains(@class,"badge")]
