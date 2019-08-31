@@ -7,6 +7,12 @@
 		"newPasswordLabel": "New password",
 		"saveChanges": "Save"
 	},
+	"activeActions": {
+		"sendConfirm": "Resend activation link",
+		"resetPassword": "Reset Password",
+		"setNewPassword": "Save password",
+		"setNewPasswordLabel": "New password"
+	},
 	"search": {
 		"Search" : "Search",
 		"search_ipvd": "Search by model or manufacturer",
@@ -111,8 +117,8 @@
 		"vendor": "Manufacturer",
 		"model": "Model",
 		"hardwareType": "Type",
-		"maxResolution": "Max Resolution",
-		"maxFps": "Max FPS",
+		"maxResolution": "<span>Max</span><br><span>Resolution</span>",
+		"maxFps": "<span>Max</span><br><span>FPS</span>",
 		"primaryCodec": "Codec",
 		"isAudioSupported": "Audio",
 		"isTwAudioSupported": "2-way Audio",
@@ -402,5 +408,9 @@
 	"Terms": "Terms",
 	"pleaseSelect": "Please select...",
 	"WHEN_MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{{targetSystemName}}</strong> System, and this system will be deleted.",
-	"FAILED_SYSTEM_DESCR": "This link is broken,<br>System may be disconnected from %CLOUD_NAME%,<br>Access to this System may be revoked, <br>or you may be logged into a different account."
+	"FAILED_SYSTEM_DESCR": "This link is broken,<br>System may be disconnected from %CLOUD_NAME%,<br>Access to this System may be revoked, <br>or you may be logged into a different account.",
+	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "You have no Systems connected to %CLOUD_NAME%",
+	"NO_SYSTEMS_LOGIN": "Log in to your System using %VMS_NAME%",
+	"NO_SYSTEMS_GOTO_ADMINISTRATION": "Go to the \"Cloud\" tab in the \"System Administration\" dialog",
+	"NO_SYSTEMS_CONNECT_SYSTEM": "Press \"Connect System to %CLOUD_NAME%\""
 }

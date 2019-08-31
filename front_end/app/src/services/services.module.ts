@@ -7,10 +7,10 @@ import { NxConfigService }           from './nx-config';
 import { NxAppStateService }         from './nx-app-state.service';
 import { NxUtilsService }            from './utils.service';
 import { NxPageService }             from './page.service';
-import { NxRegisterService }         from './register.service';
 import { NxSystemsService }          from './systems.service';
 import { NxAccountService }          from './account.service';
 import { NxUrlProtocolService }      from './url-protocol.service';
+import { NxApplyService }            from './apply.service';
 
 @NgModule({
     imports        : [
@@ -22,11 +22,11 @@ import { NxUrlProtocolService }      from './url-protocol.service';
     ],
     providers      : [
         NxAppStateService,
+        NxApplyService,
         NxLanguageProviderService,
         NxConfigService,
         NxUtilsService,
         NxPageService,
-        NxRegisterService,
         NxSystemsService,
         NxAccountService,
         NxUrlProtocolService,

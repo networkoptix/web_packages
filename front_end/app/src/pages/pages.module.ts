@@ -8,7 +8,8 @@ import { Angular2CsvModule } from 'angular2-csv';
 import { DownloadModule }            from './download/download.module';
 import { DownloadHistoryModule }     from './download-history/download-history.module';
 import { NonSupportedBrowserModule } from './non-supported-browser/non-supported-browser.module';
-import { RegisterModule }            from './register/register.module';
+import { NxRegisterModule }          from './register/register.module';
+import { NxActivateModule }          from './activate/activate.module';
 import { RightMenuModule }           from './right-menu/right-menu.module';
 import { ContentModule }             from './content/content.module';
 import { IntegrationsModule }        from './integration/integrations.module';
@@ -19,6 +20,8 @@ import { NxSetupModule }             from './integration/details/setup/setup.mod
 import { NxSettingsModule }          from './systems/settings/settings.module';
 import { NxSystemsListModule }       from './systems/list/list.module';
 import { NxAccountModule }           from './account/account.module';
+import { NxRestoreModule }           from './restore/restore.module';
+import { Nx404Module }               from './404/404.module';
 
 @NgModule({
     imports        : [
@@ -27,8 +30,11 @@ import { NxAccountModule }           from './account/account.module';
         DownloadModule,
         DownloadHistoryModule,
         NonSupportedBrowserModule,
-        RegisterModule,
+        NxRegisterModule,
+        NxActivateModule,
+        NxRestoreModule,
         IntegrationsModule,
+        IntegrationsListModule,
         ContentModule,          // TODO: Remove it after test
         RightMenuModule,        // TODO: Remove it after test
         IpvdModule,
@@ -39,6 +45,7 @@ import { NxAccountModule }           from './account/account.module';
         NxSettingsModule,
         NxSystemsListModule,
         NxAccountModule,
+        Nx404Module,
     ],
     declarations   : [],
     entryComponents: [],
@@ -48,14 +55,18 @@ import { NxAccountModule }           from './account/account.module';
         DownloadModule,
         DownloadHistoryModule,
         NonSupportedBrowserModule,
-        RegisterModule,
+        NxRegisterModule,
+        NxActivateModule,
+        NxRestoreModule,
         IntegrationsModule,
+        IntegrationsListModule,
         NxSettingsModule,
         ContentModule,          // TODO: Remove it after test
         RightMenuModule,        // TODO: Remove it after test
         IpvdModule,
         Angular2CsvModule,
         LandingModule,
+        Nx404Module,
     ]
 })
 export class PagesModule {

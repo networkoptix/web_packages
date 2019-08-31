@@ -250,7 +250,7 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
                     if (this.numberFilters > 1) {
                         selectsSelected = this.numberFilters + ' ' + this.LANG.search['filters applied'];
                     } else {
-                        selectsSelected = select.label + ' &ndash; ' + select.selected.name;
+                        selectsSelected = '<span>' + select.label + '</span> &ndash; <span>' + select.selected.name + '</span>';
                     }
                     flag++;
                 }
@@ -295,14 +295,12 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
                 }
             });
         }
-
         if (flag === 1) {
             this.filterSelected = tagsSelected || selectsSelected || multiSelectsSelected;
         } else {
             const str = (this.numberFilters === 1) ?
                     ' ' + this.LANG.search['filter applied'] :
                     ' ' + this.LANG.search['filters applied'];
-
             this.filterSelected = this.numberFilters + str;
         }
     }

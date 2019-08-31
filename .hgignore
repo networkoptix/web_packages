@@ -26,6 +26,7 @@ front_end/test/visual
 front_end/**/*.js.map
 front_end/app/src/**/*.js
 front_end/app/language_compiled.json
+translations/**/language_compiled.json
 
 
 front_end/app/scripts/services/{language,dialogs,systems,process,nx-config,cloud_api,account,angular-uuid2,authorizationCheckService}.js

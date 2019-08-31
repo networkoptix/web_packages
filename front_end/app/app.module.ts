@@ -39,9 +39,14 @@ import { CookieXSRFStrategy, XSRFStrategy } from '@angular/http';
 class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
     shouldProcessUrl(url: UrlTree) {
         return (url.toString().startsWith('/sandbox') ||
+            url.toString().startsWith('/404') ||
+            url.toString().startsWith('/login') ||
             url.toString().startsWith('/ipvd') ||
-            url.toString().startsWith('/download') ||
+            (url.toString().startsWith('/download') && !url.toString().startsWith('/downloads')) ||
             url.toString().startsWith('/account') ||
+            url.toString().startsWith('/activate') ||
+            url.toString().startsWith('/restore_password') ||
+            url.toString().startsWith('/register') ||
             url.toString().startsWith('/systems') ||
             url.toString().startsWith('/new-content') ||
             url.toString().startsWith('/right') ||
@@ -51,9 +56,6 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
         // return false;
 
         /* Temporary downgraded components - routing is handled by AJS */
-        // url.toString().startsWith('/') ||
-        // url.toString().startsWith('/register') ||
-        // url.toString().startsWith('/login') ||
         // url.toString().startsWith('/downloads') ||
         // url.toString().startsWith('/browser');
     }

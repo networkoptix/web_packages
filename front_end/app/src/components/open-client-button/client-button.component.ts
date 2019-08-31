@@ -9,6 +9,7 @@ import { NxConfigService }           from '../../services/nx-config';
 import { NxDialogsService }          from '../../dialogs/dialogs.service';
 import { NxUrlProtocolService }      from '../../services/url-protocol.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxProcessService }          from '../../services/process.service';
 
 @Component({
     selector     : 'nx-client-button',
@@ -28,7 +29,7 @@ export class NxClientButtonComponent implements OnInit {
     location: any;
     openClient: any;
 
-    constructor(@Inject('process') private process: any,
+    constructor(private processService: NxProcessService,
                 private urlProtocol: NxUrlProtocolService,
                 private config: NxConfigService,
                 private language: NxLanguageProviderService,
@@ -42,7 +43,7 @@ export class NxClientButtonComponent implements OnInit {
         this.CONFIG = this.config.getConfig();
         this.LANG = this.language.getTranslations();
 
-        this.openClient = this.process.init(() => {
+        this.openClient = this.processService.createProcess(() => {
             this.urlProtocol
                 .open(this.system && this.system.id)
                 .then(() => {

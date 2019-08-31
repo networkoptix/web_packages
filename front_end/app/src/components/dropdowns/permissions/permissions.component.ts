@@ -26,8 +26,7 @@ export class NxPermissionsDropdown implements OnInit {
     accessRoles: any;
     differ: any;
 
-    constructor(@Inject('cloudApiService') private cloudApi: any,
-                private language: NxLanguageProviderService,
+    constructor(private language: NxLanguageProviderService,
     ) {
         this.LANG = this.language.getTranslations();
         this.accessRoles = [];

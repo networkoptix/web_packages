@@ -170,8 +170,9 @@ export class NxPasswordComponent implements OnInit, ControlValueAccessor, Valida
      * Write a new (model) value to the element.
      */
     writeValue(value: any) {
-        if (value !== null) {
-            this.value = value;
+        this.value = value;
+        if (value) {
+            this.setValue();
         }
     }
 
@@ -191,4 +192,7 @@ export class NxPasswordComponent implements OnInit, ControlValueAccessor, Valida
         this.onTouchedCallback = fn;
     }
 
+    onBlur() {
+        this.onTouchedCallback();
+    }
 }

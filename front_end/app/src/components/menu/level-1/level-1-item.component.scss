@@ -15,6 +15,7 @@ $item_height : 40px;
     display          : block;
     text-decoration  : none;
     padding-left     : $item_height;
+    padding-right    : .5rem;
     border-radius    : 2px;
     
     &:hover {

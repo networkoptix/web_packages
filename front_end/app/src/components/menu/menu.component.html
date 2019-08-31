@@ -15,7 +15,7 @@
             </div>
             <div *ngFor="let subitem of level2.items; let last = last">
                 <nx-level-2-item [item]="subitem"
-                                 [ngClass]="{ last: last }"
+                                 [ngClass]="{ 'last-level-2': last }"
                                  [base]="content.base"
                                  [selected]="selectedLevel2 == subitem.id">
                 </nx-level-2-item>
@@ -29,8 +29,9 @@
             </div>
         </div>
 
-        <div *ngFor="let details of item.level3">
+        <div *ngFor="let details of item.level3; let last = last">
             <nx-level-3-item [item]="details"
+                             [ngClass]="{ 'last-level-3': last }"
                              [base]="content.base"
                              [selected]="selectedLevel3 == details.id">
             </nx-level-3-item>

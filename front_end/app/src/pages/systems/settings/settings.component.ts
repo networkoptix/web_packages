@@ -10,6 +10,7 @@ import { NxSettingsService } from './settings.service';
 import { NxMenuService }     from '../../../components/menu/menu.service';
 import { NxSystemService }   from '../../../services/system.service';
 import { NxSystemsService }        from '../../../services/systems.service';
+import { NxNoSystemsComponent }    from '../no-systems/no-systems.component';
 import { NxModalAddUserComponent } from '../../../dialogs/add-user/add-user.component';
 import { NxModalGenericComponent } from '../../../dialogs/generic/generic.component';
 import { NxAccountService }        from '../../../services/account.service';
@@ -133,6 +134,13 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         };
 
         this.menuService
+            .selectedSectionSubject
+            .subscribe(selection => {
+                this.content.selectedSection = selection;
+                this.content = { ...this.content }; // trigger onChange
+            });
+
+       this.menuService
             .selectedSubSectionSubject
             .subscribe(selection => {
                 this.content.selectedSubSection = selection;
@@ -180,8 +188,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 },
             },
             errorPrefix: this.LANG.errorCodes.cantGetSystemInfoPrefix
-        });
-        this.gettingSystem.then(() => {
+        }).then(() => {
             this.gettingSystemUsers.run();
         });
 

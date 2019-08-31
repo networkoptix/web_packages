@@ -12,6 +12,7 @@
     }
     
     nx-level-3-item {
+        display: block;
     }
     
     .container-buttons {
@@ -19,8 +20,13 @@
         padding          : 0 .75rem .5rem;
     }
     
-    .last {
+    .last-level-2 {
         padding-bottom   : .5rem;
         background-color : $light4;
+    }
+
+    .last-level-3 {
+        padding-bottom   : .5rem;
+        background-color : $light5;
     }
 }

@@ -1,6 +1,6 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, ViewContainerRef } from '@angular/core';
 import { Location }                             from '@angular/common';
-import { ActivatedRoute }                       from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { NxConfigService }                      from '../../../../services/nx-config';
 
 import { NxPageService }             from '../../../../services/page.service';
@@ -10,11 +10,14 @@ import { NxLanguageProviderService } from '../../../../services/nx-language-prov
 import { NxMenuService }             from '../../../../components/menu/menu.service';
 import { NxAccountService }          from '../../../../services/account.service';
 import { NxProcessService }          from '../../../../services/process.service';
+import { NxSystem }                  from '../../../../services/system.service';
+import { NxApplyService, Watcher }   from '../../../../services/apply.service';
+import { filter } from 'rxjs/operators';
 
 @Component({
     selector   : 'nx-system-user-component',
     templateUrl: 'users.component.html',
-    styleUrls  : ['users.component.scss']
+    styleUrls  : ['users.component.scss'],
 })
 
 export class NxSystemUsersComponent implements OnInit, OnDestroy {
@@ -23,21 +26,27 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
     location: any;
     paramUser: any;
     accessDescription: string;
+    editUser: any;
     locked: any;
     removingUserProcess: any;
     selectedUser: any;
     systemAvailable: boolean;
-    system: any;
+    system: NxSystem;
+    viewContainerRef: ViewContainerRef;
+
+    userEnabled = new Watcher<boolean>();
+    userRole = new Watcher<string>();
 
     private setupDefaults() {
         this.CONFIG = this.configService.getConfig();
-
         this.locked = {};
         this.menuService.setSection('users');
     }
 
-    constructor(private route: ActivatedRoute,
+    constructor(@Inject(ViewContainerRef) viewContainerRef,
+                private route: ActivatedRoute,
                 private accountService: NxAccountService,
+                private applyService: NxApplyService,
                 private configService: NxConfigService,
                 private language: NxLanguageProviderService,
                 private pageService: NxPageService,
@@ -46,8 +55,8 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 private menuService: NxMenuService,
                 private processService: NxProcessService,
                 location: Location) {
-
         this.location = location;
+        this.viewContainerRef = viewContainerRef;
         this.setupDefaults();
     }
 
@@ -65,21 +74,41 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 }
             });
 
-
-        this.init();
-    }
-
-    init(): void {
-        this.CONFIG = this.configService.getConfig();
-        this.settingsService.systemSubject.subscribe((system) => {
-            this.system = system;
-            if (system) {
+        this.settingsService.systemSubject
+            .pipe(filter(data => data !== undefined))
+            .subscribe((system) => {
+                this.system = system;
                 this.systemAvailable = this.system.isAvailable && this.system.mergeInfo === undefined;
                 if (!this.selectedUser || !this.selectedUser.email) {
                     this.setUser();
                 }
+            });
+
+        this.initProcesses();
+
+        this.applyService.initPageWatcher(this.viewContainerRef, this.editUser, () => {
+            this.selectedUser.isEnabled = this.userEnabled.originalValue;
+            this.selectedUser.role = this.system.accessRoles.find(role => role.name === this.userRole.originalValue);
+            this.applyService.reset();
+        }, [this.userEnabled, this.userRole]);
+    }
+
+    initProcesses(): void {
+        this.editUser = this.processService.createProcess(() => {
+            if (this.locked[this.selectedUser.email]) {
+                return;
             }
+            this.locked[this.selectedUser.email] = true;
+            return this.system.saveUser(this.selectedUser, this.selectedUser.role);
+        }, {}).then(() => {
+            this.locked[this.selectedUser.email] = false;
+            return this.system.getUsers(true).then(_ => {
+                setTimeout(_ => {
+                    this.applyService.reset();
+                });
+            });
         });
+
         this.removingUserProcess = this.processService.createProcess(() => {
             return this.system.deleteUser(this.selectedUser);
         }, {
@@ -94,27 +123,6 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
 
-    }
-
-    addUser() {
-        // Call share dialog, run process inside
-        this.settingsService.addUser().then(() => {});
-    }
-
-    editShare(user) {
-        this.selectedUser = user;
-        // Pass user inside
-        if (this.locked[user.email]) {
-            return;
-        }
-        this.locked[user.email] = true;
-
-        return this.dialogs
-                   .addUser(this.accountService, this.system, user)
-                   .then(this.settingsService.loadUsers)
-                   .finally(() => {
-                       this.locked[user.email] = false;
-                   });
     }
 
     removeUser(user) {
@@ -148,23 +156,25 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
 
     setUser() {
         if (this.system && this.system.users.length > 0) {
+            let user;
             if (this.paramUser) {
-                this.selectedUser = this.system.users.filter((user: any) => {
-                    if (user.id.replace(/{|}/g, '') === this.paramUser) {
-                        return true;
-                    }
-                })[0];
+                 user = this.system.users.find((user: any) => {
+                    return user.id.replace(/{|}/g, '') === this.paramUser;
+                });
             }
-            if (typeof(this.selectedUser) === 'undefined') {
-                this.selectedUser = this.system.users[0];
+            if (typeof(user) === 'undefined') {
+                user = this.system.users[0];
             }
 
             // If there's no users skip setting section and permissions
-            if (typeof(this.selectedUser) === 'undefined') {
+            if (typeof(user) === 'undefined') {
                 return;
             }
+            this.applyService.hardReset();
+            this.selectedUser = {... user};
             this.menuService.setSubSection(this.selectedUser.id.replace(/{|}/g, ''));
             this.setPermission(this.selectedUser.role);
+            this.applyService.reset();
         }
     }
 
@@ -173,9 +183,13 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         this.accessDescription = this.LANG.accessRoles[userRole] ?
                 this.LANG.accessRoles[userRole].description :
                 this.LANG.accessRoles.customRole.description;
+        this.selectedUser.role = role;
+        this.userRole.value = role.name;
     }
+
     updateEnabled(state) {
         this.selectedUser.isEnabled = state;
+        this.userEnabled.value = state;
     }
 }
 

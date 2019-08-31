@@ -1,38 +1,59 @@
-import { NgModule }                          from '@angular/core';
-import { CommonModule }                      from '@angular/common';
-import { BrowserModule }                     from '@angular/platform-browser';
-import { downgradeComponent, UpgradeModule } from '@angular/upgrade/static';
-import { RouterModule, Routes }              from '@angular/router';
-import { FormsModule }                       from '@angular/forms';
+import { Injectable, NgModule }          from '@angular/core';
+import { CommonModule }                  from '@angular/common';
+import { BrowserModule }                 from '@angular/platform-browser';
+import { UpgradeModule }                 from '@angular/upgrade/static';
+import { Resolve, RouterModule, Routes } from '@angular/router';
+import { FormsModule }                   from '@angular/forms';
+import { ComponentsModule }              from '../../components/components.module';
 
+import { LandingModule }       from '../landing/landing.module';
+import { DirectivesModule }    from '../../directives/directives.module';
 import { NxRegisterComponent } from './register.component';
+import { TranslateModule }     from '@ngx-translate/core';
 
-import { TranslateModule }    from '@ngx-translate/core';
-import { ComponentsModule }   from '../../components/components.module';
-import { LandingModule } from '../landing/landing.module';
-import { NxLanguageDropdown } from '../../components/dropdowns/language/language.component';
+@Injectable()
+export class SuccessResolver implements Resolve<any> {
+    constructor() {}
 
-// const appRoutes: Routes = [
-//     {
-//         path: 'register', component: NxRegisterComponent,
-//     }
-// ];
+    resolve() {
+        return 'registerSuccess';
+    }
+}
+@Injectable()
+export class ActivatedResolver implements Resolve<any> {
+    constructor() {}
+
+    resolve() {
+        return 'activated';
+    }
+}
+
+const appRoutes: Routes = [
+    { path: 'register', component: NxRegisterComponent },
+    { path: 'register/success', component: NxRegisterComponent, resolve: { uriParam: SuccessResolver }},
+    { path: 'register/successActivated', component: NxRegisterComponent, resolve: { uriParam: ActivatedResolver }},
+    { path: 'register/:code', component: NxRegisterComponent}
+];
 
 // TODO: Remove it after test
 
 @NgModule({
-    imports        : [
+    imports: [
         CommonModule,
         BrowserModule,
         UpgradeModule,
-        TranslateModule,
         ComponentsModule,
         FormsModule,
-        LandingModule
+        LandingModule,
+        DirectivesModule,
 
-        // RouterModule.forChild(appRoutes)
+        RouterModule.forChild(appRoutes),
+        TranslateModule
     ],
-    providers      : [],
+    providers      : [
+        SuccessResolver,
+        ActivatedResolver,
+    ],
     declarations   : [
         NxRegisterComponent,
     ],
@@ -44,10 +65,5 @@ import { NxLanguageDropdown } from '../../components/dropdowns/language/language
         NxRegisterComponent
     ]
 })
-export class RegisterModule {
+export class NxRegisterModule {
 }
-
-declare var angular: angular.IAngularStatic;
-angular
-        .module('cloudApp.directives')
-        .directive('nxRegisterComponent', downgradeComponent({ component: NxRegisterComponent }) as angular.IDirectiveFactory);

@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { NxLanguageProviderService } from './nx-language-provider';
 import { NxToastService } from '../dialogs/toast.service';
 import { NxCloudApiService } from './nx-cloud-api';
+import { NxConfigService } from './nx-config';
+import { NxSessionService } from './session.service';
 
 interface ProcessSettings {
     errorCodes: any;
@@ -15,8 +17,10 @@ interface ProcessSettings {
 
 
 class Process {
+    CONFIG: any;
     LANG: any;
     cloudApiService: any;
+    sessionService: any;
     toastService: any;
 
     caller: any;
@@ -33,12 +37,13 @@ class Process {
     /* process handlers */
     successHandler: any;
     errorHandler: any;
-    processHandler: any;
 
 
-    constructor(LANG, cloudApiService, toastService, caller, settings) {
+    constructor(CONFIG, LANG, sessionService, cloudApiService, toastService, caller, settings) {
+        this.CONFIG = CONFIG;
         this.LANG = LANG;
         this.cloudApiService = cloudApiService;
+        this.sessionService = sessionService;
         this.toastService = toastService;
         this.init(caller, settings);
         return this;
@@ -56,7 +61,7 @@ class Process {
         settings.successMessage
          */
         if (settings) {
-            settings.errorPrefix = settings.errorPrefix ? `(${settings.errorPrefix}): `: '';
+            settings.errorPrefix = settings.errorPrefix ? `(${settings.errorPrefix}): ` : '';
             this.settings = {... this.settings, ... settings};
         }
         this.caller = caller;
@@ -69,8 +74,16 @@ class Process {
         this.finished = false;
 
         this.deferredPromise = this.createDeferredPromise();
-        this.deferredPromise.promise.then(this.successHandler, this.errorHandler, this.processHandler);
-        return this.caller().then((data) => {
+        this.deferredPromise.promise.then(this.successHandler, this.errorHandler);
+
+        /* There is a weird issue when executing a process that is passed into a modal.
+         * After the first execution then caller function becomes undefined when the run
+         * returns this.caller(). Wrapping it in a promise fixes the issue.
+         */
+        const wrapper = new Promise((resolve) => {
+            return resolve(this.caller());
+        });
+        return wrapper.then((data) => {
             this.processing = false;
             this.finished = true;
 
@@ -84,23 +97,25 @@ class Process {
                     // Circular dependencies ... keep ngToast for no -- TT
                     const options = {
                         classname: 'success',
-                        autohide: !this.settings.holdAlerts
+                        autohide: !this.settings.holdAlerts,
+                        delay: this.CONFIG.alertTimeout
                     };
                     this.toastService.show(this.settings.successMessage, options);
                 }
                 this.deferredPromise.resolve(data);
             }
+            return;
         }, (error) => {
+            if (error.error) {
+                error = error.error;
+            }
             this.handleError(error);
-        }, (progress) => {
-            this.deferredPromise.notify(progress);
         });
     }
 
-    then(successHandler, errorHandler?, processHandler?) {
+    then(successHandler, errorHandler?) {
         this.successHandler = successHandler;
         this.errorHandler = errorHandler || (() => {});
-        this.processHandler = processHandler || (() => {});
         return this;
     }
 
@@ -151,19 +166,18 @@ class Process {
                 // we need to handle this like user was not authorised
                 data.resultCode === 'notAuthorized' ||
                 data.resultCode === 'forbidden' && this.settings.logoutForbidden)) {
+            this.sessionService.invalidateSession();
             this.deferredPromise.reject(data);
             return;
         }
         const formatted = this.formatError(data, this.settings.errorCodes);
         if (formatted !== false) {
             this.settings.errorMessage = formatted;
-            // Error handler here
-            // Circular dependencies ... keep ngToast for no -- TT
-            // nxDialogsService.notify(errorPrefix + this.errorMessage, 'danger', holdAlerts);
             const message = `${this.settings.errorPrefix} ${this.settings.errorMessage}`;
             const options = {
-                classname: 'danger',
                 autohide: !this.settings.holdAlerts,
+                classname: 'danger',
+                delay: this.CONFIG.alertTimeout
             };
             this.toastService.show(message, options);
         }
@@ -176,14 +190,18 @@ class Process {
     providedIn: 'root'
 })
 export class NxProcessService {
+    CONFIG: any;
     LANG: any;
-    constructor(private languageService: NxLanguageProviderService,
+    constructor(private configService: NxConfigService,
+                private languageService: NxLanguageProviderService,
                 private cloudApiService: NxCloudApiService,
+                private sessionService: NxSessionService,
                 private toastService: NxToastService) {
+        this.CONFIG = this.configService.getConfig();
         this.LANG = this.languageService.getTranslations();
     }
 
     createProcess(caller, settings?) {
-        return new Process(this.LANG,  this.cloudApiService, this.toastService, caller, settings);
+        return new Process(this.CONFIG, this.LANG, this.sessionService, this.cloudApiService, this.toastService, caller, settings);
     }
 }

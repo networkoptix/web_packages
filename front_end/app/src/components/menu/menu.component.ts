@@ -48,7 +48,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
             this.selectedLevel3 = changes.content.currentValue.selectedDetailsSection;
         }
 
-        if (changes.content.currentValue) {
+        if (changes.content.currentValue && changes.content.currentValue.level1) {
             this.section = changes.content.currentValue.level1.filter((level) => {
                 if (level.id === changes.content.currentValue.selectedSection) {
                     return true;

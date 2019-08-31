@@ -46,12 +46,12 @@
                         <tr>
                             <td>
                                 {% if review == original %}
-                                <strong>{{ review.customization }}</strong>
+                                <strong>{{ review.customization | portal_name }}</strong>
                                 {% else %}
-                                <a href="{% url 'admin:cms_productcustomizationreview_change' review.id %}">{{ review.customization }}</a>
+                                <a href="{% url 'admin:cms_productcustomizationreview_change' review.id %}">{{ review.customization | portal_name }}</a>
                                 {% endif %}
                             </td>
-                            <td><span class="label {% if state == 'Rejected' %} label-danger {% elif state == "Accepted" %} label-success {% else %} label-default{% endif %}">{{ state }}</span></td>
+                            <td><span class="label {% if state == 'Rejected' %} label-danger {% elif state == 'Accepted' %} label-success {% else %} label-default{% endif %}">{{ state }}</span></td>
                             <td> {{ review.reviewed_by }}</td>
                             <td> {{ review.reviewed_date }}</td>
                             <td> {{ review.notes | linebreaks }}</td>
@@ -133,7 +133,7 @@
         {% else %}
         <div>There are no changes to review</div>
         {% endif %}
-        <h2>Review Notes {% if access_customization %}for {{ original.customization.name }}{% endif %}</h2>
+        <h2>Review Notes {% if access_customization %}for {{ original.customization | portal_name }}{% endif %}</h2>
         {{ original.notes|linebreaks }}
     </div>
 

@@ -60,12 +60,23 @@ export class NxCloudApiService {
                 { email, password, first_name : firstName, last_name : lastName, subscribe, code });
     }
 
+    reactivateUser(userEmail) {
+        return this.http.post(this.CONFIG.apiBase + '/account/activate',
+                { user_email: userEmail }).toPromise();
+    }
+
     renameSystem(systemId, systemName) {
         return this.http.post(this.CONFIG.apiBase + '/systems/' + systemId + '/name', {
             name: systemName
         }).toPromise().then((result) => {
             this.systems('clearCache');
             return result;
+        });
+    }
+
+    sendMessage(type, product, message, userName?, userEmail?) {
+        return this.http.post(this.CONFIG.apiBase + '/feedback', {
+            message, product, type, userName, userEmail
         });
     }
 
@@ -151,6 +162,25 @@ export class NxCloudApiService {
         return this.http.post(this.CONFIG.apiBase + '/account/activate', {
             user_email: userEmail
         });
+    }
+
+    activate(code) {
+        return this.http.post(this.CONFIG.apiBase + '/account/activate', {
+            code
+        }).toPromise();
+    }
+
+    restorePasswordRequest(userEmail) {
+        return this.http.post(this.CONFIG.apiBase + '/account/restorePassword', {
+            user_email: userEmail
+        }).toPromise();
+    }
+
+    restorePassword(code, newPassword) {
+        return this.http.post(this.CONFIG.apiBase + '/account/restorePassword', {
+            code,
+            new_password: newPassword
+        }).toPromise();
     }
 
 }

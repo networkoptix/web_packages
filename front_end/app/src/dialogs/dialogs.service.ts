@@ -17,6 +17,7 @@ import { EmbedModalContent }         from './embed/embed.component';
 import { MergeModalContent }         from './merge/merge.component';
 import { NxConfigService }           from '../services/nx-config';
 import { NxAccountService }          from '../services/account.service';
+import { ApplyModalContent }         from './apply/apply.component';
 
 @Injectable({ providedIn: 'root' })
 export class NxDialogsService {
@@ -81,6 +82,10 @@ export class NxDialogsService {
         };
 
         return this.createModal(GenericModalContent, options, params);
+    }
+
+    apply(applyFunc, discardFunc) {
+        return this.createModal(ApplyModalContent, {}, {applyFunc, discardFunc});
     }
 
     confirm(message, title, actionLabel, actionType?, cancelLabel?) {

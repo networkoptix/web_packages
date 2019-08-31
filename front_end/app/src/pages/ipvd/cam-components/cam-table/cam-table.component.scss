@@ -45,7 +45,7 @@
   }
   
   .nx-table {
-    min-width : 700px;
+    min-width : 1045px;
     
     .table-row-spacer {
       height : .5rem;
@@ -80,6 +80,9 @@
         .caption {
           position : relative;
           height   : 2rem;
+          overflow-wrap : initial;
+          overflow      : hidden;
+          text-overflow : ellipsis;
       
           .sort-dir {
             //top: 0;
@@ -227,6 +230,12 @@
         }
       }
     }
+  }
+}
+
+.vendor {
+  @include media-breakpoint-down(md) {
+    background-color: $light4;
   }
 }
 

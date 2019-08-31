@@ -1,25 +1,34 @@
-import { Component, OnInit, Inject, ViewEncapsulation, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Inject, ViewEncapsulation, Input, Output, EventEmitter, forwardRef } from '@angular/core';
 import { NxUtilsService }                                                            from '../../../services/utils.service';
 import { NxLanguageProviderService }                                                 from '../../../services/nx-language-provider';
 import { NxCloudApiService }                                                         from '../../../services/nx-cloud-api';
+import { NG_VALUE_ACCESSOR, ControlValueAccessor }                                   from '@angular/forms';
 
 @Component({
     selector: 'nx-language-select',
     templateUrl: 'language.component.html',
     styleUrls: ['language.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => NxLanguageDropdown),
+            multi: true
+        }
+    ]
 })
 
 export class NxLanguageDropdown implements OnInit {
     @Input() instantReload: any;
+    @Input() instantApply: any;
     @Input() dropup: any;
     @Input() short: any;
     @Input() altStyle: any;
-    @Output() onSelected = new EventEmitter<string>();
 
     currentLang: string;
     show: boolean;
     direction: string;
+    langCode: string;
     activeLanguage = {
         language: '',
         name: ''
@@ -27,6 +36,11 @@ export class NxLanguageDropdown implements OnInit {
     languages = [];
     languagesCol1 = [];
     languagesCol2 = [];
+
+    // Placeholders for the callbacks which are later provided
+    // by the Control Value Accessor
+    private onTouchedCallback = () => {};
+    private onChangeCallback = (_: any) => {};
 
     constructor(private cloudApi: NxCloudApiService,
                 private language: NxLanguageProviderService,
@@ -53,27 +67,20 @@ export class NxLanguageDropdown implements OnInit {
             we should use this for seamless change of language
             // this.translate.use(lang.replace('_', '-'));
             */
-
-            this.activeLanguage = this.languages.find(lang => {
-                return (lang.language === langCode);
-            });
-            this.onSelected.emit(langCode);
             if (this.instantReload) {
                 this.cloudApi
                     .changeLanguage(langCode)
                     .then((response) => {
                         window.location.reload();
-                        return false; // return false so event will not bubble to HREF
                     });
             }
         }
-
-        return false; // return false so event will not bubble to HREF
     }
 
     ngOnInit(): void {
         this.direction = this.dropup ? 'dropup' : '';
         this.instantReload = this.instantReload !== undefined;
+        this.instantApply = this.instantApply !== undefined;
 
         this.cloudApi
             .getLanguages()
@@ -88,6 +95,34 @@ export class NxLanguageDropdown implements OnInit {
                 this.activeLanguage = this.languages.find(lang => {
                     return (lang.language === this.currentLang);
                 });
+                this.onChangeCallback(this.activeLanguage.language);
             });
+    }
+
+    writeValue(langCode: any) {
+        this.onTouchedCallback();
+        this.onChangeCallback(langCode);
+        this.langCode = langCode;
+        if (langCode) {
+            this.activeLanguage = this.languages.find(lang => {
+                return (lang.language === langCode);
+            });
+            if (this.instantApply) {
+                this.change(langCode);
+            }
+        }
+        return false; // return false so event will not bubble to HREF
+    }
+
+    registerOnChange(fn) {
+        this.onChangeCallback = fn;
+    }
+
+    registerOnTouched(fn: any): void {
+        this.onTouchedCallback = fn;
+    }
+
+    onBlur() {
+        this.onTouchedCallback();
     }
 }

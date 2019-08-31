@@ -184,20 +184,6 @@
     "permissionsRemoved": "Permissions were removed from {{email}}",
     "unknownName": "Unknown Name for System (Caused by cloud merge)"
   },
-  "account": {
-    "accountSavedSuccess": "Your account is successfully saved",
-    "activationLinkSent": "Activation Link Sent",
-    "passwordChangedSuccess": "Your account is successfully saved",
-    "changePassword": "Change Password",
-    "newPasswordLabel": "New password",
-    "saveChanges": "Save"
-  },
-  "activeActions": {
-    "sendConfirm": "Resend activation link",
-    "resetPassword": "Reset Password",
-    "setNewPassword": "Save password",
-    "setNewPasswordLabel": "New password"
-  },
   "regActions": {
     "passwordLabel": "Password",
     "createAccount": "Create Account"
@@ -222,9 +208,10 @@
     "cameraStates"        : {
       "offline"            : "Offline",
       "error"              : "Error",
+      "errorLoading"       : "An error occurred while loading this video.",
       "unauthorized"       : "Authentication required",
       "noData"             : "No data",
-      "iosVideoTooLarge"   : "iOS does not support video larger than fullHD (2MP: 1920x1080).",
+      "iOSVideoTooLarge"   : "iOS does not support video larger than fullHD (2MP: 1920x1080).",
       "flashRequired"      : "Please <a href='https://get.adobe.com/flashplayer/' target='_blank'>install Adobe Flash</a> for playing videos.",
       "flashOrWebmRequired": "Please <a href='https://get.adobe.com/flashplayer/' target='_blank'>install Adobe Flash</a> or<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> for playing video in Internet Explorer.",
       "noArmSupport"       : "This browser or device does not support video playback from ARM-based servers.",

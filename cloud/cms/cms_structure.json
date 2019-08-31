@@ -369,6 +369,31 @@
         ]
       },
       {
+        "name": "ARM guide page",
+        "label": "ARM guide page",
+        "file_path": "static/lang_{{language}}/views/static/arm-guide.html",
+        "url": "/content/arm-guide",
+        "translatable": true,
+        "values":[
+          {
+            "label": "Arm Guide Page Title",
+            "name": "%TITLE%",
+            "value": "ARM Guide",
+            "description": "Title for the ARM guide page",
+            "type": "text",
+            "advanced": true
+          },
+          {
+            "label": "ARM Guide Page Content",
+            "name": "%CONTENT%",
+            "value": "",
+            "description": "Content for ARM guide page",
+            "type": "html",
+            "advanced": true
+          }
+        ]
+      },
+      {
         "name": "End user license agreement(VMS) page",
         "label": "End user license agreement(VMS) page",
         "file_path": "static/lang_{{language}}/views/static/eula-vms.html",
@@ -1017,13 +1042,16 @@
           },
           {
             "name": "type",
-            "label": "Type(Category)",
+            "label": "Type (Category)",
             "value": [],
             "description": "",
             "type": "multiselect",
             "meta": {
               "options": [
                 {
+                  "id": "access",
+                  "label": "Access Control"
+                }, {
                   "id": "automation",
                   "label": "Automation"
                 }, {

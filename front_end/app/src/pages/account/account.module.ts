@@ -9,6 +9,11 @@ import { NxAccountComponent } from './account.component';
 
 import { TranslateModule }       from '@ngx-translate/core';
 import { ComponentsModule }      from '../../components/components.module';
+import { NxAccountSettingsComponent } from './settings/settings.component';
+import { NxAccountPasswordComponent } from './password/password.component';
+import { NxAccountSettingsModule } from './settings/settings.module';
+import { NxAccountPasswordModule } from './password/password.module';
+import { ApplyGuard } from '../../routeGuards/applyGuard';
 
 @Injectable()
 export class TypeResolver implements Resolve<any> {
@@ -23,13 +28,12 @@ export class TypeResolver implements Resolve<any> {
 const appRoutes: Routes = [
     {
         path: 'account', component: NxAccountComponent,
+        children: [
+            { path: '', component: NxAccountSettingsComponent, canDeactivate: [ApplyGuard] },
+            { path: 'password', component: NxAccountPasswordComponent, canDeactivate: [ApplyGuard] }
+        ]
     },
-    {
-        path: 'account/password', component: NxAccountComponent, resolve: {passwordMode: TypeResolver}
-    }
 ];
-
-// TODO: Remove it after test
 
 @NgModule({
     imports        : [
@@ -39,6 +43,8 @@ const appRoutes: Routes = [
         TranslateModule,
         ComponentsModule,
         FormsModule,
+        NxAccountSettingsModule,
+        NxAccountPasswordModule,
 
         RouterModule.forChild(appRoutes)
     ],

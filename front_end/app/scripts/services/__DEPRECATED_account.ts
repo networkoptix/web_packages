@@ -107,12 +107,11 @@
             },
             logout: function (doNotRedirect) {
                 cloudApi.logout().finally(function () {
-                    $rootScope.session.$reset(); // Clear session
                     if (!doNotRedirect) {
                         $location.path(CONFIG.redirectUnauthorised);
                     }
                     setTimeout(function () {
-                        document.location.reload();
+                        $rootScope.session.$reset(); // Clear session
                     });
                 });
             },

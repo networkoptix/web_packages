@@ -1,12 +1,12 @@
 import { Inject, Injectable }        from '@angular/core';
 import { DOCUMENT, Location }        from '@angular/common';
-import { BehaviorSubject }           from 'rxjs';
 import { LocalStorageService }       from 'ngx-store';
 
 import { NxConfigService }           from './nx-config';
 import { NxCloudApiService }         from './nx-cloud-api';
 import { NxLanguageProviderService } from './nx-language-provider';
 import { NxDialogsService }          from '../dialogs/dialogs.service';
+import { NxSessionService }          from './session.service';
 
 @Injectable({
     providedIn: 'root'
@@ -15,39 +15,35 @@ export class NxAccountService {
     CONFIG: any;
     LANG: any;
     location: any;
-    session: any;
     requestingLogin: any;
-    loginStateSubject = new BehaviorSubject(undefined);
 
     constructor(@Inject(DOCUMENT) private document: any,
                 private config: NxConfigService,
                 private language: NxLanguageProviderService,
                 private cloudApi: NxCloudApiService,
+                private sessionService: NxSessionService,
                 private localStorageService: LocalStorageService,
                 private locationService: Location,
                 private dialogs: NxDialogsService,
     ) {
-        this.session = this.localStorageService;
         this.location = this.locationService;
-        this.loginStateSubject.next(this.session.get('loginState'));
         this.CONFIG = this.config.getConfig();
         this.LANG = this.language.getTranslations();
 
-        this.loginStateSubject.subscribe((loginState) => {
-            // if (!$routeParams.next && this.session.get('loginState') !== loginState) {
-            //     this.document.location.reload();
-            // }
+        this.sessionService.loginStateSubject.subscribe((loginState) => {
+            if (loginState === null) {
+                this.logout();
+            }
         });
     }
 
     clearLoginState() {
-        this.session.set('loginState', undefined);
-        this.loginStateSubject.next(undefined);
+        this.sessionService.loginState = undefined;
     }
 
     checkLoginState(): Promise<boolean> {
             return new Promise<boolean>((resolve, reject) => {
-                if (this.loginStateSubject.getValue()) {
+                if (this.sessionService.loginState) {
                     resolve(true);
                 }
 
@@ -78,7 +74,7 @@ export class NxAccountService {
         return this.cloudApi
                    .authKey()
                    .then((result: any) => {
-                       return result.data.auth_key;
+                       return result.auth_key;
                    });
     }
 
@@ -86,7 +82,7 @@ export class NxAccountService {
         return this.cloudApi
                    .visitedKey(key)
                    .then((result: any) => {
-                       return result.data.visited;
+                       return result.visited;
                    });
     }
 
@@ -94,7 +90,7 @@ export class NxAccountService {
         return this.cloudApi
                    .checkCode(code)
                    .then((result: any) => {
-                       return result.data.emailExists;
+                       return result.emailExists;
                    });
     }
 
@@ -133,23 +129,23 @@ export class NxAccountService {
     }
 
     setEmail(email) {
-        this.session.set('email', email);
+        this.sessionService.email = email;
     }
 
     getEmail() {
-        return this.session.email;
+        return this.sessionService.email;
     }
 
     login(email, password, remember) {
-        this.setEmail(email);
+        this.sessionService.email = email;
 
         return this.cloudApi
                    .login(email, password, remember)
                    .then((result: any) => {
-                       if (this.session.loginState) {
+                       if (this.sessionService.loginState) {
                            // If the user that logged in matches the current session there's no need to show
                            // the logout dialog.
-                           if (result.data.email !== this.session.loginState) {
+                           if (result.email !== this.sessionService.loginState) {
                                this.logoutAuthorised();
                            }
 
@@ -157,9 +153,8 @@ export class NxAccountService {
                        }
 
                        if (result.email) { // (result.data.resultCode === L.errorCodes.ok)
-                           this.setEmail(result.email);
-                           this.session.set('loginState', result.email); // Forcing changing loginState to reload interface
-                           this.loginStateSubject.next(result.email);
+                           this.sessionService.email = result.email;
+                           this.sessionService.loginState = result.email; // Forcing changing loginState to reload interface
                        }
 
                        return Promise.resolve({ data : { resultCode: 'ok' }});
@@ -171,11 +166,11 @@ export class NxAccountService {
                    });
     }
 
-    logout(doNotRedirect) {
+    logout(doNotRedirect?) {
         this.cloudApi
             .logout()
             .finally(() => {
-                this.session.clear('all'); // Clear session
+                this.sessionService.invalidateSession(); // Clear session
                 if (!doNotRedirect) {
                     this.location.path(this.CONFIG.redirectUnauthorised);
                 }
@@ -204,7 +199,7 @@ export class NxAccountService {
     }
 
     checkUnauthorized(data) {
-        if (data && data.data && data.data.resultCode === 'notAuthorized') {
+        if (data && data.resultCode === 'notAuthorized') {
             this.logout(true);
             return false;
         }
