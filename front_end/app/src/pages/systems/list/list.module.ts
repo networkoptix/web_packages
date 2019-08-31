@@ -51,8 +51,3 @@ const appRoutes: Routes = [
 })
 export class NxSystemsListModule {
 }
-
-declare var angular: angular.IAngularStatic;
-angular
-        .module('cloudApp.directives')
-        .directive('nxSystemsListComponent', downgradeComponent({ component: NxSystemsListComponent }) as angular.IDirectiveFactory);
