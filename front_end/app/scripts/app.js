@@ -342,8 +342,7 @@ window.L = {};
                         template: '',
                     })
                     .when('/debug', {
-                        templateUrl: CONFIG.viewsDir + 'debug.html',
-                        controller: 'DebugCtrl'
+                        template: ''
                     })
                     .when('/login', {
                         template: ''

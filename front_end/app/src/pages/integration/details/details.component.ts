@@ -54,7 +54,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
         this.menuService
             .selectedSectionSubject
             .subscribe(selection => {
-                this.content.selectedSection = selection;
+                this.content.selectedSubSection = selection;
                 this.content = {...this.content}; // trigger onChange
         });
 

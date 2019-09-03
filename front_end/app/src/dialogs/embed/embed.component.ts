@@ -77,6 +77,7 @@ export class EmbedModalContent {
         uri += (uri === '') ? '?' : '&';
         uri += 'auth=' + btoa(params.login_email + ':' + params.login_password);
 
+        // HTML tags are needed for copy to clipboard functionality
         this.embedUrl = '<iframe ' +
                             'src = "' + url + uri + '" >' +
                             'Your browser doesn\'t support iframe.' +

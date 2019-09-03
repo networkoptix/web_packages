@@ -22,6 +22,7 @@ import { NxSystemsListModule }       from './systems/list/list.module';
 import { NxAccountModule }           from './account/account.module';
 import { NxRestoreModule }           from './restore/restore.module';
 import { Nx404Module }               from './404/404.module';
+import { NxDebugModule }             from './debug/debug.module';
 
 @NgModule({
     imports        : [
@@ -46,6 +47,7 @@ import { Nx404Module }               from './404/404.module';
         NxSystemsListModule,
         NxAccountModule,
         Nx404Module,
+        NxDebugModule,
     ],
     declarations   : [],
     entryComponents: [],
@@ -67,6 +69,7 @@ import { Nx404Module }               from './404/404.module';
         Angular2CsvModule,
         LandingModule,
         Nx404Module,
+        NxDebugModule,
     ]
 })
 export class PagesModule {
