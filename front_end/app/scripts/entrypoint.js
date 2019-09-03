@@ -59,7 +59,7 @@ require('./services/location-proxy.ts');
 // require('./controllers/account.js');
 // require('./controllers/activateRestore.js');
 // require('./controllers/debug.js');
-require('./controllers/static.js');
+// require('./controllers/static.js');
 // require('./controllers/system.js');
 // require('./controllers/systems.js');
 require('./controllers/view.js');
