@@ -248,9 +248,9 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
                 if (select.selected && select.selected.value !== '0') { // not default value
                     this.numberFilters++;
                     if (this.numberFilters > 1) {
-                        selectsSelected = this.numberFilters + ' ' + this.LANG.search['filters applied'];
+                        selectsSelected = this.numberFilters + '&nbsp;' + this.LANG.search['filters applied'];
                     } else {
-                        selectsSelected = '<span>' + select.label + '</span> &ndash; <span>' + select.selected.name + '</span>';
+                        selectsSelected = select.label + '&nbsp;&ndash;&nbsp;' + select.selected.name;
                     }
                     flag++;
                 }
