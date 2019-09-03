@@ -1,7 +1,7 @@
 import { NgModule }                                from '@angular/core';
 import { CommonModule }                            from '@angular/common';
 import { TranslateModule }                         from '@ngx-translate/core';
-import { downgradeComponent, downgradeInjectable } from '@angular/upgrade/static';
+import { downgradeComponent } from '@angular/upgrade/static';
 import { RouterModule }                            from '@angular/router';
 import { FormsModule }                             from '@angular/forms';
 import { NgbToastModule }                from '@ng-bootstrap/ng-bootstrap';
@@ -185,21 +185,4 @@ export class ComponentsModule {
 declare var angular: angular.IAngularStatic;
 angular
         .module('cloudApp.directives')
-        // .directive('nxLanguageSelect', downgradeComponent({ component: NxLanguageDropdown }) as angular.IDirectiveFactory)
-        // .directive('nxClientButton', downgradeComponent({ component: NxClientButtonComponent }) as angular.IDirectiveFactory)
-        // .directive('nxSelect', downgradeComponent({ component: NxGenericDropdown }) as angular.IDirectiveFactory)
-        // .directive('nxMultiSelect', downgradeComponent({ component: NxMultiSelectDropdown }) as angular.IDirectiveFactory)
-        // .directive('nxAccountSettingsSelect', downgradeComponent({ component: NxAccountSettingsDropdown }) as angular.IDirectiveFactory)
-        // .directive('nxActiveSystem', downgradeComponent({ component: NxActiveSystemDropdown }) as angular.IDirectiveFactory)
-        // .directive('nxSystems', downgradeComponent({ component: NxSystemsDropdown }) as angular.IDirectiveFactory)
-        // .directive('nxPermissions', downgradeComponent({ component: NxPermissionsDropdown }) as angular.IDirectiveFactory)
-        // .directive('nxProcessButton', downgradeComponent({ component: NxProcessButtonComponent }) as angular.IDirectiveFactory)
-        // .directive('nxPreLoader', downgradeComponent({ component: NxPreLoaderComponent }) as angular.IDirectiveFactory)
-        // .directive('nxRibbon', downgradeComponent({ component: NxRibbonComponent }) as angular.IDirectiveFactory)
-        // .directive('nxFooter', downgradeComponent({component: NxFooterComponent}) as angular.IDirectiveFactory)
         .directive('nxHeader', downgradeComponent({component: NxHeaderComponent}) as angular.IDirectiveFactory);
-        // .directive('nxLandingDisplay', downgradeComponent({component: NxLandingDisplayComponent}) as angular.IDirectiveFactory);
-
-// angular
-//         .module('cloudApp.services')
-//         .service('NxRibbonService', downgradeInjectable(NxRibbonService));
