@@ -201,7 +201,10 @@ class CustomContextForm(forms.Form):
 
             validator = RegexValidator('')
             if data_structure.type == DataStructure.DATA_TYPES.text and 'regex' in data_structure.meta_settings:
-                validator = RegexValidator(data_structure.meta_settings['regex'])
+                pattern = data_structure.meta_settings['regex']
+                if not pattern.endswith('$'):
+                    pattern = f'{pattern}$'
+                validator = RegexValidator(pattern)
 
             self.fields[data_structure.name] = forms.CharField(required=False,
                                                                label=ds_label,
