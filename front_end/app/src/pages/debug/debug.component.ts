@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { filter } from 'rxjs/operators';
 
@@ -11,7 +11,8 @@ import { NxProcessService } from '../../services/process.service';
 import { NxSystemsService } from '../../services/systems.service';
 import { NxUrlProtocolService } from '../../services/url-protocol.service';
 import { Watcher } from '../../services/apply.service';
-import {NxSystem} from "../../services/system.service";
+import { NxSystem } from '../../services/system.service';
+import { WINDOW } from '../../services/window-provider';
 
 @Component({
     selector: 'nx-debug',
@@ -57,7 +58,8 @@ export class NxDebugComponent {
     systems: NxSystem[];
     type = 'activate_account';
     userEmail = 'ebalashov@networkoptix.com';
-    constructor(private http: HttpClient,
+    constructor(@Inject(WINDOW) private window: Window,
+                private http: HttpClient,
                 private accountService: NxAccountService,
                 private cloudApiService: NxCloudApiService,
                 private dialogsService: NxDialogsService,
@@ -214,13 +216,12 @@ export class NxDebugComponent {
         this.parseActionParams();
         this.urlProtocol.getLink(this.clearEmptyStrings(this.linkSettings)).then((data: any) => {
             const link = data.link;
-            if ('protocolCheck' in window) {
-                // window.protocolCheck(link, () => {
-                //     alert('Protocol not recognized');
-                // }, () => {
-                //     alert('Ok - protocol is working');
-                // });
-            }
+            // @ts-ignore
+            this.window.protocolCheck(link, () => {
+                alert('Protocol not recognized');
+            }, () => {
+                alert('Ok - protocol is working');
+            });
         });
     }
 
