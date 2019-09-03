@@ -253,7 +253,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     id,
                     icon : 'glyphicon-cloud',
                     label: user.email,
-                    additionalLabel: '<span class="menu-level-2-additional">&ndash;&nbsp;' + user.role.name + '</span>',
+                    additionalLabel:  user.role.name,
                     path : 'users/' + id,
                     isEnabled: user.isEnabled,
                 });

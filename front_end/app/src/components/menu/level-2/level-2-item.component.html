@@ -7,5 +7,10 @@
         <span class="m-0 glyphicon {{item.icon}}"
               [ngClass]="{'selected': selected, 'item-disabled': !isEnabled}"></span>
     </div>
-    <div class="ellipsis" [innerHTML]="item.label"></div>
+    <div class="ellipsis" >
+        <span [innerHTML]="item.label" class="user"></span>
+        <span class="menu-level-2-additional"
+              *ngIf="this.item.additionalLabel"
+              [innerHTML]="'<span class=\'ml-1 mr-1\'>&ndash;</span>' + this.item.additionalLabel + 'asdasasd asd as asd as das d asd'"></span>
+    </div>
 </a>

@@ -41,7 +41,16 @@
     
     &.selected {
         background-color : $light16 !important;
-        color            : $light1 !important;
+        color : $light1 !important;
+    
+        .user {
+            color : $light1 !important;
+        }
+    
+        .menu-level-2-additional {
+            color       : $light1;
+            font-family : $font-family-regular;
+        }
     }
     
     &.item-disabled {
