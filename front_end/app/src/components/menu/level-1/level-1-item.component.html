@@ -4,7 +4,7 @@
    [id]="item.id"
    [routerLink]="[itemPath]"
    [queryParams]="item.query">
-    <div class="menu-level-1-icon">
+    <div class="menu-level-1-icon" *ngIf="item.icon">
         <span class="m-0 glyphicon" [ngClass]="item.icon"></span>
     </div>
     {{item.label}}
