@@ -253,10 +253,10 @@ import * as angular from 'angular';
                             this.isAvailable = true;
                             this.updateSystemState();
                             return processUsers(usersList, userRoles, predefinedRoles);
-                        }, () => {
+                        }, (err) => {
                             this.isAvailable = false;
                             this.updateSystemState();
-                            return Promise.reject();
+                            return Promise.reject(err);
                         });
                     };
 

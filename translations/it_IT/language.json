@@ -242,9 +242,10 @@
     "cameraStates": {
       "offline": "Offiline",
       "error": "Errore",
+      "errorLoading": "An error occurred while loading this video.",
       "unauthorized": "Autenticazione richiesta",
       "noData": "Nessun dato",
-      "iosVideoTooLarge": "iOS non supporta video più grandi di FullHD (2MP: 1920x1080).",
+      "iOSVideoTooLarge": "iOS non supporta video più grandi di FullHD (2MP: 1920x1080).",
       "flashRequired": "Si prega di <a href='https://get.adobe.com/flashplayer/' target='_blank'>installare Adobe Flash</a> per la riproduzione di video.",
       "flashOrWebmRequired": "Si prega di <a href='https://get.adobe.com/flashplayer/' target='_blank'>installare Adobe Flash</a> o<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>codec WebM</a> per la riproduzione di video in Internet Explorer.",
       "noArmSupport": "Questo browser o dispositivo non supporta la riproduzione di video da server basati su ARM.",

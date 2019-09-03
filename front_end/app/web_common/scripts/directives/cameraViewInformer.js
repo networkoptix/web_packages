@@ -65,7 +65,7 @@
                 }
     
                 scope.condition = true;
-                
+    
                 updateTpl(scope);
                 
             }, true);
@@ -73,7 +73,12 @@
             $rootScope.$on('nx.player.playing', function () {
                 // Ensure Safari will hide the informer
                 // probable cause: Event misalignment
-                scope.condition = false;
+                // ... on Safari - 'nx.player.playing' will be fired while
+                // switching playing camera to camera with not supported video
+                // and prevent error msg from displaying
+                if (scope.player !== false) {
+                    scope.condition = false;
+                }
             });
         }
         
@@ -82,7 +87,8 @@
             scope: {
                 flags: '<',
                 preloader: '<',
-                preview: '<'
+                preview: '<',
+                player: '<'
             },
             templateUrl: CONFIG.viewsDirCommon + 'components/placeholder.html',
             link: linkFunction

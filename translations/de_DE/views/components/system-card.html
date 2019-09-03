@@ -2,7 +2,9 @@
     <div class="card-body">
         <h2 class="mb-3">Ihr System</h2>
         <p>
-            <button ng-disabled="currentlyMerging && !isMaster" class="btn btn-default" ng-click="rename()">System umbenennen</button>
+            <button class="btn btn-default mw-100"
+                    ng-disabled="currentlyMerging && !isMaster"
+                    ng-click="rename()"><div class="ellipsis">System umbenennen</div></button>
         </p>
         <p ng-if="systems.length > 1 && system.canMerge || configCanMerge || debugMode || betaMode">
             <button class="btn btn-default mw-100"
@@ -10,8 +12,10 @@
                     ng-click="mergeSystems()"><div class="ellipsis">Mit einem anderen System zusammenführen</div></button>
         </p>
         <hr />
-        <button ng-disabled="currentlyMerging" class="btn btn-default" ng-click="disconnect()">Von
-            <span class="product-name">&nbsp;%CLOUD_NAME%</span> trennen</button>
+        <button class="btn btn-default mw-100"
+                ng-disabled="currentlyMerging"
+                ng-click="disconnect()">
+            <div class="ellipsis"> Verbindung zu <span class="product-name">&nbsp;%CLOUD_NAME%</span> trennen </div></button>
     </div>
 </div>
 <div class="card card-condensed" ng-if="!system.isMine">
@@ -26,9 +30,15 @@
         </p>
 
         <p ng-if="system.permissions.isAdmin">
-            <button class="btn btn-default" ng-click="rename()" ng-disabled="currentlyMerging && !isMaster">System umbenennen</button>
+            <button class="btn btn-default mw-100"
+                    ng-click="rename()"
+                    ng-disabled="currentlyMerging && !isMaster">
+                <div class="ellipsis">System umbenennen</div></button>
         </p>
-        <button class="btn btn-default" ng-click="delete()" ng-disabled="currentlyMerging">Von meinem Account trennen</button>
+        <button class="btn btn-default mw-100"
+                ng-click="delete()"
+                ng-disabled="currentlyMerging">
+            <div class="ellipsis">Verbindung zu meinem Konto trennen</div></button>
     </div>
 </div>
 <div class="mt-3 card card-default" ng-if="currentlyMerging">

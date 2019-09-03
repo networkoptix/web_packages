@@ -232,7 +232,8 @@ class ProductSettingsForm(forms.Form):
             ('generate_json', 'Generate structure template based on archive'),
             ('merge_with_db', 'Generate structure using archive and db'),
             ('update_structure',
-             'Update CMS structure and default values based on archive with structure.json and product_type template'),
+             'Update CMS structure and default values based on archive with structure.json and product_type template, '
+             'or upload just the structure.json'),
             ('update_content', 'Upload content files for product')
         )
     )

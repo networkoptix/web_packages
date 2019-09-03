@@ -242,9 +242,10 @@
     "cameraStates": {
       "offline": "Не в сети",
       "error": "Ошибка",
+      "errorLoading": "При загрузке этого видео произошла ошибка.",
       "unauthorized": "Требуется аутентификация",
       "noData": "Нет данных",
-      "iosVideoTooLarge": "iOS не поддерживает видео с разрешением больше чем fullHD (2MP: 1920x1080).",
+      "iOSVideoTooLarge": "iOS не поддерживает видео с разрешением больше чем fullHD (2MP: 1920x1080).",
       "flashRequired": "Пожалуйста, <a href='https://get.adobe.com/flashplayer/' target='_blank'>установите Adobe Flash</a> для воспроизведения видео.",
       "flashOrWebmRequired": "Видео не может быть воспроизведено. Возможно, требуется <a href='https://get.adobe.com/flashplayer/' target='_blank'>установить Adobe Flash</a> или <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>кодек WebM</a> для воспроизведения видео с серверов в Internet Explorer.",
       "noArmSupport": "Этот браузер или устройство не поддерживает воспроизведение видео с серверов на базе ARM.",

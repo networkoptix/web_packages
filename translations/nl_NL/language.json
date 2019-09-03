@@ -242,9 +242,10 @@
     "cameraStates": {
       "offline": "Offline",
       "error": "Fout",
+      "errorLoading": "An error occurred while loading this video.",
       "unauthorized": "Authenticatie vereist",
       "noData": "Geen data",
-      "iosVideoTooLarge": "iOS ondersteunt geen video die groter is dan FullHD (2MP: 1920x1080).",
+      "iOSVideoTooLarge": "iOS ondersteunt geen video die groter is dan FullHD (2MP: 1920x1080).",
       "flashRequired": "Gelieve <a href='https://get.adobe.com/flashplayer/' target='_blank'> Adobe Flash</a> te installeren voor het afspelen van video's.",
       "flashOrWebmRequired": "<a href='https://get.adobe.com/flashplayer/' target='_blank'>installeer Adobe Flash</a> of<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> voor het afspelen van video in Internet Explorer.",
       "noArmSupport": "Deze browser of dit apparaat ondersteunt geen videoweergave van ARM-gebaseerde servers.",

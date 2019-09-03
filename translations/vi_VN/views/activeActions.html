@@ -26,10 +26,13 @@
             <h1>Bạn đã đăng ký tại %CLOUD_NAME%</h1>
             <p>Chúng tôi đã gửi cho bạn một email với liên kết kích hoạt đến {{data.email}}.<br>
                 Vui lòng kích hoạt tài khoản của bạn bằng cách truy cập liên kết này.</p>
+            <process-button process="reactivate"
+                            form="reactivateAccount"
+                            button-text="$root.L.activeActions.sendConfirm"></process-button>
         </div>
         <h1 ng-if="!data.email">Kích hoạt tài khoản của bạn</h1>
-        <form name="reactivateAccount" class="form-horizontal" ng-if="!reactivate.success" novalidate>
-            <div class="form-group" ng-if="!data.email" validate-field>
+        <form name="reactivateAccount" class="form-horizontal" ng-if="!reactivate.success && !data.email" novalidate>
+            <div class="form-group" validate-field>
                 <div class="col-md-4 justify-content-start justify-content-md-end">
                     <label for="emailReactivate" class="control-label">Email</label>
                 </div>

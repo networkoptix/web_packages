@@ -1,5 +1,5 @@
 {
-  "language": "en_US",
+  "language": "sv_SE",
   "language_name": "Svenska",
   "cloudName": "%CLOUD_NAME%",
   "vmsName": "%VMS_NAME%",
@@ -242,9 +242,10 @@
     "cameraStates": {
       "offline": "Frånkopplade",
       "error": "Fel",
+      "errorLoading": "Ett fel uppstod vid laddning av den här videon.",
       "unauthorized": "Autentisering krävs",
       "noData": "Data saknas",
-      "iosVideoTooLarge": "ios stöder inte video större än fullHD (2MP: 1920x1080).",
+      "iOSVideoTooLarge": "ios stöder inte video större än fullHD (2MP: 1920x1080).",
       "flashRequired": "Var god <a href='https://get.adobe.com/flashplayer/' target='_blank'>installera Adobe Flash</a> för att spela upp videor.",
       "flashOrWebmRequired": "Var god <a href='https://get.adobe.com/flashplayer/' target='_blank'>installera Adobe Flash</a> eller<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> för att spela video i Internet Explorer.",
       "noArmSupport": "Denna webbläsare eller enhet stöder inte videouppspelning från ARM-baserade servrar.",

@@ -140,9 +140,8 @@ export class MergeModalContent {
             this.checking = true;
             this.systemMergeable = '';
             return this.precheckSystemMerge();
-        }, {
-            errorCodes: {}
-        }).then((res) => {
+        }, { errorCodes: {}})
+        .then((res) => {
             this.checking = false;
             this.targetSystemDropdown.name = this.addStatus(this.targetSystem);
             this.systemMergeable = this.checkMergeability(this.targetSystem);

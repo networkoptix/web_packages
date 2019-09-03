@@ -25,10 +25,13 @@
         <div ng-if='data.email'>
             <h1>Ви зареєстровані в %CLOUD_NAME%</h1>
             <p>Ми надіслали вам лист з посиланням на активацію до {{data.email}}<br> Будь ласка, активуйте свій обліковий запис, відвідавши це посилання.</p>
+            <process-button process="reactivate"
+                            form="reactivateAccount"
+                            button-text="$root.L.activeActions.sendConfirm"></process-button>
         </div>
         <h1 ng-if="!data.email">Активувати обліковий запис</h1>
-        <form name="reactivateAccount" class="form-horizontal" ng-if="!reactivate.success" novalidate>
-            <div class="form-group" ng-if="!data.email" validate-field>
+        <form name="reactivateAccount" class="form-horizontal" ng-if="!reactivate.success && !data.email" novalidate>
+            <div class="form-group" validate-field>
                 <div class="col-md-4 justify-content-start justify-content-md-end">
                     <label for="emailReactivate" class="control-label">Email</label>
                 </div>

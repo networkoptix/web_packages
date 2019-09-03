@@ -112,7 +112,7 @@
     "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.": "Thông tin đăng nhập của người dùng này sẽ được tiết lộ! Bạn phải tạo vai trò \"Public User\" tùy chỉnh chỉ với quyền truy cập\n            cho các camera được chọn để sử dụng công cộng và chỉ được gán các quyền xem tối thiểu được yêu cầu. Người dùng\n            \"Public User\" này không nên có quyền truy cập trên toàn hệ thống.",
     "There will be more than": "Sẽ có nhiều hơn",
     "This device has reported to support some analytics events, but we don't have exact information about them.": "Thiết bị này đã được báo cáo để hỗ trợ một số sự kiện phân tích, nhưng chúng tôi không có thông tin chính xác về chúng.",
-    "To": "To",
+    "To": "Đến",
     "Too many attempts. Try again in a minute.": "Quá nhiều lần thử. Vui lòng thử lại sau một phút.",
     "Topic": "Chủ đề",
     "Update them to the": "Cập nhật chúng lên",
@@ -192,7 +192,7 @@
             "arm": {
                 "label": "ARM",
                 "shortLabel": "ARM",
-                "supported": "Debian/Ubuntu based"
+                "supported": "<a href='/content/arm'>ARM based servers support policy</a>"
             },
             "ios": {
                 "label": "iOS",
