@@ -173,6 +173,7 @@ export class MergeModalContent {
                 }
         }
 
+        // HTML required for dropdown list
         return `<span>${system.name}</span><span class="text-muted">${status}</span>`;
     }
 
