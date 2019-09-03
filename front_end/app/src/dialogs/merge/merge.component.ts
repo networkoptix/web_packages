@@ -223,8 +223,8 @@ export class MergeModalContent {
                 this.tooManySystems = res.map(req => req.data.length)
                     .reduce((acc, cur) => acc + cur) > this.config.maxServers;
                 return {};
-            }).catch(error => error);
-        });
+            });
+        }, (err) => err);
     }
 
     makeSelectorList(systems) {
