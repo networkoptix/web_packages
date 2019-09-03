@@ -339,7 +339,7 @@ class NxSystemAPI {
         return this.get('/ec2/getCamerasEx', params);
     }
 
-    getMediaServers(id) {
+    getMediaServers(id?) {
         const params = id ? {id: this.cleanId(id)} : {};
         return this.get('/ec2/getMediaServersEx', params);
     }

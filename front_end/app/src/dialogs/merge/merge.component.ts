@@ -1,9 +1,10 @@
-import { Component, Inject, Input, Renderer2, ViewChild } from '@angular/core';
+import { Component, Input, Renderer2, ViewChild } from '@angular/core';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
-import { Location }                  from '@angular/common';
-import { EmailValidator }            from '@angular/forms';
 import { NxConfigService }           from '../../services/nx-config';
+import { NxCloudApiService }         from '../../services/nx-cloud-api';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxProcessService }          from '../../services/process.service';
+import { NxSystemService }           from '../../services/system.service';
 import { NxSystemsService }          from '../../services/systems.service';
 
 @Component({
@@ -42,10 +43,10 @@ export class MergeModalContent {
     constructor(public activeModal: NgbActiveModal,
                 public renderer: Renderer2,
                 private configService: NxConfigService,
-                @Inject('process') private process: any,
-                @Inject('system') private systemService: any,
-                @Inject('cloudApiService') private cloudApi: any,
+                private cloudApi: NxCloudApiService,
                 private language: NxLanguageProviderService,
+                private processService: NxProcessService,
+                private systemService: NxSystemService,
                 private systemsService: NxSystemsService
     ) {
         this.config = this.configService.getConfig();
@@ -66,7 +67,11 @@ export class MergeModalContent {
         this.systemMergeable = this.checkMergeability(this.targetSystem);
         this.systemError = !this.multipleSystems || this.outOfDate;
 
-        this.mergingProcess = this.process.init(() => {
+        this.initProcesses();
+    }
+
+    initProcesses() {
+        this.mergingProcess = this.processService.createProcess(() => {
             return this.cloudApi.merge(this.primarySystem.id, this.secondarySystem.id, this.password);
         }, {
             errorCodes: {
@@ -77,7 +82,7 @@ export class MergeModalContent {
                     return this.LANG.system.mergeFailed;
                 },
                 wrongPassword: () => {
-                    this.mergeForm.controls['mergePassword'].setErrors({ 'wrongPassword': true });
+                    this.mergeForm.controls.mergePassword.setErrors({ wrongPassword: true });
                     this.password = '';
 
                     this.renderer.selectRootElement('#mergePassword').focus();
@@ -131,7 +136,7 @@ export class MergeModalContent {
             }
         });
 
-        this.checkMergeabilityProcess = this.process.init(() => {
+        this.checkMergeabilityProcess = this.processService.createProcess(() => {
             this.checking = true;
             this.systemMergeable = '';
             return this.precheckSystemMerge();
@@ -144,6 +149,8 @@ export class MergeModalContent {
             if (!res.system && this.systemMergeable === '' || this.config.allowDebugMode) {
                 return this.updateState();
             }
+        }, (err) => {
+            console.log(err);
         });
     }
 
@@ -204,22 +211,20 @@ export class MergeModalContent {
     }
 
     precheckSystemMerge() {
-        return this.systemService(this.targetSystem.id, this.user.email).update().then((system) => {
-            return system.getUsersDataFromTheSystem().then(() => {
-                this.targetSystem = {...this.targetSystem, ...system};
-                return Promise.all([
-                    this.system.mediaserver.getMediaServers().catch(error => {
-                        return Promise.reject({system: 'current', errorResponse: error});
-                    }),
-                    this.targetSystem.mediaserver.getMediaServers().catch(error => {
-                        return Promise.reject({system: 'target', errorResponse: error});
-                    })
-                ]).then(res => {
-                    this.tooManySystems = res.map(req => req.data.length)
-                        .reduce((acc, cur) => acc + cur) > this.config.maxServers;
-                    return {};
-                }).catch(error => error);
-            });
+        this.targetSystem = this.systemService.createSystem(this.targetSystem.id, this.user.email);
+        return this.targetSystem.getUsersDataFromTheSystem().then(() => {
+            return Promise.all([
+                this.system.mediaserver.getMediaServers().catch(error => {
+                    return Promise.reject({system: 'current', errorResponse: error});
+                }),
+                this.targetSystem.mediaserver.getMediaServers().catch(error => {
+                    return Promise.reject({system: 'target', errorResponse: error});
+                })
+            ]).then(res => {
+                this.tooManySystems = res.map(req => req.data.length)
+                    .reduce((acc, cur) => acc + cur) > this.config.maxServers;
+                return {};
+            }).catch(error => error);
         });
     }
 
@@ -266,42 +271,3 @@ export class MergeModalContent {
         }
     }
 }
-
-// @Component({
-//     selector     : 'nx-modal-merge',
-//     template     : '',
-//     encapsulation: ViewEncapsulation.None,
-//     styleUrls    : []
-// })
-// export class NxModalMergeComponent {
-//     modalRef: NgbModalRef;
-//
-//     constructor(@Inject('languageService') private language: any,
-//                 private modalService: NgbModal) {
-//     }
-//
-//     private dialog(system, systems, user) {
-//         // TODO: Refactor dialog to use generic dialog
-//         // TODO: retire loading ModalContent (CLOUD-2493)
-//         this.modalRef = this.modalService.open(MergeModalContent,
-//             {
-//                 backdrop: 'static',
-//                 windowClass: 'modal-holder'
-//             });
-//         this.modalRef.componentInstance.language = this.language.lang;
-//         this.modalRef.componentInstance.user = user;
-//         this.modalRef.componentInstance.system = system;
-//         this.modalRef.componentInstance.systems = systems;
-//         this.modalRef.componentInstance.closable = true;
-//
-//         return this.modalRef;
-//     }
-//
-//     open(system, systems, user) {
-//         return this.dialog(system, systems, user).result;
-//     }
-//
-//     close() {
-//         this.modalRef.close({});
-//     }
-// }
