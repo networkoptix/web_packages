@@ -117,6 +117,9 @@ class CustomContextForm(forms.Form):
 
             # If the data_structure is protected and published require users to have the edit advanced permission
             disabled = not can_edit_advanced and (data_structure.protected and is_published or data_structure.advanced)
+            # Disable if datastructure is translatable and language is not default
+            disabled = disabled or (not data_structure.translatable and language != product.default_language
+                                    and context.translatable)
 
             if data_structure.type in [DataStructure.DATA_TYPES.long_text,
                                        DataStructure.DATA_TYPES.object,

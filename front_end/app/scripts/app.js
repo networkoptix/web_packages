@@ -339,9 +339,7 @@ window.L = {};
                     
                     
                     .when('/content/:page', {
-                        title: '' /*lang.pageTitles.contentPage*/,
-                        templateUrl: CONFIG.viewsDir + 'static.html',
-                        controller: 'StaticCtrl'
+                        template: '',
                     })
                     .when('/debug', {
                         template: ''
@@ -397,9 +395,6 @@ window.L = {};
                         template: ''
                     })
                     .when('/integrations/:id/:section', {
-                        template: ''
-                    })
-                    .when('/new-content', {
                         template: ''
                     })
                     .when('/right', {

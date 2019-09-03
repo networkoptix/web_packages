@@ -10,7 +10,7 @@
 {% block content_title %}
 <h1 style="display: flex; justify-content: space-between;">
     <div>{{ page_title }}</div>
-    {% if original.can_preview_customization and is_integration %}
+    {% if original.can_preview_customization and whole_preview %}
     <a class="preview" href="{% url 'preview' %}" value="0">Preview</a>
     {% endif %}
 </h1>
@@ -71,7 +71,7 @@
                     <div>
                         {% with context_url=records.0.data_structure.context.url %}
                             {{ context_name }}
-                            {% if can_preview %}
+                            {% if partial_preview %}
                                 <a class="float-right preview" href="{% url 'preview' %}"
                                    value="{{records.0.data_structure.context.id}}">Preview</a>
                             {% endif %}

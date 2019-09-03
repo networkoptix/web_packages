@@ -2,7 +2,7 @@ from datetime import datetime
 
 from notifications.notifications_api import send
 from django.contrib.auth.models import Permission
-from django.db.models import Q
+from django.utils.http import urlencode
 
 from PIL import Image
 import base64
@@ -292,8 +292,12 @@ def remove_unused_records(product):
 
 
 def generate_preview_link(context=None, product=None, state=""):
-    if product and product.is_integration:
-        return f"{settings.INTEGRATION_STORE_PAGE}/{product.id}?state={state}"
+    if product:
+        if product.is_integration:
+            return f"{settings.INTEGRATION_STORE_PAGE}/{product.id}?state={state}"
+        elif product.is_product_type(ProductType.PRODUCT_TYPES.article):
+            article_url = DataRecord.objects.filter(product=product, data_structure__name='url').last()
+            return f'/content/{article_url.value}?' + urlencode({'state': state, 'id': product.id})
 
     return f"{context.url}?preview" if context else "/content/about?preview"
 
