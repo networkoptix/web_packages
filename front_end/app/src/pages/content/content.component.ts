@@ -1,5 +1,5 @@
 import { ActivatedRoute } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Location } from '@angular/common';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxConfigService } from '../../services/nx-config';
@@ -19,6 +19,7 @@ export class NxContentComponent implements OnInit {
     private staticHTML: string;
     private articleParam: string;
     private state: string;
+    private id: string;
     private langCode: string;
     private CONFIG: any;
     private loaded: boolean;
@@ -47,6 +48,7 @@ export class NxContentComponent implements OnInit {
     ngOnInit(): void {
         this.articleParam = this.route.snapshot.paramMap.get('article_param');
         this.state = this.route.snapshot.queryParamMap.get('state');
+        this.id = this.route.snapshot.queryParamMap.get('id');
     }
 
     ngAfterViewInit(): void {
@@ -65,9 +67,11 @@ export class NxContentComponent implements OnInit {
     }
 
     getArticle() {
-        let uri = `${this.CONFIG.apiBase}/article/${this.articleParam}/`;
-        uri += (this.state) ? '?' + this.state : '';
-        this.http.get(uri).subscribe(
+        const uri = `${this.CONFIG.apiBase}/article/${this.articleParam}/?`;
+        const state = (this.state) ? this.state : '';
+        const id = (this.id) ? this.id : '';
+        const params = new HttpParams().set('state', state).set('id', id);
+        this.http.get(uri, {params}).subscribe(
             (data: any) => {
                 this.title = data.title;
                 this.body = data.body;
