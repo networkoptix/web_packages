@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, ViewContainerRef } from '@angular/core';
+import { Component, OnInit, ViewContainerRef, ViewChild } from '@angular/core';
 import { NxConfigService }           from '../../../services/nx-config';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { NxAccountService }          from '../../../services/account.service';
@@ -18,13 +18,13 @@ import { NxApplyService, Watcher }   from '../../../services/apply.service';
 })
 
 export class NxAccountSettingsComponent implements OnInit {
+    @ViewChild('applyContainer', {read: ViewContainerRef, static: true}) applyContainer;
 
     CONFIG: any;
     LANG: any;
 
     account: any = {};
     save: any;
-    viewContainerRef: ViewContainerRef;
     langCode: string;
 
     watchers: any = {
@@ -41,8 +41,7 @@ export class NxAccountSettingsComponent implements OnInit {
         this.menuService.setDetailsSection('settings');
     }
 
-    constructor(@Inject(ViewContainerRef) viewContainerRef,
-                private route: ActivatedRoute,
+    constructor(private route: ActivatedRoute,
                 private localStorage: LocalStorageService,
                 private config: NxConfigService,
                 private processService: NxProcessService,
@@ -55,12 +54,11 @@ export class NxAccountSettingsComponent implements OnInit {
                 private applyService: NxApplyService,
     ) {
         this.setupDefaults();
-        this.viewContainerRef = viewContainerRef;
     }
 
     ngOnInit(): void {
         this.save = this.processService.createProcess(() => {
-            return this.cloudApiService.accountPost(this.account)
+            return this.cloudApiService.accountPost(this.account);
         }, {
             successMessage: this.LANG.account.accountSavedSuccess,
             errorPrefix: this.LANG.errorCodes.cantChangeAccountPrefix,
@@ -85,7 +83,7 @@ export class NxAccountSettingsComponent implements OnInit {
             return result;
         });
 
-        this.applyService.initPageWatcher(this.viewContainerRef, this.save, () => {
+        this.applyService.initPageWatcher(this.applyContainer, this.save, () => {
             this.account.first_name = this.watchers.firstName.originalValue;
             this.account.last_name = this.watchers.lastName.originalValue;
             this.langCode = this.watchers.langCode.originalValue;

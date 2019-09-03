@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, ViewContainerRef } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { NxConfigService }           from '../../../services/nx-config';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { NxAccountService }          from '../../../services/account.service';
@@ -17,9 +17,10 @@ import { NxApplyService, Watcher }   from '../../../services/apply.service';
 })
 
 export class NxAccountPasswordComponent implements OnInit {
+    @ViewChild('applyContainer', {read: ViewContainerRef, static: true}) applyContainer;
+
     CONFIG: any;
     LANG: any;
-    viewContainerRef: ViewContainerRef;
 
     account: any = {};
     pass: any = {};
@@ -44,8 +45,7 @@ export class NxAccountPasswordComponent implements OnInit {
         this.menuService.setDetailsSection('password');
     }
 
-    constructor(@Inject(ViewContainerRef) viewContainerRef,
-                private route: ActivatedRoute,
+    constructor(private route: ActivatedRoute,
                 private config: NxConfigService,
                 private processService: NxProcessService,
                 private cloudApiService: NxCloudApiService,
@@ -57,7 +57,6 @@ export class NxAccountPasswordComponent implements OnInit {
                 private applyService: NxApplyService,
     ) {
         this.setupDefaults();
-        this.viewContainerRef = viewContainerRef;
     }
 
     ngOnInit(): void {
@@ -76,7 +75,7 @@ export class NxAccountPasswordComponent implements OnInit {
             this.applyService.reset();
         });
 
-        this.applyService.initPageWatcher(this.viewContainerRef, this.changePassword, () => {
+        this.applyService.initPageWatcher(this.applyContainer, this.changePassword, () => {
             this.form.reset();
             this.applyService.reset();
         }, Object.values(this.watchers));
