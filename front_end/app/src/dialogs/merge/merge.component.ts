@@ -148,8 +148,6 @@ export class MergeModalContent {
             if (!res.system && this.systemMergeable === '' || this.config.allowDebugMode) {
                 return this.updateState();
             }
-        }, (err) => {
-            console.log(err);
         });
     }
 
