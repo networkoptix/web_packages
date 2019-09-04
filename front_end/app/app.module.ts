@@ -14,12 +14,6 @@ import { TranslateHttpLoader }              from '@ngx-translate/http-loader';
 import { CookieService }                    from 'ngx-cookie-service';
 import { WebStorageModule }                 from 'ngx-store';
 
-import {
-    cloudApiServiceModule, systemModule, languageServiceModule,
-    processServiceModule, uuid2ServiceModule,
-    locationProxyModule,
-} from './src/ajs-upgrade/ajs-upgraded-providers';
-
 import { AppComponent }              from './app.component';
 import { ComponentsModule }          from './src/components/components.module';
 import { DialogsModule }             from './src/dialogs/dialogs.module';
@@ -84,12 +78,6 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
         }),
         WebStorageModule,
         OrderModule,
-        cloudApiServiceModule,
-        uuid2ServiceModule,
-        languageServiceModule,
-        processServiceModule,
-        systemModule,
-        locationProxyModule,
         ComponentsModule,
         DialogsModule,
         PagesModule,

@@ -20,7 +20,7 @@ require('./vendor/protocolcheck.js');
 
 //App
 require('./app.js');
-require('./downgraded-providers.ts');
+// require('./downgraded-providers.ts');
 
 //Directives
 require('./directives/autofocus.js');
