@@ -1,6 +1,7 @@
 @import '../../../../styles/custom/custom_palette';
 @import '../../../../styles/theme_palette';
 @import '../../../../styles/theme_variables';
+@import '~bootstrap/scss/bootstrap';
 
 integration-detail-component {
     
@@ -15,4 +16,13 @@ integration-detail-component {
             border-radius: 2px;
         }
     }
+
+    .right-menu {
+        position: absolute;
+
+        @include media-breakpoint-down(md) {
+            position: inherit;
+        }
+    }
+
 }

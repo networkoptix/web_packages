@@ -8,13 +8,14 @@ import { NxPageService }     from '../../../services/page.service';
 import { NxDialogsService }  from '../../../dialogs/dialogs.service';
 import { NxSettingsService } from './settings.service';
 import { NxMenuService }     from '../../../components/menu/menu.service';
-import { NxSystemService }   from '../../../services/system.service';
+import { NxSystemService }         from '../../../services/system.service';
 import { NxSystemsService }        from '../../../services/systems.service';
 import { NxNoSystemsComponent }    from '../no-systems/no-systems.component';
 import { NxModalAddUserComponent } from '../../../dialogs/add-user/add-user.component';
 import { NxModalGenericComponent } from '../../../dialogs/generic/generic.component';
 import { NxAccountService }        from '../../../services/account.service';
 import { NxProcessService }        from '../../../services/process.service';
+import { NxUtilsService }          from '../../../services/utils.service';
 
 @Component({
     selector   : 'nx-system-settings-component',
@@ -247,6 +248,13 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             } else {
                 usersNode.level2 = [];
             }
+
+            const byParam = NxUtilsService.byParam((user) => {
+                    return user.email;
+            }, NxUtilsService.sortASC);
+
+            this.system.users.sort(byParam);
+
             this.system.users.forEach((user) => {
                 const id = user.id.replace(/{|}/g, '');
                 usersNode.level2.push({
@@ -258,6 +266,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     isEnabled: user.isEnabled,
                 });
             });
+
             this.content = {...this.content};
         }
     }
