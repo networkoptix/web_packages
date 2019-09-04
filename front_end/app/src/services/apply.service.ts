@@ -59,10 +59,10 @@ export class Watcher<T> {
  *     this.applyService.reset();
  * >
  * };
- * const dataWatch = new Watcher<string>();
+ * const dataWatcher = new Watcher<string>();
  * this.applyService.initPageWatcher(component, saveProcess, discardFunction, [dataWatcher]);
- * dataWatch.value = 'first string'; // Nothing happens.
- * dataWatch.value = 'new string'; // NxApplyComponent becomes visible.
+ * dataWatcher.value = 'first string'; // Nothing happens.
+ * dataWatcher.value = 'new string'; // NxApplyComponent becomes visible.
  * @class
  */
 export class NxApplyService {
