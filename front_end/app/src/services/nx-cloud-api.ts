@@ -71,9 +71,16 @@ export class NxCloudApiService {
         return this.http.post(this.CONFIG.apiBase + '/ipvd', {});
     }
 
-    registerUser(email, password, firstName, lastName, subscribe, code): Observable<any> {
-        return this.http.post(this.CONFIG.apiBase + '/account/register',
-                { email, password, first_name : firstName, last_name : lastName, subscribe, code });
+    registerUser(email, password, firstName, lastName, subscribe, code) {
+        return this.http
+                   .post(this.CONFIG.apiBase + '/account/register',
+                           {
+                               email, password,
+                               first_name: firstName,
+                               last_name : lastName,
+                               subscribe, code
+                           })
+                   .toPromise();
     }
 
     reactivateUser(userEmail) {
