@@ -1,4 +1,4 @@
-﻿/* --------------- Script (c) 2006-2013 EC Software ---------------
+﻿/* --------------- Script (c) 2006-2011 EC Software ---------------
 This script was created by Help & Manual. It is designed for use 
 in combination with the output of Help & Manual and must not
 be used outside this context.     http://www.helpandmanual.com
@@ -28,17 +28,6 @@ var HMToggleExpandAll = function(value) {
 	}
   }
   HMTogglesAllExpanded = value;
-}
-
-var HMAnyToggleOpen = function() {
-  var anyOpen = false;
-  if (HMToggles.length != null){ 
-    for (i=0; i<HMToggles.length; i++){ 
-  	  if (HMToggles[i].getAttribute("hm.state")=='1') anyOpen = true; 
-	}
-  }
-  if (!anyOpen) HMTogglesAllExpanded = false;
-  return anyOpen;
 }
 
 var HMToggle = function() { 
@@ -92,7 +81,7 @@ var HMToggleExpandDropdown = function(obj, value, animate) {
     }
     else {
 	  $(obj).animate({ height: 'toggle' }, 'fast', function() {
-		if (document.all && !window.opera) { // Avoid collapsing margins bug in IE
+		if ($.browser.msie) { // Avoid collapsing margins bug in IE
 	  	  var dummy = $(obj).prev();
 	  	  if ($(dummy).outerHeight!=0) dummy = $('<div style="height:1px"></div>').insertBefore(obj);
 	  	  else $(dummy).css('display', 'block');
@@ -107,38 +96,32 @@ var HMToggleExpandDropdown = function(obj, value, animate) {
 }
 
 var HMToggleExpandPicture = function(obj, value, animate) {
-  var oldFile = (value ? obj.getAttribute("hm.src0") : obj.getAttribute("hm.src1"));
-  var newFile = (value ? obj.getAttribute("hm.src1") : obj.getAttribute("hm.src0"));
-  var newSrc = obj.src.replace(oldFile, newFile);
+  var newSrc = (value ? obj.getAttribute("hm.src1") : obj.getAttribute("hm.src0"));
   var isToggleIcon = (obj.getAttribute("hm.type")=="dropdown");
 
   if ((!isToggleIcon) && (animate)) {
 	$(obj).stop(); 
 	
 	var newImg = new Image();
-    newImg.onload = function() {
-	  var newWidth  = newImg.width;
-	  var newHeight = newImg.height;
-  	  var oldWidth  = obj.width;
-  	  var oldHeight = obj.height;
-
-      if ((newWidth > 0) && (newHeight > 0)) {
-        if ((newWidth == oldWidth) && (newHeight == oldHeight)) {
-          obj.src = newSrc;
-        }
-        else {
-          $(obj).animate({ width: newWidth, height: newHeight }, 'fast', function() {
-  	        obj.src = newSrc;
-          });
-  	    }
-  	  }
-    };
 	newImg.src = newSrc;
+	var newWidth  = newImg.width;
+	var newHeight = newImg.height;
+  	var oldWidth  = obj.width;
+  	var oldHeight = obj.height;
+  	
+  	if ((newWidth > 0) && (newHeight > 0)) {
+      if ((newWidth == oldWidth) && (newHeight == oldHeight)) {
+        obj.src = newSrc;
+      }
+      else {
+        $(obj).animate({ width: newWidth, height: newHeight }, 'fast', function() {
+  	      obj.src = newSrc;
+        });
+  	  }
+  	}
   }
   else { 
     obj.src = newSrc;
- 	$(obj).css('width', 'auto');
-    $(obj).css('height', 'auto');
   }
   var newTitle = (value ? obj.getAttribute("hm.title1") : obj.getAttribute("hm.title0"));
   if (newTitle != null) { obj.title = newTitle; }
@@ -153,10 +136,8 @@ var HMShowPictureLightbox = function(objID) {
   var startT = $(obj).offset().top;
   var startW = $(obj).outerWidth();
   var startH = $(obj).outerHeight();
-
-  var oldFile = obj.getAttribute("hm.src0");
-  var newFile = obj.getAttribute("hm.src1");
-  var newSrc = obj.src.replace(oldFile, newFile);
+	
+  var newSrc = obj.getAttribute("hm.src1");
   var newTitle = obj.getAttribute("hm.title1");
   var newCaption = obj.getAttribute("hm.caption1");
 
@@ -197,17 +178,17 @@ var HMShowLightbox = function(htmlCode, startL, startT, startW, startH, endW, en
     lightboxWindow = parent.window;
   }
 
-  $(lightboxBody).prepend('<div id="hmlightboxbackground" style="z-index:99997;border:none;padding:0;margin:0;position:absolute;left:0;top:0;background-color:#7F7F7F"></div>');  
+  $(lightboxBody).append('<div id="hmlightboxbackground" style="z-index:99997;border:none;padding:0;margin:0;position:absolute;left:0;top:0;background-color:#7F7F7F"></div>');  
   var lightboxBackground = parentScope ? parent.$('#hmlightboxbackground') : $('#hmlightboxbackground'); 
   lightboxBackground.css('opacity', '0.5');
 
   if (parentScope) {
-  	$(lightboxBody).prepend('<div id="hmlightboxscrolllayer" style="z-index:99998;border:none;padding:0;margin:0;position:absolute;left:0;top:0;background:none;overflow:auto"></div>');
+  	$(lightboxBody).append('<div id="hmlightboxscrolllayer" style="z-index:99998;border:none;padding:0;margin:0;position:absolute;left:0;top:0;background:none;overflow:auto"></div>');
   	lighboxScrollLayer = parent.$('#hmlightboxscrolllayer');
   	lightboxBody = lighboxScrollLayer;  
   } 
 
-  $(lightboxBody).prepend('<div id="hmlightbox" style="z-index:99999;position:absolute;display:none"></div>');
+  $(lightboxBody).append('<div id="hmlightbox" style="z-index:99999;position:absolute;display:none"></div>');
   var lightbox = parentScope ? parent.$('#hmlightbox') : $('#hmlightbox');  
   var lightboxObject = $(htmlCode).appendTo(lightbox);
   var lightboxCaption = null;
@@ -217,16 +198,7 @@ var HMShowLightbox = function(htmlCode, startL, startT, startW, startH, endW, en
   }  	
 
   var lightboxSpeed = 300;
-  var sizeStart; /* keep initial size for hide animation */
-  var maxW = endW;
-  var maxH = endH;
-  if (hmLightboxConstrained) {
-    if (endW > ($(lightboxWindow).width()-40)) {
-	  endW = $(lightboxWindow).width()-40;
-	  if (endW < (maxW/2)) endW = maxW/2;
-	  endH = maxH * endW / maxW;
-    }
-  }
+  var sizeStart; /* keep initial size for hide animation */ 
 
   lightboxObject.css({'width': endW+'px', 'height': endH+'px'});
   if (lightboxCaption!=null) lightboxCaption.css('width', endW+'px');
@@ -237,7 +209,7 @@ var HMShowLightbox = function(htmlCode, startL, startT, startW, startH, endW, en
     lightboxObject.css({'width': startW + 'px', 'height': startH + 'px'});
   	sizeStart = lightboxGetsize();
 	lightboxResize();
-     	
+    	
     sizeStart[0] = startL;
     sizeStart[1] = startT;
     if (parentScope) {
@@ -274,18 +246,6 @@ var HMShowLightbox = function(htmlCode, startL, startT, startW, startH, endW, en
   }
   	
   function lightboxResize() {
-    if (hmLightboxConstrained) {
-	  var tmpW = endW;
-	  endW = $(lightboxWindow).width()-40;
-	  if (endW > maxW) endW = maxW;
-	  else if (endW < (maxW/2)) endW = maxW/2;
-      if (tmpW != endW) {
-        endH = maxH * endW / maxW;
-        lightboxObject.css({'width': endW+'px', 'height': endH+'px'});
-  	    if (lightboxCaption!=null) lightboxCaption.css('width', endW+'px');
-  	  }
-  	}
-
   	var size = lightboxGetsize();
     lightbox.css({left: size[0]+'px', top:size[1]+'px'});
     
@@ -299,10 +259,6 @@ var HMShowLightbox = function(htmlCode, startL, startT, startW, startH, endW, en
   	var lbW  = lightbox.width();
   	var lbH  = lightbox.height();
 
-  	if (isVideo) {
-  	  lbW = endW;
-  	  lbH = endH;
-    }
   	var newW = hmmax(lbW + 40, lightboxDocument.width());
   	var newH = hmmax(lbH + 40, lightboxDocument.height());
 
@@ -376,14 +332,13 @@ var HMInitToggle = function() {
 		if (HMInitToggle.arguments[i] == "onclick") {
 		  node.onclick = Function(HMInitToggle.arguments[i+1]); 
 		}
-		if (HMInitToggle.arguments[i].substring(0,6) == "hm.src") {
-		  node.setAttribute(HMInitToggle.arguments[i], decodeURI(HMInitToggle.arguments[i+1]));
-	      var img = new Image();
-		  img.src = HMInitToggle.arguments[i+1];
-		}
 		else { 
-		  node.setAttribute(HMInitToggle.arguments[i], HMInitToggle.arguments[i+1]);
+		  node.setAttribute(HMInitToggle.arguments[i], decodeURI(HMInitToggle.arguments[i+1]));
 		  if ((HMInitToggle.arguments[i] == "hm.type") && (HMInitToggle.arguments[i+1] == "picture")) { isPicture = true; } 
+		}
+		if (HMInitToggle.arguments[i].substring(0,6) == "hm.src") {
+			var img = new Image();
+			img.src = HMInitToggle.arguments[i+1];
 		}
 	}
 	if (isPicture) {
@@ -419,7 +374,7 @@ var HMTrackTopiclink = function(obj) {
 }
 
 var hmshowPopup = function(event, txt, trigger) {
-
+	
 	$('#hmpopupdiv').stop().remove();
 		 
 	var pop = $('<div id="hmpopupdiv"></div>').appendTo('body');
@@ -435,10 +390,8 @@ var hmshowPopup = function(event, txt, trigger) {
 	var w = pop.width();
 	if (w > maxW) pop.width(maxW);
 	var t = 20 + posTop;           
-	var l = (posLeft - w/2);
+	var l = (posLeft + $(trigger).width()/2 - w/2);
 	if (l < 10) l = 10;
-	if ((l + pop.outerWidth()) > $(window).width()) l = $(window).width() - pop.outerWidth();
-	if (l < 0) l = 0;
 	pop.css( { left: l+'px', top: t+'px'} );
 	if (hmAnimate) pop.show('fast');
 	else pop.show();

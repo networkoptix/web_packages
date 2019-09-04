@@ -382,16 +382,3 @@ p /* Normal */
   color: #777;
   box-shadow: 5px 5px 5px #888;
 }
-
-a.dropdown-toggle /* dropdown toggle caption */
-{
-  cursor: pointer;
-}
-a.inline-toggle /* inline toggle caption */
-{
-  cursor: pointer;
-}
-img.dropdown-toggle-icon /* toggle icon */
-{
-  cursor: pointer;
-}
