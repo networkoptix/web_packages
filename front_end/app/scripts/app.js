@@ -61,17 +61,17 @@ window.L = {};
                 }
 
                 $locationProvider.html5Mode(true);
-    
+
                 if (!window.SETTINGS) {
                     if (PRODUCTION && error.status >= 500) {
                         window.location.href = '/static/503.html';
                     } else if (PRODUCTION) {
                         window.location.href = '/';
                     }
-                    
+
                     return;
                 }
-                
+
                 var CONFIG = nxConfigServiceProvider.$get().getConfig();
                 
                 if (window.LANG.ajs) {
@@ -81,7 +81,7 @@ window.L = {};
                     // is moved to A8 app component
                 } else {
                     // Fallback to default language
-    
+
                     // if request to api/utils/language fails then
                     // cloud_portal is under maintenance
                     // TODO: Causes IOS to not load sometimes but not sure why
@@ -90,7 +90,7 @@ window.L = {};
                     } else if (PRODUCTION) {
                         window.location.href = '/';
                     }
-    
+
                     $.ajax({
                             url: 'static/language.json',
                             async: false,
@@ -102,7 +102,7 @@ window.L = {};
                 }
                 
                 var lang = languageServiceProvider.$get().lang;
-                
+
                 // For compatibility with legacy modules *****
                 window.L = lang;
                 window.Config = CONFIG;
@@ -398,6 +398,9 @@ window.L = {};
                         template: ''
                     })
                     .when('/right', {
+                        template: ''
+                    })
+                    .when('/push-notifications', {
                         template: ''
                     })
                     // **** routes for detail views should state full path ****

@@ -23,6 +23,7 @@ from django.conf.urls.static import static
 from django.db import DEFAULT_DB_ALIAS, connections
 from django.db.migrations.executor import MigrationExecutor
 from django.http import HttpResponse
+from notifications import urls as notifications_urls
 
 admin.site.disable_action('delete_selected')  # Remove delete action from all models in admin
 admin.site.index_template = 'admin/index.html'
@@ -53,6 +54,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^api/', include('api.urls')),
     url(r'^api/', include('cms.urls')),
+    url(r'^api/notifications/', include(notifications_urls.public_patterns)),
     url(r'^notifications/', include('notifications.urls')),
     url(r'^admin_tools/', include('admin_tools.urls')),
     url(r'^zapier/', include('zapier.urls')),
@@ -63,6 +65,15 @@ urlpatterns = [
     url(r'^\.well-known/apple-app-site-association',
         TemplateView.as_view(template_name="static/apple-app-site-association",
                              content_type='application/json')),
+
+    # The firebase service worker js file needs to be available at the root to be recognized by the Angular fire module.
+    # Since we have no good way to serve a js file at the root without adding a url pattern or nginx conf,
+    # we check for it here
+    # TODO: Remove when we have a more convenient way to route to static files in new angular
+    url(r'^firebase-messaging-sw.js$',
+        TemplateView.as_view(template_name='static/scripts/vendor/firebase-messaging-sw.js',
+                             content_type='application/javascript')),
+
     url(r'^(?!static|preview).*',
         TemplateView.as_view(template_name="static/index.html"))
 ]

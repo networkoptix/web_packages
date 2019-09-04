@@ -667,6 +667,15 @@
             "meta": {
               "regex": "^[a-zA-Z0-9\\.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$"
             }
+          },
+          {
+            "label": "Push Notifications Auto-Enabled",
+            "name": "%PUSH_SUB_ACTIVE%",
+            "description": "Enable push notifications from all systems by default for existing devices. Otherwise, they are only enabled for system owners by default. A device's notification settings always take priority over this if they are set.",
+            "type": "check_box",
+            "value": "false",
+            "optional": false,
+            "advanced": true
           }
         ]
       },

@@ -3,10 +3,16 @@ from django.db import models
 from django.utils import timezone
 from jsonfield import JSONField
 from django.conf import settings
+from django.core.exceptions import ValidationError
+from django.core.validators import MaxLengthValidator
 from django.db.models import Q
+from model_utils import Choices
+from push_notifications.models import GCMDevice, GCMDeviceManager
 from rest_framework import serializers
 from cms.models import Customization, Product, DataStructure
 from api.models import Account
+
+import json
 
 # When cloudportal is ran locally it uses amqp by default. BROKER_TRANSPORT_OPTIONS is related to sqs.
 # This allows cloud notifications to run locally without changing settings to use sqs.
@@ -177,3 +183,57 @@ class CloudNotification(models.Model):
 
     def __str__(self):
         return self.subject
+
+
+class PushDevice(GCMDevice):
+    model = models.CharField(max_length=255)
+
+
+class PushSubscription(models.Model):
+    SUB_TYPES = Choices((0, 'cloud', 'cloud'), (1, 'local', 'local'))
+    type = models.IntegerField(choices=SUB_TYPES, default=SUB_TYPES.cloud)
+
+    system_id = models.UUIDField()
+    active = models.BooleanField(default=True)
+    device = models.ForeignKey(PushDevice, blank=True, null=True, on_delete=models.CASCADE)
+
+    account = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.CASCADE)
+    subscription_id = models.UUIDField(blank=True, null=True)
+    username = models.CharField(max_length=255, blank=True, null=True)
+
+
+class PushNotification(models.Model):
+    SIZE_LIMIT = 4000
+
+    title = models.CharField(max_length=255)
+    body = models.TextField(max_length=SIZE_LIMIT, validators=[MaxLengthValidator(SIZE_LIMIT)])
+    payload = models.TextField(
+        max_length=SIZE_LIMIT, blank=True, null=True, validators=[MaxLengthValidator(SIZE_LIMIT)]
+    )
+    options = models.TextField(blank=True, null=True)
+    subscriptions = models.ManyToManyField(PushSubscription)
+
+    raw_system_id = models.CharField(max_length=255, default='')
+    raw_targets = models.TextField(null=True)
+    result_data = models.TextField(null=True, blank=True)
+
+    def clean(self):
+        if len(self.title + self.body + self.payload) > self.SIZE_LIMIT:
+            raise ValidationError(f'Title, body, and payload cannot total more than {self.SIZE_LIMIT}')
+        super(PushNotification, self).clean()
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super(PushNotification, self).save(*args, **kwargs)
+
+    def send_notifications(self, device_tokens=None):
+        if device_tokens:
+            devices = PushDevice.objects.filter(registration_id__in=device_tokens)
+        else:
+            active_subs = self.subscriptions.filter(active=True)
+            devices = PushDevice.objects.filter(pushsubscription__in=active_subs).distinct()
+
+        payload = json.loads(self.payload) if self.payload else {}
+        options = json.loads(self.options) if self.options else {}
+
+        return devices.send_message(self.body, title=self.title, extra=payload, **options)

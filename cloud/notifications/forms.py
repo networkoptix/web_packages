@@ -1,8 +1,10 @@
 from django import forms
 from django.contrib.admin.widgets import FilteredSelectMultiple
 
-from .models import CloudNotification
+from .models import CloudNotification, PushSubscription
 from cms.models import Customization, UserGroupsToProductPermissions
+
+from dal import autocomplete
 
 
 class CloudNotificationAdminForm(forms.ModelForm):
@@ -26,3 +28,15 @@ class CloudNotificationAdminForm(forms.ModelForm):
             self.fields['customizations'].queryset = UserGroupsToProductPermissions.objects.filter(
                 group__in=groups).values_list('customization__name', flat=True).distinct()
             self.initial['customizations'] = self.instance.customizations.values_list('name', flat=True)
+
+
+class PushSubscriptionForm(forms.ModelForm):
+    class Meta:
+        model = PushSubscription
+        exclude = []
+        widgets = {
+            'account': autocomplete.ModelSelect2(
+                url='account-autocomplete',
+                attrs={'data-placeholder': 'Email ...', 'data-minimum-input-length': 2}
+            ),
+        }

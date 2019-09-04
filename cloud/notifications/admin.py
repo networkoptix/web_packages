@@ -1,3 +1,4 @@
+from django.apps import apps
 from django.conf import settings
 from django.contrib import admin
 from django.utils.html import format_html
@@ -8,7 +9,14 @@ import pytz
 from .models import *
 from .forms import *
 from django_celery_results.models import TaskResult
+from push_notifications import models as push_notifications_models
+from push_notifications.admin import GCMDeviceAdmin
 admin.site.unregister(TaskResult)
+
+# Unregister unused push_notifications model admins
+app = apps.get_app_config('push_notifications')
+for model_name, model in app.models.items():
+    admin.site.unregister(model)
 
 
 class NotificationAdmin(admin.ModelAdmin):
@@ -188,3 +196,12 @@ class TaskResultAdmin(admin.ModelAdmin):
 
     clean_old_tasks.short_description = "Remove tasks older than {} days"\
         .format(settings.CLEAR_HISTORY_RECORDS_OLDER_THAN_X_DAYS)
+
+
+@admin.register(PushSubscription)
+class PushSubscriptionAdmin(admin.ModelAdmin):
+    form = PushSubscriptionForm
+
+
+admin.site.register(PushDevice, GCMDeviceAdmin)
+admin.site.register(PushNotification)

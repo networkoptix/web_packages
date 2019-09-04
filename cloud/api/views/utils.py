@@ -53,7 +53,8 @@ def get_settings_from_cache():
         'supportedResolutions': customization_cache['supported_resolutions'],
         'supportedHardwareTypes': customization_cache['supported_hardware_types'],
         'searchTags': customization_cache['search_tags'],
-        'vendorsShown': customization_cache['vendors_shown']
+        'vendorsShown': customization_cache['vendors_shown'],
+        'pushConfig': customization_cache['push_config']
     }
 
 

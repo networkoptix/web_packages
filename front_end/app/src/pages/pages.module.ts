@@ -23,6 +23,7 @@ import { NxAccountModule }           from './account/account.module';
 import { NxRestoreModule }           from './restore/restore.module';
 import { Nx404Module }               from './404/404.module';
 import { NxDebugModule }             from './debug/debug.module';
+import { PushNotificationsModule } from './push-notifications/push-notifications.module';
 
 @NgModule({
     imports        : [
@@ -38,6 +39,7 @@ import { NxDebugModule }             from './debug/debug.module';
         IntegrationsListModule,
         ContentModule,          // TODO: Remove it after test
         RightMenuModule,        // TODO: Remove it after test
+        PushNotificationsModule,
         IpvdModule,
         Angular2CsvModule,
         LandingModule,
@@ -65,6 +67,7 @@ import { NxDebugModule }             from './debug/debug.module';
         NxSettingsModule,
         ContentModule,          // TODO: Remove it after test
         RightMenuModule,        // TODO: Remove it after test
+        PushNotificationsModule,
         IpvdModule,
         Angular2CsvModule,
         LandingModule,
