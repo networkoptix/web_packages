@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { NxConfigService }           from '../../../services/nx-config';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { NxAccountService }          from '../../../services/account.service';
@@ -18,6 +18,7 @@ import { NxApplyService, Watcher }   from '../../../services/apply.service';
 
 export class NxAccountPasswordComponent implements OnInit {
     @ViewChild('applyContainer', {read: ViewContainerRef, static: true}) applyContainer;
+    @ViewChild('passwordForm', {read: ElementRef, static: false}) form: ElementRef;
 
     CONFIG: any;
     LANG: any;
@@ -26,8 +27,6 @@ export class NxAccountPasswordComponent implements OnInit {
     pass: any = {};
 
     changePassword: any;
-
-    form: any;
 
     watchers: any = {
         password: new Watcher<string>(),
@@ -76,7 +75,7 @@ export class NxAccountPasswordComponent implements OnInit {
         });
 
         this.applyService.initPageWatcher(this.applyContainer, this.changePassword, () => {
-            this.form.reset();
+            this.form.nativeElement.reset();
             this.applyService.reset();
         }, Object.values(this.watchers));
 
@@ -100,16 +99,14 @@ export class NxAccountPasswordComponent implements OnInit {
         this.watchers.newPassword.value = '';
     }
 
-    setPassword(password, form) {
+    setPassword(password) {
         this.pass.password = password;
         this.watchers.password.value = password;
-        this.form = form;
     }
 
-    setNewPassword(newPassword, form, control) {
+    setNewPassword(newPassword) {
         this.pass.newPassword = newPassword;
         this.watchers.newPassword.value = newPassword;
-        this.form = form;
     }
 }
 
