@@ -116,6 +116,8 @@ do
             ;;
 
         rebuild_frontend)
+            printf "Installing cloud requirements\n\n"
+            pip install -r cloud/requirements.txt
             build_frontend
             setup_cms
             ;;
