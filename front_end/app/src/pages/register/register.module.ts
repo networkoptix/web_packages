@@ -10,6 +10,7 @@ import { LandingModule }       from '../landing/landing.module';
 import { DirectivesModule }    from '../../directives/directives.module';
 import { NxRegisterComponent } from './register.component';
 import { TranslateModule }     from '@ngx-translate/core';
+import { InputTrimModule }     from 'ng2-trim-directive';
 
 @Injectable()
 export class SuccessResolver implements Resolve<any> {
@@ -48,7 +49,8 @@ const appRoutes: Routes = [
         DirectivesModule,
 
         RouterModule.forChild(appRoutes),
-        TranslateModule
+        TranslateModule,
+        InputTrimModule
     ],
     providers      : [
         SuccessResolver,

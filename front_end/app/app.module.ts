@@ -6,30 +6,26 @@ import { RouterModule, UrlHandlingStrategy, UrlTree }                     from '
 import { HttpClient, HttpClientModule, HttpClientXsrfModule }             from '@angular/common/http';
 import { FormsModule }                                                    from '@angular/forms';
 
+import { InputTrimModule }                  from 'ng2-trim-directive';
 import { NgbToast, NgbModal }               from '@ng-bootstrap/ng-bootstrap';
 import { OrderModule }                      from 'ngx-order-pipe';
 import { DeviceDetectorModule }             from 'ngx-device-detector';
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { TranslateHttpLoader }              from '@ngx-translate/http-loader';
+import { TranslateModule }                  from '@ngx-translate/core';
 import { CookieService }                    from 'ngx-cookie-service';
 import { WebStorageModule }                 from 'ngx-store';
 import { AngularFireModule, FirebaseOptionsToken } from '@angular/fire';
 import { AngularFireMessagingModule } from '@angular/fire/messaging';
 
-import { AppComponent }              from './app.component';
-import { ComponentsModule }          from './src/components/components.module';
-import { DialogsModule }             from './src/dialogs/dialogs.module';
-import { PagesModule }               from './src/pages/pages.module';
-import { DirectivesModule }          from './src/directives/directives.module';
-import { NxConfigService }                  from './src/services/nx-config';
-import { ServiceModule }                    from './src/services/services.module';
-import { LayoutModule }                     from '@angular/cdk/layout';
-// import { downgradeInjectable }       from '@angular/upgrade/static';
-// import { NxLanguageProviderService } from './src/services/nx-language-provider';
-// import { NxAppStateService }         from './src/services/nx-app-state.service';
-import { WINDOWS_PROVIDERS }                from './src/services/window-provider';
-import { CookieXSRFStrategy, XSRFStrategy } from '@angular/http';
-import {initializeApp} from "./src/pages/push-notifications/push-notifications.module";
+import { AppComponent }      from './app.component';
+import { ComponentsModule }  from './src/components/components.module';
+import { DialogsModule }     from './src/dialogs/dialogs.module';
+import { PagesModule }       from './src/pages/pages.module';
+import { DirectivesModule }  from './src/directives/directives.module';
+import { NxConfigService }   from './src/services/nx-config';
+import { ServiceModule }     from './src/services/services.module';
+import { LayoutModule }      from '@angular/cdk/layout';
+import { WINDOWS_PROVIDERS } from './src/services/window-provider';
+import { initializeApp }     from './src/pages/push-notifications/push-notifications.module';
 
 // AoT requires an exported function for factories
 
@@ -82,6 +78,7 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
         }),
         WebStorageModule,
         OrderModule,
+        InputTrimModule,
         ComponentsModule,
         DialogsModule,
         PagesModule,
