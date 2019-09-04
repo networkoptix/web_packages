@@ -1,0 +1,121 @@
+<nx-pre-loader *ngIf="accountInfo.activateCode && activate.processing"></nx-pre-loader>
+
+<div class="container">
+    <div *ngIf="accountInfo.activateCode && !activate.processing">
+        <h1 class="process-success" *ngIf="activate.success" translate>
+            Your account is successfully activated
+        </h1>
+        <h1 class="process-success" *ngIf="activate.success">
+            <a class="btn btn-default" href="" (click)="login()" translate>Log In</a>
+        </h1>
+
+        <h1 class="process-success" *ngIf="!activate.success" translate>
+            Account is already activated or confirmation code is incorrect
+        </h1>
+    </div>
+
+    <div *ngIf="!accountInfo.activateCode && activationSuccess">
+        <h1 class="process-success" translate>
+            Your account is successfully activated
+        </h1>
+        <h1 class="process-success">
+            <a class="btn btn-default" href="" (click)="login()">Log In</a>
+        </h1>
+    </div>
+
+    <div *ngIf="reactivating" class="text-center">
+        <div *ngIf='accountInfo.email'>
+            <h1 translate>You have registered in %CLOUD_NAME%</h1>
+            <p>We've sent you a letter with activation link to {{accountInfo.email}}.<br>
+                Please activate your account by visiting this link.</p>
+        </div>
+        <h1 *ngIf="!accountInfo.email" translate>Activate your account</h1>
+        <form name="reactivateAccount"
+              class="form-horizontal"
+              *ngIf="!reactivate.success"
+              novalidate
+              #reactivateAccount="ngForm">
+
+            <div class="form-group" *ngIf="!accountInfo.email">
+                <div class="col-md-4 justify-content-start justify-content-md-end">
+                    <label for="reactivateAccountEmail" class="control-label" translate>Email</label>
+                </div>
+                <div class="col-sm-4">
+                    <nx-password-input
+                            class="form-component"
+                            name="reactivateAccountEmail"
+                            componentId="reactivateAccountEmail"
+                            [(ngModel)]="accountInfo.email"
+                            [form]="reactivateAccount"
+                            #reactivateAccountEmail="ngModel">
+                    </nx-password-input>
+                </div>
+                <div class="col-sm-4">
+                    <span class="help-block" *ngIf="!reactivateAccountEmail.valid && !reactivateAccountEmail.touched">
+
+                    <span class="badge badge-danger"
+                          *ngIf="reactivateAccountEmail.errors &&
+                                 reactivateAccountEmail.errors.weak &&
+                                 !reactivateAccountEmail.errors.common &&
+                                 !reactivateAccountEmail.errors.pattern &&
+                                 !reactivateAccountEmail.errors.minlength"
+                          title="{{ LANG.passwordRequirements.weakMessage}}">{{LANG.passwordRequirements.weak}}</span>
+                    <span class="badge badge-danger"
+                          *ngIf="reactivateAccountEmail.errors &&
+                                 reactivateAccountEmail.errors.common &&
+                                 !reactivateAccountEmail.errors.pattern &&
+                                 !reactivateAccountEmail.errors.minlength &&
+                                 !reactivateAccountEmail.errors.required"
+                          title="{{ LANG.passwordRequirements.commonMessage}}">{{LANG.passwordRequirements.common}}</span>
+                    <span class="badge badge-danger"
+                          *ngIf="reactivateAccountEmail.errors &&
+                                 reactivateAccountEmail.errors.minlength &&
+                                 !reactivateAccountEmail.errors.pattern"
+                          title="{{ LANG.passwordRequirements.minLengthMessage}}">{{LANG.passwordRequirements.minLength}}</span>
+                    <span class="badge badge-danger"
+                          *ngIf="reactivateAccountEmail.errors &&
+                                 reactivateAccountEmail.errors.pattern &&
+                                 !reactivateAccountEmail.errors.minlength"
+                          title="{{ LANG.passwordRequirements.requiredMessage}}">{{LANG.passwordRequirements.incorect}}</span>
+                </span>
+
+                    <span class="help-block" *ngIf="!reactivateAccountEmail.valid && reactivateAccountEmail.touched">
+                    <span class="input-error"
+                          *ngIf="reactivateAccountEmail.errors &&
+                                 reactivateAccountEmail.errors.weak &&
+                                 !reactivateAccountEmail.errors.common &&
+                                 !reactivateAccountEmail.errors.pattern &&
+                                 !reactivateAccountEmail.errors.required &&
+                                 !reactivateAccountEmail.errors.minlength">{{ LANG.passwordRequirements.weakMessage}}</span>
+
+                    <span class="input-error"
+                          *ngIf="reactivateAccountEmail.errors &&
+                                 reactivateAccountEmail.errors.common &&
+                                 !reactivateAccountEmail.errors.required">{{ LANG.passwordRequirements.commonMessage}}</span>
+
+                    <span class="input-error"
+                          *ngIf="reactivateAccountEmail.errors &&
+                                 reactivateAccountEmail.errors.minlength">{{ LANG.passwordRequirements.minLengthMessage}}
+                    </span>
+                    <span class="input-error"
+                          *ngIf="reactivateAccountEmail.errors &&
+                                 reactivateAccountEmail.errors.pattern &&
+                                 !reactivateAccountEmail.errors.minlength">{{ LANG.passwordRequirements.incorectMessage}}
+                    </span>
+                    <span class="input-error"
+                          *ngIf="reactivateAccountEmail.errors &&
+                                 reactivateAccountEmail.errors.required">{{ LANG.passwordRequirements.missingMessage}}</span>
+                </span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="d-flex justify-content-center w-100">
+                    <nx-process-button
+                            [process]="reactivate"
+                            [form]="reactivateAccount"
+                            buttonText="{{'Resend activation link' | translate}}"></nx-process-button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

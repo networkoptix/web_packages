@@ -64,7 +64,7 @@
 			"arm": {
 				"label": "ARM",
 				"shortLabel": "ARM",
-				"supported": "Debian/Ubuntu based"
+				"supported": "<a href='/content/arm'>ARM伺服器支援政策</a>"
 			},
 			"sdk": {
 				"label": "SDK",

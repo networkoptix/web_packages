@@ -10,6 +10,7 @@ import { NxConfigService }   from '../../services/nx-config';
 import { NxAppStateService } from '../../services/nx-app-state.service';
 import { NxAccountService }  from '../../services/account.service';
 import { NxDialogsService }  from '../../dialogs/dialogs.service';
+import { NxSessionService }  from '../../services/session.service';
 import { NxSystemsService }  from '../../services/systems.service';
 import { WINDOW }            from '../../services/window-provider';
 
@@ -39,6 +40,7 @@ import { WINDOW }            from '../../services/window-provider';
                 private systemsService: NxSystemsService,
                 private dialogs: NxDialogsService,
                 private accountService: NxAccountService,
+                private sessionService: NxSessionService,
                 private router: Router,
     ) {
         this.CONFIG = this._config.getConfig();
@@ -59,8 +61,6 @@ import { WINDOW }            from '../../services/window-provider';
         this.active = {};
         this.updateActive();
 
-        this.systemsService.forceUpdateSystemsAsPromise().then(() => this.updateActive());
-
         this.router.events
               .subscribe((event: Event) => {
                   if (event instanceof RoutesRecognized) {
@@ -78,11 +78,12 @@ import { WINDOW }            from '../../services/window-provider';
                   }
               });
 
-        this.accountService.loginStateSubject.subscribe((loginState) => {
+        this.sessionService.loginStateSubject.subscribe((loginState) => {
             if (loginState) {
                 this.renderer.removeClass(document.body, 'loading');
                 this.renderer.removeClass(document.body, 'anonymous');
                 this.renderer.addClass(document.body, 'authorized');
+                this.systemsService.forceUpdateSystemsAsPromise().then(() => this.updateActive());
             } else {
                 this.renderer.removeClass(document.body, 'loading');
                 this.renderer.removeClass(document.body, 'authorized');
@@ -93,6 +94,9 @@ import { WINDOW }            from '../../services/window-provider';
         this.systemsService.systemsSubject.subscribe((systems) => {
             if (!systems) {
                 return;
+            }
+            if (!this.systemId && this.route.firstChild && this.route.firstChild.snapshot.params.systemId) {
+                this.systemId = this.route.firstChild.snapshot.params.systemId;
             }
             this.systems = systems;
             this.singleSystem = (this.systems.length === 1);
@@ -107,7 +111,7 @@ import { WINDOW }            from '../../services/window-provider';
     login () {
         const url = this.window.location.pathname;
         const redirect = this.CONFIG.redirectPaths.some((path) => url.indexOf(path) > -1);
-        this.dialogs.login(this.accountService, !redirect);
+        this.dialogs.login(this.accountService, !redirect).catch(() => {});
     }
 
     logout () {
@@ -127,12 +131,14 @@ import { WINDOW }            from '../../services/window-provider';
             return;
         }
 
+        if (this.singleSystem) { // Special case for a single system - it always active
+            this.activeSystem = this.systems[0];
+            return;
+        }
+
         this.activeSystem = this.systems.find((system) => {
             return this.systemId === system.id;
         });
-        if (this.singleSystem) { // Special case for a single system - it always active
-            this.activeSystem = this.systems[0];
-        }
     }
 
 

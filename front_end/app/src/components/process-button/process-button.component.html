@@ -6,8 +6,7 @@
     </div>
 
     <button class="btn"
-            [innerHTML]="buttonText"
             [ngClass]="process && process.processing ? 'processing' : buttonClass"
             [disabled]="buttonDisabled"
-            (click)="checkForm()"></button>
+            (click)="clickFn(); checkForm(); $event.stopPropagation();">{{buttonText}}</button>
 </div>

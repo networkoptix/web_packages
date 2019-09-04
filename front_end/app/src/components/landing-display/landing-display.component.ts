@@ -1,16 +1,11 @@
-import { Location }        from '@angular/common';
 import {
-    AfterViewInit,
-    Compiler,
-    Component, Inject,
-    Injector, NgModule,
-    NgModuleRef,
-    OnInit,
+    AfterViewInit, Compiler,
+    Component, Injector,
+    NgModule, NgModuleRef,
     ViewChild,
     ViewContainerRef
-}                          from '@angular/core';
-import { NxConfigService } from '../../services/nx-config';
-import { BrowserModule }   from '@angular/platform-browser';
+}                           from '@angular/core';
+import { NxConfigService }  from '../../services/nx-config';
 
 @Component({
     selector : 'landing-display-component',
@@ -19,7 +14,7 @@ import { BrowserModule }   from '@angular/platform-browser';
     styleUrls: ['landing-display.component.scss']
 })
 
-export class NxLandingDisplayComponent implements AfterViewInit, OnInit {
+export class NxLandingDisplayComponent implements AfterViewInit {
     CONFIG: any = {};
 
     @ViewChild('dynamicTemplate', { read: ViewContainerRef, static: true }) dynamicTemplate;
@@ -28,16 +23,12 @@ export class NxLandingDisplayComponent implements AfterViewInit, OnInit {
     constructor(private _compiler: Compiler,
                 private _injector: Injector,
                 private _m: NgModuleRef<any>,
-                private config: NxConfigService) {
+                private configService: NxConfigService) {
 
-        this.CONFIG = config.getConfig();
-    }
-
-    ngOnInit(): void {
+        this.CONFIG = configService.getConfig();
     }
 
     ngAfterViewInit() {
-        this.CONFIG = this.config.getConfig();
         const myTemplateUrl = '/' + this.CONFIG.viewsDir + 'static/landing.html';
 
         const tmpCmp = Component({

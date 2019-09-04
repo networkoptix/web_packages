@@ -1,7 +1,8 @@
 import {
     Component, ElementRef, Input, OnChanges,
     OnInit, SimpleChanges
-} from '@angular/core';
+}                          from '@angular/core';
+import { NxConfigService } from '../../services/nx-config';
 
 /* Usage
 <nx-menu>
@@ -21,56 +22,62 @@ export class NxMenuComponent implements OnInit, OnChanges {
     selectedLevel2: string;
     selectedLevel3: string;
 
-    section: any;
-    buttons: any;
+    CONFIG: any;
 
-    level2: any = [];
 
-    constructor(private elementRef: ElementRef) {
-        this.buttons = {};
-        this.level2 = {
-            items : []
-        };
+    constructor(private configService: NxConfigService) {
     }
 
     ngOnInit() {
+        this.CONFIG = this.configService.getConfig();
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes.content.currentValue.selectedSection) {
-            this.systemId = changes.content.currentValue.systemId;
+        if (changes.content.currentValue) {
             this.selectedLevel1 = changes.content.currentValue.selectedSection;
             this.selectedLevel2 = changes.content.currentValue.selectedSubSection;
             this.selectedLevel3 = changes.content.currentValue.selectedDetailsSection;
         }
 
-        if (changes.content.currentValue) {
-            this.section = changes.content.currentValue.level1.filter((level) => {
-                if (level.id === changes.content.currentValue.selectedSection) {
+        if (changes.content.currentValue.selectedSection) {
+            this.systemId = changes.content.currentValue.systemId;
+        }
+    }
+
+    subLevelItemsFor(item) {
+        let levelItems = [];
+
+        // To avoid complicated code this cover only level2 for now ...
+        // as only level2 have complex structure
+        if (item.level2) {
+            levelItems = item.level2.filter((subSection) => {
+                if (!this.CONFIG || subSection.id !== this.CONFIG.menu.buttons.id) {
                     return true;
                 }
-            })[0];
-
-            if (this.section && this.section.level2) {
-                this.buttons = this.section.level2.filter((subSection) => {
-                    if (subSection.id === 'buttons') {
-                        return true;
-                    }
-                })[0] || [];
-
-                if (this.buttons.items && this.buttons.items.length) {
-                    this.buttons = this.buttons.items;
-                }
-                this.level2.items = this.section.level2.filter((subSection) => {
-                    if (subSection.id !== 'buttons') {
-                        return true;
-                    }
-                });
-            } else {
-                this.buttons = [];
-                this.level2.items = [];
-            }
+            });
         }
+
+        return levelItems;
+    }
+
+    subLevelButtonsFor(item) {
+        let buttons: any = [];
+
+        // To avoid complicated code this cover only level2 for now ...
+        // as only level2 have complex structure
+        if (item.level2) {
+            buttons = item.level2.filter((subSection) => {
+                if (this.CONFIG && subSection.id === this.CONFIG.menu.buttons.id) {
+                    return true;
+                }
+            })[0] || [] ;
+        }
+
+        if (buttons.items && buttons.items.length) {
+            buttons = buttons.items;
+        }
+
+        return buttons;
     }
 
     // *** Breadcrumb for usage of named (auxiliary) router outlet

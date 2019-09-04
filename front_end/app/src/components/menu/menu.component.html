@@ -3,19 +3,21 @@
     <div *ngFor="let item of content.level1">
         <nx-level-1-item [item]="item"
                          [base]="content.base"
-                         [selected]="selectedLevel1 == item.id">
+                         [selected]="selectedLevel1 == item.id"
+                         *ngIf="item.id">
         </nx-level-1-item>
 
         <div *ngIf="selectedLevel1 == item.id">
             <div class="container-buttons"
-                 *ngIf="buttons && buttons.length">
+                 *ngIf="subLevelButtonsFor(item).length">
                 <nx-menu-button
-                    *ngFor="let button of buttons"
+                    *ngFor="let button of subLevelButtonsFor(item)"
                     [button]="button"></nx-menu-button>
             </div>
-            <div *ngFor="let subitem of level2.items; let last = last">
+
+            <div *ngFor="let subitem of subLevelItemsFor(item); let last = last">
                 <nx-level-2-item [item]="subitem"
-                                 [ngClass]="{ last: last }"
+                                 [ngClass]="{ 'last-level-2': last }"
                                  [base]="content.base"
                                  [selected]="selectedLevel2 == subitem.id">
                 </nx-level-2-item>
@@ -29,8 +31,9 @@
             </div>
         </div>
 
-        <div *ngFor="let details of item.level3">
+        <div *ngFor="let details of item.level3; let last = last">
             <nx-level-3-item [item]="details"
+                             [ngClass]="{ 'last-level-3': last }"
                              [base]="content.base"
                              [selected]="selectedLevel3 == details.id">
             </nx-level-3-item>

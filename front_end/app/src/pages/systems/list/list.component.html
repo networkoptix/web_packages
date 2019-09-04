@@ -1,9 +1,10 @@
 <nx-pre-loader type="page" *ngIf="!systems"></nx-pre-loader>
 
 <div class="container auth-visible" *ngIf="systems">
-<!--    <ng-include *ngIf="fetchComplete && !systems.length" src="CONFIG.viewsDir + 'static/no-systems.html'"></ng-include>-->
 
-    <div class="search-block row border-bottom" *ngIf="showSearch">
+    <nx-no-systems *ngIf="!systems.length"></nx-no-systems>
+
+    <div class="search-block row border-bottom" *ngIf="showSearch && systems.length">
         <div class="col-sm-9 col-md-8 col-lg-6 input-overlay">
             <span class="form-control-static input-overlay-left"><span class="glyphicon glyphicon-search"></span></span>
             <a href="" *ngIf="search.value" (click)="search.value=''"
@@ -38,7 +39,7 @@
 
                         <nx-process-button
                                 title="{{system.stateMessage}}"
-                                (click)="systemSelected = system; $event.stopPropagation();"
+                                [clickFn]="openInClient(system)"
                                 *ngIf="LANG.system && system.stateOfHealth == CONFIG.systemStatuses.onlineStatus"
                                 [process]="openClient"
                                 [buttonText]="(system) ? LANG.system.openClient : LANG.system.openClientNoSystem"

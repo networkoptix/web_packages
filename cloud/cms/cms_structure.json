@@ -369,6 +369,31 @@
         ]
       },
       {
+        "name": "ARM guide page",
+        "label": "ARM guide page",
+        "file_path": "static/lang_{{language}}/views/static/arm-guide.html",
+        "url": "/content/arm-guide",
+        "translatable": true,
+        "values":[
+          {
+            "label": "Arm Guide Page Title",
+            "name": "%TITLE%",
+            "value": "ARM Guide",
+            "description": "Title for the ARM guide page",
+            "type": "text",
+            "advanced": true
+          },
+          {
+            "label": "ARM Guide Page Content",
+            "name": "%CONTENT%",
+            "value": "",
+            "description": "Content for ARM guide page",
+            "type": "html",
+            "advanced": true
+          }
+        ]
+      },
+      {
         "name": "End user license agreement(VMS) page",
         "label": "End user license agreement(VMS) page",
         "file_path": "static/lang_{{language}}/views/static/eula-vms.html",
@@ -1026,13 +1051,16 @@
           },
           {
             "name": "type",
-            "label": "Type(Category)",
+            "label": "Type (Category)",
             "value": [],
             "description": "",
             "type": "multiselect",
             "meta": {
               "options": [
                 {
+                  "id": "access",
+                  "label": "Access Control"
+                }, {
                   "id": "automation",
                   "label": "Automation"
                 }, {
@@ -2064,6 +2092,60 @@
             "type": "html",
             "optional": true,
             "public": false
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "article",
+    "can_preview": true,
+    "single_customization": false,
+    "contexts": [
+      {
+        "name": "content",
+        "label": "Content",
+        "description": "Article content",
+        "translatable": true,
+        "values": [
+          {
+            "name": "title",
+            "label": "Title",
+            "value": "",
+            "description": "This will be used as the title of the article",
+            "type": "text",
+            "optional": false
+          },
+          {
+            "name": "url",
+            "label": "URL",
+            "value": "",
+            "description": "URL to access the article, access by going to /content/{custom url}",
+            "type": "text",
+            "optional": false,
+            "advanced": true,
+            "translatable": false,
+            "meta": {
+              "regex": "^[A-Za-z0-9._~()'!*:@,;+?-]+$"
+            }
+          },
+          {
+            "name": "description",
+            "label": "Description",
+            "value": "",
+            "description": "Short description of the article",
+            "type": "text",
+            "optional": true,
+            "advanced": true,
+            "public": false
+          },
+          {
+            "name": "body",
+            "label": "Body",
+            "value": "",
+            "description": "HTML that will be used on the article's page",
+            "type": "html",
+            "optional": false
           }
         ]
       }

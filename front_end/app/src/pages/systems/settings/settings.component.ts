@@ -10,6 +10,7 @@ import { NxSettingsService } from './settings.service';
 import { NxMenuService }     from '../../../components/menu/menu.service';
 import { NxSystemService }   from '../../../services/system.service';
 import { NxSystemsService }        from '../../../services/systems.service';
+import { NxNoSystemsComponent }    from '../no-systems/no-systems.component';
 import { NxModalAddUserComponent } from '../../../dialogs/add-user/add-user.component';
 import { NxModalGenericComponent } from '../../../dialogs/generic/generic.component';
 import { NxAccountService }        from '../../../services/account.service';
@@ -92,7 +93,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.route.params.subscribe(params => {
             if (params.systemId) {
                 this.systemId = params.systemId;
-                this.content.base = '/systems/' + this.systemId;
+                this.content.base = this.CONFIG.menu.baseUrl + this.systemId;
                 this.content = {...this.content}; // trigger onChange
                 if (this.system) {
                     this.system.stopPoll();
@@ -106,28 +107,25 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             selectedSection   : '',         // updated by selectedSectionSubject
             selectedSubSection: '',         // updated by selectedSubSectionSubject
             system            : {},         // updated by getSystemInfo
-            base              : '/systems/' + this.systemId,
+            base              : this.CONFIG.menu.baseUrl + this.systemId,
             level1            : [
                 {
-                    id   : 'admin',
-                    icon : 'glyphicon-home',
+                    id   : this.CONFIG.menu.admin.id,
+                    icon : this.CONFIG.menu.admin.icon,
                     label: this.LANG.systemAdministration,
-                    path : '',
+                    path : this.CONFIG.menu.admin.path,
                 }, {
-                    id    : 'users',
-                    icon  : 'glyphicon-users',
-                    label : this.LANG.users,
-                    path  : 'users',
+                    id   : this.CONFIG.menu.users.id,
+                    icon : this.CONFIG.menu.users.icon,
+                    label: this.LANG.users,
+                    path : this.CONFIG.menu.users.path,
                     level2: [
                         {
-                            id   : 'buttons',
+                            id   : this.CONFIG.menu.buttons.id,
                             items: [
                                 {
                                     id: 'addUser',
                                     label: this.LANG['Add User'],
-                                    // action: {
-                                    //     callback: this.addUserModal.open.bind(this.addUserModal)
-                                    // }
                                 }
                             ]
                         }
@@ -142,7 +140,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 this.content = { ...this.content }; // trigger onChange
             });
 
-        this.menuService
+       this.menuService
             .selectedSubSectionSubject
             .subscribe(selection => {
                 this.content.selectedSubSection = selection;
@@ -190,8 +188,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 },
             },
             errorPrefix: this.LANG.errorCodes.cantGetSystemInfoPrefix
-        });
-        this.gettingSystem.then(() => {
+        }).then(() => {
             this.gettingSystemUsers.run();
         });
 
@@ -212,26 +209,28 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.accountService
             .requireLogin()
             .then((account) => {
-                this.account = account;
-                this.system = this.systemService.createSystem(this.systemId, this.account.email);
-                this.gettingSystem.run();
+                if (account) {
+                    this.account = account;
+                    this.system = this.systemService.createSystem(this.systemId, this.account.email);
+                    this.gettingSystem.run();
 
-                this.system
-                    .getInfo(true)
-                    .then(() => {
-                        this.settingsService.setSystem(this.system);
-                    })
-                    .catch((response) => {
-                        this.system.forbidden = true;
+                    this.system
+                        .getInfo(true)
+                        .then(() => {
+                            this.settingsService.setSystem(this.system);
+                        })
+                        .catch((response) => {
+                            this.system.forbidden = true;
+                        });
+
+
+                    this.system.systemSubject.subscribe((system) => {
+                        if (system !== undefined) {
+                            this.settingsService.setSystem(system);
+                            this.updateSomething();
+                        }
                     });
-
-
-                this.system.systemSubject.subscribe((system) => {
-                    if (system !== undefined) {
-                        this.settingsService.setSystem(system);
-                        this.updateSomething();
-                    }
-                });
+                }
             });
 
     }
@@ -254,7 +253,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     id,
                     icon : 'glyphicon-cloud',
                     label: user.email,
-                    additionalLabel: '<span class="menu-level-2-additional">&ndash;&nbsp;' + user.role.name + '</span>',
+                    additionalLabel:  user.role.name,
                     path : 'users/' + id,
                     isEnabled: user.isEnabled,
                 });

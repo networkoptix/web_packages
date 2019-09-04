@@ -29,7 +29,11 @@ $header-collapsing-width-1: 1px;
 
     &.navbar-default {
         background-color: #fff;
-        padding: 0;
+        padding: 0 !important;
+        
+        .container-fluid {
+            flex-wrap: nowrap;
+        }
     }
     
     .app-header-right {
@@ -259,6 +263,40 @@ $header-collapsing-width-1: 1px;
             .ellipsis{
                 display:none !important;
             }
+        }
+    }
+    
+    // TODO: remove in 19.2
+    // 19.1 retrofit 19.2 header button icons
+    #icon {
+        display          : inline-block;
+        background-size  : 144px 80px;
+        margin-right     : 5px;
+        background-image : url('/static/images/sprite_common.png');
+        @media only screen and (-webkit-min-device-pixel-ratio : 2), only screen and (min-device-pixel-ratio : 2) {
+            background-image : url('/static/images/sprite_common@2x.png');
+        }
+    }
+    
+    .glyphicon-login {
+        @extend #icon;
+        width               : 24px;
+        height              : 24px;
+        background-position : -120px -32px;
+    
+        &:before {
+            content : none;
+        }
+    }
+    
+    .glyphicon-create-user {
+        @extend #icon;
+        width               : 24px;
+        height              : 24px;
+        background-position : -96px -32px;
+    
+        &:before {
+            content : none;
         }
     }
 }

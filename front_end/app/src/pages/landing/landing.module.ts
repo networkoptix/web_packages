@@ -8,7 +8,6 @@ import { NxLandingComponent } from './landing.component';
 
 import { TranslateModule }   from '@ngx-translate/core';
 import { ComponentsModule }  from '../../components/components.module';
-import { DownloadComponent } from '../download/download.component';
 
 const appRoutes: Routes = [
     { path    : '', component: NxLandingComponent },
@@ -23,7 +22,7 @@ const appRoutes: Routes = [
         TranslateModule,
         ComponentsModule,
 
-        // RouterModule.forChild(appRoutes)
+        RouterModule.forChild(appRoutes)
     ],
     providers      : [],
     declarations   : [

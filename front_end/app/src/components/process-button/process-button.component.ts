@@ -8,6 +8,7 @@ import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
 })
 export class NxProcessButtonComponent implements OnInit {
     @Input() process: any;
+    @Input() clickFn: any;
     @Input() buttonText: string;
     @Input() buttonDisabled: boolean;
     @Input() actionType: any;
@@ -20,6 +21,10 @@ export class NxProcessButtonComponent implements OnInit {
     }
 
     ngOnInit() {
+        if (!this.clickFn) {
+            this.clickFn = () => {};
+        }
+
         this.buttonClass = 'btn-primary';
         if (this.actionType) {
             this.buttonClass = 'btn-' + this.actionType;
@@ -27,17 +32,21 @@ export class NxProcessButtonComponent implements OnInit {
     }
 
     touchForm() {
-        for (let ctrl in this.form.form.controls) {
-            this.form.form.get(ctrl).markAsTouched();
+        for (const ctrl in this.form.form.controls) {
+            if (this.form.form.controls.hasOwnProperty(ctrl)) {
+                this.form.form.get(ctrl).markAsTouched();
+            }
         }
     }
 
     setFocusToInvalid() {
-        for(let ctrl in this.form.form.controls) {
-            if (this.form.form.get(ctrl).invalid) {
-                // TODO : find how to set element's focus
-                // control.focused = true;
-                return;
+        for (const ctrl in this.form.form.controls) {
+            if (this.form.form.controls.hasOwnProperty(ctrl)) {
+                if (this.form.form.get(ctrl).invalid) {
+                    // TODO : find how to set element's focus
+                    // control.focused = true;
+                    return;
+                }
             }
         }
     }

@@ -8,20 +8,22 @@ import { Angular2CsvModule } from 'angular2-csv';
 import { DownloadModule }            from './download/download.module';
 import { DownloadHistoryModule }     from './download-history/download-history.module';
 import { NonSupportedBrowserModule } from './non-supported-browser/non-supported-browser.module';
-
-import { RegisterModule } from './register/register.module';
-
-import { RightMenuModule }        from './right-menu/right-menu.module';
-import { ContentModule }          from './content/content.module';
-import { IntegrationsModule }     from './integration/integrations.module';
-import { IntegrationsListModule } from './integration/list/list.module';
-import { LandingModule }          from './landing/landing.module';
+import { NxRegisterModule }          from './register/register.module';
+import { NxActivateModule }          from './activate/activate.module';
+import { RightMenuModule }           from './right-menu/right-menu.module';
+import { ContentModule }             from './content/content.module';
+import { IntegrationsModule }        from './integration/integrations.module';
+import { IntegrationsListModule }    from './integration/list/list.module';
+import { LandingModule }             from './landing/landing.module';
+import { NxOverviewModule }          from './integration/details/overview/overview.module';
+import { NxSetupModule }             from './integration/details/setup/setup.module';
+import { NxSettingsModule }          from './systems/settings/settings.module';
+import { NxSystemsListModule }       from './systems/list/list.module';
+import { NxAccountModule }           from './account/account.module';
+import { NxRestoreModule }           from './restore/restore.module';
+import { Nx404Module }               from './404/404.module';
+import { NxDebugModule }             from './debug/debug.module';
 import { PushNotificationsModule } from './push-notifications/push-notifications.module';
-
-import { NxOverviewModule }         from './integration/details/overview/overview.module';
-import { NxSetupModule }            from './integration/details/setup/setup.module';
-import { NxSettingsModule }         from './systems/settings/settings.module';
-import { NxSystemsListModule }      from './systems/list/list.module';
 
 @NgModule({
     imports        : [
@@ -30,8 +32,11 @@ import { NxSystemsListModule }      from './systems/list/list.module';
         DownloadModule,
         DownloadHistoryModule,
         NonSupportedBrowserModule,
-        RegisterModule,
+        NxRegisterModule,
+        NxActivateModule,
+        NxRestoreModule,
         IntegrationsModule,
+        IntegrationsListModule,
         ContentModule,          // TODO: Remove it after test
         RightMenuModule,        // TODO: Remove it after test
         PushNotificationsModule,
@@ -42,6 +47,9 @@ import { NxSystemsListModule }      from './systems/list/list.module';
         NxSetupModule,
         NxSettingsModule,
         NxSystemsListModule,
+        NxAccountModule,
+        Nx404Module,
+        NxDebugModule,
     ],
     declarations   : [],
     entryComponents: [],
@@ -51,8 +59,11 @@ import { NxSystemsListModule }      from './systems/list/list.module';
         DownloadModule,
         DownloadHistoryModule,
         NonSupportedBrowserModule,
-        RegisterModule,
+        NxRegisterModule,
+        NxActivateModule,
+        NxRestoreModule,
         IntegrationsModule,
+        IntegrationsListModule,
         NxSettingsModule,
         ContentModule,          // TODO: Remove it after test
         RightMenuModule,        // TODO: Remove it after test
@@ -60,6 +71,8 @@ import { NxSystemsListModule }      from './systems/list/list.module';
         IpvdModule,
         Angular2CsvModule,
         LandingModule,
+        Nx404Module,
+        NxDebugModule,
     ]
 })
 export class PagesModule {

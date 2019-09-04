@@ -7,10 +7,12 @@
                 <tr>
                     <th *ngFor="let header of showHeaders"
                         class="align-bottom"
+                        [title]="getCleanTitle(header)"
                         (click)="toggleHeaderSort(header)">
 
+
                         <div class="caption d-flex">
-                            <div class="" [innerHTML]="header"></div>
+                            <div class="ellipsis" [innerHTML]="header"></div>
                             <div class="sort-dir nav-arrow"
                                  [style.visibility]="(header == selectedHeader) ? 'visible' : 'hidden'"
                                  [ngClass]="{'up': !sortOrderASC}">

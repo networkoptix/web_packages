@@ -16,12 +16,6 @@ import { WebStorageModule }                 from 'ngx-store';
 import { AngularFireModule, FirebaseOptionsToken } from '@angular/fire';
 import { AngularFireMessagingModule } from '@angular/fire/messaging';
 
-import {
-    cloudApiServiceModule, systemModule, languageServiceModule,
-    processServiceModule, uuid2ServiceModule,
-    locationProxyModule,
-} from './src/ajs-upgrade/ajs-upgraded-providers';
-
 import { AppComponent }              from './app.component';
 import { ComponentsModule }          from './src/components/components.module';
 import { DialogsModule }             from './src/dialogs/dialogs.module';
@@ -42,20 +36,25 @@ import {initializeApp} from "./src/pages/push-notifications/push-notifications.m
 class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
     shouldProcessUrl(url: UrlTree) {
         return (url.toString().startsWith('/sandbox') ||
+            url.toString().startsWith('/404') ||
+            url.toString().startsWith('/login') ||
             url.toString().startsWith('/ipvd') ||
-            url.toString().startsWith('/download') ||
+            (url.toString().startsWith('/download') && !url.toString().startsWith('/downloads')) ||
+            url.toString().startsWith('/account') ||
+            url.toString().startsWith('/activate') ||
+            url.toString().startsWith('/restore_password') ||
+            url.toString().startsWith('/register') ||
             url.toString().startsWith('/systems') ||
             url.toString().startsWith('/new-content') ||
             url.toString().startsWith('/right') ||
             url.toString().startsWith('/push-notifications') ||
-            url.toString().startsWith('/integrations')) &&
+            url.toString().startsWith('/debug') ||
+            url.toString().startsWith('/integrations') ||
+            url.toString().startsWith('/content')) &&
             !url.toString().endsWith('/view');
         // return false;
 
         /* Temporary downgraded components - routing is handled by AJS */
-        // url.toString().startsWith('/') ||
-        // url.toString().startsWith('/register') ||
-        // url.toString().startsWith('/login') ||
         // url.toString().startsWith('/downloads') ||
         // url.toString().startsWith('/browser');
     }
@@ -83,12 +82,6 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
         }),
         WebStorageModule,
         OrderModule,
-        cloudApiServiceModule,
-        uuid2ServiceModule,
-        languageServiceModule,
-        processServiceModule,
-        systemModule,
-        locationProxyModule,
         ComponentsModule,
         DialogsModule,
         PagesModule,

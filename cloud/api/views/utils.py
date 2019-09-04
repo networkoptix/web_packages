@@ -117,7 +117,7 @@ def language(request):
 
 
 @api_view(['GET'])
-@permission_classes((IsAuthenticated, ))
+@permission_classes((AllowAny, ))
 @handle_exceptions
 def downloads_history(request):
     # TODO: later we can check specific permissions
@@ -348,6 +348,9 @@ def get_ipvd(request):
 
             if camera["hardwareType"] == "Camera" and camera["isMultiSensor"]:
                 camera["hardwareType"] = 'Multi-Sensor Camera'
+                camera["hardwareTypeId"] = 'multiSensorCamera'
+            else:
+                camera["hardwareTypeId"] = camera["hardwareType"].lower()
 
             res = camera["maxResolution"].split('x')
             if len(res) == 2:

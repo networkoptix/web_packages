@@ -68,11 +68,11 @@ export class NxUrlProtocolService {
 
         settings = {...settings, ...linkSettings};
 
-        const protocol = settings.native ? this.LANG.clientProtocol : this.window.location.protocol;
+        const protocol = settings.native && this.LANG.clientProtocol ? this.LANG.clientProtocol : this.window.location.protocol;
         const host = this.window.location.host;
 
         let getParams;
-        getParams = { actionParameters: settings.actionParameters };
+        getParams = {...settings.actionParameters};
 
         if (settings.from) {
             getParams.from = settings.from;
@@ -93,12 +93,14 @@ export class NxUrlProtocolService {
             url += linkSettings.action;
         }
 
-        let uri;
-        getParams.forEach((param) => {
-            uri += '&' + param;
+        const uri = [];
+        Object.keys(getParams).forEach((param) => {
+            uri.push(param + '=' + getParams[param]);
         });
 
-        url += '?' + getParams.substring(1);
+        const uriStr = uri.join('&');
+
+        url += '?' + uriStr;
 
         return url;
     }
@@ -135,19 +137,21 @@ export class NxUrlProtocolService {
             // ugly thing!
             // see CLOUD-716 for more information
 
-            // TODO: this is called without any callback function ... do we really need it?
-            // this.window.protocolCheck(link);
+            // @ts-ignore
+            this.window.protocolCheck(link);
 
-            return setTimeout(() => {
-                return this.accountService
-                        .checkVisitedKey(authKey)
-                        .then((visited) => {
+            return new Promise<any>((resolve, reject) => {
+                setTimeout(() => {
+                    this.accountService
+                       .checkVisitedKey(authKey)
+                       .then((visited) => {
                            if (!visited) {
-                               return Promise.reject(visited);
+                               return reject(visited);
                            }
-                           return visited;
+                           return resolve(visited);
                        });
-            }, this.CONFIG.openClientTimeout);
+                }, this.CONFIG.openClientTimeout);
+            });
         });
     }
 

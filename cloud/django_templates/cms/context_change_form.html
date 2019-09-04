@@ -135,11 +135,11 @@
     var bytesToMb = "{{ BYTES_TO_MB }}";
 
     {% if preview_link %}
-        window.open("{{ preview_link }}", '', '_blank,noopener,noreferrer');
+        window.open("{{ preview_link | safe }}", '', '_blank,noopener,noreferrer');
     {% endif %}
 
     function openPreview() {
-        window.open("{{ preview_link }}", '', '_blank,noopener,noreferrer');
+        window.open("{{ preview_link | safe }}", '', '_blank,noopener,noreferrer');
     }
 
     function wasTouched() {

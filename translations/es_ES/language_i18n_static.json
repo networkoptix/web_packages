@@ -64,7 +64,7 @@
 			"arm": {
 				"label": "ARM",
 				"shortLabel": "ARM",
-				"supported": "Basado en Debian / Ubuntu"
+				"supported": "<a href='/content/arm'>servidores basados en ARM admiten la política</a>"
 			},
 			"sdk": {
 				"label": "SDK",

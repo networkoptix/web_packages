@@ -90,7 +90,6 @@ class NxSystemAPI {
 
     private generateGetUrl(url: string, data: any, absUrl?: boolean) {
         const params = new HttpParams(data);
-        // console.log(params);
         if (absUrl) {
             const proto = window.location.protocol;
             const hostName = window.location.hostname;
@@ -116,9 +115,8 @@ class NxSystemAPI {
 
     private post(url: string, data?: any) {
         data = data || {};
-        data.auth = this.authPost;
         const fullUrl = `${this.urlBase}${url}`;
-        return this.http.post(fullUrl, data, {}).pipe(
+        return this.http.post(fullUrl, data, {params: {auth: this.authPost}}).pipe(
             retryWhen((error) => {
                 return this.retryHandler(error);
             })
@@ -341,7 +339,7 @@ class NxSystemAPI {
         return this.get('/ec2/getCamerasEx', params);
     }
 
-    getMediaServers(id) {
+    getMediaServers(id?) {
         const params = id ? {id: this.cleanId(id)} : {};
         return this.get('/ec2/getMediaServersEx', params);
     }
@@ -459,15 +457,22 @@ class NxSystemAPI {
 export class NxSystemAPIService {
     CONFIG: any;
     location: any;
+    systemConnections: { [key: string]: NxSystemAPI };
 
     constructor(private http: HttpClient,
                 private config: NxConfigService,
                 location: Location) {
         this.location = location;
         this.CONFIG = this.config.getConfig();
+        this.systemConnections = {};
     }
 
     createConnection(user, systemId, serverId, unauthorizedCallback) {
+        if (systemId in this.systemConnections) {
+            return this.systemConnections[systemId];
+        } else if (serverId in this.systemConnections) {
+            return this.systemConnections[serverId];
+        }
         return new NxSystemAPI(this.http, this.CONFIG, this.location, user, systemId, serverId, unauthorizedCallback);
     }
 }

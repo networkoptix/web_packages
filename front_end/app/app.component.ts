@@ -1,11 +1,12 @@
 import { Location }                  from '@angular/common';
-import { Component, Inject }         from '@angular/core';
+import { Component, HostListener, Inject } from '@angular/core';
 import { CookieService }             from 'ngx-cookie-service';
 import { DeviceDetectorService }     from 'ngx-device-detector';
 import { Title }                     from '@angular/platform-browser';
 import { WINDOW }                    from './src/services/window-provider';
 import { NxLanguageProviderService } from './src/services/nx-language-provider';
 import { NxConfigService }           from './src/services/nx-config';
+import { NxApplyService } from './src/services/apply.service';
 
 @Component({
     selector: 'nx-app',
@@ -28,6 +29,7 @@ export class AppComponent {
                 private titleService: Title,
                 private config: NxConfigService,
                 private language: NxLanguageProviderService,
+                private applyService: NxApplyService,
                 @Inject(WINDOW) private window: Window) {
 
         this.CONFIG = this.config.getConfig();
@@ -125,6 +127,27 @@ export class AppComponent {
         if (window.SETTINGS.cloudMerge) {
             // @ts-ignore
             this.CONFIG.cloudMerge = window.SETTINGS.cloudMerge;
+        }
+        // @ts-ignore
+        this.CONFIG.viewsDir = 'static/lang_' + window.LANG.ajs.language + '/views/';
+        // @ts-ignore
+        this.CONFIG.viewsDirCommon = 'static/lang_' + window.LANG.ajs.language + '/web_common/views/';
+
+        // detect preview mode
+        if (window.location.href.indexOf('preview') >= 0) {
+            this.CONFIG.previewPath = 'preview';
+            this.CONFIG.viewsDir = this.CONFIG.previewPath + '/' + this.CONFIG.viewsDir;
+        }
+
+        this.CONFIG.showHeaderAndFooter = true;
+    }
+
+    // Todo: Revisit using this when the hybrid app is killed.
+    @HostListener('window:popstate')
+    windowListener() {
+        if (this.applyService.locked) {
+            window.history.go(1);
+            this.applyService.showDialog().catch(() => {});
         }
     }
 

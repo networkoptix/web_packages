@@ -64,7 +64,7 @@
 			"arm": {
 				"label": "ARM",
 				"shortLabel": "ARM",
-				"supported": "Debian/Ubuntu based"
+				"supported": "<a href='/content/arm'>ARM based servers support policy</a>"
 			},
 			"sdk": {
 				"label": "SDK",
@@ -105,7 +105,7 @@
 		"hardwareType": "Típus",
 		"maxResolution": "Max Resolution",
 		"maxFps": "Max FPS",
-		"primaryCodec": "Codec",
+		"primaryCodec": "Kodek",
 		"isAudioSupported": "Audio",
 		"isTwAudioSupported": "2-way Audio",
 		"isPtzSupported": "PTZ",

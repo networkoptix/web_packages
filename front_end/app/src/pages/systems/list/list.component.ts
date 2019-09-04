@@ -90,12 +90,17 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
         this.openClient = this.processService.createProcess(() => {
             return this.urlProtocol
                        .open(this.systemSelected && this.systemSelected.id)
-                       .then(() => {
-                               },
-                               () => {
-                                   // this.dialogs.noClientDetected();
-                                   return true;
+                       .catch((error) => {
+                           this.dialogs
+                               .confirm(this.LANG.errorCodes.cantOpenClient, this.LANG.dialogs.noClientDetectedTitle,
+                                       this.LANG.dialogs.download, 'btn-primary',
+                                       this.LANG.dialogs.cancelButton)
+                               .then((result) => {
+                                   if (result) {
+                                       this.location.go('/download');
+                                   }
                                });
+                       });
         }, {});
 
         this.gettingSystems = this.processService.createProcess(() => {
@@ -106,6 +111,10 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
             errorPrefix    : this.LANG.errorCodes.cantGetSystemsListPrefix,
             logoutForbidden: true
         });
+    }
+
+    openInClient(system) {
+        this.systemSelected = system;
     }
 
     getSystemOwnerName(system, currentEmail) {

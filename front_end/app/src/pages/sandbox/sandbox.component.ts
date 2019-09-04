@@ -21,6 +21,7 @@ export class NxSandboxComponent {
     items: any;
     itemsSelected: any;
     filter: any;
+    autohide: boolean;
 
     submitted = false;
 
@@ -154,7 +155,7 @@ export class NxSandboxComponent {
     }
 
     notify(msg: string, type: string) {
-        this.dialogs.notify(msg, type, true);
+        this.dialogs.notify(msg, type, this.autohide);
     }
 }
 

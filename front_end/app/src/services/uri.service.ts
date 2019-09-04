@@ -29,12 +29,13 @@ export class NxUriService {
         return this.route.queryParams;
     }
 
-    updateURI(navigateTo: string, queryParams: any = {}) {
+    updateURI(navigateTo: string, queryParams: any = {}, replace?) {
+        replace = replace ? replace : false;
         // changes the route without moving from the current view
         this.router.navigate([navigateTo], {
             queryParams,
             relativeTo         : this.route,
-            replaceUrl         : false,
+            replaceUrl         : replace,
             queryParamsHandling: 'merge',
             // do not trigger navigation
             // skipLocationChange : true

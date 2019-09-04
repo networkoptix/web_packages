@@ -243,7 +243,8 @@ class ProductType(models.Model):
     PRODUCT_TYPES = Choices((0, "cloud_portal", "Cloud Portal"),
                             (1, "vms", "Vms"),
                             (2, "integration", "Integration"),
-                            (3, "other", "Other"))
+                            (3, "other", "Other"),
+                            (4, "article", "Article"))
     name = models.CharField(max_length=255, default="", blank=True)
     can_preview = models.BooleanField(default=False)
     single_customization = models.BooleanField(default=False)

@@ -10,7 +10,7 @@
 {% block content_title %}
 <h1 style="display: flex; justify-content: space-between;">
     <div>{{ page_title }}</div>
-    {% if original.can_preview_customization and is_integration %}
+    {% if original.can_preview_customization and whole_preview %}
     <a class="preview" href="{% url 'preview' %}" value="0">Preview</a>
     {% endif %}
 </h1>
@@ -46,12 +46,12 @@
                         <tr>
                             <td>
                                 {% if review == original %}
-                                <strong>{{ review.customization }}</strong>
+                                <strong>{{ review.customization | portal_name }}</strong>
                                 {% else %}
-                                <a href="{% url 'admin:cms_productcustomizationreview_change' review.id %}">{{ review.customization }}</a>
+                                <a href="{% url 'admin:cms_productcustomizationreview_change' review.id %}">{{ review.customization | portal_name }}</a>
                                 {% endif %}
                             </td>
-                            <td><span class="label {% if state == 'Rejected' %} label-danger {% elif state == "Accepted" %} label-success {% else %} label-default{% endif %}">{{ state }}</span></td>
+                            <td><span class="label {% if state == 'Rejected' %} label-danger {% elif state == 'Accepted' %} label-success {% else %} label-default{% endif %}">{{ state }}</span></td>
                             <td> {{ review.reviewed_by }}</td>
                             <td> {{ review.reviewed_date }}</td>
                             <td> {{ review.notes | linebreaks }}</td>
@@ -71,7 +71,7 @@
                     <div>
                         {% with context_url=records.0.data_structure.context.url %}
                             {{ context_name }}
-                            {% if can_preview %}
+                            {% if partial_preview %}
                                 <a class="float-right preview" href="{% url 'preview' %}"
                                    value="{{records.0.data_structure.context.id}}">Preview</a>
                             {% endif %}
@@ -133,7 +133,7 @@
         {% else %}
         <div>There are no changes to review</div>
         {% endif %}
-        <h2>Review Notes {% if access_customization %}for {{ original.customization.name }}{% endif %}</h2>
+        <h2>Review Notes {% if access_customization %}for {{ original.customization | portal_name }}{% endif %}</h2>
         {{ original.notes|linebreaks }}
     </div>
 

@@ -311,19 +311,6 @@ a.disabled {
   color:    $gray-light;
 }
 
-.no-data-panel {
-    width            : 100%;
-    z-index          : 100;
-    text-align       : center;
-    background-color : $body-bg;
-    padding          : 2rem 0;
-
-    &-body {
-        font-size   : $h3-font-size;
-        font-family : $font-family-light;
-    }
-}
-
 @include media-breakpoint-down(sm) {
     .no-data-panel .right-arrow {
         transform: rotate(90deg);

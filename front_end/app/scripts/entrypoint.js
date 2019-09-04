@@ -20,7 +20,7 @@ require('./vendor/protocolcheck.js');
 
 //App
 require('./app.js');
-require('./downgraded-providers.ts');
+// require('./downgraded-providers.ts');
 
 //Directives
 require('./directives/autofocus.js');
@@ -54,12 +54,12 @@ require('./services/system.ts');
 require('./services/location-proxy.ts');
 
 //Controllers
-require('./controllers/startPage.js');
-require('./controllers/404.js');
-require('./controllers/account.js');
-require('./controllers/activateRestore.js');
-require('./controllers/debug.js');
-require('./controllers/static.js');
+// require('./controllers/startPage.js');
+// require('./controllers/__DEPRECATED__404.js');
+// require('./controllers/account.js');
+// require('./controllers/activateRestore.js');
+// require('./controllers/debug.js');
+// require('./controllers/static.js');
 // require('./controllers/system.js');
 // require('./controllers/systems.js');
 require('./controllers/view.js');

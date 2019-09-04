@@ -4,8 +4,8 @@ import {
 }                                    from '@angular/core';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import {NxProcessService} from "../../services/process.service";
-import {NxCloudApiService} from "../../services/nx-cloud-api";
+import { NxProcessService }          from '../../services/process.service';
+import { NxCloudApiService }         from '../../services/nx-cloud-api';
 
 @Component({
     selector: 'nx-modal-disconnect-content',
@@ -55,8 +55,7 @@ export class DisconnectModalContent {
             },
             successMessage: this.LANG.system.successDisconnected,
             errorPrefix: this.LANG.errorCodes.cantDisconnectSystemPrefix
-        });
-        this.disconnect.then(() => {
+        }).then(() => {
             this.activeModal.close(true);
         });
     }

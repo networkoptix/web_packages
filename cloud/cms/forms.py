@@ -117,6 +117,9 @@ class CustomContextForm(forms.Form):
 
             # If the data_structure is protected and published require users to have the edit advanced permission
             disabled = not can_edit_advanced and (data_structure.protected and is_published or data_structure.advanced)
+            # Disable if datastructure is translatable and language is not default
+            disabled = disabled or (not data_structure.translatable and language != product.default_language
+                                    and context.translatable)
 
             if data_structure.type in [DataStructure.DATA_TYPES.long_text,
                                        DataStructure.DATA_TYPES.object,
@@ -201,7 +204,10 @@ class CustomContextForm(forms.Form):
 
             validator = RegexValidator('')
             if data_structure.type == DataStructure.DATA_TYPES.text and 'regex' in data_structure.meta_settings:
-                validator = RegexValidator(data_structure.meta_settings['regex'])
+                pattern = data_structure.meta_settings['regex']
+                if not pattern.endswith('$'):
+                    pattern = f'{pattern}$'
+                validator = RegexValidator(pattern)
 
             self.fields[data_structure.name] = forms.CharField(required=False,
                                                                label=ds_label,
@@ -226,7 +232,8 @@ class ProductSettingsForm(forms.Form):
             ('generate_json', 'Generate structure template based on archive'),
             ('merge_with_db', 'Generate structure using archive and db'),
             ('update_structure',
-             'Update CMS structure and default values based on archive with structure.json and product_type template'),
+             'Update CMS structure and default values based on archive with structure.json and product_type template, '
+             'or upload just the structure.json'),
             ('update_content', 'Upload content files for product')
         )
     )

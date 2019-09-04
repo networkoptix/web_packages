@@ -74,8 +74,10 @@ urlpatterns = [
         TemplateView.as_view(template_name='static/scripts/vendor/firebase-messaging-sw.js',
                              content_type='application/javascript')),
 
-    url(r'^(?!static).*',
+    url(r'^(?!static|preview).*',
         TemplateView.as_view(template_name="static/index.html"))
+]
 
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+if settings.LOCAL_ENVIRONMENT:
+    urlpatterns += static(settings.PREVIEW_URL, document_root=settings.PREVIEW_LOCATION)
 

@@ -219,6 +219,10 @@ button, .btn {
         padding : 0;
     }
     
+    &:hover {
+        color: $light1;
+    }
+
     .close-button {
         position        : absolute;
         right           : 0;
@@ -333,7 +337,7 @@ button, .btn {
     @include media-breakpoint-down(md) {
         padding : 0 .75rem;
     }
-    
+
     .glyphicon {
         display : block;
         margin: 0;
@@ -341,7 +345,7 @@ button, .btn {
             display : none;
         }
     }
-    
+
     .btn-caption {
         display : none;
         @include media-breakpoint-up(md) {
@@ -349,3 +353,4 @@ button, .btn {
         }
     }
 }
+

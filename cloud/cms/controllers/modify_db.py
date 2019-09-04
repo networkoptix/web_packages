@@ -2,7 +2,7 @@ from datetime import datetime
 
 from notifications.notifications_api import send
 from django.contrib.auth.models import Permission
-from django.db.models import Q
+from django.utils.http import urlencode
 
 from PIL import Image
 import base64
@@ -17,7 +17,8 @@ from ..models import *
 
 BYTES_TO_MEGABYTES = 1048576.0
 PENDING = ProductCustomizationReview.REVIEW_STATES[ProductCustomizationReview.REVIEW_STATES.pending].lower()
-GUID_REGEXP = '\{[\da-fA-F]{8}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{12}\}'
+GUID_REGEXP = r'\{[\da-fA-F]{8}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{12}\}$'
+
 
 def update_draft_state(review_id, target_state, user):
     review = ProductCustomizationReview.objects.filter(id=review_id, reviewed_by=None).last()
@@ -197,6 +198,8 @@ def save_unrevisioned_records(product, context, language, data_structures,
             new_record_value = request_data[data_structure_name]
             if data_structure.type == DataStructure.DATA_TYPES.text and 'regex' in data_structure.meta_settings:
                 pattern = data_structure.meta_settings['regex']
+                if not pattern.endswith('$'):
+                    pattern = f'{pattern}$'
                 if new_record_value and not re.match(pattern, new_record_value):
                     upload_errors.append((data_structure_name, 'Invalid input'))
                     continue
@@ -289,8 +292,12 @@ def remove_unused_records(product):
 
 
 def generate_preview_link(context=None, product=None, state=""):
-    if product and product.is_integration:
-        return f"{settings.INTEGRATION_STORE_PAGE}/{product.id}?state={state}"
+    if product:
+        if product.is_integration:
+            return f"{settings.INTEGRATION_STORE_PAGE}/{product.id}?state={state}"
+        elif product.is_product_type(ProductType.PRODUCT_TYPES.article):
+            article_url = DataRecord.objects.filter(product=product, data_structure__name='url').last()
+            return f'/content/{article_url.value}?' + urlencode({'state': state, 'id': product.id})
 
     return f"{context.url}?preview" if context else "/content/about?preview"
 
@@ -389,6 +396,13 @@ def is_not_valid_file_type(file_type, meta_types):
     return True
 
 
+def is_not_valid_file_extension(file_name, meta_types):
+    for meta_type in meta_types.split(','):
+        if file_name.endswith(f'.{meta_type.strip()}'):
+            return False
+    return True
+
+
 def get_image_dimensions(image_file):
     new_image = Image.open(image_file)
     width, height = new_image.size
@@ -436,7 +450,8 @@ def check_image_dimensions(data_structure_name,
 
 def check_meta_settings(data_structure, new_file):
     meta_settings = data_structure.meta_settings
-    if 'format' in meta_settings and is_not_valid_file_type(new_file.content_type, meta_settings['format']):
+    if 'format' in meta_settings and is_not_valid_file_extension(new_file.name, meta_settings['format']) and \
+            is_not_valid_file_type(new_file.content_type, meta_settings['format']):
         error_msg = "Invalid file type. Uploaded file is {}. It should be {}." \
             .format(new_file.content_type,
                     data_structure.meta_settings['format'].replace(',', ' or '))
@@ -447,8 +462,7 @@ def check_meta_settings(data_structure, new_file):
             format(new_file.size/BYTES_TO_MEGABYTES, meta_settings['size']/BYTES_TO_MEGABYTES)
         return [(data_structure.name, error_msg)]
 
-    if DataStructure.is_file_or_image(data_structure.type):
-
+    if data_structure.is_image:
         try:
             image_dimensions = get_image_dimensions(new_file)
         except (IOError, TypeError):
@@ -461,7 +475,6 @@ def check_meta_settings(data_structure, new_file):
 
 # End of file upload helpers
 def upload_file(data_structure, new_file):
-    encoded_file = base64.b64encode(new_file.read()).decode('utf8')
     if new_file.size >= settings.CMS_MAX_FILE_SIZE:
         return None, [(data_structure.name, 'Its size was {0:.2f}MB but must be less than {1:.2f} MB'.
                        format(new_file.size/BYTES_TO_MEGABYTES, settings.CMS_MAX_FILE_SIZE/BYTES_TO_MEGABYTES))]
@@ -469,4 +482,5 @@ def upload_file(data_structure, new_file):
     file_errors = check_meta_settings(data_structure, new_file)
     if file_errors:
         return None, file_errors
+    encoded_file = base64.b64encode(new_file.read()).decode('utf8')
     return encoded_file, []

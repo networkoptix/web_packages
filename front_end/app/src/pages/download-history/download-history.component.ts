@@ -6,13 +6,15 @@ import { ActivatedRoute, Router }            from '@angular/router';
 import { Title }                             from '@angular/platform-browser';
 import { DOCUMENT, Location, TitleCasePipe } from '@angular/common';
 import { isNumeric }                         from 'rxjs/util/isNumeric';
-import { NgbTabChangeEvent, NgbTabset }      from '@ng-bootstrap/ng-bootstrap';
+import { NgbTabChangeEvent, NgbTabset } from '@ng-bootstrap/ng-bootstrap';
 
 import isArray = require('core-js/fn/array/is-array');
 import angular = require('angular');
-import { NxConfigService }                   from '../../services/nx-config';
-import { NxLanguageProviderService }         from '../../services/nx-language-provider';
-import { NxAccountService }                  from '../../services/account.service';
+import { NxConfigService }              from '../../services/nx-config';
+import { NxLanguageProviderService }    from '../../services/nx-language-provider';
+import { NxAccountService }             from '../../services/account.service';
+import { NxCloudApiService }            from '../../services/nx-cloud-api';
+import { NxUriService }                 from '../../services/uri.service';
 
 @Component({
     selector   : 'download-history',
@@ -44,14 +46,14 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
     public tabs: NgbTabset;
 
     constructor(@Inject(DOCUMENT) private document: any,
-                @Inject('cloudApiService') private cloudApi: any,
-                @Inject('locationProxyService') private locationProxy: any,
+                private cloudApiService: NxCloudApiService,
                 private accountService: NxAccountService,
                 private configService: NxConfigService,
                 private route: ActivatedRoute,
                 private router: Router,
                 private titleService: Title,
                 private language: NxLanguageProviderService,
+                private uriService: NxUriService,
                 location: Location) {
 
         this.location = location;
@@ -75,9 +77,9 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
     }
 
     private getData() {
-        this.cloudApi
+        this.cloudApiService
             .getDownloadsHistory(this.build)
-            .then(result => {
+            .then((result: any) => {
                     this.linkbase = result.data.updatesPrefix;
                     if (!this.build) { // only one build
                         this.downloadsData = result.data;
@@ -111,7 +113,7 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
     public beforeChange($event: NgbTabChangeEvent) {
         this.activeBuilds = this.downloadsData[ $event.nextId ];
         this.titleService.setTitle(new TitleCasePipe().transform($event.nextId));
-        this.locationProxy.path('/downloads/' + $event.nextId, false);
+        this.uriService.updateURI('/downloads/' + $event.nextId, {}, true);
     }
 
     ngOnInit(): void {

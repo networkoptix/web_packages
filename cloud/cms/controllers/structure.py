@@ -85,7 +85,7 @@ def update_from_object(product_type_structure, product_type=None, preserve_files
         context_order += 1
         has_language = context.translatable
         for record in context_data["values"]:
-            update_data_structure(context.id, has_language, record, order, preserve_files)
+            update_data_structure(context, has_language, record, order, preserve_files)
             order += 1
 
 
@@ -316,18 +316,19 @@ def update_context(context_data, product_type, order):
     return context
 
 
-def update_data_structure(context_id, has_lang, record, order, preserve_file=False):
+def update_data_structure(context, has_lang, record, order, preserve_file=False):
     name = record['name']
     label = record.get("label", "")
     old_name = record.get("old_name", None)
 
-    data_structure = find_or_add_data_structure(name, old_name, context_id, has_lang)
+    data_structure = find_or_add_data_structure(name, old_name, context.id, has_lang)
     data_structure.label = label
     data_structure.order = order
     data_structure.advanced = record.get("advanced", False)
     data_structure.optional = record.get("optional", False)
     data_structure.public = record.get("public", True)
     data_structure.protected = record.get("protected", False)
+    data_structure.translatable = record.get("translatable", context.translatable)
     data_structure.description = record.get("description", "")
     data_structure.placeholder = record.get("placeholder", "")
     data_structure.type = DataStructure.get_type_by_name(record.get("type", "text"))

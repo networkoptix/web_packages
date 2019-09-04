@@ -4,16 +4,25 @@ Suite Setup       Open Browser and go to URL    ${url}
 Test Setup        Restart
 Test Teardown     Run Keyword If Test Failed    Reset DB and Open New Browser On Failure
 Suite Teardown    Close Browser
+force tags    account
 *** Variables ***
 ${password}    ${BASE PASSWORD}
 ${url}         ${ENV}
 ${CZECH ALERT}    Váš účet byl úspěšně uložen
 ${FIRST NAME IS REQUIRED}      //span[@ng-if='accountForm.firstName.$touched && accountForm.firstName.$error.required' and contains(text(),"${FIRST NAME IS REQUIRED TEXT}")]
 ${LAST NAME IS REQUIRED}       //span[@ng-if='accountForm.lastName.$touched && accountForm.lastName.$error.required' and contains(text(),"${LAST NAME IS REQUIRED TEXT}")]
+${FIRST NAME ERROR}            ${ACCOUNT FIRST NAME}/parent::div/parent::div[contains(@class, "has-error")]
+${LAST NAME ERROR}             ${ACCOUNT LAST NAME}/parent::div/parent::div[contains(@class, "has-error")]
 
 *** Keywords ***
-Verify In Account Page
-    Wait Until Elements Are Visible    ${ACCOUNT EMAIL}    ${ACCOUNT FIRST NAME}    ${ACCOUNT LAST NAME}    ${ACCOUNT SAVE}    ${ACCOUNT LANGUAGE DROPDOWN}    ${ACCOUNT DROPDOWN}
+Verify in Account Page
+    Wait Until Elements are Visible
+    ...    ${ACCOUNT EMAIL}
+    ...    ${ACCOUNT FIRST NAME}
+    ...    ${ACCOUNT LAST NAME}
+    ...    ${ACCOUNT SAVE}
+    ...    ${ACCOUNT LANGUAGE DROPDOWN}
+    ...    ${ACCOUNT DROPDOWN}
     sleep    .5
 
 Restart
@@ -34,9 +43,9 @@ Can access the account page from dropdown
     [tags]    Threaded
     Log In    ${EMAIL NOPERM}    ${password}
     Validate Log In
-    Wait Until Element Is Visible    ${ACCOUNT DROPDOWN}
+    Wait Until Element is Visible    ${ACCOUNT DROPDOWN}
     Click Button    ${ACCOUNT DROPDOWN}
-    Wait Until Element Is Visible    ${ACCOUNT SETTINGS BUTTON}
+    Wait Until Element is Visible    ${ACCOUNT SETTINGS BUTTON}
     Click Link    ${ACCOUNT SETTINGS BUTTON}
     Verify in account page
 
@@ -50,7 +59,7 @@ Can access the account page from direct link while logged in
 Accessing the account page from a direct link while logged out asks for login, closing log in takes you to main page
     [tags]    Threaded
     Go To    ${url}/account
-    Wait Until Element Is Visible    ${LOG IN CLOSE BUTTON}
+    Wait Until Element is Visible    ${LOG IN CLOSE BUTTON}
     Click Button    ${LOG IN CLOSE BUTTON}
     Location Should Be    ${url}/
 
@@ -67,7 +76,7 @@ Changing first name and saving maintains that setting
     Go To    ${url}/account
     Log In    ${EMAIL NOPERM}    ${password}    button=None
     Validate Log In
-    Verify In Account Page
+    Verify in Account Page
     Clear Element Text    ${ACCOUNT FIRST NAME}
     Input Text    ${ACCOUNT FIRST NAME}    nameChanged
     Click Button    ${ACCOUNT SAVE}
@@ -76,7 +85,7 @@ Changing first name and saving maintains that setting
     Open Browser and go to URL    ${url}/account
     Log In    ${EMAIL NOPERM}    ${password}    button=None
     Validate Log In
-    Verify In Account Page
+    Verify in Account Page
     sleep    2
     Wait Until Textfield Contains    ${ACCOUNT FIRST NAME}    nameChanged
     Clear Element Text    ${ACCOUNT FIRST NAME}
@@ -89,7 +98,7 @@ Changing last name and saving maintains that setting
     Go To    ${url}/account
     Log In    ${EMAIL NOPERM}    ${password}    button=None
     Validate Log In
-    Verify In Account Page
+    Verify in Account Page
     Input Text    ${ACCOUNT LAST NAME}    nameChanged
     Click Button    ${ACCOUNT SAVE}
     Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
@@ -97,7 +106,7 @@ Changing last name and saving maintains that setting
     Open Browser and go to URL    ${url}/account
     Log In    ${EMAIL NOPERM}    ${password}    button=None
     Validate Log In
-    Verify In Account Page
+    Verify in Account Page
     Wait Until Textfield Contains    ${ACCOUNT LAST NAME}    nameChanged
     Input Text    ${ACCOUNT LAST NAME}    ${TEST LAST NAME}
     Click Button    ${ACCOUNT SAVE}
@@ -108,10 +117,10 @@ First name is required
     Go To    ${url}/account
     Log In    ${EMAIL NOPERM}    ${password}    button=None
     Validate Log In
-    Verify In Account Page
+    Verify in Account Page
     Input Text    ${ACCOUNT FIRST NAME}    ${EMPTY}
     Click Element    ${ACCOUNT LAST NAME}
-    Wait Until Element Is Visible    ${ACCOUNT FIRST NAME}/parent::div/parent::div[contains(@class, "has-error")]
+    Wait Until Element is Visible    ${FIRST NAME ERROR}
     Element Should Be Visible    ${FIRST NAME IS REQUIRED}
 
 Last name is required
@@ -119,10 +128,10 @@ Last name is required
     Go To    ${url}/account
     Log In    ${EMAIL NOPERM}    ${password}    button=None
     Validate Log In
-    Verify In Account Page
+    Verify in Account Page
     Input Text    ${ACCOUNT LAST NAME}    ${EMPTY}
     Click Element    ${ACCOUNT FIRST NAME}
-    Wait Until Element Is Visible    ${ACCOUNT LAST NAME}/parent::div/parent::div[contains(@class, "has-error")]
+    Wait Until Element is Visible    ${LAST NAME ERROR}
     Element Should Be Visible    ${LAST NAME IS REQUIRED}
 
 SPACE for first name is not valid
@@ -130,10 +139,10 @@ SPACE for first name is not valid
     Go To    ${url}/account
     Log In    ${EMAIL NOPERM}    ${password}    button=None
     Validate Log In
-    Verify In Account Page
+    Verify in Account Page
     Input Text    ${ACCOUNT FIRST NAME}    ${SPACE}
     Click Element    ${ACCOUNT LAST NAME}
-    Wait Until Element Is Visible    ${ACCOUNT FIRST NAME}/parent::div/parent::div[contains(@class, "has-error")]
+    Wait Until Element is Visible    ${FIRST NAME ERROR}
     Element Should Be Visible    ${FIRST NAME IS REQUIRED}
 
 SPACE for last name is not valid
@@ -141,11 +150,11 @@ SPACE for last name is not valid
     Go To    ${url}/account
     Log In    ${EMAIL NOPERM}    ${password}    button=None
     Validate Log In
-    Verify In Account Page
+    Verify in Account Page
     Input Text    ${ACCOUNT FIRST NAME}    Mark
     Input Text    ${ACCOUNT LAST NAME}    ${SPACE}
     Click Element    ${ACCOUNT FIRST NAME}
-    Wait Until Element Is Visible    ${ACCOUNT LAST NAME}/parent::div/parent::div[contains(@class, "has-error")]
+    Wait Until Element is Visible    ${LAST NAME ERROR}
     Element Should Be Visible    ${LAST NAME IS REQUIRED}
 
 Email field is un-editable
@@ -153,7 +162,7 @@ Email field is un-editable
     Go To    ${url}/account
     Log In    ${EMAIL NOPERM}    ${password}    button=None
     Validate Log In
-    Verify In Account Page
+    Verify in Account Page
     ${read only}    Get Element Attribute    ${ACCOUNT EMAIL}    readOnly
     Should Be True    "${read only}"
 
@@ -162,7 +171,7 @@ Should respond to tab and go in the correct order
     Go To    ${url}/account
     Log In    ${EMAIL NOPERM}    ${password}    button=None
     Validate Log In
-    Verify In Account Page
+    Verify in Account Page
     Press Key    ${ACCOUNT DROPDOWN}    ${TAB}
     Element Should Be Focused    ${ACCOUNT EMAIL}
     Press Key    ${ACCOUNT EMAIL}    ${TAB}
@@ -187,53 +196,67 @@ Language is changeable on the account page
     Go To    ${url}/account
     Log In    ${EMAIL NOPERM}    ${password}    button=None
     Validate Log In
-    :FOR    ${lang}    ${account}   IN ZIP    ${LANGUAGES LIST}    ${LANGUAGES ACCOUNT TEXT LIST}
-    \  Sleep    1
-    \  Verify In Account Page
-    \  Run Keyword Unless    "${lang}"=="${LANGUAGE}"    Click Button    ${ACCOUNT LANGUAGE DROPDOWN}
-    \  Run Keyword Unless    "${lang}"=="${LANGUAGE}"    Wait Until Element Is Visible    //form[@name='accountForm']//button/following-sibling::ul//span[@lang='${lang}']
-    \  Run Keyword Unless    "${lang}"=="${LANGUAGE}"    Click Element    //form[@name='accountForm']//button/following-sibling::ul//span[@lang='${lang}']/..
-    \  Click Button    ${ACCOUNT SAVE}
-    \  Sleep    1    #to allow the system to change languages
-    \  Run Keyword Unless    "${lang}"=="${LANGUAGE}"    Wait Until Element Is Visible    //h1[text()='${account}']
-    Wait Until Element Is Visible    ${ACCOUNT LANGUAGE DROPDOWN}
+    FOR    ${lang}    ${account}   IN ZIP    ${LANGUAGES LIST}    ${LANGUAGES ACCOUNT TEXT LIST}
+        Sleep    1
+        Verify in Account Page
+        Run Keyword Unless    "${lang}"=="${LANGUAGE}"
+        ...    Click Button    ${ACCOUNT LANGUAGE DROPDOWN}
+        Run Keyword Unless    "${lang}"=="${LANGUAGE}"
+        ...    Wait Until Element is Visible    //form[@name='accountForm']//button/following-sibling::ul//span[@lang='${lang}']
+        Run Keyword Unless    "${lang}"=="${LANGUAGE}"
+        ...    Click Element    //form[@name='accountForm']//button/following-sibling::ul//span[@lang='${lang}']/..
+        Click Button    ${ACCOUNT SAVE}
+        Sleep    1    #to allow the system to change languages
+        Run Keyword Unless    "${lang}"=="${LANGUAGE}"
+        ...    Wait Until Element is Visible    //h1[text()='${account}']
+    END
+    Wait Until Element is Visible    ${ACCOUNT LANGUAGE DROPDOWN}
     Click Button    ${ACCOUNT LANGUAGE DROPDOWN}
-    Wait Until Element Is Visible    //form[@name='accountForm']//button/following-sibling::ul//span[@lang='${LANGUAGE}']/..
-    Click Element    //form[@name='accountForm']//button/following-sibling::ul//span[@lang='${LANGUAGE}']/..
+    Wait Until Element is Visible
+    ...    //form[@name='accountForm']//button/following-sibling::ul//span[@lang='${LANGUAGE}']/..
+    Click Element
+    ...    //form[@name='accountForm']//button/following-sibling::ul//span[@lang='${LANGUAGE}']/..
     Click Button    ${ACCOUNT SAVE}
     Sleep    1
-    Verify In Account Page
-    Wait Until Element Is Visible    //h1['${ACCOUNT TEXT}']
+    Verify in Account Page
+    Wait Until Element is Visible    //h1['${ACCOUNT TEXT}']
 
 Language changed in account is new default
     [tags]    C41574
     Go To    ${url}/account
     Log In    ${EMAIL NOPERM}    ${password}    button=None
     Validate Log In
-    Verify In Account Page
+    Verify in Account Page
     Click Button    ${ACCOUNT LANGUAGE DROPDOWN}
-    Wait Until Element Is Visible    //form[@name='accountForm']//button/following-sibling::ul//span[@lang='en_US']/..
-    Click Element    //form[@name='accountForm']//button/following-sibling::ul//span[@lang='en_US']/..
+    Wait Until Element is Visible
+    ...    //form[@name='accountForm']//button/following-sibling::ul//span[@lang='en_US']/..
+    Click Element
+    ...    //form[@name='accountForm']//button/following-sibling::ul//span[@lang='en_US']/..
     Click Button    ${ACCOUNT SAVE}
-    Wait Until Element Is Visible    //h1[text()='Account']
+    Wait Until Element is Visible    //h1[text()='Account']
     Close Browser
 
     Open Browser and go to URL    ${url}
-    Wait Until Element Is Visible    ${LANGUAGE DROPDOWN}    20
+    Wait Until Element is Visible    ${LANGUAGE DROPDOWN}    20
     Click Button    ${LANGUAGE DROPDOWN}
-    Wait Until Element Is Visible    //nx-footer//span[@lang='ru_RU']/..
+    Wait Until Element is Visible    //nx-footer//span[@lang='ru_RU']/..
     Click Element    //nx-footer//span[@lang='ru_RU']/..
-    Wait Until Element Is Visible    ${LANGUAGE DROPDOWN}/span[@lang='ru_RU']    5
-    Sleep    1    #to wait for language to fully change before continuing.  This caused issues with login.
+    Wait Until Element is Visible    ${LANGUAGE DROPDOWN}/span[@lang='ru_RU']    5
+    Sleep    1    #to wait for language to fully change before continuing.
     Go To    ${url}/account
-    Wait Until Elements Are Visible    ${EMAIL INPUT}    ${PASSWORD INPUT}    ${REMEMBER ME CHECKBOX VISIBLE}    ${FORGOT PASSWORD}    ${LOG IN CLOSE BUTTON}
+    Wait Until Elements are Visible
+    ...    ${EMAIL INPUT}
+    ...    ${PASSWORD INPUT}
+    ...    ${REMEMBER ME CHECKBOX VISIBLE}
+    ...    ${FORGOT PASSWORD}
+    ...    ${LOG IN CLOSE BUTTON}
     Input Text    ${EMAIL INPUT}    ${EMAIL NOPERM}
     Input Text    ${PASSWORD INPUT}    ${password}
-    Wait Until Element Is Visible    ${LOG IN BUTTON}
+    Wait Until Element is Visible    ${LOG IN BUTTON}
     Click Button    ${LOG IN BUTTON}
     Wait Until Page Contains Element    ${AUTHORIZED BODY}
-    Wait Until Elements Are Visible    ${ACCOUNT DROPDOWN}
-    Wait Until Element Is Visible    //h1[text()='Account']
+    Wait Until Elements are Visible    ${ACCOUNT DROPDOWN}
+    Wait Until Element is Visible    //h1[text()='Account']
 
 Language change in account page affects emails
     [tags]    C41575
@@ -241,23 +264,36 @@ Language change in account page affects emails
     Go To    ${url}/account
     Log In    ${EMAIL NOPERM}    ${password}    button=None
     Validate Log In
-    Verify In Account Page
+    Verify in Account Page
     Click Button    ${ACCOUNT LANGUAGE DROPDOWN}
-    Wait Until Element Is Visible    //form[@name='accountForm']//button/following-sibling::ul//span[@lang='ru_RU']/..
-    Click Element    //form[@name='accountForm']//button/following-sibling::ul//span[@lang='ru_RU']/..
+    Wait Until Element is Visible
+    ...    //form[@name='accountForm']//button/following-sibling::ul//span[@lang='ru_RU']/..
+    Click Element
+    ...    //form[@name='accountForm']//button/following-sibling::ul//span[@lang='ru_RU']/..
     Click Button    ${ACCOUNT SAVE}
     Sleep    5
     Close Browser
 
     Open Browser and go to URL    ${url}
     Go To    ${url}/restore_password
-    Wait Until Elements Are Visible    ${RESTORE PASSWORD EMAIL INPUT}    ${RESET PASSWORD BUTTON}
+    Wait Until Elements are Visible    ${RESTORE PASSWORD EMAIL INPUT}    ${RESET PASSWORD BUTTON}
     Input Text    ${RESTORE PASSWORD EMAIL INPUT}    ${EMAIL NOPERM}
     Click Button    ${RESET PASSWORD BUTTON}
-    Wait Until Element Is Visible    ${RESET EMAIL SENT MESSAGE}
-    Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
+    Wait Until Element is Visible    ${RESET EMAIL SENT MESSAGE}
+    Open Mailbox
+    ...    host=${BASE HOST}
+    ...    password=${BASE EMAIL PASSWORD}
+    ...    port=${BASE PORT}
+    ...    user=${BASE EMAIL}
+    ...    is_secure=True
     ${email}    Wait For Email    recipient=${EMAIL NOPERM}    timeout=120    status=UNSEEN
-    Check Email Subject    ${email}    ${russian subject}    ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}
+    Check Email Subject
+    ...    ${email}
+    ...    ${russian subject}
+    ...    ${BASE EMAIL}
+    ...    ${BASE EMAIL PASSWORD}
+    ...    ${BASE HOST}
+    ...    ${BASE PORT}
     Delete All Emails
     Close Mailbox
     Check Language

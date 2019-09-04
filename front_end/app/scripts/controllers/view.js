@@ -91,7 +91,7 @@
                         $scope.currentSystem.info.name || LANG.errorCodes.thisSystem), 'warning');
     
                     if ($scope.isInIframe) {
-                        $location.path(CONFIG.viewsDir + '404.html');
+                        $location.path('/404');
                     } else {
                         $location.path('/systems');
                     }
