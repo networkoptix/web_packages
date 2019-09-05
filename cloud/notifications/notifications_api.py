@@ -1,4 +1,4 @@
-from cms.models import get_cloud_portal_product, Product
+from cms.models import get_cloud_portal_asset, Asset
 from notifications.models import Message, Event, Feedback
 from django.core.exceptions import ValidationError
 import django
@@ -53,17 +53,17 @@ def notify(event_type, object, data):
     event.send()
 
 
-def send_feedback(event_type, product_id, data):
-    if not product_id:
-        product = get_cloud_portal_product()
+def send_feedback(event_type, asset_id, data):
+    if not asset_id:
+        asset = get_cloud_portal_asset()
     else:
-        product = Product.objects.get(id=product_id)
+        asset = Asset.objects.get(id=asset_id)
 
     feedback = Feedback.objects.create(message=data['message'],
-                                       product_name=data['product'],
+                                       asset_name=data['asset'],
                                        sender_name=data['sender_name'],
                                        sender_email=data['sender_email'],
-                                       target_product=product,
+                                       target_asset=asset,
                                        type=event_type)
     feedback.send()
 

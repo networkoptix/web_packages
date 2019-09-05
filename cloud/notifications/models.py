@@ -9,7 +9,7 @@ from django.db.models import Q
 from model_utils import Choices
 from push_notifications.models import GCMDevice, GCMDeviceManager
 from rest_framework import serializers
-from cms.models import Customization, Product, DataStructure
+from cms.models import Customization, Asset, DataStructure
 from api.models import Account
 
 import json
@@ -124,10 +124,10 @@ class Message(models.Model):
 class Feedback(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     message = models.TextField(default='', blank=True)
-    product_name = models.CharField(max_length=255)
+    asset_name = models.CharField(max_length=255)
     sender_name = models.CharField(max_length=255)
     sender_email = models.CharField(max_length=255)
-    target_product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    target_asset = models.ForeignKey(Asset, on_delete=models.CASCADE)
     type = models.CharField(max_length=255)
 
     def send(self):
@@ -135,19 +135,19 @@ class Feedback(models.Model):
         data = {
             'sender_name': self.sender_name,
             'sender_email': self.sender_email,
-            'product': self.product_name,
+            'asset': self.asset_name,
             'message': self.message
         }
-        event = Event.objects.create(type=self.type, object=self.target_product.id, data=data)
+        event = Event.objects.create(type=self.type, object=self.target_asset.id, data=data)
         event.send()
 
         # Send email to the contact email for an integration.
         data_structure = DataStructure.objects.filter(
-            name='supportEmail', context__product_type=self.target_product.product_type,
+            name='supportEmail', context__asset_type=self.target_asset.asset_type,
             context__name__in=['support', 'Settings']
         ).last()
         contact_email = data_structure.find_actual_value(
-            product=self.target_product, version_id=self.target_product.version_id()
+            asset=self.target_asset, version_id=self.target_asset.version_id()
         )
         emails = [self.sender_email]
         if contact_email:

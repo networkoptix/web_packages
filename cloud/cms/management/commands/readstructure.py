@@ -26,40 +26,40 @@ def create_new_cloudportals_for_each_customization(logger):
                                                       customization=customization) \
             .exclude(version=None).last()
         if records_with_name:
-            product_name = records_with_name.value
-            logger.stdout.write(logger.style.SUCCESS("\tProduct name for {} is {}".
-                                                     format(customization.name, product_name)))
+            asset_name = records_with_name.value
+            logger.stdout.write(logger.style.SUCCESS("\tAsset name for {} is {}".
+                                                     format(customization.name, asset_name)))
         else:
-            product_name = "Cloud Portal"
-            logger.stdout.write(logger.style.SUCCESS("\tCouldn't find product name for {} using {}".
-                                                     format(customization.name, product_name)))
-        cloud = structure.find_or_add_product_with_single_customization(product_name, customization, "cloud_portal", "")
+            asset_name = "Cloud Portal"
+            logger.stdout.write(logger.style.SUCCESS("\tCouldn't find asset name for {} using {}".
+                                                     format(customization.name, asset_name)))
+        cloud = structure.find_or_add_asset_with_single_customization(asset_name, customization, "cloud_portal", "")
         cloud.customizations.add(customization)
         cloud.save()
     logger.stdout.write(logger.style.SUCCESS("Done creating new cloud portals"))
 
 
-def move_contexts_to_producttype(logger):
+def move_contexts_to_assettype(logger):
     logger.stdout.write(
-        logger.style.SUCCESS("\nMoving contexts from original cloud portal to product_type cloud_portal"))
-    cloud_portal = Product.objects.get(name="cloud_portal")
-    cloud_portal_type = structure.find_or_add_product_type(ProductType.PRODUCT_TYPES.cloud_portal)
+        logger.style.SUCCESS("\nMoving contexts from original cloud portal to asset_type cloud_portal"))
+    cloud_portal = Asset.objects.get(name="cloud_portal")
+    cloud_portal_type = structure.find_or_add_asset_type(AssetType.ASSET_TYPES.cloud_portal)
 
     for context in cloud_portal.context_set.all():
         logger.stdout.write(logger.style.SUCCESS("\tMoving {}".format(context.name)))
-        context.product_type = cloud_portal_type
+        context.asset_type = cloud_portal_type
         context.save()
-    logger.stdout.write(logger.style.SUCCESS("Done moving contexts to product_type cloud_portal"))
+    logger.stdout.write(logger.style.SUCCESS("Done moving contexts to asset_type cloud_portal"))
 
 
 def move_revisions_to_new_cloud_portals(logger):
     logger.stdout.write(logger.style.SUCCESS("Moving revisions to new cloud portals"))
-    original_cloud_portal = Product.objects.get(id=1)
+    original_cloud_portal = Asset.objects.get(id=1)
 
-    new_clouds = Product.objects.filter(product_type__type=ProductType.PRODUCT_TYPES.cloud_portal) \
+    new_clouds = Asset.objects.filter(asset_type__type=AssetType.ASSET_TYPES.cloud_portal) \
         .exclude(id=original_cloud_portal.id)
 
-    original_content_versions = ContentVersion.objects.filter(product=original_cloud_portal)
+    original_content_versions = ContentVersion.objects.filter(asset=original_cloud_portal)
 
     for cloud in new_clouds:
         logger.stdout.write(
@@ -68,24 +68,24 @@ def move_revisions_to_new_cloud_portals(logger):
         customization_content_versions = original_content_versions.filter(
             customization=cloud.customizations.first())
         for content_version in customization_content_versions:
-            content_version.product = cloud
+            content_version.asset = cloud
             content_version.save()
             for datarecord in content_version.datarecord_set.all():
-                datarecord.product = cloud
+                datarecord.asset = cloud
                 datarecord.save()
     logger.stdout.write(logger.style.SUCCESS("Done moving revisions to new cloud portals"))
 
 
 def migrate_18_3_to_18_4(logger):
-    # If there are not products create a ProductType of cloud_portal and we can skip migrating 18 -> 19
-    if not Product.objects.all().exists():
-        structure.find_or_add_product_type(ProductType.PRODUCT_TYPES.cloud_portal)
+    # If there are not assets create a AssetType of cloud_portal and we can skip migrating 18 -> 19
+    if not Asset.objects.all().exists():
+        structure.find_or_add_asset_type(AssetType.ASSET_TYPES.cloud_portal)
 
-    if ProductType.objects.all().exists():
+    if AssetType.objects.all().exists():
         logger.stdout.write(logger.style.SUCCESS("Migration has already been completed skipping this step"))
         return
 
-    move_contexts_to_producttype(logger)
+    move_contexts_to_assettype(logger)
     create_new_cloudportals_for_each_customization(logger)
     move_revisions_to_new_cloud_portals(logger)
 
@@ -123,10 +123,10 @@ def iterate_cms_files(skin_name, ignore_not_english):
                 yield file
 
 
-def find_or_add_context_by_file(file_path, product_type, has_language):
-    context = Context.objects.filter(file_path=file_path, product_type=product_type).first()
+def find_or_add_context_by_file(file_path, asset_type, has_language):
+    context = Context.objects.filter(file_path=file_path, asset_type=asset_type).first()
     if not context:
-        context = Context(name=file_path, file_path=file_path, product_type=product_type,
+        context = Context(name=file_path, file_path=file_path, asset_type=asset_type,
                           translatable=has_language, hidden=True, is_global=False)
     else:
         context.deprecated=False
@@ -152,7 +152,7 @@ def read_cms_strings(filename):
         return data, set(re.findall(pattern, data))
 
 
-def read_structure_file(filename, product_type, global_strings, skin):
+def read_structure_file(filename, asset_type, global_strings, skin):
     context_name, language_code = context_for_file(filename, skin)
 
     # now read file and get records from there.
@@ -164,7 +164,7 @@ def read_structure_file(filename, product_type, global_strings, skin):
 
     # Here we check if there are any unique strings (which are not global)
     strings = [string for string in strings if string not in global_strings]
-    context = find_or_add_context_by_file(context_name, product_type, bool(language_code))
+    context = find_or_add_context_by_file(context_name, asset_type, bool(language_code))
     context_template = find_or_add_context_template(context, language_code, skin)
     context_template.template = data  # update template for this context
     context_template.save()
@@ -172,14 +172,14 @@ def read_structure_file(filename, product_type, global_strings, skin):
         structure.find_or_add_data_structure(string, None, context.id, bool(language_code))
 
 
-def read_structure(product_type):
-    product_type = structure.find_or_add_product_type(product_type)
+def read_structure(asset_type):
+    asset_type = structure.find_or_add_asset_type(asset_type)
     global_strings = DataStructure.objects.\
-        filter(context__is_global=True, context__product_type=product_type).\
+        filter(context__is_global=True, context__asset_type=asset_type).\
         values_list("name", flat=True)
     for skin in settings.SKINS:
         for file in iterate_cms_files(skin, False):
-            read_structure_file(file, product_type, global_strings, skin)
+            read_structure_file(file, asset_type, global_strings, skin)
 
 
 def find_or_add_language(language_code):
@@ -191,11 +191,11 @@ def find_or_add_language(language_code):
         # try to read language.json for LANGUAGE_NAME
         language_json_path = os.path.join(SOURCE_DIR.replace("{{skin}}", settings.DEFAULT_SKIN),
                                           "static", "lang_" + language_code,
-                                          "language.json")
+                                          "language_compiled.json")
 
         with codecs.open(language_json_path, 'r', 'utf-8') as file_descriptor:
             language_content = json.load(file_descriptor)
-        language_name = language_content["language_name"]
+        language_name = language_content["ajs"]["language_name"]
         language.name = language_name
         language.save()
 
@@ -215,12 +215,12 @@ class Command(BaseCommand):
            'the database (contexts, datastructure)'
 
     def add_arguments(self, parser):
-        parser.add_argument('product_type', nargs='?', default='cloud_portal')
+        parser.add_argument('asset_type', nargs='?', default='cloud_portal')
 
     @timer
     def handle(self, *args, **options):
         migrate_18_3_to_18_4(self)
-        product_type = ProductType.get_type_by_name(options['product_type'])
+        asset_type = AssetType.get_type_by_name(options['asset_type'])
         read_languages(settings.DEFAULT_SKIN)
         if not Customization.objects.filter(name=settings.CUSTOMIZATION).exists():
             default_customization = Customization(name=settings.CUSTOMIZATION,
@@ -230,6 +230,6 @@ class Command(BaseCommand):
             default_customization.save()
 
         structure.read_structure_json('cms/cms_structure.json')
-        read_structure(product_type)
+        read_structure(asset_type)
         self.stdout.write(self.style.SUCCESS(
             'Successfully initiated data structure for CMS'))

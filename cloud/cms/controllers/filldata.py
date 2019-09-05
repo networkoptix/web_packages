@@ -48,28 +48,28 @@ def target_file(file_name, save_location, language_code, preview):
     return target_file_name
 
 
-def global_contexts_to_dict(contexts, product):
+def global_contexts_to_dict(contexts, asset):
     data_structure_dict = {}
     for context in contexts:
         for data_structure in context.datastructure_set.all():
-            data_structure_dict[data_structure.name] = product.read_global_value(data_structure.name)
+            data_structure_dict[data_structure.name] = asset.read_global_value(data_structure.name)
 
     for tag in SPECIAL_STRUCTURES.function_dict:
-        data_structure_dict[tag] = SPECIAL_STRUCTURES.calc(tag, product)
+        data_structure_dict[tag] = SPECIAL_STRUCTURES.calc(tag, asset)
 
     return data_structure_dict
 
 
-def process_global_contexts(product, content, version_id, preview, global_contexts, global_contexts_dict):
+def process_global_contexts(asset, content, version_id, preview, global_contexts, global_contexts_dict):
     for global_context in global_contexts.all():
-        content = process_context_structure(product, global_context, content, None,
+        content = process_context_structure(asset, global_context, content, None,
                                             version_id, preview, False, global_contexts_dict)
 
     for tag in SPECIAL_STRUCTURES.function_dict:
         if global_contexts_dict and tag in global_contexts_dict:
             tag_value = global_contexts_dict[tag]
         else:
-            tag_value = SPECIAL_STRUCTURES.calc(tag, product)
+            tag_value = SPECIAL_STRUCTURES.calc(tag, asset)
         content = process_data_structure(content, tag, DataStructure.DATA_TYPES.text, tag_value)
 
     return content
@@ -113,7 +113,7 @@ def process_data_structure(content, tag, data_structure_type, content_value):
     return content
 
 
-def process_context_structure(product, context, content, language,
+def process_context_structure(asset, context, content, language,
                               version_id, preview, force_global_files, context_dict=None):
 
     for datastructure in context.datastructure_set.all():
@@ -122,7 +122,7 @@ def process_context_structure(product, context, content, language,
             if context_dict and datastructure.name in context_dict:
                 content_value = context_dict[datastructure.name]
             else:
-                content_value = datastructure.find_actual_value(product, language, version_id, draft=preview)
+                content_value = datastructure.find_actual_value(asset, language, version_id, draft=preview)
             # replace marker with value
             if not DataStructure.is_file_or_image(datastructure.type):
                 content = process_data_structure(content, datastructure.name, datastructure.type, content_value)
@@ -132,11 +132,11 @@ def process_context_structure(product, context, content, language,
                     # do not update files from global contexts all the time
                     continue
 
-                if not datastructure.translatable and language != product.default_language:
+                if not datastructure.translatable and language != asset.default_language:
                     # if file itself is not translatable - update it only for default language
                     continue
 
-                image_storage = os.path.join('static', product.product_root)
+                image_storage = os.path.join('static', asset.asset_root)
                 if preview:
                     image_storage = os.path.join(image_storage, 'preview')
 
@@ -149,8 +149,8 @@ def process_context_structure(product, context, content, language,
         except Exception:
             # if something happens here - instance will not start and it will close to impossible to fix so we ignore
             # broken records while logging them - it will raise cloud alarm and we will go and fix the problem
-            logger.error("ERROR: Cannot process data structure {0} for product {1}".format(
-                datastructure.name, product.name))
+            logger.error("ERROR: Cannot process data structure {0} for asset {1}".format(
+                datastructure.name, asset.name))
             logger.error(traceback.format_exc())
 
     return content
@@ -162,9 +162,9 @@ def save_content(filename, content):
         file.write(content)
 
 
-def process_context(product, context, language, skin,
+def process_context(asset, context, language, skin,
                     preview, version_id, global_contexts, global_contexts_dict=None):
-    context_template_text = context.template_for_language(language, product.default_language, skin)
+    context_template_text = context.template_for_language(language, asset.default_language, skin)
 
     # check if the file is language JSON
     if context.file_path.endswith(".json") and isinstance(context_template_text, str):
@@ -176,10 +176,10 @@ def process_context(product, context, language, skin,
     if not context_template_text:
         context_template_text = ''
     # if context is global - process it
-    content = process_context_structure(product, context, context_template_text,
+    content = process_context_structure(asset, context, context_template_text,
                                         language, version_id, preview, context.is_global)
     if not context.is_global:  # if current context is global - do not apply other contexts
-        content = process_global_contexts(product, content, version_id, preview,
+        content = process_global_contexts(asset, content, version_id, preview,
                                           global_contexts, global_contexts_dict)
 
     # If json -> dump it to string
@@ -189,29 +189,29 @@ def process_context(product, context, language, skin,
     return content
 
 
-def read_customized_file(filename, product, language_code=None,
+def read_customized_file(filename, asset, language_code=None,
                          version_id=None, preview=False):
     # 1. try to find context for this file
-    skin = product.read_global_value("%SKIN%")
-    language = Language.by_code(language_code, product.default_language)
+    skin = asset.read_global_value("%SKIN%")
+    language = Language.by_code(language_code, asset.default_language)
     clean_name = filename.replace(language_code, "{{language}}") if language_code else filename
-    context = Context.objects.filter(file_path=clean_name, product_type=product.product_type).first()
+    context = Context.objects.filter(file_path=clean_name, asset_type=asset.asset_type).first()
     if context:
         # success -> return process_context
-        global_contexts = Context.objects.filter(is_global=True, product_type=product.product_type)
-        return process_context(product, context, language, skin, preview, version_id, global_contexts)
+        global_contexts = Context.objects.filter(is_global=True, asset_type=asset.asset_type)
+        return process_context(asset, context, language, skin, preview, version_id, global_contexts)
 
     # 2. try to find datastructure for this file
     # TODO: name is not unique
-    data_structure = DataStructure.objects.filter(name=clean_name, context__product_type=product.product_type).first()
+    data_structure = DataStructure.objects.filter(name=clean_name, context__asset_type=asset.asset_type).first()
     if data_structure:
         # success -> return actual value
-        value = data_structure.find_actual_value(product, language, version_id, draft=preview)
+        value = data_structure.find_actual_value(asset, language, version_id, draft=preview)
         return base64.b64decode(value)
 
     # fail - try to read file from drive
     filename = filename.replace("{{language}}", language_code)
-    file_path = os.path.join(settings.STATIC_LOCATION, product.product_root, filename)
+    file_path = os.path.join(settings.STATIC_LOCATION, asset.asset_root, filename)
     try:  # try to read file as text
         with codecs.open(filename, 'r', 'utf-8') as file:
             return file.read()
@@ -225,13 +225,13 @@ def read_customized_file(filename, product, language_code=None,
         return None  # nothing helps
 
 
-def save_context(product, context, context_path, language, skin,
+def save_context(asset, context, context_path, language, skin,
                  preview, version_id, global_contexts, global_contexts_dict):
-    content = process_context(product, context, language, skin,
+    content = process_context(asset, context, language, skin,
                               preview, version_id, global_contexts, global_contexts_dict)
 
-    if context.template_for_language(language, product.default_language, skin):  # if we have template - save context to file
-        target_file_name = target_file(context_path, product.product_root, language.code, preview)
+    if context.template_for_language(language, asset.default_language, skin):  # if we have template - save context to file
+        target_file_name = target_file(context_path, asset.asset_root, language.code, preview)
         # print "save file: " + target_file_name
         save_content(target_file_name, content)
 
@@ -243,17 +243,17 @@ def generate_languages_json(save_location, language_codes, preview):
     save_content(target_file_name, json.dumps(languages_json, ensure_ascii=False))
 
 
-def init_skin(product, preview=False, workers=2):
-    if not product.is_cloud_portal:
-        raise APIForbiddenException("Can not run update static files on non cloud_portal products")
+def init_skin(asset, preview=False, workers=2):
+    if not asset.is_cloud_portal:
+        raise APIForbiddenException("Can not run update static files on non cloud_portal assets")
 
-    if not product.can_preview_on_portal:
+    if not asset.can_preview_on_portal:
         raise APIForbiddenException("Can not update static files for cloud portal on other customizations.")
 
     # 1. read skin for this customization
-    customization_name = product.customizations.first().name
-    skin = product.read_global_value('%SKIN%')
-    logger.info("Init " + skin + " skin for " + product.__str__())
+    customization_name = asset.customizations.first().name
+    skin = asset.read_global_value('%SKIN%')
+    logger.info("Init " + skin + " skin for " + asset.__str__())
 
     # 2. copy directory
     from_dir = SOURCE_DIR.replace("{{skin}}", skin)
@@ -262,16 +262,16 @@ def init_skin(product, preview=False, workers=2):
     # 3. run fill_content
     if not preview:
         distutils.dir_util.copy_tree(from_dir, target_dir)
-        logger.info("Fill content for " + product.__str__())
-        return fill_content(product, preview=False, incremental=False, workers=workers)
+        logger.info("Fill content for " + asset.__str__())
+        return fill_content(asset, preview=False, incremental=False, workers=workers)
     else:
         distutils.dir_util.copy_tree(from_dir, os.path.join(target_dir, 'preview'))
-        logger.info("Fill preview for " + product.__str__())
-        return fill_content(product, preview=True, incremental=False, workers=workers)
+        logger.info("Fill preview for " + asset.__str__())
+        return fill_content(asset, preview=True, incremental=False, workers=workers)
 
 
 @timer
-def fill_content(product,
+def fill_content(asset,
                  preview=True,
                  version_id=None,
                  incremental=False,
@@ -285,31 +285,31 @@ def fill_content(product,
     # else
     #   if version_id is None - preview latest available datarecords
     #   else - preview specific version
-    if not product.is_cloud_portal:
-        raise APIForbiddenException("Can not run update static files on non cloud_portal products.")
+    if not asset.is_cloud_portal:
+        raise APIForbiddenException("Can not run update static files on non cloud_portal assets.")
 
-    if not product.can_preview_on_portal:
+    if not asset.can_preview_on_portal:
         raise APIForbiddenException("Can not update static files for cloud portal on other customizations.")
 
     if preview:  # Here we decide, if we need to change preview state
         # if incremental was false initially - we keep it as false
         if version_id:
-            if product.preview_status != Product.PREVIEW_STATUS.review:
+            if asset.preview_status != Asset.PREVIEW_STATUS.review:
                 # When previewing awaiting version and state is draft
                 # if we are just sending version to review - do incremental update
                 if not send_to_review:
                     incremental = False  # otherwise - do full update and change state to review
-                product.change_preview_status(Product.PREVIEW_STATUS.review)
+                asset.change_preview_status(Asset.PREVIEW_STATUS.review)
             else:
                 if incremental:
                     return  # When previewing awaiting version and state is review - do nothing
                 pass
         else:  # draft
-            if product.preview_status == Product.PREVIEW_STATUS.review:
+            if asset.preview_status == Asset.PREVIEW_STATUS.review:
                 # When saving draft and state is review - do incremental update
                 # applying all drafted changes and change state to draft
                 # incremental = True
-                product.change_preview_status(Product.PREVIEW_STATUS.draft)
+                asset.change_preview_status(Asset.PREVIEW_STATUS.draft)
                 changed_context = None  # remove changed context so that we do full incremental update
             else:
                 # When saving draft for context and state is draft - do incremental update only for changed context
@@ -317,8 +317,8 @@ def fill_content(product,
                 # keep incremental value
                 pass
 
-    global_contexts = Context.objects.filter(is_global=True, hidden=False, product_type=product.product_type)
-    global_contexts_dict = global_contexts_to_dict(global_contexts, product)
+    global_contexts = Context.objects.filter(is_global=True, hidden=False, asset_type=asset.asset_type)
+    global_contexts_dict = global_contexts_to_dict(global_contexts, asset)
 
     if not preview:
         if version_id is not None:
@@ -326,27 +326,27 @@ def fill_content(product,
                 'Only latest accepted version can be published\
                  without preview flag, version_id id forbidden')
         version = ContentVersion.objects.filter(
-            product_id=product.id, accepted_date__isnull=False).order_by('accepted_date').last()
+            asset_id=asset.id, accepted_date__isnull=False).order_by('accepted_date').last()
         if version:
             version_id = version.id
         else:
             version_id = 0
             incremental = False  # no version - do full update using default values
-        if product.is_cloud_portal:
-            cloud_portal_customization_cache(product.product_root, force=True)
+        if asset.is_cloud_portal:
+            cloud_portal_customization_cache(asset.asset_root, force=True)
 
     if incremental and not changed_context:
         # filter records changed in this version
         # get their datastructures
         # detect their contexts
 
-        changed_records = DataRecord.objects.filter(version_id=version_id, product=product)
-        # in case version_id is none - we need to filter by product as well
+        changed_records = DataRecord.objects.filter(version_id=version_id, asset=asset)
+        # in case version_id is none - we need to filter by asset as well
         if not version_id:  # if version_id is None - check if records are actually latest
             changed_records_ids = [DataRecord.objects.
                                    filter(language_id=record.language_id,
                                           data_structure_id=record.data_structure_id,
-                                          product=product).
+                                          asset=asset).
                                    latest('created_date').id for record in changed_records]
             changed_records = changed_records.filter(id__in=changed_records_ids)
 
@@ -365,21 +365,21 @@ def fill_content(product,
             changed_contexts = [changed_context]
             changed_records = DataRecord.objects.filter(data_structure__context=changed_context,
                                                         version_id=version_id,
-                                                        product=product)
+                                                        asset=asset)
             if not version_id:
                 changed_records_ids = [DataRecord.objects.
                                        filter(language_id=record.language_id,
                                               data_structure_id=record.data_structure.id,
-                                              product=product).
+                                              asset=asset).
                                        latest('created_date').id for record in changed_records]
                 changed_records = changed_records.filter(id__in=changed_records_ids)
 
     if not incremental:  # If not incremental - iterate all contexts and all languages
-        changed_contexts = Context.objects.filter(product_type=product.product_type)
-        changed_languages = product.languages_list
+        changed_contexts = Context.objects.filter(asset_type=asset.asset_type)
+        changed_languages = asset.languages_list
 
-    default_language_code = product.default_language.code
-    languages_list = product.languages_list
+    default_language_code = asset.default_language.code
+    languages_list = asset.languages_list
 
     # Email templates are skipped here because when a email is sent, the celery worker retrieves
     # the template from the database and fills the template with the correct values before sending the email.
@@ -389,7 +389,7 @@ def fill_content(product,
 
     thread_error = False
     # Creates a pool of thread works
-    skin = product.read_global_value('%SKIN%')
+    skin = asset.read_global_value('%SKIN%')
     with ThreadPoolExecutor(max_workers=workers) as executor:
         # Stores the tasks that the thread pool runs. This is needed for checking for exceptions
         futures = []
@@ -404,7 +404,7 @@ def fill_content(product,
                     changed_languages = languages_list
             languages = Language.objects.filter(code__in=changed_languages)
             # Add the context to the list of tasks for the thread pool.
-            futures.append(executor.submit(thread_context, context, product, languages, skin,
+            futures.append(executor.submit(thread_context, context, asset, languages, skin,
                                            preview, version_id, global_contexts, global_contexts_dict))
 
         # Catch any errors raise by thread workers.
@@ -415,31 +415,31 @@ def fill_content(product,
                 logger.warning(e)
                 thread_error = True
 
-    generate_languages_json(product.product_root, languages_list,  preview)
+    generate_languages_json(asset.asset_root, languages_list,  preview)
     if thread_error:
         logger.warning("Filldata has ran into an exception. If run by the management command it will retry soon.")
     return not thread_error
 
 
-def thread_context(context, product, changed_languages, skin, preview, version_id, global_contexts, global_contexts_dict):
+def thread_context(context, asset, changed_languages, skin, preview, version_id, global_contexts, global_contexts_dict):
     # update affected languages
     if context.translatable:
         for language in changed_languages:
-            save_context(product, context, context.file_path, language, skin, preview,
+            save_context(asset, context, context.file_path, language, skin, preview,
                          version_id, global_contexts, global_contexts_dict)
     else:
-        save_context(product, context, context.file_path, product.default_language, skin, preview,
+        save_context(asset, context, context.file_path, asset.default_language, skin, preview,
                      version_id, global_contexts, global_contexts_dict)
 
 
-def zip_context(zip_file, product, context, language_code,
+def zip_context(zip_file, asset, context, language_code,
                 preview, version_id, global_contexts, add_root):
-    default_language = product.default_language
+    default_language = asset.default_language
     language = Language.by_code(language_code, default_language)
-    root_dir = product.product_root
-    skin = product.read_global_value('%SKIN%')
+    root_dir = asset.asset_root
+    skin = asset.read_global_value('%SKIN%')
     if context.template_for_language(language, default_language, skin):  # if we have template - save context to file
-        data = process_context(product, context, language, skin, preview, version_id, global_contexts)
+        data = process_context(asset, context, language, skin, preview, version_id, global_contexts)
         name = context.file_path.replace("{{language}}", language_code) if language_code else context.file_path
         if add_root:
             name = os.path.join(root_dir, name)
@@ -447,7 +447,7 @@ def zip_context(zip_file, product, context, language_code,
     file_structures = context.datastructure_set.filter(type__in=(DataStructure.DATA_TYPES.image,
                                                                  DataStructure.DATA_TYPES.file))
     for file_structure in file_structures:
-        data = file_structure.find_actual_value(product, language, version_id, draft=preview)
+        data = file_structure.find_actual_value(asset, language, version_id, draft=preview)
         if data != file_structure.default or not file_structure.optional:
             data = base64.b64decode(data)
             name = file_structure.name.replace("{{language}}", language_code) if language_code else file_structure.name
@@ -456,20 +456,20 @@ def zip_context(zip_file, product, context, language_code,
             zip_file.writestr(name, data)
 
 
-def get_zip_package(product, preview=True, version_id=None, add_root=True):
+def get_zip_package(asset, preview=True, version_id=None, add_root=True):
     zip_data = BytesIO()
     zip_file = zipfile.ZipFile(zip_data, "a", zipfile.ZIP_DEFLATED, False)
 
-    global_contexts = Context.objects.filter(is_global=True, product_type=product.product_type)
-    languages = product.languages_list
+    global_contexts = Context.objects.filter(is_global=True, asset_type=asset.asset_type)
+    languages = asset.languages_list
 
-    for context in product.product_type.context_set.all():
+    for context in asset.asset_type.context_set.all():
         if context.translatable:
             for language_code in languages:
-                zip_context(zip_file, product, context, language_code,
+                zip_context(zip_file, asset, context, language_code,
                             preview, version_id, global_contexts, add_root)
         else:
-            zip_context(zip_file, product, context, None,
+            zip_context(zip_file, asset, context, None,
                         preview, version_id, global_contexts, add_root)
 
     # Mark the files as having been created on Windows so that

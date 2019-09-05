@@ -15,12 +15,12 @@
 
 {% block content%}
 <div>
-    <h3>Download package for product</h3>
-    <p><a href="{% url 'download_package' product.id %}" download>Download package (zip)</a></p>
-    <p><a href="{% url 'download_package' product.id %}?draft" download>Download package draft (zip)</a></p>
-    <p><a href="{% url 'download_structure_from_db' product.id %}" download>Download structure (json)</a></p>
+    <h3>Download package for asset</h3>
+    <p><a href="{% url 'download_package' asset.id %}" download>Download package (zip)</a></p>
+    <p><a href="{% url 'download_package' asset.id %}?draft" download>Download package draft (zip)</a></p>
+    <p><a href="{% url 'download_structure_from_db' asset.id %}" download>Download structure (json)</a></p>
 </div>
-<h3>Update Product</h3>
+<h3>Update Asset</h3>
 <div>
 Notice root level directory will be ignored. The expected format is :<br>
 <pre style="margin: 5px 0 0 5px; width: 500px">
@@ -42,7 +42,7 @@ Example for vms
 </pre>
 <br>
 </div>
-<form id="productForm" action="{% url 'product_settings' product.id %}"
+<form id="assetForm" action="{% url 'asset_settings' asset.id %}"
       method="post" class="aligned" enctype="multipart/form-data">
     {% csrf_token %}
     {% for field in form %}
@@ -59,7 +59,7 @@ Example for vms
     {% endfor %}
 
     <div class="submit-row">
-        <a href="{% url 'admin:pages' product.id %}" class="btn btn-sm btn-default">Edit Content</a>
+        <a href="{% url 'admin:pages' asset.id %}" class="btn btn-sm btn-default">Edit Content</a>
         <button class="btn btn-sm btn-primary" type="submit" name="Upload" onclick="cookieInterval()">Upload</button>
     </div>
     <script>

@@ -7,7 +7,7 @@
         <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
         &rsaquo; <a href="{% url 'admin:app_list' app_label=opts.app_label %}">{{ opts.app_config.verbose_name }}</a>
         &rsaquo; <a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a>
-        &rsaquo; <a href="{% url 'admin:cms_product_change' product.id %}"> {{  product.name }}</a>
+        &rsaquo; <a href="{% url 'admin:cms_asset_change' asset.id %}"> {{  asset.name }}</a>
         &rsaquo; {% trans 'Pages' %}
     </div>
 {% endblock %}
@@ -40,7 +40,7 @@
                         <tbody>
                         {% for context in contexts %}
                             <tr class="row{{ forloop.counter0 | modulo:2 | add:1 }}">
-                                <th><a href="{% url 'admin:change_page' product.id context.id %}">{{ context.get_nice_name }}</a></th>
+                                <th><a href="{% url 'admin:change_page' asset.id context.id %}">{{ context.get_nice_name }}</a></th>
                                 <td>{% autoescape off%}{{ context.description }}{% endautoescape %}</td>
                                 <td>{{ context.url }}</td>
                                 <td>{% include 'admin/boolean.html' with value=context.is_global %}</td>

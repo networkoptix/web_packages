@@ -95,14 +95,14 @@ class AccountAdmin(CMSAdmin, CSVExportAdmin):
         return qs
 
     def get_list_filter(self, request):
-        if UserGroupsToProductPermissions.check_customization_permission(
+        if UserGroupsToAssetPermissions.check_customization_permission(
                 request.user, settings.CUSTOMIZATION, 'api.change_proxygroup'
         ):
             return self.list_filter + [GroupFilter]
         return self.list_filter
 
     def get_list_display(self, request):
-        if UserGroupsToProductPermissions.check_customization_permission(
+        if UserGroupsToAssetPermissions.check_customization_permission(
                 request.user, settings.CUSTOMIZATION, 'api.change_proxygroup'
         ):
             return self.list_display + ['user_groups']
@@ -112,14 +112,14 @@ class AccountAdmin(CMSAdmin, CSVExportAdmin):
         return False
 
     def has_change_permission(self, request, obj=None):
-        return UserGroupsToProductPermissions.\
+        return UserGroupsToAssetPermissions.\
             check_customization_change_account(request.user, settings.CUSTOMIZATION)
 
     def has_delete_permission(self, request, obj=None):  # No deleting users at all
         return False
 
     def has_view_permission(self, request, obj=None):
-        return UserGroupsToProductPermissions.\
+        return UserGroupsToAssetPermissions.\
             check_customization_change_account(request.user, settings.CUSTOMIZATION)
 
     def get_urls(self):

@@ -70,12 +70,12 @@ class EventAdmin(NotificationAdmin):
 
 @admin.register(Feedback)
 class FeedbackAdmin(NotificationAdmin):
-    list_display = ('product_name', 'target_product', 'type', 'sender_name', 'sender_email',
+    list_display = ('asset_name', 'target_asset', 'type', 'sender_name', 'sender_email',
                     'created_date')
     list_filter = ('type', 'created_date')
-    list_display_links = ('target_product',)
+    list_display_links = ('target_asset',)
     readonly_fields = ('message',)
-    search_fields = ('product_name', 'sender_name', 'sender_email')
+    search_fields = ('asset_name', 'sender_name', 'sender_email')
 
     def get_readonly_fields(self, request, obj=None):
         return self.list_display + self.readonly_fields

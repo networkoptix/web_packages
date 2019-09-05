@@ -17,7 +17,7 @@
 {% endblock %}
 
 {% block content %}
-    {% with version=original.version product=original.version.product %}
+    {% with version=original.version asset=original.version.asset %}
     <div id="alert" style="display:none" class="alert alert-warning"
          title="Preview being generated">Currently making the preview for you. A new tab
         will open shortly.
@@ -28,7 +28,7 @@
     <div class="module custom-block">
         {% if customization_reviews %}
         <div style="margin-bottom: 20px;">
-            <h2>Review Status {% if product.product_type.single_customization %}for each customization{% endif %}</h2>
+            <h2>Review Status {% if asset.asset_type.single_customization %}for each customization{% endif %}</h2>
             <div class="table-responsive">
                 <table class="table table-condensed">
                     <thead>
@@ -48,7 +48,7 @@
                                 {% if review == original %}
                                 <strong>{{ review.customization | portal_name }}</strong>
                                 {% else %}
-                                <a href="{% url 'admin:cms_productcustomizationreview_change' review.id %}">{{ review.customization | portal_name }}</a>
+                                <a href="{% url 'admin:cms_assetcustomizationreview_change' review.id %}">{{ review.customization | portal_name }}</a>
                                 {% endif %}
                             </td>
                             <td><span class="label {% if state == 'Rejected' %} label-danger {% elif state == 'Accepted' %} label-success {% else %} label-default{% endif %}">{{ state }}</span></td>
@@ -107,7 +107,7 @@
                                             src="{{ record }}"
                                           {% endif %}></div>
                             {% elif data_structure.type == DataStructureTypes.file %}
-                                <a href="{% url 'download_file' data_structure.name %}?version_id={{ version.id }}&product_id={{ product.id }}&lang={{ language.code }}&draft"
+                                <a href="{% url 'download_file' data_structure.name %}?version_id={{ version.id }}&asset_id={{ asset.id }}&lang={{ language.code }}&draft"
                                    download>Download</a>
                             {% elif data_structure.type == DataStructureTypes.external_file %}
                                 <a href="{{ record }}">Download</a>
@@ -118,8 +118,8 @@
                             {% else %}
                                 <div class="show-html">{{ record|safe }}</div>
                             {% endif %}
-                            {% if product.product_type.single_customization %}
-                                <a href="{% url 'admin:change_page' product.id data_structure.context.id %}"
+                            {% if asset.asset_type.single_customization %}
+                                <a href="{% url 'admin:change_page' asset.id data_structure.context.id %}"
                                    target="_blank">(edit)</a>
                             {% endif %}
                         </li>
@@ -152,9 +152,9 @@
                 <button class="btn btn-sm btn-danger" type="submit" name="force_update">Force Update</button>
                 {% endif %}
 
-                {% if product and False %}
+                {% if asset and False %}
                 <button class="btn btn-sm btn-default">
-                    <a href="{% url 'download_package' product.id %}?version_id={{ version.id }}"
+                    <a href="{% url 'download_package' asset.id %}?version_id={{ version.id }}"
                        download>Download</a>
                 </button>
                 {% endif %}

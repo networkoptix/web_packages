@@ -8,7 +8,7 @@ register = template.Library()
 
 @register.filter
 def portal_name(customization):
-    return get_cloud_portal_product(customization).name
+    return get_cloud_portal_asset(customization).name
 
 
 @register.filter
@@ -22,8 +22,8 @@ def is_FileField(field):
 
 
 @register.simple_tag
-def is_protected(data_structure, product):
-    return data_structure.is_protected(product) if data_structure else False
+def is_protected(data_structure, asset):
+    return data_structure.is_protected(asset) if data_structure else False
 
 
 @register.simple_tag
@@ -40,7 +40,7 @@ def is_external_file_or_image(data_structure_name, context):
 
 
 @register.simple_tag
-def has_value(data_structure_name, product, context, language):
+def has_value(data_structure_name, asset, context, language):
     data_structure = DataStructure.objects.filter(context=context, name=data_structure_name).first()
 
     if not data_structure:
@@ -49,7 +49,7 @@ def has_value(data_structure_name, product, context, language):
     if not data_structure.translatable:
         language = None
 
-    record_value = data_structure.find_actual_value(product, language, draft=True)
+    record_value = data_structure.find_actual_value(asset, language, draft=True)
     return record_value != "" and data_structure.default != record_value
 
 
@@ -59,27 +59,27 @@ def get_datastructure_type(data_structure):
 
 
 @register.simple_tag
-def get_product_type(product):
-    if product:
-        return ProductType.PRODUCT_TYPES[product.product_type.type]
-    return product
+def get_asset_type(asset):
+    if asset:
+        return AssetType.ASSET_TYPES[asset.asset_type.type]
+    return asset
 
 
 @register.simple_tag
 def get_review_state(state):
-    return ProductCustomizationReview.REVIEW_STATES[state]
+    return AssetCustomizationReview.REVIEW_STATES[state]
 
 
 @register.simple_tag
-def has_permission(user, product, permission=None):
-    return UserGroupsToProductPermissions.check_permission(user, product, permission)
+def has_permission(user, asset, permission=None):
+    return UserGroupsToAssetPermissions.check_permission(user, asset, permission)
 
 
 @register.simple_tag
 def has_customization_permission(user, customization, permission):
     if not customization:
         customization = settings.CUSTOMIZATION
-    return UserGroupsToProductPermissions.check_customization_permission(user, customization, permission)
+    return UserGroupsToAssetPermissions.check_customization_permission(user, customization, permission)
 
 
 @register.filter

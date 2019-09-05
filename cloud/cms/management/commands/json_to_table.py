@@ -49,23 +49,23 @@ def process_data_structure(data_structure):
 
 
 def process_cms_structure_json():
-    with open("cms/product_structure_template.html.mustache", "r") as f:
+    with open("cms/asset_structure_template.html.mustache", "r") as f:
         mustache_template = f.read()
 
     with open("cms/cms_structure.json", "r") as f:
-        product_types = json.load(f)
-        for product_type in product_types:
-            for context in product_type["contexts"]:
+        asset_types = json.load(f)
+        for asset_type in asset_types:
+            for context in asset_type["contexts"]:
                 for idx, data_structure in enumerate(context["values"]):
                     process_data_structure(data_structure)
                     data_structure['index'] = idx + 1
 
-            with open(f"cms/{product_type['type']}.html", "w+") as out_file:
-                out_file.write(pystache.render(mustache_template, product_type))
+            with open(f"cms/{asset_type['type']}.html", "w+") as out_file:
+                out_file.write(pystache.render(mustache_template, asset_type))
 
 
 class Command(BaseCommand):
-    help = "Generates html files for product types in cms_structure.json"
+    help = "Generates html files for asset types in cms_structure.json"
 
     def handle(self, *args, **options):
         process_cms_structure_json()

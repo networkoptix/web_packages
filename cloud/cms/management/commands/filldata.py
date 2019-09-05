@@ -2,7 +2,7 @@ import logging
 import time
 from django.core.management.base import BaseCommand
 from ...controllers import filldata, structure
-from ...models import Customization, Language, Product, ProductType, get_cloud_portal_product
+from ...models import Customization, Language, Asset, AssetType, get_cloud_portal_asset
 from cloud import settings
 from cloud.debug import timer
 
@@ -28,11 +28,11 @@ class Command(BaseCommand):
             customization.languages.add(en_us)
             customization.save()
 
-        product = structure.find_or_add_product_with_single_customization('Cloud Portal', customization,
+        asset = structure.find_or_add_asset_with_single_customization('Cloud Portal', customization,
                                                                           'cloud_portal', '')
 
         for i in range(settings.FILLDATA_TRIES):
-            result = filldata.init_skin(product, options['preview'], workers=1)
+            result = filldata.init_skin(asset, options['preview'], workers=1)
             if result:
                 break
 
@@ -43,9 +43,9 @@ class Command(BaseCommand):
 
         else:
             error_msg = f"Filldata failed after running {settings.FILLDATA_TRIES} time(s). " \
-                f"Run forceupdate for {product.__str__()} to fix the problem."
+                f"Run forceupdate for {asset.__str__()} to fix the problem."
             logger.critical(error_msg)
             self.stdout.write(self.style.ERROR(error_msg))
             return
 
-        self.stdout.write(self.style.SUCCESS(f"Successfully initiated static content for {product.__str__()}"))
+        self.stdout.write(self.style.SUCCESS(f"Successfully initiated static content for {asset.__str__()}"))

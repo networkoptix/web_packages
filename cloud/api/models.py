@@ -7,7 +7,7 @@ from django.utils import timezone
 
 from api.controllers.cloud_api import Account as cloud_api_account
 from api.helpers.exceptions import APIRequestException, APIException, APILogicException, ErrorCodes
-from cms.models import Customization, Product, ProductType, UserGroupsToProductPermissions
+from cms.models import Customization, Asset, AssetType, UserGroupsToAssetPermissions
 from cloud.settings import CUSTOMIZATION
 
 
@@ -144,7 +144,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
 
     @property
     def permissions(self):
-        if not UserGroupsToProductPermissions.check_customization_permission(self, CUSTOMIZATION):
+        if not UserGroupsToAssetPermissions.check_customization_permission(self, CUSTOMIZATION):
             return []
 
         permissions = []
@@ -153,41 +153,41 @@ class Account(AbstractBaseUser, PermissionsMixin):
         return list(set(permissions))
 
     @property
-    def products(self):
-        return self.products_with_permission('cms.edit_content')
+    def assets(self):
+        return self.assets_with_permission('cms.edit_content')
 
     @property
     def customizations(self):
         if self.is_superuser:
             return list(Customization.objects.all().values_list('name', flat=True))
-        cloud_portal_ids = UserGroupsToProductPermissions.objects.\
-            filter(group__in=self.groups.all(), product__product_type__type=ProductType.PRODUCT_TYPES.cloud_portal).\
-            values_list('product__id', flat=True)
+        cloud_portal_ids = UserGroupsToAssetPermissions.objects.\
+            filter(group__in=self.groups.all(), asset__asset_type__type=AssetType.ASSET_TYPES.cloud_portal).\
+            values_list('asset__id', flat=True)
 
         customizations = []
 
         for cloud_id in cloud_portal_ids:
-            product = Product.objects.get(id=cloud_id)
-            if UserGroupsToProductPermissions.check_permission(self, product, 'cms.access_customization'):
-                customizations.append(product.customizations.first().name)
+            asset = Asset.objects.get(id=cloud_id)
+            if UserGroupsToAssetPermissions.check_permission(self, asset, 'cms.access_customization'):
+                customizations.append(asset.customizations.first().name)
 
         return list(set(customizations))
 
     def customizations_with_permission(self, permission):
         customizations = []
         for customization in self.customizations:
-            if UserGroupsToProductPermissions.check_customization_permission(self, customization, permission):
+            if UserGroupsToAssetPermissions.check_customization_permission(self, customization, permission):
                 customizations.append(customization)
         return customizations
 
-    def products_with_permission(self, permission):
-        products = []
-        permission_product_ids = UserGroupsToProductPermissions.objects.filter(group__in=self.groups.all())\
-            .values_list('product__id', flat=True).distinct()
-        for product in Product.objects.filter(id__in=permission_product_ids):
-            if UserGroupsToProductPermissions.check_permission(self, product, permission):
-                products.append(product.id)
-        return products
+    def assets_with_permission(self, permission):
+        assets = []
+        permission_asset_ids = UserGroupsToAssetPermissions.objects.filter(group__in=self.groups.all())\
+            .values_list('asset__id', flat=True).distinct()
+        for asset in Asset.objects.filter(id__in=permission_asset_ids):
+            if UserGroupsToAssetPermissions.check_permission(self, asset, permission):
+                assets.append(asset.id)
+        return assets
 
     @property
     def is_portal_manager(self):

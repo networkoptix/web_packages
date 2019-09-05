@@ -16,53 +16,53 @@ from django.template.defaultfilters import truncatechars
 from cloud.storage_backend import MediaStorage
 
 
-def create_default_permission_group(product):
+def create_default_permission_group(asset):
     from django.contrib.auth.models import Permission
-    if not (product.is_cloud_portal or product.is_integration):
+    if not (asset.is_cloud_portal or asset.is_integration):
         return None
 
-    if product.is_cloud_portal:
-        group = Group.objects.create(name=f'Portal Manager - {product.name} - {product.id}')
+    if asset.is_cloud_portal:
+        group = Group.objects.create(name=f'Portal Manager - {asset.name} - {asset.id}')
         permissions = Permission.objects.filter(codename__in=['access_customization', 'change_account',
-                                                              'change_productcustomizationreview',
-                                                              'change_product', 'edit_content',
+                                                              'change_assetcustomizationreview',
+                                                              'change_asset', 'edit_content',
                                                               'force_update', 'publish_version'])
 
-        # Bind the Group to the following product_types so that the portal managers can review them
-        product_types = ProductType.objects.filter(name="",
-                                                   type__in=[ProductType.PRODUCT_TYPES.cloud_portal,
-                                                             ProductType.PRODUCT_TYPES.integration])
-        for product_type in product_types:
-            UserGroupsToProductType.objects.create(product_type=product_type, group=group)
+        # Bind the Group to the following asset_types so that the portal managers can review them
+        asset_types = AssetType.objects.filter(name="",
+                                                   type__in=[AssetType.ASSET_TYPES.cloud_portal,
+                                                             AssetType.ASSET_TYPES.integration])
+        for asset_type in asset_types:
+            UserGroupsToAssetType.objects.create(asset_type=asset_type, group=group)
 
     else:
-        group = Group.objects.create(name=f'Developer - {product.name} - {product.id}')
+        group = Group.objects.create(name=f'Developer - {asset.name} - {asset.id}')
         permissions = Permission.objects.filter(
-            codename__in=['edit_content', 'change_product', 'change_productcustomizationreview']
+            codename__in=['edit_content', 'change_asset', 'change_assetcustomizationreview']
         )
 
     group.permissions.set(permissions)
-    UserGroupsToProductPermissions.objects.create(product=product, group=group)
+    UserGroupsToAssetPermissions.objects.create(asset=asset, group=group)
 
     return group
 
 
-def rename_permission_group(group, product):
-    if product.is_cloud_portal:
-        group.name = f'Portal Manager - {product.name} - {product.id}'
+def rename_permission_group(group, asset):
+    if asset.is_cloud_portal:
+        group.name = f'Portal Manager - {asset.name} - {asset.id}'
     else:
-        group.name = f'Developer - {product.name} - {product.id}'
+        group.name = f'Developer - {asset.name} - {asset.id}'
     group.save()
 
 
-def get_cloud_portal_product(customization=settings.CUSTOMIZATION):
-    return Product.objects.get(customizations__name__in=[customization],
-                               product_type__name="",
-                               product_type__type=ProductType.PRODUCT_TYPES.cloud_portal)
+def get_cloud_portal_asset(customization=settings.CUSTOMIZATION):
+    return Asset.objects.get(customizations__name__in=[customization],
+                               asset_type__name="",
+                               asset_type__type=AssetType.ASSET_TYPES.cloud_portal)
 
 
-def get_product_by_revision(version_id):
-    return Product.objects.get(contentversion__in=[version_id])
+def get_asset_by_revision(version_id):
+    return Asset.objects.get(contentversion__in=[version_id])
 
 
 def update_global_cache(customization, version_id):
@@ -79,7 +79,7 @@ def check_update_cache(customization, version_id):
 
 def cloud_portal_customization_cache(customization_name, value=None, force=False):
     data = cache.get(customization_name)
-    product = get_cloud_portal_product(customization_name)
+    asset = get_cloud_portal_asset(customization_name)
 
     if data and 'version_id' in data and not force:
         force = check_update_cache(customization_name, data['version_id'])[0]
@@ -88,56 +88,56 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
         customization = Customization.objects.get(name=customization_name)
         custom_config = get_config(customization.name)
 
-        footer_items = product.read_global_value('%FOOTER_ITEMS%')
-        integration_store_enabled = product.read_global_value("%INTEGRATION_STORE_ENABLED%")
+        footer_items = asset.read_global_value('%FOOTER_ITEMS%')
+        integration_store_enabled = asset.read_global_value("%INTEGRATION_STORE_ENABLED%")
 
         if footer_items:
             from cms.controllers.filldata import process_global_contexts
-            global_contexts = Context.objects.filter(is_global=True, product_type=product.product_type)
+            global_contexts = Context.objects.filter(is_global=True, asset_type=asset.asset_type)
             # Replaces cms tags. If you add the key as itself in the global_context_dict it effectively is not replaced
-            footer_items = process_global_contexts(product, footer_items, product.version_id(),
+            footer_items = process_global_contexts(asset, footer_items, asset.version_id(),
                                                    False, global_contexts, {"%CLOUD_NAME%": "%CLOUD_NAME%",
                                                                             "%VMS_NAME%": "%VMS_NAME%"})
 
         data = {
-            'version_id': product.version_id(),
+            'version_id': asset.version_id(),
             'languages': customization.languages_list,
             'default_language': customization.default_language.code,
             'email': {
-                'mail_from_name': product.read_global_value('%MAIL_FROM_NAME%'),
-                'mail_from_email': product.read_global_value('%MAIL_FROM_EMAIL%'),
+                'mail_from_name': asset.read_global_value('%MAIL_FROM_NAME%'),
+                'mail_from_email': asset.read_global_value('%MAIL_FROM_EMAIL%'),
                 'portal_url': custom_config['cloud_portal']['url'],
-                'smtp_host': product.read_global_value('%SMTP_HOST%'),
-                'smtp_port': product.read_global_value('%SMTP_PORT%'),
-                'smtp_user': product.read_global_value('%SMTP_USER%'),
-                'smtp_password': product.read_global_value('%SMTP_PASSWORD%'),
-                'smtp_tls': product.read_global_value('%SMTP_TLS%')
+                'smtp_host': asset.read_global_value('%SMTP_HOST%'),
+                'smtp_port': asset.read_global_value('%SMTP_PORT%'),
+                'smtp_user': asset.read_global_value('%SMTP_USER%'),
+                'smtp_password': asset.read_global_value('%SMTP_PASSWORD%'),
+                'smtp_tls': asset.read_global_value('%SMTP_TLS%')
             },
             'config': {
-                'available_downloads_platform': product.read_global_value('%AVAILABLE_DOWNLOADS_PLATFORM%'),
-                'cloud_merge': product.read_global_value("%CLOUD_MERGE%"),
-                'copyright_year': product.read_global_value("%COPYRIGHT_YEAR%"),
-                'company_name': product.read_global_value("%COMPANY_NAME%"),
-                'company_link': product.read_global_value("%COMPANY_LINK%"),
-                'feedback_enabled': product.read_global_value("%FEEDBACK_ENABLED%"),
+                'available_downloads_platform': asset.read_global_value('%AVAILABLE_DOWNLOADS_PLATFORM%'),
+                'cloud_merge': asset.read_global_value("%CLOUD_MERGE%"),
+                'copyright_year': asset.read_global_value("%COPYRIGHT_YEAR%"),
+                'company_name': asset.read_global_value("%COMPANY_NAME%"),
+                'company_link': asset.read_global_value("%COMPANY_LINK%"),
+                'feedback_enabled': asset.read_global_value("%FEEDBACK_ENABLED%"),
                 'footer_items': footer_items,
-                'integration_filter_items': product.read_global_value("%INTEGRATION_FILTER_ITEMS%"),
-                'integration_filter_limitation': product.read_global_value("%INTEGRATION_SHOW_FILTER_LIMITATION%"),
+                'integration_filter_items': asset.read_global_value("%INTEGRATION_FILTER_ITEMS%"),
+                'integration_filter_limitation': asset.read_global_value("%INTEGRATION_SHOW_FILTER_LIMITATION%"),
                 'integration_store_enabled': integration_store_enabled,
-                'public_downloads': product.read_global_value("%PUBLIC_DOWNLOADS%"),
-                'public_releases': product.read_global_value("%PUBLIC_RELEASE_HISTORY%"),
-                'show_analytics_events': product.read_global_value("%SHOW_ANALYTICS_EVENTS%"),
-                'sort_supported_devices_by_popularity': product.read_global_value(
+                'public_downloads': asset.read_global_value("%PUBLIC_DOWNLOADS%"),
+                'public_releases': asset.read_global_value("%PUBLIC_RELEASE_HISTORY%"),
+                'show_analytics_events': asset.read_global_value("%SHOW_ANALYTICS_EVENTS%"),
+                'sort_supported_devices_by_popularity': asset.read_global_value(
                     "%SORT_SUPPORTED_DEVICES_BY_POPULARITY%"),
-                'support_link': product.read_global_value("%SUPPORT_LINK%"),
-                'privacy_link': product.read_global_value("%PRIVACY_LINK%"),
-                'supported_resolutions': product.read_global_value("%SUPPORTED_RESOLUTIONS%"),
-                'supported_hardware_types': product.read_global_value("%SUPPORTED_HARDWARE_TYPES%"),
-                'search_tags': product.read_global_value("%SEARCH_TAGS%"),
-                'vendors_shown': product.read_global_value("%VENDORS_SHOWN%"),
-                'cloud_name': product.read_global_value("%CLOUD_NAME%"),
-                'vms_name': product.read_global_value("%VMS_NAME%"),
-                'push_subscription_auto_active': product.read_global_value("%PUSH_SUB_ACTIVE%"),
+                'support_link': asset.read_global_value("%SUPPORT_LINK%"),
+                'privacy_link': asset.read_global_value("%PRIVACY_LINK%"),
+                'supported_resolutions': asset.read_global_value("%SUPPORTED_RESOLUTIONS%"),
+                'supported_hardware_types': asset.read_global_value("%SUPPORTED_HARDWARE_TYPES%"),
+                'search_tags': asset.read_global_value("%SEARCH_TAGS%"),
+                'vendors_shown': asset.read_global_value("%VENDORS_SHOWN%"),
+                'cloud_name': asset.read_global_value("%CLOUD_NAME%"),
+                'vms_name': asset.read_global_value("%VMS_NAME%"),
+                'push_subscription_auto_active': asset.read_global_value("%PUSH_SUB_ACTIVE%"),
                 'push_config': getattr(settings, 'PUSH_NOTIFICATIONS_SETTINGS', {}).get('PUBLIC')
             },
             'cloud_capabilities': {
@@ -161,15 +161,15 @@ def slugify(name, lowercase=False):
 
 
 def rename_file(instance, filename):
-    product_name = slugify(instance.product.name, True)
+    asset_name = slugify(instance.asset.name, True)
     structure_name = slugify(instance.data_structure.name, True)
     file_info = f"{structure_name}-{instance.id}"
-    return os.path.join(product_name, file_info, filename)
+    return os.path.join(asset_name, file_info, filename)
 
 
 def get_integration_type():
     # Prevents issue when migrating from empty db
-    integration = ProductType.objects.only('id', 'type').filter(type=ProductType.PRODUCT_TYPES.integration).first()
+    integration = AssetType.objects.only('id', 'type').filter(type=AssetType.ASSET_TYPES.integration).first()
     if integration:
         return integration.id
     return None
@@ -194,7 +194,7 @@ class Language(models.Model):
 class Customization(models.Model):
     class Meta:
         # Used to allow a user to see the customization in list of customizations
-        # Cloud portal(s) are now a product so customization is not necessary for giving access anymore
+        # Cloud portal(s) are now a asset so customization is not necessary for giving access anymore
         permissions = (
             ('access_customization', 'Can access customization'),
         )
@@ -235,12 +235,12 @@ class Customization(models.Model):
         return children_list
 
 
-class ProductType(models.Model):
+class AssetType(models.Model):
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=["name", "type"], name="Unique Product Type")
+            models.UniqueConstraint(fields=["name", "type"], name="Unique Asset Type")
         ]
-    PRODUCT_TYPES = Choices((0, "cloud_portal", "Cloud Portal"),
+    ASSET_TYPES = Choices((0, "cloud_portal", "Cloud Portal"),
                             (1, "vms", "Vms"),
                             (2, "integration", "Integration"),
                             (3, "other", "Other"),
@@ -248,55 +248,51 @@ class ProductType(models.Model):
     name = models.CharField(max_length=255, default="", blank=True)
     can_preview = models.BooleanField(default=False)
     single_customization = models.BooleanField(default=False)
-    type = models.IntegerField(choices=PRODUCT_TYPES, default=PRODUCT_TYPES.cloud_portal)
+    type = models.IntegerField(choices=ASSET_TYPES, default=ASSET_TYPES.cloud_portal)
     advanced = models.BooleanField(default=True)
 
     def __str__(self):
         if self.name:
-            return f"{self.name} - {ProductType.PRODUCT_TYPES[self.type]}"
-        return ProductType.PRODUCT_TYPES[self.type]
+            return f"{self.name} - {AssetType.ASSET_TYPES[self.type]}"
+        return AssetType.ASSET_TYPES[self.type]
 
     @staticmethod
     def get_type_by_name(name):
         if name == "":
-            return ProductType.PRODUCT_TYPES.cloud_portal
+            return AssetType.ASSET_TYPES.cloud_portal
         if name[0].islower():
-            return getattr(ProductType.PRODUCT_TYPES, name, ProductType.PRODUCT_TYPES.cloud_portal)
+            return getattr(AssetType.ASSET_TYPES, name, AssetType.ASSET_TYPES.cloud_portal)
 
-        for index, _name in ProductType.PRODUCT_TYPES:
+        for index, _name in AssetType.ASSET_TYPES:
             if _name == name:
                 return index
         return 0
 
-    def get_customizations(self, product):
-        return self.product_set.exclude(id=product.id).exclude(customizations=None).\
+    def get_customizations(self, asset):
+        return self.asset_set.exclude(id=asset.id).exclude(customizations=None).\
             values_list('customizations__name', flat=True)
 
 
-class Product(models.Model):
-    class Meta:
-        verbose_name = 'asset'
-        verbose_name_plural = 'assets'
-
+class Asset(models.Model):
     name = models.CharField(max_length=255)
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, null=True,
         blank=True, related_name='created_%(class)s', on_delete=models.CASCADE)
     customizations = models.ManyToManyField(Customization, default=None, blank=True)
-    product_type = models.ForeignKey(ProductType, default=get_integration_type, null=True, on_delete=models.CASCADE)
+    asset_type = models.ForeignKey(AssetType, default=get_integration_type, null=True, on_delete=models.CASCADE)
 
     PREVIEW_STATUS = Choices((0, 'draft', 'draft'), (1, 'review', 'review'))
     preview_status = models.IntegerField(choices=PREVIEW_STATUS, default=PREVIEW_STATUS.draft)
     primary_group = models.OneToOneField(Group, unique=True, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
-        if self.product_type and self.is_cloud_portal:
+        if self.asset_type and self.is_cloud_portal:
             return f"{self.name} - {self.customizations.first()}"
         return self.name
 
     @property
     def can_preview_on_portal(self):
-        return self.product_type.can_preview and \
+        return self.asset_type.can_preview and \
                self.customizations.filter(name=settings.CUSTOMIZATION).exists()
 
     @property
@@ -316,32 +312,32 @@ class Product(models.Model):
         return Customization.objects.get(name=settings.CUSTOMIZATION).languages_list
 
     @property
-    def product_root(self):
-        if self.product_type and self.is_cloud_portal:
+    def asset_root(self):
+        if self.asset_type and self.is_cloud_portal:
             return self.customizations.first().name
         return ""
 
     @property
     def is_cloud_portal(self):
-        return self.is_product_type(ProductType.PRODUCT_TYPES.cloud_portal)
+        return self.is_asset_type(AssetType.ASSET_TYPES.cloud_portal)
 
     @property
     def is_integration(self):
-        return self.is_product_type(ProductType.PRODUCT_TYPES.integration)
+        return self.is_asset_type(AssetType.ASSET_TYPES.integration)
 
-    def is_product_type(self, product_type):
-        return self.product_type.type == product_type
+    def is_asset_type(self, asset_type):
+        return self.asset_type.type == asset_type
 
     def version_id(self, customization=settings.CUSTOMIZATION):
-        if self.product_type.single_customization:
+        if self.asset_type.single_customization:
             actual_customization = self.customizations.first()
             if actual_customization:
                 customization = actual_customization.name
 
-        accepted_review = ProductCustomizationReview.objects. \
+        accepted_review = AssetCustomizationReview.objects. \
             filter(customization__name=customization,
-                   state=ProductCustomizationReview.REVIEW_STATES.accepted,
-                   version__product=self).last()
+                   state=AssetCustomizationReview.REVIEW_STATES.accepted,
+                   version__asset=self).last()
 
         return accepted_review.version.id if accepted_review else 0
 
@@ -350,14 +346,14 @@ class Product(models.Model):
         self.save()
 
     def read_global_value(self, record_name):
-        global_contexts = self.product_type.context_set.filter(is_global=True)
+        global_contexts = self.asset_type.context_set.filter(is_global=True)
         data_structure = DataStructure.objects.filter(name=record_name, context__in=global_contexts).last()
 
-        return data_structure.find_actual_value(product=self, version_id=self.version_id()) if data_structure else None
+        return data_structure.find_actual_value(asset=self, version_id=self.version_id()) if data_structure else None
 
     def clean(self):
-        if self.product_type.type != ProductType.PRODUCT_TYPES.cloud_portal and \
-                Product.objects.filter(name=self.name, product_type=self.product_type).exclude(pk=self.pk).exists():
+        if self.asset_type.type != AssetType.ASSET_TYPES.cloud_portal and \
+                Asset.objects.filter(name=self.name, asset_type=self.asset_type).exclude(pk=self.pk).exists():
             raise ValidationError({'name': 'Name already exists'})
 
     def save(self, *args, **kwargs):
@@ -370,7 +366,7 @@ class Product(models.Model):
             create_group = True
             need_update = True
         else:
-            orig = Product.objects.get(pk=self.pk)
+            orig = Asset.objects.get(pk=self.pk)
             if self.customizations.exists():
                 need_update = self.preview_status == orig.preview_status
             if orig.created_by != self.created_by:
@@ -378,7 +374,7 @@ class Product(models.Model):
             if orig.name != self.name:
                 rename_group = True
 
-        super(Product, self).save(*args, **kwargs)
+        super(Asset, self).save(*args, **kwargs)
         if need_update and self.is_cloud_portal \
                 and len(self.customizations.all()) == 1:
             cloud_portal_customization_cache(self.customizations.first().name, force=True)  # invalidate cache
@@ -388,7 +384,7 @@ class Product(models.Model):
             if create_group:
                 group = create_default_permission_group(orig or self)
                 self.primary_group = group
-                super(Product, self).save(*args, **kwargs)
+                super(Asset, self).save(*args, **kwargs)
             if self.primary_group and self.created_by:
                 self.primary_group.user_set.add(self.created_by)
                 self.created_by.is_staff = True
@@ -400,13 +396,11 @@ class Product(models.Model):
 
 class Context(models.Model):
     class Meta:
-        verbose_name = 'page'
-        verbose_name_plural = 'pages'
         permissions = (
             ("edit_content", "Can edit content and send for review"),
         )
         ordering = ['order', 'id']
-    product_type = models.ForeignKey(ProductType, null=True, on_delete=models.CASCADE)
+    asset_type = models.ForeignKey(AssetType, null=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=1024)
     label = models.CharField(max_length=1024, default="", blank=True)
     description = models.TextField(blank=True, default="")
@@ -420,8 +414,8 @@ class Context(models.Model):
     url = models.CharField(max_length=1024, blank=True, default='')
 
     def __str__(self):
-        if self.product_type:
-            return f"{self.product_type} - {self.name}"
+        if self.asset_type:
+            return f"{self.asset_type} - {self.name}"
         return self.name
 
     def get_nice_name(self):
@@ -443,7 +437,7 @@ class Context(models.Model):
         return next((context_template.first().template for context_template in contexts if context_template.exists()),
                     None)
 
-    def get_state(self, product):
+    def get_state(self, asset):
         # (State, order) In order of importance. Only update a state if the new state is more important
         INCOMPLETE = ('Incomplete', 0)
         DRAFT = ('Draft', 1)
@@ -451,21 +445,21 @@ class Context(models.Model):
         REJECTED = ('Rejected', 3)
         PUBLISHED = ('Published', 4)
 
-        reviews = ProductCustomizationReview.objects.filter(version__product=product,
+        reviews = AssetCustomizationReview.objects.filter(version__asset=asset,
                                                             customization__name=settings.CUSTOMIZATION)
         # Starting point so we don't get incorrect status with unpublished assets
-        if reviews.filter(state=ProductCustomizationReview.REVIEW_STATES.accepted).first():
+        if reviews.filter(state=AssetCustomizationReview.REVIEW_STATES.accepted).first():
             state = PUBLISHED
-        elif reviews.filter(state__in=[ProductCustomizationReview.REVIEW_STATES.pending,
-                                       ProductCustomizationReview.REVIEW_STATES.blocked]).first():
+        elif reviews.filter(state__in=[AssetCustomizationReview.REVIEW_STATES.pending,
+                                       AssetCustomizationReview.REVIEW_STATES.blocked]).first():
             state = IN_REVIEW
-        elif reviews.filter(state=ProductCustomizationReview.REVIEW_STATES.rejected).first():
+        elif reviews.filter(state=AssetCustomizationReview.REVIEW_STATES.rejected).first():
             state = REJECTED
         else:
             state = DRAFT
 
         for datastructure in self.datastructure_set.all():
-            records = datastructure.datarecord_set.filter(product=product)
+            records = datastructure.datarecord_set.filter(asset=asset)
             last_record = records.last()
             last_record_value = last_record.value if last_record else None
             if datastructure.type in [DataStructure.DATA_TYPES.object,
@@ -481,13 +475,13 @@ class Context(models.Model):
             if last_record:
                 if last_record.version:
                     if state[1] > IN_REVIEW[1]:
-                        review = last_record.version.productcustomizationreview_set.filter(
+                        review = last_record.version.assetcustomizationreview_set.filter(
                             customization__name=settings.CUSTOMIZATION).first()
                         if review:
-                            if review.state in [ProductCustomizationReview.REVIEW_STATES.pending,
-                                                ProductCustomizationReview.REVIEW_STATES.blocked]:
+                            if review.state in [AssetCustomizationReview.REVIEW_STATES.pending,
+                                                AssetCustomizationReview.REVIEW_STATES.blocked]:
                                 state = IN_REVIEW
-                            elif review.state == ProductCustomizationReview.REVIEW_STATES.rejected and \
+                            elif review.state == AssetCustomizationReview.REVIEW_STATES.rejected and \
                                     state[1] > REJECTED[1]:
                                 state = REJECTED
                 elif state[1] > DRAFT[1]:
@@ -572,22 +566,22 @@ class DataStructure(models.Model):
                 return index
         return 0
 
-    def find_actual_value(self, product=None, language=None, version_id=None, draft=False):
+    def find_actual_value(self, asset=None, language=None, version_id=None, draft=False):
         content_value = ""
-        if not product:
+        if not asset:
             return self.default
-        content_record = DataRecord.objects.filter(product=product, data_structure=self)
+        content_record = DataRecord.objects.filter(asset=asset, data_structure=self)
         if not draft:
             content_record = content_record.\
-                exclude(version__productcustomizationreview__state=ProductCustomizationReview.REVIEW_STATES.rejected).\
+                exclude(version__assetcustomizationreview__state=AssetCustomizationReview.REVIEW_STATES.rejected).\
                 order_by('version_id')
 
         # try to get translated content
         if self.translatable:
             if language:
                 content_record = content_record.filter(language=language)
-            elif product.is_cloud_portal:
-                content_record = content_record.filter(language=product.customizations.first().default_language)
+            elif asset.is_cloud_portal:
+                content_record = content_record.filter(language=asset.customizations.first().default_language)
 
         if content_record.exists():
             if not version_id:
@@ -598,7 +592,7 @@ class DataStructure(models.Model):
                 content_record = content_record.filter(version_id__lte=version_id)
                 if not draft:
                     new_review_records = content_record.\
-                        filter(version__productcustomizationreview__state=ProductCustomizationReview.
+                        filter(version__assetcustomizationreview__state=AssetCustomizationReview.
                                REVIEW_STATES.accepted)
                     # If new versions or records dont exist use old vay of getting records
                     if new_review_records.exists():
@@ -638,8 +632,8 @@ class DataStructure(models.Model):
 
         return content_value
 
-    def is_protected(self, product):
-        return self.protected and product.version_id() > 0
+    def is_protected(self, asset):
+        return self.protected and asset.version_id() > 0
 
     @staticmethod
     def is_file_or_image(data_type):
@@ -653,37 +647,37 @@ class DataStructure(models.Model):
 
 
 # CMS settings. Release engineer can change that
-class UserGroupsToProductPermissions(models.Model):
+class UserGroupsToAssetPermissions(models.Model):
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, default=None, null=True, on_delete=models.CASCADE)
+    asset = models.ForeignKey(Asset, default=None, null=True, on_delete=models.CASCADE)
 
     @staticmethod
-    def check_permission(user, product, permission=None):
+    def check_permission(user, asset, permission=None):
         if user.is_superuser:
             return True
         if permission and not user.has_perm(permission):
             return False
 
-        groups = UserGroupsToProductPermissions.objects.filter(product=product,
+        groups = UserGroupsToAssetPermissions.objects.filter(asset=asset,
                                                                group_id__in=user.groups.values_list('id', flat=True))
         if permission:
-            codename = UserGroupsToProductPermissions.convert_permission_to_codename(permission)
+            codename = UserGroupsToAssetPermissions.convert_permission_to_codename(permission)
             groups = groups.filter(group__permissions__codename=codename)
         return groups.exists()
 
     @staticmethod
     def check_customization_permission(user, customization, permission=None):
-        return UserGroupsToProductPermissions.\
-            check_permission(user, get_cloud_portal_product(customization), permission)
+        return UserGroupsToAssetPermissions.\
+            check_permission(user, get_cloud_portal_asset(customization), permission)
 
     @staticmethod
     def check_customization_change_account(user, customization):
-        return UserGroupsToProductPermissions.\
+        return UserGroupsToAssetPermissions.\
             check_customization_permission(user, customization, 'api.change_account')
 
     @staticmethod
     def check_customization_access(user, customization):
-        return UserGroupsToProductPermissions.\
+        return UserGroupsToAssetPermissions.\
             check_customization_permission(user, customization, 'cms.access_customization')
 
     @staticmethod
@@ -694,22 +688,22 @@ class UserGroupsToProductPermissions(models.Model):
         return permission
 
 
-class UserGroupsToProductType(models.Model):
+class UserGroupsToAssetType(models.Model):
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
-    product_type = models.ForeignKey(ProductType, default=None, null=True, on_delete=models.CASCADE)
+    asset_type = models.ForeignKey(AssetType, default=None, null=True, on_delete=models.CASCADE)
 
     @staticmethod
-    def check_product_type(user, product_type, permission):
+    def check_asset_type(user, asset_type, permission):
         if user.is_superuser:
             return True
 
-        codename = UserGroupsToProductPermissions.convert_permission_to_codename(permission)
-        product_type_groups = UserGroupsToProductType.objects.\
+        codename = UserGroupsToAssetPermissions.convert_permission_to_codename(permission)
+        asset_type_groups = UserGroupsToAssetType.objects.\
             filter(group_id__in=user.groups.values_list('id', flat=True),
                    group__permissions__codename=codename,
-                   product_type=product_type).values_list('group__id', flat=True)
+                   asset_type=asset_type).values_list('group__id', flat=True)
 
-        return UserGroupsToProductPermissions.objects.filter(group__id__in=product_type_groups).exists()
+        return UserGroupsToAssetPermissions.objects.filter(group__id__in=asset_type_groups).exists()
 
 
 # CMS data. Partners can change that
@@ -721,7 +715,7 @@ class ContentVersion(models.Model):
 
     # TODO: Remove this after release of 18.4 - Task: CLOUD-2299
     customization = models.ForeignKey(Customization, default=None, null=True, on_delete=models.SET_NULL)
-    product = models.ForeignKey(Product, default=1, on_delete=models.CASCADE)
+    asset = models.ForeignKey(Asset, default=1, on_delete=models.CASCADE)
 
     created_date = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(
@@ -737,30 +731,30 @@ class ContentVersion(models.Model):
         return str(self.id)
 
     def create_reviews(self):
-        blocked = ProductCustomizationReview.REVIEW_STATES.blocked
-        pending = ProductCustomizationReview.REVIEW_STATES.pending
+        blocked = AssetCustomizationReview.REVIEW_STATES.blocked
+        pending = AssetCustomizationReview.REVIEW_STATES.pending
 
-        if self.product.product_type.single_customization:
-            ProductCustomizationReview(customization=self.product.customizations.first(),
+        if self.asset.asset_type.single_customization:
+            AssetCustomizationReview(customization=self.asset.customizations.first(),
                                        version=self,
                                        state=pending).save()
             return
 
-        for customization in self.product.customizations.all():
+        for customization in self.asset.customizations.all():
             parent_in_review = False
             if customization.parent:
-                parent_in_review = self.product.customizations.filter(id=customization.parent.id).exists()
+                parent_in_review = self.asset.customizations.filter(id=customization.parent.id).exists()
             if parent_in_review:
-                ProductCustomizationReview(customization=customization, version=self, state=blocked).save()
+                AssetCustomizationReview(customization=customization, version=self, state=blocked).save()
             else:
-                ProductCustomizationReview(customization=customization, version=self, state=pending).save()
+                AssetCustomizationReview(customization=customization, version=self, state=pending).save()
 
     @property
     def state(self):
         if not self.accepted_by:
             return 'in review'
 
-        version_id = self.product.version_id()
+        version_id = self.asset.version_id()
 
         if version_id > self.id:
             return 'old'
@@ -768,7 +762,7 @@ class ContentVersion(models.Model):
         return 'current'
 
 
-class ProductCustomizationReview(models.Model):
+class AssetCustomizationReview(models.Model):
     class Meta:
         verbose_name = 'review'
         verbose_name_plural = 'reviews'
@@ -791,31 +785,31 @@ class ProductCustomizationReview(models.Model):
         related_name='accepted_%(class)s', on_delete=models.SET_NULL)
 
     def __str__(self):
-        return self.version.product.__str__()
+        return self.version.asset.__str__()
 
     def update_children_reviews(self):
-        reviews = self.version.productcustomizationreview_set.\
+        reviews = self.version.assetcustomizationreview_set.\
             filter(customization__in=self.customization.children_customizations.all())
 
-        can_show_customization = UserGroupsToProductPermissions. \
+        can_show_customization = UserGroupsToAssetPermissions. \
             check_customization_access(self.version.created_by, self.customization)
 
         for review in reviews:
-            if review.state == ProductCustomizationReview.REVIEW_STATES.rejected:
+            if review.state == AssetCustomizationReview.REVIEW_STATES.rejected:
                 continue
 
             review.reviewed_by = self.reviewed_by
             review.reviewed_date = self.reviewed_date
             review.state = self.state
 
-            if review.state == ProductCustomizationReview.REVIEW_STATES.accepted:
+            if review.state == AssetCustomizationReview.REVIEW_STATES.accepted:
                 if review.customization.trust_parent:
                     if can_show_customization:
                         review.notes = f"Automatically accepted by {self.customization}"
                     else:
                         review.notes = "Automatically accepted"
                 else:
-                    review.state = ProductCustomizationReview.REVIEW_STATES.pending
+                    review.state = AssetCustomizationReview.REVIEW_STATES.pending
                     # If the child customization does not trust its parent we need to set reviewed by and date to blank.
                     review.reviewed_by = None
                     review.reviewed_date = None
@@ -825,7 +819,7 @@ class ProductCustomizationReview(models.Model):
                 review.notes = "Automatically rejected"
 
             review.save()
-            if review.state == ProductCustomizationReview.REVIEW_STATES.rejected or review.customization.trust_parent:
+            if review.state == AssetCustomizationReview.REVIEW_STATES.rejected or review.customization.trust_parent:
                 review.update_children_reviews()
 
     def update_state(self, user, state):
@@ -836,18 +830,18 @@ class ProductCustomizationReview(models.Model):
         self.update_children_reviews()
 
     def update_between_published_and_current(self, user, state):
-        product = self.version.product
-        customization_reviews = ProductCustomizationReview.objects.\
-            filter(version__id__gt=product.version_id(self.customization),
+        asset = self.version.asset
+        customization_reviews = AssetCustomizationReview.objects.\
+            filter(version__id__gt=asset.version_id(self.customization),
                    version__id__lte=self.version_id,
-                   version__product=product,
+                   version__asset=asset,
                    customization=self.customization).distinct()
         for review in customization_reviews:
             review.update_state(user, state)
 
     @property
     def can_preview_customization(self):
-        can_preview = self.version.product.product_type.can_preview
+        can_preview = self.version.asset.asset_type.can_preview
         in_review = self.state in [self.REVIEW_STATES.pending, self.REVIEW_STATES.blocked]
         is_current_customization = self.customization.name == settings.CUSTOMIZATION
         return can_preview and in_review and is_current_customization
@@ -856,10 +850,10 @@ class ProductCustomizationReview(models.Model):
 class ExternalFile(models.Model):
     data_structure = models.ForeignKey(DataStructure, default=None, null=True, on_delete=models.CASCADE)
     # Default limit is 100 chars. The new length comes from most paths being limited to 255 char.
-    # Since we slugify the product name, data structure name and file name we need a long length.
+    # Since we slugify the asset name, data structure name and file name we need a long length.
     file = models.FileField(upload_to=rename_file, storage=MediaStorage(), max_length=1000)
     md5 = models.CharField(max_length=1024, default='')
-    product = models.ForeignKey(Product, default=None, null=True, on_delete=models.CASCADE)
+    asset = models.ForeignKey(Asset, default=None, null=True, on_delete=models.CASCADE)
     size = models.FloatField(default=0.0)
 
     def __str__(self):
@@ -868,7 +862,7 @@ class ExternalFile(models.Model):
 
 class DataRecord(models.Model):
     data_structure = models.ForeignKey(DataStructure, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, default=None, null=True, on_delete=models.CASCADE)
+    asset = models.ForeignKey(Asset, default=None, null=True, on_delete=models.CASCADE)
     language = models.ForeignKey(Language, null=True, blank=True, on_delete=models.CASCADE)
     # TODO: Remove this after release of 18.4 - Task: CLOUD-2299
     customization = models.ForeignKey(Customization, default=None, blank=True, null=True, on_delete=models.SET_NULL)
