@@ -1,6 +1,7 @@
 {
     "YOU HAVE NO SYSTEMS TEXT": "You have no Systems connected to %PRODUCT_NAME%",
     "LOG OUT BUTTON TEXT": "Log Out",
+    "LOG IN BUTTON TEXT": "Log In",
     "ACCOUNT SETTINGS BUTTON TEXT": "Account Settings",
     "CONTINUE BUTTON TEXT": "Continue",
     "RELEASE HISTORY BUTTON TEXT": "Other releases, patches and beta versions",
@@ -95,6 +96,7 @@
     "IPVD ADV FILTER MFRS": "Manufacturers",
     "IPVD ADV FILTER TYPE": "Type",
     "IPVD ADV FILTER TYPES": "Types",
+    "IPVD ADV FILTER ANALYTICS": "Analytics",
     "IPVD ADV FEATURE AUDIO": "Audio",
     "IPVD ADV FEATURE 2-WAY AUDIO": "2-way Audio",
     "IPVD ADV FEATURE PTZ": "PTZ",

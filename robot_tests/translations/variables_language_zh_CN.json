@@ -1,6 +1,7 @@
 {
     "YOU HAVE NO SYSTEMS TEXT": "你有没有连接到 %PRODUCT_NAME% 的系统",
     "LOG OUT BUTTON TEXT": "退出登录",
+    "LOG IN BUTTON TEXT": "登录",
     "ACCOUNT SETTINGS BUTTON TEXT": "帐户设置",
     "CONTINUE BUTTON TEXT": "继续",
     "RELEASE HISTORY BUTTON TEXT": "其他正式版，补丁和测试版本",

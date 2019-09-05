@@ -7,8 +7,8 @@ ${ALERT CLOSE}                        //div[contains(@class, 'ng-toast')]//span[
 
 ${BROWSER}                            Chrome
 
-${LANGUAGE DROPDOWN}                  //nx-footer//button[@id='dropdownMenuButton']
-${LANGUAGE TO SELECT}                 //nx-footer//span[@lang='${LANGUAGE}']/..
+${LANGUAGE DROPDOWN}                  //nx-header//button[@id='dropdownMenuButton']
+${LANGUAGE TO SELECT}                 //nx-header//span[@lang='${LANGUAGE}']/..
 ${DOWNLOAD LINK}                      //footer//a[@href="/download"]
 
 @{LANGUAGES LIST}                        en_US           en_GB           ru_RU               fr_FR         de_DE              es_ES         hu_HU             zh_CN     zh_TW    ja_JP       ko_KR       tr_TR          th_TH         nl_NL            he_IL      pl_PL         vi_VN
@@ -43,7 +43,7 @@ ${WRONG PASSWORD MESSAGE}             //form[@name='loginForm']//div[text()="${W
 ${ACCOUNT NOT FOUND MESSAGE}          //form[@name='loginForm']//div[text()="${ACCOUNT DOES NOT EXIST}"]
 ${TOO MANY ATTEMPTS MESSAGE}          //form[@name='loginForm']//div[text()="${TOO MANY ATTEMPTS TEXT}"]
 
-${LOG IN NAV BAR}                     //nav//a[contains(@ng-click, 'login()')]
+${LOG IN NAV BAR}                     //nav//a/span[contains(text(), '${LOG IN BUTTON TEXT}')]/..
 ${YOU HAVE NO SYSTEMS}                //span[contains(text(),"${YOU HAVE NO SYSTEMS TEXT}")]
 
 #Header
@@ -80,7 +80,7 @@ ${CHANGE PASSWORD FORM}               //form[@name='passwordForm']
 ${CURRENT PASSWORD INPUT}             //form[@name='passwordForm']//input[@ng-model='pass.password']
 ${NEW PASSWORD INPUT}                 //form[@name='passwordForm']//password-input[@ng-model='pass.newPassword']//input
 ${CHANGE PASSWORD BUTTON}             //form[@name='passwordForm']//button[@ng-click='checkForm()']
-${PASSWORD IS REQUIRED}               //span[@class='input-error' and contains(text(),"${PASSWORD IS REQUIRED TEXT}")]
+${PASSWORD IS REQUIRED}               //span[contains(@class,'input-error') and contains(text(),"${PASSWORD IS REQUIRED TEXT}")]
 ${CHANGE PASS EYE ICON OPEN}          ${CHANGE PASSWORD FORM}${EYE ICON OPEN}
 ${CHANGE PASS EYE ICON CLOSED}        ${CHANGE PASSWORD FORM}${EYE ICON CLOSED}
 
@@ -98,7 +98,7 @@ ${TERMS AND CONDITIONS CHECKBOX REAL}       ${REGISTER FORM}//input[@id='accept'
 ${CREATE ACCOUNT BUTTON}              ${REGISTER FORM}//button[contains(text(), "${CREATE ACCOUNT BUTTON TEXT}")]
 ${TERMS AND CONDITIONS LINK}          ${REGISTER FORM}//a[@href='/content/eula']
 ${TERMS AND CONDITIONS ERROR}         ${REGISTER FORM}//span[@class='help-block input-error' and contains(text(), "${TERMS AND CONDITIONS ERROR TEXT}")]
-${PRIVACY POLICY LINK}                ${REGISTER FORM}//a[@href='${PRIVACY POLICY URL}']
+${PRIVACY POLICY LINK}                ${REGISTER FORM}//a[@href='${PRIVACY POLICY URL HREF}']
 ${RESEND ACTIVATION LINK BUTTON}      //form[@name= 'loginForm']//a[contains(text(), "${RESEND ACTIVATION LINK BUTTON TEXT}")]
 ${REGISTER EYE ICON OPEN}             ${REGISTER FORM}${EYE ICON OPEN}
 ${REGISTER EYE ICON CLOSED}           ${REGISTER FORM}${EYE ICON CLOSED}
@@ -106,11 +106,11 @@ ${REGISTER EYE ICON CLOSED}           ${REGISTER FORM}${EYE ICON CLOSED}
 ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    {{message.sharer_name}} invites you to %PRODUCT_NAME%
 
 #Register form errors
-${FIRST NAME IS REQUIRED}             //span[@class='help-block input-error' and contains(text(),"${FIRST NAME IS REQUIRED TEXT}")]
-${LAST NAME IS REQUIRED}              //span[@class='help-block input-error' and contains(text(),"${LAST NAME IS REQUIRED TEXT}")]
-${EMAIL IS REQUIRED}                  //span[@class='help-block input-error' and contains(text(),"${EMAIL IS REQUIRED TEXT}")]
-${EMAIL ALREADY REGISTERED}           //span[@class='help-block input-error' and contains(text(),"${EMAIL ALREADY REGISTERED TEXT}")]
-${EMAIL INVALID}                      //span[@class='help-block input-error' and contains(text(),"${EMAIL INVALID TEXT}")]
+${FIRST NAME IS REQUIRED}             //span[contains(@class,'help-block input-error') and contains(text(),"${FIRST NAME IS REQUIRED TEXT}")]
+${LAST NAME IS REQUIRED}              //span[contains(@class,'help-block input-error') and contains(text(),"${LAST NAME IS REQUIRED TEXT}")]
+${EMAIL IS REQUIRED}                  //span[contains(@class,'help-block input-error') and contains(text(),"${EMAIL IS REQUIRED TEXT}")]
+${EMAIL ALREADY REGISTERED}           //span[contains(@class,'help-block input-error') and contains(text(),"${EMAIL ALREADY REGISTERED TEXT}")]
+${EMAIL INVALID}                      //span[contains(@class,'help-block input-error') and contains(text(),"${EMAIL INVALID TEXT}")]
 ${PASSWORD SPECIAL CHARS}             //span[contains(@ng-if,'form[id].$error.pattern &&') and contains(@ng-if,'!form[id].$error.minlength') and contains(text(),'${PASSWORD SPECIAL CHARS TEXT}')]
 ${PASSWORD TOO SHORT}                 //span[contains(@class,'input-error') and contains(text(),'${PASSWORD TOO SHORT TEXT}')]
 ${PASSWORD TOO COMMON}                //span[contains(@class,'input-error') and contains(text(),'${PASSWORD TOO COMMON TEXT}')]
@@ -122,7 +122,7 @@ ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    {{message.sharer_name}} invit
 ${OPEN NX WITNESS BUTTON FROM =}      //button[text()="${OPEN NX WITNESS BUTTON TEXT}"]
 
 
-${ACCOUNT CREATION SUCCESS}           //h1[@class="process-success d-flex align-items-center flex-column mt-5"]
+${ACCOUNT CREATION SUCCESS}           //h1[@class="process-success d-flex align-items-center flex-column mt-5 ng-star-inserted"]
 ${ACTIVATION SUCCESS}                 //h1[@ng-if='activate.success && !loading' and contains(text(), "${ACCOUNT SUCCESSFULLY ACTIVATED TEXT}")]
 ${SUCCESS LOG IN BUTTON}              //h1[@ng-if='activate.success && !loading' and contains(text(), "${ACCOUNT SUCCESSFULLY ACTIVATED TEXT}")]/following-sibling::h1/a[@href="/login"]
 #In system settings
@@ -371,8 +371,8 @@ ${300CHARS}                           QWErtyuiopasdfghhkljzxcvbnmqwertyuiopasdfg
 ${255CHARS}                           QWErtyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopas
 
 #Eye icons for password forms
-${EYE ICON OPEN}             //span[@class="glyphicon glyphicon-eye-open"]
-${EYE ICON CLOSED}           //span[@class="glyphicon glyphicon-eye-close"]
+${EYE ICON OPEN}             //span[@class="glyphicon glyphicon-eye-open ng-star-inserted"]
+${EYE ICON CLOSED}           //span[@class="glyphicon glyphicon-eye-close ng-star-inserted"]
 
 #ASCII
 ${ESCAPE}                             \\27

@@ -1,6 +1,7 @@
 {
     "YOU HAVE NO SYSTEMS TEXT": "Sinulla ei ole järjestelmiä, jotka on kytketty %PRODUCT_NAME%",
     "LOG OUT BUTTON TEXT": "Kirjaudu ulos",
+    "LOG IN BUTTON TEXT": "Kirjaudu sisään",
     "ACCOUNT SETTINGS BUTTON TEXT": "Tilin asetukset",
     "CONTINUE BUTTON TEXT": "Jatka",
     "RELEASE HISTORY BUTTON TEXT": "Muut julkaisut, korjaukset ja beta-versiot",
