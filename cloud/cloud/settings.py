@@ -33,13 +33,13 @@ assert ('bucket' in conf), 'Ivan, please add s3 bucket to config for this instan
 TRAFFIC_RELAY_HOST = '{systemId}.' + conf['trafficRelay']['host']  # {systemId}.relay-bur.vmsproxy.hdw.mx
 TRAFFIC_RELAY_PROTOCOL = 'https://'
 
-# Quick-start development settings - unsuitable for assetion
+# Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in assetion secret!
+# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '03-b9bxxpjxsga(qln0@3szw3+xnu%6ph_l*sz-xr_4^xxrj!_'
 
-# SECURITY WARNING: don't run with debug turned on in assetion!
+# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = 'debug' in conf and conf['debug'] or LOCAL_ENVIRONMENT
 
 ALLOWED_HOSTS = ['*']

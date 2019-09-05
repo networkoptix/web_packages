@@ -9,7 +9,27 @@ from cloud import settings
 from cms.admin import CMSAdmin
 from api.forms import *
 from api.models import *
+from cms.models import *
 from django_csv_exports.admin import CSVExportAdmin
+
+from django.contrib.auth.models import Permission
+
+
+@admin.register(Permission)
+class PermissionAdmin(CMSAdmin):
+    list_display = ['id', 'name', 'codename', 'asset_groups']
+    search_fields = ['codename', 'name']
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def asset_groups(self, obj):
+        return list(UserGroupsToAssetPermissions.objects
+                    .filter(group__permissions__id__in=[obj.id])
+                    .values_list('asset__name', 'group__name'))
+
+    asset_groups.short_description = 'Asset - Groups'
+    asset_groups.allow_tags = True
 
 
 class CustomizationFilter(SimpleListFilter):
