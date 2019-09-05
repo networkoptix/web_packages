@@ -41,7 +41,7 @@ require('./filters/escape.js');
 // require('./services/account.ts');
 require('./services/angular-uuid2.ts');
 require('./services/cloud_api.ts');
-require('./services/dialogs.ts');
+// require('./services/dialogs.ts');
 require('./services/language.ts');
 require('./services/mediaserver.js');
 require('./services/page.js');

@@ -4,11 +4,11 @@
 
     angular
         .module('cloudApp')
-        .controller('ViewPageCtrl', [ '$rootScope', '$scope', '$window', 'nxAccountService', 'system', '$routeParams', 'systemAPI', 'dialogs',
+        .controller('ViewPageCtrl', [ '$rootScope', '$scope', '$window', 'nxAccountService', 'system', '$routeParams', 'systemAPI', 'nxDialogsService',
             '$location', '$q', '$poll', 'camerasProvider',
             'nxConfigService', 'languageService', 'nxAppStateService', 'nxPageService',
 
-            function ($rootScope, $scope, $window, nxAccountService, system, $routeParams, systemAPI, dialogs,
+            function ($rootScope, $scope, $window, nxAccountService, system, $routeParams, systemAPI, nxDialogsService,
                       $location, $q, $poll, camerasProvider,
                       nxConfigService, languageService, nxAppStateService, nxPageService) {
     
@@ -87,7 +87,7 @@
                 
 
                 var cancelSubscription = $scope.$on('unauthorized_' + $routeParams.systemId, function () {
-                    dialogs.notify(LANG.errorCodes.lostConnection.replace('{{systemName}}',
+                    nxDialogsService.notify(LANG.errorCodes.lostConnection.replace('{{systemName}}',
                         $scope.currentSystem.info.name || LANG.errorCodes.thisSystem), 'warning');
     
                     if ($scope.isInIframe) {
