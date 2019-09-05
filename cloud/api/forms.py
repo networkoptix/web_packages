@@ -15,12 +15,12 @@ from notifications import notifications_api
 
 User = get_user_model()
 assets_help_text = "Grants group permissions to the selected assets.<br>" \
-                     "If the chosen asset is a cloud portal, permissions for the portal's customization are " \
-                     "granted.<br>" \
-                     "Example: The user can review any assets which have the same customization as their portal."
+                   "If the chosen asset is a cloud portal, permissions for the portal's customization are " \
+                   "granted.<br>" \
+                   "Example: The user can review any assets which have the same customization as their portal."
 
 asset_types_help_text = "Allows this group to review the selected asset_types. This field currently only affects " \
-                          "a users ability to review assets."
+                        "a users ability to review assets."
 
 
 class AccountAdminForm(forms.ModelForm):

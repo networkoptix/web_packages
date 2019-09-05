@@ -30,8 +30,8 @@ def create_default_permission_group(asset):
 
         # Bind the Group to the following asset_types so that the portal managers can review them
         asset_types = AssetType.objects.filter(name="",
-                                                   type__in=[AssetType.ASSET_TYPES.cloud_portal,
-                                                             AssetType.ASSET_TYPES.integration])
+                                               type__in=[AssetType.ASSET_TYPES.cloud_portal,
+                                                         AssetType.ASSET_TYPES.integration])
         for asset_type in asset_types:
             UserGroupsToAssetType.objects.create(asset_type=asset_type, group=group)
 
@@ -57,8 +57,8 @@ def rename_permission_group(group, asset):
 
 def get_cloud_portal_asset(customization=settings.CUSTOMIZATION):
     return Asset.objects.get(customizations__name__in=[customization],
-                               asset_type__name="",
-                               asset_type__type=AssetType.ASSET_TYPES.cloud_portal)
+                             asset_type__name="",
+                             asset_type__type=AssetType.ASSET_TYPES.cloud_portal)
 
 
 def get_asset_by_revision(version_id):
@@ -156,7 +156,7 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
 def slugify(name, lowercase=False):
     if lowercase:
         name = name.lower()
-    unsafe_chars = re.compile('[^a-z0-9-]', flags=re.IGNORECASE)
+    unsafe_chars = re.compile(r'[^a-z0-9-]', flags=re.IGNORECASE)
     return unsafe_chars.sub('-', name)
 
 
@@ -241,10 +241,10 @@ class AssetType(models.Model):
             models.UniqueConstraint(fields=["name", "type"], name="Unique Asset Type")
         ]
     ASSET_TYPES = Choices((0, "cloud_portal", "Cloud Portal"),
-                            (1, "vms", "Vms"),
-                            (2, "integration", "Integration"),
-                            (3, "other", "Other"),
-                            (4, "article", "Article"))
+                          (1, "vms", "Vms"),
+                          (2, "integration", "Integration"),
+                          (3, "other", "Other"),
+                          (4, "article", "Article"))
     name = models.CharField(max_length=255, default="", blank=True)
     can_preview = models.BooleanField(default=False)
     single_customization = models.BooleanField(default=False)
@@ -446,7 +446,7 @@ class Context(models.Model):
         PUBLISHED = ('Published', 4)
 
         reviews = AssetCustomizationReview.objects.filter(version__asset=asset,
-                                                            customization__name=settings.CUSTOMIZATION)
+                                                          customization__name=settings.CUSTOMIZATION)
         # Starting point so we don't get incorrect status with unpublished assets
         if reviews.filter(state=AssetCustomizationReview.REVIEW_STATES.accepted).first():
             state = PUBLISHED
@@ -659,7 +659,7 @@ class UserGroupsToAssetPermissions(models.Model):
             return False
 
         groups = UserGroupsToAssetPermissions.objects.filter(asset=asset,
-                                                               group_id__in=user.groups.values_list('id', flat=True))
+                                                             group_id__in=user.groups.values_list('id', flat=True))
         if permission:
             codename = UserGroupsToAssetPermissions.convert_permission_to_codename(permission)
             groups = groups.filter(group__permissions__codename=codename)
@@ -736,8 +736,8 @@ class ContentVersion(models.Model):
 
         if self.asset.asset_type.single_customization:
             AssetCustomizationReview(customization=self.asset.customizations.first(),
-                                       version=self,
-                                       state=pending).save()
+                                     version=self,
+                                     state=pending).save()
             return
 
         for customization in self.asset.customizations.all():
