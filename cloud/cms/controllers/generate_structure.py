@@ -410,7 +410,7 @@ def process_files(file_iterator, asset):
 
 def from_database(asset, use_actual_values=False, draft=False):
     return [AssetTypeSerializer(asset.asset_type, use_actual_values=use_actual_values,
-                                  asset=asset, lang=asset.default_language, draft=draft).data]
+                                asset=asset, lang=asset.default_language, draft=draft).data]
 
 
 def from_directory(directory, asset):

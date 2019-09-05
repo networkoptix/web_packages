@@ -239,7 +239,7 @@ def make_preview(request):
         asset.change_preview_status(asset.PREVIEW_STATUS.review)
     else:
         review = AssetCustomizationReview.objects.get(version_id=version_id,
-                                                        customization=asset.customizations.first())
+                                                      customization=asset.customizations.first())
         redirect_url = reverse('admin:cms_assetcustomizationreview_change', args=(review.id,))
         messages.error(request, "This asset can not be previewed")
 

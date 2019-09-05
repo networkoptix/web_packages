@@ -1,7 +1,6 @@
-import json
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import AllowAny
 
 from cloud import settings
 from api.helpers.exceptions import api_success, handle_exceptions
@@ -36,9 +35,9 @@ def make_integrations_json(integrations, contexts=None, show_pending=False, show
 
             if show_pending:
                 pending_version = AssetCustomizationReview.objects.filter(version__id__gt=current_version,
-                                                                            version__asset=integration,
-                                                                            customization__name=settings.CUSTOMIZATION,
-                                                                            state=PENDING).last()
+                                                                          version__asset=integration,
+                                                                          customization__name=settings.CUSTOMIZATION,
+                                                                          state=PENDING).last()
 
                 if not pending_version:
                     continue
@@ -109,8 +108,8 @@ def get_integration(request, asset_id=None):
 
     asset_id = int(asset_id)
     integration = Asset.objects.filter(asset_type__type=INTEGRATION,
-                                         customizations__name__in=[settings.CUSTOMIZATION],
-                                         id=asset_id).last()
+                                       customizations__name__in=[settings.CUSTOMIZATION],
+                                       id=asset_id).last()
 
     if not integration:
         return api_success("Integration not found.", status_code=status.HTTP_404_NOT_FOUND)
@@ -136,7 +135,7 @@ def get_integration(request, asset_id=None):
 def get_integrations(request):
     is_enabled = check_integration_store_enabled()
     integrations = Asset.objects.filter(asset_type__type=INTEGRATION,
-                                          customizations__name__in=[settings.CUSTOMIZATION])
+                                        customizations__name__in=[settings.CUSTOMIZATION])
 
     if not integrations.exists():
         return api_success([])

@@ -366,7 +366,7 @@ def get_records_for_version(asset, version, customization):
     if version.id > published_version:
 
         data_records = asset.datarecord_set.filter(version__id__gt=published_version,
-                                                     version__id__lte=version.id)
+                                                   version__id__lte=version.id)
     else:
         data_records = asset.datarecord_set.filter(version__id=version.id)
     data_records = data_records.\

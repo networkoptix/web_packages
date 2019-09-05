@@ -10,7 +10,7 @@ from dal import autocomplete
 import base64
 from api.account_backend import AccountManager
 from api.models import Account
-from cms.models import Asset, Customization, AssetType, UserGroupsToAssetPermissions, UserGroupsToAssetType
+from cms.models import Customization, Asset, AssetType, UserGroupsToAssetPermissions, UserGroupsToAssetType
 from notifications import notifications_api
 
 User = get_user_model()
