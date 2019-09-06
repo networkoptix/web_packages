@@ -18,11 +18,12 @@ import { NxSystemAdminComponent }      from './admin/admin.component';
 import { NxSystemUsersComponent }      from './users/users.component';
 import { NxNoSystemsComponent }        from '../no-systems/no-systems.component';
 import { ApplyGuard } from '../../../routeGuards/applyGuard';
+import { AuthGuard } from '../../../routeGuards/authGuard';
 
 const appRoutes: Routes = [
     // root path is handles by AJS for now
     {
-        path    : 'systems/:systemId', component: NxSystemSettingsComponent,
+        path    : 'systems/:systemId', component: NxSystemSettingsComponent, canActivate: [AuthGuard],
         children: [
             { path: '', component: NxSystemAdminComponent },
             { path: 'users', component: NxSystemUsersComponent },

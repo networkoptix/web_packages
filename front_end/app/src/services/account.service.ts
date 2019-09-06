@@ -95,17 +95,17 @@ export class NxAccountService {
     }
 
     requireLogin() {
-        const res = this.get();
-        res.then((account) => {
-            if (!account) {
-                this.dialogs
-                    .login(this, true, true)
-                    .catch(() => {
-                        this.location.path(this.CONFIG.redirectUnauthorised);
-                    });
-            }
-        });
-        return res;
+        return this.get()
+            .then((account) => {
+                if (!account) {
+                    return this.dialogs
+                        .login(this, true, true)
+                        .catch(() => {
+                            this.location.path(this.CONFIG.redirectUnauthorised);
+                        });
+                }
+                return Promise.resolve(true);
+            });
     }
 
     redirectAuthorised() {

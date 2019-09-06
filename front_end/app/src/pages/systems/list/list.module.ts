@@ -11,14 +11,12 @@ import { NxSystemsListComponent } from './list.component';
 
 import { TranslateModule }     from '@ngx-translate/core';
 import { ComponentsModule }    from '../../../components/components.module';
-import { NxRegisterComponent } from '../../register/register.component';
 import { NxSettingsModule }    from '../settings/settings.module';
-// import { NxOverviewComponent }  from './overview/overview.component';
-// import { NxSetupComponent }     from './setup/setup.component';
+import { AuthGuard }           from '../../../routeGuards/authGuard';
 
 const appRoutes: Routes = [
     {
-        path    : 'systems', component: NxSystemsListComponent,
+        path    : 'systems', component: NxSystemsListComponent, canActivate: [AuthGuard]
     }
 ];
 

@@ -79,18 +79,18 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
     private getData() {
         this.cloudApiService
             .getDownloadsHistory(this.build)
-            .then((result: any) => {
-                    this.linkbase = result.data.updatesPrefix;
+            .then((data: any) => {
+                    this.linkbase = data.updatesPrefix;
                     if (!this.build) { // only one build
-                        this.downloadsData = result.data;
+                        this.downloadsData = data;
                         this.activeBuilds = this.downloadsData[ this.section ];
                         this.getAvailableDownloadTypes(this.downloadsData);
 
                     } else {
-                        this.activeBuilds = [ result.data ];
-                        this.noteTypes = [ result.data.type ];
+                        this.activeBuilds = [ data ];
+                        this.noteTypes = [ data.type ];
                         this.downloadsData = {};
-                        this.downloadsData[ result.data.type ] = this.activeBuilds;
+                        this.downloadsData[ data.type ] = this.activeBuilds;
                     }
 
                     this.titleService.setTitle(new TitleCasePipe().transform(this.noteTypes[ 0 ])); // this.downloadTypes[ 0 ][ 0 ].toUpperCase() + this.downloadTypes[ 0 ].substr(1).toLowerCase());

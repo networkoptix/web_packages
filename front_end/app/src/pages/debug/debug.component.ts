@@ -71,7 +71,7 @@ export class NxDebugComponent {
     ) {
         this.LANG = this.languageService.getTranslations();
         this.pageService.setPageTitle(this.LANG.pageTitles.debug);
-        this.accountService.requireLogin().then((acc) => {
+        this.accountService.get().then((acc) => {
             this.init();
         });
     }

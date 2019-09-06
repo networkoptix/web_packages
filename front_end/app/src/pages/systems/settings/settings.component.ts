@@ -208,7 +208,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     getSystemInfo() {
         this.settingsService.setSystem(undefined);
         this.accountService
-            .requireLogin()
+            .get()
             .then((account) => {
                 if (account) {
                     this.account = account;

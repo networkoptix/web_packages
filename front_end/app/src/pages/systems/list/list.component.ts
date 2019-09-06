@@ -20,7 +20,6 @@ import { NxProcessService }     from '../../../services/process.service';
 export class NxSystemsListComponent implements OnInit, OnDestroy {
     CONFIG: any = {};
     LANG: any = {};
-    // location: any;
     showSearch: any;
     fetchComplete: any;
     search: any;
@@ -28,7 +27,6 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
     openClient: any;
     systems: any;
     filteredSystems: any;
-    checkSystems: any;
     systemSelected: any;
     userEmail: string;
 
@@ -61,8 +59,7 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
         this.fetchComplete = false;
         this.search = { value: '' };
 
-        this.accountService
-            .requireLogin()
+        this.accountService.get()
             .then((account) => {
                 if (account) {
                     this.userEmail = account.email;

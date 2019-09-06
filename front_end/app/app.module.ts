@@ -26,6 +26,7 @@ import { ServiceModule }     from './src/services/services.module';
 import { LayoutModule }      from '@angular/cdk/layout';
 import { WINDOWS_PROVIDERS } from './src/services/window-provider';
 import { initializeApp }     from './src/pages/push-notifications/push-notifications.module';
+import { AuthGuard }         from './src/routeGuards/authGuard';
 
 // AoT requires an exported function for factories
 
@@ -111,7 +112,8 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
             provide: FirebaseOptionsToken,
             deps: [NxConfigService],
             useFactory: initializeApp
-        }
+        },
+        AuthGuard,
     ],
     declarations   : [
         AppComponent
