@@ -167,6 +167,7 @@ Check Password Badge
 Check Email Outline
     [Arguments]    ${email}
     Element Style Should Be    ${REGISTER EMAIL INPUT}    border-color    ${ERROR COLOR}
+#    Element Style Should Be    ${REGISTER EMAIL INPUT}    color    ${ERROR COLOR}
     Run Keyword If    "${email}"=="${EMPTY}" or "${email}"=="${SPACE}"
     ...    Element Should Be Visible    ${EMAIL IS REQUIRED}
     Run Keyword If    "${email}"=="${existing email}"
@@ -177,6 +178,7 @@ Check Email Outline
 Check Password Outline
     [Arguments]    ${pass}
     Element Style Should Be    ${REGISTER PASSWORD INPUT}    border-color    ${ERROR COLOR}
+#    Element Style Should Be    ${REGISTER PASSWORD INPUT}    color    ${ERROR COLOR}
     Run Keyword If    '''${pass}'''=='''${EMPTY}''' or '''${pass}'''=='''${SPACE}'''
     ...    Element Should Be Visible    ${PASSWORD IS REQUIRED}
     Run Keyword If    '''${pass}'''=='''${7char password}'''
@@ -191,11 +193,13 @@ Check Password Outline
 Check First Name Outline
     [Arguments]    ${first}
     Element Style Should Be    ${REGISTER FIRST NAME INPUT}    border-color    ${ERROR COLOR}
+#    Element Style Should Be    ${REGISTER FIRST NAME INPUT}    color    ${ERROR COLOR}
     Element Should Be Visible    ${FIRST NAME IS REQUIRED}
 
 Check Last Name Outline
     [Arguments]    ${last}
     Element Style Should Be    ${REGISTER LAST NAME INPUT}    border-color    ${ERROR COLOR}
+#    Element Style Should Be    ${REGISTER LAST NAME INPUT}    color    ${ERROR COLOR}
     Element Should Be Visible    ${LAST NAME IS REQUIRED}
 
 Check Terms and Conditions Error
