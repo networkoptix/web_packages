@@ -3,7 +3,8 @@
 <div *ngIf="system" class="auth-visible" >
     <nx-block *ngIf="selectedUser" header-style="extended">
         <header>
-            <div class="float-right d-flex">
+            <div class="float-right d-flex"
+                 *ngIf="systemAvailable">
                 <span *ngIf="!selectedUser.isEnabled"
                       class="text-danger" [ngClass]="{'pr-2': selectedUser.canBeEdited}"
                       translate>User disabled</span>
@@ -33,7 +34,7 @@
             </div>
         </nx-section>
         <nx-section *ngIf="systemAvailable && selectedUser.canBeDeleted && system.currentUser.isAdmin">
-            <div class="float-left mr-2 mt-2">
+            <div class="float-left mr-2">
                 <button class="btn btn-default" (click)="removeUser(selectedUser)">Remove User</button>
             </div>
         </nx-section>

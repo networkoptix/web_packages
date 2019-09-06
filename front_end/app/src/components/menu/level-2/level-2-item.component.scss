@@ -48,7 +48,7 @@
         }
     
         .menu-level-2-additional {
-            color       : $light1;
+            color       : $light1 !important;
             font-family : $font-family-regular;
         }
     }
@@ -57,12 +57,8 @@
         color : $light16;
     
         .menu-level-2-additional {
-            color : $light1;
+            color : $light16;
         }
-    }
-    
-    span {
-        color : $light16;
     }
 }
 
