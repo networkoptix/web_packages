@@ -4,8 +4,10 @@ import { Location } from '@angular/common';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxConfigService } from '../../services/nx-config';
 import { Title } from '@angular/platform-browser';
-import { Component, OnInit, Compiler, NgModule, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, OnInit, Compiler, NgModule, ViewChild, ViewContainerRef, Inject } from '@angular/core';
 import { ComponentsModule } from '../../components/components.module';
+import { SessionStorageService } from 'ngx-store';
+import { WINDOW } from '../../services/window-provider';
 
 @Component({
     selector : 'content-component',
@@ -23,6 +25,7 @@ export class NxContentComponent implements OnInit {
     private langCode: string;
     private CONFIG: any;
     private loaded: boolean;
+    private staticContent: any;
 
     @ViewChild('dynamicTemplate', { read: ViewContainerRef, static: true }) dynamicTemplate;
     @ViewChild('dynamicImage', { read: ViewContainerRef, static: true }) dynamicImage;
@@ -33,13 +36,15 @@ export class NxContentComponent implements OnInit {
         this.staticHTML = '';
     }
 
-    constructor(private route: ActivatedRoute,
+    constructor(@Inject(WINDOW) private window: Window,
+                private route: ActivatedRoute,
                 private http: HttpClient,
                 private location: Location,
                 private language: NxLanguageProviderService,
                 private config: NxConfigService,
                 private titleService: Title,
-                private _compiler: Compiler) {
+                private _compiler: Compiler,
+                private sessionStorage: SessionStorageService) {
         this.setupDefaults();
         this.langCode = this.language.getLang();
         this.CONFIG = config.getConfig();
@@ -49,21 +54,20 @@ export class NxContentComponent implements OnInit {
         this.articleParam = this.route.snapshot.paramMap.get('article_param');
         this.state = this.route.snapshot.queryParamMap.get('state');
         this.id = this.route.snapshot.queryParamMap.get('id');
+        this.staticContent = JSON.parse(this.sessionStorage.get('staticContent')) || {};
+
+        // Clear staticContent on reload so we can try to fetch from db again
+        window.onbeforeunload = (event) => {
+            this.sessionStorage.remove('staticContent');
+        };
     }
 
     ngAfterViewInit(): void {
-        this.getArticle();
-    }
-
-    waitForViewsDir() {
-        return new Promise((resolve) => {
-            const interval = setInterval(() => {
-                if (this.CONFIG.viewsDir) {
-                    clearInterval(interval);
-                    resolve();
-                }
-            }, 200);
-        });
+        if (!this.staticContent[this.articleParam]) {
+            this.getArticle();
+        } else {
+            this.loadStaticArticle();
+        }
     }
 
     getArticle() {
@@ -84,31 +88,28 @@ export class NxContentComponent implements OnInit {
     }
 
     loadStaticArticle() {
-        this.waitForViewsDir().then(() => {
-            const templateUrl = `/${this.CONFIG.viewsDir}static/${this.articleParam}.html`;
-            this.http.get(templateUrl, {responseType: 'text'}).subscribe(
-                (html: any) => {
-                    this.compileStaticArticle(html);
-                },
-                () => {
-                    this.location.go('404');
-                }
-            );
-        });
+        const templateUrl = `/${this.CONFIG.viewsDir}static/${this.articleParam}.html`;
+        this.compileStaticArticle(templateUrl);
     }
 
-    compileStaticArticle(template) {
-        @Component({template})
+    compileStaticArticle(templateUrl) {
+        @Component({templateUrl})
         class TemplateComponent {}
 
         @NgModule({declarations: [TemplateComponent], imports: [ComponentsModule]})
         class TemplateModule {}
 
-        const mod = this._compiler.compileModuleAndAllComponentsSync(TemplateModule);
-        const factory = mod.componentFactories.find((comp) => comp.componentType === TemplateComponent);
+        this._compiler.compileModuleAndAllComponentsAsync(TemplateModule).then((mod) => {
+            const factory = mod.componentFactories.find((comp) => comp.componentType === TemplateComponent);
 
-        this.dynamicTemplate.createComponent(factory);
-        this.loaded = true;
+            this.dynamicTemplate.createComponent(factory);
+            this.loaded = true;
+
+            /* If content was successfully compiled from static files,
+                add to staticContent so we don't do an API call each time we switch pages */
+            this.staticContent[this.articleParam] = true;
+            this.sessionStorage.set('staticContent', JSON.stringify(this.staticContent));
+        }).catch(() => this.location.go('404'));
     }
 }
 
