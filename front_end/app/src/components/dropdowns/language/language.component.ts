@@ -61,15 +61,27 @@ export class NxLanguageDropdown implements OnInit {
     }
 
     change(langCode: string) {
-        if (this.activeLanguage.language !== langCode) {
-            /*  TODO: Currently this is not needed because the language file will
-            be loaded during page reload. Once we transfer everything to Angular 5
-            we should use this for seamless change of language
-            // this.translate.use(lang.replace('_', '-'));
-            */
-            if (this.instantReload) {
+        this.langCode = langCode;
+        this.onTouchedCallback();
+        this.onChangeCallback(langCode);
+        this.setLanguage();
+        return false; // return false so event will not bubble to HREF
+    }
+
+    setLanguage() {
+        if (this.activeLanguage.language !== this.langCode) {
+            this.activeLanguage = this.languages.find(lang => {
+                return (lang.language === this.langCode);
+            });
+
+            if (this.instantApply && this.instantReload) {
+                /*  TODO: Currently this is not needed because the language file will
+                be loaded during page reload. Once we transfer everything to Angular 5
+                we should use this for seamless change of language
+                // this.translate.use(lang.replace('_', '-'));
+                */
                 this.cloudApi
-                    .changeLanguage(langCode)
+                    .changeLanguage(this.langCode)
                     .then((response) => {
                         window.location.reload();
                     });
@@ -100,18 +112,10 @@ export class NxLanguageDropdown implements OnInit {
     }
 
     writeValue(langCode: any) {
-        this.onTouchedCallback();
-        this.onChangeCallback(langCode);
         this.langCode = langCode;
         if (langCode) {
-            this.activeLanguage = this.languages.find(lang => {
-                return (lang.language === langCode);
-            });
-            if (this.instantApply) {
-                this.change(langCode);
-            }
+            this.setLanguage();
         }
-        return false; // return false so event will not bubble to HREF
     }
 
     registerOnChange(fn) {

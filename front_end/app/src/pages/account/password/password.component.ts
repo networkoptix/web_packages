@@ -9,6 +9,7 @@ import { NxCloudApiService }         from '../../../services/nx-cloud-api';
 import { NxSystemsService }          from '../../../services/systems.service';
 import { NxMenuService }             from '../../../components/menu/menu.service';
 import { NxApplyService, Watcher }   from '../../../services/apply.service';
+import { NxPageService }             from '../../../services/page.service';
 
 @Component({
     selector   : 'nx-account-password-component',
@@ -54,11 +55,13 @@ export class NxAccountPasswordComponent implements OnInit {
                 private dialogs: NxDialogsService,
                 private menuService: NxMenuService,
                 private applyService: NxApplyService,
-    ) {
+                private pageService: NxPageService) {
         this.setupDefaults();
     }
 
     ngOnInit(): void {
+        this.pageService.setPageTitle(this.LANG.pageTitles.changePassword);
+
         this.changePassword = this.processService.createProcess(() => {
             return this.cloudApiService
                        .changePassword(this.pass.newPassword, this.pass.password);

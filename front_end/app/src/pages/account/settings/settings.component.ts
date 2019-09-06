@@ -10,6 +10,7 @@ import { NxCloudApiService }         from '../../../services/nx-cloud-api';
 import { NxSystemsService }          from '../../../services/systems.service';
 import { NxMenuService }             from '../../../components/menu/menu.service';
 import { NxApplyService, Watcher }   from '../../../services/apply.service';
+import { NxPageService }             from '../../../services/page.service';
 
 @Component({
     selector   : 'nx-account-settings-component',
@@ -52,11 +53,13 @@ export class NxAccountSettingsComponent implements OnInit {
                 private dialogs: NxDialogsService,
                 private menuService: NxMenuService,
                 private applyService: NxApplyService,
-    ) {
+                private pageService: NxPageService) {
         this.setupDefaults();
     }
 
     ngOnInit(): void {
+        this.pageService.setPageTitle(this.LANG.pageTitles.account);
+
         this.save = this.processService.createProcess(() => {
             return this.cloudApiService.accountPost(this.account);
         }, {

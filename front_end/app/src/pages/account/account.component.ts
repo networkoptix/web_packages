@@ -5,7 +5,6 @@ import { NxAccountService }          from '../../services/account.service';
 import { NxDialogsService }          from '../../dialogs/dialogs.service';
 import { ActivatedRoute }            from '@angular/router';
 import { NxUriService }              from '../../services/uri.service';
-import { NxPageService }             from '../../services/page.service';
 import { LocalStorageService }       from 'ngx-store';
 import { NxProcessService }          from '../../services/process.service';
 import { NxCloudApiService }         from '../../services/nx-cloud-api';
@@ -52,18 +51,12 @@ export class NxAccountComponent implements OnInit {
                 private accountService: NxAccountService,
                 private dialogs: NxDialogsService,
                 private uriService: NxUriService,
-                private pageService: NxPageService,
                 private menuService: NxMenuService
     ) {
         this.setupDefaults();
     }
 
     ngOnInit(): void {
-        const mode = this.route.snapshot.data.passwordMode;
-
-        const title = (!mode) ? this.LANG.pageTitles.account : this.LANG.pageTitles.changePassword;
-        this.pageService.setPageTitle(title);
-
         if (this.route.snapshot.data.auth) {
             let auth;
             try {

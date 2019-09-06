@@ -20,7 +20,7 @@
         <li class="dropdown-item-container" *ngFor="let lang of languages">
             <a class="dropdown-item inset"
                href
-               (click)="show = false; writeValue(lang.language);"
+               (click)="show = false; change(lang.language);"
                [ngClass]="{'active': lang.language === activeLanguage.language}">
 
                 <span>
@@ -40,7 +40,7 @@
                     <li class="dropdown-item-container" *ngFor="let lang of languagesCol1">
                         <a class="dropdown-item inset"
                            href
-                           (click)="show = false; writeValue(lang.language);"
+                           (click)="show = false; change(lang.language);"
                            [ngClass]="{'selected': lang.language === activeLanguage.language}">
 
                             <span>
@@ -57,7 +57,7 @@
                         <a href
                            class="dropdown-item inset"
                            [ngClass]="{'selected': lang.language === activeLanguage.language}"
-                           (click)="show = false; writeValue(lang.language);">
+                           (click)="show = false; change(lang.language);">
 
                             <span>
                                 <span class="lang-sm" lang="{{lang.language}}"></span>

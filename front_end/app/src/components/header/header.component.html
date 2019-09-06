@@ -61,7 +61,7 @@
                                 <span class="btn-caption" translate>Log In</span>
                             </a>
                         </span>
-                        <span>
+                        <span *ngIf="!this.loginState">
                             <nx-language-select
                                     short="true" altStyle="true"
                                     instantReload="true" instantApply="true"></nx-language-select>
