@@ -51,9 +51,6 @@ export class NxContentComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.articleParam = this.route.snapshot.paramMap.get('article_param');
-        this.state = this.route.snapshot.queryParamMap.get('state');
-        this.id = this.route.snapshot.queryParamMap.get('id');
         this.staticContent = JSON.parse(this.sessionStorage.get('staticContent')) || {};
 
         // Clear staticContent on reload so we can try to fetch from db again
@@ -63,11 +60,17 @@ export class NxContentComponent implements OnInit {
     }
 
     ngAfterViewInit(): void {
-        if (!this.staticContent[this.articleParam]) {
-            this.getArticle();
-        } else {
-            this.loadStaticArticle();
-        }
+        this.route.paramMap.subscribe((paramMap) => {
+            this.articleParam = paramMap.get('article_param');
+            this.state = this.route.snapshot.queryParamMap.get('state');
+            this.id = this.route.snapshot.queryParamMap.get('id');
+
+            if (!this.staticContent[this.articleParam]) {
+                this.getArticle();
+            } else {
+                this.loadStaticArticle();
+            }
+        });
     }
 
     getArticle() {
@@ -102,6 +105,9 @@ export class NxContentComponent implements OnInit {
         this._compiler.compileModuleAndAllComponentsAsync(TemplateModule).then((mod) => {
             const factory = mod.componentFactories.find((comp) => comp.componentType === TemplateComponent);
 
+            this.dynamicTemplate.clear();
+            this.title = '';
+            this.body = '';
             this.dynamicTemplate.createComponent(factory);
             this.loaded = true;
 
