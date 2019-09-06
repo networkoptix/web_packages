@@ -5,13 +5,15 @@
         <header>
             <h2 class="system-name mb-2">{{system.info.name}}</h2>
             <span class="system-owner">
-                        <span translate>Owner</span><span>&nbsp;– </span>
-                        <span class="name">
-                            <span *ngIf="system.isMine; else ownerInfo" translate>you</span>
-                            <ng-template #ownerInfo><span>{{system.info.ownerFullName}}
-                                ({{system.info.ownerAccountEmail}})</span></ng-template>
-                        </span>
+                <span translate>Owner</span><span>&nbsp;–&nbsp;</span>
+                <span>
+                    <span *ngIf="system.isMine" class="system-owner-bold" translate>you</span>
+                    <span *ngIf="!system.isMine">
+                        <span class="system-owner-bold">{{system.info.ownerFullName}}</span>
+                        ({{system.info.ownerAccountEmail}})
                     </span>
+                </span>
+            </span>
         </header>
 
         <nx-section *ngIf="system.permissions.isAdmin">

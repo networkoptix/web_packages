@@ -12,8 +12,8 @@
                            (ngModelChange)="updateEnabled($event);"
                 ></nx-switch>
             </div>
-            <h2 class="users-email mb-2">{{selectedUser.email}}</h2>
-            <span class="users-name">{{selectedUser.fullName}}</span>
+            <h2 class="user-email mb-2">{{selectedUser.email}}</h2>
+            <span class="user-name">{{selectedUser.fullName}}</span>
         </header>
 
         <nx-section>
@@ -29,11 +29,11 @@
                 </nx-permissions-select>
             </div>
             <div>
-                <span class="help-block" [innerHtml]="accessDescription"></span>
+                <span class="help-block pt-0" [innerHtml]="accessDescription"></span>
             </div>
         </nx-section>
         <nx-section *ngIf="systemAvailable && selectedUser.canBeDeleted">
-            <div class="float-left mr-2 mt-2">
+            <div class="float-left mr-2">
                 <button class="btn btn-default" (click)="removeUser(selectedUser)">Remove User</button>
             </div>
         </nx-section>

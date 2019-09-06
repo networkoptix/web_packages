@@ -3,13 +3,17 @@
 .user-name {
     @include ellipsis;
     //width     : 20%;
-    max-width : 175px;
+    // max-width : 175px;
+    font-family : $font-family-regular;
+    font-size : $font-size-base;
 }
 
 .user-email {
     @include ellipsis;
     //width     : 30%;
-    max-width : 240px;
+    // max-width : 240px;
+    font-family : $font-family-medium;
+    line-height: 1.2;
 }
 
 .user-role {

@@ -1,14 +1,14 @@
 @import '../../../styles/typography';
 
 nx-block {
-  .users-email,
+  .user-email,
   .system-name {
     font-family: $font-family-medium;
   }
 
-  .users-name,
+  .user-name,
   .system-owner {
-    font-family: $font-family-base;
+    font-family: $font-family-regular;
     font-size: $font-size-base;
   }
 

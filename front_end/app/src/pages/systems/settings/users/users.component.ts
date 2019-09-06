@@ -1,8 +1,12 @@
-import { Component, Inject, OnDestroy, OnInit, ViewContainerRef } from '@angular/core';
-import { Location }                             from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
-import { NxConfigService }                      from '../../../../services/nx-config';
+import {
+    Component, Inject, OnDestroy,
+    OnInit, ViewContainerRef
+}                                    from '@angular/core';
+import { Location }                  from '@angular/common';
+import { ActivatedRoute }            from '@angular/router';
+import { filter }                    from 'rxjs/operators';
 
+import { NxConfigService }           from '../../../../services/nx-config';
 import { NxPageService }             from '../../../../services/page.service';
 import { NxDialogsService }          from '../../../../dialogs/dialogs.service';
 import { NxSettingsService }         from '../settings.service';
@@ -12,7 +16,6 @@ import { NxAccountService }          from '../../../../services/account.service'
 import { NxProcessService }          from '../../../../services/process.service';
 import { NxSystem }                  from '../../../../services/system.service';
 import { NxApplyService, Watcher }   from '../../../../services/apply.service';
-import { filter } from 'rxjs/operators';
 
 @Component({
     selector   : 'nx-system-user-component',
