@@ -7,7 +7,7 @@
                 <span *ngIf="!selectedUser.isEnabled"
                       class="text-danger" [ngClass]="{'pr-2': selectedUser.canBeEdited}"
                       translate>User disabled</span>
-                <nx-switch *ngIf="selectedUser.canBeEdited"
+                <nx-switch *ngIf="selectedUser.canBeEdited && system.currentUser.isAdmin"
                            [ngModel]="selectedUser.isEnabled"
                            (ngModelChange)="updateEnabled($event);"
                 ></nx-switch>
@@ -17,7 +17,7 @@
         </header>
 
         <nx-section>
-            <div *ngIf="systemAvailable && selectedUser.canBeEdited" class="mr-2 my-2" style="width: 200px">
+            <div *ngIf="systemAvailable && selectedUser.canBeEdited && system.currentUser.isAdmin" class="mr-2 my-2" style="width: 200px">
                 <label for="permissionsSelect" translate>Access level</label>
                 <nx-permissions-select
                         id="permissionsSelect"
@@ -32,8 +32,8 @@
                 <span class="help-block pt-0" [innerHtml]="accessDescription"></span>
             </div>
         </nx-section>
-        <nx-section *ngIf="systemAvailable && selectedUser.canBeDeleted">
-            <div class="float-left mr-2">
+        <nx-section *ngIf="systemAvailable && selectedUser.canBeDeleted && system.currentUser.isAdmin">
+            <div class="float-left mr-2 mt-2">
                 <button class="btn btn-default" (click)="removeUser(selectedUser)">Remove User</button>
             </div>
         </nx-section>

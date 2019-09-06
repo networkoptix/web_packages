@@ -130,9 +130,6 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
 
     removeUser(user) {
         this.selectedUser = user;
-        if (this.accountService.getEmail() === user.email) {
-            // return this.delete();
-        }
         if (this.locked[user.email]) {
             return;
         }
@@ -145,10 +142,8 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 'btn-danger', this.LANG.dialogs.cancelButton)
             .then((result) => {
                 if (result) {
-                    // Run a process of sharing
-                    // $poll.cancel(pollingSystemUpdate);
                     this.selectedUser = user;
-                    this.removingUserProcess.run();
+                    this.removingUserProcess.run().catch(() => {});
                 } else {
                     this.locked[user.email] = false;
                 }
