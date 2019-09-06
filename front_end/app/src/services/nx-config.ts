@@ -286,7 +286,7 @@ export class NxConfigService {
                 maxLength   : 200,
                 debounceTime: 500 // ms
             },
-            menu  : {
+            systemMenu  : {
                 baseUrl: '/systems/',
                 admin  : {
                     id  : 'admin',

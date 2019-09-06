@@ -94,7 +94,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.route.params.subscribe(params => {
             if (params.systemId) {
                 this.systemId = params.systemId;
-                this.content.base = this.CONFIG.menu.baseUrl + this.systemId;
+                this.content.base = this.CONFIG.systemMenu.baseUrl + this.systemId;
                 this.content = {...this.content}; // trigger onChange
                 if (this.system) {
                     this.system.stopPoll();
@@ -108,21 +108,21 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             selectedSection   : '',         // updated by selectedSectionSubject
             selectedSubSection: '',         // updated by selectedSubSectionSubject
             system            : {},         // updated by getSystemInfo
-            base              : this.CONFIG.menu.baseUrl + this.systemId,
+            base              : this.CONFIG.systemMenu.baseUrl + this.systemId,
             level1            : [
                 {
-                    id   : this.CONFIG.menu.admin.id,
-                    icon : this.CONFIG.menu.admin.icon,
+                    id   : this.CONFIG.systemMenu.admin.id,
+                    icon : this.CONFIG.systemMenu.admin.icon,
                     label: this.LANG.systemAdministration,
-                    path : this.CONFIG.menu.admin.path,
+                    path : this.CONFIG.systemMenu.admin.path,
                 }, {
-                    id   : this.CONFIG.menu.users.id,
-                    icon : this.CONFIG.menu.users.icon,
+                    id   : this.CONFIG.systemMenu.users.id,
+                    icon : this.CONFIG.systemMenu.users.icon,
                     label: this.LANG.users,
-                    path : this.CONFIG.menu.users.path,
+                    path : this.CONFIG.systemMenu.users.path,
                     level2: [
                         {
-                            id   : this.CONFIG.menu.buttons.id,
+                            id   : this.CONFIG.systemMenu.buttons.id,
                             items: [
                                 {
                                     id: 'addUser',

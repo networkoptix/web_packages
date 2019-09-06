@@ -51,7 +51,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
         // as only level2 have complex structure
         if (item.level2) {
             levelItems = item.level2.filter((subSection) => {
-                if (!this.CONFIG || subSection.id !== this.CONFIG.menu.buttons.id) {
+                if (!this.CONFIG || subSection.id !== this.CONFIG.systemMenu.buttons.id) {
                     return true;
                 }
             });
@@ -67,7 +67,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
         // as only level2 have complex structure
         if (item.level2) {
             buttons = item.level2.filter((subSection) => {
-                if (this.CONFIG && subSection.id === this.CONFIG.menu.buttons.id) {
+                if (this.CONFIG && subSection.id === this.CONFIG.systemMenu.buttons.id) {
                     return true;
                 }
             })[0] || [] ;
