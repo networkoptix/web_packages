@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { NxConfigService } from './nx-config';
-import { Observable, of, throwError} from 'rxjs';
-import { finalize, retryWhen } from 'rxjs/operators';
+import { from, Observable, of, throwError } from 'rxjs';
+import { finalize, mergeMap, retryWhen } from 'rxjs/operators';
 import { Location } from '@angular/common';
 
 
@@ -26,13 +26,13 @@ class NxSystemAPI {
     *
     * There are several modes for this service:
     * 1. Upper level: working locally (no systemId) or through the cloud (with systemId)
-    * 2. Lower level: workgin with default server (no serverID) or through the proxy (with serverId)
+    * 2. Lower level: working with default server (no serverID) or through the proxy (with serverId)
     *
-    * Service supports authentification methods for all these cases
-    * 1. working locally we use cookie authentification on server
+    * Service supports authentication methods for all these cases
+    * 1. working locally we use cookie authentication on server
     * 2. working through cloud we use cloudAPI method to get auth keys
     *
-    * Service also supports re-authentification?
+    * Service also supports re-authentication?
     *
     *
     * Service also should support global handlers for responses:
@@ -107,9 +107,7 @@ class NxSystemAPI {
         params.auth = this.authGet;
         const fullUrl = `${this.urlBase}${url}`;
         return this.http.get(fullUrl, {params}).pipe(
-            retryWhen((error) => {
-                return this.retryHandler(error);
-            })
+            retryWhen((request) => this.retryHandler(request))
         );
     }
 
@@ -117,24 +115,21 @@ class NxSystemAPI {
         data = data || {};
         const fullUrl = `${this.urlBase}${url}`;
         return this.http.post(fullUrl, data, {params: {auth: this.authPost}}).pipe(
-            retryWhen((error) => {
-                return this.retryHandler(error);
-            })
+            retryWhen((request) => this.retryHandler(request))
         );
     }
 
-    private retryHandler(error) {
-        if (error.status === 401 || error.status === 403  || error.resultCode === 'forbidden') {
-            return this.unauthorizedCallback(error).subscribe(() => {
-                return throwError(error);
-            }, () => {
-                return of();
-            });
-        } else if (error.status === 503) { // Repeat the request once again for 503 error
-            return throwError(error); // this.wrapRequest(method, url, data, true);
-        }
-
-        return of();
+    private retryHandler(request) {
+        return request.pipe(mergeMap((error: any, attempt: number) => {
+            if (attempt === 0) {
+                if (error.status === 401 || error.status === 403 || error.resultCode === 'forbidden') {
+                    return from(this.unauthorizedCallback(error));
+                } else if (error.status === 503) { // Repeat the request once again for 503 error
+                    return of();
+                }
+            }
+            return throwError(error);
+        }));
     }
 
     init(userEmail, systemId, serverId, unauthorizedCallback) {
@@ -149,57 +144,6 @@ class NxSystemAPI {
     cleanId(id) {
         return id.replace('{', '').replace('}', '');
     }
-
-    // private wrapRequest (method, url, data, repeat) {
-    //     const auth = method === 'GET' ? this.authGet : this.authPost;
-    //     const getData = method === 'GET' ? data : undefined;
-    //     const postData = method === 'POST' ? data : undefined;
-    //     const requestUrl = this._setGetParams(url, getData, this.systemId && auth);
-    //
-    //     let canceler = new Promise();
-    //     const request = this.http.request({
-    //         method: method,
-    //         url: requestUrl,
-    //         data: postData,
-    //         timeout: canceler.promise
-    //     });
-    //
-    //     const promise = request.catch((error) => {
-    //         if (error.status === 401 || error.status === 403  || error.data && error.data.resultCode === 'forbidden') {
-    //             if (!repeat && this.unauthorizedCallback) { // first attempt
-    //                 // Here we call a handler for unauthorised request. If handler promises success - we repeat the request once again.
-    //                 // Handler is supposed to try and update auth keys
-    //                 return this.unauthorizedCallback(error).then(function() {
-    //                     return this.wrapRequest(method, url, data, true);
-    //                 }, () => {
-    //                     // $rootScope.$broadcast('unauthorized_' + self.systemId);
-    //                     return Promise.reject(error);
-    //                 });
-    //             }
-    //             // Not authorised request - we lost connection to the system, broadcast this for active controller to handle the situation if needed
-    //             // $rootScope.$broadcast('unauthorized_' + self.systemId);
-    //         }
-    //         if (!repeat && error.status === 503) { // Repeat the request once again for 503 error
-    //             return this.wrapRequest(method, url, data, true);
-    //         }
-    //
-    //         return Promise.reject(error); // We cannot handle the problem at this level, pass it up
-    //     });
-    //
-    //     promise.then(() => {
-    //         canceler = undefined;
-    //     }, () => {
-    //         canceler = undefined;
-    //     });
-    //     promise.abort((reason) => {
-    //         this.abortReason = reason; // Save this information for the promise handler
-    //         if (canceler) {
-    //             canceler.resolve('abort request: ' + reason);
-    //         }
-    //     });
-    //
-    //     return promise;
-    // }
 
     apiHost() {
         if (this.systemId) {
@@ -242,7 +186,7 @@ class NxSystemAPI {
             });
         }
 
-        this.userRequest.finally(function() {
+        this.userRequest.finally(() => {
             this.userRequest = undefined; // Clear cache in case of errors
         });
         return this.userRequest;

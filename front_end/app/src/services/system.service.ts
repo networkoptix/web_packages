@@ -387,6 +387,7 @@ export class NxSystem extends System implements OnDestroy {
     saveUser(user, role) {
         user.email = user.email.toLowerCase();
         const accessRole = role.name || role.label;
+        let userCreated = false;
 
         if (!user.userId) {
             if (user.email === this.currentUserEmail) {
@@ -397,8 +398,8 @@ export class NxSystem extends System implements OnDestroy {
                 return user.email === u.email;
             });
             if (!existingUser) { // user not found - create a new one
+                userCreated = true;
                 existingUser = this.mediaserver.userObject(user.fullName, user.email);
-                this.users.push(existingUser);
             }
             user = existingUser;
 
@@ -414,6 +415,9 @@ export class NxSystem extends System implements OnDestroy {
         // this.cloudApi.share(this.id, user.email, accessRole);
 
         return this.mediaserver.saveUser(user).toPromise().then((result) => {
+            if (userCreated) {
+                this.users.push(user);
+            }
             user.role = role;
             user.accessRole = accessRole;
             return result;
