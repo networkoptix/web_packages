@@ -1,11 +1,13 @@
-<div *ngIf="!registerSuccess && session.fromClient">
-    <landing-component></landing-component>
-    <div class="container">
-        <hr style="margin-bottom: 40px;">
-    </div>
-</div>
-
 <div class="container auth-hidden">
+    <div *ngIf="!registerSuccess && session.fromClient">
+        <div class="promo-block">
+            <landing-display-component></landing-display-component>
+        </div>
+        <div class="container">
+            <hr style="margin-bottom: 40px;">
+        </div>
+    </div>
+
     <h1 class="process-success d-flex align-items-center flex-column mt-5"
         *ngIf="registerSuccess && !activated">
         <span translate>Account is created.</span>
@@ -211,5 +213,6 @@
     </form>
 
     <nx-footer></nx-footer>
-
 </div>
+
+

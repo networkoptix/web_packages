@@ -106,7 +106,6 @@ export class NxRegisterComponent implements OnInit {
 
     ngOnInit(): void {
         this.mode = this.route.snapshot.data.uriParam;
-
         if (this.route.snapshot.params.code) {
             this.code = this.route.snapshot.params.code;
         }
@@ -154,6 +153,7 @@ export class NxRegisterComponent implements OnInit {
         // this.context = $sessionStorage;
 
         this.session.set('fromClient', this.urlProtocol.getSource().isApp);
+        this.session.fromClient = this.urlProtocol.getSource().isApp;
     }
 
     init() {
