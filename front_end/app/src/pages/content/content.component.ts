@@ -65,6 +65,11 @@ export class NxContentComponent implements OnInit {
             this.state = this.route.snapshot.queryParamMap.get('state');
             this.id = this.route.snapshot.queryParamMap.get('id');
 
+            this.dynamicTemplate.clear();
+            this.title = '';
+            this.body = '';
+            this.loaded = false;
+
             if (!this.staticContent[this.articleParam]) {
                 this.getArticle();
             } else {
@@ -105,9 +110,6 @@ export class NxContentComponent implements OnInit {
         this._compiler.compileModuleAndAllComponentsAsync(TemplateModule).then((mod) => {
             const factory = mod.componentFactories.find((comp) => comp.componentType === TemplateComponent);
 
-            this.dynamicTemplate.clear();
-            this.title = '';
-            this.body = '';
             this.dynamicTemplate.createComponent(factory);
             this.loaded = true;
 
