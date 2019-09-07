@@ -172,6 +172,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             this.selectedUser = {... user};
             this.menuService.setSubSection(this.selectedUser.id.replace(/{|}/g, ''));
             this.setPermission(this.selectedUser.role);
+            this.userEnabled.value = this.selectedUser.isEnabled;
             this.applyService.reset();
         }
     }
