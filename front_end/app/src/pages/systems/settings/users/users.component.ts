@@ -14,7 +14,7 @@ import { NxLanguageProviderService } from '../../../../services/nx-language-prov
 import { NxMenuService }             from '../../../../components/menu/menu.service';
 import { NxAccountService }          from '../../../../services/account.service';
 import { NxProcessService }          from '../../../../services/process.service';
-import { NxSystem }                  from '../../../../services/system.service';
+import { NxSystem, NxSystemRole, NxSystemUser }      from '../../../../services/system.service';
 import { NxApplyService, Watcher }   from '../../../../services/apply.service';
 
 @Component({
@@ -32,7 +32,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
     editUser: any;
     locked: any;
     removingUserProcess: any;
-    selectedUser: any;
+    selectedUser: NxSystemUser;
     systemAvailable: boolean;
     system: NxSystem;
     viewContainerRef: ViewContainerRef;
@@ -176,7 +176,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         }
     }
 
-    setPermission(role: any) {
+    setPermission(role: NxSystemRole|any) {
         const userRole = role && role.name ? role.name : this.selectedUser.accessRole;
         this.accessDescription = this.LANG.accessRoles[userRole] ?
                 this.LANG.accessRoles[userRole].description :

@@ -10,15 +10,17 @@ import { flatMap } from 'rxjs/operators';
 import { NxPollService } from './poll.service';
 
 
-interface RoleInterface {
+export interface NxSystemRole {
+    id: string;
     isAdmin: boolean;
     isOwner: boolean;
+    label: string;
     name: string;
     permissions: string;
 }
 
 
-interface UserInterface {
+export interface NxSystemUser {
     accessRole: string;
     canBeDeleted: boolean;
     canBeEdited: boolean;
@@ -36,16 +38,17 @@ interface UserInterface {
     parentId: string;
     permissions: string;
     realm: string;
-    role: RoleInterface;
+    role: NxSystemRole;
     typeId: string;
     url: string;
+    userId: string;
     userRoleId: string;
 }
 
 
 interface SystemInterface {
     accessRole: any;
-    accessRoles: any;
+    accessRoles: NxSystemRole[];
     canMerge: boolean;
     id: string;
     info: any;
@@ -55,13 +58,13 @@ interface SystemInterface {
     mergeInfo: any;
     permissions: any;
     stateMessage: string;
-    users: any;
+    users: NxSystemUser[];
 }
 
 
 class System implements SystemInterface {
     accessRole: any;
-    accessRoles: any;
+    accessRoles: NxSystemRole[];
     canMerge: boolean;
     id: string;
     info: any;
@@ -71,7 +74,7 @@ class System implements SystemInterface {
     mergeInfo: any;
     permissions: any;
     stateMessage: string;
-    users: any;
+    users: NxSystemUser[];
 
     constructor () {
         this.accessRole = '';
@@ -85,7 +88,7 @@ class System implements SystemInterface {
         this.mergeInfo = undefined;
         this.permissions = undefined;
         this.stateMessage = '';
-        this.users = undefined;
+        this.users = [];
     }
 }
 
@@ -100,7 +103,7 @@ export class NxSystem extends System implements OnDestroy {
 
     activeSubscription: any;
     currentUserEmail: string;
-    currentUser: any;
+    currentUser: NxSystemUser;
     mediaserver: any;
 
     infoPromise: any;
@@ -128,7 +131,7 @@ export class NxSystem extends System implements OnDestroy {
     }
 
     init() {
-        this.CONFIG.accessRoles.predefinedRoles.forEach((option) => {
+        this.CONFIG.accessRoles.predefinedRoles.forEach((option: NxSystemRole) => {
             if (option.permissions) {
                 option.permissions = this.normalizePermissionString(option.permissions);
             }
@@ -184,11 +187,12 @@ export class NxSystem extends System implements OnDestroy {
         }
     }
 
-    checkPermissions(offline?) {
+    checkPermissions() {
         this.permissions = {};
         this.accessRole = this.info.accessRole;
+        // console.log(this.info);
         if (this.currentUser) {
-            if (!offline) {
+            if (this.isAvailable) {
                 const role = this.findAccessRole(this.currentUser);
                 this.accessRole = role.name;
             }
@@ -196,7 +200,6 @@ export class NxSystem extends System implements OnDestroy {
             this.permissions.isAdmin = this.isOwner(this.currentUser) || this.isAdmin(this.currentUser);
             this.permissions.editUsers = this.permissions.isAdmin || this.currentUser.permissions.indexOf(this.CONFIG.accessRoles.editUserPermissionFlag) >= 0;
         } else {
-            this.accessRole = this.info.accessRole;
             if (this.isMine) {
                 this.permissions.editUsers = true;
                 this.permissions.editAdmins = true;
@@ -241,7 +244,7 @@ export class NxSystem extends System implements OnDestroy {
         }
         if (!this.infoPromise) {
             this.infoPromise = this.updateSystemAuth().then(() => {
-               return this.getInfoAndPermissions();
+                return this.getInfoAndPermissions();
             });
         }
         return this.infoPromise;
@@ -282,13 +285,13 @@ export class NxSystem extends System implements OnDestroy {
         return user.permissions && user.permissions.indexOf(this.CONFIG.accessRoles.globalAdminPermissionFlag) >= 0;
     }
 
-    updateAccessRoles(predefinedRoles, userDefinedRoles) {
-        predefinedRoles.forEach((role) => {
+    updateAccessRoles(predefinedRoles: NxSystemRole[], userDefinedRoles: NxSystemRole[]) {
+        predefinedRoles.forEach((role: NxSystemRole) => {
             role.permissions = this.normalizePermissionString(role.permissions);
             role.isAdmin = this.isAdmin(role);
         });
 
-        const userRolesList = userDefinedRoles.map((userRole) => {
+        const userRolesList = userDefinedRoles.map((userRole: NxSystemRole) => {
             userRole.isAdmin = this.isAdmin(userRole);
             userRole.permissions = this.normalizePermissionString(userRole.permissions);
             return userRole;
@@ -301,7 +304,7 @@ export class NxSystem extends System implements OnDestroy {
         return this.accessRoles;
     }
 
-    findAccessRole(user) {
+    findAccessRole(user: NxSystemUser) {
         const roles = this.accessRoles || this.CONFIG.accessRoles.predefinedRoles;
         const role = roles.find((role) => {
             // Owner flag has top priority and overrides everything
@@ -387,7 +390,7 @@ export class NxSystem extends System implements OnDestroy {
 
                     if (user.email === this.currentUserEmail) {
                         this.currentUser = user;
-                        this.checkPermissions(true);
+                        this.checkPermissions();
                     }
                     return user;
                 }).sort((userA, userB) => {
@@ -404,7 +407,7 @@ export class NxSystem extends System implements OnDestroy {
         return this.usersPromise;
     }
 
-    saveUser(user, role) {
+    saveUser(user: NxSystemUser, role: NxSystemRole) {
         user.email = user.email.toLowerCase();
         let userCreated = false;
 
@@ -443,7 +446,7 @@ export class NxSystem extends System implements OnDestroy {
         });
     }
 
-    deleteUser(removedUser) {
+    deleteUser(removedUser: NxSystemUser) {
         return this.mediaserver.deleteUser(removedUser.id).toPromise().then(() => {
             this.users = this.users.filter((user) => user !== removedUser);
         });
@@ -481,9 +484,9 @@ export class NxSystem extends System implements OnDestroy {
     }
 
     update() {
-        return from(this.getInfo()).pipe(flatMap((res) => {
+        return from(this.getInfo(true)).pipe(flatMap((res) => {
             if (this.permissions.editUsers) {
-                this.getUsers();
+                return from(this.getUsers(true));
             }
             return of(true);
         }));
