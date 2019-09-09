@@ -38,6 +38,9 @@ export class NxActivateComponent implements OnInit {
     changeSuccess: any;
 
     private setupDefaults() {
+        this.context = {
+            process: ''
+        };
 
         this.LANG = this.language.getTranslations();
         this.pageService.setPageTitle(this.LANG.pageTitles.activate);
@@ -66,7 +69,7 @@ export class NxActivateComponent implements OnInit {
             errorPrefix: this.LANG.errorCodes.cantActivatePrefix
         }).then(() => {
             this.pageService.setPageTitle(this.LANG.pageTitles.activateSuccess);
-            // this.setContext('activateSuccess');
+            this.setContext('activateSuccess');
             this.activationSuccess = true;
             this.loading = false;
             this.dialogs.dismiss();
@@ -109,6 +112,14 @@ export class NxActivateComponent implements OnInit {
         this.uriParam = this.route.snapshot.data.uriParam;
         this.uriParamCode = this.route.snapshot.params.code;
 
+        // Check session context
+        if (this.checkContext('activateSuccess', this.uriParam) ||
+            this.checkContext('restoringSuccess', this.uriParam) ||
+            this.checkContext('changeSuccess', this.uriParam)) {
+
+            this.setContext(undefined);
+        }
+
         this.accountInfo = {
             newPassword : '',
             email       : '', // moved to init()
@@ -149,24 +160,24 @@ export class NxActivateComponent implements OnInit {
         }
     }
 
-    // private setContext(name) {
-    //     this.context.process = name;
-    // }
+    private setContext(name) {
+        this.context.process = name;
+    }
 
-    // private checkContext(name, flag) {
-    //     if (!flag) {
-    //         return false;
-    //     }
-    //     if (this.context.process !== name) {
-    //         this.authorizationService.redirectToHome();
-    //     }
-    //     return true;
-    // }
+    private checkContext(name, flag) {
+        if (!flag) {
+            return false;
+        }
+        if (this.context.process !== name) {
+            this.accountService.redirectToHome();
+        }
+        return true;
+    }
 
     private checkActivate() {
         if (this.accountInfo.activateCode) {
             this.pageService.setPageTitle(this.LANG.pageTitles.activateCode);
-            // this.setContext(undefined);
+            this.setContext(undefined);
             this.activate.run();
         }
     }

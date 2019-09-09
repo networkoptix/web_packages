@@ -77,12 +77,15 @@ export class NxRegisterComponent implements OnInit {
 
             if (this.accountInfo.code) {
                 this.activated = true;
-                this.uriService.updateURI('/register/successActivated', {}, true);
-                this.accountService.login(this.accountInfo.email, this.accountInfo.password, true);
-                this.registerSuccess = true;
-                this.activated = true;
+                this.uriService.updateURI('/register/successActivated', {}, false);
+                this.accountService
+                    .login(this.accountInfo.email, this.accountInfo.password, true)
+                    .then(() => {
+                        this.registerSuccess = true;
+                        this.activated = true;
+                    });
             } else {
-                this.uriService.updateURI('/register/success', {}, true);
+                this.uriService.updateURI('/register/success', {}, false);
                 setTimeout(() => {
                     this.accountService.setEmail(this.accountInfo.email);
                     this.pageService.setPageTitle(this.LANG.pageTitles.registerSuccess);

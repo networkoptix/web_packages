@@ -117,15 +117,16 @@ export class NxAccountService {
     }
 
     redirectToHome() {
-        this.get().then((account) => {
-            if (account) {
-                this.location.path(this.CONFIG.redirectAuthorised);
-            } else {
-                this.location.path(this.CONFIG.redirectUnauthorised);
-            }
-        }, () => {
-            this.location.path(this.CONFIG.redirectUnauthorised);
-        });
+        this.get()
+            .then((account) => {
+                if (account) {
+                    this.location.go(this.CONFIG.redirectAuthorised);
+                } else {
+                    this.location.go(this.CONFIG.redirectUnauthorised);
+                }
+            }).catch(() => {
+                this.location.go(this.CONFIG.redirectUnauthorised);
+            });
     }
 
     setEmail(email) {
