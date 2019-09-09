@@ -37,6 +37,16 @@
         border-color : $brand_core;
         box-shadow   : none;
     }
+    
+    &[class*="ng-invalid"]:not(.ng-untouched) {
+        border-color : $error;
+        color        : $error;
+
+        + .input-group-addon {
+            border-color     : transparent;
+            background-color : transparent;
+        }
+    }
 }
 
 .form-component {
@@ -49,6 +59,13 @@
                 border-color     : transparent;
                 background-color : transparent;
             }
+        }
+    }
+    
+    &.ng-untouched {
+        input {
+            border-color : $light6 !important;
+            color        : $dark9 !important;
         }
     }
 }
