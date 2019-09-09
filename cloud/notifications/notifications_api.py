@@ -1,16 +1,16 @@
-from cms.models import get_cloud_portal_asset, Asset
-from notifications.models import Message, Event, Feedback
-from django.core.exceptions import ValidationError
 import django
+import json
 from django.conf import settings
+from django.core.exceptions import ValidationError
+from urllib.parse import quote_plus
 
 from api.controllers import cloud_api
 from api.helpers import exceptions
 from api.models import Account
-from .models import PushDevice, PushSubscription
-from cms.models import cloud_portal_customization_cache
+from notifications.models import Message, Event, Feedback, PushDevice, PushSubscription
+from cms.models import Asset, cloud_portal_customization_cache, get_cloud_portal_asset
 
-import logging, json
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -27,6 +27,9 @@ def find_message(external_id):
 
 def send(user_email, msg_type, message, customization, external_id=None):
     django.core.validators.validate_email(user_email)
+
+    if 'code' in message:
+        message['code'] = quote_plus(message['code'])
 
     msg = Message(user_email=user_email, type=msg_type,
                   message=message, customization=customization,
