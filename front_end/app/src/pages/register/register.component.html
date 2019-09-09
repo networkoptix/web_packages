@@ -1,5 +1,5 @@
 <div class="container auth-hidden">
-    <div *ngIf="!registerSuccess && session.fromClient">
+    <div *ngIf="!registerSuccess && fromClient">
         <div class="promo-block">
             <landing-display-component></landing-display-component>
         </div>
@@ -23,7 +23,7 @@
     <form id="registerForm" class="form-horizontal" #registerForm="ngForm"
           *ngIf="!registerSuccess" novalidate autocomplete="off">
 
-        <h1 *ngIf="!session.fromClient" translate>Create account</h1>
+        <h1 *ngIf="!fromClient" translate>Create account</h1>
 
         <!-- special hack to prevent autocompletion -->
         <input type="text" style="display:none">

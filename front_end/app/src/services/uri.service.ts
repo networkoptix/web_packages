@@ -36,9 +36,7 @@ export class NxUriService {
             queryParams,
             relativeTo         : this.route,
             replaceUrl         : replace,
-            queryParamsHandling: 'merge',
-            // do not trigger navigation
-            // skipLocationChange : true
+            queryParamsHandling: 'merge'
         });
     }
 
