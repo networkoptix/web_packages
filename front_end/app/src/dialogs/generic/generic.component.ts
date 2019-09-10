@@ -32,8 +32,8 @@ export class GenericModalContent implements OnInit {
         this.activeModal.close(true);
     }
 
-    close() {
-        this.activeModal.close();
+    close(action?) {
+        this.activeModal.close(action);
     }
 }
 

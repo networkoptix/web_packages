@@ -190,10 +190,12 @@ export class NxAccountService {
                         this.LANG.dialogs.logoutAuthorisedContinueButton,
                         undefined,
                         this.LANG.dialogs.logoutAuthorisedLogoutButton
-                ).then(() => {
-                    this.redirectAuthorised();
-                }, () => {
-                    this.logout(true);
+                ).then((result) => {
+                    if (result === this.LANG.dialogs.logoutAuthorisedLogoutButton) {
+                        this.logout(true);
+                    } else {
+                        this.redirectAuthorised();
+                    }
                 });
             }
         });
