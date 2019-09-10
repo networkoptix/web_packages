@@ -467,8 +467,8 @@ a.disabled {
 }
 
 
-/* add beta-symbol after product name everywhere */
-/*.product-name.add-version:after{
+/* add beta-symbol after asset name everywhere */
+/*.asset-name.add-version:after{
   content: "\03B2";
   font-style: italic;
   opacity: 0.5;

@@ -14,8 +14,8 @@ import { NxCloudApiService }         from '../../services/nx-cloud-api';
 export interface MessageParams {
     disclaimer: string;
     email?: string;
-    product: string;
-    productId?: string;
+    asset: string;
+    assetId?: string;
     to?: string;
 }
 
@@ -72,8 +72,8 @@ export class MessageModalContent {
 
         this.initForm();
         this.sendMessage = this.processService.createProcess(() => {
-            const product = this.data.productId || this.data.product;
-            return this.cloudApiService.sendMessage(this.topic, product, this.message, this.userName, this.userEmail).toPromise();
+            const asset = this.data.assetId || this.data.asset;
+            return this.cloudApiService.sendMessage(this.topic, asset, this.message, this.userName, this.userEmail).toPromise();
         }, {
             successMessage: this.LANG.dialogs.message.sent
         }).then(() => {
@@ -96,14 +96,14 @@ export class MessageModalContent {
 
         const title = this.LANG.dialogs.message.title[this.messageType];
         if (this.messageType !== this.config.messageType.integration) {
-            this.title = title.replace('{{product}}', this.data.product);
+            this.title = title.replace('{{asset}}', this.data.asset);
         } else {
             this.title = title.replace('{{companyName}}', this.data.to);
         }
         this.topics = this.config.messageTopics[this.messageType].map((topic) => {
             return {
                 id: topic,
-                name: this.LANG.dialogs.message.topic[topic].replace('{{product}}', this.data.product)
+                name: this.LANG.dialogs.message.topic[topic].replace('{{asset}}', this.data.asset)
             };
         });
 

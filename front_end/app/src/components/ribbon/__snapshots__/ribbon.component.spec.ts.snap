@@ -20,7 +20,7 @@ exports[`NxRibbonComponent renders correctly 1`] = `
       class="action"
     >
       <a
-        href="/admin/cms/product/"
+        href="/admin/cms/asset"
       >
         Go back
       </a>
