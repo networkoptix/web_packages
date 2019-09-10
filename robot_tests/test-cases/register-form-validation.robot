@@ -60,7 +60,7 @@ Weak Password asqwerdf                    mark        hamill      ${valid email}
     [tags]    C41860
 Cyrillic Password Кенгшщзх                mark        hamill      ${valid email}            ${CYRILLIC TEXT}            True
     [tags]    C41860
-Smiley Password ☠☿☂⊗⅓∠∩λ℘웃♞⊀☻★    mark        hamill      ${valid email}            ${SMILEY TEXT}              True
+Smiley Password ☠☿☂⊗⅓∠∩λ℘웃♞⊀☻★      mark        hamill      ${valid email}            ${SMILEY TEXT}              True
     [tags]    C41860
 Glyph Password 您都可以享受源源不絕的好禮及優惠    mark        hamill      ${valid email}            ${GLYPH TEXT}               True
     [tags]    C41860
@@ -70,9 +70,9 @@ Leading Space Password                    mark        hamill      ${valid email}
     [tags]    C41860
 Trailing Space Password                   mark        hamill      ${valid email}            ${BASE PASSWORD}${SPACE}    True
     [tags]    C41860
-Fair Password                             mark        hamill      ${EMPTY}                  ${symbol password}          True
+Fair Password                             mark        hamill      ${SPACE}                  ${symbol password}          True
     [tags]    C41860
-Good Password                             mark        hamill      ${EMPTY}                  ${BASE PASSWORD}            True
+Good Password                             mark        hamill      ${SPACE}                  ${BASE PASSWORD}            True
     [tags]    C41860
 Middle Space Password qweasd 123          mark        hamill      ${valid email}            ${BASE PASSWORD}            True
     [tags]    C41862
@@ -92,7 +92,7 @@ Invalid All                               ${SPACE}    ${SPACE}    noptixqagmail.
     [tags]    C41556
 Terms Unchecked                           mark        hamill      ${valid email}            ${BASE PASSWORD}            False
     [tags]    C41556
-Empty All                                 ${EMPTY}    ${EMPTY}    ${EMPTY}                  ${EMPTY}                    False
+Empty All                                 ${EMPTY}    ${EMPTY}    ${SPACE}                  ${EMPTY}                    False
     [tags]    C41556
 
 *** Keywords ***
@@ -137,6 +137,7 @@ Test Register Invalid
 
 Register Form Validation
     [arguments]    ${first name}    ${last name}    ${email}    ${password}    ${checked}
+    Clear Element Text    ${REGISTER PASSWORD INPUT}
     Input Text    ${REGISTER FIRST NAME INPUT}    ${first name}
     Input Text    ${REGISTER LAST NAME INPUT}    ${last name}
     Input Text    ${REGISTER EMAIL INPUT}    ${email}
@@ -166,8 +167,9 @@ Check Password Badge
 
 Check Email Outline
     [Arguments]    ${email}
+    Sleep    2
     Element Style Should Be    ${REGISTER EMAIL INPUT}    border-color    ${ERROR COLOR}
-#    Element Style Should Be    ${REGISTER EMAIL INPUT}    color    ${ERROR COLOR}
+    Element Style Should Be    ${REGISTER EMAIL INPUT}    color    ${ERROR COLOR WITH OPACITY}
     Run Keyword If    "${email}"=="${EMPTY}" or "${email}"=="${SPACE}"
     ...    Element Should Be Visible    ${EMAIL IS REQUIRED}
     Run Keyword If    "${email}"=="${existing email}"
@@ -178,7 +180,7 @@ Check Email Outline
 Check Password Outline
     [Arguments]    ${pass}
     Element Style Should Be    ${REGISTER PASSWORD INPUT}    border-color    ${ERROR COLOR}
-#    Element Style Should Be    ${REGISTER PASSWORD INPUT}    color    ${ERROR COLOR}
+    Element Style Should Be    ${REGISTER PASSWORD INPUT}    color    ${ERROR COLOR WITH OPACITY}
     Run Keyword If    '''${pass}'''=='''${EMPTY}''' or '''${pass}'''=='''${SPACE}'''
     ...    Element Should Be Visible    ${PASSWORD IS REQUIRED}
     Run Keyword If    '''${pass}'''=='''${7char password}'''
@@ -193,13 +195,13 @@ Check Password Outline
 Check First Name Outline
     [Arguments]    ${first}
     Element Style Should Be    ${REGISTER FIRST NAME INPUT}    border-color    ${ERROR COLOR}
-#    Element Style Should Be    ${REGISTER FIRST NAME INPUT}    color    ${ERROR COLOR}
+    Element Style Should Be    ${REGISTER FIRST NAME INPUT}    color    ${ERROR COLOR WITH OPACITY}
     Element Should Be Visible    ${FIRST NAME IS REQUIRED}
 
 Check Last Name Outline
     [Arguments]    ${last}
     Element Style Should Be    ${REGISTER LAST NAME INPUT}    border-color    ${ERROR COLOR}
-#    Element Style Should Be    ${REGISTER LAST NAME INPUT}    color    ${ERROR COLOR}
+    Element Style Should Be    ${REGISTER LAST NAME INPUT}    color    ${ERROR COLOR WITH OPACITY}
     Element Should Be Visible    ${LAST NAME IS REQUIRED}
 
 Check Terms and Conditions Error

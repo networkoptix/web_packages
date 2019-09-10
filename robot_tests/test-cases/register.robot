@@ -198,9 +198,9 @@ should suggest user to log out, if he was logged in and goes to registration lin
 
 should display promo-block, if user goes to registration from native app
     Go To    ${url}/register?from=client
-    Wait Until Element Is Visible    ${PROMO BLOCK}
+    Wait Until Element Is Visible    ${JUMBOTRON}
     Go To    ${url}/register?from=mobile
-    Wait Until Element Is Visible    ${PROMO BLOCK}
+    Wait Until Element Is Visible    ${JUMBOTRON}
 
 should not display promo-block, if user goes to registration not from native app
     Go To    ${url}/register

@@ -17,5 +17,6 @@
     "ITUNES STORE LINK"        :    "https://itunes.apple.com/eg/app/hd-witness/id1050899754",
     "PLAY STORE LINK"          :    "https://play.google.com/store/apps/details?id=com.networkoptix.nxwitness",
     "IPVD VENDORS SHOWN"       :    "30",
-    "ERROR COLOR"              :    "rgb(217, 42, 42)"
+    "ERROR COLOR"              :    "rgb(217, 42, 42)",
+    "ERROR COLOR WITH OPACITY" :    "rgba(217, 42, 42, 1)"
 }
