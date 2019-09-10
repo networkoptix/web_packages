@@ -19,7 +19,7 @@ export class ApplyModalContent {
 
     apply = () => {
         this.activeModal.close('applied');
-    }
+    };
 
     close() {
         this.activeModal.dismiss('canceled');

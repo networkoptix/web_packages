@@ -1,11 +1,14 @@
-import { Component, Inject, OnInit, Input, ViewEncapsulation, Renderer2, ViewChild } from '@angular/core';
-import { NgbModal, NgbActiveModal, NgbModalRef }                                     from '@ng-bootstrap/ng-bootstrap';
-import { EmailValidator, NgForm }                                                    from '@angular/forms';
-import { NxConfigService }                                                           from '../../services/nx-config';
-import { WINDOW }                                                                    from '../../services/window-provider';
-import { NxLanguageProviderService }                                                 from '../../services/nx-language-provider';
-import { NxProcessService }                                                          from '../../services/process.service';
-import { NxCloudApiService }                                                         from '../../services/nx-cloud-api';
+import {
+    Component, Inject, Input,
+    Renderer2, ViewChild
+}                                    from '@angular/core';
+import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
+import { EmailValidator, NgForm }    from '@angular/forms';
+import { NxConfigService }           from '../../services/nx-config';
+import { WINDOW }                    from '../../services/window-provider';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxProcessService }          from '../../services/process.service';
+import { NxCloudApiService }         from '../../services/nx-cloud-api';
 
 
 export interface MessageParams {
@@ -76,7 +79,6 @@ export class MessageModalContent {
         }).then(() => {
             this.activeModal.close(true);
         });
-
     }
 
     close() {
@@ -122,43 +124,3 @@ export class MessageModalContent {
         this.topicMessage = topic.name;
     }
 }
-
-// @Component({
-//     selector: 'nx-modal-message',
-//     template: '',
-//     encapsulation: ViewEncapsulation.None,
-//     styleUrls: []
-// })
-// export class NxModalMessageComponent implements OnInit {
-//     config: any;
-//     modalRef: NgbModalRef;
-//
-//     constructor(private configService: NxConfigService,
-//                 private modalService: NgbModal) {
-//         this.config = configService.getConfig();
-//     }
-//
-//     private dialog(type: string, data: MessageParams) {
-//         // TODO: Refactor dialog to use generic dialog
-//         // TODO: retire loading ModalContent (CLOUD-2493)
-//         this.modalRef = this.modalService.open(MessageModalContent,
-//                 {
-//                             windowClass: 'modal-holder',
-//                             backdrop: 'static'
-//                         });
-//         this.modalRef.componentInstance.closable = true;
-//         this.modalRef.componentInstance.messageType = type;
-//         this.modalRef.componentInstance.data = data;
-//         this.modalRef.componentInstance.config = this.config;
-//
-//
-//         return this.modalRef;
-//     }
-//
-//     open(type: string, data: MessageParams) {
-//         return this.dialog(type, data).result;
-//     }
-//
-//     ngOnInit() {
-//     }
-// }

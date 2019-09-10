@@ -34,8 +34,6 @@ const appRoutes: Routes = [
     { path: 'activate/:code', component: NxActivateComponent }
 ];
 
-// TODO: Remove it after test
-
 @NgModule({
     imports: [
         CommonModule,

@@ -14,8 +14,6 @@ const appRoutes: Routes = [
     }
 ];
 
-// TODO: Remove it after test
-
 @NgModule({
     imports        : [
         CommonModule,

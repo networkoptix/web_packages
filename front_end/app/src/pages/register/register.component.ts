@@ -1,8 +1,7 @@
 import {
-    Component, Inject,
-    Input, OnDestroy, OnInit, ViewChild
-} from '@angular/core';
-import { Location }                  from '@angular/common';
+    Component, Input,
+    OnInit, ViewChild
+}                                    from '@angular/core';
 import { ActivatedRoute }            from '@angular/router';
 import { NxPageService }             from '../../services/page.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
@@ -12,7 +11,6 @@ import { NxUrlProtocolService }      from '../../services/url-protocol.service';
 import { NxProcessService }          from '../../services/process.service';
 import { NxUriService }              from '../../services/uri.service';
 import { NxCloudApiService }         from '../../services/nx-cloud-api';
-import { WINDOW }                    from '../../services/window-provider';
 
 @Component({
     selector   : 'nx-register-component',
@@ -95,7 +93,6 @@ export class NxRegisterComponent implements OnInit {
             } catch (ex) {}
         }
 
-        // TODO: UNCOMMENT after done with test data
         this.accountInfo = {
             email    : this.accountInfo.email || this.accountService.getEmail(),
             password : '',
@@ -156,7 +153,6 @@ export class NxRegisterComponent implements OnInit {
                                         this.localStorage.set('regActivated', 'activated');
                                     });
                             } else {
-                                // this.location.go('/register/success');
                                 this.uriService.updateURI('/register/success', {}, true);
                                 this.accountService.setEmail(this.accountInfo.email);
                                 this.pageService.setPageTitle(this.LANG.pageTitles.registerSuccess);
