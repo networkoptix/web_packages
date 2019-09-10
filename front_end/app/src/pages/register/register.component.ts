@@ -54,7 +54,7 @@ export class NxRegisterComponent implements OnInit {
                 private uriService: NxUriService,
                 private urlProtocol: NxUrlProtocolService,
                 private route: ActivatedRoute,
-                private localStorageService: LocalStorageService,
+                private localStorage: LocalStorageService,
                 private accountService: NxAccountService,
                 private language: NxLanguageProviderService,
                 private pageService: NxPageService,
@@ -64,7 +64,7 @@ export class NxRegisterComponent implements OnInit {
 
     ngOnInit(): void {
         // Process service trigger route reload (maybe AJS? ) ... revise this after we remove AJS
-        this.context.process = this.localStorageService.get('regProcess');
+        this.context.process = this.localStorage.get('regProcess');
 
         this.uriParam = this.route.snapshot.data.uriParam;
         if (this.route.snapshot.params.code) {
@@ -112,7 +112,7 @@ export class NxRegisterComponent implements OnInit {
 
         this.fromClient = this.urlProtocol.getSource().isApp;
 
-        this.localStorageService.set('regProcess', undefined);
+        this.localStorage.set('regProcess', undefined);
 
         this.register = this.processService.createProcess(() => {
             this.accountService.setEmail(this.accountInfo.email);
@@ -152,8 +152,8 @@ export class NxRegisterComponent implements OnInit {
                                     .then(() => {
                                         this.registerSuccess = true;
                                         this.activated = true;
-                                        this.localStorageService.set('regProcess', 'registerSuccess');
-                                        this.localStorageService.set('regActivated', 'activated');
+                                        this.localStorage.set('regProcess', 'registerSuccess');
+                                        this.localStorage.set('regActivated', 'activated');
                                     });
                             } else {
                                 // this.location.go('/register/success');
@@ -161,7 +161,7 @@ export class NxRegisterComponent implements OnInit {
                                 this.accountService.setEmail(this.accountInfo.email);
                                 this.pageService.setPageTitle(this.LANG.pageTitles.registerSuccess);
                                 this.registerSuccess = true;
-                                this.localStorageService.set('regProcess', 'registerSuccess');
+                                this.localStorage.set('regProcess', 'registerSuccess');
                             }
                         });
     }
