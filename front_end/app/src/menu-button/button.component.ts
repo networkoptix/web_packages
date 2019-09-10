@@ -4,6 +4,7 @@ import { NxSettingsService } from '../pages/systems/settings/settings.service';
 @Component({
     selector: 'nx-menu-button',
     template: `<button class="btn btn-menu btn-clear" 
+                       [disabled]="button.disabled"
                        (click)="action()">{{button.label}}</button>`
 })
 export class NxMenuButtonComponent {
@@ -13,7 +14,7 @@ export class NxMenuButtonComponent {
 
     action() {
         if (this.button.id === 'addUser') {
-            this.settingsService.addUser();
+            this.settingsService.addUser().catch(() => {});
         }
     }
 }

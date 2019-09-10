@@ -127,6 +127,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                                 {
                                     id: 'addUser',
                                     label: this.LANG['Add User'],
+                                    disabled: true
                                 }
                             ]
                         }
@@ -245,6 +246,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             // Retain buttons
             if (usersNode.level2.length && usersNode.level2[0].id === 'buttons') {
                 usersNode.level2 = [usersNode.level2[0]];
+                usersNode.level2[0].items[0].disabled = !this.system.isAvailable;
             } else {
                 usersNode.level2 = [];
             }
