@@ -1,16 +1,18 @@
-<div class="container auth-hidden">
+<nx-pre-loader *ngIf="!loaded"></nx-pre-loader>
+
+<div class="container" *ngIf="loaded">
     <div class="jumbotron">
         <landing-display-component></landing-display-component>
 
-        <p *ngIf="!userEmail" class="d-flex justify-content-center">
-            <a class="btn btn-lg btn-primary auth-hidden"
+        <p *ngIf="!userEmail" class="button d-flex justify-content-center auth-hidden">
+            <a class="btn btn-primary"
                href="/register" role="button" translate>Create Account</a>
         </p>
-        <p *ngIf="userEmail" class="d-flex justify-content-center">
-            <a class="btn btn-lg btn-primary auth-hidden"
+        <p *ngIf="userEmail" class="button d-flex justify-content-center auth-hidden">
+            <a class="btn btn-primary"
                href="/login"
                role="button" translate>Log In</a>
         </p>
     </div>
-    <nx-footer></nx-footer>
+    <nx-footer [center]="true"></nx-footer>
 </div>

@@ -108,7 +108,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                                         this.ribbonService.show(
                                                 this.LANG.integration.previewRibbonText,
                                                 this.LANG.integration.backToEditText,
-                                                this.CONFIG.links.admin.product.replace('%ID%', this.plugin.id)
+                                                this.CONFIG.links.admin.asset.replace('%ID%', this.plugin.id)
                                         );
                                     }
 
@@ -136,8 +136,8 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
             to: this.plugin.information.companyName,
             email: this.plugin.support.supportEmail,
             disclaimer,
-            productId: this.plugin.id,
-            product: this.plugin.information.name,
+            assetId: this.plugin.id,
+            asset: this.plugin.information.name,
         };
         this.dialogs
             .message(this.accountService, this.CONFIG.messageType.integration, data)

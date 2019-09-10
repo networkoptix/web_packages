@@ -18,6 +18,7 @@
 @import '_faq';
 
 @import '../web_common/styles/common';
+@import '../src/components/content-block/content-block.component';
 
 html {
     @include rem-baseline;
@@ -466,8 +467,8 @@ a.disabled {
 }
 
 
-/* add beta-symbol after product name everywhere */
-/*.product-name.add-version:after{
+/* add beta-symbol after asset name everywhere */
+/*.asset-name.add-version:after{
   content: "\03B2";
   font-style: italic;
   opacity: 0.5;
@@ -534,37 +535,17 @@ a.disabled {
     }
 }
 
-.promo-block {
-    padding    : 32px 74px;
-    text-align : center;
-    
-    h2, h4 {
-        color           : $light15;
-        font-family     : $font-family-bold;
-        justify-content : center;
-    }
-    
-    h4 {
-        margin : 0.5rem !important;
-    }
-    
-    .welcome-caption {
-        justify-content : center;
-        color           : $brand_core;
-    }
-}
-
-@include media-breakpoint-up(sm) {
-    .promo-block {
-        padding: 32px 30px;
-    }
-}
-
-@include media-breakpoint-up(lg) {
-    .promo-block {
-        padding: 32px 74px;
-    }
-}
+//@include media-breakpoint-up(sm) {
+//    .promo-block {
+//        padding: 32px 30px;
+//    }
+//}
+//
+//@include media-breakpoint-up(lg) {
+//    .promo-block {
+//        padding: 32px 74px;
+//    }
+//}
 
 .error-page{
     color:$dark10;
@@ -627,37 +608,67 @@ a.disabled {
     }
 }
 
-.cloud-icon img{
-  height: 60px;
-}
-
 .jumbotron {
-    .cloud-icon img {
-        height : 100px;
-    }
-
+    padding: 80px 0 0 0;
     .welcome-caption {
-        font-size       : 63px;
-        color           : $brand-primary !important;
+        font-size       : 64px;
+        font-family     : $font-family-light;
         justify-content : center;
         line-height     : 1;
+        padding: 8px 0;
+        margin-top: 0;
+        margin-bottom: 16px;
     }
 
     .lead {
-        margin-bottom : 15px;
-        font-size     : $h2-font-size;
-        font-family   : $font-family-light;
+        margin-bottom : 48px;
+        padding-bottom: 1px;
+        font-size     : 18px;
+        font-family   : $font-family-regular;
     }
 
     .promo-block {
+        @extend .card;
+        text-align : center;
+        padding: 0;
+        margin: 0 8px 16px;
+
+        @include media-breakpoint-up(sm) {
+            flex: 0 0 calc(100%/3 - 16px);
+        }
+
         h2 {
-            font-family : $font-family-medium;
+            @extend .card--header;
+            font-family     : $font-family-medium;
+            font-size       : 18px;
+            line-height     : unset;
+            padding-top     : 103px;
+            padding-bottom  : 35px;
+            background: $additional_light1 no-repeat 50% 20px;
+            background-size: auto 64px;
+        }
+
+        &:nth-of-type(1) h2 {
+          background-image: url('/static/images/promo/landing_promo_1.png');
+        }
+
+        &:nth-of-type(2) h2 {
+          background-image: url('/static/images/promo/landing_promo_2.png');
+        }
+
+        &:nth-of-type(3) h2 {
+          background-image: url('/static/images/promo/landing_promo_3.png');
+        }
+
+        h2, h4 {
+            justify-content : center;
         }
 
         h4 {
-            margin      : 0.5rem 0;
-            font-family : $font-family-light;
-            font-size   : $h4-font-size;
+            font-family     : $font-family-regular;
+            font-size       : 14px;
+            margin          : 20px 16px;
+            line-height     : 1.4;
         }
     }
 }

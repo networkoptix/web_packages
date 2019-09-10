@@ -3,8 +3,6 @@ import { CommonModule } from '@angular/common';
 
 import { ComponentsModule } from '../components/components.module';
 import { DirectivesModule } from '../directives/directives.module';
-
-// import { NxDialogsService }                             from './dialogs.service';
 import { LoginModalContent }                            from './login/login.component';
 import { DisconnectModalContent }                       from './disconnect/disconnect.component';
 import { RenameModalContent }                           from './rename/rename.component';
@@ -68,9 +66,3 @@ import { ApplyModalContent, NxModalApplyComponent }     from './apply/apply.comp
 })
 export class DialogsModule {
 }
-
-declare var angular: angular.IAngularStatic;
-angular
-    .module('cloudApp.services')
-    .service('nxDialogsService', downgradeInjectable(NxDialogsService));
-

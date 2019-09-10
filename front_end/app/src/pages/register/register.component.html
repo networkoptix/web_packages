@@ -1,9 +1,9 @@
 <div class="container auth-hidden">
-    <div *ngIf="!registerSuccess && fromClient">
-        <div class="promo-block">
+    <div *ngIf="!registerSuccess && fromClient" style="max-width: 991px;" class="m-auto">
+        <div class="jumbotron">
             <landing-display-component></landing-display-component>
         </div>
-        <div class="container">
+        <div class="container p-0">
             <hr style="margin-bottom: 40px;">
         </div>
     </div>
@@ -55,7 +55,7 @@
                        [(ngModel)]="accountInfo.lastName"
                        #lastName="ngModel"
                        id="lastName" name="lastName" maxlength="255"
-                       required autocomplete="off" value="Tsolov">
+                       required autocomplete="off">
             </div>
             <div class="col-md-4">
                 <span class="help-block input-error"
@@ -212,7 +212,7 @@
         </div>
     </form>
 
-    <nx-footer></nx-footer>
+    <nx-footer center="true"></nx-footer>
 </div>
 
 

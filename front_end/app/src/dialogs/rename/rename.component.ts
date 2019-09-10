@@ -1,8 +1,8 @@
 import { Component, Input, Renderer2 } from '@angular/core';
-import { NgbActiveModal }                      from '@ng-bootstrap/ng-bootstrap';
-import { NxLanguageProviderService }           from '../../services/nx-language-provider';
-import { NxProcessService }                    from '../../services/process.service';
-import { NxCloudApiService }                   from '../../services/nx-cloud-api';
+import { NgbActiveModal }              from '@ng-bootstrap/ng-bootstrap';
+import { NxLanguageProviderService }   from '../../services/nx-language-provider';
+import { NxProcessService }            from '../../services/process.service';
+import { NxCloudApiService }           from '../../services/nx-cloud-api';
 
 @Component({
     selector: 'nx-modal-rename-content',
@@ -40,40 +40,3 @@ export class RenameModalContent {
         this.activeModal.close();
     }
 }
-
-// @Component({
-//     selector: 'nx-modal-rename',
-//     template: '',
-//     encapsulation: ViewEncapsulation.None,
-//     styleUrls: []
-// })
-// export class NxModalRenameComponent implements OnInit {
-//     modalRef: NgbModalRef;
-//
-//     constructor(@Inject('languageService') private language: any,
-//                 private modalService: NgbModal) {
-//     }
-//
-//     private dialog(systemId, systemName) {
-//         // TODO: Refactor dialog to use generic dialog
-//         // TODO: retire loading ModalContent (CLOUD-2493)
-//         this.modalRef = this.modalService.open(RenameModalContent,
-//                 {
-//                             windowClass: 'modal-holder',
-//                             backdrop: 'static'
-//                         });
-//         this.modalRef.componentInstance.language = this.language.lang;
-//         this.modalRef.componentInstance.systemId = systemId;
-//         this.modalRef.componentInstance.systemName = systemName;
-//         this.modalRef.componentInstance.closable = true;
-//
-//         return this.modalRef;
-//     }
-//
-//     open(systemId, systemName) {
-//         return this.dialog(systemId, systemName).result;
-//     }
-//
-//     ngOnInit() {
-//     }
-// }

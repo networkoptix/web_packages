@@ -65,7 +65,7 @@ export class NxIntegrationsListComponent implements OnInit, OnDestroy, OnChanges
         this.ribbonService.show(
                 this.LANG.integration.previewRibbonText,
                 this.LANG.integration.backToEditText,
-                this.CONFIG.links.admin.product.replace('%ID%/pages/', '')
+                this.CONFIG.links.admin.asset.replace('%ID%/pages/', '')
         );
     }
 }

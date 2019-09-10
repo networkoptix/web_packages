@@ -288,14 +288,14 @@
             "sent": "Message has been sent.",
             "title": {
                 "integration": "Get in touch with {{companyName}}",
-                "ipvd_feedback_device": "Feedback about {{product}}",
+                "ipvd_feedback_device": "Feedback about {{asset}}",
                 "ipvd_feedback_page": "Feedback for cameras page"
             },
             "topic": {
-                "contact_sales": "Contact sales for {{product}}",
-                "contact_support": "Contact support for {{product}}",
-                "integration_feedback": "Feedback for integration {{product}}",
-                "ipvd_feedback_device": "Feedback about {{product}}",
+                "contact_sales": "Contact sales for {{asset}}",
+                "contact_support": "Contact support for {{asset}}",
+                "integration_feedback": "Feedback for integration {{asset}}",
+                "ipvd_feedback_device": "Feedback about {{asset}}",
                 "ipvd_feedback_page": "Feedback for cameras page"
             }
         },

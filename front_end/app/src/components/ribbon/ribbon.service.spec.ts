@@ -27,7 +27,7 @@ describe('NxRibbonService', () => {
                     visibility: true,
                     message: 'Alcohol! Because no great story started with someone eating a salad.',
                     text : 'Go back',
-                    url    : '/admin/cms/product/'
+                    url    : '/admin/cms/asset'
                 };
                 service.contextSubject = new BehaviorSubject(context);
 

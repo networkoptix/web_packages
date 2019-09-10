@@ -421,7 +421,7 @@ export class NxIpvdComponent implements OnInit {
         const device: string = (param === 'device' && this.activeCamera) ? this.activeCamera.model : '';
         const data: MessageParams = {
             disclaimer: this.LANG.privacyPolicy.ipvd,
-            product: device,
+            asset: device,
         };
         this.dialogs
             .message(this.accountService, type, data)

@@ -97,9 +97,9 @@ export class NxCloudApiService {
         });
     }
 
-    sendMessage(type, product, message, userName?, userEmail?) {
+    sendMessage(type, asset, message, userName?, userEmail?) {
         return this.http.post(this.CONFIG.apiBase + '/feedback', {
-            message, product, type, userName, userEmail
+            message, asset, type, userName, userEmail
         });
     }
 

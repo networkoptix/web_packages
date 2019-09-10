@@ -98,7 +98,7 @@ export class LoginModalContent implements OnInit {
 
     resetForm() {
         if (!this.loginForm.valid) {
-            this.loginForm.controls['login_password'].setErrors(null);
+            this.loginForm.controls.login_password.setErrors(undefined);
             this.wrongPassword = false;
             this.accountBlocked = false;
         }
@@ -113,8 +113,8 @@ export class LoginModalContent implements OnInit {
         this.password = '';
 
         this.login = this.processService.createProcess(() => {
-            this.loginForm.controls['login_email'].setErrors(null);
-            this.loginForm.controls['login_password'].setErrors(null);
+            this.loginForm.controls.login_email.setErrors(undefined);
+            this.loginForm.controls.login_password.setErrors(undefined);
             this.wrongPassword = false;
             this.accountBlocked = false;
 
@@ -124,15 +124,15 @@ export class LoginModalContent implements OnInit {
             errorCodes: {
                 accountNotActivated: () => {
                     this.password = '';
-                    this.loginForm.controls['login_password'].markAsPristine();
-                    this.loginForm.controls['login_password'].markAsUntouched();
+                    this.loginForm.controls.login_password.markAsPristine();
+                    this.loginForm.controls.login_password.markAsUntouched();
 
-                    this.loginForm.controls['login_email'].setErrors({ 'not_activated': true });
+                    this.loginForm.controls.login_email.setErrors({ not_activated: true });
                     this.renderer.selectRootElement('#login_email').select();
                 },
                 notAuthorized: () => {
                     this.wrongPassword = true;
-                    this.loginForm.controls['login_password'].setErrors({ 'nx_wrong_password': true });
+                    this.loginForm.controls.login_password.setErrors({ nx_wrong_password: true });
                     this.password = '';
 
                     this.renderer.selectRootElement('#login_password').focus();
@@ -140,25 +140,24 @@ export class LoginModalContent implements OnInit {
                 },
                 notFound: () => {
                     this.password = '';
-                    this.loginForm.controls['login_password'].markAsPristine();
-                    this.loginForm.controls['login_password'].markAsUntouched();
+                    this.loginForm.controls.login_password.markAsPristine();
+                    this.loginForm.controls.login_password.markAsUntouched();
 
-                    this.loginForm.controls['login_email'].setErrors({ 'no_user': true });
+                    this.loginForm.controls.login_email.setErrors({ no_user: true });
                     this.renderer.selectRootElement('#login_email').select();
                 },
                 accountBlocked: () => {
-                    this.loginForm.controls['login_password'].markAsPristine();
-                    this.loginForm.controls['login_password'].markAsUntouched();
+                    this.loginForm.controls.login_password.markAsPristine();
+                    this.loginForm.controls.login_password.markAsUntouched();
 
                     this.accountBlocked = true;
-                    this.loginForm.controls['login_password'].setErrors({ 'nx_account_blocked': true });
+                    this.loginForm.controls.login_password.setErrors({ nx_account_blocked: true });
                 },
                 wrongParameters: () => {
                 },
                 portalError: this.LANG.errorCodes.brokenAccount
             }
-        });
-        this.login.then(() => {
+        }).then(() => {
             this.activeModal.close();
             if (this.keepPage) {
                 if (this.location.path() === '') {
@@ -189,60 +188,3 @@ export class LoginModalContent implements OnInit {
         this.activeModal.close('canceled');
     }
 }
-
-// @Component({
-//     selector: 'nx-modal-login',
-//     template: '',
-//     encapsulation: ViewEncapsulation.None,
-//     styleUrls: []
-// })
-// export class NxModalLoginComponent implements OnInit {
-//     login: any;
-//     modalRef: NgbModalRef;
-//     location: Location;
-//     closeResult: string;
-//
-//     constructor(@Inject('languageService') private language: any,
-//                 private modalService: NgbModal,
-//                 // private dialogs: NxDialogsService,
-//                 location: Location) {
-//
-//         this.location = location;
-//     }
-//
-//     private dialog(keepPage?) {
-//         // TODO: Refactor dialog to use generic dialog
-//         // TODO: retire loading ModalContent (CLOUD-2493)
-//         this.modalRef = this.modalService.open(LoginModalContent,
-//                 {
-//                             windowClass: 'modal-holder',
-//                             backdrop: 'static',
-//                             size: 'sm'
-//                         });
-//         this.modalRef.componentInstance.language = this.language;
-//         this.modalRef.componentInstance.login = this.login;
-//         this.modalRef.componentInstance.cancellable = !keepPage || false;
-//         this.modalRef.componentInstance.closable = true;
-//         this.modalRef.componentInstance.location = this.location;
-//         this.modalRef.componentInstance.keepPage = (keepPage !== undefined) ? keepPage : true;
-//
-//         return this.modalRef;
-//     }
-//
-//     open(keepPage?) {
-//         return this.dialog(keepPage)
-//                 .result
-//                 // handle how the dialog was closed
-//                 // required if we need to have dismissible dialog otherwise
-//                 // will raise a JS error ( Uncaught [in promise] )
-//                 .then((result) => {
-//                     this.closeResult = `Closed with: ${result}`;
-//                 }, (reason) => {
-//                     this.closeResult = 'Dismissed';
-//                 });
-//     }
-//
-//     ngOnInit() {
-//         // Initialization should be in LoginModalContent.ngOnInit()
-//     }
-// }

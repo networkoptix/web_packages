@@ -36,7 +36,6 @@ const appRoutes: Routes = [
     { path: 'register/:code', component: NxRegisterComponent}
 ];
 
-// TODO: Remove it after test
 
 @NgModule({
     imports: [

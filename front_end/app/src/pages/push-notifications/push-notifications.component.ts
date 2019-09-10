@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { AngularFireMessaging } from '@angular/fire/messaging';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -68,7 +68,7 @@ export class PushComponent implements OnInit {
                 this.setSystems();
                 this.setFirebase();
             }
-        })
+        });
     }
 
     setSystems() {
@@ -251,8 +251,8 @@ export class PushComponent implements OnInit {
             })
         };
         this.http.post('/api/notifications/subscribe', {
-            systemId: systemId,
-            deviceToken: deviceToken,
+            systemId,
+            deviceToken,
             isActive: subState
         }, httpOptions).subscribe(
             (response: any) => {},

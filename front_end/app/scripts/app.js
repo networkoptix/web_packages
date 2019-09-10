@@ -111,132 +111,28 @@ window.L = {};
                 $routeProvider
                     .when('/register/success', {
                         template: ''
-                        // template: '<nx-register-component [uri-param]="uriParam"></nx-register-component>',
-                        // controller: ['$scope', 'getParam', function ($scope, getParam) {
-                        //     $scope.uriParam = getParam;
-                        // }],
-                        // resolve: {
-                        //     getParam: [function () {
-                        //         return 'registerSuccess';
-                        //     }]
-                        // }
                     })
                     .when('/register/successActivated', {
                         template: ''
-                        // template: '<nx-register-component [uri-param]="uriParam"></nx-register-component>',
-                        // controller: ['$scope', 'getParam', function ($scope, getParam) {
-                        //     $scope.uriParam = getParam;
-                        // }],
-                        // resolve: {
-                        //     getParam: [function () {
-                        //         return 'successActivated';
-                        //     }]
-                        // }
-                        // templateUrl: CONFIG.viewsDir + 'regActions.html',
-                        // controller: 'RegisterCtrl',
-                        // resolve: {
-                        //     test: ['$route', function ($route) {
-                        //         $route.current.params.registerSuccess = true;
-                        //         $route.current.params.activated = true;
-                        //     }]
-                        // }
                     })
                     .when('/register/:code', {
                         template: ''
-                        // template: '<nx-register-component [uri-param]="getParam" [uri-param-code]="getCode"></nx-register-component>',
-                        // controller: ['$scope', 'getParam', function ($scope, getParam) {
-                        //     $scope.uriParam = getParam;
-                        //     $scope.uriParamCode = getCode;
-                        // }],
-                        // resolve: {
-                        //     getParam: [function () {
-                        //         return 'code';
-                        //     }],
-                        //     getCode: ['$route', function ($route) {
-                        //         return $route.current.params.code;
-                        //     }]
-                        // }
-                        // templateUrl: CONFIG.viewsDir + 'regActions.html',
-                        // controller: 'RegisterCtrl'
                     })
-                    // .when('/register', {
-                    //     templateUrl: CONFIG.viewsDir + 'regActions.html',
-                    //     controller: 'RegisterCtrl'
-                    // })
                     .when('/register', {
                         template: ''
-                        // template: '<nx-register-component [uri-param]="register"></nx-register-component>'
                     })
                     .when('/account/password', {
                         template: ''
-                        // templateUrl: CONFIG.viewsDir + 'account.html',
-                        // controller: 'AccountCtrl',
-                        // resolve: {
-                        //     test: ['$route', function ($route) {
-                        //         $route.current.params.passwordMode = true;
-                        //     }]
-                        // }
                     })
                     .when('/account', {
                         template: ''
-                        // templateUrl: CONFIG.viewsDir + 'account.html',
-                        // controller: 'AccountCtrl',
-                        // resolve: {
-                        //     test: ['$route', function ($route) {
-                        //         $route.current.params.accountMode = true;
-                        //     }]
-                        // }
                     })
-                    // .when('/systems', {
-                    //     templateUrl: CONFIG.viewsDir + 'systems.html',
-                    //     controller: 'SystemsCtrl'
-                    // })
-                    // .when('/systems/:systemId', {
-                    //     templateUrl: CONFIG.viewsDir + 'system.html',
-                    //     controller: 'SystemCtrl'
-                    // })
                     .when('/systems/:systemId/users', {
                         template: ''
-                        // template: '<nx-system-settings-component [uri-param-system-id]="uriParamSystemId" [param]="callShare"></nx-system-settings-component>',
-                        // controller: ['$scope', 'getSystemId', 'getCallShare', function ($scope, getSystemId, getCallShare) {
-                        //     $scope.uriParamSystemId = getSystemId;
-                        //     $scope.param = getParam;
-                        // }],
-                        // resolve: {
-                        //     getSystemId: ['$route', function ($route) {
-                        //         return $route.current.params.systemId;
-                        //     }],
-                        //     getparam: ['$route', function ($route) {
-                        //         return 'users';
-                        //     }]
-                        // }
                     })
                     .when('/systems/:systemId/users/:userId', {
                         template: ''
                     })
-                    // .when('/systems/:systemId/share', {
-                    //     // title: lang.pageTitles.systemShare,
-                    //     // templateUrl: CONFIG.viewsDir + 'system.html',
-                    //     // controller: 'SystemCtrl',
-                    //     // resolve: {
-                    //     //     test: ['$route', function ($route) {
-                    //     //         $route.current.params.callShare = true;
-                    //     //     }]
-                    //     // }
-                    //     template: '<nx-system-settings-component [uri-param-system-id]="uriParamSystemId" [call-share]="callShare"></nx-system-settings-component>',
-                    //     controller: ['$scope', 'getSystemId', 'getCallShare', function ($scope, getSystemId, getCallShare) {
-                    //         $scope.uriParamSystemId = getSystemId;
-                    //         $scope.callShare = getCallShare;
-                    //     }],
-                    //     resolve: {
-                    //         getSystemId: ['$route', function ($route) {
-                    //             return $route.current.params.systemId;
-                    //         }],
-                    //         getCallShare: ['$route', function ($route) {
-                    //             return true;
-                    //         }]
-                    //     }
-                    // })
                     .when('/systems/:systemId/view', {
                         templateUrl: CONFIG.viewsDir + 'view.html',
                         controller: 'ViewPageCtrl'
@@ -247,19 +143,9 @@ window.L = {};
                     })
                     .when('/systems/:systemId', {
                         template: ''
-                        // template: '<nx-system-settings-component [uri-param-system-id]="uriParamSystemId" ></nx-system-settings-component>',
-                        // controller: ['$scope', 'getSystemId', function ($scope, getSystemId) {
-                        //     $scope.uriParamSystemId = getSystemId;
-                        // }],
-                        // resolve: {
-                        //     getSystemId: ['$route', function ($route) {
-                        //         return $route.current.params.systemId;
-                        //     }]
-                        // }
                     })
                     .when('/systems', {
                         template: ''
-                        // template: '<nx-systems-list-component></nx-systems-list-component>',
                     })
                     .when('/embed/:systemId/view/:cameraId', {
                         templateUrl: CONFIG.viewsDir + 'view.html',
@@ -270,74 +156,27 @@ window.L = {};
                             }]
                         }
                     })
-                    
-                    
                     .when('/activate', {
                         template: ''
-                        // templateUrl: CONFIG.viewsDir + 'activeActions.html',
-                        // controller: 'ActivateRestoreCtrl',
-                        // resolve: {
-                        //     test: ['$route', function ($route) {
-                        //         $route.current.params.reactivating = true;
-                        //     }]
-                        // }
                     })
                     .when('/activate/success', {
                         template: ''
-                        // templateUrl: CONFIG.viewsDir + 'activeActions.html',
-                        // controller: 'ActivateRestoreCtrl',
-                        // resolve: {
-                        //     test: ['$route', function ($route) {
-                        //         $route.current.params.activationSuccess = true;
-                        //     }]
-                        // }
                     })
                     .when('/activate/:activateCode', {
                         template: ''
-                        // templateUrl: CONFIG.viewsDir + 'activeActions.html',
-                        // controller: 'ActivateRestoreCtrl'
                     })
-                    
-                    
-                    
                     .when('/restore_password', {
                         template: ''
-                        // templateUrl: CONFIG.viewsDir + 'activeActions.html',
-                        // controller: 'ActivateRestoreCtrl',
-                        // resolve: {
-                        //     test: ['$route', function ($route) {
-                        //         $route.current.params.restoring = true;
-                        //     }]
-                        // }
                     })
                     .when('/restore_password/sent', {
                         template: ''
-                        // templateUrl: CONFIG.viewsDir + 'activeActions.html',
-                        // controller: 'ActivateRestoreCtrl',
-                        // resolve: {
-                        //     test: ['$route', function ($route) {
-                        //         $route.current.params.restoringSuccess = true;
-                        //     }]
-                        // }
                     })
                     .when('/restore_password/success', {
                         template: ''
-                        // templateUrl: CONFIG.viewsDir + 'activeActions.html',
-                        // controller: 'ActivateRestoreCtrl',
-                        // resolve: {
-                        //     test: ['$route', function ($route) {
-                        //         $route.current.params.changeSuccess = true;
-                        //     }]
-                        // }
                     })
                     .when('/restore_password/:restoreCode', {
                         template: ''
-                        // templateUrl: CONFIG.viewsDir + 'activeActions.html',
-                        // controller: 'ActivateRestoreCtrl'
                     })
-                    
-                    
-                    
                     .when('/content/:page', {
                         template: '',
                     })
@@ -346,14 +185,6 @@ window.L = {};
                     })
                     .when('/login', {
                         template: ''
-                        // title: lang.pageTitles.login,
-                        // templateUrl: CONFIG.viewsDir + 'startPage.html',
-                        // controller: 'StartPageCtrl',
-                        // resolve: {
-                        //     test: ['$route', function ($route) {
-                        //         $route.current.params.callLogin = true;
-                        //     }]
-                        // }
                     })
                     .when('/admin', {
                         resolve: {

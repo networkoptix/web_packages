@@ -88,38 +88,3 @@ export class EmbedModalContent {
         this.activeModal.close();
     }
 }
-
-// @Component({
-//     selector     : 'nx-modal-embed',
-//     template     : '',
-//     encapsulation: ViewEncapsulation.None,
-//     styleUrls    : []
-// })
-// export class NxModalEmbedComponent implements OnInit {
-//     modalRef: NgbModalRef;
-//
-//     constructor(@Inject('languageService') private language: any,
-//                 private modalService: NgbModal) {
-//     }
-//
-//     private dialog() {
-//         // TODO: Refactor dialog to use generic dialog
-//         // TODO: retire loading ModalContent (CLOUD-2493)
-//         this.modalRef = this.modalService.open(EmbedModalContent,
-//                 {
-//                             windowClass: 'modal-holder',
-//                             backdrop: 'static'
-//                         });
-//         this.modalRef.componentInstance.language = this.language.lang;
-//         this.modalRef.componentInstance.closable = true;
-//
-//         return this.modalRef;
-//     }
-//
-//     open(systemId) {
-//         return this.dialog().result;
-//     }
-//
-//     ngOnInit() {
-//     }
-// }

@@ -109,13 +109,16 @@ export class NxActivateComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        // Process service trigger route reload (maybe AJS? ) ... revise this after we remove AJS
+        this.context.process = this.localStorage.get('activateProcess');
+
         this.uriParam = this.route.snapshot.data.uriParam;
         this.uriParamCode = this.route.snapshot.params.code;
 
         // Check session context
         if (this.checkContext('activateSuccess', this.uriParam) ||
-            this.checkContext('restoringSuccess', this.uriParam) ||
-            this.checkContext('changeSuccess', this.uriParam)) {
+                this.checkContext('restoringSuccess', this.uriParam) ||
+                this.checkContext('changeSuccess', this.uriParam)) {
 
             this.setContext(undefined);
         }
@@ -123,7 +126,6 @@ export class NxActivateComponent implements OnInit {
         this.accountInfo = {
             newPassword : '',
             email       : '', // moved to init()
-            // restoreCode: $routeParams.restoreCode,
             activateCode: this.uriParamCode
         };
 
@@ -162,6 +164,7 @@ export class NxActivateComponent implements OnInit {
 
     private setContext(name) {
         this.context.process = name;
+        this.localStorage.set('activateProcess', name);
     }
 
     private checkContext(name, flag) {
