@@ -4,6 +4,7 @@ import json
 from datetime import datetime
 from distutils.util import strtobool
 from django.db import models
+from django.db.utils import ProgrammingError
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from jsonfield import JSONField
@@ -169,9 +170,12 @@ def rename_file(instance, filename):
 
 def get_integration_type():
     # Prevents issue when migrating from empty db
-    integration = AssetType.objects.only('id', 'type').filter(type=AssetType.ASSET_TYPES.integration).first()
-    if integration:
-        return integration.id
+    try:
+        integration = AssetType.objects.only('id', 'type').filter(type=AssetType.ASSET_TYPES.integration).first()
+        if integration:
+            return integration.id
+    except ProgrammingError:
+        pass
     return None
 
 
@@ -379,17 +383,15 @@ class Asset(models.Model):
                 and len(self.customizations.all()) == 1:
             cloud_portal_customization_cache(self.customizations.first().name, force=True)  # invalidate cache
             # TODO: need to update all static right here
-
         if create_group or update_group:
             if create_group:
                 group = create_default_permission_group(orig or self)
                 self.primary_group = group
-                super(Asset, self).save(*args, **kwargs)
+                self.save()
             if self.primary_group and self.created_by:
                 self.primary_group.user_set.add(self.created_by)
                 self.created_by.is_staff = True
                 self.created_by.save()
-
         if self.primary_group and rename_group:
             rename_permission_group(self.primary_group, self)
 

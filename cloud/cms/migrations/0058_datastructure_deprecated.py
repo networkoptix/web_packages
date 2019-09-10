@@ -7,6 +7,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('cms', '0057_product_contact_email'),
+        ('notifications', '0010_feedback')
     ]
 
     operations = [
