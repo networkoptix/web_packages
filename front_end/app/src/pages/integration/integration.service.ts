@@ -3,6 +3,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { NxCloudApiService }           from '../../services/nx-cloud-api';
 import { NxConfigService }             from '../../services/nx-config';
 import { NxUtilsService }              from '../../services/utils.service';
+import { NxLanguageProviderService }   from '../../services/nx-language-provider';
 
 interface Platform {
     file: string;
@@ -16,29 +17,35 @@ interface Platform {
     providedIn: 'root'
 })
 export class IntegrationService implements OnDestroy {
-    config: any = {};
+    CONFIG: any = {};
+
     pluginsSubject = new BehaviorSubject(undefined);
-    selectedSectionSubject = new BehaviorSubject([]);
+    // selectedSectionSubject = new BehaviorSubject([]);
     plugin: any = {};
     inReview: boolean;
     haveCustomBuild: boolean;
 
     constructor(private api: NxCloudApiService,
-                private configService: NxConfigService) {
-
-        this.config = this.configService.getConfig();
+                private configService: NxConfigService,
+                private language: NxLanguageProviderService,
+    ) {
+        this.CONFIG = this.configService.getConfig();
 
         this.getIntegrations()
             .subscribe(result => {
                 const plugins = result && result.data || [];
 
                 plugins.forEach(plugin => {
+                    if (plugin.mine) {
+                        plugin.information.type.push({ id: 'mine', label: 'mine'}); // label is not important - filter by ID
+                    }
+
                     plugin.versionDetails = {
                         version: (plugin.versionDetails) ? this.formatVersion(plugin.versionDetails.version) || '1.0' : '1.0'
                     };
                     this.formatRequirementsAndCompatibility(plugin);
 
-                    plugin.information.logo = plugin.information.logo || this.config.icons.default;
+                    plugin.information.logo = plugin.information.logo || this.CONFIG.icons.default;
 
                     plugin.state = (plugin.pending) ? 'pending' : (plugin.draft) ? 'draft' : undefined;
 
@@ -167,7 +174,7 @@ export class IntegrationService implements OnDestroy {
     setPlatformIcons(plugin) {
         const platformIcons = [];
 
-        this.config.icons.platforms.forEach(icon => {
+        this.CONFIG.icons.platforms.forEach(icon => {
             const platform = plugin.requirementsAndCompatibility
                                    .platforms
                                    .find(platform => {
@@ -204,7 +211,7 @@ export class IntegrationService implements OnDestroy {
                         platform.noFollow = true;
                     }
                 } else {
-                    platform.name = this.config.defaultPlatformNames[platformName];
+                    platform.name = this.CONFIG.defaultPlatformNames[platformName];
                 }
 
                 platform.url = downloadPlatforms[platformName];
@@ -258,9 +265,9 @@ export class IntegrationService implements OnDestroy {
         return this.plugin;
     }
 
-    setSection(section) {
-        this.selectedSectionSubject.next(section);
-    }
+    // setSection(section) {
+    //     this.selectedSectionSubject.next(section);
+    // }
 
     ngOnDestroy() {
         this.pluginsSubject.unsubscribe();

@@ -6,7 +6,7 @@
              placeholder-title="$root.L.common.systemOffline"
              icon-class="'server-offline'"
              class="webclient-placeholder offline"></placeholder>
-<placeholder ng-if="!systemReady && currentSystem.isOnline && unreachable"
+<placeholder ng-if="!systemReady && unreachable"
              placeholder-title="$root.L.common.systemUnreachable"
              icon-class="'server-offline'"
              class="webclient-placeholder offline"></placeholder>
@@ -17,3 +17,5 @@
 <div ng-if="systemReady && currentSystem.isOnline && hasCameras"
      webclient system="system"
      class="container-fluid webclient"></div>
+
+<nx-footer></nx-footer>

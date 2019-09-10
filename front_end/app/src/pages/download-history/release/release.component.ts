@@ -15,7 +15,7 @@ export class ReleaseComponent implements OnInit {
     @Input() lang: any;
     @Input() linkbase: any;
 
-    constructor(@Inject('languageService') private language: any) {
+    constructor() {
     }
 
     ngOnInit(): void {

@@ -7,8 +7,8 @@ from collections import OrderedDict
 from distutils.util import strtobool
 from PIL import Image  # get Pillow
 from zipfile import ZipFile
-from ..models import Context, DataStructure, ProductType
-from cms.serializers import ProductTypeSerializer
+from ..models import Context, DataStructure, AssetType
+from cms.serializers import AssetTypeSerializer
 from cms.controllers.modify_db import GUID_REGEXP
 
 import logging
@@ -38,11 +38,11 @@ def image_meta(data, extension):
         return None
 
 
-def find_context(name, file_path, structure, product_type):
+def find_context(name, file_path, structure, asset_type):
     context = next((context for context in structure["contexts"]
                    if context["name"] == name or file_path and context["file_path"] == file_path), None)
     if not context:
-        db_context = Context.objects.filter(file_path=file_path, product_type=product_type).first()
+        db_context = Context.objects.filter(file_path=file_path, asset_type=asset_type).first()
         translatable = False
         hidden = True
         label = ""
@@ -67,22 +67,24 @@ def find_context(name, file_path, structure, product_type):
     return context
 
 
-def find_structure(name, context, structure_type, product_type, meta=None,
+def find_structure(name, context, structure_type, asset_type, meta=None,
                    description="", value="", advanced=False, optional=False):
     data_structure = next((structure for structure in context["values"] if structure["name"] == name), None)
     if not data_structure:
         # try to populate structure from database
         # Important: here we just find any datastructure with the same name.
         # The goal is to try to get label and description from another asset
-        db_structure = DataStructure.objects.filter(name=name, context__product_type=product_type).first()
+        db_structure = DataStructure.objects.filter(name=name, context__asset_type=asset_type).first()
         if not db_structure:
             db_structure = DataStructure.objects.filter(name=name).first()
-        label = ''
+        label = ""
+        placeholder = ""
         protected = False
         if db_structure:
             label = db_structure.label if db_structure.label != name else ''
             value = db_structure.default if not DataStructure.is_file_or_image(db_structure.type) else ""
-            if db_structure.type in [DataStructure.DATA_TYPES.object, DataStructure.DATA_TYPES.array]:
+            if db_structure.type in [DataStructure.DATA_TYPES.object, DataStructure.DATA_TYPES.array,
+                                     DataStructure.DATA_TYPES.multiselect]:
                 if value:
                     value = json.loads(value)
                 else:
@@ -97,12 +99,14 @@ def find_structure(name, context, structure_type, product_type, meta=None,
             advanced = db_structure.advanced
             optional = db_structure.optional
             protected = db_structure.protected
+            placeholder = db_structure.placeholder
 
         data_structure = OrderedDict([
             ("label", label),
             ("name", name),
             ("value", value),
             ("description", description),
+            ("placeholder", placeholder),
             ("type", structure_type),
             ("advanced", advanced),
             ("optional", optional),
@@ -168,7 +172,7 @@ def templatify_json(json_data, prefix=''):
     return values, json_data
 
 
-def check_if_json (data, short_name, structure, product_type):
+def check_if_json(data, short_name, structure, asset_type):
     if not short_name.lower().endswith('.json'):
         return False
 
@@ -184,7 +188,7 @@ def check_if_json (data, short_name, structure, product_type):
     values, template = templatify_json(json_data)
 
     # Now we create context with that template
-    context = find_context(short_name, short_name, structure, product_type)
+    context = find_context(short_name, short_name, structure, asset_type)
 
     for key, value in values.items():
         record_type = 'Text'
@@ -207,24 +211,24 @@ def check_if_json (data, short_name, structure, product_type):
             record_type = 'guid'
             advanced = True
 
-        find_structure(key, context, record_type, product_type,
+        find_structure(key, context, record_type, asset_type,
                        value=default_value, advanced=advanced, description=description)
     return True
 
 
-def check_if_customizable(data, short_name, structure, product_type):
+def check_if_customizable(data, short_name, structure, asset_type):
     strings = read_cms_strings(data)
     if not strings:
         return False
 
     # customizable file creates new structure
-    context = find_context(short_name, short_name, structure, product_type)
+    context = find_context(short_name, short_name, structure, asset_type)
     for match in strings:
-        find_structure(match[1], context, 'Text', product_type, meta={"regex": ""}, description=match[0])
+        find_structure(match[1], context, 'Text', asset_type, meta={"regex": ""}, description=match[0])
     return True
 
 
-def read_data(data, short_name, context, cms_structure, product_type):
+def read_data(data, short_name, context, cms_structure, asset_type):
     extension = os.path.splitext(short_name)[1][1:]
     if short_name.endswith('DS_Store'):
         return
@@ -235,11 +239,11 @@ def read_data(data, short_name, context, cms_structure, product_type):
         if not meta:
             return {'file': short_name, 'extension': extension}
         structure_type = 'image'
-    elif check_if_json(data, short_name, cms_structure, product_type):
+    elif check_if_json(data, short_name, cms_structure, asset_type):
         return
-    elif check_if_customizable(data, short_name, cms_structure, product_type):
+    elif check_if_customizable(data, short_name, cms_structure, asset_type):
         return
-    find_structure(short_name, context, structure_type, product_type, meta=meta)
+    find_structure(short_name, context, structure_type, asset_type, meta=meta)
 
 
 def iterate_zip(file_descriptor):
@@ -386,40 +390,40 @@ def merge_structure(base_structure, new_structure):
     return merged_structure
 
 
-def process_files(file_iterator, product):
+def process_files(file_iterator, asset):
     log_errors = []
-    structure = OrderedDict([('product', product.name),
-                             ('type', ProductType.PRODUCT_TYPES[product.product_type.type]),
-                             ('single_customization', product.product_type.single_customization),
-                             ('can_preview', product.product_type.can_preview),
+    structure = OrderedDict([('asset', asset.name),
+                             ('type', AssetType.ASSET_TYPES[asset.asset_type.type]),
+                             ('single_customization', asset.asset_type.single_customization),
+                             ('can_preview', asset.asset_type.can_preview),
                              ('contexts', [])])
-    find_context('root', '.', structure, product.product_type)
+    find_context('root', '.', structure, asset.asset_type)
     for short_name, context_name, data in iterate_contexts(file_iterator):
         if "._" in short_name:
             continue
-        context = find_context(context_name, context_name, structure, product.product_type)
-        error = read_data(data, short_name, context, structure, product.product_type)
+        context = find_context(context_name, context_name, structure, asset.asset_type)
+        error = read_data(data, short_name, context, structure, asset.asset_type)
         if error:
             log_errors.append(error)
     return [structure], log_errors
 
 
-def from_database(product, use_actual_values=False, draft=False):
-    return [ProductTypeSerializer(product.product_type, use_actual_values=use_actual_values,
-                                  product=product, lang=product.default_language, draft=draft).data]
+def from_database(asset, use_actual_values=False, draft=False):
+    return [AssetTypeSerializer(asset.asset_type, use_actual_values=use_actual_values,
+                                asset=asset, lang=asset.default_language, draft=draft).data]
 
 
-def from_directory(directory, product):
-    return process_files(iterate_directory(directory), product)
+def from_directory(directory, asset):
+    return process_files(iterate_directory(directory), asset)
 
 
-def from_zip(file_descriptor, product):
-    return process_files(iterate_zip(file_descriptor), product)
+def from_zip(file_descriptor, asset):
+    return process_files(iterate_zip(file_descriptor), asset)
 
 
-def merge_db_with_archive(file_descriptor, product):
-    db_structure = from_database(product, use_actual_values=False)[0]
-    archive_structure = from_zip(file_descriptor, product)[0][0]
+def merge_db_with_archive(file_descriptor, asset):
+    db_structure = from_database(asset, use_actual_values=False)[0]
+    archive_structure = from_zip(file_descriptor, asset)[0][0]
     return merge_structure(db_structure, archive_structure)
 
 

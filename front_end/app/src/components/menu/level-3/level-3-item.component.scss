@@ -1,4 +1,68 @@
+@import '../../../../styles/theme_palette';
+@import '../../../../styles/theme_variables';
+@import '../../../styles/mixins';
+
 .menu-level-3 {
-    color        : blue;
-    padding-left : 20px;
+    position         : relative;
+    background-color : $light5;
+    font-family      : $font-family-medium;
+    font-size        : $font-size-base;
+    color            : $dark9;
+    border-radius    : 0;
+    text-decoration  : none;
+    padding-left     : .75rem;
+    padding-right    : .75rem;
+    display          : block;
+    white-space      : nowrap;
+    overflow         : hidden;
+    line-height      : 26px;
+
+    &:hover {
+        background-color : $light6;
+    }
+
+    &:active {
+        background-color : $light7;
+    }
+
+    & > div {
+        line-height: 26px;
+    }
+
+    &-icon {
+        float           : left;
+        margin-right    : .5rem;
+        display         : flex;
+        align-items     : center;
+        justify-content : center;
+        width           : 18px;
+        height          : 26px;
+    }
+
+    &.selected {
+        background-color : $light16 !important;
+        color            : $light1 !important;
+    }
+
+    &.item-disabled {
+        color : $light16;
+
+        .menu-level-3-additional {
+            color : $light1;
+        }
+    }
+
+    span {
+        color : $light16;
+    }
 }
+
+.menu-level-3-additional {
+    color : $light16;
+    font-family: $font-family-regular;
+}
+
+//.menu-level-3 {
+//    color        : blue;
+//    padding-left : 20px;
+//}

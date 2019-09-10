@@ -1,0 +1,15 @@
+@import '../../../../styles/typography';
+
+.system-owner {
+    font-family : $font-family-regular;
+    font-size   : $font-size-base;
+    
+    &-bold {
+        font-family: $font-family-bold;
+    }
+}
+
+.system-name {
+    font-family : $font-family-medium;
+    line-height: 1.2;
+}

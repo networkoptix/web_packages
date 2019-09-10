@@ -1,77 +1,233 @@
-import { Inject, Injectable }         from '@angular/core';
-import './../dialogs/dialogs.scss';
-import { NxModalLoginComponent }      from './login/login.component';
-import { NxModalGenericComponent }    from './generic/generic.component';
-import { NxModalShareComponent }      from './share/share.component';
-import { NxModalDisconnectComponent } from './disconnect/disconnect.component';
-import { NxModalRenameComponent }     from './rename/rename.component';
-import { NxModalMergeComponent }      from './merge/merge.component';
-import { NxModalEmbedComponent }      from './embed/embed.component';
-import { NxModalMessageComponent }    from './message/message.component';
+import { Inject, Injectable } from '@angular/core';
+import { DOCUMENT, Location } from '@angular/common';
+import { DomSanitizer }       from '@angular/platform-browser';
+import { NgbModal }                  from '@ng-bootstrap/ng-bootstrap';
 
-@Injectable()
+import './../dialogs/dialogs.scss';
+
+import { NxToastService }            from './toast.service';
+import { LoginModalContent }         from './login/login.component';
+import { NxLanguageProviderService } from '../services/nx-language-provider';
+import { GenericModalContent }       from './generic/generic.component';
+import { AddUserModalContent }       from './add-user/add-user.component';
+import { DisconnectModalContent }    from './disconnect/disconnect.component';
+import { RenameModalContent }        from './rename/rename.component';
+import { MessageModalContent }       from './message/message.component';
+import { EmbedModalContent }         from './embed/embed.component';
+import { MergeModalContent }         from './merge/merge.component';
+import { NxConfigService }           from '../services/nx-config';
+import { NxAccountService }          from '../services/account.service';
+import { ApplyModalContent }         from './apply/apply.component';
+
+@Injectable({ providedIn: 'root' })
 export class NxDialogsService {
 
-    constructor(@Inject('ngToast') private toast: any,
-                private loginModal: NxModalLoginComponent,
-                private genericModal: NxModalGenericComponent,
-                private disconnectModal: NxModalDisconnectComponent,
-                private renameModal: NxModalRenameComponent,
-                private mergeModal: NxModalMergeComponent,
-                private messageModel: NxModalMessageComponent,
-                private embedModal: NxModalEmbedComponent,
-                private shareModal: NxModalShareComponent) {
+    LANG: any = {};
+    CONFIG: any = {};
+    location: any;
+    closeResult: any;
+
+    constructor(@Inject(DOCUMENT) private document: any,
+                private modalService: NgbModal,
+                private toastService: NxToastService,
+                private language: NxLanguageProviderService,
+                private domSanitizer: DomSanitizer,
+                location: Location,
+                private configService: NxConfigService,
+    ) {
+        this.LANG = this.language.getTranslations();
+        this.CONFIG = this.configService.getConfig();
+        this.location = location;
     }
 
     dismiss() {
-        this.toast.dismiss();
+        this.toastService.remove();
     }
 
     notify(message, type, hold?) {
         type = type || 'info';
         hold = hold || false;
 
-        return this.toast.create({
-            additionalClasses: 'button-fix',
-            className        : type,
-            content          : message,
-            dismissOnTimeout : !hold,
-            dismissOnClick   : !hold,
-            dismissButton    : hold
-        });
+        const options = {
+            autohide: !hold,
+            classname: type,
+            delay: this.CONFIG.alertTimeout
+        };
+
+        return this.toastService.show(message, options);
+    }
+
+    createModal(modal, options, inputs) {
+        const modalRef = this.modalService.open(modal, options);
+        Object.assign(modalRef.componentInstance, inputs);
+        return modalRef.result;
+    }
+
+    alert(message, title) {
+        const options: any = {
+            windowClass: 'modal-holder',
+            backdrop   : 'static'
+        };
+
+        const params: any = {
+            message    : this.domSanitizer.bypassSecurityTrustHtml(message),
+            title,
+            actionLabel: this.LANG.dialogs.okButton,
+            buttonType : 'default',
+            cancelLabel: this.LANG.dialogs.cancelButton,
+            buttonClass: 'btn-primary',
+            hasFooter  : true,
+            cancellable: true,
+            closable   : true,
+        };
+
+        return this.createModal(GenericModalContent, options, params);
+    }
+
+    apply(applyFunc, discardFunc) {
+        return this.createModal(ApplyModalContent, {}, {applyFunc, discardFunc});
     }
 
     confirm(message, title, actionLabel, actionType?, cancelLabel?) {
-        // title, template, url, content, hasFooter, cancellable, params, closable, actionLabel, buttonType, size
-        return this.genericModal.openConfirm(message, title, actionLabel, actionType, cancelLabel);
+        const options: any = {
+            windowClass: 'modal-holder',
+            backdrop   : 'static'
+        };
+
+        const params: any = {
+            message : this.domSanitizer.bypassSecurityTrustHtml(message),
+            title,
+            actionLabel,
+            buttonType : actionType || 'default',
+            cancelLabel,
+            buttonClass : actionType || 'btn-primary',
+            hasFooter : true,
+            cancellable : false,
+            closable : true,
+        };
+
+        return this.createModal(GenericModalContent, options, params);
     }
 
+    login(account: NxAccountService, keepPage?, redirectClose?) {
+        const options: any = {
+            windowClass: 'modal-holder',
+            backdrop   : 'static',
+            size       : 'sm'
+        };
 
-    login(keepPage?, redirectClose?) {
-        return this.loginModal.open(keepPage, redirectClose);
+        const params: any = {
+            account,
+            login        : this.login,
+            cancellable  : !keepPage || false,
+            closable     : true,
+            location     : this.location,
+            keepPage     : (keepPage !== undefined) ? keepPage : true,
+            redirectClose: redirectClose || false
+        };
+
+        return this.createModal(LoginModalContent, options, params)
+                    // handle how the dialog was closed
+                    // required if we need to have dismissible dialog otherwise
+                    // will raise a JS error ( Uncaught [in promise] )
+                   .then((result) => {
+                       this.closeResult = `Closed with: ${result}`;
+
+                       if (redirectClose && result === 'canceled') {
+                           this.document.location.href = this.CONFIG.redirectUnauthorised;
+                       }
+                   }, (reason) => {
+                       this.closeResult = 'Dismissed';
+                   });
     }
 
-    share(system?, user?) {
-        return this.shareModal.open(system, user);
+    addUser(account: NxAccountService, system?, user?) {
+        const options: any = {
+            windowClass: 'modal-holder',
+            backdrop   : 'static'
+        };
+
+        const params: any = {
+            account,
+            system,
+            user,
+            closable   : true,
+        };
+
+        return this.createModal(AddUserModalContent, options, params);
     }
 
     disconnect(systemId) {
-        return this.disconnectModal.open(systemId);
+        const options: any = {
+            windowClass: 'modal-holder',
+            backdrop   : 'static'
+        };
+
+        const params: any = {
+            systemId,
+            closable: true,
+        };
+
+        return this.createModal(DisconnectModalContent, options, params);
     }
 
     rename(systemId, systemName) {
-        return this.renameModal.open(systemId, systemName);
+        const options: any = {
+            windowClass: 'modal-holder',
+            backdrop   : 'static'
+        };
+
+        const params: any = {
+            systemId,
+            systemName,
+            closable: true,
+        };
+
+        return this.createModal(RenameModalContent, options, params);
     }
 
     merge(system, systems, user) {
-        return this.mergeModal.open(system, systems, user);
+        const options: any = {
+            windowClass: 'modal-holder',
+            backdrop   : 'static'
+        };
+
+        const params: any = {
+            user,
+            system,
+            systems,
+            closable   : true,
+        };
+
+        return this.createModal(MergeModalContent, options, params);
     }
 
-    message(type, data) {
-        return this.messageModel.open(type, data);
+    message(account: NxAccountService, type, data): Promise<any> {
+        const options: any = {
+            windowClass: 'modal-holder',
+            backdrop   : 'static'
+        };
+
+        const params: any = {
+            account,
+            messageType : type,
+            data,
+            closable: true,
+        };
+
+        return this.createModal(MessageModalContent, options, params);
     }
 
-    embed(system) {
-        return this.embedModal.open(system);
+    embed(systemId) {
+        const options: any = {
+            windowClass: 'modal-holder',
+            backdrop   : 'static'
+        };
+
+        const params: any = {
+            closable   : true,
+        };
+
+        return this.createModal(EmbedModalContent, options, params);
     }
 }

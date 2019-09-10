@@ -15,9 +15,9 @@
     <div class="breadcrumbs">
         <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
         &rsaquo; <a href="{% url 'admin:app_list' app_label=opts.app_label %}">{{ opts.app_config.verbose_name }}</a>
-        &rsaquo; <a href="{% url 'admin:cms_product_changelist' %}">{{ product_opts.verbose_name_plural|capfirst }}</a>
-        &rsaquo; <a href="{% url 'admin:cms_product_change' product.id %}"> {{ product.name }}</a>
-        &rsaquo; <a href="{% url 'admin:pages' product.id %}"> Pages </a>
+        &rsaquo; <a href="{% url 'admin:cms_asset_changelist' %}">{{ asset_opts.verbose_name_plural|capfirst }}</a>
+        &rsaquo; <a href="{% url 'admin:cms_asset_change' asset.id %}"> {{ asset.name }}</a>
+        &rsaquo; <a href="{% url 'admin:pages' asset.id %}"> Pages </a>
         &rsaquo; {% trans 'Edit'%} <span>{{ original.get_nice_name }}</span>
     </div>
 {% endblock %}
@@ -27,7 +27,7 @@
 <form id="context_form" class="aligned" action="" enctype="multipart/form-data" method="post" novalidate>
     {% csrf_token %}
     <input type="hidden" name="context_id" value="{{ original.id }}">
-    <input type="hidden" name="product_id" value="{{ product.id }}">
+    <input type="hidden" name="asset_id" value="{{ asset.id }}">
     <input type="hidden" name="currentLanguage" value="{{ language_code }}">
     <input type="hidden" id="languageChanged">
     {% for field in custom_form %}
@@ -41,8 +41,8 @@
             {% get_data_structure field.name original as data_structure %}
             {% get_datastructure_type data_structure as data_structure_type %}
             {% is_external_file_or_image field.name original as is_external %}
-            {% is_protected data_structure product as protected %}
-            {% has_value field.name product original language as record_exists %}
+            {% is_protected data_structure asset as protected %}
+            {% has_value field.name asset original language as record_exists %}
             <label {% if data_structure.advanced or protected %} class="text-danger" {% endif %}
                     for="id_{{ field.name }}">{{ field.label }}{% if not data_structure.optional %}*{% endif %}
                 {% if user.is_superuser %}<p class="help">{{ field.name }}</p>{% endif %}
@@ -83,7 +83,7 @@
                                  src="{{ field.value }}">
                         {% else %}
                         <a href={% if not is_external %}
-                                    "{% url 'download_file' field.name %}?product_id={{ product.id }}&lang={{ language_code }}&draft"
+                                    "{% url 'download_file' field.name %}?asset_id={{ asset.id }}&lang={{ language_code }}&draft"
                                 {% else %}
                                     "{{ field.value }}"
                                 {% endif %} download>
@@ -109,7 +109,7 @@
         </div>
     </div>
     {% endfor %}
-    {% has_permission user product 'cms.edit_content' as can_edit_content %}
+    {% has_permission user asset 'cms.edit_content' as can_edit_content %}
     {% if can_edit_content %}
         <div class="submit-row">
             {% if preview_link %}
@@ -117,10 +117,10 @@
             {% endif %}
             {% if user.is_superuser and context.file_path %}
                 <a class="btn btn-sm btn-default"
-                   href="{% url 'download_file' context.file_path %}?product_id={{ product.id }}&lang={{ language.code }}&draft"
+                   href="{% url 'download_file' context.file_path %}?asset_id={{ asset.id }}&lang={{ language.code }}&draft"
                    download>Download Draft</a>
             {% endif %}
-            {% if product.can_preview_on_portal %}
+            {% if asset.can_preview_on_portal %}
                 <button class="btn btn-sm btn-info" type="submit" name="Preview">Save draft & Open preview</button>
             {% else %}
                 <button class="btn btn-sm btn-info" type="submit" name="SaveDraft">Save Draft</button>
@@ -135,11 +135,11 @@
     var bytesToMb = "{{ BYTES_TO_MB }}";
 
     {% if preview_link %}
-        window.open("{{ preview_link }}", '', '_blank,noopener,noreferrer');
+        window.open("{{ preview_link | safe }}", '', '_blank,noopener,noreferrer');
     {% endif %}
 
     function openPreview() {
-        window.open("{{ preview_link }}", '', '_blank,noopener,noreferrer');
+        window.open("{{ preview_link | safe }}", '', '_blank,noopener,noreferrer');
     }
 
     function wasTouched() {
@@ -249,6 +249,13 @@
 
     tinymce.init({
         selector: '.tinymce',
+        paste_postprocess: function(plugin, args) {
+            $(args.node).find('img').each(function () {
+                $(this).on('error', function() {
+                    tinymce.activeEditor.dom.remove(tinymce.activeEditor.dom.select('img[src="' + this.currentSrc +'"]'));
+                });
+            });
+        },
         menubar: false,
         resize: 'both',
         theme: 'advanced',

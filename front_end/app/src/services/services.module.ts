@@ -1,12 +1,16 @@
 import { NgModule }                  from '@angular/core';
 import { CommonModule }              from '@angular/common';
+import { downgradeInjectable }       from '@angular/upgrade/static';
+
 import { NxLanguageProviderService } from './nx-language-provider';
 import { NxConfigService }           from './nx-config';
 import { NxAppStateService }         from './nx-app-state.service';
-import { downgradeInjectable }       from '@angular/upgrade/static';
 import { NxUtilsService }            from './utils.service';
 import { NxPageService }             from './page.service';
-
+import { NxSystemsService }          from './systems.service';
+import { NxAccountService }          from './account.service';
+import { NxUrlProtocolService }      from './url-protocol.service';
+import { NxApplyService }            from './apply.service';
 
 @NgModule({
     imports        : [
@@ -18,10 +22,14 @@ import { NxPageService }             from './page.service';
     ],
     providers      : [
         NxAppStateService,
+        NxApplyService,
         NxLanguageProviderService,
         NxConfigService,
         NxUtilsService,
         NxPageService,
+        NxSystemsService,
+        NxAccountService,
+        NxUrlProtocolService,
     ],
     exports        : []
 })
@@ -34,5 +42,8 @@ angular
     .service('nxLanguageService', downgradeInjectable(NxLanguageProviderService))
     .service('nxConfigService', downgradeInjectable(NxConfigService))
     .service('nxPageService', downgradeInjectable(NxPageService))
-    .service('nxAppStateService', downgradeInjectable(NxAppStateService));
+    .service('nxAppStateService', downgradeInjectable(NxAppStateService))
+    .service('nxAccountService', downgradeInjectable(NxAccountService))
+    .service('nxUrlProtocolService', downgradeInjectable(NxUrlProtocolService))
+    .service('nxSystemsService', downgradeInjectable(NxSystemsService));
 

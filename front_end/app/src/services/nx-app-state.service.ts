@@ -11,7 +11,6 @@ export class NxAppStateService {
 
     constructor(private _config: NxConfigService) {
         this.config = this._config.getConfig();
-        this.footerVisibleObservable.next(this.config.showHeaderAndFooter);
     }
 
     setFooterVisibility(visibile) {

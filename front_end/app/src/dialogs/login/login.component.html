@@ -14,7 +14,7 @@
             <input type="email" class="form-control"
                    id="login_email" name="login_email" #login_email="ngModel"
                    [(ngModel)]="auth.email"
-                   pattern="{{ config.emailRegex }}" maxlength="255"
+                   pattern="{{ CONFIG.emailRegex }}" maxlength="255"
                    required nxFocusMe>
             <div *ngIf="login_email.invalid && login_email.errors.no_user" class="clearfix">
                 <div class="input-error float-left" translate>Account not found</div>

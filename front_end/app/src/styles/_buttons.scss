@@ -123,6 +123,18 @@ button, .btn {
     }
 }
 
+.btn.btn-menu {
+    height           : 28px;
+    color            : $dark9;
+    border           : 1px solid $light10;
+    background-color : transparent;
+    max-width        : 180px;
+    display          : flex;
+    align-content    : center;
+    justify-content  : center;
+    border-radius    : $border-radius-base !important;
+}
+
 .btn.btn-clear {
     color            : $dark9;
     background-color : transparent;
@@ -210,7 +222,7 @@ button, .btn {
     &:hover {
         color: $light1;
     }
-    
+
     .close-button {
         position        : absolute;
         right           : 0;
@@ -325,15 +337,15 @@ button, .btn {
     @include media-breakpoint-down(md) {
         padding : 0 .75rem;
     }
-    
+
     .glyphicon {
         display : block;
-        margin  : 0;
+        margin: 0;
         @include media-breakpoint-up(md) {
             display : none;
         }
     }
-    
+
     .btn-caption {
         display : none;
         @include media-breakpoint-up(md) {
@@ -341,3 +353,4 @@ button, .btn {
         }
     }
 }
+

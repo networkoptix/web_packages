@@ -1,4 +1,4 @@
-<form *ngIf="lang" #messageForm="ngForm" name="messageForm" novalidate>
+<form *ngIf="LANG" #messageForm="ngForm" name="messageForm" novalidate>
     <div class="modal-header">
         <h1 class="modal-title">{{ title }}</h1>
         <button type="button" class="close"
@@ -60,7 +60,7 @@
     <div class="modal-footer">
         <nx-process-button [process]="sendMessage"
                            [form]="feedbackForm"
-                           action-type="'primary'"
+                           [actionType]="'primary'"
                            buttonText="{{ 'Send' | translate }}"></nx-process-button>
 
         <button type="button" class="btn btn-default" (click)="close()" translate>Cancel</button>

@@ -6,10 +6,10 @@
                 <div class="search-group" [ngClass]="{'mr-3' : layout == 'full'}">
                     <span class="glyphicon glyphicon-search icon-search"></span>
                     <input [(ngModel)]="localFilter.query"
-                           [ngModelOptions]="{debounceTime : config.search.debounceTime}"
+                           [ngModelOptions]="{debounceTime : CONFIG.search.debounceTime}"
                            (ngModelChange)="modelChanged()"
                            [ngClass]="{'non-empty': localFilter.query && localFilter.query != ''}"
-                           [maxLength]="config.search.maxLength"
+                           [maxLength]="CONFIG.search.maxLength"
                            type="text"
                            class="form-control search-input"
                            name="query"
@@ -23,7 +23,7 @@
                 <div class="float-left btn btn-big btn-tag-selected mt-3 mt-md-0 mr-1"
                         *ngIf="numberFilters != 0 && layout == 'full'">
 
-                    <span class="filter-label" [innerHTML]="filterSelected"></span>
+                    <span class="filter-label" [innerHTML]="filterSelected" dir="auto"></span>
                     <span class="close-button" (click)="resetFilters()">
                         <span class="glyphicon tag-close-icon"></span>
                     </span>
@@ -52,7 +52,6 @@
                     <label style="text-transform: capitalize">{{ select.label }}</label>
                     <nx-select [name]="select.label"
                                [items]="select.items"
-                               label="optionLabel"
                                [(ngModel)]="select.selected"
                                (ngModelChange)="modelChanged()"
                                [selected]="select.selected ? select.selected : null">

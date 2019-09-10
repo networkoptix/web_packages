@@ -9,7 +9,27 @@ from cloud import settings
 from cms.admin import CMSAdmin
 from api.forms import *
 from api.models import *
+from cms.models import *
 from django_csv_exports.admin import CSVExportAdmin
+
+from django.contrib.auth.models import Permission
+
+
+@admin.register(Permission)
+class PermissionAdmin(CMSAdmin):
+    list_display = ['id', 'name', 'codename', 'asset_groups']
+    search_fields = ['codename', 'name']
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def asset_groups(self, obj):
+        return list(UserGroupsToAssetPermissions.objects
+                    .filter(group__permissions__id__in=[obj.id])
+                    .values_list('asset__name', 'group__name'))
+
+    asset_groups.short_description = 'Asset - Groups'
+    asset_groups.allow_tags = True
 
 
 class CustomizationFilter(SimpleListFilter):
@@ -95,14 +115,14 @@ class AccountAdmin(CMSAdmin, CSVExportAdmin):
         return qs
 
     def get_list_filter(self, request):
-        if UserGroupsToProductPermissions.check_customization_permission(
+        if UserGroupsToAssetPermissions.check_customization_permission(
                 request.user, settings.CUSTOMIZATION, 'api.change_proxygroup'
         ):
             return self.list_filter + [GroupFilter]
         return self.list_filter
 
     def get_list_display(self, request):
-        if UserGroupsToProductPermissions.check_customization_permission(
+        if UserGroupsToAssetPermissions.check_customization_permission(
                 request.user, settings.CUSTOMIZATION, 'api.change_proxygroup'
         ):
             return self.list_display + ['user_groups']
@@ -112,14 +132,14 @@ class AccountAdmin(CMSAdmin, CSVExportAdmin):
         return False
 
     def has_change_permission(self, request, obj=None):
-        return UserGroupsToProductPermissions.\
+        return UserGroupsToAssetPermissions.\
             check_customization_change_account(request.user, settings.CUSTOMIZATION)
 
     def has_delete_permission(self, request, obj=None):  # No deleting users at all
         return False
 
     def has_view_permission(self, request, obj=None):
-        return UserGroupsToProductPermissions.\
+        return UserGroupsToAssetPermissions.\
             check_customization_change_account(request.user, settings.CUSTOMIZATION)
 
     def get_urls(self):

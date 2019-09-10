@@ -4,12 +4,12 @@
 
     angular
         .module('cloudApp')
-        .controller('ViewPageCtrl', [ '$rootScope', '$scope', '$window', 'account', 'system', '$routeParams', 'systemAPI', 'dialogs',
-            '$location', '$q', '$poll', 'authorizationCheckService', 'camerasProvider',
+        .controller('ViewPageCtrl', [ '$rootScope', '$scope', '$window', 'nxAccountService', 'system', '$routeParams', 'systemAPI', 'nxDialogsService',
+            '$location', '$q', '$poll', 'camerasProvider',
             'nxConfigService', 'languageService', 'nxAppStateService', 'nxPageService',
 
-            function ($rootScope, $scope, $window, account, system, $routeParams, systemAPI, dialogs,
-                      $location, $q, $poll, authorizationCheckService, camerasProvider,
+            function ($rootScope, $scope, $window, nxAccountService, system, $routeParams, systemAPI, nxDialogsService,
+                      $location, $q, $poll, camerasProvider,
                       nxConfigService, languageService, nxAppStateService, nxPageService) {
     
                 const CONFIG = nxConfigService.getConfig();
@@ -49,8 +49,8 @@
                 function systemError(){
                     $scope.unreachable = true;
                 }
-                
-                authorizationCheckService
+    
+                nxAccountService
                     .requireLogin()
                     .then(function (account) {
                         $scope.unreachable = false;
@@ -87,11 +87,11 @@
                 
 
                 var cancelSubscription = $scope.$on('unauthorized_' + $routeParams.systemId, function () {
-                    dialogs.notify(LANG.errorCodes.lostConnection.replace('{{systemName}}',
+                    nxDialogsService.notify(LANG.errorCodes.lostConnection.replace('{{systemName}}',
                         $scope.currentSystem.info.name || LANG.errorCodes.thisSystem), 'warning');
     
                     if ($scope.isInIframe) {
-                        $location.path(CONFIG.viewsDir + '404.html');
+                        $location.path('/404');
                     } else {
                         $location.path('/systems');
                     }

@@ -1,0 +1,153 @@
+
+<div class="container">
+    <div *ngIf="restoringSuccess">
+        <h1 class="process-success">
+            Password reset instructions are sent to Email <br>{{data.email}}
+        </h1>
+    </div>
+
+    <div *ngIf="restoring">
+        <h1>Reset Password</h1>
+        <form name="restorePassword" #restorePassword="ngForm" class="form-horizontal" novalidate>
+            <div class="form-group">
+                <div class="col-md-4 justify-content-start justify-content-md-end">
+                    <label for="email" class="col-sm-4 control-label">Email</label>
+                </div>
+                <div class="col-sm-4">
+                    <nx-email-input
+                            class="form-component"
+                            name="email"
+                            componentId="email"
+                            [(ngModel)]="data.email"
+                            [form]="restorePassword"
+                            #email="ngModel">
+                    </nx-email-input>
+                </div>
+                <div class="col-sm-4">
+                    <span class="help-block input-error"
+                          *ngIf="email.touched && email.errors && email.errors.required">Email is required</span>
+                    <span class="help-block input-error"
+                          *ngIf="email.touched && email.errors && email.errors.pattern">Please enter a valid Email</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="offset-sm-4 col-sm-8">
+                    <nx-process-button
+                            [process]="restore"
+                            [form]="restorePassword"
+                            [buttonText]="LANG.activeActions.resetPassword">
+                    </nx-process-button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div *ngIf="data.restoreCode || changeSuccess">
+        <div *ngIf="change.success || changeSuccess">
+            <h1 class="process-success" translate>
+                Password successfully saved
+            </h1>
+            <div class="process-success d-flex justify-content-center">
+                <a class="btn btn-default" href="" (click)="login()" translate>Log In</a>
+            </div>
+        </div>
+
+        <form name="restorePasswordWithCode" #restorePasswordWithCode="ngForm" class="form-horizontal" *ngIf="!change.success && !changeSuccess"
+              novalidate>
+
+            <h1 translate>Set New Password</h1>
+
+            <div class="form-group row">
+                <div class="col-md-4 justify-content-start justify-content-md-end">
+                    <label for="newPassword" class="text-left text-md-right control-label" translate>New Password</label>
+                </div>
+                <div class="col-md-4">
+                    <nx-password-input
+                            name="newPassword"
+                            componentId="newPassword"
+                            [(ngModel)]="data.newPassword"
+                            [form]="restorePasswordWithCode"
+                            #newPassword="ngModel">
+                    </nx-password-input>
+                </div>
+
+                <div class="col-md-4">
+                <span class="help-block" *ngIf="newPassword.valid && LANG.passwordRequirements">
+                    <span class="badge badge-success"
+                          *ngIf="newPassword.control && !newPassword.control.fairPassword">{{LANG.passwordRequirements.good}}</span>
+                    <span class="badge badge-warning"
+                          *ngIf="newPassword.control && newPassword.control.fairPassword"
+                          title="{{ LANG.passwordRequirements.fairMessage}}">{{LANG.passwordRequirements.fair}}</span>
+                </span>
+
+                <span class="help-block" *ngIf="!newPassword.valid && !newPassword.touched">
+
+                    <span class="badge badge-danger"
+                          *ngIf="newPassword.errors &&
+                                 newPassword.errors.weak &&
+                                 !newPassword.errors.common &&
+                                 !newPassword.errors.pattern &&
+                                 !newPassword.errors.minlength"
+                          title="{{ LANG.passwordRequirements.weakMessage}}">{{LANG.passwordRequirements.weak}}</span>
+                    <span class="badge badge-danger"
+                          *ngIf="newPassword.errors &&
+                                 newPassword.errors.common &&
+                                 !newPassword.errors.pattern &&
+                                 !newPassword.errors.minlength &&
+                                 !newPassword.errors.required"
+                          title="{{ LANG.passwordRequirements.commonMessage}}">{{LANG.passwordRequirements.common}}</span>
+                    <span class="badge badge-danger"
+                          *ngIf="newPassword.errors &&
+                                 newPassword.errors.minlength &&
+                                 !newPassword.errors.pattern"
+                          title="{{ LANG.passwordRequirements.minLengthMessage}}">{{LANG.passwordRequirements.minLength}}</span>
+                    <span class="badge badge-danger"
+                          *ngIf="newPassword.errors &&
+                                 newPassword.errors.pattern &&
+                                 !newPassword.errors.minlength"
+                          title="{{ LANG.passwordRequirements.requiredMessage}}">{{LANG.passwordRequirements.incorect}}</span>
+                </span>
+
+                <span class="help-block" *ngIf="!newPassword.valid && newPassword.touched">
+                    <span class="input-error"
+                          *ngIf="newPassword.errors &&
+                                 newPassword.errors.weak &&
+                                 !newPassword.errors.common &&
+                                 !newPassword.errors.pattern &&
+                                 !newPassword.errors.required &&
+                                 !newPassword.errors.minlength">{{ LANG.passwordRequirements.weakMessage}}</span>
+
+                    <span class="input-error"
+                          *ngIf="newPassword.errors &&
+                                 newPassword.errors.common &&
+                                 !newPassword.errors.required">{{ LANG.passwordRequirements.commonMessage}}</span>
+
+                    <span class="input-error"
+                          *ngIf="newPassword.errors &&
+                                 newPassword.errors.minlength">{{ LANG.passwordRequirements.minLengthMessage}}
+                    </span>
+                    <span class="input-error"
+                          *ngIf="newPassword.errors &&
+                                 newPassword.errors.pattern &&
+                                 !newPassword.errors.minlength">{{ LANG.passwordRequirements.incorectMessage}}
+                    </span>
+                    <span class="input-error"
+                          *ngIf="newPassword.errors &&
+                                 newPassword.errors.required">{{ LANG.passwordRequirements.missingMessage}}</span>
+                </span>
+            </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="offset-sm-4 col-sm-8">
+                    <nx-process-button
+                            [process]="change"
+                            [form]="restorePasswordWithCode"
+                            [buttonText]="LANG.activeActions.setNewPassword">
+                    </nx-process-button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <nx-footer></nx-footer>
+</div>

@@ -1,0 +1,84 @@
+from api.helpers.exceptions import api_success, handle_exceptions, APINotFoundException
+from cms.controllers.filldata import global_contexts_to_dict, process_global_contexts
+from cms.models import Context, Asset, AssetType, get_cloud_portal_asset, Language, AssetCustomizationReview, \
+    DataStructure
+from django.conf import settings
+from django.db.models import Count
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
+from util.helpers import detect_language_by_request
+
+
+@api_view(("GET", ))
+@permission_classes((AllowAny, ))
+@handle_exceptions
+def get_article(request, url_param, **kwargs):
+    draft = request.query_params.get('state') == 'draft'
+    review = request.query_params.get('state') == 'review'
+    article_id = request.query_params.get('id')
+
+    if article_id:
+        # If id is provided, then only search with id, url_parm is ignored to make sure correct article is found
+        # Used primarily for showing previews correctly
+        article = Asset.objects.filter(id=article_id, customizations__name=settings.CUSTOMIZATION).first()
+
+    else:
+        # Try to get an article that has ONLY the current customization
+        article = Asset.objects.annotate(num_customizations=Count('customizations')).filter(
+            num_customizations=1, datarecord__value=url_param,
+            datarecord__data_structure__context__asset_type__type=AssetType.ASSET_TYPES.article,
+            datarecord__data_structure__name='url', customizations__name=settings.CUSTOMIZATION,
+            contentversion__assetcustomizationreview__state=AssetCustomizationReview.REVIEW_STATES.accepted
+        ).last()
+
+        # Otherwise, get the most recently accepted article that has the current customization
+        if not article:
+            review = AssetCustomizationReview.objects.filter(
+                version__asset__datarecord__value=url_param, version__asset__datarecord__data_structure__name='url',
+                version__asset__asset_type__type=AssetType.ASSET_TYPES.article,
+                state=AssetCustomizationReview.REVIEW_STATES.accepted, customization__name=settings.CUSTOMIZATION
+            ).order_by('-reviewed_date').first()
+            if review:
+                article = review.version.asset
+
+    # If article is not found, then return a 404
+    if article:
+        # Set version based on draft or pending query params
+        version = article.version_id()
+        if review:
+            pending_review = AssetCustomizationReview.objects.filter(
+                version__id__gt=version, version__asset=article, customization__name=settings.CUSTOMIZATION,
+                state=AssetCustomizationReview.REVIEW_STATES.pending).last()
+            if pending_review:
+                version = pending_review.version.id
+        elif draft:
+            version = None
+
+        # If version is 0, then article has no acceptable version and the request isn't for a draft
+        if version != 0:
+            language = Language.by_code(detect_language_by_request(request))
+
+            # Get values for title and body of article for this version
+            title = DataStructure.objects.filter(name='title').first().find_actual_value(asset=article,
+                                                                                         language=language,
+                                                                                         version_id=version,
+                                                                                         draft=draft or review)
+            body = DataStructure.objects.filter(name='body').first().find_actual_value(asset=article,
+                                                                                       language=language,
+                                                                                       version_id=version,
+                                                                                       draft=draft or review)
+            article_dict = {
+                "title": title,
+                "body": body
+            }
+
+            # Get global contexts and fill any matching variables in datarecords
+            cloud_portal = get_cloud_portal_asset()
+            global_contexts = Context.objects.filter(asset_type=cloud_portal.asset_type, is_global=True)
+            global_contexts_dict = global_contexts_to_dict(global_contexts, cloud_portal)
+            process_global_contexts(cloud_portal, article_dict, article.version_id(), False,
+                                    global_contexts, global_contexts_dict)
+
+            return api_success(article_dict)
+
+    raise APINotFoundException(error_data={'url_param': url_param}, error_text='Article not found')

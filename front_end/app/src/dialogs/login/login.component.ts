@@ -1,81 +1,91 @@
 import {
-    Component,
-    Inject,
-    OnInit,
-    Input,
-    ViewEncapsulation,
-    ViewChild,
-    Renderer2
-}                                                                     from '@angular/core';
-import { DOCUMENT, Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
-import { NgbModal, NgbActiveModal, NgbModalRef }                      from '@ng-bootstrap/ng-bootstrap';
-import { NxModalGenericComponent }                                    from '../generic/generic.component';
-import { NxConfigService }                                            from '../../services/nx-config';
-import { NxUtilsService }                                             from '../../services/utils.service';
+    Component, Inject, OnInit,
+    Input, ViewChild, Renderer2
+}                                    from '@angular/core';
+import {
+    DOCUMENT, Location
+}                                    from '@angular/common';
+import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
+import { NxConfigService }           from '../../services/nx-config';
+import { NxUtilsService }            from '../../services/utils.service';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxModalGenericComponent }   from '../generic/generic.component';
+import { LocalStorageService }       from 'ngx-store';
+import { NxProcessService }          from '../../services/process.service';
+import { NxCloudApiService }         from '../../services/nx-cloud-api';
 
 @Component({
     selector: 'ngbd-modal-content',
     templateUrl: 'login.component.html',
     styleUrls: [],
-    providers: [Location, { provide: LocationStrategy, useClass: PathLocationStrategy }]
 })
 export class LoginModalContent implements OnInit {
-    @Input() language;
+    @Input() account;
     @Input() login;
     @Input() cancellable;
     @Input() closable;
-    @Input() location;
     @Input() keepPage;
 
-    config: any;
+    LANG: any;
+    CONFIG: any;
+
     auth: any;
     next: string;
     password: string;
     remember: boolean;
+    location: any;
 
     wrongPassword: boolean;
     accountBlocked: boolean;
 
-    @ViewChild('loginForm') loginForm: HTMLFormElement;
+    @ViewChild('loginForm', { static: true }) loginForm: HTMLFormElement;
 
-    constructor(public activeModal: NgbActiveModal,
-                @Inject('account') private account: any,
-                @Inject('process') private process: any,
-                @Inject('cloudApiService') private cloudApi: any,
-                @Inject('localStorageService') private localStorage: any,
-                @Inject(DOCUMENT) private document: any,
-                private configService: NxConfigService,
-                private renderer: Renderer2,
-                private genericModal: NxModalGenericComponent) {
-
-        this.auth = this.localStorage;
+    private setupDefaults() {
+        this.auth = { email: this.localStorage.get('email') };
         this.next = '';
         this.password = '';
         this.remember = true;
         this.wrongPassword = false;
-        this.config = configService.getConfig();
+        this.CONFIG = this.configService.getConfig();
+        this.LANG = this.language.getTranslations();
+    }
+
+    constructor(private processService: NxProcessService,
+                private cloudApiService: NxCloudApiService,
+                private localStorage: LocalStorageService,
+                private activeModal: NgbActiveModal,
+                private configService: NxConfigService,
+                private language: NxLanguageProviderService,
+                private genericModal: NxModalGenericComponent,
+                private renderer: Renderer2,
+                location: Location,
+                @Inject(DOCUMENT) private document: any,
+    ) {
+        this.setupDefaults();
+
+        this.location = location;
     }
 
     resendActivation(email) {
         this.activeModal.close();
 
-        this.process.init(() => {
-            return this.cloudApi.reactivate(email);
+        this.processService.createProcess(() => {
+            return this.cloudApiService.reactivate(email);
         }, {
             errorCodes: {
-                forbidden: this.language.lang.errorCodes.accountAlreadyActivated,
-                notFound: this.language.lang.errorCodes.emailNotFound
+                forbidden: this.LANG.errorCodes.accountAlreadyActivated,
+                notFound: this.LANG.errorCodes.emailNotFound
             },
             holdAlerts: true,
-            errorPrefix: this.language.lang.errorCodes.cantSendConfirmationPrefix
+            errorPrefix: this.LANG.errorCodes.cantSendConfirmationPrefix
         })
-                .run()
-                .then(() => {
-                    this.genericModal.openConfirm(
-                            'Check your inbox and visit provided link to activate account',
-                            'Activation email sent',
-                            'OK');
-                });
+        .run()
+        .then(() => {
+            this.genericModal.openConfirm(
+                    'Check your inbox and visit provided link to activate account',
+                    'Activation email sent',
+                    'OK');
+        });
     }
 
     gotoRegister() {
@@ -102,7 +112,7 @@ export class LoginModalContent implements OnInit {
         }
         this.password = '';
 
-        this.login = this.process.init(() => {
+        this.login = this.processService.createProcess(() => {
             this.loginForm.controls['login_email'].setErrors(null);
             this.loginForm.controls['login_password'].setErrors(null);
             this.wrongPassword = false;
@@ -145,26 +155,26 @@ export class LoginModalContent implements OnInit {
                 },
                 wrongParameters: () => {
                 },
-                portalError: this.language.lang.errorCodes.brokenAccount
+                portalError: this.LANG.errorCodes.brokenAccount
             }
-        }).then(() => {
+        });
+        this.login.then(() => {
+            this.activeModal.close();
             if (this.keepPage) {
                 if (this.location.path() === '') {
-                    // TODO: Repace this once 'register' page is moved to A5
-                    // AJS and A5 routers freak out about route change *****
-                    // this.location.go(this.config.redirectAuthorised);
-                    this.document.location.href = this.config.redirectAuthorised;
+                    this.location.go(this.CONFIG.redirectAuthorised);
+                } else {
+                    // TODO: remove window reload once we separate session state from account service
+                    window.location.reload();
+                    // this.location.go(this.location.path());
                 }
             } else if (this.next) {
                 // sanitize this.next
                 this.next = NxUtilsService.getRelativeLocation(this.next);
-                this.document.location.href = this.next;
+                this.location.go(this.next);
             } else {
                 setTimeout(() => {
-                    // TODO: Repace this once 'register' page is moved to A5
-                    // AJS and A5 routers freak out about route change *****
-                    // this.location.go(this.config.redirectAuthorised);
-                    this.document.location.href = this.config.redirectAuthorised;
+                    this.location.go(this.CONFIG.redirectAuthorised);
                 });
             }
         });
@@ -172,76 +182,67 @@ export class LoginModalContent implements OnInit {
 
     close() {
         // prevent unnecessary reload
-        if (!this.keepPage && this.account.email === undefined) {
-            // TODO: Repace this once 'register' page is moved to A5
-            // AJS and A5 routers freak out about route change *****
-            // this.location.go(this.config.redirectUnauthorised);
-            this.document.location.href = this.config.redirectUnauthorised;
+        if (!this.keepPage) { // && this.accountService.getEmail() === undefined) {
+            this.location.go(this.CONFIG.redirectUnauthorised);
         }
 
         this.activeModal.close('canceled');
     }
 }
 
-@Component({
-    selector: 'nx-modal-login',
-    template: '',
-    encapsulation: ViewEncapsulation.None,
-    styleUrls: []
-})
-export class NxModalLoginComponent implements OnInit {
-    login: any;
-    config: any;
-    modalRef: NgbModalRef;
-    location: Location;
-    closeResult: string;
-
-    constructor(@Inject('languageService') private language: any,
-                @Inject(DOCUMENT) private document: any,
-                private modalService: NgbModal,
-                private configService: NxConfigService,
-                location: Location) {
-        this.config = configService.getConfig();
-        this.location = location;
-    }
-
-    private dialog(keepPage?) {
-        // TODO: Refactor dialog to use generic dialog
-        // TODO: retire loading ModalContent (CLOUD-2493)
-        this.modalRef = this.modalService.open(LoginModalContent,
-                {
-                            windowClass: 'modal-holder',
-                            backdrop: 'static',
-                            size: 'sm'
-                        });
-        this.modalRef.componentInstance.language = this.language;
-        this.modalRef.componentInstance.login = this.login;
-        this.modalRef.componentInstance.cancellable = !keepPage || false;
-        this.modalRef.componentInstance.closable = true;
-        this.modalRef.componentInstance.location = this.location;
-        this.modalRef.componentInstance.keepPage = (keepPage !== undefined) ? keepPage : true;
-
-        return this.modalRef;
-    }
-
-    open(keepPage?, redirectClose?) {
-        return this.dialog(keepPage)
-                .result
-                // handle how the dialog was closed
-                // required if we need to have dismissible dialog otherwise
-                // will raise a JS error ( Uncaught [in promise] )
-                .then((result) => {
-                    this.closeResult = `Closed with: ${result}`;
-
-                    if (redirectClose && result === 'canceled') {
-                        this.document.location.href = this.config.redirectUnauthorised;
-                    }
-                }, (reason) => {
-                    this.closeResult = 'Dismissed';
-                });
-    }
-
-    ngOnInit() {
-        // Initialization should be in LoginModalContent.ngOnInit()
-    }
-}
+// @Component({
+//     selector: 'nx-modal-login',
+//     template: '',
+//     encapsulation: ViewEncapsulation.None,
+//     styleUrls: []
+// })
+// export class NxModalLoginComponent implements OnInit {
+//     login: any;
+//     modalRef: NgbModalRef;
+//     location: Location;
+//     closeResult: string;
+//
+//     constructor(@Inject('languageService') private language: any,
+//                 private modalService: NgbModal,
+//                 // private dialogs: NxDialogsService,
+//                 location: Location) {
+//
+//         this.location = location;
+//     }
+//
+//     private dialog(keepPage?) {
+//         // TODO: Refactor dialog to use generic dialog
+//         // TODO: retire loading ModalContent (CLOUD-2493)
+//         this.modalRef = this.modalService.open(LoginModalContent,
+//                 {
+//                             windowClass: 'modal-holder',
+//                             backdrop: 'static',
+//                             size: 'sm'
+//                         });
+//         this.modalRef.componentInstance.language = this.language;
+//         this.modalRef.componentInstance.login = this.login;
+//         this.modalRef.componentInstance.cancellable = !keepPage || false;
+//         this.modalRef.componentInstance.closable = true;
+//         this.modalRef.componentInstance.location = this.location;
+//         this.modalRef.componentInstance.keepPage = (keepPage !== undefined) ? keepPage : true;
+//
+//         return this.modalRef;
+//     }
+//
+//     open(keepPage?) {
+//         return this.dialog(keepPage)
+//                 .result
+//                 // handle how the dialog was closed
+//                 // required if we need to have dismissible dialog otherwise
+//                 // will raise a JS error ( Uncaught [in promise] )
+//                 .then((result) => {
+//                     this.closeResult = `Closed with: ${result}`;
+//                 }, (reason) => {
+//                     this.closeResult = 'Dismissed';
+//                 });
+//     }
+//
+//     ngOnInit() {
+//         // Initialization should be in LoginModalContent.ngOnInit()
+//     }
+// }

@@ -10,9 +10,11 @@ from django.utils import timezone
 
 from api.models import Account
 from notifications import notifications_api
-from notifications.models import Message
+from notifications.notifications_api import log_push_result, set_subscriptions_from_targets
+from notifications.models import Message, PushSubscription, PushNotification
 from util.helpers import get_language_for_email
 
+import json
 import traceback
 import logging
 logger = logging.getLogger(__name__)
@@ -89,6 +91,46 @@ def send_email(msg_id, queue="", attempt=1):
             'queue': queue,
             'attempt': attempt
         }
+
+
+@shared_task
+def send_push_notification(notification_id, request_data, device_tokens=None, count=1):
+    if count == 1:
+        logger.info('Start processing push notification: {}'.format(notification_id))
+
+    notification_object = PushNotification.objects.get(id=notification_id)
+
+    try:
+        if not notification_object.subscriptions.all():
+            if not set_subscriptions_from_targets(notification_object, request_data):
+                log_push_result(notification_object, 'No matching subscriptions found')
+                return
+
+        response = notification_object.send_notifications()
+        resend_tokens = notifications_api.process_push_response(response, notification_object)
+
+        if resend_tokens and count < settings.PUSH_NOTIFICATIONS_SETTINGS['MAX_RETRIES']:
+            send_push_notification.apply_async(
+                countdown=settings.PUSH_NOTIFICATIONS_SETTINGS['RETRY_INTERVAL'],
+                args=[notification_object.id],
+                kwargs={'request_data': request_data, 'device_tokens': resend_tokens, 'count': count + 1}
+            )
+
+    except Exception as exception:
+        if 'response' not in locals() or not response:
+            log_push_result(notification_object, f'Exception: {exception}.', logging.ERROR)
+            if count < settings.PUSH_NOTIFICATIONS_SETTINGS['MAX_RETRIES']:
+                send_push_notification.apply_async(
+                    countdown=settings.PUSH_NOTIFICATIONS_SETTINGS['RETRY_INTERVAL'],
+                    args=[notification_object.id],
+                    kwargs={'request_data': request_data, 'device_tokens': device_tokens, 'count': count + 1}
+                )
+        elif 'resend_tokens' not in locals():
+            log_push_result(
+                notification_object, f'{type(exception)}: {exception},\nResponse: {response}.', logging.ERROR
+            )
+        else:
+            log_push_result(notification_object, f'{type(exception)}: {exception}', logging.ERROR)
 
 
 # For testing we dont want to send emails to everyone so we need to set

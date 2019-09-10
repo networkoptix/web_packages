@@ -2,7 +2,7 @@ from datetime import datetime
 
 from notifications.notifications_api import send
 from django.contrib.auth.models import Permission
-from django.db.models import Q
+from django.utils.http import urlencode
 
 from PIL import Image
 import base64
@@ -16,11 +16,12 @@ from api.models import Account
 from ..models import *
 
 BYTES_TO_MEGABYTES = 1048576.0
-PENDING = ProductCustomizationReview.REVIEW_STATES[ProductCustomizationReview.REVIEW_STATES.pending].lower()
-GUID_REGEXP = '\{[\da-fA-F]{8}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{12}\}'
+PENDING = AssetCustomizationReview.REVIEW_STATES[AssetCustomizationReview.REVIEW_STATES.pending].lower()
+GUID_REGEXP = r'\{[\da-fA-F]{8}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{12}\}$'
+
 
 def update_draft_state(review_id, target_state, user):
-    review = ProductCustomizationReview.objects.filter(id=review_id, reviewed_by=None).last()
+    review = AssetCustomizationReview.objects.filter(id=review_id, reviewed_by=None).last()
     if not review:
         return " is currently publishing or has already been published"
 
@@ -34,36 +35,36 @@ def update_draft_state(review_id, target_state, user):
     return None
 
 
-def notify_version_ready(product, version, exclude_user):
+def notify_version_ready(asset, version, exclude_user):
     perm = Permission.objects.filter(codename='publish_version')
     users = Account.objects.filter(groups__permissions__in=perm).exclude(pk=exclude_user.pk).distinct()
 
-    product_name = product.name
-    product_type = ProductType.PRODUCT_TYPES[product.product_type.type]
-    product_customizations_set = set()
-    for customization in product.customizations.values_list('name', flat=True):
+    asset_name = asset.name
+    asset_type = AssetType.ASSET_TYPES[asset.asset_type.type]
+    asset_customizations_set = set()
+    for customization in asset.customizations.values_list('name', flat=True):
         cloud_capabilities = cloud_portal_customization_cache(customization, 'cloud_capabilities')
         # Ignore integrations if the integration store is disabled.
-        if not product.is_integration or cloud_capabilities['integration_store_enabled']:
-            product_customizations_set.add(customization)
+        if not asset.is_integration or cloud_capabilities['integration_store_enabled']:
+            asset_customizations_set.add(customization)
 
     for user in users:
-        # If the user has a customization in common with product send them a notification
-        intersection_user_customizations_to_products = set(user.customizations) & product_customizations_set
-        if intersection_user_customizations_to_products:
+        # If the user has a customization in common with asset send them a notification
+        intersection_user_customizations_to_assets = set(user.customizations) & asset_customizations_set
+        if intersection_user_customizations_to_assets:
             # There should never be two customizations with the same name but this is a safety check
-            review_id = version.productcustomizationreview_set.\
-                filter(customization__name=intersection_user_customizations_to_products.pop()).first().id
+            review_id = version.assetcustomizationreview_set.\
+                filter(customization__name=intersection_user_customizations_to_assets.pop()).first().id
             send(user.email, "review_version",
                  {
                      'id': review_id,
-                     'product': product_name,
-                     'product_type': product_type
+                     'asset': asset_name,
+                     'asset_type': asset_type
                  },
                  user.customization)
 
 
-def save_unrevisioned_records(product, context, language, data_structures,
+def save_unrevisioned_records(asset, context, language, data_structures,
                               request_data, request_files, user, version_id=None):
     upload_errors = []
     for data_structure in data_structures:
@@ -75,7 +76,7 @@ def save_unrevisioned_records(product, context, language, data_structures,
         new_record_value = ""
         external_file = None
         delete_file = False
-        latest_value = data_structure.find_actual_value(product, ds_language, draft=True)
+        latest_value = data_structure.find_actual_value(asset, ds_language, draft=True)
         # If the DataStructure is supposed to be an image convert to base64 and
         # error check
         # TODO: Refactor image/file logic - CLOUD-1524
@@ -123,15 +124,18 @@ def save_unrevisioned_records(product, context, language, data_structures,
                                       'No submitted GUID or default value. GUID has been generated as {}'
                                       .format(new_record_value)))
 
-        elif data_structure.type == DataStructure.DATA_TYPES.select:
+        elif data_structure.type in [DataStructure.DATA_TYPES.select, DataStructure.DATA_TYPES.multiselect]:
             values = request_data.getlist(data_structure_name)
             if 'options' in data_structure.meta_settings and data_structure.meta_settings['options']:
-                if 'multi' in data_structure.meta_settings and data_structure.meta_settings['multi']:
+                if data_structure.type == DataStructure.DATA_TYPES.multiselect:
                     new_record_value = json.dumps(values)
                 else:
                     new_record_value = values[0]
             else:
-                new_record_value = ''
+                if data_structure.type == DataStructure.DATA_TYPES.multiselect:
+                    new_record_value = '[]'
+                else:
+                    new_record_value = ''
 
         elif data_structure.type in [DataStructure.DATA_TYPES.external_file, DataStructure.DATA_TYPES.external_image]:
 
@@ -148,7 +152,7 @@ def save_unrevisioned_records(product, context, language, data_structures,
                 for chunk in request_file.chunks():
                     md5.update(chunk)
 
-                external_file = ExternalFile(data_structure=data_structure, product=product)
+                external_file = ExternalFile(data_structure=data_structure, asset=asset)
                 external_file.save()
 
                 external_file.file = request_file
@@ -194,6 +198,8 @@ def save_unrevisioned_records(product, context, language, data_structures,
             new_record_value = request_data[data_structure_name]
             if data_structure.type == DataStructure.DATA_TYPES.text and 'regex' in data_structure.meta_settings:
                 pattern = data_structure.meta_settings['regex']
+                if not pattern.endswith('$'):
+                    pattern = f'{pattern}$'
                 if new_record_value and not re.match(pattern, new_record_value):
                     upload_errors.append((data_structure_name, 'Invalid input'))
                     continue
@@ -224,7 +230,7 @@ def save_unrevisioned_records(product, context, language, data_structures,
             upload_errors.append((data_structure_name, "You do not have permission to edit this field"))
             continue
 
-        record = DataRecord(product=product,
+        record = DataRecord(asset=asset,
                             data_structure=data_structure,
                             language=ds_language,
                             value=new_record_value,
@@ -235,8 +241,8 @@ def save_unrevisioned_records(product, context, language, data_structures,
             record.external_file = external_file
             record.save()
 
-    if product.is_cloud_portal and product.can_preview_on_portal:
-        fill_content(product,
+    if asset.is_cloud_portal and asset.can_preview_on_portal:
+        fill_content(asset,
                      preview=True,
                      incremental=True,
                      version_id=version_id,
@@ -252,11 +258,11 @@ def update_latest_record_version(records, new_version):
         record.save()
 
 
-def update_records_to_version(product, contexts, version):
+def update_records_to_version(asset, contexts, version):
     languages = Language.objects.all()
     for context in contexts:
         for data_structure in context.datastructure_set.all():
-            all_records = data_structure.datarecord_set.filter(product=product)
+            all_records = data_structure.datarecord_set.filter(asset=asset)
 
             if data_structure.translatable:
                 for language in languages:
@@ -270,53 +276,58 @@ def update_records_to_version(product, contexts, version):
                 update_latest_record_version(all_records, version)
 
 
-def strip_version_from_records(version, product):
-    records_to_strip = DataRecord.objects.filter(version=version, product=product)
+def strip_version_from_records(version, asset):
+    records_to_strip = DataRecord.objects.filter(version=version, asset=asset)
     for record in records_to_strip:
         record.version = None
         record.save()
 
 
 # Currently unused
-def remove_unused_records(product):
-    nullify_records = DataRecord.objects.filter(product=product, version_id=None)
+def remove_unused_records(asset):
+    nullify_records = DataRecord.objects.filter(asset=asset, version_id=None)
     if nullify_records.exists():
         for record in nullify_records:
             record.delete()
 
 
-def generate_preview_link(context=None, product=None, state=""):
-    if product and product.is_integration:
-        return f"{settings.INTEGRATION_STORE_PAGE}/{product.id}?state={state}"
+def generate_preview_link(context=None, asset=None, state=""):
+    if asset:
+        if asset.is_integration:
+            return f"{settings.INTEGRATION_STORE_PAGE}/{asset.id}?state={state}"
+        elif asset.is_asset_type(AssetType.ASSET_TYPES.article):
+            article_url = DataRecord.objects.filter(asset=asset, data_structure__name='url').last()
+            return f'/content/{article_url.value}?' + urlencode({'state': state, 'id': asset.id})
 
     return f"{context.url}?preview" if context else "/content/about?preview"
 
 
-def generate_preview(product, context=None, version_id=None, send_to_review=False):
-    if product.is_cloud_portal and product.can_preview_on_portal:
-        fill_content(product,
+def generate_preview(asset, context=None, version_id=None, send_to_review=False):
+    if asset.is_cloud_portal and asset.can_preview_on_portal:
+        fill_content(asset,
                      preview=True,
                      incremental=True,
                      changed_context=context,
                      version_id=version_id,
                      send_to_review=send_to_review)
-    return generate_preview_link(context, product=product, state=PENDING)
+    return generate_preview_link(context, asset=asset, state=PENDING)
 
 
-def publish_latest_version(product, review_id, user):
-    publish_errors = update_draft_state(review_id, ProductCustomizationReview.REVIEW_STATES.accepted, user)
+def publish_latest_version(asset, review_id, user):
+    publish_errors = update_draft_state(review_id, AssetCustomizationReview.REVIEW_STATES.accepted, user)
     if not publish_errors:
-        fill_content(product, preview=False, incremental=True)
+        fill_content(asset, preview=False, incremental=True)
     return publish_errors
 
 
-def integration_has_required_data(product):
+def integration_has_required_data(asset):
     errors = []
-    for datastructure in DataStructure.objects.filter(context__product_type=product.product_type):
-        records = datastructure.datarecord_set.filter(product=product)
+    for datastructure in DataStructure.objects.filter(context__asset_type=asset.asset_type):
+        records = datastructure.datarecord_set.filter(asset=asset)
         last_record_value = records.last().value if records.last() else None
         if last_record_value and datastructure.type in [DataStructure.DATA_TYPES.select,
-                                                        DataStructure.DATA_TYPES.array]:
+                                                        DataStructure.DATA_TYPES.array,
+                                                        DataStructure.DATA_TYPES.multiselect]:
             last_record_value = json.loads(last_record_value)
         if not datastructure.optional and (not records.exists() or not last_record_value):
             ds_name = datastructure.label if datastructure.label else datastructure.name
@@ -326,38 +337,38 @@ def integration_has_required_data(product):
     return errors
 
 
-def send_version_for_review(product, user):
-    old_version = ContentVersion.objects.filter(product=product, accepted_date=None).order_by('created_date').last()
+def send_version_for_review(asset, user):
+    old_version = ContentVersion.objects.filter(asset=asset, accepted_date=None).order_by('created_date').last()
 
     if old_version:
-        strip_version_from_records(old_version, product)
+        strip_version_from_records(old_version, asset)
         old_version.delete()
 
-    # We only check for integrations because its the only product type that non staff have access to.
-    if product.is_integration:
-        errors = integration_has_required_data(product)
+    # We only check for integrations because its the only asset type that non staff have access to.
+    if asset.is_integration:
+        errors = integration_has_required_data(asset)
         if len(errors) > 0:
             return errors
 
-    version = ContentVersion(product=product, created_by=user)
+    version = ContentVersion(asset=asset, created_by=user)
     version.save()
 
     version.create_reviews()
 
-    update_records_to_version(product, Context.objects.filter(product_type=product.product_type), version)
+    update_records_to_version(asset, Context.objects.filter(asset_type=asset.asset_type), version)
 
-    notify_version_ready(product, version, user)
+    notify_version_ready(asset, version, user)
     return []
 
 
-def get_records_for_version(product, version, customization):
-    published_version = product.version_id(customization)
+def get_records_for_version(asset, version, customization):
+    published_version = asset.version_id(customization)
     if version.id > published_version:
 
-        data_records = product.datarecord_set.filter(version__id__gt=published_version,
-                                                     version__id__lte=version.id)
+        data_records = asset.datarecord_set.filter(version__id__gt=published_version,
+                                                   version__id__lte=version.id)
     else:
-        data_records = product.datarecord_set.filter(version__id=version.id)
+        data_records = asset.datarecord_set.filter(version__id=version.id)
     data_records = data_records.\
         order_by('data_structure__context__order', 'language__code', 'data_structure__order', '-id')
     contexts = {}

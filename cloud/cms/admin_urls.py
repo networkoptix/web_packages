@@ -1,18 +1,18 @@
 from django.conf.urls import url
-from cms.views import product
+from cms.views import asset
 
 urlpatterns = [
-    url(r'download/(?P<path>.*)$', product.download_file, name="download_file"),
+    url(r'download/(?P<path>.*)$', asset.download_file, name="download_file"),
 
-    url(r'download-structure-from-db/(?P<product_id>.+?)/?$', product.download_current_structure,
+    url(r'download-structure-from-db/(?P<asset_id>.+?)/?$', asset.download_current_structure,
         name="download_structure_from_db"),
 
-    url(r'preview/', product.make_preview, name="preview"),
+    url(r'preview/', asset.make_preview, name="preview"),
 
-    url(r'package/(?P<product_id>.+?)/?$', product.download_package, name="download_package"),
+    url(r'package/(?P<asset_id>.+?)/?$', asset.download_package, name="download_package"),
 
-    url(r'product_settings/(?P<product_id>.+?)/$', product.product_settings, name="product_settings"),
+    url(r'asset_settings/(?P<asset_id>.+?)/$', asset.asset_settings, name="asset_settings"),
 
-    url(r'get_product_ids/?$', product.get_product_ids_by_product_type, name="product_ids_by_type")
+    url(r'get_asset_ids/?$', asset.get_asset_ids_by_asset_type, name="asset_ids_by_type")
 
 ]

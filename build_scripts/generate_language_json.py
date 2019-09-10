@@ -53,8 +53,7 @@ def merge_files(base_lang, lang, file_name):
         merged_lang["language"] = US_LANGUAGE_CODE
         merged_lang["language_name"] = US_LANGUAGE_NAME
 
-    save_content(f"static/lang_{lang}/{file_name}",
-                 json.dumps(merged_lang, indent=4, ensure_ascii=False, sort_keys=True))
+    return merged_lang
 
 
 def generate_languages_files(languages, template_filename):
@@ -66,8 +65,10 @@ def generate_languages_files(languages, template_filename):
         base_i18n = json.load(file_descriptor)
 
     for lang in languages:
-        merge_files(base_lang, lang, "language.json")
-        merge_files(base_i18n, lang, "language_i18n.json")
+        ajs = merge_files(base_lang, lang, "language.json")
+        i18n = merge_files(base_i18n, lang, "language_i18n.json")
+        compiled = {"ajs": ajs, "i18n": i18n}
+        save_content(f"static/lang_{lang}/language_compiled.json", json.dumps(compiled, indent=4, ensure_ascii=False, sort_keys=True))
 
 
 languages = sys.argv[1:]

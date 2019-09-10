@@ -1,0 +1,174 @@
+'use strict';
+
+angular.module('cloudApp')
+    .controller('ActivateRestoreCtrl',['$scope', 'cloudApi', '$routeParams', 'process', '$localStorage', '$timeout',
+        '$sessionStorage', 'nxAccountService', '$location', 'nxUrlProtocolService', 'dialogs',
+        'languageService', 'nxPageService',
+        function ($scope, cloudApi, $routeParams, process, $localStorage, $timeout,
+                  $sessionStorage, nxAccountService, $location, nxUrlProtocolService, dialogs,
+                  languageService, nxPageService) {
+
+            $scope.session = $localStorage;
+            $scope.context = $sessionStorage;
+    
+            nxPageService.setPageTitle(languageService.lang.pageTitles.activate);
+            
+            $scope.data = {
+                newPassword: '',
+                email: '', // moved to init()
+                restoreCode: $routeParams.restoreCode,
+                activateCode: $routeParams.activateCode
+            };
+
+            $scope.reactivating = $routeParams.reactivating;
+            $scope.restoring = $routeParams.restoring;
+
+            $scope.activationSuccess = $routeParams.activationSuccess;
+            $scope.restoringSuccess = $routeParams.restoringSuccess;
+            $scope.changeSuccess = $routeParams.changeSuccess;
+
+            $scope.loading = true;
+
+            if($scope.reactivating){
+                nxAccountService.redirectAuthorised();
+            }
+            function checkActivate(){
+                if($scope.data.activateCode){
+                    nxPageService.setPageTitle(languageService.lang.pageTitles.activateCode);
+                    setContext(null);
+                    $scope.activate.run();
+                }
+            }
+            function init(){
+                $scope.data.email = nxAccountService.getEmail();
+
+                if($scope.data.restoreCode || $scope.data.activateCode){
+                    nxAccountService.logoutAuthorised();
+                    var code = $scope.data.restoreCode || $scope.data.activateCode;
+                    nxAccountService.checkCode(code).then(function(registered){
+                        if(!registered){
+                            // send to registration form with the code
+                            $location.path('/register/' + code);
+                        }else{
+                            checkActivate();
+                        }
+                    },function(){
+                        // Wrong activation code or some error - do nothing, keep user on this page
+                        checkActivate();
+                    });
+                }
+            }
+
+            function setContext(name){
+                $scope.context.process = name;
+            }
+
+            function checkContext(name, flag){
+                if(!flag){
+                    return false;
+                }
+                if( $scope.context.process !== name ){
+                    nxAccountService.redirectToHome();
+                }
+                return true;
+            }
+
+            // Check session context
+            if( checkContext('activateSuccess',  $routeParams.activationSuccess) ||
+                checkContext('restoringSuccess', $routeParams.restoringSuccess) ||
+                checkContext('changeSuccess',    $routeParams.changeSuccess)){
+                setContext(null);
+            }
+
+            $scope.$on('$destroy', function(){
+                dialogs.dismissNotifications();
+            });
+
+            $scope.change = process.init(function(){
+                return cloudApi.restorePassword($scope.data.restoreCode, $scope.data.newPassword);
+            },{
+                errorCodes:{
+                    notFound: L.errorCodes.wrongCodeRestore,
+                    notAuthorized: L.errorCodes.wrongCodeRestore
+                },
+                ignoreUnauthorized: true,
+                holdAlerts:true,
+                errorPrefix:L.errorCodes.cantChangePasswordPrefix
+            }).then(function(){
+                nxPageService.setPageTitle(languageService.lang.pageTitles.restorePasswordSuccess);
+                setContext('changeSuccess');
+                dialogs.dismissNotifications();
+                $location.path('/restore_password/success', false); // Change url, do not reload
+            });
+
+            $scope.restore = process.init(function(){
+                return cloudApi.restorePasswordRequest($scope.data.email);
+            },{
+                errorCodes:{
+                    notFound: L.errorCodes.emailNotFound
+                },
+                ignoreUnauthorized: true,
+                holdAlerts:true,
+                errorPrefix:L.errorCodes.cantSendActivationPrefix
+            }).then(function(){
+                nxPageService.setPageTitle(languageService.lang.pageTitles.restoringSuccess);
+                $scope.restoring = false;
+                $scope.restoringSuccess = true;
+                setContext('restoringSuccess');
+                dialogs.dismissNotifications();
+                $location.path('/restore_password/sent', false); // Change url, do not reload
+            });
+
+            $scope.openClient = function(){
+                nxUrlProtocolService.open();
+            };
+
+            $scope.activate = process.init(function(){
+                $scope.loading = true;
+                return cloudApi.activate($scope.data.activateCode);
+            },{
+                errorCodes:{
+                    notFound: function(){
+                        $scope.activationSuccess = false;
+                        $scope.loading = false;
+                        return false;
+                    },
+                    notAuthorized: function(){
+                        $scope.activationSuccess = false;
+                        $scope.loading = false;
+                        return false;
+                    },
+                    accountActivated: function() {
+                        $scope.activationSuccess = false;
+                        $scope.loading = false;
+                        return false;
+                    }
+                },
+                errorPrefix:L.errorCodes.cantActivatePrefix
+            }).then(function(){
+                nxPageService.setPageTitle(languageService.lang.pageTitles.activateSuccess);
+                setContext('activateSuccess');
+                $scope.activationSuccess = true;
+                $scope.loading = false;
+                dialogs.dismissNotifications();
+                $location.path('/activate/success', false); // Change url, do not reload
+            });
+
+
+            $scope.reactivate = process.init(function(){
+                return cloudApi.reactivate($scope.data.email);
+            },{
+                errorCodes:{
+                    forbidden: L.errorCodes.accountAlreadyActivated,
+                    notFound: L.errorCodes.emailNotFound
+                },
+                holdAlerts:true,
+                errorPrefix:L.errorCodes.cantSendConfirmationPrefix
+            }).then(function(){
+                nxPageService.setPageTitle(languageService.lang.pageTitles.activateSuccess);
+                dialogs.notify(L.account.activationLinkSent, 'success');
+            });
+
+            init();
+
+        }]);

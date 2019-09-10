@@ -1,0 +1,28 @@
+@import '../../../../styles/custom/custom_palette';
+@import '../../../../styles/theme_palette';
+@import '../../../../styles/theme_variables';
+@import '~bootstrap/scss/bootstrap';
+
+integration-detail-component {
+    
+    .integration-details {
+    }
+    
+    .menu {
+        background-color : $light5;
+        padding          : .5rem 0;
+        
+        .menu-level-2 {
+            border-radius: 2px;
+        }
+    }
+
+    .right-menu {
+        position: absolute;
+
+        @include media-breakpoint-down(md) {
+            position: inherit;
+        }
+    }
+
+}

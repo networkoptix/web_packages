@@ -34,7 +34,6 @@
     
     &--body {
         padding          : 1rem;
-        overflow         : hidden;
         background-color : $light1;
         
         img {
@@ -148,6 +147,10 @@
     &.fixed-height {
         height   : rem(300px);
         overflow : hidden;
+
+        .card--body {
+            overflow: hidden;
+        }
     }
     
     

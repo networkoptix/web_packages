@@ -1,9 +1,11 @@
-import { Component, Inject, Input, Renderer2, ViewChild, ViewEncapsulation } from '@angular/core';
-import { NgbModal, NgbActiveModal, NgbModalRef }       from '@ng-bootstrap/ng-bootstrap';
-import { TranslateService } from '@ngx-translate/core';
-import { Location }                              from '@angular/common';
-import { EmailValidator }                        from '@angular/forms';
-import { NxConfigService }                       from '../../services/nx-config';
+import { Component, Input, Renderer2, ViewChild } from '@angular/core';
+import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
+import { NxConfigService }           from '../../services/nx-config';
+import { NxCloudApiService }         from '../../services/nx-cloud-api';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxProcessService }          from '../../services/process.service';
+import { NxSystemService }           from '../../services/system.service';
+import { NxSystemsService }          from '../../services/systems.service';
 
 @Component({
     selector   : 'nx-modal-merge-content',
@@ -14,14 +16,13 @@ export class MergeModalContent {
     @Input() system;
     @Input() systems;
     @Input() systemName;
-    @Input() language;
     @Input() closable;
     @Input() user;
 
+    LANG: any;
     checking: boolean;
     checkMergeabilityProcess: any;
     config: any;
-    lang: any;
     mergingProcess: any;
     multipleSystems: boolean;
     outOfDate: boolean;
@@ -37,25 +38,22 @@ export class MergeModalContent {
     tooManySystems: boolean;
     wrongPassword: boolean;
 
-    @ViewChild('mergeForm') mergeForm: HTMLFormElement;
+    @ViewChild('mergeForm', { static: true }) mergeForm: HTMLFormElement;
 
     constructor(public activeModal: NgbActiveModal,
                 public renderer: Renderer2,
                 private configService: NxConfigService,
-                @Inject('process') private process: any,
-                @Inject('account') private account: any,
-                @Inject('system') private systemService: any,
-                @Inject('systemsProvider') private systemsProvider: any,
-                @Inject('cloudApiService') private cloudApi: any,
-                public translateService: TranslateService) {
+                private cloudApi: NxCloudApiService,
+                private language: NxLanguageProviderService,
+                private processService: NxProcessService,
+                private systemService: NxSystemService,
+                private systemsService: NxSystemsService
+    ) {
         this.config = this.configService.getConfig();
         this.checking = false;
         this.state = 'select';
         this.wrongPassword = false;
-        this.translateService.getTranslation(this.translateService.currentLang)
-            .subscribe((translations) => {
-                this.lang = translations;
-        });
+        this.LANG = this.language.getTranslations();
     }
 
     ngOnInit() {
@@ -69,27 +67,31 @@ export class MergeModalContent {
         this.systemMergeable = this.checkMergeability(this.targetSystem);
         this.systemError = !this.multipleSystems || this.outOfDate;
 
-        this.mergingProcess = this.process.init(() => {
+        this.initProcesses();
+    }
+
+    initProcesses() {
+        this.mergingProcess = this.processService.createProcess(() => {
             return this.cloudApi.merge(this.primarySystem.id, this.secondarySystem.id, this.password);
         }, {
             errorCodes: {
                 mergedSystemIsOffline: () => {
-                    return this.language.system.mergeFailed;
+                    return this.LANG.system.mergeFailed;
                 },
                 vmsRequestFailure: () => {
-                    return this.language.system.mergeFailed;
+                    return this.LANG.system.mergeFailed;
                 },
                 wrongPassword: () => {
-                    this.mergeForm.controls['mergePassword'].setErrors({ 'wrongPassword': true });
+                    this.mergeForm.controls.mergePassword.setErrors({ wrongPassword: true });
                     this.password = '';
 
                     this.renderer.selectRootElement('#mergePassword').focus();
                     this.wrongPassword = true;
                 },
             },
-            successMessage: this.language.system.mergeStart
+            successMessage: this.LANG.system.mergeStart
         }).then(() => {
-            this.systemsProvider.forceUpdateSystems();
+            this.systemsService.forceUpdateSystems();
             this.activeModal.close({
                 anotherSystemId: this.targetSystem.id,
                 role: this.primarySystem.id === this.system.id ?
@@ -119,7 +121,7 @@ export class MergeModalContent {
                 }
 
                 // Check the state of health
-                var primaryState = this.primarySystem.stateOfHealth;
+                let primaryState = this.primarySystem.stateOfHealth;
                 // If stateOfHealth is undefined check in info for stateOfHealth.
                 if (primaryState === undefined) {
                     primaryState = this.primarySystem.info && this.primarySystem.info.stateOfHealth;
@@ -134,7 +136,7 @@ export class MergeModalContent {
             }
         });
 
-        this.checkMergeabilityProcess = this.process.init(() => {
+        this.checkMergeabilityProcess = this.processService.createProcess(() => {
             this.checking = true;
             this.systemMergeable = '';
             return this.precheckSystemMerge();
@@ -151,9 +153,9 @@ export class MergeModalContent {
 
     addStatus(system) {
         let status = '';
-        const statusIncompatible = ` – ${this.language.systemStatuses.incompatible}`;
-        const statusUnavailable = ` – ${this.language.systemStatuses.unavailable}`;
-        const statusOffline = ` – ${this.language.systemStatuses.offline}`;
+        const statusIncompatible = ` – ${this.LANG.systemStatuses.incompatible}`;
+        const statusUnavailable = ` – ${this.LANG.systemStatuses.unavailable}`;
+        const statusOffline = ` – ${this.LANG.systemStatuses.offline}`;
         const stateOfHealth = system.info && system.info.stateOfHealth || system.stateOfHealth || system.stateMessage || '';
         switch (stateOfHealth) {
             case 'online':
@@ -175,6 +177,7 @@ export class MergeModalContent {
                 }
         }
 
+        // HTML required for dropdown list
         return `<span>${system.name}</span><span class="text-muted">${status}</span>`;
     }
 
@@ -205,25 +208,21 @@ export class MergeModalContent {
     }
 
     precheckSystemMerge() {
-        return this.systemService(this.targetSystem.id, this.user.email).update().then((system) => {
-            return system.getUsersDataFromTheSystem().then(() => {
-                this.targetSystem = {...this.targetSystem, ...system};
-                return Promise.all([
-                    this.system.mediaserver.getMediaServers().catch(error => {
-                        return Promise.reject({system: 'current', errorResponse: error});
-                    }),
-                    this.targetSystem.mediaserver.getMediaServers().catch(error => {
-                        return Promise.reject({system: 'target', errorResponse: error});
-                    })
-                ]).then(res => {
-                    this.tooManySystems = res.map(req => req.data.length)
-                        .reduce((acc, cur) => acc + cur) > this.config.maxServers;
-                    return {};
-                }).catch(error => error);
-            }, (error) => {
-                return error;
+        this.targetSystem = this.systemService.createSystem(this.targetSystem.id, this.user.email);
+        return this.targetSystem.getUsersDataFromTheSystem().then(() => {
+            return Promise.all([
+                this.system.mediaserver.getMediaServers().catch(error => {
+                    return Promise.reject({system: 'current', errorResponse: error});
+                }),
+                this.targetSystem.mediaserver.getMediaServers().catch(error => {
+                    return Promise.reject({system: 'target', errorResponse: error});
+                })
+            ]).then(res => {
+                this.tooManySystems = res.map(req => req.data.length)
+                    .reduce((acc, cur) => acc + cur) > this.config.maxServers;
+                return {};
             });
-        });
+        }, (err) => err);
     }
 
     makeSelectorList(systems) {
@@ -267,45 +266,5 @@ export class MergeModalContent {
             default:
                 break;
         }
-    }
-}
-
-@Component({
-    selector     : 'nx-modal-merge',
-    template     : '',
-    encapsulation: ViewEncapsulation.None,
-    styleUrls    : []
-})
-
-export class NxModalMergeComponent {
-    modalRef: NgbModalRef;
-
-    constructor(@Inject('languageService') private language: any,
-                private modalService: NgbModal) {
-    }
-
-    private dialog(system, systems, user) {
-        // TODO: Refactor dialog to use generic dialog
-        // TODO: retire loading ModalContent (CLOUD-2493)
-        this.modalRef = this.modalService.open(MergeModalContent,
-            {
-                backdrop: 'static',
-                windowClass: 'modal-holder'
-            });
-        this.modalRef.componentInstance.language = this.language.lang;
-        this.modalRef.componentInstance.user = user;
-        this.modalRef.componentInstance.system = system;
-        this.modalRef.componentInstance.systems = systems;
-        this.modalRef.componentInstance.closable = true;
-
-        return this.modalRef;
-    }
-
-    open(system, systems, user) {
-        return this.dialog(system, systems, user).result;
-    }
-
-    close() {
-        this.modalRef.close({});
     }
 }
