@@ -267,6 +267,7 @@
             "label": "Landing page large image",
             "name": "static/images/promo/cloud.png",
             "optional": true,
+            "advanced": true,
             "value": "",
             "description": "Image for the front page. Image must have transparent background.",
             "type": "image",
@@ -284,6 +285,19 @@
             "type": "text"
           },
           {
+            "label": "Left block icon",
+            "name": "static/images/promo/landing_promo_1.png",
+            "value": "",
+            "description": "Header icon",
+            "type": "image",
+            "optional": true,
+            "meta": {
+              "background": "light",
+              "format": "png",
+              "height_ge": 128
+            }
+          },
+          {
             "label": "Left block title",
             "name": "%BLOCK1_TITLE%",
             "value": "Connect",
@@ -298,6 +312,19 @@
             "type": "long_text"
           },
           {
+            "label": "Middle block icon",
+            "name": "static/images/promo/landing_promo_2.png",
+            "value": "",
+            "description": "Header icon",
+            "type": "image",
+            "optional": true,
+            "meta": {
+              "background": "light",
+              "format": "png",
+              "height_ge": 128
+            }
+          },
+          {
             "label": "Middle block title",
             "name": "%BLOCK2_TITLE%",
             "value": "Share",
@@ -310,6 +337,19 @@
             "value": "Share the access and manage all your Systems, users and their permissions from a single place",
             "description": "8-10 words",
             "type": "long_text"
+          },
+          {
+            "label": "Right block icon",
+            "name": "static/images/promo/landing_promo_3.png",
+            "value": "",
+            "description": "Header icon",
+            "type": "image",
+            "optional": true,
+            "meta": {
+              "background": "light",
+              "format": "png",
+              "height_ge": 128
+            }
           },
           {
             "label": "Right block title",

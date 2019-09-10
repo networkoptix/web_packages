@@ -6,6 +6,7 @@ import { NxDialogsService }          from '../../dialogs/dialogs.service';
 import { NxAccountService }          from '../../services/account.service';
 import { NxPageService }             from '../../services/page.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxSessionService }          from '../../services/session.service';
 import { LocalStorageService }       from 'ngx-store';
 
 @Component({
@@ -22,6 +23,8 @@ export class NxLandingComponent implements OnInit, OnDestroy {
     params: any;
     userEmail: any;
     login: any;
+
+    loaded: boolean;
 
     private setupDefaults() {
         this.CONFIG = this.config.getConfig();
@@ -40,24 +43,28 @@ export class NxLandingComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        if (this.router.url === '/login') {
-            // TODO: remove this hack after we retire AJS
-            // downgraded component cause this page to load twice and we end up with two login dialogs
-            if (!this.localStorage.get('login')) {
-                this.login = this.dialogs.login(this.accountService, false, false);
-                this.pageService.setPageTitle(this.LANG.pageTitles.login);
-                this.localStorage.set('login', true);
-            }
-
+        if (this.router.url === '/content/about') {
+            this.loaded = true;
         } else {
             this.accountService
                 .checkLoginState()
                 .then(() => {
+                    // TODO: remove this hack after we retire AJS
+                    // downgraded component cause this page to load twice and we end up with two login dialogs
                     this.accountService.redirectAuthorised();
                     this.userEmail = this.accountService.getEmail();
-                })
-                .catch(() => {
+                }, () => {
+                    if (this.router.url === '/login' && !this.localStorage.get('login')) {
+                        this.localStorage.set('login', true);
+                        this.login = this.dialogs.login(this.accountService, false, false);
+                        this.pageService.setPageTitle(this.LANG.pageTitles.login);
+                    } else {
+                        this.loaded = true;
+                        this.pageService.setPageTitle(this.LANG.pageTitles.default);
+                    }
+                }).catch(() => {
                     this.pageService.setPageTitle(this.LANG.pageTitles.default);
+                    this.loaded = true;
                 });
         }
     }
