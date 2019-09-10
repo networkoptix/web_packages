@@ -190,7 +190,8 @@ Advaced Search Filters Text
 
 Validate on IPVD Page
     Wait until Elements are Visible
-    ...    ${IPVD TITLE}
+    # CLOUD-3564 "Supported IP Video Devices" inset not being translated
+    # ...    ${IPVD TITLE}
     ...    ${IPVD SEARCH BAR}
     ...    ${IPVD ADV SEARCH BUTTON}
     ...    ${IPVD MANUFACTURERS PANE}
