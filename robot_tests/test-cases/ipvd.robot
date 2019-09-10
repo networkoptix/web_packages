@@ -393,7 +393,7 @@ Advanced search
     ...    ${IPVD ADV FILTER MIN RES}
     Element Should Contain
     ...    ${IPVD FILTERS APPLIED BUTTON}
-    ...    1080
+    ...    1080p
 
     Log    Step 5
     Click Element    ${IPVD ADV FILTERS MFRS}
