@@ -64,7 +64,7 @@
 			"arm": {
 				"label": "ARM",
 				"shortLabel": "ARM",
-				"supported": "<a href='/content/arm'>ARM based servers support policy</a>"
+				"supported": "<a href='/content/arm'>Политика поддержки серверов на базе ARM</a>"
 			},
 			"sdk": {
 				"label": "SDK",

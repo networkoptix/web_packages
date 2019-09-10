@@ -242,7 +242,7 @@
     "cameraStates": {
       "offline": "オフライン",
       "error": "エラー",
-      "errorLoading": "An error occurred while loading this video.",
+      "errorLoading": "ビデオの読み込み中にエラーが発生しました",
       "unauthorized": "認証が必要です",
       "noData": "データがありません",
       "iOSVideoTooLarge": "iOSはfullHD(2MP：1920x1080)より大きいビデオをサポートしていません",

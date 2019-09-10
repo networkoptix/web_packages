@@ -52,6 +52,8 @@ export class CamTableComponent implements OnChanges, OnInit {
     pagerMaxSize: number;
     CONFIG: any = {};
     showAnalytics: boolean;
+    serviceParams;
+    serviceHeaders;
 
     // Options for the Excel export
     public csvFilename: any;
@@ -68,7 +70,6 @@ export class CamTableComponent implements OnChanges, OnInit {
         removeNewLines  : true
     };
 
-    SERVICE_PARAMS = ['count', 'resolutionArea', 'area'];
 
     constructor(private router: Router,
                 private translate: TranslateService,
@@ -82,6 +83,8 @@ export class CamTableComponent implements OnChanges, OnInit {
         this.sortOrderASC = true;
         this._elements = this.elements;
 
+        this.serviceHeaders = [this.lang.ipvd.count, this.lang.ipvd.resolutionArea];
+        this.serviceParams = ['count', 'resolutionArea'];
         this.paramsShown = 6;
         this.cameraHeaders = [
             this.lang.ipvd.vendor,
@@ -213,10 +216,14 @@ export class CamTableComponent implements OnChanges, OnInit {
         });
     }
 
-    filterAllowedParams(arr: any = []) {
+    filterAllowedParams(arrHeaders, arrParams) {
         // filter 'service' params
-        this.allowedParameters = this.allowedParameters.filter((el) => !arr.includes(el));
-        this.cameraHeaders = this.cameraHeaders.filter((el) => !arr.includes(el.toLowerCase()));
+        this.allowedParameters = this.allowedParameters.filter((el) => {
+            return !arrParams.includes(el);
+        });
+        this.cameraHeaders = this.cameraHeaders.filter((el) => {
+            return !arrHeaders.includes(el);
+        });
         this.showHeaders = this.cameraHeaders;
     }
 
@@ -285,7 +292,7 @@ export class CamTableComponent implements OnChanges, OnInit {
             this.setDebugAndBetaMode();
 
             if (!this.debug && !this.beta) {
-                this.filterAllowedParams(this.SERVICE_PARAMS);
+                this.filterAllowedParams(this.serviceHeaders, this.serviceParams);
             }
 
             this.showAnalytics = this.CONFIG.ipvd.showAnalyticsEvents || this.params.debug || this.params.beta;
@@ -345,7 +352,7 @@ export class CamTableComponent implements OnChanges, OnInit {
 
         this.showAnalytics = this.CONFIG.ipvd.showAnalyticsEvents || this.debug || this.beta;
         if (!this.showAnalytics) {
-            this.filterAllowedParams(['isAnalyticsSupported', 'analytics']);
+            this.filterAllowedParams([this.lang.ipvd.isAnalyticsSupported], ['isAnalyticsSupported']);
         }
     }
 

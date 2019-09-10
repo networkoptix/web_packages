@@ -1,0 +1,35 @@
+{
+  "activate_account": {
+    "emailSubject": "Aktiver kontoen din"
+  },
+  "cloud_invite": {
+    "emailSubject": "Du har blitt invitert til %CLOUD_NAME%"
+  },
+  "cloud_notification": {
+    "emailSubject": "{{message.subject}}"
+  },
+  "contact_sales": {
+    "emailSubject": "Salgsforespørsel for {{message.product}}"
+  },
+  "contact_support": {
+    "emailSubject": "Support forespørsel for {{message.product}}"
+  },
+  "integration_feedback": {
+    "emailSubject": "Tilbakemelding for {{message.product}}"
+  },
+  "ipvd_feedback": {
+    "emailSubject": "Kamera Side Tilbakemelding{{#message.product}} for {{message.product}}{{/message.product}}"
+  },
+  "review_version": {
+    "emailSubject": "{{message.product_type}}: {{message.product}} har en ny versjon å vurdere"
+  },
+  "restore_password": {
+    "emailSubject": "Tilbakestill passordet ditt"
+  },
+  "system_invite": {
+    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} inviterer deg til %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}Videosystem {{message.system_name}} ble delt med deg{{/message.sharer_name}}"
+  },
+  "system_shared": {
+    "emailSubject": "Videosystem {{message.system_name}} ble delt med deg"
+  }
+}

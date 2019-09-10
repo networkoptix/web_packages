@@ -2,6 +2,7 @@
 @import '../../styles/theme_palette';
 @import '../../styles/theme_variables';
 @import '../styles/mixins';
+@import '~bootstrap/scss/mixins';
 
 #button {
     height        : 2rem;
@@ -317,5 +318,26 @@ button, .btn {
     
     &:active, &:focus {
         color : $light16;
+    }
+}
+
+.btn-collapse {
+    @include media-breakpoint-down(md) {
+        padding : 0 .75rem;
+    }
+    
+    .glyphicon {
+        display : block;
+        margin  : 0;
+        @include media-breakpoint-up(md) {
+            display : none;
+        }
+    }
+    
+    .btn-caption {
+        display : none;
+        @include media-breakpoint-up(md) {
+            display : block;
+        }
     }
 }

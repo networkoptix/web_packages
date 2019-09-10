@@ -1,0 +1,14 @@
+<h1>Hallo, </h1>
+
+<p>Je bent uitgenodigd voor %CLOUD_NAME%</p>
+
+{{#message.message}}
+<p>{{ message.message }}</p>
+{{/message.message}}
+
+<p>Maak een account aan op
+    <a href="{{ config.portal_url }}">%CLOUD_NAME%</a>
+    met behulp van uw huidige e-mailadres en volg verdere instructies.
+</p>
+
+<a class="btn" href="{{ config.portal_url }}/register/{{ message.code }}">Account Registreren</a>

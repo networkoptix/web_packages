@@ -221,7 +221,7 @@ ${EDIT PERMISSIONS CUSTOM}            //form[@name='shareForm']//select[@ng-mode
 ${EDIT PERMISSIONS HINT}              //form[@name='shareForm']//span[contains(@class,'help-block')]
 
 #Account Page
-${ACCOUNT EMAIL}                      //form[@name='accountForm']//input[@ng-model='account.email']
+${ACCOUNT EMAIL}                      //form[@name='accountForm']//input[@ng-model='userEmail']
 ${ACCOUNT FIRST NAME}                 //form[@name='accountForm']//input[@ng-model='account.first_name']
 ${ACCOUNT LAST NAME}                  //form[@name='accountForm']//input[@ng-model='account.last_name']
 ${ACCOUNT LANGUAGE DROPDOWN}          //form[@name='accountForm']//nx-language-select//button[@id='dropdownMenuButton']

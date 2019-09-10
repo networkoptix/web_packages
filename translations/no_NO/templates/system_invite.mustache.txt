@@ -1,0 +1,13 @@
+Velkommen til %CLOUD_NAME%
+
+{{#message.sharer_name}}
+{{message.sharer_name}} ({{message.sharer_email}}) inviterer deg til å bli med %CLOUD_NAME% og delte sitt system {{message.system_name}} med deg.
+{{/message.sharer_name}}
+
+{{^message.sharer_name}}
+Du er invitert til å bli med %CLOUD_NAME%.
+Du har fått tilgang til {{message.system_name}}.
+{{/message.sharer_name}}
+
+Registrer og se systemet: {{config.portal_url}}/ register /{{message.code}}
+

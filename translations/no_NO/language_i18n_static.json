@@ -1,0 +1,197 @@
+{
+	"search": {
+		"Search": "Søk",
+		"search_ipvd": "Søk etter modell eller produsent",
+		"filter applied": "filtrert visning",
+		"filters applied": "filtrert visning",
+		"Any": "Enhver",
+		"selected": "valgt",
+		"vendor": "Produsent",
+		"vendors": "Produsenter",
+		"hardwareType": "Type",
+		"hardwareTypes": "Typer",
+		"minResolution": "Minimum oppløsning",
+		"analytics": "Analyser",
+		"analyticsSelected": "analysehendelser"
+	},
+	"cameraFilters": {
+		"ptz": "PTZ kameraer",
+		"aptz": "Kameraer med avansert PTZ",
+		"fisheye": "Fisheye-kameraer",
+		"H265": "H.265 kameraer",
+		"IO": "I/O-moduler",
+		"multiSensor": "Multisensor kameraer",
+		"TwWayAudio": "2-veis lydenheter",
+		"audio": "Kameraer med lyd",
+		"encoder": "Enkoder",
+		"highRes": "Ekstra høyoppløselige kameraer"
+	},
+	"downloads": {
+		"mobile": {
+			"ios": {
+				"link": "%IOS_APPLICATION_LINK%"
+			},
+			"android": {
+				"link": "%ANDROID_APPLICATION_LINK%"
+			}
+		},
+		"groups": {
+			"windows": {
+				"label": "Vindu",
+				"supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+			},
+			"mac": {
+				"label": "Mac OS",
+				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10,13 High Sierra"
+			},
+			"linux": {
+				"label": "Ubuntu Linux",
+				"shortLabel": "Ubuntu",
+				"supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+			},
+			"macos": {
+				"label": "Mac OS",
+				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10,13 High Sierra"
+			},
+			"ios": {
+				"label": "iOS",
+				"shortLabel": "iOS"
+			},
+			"android": {
+				"label": "Android",
+				"shortLabel": "Android"
+			},
+			"arm": {
+				"label": "ARM",
+				"shortLabel": "ARM",
+				"supported": "<a href='/content/arm'>ARM based servers support policy</a>"
+			},
+			"sdk": {
+				"label": "SDK",
+				"shortLabel": "SDK",
+				"supported": "C + + kryssplattform SDK"
+			}
+		},
+		"platforms": {
+			"win64": "x64",
+			"linux64": "x64",
+			"mac": "X",
+			"bananapi": "Banana Pi",
+			"bpi": "Nx1",
+			"rpi": " Raspberry Pi"
+		},
+		"appTypes": {
+			"client": "Kun klient",
+			"server": "Kun Server",
+			"bundle": "Klient og server",
+			"servertool": "Konfigurasjonsverktøy",
+			"package": "Pakke"
+		},
+		"releasesTypes": {
+			"beta": "Beta",
+			"betas": "Betaer",
+			"rc": "Utsendelseskandidater",
+			"release": "Utgivelse",
+			"releases": "Utgivelser",
+			"patch": "Fiks",
+			"patches": "Fikser"
+		}
+	},
+	"ipvd": {
+		"resolutionArea": "Område",
+		"count": "Antall",
+		"vendor": "Produsent",
+		"model": "Modell",
+		"hardwareType": "Type",
+		"maxResolution": "Oppløsning",
+		"maxFps": "Max FPS",
+		"primaryCodec": "Kodek",
+		"isAudioSupported": "Lyd",
+		"isTwAudioSupported": "2-veis lyd",
+		"isPtzSupported": "PTZ",
+		"isAptzSupported": "Avansert PTZ",
+		"isAptzSupportedShort": "Avs. PTZ",
+		"isFisheye": "Fisheye",
+		"isMdSupported": "Motion",
+		"isIoSupported": "I/O",
+		"isH265": "H.265",
+		"isMultiSensor": "Multi Sensor",
+		"isAnalyticsSupported": "Analyser",
+		"camera": "Kamera",
+		"multiSensorCamera": "Multisensor kameraer",
+		"encoder": "Enkoder",
+		"dvr": "DVR",
+		"other": "Andre",
+		"PTZ cameras": "PTZ kameraer",
+		"Advanced PTZ cameras": "Avanserte PTZ kameraer",
+		"Fisheye Cameras": "Fisheye-kameraer",
+		"Cameras supporting H.265": "Kameraer som støtter H.265",
+		"I / O modules": "I/O-moduler",
+		"Multisensor Cameras": "Multisensor kameraer",
+		"Cameras with 2-way audio": "Kameraer med 2-veis lyd",
+		"Extra high resolution cameras": "Ekstra høyoppløselige kameraer",
+		"feedback": {
+			"a_Please": "Vennligst",
+			"b_Link": "send inn en forespørsel",
+			"c_Info": "for ytterligere spørsmål / bekymringer angående støttede enheter."
+		},
+		"disclaimer": "Denne listen er begrenset til enheter som er funnet på {{vmsName}} der brukere har tillatt automatisk rapportering av enhetsspesifikasjoner til {{companyName}}. Ingen personlig informasjon blir samlet inn, og hver bruker forblir helt anonym."
+	},
+	"integration": {
+		"previewRibbonText": "Denne siden er en forhåndsvisning av de siste endringene, og den stemmer ikke overens med offentlig tilgjengelig versjon.",
+		"backToEditText": "Tilbake til redigeringsgrensesnittene",
+		"Access Control": "Adgangskontroll",
+		"Connector": "Tilkobler",
+		"Data Analytics": "Data Analytics",
+		"Drone": "Drone",
+		"Health Monitor": "Helse Monitor",
+		"Storage": "Lagring"
+	},
+	"messageDialogPlaceholders": {
+		"feedback": "Pass på at du inkluderer din kameramodell og produsent..."
+	},
+	"pageTitles": {
+		"supportedDevices": "Støttede enheter",
+		"integrations": "Integrasjoner"
+	},
+	"dialogs": {
+		"merge": {
+			"connectToCloud": "Koble System du vil slå sammen med denne til <strong>{{cloudName}}</strong> eller slå sammen lokalt ved hjelp av <strong>{{vmsName}}</strong> Klienten.",
+			"mergeConfirmation": "Du er i ferd med å slå sammen systemer <strong>{{primarySystem}}</strong> og <strong>{{secondarySystem}}</strong>. Innstillinger og navnet vil bli tatt fra <strong>{{primarySystem}}</strong>.",
+			"primaryCannotMerge": "System {{targetSystem}} har en nyere programvareversjon som ikke er kompatibel med gjeldende system. Oppdater det nåværende systemet til <a href=\"/download\" target=\"_blank\" translate>siste versjon</a> å slå det sammen med {{targetSystem}} systemet.",
+			"primarySystemOffline": "System {{primarySystem}} er offline og kan ikke slås sammen med System {{targetSystem}}.",
+			"secondaryCannotMerge": "System {{targetSystem}} har en eldre programvareversjon som ikke er kompatibel med gjeldende system. Oppdater {{targetSystem}} til <a href=\"/download\" target=\"_blank\" translate>siste build</a> å slå dert sammen med det nåværende.",
+			"systemOffline": "System {{targetSystem}} er frakoblet og kan ikke slås sammen med det nåværende.",
+			"systemUnavailable": "System {{targetSystem}} er for tiden ikke tilgjengelig. Prøv igjen om noen få minutter eller kontakt"
+		},
+		"message": {
+			"failedToSend": "Meldingen ble ikke sendt.",
+			"sent": "Meldingen er sendt.",
+			"title": {
+				"integration": "Kom i kontakt med {{companyName}}",
+				"ipvd_feedback_page": "Tilbakemelding for kameraer-siden",
+				"ipvd_feedback_device": "Tilbakemelding om {{product}}"
+			},
+			"topic": {
+				"contact_sales": "Kontakt salg for {{product}}",
+				"contact_support": "Kontakt brukerstøtte for {{product}}",
+				"integration_feedback": "Tilbakemelding for integrasjon {{product}}",
+				"ipvd_feedback_page": "Tilbakemelding for kameraer-siden",
+				"ipvd_feedback_device": "Tilbakemelding for {{product}}"
+			}
+		}
+	},
+	"privacyPolicy": {
+		"integration": "Ved å sende inn dette skjemaet samtykker du til å bli kontaktet av {{INTEGRATION_COMPANY}} og / eller %COMPANY_NAME%.\nDu vil finne {{INTEGRATION_COMPANY}} personvernregler <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">her</a> og %COMPANY_NAME% personvernregler <a href=\"%PRIVACY_LINK%\" target=\"blank\">her</a> som inkluderer instruksjoner om hvordan du kan trekke tilbake ditt samtykke.",
+		"ipvd": "Ved å sende inn dette skjemaet samtykker du i å bli kontaktet av %COMPANY_NAME%.\nDu vil finne %COMPANY_NAME% personvernregler <a href=\"%PRIVACY_LINK%\" target=\"blank\">her</a> som inkluderer instruksjoner om hvordan du kan trekke tilbake ditt samtykke."
+	},
+	"testedVersionLabel": "Testet på {{vmsName}} versjon:",
+	"testedVersionsLabel": "Testet på {{vmsName}} versjoner:",
+	"About %CLOUD_NAME%": "Om %CLOUD_NAME%",
+	"Download %VMS_NAME%": "Last ned %VMS_NAME%",
+	"Integrations": "Integrasjoner",
+	"Privacy": "Personvern",
+	"Support": "Brukerstøtte",
+	"Supported Devices": "Støttede enheter",
+	"Terms": "Vilkår"
+}

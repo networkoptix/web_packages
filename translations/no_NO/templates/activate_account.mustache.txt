@@ -1,0 +1,8 @@
+Hei {{message.userFullName}},
+
+  Vennligst åpne lenken nedenfor for å bekrefte e-postadressen din og aktiver kontoen.
+
+{{config.portal_url}}/activate/{{message.code}}
+
+Hvis du ikke registrerte deg i %CLOUD_NAME%, ignorerer du denne e-posten.
+Ikke del meldingen eller lenken til noen.

@@ -138,9 +138,8 @@ export class MergeModalContent {
             this.checking = true;
             this.systemMergeable = '';
             return this.precheckSystemMerge();
-        }, {
-            errorCodes: {}
-        }).then((res) => {
+        }, { errorCodes: {}})
+        .then((res) => {
             this.checking = false;
             this.targetSystemDropdown.name = this.addStatus(this.targetSystem);
             this.systemMergeable = this.checkMergeability(this.targetSystem);
@@ -221,6 +220,8 @@ export class MergeModalContent {
                         .reduce((acc, cur) => acc + cur) > this.config.maxServers;
                     return {};
                 }).catch(error => error);
+            }, (error) => {
+                return error;
             });
         });
     }

@@ -347,6 +347,9 @@ def get_ipvd(request):
 
             if camera["hardwareType"] == "Camera" and camera["isMultiSensor"]:
                 camera["hardwareType"] = 'Multi-Sensor Camera'
+                camera["hardwareTypeId"] = 'multiSensorCamera'
+            else:
+                camera["hardwareTypeId"] = camera["hardwareType"].lower()
 
             res = camera["maxResolution"].split('x')
             if len(res) == 2:

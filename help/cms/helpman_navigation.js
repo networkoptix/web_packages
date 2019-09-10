@@ -1,4 +1,4 @@
-/* ------------ Script copyright 2005-2013 EC Software -------------
+/* ------------ Script copyright 2005-2011 EC Software -------------
    This script was created by Help & Manual and is part of the      
    Webhelp export format. This script is designed for use in 
    combination with the output of Help & Manual and must not 
@@ -10,7 +10,7 @@
 var usecookie = false;
 var tocselecting = false;
 var abspossupported = 0;
-var currentselection = null;
+var currentselection;
 var currenttocstate = "";
 
 if (gaaccount != "") {
@@ -80,12 +80,9 @@ function hmContentFrame() {
   return hmcontent;  	
 }
 
-var lastTrackEvent = "";
-
 function track(action, data) {
   if (gaaccount != "") {	
-    if ((window._gat) && (lastTrackEvent != action+data)) {
-      lastTrackEvent = action+data;	
+    if (window._gat) {
       var pageTracker = window._gat._getTracker(gaaccount);
       switch(action) {
       case "topic":
@@ -136,8 +133,7 @@ function switchall(nodevisible, animate) {
 function loadstate(toc) {
 	var tmpAnimate = hmAnimate;
     hmAnimate = false;
-    currentselection = null;
-   
+    
     if (currenttocstate=="") {
       if (usecookie) currenttocstate = document.cookie;
       else { /* load default toc state */
@@ -179,24 +175,13 @@ function toggle(nodeID) {
 
 function hmNodeClicked(node, event) {
     if (event.stopPropagation) { event.stopPropagation(); } else { event.cancelBubble = true; } //MSIE
-    if ($(node).css('direction') != 'rtl') {
-      var scrOfX = $(hmNavigationFrame()).scrollLeft();
-      var scrOfY = $(hmNavigationFrame()).scrollTop();
-      var offset = parseInt( $(node).css('padding-left'));
-      var thisClicked = ( (event.clientY+scrOfY > $(node).offset().top) && (event.clientY+scrOfY < ($(node).offset().top+offset)) &&
-                          (event.clientX+scrOfX > $(node).offset().left) && (event.clientX+scrOfX < ($(node).offset().left+offset+$(node.firstChild).outerWidth())) );
-      var iconClicked = (thisClicked && (event.clientX+scrOfX > $(node).offset().left) && (event.clientX+scrOfX < ($(node).offset().left+offset)));
-	}
-	else {
-      var scrOfX = $(hmNavigationFrame()).scrollLeft();
-      var scrOfY = $(hmNavigationFrame()).scrollTop();
-      var offset = parseInt( $(node).css('padding-right'));
-      var nodeW = $(node).outerWidth();
-      var textW = $(node.firstChild).outerWidth();
-      var thisClicked = ( (event.clientY+scrOfY > $(node).offset().top) && (event.clientY+scrOfY < ($(node).offset().top+offset)) &&
-                          (event.clientX+scrOfX < $(node).offset().left+nodeW) && (event.clientX+scrOfX > ($(node).offset().left+nodeW-offset-textW)) );
-      var iconClicked = (thisClicked && (event.clientX+scrOfX < $(node).offset().left+nodeW) && (event.clientX+scrOfX > ($(node).offset().left+nodeW-offset)));
-	}	
+   
+    var scrOfX = $(hmNavigationFrame()).scrollLeft();
+    var scrOfY = $(hmNavigationFrame()).scrollTop();
+    var offset = parseInt( $(node).css('padding-left'));
+    var thisClicked = ( (event.clientY+scrOfY > $(node).offset().top) && (event.clientY+scrOfY < ($(node).offset().top+offset)) &&
+                        (event.clientX+scrOfX > $(node).offset().left) && (event.clientX+scrOfX < ($(node).offset().left+offset+$(node.firstChild).outerWidth())) );
+    var iconClicked = (thisClicked && (event.clientX+scrOfX > $(node).offset().left) && (event.clientX+scrOfX < ($(node).offset().left+offset)));
     var thisID = node.id;
     if (iconClicked) {
       toggle('ul'+thisID.substring(1,thisID.length));
@@ -261,8 +246,7 @@ function hilight(spanID) {
        try {
           if ((currentselection) && (currentselection != thisnode)) currentselection.className = "heading" + currentselection.className.substr(7,1);
        }
-       catch(e){
-       }
+       catch(e){}
        thisnode.className = "hilight"+thisnode.className.substr(7,1);
        selectionchanged = (currentselection != thisnode);
        currentselection = thisnode;
@@ -286,15 +270,10 @@ function intoview(thisnode, tree, selectionchanged) {
 
 function collapseunfocused(toc, selectedID) {
     if (toc) {
-       var nodepath = 'ul'+selectedID.replace(/[isaul]/g,'') + ".";
-       var nodeCompare = "";
+       var nodepath = 'ul'+selectedID.replace(/[isaul]/g,'');
        var items = toc.getElementsByTagName("ul");
        for (var i = 0; i < items.length; i++) {
-         if (items[i].id.indexOf(".")<0) nodeCompare = items[i].id + ".";
-         else nodeCompare = items[i].id;
-         if (nodepath.lastIndexOf(nodeCompare)<0) {
-           hmSwitchNode(items[i], false, false);
-         }
+          if (nodepath.lastIndexOf(items[i].id)<0) { hmSwitchNode(items[i], false, false); }
        }
     }
 }
@@ -316,7 +295,6 @@ function quicksync(aID) {
              else collapseunfocused(toc, "");
           }
        }
-       track('topic', topicID);
     }
     tocselecting = false;
 }
@@ -344,7 +322,6 @@ function lazysync(topicID) {
              else collapseunfocused(toc, "");
           }
        }
-       track('topic', topicID);
     }
     tocselecting = false;
 }
