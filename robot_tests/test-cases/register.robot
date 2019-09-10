@@ -237,7 +237,7 @@ Cannot register email that is already registered
     Register    mark    hamill    ${email}    ${password}
     Go To    ${url}/register
     Register    mark    hamill    ${email}    ${password}
-    Wait Until Element Is Visible    ${REGISTER FORM}//span[@ng-if="registerForm.registerEmail.$error.alreadyExists" and text()="${EMAIL ALREADY REGISTERED TEXT}"]
+    Wait Until Element Is Visible    ${REGISTER FORM}//span[contains(@class,"help-block input-error") and text()="${EMAIL ALREADY REGISTERED TEXT}"]
 
 Cannot register email that is already activated
     [tags]    C41563
@@ -247,7 +247,7 @@ Cannot register email that is already activated
     Activate    ${email}
     Go To    ${url}/register
     Register    mark    hamill    ${email}    ${password}
-    Wait Until Element Is Visible    ${REGISTER FORM}//span[@ng-if="registerForm.registerEmail.$error.alreadyExists" and text()="${EMAIL ALREADY REGISTERED TEXT}"]
+    Wait Until Element Is Visible    ${REGISTER FORM}//span[contains(@class,"help-block input-error") and text()="${EMAIL ALREADY REGISTERED TEXT}"]
 
 Check registration email links, colors, cloud name, and user name
     [tags]    C24211

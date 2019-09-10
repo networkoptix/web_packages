@@ -66,7 +66,7 @@ Check Language Anonymous
 Check Langauge Logged In
     Register Keyword To Run On Failure    NONE
     Go To    ${ENV}/account
-    ${status}=    Run Keyword And Return Status    Wait Until Element Is Visible    ${LANGUAGE DROPDOWN}/span[@lang='${LANGUAGE}']    5
+    ${status}=    Run Keyword And Return Status    Wait Until Element Is Visible    ${ACCOUNT LANGUAGE DROPDOWN}/span[@lang='${LANGUAGE}']    5
     Register Keyword To Run On Failure    Failure Tasks
     Run Keyword If    "${status}"=="False"    Set Language
 
