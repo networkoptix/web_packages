@@ -98,7 +98,7 @@ export class LoginModalContent implements OnInit {
 
     resetForm() {
         if (!this.loginForm.valid) {
-            this.loginForm.controls['login_password'].setErrors(null);
+            this.loginForm.controls.login_password.setErrors(undefined);
             this.wrongPassword = false;
             this.accountBlocked = false;
         }
@@ -113,8 +113,8 @@ export class LoginModalContent implements OnInit {
         this.password = '';
 
         this.login = this.processService.createProcess(() => {
-            this.loginForm.controls['login_email'].setErrors(null);
-            this.loginForm.controls['login_password'].setErrors(null);
+            this.loginForm.controls.login_email.setErrors(undefined);
+            this.loginForm.controls.login_password.setErrors(undefined);
             this.wrongPassword = false;
             this.accountBlocked = false;
 
@@ -124,15 +124,15 @@ export class LoginModalContent implements OnInit {
             errorCodes: {
                 accountNotActivated: () => {
                     this.password = '';
-                    this.loginForm.controls['login_password'].markAsPristine();
-                    this.loginForm.controls['login_password'].markAsUntouched();
+                    this.loginForm.controls.login_password.markAsPristine();
+                    this.loginForm.controls.login_password.markAsUntouched();
 
-                    this.loginForm.controls['login_email'].setErrors({ 'not_activated': true });
+                    this.loginForm.controls.login_email.setErrors({ not_activated: true });
                     this.renderer.selectRootElement('#login_email').select();
                 },
                 notAuthorized: () => {
                     this.wrongPassword = true;
-                    this.loginForm.controls['login_password'].setErrors({ 'nx_wrong_password': true });
+                    this.loginForm.controls.login_password.setErrors({ nx_wrong_password: true });
                     this.password = '';
 
                     this.renderer.selectRootElement('#login_password').focus();
@@ -140,25 +140,24 @@ export class LoginModalContent implements OnInit {
                 },
                 notFound: () => {
                     this.password = '';
-                    this.loginForm.controls['login_password'].markAsPristine();
-                    this.loginForm.controls['login_password'].markAsUntouched();
+                    this.loginForm.controls.login_password.markAsPristine();
+                    this.loginForm.controls.login_password.markAsUntouched();
 
-                    this.loginForm.controls['login_email'].setErrors({ 'no_user': true });
+                    this.loginForm.controls.login_email.setErrors({ no_user: true });
                     this.renderer.selectRootElement('#login_email').select();
                 },
                 accountBlocked: () => {
-                    this.loginForm.controls['login_password'].markAsPristine();
-                    this.loginForm.controls['login_password'].markAsUntouched();
+                    this.loginForm.controls.login_password.markAsPristine();
+                    this.loginForm.controls.login_password.markAsUntouched();
 
                     this.accountBlocked = true;
-                    this.loginForm.controls['login_password'].setErrors({ 'nx_account_blocked': true });
+                    this.loginForm.controls.login_password.setErrors({ nx_account_blocked: true });
                 },
                 wrongParameters: () => {
                 },
                 portalError: this.LANG.errorCodes.brokenAccount
             }
-        });
-        this.login.then(() => {
+        }).then(() => {
             this.activeModal.close();
             if (this.keepPage) {
                 if (this.location.path() === '') {

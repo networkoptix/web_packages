@@ -104,7 +104,7 @@ export class NxAccountService {
                             this.location.path(this.CONFIG.redirectUnauthorised);
                         });
                 }
-                return Promise.resolve(true);
+                return account;
             });
     }
 
