@@ -197,7 +197,7 @@ ${DISCONNECT MODAL DISCONNECT BUTTON}    //button[text()='${DISCONNECT BUTTON TE
 
 ${JUMBOTRON}                          //div[@class='jumbotron']
 ${PROMO BLOCK}                        //div[contains(@class,'promo-block') and not(contains(@class, 'col-sm-4'))]
-${ALREADY ACTIVATED}                  //h1[@ng-if='!activate.success && !loading' and contains(text(),"${ALREADY ACTIVATED TEXT}")]
+${ALREADY ACTIVATED}                  //h1[contains(@class,"process-success") and contains(text(),"${ALREADY ACTIVATED TEXT}")]
 
 #Share Elements (Note: Share and Permissions are the same form so these are the same variables.  Making two just in case they do diverge at some point.)
 ${SHARE MODAL}                        //form[@name='shareForm']
@@ -221,11 +221,12 @@ ${EDIT PERMISSIONS CUSTOM}            //form[@name='shareForm']//select[@ng-mode
 ${EDIT PERMISSIONS HINT}              //form[@name='shareForm']//span[contains(@class,'help-block')]
 
 #Account Page
-${ACCOUNT EMAIL}                      //form[@name='accountForm']//input[@ng-model='userEmail']
-${ACCOUNT FIRST NAME}                 //form[@name='accountForm']//input[@ng-model='account.first_name']
-${ACCOUNT LAST NAME}                  //form[@name='accountForm']//input[@ng-model='account.last_name']
+${ACCOUNT EMAIL}                      //account//a[@id='settings']
+${ACCOUNT FIRST NAME}                 //form[@name='accountForm']//input[@id='firstName']
+${ACCOUNT LAST NAME}                  //form[@name='accountForm']//input[@id='lastName']
 ${ACCOUNT LANGUAGE DROPDOWN}          //nx-language-select//button[@id='dropdownMenuButton']
-${ACCOUNT SAVE}                       //form[@name='accountForm']//button[@ng-click='checkForm()']
+${ACCOUNT SAVE}                       //nx-account-settings-component//button[text()="${SAVE BUTTON TEXT}"]
+${ACCOUNT CANCEL}                     //nx-account-settings-component//button[text()="${CANCEL BUTTON TEXT}"]
 
 #Downloads
 ${DOWNLOADS HEADER}                   //h1["Downloads"]

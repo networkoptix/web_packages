@@ -20,9 +20,9 @@ Verify in Account Page
     ...    ${ACCOUNT EMAIL}
     ...    ${ACCOUNT FIRST NAME}
     ...    ${ACCOUNT LAST NAME}
-    ...    ${ACCOUNT SAVE}
     ...    ${ACCOUNT LANGUAGE DROPDOWN}
     ...    ${ACCOUNT DROPDOWN}
+    Elements Should Not Be Visible    ${ACCOUNT SAVE}    ${ACCOUNT CANCEL}
     sleep    .5
 
 Restart
