@@ -9,19 +9,19 @@
     "emailSubject": "{{message.subject}}"
   },
   "contact_sales": {
-    "emailSubject": "{{message.product}} 的產品咨询"
+    "emailSubject": "{{message.asset}} 的產品咨询"
   },
   "contact_support": {
-    "emailSubject": "{{message.product}} 的技术支持"
+    "emailSubject": "{{message.asset}} 的技术支持"
   },
   "integration_feedback": {
-    "emailSubject": "{{message.product}} 的反馈"
+    "emailSubject": "{{message.asset}} 的反馈"
   },
   "ipvd_feedback": {
-    "emailSubject": "关于 {{message.product}}{{/message.product}} 摄像机页面反馈{{#message.product}}"
+    "emailSubject": "关于 {{message.asset}}{{/message.asset}} 摄像机页面反馈{{#message.asset}}"
   },
   "review_version": {
-    "emailSubject": "{{message.product_type}}： {{message.product}} 有新版本可供检视"
+    "emailSubject": "{{message.asset_type}}： {{message.asset}} 有新版本可供检视"
   },
   "restore_password": {
     "emailSubject": "重新设置密码"

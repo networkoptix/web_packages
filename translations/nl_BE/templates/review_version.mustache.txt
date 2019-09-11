@@ -1,8 +1,8 @@
-Er is een nieuwe versie voor {{ message.product }} ({{message.product_type}}) om te beoordelen.
+Er is een nieuwe versie voor {{ message.asset }} ({{message.asset_type}}) om te beoordelen.
 
-Klik op de link om de revisie te bekijken {{ message.id }} voor {{ message.product }}
+Klik op de link om de revisie te bekijken {{ message.id }} voor {{ message.asset }}
 
-Link naar beoordeling: {{ config.portal_url }}/ admin / cms / productaanpassingsoverzicht /{{ message.id }}/ wijziging /
+Link to review: {{ config.portal_url }}/admin/cms/assetcustomizationreview/{{ message.id }}/change/
 
 Op deze pagina kunt u
 1) Een voorbeeld maken om de meest recente wijzigingen te zien.

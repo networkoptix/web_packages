@@ -1,4 +1,19 @@
 {
+	"account": {
+		"accountSavedSuccess": "您的帳號已成功儲存",
+		"activationLinkSent": "啟動連結已發送",
+		"passwordChangedSuccess": "您的帳號已成功儲存",
+		"changePassword": "變更密碼",
+		"newPasswordLabel": "新密碼",
+		"saveChanges": "儲存"
+	},
+	"activeActions": {
+		"sendConfirm": "重新發送啟動連結",
+		"resetPassword": "重置密碼",
+		"setNewPassword": "儲存密碼",
+		"setNewPasswordLabel": "新密碼"
+	},
+	"clientProtocol": "%CLIENT_PROTOCOL%:",
 	"search": {
 		"Search": "搜尋",
 		"search_ipvd": "按型號或製造商搜尋",
@@ -8,7 +23,7 @@
 		"selected": "已選取",
 		"vendor": "製造商",
 		"vendors": "製造商",
-		"hardwareType": "型態",
+		"hardwareType": "類型",
 		"hardwareTypes": "類型",
 		"minResolution": "最低解析度",
 		"analytics": "分析",
@@ -89,12 +104,12 @@
 		},
 		"releasesTypes": {
 			"beta": "Beta",
-			"betas": "測試版本",
+			"betas": "Betas",
 			"rc": "Release Candidate",
 			"release": "Release",
-			"releases": "版本發佈",
+			"releases": "Releases",
 			"patch": "Patch",
-			"patches": "補丁"
+			"patches": "Patches"
 		}
 	},
 	"ipvd": {
@@ -102,9 +117,9 @@
 		"count": "總計",
 		"vendor": "製造商",
 		"model": "型號",
-		"hardwareType": "型態",
-		"maxResolution": "最大解析度",
-		"maxFps": "每秒最大幀數（FPS）",
+		"hardwareType": "類型",
+		"maxResolution": "<span>Max</span><br><span>Resolution</span>",
+		"maxFps": "<span>Max</span><br><span>FPS</span>",
 		"primaryCodec": "編碼器",
 		"isAudioSupported": "音源",
 		"isTwAudioSupported": "雙向語音",
@@ -138,6 +153,7 @@
 		"disclaimer": "此列表僅限於在 {{vmsName}} 上找到的設備，使用者已同意將設備規格自動回報給 {{companyName}}。不會收集任何個人信息，每個使用者都將完全匿名。"
 	},
 	"integration": {
+		"myIntegrationsLabel": "Mine",
 		"previewRibbonText": "此頁面可預覽最新版本的更新，與公開版本不相符。",
 		"backToEditText": "返回編輯頁面",
 		"Access Control": "門禁管理",
@@ -151,10 +167,41 @@
 		"feedback": "請確認已包含您的攝影機型號和製造商......"
 	},
 	"pageTitles": {
+		"template": "{{title}} %CLOUD_NAME%",
+		"default": "%CLOUD_NAME%",
+		"registerSuccess": "歡迎來到",
+		"register": "新建帳號",
+		"changePassword": "更改密碼 -",
+		"account": "帳號設定 -",
+		"systems": "系統 -",
+		"system": "系統 -",
+		"systemShare": "共用系統 -",
+		"activate": "啟動帳號 -",
+		"activateSent": "啟動帳號 -",
+		"activateSuccess": "帳號啟動 -",
+		"activateCode": "啟動帳號 -",
+		"restorePassword": "重置密碼 -",
+		"restorePasswordSuccess": "密碼已儲存 -",
+		"restorePasswordCode": "重置密碼 -",
+		"view": "查看攝影機 - ",
+		"debug": "除錯",
+		"login": "登入 -",
+		"download": "下載 %VMS_NAME%",
+		"downloadPlatform": "下載 %VMS_NAME% ",
+		"pageNotFound": "找不到頁面",
 		"supportedDevices": "支援設備",
 		"integrations": "整合"
 	},
 	"dialogs": {
+		"okButton": "確定",
+		"cancelButton": "取消",
+		"loginTitle": "登入到 %CLOUD_NAME%",
+		"loginButton": "登入",
+		"logoutAuthorisedTitle": "您已經登入",
+		"logoutAuthorisedContinueButton": "繼續",
+		"logoutAuthorisedLogoutButton": "登出",
+		"noClientDetectedTitle": "安裝 %VMS_NAME% 來查看您的系統",
+		"download": "下載 %VMS_NAME%",
 		"merge": {
 			"connectToCloud": "請將要與此合併的系統連接到 <strong>{{cloudName}}</strong> 或使用 <strong>{{vmsName}}</strong> 客戶端進行本地合併。",
 			"mergeConfirmation": "您即將合併系統 <strong>{{primarySystem}}</strong> 和 <strong>{{secondarySystem}}</strong>。設定和名稱將取自 <strong>{{primarySystem}}</strong>。",
@@ -179,12 +226,178 @@
 				"ipvd_feedback_page": "攝影機頁面的回饋意見",
 				"ipvd_feedback_device": "{{product}} 的回饋意見"
 			}
+		},
+		"sharing": {
+			"confirmOwner": "如果您更改系統擁有者, 您將註銷目前此帳號的所有權. 此操作是不可逆的, 是否確定?",
+			"shareTitle": "新增",
+			"shareConfirmButton": "新增",
+			"editShareTitle": "編輯權限",
+			"editShareConfirmButton": "儲存",
+			"permissionsSaved": "新權限已儲存"
+		}
+	},
+	"errorCodes": {
+		"ok": "ok",
+		"cantSendActivationPrefix": "無法發送確認郵件",
+		"cantDisconnectSystemPrefix": "無法刪除系統",
+		"cantUnshareWithMeSystemPrefix": "無法刪除系統",
+		"cantSharePrefix": "無法共用系統",
+		"cantGetUsersListPrefix": "使用者清單不可用",
+		"cantGetSystemsListPrefix": "系統清單不可用",
+		"cantRegisterPrefix": "出現錯誤",
+		"cantGetSystemInfoPrefix": "系統資訊不可用",
+		"cantChangeAccountPrefix": "無法儲存變更",
+		"cantChangePasswordPrefix": "無法儲存密碼",
+		"cantActivatePrefix": "無法啟動您的帳號",
+		"cantSendConfirmationPrefix": "無法發送確認郵件",
+		"notAuthorized": "密碼不正確",
+		"brokenAccount": "帳號出現意外問題. <a href=\"/restore_password\">還原帳號</a>",
+		"wrongParameters": "表單上的一些參數不正確",
+		"wrongCode": "帳號已經啟動或確認碼不正確",
+		"wrongCodeRestore": "確認代碼已使用或不正確",
+		"wrongAuthCode": "代碼已過期或不正確",
+		"forbidden": "您沒有權限執行此操作",
+		"accountNotActivated": "此帳號尚未啟動. <a href=\"/activate\"> 再發送一次啟動連結</a>",
+		"accountBlocked": "此帳號已被封鎖。請在幾分鐘後再試一次。",
+		"notFound": "找不到",
+		"alreadyExists": "此帳號已存在",
+		"unknownError": "發生意外的錯誤",
+		"accountAlreadyActivated": "此帳號已啟動",
+		"emailNotFound": "帳號不存在.",
+		"EmailAlreadyExists": "此電子郵件已被註冊",
+		"oldPasswordMistmatch": "目前密碼不正確.",
+		"passwordMismatch": "密碼不正確",
+		"cantEditYourself": "不允許變更自己的權限",
+		"cantEditAdmin": "此使用者具有管理員權限",
+		"cantOpenClient": "%VMS_NAME% 應用程式未檢測到.<a href=\"/download\"> 下載</a>",
+		"lostConnection": "與 {{systemName}} 的連線斷開了",
+		"thisSystem": "系統",
+		"oldSafariNotSupported": "不支持10歲以上的Safari版本",
+		"DUPLICATE_MEDIASERVER_FOUND": "某些伺服器列表並存於選定的和當前的兩個系統中 。<br>請從各系統中刪除並斷線不相容的伺服器，然後重連一次。",
+		"mergedSystemIsOffline": "系統 <strong>{{failedSystem}}</strong> 處於離線狀態。",
+		"INCOMPATIBLE": "系統有不同的軟體版本。請將它們更新到 <a href=\"/download\">最新版本</a>。",
+		"FAIL": "系統 <strong>{{failedSystem}}</strong> 目前無法連上。<br>請稍後再試一次, 或聯繫 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">支援</a>。",
+		"unknownMergeError": "不明錯誤。您可以嘗試刷新頁面並重複嘗試。如果問題仍然存在 - 請聯繫 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">支援</a>。"
+	},
+	"passwordRequirements": {
+		"good": "好",
+		"fair": "尚可",
+		"fairMessage": "使用數字, 大寫和小寫字母及特殊字元使您密碼更強",
+		"minLength": "太短",
+		"minLengthMessage": "密碼必須包含至少 8 個字元",
+		"required": "不正確",
+		"requiredMessage": "只能使用拉丁字母, 數字和符號鍵盤, 避免前後空格",
+		"weak": "弱",
+		"weakMessage": "使用數字, 大寫和小寫字母及特殊字元使您密碼更強",
+		"strongMessage": "理想的密碼!",
+		"common": "太常見",
+		"commonMessage": "此密碼是很常用的組合",
+		"missingMessage": "密碼是必填的"
+	},
+	"registration": {
+		"agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
+	},
+	"system": {
+		"yourSystem": "您的系統",
+		"mySystemSearch": "我的",
+		"unavailable": "無法連接至系統",
+		"offline": "系統處於離線狀態",
+		"openClient": "在 %VMS_NAME% 中打開",
+		"openClientNoSystem": "開啟 %VMS_NAME%",
+		"confirmMergeAction": "合併",
+		"mergeSystemTitle": "合併系統",
+		"confirmRenameTitle": "系統名稱",
+		"confirmRenameAction": "儲存",
+		"successRename": "系統名稱已儲存",
+		"confirmDisconnectTitle": "是否從 %CLOUD_NAME% 中斷開系統?",
+		"confirmDisconnectAction": "斷線",
+		"confirmUnshareFromMe": "您正要從您的帳號斷開此系統. 您將再也無法存取此系統. 確定?",
+		"confirmUnshareFromMeTitle": "斷開系統?",
+		"confirmUnshareFromMeAction": "斷線",
+		"confirmUnshare": "此使用者將無法存取系統. 確定?",
+		"confirmUnshareTitle": "刪除使用者?",
+		"confirmUnshareAction": "刪除",
+		"successDisconnected": "系統已成功從 %CLOUD_NAME%斷線",
+		"successDeleted": "從您的帳號成功刪除系統 {{systemName}}",
+		"mergeFailed": "系統合併失敗",
+		"mergeStart": "系統開始合併中",
+		"mergeSuccess": "系統合併完成",
+		"permissionsRemoved": "權限從 {{email}} 被移除",
+		"unknownName": "未知的系統名稱（由雲合併引起）"
+	},
+	"systemStatuses": {
+		"activated": "啟動",
+		"incompatible": "不相容",
+		"merging": "合併中",
+		"notActivated": "未啟動",
+		"online": "線上",
+		"offline": "離線",
+		"unavailable": "不可用的"
+	},
+	"accessRoles": {
+		"disabled": {
+			"label": "停用",
+			"description": "使用者被停用, 無法登入到系統"
+		},
+		"Owner": {
+			"label": "擁有者",
+			"description": "不受限權限包括共用及從雲端連接/斷開系統的能力"
+		},
+		"Viewer": {
+			"label": "瀏覽者",
+			"description": "可以瀏覽即時影像和回放錄影資料"
+		},
+		"Live Viewer": {
+			"label": "即時影像瀏覽者",
+			"description": "只能瀏覽即時影像"
+		},
+		"Advanced Viewer": {
+			"label": "進階瀏覽者",
+			"description": "可以瀏覽即時影像, 回放錄影資料, 控制 PTZ 等"
+		},
+		"Administrator": {
+			"label": "管理者",
+			"description": "不受限的權限包括共用的能力"
+		},
+		"Custom": {
+			"label": "自訂",
+			"description": "使用 %VMS_NAME% 用戶端應用程式可以設置自訂權限"
+		},
+		"cloudAdmin": {
+			"label": "管理者",
+			"description": "可以配置系統和共用它"
+		},
+		"customRole": {
+			"label": "自訂角色",
+			"description": "在系統中指定的自訂使用者角色"
+		},
+		"owner": {
+			"label": "擁有者",
+			"description": "不受限權限包括共用及從雲端連接/斷開系統的能力"
+		},
+		"viewer": {
+			"label": "瀏覽者",
+			"description": "可以瀏覽即時影像和回放錄影資料"
+		},
+		"liveViewer": {
+			"label": "即時影像瀏覽者",
+			"description": "只能瀏覽即時影像"
+		},
+		"advancedViewer": {
+			"label": "進階瀏覽者",
+			"description": "可以瀏覽即時影像, 回放錄影資料, 設定攝影機, 控制 PTZ 等"
+		},
+		"custom": {
+			"label": "自訂",
+			"description": "使用 %VMS_NAME% 用戶端應用程式可以設置自訂權限"
 		}
 	},
 	"privacyPolicy": {
 		"integration": "提交表單即表示您同意與{{INTEGRATION_COMPANY}} 和/或 %COMPANY_NAME%聯繫。\n您可在<a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">瀏覽 {{INTEGRATION_COMPANY}} 隱私政策 </a> 和 %COMPANY_NAME% 隱私政策 <a href=\"%PRIVACY_LINK%\" target=\"blank\">這裡</a> 可了解如何撤銷您的同意。",
 		"ipvd": "提交表單即表示同意 %COMPANY_NAME%與您聯繫。\n您可在<a href=\"%PRIVACY_LINK%\" target=\"blank\">瀏覽 %COMPANY_NAME% 隱私政策</a> ，其中包含如何撤回同意。"
 	},
+	"systemAdministration": "系統管理",
+	"users": "使用者",
 	"testedVersionLabel": "測試 {{vmsName}} 版本：",
 	"testedVersionsLabel": "測試 {{vmsName}} 版本：",
 	"About %CLOUD_NAME%": "關於 %CLOUD_NAME%",
@@ -193,5 +406,12 @@
 	"Privacy": "隱私政策",
 	"Support": "支援",
 	"Supported Devices": "支援設備",
-	"Terms": "條款"
+	"Terms": "條款",
+	"pleaseSelect": "Please select...",
+	"WHEN_MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{{targetSystemName}}</strong> System, and this system will be deleted.",
+	"FAILED_SYSTEM_DESCR": "This link is broken,<br>System may be disconnected from %CLOUD_NAME%,<br>Access to this System may be revoked, <br>or you may be logged into a different account.",
+	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "您沒有任何系統連接到 %CLOUD_NAME%",
+	"NO_SYSTEMS_LOGIN": "使用 %VMS_NAME% 登入到您的系統",
+	"NO_SYSTEMS_GOTO_ADMINISTRATION": "到 \"系統管理\" 對話框中的 \"雲端\" 頁面",
+	"NO_SYSTEMS_CONNECT_SYSTEM": "點擊 \"連接系統到 %CLOUD_NAME%\""
 }

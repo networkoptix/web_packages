@@ -4,17 +4,6 @@
   "cloudName": "%CLOUD_NAME%",
   "vmsName": "%VMS_NAME%",
   "clientProtocol": "%CLIENT_PROTOCOL%:",
-  "dialogs": {
-    "okButton": "Tamam",
-    "cancelButton": "İptal",
-    "loginTitle": "%CLOUD_NAME% e giriş yapın",
-    "loginButton": "Giriş yap",
-    "logoutAuthorisedTitle": "Zaten giriş yapılmış",
-    "logoutAuthorisedContinueButton": "Devam et",
-    "logoutAuthorisedLogoutButton": "Oturumu Kapat",
-    "noClientDetectedTitle": "Sisteminizi görüntülemek için %VMS_NAME%'i yükleyin",
-    "download": "İndir %VMS_NAME%"
-  },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
     "default": "%CLOUD_NAME%",
@@ -168,14 +157,6 @@
     "commonMessage": "Dünyada en çok kullanılan parolayı seçtiniz",
     "missingMessage": "Parola gerekmektedir"
   },
-  "sharing": {
-    "confirmOwner": "Sistem sahibini değiştirirseniz, hesabınızdaki yetkileri iptal edersiniz. Bu eylem geri döndürülemez. Emin misiniz?",
-    "shareTitle": "Paylaş",
-    "shareConfirmButton": "Paylaş",
-    "editShareTitle": "İzinleri düzenle",
-    "editShareConfirmButton": "Kaydet",
-    "permissionsSaved": "Yeni izin kaydedildi"
-  },
   "system": {
     "yourSystem": "Sistem",
     "mySystemSearch": "IMeMyMine",
@@ -190,12 +171,11 @@
     "successRename": "Sistem ismi kaydedildi",
     "confirmDisconnectTitle": "%CLOUD_NAME% den bağlantıyı kesmek istiyor musunuz?",
     "confirmDisconnectAction": "Bağlantıyı kes",
-    "confirmUnshareFromMe": "Hesabınızın bu sistemle bağlantısını kesmek üzeresiniz. Bundan sonra bu sisteme erişim sağlayamayacaksınız. Emin misiniz?",
-    "confirmUnshareFromMeTitle": "Sistemle bağlantıyı kes?",
+    "confirmUnshareFromMe": "You will not be able to lgo into this System anymore.",
+    "confirmUnshareFromMeTitle": "Disconnect System from your Account?",
     "confirmUnshareFromMeAction": "Bağlantıyı kes",
-    "confirmUnshare": "Bu kullanıcı Sistem'e erişemez. Emin misiniz?",
-    "confirmUnshareTitle": "Kullanıcıyı sil?",
-    "confirmUnshareAction": "Sil",
+    "confirmUnshareTitle": "Remove user?",
+    "confirmUnshareAction": "Kaldır",
     "successDisconnected": "Sistem %CLOUD_NAME%'den başarıyla çıkarıldı",
     "successDeleted": "{{systemName}} sistemi hesabınızdan başarıyla silindi",
     "mergeFailed": "Sistem birleştirme işlemi başarısız oldu",
@@ -203,20 +183,6 @@
     "mergeSuccess": "Sistem birleştirme tamamlandı",
     "permissionsRemoved": "İzinler {{email}}'den kaldırıldı",
     "unknownName": "Sistem için Bilinmeyen Ad (Bulut birleştirme yüzünden)"
-  },
-  "account": {
-    "accountSavedSuccess": "Hesabınız başarıyla kaydedildi",
-    "activationLinkSent": "Aktivasyon linki gönderildi",
-    "passwordChangedSuccess": "Hesabınız başarıyla kaydedildi",
-    "changePassword": "Parola Değiştir",
-    "newPasswordLabel": "Yeni Parola",
-    "saveChanges": "Kaydet"
-  },
-  "activeActions": {
-    "sendConfirm": "Aktivasyon linki gönder",
-    "resetPassword": "Parolayı sıfırla",
-    "setNewPassword": "Parolayı kaydet",
-    "setNewPasswordLabel": "Yeni Parola"
   },
   "regActions": {
     "passwordLabel": "Parola",

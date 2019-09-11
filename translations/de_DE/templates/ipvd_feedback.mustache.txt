@@ -1,3 +1,3 @@
 Hello, {{ message.userFullName }}
-{{ message.sender_name}} ({{ message.sender_email }}) gab folgendes Feedback{{#message.product}} für {{ message.product }}{{/message.product}}:
+{{ message.sender_name}} ({{ message.sender_email }}) gab folgendes Feedback{{#message.asset}} für {{ message.asset }}{{/message.asset}}:
 <pre>{{ message.message }}</pre>

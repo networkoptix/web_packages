@@ -4,17 +4,6 @@
   "cloudName": "%CLOUD_NAME%",
   "vmsName": "%VMS_NAME%",
   "clientProtocol": "%CLIENT_PROTOCOL%:",
-  "dialogs": {
-    "okButton": "Xác định",
-    "cancelButton": "Hủy bỏ",
-    "loginTitle": "Đăng nhập vào %CLOUD_NAME%",
-    "loginButton": "Đăng nhập",
-    "logoutAuthorisedTitle": "Bạn đã đăng nhập",
-    "logoutAuthorisedContinueButton": "Tiếp tục",
-    "logoutAuthorisedLogoutButton": "Đăng xuất",
-    "noClientDetectedTitle": "Cài đặt %VMS_NAME% để xem Hệ thống của bạn",
-    "download": "Tải xuống %VMS_NAME%"
-  },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
     "default": "%CLOUD_NAME%",
@@ -168,14 +157,6 @@
     "commonMessage": "Mật khẩu này nằm trong mật khẩu phổ biến nhất trên thế giới",
     "missingMessage": "Mật khẩu là bắt buộc"
   },
-  "sharing": {
-    "confirmOwner": "Nếu bạn thay sở hữu hệ thống, bạn sẽ thu hồi quyền sở hữu hiện tại của mình. Không thể phục hồi sở hữu cũ. Bạn có chắc không?",
-    "shareTitle": "Chia sẻ",
-    "shareConfirmButton": "Chia sẻ",
-    "editShareTitle": "Quyền chỉnh sửa",
-    "editShareConfirmButton": "Tiết kiệm",
-    "permissionsSaved": "Cấp phép mới được lưu"
-  },
   "system": {
     "yourSystem": "Hệ thống của bạn",
     "mySystemSearch": "IMeMyMine",
@@ -190,12 +171,11 @@
     "successRename": "Đã lưu tên hệ thống",
     "confirmDisconnectTitle": "Hệ thống đã ngắt kết nối từ %CLOUD_NAME%?",
     "confirmDisconnectAction": "Ngắt kết nối",
-    "confirmUnshareFromMe": "Bạn sẽ ngắt kết nối Hệ thống này khỏi tài khoản của bạn. Bạn sẽ không thể truy cập Hệ thống này nữa. Bạn có chắc không?",
-    "confirmUnshareFromMeTitle": "Ngắt kết nối hệ thống?",
+    "confirmUnshareFromMe": "You will not be able to lgo into this System anymore.",
+    "confirmUnshareFromMeTitle": "Disconnect System from your Account?",
     "confirmUnshareFromMeAction": "Ngắt kết nối",
-    "confirmUnshare": "Người dùng này sẽ không thể truy cập vào Hệ thống. Bạn có chắc không?",
-    "confirmUnshareTitle": "Xóa người dùng?",
-    "confirmUnshareAction": "Xóa bỏ",
+    "confirmUnshareTitle": "Remove user?",
+    "confirmUnshareAction": "Tẩy",
     "successDisconnected": "Hệ thống được ngắt kết nối thành công từ %CLOUD_NAME%",
     "successDeleted": "Tài khoản {{systemName}} đã xóa thành công từ hệ thống của bạn",
     "mergeFailed": "Hợp nhất hệ thống không thành công",
@@ -203,20 +183,6 @@
     "mergeSuccess": "Hoàn thành hợp nhất hệ thống",
     "permissionsRemoved": "Các quyền đã bị xóa khỏi {{email}}",
     "unknownName": "Tên không xác định cho hệ thống (do hợp nhất Cloud)"
-  },
-  "account": {
-    "accountSavedSuccess": "Tài khoản của bạn đã được lưu thành công",
-    "activationLinkSent": "Link kích hoạt đã được gửi",
-    "passwordChangedSuccess": "Tài khoản của bạn đã được lưu thành công",
-    "changePassword": "Đổi mật khẩu",
-    "newPasswordLabel": "Mật khẩu mới",
-    "saveChanges": "Tiết kiệm"
-  },
-  "activeActions": {
-    "sendConfirm": "Gửi lại link kích hoạt",
-    "resetPassword": "Đặt lại mật khẩu",
-    "setNewPassword": "Lưu mật khẩu",
-    "setNewPasswordLabel": "Mật khẩu mới"
   },
   "regActions": {
     "passwordLabel": "Mật khẩu",

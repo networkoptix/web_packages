@@ -1,6 +1,21 @@
 {
+	"account": {
+		"accountSavedSuccess": "A sua conta foi gravada com sucesso",
+		"activationLinkSent": "Link de ativação enviado",
+		"passwordChangedSuccess": "A sua conta foi gravada com sucesso",
+		"changePassword": "Mudar Senha",
+		"newPasswordLabel": "Nova senha",
+		"saveChanges": "Gravar"
+	},
+	"activeActions": {
+		"sendConfirm": "Reenviar Link de Ativação",
+		"resetPassword": "Reset da Senha",
+		"setNewPassword": "Guardar senha",
+		"setNewPasswordLabel": "Nova senha"
+	},
+	"clientProtocol": "%CLIENT_PROTOCOL%:",
 	"search": {
-		"Search": "Pesquisa",
+		"Search": "Pesquisar",
 		"search_ipvd": "Pesquisar por modelo ou fabricante",
 		"filter applied": "filtro aplicado",
 		"filters applied": "filtros aplicados",
@@ -90,9 +105,9 @@
 		"releasesTypes": {
 			"beta": "Beta",
 			"betas": "Betas",
-			"rc": "Candidato a lançamento",
-			"release": "Lançamento",
-			"releases": "Versões",
+			"rc": "Release Candidate",
+			"release": "Release",
+			"releases": "Releases",
 			"patch": "Patch",
 			"patches": "Patches"
 		}
@@ -103,8 +118,8 @@
 		"vendor": "Fabricante",
 		"model": "Modelo",
 		"hardwareType": "Tipo",
-		"maxResolution": "Resolução Máxima",
-		"maxFps": "FPS Máximo",
+		"maxResolution": "<span>Max</span><br><span>Resolution</span>",
+		"maxFps": "<span>Max</span><br><span>FPS</span>",
 		"primaryCodec": "Codec",
 		"isAudioSupported": "Audio",
 		"isTwAudioSupported": "áudio bidirecional",
@@ -138,6 +153,7 @@
 		"disclaimer": "Esta lista é limitada a dispositivos encontrados em {{vmsName}} onde os usuários permitem o auto-relatório de especificações do dispositivo para {{companyName}}. Nenhuma informação pessoal é coletada e cada usuário permanece totalmente anônimo."
 	},
 	"integration": {
+		"myIntegrationsLabel": "Mine",
 		"previewRibbonText": "Esta página é uma pré-visualização das últimas alterações, e não corresponde à versão disponível publicamente.",
 		"backToEditText": "Voltar às interfaces de edição",
 		"Access Control": "Controle de Acesso",
@@ -151,10 +167,41 @@
 		"feedback": "Certifique-se de incluir seu modelo de câmera e fabricante..."
 	},
 	"pageTitles": {
+		"template": "{{title}} %CLOUD_NAME%",
+		"default": "%CLOUD_NAME%",
+		"registerSuccess": "Bem-vindo ao",
+		"register": "Criar Conta",
+		"changePassword": "Mudar senha -",
+		"account": "Definições da conta -",
+		"systems": "Sistemas -",
+		"system": "Sistema -",
+		"systemShare": "Partilha de Sistema -",
+		"activate": "Ativar conta -",
+		"activateSent": "Ativar conta -",
+		"activateSuccess": "Conta ativada -",
+		"activateCode": "Ativar conta -",
+		"restorePassword": "Reset de Senha -",
+		"restorePasswordSuccess": "Senha guardada -",
+		"restorePasswordCode": "Reset de Senha -",
+		"view": "Visualizar câmaras - ",
+		"debug": "Depurar",
+		"login": "Entrar -",
+		"download": "Baixar %VMS_NAME%",
+		"downloadPlatform": "Baixar %VMS_NAME% para ",
+		"pageNotFound": "Página não encontrada",
 		"supportedDevices": "Dispositivos suportados",
 		"integrations": "Integrações"
 	},
 	"dialogs": {
+		"okButton": "OK",
+		"cancelButton": "Cancelar",
+		"loginTitle": "Logar em %CLOUD_NAME%",
+		"loginButton": "Entrar",
+		"logoutAuthorisedTitle": "Já tem sessão iniciada",
+		"logoutAuthorisedContinueButton": "Continuar",
+		"logoutAuthorisedLogoutButton": "Terminar sessão",
+		"noClientDetectedTitle": "Instalar %VMS_NAME% para visualizar o seu sistema",
+		"download": "Baixar %VMS_NAME%",
 		"merge": {
 			"connectToCloud": "Conecte o sistema que você deseja mesclar com este para <strong>{{cloudName}}</strong> ou mesclar localmente usando <strong>{{vmsName}}</strong> Cliente.",
 			"mergeConfirmation": "Você está prestes a mesclar sistemas <strong>{{primarySystem}}</strong> e <strong>{{secondarySystem}}</strong>. As configurações e o nome serão tiradas do <strong>{{primarySystem}}</strong>.",
@@ -179,12 +226,178 @@
 				"ipvd_feedback_page": "Feedback para página de câmaras",
 				"ipvd_feedback_device": "Comentários sobre {{product}}"
 			}
+		},
+		"sharing": {
+			"confirmOwner": "Se alterar o proprietário do sistema, você revogará a propriedade da conta atual. Esta ação é irreversível. Tem certeza?",
+			"shareTitle": "Adicionar",
+			"shareConfirmButton": "Adicionar",
+			"editShareTitle": "Editar Permissões",
+			"editShareConfirmButton": "Gravar",
+			"permissionsSaved": "Novas permissões guardadas"
+		}
+	},
+	"errorCodes": {
+		"ok": "ok",
+		"cantSendActivationPrefix": "Não é possível enviar um email de confirmação",
+		"cantDisconnectSystemPrefix": "Não é possível apagar o Sistema",
+		"cantUnshareWithMeSystemPrefix": "Não é possível apagar o Sistema",
+		"cantSharePrefix": "Não é possível partilhar o Sistema",
+		"cantGetUsersListPrefix": "A lista de utilizadores não está disponível",
+		"cantGetSystemsListPrefix": "A lista de Sistemas não está disponível",
+		"cantRegisterPrefix": "Ocorreu um erro",
+		"cantGetSystemInfoPrefix": "Informações do sistema indisponível",
+		"cantChangeAccountPrefix": "Não é possível guardar as alterações",
+		"cantChangePasswordPrefix": "Não é possível guardar a senha",
+		"cantActivatePrefix": "Não é possível ativar a sua conta",
+		"cantSendConfirmationPrefix": "Não é possível enviar um email de confirmação",
+		"notAuthorized": "Senha incorreta",
+		"brokenAccount": "Problema inesperado com a conta. <a href=\"/restore_password\">Restaurar conta</a>",
+		"wrongParameters": "Alguns parâmetros no formulário estão incorretos",
+		"wrongCode": "A conta já está ativada ou o código de confirmação está incorreto",
+		"wrongCodeRestore": "O código de confirmação já foi usado ou está incorreto",
+		"wrongAuthCode": "O código expirou ou está incorreto",
+		"forbidden": "Não tem permissões para efetuar esta ação",
+		"accountNotActivated": "Esta conta ainda não está ativada. <a href=\"/activate\">Enviar link de ativação novamente</a>",
+		"accountBlocked": "Esta conta está temporariamente bloqueada. Por favor, tente novamente dentro de alguns minutos.",
+		"notFound": "Não encontrado",
+		"alreadyExists": "Esta conta já existe",
+		"unknownError": "Ocorreu um erro inesperado",
+		"accountAlreadyActivated": "Esta conta já está ativada",
+		"emailNotFound": "Conta não existe.",
+		"EmailAlreadyExists": "Este Email já está registado",
+		"oldPasswordMistmatch": "A senha atual está incorreta.",
+		"passwordMismatch": "Senha incorreta",
+		"cantEditYourself": "Não é permitido alterar as permissões próprias",
+		"cantEditAdmin": "Este utilizador tem permissões de administrador",
+		"cantOpenClient": "Aplicação %VMS_NAME% não está sendo detectada. <a href=\"/download\">Descarregar</a>",
+		"lostConnection": "Conexão a {{systemName}} perdida",
+		"thisSystem": "o sistema",
+		"oldSafariNotSupported": "Versões do Safari anteriores à 10 não são suportadas",
+		"DUPLICATE_MEDIASERVER_FOUND": "Algumas listas de servidores como existentes em ambos os sistemas - no selecionado e no atual.<br>Remova os servidores offline e incompatíveis de cada sistema e tente novamente.",
+		"mergedSystemIsOffline": "O sistema <strong>{{failedSystem}}</strong> está offline.",
+		"INCOMPATIBLE": "Os sistemas têm diferentes versões de software. Por favor, atualize os dois para o <a href=\"/download\">mais recente build</a>.",
+		"FAIL": "O sistema <strong>{{failedSystem}}</strong> está atualmente inacessível.<br>Tente novamente em alguns instantes ou entre em contato com o suporte <a href=\"%SUPPORT_LINK%\" target=\"_blank\"></a>.",
+		"unknownMergeError": "Erro desconhecido. Você pode tentar atualizar a página e repetir a tentativa. Se o problema persistir - por favor, contate o suporte <a href=\"%SUPPORT_LINK%\" target=\"_blank\"></a>."
+	},
+	"passwordRequirements": {
+		"good": "boa",
+		"fair": "justo",
+		"fairMessage": "Use números, letras maiúsculas e minúsculas e caracteres especiais para tornar a sua senha mais forte",
+		"minLength": "curto demais",
+		"minLengthMessage": "A senha deve conter pelo menos 8 caracteres",
+		"required": "incorreta",
+		"requiredMessage": "Use apenas letras latinas, números e símbolos do teclado, evite espaços à esquerda e à direita",
+		"weak": "fraca",
+		"weakMessage": "Use números, letras maiúsculas e minúsculas e caracteres especiais para tornar a sua senha mais forte",
+		"strongMessage": "Senha forte!",
+		"common": "muito comum",
+		"commonMessage": "Esta senha está principais senhas mais populares no mundo",
+		"missingMessage": "A senha é obrigatória"
+	},
+	"registration": {
+		"agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
+	},
+	"system": {
+		"yourSystem": "O seu Sistema",
+		"mySystemSearch": "IMeMyMine",
+		"unavailable": "O sistema está inacessível",
+		"offline": "O sistema está offline",
+		"openClient": "Abrir em %VMS_NAME%",
+		"openClientNoSystem": "Abrir %VMS_NAME%",
+		"confirmMergeAction": "\"Merge\"",
+		"mergeSystemTitle": "\"Merge\" dos Sistemas",
+		"confirmRenameTitle": "Nome do Sistema",
+		"confirmRenameAction": "Gravar",
+		"successRename": "Nome do sistema guardado",
+		"confirmDisconnectTitle": "Disconnect System from %CLOUD_NAME%?",
+		"confirmDisconnectAction": "Desconectar",
+		"confirmUnshareFromMe": "Está prestes a desconectar este Sistema da sua conta. Não poderá mais aceder a este Sistema. Tem certeza?",
+		"confirmUnshareFromMeTitle": "Desconectar o Sistema?",
+		"confirmUnshareFromMeAction": "Desconectar",
+		"confirmUnshare": "Este utilizador não será capaz de aceder ao sistema. Tem certeza?",
+		"confirmUnshareTitle": "Apagar utilizador?",
+		"confirmUnshareAction": "Apagar",
+		"successDisconnected": "O Sistema foi desconectado de %CLOUD_NAME% com sucesso",
+		"successDeleted": "O sistema {{systemName}} foi apagado com sucesso da sua conta",
+		"mergeFailed": "Falha na mesclagem do sistema",
+		"mergeStart": "Sistemas começaram a se fundir",
+		"mergeSuccess": "Mesclagem de sistema concluída",
+		"permissionsRemoved": "As permissões foram removidas de {{email}}",
+		"unknownName": "Nome desconhecido para o sistema (Causado pela mescla de nuvem)"
+	},
+	"systemStatuses": {
+		"activated": "ativado",
+		"incompatible": "incompatível",
+		"merging": "mesclando",
+		"notActivated": "não ativado",
+		"online": "online",
+		"offline": "desligada",
+		"unavailable": "indisponível"
+	},
+	"accessRoles": {
+		"disabled": {
+			"label": "Desabilitado",
+			"description": "O utilizador está desativado e não pode efetuar login no sistema"
+		},
+		"Owner": {
+			"label": "Dono",
+			"description": "Acesso não restrito, incluindo a capacidade de partilhar e conectar/desconectar o sistema da \"Cloud\""
+		},
+		"Viewer": {
+			"label": "Visualizador",
+			"description": "Pode visualizar o vídeo ao vivo e pesquisar o arquivo"
+		},
+		"Live Viewer": {
+			"label": "Visualizador ao vivo",
+			"description": "Só pode visualizar o vídeo ao vivo"
+		},
+		"Advanced Viewer": {
+			"label": "Visualizador Avançado",
+			"description": "Pode ver vídeo ao vivo, navegar no arquivo, controle PTZ etc"
+		},
+		"Administrator": {
+			"label": "Administrador",
+			"description": "Acesso não restrito incluindo a capacidade de partilhar"
+		},
+		"Custom": {
+			"label": "Personalizado",
+			"description": "Use a aplicação Cliente %VMS_NAME% para configurar permissões personalizadas"
+		},
+		"cloudAdmin": {
+			"label": "Administrador",
+			"description": "Pode configurar o Sistema e partilhá-lo"
+		},
+		"customRole": {
+			"label": "Perfil Personalizado",
+			"description": "Perfil de utilizador personalizado especificado no Sistema"
+		},
+		"owner": {
+			"label": "Dono",
+			"description": "Acesso não restrito, incluindo a capacidade de partilhar e conectar/desconectar o sistema da \"Cloud\""
+		},
+		"viewer": {
+			"label": "Visualizador",
+			"description": "Pode visualizar o vídeo ao vivo e pesquisar o arquivo"
+		},
+		"liveViewer": {
+			"label": "Visualizador ao vivo",
+			"description": "Só pode visualizar o vídeo ao vivo"
+		},
+		"advancedViewer": {
+			"label": "Visualizador Avançado",
+			"description": "Pode ver vídeos ao vivo, navegar no arquivo, configurar câmaras, controlar PTZ etc"
+		},
+		"custom": {
+			"label": "Personalizado",
+			"description": "Use a aplicação Cliente %VMS_NAME% para configurar permissões personalizadas"
 		}
 	},
 	"privacyPolicy": {
 		"integration": "Ao enviar este formulário você concorda em ser contatado por {{INTEGRATION_COMPANY}} e/ou %COMPANY_NAME%.\nVocê encontrará {{INTEGRATION_COMPANY}} política de privacidade <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">aqui</a> e %COMPANY_NAME% Política de Privacidade aqui <a href=\"%PRIVACY_LINK%\" target=\"blank\">aqui</a> que incluem instruções sobre como retirar seu consentimento.",
 		"ipvd": "Ao enviar este formulário você concorda em ser contatado por %COMPANY_NAME%.\nVocê encontrará %COMPANY_NAME% política de privacidade <a href=\"%PRIVACY_LINK%\" target=\"blank\">aqui</a> que inclui instruções sobre como retirar seu consentimento."
 	},
+	"systemAdministration": "Administração do Sistema",
+	"users": "Utilizadores",
 	"testedVersionLabel": "Testado em versão {{vmsName}}:",
 	"testedVersionsLabel": "Testado em versões de {{vmsName}}:",
 	"About %CLOUD_NAME%": "Sobre %CLOUD_NAME%",
@@ -193,5 +406,12 @@
 	"Privacy": "Privacidade",
 	"Support": "Suporte",
 	"Supported Devices": "Dispositivos suportados",
-	"Terms": "Termos"
+	"Terms": "Termos",
+	"pleaseSelect": "Please select...",
+	"WHEN_MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{{targetSystemName}}</strong> System, and this system will be deleted.",
+	"FAILED_SYSTEM_DESCR": "This link is broken,<br>System may be disconnected from %CLOUD_NAME%,<br>Access to this System may be revoked, <br>or you may be logged into a different account.",
+	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "Você não tem sistemas conectados a %CLOUD_NAME%",
+	"NO_SYSTEMS_LOGIN": "Faça o login no seu sistema usando %VMS_NAME%",
+	"NO_SYSTEMS_GOTO_ADMINISTRATION": "Vá a aba \"Cloud\" na caixa de diálogo \"Administração do sistema\"",
+	"NO_SYSTEMS_CONNECT_SYSTEM": "Pressione \"Conecte o sistema a %CLOUD_NAME%\""
 }

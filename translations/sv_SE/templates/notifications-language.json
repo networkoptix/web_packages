@@ -9,19 +9,19 @@
     "emailSubject": "{{message.subject}}"
   },
   "contact_sales": {
-    "emailSubject": "Försäljningsförfrågan för {{message.product}}"
+    "emailSubject": "Försäljningsförfrågan för {{message.asset}}"
   },
   "contact_support": {
-    "emailSubject": "Supportansökan för {{message.product}}"
+    "emailSubject": "Supportansökan för {{message.asset}}"
   },
   "integration_feedback": {
-    "emailSubject": "Feedback för {{message.product}}"
+    "emailSubject": "Feedback för {{message.asset}}"
   },
   "ipvd_feedback": {
-    "emailSubject": "Kamerasida återkoppling{{#message.product}} för {{message.product}}{{/message.product}}"
+    "emailSubject": "Kamerasida återkoppling{{#message.asset}} för {{message.asset}}{{/message.asset}}"
   },
   "review_version": {
-    "emailSubject": "{{message.product_type}}: {{message.product}} har en ny version att granska"
+    "emailSubject": "{{message.asset_type}}: {{message.asset}} har en ny version att granska"
   },
   "restore_password": {
     "emailSubject": "Återställ ditt lösenord"

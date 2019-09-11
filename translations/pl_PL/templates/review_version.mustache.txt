@@ -1,8 +1,8 @@
-Istnieje nowa wersja {{ message.product }}({{message.product_type}}) do przejrzenia.
+Istnieje nowa wersja {{ message.asset }}({{message.asset_type}}) do przejrzenia.
 
-Kliknij link, aby przejrzeć opis wersji {{ message.id }} dla {{ message.product }}
+Kliknij link, aby przejrzeć opis wersji {{ message.id }} dla {{ message.asset }}
 
-Link do przejrzenia: {{ config.portal_url }}/admin/cms/productcustomizationreview/{{ message.id }}/change/
+Link to review: {{ config.portal_url }}/admin/cms/assetcustomizationreview/{{ message.id }}/change/
 
 Na tej stronie możesz
 1) Przejrzeć najnowsze zmiany.

@@ -1,8 +1,8 @@
-Er is een nieuwe versie voor {{ message.product }}({{message.product_type}}) om te bekijken.
+Er is een nieuwe versie voor {{ message.asset }}({{message.asset_type}}) om te bekijken.
 
-Klik op de link om het ontwerp {{ message.id }} voor {{ message.product }} te bekijken
+Klik op de link om de revisie te bekijken {{ message.id }} voor {{ message.asset }}
 
-Link ter beoordeling: {{ config.portal_url }}/admin/cms/productcustomizationreview/{{ message.id }}/change/
+Link to review: {{ config.portal_url }}/admin/cms/assetcustomizationreview/{{ message.id }}/change/
 
 Op deze pagina kunt u
 1) Een voorbeeld maken om de meest recente wijzigingen te zien.

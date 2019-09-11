@@ -9,19 +9,19 @@
     "emailSubject": "{{message.subject}}"
   },
   "contact_sales": {
-    "emailSubject": "สอบถามรายละเอียดการขายสำหรับ {{message.product}}"
+    "emailSubject": "สอบถามรายละเอียดการขายสำหรับ {{message.asset}}"
   },
   "contact_support": {
-    "emailSubject": "ขอรับการสนับสนุนสำหรับ {{message.product}}"
+    "emailSubject": "ขอรับการสนับสนุนสำหรับ {{message.asset}}"
   },
   "integration_feedback": {
-    "emailSubject": "ข้อเสนอแนะเกี่ยวกับ {{message.product}}"
+    "emailSubject": "ข้อเสนอแนะเกี่ยวกับ {{message.asset}}"
   },
   "ipvd_feedback": {
-    "emailSubject": "คำติชมหน้ากล้อง{{#message.product}} สำหรับ {{message.product}}{{/message.product}}"
+    "emailSubject": "คำติชมหน้ากล้อง{{#message.asset}} สำหรับ {{message.asset}}{{/message.asset}}"
   },
   "review_version": {
-    "emailSubject": "{{message.product_type}}: {{message.product}} มีรุ่นใหม่ให้ตรวจสอบ"
+    "emailSubject": "{{message.asset_type}}: {{message.asset}} มีรุ่นใหม่ให้ตรวจสอบ"
   },
   "restore_password": {
     "emailSubject": "รีเซ็ตรหัสผ่านของคุณ"

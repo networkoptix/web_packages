@@ -1,8 +1,8 @@
-{{ message.product }} （{{message.product_type}}） の新しいバージョンをレビューできます。
+{{ message.asset }} （{{message.asset_type}}） の新しいバージョンをレビューできます。
 
-{{ message.product }}のドラフト {{ message.id }} を確認するにはリンクをクリックしてください
+{{ message.asset }}のドラフト {{ message.id }} を確認するにはリンクをクリックしてください
 
-レビューへのリンク： {{ config.portal_url }}/admin/cms/productcustomizationreview/{{ message.id }}/change/
+Link to review: {{ config.portal_url }}/admin/cms/assetcustomizationreview/{{ message.id }}/change/
 
 このページでは
 1) 最新の変更を表示するプレビューを作成します。

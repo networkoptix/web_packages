@@ -4,17 +4,6 @@
   "cloudName": "%CLOUD_NAME%",
   "vmsName": "%VMS_NAME%",
   "clientProtocol": "%CLIENT_PROTOCOL%:",
-  "dialogs": {
-    "okButton": "OK",
-    "cancelButton": "Avbryt",
-    "loginTitle": "Logg inn på %CLOUD_NAME%",
-    "loginButton": "Logg Inn",
-    "logoutAuthorisedTitle": "Du er allerede innlogget",
-    "logoutAuthorisedContinueButton": "Fortsette",
-    "logoutAuthorisedLogoutButton": "Logg ut",
-    "noClientDetectedTitle": "Installer %VMS_NAME% for å koble til ditt System",
-    "download": "Last ned %VMS_NAME%"
-  },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
     "default": "%CLOUD_NAME%",
@@ -168,14 +157,6 @@
     "commonMessage": "Dette passordet er blant de mest brukte passordene i verden",
     "missingMessage": "Passord er påkrevd"
   },
-  "sharing": {
-    "confirmOwner": "Hvis du endrer System-eier, vil du tilbakekalle eierskapet fra gjeldende konto. Denne handlingen er irreversibel. Er du sikker?",
-    "shareTitle": "Del",
-    "shareConfirmButton": "Del",
-    "editShareTitle": "Endre tillatelser",
-    "editShareConfirmButton": "Lagre",
-    "permissionsSaved": "Nye tillatelser lagret"
-  },
   "system": {
     "yourSystem": "Ditt system",
     "mySystemSearch": "IMeMyMine",
@@ -190,12 +171,11 @@
     "successRename": "Systemnavn lagret",
     "confirmDisconnectTitle": "Koble fra systemet fra %CLOUD_NAME%?",
     "confirmDisconnectAction": "Koble fra",
-    "confirmUnshareFromMe": "Du er i ferd med å koble fra dette systemet fra kontoen din. Du vil ikke kunne få tilgang til dette systemet lenger. Er du sikker?",
-    "confirmUnshareFromMeTitle": "Koble fra systemet?",
+    "confirmUnshareFromMe": "You will not be able to lgo into this System anymore.",
+    "confirmUnshareFromMeTitle": "Disconnect System from your Account?",
     "confirmUnshareFromMeAction": "Koble fra",
-    "confirmUnshare": "Denne brukeren kan ikke ha tilgang til System. Er du sikker?",
-    "confirmUnshareTitle": "Slett bruker?",
-    "confirmUnshareAction": "Slett",
+    "confirmUnshareTitle": "Remove user?",
+    "confirmUnshareAction": "Fjern",
     "successDisconnected": "Systemet er frakoblet fra %CLOUD_NAME%",
     "successDeleted": "System {{systemName}} er slettet fra kontoen din",
     "mergeFailed": "Systemsammenslåing mislyktes",
@@ -203,20 +183,6 @@
     "mergeSuccess": "Systemsammenslåing fullført",
     "permissionsRemoved": "Tillatelser ble fjernet fra {{email}}",
     "unknownName": "Ukjent navn for system (forårsaket av cloud-sammenslåing)"
-  },
-  "account": {
-    "accountSavedSuccess": "Din konto er lagret",
-    "activationLinkSent": "Aktiveringslink sendt",
-    "passwordChangedSuccess": "Din konto er lagret",
-    "changePassword": "Bytt passord",
-    "newPasswordLabel": "Nytt passord",
-    "saveChanges": "Lagre"
-  },
-  "activeActions": {
-    "sendConfirm": "Send aktiveringslink igjen",
-    "resetPassword": "Tilbakestille passord",
-    "setNewPassword": "Lagre passord",
-    "setNewPasswordLabel": "Nytt passord"
   },
   "regActions": {
     "passwordLabel": "Passord",

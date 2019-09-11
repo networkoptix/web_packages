@@ -9,19 +9,19 @@
     "emailSubject": "{{message.subject}}"
   },
   "contact_sales": {
-    "emailSubject": "{{message.product}}的產品諮詢"
+    "emailSubject": "{{message.asset}}的產品諮詢"
   },
   "contact_support": {
-    "emailSubject": "{{message.product}}的技術支援"
+    "emailSubject": "{{message.asset}}的技術支援"
   },
   "integration_feedback": {
-    "emailSubject": "{{message.product}} 的回饋意見"
+    "emailSubject": "{{message.asset}} 的回饋意見"
   },
   "ipvd_feedback": {
-    "emailSubject": "關於 {{message.product}}{{/message.product}} 攝影機頁面回饋意見{{#message.product}}"
+    "emailSubject": "關於 {{message.asset}}{{/message.asset}} 攝影機頁面回饋意見{{#message.asset}}"
   },
   "review_version": {
-    "emailSubject": "{{message.product_type}}： {{message.product}} 有新版本可供檢視"
+    "emailSubject": "{{message.asset_type}}： {{message.asset}} 有新版本可供檢視"
   },
   "restore_password": {
     "emailSubject": "重設您的密碼"

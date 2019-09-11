@@ -4,17 +4,6 @@
   "cloudName": "%CLOUD_NAME%",
   "vmsName": "%VMS_NAME%",
   "clientProtocol": "%CLIENT_PROTOCOL%:",
-  "dialogs": {
-    "okButton": "OK",
-    "cancelButton": "Annulla",
-    "loginTitle": "Accedi a %CLOUD_NAME%",
-    "loginButton": "Accesso",
-    "logoutAuthorisedTitle": "Ha già effettuato l'accesso",
-    "logoutAuthorisedContinueButton": "Continua",
-    "logoutAuthorisedLogoutButton": "Disconnetti",
-    "noClientDetectedTitle": "Installa %VMS_NAME% per visualizzare il suo sistema",
-    "download": "Scarica %VMS_NAME%"
-  },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
     "default": "%CLOUD_NAME%",
@@ -168,14 +157,6 @@
     "commonMessage": "Questa password è nelle migliori e più popolari password utilizzate nel mondo",
     "missingMessage": "È richiesta la password"
   },
-  "sharing": {
-    "confirmOwner": "Se cambi proprietario del sistema, revocherai la proprietà dall'account corrente. Questa azione è irreversibile. E' sicuro?",
-    "shareTitle": "Condividere",
-    "shareConfirmButton": "Condividere",
-    "editShareTitle": "Modifica Permessi",
-    "editShareConfirmButton": "Salvare",
-    "permissionsSaved": "Nuove autorizzazioni salvate"
-  },
   "system": {
     "yourSystem": "Il suo sistema",
     "mySystemSearch": "IMeMyMine",
@@ -190,12 +171,11 @@
     "successRename": "Nome del sistema salvato",
     "confirmDisconnectTitle": "Scollegare il sistema da %CLOUD_NAME%?",
     "confirmDisconnectAction": "Scollegamento",
-    "confirmUnshareFromMe": "Sta per disconnettere questo Sistema dal suo account. Non sara' in più in grado di accedere a questo Sistema. E' sicuro?",
-    "confirmUnshareFromMeTitle": "Scollegare il sistema da?",
+    "confirmUnshareFromMe": "You will not be able to lgo into this System anymore.",
+    "confirmUnshareFromMeTitle": "Disconnect System from your Account?",
     "confirmUnshareFromMeAction": "Scollegamento",
-    "confirmUnshare": "Questo utente non sarà in grado di accedere al sistema. E' sicuro?",
-    "confirmUnshareTitle": "Cancella utente?",
-    "confirmUnshareAction": "Elimina",
+    "confirmUnshareTitle": "Remove user?",
+    "confirmUnshareAction": "Rimuovere",
     "successDisconnected": "Il sistema è stato scollegato correttamente da %CLOUD_NAME%",
     "successDeleted": "Il sistema {{systemName}} è stato eliminato correttamente dal suo account",
     "mergeFailed": "Unione di sistemi fallita",
@@ -203,20 +183,6 @@
     "mergeSuccess": "Unione del sistema completata",
     "permissionsRemoved": "Le autorizzazioni sono state rimosse da {{email}}",
     "unknownName": "Nome sconosciuto per il sistema (causato da cloud merge)"
-  },
-  "account": {
-    "accountSavedSuccess": "Il suo account è stato salvato con successo",
-    "activationLinkSent": "Link di attivazione inviato",
-    "passwordChangedSuccess": "Il suo account è stato salvato con successo",
-    "changePassword": "Cambia Password",
-    "newPasswordLabel": "Nuova password",
-    "saveChanges": "Salvare"
-  },
-  "activeActions": {
-    "sendConfirm": "Rinvia il link di attivazione",
-    "resetPassword": "Reimpostare la password",
-    "setNewPassword": "Salva password",
-    "setNewPasswordLabel": "Nuova password"
   },
   "regActions": {
     "passwordLabel": "Password",
@@ -242,7 +208,7 @@
     "cameraStates": {
       "offline": "Offiline",
       "error": "Errore",
-      "errorLoading": "An error occurred while loading this video.",
+      "errorLoading": "Si è verificato un errore durante il caricamento di questo video.",
       "unauthorized": "Autenticazione richiesta",
       "noData": "Nessun dato",
       "iOSVideoTooLarge": "iOS non supporta video più grandi di FullHD (2MP: 1920x1080).",

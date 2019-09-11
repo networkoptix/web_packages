@@ -4,17 +4,6 @@
   "cloudName": "%CLOUD_NAME%",
   "vmsName": "%VMS_NAME%",
   "clientProtocol": "%CLIENT_PROTOCOL%:",
-  "dialogs": {
-    "okButton": "OK",
-    "cancelButton": "Annuler",
-    "loginTitle": "Connecter à %CLOUD_NAME%",
-    "loginButton": "Connexion",
-    "logoutAuthorisedTitle": "Vous êtes déjà connecté",
-    "logoutAuthorisedContinueButton": "Continuer",
-    "logoutAuthorisedLogoutButton": "Déconnecter",
-    "noClientDetectedTitle": "Installer %VMS_NAME% pour visionner votre Système",
-    "download": "Télécharger %VMS_NAME%"
-  },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
     "default": "%CLOUD_NAME%",
@@ -168,14 +157,6 @@
     "commonMessage": "Ce mot de passe est en haut de la liste des plus populaires dans le monde",
     "missingMessage": "Mot de passe requis"
   },
-  "sharing": {
-    "confirmOwner": "Si vous modifiez le propriétaire du système, vous révoquez la propriété sur le compte courant. Cette action est irréversible. Êtes-vous sûr ?",
-    "shareTitle": "Partager",
-    "shareConfirmButton": "Partager",
-    "editShareTitle": "Modifier autorisations",
-    "editShareConfirmButton": "Enregistrer",
-    "permissionsSaved": "Nouvelles autorisations enregistrées"
-  },
   "system": {
     "yourSystem": "Votre système",
     "mySystemSearch": "IMeMyMine",
@@ -190,11 +171,10 @@
     "successRename": "Nom du système sauvegardé",
     "confirmDisconnectTitle": "Déconnecter le système de %CLOUD_NAME% ?",
     "confirmDisconnectAction": "Déconnecter",
-    "confirmUnshareFromMe": "Vous êtes sur le point de déconnecter ce système de votre compte. Vous ne serez plus en mesure d’accéder à ce système. Êtes-Vous sûr ?",
-    "confirmUnshareFromMeTitle": "Déconnecter système?",
+    "confirmUnshareFromMe": "You will not be able to lgo into this System anymore.",
+    "confirmUnshareFromMeTitle": "Disconnect System from your Account?",
     "confirmUnshareFromMeAction": "Déconnecter",
-    "confirmUnshare": "Cet usager ne sera pas en mesure d’accéder au système. Êtes-vous sûr?",
-    "confirmUnshareTitle": "Supprimer usager?",
+    "confirmUnshareTitle": "Remove user?",
     "confirmUnshareAction": "Supprimer",
     "successDisconnected": "Système correctement déconnecté de %CLOUD_NAME%",
     "successDeleted": "Système {{systemName}} a correctement été supprimé de votre compte",
@@ -203,20 +183,6 @@
     "mergeSuccess": "Fusion du système terminée",
     "permissionsRemoved": "Autorisations retirées de {{email}}",
     "unknownName": "Nom inconnu pour le système (causé par la fusion nuage)"
-  },
-  "account": {
-    "accountSavedSuccess": "Votre compte est enregistré avec succès",
-    "activationLinkSent": "Lien d'activation envoyé",
-    "passwordChangedSuccess": "Votre compte est enregistré avec succès",
-    "changePassword": "Changer mot de passe",
-    "newPasswordLabel": "Nouveau mot de passe",
-    "saveChanges": "Enregistrer"
-  },
-  "activeActions": {
-    "sendConfirm": "Renvoyer lien d'activation",
-    "resetPassword": "Réinitialiser mot de passe",
-    "setNewPassword": "Sauvergarder mot de passe",
-    "setNewPasswordLabel": "Nouveau mot de passe"
   },
   "regActions": {
     "passwordLabel": "Mot de passe",

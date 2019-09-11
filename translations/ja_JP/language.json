@@ -4,17 +4,6 @@
   "cloudName": "%CLOUD_NAME%",
   "vmsName": "%VMS_NAME%",
   "clientProtocol": "%CLIENT_PROTOCOL%:",
-  "dialogs": {
-    "okButton": "OK",
-    "cancelButton": "キャンセル",
-    "loginTitle": "%CLOUD_NAME% にログイン",
-    "loginButton": "ログイン",
-    "logoutAuthorisedTitle": "すでにログインしています",
-    "logoutAuthorisedContinueButton": "続行",
-    "logoutAuthorisedLogoutButton": "ログアウト",
-    "noClientDetectedTitle": "システムを表示するには %VMS_NAME% をインストールします",
-    "download": "%VMS_NAME% をダウンロード"
-  },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
     "default": "%CLOUD_NAME%",
@@ -168,14 +157,6 @@
     "commonMessage": "このパスワードは、世界で最も人気のあるパスワードです",
     "missingMessage": "パスワードが必要です"
   },
-  "sharing": {
-    "confirmOwner": "システムのオーナーを変更すると、現在のアカウントから所有権を取り消します。この動作は元に戻せません。よろしいですか？",
-    "shareTitle": "共有",
-    "shareConfirmButton": "共有",
-    "editShareTitle": "権限を編集",
-    "editShareConfirmButton": "保存",
-    "permissionsSaved": "新しい権限が保存されました"
-  },
   "system": {
     "yourSystem": "お使いのシステム",
     "mySystemSearch": "IMeMyMine",
@@ -190,33 +171,18 @@
     "successRename": "システム名は保存されました",
     "confirmDisconnectTitle": "%CLOUD_NAME% からシステムを切断しますか？",
     "confirmDisconnectAction": "切断",
-    "confirmUnshareFromMe": "あなたのアカウントからこのシステムを切断しようとしています　もうこのシステムにアクセスすることはできません。切断しますか？",
-    "confirmUnshareFromMeTitle": "システムを切断しますか？",
+    "confirmUnshareFromMe": "You will not be able to lgo into this System anymore.",
+    "confirmUnshareFromMeTitle": "Disconnect System from your Account?",
     "confirmUnshareFromMeAction": "切断",
-    "confirmUnshare": "このユーザはシステムにアクセスすることができません。よろしいですか？",
-    "confirmUnshareTitle": "ユーザーを削除しますか？",
+    "confirmUnshareTitle": "Remove user?",
     "confirmUnshareAction": "削除",
-    "successDisconnected": "システムは %CLOUD_NAME%から正常に切断されました",
+    "successDisconnected": "システムは %CLOUD_NAME% から正常に切断されました",
     "successDeleted": "システム {{systemName}} はあなたのアカウントから正常に削除されました",
     "mergeFailed": "システム統合が失敗しました",
     "mergeStart": "システムが統合を開始しました",
     "mergeSuccess": "システムが統合されました",
     "permissionsRemoved": "{{email}} から権限が削除されました",
     "unknownName": "システムの名前が不明です（クラウド統合が原因）"
-  },
-  "account": {
-    "accountSavedSuccess": "あなたのアカウントは正常に保存されました",
-    "activationLinkSent": "アクティベーションリンクが送信されました",
-    "passwordChangedSuccess": "あなたのアカウントは正常に保存されました",
-    "changePassword": "パスワードを変更",
-    "newPasswordLabel": "新規パスワード",
-    "saveChanges": "保存"
-  },
-  "activeActions": {
-    "sendConfirm": "アクティベーションリンクを再送信",
-    "resetPassword": "パスワードを再設定する",
-    "setNewPassword": "パスワードを保存する",
-    "setNewPasswordLabel": "新規パスワード"
   },
   "regActions": {
     "passwordLabel": "パスワード",

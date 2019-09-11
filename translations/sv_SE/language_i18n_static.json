@@ -1,4 +1,19 @@
 {
+	"account": {
+		"accountSavedSuccess": "Ditt konto har sparats",
+		"activationLinkSent": "Aktiveringslänk skickad",
+		"passwordChangedSuccess": "Ditt konto har sparats",
+		"changePassword": "Ändra lösenord",
+		"newPasswordLabel": "Nytt lösenord",
+		"saveChanges": "Spara"
+	},
+	"activeActions": {
+		"sendConfirm": "Skicka aktiveringslänk igen",
+		"resetPassword": "Återställ lösenord",
+		"setNewPassword": "Spara lösenord",
+		"setNewPasswordLabel": "Nytt lösenord"
+	},
+	"clientProtocol": "%CLIENT_PROTOCOL%:",
 	"search": {
 		"Search": "Sök",
 		"search_ipvd": "Sök efter modell eller tillverkare",
@@ -38,20 +53,20 @@
 		"groups": {
 			"windows": {
 				"label": "Windows",
-				"supported": "7, 8, 8,1, 10, Server 2008, Server 2012"
+				"supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
 			},
 			"mac": {
 				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10,12 Sierra, OSX 10,13 High Sierra"
+				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
 			},
 			"linux": {
 				"label": "Ubuntu Linux",
 				"shortLabel": "Ubuntu",
-				"supported": "Ubuntu 14,04 LTS, 16,04 LTS"
+				"supported": "Ubuntu 14.04 LTS, 16.04 LTS"
 			},
 			"macos": {
 				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10,12 Sierra, OSX 10,13 High Sierra"
+				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
 			},
 			"ios": {
 				"label": "iOS",
@@ -89,12 +104,12 @@
 		},
 		"releasesTypes": {
 			"beta": "Beta",
-			"betas": "Betor",
-			"rc": "Releasekandidat",
+			"betas": "Betas",
+			"rc": "Release Candidate",
 			"release": "Release",
-			"releases": "Releaser",
+			"releases": "Releases",
 			"patch": "Patch",
-			"patches": "Patchar"
+			"patches": "Patches"
 		}
 	},
 	"ipvd": {
@@ -103,8 +118,8 @@
 		"vendor": "Tillverkare",
 		"model": "Modell",
 		"hardwareType": "Typ",
-		"maxResolution": "Max upplösning",
-		"maxFps": "Max FPS",
+		"maxResolution": "<span>Max</span><br><span>Resolution</span>",
+		"maxFps": "<span>Max</span><br><span>FPS</span>",
 		"primaryCodec": "Kodek",
 		"isAudioSupported": "Ljud",
 		"isTwAudioSupported": "2-vägs ljud",
@@ -138,6 +153,7 @@
 		"disclaimer": "Denna lista är begränsad till enheter som finns på {{vmsName}} där användare har tillåtit automatisk rapportering av enhetsspecifikationer till {{companyName}}. Ingen personlig information samlas in och varje användare förblir helt anonym."
 	},
 	"integration": {
+		"myIntegrationsLabel": "Mine",
 		"previewRibbonText": "Den här sidan är en förhandsvisning av de senaste ändringarna, och den matchar inte den offentligt tillgängliga versionen.",
 		"backToEditText": "Tillbaka till redigeringsgränssnittet",
 		"Access Control": "Åtkomstkontroll",
@@ -151,10 +167,41 @@
 		"feedback": "Se till att du inkluderar din kameramodell och tillverkare..."
 	},
 	"pageTitles": {
+		"template": "{{title}} %CLOUD_NAME%",
+		"default": "%CLOUD_NAME%",
+		"registerSuccess": "Välkommen till",
+		"register": "Skapa konto i",
+		"changePassword": "Ändra lösenord -",
+		"account": "Kontoinställningar -",
+		"systems": "System -",
+		"system": "Systemet -",
+		"systemShare": "Dela system -",
+		"activate": "Aktivera konto -",
+		"activateSent": "Aktivera konto -",
+		"activateSuccess": "Kontot aktiverat -",
+		"activateCode": "Aktivera konto -",
+		"restorePassword": "Återställ lösenord -",
+		"restorePasswordSuccess": "Lösenordet sparat -",
+		"restorePasswordCode": "Återställ lösenord -",
+		"view": "Visa kameror - ",
+		"debug": "Debugläge",
+		"login": "Logga in -",
+		"download": "Ladda ner %VMS_NAME%",
+		"downloadPlatform": "Hämta %VMS_NAME% för ",
+		"pageNotFound": "Det gick inte att hitta sidan",
 		"supportedDevices": "Enheter som stöds",
 		"integrations": "Integrationer"
 	},
 	"dialogs": {
+		"okButton": "OK",
+		"cancelButton": "Avbryt",
+		"loginTitle": "Logga in på %CLOUD_NAME%",
+		"loginButton": "Logga in",
+		"logoutAuthorisedTitle": "Du är redan inloggad",
+		"logoutAuthorisedContinueButton": "Fortsätt",
+		"logoutAuthorisedLogoutButton": "Logga ut",
+		"noClientDetectedTitle": "Installera %VMS_NAME% om du vill visa ditt System",
+		"download": "Ladda ner %VMS_NAME%",
 		"merge": {
 			"connectToCloud": "Anslut system du vill slå samman med den här till <strong>{{cloudName}}</strong> eller slå ihop lokalt med <strong>{{vmsName}}</strong> Client.",
 			"mergeConfirmation": "Du håller på att slå samman system <strong>{{primarySystem}}</strong> och <strong>{{secondarySystem}}</strong>. Inställningar och namnet kommer att tas från <strong>{{primarySystem}}</strong>.",
@@ -179,12 +226,178 @@
 				"ipvd_feedback_page": "Feedback för kamerans sida",
 				"ipvd_feedback_device": "Feedback om {{product}}"
 			}
+		},
+		"sharing": {
+			"confirmOwner": "Om du ändrar systemägaren återkallar du ägandet från det aktuella kontot. Denna åtgärd är oåterkallelig. Är du säker?",
+			"shareTitle": "Lägg till",
+			"shareConfirmButton": "Lägg till",
+			"editShareTitle": "Ändra behörigheter",
+			"editShareConfirmButton": "Spara",
+			"permissionsSaved": "Nya behörigheter sparades"
+		}
+	},
+	"errorCodes": {
+		"ok": "ok",
+		"cantSendActivationPrefix": "Kan inte skicka bekräftelse-e-post",
+		"cantDisconnectSystemPrefix": "Kan inte ta bort System",
+		"cantUnshareWithMeSystemPrefix": "Kan inte ta bort System",
+		"cantSharePrefix": "Kan inte dela System",
+		"cantGetUsersListPrefix": "Användarlistan är inte tillgänglig",
+		"cantGetSystemsListPrefix": "Systemlistan är inte tillgänglig",
+		"cantRegisterPrefix": "Fel inträffade",
+		"cantGetSystemInfoPrefix": "Systeminfo är inte tillgänglig",
+		"cantChangeAccountPrefix": "Kan inte spara ändringar",
+		"cantChangePasswordPrefix": "Kan inte spara lösenord",
+		"cantActivatePrefix": "Kan inte aktivera ditt konto",
+		"cantSendConfirmationPrefix": "Kan inte skicka bekräftelse-e-post",
+		"notAuthorized": "Fel lösenord",
+		"brokenAccount": "Oväntat problem med kontot. <a href=\"/restore_password\">Återställ konto</a>",
+		"wrongParameters": "Vissa parametrar på formuläret är felaktiga",
+		"wrongCode": "Kontot är redan aktiverat eller bekräftelsekoden är felaktig",
+		"wrongCodeRestore": "Bekräftelsekoden är redan använd eller felaktig",
+		"wrongAuthCode": "Koden är utgått eller felaktig",
+		"forbidden": "Du har inte behörighet att utföra denna åtgärd",
+		"accountNotActivated": "Det här kontot är inte aktiverat än. <a href=\"/activate\">Skicka aktiveringslänk igen</a>",
+		"accountBlocked": "Det här kontot är tillfälligt blockerat. Vänligen försök igen om några minuter.",
+		"notFound": "Hittades inte",
+		"alreadyExists": "Det här kontot existerar redan",
+		"unknownError": "Ett oväntat fel uppstod",
+		"accountAlreadyActivated": "Detta konto är redan aktiverat",
+		"emailNotFound": "Kontot existerar inte.",
+		"EmailAlreadyExists": "Denna e-postadress är redan registrerad",
+		"oldPasswordMistmatch": "Nuvarande lösenord är inkorrekt.",
+		"passwordMismatch": "Fel lösenord",
+		"cantEditYourself": "Ändring av egna behörigheter är inte tillåtet",
+		"cantEditAdmin": "Detta konto har administratörsrättigheter",
+		"cantOpenClient": "%VMS_NAME% programmet hittades inte. <a href=\"/download\">Ladda ner</a>",
+		"lostConnection": "Anslutning till {{systemName}} förlorad",
+		"thisSystem": "systemet",
+		"oldSafariNotSupported": "Versioner av Safari äldre än 10 stöds inte",
+		"DUPLICATE_MEDIASERVER_FOUND": "Några server listas som befintliga i båda systemen – i den valda och i den nuvarande.<br>ta bort offline och oförenliga servrar från varje System och försök igen.",
+		"mergedSystemIsOffline": "Systemet <strong>{{failedSystem}}</strong> är offline.",
+		"INCOMPATIBLE": "Systemen har olika mjukvaruversioner. Vänligen uppdatera dem båda till <a href=\"/download\">senaste version</a>.",
+		"FAIL": "System <strong>{{failedSystem}}</strong> är för närvarande oåtkomligt.<br>Försök igen om några minuter eller kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+		"unknownMergeError": "Okänt fel. Du kan försöka uppdatera sidan och upprepa försöket. Om problemet kvarstår - kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>."
+	},
+	"passwordRequirements": {
+		"good": "bra",
+		"fair": "skapligt",
+		"fairMessage": "Använd siffror, stora bokstäver och specialtecken för att göra ditt lösenord starkare",
+		"minLength": "för kort",
+		"minLengthMessage": "Lösenordet måste innehålla minst 8 tecken",
+		"required": "felaktig",
+		"requiredMessage": "Använd endast latinska bokstäver, siffror och tangentbordssymboler, undvik ledande och efterföljande mellanslag",
+		"weak": "svagt",
+		"weakMessage": "Använd siffror, stora bokstäver och specialtecken för att göra ditt lösenord starkare",
+		"strongMessage": "Starkt lösenord!",
+		"common": "för vanligt",
+		"commonMessage": "Detta lösenord är i topp populäraste lösenord i världen",
+		"missingMessage": "Lösenord krävs"
+	},
+	"registration": {
+		"agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
+	},
+	"system": {
+		"yourSystem": "Ditt system",
+		"mySystemSearch": "JagMigMinMin",
+		"unavailable": "Systemet är oåtkomligt",
+		"offline": "Systemet är offline",
+		"openClient": "Öppet i %VMS_NAME%",
+		"openClientNoSystem": "Öppna %VMS_NAME%",
+		"confirmMergeAction": "Sammanfoga",
+		"mergeSystemTitle": "Sammanfoga system",
+		"confirmRenameTitle": "Systemets namn",
+		"confirmRenameAction": "Spara",
+		"successRename": "Systemnamnet sparat",
+		"confirmDisconnectTitle": "Koppla bort systemet från %CLOUD_NAME%?",
+		"confirmDisconnectAction": "Koppla från",
+		"confirmUnshareFromMe": "Du håller på att koppla bort det här systemet från ditt konto. Du kommer inte längre få tillgång till det här systemet. Är du säker?",
+		"confirmUnshareFromMeTitle": "Koppla ifrån systemet?",
+		"confirmUnshareFromMeAction": "Koppla från",
+		"confirmUnshare": "Den här användaren kan inte komma åt System. Är du säker?",
+		"confirmUnshareTitle": "Radera användaren?",
+		"confirmUnshareAction": "Radera",
+		"successDisconnected": "Systemet har kopplats bort från %CLOUD_NAME%",
+		"successDeleted": "System {{systemName}} har tagits bort från ditt konto",
+		"mergeFailed": "Systemsammanslagning misslyckades",
+		"mergeStart": "System har börjat slås samman",
+		"mergeSuccess": "Systemsammanslagning slutförd",
+		"permissionsRemoved": "Rättigheterna togs bort från {{email}}",
+		"unknownName": "Okänt namn för system (orsakad av molnsammanslagning)"
+	},
+	"systemStatuses": {
+		"activated": "aktiverad",
+		"incompatible": "oförenlig",
+		"merging": "sammanslagning",
+		"notActivated": "inte aktiverad",
+		"online": "uppkopplad",
+		"offline": "frånkopplade",
+		"unavailable": "inte tillgänglig"
+	},
+	"accessRoles": {
+		"disabled": {
+			"label": "Inaktiverad",
+			"description": "Användaren är inaktiverad och kan inte logga in på System"
+		},
+		"Owner": {
+			"label": "Ägare",
+			"description": "Obegränsad åtkomst, inklusive möjligheten att dela och ansluta/avregistrera systemet från molnet"
+		},
+		"Viewer": {
+			"label": "Användare",
+			"description": "Kan visa live video och bläddra i arkivet"
+		},
+		"Live Viewer": {
+			"label": "Begränsad användare",
+			"description": "Kan bara visa live video"
+		},
+		"Advanced Viewer": {
+			"label": "Avancerad användare",
+			"description": "Kan visa live video, bläddra i arkivet, konfigurera kameror, styra PTZ etc"
+		},
+		"Administrator": {
+			"label": "Administratör",
+			"description": "Obegränsad tillgång, inklusive möjligheten att dela"
+		},
+		"Custom": {
+			"label": "Anpassad",
+			"description": "Använd %VMS_NAME% klientprogrammet för att ställa in anpassade behörigheter"
+		},
+		"cloudAdmin": {
+			"label": "Administratör",
+			"description": "Kan konfigurera system och dela det"
+		},
+		"customRole": {
+			"label": "Anpassad roll",
+			"description": "Anpassad användarroll anges i system"
+		},
+		"owner": {
+			"label": "Ägare",
+			"description": "Obegränsad åtkomst, inklusive möjligheten att dela och ansluta/avregistrera systemet från molnet"
+		},
+		"viewer": {
+			"label": "Användare",
+			"description": "Kan visa live video och bläddra i arkivet"
+		},
+		"liveViewer": {
+			"label": "Begränsad användare",
+			"description": "Kan bara visa live video"
+		},
+		"advancedViewer": {
+			"label": "Avancerad användare",
+			"description": "Kan visa live video, bläddra i arkivet, konfigurera kameror, styra PTZ etc"
+		},
+		"custom": {
+			"label": "Anpassad",
+			"description": "Använd %VMS_NAME% klientprogrammet för att ställa in anpassade behörigheter"
 		}
 	},
 	"privacyPolicy": {
 		"integration": "Genom att skicka in denna blankett accepterar du att du kontaktas av {{INTEGRATION_COMPANY}} och / eller %COMPANY_NAME%.\nDu hittar {{INTEGRATION_COMPANY}} sekretesspolicy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">här</a> och %COMPANY_NAME% sekretesspolicy <a href=\"%PRIVACY_LINK%\" target=\"blank\">här</a> som innehåller anvisningar om hur du återkallar ditt samtycke.",
 		"ipvd": "Genom att skicka in denna blankett accepterar du att du kontaktas av %COMPANY_NAME%.\nDu hittar %COMPANY_NAME% sekretesspolicy <a href=\"%PRIVACY_LINK%\" target=\"blank\">här</a> som innehåller instruktioner om hur du återkallar ditt samtycke."
 	},
+	"systemAdministration": "Systemadministration",
+	"users": "Användare",
 	"testedVersionLabel": "Testat på {{vmsName}} version:",
 	"testedVersionsLabel": "Testat på {{vmsName}} versioner:",
 	"About %CLOUD_NAME%": "Om %CLOUD_NAME%",
@@ -193,5 +406,12 @@
 	"Privacy": "Sekretess",
 	"Support": "Support",
 	"Supported Devices": "Enheter som stöds",
-	"Terms": "Villkor"
+	"Terms": "Villkor",
+	"pleaseSelect": "Please select...",
+	"WHEN_MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{{targetSystemName}}</strong> System, and this system will be deleted.",
+	"FAILED_SYSTEM_DESCR": "This link is broken,<br>System may be disconnected from %CLOUD_NAME%,<br>Access to this System may be revoked, <br>or you may be logged into a different account.",
+	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "Du har inga system anslutna till %CLOUD_NAME%",
+	"NO_SYSTEMS_LOGIN": "Logga in på ditt system med %VMS_NAME%",
+	"NO_SYSTEMS_GOTO_ADMINISTRATION": "Gå till fliken \"Cloud\" i dialogrutan \"Systemadministration\"",
+	"NO_SYSTEMS_CONNECT_SYSTEM": "Tryck på \"Anslut system till %CLOUD_NAME%\""
 }

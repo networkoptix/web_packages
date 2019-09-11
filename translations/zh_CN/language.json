@@ -4,17 +4,6 @@
   "cloudName": "%CLOUD_NAME%",
   "vmsName": "%VMS_NAME%",
   "clientProtocol": "%CLIENT_PROTOCOL%",
-  "dialogs": {
-    "okButton": "确定",
-    "cancelButton": "撤消",
-    "loginTitle": "登录到 %CLOUD_NAME%",
-    "loginButton": "登录",
-    "logoutAuthorisedTitle": "您已经登录",
-    "logoutAuthorisedContinueButton": "继续",
-    "logoutAuthorisedLogoutButton": "退出登录",
-    "noClientDetectedTitle": "安装 %VMS_NAME% 来查看您的系统",
-    "download": "下载 %VMS_NAME%"
-  },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
     "default": "%CLOUD_NAME%",
@@ -168,14 +157,6 @@
     "commonMessage": "此密码是在世界顶级最受欢迎的密码",
     "missingMessage": "密码为必填项"
   },
-  "sharing": {
-    "confirmOwner": "如果您更改系统所有者，将撤消从当前帐户的所有权。此操作是不可逆的。是否确定？",
-    "shareTitle": "共享",
-    "shareConfirmButton": "共享",
-    "editShareTitle": "编辑权限",
-    "editShareConfirmButton": "保存",
-    "permissionsSaved": "保存的新权限"
-  },
   "system": {
     "yourSystem": "您的系统",
     "mySystemSearch": "我的",
@@ -190,11 +171,10 @@
     "successRename": "保存的系统名称",
     "confirmDisconnectTitle": "系统从 %CLOUD_NAME%断开 吗？",
     "confirmDisconnectAction": "断开连接",
-    "confirmUnshareFromMe": "您将要断开此系统从您的帐户。你将无法再访问该系统。是否确定？",
-    "confirmUnshareFromMeTitle": "断开系统吗？",
+    "confirmUnshareFromMe": "You will not be able to lgo into this System anymore.",
+    "confirmUnshareFromMeTitle": "Disconnect System from your Account?",
     "confirmUnshareFromMeAction": "断开连接",
-    "confirmUnshare": "此用户不能访问系统。是否确定？",
-    "confirmUnshareTitle": "删除用户？",
+    "confirmUnshareTitle": "Remove user?",
     "confirmUnshareAction": "删除",
     "successDisconnected": "系统已成功从 %CLOUD_NAME%断线",
     "successDeleted": "从您的帐户成功删除系统 {{systemName}}",
@@ -203,20 +183,6 @@
     "mergeSuccess": "系统合并完成",
     "permissionsRemoved": "权限从 {{email}} 被刪除",
     "unknownName": "未知的系统名称（由云合并引起）"
-  },
-  "account": {
-    "accountSavedSuccess": "您的帐户已成功保存",
-    "activationLinkSent": "激活链接已发送",
-    "passwordChangedSuccess": "您的帐户已成功保存",
-    "changePassword": "更改密码",
-    "newPasswordLabel": "新密码",
-    "saveChanges": "保存"
-  },
-  "activeActions": {
-    "sendConfirm": "重新发送激活链接",
-    "resetPassword": "重置密码",
-    "setNewPassword": "保存密码",
-    "setNewPasswordLabel": "新密码"
   },
   "regActions": {
     "passwordLabel": "密码",

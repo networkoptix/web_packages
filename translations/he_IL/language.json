@@ -4,17 +4,6 @@
   "cloudName": "%CLOUD_NAME%",
   "vmsName": "%VMS_NAME%",
   "clientProtocol": "%CLIENT_PROTOCOL%:",
-  "dialogs": {
-    "okButton": "אישור",
-    "cancelButton": "ביטול",
-    "loginTitle": "היכנס ל- %CLOUD_NAME%",
-    "loginButton": "התחברות",
-    "logoutAuthorisedTitle": "אתה כבר מחובר",
-    "logoutAuthorisedContinueButton": "המשך",
-    "logoutAuthorisedLogoutButton": "יציאה",
-    "noClientDetectedTitle": "התקן את %VMS_NAME% כדי לצפות במערכת שלך",
-    "download": "הורד את %VMS_NAME%"
-  },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
     "default": "%CLOUD_NAME%",
@@ -168,14 +157,6 @@
     "commonMessage": "סיסמה זו חלשה מאחר והיא מהסיסמאות הפופולריות ביותר בעולם",
     "missingMessage": "נדרשת סיסמא"
   },
-  "sharing": {
-    "confirmOwner": "אם תשנה את 'בעל המערכת', תשלול את הבעלות מהחשבון הנוכחי. פעולה זו היא בלתי הפיכה. האם להמשיך?",
-    "shareTitle": "שתף",
-    "shareConfirmButton": "שתף",
-    "editShareTitle": "ערוך הרשאות",
-    "editShareConfirmButton": "שמור",
-    "permissionsSaved": "הרשאות חדשות נשמרו"
-  },
   "system": {
     "yourSystem": "המערכת שלך",
     "mySystemSearch": "IMeMyMine",
@@ -190,12 +171,11 @@
     "successRename": "שם המערכת נשמר",
     "confirmDisconnectTitle": "נתק את מערכת מ %CLOUD_NAME%?",
     "confirmDisconnectAction": "נתק",
-    "confirmUnshareFromMe": "אתה עומד לנתק את המערכת מהחשבון שלך. לא תוכל עוד לגשת למערכת זו. האם להמשיך?",
-    "confirmUnshareFromMeTitle": "נתק מערכת?",
+    "confirmUnshareFromMe": "You will not be able to lgo into this System anymore.",
+    "confirmUnshareFromMeTitle": "Disconnect System from your Account?",
     "confirmUnshareFromMeAction": "נתק",
-    "confirmUnshare": "משתמש זה לא יוכל לגשת למערכת. האם אתה בטוח?",
-    "confirmUnshareTitle": "מחק משתמש?",
-    "confirmUnshareAction": "מחיקה",
+    "confirmUnshareTitle": "Remove user?",
+    "confirmUnshareAction": "הסר",
     "successDisconnected": "המערכת התנתקה בהצלחה מ %CLOUD_NAME%",
     "successDeleted": "המערכת {{systemName}} נמחקה בהצלחה מהחשבון שלך",
     "mergeFailed": "מיזוג המערכת נכשל",
@@ -203,20 +183,6 @@
     "mergeSuccess": "מיזוג המערכת הושלם",
     "permissionsRemoved": "ההרשאות הוסרו מ- {{email}}",
     "unknownName": "שם לא ידוע עבור מערכת (נגרמה על ידי מיזוג ענן)"
-  },
-  "account": {
-    "accountSavedSuccess": "החשבון שלך נשמר בהצלחה",
-    "activationLinkSent": "קישור הפעלה נשלח",
-    "passwordChangedSuccess": "החשבון שלך נשמר בהצלחה",
-    "changePassword": "שנה סיסמא",
-    "newPasswordLabel": "סיסמה חדשה",
-    "saveChanges": "שמור"
-  },
-  "activeActions": {
-    "sendConfirm": "שלח את קישור ההפעלה שוב",
-    "resetPassword": "איפוס סיסמה",
-    "setNewPassword": "שמור סיסמה",
-    "setNewPasswordLabel": "סיסמה חדשה"
   },
   "regActions": {
     "passwordLabel": "סיסמה",

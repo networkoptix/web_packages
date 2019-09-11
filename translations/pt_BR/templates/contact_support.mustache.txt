@@ -1,3 +1,3 @@
 Olá, {{ message.userFullName }}
-{{ message.sender_name}} ({{ message.sender_email }}) tem a seguinte pergunta de suporte para {{ message.product }}:
+{{ message.sender_name}} ({{ message.sender_email }}) tem a seguinte pergunta de suporte para {{ message.asset }}:
 <pre>{{ message.message }}</pre>
