@@ -1,20 +1,21 @@
 import {
     Component, OnInit, OnDestroy,
-    Input, ViewChild, Inject
-}                                            from '@angular/core';
-import { ActivatedRoute, Router }            from '@angular/router';
-import { Title }                             from '@angular/platform-browser';
-import { DOCUMENT, Location, TitleCasePipe } from '@angular/common';
-import { isNumeric }                         from 'rxjs/util/isNumeric';
-import { NgbTabChangeEvent, NgbTabset } from '@ng-bootstrap/ng-bootstrap';
+    Input, ViewChild, Inject, PLATFORM_ID
+} from '@angular/core';
+import { ActivatedRoute, ActivationEnd, Router }                from '@angular/router';
+import { Title }                                                from '@angular/platform-browser';
+import { DOCUMENT, isPlatformBrowser, Location, TitleCasePipe } from '@angular/common';
+import { isNumeric }                                            from 'rxjs/util/isNumeric';
+import { NgbTabChangeEvent, NgbTabset }                         from '@ng-bootstrap/ng-bootstrap';
 
 import isArray = require('core-js/fn/array/is-array');
 import angular = require('angular');
-import { NxConfigService }              from '../../services/nx-config';
-import { NxLanguageProviderService }    from '../../services/nx-language-provider';
-import { NxAccountService }             from '../../services/account.service';
-import { NxCloudApiService }            from '../../services/nx-cloud-api';
-import { NxUriService }                 from '../../services/uri.service';
+import { NxConfigService }                                      from '../../services/nx-config';
+import { NxLanguageProviderService }                            from '../../services/nx-language-provider';
+import { NxAccountService }                                     from '../../services/account.service';
+import { NxCloudApiService }                                    from '../../services/nx-cloud-api';
+import { NxUriService }                                         from '../../services/uri.service';
+import { filter }                                               from 'rxjs/operators';
 
 @Component({
     selector   : 'download-history',
@@ -23,9 +24,6 @@ import { NxUriService }                 from '../../services/uri.service';
 })
 
 export class DownloadHistoryComponent implements OnInit, OnDestroy {
-    @Input() routeParam;
-    @Input() section: string;
-
     private sub: any;
     private build: any;
     private canViewRelease: boolean;
@@ -33,6 +31,9 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
     CONFIG: any;
     LANG: any;
 
+    tabsVisible: boolean;
+    routeParam: any;
+    section: any;
     user: any;
     downloads: any;
     activeBuilds: any;
@@ -40,10 +41,16 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
     noteTypes: any;
     linkbase: any;
 
-    location: Location;
-
-    @ViewChild('tabs', { static: true })
+    @ViewChild('tabs', { static: false })
     public tabs: NgbTabset;
+
+    private setupDefaults() {
+        this.CONFIG = this.configService.getConfig();
+        this.LANG = this.language.getTranslations();
+        this.tabsVisible = false;
+        this.canViewRelease = false;
+        this.noteTypes = [];
+    }
 
     constructor(@Inject(DOCUMENT) private document: any,
                 private cloudApiService: NxCloudApiService,
@@ -54,16 +61,27 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
                 private titleService: Title,
                 private language: NxLanguageProviderService,
                 private uriService: NxUriService,
-                location: Location) {
+                private location: Location,
+                @Inject(PLATFORM_ID) private platformId: object,
+    ) {
+        this.setupDefaults();
 
-        this.location = location;
-        this.canViewRelease = false;
-        this.noteTypes = [];
-        this.CONFIG = this.configService.getConfig();
-        this.LANG = this.language.getTranslations();
+        if (isPlatformBrowser(this.platformId)) {
+            this.router
+                .events
+                .pipe(
+                    filter(event => event instanceof ActivationEnd)
+                )
+                .subscribe((event: ActivationEnd) => {
+                    if (this.tabs && event.snapshot.params.type) {
+                        this.tabs.select(event.snapshot.params.type);
+                    }
+                });
+        }
     }
 
     private getAvailableDownloadTypes(data) {
+        this.noteTypes = [];
         angular.forEach(data, (noteType, name) => {
             if (isArray(noteType) && noteType.length) {
                 this.noteTypes.push(name);
@@ -77,7 +95,7 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
     }
 
     private getData() {
-        this.cloudApiService
+        const data = this.cloudApiService
             .getDownloadsHistory(this.build)
             .then((data: any) => {
                     this.linkbase = data.updatesPrefix;
@@ -85,7 +103,6 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
                         this.downloadsData = data;
                         this.activeBuilds = this.downloadsData[ this.section ];
                         this.getAvailableDownloadTypes(this.downloadsData);
-
                     } else {
                         this.activeBuilds = [ data ];
                         this.noteTypes = [ data.type ];
@@ -96,6 +113,7 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
                     this.titleService.setTitle(new TitleCasePipe().transform(this.noteTypes[ 0 ])); // this.downloadTypes[ 0 ][ 0 ].toUpperCase() + this.downloadTypes[ 0 ].substr(1).toLowerCase());
 
                     setTimeout(() => {
+                        this.tabsVisible = true;
                         if (this.tabs) {
                             this.tabs.select(this.section);
                         }
@@ -105,20 +123,23 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
                     // TODO: Repace this once this page is moved to A5
                     // AJS and A5 routers freak out about route change *****
                     // this.router.navigate(['404']); // Can't find downloads.json in specific build
-                    this.location.go('404');
+                    this.document.location.href = this.CONFIG.redirect404;
                 }
-            );
+            )
+            .finally((result: any) => {
+                this.sub.unsubscribe();
+            });
     }
 
     public beforeChange($event: NgbTabChangeEvent) {
         this.activeBuilds = this.downloadsData[ $event.nextId ];
         this.titleService.setTitle(new TitleCasePipe().transform($event.nextId));
-        this.uriService.updateURI('/downloads/' + $event.nextId, {}, true);
+        this.uriService.updateURI('/downloads/' + $event.nextId, {});
     }
 
     ngOnInit(): void {
         this.sub = this.route.params.subscribe(params => {
-            // this.build = params['build'];
+            this.routeParam = params.type;
 
             this.routeParam = this.routeParam || 'releases';
             if (isNumeric(this.routeParam)) {

@@ -6,13 +6,14 @@ import { ActivatedRoute, ActivationEnd, Router } from '@angular/router';
 import { Title }                                 from '@angular/platform-browser';
 import { isPlatformBrowser, Location }           from '@angular/common';
 import { filter }                                from 'rxjs/operators';
-import { NgbTabChangeEvent, NgbTabset }          from '@ng-bootstrap/ng-bootstrap';
-import { DeviceDetectorService }                 from 'ngx-device-detector';
-import { NxConfigService }                       from '../../services/nx-config';
-import { NxLanguageProviderService }             from '../../services/nx-language-provider';
-import { NxAccountService }                      from '../../services/account.service';
-import { NxCloudApiService }                     from '../../services/nx-cloud-api';
-import { NxUriService }                          from '../../services/uri.service';
+import { NgbTabChangeEvent, NgbTabset } from '@ng-bootstrap/ng-bootstrap';
+import { DeviceDetectorService }        from 'ngx-device-detector';
+import { NxConfigService }              from '../../services/nx-config';
+import { NxLanguageProviderService }    from '../../services/nx-language-provider';
+import { NxAccountService }             from '../../services/account.service';
+import { NxCloudApiService }            from '../../services/nx-cloud-api';
+import { NxUriService }                 from '../../services/uri.service';
+import { Observable, Subscription }     from 'rxjs';
 
 @Component({
     selector   : 'download-component',
@@ -23,10 +24,9 @@ import { NxUriService }                          from '../../services/uri.servic
 export class DownloadComponent implements OnInit, OnDestroy {
     @Input() routeParamPlatform;
 
-    private sub: any;
+    private sub: Subscription;
     private platform: any;
     private activeOs: string;
-    private routeData: any;
     private canViewDownloads: boolean;
 
     CONFIG: any;
@@ -85,13 +85,16 @@ export class DownloadComponent implements OnInit, OnDestroy {
         this.setupDefaults();
 
         if (isPlatformBrowser(this.platformId)) {
-            this.router.events.pipe(
+            this.router
+                .events
+                .pipe(
                     filter(event => event instanceof ActivationEnd)
-            ).subscribe((event: ActivationEnd) => {
-                if (this.tabs && event.snapshot.params.platform) {
-                    this.tabs.select(event.snapshot.params.platform);
-                }
-            });
+                )
+                .subscribe((event: ActivationEnd) => {
+                    if (this.tabs && event.snapshot.params.platform) {
+                        this.tabs.select(event.snapshot.params.platform);
+                    }
+                });
         }
     }
 
@@ -105,14 +108,8 @@ export class DownloadComponent implements OnInit, OnDestroy {
     }
 
     private getDownloads() {
-        // TODO: Commented until we ged rid of AJS
-        this.routeData = this.route.snapshot.data;
-
         this.sub = this.route.params.subscribe(params => {
             this.platform = params.platform;
-
-            // TODO: Commented until we ged rid of AJS
-            // this.activeOs = this.platform || this.platformMatch[this.routeData.platform.os];
 
             for (const mobile in this.downloads.mobile) {
                 if (this.downloads.mobile[ mobile ].os === this.activeOs) {
@@ -169,6 +166,8 @@ export class DownloadComponent implements OnInit, OnDestroy {
                         this.tabs.select(this.platform.toLowerCase());
                     }
                 });
+
+                this.sub.unsubscribe();
             });
     }
 

@@ -47,12 +47,12 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
             url.toString().startsWith('/push-notifications') ||
             url.toString().startsWith('/debug') ||
             url.toString().startsWith('/integrations') ||
+            url.toString().startsWith('/downloads') ||
             url.toString().startsWith('/content')) &&
             !url.toString().endsWith('/view');
         // return false;
 
         /* Temporary downgraded components - routing is handled by AJS */
-        // url.toString().startsWith('/downloads') ||
         // url.toString().startsWith('/browser');
     }
 
