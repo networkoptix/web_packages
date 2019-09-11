@@ -6,7 +6,7 @@ from distutils.util import strtobool
 from django.db import models
 from django.db.utils import ProgrammingError
 from django.conf import settings
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, FieldError
 from jsonfield import JSONField
 from model_utils import Choices
 from django.core.cache import cache, caches
@@ -288,6 +288,7 @@ class Asset(models.Model):
     PREVIEW_STATUS = Choices((0, 'draft', 'draft'), (1, 'review', 'review'))
     preview_status = models.IntegerField(choices=PREVIEW_STATUS, default=PREVIEW_STATUS.draft)
     primary_group = models.OneToOneField(Group, unique=True, on_delete=models.SET_NULL, null=True, blank=True)
+    protected = models.BooleanField(default=False)
 
     def __str__(self):
         if self.asset_type and self.is_cloud_portal:
@@ -394,6 +395,12 @@ class Asset(models.Model):
                 self.created_by.save()
         if self.primary_group and rename_group:
             rename_permission_group(self.primary_group, self)
+
+    def delete(self, *args, **kwargs):
+        if self.protected:
+            raise FieldError('Cannot delete a protected asset')
+        else:
+            return super().delete(*args, **kwargs)
 
 
 class Context(models.Model):
