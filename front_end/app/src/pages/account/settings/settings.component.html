@@ -9,13 +9,13 @@
                 <nx-section>
                     <form #accountForm="ngForm" name="accountForm" class="form" novalidate>
                         <div class="inputs d-block d-md-table w-100 mw-100">
-                            <div class="form-group d-block d-md-table-row">
-                                <div class="label d-block d-md-table-cell text-nowrap text-right pr-md-2">
+                            <div class="form-group d-block d-md-table-row mb-2">
+                                <div class="label d-block d-md-table-cell text-nowrap text-right pr-md-2 pb-2 pb-md-0">
                                     <label for="firstName" class="control-label m-0 pb-md-2" translate>First Name</label>
                                 </div>
                                 <div class="d-block d-md-table-cell">
                                     <div class="row pb-md-2">
-                                        <div class="col-12 col-md-7">
+                                        <div class="col-12 col-md-7 pb-2 pb-md-0">
                                             <input type="text" class="form-control"
                                                    [ngModel]="account.first_name"
                                                    (ngModelChange)="changeFirstName($event)"
@@ -31,13 +31,13 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group d-block d-md-table-row">
-                                <div class="label d-block d-md-table-cell text-nowrap text-right pr-md-2">
+                            <div class="form-group d-block d-md-table-row mb-0">
+                                <div class="label d-block d-md-table-cell text-nowrap text-right pr-md-2 pb-2 pb-md-0">
                                     <label for="firstName" class="control-label m-0 pb-md-2" translate>Last Name</label>
                                 </div>
                                 <div class="d-block d-md-table-cell">
                                     <div class="row pb-md-2">
-                                        <div class="col-12 col-md-7">
+                                        <div class="col-12 col-md-7 pb-2 pb-md-0">
                                             <input type="text" class="form-control"
                                                    [ngModel]="account.last_name"
                                                    (ngModelChange)="changeLastName($event)"

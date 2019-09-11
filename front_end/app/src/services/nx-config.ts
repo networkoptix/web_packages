@@ -302,6 +302,18 @@ export class NxConfigService {
                     id  : 'buttons'
                 }
             },
+            accountMenu: {
+                baseUrl: '/account',
+                icon : 'glyphicon-user',
+                settings  : {
+                    id  : 'settings',
+                    path: ''
+                },
+                password: {
+                    id: 'password',
+                    path: '/password'
+                },
+            },
             myIntegrationTagId            : 'mine',
             companyLink                   : '',
             companyName                   : '',

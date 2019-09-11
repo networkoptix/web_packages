@@ -239,6 +239,7 @@
     },
     "account": {
         "accountSavedSuccess": "Your account is successfully saved",
+        "accountSettings": "Account Settings",
         "activationLinkSent": "Activation Link Sent",
         "changePassword": "Change Password",
         "newPasswordLabel": "New password",
