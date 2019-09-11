@@ -511,6 +511,7 @@ INTEGRATION_STORE_PAGE = '/integrations'
 # Filldata settings
 FILLDATA_TRIES = 15
 FILLDATA_TIMEOUT = 60
+READ_STRUCTURE_FINISHED = 'READ_STRUCTURE_FINISHED'
 
 
 SUPERUSER_DOMAIN = '@networkoptix.com'  # Only user from this domain can have superuser permissions
