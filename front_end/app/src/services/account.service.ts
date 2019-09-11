@@ -1,12 +1,15 @@
 import { Inject, Injectable }        from '@angular/core';
 import { DOCUMENT, Location }        from '@angular/common';
 import { LocalStorageService }       from 'ngx-store';
+import { Router } from '@angular/router';
 
 import { NxConfigService }           from './nx-config';
 import { NxCloudApiService }         from './nx-cloud-api';
 import { NxLanguageProviderService } from './nx-language-provider';
 import { NxDialogsService }          from '../dialogs/dialogs.service';
 import { NxSessionService }          from './session.service';
+
+import { distinctUntilChanged } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root'
@@ -25,12 +28,14 @@ export class NxAccountService {
                 private localStorageService: LocalStorageService,
                 private locationService: Location,
                 private dialogs: NxDialogsService,
+                private router: Router,
     ) {
         this.location = this.locationService;
         this.CONFIG = this.config.getConfig();
         this.LANG = this.language.getTranslations();
 
-        this.sessionService.loginStateSubject.subscribe((loginState) => {
+        // Distinct until changed is used to prevent the logout function from looping.
+        this.sessionService.loginStateSubject.pipe(distinctUntilChanged()).subscribe((loginState) => {
             if (loginState === null) {
                 this.logout();
             }
@@ -38,7 +43,7 @@ export class NxAccountService {
     }
 
     clearLoginState() {
-        this.sessionService.loginState = undefined;
+        this.sessionService.invalidateSession();
     }
 
     checkLoginState(): Promise<boolean> {
@@ -173,7 +178,7 @@ export class NxAccountService {
             .finally(() => {
                 this.sessionService.invalidateSession(); // Clear session
                 if (!doNotRedirect) {
-                    this.location.path(this.CONFIG.redirectUnauthorised);
+                    return this.router.navigate([this.CONFIG.redirectUnauthorised]);
                 }
                 setTimeout(() => {
                     this.document.location.reload();

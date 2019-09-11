@@ -32,6 +32,7 @@ export class NxRestoreComponent implements OnInit {
     restoringSuccess: any;
     changeSuccess: any;
     context: any;
+    ready: boolean;
 
     private setupDefaults() {
         this.CONFIG = this.configService.getConfig();
@@ -41,7 +42,6 @@ export class NxRestoreComponent implements OnInit {
         this.context = {
             process: ''
         };
-
     }
 
     constructor(private configService: NxConfigService,
@@ -59,8 +59,20 @@ export class NxRestoreComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.ready = false;
+        // ... revise this after we remove AJS ... cannot use location.path() as it will trigger AJS
+        // updateURI causes component to be re-created
+        this.context.process = this.localStorage.get('restoreProcess');
+
         this.uriParam = this.route.snapshot.data.uriParam;
         this.uriParamCode = this.route.snapshot.params.code;
+
+        // Check session context
+        if (this.uriParam !== 'restoring' &&
+            this.checkContexts(['changeSuccess', 'restoringSuccess'])) {
+
+            this.setContext(undefined);
+        }
 
         this.data = {
             newPassword : '',
@@ -87,7 +99,7 @@ export class NxRestoreComponent implements OnInit {
             this.pageService.setPageTitle(this.LANG.pageTitles.restorePasswordSuccess);
             this.setContext('changeSuccess');
             this.dialogs.dismiss();
-            this.uriService.updateURI('/restore_password/success', {}, true); // Change url, do not reload
+            this.uriService.updateURI('/restore_password/success', {});
         });
 
         this.restore = this.processService.createProcess(() => {
@@ -105,12 +117,28 @@ export class NxRestoreComponent implements OnInit {
             this.restoringSuccess = true;
             this.setContext('restoringSuccess');
             this.dialogs.dismiss();
-            this.uriService.updateURI('/restore_password/sent', {}, true); // Change url, do not reload
+            this.uriService.updateURI('/restore_password/sent', {});
         });
+
+        // give checkContext time to redirect if context is not correct
+        setTimeout(() => {
+            this.ready = true;
+        }, 500);
     }
 
     setContext(name) {
         this.context.process = name;
+        this.localStorage.set('restoreProcess', name);
+    }
+
+    private checkContexts(arr) {
+        if (!this.uriParam) {
+            return false;
+        }
+        if (!arr.includes(this.context.process)) {
+            this.accountService.redirectToHome();
+        }
+        return true;
     }
 
     login() {

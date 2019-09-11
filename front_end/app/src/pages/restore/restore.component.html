@@ -1,5 +1,6 @@
+<nx-pre-loader *ngIf="!ready"></nx-pre-loader>
 
-<div class="container">
+<div class="container" *ngIf="ready">
     <div *ngIf="restoringSuccess">
         <h1 class="process-success">
             Password reset instructions are sent to Email <br>{{data.email}}

@@ -63,7 +63,8 @@ export class NxAccountSettingsDropdown implements OnInit {
         const stay = url.startsWith('/systems') ||
                      url.startsWith('/account') ||
                      url.startsWith('/push-notifications') ||
-                     url.startsWith('/download') && !(this.config.publicDownloads || this.config.publicReleases);
+                     url.startsWith('/download') && !this.config.publicDownloads  ||
+                     url.startsWith('/downloads') && !this.config.publicReleases;
         this.accountService.logout(!stay);
     }
 }
