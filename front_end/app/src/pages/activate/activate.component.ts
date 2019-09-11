@@ -35,7 +35,6 @@ export class NxActivateComponent implements OnInit {
     loading: boolean;
     reactivating: any;
     activationSuccess: any;
-    changeSuccess: any;
 
     private setupDefaults() {
         this.context = {
@@ -116,10 +115,7 @@ export class NxActivateComponent implements OnInit {
         this.uriParamCode = this.route.snapshot.params.code;
 
         // Check session context
-        if (this.checkContext('activateSuccess', this.uriParam) ||
-                this.checkContext('restoringSuccess', this.uriParam) ||
-                this.checkContext('changeSuccess', this.uriParam)) {
-
+        if (this.checkContext('activateSuccess', this.uriParam)) {
             this.setContext(undefined);
         }
 
@@ -131,7 +127,6 @@ export class NxActivateComponent implements OnInit {
 
         this.reactivating = (this.uriParam === 'reactivating');
         this.activationSuccess = (this.uriParam === 'activationSuccess');
-        this.changeSuccess = (this.uriParam === 'changeSuccess');
 
         this.loading = true;
 
