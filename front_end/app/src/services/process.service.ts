@@ -61,7 +61,7 @@ class Process {
         settings.successMessage
          */
         if (settings) {
-            settings.errorPrefix = settings.errorPrefix ? `(${settings.errorPrefix}): ` : '';
+            settings.errorPrefix = settings.errorPrefix ? `${settings.errorPrefix}: ` : '';
             this.settings = {... this.settings, ... settings};
         } else {
             this.settings = {
