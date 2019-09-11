@@ -275,10 +275,10 @@ ${IPVD ADV FEATURES MOTION}           ${IPVD ADV FEATURES}//nx-tag/div[contains(
 ${IPVD ADV FEATURES I/O}              ${IPVD ADV FEATURES}//nx-tag/div[contains(text(),'${IPVD ADV FEATURE I/O}')]/..
 ${IPVD ADV FEATURES H.265}            ${IPVD ADV FEATURES}//nx-tag/div[contains(text(),'${IPVD ADV FEATURE H.265}')]/..
 ${IPVD ADV FEATURES MULTI SENSOR}     ${IPVD ADV FEATURES}//nx-tag/div[contains(text(),'${IPVD ADV FEATURE MULTI SENSOR}')]/..
-${IPVD ADV FEATURES CLOSE BUTTON}     //span[@class='close-button']
+${IPVD ADV FEATURES CLOSE BUTTON}     //span[contains(@class,'close-button')]
 #IPVD Manufacturers
 ${IPVD MANUFACTURERS PANE}            //ipvd//nx-vendor-list/nx-block[@id='vendors']
-${IPVD MANUFACTURERS PANE ITEM}       ${IPVD MANUFACTURERS PANE}//*[@class="float-left mr-1 mb-1"]
+${IPVD MANUFACTURERS PANE ITEM}       ${IPVD MANUFACTURERS PANE}//*[contains(@class,"float-left mr-1 mb-1")]
 ${IPVD AND MORE}                      ${IPVD MANUFACTURERS PANE}//div[@class="manufacture-info"]
 #IPVD Devices
 ${IPVD DEVICES PANE}                  //ipvd//nx-vendor-list/nx-block[@id='cameras']
@@ -326,7 +326,7 @@ ${IPVD FEEDBACK MESSAGE}              ${IPVD FEEDBACK FORM}//textarea[@id='messa
 ${IPVD FEEDBACK PRIVACY POLICY}       ${IPVD FEEDBACK FORM}//a[text()="${PRIVACY POLICY LINK TEXT}"]
 ${IPVD FEEDBACK SEND BUTTON}          ${IPVD FEEDBACK}//button[text()="${SEND BUTTON TEXT}"]
 ${IPVD FEEDBACK CANCEL BUTTON}        ${IPVD FEEDBACK}//button[text()="${CANCEL BUTTON TEXT}"]
-${IPVD FEEDBACK CLOSE BUTTON}         ${IPVD FEEDBACK}//button[@class='close']
+${IPVD FEEDBACK CLOSE BUTTON}         ${IPVD FEEDBACK}//button[contains(@class,'close')]
 
 ${NOTHING FOUND PLACEHOLDER}          //div[contains(@class,'text-placeholder') and contains(text(),"${NOTHING FOUND}")]
 
@@ -351,9 +351,9 @@ ${RELEASE NUMBER}                     //div[contains(@class,"active")]//div[@ng-
 
 ${PRIVACY POLICY HEADER}              //h1[contains(text(),'Personal data and privacy policy')]
 
-${DROPDOWN MENU}                      /../div[@class='dropdown-menu']
-${DROPDOWN MENU LIST}                 ${DROPDOWN MENU}/ul[@class='dropdown-menu--list']
-${DROPDOWN MENU ITEMS}                ${DROPDOWN MENU LIST}/li[@class='dropdown-item-container']
+${DROPDOWN MENU}                      /../div[contains(@class,'dropdown-menu')]
+${DROPDOWN MENU LIST}                 ${DROPDOWN MENU}/ul[contains(@class,'dropdown-menu--list')]
+${DROPDOWN MENU ITEMS}                ${DROPDOWN MENU LIST}/li[contains(@class,'dropdown-item-container')]
 
 #Password badges
 ${PASSWORD BADGE}                     //span[contains(@class,"badge")]
