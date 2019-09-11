@@ -5,7 +5,8 @@
 		"passwordChangedSuccess": "Your account is successfully saved",
 		"changePassword": "Change Password",
 		"newPasswordLabel": "New password",
-		"saveChanges": "Save"
+		"saveChanges": "Save",
+		"accountSettings": "Account Settings"
 	},
 	"activeActions": {
 		"sendConfirm": "Resend activation link",

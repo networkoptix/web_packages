@@ -294,6 +294,13 @@ class AssetAdmin(CMSAdmin):
     def has_add_permission(self, request):
         return super(CMSAdmin, self).has_add_permission(request)
 
+    def has_delete_permission(self, request, obj=None):
+        if obj and obj.protected:
+            return False
+        elif request.user.is_superuser:
+            return True
+        return False
+
     def change_view(self, request, object_id, form_url='', extra_context=None):
         extra_context = extra_context or {}
         extra_context['current_versions'] = []

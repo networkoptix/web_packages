@@ -104,26 +104,26 @@ export class NxAccountComponent implements OnInit {
     }
 
     init(): void {
+        const accountMenu = this.CONFIG.accountMenu;
         this.content = {
-            base: '/account',
-            selectedSection   : 'account',
-            selectedDetailsSection: '',
+            base: accountMenu.baseUrl,
+            selectedSection   : accountMenu.settings.id,
             level1            : [
                 {
-                    id   : 'account',
-                    icon : 'glyphicon-user',
+                    id   : accountMenu.settings.id,
+                    icon : accountMenu.icon,
                     label: this.account.email,
-                    path : '',
+                    path : accountMenu.settings.path,
                     level3: [
                         {
-                            id: 'settings',
-                            label: 'Account Settings',
-                            path: ''
+                            id: accountMenu.settings.id,
+                            label: this.LANG.account.accountSettings,
+                            path: accountMenu.settings.path
                         },
                         {
-                            id: 'password',
-                            label: 'Password',
-                            path: 'password'
+                            id: accountMenu.password.id,
+                            label: this.LANG.account.changePassword,
+                            path: accountMenu.password.path
                         }
                     ]
                 }

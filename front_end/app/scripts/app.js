@@ -194,18 +194,10 @@ window.L = {};
                         }})
                     // for history purpose
                     .when('/downloads/history', {
-                        template: '<download-history></download-history>'
+                        template: ''
                     })
                     .when('/downloads/:param?', {
-                        template: '<download-history [route-param]="uriParam"></download-history>',
-                        controller: [ '$scope', 'getParam', function ($scope, getParam) {
-                            $scope.uriParam = getParam;
-                        }],
-                        resolve: {
-                            getParam: [ '$route', function($route){
-                                return $route.current.params.param;
-                            }]
-                        }
+                        template: ''
                     })
                     .when('/download', {
                         template: ''

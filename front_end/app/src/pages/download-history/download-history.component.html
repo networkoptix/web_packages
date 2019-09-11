@@ -3,12 +3,14 @@
 
     <div class="col-12 p-0" style="min-height: 80px;">
         <nx-pre-loader *ngIf="!activeBuilds"></nx-pre-loader>
-        <ngb-tabset *ngIf="activeBuilds && noteTypes"
-                    (tabChange)="beforeChange($event)" #tabs>
+
+        <ngb-tabset *ngIf="activeBuilds"
+                    [style.visibility]="tabsVisible ? 'visible' : 'hidden'"
+                    (tabChange)="beforeChange($event)" #tabs="ngbTabset">
 
             <ngb-tab *ngFor="let type of noteTypes"
                      [id]="type">
-                <ng-template ngbTabTitle *ngIf="!hideTabs">
+                <ng-template ngbTabTitle>
                     <span class="tab-heading">{{LANG.downloads.releasesTypes[type] || type.name}}</span>
                 </ng-template>
                 <ng-template ngbTabContent>

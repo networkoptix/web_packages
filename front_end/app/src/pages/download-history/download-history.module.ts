@@ -1,8 +1,8 @@
-import { NgModule }                          from '@angular/core';
-import { CommonModule }                      from '@angular/common';
-import { BrowserModule }                     from '@angular/platform-browser';
-import { downgradeComponent, UpgradeModule } from '@angular/upgrade/static';
-import { RouterModule, Routes }              from '@angular/router';
+import { Injectable, NgModule }                  from '@angular/core';
+import { CommonModule }                          from '@angular/common';
+import { BrowserModule }                         from '@angular/platform-browser';
+import { UpgradeModule }                         from '@angular/upgrade/static';
+import { Resolve, Router, RouterModule, Routes } from '@angular/router';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
@@ -10,10 +10,24 @@ import { ComponentsModule }         from '../../components/components.module';
 import { ReleaseComponent }         from './release/release.component';
 import { DownloadHistoryComponent } from './download-history.component';
 import { TranslateModule }          from '@ngx-translate/core';
+import { DeviceDetectorService }    from 'ngx-device-detector';
+import { EMPTY as empty }           from 'rxjs';
+
+@Injectable()
+export class TypeResolver implements Resolve<any> {
+    constructor(private router: Router) {
+    }
+
+    resolve() {
+            this.router.navigate(['/downloads/releases']);
+            return empty;
+    }
+}
 
 const appRoutes: Routes = [
-    {path: 'downloads/history', component: DownloadHistoryComponent},
-    {path: 'downloads/:type', component: DownloadHistoryComponent}
+    // { path: '', redirectTo: 'download', pathMatch: 'full' },
+    { path: 'downloads/history', component: DownloadHistoryComponent, resolve: { type: TypeResolver }},
+    { path: 'downloads/:type', component: DownloadHistoryComponent }
 ];
 
 @NgModule({
@@ -24,10 +38,12 @@ const appRoutes: Routes = [
         NgbModule,
         TranslateModule,
 
-        ComponentsModule
-        // RouterModule.forChild(appRoutes)
+        ComponentsModule,
+        RouterModule.forChild(appRoutes),
     ],
-    providers: [],
+    providers: [
+        TypeResolver,
+    ],
     declarations: [
         DownloadHistoryComponent,
         ReleaseComponent
@@ -43,7 +59,7 @@ const appRoutes: Routes = [
 export class DownloadHistoryModule {
 }
 
-declare var angular: angular.IAngularStatic;
-angular
-    .module('cloudApp.directives')
-    .directive('downloadHistory', downgradeComponent({component: DownloadHistoryComponent}) as angular.IDirectiveFactory);
+// declare var angular: angular.IAngularStatic;
+// angular
+//     .module('cloudApp.directives')
+//     .directive('downloadHistory', downgradeComponent({component: DownloadHistoryComponent}) as angular.IDirectiveFactory);
