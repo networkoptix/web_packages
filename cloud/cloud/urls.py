@@ -43,7 +43,7 @@ def health_check(request):
     read_structure_finished = caches['global'].get(settings.READ_STRUCTURE_FINISHED, False)
     executor = MigrationExecutor(connections[DEFAULT_DB_ALIAS])
     plan = executor.migration_plan(executor.loader.graph.leaf_nodes())
-    status = 503 if plan and not read_structure_finished else 200
+    status = 503 if plan or not read_structure_finished else 200
     return HttpResponse(status=status)
 
 
