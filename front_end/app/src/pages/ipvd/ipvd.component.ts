@@ -217,7 +217,10 @@ export class NxIpvdComponent implements OnInit {
                         label              : this.LANG.search.analytics,
                         searchLabel        : this.LANG.search.analyticsSelected,
                         searchLabelSingular: '',
-                        items              : this.analytics,
+                        items              : this.analytics
+                                                 .map(v => (
+                                                    { id: v, label: v })
+                                                 ),
                         selected           : []
                     });
         }
