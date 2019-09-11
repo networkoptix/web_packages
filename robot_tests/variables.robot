@@ -123,8 +123,8 @@ ${OPEN NX WITNESS BUTTON FROM =}      //button[text()="${OPEN NX WITNESS BUTTON 
 
 
 ${ACCOUNT CREATION SUCCESS}           //h1[@class="process-success d-flex align-items-center flex-column mt-5 ng-star-inserted"]
-${ACTIVATION SUCCESS}                 //h1[@ng-if='activate.success && !loading' and contains(text(), "${ACCOUNT SUCCESSFULLY ACTIVATED TEXT}")]
-${SUCCESS LOG IN BUTTON}              //h1[@ng-if='activate.success && !loading' and contains(text(), "${ACCOUNT SUCCESSFULLY ACTIVATED TEXT}")]/following-sibling::h1/a[@href="/login"]
+${ACTIVATION SUCCESS}                 //h1[@class='process-success' and contains(text(), "${ACCOUNT SUCCESSFULLY ACTIVATED TEXT}")]
+${SUCCESS LOG IN BUTTON}              //h1[@ng-if='process-success' and contains(text(), "${ACCOUNT SUCCESSFULLY ACTIVATED TEXT}")]/following-sibling::h1/a[@href="/login"]
 #In system settings
 ${SYSTEM NAME}                        //h1[@ng-if="gettingSystem.success"]
 ${FIRST USER OWNER}                   //table[@ng-if='system.users.length']/tbody/tr/td[3]/span[contains(text(),"${OWNER TEXT}")]
