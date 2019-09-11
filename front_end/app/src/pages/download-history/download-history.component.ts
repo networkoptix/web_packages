@@ -126,7 +126,7 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
                     this.document.location.href = this.CONFIG.redirect404;
                 }
             )
-            .finally((result: any) => {
+            .finally(() => {
                 this.sub.unsubscribe();
             });
     }
