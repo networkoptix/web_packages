@@ -52,9 +52,9 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.menuService
-            .selectedSectionSubject
+            .selectedDetailsSection
             .subscribe(selection => {
-                this.content.selectedSubSection = selection;
+                this.content.selectedDetailsSection = selection;
                 this.content = {...this.content}; // trigger onChange
         });
 
@@ -78,7 +78,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                                     id    : '',
                                     label : '',
                                     path  : '',
-                                    level2: [
+                                    level3: [
                                         {
                                             id   : 'how-it-works',
                                             label: 'How it works',
