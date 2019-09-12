@@ -206,7 +206,7 @@ window.L = {};
                         template: ''
                     })
                     .when('/browser', {
-                        template: '<non-supported-browser></non-supported-browser>'
+                        template: ''
                     })
                     .when('/ipvd', {
                         template: ''
