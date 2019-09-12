@@ -166,6 +166,7 @@ def get_integration_type():
 
 
 class DeploymentStatus(models.Model):
+    name = models.CharField(max_length=100, blank=True)
     ready = models.BooleanField(default=False)
 
 

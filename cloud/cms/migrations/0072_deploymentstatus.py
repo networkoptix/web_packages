@@ -14,7 +14,8 @@ class Migration(migrations.Migration):
             name='DeploymentStatus',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('ready', models.BooleanField(default=False)),
+                ('name', models.CharField(blank=True, max_length=100)),
+                ('ready', models.BooleanField(default=False))
             ],
         ),
     ]
