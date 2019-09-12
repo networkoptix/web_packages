@@ -12,6 +12,7 @@ import { NxLanguageProviderService } from '../../../services/nx-language-provide
 })
 
 export class NxPermissionsDropdown implements OnInit {
+    @Input() disabled: any;
     @Input() user: any;
     @Input() roles: any;
     @Input() system: any;
