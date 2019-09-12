@@ -148,22 +148,26 @@ export class NxAccountService {
         return this.cloudApi
                    .login(email, password, remember)
                    .then((result: any) => {
-                       if (this.sessionService.loginState) {
-                           // If the user that logged in matches the current session there's no need to show
-                           // the logout dialog.
-                           if (result.email !== this.sessionService.loginState) {
-                               this.logoutAuthorised();
+                       if (!this.cloudApi.checkResponseHasError(result)) {
+                           if (this.sessionService.loginState) {
+                               // If the user that logged in matches the current session there's no need to show
+                               // the logout dialog.
+                               if (result.email !== this.sessionService.loginState) {
+                                   this.logoutAuthorised();
+                               }
+
+                               return Promise.resolve({ data: { resultCode: this.CONFIG.responseOk } });
                            }
 
-                           return Promise.resolve({ data: { resultCode: 'ok' } });
-                       }
+                           if (result.email) { // (result.data.resultCode === L.errorCodes.ok)
+                               this.sessionService.email = result.email;
+                               this.sessionService.loginState = result.email; // Forcing changing loginState to reload interface
+                           }
 
-                       if (result.email) { // (result.data.resultCode === L.errorCodes.ok)
-                           this.sessionService.email = result.email;
-                           this.sessionService.loginState = result.email; // Forcing changing loginState to reload interface
+                           return Promise.resolve({ data: { resultCode: this.CONFIG.responseOk } });
                        }
+                       return Promise.reject({ error: { resultCode: result.resultCode }});
 
-                       return Promise.resolve({ data : { resultCode: 'ok' }});
                    })
                    .catch((result: any) => {
                        if (this.cloudApi.checkResponseHasError(result.error)) {
