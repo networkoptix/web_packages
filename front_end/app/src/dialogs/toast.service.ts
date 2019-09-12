@@ -5,7 +5,10 @@ export class NxToastService {
     toasts: any[] = [];
 
     show(textOrTpl: string | TemplateRef<any>, options: any = {}) {
-        this.toasts.push({ textOrTpl, ...options });
+        const toast = this.toasts.find(obj => obj.textOrTpl === textOrTpl);
+        if (!toast) {
+            this.toasts.push({ textOrTpl, ...options });
+        }
     }
 
     remove(toast?) {
