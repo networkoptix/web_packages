@@ -80,12 +80,12 @@ import { WINDOW }            from '../../services/window-provider';
               });
 
         this.sessionService.loginStateSubject.subscribe((loginState) => {
+            this.loginState = loginState;
             if (loginState) {
                 this.renderer.removeClass(document.body, 'loading');
                 this.renderer.removeClass(document.body, 'anonymous');
                 this.renderer.addClass(document.body, 'authorized');
                 this.systemsService.forceUpdateSystemsAsPromise().then(() => this.updateActive());
-                this.loginState = loginState;
             } else {
                 this.renderer.removeClass(document.body, 'loading');
                 this.renderer.removeClass(document.body, 'authorized');
