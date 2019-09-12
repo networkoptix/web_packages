@@ -234,6 +234,9 @@ window.L = {};
                     .when('/main', {
                         template: ''
                     })
+                    .when('/404', {
+                        template: ''
+                    })
                     .when('/', {
                         // // TODO: keep until we retire AJS
                         template: '<landing-component></landing-component>'
@@ -242,7 +245,11 @@ window.L = {};
                         // controller: 'StartPageCtrl'
                     })
                     .otherwise({
-                        template: '<nx-404></nx-404>'
+                        resolve: {
+                            404: function () {
+                                window.location = '/404';
+                            }
+                        }
                     });
             }]);
 })();

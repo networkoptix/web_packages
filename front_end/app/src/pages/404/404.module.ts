@@ -9,9 +9,8 @@ import { Nx404Component } from './404.component';
 import { ComponentsModule } from '../../components/components.module';
 
 const appRoutes: Routes = [
-    {
-        path: '404', component: Nx404Component,
-    }
+    { path: '404', component: Nx404Component },
+    { path: '**', redirectTo: '404' }
 ];
 
 @NgModule({
