@@ -741,3 +741,10 @@ class ExternalFileAdmin(CMSAdmin):
 
 
 admin.site.register(ExternalFile, ExternalFileAdmin)
+
+
+class DeploymentStatusAdmin(CMSAdmin):
+    list_display = ["id", "ready"]
+
+
+admin.site.register(DeploymentStatus, DeploymentStatusAdmin)

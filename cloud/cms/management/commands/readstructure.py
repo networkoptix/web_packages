@@ -7,7 +7,6 @@ import os
 import re
 import json
 import codecs
-from django.core.cache import caches
 from cloud import settings
 from cloud.debug import timer
 from cms.controllers import structure
@@ -220,7 +219,6 @@ class Command(BaseCommand):
 
     @timer
     def handle(self, *args, **options):
-        caches['global'].set(settings.READ_STRUCTURE_FINISHED, False)
         migrate_18_3_to_18_4(self)
         product_type = ProductType.get_type_by_name(options['product_type'])
         read_languages(settings.DEFAULT_SKIN)
@@ -235,4 +233,6 @@ class Command(BaseCommand):
         read_structure(product_type)
         self.stdout.write(self.style.SUCCESS(
             'Successfully initiated data structure for CMS'))
-        caches['global'].set(settings.READ_STRUCTURE_FINISHED, True)
+        deploymentStatus, created = DeploymentStatus.objects.get_or_create(id=1)
+        deploymentStatus.ready = True
+        deploymentStatus.save()

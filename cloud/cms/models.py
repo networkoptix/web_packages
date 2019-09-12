@@ -165,6 +165,10 @@ def get_integration_type():
     return None
 
 
+class DeploymentStatus(models.Model):
+    ready = models.BooleanField(default=False)
+
+
 # CMS structure (data structure). Only developers can change that
 class Language(models.Model):
     name = models.CharField(max_length=255, unique=True)

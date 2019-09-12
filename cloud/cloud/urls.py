@@ -20,7 +20,6 @@ from django.shortcuts import redirect
 from django.views.generic.base import TemplateView
 from django.conf import settings
 from django.conf.urls.static import static
-from django.core.cache import caches
 from django.db import DEFAULT_DB_ALIAS, connections
 from django.db.migrations.executor import MigrationExecutor
 from django.http import HttpResponse
@@ -40,10 +39,9 @@ def redirect_login(request):
 
 
 def health_check(request):
-    read_structure_finished = caches['global'].get(settings.READ_STRUCTURE_FINISHED, False)
     executor = MigrationExecutor(connections[DEFAULT_DB_ALIAS])
     plan = executor.migration_plan(executor.loader.graph.leaf_nodes())
-    status = 503 if plan or not read_structure_finished else 200
+    status = 503 if plan else 200
     return HttpResponse(status=status)
 
 
