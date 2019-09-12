@@ -128,8 +128,8 @@ ${SUCCESS LOG IN BUTTON}              //h1[@class='process-success' and contains
 #In system settings
 ${SYSTEM NAME}                        //h1[@ng-if="gettingSystem.success"]
 ${FIRST USER OWNER}                   //table[@ng-if='system.users.length']/tbody/tr/td[3]/span[contains(text(),"${OWNER TEXT}")]
-${DISCONNECT FROM NX}                 //button[@ng-click='disconnect()']
-${RENAME SYSTEM}                      //button[@ng-click='rename()']
+${DISCONNECT FROM NX}                 //button/span[text()='${DISCONNECT FROM CLOUD TEXT}']/..
+${RENAME SYSTEM}                      //button/span[text()='${RENAME}']
 ${RENAME CANCEL}                      //form[@name='renameForm']//button[text()='${CANCEL BUTTON TEXT}']
 ${RENAME X BUTTON}                    //form[@name='renameForm']//button[@class='close']
 ${RENAME SAVE}                        //form[@name='renameForm']//button[text()='${SAVE BUTTON TEXT}']
@@ -160,7 +160,7 @@ ${SYSTEMS SEARCH INPUT}               //input[@ng-model='search.value']
 ${SYSTEM SEARCH X BUTTON}             //a[@ng-click="search.value=''"]
 
 #Merge
-${MERGE BUTTON SYSTEM}                //button[@ng-click="mergeSystems()"]
+${MERGE BUTTON SYSTEM}                //button/span[text()="${MERGE SYSTEM BUTTON TEXT}"]
 ${MERGE DIALOG}                       //nx-modal-merge-content
 ${MERGE FORM}                         //form[@name="mergeForm"]
 ${MERGE SYSTEM DROPDOWN}              ${MERGE DIALOG}//button[@id="genericSelect"]
