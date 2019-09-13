@@ -234,7 +234,7 @@ export class NxSystem extends System implements OnDestroy {
                 this.mergeInfo = response.mergeInfo;
 
                 this.checkPermissions();
-                return this.info;
+                return this;
             });
     }
 
