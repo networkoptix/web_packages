@@ -230,7 +230,8 @@
               "background": "white",
               "format": "png",
               "height_le": 72,
-              "height_ge": 64
+              "height_ge": 64,
+              "size": 5242880
             }
           },
           {
@@ -245,7 +246,8 @@
               "height_ge": 32,
               "height_le": 64,
               "width_ge": 32,
-              "width_le": 240
+              "width_le": 240,
+              "size": 5242880
             }
           }
         ]
