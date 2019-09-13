@@ -1,6 +1,7 @@
-import { Injectable }        from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { LocalStorageService }       from 'ngx-store';
 import { ReplaySubject } from 'rxjs';
+import { WINDOW } from './window-provider';
 
 @Injectable({
     providedIn: 'root'
@@ -9,9 +10,17 @@ export class NxSessionService {
     loginStateSubject = new ReplaySubject(0);
     session: any;
 
-    constructor(private localStorageService: LocalStorageService) {
+    constructor(private localStorageService: LocalStorageService,
+                @Inject(WINDOW) private window: Window) {
         this.session = this.localStorageService;
         this.loginStateSubject.next(this.loginState || '');
+
+        // Listens to changes from other browser tabs.
+        this.window.addEventListener('storage', (event) => {
+            if (event.key === 'ngx_loginState') {
+                this.window.location.reload();
+            }
+        });
     }
 
     invalidateSession() {
