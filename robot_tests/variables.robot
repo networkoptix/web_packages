@@ -65,13 +65,13 @@ ${LOG IN BODY}                        //nx-app//a[@href='/login']
 
 #Forgot Password
 ${RESET PASSWORD FORM}                //form[@name='restorePasswordWithCode']
-${RESTORE PASSWORD EMAIL INPUT}       //form[@name='restorePassword']//input[@type='email']
-${RESET PASSWORD BUTTON}              //form[@name='restorePassword']//button[@ng-click='checkForm()']
+${RESTORE PASSWORD EMAIL INPUT}       //form[@name='restorePassword']//nx-email-input/input
+${RESET PASSWORD BUTTON}              //form[@name='restorePassword']//button[contains(@class,'btn btn-primary')]
 ${RESET PASSWORD INPUT}               //form[@name='restorePasswordWithCode']//input[@id='newPassword']
-${SAVE PASSWORD}                      //form[@name='restorePasswordWithCode']//button[@ng-click='checkForm()']
-${RESET EMAIL SENT MESSAGE}           //div[@ng-if='restoringSuccess']/h1
+${SAVE PASSWORD}                      //form[@name='restorePasswordWithCode']//button[contains(@class,'btn btn-primary')]
+${RESET EMAIL SENT MESSAGE}           //div/h1[contains(@class,'process-success')]
 ${RESET SUCCESS MESSAGE}              //h1[contains(text(), "${RESET SUCCESS MESSAGE TEXT}")]
-${RESET SUCCESS LOG IN LINK}          //div[@ng-if='change.success || changeSuccess']//a[@href='/login']
+${RESET SUCCESS LOG IN LINK}          //div[contains(@class,'process-success')]//a[contains(@class,'btn btn-default')]
 ${RESET EYE ICON OPEN}                ${RESET PASSWORD FORM}${EYE ICON OPEN}
 ${RESET EYE ICON CLOSED}              ${RESET PASSWORD FORM}${EYE ICON CLOSED}
 
