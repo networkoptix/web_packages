@@ -2,8 +2,8 @@
 Variables    getvars.py
 
 *** Variables ***
-${ALERT}                              //span[@ng-if='!message.compileContent']
-${ALERT CLOSE}                        //div[contains(@class, 'ng-toast')]//span[@ng-bind-html='message.content']/../preceding-sibling::button[@ng-click='!message.dismissOnClick && dismiss()']
+${ALERT}                              //div[contains(@class,'toast-body')]
+${ALERT CLOSE}                        ${ALERT}/button[contains(@class,'close') and @data-dismiss='alert']
 
 ${BROWSER}                            Chrome
 

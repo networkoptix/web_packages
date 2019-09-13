@@ -241,7 +241,7 @@ Check For Alert
 Check For Alert Dismissable
     [arguments]    ${alert text}
     Wait Until Elements Are Visible    ${ALERT}    ${ALERT CLOSE}
-    Element Text Should Be    ${ALERT}    ${alert text}
+    Element Text Should Be    ${ALERT}//span[contains(@class,'toast-content')]    ${alert text}
     Click Element    ${ALERT CLOSE}
     Wait Until Page Does Not Contain Element    ${ALERT}
 
