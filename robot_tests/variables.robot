@@ -2,8 +2,8 @@
 Variables    getvars.py
 
 *** Variables ***
-${ALERT}                              //div[contains(@class,'toast-body')]
-${ALERT CLOSE}                        ${ALERT}/button[contains(@class,'close') and @data-dismiss='alert']
+${ALERT}                              //div[contains(@class,'toast-body')]//span[contains(@class,'toast-content')]
+${ALERT CLOSE}                        //div[contains(@class,'toast-body')]/button[contains(@class,'close') and @data-dismiss='alert']
 
 ${BROWSER}                            Chrome
 
