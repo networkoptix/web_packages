@@ -15,6 +15,8 @@ ${EMAIL IS REQUIRED}   //span[contains(@class,'input-error') and contains(text()
 ${EMAIL INVALID}       //span[contains(@class,'input-error') and contains(text(),'${EMAIL INVALID TEXT}')]
 
 *** Test Cases ***                        EMAIL
+Empty Email                               ${EMPTY}
+    [tags]    C26260
 Invalid Email 1 noptixqagmail.com         noptixqagmail.com
     [tags]    C41875
 Invalid Email 2 @gmail.com                @gmail.com
@@ -50,8 +52,6 @@ Trailing Space Email                      myemail@gmail.com${SPACE}
     [tags]    C41875
 Unregistered Email                        ${EMAIL UNREGISTERED}
     [tags]    C41870
-Empty Email                               ${EMPTY}
-    [tags]    C26260
 
 *** Keywords ***
 Restart
@@ -74,8 +74,7 @@ Open Restore Password Dialog
 Test Email Invalid
     [Arguments]   ${email}
     Input Text    ${RESTORE PASSWORD EMAIL INPUT}    ${email}
-    Click Element    //h1
-    Run Keyword If    '${email}'=='${EMAIL UNREGISTERED}'    Click Button    ${RESET PASSWORD BUTTON}
+    Click Button    ${RESET PASSWORD BUTTON}
     Run Keyword Unless    '${email}'=='${EMAIL UNREGISTERED}' or '${email}'=='${SPACE}myemail@gmail.com' or '${email}'=='myemail@gmail.com${SPACE}'    Check Email Outline    ${email}
     Run Keyword If    '${email}'=='${EMAIL UNREGISTERED}'    Check For Alert Dismissable    ${CANNOT SEND CONFIRMATION EMAIL} ${ACCOUNT DOES NOT EXIST}
 

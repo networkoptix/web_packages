@@ -242,7 +242,7 @@ Check For Alert Dismissable
     [arguments]    ${alert text}
     Wait Until Elements Are Visible    ${ALERT}    ${ALERT CLOSE}
     Element Text Should Be    ${ALERT}    ${alert text}
-    Click Element    ${ALERT CLOSE}
+    Click Button    ${ALERT CLOSE}
     Wait Until Page Does Not Contain Element    ${ALERT}
 
 Verify In System
