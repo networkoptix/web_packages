@@ -141,7 +141,6 @@ export class NxRegisterComponent implements OnInit {
                             }
 
                             if (response.activated) {
-                                this.activated = true;
                                 this.uriService.updateURI('/register/successActivated', {}, false);
                                 this.accountService
                                     .login(this.accountInfo.email, this.accountInfo.password, true)
