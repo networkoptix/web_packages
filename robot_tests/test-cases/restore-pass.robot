@@ -122,12 +122,12 @@ displays password masked, shows password and changes eye icon when clicked
     Wait Until Elements Are Visible    ${RESET PASSWORD INPUT}    ${SAVE PASSWORD}
     ${input type}    Get Element Attribute    ${RESET PASSWORD INPUT}    type
     Should Be Equal    '${input type}'    'password'
-    Click Element    ${RESET EYE ICON OPEN}
-    Wait Until Element Is Visible    ${RESET EYE ICON CLOSED}
-    ${input type}    Get Element Attribute    ${RESET PASSWORD INPUT}    type
-    Should Be Equal    '${input type}'    'text'
     Click Element    ${RESET EYE ICON CLOSED}
     Wait Until Element Is Visible    ${RESET EYE ICON OPEN}
+    ${input type}    Get Element Attribute    ${RESET PASSWORD INPUT}    type
+    Should Be Equal    '${input type}'    'text'
+    Click Element    ${RESET EYE ICON OPEN}
+    Wait Until Element Is Visible    ${RESET EYE ICON CLOSED}
     ${input type}    Get Element Attribute    ${RESET PASSWORD INPUT}    type
     Should Be Equal    '${input type}'    'password'
 
