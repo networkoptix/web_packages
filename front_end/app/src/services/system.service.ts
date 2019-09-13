@@ -190,7 +190,7 @@ export class NxSystem extends System implements OnDestroy {
     checkPermissions() {
         this.permissions = {};
         this.accessRole = this.info.accessRole;
-        // console.log(this.info);
+
         if (this.currentUser) {
             if (this.isAvailable) {
                 const role = this.findAccessRole(this.currentUser);
@@ -278,7 +278,7 @@ export class NxSystem extends System implements OnDestroy {
     }
 
     isOwner(user) {
-        return user.isAdmin || user.email === this.info.ownerAccountEmail;
+        return user.email === this.info.ownerAccountEmail;
     }
 
     isAdmin(user) {
@@ -309,7 +309,7 @@ export class NxSystem extends System implements OnDestroy {
         const role = roles.find((role) => {
             // Owner flag has top priority and overrides everything
             if (role.isOwner) {
-                return role.isOwner === user.isAdmin;
+                return this.isOwner(user);
             }
             if (!this.isEmptyGuid(role.id)) {
                 return role.id === user.userRoleId;
