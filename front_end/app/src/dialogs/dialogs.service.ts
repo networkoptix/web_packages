@@ -1,7 +1,8 @@
 import { Inject, Injectable } from '@angular/core';
 import { DOCUMENT, Location } from '@angular/common';
 import { DomSanitizer }       from '@angular/platform-browser';
-import { NgbModal }                  from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal }           from '@ng-bootstrap/ng-bootstrap';
+import { Router }             from '@angular/router';
 
 import './../dialogs/dialogs.scss';
 
@@ -34,6 +35,7 @@ export class NxDialogsService {
                 private domSanitizer: DomSanitizer,
                 location: Location,
                 private configService: NxConfigService,
+                private router: Router
     ) {
         this.LANG = this.language.getTranslations();
         this.CONFIG = this.configService.getConfig();
@@ -127,18 +129,18 @@ export class NxDialogsService {
         };
 
         return this.createModal(LoginModalContent, options, params)
-                    // handle how the dialog was closed
-                    // required if we need to have dismissible dialog otherwise
-                    // will raise a JS error ( Uncaught [in promise] )
-                   .then((result) => {
-                       this.closeResult = `Closed with: ${result}`;
+            // handle how the dialog was closed
+            // required if we need to have dismissible dialog otherwise
+            // will raise a JS error ( Uncaught [in promise] )
+            .then((result) => {
+                this.closeResult = `Closed with: ${result}`;
 
-                       if (redirectClose && result === 'canceled') {
-                           this.document.location.href = this.CONFIG.redirectUnauthorised;
-                       }
-                   }, (reason) => {
-                       this.closeResult = 'Dismissed';
-                   });
+                if (redirectClose && result === 'canceled') {
+                    return this.router.navigate([this.CONFIG.redirectUnauthorised]);
+                }
+            }, (reason) => {
+                this.closeResult = 'Dismissed';
+            });
     }
 
     addUser(account: NxAccountService, system?, user?) {
