@@ -86,25 +86,19 @@ export class NxAccountComponent implements OnInit {
                     });
             }
         } else {
-            this.accountService
-                .checkLoginState()
-                .then(() => {
-                    this.accountService
-                        .get()
-                        .then((account) => {
-                            this.account = account;
-                            this.init();
-                        });
-
-                })
-                .catch(() => {
-                    this.dialogs.login(this.accountService, true);
+            this.accountService.requireLogin()
+                .then((account) => {
+                    this.account = account;
+                    this.init();
                 });
         }
     }
 
     init(): void {
         const accountMenu = this.CONFIG.accountMenu;
+        if (this.account === undefined) {
+            return;
+        }
         this.content = {
             base: accountMenu.baseUrl,
             selectedSection   : accountMenu.settings.id,

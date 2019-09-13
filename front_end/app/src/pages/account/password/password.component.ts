@@ -83,17 +83,10 @@ export class NxAccountPasswordComponent implements OnInit {
         }, Object.values(this.watchers));
 
         this.accountService
-            .checkLoginState()
-            .then(() => {
-                this.accountService
-                    .get()
-                    .then((account) => {
-                        this.account = account;
-                        this.setOriginal();
-                    });
-            })
-            .catch(() => {
-                this.dialogs.login(this.accountService, true);
+            .requireLogin()
+            .then((account) => {
+                this.account = account;
+                this.setOriginal();
             });
     }
 

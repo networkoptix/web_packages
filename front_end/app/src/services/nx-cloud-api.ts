@@ -184,7 +184,7 @@ export class NxCloudApiService {
     reactivate(userEmail) {
         return this.http.post(this.CONFIG.apiBase + '/account/activate', {
             user_email: userEmail
-        });
+        }).toPromise();
     }
 
     activate(code) {

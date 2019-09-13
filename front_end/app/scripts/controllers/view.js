@@ -14,7 +14,7 @@
     
                 const CONFIG = nxConfigService.getConfig();
                 const LANG = languageService.lang;
-    
+
                 nxPageService.setPageTitle(LANG.pageTitles.view);
                 
                 $scope.systemReady = false;
@@ -45,8 +45,8 @@
                     });
                     nxAppStateService.setFooterVisibility(false);
                 }
-                
-                function systemError(){
+    
+                function systemError () {
                     $scope.unreachable = true;
                 }
     
@@ -57,12 +57,11 @@
                         $scope.currentSystem = system($routeParams.systemId, account.email);
                         var systemInfoRequest = $scope.currentSystem.getInfo();
                         var systemAuthRequest = $scope.currentSystem.updateSystemAuth();
-
-                        $q.all([ systemInfoRequest, systemAuthRequest ]).then(function () {
+    
+                        $q.all([systemInfoRequest, systemAuthRequest]).then(function (result) {
                             $scope.system = $scope.currentSystem.mediaserver;
-
                             $scope.hasCameras = false;
-
+        
                             if ($scope.currentSystem.isOnline) {
                                 $scope.camerasProvider = camerasProvider.getProvider($scope.system);
                                 $scope.camerasProvider
@@ -72,7 +71,7 @@
                                             $scope.camerasProvider.getCameras(cameras.data);
                                             $scope.systemReady = true;
                                             $scope.hasCameras = (Object.keys($scope.camerasProvider.cameras).length);
-
+                        
                                             if ($scope.hasCameras) {
                                                 delayedUpdateSystemInfo();
                                             }
@@ -81,7 +80,10 @@
                             } else {
                                 $scope.systemReady = true;
                             }
-                        }, systemError);
+                        })
+                        .catch(function (error) {
+                            $scope.unreachable = true;
+                        });
                     });
 
                 
