@@ -9,10 +9,12 @@ Force Tags        email    form    Threaded File
 *** Variables ***
 ${url}    ${ENV}
 ${password}     ${BASE PASSWORD}
-${EMAIL IS REQUIRED}           //span[@ng-if='restorePassword.email.$touched && restorePassword.email.$error.required' and contains(text(),"${EMAIL IS REQUIRED TEXT}")]
-${EMAIL INVALID}               //span[@ng-if='restorePassword.email.$touched && restorePassword.email.$error.email' and contains(text(),"${EMAIL INVALID TEXT}")]
+# ${EMAIL IS REQUIRED}   //span[@ng-if='restorePassword.email.$touched && restorePassword.email.$error.required' and contains(text(),'${EMAIL IS REQUIRED TEXT}')]
+${EMAIL IS REQUIRED}   //span[contains(@class,'input-error') and contains(text(),'${EMAIL IS REQUIRED TEXT}')]
+# ${EMAIL INVALID}       //span[@ng-if='restorePassword.email.$touched && restorePassword.email.$error.email' and contains(text(),"${EMAIL INVALID TEXT}")]
+${EMAIL INVALID}       //span[contains(@class,'input-error') and contains(text(),'${EMAIL INVALID TEXT}')]
 
-*** Test Cases ***      EMAIL
+*** Test Cases ***                        EMAIL
 Invalid Email 1 noptixqagmail.com         noptixqagmail.com
     [tags]    C41875
 Invalid Email 2 @gmail.com                @gmail.com
@@ -57,6 +59,8 @@ Restart
     Open Restore Password Dialog
 
 Open Restore Password Dialog
+    # Re-Setting strings with different string qualifiers due to Hebrew having accent characters that can prematurely truncate the strings.
+    # Should refactor initial variable settings around line 12 above to use Regexp Escape keyword to properly escape the strings.
     Run Keyword If    "${LANGUAGE}"=="he_IL"    Set Suite Variable    ${EMAIL INVALID}    //span[@ng-if='restorePassword.email.$touched && restorePassword.email.$error.email' and contains(text(),'${EMAIL INVALID TEXT}')]
     Run Keyword If    "${LANGUAGE}"=="he_IL"    Set Suite Variable    ${EMAIL IS REQUIRED}    //span[@ng-if='restorePassword.email.$touched && restorePassword.email.$error.required' and contains(text(),'${EMAIL IS REQUIRED TEXT}')]
     ${email}    Get Random Email    ${BASE EMAIL}
@@ -77,6 +81,6 @@ Test Email Invalid
 
 Check Email Outline
     [Arguments]    ${email}
-    Wait Until Element Is Visible    ${RESTORE PASSWORD EMAIL INPUT}/parent::div/parent::div[contains(@class,'has-error')]
+    Wait Until Element Is Visible    ${RESTORE PASSWORD EMAIL INPUT}/../parent::div/parent::div/div/span[contains(@class,'input-error')]
     Run Keyword If    "${email}"=="${EMPTY}" or "${email}"=="${SPACE}"    Element Should Be Visible    ${EMAIL IS REQUIRED}
     Run Keyword Unless    "${email}"=="${EMPTY}" or "${email}"=="${SPACE}"    Element Should Be Visible    ${EMAIL INVALID}
