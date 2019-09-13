@@ -182,7 +182,8 @@ export class NxAccountService {
             .finally(() => {
                 this.sessionService.invalidateSession(); // Clear session
                 if (!doNotRedirect) {
-                    return this.router.navigate([this.CONFIG.redirectUnauthorised]);
+                    return this.router.navigate([this.CONFIG.redirectUnauthorised])
+                        .finally(this.document.location.reload());
                 }
                 setTimeout(() => {
                     this.document.location.reload();
