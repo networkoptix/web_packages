@@ -138,10 +138,10 @@ ${RENAME INPUT}                       //form[@name='renameForm']//input[@id='sys
 ${RENAME INPUT WITH ERROR}            //form[@name='renameForm']//input[@id='systemName' and contains(@class,'ng-invalid')]
 ${SYSTEM NAME IS REQUIRED}            //form[@name='renameForm']//span[@class='input-error' and contains(text(),"${SYSTEM NAME IS REQUIRED TEXT}")]
 
-${OWNER NAME}                         //h3[contains(@class,"user-name") and text()="${TEST FIRST NAME} ${TEST LAST NAME}"]
-${OWNER LABEL}                        //h3[contains(@class,"user-name") and text()="${TEST FIRST NAME} ${TEST LAST NAME}"]/../h2[contains(text(), "${OWNER TEXT}")]
-${OWNER EMAIL}                        //a[@ng-href="mailto:${EMAIL OWNER}"]
-${YOUR PERMISSIONS}                   //ng-include[@src="$root.C.viewsDir + 'components/system-card.html'"]//p[contains(text(), "${YOUR PERMISSIONS TEXT}")]
+${OWNER NAME}                         //header//span[contains(text(), "${TEST FIRST NAME} ${TEST LAST NAME}"]
+${OWNER LABEL}                        //header//span[contains(text(), "${OWNER TEXT}")]
+${OWNER EMAIL}                        //header//span[contains(text(), "${EMAIL OWNER}"]
+${YOUR ACCESS LEVEL}                   //ng-include[@src="$root.C.viewsDir + 'components/system-card.html'"]//p[contains(text(), "${YOUR ACCESS LEVEL TEXT}")]
 
 ${DISCONNECT FROM MY ACCOUNT}         //button[@ng-click='delete()']
 ${SHARE BUTTON SYSTEMS}               //div[@process-loading='gettingSystem']//button[@ng-click='share()']
@@ -152,7 +152,7 @@ ${DELETE USER MODAL}                  //ngb-modal-window
 ${DELETE USER BUTTON}                 //button[contains(text(), '${DELETE USER BUTTON TEXT}')]
 ${DELETE USER CANCEL BUTTON}          //ngb-modal-window//button[contains(text(), "${CANCEL BUTTON TEXT}")]
 ${SYSTEM NAME OFFLINE}                //span[@ng-if='!system.isOnline']
-${USERS LIST}                         //div[@process-loading='gettingSystemUsers']
+${USERS LIST LINK}                    // a[@id='users']
 
 ${SYSTEM NO ACCESS}                   //div[@ng-if='systemNoAccess']/h1[contains(text(), "${SYSTEM NO ACCESS TEXT}")]
 ${AVAILABLE SYSTEMS LIST}             //a[@href='/systems']

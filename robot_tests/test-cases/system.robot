@@ -105,15 +105,15 @@ Cancel should cancel disconnection and disconnect should remove it when not owne
 correct items are shown for owner
     [tags]    C41560    Threaded
     Log in to Auto Tests System    ${EMAIL OWNER}
-    Wait Until Element Is Visible    ${USERS LIST}
+    Wait Until Element Is Visible    ${USERS LIST LINK}
 #    Wait Until Elements Are Visible    //h2[text()\='${OWNER TEXT}']
-    Wait Until Elements Are Visible    //h2[text()\='${YOUR SYSTEM TEXT}']    ${RENAME SYSTEM}    ${DISCONNECT FROM NX}    ${SHARE BUTTON SYSTEMS}
+    Wait Until Elements Are Visible    //h2[text()\='${YOUR SYSTEM TEXT}']    ${RENAME SYSTEM}    ${DISCONNECT FROM NX}
 
 correct items are shown for admin
     [tags]    C41561    Threaded
     Log in to Auto Tests System    ${EMAIL ADMIN}
-    Wait Until Element Is Visible    ${USERS LIST}
-    Wait Until Elements Are Visible    ${RENAME SYSTEM}    ${DISCONNECT FROM MY ACCOUNT}    ${SHARE BUTTON SYSTEMS}    ${OWNER LABEL}    ${OWNER NAME}    ${OWNER EMAIL}    ${YOUR PERMISSIONS}    ${YOUR PERMISSIONS}/b[contains(text(), ${ADMIN TEXT})]
+    Wait Until Element Is Visible    ${USERS LIST LINK}
+    Wait Until Elements Are Visible    ${RENAME SYSTEM}    ${DISCONNECT FROM MY ACCOUNT}    ${OWNER LABEL}    ${OWNER NAME}    ${OWNER EMAIL}    ${YOUR ACCESS LEVEL}    ${YOUR ACCESS LEVEL}/b[contains(text(), ${ADMIN TEXT})]
 
 correct items are shown for advanced viewer and below
     [tags]    C41562    Threaded
@@ -121,7 +121,7 @@ correct items are shown for advanced viewer and below
     ${users text}    Set Variable    ${ADV VIEWER TEXT}    ${VIEWER TEXT}     ${LIVE VIEWER TEXT}    ${CUSTOM TEXT}
     :FOR    ${user}  ${text}  IN ZIP  ${users}  ${users text}
     \    Log in to Auto Tests System    ${user}
-    \    Wait Until Elements Are Visible    ${OWNER NAME}    ${OWNER LABEL}    ${OWNER EMAIL}    ${YOUR PERMISSIONS}    ${YOUR PERMISSIONS}/b[contains(text(),"${text}")]
+    \    Wait Until Elements Are Visible    ${OWNER NAME}    ${OWNER LABEL}    ${OWNER EMAIL}    ${YOUR ACCESS LEVEL}    ${YOUR ACCESS LEVEL}/b[contains(text(),"${text}")]
     \    Element Should Be Enabled    ${DISCONNECT FROM MY ACCOUNT}
     \    Element Should Not Be Visible    ${RENAME SYSTEM}
     \    Element Should Not Be Visible    ${SHARE BUTTON SYSTEMS}
