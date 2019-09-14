@@ -558,6 +558,7 @@ class DataStructure(models.Model):
     advanced = models.BooleanField(default=False)
     order = models.IntegerField(default=100000)
     optional = models.BooleanField(default=False)
+    unique = models.BooleanField(default=False)
     public = models.BooleanField(default=True)
     deprecated = models.BooleanField(default=False)
     protected = models.BooleanField(default=False)
