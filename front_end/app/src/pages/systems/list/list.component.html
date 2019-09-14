@@ -36,16 +36,10 @@
                               [ngClass]="CONFIG.systemStatuses[system.stateOfHealth].style || CONFIG.systemStatuses.default.style"
                               [innerHTML]="LANG.systemStatuses[system.stateOfHealth] || system.stateOfHealth | highlight:search.value">
                         </span>
+                        <nx-client-button [system]="system"
+                                          [actionType]="(system) ? 'default' : 'primary'"
+                                          *ngIf="LANG.system && system.stateOfHealth == CONFIG.systemStatuses.onlineStatus"></nx-client-button>
 
-                        <nx-process-button
-                                title="{{system.stateMessage}}"
-                                [clickFn]="openInClient(system)"
-                                *ngIf="LANG.system && system.stateOfHealth == CONFIG.systemStatuses.onlineStatus"
-                                [process]="openClient"
-                                [buttonText]="(system) ? LANG.system.openClient : LANG.system.openClientNoSystem"
-                                [actionType]="(system) ? 'default' : 'primary'"
-                                [buttonDisabled]="(system) ? !system.isOnline && system.stateOfHealth !== CONFIG.systemStatuses.onlineStatus : false">
-                        </nx-process-button>
                     </div>
                 </div>
             </div>
