@@ -84,17 +84,17 @@ def is_datarecord_unique(asset, data_structure, value, customizations=None):
 
     asset_ids_found = []
 
-    pending_version_ids = []
+    not_accepted_version_ids = []
     # Find all versions of assets that may cause conflict
     for review in AssetCustomizationReview.objects.filter(
             version__asset__id__in=asset_ids, version__datarecord__data_structure=data_structure
     ).order_by('-pk').select_related('version__asset'):
         asset_id = review.version.asset.id
-        if asset_id in asset_ids and asset_id not in asset_ids_found:
+        if asset_id not in asset_ids_found:
             if review.state == AssetCustomizationReview.REVIEW_STATES.accepted:
                 asset_ids_found.append(asset_id)
             else:
-                pending_version_ids.append(review.version.id)
+                not_accepted_version_ids.append(review.version.id)
 
     asset_ids_found.clear()
     asset_ids_published_found = []
@@ -104,7 +104,7 @@ def is_datarecord_unique(asset, data_structure, value, customizations=None):
     ).order_by('-pk').select_related('asset'):
         if datarecord.version:
             # If datarecord has a new version that is still pending/rejected/blocked, check value
-            if datarecord.version in pending_version_ids:
+            if datarecord.version in not_accepted_version_ids:
                 if datarecord.value == value:
                     return False
             # If datarecord has a published version or older version, make sure we
