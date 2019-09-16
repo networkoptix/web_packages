@@ -7,7 +7,7 @@ import { DomSanitizer }                                from '@angular/platform-b
 @Component({
     selector: 'nx-modal-generic-content',
     templateUrl: 'generic.component.html',
-    styleUrls: []
+    styleUrls: ['generic.component.scss']
 })
 export class GenericModalContent implements OnInit {
     @Input() message;
@@ -19,6 +19,7 @@ export class GenericModalContent implements OnInit {
     @Input() hasFooter;
     @Input() cancellable;
     @Input() closable;
+    @Input() stacked;
 
     constructor(public activeModal: NgbActiveModal,
     ) {}
@@ -31,6 +32,7 @@ export class GenericModalContent implements OnInit {
     }
 
     ngOnInit() {
+        this.stacked = this.stacked || '';
         this.buttonClass = this.buttonClass || '';
         this.closable = !!this.closable;
     }
@@ -63,7 +65,7 @@ export class NxModalGenericComponent implements OnInit {
         this.LANG = this.language.getTranslations();
     }
 
-    private dialog(message, title, actionLabel, actionType?, cancelLabel?,
+    private dialog(message, title, actionLabel, actionType?, cancelLabel?, stacked?,
                    hasFooter?, cancellable?, closable?) {
         this.modalRef = this.modalService.open(GenericModalContent,
                 {
@@ -71,12 +73,13 @@ export class NxModalGenericComponent implements OnInit {
                             backdrop: 'static'
                         });
 
-        this.modalRef.componentInstance.message = this.domSanitizer.bypassSecurityTrustHtml(message);
+        this.modalRef.componentInstance.message = message ? this.domSanitizer.bypassSecurityTrustHtml(message) : '';
         this.modalRef.componentInstance.title = title;
         this.modalRef.componentInstance.actionLabel = actionLabel;
         this.modalRef.componentInstance.buttonType = actionType || 'default';
         this.modalRef.componentInstance.cancelLabel = cancelLabel;
         this.modalRef.componentInstance.buttonClass = actionType || 'btn-primary';
+        this.modalRef.componentInstance.stacked = stacked ? 'stacked' : '';
 
         this.modalRef.componentInstance.hasFooter = hasFooter;
         this.modalRef.componentInstance.cancellable = cancellable;
@@ -85,21 +88,23 @@ export class NxModalGenericComponent implements OnInit {
         return this.modalRef;
     }
 
-    openConfirm(message, title, actionLabel, actionType?, cancelLabel?) {
+    openConfirm(message, title, actionLabel, actionType?, cancelLabel?, stacked?) {
         return this.dialog(message, title, actionLabel,
             actionType,
             cancelLabel,
+            stacked,
             true,
             false,
             true)
             .result;
     }
 
-    openAlert(message, title) {
+    openAlert(message, title, stacked?) {
         return this.dialog(message, title,
             this.LANG.dialogs.okButton,
             null,
             this.LANG.dialogs.cancelButton,
+            stacked,
             true,
             true,
             true)

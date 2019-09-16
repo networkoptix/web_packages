@@ -269,6 +269,8 @@
     "devices": "devices",
     "dialogs": {
         "cancelButton": "Cancel",
+        "continueAs": "Continue as {email}",
+        "createNewAccount": "Create New Account",
         "download": "Download %VMS_NAME%",
         "loginButton": "Log in",
         "loginTitle": "Log in to %CLOUD_NAME%",

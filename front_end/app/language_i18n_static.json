@@ -196,6 +196,8 @@
 	"dialogs": {
 		"okButton": "OK",
 		"cancelButton": "Cancel",
+		"continueAs": "Continue as {email}",
+		"createNewAccount": "Create New Account",
 		"loginTitle": "Log in to %CLOUD_NAME%",
 		"loginButton": "Log in",
 		"logoutAuthorisedTitle": "You are already logged in",

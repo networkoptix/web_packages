@@ -195,11 +195,13 @@ export class NxAccountService {
         this.get().then((account) => {
             // logoutAuthorisedLogoutButton
             if (account) {
+                const continueAs = this.LANG.dialogs.continueAs.replace('{email}', account.email);
                 this.dialogs.confirm('',
                         this.LANG.dialogs.logoutAuthorisedTitle,
-                        this.LANG.dialogs.logoutAuthorisedContinueButton,
+                        continueAs,
                         undefined,
-                        this.LANG.dialogs.logoutAuthorisedLogoutButton
+                        this.LANG.dialogs.createNewAccount,
+                        true
                 ).then((result) => {
                     if (result === this.LANG.dialogs.logoutAuthorisedLogoutButton) {
                         this.logout(true);
