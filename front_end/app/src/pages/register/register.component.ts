@@ -85,7 +85,7 @@ export class NxRegisterComponent implements OnInit {
         }
 
         if (this.code) {
-            let decoded;
+            let decoded: string;
             try {
                 decoded = atob(this.uriParamCode);
                 this.accountInfo.email = decoded.substring(decoded.indexOf(':') + 1);
@@ -140,9 +140,7 @@ export class NxRegisterComponent implements OnInit {
                                 return;
                             }
 
-
-                            if (this.accountInfo.code) {
-                                this.activated = true;
+                            if (response.activated) {
                                 this.uriService.updateURI('/register/successActivated', {}, false);
                                 this.accountService
                                     .login(this.accountInfo.email, this.accountInfo.password, true)

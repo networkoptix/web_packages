@@ -185,4 +185,5 @@ export class ComponentsModule {
 declare var angular: angular.IAngularStatic;
 angular
         .module('cloudApp.directives')
-        .directive('nxHeader', downgradeComponent({component: NxHeaderComponent}) as angular.IDirectiveFactory);
+        .directive('nxHeader', downgradeComponent({component: NxHeaderComponent}) as angular.IDirectiveFactory)
+        .directive('nxRibbon', downgradeComponent({component: NxRibbonComponent}) as angular.IDirectiveFactory);

@@ -32,28 +32,9 @@ import { AuthGuard }         from './src/routeGuards/authGuard';
 
 class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
     shouldProcessUrl(url: UrlTree) {
-        return (url.toString().startsWith('/sandbox') ||
-            url.toString().startsWith('/404') ||
-            url.toString().startsWith('/login') ||
-            url.toString().startsWith('/ipvd') ||
-            (url.toString().startsWith('/download') && !url.toString().startsWith('/downloads')) ||
-            url.toString().startsWith('/account') ||
-            url.toString().startsWith('/activate') ||
-            url.toString().startsWith('/restore_password') ||
-            url.toString().startsWith('/register') ||
-            url.toString().startsWith('/systems') ||
-            url.toString().startsWith('/new-content') ||
-            url.toString().startsWith('/right') ||
-            url.toString().startsWith('/push-notifications') ||
-            url.toString().startsWith('/debug') ||
-            url.toString().startsWith('/integrations') ||
-            url.toString().startsWith('/downloads') ||
-            url.toString().startsWith('/content')) &&
-            !url.toString().endsWith('/view');
-        // return false;
+        const remainingRoutes = url.toString().match('\/(systems|embed)\/[A-Za-z0-9\-:]+\/view\/?');
 
-        /* Temporary downgraded components - routing is handled by AJS */
-        // url.toString().startsWith('/browser');
+        return (url.toString() !== '/' && !remainingRoutes);
     }
 
     extract(url: UrlTree) {

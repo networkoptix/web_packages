@@ -66,3 +66,9 @@ import { ApplyModalContent, NxModalApplyComponent }     from './apply/apply.comp
 })
 export class DialogsModule {
 }
+
+declare var angular: angular.IAngularStatic;
+angular
+    .module('cloudApp.services')
+    .service('nxDialogsService', downgradeInjectable(NxDialogsService));
+

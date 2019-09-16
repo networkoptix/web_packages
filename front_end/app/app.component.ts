@@ -54,7 +54,7 @@ export class AppComponent {
         };
 
         this.deviceInfo = this.deviceService.getDeviceInfo();
-        let allowedDevice = this.allowedDevices[this.deviceInfo.os];
+        let allowedDevice = this.allowedDevices[this.deviceInfo.os.toLowerCase()];
 
         // Special case for Kyle's robot tests
         // ... device detector doesn't detect it correctly
@@ -63,7 +63,7 @@ export class AppComponent {
         }
 
         if (allowedDevice !== undefined) {
-            const allowedVersion = allowedDevice[this.deviceInfo.browser] || 0;
+            const allowedVersion = allowedDevice[this.deviceInfo.browser.toLowerCase()] || 0;
             const majorVersion = this.deviceInfo.browser_version.split('.')[0];
 
             if (majorVersion < allowedVersion) {

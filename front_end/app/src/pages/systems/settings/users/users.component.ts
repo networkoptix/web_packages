@@ -10,12 +10,13 @@ import { NxConfigService }           from '../../../../services/nx-config';
 import { NxPageService }             from '../../../../services/page.service';
 import { NxDialogsService }          from '../../../../dialogs/dialogs.service';
 import { NxSettingsService }         from '../settings.service';
-import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
-import { NxMenuService }             from '../../../../components/menu/menu.service';
-import { NxAccountService }          from '../../../../services/account.service';
-import { NxProcessService }          from '../../../../services/process.service';
-import { NxSystem, NxSystemRole, NxSystemUser }      from '../../../../services/system.service';
-import { NxApplyService, Watcher }   from '../../../../services/apply.service';
+import { NxLanguageProviderService }            from '../../../../services/nx-language-provider';
+import { NxMenuService }                        from '../../../../components/menu/menu.service';
+import { NxAccountService }                     from '../../../../services/account.service';
+import { NxProcessService }                     from '../../../../services/process.service';
+import { NxSystem, NxSystemRole, NxSystemUser } from '../../../../services/system.service';
+import { NxApplyService, Watcher }              from '../../../../services/apply.service';
+import { NxUriService }                         from '../../../../services/uri.service';
 
 @Component({
     selector   : 'nx-system-user-component',
@@ -57,6 +58,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 private settingsService: NxSettingsService,
                 private menuService: NxMenuService,
                 private processService: NxProcessService,
+                private uriService: NxUriService,
                 location: Location) {
         this.location = location;
         this.viewContainerRef = viewContainerRef;
@@ -81,6 +83,13 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             .pipe(filter(data => data !== undefined))
             .subscribe((system) => {
                 this.system = system;
+
+                // Route guard did not worked :( ... so doing it the old way
+                if (!this.system.permissions || !this.system.permissions.editUsers) {
+                    this.uriService.updateURI('systems/' + this.system.id, {});
+                    return;
+                }
+
                 this.systemAvailable = this.system.isAvailable && this.system.mergeInfo === undefined;
                 if (!this.selectedUser || !this.selectedUser.email) {
                     this.setUser();

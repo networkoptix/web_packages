@@ -5,6 +5,7 @@ from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.template.loader import render_to_string
 from .models import *
 from api.models import Account
+from .controllers.modify_db import are_asset_datarecords_unique
 
 from dal import autocomplete
 
@@ -304,6 +305,11 @@ class AssetForm(forms.ModelForm):
                 if customizations.filter(name__in=asset_type.get_customizations(self.instance)).exists():
                     raise forms.ValidationError(f"Customization is already used for a "
                                                 f"{AssetType.ASSET_TYPES[asset_type.type]} asset.")
+
+        unique, error_field = are_asset_datarecords_unique(self.instance, customizations)
+        if not unique:
+            raise forms.ValidationError(f'Cannot apply customizations because there is a uniqueness conflict '
+                                        f'on the {error_field.name} field')
 
         return cleaned_data
 

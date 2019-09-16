@@ -13,6 +13,8 @@
     
     .toast {
         transition : .5s linear all;
+        max-width  : 600px;
+        min-width  : 300px;
         
         &.hide {
             opacity    : 0;

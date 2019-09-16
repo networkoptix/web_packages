@@ -9,7 +9,8 @@ import { NxLanguageProviderService } from '../../services/nx-language-provider';
 export class Nx404Component {
     LANG: any;
     constructor(private languageService: NxLanguageProviderService,
-                private pageService: NxPageService) {
+                private pageService: NxPageService,
+    ) {
         this.LANG = this.languageService.getTranslations();
         this.pageService.setPageTitle(this.LANG.pageTitles.pageNotFound);
     }

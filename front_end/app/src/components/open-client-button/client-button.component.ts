@@ -4,7 +4,7 @@ import {
     Input,
     ViewEncapsulation, Inject
 }                                    from '@angular/core';
-import { Location }                  from '@angular/common';
+import { Router }                    from '@angular/router';
 import { NxConfigService }           from '../../services/nx-config';
 import { NxDialogsService }          from '../../dialogs/dialogs.service';
 import { NxUrlProtocolService }      from '../../services/url-protocol.service';
@@ -34,7 +34,7 @@ export class NxClientButtonComponent implements OnInit {
                 private config: NxConfigService,
                 private language: NxLanguageProviderService,
                 private dialogs: NxDialogsService,
-                location: Location) {
+                private router: Router) {
 
         this.location = location;
     }
@@ -46,24 +46,23 @@ export class NxClientButtonComponent implements OnInit {
         this.openClient = this.processService.createProcess(() => {
             this.urlProtocol
                 .open(this.system && this.system.id)
-                .then(() => {
-                        },
-                        () => {
-                            // message, title, actionLabel, actionType
-                            return this.dialogs
-                                       .confirm(
-                                               this.LANG.errorCodes.cantOpenClient,
-                                               this.LANG.dialogs.noClientDetectedTitle,
-                                               this.LANG.dialogs.download,
-                                               'btn-primary',
-                                               this.LANG.dialogs.cancelButton
-                                       )
-                                       .then((result) => {
-                                           if (result) {
-                                               this.location.path('/download');
-                                           }
-                                       });
-                        });
+                .then(() => {},
+                    () => {
+                    // message, title, actionLabel, actionType
+                        return this.dialogs
+                            .confirm(
+                                this.LANG.errorCodes.cantOpenClient,
+                                this.LANG.dialogs.noClientDetectedTitle,
+                                this.LANG.dialogs.download,
+                                'btn-primary',
+                                this.LANG.dialogs.cancelButton
+                            )
+                            .then((result) => {
+                                if (result === true) {
+                                    this.router.navigate(['/download']);
+                                }
+                            });
+                    });
         });
     }
 }

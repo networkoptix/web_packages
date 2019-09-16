@@ -89,11 +89,6 @@ import * as angular from 'angular';
 
                     System.prototype.getInfoAndPermissions = function () {
                         return nxSystemsService.getSystemAsPromise(this.id).then((system) => {
-                            const error = cloudApi.checkResponseHasError(system);
-                            if (error) {
-                                return $q.reject(error);
-                            }
-
                             if (!system) {
                                 return $q.reject({ data: { resultCode: 'forbidden' } });
                             }

@@ -83,7 +83,7 @@ export class NxPasswordComponent implements OnInit, ControlValueAccessor, Valida
         const complexity = this.checkComplexity(c.value);
 
         if (complexity) {
-            if (complexity === this.CONFIG.passwordRequirements.strongClassesCount) {
+            if (complexity >= this.CONFIG.passwordRequirements.strongClassesCount) {
                 this.form.form.get(this.componentId).fairPassword = false;
                 return null; // valid
 

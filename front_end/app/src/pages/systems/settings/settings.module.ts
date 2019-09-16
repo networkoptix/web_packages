@@ -11,23 +11,35 @@ import { NxSystemSettingsComponent } from './settings.component';
 import { TranslateModule }  from '@ngx-translate/core';
 import { ComponentsModule } from '../../../components/components.module';
 
-import { NxSystemAdminModule }         from './admin/admin.module';
-import { NxSystemUsersModule }         from './users/users.module';
-import { NxSystemMergeStatusModule }   from './merge-status/merge-status.module';
-import { NxSystemAdminComponent }      from './admin/admin.component';
-import { NxSystemUsersComponent }      from './users/users.component';
-import { NxNoSystemsComponent }        from '../no-systems/no-systems.component';
-import { ApplyGuard } from '../../../routeGuards/applyGuard';
-import { AuthGuard } from '../../../routeGuards/authGuard';
+import { NxSystemAdminModule }       from './admin/admin.module';
+import { NxSystemUsersModule }       from './users/users.module';
+import { NxSystemMergeStatusModule } from './merge-status/merge-status.module';
+import { NxSystemAdminComponent }    from './admin/admin.component';
+import { NxSystemUsersComponent }    from './users/users.component';
+import { NxNoSystemsComponent }      from '../no-systems/no-systems.component';
+import { ApplyGuard }                from '../../../routeGuards/applyGuard';
+import { AuthGuard }                 from '../../../routeGuards/authGuard';
 
 const appRoutes: Routes = [
     // root path is handles by AJS for now
     {
-        path    : 'systems/:systemId', component: NxSystemSettingsComponent, canActivate: [AuthGuard],
+        path    : 'systems/:systemId',
+        component: NxSystemSettingsComponent,
+        canActivate: [AuthGuard],
         children: [
-            { path: '', component: NxSystemAdminComponent },
-            { path: 'users', component: NxSystemUsersComponent },
-            { path: 'users/:userId', component: NxSystemUsersComponent, canDeactivate: [ApplyGuard] }
+            {
+                path: '',
+                component: NxSystemAdminComponent
+            },
+            {
+                path: 'users',
+                component: NxSystemUsersComponent,
+            },
+            {
+                path: 'users/:userId',
+                component: NxSystemUsersComponent,
+                canDeactivate: [ApplyGuard]
+            }
         ]
     }
 ];
@@ -47,7 +59,9 @@ const appRoutes: Routes = [
 
         RouterModule.forChild(appRoutes)
     ],
-    providers      : [ApplyGuard],
+    providers      : [
+        ApplyGuard,
+    ],
     declarations   : [
         NxSystemSettingsComponent,
         NxNoSystemsComponent,

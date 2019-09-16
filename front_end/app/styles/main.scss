@@ -28,10 +28,6 @@ html {
 }
 
 body {
-    @include media-breakpoint-up(lg) {
-        margin-bottom : 80px;
-    }
-
     min-width : 360px;
     padding   : 0 !important;
 }

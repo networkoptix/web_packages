@@ -5,6 +5,7 @@ import {
 import {
     DOCUMENT, Location
 }                                    from '@angular/common';
+import { Router }                    from '@angular/router';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
 import { NxConfigService }           from '../../services/nx-config';
 import { NxUtilsService }            from '../../services/utils.service';
@@ -58,6 +59,7 @@ export class LoginModalContent implements OnInit {
                 private language: NxLanguageProviderService,
                 private genericModal: NxModalGenericComponent,
                 private renderer: Renderer2,
+                private router: Router,
                 location: Location,
                 @Inject(DOCUMENT) private document: any,
     ) {
@@ -165,7 +167,6 @@ export class LoginModalContent implements OnInit {
                 } else {
                     // TODO: remove window reload once we separate session state from account service
                     window.location.reload();
-                    // this.location.go(this.location.path());
                 }
             } else if (this.next) {
                 // sanitize this.next
@@ -182,7 +183,7 @@ export class LoginModalContent implements OnInit {
     close() {
         // prevent unnecessary reload
         if (!this.keepPage) { // && this.accountService.getEmail() === undefined) {
-            this.location.go(this.CONFIG.redirectUnauthorised);
+            return this.router.navigate([this.CONFIG.redirectUnauthorised]);
         }
 
         this.activeModal.close('canceled');
