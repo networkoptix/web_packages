@@ -240,12 +240,12 @@ select {
 }
 
 #badge-large {
-    height    : 2rem;
-    font-family: $font-family-regular;
-    font-weight : 400;
-    font-size : rem(13px);
-    padding   : 0 12px;
-    line-height: 2rem;
+    height    : 2rem !important;
+    font-family: $font-family-regular !important;
+    font-weight : 400 !important;
+    font-size : rem(13px) !important;
+    padding   : 0 12px !important;
+    line-height: 2rem !important;
 }
 
 .badge {
@@ -275,8 +275,9 @@ select {
     }
 
     &-default {
-        background-color : $light8;
-        color: $light1;
+        background-color : $light8 !important;
+        color: $light1 !important;
+        line-height : rem(14px);
     }
 
     &-primary {

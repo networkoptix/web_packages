@@ -18,8 +18,8 @@
         </div>
     </div>
 
-    <div *ngIf="systems.length" class="mb-1">
-        <h1 class="p-0">{{search.value && filteredSystems.length}}&nbsp;<span
+    <div *ngIf="systems.length">
+        <h1 class="p-0 mb-3 mt-3">{{search.value && filteredSystems.length}}&nbsp;<span
                 translate>Systems</span>&nbsp;{{search.value && 'found'}}</h1>
         <div class="row">
             <div *ngFor="let system of filteredSystems"
@@ -31,7 +31,7 @@
                               [innerHTML]="getSystemOwnerName(system, userEmail) | highlight:search.value"></span>
 
                         <span style="margin-top: 24px;"
-                              class="badge badge-info"
+                              class="badge"
                               *ngIf="system.stateOfHealth != CONFIG.systemStatuses.onlineStatus && LANG.systemStatuses"
                               [ngClass]="CONFIG.systemStatuses[system.stateOfHealth].style || CONFIG.systemStatuses.default.style"
                               [innerHTML]="LANG.systemStatuses[system.stateOfHealth] || system.stateOfHealth | highlight:search.value">
