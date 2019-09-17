@@ -124,12 +124,12 @@ ${OPEN NX WITNESS BUTTON FROM =}      //button[text()="${OPEN NX WITNESS BUTTON 
 
 ${ACCOUNT CREATION SUCCESS}           //h1[@class="process-success d-flex align-items-center flex-column mt-5 ng-star-inserted"]
 ${ACTIVATION SUCCESS}                 //h1[@class='process-success' and contains(text(), "${ACCOUNT SUCCESSFULLY ACTIVATED TEXT}")]
-${SUCCESS LOG IN BUTTON}              //h1[@ng-if='process-success' and contains(text(), "${ACCOUNT SUCCESSFULLY ACTIVATED TEXT}")]/following-sibling::h1/a[@href="/login"]
+${SUCCESS LOG IN BUTTON}              //h1[@class='process-success' and contains(text(), "${ACCOUNT SUCCESSFULLY ACTIVATED TEXT}")]/following-sibling::h1/a[text()="${LOG IN BUTTON TEXT}"]
 #In system settings
 ${SYSTEM NAME}                        //h1[@ng-if="gettingSystem.success"]
 ${FIRST USER OWNER}                   //table[@ng-if='system.users.length']/tbody/tr/td[3]/span[contains(text(),"${OWNER TEXT}")]
-${DISCONNECT FROM NX}                 //button[@ng-click='disconnect()']
-${RENAME SYSTEM}                      //button[@ng-click='rename()']
+${DISCONNECT FROM NX}                 //button/span[text()='${DISCONNECT FROM CLOUD TEXT}']/..
+${RENAME SYSTEM}                      //button/span[text()='${RENAME}']
 ${RENAME CANCEL}                      //form[@name='renameForm']//button[text()='${CANCEL BUTTON TEXT}']
 ${RENAME X BUTTON}                    //form[@name='renameForm']//button[@class='close']
 ${RENAME SAVE}                        //form[@name='renameForm']//button[text()='${SAVE BUTTON TEXT}']
@@ -138,10 +138,10 @@ ${RENAME INPUT}                       //form[@name='renameForm']//input[@id='sys
 ${RENAME INPUT WITH ERROR}            //form[@name='renameForm']//input[@id='systemName' and contains(@class,'ng-invalid')]
 ${SYSTEM NAME IS REQUIRED}            //form[@name='renameForm']//span[@class='input-error' and contains(text(),"${SYSTEM NAME IS REQUIRED TEXT}")]
 
-${OWNER NAME}                         //h3[contains(@class,"user-name") and text()="${TEST FIRST NAME} ${TEST LAST NAME}"]
-${OWNER LABEL}                        //h3[contains(@class,"user-name") and text()="${TEST FIRST NAME} ${TEST LAST NAME}"]/../h2[contains(text(), "${OWNER TEXT}")]
-${OWNER EMAIL}                        //a[@ng-href="mailto:${EMAIL OWNER}"]
-${YOUR PERMISSIONS}                   //ng-include[@src="$root.C.viewsDir + 'components/system-card.html'"]//p[contains(text(), "${YOUR PERMISSIONS TEXT}")]
+${OWNER NAME}                         //header//span[contains(text(), "${TEST FIRST NAME} ${TEST LAST NAME}"]
+${OWNER LABEL}                        //header//span[contains(text(), "${OWNER TEXT}")]
+${OWNER EMAIL}                        //header//span[contains(text(), "${EMAIL OWNER}"]
+${YOUR ACCESS LEVEL}                   //ng-include[@src="$root.C.viewsDir + 'components/system-card.html'"]//p[contains(text(), "${YOUR ACCESS LEVEL TEXT}")]
 
 ${DISCONNECT FROM MY ACCOUNT}         //button[@ng-click='delete()']
 ${SHARE BUTTON SYSTEMS}               //div[@process-loading='gettingSystem']//button[@ng-click='share()']
@@ -152,7 +152,7 @@ ${DELETE USER MODAL}                  //ngb-modal-window
 ${DELETE USER BUTTON}                 //button[contains(text(), '${DELETE USER BUTTON TEXT}')]
 ${DELETE USER CANCEL BUTTON}          //ngb-modal-window//button[contains(text(), "${CANCEL BUTTON TEXT}")]
 ${SYSTEM NAME OFFLINE}                //span[@ng-if='!system.isOnline']
-${USERS LIST}                         //div[@process-loading='gettingSystemUsers']
+${USERS LIST LINK}                    // a[@id='users']
 
 ${SYSTEM NO ACCESS}                   //div[@ng-if='systemNoAccess']/h1[contains(text(), "${SYSTEM NO ACCESS TEXT}")]
 ${AVAILABLE SYSTEMS LIST}             //a[@href='/systems']
@@ -160,7 +160,7 @@ ${SYSTEMS SEARCH INPUT}               //input[@ng-model='search.value']
 ${SYSTEM SEARCH X BUTTON}             //a[@ng-click="search.value=''"]
 
 #Merge
-${MERGE BUTTON SYSTEM}                //button[@ng-click="mergeSystems()"]
+${MERGE BUTTON SYSTEM}                //button/span[text()="${MERGE SYSTEM BUTTON TEXT}"]
 ${MERGE DIALOG}                       //nx-modal-merge-content
 ${MERGE FORM}                         //form[@name="mergeForm"]
 ${MERGE SYSTEM DROPDOWN}              ${MERGE DIALOG}//button[@id="genericSelect"]
@@ -197,7 +197,7 @@ ${DISCONNECT MODAL DISCONNECT BUTTON}    //button[text()='${DISCONNECT BUTTON TE
 
 ${JUMBOTRON}                          //div[@class='jumbotron']
 ${PROMO BLOCK}                        //div[contains(@class,'promo-block') and not(contains(@class, 'col-sm-4'))]
-${ALREADY ACTIVATED}                  //h1[@ng-if='!activate.success && !loading' and contains(text(),"${ALREADY ACTIVATED TEXT}")]
+${ALREADY ACTIVATED}                  //h1[contains(@class,"process-success") and contains(text(),"${ALREADY ACTIVATED TEXT}")]
 
 #Share Elements (Note: Share and Permissions are the same form so these are the same variables.  Making two just in case they do diverge at some point.)
 ${SHARE MODAL}                        //form[@name='shareForm']
@@ -221,11 +221,12 @@ ${EDIT PERMISSIONS CUSTOM}            //form[@name='shareForm']//select[@ng-mode
 ${EDIT PERMISSIONS HINT}              //form[@name='shareForm']//span[contains(@class,'help-block')]
 
 #Account Page
-${ACCOUNT EMAIL}                      //form[@name='accountForm']//input[@ng-model='userEmail']
-${ACCOUNT FIRST NAME}                 //form[@name='accountForm']//input[@ng-model='account.first_name']
-${ACCOUNT LAST NAME}                  //form[@name='accountForm']//input[@ng-model='account.last_name']
+${ACCOUNT EMAIL}                      //account//a[@id='settings']
+${ACCOUNT FIRST NAME}                 //form[@name='accountForm']//input[@id='firstName']
+${ACCOUNT LAST NAME}                  //form[@name='accountForm']//input[@id='lastName']
 ${ACCOUNT LANGUAGE DROPDOWN}          //nx-language-select//button[@id='dropdownMenuButton']
-${ACCOUNT SAVE}                       //form[@name='accountForm']//button[@ng-click='checkForm()']
+${ACCOUNT SAVE}                       //nx-account-settings-component//button[text()="${SAVE BUTTON TEXT}"]
+${ACCOUNT CANCEL}                     //nx-account-settings-component//button[text()="${CANCEL BUTTON TEXT}"]
 
 #Downloads
 ${DOWNLOADS HEADER}                   //h1["Downloads"]
