@@ -187,7 +187,7 @@
         var errorList = $(element).parents('div').siblings('ul.errorlist');
         $(errorList).html("");
 
-        if (upload_files.length > 0 && upload_files[0].size > element.size) {
+        if (element.hasOwnProperty('size') && upload_files.length > 0 && upload_files[0].size > element.size) {
             var errorMsg = "<li>The file's size it too large. Its size was ";
             errorMsg += (upload_files[0].size/bytesToMb).toFixed(2).toString();
             errorMsg += "MB but must be less than ";
@@ -198,7 +198,7 @@
             // Check if all of the other files are valid.
             for (var j = 0; j < files.length; ++j) {
                 // If any are invalid disable submit buttons
-                if(files[j].files.length > 0 && files[j].size < files[j].files[0].size) {
+                if(files[j].hasOwnProperty('size') && files[j].files.length > 0 && files[j].size < files[j].files[0].size) {
                     disableSubmitButtons(true);
                     return;
                 }
