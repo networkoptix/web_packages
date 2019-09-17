@@ -109,7 +109,7 @@ export class NxAccountService {
                     return this.loginWithAuthKey(queryParams.auth);
                 } else if (account && queryParams.auth) {
                     return this.dialogs.confirm('',
-                        this.LANG.dialogs.loginWithDifferentAccount,
+                        this.LANG.dialogs.loggedFromOther,
                         this.LANG.dialogs.okButton,
                         undefined,
                         this.LANG.dialogs.remainAs.replace('{email}', account.email),
@@ -237,7 +237,7 @@ export class NxAccountService {
                 const isRegister = this.router.url.includes('/register');
                 const isRestore = this.router.url.includes('/restore_password');
                 const actionLabel = this.LANG.dialogs.continueAs.replace('{email}', account.email);
-                const title = isRegister ? this.LANG.dialogs.logoutAuthorisedTitle : this.LANG.dialogs.loginWithDifferentAccount;
+                const title = isRegister ? this.LANG.dialogs.logoutAuthorisedTitle : this.LANG.dialogs.changeAccountLogged;
 
                 let cancelLabel = '';
                 if (isRegister) {
