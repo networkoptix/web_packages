@@ -25,7 +25,7 @@ export class GenericModalContent implements OnInit {
     ) {}
 
     @HostListener('document:click', ['$event'])
-    onMouseEnter(event: any) {
+    onLinkClick(event: any) {
         if (event.target.localName === 'a') {
             this.close('canceled');
         }
