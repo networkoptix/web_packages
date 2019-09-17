@@ -4,6 +4,7 @@ import os
 import json
 import codecs
 import base64
+import binascii
 import zipfile
 import distutils.dir_util
 import errno
@@ -449,11 +450,14 @@ def zip_context(zip_file, asset, context, language_code,
     for file_structure in file_structures:
         data = file_structure.find_actual_value(asset, language, version_id, draft=preview)
         if data != file_structure.default or not file_structure.optional:
-            data = base64.b64decode(data)
-            name = file_structure.name.replace("{{language}}", language_code) if language_code else file_structure.name
-            if add_root:
-                name = os.path.join(root_dir, name)
-            zip_file.writestr(name, data)
+            try:
+                data = base64.b64decode(data)
+                name = file_structure.name.replace("{{language}}", language_code) if language_code else file_structure.name
+                if add_root:
+                    name = os.path.join(root_dir, name)
+                zip_file.writestr(name, data)
+            except binascii.Error as e:
+                logger.error(f'{file_structure.name} had the following Exception {str(e)}')
 
 
 def get_zip_package(asset, preview=True, version_id=None, add_root=True):
