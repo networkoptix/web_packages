@@ -19,7 +19,7 @@ import { WINDOW }            from '../../services/window-provider';
     templateUrl: 'header.component.html',
     styleUrls: [ 'header.component.scss' ]
 })
- export class NxHeaderComponent implements OnInit {
+export class NxHeaderComponent implements OnInit {
 
     CONFIG: any = {};
 
@@ -142,6 +142,4 @@ import { WINDOW }            from '../../services/window-provider';
             return this.systemId === system.id;
         });
     }
-
-
 }
