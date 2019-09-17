@@ -7,12 +7,14 @@ import os
 import re
 import json
 import codecs
+import time
 from cloud import settings
 from cloud.debug import timer
 from cms.controllers import structure
 from cms.models import *
 from django.core.management.base import BaseCommand
-
+import logging
+logger = logging.getLogger(__name__)
 
 SOURCE_DIR = 'static/_source/{{skin}}/'
 
@@ -219,6 +221,17 @@ class Command(BaseCommand):
 
     @timer
     def handle(self, *args, **options):
+        read_structure_lock, created = DeploymentStatus.objects.get_or_create(name='ReadStructureLock')
+        if read_structure_lock.ready:
+            logger.info("Read structure is locked. Going to health check")
+            return
+        read_structure_lock.ready = True
+        read_structure_lock.save()
+
+        read_structure_finished, created = DeploymentStatus.objects.get_or_create(name='ReadStructureFinished')
+        read_structure_finished.ready = False
+        read_structure_finished.save()
+
         migrate_18_3_to_18_4(self)
         product_type = ProductType.get_type_by_name(options['product_type'])
         read_languages(settings.DEFAULT_SKIN)
@@ -233,3 +246,9 @@ class Command(BaseCommand):
         read_structure(product_type)
         self.stdout.write(self.style.SUCCESS(
             'Successfully initiated data structure for CMS'))
+
+        read_structure_lock.ready = False
+        read_structure_lock.save()
+
+        read_structure_finished.ready = True
+        read_structure_finished.save()
