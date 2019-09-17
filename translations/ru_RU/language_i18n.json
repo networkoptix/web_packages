@@ -239,6 +239,7 @@
     },
     "account": {
         "accountSavedSuccess": "Ваша учетная запись успешно сохранена",
+        "accountSettings": "Настройки учётной записи",
         "activationLinkSent": "Ссылка для активации отправлена",
         "changePassword": "Изменить пароль",
         "newPasswordLabel": "Новый пароль",
@@ -268,9 +269,12 @@
     "devices": "устройства",
     "dialogs": {
         "cancelButton": "Отменить",
+        "continueAs": "Continue as {email}",
+        "createNewAccount": "Create New Account",
         "download": "Скачать %VMS_NAME%",
         "loginButton": "Войти",
         "loginTitle": "Войти в %CLOUD_NAME%",
+        "loginWithDifferentAccount": "You are already logged in with a different account",
         "logoutAuthorisedContinueButton": "Продолжить",
         "logoutAuthorisedLogoutButton": "Выход",
         "logoutAuthorisedTitle": "Вы уже выполнили вход",
@@ -288,19 +292,20 @@
             "sent": "Сообщение отправлено.",
             "title": {
                 "integration": "Связаться с {{companyName}}",
-                "ipvd_feedback_device": "Отзыв о {{product}}",
+                "ipvd_feedback_device": "Отзыв о {{asset}}",
                 "ipvd_feedback_page": "Отзыв о странице камер"
             },
             "topic": {
-                "contact_sales": "Связаться с отделом продаж по поводу {{product}}",
-                "contact_support": "Обратитесь в службу поддержки по поводу {{product}}",
-                "integration_feedback": "Отзыв об интеграции {{product}}",
-                "ipvd_feedback_device": "Отзыв о {{product}}",
+                "contact_sales": "Связаться с отделом продаж по поводу {{asset}}",
+                "contact_support": "Обратитесь в службу поддержки по поводу {{asset}}",
+                "integration_feedback": "Отзыв об интеграции {{asset}}",
+                "ipvd_feedback_device": "Отзыв о {{asset}}",
                 "ipvd_feedback_page": "Отзыв о странице камер"
             }
         },
         "noClientDetectedTitle": "Установите %VMS_NAME% для работы с системой",
         "okButton": "OK",
+        "remainAs": "Remain logged as {email} ",
         "sharing": {
             "confirmOwner": "Если изменить владельца системы, она больше не будет принадлежать текущей учетной записи. Это действие необратимо. Вы уверены?",
             "editShareConfirmButton": "Сохранить",

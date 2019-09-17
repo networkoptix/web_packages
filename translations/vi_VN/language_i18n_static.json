@@ -5,7 +5,8 @@
 		"passwordChangedSuccess": "Tài khoản của bạn đã được lưu thành công",
 		"changePassword": "Đổi mật khẩu",
 		"newPasswordLabel": "Mật khẩu mới",
-		"saveChanges": "Tiết kiệm"
+		"saveChanges": "Tiết kiệm",
+		"accountSettings": "Cài đặt tài khoản"
 	},
 	"activeActions": {
 		"sendConfirm": "Gửi lại link kích hoạt",
@@ -195,12 +196,16 @@
 	"dialogs": {
 		"okButton": "Xác định",
 		"cancelButton": "Hủy bỏ",
+		"continueAs": "Continue as {email}",
+		"createNewAccount": "Create New Account",
 		"loginTitle": "Đăng nhập vào %CLOUD_NAME%",
 		"loginButton": "Đăng nhập",
+		"loginWithDifferentAccount": "You are already logged in with a different account",
 		"logoutAuthorisedTitle": "Bạn đã đăng nhập",
 		"logoutAuthorisedContinueButton": "Tiếp tục",
 		"logoutAuthorisedLogoutButton": "Đăng xuất",
 		"noClientDetectedTitle": "Cài đặt %VMS_NAME% để xem Hệ thống của bạn",
+		"remainAs": "Remain logged as {email} ",
 		"download": "Tải xuống %VMS_NAME%",
 		"merge": {
 			"connectToCloud": "Kết nối Hệ thống mà bạn muốn hợp nhất với hệ thống này thành <strong>{{cloudName}}</strong> hoặc hợp nhất cục bộ bằng <strong>{{vmsName}}</strong> Client.",
@@ -217,14 +222,14 @@
 			"title": {
 				"integration": "Liên lạc với {{companyName}}",
 				"ipvd_feedback_page": "Phản hồi cho trang camera",
-				"ipvd_feedback_device": "Phản hồi về {{product}}"
+				"ipvd_feedback_device": "Phản hồi về {{asset}}"
 			},
 			"topic": {
-				"contact_sales": "Liên hệ bán hàng cho {{product}}",
-				"contact_support": "Liên hệ hỗ trợ cho {{product}}",
-				"integration_feedback": "Phản hồi cho tích hợp {{product}}",
+				"contact_sales": "Liên hệ bán hàng cho {{asset}}",
+				"contact_support": "Liên hệ hỗ trợ cho {{asset}}",
+				"integration_feedback": "Phản hồi cho tích hợp {{asset}}",
 				"ipvd_feedback_page": "Phản hồi cho trang camera",
-				"ipvd_feedback_device": "Phản hồi về {{product}}"
+				"ipvd_feedback_device": "Phản hồi về {{asset}}"
 			}
 		},
 		"sharing": {

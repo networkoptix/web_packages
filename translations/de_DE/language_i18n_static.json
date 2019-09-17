@@ -5,7 +5,8 @@
 		"passwordChangedSuccess": "Ihr Account wurde erfolgreich gespeichert",
 		"changePassword": "Passwort ändern",
 		"newPasswordLabel": "Neues Passwort",
-		"saveChanges": "Speichern"
+		"saveChanges": "Speichern",
+		"accountSettings": "Accounteinstellungen"
 	},
 	"activeActions": {
 		"sendConfirm": "Aktivierungslink erneut zusenden",
@@ -118,7 +119,7 @@
 		"vendor": "Hersteller",
 		"model": "Modell",
 		"hardwareType": "Typ",
-		"maxResolution": "<span>Max</span><br><span>Resolution</span>",
+		"maxResolution": "<span>Max</span><br><span>Auflösung</span>",
 		"maxFps": "<span>Max</span><br><span>FPS</span>",
 		"primaryCodec": "Codec",
 		"isAudioSupported": "Audio",
@@ -153,7 +154,7 @@
 		"disclaimer": "Diese Liste ist auf Geräte beschränkt, die auf {{vmsName}} gefunden wurden, wo Benutzer das automatische Berichten von Gerätespezifikationen an {{companyName}}} erlaubt haben. Es werden keine personenbezogenen Daten erhoben und jeder Nutzer bleibt völlig anonym."
 	},
 	"integration": {
-		"myIntegrationsLabel": "Mine",
+		"myIntegrationsLabel": "Meine",
 		"previewRibbonText": "Diese Seite ist eine Vorschau auf die neuesten Änderungen und entspricht nicht der öffentlich zugänglichen Version.",
 		"backToEditText": "Zurück zu den Bearbeitungsoberflächen",
 		"Access Control": "Zugangskontrolle",
@@ -195,12 +196,16 @@
 	"dialogs": {
 		"okButton": "Ok",
 		"cancelButton": "Abbrechen",
+		"continueAs": "Continue as {email}",
+		"createNewAccount": "Create New Account",
 		"loginTitle": "Anmelden bei %CLOUD_NAME%",
 		"loginButton": "Anmelden",
+		"loginWithDifferentAccount": "You are already logged in with a different account",
 		"logoutAuthorisedTitle": "Sie sind bereits eingeloggt",
 		"logoutAuthorisedContinueButton": "Fortfahren",
 		"logoutAuthorisedLogoutButton": "Abmelden",
 		"noClientDetectedTitle": "Installieren Sie %VMS_NAME%, um Ihr System anzusehen",
+		"remainAs": "Remain logged as {email} ",
 		"download": "%VMS_NAME% herunterladen",
 		"merge": {
 			"connectToCloud": "Verbinden Sie das System, mit dem Sie fusionieren möchten, mit <strong>{{cloudName}}</strong> oder fusionieren Sie lokal mit dem <strong>{{vmsName}}</strong>-Client.",
@@ -217,14 +222,14 @@
 			"title": {
 				"integration": "Kontaktieren Sie {{companyName}}",
 				"ipvd_feedback_page": "Feedback zur Kameraseite",
-				"ipvd_feedback_device": "Feedback zu {{product}}"
+				"ipvd_feedback_device": "Feedback zu {{asset}}"
 			},
 			"topic": {
-				"contact_sales": "Kontaktiere Vertrieb für {{product}}",
-				"contact_support": "Kontaktiere Support für {{product}}",
-				"integration_feedback": "Feedback zur Integration {{product}}",
+				"contact_sales": "Kontaktiere Vertrieb für {{asset}}",
+				"contact_support": "Kontaktiere Support für {{asset}}",
+				"integration_feedback": "Feedback zur Integration {{asset}}",
 				"ipvd_feedback_page": "Feedback zur Kameraseite",
-				"ipvd_feedback_device": "Feedback zu {{product}}"
+				"ipvd_feedback_device": "Feedback zu {{asset}}"
 			}
 		},
 		"sharing": {
@@ -295,7 +300,7 @@
 		"missingMessage": "Passwort ist erforderlich"
 	},
 	"registration": {
-		"agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
+		"agreement": "Ich stimme den <a href=\"/content/eula\" target=\"_blank\">Allgemeinen Geschäftsbedingungen</a> und der <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Datenschutzrichtlinie</a> zu"
 	},
 	"system": {
 		"yourSystem": "Ihr System",
@@ -407,9 +412,9 @@
 	"Support": "Support",
 	"Supported Devices": "Unterstützte Geräte",
 	"Terms": "Bedingungen",
-	"pleaseSelect": "Please select...",
-	"WHEN_MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{{targetSystemName}}</strong> System, and this system will be deleted.",
-	"FAILED_SYSTEM_DESCR": "This link is broken,<br>System may be disconnected from %CLOUD_NAME%,<br>Access to this System may be revoked, <br>or you may be logged into a different account.",
+	"pleaseSelect": "Bitte auswählen...",
+	"WHEN_MERGE_FINISHES": "Wenn der Zusammenschluss abgeschlossen ist, sind alle Benutzer und Kameras dieses Systems im System \"<strong>{{targetSystemName}}}</strong>\" verfügbar, und dieses System wird gelöscht.",
+	"FAILED_SYSTEM_DESCR": "Dieser Link ist kaputt,<br>System könnte von %CLOUD_NAME% getrennt werden,<br>Zugriff auf dieses System könnte widerrufen werden,<br>oder Sie könnten in einem anderen Account angemeldet sein.",
 	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "Es ist kein System mit %CLOUD_NAME% verbunden",
 	"NO_SYSTEMS_LOGIN": "Melden Sie sich in Ihrem System mit %VMS_NAME% an",
 	"NO_SYSTEMS_GOTO_ADMINISTRATION": "Gehen Sie zum \"Cloud\"-Tab in der Systemadministration",

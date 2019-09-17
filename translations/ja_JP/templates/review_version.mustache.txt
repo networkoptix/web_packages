@@ -2,7 +2,7 @@
 
 {{ message.asset }}のドラフト {{ message.id }} を確認するにはリンクをクリックしてください
 
-Link to review: {{ config.portal_url }}/admin/cms/assetcustomizationreview/{{ message.id }}/change/
+レビューへのリンク：{{ config.portal_url }}/admin/cms/assetcustomizationreview/{{ message.id }}/change/
 
 このページでは
 1) 最新の変更を表示するプレビューを作成します。

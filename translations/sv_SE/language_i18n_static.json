@@ -5,7 +5,8 @@
 		"passwordChangedSuccess": "Ditt konto har sparats",
 		"changePassword": "Ändra lösenord",
 		"newPasswordLabel": "Nytt lösenord",
-		"saveChanges": "Spara"
+		"saveChanges": "Spara",
+		"accountSettings": "Kontoinställningar"
 	},
 	"activeActions": {
 		"sendConfirm": "Skicka aktiveringslänk igen",
@@ -195,12 +196,16 @@
 	"dialogs": {
 		"okButton": "OK",
 		"cancelButton": "Avbryt",
+		"continueAs": "Continue as {email}",
+		"createNewAccount": "Create New Account",
 		"loginTitle": "Logga in på %CLOUD_NAME%",
 		"loginButton": "Logga in",
+		"loginWithDifferentAccount": "You are already logged in with a different account",
 		"logoutAuthorisedTitle": "Du är redan inloggad",
 		"logoutAuthorisedContinueButton": "Fortsätt",
 		"logoutAuthorisedLogoutButton": "Logga ut",
 		"noClientDetectedTitle": "Installera %VMS_NAME% om du vill visa ditt System",
+		"remainAs": "Remain logged as {email} ",
 		"download": "Ladda ner %VMS_NAME%",
 		"merge": {
 			"connectToCloud": "Anslut system du vill slå samman med den här till <strong>{{cloudName}}</strong> eller slå ihop lokalt med <strong>{{vmsName}}</strong> Client.",
@@ -217,14 +222,14 @@
 			"title": {
 				"integration": "Kom i kontakt med {{companyName}}",
 				"ipvd_feedback_page": "Feedback för kamerans sida",
-				"ipvd_feedback_device": "Feedback om {{product}}"
+				"ipvd_feedback_device": "Feedback om {{asset}}"
 			},
 			"topic": {
-				"contact_sales": "Kontakta försäljning för {{product}}",
-				"contact_support": "Kontakta support för {{product}}",
-				"integration_feedback": "Feedback för integration {{product}}",
+				"contact_sales": "Kontakta försäljning för {{asset}}",
+				"contact_support": "Kontakta support för {{asset}}",
+				"integration_feedback": "Feedback för integration {{asset}}",
 				"ipvd_feedback_page": "Feedback för kamerans sida",
-				"ipvd_feedback_device": "Feedback om {{product}}"
+				"ipvd_feedback_device": "Feedback om {{asset}}"
 			}
 		},
 		"sharing": {

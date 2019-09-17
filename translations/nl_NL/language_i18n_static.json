@@ -5,7 +5,8 @@
 		"passwordChangedSuccess": "Uw account is succesvol opgeslagen",
 		"changePassword": "Wijzig wachtwoord",
 		"newPasswordLabel": "Nieuw wachtwoord",
-		"saveChanges": "Opslaan"
+		"saveChanges": "Opslaan",
+		"accountSettings": "Accountinstellingen"
 	},
 	"activeActions": {
 		"sendConfirm": "Activatielink opnieuw verzenden",
@@ -118,7 +119,7 @@
 		"vendor": "Fabrikant",
 		"model": "Model",
 		"hardwareType": "Type",
-		"maxResolution": "<span>Max</span><br><span>Resolution</span>",
+		"maxResolution": "<span>Max</span><br><span>Resolutie</span>",
 		"maxFps": "<span>Max</span><br><span>FPS</span>",
 		"primaryCodec": "Codec",
 		"isAudioSupported": "Audio",
@@ -153,7 +154,7 @@
 		"disclaimer": "Deze lijst is beperkt tot apparaten die gevonden zijn op {{vmsName}}, waar gebruikers automatisch rapporteren van gebruiksinformatie naar {{companyName}} hebben toegestaan. Geen persoonlijke informatie wordt verzameld en elke gebruiker blijft volledig anoniem."
 	},
 	"integration": {
-		"myIntegrationsLabel": "Mine",
+		"myIntegrationsLabel": "Mijn",
 		"previewRibbonText": "Deze pagina is een voorbeeld van de laatste wijzigingen, en het komt niet overeen met de publiekelijk beschikbare versie.",
 		"backToEditText": "Terug naar het bewerken van de interface",
 		"Access Control": "Toegangscontrole",
@@ -195,12 +196,16 @@
 	"dialogs": {
 		"okButton": "Oké",
 		"cancelButton": "Annuleren",
+		"continueAs": "Continue as {email}",
+		"createNewAccount": "Create New Account",
 		"loginTitle": "Meld u aan bij %CLOUD_NAME%",
 		"loginButton": "Inloggen",
+		"loginWithDifferentAccount": "You are already logged in with a different account",
 		"logoutAuthorisedTitle": "U bent reeds ingelogd",
 		"logoutAuthorisedContinueButton": "Doorgaan",
 		"logoutAuthorisedLogoutButton": "Uitloggen",
 		"noClientDetectedTitle": "Installeer %VMS_NAME% om uw systeem te bekijken",
+		"remainAs": "Remain logged as {email} ",
 		"download": "Download %VMS_NAME%",
 		"merge": {
 			"connectToCloud": "Verbind het systeem dat u met deze wilt samenvoegen tot <strong>{{cloudName}}</strong> of plaats lokaal samen met behulp van de <strong>{{vmsName}}</strong> Client.",
@@ -217,14 +222,14 @@
 			"title": {
 				"integration": "Neem contact op met {{companyName}}",
 				"ipvd_feedback_page": "Feedback voor de camerapagina",
-				"ipvd_feedback_device": "Feedback over {{product}}"
+				"ipvd_feedback_device": "Feedback over {{asset}}"
 			},
 			"topic": {
-				"contact_sales": "Neem contact op met sales voor {{product}}",
-				"contact_support": "Neem contact op met ondersteuning voor {{product}}",
-				"integration_feedback": "Feedback voor integratie {{product}}",
+				"contact_sales": "Neem contact op met sales voor {{asset}}",
+				"contact_support": "Neem contact op met ondersteuning voor {{asset}}",
+				"integration_feedback": "Feedback voor integratie {{asset}}",
 				"ipvd_feedback_page": "Feedback voor de camerapagina",
-				"ipvd_feedback_device": "Feedback over {{product}}"
+				"ipvd_feedback_device": "Feedback over {{asset}}"
 			}
 		},
 		"sharing": {
@@ -295,7 +300,7 @@
 		"missingMessage": "Wachtwoord is vereist"
 	},
 	"registration": {
-		"agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
+		"agreement": "Ik ga akkoord met de <a href=\"/content/eula\" target=\"_blank\">algemene voorwaarden</a> en het<a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy beleid</a>"
 	},
 	"system": {
 		"yourSystem": "Uw systeem",
@@ -407,9 +412,9 @@
 	"Support": "Ondersteuning",
 	"Supported Devices": "Ondersteunde apparaten",
 	"Terms": "Voorwaarden",
-	"pleaseSelect": "Please select...",
-	"WHEN_MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{{targetSystemName}}</strong> System, and this system will be deleted.",
-	"FAILED_SYSTEM_DESCR": "This link is broken,<br>System may be disconnected from %CLOUD_NAME%,<br>Access to this System may be revoked, <br>or you may be logged into a different account.",
+	"pleaseSelect": "Selecteer...",
+	"WHEN_MERGE_FINISHES": "Wanneer het samenvoegen is voltooid, worden alle gebruikers en camera's van dit systeem beschikbaar in systeem \"<strong>{{targetSystemName}}</strong>\" en zal het huidige systeem worden verwijderd.",
+	"FAILED_SYSTEM_DESCR": "Deze link is gebroken, <br>het systeem kan worden losgekoppeld van %CLOUD_NAME%, <br>toegang tot dit systeem kan zijn ingetrokken, <br>of u bent reeds ingelogd bij een ander account.",
 	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "U heeft geen systemen verbonden met %CLOUD_NAME%",
 	"NO_SYSTEMS_LOGIN": "Log in op uw systeem met %VMS_NAME%",
 	"NO_SYSTEMS_GOTO_ADMINISTRATION": "Ga naar het tabblad 'Cloud' in het dialoogvenster 'Systeembeheer'",

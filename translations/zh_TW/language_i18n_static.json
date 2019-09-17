@@ -5,7 +5,8 @@
 		"passwordChangedSuccess": "您的帳號已成功儲存",
 		"changePassword": "變更密碼",
 		"newPasswordLabel": "新密碼",
-		"saveChanges": "儲存"
+		"saveChanges": "儲存",
+		"accountSettings": "帳號設定"
 	},
 	"activeActions": {
 		"sendConfirm": "重新發送啟動連結",
@@ -118,8 +119,8 @@
 		"vendor": "製造商",
 		"model": "型號",
 		"hardwareType": "類型",
-		"maxResolution": "<span>Max</span><br><span>Resolution</span>",
-		"maxFps": "<span>Max</span><br><span>FPS</span>",
+		"maxResolution": "<span>最大</span><br><span>解析度</span>",
+		"maxFps": "<span>最大</span><br><span>帪數</span>",
 		"primaryCodec": "編碼器",
 		"isAudioSupported": "音源",
 		"isTwAudioSupported": "雙向語音",
@@ -153,7 +154,7 @@
 		"disclaimer": "此列表僅限於在 {{vmsName}} 上找到的設備，使用者已同意將設備規格自動回報給 {{companyName}}。不會收集任何個人信息，每個使用者都將完全匿名。"
 	},
 	"integration": {
-		"myIntegrationsLabel": "Mine",
+		"myIntegrationsLabel": "我的",
 		"previewRibbonText": "此頁面可預覽最新版本的更新，與公開版本不相符。",
 		"backToEditText": "返回編輯頁面",
 		"Access Control": "門禁管理",
@@ -195,12 +196,16 @@
 	"dialogs": {
 		"okButton": "確定",
 		"cancelButton": "取消",
+		"continueAs": "Continue as {email}",
+		"createNewAccount": "Create New Account",
 		"loginTitle": "登入到 %CLOUD_NAME%",
 		"loginButton": "登入",
+		"loginWithDifferentAccount": "You are already logged in with a different account",
 		"logoutAuthorisedTitle": "您已經登入",
 		"logoutAuthorisedContinueButton": "繼續",
 		"logoutAuthorisedLogoutButton": "登出",
 		"noClientDetectedTitle": "安裝 %VMS_NAME% 來查看您的系統",
+		"remainAs": "Remain logged as {email} ",
 		"download": "下載 %VMS_NAME%",
 		"merge": {
 			"connectToCloud": "請將要與此合併的系統連接到 <strong>{{cloudName}}</strong> 或使用 <strong>{{vmsName}}</strong> 客戶端進行本地合併。",
@@ -217,14 +222,14 @@
 			"title": {
 				"integration": "與 {{companyName}} 聯繫",
 				"ipvd_feedback_page": "攝影機頁面的回饋意見",
-				"ipvd_feedback_device": "{{product}} 的回饋意見"
+				"ipvd_feedback_device": "{{asset}} 的回饋意見"
 			},
 			"topic": {
-				"contact_sales": "聯繫 {{product}} 業務",
-				"contact_support": "聯繫 {{product}} 技術支援",
-				"integration_feedback": "整合 {{product}} 的回饋意見",
+				"contact_sales": "聯繫 {{asset}} 業務",
+				"contact_support": "聯繫 {{asset}} 技術支援",
+				"integration_feedback": "整合 {{asset}} 的回饋意見",
 				"ipvd_feedback_page": "攝影機頁面的回饋意見",
-				"ipvd_feedback_device": "{{product}} 的回饋意見"
+				"ipvd_feedback_device": "{{asset}} 的回饋意見"
 			}
 		},
 		"sharing": {
@@ -295,7 +300,7 @@
 		"missingMessage": "密碼是必填的"
 	},
 	"registration": {
-		"agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
+		"agreement": "我同意<a href=\"/content/eula\" target=\"_blank\">合約條款</a>和<a href=\"%PRIVACY_LINK%\" target=\"_blank\">隱私政策</a>"
 	},
 	"system": {
 		"yourSystem": "您的系統",
@@ -407,9 +412,9 @@
 	"Support": "支援",
 	"Supported Devices": "支援設備",
 	"Terms": "條款",
-	"pleaseSelect": "Please select...",
-	"WHEN_MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{{targetSystemName}}</strong> System, and this system will be deleted.",
-	"FAILED_SYSTEM_DESCR": "This link is broken,<br>System may be disconnected from %CLOUD_NAME%,<br>Access to this System may be revoked, <br>or you may be logged into a different account.",
+	"pleaseSelect": "請選擇...",
+	"WHEN_MERGE_FINISHES": "合併完成後, 此系統中的所有用戶和攝影機都將可用於<strong>{{targetSystemName}}</strong>, 同時此系統將被刪除",
+	"FAILED_SYSTEM_DESCR": "此連結已損毀,<br> 系統可能會從 %CLOUD_NAME% 離線,<br>於此系統的權限可能被註銷,<br>或請您用不同的帳號登錄.",
 	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "您沒有任何系統連接到 %CLOUD_NAME%",
 	"NO_SYSTEMS_LOGIN": "使用 %VMS_NAME% 登入到您的系統",
 	"NO_SYSTEMS_GOTO_ADMINISTRATION": "到 \"系統管理\" 對話框中的 \"雲端\" 頁面",

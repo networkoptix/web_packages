@@ -5,7 +5,8 @@
 		"passwordChangedSuccess": "Din konto er lagret",
 		"changePassword": "Bytt passord",
 		"newPasswordLabel": "Nytt passord",
-		"saveChanges": "Lagre"
+		"saveChanges": "Lagre",
+		"accountSettings": "Kontoinnstillinger"
 	},
 	"activeActions": {
 		"sendConfirm": "Send aktiveringslink igjen",
@@ -195,12 +196,16 @@
 	"dialogs": {
 		"okButton": "OK",
 		"cancelButton": "Avbryt",
+		"continueAs": "Continue as {email}",
+		"createNewAccount": "Create New Account",
 		"loginTitle": "Logg inn på %CLOUD_NAME%",
 		"loginButton": "Logg Inn",
+		"loginWithDifferentAccount": "You are already logged in with a different account",
 		"logoutAuthorisedTitle": "Du er allerede innlogget",
 		"logoutAuthorisedContinueButton": "Fortsette",
 		"logoutAuthorisedLogoutButton": "Logg ut",
 		"noClientDetectedTitle": "Installer %VMS_NAME% for å koble til ditt System",
+		"remainAs": "Remain logged as {email} ",
 		"download": "Last ned %VMS_NAME%",
 		"merge": {
 			"connectToCloud": "Koble System du vil slå sammen med denne til <strong>{{cloudName}}</strong> eller slå sammen lokalt ved hjelp av <strong>{{vmsName}}</strong> Klienten.",
@@ -217,14 +222,14 @@
 			"title": {
 				"integration": "Kom i kontakt med {{companyName}}",
 				"ipvd_feedback_page": "Tilbakemelding for kameraer-siden",
-				"ipvd_feedback_device": "Tilbakemelding om {{product}}"
+				"ipvd_feedback_device": "Tilbakemelding for {{asset}}"
 			},
 			"topic": {
-				"contact_sales": "Kontakt salgsavdelingen for {{product}}",
-				"contact_support": "Kontakt brukerstøtte for {{product}}",
-				"integration_feedback": "Tilbakemelding for integrasjon {{product}}",
+				"contact_sales": "Kontakt salg for {{asset}}",
+				"contact_support": "Kontakt brukerstøtte for {{asset}}",
+				"integration_feedback": "Tilbakemelding for integrasjon {{asset}}",
 				"ipvd_feedback_page": "Tilbakemelding for kameraer-siden",
-				"ipvd_feedback_device": "Tilbakemelding om {{product}}"
+				"ipvd_feedback_device": "Tilbakemelding for {{asset}}"
 			}
 		},
 		"sharing": {

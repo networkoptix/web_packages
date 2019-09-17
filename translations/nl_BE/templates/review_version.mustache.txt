@@ -2,7 +2,7 @@ Er is een nieuwe versie voor {{ message.asset }} ({{message.asset_type}}) om te 
 
 Klik op de link om de revisie te bekijken {{ message.id }} voor {{ message.asset }}
 
-Link to review: {{ config.portal_url }}/admin/cms/assetcustomizationreview/{{ message.id }}/change/
+Link ter beoordeling: {{ config.portal_url }}/admin/cms/assetcustomizationreview/{{ message.id }}/change/
 
 Op deze pagina kunt u
 1) Een voorbeeld maken om de meest recente wijzigingen te zien.

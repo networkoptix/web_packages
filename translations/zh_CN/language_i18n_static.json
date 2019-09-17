@@ -5,7 +5,8 @@
 		"passwordChangedSuccess": "您的帐户已成功保存",
 		"changePassword": "更改密码",
 		"newPasswordLabel": "新密码",
-		"saveChanges": "保存"
+		"saveChanges": "保存",
+		"accountSettings": "帐户设置"
 	},
 	"activeActions": {
 		"sendConfirm": "重新发送激活链接",
@@ -118,8 +119,8 @@
 		"vendor": "制造商",
 		"model": "型号",
 		"hardwareType": "类型",
-		"maxResolution": "<span>Max</span><br><span>Resolution</span>",
-		"maxFps": "<span>Max</span><br><span>FPS</span>",
+		"maxResolution": "<span>最大</span><br><span>分辨率</span>",
+		"maxFps": "<span>最大</span><br><span>帧数</span>",
 		"primaryCodec": "编码器",
 		"isAudioSupported": "音频",
 		"isTwAudioSupported": "双向音频",
@@ -153,7 +154,7 @@
 		"disclaimer": "此列表仅限于在 {{vmsName}} 上找到的设备，用戶已同意将设备规格自动回报给 {{companyName}}。不会收集任何个人信息，每个用戶都将完全匿名。"
 	},
 	"integration": {
-		"myIntegrationsLabel": "Mine",
+		"myIntegrationsLabel": "我的",
 		"previewRibbonText": "此页面是最新更改的预览，不与公开版本相符。",
 		"backToEditText": "返回编辑界面",
 		"Access Control": "门禁管理",
@@ -195,12 +196,16 @@
 	"dialogs": {
 		"okButton": "确定",
 		"cancelButton": "撤消",
+		"continueAs": "Continue as {email}",
+		"createNewAccount": "Create New Account",
 		"loginTitle": "登录到 %CLOUD_NAME%",
 		"loginButton": "登录",
+		"loginWithDifferentAccount": "You are already logged in with a different account",
 		"logoutAuthorisedTitle": "您已经登录",
 		"logoutAuthorisedContinueButton": "继续",
 		"logoutAuthorisedLogoutButton": "退出登录",
 		"noClientDetectedTitle": "安装 %VMS_NAME% 来查看您的系统",
+		"remainAs": "Remain logged as {email} ",
 		"download": "下载 %VMS_NAME%",
 		"merge": {
 			"connectToCloud": "请将要与此合并的系统连接到 <strong>{{cloudName}}</strong> 或使用 <strong>{{vmsName}}</strong> 客户端进行本地合并。",
@@ -217,14 +222,14 @@
 			"title": {
 				"integration": "与 {{companyName}} 联系",
 				"ipvd_feedback_page": "摄像机页面反馈",
-				"ipvd_feedback_device": "关于 {{product}} 反馈"
+				"ipvd_feedback_device": "关于 {{asset}} 反馈"
 			},
 			"topic": {
-				"contact_sales": "联系{{product}} 销售人员",
-				"contact_support": "联系{{product}} 技术支持",
-				"integration_feedback": "集成{{product}} 反馈",
+				"contact_sales": "联系{{asset}} 销售人员",
+				"contact_support": "联系{{asset}} 技术支持",
+				"integration_feedback": "集成{{asset}} 反馈",
 				"ipvd_feedback_page": "摄像机页面反馈",
-				"ipvd_feedback_device": "关于 {{product}} 反馈"
+				"ipvd_feedback_device": "关于 {{asset}} 反馈"
 			}
 		},
 		"sharing": {
@@ -295,7 +300,7 @@
 		"missingMessage": "密码为必填项"
 	},
 	"registration": {
-		"agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
+		"agreement": "我同意<a href=\"/content/eula\" target=\"_blank\">合约条款</a>和<a href=\"%PRIVACY_LINK%\" target=\"_blank\">隐私政策</a>"
 	},
 	"system": {
 		"yourSystem": "您的系统",
@@ -407,9 +412,9 @@
 	"Support": "技术支持",
 	"Supported Devices": "支持设备",
 	"Terms": "条款",
-	"pleaseSelect": "Please select...",
-	"WHEN_MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{{targetSystemName}}</strong> System, and this system will be deleted.",
-	"FAILED_SYSTEM_DESCR": "This link is broken,<br>System may be disconnected from %CLOUD_NAME%,<br>Access to this System may be revoked, <br>or you may be logged into a different account.",
+	"pleaseSelect": "请选择...",
+	"WHEN_MERGE_FINISHES": "合并完成后, 此系统中的所有用户和摄相机都将可用于<strong>{{targetSystemName}}</strong>, 同时此系统将被删除",
+	"FAILED_SYSTEM_DESCR": "此连结已损毁,<br> 系统可能会从 %CLOUD_NAME% 离线,<br>于此系统的权限可能被注销,<br>或请您用不同的帐戶登录.",
 	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "你有没有连接到 %CLOUD_NAME% 的系统",
 	"NO_SYSTEMS_LOGIN": "登录到您的系统使用 %VMS_NAME%",
 	"NO_SYSTEMS_GOTO_ADMINISTRATION": "转到\"系统管理\"对话框中的\"云\"选项",

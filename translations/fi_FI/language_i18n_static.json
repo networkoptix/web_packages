@@ -5,7 +5,8 @@
 		"passwordChangedSuccess": "Tilisi on onnistuneesti päivitetty",
 		"changePassword": "Vaihda salasana",
 		"newPasswordLabel": "Uusi salasana",
-		"saveChanges": "Tallenna"
+		"saveChanges": "Tallenna",
+		"accountSettings": "Tilin asetukset"
 	},
 	"activeActions": {
 		"sendConfirm": "Lähetä aktivointilinkki uudelleen",
@@ -195,12 +196,16 @@
 	"dialogs": {
 		"okButton": "OK",
 		"cancelButton": "Peruuta",
+		"continueAs": "Continue as {email}",
+		"createNewAccount": "Create New Account",
 		"loginTitle": "Kirjaudu sisään %CLOUD_NAME%",
 		"loginButton": "Kirjaudu sisään",
+		"loginWithDifferentAccount": "You are already logged in with a different account",
 		"logoutAuthorisedTitle": "Olet jo kirjautunut sisään",
 		"logoutAuthorisedContinueButton": "Jatka",
 		"logoutAuthorisedLogoutButton": "Kirjaudu ulos",
 		"noClientDetectedTitle": "Asenna %VMS_NAME% nähdäksesi järjestelmän",
+		"remainAs": "Remain logged as {email} ",
 		"download": "Lataa %VMS_NAME%",
 		"merge": {
 			"connectToCloud": "Yhdistä järjestelmä, johon haluat yhdistää tämän, <strong>{{cloudName}}</strong> tai yhdistä paikallisesti <strong>{{vmsName}}</strong> -Client-sovelluksen avulla.",
@@ -217,14 +222,14 @@
 			"title": {
 				"integration": "Ota yhteyttä {{companyName}}",
 				"ipvd_feedback_page": "Palaute kameran sivulle",
-				"ipvd_feedback_device": "Palaute{{product}}"
+				"ipvd_feedback_device": "Palaute{{asset}}"
 			},
 			"topic": {
-				"contact_sales": "Ota yhteyttä {{product}} myyntiin",
-				"contact_support": "Ota yhteyttä tukeen {{product}}",
-				"integration_feedback": "Palaute integraatiosta {{product}}",
+				"contact_sales": "Ota yhteyttä {{asset}} myyntiin",
+				"contact_support": "Pyydä tukea {{asset}}",
+				"integration_feedback": "Palaute integraatiosta {{asset}}",
 				"ipvd_feedback_page": "Palaute kameran sivulle",
-				"ipvd_feedback_device": "Palaute{{product}}"
+				"ipvd_feedback_device": "Palaute{{asset}}"
 			}
 		},
 		"sharing": {

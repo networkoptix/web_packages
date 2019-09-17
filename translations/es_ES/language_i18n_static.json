@@ -5,7 +5,8 @@
 		"passwordChangedSuccess": "Su cuenta se ha guardado",
 		"changePassword": "Cambiar contraseña",
 		"newPasswordLabel": "Nueva contraseña",
-		"saveChanges": "Guardar"
+		"saveChanges": "Guardar",
+		"accountSettings": "Configuración de cuenta"
 	},
 	"activeActions": {
 		"sendConfirm": "Reenviar enlace de activación",
@@ -118,8 +119,8 @@
 		"vendor": "Fabricante",
 		"model": "Modelo",
 		"hardwareType": "Tipo",
-		"maxResolution": "<span>Max</span><br><span>Resolution</span>",
-		"maxFps": "<span>Max</span><br><span>FPS</span>",
+		"maxResolution": "<span>Máx</span><br><span>Resolución</span>",
+		"maxFps": "<span>Máx</span><br><span>FPS</span>",
 		"primaryCodec": "Codec",
 		"isAudioSupported": "Audio",
 		"isTwAudioSupported": "audio bidireccional",
@@ -153,7 +154,7 @@
 		"disclaimer": "Esta lista se limita a los dispositivos que se encuentran en {{vmsName}} donde los usuarios han permitido el informe automático de las especificaciones del dispositivo a {{companyName}}. No se recopila información personal y cada usuario permanece completamente anónimo."
 	},
 	"integration": {
-		"myIntegrationsLabel": "Mine",
+		"myIntegrationsLabel": "Mío",
 		"previewRibbonText": "Esta página es una vista previa de los últimos cambios y no coincide con la versión de acceso público.",
 		"backToEditText": "Volver a las interfaces de edición",
 		"Access Control": "Control de Acceso",
@@ -195,12 +196,16 @@
 	"dialogs": {
 		"okButton": "OK",
 		"cancelButton": "Cancelar",
+		"continueAs": "Continue as {email}",
+		"createNewAccount": "Create New Account",
 		"loginTitle": "Inicie sesión en %CLOUD_NAME%",
 		"loginButton": "Inicia sesión",
+		"loginWithDifferentAccount": "You are already logged in with a different account",
 		"logoutAuthorisedTitle": "Ya se ha conectado",
 		"logoutAuthorisedContinueButton": "Continuar",
 		"logoutAuthorisedLogoutButton": "Cerrar Sessión",
 		"noClientDetectedTitle": "Instalar %VMS_NAME% para ver su sistema",
+		"remainAs": "Remain logged as {email} ",
 		"download": "Descargar %VMS_NAME%",
 		"merge": {
 			"connectToCloud": "Conectar el sistema que desea fusionar con este a <strong>{{cloudName}}</strong> o fusionar localmente usando <strong>{{vmsName}}</strong> Cliente.",
@@ -217,14 +222,14 @@
 			"title": {
 				"integration": "Ponte en contacto con {{companyName}}",
 				"ipvd_feedback_page": "Comentarios sobre la página de cámaras",
-				"ipvd_feedback_device": "Comentarios sobre {{product}}"
+				"ipvd_feedback_device": "Comentarios sobre {{asset}}"
 			},
 			"topic": {
-				"contact_sales": "Póngase en contacto con ventas para {{product}}",
-				"contact_support": "Contactar a soporte para {{product}}",
-				"integration_feedback": "Comentarios para la integración {{product}}",
+				"contact_sales": "Contactar a ventas para {{asset}}",
+				"contact_support": "Contactar a soporte para {{asset}}",
+				"integration_feedback": "Comentarios para la integración {{asset}}",
 				"ipvd_feedback_page": "Comentarios sobre la página de cámaras",
-				"ipvd_feedback_device": "Comentarios sobre {{product}}"
+				"ipvd_feedback_device": "Comentarios sobre {{asset}}"
 			}
 		},
 		"sharing": {
@@ -295,7 +300,7 @@
 		"missingMessage": "Se requiere contraseña"
 	},
 	"registration": {
-		"agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
+		"agreement": "Acepto los <a href=\"/content/eula\" target=\"_blank\">Términos y\nCondiciones</a> y <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Política de Privacidad</a>"
 	},
 	"system": {
 		"yourSystem": "Su Sistema",
@@ -407,9 +412,9 @@
 	"Support": "Asistencia",
 	"Supported Devices": "Dispositivos soportados",
 	"Terms": "Condiciones",
-	"pleaseSelect": "Please select...",
-	"WHEN_MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{{targetSystemName}}</strong> System, and this system will be deleted.",
-	"FAILED_SYSTEM_DESCR": "This link is broken,<br>System may be disconnected from %CLOUD_NAME%,<br>Access to this System may be revoked, <br>or you may be logged into a different account.",
+	"pleaseSelect": "Por favor, seleccione...",
+	"WHEN_MERGE_FINISHES": "Cuando la fusión haya terminado, todos los usuarios y cámaras de este sistema estarán disponibles en <strong>{{targetSystemName}}</strong> Sistema, y este sistema será eliminado.",
+	"FAILED_SYSTEM_DESCR": "Este enlace está roto,<br>El sistema puede ser desconectado de %CLOUD_NAME%,<br>El acceso a este sistema puede ser revocado, <br>o puedes iniciar sesión en una cuenta diferente.",
 	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "No tienes sistemas conectados a %CLOUD_NAME%",
 	"NO_SYSTEMS_LOGIN": "Iniciar sesión en tu sistema utilizando %VMS_NAME%",
 	"NO_SYSTEMS_GOTO_ADMINISTRATION": "Vaya a la etiqueta \"Nube\" en el diálogo de la \"Administración del sistema\"",

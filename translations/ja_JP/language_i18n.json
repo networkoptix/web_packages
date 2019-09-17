@@ -1,9 +1,9 @@
 {
     "2-Way Audio": "双方向オーディオ",
     "About %CLOUD_NAME%": "%CLOUD_NAME%について",
-    "Access Level": "Access Level",
-    "Access level": "Access level",
-    "Account Information": "Account Information",
+    "Access Level": "アクセスレベル",
+    "Access level": "アクセスレベル",
+    "Account Information": "アカウント情報",
     "Account Settings": "アカウント設定",
     "Account is already activated or confirmation code is incorrect": "アカウントは既に有効化されているか、確認コードが正しくありません",
     "Account is created.": "アカウントが作成されました。",
@@ -12,7 +12,7 @@
     "Account not found": "アカウントが見つかりません",
     "Activate your account": "アカウントの有効化",
     "Actual number of events supported by this camera may be bigger.": "このカメラでサポートされている実際のイベント数はもっと大きい可能性があります。",
-    "Add User": "Add User",
+    "Add User": "ユーザーの追加",
     "Additional Requirements": "追加の要件",
     "Administration": "管理",
     "Advanced PTZ": "高度なPTZ",
@@ -26,7 +26,7 @@
     "Analytics Events": "分析イベント",
     "Any": "全て",
     "Apply": "適用",
-    "Apply changes before leaving this page?": "Apply changes before leaving this page?",
+    "Apply changes before leaving this page?": "このページを離れる前に変更を適用しますか？",
     "Audio": "オーディオ",
     "Available Systems list": "使用可能なシステム の一覧",
     "Build Number:": "ビルド番号:",
@@ -40,7 +40,7 @@
     "Close": "閉じる",
     "Codec": "コー​​デック",
     "Collapse": "閉じる",
-    "Confirmation message is sent to": "Confirmation message is sent to",
+    "Confirmation message is sent to": "確認メッセージが送信されます",
     "Contact": "お問い合わせ",
     "Create Account": "アカウント作成",
     "Create account": "アカウント作成",
@@ -52,7 +52,7 @@
     "Disconnect": "切断",
     "Disconnect System from %CLOUD_NAME%?": "%CLOUD_NAME% からシステムを切断しますか？",
     "Disconnect from %CLOUD_NAME%": "%CLOUD_NAME%から切断",
-    "Disconnect from My Account": "Disconnect from My Account",
+    "Disconnect from My Account": "アカウントから離れる",
     "Download": "ダウンロード",
     "Download %VMS_NAME%": "%VMS_NAME% をダウンロード",
     "Download Chrome": "Chromeをダウンロード",
@@ -68,12 +68,12 @@
     "Enter password for your account to continue": "アカウントのパスワードを入力して続行してください",
     "Enter password to continue.": "パスワードを入力して続行",
     "Export all to CSV": "CSV にすべてエクスポート",
-    "FAILED_SYSTEM_DESCR": "This link is broken,<br>System may be disconnected from %CLOUD_NAME%,<br>Access to this System may be revoked, <br>or you may be logged into a different account.",
+    "FAILED_SYSTEM_DESCR": "このリンクは壊れています。<br>システムは %CLOUD_NAME%から切断される可能性があります。<br>このシステムへのアクセスが取り消される可能性があります。<br>または別のアカウントにログインしている可能性があります。",
     "FPS(max)": "FPS（最大）",
     "Failed to access System": "システムにアクセスできませんでした",
     "Finishing systems merge": "システム統合が完了しました",
     "Firmware version": "ファームウェアバージョン",
-    "First Name": "First Name",
+    "First Name": "名",
     "First name": "名前",
     "First name is required": "名前を入力してください",
     "Fisheye": "魚眼",
@@ -86,7 +86,7 @@
     "In-Client Upgrade:": "クライアント内アップグレード：",
     "Integrations": "統合",
     "Language": "言語:",
-    "Last Name": "Last Name",
+    "Last Name": "姓",
     "Last name": "苗字",
     "Last name is required": "苗字を入力してください",
     "Latest version": "最新版",
@@ -97,7 +97,7 @@
     "Merge current System with": "現在のシステムと統合",
     "Merge with Another System": "別のシステムと統合する",
     "Message": "メッセージ",
-    "Mine": "Mine",
+    "Mine": "自分",
     "Motion Detection": "モーション検知",
     "Multi Sensor": "マルチセンサー",
     "NO_SYSTEMS_CONNECT_SYSTEM": "「システムを %CLOUD_NAME% に接続」を押します",
@@ -164,9 +164,9 @@
     "Update them to the": "更新",
     "Updated": "更新",
     "User": "ユーザー",
-    "User disabled": "User disabled",
+    "User disabled": "無効なユーザー",
     "View": "表示",
-    "WHEN_MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{{targetSystemName}}</strong> System, and this system will be deleted.",
+    "WHEN_MERGE_FINISHES": "統合が完了すると、このシステムのすべてのユーザーとカメラが <strong>{{targetSystemName}}</strong> システムで使用可能になり、このシステムが削除されます。",
     "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.": "Google ChromeやMozilla Firefoxの最新バージョンをインストールすることを推奨しますが、他の最新のWebブラウザを使用することもできます",
     "What's New?": "新着情報",
     "Works with:": "で動作します：",
@@ -176,7 +176,7 @@
     "You have registered in %CLOUD_NAME%": "%CLOUD_NAME% に登録されました",
     "Your Email": "あなたのEメール",
     "Your Name": "名前",
-    "Your access level": "Your access level",
+    "Your access level": "アクセスレベル",
     "Your account is successfully activated": "あなたのアカウントは正常にアクティベートされました",
     "Your browser is not supported": "お使いのブラウザーはサポートされていません",
     "accessRoles": {
@@ -239,6 +239,7 @@
     },
     "account": {
         "accountSavedSuccess": "あなたのアカウントは正常に保存されました",
+        "accountSettings": "アカウント設定",
         "activationLinkSent": "アクティベーションリンクが送信されました",
         "changePassword": "パスワードを変更",
         "newPasswordLabel": "新規パスワード",
@@ -268,9 +269,12 @@
     "devices": "デバイス",
     "dialogs": {
         "cancelButton": "キャンセル",
+        "continueAs": "Continue as {email}",
+        "createNewAccount": "Create New Account",
         "download": "%VMS_NAME% をダウンロード",
         "loginButton": "ログイン",
         "loginTitle": "%CLOUD_NAME% にログイン",
+        "loginWithDifferentAccount": "You are already logged in with a different account",
         "logoutAuthorisedContinueButton": "続行",
         "logoutAuthorisedLogoutButton": "ログアウト",
         "logoutAuthorisedTitle": "すでにログインしています",
@@ -288,19 +292,20 @@
             "sent": "メッセージが送信されました。",
             "title": {
                 "integration": "{{companyName}} と連絡を取る",
-                "ipvd_feedback_device": "{{product}} についてのフィードバック",
+                "ipvd_feedback_device": "{{asset}} についてのフィードバック",
                 "ipvd_feedback_page": "カメラページへのフィードバック"
             },
             "topic": {
-                "contact_sales": "{{product}} についてセールスに連絡する",
-                "contact_support": "{{product}} についてサポートに連絡する",
-                "integration_feedback": "{{product}} 統合のためのフィードバック",
-                "ipvd_feedback_device": "{{product}} についてのフィードバック",
+                "contact_sales": "{{asset}} についてセールスに連絡する",
+                "contact_support": "{{asset}} についてサポートに連絡する",
+                "integration_feedback": "{{asset}} 統合のためのフィードバック",
+                "ipvd_feedback_device": "{{asset}} についてのフィードバック",
                 "ipvd_feedback_page": "カメラページへのフィードバック"
             }
         },
         "noClientDetectedTitle": "システムを表示するには %VMS_NAME% をインストールします",
         "okButton": "OK",
+        "remainAs": "Remain logged as {email} ",
         "sharing": {
             "confirmOwner": "システムのオーナーを変更すると、現在のアカウントから所有権を取り消します。この動作は元に戻せません。よろしいですか？",
             "editShareConfirmButton": "保存",
@@ -439,7 +444,7 @@
         "Health Monitor": "ヘルスモニタ",
         "Storage": "ストレージ",
         "backToEditText": "編集インターフェースに戻る",
-        "myIntegrationsLabel": "Mine",
+        "myIntegrationsLabel": "自分",
         "previewRibbonText": "このページは最新の変更のプレビューです、一般的に利用可能なバージョンと一致しません。"
     },
     "ipvd": {
@@ -473,8 +478,8 @@
         "isMultiSensor": "マルチセンサー",
         "isPtzSupported": "PTZ",
         "isTwAudioSupported": "双方向オーディオ",
-        "maxFps": "<span>Max</span><br><span>FPS</span>",
-        "maxResolution": "<span>Max</span><br><span>Resolution</span>",
+        "maxFps": "<span>最大</span><br><span>FPS</span>",
+        "maxResolution": "<span>最大</span><br><span>解像度</span>",
         "model": "モデル",
         "multiSensorCamera": "マルチセンサーカメラ",
         "other": "その他",
@@ -530,15 +535,15 @@
         "weakMessage": "パスワードをより強力にするために、数字、大文字と小文字、特殊文字を使用してください"
     },
     "phoneNumberWithLabel": "電話： {{number}}",
-    "pleaseSelect": "Please select...",
+    "pleaseSelect": "選択してください",
     "privacyPolicy": {
         "integration": "このフォームを送信することにより、あなたは {{INTEGRATION_COMPANY}} または %COMPANY_NAME%、あるいはその両方から連絡を受けることに同意します。\n{{INTEGRATION_COMPANY}} プライバシーポリシー <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">ここ</a> と %COMPANY_NAME% プライバシーポリシー <a href=\"%PRIVACY_LINK%\" target=\"blank\">ここ</a> には同意を撤回する方法に関する指示が含まれています。",
         "ipvd": "このフォームを送信することにより、あなたは %COMPANY_NAME%から連絡を受けることに同意します。\n %COMPANY_NAME% プライバシーポリシー <a href=\"%PRIVACY_LINK%\" target=\"blank\">ここ</a>には同意を撤回する方法についての指示が含まれています。"
     },
     "registration": {
-        "agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
+        "agreement": "<a href=\"/content/eula\" target=\"_blank\">利用規約、条件</a>および<a href=\"%PRIVACY_LINK%\" target=\"_blank\">プライバシーポリシー</a>に同意します"
     },
-    "registration.agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>",
+    "registration.agreement": "<a href=\"/content/eula\" target=\"_blank\">利用規約、条件</a>および<a href=\"%PRIVACY_LINK%\" target=\"_blank\">プライバシーポリシー</a>に同意します",
     "search": {
         "Any": "全て",
         "Search": "検索",
@@ -597,5 +602,5 @@
     "testedVersionLabel": "{{vmsName}} バージョンでテスト済み：",
     "testedVersionsLabel": "{{vmsName}} バージョンでテスト済み：",
     "users": "ユーザー",
-    "you": "you"
+    "you": "あなた"
 }

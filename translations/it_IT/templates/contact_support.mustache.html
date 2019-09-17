@@ -1,4 +1,4 @@
 <h1>Buongiorno, {{ message.userFullName }}</h1>
 
-<a href="mailto:{{ message.sender_email }}">{{ message.sender_name }}</a>has the following support question for the {{ message.asset }}:
+{{ message.sender_email }} ({{ message.sender_name }}) ha la seguente domanda di supporto per il {{ message.asset }}:
 <div>{{ message.message }}</div>

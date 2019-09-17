@@ -239,6 +239,7 @@
     },
     "account": {
         "accountSavedSuccess": "Your account is successfully saved",
+        "accountSettings": "Account Settings",
         "activationLinkSent": "Activation Link Sent",
         "changePassword": "Change Password",
         "newPasswordLabel": "New password",
@@ -268,9 +269,12 @@
     "devices": "devices",
     "dialogs": {
         "cancelButton": "Cancel",
+        "continueAs": "Continue as {email}",
+        "createNewAccount": "Create New Account",
         "download": "Download %VMS_NAME%",
         "loginButton": "Log in",
         "loginTitle": "Log in to %CLOUD_NAME%",
+        "loginWithDifferentAccount": "You are already logged in with a different account",
         "logoutAuthorisedContinueButton": "Continue",
         "logoutAuthorisedLogoutButton": "Log Out",
         "logoutAuthorisedTitle": "You are already logged in",
@@ -288,19 +292,20 @@
             "sent": "Message has been sent.",
             "title": {
                 "integration": "Get in touch with {{companyName}}",
-                "ipvd_feedback_device": "Feedback about {{product}}",
+                "ipvd_feedback_device": "Feedback about {{asset}}",
                 "ipvd_feedback_page": "Feedback for cameras page"
             },
             "topic": {
-                "contact_sales": "Contact sales for {{product}}",
-                "contact_support": "Contact support for {{product}}",
-                "integration_feedback": "Feedback for integration {{product}}",
-                "ipvd_feedback_device": "Feedback about {{product}}",
+                "contact_sales": "Contact sales for {{asset}}",
+                "contact_support": "Contact support for {{asset}}",
+                "integration_feedback": "Feedback for integration {{asset}}",
+                "ipvd_feedback_device": "Feedback about {{asset}}",
                 "ipvd_feedback_page": "Feedback for cameras page"
             }
         },
         "noClientDetectedTitle": "Install %VMS_NAME% to view your System",
         "okButton": "OK",
+        "remainAs": "Remain logged as {email} ",
         "sharing": {
             "confirmOwner": "If you change System owner, you will revoke ownership from the current account. This action is irreversible. Are you sure?",
             "editShareConfirmButton": "Save",
