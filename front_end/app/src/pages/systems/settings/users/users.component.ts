@@ -152,7 +152,8 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             .then((result) => {
                 if (result) {
                     this.selectedUser = user;
-                    this.removingUserProcess.run().catch(() => {});
+                    // Handling promise to satisfy the linter.
+                    this.removingUserProcess.run().then(() => {});
                 } else {
                     this.locked[user.email] = false;
                 }

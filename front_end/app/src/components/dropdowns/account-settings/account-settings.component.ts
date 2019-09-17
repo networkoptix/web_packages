@@ -35,7 +35,6 @@ export class NxAccountSettingsDropdown implements OnInit {
             .then(() => {
                 this.getAccount();
             })
-            .catch(() => {});
 
         this.sessionService.loginStateSubject.pipe(
             filter((state) => {

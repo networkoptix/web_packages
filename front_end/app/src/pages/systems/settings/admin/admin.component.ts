@@ -168,12 +168,13 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                        // HTML needed for section formatting
                        const dialogBody = '<p>' + commonErrorMsg + '</p><p>' + responseError + '</p>';
 
+                       // Handling promise to satisfy the linter.
                        this.dialogs.confirm(
                                dialogBody,
                                this.LANG.merging.mergeFailedTitle,
                                this.LANG.dialogs.okButton,
                                'btn-primary',
-                               undefined).catch(() => {});
+                               undefined).then(() => {});
                    })
                    .finally(() => {
                        this.currentlyMerging = false;

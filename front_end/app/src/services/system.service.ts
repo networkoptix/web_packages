@@ -162,7 +162,8 @@ export class NxSystem extends System implements OnDestroy {
              */
             return this.updateSystemAuth(true);
         });
-        this.updateSystemAuth(true).catch(() => {});
+        // Handling promise to satisfy the linter.
+        this.updateSystemAuth(true).then(() => {});
         this.updateSystemState();
         this.systemPoll = this.pollService.createPoll(this.update(), this.CONFIG.updateInterval);
     }
@@ -401,7 +402,7 @@ export class NxSystem extends System implements OnDestroy {
                 // If system is reported to be online - try to get actual users list
                 this.systemSubject.next(this);
                 return this.users;
-            }).catch(() => {});
+            }).then(() => {}); // Handling promise to satisfy the linter.
 
         }
         return this.usersPromise;
@@ -454,7 +455,8 @@ export class NxSystem extends System implements OnDestroy {
 
     deleteFromCurrentAccount() {
         if (this.currentUser && this.isAvailable) {
-            this.mediaserver.deleteUser(this.currentUser.id).toPromise.catch(() => {}); // Try to remove me from the system directly
+            // Handling promise to satisfy the linter.
+            this.mediaserver.deleteUser(this.currentUser.id).toPromise.then(() => {}); // Try to remove me from the system directly
         }
         // Anyway - send another request to cloud_db to remove my this
         return this.cloudApi.unshare(this.id, this.currentUserEmail).toPromise();

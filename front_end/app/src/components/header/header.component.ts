@@ -113,7 +113,8 @@ export class NxHeaderComponent implements OnInit {
     login () {
         const url = this.window.location.pathname;
         const redirect = this.CONFIG.redirectPaths.some((path) => url.indexOf(path) > -1);
-        this.dialogs.login(this.accountService, !redirect).catch(() => {});
+        // Handling promise to satisfy the linter.
+        this.dialogs.login(this.accountService, !redirect).then(() => {});
     }
 
     logout () {
