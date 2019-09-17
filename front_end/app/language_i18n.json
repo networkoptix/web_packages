@@ -272,6 +272,7 @@
         "continueAs": "Continue as {email}",
         "createNewAccount": "Create New Account",
         "download": "Download %VMS_NAME%",
+        "loginAs": "Log in as {email}",
         "loginButton": "Log in",
         "loginTitle": "Log in to %CLOUD_NAME%",
         "logoutAuthorisedContinueButton": "Continue",

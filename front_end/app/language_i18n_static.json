@@ -198,6 +198,7 @@
 		"cancelButton": "Cancel",
 		"continueAs": "Continue as {email}",
 		"createNewAccount": "Create New Account",
+		"loginAs": "Log in as {email}",
 		"loginTitle": "Log in to %CLOUD_NAME%",
 		"loginButton": "Log in",
 		"logoutAuthorisedTitle": "You are already logged in",

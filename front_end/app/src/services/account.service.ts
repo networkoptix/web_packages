@@ -8,6 +8,7 @@ import { NxCloudApiService }         from './nx-cloud-api';
 import { NxLanguageProviderService } from './nx-language-provider';
 import { NxDialogsService }          from '../dialogs/dialogs.service';
 import { NxSessionService }          from './session.service';
+import { NxQueryParamService }       from './query-param.service';
 
 import { distinctUntilChanged } from 'rxjs/operators';
 
@@ -25,6 +26,7 @@ export class NxAccountService {
                 private language: NxLanguageProviderService,
                 private cloudApi: NxCloudApiService,
                 private sessionService: NxSessionService,
+                private queryParmaService: NxQueryParamService,
                 private localStorageService: LocalStorageService,
                 private locationService: Location,
                 private dialogs: NxDialogsService,
@@ -102,7 +104,15 @@ export class NxAccountService {
     requireLogin() {
         return this.get()
             .then((account) => {
-                if (!account) {
+                const queryParams: any = this.queryParmaService.queryParams;
+                if (!account && queryParams.auth) {
+                    return this.loginWithAuthKey(queryParams.auth);
+                } else if (account && queryParams.auth) {
+                    this.logoutAuthorised().then(res => {
+                        // TODO: already signed in options. Issue with auth code not containing email anymore.
+                        // console.log(res);
+                    });
+                } else if (!account) {
                     return this.dialogs
                         .login(this, true, true)
                         .catch(() => {
@@ -176,6 +186,25 @@ export class NxAccountService {
                    });
     }
 
+    loginWithAuthKey(authKey: string) {
+        const auth = atob(authKey);
+        const index = auth.indexOf(':');
+        const tempLogin = auth.substring(0, index);
+        const tempPassword = auth.substring(index + 1);
+
+        return this.login(tempLogin, tempPassword, false)
+            .then(() => {
+                return this.router.navigate([], {queryParamsHandling: 'merge'});
+            }).catch(() => {
+                // If the key login fails ask the user to login manually.
+                return this.dialogs
+                    .login(this, true, true)
+                    .catch(() => {
+                        this.location.path(this.CONFIG.redirectUnauthorised);
+                    });
+            });
+    }
+
     logout(doNotRedirect?) {
         this.cloudApi
             .logout()
@@ -192,21 +221,38 @@ export class NxAccountService {
     }
 
     logoutAuthorised() {
-        this.get().then((account) => {
+        return this.get().then((account) => {
             // logoutAuthorisedLogoutButton
             if (account) {
+                const isRegister = this.router.url.includes('/register');
+                const isRestore = this.router.url.includes('/restore_password');
                 const continueAs = this.LANG.dialogs.continueAs.replace('{email}', account.email);
-                this.dialogs.confirm('',
+                const loginAs = this.LANG.dialogs.loginAs.replace('{email}', account.email);
+
+                let actionLabel = '';
+                let cancelLabel = '';
+                if (isRegister) {
+                    actionLabel = continueAs;
+                    cancelLabel = this.LANG.dialogs.createNewAccount;
+                } else if (isRestore) {
+                    actionLabel = continueAs;
+                    cancelLabel = this.LANG.dialogs.logoutAuthorisedLogoutButton;
+                } else {
+                    actionLabel = loginAs;
+                    cancelLabel = continueAs;
+                }
+                return this.dialogs.confirm('',
                         this.LANG.dialogs.logoutAuthorisedTitle,
-                        continueAs,
+                        actionLabel,
                         undefined,
-                        this.LANG.dialogs.createNewAccount,
+                        cancelLabel,
                         true
                 ).then((result) => {
-                    if (result === this.LANG.dialogs.logoutAuthorisedLogoutButton) {
-                        this.logout(true);
+                    // console.log(result);
+                    if (result === true || result === this.LANG.dialogs.logoutAuthorisedLogoutButton) {
+                        return this.logout(true);
                     } else {
-                        this.redirectAuthorised();
+                        return this.redirectAuthorised();
                     }
                 });
             }

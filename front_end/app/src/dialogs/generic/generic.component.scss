@@ -4,10 +4,13 @@
 
     & > :first-child {
         margin-bottom: 0.5rem;
-        max-width: 350px;
     }
 
     & > :not(:first-child) {
         margin-left: 0 !important;
+    }
+
+    button {
+        max-width: 100%;
     }
 }

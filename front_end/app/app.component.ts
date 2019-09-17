@@ -3,10 +3,13 @@ import { Component, HostListener, Inject } from '@angular/core';
 import { CookieService }             from 'ngx-cookie-service';
 import { DeviceDetectorService }     from 'ngx-device-detector';
 import { Title }                     from '@angular/platform-browser';
+import { ActivationStart, Event, Router } from '@angular/router';
+import { filter }                    from 'rxjs/operators';
 import { WINDOW }                    from './src/services/window-provider';
 import { NxLanguageProviderService } from './src/services/nx-language-provider';
 import { NxConfigService }           from './src/services/nx-config';
-import { NxApplyService } from './src/services/apply.service';
+import { NxApplyService }            from './src/services/apply.service';
+import { NxQueryParamService } from './src/services/query-param.service';
 
 @Component({
     selector: 'nx-app',
@@ -30,6 +33,8 @@ export class AppComponent {
                 private config: NxConfigService,
                 private language: NxLanguageProviderService,
                 private applyService: NxApplyService,
+                private queryParamService: NxQueryParamService,
+                private router: Router,
                 @Inject(WINDOW) private window: Window) {
 
         this.CONFIG = this.config.getConfig();
@@ -140,6 +145,13 @@ export class AppComponent {
         }
 
         this.CONFIG.showHeaderAndFooter = true;
+
+        // Updates query params for components without routes.
+        this.router.events.pipe(
+            filter((event: Event) => event instanceof ActivationStart)
+        ).subscribe(({ snapshot: { queryParams } }: ActivationStart) => {
+            this.queryParamService.queryParams = queryParams;
+        });
     }
 
     // Todo: Revisit using this when the hybrid app is killed.
