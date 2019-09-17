@@ -18,7 +18,6 @@ import { NxAccountService } from '../../../services/account.service';
     selector   : 'integration-detail-component',
     templateUrl: 'details.component.html',
     styleUrls  : ['details.component.scss'],
-    encapsulation: ViewEncapsulation.None,
 })
 
 export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {

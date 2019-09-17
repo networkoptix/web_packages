@@ -94,7 +94,7 @@ export class PushComponent implements OnInit {
         this.afMessaging.messages.subscribe(
             (message: any) => {
                 this.receivedMessages.push(message);
-                const _notify = new Notification(message.notification.title, ...message.notification);
+                const _notify = new Notification(message.notification.title, message.notification);
                 if (message.data) {
                     message.data = JSON.stringify(message.data);
                 }

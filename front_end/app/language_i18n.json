@@ -269,7 +269,11 @@
     "devices": "devices",
     "dialogs": {
         "cancelButton": "Cancel",
+        "changeAccountLogged": "You are already logged in with a different account",
+        "continueAs": "Continue as {email}",
+        "createNewAccount": "Create New Account",
         "download": "Download %VMS_NAME%",
+        "loggedFromOther": "You will be logged in with a different account",
         "loginButton": "Log in",
         "loginTitle": "Log in to %CLOUD_NAME%",
         "logoutAuthorisedContinueButton": "Continue",
@@ -302,6 +306,7 @@
         },
         "noClientDetectedTitle": "Install %VMS_NAME% to view your System",
         "okButton": "OK",
+        "remainAs": "Remain logged as {email} ",
         "sharing": {
             "confirmOwner": "If you change System owner, you will revoke ownership from the current account. This action is irreversible. Are you sure?",
             "editShareConfirmButton": "Save",

@@ -228,7 +228,7 @@ header {
     }
     
     .dropdown-toggle-transparent {
-        background-color : transparent;
+        background-color : transparent !important;
         box-shadow       : none;
         border-radius    : 0;
         
@@ -249,7 +249,7 @@ header {
     
     &.show {
         .dropdown-toggle {
-            background-color : $light5;
+            background-color : $light5 !important;
         }
         
         .dropdown-toggle-transparent {

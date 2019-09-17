@@ -80,10 +80,7 @@
                             } else {
                                 $scope.systemReady = true;
                             }
-                        })
-                        .catch(function (error) {
-                            $scope.unreachable = true;
-                        });
+                        }, systemError);
                     });
 
                 

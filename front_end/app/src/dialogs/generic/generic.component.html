@@ -10,7 +10,7 @@
     <p [innerHTML]="message"></p>
 </div>
 
-<div class="modal-footer" *ngIf="hasFooter">
+<div class="modal-footer" *ngIf="hasFooter" [ngClass]="stacked">
     <button type="button" class="btn"
             [ngClass]="buttonClass" *ngIf="cancellable"
             (click)="close('CANCEL')"

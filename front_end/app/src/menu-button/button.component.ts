@@ -14,7 +14,8 @@ export class NxMenuButtonComponent {
 
     action() {
         if (this.button.id === 'addUser') {
-            this.settingsService.addUser().catch(() => {});
+            // Handling promise to satisfy the linter.
+            this.settingsService.addUser().then(() => {});
         }
     }
 }

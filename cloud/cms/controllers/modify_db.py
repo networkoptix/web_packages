@@ -2,6 +2,7 @@ from datetime import datetime
 
 from notifications.notifications_api import send
 from django.contrib.auth.models import Permission
+from django.db.models import Q
 from django.utils.http import urlencode
 
 from PIL import Image
@@ -62,6 +63,64 @@ def notify_version_ready(asset, version, exclude_user):
                      'asset_type': asset_type
                  },
                  user.customization)
+
+
+def are_asset_datarecords_unique(asset, customizations=None):
+    for data_structure in DataStructure.objects.filter(context__asset_type__type=asset.asset_type.type, unique=True):
+        value = data_structure.find_actual_value(asset=asset, language=None, version_id=None, draft=True)
+        if not is_datarecord_unique(asset, data_structure, value, customizations):
+            return False, data_structure
+    return True, None
+
+
+def is_datarecord_unique(asset, data_structure, value, customizations=None):
+    # Find all assets that may cause conflict
+    if not customizations:
+        customizations = asset.customizations.all()
+
+    asset_ids = list(Asset.objects.filter(
+        ~Q(id=asset.id), asset_type__type=asset.asset_type.type, customizations__in=customizations
+    ).values_list('id', flat=True))
+
+    asset_ids_found = []
+
+    not_accepted_version_ids = []
+    # Find all versions of assets that may cause conflict
+    for review in AssetCustomizationReview.objects.filter(
+            version__asset__id__in=asset_ids, version__datarecord__data_structure=data_structure
+    ).order_by('-pk').select_related('version__asset'):
+        asset_id = review.version.asset.id
+        if asset_id not in asset_ids_found:
+            if review.state == AssetCustomizationReview.REVIEW_STATES.accepted:
+                asset_ids_found.append(asset_id)
+            else:
+                not_accepted_version_ids.append(review.version.id)
+
+    asset_ids_found.clear()
+    asset_ids_published_found = []
+
+    for datarecord in DataRecord.objects.filter(
+            asset_id__in=asset_ids, data_structure=data_structure
+    ).order_by('-pk').select_related('asset'):
+        if datarecord.version:
+            # If datarecord has a new version that is still pending/rejected/blocked, check value
+            if datarecord.version in not_accepted_version_ids:
+                if datarecord.value == value:
+                    return False
+            # If datarecord has a published version or older version, make sure we
+            # don't have a newer one already
+            elif datarecord.asset.id not in asset_ids_published_found:
+                if datarecord.value == value:
+                    return False
+                else:
+                    asset_ids_published_found.append(datarecord.asset.id)
+        # If datarecord is unversioned, check that we haven't seen one for this asset yet
+        elif datarecord.asset.id not in asset_ids_found:
+            if datarecord.value == value:
+                return False
+            else:
+                asset_ids_found.append(datarecord.asset.id)
+    return True
 
 
 def save_unrevisioned_records(asset, context, language, data_structures,
@@ -228,6 +287,10 @@ def save_unrevisioned_records(asset, context, language, data_structures,
 
         if data_structure.advanced and not (user.is_superuser or user.has_perm('cms.edit_advanced')):
             upload_errors.append((data_structure_name, "You do not have permission to edit this field"))
+            continue
+
+        if data_structure.unique and not is_datarecord_unique(asset, data_structure, new_record_value):
+            upload_errors.append((data_structure_name, "This field must be unique"))
             continue
 
         record = DataRecord(asset=asset,

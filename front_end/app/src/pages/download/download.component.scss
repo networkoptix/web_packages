@@ -40,11 +40,11 @@
     padding          : 0 12px 0 0;
     height           : auto;
     box-shadow       : none;
-    background-color : transparent;
+    background-color : transparent !important;
     border           : 1px solid $light5;
 
     &:hover {
-        border-color     : $light8;
+        border-color     : $light8 !important;
         background-color : rgba($light5, .25) !important;
     }
 

@@ -8,6 +8,7 @@ import { NxCloudApiService }         from './nx-cloud-api';
 import { NxLanguageProviderService } from './nx-language-provider';
 import { NxDialogsService }          from '../dialogs/dialogs.service';
 import { NxSessionService }          from './session.service';
+import { NxQueryParamService }       from './query-param.service';
 
 import { distinctUntilChanged } from 'rxjs/operators';
 
@@ -25,6 +26,7 @@ export class NxAccountService {
                 private language: NxLanguageProviderService,
                 private cloudApi: NxCloudApiService,
                 private sessionService: NxSessionService,
+                private queryParmaService: NxQueryParamService,
                 private localStorageService: LocalStorageService,
                 private locationService: Location,
                 private dialogs: NxDialogsService,
@@ -102,7 +104,25 @@ export class NxAccountService {
     requireLogin() {
         return this.get()
             .then((account) => {
-                if (!account) {
+                const queryParams: any = this.queryParmaService.queryParams;
+                if (!account && queryParams.auth) {
+                    return this.loginWithAuthKey(queryParams.auth);
+                } else if (account && queryParams.auth) {
+                    return this.dialogs.confirm('',
+                        this.LANG.dialogs.loggedFromOther,
+                        this.LANG.dialogs.okButton,
+                        undefined,
+                        this.LANG.dialogs.remainAs.replace('{email}', account.email),
+                        'long-button'
+                    ).then((result) => {
+                        if (result === true) {
+                            this.logout(true);
+                            return this.loginWithAuthKey(queryParams.auth);
+                        } else {
+                            return this.redirectAuthorised();
+                        }
+                    });
+                } else if (!account) {
                     return this.dialogs
                         .login(this, true, true)
                         .catch(() => {
@@ -176,13 +196,33 @@ export class NxAccountService {
                    });
     }
 
+    loginWithAuthKey(authKey: string) {
+        const auth = atob(authKey);
+        const index = auth.indexOf(':');
+        const tempLogin = auth.substring(0, index);
+        const tempPassword = auth.substring(index + 1);
+
+        return this.login(tempLogin, tempPassword, false)
+            .then(() => {
+                return this.router.navigate([], {queryParamsHandling: 'merge'});
+            }).catch(() => {
+                // If the key login fails ask the user to login manually.
+                return this.dialogs
+                    .login(this, true, true)
+                    .catch(() => {
+                        this.location.path(this.CONFIG.redirectUnauthorised);
+                    });
+            });
+    }
+
     logout(doNotRedirect?) {
         this.cloudApi
             .logout()
             .finally(() => {
                 this.sessionService.invalidateSession(); // Clear session
                 if (!doNotRedirect) {
-                    return this.router.navigate([this.CONFIG.redirectUnauthorised]);
+                    return this.router.navigate([this.CONFIG.redirectUnauthorised])
+                        .finally(this.document.location.reload());
                 }
                 setTimeout(() => {
                     this.document.location.reload();
@@ -191,22 +231,37 @@ export class NxAccountService {
     }
 
     logoutAuthorised() {
-        this.get().then((account) => {
+        return this.get().then((account) => {
             // logoutAuthorisedLogoutButton
             if (account) {
-                this.dialogs.confirm('',
-                        this.LANG.dialogs.logoutAuthorisedTitle,
-                        this.LANG.dialogs.logoutAuthorisedContinueButton,
+                const isRegister = this.router.url.includes('/register');
+                const isRestore = this.router.url.includes('/restore_password');
+                const actionLabel = this.LANG.dialogs.continueAs.replace('{email}', account.email);
+                const title = isRegister ? this.LANG.dialogs.logoutAuthorisedTitle : this.LANG.dialogs.changeAccountLogged;
+
+                let cancelLabel = '';
+                if (isRegister) {
+                    cancelLabel = this.LANG.dialogs.createNewAccount;
+                } else if (isRestore) {
+                    cancelLabel = this.LANG.dialogs.logoutAuthorisedLogoutButton;
+                } else {
+                    cancelLabel = this.LANG.dialogs.cancelButton;
+                }
+                return this.dialogs.confirm('',
+                        title,
+                        actionLabel,
                         undefined,
-                        this.LANG.dialogs.logoutAuthorisedLogoutButton
+                        cancelLabel,
+                    ''
                 ).then((result) => {
-                    if (result === this.LANG.dialogs.logoutAuthorisedLogoutButton) {
-                        this.logout(true);
+                    if ((isRestore || isRegister) && result === cancelLabel) {
+                        return this.logout(true);
                     } else {
-                        this.redirectAuthorised();
+                        return this.redirectAuthorised();
                     }
                 });
             }
+            return;
         });
     }
 

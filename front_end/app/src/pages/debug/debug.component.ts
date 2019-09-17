@@ -141,8 +141,8 @@ export class NxDebugComponent {
             success: true,
             process: debugProcess
         };
-
-        this.systemsService.forceUpdateSystemsAsPromise().catch(() => {});
+        // Handling promise to satisfy the linter.
+        this.systemsService.forceUpdateSystemsAsPromise().then(() => {});
     }
 
     debugProxy() {

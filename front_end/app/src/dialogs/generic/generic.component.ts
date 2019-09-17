@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, Input, ViewEncapsulation, HostListener } from '@angular/core';
 import { Location }                                    from '@angular/common';
 import { NgbActiveModal, NgbModal, NgbModalRef }       from '@ng-bootstrap/ng-bootstrap';
 import { NxLanguageProviderService }                   from '../../services/nx-language-provider';
@@ -7,7 +7,7 @@ import { DomSanitizer }                                from '@angular/platform-b
 @Component({
     selector: 'nx-modal-generic-content',
     templateUrl: 'generic.component.html',
-    styleUrls: []
+    styleUrls: ['generic.component.scss']
 })
 export class GenericModalContent implements OnInit {
     @Input() message;
@@ -19,11 +19,20 @@ export class GenericModalContent implements OnInit {
     @Input() hasFooter;
     @Input() cancellable;
     @Input() closable;
+    @Input() stacked;
 
     constructor(public activeModal: NgbActiveModal,
     ) {}
 
+    @HostListener('document:click', ['$event'])
+    onLinkClick(event: any) {
+        if (event.target.localName === 'a') {
+            this.close('canceled');
+        }
+    }
+
     ngOnInit() {
+        this.stacked = this.stacked || '';
         this.buttonClass = this.buttonClass || '';
         this.closable = !!this.closable;
     }
@@ -56,7 +65,7 @@ export class NxModalGenericComponent implements OnInit {
         this.LANG = this.language.getTranslations();
     }
 
-    private dialog(message, title, actionLabel, actionType?, cancelLabel?,
+    private dialog(message, title, actionLabel, actionType?, cancelLabel?, footerClass?,
                    hasFooter?, cancellable?, closable?) {
         this.modalRef = this.modalService.open(GenericModalContent,
                 {
@@ -64,12 +73,13 @@ export class NxModalGenericComponent implements OnInit {
                             backdrop: 'static'
                         });
 
-        this.modalRef.componentInstance.message = this.domSanitizer.bypassSecurityTrustHtml(message);
+        this.modalRef.componentInstance.message = message ? this.domSanitizer.bypassSecurityTrustHtml(message) : '';
         this.modalRef.componentInstance.title = title;
         this.modalRef.componentInstance.actionLabel = actionLabel;
         this.modalRef.componentInstance.buttonType = actionType || 'default';
         this.modalRef.componentInstance.cancelLabel = cancelLabel;
         this.modalRef.componentInstance.buttonClass = actionType || 'btn-primary';
+        this.modalRef.componentInstance.footerClass = footerClass || '';
 
         this.modalRef.componentInstance.hasFooter = hasFooter;
         this.modalRef.componentInstance.cancellable = cancellable;
@@ -78,21 +88,23 @@ export class NxModalGenericComponent implements OnInit {
         return this.modalRef;
     }
 
-    openConfirm(message, title, actionLabel, actionType?, cancelLabel?) {
+    openConfirm(message, title, actionLabel, actionType?, cancelLabel?, footerClass?) {
         return this.dialog(message, title, actionLabel,
             actionType,
             cancelLabel,
+            footerClass,
             true,
             false,
             true)
             .result;
     }
 
-    openAlert(message, title) {
+    openAlert(message, title, footerClass?) {
         return this.dialog(message, title,
             this.LANG.dialogs.okButton,
             null,
             this.LANG.dialogs.cancelButton,
+            footerClass,
             true,
             true,
             true)

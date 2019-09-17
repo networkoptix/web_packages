@@ -179,6 +179,11 @@ def get_integration_type():
     return None
 
 
+class DeploymentStatus(models.Model):
+    name = models.CharField(max_length=100, blank=True)
+    ready = models.BooleanField(default=False)
+
+
 # CMS structure (data structure). Only developers can change that
 class Language(models.Model):
     name = models.CharField(max_length=255, unique=True)
@@ -558,6 +563,7 @@ class DataStructure(models.Model):
     advanced = models.BooleanField(default=False)
     order = models.IntegerField(default=100000)
     optional = models.BooleanField(default=False)
+    unique = models.BooleanField(default=False)
     public = models.BooleanField(default=True)
     deprecated = models.BooleanField(default=False)
     protected = models.BooleanField(default=False)
