@@ -257,12 +257,14 @@ def save_unrevisioned_records(asset, context, language, data_structures,
             new_record_value = request_data[data_structure_name]
             if data_structure.type == DataStructure.DATA_TYPES.text and 'regex' in data_structure.meta_settings:
                 pattern = data_structure.meta_settings['regex']
+                if pattern == '':
+                    pattern = '.*$'
                 if not pattern.endswith('$'):
                     pattern = f'{pattern}$'
                 if new_record_value and not re.match(pattern, new_record_value):
                     upload_errors.append((data_structure_name, 'Invalid input'))
                     continue
-            elif 'char_limit' in data_structure.meta_settings:
+            if 'char_limit' in data_structure.meta_settings:
                 char_limit = int(data_structure.meta_settings['char_limit'])
                 if len(new_record_value) > char_limit:
                     upload_errors.append(
@@ -383,7 +385,7 @@ def publish_latest_version(asset, review_id, user):
     return publish_errors
 
 
-def integration_has_required_data(asset):
+def asset_has_required_data(asset):
     errors = []
     for datastructure in DataStructure.objects.filter(context__asset_type=asset.asset_type):
         records = datastructure.datarecord_set.filter(asset=asset)
@@ -409,7 +411,7 @@ def send_version_for_review(asset, user):
 
     # We only check for integrations because its the only asset type that non staff have access to.
     if asset.is_integration:
-        errors = integration_has_required_data(asset)
+        errors = asset_has_required_data(asset)
         if len(errors) > 0:
             return errors
 
