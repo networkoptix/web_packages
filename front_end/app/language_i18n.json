@@ -272,9 +272,9 @@
         "continueAs": "Continue as {email}",
         "createNewAccount": "Create New Account",
         "download": "Download %VMS_NAME%",
-        "loginAs": "Log in as {email}",
         "loginButton": "Log in",
         "loginTitle": "Log in to %CLOUD_NAME%",
+        "loginWithDifferentAccount": "You are already logged in with a different account",
         "logoutAuthorisedContinueButton": "Continue",
         "logoutAuthorisedLogoutButton": "Log Out",
         "logoutAuthorisedTitle": "You are already logged in",
@@ -305,6 +305,7 @@
         },
         "noClientDetectedTitle": "Install %VMS_NAME% to view your System",
         "okButton": "OK",
+        "remainAs": "Remain logged as {email} ",
         "sharing": {
             "confirmOwner": "If you change System owner, you will revoke ownership from the current account. This action is irreversible. Are you sure?",
             "editShareConfirmButton": "Save",

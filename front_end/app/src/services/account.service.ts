@@ -108,9 +108,19 @@ export class NxAccountService {
                 if (!account && queryParams.auth) {
                     return this.loginWithAuthKey(queryParams.auth);
                 } else if (account && queryParams.auth) {
-                    this.logoutAuthorised().then(res => {
-                        // TODO: already signed in options. Issue with auth code not containing email anymore.
-                        // console.log(res);
+                    return this.dialogs.confirm('',
+                        this.LANG.dialogs.loginWithDifferentAccount,
+                        this.LANG.dialogs.okButton,
+                        undefined,
+                        this.LANG.dialogs.remainAs.replace('{email}', account.email),
+                        'long-button'
+                    ).then((result) => {
+                        if (result === true) {
+                            this.logout(true);
+                            return this.loginWithAuthKey(queryParams.auth);
+                        } else {
+                            return this.redirectAuthorised();
+                        }
                     });
                 } else if (!account) {
                     return this.dialogs
@@ -226,36 +236,32 @@ export class NxAccountService {
             if (account) {
                 const isRegister = this.router.url.includes('/register');
                 const isRestore = this.router.url.includes('/restore_password');
-                const continueAs = this.LANG.dialogs.continueAs.replace('{email}', account.email);
-                const loginAs = this.LANG.dialogs.loginAs.replace('{email}', account.email);
+                const actionLabel = this.LANG.dialogs.continueAs.replace('{email}', account.email);
+                const title = isRegister ? this.LANG.dialogs.logoutAuthorisedTitle : this.LANG.dialogs.loginWithDifferentAccount;
 
-                let actionLabel = '';
                 let cancelLabel = '';
                 if (isRegister) {
-                    actionLabel = continueAs;
                     cancelLabel = this.LANG.dialogs.createNewAccount;
                 } else if (isRestore) {
-                    actionLabel = continueAs;
                     cancelLabel = this.LANG.dialogs.logoutAuthorisedLogoutButton;
                 } else {
-                    actionLabel = loginAs;
-                    cancelLabel = continueAs;
+                    cancelLabel = this.LANG.dialogs.cancelButton;
                 }
                 return this.dialogs.confirm('',
-                        this.LANG.dialogs.logoutAuthorisedTitle,
+                        title,
                         actionLabel,
                         undefined,
                         cancelLabel,
-                        true
+                    ''
                 ).then((result) => {
-                    // console.log(result);
-                    if (result === true || result === this.LANG.dialogs.logoutAuthorisedLogoutButton) {
+                    if ((isRestore || isRegister) && result === cancelLabel) {
                         return this.logout(true);
                     } else {
                         return this.redirectAuthorised();
                     }
                 });
             }
+            return;
         });
     }
 

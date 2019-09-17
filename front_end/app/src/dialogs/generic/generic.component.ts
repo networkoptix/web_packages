@@ -65,7 +65,7 @@ export class NxModalGenericComponent implements OnInit {
         this.LANG = this.language.getTranslations();
     }
 
-    private dialog(message, title, actionLabel, actionType?, cancelLabel?, stacked?,
+    private dialog(message, title, actionLabel, actionType?, cancelLabel?, footerClass?,
                    hasFooter?, cancellable?, closable?) {
         this.modalRef = this.modalService.open(GenericModalContent,
                 {
@@ -79,7 +79,7 @@ export class NxModalGenericComponent implements OnInit {
         this.modalRef.componentInstance.buttonType = actionType || 'default';
         this.modalRef.componentInstance.cancelLabel = cancelLabel;
         this.modalRef.componentInstance.buttonClass = actionType || 'btn-primary';
-        this.modalRef.componentInstance.stacked = stacked ? 'stacked' : '';
+        this.modalRef.componentInstance.footerClass = footerClass || '';
 
         this.modalRef.componentInstance.hasFooter = hasFooter;
         this.modalRef.componentInstance.cancellable = cancellable;
@@ -88,23 +88,23 @@ export class NxModalGenericComponent implements OnInit {
         return this.modalRef;
     }
 
-    openConfirm(message, title, actionLabel, actionType?, cancelLabel?, stacked?) {
+    openConfirm(message, title, actionLabel, actionType?, cancelLabel?, footerClass?) {
         return this.dialog(message, title, actionLabel,
             actionType,
             cancelLabel,
-            stacked,
+            footerClass,
             true,
             false,
             true)
             .result;
     }
 
-    openAlert(message, title, stacked?) {
+    openAlert(message, title, footerClass?) {
         return this.dialog(message, title,
             this.LANG.dialogs.okButton,
             null,
             this.LANG.dialogs.cancelButton,
-            stacked,
+            footerClass,
             true,
             true,
             true)

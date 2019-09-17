@@ -65,7 +65,7 @@ export class NxDialogsService {
         return modalRef.result;
     }
 
-    alert(message, title, stacked?) {
+    alert(message, title, footerClass?) {
         const options: any = {
             windowClass: 'modal-holder',
             backdrop   : 'static'
@@ -78,7 +78,7 @@ export class NxDialogsService {
             buttonType : 'default',
             cancelLabel: this.LANG.dialogs.cancelButton,
             buttonClass: 'btn-primary',
-            stacked: stacked ? 'stacked' : '',
+            stacked: footerClass || '',
             hasFooter  : true,
             cancellable: true,
             closable   : true,
@@ -91,7 +91,7 @@ export class NxDialogsService {
         return this.createModal(ApplyModalContent, {}, {applyFunc, discardFunc});
     }
 
-    confirm(message, title, actionLabel, actionType?, cancelLabel?, stacked?) {
+    confirm(message, title, actionLabel, actionType?, cancelLabel?, footerClass?) {
         const options: any = {
             windowClass: 'modal-holder',
             backdrop   : 'static'
@@ -104,7 +104,7 @@ export class NxDialogsService {
             buttonType : actionType || 'default',
             cancelLabel,
             buttonClass : actionType || 'btn-primary',
-            stacked: stacked ? 'stacked' : '',
+            stacked: footerClass || '',
             hasFooter : true,
             cancellable : false,
             closable : true,
