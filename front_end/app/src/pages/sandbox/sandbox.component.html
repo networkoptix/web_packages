@@ -2,6 +2,29 @@
     <h1>SANDBOX</h1>
 
     <ngb-tabset #tabs>
+        <ngb-tab id="Toastr">
+            <ng-template ngbTabTitle>
+                <span class="tab-heading">Toastr</span>
+            </ng-template>
+            <ng-template ngbTabContent>
+                <div class="form-group">
+                    <nx-checkbox
+                            name="autohide"
+                            componentId="autohide"
+                            [(ngModel)]="autohide"
+                            checked>
+                    </nx-checkbox>
+
+                    <label for="autohide">Auto hide</label>
+                </div>
+                <div class="row p-3">
+                    <button class="btn btn-default" (click)="notify( 'I\'m info asdas sadasd asd' ,'info')">Info</button>
+                    <button class="btn btn-default" (click)="notify('I\'m danger' ,'danger')">Danger</button>
+                    <button class="btn btn-default" (click)="notify('I\'m warning' ,'warning')">Warning</button>
+                    <button class="btn btn-default" (click)="notify('I\'m success' ,'success')">Success</button>
+                </div>
+            </ng-template>
+        </ngb-tab>
         <ngb-tab id="Search">
             <ng-template ngbTabTitle>
                 <span class="tab-heading">Search</span>

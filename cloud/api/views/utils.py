@@ -15,8 +15,8 @@ import requests
 from cloud import settings
 from django.shortcuts import redirect
 
-from cms.models import DataStructure, get_cloud_portal_product,\
-    cloud_portal_customization_cache, UserGroupsToProductPermissions
+from cms.models import DataStructure, get_cloud_portal_asset,\
+    cloud_portal_customization_cache, UserGroupsToAssetPermissions
 
 logger = logging.getLogger(__name__)
 
@@ -53,7 +53,8 @@ def get_settings_from_cache():
         'supportedResolutions': customization_cache['supported_resolutions'],
         'supportedHardwareTypes': customization_cache['supported_hardware_types'],
         'searchTags': customization_cache['search_tags'],
-        'vendorsShown': customization_cache['vendors_shown']
+        'vendorsShown': customization_cache['vendors_shown'],
+        'pushConfig': customization_cache['push_config']
     }
 
 
@@ -90,7 +91,7 @@ def language(request):
     if request.method == 'GET':  # Get language for current user
         from util.helpers import detect_language_by_request
         lang = detect_language_by_request(request)
-        language_file = f'/static/lang_{lang}/language.json'
+        language_file = f'/static/lang_{lang}/language_compiled.json'
         # Return: redirect to language.json file for selected language
         response = redirect(language_file)
 
@@ -116,11 +117,11 @@ def language(request):
 
 
 @api_view(['GET'])
-@permission_classes((IsAuthenticated, ))
+@permission_classes((AllowAny, ))
 @handle_exceptions
 def downloads_history(request):
     # TODO: later we can check specific permissions
-    can_view_releases = UserGroupsToProductPermissions.\
+    can_view_releases = UserGroupsToAssetPermissions.\
         check_customization_permission(request.user, settings.CUSTOMIZATION, 'api.can_view_release')
     public_release_history = get_settings_from_cache()['publicReleases']
     if not public_release_history and not can_view_releases:
@@ -149,7 +150,7 @@ def download_build(request, build):
     # TODO: later we can check specific permissions
     customization = settings.CUSTOMIZATION
     public_release_history = get_settings_from_cache()['publicReleases']
-    can_view_releases = UserGroupsToProductPermissions.\
+    can_view_releases = UserGroupsToAssetPermissions.\
         check_customization_permission(request.user, customization, 'api.can_view_release')
     if not public_release_history and not can_view_releases:
         raise APIForbiddenException("Not authorized", ErrorCodes.forbidden)

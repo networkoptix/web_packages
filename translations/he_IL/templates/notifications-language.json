@@ -9,19 +9,19 @@
     "emailSubject": "{{message.subject}}"
   },
   "contact_sales": {
-    "emailSubject": "שאלת מכירות עבור {{message.product}}"
+    "emailSubject": "שאלת מכירות עבור {{message.asset}}"
   },
   "contact_support": {
-    "emailSubject": "בקשת תמיכה עבור {{message.product}}"
+    "emailSubject": "בקשת תמיכה עבור {{message.asset}}"
   },
   "integration_feedback": {
-    "emailSubject": "משוב על {{message.product}}"
+    "emailSubject": "משוב על {{message.asset}}"
   },
   "ipvd_feedback": {
-    "emailSubject": "משוב דף מצלמה {{#message.product}} עבור {{message.product}}{{/message.product}}"
+    "emailSubject": "משוב דף מצלמה {{#message.asset}} עבור {{message.asset}}{{/message.asset}}"
   },
   "review_version": {
-    "emailSubject": "{{message.product_type}}: ל {{message.product}} יש גרסה חדשה לסקירה"
+    "emailSubject": "{{message.asset_type}}: ל {{message.asset}} יש גרסה חדשה לסקירה"
   },
   "restore_password": {
     "emailSubject": "אפס את סיסמתך"

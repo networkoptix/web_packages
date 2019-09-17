@@ -1,4 +1,19 @@
 {
+	"account": {
+		"accountSavedSuccess": "Váš účet byl úspěšně uložen",
+		"activationLinkSent": "Aktivní odkaz byl odeslán",
+		"passwordChangedSuccess": "Váš účet byl úspěšně uložen",
+		"changePassword": "Změnit heslo",
+		"newPasswordLabel": "Nové heslo",
+		"saveChanges": "Uložit"
+	},
+	"activeActions": {
+		"sendConfirm": "Znovu poslat aktivační odkaz",
+		"resetPassword": "Obnovení hesla",
+		"setNewPassword": "Uložit heslo",
+		"setNewPasswordLabel": "Nové heslo"
+	},
+	"clientProtocol": "%CLIENT_PROTOCOL%:",
 	"search": {
 		"Search": "Hledat",
 		"search_ipvd": "Hledání podle modelu nebo výrobce",
@@ -89,12 +104,12 @@
 		},
 		"releasesTypes": {
 			"beta": "Beta",
-			"betas": "Beta verze",
+			"betas": "Betas",
 			"rc": "Release Candidate",
 			"release": "Release",
-			"releases": "Vydání",
+			"releases": "Releases",
 			"patch": "Patch",
-			"patches": "Opravy"
+			"patches": "Patches"
 		}
 	},
 	"ipvd": {
@@ -103,15 +118,15 @@
 		"vendor": "Výrobce",
 		"model": "Model",
 		"hardwareType": "Typ",
-		"maxResolution": "Maximální rozlišení",
-		"maxFps": "Max. FPS",
+		"maxResolution": "<span>Max</span><br><span>Resolution</span>",
+		"maxFps": "<span>Max</span><br><span>FPS</span>",
 		"primaryCodec": "Kodek",
 		"isAudioSupported": "Zvuk",
 		"isTwAudioSupported": "Obousměrný zvuk",
 		"isPtzSupported": "PTZ",
 		"isAptzSupported": "Pokročilé PTZ",
 		"isAptzSupportedShort": "Adv. PTZ",
-		"isFisheye": "Rybí oko",
+		"isFisheye": "Fisheye",
 		"isMdSupported": "Pohyb",
 		"isIoSupported": "I/O",
 		"isH265": "H.265",
@@ -138,6 +153,7 @@
 		"disclaimer": "Tento seznam je omezen na zařízení nalezená na {{vmsName}} kde uživatelé povolili automatické hlášení specifikací zařízení na {{companyName}}. Nejsou shromažďovány žádné osobní údaje a každý uživatel zůstává zcela anonymní."
 	},
 	"integration": {
+		"myIntegrationsLabel": "Mine",
 		"previewRibbonText": "Tato stránka je náhled nejnovějších změn a neodpovídá veřejně dostupné verzi.",
 		"backToEditText": "Zpět na editační rozhraní",
 		"Access Control": "Kontrola Přístupu",
@@ -151,10 +167,41 @@
 		"feedback": "Nezapomeňte uvést model kamery a výrobce..."
 	},
 	"pageTitles": {
+		"template": "{{title}} %CLOUD_NAME%",
+		"default": "%CLOUD_NAME%",
+		"registerSuccess": "Vítejte v",
+		"register": "Vytvořit účet v",
+		"changePassword": "Změnit heslo -",
+		"account": "Nastavení účtu -",
+		"systems": "Systémy -",
+		"system": "Systém -",
+		"systemShare": "Sdílet systém -",
+		"activate": "Aktivovat účet -",
+		"activateSent": "Aktivovat účet -",
+		"activateSuccess": "Účet aktivován -",
+		"activateCode": "Aktivovat účet -",
+		"restorePassword": "Obnovit heslo -",
+		"restorePasswordSuccess": "Heslo uloženo -",
+		"restorePasswordCode": "Obnovit heslo -",
+		"view": "Zobrazit kamery - ",
+		"debug": "Ladění",
+		"login": "Přihlásit -",
+		"download": "Stáhnout %VMS_NAME%",
+		"downloadPlatform": "Stáhnout %VMS_NAME% pro ",
+		"pageNotFound": "Stránka nenalezna",
 		"supportedDevices": "Podporovaná zařízení",
 		"integrations": "Integrace"
 	},
 	"dialogs": {
+		"okButton": "OK",
+		"cancelButton": "Zrušit",
+		"loginTitle": "Přihlaste se k %CLOUD_NAME%",
+		"loginButton": "Přihlásit",
+		"logoutAuthorisedTitle": "Již jste přihlášen",
+		"logoutAuthorisedContinueButton": "Pokračovat",
+		"logoutAuthorisedLogoutButton": "Odhlásit se",
+		"noClientDetectedTitle": "Pro zobrazení Vašeho systému nainstalujte %VMS_NAME%",
+		"download": "Stáhnout %VMS_NAME%",
 		"merge": {
 			"connectToCloud": "Připojit systém, který chcete sloučit s tímto na <strong>{{cloudName}}</strong> nebo sloučit lokálně pomocí <strong>{{vmsName}}</strong> Klienta.",
 			"mergeConfirmation": "Chystáte se sloučit systémy <strong>{{primarySystem}}</strong> a <strong>{{secondarySystem}}</strong>. Nastavení a název budou převzaty z <strong>{{primarySystem}}</strong>.",
@@ -179,12 +226,178 @@
 				"ipvd_feedback_page": "Zpětná vazba pro kameru",
 				"ipvd_feedback_device": "Zpětná vazba pro {{product}}"
 			}
+		},
+		"sharing": {
+			"confirmOwner": "Pokud změníte vlastníka systému, zrušíte vlastnictví aktuálního účtu. Tato akce je nevratná. Přejete si pokračovat?",
+			"shareTitle": "Přidat",
+			"shareConfirmButton": "Přidat",
+			"editShareTitle": "Upravit oprávnění",
+			"editShareConfirmButton": "Uložit",
+			"permissionsSaved": "Nová oprávnění byla uložena"
+		}
+	},
+	"errorCodes": {
+		"ok": "ok",
+		"cantSendActivationPrefix": "Nelze odeslat potvrzovací email",
+		"cantDisconnectSystemPrefix": "Systém nelze smazat",
+		"cantUnshareWithMeSystemPrefix": "Systém nelze smazat",
+		"cantSharePrefix": "Systém nelze sdílet",
+		"cantGetUsersListPrefix": "Seznam uživatelů není dostupný",
+		"cantGetSystemsListPrefix": "Seznam systému není dostupný",
+		"cantRegisterPrefix": "Došlo k chybě",
+		"cantGetSystemInfoPrefix": "Informace o systému jsou nedostupné",
+		"cantChangeAccountPrefix": "Změny nelze uložit",
+		"cantChangePasswordPrefix": "Heslo nelze uložit",
+		"cantActivatePrefix": "Váš účet nelze aktivovat",
+		"cantSendConfirmationPrefix": "Nelze odeslat potvrzovací email",
+		"notAuthorized": "Chybné heslo",
+		"brokenAccount": "Neočekávaný problém s účtem. <a href=\"/restore_password\">Obnovení účtu</a>",
+		"wrongParameters": "Některé parametry ve formuláři jsou nesprávné",
+		"wrongCode": "Účet je již aktivován, nebo potvrzovací kód je nesprávný",
+		"wrongCodeRestore": "Potvrzovací kód je již použit nebo nesprávný",
+		"wrongAuthCode": "Kód je nesprávný nebo vypršela jeho platnost",
+		"forbidden": "K provedení této akce nemáte oprávnění",
+		"accountNotActivated": "Tento účet není ještě aktivován. <a href=\"/activate\">Odeslat znovu aktivační odkaz</a>",
+		"accountBlocked": "Tento účet je dočasně zablokován. Zkuste to prosím znovu za pár minut.",
+		"notFound": "Nenalezeno",
+		"alreadyExists": "Tento účet již existuje",
+		"unknownError": "Došlo k neočekávané chybě",
+		"accountAlreadyActivated": "Tento účet byl již aktivován",
+		"emailNotFound": "Účet neexistuje.",
+		"EmailAlreadyExists": "Tento email je již registrován",
+		"oldPasswordMistmatch": "Aktuální heslo je nesprávné.",
+		"passwordMismatch": "Chybné heslo",
+		"cantEditYourself": "Změna vlastních oprávnění není povolena",
+		"cantEditAdmin": "Tento uživatel má oprávnění správce",
+		"cantOpenClient": "Aplikace %VMS_NAME% není nalezena. <a href=\"/download\">Stáhnout</a>",
+		"lostConnection": "Připojení k {{systemName}} se ztratilo",
+		"thisSystem": "systém",
+		"oldSafariNotSupported": "Verze Safari starší než 10 není podporována",
+		"DUPLICATE_MEDIASERVER_FOUND": "Některé serverové seznamy se mohou zobrazovat jako existující v obou systémech - ve vybraném i v aktuálním.<br>Ze systému odeberte offline a nekompatibilní servery a opakujte akci.",
+		"mergedSystemIsOffline": "Systém <strong>{{failedSystem}}</strong> je offline.",
+		"INCOMPATIBLE": "Systémy mají různé verze softwaru. Prosím aktualizujte oba na <a href=\"/download\">nejnovější verzi</a>.",
+		"FAIL": "Systém <strong>{{failedSystem}}</strong> je momentálně nedostupný.<br>zkuste to znovu za okamžik nebo se obraťte na podporu <a href=\"%SUPPORT_LINK%\" target=\"_blank\"></a>.",
+		"unknownMergeError": "Neznámá chyba. POkuste se stránku obnovit a zopakovat pokus. Pokud problém přetrvává - kontaktujte <a href=\"%SUPPORT_LINK%\" target=\"_blank\">podporu</a>."
+	},
+	"passwordRequirements": {
+		"good": "dobré",
+		"fair": "dostatečné",
+		"fairMessage": "Aby bylo vaše heslo silnější, použijte čísla, velká a malá písmena a speciální znaky",
+		"minLength": "příliš krátké",
+		"minLengthMessage": "Heslo musí obsahovat nejméně 8 znaků",
+		"required": "nesprávné",
+		"requiredMessage": "Používejte pouze latinskou abecedu, číslice a symboly na klávesnici, vyhněte se použití mezery na počátku a konci",
+		"weak": "slabé",
+		"weakMessage": "Aby bylo vaše heslo silnější, použijte čísla, velká a malá písmena a speciální znaky",
+		"strongMessage": "Silné heslo!",
+		"common": "příliš časté",
+		"commonMessage": "Toto heslo je v seznamu nejoblíbenějších heslech na světě",
+		"missingMessage": "Heslo je vyžadováno"
+	},
+	"registration": {
+		"agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
+	},
+	"system": {
+		"yourSystem": "Váš systém",
+		"mySystemSearch": "IMeMyMine",
+		"unavailable": "Systém je nedostupný",
+		"offline": "Systém je offline",
+		"openClient": "Otevřít v %VMS_NAME%",
+		"openClientNoSystem": "Otevřít %VMS_NAME%",
+		"confirmMergeAction": "Sloučit",
+		"mergeSystemTitle": "Sloučení systémů",
+		"confirmRenameTitle": "Název systému",
+		"confirmRenameAction": "Uložit",
+		"successRename": "Název systému byl uložen",
+		"confirmDisconnectTitle": "Odpojit systém od %CLOUD_NAME%?",
+		"confirmDisconnectAction": "Odpojit",
+		"confirmUnshareFromMe": "Chystáte se odpojit systém od Vašeho účtu. K tomuto systému již nebudete mít přístup. Přejete si pokračovat?",
+		"confirmUnshareFromMeTitle": "Odpojit systém?",
+		"confirmUnshareFromMeAction": "Odpojit",
+		"confirmUnshare": "Tento uživatel nebude mít přístup k systému. Přejete si pokračovat?",
+		"confirmUnshareTitle": "Smazat uživatele?",
+		"confirmUnshareAction": "Smazat",
+		"successDisconnected": "Systém byl úspěšně odpojen od %CLOUD_NAME%",
+		"successDeleted": "Systém {{systemName}} byl úspěšně odstraněna z Vašeho účtu",
+		"mergeFailed": "Spojení systémů selhalo",
+		"mergeStart": "Systémy se spojují",
+		"mergeSuccess": "Sloučení systému bylo dokončeno",
+		"permissionsRemoved": "Oprávnění byla odstraněna z adresy {{email}}",
+		"unknownName": "Neznámý název systému (problém s cloudovým spojením)"
+	},
+	"systemStatuses": {
+		"activated": "aktivováno",
+		"incompatible": "nekompatibilní",
+		"merging": "#merging",
+		"notActivated": "neaktivováno",
+		"online": "online",
+		"offline": "offline",
+		"unavailable": "nedostupný"
+	},
+	"accessRoles": {
+		"disabled": {
+			"label": "Zakázáno",
+			"description": "Uživatel je zakázán a nemůže se přihlásit do systému"
+		},
+		"Owner": {
+			"label": "Vlastník",
+			"description": "Neomezený přístup, včetně možnosti sdílení a připojení/odpojení systému z cloudu"
+		},
+		"Viewer": {
+			"label": "Prohlížeč",
+			"description": "Můžete zobrazit živé video a procházet archiv"
+		},
+		"Live Viewer": {
+			"label": "Živé video",
+			"description": "Můžete zobrazit pouze živé video"
+		},
+		"Advanced Viewer": {
+			"label": "Rozšířený prohlížeč",
+			"description": "Lze sledovat živé video, procházet archiv, ovládat PTZ atd"
+		},
+		"Administrator": {
+			"label": "Administrátor",
+			"description": "Neomezený přístup včetně možnosti sdílení"
+		},
+		"Custom": {
+			"label": "Vlastní",
+			"description": "Pro nastavení uživatelských oprávnění použijte aplikaci %VMS_NAME% Client"
+		},
+		"cloudAdmin": {
+			"label": "Administrátor",
+			"description": "Můžete nastavit systém a sdílet jej"
+		},
+		"customRole": {
+			"label": "Vlastní role",
+			"description": "Vlastní role uživatele zadaná v systému"
+		},
+		"owner": {
+			"label": "Vlastník",
+			"description": "Neomezený přístup, včetně možnosti sdílení a připojení/odpojení systému z cloudu"
+		},
+		"viewer": {
+			"label": "Prohlížeč",
+			"description": "Můžete zobrazit živé video a procházet archiv"
+		},
+		"liveViewer": {
+			"label": "Živé video",
+			"description": "Můžete zobrazit pouze živé video"
+		},
+		"advancedViewer": {
+			"label": "Rozšířený prohlížeč",
+			"description": "Můžete sledovat živé video, prohlížet archiv, konfigurovat kamery, ovládat PTZ atd"
+		},
+		"custom": {
+			"label": "Vlastní",
+			"description": "Pro nastavení uživatelských oprávnění použijte aplikaci %VMS_NAME% Client"
 		}
 	},
 	"privacyPolicy": {
 		"integration": "Odesláním tohoto formuláře souhlasíte s tím, že budete kontaktováni {{INTEGRATION_COMPANY}} a / nebo %COMPANY_NAME%.\nZde najdete {{INTEGRATION_COMPANY}} zásady ochrany osobních údajů <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">zde</a> a %COMPANY_NAME% zásady ochrany osobních údajů <a href=\"%PRIVACY_LINK%\" target=\"blank\">zde</a> které obsahují pokyny, jak svůj souhlas odvolat.",
 		"ipvd": "Odesláním tohoto formuláře souhlasíte, že budete kontaktováni %COMPANY_NAME%.\nZde najdete %COMPANY_NAME% zásady ochrany <a href=\"%PRIVACY_LINK%\" target=\"blank\">zde</a>, které zahrnují instrukce o tom, jak se odvolat svůj souhlas."
 	},
+	"systemAdministration": "Správce systému",
+	"users": "Uživatelé",
 	"testedVersionLabel": "Testováno na {{vmsName}} verzi:",
 	"testedVersionsLabel": "Testováno na {{vmsName}} verzích:",
 	"About %CLOUD_NAME%": "O aplikaci %CLOUD_NAME%",
@@ -193,5 +406,12 @@
 	"Privacy": "Soukromí",
 	"Support": "Podpora",
 	"Supported Devices": "Podporovaná zařízení",
-	"Terms": "Podmínky"
+	"Terms": "Podmínky",
+	"pleaseSelect": "Please select...",
+	"WHEN_MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{{targetSystemName}}</strong> System, and this system will be deleted.",
+	"FAILED_SYSTEM_DESCR": "This link is broken,<br>System may be disconnected from %CLOUD_NAME%,<br>Access to this System may be revoked, <br>or you may be logged into a different account.",
+	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "Nemáte žádné systémy připojené k %CLOUD_NAME%",
+	"NO_SYSTEMS_LOGIN": "Přihlaste se k Vašemu systému pomocí %VMS_NAME%",
+	"NO_SYSTEMS_GOTO_ADMINISTRATION": "Přejděte na záložku \"Cloud\" v dialogovém okně \"Správa systému\"",
+	"NO_SYSTEMS_CONNECT_SYSTEM": "Stiskněte tlačítko \"Připojit systém k %CLOUD_NAME%\""
 }

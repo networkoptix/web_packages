@@ -1,5 +1,6 @@
 *** Settings ***
 Resource          ../resource.robot
+Resource          ../ipvd_resource.robot
 Suite Setup       Open Browser and go to URL    ${url}
 Test Setup        Restart
 Test Teardown     Run Keyword If Test Failed    Open New Browser On Failure
@@ -161,4 +162,8 @@ works at restore password page with password input - after submit success
     Input Text    ${RESET PASSWORD INPUT}    ${password}
     Click Button    ${SAVE PASSWORD}
     Wait Until Elements Are Visible    ${RESET SUCCESS MESSAGE}    ${RESET SUCCESS LOG IN LINK}
+    Check Log In
+
+works at IPVD page
+    Go To IPVD Page
     Check Log In

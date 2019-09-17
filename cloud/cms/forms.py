@@ -5,6 +5,7 @@ from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.template.loader import render_to_string
 from .models import *
 from api.models import Account
+from .controllers.modify_db import are_asset_datarecords_unique
 
 from dal import autocomplete
 
@@ -52,12 +53,12 @@ def get_languages_list():
 
 
 def generate_branding_variables(datastructure):
-    cloud_portal = Product.objects.get(customizations__name=settings.CUSTOMIZATION,
-                                       product_type=get_cloud_portal_product().product_type)
-    branding_context = Context.objects.get(name='branding', product_type=get_cloud_portal_product().product_type)
+    cloud_portal = Asset.objects.get(customizations__name=settings.CUSTOMIZATION,
+                                       asset_type=get_cloud_portal_asset().asset_type)
+    branding_context = Context.objects.get(name='branding', asset_type=get_cloud_portal_asset().asset_type)
 
     brands = [
-        (ds, ds.find_actual_value(product=cloud_portal))
+        (ds, ds.find_actual_value(asset=cloud_portal))
         for ds in branding_context.datastructure_set.all()
         if 'shortcut' in ds.meta_settings
     ]
@@ -79,7 +80,7 @@ class CustomContextForm(forms.Form):
         super(CustomContextForm, self)
         self.fields.pop('language')
 
-    def add_fields(self, product, context, language, user):
+    def add_fields(self, asset, context, language, user):
         data_structures = context.datastructure_set.all()
 
         if len(data_structures) < 1:
@@ -88,7 +89,7 @@ class CustomContextForm(forms.Form):
         if not context.translatable:
             self.remove_language()
 
-        is_published = product.version_id() > 0
+        is_published = asset.version_id() > 0
         can_edit_advanced = user.is_superuser or user.has_perm('cms.edit_advanced')
 
         for data_structure in data_structures:
@@ -111,12 +112,15 @@ class CustomContextForm(forms.Form):
                     ds_description += "<br>This record is the same for every language."
                 ds_language = None
 
-            record_value = data_structure.find_actual_value(product, ds_language, draft=True)
+            record_value = data_structure.find_actual_value(asset, ds_language, draft=True)
 
-            widget_type = forms.TextInput(attrs={'size': 80, 'placeholder': data_structure.default})
+            widget_type = forms.TextInput(attrs={'size': 80, 'placeholder': data_structure.placeholder})
 
             # If the data_structure is protected and published require users to have the edit advanced permission
             disabled = not can_edit_advanced and (data_structure.protected and is_published or data_structure.advanced)
+            # Disable if datastructure is translatable and language is not default
+            disabled = disabled or (not data_structure.translatable and language != asset.default_language
+                                    and context.translatable)
 
             if data_structure.type in [DataStructure.DATA_TYPES.long_text,
                                        DataStructure.DATA_TYPES.object,
@@ -159,16 +163,24 @@ class CustomContextForm(forms.Form):
                     self.fields[data_structure.name].widget.attrs['size'] = file_size
                 continue
 
-            elif data_structure.type == DataStructure.DATA_TYPES.select:
-                queryset = data_structure.meta_settings['options'] if 'options' in data_structure.meta_settings else []
-                queryset = [(choice, choice) for choice in queryset]
-                if 'multi' in data_structure.meta_settings and data_structure.meta_settings['multi']:
-                    if record_value:
-                        record_value = json.loads(record_value)
+            elif data_structure.type in [DataStructure.DATA_TYPES.select, DataStructure.DATA_TYPES.multiselect]:
+                options = data_structure.meta_settings['options'] if 'options' in data_structure.meta_settings else []
+                choices = []
+                for choice in options:
+                    if type(choice) == dict:
+                        choices.append((choice['label'], choice['label']))
+                    else:
+                        choices.append((choice, choice))
+
+                for i in range(len(record_value)):
+                    if type(record_value[i]) == dict:
+                        record_value[i] = record_value[i]['label']
+
+                if data_structure.type == DataStructure.DATA_TYPES.multiselect:
                     self.fields[data_structure.name] = forms.MultipleChoiceField(label=ds_label,
                                                                                  help_text=ds_description,
                                                                                  initial=record_value,
-                                                                                 choices=queryset,
+                                                                                 choices=choices,
                                                                                  required=False,
                                                                                  disabled=disabled,
                                                                                  widget=forms.CheckboxSelectMultiple(attrs={'class': 'nodots'}))
@@ -176,7 +188,7 @@ class CustomContextForm(forms.Form):
                     self.fields[data_structure.name] = forms.ChoiceField(label=ds_label,
                                                                          help_text=ds_description,
                                                                          initial=record_value,
-                                                                         choices=queryset,
+                                                                         choices=choices,
                                                                          required=False,
                                                                          disabled=disabled)
                 continue
@@ -193,7 +205,10 @@ class CustomContextForm(forms.Form):
 
             validator = RegexValidator('')
             if data_structure.type == DataStructure.DATA_TYPES.text and 'regex' in data_structure.meta_settings:
-                validator = RegexValidator(data_structure.meta_settings['regex'])
+                pattern = data_structure.meta_settings['regex']
+                if not pattern.endswith('$'):
+                    pattern = f'{pattern}$'
+                validator = RegexValidator(pattern)
 
             self.fields[data_structure.name] = forms.CharField(required=False,
                                                                label=ds_label,
@@ -204,7 +219,7 @@ class CustomContextForm(forms.Form):
                                                                validators=[validator])
 
 
-class ProductSettingsForm(forms.Form):
+class AssetSettingsForm(forms.Form):
     file = forms.FileField(
         label="File",
         help_text="Archive with static files and images for content or structure.json file.",
@@ -218,18 +233,18 @@ class ProductSettingsForm(forms.Form):
             ('generate_json', 'Generate structure template based on archive'),
             ('merge_with_db', 'Generate structure using archive and db'),
             ('update_structure',
-             'Update CMS structure and default values based on archive with structure.json and product_type template, '
+             'Update CMS structure and default values based on archive with structure.json and asset_type template, '
              'or upload just the structure.json'),
-            ('update_content', 'Upload content files for product')
+            ('update_content', 'Upload content files for asset')
         )
     )
 
 
-class ProductForm(forms.ModelForm):
+class AssetForm(forms.ModelForm):
     publish_all_customizations = forms.BooleanField(required=False, label='Publish to all Customizations', initial=True)
 
     class Meta:
-        model = Product
+        model = Asset
         exclude = []
         widgets = {
             'created_by': autocomplete.ModelSelect2(url='account-autocomplete',
@@ -245,18 +260,18 @@ class ProductForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
         # Do the normal form initialisation.
-        super(ProductForm, self).__init__(*args, **kwargs)
+        super(AssetForm, self).__init__(*args, **kwargs)
         self.publish_all = False
-        if self.instance.product_type and self.instance.product_type.single_customization:
+        if self.instance.asset_type and self.instance.asset_type.single_customization:
             # used for removing customizations that are already in use from the multiple choice field,
             if 'customizations' in [field.name for field in self.visible_fields()]:
-                product_type_customizations = self.instance.product_type.get_customizations(self.instance)\
+                asset_type_customizations = self.instance.asset_type.get_customizations(self.instance)\
                     .exclude(customizations__name=self.instance.customizations.first())
                 self.fields['customizations'].queryset = Customization.objects.all(). \
-                    exclude(name__in=product_type_customizations)
+                    exclude(name__in=asset_type_customizations)
 
         if self.user and not self.user.is_superuser and not self.instance.pk:
-            self.fields['product_type'].queryset = ProductType.objects.exclude(advanced=True)
+            self.fields['asset_type'].queryset = AssetType.objects.exclude(advanced=True)
             self.fields['created_by'] = forms.ModelChoiceField(
                 queryset=Account.objects.filter(id=self.user.id), empty_label=None
             )
@@ -269,27 +284,32 @@ class ProductForm(forms.ModelForm):
     def clean(self):
         cleaned_data = super().clean()
         customizations = cleaned_data.get('customizations')
-        product_type = cleaned_data.get('product_type')
+        asset_type = cleaned_data.get('asset_type')
 
         if self.instance.pk:
             if not customizations:
                 customizations = self.instance.customizations.all()
-            if not product_type:
-                product_type = self.instance.product_type
+            if not asset_type:
+                asset_type = self.instance.asset_type
 
         if ('publish_all_customizations' in cleaned_data and cleaned_data['publish_all_customizations']
-                or self.publish_all) and not product_type.single_customization:
+                or self.publish_all) and not asset_type.single_customization:
             cleaned_data['customizations'] = Customization.objects.all()
         else:
             num_customizations = len(customizations)
 
-            if product_type.single_customization:
+            if asset_type.single_customization:
                 if num_customizations > 1:
                     raise forms.ValidationError(f"Too many customizations selected for "
-                                                f"{ProductType.PRODUCT_TYPES[product_type.type]}.")
-                if customizations.filter(name__in=product_type.get_customizations(self.instance)).exists():
+                                                f"{AssetType.ASSET_TYPES[asset_type.type]}.")
+                if customizations.filter(name__in=asset_type.get_customizations(self.instance)).exists():
                     raise forms.ValidationError(f"Customization is already used for a "
-                                                f"{ProductType.PRODUCT_TYPES[product_type.type]} product.")
+                                                f"{AssetType.ASSET_TYPES[asset_type.type]} asset.")
+
+        unique, error_field = are_asset_datarecords_unique(self.instance, customizations)
+        if not unique:
+            raise forms.ValidationError(f'Cannot apply customizations because there is a uniqueness conflict '
+                                        f'on the {error_field.name} field')
 
         return cleaned_data
 

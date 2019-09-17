@@ -1,8 +1,8 @@
-มีรุ่นใหม่สำหรับการตรวจสอบ {{ message.product }}({{message.product_type}})
+มีรุ่นใหม่สำหรับการตรวจสอบ {{ message.asset }}({{message.asset_type}})
 
-คลิกที่ลิงก์เพื่อดูร่าง {{ message.id }} สำหรับ {{ message.product }}
+คลิกที่ลิงก์เพื่อดูร่าง {{ message.id }} สำหรับ {{ message.asset }}
 
-ลิงก์ไปยังบทวิจารณ์: {{ config.portal_url }}/ admin / cms / productcustomizationreviewreview /{{ message.id }}/ change /
+Link to review: {{ config.portal_url }}/admin/cms/assetcustomizationreview/{{ message.id }}/change/
 
 ในหน้านี้คุณสามารถทำได้
 1) สร้างตัวอย่างเพื่อดูการเปลี่ยนแปลงล่าสุด

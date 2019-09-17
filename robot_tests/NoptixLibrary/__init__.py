@@ -62,6 +62,13 @@ class NoptixLibrary(object):
             not_found = "No element found with style attribute " + styleAttribute
             raise AssertionError(not_found)
 
+    def element_style_should_be(self, locator, styleAttribute, expectedValue):
+        observedValue = self.get_element_style(locator, styleAttribute)
+        if observedValue == expectedValue:
+            pass
+        else:
+            raise AssertionError("Expected: " + expectedValue + "\nObserved: " + observedValue)
+
     def wait_until_textfield_contains(self, locator, expected, timeout=10):
         seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
         timeout = timeout + time.time()

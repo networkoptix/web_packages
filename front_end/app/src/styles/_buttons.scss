@@ -49,12 +49,13 @@ button, .btn {
 }
 
 .btn.btn-default, .btn.btn-dropdown-toggle {
-    color            : $dark9;
-    background-color : $light4;
+    color            : $dark9 !important;
+    background-color : $light4 !important;
     box-shadow       : inset 0 -1px 0 0 $light7;
+    font-family      : $font-family-medium;
     
     &:hover:not([disabled]):not(.disabled) {
-        background-color : $light5;
+        background-color : $light5 !important;
         box-shadow       : inset 0 -1px 0 0 $light8;
     }
     
@@ -67,12 +68,12 @@ button, .btn {
 
 .btn.btn-primary {
     color            : $light1 !important;
-    background-color : $brand_core;
-    border-color     : transparent;
+    background-color : $brand_core !important;
+    border-color     : transparent !important;
     box-shadow       : inset 0 -1px 0 0 $brand_d2;
     
     &:hover:not([disabled]):not(.disabled) {
-        background-color : $brand_d1;
+        background-color : $brand_d1 !important;
         box-shadow       : inset 0 -1px 0 0 $brand_d3;
     }
     
@@ -123,6 +124,18 @@ button, .btn {
     }
 }
 
+.btn.btn-menu {
+    height           : 28px;
+    color            : $dark9;
+    border           : 1px solid $light10;
+    background-color : transparent;
+    max-width        : 180px;
+    display          : flex;
+    align-content    : center;
+    justify-content  : center;
+    border-radius    : $border-radius-base !important;
+}
+
 .btn.btn-clear {
     color            : $dark9;
     background-color : transparent;
@@ -157,13 +170,15 @@ button, .btn {
     padding-left : 0;
     
     .back-arrow {
-        width               : 40px;
-        height              : 32px;
+        width               : 20px;
+        height              : 20px;
         background-image    : url('/static/images/tutorial_arrow.png') !important;
         background-repeat   : no-repeat;
         background-size     : 20px 20px;
         background-position : center;
         transform           : scaleX(-1);
+        float               : left;
+        margin-right        : .5rem;
         
         @media only screen and (-webkit-min-device-pixel-ratio : 2), only screen and (min-device-pixel-ratio : 2) {
             background-image : url('/static/images/tutorial_arrow@2x.png') !important;
@@ -210,7 +225,7 @@ button, .btn {
     &:hover {
         color: $light1;
     }
-    
+
     .close-button {
         position        : absolute;
         right           : 0;
@@ -325,15 +340,15 @@ button, .btn {
     @include media-breakpoint-down(md) {
         padding : 0 .75rem;
     }
-    
+
     .glyphicon {
         display : block;
-        margin  : 0;
+        margin: 0;
         @include media-breakpoint-up(md) {
             display : none;
         }
     }
-    
+
     .btn-caption {
         display : none;
         @include media-breakpoint-up(md) {
@@ -341,3 +356,4 @@ button, .btn {
         }
     }
 }
+

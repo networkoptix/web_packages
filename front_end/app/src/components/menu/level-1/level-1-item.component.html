@@ -1,6 +1,11 @@
-<a class="menu-level-1"
+
+<a class="menu-level-1 ellipsis"
    [ngClass]="{'selected': selected }"
    [id]="item.id"
    [routerLink]="[itemPath]"
-   [queryParams]="item.query"
-   [innerHtml]="item.label"></a>
+   [queryParams]="item.query">
+    <div class="menu-level-1-icon" *ngIf="item.icon">
+        <span class="m-0 glyphicon" [ngClass]="item.icon"></span>
+    </div>
+    {{item.label}}
+</a>

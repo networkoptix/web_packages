@@ -1,27 +1,36 @@
 const fs = require('fs');
-const path = require('path');
+// const path = require('path');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const common = require('./webpack.common.js');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 const ENV = process.env.ENV = process.env.NODE_ENV = 'dev';
+const host = '0.0.0.0';
+const port = 9000;
+const cloudInstance = process.env.CLOUD_INSTANCE || 'https://cloud-dev2.hdw.mx';
+const localStatic = `https://${host}:${port}`;
 
 module.exports = merge(common, {
     devtool  : 'cheap-module-eval-source-map',
     devServer: {
         contentBase       : './dist',
         hot               : true,
-        host              : '0.0.0.0',
-        port              : 9000,
+        host              : host,
+        port              : port,
         proxy             : [
             {
+                context: ['/api/utils/language'],
+                target: localStatic,
+                pathRewrite: { '^/api/utils/language': 'language_compiled.json'},
+                changeOrigin: true,
+                secure: false
+            },
+            {
                 context: [ '/api/', '/gateway/' ],
-                // target : 'http://localhost:8000',
-                // target : 'https://cloud-dev2.hdw.mx',
-                target : 'https://cloud-test.hdw.mx',
+                target : cloudInstance,
                 changeOrigin: true,
                 //secure: false
 
@@ -29,7 +38,7 @@ module.exports = merge(common, {
             // Rewrite English translations and static pages to be served from DEV files
             {
                 context     : '/static/lang_en_US/',
-                target      : 'https://0.0.0.0:9000',
+                target      : localStatic,
                 pathRewrite : { '^/static/lang_en_US': '' },
                 changeOrigin: true,
                 secure      : false
@@ -37,14 +46,14 @@ module.exports = merge(common, {
             // Rewrite Russian translations and static pages to be served from DEV files
             {
                 context: '/static/lang_ru_RU/',
-                target: 'https://0.0.0.0:9000',
+                target: localStatic,
                 pathRewrite: {'^/static/lang_ru_RU': ''},
                 changeOrigin: true,
                 secure: false
             },
             {
                 context     : '/static/',
-                target      : 'https://0.0.0.0:9000',
+                target      : localStatic,
                 pathRewrite : { '^/static': '' },
                 changeOrigin: true,
                 secure      : false

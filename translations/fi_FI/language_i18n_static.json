@@ -1,4 +1,19 @@
 {
+	"account": {
+		"accountSavedSuccess": "Tilisi on onnistuneesti päivitetty",
+		"activationLinkSent": "Aktivointilinkki lähetetty",
+		"passwordChangedSuccess": "Tilisi on onnistuneesti päivitetty",
+		"changePassword": "Vaihda salasana",
+		"newPasswordLabel": "Uusi salasana",
+		"saveChanges": "Tallenna"
+	},
+	"activeActions": {
+		"sendConfirm": "Lähetä aktivointilinkki uudelleen",
+		"resetPassword": "Vaihda salasana",
+		"setNewPassword": "Tallenna salasana",
+		"setNewPasswordLabel": "Uusi salasana"
+	},
+	"clientProtocol": "%CLIENT_PROTOCOL%:",
 	"search": {
 		"Search": "Etsi",
 		"search_ipvd": "Hae mallin tai valmistajan mukaan",
@@ -38,7 +53,7 @@
 		"groups": {
 			"windows": {
 				"label": "Windows",
-				"supported": "7, 8, 8,1, 10, Server 2008, Server 2012"
+				"supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
 			},
 			"mac": {
 				"label": "Mac OS",
@@ -89,12 +104,12 @@
 		},
 		"releasesTypes": {
 			"beta": "Beta",
-			"betas": "Beta-versioita",
-			"rc": "Julkaisuehdokkaat",
-			"release": "Julkaisu",
-			"releases": "Julkaisut",
-			"patch": "Korjaus",
-			"patches": "Korjaukset"
+			"betas": "Betas",
+			"rc": "Release Candidate",
+			"release": "Release",
+			"releases": "Releases",
+			"patch": "Patch",
+			"patches": "Patches"
 		}
 	},
 	"ipvd": {
@@ -103,8 +118,8 @@
 		"vendor": "Valmistaja",
 		"model": "Malli",
 		"hardwareType": "Tyyppi",
-		"maxResolution": "Maks. Resoluutio",
-		"maxFps": "Max FPS",
+		"maxResolution": "<span>Max</span><br><span>Resolution</span>",
+		"maxFps": "<span>Max</span><br><span>FPS</span>",
 		"primaryCodec": "Koodekki",
 		"isAudioSupported": "Ääni",
 		"isTwAudioSupported": "2-suuntainen ääni",
@@ -138,6 +153,7 @@
 		"disclaimer": "Tämä luettelo rajoittuu löydettyihin laitteisiin {{vmsName}}, joissa käyttäjät ovat sallineet automaattisen raportoinnin laitteen määrityksistä{{companyName}}. Henkilökohtaisia tietoja ei kerätä ja jokainen käyttäjä pysyy täysin nimettömänä."
 	},
 	"integration": {
+		"myIntegrationsLabel": "Mine",
 		"previewRibbonText": "Tällä sivulla on esikatselu viimeisimmistä muutoksista, ja se ei kata yleisesti saatavilla olevia versioita.",
 		"backToEditText": "Takaisin muokkausliittymiin",
 		"Access Control": "Kulunvalvonta",
@@ -151,10 +167,41 @@
 		"feedback": "Varmista, että määrität kameramallin ja valmistajan..."
 	},
 	"pageTitles": {
+		"template": "{{title}} %CLOUD_NAME%",
+		"default": "%CLOUD_NAME%",
+		"registerSuccess": "Tervetuloa",
+		"register": "Luo tili",
+		"changePassword": "Vaihda salasana -",
+		"account": "Tilin asetukset -",
+		"systems": "Järjestelmät",
+		"system": "Järjestelmä",
+		"systemShare": "Jaa järjestelmä -",
+		"activate": "Aktivoi tili",
+		"activateSent": "Aktivoi tili",
+		"activateSuccess": "Tili aktivoitu",
+		"activateCode": "Aktivoi tili",
+		"restorePassword": "Vaihda salasana -",
+		"restorePasswordSuccess": "Salasana tallennettu",
+		"restorePasswordCode": "Vaihda salasana -",
+		"view": "Näytä kamerat - ",
+		"debug": "Vianetsintä",
+		"login": "Kirjaudu sisään -",
+		"download": "Lataa %VMS_NAME%",
+		"downloadPlatform": "Lataa %VMS_NAME% ",
+		"pageNotFound": "Sivua ei löydy",
 		"supportedDevices": "Tuetut laitteet",
 		"integrations": "Integraatiot"
 	},
 	"dialogs": {
+		"okButton": "OK",
+		"cancelButton": "Peruuta",
+		"loginTitle": "Kirjaudu sisään %CLOUD_NAME%",
+		"loginButton": "Kirjaudu sisään",
+		"logoutAuthorisedTitle": "Olet jo kirjautunut sisään",
+		"logoutAuthorisedContinueButton": "Jatka",
+		"logoutAuthorisedLogoutButton": "Kirjaudu ulos",
+		"noClientDetectedTitle": "Asenna %VMS_NAME% nähdäksesi järjestelmän",
+		"download": "Lataa %VMS_NAME%",
 		"merge": {
 			"connectToCloud": "Yhdistä järjestelmä, johon haluat yhdistää tämän, <strong>{{cloudName}}</strong> tai yhdistä paikallisesti <strong>{{vmsName}}</strong> -Client-sovelluksen avulla.",
 			"mergeConfirmation": "Olet yhdistämässä järjestelmiä <strong>{{primarySystem}}</strong> ja <strong>{{secondarySystem}}</strong>. Asetukset ja nimi otetaan <strong>{{primarySystem}}</strong>.",
@@ -174,17 +221,183 @@
 			},
 			"topic": {
 				"contact_sales": "Ota yhteyttä {{product}} myyntiin",
-				"contact_support": "Pyydä tukea {{product}}",
+				"contact_support": "Ota yhteyttä tukeen {{product}}",
 				"integration_feedback": "Palaute integraatiosta {{product}}",
 				"ipvd_feedback_page": "Palaute kameran sivulle",
 				"ipvd_feedback_device": "Palaute{{product}}"
 			}
+		},
+		"sharing": {
+			"confirmOwner": "Jos vaihdat järjestelmän omistajaa, peruutat omistusoikeuden nykyisestä tilistä. Tämä toimenpide on peruuttamaton. Oletko varma?",
+			"shareTitle": "Lisää",
+			"shareConfirmButton": "Lisää",
+			"editShareTitle": "Muokkaa käyttöoikeuksia",
+			"editShareConfirmButton": "Tallenna",
+			"permissionsSaved": "Uudet käyttöoikeudet tallennettu"
+		}
+	},
+	"errorCodes": {
+		"ok": "ok",
+		"cantSendActivationPrefix": "Vahvistussähköpostia ei voida lähettää",
+		"cantDisconnectSystemPrefix": "Järjestelmää ei voi poistaa",
+		"cantUnshareWithMeSystemPrefix": "Järjestelmää ei voi poistaa",
+		"cantSharePrefix": "Järjestelmää ei voi jakaa",
+		"cantGetUsersListPrefix": "Käyttäjien luettelo ei ole käytettävissä",
+		"cantGetSystemsListPrefix": "Järjestelmäluettelo ei ole käytettävissä",
+		"cantRegisterPrefix": "Tapahtui virhe",
+		"cantGetSystemInfoPrefix": "Järjestelmätiedot eivät ole käytettävissä",
+		"cantChangeAccountPrefix": "Muutoksia ei voida tallentaa",
+		"cantChangePasswordPrefix": "Salasanaa ei voida tallentaa",
+		"cantActivatePrefix": "Tiliäsi ei voida aktivoida",
+		"cantSendConfirmationPrefix": "Vahvistussähköpostia ei voida lähettää",
+		"notAuthorized": "Väärä salasana",
+		"brokenAccount": "Odottamaton ongelma tilillä. <a href=\"/restore_password\">Palauta tili</a>",
+		"wrongParameters": "Jotkin lomakkeen parametrit ovat virheellisiä",
+		"wrongCode": "Tili on jo aktivoitu tai vahvistuskoodi on virheellinen",
+		"wrongCodeRestore": "Vahvistuskoodi on jo käytetty tai virheellinen",
+		"wrongAuthCode": "Koodi on vanhentunut tai virheellinen",
+		"forbidden": "Sinulla ei ole oikeuksia tämän toiminnon suorittamiseen",
+		"accountNotActivated": "Tätä tiliä ei ole vielä aktivoitu. <a href=\"/activate\">Lähetä aktivointilinkki uudelleen</a>",
+		"accountBlocked": "Tämä tili on estetty tilapäisesti. Yritä uudelleen muutaman minuutin.",
+		"notFound": "Ei löydy",
+		"alreadyExists": "Tili on jo olemassa",
+		"unknownError": "Odottamaton virhe",
+		"accountAlreadyActivated": "Käyttäjätilisi on jo aktivoitu",
+		"emailNotFound": "Tiliä ei ole olemassa.",
+		"EmailAlreadyExists": "Tämä sähköpostiosoite on jo rekisteröity",
+		"oldPasswordMistmatch": "Salasana on virheellinen.",
+		"passwordMismatch": "Väärä salasana",
+		"cantEditYourself": "Oman käyttöoikeuden muuttaminen ei ole sallittua",
+		"cantEditAdmin": "Tällä käyttäjällä on järjestelmänvalvojan oikeudet",
+		"cantOpenClient": "%VMS_NAME% sovellusta ei havaita. <a href=\"/download\">Lataa</a>",
+		"lostConnection": "Yhteys {{systemName}} menetetty",
+		"thisSystem": "järjestelmä",
+		"oldSafariNotSupported": "Safari-selaimen versio 10 vanhempia ei tueta",
+		"DUPLICATE_MEDIASERVER_FOUND": "Jotkin palvelimet ovat olemassa molemmissa järjestelmissä - valituissa ja nykyisissä järjestelmissä.<br>Poista offline- ja yhteensopimattomat palvelimet jokaisesta järjestelmästä ja yritä uudelleen.",
+		"mergedSystemIsOffline": "Järjestelmä <strong>{{failedSystem}}</strong> on offline-tilassa.",
+		"INCOMPATIBLE": "Järjestelmissä on erilaisia ohjelmistoversioita. Päivitä molemmat <a href=\"/download\">viimeisin versio</a>kohdalle.",
+		"FAIL": "Järjestelmä <strong>{{failedSystem}}</strong> ei ole tällä hetkellä saavutettavissa.<br>Yritä uudelleen hetken kuluttua tai ota yhteys <a href=\"%SUPPORT_LINK%\" target=\"_blank\">tukeen</a>.",
+		"unknownMergeError": "Tuntematon virhe. Voit yrittää päivittää sivua ja toistaa yrityksen. Jos ongelma jatkuu - ota yhteyttä <a href=\"%SUPPORT_LINK%\" target=\"_blank\">tukeen</a>."
+	},
+	"passwordRequirements": {
+		"good": "hyvä",
+		"fair": "kohtalainen",
+		"fairMessage": "Käytä numeroita, isoja ja pieniä kirjaimia ja erikoismerkkejä vahvistaaksesi salasanasi",
+		"minLength": "liian lyhyt",
+		"minLengthMessage": "Salasanan pitää olla vähintään 8 merkkiä pitkä",
+		"required": "virheellinen",
+		"requiredMessage": "Käytä vain latinankielisiä kirjaimia, numeroita ja näppäimistön symboleja",
+		"weak": "heikko",
+		"weakMessage": "Käytä numeroita, isoja ja pieniä kirjaimia ja erikoismerkkejä vahvistaaksesi salasanasi",
+		"strongMessage": "Vahva salasana!",
+		"common": "liian yleinen",
+		"commonMessage": "Tämä salasana on maailman suosituimpia salasanoja",
+		"missingMessage": "Salasana tarvitaan"
+	},
+	"registration": {
+		"agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
+	},
+	"system": {
+		"yourSystem": "Järjestelmäsi",
+		"mySystemSearch": "IMeMyMine",
+		"unavailable": "Järjestelmä ei ole tavoitettavissa",
+		"offline": "Järjestelmään ei saada yhteyttä",
+		"openClient": "Avaa %VMS_NAME%",
+		"openClientNoSystem": "Avaa %VMS_NAME%",
+		"confirmMergeAction": "Yhdistä",
+		"mergeSystemTitle": "Yhdistä järjestelmät",
+		"confirmRenameTitle": "Järjestelmänimi",
+		"confirmRenameAction": "Tallenna",
+		"successRename": "Järjestelmän nimi on tallennettu",
+		"confirmDisconnectTitle": "Irrota järjestelmä %CLOUD_NAME%?",
+		"confirmDisconnectAction": "Katkaise yhteys",
+		"confirmUnshareFromMe": "Olet poistamassa tämän järjestelmän tilistäsi. Et voi enää käyttää tätä järjestelmää. Oletko varma?",
+		"confirmUnshareFromMeTitle": "Katkaise yhteys järjestelmään?",
+		"confirmUnshareFromMeAction": "Katkaise yhteys",
+		"confirmUnshare": "Tämä käyttäjä ei voi käyttää järjestelmää. Oletko varma?",
+		"confirmUnshareTitle": "Poista käyttäjä?",
+		"confirmUnshareAction": "Poista",
+		"successDisconnected": "Järjestelmä irrotetaan onnistuneesti %CLOUD_NAME%",
+		"successDeleted": "Järjestelmä {{systemName}} poistetaan onnistuneesti tililtäsi",
+		"mergeFailed": "Järjestelmien yhdistäminen epäonnistui",
+		"mergeStart": "Järjestelmät ovat alkaneet yhdistyä",
+		"mergeSuccess": "Järjestelmän yhdistäminen on valmis",
+		"permissionsRemoved": "Käyttöoikeudet poistettiin {{email}}",
+		"unknownName": "Järjestelmän tuntematon nimi (pilviliitoksen aiheuttama)"
+	},
+	"systemStatuses": {
+		"activated": "aktivoitu",
+		"incompatible": "yhteensopimaton",
+		"merging": "liitetään",
+		"notActivated": "ei aktivoitu",
+		"online": "yhteys muodostettu",
+		"offline": "ei yhteyttä",
+		"unavailable": "ei saatavilla"
+	},
+	"accessRoles": {
+		"disabled": {
+			"label": "Poissa käytöstä",
+			"description": "Käyttäjä on poistettu käytöstä ja ei voi kirjautua järjestelmään"
+		},
+		"Owner": {
+			"label": "Omistaja",
+			"description": "Rajoittamaton pääsy, mukaan lukien kyky jakaa ja yhdistää / irroittaa järjestelmää pilvestä"
+		},
+		"Viewer": {
+			"label": "Katsoja",
+			"description": "Voi katsella reaaliaikaista videota ja selata arkistoa"
+		},
+		"Live Viewer": {
+			"label": "Reaaliaikainen katselu",
+			"description": "Voit katsella vain reaaliaikaista videota"
+		},
+		"Advanced Viewer": {
+			"label": "Edistyneempi katselu",
+			"description": "Voi katsella reaaliaikasta videota, selata arkistoa, määrittää kameroita, ohjata PTZ: tä jne"
+		},
+		"Administrator": {
+			"label": "Järjestelmänvalvoja",
+			"description": "Rajoittamaton pääsy mukaan lukien kyky jakaa"
+		},
+		"Custom": {
+			"label": "Asiakassuhde",
+			"description": "Käytä %VMS_NAME% Client -sovellusta mukautettujen käyttöoikeuksien määrittämiseen"
+		},
+		"cloudAdmin": {
+			"label": "Järjestelmänvalvoja",
+			"description": "Voi konfiguroida järjestelmää ja jakaa sen"
+		},
+		"customRole": {
+			"label": "Mukautettu rooli",
+			"description": "Mukautettu käyttäjärooli Järjestelmässä"
+		},
+		"owner": {
+			"label": "Omistaja",
+			"description": "Rajoittamaton pääsy, mukaan lukien kyky jakaa ja yhdistää / irroittaa järjestelmää pilvestä"
+		},
+		"viewer": {
+			"label": "Katsoja",
+			"description": "Voi katsella reaaliaikaista videota ja selata arkistoa"
+		},
+		"liveViewer": {
+			"label": "Reaaliaikainen katselu",
+			"description": "Voit katsella vain reaaliaikaista videota"
+		},
+		"advancedViewer": {
+			"label": "Edistyneempi katselu",
+			"description": "Voi katsella reaaliaikasta videota, selata arkistoa, määrittää kameroita, ohjata PTZ: tä jne"
+		},
+		"custom": {
+			"label": "Asiakassuhde",
+			"description": "Käytä %VMS_NAME% Client -sovellusta mukautettujen käyttöoikeuksien määrittämiseen"
 		}
 	},
 	"privacyPolicy": {
 		"integration": "Lähettämällä tämän lomakkeen hyväksyt, että sinuun otetaan yhteyttä {{INTEGRATION_COMPANY}} ja / tai %COMPANY_NAME%.\nLöydät {{INTEGRATION_COMPANY}} tietosuojakäytäntöä <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">täältä</a> ja %COMPANY_NAME% tietosuojakäytäntöä <a href=\"%PRIVACY_LINK%\" target=\"blank\">täältä</a> jotka sisältävät ohjeet suostumuksen peruuttamiselle.",
 		"ipvd": "Lähettämällä tämän lomakkeen hyväksyt %COMPANY_NAME%.\nLöydät %COMPANY_NAME% tietosuojakäytäntö <a href=\"%PRIVACY_LINK%\" target=\"blank\">täällä</a>, joka sisältää ohjeita siitä, miten peruuttaa suostumuksesi."
 	},
+	"systemAdministration": "Järjestelmän hallinta",
+	"users": "Käyttäjät",
 	"testedVersionLabel": "Testattu {{vmsName}} versiolla:",
 	"testedVersionsLabel": "Testattu {{vmsName}} versiolla:",
 	"About %CLOUD_NAME%": "Tietoja %CLOUD_NAME%",
@@ -193,5 +406,12 @@
 	"Privacy": "Tietosuoja",
 	"Support": "Tuki",
 	"Supported Devices": "Tuetut laitteet",
-	"Terms": "Ehdot"
+	"Terms": "Ehdot",
+	"pleaseSelect": "Please select...",
+	"WHEN_MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{{targetSystemName}}</strong> System, and this system will be deleted.",
+	"FAILED_SYSTEM_DESCR": "This link is broken,<br>System may be disconnected from %CLOUD_NAME%,<br>Access to this System may be revoked, <br>or you may be logged into a different account.",
+	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "Sinulla ei ole järjestelmiä, jotka on kytketty %CLOUD_NAME%",
+	"NO_SYSTEMS_LOGIN": "Kirjaudu järjestelmään käyttämällä %VMS_NAME%",
+	"NO_SYSTEMS_GOTO_ADMINISTRATION": "Siirry \"Cloud\" -välilehdelle \"System Administration\" -valintaikkunassa",
+	"NO_SYSTEMS_CONNECT_SYSTEM": "Paina \"Yhdistä järjestelmä %CLOUD_NAME%\""
 }

@@ -9,19 +9,19 @@
     "emailSubject": "{{message.subject}}"
   },
   "contact_sales": {
-    "emailSubject": "Запрос на продажу {{message.product}}"
+    "emailSubject": "Запрос на продажу {{message.asset}}"
   },
   "contact_support": {
-    "emailSubject": "Запрос на поддержку по {{message.product}}"
+    "emailSubject": "Запрос на поддержку по {{message.asset}}"
   },
   "integration_feedback": {
-    "emailSubject": "Отзыв о {{message.product}}"
+    "emailSubject": "Отзыв о {{message.asset}}"
   },
   "ipvd_feedback": {
-    "emailSubject": "Отзыв о странице камеры{{#message.product}} для {{message.product}}{{/message.product}}"
+    "emailSubject": "Отзыв о странице камеры{{#message.asset}} для {{message.asset}}{{/message.asset}}"
   },
   "review_version": {
-    "emailSubject": "{{message.product_type}}: {{message.product}} есть новая версия для проверки"
+    "emailSubject": "{{message.asset_type}}: {{message.asset}} есть новая версия для проверки"
   },
   "restore_password": {
     "emailSubject": "Восстановление пароля"

@@ -1,4 +1,19 @@
 {
+	"account": {
+		"accountSavedSuccess": "您的帐户已成功保存",
+		"activationLinkSent": "激活链接已发送",
+		"passwordChangedSuccess": "您的帐户已成功保存",
+		"changePassword": "更改密码",
+		"newPasswordLabel": "新密码",
+		"saveChanges": "保存"
+	},
+	"activeActions": {
+		"sendConfirm": "重新发送激活链接",
+		"resetPassword": "重置密码",
+		"setNewPassword": "保存密码",
+		"setNewPasswordLabel": "新密码"
+	},
+	"clientProtocol": "%CLIENT_PROTOCOL%",
 	"search": {
 		"Search": "搜索",
 		"search_ipvd": "按型号或制造商搜索",
@@ -89,12 +104,12 @@
 		},
 		"releasesTypes": {
 			"beta": "Beta",
-			"betas": "测试版本",
+			"betas": "Betas",
 			"rc": "Release Candidate",
 			"release": "Release",
-			"releases": "版本发布",
+			"releases": "Releases",
 			"patch": "Patch",
-			"patches": "补丁"
+			"patches": "Patches"
 		}
 	},
 	"ipvd": {
@@ -103,8 +118,8 @@
 		"vendor": "制造商",
 		"model": "型号",
 		"hardwareType": "类型",
-		"maxResolution": "最大分辨率",
-		"maxFps": "每秒最大帧数（FPS）",
+		"maxResolution": "<span>Max</span><br><span>Resolution</span>",
+		"maxFps": "<span>Max</span><br><span>FPS</span>",
 		"primaryCodec": "编码器",
 		"isAudioSupported": "音频",
 		"isTwAudioSupported": "双向音频",
@@ -138,6 +153,7 @@
 		"disclaimer": "此列表仅限于在 {{vmsName}} 上找到的设备，用戶已同意将设备规格自动回报给 {{companyName}}。不会收集任何个人信息，每个用戶都将完全匿名。"
 	},
 	"integration": {
+		"myIntegrationsLabel": "Mine",
 		"previewRibbonText": "此页面是最新更改的预览，不与公开版本相符。",
 		"backToEditText": "返回编辑界面",
 		"Access Control": "门禁管理",
@@ -151,10 +167,41 @@
 		"feedback": "请确保已包含您的摄像机型号和制造商..."
 	},
 	"pageTitles": {
+		"template": "{{title}} %CLOUD_NAME%",
+		"default": "%CLOUD_NAME%",
+		"registerSuccess": "欢迎来到",
+		"register": "创建帐户中",
+		"changePassword": "更改密码-",
+		"account": "帐户设置-",
+		"systems": "系统.",
+		"system": "系统-",
+		"systemShare": "共享系统-",
+		"activate": "激活帐户-",
+		"activateSent": "激活帐户-",
+		"activateSuccess": "帐户激活 -",
+		"activateCode": "激活帐户-",
+		"restorePassword": "重置密码-",
+		"restorePasswordSuccess": "保存的密码-",
+		"restorePasswordCode": "重置密码-",
+		"view": "查看相机 - ",
+		"debug": "调试",
+		"login": "登录-",
+		"download": "下载 %VMS_NAME%",
+		"downloadPlatform": "下载的 %VMS_NAME% ",
+		"pageNotFound": "找不到页面",
 		"supportedDevices": "支持设备",
 		"integrations": "集成"
 	},
 	"dialogs": {
+		"okButton": "确定",
+		"cancelButton": "撤消",
+		"loginTitle": "登录到 %CLOUD_NAME%",
+		"loginButton": "登录",
+		"logoutAuthorisedTitle": "您已经登录",
+		"logoutAuthorisedContinueButton": "继续",
+		"logoutAuthorisedLogoutButton": "退出登录",
+		"noClientDetectedTitle": "安装 %VMS_NAME% 来查看您的系统",
+		"download": "下载 %VMS_NAME%",
 		"merge": {
 			"connectToCloud": "请将要与此合并的系统连接到 <strong>{{cloudName}}</strong> 或使用 <strong>{{vmsName}}</strong> 客户端进行本地合并。",
 			"mergeConfirmation": "您即将合并系统 <strong>{{primarySystem}}</strong> 和 <strong>{{secondarySystem}}</strong>。设置和名称将取自 <strong>{{primarySystem}}</strong>。",
@@ -179,12 +226,178 @@
 				"ipvd_feedback_page": "摄像机页面反馈",
 				"ipvd_feedback_device": "关于 {{product}} 反馈"
 			}
+		},
+		"sharing": {
+			"confirmOwner": "如果您更改系统所有者，将撤消从当前帐户的所有权。此操作是不可逆的。是否确定？",
+			"shareTitle": "添加",
+			"shareConfirmButton": "添加",
+			"editShareTitle": "编辑权限",
+			"editShareConfirmButton": "保存",
+			"permissionsSaved": "保存的新权限"
+		}
+	},
+	"errorCodes": {
+		"ok": "ok",
+		"cantSendActivationPrefix": "不能发送确认电子邮件",
+		"cantDisconnectSystemPrefix": "不能删除系统",
+		"cantUnshareWithMeSystemPrefix": "不能删除系统",
+		"cantSharePrefix": "不能共享系统",
+		"cantGetUsersListPrefix": "用户列表不可用",
+		"cantGetSystemsListPrefix": "系统列表不可用",
+		"cantRegisterPrefix": "出现错误",
+		"cantGetSystemInfoPrefix": "系统信息不可用",
+		"cantChangeAccountPrefix": "无法保存更改",
+		"cantChangePasswordPrefix": "无法保存密码",
+		"cantActivatePrefix": "无法激活您的帐户",
+		"cantSendConfirmationPrefix": "不能发送确认电子邮件",
+		"notAuthorized": "错误的密码。",
+		"brokenAccount": "帐户出现意外问题。 <a href=\"/restore_password\">恢复帐户</a>",
+		"wrongParameters": "窗体上的一些参数不正确",
+		"wrongCode": "已经激活帐户或确认码不正确",
+		"wrongCodeRestore": "确认代码已使用或不正确",
+		"wrongAuthCode": "代码已过期或不正确",
+		"forbidden": "您没有权限执行此操作",
+		"accountNotActivated": "此帐户尚未激活。<a href=\"/activate\"> 发送激活链接，再一次</a>",
+		"accountBlocked": "此帐户被阻止。请在几分钟后再试一次。",
+		"notFound": "找不到",
+		"alreadyExists": "此帐户已存在",
+		"unknownError": "发生意外的错误",
+		"accountAlreadyActivated": "此帐户已激活",
+		"emailNotFound": "帐户不存在.",
+		"EmailAlreadyExists": "此电子邮件已被注册",
+		"oldPasswordMistmatch": "当前密码不正确.",
+		"passwordMismatch": "错误的密码。",
+		"cantEditYourself": "不允许更改自己的权限",
+		"cantEditAdmin": "此用户具有管理员权限",
+		"cantOpenClient": "%VMS_NAME% 应用程序未检测到。<a href=\"/download\"> 下载</a>",
+		"lostConnection": "连接到 {{systemName}} 失去了",
+		"thisSystem": "系统",
+		"oldSafariNotSupported": "不支持10岁以上的Safari版本",
+		"DUPLICATE_MEDIASERVER_FOUND": "某些服务器列表并存于选定的和当前的两个系统中 。 <br>请从各系统中删除并断线不相容的服务器，然后重连一次。",
+		"mergedSystemIsOffline": "系统 <strong>{{failedSystem}}</strong> 处于离线状态。",
+		"INCOMPATIBLE": "系统有不同的软件版本。请将它们更新到 <a href=\"/download\">最新版本</a>。",
+		"FAIL": "系统 <strong>{{failedSystem}}</strong> 目前无法连上。<br>请稍后再试一次, 或联系 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">支持</a>。",
+		"unknownMergeError": "不明错误。您可以尝试刷新页面并重复尝试。如果问题仍然存在 - 请联系 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">支持</a>。"
+	},
+	"passwordRequirements": {
+		"good": "良好",
+		"fair": "一般",
+		"fairMessage": "使用数字、 上层和小写字母和特殊字符，使您更强的密码",
+		"minLength": "太短",
+		"minLengthMessage": "密码必须包含至少 8 个字符",
+		"required": "不正确",
+		"requiredMessage": "使用只有拉丁文字母、 数字和符号键盘，避免前导和尾随空格",
+		"weak": "弱",
+		"weakMessage": "使用数字、 上层和小写字母和特殊字符，使您更强的密码",
+		"strongMessage": "强密码 ！",
+		"common": "太常见",
+		"commonMessage": "此密码是在世界顶级最受欢迎的密码",
+		"missingMessage": "密码为必填项"
+	},
+	"registration": {
+		"agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
+	},
+	"system": {
+		"yourSystem": "您的系统",
+		"mySystemSearch": "我的",
+		"unavailable": "系统无法访问",
+		"offline": "系统处于离线状态",
+		"openClient": "在 %VMS_NAME% 中打开",
+		"openClientNoSystem": "打开 %VMS_NAME%",
+		"confirmMergeAction": "联网",
+		"mergeSystemTitle": "合并系统",
+		"confirmRenameTitle": "系统名称",
+		"confirmRenameAction": "保存",
+		"successRename": "保存的系统名称",
+		"confirmDisconnectTitle": "系统从 %CLOUD_NAME%断开 吗？",
+		"confirmDisconnectAction": "断开连接",
+		"confirmUnshareFromMe": "您将要断开此系统从您的帐户。你将无法再访问该系统。是否确定？",
+		"confirmUnshareFromMeTitle": "断开系统吗？",
+		"confirmUnshareFromMeAction": "断开连接",
+		"confirmUnshare": "此用户不能访问系统。是否确定？",
+		"confirmUnshareTitle": "删除用户？",
+		"confirmUnshareAction": "删除",
+		"successDisconnected": "系统已成功从 %CLOUD_NAME%断线",
+		"successDeleted": "从您的帐户成功删除系统 {{systemName}}",
+		"mergeFailed": "系统合并失败",
+		"mergeStart": "系统开始合并中",
+		"mergeSuccess": "系统合并完成",
+		"permissionsRemoved": "权限从 {{email}} 被刪除",
+		"unknownName": "未知的系统名称（由云合并引起）"
+	},
+	"systemStatuses": {
+		"activated": "激活",
+		"incompatible": "不兼容",
+		"merging": "合并中",
+		"notActivated": "未激活",
+		"online": "在线",
+		"offline": "离线",
+		"unavailable": "不可用"
+	},
+	"accessRoles": {
+		"disabled": {
+			"label": "禁用",
+			"description": "用户被禁用，无法登录到系统"
+		},
+		"Owner": {
+			"label": "所有者",
+			"description": "不受限制地的访问包括共享和从云连接或断开系统的能力"
+		},
+		"Viewer": {
+			"label": "浏览者",
+			"description": "可以查看实时视频和浏览存档"
+		},
+		"Live Viewer": {
+			"label": "实时浏览者",
+			"description": "只能查看实时视频"
+		},
+		"Advanced Viewer": {
+			"label": "高级浏览者",
+			"description": "可以查看实时视频，浏览存档，控制云台等"
+		},
+		"Administrator": {
+			"label": "管理员",
+			"description": "不受限制地的访问包括共享的能力"
+		},
+		"Custom": {
+			"label": "自定义",
+			"description": "使用 %VMS_NAME% 客户端应用程序可以设置自定义权限"
+		},
+		"cloudAdmin": {
+			"label": "管理员",
+			"description": "可以配置系统和共享它"
+		},
+		"customRole": {
+			"label": "自定义角色",
+			"description": "在系统中指定的自定义用户角色"
+		},
+		"owner": {
+			"label": "所有者",
+			"description": "不受限制地的访问包括共享和从云连接或断开系统的能力"
+		},
+		"viewer": {
+			"label": "浏览者",
+			"description": "可以查看实时视频和浏览存档"
+		},
+		"liveViewer": {
+			"label": "实时浏览者",
+			"description": "只能查看实时视频"
+		},
+		"advancedViewer": {
+			"label": "高级浏览者",
+			"description": "可以查看实时视频，浏览存档，配置摄像头，控制云台等"
+		},
+		"custom": {
+			"label": "自定义",
+			"description": "使用 %VMS_NAME% 客户端应用程序可以设置自定义权限"
 		}
 	},
 	"privacyPolicy": {
 		"integration": "提交表单即表示您同意与{{INTEGRATION_COMPANY}} 和/或 %COMPANY_NAME%联系。\n您可在<a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">浏览{{INTEGRATION_COMPANY}} 隐私政策</a> 和%COMPANY_NAME% 隐私政策<a href=\"%PRIVACY_LINK%\" target=\" blank\">这里</a> 可了解如何撤销您的同意。",
 		"ipvd": "提交表单即表示同意 %COMPANY_NAME%与您联系。\n您可在<a href=\"%PRIVACY_LINK%\" target=\"blank\">浏览 %COMPANY_NAME% 隐私政策</a> ，其中包含如何撤回同意。"
 	},
+	"systemAdministration": "系统管理",
+	"users": "用户",
 	"testedVersionLabel": "测试 {{vmsName}} 版本：",
 	"testedVersionsLabel": "测试 {{vmsName}} 版本：",
 	"About %CLOUD_NAME%": "关于 %CLOUD_NAME%",
@@ -193,5 +406,12 @@
 	"Privacy": "隐私政策",
 	"Support": "技术支持",
 	"Supported Devices": "支持设备",
-	"Terms": "条款"
+	"Terms": "条款",
+	"pleaseSelect": "Please select...",
+	"WHEN_MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{{targetSystemName}}</strong> System, and this system will be deleted.",
+	"FAILED_SYSTEM_DESCR": "This link is broken,<br>System may be disconnected from %CLOUD_NAME%,<br>Access to this System may be revoked, <br>or you may be logged into a different account.",
+	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "你有没有连接到 %CLOUD_NAME% 的系统",
+	"NO_SYSTEMS_LOGIN": "登录到您的系统使用 %VMS_NAME%",
+	"NO_SYSTEMS_GOTO_ADMINISTRATION": "转到\"系统管理\"对话框中的\"云\"选项",
+	"NO_SYSTEMS_CONNECT_SYSTEM": "按“将系统连接到 %CLOUD_NAME%”"
 }

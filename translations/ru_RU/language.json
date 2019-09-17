@@ -4,17 +4,6 @@
   "cloudName": "%CLOUD_NAME%",
   "vmsName": "%VMS_NAME%",
   "clientProtocol": "%CLIENT_PROTOCOL%:",
-  "dialogs": {
-    "okButton": "OK",
-    "cancelButton": "Отменить",
-    "loginTitle": "Войти в %CLOUD_NAME%",
-    "loginButton": "Войти",
-    "logoutAuthorisedTitle": "Вы уже выполнили вход",
-    "logoutAuthorisedContinueButton": "Продолжить",
-    "logoutAuthorisedLogoutButton": "Выход",
-    "noClientDetectedTitle": "Установите %VMS_NAME% для работы с системой",
-    "download": "Скачать %VMS_NAME%"
-  },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
     "default": "%CLOUD_NAME%",
@@ -168,14 +157,6 @@
     "commonMessage": "Этот пароль входит в список самых популярных паролей в мире",
     "missingMessage": "Пароль обязателен для заполнения"
   },
-  "sharing": {
-    "confirmOwner": "Если изменить владельца системы, она больше не будет принадлежать текущей учетной записи. Это действие необратимо. Вы уверены?",
-    "shareTitle": "Общий доступ",
-    "shareConfirmButton": "Общий доступ",
-    "editShareTitle": "Изменить полномочия",
-    "editShareConfirmButton": "Сохранить",
-    "permissionsSaved": "Новые полномочия сохранены"
-  },
   "system": {
     "yourSystem": "Ваша система",
     "mySystemSearch": "ЯМойМоя",
@@ -190,10 +171,9 @@
     "successRename": "Имя системы сохранено",
     "confirmDisconnectTitle": "Отключить систему от %CLOUD_NAME%?",
     "confirmDisconnectAction": "Отключить",
-    "confirmUnshareFromMe": "Вы собираетесь отключить эту систему от учетной записи. Вы не сможете больше иметь доступ к этой системе. Вы уверены?",
-    "confirmUnshareFromMeTitle": "Отключить систему?",
+    "confirmUnshareFromMe": "Вы не сможете больше заходить в эту cистему.",
+    "confirmUnshareFromMeTitle": "Отключить систему от вашей учетной записи?",
     "confirmUnshareFromMeAction": "Отключить",
-    "confirmUnshare": "Этот пользователь не сможет получить доступ к системе. Вы уверены?",
     "confirmUnshareTitle": "Удалить пользователя?",
     "confirmUnshareAction": "Удалить",
     "successDisconnected": "Система успешно отключена от %CLOUD_NAME%",
@@ -203,20 +183,6 @@
     "mergeSuccess": "Слияние системы завершено",
     "permissionsRemoved": "{{email}} был лишен полномочий",
     "unknownName": "Неизвестное имя для системы (вызвано облачным объединением систем)"
-  },
-  "account": {
-    "accountSavedSuccess": "Ваша учетная запись успешно сохранена",
-    "activationLinkSent": "Ссылка для активации отправлена",
-    "passwordChangedSuccess": "Ваша учетная запись успешно сохранена",
-    "changePassword": "Изменить пароль",
-    "newPasswordLabel": "Новый пароль",
-    "saveChanges": "Сохранить"
-  },
-  "activeActions": {
-    "sendConfirm": "Отправить ссылку еще раз",
-    "resetPassword": "Сброс пароля",
-    "setNewPassword": "Сохранить пароль",
-    "setNewPasswordLabel": "Новый пароль"
   },
   "regActions": {
     "passwordLabel": "Пароль",

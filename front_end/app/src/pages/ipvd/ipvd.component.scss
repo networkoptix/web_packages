@@ -51,8 +51,8 @@
         
         .nx-table {
             th {
-                display : inline-block;
-                white-space: normal;
+                //display : inline-block;
+                //white-space: normal;
     
                 .caption {
                     line-height : 1rem;
@@ -65,27 +65,45 @@
     
                 &:nth-child(1) {
                     padding-left : 1rem;
-                    width : 175px;
+                    max-width : 175px;
+    
+                    .caption {
+                        div:first-of-type {
+                            width : 80%;
+                        }
+                    }
                 }
     
                 &.debug {
                     &:nth-child(1) {
-                        width : 130px;
+                        max-width : 130px;
                     }
                 }
 
                 &:nth-child(2) {
-                    width : 150px;
+                    max-width : 150px;
+    
+                    .caption {
+                        div:first-of-type {
+                            max-width : 80%;
+                        }
+                    }
                 }
     
                 &.debug {
                     &:nth-child(2) {
-                        width : 130px;
+                        max-width : 130px;
                     }
                 }
                 
                 &:nth-child(3) {
-                    width : 110px;
+                    max-width : 110px;
+    
+                    .caption {
+                        div:first-of-type {
+                            width : 80%;
+                        }
+                    }
                 }
     
                 &:nth-child(4) {
@@ -150,9 +168,9 @@
             }
             
             td {
-                display : inline-block;
-                vertical-align : middle;
-                padding : rem(4px) 1rem rem(4px) 0;
+                //display : inline-block;
+                //vertical-align : middle;
+                //padding : rem(4px) 1rem rem(4px) 0;
     
                 &:nth-child(n+1) > div {
                     white-space : normal;

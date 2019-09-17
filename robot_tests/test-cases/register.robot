@@ -59,7 +59,7 @@ should open register page in anonymous state
     [tags]    C24211
     Go To    ${url}/register
     Location should be    ${url}/register
-    Wait Until Element Is Visible    //form[@name="registerForm"]
+    Wait Until Element Is Visible    ${REGISTER FORM}
 
 should register user with correct credentials
     ${email}    Get Random Email    ${BASE EMAIL}
@@ -98,15 +98,15 @@ with valid inputs no errors are displayed
 displays password masked, shows password and changes eye icon when clicked
     [tags]    C24211
     Go To    ${url}/register
-    Wait Until Elements Are Visible    ${REGISTER PASSWORD INPUT}    ${REGISTER EYE ICON OPEN}
+    Wait Until Elements Are Visible    ${REGISTER PASSWORD INPUT}    ${REGISTER EYE ICON CLOSED}
     ${input type}    Get Element Attribute    ${REGISTER PASSWORD INPUT}    type
     Should Be Equal    '${input type}'    'password'
-    Click Element    ${REGISTER EYE ICON OPEN}
-    Wait Until Element Is Visible    ${REGISTER EYE ICON CLOSED}
-    ${input type}    Get Element Attribute    ${REGISTER PASSWORD INPUT}    type
-    Should Be Equal    '${input type}'    'text'
     Click Element    ${REGISTER EYE ICON CLOSED}
     Wait Until Element Is Visible    ${REGISTER EYE ICON OPEN}
+    ${input type}    Get Element Attribute    ${REGISTER PASSWORD INPUT}    type
+    Should Be Equal    '${input type}'    'text'
+    Click Element    ${REGISTER EYE ICON OPEN}
+    Wait Until Element Is Visible    ${REGISTER EYE ICON CLOSED}
     ${input type}    Get Element Attribute    ${REGISTER PASSWORD INPUT}    type
     Should Be Equal    '${input type}'    'password'
 
@@ -132,15 +132,16 @@ should respond to Tab key
     Element Should Be Focused    ${REGISTER LAST NAME INPUT}
     Press Key    ${REGISTER LAST NAME INPUT}    ${TAB}
     Element Should Be Focused    ${REGISTER EMAIL INPUT}
+    Sleep    1
     Press Key    ${REGISTER EMAIL INPUT}    ${TAB}
     Element Should Be Focused    ${REGISTER PASSWORD INPUT}
     Press Key    ${REGISTER PASSWORD INPUT}    ${TAB}
     Element Should Be Focused    ${TERMS AND CONDITIONS CHECKBOX REAL}
 
     Press Key    ${TERMS AND CONDITIONS CHECKBOX REAL}    ${SPACEBAR}
-    Wait Until Page Contains Element    //form[@name='registerForm']//input[contains(@class, "ng-not-empty") and @ng-model='account.accept']
+    Wait Until Page Contains Element    ${TERMS AND CONDITIONS CHECKBOX VISIBLE}/../../span[contains(@class,"checked")]
     Press Key    ${TERMS AND CONDITIONS CHECKBOX REAL}    ${SPACEBAR}
-    Wait Until Page Contains Element    //form[@name='registerForm']//input[contains(@class, "ng-empty") and @ng-model='account.accept']
+    Wait Until Page Contains Element    ${TERMS AND CONDITIONS CHECKBOX VISIBLE}/../../span[contains(@class,"unchecked")]
 
     Press Key    ${TERMS AND CONDITIONS CHECKBOX REAL}    ${TAB}
     Press Key    ${TERMS AND CONDITIONS LINK}    ${ENTER}
@@ -197,28 +198,28 @@ should suggest user to log out, if he was logged in and goes to registration lin
 
 should display promo-block, if user goes to registration from native app
     Go To    ${url}/register?from=client
-    Wait Until Element Is Visible    ${PROMO BLOCK}
+    Wait Until Element Is Visible    ${JUMBOTRON}
     Go To    ${url}/register?from=mobile
-    Wait Until Element Is Visible    ${PROMO BLOCK}
+    Wait Until Element Is Visible    ${JUMBOTRON}
 
 should not display promo-block, if user goes to registration not from native app
     Go To    ${url}/register
     Wait Until Element Is Visible    ${REGISTER FIRST NAME INPUT}
-    Element Should Not Be Visible    ${PROMO BLOCK}
+    Element Should Not Be Visible    ${JUMBOTRON}
 
 should remove promo-block on registration form successful submitting form when from=client
     ${email}    Get Random Email    ${BASE EMAIL}
     Go To    ${url}/register?from=client
     Register    mark    hamill    ${email}    ${password}
     Validate Register Success    ${url}/register/success?from=client
-    Element Should Not Be Visible    ${PROMO BLOCK}
+    Element Should Not Be Visible    ${JUMBOTRON}
 
 should remove promo-block on registration form successful submitting form when from=mobile
     ${email}    Get Random Email    ${BASE EMAIL}
     Go To    ${url}/register?from=mobile
     Register    mark    hamill    ${email}    ${password}
     Validate Register Success    ${url}/register/success?from=mobile
-    Element Should Not Be Visible    ${PROMO BLOCK}
+    Element Should Not Be Visible    ${JUMBOTRON}
 
 should not allow to access /register/success /activate/success by direct input
     Close Browser
@@ -236,7 +237,7 @@ Cannot register email that is already registered
     Register    mark    hamill    ${email}    ${password}
     Go To    ${url}/register
     Register    mark    hamill    ${email}    ${password}
-    Wait Until Element Is Visible    //form[@name="registerForm"]//span[@ng-if="registerForm.registerEmail.$error.alreadyExists" and text()="${EMAIL ALREADY REGISTERED TEXT}"]
+    Wait Until Element Is Visible    ${REGISTER FORM}//span[contains(@class,"help-block input-error") and text()="${EMAIL ALREADY REGISTERED TEXT}"]
 
 Cannot register email that is already activated
     [tags]    C41563
@@ -246,7 +247,7 @@ Cannot register email that is already activated
     Activate    ${email}
     Go To    ${url}/register
     Register    mark    hamill    ${email}    ${password}
-    Wait Until Element Is Visible    //form[@name="registerForm"]//span[@ng-if="registerForm.registerEmail.$error.alreadyExists" and text()="${EMAIL ALREADY REGISTERED TEXT}"]
+    Wait Until Element Is Visible    ${REGISTER FORM}//span[contains(@class,"help-block input-error") and text()="${EMAIL ALREADY REGISTERED TEXT}"]
 
 Check registration email links, colors, cloud name, and user name
     [tags]    C24211

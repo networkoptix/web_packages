@@ -24,6 +24,7 @@ body {
         padding : rem(16px);
         h2 {
             font-size: rem(20px);
+            display: inline;
         }
     }
 
@@ -160,13 +161,13 @@ hr {
 
 @mixin kill-glyphicon {
     background-size  : 112px 80px;
-    background-image : url('/static/images/portal_icons.png') !important;
+    background-image : url('/static/images/sprite_common.png') !important;
     &:before {
         content : none;
     }
 
     @media only screen and (-webkit-min-device-pixel-ratio : 2), only screen and (min-device-pixel-ratio : 2) {
-        background-image : url('/static/images/portal_icons@2x.png');
+        background-image : url('/static/images/sprite_common@2x.png');
     }
 }
 
@@ -230,6 +231,7 @@ select {
         position         : absolute;
         right            : 2px;
         z-index          : 9;
+        top              : 0;
 
         .glyphicon {
             margin : 0;
@@ -238,12 +240,12 @@ select {
 }
 
 #badge-large {
-    height    : 2rem;
-    font-family: $font-family-regular;
-    font-weight : 400;
-    font-size : rem(13px);
-    padding   : 0 12px;
-    line-height: 2rem;
+    height    : 2rem !important;
+    font-family: $font-family-regular !important;
+    font-weight : 400 !important;
+    font-size : rem(13px) !important;
+    padding   : 0 12px !important;
+    line-height: 2rem !important;
 }
 
 .badge {
@@ -273,8 +275,9 @@ select {
     }
 
     &-default {
-        background-color : $light8;
-        color: $light1;
+        background-color : $light8 !important;
+        color: $light1 !important;
+        line-height : rem(14px);
     }
 
     &-primary {

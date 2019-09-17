@@ -1,0 +1,18 @@
+@import '../../../styles/typography';
+
+nx-block {
+  .user-email,
+  .system-name {
+    font-family: $font-family-medium;
+  }
+
+  .user-name,
+  .system-owner {
+    font-family: $font-family-regular;
+    font-size: $font-size-base;
+  }
+
+  .name {
+    font-family: $font-family-bold;
+  }
+}

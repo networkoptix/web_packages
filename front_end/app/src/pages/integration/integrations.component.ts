@@ -14,7 +14,8 @@ import { Title }              from '@angular/platform-browser';
 
 export class NxIntegrationsComponent implements OnInit {
     private CONFIG: any = {};
-    private lang: any = {};
+    private LANG: any = {};
+
     private allElements: any;
     private elements: any;
     private emptyFilter: any = {};
@@ -54,12 +55,9 @@ export class NxIntegrationsComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.language
-            .translationsSubject
-            .subscribe((lang) => {
-                this.lang = lang;
-                this.title.setTitle(this.lang.pageTitles.integrations);
-            });
+        this.CONFIG = this.config.getConfig();
+        this.LANG = this.language.getTranslations();
+        this.title.setTitle(this.LANG.pageTitles.integrations);
 
         // Example URI
         // /integrations?search=node
@@ -74,14 +72,13 @@ export class NxIntegrationsComponent implements OnInit {
             .pluginsSubject
             .subscribe((result: any) => {
                 if (result) {
-                    this.navigate404IfNoResult(result); // TODO: REMOVE in 19.2
-                    // if (!this.CONFIG.integrationStoreEnabled) {
-                    //     this.location.go('404');
-                    // } else {
-                    //     this.allElements = result;
-                    //     this.setTags();
-                    //     this.setFilter();
-                    // }
+                    if (!this.CONFIG.integrationStoreEnabled) {
+                        this.location.go('404');
+                    } else {
+                        this.allElements = result;
+                        this.setTags();
+                        this.setFilter();
+                    }
                 } else {
                     this.elements = undefined;
                 }
@@ -92,29 +89,13 @@ export class NxIntegrationsComponent implements OnInit {
             });
     }
 
-    // TODO: REMOVE in 19.2 as CONFIG is already moved to A6
-    // currently integrationStoreEnabled is populated in AJS and this creates
-    // an issue (not avail on page reload)
-    navigate404IfNoResult(result) {
-        // CONFIG is not avail or integrationStoreEnabled is not initialized (AJS dependency)
-        if (!this.CONFIG || this.CONFIG.integrationStoreEnabled === undefined) {
-            setTimeout(() => this.navigate404IfNoResult(result));
-            return;
-        }
-
-        if (!this.CONFIG.integrationStoreEnabled && result.length === 0) {
-            this.location.go('404');
-        } else {
-            this.allElements = result;
-            this.setTags();
-            this.setFilter();
-        }
-    }
-
     setTags() {
+        const found = this.allElements.find((elm) => elm.mine);
+        const haveMyIntegration = (found && found.mine) || false;
+
         this.CONFIG.integrationFilterItems.forEach(item => {
-            if (item.enabled) {
-                    this.filterModel.tags.push({ id: item.name, label: item.name, value: false });
+            if (item.enabled || (item.id === this.CONFIG.myIntegrationTagId && haveMyIntegration)) {
+                    this.filterModel.tags.push({ id: item.id, label: item.name, value: false });
             }
         });
 
@@ -145,12 +126,11 @@ export class NxIntegrationsComponent implements OnInit {
 
         if (this.filterModel.tags.length) {
             const hasTagSelection = this.filterModel.tags.some((tag) => tag.value);
-
             if (hasTagSelection) {
                 this.elements = this.elements.filter(item => {
                     return item.information.type.find((type) => {
                         return this.filterModel.tags.some(tag => {
-                            if (tag.label === type && tag.value) {
+                            if (tag.id === type.id && tag.value) {
                                 return item;
                             }
                         });
@@ -170,4 +150,3 @@ export class NxIntegrationsComponent implements OnInit {
         item.name = item.name.replace(pattern, '<span class="marked">' + text + '</span>');
     }
 }
-

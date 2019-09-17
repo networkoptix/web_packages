@@ -9,19 +9,19 @@
     "emailSubject": "{{message.subject}}"
   },
   "contact_sales": {
-    "emailSubject": "Myyntikysely {{message.product}}"
+    "emailSubject": "Myyntikysely {{message.asset}}"
   },
   "contact_support": {
-    "emailSubject": "Tukipyyntö {{message.product}}"
+    "emailSubject": "Tukipyyntö {{message.asset}}"
   },
   "integration_feedback": {
-    "emailSubject": "Palaute{{message.product}}"
+    "emailSubject": "Palaute{{message.asset}}"
   },
   "ipvd_feedback": {
-    "emailSubject": "Kameran sivun palaute{{#message.product}} {{message.product}}{{/message.product}}"
+    "emailSubject": "Kameran sivun palaute{{#message.asset}} {{message.asset}}{{/message.asset}}"
   },
   "review_version": {
-    "emailSubject": "{{message.product_type}}: {{message.product}} on uusi versio tarkistettavaksi"
+    "emailSubject": "{{message.asset_type}}: {{message.asset}} on uusi versio tarkistettavaksi"
   },
   "restore_password": {
     "emailSubject": "Nollaa salasanasi"

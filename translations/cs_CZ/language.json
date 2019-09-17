@@ -4,17 +4,6 @@
   "cloudName": "%CLOUD_NAME%",
   "vmsName": "%VMS_NAME%",
   "clientProtocol": "%CLIENT_PROTOCOL%:",
-  "dialogs": {
-    "okButton": "OK",
-    "cancelButton": "Zrušit",
-    "loginTitle": "Přihlaste se k %CLOUD_NAME%",
-    "loginButton": "Přihlásit",
-    "logoutAuthorisedTitle": "Již jste přihlášen",
-    "logoutAuthorisedContinueButton": "Pokračovat",
-    "logoutAuthorisedLogoutButton": "Odhlásit se",
-    "noClientDetectedTitle": "Pro zobrazení Vašeho systému nainstalujte %VMS_NAME%",
-    "download": "Stáhnout %VMS_NAME%"
-  },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
     "default": "%CLOUD_NAME%",
@@ -168,14 +157,6 @@
     "commonMessage": "Toto heslo je v seznamu nejoblíbenějších heslech na světě",
     "missingMessage": "Heslo je vyžadováno"
   },
-  "sharing": {
-    "confirmOwner": "Pokud změníte vlastníka systému, zrušíte vlastnictví aktuálního účtu. Tato akce je nevratná. Přejete si pokračovat?",
-    "shareTitle": "Sdílet",
-    "shareConfirmButton": "Sdílet",
-    "editShareTitle": "Upravit oprávnění",
-    "editShareConfirmButton": "Uložit",
-    "permissionsSaved": "Nová oprávnění byla uložena"
-  },
   "system": {
     "yourSystem": "Váš systém",
     "mySystemSearch": "IMeMyMine",
@@ -190,12 +171,11 @@
     "successRename": "Název systému byl uložen",
     "confirmDisconnectTitle": "Odpojit systém od %CLOUD_NAME%?",
     "confirmDisconnectAction": "Odpojit",
-    "confirmUnshareFromMe": "Chystáte se odpojit systém od Vašeho účtu. K tomuto systému již nebudete mít přístup. Přejete si pokračovat?",
-    "confirmUnshareFromMeTitle": "Odpojit systém?",
+    "confirmUnshareFromMe": "You will not be able to lgo into this System anymore.",
+    "confirmUnshareFromMeTitle": "Disconnect System from your Account?",
     "confirmUnshareFromMeAction": "Odpojit",
-    "confirmUnshare": "Tento uživatel nebude mít přístup k systému. Přejete si pokračovat?",
-    "confirmUnshareTitle": "Smazat uživatele?",
-    "confirmUnshareAction": "Smazat",
+    "confirmUnshareTitle": "Remove user?",
+    "confirmUnshareAction": "Odstranit",
     "successDisconnected": "Systém byl úspěšně odpojen od %CLOUD_NAME%",
     "successDeleted": "Systém {{systemName}} byl úspěšně odstraněna z Vašeho účtu",
     "mergeFailed": "Spojení systémů selhalo",
@@ -203,20 +183,6 @@
     "mergeSuccess": "Sloučení systému bylo dokončeno",
     "permissionsRemoved": "Oprávnění byla odstraněna z adresy {{email}}",
     "unknownName": "Neznámý název systému (problém s cloudovým spojením)"
-  },
-  "account": {
-    "accountSavedSuccess": "Váš účet byl úspěšně uložen",
-    "activationLinkSent": "Aktivní odkaz byl odeslán",
-    "passwordChangedSuccess": "Váš účet byl úspěšně uložen",
-    "changePassword": "Změnit heslo",
-    "newPasswordLabel": "Nové heslo",
-    "saveChanges": "Uložit"
-  },
-  "activeActions": {
-    "sendConfirm": "Znovu poslat aktivační odkaz",
-    "resetPassword": "Obnovení hesla",
-    "setNewPassword": "Uložit heslo",
-    "setNewPasswordLabel": "Nové heslo"
   },
   "regActions": {
     "passwordLabel": "Heslo",

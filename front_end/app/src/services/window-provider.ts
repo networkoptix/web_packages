@@ -1,4 +1,4 @@
-import { InjectionToken, FactoryProvider } from '@angular/core';
+import { Injectable, InjectionToken, FactoryProvider } from '@angular/core';
 
 export const WINDOW = new InjectionToken<Window>('window');
 
@@ -9,4 +9,5 @@ const windowProvider: FactoryProvider = {
 
 export const WINDOWS_PROVIDERS = [
     windowProvider
-]
+];
+

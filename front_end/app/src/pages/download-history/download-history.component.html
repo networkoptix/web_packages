@@ -2,20 +2,22 @@
     <h1 translate>Release notes</h1>
 
     <div class="col-12 p-0" style="min-height: 80px;">
-        <nx-pre-loader type="page" *ngIf="!activeBuilds"></nx-pre-loader>
-        <ngb-tabset *ngIf="noteTypes"
-                    (tabChange)="beforeChange($event)" #tabs>
+        <nx-pre-loader *ngIf="!activeBuilds"></nx-pre-loader>
+
+        <ngb-tabset *ngIf="activeBuilds"
+                    [style.visibility]="tabsVisible ? 'visible' : 'hidden'"
+                    (tabChange)="beforeChange($event)" #tabs="ngbTabset">
 
             <ngb-tab *ngFor="let type of noteTypes"
                      [id]="type">
-                <ng-template ngbTabTitle *ngIf="!hideTabs">
-                    <span class="tab-heading">{{lang.downloads.releasesTypes[type] || type.name}}</span>
+                <ng-template ngbTabTitle>
+                    <span class="tab-heading">{{LANG.downloads.releasesTypes[type] || type.name}}</span>
                 </ng-template>
                 <ng-template ngbTabContent>
                     <div class="card card-default">
                         <div class="card-body" *ngIf="activeBuilds">
                             <div *ngFor="let release of activeBuilds">
-                                <nx-release [lang]="lang" [linkbase]="linkbase" [release]="release"></nx-release>
+                                <nx-release [lang]="LANG" [linkbase]="linkbase" [release]="release"></nx-release>
                             </div>
                         </div>
                     </div>
@@ -23,4 +25,5 @@
             </ngb-tab>
         </ngb-tabset>
     </div>
+    <nx-footer></nx-footer>
 </div>

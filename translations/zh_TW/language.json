@@ -4,17 +4,6 @@
   "cloudName": "%CLOUD_NAME%",
   "vmsName": "%VMS_NAME%",
   "clientProtocol": "%CLIENT_PROTOCOL%:",
-  "dialogs": {
-    "okButton": "確定",
-    "cancelButton": "取消",
-    "loginTitle": "登入到 %CLOUD_NAME%",
-    "loginButton": "登入",
-    "logoutAuthorisedTitle": "您已經登入",
-    "logoutAuthorisedContinueButton": "繼續",
-    "logoutAuthorisedLogoutButton": "登出",
-    "noClientDetectedTitle": "安裝 %VMS_NAME% 來查看您的系統",
-    "download": "下載 %VMS_NAME%"
-  },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
     "default": "%CLOUD_NAME%",
@@ -168,14 +157,6 @@
     "commonMessage": "此密碼是很常用的組合",
     "missingMessage": "密碼是必填的"
   },
-  "sharing": {
-    "confirmOwner": "如果您更改系統擁有者, 您將註銷目前此帳號的所有權. 此操作是不可逆的, 是否確定?",
-    "shareTitle": "共用",
-    "shareConfirmButton": "共用",
-    "editShareTitle": "編輯權限",
-    "editShareConfirmButton": "儲存",
-    "permissionsSaved": "新權限已儲存"
-  },
   "system": {
     "yourSystem": "您的系統",
     "mySystemSearch": "我的",
@@ -190,12 +171,11 @@
     "successRename": "系統名稱已儲存",
     "confirmDisconnectTitle": "是否從 %CLOUD_NAME% 中斷開系統?",
     "confirmDisconnectAction": "斷線",
-    "confirmUnshareFromMe": "您正要從您的帳號斷開此系統. 您將再也無法存取此系統. 確定?",
-    "confirmUnshareFromMeTitle": "斷開系統?",
+    "confirmUnshareFromMe": "You will not be able to lgo into this System anymore.",
+    "confirmUnshareFromMeTitle": "Disconnect System from your Account?",
     "confirmUnshareFromMeAction": "斷線",
-    "confirmUnshare": "此使用者將無法存取系統. 確定?",
-    "confirmUnshareTitle": "刪除使用者?",
-    "confirmUnshareAction": "刪除",
+    "confirmUnshareTitle": "Remove user?",
+    "confirmUnshareAction": "移除",
     "successDisconnected": "系統已成功從 %CLOUD_NAME%斷線",
     "successDeleted": "從您的帳號成功刪除系統 {{systemName}}",
     "mergeFailed": "系統合併失敗",
@@ -203,20 +183,6 @@
     "mergeSuccess": "系統合併完成",
     "permissionsRemoved": "權限從 {{email}} 被移除",
     "unknownName": "未知的系統名稱（由雲合併引起）"
-  },
-  "account": {
-    "accountSavedSuccess": "您的帳號已成功儲存",
-    "activationLinkSent": "啟動連結已發送",
-    "passwordChangedSuccess": "您的帳號已成功儲存",
-    "changePassword": "變更密碼",
-    "newPasswordLabel": "新密碼",
-    "saveChanges": "儲存"
-  },
-  "activeActions": {
-    "sendConfirm": "重新發送啟動連結",
-    "resetPassword": "重置密碼",
-    "setNewPassword": "儲存密碼",
-    "setNewPasswordLabel": "新密碼"
   },
   "regActions": {
     "passwordLabel": "密碼",

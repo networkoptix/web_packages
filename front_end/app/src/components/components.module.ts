@@ -1,9 +1,10 @@
 import { NgModule }                                from '@angular/core';
 import { CommonModule }                            from '@angular/common';
 import { TranslateModule }                         from '@ngx-translate/core';
-import { downgradeComponent, downgradeInjectable } from '@angular/upgrade/static';
+import { downgradeComponent } from '@angular/upgrade/static';
 import { RouterModule }                            from '@angular/router';
 import { FormsModule }                             from '@angular/forms';
+import { NgbToastModule }                from '@ng-bootstrap/ng-bootstrap';
 
 import { DirectivesModule }               from '../directives/directives.module';
 import { NxProcessButtonComponent }       from './process-button/process-button.component';
@@ -31,21 +32,31 @@ import { NxSystemsDropdown }         from './dropdowns/systems/systems.component
 import { NxPermissionsDropdown }     from './dropdowns/permissions/permissions.component';
 import { NxMultiSelectDropdown }     from './dropdowns/multi-select/multi-select.component';
 import { NxLandingDisplayComponent } from './landing-display/landing-display.component';
+import { NxPasswordComponent }       from './password-input/password.component';
+import { NxEmailComponent }          from './email-input/email.component';
+import { NxClientButtonComponent }   from './open-client-button/client-button.component';
+import { NxSwitchComponent }         from './switch/switch.component';
+import { ToastsContainer }           from './toast/toast.component';
+import { NxHeaderComponent }         from './header/header.component';
+import { NxNavLocationDropdown }     from './dropdowns/nav-location/nav.component';
+import { NxApplyComponent }           from './apply/apply.component';
 
 @NgModule({
-    imports        : [
+    imports: [
         CommonModule,
         DirectivesModule,
         TranslateModule,
         RouterModule,
         FormsModule,
-        MenuModule
+        MenuModule,
+        NgbToastModule
     ],
     declarations   : [
         NxGenericDropdown,
         NxLanguageDropdown,
         NxAccountSettingsDropdown,
         NxActiveSystemDropdown,
+        NxNavLocationDropdown,
         NxSystemsDropdown,
         NxPermissionsDropdown,
         NxMultiSelectDropdown,
@@ -63,14 +74,22 @@ import { NxLandingDisplayComponent } from './landing-display/landing-display.com
         NxRibbonComponent,
         NxVendorListComponent,
         NxSearchComponent,
+        NxHeaderComponent,
         NxFooterComponent,
         NxLandingDisplayComponent,
+        NxPasswordComponent,
+        NxEmailComponent,
+        NxClientButtonComponent,
+        NxSwitchComponent,
+        NxApplyComponent,
+        ToastsContainer,
     ],
     entryComponents: [
         NxGenericDropdown,
         NxLanguageDropdown,
         NxAccountSettingsDropdown,
         NxActiveSystemDropdown,
+        NxNavLocationDropdown,
         NxSystemsDropdown,
         NxPermissionsDropdown,
         NxMultiSelectDropdown,
@@ -88,8 +107,15 @@ import { NxLandingDisplayComponent } from './landing-display/landing-display.com
         NxRibbonComponent,
         NxVendorListComponent,
         NxSearchComponent,
+        NxHeaderComponent,
         NxFooterComponent,
         NxLandingDisplayComponent,
+        NxPasswordComponent,
+        NxEmailComponent,
+        NxClientButtonComponent,
+        NxSwitchComponent,
+        NxApplyComponent,
+        ToastsContainer,
     ],
     providers      : [
         NxProcessButtonComponent,
@@ -105,8 +131,15 @@ import { NxLandingDisplayComponent } from './landing-display/landing-display.com
         NxRibbonComponent,
         NxVendorListComponent,
         NxSearchComponent,
+        NxHeaderComponent,
         NxFooterComponent,
         NxLandingDisplayComponent,
+        NxPasswordComponent,
+        NxEmailComponent,
+        NxClientButtonComponent,
+        NxSwitchComponent,
+        NxApplyComponent,
+        ToastsContainer,
 
         NxRibbonService,
     ],
@@ -115,6 +148,7 @@ import { NxLandingDisplayComponent } from './landing-display/landing-display.com
         NxLanguageDropdown,
         NxAccountSettingsDropdown,
         NxActiveSystemDropdown,
+        NxNavLocationDropdown,
         NxSystemsDropdown,
         NxPermissionsDropdown,
         NxMultiSelectDropdown,
@@ -132,8 +166,16 @@ import { NxLandingDisplayComponent } from './landing-display/landing-display.com
         NxRibbonComponent,
         NxVendorListComponent,
         NxSearchComponent,
+        NxHeaderComponent,
         NxFooterComponent,
         NxLandingDisplayComponent,
+        NxPasswordComponent,
+        NxEmailComponent,
+        NxClientButtonComponent,
+        NxSwitchComponent,
+        NxApplyComponent,
+        ToastsContainer,
+
         MenuModule,
     ]
 })
@@ -143,19 +185,5 @@ export class ComponentsModule {
 declare var angular: angular.IAngularStatic;
 angular
         .module('cloudApp.directives')
-        .directive('nxLanguageSelect', downgradeComponent({ component: NxLanguageDropdown }) as angular.IDirectiveFactory)
-        .directive('nxSelect', downgradeComponent({ component: NxGenericDropdown }) as angular.IDirectiveFactory)
-        .directive('nxMultiSelect', downgradeComponent({ component: NxMultiSelectDropdown }) as angular.IDirectiveFactory)
-        .directive('nxAccountSettingsSelect', downgradeComponent({ component: NxAccountSettingsDropdown }) as angular.IDirectiveFactory)
-        .directive('nxActiveSystem', downgradeComponent({ component: NxActiveSystemDropdown }) as angular.IDirectiveFactory)
-        .directive('nxSystems', downgradeComponent({ component: NxSystemsDropdown }) as angular.IDirectiveFactory)
-        .directive('nxPermissions', downgradeComponent({ component: NxPermissionsDropdown }) as angular.IDirectiveFactory)
-        .directive('nxProcessButton', downgradeComponent({ component: NxProcessButtonComponent }) as angular.IDirectiveFactory)
-        .directive('nxPreLoader', downgradeComponent({ component: NxPreLoaderComponent }) as angular.IDirectiveFactory)
-        .directive('nxRibbon', downgradeComponent({ component: NxRibbonComponent }) as angular.IDirectiveFactory)
-        .directive('nxFooter', downgradeComponent({component: NxFooterComponent}) as angular.IDirectiveFactory)
-        .directive('nxLandingDisplay', downgradeComponent({component: NxLandingDisplayComponent}) as angular.IDirectiveFactory);
-
-angular
-        .module('cloudApp.services')
-        .service('NxRibbonService', downgradeInjectable(NxRibbonService));
+        .directive('nxHeader', downgradeComponent({component: NxHeaderComponent}) as angular.IDirectiveFactory)
+        .directive('nxRibbon', downgradeComponent({component: NxRibbonComponent}) as angular.IDirectiveFactory);

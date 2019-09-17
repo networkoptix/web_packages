@@ -3,10 +3,16 @@ from django.db import models
 from django.utils import timezone
 from jsonfield import JSONField
 from django.conf import settings
+from django.core.exceptions import ValidationError
+from django.core.validators import MaxLengthValidator
 from django.db.models import Q
+from model_utils import Choices
+from push_notifications.models import GCMDevice, GCMDeviceManager
 from rest_framework import serializers
-from cms.models import Customization, Product, DataStructure
+from cms.models import Customization, Asset, DataStructure
 from api.models import Account
+
+import json
 
 # When cloudportal is ran locally it uses amqp by default. BROKER_TRANSPORT_OPTIONS is related to sqs.
 # This allows cloud notifications to run locally without changing settings to use sqs.
@@ -118,10 +124,10 @@ class Message(models.Model):
 class Feedback(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     message = models.TextField(default='', blank=True)
-    product_name = models.CharField(max_length=255)
+    asset_name = models.CharField(max_length=255)
     sender_name = models.CharField(max_length=255)
     sender_email = models.CharField(max_length=255)
-    target_product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    target_asset = models.ForeignKey(Asset, on_delete=models.CASCADE)
     type = models.CharField(max_length=255)
 
     def send(self):
@@ -129,19 +135,19 @@ class Feedback(models.Model):
         data = {
             'sender_name': self.sender_name,
             'sender_email': self.sender_email,
-            'product': self.product_name,
+            'asset': self.asset_name,
             'message': self.message
         }
-        event = Event.objects.create(type=self.type, object=self.target_product.id, data=data)
+        event = Event.objects.create(type=self.type, object=self.target_asset.id, data=data)
         event.send()
 
         # Send email to the contact email for an integration.
         data_structure = DataStructure.objects.filter(
-            name='supportEmail', context__product_type=self.target_product.product_type,
+            name='supportEmail', context__asset_type=self.target_asset.asset_type,
             context__name__in=['support', 'Settings']
         ).last()
         contact_email = data_structure.find_actual_value(
-            product=self.target_product, version_id=self.target_product.version_id()
+            asset=self.target_asset, version_id=self.target_asset.version_id()
         )
         emails = [self.sender_email]
         if contact_email:
@@ -177,3 +183,57 @@ class CloudNotification(models.Model):
 
     def __str__(self):
         return self.subject
+
+
+class PushDevice(GCMDevice):
+    model = models.CharField(max_length=255)
+
+
+class PushSubscription(models.Model):
+    SUB_TYPES = Choices((0, 'cloud', 'cloud'), (1, 'local', 'local'))
+    type = models.IntegerField(choices=SUB_TYPES, default=SUB_TYPES.cloud)
+
+    system_id = models.UUIDField()
+    active = models.BooleanField(default=True)
+    device = models.ForeignKey(PushDevice, blank=True, null=True, on_delete=models.CASCADE)
+
+    account = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.CASCADE)
+    subscription_id = models.UUIDField(blank=True, null=True)
+    username = models.CharField(max_length=255, blank=True, null=True)
+
+
+class PushNotification(models.Model):
+    SIZE_LIMIT = 4000
+
+    title = models.CharField(max_length=255)
+    body = models.TextField(max_length=SIZE_LIMIT, validators=[MaxLengthValidator(SIZE_LIMIT)])
+    payload = models.TextField(
+        max_length=SIZE_LIMIT, blank=True, null=True, validators=[MaxLengthValidator(SIZE_LIMIT)]
+    )
+    options = models.TextField(blank=True, null=True)
+    subscriptions = models.ManyToManyField(PushSubscription)
+
+    raw_system_id = models.CharField(max_length=255, default='')
+    raw_targets = models.TextField(null=True)
+    result_data = models.TextField(null=True, blank=True)
+
+    def clean(self):
+        if len(self.title + self.body + self.payload) > self.SIZE_LIMIT:
+            raise ValidationError(f'Title, body, and payload cannot total more than {self.SIZE_LIMIT}')
+        super(PushNotification, self).clean()
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super(PushNotification, self).save(*args, **kwargs)
+
+    def send_notifications(self, device_tokens=None):
+        if device_tokens:
+            devices = PushDevice.objects.filter(registration_id__in=device_tokens)
+        else:
+            active_subs = self.subscriptions.filter(active=True)
+            devices = PushDevice.objects.filter(pushsubscription__in=active_subs).distinct()
+
+        payload = json.loads(self.payload) if self.payload else {}
+        options = json.loads(self.options) if self.options else {}
+
+        return devices.send_message(self.body, title=self.title, extra=payload, **options)

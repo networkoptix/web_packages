@@ -9,19 +9,19 @@
     "emailSubject": "{{message.subject}}"
   },
   "contact_sales": {
-    "emailSubject": "Sales inquiry for {{message.product}}"
+    "emailSubject": "Sales inquiry for {{message.asset}}"
   },
   "contact_support": {
-    "emailSubject": "Support request for {{message.product}}"
+    "emailSubject": "Support request for {{message.asset}}"
   },
   "integration_feedback": {
-    "emailSubject": "Feedback for {{message.product}}"
+    "emailSubject": "Feedback for {{message.asset}}"
   },
   "ipvd_feedback": {
-    "emailSubject": "Camera Page Feedback{{#message.product}} for {{message.product}}{{/message.product}}"
+    "emailSubject": "Camera Page Feedback{{#message.asset}} for {{message.asset}}{{/message.asset}}"
   },
   "review_version": {
-    "emailSubject": "{{message.product_type}}: {{message.product}} has a new version to review"
+    "emailSubject": "{{message.asset_type}}: {{message.asset}} has a new version to review"
   },
   "restore_password": {
     "emailSubject": "Reset your password"

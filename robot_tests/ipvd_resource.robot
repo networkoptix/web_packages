@@ -14,6 +14,10 @@ Go To IPVD Page with arguments
     Go To    ${url}/ipvd${urlParameters}
     Validate on IPVD page
 
+Open IPVD Page
+    Open Browser and go to URL    ${url}/ipvd
+    Validate on IPVD page
+
 Open IPVD Page and Log In
     Open Browser and go to URL    ${url}/ipvd
     Validate on IPVD page
@@ -186,7 +190,8 @@ Advaced Search Filters Text
 
 Validate on IPVD Page
     Wait until Elements are Visible
-    ...    ${IPVD TITLE}
+    # CLOUD-3564 "Supported IP Video Devices" inset not being translated
+    # ...    ${IPVD TITLE}
     ...    ${IPVD SEARCH BAR}
     ...    ${IPVD ADV SEARCH BUTTON}
     ...    ${IPVD MANUFACTURERS PANE}
@@ -269,7 +274,7 @@ Validate Manufacturer More Count
     ${more}=   Get Text    ${IPVD AND MORE}
     ${more}=   Remove String Using Regexp
     ...    ${more}
-    ...    (\\.\\.\\.\\ and\\ )|(\\ more)
+    ...    \\D
     Should be True    ${more} == ${count}-${IPVD VENDORS SHOWN}
     ...    Expected ${more} to be ${count} minus ${IPVD VENDORS SHOWN}.
 
@@ -310,6 +315,7 @@ Validate Privacy Policy
 
 Submit Feedback/Request Form
     [Arguments]    ${Your Name}    ${Email}    ${Message}
+    Sleep    0.25
     Input Text    ${IPVD FEEDBACK YOUR NAME}    ${Your Name}
     Sleep    0.25
     Input Text    ${IPVD FEEDBACK EMAIL}    ${Email}
@@ -321,7 +327,7 @@ Submit Feedback/Request Form
 
 Validate Message Sent
     Page should Not contain Element    ${IPVD FEEDBACK}
-    Check For Alert    Message has been sent.
+    Check For Alert    ${IPVD FEEDBACK MESSAGE SENT}
     # TODO: Check email and verify submitted data received
 
 Validate Message Not Sent

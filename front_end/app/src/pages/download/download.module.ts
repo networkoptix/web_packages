@@ -1,21 +1,23 @@
-import { Injectable, NgModule }                  from '@angular/core';
-import { CommonModule }                          from '@angular/common';
-import { BrowserModule }                         from '@angular/platform-browser';
-import { downgradeComponent, UpgradeModule }     from '@angular/upgrade/static';
-import { Router, Resolve, RouterModule, Routes } from '@angular/router';
+import { Injectable, NgModule }  from '@angular/core';
+import { CommonModule }          from '@angular/common';
+import { BrowserModule }         from '@angular/platform-browser';
 
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import {
+    Router, Resolve,
+    RouterModule, Routes
+}                                from '@angular/router';
+import { NgbModule }             from '@ng-bootstrap/ng-bootstrap';
 
-import { DownloadComponent }           from './download.component';
-import { Observable, EMPTY as empty }  from 'rxjs';
-import { DeviceDetectorService }       from 'ngx-device-detector';
-import { FormsModule, EmailValidator } from '@angular/forms';
+import { EMPTY as empty }        from 'rxjs';
+import { DeviceDetectorService } from 'ngx-device-detector';
+import { FormsModule }           from '@angular/forms';
+import { TranslateModule }       from '@ngx-translate/core';
 
-import { TranslateModule }  from '@ngx-translate/core';
-import { ComponentsModule } from '../../components/components.module';
+import { DownloadComponent }     from './download.component';
+import { ComponentsModule }      from '../../components/components.module';
 
 @Injectable()
-export class OsResolver implements Resolve<Observable<string>> {
+export class OsResolver implements Resolve<any> {
 
     deviceInfo: any;
     platform: string;
@@ -27,17 +29,17 @@ export class OsResolver implements Resolve<Observable<string>> {
         this.deviceInfo = this.deviceService.getDeviceInfo();
 
         this.platformMatch = {
-            'unix': 'Linux',
-            'linux': 'Linux',
-            'mac': 'MacOS',
-            'windows': 'Windows',
-            'arm': 'ARM',
-            'skd': 'SDK'
+            unix: 'Linux',
+            linux: 'Linux',
+            mac: 'MacOS',
+            windows: 'Windows',
+            arm: 'ARM',
+            skd: 'SDK'
         };
     }
 
     resolve() {
-        this.platform = this.platformMatch[this.deviceInfo.os];
+        this.platform = this.platformMatch[this.deviceInfo.os.toLowerCase()].toLowerCase();
         if (this.platform) {
             this.router.navigate(['/download/' + this.platform]);
             return empty;
@@ -50,7 +52,7 @@ export class OsResolver implements Resolve<Observable<string>> {
 const appRoutes: Routes = [
     // {path: 'downloads', component: DownloadComponent},
     {path: '', redirectTo: 'download', pathMatch: 'full'},
-    {path: 'download', component: DownloadComponent, resolve: {platform: OsResolver}},
+    {path: 'download', component: DownloadComponent, resolve: { platform: OsResolver }},
     {path: 'download/:platform', component: DownloadComponent}
 ];
 
@@ -58,13 +60,12 @@ const appRoutes: Routes = [
     imports: [
         CommonModule,
         BrowserModule,
-        UpgradeModule,
         NgbModule,
         FormsModule,
         TranslateModule,
         ComponentsModule,
 
-        // RouterModule.forChild(appRoutes)
+        RouterModule.forChild(appRoutes)
     ],
     providers: [
         OsResolver
@@ -82,9 +83,3 @@ const appRoutes: Routes = [
 })
 export class DownloadModule {
 }
-
-declare var angular: angular.IAngularStatic;
-angular
-    .module('cloudApp.directives')
-    .directive('downloadComponent', downgradeComponent({component: DownloadComponent}) as angular.IDirectiveFactory);
-

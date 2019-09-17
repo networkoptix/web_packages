@@ -17,7 +17,7 @@ const appRoutes: Routes = [
         BrowserModule,
         UpgradeModule,
 
-        //RouterModule.forChild(appRoutes)
+        RouterModule.forChild(appRoutes)
     ],
     providers: [],
     declarations: [
@@ -33,8 +33,3 @@ const appRoutes: Routes = [
 })
 export class NonSupportedBrowserModule {
 }
-
-declare var angular: angular.IAngularStatic;
-angular
-        .module('cloudApp.directives')
-        .directive('nonSupportedBrowser', downgradeComponent({ component: NonSupportedBrowserComponent }) as angular.IDirectiveFactory)

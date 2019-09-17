@@ -9,19 +9,19 @@
     "emailSubject": "{{message.subject}}"
   },
   "contact_sales": {
-    "emailSubject": "Verkoopaanvraag voor {{message.product}}"
+    "emailSubject": "Verkoopaanvraag voor {{message.asset}}"
   },
   "contact_support": {
-    "emailSubject": "Ondersteuningsverzoek voor {{message.product}}"
+    "emailSubject": "Ondersteuningsverzoek voor {{message.asset}}"
   },
   "integration_feedback": {
-    "emailSubject": "Feedback over {{message.product}}"
+    "emailSubject": "Feedback over {{message.asset}}"
   },
   "ipvd_feedback": {
-    "emailSubject": "Camera pagina feedback{{#message.product}} voor {{message.product}}{{/message.product}}"
+    "emailSubject": "Camera pagina feedback{{#message.asset}} voor {{message.asset}}{{/message.asset}}"
   },
   "review_version": {
-    "emailSubject": "{{message.product_type}}: {{message.product}} heeft een nieuwe versie om te beoordelen"
+    "emailSubject": "{{message.asset_type}}: {{message.asset}} heeft een nieuwe versie om te beoordelen"
   },
   "restore_password": {
     "emailSubject": "Uw wachtwoord opnieuw instellen"

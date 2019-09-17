@@ -1,4 +1,4 @@
-<form *ngIf="lang" #messageForm="ngForm" name="messageForm" novalidate>
+<form *ngIf="LANG" #messageForm="ngForm" name="messageForm" novalidate>
     <div class="modal-header">
         <h1 class="modal-title">{{ title }}</h1>
         <button type="button" class="close"
@@ -14,7 +14,7 @@
                 <label for="to_email" translate>To</label>
                 <div id="to_email" class="form-control-plaintext">
                     {{data.to}}&nbsp;
-                    <a href="mailto:{{data.email}}?subject={{topicMessage}}&body=I have a question about {{data.product}}%0D%0A%0D%0A Link: {{url}}"
+                    <a href="mailto:{{data.email}}?subject={{topicMessage}}&body=I have a question about {{data.asset}}%0D%0A%0D%0A Link: {{url}}"
                        target="_blank">
                         {{data.email}}
                     </a>
@@ -60,7 +60,7 @@
     <div class="modal-footer">
         <nx-process-button [process]="sendMessage"
                            [form]="feedbackForm"
-                           action-type="'primary'"
+                           [actionType]="'primary'"
                            buttonText="{{ 'Send' | translate }}"></nx-process-button>
 
         <button type="button" class="btn btn-default" (click)="close()" translate>Cancel</button>

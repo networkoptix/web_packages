@@ -1,8 +1,8 @@
-ישנה גרסה חדשה לסריקה עבור {{ message.product }}{{message.product_type}}.
+ישנה גרסה חדשה לסריקה עבור {{ message.asset }}{{message.asset_type}}.
 
-לחץ על הקישור כדי לבדוק את הטיוטה {{ message.id }} עבור {{ message.product }}
+לחץ על הקישור כדי לבדוק את הטיוטה {{ message.id }} עבור {{ message.asset }}
 
-קישור לסקירה: {{ config.portal_url }}/admin/cms/version/{{ message.id }}/
+Link to review: {{ config.portal_url }}/admin/cms/assetcustomizationreview/{{ message.id }}/change/
 
 בדף זה אתה יכול
 1) ליצור תצוגה מקדימה כדי לראות את השינויים האחרונים.

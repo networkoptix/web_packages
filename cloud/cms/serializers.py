@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from cms.models import Context, DataStructure, ProductType
+from cms.models import Context, DataStructure, AssetType
 
 
 class BaseCMSSerializer(serializers.ModelSerializer):
@@ -8,8 +8,8 @@ class BaseCMSSerializer(serializers.ModelSerializer):
         if "use_actual_values" in kwargs:
             self.query["use_actual_values"] = kwargs.pop("use_actual_values")
 
-        if "product" in kwargs:
-            self.query["product"] = kwargs.pop("product")
+        if "asset" in kwargs:
+            self.query["asset"] = kwargs.pop("asset")
         if "lang" in kwargs:
             self.query["lang"] = kwargs.pop("lang")
         if "draft" in kwargs:
@@ -38,7 +38,7 @@ class DataStructureSerializer(BaseCMSSerializer):
         is_file_or_image = DataStructure.is_file_or_image(obj.type)
         if self.query and not is_file_or_image:
 
-            return obj.find_actual_value(product=self.query["product"],
+            return obj.find_actual_value(asset=self.query["asset"],
                                          language=self.query["lang"],
                                          draft=self.query["draft"])
         return obj.default if not is_file_or_image else ""
@@ -58,9 +58,9 @@ class ContextSerializer(BaseCMSSerializer):
         return DataStructureSerializer(obj.datastructure_set.all(), many=True, params=self.query).data
 
 
-class ProductTypeSerializer(BaseCMSSerializer):
+class AssetTypeSerializer(BaseCMSSerializer):
     class Meta:
-        model = ProductType
+        model = AssetType
         fields = ("type", "can_preview", "single_customization", "contexts")
 
     contexts = serializers.SerializerMethodField('get_contexts_values')
@@ -70,4 +70,4 @@ class ProductTypeSerializer(BaseCMSSerializer):
         return ContextSerializer(obj.context_set.all(), many=True, params=self.query).data
 
     def get_nice_name(self, obj):
-        return ProductType.PRODUCT_TYPES[obj.type]
+        return AssetType.ASSET_TYPES[obj.type]

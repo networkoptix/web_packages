@@ -1,7 +1,8 @@
 *** Settings ***
 Library           SeleniumLibrary    run_on_failure=Failure Tasks
-Library           NoptixImapLibrary/
 Library           String
+Library           Collections
+Library           NoptixImapLibrary/
 Library           NoptixLibrary/
 Resource          variables.robot
 Resource          ${variables_file}
@@ -25,7 +26,7 @@ Open Browser and go to URL
     ...          ELSE    Open Browser With Options
     Set Selenium Speed    ${speed}
     Set Selenium Timeout    ${selenium_timeout}
-    Check Language
+    Check Language Anonymous
     Go To    ${url}
 
 Regular Open Browser
@@ -56,10 +57,17 @@ Set Chrome Options Headless
     \    Call Method    ${options}    add_argument    ${option}
     [Return]    ${options}
 
-Check Language
+Check Language Anonymous
 #    Wait Until Page Contains Element    ${LANGUAGE DROPDOWN}/span[@lang='en_US']
     Register Keyword To Run On Failure    NONE
     ${status}=    Run Keyword And Return Status    Wait Until Element Is Visible    ${LANGUAGE DROPDOWN}/span[@lang='${LANGUAGE}']    5
+    Register Keyword To Run On Failure    Failure Tasks
+    Run Keyword If    "${status}"=="False"    Set Language
+
+Check Langauge Logged In
+    Register Keyword To Run On Failure    NONE
+    Go To    ${ENV}/account
+    ${status}=    Run Keyword And Return Status    Wait Until Element Is Visible    ${ACCOUNT LANGUAGE DROPDOWN}/span[@lang='${LANGUAGE}']    5
     Register Keyword To Run On Failure    Failure Tasks
     Run Keyword If    "${status}"=="False"    Set Language
 
@@ -86,7 +94,7 @@ Log In
 Validate Log In
     Wait Until Page Contains Element    ${AUTHORIZED BODY}    10
     Wait Until Elements Are Visible    ${ACCOUNT DROPDOWN}
-    Check Language
+    Check Langauge Logged In
     Sleep    1    #this is a test to see if it eliminates a problem with the login dialog popping up on logout
 
 Log Out
@@ -102,7 +110,7 @@ Log Out
 Validate Log Out
     Wait Until Element Is Not Visible    ${BACKDROP}
     Wait Until Page Contains Element    ${ANONYMOUS BODY}
-    Check Language
+    Check Language Anonymous
 
 Register
     [arguments]    ${first name}    ${last name}    ${email}    ${password}    ${checked}=false
@@ -423,3 +431,21 @@ Set Checkbox Value
     Should Not Be Empty    ${id}    'The specified checkbox element "${CHECKBOX ELEMENT}" does not have an id attribute and cannot be used with the Set Checkbox Value Keyword.'
     ${checked}    Get Checkbox Value    ${CHECKBOX ELEMENT}
     Run Keyword If    ${checked} != ${Desired Bool Value}    Execute Javascript    window.document.getElementById('${id}').click()
+
+Get Child WebElements
+    [arguments]    ${locator}
+    ${element}=   Get WebElement    ${locator}
+    ${children}=    Call Method
+    ...    ${element}
+    ...    find_elements
+    ...    by=xpath    value=child::*
+    [return]    ${children}
+
+Get Parent WebElement
+    [arguments]    ${locator}
+    ${element}=   Get WebElement    ${locator}
+    ${parent}=   Call Method
+    ...    ${element}
+    ...    find_element
+    ...    by=xpath    value=parent::*
+    [return]    ${parent}

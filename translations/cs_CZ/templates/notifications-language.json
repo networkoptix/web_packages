@@ -9,19 +9,19 @@
     "emailSubject": "{{message.subject}}"
   },
   "contact_sales": {
-    "emailSubject": "Dotaz na prodejce o {{message.product}}"
+    "emailSubject": "Dotaz na prodejce o {{message.asset}}"
   },
   "contact_support": {
-    "emailSubject": "Žádost o podporu {{message.product}}"
+    "emailSubject": "Žádost o podporu {{message.asset}}"
   },
   "integration_feedback": {
-    "emailSubject": "Zpětná vazba pro {{message.product}}"
+    "emailSubject": "Zpětná vazba pro {{message.asset}}"
   },
   "ipvd_feedback": {
-    "emailSubject": "Zpětná vazba stránky kamery{{#message.product}} pro {{message.product}}{{/message.product}}"
+    "emailSubject": "Zpětná vazba stránky kamery{{#message.asset}} pro {{message.asset}}{{/message.asset}}"
   },
   "review_version": {
-    "emailSubject": "{{message.product_type}}: {{message.product}} má novou verzi ke kontrole"
+    "emailSubject": "{{message.asset_type}}: {{message.asset}} má novou verzi ke kontrole"
   },
   "restore_password": {
     "emailSubject": "Resetovat heslo"

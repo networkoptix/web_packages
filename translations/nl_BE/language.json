@@ -4,17 +4,6 @@
   "cloudName": "%CLOUD_NAME%",
   "vmsName": "%VMS_NAME%",
   "clientProtocol": "%CLIENT_PROTOCOL%:",
-  "dialogs": {
-    "okButton": "Oké",
-    "cancelButton": "Annuleren",
-    "loginTitle": "Meld u aan bij %CLOUD_NAME%",
-    "loginButton": "Inloggen",
-    "logoutAuthorisedTitle": "U bent reeds ingelogd",
-    "logoutAuthorisedContinueButton": "Doorgaan",
-    "logoutAuthorisedLogoutButton": "Uitloggen",
-    "noClientDetectedTitle": "Installeer %VMS_NAME% om uw systeem te bekijken",
-    "download": "Download %VMS_NAME%"
-  },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
     "default": "%CLOUD_NAME%",
@@ -168,14 +157,6 @@
     "commonMessage": "Dit wachtwoord bevind zich in de top van de meest populaire wachtwoorden in de wereld",
     "missingMessage": "Wachtwoord is vereist"
   },
-  "sharing": {
-    "confirmOwner": "Als u de eigenaar van het systeem wijzigt, trekt u het eigendom in van het uw account voor dit systeem. Deze actie is onomkeerbaar. Weet je het zeker?",
-    "shareTitle": "Delen",
-    "shareConfirmButton": "Delen",
-    "editShareTitle": "Wijzig machtigingen",
-    "editShareConfirmButton": "Opslaan",
-    "permissionsSaved": "Nieuwe machtigingen opgeslagen"
-  },
   "system": {
     "yourSystem": "Uw systeem",
     "mySystemSearch": "IMeMyMine",
@@ -190,11 +171,10 @@
     "successRename": "Systeemnaam opgeslagen",
     "confirmDisconnectTitle": "Ontkoppel het systeem van %CLOUD_NAME%?",
     "confirmDisconnectAction": "Verbinding verbreken",
-    "confirmUnshareFromMe": "U staat op het punt om dit systeem uit uw account te verbreken. U kunt dit systeem niet meer gebruiken. Weet u het zeker?",
-    "confirmUnshareFromMeTitle": "Systeem loskoppelen?",
+    "confirmUnshareFromMe": "You will not be able to lgo into this System anymore.",
+    "confirmUnshareFromMeTitle": "Disconnect System from your Account?",
     "confirmUnshareFromMeAction": "Verbinding verbreken",
-    "confirmUnshare": "Deze gebruiker heeft geen toegang tot het systeem. Weet je het zeker?",
-    "confirmUnshareTitle": "Gebruiker verwijderen?",
+    "confirmUnshareTitle": "Remove user?",
     "confirmUnshareAction": "Verwijder",
     "successDisconnected": "Systeem is met succes ontkoppeld van %CLOUD_NAME%",
     "successDeleted": "Systeem {{systemName}} is succesvol verwijderd van uw account",
@@ -203,20 +183,6 @@
     "mergeSuccess": "Systeem samenvoegen voltooid",
     "permissionsRemoved": "Machtigingen zijn verwijderd uit {{email}}",
     "unknownName": "Onbekende naam voor systeem (veroorzaakt door samenvoeging in de cloud)"
-  },
-  "account": {
-    "accountSavedSuccess": "Uw account is succesvol opgeslagen",
-    "activationLinkSent": "Activatielink verzonden",
-    "passwordChangedSuccess": "Uw account is succesvol opgeslagen",
-    "changePassword": "Wachtwoord wijzigen",
-    "newPasswordLabel": "Nieuw wachtwoord",
-    "saveChanges": "Opslaan"
-  },
-  "activeActions": {
-    "sendConfirm": "Activatielink opnieuw verzenden",
-    "resetPassword": "Reset wachtwoord",
-    "setNewPassword": "Wachtwoord opslaan",
-    "setNewPasswordLabel": "Nieuw wachtwoord"
   },
   "regActions": {
     "passwordLabel": "Password",

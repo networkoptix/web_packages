@@ -60,7 +60,7 @@ Weak Password asqwerdf                    mark        hamill      ${valid email}
     [tags]    C41860
 Cyrillic Password Кенгшщзх                mark        hamill      ${valid email}            ${CYRILLIC TEXT}            True
     [tags]    C41860
-Smiley Password ☠☿☂⊗⅓∠∩λ℘웃♞⊀☻★    mark        hamill      ${valid email}            ${SMILEY TEXT}              True
+Smiley Password ☠☿☂⊗⅓∠∩λ℘웃♞⊀☻★      mark        hamill      ${valid email}            ${SMILEY TEXT}              True
     [tags]    C41860
 Glyph Password 您都可以享受源源不絕的好禮及優惠    mark        hamill      ${valid email}            ${GLYPH TEXT}               True
     [tags]    C41860
@@ -70,9 +70,9 @@ Leading Space Password                    mark        hamill      ${valid email}
     [tags]    C41860
 Trailing Space Password                   mark        hamill      ${valid email}            ${BASE PASSWORD}${SPACE}    True
     [tags]    C41860
-Fair Password                             mark        hamill      ${EMPTY}                  ${symbol password}          True
+Fair Password                             mark        hamill      ${SPACE}                  ${symbol password}          True
     [tags]    C41860
-Good Password                             mark        hamill      ${EMPTY}                  ${BASE PASSWORD}            True
+Good Password                             mark        hamill      ${SPACE}                  ${BASE PASSWORD}            True
     [tags]    C41860
 Middle Space Password qweasd 123          mark        hamill      ${valid email}            ${BASE PASSWORD}            True
     [tags]    C41862
@@ -92,7 +92,7 @@ Invalid All                               ${SPACE}    ${SPACE}    noptixqagmail.
     [tags]    C41556
 Terms Unchecked                           mark        hamill      ${valid email}            ${BASE PASSWORD}            False
     [tags]    C41556
-Empty All                                 ${EMPTY}    ${EMPTY}    ${EMPTY}                  ${EMPTY}                    False
+Empty All                                 ${EMPTY}    ${EMPTY}    ${SPACE}                  ${EMPTY}                    False
     [tags]    C41556
 
 *** Keywords ***
@@ -109,28 +109,24 @@ Test Register Invalid
     ...    //span[@ng-if="registerForm.registerEmail.$touched && registerForm.registerEmail.$error.email" and contains(text(),'${EMAIL INVALID TEXT}')]
     Run Keyword If    "${LANGUAGE}"=="he_IL"    Set Suite Variable    ${EMAIL IS REQUIRED}=
     ...    //span[@ng-if="registerForm.registerEmail.$touched && registerForm.registerEmail.$error.required" and contains(text(),'${EMAIL IS REQUIRED TEXT}')]
-    Elements Should Not Be Visible    ${EMAIL INVALID}
-    ...    ${EMAIL ALREADY REGISTERED}
-    ...    ${EMAIL IS REQUIRED}
-    ...    ${REGISTER EMAIL INPUT}/parent::div/parent::div[contains(@class,"has-error")]
-    ...    ${PASSWORD BADGE}
-    ...    ${PASSWORD IS REQUIRED}
-    ...    ${PASSWORD TOO SHORT}
-    ...    ${PASSWORD SPECIAL CHARS}
-    ...    ${PASSWORD TOO COMMON}
-    ...    ${PASSWORD IS WEAK}
-    ...    ${REGISTER PASSWORD INPUT}/../input[contains(@class,'ng-invalid ')]
-    ...    ${FIRST NAME IS REQUIRED}
-    ...    ${REGISTER FIRST NAME INPUT}/parent::div/parent::div[contains(@class,"has-error")]
-    ...    ${LAST NAME IS REQUIRED}
-    ...    ${REGISTER LAST NAME INPUT}/parent::div/parent::div[contains(@class,"has-error")]
-    ...    ${TERMS AND CONDITIONS ERROR}
     Wait Until Elements Are Visible
     ...    ${REGISTER FIRST NAME INPUT}
     ...    ${REGISTER LAST NAME INPUT}
     ...    ${REGISTER EMAIL INPUT}
     ...    ${REGISTER PASSWORD INPUT}
     ...    ${CREATE ACCOUNT BUTTON}
+    Elements Should Not Be Visible    ${EMAIL INVALID}
+    ...    ${EMAIL ALREADY REGISTERED}
+    ...    ${EMAIL IS REQUIRED}
+    ...    ${PASSWORD BADGE}
+    ...    ${PASSWORD IS REQUIRED}
+    ...    ${PASSWORD TOO SHORT}
+    ...    ${PASSWORD SPECIAL CHARS}
+    ...    ${PASSWORD TOO COMMON}
+    ...    ${PASSWORD IS WEAK}
+    ...    ${FIRST NAME IS REQUIRED}
+    ...    ${LAST NAME IS REQUIRED}
+    ...    ${TERMS AND CONDITIONS ERROR}
     Register Form Validation    ${first}    ${last}    ${email}    ${pass}    ${checked}
     Run Keyword Unless    '''${pass}'''=='''${BASE PASSWORD}''' or '''${pass}'''=='''${symbol password}'''
     ...    Check Password Outline    ${pass}
@@ -141,6 +137,7 @@ Test Register Invalid
 
 Register Form Validation
     [arguments]    ${first name}    ${last name}    ${email}    ${password}    ${checked}
+    Clear Element Text    ${REGISTER PASSWORD INPUT}
     Input Text    ${REGISTER FIRST NAME INPUT}    ${first name}
     Input Text    ${REGISTER LAST NAME INPUT}    ${last name}
     Input Text    ${REGISTER EMAIL INPUT}    ${email}
@@ -148,7 +145,7 @@ Register Form Validation
     sleep    .1
     Input Text    ${REGISTER PASSWORD INPUT}    ${password}
     Run Keyword If    '''${password}'''!='''${EMPTY}'''     Check Password Badge    ${password}
-    Run Keyword If    "${checked}"=="True"    Click Element    ${TERMS AND CONDITIONS CHECKBOX REAL}
+    Run Keyword If    "${checked}"=="True"    Click Element    ${TERMS AND CONDITIONS CHECKBOX VISIBLE}
     Sleep    .1    #On Ubuntu it was going too fast
     click button    ${CREATE ACCOUNT BUTTON}
 
@@ -170,8 +167,9 @@ Check Password Badge
 
 Check Email Outline
     [Arguments]    ${email}
-    Wait Until Element Is Visible
-    ...    ${REGISTER EMAIL INPUT}/parent::div/parent::div[contains(@class,"has-error")]
+    Sleep    2
+    Element Style Should Be    ${REGISTER EMAIL INPUT}    border-color    ${ERROR COLOR}
+    Element Style Should Be    ${REGISTER EMAIL INPUT}    color    ${ERROR COLOR WITH OPACITY}
     Run Keyword If    "${email}"=="${EMPTY}" or "${email}"=="${SPACE}"
     ...    Element Should Be Visible    ${EMAIL IS REQUIRED}
     Run Keyword If    "${email}"=="${existing email}"
@@ -181,8 +179,8 @@ Check Email Outline
 
 Check Password Outline
     [Arguments]    ${pass}
-    Wait Until Element Is Visible
-    ...    ${REGISTER PASSWORD INPUT}/../input[contains(@class,'ng-invalid')]
+    Element Style Should Be    ${REGISTER PASSWORD INPUT}    border-color    ${ERROR COLOR}
+    Element Style Should Be    ${REGISTER PASSWORD INPUT}    color    ${ERROR COLOR WITH OPACITY}
     Run Keyword If    '''${pass}'''=='''${EMPTY}''' or '''${pass}'''=='''${SPACE}'''
     ...    Element Should Be Visible    ${PASSWORD IS REQUIRED}
     Run Keyword If    '''${pass}'''=='''${7char password}'''
@@ -196,14 +194,14 @@ Check Password Outline
 
 Check First Name Outline
     [Arguments]    ${first}
-    Wait Until Element Is Visible
-    ...    ${REGISTER FIRST NAME INPUT}/parent::div/parent::div[contains(@class,"has-error")]
+    Element Style Should Be    ${REGISTER FIRST NAME INPUT}    border-color    ${ERROR COLOR}
+    Element Style Should Be    ${REGISTER FIRST NAME INPUT}    color    ${ERROR COLOR WITH OPACITY}
     Element Should Be Visible    ${FIRST NAME IS REQUIRED}
 
 Check Last Name Outline
     [Arguments]    ${last}
-    Wait Until Element Is Visible
-    ...    ${REGISTER LAST NAME INPUT}/parent::div/parent::div[contains(@class,"has-error")]
+    Element Style Should Be    ${REGISTER LAST NAME INPUT}    border-color    ${ERROR COLOR}
+    Element Style Should Be    ${REGISTER LAST NAME INPUT}    color    ${ERROR COLOR WITH OPACITY}
     Element Should Be Visible    ${LAST NAME IS REQUIRED}
 
 Check Terms and Conditions Error

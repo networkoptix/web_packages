@@ -1,3 +1,3 @@
 Привіт, {{ message.userFullName }}
-{{ message.sender_name}} ({{ message.sender_email }}) маж наступне запитання щодо продажу {{ message.product }}:
+{{ message.sender_name}} ({{ message.sender_email }}) маж наступне запитання щодо продажу {{ message.asset }}:
 <pre>{{ message.message }}</pre>

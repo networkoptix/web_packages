@@ -1,6 +1,6 @@
 *** Settings ***
 Resource          ../ipvd_resource.robot
-Suite Setup       Open IPVD page and Log In
+Suite Setup       Open IPVD Page
 Test Template     Test Submit Feedback Message
 Test Teardown     NONE
 Suite Teardown    Close All Browsers
@@ -40,7 +40,7 @@ Test Submit Feedback Message
     Click Element    ${IPVD SEND DEVICE FEEDBACK}
     Wait Until Element Is Visible    ${IPVD FEEDBACK}
     ${model}=   Get Text    ${IPVD DEVICE MODEL}
-    Element Should Contain    ${IPVD FEEDBACK TITLE}    Feedback about ${model}
+    Element Should Contain    ${IPVD FEEDBACK TITLE}    ${IPVD FEEDBACK ABOUT} ${model}
     Submit Feedback/Request Form    ${Your Name}    ${Email}    ${Message}
     Run Keyword If    ${Expect Success}==True    Validate Message Sent
     ...    ELSE IF    ${Expect Success}==False   Validate Message Not Sent

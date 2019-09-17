@@ -43,7 +43,7 @@ describe('NxRibbonComponent', () => {
         message:
           'Alcohol! Because no great story started with someone eating a salad.',
         text: 'Go back',
-        url: '/admin/cms/product/'
+        url: '/admin/cms/asset'
       };
 
       service.show(context.message, context.text, context.url);
@@ -74,7 +74,7 @@ describe('NxRibbonComponent', () => {
         message:
           'Alcohol! Because no great story started with someone eating a salad.',
         text: 'Go back',
-        url: '/admin/cms/product/'
+        url: '/admin/cms/asset'
       };
 
       service.show(context.message, context.text, context.url);

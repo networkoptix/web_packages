@@ -4,17 +4,6 @@
   "cloudName": "%CLOUD_NAME%",
   "vmsName": "%VMS_NAME%",
   "clientProtocol": "%CLIENT_PROTOCOL%:",
-  "dialogs": {
-    "okButton": "OK",
-    "cancelButton": "Peruuta",
-    "loginTitle": "Kirjaudu sisään %CLOUD_NAME%",
-    "loginButton": "Kirjaudu sisään",
-    "logoutAuthorisedTitle": "Olet jo kirjautunut sisään",
-    "logoutAuthorisedContinueButton": "Jatka",
-    "logoutAuthorisedLogoutButton": "Kirjaudu ulos",
-    "noClientDetectedTitle": "Asenna %VMS_NAME% nähdäksesi järjestelmän",
-    "download": "Lataa %VMS_NAME%"
-  },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
     "default": "%CLOUD_NAME%",
@@ -168,14 +157,6 @@
     "commonMessage": "Tämä salasana on maailman suosituimpia salasanoja",
     "missingMessage": "Salasana tarvitaan"
   },
-  "sharing": {
-    "confirmOwner": "Jos vaihdat järjestelmän omistajaa, peruutat omistusoikeuden nykyisestä tilistä. Tämä toimenpide on peruuttamaton. Oletko varma?",
-    "shareTitle": "Jaa",
-    "shareConfirmButton": "Jaa",
-    "editShareTitle": "Muokkaa käyttöoikeuksia",
-    "editShareConfirmButton": "Tallenna",
-    "permissionsSaved": "Uudet käyttöoikeudet tallennettu"
-  },
   "system": {
     "yourSystem": "Järjestelmäsi",
     "mySystemSearch": "IMeMyMine",
@@ -190,11 +171,10 @@
     "successRename": "Järjestelmän nimi on tallennettu",
     "confirmDisconnectTitle": "Irrota järjestelmä %CLOUD_NAME%?",
     "confirmDisconnectAction": "Katkaise yhteys",
-    "confirmUnshareFromMe": "Olet poistamassa tämän järjestelmän tilistäsi. Et voi enää käyttää tätä järjestelmää. Oletko varma?",
-    "confirmUnshareFromMeTitle": "Katkaise yhteys järjestelmään?",
+    "confirmUnshareFromMe": "You will not be able to lgo into this System anymore.",
+    "confirmUnshareFromMeTitle": "Disconnect System from your Account?",
     "confirmUnshareFromMeAction": "Katkaise yhteys",
-    "confirmUnshare": "Tämä käyttäjä ei voi käyttää järjestelmää. Oletko varma?",
-    "confirmUnshareTitle": "Poista käyttäjä?",
+    "confirmUnshareTitle": "Remove user?",
     "confirmUnshareAction": "Poista",
     "successDisconnected": "Järjestelmä irrotetaan onnistuneesti %CLOUD_NAME%",
     "successDeleted": "Järjestelmä {{systemName}} poistetaan onnistuneesti tililtäsi",
@@ -203,20 +183,6 @@
     "mergeSuccess": "Järjestelmän yhdistäminen on valmis",
     "permissionsRemoved": "Käyttöoikeudet poistettiin {{email}}",
     "unknownName": "Järjestelmän tuntematon nimi (pilviliitoksen aiheuttama)"
-  },
-  "account": {
-    "accountSavedSuccess": "Tilisi on onnistuneesti päivitetty",
-    "activationLinkSent": "Aktivointilinkki lähetetty",
-    "passwordChangedSuccess": "Tilisi on onnistuneesti päivitetty",
-    "changePassword": "Vaihda salasana",
-    "newPasswordLabel": "Uusi salasana",
-    "saveChanges": "Tallenna"
-  },
-  "activeActions": {
-    "sendConfirm": "Lähetä aktivointilinkki uudelleen",
-    "resetPassword": "Vaihda salasana",
-    "setNewPassword": "Tallenna salasana",
-    "setNewPasswordLabel": "Uusi salasana"
   },
   "regActions": {
     "passwordLabel": "Salasana",

@@ -1,22 +1,34 @@
-import { Component, OnInit, Inject, ViewEncapsulation, Input, Output, EventEmitter } from '@angular/core';
-import { TranslateService }                                                          from '@ngx-translate/core';
+import { Component, OnInit, Inject, ViewEncapsulation, Input, Output, EventEmitter, forwardRef } from '@angular/core';
 import { NxUtilsService }                                                            from '../../../services/utils.service';
+import { NxLanguageProviderService }                                                 from '../../../services/nx-language-provider';
+import { NxCloudApiService }                                                         from '../../../services/nx-cloud-api';
+import { NG_VALUE_ACCESSOR, ControlValueAccessor }                                   from '@angular/forms';
 
 @Component({
     selector: 'nx-language-select',
     templateUrl: 'language.component.html',
     styleUrls: ['language.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => NxLanguageDropdown),
+            multi: true
+        }
+    ]
 })
 
 export class NxLanguageDropdown implements OnInit {
     @Input() instantReload: any;
+    @Input() instantApply: any;
     @Input() dropup: any;
     @Input() short: any;
-    @Output() onSelected = new EventEmitter<string>();
+    @Input() altStyle: any;
 
+    currentLang: string;
     show: boolean;
     direction: string;
+    langCode: string;
     activeLanguage = {
         language: '',
         name: ''
@@ -25,10 +37,15 @@ export class NxLanguageDropdown implements OnInit {
     languagesCol1 = [];
     languagesCol2 = [];
 
-    constructor(@Inject('cloudApiService') private cloudApi: any,
-                @Inject('languageService') private language: any,
-                private translate: TranslateService) {
+    // Placeholders for the callbacks which are later provided
+    // by the Control Value Accessor
+    private onTouchedCallback = () => {};
+    private onChangeCallback = (_: any) => {};
 
+    constructor(private cloudApi: NxCloudApiService,
+                private language: NxLanguageProviderService,
+    ) {
+        this.currentLang = this.language.getLang();
         this.show = false;
     }
 
@@ -44,39 +61,43 @@ export class NxLanguageDropdown implements OnInit {
     }
 
     change(langCode: string) {
-        if (this.activeLanguage.language !== langCode) {
-            /*  TODO: Currently this is not needed because the language file will
-            be loaded during page reload. Once we transfer everything to Angular 5
-            we should use this for seamless change of language
-            // this.translate.use(lang.replace('_', '-'));
-            */
+        this.langCode = langCode;
+        this.onTouchedCallback();
+        this.onChangeCallback(langCode);
+        this.setLanguage();
+        return false; // return false so event will not bubble to HREF
+    }
 
+    setLanguage() {
+        if (this.activeLanguage.language !== this.langCode) {
             this.activeLanguage = this.languages.find(lang => {
-                return (lang.language === langCode);
+                return (lang.language === this.langCode);
             });
-            this.onSelected.emit(langCode);
 
-            if (this.instantReload) {
+            if (this.instantApply && this.instantReload) {
+                /*  TODO: Currently this is not needed because the language file will
+                be loaded during page reload. Once we transfer everything to Angular 5
+                we should use this for seamless change of language
+                // this.translate.use(lang.replace('_', '-'));
+                */
                 this.cloudApi
-                    .changeLanguage(langCode)
-                    .then(() => {
+                    .changeLanguage(this.langCode)
+                    .then((response) => {
                         window.location.reload();
-                        return false; // return false so event will not bubble to HREF
                     });
             }
         }
-
-        return false; // return false so event will not bubble to HREF
     }
 
     ngOnInit(): void {
         this.direction = this.dropup ? 'dropup' : '';
         this.instantReload = this.instantReload !== undefined;
+        this.instantApply = this.instantApply !== undefined;
 
         this.cloudApi
             .getLanguages()
             .then((data: any) => {
-                this.languages = data.data;
+                this.languages = data;
                 this.languages.sort(NxUtilsService.byParam((lang) => {
                     return lang.language;
                 }, NxUtilsService.sortASC));
@@ -84,8 +105,28 @@ export class NxLanguageDropdown implements OnInit {
                 this.splitLanguages();
 
                 this.activeLanguage = this.languages.find(lang => {
-                    return (lang.language === this.language.lang.language);
+                    return (lang.language === this.currentLang);
                 });
+                this.onChangeCallback(this.activeLanguage.language);
             });
+    }
+
+    writeValue(langCode: any) {
+        this.langCode = langCode;
+        if (langCode) {
+            this.setLanguage();
+        }
+    }
+
+    registerOnChange(fn) {
+        this.onChangeCallback = fn;
+    }
+
+    registerOnTouched(fn: any): void {
+        this.onTouchedCallback = fn;
+    }
+
+    onBlur() {
+        this.onTouchedCallback();
     }
 }

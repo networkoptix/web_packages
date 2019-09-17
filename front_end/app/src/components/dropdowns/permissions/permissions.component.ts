@@ -1,8 +1,8 @@
 import {
     Component, OnInit, Inject, ViewEncapsulation,
     Input, Output, EventEmitter, SimpleChanges
-} from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+}                                    from '@angular/core';
+import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 
 @Component({
     selector     : 'nx-permissions-select',
@@ -12,11 +12,14 @@ import { TranslateService } from '@ngx-translate/core';
 })
 
 export class NxPermissionsDropdown implements OnInit {
+    @Input() disabled: any;
     @Input() user: any;
     @Input() roles: any;
     @Input() system: any;
     @Input() selected: any;
     @Output() onSelected = new EventEmitter<string>();
+
+    LANG: any;
 
     selection: string;
     message: string;
@@ -24,21 +27,12 @@ export class NxPermissionsDropdown implements OnInit {
     accessRoles: any;
     differ: any;
 
-    constructor(@Inject('cloudApiService') private cloudApi: any,
-                @Inject('languageService') private language: any,
-                // private differs: KeyValueDiffers,
-                private translate: TranslateService) {
-
+    constructor(private language: NxLanguageProviderService,
+    ) {
+        this.LANG = this.language.getTranslations();
         this.accessRoles = [];
         this.show = false;
-
-        // Keeping this just for reference ... ngDoCheck runs often so it's unnecessary overhead
-        // this.differ = this.differs.find({}).create();
-
-        translate.get('Please select...')
-            .subscribe((res: string) => {
-                this.message = res;
-            });
+        this.message = this.LANG.pleaseSelect;
     }
 
     // TODO: Bind ngModel to the component and eliminate EventEmitter
@@ -50,8 +44,8 @@ export class NxPermissionsDropdown implements OnInit {
         if (this.roles) {
             this.accessRoles = this.roles.filter((role) => {
                 if (!(role.isOwner || role.isAdmin && !this.system.isMine)) {
-                    role.optionLabel = this.language.lang.accessRoles[ role.name ] ?
-                            this.language.lang.accessRoles[role.name].label :
+                    role.optionLabel = this.LANG.accessRoles[ role.name ] ?
+                            this.LANG.accessRoles[role.name].label :
                             role.name;
 
                     return role;
@@ -83,6 +77,10 @@ export class NxPermissionsDropdown implements OnInit {
                 this.selection = role.optionLabel || this.message;
                 this.changePermission(role);
             }
+        }
+
+        if (changes.selected && changes.selected.currentValue) {
+            this.selection = changes.selected.currentValue.name;
         }
     }
 

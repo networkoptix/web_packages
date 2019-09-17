@@ -92,6 +92,101 @@ should show system name in header with no dropdown if user has only one system
     Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
     Remove User Permissions    ${EMAIL NOPERM}
 
+User have several systems linked to his account
+    [tags]    C41570    Threaded
+    Log    Step 1
+    Log In    ${EMAIL OWNER}    ${password}
+    Validate Log In
+    # Expected Result
+    Wait Until Element Is Visible    ${SYSTEMS DROPDOWN}
+    ${count1}=   Get Text    ${SYSTEMS DROPDOWN}
+    ${count1}=   Remove String Using Regexp
+    ...    ${count1}
+    ...    \\D
+    Should Be True
+    ...    ${count1} > 12
+    ...    The Systems count was expected to be more than 12, but is ${count1}.
+
+    Log    Step 2
+    Click Element    ${SYSTEMS DROPDOWN}
+    # Expected Result
+    Wait Until Elements Are Visible
+    ...    ${SYSTEMS DROPDOWN}${DROPDOWN MENU}
+    ...    ${SYSTEMS DROPDOWN}${DROPDOWN MENU ITEMS}
+    ...    ${ALL SYSTEMS}
+    ${count2}=   Get Element Count
+    ...    ${SYSTEMS DROPDOWN}${DROPDOWN MENU ITEMS}
+    Should Be Equal As Integers
+    ...    ${count1}
+    ...    ${count2}
+    ${elements}=   Get WebElements
+    ...    ${SYSTEMS DROPDOWN}${DROPDOWN MENU ITEMS}
+    # Confirm height of dropdown menu list is less than total height of all list items within
+    ${ulWidth}    ${ulHeight}=   Get Element Size
+    ...    ${SYSTEMS DROPDOWN}${DROPDOWN MENU LIST}
+    ${e}=   Get From List    ${elements}    0
+    ${liWidth}    ${liHeight}=   Get Element Size    ${e}
+    Should be True    ${ulHeight} < (${liHeight}*${count1})
+
+    Log    Step 3
+    ${r}=   Evaluate    random.randint(0, ${count1})    modules=random
+    ${r1}=   Evaluate    ${r}+1
+    Log    r1: ${r1}
+    ${x}=   Get From List    ${elements}    ${r}
+    ${l}=   Set Variable    ${SYSTEMS DROPDOWN}${DROPDOWN MENU ITEMS}\[${r1}]
+    ${h}=   Get Element Attribute    ${l}/a    href
+    ${n}=   Get Text    ${l}//span[@class='system-name']
+    Scroll Element Into View    ${x}
+    Click Element    ${x}
+    # Expected Result
+    Location Should Contain    ${h}
+    Wait Until Element Contains
+    ...    ${SYSTEM NAME}
+    ...    ${n}
+    ${system}=   Get Text    ${SYSTEMS DROPDOWN}/span[@class='ellipsis']
+    Should Be Equal As Strings
+    ...    ${n}
+    ...    ${system}
+
+    Log    Step 4
+    Click Element    ${SYSTEMS DROPDOWN}
+    # Expected Result
+    Wait Until Elements Are Visible
+    ...    ${SYSTEMS DROPDOWN}${DROPDOWN MENU}
+    ...    ${SYSTEMS DROPDOWN}${DROPDOWN MENU ITEMS}
+    ${l}=   Set Variable
+    ...    ${SYSTEMS DROPDOWN}${DROPDOWN MENU ITEMS}//span[@class='system-name']
+    ${elements}=   Get WebElements    ${l}
+    #Should Contain X Times    ${elements}    ${n}    1
+    ${x}=   Set Variable    0
+    FOR    ${element}    IN     @{elements}
+        ${n2}=   Get Text    ${element}
+        ${x1}=   Evaluate    ${x}+1
+        ${x}=   Set Variable If    "${n2}" == "${n}"
+        ...    ${x1}
+        ...    ${x}
+    END
+    Should Be Equal As Integers
+    ...    ${x}    1
+    ...    Expected only 1 System named ${n}, but found ${x}
+
+    Log    Step 5
+    Wait Until Element Is Visible    ${ALL SYSTEMS}
+    Click Element    ${ALL SYSTEMS}
+    # Expected Result
+    ${l}=   Get Location
+    Should End With    ${l}    /systems
+    Wait Until Element Is Visible    ${SYSTEMS DROPDOWN}
+    ${count3}=   Get Text    ${SYSTEMS DROPDOWN}
+    ${count3}=   Remove String Using Regexp
+    ...    ${count3}
+    ...    \\D
+    Should Be True
+    ...    ${count3} > 12
+    ...    The Systems count was expected to be more than 12, but is ${count3}.
+    Should Be Equal As Integers
+    ...    ${count1}
+    ...    ${count3}
 
 should show the system page instead of all systems when user only has one
     [tags]    C41878
@@ -169,7 +264,6 @@ Search can be cleared by x button
     ${tiles2}    Get WebElements    //div[contains(@class,"card ")]
     ${len2}    Get Length    ${tiles2}
     Should Be Equal    ${len}    ${len2}
-
 
 Searching for owner email should only show systems with that owner
     [tags]    C41891    Threaded

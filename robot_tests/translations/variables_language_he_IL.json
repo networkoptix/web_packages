@@ -1,6 +1,7 @@
 {
     "YOU HAVE NO SYSTEMS TEXT": "אין לך מערכות המחוברות ל- %PRODUCT_NAME%",
     "LOG OUT BUTTON TEXT": "יציאה",
+    "LOG IN BUTTON TEXT": "התחבר",
     "ACCOUNT SETTINGS BUTTON TEXT": "הגדרות החשבון",
     "CONTINUE BUTTON TEXT": "המשך",
     "RELEASE HISTORY BUTTON TEXT": "גרסאות אחרות, תיקונים וגרסאות ביתא",
@@ -129,7 +130,7 @@
     "IPVD EXPORT ALL TO CSV": "ייצא נתונים לקובץ CSV",
     "IPVD SUBMIT A REQUEST TEXT": "הגש בקשה",
     "IPVD SEND DEVICE FEEDBACK TEXT": "שלח משוב על המכשיר הזה",
-    "IPVD FEEDBACK ABOUT": "Feedback about",
+    "IPVD FEEDBACK ABOUT": "משוב על",
     "IPVD FEEDBACK FOR CAMERAS PAGE": "משוב עבור דף מצלמות",
     "IPVD FEEDBACK MESSAGE SENT": "ההודעה נשלחה.",
     "PRIVACY POLICY LINK TEXT": "כאן",

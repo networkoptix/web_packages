@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { DomSanitizer }      from '@angular/platform-browser';
 import { NxConfigService }   from '../../services/nx-config';
 import { NxAppStateService } from '../../services/nx-app-state.service';
+import { ActivatedRoute, Router }            from '@angular/router';
 
 @Component({
     selector: 'nx-footer',
@@ -16,9 +17,15 @@ import { NxAppStateService } from '../../services/nx-app-state.service';
     footerItems: any;
     viewFooter: boolean;
 
+    // options
+    @Input() center: boolean;
+    classes: string[] = [];
+
     constructor(private sanitizer: DomSanitizer,
                 private _config: NxConfigService,
-                private appState: NxAppStateService) {
+                private appState: NxAppStateService,
+                private route: ActivatedRoute,
+                private router: Router) {
         this.config = this._config.getConfig();
     }
 
@@ -30,6 +37,14 @@ import { NxAppStateService } from '../../services/nx-app-state.service';
 
         this.appState.footerVisibleObservable.subscribe((visible) => {
             this.viewFooter = visible;
+        });
+
+        this.route.url.subscribe((a) => {
+            this.classes = [];
+            const url = this.router.url;
+            if (url === '/account/password') {
+                this.classes.push('col-xxxl-6');
+            }
         });
     }
 }

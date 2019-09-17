@@ -1,8 +1,8 @@
-Uusi versio {{ message.product }}({{message.product_type}}) on tarkistettavana.
+Uusi versio {{ message.asset }}({{message.asset_type}}) on tarkistettavana.
 
-Napsauta linkkiä, jolla voit tarkastella luonnosta {{ message.id }} {{ message.product }}
+Napsauta linkkiä, jolla voit tarkastella luonnosta {{ message.id }} {{ message.asset }}
 
-Linkki tarkistettavaksi: {{ config.portal_url }}/ admin / cms / version /{{ message.id }}/
+Link to review: {{ config.portal_url }}/admin/cms/assetcustomizationreview/{{ message.id }}/change/
 
 Tällä sivulla voit
 1) Luoda esikatselun nähdäksesi uusimmat muutokset.

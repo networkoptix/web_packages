@@ -9,19 +9,19 @@
     "emailSubject": "{{message.subject}}"
   },
   "contact_sales": {
-    "emailSubject": "Richiesta informazioni di vendita per {{message.product}}"
+    "emailSubject": "Richiesta informazioni di vendita per {{message.asset}}"
   },
   "contact_support": {
-    "emailSubject": "Richiesta di supporto per {{message.product}}"
+    "emailSubject": "Richiesta di supporto per {{message.asset}}"
   },
   "integration_feedback": {
-    "emailSubject": "Feedback per {{message.product}}"
+    "emailSubject": "Feedback per {{message.asset}}"
   },
   "ipvd_feedback": {
-    "emailSubject": "Feedback pagina telecamera{{#message.product}} per {{message.product}}{{/message.product}}"
+    "emailSubject": "Feedback pagina telecamera{{#message.asset}} per {{message.asset}}{{/message.asset}}"
   },
   "review_version": {
-    "emailSubject": "{{message.product_type}}: {{message.product}} ha una nuova versione da revisionare"
+    "emailSubject": "{{message.asset_type}}: {{message.asset}} ha una nuova versione da revisionare"
   },
   "restore_password": {
     "emailSubject": "Reimpostare la password"

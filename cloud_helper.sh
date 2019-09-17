@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 DOCKER_COMPOSE='etc/docker-compose.yml'
+#SQL='./etc/cloud-dev2.sql'
 SQL='./etc/*.sql'
 
 
@@ -44,6 +45,10 @@ function setup_db(){
         printf "No sql files found at ${SQL}\n"
         exit 1
     fi
+}
+
+function login_db(){
+    mysql -h 0.0.0.0 --port=3306 -uroot cloudportal
 }
 
 function setup_env(){
@@ -114,7 +119,13 @@ do
             echo 'Generated files are created in ./cloud/cms'
             ;;
 
+        login_db)
+            login_db
+            ;;
+
         rebuild_frontend)
+            printf "Installing cloud requirements\n\n"
+            pip install -r cloud/requirements.txt
             build_frontend
             setup_cms
             ;;
@@ -128,6 +139,16 @@ do
         setup_env)
             setup_env
             ;;
+        set_cloud_instance)
+            if [[ -z ${CLOUD_INSTANCE} ]]; then
+                echo -e "\nexport CLOUD_INSTANCE=$2" >> ~/.bash_profile
+            else
+                sed -i '' "s,CLOUD_INSTANCE=.*,CLOUD_INSTANCE=${2},g" ~/.bash_profile
+            fi
+            export CLOUD_INSTANCE=$2
+            echo "If command was not run with source it will not work"
+            break
+            ;;
         start_celery)
             . ./env/bin/activate
             start_celery
@@ -139,12 +160,14 @@ do
             stop_docker_containers
             ;;
         *)
-            echo Usage: cloud_shortcuts '[init|add_env|build_frontend|rebuild_frontend|setup_cms|setup_db|setup_env|start_celery|start_docker|stop_docker]'
+            echo Usage: cloud_shortcuts '[init|add_env|build_frontend|login_db|rebuild_frontend|set_cloud_instance|setup_cms|setup_db|setup_env|start_celery|start_docker|stop_docker]'
             echo 'init - Does everything. Only run this once'
             echo 'add_env - Adds LOCAL_ENV to your bash profile'
             echo 'build_frontend - Builds the frontend'
             echo 'generate_cms_docs - Creates an html file for each product in cms/cms_structure.json'
-            echo 'rebuild_frontend - Rebuilds the frontend and runs readstructre and filldata commands'
+            echo 'login_db - Login to docker db'
+            echo 'rebuild_frontend - Rebuilds the frontend and runs readstructure and filldata commands'
+            echo 'set_cloud_instance - Sets the cloud instance env. Usage "source ./cloud_helper.sh set_cloud_instance $instance".'
             echo 'setup_cms - Fills in the cms. Runs migrate, readstructure and filldata commands'
             echo 'setup_db - Loads local db with sql file in ~/develop/nx_vms/cloud_portal/'
             echo 'start_celery - Starts celery worker (This uses sqs queue based on local settings)'

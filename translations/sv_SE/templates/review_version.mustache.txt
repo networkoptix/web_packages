@@ -1,8 +1,8 @@
-Det finns en ny version av {{ message.product }} ({{message.product_type}}) för att granska.
+Det finns en ny version av {{ message.asset }} ({{message.asset_type}}) för att granska.
 
-Klicka på länken för att se utkast {{ message.id }} för {{ message.product }}
+Klicka på länken för att se utkast {{ message.id }} för {{ message.asset }}
 
-Länk till granskning: {{ config.portal_url }}/ admin / cms / productcustomizationreview /{{ message.id }}/ change /
+Link to review: {{ config.portal_url }}/admin/cms/assetcustomizationreview/{{ message.id }}/change/
 
 På den här sidan kan du
 1) Skapa en förhandsgranskning för att se de senaste ändringarna.

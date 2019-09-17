@@ -4,17 +4,6 @@
   "cloudName": "%CLOUD_NAME%",
   "vmsName": "%VMS_NAME%",
   "clientProtocol": "%CLIENT_PROTOCOL%:",
-  "dialogs": {
-    "okButton": "OK",
-    "cancelButton": "Avbryt",
-    "loginTitle": "Logga in på %CLOUD_NAME%",
-    "loginButton": "Logga in",
-    "logoutAuthorisedTitle": "Du är redan inloggad",
-    "logoutAuthorisedContinueButton": "Fortsätt",
-    "logoutAuthorisedLogoutButton": "Logga ut",
-    "noClientDetectedTitle": "Installera %VMS_NAME% om du vill visa ditt System",
-    "download": "Ladda ner %VMS_NAME%"
-  },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
     "default": "%CLOUD_NAME%",
@@ -168,14 +157,6 @@
     "commonMessage": "Detta lösenord är i topp populäraste lösenord i världen",
     "missingMessage": "Lösenord krävs"
   },
-  "sharing": {
-    "confirmOwner": "Om du ändrar systemägaren återkallar du ägandet från det aktuella kontot. Denna åtgärd är oåterkallelig. Är du säker?",
-    "shareTitle": "Dela",
-    "shareConfirmButton": "Dela",
-    "editShareTitle": "Ändra behörigheter",
-    "editShareConfirmButton": "Spara",
-    "permissionsSaved": "Nya behörigheter sparades"
-  },
   "system": {
     "yourSystem": "Ditt system",
     "mySystemSearch": "JagMigMinMin",
@@ -190,12 +171,11 @@
     "successRename": "Systemnamnet sparat",
     "confirmDisconnectTitle": "Koppla bort systemet från %CLOUD_NAME%?",
     "confirmDisconnectAction": "Koppla från",
-    "confirmUnshareFromMe": "Du håller på att koppla bort det här systemet från ditt konto. Du kommer inte längre få tillgång till det här systemet. Är du säker?",
-    "confirmUnshareFromMeTitle": "Koppla ifrån systemet?",
+    "confirmUnshareFromMe": "You will not be able to lgo into this System anymore.",
+    "confirmUnshareFromMeTitle": "Disconnect System from your Account?",
     "confirmUnshareFromMeAction": "Koppla från",
-    "confirmUnshare": "Den här användaren kan inte komma åt System. Är du säker?",
-    "confirmUnshareTitle": "Radera användaren?",
-    "confirmUnshareAction": "Radera",
+    "confirmUnshareTitle": "Remove user?",
+    "confirmUnshareAction": "Ta bort",
     "successDisconnected": "Systemet har kopplats bort från %CLOUD_NAME%",
     "successDeleted": "System {{systemName}} har tagits bort från ditt konto",
     "mergeFailed": "Systemsammanslagning misslyckades",
@@ -203,20 +183,6 @@
     "mergeSuccess": "Systemsammanslagning slutförd",
     "permissionsRemoved": "Rättigheterna togs bort från {{email}}",
     "unknownName": "Okänt namn för system (orsakad av molnsammanslagning)"
-  },
-  "account": {
-    "accountSavedSuccess": "Ditt konto har sparats",
-    "activationLinkSent": "Aktiveringslänk skickad",
-    "passwordChangedSuccess": "Ditt konto har sparats",
-    "changePassword": "Ändra lösenord",
-    "newPasswordLabel": "Nytt lösenord",
-    "saveChanges": "Spara"
-  },
-  "activeActions": {
-    "sendConfirm": "Skicka aktiveringslänk igen",
-    "resetPassword": "Återställ lösenord",
-    "setNewPassword": "Spara lösenord",
-    "setNewPasswordLabel": "Nytt lösenord"
   },
   "regActions": {
     "passwordLabel": "Lösenord",

@@ -77,6 +77,10 @@
                 }
             }
         }
+
+        &:only-of-type {
+            margin-bottom: 0 !important;
+        }
     }
 }
 
@@ -106,7 +110,7 @@
         }
 
         @media (max-width : $collapse-second-width) {
-            right : 75px !important;
+            right : 82px !important;
             left  : auto !important;
         }
     }

@@ -9,19 +9,19 @@
     "emailSubject": "{{message.subject}}"
   },
   "contact_sales": {
-    "emailSubject": "Запит на продаж {{message.product}}"
+    "emailSubject": "Запит на продаж {{message.asset}}"
   },
   "contact_support": {
-    "emailSubject": "Запит на підтримку для {{message.product}}"
+    "emailSubject": "Запит на підтримку для {{message.asset}}"
   },
   "integration_feedback": {
-    "emailSubject": "Зворотній зв'язок для {{message.product}}"
+    "emailSubject": "Зворотній зв'язок для {{message.asset}}"
   },
   "ipvd_feedback": {
-    "emailSubject": "Зворотній зв'язок зі сторінкою камери{{#message.product}} для {{message.product}}{{/message.product}}"
+    "emailSubject": "Зворотній зв'язок зі сторінкою камери{{#message.asset}} для {{message.asset}}{{/message.asset}}"
   },
   "review_version": {
-    "emailSubject": "{{message.product_type}}: {{message.product}} має нову версію для перегляду"
+    "emailSubject": "{{message.asset_type}}: {{message.asset}} має нову версію для перегляду"
   },
   "restore_password": {
     "emailSubject": "Відновити пароль"

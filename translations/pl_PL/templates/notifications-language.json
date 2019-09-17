@@ -9,19 +9,19 @@
     "emailSubject": "{{message.subject}}"
   },
   "contact_sales": {
-    "emailSubject": "Zapytanie handlowe o {{message.product}}"
+    "emailSubject": "Zapytanie handlowe o {{message.asset}}"
   },
   "contact_support": {
-    "emailSubject": "Prośba o wsparcie do {{message.product}}"
+    "emailSubject": "Prośba o wsparcie do {{message.asset}}"
   },
   "integration_feedback": {
-    "emailSubject": "Opinie dotyczące {{message.product}}"
+    "emailSubject": "Opinie dotyczące {{message.asset}}"
   },
   "ipvd_feedback": {
-    "emailSubject": "Opinia {{#message.product}} dla {{message.product}}{{/message.product}}"
+    "emailSubject": "Opinia {{#message.asset}} dla {{message.asset}}{{/message.asset}}"
   },
   "review_version": {
-    "emailSubject": "{{message.product_type}}: {{message.product}} ma nową wersję do przejrzenia"
+    "emailSubject": "{{message.asset_type}}: {{message.asset}} ma nową wersję do przejrzenia"
   },
   "restore_password": {
     "emailSubject": "Zresetuj swoje hasło"

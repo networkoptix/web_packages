@@ -4,17 +4,6 @@
   "cloudName": "%CLOUD_NAME%",
   "vmsName": "%VMS_NAME%",
   "clientProtocol": "%CLIENT_PROTOCOL%:",
-  "dialogs": {
-    "okButton": "ตกลง",
-    "cancelButton": "ยกเลิก",
-    "loginTitle": "เข้าสู่ระบบ %CLOUD_NAME%",
-    "loginButton": "ลงชื่อเข้าสู่ระบบ",
-    "logoutAuthorisedTitle": "คุณกำลังอยู่ในระบบ",
-    "logoutAuthorisedContinueButton": "ดำเนิน​การ",
-    "logoutAuthorisedLogoutButton": "ออกจากระบบ",
-    "noClientDetectedTitle": "ติดตั้ง %VMS_NAME% เพื่อดูระบบของคุณ",
-    "download": "ดาวน์โหลด %VMS_NAME%"
-  },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
     "default": "%CLOUD_NAME%",
@@ -168,14 +157,6 @@
     "commonMessage": "รหัสผ่านนี้อยู่ในรหัสผ่านที่ได้รับความนิยมมากที่สุดในโลก",
     "missingMessage": "จำเป็นต้องใช้รหัสผ่าน"
   },
-  "sharing": {
-    "confirmOwner": "หากคุณเปลี่ยนเจ้าของระบบคุณจะยกเลิกการเป็นเจ้าของจากบัญชีปัจจุบัน การกระทำนี้ไม่สามารถย้อนกลับได้ คุณแน่ใจไหม?",
-    "shareTitle": "แชร์",
-    "shareConfirmButton": "แชร์",
-    "editShareTitle": "แก้ไขสิทธิ์",
-    "editShareConfirmButton": "บันทึก",
-    "permissionsSaved": "อนุญาตสิทธิ์ใหม่แล้ว"
-  },
   "system": {
     "yourSystem": "ระบบของคุณ",
     "mySystemSearch": "IMeMyMine",
@@ -190,12 +171,11 @@
     "successRename": "ระบบเปลี่ยนชื่อ",
     "confirmDisconnectTitle": "ยกเลิกการเชื่อมต่อระบบจาก %CLOUD_NAME%?",
     "confirmDisconnectAction": "ตัดการเชื่อมต่อ",
-    "confirmUnshareFromMe": "คุณกำลังจะยกเลิกการเชื่อมต่อระบบนี้จากบัญชีของคุณ คุณจะไม่สามารถเข้าถึงระบบนี้ได้อีกต่อไป คุณแน่ใจไหม?",
-    "confirmUnshareFromMeTitle": "ยกเลิกการเชื่อมต่อระบบหรือไม่?",
+    "confirmUnshareFromMe": "You will not be able to lgo into this System anymore.",
+    "confirmUnshareFromMeTitle": "Disconnect System from your Account?",
     "confirmUnshareFromMeAction": "ตัดการเชื่อมต่อ",
-    "confirmUnshare": "ผู้ใช้รายนี้จะไม่สามารถเข้าใช้งานระบบได้ คุณแน่ใจไหม?",
-    "confirmUnshareTitle": "ลบผู้ใช้หรือไม่?",
-    "confirmUnshareAction": "ลบ",
+    "confirmUnshareTitle": "Remove user?",
+    "confirmUnshareAction": "เอาออก",
     "successDisconnected": "ระบบถูกตัดการเชื่อมต่อเรียบร้อยแล้วจาก %CLOUD_NAME%",
     "successDeleted": "ระบบ {{systemName}} จะถูกลบออกจากบัญชีของคุณเรียบร้อยแล้ว",
     "mergeFailed": "การผสานระบบล้มเหลว",
@@ -203,20 +183,6 @@
     "mergeSuccess": "ผสานระบบเสร็จสมบูรณ์",
     "permissionsRemoved": "สิทธิ์ถูกนำออกจาก {{email}}",
     "unknownName": "ชื่อที่ไม่รู้จักสำหรับระบบ (เกิดจากการผสานคลาวด์)"
-  },
-  "account": {
-    "accountSavedSuccess": "บันทึกบัญชีของคุณเรียบร้อยแล้ว",
-    "activationLinkSent": "ส่งการเปิดใช้งานแล้ว",
-    "passwordChangedSuccess": "บันทึกบัญชีของคุณเรียบร้อยแล้ว",
-    "changePassword": "เปลี่ยนรหัสผ่าน",
-    "newPasswordLabel": "สร้างรหัสผ่านใหม่",
-    "saveChanges": "บันทึก"
-  },
-  "activeActions": {
-    "sendConfirm": "ส่งการเชื่อมโยงการเปิดใช้งานอีกครั้ง",
-    "resetPassword": "รีเซ็ตรหัสผ่าน",
-    "setNewPassword": "บันทึกรหัสผ่าน",
-    "setNewPasswordLabel": "สร้างรหัสผ่านใหม่"
   },
   "regActions": {
     "passwordLabel": "รหัสผ่าน",
@@ -242,7 +208,7 @@
     "cameraStates": {
       "offline": "ออฟไลน์",
       "error": "ข้อผิดพลาด",
-      "errorLoading": "An error occurred while loading this video.",
+      "errorLoading": "เกิดข้อผิดพลาดขณะโหลดวิดีโอนี้",
       "unauthorized": "จำเป็นต้องระบุตัวตนผู้ใช้",
       "noData": "ไม่มีข้อมูล",
       "iOSVideoTooLarge": "iOS ไม่สนับสนุนวิดีโอที่ใหญ่กว่า fullHD (2MP: 1920x1080)",

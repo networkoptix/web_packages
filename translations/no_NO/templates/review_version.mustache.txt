@@ -1,8 +1,8 @@
-Det er en ny versjon for {{ message.product }}({{message.product_type}}) å se gjennom.
+Det er en ny versjon for {{ message.asset }}({{message.asset_type}}) å se gjennom.
 
-Klikk på lenken for å se utkast {{ message.id }} for {{ message.product }}
+Klikk på lenken for å se utkast {{ message.id }} for {{ message.asset }}
 
-Link til anmeldelse: {{ config.portal_url }}/ admin / cms / productcustomizationreview /{{ message.id }}/ change /
+Link to review: {{ config.portal_url }}/admin/cms/assetcustomizationreview/{{ message.id }}/change/
 
 På denne siden kan du
 1) Opprett en forhåndsvisning for å se de nyeste endringene.

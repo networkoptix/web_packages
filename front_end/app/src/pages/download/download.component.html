@@ -1,21 +1,21 @@
-<div class="container" *ngIf="canViewDownloads && lang">
+<div class="container" *ngIf="canViewDownloads && LANG">
     <h1 translate>Download</h1>
 
     <div class="p-0">
-        <ngb-tabset (tabChange)="beforeChange($event)" #tabs [style.visibility]="tabsVisible ? 'visible' : 'hidden'">
+        <ngb-tabset (tabChange)="beforeChange($event)" #tabs="ngbTabset" [style.visibility]="tabsVisible ? 'visible' : 'hidden'">
 
             <ngb-tab *ngFor="let platform of sortedPlatforms"
                      [id]="platform.os || platform.name" >
 
                 <ng-template ngbTabTitle>
-                    <span class="tab-heading">{{lang.downloads.groups[platform.name].label}}</span>
+                    <span class="tab-heading">{{LANG.downloads.groups[platform.name].label}}</span>
                 </ng-template>
                 <ng-template ngbTabContent>
                     <div class="card card-default">
                         <div class="card-body flex-md">
                             <div class="col-md-4 pl-md-4 order-2 order-md-2 border-left-md">
                                 <b translate>Latest version</b>
-                                <h2 class="version-number"><b>{{downloadsData.version}}</b></h2>
+                                <h2 class="version-number d-flex"><b>{{downloadsData.version}}</b></h2>
                                 <p>
                                     <a [href]="downloadsData.releaseNotes" target="_blank" translate>What's New?</a>
                                     <br>&nbsp;
@@ -33,12 +33,12 @@
                                             </div>
                                             <div class="media-body text-left">
                                                 <h3 translate>Download %VMS_NAME%</h3>
-                                                <div class="h7 installer-name">{{lang.downloads.groups[platform.name].shortLabel ||
-                    lang.downloads.groups[platform.name].label}} {{platform.files[0].formatName}}</div>
+                                                <div class="h7 installer-name">{{LANG.downloads.groups[platform.name].shortLabel ||
+                                                LANG.downloads.groups[platform.name].label}} {{platform.files[0].formatName}}</div>
                                             </div>
                                         </a>
-                                        <p *ngIf="lang.downloads.groups[platform.name].supported"
-                                           [innerHTML]="lang.downloads.groups[platform.name].supported">
+                                        <p *ngIf="LANG.downloads.groups[platform.name].supported"
+                                           [innerHTML]="LANG.downloads.groups[platform.name].supported">
                                         </p>
                                     </div>
                                 </div>
@@ -60,10 +60,10 @@
 
         <div class="clearfix">
             <div class="mobile-badge" *ngFor="let platform of downloads.mobile">
-                <a *ngIf="lang.downloads.mobile[platform.name].link != 'disabled'"
+                <a *ngIf="LANG.downloads.mobile[platform.name].link != 'disabled'"
                    class="mobile-link"
                    [ngClass]="platform.os"
-                   [href]="lang.downloads.mobile[platform.name].link">
+                   [href]="LANG.downloads.mobile[platform.name].link">
                 </a>
             </div>
             <div class="mobile-badge float-right" *ngIf="canSeeHistory">
@@ -71,5 +71,6 @@
             </div>
         </div>
     </div>
+    <nx-footer></nx-footer>
 </div>
 

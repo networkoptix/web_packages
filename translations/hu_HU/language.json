@@ -4,17 +4,6 @@
   "cloudName": "%CLOUD_NAME%",
   "vmsName": "%VMS_NAME%",
   "clientProtocol": "%CLIENT_PROTOCOL%:",
-  "dialogs": {
-    "okButton": "OK",
-    "cancelButton": "Mégsem",
-    "loginTitle": "Bejelentkezés ide: %CLOUD_NAME%",
-    "loginButton": "Bejelentkezés",
-    "logoutAuthorisedTitle": "Már bejelentkezett",
-    "logoutAuthorisedContinueButton": "Folyatatás",
-    "logoutAuthorisedLogoutButton": "Kijelentkezés",
-    "noClientDetectedTitle": "Telepítse a %VMS_NAME% alkalmazást a rendszer megtekintéshez",
-    "download": "%VMS_NAME% letöltése"
-  },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
     "default": "%CLOUD_NAME%",
@@ -168,14 +157,6 @@
     "commonMessage": "Ez a jelszó a leggyakoribb jelszavak egyike",
     "missingMessage": "Jelszó megadása szükséges"
   },
-  "sharing": {
-    "confirmOwner": "Ha megváltoztatja a rendszertulajdonost, érvényteleníti a tulajdonjogot ehhez a fiókhoz. Ez a művelet nem fordítható vissza. Folytatja?",
-    "shareTitle": "Megosztás",
-    "shareConfirmButton": "Megosztás",
-    "editShareTitle": "Engedélyek szerkesztése",
-    "editShareConfirmButton": "Mentés",
-    "permissionsSaved": "Új engedélyek mentve"
-  },
   "system": {
     "yourSystem": "Az Ön rendszere",
     "mySystemSearch": "IMeMyMine",
@@ -190,11 +171,10 @@
     "successRename": "Rendszer neve mentve",
     "confirmDisconnectTitle": "Megszünteti a kapcsolatot %CLOUD_NAME% felhővel?",
     "confirmDisconnectAction": "Szétkapcsolás",
-    "confirmUnshareFromMe": "A rendszer leválasztására készül fiókjáról. Többé nem fog tudni kapcsolódni a rendszerhez. Folytatja?",
-    "confirmUnshareFromMeTitle": "Leválasztja a rendszert?",
+    "confirmUnshareFromMe": "You will not be able to lgo into this System anymore.",
+    "confirmUnshareFromMeTitle": "Disconnect System from your Account?",
     "confirmUnshareFromMeAction": "Szétkapcsolás",
-    "confirmUnshare": "Ez a felhasználó nem fog tudni csatlakozni a rendszerhez. Folytatja?",
-    "confirmUnshareTitle": "Törli a felhasználót?",
+    "confirmUnshareTitle": "Remove user?",
     "confirmUnshareAction": "Törlés",
     "successDisconnected": "Rendszer sikeresen bontotta %CLOUD_NAME% kapcsolatát",
     "successDeleted": "{{systemName}} rendszer sikeresen törölve a fiókból",
@@ -203,20 +183,6 @@
     "mergeSuccess": "A rendszer egyesítése befejeződött",
     "permissionsRemoved": "{{email}} engedélyei vissavonva",
     "unknownName": "Ismeretlen név a rendszerhez (felhő egyesítése okozta)"
-  },
-  "account": {
-    "accountSavedSuccess": "A fiók mentése sikeres",
-    "activationLinkSent": "Aktiválási link elküldve",
-    "passwordChangedSuccess": "A fiók mentése sikeres",
-    "changePassword": "Jelszómódosítás",
-    "newPasswordLabel": "Új jelszó",
-    "saveChanges": "Mentés"
-  },
-  "activeActions": {
-    "sendConfirm": "Aktiválási link újraküldése",
-    "resetPassword": "Jelszó visszaállítása",
-    "setNewPassword": "Jelszó mentése",
-    "setNewPasswordLabel": "Új jelszó"
   },
   "regActions": {
     "passwordLabel": "Jelszó",
@@ -242,7 +208,7 @@
     "cameraStates": {
       "offline": "Offline",
       "error": "Hiba",
-      "errorLoading": "An error occurred while loading this video.",
+      "errorLoading": "Hiba történt a videó betöltése közben.",
       "unauthorized": "Hitelesítés szükséges",
       "noData": "Nincs adat",
       "iOSVideoTooLarge": "Az iOS nem támogat FullHD-nál (2MP: 1920x1080) nagyobb videót.",

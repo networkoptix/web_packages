@@ -1,4 +1,5 @@
 from django import forms
+from django.conf import settings
 from django.core.validators import EmailValidator
 from django.contrib import messages
 from django.contrib.auth import get_user_model
@@ -9,17 +10,17 @@ from dal import autocomplete
 import base64
 from api.account_backend import AccountManager
 from api.models import Account
-from cms.models import Customization, Product, ProductType, UserGroupsToProductPermissions, UserGroupsToProductType
+from cms.models import Customization, Asset, AssetType, UserGroupsToAssetPermissions, UserGroupsToAssetType
 from notifications import notifications_api
 
 User = get_user_model()
-products_help_text = "Grants group permissions to the selected products.<br>" \
-                     "If the chosen product is a cloud portal, permissions for the portal's customization are " \
-                     "granted.<br>" \
-                     "Example: The user can review any products which have the same customization as their portal."
+assets_help_text = "Grants group permissions to the selected assets.<br>" \
+                   "If the chosen asset is a cloud portal, permissions for the portal's customization are " \
+                   "granted.<br>" \
+                   "Example: The user can review any assets which have the same customization as their portal."
 
-product_types_help_text = "Allows this group to review the selected product_types. This field currently only affects " \
-                          "a users ability to review assets."
+asset_types_help_text = "Allows this group to review the selected asset_types. This field currently only affects " \
+                        "a users ability to review assets."
 
 
 class AccountAdminForm(forms.ModelForm):
@@ -51,18 +52,18 @@ class GroupAdminForm(forms.ModelForm):
                                                  })
                                             )
 
-    products = forms.ModelMultipleChoiceField(
-        queryset=Product.objects.all(),
+    assets = forms.ModelMultipleChoiceField(
+        queryset=Asset.objects.all(),
         required=False,
-        help_text=products_help_text,
-        widget=FilteredSelectMultiple('products', False)
+        help_text=assets_help_text,
+        widget=FilteredSelectMultiple('assets', False)
     )
 
-    product_types = forms.ModelMultipleChoiceField(
-        queryset=ProductType.objects.all(),
+    asset_types = forms.ModelMultipleChoiceField(
+        queryset=AssetType.objects.all(),
         required=False,
-        help_text=product_types_help_text,
-        widget=FilteredSelectMultiple('product_types', False)
+        help_text=asset_types_help_text,
+        widget=FilteredSelectMultiple('asset_types', False)
     )
 
     def __init__(self, *args, **kwargs):
@@ -72,26 +73,26 @@ class GroupAdminForm(forms.ModelForm):
         if self.instance.pk:
             # Populate the users field with the current Group users.
             self.fields['users'].initial = self.instance.user_set.all()
-            self.fields['products'].initial = UserGroupsToProductPermissions.objects.filter(group=self.instance)\
-                .values_list('product', flat=True).distinct()
-            self.fields['product_types'].initial = UserGroupsToProductType.objects.filter(group=self.instance)\
-                .values_list('product_type', flat=True).distinct()
+            self.fields['assets'].initial = UserGroupsToAssetPermissions.objects.filter(group=self.instance)\
+                .values_list('asset', flat=True).distinct()
+            self.fields['asset_types'].initial = UserGroupsToAssetType.objects.filter(group=self.instance)\
+                .values_list('asset_type', flat=True).distinct()
 
     def save_m2m(self):
         # Add the users to the Group.
         self.instance.user_set.set(self.cleaned_data['users'])
 
-        for product in self.cleaned_data['products']:
-            UserGroupsToProductPermissions.objects.get_or_create(group=self.instance, product=product)
+        for asset in self.cleaned_data['assets']:
+            UserGroupsToAssetPermissions.objects.get_or_create(group=self.instance, asset=asset)
 
-        UserGroupsToProductPermissions.objects.filter(group=self.instance).\
-            exclude(product__in=self.cleaned_data['products']).delete()
+        UserGroupsToAssetPermissions.objects.filter(group=self.instance).\
+            exclude(asset__in=self.cleaned_data['assets']).delete()
 
-        for product_type in self.cleaned_data['product_types']:
-            UserGroupsToProductType.objects.get_or_create(group=self.instance, product_type=product_type)
+        for asset_type in self.cleaned_data['asset_types']:
+            UserGroupsToAssetType.objects.get_or_create(group=self.instance, asset_type=asset_type)
 
-        UserGroupsToProductType.objects.filter(group=self.instance).\
-            exclude(product_type__in=self.cleaned_data['product_types']).delete()
+        UserGroupsToAssetType.objects.filter(group=self.instance).\
+            exclude(asset_type__in=self.cleaned_data['asset_types']).delete()
 
     def save(self, *args, **kwargs):
         # Default save
@@ -103,7 +104,7 @@ class GroupAdminForm(forms.ModelForm):
 
 class UserInviteFrom(forms.Form):
     email = forms.CharField(max_length=100, validators=[EmailValidator()])
-    customization = forms.ChoiceField(choices=[])
+    customization = forms.ChoiceField(choices=[], initial=settings.CUSTOMIZATION)
     message = forms.CharField(widget=forms.Textarea)
 
     def __init__(self, *args, **kwargs):

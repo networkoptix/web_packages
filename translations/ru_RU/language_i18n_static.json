@@ -1,11 +1,26 @@
 {
+	"account": {
+		"accountSavedSuccess": "Ваша учетная запись успешно сохранена",
+		"activationLinkSent": "Ссылка для активации отправлена",
+		"passwordChangedSuccess": "Ваша учетная запись успешно сохранена",
+		"changePassword": "Изменить пароль",
+		"newPasswordLabel": "Новый пароль",
+		"saveChanges": "Сохранить"
+	},
+	"activeActions": {
+		"sendConfirm": "Отправить ссылку еще раз",
+		"resetPassword": "Сброс пароля",
+		"setNewPassword": "Сохранить пароль",
+		"setNewPasswordLabel": "Новый пароль"
+	},
+	"clientProtocol": "%CLIENT_PROTOCOL%:",
 	"search": {
 		"Search": "Поиск",
 		"search_ipvd": "Поиск по модели или производителю",
 		"filter applied": "фильтр применен",
 		"filters applied": "фильтры применены",
 		"Any": "Любой",
-		"selected": "выбрано",
+		"selected": "выбраны",
 		"vendor": "Производитель",
 		"vendors": "Производители",
 		"hardwareType": "Тип",
@@ -88,13 +103,13 @@
 			"package": "Пакет"
 		},
 		"releasesTypes": {
-			"beta": "Бета",
-			"betas": "Бета",
-			"rc": "Релиз-кандидат",
-			"release": "Релиз",
-			"releases": "Релизы",
+			"beta": "Beta",
+			"betas": "Betas",
+			"rc": "Release Candidate",
+			"release": "Release",
+			"releases": "Releases",
 			"patch": "Patch",
-			"patches": "Патчи"
+			"patches": "Patches"
 		}
 	},
 	"ipvd": {
@@ -103,8 +118,8 @@
 		"vendor": "Производитель",
 		"model": "Модель",
 		"hardwareType": "Тип",
-		"maxResolution": "Максимальное разрешение",
-		"maxFps": "Макс. FPS",
+		"maxResolution": "<span>Макс.</span><br><span>Разрешение</span>",
+		"maxFps": "<span>Макс.</span><br><span>FPS</span>",
 		"primaryCodec": "Кодек",
 		"isAudioSupported": "Аудио",
 		"isTwAudioSupported": "двухсторонний звук",
@@ -128,7 +143,7 @@
 		"Cameras supporting H.265": "Камеры с поддержкой H.265",
 		"I / O modules": "Модули ввода/вывода",
 		"Multisensor Cameras": "Мультисенсорные камеры",
-		"Cameras with 2-way audio": "Камеры с 2х-сторонним звуком",
+		"Cameras with 2-way audio": "Камеры с двусторонним звуком",
 		"Extra high resolution cameras": "Камеры сверхвысокого разрешения",
 		"feedback": {
 			"a_Please": "Пожалуйста",
@@ -138,6 +153,7 @@
 		"disclaimer": "Этот список ограничен устройствами, найденными на {{vmsName}}, где пользователи разрешили автоматическую отправку данных по устройствам в {{companyName}}. Личная информация не собирается, и каждый пользователь остается полностью анонимным."
 	},
 	"integration": {
+		"myIntegrationsLabel": "Мой",
 		"previewRibbonText": "Эта страница является предварительным просмотром последних изменений и не соответствует общедоступной версии.",
 		"backToEditText": "Вернуться к интерфейсам редактирования",
 		"Access Control": "Контроль доступа",
@@ -151,10 +167,41 @@
 		"feedback": "Убедитесь, что вы указали модель и производителя вашей камеры..."
 	},
 	"pageTitles": {
+		"template": "{{title}} %CLOUD_NAME%",
+		"default": "%CLOUD_NAME%",
+		"registerSuccess": "Добро пожаловать в",
+		"register": "Зарегистрироваться в",
+		"changePassword": "Изменить пароль -",
+		"account": "Настройки учетной записи -",
+		"systems": "Системы -",
+		"system": "Система -",
+		"systemShare": "Общий доступ -",
+		"activate": "Активировать учетную запись -",
+		"activateSent": "Активировать учетную запись -",
+		"activateSuccess": "Учетная запись активирована -",
+		"activateCode": "Активировать учетную запись -",
+		"restorePassword": "Сброс пароля -",
+		"restorePasswordSuccess": "Пароль сохранен -",
+		"restorePasswordCode": "Сброс пароля -",
+		"view": "Просмотр камер - ",
+		"debug": "Отладка",
+		"login": "Войти -",
+		"download": "Скачать %VMS_NAME%",
+		"downloadPlatform": "Скачать %VMS_NAME% для ",
+		"pageNotFound": "Страница не найдена",
 		"supportedDevices": "Поддерживаемые устройства",
 		"integrations": "Интеграции"
 	},
 	"dialogs": {
+		"okButton": "OK",
+		"cancelButton": "Отменить",
+		"loginTitle": "Войти в %CLOUD_NAME%",
+		"loginButton": "Войти",
+		"logoutAuthorisedTitle": "Вы уже выполнили вход",
+		"logoutAuthorisedContinueButton": "Продолжить",
+		"logoutAuthorisedLogoutButton": "Выход",
+		"noClientDetectedTitle": "Установите %VMS_NAME% для работы с системой",
+		"download": "Скачать %VMS_NAME%",
 		"merge": {
 			"connectToCloud": "Подключите систему, которую вы хотите объединить с этой, к <strong>{{cloudName}}</strong> или выполните объединение локально, используя <strong>{{vmsName}}</strong> Client.",
 			"mergeConfirmation": "Вы собираетесь объединить системы <strong>{{primarySystem}}</strong> и <strong>{{secondarySystem}}</strong>. Настройки и название будут взяты из <strong>{{primarySystem}}</strong>.",
@@ -179,12 +226,178 @@
 				"ipvd_feedback_page": "Отзыв о странице камер",
 				"ipvd_feedback_device": "Отзыв о {{product}}"
 			}
+		},
+		"sharing": {
+			"confirmOwner": "Если изменить владельца системы, она больше не будет принадлежать текущей учетной записи. Это действие необратимо. Вы уверены?",
+			"shareTitle": "Добавить",
+			"shareConfirmButton": "Добавить",
+			"editShareTitle": "Изменить полномочия",
+			"editShareConfirmButton": "Сохранить",
+			"permissionsSaved": "Новые полномочия сохранены"
+		}
+	},
+	"errorCodes": {
+		"ok": "ок",
+		"cantSendActivationPrefix": "Не удается отправить подтверждение по Email",
+		"cantDisconnectSystemPrefix": "Не удается удалить систему",
+		"cantUnshareWithMeSystemPrefix": "Не удается удалить систему",
+		"cantSharePrefix": "Невозможно объединить систему",
+		"cantGetUsersListPrefix": "Список пользователей недоступен",
+		"cantGetSystemsListPrefix": "Список систем недоступен",
+		"cantRegisterPrefix": "Произошла ошибка",
+		"cantGetSystemInfoPrefix": "Информация о системе недоступна",
+		"cantChangeAccountPrefix": "Не удается сохранить изменения",
+		"cantChangePasswordPrefix": "Не удается сохранить пароль",
+		"cantActivatePrefix": "Не удается активировать вашу учетную запись",
+		"cantSendConfirmationPrefix": "Не удается отправить подтверждение по Email",
+		"notAuthorized": "Неправильный пароль",
+		"brokenAccount": "Неожиданная проблема с учетной записью. <a href=\"/restore_password\">Восстановить учетную запись</a>",
+		"wrongParameters": "Некоторые параметры в форме неверны",
+		"wrongCode": "Учетная запись уже активирована или неверный код подтверждения",
+		"wrongCodeRestore": "Код подтверждения уже используется или неверен",
+		"wrongAuthCode": "Код устарел или неверен",
+		"forbidden": "Отсутствуют полномочия на выполнение этого действия",
+		"accountNotActivated": "Эта учетная запись еще не активирована. <a href=\"/activate\">Отправить ссылку активации снова</a>",
+		"accountBlocked": "Эта учетная запись заблокирована. Пожалуйста, повторите попытку через несколько минут.",
+		"notFound": "Не найдено",
+		"alreadyExists": "Эта учетная запись уже существует",
+		"unknownError": "Произошла непредвиденная ошибка",
+		"accountAlreadyActivated": "Эта учетная запись уже активирована",
+		"emailNotFound": "Учетная запись не существует.",
+		"EmailAlreadyExists": "Этот Email уже зарегистрирован",
+		"oldPasswordMistmatch": "Текущий пароль указан неверно.",
+		"passwordMismatch": "Неправильный пароль",
+		"cantEditYourself": "Не допускается изменение собственных полномочий",
+		"cantEditAdmin": "Этот пользователь имеет полномочия администратора",
+		"cantOpenClient": "Приложение %VMS_NAME% не обнаружено. <a href=\"/download\">Скачать</a>",
+		"lostConnection": "Подключение к {{systemName}} потеряно",
+		"thisSystem": "система",
+		"oldSafariNotSupported": "Версии Safari старше 10 не поддерживаются",
+		"DUPLICATE_MEDIASERVER_FOUND": "Некоторые серверы перечислены как существующие в обеих системах - как в выбранной, так и в текущей.<br>Удалите серверы, которые находятся не в сети, и несовместимые серверы из каждой системы и повторите попытку.",
+		"mergedSystemIsOffline": "Система <strong>{{failedSystem}}</strong> не в сети.",
+		"INCOMPATIBLE": "Системы имеют разные версии программного обеспечения. Пожалуйста, обновите их на <a href=\"/download\">последнюю версию</a>.",
+		"FAIL": "Система <strong>{{failedSystem}}</strong> в настоящее время недоступна.<br>Повторите попытку через несколько минут или обратитесь в <a href=\"%SUPPORT_LINK%\" target=\"_blank\">поддержку</a>.",
+		"unknownMergeError": "Неизвестная ошибка. Вы можете попробовать обновить страницу и повторить попытку. Если проблема не устранена, обратитесь в <a href=\"%SUPPORT_LINK%\" target=\"_blank\">службу поддержки</a>."
+	},
+	"passwordRequirements": {
+		"good": "хорошее",
+		"fair": "средний",
+		"fairMessage": "Для надежности пароля используйте цифры, буквы верхнего и нижнего регистра и специальные символы",
+		"minLength": "короткий",
+		"minLengthMessage": "Пароль должен содержать не менее 8 символов",
+		"required": "некорректный",
+		"requiredMessage": "Используйте только латинские буквы, цифры и символы клавиатуры, избегайте начальных и конечных пробелов",
+		"weak": "слабый",
+		"weakMessage": "Для надежности пароля используйте цифры, буквы верхнего и нижнего регистра и специальные символы",
+		"strongMessage": "Надежный пароль!",
+		"common": "часто встречающийся",
+		"commonMessage": "Этот пароль входит в список самых популярных паролей в мире",
+		"missingMessage": "Пароль обязателен для заполнения"
+	},
+	"registration": {
+		"agreement": "Я согласен с <a href=\"/content/eula\" target=\"_blank\">условиями</a> и <a href=\"%PRIVACY_LINK%\" target=\"_blank\">правилами конфиденциальности</a>"
+	},
+	"system": {
+		"yourSystem": "Ваша система",
+		"mySystemSearch": "ЯМойМоя",
+		"unavailable": "Система недоступна",
+		"offline": "Система не в сети",
+		"openClient": "Открыть в %VMS_NAME%",
+		"openClientNoSystem": "Открыть %VMS_NAME%",
+		"confirmMergeAction": "Объединить",
+		"mergeSystemTitle": "Объединить системы",
+		"confirmRenameTitle": "Имя системы",
+		"confirmRenameAction": "Сохранить",
+		"successRename": "Имя системы сохранено",
+		"confirmDisconnectTitle": "Отключить систему от %CLOUD_NAME%?",
+		"confirmDisconnectAction": "Отключить",
+		"confirmUnshareFromMe": "Вы собираетесь отключить эту систему от учетной записи. Вы не сможете больше иметь доступ к этой системе. Вы уверены?",
+		"confirmUnshareFromMeTitle": "Отключить систему?",
+		"confirmUnshareFromMeAction": "Отключить",
+		"confirmUnshare": "Этот пользователь не сможет получить доступ к системе. Вы уверены?",
+		"confirmUnshareTitle": "Удалить пользователя?",
+		"confirmUnshareAction": "Удалить",
+		"successDisconnected": "Система успешно отключена от %CLOUD_NAME%",
+		"successDeleted": "Система {{systemName}} успешно удалена из вашей учетной записи",
+		"mergeFailed": "Объединение систем не удалось",
+		"mergeStart": "Объединение систем началось",
+		"mergeSuccess": "Слияние системы завершено",
+		"permissionsRemoved": "{{email}} был лишен полномочий",
+		"unknownName": "Неизвестное имя для системы (вызвано облачным объединением систем)"
+	},
+	"systemStatuses": {
+		"activated": "активирован",
+		"incompatible": "несовместима",
+		"merging": "объединяется",
+		"notActivated": "не активирован",
+		"online": "в сети",
+		"offline": "не в сети",
+		"unavailable": "недоступен"
+	},
+	"accessRoles": {
+		"disabled": {
+			"label": "Отключен",
+			"description": "Пользователь отключен и не может войти в систему"
+		},
+		"Owner": {
+			"label": "Владелец",
+			"description": "Неограниченный доступ, включая управление общим доступом и подключением системы к облаку"
+		},
+		"Viewer": {
+			"label": "Видео с камер и архив",
+			"description": "Может смотреть видео в реальном времени и архив"
+		},
+		"Live Viewer": {
+			"label": "Только видео в реальном времени",
+			"description": "Может смотреть только видео в реальном времени"
+		},
+		"Advanced Viewer": {
+			"label": "Просмотр и настройка",
+			"description": "Может смотреть живое видео, архив, управлять PTZ и т. д"
+		},
+		"Administrator": {
+			"label": "Администратор",
+			"description": "Неограниченный доступ, включая управление общим доступом"
+		},
+		"Custom": {
+			"label": "Особые",
+			"description": "Используйте клиентское приложение %VMS_NAME% для настройки особых полномочий"
+		},
+		"cloudAdmin": {
+			"label": "Администратор",
+			"description": "Может настраивать систему и общий доступ"
+		},
+		"customRole": {
+			"label": "Особая роль",
+			"description": "Особая роль, настроенная в Системе"
+		},
+		"owner": {
+			"label": "Владелец",
+			"description": "Неограниченный доступ, включая управление общим доступом и подключением системы к облаку"
+		},
+		"viewer": {
+			"label": "Видео с камер и архив",
+			"description": "Может смотреть видео в реальном времени и архив"
+		},
+		"liveViewer": {
+			"label": "Только видео в реальном времени",
+			"description": "Может смотреть только видео в реальном времени"
+		},
+		"advancedViewer": {
+			"label": "Просмотр и настройка",
+			"description": "Может смотреть видео в реальном времени, архив, изменять настройки камер, управлять PTZ и т. д"
+		},
+		"custom": {
+			"label": "Особые",
+			"description": "Используйте клиентское приложение %VMS_NAME% для настройки особых полномочий"
 		}
 	},
 	"privacyPolicy": {
 		"integration": "Отправляя эту форму, вы соглашаетесь на получение информации от {{INTEGRATION_COMPANY}} и/или %COMPANY_NAME%.\nПолитика конфиденциальности {{INTEGRATION_COMPANY}} с инструкциями о том, как отозвать ваше согласие, доступна <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">здесь</a>, а %COMPANY_NAME% - <a href=\"%PRIVACY_LINK%\" target=\"blank\">здесь</a>.",
 		"ipvd": "Отправляя эту форму, вы соглашаетесь на получение информации от %COMPANY_NAME%.\nПолитика конфиденциальности %COMPANY_NAME% с инструкциями о том, как отозвать ваше согласие, доступна <a href=\"%PRIVACY_LINK%\" target=\"blank\">здесь</a>."
 	},
+	"systemAdministration": "Администрирование системы",
+	"users": "Пользователи",
 	"testedVersionLabel": "Проверено на версии {{vmsName}}:",
 	"testedVersionsLabel": "Проверено на версиях {{vmsName}}:",
 	"About %CLOUD_NAME%": "О %CLOUD_NAME%",
@@ -193,5 +406,12 @@
 	"Privacy": "Политика конфиденциальности",
 	"Support": "Техническая поддержка",
 	"Supported Devices": "Поддерживаемые устройства",
-	"Terms": "Условия использования"
+	"Terms": "Условия использования",
+	"pleaseSelect": "Пожалуйста, выберите...",
+	"WHEN_MERGE_FINISHES": "После завершения объединения все пользователи и камеры из этой системы станут доступны в <strong>{{targetSystemName}}</strong>, а эта система будет удалена.",
+	"FAILED_SYSTEM_DESCR": "Эта ссылка не работает,<br>Система могла быть отключена от %CLOUD_NAME%,<br>доступ к этой системе мог быть отозван<br>или вы вошли под другой учетной записью.",
+	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "У вас нет систем, подключенных к %CLOUD_NAME%",
+	"NO_SYSTEMS_LOGIN": "Войдите в систему с помощью %VMS_NAME%",
+	"NO_SYSTEMS_GOTO_ADMINISTRATION": "Перейдите на вкладку \"Облако\" в окне \"Системное администрирование\"",
+	"NO_SYSTEMS_CONNECT_SYSTEM": "Нажмите «Подключить систему к %CLOUD_NAME%"
 }

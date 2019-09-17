@@ -1,20 +1,23 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Location }                     from '@angular/common';
-import { ActivatedRoute }               from '@angular/router';
-import { IntegrationService }        from '../integration.service';
-import { DomSanitizer }              from '@angular/platform-browser';
-import { NxRibbonService }           from '../../../components/ribbon/ribbon.service';
-import { NxConfigService }           from '../../../services/nx-config';
-import { NxModalMessageComponent, MessageParams }   from '../../../dialogs/message/message.component';
+import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { Location }                                        from '@angular/common';
+import { ActivatedRoute }                                  from '@angular/router';
+import { IntegrationService }                              from '../integration.service';
+import { DomSanitizer }                                    from '@angular/platform-browser';
+import { NxRibbonService }                                 from '../../../components/ribbon/ribbon.service';
+import { NxConfigService }                                 from '../../../services/nx-config';
+import { MessageParams }          from '../../../dialogs/message/message.component';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 
-import { map }           from 'rxjs/operators';
-import { combineLatest } from 'rxjs';
+import { map }              from 'rxjs/operators';
+import { combineLatest }    from 'rxjs';
+import { NxMenuService }    from '../../../components/menu/menu.service';
+import { NxDialogsService } from '../../../dialogs/dialogs.service';
+import { NxAccountService } from '../../../services/account.service';
 
 @Component({
     selector   : 'integration-detail-component',
     templateUrl: 'details.component.html',
-    styleUrls  : ['details.component.scss']
+    styleUrls  : ['details.component.scss'],
 })
 
 export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
@@ -27,6 +30,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
 
     private setupDefaults() {
         this.CONFIG = this.configService.getConfig();
+        this.LANG = this.language.getTranslations();
     }
 
     constructor(public sanitizer: DomSanitizer,
@@ -35,25 +39,21 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                 private ribbonService: NxRibbonService,
                 private configService: NxConfigService,
                 // TODO: Use dialog service when it is not being downgraded
-                private messageDialog: NxModalMessageComponent,
+                private dialogs: NxDialogsService,
                 private language: NxLanguageProviderService,
-                location: Location) {
+                private menuService: NxMenuService,
+                private accountService: NxAccountService,
+                location: Location,
+    ) {
         this.location = location;
         this.setupDefaults();
     }
 
     ngOnInit(): void {
-        this.language.translationsSubject.subscribe((lang) => {
-            this.LANG = lang;
-            this.init();
-        });
-    }
-
-    init(): void {
-        this.integrationService
-            .selectedSectionSubject
+        this.menuService
+            .selectedDetailsSection
             .subscribe(selection => {
-                this.content.selectedSection = selection;
+                this.content.selectedDetailsSection = selection;
                 this.content = {...this.content}; // trigger onChange
         });
 
@@ -77,7 +77,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                                     id    : '',
                                     label : '',
                                     path  : '',
-                                    level2: [
+                                    level3: [
                                         {
                                             id   : 'how-it-works',
                                             label: 'How it works',
@@ -107,7 +107,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                                         this.ribbonService.show(
                                                 this.LANG.integration.previewRibbonText,
                                                 this.LANG.integration.backToEditText,
-                                                this.CONFIG.links.admin.product.replace('%ID%', this.plugin.id)
+                                                this.CONFIG.links.admin.asset.replace('%ID%', this.plugin.id)
                                         );
                                     }
 
@@ -135,10 +135,12 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
             to: this.plugin.information.companyName,
             email: this.plugin.support.supportEmail,
             disclaimer,
-            productId: this.plugin.id,
-            product: this.plugin.information.name,
+            assetId: this.plugin.id,
+            asset: this.plugin.information.name,
         };
-        this.messageDialog.open(this.CONFIG.messageType.integration, data).then(() => {});
+        this.dialogs
+            .message(this.accountService, this.CONFIG.messageType.integration, data)
+            .then(() => {});
     }
 }
 

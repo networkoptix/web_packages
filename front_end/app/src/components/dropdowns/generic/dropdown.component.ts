@@ -1,6 +1,8 @@
-import { Component, OnInit, ViewEncapsulation, Input, forwardRef, EventEmitter, Output, OnChanges, SimpleChanges } from '@angular/core';
-import { TranslateService }                                        from '@ngx-translate/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR }                 from '@angular/forms';
+import {
+    Component, OnInit, ViewEncapsulation, Input,
+    forwardRef, EventEmitter, Output, OnChanges, SimpleChanges } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR }               from '@angular/forms';
+import { NxLanguageProviderService }                             from '../../../services/nx-language-provider';
 
 const noop = () => {
 };
@@ -39,16 +41,15 @@ export class NxGenericDropdown implements OnInit, ControlValueAccessor {
     private onTouchedCallback: () => void = noop;
     private onChangeCallback: (_: any) => void = noop;
 
+    LANG: any = {};
+
     message: string;
     show: boolean;
 
-    constructor(private translate: TranslateService) {
+    constructor(private language: NxLanguageProviderService) {
         this.show = false;
-
-        translate.get('Please select...')
-                .subscribe((res: string) => {
-                    this.message = res;
-                });
+        this.LANG = this.language.getTranslations();
+        this.message = this.LANG.pleaseSelect;
     }
 
     // TODO: Bind ngModel to the component and eliminate EventEmitter
