@@ -69,9 +69,10 @@ Check Langauge Logged In
     # this is a temorary fix.  Future update will use API calls
     ${previous location}=   Get Location
     Go To    ${ENV}/account
-    ${status}=   Run Keyword And Return Status    Wait Until Element Is Visible    ${ACCOUNT LANGUAGE DROPDOWN}/span[@lang='${LANGUAGE}']    5
+    ${status}=    Run Keyword And Return Status    Wait Until Element Is Visible    ${ACCOUNT LANGUAGE DROPDOWN}/span[@lang='${LANGUAGE}']    5
     Register Keyword To Run On Failure    Failure Tasks
     Run Keyword If    "${status}"=="False"    Set Language
+    Run Keyword If    "${status}"=="False"    Click Button    ${ACCOUNT SAVE}
     Go To    ${previous location}
 
 Set Language

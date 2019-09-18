@@ -7,8 +7,8 @@ ${ALERT CLOSE}                        //div[contains(@class,'toast-body')]/butto
 
 ${BROWSER}                            Chrome
 
-${LANGUAGE DROPDOWN}                  //nx-header//button[@id='dropdownMenuButton']
-${LANGUAGE TO SELECT}                 //nx-header//span[@lang='${LANGUAGE}']/..
+${LANGUAGE DROPDOWN}                  //nx-language-select//button[@id='dropdownMenuButton']
+${LANGUAGE TO SELECT}                 //nx-language-select//span[@lang='${LANGUAGE}']/..
 ${DOWNLOAD LINK}                      //footer//a[@href="/download"]
 
 @{LANGUAGES LIST}                        en_US           en_GB           ru_RU               fr_FR         de_DE              es_ES         hu_HU             zh_CN     zh_TW    ja_JP       ko_KR       tr_TR          th_TH         nl_NL            he_IL      pl_PL         vi_VN
@@ -225,8 +225,8 @@ ${ACCOUNT EMAIL}                      //account//a[@id='settings']
 ${ACCOUNT FIRST NAME}                 //form[@name='accountForm']//input[@id='firstName']
 ${ACCOUNT LAST NAME}                  //form[@name='accountForm']//input[@id='lastName']
 ${ACCOUNT LANGUAGE DROPDOWN}          //nx-language-select//button[@id='dropdownMenuButton']
-${ACCOUNT SAVE}                       //nx-account-settings-component//button[text()="${SAVE BUTTON TEXT}"]
-${ACCOUNT CANCEL}                     //nx-account-settings-component//button[text()="${CANCEL BUTTON TEXT}"]
+${ACCOUNT SAVE}                       //nx-account-settings-component//nx-apply//nx-process-button//button
+${ACCOUNT CANCEL}                     //nx-account-settings-component//nx-apply/div/button
 
 #Downloads
 ${DOWNLOADS HEADER}                   //h1["Downloads"]
