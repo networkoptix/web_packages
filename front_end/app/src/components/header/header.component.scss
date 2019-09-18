@@ -7,7 +7,6 @@
 @import '../../../styles/custom/custom_palette';
 @import '../../../styles/theme_variables';
 
-$header-height             : 48px;
 $logo-height               : 32px;
 $line-height               : 44px;
 $vertical-spacing          : 15px;
@@ -25,13 +24,12 @@ $collapse-second-width-max : $collapse-second-width - 1px;
 $header-collapsing-width-1 : 1px;
 
 .navbar {
-    height        : $header-height;
+    height        : $navbar-height;
     border-top    : none;
     border-left   : none;
     border-right  : none;
     border-radius : 0;
     border-bottom : 1px solid $light4;
-    box-shadow    : 0 6px 10px $light3;
     padding-right : 1rem !important;
     
     &.navbar-default {
@@ -51,7 +49,7 @@ $header-collapsing-width-1 : 1px;
     .navbar-nav {
         flex-direction : row;
         align-items    : center;
-        height         : $header-height;
+        height         : $navbar-height;
         line-height    : $line-height;
     }
     
@@ -63,7 +61,7 @@ $header-collapsing-width-1 : 1px;
         & > img {
             height  : $logo-height;
             display : inline-block;
-            margin  : (($header-height - $logo-height)/2) 0;
+            margin  : (($navbar-height - $logo-height)/2) 0;
         }
     }
     
@@ -137,9 +135,7 @@ $header-collapsing-width-1 : 1px;
                 
                 height        : 58px;
                 margin-bottom : -2px;
-    
-                box-shadow : 0 6px 10px transparentize($dark15, 0.8);
-                
+
                 &::before {
                     content       : "";
                     position      : absolute;

@@ -73,7 +73,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             .params
             .subscribe(params => {
                 if (params.userId) {
-                    this.menuService.setSubSection(params.userId);
+                    this.menuService.setDetailsSection(params.userId);
                     this.paramUser = params.userId;
                     this.setUser();
                 }
@@ -180,7 +180,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             }
             this.applyService.hardReset();
             this.selectedUser = {... user};
-            this.menuService.setSubSection(this.selectedUser.id.replace(/{|}/g, ''));
+            this.menuService.setDetailsSection(this.selectedUser.id.replace(/{|}/g, ''));
             this.setPermission(this.selectedUser.role);
             this.userEnabled.value = this.selectedUser.isEnabled;
             this.applyService.reset();

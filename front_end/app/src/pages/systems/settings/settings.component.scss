@@ -16,3 +16,7 @@ nx-block {
     font-family: $font-family-bold;
   }
 }
+
+.fill-screen-height {
+    height: calc(100vh - 80px);
+  }
