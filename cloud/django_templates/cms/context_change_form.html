@@ -62,7 +62,7 @@
                             {% else %}
                                 preview-image
                             {% endif %}
-                            context-preview {% if data_structure.optional and not record_exists %} optional-image {% endif %}"
+                            context-preview {% if not record_exists %} optional-image {% endif %}"
                              src="data:image/png;base64,{{ field.value }}">
                     </div>
 
@@ -87,7 +87,7 @@
                                 {% else %}
                                     "{{ field.value }}"
                                 {% endif %} download>
-                            {% if data_structure.optional and not record_exists %}
+                            {% if not record_exists %}
                                 Download Example
                             {% else %}
                                 Download

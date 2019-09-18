@@ -449,7 +449,8 @@ def zip_context(zip_file, asset, context, language_code,
                                                                  DataStructure.DATA_TYPES.file))
     for file_structure in file_structures:
         data = file_structure.find_actual_value(asset, language, version_id, draft=preview)
-        if data != file_structure.default or not file_structure.optional:
+        is_not_default = data != file_structure.default or file_structure.datarecord_set.filter(asset=asset).exists()
+        if data and (not asset.is_asset_type(AssetType.ASSET_TYPES.vms) or is_not_default):
             try:
                 data = base64.b64decode(data)
                 name = file_structure.name.replace("{{language}}", language_code) if language_code else file_structure.name

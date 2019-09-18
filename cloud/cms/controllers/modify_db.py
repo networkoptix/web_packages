@@ -163,6 +163,9 @@ def save_unrevisioned_records(asset, context, language, data_structures,
             # No file was uploaded and the user didn't delete an optional data structure so skip
             elif data_structure.optional and 'delete_' + data_structure_name not in request_data:
                 continue
+            elif latest_value == data_structure_name.default and \
+                    not data_structure.datarecord_set.filter(asset=asset).exists():
+                continue
 
         elif data_structure.type == DataStructure.DATA_TYPES.guid:
 
@@ -390,8 +393,8 @@ def asset_has_required_data(asset):
     for datastructure in DataStructure.objects.filter(context__asset_type=asset.asset_type):
         records = datastructure.datarecord_set.filter(asset=asset)
         last_record_value = records.last().value if records.last() else None
-        if last_record_value and datastructure.type in [DataStructure.DATA_TYPES.select,
-                                                        DataStructure.DATA_TYPES.array,
+        if last_record_value and datastructure.type in [DataStructure.DATA_TYPES.array,
+                                                        DataStructure.DATA_TYPES.object,
                                                         DataStructure.DATA_TYPES.multiselect]:
             last_record_value = json.loads(last_record_value)
         if not datastructure.optional and (not records.exists() or not last_record_value):
@@ -410,7 +413,7 @@ def send_version_for_review(asset, user):
         old_version.delete()
 
     # We only check for integrations because its the only asset type that non staff have access to.
-    if asset.is_integration:
+    if asset.is_integration or asset.is_asset_type(AssetType.ASSET_TYPES.vms):
         errors = asset_has_required_data(asset)
         if len(errors) > 0:
             return errors
