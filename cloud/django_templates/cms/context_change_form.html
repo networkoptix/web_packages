@@ -44,7 +44,7 @@
             {% is_protected data_structure asset as protected %}
             {% has_value field.name asset original language as record_exists %}
             <label {% if data_structure.advanced or protected %} class="text-danger" {% endif %}
-                    for="id_{{ field.name }}">{{ field.label }}{% if not data_structure.optional %}*{% endif %}
+                    for="{{ field.name }}">{{ field.label }}{% if not data_structure.optional %}*{% endif %}
                 {% if user.is_superuser %}<p class="help">{{ field.name }}</p>{% endif %}
                 {% if not data_structure.optional %} <p class="help">required</p> {% endif %}
             </label>
@@ -58,8 +58,9 @@
                         {% endif %}
                         <img class="
                             {% if 'background' in data_structure.meta_settings and data_structure.meta_settings.background != 'transparent' %}
+                                {# TODO: Note that optional was here #}
                                 {{ data_structure.meta_settings.background }}
-                            {% else %}
+                            {% elif not record_exists %}
                                 preview-image
                             {% endif %}
                             context-preview {% if not record_exists %} optional-image {% endif %}"
@@ -76,7 +77,7 @@
                             <img class="
                                 {% if 'background' in data_structure.meta_settings and data_structure.meta_settings.background != 'transparent' %}
                                     {{ data_structure.meta_settings.background }}
-                                {% else %}
+                                {% elif not record_exists %}
                                     preview-image
                                 {% endif %}
                                 context-preview {% if data_structure.optional and not record_exists %} optional-image {% endif %}"
@@ -88,6 +89,7 @@
                                     "{{ field.value }}"
                                 {% endif %} download>
                             {% if not record_exists %}
+                                {# TODO: Note that data_structure.optional was here #}
                                 Download Example
                             {% else %}
                                 Download

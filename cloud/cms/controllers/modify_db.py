@@ -135,6 +135,7 @@ def save_unrevisioned_records(asset, context, language, data_structures,
         new_record_value = ""
         external_file = None
         delete_file = False
+        is_file_or_image = DataStructure.is_file_or_image(data_structure.type)
         latest_value = data_structure.find_actual_value(asset, ds_language, draft=True)
         # If the DataStructure is supposed to be an image convert to base64 and
         # error check
@@ -148,7 +149,7 @@ def save_unrevisioned_records(asset, context, language, data_structures,
             This will create a new record making images/files behave like the other data structure types
             Places to touch are here and cms/forms.py
         """
-        if DataStructure.is_file_or_image(data_structure.type):
+        if is_file_or_image:
             # If a file has been uploaded try to save it
             if data_structure_name in request_files:
                 if request_files[data_structure_name]:
@@ -156,15 +157,11 @@ def save_unrevisioned_records(asset, context, language, data_structures,
                     if file_errors:
                         upload_errors.extend(file_errors)
                         continue
-
-            # No file was uploaded and there is a record means the user didn't change anything so skip
+            # No file was uploaded and there is a record means the user didn't change anything so skip.
             elif not data_structure.optional and latest_value:
                 continue
-            # No file was uploaded and the user didn't delete an optional data structure so skip
+            # No file was uploaded and the user didn't delete an optional data structure so skip.
             elif data_structure.optional and 'delete_' + data_structure_name not in request_data:
-                continue
-            elif latest_value == data_structure_name.default and \
-                    not data_structure.datarecord_set.filter(asset=asset).exists():
                 continue
 
         elif data_structure.type == DataStructure.DATA_TYPES.guid:
@@ -276,7 +273,7 @@ def save_unrevisioned_records(asset, context, language, data_structures,
                          format(len(new_record_value), char_limit)))
 
         # If the data structure is not option and no record exists and nothing was uploaded try to use the default value
-        if not data_structure.optional and not new_record_value:
+        if not data_structure.optional and not new_record_value and not is_file_or_image:
             if not latest_value:
                 new_record_value = data_structure.default
                 if new_record_value:
@@ -287,7 +284,7 @@ def save_unrevisioned_records(asset, context, language, data_structures,
             else:
                 continue
 
-        if new_record_value == latest_value and not delete_file and not external_file:
+        if new_record_value == latest_value and not delete_file and not external_file and not is_file_or_image:
             continue
 
         if data_structure.advanced and not (user.is_superuser or user.has_perm('cms.edit_advanced')):
