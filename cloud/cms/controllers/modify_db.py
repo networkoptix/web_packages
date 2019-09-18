@@ -471,5 +471,6 @@ def upload_file(data_structure, new_file):
     file_errors = check_meta_settings(data_structure, new_file)
     if file_errors:
         return None, file_errors
+    new_file.seek(0)
     encoded_file = base64.b64encode(new_file.read()).decode('utf8')
     return encoded_file, []
