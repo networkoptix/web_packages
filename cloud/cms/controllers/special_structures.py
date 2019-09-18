@@ -1,4 +1,4 @@
-from cms.models import get_cloud_portal_asset, Asset, AssetCustomizationReview
+from cms.models import get_cloud_portal_asset, Asset
 
 
 class SpecialStructures:
@@ -12,7 +12,6 @@ class SpecialStructures:
         self.function_dict = {}
         self.add_function("%CUSTOMIZATION_NAME%", self.calc_customization)
         self.add_function("%LANGUAGES%", self.calc_lang_codes)
-        self.add_function("%NUM_EULA_VERSIONS%", self.calc_num_eula_versions)
 
     def add_function(self, tag: str, function):
         self.function_dict[tag] = function
@@ -37,12 +36,3 @@ class SpecialStructures:
     @staticmethod
     def calc_lang_codes(asset: Asset):
         return asset.languages_list
-
-    @staticmethod
-    def calc_num_eula_versions(asset: Asset):
-        accepted = AssetCustomizationReview.REVIEW_STATES.accepted
-        data_records = asset.datarecord_set.\
-            filter(data_structure__name="%CONTENT%",
-                   data_structure__context__name="license.html",
-                   version__assetcustomizationreview__state=accepted)
-        return len(data_records)
