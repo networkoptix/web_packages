@@ -5,7 +5,8 @@
 		"passwordChangedSuccess": "Your account is successfully saved",
 		"changePassword": "Change Password",
 		"newPasswordLabel": "New password",
-		"saveChanges": "Save"
+		"saveChanges": "Save",
+		"accountSettings": "Account Settings"
 	},
 	"activeActions": {
 		"sendConfirm": "Resend activation link",
@@ -195,12 +196,16 @@
 	"dialogs": {
 		"okButton": "OK",
 		"cancelButton": "Cancel",
+		"continueAs": "Continue as {email}",
+		"createNewAccount": "Create New Account",
 		"loginTitle": "Log in to %CLOUD_NAME%",
 		"loginButton": "Log in",
+		"loginWithDifferentAccount": "You are already logged in with a different account",
 		"logoutAuthorisedTitle": "You are already logged in",
 		"logoutAuthorisedContinueButton": "Continue",
 		"logoutAuthorisedLogoutButton": "Log Out",
 		"noClientDetectedTitle": "Install %VMS_NAME% to view your System",
+		"remainAs": "Remain logged as {email} ",
 		"download": "Download %VMS_NAME%",
 		"merge": {
 			"connectToCloud": "Connect System you want to merge with this one to <strong>{{cloudName}}</strong> or merge locally using <strong>{{vmsName}}</strong> Client.",
@@ -217,14 +222,14 @@
 			"title": {
 				"integration": "Get in touch with {{companyName}}",
 				"ipvd_feedback_page": "Feedback for cameras page",
-				"ipvd_feedback_device": "Feedback about {{product}}"
+				"ipvd_feedback_device": "Feedback about {{asset}}"
 			},
 			"topic": {
-				"contact_sales": "Contact sales for {{product}}",
-				"contact_support": "Contact support for {{product}}",
-				"integration_feedback": "Feedback for integration {{product}}",
+				"contact_sales": "Contact sales for {{asset}}",
+				"contact_support": "Contact support for {{asset}}",
+				"integration_feedback": "Feedback for integration {{asset}}",
 				"ipvd_feedback_page": "Feedback for cameras page",
-				"ipvd_feedback_device": "Feedback about {{product}}"
+				"ipvd_feedback_device": "Feedback about {{asset}}"
 			}
 		},
 		"sharing": {

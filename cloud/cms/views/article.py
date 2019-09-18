@@ -1,4 +1,4 @@
-from api.helpers.exceptions import api_success, handle_exceptions, APINotFoundException
+from api.helpers.exceptions import api_success, handle_exceptions, APINotFoundException, APIForbiddenException
 from cms.controllers.filldata import global_contexts_to_dict, process_global_contexts
 from cms.models import Context, Asset, AssetType, get_cloud_portal_asset, Language, AssetCustomizationReview, \
     DataStructure
@@ -16,33 +16,28 @@ def get_article(request, url_param, **kwargs):
     draft = request.query_params.get('state') == 'draft'
     review = request.query_params.get('state') == 'review'
     article_id = request.query_params.get('id')
+    article = None
 
     if article_id:
         # If id is provided, then only search with id, url_parm is ignored to make sure correct article is found
         # Used primarily for showing previews correctly
-        article = Asset.objects.filter(id=article_id, customizations__name=settings.CUSTOMIZATION).first()
+        article = Asset.objects.filter(id=article_id).first()
 
     else:
-        # Try to get an article that has ONLY the current customization
-        article = Asset.objects.annotate(num_customizations=Count('customizations')).filter(
-            num_customizations=1, datarecord__value=url_param,
-            datarecord__data_structure__context__asset_type__type=AssetType.ASSET_TYPES.article,
-            datarecord__data_structure__name='url', customizations__name=settings.CUSTOMIZATION,
-            contentversion__assetcustomizationreview__state=AssetCustomizationReview.REVIEW_STATES.accepted
-        ).last()
-
-        # Otherwise, get the most recently accepted article that has the current customization
-        if not article:
-            review = AssetCustomizationReview.objects.filter(
-                version__asset__datarecord__value=url_param, version__asset__datarecord__data_structure__name='url',
-                version__asset__asset_type__type=AssetType.ASSET_TYPES.article,
-                state=AssetCustomizationReview.REVIEW_STATES.accepted, customization__name=settings.CUSTOMIZATION
-            ).order_by('-reviewed_date').first()
-            if review:
-                article = review.version.asset
+        review = AssetCustomizationReview.objects.filter(
+            version__asset__datarecord__value=url_param, version__asset__datarecord__data_structure__name='url',
+            version__asset__asset_type__type=AssetType.ASSET_TYPES.article,
+            state=AssetCustomizationReview.REVIEW_STATES.accepted, customization__name=settings.CUSTOMIZATION
+        ).order_by('-reviewed_date').first()
+        if review:
+            article = review.version.asset
 
     # If article is not found, then return a 404
     if article:
+        if (draft or review) and not (request.user.is_superuser or article.created_by == request.user):
+            raise APIForbiddenException(error_data={'url_param': url_param},
+                                        error_text='Not allowed to view this preview')
+
         # Set version based on draft or pending query params
         version = article.version_id()
         if review:

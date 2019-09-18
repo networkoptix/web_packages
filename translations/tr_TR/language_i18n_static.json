@@ -5,7 +5,8 @@
 		"passwordChangedSuccess": "Hesabınız başarıyla kaydedildi",
 		"changePassword": "Parola Değiştir",
 		"newPasswordLabel": "Yeni Parola",
-		"saveChanges": "Kaydet"
+		"saveChanges": "Kaydet",
+		"accountSettings": "Hesap Ayarları"
 	},
 	"activeActions": {
 		"sendConfirm": "Aktivasyon linki gönder",
@@ -118,8 +119,8 @@
 		"vendor": "Üretici",
 		"model": "Model",
 		"hardwareType": "Tür",
-		"maxResolution": "<span>Max</span><br><span>Resolution</span>",
-		"maxFps": "<span>Max</span><br><span>FPS</span>",
+		"maxResolution": "<span>Max</span><br><span>Çözünürlük</span>",
+		"maxFps": "<span>Maksimum</span><br><span>FPS</span>",
 		"primaryCodec": "Kodek",
 		"isAudioSupported": "Ses",
 		"isTwAudioSupported": "çift Yönlü Ses",
@@ -153,7 +154,7 @@
 		"disclaimer": "Bu liste, {{vmsName}} bulunan, kullanıcıların cihaz özelliklerinin {{companyName}} otomatik raporlanmasına izin verdiği yerlerdedir. Hiçbir kişisel bilgi toplanmaz ve her kullanıcı tamamen adsız kalır."
 	},
 	"integration": {
-		"myIntegrationsLabel": "Mine",
+		"myIntegrationsLabel": "Benim",
 		"previewRibbonText": "Bu sayfa en son değişikliklerin önizlemesidir ve herkese açık kullanılabilir sürümle eşleşmiyor.",
 		"backToEditText": "Düzeleme arayüzüne dön",
 		"Access Control": "Erişim Kontrolü",
@@ -195,12 +196,16 @@
 	"dialogs": {
 		"okButton": "Tamam",
 		"cancelButton": "İptal",
+		"continueAs": "Continue as {email}",
+		"createNewAccount": "Create New Account",
 		"loginTitle": "%CLOUD_NAME% e giriş yapın",
 		"loginButton": "Giriş yap",
+		"loginWithDifferentAccount": "You are already logged in with a different account",
 		"logoutAuthorisedTitle": "Zaten giriş yapılmış",
 		"logoutAuthorisedContinueButton": "Devam et",
 		"logoutAuthorisedLogoutButton": "Oturumu Kapat",
 		"noClientDetectedTitle": "Sisteminizi görüntülemek için %VMS_NAME%'i yükleyin",
+		"remainAs": "Remain logged as {email} ",
 		"download": "İndir %VMS_NAME%",
 		"merge": {
 			"connectToCloud": "Birleştirmek istediğiniz <strong>{{cloudName}}</strong> sistemine bağlanın veya yerel sistemi <strong>{{vmsName}}</strong> kullanarak birleştirin.",
@@ -217,14 +222,14 @@
 			"title": {
 				"integration": "{{companyName}} ile iletişime geçin",
 				"ipvd_feedback_page": "Kameralar sayfası için geri bildirim",
-				"ipvd_feedback_device": "{{product}} hakkında geri bildirim"
+				"ipvd_feedback_device": "{{asset}} hakkında geri bildirim"
 			},
 			"topic": {
-				"contact_sales": "Satış için {{product}} iletişime geçin",
-				"contact_support": "{{product}} için Destek İste",
-				"integration_feedback": "Entegrasyon için geri bildirim {{product}}",
+				"contact_sales": "Satış için {{asset}} iletişime geçin",
+				"contact_support": "{{asset}} için Destek İste",
+				"integration_feedback": "Entegrasyon için geri bildirim {{asset}}",
 				"ipvd_feedback_page": "Kameralar sayfası için geri bildirim",
-				"ipvd_feedback_device": "{{product}} hakkında geri bildirim"
+				"ipvd_feedback_device": "{{asset}} hakkında geri bildirim"
 			}
 		},
 		"sharing": {
@@ -295,7 +300,7 @@
 		"missingMessage": "Parola gerekmektedir"
 	},
 	"registration": {
-		"agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
+		"agreement": "Kabul et <a href=\"/content/eula\" target=\"_blank\">Şartlar ve Koşullar</a>ve<a href=\"%PRIVACY_LINK%\" target=\"_blank\">Gizlilik Politikası</a>"
 	},
 	"system": {
 		"yourSystem": "Sistem",
@@ -407,9 +412,9 @@
 	"Support": "Destek",
 	"Supported Devices": "Desteklenen cihazlar",
 	"Terms": "Şartlar",
-	"pleaseSelect": "Please select...",
-	"WHEN_MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{{targetSystemName}}</strong> System, and this system will be deleted.",
-	"FAILED_SYSTEM_DESCR": "This link is broken,<br>System may be disconnected from %CLOUD_NAME%,<br>Access to this System may be revoked, <br>or you may be logged into a different account.",
+	"pleaseSelect": "Lütfen seçiniz...",
+	"WHEN_MERGE_FINISHES": "Birleştirme işlemi tamamlandığında, bu sistemdeki tüm kullanıcılar ve kameralar kullanılabilir hale gelir <strong>\" Sistem{{targetSystemName}}</strong> \" ve bu sistem silinecektir.",
+	"FAILED_SYSTEM_DESCR": "Bu bağlantı bozuk,<br>sistem bağlantısı kesilebilir %CLOUD_NAME% den kesilebilir,<br>sisteme erişim engellenmiş olabilir,<br>yada farklı bir hesapla sisteme girilmiş olabilir.",
 	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "%CLOUD_NAME% ile bağlı hiçbir Sisteminiz yok",
 	"NO_SYSTEMS_LOGIN": "%VMS_NAME% adresini kullanarak Sisteminize giriş yapın",
 	"NO_SYSTEMS_GOTO_ADMINISTRATION": "\"Sistem Yönetimi\" iletişim kutusundaki \"Bulut\" sekmesine gidin",

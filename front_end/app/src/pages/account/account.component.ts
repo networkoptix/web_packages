@@ -57,41 +57,11 @@ export class NxAccountComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        if (this.route.snapshot.data.auth) {
-            let auth;
-            try {
-                auth = atob(this.route.snapshot.data.auth);
-            } catch (exception) {
-                auth = false;
-                console.error(exception);
-            }
-            if (auth) {
-                const index = auth.indexOf(':');
-                const tempLogin = auth.substring(0, index);
-                const tempPassword = auth.substring(index + 1);
-
-                this.accountService
-                    .login(tempLogin, tempPassword, false)
-                    .then(() => {
-                        this.accountService
-                            .get()
-                            .then((account) => {
-                                this.account = account;
-                                this.init();
-                            });
-
-                    })
-                    .finally(() => {
-                        this.uriService.updateURI('', { auth: undefined });
-                    });
-            }
-        } else {
-            this.accountService.requireLogin()
-                .then((account) => {
-                    this.account = account;
-                    this.init();
-                });
-        }
+        this.accountService.requireLogin()
+            .then((account) => {
+                this.account = account;
+                this.init();
+            });
     }
 
     init(): void {

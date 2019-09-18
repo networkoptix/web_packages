@@ -375,6 +375,8 @@ def download_package(request, asset_id):
         latest_review = latest_review.last()
         if latest_review:
             version_id = latest_review.version.id
+        elif len(modify_db.asset_has_required_data(asset)) > 0:
+            return HttpResponseBadRequest("There is no completed version for this asset.")
 
     zipped_data = filldata.get_zip_package(asset, preview, version_id)
     file_name = f"{asset.name}.zip"

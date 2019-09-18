@@ -3,16 +3,22 @@ import { Component, HostListener, Inject } from '@angular/core';
 import { CookieService }             from 'ngx-cookie-service';
 import { DeviceDetectorService }     from 'ngx-device-detector';
 import { Title }                     from '@angular/platform-browser';
+import { ActivationStart, Event, Router } from '@angular/router';
+import { filter }                    from 'rxjs/operators';
 import { WINDOW }                    from './src/services/window-provider';
 import { NxLanguageProviderService } from './src/services/nx-language-provider';
 import { NxConfigService }           from './src/services/nx-config';
-import { NxApplyService } from './src/services/apply.service';
+import { NxApplyService }            from './src/services/apply.service';
+import { NxQueryParamService } from './src/services/query-param.service';
+import { NxRibbonService } from './src/components/ribbon/ribbon.service';
 
 @Component({
     selector: 'nx-app',
     template: `
-        <router-outlet></router-outlet>
-        <div ng-view="" ng-model-options="{ updateOn: 'blur' }"></div>
+        <div [ngClass]="headerPadding">
+            <router-outlet></router-outlet>
+            <div ng-view="" ng-model-options="{ updateOn: 'blur' }"></div>
+        </div>
         <app-toasts aria-live="polite" aria-atomic="true"></app-toasts>
     `
 })
@@ -22,6 +28,7 @@ export class AppComponent {
     deviceInfo: any;
     allowedDevices: {};
     hlsIsSupported: boolean;
+    headerPadding: string;
 
     constructor(private cookieService: CookieService,
                 private deviceService: DeviceDetectorService,
@@ -30,6 +37,9 @@ export class AppComponent {
                 private config: NxConfigService,
                 private language: NxLanguageProviderService,
                 private applyService: NxApplyService,
+                private queryParamService: NxQueryParamService,
+                private router: Router,
+                private ribbonService: NxRibbonService,
                 @Inject(WINDOW) private window: Window) {
 
         this.CONFIG = this.config.getConfig();
@@ -140,6 +150,22 @@ export class AppComponent {
         }
 
         this.CONFIG.showHeaderAndFooter = true;
+        this.headerPadding = 'headerPadding';
+
+        this.ribbonService.contextSubject.subscribe((context) => {
+            if (context.visibility) {
+                this.headerPadding = 'headerAndRibbonPadding';
+            } else {
+                this.headerPadding = 'headerPadding';
+            }
+        });
+
+        // Updates query params for components without routes.
+        this.router.events.pipe(
+            filter((event: Event) => event instanceof ActivationStart)
+        ).subscribe(({ snapshot: { queryParams } }: ActivationStart) => {
+            this.queryParamService.queryParams = queryParams;
+        });
     }
 
     // Todo: Revisit using this when the hybrid app is killed.

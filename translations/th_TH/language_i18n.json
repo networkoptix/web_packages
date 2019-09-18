@@ -239,6 +239,7 @@
     },
     "account": {
         "accountSavedSuccess": "บันทึกบัญชีของคุณเรียบร้อยแล้ว",
+        "accountSettings": "การตั้งค่าบัญชี",
         "activationLinkSent": "ส่งการเปิดใช้งานแล้ว",
         "changePassword": "เปลี่ยนรหัสผ่าน",
         "newPasswordLabel": "สร้างรหัสผ่านใหม่",
@@ -268,9 +269,12 @@
     "devices": "อุุปกรณ์",
     "dialogs": {
         "cancelButton": "ยกเลิก",
+        "continueAs": "Continue as {email}",
+        "createNewAccount": "Create New Account",
         "download": "ดาวน์โหลด %VMS_NAME%",
         "loginButton": "ลงชื่อเข้าสู่ระบบ",
         "loginTitle": "เข้าสู่ระบบ %CLOUD_NAME%",
+        "loginWithDifferentAccount": "You are already logged in with a different account",
         "logoutAuthorisedContinueButton": "ดำเนิน​การ",
         "logoutAuthorisedLogoutButton": "ออกจากระบบ",
         "logoutAuthorisedTitle": "คุณกำลังอยู่ในระบบ",
@@ -288,19 +292,20 @@
             "sent": "ส่งข้อความแล้ว",
             "title": {
                 "integration": "ติดต่อกับ {{companyName}}",
-                "ipvd_feedback_device": "ข้อเสนอแนะเกี่ยวกับ {{product}}",
+                "ipvd_feedback_device": "ข้อเสนอแนะเกี่ยวกับ {{asset}}",
                 "ipvd_feedback_page": "ข้อเสนอแนะสำหรับหน้ากล้อง"
             },
             "topic": {
-                "contact_sales": "ติดต่อฝ่ายขายสำหรับ {{product}}",
-                "contact_support": "ติดต่อฝ่ายสนับสนุนสำหรับ {{product}}",
-                "integration_feedback": "ข้อเสนอแนะสำหรับการรวม {{product}}",
-                "ipvd_feedback_device": "ข้อเสนอแนะเกี่ยวกับ {{product}}",
+                "contact_sales": "ติดต่อฝ่ายขายสำหรับ {{asset}}",
+                "contact_support": "ติดต่อฝ่ายสนับสนุนสำหรับ {{asset}}",
+                "integration_feedback": "ข้อเสนอแนะสำหรับการรวม {{asset}}",
+                "ipvd_feedback_device": "ข้อเสนอแนะเกี่ยวกับ {{asset}}",
                 "ipvd_feedback_page": "ข้อเสนอแนะสำหรับหน้ากล้อง"
             }
         },
         "noClientDetectedTitle": "ติดตั้ง %VMS_NAME% เพื่อดูระบบของคุณ",
         "okButton": "ตกลง",
+        "remainAs": "Remain logged as {email} ",
         "sharing": {
             "confirmOwner": "หากคุณเปลี่ยนเจ้าของระบบคุณจะยกเลิกการเป็นเจ้าของจากบัญชีปัจจุบัน การกระทำนี้ไม่สามารถย้อนกลับได้ คุณแน่ใจไหม?",
             "editShareConfirmButton": "บันทึก",

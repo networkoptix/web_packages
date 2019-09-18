@@ -5,7 +5,8 @@
 		"passwordChangedSuccess": "계정이 성공적으로 저장되었습니다.",
 		"changePassword": "패스워드 변경",
 		"newPasswordLabel": "새 패스워드",
-		"saveChanges": "저장"
+		"saveChanges": "저장",
+		"accountSettings": "계정 설정"
 	},
 	"activeActions": {
 		"sendConfirm": "활성화 링크 재전송",
@@ -118,8 +119,8 @@
 		"vendor": "제조사",
 		"model": "모델",
 		"hardwareType": "유형",
-		"maxResolution": "<span>Max</span><br><span>Resolution</span>",
-		"maxFps": "<span>Max</span><br><span>FPS</span>",
+		"maxResolution": "<span>최대</span><br><span>해상도</span>",
+		"maxFps": "<span>최대</span><br><span>FPS</span>",
 		"primaryCodec": "코덱",
 		"isAudioSupported": "오디오",
 		"isTwAudioSupported": "양방향 오디오",
@@ -153,7 +154,7 @@
 		"disclaimer": "이 목록은 사용자가 {{companyName}} 에 자동보고 되도록 허용 하였을 경우 {{vmsName}} 에 있는 기기들에 제한됩니다. 개인 정보는 수집되지 않으며 각 사용자는 완전히 익명으로 처리됩니다."
 	},
 	"integration": {
-		"myIntegrationsLabel": "Mine",
+		"myIntegrationsLabel": "나의",
 		"previewRibbonText": "이 페이지는 최신 변경 사항의 미리보기이며 공개적으로 사용 가능한 버전과 일치하지 않습니다.",
 		"backToEditText": "편집 인터페이스로 돌아 가기",
 		"Access Control": "접근 제어",
@@ -195,12 +196,16 @@
 	"dialogs": {
 		"okButton": "확인",
 		"cancelButton": "취소",
+		"continueAs": "{email} 으로 계속",
+		"createNewAccount": "새 계정 만들기",
 		"loginTitle": "%CLOUD_NAME%에 로그인",
 		"loginButton": "로그인",
+		"loginWithDifferentAccount": "이미 다른 계정으로 로그인했습니다",
 		"logoutAuthorisedTitle": "이미 로그인 되어 있습니다",
 		"logoutAuthorisedContinueButton": "계속",
 		"logoutAuthorisedLogoutButton": "로그 아웃",
 		"noClientDetectedTitle": "시스템이 성공적으로 %VMS_NAME% 에서 분리 되었습니다",
+		"remainAs": "{email} 기록 된 상태로 유지 ",
 		"download": "%VMS_NAME% 다운로드",
 		"merge": {
 			"connectToCloud": "이 시스템과 머지하려는 시스템을 <strong>{{cloudName}}</strong> 에 연결하거나 <strong>{{vmsName}}</strong> 클라이언트를 사용하여 로컬로 머지하십시오.",
@@ -217,14 +222,14 @@
 			"title": {
 				"integration": "{{companyName}} 과 연락",
 				"ipvd_feedback_page": "카메라 페이지에 대한 피드백",
-				"ipvd_feedback_device": "{{product}} 에 대한 피드백"
+				"ipvd_feedback_device": "{{asset}} 에 대한 피드백"
 			},
 			"topic": {
-				"contact_sales": "영업팀에 문의 {{product}}",
-				"contact_support": "{{product}}대해 지원팀에 문의",
-				"integration_feedback": "통합에 대한 피드백 {{product}}",
+				"contact_sales": "{{asset}} 에 대해 영업팀에 문의",
+				"contact_support": "{{asset}} 대해 지원팀에 문의",
+				"integration_feedback": "{{asset}} 통합에 대한 피드백",
 				"ipvd_feedback_page": "카메라 페이지에 대한 피드백",
-				"ipvd_feedback_device": "{{product}} 에 대한 피드백"
+				"ipvd_feedback_device": "{{asset}} 에 대한 피드백"
 			}
 		},
 		"sharing": {
@@ -295,7 +300,7 @@
 		"missingMessage": "패스워드가 필요합니다."
 	},
 	"registration": {
-		"agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
+		"agreement": "나는 <a href=\"/content/eula\" target=\"_blank\">약관 &\n조건</a> 및 <a href=\"%PRIVACY_LINK%\" target=\"_blank\">개인 정보 취급 방침</a> 에 동의합니다"
 	},
 	"system": {
 		"yourSystem": "귀하의 시스템",
@@ -407,9 +412,9 @@
 	"Support": "지원",
 	"Supported Devices": "지원되는 기기들",
 	"Terms": "이용 약관",
-	"pleaseSelect": "Please select...",
+	"pleaseSelect": "선택하십시오",
 	"WHEN_MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{{targetSystemName}}</strong> System, and this system will be deleted.",
-	"FAILED_SYSTEM_DESCR": "This link is broken,<br>System may be disconnected from %CLOUD_NAME%,<br>Access to this System may be revoked, <br>or you may be logged into a different account.",
+	"FAILED_SYSTEM_DESCR": "이 링크가 끊어졌습니다.<br>시스템이 %CLOUD_NAME%에서 연결이 끊어졌을 수 있습니다.<br>이 시스템에 대한 액세스가 취소되었거나 <br>또는 다른 계정으로 로그인했을 수 있습니다.",
 	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "%CLOUD_NAME%에 연결된 시스템이 없습니다",
 	"NO_SYSTEMS_LOGIN": "%VMS_NAME%을 사용하여 시스템에 로그인하십시오.",
 	"NO_SYSTEMS_GOTO_ADMINISTRATION": "\"시스템 관리\"관리에서 \"클라우드\"탭으로 이동하십시오.",

@@ -239,6 +239,7 @@
     },
     "account": {
         "accountSavedSuccess": "Ваш обліковий запис успішно збережено",
+        "accountSettings": "Параметри облікового запису",
         "activationLinkSent": "Посилання для активації відправлене",
         "changePassword": "Змінити пароль",
         "newPasswordLabel": "Новий пароль",
@@ -268,9 +269,12 @@
     "devices": "пристрої",
     "dialogs": {
         "cancelButton": "Відмінити",
+        "continueAs": "Continue as {email}",
+        "createNewAccount": "Create New Account",
         "download": "Завантажити %VMS_NAME%",
         "loginButton": "Увійти",
         "loginTitle": "Увійти до %CLOUD_NAME%",
+        "loginWithDifferentAccount": "You are already logged in with a different account",
         "logoutAuthorisedContinueButton": "Продовжити",
         "logoutAuthorisedLogoutButton": "Вийти",
         "logoutAuthorisedTitle": "Ви вже увійшли",
@@ -288,19 +292,20 @@
             "sent": "Повідомлення відправлено.",
             "title": {
                 "integration": "Зв’яжіться з {{companyName}}",
-                "ipvd_feedback_device": "Відгук про {{product}}",
+                "ipvd_feedback_device": "Відгук про {{asset}}",
                 "ipvd_feedback_page": "Зворотній зв’язок для сторінки камер"
             },
             "topic": {
-                "contact_sales": "Зв'яжіться з відділом продажів за {{product}}",
-                "contact_support": "Зверніться до служби підтримки за {{product}}",
-                "integration_feedback": "Зворотній зв'язок для інтеграції {{product}}",
-                "ipvd_feedback_device": "Відгук про {{product}}",
+                "contact_sales": "Зв'яжіться з відділом продажів за {{asset}}",
+                "contact_support": "Зверніться до служби підтримки за {{asset}}",
+                "integration_feedback": "Зворотній зв'язок для інтеграції {{asset}}",
+                "ipvd_feedback_device": "Відгук про {{asset}}",
                 "ipvd_feedback_page": "Зворотній зв’язок для сторінки камер"
             }
         },
         "noClientDetectedTitle": "Встановіть %VMS_NAME% для роботи з системою",
         "okButton": "ОК",
+        "remainAs": "Remain logged as {email} ",
         "sharing": {
             "confirmOwner": "Якщо змінити власника системи, вона більше не буде належати до поточного облікового запису. Ця дія є незворотньою. Ви впевнені?",
             "editShareConfirmButton": "Зберегти",

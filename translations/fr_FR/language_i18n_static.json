@@ -5,7 +5,8 @@
 		"passwordChangedSuccess": "Votre compte est enregistré avec succès",
 		"changePassword": "Changer mot de passe",
 		"newPasswordLabel": "Nouveau mot de passe",
-		"saveChanges": "Enregistrer"
+		"saveChanges": "Enregistrer",
+		"accountSettings": "Paramètres compte"
 	},
 	"activeActions": {
 		"sendConfirm": "Renvoyer lien d'activation",
@@ -195,12 +196,16 @@
 	"dialogs": {
 		"okButton": "OK",
 		"cancelButton": "Annuler",
+		"continueAs": "Continue as {email}",
+		"createNewAccount": "Create New Account",
 		"loginTitle": "Connecter à %CLOUD_NAME%",
 		"loginButton": "Connexion",
+		"loginWithDifferentAccount": "You are already logged in with a different account",
 		"logoutAuthorisedTitle": "Vous êtes déjà connecté",
 		"logoutAuthorisedContinueButton": "Continuer",
 		"logoutAuthorisedLogoutButton": "Déconnecter",
 		"noClientDetectedTitle": "Installer %VMS_NAME% pour visionner votre Système",
+		"remainAs": "Remain logged as {email} ",
 		"download": "Télécharger %VMS_NAME%",
 		"merge": {
 			"connectToCloud": "Connectez le système que vous souhaitez fusionner avec celui-ci à <strong>{{cloudName}}</strong> ou fusionner localement à l'aide de <strong>{{vmsName}}</strong> Client.",
@@ -217,14 +222,14 @@
 			"title": {
 				"integration": "Entrez en contact avec {{companyName}}",
 				"ipvd_feedback_page": "Commentaires sur la page des caméras",
-				"ipvd_feedback_device": "Commentaires sur {{product}}"
+				"ipvd_feedback_device": "Commentaires sur {{asset}}"
 			},
 			"topic": {
-				"contact_sales": "Contacter les ventes pour {{product}}",
-				"contact_support": "Contacter le support pour {{product}}",
-				"integration_feedback": "Commentaires pour l'intégration {{product}}",
+				"contact_sales": "Contacter les ventes pour {{asset}}",
+				"contact_support": "Contacter le support pour {{asset}}",
+				"integration_feedback": "Commentaires pour l'intégration {{asset}}",
 				"ipvd_feedback_page": "Commentaires sur la page des caméras",
-				"ipvd_feedback_device": "Commentaires sur {{product}}"
+				"ipvd_feedback_device": "Commentaires sur {{asset}}"
 			}
 		},
 		"sharing": {

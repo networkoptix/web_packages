@@ -5,7 +5,8 @@
 		"passwordChangedSuccess": "A fiók mentése sikeres",
 		"changePassword": "Jelszómódosítás",
 		"newPasswordLabel": "Új jelszó",
-		"saveChanges": "Mentés"
+		"saveChanges": "Mentés",
+		"accountSettings": "Fiókbeállítások"
 	},
 	"activeActions": {
 		"sendConfirm": "Aktiválási link újraküldése",
@@ -195,12 +196,16 @@
 	"dialogs": {
 		"okButton": "OK",
 		"cancelButton": "Mégsem",
+		"continueAs": "Continue as {email}",
+		"createNewAccount": "Create New Account",
 		"loginTitle": "Bejelentkezés ide: %CLOUD_NAME%",
 		"loginButton": "Bejelentkezés",
+		"loginWithDifferentAccount": "You are already logged in with a different account",
 		"logoutAuthorisedTitle": "Már bejelentkezett",
 		"logoutAuthorisedContinueButton": "Folyatatás",
 		"logoutAuthorisedLogoutButton": "Kijelentkezés",
 		"noClientDetectedTitle": "Telepítse a %VMS_NAME% alkalmazást a rendszer megtekintéshez",
+		"remainAs": "Remain logged as {email} ",
 		"download": "%VMS_NAME% letöltése",
 		"merge": {
 			"connectToCloud": "Csatlakoztassa az egyesíteni kívánt rendszert ezzel együtt <strong>{{cloudName}}</strong> vagy egyesítse helyileg <strong>{{vmsName}}</strong> klienst használva.",
@@ -217,14 +222,14 @@
 			"title": {
 				"integration": "Get in touch with {{companyName}}",
 				"ipvd_feedback_page": "Feedback for cameras page",
-				"ipvd_feedback_device": "Feedback about {{product}}"
+				"ipvd_feedback_device": "Feedback about {{asset}}"
 			},
 			"topic": {
-				"contact_sales": "Contact sales for {{product}}",
-				"contact_support": "Contact support for {{product}}",
-				"integration_feedback": "Feedback for integration {{product}}",
+				"contact_sales": "Contact sales for {{asset}}",
+				"contact_support": "Contact support for {{asset}}",
+				"integration_feedback": "Feedback for integration {{asset}}",
 				"ipvd_feedback_page": "Feedback for cameras page",
-				"ipvd_feedback_device": "Feedback about {{product}}"
+				"ipvd_feedback_device": "Feedback about {{asset}}"
 			}
 		},
 		"sharing": {

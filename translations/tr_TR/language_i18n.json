@@ -1,9 +1,9 @@
 {
     "2-Way Audio": "Çift Yönlü Ses",
     "About %CLOUD_NAME%": "%CLOUD_NAME% Hakkında",
-    "Access Level": "Access Level",
-    "Access level": "Access level",
-    "Account Information": "Account Information",
+    "Access Level": "Erişim Seviyesi",
+    "Access level": "Erişim Seviyesi",
+    "Account Information": "Hesap Bilgileri",
     "Account Settings": "Hesap Ayarları",
     "Account is already activated or confirmation code is incorrect": "Hesap zaten etkinleştirildi veya onay kodu yanlış",
     "Account is created.": "Hesap oluşturuldu.",
@@ -12,7 +12,7 @@
     "Account not found": "Hesap bulunamadı",
     "Activate your account": "Hesabınızı Aktifleştirin",
     "Actual number of events supported by this camera may be bigger.": "Bu kamera tarafından desteklenen gerçek olay sayısı daha büyük olabilir.",
-    "Add User": "Add User",
+    "Add User": "Kullanıcı ekle",
     "Additional Requirements": "Ek gereksinimler",
     "Administration": "Yönetim",
     "Advanced PTZ": "Gelişmiş PTZ",
@@ -26,7 +26,7 @@
     "Analytics Events": "Analiz Etkinliği",
     "Any": "Herhangi",
     "Apply": "Uygula",
-    "Apply changes before leaving this page?": "Apply changes before leaving this page?",
+    "Apply changes before leaving this page?": "Bu sayfadan ayrılmadan önce değişiklik uygulansın mı?",
     "Audio": "Ses",
     "Available Systems list": "Kullanılabilir Sistem Listesi",
     "Build Number:": "Yapı numarası:",
@@ -52,7 +52,7 @@
     "Disconnect": "Bağlantıyı kes",
     "Disconnect System from %CLOUD_NAME%?": "%CLOUD_NAME% den bağlantıyı kesmek istiyor musunuz?",
     "Disconnect from %CLOUD_NAME%": "Bağlantıyı ile kes%CLOUD_NAME%",
-    "Disconnect from My Account": "Disconnect from My Account",
+    "Disconnect from My Account": "Hesabımdan çıkış yap",
     "Download": "Karşıdan Yükle",
     "Download %VMS_NAME%": "İndir %VMS_NAME%",
     "Download Chrome": "Chrome'u indir",
@@ -68,12 +68,12 @@
     "Enter password for your account to continue": "Devam etmek için hesabınızın şifresini girin",
     "Enter password to continue.": "Devam etmek için parola girin.",
     "Export all to CSV": "Tamamını CSV olarak dışarıya aktar",
-    "FAILED_SYSTEM_DESCR": "This link is broken,<br>System may be disconnected from %CLOUD_NAME%,<br>Access to this System may be revoked, <br>or you may be logged into a different account.",
+    "FAILED_SYSTEM_DESCR": "Bu bağlantı bozuk,<br>sistem bağlantısı kesilebilir %CLOUD_NAME% den kesilebilir,<br>sisteme erişim engellenmiş olabilir,<br>yada farklı bir hesapla sisteme girilmiş olabilir.",
     "FPS(max)": "FPS(maks)",
     "Failed to access System": "Sisteme erişim sağlanılamadı",
     "Finishing systems merge": "Sistem birleştirme bitiriliyor",
     "Firmware version": "Firmware versiyonu",
-    "First Name": "First Name",
+    "First Name": "Adı",
     "First name": "Soyadı",
     "First name is required": "Ad girmek zorunludur",
     "Fisheye": "Balıkgözü",
@@ -86,7 +86,7 @@
     "In-Client Upgrade:": "İstemci Yükseltmesi:",
     "Integrations": "Entegrasyonlar",
     "Language": "Dil",
-    "Last Name": "Last Name",
+    "Last Name": "Soyadı",
     "Last name": "Soyadı",
     "Last name is required": "Soyad girmek zorunludur",
     "Latest version": "Son Sürüm",
@@ -97,7 +97,7 @@
     "Merge current System with": "Geçerli sistem ile birleştir",
     "Merge with Another System": "Başka bir sistemle birleştir",
     "Message": "Mesaj",
-    "Mine": "Mine",
+    "Mine": "Benim",
     "Motion Detection": "Hareket Algılama",
     "Multi Sensor": "Çoklu sensör",
     "NO_SYSTEMS_CONNECT_SYSTEM": "Sistem %CLOUD_NAME% e bağlan\"",
@@ -164,9 +164,9 @@
     "Update them to the": "Onları güncelle",
     "Updated": "Güncellendi",
     "User": "Kullanıcı",
-    "User disabled": "User disabled",
+    "User disabled": "Kullanıcı Devre Dışı",
     "View": "Görünüm",
-    "WHEN_MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{{targetSystemName}}</strong> System, and this system will be deleted.",
+    "WHEN_MERGE_FINISHES": "Birleştirme işlemi tamamlandığında, bu sistemdeki tüm kullanıcılar ve kameralar kullanılabilir hale gelir <strong>\" Sistem{{targetSystemName}}</strong> \" ve bu sistem silinecektir.",
     "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.": "Google Chrome veya Mozilla Firefox'un en son sürümlerini yüklemenizi öneririz ancak başka herhangi bir modern web tarayıcısını kullanabilirsiniz.",
     "What's New?": "Ne Yenilikler Var?",
     "Works with:": "İle çalışır:",
@@ -176,7 +176,7 @@
     "You have registered in %CLOUD_NAME%": "%CLOUD_NAME% içinde kayıtlı",
     "Your Email": "E-posta Adresiniz",
     "Your Name": "Adınız",
-    "Your access level": "Your access level",
+    "Your access level": "Erişim seviyesi",
     "Your account is successfully activated": "Hesabın başarıyla aktif edildi",
     "Your browser is not supported": "Tarayıcınız desteklenmiyor",
     "accessRoles": {
@@ -239,6 +239,7 @@
     },
     "account": {
         "accountSavedSuccess": "Hesabınız başarıyla kaydedildi",
+        "accountSettings": "Hesap Ayarları",
         "activationLinkSent": "Aktivasyon linki gönderildi",
         "changePassword": "Parola Değiştir",
         "newPasswordLabel": "Yeni Parola",
@@ -268,9 +269,12 @@
     "devices": "aygıtlar",
     "dialogs": {
         "cancelButton": "İptal",
+        "continueAs": "Continue as {email}",
+        "createNewAccount": "Create New Account",
         "download": "İndir %VMS_NAME%",
         "loginButton": "Giriş yap",
         "loginTitle": "%CLOUD_NAME% e giriş yapın",
+        "loginWithDifferentAccount": "You are already logged in with a different account",
         "logoutAuthorisedContinueButton": "Devam et",
         "logoutAuthorisedLogoutButton": "Oturumu Kapat",
         "logoutAuthorisedTitle": "Zaten giriş yapılmış",
@@ -288,19 +292,20 @@
             "sent": "Mesaj gönderildi.",
             "title": {
                 "integration": "{{companyName}} ile iletişime geçin",
-                "ipvd_feedback_device": "{{product}} hakkında geri bildirim",
+                "ipvd_feedback_device": "{{asset}} hakkında geri bildirim",
                 "ipvd_feedback_page": "Kameralar sayfası için geri bildirim"
             },
             "topic": {
-                "contact_sales": "Satış için {{product}} iletişime geçin",
-                "contact_support": "{{product}} için Destek İste",
-                "integration_feedback": "Entegrasyon için geri bildirim {{product}}",
-                "ipvd_feedback_device": "{{product}} hakkında geri bildirim",
+                "contact_sales": "Satış için {{asset}} iletişime geçin",
+                "contact_support": "{{asset}} için Destek İste",
+                "integration_feedback": "Entegrasyon için geri bildirim {{asset}}",
+                "ipvd_feedback_device": "{{asset}} hakkında geri bildirim",
                 "ipvd_feedback_page": "Kameralar sayfası için geri bildirim"
             }
         },
         "noClientDetectedTitle": "Sisteminizi görüntülemek için %VMS_NAME%'i yükleyin",
         "okButton": "Tamam",
+        "remainAs": "Remain logged as {email} ",
         "sharing": {
             "confirmOwner": "Sistem sahibini değiştirirseniz, hesabınızdaki yetkileri iptal edersiniz. Bu eylem geri döndürülemez. Emin misiniz?",
             "editShareConfirmButton": "Kaydet",
@@ -439,7 +444,7 @@
         "Health Monitor": "Durum İzleyici",
         "Storage": "Depolama",
         "backToEditText": "Düzeleme arayüzüne dön",
-        "myIntegrationsLabel": "Mine",
+        "myIntegrationsLabel": "Benim",
         "previewRibbonText": "Bu sayfa en son değişikliklerin önizlemesidir ve herkese açık kullanılabilir sürümle eşleşmiyor."
     },
     "ipvd": {
@@ -473,8 +478,8 @@
         "isMultiSensor": "Çoklu sensör",
         "isPtzSupported": "PTZ",
         "isTwAudioSupported": "çift Yönlü Ses",
-        "maxFps": "<span>Max</span><br><span>FPS</span>",
-        "maxResolution": "<span>Max</span><br><span>Resolution</span>",
+        "maxFps": "<span>Maksimum</span><br><span>FPS</span>",
+        "maxResolution": "<span>Max</span><br><span>Çözünürlük</span>",
         "model": "Model",
         "multiSensorCamera": "Çok Sensörlü Kamera",
         "other": "Diğer",
@@ -530,15 +535,15 @@
         "weakMessage": "Parolanın güçlü olması için \nküçük büyük harf ve özel karakterler kullanın"
     },
     "phoneNumberWithLabel": "Tel: {{number}}",
-    "pleaseSelect": "Please select...",
+    "pleaseSelect": "Lütfen seçiniz...",
     "privacyPolicy": {
         "integration": "Bu formu göndererek, {{INTEGRATION_COMPANY}} ve / veya %COMPANY_NAME%ile irtibata geçmeyi kabul edersiniz.\nSen bulacaksınız {{INTEGRATION_COMPANY}} gizlilik politikasını <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">burada</a> ve %COMPANY_NAME% gizlilik politikasını <a href=\"%PRIVACY_LINK%\" target=\"blank\">Burada</a> onayınızı geri çekmek konusunda talimat içerir.",
         "ipvd": "Bu formu göndererek, %COMPANY_NAME%ile iletişime geçmeyi kabul edersiniz.\nBurada, onayınızı nasıl geri çekeceğinizle ilgili talimatları içeren %COMPANY_NAME% gizlilik politikasını <a href=\"%PRIVACY_LINK%\" target=\"blank\">burada</a> bulacaksınız."
     },
     "registration": {
-        "agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
+        "agreement": "Kabul et <a href=\"/content/eula\" target=\"_blank\">Şartlar ve Koşullar</a>ve<a href=\"%PRIVACY_LINK%\" target=\"_blank\">Gizlilik Politikası</a>"
     },
-    "registration.agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>",
+    "registration.agreement": "Kabul et <a href=\"/content/eula\" target=\"_blank\">Şartlar ve Koşullar</a>ve<a href=\"%PRIVACY_LINK%\" target=\"_blank\">Gizlilik Politikası</a>",
     "search": {
         "Any": "Herhangi",
         "Search": "Arama",
@@ -597,5 +602,5 @@
     "testedVersionLabel": "{{vmsName}} versiyonda test edildi:",
     "testedVersionsLabel": "{{vmsName}} versiyonda test edildi:",
     "users": "Kullanıcılar",
-    "you": "you"
+    "you": "sen"
 }

@@ -115,24 +115,8 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     icon : this.CONFIG.systemMenu.admin.icon,
                     label: this.LANG.systemAdministration,
                     path : this.CONFIG.systemMenu.admin.path,
-                }, {
-                    id   : this.CONFIG.systemMenu.users.id,
-                    icon : this.CONFIG.systemMenu.users.icon,
-                    label: this.LANG.users,
-                    path : this.CONFIG.systemMenu.users.path,
-                    level2: [
-                        {
-                            id   : this.CONFIG.systemMenu.buttons.id,
-                            items: [
-                                {
-                                    id: 'addUser',
-                                    label: this.LANG['Add User'],
-                                    disabled: true
-                                }
-                            ]
-                        }
-                    ]
-                }]
+                }
+            ]
         };
 
         this.menuService
@@ -146,6 +130,13 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             .selectedSubSectionSubject
             .subscribe(selection => {
                 this.content.selectedSubSection = selection;
+                this.content = { ...this.content }; // trigger onChange
+            });
+
+       this.menuService
+            .selectedDetailsSection
+            .subscribe(selection => {
+                this.content.selectedDetailsSection = selection;
                 this.content = { ...this.content }; // trigger onChange
             });
 
@@ -239,17 +230,43 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
     updateSomething() {
         this.systemNoAccess = false;
+
         if (this.system.permissions.editUsers) {
             this.content.system = this.system;
-            const usersNode = this.content.level1.filter((node) => node.id === 'users')[0];
+            let usersNode = this.content.level1.filter((node) => node.id === this.CONFIG.systemMenu.users.id)[0];
+
+            if (!usersNode) {
+                usersNode = {
+                    id    : this.CONFIG.systemMenu.users.id,
+                    icon  : this.CONFIG.systemMenu.users.icon,
+                    label : this.LANG.users,
+                    path  : this.CONFIG.systemMenu.users.path,
+                    level2: [
+                        {
+                            id   : this.CONFIG.systemMenu.buttons.id,
+                            items: [
+                                {
+                                    id      : 'addUser',
+                                    label   : this.LANG['Add User'],
+                                    disabled: true
+                                }
+                            ],
+                            level3: []
+                        }
+                    ],
+                };
+                this.content.level1.push(usersNode);
+            }
 
             // Retain buttons
             if (usersNode.level2.length && usersNode.level2[0].id === 'buttons') {
-                usersNode.level2 = [usersNode.level2[0]];
+                // usersNode.level2 = [usersNode.level2[0]];
                 usersNode.level2[0].items[0].disabled = !this.system.isAvailable;
             } else {
                 usersNode.level2 = [];
             }
+
+            usersNode.level3 = [];
 
             const byParam = NxUtilsService.byParam((user) => {
                     return user.email;
@@ -259,7 +276,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
             this.system.users.forEach((user) => {
                 const id = user.id.replace(/{|}/g, '');
-                usersNode.level2.push({
+                usersNode.level3.push({
                     id,
                     icon : 'glyphicon-cloud',
                     label: user.email,
@@ -268,9 +285,15 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     isEnabled: user.isEnabled,
                 });
             });
-
-            this.content = {...this.content};
+        } else {
+            // remove Users
+            const index = this.content.level1.findIndex(x => x.id === this.CONFIG.systemMenu.users.id);
+            if (index !== -1) {
+                this.content.level1.splice(index, 1);
+            }
         }
+
+        this.content = { ...this.content };
     }
 
     cleanUrl() {

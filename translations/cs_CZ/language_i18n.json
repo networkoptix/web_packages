@@ -239,6 +239,7 @@
     },
     "account": {
         "accountSavedSuccess": "Váš účet byl úspěšně uložen",
+        "accountSettings": "Nastavení účtu",
         "activationLinkSent": "Aktivní odkaz byl odeslán",
         "changePassword": "Změnit heslo",
         "newPasswordLabel": "Nové heslo",
@@ -268,9 +269,12 @@
     "devices": "zařízení",
     "dialogs": {
         "cancelButton": "Zrušit",
+        "continueAs": "Continue as {email}",
+        "createNewAccount": "Create New Account",
         "download": "Stáhnout %VMS_NAME%",
         "loginButton": "Přihlásit",
         "loginTitle": "Přihlaste se k %CLOUD_NAME%",
+        "loginWithDifferentAccount": "You are already logged in with a different account",
         "logoutAuthorisedContinueButton": "Pokračovat",
         "logoutAuthorisedLogoutButton": "Odhlásit se",
         "logoutAuthorisedTitle": "Již jste přihlášen",
@@ -288,19 +292,20 @@
             "sent": "Zpráva byla odeslána.",
             "title": {
                 "integration": "Spojte se s {{companyName}}",
-                "ipvd_feedback_device": "Zpětná vazba pro {{product}}",
+                "ipvd_feedback_device": "Zpětná vazba pro {{asset}}",
                 "ipvd_feedback_page": "Zpětná vazba pro kameru"
             },
             "topic": {
-                "contact_sales": "Kontaktovat obchod ohledně {{product}}",
-                "contact_support": "Kontaktovat podporu ohledně{{product}}",
-                "integration_feedback": "Zpětná vazba pro integraci {{product}}",
-                "ipvd_feedback_device": "Zpětná vazba pro {{product}}",
+                "contact_sales": "Kontaktovat obchod ohledně {{asset}}",
+                "contact_support": "Kontaktovat podporu ohledně{{asset}}",
+                "integration_feedback": "Zpětná vazba pro integraci {{asset}}",
+                "ipvd_feedback_device": "Zpětná vazba pro {{asset}}",
                 "ipvd_feedback_page": "Zpětná vazba pro kameru"
             }
         },
         "noClientDetectedTitle": "Pro zobrazení Vašeho systému nainstalujte %VMS_NAME%",
         "okButton": "OK",
+        "remainAs": "Remain logged as {email} ",
         "sharing": {
             "confirmOwner": "Pokud změníte vlastníka systému, zrušíte vlastnictví aktuálního účtu. Tato akce je nevratná. Přejete si pokračovat?",
             "editShareConfirmButton": "Uložit",

@@ -239,6 +239,7 @@
     },
     "account": {
         "accountSavedSuccess": "Tài khoản của bạn đã được lưu thành công",
+        "accountSettings": "Cài đặt tài khoản",
         "activationLinkSent": "Link kích hoạt đã được gửi",
         "changePassword": "Đổi mật khẩu",
         "newPasswordLabel": "Mật khẩu mới",
@@ -268,9 +269,12 @@
     "devices": "thiết bị",
     "dialogs": {
         "cancelButton": "Hủy bỏ",
+        "continueAs": "Continue as {email}",
+        "createNewAccount": "Create New Account",
         "download": "Tải xuống %VMS_NAME%",
         "loginButton": "Đăng nhập",
         "loginTitle": "Đăng nhập vào %CLOUD_NAME%",
+        "loginWithDifferentAccount": "You are already logged in with a different account",
         "logoutAuthorisedContinueButton": "Tiếp tục",
         "logoutAuthorisedLogoutButton": "Đăng xuất",
         "logoutAuthorisedTitle": "Bạn đã đăng nhập",
@@ -288,19 +292,20 @@
             "sent": "Tin nhắn đã được gửi.",
             "title": {
                 "integration": "Liên lạc với {{companyName}}",
-                "ipvd_feedback_device": "Phản hồi về {{product}}",
+                "ipvd_feedback_device": "Phản hồi về {{asset}}",
                 "ipvd_feedback_page": "Phản hồi cho trang camera"
             },
             "topic": {
-                "contact_sales": "Liên hệ bán hàng cho {{product}}",
-                "contact_support": "Liên hệ hỗ trợ cho {{product}}",
-                "integration_feedback": "Phản hồi cho tích hợp {{product}}",
-                "ipvd_feedback_device": "Phản hồi về {{product}}",
+                "contact_sales": "Liên hệ bán hàng cho {{asset}}",
+                "contact_support": "Liên hệ hỗ trợ cho {{asset}}",
+                "integration_feedback": "Phản hồi cho tích hợp {{asset}}",
+                "ipvd_feedback_device": "Phản hồi về {{asset}}",
                 "ipvd_feedback_page": "Phản hồi cho trang camera"
             }
         },
         "noClientDetectedTitle": "Cài đặt %VMS_NAME% để xem Hệ thống của bạn",
         "okButton": "Xác định",
+        "remainAs": "Remain logged as {email} ",
         "sharing": {
             "confirmOwner": "Nếu bạn thay sở hữu hệ thống, bạn sẽ thu hồi quyền sở hữu hiện tại của mình. Không thể phục hồi sở hữu cũ. Bạn có chắc không?",
             "editShareConfirmButton": "Tiết kiệm",

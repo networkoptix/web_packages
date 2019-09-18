@@ -200,13 +200,15 @@ def process_zip(file_descriptor, user, asset, update_structure, update_content):
                 # Ideally, the only difference is specific data values
 
                 context_template = context.contexttemplate_set.first()
-                context_template_lines = context_template.template.split("\n")
 
                 # normalise json file
                 # here is the problem: we parse json as text file to extract values, which might be not the best
                 # course of action, but it lets us parse any tags, not only json-name-based
                 if name.endswith('json'):
                     file_content = json.dumps(json.loads(file_content), indent=4, separators=(',', ': '))
+                    context_template = json.dumps(json.loads(context_template), indent=4, separators=(',', ': '))
+
+                context_template_lines = context_template.template.split("\n")
 
                 for structure in context.datastructure_set.all():
                     if DataStructure.is_file_or_image(structure.type):
@@ -232,7 +234,8 @@ def process_zip(file_descriptor, user, asset, update_structure, update_content):
                     # try to parse file_content with regex
                     result = re.search(template_line, file_content, re.MULTILINE)
                     if not result:
-                        log_messages.append(('warning', f'No line in file {name} for data structure {structure.name}'))
+                        log_messages.append(('warning', f'No line in file {name} for data structure {structure.name}, '
+                                                        f'template: {template_line}'))
                         continue
 
                     # if there is a value - compare it with latest draft

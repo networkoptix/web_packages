@@ -9,8 +9,8 @@ force tags    account
 ${password}    ${BASE PASSWORD}
 ${url}         ${ENV}
 ${CZECH ALERT}    Váš účet byl úspěšně uložen
-${FIRST NAME IS REQUIRED}      //span[@ng-if='accountForm.firstName.$touched && accountForm.firstName.$error.required' and contains(text(),"${FIRST NAME IS REQUIRED TEXT}")]
-${LAST NAME IS REQUIRED}       //span[@ng-if='accountForm.lastName.$touched && accountForm.lastName.$error.required' and contains(text(),"${LAST NAME IS REQUIRED TEXT}")]
+${FIRST NAME IS REQUIRED}      //span[@class='error-text ng-star-inserted' and contains(text(),"${FIRST NAME IS REQUIRED TEXT}")]
+${LAST NAME IS REQUIRED}       //span[@class='error-text ng-star-inserted' and contains(text(),"${LAST NAME IS REQUIRED TEXT}")]
 ${FIRST NAME ERROR}            ${ACCOUNT FIRST NAME}/parent::div/parent::div[contains(@class, "has-error")]
 ${LAST NAME ERROR}             ${ACCOUNT LAST NAME}/parent::div/parent::div[contains(@class, "has-error")]
 
@@ -20,9 +20,9 @@ Verify in Account Page
     ...    ${ACCOUNT EMAIL}
     ...    ${ACCOUNT FIRST NAME}
     ...    ${ACCOUNT LAST NAME}
-    ...    ${ACCOUNT SAVE}
     ...    ${ACCOUNT LANGUAGE DROPDOWN}
     ...    ${ACCOUNT DROPDOWN}
+    Elements Should Not Be Visible    ${ACCOUNT SAVE}    ${ACCOUNT CANCEL}
     sleep    .5
 
 Restart
@@ -61,6 +61,7 @@ Accessing the account page from a direct link while logged out asks for login, c
     Go To    ${url}/account
     Wait Until Element is Visible    ${LOG IN CLOSE BUTTON}
     Click Button    ${LOG IN CLOSE BUTTON}
+    Validate Log Out
     Location Should Be    ${url}/
 
 Accessing the account page from a direct link while logged out asks for login, on valid login takes you to account page
@@ -142,7 +143,8 @@ SPACE for first name is not valid
     Verify in Account Page
     Input Text    ${ACCOUNT FIRST NAME}    ${SPACE}
     Click Element    ${ACCOUNT LAST NAME}
-    Wait Until Element is Visible    ${FIRST NAME ERROR}
+    Element Style Should Be    ${ACCOUNT FIRST NAME}    border-color    ${ERROR COLOR}
+    Element Style Should Be    ${ACCOUNT FIRST NAME}    color    ${ERROR COLOR WITH OPACITY}
     Element Should Be Visible    ${FIRST NAME IS REQUIRED}
 
 SPACE for last name is not valid
@@ -154,7 +156,8 @@ SPACE for last name is not valid
     Input Text    ${ACCOUNT FIRST NAME}    Mark
     Input Text    ${ACCOUNT LAST NAME}    ${SPACE}
     Click Element    ${ACCOUNT FIRST NAME}
-    Wait Until Element is Visible    ${LAST NAME ERROR}
+    Element Style Should Be    ${ACCOUNT LAST NAME}    border-color    ${ERROR COLOR}
+    Element Style Should Be    ${ACCOUNT LAST NAME}    color    ${ERROR COLOR WITH OPACITY}
     Element Should Be Visible    ${LAST NAME IS REQUIRED}
 
 Email field is un-editable

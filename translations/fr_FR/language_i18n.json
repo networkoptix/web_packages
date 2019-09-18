@@ -239,6 +239,7 @@
     },
     "account": {
         "accountSavedSuccess": "Votre compte est enregistré avec succès",
+        "accountSettings": "Paramètres compte",
         "activationLinkSent": "Lien d'activation envoyé",
         "changePassword": "Changer mot de passe",
         "newPasswordLabel": "Nouveau mot de passe",
@@ -268,9 +269,12 @@
     "devices": "périphériques",
     "dialogs": {
         "cancelButton": "Annuler",
+        "continueAs": "Continue as {email}",
+        "createNewAccount": "Create New Account",
         "download": "Télécharger %VMS_NAME%",
         "loginButton": "Connexion",
         "loginTitle": "Connecter à %CLOUD_NAME%",
+        "loginWithDifferentAccount": "You are already logged in with a different account",
         "logoutAuthorisedContinueButton": "Continuer",
         "logoutAuthorisedLogoutButton": "Déconnecter",
         "logoutAuthorisedTitle": "Vous êtes déjà connecté",
@@ -288,19 +292,20 @@
             "sent": "Message a été envoyé.",
             "title": {
                 "integration": "Entrez en contact avec {{companyName}}",
-                "ipvd_feedback_device": "Commentaires sur {{product}}",
+                "ipvd_feedback_device": "Commentaires sur {{asset}}",
                 "ipvd_feedback_page": "Commentaires sur la page des caméras"
             },
             "topic": {
-                "contact_sales": "Contacter les ventes pour {{product}}",
-                "contact_support": "Contacter le support pour {{product}}",
-                "integration_feedback": "Commentaires pour l'intégration {{product}}",
-                "ipvd_feedback_device": "Commentaires sur {{product}}",
+                "contact_sales": "Contacter les ventes pour {{asset}}",
+                "contact_support": "Contacter le support pour {{asset}}",
+                "integration_feedback": "Commentaires pour l'intégration {{asset}}",
+                "ipvd_feedback_device": "Commentaires sur {{asset}}",
                 "ipvd_feedback_page": "Commentaires sur la page des caméras"
             }
         },
         "noClientDetectedTitle": "Installer %VMS_NAME% pour visionner votre Système",
         "okButton": "OK",
+        "remainAs": "Remain logged as {email} ",
         "sharing": {
             "confirmOwner": "Si vous modifiez le propriétaire du système, vous révoquez la propriété sur le compte courant. Cette action est irréversible. Êtes-vous sûr ?",
             "editShareConfirmButton": "Enregistrer",

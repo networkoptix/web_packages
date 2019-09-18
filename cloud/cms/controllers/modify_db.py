@@ -84,17 +84,17 @@ def is_datarecord_unique(asset, data_structure, value, customizations=None):
 
     asset_ids_found = []
 
-    pending_version_ids = []
+    not_accepted_version_ids = []
     # Find all versions of assets that may cause conflict
     for review in AssetCustomizationReview.objects.filter(
             version__asset__id__in=asset_ids, version__datarecord__data_structure=data_structure
     ).order_by('-pk').select_related('version__asset'):
         asset_id = review.version.asset.id
-        if asset_id in asset_ids and asset_id not in asset_ids_found:
+        if asset_id not in asset_ids_found:
             if review.state == AssetCustomizationReview.REVIEW_STATES.accepted:
                 asset_ids_found.append(asset_id)
             else:
-                pending_version_ids.append(review.version.id)
+                not_accepted_version_ids.append(review.version.id)
 
     asset_ids_found.clear()
     asset_ids_published_found = []
@@ -104,7 +104,7 @@ def is_datarecord_unique(asset, data_structure, value, customizations=None):
     ).order_by('-pk').select_related('asset'):
         if datarecord.version:
             # If datarecord has a new version that is still pending/rejected/blocked, check value
-            if datarecord.version in pending_version_ids:
+            if datarecord.version in not_accepted_version_ids:
                 if datarecord.value == value:
                     return False
             # If datarecord has a published version or older version, make sure we
@@ -135,6 +135,7 @@ def save_unrevisioned_records(asset, context, language, data_structures,
         new_record_value = ""
         external_file = None
         delete_file = False
+        is_file_or_image = DataStructure.is_file_or_image(data_structure.type)
         latest_value = data_structure.find_actual_value(asset, ds_language, draft=True)
         # If the DataStructure is supposed to be an image convert to base64 and
         # error check
@@ -148,7 +149,7 @@ def save_unrevisioned_records(asset, context, language, data_structures,
             This will create a new record making images/files behave like the other data structure types
             Places to touch are here and cms/forms.py
         """
-        if DataStructure.is_file_or_image(data_structure.type):
+        if is_file_or_image:
             # If a file has been uploaded try to save it
             if data_structure_name in request_files:
                 if request_files[data_structure_name]:
@@ -156,11 +157,10 @@ def save_unrevisioned_records(asset, context, language, data_structures,
                     if file_errors:
                         upload_errors.extend(file_errors)
                         continue
-
-            # No file was uploaded and there is a record means the user didn't change anything so skip
+            # No file was uploaded and there is a record means the user didn't change anything so skip.
             elif not data_structure.optional and latest_value:
                 continue
-            # No file was uploaded and the user didn't delete an optional data structure so skip
+            # No file was uploaded and the user didn't delete an optional data structure so skip.
             elif data_structure.optional and 'delete_' + data_structure_name not in request_data:
                 continue
 
@@ -257,12 +257,14 @@ def save_unrevisioned_records(asset, context, language, data_structures,
             new_record_value = request_data[data_structure_name]
             if data_structure.type == DataStructure.DATA_TYPES.text and 'regex' in data_structure.meta_settings:
                 pattern = data_structure.meta_settings['regex']
+                if pattern == '':
+                    pattern = '.*$'
                 if not pattern.endswith('$'):
                     pattern = f'{pattern}$'
                 if new_record_value and not re.match(pattern, new_record_value):
                     upload_errors.append((data_structure_name, 'Invalid input'))
                     continue
-            elif 'char_limit' in data_structure.meta_settings:
+            if 'char_limit' in data_structure.meta_settings:
                 char_limit = int(data_structure.meta_settings['char_limit'])
                 if len(new_record_value) > char_limit:
                     upload_errors.append(
@@ -271,7 +273,7 @@ def save_unrevisioned_records(asset, context, language, data_structures,
                          format(len(new_record_value), char_limit)))
 
         # If the data structure is not option and no record exists and nothing was uploaded try to use the default value
-        if not data_structure.optional and not new_record_value:
+        if not data_structure.optional and not new_record_value and not is_file_or_image:
             if not latest_value:
                 new_record_value = data_structure.default
                 if new_record_value:
@@ -282,7 +284,7 @@ def save_unrevisioned_records(asset, context, language, data_structures,
             else:
                 continue
 
-        if new_record_value == latest_value and not delete_file and not external_file:
+        if new_record_value == latest_value and not delete_file and not external_file and not is_file_or_image:
             continue
 
         if data_structure.advanced and not (user.is_superuser or user.has_perm('cms.edit_advanced')):
@@ -383,13 +385,13 @@ def publish_latest_version(asset, review_id, user):
     return publish_errors
 
 
-def integration_has_required_data(asset):
+def asset_has_required_data(asset):
     errors = []
     for datastructure in DataStructure.objects.filter(context__asset_type=asset.asset_type):
         records = datastructure.datarecord_set.filter(asset=asset)
         last_record_value = records.last().value if records.last() else None
-        if last_record_value and datastructure.type in [DataStructure.DATA_TYPES.select,
-                                                        DataStructure.DATA_TYPES.array,
+        if last_record_value and datastructure.type in [DataStructure.DATA_TYPES.array,
+                                                        DataStructure.DATA_TYPES.object,
                                                         DataStructure.DATA_TYPES.multiselect]:
             last_record_value = json.loads(last_record_value)
         if not datastructure.optional and (not records.exists() or not last_record_value):
@@ -408,8 +410,8 @@ def send_version_for_review(asset, user):
         old_version.delete()
 
     # We only check for integrations because its the only asset type that non staff have access to.
-    if asset.is_integration:
-        errors = integration_has_required_data(asset)
+    if asset.is_integration or asset.is_asset_type(AssetType.ASSET_TYPES.vms):
+        errors = asset_has_required_data(asset)
         if len(errors) > 0:
             return errors
 
@@ -545,5 +547,7 @@ def upload_file(data_structure, new_file):
     file_errors = check_meta_settings(data_structure, new_file)
     if file_errors:
         return None, file_errors
+    # Must seek file before reading or else encoding will be messed ruined.
+    new_file.seek(0)
     encoded_file = base64.b64encode(new_file.read()).decode('utf8')
     return encoded_file, []

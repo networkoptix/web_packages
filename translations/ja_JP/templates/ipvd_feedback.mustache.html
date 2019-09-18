@@ -1,4 +1,4 @@
 <h1>こんにちは、{{ message.userFullName }}</h1>
 
-<a href="mailto:{{ message.sender_email }}">{{ message.sender_name }}</a>gave the following feedback{{#message.asset}} for {{ message.asset }}{{/message.asset}}:
+{{ message.asset }}{{/message.asset}}に対して<a href="mailto:{{ message.sender_email }}">{{ message.sender_name }}</a>は次のフィードバック{{#message.asset}}を行いました：
 <div>{{ message.message }}</div>

@@ -66,10 +66,13 @@ Check Language Anonymous
 
 Check Langauge Logged In
     Register Keyword To Run On Failure    NONE
+    # this is a temorary fix.  Future update will use API calls
+    ${previous location}=   Get Location
     Go To    ${ENV}/account
-    ${status}=    Run Keyword And Return Status    Wait Until Element Is Visible    ${ACCOUNT LANGUAGE DROPDOWN}/span[@lang='${LANGUAGE}']    5
+    ${status}=   Run Keyword And Return Status    Wait Until Element Is Visible    ${ACCOUNT LANGUAGE DROPDOWN}/span[@lang='${LANGUAGE}']    5
     Register Keyword To Run On Failure    Failure Tasks
     Run Keyword If    "${status}"=="False"    Set Language
+    Go To    ${previous location}
 
 Set Language
     [arguments]    ${lang}=${LANGUAGE}

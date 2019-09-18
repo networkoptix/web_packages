@@ -12,8 +12,10 @@ export class NxLevel3ItemComponent implements OnInit {
     @Input() base: any = {};
     @Input() item: any = {};
     @Input() selected: boolean;
+    @Input() first: boolean;
 
     itemPath: string;
+    isEnabled: boolean;
 
     constructor() {
     }
@@ -21,5 +23,6 @@ export class NxLevel3ItemComponent implements OnInit {
     ngOnInit() {
         this.itemPath = this.base;
         this.itemPath += (this.item.path !== '') ? '/' + this.item.path : '';
+        this.isEnabled = this.item.isEnabled === undefined ? true : this.item.isEnabled;
     }
 }

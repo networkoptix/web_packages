@@ -18,15 +18,28 @@
     line-height      : 26px;
 
     &:hover {
-        background-color : $light6;
+        &, * {
+            background-color: $light6 !important;
+        }
     }
 
     &:active {
-        background-color : $light7;
+        &, * {
+            background-color: $light7 !important;
+        }
     }
 
     & > div {
         line-height: 26px;
+    }
+
+    .top-shadow-cover {
+        left: 0;
+        position: absolute;
+        background: $light5;
+        width: 100%;
+        height: 4px;
+        z-index: 2;
     }
 
     &-icon {
@@ -40,21 +53,23 @@
     }
 
     &.selected {
-        background-color : $light16 !important;
-        color            : $light1 !important;
-    }
-
-    &.item-disabled {
-        color : $light16;
+        &, * {
+            color: $light1 !important;
+            background-color: $light16 !important;
+        }
 
         .menu-level-3-additional {
-            color : $light1;
+            font-family : $font-family-regular;
         }
     }
 
-    span {
-        color : $light16;
+    &.item-disabled {
+        color : $light13;
     }
+
+    //span {
+    //    color : $light16;
+    //}
 }
 
 .menu-level-3-additional {

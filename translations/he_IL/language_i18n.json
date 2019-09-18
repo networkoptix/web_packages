@@ -239,6 +239,7 @@
     },
     "account": {
         "accountSavedSuccess": "החשבון שלך נשמר בהצלחה",
+        "accountSettings": "הגדרות החשבון",
         "activationLinkSent": "קישור הפעלה נשלח",
         "changePassword": "שנה סיסמא",
         "newPasswordLabel": "סיסמה חדשה",
@@ -268,9 +269,12 @@
     "devices": "מכשירים",
     "dialogs": {
         "cancelButton": "ביטול",
+        "continueAs": "Continue as {email}",
+        "createNewAccount": "Create New Account",
         "download": "הורד את %VMS_NAME%",
         "loginButton": "התחברות",
         "loginTitle": "היכנס ל- %CLOUD_NAME%",
+        "loginWithDifferentAccount": "You are already logged in with a different account",
         "logoutAuthorisedContinueButton": "המשך",
         "logoutAuthorisedLogoutButton": "יציאה",
         "logoutAuthorisedTitle": "אתה כבר מחובר",
@@ -288,19 +292,20 @@
             "sent": "ההודעה נשלחה.",
             "title": {
                 "integration": "צור קשר עם {{companyName}}",
-                "ipvd_feedback_device": "משוב על {{product}}",
+                "ipvd_feedback_device": "משוב על {{asset}}",
                 "ipvd_feedback_page": "משוב עבור דף מצלמות"
             },
             "topic": {
-                "contact_sales": "צור קשר עם מחלקת המכירות עבור {{product}}",
-                "contact_support": "צור קשר עם התמיכה בנוגע ל- {{product}}",
-                "integration_feedback": "משוב לאינטגרציה {{product}}",
-                "ipvd_feedback_device": "משוב על {{product}}",
+                "contact_sales": "צור קשר עם מחלקת המכירות עבור {{asset}}",
+                "contact_support": "צור קשר עם התמיכה בנוגע ל- {{asset}}",
+                "integration_feedback": "משוב לאינטגרציה {{asset}}",
+                "ipvd_feedback_device": "משוב על {{asset}}",
                 "ipvd_feedback_page": "משוב עבור דף מצלמות"
             }
         },
         "noClientDetectedTitle": "התקן את %VMS_NAME% כדי לצפות במערכת שלך",
         "okButton": "אישור",
+        "remainAs": "Remain logged as {email} ",
         "sharing": {
             "confirmOwner": "אם תשנה את 'בעל המערכת', תשלול את הבעלות מהחשבון הנוכחי. פעולה זו היא בלתי הפיכה. האם להמשיך?",
             "editShareConfirmButton": "שמור",

@@ -239,6 +239,7 @@
     },
     "account": {
         "accountSavedSuccess": "A sua conta foi gravada com sucesso",
+        "accountSettings": "Definições da Conta",
         "activationLinkSent": "Link de activação enviado",
         "changePassword": "Alterar senha",
         "newPasswordLabel": "Nova senha",
@@ -268,9 +269,12 @@
     "devices": "dispositivos",
     "dialogs": {
         "cancelButton": "Cancelar",
+        "continueAs": "Continue as {email}",
+        "createNewAccount": "Create New Account",
         "download": "Baixar %VMS_NAME%",
         "loginButton": "Entrar",
         "loginTitle": "Logar em %CLOUD_NAME%",
+        "loginWithDifferentAccount": "You are already logged in with a different account",
         "logoutAuthorisedContinueButton": "Continuar",
         "logoutAuthorisedLogoutButton": "Terminar sessão",
         "logoutAuthorisedTitle": "Já tem sessão iniciada",
@@ -288,19 +292,20 @@
             "sent": "Message has been sent.",
             "title": {
                 "integration": "Get in touch with {{companyName}}",
-                "ipvd_feedback_device": "Feedback about {{product}}",
+                "ipvd_feedback_device": "Feedback about {{asset}}",
                 "ipvd_feedback_page": "Feedback for cameras page"
             },
             "topic": {
-                "contact_sales": "Contact sales for {{product}}",
-                "contact_support": "Contact support for {{product}}",
-                "integration_feedback": "Feedback for integration {{product}}",
-                "ipvd_feedback_device": "Feedback about {{product}}",
+                "contact_sales": "Contact sales for {{asset}}",
+                "contact_support": "Contact support for {{asset}}",
+                "integration_feedback": "Feedback for integration {{asset}}",
+                "ipvd_feedback_device": "Feedback about {{asset}}",
                 "ipvd_feedback_page": "Feedback for cameras page"
             }
         },
         "noClientDetectedTitle": "Instalar %VMS_NAME% para visualizar o seu sistema",
         "okButton": "OK",
+        "remainAs": "Remain logged as {email} ",
         "sharing": {
             "confirmOwner": "Se alterar o proprietário do sistema, você revogará a propriedade da conta actual. Esta acção é irreversível. Tem certeza?",
             "editShareConfirmButton": "Gravar",

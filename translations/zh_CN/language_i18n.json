@@ -1,9 +1,9 @@
 {
     "2-Way Audio": "双向音频",
     "About %CLOUD_NAME%": "关于 %CLOUD_NAME%",
-    "Access Level": "Access Level",
-    "Access level": "Access level",
-    "Account Information": "Account Information",
+    "Access Level": "访问权限等级",
+    "Access level": "访问权限等级",
+    "Account Information": "帐户信息",
     "Account Settings": "帐户设置",
     "Account is already activated or confirmation code is incorrect": "已经激活帐户或确认码不正确",
     "Account is created.": "帐户已创建",
@@ -12,7 +12,7 @@
     "Account not found": "未找到该用户",
     "Activate your account": "激活您的帐户",
     "Actual number of events supported by this camera may be bigger.": "此摄像机实际可支援的事件数可能更大。",
-    "Add User": "Add User",
+    "Add User": "新增用户",
     "Additional Requirements": "其它需求",
     "Administration": "管理员",
     "Advanced PTZ": "高级PTZ",
@@ -26,7 +26,7 @@
     "Analytics Events": "分析事件",
     "Any": "任何",
     "Apply": "应用",
-    "Apply changes before leaving this page?": "Apply changes before leaving this page?",
+    "Apply changes before leaving this page?": "离开此页面前确定储存更改?",
     "Audio": "音频",
     "Available Systems list": "可用系统列表",
     "Build Number:": "版本号:",
@@ -52,7 +52,7 @@
     "Disconnect": "断开连接",
     "Disconnect System from %CLOUD_NAME%?": "系统从 %CLOUD_NAME%断开 吗？",
     "Disconnect from %CLOUD_NAME%": "从%CLOUD_NAME%断开连接",
-    "Disconnect from My Account": "Disconnect from My Account",
+    "Disconnect from My Account": "从我的账户断开连接",
     "Download": "下载",
     "Download %VMS_NAME%": "下载 %VMS_NAME%",
     "Download Chrome": "下载 Chrome 浏览器",
@@ -68,12 +68,12 @@
     "Enter password for your account to continue": "输入您帐户的密码以继续",
     "Enter password to continue.": "输入您的密码以继续",
     "Export all to CSV": "导出为 CSV 格式",
-    "FAILED_SYSTEM_DESCR": "This link is broken,<br>System may be disconnected from %CLOUD_NAME%,<br>Access to this System may be revoked, <br>or you may be logged into a different account.",
+    "FAILED_SYSTEM_DESCR": "此连结已损毁,<br> 系统可能会从 %CLOUD_NAME% 离线,<br>于此系统的权限可能被注销,<br>或请您用不同的帐戶登录.",
     "FPS(max)": "FPS（最大值）",
     "Failed to access System": "未能访问系统",
     "Finishing systems merge": "完成系统合并",
     "Firmware version": "固件版本",
-    "First Name": "First Name",
+    "First Name": "名",
     "First name": "名",
     "First name is required": "名字是必填项",
     "Fisheye": "鱼眼",
@@ -86,7 +86,7 @@
     "In-Client Upgrade:": "客户端升级：",
     "Integrations": "集成",
     "Language": "语言:",
-    "Last Name": "Last Name",
+    "Last Name": "姓",
     "Last name": "姓氏",
     "Last name is required": "姓氏是必填项",
     "Latest version": "最新版本",
@@ -97,7 +97,7 @@
     "Merge current System with": "合并当前系统",
     "Merge with Another System": "与其他系统合并",
     "Message": "訊息",
-    "Mine": "Mine",
+    "Mine": "我的",
     "Motion Detection": "移动侦测",
     "Multi Sensor": "多传感器",
     "NO_SYSTEMS_CONNECT_SYSTEM": "按“将系统连接到 %CLOUD_NAME%”",
@@ -164,9 +164,9 @@
     "Update them to the": "更新到",
     "Updated": "更新",
     "User": "用户",
-    "User disabled": "User disabled",
+    "User disabled": "用户已被禁用",
     "View": "查看",
-    "WHEN_MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{{targetSystemName}}</strong> System, and this system will be deleted.",
+    "WHEN_MERGE_FINISHES": "合并完成后, 此系统中的所有用户和摄相机都将可用于<strong>{{targetSystemName}}</strong>, 同时此系统将被删除",
     "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.": "建议您安装最新版本的Google Chrome或Mozilla Firefox，或可以使用任何其他最新的网络浏览器。",
     "What's New?": "最新动态",
     "Works with:": "适用于：",
@@ -176,7 +176,7 @@
     "You have registered in %CLOUD_NAME%": "您已在 %CLOUD_NAME% 中注册",
     "Your Email": "您的电邮",
     "Your Name": "您的姓名",
-    "Your access level": "Your access level",
+    "Your access level": "您的访问级别",
     "Your account is successfully activated": "已成功激活您的帐户",
     "Your browser is not supported": "系统不支持您的浏览器",
     "accessRoles": {
@@ -239,6 +239,7 @@
     },
     "account": {
         "accountSavedSuccess": "您的帐户已成功保存",
+        "accountSettings": "帐户设置",
         "activationLinkSent": "激活链接已发送",
         "changePassword": "更改密码",
         "newPasswordLabel": "新密码",
@@ -268,9 +269,12 @@
     "devices": "设备",
     "dialogs": {
         "cancelButton": "撤消",
+        "continueAs": "Continue as {email}",
+        "createNewAccount": "Create New Account",
         "download": "下载 %VMS_NAME%",
         "loginButton": "登录",
         "loginTitle": "登录到 %CLOUD_NAME%",
+        "loginWithDifferentAccount": "You are already logged in with a different account",
         "logoutAuthorisedContinueButton": "继续",
         "logoutAuthorisedLogoutButton": "退出登录",
         "logoutAuthorisedTitle": "您已经登录",
@@ -288,19 +292,20 @@
             "sent": "訊息已傳送。",
             "title": {
                 "integration": "与 {{companyName}} 联系",
-                "ipvd_feedback_device": "关于 {{product}} 反馈",
+                "ipvd_feedback_device": "关于 {{asset}} 反馈",
                 "ipvd_feedback_page": "摄像机页面反馈"
             },
             "topic": {
-                "contact_sales": "联系{{product}} 销售人员",
-                "contact_support": "联系{{product}} 技术支持",
-                "integration_feedback": "集成{{product}} 反馈",
-                "ipvd_feedback_device": "关于 {{product}} 反馈",
+                "contact_sales": "联系{{asset}} 销售人员",
+                "contact_support": "联系{{asset}} 技术支持",
+                "integration_feedback": "集成{{asset}} 反馈",
+                "ipvd_feedback_device": "关于 {{asset}} 反馈",
                 "ipvd_feedback_page": "摄像机页面反馈"
             }
         },
         "noClientDetectedTitle": "安装 %VMS_NAME% 来查看您的系统",
         "okButton": "确定",
+        "remainAs": "Remain logged as {email} ",
         "sharing": {
             "confirmOwner": "如果您更改系统所有者，将撤消从当前帐户的所有权。此操作是不可逆的。是否确定？",
             "editShareConfirmButton": "保存",
@@ -439,7 +444,7 @@
         "Health Monitor": "健康状况监控器",
         "Storage": "存储设备",
         "backToEditText": "返回编辑界面",
-        "myIntegrationsLabel": "Mine",
+        "myIntegrationsLabel": "我的",
         "previewRibbonText": "此页面是最新更改的预览，不与公开版本相符。"
     },
     "ipvd": {
@@ -473,8 +478,8 @@
         "isMultiSensor": "多传感器",
         "isPtzSupported": "PTZ",
         "isTwAudioSupported": "双向音频",
-        "maxFps": "<span>Max</span><br><span>FPS</span>",
-        "maxResolution": "<span>Max</span><br><span>Resolution</span>",
+        "maxFps": "<span>最大</span><br><span>帧数</span>",
+        "maxResolution": "<span>最大</span><br><span>分辨率</span>",
         "model": "型号",
         "multiSensorCamera": "多传感器摄像机",
         "other": "其它",
@@ -530,15 +535,15 @@
         "weakMessage": "使用数字、 上层和小写字母和特殊字符，使您更强的密码"
     },
     "phoneNumberWithLabel": "电话： {{number}}",
-    "pleaseSelect": "Please select...",
+    "pleaseSelect": "请选择...",
     "privacyPolicy": {
         "integration": "提交表单即表示您同意与{{INTEGRATION_COMPANY}} 和/或 %COMPANY_NAME%联系。\n您可在<a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">浏览{{INTEGRATION_COMPANY}} 隐私政策</a> 和%COMPANY_NAME% 隐私政策<a href=\"%PRIVACY_LINK%\" target=\" blank\">这里</a> 可了解如何撤销您的同意。",
         "ipvd": "提交表单即表示同意 %COMPANY_NAME%与您联系。\n您可在<a href=\"%PRIVACY_LINK%\" target=\"blank\">浏览 %COMPANY_NAME% 隐私政策</a> ，其中包含如何撤回同意。"
     },
     "registration": {
-        "agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
+        "agreement": "我同意<a href=\"/content/eula\" target=\"_blank\">合约条款</a>和<a href=\"%PRIVACY_LINK%\" target=\"_blank\">隐私政策</a>"
     },
-    "registration.agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>",
+    "registration.agreement": "我同意<a href=\"/content/eula\" target=\"_blank\">合约条款</a>和<a href=\"%PRIVACY_LINK%\" target=\"_blank\">隐私政策</a>",
     "search": {
         "Any": "任何",
         "Search": "搜索",
@@ -597,5 +602,5 @@
     "testedVersionLabel": "测试 {{vmsName}} 版本：",
     "testedVersionsLabel": "测试 {{vmsName}} 版本：",
     "users": "用户",
-    "you": "you"
+    "you": "您"
 }

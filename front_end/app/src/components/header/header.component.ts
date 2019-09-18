@@ -19,7 +19,7 @@ import { WINDOW }            from '../../services/window-provider';
     templateUrl: 'header.component.html',
     styleUrls: [ 'header.component.scss' ]
 })
- export class NxHeaderComponent implements OnInit {
+export class NxHeaderComponent implements OnInit {
 
     CONFIG: any = {};
 
@@ -113,7 +113,8 @@ import { WINDOW }            from '../../services/window-provider';
     login () {
         const url = this.window.location.pathname;
         const redirect = this.CONFIG.redirectPaths.some((path) => url.indexOf(path) > -1);
-        this.dialogs.login(this.accountService, !redirect).catch(() => {});
+        // Handling promise to satisfy the linter.
+        this.dialogs.login(this.accountService, !redirect).then(() => {});
     }
 
     logout () {
@@ -142,6 +143,4 @@ import { WINDOW }            from '../../services/window-provider';
             return this.systemId === system.id;
         });
     }
-
-
 }

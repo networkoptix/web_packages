@@ -74,6 +74,10 @@ export class NxRestoreComponent implements OnInit {
             this.setContext(undefined);
         }
 
+        if (this.uriParamCode) {
+            this.accountService.logoutAuthorised();
+        }
+
         this.data = {
             newPassword : '',
             email       : '', // moved to init()

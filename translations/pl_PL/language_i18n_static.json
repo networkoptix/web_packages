@@ -5,7 +5,8 @@
 		"passwordChangedSuccess": "Twoje konto zostało pomyślnie zapisane",
 		"changePassword": "Zmień hasło",
 		"newPasswordLabel": "Nowe hasło",
-		"saveChanges": "Zachowaj"
+		"saveChanges": "Zachowaj",
+		"accountSettings": "Ustawienia konta"
 	},
 	"activeActions": {
 		"sendConfirm": "Wyślij ponownie link aktywacyjny",
@@ -118,8 +119,8 @@
 		"vendor": "Producent",
 		"model": "Model",
 		"hardwareType": "Rodzaj",
-		"maxResolution": "<span>Max</span><br><span>Resolution</span>",
-		"maxFps": "<span>Max</span><br><span>FPS</span>",
+		"maxResolution": "<span>Maks.</span><br><span>Rozdzielczość</span>",
+		"maxFps": "<span>Maks.</span><br><span>kl./s</span>",
 		"primaryCodec": "Kodek",
 		"isAudioSupported": "Dźwięk",
 		"isTwAudioSupported": "Dwukierunkowe audio",
@@ -153,7 +154,7 @@
 		"disclaimer": "Ta lista jest ograniczona do urządzeń znalezionych przez serwer {{vmsName}}, na którym administrator zezwolił na automatyczne raportowanie specyfikacji urządzeń do firmy {{companyName}}. Żadne dane osobowe nie są gromadzone, a każdy użytkownik pozostaje całkowicie anonimowy."
 	},
 	"integration": {
-		"myIntegrationsLabel": "Mine",
+		"myIntegrationsLabel": "Moje",
 		"previewRibbonText": "Ta strona to podgląd najnowszych zmian i nie jest zgodna z publicznie dostępną wersją.",
 		"backToEditText": "Powrót do edycji interfejsów",
 		"Access Control": "Kontrola dostępu",
@@ -195,12 +196,16 @@
 	"dialogs": {
 		"okButton": "OK",
 		"cancelButton": "Anuluj",
+		"continueAs": "Continue as {email}",
+		"createNewAccount": "Create New Account",
 		"loginTitle": "Zaloguj do %CLOUD_NAME%",
 		"loginButton": "Zaloguj",
+		"loginWithDifferentAccount": "You are already logged in with a different account",
 		"logoutAuthorisedTitle": "Jesteś już zalogowany",
 		"logoutAuthorisedContinueButton": "Kontynuuj",
 		"logoutAuthorisedLogoutButton": "Wyloguj",
 		"noClientDetectedTitle": "Zainstaluj %VMS_NAME%, aby przejrzeć swój system",
+		"remainAs": "Remain logged as {email} ",
 		"download": "Pobierz %VMS_NAME%",
 		"merge": {
 			"connectToCloud": "System, który chcesz złączyć z tym systemem, podłącz do <strong>{{cloudName}}</strong> lub złącz je lokalnie za pomocą klienta <strong>{{vmsName}}</strong>.",
@@ -217,14 +222,14 @@
 			"title": {
 				"integration": "Skontaktuj się z {{companyName}}",
 				"ipvd_feedback_page": "Opinia dotycząca listy kamer",
-				"ipvd_feedback_device": "Opinia o {{product}}"
+				"ipvd_feedback_device": "Opinie dotyczące {{asset}}"
 			},
 			"topic": {
-				"contact_sales": "Kontakt do sprzedawcy {{product}}",
-				"contact_support": "Kontakt do wsparcia technicznego {{product}}",
-				"integration_feedback": "Opinia dotycząca integracji {{product}}",
+				"contact_sales": "Kontakt do sprzedawcy {{asset}}",
+				"contact_support": "Kontakt do wsparcia technicznego {{asset}}",
+				"integration_feedback": "Opinia dotycząca integracji {{asset}}",
 				"ipvd_feedback_page": "Opinia dotycząca listy kamer",
-				"ipvd_feedback_device": "Opinia o {{product}}"
+				"ipvd_feedback_device": "Opinie dotyczące {{asset}}"
 			}
 		},
 		"sharing": {
@@ -295,7 +300,7 @@
 		"missingMessage": "Hasło jest wymagane"
 	},
 	"registration": {
-		"agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
+		"agreement": "Wyrażam zgodę na <a href=\"/content/eula\" target=\"_blank\">Zasady i warunki</a> oraz na <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Politykę prywatności</a>"
 	},
 	"system": {
 		"yourSystem": "Twój system",
@@ -407,9 +412,9 @@
 	"Support": "Wsparcie",
 	"Supported Devices": "Obsługiwane urządzenia",
 	"Terms": "Warunki",
-	"pleaseSelect": "Please select...",
-	"WHEN_MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{{targetSystemName}}</strong> System, and this system will be deleted.",
-	"FAILED_SYSTEM_DESCR": "This link is broken,<br>System may be disconnected from %CLOUD_NAME%,<br>Access to this System may be revoked, <br>or you may be logged into a different account.",
+	"pleaseSelect": "Proszę wybrać...",
+	"WHEN_MERGE_FINISHES": "Po złączeniu systemów wszyscy użytkownicy i kamery z tego systemu będą również dostępne w systemie <strong>{{targetSystemName}}</strong>, a ten system zostanie usunięty.",
+	"FAILED_SYSTEM_DESCR": "Ten link jest uszkodzony,<br>system może być odłączony od %CLOUD_NAME%,<br>uprawnienia do tego systemu mogły zostać odebrane,<br>lub możesz być zalogowany na inne konto.",
 	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "Nie masz systemów podłączonych do %CLOUD_NAME%",
 	"NO_SYSTEMS_LOGIN": "Zaloguj się do swojego systemu używając %VMS_NAME%",
 	"NO_SYSTEMS_GOTO_ADMINISTRATION": "Przejdź do karty \"Chmura\" w oknie dialogowym \"Administracja systemem\"",

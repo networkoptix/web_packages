@@ -48,8 +48,8 @@ import { PushNotificationsModule } from './push-notifications/push-notifications
         NxSettingsModule,
         NxSystemsListModule,
         NxAccountModule,
-        Nx404Module,
         NxDebugModule,
+        Nx404Module,  // Must be last module for routing
     ],
     declarations   : [],
     entryComponents: [],
@@ -71,8 +71,8 @@ import { PushNotificationsModule } from './push-notifications/push-notifications
         IpvdModule,
         Angular2CsvModule,
         LandingModule,
-        Nx404Module,
         NxDebugModule,
+        Nx404Module, // Must be last module for routing
     ]
 })
 export class PagesModule {
