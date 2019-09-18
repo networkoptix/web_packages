@@ -10,12 +10,15 @@ import { NxLanguageProviderService } from './src/services/nx-language-provider';
 import { NxConfigService }           from './src/services/nx-config';
 import { NxApplyService }            from './src/services/apply.service';
 import { NxQueryParamService } from './src/services/query-param.service';
+import { NxRibbonService } from './src/components/ribbon/ribbon.service';
 
 @Component({
     selector: 'nx-app',
     template: `
-        <router-outlet></router-outlet>
-        <div ng-view="" ng-model-options="{ updateOn: 'blur' }"></div>
+        <div [ngClass]="headerPadding">
+            <router-outlet></router-outlet>
+            <div ng-view="" ng-model-options="{ updateOn: 'blur' }"></div>
+        </div>
         <app-toasts aria-live="polite" aria-atomic="true"></app-toasts>
     `
 })
@@ -25,6 +28,7 @@ export class AppComponent {
     deviceInfo: any;
     allowedDevices: {};
     hlsIsSupported: boolean;
+    headerPadding: string;
 
     constructor(private cookieService: CookieService,
                 private deviceService: DeviceDetectorService,
@@ -35,6 +39,7 @@ export class AppComponent {
                 private applyService: NxApplyService,
                 private queryParamService: NxQueryParamService,
                 private router: Router,
+                private ribbonService: NxRibbonService,
                 @Inject(WINDOW) private window: Window) {
 
         this.CONFIG = this.config.getConfig();
@@ -145,6 +150,15 @@ export class AppComponent {
         }
 
         this.CONFIG.showHeaderAndFooter = true;
+        this.headerPadding = 'headerPadding';
+
+        this.ribbonService.contextSubject.subscribe((context) => {
+            if (context.visibility) {
+                this.headerPadding = 'headerAndRibbonPadding';
+            } else {
+                this.headerPadding = 'headerPadding';
+            }
+        });
 
         // Updates query params for components without routes.
         this.router.events.pipe(

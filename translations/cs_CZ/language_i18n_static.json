@@ -5,7 +5,8 @@
 		"passwordChangedSuccess": "Váš účet byl úspěšně uložen",
 		"changePassword": "Změnit heslo",
 		"newPasswordLabel": "Nové heslo",
-		"saveChanges": "Uložit"
+		"saveChanges": "Uložit",
+		"accountSettings": "Nastavení účtu"
 	},
 	"activeActions": {
 		"sendConfirm": "Znovu poslat aktivační odkaz",
@@ -195,12 +196,16 @@
 	"dialogs": {
 		"okButton": "OK",
 		"cancelButton": "Zrušit",
+		"continueAs": "Continue as {email}",
+		"createNewAccount": "Create New Account",
 		"loginTitle": "Přihlaste se k %CLOUD_NAME%",
 		"loginButton": "Přihlásit",
+		"loginWithDifferentAccount": "You are already logged in with a different account",
 		"logoutAuthorisedTitle": "Již jste přihlášen",
 		"logoutAuthorisedContinueButton": "Pokračovat",
 		"logoutAuthorisedLogoutButton": "Odhlásit se",
 		"noClientDetectedTitle": "Pro zobrazení Vašeho systému nainstalujte %VMS_NAME%",
+		"remainAs": "Remain logged as {email} ",
 		"download": "Stáhnout %VMS_NAME%",
 		"merge": {
 			"connectToCloud": "Připojit systém, který chcete sloučit s tímto na <strong>{{cloudName}}</strong> nebo sloučit lokálně pomocí <strong>{{vmsName}}</strong> Klienta.",
@@ -217,14 +222,14 @@
 			"title": {
 				"integration": "Spojte se s {{companyName}}",
 				"ipvd_feedback_page": "Zpětná vazba pro kameru",
-				"ipvd_feedback_device": "Zpětná vazba pro {{product}}"
+				"ipvd_feedback_device": "Zpětná vazba pro {{asset}}"
 			},
 			"topic": {
-				"contact_sales": "Kontaktovat obchod ohledně {{product}}",
-				"contact_support": "Kontaktovat podporu ohledně{{product}}",
-				"integration_feedback": "Zpětná vazba pro integraci {{product}}",
+				"contact_sales": "Kontaktovat obchod ohledně {{asset}}",
+				"contact_support": "Kontaktovat podporu ohledně{{asset}}",
+				"integration_feedback": "Zpětná vazba pro integraci {{asset}}",
 				"ipvd_feedback_page": "Zpětná vazba pro kameru",
-				"ipvd_feedback_device": "Zpětná vazba pro {{product}}"
+				"ipvd_feedback_device": "Zpětná vazba pro {{asset}}"
 			}
 		},
 		"sharing": {

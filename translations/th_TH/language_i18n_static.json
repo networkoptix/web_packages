@@ -5,7 +5,8 @@
 		"passwordChangedSuccess": "บันทึกบัญชีของคุณเรียบร้อยแล้ว",
 		"changePassword": "เปลี่ยนรหัสผ่าน",
 		"newPasswordLabel": "สร้างรหัสผ่านใหม่",
-		"saveChanges": "บันทึก"
+		"saveChanges": "บันทึก",
+		"accountSettings": "การตั้งค่าบัญชี"
 	},
 	"activeActions": {
 		"sendConfirm": "ส่งการเชื่อมโยงการเปิดใช้งานอีกครั้ง",
@@ -195,12 +196,16 @@
 	"dialogs": {
 		"okButton": "ตกลง",
 		"cancelButton": "ยกเลิก",
+		"continueAs": "Continue as {email}",
+		"createNewAccount": "Create New Account",
 		"loginTitle": "เข้าสู่ระบบ %CLOUD_NAME%",
 		"loginButton": "ลงชื่อเข้าสู่ระบบ",
+		"loginWithDifferentAccount": "You are already logged in with a different account",
 		"logoutAuthorisedTitle": "คุณกำลังอยู่ในระบบ",
 		"logoutAuthorisedContinueButton": "ดำเนิน​การ",
 		"logoutAuthorisedLogoutButton": "ออกจากระบบ",
 		"noClientDetectedTitle": "ติดตั้ง %VMS_NAME% เพื่อดูระบบของคุณ",
+		"remainAs": "Remain logged as {email} ",
 		"download": "ดาวน์โหลด %VMS_NAME%",
 		"merge": {
 			"connectToCloud": "เชื่อมต่อระบบที่คุณต้องการผสานกับระบบนี้กับ <strong>{{cloudName}}</strong> หรือผสานภายในเครื่องโดยใช้ไคลเอ็นต์ <strong>{{vmsName}}</strong>",
@@ -217,14 +222,14 @@
 			"title": {
 				"integration": "ติดต่อกับ {{companyName}}",
 				"ipvd_feedback_page": "ข้อเสนอแนะสำหรับหน้ากล้อง",
-				"ipvd_feedback_device": "ข้อเสนอแนะเกี่ยวกับ {{product}}"
+				"ipvd_feedback_device": "ข้อเสนอแนะเกี่ยวกับ {{asset}}"
 			},
 			"topic": {
-				"contact_sales": "ติดต่อฝ่ายขายสำหรับ {{product}}",
-				"contact_support": "ติดต่อฝ่ายสนับสนุนสำหรับ {{product}}",
-				"integration_feedback": "ข้อเสนอแนะสำหรับการรวม {{product}}",
+				"contact_sales": "ติดต่อฝ่ายขายสำหรับ {{asset}}",
+				"contact_support": "ติดต่อฝ่ายสนับสนุนสำหรับ {{asset}}",
+				"integration_feedback": "ข้อเสนอแนะสำหรับการรวม {{asset}}",
 				"ipvd_feedback_page": "ข้อเสนอแนะสำหรับหน้ากล้อง",
-				"ipvd_feedback_device": "ข้อเสนอแนะเกี่ยวกับ {{product}}"
+				"ipvd_feedback_device": "ข้อเสนอแนะเกี่ยวกับ {{asset}}"
 			}
 		},
 		"sharing": {

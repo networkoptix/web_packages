@@ -5,7 +5,8 @@
 		"passwordChangedSuccess": "A sua conta foi gravada com sucesso",
 		"changePassword": "Alterar senha",
 		"newPasswordLabel": "Nova senha",
-		"saveChanges": "Gravar"
+		"saveChanges": "Gravar",
+		"accountSettings": "Definições da Conta"
 	},
 	"activeActions": {
 		"sendConfirm": "Reenviar Link de Activação",
@@ -195,12 +196,16 @@
 	"dialogs": {
 		"okButton": "OK",
 		"cancelButton": "Cancelar",
+		"continueAs": "Continue as {email}",
+		"createNewAccount": "Create New Account",
 		"loginTitle": "Logar em %CLOUD_NAME%",
 		"loginButton": "Entrar",
+		"loginWithDifferentAccount": "You are already logged in with a different account",
 		"logoutAuthorisedTitle": "Já tem sessão iniciada",
 		"logoutAuthorisedContinueButton": "Continuar",
 		"logoutAuthorisedLogoutButton": "Terminar sessão",
 		"noClientDetectedTitle": "Instalar %VMS_NAME% para visualizar o seu sistema",
+		"remainAs": "Remain logged as {email} ",
 		"download": "Baixar %VMS_NAME%",
 		"merge": {
 			"connectToCloud": "Ligar ao Sistema que deseja fazer a fusão com este para <strong>{{cloudName}}</strong> ou fazer a fusão localmente usando <strong>{{vmsName}}</strong> Client.",
@@ -217,14 +222,14 @@
 			"title": {
 				"integration": "Get in touch with {{companyName}}",
 				"ipvd_feedback_page": "Feedback for cameras page",
-				"ipvd_feedback_device": "Feedback about {{product}}"
+				"ipvd_feedback_device": "Feedback about {{asset}}"
 			},
 			"topic": {
-				"contact_sales": "Contact sales for {{product}}",
-				"contact_support": "Contact support for {{product}}",
-				"integration_feedback": "Feedback for integration {{product}}",
+				"contact_sales": "Contact sales for {{asset}}",
+				"contact_support": "Contact support for {{asset}}",
+				"integration_feedback": "Feedback for integration {{asset}}",
 				"ipvd_feedback_page": "Feedback for cameras page",
-				"ipvd_feedback_device": "Feedback about {{product}}"
+				"ipvd_feedback_device": "Feedback about {{asset}}"
 			}
 		},
 		"sharing": {

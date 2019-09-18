@@ -5,7 +5,8 @@
 		"passwordChangedSuccess": "Ваша учетная запись успешно сохранена",
 		"changePassword": "Изменить пароль",
 		"newPasswordLabel": "Новый пароль",
-		"saveChanges": "Сохранить"
+		"saveChanges": "Сохранить",
+		"accountSettings": "Настройки учётной записи"
 	},
 	"activeActions": {
 		"sendConfirm": "Отправить ссылку еще раз",
@@ -195,12 +196,16 @@
 	"dialogs": {
 		"okButton": "OK",
 		"cancelButton": "Отменить",
+		"continueAs": "Continue as {email}",
+		"createNewAccount": "Create New Account",
 		"loginTitle": "Войти в %CLOUD_NAME%",
 		"loginButton": "Войти",
+		"loginWithDifferentAccount": "You are already logged in with a different account",
 		"logoutAuthorisedTitle": "Вы уже выполнили вход",
 		"logoutAuthorisedContinueButton": "Продолжить",
 		"logoutAuthorisedLogoutButton": "Выход",
 		"noClientDetectedTitle": "Установите %VMS_NAME% для работы с системой",
+		"remainAs": "Remain logged as {email} ",
 		"download": "Скачать %VMS_NAME%",
 		"merge": {
 			"connectToCloud": "Подключите систему, которую вы хотите объединить с этой, к <strong>{{cloudName}}</strong> или выполните объединение локально, используя <strong>{{vmsName}}</strong> Client.",
@@ -217,14 +222,14 @@
 			"title": {
 				"integration": "Связаться с {{companyName}}",
 				"ipvd_feedback_page": "Отзыв о странице камер",
-				"ipvd_feedback_device": "Отзыв о {{product}}"
+				"ipvd_feedback_device": "Отзыв о {{asset}}"
 			},
 			"topic": {
-				"contact_sales": "Связаться с отделом продаж по поводу {{product}}",
-				"contact_support": "Обратитесь в службу поддержки по поводу {{product}}",
-				"integration_feedback": "Отзыв об интеграции {{product}}",
+				"contact_sales": "Связаться с отделом продаж по поводу {{asset}}",
+				"contact_support": "Обратитесь в службу поддержки по поводу {{asset}}",
+				"integration_feedback": "Отзыв об интеграции {{asset}}",
 				"ipvd_feedback_page": "Отзыв о странице камер",
-				"ipvd_feedback_device": "Отзыв о {{product}}"
+				"ipvd_feedback_device": "Отзыв о {{asset}}"
 			}
 		},
 		"sharing": {

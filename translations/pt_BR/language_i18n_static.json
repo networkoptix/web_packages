@@ -5,7 +5,8 @@
 		"passwordChangedSuccess": "A sua conta foi gravada com sucesso",
 		"changePassword": "Mudar Senha",
 		"newPasswordLabel": "Nova senha",
-		"saveChanges": "Gravar"
+		"saveChanges": "Gravar",
+		"accountSettings": "Configurações da conta"
 	},
 	"activeActions": {
 		"sendConfirm": "Reenviar Link de Ativação",
@@ -195,12 +196,16 @@
 	"dialogs": {
 		"okButton": "OK",
 		"cancelButton": "Cancelar",
+		"continueAs": "Continue as {email}",
+		"createNewAccount": "Create New Account",
 		"loginTitle": "Logar em %CLOUD_NAME%",
 		"loginButton": "Entrar",
+		"loginWithDifferentAccount": "You are already logged in with a different account",
 		"logoutAuthorisedTitle": "Já tem sessão iniciada",
 		"logoutAuthorisedContinueButton": "Continuar",
 		"logoutAuthorisedLogoutButton": "Terminar sessão",
 		"noClientDetectedTitle": "Instalar %VMS_NAME% para visualizar o seu sistema",
+		"remainAs": "Remain logged as {email} ",
 		"download": "Baixar %VMS_NAME%",
 		"merge": {
 			"connectToCloud": "Conecte o sistema que você deseja mesclar com este para <strong>{{cloudName}}</strong> ou mesclar localmente usando <strong>{{vmsName}}</strong> Cliente.",
@@ -217,14 +222,14 @@
 			"title": {
 				"integration": "Entre em contato com {{companyName}}",
 				"ipvd_feedback_page": "Feedback para página de câmaras",
-				"ipvd_feedback_device": "Comentários sobre {{product}}"
+				"ipvd_feedback_device": "Comentários sobre {{asset}}"
 			},
 			"topic": {
-				"contact_sales": "Entre em contato com vendas para {{product}}",
-				"contact_support": "Contate o suporte para {{product}}",
-				"integration_feedback": "Feedback para integração {{product}}",
+				"contact_sales": "Entre em contato com vendas para {{asset}}",
+				"contact_support": "Contate o suporte para {{asset}}",
+				"integration_feedback": "Feedback para integração {{asset}}",
 				"ipvd_feedback_page": "Feedback para página de câmaras",
-				"ipvd_feedback_device": "Comentários sobre {{product}}"
+				"ipvd_feedback_device": "Comentários sobre {{asset}}"
 			}
 		},
 		"sharing": {

@@ -1,9 +1,9 @@
 {
     "2-Way Audio": "2-weg audio",
     "About %CLOUD_NAME%": "Over %CLOUD_NAME%",
-    "Access Level": "Access Level",
-    "Access level": "Access level",
-    "Account Information": "Account Information",
+    "Access Level": "Toegangsniveau",
+    "Access level": "Toegangsniveau",
+    "Account Information": "Accountinformatie",
     "Account Settings": "Accountinstellingen",
     "Account is already activated or confirmation code is incorrect": "Account is al geactiveerd of de bevestigingscode is onjuist",
     "Account is created.": "Het account is aangemaakt.",
@@ -12,7 +12,7 @@
     "Account not found": "Account niet gevonden",
     "Activate your account": "Activeer uw account",
     "Actual number of events supported by this camera may be bigger.": "Het werkelijke aantal door deze camera ondersteunde evenementen kan groter zijn.",
-    "Add User": "Add User",
+    "Add User": "Gebruiker toevoegen",
     "Additional Requirements": "Aanvullende vereisten",
     "Administration": "Beheer",
     "Advanced PTZ": "Geavanceerde PTZ",
@@ -26,7 +26,7 @@
     "Analytics Events": "Analytics gebeurtenissen",
     "Any": "Elke",
     "Apply": "Toepassen",
-    "Apply changes before leaving this page?": "Apply changes before leaving this page?",
+    "Apply changes before leaving this page?": "Wijzigingen aanbrengen voordat u deze pagina verlaat?",
     "Audio": "Audio",
     "Available Systems list": "Lijst van de beschikbare systemen",
     "Build Number:": "Buildnummer:",
@@ -40,7 +40,7 @@
     "Close": "Afsluiten",
     "Codec": "Codec",
     "Collapse": "Samenvouwen",
-    "Confirmation message is sent to": "Confirmation message is sent to",
+    "Confirmation message is sent to": "Een bevestigingsbericht wordt verzonden naar",
     "Contact": "Contact",
     "Create Account": "Account aanmaken",
     "Create account": "Account aanmaken",
@@ -52,7 +52,7 @@
     "Disconnect": "Verbinding verbreken",
     "Disconnect System from %CLOUD_NAME%?": "Ontkoppel het systeem van %CLOUD_NAME%?",
     "Disconnect from %CLOUD_NAME%": "Verbinding verbreken met %CLOUD_NAME%",
-    "Disconnect from My Account": "Disconnect from My Account",
+    "Disconnect from My Account": "Ontkoppel van mijn account",
     "Download": "Download",
     "Download %VMS_NAME%": "Download %VMS_NAME%",
     "Download Chrome": "Download Chrome",
@@ -68,12 +68,12 @@
     "Enter password for your account to continue": "Voer het wachtwoord in voor uw account om door te gaan",
     "Enter password to continue.": "Voer uw wachtwoord in om door te gaan.",
     "Export all to CSV": "Alles exporteren naar CSV",
-    "FAILED_SYSTEM_DESCR": "This link is broken,<br>System may be disconnected from %CLOUD_NAME%,<br>Access to this System may be revoked, <br>or you may be logged into a different account.",
+    "FAILED_SYSTEM_DESCR": "Deze link is gebroken, <br>het systeem kan worden losgekoppeld van %CLOUD_NAME%, <br>toegang tot dit systeem kan zijn ingetrokken, <br>of u bent reeds ingelogd bij een ander account.",
     "FPS(max)": "FPS(max)",
     "Failed to access System": "Het is niet gelukt toegang te krijgen tot het systeem",
     "Finishing systems merge": "Samenvoegen van systemen aan het voltooien",
     "Firmware version": "Firmware versie",
-    "First Name": "First Name",
+    "First Name": "Voornaam",
     "First name": "Voornaam",
     "First name is required": "Voornaam is verplicht",
     "Fisheye": "Fisheye",
@@ -86,7 +86,7 @@
     "In-Client Upgrade:": "In-client-upgrade:",
     "Integrations": "Integraties",
     "Language": "Taal",
-    "Last Name": "Last Name",
+    "Last Name": "Achternaam",
     "Last name": "Achternaam",
     "Last name is required": "Achternaam is verplicht",
     "Latest version": "Laatste versie",
@@ -97,7 +97,7 @@
     "Merge current System with": " Huidig ​​systeem samenvoegen met ",
     "Merge with Another System": "Samenvoegen met een ander systeem",
     "Message": "Bericht",
-    "Mine": "Mine",
+    "Mine": "Mijn",
     "Motion Detection": "Bewegingsdetectie",
     "Multi Sensor": "Multi Sensor",
     "NO_SYSTEMS_CONNECT_SYSTEM": "Druk op \"Systeem verbinden met %CLOUD_NAME%\"",
@@ -164,9 +164,9 @@
     "Update them to the": "Werk ze bij naar de",
     "Updated": "Geupdate",
     "User": "Gebruiker",
-    "User disabled": "User disabled",
+    "User disabled": "Gebruiker Uitgeschakeld",
     "View": "Toon",
-    "WHEN_MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{{targetSystemName}}</strong> System, and this system will be deleted.",
+    "WHEN_MERGE_FINISHES": "Wanneer het samenvoegen is voltooid, worden alle gebruikers en camera's van dit systeem beschikbaar in systeem \"<strong>{{targetSystemName}}</strong>\" en zal het huidige systeem worden verwijderd.",
     "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.": "We raden u aan de nieuwste versies van Google Chrome of Mozilla Firefox te installeren, maar u kunt elke andere moderne webbrowser gebruiken.",
     "What's New?": "Wat is nieuw?",
     "Works with:": "Werkt met:",
@@ -176,7 +176,7 @@
     "You have registered in %CLOUD_NAME%": "U heeft zich geregistreerd voor %CLOUD_NAME%",
     "Your Email": "Uw e-mail",
     "Your Name": "Uw naam",
-    "Your access level": "Your access level",
+    "Your access level": "Uw toegangsniveau",
     "Your account is successfully activated": "Uw account is succesvol geactiveerd",
     "Your browser is not supported": "Uw browser wordt niet ondersteund",
     "accessRoles": {
@@ -239,6 +239,7 @@
     },
     "account": {
         "accountSavedSuccess": "Uw account is succesvol opgeslagen",
+        "accountSettings": "Accountinstellingen",
         "activationLinkSent": "Activatielink verzonden",
         "changePassword": "Wijzig wachtwoord",
         "newPasswordLabel": "Nieuw wachtwoord",
@@ -268,9 +269,12 @@
     "devices": "apparaten",
     "dialogs": {
         "cancelButton": "Annuleren",
+        "continueAs": "Continue as {email}",
+        "createNewAccount": "Create New Account",
         "download": "Download %VMS_NAME%",
         "loginButton": "Inloggen",
         "loginTitle": "Meld u aan bij %CLOUD_NAME%",
+        "loginWithDifferentAccount": "You are already logged in with a different account",
         "logoutAuthorisedContinueButton": "Doorgaan",
         "logoutAuthorisedLogoutButton": "Uitloggen",
         "logoutAuthorisedTitle": "U bent reeds ingelogd",
@@ -288,19 +292,20 @@
             "sent": "Het Bericht werd verstuurd.",
             "title": {
                 "integration": "Neem contact op met {{companyName}}",
-                "ipvd_feedback_device": "Feedback over {{product}}",
+                "ipvd_feedback_device": "Feedback over {{asset}}",
                 "ipvd_feedback_page": "Feedback voor de camerapagina"
             },
             "topic": {
-                "contact_sales": "Neem contact op met sales voor {{product}}",
-                "contact_support": "Neem contact op met ondersteuning voor {{product}}",
-                "integration_feedback": "Feedback voor integratie {{product}}",
-                "ipvd_feedback_device": "Feedback over {{product}}",
+                "contact_sales": "Neem contact op met sales voor {{asset}}",
+                "contact_support": "Neem contact op met ondersteuning voor {{asset}}",
+                "integration_feedback": "Feedback voor integratie {{asset}}",
+                "ipvd_feedback_device": "Feedback over {{asset}}",
                 "ipvd_feedback_page": "Feedback voor de camerapagina"
             }
         },
         "noClientDetectedTitle": "Installeer %VMS_NAME% om uw systeem te bekijken",
         "okButton": "Oké",
+        "remainAs": "Remain logged as {email} ",
         "sharing": {
             "confirmOwner": "Als u de eigenaar van het systeem wijzigt, trekt u het eigendom in van het uw account voor dit systeem. Deze actie is onomkeerbaar. Weet je het zeker?",
             "editShareConfirmButton": "Opslaan",
@@ -439,7 +444,7 @@
         "Health Monitor": "Server monitor",
         "Storage": "Opslagruimte",
         "backToEditText": "Terug naar het bewerken van de interface",
-        "myIntegrationsLabel": "Mine",
+        "myIntegrationsLabel": "Mijn",
         "previewRibbonText": "Deze pagina is een voorbeeld van de laatste wijzigingen, en het komt niet overeen met de publiekelijk beschikbare versie."
     },
     "ipvd": {
@@ -474,7 +479,7 @@
         "isPtzSupported": "PTZ",
         "isTwAudioSupported": "2-weg audio",
         "maxFps": "<span>Max</span><br><span>FPS</span>",
-        "maxResolution": "<span>Max</span><br><span>Resolution</span>",
+        "maxResolution": "<span>Max</span><br><span>Resolutie</span>",
         "model": "Model",
         "multiSensorCamera": "Multi-Sensor Camera",
         "other": "Overige",
@@ -530,15 +535,15 @@
         "weakMessage": "Gebruik cijfers, hoofdletters, kleine letters en speciale tekens om uw wachtwoord sterker te maken"
     },
     "phoneNumberWithLabel": "Tel: {{number}}",
-    "pleaseSelect": "Please select...",
+    "pleaseSelect": "Selecteer...",
     "privacyPolicy": {
         "integration": "Door dit formulier in te dienen, ga je akkoord met contactering door {{INTEGRATION_COMPANY}} en/of %COMPANY_NAME%.\nJe vindt {{INTEGRATION_COMPANY}} privacybeleid <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">hier</a> en %COMPANY_NAME% privacybeleid <a href=\"%PRIVACY_LINK%\" target=\"blank\">hier</a> welke instructies bevat over hoe je toestemming kan intrekken.",
         "ipvd": "Door dit formulier in te dienen, ga je akkoord met contactering door %COMPANY_NAME%.\nJe vindt %COMPANY_NAME% privacy beleid <a href=\"%PRIVACY_LINK%\" target=\"blank\">hier</a> welke instructies bevat over hoe je toestemming moet intrekken."
     },
     "registration": {
-        "agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
+        "agreement": "Ik ga akkoord met de <a href=\"/content/eula\" target=\"_blank\">algemene voorwaarden</a> en het<a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy beleid</a>"
     },
-    "registration.agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>",
+    "registration.agreement": "Ik ga akkoord met de <a href=\"/content/eula\" target=\"_blank\">algemene voorwaarden</a> en het<a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy beleid</a>",
     "search": {
         "Any": "Elke",
         "Search": "Zoeken",
@@ -597,5 +602,5 @@
     "testedVersionLabel": "Getest op {{vmsName}} versie:",
     "testedVersionsLabel": "Getest op {{vmsName}} versies:",
     "users": "Gebruikers",
-    "you": "you"
+    "you": "u"
 }

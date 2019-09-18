@@ -2,13 +2,13 @@
 Variables    getvars.py
 
 *** Variables ***
-${ALERT}                              //span[@ng-if='!message.compileContent']
-${ALERT CLOSE}                        //div[contains(@class, 'ng-toast')]//span[@ng-bind-html='message.content']/../preceding-sibling::button[@ng-click='!message.dismissOnClick && dismiss()']
+${ALERT}                              //div[contains(@class,'toast-body')]//span[contains(@class,'toast-content')]
+${ALERT CLOSE}                        //div[contains(@class,'toast-body')]/button[contains(@class,'close') and @data-dismiss='alert']
 
 ${BROWSER}                            Chrome
 
-${LANGUAGE DROPDOWN}                  //nx-header//button[@id='dropdownMenuButton']
-${LANGUAGE TO SELECT}                 //nx-header//span[@lang='${LANGUAGE}']/..
+${LANGUAGE DROPDOWN}                  //nx-language-select//button[@id='dropdownMenuButton']
+${LANGUAGE TO SELECT}                 //nx-language-select//span[@lang='${LANGUAGE}']/..
 ${DOWNLOAD LINK}                      //footer//a[@href="/download"]
 
 @{LANGUAGES LIST}                        en_US           en_GB           ru_RU               fr_FR         de_DE              es_ES         hu_HU             zh_CN     zh_TW    ja_JP       ko_KR       tr_TR          th_TH         nl_NL            he_IL      pl_PL         vi_VN
@@ -65,13 +65,13 @@ ${LOG IN BODY}                        //nx-app//a[@href='/login']
 
 #Forgot Password
 ${RESET PASSWORD FORM}                //form[@name='restorePasswordWithCode']
-${RESTORE PASSWORD EMAIL INPUT}       //form[@name='restorePassword']//input[@type='email']
-${RESET PASSWORD BUTTON}              //form[@name='restorePassword']//button[@ng-click='checkForm()']
+${RESTORE PASSWORD EMAIL INPUT}       //form[@name='restorePassword']//nx-email-input/input
+${RESET PASSWORD BUTTON}              //form[@name='restorePassword']//button[contains(@class,'btn btn-primary')]
 ${RESET PASSWORD INPUT}               //form[@name='restorePasswordWithCode']//input[@id='newPassword']
-${SAVE PASSWORD}                      //form[@name='restorePasswordWithCode']//button[@ng-click='checkForm()']
-${RESET EMAIL SENT MESSAGE}           //div[@ng-if='restoringSuccess']/h1
+${SAVE PASSWORD}                      //form[@name='restorePasswordWithCode']//button[contains(@class,'btn btn-primary')]
+${RESET EMAIL SENT MESSAGE}           //div/h1[contains(@class,'process-success')]
 ${RESET SUCCESS MESSAGE}              //h1[contains(text(), "${RESET SUCCESS MESSAGE TEXT}")]
-${RESET SUCCESS LOG IN LINK}          //div[@ng-if='change.success || changeSuccess']//a[@href='/login']
+${RESET SUCCESS LOG IN LINK}          //div[contains(@class,'process-success')]//a[contains(@class,'btn btn-default')]
 ${RESET EYE ICON OPEN}                ${RESET PASSWORD FORM}${EYE ICON OPEN}
 ${RESET EYE ICON CLOSED}              ${RESET PASSWORD FORM}${EYE ICON CLOSED}
 
@@ -225,8 +225,8 @@ ${ACCOUNT EMAIL}                      //account//a[@id='settings']
 ${ACCOUNT FIRST NAME}                 //form[@name='accountForm']//input[@id='firstName']
 ${ACCOUNT LAST NAME}                  //form[@name='accountForm']//input[@id='lastName']
 ${ACCOUNT LANGUAGE DROPDOWN}          //nx-language-select//button[@id='dropdownMenuButton']
-${ACCOUNT SAVE}                       //nx-account-settings-component//button[text()="${SAVE BUTTON TEXT}"]
-${ACCOUNT CANCEL}                     //nx-account-settings-component//button[text()="${CANCEL BUTTON TEXT}"]
+${ACCOUNT SAVE}                       //nx-account-settings-component//nx-apply//nx-process-button//button
+${ACCOUNT CANCEL}                     //nx-account-settings-component//nx-apply/div/button
 
 #Downloads
 ${DOWNLOADS HEADER}                   //h1["Downloads"]

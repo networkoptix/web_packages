@@ -1,9 +1,9 @@
 {
     "2-Way Audio": "Audio bidireccional",
     "About %CLOUD_NAME%": "Sobre %CLOUD_NAME%",
-    "Access Level": "Access Level",
-    "Access level": "Access level",
-    "Account Information": "Account Information",
+    "Access Level": "Nivel de Acceso",
+    "Access level": "Nivel de acceso",
+    "Account Information": "Información de la Cuenta",
     "Account Settings": "Configuración de cuenta",
     "Account is already activated or confirmation code is incorrect": "Ya está activada la cuenta o el código de confirmación es incorrecto",
     "Account is created.": "La cuenta ha sido creada.",
@@ -12,7 +12,7 @@
     "Account not found": "Cuenta no encontrada",
     "Activate your account": "Activar tu cuenta",
     "Actual number of events supported by this camera may be bigger.": "El número real de eventos soportados por esta cámara puede ser mayor.",
-    "Add User": "Add User",
+    "Add User": "Añadir Usuario",
     "Additional Requirements": "Requerimientos adicionales",
     "Administration": "Administración",
     "Advanced PTZ": "PTZ Avanzado",
@@ -26,7 +26,7 @@
     "Analytics Events": "Eventos de Analiticas",
     "Any": "Cualquiera",
     "Apply": "Aplicar",
-    "Apply changes before leaving this page?": "Apply changes before leaving this page?",
+    "Apply changes before leaving this page?": "¿Aplicar cambios antes de salir de esta página?",
     "Audio": "Audio",
     "Available Systems list": "Lista de Sistemas disponible",
     "Build Number:": "Número de compilación:",
@@ -52,7 +52,7 @@
     "Disconnect": "Desconectar",
     "Disconnect System from %CLOUD_NAME%?": "¿Desconectar el Sistema de %CLOUD_NAME%?",
     "Disconnect from %CLOUD_NAME%": "Desconectar de %CLOUD_NAME%",
-    "Disconnect from My Account": "Disconnect from My Account",
+    "Disconnect from My Account": "Desconectarse de mi Cuenta",
     "Download": "Descargar",
     "Download %VMS_NAME%": "Descargar %VMS_NAME%",
     "Download Chrome": "Descargar Chrome",
@@ -68,12 +68,12 @@
     "Enter password for your account to continue": "Introduzca la contraseña para que su cuenta continúe",
     "Enter password to continue.": "Introduzca la contraseña para continuar.",
     "Export all to CSV": "Exportar todo a CSV",
-    "FAILED_SYSTEM_DESCR": "This link is broken,<br>System may be disconnected from %CLOUD_NAME%,<br>Access to this System may be revoked, <br>or you may be logged into a different account.",
+    "FAILED_SYSTEM_DESCR": "Este enlace está roto,<br>El sistema puede ser desconectado de %CLOUD_NAME%,<br>El acceso a este sistema puede ser revocado, <br>o puedes iniciar sesión en una cuenta diferente.",
     "FPS(max)": "FPS (max)",
     "Failed to access System": "Error al acceder al sistema",
     "Finishing systems merge": "Acabando la fusión de sistemas",
     "Firmware version": "Versión de firmware",
-    "First Name": "First Name",
+    "First Name": "Nombre",
     "First name": "Su nombre",
     "First name is required": "Nombre es requerido",
     "Fisheye": "Fisheye",
@@ -86,7 +86,7 @@
     "In-Client Upgrade:": "Actualización en el cliente:",
     "Integrations": "Integraciones",
     "Language": "Idioma",
-    "Last Name": "Last Name",
+    "Last Name": "Apellido",
     "Last name": "Apellido",
     "Last name is required": "Apellido es requerido",
     "Latest version": "Última versión",
@@ -97,7 +97,7 @@
     "Merge current System with": "Combinar el sistema actual con",
     "Merge with Another System": "Fusionar con otro sistema",
     "Message": "Mensaje",
-    "Mine": "Mine",
+    "Mine": "Mío",
     "Motion Detection": "Detección de movimiento",
     "Multi Sensor": "Multi Sensor",
     "NO_SYSTEMS_CONNECT_SYSTEM": "Presiona \"Conectar el sistema a %CLOUD_NAME%\"",
@@ -164,9 +164,9 @@
     "Update them to the": "Actualizarlos a",
     "Updated": "Actualizado",
     "User": "Usuario",
-    "User disabled": "User disabled",
+    "User disabled": "Usuario deshabilitado",
     "View": "Vista",
-    "WHEN_MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{{targetSystemName}}</strong> System, and this system will be deleted.",
+    "WHEN_MERGE_FINISHES": "Cuando la fusión haya terminado, todos los usuarios y cámaras de este sistema estarán disponibles en <strong>{{targetSystemName}}</strong> Sistema, y este sistema será eliminado.",
     "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.": "Recomendamos instalar las últimas versiones de Google Chrome o Mozilla Firefox, pero puede usar cualquier otro navegador web moderno.",
     "What's New?": "¿Qué hay de nuevo?",
     "Works with:": "Funciona con:",
@@ -176,7 +176,7 @@
     "You have registered in %CLOUD_NAME%": "Te has registrado en %CLOUD_NAME%",
     "Your Email": "Tu correo electrónico",
     "Your Name": "Tu Nombre",
-    "Your access level": "Your access level",
+    "Your access level": "Tu nivel de acceso",
     "Your account is successfully activated": "Su cuenta se ha guardado",
     "Your browser is not supported": "Tu navegador no es compatible",
     "accessRoles": {
@@ -239,6 +239,7 @@
     },
     "account": {
         "accountSavedSuccess": "Su cuenta se ha guardado",
+        "accountSettings": "Configuración de cuenta",
         "activationLinkSent": "Enlace de activación",
         "changePassword": "Cambiar contraseña",
         "newPasswordLabel": "Nueva contraseña",
@@ -268,9 +269,12 @@
     "devices": "dispositivos",
     "dialogs": {
         "cancelButton": "Cancelar",
+        "continueAs": "Continue as {email}",
+        "createNewAccount": "Create New Account",
         "download": "Descargar %VMS_NAME%",
         "loginButton": "Inicia sesión",
         "loginTitle": "Inicie sesión en %CLOUD_NAME%",
+        "loginWithDifferentAccount": "You are already logged in with a different account",
         "logoutAuthorisedContinueButton": "Continuar",
         "logoutAuthorisedLogoutButton": "Cerrar Sessión",
         "logoutAuthorisedTitle": "Ya se ha conectado",
@@ -288,19 +292,20 @@
             "sent": "El mensaje ha sido enviado.",
             "title": {
                 "integration": "Ponte en contacto con {{companyName}}",
-                "ipvd_feedback_device": "Comentarios sobre {{product}}",
+                "ipvd_feedback_device": "Comentarios sobre {{asset}}",
                 "ipvd_feedback_page": "Comentarios sobre la página de cámaras"
             },
             "topic": {
-                "contact_sales": "Póngase en contacto con ventas para {{product}}",
-                "contact_support": "Contactar a soporte para {{product}}",
-                "integration_feedback": "Comentarios para la integración {{product}}",
-                "ipvd_feedback_device": "Comentarios sobre {{product}}",
+                "contact_sales": "Contactar a ventas para {{asset}}",
+                "contact_support": "Contactar a soporte para {{asset}}",
+                "integration_feedback": "Comentarios para la integración {{asset}}",
+                "ipvd_feedback_device": "Comentarios sobre {{asset}}",
                 "ipvd_feedback_page": "Comentarios sobre la página de cámaras"
             }
         },
         "noClientDetectedTitle": "Instalar %VMS_NAME% para ver su sistema",
         "okButton": "OK",
+        "remainAs": "Remain logged as {email} ",
         "sharing": {
             "confirmOwner": "Si se cambia el dueño del sistema, revocará la titularidad de esta cuenta. Esta acción es irreversible. ¿Está seguro?",
             "editShareConfirmButton": "Guardar",
@@ -439,7 +444,7 @@
         "Health Monitor": "Monitor de Salud",
         "Storage": "Almacenamiento",
         "backToEditText": "Volver a las interfaces de edición",
-        "myIntegrationsLabel": "Mine",
+        "myIntegrationsLabel": "Mío",
         "previewRibbonText": "Esta página es una vista previa de los últimos cambios y no coincide con la versión de acceso público."
     },
     "ipvd": {
@@ -473,8 +478,8 @@
         "isMultiSensor": "Multi Sensor",
         "isPtzSupported": "PTZ",
         "isTwAudioSupported": "audio bidireccional",
-        "maxFps": "<span>Max</span><br><span>FPS</span>",
-        "maxResolution": "<span>Max</span><br><span>Resolution</span>",
+        "maxFps": "<span>Máx</span><br><span>FPS</span>",
+        "maxResolution": "<span>Máx</span><br><span>Resolución</span>",
         "model": "Modelo",
         "multiSensorCamera": "Cámara multisensor",
         "other": "Otro",
@@ -530,15 +535,15 @@
         "weakMessage": "Uso de números, letras mayúsculas y minúsculas y caracteres especiales para hacer su contraseña más fuerte"
     },
     "phoneNumberWithLabel": "Tel: {{number}}",
-    "pleaseSelect": "Please select...",
+    "pleaseSelect": "Por favor, seleccione...",
     "privacyPolicy": {
         "integration": "Al enviar este formulario, usted acepta ser contactado por {{INTEGRATION_COMPANY}} y / o %COMPANY_NAME%.\nEncontrará {{INTEGRATION_COMPANY}} política de privacidad <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">aquí</a> y %COMPANY_NAME% política de privacidad <a href=\"%PRIVACY_LINK%\" target=\"blank\">aquí</a> que incluyen instrucciones sobre cómo retirar su consentimiento.",
         "ipvd": "Al enviar este formulario, usted acepta ser contactado por %COMPANY_NAME%.\nEncontrará %COMPANY_NAME% política de privacidad <a href=\"%PRIVACY_LINK%\" target=\"blank\">aquí</a> que incluye instrucciones sobre cómo retirar su consentimiento."
     },
     "registration": {
-        "agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
+        "agreement": "Acepto los <a href=\"/content/eula\" target=\"_blank\">Términos y\nCondiciones</a> y <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Política de Privacidad</a>"
     },
-    "registration.agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>",
+    "registration.agreement": "Acepto los <a href=\"/content/eula\" target=\"_blank\">Términos y\nCondiciones</a> y <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Política de Privacidad</a>",
     "search": {
         "Any": "Cualquiera",
         "Search": "Búsqueda",
@@ -597,5 +602,5 @@
     "testedVersionLabel": "Probado en la versión {{vmsName}}:",
     "testedVersionsLabel": "Probado en {{vmsName}} versiones:",
     "users": "Usuarios",
-    "you": "you"
+    "you": "usted"
 }

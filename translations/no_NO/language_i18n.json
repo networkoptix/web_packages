@@ -239,6 +239,7 @@
     },
     "account": {
         "accountSavedSuccess": "Din konto er lagret",
+        "accountSettings": "Kontoinnstillinger",
         "activationLinkSent": "Aktiveringslink sendt",
         "changePassword": "Bytt passord",
         "newPasswordLabel": "Nytt passord",
@@ -268,9 +269,12 @@
     "devices": "enheter",
     "dialogs": {
         "cancelButton": "Avbryt",
+        "continueAs": "Continue as {email}",
+        "createNewAccount": "Create New Account",
         "download": "Last ned %VMS_NAME%",
         "loginButton": "Logg Inn",
         "loginTitle": "Logg inn på %CLOUD_NAME%",
+        "loginWithDifferentAccount": "You are already logged in with a different account",
         "logoutAuthorisedContinueButton": "Fortsette",
         "logoutAuthorisedLogoutButton": "Logg ut",
         "logoutAuthorisedTitle": "Du er allerede innlogget",
@@ -288,19 +292,20 @@
             "sent": "Meldingen er sendt.",
             "title": {
                 "integration": "Kom i kontakt med {{companyName}}",
-                "ipvd_feedback_device": "Tilbakemelding om {{product}}",
+                "ipvd_feedback_device": "Tilbakemelding for {{asset}}",
                 "ipvd_feedback_page": "Tilbakemelding for kameraer-siden"
             },
             "topic": {
-                "contact_sales": "Kontakt salgsavdelingen for {{product}}",
-                "contact_support": "Kontakt brukerstøtte for {{product}}",
-                "integration_feedback": "Tilbakemelding for integrasjon {{product}}",
-                "ipvd_feedback_device": "Tilbakemelding om {{product}}",
+                "contact_sales": "Kontakt salg for {{asset}}",
+                "contact_support": "Kontakt brukerstøtte for {{asset}}",
+                "integration_feedback": "Tilbakemelding for integrasjon {{asset}}",
+                "ipvd_feedback_device": "Tilbakemelding for {{asset}}",
                 "ipvd_feedback_page": "Tilbakemelding for kameraer-siden"
             }
         },
         "noClientDetectedTitle": "Installer %VMS_NAME% for å koble til ditt System",
         "okButton": "OK",
+        "remainAs": "Remain logged as {email} ",
         "sharing": {
             "confirmOwner": "Hvis du endrer System-eier, vil du tilbakekalle eierskapet fra gjeldende konto. Denne handlingen er irreversibel. Er du sikker?",
             "editShareConfirmButton": "Lagre",

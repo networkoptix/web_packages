@@ -69,9 +69,10 @@ Check Langauge Logged In
     # this is a temorary fix.  Future update will use API calls
     ${previous location}=   Get Location
     Go To    ${ENV}/account
-    ${status}=   Run Keyword And Return Status    Wait Until Element Is Visible    ${ACCOUNT LANGUAGE DROPDOWN}/span[@lang='${LANGUAGE}']    5
+    ${status}=    Run Keyword And Return Status    Wait Until Element Is Visible    ${ACCOUNT LANGUAGE DROPDOWN}/span[@lang='${LANGUAGE}']    5
     Register Keyword To Run On Failure    Failure Tasks
     Run Keyword If    "${status}"=="False"    Set Language
+    Run Keyword If    "${status}"=="False"    Click Button    ${ACCOUNT SAVE}
     Go To    ${previous location}
 
 Set Language
@@ -245,7 +246,7 @@ Check For Alert Dismissable
     [arguments]    ${alert text}
     Wait Until Elements Are Visible    ${ALERT}    ${ALERT CLOSE}
     Element Text Should Be    ${ALERT}    ${alert text}
-    Click Element    ${ALERT CLOSE}
+    Click Button    ${ALERT CLOSE}
     Wait Until Page Does Not Contain Element    ${ALERT}
 
 Verify In System

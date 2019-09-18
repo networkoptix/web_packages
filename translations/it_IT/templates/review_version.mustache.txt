@@ -2,7 +2,7 @@ C'è una nuova versione per {{ message.asset }} ({{message.asset_type}}) da revi
 
 Clicchi sul link per rivedere il progetto {{ message.id }} per {{ message.asset }}
 
-Link to review: {{ config.portal_url }}/admin/cms/assetcustomizationreview/{{ message.id }}/change/
+Link per la Revisione: {{ config.portal_url }}/admin/cms/version/{{ message.id }}/
 
 Su questa pagina è possibile
 1) Creare un'anteprima per visualizzare le modifiche più recenti.

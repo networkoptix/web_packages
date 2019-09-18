@@ -49,8 +49,7 @@ def has_value(data_structure_name, asset, context, language):
     if not data_structure.translatable:
         language = None
 
-    record_value = data_structure.find_actual_value(asset, language, draft=True)
-    return record_value != "" and data_structure.default != record_value
+    return data_structure.datarecord_set.filter(asset=asset, language=language).exists()
 
 
 @register.simple_tag

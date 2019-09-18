@@ -239,6 +239,7 @@
     },
     "account": {
         "accountSavedSuccess": "A sua conta foi gravada com sucesso",
+        "accountSettings": "Configurações da conta",
         "activationLinkSent": "Link de ativação enviado",
         "changePassword": "Mudar Senha",
         "newPasswordLabel": "Nova senha",
@@ -268,9 +269,12 @@
     "devices": "dispositivos",
     "dialogs": {
         "cancelButton": "Cancelar",
+        "continueAs": "Continue as {email}",
+        "createNewAccount": "Create New Account",
         "download": "Baixar %VMS_NAME%",
         "loginButton": "Entrar",
         "loginTitle": "Logar em %CLOUD_NAME%",
+        "loginWithDifferentAccount": "You are already logged in with a different account",
         "logoutAuthorisedContinueButton": "Continuar",
         "logoutAuthorisedLogoutButton": "Terminar sessão",
         "logoutAuthorisedTitle": "Já tem sessão iniciada",
@@ -288,19 +292,20 @@
             "sent": "A mensagem foi enviada.",
             "title": {
                 "integration": "Entre em contato com {{companyName}}",
-                "ipvd_feedback_device": "Comentários sobre {{product}}",
+                "ipvd_feedback_device": "Comentários sobre {{asset}}",
                 "ipvd_feedback_page": "Feedback para página de câmaras"
             },
             "topic": {
-                "contact_sales": "Entre em contato com vendas para {{product}}",
-                "contact_support": "Contate o suporte para {{product}}",
-                "integration_feedback": "Feedback para integração {{product}}",
-                "ipvd_feedback_device": "Comentários sobre {{product}}",
+                "contact_sales": "Entre em contato com vendas para {{asset}}",
+                "contact_support": "Contate o suporte para {{asset}}",
+                "integration_feedback": "Feedback para integração {{asset}}",
+                "ipvd_feedback_device": "Comentários sobre {{asset}}",
                 "ipvd_feedback_page": "Feedback para página de câmaras"
             }
         },
         "noClientDetectedTitle": "Instalar %VMS_NAME% para visualizar o seu sistema",
         "okButton": "OK",
+        "remainAs": "Remain logged as {email} ",
         "sharing": {
             "confirmOwner": "Se alterar o proprietário do sistema, você revogará a propriedade da conta atual. Esta ação é irreversível. Tem certeza?",
             "editShareConfirmButton": "Gravar",

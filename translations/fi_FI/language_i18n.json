@@ -239,6 +239,7 @@
     },
     "account": {
         "accountSavedSuccess": "Tilisi on onnistuneesti päivitetty",
+        "accountSettings": "Tilin asetukset",
         "activationLinkSent": "Aktivointilinkki lähetetty",
         "changePassword": "Vaihda salasana",
         "newPasswordLabel": "Uusi salasana",
@@ -268,9 +269,12 @@
     "devices": "laitteet",
     "dialogs": {
         "cancelButton": "Peruuta",
+        "continueAs": "Continue as {email}",
+        "createNewAccount": "Create New Account",
         "download": "Lataa %VMS_NAME%",
         "loginButton": "Kirjaudu sisään",
         "loginTitle": "Kirjaudu sisään %CLOUD_NAME%",
+        "loginWithDifferentAccount": "You are already logged in with a different account",
         "logoutAuthorisedContinueButton": "Jatka",
         "logoutAuthorisedLogoutButton": "Kirjaudu ulos",
         "logoutAuthorisedTitle": "Olet jo kirjautunut sisään",
@@ -288,19 +292,20 @@
             "sent": "Viesti on lähetetty.",
             "title": {
                 "integration": "Ota yhteyttä {{companyName}}",
-                "ipvd_feedback_device": "Palaute{{product}}",
+                "ipvd_feedback_device": "Palaute{{asset}}",
                 "ipvd_feedback_page": "Palaute kameran sivulle"
             },
             "topic": {
-                "contact_sales": "Ota yhteyttä {{product}} myyntiin",
-                "contact_support": "Ota yhteyttä tukeen {{product}}",
-                "integration_feedback": "Palaute integraatiosta {{product}}",
-                "ipvd_feedback_device": "Palaute{{product}}",
+                "contact_sales": "Ota yhteyttä {{asset}} myyntiin",
+                "contact_support": "Pyydä tukea {{asset}}",
+                "integration_feedback": "Palaute integraatiosta {{asset}}",
+                "ipvd_feedback_device": "Palaute{{asset}}",
                 "ipvd_feedback_page": "Palaute kameran sivulle"
             }
         },
         "noClientDetectedTitle": "Asenna %VMS_NAME% nähdäksesi järjestelmän",
         "okButton": "OK",
+        "remainAs": "Remain logged as {email} ",
         "sharing": {
             "confirmOwner": "Jos vaihdat järjestelmän omistajaa, peruutat omistusoikeuden nykyisestä tilistä. Tämä toimenpide on peruuttamaton. Oletko varma?",
             "editShareConfirmButton": "Tallenna",

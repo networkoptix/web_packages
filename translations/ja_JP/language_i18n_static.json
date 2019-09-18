@@ -5,7 +5,8 @@
 		"passwordChangedSuccess": "あなたのアカウントは正常に保存されました",
 		"changePassword": "パスワードを変更",
 		"newPasswordLabel": "新規パスワード",
-		"saveChanges": "保存"
+		"saveChanges": "保存",
+		"accountSettings": "アカウント設定"
 	},
 	"activeActions": {
 		"sendConfirm": "アクティベーションリンクを再送信",
@@ -118,8 +119,8 @@
 		"vendor": "製造メーカー",
 		"model": "モデル",
 		"hardwareType": "タイプ",
-		"maxResolution": "<span>Max</span><br><span>Resolution</span>",
-		"maxFps": "<span>Max</span><br><span>FPS</span>",
+		"maxResolution": "<span>最大</span><br><span>解像度</span>",
+		"maxFps": "<span>最大</span><br><span>FPS</span>",
 		"primaryCodec": "コー​​デック",
 		"isAudioSupported": "オーディオ",
 		"isTwAudioSupported": "双方向オーディオ",
@@ -153,7 +154,7 @@
 		"disclaimer": "このリストは、ユーザーが{{companyName}} へのデバイススペックの自動報告を許可した{{vmsName}} において検出されたデバイスに限定されています。個人情報は収集されず、各ユーザーは完全に匿名のままです。"
 	},
 	"integration": {
-		"myIntegrationsLabel": "Mine",
+		"myIntegrationsLabel": "自分",
 		"previewRibbonText": "このページは最新の変更のプレビューです、一般的に利用可能なバージョンと一致しません。",
 		"backToEditText": "編集インターフェースに戻る",
 		"Access Control": "アクセスコントロール",
@@ -195,12 +196,16 @@
 	"dialogs": {
 		"okButton": "OK",
 		"cancelButton": "キャンセル",
+		"continueAs": "Continue as {email}",
+		"createNewAccount": "Create New Account",
 		"loginTitle": "%CLOUD_NAME% にログイン",
 		"loginButton": "ログイン",
+		"loginWithDifferentAccount": "You are already logged in with a different account",
 		"logoutAuthorisedTitle": "すでにログインしています",
 		"logoutAuthorisedContinueButton": "続行",
 		"logoutAuthorisedLogoutButton": "ログアウト",
 		"noClientDetectedTitle": "システムを表示するには %VMS_NAME% をインストールします",
+		"remainAs": "Remain logged as {email} ",
 		"download": "%VMS_NAME% をダウンロード",
 		"merge": {
 			"connectToCloud": "これと統合したいシステムを <strong>{{cloudName}}</strong> に接続するか、 <strong>{{vmsName}}</strong> クライアントを使用してローカルに統合します。",
@@ -217,14 +222,14 @@
 			"title": {
 				"integration": "{{companyName}} と連絡を取る",
 				"ipvd_feedback_page": "カメラページへのフィードバック",
-				"ipvd_feedback_device": "{{product}} についてのフィードバック"
+				"ipvd_feedback_device": "{{asset}} についてのフィードバック"
 			},
 			"topic": {
-				"contact_sales": "{{product}} についてセールスに連絡する",
-				"contact_support": "{{product}} についてサポートに連絡する",
-				"integration_feedback": "{{product}} 統合のためのフィードバック",
+				"contact_sales": "{{asset}} についてセールスに連絡する",
+				"contact_support": "{{asset}} についてサポートに連絡する",
+				"integration_feedback": "{{asset}} 統合のためのフィードバック",
 				"ipvd_feedback_page": "カメラページへのフィードバック",
-				"ipvd_feedback_device": "{{product}} についてのフィードバック"
+				"ipvd_feedback_device": "{{asset}} についてのフィードバック"
 			}
 		},
 		"sharing": {
@@ -295,7 +300,7 @@
 		"missingMessage": "パスワードが必要です"
 	},
 	"registration": {
-		"agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
+		"agreement": "<a href=\"/content/eula\" target=\"_blank\">利用規約、条件</a>および<a href=\"%PRIVACY_LINK%\" target=\"_blank\">プライバシーポリシー</a>に同意します"
 	},
 	"system": {
 		"yourSystem": "お使いのシステム",
@@ -407,9 +412,9 @@
 	"Support": "サポート",
 	"Supported Devices": "サポートされているデバイス",
 	"Terms": "利用規約",
-	"pleaseSelect": "Please select...",
-	"WHEN_MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{{targetSystemName}}</strong> System, and this system will be deleted.",
-	"FAILED_SYSTEM_DESCR": "This link is broken,<br>System may be disconnected from %CLOUD_NAME%,<br>Access to this System may be revoked, <br>or you may be logged into a different account.",
+	"pleaseSelect": "選択してください",
+	"WHEN_MERGE_FINISHES": "統合が完了すると、このシステムのすべてのユーザーとカメラが <strong>{{targetSystemName}}</strong> システムで使用可能になり、このシステムが削除されます。",
+	"FAILED_SYSTEM_DESCR": "このリンクは壊れています。<br>システムは %CLOUD_NAME%から切断される可能性があります。<br>このシステムへのアクセスが取り消される可能性があります。<br>または別のアカウントにログインしている可能性があります。",
 	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "%CLOUD_NAME% に接続されたシステムがありません",
 	"NO_SYSTEMS_LOGIN": "%VMS_NAME% を使用してシステムにログインします",
 	"NO_SYSTEMS_GOTO_ADMINISTRATION": "システムアドミニストレーションのクラウドタブに移動",

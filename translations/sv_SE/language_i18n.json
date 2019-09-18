@@ -239,6 +239,7 @@
     },
     "account": {
         "accountSavedSuccess": "Ditt konto har sparats",
+        "accountSettings": "Kontoinställningar",
         "activationLinkSent": "Aktiveringslänk skickad",
         "changePassword": "Ändra lösenord",
         "newPasswordLabel": "Nytt lösenord",
@@ -268,9 +269,12 @@
     "devices": "enheter",
     "dialogs": {
         "cancelButton": "Avbryt",
+        "continueAs": "Continue as {email}",
+        "createNewAccount": "Create New Account",
         "download": "Ladda ner %VMS_NAME%",
         "loginButton": "Logga in",
         "loginTitle": "Logga in på %CLOUD_NAME%",
+        "loginWithDifferentAccount": "You are already logged in with a different account",
         "logoutAuthorisedContinueButton": "Fortsätt",
         "logoutAuthorisedLogoutButton": "Logga ut",
         "logoutAuthorisedTitle": "Du är redan inloggad",
@@ -288,19 +292,20 @@
             "sent": "Meddelandet har skickats.",
             "title": {
                 "integration": "Kom i kontakt med {{companyName}}",
-                "ipvd_feedback_device": "Feedback om {{product}}",
+                "ipvd_feedback_device": "Feedback om {{asset}}",
                 "ipvd_feedback_page": "Feedback för kamerans sida"
             },
             "topic": {
-                "contact_sales": "Kontakta försäljning för {{product}}",
-                "contact_support": "Kontakta support för {{product}}",
-                "integration_feedback": "Feedback för integration {{product}}",
-                "ipvd_feedback_device": "Feedback om {{product}}",
+                "contact_sales": "Kontakta försäljning för {{asset}}",
+                "contact_support": "Kontakta support för {{asset}}",
+                "integration_feedback": "Feedback för integration {{asset}}",
+                "ipvd_feedback_device": "Feedback om {{asset}}",
                 "ipvd_feedback_page": "Feedback för kamerans sida"
             }
         },
         "noClientDetectedTitle": "Installera %VMS_NAME% om du vill visa ditt System",
         "okButton": "OK",
+        "remainAs": "Remain logged as {email} ",
         "sharing": {
             "confirmOwner": "Om du ändrar systemägaren återkallar du ägandet från det aktuella kontot. Denna åtgärd är oåterkallelig. Är du säker?",
             "editShareConfirmButton": "Spara",

@@ -5,7 +5,8 @@
 		"passwordChangedSuccess": "Ваш обліковий запис успішно збережено",
 		"changePassword": "Змінити пароль",
 		"newPasswordLabel": "Новий пароль",
-		"saveChanges": "Зберегти"
+		"saveChanges": "Зберегти",
+		"accountSettings": "Параметри облікового запису"
 	},
 	"activeActions": {
 		"sendConfirm": "Відправити посилання активації ще раз",
@@ -195,12 +196,16 @@
 	"dialogs": {
 		"okButton": "ОК",
 		"cancelButton": "Відмінити",
+		"continueAs": "Continue as {email}",
+		"createNewAccount": "Create New Account",
 		"loginTitle": "Увійти до %CLOUD_NAME%",
 		"loginButton": "Увійти",
+		"loginWithDifferentAccount": "You are already logged in with a different account",
 		"logoutAuthorisedTitle": "Ви вже увійшли",
 		"logoutAuthorisedContinueButton": "Продовжити",
 		"logoutAuthorisedLogoutButton": "Вийти",
 		"noClientDetectedTitle": "Встановіть %VMS_NAME% для роботи з системою",
+		"remainAs": "Remain logged as {email} ",
 		"download": "Завантажити %VMS_NAME%",
 		"merge": {
 			"connectToCloud": "Підключіть систему, яку хочете об’єднати з цією <strong>{{cloudName}}</strong> або об’єднайте локально з <strong>{{vmsName}}</strong> Клієнтом.",
@@ -217,14 +222,14 @@
 			"title": {
 				"integration": "Зв’яжіться з {{companyName}}",
 				"ipvd_feedback_page": "Зворотній зв’язок для сторінки камер",
-				"ipvd_feedback_device": "Відгук про {{product}}"
+				"ipvd_feedback_device": "Відгук про {{asset}}"
 			},
 			"topic": {
-				"contact_sales": "Зв'яжіться з відділом продажів за {{product}}",
-				"contact_support": "Зверніться до служби підтримки за {{product}}",
-				"integration_feedback": "Зворотній зв'язок для інтеграції {{product}}",
+				"contact_sales": "Зв'яжіться з відділом продажів за {{asset}}",
+				"contact_support": "Зверніться до служби підтримки за {{asset}}",
+				"integration_feedback": "Зворотній зв'язок для інтеграції {{asset}}",
 				"ipvd_feedback_page": "Зворотній зв’язок для сторінки камер",
-				"ipvd_feedback_device": "Відгук про {{product}}"
+				"ipvd_feedback_device": "Відгук про {{asset}}"
 			}
 		},
 		"sharing": {

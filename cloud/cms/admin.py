@@ -237,7 +237,10 @@ class AssetFilter(SimpleListFilter):
 
     def queryset(self, request, queryset):
         if self.value():
-            return queryset.filter(version__asset__id=self.value())
+            if isinstance(queryset.first(), AssetCustomizationReview):
+                return queryset.filter(version__asset__id=self.value())
+            elif isinstance(queryset.first(), ContentVersion):
+                return queryset.filter(asset__id=self.value())
         return queryset
 
 

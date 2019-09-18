@@ -2,7 +2,7 @@ Es gibt eine neue Version für {{ message.asset }}({{message.asset_type}}) zum �
 
 Klicken Sie auf den Link, um den Entwurf {{ message.id }} für {{ message.asset }} zu überprüfen
 
-Link to review: {{ config.portal_url }}/admin/cms/assetcustomizationreview/{{ message.id }}/change/
+Link zur Bewertung: {{ config.portal_url }}/admin/cms/assetcustomizationreview/{{ message.id }}/change/
 
 Auf dieser Seite können Sie
 1) Erstellen Sie eine Vorschau, um die aktuellsten Änderungen zu sehen.

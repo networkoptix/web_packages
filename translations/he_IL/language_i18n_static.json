@@ -5,7 +5,8 @@
 		"passwordChangedSuccess": "החשבון שלך נשמר בהצלחה",
 		"changePassword": "שנה סיסמא",
 		"newPasswordLabel": "סיסמה חדשה",
-		"saveChanges": "שמור"
+		"saveChanges": "שמור",
+		"accountSettings": "הגדרות החשבון"
 	},
 	"activeActions": {
 		"sendConfirm": "שלח את קישור ההפעלה שוב",
@@ -195,12 +196,16 @@
 	"dialogs": {
 		"okButton": "אישור",
 		"cancelButton": "ביטול",
+		"continueAs": "Continue as {email}",
+		"createNewAccount": "Create New Account",
 		"loginTitle": "היכנס ל- %CLOUD_NAME%",
 		"loginButton": "התחברות",
+		"loginWithDifferentAccount": "You are already logged in with a different account",
 		"logoutAuthorisedTitle": "אתה כבר מחובר",
 		"logoutAuthorisedContinueButton": "המשך",
 		"logoutAuthorisedLogoutButton": "יציאה",
 		"noClientDetectedTitle": "התקן את %VMS_NAME% כדי לצפות במערכת שלך",
+		"remainAs": "Remain logged as {email} ",
 		"download": "הורד את %VMS_NAME%",
 		"merge": {
 			"connectToCloud": "חבר מערכת שברצונך למזג עם מערכת זו <strong>{{cloudName}}</strong> או מזג מקומי באמצעות <strong>{{vmsName}}</strong> לקוח.",
@@ -217,14 +222,14 @@
 			"title": {
 				"integration": "צור קשר עם {{companyName}}",
 				"ipvd_feedback_page": "משוב עבור דף מצלמות",
-				"ipvd_feedback_device": "משוב על {{product}}"
+				"ipvd_feedback_device": "משוב על {{asset}}"
 			},
 			"topic": {
-				"contact_sales": "צור קשר עם מחלקת המכירות עבור {{product}}",
-				"contact_support": "צור קשר עם התמיכה בנוגע ל- {{product}}",
-				"integration_feedback": "משוב לאינטגרציה {{product}}",
+				"contact_sales": "צור קשר עם מחלקת המכירות עבור {{asset}}",
+				"contact_support": "צור קשר עם התמיכה בנוגע ל- {{asset}}",
+				"integration_feedback": "משוב לאינטגרציה {{asset}}",
 				"ipvd_feedback_page": "משוב עבור דף מצלמות",
-				"ipvd_feedback_device": "משוב על {{product}}"
+				"ipvd_feedback_device": "משוב על {{asset}}"
 			}
 		},
 		"sharing": {
