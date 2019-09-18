@@ -19,6 +19,7 @@ export class NxAccountService {
     CONFIG: any;
     LANG: any;
     location: any;
+    loggingOut: boolean;
     requestingLogin: any;
 
     constructor(@Inject(DOCUMENT) private document: any,
@@ -35,6 +36,7 @@ export class NxAccountService {
         this.location = this.locationService;
         this.CONFIG = this.config.getConfig();
         this.LANG = this.language.getTranslations();
+        this.loggingOut = false;
 
         // Distinct until changed is used to prevent the logout function from looping.
         this.sessionService.loginStateSubject.pipe(distinctUntilChanged()).subscribe((loginState) => {
@@ -216,6 +218,10 @@ export class NxAccountService {
     }
 
     logout(doNotRedirect?) {
+        if (this.loggingOut) {
+            return;
+        }
+        this.loggingOut = true;
         this.cloudApi
             .logout()
             .finally(() => {
