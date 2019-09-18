@@ -385,10 +385,12 @@ def publish_latest_version(asset, review_id, user):
     return publish_errors
 
 
-def asset_has_required_data(asset):
+def asset_has_required_data(asset, version_id=None):
     errors = []
     for datastructure in DataStructure.objects.filter(context__asset_type=asset.asset_type):
         records = datastructure.datarecord_set.filter(asset=asset)
+        if version_id:
+            records = records.filter(version__id__lte=version_id)
         last_record_value = records.last().value if records.last() else None
         if last_record_value and datastructure.type in [DataStructure.DATA_TYPES.array,
                                                         DataStructure.DATA_TYPES.object,

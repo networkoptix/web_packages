@@ -367,16 +367,20 @@ def download_package(request, asset_id):
     version_id = request.GET['version_id'] if 'version_id' in request.GET else None
     preview = 'draft' in request.GET
 
-    if not version_id and not preview:
-        latest_review = AssetCustomizationReview.objects.filter(version__asset=asset)
-        if not preview:
-            latest_review = latest_review.filter(state=AssetCustomizationReview.REVIEW_STATES.accepted)
-
-        latest_review = latest_review.last()
+    if not preview and not version_id:
+        latest_review = AssetCustomizationReview.objects.\
+            filter(version__asset=asset,
+                   state=AssetCustomizationReview.REVIEW_STATES.accepted).last()
         if latest_review:
             version_id = latest_review.version.id
-        elif len(modify_db.asset_has_required_data(asset)) > 0:
-            return HttpResponseBadRequest("There is no completed version for this asset.")
+        else:
+            return HttpResponseBadRequest("There are no published versions for this asset.")
+
+    if len(modify_db.asset_has_required_data(asset, version_id)) > 0:
+        error_message = "Asset requires all fields to be filled."
+        if version_id:
+            error_message = f"Asset does not have all required fields filled for version: {version_id}"
+        return HttpResponseBadRequest(error_message)
 
     zipped_data = filldata.get_zip_package(asset, preview, version_id)
     file_name = f"{asset.name}.zip"
