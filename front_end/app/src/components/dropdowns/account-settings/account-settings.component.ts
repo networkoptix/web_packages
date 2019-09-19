@@ -30,12 +30,7 @@ export class NxAccountSettingsDropdown implements OnInit {
     }
 
     ngOnInit(): void {
-        this.accountService
-            .checkLoginState()
-            .then(() => {
-                this.getAccount();
-            }, () => {});
-
+        this.getAccount();
         this.sessionService.loginStateSubject.pipe(
             filter((state) => {
                 return typeof state === 'string';
