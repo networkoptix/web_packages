@@ -80,9 +80,11 @@ export class NxRestoreComponent implements OnInit {
 
         this.data = {
             newPassword : '',
-            email       : '', // moved to init()
+            email       : this.localStorage.get('restoreEmail') || '',
             restoreCode : this.uriParamCode
         };
+
+        this.localStorage.remove('restoreEmail');
 
         this.restoring = (this.uriParam === 'restoring');
         this.restoringSuccess = (this.uriParam === 'restoringSuccess');
@@ -120,6 +122,7 @@ export class NxRestoreComponent implements OnInit {
             this.restoring = false;
             this.restoringSuccess = true;
             this.setContext('restoringSuccess');
+            this.setEmail(this.data.email);
             this.dialogs.dismiss();
             this.uriService.updateURI('/restore_password/sent', {});
         });
@@ -133,6 +136,10 @@ export class NxRestoreComponent implements OnInit {
     setContext(name) {
         this.context.process = name;
         this.localStorage.set('restoreProcess', name);
+    }
+
+    setEmail(email) {
+        this.localStorage.set('restoreEmail', email);
     }
 
     private checkContexts(arr) {
