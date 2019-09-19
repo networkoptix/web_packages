@@ -300,7 +300,9 @@ def save_unrevisioned_records(asset, context, language, data_structures,
                 continue
 
         if new_record_value == latest_value and not delete_file and not external_file and not is_file_or_image:
-            continue
+            # If the structure has a default value and no record exists allow it save once.
+            if not data_structure.default or data_structure.datarecord_set.filter(asset=asset).exists():
+                continue
 
         if data_structure.advanced and not (user.is_superuser or user.has_perm('cms.edit_advanced')):
             upload_errors.append((data_structure_name, "You do not have permission to edit this field"))
