@@ -40,16 +40,16 @@ def is_external_file_or_image(data_structure_name, context):
 
 
 @register.simple_tag
-def has_value(data_structure_name, asset, context, language):
+def has_value(data_structure_name, asset, context, language_code):
     data_structure = DataStructure.objects.filter(context=context, name=data_structure_name).first()
 
     if not data_structure:
         return False
 
     if not data_structure.translatable:
-        language = None
+        language_code = None
 
-    return data_structure.datarecord_set.filter(asset=asset, language=language).exists()
+    return data_structure.datarecord_set.filter(asset=asset, language__code=language_code).exists()
 
 
 @register.simple_tag

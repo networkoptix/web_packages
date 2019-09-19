@@ -83,8 +83,9 @@ def is_datarecord_unique(asset, data_structure, value, customizations=None):
     ).values_list('id', flat=True))
 
     asset_ids_found = []
+    not_accepted_asset_ids_found = []
 
-    not_accepted_version_ids = []
+    version_ids = []
     # Find all versions of assets that may cause conflict
     for review in AssetCustomizationReview.objects.filter(
             version__asset__id__in=asset_ids, version__datarecord__data_structure=data_structure
@@ -93,27 +94,20 @@ def is_datarecord_unique(asset, data_structure, value, customizations=None):
         if asset_id not in asset_ids_found:
             if review.state == AssetCustomizationReview.REVIEW_STATES.accepted:
                 asset_ids_found.append(asset_id)
-            else:
-                not_accepted_version_ids.append(review.version.id)
+                version_ids.append(review.version.id)
+            elif asset_id not in not_accepted_asset_ids_found:
+                not_accepted_asset_ids_found.append(asset_id)
+                version_ids.append(review.version.id)
 
     asset_ids_found.clear()
-    asset_ids_published_found = []
 
     for datarecord in DataRecord.objects.filter(
             asset_id__in=asset_ids, data_structure=data_structure
     ).order_by('-pk').select_related('asset'):
         if datarecord.version:
-            # If datarecord has a new version that is still pending/rejected/blocked, check value
-            if datarecord.version in not_accepted_version_ids:
-                if datarecord.value == value:
-                    return False
-            # If datarecord has a published version or older version, make sure we
-            # don't have a newer one already
-            elif datarecord.asset.id not in asset_ids_published_found:
-                if datarecord.value == value:
-                    return False
-                else:
-                    asset_ids_published_found.append(datarecord.asset.id)
+            if datarecord.version.id in version_ids and datarecord.value == value:
+                return False
+            asset_ids_found.append(datarecord.asset.id)
         # If datarecord is unversioned, check that we haven't seen one for this asset yet
         elif datarecord.asset.id not in asset_ids_found:
             if datarecord.value == value:
