@@ -197,9 +197,7 @@ should prompt log user out if he visits restore password link from email
     Wait Until Elements Are Visible    ${RESTORE PASSWORD EMAIL INPUT}    ${RESET PASSWORD BUTTON}
     Input Text    ${RESTORE PASSWORD EMAIL INPUT}    ${email}
     Click Button    ${RESET PASSWORD BUTTON}
-    #TODO: CLOUD-3635 restore_password/sent "Password reset instructions are sent to Email" message is not followed by the email address sent to
-    #${RESET EMAIL SENT MESSAGE TEXT}    Replace String    ${RESET EMAIL SENT MESSAGE TEXT}    %email%    ${email}
-    ${RESET EMAIL SENT MESSAGE TEXT}    Remove String Using Regexp    ${RESET EMAIL SENT MESSAGE TEXT}    \ \%email\%
+    ${RESET EMAIL SENT MESSAGE TEXT}    Replace String    ${RESET EMAIL SENT MESSAGE TEXT}    %email%    ${email}
     Wait Until Element Is Visible    ${RESET EMAIL SENT MESSAGE}
     ${text}    Get Text    ${RESET EMAIL SENT MESSAGE}
     ${replaced}    Replace String    ${text}    \n    ${SPACE}
