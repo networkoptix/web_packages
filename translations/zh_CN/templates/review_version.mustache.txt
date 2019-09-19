@@ -2,7 +2,7 @@
 
 点击链接查看{{ message.asset }}的{{ message.id }}草案
 
-Link to review: {{ config.portal_url }}/admin/cms/assetcustomizationreview/{{ message.id }}/change/
+链接到评论：{{ config.portal_url }}/admin/cms/assetcustomizationreview/{{ message.id }}/change/
 
 你可以在此页
 1) 创建预览以查看最近的更改。
