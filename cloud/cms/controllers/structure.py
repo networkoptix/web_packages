@@ -200,6 +200,11 @@ def process_zip(file_descriptor, user, asset, update_structure, update_content):
                 # Ideally, the only difference is specific data values
 
                 context_template = context.contexttemplate_set.first()
+                if context_template:
+                    context_template = context_template.template
+                else:
+                    log_messages.append(('error', f'Template does not exist for context {context.name}'))
+                    continue
 
                 # normalise json file
                 # here is the problem: we parse json as text file to extract values, which might be not the best
@@ -208,7 +213,7 @@ def process_zip(file_descriptor, user, asset, update_structure, update_content):
                     file_content = json.dumps(json.loads(file_content), indent=4, separators=(',', ': '))
                     context_template = json.dumps(json.loads(context_template), indent=4, separators=(',', ': '))
 
-                context_template_lines = context_template.template.split("\n")
+                context_template_lines = context_template.split("\n")
 
                 for structure in context.datastructure_set.all():
                     if DataStructure.is_file_or_image(structure.type):
