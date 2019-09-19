@@ -60,10 +60,10 @@
                             {% if 'background' in data_structure.meta_settings and data_structure.meta_settings.background != 'transparent' %}
                                 {# TODO: Note that optional was here #}
                                 {{ data_structure.meta_settings.background }}
-                            {% elif not record_exists %}
-                                preview-image
+                            {% else %}
+                                default-background
                             {% endif %}
-                            context-preview {% if not record_exists %} optional-image {% endif %}"
+                            context-preview {% if not record_exists %} placeholder-image {% endif %}"
                              src="data:image/png;base64,{{ field.value }}">
                     </div>
 
@@ -77,10 +77,10 @@
                             <img class="
                                 {% if 'background' in data_structure.meta_settings and data_structure.meta_settings.background != 'transparent' %}
                                     {{ data_structure.meta_settings.background }}
-                                {% elif not record_exists %}
-                                    preview-image
+                                {% else %}
+                                    default-background
                                 {% endif %}
-                                context-preview {% if data_structure.optional and not record_exists %} optional-image {% endif %}"
+                                context-preview {% if not record_exists %} placeholder-image {% endif %}"
                                  src="{{ field.value }}">
                         {% else %}
                         <a href={% if not is_external %}
