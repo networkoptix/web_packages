@@ -234,6 +234,27 @@ def save_unrevisioned_records(asset, context, language, data_structures,
         elif data_structure.type == DataStructure.DATA_TYPES.check_box:
             new_record_value = data_structure_name in request_data
 
+        elif data_structure.type == DataStructure.DATA_TYPES.integer:
+            try:
+                new_record_value = int(request_data[data_structure_name])
+            except ValueError:
+                upload_errors.append((data_structure_name, "This field has can only be integers."))
+                continue
+            meta_error = False
+            if 'min' in data_structure.meta_settings and new_record_value < int(data_structure.meta_settings['min']):
+                error_text = f"Value: {new_record_value} is less than the minimum: " \
+                             f"{int(data_structure.meta_settings['min'])}"
+                upload_errors.append((data_structure_name, error_text))
+                meta_error = True
+            if 'max' in data_structure.meta_settings and new_record_value > int(data_structure.meta_settings['max']):
+                error_text = f"Value: {new_record_value} is more than the maximum: " \
+                             f"{int(data_structure.meta_settings['max'])}"
+                upload_errors.append((data_structure_name, error_text))
+                meta_error = True
+
+            if meta_error:
+                continue
+
         elif data_structure.type in [DataStructure.DATA_TYPES.object, DataStructure.DATA_TYPES.array]:
             new_record_value = request_data[data_structure_name]
             if not new_record_value:

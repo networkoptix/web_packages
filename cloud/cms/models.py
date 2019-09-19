@@ -551,7 +551,8 @@ class DataStructure(models.Model):
                          (9, 'check_box', 'Check Box'),
                          (10, 'object', 'Object'),
                          (11, 'array', 'Array'),
-                         (12, 'multiselect', 'Multiselect'))
+                         (12, 'multiselect', 'Multiselect'),
+                         (13, 'integer', 'Integer'))
 
     type = models.IntegerField(choices=DATA_TYPES, default=DATA_TYPES.text)
     default = models.TextField(default='', blank=True)
@@ -632,6 +633,13 @@ class DataStructure(models.Model):
 
         if self.type == DataStructure.DATA_TYPES.check_box:
             content_value = strtobool(content_value) == 1 if content_value else False
+
+        if self.type == DataStructure.DATA_TYPES.integer:
+            if content_value:
+                content_value = int(content_value)
+            else:
+                content_value = self.default if self.default else 0
+
         if self.type in [DataStructure.DATA_TYPES.array, DataStructure.DATA_TYPES.object,
                          DataStructure.DATA_TYPES.multiselect]:
             content_value = json.loads(content_value) if content_value else None

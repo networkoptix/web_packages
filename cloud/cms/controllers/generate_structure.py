@@ -201,6 +201,8 @@ def check_if_json(data, short_name, structure, asset_type):
             record_type = 'check_box'
             default_value = value
             description = ''
+        elif type(value) == int:
+            record_type = 'integer'
         elif type(value) == list:
             record_type = 'array'
             advanced = True
