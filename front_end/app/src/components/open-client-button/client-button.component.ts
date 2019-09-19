@@ -27,6 +27,7 @@ export class NxClientButtonComponent implements OnInit {
     LANG: any = {};
 
     location: any;
+    modalActive: boolean;
     openClient: any;
 
     constructor(private processService: NxProcessService,
@@ -42,6 +43,7 @@ export class NxClientButtonComponent implements OnInit {
     ngOnInit() {
         this.CONFIG = this.config.getConfig();
         this.LANG = this.language.getTranslations();
+        this.modalActive = false;
 
         this.openClient = this.processService.createProcess(() => {
             this.urlProtocol
@@ -49,6 +51,10 @@ export class NxClientButtonComponent implements OnInit {
                 .then(() => {},
                     () => {
                     // message, title, actionLabel, actionType
+                        if (this.modalActive) {
+                            return;
+                        }
+                        this.modalActive = true;
                         return this.dialogs
                             .confirm(
                                 this.LANG.errorCodes.cantOpenClient,
@@ -61,6 +67,8 @@ export class NxClientButtonComponent implements OnInit {
                                 if (result === true) {
                                     this.router.navigate(['/download']);
                                 }
+                            }).finally(() => {
+                                this.modalActive = false;
                             });
                     });
         });

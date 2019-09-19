@@ -414,7 +414,7 @@
         "cantGetSystemInfoPrefix": "System info is unavailable",
         "cantGetSystemsListPrefix": "System list is unavailable",
         "cantGetUsersListPrefix": "Users list is unavailable",
-        "cantOpenClient": "%VMS_NAME% application is not detected. <a href=\"/download\">Download</a>",
+        "cantOpenClient": "%VMS_NAME% application is not detected.",
         "cantRegisterPrefix": "Error occurred",
         "cantSendActivationPrefix": "Cannot send confirmation Email",
         "cantSendConfirmationPrefix": "Cannot send confirmation Email",
