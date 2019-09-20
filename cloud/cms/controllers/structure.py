@@ -236,13 +236,19 @@ def process_zip(file_descriptor, user, asset, update_structure, update_content):
                     template_line = re.escape(template_line)
                     escape_name = re.escape(structure.name)
                     template_line = template_line.replace(escape_name, replace_str)
-                    if not DataStructure.is_string(structure.type):
+                    structure_is_str = DataStructure.is_string(structure.type)
+
+                    # Non string structures do not have the " so we need to remove them to get the value.
+                    if not structure_is_str:
                         template_line = template_line.replace('"(', '(').replace(')"', ')')
 
                     if structure.type != structure.DATA_TYPES.html:
                         template_line += "$"
 
                     # 3. Get all matches for a key. We dont care about how far its nested.
+                    if structure.type == DataStructure.DATA_TYPES.html:
+                        print(escape_name)
+                        print(template_line)
                     results = re.findall(template_line, file_content, re.MULTILINE)
                     if not len(results):
                         log_messages.append(('warning', f'No line in file {name} for data structure {structure.name}, '
@@ -272,6 +278,9 @@ def process_zip(file_descriptor, user, asset, update_structure, update_content):
                         else:
                             # If all of the keys are found then tmp_dict has our value
                             value = tmp_dict
+                    # Value is a str and needs to be cast the correct type.
+                    elif not structure_is_str:
+                        value = json.loads(value)
 
                     # if there is a value - compare it with latest draft
                     current_value = structure.find_actual_value(asset, draft=True)
