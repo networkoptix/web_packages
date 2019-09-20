@@ -25,7 +25,7 @@ export class NxApplyComponent {
 
     @HostListener('document:keypress', ['$event'])
     handleKeyboardEvent(event: KeyboardEvent) {
-        if (event.key === 'Enter' && document.activeElement.tagName === 'INPUT') {
+        if (event.key === 'Enter' && document.activeElement.tagName === 'INPUT' && this.processButton) {
             this.processButton.checkForm();
         }
     }

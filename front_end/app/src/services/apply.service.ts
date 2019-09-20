@@ -76,6 +76,7 @@ export class NxApplyService {
     popupActive = false;
     private watchers: any;
     private watchersSubscription: any;
+    form: NgForm;
 
     constructor(private factoryResolver: ComponentFactoryResolver,
                 private dialogsService: NxDialogsService) {}
@@ -152,7 +153,7 @@ export class NxApplyService {
             return Promise.resolve(false);
         }
         this.popupActive = true;
-        return this.dialogsService.apply(this.applyFunction, this.discardFunction).then((status) => {
+        return this.dialogsService.apply(this.applyFunction, this.discardFunction, this.form).then((status) => {
             if (status !== 'applied' && status !== 'discarded') {
                 return false;
             }
@@ -162,6 +163,18 @@ export class NxApplyService {
             return false;
         }).finally(() => {
             this.popupActive = false;
+        });
+    }
+
+    canMove() {
+        return new Promise<boolean>((resolve) => {
+            if (this.locked) {
+                this.showDialog().then((state) => {
+                    resolve(state);
+                });
+            } else {
+                resolve(!this.locked);
+            }
         });
     }
 
@@ -191,6 +204,7 @@ export class NxApplyService {
     }
 
     public setForm(form: NgForm) {
+        this.form = form;
         (<NxApplyComponent>this.applyComponentRef.instance).form = form;
     }
 

@@ -3,6 +3,7 @@ import { Location }                                    from '@angular/common';
 import { NgbActiveModal, NgbModal, NgbModalRef }       from '@ng-bootstrap/ng-bootstrap';
 import { NxLanguageProviderService }                   from '../../services/nx-language-provider';
 import { DomSanitizer }                                from '@angular/platform-browser';
+import { NgForm }                                      from '@angular/forms';
 
 @Component({
     selector: 'nx-modal-apply-content',
@@ -12,13 +13,21 @@ import { DomSanitizer }                                from '@angular/platform-b
 export class ApplyModalContent {
     @Input() applyFunc: any;
     @Input() discardFunc: any;
+    @Input() form: NgForm;
 
     constructor(public activeModal: NgbActiveModal,
     ) {
     }
 
     apply = () => {
-        this.activeModal.close('applied');
+        if (this.form) {
+            this.form.form.markAllAsTouched();
+        }
+        this.applyFunc.then(() => {
+            this.activeModal.close('applied');
+        }, () => {
+            this.activeModal.close('canceled');
+        });
     };
 
     close() {

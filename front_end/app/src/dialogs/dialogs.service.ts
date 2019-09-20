@@ -87,8 +87,12 @@ export class NxDialogsService {
         return this.createModal(GenericModalContent, options, params);
     }
 
-    apply(applyFunc, discardFunc) {
-        return this.createModal(ApplyModalContent, {}, {applyFunc, discardFunc});
+    apply(applyFunc, discardFunc, form) {
+        // Blur activeElement to prevent ExpressionChangedAfterItHasBeenCheckedError
+        if (document.activeElement instanceof HTMLElement) {
+            document.activeElement.blur();
+        }
+        return this.createModal(ApplyModalContent, {}, {applyFunc, discardFunc, form});
     }
 
     confirm(message, title, actionLabel, actionType?, cancelLabel?, footerClass?) {

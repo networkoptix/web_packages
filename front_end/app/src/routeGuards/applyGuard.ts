@@ -11,12 +11,9 @@ export class ApplyGuard implements CanActivate, CanDeactivate<any> {
     canActivate(route: ActivatedRouteSnapshot,
                 state: RouterStateSnapshot
     ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-        if (this.applyService.locked) {
-            this.applyService.showDialog().then((state) => {
-                return state;
-            });
-        }
-        return ! this.applyService.locked;
+        return this.applyService.canMove().then((allowed) => {
+            return allowed;
+        });
     }
 
     canDeactivate(component: any,
@@ -24,11 +21,8 @@ export class ApplyGuard implements CanActivate, CanDeactivate<any> {
                   currentState: RouterStateSnapshot,
                   nextState?: RouterStateSnapshot
     ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-        if (this.applyService.locked) {
-            return this.applyService.showDialog().then((state) => {
-                return state;
-            });
-        }
-        return ! this.applyService.locked;
+        return this.applyService.canMove().then((allowed) => {
+            return allowed;
+        });
     }
 }

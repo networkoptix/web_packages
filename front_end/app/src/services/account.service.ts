@@ -9,6 +9,7 @@ import { NxLanguageProviderService } from './nx-language-provider';
 import { NxDialogsService }          from '../dialogs/dialogs.service';
 import { NxSessionService }          from './session.service';
 import { NxQueryParamService }       from './query-param.service';
+import { NxApplyService }            from './apply.service';
 
 import { distinctUntilChanged } from 'rxjs/operators';
 
@@ -32,6 +33,7 @@ export class NxAccountService {
                 private locationService: Location,
                 private dialogs: NxDialogsService,
                 private router: Router,
+                private applyService: NxApplyService,
     ) {
         this.location = this.locationService;
         this.CONFIG = this.config.getConfig();
@@ -221,19 +223,24 @@ export class NxAccountService {
         if (this.loggingOut) {
             return;
         }
-        this.loggingOut = true;
-        this.cloudApi
-            .logout()
-            .finally(() => {
-                this.sessionService.invalidateSession(); // Clear session
-                if (!doNotRedirect) {
-                    return this.router.navigate([this.CONFIG.redirectUnauthorised])
-                        .finally(this.document.location.reload());
-                }
-                setTimeout(() => {
-                    this.document.location.reload();
-                });
-            });
+
+        this.applyService.canMove().then((allowed) => {
+            if (allowed) {
+                this.loggingOut = true;
+                this.cloudApi
+                    .logout()
+                    .finally(() => {
+                        this.sessionService.invalidateSession(); // Clear session
+                        if (!doNotRedirect) {
+                            return this.router.navigate([this.CONFIG.redirectUnauthorised])
+                                .finally(this.document.location.reload());
+                        }
+                        setTimeout(() => {
+                            this.document.location.reload();
+                        });
+                    });
+            }
+        });
     }
 
     logoutAuthorised() {
