@@ -288,10 +288,10 @@ def save_unrevisioned_records(asset, context, language, data_structures,
                          format(len(new_record_value), char_limit)))
 
         # If the data structure is not option and no record exists and nothing was uploaded try to use the default value
-        if not data_structure.optional and not new_record_value and not is_file_or_image:
-            if not latest_value:
+        if not data_structure.optional and new_record_value == "" and not is_file_or_image:
+            if latest_value != '':
                 new_record_value = data_structure.default
-                if new_record_value:
+                if new_record_value != '':
                     upload_errors.append((data_structure_name, "This field cannot be blank. Using default value"))
                 else:
                     upload_errors.append((data_structure_name, "This field cannot be blank"))
@@ -300,9 +300,7 @@ def save_unrevisioned_records(asset, context, language, data_structures,
                 continue
 
         if new_record_value == latest_value and not delete_file and not external_file and not is_file_or_image:
-            # If the structure has a default value and no record exists allow it save once.
-            if not data_structure.default or data_structure.datarecord_set.filter(asset=asset).exists():
-                continue
+            continue
 
         if data_structure.advanced and not (user.is_superuser or user.has_perm('cms.edit_advanced')):
             upload_errors.append((data_structure_name, "You do not have permission to edit this field"))
@@ -413,7 +411,7 @@ def asset_has_required_data(asset, version_id=None):
                                                         DataStructure.DATA_TYPES.object,
                                                         DataStructure.DATA_TYPES.multiselect]:
             last_record_value = json.loads(last_record_value)
-        if not datastructure.optional and (not records.exists() or not last_record_value):
+        if not datastructure.optional and not records.exists() and last_record_value == '':
             ds_name = datastructure.label if datastructure.label else datastructure.name
             errors.append((ds_name,
                            "This field cannot be blank. Go to the {} page and fill in {}.".
