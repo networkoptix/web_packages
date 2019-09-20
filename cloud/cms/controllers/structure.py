@@ -236,6 +236,8 @@ def process_zip(file_descriptor, user, asset, update_structure, update_content):
                     template_line = re.escape(template_line)
                     escape_name = re.escape(structure.name)
                     template_line = template_line.replace(escape_name, replace_str)
+                    if not DataStructure.is_string(structure.type):
+                        template_line = template_line.replace('"(', '(').replace(')"', ')')
 
                     if structure.type != structure.DATA_TYPES.html:
                         template_line += "$"

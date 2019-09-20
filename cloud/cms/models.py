@@ -668,6 +668,12 @@ class DataStructure(models.Model):
     def is_image(self):
         return self.type in [DataStructure.DATA_TYPES.image, DataStructure.DATA_TYPES.external_image]
 
+    @staticmethod
+    def is_string(data_type):
+        return data_type in [DataStructure.DATA_TYPES.text, DataStructure.DATA_TYPES.long_text,
+                             DataStructure.DATA_TYPES.guid, DataStructure.DATA_TYPES.html,
+                             DataStructure.DATA_TYPES.select]
+
 
 # CMS settings. Release engineer can change that
 class UserGroupsToAssetPermissions(models.Model):
