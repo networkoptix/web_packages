@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewContainerRef, ViewChild } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewContainerRef, ViewChild, ViewChildren, QueryList } from '@angular/core';
 import { NxConfigService }           from '../../../services/nx-config';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { NxAccountService }          from '../../../services/account.service';
@@ -11,6 +11,8 @@ import { NxSystemsService }          from '../../../services/systems.service';
 import { NxMenuService }             from '../../../components/menu/menu.service';
 import { NxApplyService, Watcher }   from '../../../services/apply.service';
 import { NxPageService }             from '../../../services/page.service';
+import { NgForm }                    from '@angular/forms';
+import { first }                     from 'rxjs/operators';
 
 @Component({
     selector   : 'nx-account-settings-component',
@@ -18,8 +20,9 @@ import { NxPageService }             from '../../../services/page.service';
     styleUrls  : ['settings.component.scss']
 })
 
-export class NxAccountSettingsComponent implements OnInit {
+export class NxAccountSettingsComponent implements OnInit, AfterViewInit {
     @ViewChild('applyContainer', {read: ViewContainerRef, static: true}) applyContainer;
+    @ViewChildren('accountForm', {read: NgForm}) formQueryList: QueryList<NgForm>;
 
     CONFIG: any;
     LANG: any;
@@ -103,6 +106,12 @@ export class NxAccountSettingsComponent implements OnInit {
         if (this.localStorage && this.localStorage.get('langChanged')) {
             this.localStorage.set('langChanged', false);
         }
+    }
+
+    ngAfterViewInit() {
+        this.formQueryList.changes.pipe(first()).subscribe((changes) => {
+            this.applyService.setForm(changes.first);
+        });
     }
 
     setOriginal() {

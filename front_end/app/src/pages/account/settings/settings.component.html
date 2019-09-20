@@ -20,6 +20,7 @@
                                                    [ngModel]="account.first_name"
                                                    (ngModelChange)="changeFirstName($event)"
                                                    name="firstName" id="firstName" #firstName="ngModel"
+                                                   pattern="\S+.*"
                                                    maxlength="255"
                                                    required
                                                    nxFocusMe>
@@ -42,7 +43,9 @@
                                                    [ngModel]="account.last_name"
                                                    (ngModelChange)="changeLastName($event)"
                                                    name="lastName" id="lastName" #lastName="ngModel"
-                                                   maxlength="255" required>
+                                                   pattern="\S+.*"
+                                                   maxlength="255"
+                                                   required>
                                         </div>
                                         <div class="col-12 col-md-5 d-block d-md-flex ml-md-n2 align-items-center">
                                             <span class="error-text"
