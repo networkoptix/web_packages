@@ -3,6 +3,7 @@ import { BehaviorSubject, merge } from 'rxjs';
 import { distinctUntilChanged, filter, skip } from 'rxjs/operators';
 import { NxDialogsService } from '../dialogs/dialogs.service';
 import { NxApplyComponent } from '../components/apply/apply.component';
+import { NgForm } from '@angular/forms';
 
 /**
  * Allows making subscriptions to variables similar to $watch from AngularJS.
@@ -121,11 +122,13 @@ export class NxApplyService {
      * @param discardFunction The process that is suppose to run when discard is pressed.
      * @param watchers An array of watchers which will trigger the NxApplyComponent to show
      *     if a value on the page has been changed.
+     * @param {NgForm=} form Optional form to pass to the process-button
      */
     initPageWatcher(component: ViewContainerRef,
                     saveFunction: any,
                     discardFunction: () => void,
-                    watchers: Watcher<any>[]
+                    watchers: Watcher<any>[],
+                    form?: NgForm
     ) {
         this.clearSubscriptions();
         this.component = component;
@@ -133,6 +136,9 @@ export class NxApplyService {
         this.createComponent();
         this.setSaveFunction(saveFunction);
         this.setDiscardFunction(discardFunction);
+        if (form) {
+            this.setForm(form);
+        }
         this.addWatchers(watchers);
         this.lockedSubscription = this.lockedSubject.subscribe((value) => {
             (<NxApplyComponent>this.applyComponentRef.instance).show = value;
@@ -182,6 +188,10 @@ export class NxApplyService {
     private setSaveFunction(func: any) {
         this.applyFunction = func;
         (<NxApplyComponent>this.applyComponentRef.instance).save = func;
+    }
+
+    public setForm(form: NgForm) {
+        (<NxApplyComponent>this.applyComponentRef.instance).form = form;
     }
 
     /**

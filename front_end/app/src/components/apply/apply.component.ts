@@ -1,5 +1,6 @@
-import { Component, forwardRef, Input } from '@angular/core';
-import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Component, forwardRef, Input, HostListener, ViewChild } from '@angular/core';
+import { NG_VALUE_ACCESSOR, NgForm } from '@angular/forms';
+import { NxProcessButtonComponent } from '../process-button/process-button.component';
 
 
 @Component({
@@ -15,9 +16,20 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
     ],
 })
 export class NxApplyComponent {
+    @ViewChild(NxProcessButtonComponent, {static: false}) processButton: NxProcessButtonComponent;
+
     @Input('') show: boolean;
     @Input('') save: any;
     @Input('') discard: any;
+    @Input() form: NgForm;
+
+    @HostListener('document:keypress', ['$event'])
+    handleKeyboardEvent(event: KeyboardEvent) {
+        if (event.key === 'Enter' && document.activeElement.tagName === 'INPUT') {
+            this.processButton.checkForm();
+        }
+    }
+
     constructor() {
     }
 }
