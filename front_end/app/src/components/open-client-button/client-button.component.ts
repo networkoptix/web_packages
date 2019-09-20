@@ -2,8 +2,8 @@ import {
     Component,
     OnInit,
     Input,
-    ViewEncapsulation, Inject
-}                                    from '@angular/core';
+    ViewEncapsulation, Inject, OnDestroy
+} from '@angular/core';
 import { Router }                    from '@angular/router';
 import { NxConfigService }           from '../../services/nx-config';
 import { NxDialogsService }          from '../../dialogs/dialogs.service';
@@ -17,7 +17,7 @@ import { NxProcessService }          from '../../services/process.service';
     styleUrls    : ['client-button.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class NxClientButtonComponent implements OnInit {
+export class NxClientButtonComponent implements OnInit, OnDestroy {
 
     @Input() system: any;
     @Input() customClass: any;
@@ -27,6 +27,7 @@ export class NxClientButtonComponent implements OnInit {
     LANG: any = {};
 
     location: any;
+    canceled: boolean;
     modalActive: boolean;
     openClient: any;
 
@@ -40,37 +41,40 @@ export class NxClientButtonComponent implements OnInit {
         this.location = location;
     }
 
+    ngOnDestroy(): void {
+        this.canceled = true;
+    }
+
     ngOnInit() {
         this.CONFIG = this.config.getConfig();
         this.LANG = this.language.getTranslations();
         this.modalActive = false;
+        this.canceled = false;
 
         this.openClient = this.processService.createProcess(() => {
-            this.urlProtocol
-                .open(this.system && this.system.id)
-                .then(() => {},
-                    () => {
-                    // message, title, actionLabel, actionType
-                        if (this.modalActive) {
-                            return;
-                        }
-                        this.modalActive = true;
-                        return this.dialogs
-                            .confirm(
-                                this.LANG.errorCodes.cantOpenClient,
-                                this.LANG.dialogs.noClientDetectedTitle,
-                                this.LANG.dialogs.download,
-                                'btn-primary',
-                                this.LANG.dialogs.cancelButton
-                            )
-                            .then((result) => {
-                                if (result === true) {
-                                    this.router.navigate(['/download']);
-                                }
-                            }).finally(() => {
-                                this.modalActive = false;
-                            });
-                    });
-        });
+            return this.urlProtocol
+                .open(this.system && this.system.id);
+        }).then(() => {}, () => {
+            // message, title, actionLabel, actionType
+            if (this.modalActive || this.canceled) {
+                return;
+            }
+            this.modalActive = true;
+            return this.dialogs
+                .confirm(
+                    this.LANG.errorCodes.cantOpenClient,
+                    this.LANG.dialogs.noClientDetectedTitle,
+                    this.LANG.dialogs.download,
+                    'btn-primary',
+                    this.LANG.dialogs.cancelButton
+                )
+                .then((result) => {
+                    if (result === true) {
+                        this.router.navigate(['/download']);
+                    }
+                }).finally(() => {
+                    this.modalActive = false;
+                });
+            });
     }
 }
