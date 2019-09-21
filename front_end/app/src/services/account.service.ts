@@ -128,7 +128,11 @@ export class NxAccountService {
                     });
                 } else if (!account) {
                     return this.dialogs
-                        .login(this, true, true)
+                        .login(this, true, true).then(() => {
+                            return this.get().then((account) => {
+                                return account;
+                            });
+                        })
                         .catch(() => {
                             this.location.path(this.CONFIG.redirectUnauthorised);
                         });
