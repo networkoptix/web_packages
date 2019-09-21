@@ -246,9 +246,6 @@ def process_zip(file_descriptor, user, asset, update_structure, update_content):
                         template_line += "$"
 
                     # 3. Get all matches for a key. We dont care about how far its nested.
-                    if structure.type == DataStructure.DATA_TYPES.html:
-                        print(escape_name)
-                        print(template_line)
                     results = re.findall(template_line, file_content, re.MULTILINE)
                     if not len(results):
                         log_messages.append(('warning', f'No line in file {name} for data structure {structure.name}, '
