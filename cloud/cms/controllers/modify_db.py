@@ -146,32 +146,33 @@ def save_unrevisioned_records(asset, context, language, data_structures,
         if is_file_or_image:
             # If a file has been uploaded try to save it
             if data_structure_name in request_files:
-                if request_files[data_structure_name]:
-                    new_record_value, file_errors = upload_file(data_structure, request_files[data_structure_name])
-                    if file_errors:
-                        upload_errors.extend(file_errors)
-                        continue
-            # No file was uploaded and there is a record means the user didn't change anything so skip.
-            elif not data_structure.optional and latest_value:
-                continue
-            # No file was uploaded and the user didn't delete an optional data structure so skip.
-            elif data_structure.optional and 'delete_' + data_structure_name not in request_data:
+                new_record_value, file_errors = upload_file(data_structure, request_files[data_structure_name])
+                if file_errors:
+                    upload_errors.extend(file_errors)
+                    continue
+
+            elif 'delete_' + data_structure_name in request_data:
+                delete_file = request_data['delete_' + data_structure_name]
+
+            elif not data_structure.optional and data_structure.default and not data_structure.datarecord_set.exists():
+                new_record_value = data_structure.default
+            # If the file isn't being uploaded or deleted skip
+            else:
                 continue
 
         elif data_structure.type == DataStructure.DATA_TYPES.guid:
 
             # if the guid is valid it will go to the next set of checks
             new_record_value = request_data[data_structure_name] if data_structure_name in request_data else ""
-            is_guid = re.match(GUID_REGEXP, new_record_value)
 
             # if its option and not a valid guid set error message and go to next DataStructure
-            if new_record_value and not is_guid:
+            if new_record_value and not re.match(GUID_REGEXP, new_record_value):
                 upload_errors.append((data_structure_name, 'Invalid GUID {} it should formatted like {}'
                                       .format(new_record_value, "{XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXX}")))
                 continue
 
             # no guid submitted or default value and is not optional generate a guid
-            elif not data_structure.optional and not new_record_value:  # and not data_structure.default:
+            elif not data_structure.optional and not new_record_value:
                 new_record_value = '{' + str(uuid.uuid4()) + '}'
                 upload_errors.append((data_structure_name,
                                       'No submitted GUID or default value. GUID has been generated as {}'
@@ -214,16 +215,13 @@ def save_unrevisioned_records(asset, context, language, data_structures,
                 external_file.save()
 
                 new_record_value = external_file.file.url
-            # No file was uploaded and there is a record means the user didn't change anything so skip
-            elif not data_structure.optional and latest_value:
-                continue
-            # No file was uploaded and the user didn't delete an optional data structure so skip
-            elif data_structure.optional and 'delete_' + data_structure_name not in request_data:
-                continue
 
-            # Mark this file for deletion
-            elif 'delete_' + data_structure_name in request_data and request_data['delete_' + data_structure_name]:
-                delete_file = True
+            elif 'delete_' + data_structure_name in request_data:
+                delete_file = request_data['delete_' + data_structure_name]
+
+            # No file was uploaded and the user didn't delete an optional data structure so skip
+            else:
+                continue
 
         elif data_structure.type == DataStructure.DATA_TYPES.check_box:
             new_record_value = data_structure_name in request_data
@@ -270,7 +268,7 @@ def save_unrevisioned_records(asset, context, language, data_structures,
 
         elif data_structure_name in request_data:
             new_record_value = request_data[data_structure_name]
-            if data_structure.type == DataStructure.DATA_TYPES.text and 'regex' in data_structure.meta_settings:
+            if 'regex' in data_structure.meta_settings:
                 pattern = data_structure.meta_settings['regex']
                 if pattern == '':
                     pattern = '.*$'
@@ -279,6 +277,7 @@ def save_unrevisioned_records(asset, context, language, data_structures,
                 if new_record_value and not re.match(pattern, new_record_value):
                     upload_errors.append((data_structure_name, 'Invalid input'))
                     continue
+
             if 'char_limit' in data_structure.meta_settings:
                 char_limit = int(data_structure.meta_settings['char_limit'])
                 if len(new_record_value) > char_limit:
@@ -286,17 +285,16 @@ def save_unrevisioned_records(asset, context, language, data_structures,
                         (data_structure_name,
                          'Character limit exceeded. Text was {} characters but should not be more than {} characters'.
                          format(len(new_record_value), char_limit)))
-
-        # If the data structure is not option and no record exists and nothing was uploaded try to use the default value
-        if not data_structure.optional and new_record_value == "" and not is_file_or_image:
-            if latest_value != '':
-                new_record_value = data_structure.default
-                if new_record_value != '':
-                    upload_errors.append((data_structure_name, "This field cannot be blank. Using default value"))
-                else:
-                    upload_errors.append((data_structure_name, "This field cannot be blank"))
                     continue
+
+        # If the data structure is not optional and has no value use the default.
+        if not data_structure.optional and new_record_value == "" and not is_file_or_image:
+            # If there is a default value use it. Otherwise don't fill it prevent it.
+            if data_structure.default != "":
+                new_record_value = data_structure.default
+                upload_errors.append((data_structure_name, "This field cannot be blank. Using default value"))
             else:
+                upload_errors.append((data_structure_name, "This field cannot be blank"))
                 continue
 
         if new_record_value == latest_value and not delete_file and not external_file and not is_file_or_image:
