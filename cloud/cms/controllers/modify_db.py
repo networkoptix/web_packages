@@ -129,7 +129,10 @@ def save_unrevisioned_records(asset, context, language, data_structures,
         new_record_value = ""
         external_file = None
         delete_file = False
+        records_exist = data_structure.datarecord_set.filter(asset=asset).exists()
         is_file_or_image = DataStructure.is_file_or_image(data_structure.type)
+        is_file = is_file_or_image or data_structure.type in [DataStructure.DATA_TYPES.external_file,
+                                                              DataStructure.DATA_TYPES.external_image]
         latest_value = data_structure.find_actual_value(asset, ds_language, draft=True)
         # If the DataStructure is supposed to be an image convert to base64 and
         # error check
@@ -143,6 +146,9 @@ def save_unrevisioned_records(asset, context, language, data_structures,
             This will create a new record making images/files behave like the other data structure types
             Places to touch are here and cms/forms.py
         """
+        # If the file was uploaded the value will change
+        if is_file:
+            new_record_value = latest_value
         if is_file_or_image:
             # If a file has been uploaded try to save it
             if data_structure_name in request_files:
@@ -154,10 +160,7 @@ def save_unrevisioned_records(asset, context, language, data_structures,
             elif 'delete_' + data_structure_name in request_data:
                 delete_file = request_data['delete_' + data_structure_name]
 
-            elif not data_structure.optional and data_structure.default and not data_structure.datarecord_set.exists():
-                new_record_value = data_structure.default
-            # If the file isn't being uploaded or deleted skip
-            else:
+            elif data_structure.optional:
                 continue
 
         elif data_structure.type == DataStructure.DATA_TYPES.guid:
@@ -182,12 +185,19 @@ def save_unrevisioned_records(asset, context, language, data_structures,
             values = request_data.getlist(data_structure_name)
             if 'options' in data_structure.meta_settings and data_structure.meta_settings['options']:
                 if data_structure.type == DataStructure.DATA_TYPES.multiselect:
-                    new_record_value = json.dumps(values)
+                    # Check value with latest value before turning it into a string
+                    if values == latest_value:
+                        continue
+                    if not records_exist:
+                        # Gets the casted default value
+                        new_record_value = data_structure.find_actual_value(asset=asset)
+                    else:
+                        new_record_value = json.dumps(values)
                 else:
                     new_record_value = values[0]
-            else:
+            elif not values:
                 if data_structure.type == DataStructure.DATA_TYPES.multiselect:
-                    new_record_value = '[]'
+                    new_record_value = json.dumps([])
                 else:
                     new_record_value = ''
 
@@ -219,8 +229,7 @@ def save_unrevisioned_records(asset, context, language, data_structures,
             elif 'delete_' + data_structure_name in request_data:
                 delete_file = request_data['delete_' + data_structure_name]
 
-            # No file was uploaded and the user didn't delete an optional data structure so skip
-            else:
+            elif data_structure.optional:
                 continue
 
         elif data_structure.type == DataStructure.DATA_TYPES.check_box:
@@ -288,16 +297,17 @@ def save_unrevisioned_records(asset, context, language, data_structures,
                     continue
 
         # If the data structure is not optional and has no value use the default.
-        if not data_structure.optional and new_record_value == "" and not is_file_or_image:
+        if new_record_value == "" and not data_structure.optional and not records_exist:
             # If there is a default value use it. Otherwise don't fill it prevent it.
             if data_structure.default != "":
-                new_record_value = data_structure.default
+                # Gets the default value and will cast the default value
+                new_record_value = data_structure.find_actual_value(asset=asset)
                 upload_errors.append((data_structure_name, "This field cannot be blank. Using default value"))
             else:
                 upload_errors.append((data_structure_name, "This field cannot be blank"))
                 continue
 
-        if new_record_value == latest_value and not delete_file and not external_file and not is_file_or_image:
+        if new_record_value == latest_value and not delete_file:
             continue
 
         if data_structure.advanced and not (user.is_superuser or user.has_perm('cms.edit_advanced')):
@@ -307,6 +317,10 @@ def save_unrevisioned_records(asset, context, language, data_structures,
         if data_structure.unique and not is_datarecord_unique(asset, data_structure, new_record_value):
             upload_errors.append((data_structure_name, "This field must be unique"))
             continue
+
+        # Remove value for delete_file
+        if delete_file:
+            new_record_value = ""
 
         record = DataRecord(asset=asset,
                             data_structure=data_structure,
@@ -448,7 +462,7 @@ def get_records_for_version(asset, version, customization):
         data_records = asset.datarecord_set.filter(version__id__gt=published_version,
                                                    version__id__lte=version.id)
     else:
-        data_records = asset.datarecord_set.filter(version__id=version.id)
+        data_records = asset.datarecord_set.filter(version__id__lte=version.id)
     data_records = data_records.\
         order_by('data_structure__context__order', 'language__code', 'data_structure__order', '-id')
     contexts = {}

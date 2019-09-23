@@ -638,11 +638,11 @@ class DataStructure(models.Model):
             if content_value:
                 content_value = int(content_value)
             else:
-                content_value = self.default if self.default else 0
+                content_value = int(self.default) if self.default else 0
 
         if self.type in [DataStructure.DATA_TYPES.array, DataStructure.DATA_TYPES.object,
                          DataStructure.DATA_TYPES.multiselect]:
-            content_value = json.loads(content_value) if content_value else None
+            content_value = json.loads(content_value) if content_value != "" else None
 
             if self.type == DataStructure.DATA_TYPES.multiselect:
                 # If an option has an id, change the value to a dict with the id and the value
