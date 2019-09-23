@@ -143,7 +143,7 @@ User have several systems linked to his account
     Wait Until Element Contains
     ...    ${SYSTEM NAME}
     ...    ${n}
-    ${system}=   Get Text    ${SYSTEMS DROPDOWN}/span[@class='ellipsis']
+    ${system}=   Get Text    ${SYSTEMS DROPDOWN}/span[contains(@class,'ellipsis')]
     Should Be Equal As Strings
     ...    ${n}
     ...    ${system}
@@ -176,8 +176,8 @@ User have several systems linked to his account
     # Expected Result
     ${l}=   Get Location
     Should End With    ${l}    /systems
-    Wait Until Element Is Visible    ${SYSTEMS DROPDOWN}
-    ${count3}=   Get Text    ${SYSTEMS DROPDOWN}
+    Wait Until Element Is Visible    ${SYSTEMS DROPDOWN}//span[text()]/span/..
+    ${count3}=   Get Text    ${SYSTEMS DROPDOWN}//span[text()]/span/..
     ${count3}=   Remove String Using Regexp
     ...    ${count3}
     ...    \\D

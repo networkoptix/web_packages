@@ -126,7 +126,7 @@ ${ACCOUNT CREATION SUCCESS}           //h1[@class="process-success d-flex align-
 ${ACTIVATION SUCCESS}                 //h1[@class='process-success' and contains(text(), "${ACCOUNT SUCCESSFULLY ACTIVATED TEXT}")]
 ${SUCCESS LOG IN BUTTON}              //h1[@class='process-success' and contains(text(), "${ACCOUNT SUCCESSFULLY ACTIVATED TEXT}")]/following-sibling::h1/a[text()="${LOG IN BUTTON TEXT}"]
 #In system settings
-${SYSTEM NAME}                        //h1[@ng-if="gettingSystem.success"]
+${SYSTEM NAME}                        //h2[contains(@class,"system-name")]
 ${FIRST USER OWNER}                   //table[@ng-if='system.users.length']/tbody/tr/td[3]/span[contains(text(),"${OWNER TEXT}")]
 ${DISCONNECT FROM NX}                 //button/span[text()='${DISCONNECT FROM CLOUD TEXT}']/..
 ${RENAME SYSTEM}                      //button/span[text()='${RENAME}']
@@ -354,7 +354,7 @@ ${PRIVACY POLICY HEADER}              //h1[contains(text(),'Personal data and pr
 
 ${DROPDOWN MENU}                      /../div[contains(@class,'dropdown-menu')]
 ${DROPDOWN MENU LIST}                 ${DROPDOWN MENU}/ul[contains(@class,'dropdown-menu--list')]
-${DROPDOWN MENU ITEMS}                ${DROPDOWN MENU LIST}/li[contains(@class,'dropdown-item-container')]
+${DROPDOWN MENU ITEMS}                ${DROPDOWN MENU LIST}/li[contains(@class,'dropdown-item-container')]/a/span[not(text()='All Systems')]/../../../li
 
 #Password badges
 ${PASSWORD BADGE}                     //span[contains(@class,"badge")]
