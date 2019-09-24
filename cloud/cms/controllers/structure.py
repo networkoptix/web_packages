@@ -242,6 +242,9 @@ def process_zip(file_descriptor, user, asset, update_structure, update_content):
                     if not structure_is_str:
                         template_line = template_line.replace('"(', '(').replace(')"', ')')
 
+                    # Multiselect needs special treatment because regex cannot catch multiple lines.
+                    if structure.type == structure.DATA_TYPES.multiselect:
+                        template_line += "?"
                     if structure.type != structure.DATA_TYPES.html:
                         template_line += "$"
 
@@ -254,7 +257,8 @@ def process_zip(file_descriptor, user, asset, update_structure, update_content):
 
                     value = results[0]
                     # If our context is a json and we got multiple results we need to find its true value.
-                    if file_json and len(results) > 1:
+                    # If its a multiselect we try to find the value anyways.
+                    if file_json and len(results) > 1 or structure.type == structure.DATA_TYPES.multiselect:
                         # We need a temporary copy so that we can keep moving through a nested dictionary which has an
                         # unknown depth.
                         tmp_dict = file_json
@@ -285,6 +289,9 @@ def process_zip(file_descriptor, user, asset, update_structure, update_content):
                         continue
 
                     records_created += 1
+
+                    if structure.type == structure.DATA_TYPES.multiselect:
+                        value = json.dumps(value)
 
                     # save if needed
                     record = DataRecord(asset=asset,
