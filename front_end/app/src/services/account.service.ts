@@ -30,7 +30,7 @@ export class NxAccountService {
                 private language: NxLanguageProviderService,
                 private cloudApi: NxCloudApiService,
                 private sessionService: NxSessionService,
-                private queryParmaService: NxQueryParamService,
+                private queryParamService: NxQueryParamService,
                 private localStorageService: LocalStorageService,
                 private locationService: Location,
                 private dialogs: NxDialogsService,
@@ -112,7 +112,7 @@ export class NxAccountService {
     requireLogin() {
         return this.get()
             .then((account) => {
-                const queryParams: any = this.queryParmaService.queryParams;
+                const queryParams: any = this.queryParamService.queryParams;
                 if (!account && queryParams.auth) {
                     return this.loginWithAuthKey(queryParams.auth);
                 } else if (account && queryParams.auth) {
@@ -120,8 +120,8 @@ export class NxAccountService {
                         this.LANG.dialogs.loggedFromOther,
                         this.LANG.dialogs.okButton,
                         undefined,
-                        this.LANG.dialogs.remainAs.replace('{email}', account.email),
-                        'long-button'
+                        this.LANG.dialogs.stayAs.replace('{email}', account.email),
+                        'long-cancel-button'
                     ).then((result) => {
                         if (result === true) {
                             this.logout(true);
@@ -257,8 +257,6 @@ export class NxAccountService {
             if (account) {
                 const isRegister = this.router.url.includes('/register');
                 const isRestore = this.router.url.includes('/restore_password');
-                const actionLabel = this.LANG.dialogs.continueAs.replace('{email}', account.email);
-                const title = isRegister ? this.LANG.dialogs.logoutAuthorisedTitle : this.LANG.dialogs.changeAccountLogged;
 
                 let cancelLabel = '';
                 if (isRegister) {
@@ -269,8 +267,8 @@ export class NxAccountService {
                     cancelLabel = this.LANG.dialogs.cancelButton;
                 }
                 return this.dialogs.confirm('',
-                        title,
-                        actionLabel,
+                        this.LANG.dialogs.changeAccountLogged.replace('{email}', account.email),
+                        this.LANG.dialogs.stayLoggedIn,
                         undefined,
                         cancelLabel,
                     ''

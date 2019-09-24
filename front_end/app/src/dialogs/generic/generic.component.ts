@@ -19,13 +19,13 @@ export class GenericModalContent implements OnInit {
     @Input() hasFooter;
     @Input() cancellable;
     @Input() closable;
-    @Input() stacked;
+    @Input() footerClass;
 
     constructor(public activeModal: NgbActiveModal,
     ) {}
 
     ngOnInit() {
-        this.stacked = this.stacked || '';
+        this.footerClass = this.footerClass || '';
         this.buttonClass = this.buttonClass || '';
         this.closable = !!this.closable;
     }
