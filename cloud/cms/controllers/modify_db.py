@@ -418,7 +418,7 @@ def asset_has_required_data(asset, version_id=None):
         records = datastructure.datarecord_set.filter(asset=asset)
         if version_id:
             records = records.filter(version__id__lte=version_id)
-        last_record_value = records.last().value if records.last() else None
+        last_record_value = records.last().value if records.last() else ""
         if last_record_value and datastructure.type in [DataStructure.DATA_TYPES.array,
                                                         DataStructure.DATA_TYPES.object,
                                                         DataStructure.DATA_TYPES.multiselect]:
