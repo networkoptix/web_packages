@@ -184,11 +184,12 @@ def save_unrevisioned_records(asset, context, language, data_structures,
         elif data_structure.type in [DataStructure.DATA_TYPES.select, DataStructure.DATA_TYPES.multiselect]:
             values = request_data.getlist(data_structure_name)
             if 'options' in data_structure.meta_settings and data_structure.meta_settings['options']:
+                print(data_structure_name, values, latest_value)
                 if data_structure.type == DataStructure.DATA_TYPES.multiselect:
                     # Check value with latest value before turning it into a string
                     if values == latest_value:
                         continue
-                    if not records_exist:
+                    if not len(values) and not records_exist:
                         # Gets the casted default value
                         new_record_value = data_structure.find_actual_value(asset=asset)
                     else:
@@ -423,7 +424,7 @@ def asset_has_required_data(asset, version_id=None):
                                                         DataStructure.DATA_TYPES.object,
                                                         DataStructure.DATA_TYPES.multiselect]:
             last_record_value = json.loads(last_record_value)
-        if not datastructure.optional and (not records.exists() or last_record_value == ""):
+        if not datastructure.optional and not datastructure.default and (not records.exists() or last_record_value == ""):
             ds_name = datastructure.label if datastructure.label else datastructure.name
             errors.append((ds_name,
                            "This field cannot be blank. Go to the {} page and fill in {}.".
