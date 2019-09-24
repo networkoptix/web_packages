@@ -12,6 +12,7 @@ import { NxQueryParamService }       from './query-param.service';
 import { NxApplyService }            from './apply.service';
 
 import { distinctUntilChanged } from 'rxjs/operators';
+import { ReplaySubject }        from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -22,6 +23,7 @@ export class NxAccountService {
     location: any;
     loggingOut: boolean;
     requestingLogin: any;
+    loginStateSubject = new ReplaySubject(1);
 
     constructor(@Inject(DOCUMENT) private document: any,
                 private config: NxConfigService,
@@ -44,6 +46,8 @@ export class NxAccountService {
         this.sessionService.loginStateSubject.pipe(distinctUntilChanged()).subscribe((loginState) => {
             if (loginState === null) {
                 this.logout();
+            } else if (loginState !== '') {
+                this.loginStateSubject.next(loginState);
             }
         });
     }

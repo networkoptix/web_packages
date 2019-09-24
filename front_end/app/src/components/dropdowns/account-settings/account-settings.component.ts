@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Location }          from '@angular/common';
-import { pipe } from 'rxjs';
-import { filter } from 'rxjs/operators';
 import { NxConfigService }   from '../../../services/nx-config';
 import { NxAccountService }  from '../../../services/account.service';
 import { NxSessionService }  from '../../../services/session.service';
@@ -31,13 +29,10 @@ export class NxAccountSettingsDropdown implements OnInit {
 
     ngOnInit(): void {
         this.getAccount();
-        this.sessionService.loginStateSubject.pipe(
-            filter((state) => {
-                return typeof state === 'string';
-            })
-        ).subscribe((state) => {
-            this.getAccount();
-        });
+        this.accountService.loginStateSubject
+            .subscribe(() => {
+                this.getAccount();
+            });
     }
 
     getAccount() {
