@@ -9,16 +9,17 @@
     display: flex;
     flex-direction: column;
     max-height: 100%;
+    overflow-y: auto;
 
     .level-1-container {
         display: flex;
         flex-direction: column;
-        min-height: 0;
         flex-shrink: 0;
     }
 
     .selected {
         flex-shrink: 1;
+        min-height: 40px;
     }
 
     nx-level-1-item {
@@ -30,7 +31,12 @@
         flex-direction: column;
     }
 
+    .min-height-level-3 {
+        min-height: 120px !important;
+    }
+
     .level-3-items {
+        min-height: fit-content;
         overflow-y: auto;
 
         .top-shadow {
