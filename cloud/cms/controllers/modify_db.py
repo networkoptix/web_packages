@@ -423,7 +423,7 @@ def asset_has_required_data(asset, version_id=None):
                                                         DataStructure.DATA_TYPES.object,
                                                         DataStructure.DATA_TYPES.multiselect]:
             last_record_value = json.loads(last_record_value)
-        if not datastructure.optional and not records.exists() and last_record_value == '':
+        if not datastructure.optional and (not records.exists() or last_record_value == ""):
             ds_name = datastructure.label if datastructure.label else datastructure.name
             errors.append((ds_name,
                            "This field cannot be blank. Go to the {} page and fill in {}.".
