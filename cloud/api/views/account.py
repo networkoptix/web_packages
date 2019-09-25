@@ -5,6 +5,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.serializers import ValidationError
+from django.conf import settings
 from django.utils import timezone
 
 from api.controllers.cloud_api import Account
@@ -79,6 +80,8 @@ def login(request):
 
     if 'remember' not in request.data or not request.data['remember']:
         request.session.set_expiry(0)
+    else:
+        request.session.set_expiry(settings.AUTHENTICATED_SESSION_COOKIE_AGE)
 
     django.contrib.auth.login(request, user)
 
