@@ -13,7 +13,6 @@
                    class="form-control"
                    [ngModel]="search.value"
                    (ngModelChange)="setSearch($event)"
-                   [ngModelOptions]="{debounceTime : CONFIG.search.debounceTime}"
                    placeholder="Search">
         </div>
     </div>
