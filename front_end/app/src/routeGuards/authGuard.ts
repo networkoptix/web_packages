@@ -23,6 +23,10 @@ export class AuthGuard implements CanActivate {
     canActivate(route: ActivatedRouteSnapshot,
                 state: RouterStateSnapshot
     ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+        // All route to pass account service will handle auth login.
+        if (state.root.queryParams.auth) {
+            return true;
+        }
         return this.accountService.requireLogin().then((account) => {
             return account !== undefined;
         });

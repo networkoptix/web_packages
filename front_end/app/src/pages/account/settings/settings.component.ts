@@ -97,7 +97,7 @@ export class NxAccountSettingsComponent implements OnInit, AfterViewInit {
         }, Object.values(this.watchers));
 
         this.accountService
-            .requireLogin()
+            .get()
             .then((account) => {
                 this.account = account;
                 this.setOriginal();

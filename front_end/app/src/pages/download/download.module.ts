@@ -51,7 +51,7 @@ export class OsResolver implements Resolve<any> {
 
 const appRoutes: Routes = [
     // {path: 'downloads', component: DownloadComponent},
-    {path: '', redirectTo: 'download', pathMatch: 'full'},
+    // {path: '', redirectTo: 'download', pathMatch: 'full'},
     {path: 'download', component: DownloadComponent, resolve: { platform: OsResolver }},
     {path: 'download/:platform', component: DownloadComponent}
 ];

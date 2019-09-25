@@ -1,7 +1,7 @@
 import { Inject, Injectable }        from '@angular/core';
 import { DOCUMENT, Location }        from '@angular/common';
 import { LocalStorageService }       from 'ngx-store';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { NxConfigService }           from './nx-config';
 import { NxCloudApiService }         from './nx-cloud-api';
@@ -11,7 +11,7 @@ import { NxSessionService }          from './session.service';
 import { NxQueryParamService }       from './query-param.service';
 import { NxApplyService }            from './apply.service';
 
-import { distinctUntilChanged } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { ReplaySubject }        from 'rxjs';
 
 @Injectable({
@@ -35,6 +35,7 @@ export class NxAccountService {
                 private locationService: Location,
                 private dialogs: NxDialogsService,
                 private router: Router,
+                private activatedRoute: ActivatedRoute,
                 private applyService: NxApplyService,
     ) {
         this.location = this.locationService;
@@ -48,6 +49,15 @@ export class NxAccountService {
                 this.logout();
             } else if (loginState !== '') {
                 this.loginStateSubject.next(loginState);
+            }
+        });
+
+        // Handles login with auth param everywhere.
+        this.queryParamService.queryParamsSubject.pipe(
+            debounceTime(100), distinctUntilChanged()
+        ).subscribe((params: any) => {
+            if (params.auth) {
+                this.handleAuthKeyLogin(params.auth);
             }
         });
     }
@@ -112,25 +122,7 @@ export class NxAccountService {
     requireLogin() {
         return this.get()
             .then((account) => {
-                const queryParams: any = this.queryParamService.queryParams;
-                if (!account && queryParams.auth) {
-                    return this.loginWithAuthKey(queryParams.auth);
-                } else if (account && queryParams.auth) {
-                    return this.dialogs.confirm('',
-                        this.LANG.dialogs.loggedFromOther,
-                        this.LANG.dialogs.okButton,
-                        undefined,
-                        this.LANG.dialogs.stayAs.replace('{email}', account.email),
-                        'long-cancel-button'
-                    ).then((result) => {
-                        if (result === true) {
-                            this.logout(true);
-                            return this.loginWithAuthKey(queryParams.auth);
-                        } else {
-                            return this.redirectAuthorised();
-                        }
-                    });
-                } else if (!account) {
+                if (!account) {
                     return this.dialogs
                         .login(this, true, true).then(() => {
                             return this.get().then((account) => {
@@ -216,7 +208,8 @@ export class NxAccountService {
 
         return this.login(tempLogin, tempPassword, false)
             .then(() => {
-                return this.router.navigate([], {queryParamsHandling: 'merge'});
+                const queryParams = {auth: undefined, from: undefined};
+                return this.router.navigate([], { queryParams , queryParamsHandling: 'merge'});
             }).catch(() => {
                 // If the key login fails ask the user to login manually.
                 return this.dialogs
@@ -244,7 +237,7 @@ export class NxAccountService {
                                 .finally(this.document.location.reload());
                         }
                         setTimeout(() => {
-                            this.document.location.reload();
+                            return this.document.location.reload();
                         });
                     });
             }
@@ -290,5 +283,31 @@ export class NxAccountService {
             return false;
         }
         return true;
+    }
+
+    private handleAuthKeyLogin(auth) {
+        this.get().then((account) => {
+            if (!account) {
+                return this.loginWithAuthKey(auth).then(() => {
+                    return this.document.location.reload();
+                });
+            }
+            return this.dialogs.confirm('',
+                this.LANG.dialogs.loggedFromOther,
+                this.LANG.dialogs.okButton,
+                undefined,
+                this.LANG.dialogs.stayAs.replace('{email}', account.email),
+                'long-cancel-button'
+            ).then((result) => {
+                if (result === true) {
+                    this.logout(true);
+                } else {
+                    const queryParams = {auth: undefined, from: undefined};
+                    return this.router
+                        .navigate([], { queryParams , queryParamsHandling: 'merge'})
+                        .then(() => this.document.location.reload());
+                }
+            });
+        });
     }
 }

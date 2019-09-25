@@ -57,7 +57,7 @@ export class NxAccountComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.accountService.requireLogin()
+        this.accountService.get()
             .then((account) => {
                 this.account = account;
                 this.init();
