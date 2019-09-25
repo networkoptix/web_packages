@@ -117,6 +117,11 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
         }
     }
 
+    setSearch(value) {
+        this.search.value = value;
+        this.searchSystems();
+    }
+
     openSystem(system) {
         this.location.go('/systems/' + system.id);
     }

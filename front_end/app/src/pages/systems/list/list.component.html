@@ -11,8 +11,8 @@
                class="form-control-static input-overlay-right"><span class="glyphicon glyphicon-remove"></span></a>
             <input type="text"
                    class="form-control"
-                   [(ngModel)]="search.value"
-                   (ngModelChange)="searchSystems"
+                   [ngModel]="search.value"
+                   (ngModelChange)="setSearch($event)"
                    [ngModelOptions]="{debounceTime : CONFIG.search.debounceTime}"
                    placeholder="Search">
         </div>
