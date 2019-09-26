@@ -270,8 +270,7 @@
     "devices": "Geräte",
     "dialogs": {
         "cancelButton": "Abbrechen",
-        "changeAccountLogged": "You are already logged in with a different account",
-        "continueAs": "Continue as {email}",
+        "changeAccountLogged": "You are already logged in with as {email}",
         "createNewAccount": "Create New Account",
         "download": "%VMS_NAME% herunterladen",
         "loggedFromOther": "You will be logged in with a different account",
@@ -307,7 +306,6 @@
         },
         "noClientDetectedTitle": "Installieren Sie %VMS_NAME%, um Ihr System anzusehen",
         "okButton": "Ok",
-        "remainAs": "Remain logged as {email} ",
         "sharing": {
             "confirmOwner": "Wenn Sie den Systembesitzer ändern, werden Sie das Eigentum vom aktuellen Account widerrufen. Diese Handlung ist unwiderruflich. Sind Sie sich sicher?",
             "editShareConfirmButton": "Speichern",
@@ -315,7 +313,9 @@
             "permissionsSaved": "Neue Berechtigungen gespeichert",
             "shareConfirmButton": "Hinzufügen",
             "shareTitle": "Hinzufügen"
-        }
+        },
+        "stayAs": "Stay logged as {email} ",
+        "stayLoggedIn": "Stay Logged In"
     },
     "dialogs.merge.connectToCloud": "Verbinden Sie das System, mit dem Sie fusionieren möchten, mit <strong>{{cloudName}}</strong> oder fusionieren Sie lokal mit dem <strong>{{vmsName}}</strong>-Client.",
     "dialogs.merge.mergeConfirmation": "Sie sind dabei, die Systeme <strong>{{primarySystem}}</strong> und <strong>{{secondarySystem}}</strong> zusammenzuführen. Die Einstellungen und der Name werden von diesem System <strong>{{primarySystem}}</strong>verwendet.",
@@ -414,7 +414,7 @@
         "cantGetSystemInfoPrefix": "Systeminfo ist nicht verfügbar",
         "cantGetSystemsListPrefix": "Systemliste ist nicht verfügbar",
         "cantGetUsersListPrefix": "Benutzerliste ist nicht verfügbar",
-        "cantOpenClient": "Die Anwendung %VMS_NAME% wurde nicht gefunden. <a href=\"/download\">Download</a>",
+        "cantOpenClient": "%VMS_NAME% application is not detected.",
         "cantRegisterPrefix": "Ein Fehler ist aufgetreten",
         "cantSendActivationPrefix": "Bestätigungsmail konnte nicht gesendet werden",
         "cantSendConfirmationPrefix": "Bestätigungsmail konnte nicht gesendet werden",

@@ -142,21 +142,6 @@
     "mergeFailedTitle": "Falha na fusão de Sistemas",
     "commonText": "Falha ao mesclar Sistemas <strong>{{primarySystem}}</strong> e <strong>{{secondarySystem}}</strong>."
   },
-  "passwordRequirements": {
-    "good": "boa",
-    "fair": "justo",
-    "fairMessage": "Use números, letras maiúsculas e minúsculas e caracteres especiais para tornar a sua senha mais forte",
-    "minLength": "curto demais",
-    "minLengthMessage": "A senha deve conter pelo menos 8 caracteres",
-    "required": "incorreta",
-    "requiredMessage": "Use apenas letras latinas, números e símbolos do teclado, evite espaços à esquerda e à direita",
-    "weak": "fraca",
-    "weakMessage": "Use números, letras maiúsculas e minúsculas e caracteres especiais para tornar a sua senha mais forte",
-    "strongMessage": "Senha forte!",
-    "common": "muito comum",
-    "commonMessage": "Esta senha está principais senhas mais populares no mundo",
-    "missingMessage": "A senha é obrigatória"
-  },
   "system": {
     "yourSystem": "O seu Sistema",
     "mySystemSearch": "IMeMyMine",

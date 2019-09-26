@@ -142,21 +142,6 @@
     "mergeFailedTitle": "Hợp nhất hệ thống không thành công",
     "commonText": "Không thể hợp nhất Hệ thống <strong>{{primarySystem}}</strong> và <strong>{{secondarySystem}}</strong>."
   },
-  "passwordRequirements": {
-    "good": "tốt",
-    "fair": "công bằng",
-    "fairMessage": "Sử dụng số, chữ hoa và chữ thường và ký tự đặc biệt để làm cho mật khẩu của bạn mạnh mẽ hơn",
-    "minLength": "quá ngắn",
-    "minLengthMessage": "Mật khẩu phải chứa ít nhất 8 ký tự",
-    "required": "không chính xác",
-    "requiredMessage": "Chỉ sử dụng chữ cái Latin, số và ký hiệu bàn phím, tránh các khoảng trống đầu và cuối",
-    "weak": "yếu",
-    "weakMessage": "Sử dụng số, chữ hoa và chữ thường và ký tự đặc biệt để làm cho mật khẩu của bạn mạnh mẽ hơn",
-    "strongMessage": "Mật khẩu mạnh!",
-    "common": "quá phổ biến",
-    "commonMessage": "Mật khẩu này nằm trong mật khẩu phổ biến nhất trên thế giới",
-    "missingMessage": "Mật khẩu là bắt buộc"
-  },
   "system": {
     "yourSystem": "Hệ thống của bạn",
     "mySystemSearch": "IMeMyMine",

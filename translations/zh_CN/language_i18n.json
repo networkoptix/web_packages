@@ -270,8 +270,7 @@
     "devices": "设备",
     "dialogs": {
         "cancelButton": "撤消",
-        "changeAccountLogged": "您已使用其他帐户登录",
-        "continueAs": "以{email} 继续登录",
+        "changeAccountLogged": "You are already logged in with as {email}",
         "createNewAccount": "新增帐户",
         "download": "下载 %VMS_NAME%",
         "loggedFromOther": "You will be logged in with a different account",
@@ -307,7 +306,6 @@
         },
         "noClientDetectedTitle": "安装 %VMS_NAME% 来查看您的系统",
         "okButton": "确定",
-        "remainAs": "以{email} 保持登录 ",
         "sharing": {
             "confirmOwner": "如果您更改系统所有者，将撤消从当前帐户的所有权。此操作是不可逆的。是否确定？",
             "editShareConfirmButton": "保存",
@@ -315,7 +313,9 @@
             "permissionsSaved": "保存的新权限",
             "shareConfirmButton": "添加",
             "shareTitle": "添加"
-        }
+        },
+        "stayAs": "Stay logged as {email} ",
+        "stayLoggedIn": "Stay Logged In"
     },
     "dialogs.merge.connectToCloud": "请将要与此合并的系统连接到 <strong>{{cloudName}}</strong> 或使用 <strong>{{vmsName}}</strong> 客户端进行本地合并。",
     "dialogs.merge.mergeConfirmation": "您即将合并系统 <strong>{{primarySystem}}</strong> 和 <strong>{{secondarySystem}}</strong>。设置和名称将取自 <strong>{{primarySystem}}</strong>。",
@@ -414,7 +414,7 @@
         "cantGetSystemInfoPrefix": "系统信息不可用",
         "cantGetSystemsListPrefix": "系统列表不可用",
         "cantGetUsersListPrefix": "用户列表不可用",
-        "cantOpenClient": "%VMS_NAME% 应用程序未检测到。<a href=\"/download\"> 下载</a>",
+        "cantOpenClient": "%VMS_NAME% application is not detected.",
         "cantRegisterPrefix": "出现错误",
         "cantSendActivationPrefix": "不能发送确认电子邮件",
         "cantSendConfirmationPrefix": "不能发送确认电子邮件",

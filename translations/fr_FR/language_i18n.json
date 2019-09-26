@@ -270,8 +270,7 @@
     "devices": "périphériques",
     "dialogs": {
         "cancelButton": "Annuler",
-        "changeAccountLogged": "You are already logged in with a different account",
-        "continueAs": "Continue as {email}",
+        "changeAccountLogged": "You are already logged in with as {email}",
         "createNewAccount": "Create New Account",
         "download": "Télécharger %VMS_NAME%",
         "loggedFromOther": "You will be logged in with a different account",
@@ -307,7 +306,6 @@
         },
         "noClientDetectedTitle": "Installer %VMS_NAME% pour visionner votre Système",
         "okButton": "OK",
-        "remainAs": "Remain logged as {email} ",
         "sharing": {
             "confirmOwner": "Si vous modifiez le propriétaire du système, vous révoquez la propriété sur le compte courant. Cette action est irréversible. Êtes-vous sûr ?",
             "editShareConfirmButton": "Enregistrer",
@@ -315,7 +313,9 @@
             "permissionsSaved": "Nouvelles autorisations enregistrées",
             "shareConfirmButton": "Ajouter",
             "shareTitle": "Ajouter"
-        }
+        },
+        "stayAs": "Stay logged as {email} ",
+        "stayLoggedIn": "Stay Logged In"
     },
     "dialogs.merge.connectToCloud": "Connectez le système que vous souhaitez fusionner avec celui-ci à <strong>{{cloudName}}</strong> ou fusionner localement à l'aide de <strong>{{vmsName}}</strong> Client.",
     "dialogs.merge.mergeConfirmation": "Vous êtes sur le point de fusionner les systèmes <strong>{{primarySystem}}</strong> et <strong>{{secondarySystem}}</strong>. Les réglages et le nom seront pris à partir du <strong>{{primarySystem}}</strong>.",
@@ -414,7 +414,7 @@
         "cantGetSystemInfoPrefix": "Information système non disponible",
         "cantGetSystemsListPrefix": "Liste système non disponible",
         "cantGetUsersListPrefix": "Liste des usagers non disponible",
-        "cantOpenClient": "%VMS_NAME% application non détectée. <a href=\"/download\"> Télécharger</a>",
+        "cantOpenClient": "%VMS_NAME% application is not detected.",
         "cantRegisterPrefix": "Erreur survenue",
         "cantSendActivationPrefix": "Impossible d’envoyer courriel de confirmation",
         "cantSendConfirmationPrefix": "Impossible d’envoyer courriel de confirmation",

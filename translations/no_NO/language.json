@@ -142,21 +142,6 @@
     "mergeFailedTitle": "Systemsammenslåing mislyktes",
     "commonText": "Kunne ikke slå sammen systemer <strong>{{primarySystem}}</strong> og <strong>{{secondarySystem}}</strong>."
   },
-  "passwordRequirements": {
-    "good": "sterkt",
-    "fair": "tilfredstillende",
-    "fairMessage": "Bruk tall, store og små bokstaver og spesialtegn for å gjøre passordet ditt sterkere. Unngå æøå",
-    "minLength": "for kort",
-    "minLengthMessage": "Passordet må inneholde minst 8 tegn",
-    "required": "stemmer ikke",
-    "requiredMessage": "Bruk bare latinske bokstaver, tall og tastatur symboler, unngå ledende og etterfølgende mellomrom",
-    "weak": "svakt",
-    "weakMessage": "Bruk tall, store og små bokstaver og spesialtegn for å gjøre passordet ditt sterkere. Unngå æøå",
-    "strongMessage": "Sterkt passord!",
-    "common": "for vanlig",
-    "commonMessage": "Dette passordet er blant de mest brukte passordene i verden",
-    "missingMessage": "Passord er påkrevd"
-  },
   "system": {
     "yourSystem": "Ditt system",
     "mySystemSearch": "IMeMyMine",

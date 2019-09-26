@@ -142,21 +142,6 @@
     "mergeFailedTitle": "Järjestelmien yhdistäminen epäonnistui",
     "commonText": "Järjestelmien yhdistäminen <strong>{{primarySystem}}</strong> ja <strong>{{secondarySystem}}</strong>epäonnistui."
   },
-  "passwordRequirements": {
-    "good": "hyvä",
-    "fair": "kohtalainen",
-    "fairMessage": "Käytä numeroita, isoja ja pieniä kirjaimia ja erikoismerkkejä vahvistaaksesi salasanasi",
-    "minLength": "liian lyhyt",
-    "minLengthMessage": "Salasanan pitää olla vähintään 8 merkkiä pitkä",
-    "required": "virheellinen",
-    "requiredMessage": "Käytä vain latinankielisiä kirjaimia, numeroita ja näppäimistön symboleja",
-    "weak": "heikko",
-    "weakMessage": "Käytä numeroita, isoja ja pieniä kirjaimia ja erikoismerkkejä vahvistaaksesi salasanasi",
-    "strongMessage": "Vahva salasana!",
-    "common": "liian yleinen",
-    "commonMessage": "Tämä salasana on maailman suosituimpia salasanoja",
-    "missingMessage": "Salasana tarvitaan"
-  },
   "system": {
     "yourSystem": "Järjestelmäsi",
     "mySystemSearch": "IMeMyMine",

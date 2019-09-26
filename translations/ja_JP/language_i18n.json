@@ -270,8 +270,7 @@
     "devices": "デバイス",
     "dialogs": {
         "cancelButton": "キャンセル",
-        "changeAccountLogged": "You are already logged in with a different account",
-        "continueAs": "Continue as {email}",
+        "changeAccountLogged": "You are already logged in with as {email}",
         "createNewAccount": "Create New Account",
         "download": "%VMS_NAME% をダウンロード",
         "loggedFromOther": "You will be logged in with a different account",
@@ -307,7 +306,6 @@
         },
         "noClientDetectedTitle": "システムを表示するには %VMS_NAME% をインストールします",
         "okButton": "OK",
-        "remainAs": "Remain logged as {email} ",
         "sharing": {
             "confirmOwner": "システムのオーナーを変更すると、現在のアカウントから所有権を取り消します。この動作は元に戻せません。よろしいですか？",
             "editShareConfirmButton": "保存",
@@ -315,7 +313,9 @@
             "permissionsSaved": "新しい権限が保存されました",
             "shareConfirmButton": "追加",
             "shareTitle": "追加"
-        }
+        },
+        "stayAs": "Stay logged as {email} ",
+        "stayLoggedIn": "Stay Logged In"
     },
     "dialogs.merge.connectToCloud": "これと統合したいシステムを <strong>{{cloudName}}</strong> に接続するか、 <strong>{{vmsName}}</strong> クライアントを使用してローカルに統合します。",
     "dialogs.merge.mergeConfirmation": "<strong>{{primarySystem}}</strong> と <strong>{{secondarySystem}}</strong>を統合しようとしています。設定と名前は <strong>{{primarySystem}}</strong>から取得されます。",
@@ -414,7 +414,7 @@
         "cantGetSystemInfoPrefix": "システム情報は利用できません",
         "cantGetSystemsListPrefix": "システムリストは使用できません",
         "cantGetUsersListPrefix": "ユーザーリストは使用できません",
-        "cantOpenClient": "%VMS_NAME% アプリケーションが検出されません<a href=\"/download\"> ダウンロード</a>",
+        "cantOpenClient": "%VMS_NAME% application is not detected.",
         "cantRegisterPrefix": "エラーが発生しました",
         "cantSendActivationPrefix": "確認メールを送信できません",
         "cantSendConfirmationPrefix": "確認メールを送信できません",

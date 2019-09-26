@@ -142,21 +142,6 @@
     "mergeFailedTitle": "Sistem birleştirme işlemi başarısız oldu",
     "commonText": "Sistem <strong>{{primarySystem}}</strong> ve <strong>{{secondarySystem}}</strong> birleştirilemedi."
   },
-  "passwordRequirements": {
-    "good": "iyi",
-    "fair": "idare eder",
-    "fairMessage": "Parolanın güçlü olması için \nküçük büyük harf ve özel karakterler kullanın",
-    "minLength": "çok kısa",
-    "minLengthMessage": "Şifre en az 8 karakter içermelidir",
-    "required": "yanlış",
-    "requiredMessage": "Sadece alfanümerik ve klavye karakterleri kullanın",
-    "weak": "zayıf",
-    "weakMessage": "Parolanın güçlü olması için \nküçük büyük harf ve özel karakterler kullanın",
-    "strongMessage": "Güçlü parola!",
-    "common": "çok yaygın",
-    "commonMessage": "Dünyada en çok kullanılan parolayı seçtiniz",
-    "missingMessage": "Parola gerekmektedir"
-  },
   "system": {
     "yourSystem": "Sistem",
     "mySystemSearch": "IMeMyMine",

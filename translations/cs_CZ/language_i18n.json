@@ -270,8 +270,7 @@
     "devices": "zařízení",
     "dialogs": {
         "cancelButton": "Zrušit",
-        "changeAccountLogged": "You are already logged in with a different account",
-        "continueAs": "Continue as {email}",
+        "changeAccountLogged": "You are already logged in with as {email}",
         "createNewAccount": "Create New Account",
         "download": "Stáhnout %VMS_NAME%",
         "loggedFromOther": "You will be logged in with a different account",
@@ -307,7 +306,6 @@
         },
         "noClientDetectedTitle": "Pro zobrazení Vašeho systému nainstalujte %VMS_NAME%",
         "okButton": "OK",
-        "remainAs": "Remain logged as {email} ",
         "sharing": {
             "confirmOwner": "Pokud změníte vlastníka systému, zrušíte vlastnictví aktuálního účtu. Tato akce je nevratná. Přejete si pokračovat?",
             "editShareConfirmButton": "Uložit",
@@ -315,7 +313,9 @@
             "permissionsSaved": "Nová oprávnění byla uložena",
             "shareConfirmButton": "Přidat",
             "shareTitle": "Přidat"
-        }
+        },
+        "stayAs": "Stay logged as {email} ",
+        "stayLoggedIn": "Stay Logged In"
     },
     "dialogs.merge.connectToCloud": "Připojit systém, který chcete sloučit s tímto na <strong>{{cloudName}}</strong> nebo sloučit lokálně pomocí <strong>{{vmsName}}</strong> Klienta.",
     "dialogs.merge.mergeConfirmation": "Chystáte se sloučit systémy <strong>{{primarySystem}}</strong> a <strong>{{secondarySystem}}</strong>. Nastavení a název budou převzaty z <strong>{{primarySystem}}</strong>.",
@@ -414,7 +414,7 @@
         "cantGetSystemInfoPrefix": "Informace o systému jsou nedostupné",
         "cantGetSystemsListPrefix": "Seznam systému není dostupný",
         "cantGetUsersListPrefix": "Seznam uživatelů není dostupný",
-        "cantOpenClient": "Aplikace %VMS_NAME% není nalezena. <a href=\"/download\">Stáhnout</a>",
+        "cantOpenClient": "%VMS_NAME% application is not detected.",
         "cantRegisterPrefix": "Došlo k chybě",
         "cantSendActivationPrefix": "Nelze odeslat potvrzovací email",
         "cantSendConfirmationPrefix": "Nelze odeslat potvrzovací email",

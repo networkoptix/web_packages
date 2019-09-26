@@ -270,8 +270,7 @@
     "devices": "пристрої",
     "dialogs": {
         "cancelButton": "Відмінити",
-        "changeAccountLogged": "Ви вже ввійшли в інший обліковий запис",
-        "continueAs": "Продовжувати як {email}",
+        "changeAccountLogged": "You are already logged in with as {email}",
         "createNewAccount": "Створити новий обліковий запис",
         "download": "Завантажити %VMS_NAME%",
         "loggedFromOther": "You will be logged in with a different account",
@@ -307,7 +306,6 @@
         },
         "noClientDetectedTitle": "Встановіть %VMS_NAME% для роботи з системою",
         "okButton": "ОК",
-        "remainAs": "Залишаються зареєстрованими як {email} ",
         "sharing": {
             "confirmOwner": "Якщо змінити власника системи, вона більше не буде належати до поточного облікового запису. Ця дія є незворотньою. Ви впевнені?",
             "editShareConfirmButton": "Зберегти",
@@ -315,7 +313,9 @@
             "permissionsSaved": "Нові права доступу збережені",
             "shareConfirmButton": "Додати",
             "shareTitle": "Додати"
-        }
+        },
+        "stayAs": "Stay logged as {email} ",
+        "stayLoggedIn": "Stay Logged In"
     },
     "dialogs.merge.connectToCloud": "Підключіть систему, яку хочете об’єднати з цією <strong>{{cloudName}}</strong> або об’єднайте локально з <strong>{{vmsName}}</strong> Клієнтом.",
     "dialogs.merge.mergeConfirmation": "Ви збираєтеся об’єднати системи <strong>{{primarySystem}}</strong> та <strong>{{secondarySystem}}</strong>. Ім'я та налаштування будуть взяті з <strong>{{primarySystem}}</strong>.",
@@ -414,7 +414,7 @@
         "cantGetSystemInfoPrefix": "Інформація про систему недоступна",
         "cantGetSystemsListPrefix": "Список систем недоступний",
         "cantGetUsersListPrefix": "Список користувачів недоступний",
-        "cantOpenClient": "Додаток %VMS_NAME% не виявлено. <a href=\"/download\">Завантажити</a>",
+        "cantOpenClient": "%VMS_NAME% application is not detected.",
         "cantRegisterPrefix": "Виникла помилка",
         "cantSendActivationPrefix": "Не вдається надіслати підтвердження електронною поштою",
         "cantSendConfirmationPrefix": "Не вдається надіслати підтвердження електронною поштою",

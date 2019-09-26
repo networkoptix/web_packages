@@ -142,21 +142,6 @@
     "mergeFailedTitle": "Het samenvoegen van systemen is mislukt",
     "commonText": "Fouten bij het samenvoegen van systemen <strong>{{primarySystem}}</strong> en <strong>{{secondarySystem}}</strong>."
   },
-  "passwordRequirements": {
-    "good": "goed",
-    "fair": "redelijk",
-    "fairMessage": "Gebruik cijfers, hoofdletters, kleine letters en speciale tekens om uw wachtwoord sterker te maken",
-    "minLength": "te kort",
-    "minLengthMessage": "Het wachtwoord moet minstens 8 karakters bevatten",
-    "required": "onjuist",
-    "requiredMessage": "Gebruik alleen alfanumerieke tekens en symbolen van het toetsenbord, Vermijd spaties voor en na het wachtwoord",
-    "weak": "zwak",
-    "weakMessage": "Gebruik cijfers, hoofdletters, kleine letters en speciale tekens om uw wachtwoord sterker te maken",
-    "strongMessage": "Sterk wachtwoord!",
-    "common": "te algemeen",
-    "commonMessage": "Dit wachtwoord bevind zich in de top van de meest populaire wachtwoorden in de wereld",
-    "missingMessage": "Wachtwoord is vereist"
-  },
   "system": {
     "yourSystem": "Uw systeem",
     "mySystemSearch": "IMeMyMine",
@@ -171,7 +156,7 @@
     "successRename": "Systeemnaam opgeslagen",
     "confirmDisconnectTitle": "Ontkoppel het systeem van %CLOUD_NAME%?",
     "confirmDisconnectAction": "Verbinding verbreken",
-    "confirmUnshareFromMe": "U kunt niet meer inloggen in dit systeem.",
+    "confirmUnshareFromMe": "U zal niet meer kunnen inloggen in dit systeem.",
     "confirmUnshareFromMeTitle": "Wilt u dit systeem loskoppelen van uw account?",
     "confirmUnshareFromMeAction": "Verbinding verbreken",
     "confirmUnshareTitle": "Gebruiker verwijderen?",

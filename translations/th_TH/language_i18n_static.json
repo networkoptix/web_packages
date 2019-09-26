@@ -196,9 +196,8 @@
 	"dialogs": {
 		"okButton": "ตกลง",
 		"cancelButton": "ยกเลิก",
-		"continueAs": "Continue as {email}",
 		"createNewAccount": "Create New Account",
-		"changeAccountLogged": "You are already logged in with a different account",
+		"changeAccountLogged": "You are already logged in with as {email}",
 		"loggedFromOther": "You will be logged in with a different account",
 		"loginTitle": "เข้าสู่ระบบ %CLOUD_NAME%",
 		"loginButton": "ลงชื่อเข้าสู่ระบบ",
@@ -206,7 +205,8 @@
 		"logoutAuthorisedContinueButton": "ดำเนิน​การ",
 		"logoutAuthorisedLogoutButton": "ออกจากระบบ",
 		"noClientDetectedTitle": "ติดตั้ง %VMS_NAME% เพื่อดูระบบของคุณ",
-		"remainAs": "Remain logged as {email} ",
+		"stayAs": "Stay logged as {email} ",
+		"stayLoggedIn": "Stay Logged In",
 		"download": "ดาวน์โหลด %VMS_NAME%",
 		"merge": {
 			"connectToCloud": "เชื่อมต่อระบบที่คุณต้องการผสานกับระบบนี้กับ <strong>{{cloudName}}</strong> หรือผสานภายในเครื่องโดยใช้ไคลเอ็นต์ <strong>{{vmsName}}</strong>",

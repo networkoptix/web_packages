@@ -115,7 +115,7 @@
     "Page not found": "Det gick inte att hitta sidan",
     "Password": "Lösenord",
     "Password is required": "Lösenord krävs",
-    "Password reset instructions are sent to Email": "Password reset instructions are sent to Email",
+    "Password reset instructions are sent to Email": "Instruktioner för återställning av lösenord skickas till e-post",
     "Password successfully saved": "Lösenordet har sparats",
     "Password:": "Lösenord:",
     "Please enter a valid Email": "Ange en giltig e-postadress",
@@ -270,11 +270,10 @@
     "devices": "enheter",
     "dialogs": {
         "cancelButton": "Avbryt",
-        "changeAccountLogged": "Du är redan inloggad med ett annat konto",
-        "continueAs": "Fortsätt som {email}",
+        "changeAccountLogged": "You are already logged in with as {email}",
         "createNewAccount": "Skapa nytt konto",
         "download": "Ladda ner %VMS_NAME%",
-        "loggedFromOther": "You will be logged in with a different account",
+        "loggedFromOther": "Du kommer att vara inloggad med ett annat konto",
         "loginButton": "Logga in",
         "loginTitle": "Logga in på %CLOUD_NAME%",
         "logoutAuthorisedContinueButton": "Fortsätt",
@@ -307,7 +306,6 @@
         },
         "noClientDetectedTitle": "Installera %VMS_NAME% om du vill visa ditt System",
         "okButton": "OK",
-        "remainAs": "Förbli loggad som {email} ",
         "sharing": {
             "confirmOwner": "Om du ändrar systemägaren återkallar du ägandet från det aktuella kontot. Denna åtgärd är oåterkallelig. Är du säker?",
             "editShareConfirmButton": "Spara",
@@ -315,7 +313,9 @@
             "permissionsSaved": "Nya behörigheter sparades",
             "shareConfirmButton": "Lägg till",
             "shareTitle": "Lägg till"
-        }
+        },
+        "stayAs": "Stay logged as {email} ",
+        "stayLoggedIn": "Stay Logged In"
     },
     "dialogs.merge.connectToCloud": "Anslut system du vill slå samman med den här till <strong>{{cloudName}}</strong> eller slå ihop lokalt med <strong>{{vmsName}}</strong> Client.",
     "dialogs.merge.mergeConfirmation": "Du håller på att slå samman system <strong>{{primarySystem}}</strong> och <strong>{{secondarySystem}}</strong>. Inställningar och namnet kommer att tas från <strong>{{primarySystem}}</strong>.",
@@ -414,7 +414,7 @@
         "cantGetSystemInfoPrefix": "Systeminfo är inte tillgänglig",
         "cantGetSystemsListPrefix": "Systemlistan är inte tillgänglig",
         "cantGetUsersListPrefix": "Användarlistan är inte tillgänglig",
-        "cantOpenClient": "%VMS_NAME% programmet hittades inte. <a href=\"/download\">Ladda ner</a>",
+        "cantOpenClient": "%VMS_NAME% programmet hittades inte.",
         "cantRegisterPrefix": "Fel inträffade",
         "cantSendActivationPrefix": "Kan inte skicka bekräftelse-e-post",
         "cantSendConfirmationPrefix": "Kan inte skicka bekräftelse-e-post",

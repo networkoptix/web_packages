@@ -115,7 +115,7 @@
     "Page not found": "Pagina non trovata",
     "Password": "Password",
     "Password is required": "È richiesta la password",
-    "Password reset instructions are sent to Email": "Password reset instructions are sent to Email",
+    "Password reset instructions are sent to Email": "Le istruzioni per il ripristino della password sono inviate all' e-mail",
     "Password successfully saved": "Password salvata correttamente",
     "Password:": "Password:",
     "Please enter a valid Email": "Inserisca un'e-mail valida",
@@ -270,11 +270,10 @@
     "devices": "dispositivi",
     "dialogs": {
         "cancelButton": "Annulla",
-        "changeAccountLogged": "Hai già effettuato l'accesso con un altro account",
-        "continueAs": "Continua come {email}",
+        "changeAccountLogged": "You are already logged in with as {email}",
         "createNewAccount": "Crea nuovo account",
         "download": "Scarica %VMS_NAME%",
-        "loggedFromOther": "You will be logged in with a different account",
+        "loggedFromOther": "Verrà effettuato l'accesso con un altro account",
         "loginButton": "Accesso",
         "loginTitle": "Accedi a %CLOUD_NAME%",
         "logoutAuthorisedContinueButton": "Continua",
@@ -307,7 +306,6 @@
         },
         "noClientDetectedTitle": "Installa %VMS_NAME% per visualizzare il suo sistema",
         "okButton": "OK",
-        "remainAs": "Rimani collegato come {email} ",
         "sharing": {
             "confirmOwner": "Se cambi proprietario del sistema, revocherai la proprietà dall'account corrente. Questa azione è irreversibile. E' sicuro?",
             "editShareConfirmButton": "Salvare",
@@ -315,7 +313,9 @@
             "permissionsSaved": "Nuove autorizzazioni salvate",
             "shareConfirmButton": "Inserisci",
             "shareTitle": "Inserisci"
-        }
+        },
+        "stayAs": "Stay logged as {email} ",
+        "stayLoggedIn": "Stay Logged In"
     },
     "dialogs.merge.connectToCloud": "Connetti il Sistema che vuoi unire con questo <strong>{{cloudName}}</strong> o unisci localmente usando <strong>{{vmsName}}</strong> il Client.",
     "dialogs.merge.mergeConfirmation": "Stai per unire i Sistemi <strong>{{primarySystem}}</strong> e <strong>{{secondarySystem}}</strong>. Le impostazioni e il nome verranno presi da <strong>{{primarySystem}}</strong>.",
@@ -414,7 +414,7 @@
         "cantGetSystemInfoPrefix": "Le informazioni di sistema non sono disponibili",
         "cantGetSystemsListPrefix": "L'elenco di sistema non è disponibile",
         "cantGetUsersListPrefix": "L'elenco utenti non è disponibile",
-        "cantOpenClient": "%VMS_NAME% applicazione non rilevata. <a href=\"/download\">Scarica</a>",
+        "cantOpenClient": "%VMS_NAME% applicazione non rilevata.",
         "cantRegisterPrefix": "Si è verificato un errore",
         "cantSendActivationPrefix": "Non è possibile inviare e-mail di conferma",
         "cantSendConfirmationPrefix": "Non è possibile inviare e-mail di conferma",

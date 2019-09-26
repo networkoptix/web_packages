@@ -142,21 +142,6 @@
     "mergeFailedTitle": "システムの統合に失敗しました",
     "commonText": "システム <strong>{{primarySystem}}</strong> および <strong>{{secondarySystem}}</strong>を統合できませんでした。"
   },
-  "passwordRequirements": {
-    "good": "良い",
-    "fair": "可",
-    "fairMessage": "パスワードをより強力にするために、数字、大文字と小文字、特殊文字を使用してください",
-    "minLength": "短すぎます",
-    "minLengthMessage": "パスワードは8文字以上必要です",
-    "required": "無効",
-    "requiredMessage": "英数字、キーボード記号のみを使用し、前後のスペースを避けてください。",
-    "weak": "弱",
-    "weakMessage": "パスワードをより強力にするために、数字、大文字と小文字、特殊文字を使用してください",
-    "strongMessage": "強力なパスワードです",
-    "common": "あまりにも一般的",
-    "commonMessage": "このパスワードは、世界で最も人気のあるパスワードです",
-    "missingMessage": "パスワードが必要です"
-  },
   "system": {
     "yourSystem": "お使いのシステム",
     "mySystemSearch": "IMeMyMine",

@@ -115,7 +115,7 @@
     "Page not found": "Página no encontrada",
     "Password": "Contraseña",
     "Password is required": "Se requiere contraseña",
-    "Password reset instructions are sent to Email": "Password reset instructions are sent to Email",
+    "Password reset instructions are sent to Email": "Las instrucciones para restablecer la contraseña son enviadas al correo electrónico",
     "Password successfully saved": "Contraseña establecida exitosamente",
     "Password:": "Contraseña:",
     "Please enter a valid Email": "Introduzca una dirección de correo electrónico válida",
@@ -270,11 +270,10 @@
     "devices": "dispositivos",
     "dialogs": {
         "cancelButton": "Cancelar",
-        "changeAccountLogged": "Ya has iniciado sesión con una cuenta diferente",
-        "continueAs": "Continuar como {email}",
+        "changeAccountLogged": "You are already logged in with as {email}",
         "createNewAccount": "Crear Nueva Cuenta",
         "download": "Descargar %VMS_NAME%",
-        "loggedFromOther": "You will be logged in with a different account",
+        "loggedFromOther": "Se iniciará sesión con una cuenta diferente",
         "loginButton": "Inicia sesión",
         "loginTitle": "Inicie sesión en %CLOUD_NAME%",
         "logoutAuthorisedContinueButton": "Continuar",
@@ -307,7 +306,6 @@
         },
         "noClientDetectedTitle": "Instalar %VMS_NAME% para ver su sistema",
         "okButton": "OK",
-        "remainAs": "Permanecer registrado como {email} ",
         "sharing": {
             "confirmOwner": "Si se cambia el dueño del sistema, revocará la titularidad de esta cuenta. Esta acción es irreversible. ¿Está seguro?",
             "editShareConfirmButton": "Guardar",
@@ -315,7 +313,9 @@
             "permissionsSaved": "Nuevos permisos guardados",
             "shareConfirmButton": "Añadir",
             "shareTitle": "Añadir"
-        }
+        },
+        "stayAs": "Stay logged as {email} ",
+        "stayLoggedIn": "Stay Logged In"
     },
     "dialogs.merge.connectToCloud": "Conectar el sistema que desea fusionar con este a <strong>{{cloudName}}</strong> o fusionar localmente usando <strong>{{vmsName}}</strong> Cliente.",
     "dialogs.merge.mergeConfirmation": "Estás a punto de fusionar sistemas <strong>{{primarySystem}}</strong> y <strong>{{secondarySystem}}</strong>. Los ajustes y el nombre serán tomados de los <strong>{{primarySystem}}</strong>.",
@@ -414,7 +414,7 @@
         "cantGetSystemInfoPrefix": "La información del sistema no esta disponible",
         "cantGetSystemsListPrefix": "La lista de Sistemas no está disponible",
         "cantGetUsersListPrefix": "Lista de usuarios no está disponible",
-        "cantOpenClient": "%VMS_NAME% aplicación no es detectada.<a href=\"/download\">Descargar</a>",
+        "cantOpenClient": ". La aplicación %VMS_NAME% no se ha detectado.",
         "cantRegisterPrefix": "Un error ha ocurrido",
         "cantSendActivationPrefix": "No se puede enviar el correo electrónico de confirmación",
         "cantSendConfirmationPrefix": "No se puede enviar el correo electrónico de confirmación",

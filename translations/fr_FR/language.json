@@ -142,21 +142,6 @@
     "mergeFailedTitle": "Fusion des systèmes a échoué",
     "commonText": "Échec de la fusion des systèmes <strong>{{primarySystem}}</strong> et <strong>{{secondarySystem}}</strong>."
   },
-  "passwordRequirements": {
-    "good": "bon",
-    "fair": "juste",
-    "fairMessage": "Utiliser des nombres, majuscules et minuscules et caractères spéciaux pour rendre votre mot de passe plus fort",
-    "minLength": "trop court",
-    "minLengthMessage": "Mot de passe doit contenir au moins 8 caractères",
-    "required": "incorrect",
-    "requiredMessage": "Utilisez uniquement les lettres latines, les chiffres et les symboles du clavier, éviter les espaces de début et de fin",
-    "weak": "faible",
-    "weakMessage": "Utiliser des nombres, majuscules et minuscules et caractères spéciaux pour rendre votre mot de passe plus fort",
-    "strongMessage": "Mot de passe fort!",
-    "common": "trop commun",
-    "commonMessage": "Ce mot de passe est en haut de la liste des plus populaires dans le monde",
-    "missingMessage": "Mot de passe requis"
-  },
   "system": {
     "yourSystem": "Votre système",
     "mySystemSearch": "IMeMyMine",

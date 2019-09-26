@@ -196,9 +196,8 @@
 	"dialogs": {
 		"okButton": "Xác định",
 		"cancelButton": "Hủy bỏ",
-		"continueAs": "Continue as {email}",
 		"createNewAccount": "Create New Account",
-		"changeAccountLogged": "You are already logged in with a different account",
+		"changeAccountLogged": "You are already logged in with as {email}",
 		"loggedFromOther": "You will be logged in with a different account",
 		"loginTitle": "Đăng nhập vào %CLOUD_NAME%",
 		"loginButton": "Đăng nhập",
@@ -206,7 +205,8 @@
 		"logoutAuthorisedContinueButton": "Tiếp tục",
 		"logoutAuthorisedLogoutButton": "Đăng xuất",
 		"noClientDetectedTitle": "Cài đặt %VMS_NAME% để xem Hệ thống của bạn",
-		"remainAs": "Remain logged as {email} ",
+		"stayAs": "Stay logged as {email} ",
+		"stayLoggedIn": "Stay Logged In",
 		"download": "Tải xuống %VMS_NAME%",
 		"merge": {
 			"connectToCloud": "Kết nối Hệ thống mà bạn muốn hợp nhất với hệ thống này thành <strong>{{cloudName}}</strong> hoặc hợp nhất cục bộ bằng <strong>{{vmsName}}</strong> Client.",

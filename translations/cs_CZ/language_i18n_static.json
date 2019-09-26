@@ -196,9 +196,8 @@
 	"dialogs": {
 		"okButton": "OK",
 		"cancelButton": "Zrušit",
-		"continueAs": "Continue as {email}",
 		"createNewAccount": "Create New Account",
-		"changeAccountLogged": "You are already logged in with a different account",
+		"changeAccountLogged": "You are already logged in with as {email}",
 		"loggedFromOther": "You will be logged in with a different account",
 		"loginTitle": "Přihlaste se k %CLOUD_NAME%",
 		"loginButton": "Přihlásit",
@@ -206,7 +205,8 @@
 		"logoutAuthorisedContinueButton": "Pokračovat",
 		"logoutAuthorisedLogoutButton": "Odhlásit se",
 		"noClientDetectedTitle": "Pro zobrazení Vašeho systému nainstalujte %VMS_NAME%",
-		"remainAs": "Remain logged as {email} ",
+		"stayAs": "Stay logged as {email} ",
+		"stayLoggedIn": "Stay Logged In",
 		"download": "Stáhnout %VMS_NAME%",
 		"merge": {
 			"connectToCloud": "Připojit systém, který chcete sloučit s tímto na <strong>{{cloudName}}</strong> nebo sloučit lokálně pomocí <strong>{{vmsName}}</strong> Klienta.",
