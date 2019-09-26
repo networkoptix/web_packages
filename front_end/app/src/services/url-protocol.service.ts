@@ -137,20 +137,28 @@ export class NxUrlProtocolService {
             // ugly thing!
             // see CLOUD-716 for more information
 
-            // @ts-ignore
-            this.window.protocolCheck(link);
-
             return new Promise<any>((resolve, reject) => {
-                setTimeout(() => {
-                    this.accountService
-                       .checkVisitedKey(authKey)
-                       .then((visited) => {
-                           if (!visited) {
-                               return reject(visited);
-                           }
-                           return resolve(visited);
-                       });
-                }, this.CONFIG.openClientTimeout);
+                // If the user clicks open the window will blur twice or more.
+                // Otherwise the window will blur only once meaning it was canceled.
+                let blurCount = 0;
+                this.window.onblur = (event) => {
+                    blurCount += 1;
+                };
+                // Check on before unload
+                // @ts-ignore
+                this.window.protocolCheck(link, (_) => reject(), () => {
+                    setTimeout(() => {
+                        this.accountService
+                            .checkVisitedKey(authKey)
+                            .then((visited) => {
+                                this.window.onblur = undefined;
+                                if (!visited && blurCount > 1) {
+                                    return reject(visited);
+                                }
+                                return resolve(visited);
+                            });
+                        }, this.CONFIG.openClientTimeout);
+                });
             });
         });
     }
