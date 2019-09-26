@@ -330,7 +330,7 @@ Search should only be visible with 9 or more systems
     Log Out
 
 should update owner name in systems list, if it's changed
-    [tags]    Test
+    [tags]
     Go To    ${url}/account
     Log In    ${EMAIL OWNER}    ${password}    None
     Validate Log In
