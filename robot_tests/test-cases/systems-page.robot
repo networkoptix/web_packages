@@ -73,7 +73,7 @@ should show the no systems connected message when you have no systems
     Wait Until Element Is Visible    ${YOU HAVE NO SYSTEMS}
 
 should show system name in header with no dropdown if user has only one system
-    [tags]    C41569    Threaded    HasIssue
+    [tags]    C41569    Threaded
     Log In    ${EMAIL OWNER}    ${password}
     Validate Log In
     Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
@@ -189,7 +189,7 @@ User have several systems linked to his account
     ...    ${count3}
 
 should show the system page instead of all systems when user only has one
-    [tags]    C41878    HasIssue
+    [tags]    C41878
     Log In    ${EMAIL OWNER}    ${password}
     Validate Log In
     Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
