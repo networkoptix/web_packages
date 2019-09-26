@@ -73,7 +73,7 @@ should show the no systems connected message when you have no systems
     Wait Until Element Is Visible    ${YOU HAVE NO SYSTEMS}
 
 should show system name in header with no dropdown if user has only one system
-    [tags]    C41569    Threaded
+    [tags]    C41569    Threaded    HasIssue
     Log In    ${EMAIL OWNER}    ${password}
     Validate Log In
     Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
@@ -189,7 +189,7 @@ User have several systems linked to his account
     ...    ${count3}
 
 should show the system page instead of all systems when user only has one
-    [tags]    C41878
+    [tags]    C41878    HasIssue
     Log In    ${EMAIL OWNER}    ${password}
     Validate Log In
     Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
@@ -208,7 +208,7 @@ should show the system page instead of all systems when user only has one
     Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
     Remove User Permissions    ${EMAIL NOPERM}
 
-should open system page (users list) when clicked on system
+should open system page when clicked on system
     [tags]    C41893    Threaded
     Log In    ${EMAIL OWNER}    ${password}
     Validate Log In
@@ -257,10 +257,14 @@ Search can be cleared by x button
     Wait Until Elements Are Visible    ${SYSTEMS SEARCH INPUT}    ${AUTO TESTS TITLE}    ${AUTO TESTS USER}    ${AUTO TESTS OPEN NX}
     ${tiles}    Get WebElements    //div[contains(@class,"card ")]
     ${len}    Get Length    ${tiles}
-    Input Text    ${SYSTEMS SEARCH INPUT}    ${TEST FIRST NAME}
+    Textfield Value Should Be    ${SYSTEMS SEARCH INPUT}    ${EMPTY}
+    Input Text    ${SYSTEMS SEARCH INPUT}    Tests
+    Wait For Condition    return document.getElementsByClassName('card ').length < ${len}    30
+    Textfield Value Should Be    ${SYSTEMS SEARCH INPUT}    Tests
     Wait Until Element Is Visible    ${SYSTEM SEARCH X BUTTON}
     Click Link    ${SYSTEM SEARCH X BUTTON}
-    Element Text Should Be    ${SYSTEMS SEARCH INPUT}    ${EMPTY}
+    Wait Until Elements Are Visible    ${SYSTEMS SEARCH INPUT}
+    Textfield Value Should Be    ${SYSTEMS SEARCH INPUT}    ${EMPTY}
     ${tiles2}    Get WebElements    //div[contains(@class,"card ")]
     ${len2}    Get Length    ${tiles2}
     Should Be Equal    ${len}    ${len2}
@@ -275,43 +279,66 @@ Searching for owner email should only show systems with that owner
 
 Search should only be visible with 9 or more systems
     [tags]    C41890
-    Log In    ${EMAIL VIEWER}    ${password}
-    Validate Log In
-    Wait Until Elements Are Visible    ${SYSTEMS SEARCH INPUT}    ${AUTO TESTS TITLE}    ${AUTO TESTS USER}    ${AUTO TESTS OPEN NX}
-    Log Out
     Log In    ${EMAIL OWNER}    ${password}
     Validate Log In
     Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
-    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${SHARE BUTTON SYSTEMS}    ${OPEN IN NX BUTTON}    ${RENAME SYSTEM}
-    Remove User Permissions    ${EMAIL VIEWER}
-    Log Out
-    Log In    ${EMAIL VIEWER}    ${password}
-    Validate Log In
-    Elements Should Not Be Visible    ${SYSTEMS SEARCH INPUT}
-    Log Out
-    Log In    ${EMAIL OWNER}    ${password}
-    Validate Log In
-    Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
-    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${SHARE BUTTON SYSTEMS}    ${OPEN IN NX BUTTON}    ${RENAME SYSTEM}
+    Wait Until Elements Are Visible    ${RENAME SYSTEM}    ${DISCONNECT FROM NX}    ${USERS LIST LINK}
+    Click Link    ${USERS LIST LINK}
+    Wait Until Elements Are Visible    ${REMOVE USER BUTTON}    ${SHARE BUTTON SYSTEMS}
     Share To    ${EMAIL VIEWER}    ${VIEWER TEXT}
     Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
     ${email}    Wait For Email    recipient=${EMAIL VIEWER}    timeout=120    status=UNSEEN
     Delete All Emails
     Close Mailbox
     Log Out
+
+    Log In    ${EMAIL VIEWER}    ${password}
+    Validate Log In
+    Wait Until Elements Are Visible    ${SYSTEMS SEARCH INPUT}    ${AUTO TESTS TITLE}    ${AUTO TESTS USER}    ${AUTO TESTS OPEN NX}
+    Log Out
+
+    Log In    ${EMAIL OWNER}    ${password}
+    Validate Log In
+    Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
+    Wait Until Elements Are Visible    ${RENAME SYSTEM}    ${DISCONNECT FROM NX}    ${USERS LIST LINK}
+    Click Link    ${USERS LIST LINK}
+    Wait Until Elements Are Visible    ${REMOVE USER BUTTON}    ${SHARE BUTTON SYSTEMS}
+    Remove User Permissions    ${EMAIL VIEWER}
+    Log Out
+
+    Log In    ${EMAIL VIEWER}    ${password}    None
+    Validate Log In
+    Elements Should Not Be Visible    ${SYSTEMS SEARCH INPUT}
+    Log Out
+
+    Log In    ${EMAIL OWNER}    ${password}    None
+    Validate Log In
+    Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
+    Wait Until Elements Are Visible    ${RENAME SYSTEM}    ${DISCONNECT FROM NX}    ${USERS LIST LINK}
+    Click Link    ${USERS LIST LINK}
+    Wait Until Elements Are Visible    ${REMOVE USER BUTTON}    ${SHARE BUTTON SYSTEMS}
+    Share To    ${EMAIL VIEWER}    ${VIEWER TEXT}
+    Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
+    ${email}    Wait For Email    recipient=${EMAIL VIEWER}    timeout=120    status=UNSEEN
+    Delete All Emails
+    Close Mailbox
+    Log Out
+
     Log In    ${EMAIL VIEWER}    ${password}
     Validate Log In
     Wait Until Element Is Visible    ${SYSTEMS SEARCH INPUT}
+    Log Out
 
 should update owner name in systems list, if it's changed
+    [tags]    Test
     Go To    ${url}/account
     Log In    ${EMAIL OWNER}    ${password}    None
     Validate Log In
-    Wait Until Elements Are Visible    ${ACCOUNT EMAIL}    ${ACCOUNT FIRST NAME}    ${ACCOUNT LAST NAME}    ${ACCOUNT SAVE}
+    Wait Until Elements Are Visible    ${ACCOUNT EMAIL}    ${ACCOUNT FIRST NAME}    ${ACCOUNT LAST NAME}
     #Sleep added here because the account page was populating the first/lastname fields again after Selenium changed it.
     Sleep    1
-    Wait Until Textfield Contains    ${ACCOUNT EMAIL}    ${EMAIL OWNER}
-    Wait Until Textfield Contains    ${ACCOUNT FIRST NAME}    ${TEST FIRST NAME}
+    Element Text Should Be    ${ACCOUNT EMAIL}    ${EMAIL OWNER}
+    Textfield Value Should Be    ${ACCOUNT FIRST NAME}    ${TEST FIRST NAME}
     Clear Element Text    ${ACCOUNT FIRST NAME}
     Input Text    ${ACCOUNT FIRST NAME}    newFirstName
     Clear Element Text    ${ACCOUNT LAST NAME}
@@ -319,7 +346,7 @@ should update owner name in systems list, if it's changed
     Click Button    ${ACCOUNT SAVE}
     Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
     Log Out
-    Log In    ${EMAIL ADMIN}    ${password}
+    Log In    ${EMAIL ADMIN}    ${password}    None
     Validate Log In
     Go To    ${url}/systems
     Wait Until Elements Are Visible    ${AUTO TESTS TITLE}    ${AUTO TESTS USER}    ${AUTO TESTS OPEN NX}

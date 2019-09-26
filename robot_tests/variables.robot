@@ -144,23 +144,25 @@ ${OWNER EMAIL}                        //header//span[contains(text(), "${EMAIL O
 ${YOUR ACCESS LEVEL}                   //ng-include[@src="$root.C.viewsDir + 'components/system-card.html'"]//p[contains(text(), "${YOUR ACCESS LEVEL TEXT}")]
 
 ${DISCONNECT FROM MY ACCOUNT}         //button[@ng-click='delete()']
-${SHARE BUTTON SYSTEMS}               //div[@process-loading='gettingSystem']//button[@ng-click='share()']
-${SHARE BUTTON DISABLED}              //div[@process-loading='gettingSystem']//button[@ng-click='share()' and @ng-disabled='!system.isAvailable || currentlyMerging']
-${OPEN IN NX BUTTON}                  //div[@process-loading='gettingSystem']//button[@ng-click='checkForm()']
-${OPEN IN NX BUTTON DISABLED}         //div[@process-loading='gettingSystem']//button[@ng-click='checkForm()' and @ng-disabled='buttonDisabled']
+${SHARE BUTTON SYSTEMS}               //nx-system-settings-component//nx-menu//nx-menu-button//button
+${SHARE BUTTON DISABLED}              ${SHARE BUTTON SYSTEMS}\[@disabled]
+${OPEN IN NX BUTTON}                  //nx-client-button//nx-process-button//button
+${OPEN IN NX BUTTON DISABLED}         ${OPEN IN NX BUTTON}\[@disabled]
+${REMOVE USER BUTTON}                 //button[contains(text(), '${REMOVE USER BUTTON TEXT}')]
 ${DELETE USER MODAL}                  //ngb-modal-window
 ${DELETE USER BUTTON}                 //button[contains(text(), '${DELETE USER BUTTON TEXT}')]
 ${DELETE USER CANCEL BUTTON}          //ngb-modal-window//button[contains(text(), "${CANCEL BUTTON TEXT}")]
 ${SYSTEM NAME OFFLINE}                //span[@ng-if='!system.isOnline']
-${USERS LIST LINK}                    // a[@id='users']
+${USERS LIST LINK}                    //a[@id='users']
 
 ${SYSTEM NO ACCESS}                   //div[@ng-if='systemNoAccess']/h1[contains(text(), "${SYSTEM NO ACCESS TEXT}")]
 ${AVAILABLE SYSTEMS LIST}             //a[@href='/systems']
-${SYSTEMS SEARCH INPUT}               //input[@ng-model='search.value']
-${SYSTEM SEARCH X BUTTON}             //a[@ng-click="search.value=''"]
+${SYSTEMS SEARCH INPUT}               //nx-systems-list-component//div[contains(@class,'search-block')]//input
+${SYSTEM SEARCH X BUTTON}             ${SYSTEMS SEARCH INPUT}//preceding::a[contains(@class,'input-overlay-right')]
 
 #Merge
 ${MERGE BUTTON SYSTEM}                //button/span[text()="${MERGE SYSTEM BUTTON TEXT}"]
+${MERGE BUTTON SYSTEM DISABLED}       //button[@disabled]/span[text()="${MERGE SYSTEM BUTTON TEXT}"]
 ${MERGE DIALOG}                       //nx-modal-merge-content
 ${MERGE FORM}                         //form[@name="mergeForm"]
 ${MERGE SYSTEM DROPDOWN}              ${MERGE DIALOG}//button[@id="genericSelect"]
@@ -200,13 +202,13 @@ ${PROMO BLOCK}                        //div[contains(@class,'promo-block') and n
 ${ALREADY ACTIVATED}                  //h1[contains(@class,"process-success") and contains(text(),"${ALREADY ACTIVATED TEXT}")]
 
 #Share Elements (Note: Share and Permissions are the same form so these are the same variables.  Making two just in case they do diverge at some point.)
-${SHARE MODAL}                        //form[@name='shareForm']
-${SHARE EMAIL}                        //form[@name='shareForm']//input[@id='email']
-${SHARE PERMISSIONS DROPDOWN}         //form[@name='shareForm']//nx-permissions-select//button[@id='permissionsSelect']
-${SHARE BUTTON MODAL}                 //form[@name='shareForm']//button[text()='${SHARE BUTTON TEXT}']
-${SHARE CANCEL}                       //form[@name='shareForm']//button[text()='${CANCEL BUTTON TEXT}']
-${SHARE CLOSE}                        //form[@name='shareForm']//button[@data-dismiss='modal']
-${SHARE PERMISSIONS HINT}             //form[@name='shareForm']//span[contains(@class,'help-block')]
+${SHARE MODAL}                        //form[@name='addUserForm']
+${SHARE EMAIL}                        ${SHARE MODAL}//input[@id='email']
+${SHARE PERMISSIONS DROPDOWN}         ${SHARE MODAL}//nx-permissions-select//button[@id='permissionsSelect']
+${SHARE BUTTON MODAL}                 ${SHARE MODAL}//button[text()='${ADD BUTTON TEXT}']
+${SHARE CANCEL}                       ${SHARE MODAL}//button[text()='${CANCEL BUTTON TEXT}']
+${SHARE CLOSE}                        ${SHARE MODAL}//button[@data-dismiss='modal']
+${SHARE PERMISSIONS HINT}             ${SHARE MODAL}//span[contains(@class,'help-block')]
 
 ${EDIT PERMISSIONS EMAIL}             //form[@name='shareForm']//input[@ng-model='user.email']
 ${EDIT PERMISSIONS DROPDOWN}          //form[@name='shareForm']//button[@id='permissionsSelect']

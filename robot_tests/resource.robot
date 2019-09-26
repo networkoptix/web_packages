@@ -191,7 +191,8 @@ Restore password
 
 Share To
     [arguments]    ${email}    ${permissions}
-    Wait Until Element Is Enabled    ${OPEN IN NX BUTTON}
+    Wait Until Element Is Visible    ${USERS LIST LINK}
+    Click Link    ${USERS LIST LINK}
     Wait Until Element Is Enabled    ${SHARE BUTTON SYSTEMS}
     Click Button    ${SHARE BUTTON SYSTEMS}
     Wait Until Elements Are Visible    ${SHARE EMAIL}    ${SHARE BUTTON MODAL}
@@ -225,15 +226,17 @@ Check User Permissions
 
 Remove User Permissions
     [arguments]    ${user email}
-    Wait Until Element Is Visible    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${user email}')]
-    Mouse Over    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${user email}')]
-    Wait Until Element Is Visible    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${user email}')]/following-sibling::td/a[@ng-click='unshare(user)']/span[contains(text(),'${DELETE USER BUTTON TEXT}')]
-    Click Element    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${user email}')]/following-sibling::td/a[@ng-click='unshare(user)']/span['&nbsp&nbspDelete']
+    Wait Until Element Is Visible    ${USERS LIST LINK}
+    Click Link    ${USERS LIST LINK}
+    ${User In List}=   Set Variable    //nx-system-settings-component//nx-menu//nx-level-3-item//span[text()='${user email}']/../../../a
+    Click Link    ${User In List}
+    Wait Until Element Is Visible    ${REMOVE USER BUTTON}
+    Click Button    ${REMOVE USER BUTTON}
     Wait Until Element Is Visible    ${DELETE USER BUTTON}
     Click Button    ${DELETE USER BUTTON}
     ${PERMISSIONS WERE REMOVED FROM EMAIL}    Replace String    ${PERMISSIONS WERE REMOVED FROM}    %email%    ${user email}
     Check For Alert    ${PERMISSIONS WERE REMOVED FROM EMAIL}
-    Wait Until Element Is Not Visible    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${user email}')]
+    Wait Until Element Is Not Visible    ${User In List}
 
 Check For Alert
     [arguments]    ${alert text}    ${timeout}=${selenium_timeout}
@@ -251,7 +254,7 @@ Check For Alert Dismissable
 
 Verify In System
     [arguments]    ${system name}
-    Wait Until Element Is Visible    //h1[@ng-if='gettingSystem.success' and contains(text(), '${system name}')]
+    Wait Until Element Is Visible    //h2[contains(@class,"system-name") and contains(text(), '${system name}')]
 
 Disconnect from cloud
     Wait Until Element Is Visible    ${DISCONNECT FROM NX}
