@@ -138,8 +138,12 @@ export class NxUrlProtocolService {
             // see CLOUD-716 for more information
 
             return new Promise<any>((resolve, reject) => {
-                // If the user clicks open the window will blur twice or more.
-                // Otherwise the window will blur only once meaning it was canceled.
+                /* The browser opens a dialog that we cannot directly detect or get a response from.
+                 * However, when the browser dialog opens it causes the page to blur so we use that to detect what
+                 * happens.
+                 * If the page blurs only once that means that the user probably canceled the dialog.
+                 * If the page blurs more than once the vms client probably opened.
+                 */
                 let blurCount = 0;
                 this.window.onblur = (event) => {
                     blurCount += 1;
