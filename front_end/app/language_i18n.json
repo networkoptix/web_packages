@@ -583,6 +583,7 @@
         "mergeSystemTitle": "Merge Systems",
         "mySystemSearch": "IMeMyMine",
         "offline": "System is offline",
+        "offlineAlertRibbon": "System is offline. Some settings may not be available.",
         "openClient": "Open in %VMS_NAME%",
         "openClientNoSystem": "Open %VMS_NAME%",
         "permissionsRemoved": "Permissions were removed from {{email}}",

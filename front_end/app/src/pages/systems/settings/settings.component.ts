@@ -13,6 +13,7 @@ import { NxSystemsService }        from '../../../services/systems.service';
 import { NxAccountService }        from '../../../services/account.service';
 import { NxProcessService }        from '../../../services/process.service';
 import { NxUtilsService }          from '../../../services/utils.service';
+import { NxRibbonService }         from '../../../components/ribbon/ribbon.service';
 
 @Component({
     selector   : 'nx-system-settings-component',
@@ -74,6 +75,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 private processService: NxProcessService,
                 private menuService: NxMenuService,
                 location: Location,
+                private ribbonService: NxRibbonService
     ) {
         this.location = location;
         this.setupDefaults();
@@ -96,6 +98,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     this.system.stopPoll();
                 }
                 this.system = undefined;
+                this.ribbonService.hide();
                 this.getSystemInfo();
             }
         });
@@ -122,18 +125,18 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 this.content = { ...this.content }; // trigger onChange
             });
 
-       this.menuService
+        this.menuService
             .selectedSubSectionSubject
             .subscribe(selection => {
                 this.content.selectedSubSection = selection;
-                this.content = { ...this.content }; // trigger onChange
+                this.content = {...this.content}; // trigger onChange
             });
 
-       this.menuService
+        this.menuService
             .selectedDetailsSection
             .subscribe(selection => {
                 this.content.selectedDetailsSection = selection;
-                this.content = { ...this.content }; // trigger onChange
+                this.content = {...this.content}; // trigger onChange
             });
 
         if (this.CONFIG.accessRoles.options) {
@@ -187,6 +190,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.system.stopPoll();
+        this.ribbonService.hide();
     }
 
     getSystemInfo() {
@@ -212,12 +216,21 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     this.system.systemSubject.subscribe((system) => {
                         if (system !== undefined) {
                             this.settingsService.system = system;
+                            this.updateAlert();
                             this.updateMenu();
                         }
                     });
                 }
             });
 
+    }
+
+    updateAlert() {
+        if (!this.system.isOnline) {
+            this.ribbonService.show(this.LANG.system.offlineAlertRibbon, '', '', 'alert');
+        } else {
+            this.ribbonService.hide();
+        }
     }
 
     updateMenu() {

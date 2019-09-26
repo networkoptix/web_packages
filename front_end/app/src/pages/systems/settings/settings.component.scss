@@ -2,8 +2,8 @@
 @import '~bootstrap/scss/bootstrap';
 
 .block-container {
-  @extend .container;
   max-width: 1592px;
+  width: 100%;
 }
 
 nx-block {
@@ -26,11 +26,18 @@ nx-block {
 .fixed-sidebar{
   @include media-breakpoint-up(md) {
     position: fixed;
+    left: 0;
   }
 }
 
 .fill-screen-height {
   @include media-breakpoint-up(md) {
     height: calc(100vh - 80px);
+  }
+}
+
+.fill-screen-height-alert {
+  @include media-breakpoint-up(md) {
+    height: calc(100vh - 116px);
   }
 }

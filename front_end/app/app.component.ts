@@ -15,6 +15,11 @@ import { NxRibbonService } from './src/components/ribbon/ribbon.service';
 @Component({
     selector: 'nx-app',
     template: `
+        <div class="fixed-top">
+            <nx-ribbon *ngIf="!ribbonService.context.type"></nx-ribbon>
+            <nx-header></nx-header>
+            <nx-ribbon *ngIf="ribbonService.context.type === 'alert'"></nx-ribbon>
+        </div>
         <div [ngClass]="headerPadding">
             <router-outlet></router-outlet>
             <div ng-view="" ng-model-options="{ updateOn: 'blur' }"></div>

@@ -11,12 +11,14 @@ export class NxRibbonComponent implements OnInit {
     action: string;
     actionUrl: string;
     showRibbon: boolean;
+    type: string;
 
     private setupDefaults() {
         this.showRibbon = false;
         this.message = '';
         this.action = '';
         this.actionUrl = '';
+        this.type = '';
     }
 
     constructor(private ribbonService: NxRibbonService) {
@@ -27,6 +29,7 @@ export class NxRibbonComponent implements OnInit {
             this.message = context.message || '';
             this.action = context.text || '';
             this.actionUrl = context.url || '';
+            this.type = context.type || '';
         });
     }
 
