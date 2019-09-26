@@ -32,7 +32,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
     accessDescription: string;
     editUser: any;
     locked: any;
-    removingUserProcess: any;
+    nextUserId: string;
     selectedUser: NxSystemUser;
     systemAvailable: boolean;
     system: NxSystem;
@@ -120,46 +120,37 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 });
             });
         });
-
-        this.removingUserProcess = this.processService.createProcess(() => {
-            return this.system.deleteUser(this.selectedUser);
-        }, {
-            successMessage: this.LANG.system.permissionsRemoved.replace('{{email}}', this.selectedUser ? this.selectedUser.email : ''),
-            errorPrefix   : this.LANG.errorCodes.cantSharePrefix
-        }).then(() => {
-            this.locked[this.selectedUser.email] = false;
-            this.selectedUser = undefined;
-            this.settingsService.loadUsers();
-        });
     }
 
     ngOnDestroy(): void {
 
     }
 
-    removeUser(user) {
-        this.selectedUser = user;
+    removeUser() {
+        const user = this.selectedUser;
         if (this.locked[user.email]) {
             return;
         }
         this.locked[user.email] = true;
+        this.calcNextUserId();
 
-        this.dialogs
-            .confirm(this.LANG.system.confirmUnshare,
-                this.LANG.system.confirmUnshareTitle,
-                this.LANG.system.confirmUnshareAction,
-                'btn-danger', this.LANG.dialogs.cancelButton)
-            .then((result) => {
-                if (result) {
-                    this.selectedUser = user;
-                    // Handling promise to satisfy the linter.
-                    this.removingUserProcess.run().then(() => {});
-                } else {
-                    this.locked[user.email] = false;
-                }
-            }, () => {
+        this.dialogs.removeUser(this.system, user).then((result) => {
+            if (result) {
+                delete this.locked[user.email];
+                this.uriService.updateURI(`systems/${this.system.id}/users/${this.nextUserId}`);
+                this.menuService.setDetailsSection(this.nextUserId);
+            } else {
                 this.locked[user.email] = false;
-            });
+            }
+        });
+    }
+
+    calcNextUserId () {
+        const currentUserIndex = this.system.users.findIndex((user) => {
+            return user.id === this.selectedUser.id;
+        });
+        const nextUserIndex = currentUserIndex + 1 !== this.system.users.length ? currentUserIndex + 1 : currentUserIndex - 1;
+        this.nextUserId = this.system.mediaserver.cleanId(this.system.users[nextUserIndex].id);
     }
 
     setUser() {
@@ -172,6 +163,8 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             }
             if (typeof(user) === 'undefined') {
                 user = this.system.users[0];
+                const userId = this.system.mediaserver.cleanId(user.id);
+                this.uriService.updateURI(`systems/${this.system.id}/users/${userId}`);
             }
 
             // If there's no users skip setting section and permissions

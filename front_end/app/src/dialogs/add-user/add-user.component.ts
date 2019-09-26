@@ -150,8 +150,12 @@ export class AddUserModalContent {
         }, {
             successMessage: this.LANG.dialogs.sharing.permissionsSaved
         }).then((userId) => {
-            this.system.getUsers();
-            this.activeModal.close(userId.id);
+            this.system.getUsers(true).then(() => {
+                // Timeout allows observable in the settings component to update the side menu.
+                setTimeout(() => {
+                    this.activeModal.close(userId.id);
+                });
+            });
         });
     }
 

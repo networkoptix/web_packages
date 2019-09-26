@@ -19,6 +19,7 @@ import { MergeModalContent }         from './merge/merge.component';
 import { NxConfigService }           from '../services/nx-config';
 import { NxAccountService }          from '../services/account.service';
 import { ApplyModalContent }         from './apply/apply.component';
+import { RemoveUserModalContent }    from './remove-user/remove-user.component';
 
 @Injectable({ providedIn: 'root' })
 export class NxDialogsService {
@@ -149,7 +150,7 @@ export class NxDialogsService {
             });
     }
 
-    addUser(account: NxAccountService, system?, user?) {
+    addUser(account, system, user?) {
         const options: any = {
             windowClass: 'modal-holder',
             backdrop   : 'static'
@@ -177,6 +178,21 @@ export class NxDialogsService {
         };
 
         return this.createModal(DisconnectModalContent, options, params);
+    }
+
+    removeUser(system, user) {
+        const options: any = {
+            windowClass: 'modal-holder',
+            backdrop   : 'static'
+        };
+
+        const params: any = {
+            system,
+            user,
+            closable   : true,
+        };
+
+        return this.createModal(RemoveUserModalContent, options, params);
     }
 
     rename(systemId, systemName) {

@@ -1,7 +1,7 @@
 import {
-    Component, Inject, Input,
+    Component, Inject, Input, OnInit,
     Renderer2, ViewChild
-}                                    from '@angular/core';
+} from '@angular/core';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
 import { EmailValidator, NgForm }    from '@angular/forms';
 import { NxConfigService }           from '../../services/nx-config';
@@ -29,7 +29,7 @@ interface Topic {
     templateUrl: 'message.component.html',
     styleUrls: []
 })
-export class MessageModalContent {
+export class MessageModalContent implements OnInit {
     @Input() account;
     @Input() messageType;
     @Input() data;

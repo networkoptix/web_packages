@@ -5,13 +5,13 @@ import { NxConfigService }             from '../../../services/nx-config';
 import { NxDialogsService }            from '../../../dialogs/dialogs.service';
 import { NxAccountService }            from '../../../services/account.service';
 import { NxUriService }                from '../../../services/uri.service';
+import { NxMenuService }               from '../../../components/menu/menu.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class NxSettingsService implements OnDestroy {
     config: any = {};
-    addingUser = false;
     systemSubject = new BehaviorSubject(undefined);
     selectedSectionSubject = new BehaviorSubject([]);
     plugin: any = {};
@@ -20,6 +20,7 @@ export class NxSettingsService implements OnDestroy {
                 private accountService: NxAccountService,
                 private configService: NxConfigService,
                 private uriService: NxUriService,
+                private menuService: NxMenuService,
                 private dialogs: NxDialogsService
     ) {
         this.config = this.configService.getConfig();
@@ -42,24 +43,19 @@ export class NxSettingsService implements OnDestroy {
     }
 
     addUser() {
-        // Todo: when user is added cant click on them for side menu. Need to click on another user first.
         // Call share dialog, run process inside
-        this.addingUser = true;
         return this.dialogs
                    .addUser(this.accountService, this.system)
                    .then((userId) => {
                        if (userId) {
-                           return this.loadUsers().then(() => {
-                               userId = this.system.mediaserver.cleanId(userId);
-                               // this.uriService.updateURI(`/systems/${this.system.id}/users/${userId}`, {}, true);
-                           });
+                           userId = this.system.mediaserver.cleanId(userId);
+                           this.menuService.setDetailsSection(userId);
+                           this.uriService.updateURI(`systems/${this.system.id}/users/${userId}`);
                        }
                    }, (reason) => {
                        // dialog was dismissed ... this handler is required if dialog is dismissible
                        // if we don't handle it will raise a JS error
                        // ERROR Error: Uncaught (in promise): [object Number]
-                   }).finally(() => {
-                       this.addingUser = false;
                    });
     }
 
