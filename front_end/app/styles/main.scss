@@ -120,6 +120,11 @@ nx-app {
     }
 }
 
+.block-container {
+  max-width: $fluid-container-max-width;
+  width: 100%;
+}
+
 @mixin keyframe ($animation_name) {
     @-webkit-keyframes #{$animation-name} {
         @content;
