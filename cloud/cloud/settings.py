@@ -39,8 +39,10 @@ TRAFFIC_RELAY_PROTOCOL = 'https://'
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '03-b9bxxpjxsga(qln0@3szw3+xnu%6ph_l*sz-xr_4^xxrj!_'
 
+# Celery worker should never run in debug mode. If it is running with debug then it will hang after sometime.
+CELERY_WORKER = 'celery' in sys.argv[0]
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = 'debug' in conf and conf['debug'] or LOCAL_ENVIRONMENT
+DEBUG = ('debug' in conf and conf['debug'] or LOCAL_ENVIRONMENT) and not CELERY_WORKER
 
 ALLOWED_HOSTS = ['*']
 
