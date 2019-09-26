@@ -179,10 +179,13 @@
     "downloads": {
         "appTypes": {
             "bundle": "Client and Server",
+            "camera_sdk": "Camera",
             "client": "Client only",
+            "metadata_sdk": "Meta Data",
             "package": "Package",
             "server": "Server only",
-            "servertool": "Configuration tool"
+            "servertool": "Configuration tool",
+            "storage_sdk": "Storage"
         },
         "groups": {
             "android": {
@@ -233,8 +236,11 @@
             "bananapi": "Banana Pi",
             "bpi": "Nx1",
             "linux64": "x64",
+            "linux_arm32": "x32",
+            "linux_arm64": "x64",
             "mac": "X",
             "rpi": " Raspberry Pi",
+            "universal": "SDK",
             "win64": "x64"
         },
         "releasesTypes": {

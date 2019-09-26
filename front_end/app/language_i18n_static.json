@@ -73,19 +73,25 @@
 			}
 		},
 		"platforms": {
-			"win64": "x64",
-			"linux64": "x64",
-			"mac": "X",
 			"bananapi": "Banana Pi",
 			"bpi": "Nx1",
-			"rpi": " Raspberry Pi"
+			"linux64": "x64",
+			"linux_arm32": "x32",
+			"linux_arm64": "x64",
+			"mac": "X",
+			"rpi": " Raspberry Pi",
+			"universal": "SDK",
+			"win64": "x64"
 		},
 		"appTypes": {
-			"client": "Client only",
-			"server": "Server only",
 			"bundle": "Client and Server",
+			"camera_sdk": "Camera",
+			"client": "Client only",
+			"metadata_sdk": "Meta Data",
+			"package": "Package",
+			"server": "Server only",
 			"servertool": "Configuration tool",
-			"package": "Package"
+			"storage_sdk": "Storage"
 		},
 		"releasesTypes": {
 			"beta": "Beta",

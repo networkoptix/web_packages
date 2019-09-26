@@ -137,11 +137,15 @@ export class DownloadComponent implements OnInit, OnDestroy {
                                     return this.downloads.groups[platform.name].appTypes.includes(installer.appType);
                             }
                         }).map((installer) => {
-                            const translatedPlatform = this.lang.downloads.platforms[installer.platform] || installer.platform;
-                            const translatedAppType = this.lang.downloads.appTypes[installer.appType] || this.lang.downloads.appTypes.package;
-                            installer.formatName = `${translatedPlatform} - ${translatedAppType}`;
-                            if (installer.niceName) {
+                            const translatedPlatform = this.lang.downloads.platforms[installer.platform];
+                            const translatedAppType = this.lang.downloads.appTypes[installer.appType];
+
+                            if (translatedPlatform && translatedAppType) {
+                                installer.formatName = `${translatedPlatform} - ${translatedAppType}`;
+                            } else if (installer.niceName) {
                                 installer.formatName = installer.niceName;
+                            } else {
+                                installer.formatName = `${installer.platform} - ${this.lang.downloads.appTypes.package}`;
                             }
                             installer.url = `${this.downloadsData.releaseUrl}${installer.path}`;
                             return installer;
