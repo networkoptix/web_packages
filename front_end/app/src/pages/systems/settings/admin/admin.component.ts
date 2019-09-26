@@ -143,7 +143,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         this.systems = this.systemsService.getMySystems(this.accountService.getEmail(), this.system.id);
 
         this.currentlyMerging = true;
-        this.settingsService.setSystem(this.system);
+        this.settingsService.system = this.system;
 
         return this.dialogs
                    .merge(this.system, this.systems, this.accountService)
@@ -178,7 +178,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                    })
                    .finally(() => {
                        this.currentlyMerging = false;
-                       this.settingsService.setSystem(this.system);
+                       this.settingsService.system = this.system;
                    });
     }
 }

@@ -149,9 +149,9 @@ export class AddUserModalContent {
             }
         }, {
             successMessage: this.LANG.dialogs.sharing.permissionsSaved
-        }).then(() => {
+        }).then((userId) => {
             this.system.getUsers();
-            this.activeModal.close(true);
+            this.activeModal.close(userId.id);
         });
     }
 

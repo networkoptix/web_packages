@@ -10,9 +10,6 @@ import { NxSettingsService } from './settings.service';
 import { NxMenuService }     from '../../../components/menu/menu.service';
 import { NxSystemService }         from '../../../services/system.service';
 import { NxSystemsService }        from '../../../services/systems.service';
-import { NxNoSystemsComponent }    from '../no-systems/no-systems.component';
-import { NxModalAddUserComponent } from '../../../dialogs/add-user/add-user.component';
-import { NxModalGenericComponent } from '../../../dialogs/generic/generic.component';
 import { NxAccountService }        from '../../../services/account.service';
 import { NxProcessService }        from '../../../services/process.service';
 import { NxUtilsService }          from '../../../services/utils.service';
@@ -77,7 +74,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 private processService: NxProcessService,
                 private menuService: NxMenuService,
                 location: Location,
-                private addUserModal: NxModalAddUserComponent,
     ) {
         this.location = location;
         this.setupDefaults();
@@ -193,12 +189,8 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.system.stopPoll();
     }
 
-    getSystem() {
-        return this.system;
-    }
-
     getSystemInfo() {
-        this.settingsService.setSystem(undefined);
+        this.settingsService.system = undefined;
         this.accountService
             .get()
             .then((account) => {
@@ -210,7 +202,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     this.system
                         .getInfo(true)
                         .then(() => {
-                            this.settingsService.setSystem(this.system);
+                            this.settingsService.system = this.system;
                         })
                         .catch((response) => {
                             this.system.forbidden = true;
@@ -219,8 +211,8 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
                     this.system.systemSubject.subscribe((system) => {
                         if (system !== undefined) {
-                            this.settingsService.setSystem(system);
-                            this.updateSomething();
+                            this.settingsService.system = system;
+                            this.updateMenu();
                         }
                     });
                 }
@@ -228,7 +220,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
     }
 
-    updateSomething() {
+    updateMenu() {
         this.systemNoAccess = false;
 
         if (this.system.permissions.editUsers) {
@@ -261,7 +253,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             // Retain buttons
             if (usersNode.level2.length && usersNode.level2[0].id === 'buttons') {
                 // usersNode.level2 = [usersNode.level2[0]];
-                usersNode.level2[0].items[0].disabled = !this.system.isAvailable;
+                usersNode.level2[0].items[0].disabled = !this.system.isAvailable || this.settingsService.addingUser;
             } else {
                 usersNode.level2 = [];
             }
