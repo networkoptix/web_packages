@@ -238,6 +238,8 @@ def downloads(request):
         # End of fallback section for old structure and old versions
 
         build_number = latest_version.split('.')[-1]
+        if ' ' in build_number:
+            build_number = build_number.split(' ')[0]
         updates_path = updates_record['updates_prefix']
 
         # get downloads.json for specific version. If get there - version is at least 3.0, so downloads.json is present
