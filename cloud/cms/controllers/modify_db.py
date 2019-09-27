@@ -166,7 +166,8 @@ def save_unrevisioned_records(asset, context, language, data_structures,
         elif data_structure.type == DataStructure.DATA_TYPES.guid:
 
             # if the guid is valid it will go to the next set of checks
-            new_record_value = request_data[data_structure_name] if data_structure_name in request_data else ""
+            if data_structure_name in request_data:
+                new_record_value = request_data[data_structure_name]
 
             # if its option and not a valid guid set error message and go to next DataStructure
             if new_record_value and not re.match(GUID_REGEXP, new_record_value):
@@ -175,31 +176,16 @@ def save_unrevisioned_records(asset, context, language, data_structures,
                 continue
 
             # no guid submitted or default value and is not optional generate a guid
-            elif not data_structure.optional and not new_record_value:
+            elif not new_record_value and not data_structure.optional:
                 new_record_value = '{' + str(uuid.uuid4()) + '}'
                 upload_errors.append((data_structure_name,
                                       'No submitted GUID or default value. GUID has been generated as {}'
                                       .format(new_record_value)))
 
         elif data_structure.type in [DataStructure.DATA_TYPES.select, DataStructure.DATA_TYPES.multiselect]:
-            values = request_data.getlist(data_structure_name)
-            if 'options' in data_structure.meta_settings and data_structure.meta_settings['options']:
-                if data_structure.type == DataStructure.DATA_TYPES.multiselect:
-                    # Check value with latest value before turning it into a string
-                    if values == latest_value:
-                        continue
-                    if not len(values) and not records_exist:
-                        # Gets the casted default value
-                        new_record_value = json.dumps(data_structure.find_actual_value(asset=asset))
-                    else:
-                        new_record_value = json.dumps(values)
-                else:
-                    new_record_value = values[0]
-            elif not values:
-                if data_structure.type == DataStructure.DATA_TYPES.multiselect:
-                    new_record_value = json.dumps([])
-                else:
-                    new_record_value = ''
+            new_record_value = request_data.getlist(data_structure_name, "")
+            if new_record_value != "" and data_structure.type == DataStructure.DATA_TYPES.select:
+                new_record_value = new_record_value[0]
 
         elif data_structure.type in [DataStructure.DATA_TYPES.external_file, DataStructure.DATA_TYPES.external_image]:
 
@@ -257,20 +243,13 @@ def save_unrevisioned_records(asset, context, language, data_structures,
                 continue
 
         elif data_structure.type in [DataStructure.DATA_TYPES.object, DataStructure.DATA_TYPES.array]:
-            new_record_value = request_data[data_structure_name]
-            if not new_record_value:
-                if data_structure.type is DataStructure.DATA_TYPES.object:
-                    new_record_value = '{}'
-                elif data_structure.type is DataStructure.DATA_TYPES.array:
-                    new_record_value = '[]'
             try:
-                new_record_value = DataStructure.cast_value(data_structure, new_record_value)
+                new_record_value = DataStructure.cast_value(data_structure, request_data[data_structure_name])
                 if data_structure.type == DataStructure.DATA_TYPES.array and type(new_record_value) != list:
                     raise ValueError
                 elif data_structure.type == DataStructure.DATA_TYPES.object and type(new_record_value) != dict:
                     raise ValueError
 
-                new_record_value = json.dumps(new_record_value, indent=4, separators=(',', ': '))
             except ValueError:
                 upload_errors.append((data_structure_name, "Json was incorrectly formatted."))
                 continue
@@ -321,6 +300,10 @@ def save_unrevisioned_records(asset, context, language, data_structures,
         # Remove value for delete_file
         if delete_file:
             new_record_value = ""
+
+        # Temporary until CLOUD-3362 is done
+        if type(new_record_value) in [list, dict]:
+            new_record_value = json.dumps(new_record_value)
 
         record = DataRecord(asset=asset,
                             data_structure=data_structure,

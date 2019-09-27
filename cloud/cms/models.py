@@ -638,6 +638,13 @@ class DataStructure(models.Model):
 
         elif data_structure.type in [DataStructure.DATA_TYPES.object, DataStructure.DATA_TYPES.array,
                                      DataStructure.DATA_TYPES.multiselect]:
+            if not value:
+                if data_structure.type in [DataStructure.DATA_TYPES.object]:
+                    value = {}
+                else:
+                    value = []
+            else:
+                value = json.loads(value)
 
             if data_structure.type == DataStructure.DATA_TYPES.multiselect:
                 for choice in data_structure.meta_settings['options']:
@@ -646,9 +653,8 @@ class DataStructure(models.Model):
                             if value[i] == choice['label']:
                                 value[i] = choice
                                 break
-            return json.loads(value) if value else None
 
-        return value if value else ""
+        return value
 
     @staticmethod
     def get_type_by_name(name):
