@@ -249,7 +249,7 @@ def downloads(request):
         downloads_json['releaseNotes'] = updates_record['release_notes']
         downloads_json['releaseUrl'] = updates_path + '/' + build_number + '/'
         # add release notes to downloads.json
-        # evaluate file pathss
+        # evaluate file paths
         # release_notes = updates_record['release_notes']
 
         global_cache.set(cache_key, json.dumps(downloads_json))

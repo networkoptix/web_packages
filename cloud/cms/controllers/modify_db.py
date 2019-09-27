@@ -264,7 +264,7 @@ def save_unrevisioned_records(asset, context, language, data_structures,
                 elif data_structure.type is DataStructure.DATA_TYPES.array:
                     new_record_value = '[]'
             try:
-                new_record_value = json.loads(new_record_value)
+                new_record_value = DataStructure.cast_value(data_structure, new_record_value)
                 if data_structure.type == DataStructure.DATA_TYPES.array and type(new_record_value) != list:
                     raise ValueError
                 elif data_structure.type == DataStructure.DATA_TYPES.object and type(new_record_value) != dict:
@@ -462,7 +462,7 @@ def get_records_for_version(asset, version, customization):
         data_records = asset.datarecord_set.filter(version__id__gt=published_version,
                                                    version__id__lte=version.id)
     else:
-        data_records = asset.datarecord_set.filter(version__id__lte=version.id)
+        data_records = asset.datarecord_set.filter(version__id=version.id)
     data_records = data_records.\
         order_by('data_structure__context__order', 'language__code', 'data_structure__order', '-id')
     contexts = {}

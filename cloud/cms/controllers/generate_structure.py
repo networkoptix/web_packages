@@ -4,7 +4,6 @@ import re
 import io
 import json
 from collections import OrderedDict
-from distutils.util import strtobool
 from PIL import Image  # get Pillow
 from zipfile import ZipFile
 from ..models import Context, DataStructure, AssetType
@@ -83,14 +82,7 @@ def find_structure(name, context, structure_type, asset_type, meta=None,
         if db_structure:
             label = db_structure.label if db_structure.label != name else ''
             value = db_structure.default if not DataStructure.is_file_or_image(db_structure.type) else ""
-            if db_structure.type in [DataStructure.DATA_TYPES.object, DataStructure.DATA_TYPES.array,
-                                     DataStructure.DATA_TYPES.multiselect]:
-                if value:
-                    value = json.loads(value)
-                else:
-                    value = None
-            elif db_structure.type is DataStructure.DATA_TYPES.check_box:
-                value = strtobool(value) == 1
+            value = DataStructure.cast_value(data_structure, value)
 
             if db_structure.description:
                 description = db_structure.description
