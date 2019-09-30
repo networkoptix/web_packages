@@ -392,6 +392,16 @@ class NxSystemAPI {
         }
         this.location.path(`${systemLink}/view/${this.cleanId(cameraId)}`, false);
     }
+
+    /* Health Monitor */
+    getHealthManifest() {
+        return this.get('/ec2/metrics/manifest');
+    }
+
+    getHealthValues() {
+        // return this.get('/ec2/metrics/values');
+        return this.http.get('/getdata');
+    }
 }
 
 

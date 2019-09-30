@@ -127,6 +127,9 @@ window.L = {};
                     .when('/account', {
                         template: ''
                     })
+                    .when('/health/:systemId', {
+                        template: ''
+                    })
                     .when('/systems/:systemId/users', {
                         template: ''
                     })

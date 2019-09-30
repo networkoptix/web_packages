@@ -286,6 +286,9 @@ export class NxConfigService {
                 maxLength   : 200,
                 debounceTime: 500 // ms
             },
+            systemHealthMenu: {
+                baseUrl: '/health/'
+            },
             systemMenu  : {
                 baseUrl: '/systems/',
                 admin  : {

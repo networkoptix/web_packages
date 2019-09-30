@@ -1,0 +1,43 @@
+<!--<nx-pre-loader type="page" *ngIf="!pagedItems.length"></nx-pre-loader>-->
+<div class="nx-table-wrapper" id="nx-table">
+    <div class="table-wrapper">
+        <table class="table table-hover nx-table">
+            <thead>
+                <tr>
+                    <th *ngFor="let header of headers" class="align-bottom"
+                        (click)="toggleHeaderSort(header)">
+                        <div class="caption d-flex">
+                            <div class="ellipsis" [innerHTML]="header.name || header.id"></div>
+                            <div class="sort-dir nav-arrow"
+                                 [style.visibility]="(header == selectedHeader) ? 'visible' : 'hidden'"
+                                 [ngClass]="{'up': !sortOrderASC}">
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="table-row-spacer"></tr>
+                <tr *ngFor="let item of pagedItems"
+                    [ngClass]="{'selected': item.sortKey == selectedCamera}"
+                    (click)="setClickedRow(item);">
+                    <td *ngFor="let field of item">{{field}}</td>
+                </tr>
+                <tr class="table-row-spacer"></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="vertical-align ml-0 clearfix">
+        <nav aria-label="Cameras table navigation" class="pagination-nav pt-3 pb-3">
+            <ngb-pagination
+                    [collectionSize]="elements.length"
+                    [maxSize]="pagerMaxSize"
+                    [pageSize]="pageSize"
+                    [page]="currentPage"
+                    (pageChange)="setPage($event, true)"></ngb-pagination>
+        </nav>
+    </div>
+</div>

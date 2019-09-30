@@ -39,7 +39,8 @@ import { NxSwitchComponent }         from './switch/switch.component';
 import { ToastsContainer }           from './toast/toast.component';
 import { NxHeaderComponent }         from './header/header.component';
 import { NxNavLocationDropdown }     from './dropdowns/nav-location/nav.component';
-import { NxApplyComponent }           from './apply/apply.component';
+import { NxApplyComponent }          from './apply/apply.component';
+import { DynamicTableModule }        from './dynamic-table/dynamic-table.module';
 
 @NgModule({
     imports: [
@@ -49,7 +50,8 @@ import { NxApplyComponent }           from './apply/apply.component';
         RouterModule,
         FormsModule,
         MenuModule,
-        NgbToastModule
+        NgbToastModule,
+        DynamicTableModule,
     ],
     declarations   : [
         NxGenericDropdown,
@@ -177,6 +179,7 @@ import { NxApplyComponent }           from './apply/apply.component';
         ToastsContainer,
 
         MenuModule,
+        DynamicTableModule,
     ]
 })
 export class ComponentsModule {
