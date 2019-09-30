@@ -284,6 +284,11 @@ class AssetType(models.Model):
 
 
 class Asset(models.Model):
+
+    class Meta:
+        permissions = (
+            ("can_download_package", "Can Download Asset Package"),
+        )
     name = models.CharField(max_length=255)
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, null=True,
