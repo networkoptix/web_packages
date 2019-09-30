@@ -314,6 +314,12 @@ export class NxConfigService {
                     path: '/password'
                 },
             },
+            meta: {
+                viewport: {
+                    default: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no',
+                    desktopLayout: 'width=768, maximum-scale=1, user-scalable=yes, shrink-to-fit=no'
+                }
+            },
             myIntegrationTagId            : 'mine',
             companyLink                   : '',
             companyName                   : '',

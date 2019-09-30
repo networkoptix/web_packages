@@ -3,6 +3,7 @@ import { Location }                                    from '@angular/common';
 import { ActivatedRoute }                              from '@angular/router';
 import { NxConfigService }                             from '../../../services/nx-config';
 import { NxLanguageProviderService }                   from '../../../services/nx-language-provider';
+import { Meta }                                        from '@angular/platform-browser';
 
 import { NxPageService }     from '../../../services/page.service';
 import { NxDialogsService }  from '../../../dialogs/dialogs.service';
@@ -75,13 +76,15 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 private processService: NxProcessService,
                 private menuService: NxMenuService,
                 location: Location,
-                private ribbonService: NxRibbonService
+                private ribbonService: NxRibbonService,
+                private meta: Meta
     ) {
         this.location = location;
         this.setupDefaults();
     }
 
     ngOnInit(): void {
+        this.meta.updateTag({name: 'viewport', content: this.CONFIG.meta.viewport.desktopLayout});
         this.LANG = this.language.getTranslations();
         this.pageService.setPageTitle(this.LANG.pageTitles.system);
         this.init();
@@ -191,6 +194,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         this.system.stopPoll();
         this.ribbonService.hide();
+        this.meta.updateTag({name: 'viewport', content: this.CONFIG.meta.viewport.default});
     }
 
     getSystemInfo() {
