@@ -108,7 +108,8 @@ class Account(AbstractBaseUser, PermissionsMixin):
     class Meta:
         permissions = (
             ("can_view_release", "Can view releases and patches"),
-            ('invite_users', 'Invite users'),
+            ("invite_users", "Invite users"),
+            ("ignore_exceptions", "Downgrades log level of exceptions to INFO")
         )
 
     objects = AccountManager()

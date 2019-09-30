@@ -361,7 +361,7 @@ def log_error(request, error, log_level):
                    error_formatted,
                    traceback.format_exc()
                    ).replace("Traceback", "")  # remove Traceback word from handled exceptions
-    if request.user.is_superuser:
+    if request.user.has_perm('api.ignore_exceptions'):
         log_level = logging.INFO
 
     logger.log(log_level, error_formatted)
