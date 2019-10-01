@@ -362,7 +362,7 @@ def log_error(request, error, log_level):
                    traceback.format_exc()
                    ).replace("Traceback", "")  # remove Traceback word from handled exceptions
     # Explicit check so that it will not affect superusers.
-    if 'ignore_exceptions' in request.user.global_permissions:
+    if request.user.is_authenticated and 'ignore_exceptions' in request.user.global_permissions:
         log_level = logging.INFO
 
     logger.log(log_level, error_formatted)
