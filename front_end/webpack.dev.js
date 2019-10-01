@@ -1,5 +1,4 @@
 const fs = require('fs');
-// const path = require('path');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
@@ -21,33 +20,48 @@ module.exports = merge(common, {
         host              : host,
         port              : port,
         proxy             : [
-            {
-                context: ['/api/utils/language'],
-                target: localStatic,
-                pathRewrite: { '^/api/utils/language': 'language_compiled.json'},
-                changeOrigin: true,
-                secure: false
-            },
+            // Uncomment to test local translation strings
+            // {
+            //     context: ['/api/utils/language'],
+            //     target: localStatic,
+            //     pathRewrite: {'^/api/utils/language': 'language_compiled.json'},
+            //     changeOrigin: true,
+            //     secure: false
+            // },
             {
                 context: [ '/api/', '/gateway/' ],
                 target : cloudInstance,
                 changeOrigin: true,
-                //secure: false
+                secure: false
 
             },
-            // Rewrite English translations and static pages to be served from DEV files
             {
                 context     : '/static/lang_en_US/',
-                target      : localStatic,
-                pathRewrite : { '^/static/lang_en_US': '' },
+                target      : cloudInstance,
                 changeOrigin: true,
                 secure      : false
             },
-            // Rewrite Russian translations and static pages to be served from DEV files
             {
                 context: '/static/lang_ru_RU/',
-                target: localStatic,
-                pathRewrite: {'^/static/lang_ru_RU': ''},
+                target: cloudInstance,
+                changeOrigin: true,
+                secure: false
+            },
+            {
+                context: '/static/lang_de_DE/',
+                target: cloudInstance,
+                changeOrigin: true,
+                secure: false
+            },
+            {
+                context: '/static/lang_he_IL/',
+                target: cloudInstance,
+                changeOrigin: true,
+                secure: false
+            },
+            {
+                context: '/static/images/',
+                target: cloudInstance,
                 changeOrigin: true,
                 secure: false
             },
@@ -76,19 +90,6 @@ module.exports = merge(common, {
 
         // make some resources available while serve the project locally
         new CopyWebpackPlugin([
-            {
-                from: 'images',
-                to  : 'static/images'
-            },
-            {
-                from: 'language_i18n.json',
-                to: '../../translations/en_US/language_i18n.json'
-            },
-            // Local test for i18n *********************
-            {
-                from: '../../translations/ru_RU/',
-                to  : 'static/lang_ru_RU/'
-            },
             // *****************************************
             // Local test for commonPasswordsList ******
             {
@@ -100,7 +101,6 @@ module.exports = merge(common, {
     ],
     output: {
         filename  : 'scripts/[name].js',
-        // path      : path.resolve(__dirname, 'dist'),
         publicPath: '/'
     },
     module   : {
