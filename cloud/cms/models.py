@@ -636,7 +636,7 @@ class DataStructure(models.Model):
     @staticmethod
     def cast_value(data_structure, value):
         if data_structure.type == DataStructure.DATA_TYPES.check_box:
-            return strtobool(value) == 1 if value else False
+            return bool(strtobool(value)) if value else False
 
         elif data_structure.type == DataStructure.DATA_TYPES.integer:
             return int(value) if value else 0

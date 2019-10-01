@@ -129,6 +129,7 @@ def save_unrevisioned_records(asset, context, language, data_structures,
         new_record_value = ""
         external_file = None
         delete_file = False
+        has_error = False
         records_exist = data_structure.datarecord_set.filter(asset=asset).exists()
         is_file_or_image = DataStructure.is_file_or_image(data_structure.type)
         is_file = is_file_or_image or data_structure.type in [DataStructure.DATA_TYPES.external_file,
@@ -164,10 +165,8 @@ def save_unrevisioned_records(asset, context, language, data_structures,
                 continue
 
         elif data_structure.type == DataStructure.DATA_TYPES.guid:
-
             # if the guid is valid it will go to the next set of checks
-            if data_structure_name in request_data:
-                new_record_value = request_data[data_structure_name]
+            new_record_value = request_data[data_structure_name]
 
             # if its option and not a valid guid set error message and go to next DataStructure
             if new_record_value and not re.match(GUID_REGEXP, new_record_value):
@@ -227,20 +226,17 @@ def save_unrevisioned_records(asset, context, language, data_structures,
             except ValueError:
                 upload_errors.append((data_structure_name, "This field has can only be integers."))
                 continue
-            meta_error = False
+
             if 'min' in data_structure.meta_settings and new_record_value < int(data_structure.meta_settings['min']):
                 error_text = f"Value: {new_record_value} is less than the minimum: " \
                              f"{int(data_structure.meta_settings['min'])}"
                 upload_errors.append((data_structure_name, error_text))
-                meta_error = True
+                has_error = True
             if 'max' in data_structure.meta_settings and new_record_value > int(data_structure.meta_settings['max']):
                 error_text = f"Value: {new_record_value} is more than the maximum: " \
                              f"{int(data_structure.meta_settings['max'])}"
                 upload_errors.append((data_structure_name, error_text))
-                meta_error = True
-
-            if meta_error:
-                continue
+                has_error = True
 
         elif data_structure.type in [DataStructure.DATA_TYPES.object, DataStructure.DATA_TYPES.array]:
             try:
@@ -254,7 +250,7 @@ def save_unrevisioned_records(asset, context, language, data_structures,
                 upload_errors.append((data_structure_name, "Json was incorrectly formatted."))
                 continue
 
-        elif data_structure_name in request_data:
+        else:
             new_record_value = request_data[data_structure_name]
             if 'regex' in data_structure.meta_settings:
                 pattern = data_structure.meta_settings['regex']
@@ -264,7 +260,7 @@ def save_unrevisioned_records(asset, context, language, data_structures,
                     pattern = f'{pattern}$'
                 if new_record_value and not re.match(pattern, new_record_value):
                     upload_errors.append((data_structure_name, 'Invalid input'))
-                    continue
+                    has_error = True
 
             if 'char_limit' in data_structure.meta_settings:
                 char_limit = int(data_structure.meta_settings['char_limit'])
@@ -273,12 +269,15 @@ def save_unrevisioned_records(asset, context, language, data_structures,
                         (data_structure_name,
                          'Character limit exceeded. Text was {} characters but should not be more than {} characters'.
                          format(len(new_record_value), char_limit)))
-                    continue
+                    has_error = True
+
+        if has_error:
+            continue
 
         # If the data structure is not optional and has no value use the default.
-        if new_record_value == "" and not data_structure.optional and not records_exist:
+        if new_record_value in ["", {}, []] and not data_structure.optional:
             # If there is a default value use it. Otherwise don't fill it prevent it.
-            if data_structure.default != "":
+            if data_structure.default != "" and not records_exist:
                 # Gets the default value and will cast the default value
                 new_record_value = data_structure.find_actual_value(asset=asset)
                 upload_errors.append((data_structure_name, "This field cannot be blank. Using default value"))
@@ -287,6 +286,11 @@ def save_unrevisioned_records(asset, context, language, data_structures,
                 continue
 
         if new_record_value == latest_value and not delete_file:
+            continue
+
+        # Multiselect is a special case because it adds the label and other info.
+        if data_structure.type == DataStructure.DATA_TYPES.multiselect and \
+                latest_value == DataStructure.cast_value(data_structure, json.dumps(new_record_value)):
             continue
 
         if data_structure.advanced and not (user.is_superuser or user.has_perm('cms.edit_advanced')):
