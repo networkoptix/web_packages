@@ -15,6 +15,7 @@ from api.helpers.exceptions import APIRequestException, APINotFoundException, ap
 from api.helpers.permissions import make_customization_visible_to_user
 from cms.controllers import filldata, generate_structure, modify_db, structure, structure_to_html
 from cms.forms import *
+from cms.permissions import IsSuperuser
 
 from django.contrib.admin import AdminSite
 
@@ -254,14 +255,10 @@ def response_attachment(data, filename, content_type):
     return response
 
 
-@require_http_methods(["GET", "POST"])
-@permission_required('cms.change_asset')
+@api_view(["GET", "POST"])
+@permission_classes((IsSuperuser,))
 def asset_settings(request, asset_id):
     asset = Asset.objects.get(pk=asset_id)
-
-    if not UserGroupsToAssetPermissions.check_permission(request.user, asset, 'cms.edit_content'):
-        raise PermissionDenied
-
     form = None
     if request.method == "POST":
         form = AssetSettingsForm(request.POST, request.FILES)
@@ -368,9 +365,7 @@ def download_file(request, path):
 @permission_classes((IsAuthenticated,))
 def download_package(request, asset_id):
     asset = Asset.objects.get(id=asset_id)
-
-    if not UserGroupsToAssetPermissions.check_permission(request.user, asset, 'cms.edit_content') and \
-            not request.user.has_perm("cms.can_download_package"):
+    if not request.user.has_perm("cms.can_download_package"):
         raise PermissionDenied
 
     version_id = request.GET['version_id'] if 'version_id' in request.GET else None
@@ -401,7 +396,8 @@ def download_package(request, asset_id):
 @api_view(["GET"])
 @permission_classes((IsAuthenticated,))
 def get_asset_ids_by_asset_type(request):
-    if not request.user.has_perm("cms.force_update") and not request.user.has_perm("cms.can_download_package"):
+
+    if not request.user.has_perm("cms.can_download_package"):
         raise PermissionDenied
 
     require_params(request, ("name", "type"))
