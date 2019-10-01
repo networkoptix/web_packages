@@ -13,7 +13,7 @@ import json
 from cloud import settings
 from api.helpers.exceptions import APIRequestException, APINotFoundException, api_success, handle_exceptions, require_params
 from api.helpers.permissions import make_customization_visible_to_user
-from cms.controllers import filldata, generate_structure, modify_db, structure
+from cms.controllers import filldata, generate_structure, modify_db, structure, structure_to_html
 from cms.forms import *
 
 from django.contrib.admin import AdminSite
@@ -330,13 +330,20 @@ def asset_settings(request, asset_id):
 @permission_required('cms.change_asset')
 def download_current_structure(request, asset_id):
     use_actual_values = "get_values" in request.GET
+    output_format = request.GET.get("format", "json")
     asset = Asset.objects.filter(id=asset_id).last()
     if asset_id and asset:
         if not UserGroupsToAssetPermissions.check_permission(request.user, asset, 'cms.edit_content'):
             raise PermissionDenied
         data = generate_structure.from_database(asset, use_actual_values)
-        content = json.dumps(data, ensure_ascii=False, indent=4, separators=(',', ': '))
-        return response_attachment(content, 'structure.json', 'application')
+        file_name = "structure.json"
+        if output_format == "html":
+            data = data[0]
+            content = structure_to_html.process_structure_json(data)
+            file_name = f"{data['type']}.html"
+        else:
+            content = json.dumps(data, ensure_ascii=False, indent=4, separators=(',', ': '))
+        return response_attachment(content, file_name, 'application')
     return HttpResponseBadRequest("Asset not given or found")
 
 

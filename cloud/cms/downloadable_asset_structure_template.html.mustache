@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            table {
+                border-spacing: unset;
+            }
+            .table-wrap tr:nth-child(odd) {
+                background-color:white;
+            }
+			.table-wrap tr:nth-child(even) {
+				background-color: lightgrey;
+			}
+        </style>
+    </head>
+    <body>
+<!--        <h1>Asset Type: {{type}}</h1>-->
+<!--        <table style="border-spacing: 15px;">-->
+<!--            <tr>-->
+<!--                <td >Can Preview:</td>-->
+<!--                <td >{{can_preview}}</td>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--                <td >Single Customization:</td>-->
+<!--                <td >{{single_customization}}</td>-->
+<!--            </tr>-->
+<!--        </table>-->
+        <h1>Expected data for pages</h1>
+        {{#contexts}}
+            <h2>{{#label}}{{label}}{{/label}}{{^label}}{{name}}{{/label}}</h2>
+            <table style="border-spacing: 15px;">
+                {{#name}}
+                <tr>
+                    <td>Name (Tag):</td>
+                    <td>{{name}}</td>
+                </tr>
+                {{/name}}
+                {{#file_path}}
+                <tr>
+                    <td>File path:</td>
+                    <td>{{file_path}}</td>
+                </tr>
+                {{/file_path}}
+
+                {{#description}}
+                <tr>
+                    <td>Description:</td>
+                    <td>{{{description}}}</td>
+                </tr>
+                {{/description}}
+                {{#url}}
+                <tr>
+                    <td>Url:</td>
+                    <td>{{url}}</td>
+                </tr>
+                {{/url}}
+                {{#translatable}}
+                <tr>
+                    <td>Translatable:</td>
+                    <td>{{translatable}}</td>
+                </tr>
+                {{/translatable}}
+            </table>
+            <div class="table-wrap">
+                <table class="relative-table wrapped" style="width: 100%" role="grid" border="0">
+                    <colgroup>
+                        <col style="width: 5.23845%">
+                        <col style="width: 3.16209%">
+                        <col style="width: 3.01875%">
+                        <col style="width: 5.4923%">
+                        <col style="width: 10.9987%">
+                        <col style="width: 10.4722%">
+                    </colgroup>
+                    <tr>
+                        <th align="center" ></th>
+                        <th align="center" >Label</th>
+                        <th align="center" >Name (Tag)</th>
+                        <th align="center" >Type</th>
+                        <th align="center" >Description</th>
+                        <th align="center" >Default Value</th>
+                        <th align="center" >Settings</th>
+                    </tr>
+                    {{#values}}
+                    <tr>
+                        <td align="center" >{{index}}</td>
+                        <td align="center" >{{label}}</td>
+                        <td align="center" >{{name}}</td>
+                        <td align="center" >{{type}}</td>
+                        <td align="center"  style="width: 300px">{{{description}}}</td>
+                        <td align="center" >{{{value}}}</td>
+                        <td align="center" >{{{nice_meta}}}</td>
+                    </tr>
+                    {{/values}}
+                </table>
+            </div>
+        {{/contexts}}
+    </body>
+</html>
