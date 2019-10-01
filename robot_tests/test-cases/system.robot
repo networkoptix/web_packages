@@ -25,8 +25,9 @@ Check System Text
     [arguments]    ${user}
     Log Out
     Log in to Auto Tests System    ${user}
-    Wait Until Elements Are Visible    //h2[text()\='${OWNER TEXT}']    //a[text()\='${EMAIL OWNER}']
-    Wait Until Element Is Not Visible    //h2[text()='${YOUR SYSTEM TEXT}']
+    ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    testFirstName testLastName
+    Wait Until Elements Are Visible    ${current owner name}    ${OWNER EMAIL}    ${YOUR ACCESS LEVEL}
+    Run Keyword Unless    "${user}"=="${EMAIL ADMIN}"    Wait Until Element Is Not Visible    ${YOUR ACCESS LEVEL}/span[contains(text(),'${ADMIN TEXT}')]
 
 Reset DB and Open New Browser On Failure
     Close Browser
@@ -69,32 +70,55 @@ should confirm, if not owner deletes system (You will lose access to this system
     Wait Until Element Is Visible    ${DISCONNECT MODAL WARNING}
     Click Element    ${DISCONNECT MODAL WARNING}
     Sleep    .5
+    Wait Until Element Is Visible    ${DISCONNECT MODAL CANCEL}
     Click Button    ${DISCONNECT MODAL CANCEL}
     Wait Until Page Does Not Contain Element    ${DELETE USER MODAL}
 
 Cancel should cancel disconnection and disconnect should remove it when not owner
     [tags]    C41884
+    Log In    ${EMAIL OWNER}    ${password}
+    Validate Log In
+
+    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
+    Wait Until Elements Are Visible    ${USERS LIST LINK}
+    Click Link    ${USERS LIST LINK}
+    Wait Until Element Is Visible    ${SHARE BUTTON SYSTEMS}
+    Click Button    ${SHARE BUTTON SYSTEMS}
+    Wait Until Elements Are Visible    ${SHARE EMAIL}    ${SHARE BUTTON MODAL}
+    Input Text    ${SHARE EMAIL}    ${EMAIL NOT OWNER}
+    Wait Until Element Contains    ${SHARE PERMISSIONS DROPDOWN}    ${VIEWER TEXT}
+    Click Button    ${SHARE BUTTON MODAL}
+    Check For Alert    ${NEW PERMISSIONS SAVED}
+
+    Log Out
     Log In To Auto Tests System    ${EMAIL NOT OWNER}
     Validate Log In
     Wait Until Element Is Visible    ${DISCONNECT FROM MY ACCOUNT}
     Click Button    ${DISCONNECT FROM MY ACCOUNT}
     Wait Until Elements Are Visible    ${DISCONNECT MODAL WARNING}    ${DISCONNECT MODAL CANCEL}
+
     Click Button    ${DISCONNECT MODAL CANCEL}
     Wait Until Element Is Not Visible    ${DISCONNECT MODAL WARNING}
     Wait Until Page Does Not Contain Element    //div[@modal-render='true']
+
     Wait Until Element Is Visible    ${DISCONNECT FROM MY ACCOUNT}
     Click Button    ${DISCONNECT FROM MY ACCOUNT}
-    Wait Until Elements Are Visible    ${DISCONNECT MODAL WARNING}    ${DISCONNECT MODAL DISCONNECT BUTTON}
+    Wait Until Elements Are Visible    ${MODAL DIALOG}    ${DISCONNECT MODAL WARNING}    ${DISCONNECT MODAL DISCONNECT BUTTON}
     Click Button    ${DISCONNECT MODAL DISCONNECT BUTTON}
     ${SYSYEM DELETED FROM ACCOUNT}    Replace String    ${SYSYEM DELETED FROM ACCOUNT}    {{system_name}}    ${AUTO TESTS}
     Check For Alert    ${SYSYEM DELETED FROM ACCOUNT}
     Wait Until Element Is Visible    ${YOU HAVE NO SYSTEMS}
+
     Log Out
     Log In    ${EMAIL OWNER}    ${password}
     Validate Log In
+
     Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
+    Wait Until Elements Are Visible    ${USERS LIST LINK}
+    Click Link    ${USERS LIST LINK}
     Wait Until Element Is Visible    ${SHARE BUTTON SYSTEMS}
     Run Keyword And Expect Error    *    Wait Until Element Is Visible    ${NOT OWNER IN SYSTEM}
+
     Click Button    ${SHARE BUTTON SYSTEMS}
     Wait Until Elements Are Visible    ${SHARE EMAIL}    ${SHARE BUTTON MODAL}
     Input Text    ${SHARE EMAIL}    ${EMAIL NOT OWNER}
@@ -106,46 +130,29 @@ correct items are shown for owner
     [tags]    C41560    Threaded
     Log in to Auto Tests System    ${EMAIL OWNER}
     Wait Until Element Is Visible    ${USERS LIST LINK}
-#    Wait Until Elements Are Visible    //h2[text()\='${OWNER TEXT}']
-    Wait Until Elements Are Visible    //h2[text()\='${YOUR SYSTEM TEXT}']    ${RENAME SYSTEM}    ${DISCONNECT FROM NX}
+    ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    you
+    Wait Until Elements Are Visible    ${RENAME SYSTEM}    ${DISCONNECT FROM NX}    ${current owner name}
 
 correct items are shown for admin
     [tags]    C41561    Threaded
     Log in to Auto Tests System    ${EMAIL ADMIN}
     Wait Until Element Is Visible    ${USERS LIST LINK}
-    Wait Until Elements Are Visible    ${RENAME SYSTEM}    ${DISCONNECT FROM MY ACCOUNT}    ${OWNER LABEL}    ${OWNER NAME}    ${OWNER EMAIL}    ${YOUR ACCESS LEVEL}    ${YOUR ACCESS LEVEL}/b[contains(text(), ${ADMIN TEXT})]
+    ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    testFirstName testLastName
+    Wait Until Elements Are Visible    ${RENAME SYSTEM}    ${DISCONNECT FROM MY ACCOUNT}    ${OWNER LABEL}    ${current owner name}    ${OWNER EMAIL}    ${YOUR ACCESS LEVEL}    ${YOUR ACCESS LEVEL}/span[contains(text(),'${ADMIN TEXT}')]
 
 correct items are shown for advanced viewer and below
     [tags]    C41562    Threaded
     ${users}         Set Variable    ${EMAIL ADVVIEWER}    ${EMAIL VIEWER}    ${EMAIL LIVEVIEWER}    ${EMAIL CUSTOM}
     ${users text}    Set Variable    ${ADV VIEWER TEXT}    ${VIEWER TEXT}     ${LIVE VIEWER TEXT}    ${CUSTOM TEXT}
-    :FOR    ${user}  ${text}  IN ZIP  ${users}  ${users text}
-    \    Log in to Auto Tests System    ${user}
-    \    Wait Until Elements Are Visible    ${OWNER NAME}    ${OWNER LABEL}    ${OWNER EMAIL}    ${YOUR ACCESS LEVEL}    ${YOUR ACCESS LEVEL}/b[contains(text(),"${text}")]
-    \    Element Should Be Enabled    ${DISCONNECT FROM MY ACCOUNT}
-    \    Element Should Not Be Visible    ${RENAME SYSTEM}
-    \    Element Should Not Be Visible    ${SHARE BUTTON SYSTEMS}
-    \    Element Should Not Be Visible    ${USERS LIST}
-    \    Log Out
-
-does not display edit and remove for owner row
-    [tags]    Threaded    C41905
-    Log in to Auto Tests System    ${EMAIL ADMIN}
-    Wait Until Element Is Visible    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${EMAIL OWNER}')]
-    Mouse Over    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${EMAIL OWNER}')]
-    Element Should Not Be Visible    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${EMAIL OWNER}')]/following-sibling::td/a[@ng-click='unshare(user)']/span[text()='${DELETE USER BUTTON TEXT}']
-    Element Should Not Be Visible    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${EMAIL OWNER}')]/following-sibling::td/a[@ng-click='editShare(user)']/span[contains(text(),'${EDIT USER BUTTON TEXT}')]/..
-
-always displays owner on the top of the table
-    [tags]    Threaded
-    Log in to Auto Tests System    ${EMAIL OWNER}
-    Wait Until Element Is Visible    ${FIRST USER OWNER}
-
-contains user emails and names
-    [tags]    Threaded
-    Log in to Auto Tests System    ${EMAIL OWNER}
-    Wait Until Element Is Visible    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${EMAIL ADMIN}')]
-    Wait Until Element Is Visible    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${ADMIN FIRST NAME} ${ADMIN LAST NAME}')]
+    ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    testFirstName testLastName
+    FOR    ${user}  ${text}  IN ZIP  ${users}  ${users text}
+        Log in to Auto Tests System    ${user}
+        Wait Until Elements Are Visible    ${current owner name}    ${OWNER LABEL}    ${OWNER EMAIL}    ${YOUR ACCESS LEVEL}    ${YOUR ACCESS LEVEL}/span[contains(text(),"${text}")]
+        Element Should Be Enabled    ${DISCONNECT FROM MY ACCOUNT}
+        Element Should Not Be Visible    ${RENAME SYSTEM}
+        Element Should Not Be Visible    ${SHARE BUTTON SYSTEMS}
+        Log Out
+    END
 
 rename button opens dialog and clicking cancel closes rename dialog without rename
     [tags]    C41880    Threaded
@@ -171,8 +178,7 @@ clicking 'X' closes rename dialog without rename
 clicking save with no input in rename dialog throws error
     [tags]    C41880    Threaded
     Log in to Auto Tests System    ${EMAIL OWNER}
-    Wait Until Element Is Visible    ${RENAME SYSTEM}
-    Wait Until Elements Are Visible    ${RENAME SYSTEM}    ${OPEN IN NX BUTTON}    ${DISCONNECT FROM NX}    ${SHARE BUTTON SYSTEMS}
+    Wait Until Elements Are Visible    ${RENAME SYSTEM}    ${DISCONNECT FROM NX}
     Click Button    ${RENAME SYSTEM}
     Wait Until Elements Are Visible    ${RENAME CANCEL}    ${RENAME SAVE}    ${RENAME INPUT}
     sleep    2
@@ -185,8 +191,7 @@ clicking save with no input in rename dialog throws error
 clicking save in rename dialog renames system
     [tags]    C41880
     Log in to Auto Tests System    ${EMAIL OWNER}
-    Wait Until Element Is Visible    ${RENAME SYSTEM}
-    Wait Until Elements Are Visible    ${RENAME SYSTEM}    ${OPEN IN NX BUTTON}    ${DISCONNECT FROM NX}    ${SHARE BUTTON SYSTEMS}
+    Wait Until Elements Are Visible    ${RENAME SYSTEM}    ${DISCONNECT FROM NX}
     Click Button    ${RENAME SYSTEM}
     Wait Until Elements Are Visible    ${RENAME CANCEL}    ${RENAME SAVE}    ${RENAME INPUT}
     Clear Element Text    ${RENAME INPUT}
@@ -194,7 +199,7 @@ clicking save in rename dialog renames system
     Click Button    ${RENAME SAVE}
     Check For Alert    ${SYSTEM NAME SAVED}
     Verify In System    Auto Tests Rename
-    Wait Until Elements Are Visible    ${RENAME SYSTEM}    ${OPEN IN NX BUTTON}    ${DISCONNECT FROM NX}    ${SHARE BUTTON SYSTEMS}
+    Wait Until Elements Are Visible    ${RENAME SYSTEM}    ${DISCONNECT FROM NX}
     Click Button    ${RENAME SYSTEM}
     Wait Until Elements Are Visible    ${RENAME CANCEL}    ${RENAME SAVE}    ${RENAME INPUT}
     Clear Element Text    ${RENAME INPUT}
@@ -242,8 +247,14 @@ should display same user data as user provided during registration
     Log Out
 
 #verify user was added with appropriate name
-    Log In    ${random email}    ${password}
-    Wait Until Element Is Visible    //td[contains(text(),'${COMBO TEXT} ${COMBO TEXT}')]
+    Log In    ${random email}    ${password}    None
+    Wait Until Elements Are Visible    ${USERS LIST LINK}
+    Click Link    ${USERS LIST LINK}
+#click link containing user's email
+    ${User In List}=   Set Variable    //nx-system-settings-component//nx-menu//nx-level-3-item//span[text()='${random email}']/../../../a
+    Click Link    ${User In List}
+#verify name displayed
+    Wait Until Element Is Visible    //nx-system-user-component//nx-block//header/span[contains(text(),'${COMBO TEXT} ${COMBO TEXT}')]
 
 #remove new user from system
     Log Out
@@ -253,7 +264,7 @@ should display same user data as user provided during registration
     Delete All Emails
     Close Mailbox
 
-should display same user data as showed in user account
+should display same user data as shown in user account
     [tags]    email    C41573    C41842    Threaded
 #create user
     ${random email}    Get Random Email    ${BASE EMAIL}
@@ -283,7 +294,13 @@ should display same user data as showed in user account
     Log Out
 
     Log in to Auto Tests System    ${email}
-    Wait Until Element Is Visible    //td[contains(text(),'${COMBO TEXT} ${COMBO TEXT}')]
+    Wait Until Elements Are Visible    ${USERS LIST LINK}
+    Click Link    ${USERS LIST LINK}
+#click link containing user's email
+    ${User In List}=   Set Variable    //nx-system-settings-component//nx-menu//nx-level-3-item//span[text()='${random email}']/../../../a
+    Click Link    ${User In List}
+#verify name displayed
+    Wait Until Element Is Visible    //nx-system-user-component//nx-block//header/span[contains(text(),'${COMBO TEXT} ${COMBO TEXT}')]
 
     #remove new user from system
     Log Out
@@ -296,7 +313,8 @@ should display same user data as showed in user account
 should show (your system) for owner and (owner's name) for non-owners
     [tags]    Threaded
     Log in to Auto Tests System    ${EMAIL OWNER}
-    Wait Until Element Is Visible    //h2[text()='${YOUR SYSTEM TEXT}']
-    Wait Until Element Is Not Visible    //h2[text()='${OWNER TEXT}']
-    :FOR    ${user}    IN    @{EMAILS LIST}
-    \  Run Keyword Unless    "${user}"=="${EMAIL OWNER}"    Check System Text    ${user}
+    ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    you
+    Wait Until Elements Are Visible    ${RENAME SYSTEM}    ${DISCONNECT FROM NX}    ${current owner name}
+    FOR    ${user}    IN    @{EMAILS LIST}
+        Run Keyword Unless    "${user}"=="${EMAIL OWNER}"    Check System Text    ${user}
+    END

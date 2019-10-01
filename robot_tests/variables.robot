@@ -37,18 +37,18 @@ ${REMEMBER ME CHECKBOX REAL}          //form[@name='loginForm']//input[@id='reme
 
 ${FORGOT PASSWORD}                    //form[@name='loginForm']//a[@href='/restore_password']
 ${LOG IN CLOSE BUTTON}                //button[@data-dismiss='modal']
-${ACCOUNT NOT FOUND}                  //form[@name='loginForm']//div[contains(text(), '${ACCOUNT NOT FOUND TEXT}')]
+${ACCOUNT NOT FOUND}                  //form[@name='loginForm']//div[contains(text(),'${ACCOUNT NOT FOUND TEXT}')]
 ${RESEND ACTIVATION EMAIL LINK}       //form[@name='loginForm']//a[text()='${RESEND ACTIVATION LINK BUTTON TEXT}']
 ${WRONG PASSWORD MESSAGE}             //form[@name='loginForm']//div[text()="${WRONG PASSWORD}"]
 ${ACCOUNT NOT FOUND MESSAGE}          //form[@name='loginForm']//div[text()="${ACCOUNT DOES NOT EXIST}"]
 ${TOO MANY ATTEMPTS MESSAGE}          //form[@name='loginForm']//div[text()="${TOO MANY ATTEMPTS TEXT}"]
 
-${LOG IN NAV BAR}                     //nav//a/span[contains(text(), '${LOG IN BUTTON TEXT}')]/..
+${LOG IN NAV BAR}                     //nav//a/span[contains(text(),'${LOG IN BUTTON TEXT}')]/..
 ${YOU HAVE NO SYSTEMS}                //span[contains(text(),"${YOU HAVE NO SYSTEMS TEXT}")]
 
 #Header
 ${ACCOUNT DROPDOWN}                   //header//nx-account-settings-select//button[@id='accountSettingsSelect' and @data-toggle="dropdown"]
-${LOG OUT BUTTON}                     //li[contains(@class, 'collapse-first')]//a/span[contains(text(), "${LOG OUT BUTTON TEXT}")]/..
+${LOG OUT BUTTON}                     //li[contains(@class, 'collapse-first')]//a/span[contains(text(),"${LOG OUT BUTTON TEXT}")]/..
 ${LOGO LINK}                          //header//a[@href='/']
 ${ACCOUNT SETTINGS BUTTON}            //li//a[@href = '/account/']
 ${CHANGE PASSWORD BUTTON DROPDOWN}    //li//a[@href = '/account/password/']
@@ -70,7 +70,7 @@ ${RESET PASSWORD BUTTON}              //form[@name='restorePassword']//button[co
 ${RESET PASSWORD INPUT}               //form[@name='restorePasswordWithCode']//input[@id='newPassword']
 ${SAVE PASSWORD}                      //form[@name='restorePasswordWithCode']//button[contains(@class,'btn btn-primary')]
 ${RESET EMAIL SENT MESSAGE}           //div/h1[contains(@class,'process-success')]
-${RESET SUCCESS MESSAGE}              //h1[contains(text(), "${RESET SUCCESS MESSAGE TEXT}")]
+${RESET SUCCESS MESSAGE}              //h1[contains(text(),"${RESET SUCCESS MESSAGE TEXT}")]
 ${RESET SUCCESS LOG IN LINK}          //div[contains(@class,'process-success')]//a[contains(@class,'btn btn-default')]
 ${RESET EYE ICON OPEN}                ${RESET PASSWORD FORM}${EYE ICON OPEN}
 ${RESET EYE ICON CLOSED}              ${RESET PASSWORD FORM}${EYE ICON CLOSED}
@@ -95,11 +95,11 @@ ${REGISTER PASSWORD INPUT}            ${REGISTER FORM}//input[@id='registerPassw
 ${TERMS AND CONDITIONS CHECKBOX VISIBLE}    ${REGISTER FORM}//label[@class="nx-checkbox"]/span[contains(@class,"tick")]//*[local-name() = 'svg']
 ${TERMS AND CONDITIONS CHECKBOX REAL}       ${REGISTER FORM}//input[@id='accept']
 
-${CREATE ACCOUNT BUTTON}              ${REGISTER FORM}//button[contains(text(), "${CREATE ACCOUNT BUTTON TEXT}")]
+${CREATE ACCOUNT BUTTON}              ${REGISTER FORM}//button[contains(text(),"${CREATE ACCOUNT BUTTON TEXT}")]
 ${TERMS AND CONDITIONS LINK}          ${REGISTER FORM}//a[@href='/content/eula']
-${TERMS AND CONDITIONS ERROR}         ${REGISTER FORM}//span[@class='help-block input-error' and contains(text(), "${TERMS AND CONDITIONS ERROR TEXT}")]
+${TERMS AND CONDITIONS ERROR}         ${REGISTER FORM}//span[@class='help-block input-error' and contains(text(),"${TERMS AND CONDITIONS ERROR TEXT}")]
 ${PRIVACY POLICY LINK}                ${REGISTER FORM}//a[@href='${PRIVACY POLICY URL HREF}']
-${RESEND ACTIVATION LINK BUTTON}      //form[@name= 'loginForm']//a[contains(text(), "${RESEND ACTIVATION LINK BUTTON TEXT}")]
+${RESEND ACTIVATION LINK BUTTON}      //form[@name= 'loginForm']//a[contains(text(),"${RESEND ACTIVATION LINK BUTTON TEXT}")]
 ${REGISTER EYE ICON OPEN}             ${REGISTER FORM}${EYE ICON OPEN}
 ${REGISTER EYE ICON CLOSED}           ${REGISTER FORM}${EYE ICON CLOSED}
 
@@ -123,39 +123,39 @@ ${OPEN NX WITNESS BUTTON FROM =}      //button[text()="${OPEN NX WITNESS BUTTON 
 
 
 ${ACCOUNT CREATION SUCCESS}           //h1[@class="process-success d-flex align-items-center flex-column mt-5 ng-star-inserted"]
-${ACTIVATION SUCCESS}                 //h1[@class='process-success' and contains(text(), "${ACCOUNT SUCCESSFULLY ACTIVATED TEXT}")]
-${SUCCESS LOG IN BUTTON}              //h1[@class='process-success' and contains(text(), "${ACCOUNT SUCCESSFULLY ACTIVATED TEXT}")]/following-sibling::h1/a[text()="${LOG IN BUTTON TEXT}"]
+${ACTIVATION SUCCESS}                 //h1[@class='process-success' and contains(text(),"${ACCOUNT SUCCESSFULLY ACTIVATED TEXT}")]
+${SUCCESS LOG IN BUTTON}              //h1[@class='process-success' and contains(text(),"${ACCOUNT SUCCESSFULLY ACTIVATED TEXT}")]/following-sibling::h1/a[text()="${LOG IN BUTTON TEXT}"]
 #In system settings
 ${SYSTEM NAME}                        //h2[contains(@class,"system-name")]
 ${FIRST USER OWNER}                   //table[@ng-if='system.users.length']/tbody/tr/td[3]/span[contains(text(),"${OWNER TEXT}")]
 ${DISCONNECT FROM NX}                 //button/span[text()='${DISCONNECT FROM CLOUD TEXT}']/..
-${RENAME SYSTEM}                      //button/span[text()='${RENAME}']
+${RENAME SYSTEM}                      //button/span[text()='${RENAME}']/..
 ${RENAME CANCEL}                      //form[@name='renameForm']//button[text()='${CANCEL BUTTON TEXT}']
-${RENAME X BUTTON}                    //form[@name='renameForm']//button[@class='close']
+${RENAME X BUTTON}                    //form[@name='renameForm']//button[contains(@class,'close')]
 ${RENAME SAVE}                        //form[@name='renameForm']//button[text()='${SAVE BUTTON TEXT}']
 
 ${RENAME INPUT}                       //form[@name='renameForm']//input[@id='systemName']
 ${RENAME INPUT WITH ERROR}            //form[@name='renameForm']//input[@id='systemName' and contains(@class,'ng-invalid')]
 ${SYSTEM NAME IS REQUIRED}            //form[@name='renameForm']//span[@class='input-error' and contains(text(),"${SYSTEM NAME IS REQUIRED TEXT}")]
 
-${OWNER NAME}                         //header//span[contains(text(), "${TEST FIRST NAME} ${TEST LAST NAME}"]
-${OWNER LABEL}                        //header//span[contains(text(), "${OWNER TEXT}")]
-${OWNER EMAIL}                        //header//span[contains(text(), "${EMAIL OWNER}"]
-${YOUR ACCESS LEVEL}                   //ng-include[@src="$root.C.viewsDir + 'components/system-card.html'"]//p[contains(text(), "${YOUR ACCESS LEVEL TEXT}")]
+${OWNER LABEL}                        //nx-block//header//h2/following-sibling::span[contains(@class,'system-owner')]/span[contains(text(),'${OWNER TEXT}')]
+${OWNER NAME}                         ${OWNER LABEL}//following-sibling::span//span[contains(text(),'%OWNER_NAME%')]
+${OWNER EMAIL}                        ${OWNER LABEL}/following-sibling::span/span[contains(text(),"${EMAIL OWNER}")]
+${YOUR ACCESS LEVEL}                  //nx-block//nx-section//span[contains(@class,'system-owner') and contains(text(),"${YOUR ACCESS LEVEL TEXT}")]
 
-${DISCONNECT FROM MY ACCOUNT}         //button[@ng-click='delete()']
+${DISCONNECT FROM MY ACCOUNT}         //button[contains(text(),'Disconnect from My Account')]
 ${SHARE BUTTON SYSTEMS}               //nx-system-settings-component//nx-menu//nx-menu-button//button
 ${SHARE BUTTON DISABLED}              ${SHARE BUTTON SYSTEMS}\[@disabled]
 ${OPEN IN NX BUTTON}                  //nx-client-button//nx-process-button//button
 ${OPEN IN NX BUTTON DISABLED}         ${OPEN IN NX BUTTON}\[@disabled]
-${REMOVE USER BUTTON}                 //button[contains(text(), '${REMOVE USER BUTTON TEXT}')]
+${REMOVE USER BUTTON}                 //button[contains(text(),'${REMOVE USER BUTTON TEXT}')]
 ${DELETE USER MODAL}                  //ngb-modal-window
-${DELETE USER BUTTON}                 //button[contains(text(), '${DELETE USER BUTTON TEXT}')]
-${DELETE USER CANCEL BUTTON}          //ngb-modal-window//button[contains(text(), "${CANCEL BUTTON TEXT}")]
+${DELETE USER BUTTON}                 //button[contains(text(),'${DELETE USER BUTTON TEXT}')]
+${DELETE USER CANCEL BUTTON}          //ngb-modal-window//button[contains(text(),"${CANCEL BUTTON TEXT}")]
 ${SYSTEM NAME OFFLINE}                //span[@ng-if='!system.isOnline']
 ${USERS LIST LINK}                    //a[@id='users']
 
-${SYSTEM NO ACCESS}                   //div[@ng-if='systemNoAccess']/h1[contains(text(), "${SYSTEM NO ACCESS TEXT}")]
+${SYSTEM NO ACCESS}                   //div/h1[contains(text(),"${SYSTEM NO ACCESS TEXT}")]
 ${AVAILABLE SYSTEMS LIST}             //a[@href='/systems']
 ${SYSTEMS SEARCH INPUT}               //nx-systems-list-component//div[contains(@class,'search-block')]//input
 ${SYSTEM SEARCH X BUTTON}             ${SYSTEMS SEARCH INPUT}//preceding::a[contains(@class,'input-overlay-right')]
@@ -189,13 +189,14 @@ ${DISCONNECT FORM}                    //form[@name='disconnectForm']
 ${DISCONNECT FORM CANCEL}             ${DISCONNECT FORM}//button[text()='${CANCEL BUTTON TEXT}']
 ${DISCONNECT FORM HEADER}             //h1["${DISCONNECT FORM HEADER TEXT}"]
 ${DISCONNECT PASSWORD INPUT}          ${DISCONNECT FORM}//input[@id="password"]
-${DISCONNECT FORM DISCONNECT BUTTON}    ${DISCONNECT FORM}//button[contains(text(), "${DISCONNECT BUTTON TEXT}")]
+${DISCONNECT FORM DISCONNECT BUTTON}    ${DISCONNECT FORM}//button[contains(text(),"${DISCONNECT BUTTON TEXT}")]
 
+${MODAL DIALOG}                       //ngb-modal-window/div[contains(@class,'modal-dialog')]/div[contains(@class,'modal-content')]
 #Disconnect from my account
-${DISCONNECT MODAL WARNING}              //p[contains(text(), "${DISCONNECT MODAL WARNING TEXT}")]
+${DISCONNECT MODAL WARNING}              ${MODAL DIALOG}//p[contains(text(),"${DISCONNECT MODAL WARNING TEXT}")]
 # extra spaces here temporarily
-${DISCONNECT MODAL CANCEL}               //button[text()='${CANCEL BUTTON TEXT} ']
-${DISCONNECT MODAL DISCONNECT BUTTON}    //button[text()='${DISCONNECT BUTTON TEXT} ']
+${DISCONNECT MODAL CANCEL}               ${MODAL DIALOG}//button/span[contains(text(),'${CANCEL BUTTON TEXT}')]/..
+${DISCONNECT MODAL DISCONNECT BUTTON}    ${MODAL DIALOG}//button[contains(text(),'${DISCONNECT BUTTON TEXT}')]
 
 ${JUMBOTRON}                          //div[@class='jumbotron']
 ${PROMO BLOCK}                        //div[contains(@class,'promo-block') and not(contains(@class, 'col-sm-4'))]
@@ -372,7 +373,7 @@ ${PASSWORD INCORRECT BADGE}           //span[contains(@class,"badge") and contai
 ${LOGGED IN CONTINUE BUTTON}          //ngb-modal-window//button[contains(text(),'Continue')]
 ${LOGGED IN LOG OUT BUTTON}           //ngb-modal-window//button[contains(text(),'${LOG OUT BUTTON TEXT}')]
 
-${CONTINUE BUTTON}                    //ngb-modal-window//button[contains(text(), '${CONTINUE BUTTON TEXT}')]
+${CONTINUE BUTTON}                    //ngb-modal-window//button[contains(text(),'${CONTINUE BUTTON TEXT}')]
 ${CONTINUE MODAL}                     //ngb-modal-window
 
 ${300CHARS}                           QWErtyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmyy

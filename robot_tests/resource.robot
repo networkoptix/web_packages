@@ -397,7 +397,7 @@ Reset System Names
     Open Browser and go to URL    ${url}/systems/${AUTOTESTS OFFLINE SYSTEM ID}
     Log In    ${EMAIL OWNER}    ${BASE PASSWORD}    None
     Validate Log In
-    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${SHARE BUTTON SYSTEMS}    ${OPEN IN NX BUTTON}    ${RENAME SYSTEM}
+    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}
     Click Button    ${RENAME SYSTEM}
     Wait Until Elements Are Visible    ${RENAME CANCEL}    ${RENAME SAVE}    ${RENAME INPUT}
     Clear Element Text    ${RENAME INPUT}
@@ -407,7 +407,7 @@ Reset System Names
     Verify In System    Auto Tests 2
 
     Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
-    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${SHARE BUTTON SYSTEMS}    ${OPEN IN NX BUTTON}    ${RENAME SYSTEM}
+    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}
     Click Button    ${RENAME SYSTEM}
     Wait Until Elements Are Visible    ${RENAME CANCEL}    ${RENAME SAVE}    ${RENAME INPUT}
     Clear Element Text    ${RENAME INPUT}
