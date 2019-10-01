@@ -154,6 +154,13 @@ class Account(AbstractBaseUser, PermissionsMixin):
         return list(set(permissions))
 
     @property
+    def global_permissions(self):
+        permissions = []
+        for group in self.groups.all():
+            permissions.extend([permission.codename for permission in group.permissions.all()])
+        return list(set(permissions))
+
+    @property
     def assets(self):
         return self.assets_with_permission('cms.edit_content')
 
