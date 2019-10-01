@@ -82,7 +82,7 @@ Going to the downloads page should show you the tab according to your OS
     #we convert to lowercase because the ids are lowercase but the os call gives uppercase
     ${os}    Get OS
     ${os}    Convert To Lowercase    ${os}
-    Wait Until Element Is Visible    //a[@aria-expanded="true" and @id="${os}"]
+    Wait Until Element Is Visible    //a[@aria-selected="true" and @id="${os}"]
 
 Make sure each tab changes the text to show the corresponding OS and url
     Go to download page

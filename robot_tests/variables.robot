@@ -232,16 +232,18 @@ ${ACCOUNT SAVE}                       //nx-account-settings-component//nx-apply/
 ${ACCOUNT CANCEL}                     //nx-account-settings-component//nx-apply/div/button
 
 #Downloads
-${DOWNLOADS HEADER}                   //h1["Downloads"]
-${DOWNLOAD WINDOWS VMS LINK}          //div[text()="Windows x64 - Client and Server"]/../..
-${DOWNLOAD UBUNTU VMS LINK}           //div[text()="Ubuntu x64 - Client only"]/../..
-${DOWNLOAD MAC OS VMS LINK}           //div[text()="Mac OS X - Client only"]/../..
-${ITUNES STORE DOWNLOAD BUTTON}       //a[@class="mobile-link iOS"]
-${PLAY STORE DOWNLOAD BUTTON}         //a[@class="mobile-link Android"]
+${DOWNLOADS HEADER}                   //h1[contains(text(),"Download")]
+${DOWNLOAD WINDOWS VMS LINK}          //h3[text()="Download Nx Witness"]//following-sibling::div[contains(text(),"Windows x64 - Client & Server")]/../..
+${DOWNLOAD UBUNTU VMS LINK}           //h3[text()="Download Nx Witness"]//following-sibling::div[contains(text(),"Ubuntu x64 - Client")]/../..
+${DOWNLOAD MAC OS VMS LINK}           //h3[text()="Download Nx Witness"]//following-sibling::div[contains(text(),"Mac OS - Client")]/../..
+${DOWNLOAD ARM VMS LINK}              //h3[text()="Download Nx Witness"]//following-sibling::div[contains(text(),"ARM") and contains(text(),"Client")]/../..
+${ITUNES STORE DOWNLOAD BUTTON}       //a[contains(@class,"mobile-link iOS")]
+${PLAY STORE DOWNLOAD BUTTON}         //a[contains(@class,"mobile-link Android")]
 
 ${WINDOWS TAB}                        //a[@id="windows"]
 ${UBUNTU TAB}                         //a[@id="linux"]
 ${MAC OS TAB}                         //a[@id="macos"]
+${ARM TAB}                            //a[@id="arm"]
 
 #History
 ${RELEASES TAB}                       //span[@class='tab-heading' and text()='Releases']/..
@@ -344,12 +346,8 @@ ${FOOTER COPYRIGHT LINK}              //footer//a[contains(text(),"${COPYRIGHT S
 ${FOOTER SUPPORTED DEVICES LINK}      //footer//a[contains(text(),"${SUPPORTED DEVICES}"]
 
 #Misc
-${PAGE NOT FOUND}                     //h1[contains(text(), '${PAGE NOT FOUND TEXT}')]
-${TAKE ME HOME}                       //a[@href='/' and contains(text(), "${TAKE ME HOME TEXT}")]
-
-${WINDOWS TAB}                        //a[@ng-click="select()"]//span[text()="Windows"]/../..
-${UBUNTU TAB}                         //a[@ng-click="select()"]//span[text()="Ubuntu Linux"]/../..
-${MAC OS TAB}                         //a[@ng-click="select()"]//span[text()="Mac OS"]/../..
+${PAGE NOT FOUND}                     //h1[contains(text(),'${PAGE NOT FOUND TEXT}')]
+${TAKE ME HOME}                       //a[@href='/' and contains(text(),"${TAKE ME HOME TEXT}")]
 
 ${RELEASE NUMBER}                     //div[contains(@class,"active")]//div[@ng-repeat="release in activeBuilds"]//h1/b
 
