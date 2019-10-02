@@ -37,6 +37,7 @@ export class DownloadComponent implements OnInit, OnDestroy {
     platformMatch: {};
     canSeeHistory: boolean;
     tabsVisible: boolean;
+    activeTab: string;
     sortedPlatforms: any;
 
     @ViewChild('tabs', { static: false })
@@ -104,6 +105,7 @@ export class DownloadComponent implements OnInit, OnDestroy {
 
     public beforeChange($event: NgbTabChangeEvent) {
         this.setTitle($event.nextId);
+        this.activeTab = $event.nextId;
         this.uriService.updateURI('/download/' + $event.nextId, {});
     }
 
