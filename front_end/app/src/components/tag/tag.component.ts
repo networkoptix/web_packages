@@ -4,6 +4,18 @@ import {
 }                                                  from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
+/* Usage
+ <nx-tag
+     type?="default | danger | info | brand | success | warning" -> default - "badge"
+     element?="btn" -> default - "badge"
+     size?="large"
+     name?="tagName" id?="tagId"
+     [value]?="tag.selected"
+     (click)?="onClick($event)">
+     [TEXT]
+ </nx-checkbox>
+ */
+
 @Component({
     selector: 'nx-tag',
     templateUrl: 'tag.component.html',
@@ -16,22 +28,26 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 })
 export class NxTagComponent implements OnInit, ControlValueAccessor {
     @Input() type: string;
+    @Input() element: string;
+    @Input() size: string;
+
     @Input('value') selected: boolean;
     @Output() onClick = new EventEmitter<boolean>();
 
-    private badgeClass: string;
+    private badgeType: string;
 
     constructor() {}
 
     ngOnInit() {
-        this.badgeClass = this.type !== undefined ? `-${this.type}` : '';
+        this.element = this.element || 'badge';
+        this.badgeType = this.type !== undefined ? `badge-${this.type}` : 'badge';
         if (this.selected) {
-            this.badgeClass = `${this.badgeClass}-selected`;
+            this.badgeType = `badge-${this.badgeType}-selected`;
         }
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        this.selected = changes.selected.currentValue;
+        this.selected = changes.selected && changes.selected.currentValue;
         setTimeout(() => {
             if (!this.selected) {
                 this.deselectTag();
@@ -43,13 +59,13 @@ export class NxTagComponent implements OnInit, ControlValueAccessor {
 
     deselectTag() {
         this.selected = false;
-        this.badgeClass = this.type ? `-${this.type}` : '';
+        this.badgeType = this.type ? `badge-${this.type}` : 'badge';
         this.changeState(false);
     }
 
     selectTag() {
         this.selected = true;
-        this.badgeClass = this.type ? `-${this.type}-selected` : '-selected';
+        this.badgeType = this.type ? `badge-${this.type}-selected` : 'badge-selected';
         this.changeState(true);
     }
 

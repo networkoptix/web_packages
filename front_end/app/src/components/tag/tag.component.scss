@@ -17,28 +17,38 @@
     }
 }
 
-.badge,
-.badge-brand {
+.badge {
     font-family : $font-family-regular;
     font-weight: 400;
+    font-size : rem(12px);
     color : $light16;
     background-color: $light4;
-    line-height: 1rem;
+    line-height: 18px;
+    height: 20px;
+    padding : 0 8px;
+    border-radius : 2px;
     
-    &:hover {
-        background-color : $light5;
-    }
-    
-    &:active {
-        background-color : $light6;
+    &.large {
+        height      : 2rem !important;
+        font-family : $font-family-regular !important;
+        font-weight : 400 !important;
+        font-size   : rem(13px);
+        line-height : 2rem !important;
+        padding     : 0 12px;
     }
 }
 
 .badge {
-    &-meduim {
-        font-family : $font-family-regular;
-        line-height           : 2rem;
-        padding : 0 12px;
+    &.btn {
+        cursor : pointer !important;
+        
+        &:hover {
+            background-color : $light5;
+        }
+    
+        &:active {
+            background-color : $light6;
+        }
     }
 }
 
@@ -56,22 +66,22 @@
     font-size : rem(13px);
 }
 
-$theme-colors : (
-    "success": $brand-success,
-    "info": $brand-info,
-    "warning": $brand-warning,
-    "danger": $brand-danger,
-);
+$nx-theme-colors :
+    "brand" $brand_core $light1,
+    "default" $light8 $light1,
+    "success" $brand-success $light1,
+    "info" $brand-info $light1,
+    "warning" $brand-warning $light1,
+    "danger" $brand-danger $light1;
 
-@each $color, $value in $theme-colors {
-    .badge-#{$color} {
+@each $name, $bg-color, $fg-color in $nx-theme-colors {
+    .badge-#{$name} {
         @extend .badge;
-        padding: 0 12px !important;
-        font-family : $font-family-regular;
+        background-color : $bg-color;
+        color: $fg-color;
     }
-    .badge-#{$color}-selected {
+    .badge-#{$name}-selected {
         color: $light1;
-        @include badge-selected($value, darken($value, 10%), darken($value, 15%));
-        font-family : $font-family-regular;
+        @include badge-selected($bg-color, darken($bg-color, 10%), darken($bg-color, 15%));
     }
 }

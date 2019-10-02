@@ -80,6 +80,8 @@
                             <ul class="pagination m-0">
                                 <li class="tags ml-0" *ngFor="let tag of localFilter.tags">
                                     <nx-tag
+                                            element="btn"
+                                            size="large"
                                             [name]="tag.label"
                                             [(ngModel)]="tag.value"
                                             (ngModelChange)="modelChanged('tags')"

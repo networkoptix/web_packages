@@ -65,22 +65,22 @@ export class NxConfigService {
                     'notActivated'
                 ],
                 default     : {
-                    style: 'badge-default'
+                    style: 'default'
                 },
                 notActivated: {
-                    style: 'badge-danger'
+                    style: 'danger'
                 },
                 activated   : {
-                    style: 'badge-info'
+                    style: 'info'
                 },
                 online      : {
-                    style: 'badge-success'
+                    style: 'success'
                 },
                 offline     : {
-                    style: 'badge-default'
+                    style: 'default'
                 },
                 unavailable : {
-                    style: 'badge-default'
+                    style: 'default'
                 },
                 master      : 'master',
                 slave       : 'slave'

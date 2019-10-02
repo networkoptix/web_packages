@@ -117,37 +117,36 @@
 
             <div class="col-md-4">
                 <span class="help-block" *ngIf="registerPassword.valid && LANG.passwordRequirements">
-                    <span class="badge badge-success mt-2 mt-md-0" *ngIf="registerPassword.control && !registerPassword.control.fairPassword">{{LANG.passwordRequirements.good}}</span>
-                    <span class="badge badge-warning mt-2 mt-md-0" *ngIf="registerPassword.control && registerPassword.control.fairPassword"
-                          title="{{ LANG.passwordRequirements.fairMessage}}">{{LANG.passwordRequirements.fair}}</span>
+                    <nx-tag type="success" class="mt-2 mt-md-0" *ngIf="registerPassword.control && !registerPassword.control.fairPassword">{{LANG.passwordRequirements.good}}</nx-tag>
+                    <nx-tag type="warning" class="mt-2 mt-md-0" *ngIf="registerPassword.control && registerPassword.control.fairPassword"
+                          title="{{ LANG.passwordRequirements.fairMessage}}">{{LANG.passwordRequirements.fair}}</nx-tag>
                 </span>
 
                 <span class="help-block" *ngIf="!registerPassword.valid && !registerPassword.touched">
-
-                    <span class="badge badge-danger mt-2 mt-md-0"
+                    <nx-tag type="danger" class="mt-2 mt-md-0"
                           *ngIf="registerPassword.errors &&
                                  registerPassword.errors.weak &&
                                  !registerPassword.errors.common &&
                                  !registerPassword.errors.pattern &&
                                  !registerPassword.errors.minlength"
-                          title="{{ LANG.passwordRequirements.weakMessage}}">{{LANG.passwordRequirements.weak}}</span>
-                    <span class="badge badge-danger mt-2 mt-md-0"
+                          title="{{ LANG.passwordRequirements.weakMessage}}">{{LANG.passwordRequirements.weak}}</nx-tag>
+                    <nx-tag type="danger" class="mt-2 mt-md-0"
                           *ngIf="registerPassword.errors &&
                                  registerPassword.errors.common &&
                                  !registerPassword.errors.pattern &&
                                  !registerPassword.errors.minlength &&
                                  !registerPassword.errors.required"
-                          title="{{ LANG.passwordRequirements.commonMessage}}">{{LANG.passwordRequirements.common}}</span>
-                    <span class="badge badge-danger mt-2 mt-md-0"
+                          title="{{ LANG.passwordRequirements.commonMessage}}">{{LANG.passwordRequirements.common}}</nx-tag>
+                    <nx-tag type="danger" class="mt-2 mt-md-0"
                           *ngIf="registerPassword.errors &&
                                  registerPassword.errors.minlength &&
                                  !registerPassword.errors.pattern"
-                          title="{{ LANG.passwordRequirements.minLengthMessage}}">{{LANG.passwordRequirements.minLength}}</span>
-                    <span class="badge badge-danger mt-2 mt-md-0"
+                          title="{{ LANG.passwordRequirements.minLengthMessage}}">{{LANG.passwordRequirements.minLength}}</nx-tag>
+                    <nx-tag type="danger" class="mt-2 mt-md-0"
                           *ngIf="registerPassword.errors &&
                                  registerPassword.errors.pattern &&
                                  !registerPassword.errors.minlength"
-                          title="{{ LANG.passwordRequirements.requiredMessage}}">{{LANG.passwordRequirements.required}}</span>
+                          title="{{ LANG.passwordRequirements.requiredMessage}}">{{LANG.passwordRequirements.required}}</nx-tag>
                 </span>
 
                 <span class="help-block" *ngIf="!registerPassword.valid && registerPassword.touched">

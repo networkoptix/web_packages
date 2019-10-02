@@ -28,16 +28,16 @@
                     <label class="group-label mb-1" translate>Tags</label>
                 </div>
                 <h3 class="float-left m-0 mt-1 mr-1" *ngIf="plugin.pending">
-                    <span class="badge large badge-danger" translate>In Review</span>
+                    <nx-tag type="danger" size="large" translate>In Review</nx-tag>
                 </h3>
                 <h3 class="float-left m-0 mt-1 mr-1" *ngIf="plugin.draft">
-                    <span class="badge large badge-danger" translate>Draft</span>
+                    <nx-tag type="danger" size="large" translate>Draft</nx-tag>
                 </h3>
                 <h3 class="float-left m-0 mt-1 mr-1" *ngFor="let type of plugin.information.type">
-                    <span class="badge large" *ngIf="type.id != 'mine'">{{type.label}}</span>
+                    <nx-tag size="large" *ngIf="type.id != 'mine'">{{type.label}}</nx-tag>
                 </h3>
                 <h3 class="float-left m-0 mt-1 mr-1" *ngIf="plugin.mine">
-                    <span class="badge large badge-brand" translate>Mine</span>
+                    <nx-tag type="brand" size="large" translate>Mine</nx-tag>
                 </h3>
             </div>
 

@@ -7,7 +7,9 @@
 
     <nx-section>
         <div class="float-left mr-1 mb-1" *ngFor="let vendor of vendors">
-            <nx-tag (click)="setVendor(vendor)"
+            <nx-tag element="btn"
+                    size="large"
+                    (click)="setVendor(vendor)"
                     [value]="null">
                 {{vendor.name}} <span *ngIf="debug">({{vendor.count}})</span>
             </nx-tag>
@@ -25,7 +27,9 @@
 
     <nx-section>
         <div class="float-left mr-1 mb-1" *ngFor="let filter of filters">
-            <nx-tag (click)="setFilter(filter)"
+            <nx-tag element="btn"
+                    size="large"
+                    (click)="setFilter(filter)"
                     [value]="null">
                 {{filter.label | translate}}
             </nx-tag>
