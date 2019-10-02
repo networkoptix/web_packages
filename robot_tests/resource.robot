@@ -89,9 +89,11 @@ Log In
     Run Keyword Unless    '''${button}''' == "None"    Wait Until Element Is Visible    ${button}
     Run Keyword Unless    '''${button}''' == "None"    Click Link    ${button}
     Wait Until Elements Are Visible    ${EMAIL INPUT}    ${PASSWORD INPUT}    ${REMEMBER ME CHECKBOX VISIBLE}    ${FORGOT PASSWORD}    ${LOG IN CLOSE BUTTON}
-    Sleep    .5
+    Sleep    1
     Input Text    ${EMAIL INPUT}    ${email}
+    Sleep    0.25
     Input Text    ${PASSWORD INPUT}    ${password}
+    Sleep    0.25
     Wait Until Element Is Visible    ${LOG IN BUTTON}
     Click Button    ${LOG IN BUTTON}
 
@@ -193,6 +195,10 @@ Share To
     [arguments]    ${email}    ${permissions}
     Wait Until Element Is Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
+#remove user first to force share email to be sent.
+    ${User In List}=   Set Variable    //nx-system-settings-component//nx-menu//nx-level-3-item//span[text()='${email}']/../../../a
+    ${user exists}    Run Keyword And Return Status    Page Should Contain Link    ${User In List}
+    Run Keyword If    ${user exists}    Remove User Permissions    ${email}
     Wait Until Element Is Enabled    ${SHARE BUTTON SYSTEMS}
     Click Button    ${SHARE BUTTON SYSTEMS}
     Wait Until Elements Are Visible    ${SHARE EMAIL}    ${SHARE BUTTON MODAL}
