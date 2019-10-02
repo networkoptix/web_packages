@@ -23,12 +23,16 @@ html {
     @include rem-baseline;
     position: relative;
     min-height: 100%;
-    overflow-y: scroll; /* CLOUD-373: this is hack: we fix vertical scroll to prevent the page from shaking when it appears or disappears*/
+    height: 100%;
+    margin: 0;
+    //overflow-y: scroll; /* CLOUD-373: this is hack: we fix vertical scroll to prevent the page from shaking when it appears or disappears*/
 }
 
 body {
     min-width : 360px;
     padding   : 0 !important;
+    height: 100%;
+    margin: 0;
 }
 
 [data-whatintent='mouse'] *:focus {
