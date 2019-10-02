@@ -39,13 +39,9 @@ export class OsResolver implements Resolve<any> {
     }
 
     resolve() {
-        this.platform = this.platformMatch[this.deviceInfo.os.toLowerCase()].toLowerCase();
-        if (this.platform) {
-            this.router.navigate(['/download/' + this.platform]);
-            return empty;
-        }
-
-        return this.deviceInfo;
+        this.platform = this.platformMatch[this.deviceInfo.os.toLowerCase()] || 'windows';
+        this.router.navigate(['/download/' + this.platform.toLowerCase()]);
+        return empty;
     }
 }
 
