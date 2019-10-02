@@ -34,7 +34,7 @@ Open New Browser On Failure
 
 *** Test Cases ***
 the page is opened and shows the user list to owner
-    [tags]    C41881    Threaded    Passing_19.2
+    [tags]    C41881    Threaded
     Log in to Autotests 2 System    ${EMAIL OWNER}
     Location Should Be    ${url}/systems/${AUTOTESTS OFFLINE SYSTEM ID}
     Wait Until Elements Are Visible    ${USERS LIST LINK}
@@ -42,7 +42,7 @@ the page is opened and shows the user list to owner
     Wait Until Element Is Visible    ${USERS LIST}
 
 should confirm, if owner deletes system (You are going to disconnect your system from cloud)
-    [tags]    Threaded    Passing_19.2
+    [tags]    Threaded
     Log in to Autotests 2 System    ${EMAIL OWNER}
     Click Button    ${DISCONNECT FROM NX}
     Wait Until Elements Are Visible    ${DISCONNECT FORM}    ${DISCONNECT FORM HEADER}    ${DISCONNECT FORM CANCEL}
@@ -51,7 +51,7 @@ should confirm, if owner deletes system (You are going to disconnect your system
     Wait Until Page Does Not Contain Element    ${BACKDROP}
 
 should confirm, if not owner deletes system (You will lose access to this system)
-    [tags]    Threaded    Passing_19.2
+    [tags]    Threaded
     Log in to Autotests 2 System    ${EMAIL OWNER}
     Validate Log In
     Wait Until Element Is Visible    ${DISCONNECT FROM NX}
@@ -62,7 +62,7 @@ should confirm, if not owner deletes system (You will lose access to this system
     Wait Until Page Does Not Contain Element    ${DELETE USER MODAL}
 
 share button should be disabled
-    [tags]    C41881    Threaded    Passing_19.2
+    [tags]    C41881    Threaded
     Log in to Autotests 2 System    ${EMAIL OWNER}
     Wait Until Page Does Not Contain Element    //div[contains(@uib-modal-backdrop, "modal-backdrop")]
     Wait Until Elements Are Visible    ${USERS LIST LINK}
@@ -70,7 +70,7 @@ share button should be disabled
     Wait Until Element Is Visible    ${SHARE BUTTON DISABLED}
 
 open in nx button should be disabled
-    [tags]    C41881    Threaded    Bug_19.2
+    [tags]    C41881    Threaded
     Log in to Autotests 2 System    ${EMAIL OWNER}
     Wait Until Element Is Visible    ${SYSTEMS DROPDOWN}
     Click Element    ${SYSTEMS DROPDOWN}
@@ -83,7 +83,7 @@ open in nx button should be disabled
     Wait Until Element Is Visible    ${OPEN IN NX BUTTON DISABLED}
 
 should show offline next to system name
-    [tags]    C41881    Threaded    Passing_19.2
+    [tags]    C41881    Threaded
     Log in to Autotests 2 System    ${EMAIL OWNER}
     Wait Until Element Is Visible    ${SYSTEM NAME OFFLINE}
     Log Out
@@ -91,7 +91,7 @@ should show offline next to system name
     Wait Until Element Is Visible    ${SYSTEM NAME OFFLINE}
 
 should not be able to delete/edit users
-    [tags]    Threaded    Passing_19.2
+    [tags]    Threaded
     Log in to Autotests 2 System    ${EMAIL OWNER}
     Wait Until Elements Are Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
@@ -101,20 +101,20 @@ should not be able to delete/edit users
     Wait Until Elements Are Visible    ${ACCESS LEVEL DROPDOWN}${DISABLED}    ${REMOVE USER BUTTON}${DISABLED}
 
 should open System page by link to not authorized user and redirect to homepage, if he does not log in
-    [tags]    Threaded    Passing_19.2
+    [tags]    Threaded
     Go To    ${url}/systems/${AUTOTESTS OFFLINE SYSTEM ID}
     Wait Until Element Is Visible    ${LOG IN CLOSE BUTTON}
     Click Button    ${LOG IN CLOSE BUTTON}
     Wait Until Element Is Visible    ${JUMBOTRON}
 
 should open System page by link to not authorized user and show it, after owner logs in
-    [tags]    Threaded    Passing_19.2
+    [tags]    Threaded
     Go To    ${url}/systems/${AUTOTESTS OFFLINE SYSTEM ID}
     Log In    ${EMAIL OWNER}   ${password}    None
     Verify In System    Auto Tests 2
 
 should open System page by link to user without permission and show alert (System info is unavailable: You have no access to this system)
-    [tags]    C41572    Threaded    Passing_19.2
+    [tags]    C41572    Threaded
     Log In    ${EMAIL NOPERM}    ${password}
     Validate Log In
     Go To    ${url}/systems/${AUTOTESTS OFFLINE SYSTEM ID}
@@ -123,13 +123,13 @@ should open System page by link to user without permission and show alert (Syste
     Location Should Be    ${url}/systems
 
 should open System page by link not authorized user, and show alert if logs in and has no permission
-    [tags]    Threaded    Passing_19.2
+    [tags]    Threaded
     Go To    ${url}/systems/${AUTOTESTS OFFLINE SYSTEM ID}
     Log In    ${EMAIL NOPERM}   ${password}    None
     Wait Until Element Is Visible    ${SYSTEM NO ACCESS}
 
 rename button opens dialog and clicking cancel closes rename dialog without rename
-    [tags]    C41880    Threaded    Passing_19.2
+    [tags]    C41880    Threaded
     Log in to Autotests 2 System    ${EMAIL OWNER}
     Wait Until Element Is Visible    ${RENAME SYSTEM}
     Click Button    ${RENAME SYSTEM}
@@ -139,7 +139,7 @@ rename button opens dialog and clicking cancel closes rename dialog without rena
     Verify In System    Auto Tests 2
 
 clicking 'X' closes rename dialog without rename
-    [tags]    C41880    Threaded    Passing_19.2
+    [tags]    C41880    Threaded
     Log in to Autotests 2 System    ${EMAIL OWNER}
     Wait Until Element Is Visible    ${RENAME SYSTEM}
     Click Button    ${RENAME SYSTEM}
@@ -150,7 +150,7 @@ clicking 'X' closes rename dialog without rename
     Verify In System    Auto Tests 2
 
 clicking save with no input in rename dialog throws error
-    [tags]    C41880    Threaded    Passing_19.2
+    [tags]    C41880    Threaded
     Log in to Autotests 2 System    ${EMAIL OWNER}
     Wait Until Element Is Visible    ${RENAME SYSTEM}
     Wait Until Elements Are Visible    ${RENAME SYSTEM}    ${DISCONNECT FROM NX}
@@ -164,7 +164,7 @@ clicking save with no input in rename dialog throws error
     Click Button    ${RENAME CANCEL}
 
 does not show Share button to viewer, advanced viewer, live viewer
-    [tags]    Threaded    Passing_19.2
+    [tags]    Threaded
     @{emails}    Set Variable    ${EMAIL VIEWER}    ${EMAIL LIVE VIEWER}    ${EMAIL ADV VIEWER}
     FOR    ${user}    IN    @{emails}
         Log in to Autotests 2 System    ${user}
@@ -179,7 +179,7 @@ does not show Share button to viewer, advanced viewer, live viewer
     END
 
 Your permissions is shown for non-owners
-    [tags]    Threaded    C41881    Passing_19.2
+    [tags]    Threaded    C41881
     ${users}         Set Variable    ${EMAIL ADVVIEWER}    ${EMAIL VIEWER}    ${EMAIL LIVEVIEWER}    ${EMAIL CUSTOM}    ${EMAIL ADMIN}
     ${users text}    Set Variable    ${ADV VIEWER TEXT}    ${VIEWER TEXT}     ${LIVE VIEWER TEXT}    ${CUSTOM TEXT}     ${ADMIN TEXT}
     ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    testFirstName testLastName
@@ -190,7 +190,7 @@ Your permissions is shown for non-owners
     END
 
 should show (you) for owner and (owner's name & email) for non-owners
-    [tags]    C41881    Threaded    Passing_19.2
+    [tags]    C41881    Threaded
     Log in to AutoTests 2 System    ${EMAIL OWNER}
     ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    you
     Wait Until Elements Are Visible    ${RENAME SYSTEM}    ${DISCONNECT FROM NX}    ${current owner name}
