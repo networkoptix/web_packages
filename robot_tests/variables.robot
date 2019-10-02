@@ -377,9 +377,10 @@ ${PASSWORD IS GOOD BADGE}             //span[contains(@class,"badge") and contai
 ${PASSWORD INCORRECT BADGE}           //span[contains(@class,"badge") and contains(text(),"${PASSWORD INCORRECT BADGE TEXT}")]
 
 #Already logged in modal
-#${LOGGED IN CONTINUE BUTTON}          //ngb-modal-window//button[contains(text(),'${CONTINUE BUTTON TEXT}')]    #CLOUD-3584
-${LOGGED IN CONTINUE BUTTON}          //ngb-modal-window//button[contains(text(),'Continue')]
-${LOGGED IN LOG OUT BUTTON}           //ngb-modal-window//button[contains(text(),'${LOG OUT BUTTON TEXT}')]
+${LOGGED IN STAY LOGGED IN BUTTON}    //ngb-modal-window//button[contains(text(),'${STAY LOGGED IN BUTTON TEXT}')]
+${LOGGED IN OK BUTTON}                //ngb-modal-window//button[contains(text(),'${OK TEXT}')]
+${LOGGED IN NEW ACCOUNT BUTTON}       //ngb-modal-window//button/span[contains(text(),'${CREATE NEW ACCOUNT BUTTON TEXT}')]/..
+${LOGGED IN LOG OUT BUTTON}           //ngb-modal-window//button/span[contains(text(),'${LOG OUT BUTTON TEXT}')]/..
 
 ${CONTINUE BUTTON}                    //ngb-modal-window//button[contains(text(),'${CONTINUE BUTTON TEXT}')]
 ${CONTINUE MODAL}                     //ngb-modal-window
