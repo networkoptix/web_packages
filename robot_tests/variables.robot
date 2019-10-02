@@ -54,6 +54,8 @@ ${ACCOUNT SETTINGS BUTTON}            //li//a[@href = '/account/']
 ${CHANGE PASSWORD BUTTON DROPDOWN}    //li//a[@href = '/account/password/']
 ${RELEASE HISTORY BUTTON}             //a[@href="/downloads/history" and contains(text(),"${RELEASE HISTORY BUTTON TEXT}")]
 ${SYSTEMS DROPDOWN}                   //header//li[contains(@class, 'collapse-second')]//button[@id='systemsDropdown']
+${OPEN IN NX BUTTON}                  //nx-client-button//nx-process-button//button
+${OPEN IN NX BUTTON DISABLED}         ${OPEN IN NX BUTTON}${DISABLED}
 ${ALL SYSTEMS}                        //header//li[contains(@class, 'collapse-second')]//a[@href='/systems']
 
 ${AUTHORIZED BODY}                    //body[contains(@class, 'authorized')]
@@ -121,10 +123,12 @@ ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    {{message.sharer_name}} invit
 #targets the open nx witness button presented when logging in after activating with from=mobile or client
 ${OPEN NX WITNESS BUTTON FROM =}      //button[text()="${OPEN NX WITNESS BUTTON TEXT}"]
 
-
 ${ACCOUNT CREATION SUCCESS}           //h1[@class="process-success d-flex align-items-center flex-column mt-5 ng-star-inserted"]
 ${ACTIVATION SUCCESS}                 //h1[@class='process-success' and contains(text(),"${ACCOUNT SUCCESSFULLY ACTIVATED TEXT}")]
 ${SUCCESS LOG IN BUTTON}              //h1[@class='process-success' and contains(text(),"${ACCOUNT SUCCESSFULLY ACTIVATED TEXT}")]/following-sibling::h1/a[text()="${LOG IN BUTTON TEXT}"]
+
+${SYSTEM NAME OFFLINE}                //nx-ribbon/div[contains(@class,'alert-ribbon')]/div[@class='message' and text()='System is offline. Some settings may not be available.']
+
 #In system settings
 ${SYSTEM NAME}                        //h2[contains(@class,"system-name")]
 ${FIRST USER OWNER}                   //table[@ng-if='system.users.length']/tbody/tr/td[3]/span[contains(text(),"${OWNER TEXT}")]
@@ -138,22 +142,26 @@ ${RENAME INPUT}                       //form[@name='renameForm']//input[@id='sys
 ${RENAME INPUT WITH ERROR}            //form[@name='renameForm']//input[@id='systemName' and contains(@class,'ng-invalid')]
 ${SYSTEM NAME IS REQUIRED}            //form[@name='renameForm']//span[@class='input-error' and contains(text(),"${SYSTEM NAME IS REQUIRED TEXT}")]
 
-${OWNER LABEL}                        //nx-block//header//h2/following-sibling::span[contains(@class,'system-owner')]/span[contains(text(),'${OWNER TEXT}')]
+${SYSTEM USER DETAILS}                //nx-system-settings-component//nx-block/..
+
+${OWNER LABEL}                        ${SYSTEM USER DETAILS}//header//h2/following-sibling::span[contains(@class,'system-owner')]/span[contains(text(),'${OWNER TEXT}')]
 ${OWNER NAME}                         ${OWNER LABEL}//following-sibling::span//span[contains(text(),'%OWNER_NAME%')]
 ${OWNER EMAIL}                        ${OWNER LABEL}/following-sibling::span/span[contains(text(),"${EMAIL OWNER}")]
-${YOUR ACCESS LEVEL}                  //nx-block//nx-section//span[contains(@class,'system-owner') and contains(text(),"${YOUR ACCESS LEVEL TEXT}")]
+${YOUR ACCESS LEVEL}                  ${SYSTEM USER DETAILS}//nx-section//span[contains(@class,'system-owner') and contains(text(),"${YOUR ACCESS LEVEL TEXT}")]
 
 ${DISCONNECT FROM MY ACCOUNT}         //button[contains(text(),'Disconnect from My Account')]
-${SHARE BUTTON SYSTEMS}               //nx-system-settings-component//nx-menu//nx-menu-button//button
-${SHARE BUTTON DISABLED}              ${SHARE BUTTON SYSTEMS}\[@disabled]
-${OPEN IN NX BUTTON}                  //nx-client-button//nx-process-button//button
-${OPEN IN NX BUTTON DISABLED}         ${OPEN IN NX BUTTON}\[@disabled]
+
+${ACCESS LEVEL DROPDOWN}              ${SYSTEM USER DETAILS}//nx-section//button[@id='permissionsSelect']
 ${REMOVE USER BUTTON}                 //button[contains(text(),'${REMOVE USER BUTTON TEXT}')]
 ${DELETE USER MODAL}                  //ngb-modal-window
 ${DELETE USER BUTTON}                 //button[contains(text(),'${DELETE USER BUTTON TEXT}')]
 ${DELETE USER CANCEL BUTTON}          //ngb-modal-window//button[contains(text(),"${CANCEL BUTTON TEXT}")]
-${SYSTEM NAME OFFLINE}                //span[@ng-if='!system.isOnline']
+
 ${USERS LIST LINK}                    //a[@id='users']
+${USERS LIST}                         ${USERS LIST LINK}/../../div[contains(@class,'level-3-items')]
+
+${SHARE BUTTON SYSTEMS}               //nx-system-settings-component//nx-menu//nx-menu-button//button
+${SHARE BUTTON DISABLED}              ${SHARE BUTTON SYSTEMS}${DISABLED}
 
 ${SYSTEM NO ACCESS}                   //div/h1[contains(text(),"${SYSTEM NO ACCESS TEXT}")]
 ${AVAILABLE SYSTEMS LIST}             //a[@href='/systems']
@@ -356,6 +364,8 @@ ${PRIVACY POLICY HEADER}              //h1[contains(text(),'Personal data and pr
 ${DROPDOWN MENU}                      /../div[contains(@class,'dropdown-menu')]
 ${DROPDOWN MENU LIST}                 ${DROPDOWN MENU}/ul[contains(@class,'dropdown-menu--list')]
 ${DROPDOWN MENU ITEMS}                ${DROPDOWN MENU LIST}/li[contains(@class,'dropdown-item-container')]/a/span[not(text()='All Systems')]/../../../li
+
+${DISABLED}                           \[@disabled]
 
 #Password badges
 ${PASSWORD BADGE}                     //span[contains(@class,"badge")]
