@@ -86,7 +86,7 @@ Allows log in with 'Remember Me checkmark' switched off
     Validate Log In
 
 Contains 'I forgot password' link that leads to Restore Password page with pre-filled email from log In form
-    [Tags]    Threaded    Bug_19.2
+    [Tags]    Threaded
     Log In    ${email}    'aderhgadehf'
     Wait Until Elements are Visible
     ...    ${REMEMBER ME CHECKBOX VISIBLE}
@@ -97,11 +97,10 @@ Contains 'I forgot password' link that leads to Restore Password page with pre-f
     Sleep    1
     Click Link    ${FORGOT PASSWORD}
     Wait Until Element is Visible    ${RESTORE PASSWORD EMAIL INPUT}
-  Log    CLOUD-3708 Regression: Email is not pre-populated when clicking "forgot password" with an email input in the login form
     Textfield Should Contain    ${RESTORE PASSWORD EMAIL INPUT}    ${email}
 
 Passes email from email input to Restore password page, even without clicking 'Log in' button
-    [tags]    C41872    Threaded    Bug_19.2
+    [tags]    C41872    Threaded
     Wait Until Element is Visible    ${LOG IN NAV BAR}
     Click Link    ${LOG IN NAV BAR}
     Wait Until Element is Visible    ${EMAIL INPUT}
@@ -111,7 +110,6 @@ Passes email from email input to Restore password page, even without clicking 'L
     Wait Until Element is Visible    ${FORGOT PASSWORD}
     Click Link    ${FORGOT PASSWORD}
     Wait Until Element is Visible    ${RESTORE PASSWORD EMAIL INPUT}
-  Log    CLOUD-3708 Regression: Email is not pre-populated when clicking "forgot password" with an email input in the login form
     Textfield Should Contain    ${RESTORE PASSWORD EMAIL INPUT}    ${email}
 
 Shows non-activated user message when not activated at login; Resend activation button sends email
