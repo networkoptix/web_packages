@@ -23,18 +23,22 @@
                             </div>
 
                             <div class="col-md-8 order-1 order-md-1 p-0">
-                                <div class="row">
+                                <div class="row" *ngIf="activeTab != 'sdk'">
                                     <div class="col-md-12">
                                         <a class="media btn btn-default download-button"
                                            *ngIf="platform.files.length"
-                                           [href]="platform.files[0].url">
+                                           [href]="downloadButton && downloadButton.url">
                                             <div class="media-left">
                                                 <span class="download-link"></span>
                                             </div>
                                             <div class="media-body text-left">
                                                 <h3 translate>Download %VMS_NAME%</h3>
-                                                <div class="h7 installer-name">{{LANG.downloads.groups[platform.name].shortLabel ||
-                                                LANG.downloads.groups[platform.name].label}} {{platform.files[0].formatName}}</div>
+                                                <div class="h7 installer-name">
+                                                    <span *ngIf="platform.name !== 'sdk'">
+                                                        {{LANG.downloads.groups[platform.name].shortLabel || LANG.downloads.groups[platform.name].label}}
+                                                    </span>
+                                                    {{downloadButton && downloadButton.formatName}}
+                                                </div>
                                             </div>
                                         </a>
                                         <p *ngIf="LANG.downloads.groups[platform.name].supported"
@@ -44,7 +48,7 @@
                                 </div>
 
                                 <div class="installers" *ngIf="platform.files.length > 0">
-                                    <h5><b translate>Other packages:</b></h5>
+                                    <h5 *ngIf="activeTab != 'sdk'"><b translate>Other packages:</b></h5>
                                     <div class="links mb-1"
                                          *ngFor="let file of platform.files; let i = index"
                                          [ngClass]="{'a-link': (i % 3) != 2}">

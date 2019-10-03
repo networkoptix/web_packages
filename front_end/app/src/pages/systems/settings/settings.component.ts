@@ -84,7 +84,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.meta.updateTag({name: 'viewport', content: this.CONFIG.meta.viewport.desktopLayout});
+        this.pageService.setDesktopLayout();
         this.LANG = this.language.getTranslations();
         this.pageService.setPageTitle(this.LANG.pageTitles.system);
         this.init();
@@ -194,7 +194,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         this.system.stopPoll();
         this.ribbonService.hide();
-        this.meta.updateTag({name: 'viewport', content: this.CONFIG.meta.viewport.default});
+        this.pageService.setDefaultLayout();
     }
 
     getSystemInfo() {

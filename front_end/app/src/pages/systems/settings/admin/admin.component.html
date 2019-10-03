@@ -1,50 +1,51 @@
 <nx-pre-loader *ngIf="!system"></nx-pre-loader>
 
-<div class="" *ngIf="system">
-    <nx-block header-style="extended">
-        <header>
-            <h2 class="system-name mb-2">{{system.info.name}}</h2>
-            <span class="system-owner">
-                <span translate>Owner</span><span>&nbsp;–&nbsp;</span>
-                <span>
-                    <span *ngIf="system.isMine" class="system-owner-bold" translate>you</span>
-                    <span *ngIf="!system.isMine">
-                        <span class="system-owner-bold">{{system.info.ownerFullName}}</span>
-                        ({{system.info.ownerAccountEmail}})
+<div *ngIf="system" class="row d-flex align-items-start">
+    <div class="col-12 col-xxxl-6">
+        <nx-block header-style="extended">
+            <header>
+                <h2 class="system-name mb-2">{{system.info.name}}</h2>
+                <span class="system-owner">
+                    <span translate>Owner</span><span>&nbsp;–&nbsp;</span>
+                    <span>
+                        <span *ngIf="system.isMine" class="system-owner-bold" translate>you</span>
+                        <span *ngIf="!system.isMine">
+                            <span class="system-owner-bold">{{system.info.ownerFullName}}</span>
+                            ({{system.info.ownerAccountEmail}})
+                        </span>
                     </span>
                 </span>
-            </span>
-        </header>
+            </header>
 
-        <nx-section *ngIf="system.permissions.isAdmin">
-            <div class="row m-0">
-                <div class="col-xl-7">
-                    <div class="float-left mr-2">
-                        <button class="btn btn-default"
-                                (click)="rename()"><span class="ellipsis" translate>Rename</span>
-                        </button>
+            <nx-section *ngIf="system.permissions.isAdmin">
+                <div class="row">
+                    <div class="col-xl-7">
+                        <div class="float-left mr-2">
+                            <button class="btn btn-default"
+                                    (click)="rename()"><span class="ellipsis" translate>Rename</span>
+                            </button>
+                        </div>
+                        <div class="float-left mr-2" *ngIf="system.isMine">
+                            <button class="btn btn-default"
+                                    [disabled]="(currentlyMerging || !system.isOnline || !system.isAvailable) && !(debugMode || betaMode)"
+                                    (click)="mergeSystems()"><span class="ellipsis"
+                                                                   translate>Merge with Another System</span>
+                            </button>
+                        </div>
                     </div>
-                    <div class="float-left mr-2" *ngIf="system.isMine">
-                        <button class="btn btn-default"
-                                [disabled]="(currentlyMerging || !system.isOnline || !system.isAvailable) && !(debugMode || betaMode)"
-                                (click)="mergeSystems()"><span class="ellipsis"
-                                                               translate>Merge with Another System</span>
-                        </button>
+                    <div class="col-xl-5 mt-2 mt-xl-0">
+                        <div class="float-xl-right" *ngIf="system.isMine">
+                            <button [disabled]="currentlyMerging"
+                                    class="btn btn-default"
+                                    (click)="disconnect()"><span class="ellipsis" translate>Disconnect from %CLOUD_NAME%</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
-                <div class="col-xl-5 mt-2 mt-xl-0">
-                    <div class="float-xl-right" *ngIf="system.isMine">
-                        <button [disabled]="currentlyMerging"
-                                class="btn btn-default"
-                                (click)="disconnect()"><span class="ellipsis" translate>Disconnect from %CLOUD_NAME%</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </nx-section>
-    </nx-block>
-
-    <div class="mt-3" *ngIf="!system.isMine">
+            </nx-section>
+        </nx-block>
+    </div>
+    <div class="col-12 col-xxxl-6 mt-3 mt-xxxl-0" *ngIf="!system.isMine">
         <nx-block>
             <nx-section>
                 <span class="system-owner" translate>Your access level<span>&nbsp;– </span>
@@ -59,4 +60,5 @@
             </nx-section>
         </nx-block>
     </div>
+
 </div>

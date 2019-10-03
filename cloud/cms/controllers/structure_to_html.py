@@ -35,8 +35,7 @@ def process_data_structure(data_structure):
 
         if "options" in data_structure["meta"]:
             options = [option["label"] if "label" in option else option for option in data_structure["meta"]["options"]]
-            data_structure["nice_meta"] += f'<br>Options:<ul style="list-style: none">' \
-                f'<li>{", ".join(options)}</li></ul>'
+            data_structure["nice_meta"] += f'Options:&nbsp;{", ".join(options)}&nbsp;&nbsp;&nbsp;'
 
         if data_structure["nice_meta"].find('<br>') == 0:
             data_structure["nice_meta"] = data_structure["nice_meta"].replace(br, "", 1)
