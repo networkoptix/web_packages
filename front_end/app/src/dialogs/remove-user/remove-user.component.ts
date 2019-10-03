@@ -35,17 +35,14 @@ export class RemoveUserModalContent {
 
     ngOnInit() {
         this.removeUserProcess = this.processService.createProcess(() => {
-            return this.system.deleteUser(this.user);
+            return this.system.deleteUser(this.user).then(() => {
+                return this.system.getUsers(true);
+            });
         }, {
             successMessage: this.LANG.system.permissionsRemoved.replace('{{email}}', this.user ? this.user.email : ''),
             errorPrefix   : this.LANG.errorCodes.cantSharePrefix
         }).then(() => {
-            this.system.getUsers(true).then(() => {
-                // Timeout allows observable in the settings component to update the side menu.
-                setTimeout(() => {
-                    this.activeModal.close(true);
-                });
-            });
+            this.activeModal.close(true);
         });
     }
 

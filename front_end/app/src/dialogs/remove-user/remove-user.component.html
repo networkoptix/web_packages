@@ -12,6 +12,7 @@
 
 <div class="modal-footer">
     <nx-process-button [process]="removeUserProcess"
+                       [actionType]="'danger'"
                        [buttonText]="buttonText"></nx-process-button>
     <button type="button" class="btn btn-default" (click)="close()" translate>Cancel</button>
 </div>
