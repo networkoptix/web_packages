@@ -73,19 +73,26 @@
 			}
 		},
 		"platforms": {
-			"win64": "x64",
-			"linux64": "x64",
-			"mac": "X",
 			"bananapi": "Banana Pi",
 			"bpi": "Nx1",
-			"rpi": " Raspberry Pi"
+			"linux64": "x64",
+			"linux_arm32": "x32",
+			"linux_arm64": "x64",
+			"mac": "X",
+			"rpi": " Raspberry Pi",
+			"universal": "SDK",
+			"win64": "x64"
 		},
 		"appTypes": {
-			"client": "Pouze klient",
-			"server": "Pouze server",
 			"bundle": "Klient a server",
+			"camera_sdk": "SDK zdroje videa",
+			"client": "Pouze klient",
+			"metadata_sdk": "Metadata SDK",
+			"package": "Balíček",
+			"server": "Pouze server",
 			"servertool": "Nástroj konfigurace",
-			"package": "Balíček"
+			"storage_sdk": "SDK pro úložiště",
+			"video_source_sdk": "SDK zdroje videa"
 		},
 		"releasesTypes": {
 			"beta": "Beta",

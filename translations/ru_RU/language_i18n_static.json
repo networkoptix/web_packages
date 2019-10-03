@@ -73,19 +73,26 @@
 			}
 		},
 		"platforms": {
-			"win64": "x64",
-			"linux64": "x64",
-			"mac": "X",
 			"bananapi": "Banana Pi",
 			"bpi": "Nx1",
-			"rpi": " Raspberry Pi"
+			"linux64": "x64",
+			"linux_arm32": "x32",
+			"linux_arm64": "x64",
+			"mac": "X",
+			"rpi": " Raspberry Pi",
+			"universal": "SDK",
+			"win64": "x64"
 		},
 		"appTypes": {
-			"client": "Только клиент",
-			"server": "Только сервер",
 			"bundle": "Клиент и сервер",
+			"camera_sdk": "SDK источника видео",
+			"client": "Только клиент",
+			"metadata_sdk": "Metadata SDK",
+			"package": "Пакет",
+			"server": "Только сервер",
 			"servertool": "Инструмент настройки",
-			"package": "Пакет"
+			"storage_sdk": "SDK для интеграции хранилищ",
+			"video_source_sdk": "SDK источника видео"
 		},
 		"releasesTypes": {
 			"beta": "Бета",

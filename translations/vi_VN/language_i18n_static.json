@@ -73,19 +73,26 @@
 			}
 		},
 		"platforms": {
-			"win64": "x64",
-			"linux64": "x64",
-			"mac": "X",
 			"bananapi": "Banana Pi",
 			"bpi": "Nx1",
-			"rpi": " Raspberry Pi"
+			"linux64": "x64",
+			"linux_arm32": "x32",
+			"linux_arm64": "x64",
+			"mac": "X",
+			"rpi": " Raspberry Pi",
+			"universal": "SDK",
+			"win64": "x64"
 		},
 		"appTypes": {
-			"client": "Chỉ máy trạm",
-			"server": "Chỉ máy chủ",
 			"bundle": "Máy chủ và Máy trạm",
+			"camera_sdk": "SDK nguồn video",
+			"client": "Chỉ máy trạm",
+			"metadata_sdk": "Metadata SDK",
+			"package": "Gói",
+			"server": "Chỉ máy chủ",
 			"servertool": "Công cụ cấu hình",
-			"package": "Gói"
+			"storage_sdk": "SDK lưu trữ",
+			"video_source_sdk": "SDK nguồn video"
 		},
 		"releasesTypes": {
 			"beta": "Beta",

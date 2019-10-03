@@ -242,7 +242,7 @@
     "cameraStates": {
       "offline": "ออฟไลน์",
       "error": "ข้อผิดพลาด",
-      "errorLoading": "An error occurred while loading this video.",
+      "errorLoading": "เกิดข้อผิดพลาดขณะโหลดวิดีโอนี้",
       "unauthorized": "จำเป็นต้องระบุตัวตนผู้ใช้",
       "noData": "ไม่มีข้อมูล",
       "iOSVideoTooLarge": "iOS ไม่สนับสนุนวิดีโอที่ใหญ่กว่า fullHD (2MP: 1920x1080)",

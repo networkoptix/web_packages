@@ -73,19 +73,26 @@
 			}
 		},
 		"platforms": {
-			"win64": "x64",
-			"linux64": "x64",
-			"mac": "X",
 			"bananapi": "Banana Pi",
 			"bpi": "Nx1",
-			"rpi": " Raspberry Pi"
+			"linux64": "x64",
+			"linux_arm32": "x32",
+			"linux_arm64": "x64",
+			"mac": "X",
+			"rpi": " Raspberry Pi",
+			"universal": "SDK",
+			"win64": "x64"
 		},
 		"appTypes": {
-			"client": "Alleen client",
-			"server": "Alleen server",
 			"bundle": "Client en Server",
+			"camera_sdk": "Video Bron SDK",
+			"client": "Alleen client",
+			"metadata_sdk": "Metadata SDK",
+			"package": "Pakket",
+			"server": "Alleen server",
 			"servertool": "Configuratie tool",
-			"package": "Pakket"
+			"storage_sdk": "Storage SDK",
+			"video_source_sdk": "Video Bron SDK"
 		},
 		"releasesTypes": {
 			"beta": "Beta",

@@ -73,19 +73,26 @@
 			}
 		},
 		"platforms": {
-			"win64": "x64",
-			"linux64": "x64",
-			"mac": "X",
 			"bananapi": "Banana Pi",
 			"bpi": "Nx1",
-			"rpi": " Raspberry Pi"
+			"linux64": "x64",
+			"linux_arm32": "x32",
+			"linux_arm64": "x64",
+			"mac": "X",
+			"rpi": " Raspberry Pi",
+			"universal": "SDK",
+			"win64": "x64"
 		},
 		"appTypes": {
-			"client": "Yalnızca istemci",
-			"server": "Yalnızca sunucu",
 			"bundle": "İstemci ve sunucu",
+			"camera_sdk": "Video Source SDK",
+			"client": "Yalnızca istemci",
+			"metadata_sdk": "Metadata SDK",
+			"package": "Paket",
+			"server": "Yalnızca sunucu",
 			"servertool": "Konfigürasyon aracı",
-			"package": "Paket"
+			"storage_sdk": "Depolama için SDK",
+			"video_source_sdk": "Video Source SDK"
 		},
 		"releasesTypes": {
 			"beta": "Beta",

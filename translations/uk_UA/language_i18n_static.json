@@ -73,19 +73,26 @@
 			}
 		},
 		"platforms": {
-			"win64": "x64",
-			"linux64": "x64",
-			"mac": "X",
 			"bananapi": "Banana Pi",
 			"bpi": "Nx1",
-			"rpi": " Raspberry Pi"
+			"linux64": "x64",
+			"linux_arm32": "x32",
+			"linux_arm64": "x64",
+			"mac": "X",
+			"rpi": " Raspberry Pi",
+			"universal": "SDK",
+			"win64": "x64"
 		},
 		"appTypes": {
-			"client": "Тільки клієнт",
-			"server": "Тільки сервер",
 			"bundle": "Клієнт і сервер",
+			"camera_sdk": "SDK джерела відео",
+			"client": "Тільки клієнт",
+			"metadata_sdk": "Metadata SDK",
+			"package": "Package",
+			"server": "Тільки сервер",
 			"servertool": "Інструмент налаштування",
-			"package": "Package"
+			"storage_sdk": "SDK для інтеграції сховищ",
+			"video_source_sdk": "SDK джерела відео"
 		},
 		"releasesTypes": {
 			"beta": "Бета",

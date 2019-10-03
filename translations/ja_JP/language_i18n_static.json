@@ -73,19 +73,26 @@
 			}
 		},
 		"platforms": {
-			"win64": "x64",
-			"linux64": "x64",
-			"mac": "X",
 			"bananapi": "Banana Pi",
 			"bpi": "N×1",
-			"rpi": " Raspberry Pi"
+			"linux64": "x64",
+			"linux_arm32": "x32",
+			"linux_arm64": "x64",
+			"mac": "X",
+			"rpi": " Raspberry Pi",
+			"universal": "SDK",
+			"win64": "x64"
 		},
 		"appTypes": {
-			"client": "クライアントのみ",
-			"server": "サーバーのみ",
 			"bundle": "クライアントとサーバー",
+			"camera_sdk": "ビデオソースSDK",
+			"client": "クライアントのみ",
+			"metadata_sdk": "Metadata SDK",
+			"package": "パッケージ",
+			"server": "サーバーのみ",
 			"servertool": "構成ツール",
-			"package": "パッケージ"
+			"storage_sdk": "ストレージ SDK",
+			"video_source_sdk": "ビデオソースSDK"
 		},
 		"releasesTypes": {
 			"beta": "ベータ",

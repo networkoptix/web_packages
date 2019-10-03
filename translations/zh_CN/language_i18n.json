@@ -179,10 +179,14 @@
     "downloads": {
         "appTypes": {
             "bundle": "客户端和服务器",
+            "camera_sdk": "视频源SDK",
             "client": "仅用于客户端",
+            "metadata_sdk": "Metadata SDK",
             "package": "数据包",
             "server": "仅限服务器",
-            "servertool": "配置工具"
+            "servertool": "配置工具",
+            "storage_sdk": "存储 SDK",
+            "video_source_sdk": "视频源SDK"
         },
         "groups": {
             "android": {
@@ -233,8 +237,11 @@
             "bananapi": "Banana Pi",
             "bpi": "Nx1",
             "linux64": "x64",
+            "linux_arm32": "x32",
+            "linux_arm64": "x64",
             "mac": "X",
             "rpi": " Raspberry Pi",
+            "universal": "SDK",
             "win64": "x64"
         },
         "releasesTypes": {

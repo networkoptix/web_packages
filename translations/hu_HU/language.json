@@ -242,7 +242,7 @@
     "cameraStates": {
       "offline": "Offline",
       "error": "Hiba",
-      "errorLoading": "An error occurred while loading this video.",
+      "errorLoading": "Hiba történt a videó betöltése közben.",
       "unauthorized": "Hitelesítés szükséges",
       "noData": "Nincs adat",
       "iOSVideoTooLarge": "Az iOS nem támogat FullHD-nál (2MP: 1920x1080) nagyobb videót.",

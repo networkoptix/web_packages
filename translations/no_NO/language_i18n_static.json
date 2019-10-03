@@ -64,7 +64,7 @@
 			"arm": {
 				"label": "ARM",
 				"shortLabel": "ARM",
-				"supported": "<a href='/content/arm'>ARM based servers support policy</a>"
+				"supported": "<a href='/content/arm'>ARM-baserte servere support policy</a>"
 			},
 			"sdk": {
 				"label": "SDK",
@@ -73,19 +73,26 @@
 			}
 		},
 		"platforms": {
-			"win64": "x64",
-			"linux64": "x64",
-			"mac": "X",
 			"bananapi": "Banana Pi",
 			"bpi": "Nx1",
-			"rpi": " Raspberry Pi"
+			"linux64": "x64",
+			"linux_arm32": "x32",
+			"linux_arm64": "x64",
+			"mac": "X",
+			"rpi": " Raspberry Pi",
+			"universal": "SDK",
+			"win64": "x64"
 		},
 		"appTypes": {
-			"client": "Kun klient",
-			"server": "Kun Server",
 			"bundle": "Klient og server",
+			"camera_sdk": "Videokilde SDK",
+			"client": "Kun klient",
+			"metadata_sdk": "Metadata SDK",
+			"package": "Pakke",
+			"server": "Kun Server",
 			"servertool": "Konfigurasjonsverktøy",
-			"package": "Pakke"
+			"storage_sdk": "Lagrings SDK",
+			"video_source_sdk": "Videokilde SDK"
 		},
 		"releasesTypes": {
 			"beta": "Beta",

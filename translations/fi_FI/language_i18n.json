@@ -179,10 +179,14 @@
     "downloads": {
         "appTypes": {
             "bundle": "Client ja palvelin",
+            "camera_sdk": "Videolähteen SDK",
             "client": "Vain Client-sovellus",
+            "metadata_sdk": "Metadata SDK",
             "package": "Paketti",
             "server": "Vain palvelin-sovellus",
-            "servertool": "Konfigurointityökalu"
+            "servertool": "Konfigurointityökalu",
+            "storage_sdk": "Storage SDK",
+            "video_source_sdk": "Videolähteen SDK"
         },
         "groups": {
             "android": {
@@ -233,8 +237,11 @@
             "bananapi": "Banana Pi",
             "bpi": "Nx1",
             "linux64": "x64",
+            "linux_arm32": "x32",
+            "linux_arm64": "x64",
             "mac": "X",
             "rpi": " Raspberry Pi",
+            "universal": "SDK",
             "win64": "x64"
         },
         "releasesTypes": {

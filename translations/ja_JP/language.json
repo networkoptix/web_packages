@@ -196,7 +196,7 @@
     "confirmUnshare": "このユーザはシステムにアクセスすることができません。よろしいですか？",
     "confirmUnshareTitle": "ユーザーを削除しますか？",
     "confirmUnshareAction": "削除",
-    "successDisconnected": "システムは %CLOUD_NAME%から正常に切断されました",
+    "successDisconnected": "システムは %CLOUD_NAME% から正常に切断されました",
     "successDeleted": "システム {{systemName}} はあなたのアカウントから正常に削除されました",
     "mergeFailed": "システム統合が失敗しました",
     "mergeStart": "システムが統合を開始しました",

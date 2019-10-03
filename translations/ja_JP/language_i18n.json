@@ -179,10 +179,14 @@
     "downloads": {
         "appTypes": {
             "bundle": "クライアントとサーバー",
+            "camera_sdk": "ビデオソースSDK",
             "client": "クライアントのみ",
+            "metadata_sdk": "Metadata SDK",
             "package": "パッケージ",
             "server": "サーバーのみ",
-            "servertool": "構成ツール"
+            "servertool": "構成ツール",
+            "storage_sdk": "ストレージ SDK",
+            "video_source_sdk": "ビデオソースSDK"
         },
         "groups": {
             "android": {
@@ -233,8 +237,11 @@
             "bananapi": "Banana Pi",
             "bpi": "N×1",
             "linux64": "x64",
+            "linux_arm32": "x32",
+            "linux_arm64": "x64",
             "mac": "X",
             "rpi": " Raspberry Pi",
+            "universal": "SDK",
             "win64": "x64"
         },
         "releasesTypes": {

@@ -64,7 +64,7 @@
 			"arm": {
 				"label": "ARM",
 				"shortLabel": "ARM",
-				"supported": "<a href='/content/arm'>ARM based servers support policy</a>"
+				"supported": "<a href='/content/arm'>Politica di supporto per server basati su ARM</a>"
 			},
 			"sdk": {
 				"label": "SDK",
@@ -73,19 +73,26 @@
 			}
 		},
 		"platforms": {
-			"win64": "x64",
-			"linux64": "x64",
-			"mac": "X",
 			"bananapi": "Banana Pi",
 			"bpi": "Nx1",
-			"rpi": " Raspberry Pi"
+			"linux64": "x64",
+			"linux_arm32": "x32",
+			"linux_arm64": "x64",
+			"mac": "X",
+			"rpi": " Raspberry Pi",
+			"universal": "SDK",
+			"win64": "x64"
 		},
 		"appTypes": {
-			"client": "Solo cliente",
-			"server": "Solo server",
 			"bundle": "Client e Server",
+			"camera_sdk": "SDK sorgente video",
+			"client": "Solo cliente",
+			"metadata_sdk": "Metadata SDK",
+			"package": "Pacchetto",
+			"server": "Solo server",
 			"servertool": "Strumenti di configurazione",
-			"package": "Pacchetto"
+			"storage_sdk": "SDK di archiviazione",
+			"video_source_sdk": "SDK sorgente video"
 		},
 		"releasesTypes": {
 			"beta": "Beta",

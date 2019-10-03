@@ -73,19 +73,26 @@
 			}
 		},
 		"platforms": {
-			"win64": "x64",
-			"linux64": "x64",
-			"mac": "X",
 			"bananapi": "Banana Pi",
 			"bpi": "Nx1",
-			"rpi": " Raspberry Pi"
+			"linux64": "x64",
+			"linux_arm32": "x32",
+			"linux_arm64": "x64",
+			"mac": "X",
+			"rpi": " Raspberry Pi",
+			"universal": "SDK",
+			"win64": "x64"
 		},
 		"appTypes": {
-			"client": "僅用戶端",
-			"server": "僅伺服器",
 			"bundle": "用戶端和伺服器",
+			"camera_sdk": "影像來源SDK",
+			"client": "僅用戶端",
+			"metadata_sdk": "Metadata SDK",
+			"package": "套件",
+			"server": "僅伺服器",
 			"servertool": "設定工具",
-			"package": "套件"
+			"storage_sdk": "儲存裝置 SDK",
+			"video_source_sdk": "影像來源SDK"
 		},
 		"releasesTypes": {
 			"beta": "Beta",

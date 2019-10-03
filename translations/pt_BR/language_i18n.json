@@ -179,10 +179,14 @@
     "downloads": {
         "appTypes": {
             "bundle": "Cliente e Servidor",
+            "camera_sdk": "Fonte de vídeo SDK",
             "client": "Somente cliente",
+            "metadata_sdk": "Metadata SDK",
             "package": "Pacote",
             "server": "Somente servidor",
-            "servertool": "Ferramenta de configuração"
+            "servertool": "Ferramenta de configuração",
+            "storage_sdk": "SDK de armazenamento",
+            "video_source_sdk": "Fonte de vídeo SDK"
         },
         "groups": {
             "android": {
@@ -233,8 +237,11 @@
             "bananapi": "Banana Pi",
             "bpi": "Nx1",
             "linux64": "x64",
+            "linux_arm32": "x32",
+            "linux_arm64": "x64",
             "mac": "X",
             "rpi": " Raspberry Pi",
+            "universal": "SDK",
             "win64": "x64"
         },
         "releasesTypes": {

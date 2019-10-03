@@ -64,7 +64,7 @@
 			"arm": {
 				"label": "ARM",
 				"shortLabel": "ARM",
-				"supported": "<a href='/content/arm'>ARM based servers support policy</a>"
+				"supported": "<a href='/content/arm'>เซิร์ฟเวอร์ที่ใช้ ARM สนับสนุนนโยบาย</a>"
 			},
 			"sdk": {
 				"label": "SDK",
@@ -73,19 +73,26 @@
 			}
 		},
 		"platforms": {
-			"win64": "x64",
-			"linux64": "x64",
-			"mac": "X",
 			"bananapi": "Banana Pi",
 			"bpi": "Nx1",
-			"rpi": " Raspberry Pi"
+			"linux64": "x64",
+			"linux_arm32": "x32",
+			"linux_arm64": "x64",
+			"mac": "X",
+			"rpi": " Raspberry Pi",
+			"universal": "SDK",
+			"win64": "x64"
 		},
 		"appTypes": {
-			"client": "ไคลเอ็นต์เท่านั้น",
-			"server": "เซิร์ฟเวอร์เท่านั้น",
 			"bundle": "ไคลเอ็นต์และเซิร์ฟเวอร์",
+			"camera_sdk": "SDK แหล่งวิดีโอ",
+			"client": "ไคลเอ็นต์เท่านั้น",
+			"metadata_sdk": "Metadata SDK",
+			"package": "แพคเกจ",
+			"server": "เซิร์ฟเวอร์เท่านั้น",
 			"servertool": "เครื่องมือกำหนดค่า",
-			"package": "แพคเกจ"
+			"storage_sdk": "SDK ที่เก็บข้อมูล",
+			"video_source_sdk": "SDK แหล่งวิดีโอ"
 		},
 		"releasesTypes": {
 			"beta": "Beta",

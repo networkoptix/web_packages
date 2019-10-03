@@ -73,19 +73,26 @@
 			}
 		},
 		"platforms": {
-			"win64": "x64",
-			"linux64": "x64",
-			"mac": "X",
 			"bananapi": "Banana Pi",
 			"bpi": "Nx1",
-			"rpi": " Raspberry Pi"
+			"linux64": "x64",
+			"linux_arm32": "x32",
+			"linux_arm64": "x64",
+			"mac": "X",
+			"rpi": " Raspberry Pi",
+			"universal": "SDK",
+			"win64": "x64"
 		},
 		"appTypes": {
-			"client": "Vain Client-sovellus",
-			"server": "Vain palvelin-sovellus",
 			"bundle": "Client ja palvelin",
+			"camera_sdk": "Videolähteen SDK",
+			"client": "Vain Client-sovellus",
+			"metadata_sdk": "Metadata SDK",
+			"package": "Paketti",
+			"server": "Vain palvelin-sovellus",
 			"servertool": "Konfigurointityökalu",
-			"package": "Paketti"
+			"storage_sdk": "Storage SDK",
+			"video_source_sdk": "Videolähteen SDK"
 		},
 		"releasesTypes": {
 			"beta": "Beta",

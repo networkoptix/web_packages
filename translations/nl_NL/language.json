@@ -242,7 +242,7 @@
     "cameraStates": {
       "offline": "Offline",
       "error": "Fout",
-      "errorLoading": "An error occurred while loading this video.",
+      "errorLoading": "Er is een fout opgetreden tijdens het laden van deze video.",
       "unauthorized": "Authenticatie vereist",
       "noData": "Geen data",
       "iOSVideoTooLarge": "iOS ondersteunt geen video die groter is dan FullHD (2MP: 1920x1080).",
