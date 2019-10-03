@@ -107,15 +107,18 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
 
     initProcesses(): void {
         this.editUser = this.processService.createProcess(() => {
-            if (this.locked[this.selectedUser.email]) {
+            const selectedUser = this.selectedUser;
+            if (this.locked[selectedUser.email]) {
                 return;
             }
-            this.locked[this.selectedUser.email] = true;
-            return this.system.saveUser(this.selectedUser, this.selectedUser.role).then(() => {
+            this.locked[selectedUser.email] = true;
+            return this.system.saveUser(selectedUser, selectedUser.role).then(() => {
                 return this.system.getUsers(true);
+            }).then(() => {
+                this.locked[selectedUser.email] = false;
+                return;
             });
         }, {}).then(() => {
-            this.locked[this.selectedUser.email] = false;
             setTimeout(() => {
                 this.applyService.hardReset();
             });
