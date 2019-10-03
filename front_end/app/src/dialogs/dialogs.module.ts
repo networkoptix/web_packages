@@ -19,15 +19,17 @@ import { ClipboardModule }                              from 'ngx-clipboard';
 import { GenericModalContent, NxModalGenericComponent } from './generic/generic.component';
 import { NxDialogsService }                             from './dialogs.service';
 import { ApplyModalContent, NxModalApplyComponent }     from './apply/apply.component';
+import { RouterModule }                                 from '@angular/router';
 
 @NgModule({
-    imports        : [
+    imports: [
         CommonModule,
         FormsModule,
         TranslateModule,
         ClipboardModule,
         ComponentsModule,
         DirectivesModule,
+        RouterModule,
     ],
     declarations   : [
         LoginModalContent,
