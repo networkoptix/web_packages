@@ -16,7 +16,8 @@ ${DOWNLOAD LINK}                      //footer//a[@href="/download"]
 @{LANGUAGES CREATE ACCOUNT TEXT LIST}    Create Account  Create Account  Зарегистрироваться  Créer compte  Account erstellen  Crear Cuenta  Fiók létrehozása  创建帐户  新建帳號  アカウント作成  계정 만들기  Hesap oluştur  สร้างบัญชี   Account aanmaken  צור חשבון   Utwórz konto  Tạo tài khoản
 @{USER TYPE LIST}    ${OWNER TEXT}    ${ADMIN TEXT}    ${ADV VIEWER TEXT}    ${VIEWER TEXT}    ${LIVE VIEWER TEXT}    ${CUSTOM TEXT}
 
-${BACKDROP}                           //ngb-modal-window
+${BACKDROP}                           //ngb-modal-backdrop
+${MODAL DIALOG}                       //ngb-modal-window/div[contains(@class,'modal-dialog')]/div[contains(@class,'modal-content')]
 
 ${COMBO TEXT}                         Кенг☿☂⊗⅓您都可以`~!@#$%계정이 이
 ${CYRILLIC TEXT}                      Кенгшщзх
@@ -78,10 +79,10 @@ ${RESET EYE ICON OPEN}                ${RESET PASSWORD FORM}${EYE ICON OPEN}
 ${RESET EYE ICON CLOSED}              ${RESET PASSWORD FORM}${EYE ICON CLOSED}
 
 #Change Password
-${CHANGE PASSWORD FORM}               //form[@name='passwordForm']
-${CURRENT PASSWORD INPUT}             //form[@name='passwordForm']//input[@ng-model='pass.password']
-${NEW PASSWORD INPUT}                 //form[@name='passwordForm']//password-input[@ng-model='pass.newPassword']//input
-${CHANGE PASSWORD BUTTON}             //form[@name='passwordForm']//button[@ng-click='checkForm()']
+${CHANGE PASSWORD FORM}               //nx-account-password-component//form
+${CURRENT PASSWORD INPUT}             ${CHANGE PASSWORD FORM}//input[@id='password']
+${NEW PASSWORD INPUT}                 ${CHANGE PASSWORD FORM}//input[@id='newPassword']
+${CHANGE PASSWORD BUTTON}             //nx-account-password-component//nx-apply//nx-process-button//button
 ${PASSWORD IS REQUIRED}               //span[contains(@class,'input-error') and contains(text(),"${PASSWORD IS REQUIRED TEXT}")]
 ${CHANGE PASS EYE ICON OPEN}          ${CHANGE PASSWORD FORM}${EYE ICON OPEN}
 ${CHANGE PASS EYE ICON CLOSED}        ${CHANGE PASSWORD FORM}${EYE ICON CLOSED}
@@ -153,9 +154,9 @@ ${DISCONNECT FROM MY ACCOUNT}         //button[contains(text(),'Disconnect from 
 
 ${ACCESS LEVEL DROPDOWN}              ${SYSTEM USER DETAILS}//nx-section//button[@id='permissionsSelect']
 ${REMOVE USER BUTTON}                 //button[contains(text(),'${REMOVE USER BUTTON TEXT}')]
-${DELETE USER MODAL}                  //ngb-modal-window
+${DELETE USER MODAL}                  ${MODAL DIALOG}
 ${DELETE USER BUTTON}                 //button[contains(text(),'${DELETE USER BUTTON TEXT}')]
-${DELETE USER CANCEL BUTTON}          //ngb-modal-window//button[contains(text(),"${CANCEL BUTTON TEXT}")]
+${DELETE USER CANCEL BUTTON}          ${MODAL DIALOG}//button[contains(text(),"${CANCEL BUTTON TEXT}")]
 
 ${USERS LIST LINK}                    //a[@id='users']
 ${USERS LIST}                         ${USERS LIST LINK}/../../div[contains(@class,'level-3-items')]
@@ -199,7 +200,6 @@ ${DISCONNECT FORM HEADER}             //h1["${DISCONNECT FORM HEADER TEXT}"]
 ${DISCONNECT PASSWORD INPUT}          ${DISCONNECT FORM}//input[@id="password"]
 ${DISCONNECT FORM DISCONNECT BUTTON}    ${DISCONNECT FORM}//button[contains(text(),"${DISCONNECT BUTTON TEXT}")]
 
-${MODAL DIALOG}                       //ngb-modal-window/div[contains(@class,'modal-dialog')]/div[contains(@class,'modal-content')]
 #Disconnect from my account
 ${DISCONNECT MODAL WARNING}              ${MODAL DIALOG}//p[contains(text(),"${DISCONNECT MODAL WARNING TEXT}")]
 # extra spaces here temporarily
@@ -377,13 +377,10 @@ ${PASSWORD IS GOOD BADGE}             //span[contains(@class,"badge") and contai
 ${PASSWORD INCORRECT BADGE}           //span[contains(@class,"badge") and contains(text(),"${PASSWORD INCORRECT BADGE TEXT}")]
 
 #Already logged in modal
-${LOGGED IN STAY LOGGED IN BUTTON}    //ngb-modal-window//button[contains(text(),'${STAY LOGGED IN BUTTON TEXT}')]
-${LOGGED IN OK BUTTON}                //ngb-modal-window//button[contains(text(),'${OK TEXT}')]
-${LOGGED IN NEW ACCOUNT BUTTON}       //ngb-modal-window//button/span[contains(text(),'${CREATE NEW ACCOUNT BUTTON TEXT}')]/..
-${LOGGED IN LOG OUT BUTTON}           //ngb-modal-window//button/span[contains(text(),'${LOG OUT BUTTON TEXT}')]/..
-
-${CONTINUE BUTTON}                    //ngb-modal-window//button[contains(text(),'${CONTINUE BUTTON TEXT}')]
-${CONTINUE MODAL}                     //ngb-modal-window
+${LOGGED IN STAY LOGGED IN BUTTON}    ${MODAL DIALOG}//button[contains(text(),'${STAY LOGGED IN BUTTON TEXT}')]
+${LOGGED IN OK BUTTON}                ${MODAL DIALOG}//button[contains(text(),'${OK TEXT}')]
+${LOGGED IN NEW ACCOUNT BUTTON}       ${MODAL DIALOG}//button/span[contains(text(),'${CREATE NEW ACCOUNT BUTTON TEXT}')]/..
+${LOGGED IN LOG OUT BUTTON}           ${MODAL DIALOG}//button/span[contains(text(),'${LOG OUT BUTTON TEXT}')]/..
 
 ${300CHARS}                           QWErtyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmyy
 ${255CHARS}                           QWErtyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopas

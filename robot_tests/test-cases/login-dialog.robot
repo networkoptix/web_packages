@@ -2,8 +2,8 @@
 Resource          ../resource.robot
 Suite Setup       Open Browser and go to URL    ${url}
 Test Setup        Restart
-Test Teardown     Run Keyword If Test Failed    Open New Browser On Failure
-Suite Teardown    Close All Browsers
+#Test Teardown     Run Keyword If Test Failed    Open New Browser On Failure
+#Suite Teardown    Close All Browsers
 
 *** Variables ***
 ${email}    ${EMAIL OWNER}
@@ -86,7 +86,7 @@ Allows log in with 'Remember Me checkmark' switched off
     Validate Log In
 
 Contains 'I forgot password' link that leads to Restore Password page with pre-filled email from log In form
-    [Tags]    Threaded
+    [Tags]    Threaded    Bug_19.2
     Log In    ${email}    'aderhgadehf'
     Wait Until Elements are Visible
     ...    ${REMEMBER ME CHECKBOX VISIBLE}
@@ -97,10 +97,11 @@ Contains 'I forgot password' link that leads to Restore Password page with pre-f
     Sleep    1
     Click Link    ${FORGOT PASSWORD}
     Wait Until Element is Visible    ${RESTORE PASSWORD EMAIL INPUT}
+  Log    CLOUD-3708 Regression: Email is not pre-populated when clicking "forgot password" with an email input in the login form
     Textfield Should Contain    ${RESTORE PASSWORD EMAIL INPUT}    ${email}
 
 Passes email from email input to Restore password page, even without clicking 'Log in' button
-    [tags]    C41872    Threaded
+    [tags]    C41872    Threaded    Bug_19.2
     Wait Until Element is Visible    ${LOG IN NAV BAR}
     Click Link    ${LOG IN NAV BAR}
     Wait Until Element is Visible    ${EMAIL INPUT}
@@ -110,6 +111,7 @@ Passes email from email input to Restore password page, even without clicking 'L
     Wait Until Element is Visible    ${FORGOT PASSWORD}
     Click Link    ${FORGOT PASSWORD}
     Wait Until Element is Visible    ${RESTORE PASSWORD EMAIL INPUT}
+  Log    CLOUD-3708 Regression: Email is not pre-populated when clicking "forgot password" with an email input in the login form
     Textfield Should Contain    ${RESTORE PASSWORD EMAIL INPUT}    ${email}
 
 Shows non-activated user message when not activated at login; Resend activation button sends email
@@ -236,9 +238,10 @@ Handles two tabs, updates second tab state if logout is done on first
     Select Window    @{tabs}[0]
     Location Should Be    ${url}/register
     Reload Page
-    Wait Until Element is Visible    ${CONTINUE BUTTON}
-    Click Button    ${CONTINUE BUTTON}
-    Wait Until Page Does Not Contain Element    ${CONTINUE MODAL}
+    Wait Until Element is Visible    ${LOGGED IN STAY LOGGED IN BUTTON}
+    Click Button    ${LOGGED IN STAY LOGGED IN BUTTON}
+    Sleep    2
+    Wait Until Page Does Not Contain Elements    ${BACKDROP}    ${MODAL DIALOG}
     Validate Log In
     Log Out
     Validate Log Out
@@ -278,7 +281,7 @@ Log in more than 5 times
     Validate Log In
 
 User is logged out of browser after a password change in another browser
-    [tags]    C41837
+    [tags]    C41837    Bug_19.2
     Log In    ${email}    ${password}
     Validate Log In
     Open Browser and go to URL    ${url}
@@ -290,14 +293,18 @@ User is logged out of browser after a password change in another browser
     Wait Until Elements are Visible
     ...    ${CURRENT PASSWORD INPUT}
     ...    ${NEW PASSWORD INPUT}
+    Element Should Not Be Visible
     ...    ${CHANGE PASSWORD BUTTON}
     Input Text    ${CURRENT PASSWORD INPUT}    ${password}
     Input Text    ${NEW PASSWORD INPUT}    ${ALT PASSWORD}
+    Wait Until Element Is Visible
+    ...    ${CHANGE PASSWORD BUTTON}
     Click Button    ${CHANGE PASSWORD BUTTON}
     Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
     Switch Browser    2
     # wait for server to disconnect user
     sleep    30
+  Log    CLOUD-3710 Regression: User changes his password in another browser
     Wait Until Element is Visible    ${LOG IN MODAL}
     Click Element    ${LOG IN CLOSE BUTTON}
     Validate Log Out
@@ -310,8 +317,9 @@ User is logged out of browser after a password change in another browser
     Wait Until Elements are Visible
     ...    ${CURRENT PASSWORD INPUT}
     ...    ${NEW PASSWORD INPUT}
-    ...    ${CHANGE PASSWORD BUTTON}
     Input Text    ${CURRENT PASSWORD INPUT}    ${ALT PASSWORD}
     Input Text    ${NEW PASSWORD INPUT}    ${password}
+    Wait Until Element Is Visible
+    ...    ${CHANGE PASSWORD BUTTON}
     Click Button    ${CHANGE PASSWORD BUTTON}
     Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}

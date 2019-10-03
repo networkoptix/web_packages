@@ -46,15 +46,17 @@ Open Browser With Options
 Set Chrome Options
     [Documentation]    Set Chrome options for headless mode
     ${options}=    Evaluate    sys.modules['selenium.webdriver'].ChromeOptions()    sys, selenium.webdriver
-    : FOR    ${option}    IN    @{chrome_arguments}
-    \    Call Method    ${options}    add_argument    ${option}
+    FOR    ${option}    IN    @{chrome_arguments}
+        Call Method    ${options}    add_argument    ${option}
+    END
     [Return]    ${options}
 
 Set Chrome Options Headless
     [Documentation]    Set Chrome options for headless mode
     ${options}=    Evaluate    sys.modules['selenium.webdriver'].ChromeOptions()    sys, selenium.webdriver
-    : FOR    ${option}    IN    @{chrome_arguments_headless}
-    \    Call Method    ${options}    add_argument    ${option}
+    FOR    ${option}    IN    @{chrome_arguments_headless}
+        Call Method    ${options}    add_argument    ${option}
+    END
     [Return]    ${options}
 
 Check Language Anonymous
@@ -284,13 +286,21 @@ Failure Tasks
 
 Wait Until Elements Are Visible
     [arguments]    @{elements}
-    :FOR     ${element}  IN  @{elements}
-    \  Wait Until Element Is Visible    ${element}
+    FOR     ${element}  IN  @{elements}
+        Wait Until Element Is Visible    ${element}
+    END
 
 Elements Should Not Be Visible
     [arguments]    @{elements}
-    :FOR     ${element}  IN  @{elements}
-    \  Element Should Not Be Visible    ${element}
+    FOR     ${element}  IN  @{elements}
+        Element Should Not Be Visible    ${element}
+    END
+
+Wait Until Page Does Not Contain Elements
+    [arguments]    @{elements}
+    FOR     ${element}  IN  @{elements}
+        Wait Until Page Does Not Contain Element    ${element}
+    END
 
 #Reset resources
 Clean up email noperm
@@ -316,16 +326,17 @@ Clean up random emails
 
 Find and remove emails
     ${random emails}    Get WebElements    //div[@process-loading='gettingSystemUsers']//tbody//tr//td[contains(text(), 'noptixautoqa+15')]
-    :FOR    ${element}    IN    @{random emails}
-    \  ${email}    Get Text    ${element}
-    \  Mouse Over    ${element}
-    \  Wait Until Element Is Visible    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${email}')]/following-sibling::td/a[@ng-click='unshare(user)']/span['&nbsp&nbspDelete']
-    \  Click Element    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${email}')]/following-sibling::td/a[@ng-click='unshare(user)']/span['&nbsp&nbspDelete']
-    \  Wait Until Element Is Visible    ${DELETE USER BUTTON}
-    \  Click Button    ${DELETE USER BUTTON}
-    \  ${PERMISSIONS WERE REMOVED FROM EMAIL}    Replace String    ${PERMISSIONS WERE REMOVED FROM}    %email%    ${email}
-    \  Check For Alert    ${PERMISSIONS WERE REMOVED FROM EMAIL}
-    \  Wait Until Element Is Not Visible    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${email}')]
+    FOR    ${element}    IN    @{random emails}
+        ${email}    Get Text    ${element}
+        Mouse Over    ${element}
+        Wait Until Element Is Visible    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${email}')]/following-sibling::td/a[@ng-click='unshare(user)']/span['&nbsp&nbspDelete']
+        Click Element    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${email}')]/following-sibling::td/a[@ng-click='unshare(user)']/span['&nbsp&nbspDelete']
+        Wait Until Element Is Visible    ${DELETE USER BUTTON}
+        Click Button    ${DELETE USER BUTTON}
+        ${PERMISSIONS WERE REMOVED FROM EMAIL}    Replace String    ${PERMISSIONS WERE REMOVED FROM}    %email%    ${email}
+        Check For Alert    ${PERMISSIONS WERE REMOVED FROM EMAIL}
+        Wait Until Element Is Not Visible    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${email}')]
+    END
 
 Reset user noperm first/last name
     Register Keyword To Run On Failure    None
