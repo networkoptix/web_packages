@@ -111,13 +111,13 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 return;
             }
             this.locked[this.selectedUser.email] = true;
-            return this.system.saveUser(this.selectedUser, this.selectedUser.role);
+            return this.system.saveUser(this.selectedUser, this.selectedUser.role).then(() => {
+                return this.system.getUsers(true);
+            });
         }, {}).then(() => {
             this.locked[this.selectedUser.email] = false;
-            return this.system.getUsers(true).then(_ => {
-                setTimeout(_ => {
-                    this.applyService.reset();
-                });
+            setTimeout(() => {
+                this.applyService.hardReset();
             });
         });
     }

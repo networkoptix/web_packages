@@ -1,7 +1,12 @@
-<div *ngIf="show" class="d-flex pt-3">
-    <nx-process-button [process]="save"
-                       [actionType]="'primary wide-button'"
-                       [form]="form"
-                       buttonText="{{ 'Save' | translate }}"></nx-process-button>
-    <button type="button" class="btn btn-default ml-2" (click)="discard()" translate>Cancel</button>
+<div class="pt-3 placeholder-text">
+    <div *ngIf="show; else noChanges" class="d-flex">
+        <nx-process-button [process]="save"
+                           [actionType]="'primary min-w-120'"
+                           [form]="form"
+                           buttonText="{{ 'Save' | translate }}"></nx-process-button>
+        <button type="button" class="min-w-80 btn btn-default ml-2" (click)="discard()" translate>Cancel</button>
+    </div>
+    <ng-template #noChanges>
+        <div translate>No unsaved changes</div>
+    </ng-template>
 </div>
