@@ -16,9 +16,9 @@ Log in to Auto Tests System
     [arguments]    ${email}
     Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
     Log In    ${email}    ${password}    None
-    Run Keyword If    '${email}' == '${EMAIL OWNER}'    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${SHARE BUTTON SYSTEMS}    ${OPEN IN NX BUTTON}    ${RENAME SYSTEM}
-    Run Keyword If    '${email}' == '${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${SHARE BUTTON SYSTEMS}    ${OPEN IN NX BUTTON}    ${RENAME SYSTEM}
-    Run Keyword Unless    '${email}' == '${EMAIL OWNER}' or '${email}' == '${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${OPEN IN NX BUTTON}
+    Run Keyword If    '${email}' == '${EMAIL OWNER}'    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}
+    Run Keyword If    '${email}' == '${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${RENAME SYSTEM}
+    Run Keyword Unless    '${email}' == '${EMAIL OWNER}' or '${email}' == '${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
 Check For Alert2
     [arguments]    ${alert text}
     Wait Until Element Is Visible    ${ALERT}
@@ -28,17 +28,21 @@ Check For Alert2
 
 *** Test Cases ***
 Add Then Remove
-    @{emails}    Get Many Random Emails    ${how many}
+    @{emails}    Get Many Random Emails    ${how many}    ${BASE EMAIL}
     Open Browser and go to URL    ${url}
     Log in to Auto Tests System    ${email}
+    Wait Until Elements Are Visible    ${USERS LIST LINK}
+    Click Link    ${USERS LIST LINK}
     Wait Until Element Is Visible    ${SHARE BUTTON SYSTEMS}
-    :FOR    ${x}    IN RANGE    ${how many}
-    \  Click Button    ${SHARE BUTTON SYSTEMS}
-    \  Wait Until Elements Are Visible    ${SHARE EMAIL}    ${SHARE BUTTON MODAL}
-    \  Input Text    ${SHARE EMAIL}    @{emails}[${x}]
-    \  Click Button    ${SHARE BUTTON MODAL}
-    \  Check For Alert2    ${NEW PERMISSIONS SAVED}
+    FOR    ${x}    IN RANGE    ${how many}
+        Click Button    ${SHARE BUTTON SYSTEMS}
+        Wait Until Elements Are Visible    ${SHARE EMAIL}    ${SHARE BUTTON MODAL}
+        Input Text    ${SHARE EMAIL}    @{emails}[${x}]
+        Click Button    ${SHARE BUTTON MODAL}
+        Check For Alert2    ${NEW PERMISSIONS SAVED}
+    END
     Register Keyword To Run On Failure    Capture Page Screenshot
-    :FOR    ${x}    IN RANGE    ${how many}
-    \  Run Keyword And Continue On Failure    Remove User Permissions    @{emails}[${x}]
+    FOR    ${x}    IN RANGE    ${how many}
+        Run Keyword And Continue On Failure    Remove User Permissions    @{emails}[${x}]
+    END
     Close Browser
