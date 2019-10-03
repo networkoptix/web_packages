@@ -179,13 +179,14 @@
     "downloads": {
         "appTypes": {
             "bundle": "Client and Server",
-            "camera_sdk": "Camera",
+            "camera_sdk": "Video Source SDK",
             "client": "Client only",
-            "metadata_sdk": "Meta Data",
+            "metadata_sdk": "Metadata SDK",
             "package": "Package",
             "server": "Server only",
             "servertool": "Configuration tool",
-            "storage_sdk": "Storage"
+            "storage_sdk": "Storage SDK",
+            "video_source_sdk": "Video Source SDK"
         },
         "groups": {
             "android": {

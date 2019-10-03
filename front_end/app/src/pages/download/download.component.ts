@@ -26,6 +26,7 @@ export class DownloadComponent implements OnInit, OnDestroy {
     private canViewDownloads: boolean;
 
     config: any;
+    downloadButton: any;
     downloads: any;
     downloadsData: any;
     lang: any;
@@ -91,7 +92,19 @@ export class DownloadComponent implements OnInit, OnDestroy {
 
     public beforeChange($event: NgbTabChangeEvent) {
         this.setTitle($event.nextId);
+        this.calcDownloadButton($event.nextId);
         this.locationProxy.path('/download/' + $event.nextId, false);
+    }
+
+    private calcDownloadButton(platformName) {
+        const platform = this.sortedPlatforms.find(platform => platform.name === platformName);
+        this.downloadButton = undefined;
+        if (platform.name === 'sdk') {
+            this.downloadButton = platform.files.find((installer) => installer.formatName === this.lang.downloads.appTypes.metadata_sdk);
+        }
+        if (!this.downloadButton) {
+            this.downloadButton = platform.files[0];
+        }
     }
 
     private getDownloads() {
@@ -139,8 +152,9 @@ export class DownloadComponent implements OnInit, OnDestroy {
                         }).map((installer) => {
                             const translatedPlatform = this.lang.downloads.platforms[installer.platform];
                             const translatedAppType = this.lang.downloads.appTypes[installer.appType];
-
-                            if (translatedPlatform && translatedAppType) {
+                            if (platform.name === 'sdk' && translatedAppType) {
+                                installer.formatName = translatedAppType;
+                            } else if (translatedPlatform && translatedAppType) {
                                 installer.formatName = `${translatedPlatform} - ${translatedAppType}`;
                             } else if (installer.niceName) {
                                 installer.formatName = installer.niceName;
