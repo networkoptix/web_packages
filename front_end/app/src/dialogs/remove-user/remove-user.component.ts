@@ -19,7 +19,6 @@ export class RemoveUserModalContent {
     LANG: any;
     CONFIG: any;
 
-    buttonText: string;
     removeUserProcess: any;
 
     constructor(public activeModal: NgbActiveModal,
@@ -30,7 +29,6 @@ export class RemoveUserModalContent {
     ) {
         this.CONFIG = this.configService.getConfig();
         this.LANG = this.language.getTranslations();
-        this.buttonText = this.LANG.system.confirmUnshareAction;
     }
 
     ngOnInit() {
