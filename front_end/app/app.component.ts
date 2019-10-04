@@ -15,7 +15,7 @@ import { NxRibbonService } from './src/components/ribbon/ribbon.service';
 @Component({
     selector: 'nx-app',
     template: `        
-        <div class="outerContainer" style="display: flex; flex-flow: column; height: 100%;">
+        <div class="outerContainer">
             <div class="headerContainer">
                 <nx-header></nx-header>
                 <nx-ribbon></nx-ribbon>
