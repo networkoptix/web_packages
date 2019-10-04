@@ -1,4 +1,5 @@
 @import '../../../styles/typography';
+@import '../../../../styles/theme_variables';
 @import '~bootstrap/scss/bootstrap';
 
 nx-block {
@@ -19,20 +20,36 @@ nx-block {
 }
 
 .fixed-sidebar{
+  @include media-breakpoint-down(sm) {
+    height: auto !important;
+  }
+
+  // replicate col-md-4
   @include media-breakpoint-up(md) {
     position: fixed;
     left: 0;
+    width: calc((100% - (#{$grid-gutter-width} + #{$scrollbar-height})) / 3)
+  }
+
+  // replicate col-xl-3
+  @include media-breakpoint-up(xl) {
+    width: calc((100% - (#{$grid-gutter-width} + #{$scrollbar-height})) / 4)
+  }
+
+  // replicate col-xxxl-2 with max width of block-container
+  @include media-breakpoint-up(xxxl) {
+    width: calc(#{$fluid-container-max-width} / 6);
   }
 }
 
-.fill-screen-height {
-  @include media-breakpoint-up(md) {
-    height: calc(100vh - 80px);
-  }
-}
-
-.fill-screen-height-alert {
-  @include media-breakpoint-up(md) {
-    height: calc(100vh - 116px);
-  }
-}
+//.fill-screen-height {
+//  @include media-breakpoint-up(md) {
+//    height: calc(100vh - 80px);
+//  }
+//}
+//
+//.fill-screen-height-alert {
+//  @include media-breakpoint-up(md) {
+//    height: calc(100vh - 116px);
+//  }
+//}

@@ -16,12 +16,12 @@ import { NxRibbonService } from './src/components/ribbon/ribbon.service';
     selector: 'nx-app',
     template: `        
         <div class="outerContainer" style="display: flex; flex-flow: column; height: 100%;">
-            <div class="headerContainer" style="flex: 0 1 auto;">
+            <div class="headerContainer">
                 <nx-header></nx-header>
                 <nx-ribbon></nx-ribbon>
             </div>
         
-            <div class="mainContainer" style="flex: 1 1 auto; overflow-y: scroll;">
+            <div class="mainContainer" style="">
                 <router-outlet></router-outlet>
                 <div ng-view="" ng-model-options="{ updateOn: 'blur' }"></div>
             </div>

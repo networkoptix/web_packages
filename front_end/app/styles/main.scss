@@ -25,7 +25,6 @@ html {
     min-height: 100%;
     height: 100%;
     margin: 0;
-    //overflow-y: scroll; /* CLOUD-373: this is hack: we fix vertical scroll to prevent the page from shaking when it appears or disappears*/
 }
 
 body {
@@ -33,6 +32,11 @@ body {
     padding   : 0 !important;
     height: 100%;
     margin: 0;
+}
+
+.mainContainer {
+    flex: 1 1 auto;
+    overflow-y: scroll; /* CLOUD-373: this is hack: we fix vertical scroll to prevent the page from shaking when it appears or disappears*/
 }
 
 [data-whatintent='mouse'] *:focus {
