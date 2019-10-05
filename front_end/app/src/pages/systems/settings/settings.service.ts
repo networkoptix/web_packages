@@ -12,6 +12,7 @@ import { NxMenuService }               from '../../../components/menu/menu.servi
 })
 export class NxSettingsService implements OnDestroy {
     config: any = {};
+    footerSubject = new BehaviorSubject(false);
     systemSubject = new BehaviorSubject(undefined);
     selectedSectionSubject = new BehaviorSubject([]);
     plugin: any = {};

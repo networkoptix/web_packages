@@ -20,7 +20,7 @@ import { NxSystem }                  from '../../../../services/system.service';
     styleUrls  : ['admin.component.scss']
 })
 
-export class NxSystemAdminComponent implements OnInit, OnDestroy {
+export class NxSystemAdminComponent implements OnInit {
     CONFIG: any = {};
     LANG: any = {};
     system: NxSystem;
@@ -71,6 +71,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             .subscribe((system) => {
                 this.system = system;
                 if (system) {
+                    this.settingsService.footerSubject.next(true);
                     this.userRole = system.accessRole;
                     if (system.accessRole in this.LANG.accessRoles) {
                         this.userRole = this.LANG.accessRoles[system.accessRole].label;
@@ -83,10 +84,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                     }).then(() => this.updateAndGoToSystems(), (error) => error);
                 }
             });
-
-    }
-
-    ngOnDestroy(): void {
 
     }
 

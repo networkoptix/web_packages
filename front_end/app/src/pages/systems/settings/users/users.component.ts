@@ -180,6 +180,10 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             this.setPermission(this.selectedUser.role);
             this.userEnabled.value = this.selectedUser.isEnabled;
             this.applyService.reset();
+
+            this.settingsService.footerSubject.next(true);
+
+            setTimeout(() => this.applyService.setVisible());
         }
     }
 

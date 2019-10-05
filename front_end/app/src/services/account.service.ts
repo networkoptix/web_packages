@@ -23,6 +23,7 @@ export class NxAccountService {
     location: any;
     loggingOut: boolean;
     requestingLogin: any;
+    account: any;
     loginStateSubject = new ReplaySubject(1);
 
     constructor(@Inject(DOCUMENT) private document: any,
@@ -85,9 +86,18 @@ export class NxAccountService {
                            return this.get(); // Try again
                        });
         }
+
+        // TODO: Not real cashing - Caching will be implemented by another task
+        if (this.account) {
+            return new Promise(resolve => {
+                return resolve(this.account);
+            });
+        }
+
         return this.cloudApi
                    .account()
                    .then((account) => {
+                       this.account = account;
                        return account;
                    })
                    .catch(() => {
