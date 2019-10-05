@@ -17,6 +17,8 @@ import { NxProcessService }                     from '../../../../services/proce
 import { NxSystem, NxSystemRole, NxSystemUser } from '../../../../services/system.service';
 import { NxApplyService, Watcher }              from '../../../../services/apply.service';
 import { NxUriService }                         from '../../../../services/uri.service';
+import { Subscription }                         from 'rxjs';
+import { NxToastService }                       from '../../../../dialogs/toast.service';
 
 @Component({
     selector   : 'nx-system-user-component',
@@ -37,6 +39,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
     systemAvailable: boolean;
     system: NxSystem;
     viewContainerRef: ViewContainerRef;
+    systemSubscription: Subscription;
 
     userEnabled = new Watcher<boolean>();
     userRole = new Watcher<string>();
@@ -59,6 +62,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 private menuService: NxMenuService,
                 private processService: NxProcessService,
                 private uriService: NxUriService,
+                private toastService: NxToastService,
                 location: Location) {
         this.location = location;
         this.viewContainerRef = viewContainerRef;
@@ -68,6 +72,8 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.LANG = this.language.getTranslations();
         this.pageService.setPageTitle(this.LANG.pageTitles.systems);
+
+        let share = this.route.snapshot.routeConfig.path === 'share';
 
         this.route
             .params
@@ -79,7 +85,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 }
             });
 
-        this.settingsService.systemSubject
+        this.systemSubscription = this.settingsService.systemSubject
             .pipe(filter(data => data !== undefined))
             .subscribe((system) => {
                 this.system = system;
@@ -94,6 +100,15 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 if (!this.selectedUser || !this.selectedUser.email) {
                     this.setUser();
                 }
+
+                if (share) {
+                    if (this.systemAvailable) {
+                        this.settingsService.addUser();
+                    } else {
+                        this.toastService.show(this.LANG.system.shareOffline, {classname: 'danger'});
+                    }
+                    share = false;
+                }
             });
 
         this.initProcesses();
@@ -103,6 +118,10 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             this.selectedUser.role = this.system.accessRoles.find(role => role.name === this.userRole.originalValue);
             this.applyService.reset();
         }, [this.userEnabled, this.userRole]);
+    }
+
+    ngOnDestroy(): void {
+        this.systemSubscription.unsubscribe();
     }
 
     initProcesses(): void {
@@ -123,10 +142,6 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 this.applyService.hardReset();
             });
         });
-    }
-
-    ngOnDestroy(): void {
-
     }
 
     removeUser() {

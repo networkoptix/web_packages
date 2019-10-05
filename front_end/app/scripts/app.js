@@ -141,6 +141,9 @@ window.L = {};
                         templateUrl: CONFIG.viewsDir + 'view.html',
                         controller: 'ViewPageCtrl'
                     })
+                    .when('/systems/:systemId/share', {
+                        template: ''
+                    })
                     .when('/systems/:systemId', {
                         template: ''
                     })

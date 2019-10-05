@@ -337,7 +337,8 @@
 		"mergeStart": "Systems have started merging",
 		"mergeSuccess": "System merge completed",
 		"permissionsRemoved": "Permissions were removed from {{email}}",
-		"unknownName": "Unknown Name for System (Caused by cloud merge)"
+		"unknownName": "Unknown Name for System (Caused by cloud merge)",
+		"shareOffline": "Cannot share system while it is offline"
 	},
 	"systemStatuses": {
 		"activated": "activated",
