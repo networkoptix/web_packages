@@ -241,6 +241,7 @@ export class NxAccountService {
                 this.cloudApi
                     .logout()
                     .finally(() => {
+                        this.account = undefined;
                         this.sessionService.invalidateSession(); // Clear session
                         if (!doNotRedirect) {
                             return this.router.navigate([this.CONFIG.redirectUnauthorised])
