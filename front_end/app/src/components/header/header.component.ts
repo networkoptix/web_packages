@@ -61,19 +61,21 @@ export class NxHeaderComponent implements OnInit {
         // this.route.queryParams.subscribe(params => {
         //     this.inline = params['inline'] !== 'undefined';
         // });
-
         this.navVisible = false;
         this.dropdownsVisible = false;
         this.viewHeader = this.CONFIG.showHeaderAndFooter;
         this.active = {};
 
-        this.accountService
-            .get()
-            .then(account => {
-                if (account) {
-                    this.dropdownsVisible = true;
-                }
-            });
+        this.sessionService.loginStateSubject.subscribe((state) => {
+            this.accountService
+                .get()
+                .then(account => {
+                    if (account) {
+                        this.dropdownsVisible = true;
+                    }
+                });
+        });
+
 
         this.router.events
               .subscribe((event: Event) => {
