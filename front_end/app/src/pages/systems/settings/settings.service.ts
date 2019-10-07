@@ -17,6 +17,8 @@ export class NxSettingsService implements OnDestroy {
     selectedSectionSubject = new BehaviorSubject([]);
     plugin: any = {};
 
+    share: boolean;
+
     constructor(private api: NxCloudApiService,
                 private accountService: NxAccountService,
                 private configService: NxConfigService,

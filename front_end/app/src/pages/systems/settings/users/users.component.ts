@@ -73,7 +73,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         this.LANG = this.language.getTranslations();
         this.pageService.setPageTitle(this.LANG.pageTitles.systems);
 
-        let share = this.route.snapshot.routeConfig.path === 'share';
+        this.settingsService.share = this.route.snapshot.routeConfig.path === 'share';
 
         this.route
             .params
@@ -99,15 +99,6 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 this.systemAvailable = this.system.isAvailable && this.system.mergeInfo === undefined;
                 if (!this.selectedUser || !this.selectedUser.email) {
                     this.setUser();
-                }
-
-                if (share) {
-                    if (this.systemAvailable) {
-                        this.settingsService.addUser();
-                    } else {
-                        this.toastService.show(this.LANG.system.shareOffline, {classname: 'danger'});
-                    }
-                    share = false;
                 }
             });
 

@@ -15,6 +15,7 @@ import { NxAccountService }        from '../../../services/account.service';
 import { NxProcessService }        from '../../../services/process.service';
 import { NxUtilsService }          from '../../../services/utils.service';
 import { NxRibbonService }         from '../../../components/ribbon/ribbon.service';
+import { NxToastService }          from '../../../dialogs/toast.service';
 
 @Component({
     selector   : 'nx-system-settings-component',
@@ -79,6 +80,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 private menuService: NxMenuService,
                 location: Location,
                 private ribbonService: NxRibbonService,
+                private toastService: NxToastService,
                 private meta: Meta
     ) {
         this.location = location;
@@ -231,12 +233,23 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                             this.settingsService.system = system;
                             this.updateAlert();
                             this.updateMenu();
+                            this.checkShare();
                             this.menuVisible = true;
                         }
                     });
                 }
             });
+    }
 
+    checkShare() {
+        if (this.settingsService.share) {
+            if (this.system.systemAvailable) {
+                this.settingsService.addUser();
+            } else {
+                this.toastService.show(this.LANG.system.shareOffline, {classname: 'danger', delay: this.CONFIG.alertTimeout, autohide: true});
+            }
+            this.settingsService.share = false;
+        }
     }
 
     updateAlert() {
