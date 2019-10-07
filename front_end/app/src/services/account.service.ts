@@ -12,7 +12,7 @@ import { NxQueryParamService }       from './query-param.service';
 import { NxApplyService }            from './apply.service';
 
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { ReplaySubject }        from 'rxjs';
+import { ReplaySubject, timer }               from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -77,6 +77,34 @@ export class NxAccountService {
             });
     }
 
+    setupAccount(account) {
+        this.account = account;
+
+        // Set up timer
+        const timer$ = timer(0, this.CONFIG.updateInterval);
+
+        // Update account to unsure any external changes are applied to this session
+        timer$.subscribe(() => {
+            this.cloudApi
+                .account()
+                .then((account) => {
+                    this.account = account;
+                })
+                .catch(() => {
+                    this.cloudApi
+                        .logout()
+                        .finally(() => {
+                            this.account = undefined;
+                            this.sessionService.invalidateSession(); // Clear session
+
+                            setTimeout(() => {
+                                return this.document.location.reload();
+                            });
+                        });
+                });
+        });
+    }
+
     get() {
         if (this.requestingLogin) {
             // login is requesting, so we wait
@@ -87,7 +115,6 @@ export class NxAccountService {
                        });
         }
 
-        // TODO: Not real cashing - Caching will be implemented by another task
         if (this.account) {
             return new Promise(resolve => {
                 return resolve(this.account);
@@ -97,7 +124,7 @@ export class NxAccountService {
         return this.cloudApi
                    .account()
                    .then((account) => {
-                       this.account = account;
+                       this.setupAccount(account);
                        return account;
                    })
                    .catch(() => {
@@ -150,7 +177,7 @@ export class NxAccountService {
     redirectAuthorised() {
         this.get().then((account) => {
             if (account) {
-                this.location.go(this.CONFIG.redirectAuthorised);
+                this.router.navigate([this.CONFIG.redirectAuthorised]);
             }
         });
     }
@@ -159,12 +186,12 @@ export class NxAccountService {
         this.get()
             .then((account) => {
                 if (account) {
-                    this.location.go(this.CONFIG.redirectAuthorised);
+                    this.router.navigate([this.CONFIG.redirectAuthorised]);
                 } else {
-                    this.location.go(this.CONFIG.redirectUnauthorised);
+                    this.router.navigate([this.CONFIG.redirectUnauthorised]);
                 }
             }).catch(() => {
-                this.location.go(this.CONFIG.redirectUnauthorised);
+            this.router.navigate([this.CONFIG.redirectUnauthorised]);
             });
     }
 
@@ -179,7 +206,7 @@ export class NxAccountService {
     login(email, password, remember) {
         this.sessionService.email = email;
 
-        return this.cloudApi
+        this.requestingLogin = this.cloudApi
                    .login(email, password, remember)
                    .then((result: any) => {
                        if (!this.cloudApi.checkResponseHasError(result)) {
@@ -208,6 +235,7 @@ export class NxAccountService {
                            return Promise.reject({ resultCode: result.error.resultCode });
                        }
                    });
+        return this.requestingLogin;
     }
 
     loginWithAuthKey(authKey: string) {
