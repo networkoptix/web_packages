@@ -18,8 +18,8 @@
             </header>
 
             <nx-section *ngIf="system.permissions.isAdmin">
-                <div class="row">
-                    <div class="col-xl-7">
+                <div class="row m-0">
+                    <div class="col-xl-7 pl-0">
                         <div class="float-left mr-2">
                             <button class="btn btn-default"
                                     (click)="rename()"><span class="ellipsis" translate>Rename</span>
@@ -33,7 +33,7 @@
                             </button>
                         </div>
                     </div>
-                    <div class="col-xl-5 mt-2 mt-xl-0">
+                    <div class="col-xl-5 p-0 mt-2 mt-xl-0">
                         <div class="float-xl-right" *ngIf="system.isMine">
                             <button [disabled]="currentlyMerging"
                                     class="btn btn-default"
