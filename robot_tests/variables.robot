@@ -46,11 +46,12 @@ ${WRONG PASSWORD MESSAGE}             //form[@name='loginForm']//div[text()="${W
 ${ACCOUNT NOT FOUND MESSAGE}          //form[@name='loginForm']//div[text()="${ACCOUNT DOES NOT EXIST}"]
 ${TOO MANY ATTEMPTS MESSAGE}          //form[@name='loginForm']//div[text()="${TOO MANY ATTEMPTS TEXT}"]
 
-${LOG IN NAV BAR}                     //nav//a/span[contains(text(),'${LOG IN BUTTON TEXT}')]/..
+#${LOG IN NAV BAR}                     //nav//a/span[contains(text(),'${LOG IN BUTTON TEXT}')]/..
+${LOG IN NAV BAR}                     //nav//a/span[contains(text(),'Log In')]
 ${YOU HAVE NO SYSTEMS}                //span[contains(text(),"${YOU HAVE NO SYSTEMS TEXT}")]
 
 #Header
-${ACCOUNT DROPDOWN}                   //header//nx-account-settings-select//button[@id='accountSettingsSelect' and @data-toggle="dropdown"]
+${ACCOUNT DROPDOWN}                   //header//nx-account-settings-select//button[@id='accountSettingsSelect']
 ${LOG OUT BUTTON}                     //li[contains(@class, 'collapse-first')]//a/span[contains(text(),"${LOG OUT BUTTON TEXT}")]/..
 ${LOGO LINK}                          //header//a[@href='/']
 ${ACCOUNT SETTINGS BUTTON}            //li//a[@href = '/account/']
@@ -85,6 +86,7 @@ ${CHANGE PASSWORD FORM}               //nx-account-password-component//form
 ${CURRENT PASSWORD INPUT}             ${CHANGE PASSWORD FORM}//input[@id='password']
 ${NEW PASSWORD INPUT}                 ${CHANGE PASSWORD FORM}//input[@id='newPassword']
 ${CHANGE PASSWORD BUTTON}             //nx-account-password-component//nx-apply//nx-process-button//button
+${CANCEL CHANGES BUTTON}              //nx-account-password-component//nx-apply//button[contains(text(), "Cancel")]
 ${PASSWORD IS REQUIRED}               //span[contains(@class,'input-error') and contains(text(),"${PASSWORD IS REQUIRED TEXT}")]
 ${CHANGE PASS EYE ICON OPEN}          ${CHANGE PASSWORD FORM}${EYE ICON OPEN}
 ${CHANGE PASS EYE ICON CLOSED}        ${CHANGE PASSWORD FORM}${EYE ICON CLOSED}
@@ -243,6 +245,8 @@ ${ACCOUNT LAST NAME}                  //form[@name='accountForm']//input[@id='la
 ${ACCOUNT LANGUAGE DROPDOWN}          //nx-language-select//button[@id='dropdownMenuButton']
 ${ACCOUNT SAVE}                       //nx-apply//nx-process-button//button
 ${ACCOUNT CANCEL}                     //nx-apply/div/button
+${APPLY CHANGES BUTTON}               ${MODAL DIALOG}//button[contains(text(), 'Apply')]
+${DISCARD CHANGES BUTTON}             ${MODAL DIALOG}//button[contains(text(), 'Discard')]
 
 #Downloads
 ${DOWNLOADS HEADER}                   //h1[contains(text(),"Download")]

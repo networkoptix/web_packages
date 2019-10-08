@@ -89,7 +89,7 @@ Set Language
 Log In
     [arguments]    ${email}    ${password}    ${button}=${LOG IN NAV BAR}
     Run Keyword Unless    '''${button}''' == "None"    Wait Until Element Is Visible    ${button}
-    Run Keyword Unless    '''${button}''' == "None"    Click Link    ${button}
+    Run Keyword Unless    '''${button}''' == "None"    Click Element    ${button}
     Wait Until Elements Are Visible    ${EMAIL INPUT}    ${PASSWORD INPUT}    ${REMEMBER ME CHECKBOX VISIBLE}    ${FORGOT PASSWORD}    ${LOG IN CLOSE BUTTON}
     Sleep    1
     Input Text    ${EMAIL INPUT}    ${email}
@@ -122,6 +122,7 @@ Validate Log Out
 
 Validate on Register Page
     Wait Until Elements Are Visible    ${REGISTER FIRST NAME INPUT}    ${REGISTER LAST NAME INPUT}    ${REGISTER PASSWORD INPUT}    ${CREATE ACCOUNT BUTTON}
+    Run keyword and continue on failure    Title should be    Create account in ${CLOUD NAME}
 
 Register
     [arguments]    ${first name}    ${last name}    ${email}    ${password}    ${checked}=false
@@ -138,6 +139,7 @@ Validate Register Success
     [arguments]    ${location}=${url}/register/success
     Wait Until Element Is Visible    ${ACCOUNT CREATION SUCCESS}
     Location Should Be    ${location}
+    Run keyword and continue on failure    Title should be    Welcome to ${CLOUD NAME}
 
 Validate Register Email Received
     [arguments]    ${recipient}

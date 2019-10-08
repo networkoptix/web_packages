@@ -62,7 +62,7 @@ Validate Filtering by Manufacturer
     Click Element    ${IPVD MANUFACTURERS PANE}//div[contains(text(), '${vendor}')]
     Element Text should be    //nx-search/div/div/div[1]/div/div[2]/span[1]
     ...    Manufacturer – ${vendor}
-    Element Text should be  ${IPVD TABLE FIRST ITEM}/td[1]     ${vendor}
+    Element Text should be    ${IPVD TABLE FIRST ITEM}/td[1]     ${vendor}
     Validate Landing Page Objects are not Visible
 
 Validate Filtering by Device Type
@@ -191,19 +191,20 @@ Advaced Search Filters Text
 Validate on IPVD Page
     Wait until Elements are Visible
     # CLOUD-3564 "Supported IP Video Devices" inset not being translated
-    # ...    ${IPVD TITLE}
     ...    ${IPVD SEARCH BAR}
     ...    ${IPVD ADV SEARCH BUTTON}
     ...    ${IPVD MANUFACTURERS PANE}
     ...    ${IPVD AND MORE}
     ...    ${IPVD DEVICES PANE}
     ...    ${IPVD LANDING PAGE TEXT}
+    Run keyword and continue on failure    Title should be    Supported Devices
     Elements should Not be Visible
     ...    ${IPVD TABLE}
     ...    ${IPVD DEVICE DETAILS}
     ...    ${IPVD PAGINATION}
     ...    ${IPVD EXPORT TO CSV}
     Validate Manufacturer More Count
+
 
 Verify IPVD Advanced Search is Closed
     Wait until Elements are Visible    ${IPVD ADV SEARCH BUTTON}

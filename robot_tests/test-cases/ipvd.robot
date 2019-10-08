@@ -22,7 +22,7 @@ IPVD Page loads while Logged in
     Go To IPVD Page
 
 IPVD landing page actions
-    [tags]  C48791  IPVD
+    [Tags]    C48791    IPVD
 
     Log    Step 1 - Validate Landing Page Contents
     Go To IPVD Page
