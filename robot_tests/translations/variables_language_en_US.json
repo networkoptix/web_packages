@@ -52,7 +52,7 @@
 
     "EDIT USER BUTTON TEXT"                :    "Edit",
     "REMOVE USER BUTTON TEXT"              :    "Remove User",
-    "DELETE USER BUTTON TEXT"              :    "Delete",
+    "REMOVE BUTTON TEXT"                   :    "Remove",
     "CANCEL BUTTON TEXT"                   :    "Cancel",
     "SAVE BUTTON TEXT"                     :    "Save",
     "ADD BUTTON TEXT"                      :    "Add",

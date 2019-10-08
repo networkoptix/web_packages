@@ -145,6 +145,8 @@ ${SYSTEM NAME IS REQUIRED}            //form[@name='renameForm']//span[@class='i
 
 ${SYSTEM USER DETAILS}                //nx-system-settings-component//nx-block/..
 
+${USER EMAIL}                         ${SYSTEM USER DETAILS}//header//h2[contains(@class,'user-email')]
+${USER NAME}                          ${USER EMAIL}/following-sibling::span[contains(@class,'user-name')]
 ${OWNER LABEL}                        ${SYSTEM USER DETAILS}//header//h2/following-sibling::span[contains(@class,'system-owner')]/span[contains(text(),'${OWNER TEXT}')]
 ${OWNER NAME}                         ${OWNER LABEL}//following-sibling::span//span[contains(text(),'%OWNER_NAME%')]
 ${OWNER EMAIL}                        ${OWNER LABEL}/following-sibling::span/span[contains(text(),"${EMAIL OWNER}")]
@@ -153,10 +155,11 @@ ${YOUR ACCESS LEVEL}                  ${SYSTEM USER DETAILS}//nx-section//span[c
 ${DISCONNECT FROM MY ACCOUNT}         //button[contains(text(),'Disconnect from My Account')]
 
 ${ACCESS LEVEL DROPDOWN}              ${SYSTEM USER DETAILS}//nx-section//button[@id='permissionsSelect']
-${REMOVE USER BUTTON}                 //button[contains(text(),'${REMOVE USER BUTTON TEXT}')]
-${DELETE USER MODAL}                  ${MODAL DIALOG}
-${DELETE USER BUTTON}                 //button[contains(text(),'${DELETE USER BUTTON TEXT}')]
-${DELETE USER CANCEL BUTTON}          ${MODAL DIALOG}//button[contains(text(),"${CANCEL BUTTON TEXT}")]
+${HELP BLOCK}                         ${SYSTEM USER DETAILS}//nx-section//span[contains(@class,'help-block')]
+${REMOVE USER BUTTON}                 ${SYSTEM USER DETAILS}//button[contains(text(),'${REMOVE USER BUTTON TEXT}')]
+${REMOVE MODAL}                       ${MODAL DIALOG}
+${REMOVE BUTTON}                      ${MODAL DIALOG}//button[contains(text(),'${REMOVE BUTTON TEXT}')]
+${REMOVE CANCEL BUTTON}               ${MODAL DIALOG}//button[contains(text(),"${CANCEL BUTTON TEXT}")]
 
 ${USERS LIST LINK}                    //a[@id='users']
 ${USERS LIST}                         ${USERS LIST LINK}/../../div[contains(@class,'level-3-items')]
@@ -236,8 +239,8 @@ ${ACCOUNT EMAIL}                      //account//a[@id='settings']
 ${ACCOUNT FIRST NAME}                 //form[@name='accountForm']//input[@id='firstName']
 ${ACCOUNT LAST NAME}                  //form[@name='accountForm']//input[@id='lastName']
 ${ACCOUNT LANGUAGE DROPDOWN}          //nx-language-select//button[@id='dropdownMenuButton']
-${ACCOUNT SAVE}                       //nx-account-settings-component//nx-apply//nx-process-button//button
-${ACCOUNT CANCEL}                     //nx-account-settings-component//nx-apply/div/button
+${ACCOUNT SAVE}                       //nx-apply//nx-process-button//button
+${ACCOUNT CANCEL}                     //nx-apply/div/button
 
 #Downloads
 ${DOWNLOADS HEADER}                   //h1[contains(text(),"Download")]
@@ -361,7 +364,7 @@ ${RELEASE NUMBER}                     //div[contains(@class,"active")]//div[@ng-
 
 ${PRIVACY POLICY HEADER}              //h1[contains(text(),'Personal data and privacy policy')]
 
-${DROPDOWN MENU}                      /../div[contains(@class,'dropdown-menu')]
+${DROPDOWN MENU}                      /..//div[contains(@class,'dropdown-menu')]
 ${DROPDOWN MENU LIST}                 ${DROPDOWN MENU}/ul[contains(@class,'dropdown-menu--list')]
 ${DROPDOWN MENU ITEMS}                ${DROPDOWN MENU LIST}/li[contains(@class,'dropdown-item-container')]/a/span[not(text()='All Systems')]/../../../li
 

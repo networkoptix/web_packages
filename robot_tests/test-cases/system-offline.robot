@@ -59,7 +59,7 @@ should confirm, if not owner deletes system (You will lose access to this system
     Wait Until Elements Are Visible    ${DISCONNECT FORM}    ${DISCONNECT FORM HEADER}    ${DISCONNECT FORM CANCEL}
     Click Element    ${DISCONNECT FORM}
     Click Button    ${DISCONNECT FORM CANCEL}
-    Wait Until Page Does Not Contain Element    ${DELETE USER MODAL}
+    Wait Until Page Does Not Contain Element    ${REMOVE USER MODAL}
 
 share button should be disabled
     [tags]    C41881    Threaded
