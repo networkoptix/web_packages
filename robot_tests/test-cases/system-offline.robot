@@ -74,7 +74,6 @@ open in nx button should be disabled
     Log in to Autotests 2 System    ${EMAIL OWNER}
     Wait Until Element Is Visible    ${SYSTEMS DROPDOWN}
     Click Element    ${SYSTEMS DROPDOWN}
-  Log    CLOUD-3702 Systems Dropdown menu label & contents not updated when accessing system by direct URL
     Wait Until Element Is Visible    ${OPEN IN NX BUTTON DISABLED}
     Log Out
     Log in to Autotests 2 System    ${EMAIL VIEWER}

@@ -31,7 +31,7 @@ Open IPVD Page and Log In
 ### Landing Page keywords - start ###
 
 Validate Landing Page Contents
-    ${search_placeholder} =  Get Element Attribute   ${IPVD SEARCH BAR}    placeholder
+    ${search_placeholder}=   Get Element Attribute   ${IPVD SEARCH BAR}    placeholder
     Go To IPVD page
     Validate on IPVD Page
     Should be Equal as Strings
@@ -58,7 +58,7 @@ Validate Landing Page Contents
 
 
 Validate Filtering by Manufacturer
-    ${vendor} =  Set variable   Axis
+    ${vendor}=   Set variable   Axis
     Click Element    ${IPVD MANUFACTURERS PANE}//div[contains(text(), '${vendor}')]
     Element Text should be    //nx-search/div/div/div[1]/div/div[2]/span[1]
     ...    Manufacturer – ${vendor}
@@ -66,7 +66,7 @@ Validate Filtering by Manufacturer
     Validate Landing Page Objects are not Visible
 
 Validate Filtering by Device Type
-    ${device} =  Set variable  Encoder
+    ${device}=   Set variable  Encoder
     Click Element    ${IPVD DEVICES PANE}//div[contains(text(), '${device}s')]
     Element Text should be  //ipvd/div/div[1]/nx-search/div/div/div[1]/div/div[2]/span[1]    Type – ${device}
     Element Text should be  ${IPVD TABLE FIRST ITEM}/td[3]     ${device}
@@ -79,11 +79,11 @@ Validate Landing Page Objects are Not Visible
     ...    ${IPVD DEVICES PANE}
 
 Validate Manufacturers Pane is Not Empty
-    ${numVendors} =    Get Element Count    ${IPVD MANUFACTURERS PANE ITEM}
+    ${numVendors}=     Get Element Count    ${IPVD MANUFACTURERS PANE ITEM}
     Should Not be Equal As Numbers  ${numVendors}   0
 
 Validate Devices Pane is Not Empty
-    ${numDeviceTypes} =    Get Element Count    ${IPVD DEVICES PANE}//*[@class="float-left mr-1 mb-1"]
+    ${numDeviceTypes}=     Get Element Count    ${IPVD DEVICES PANE}//*[@class="float-left mr-1 mb-1"]
     Should Not be Equal As Numbers  ${numDeviceTypes}   0
 
 ### Landing Page keywords - end ###
