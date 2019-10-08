@@ -101,7 +101,7 @@ Log In
 
 Validate Log In
     Wait Until Page Contains Element    ${AUTHORIZED BODY}    10
-    Wait Until Elements Are Visible    ${ACCOUNT DROPDOWN}
+    Wait Until Element is Visible    ${ACCOUNT DROPDOWN}
     Check Langauge Logged In
     Sleep    1    #this is a test to see if it eliminates a problem with the login dialog popping up on logout
 
@@ -373,7 +373,7 @@ Find and remove emails
         Click Link    ${element}
         Wait Until Element Is Visible    ${REMOVE USER BUTTON}
         Click Button    ${REMOVE USER BUTTON}
-        Wait Until Elements Are Visible    ${REMOVE MODAL}    ${REMOVE BUTTON}    ${REMOVE CANCEL BUTTON}
+        Wait Until Elements Are Visible    ${REMOVE USER MODAL}    ${REMOVE BUTTON}    ${REMOVE CANCEL BUTTON}
         Click Button    ${REMOVE BUTTON}
         ${PERMISSIONS WERE REMOVED FROM EMAIL}    Replace String    ${PERMISSIONS WERE REMOVED FROM}    %email%    ${email}
         Check For Alert    ${PERMISSIONS WERE REMOVED FROM EMAIL}

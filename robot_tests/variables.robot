@@ -157,7 +157,7 @@ ${DISCONNECT FROM MY ACCOUNT}         //button[contains(text(),'Disconnect from 
 ${ACCESS LEVEL DROPDOWN}              ${SYSTEM USER DETAILS}//nx-section//button[@id='permissionsSelect']
 ${HELP BLOCK}                         ${SYSTEM USER DETAILS}//nx-section//span[contains(@class,'help-block')]
 ${REMOVE USER BUTTON}                 ${SYSTEM USER DETAILS}//button[contains(text(),'${REMOVE USER BUTTON TEXT}')]
-${REMOVE MODAL}                       ${MODAL DIALOG}
+${REMOVE USER MODAL}                  ${MODAL DIALOG}
 ${REMOVE BUTTON}                      ${MODAL DIALOG}//button[contains(text(),'${REMOVE BUTTON TEXT}')]
 ${REMOVE CANCEL BUTTON}               ${MODAL DIALOG}//button[contains(text(),"${CANCEL BUTTON TEXT}")]
 
