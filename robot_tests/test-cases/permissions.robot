@@ -2,7 +2,7 @@
 Resource          ../resource.robot
 Suite Setup       Open Browser and go to URL    ${url}
 Test Setup        Restart
-Test Teardown     Run Keyword If Test Failed    Reset DB and Open New Browser On Failure
+Test Teardown     Run Keyword If Test Failed    Reset DB and Open New Browser on Failure
 Suite Teardown    Close All Browsers
 Force Tags        System
 
@@ -80,7 +80,7 @@ Reset DB and Open New Browser on Failure
 
 *** Test Cases ***
 Share button - opens dialog
-    [tags]    C41888    Threaded    Passing_19.2
+    [tags]    C41888    Threaded
     Log in to Auto Tests System    ${email}
     Wait Until Elements Are Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
@@ -91,7 +91,7 @@ Share button - opens dialog
     Wait Until Page Does Not Contain Element    ${SHARE MODAL}
 
 Sharing link /systems/{system_id}/share - opens dialog
-    [tags]    Threaded    Passing_19.2
+    [tags]    Threaded
     Log in to Auto Tests System    ${email}
     # ${location}    Get Location
     # Go To    ${location}/share
@@ -104,7 +104,7 @@ Sharing link /systems/{system_id}/share - opens dialog
     Wait Until Page Does Not Contain Element    ${SHARE MODAL}
 
 Sharing link for anonymous - first ask login, then show share dialog
-    [tags]    Threaded    Passing_19.2
+    [tags]    Threaded
     Log in to Auto Tests System    ${email}
     ${location}    Get Location
     Log Out
@@ -120,7 +120,7 @@ Sharing link for anonymous - first ask login, then show share dialog
     Wait Until Page Does Not Contain Element    ${SHARE MODAL}
 
 After closing dialog, called by link - clear link
-    [tags]    C41888    Threaded    Passing_19.2
+    [tags]    C41888    Threaded
     Set Window Size    1920    1080
     Log in to Auto Tests System    ${email}
     Wait Until Elements Are Visible    ${USERS LIST LINK}
@@ -147,7 +147,7 @@ After closing dialog, called by link - clear link
     Location Should Be    ${location}
 
 Sharing roles are ordered: more access is on top of the list with options
-    [tags]    Threaded    Passing_19.2
+    [tags]    Threaded
     Log in to Auto Tests System    ${email}
     Wait Until Elements Are Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
@@ -160,7 +160,7 @@ Sharing roles are ordered: more access is on top of the list with options
     Wait Until Page Does Not Contain Element    ${SHARE MODAL}
 
 When user selects role - special hint appears
-    [tags]    C41901    Threaded    Passing_19.2
+    [tags]    C41901    Threaded
     Log in to Auto Tests System    ${email}
     Wait Until Elements Are Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
@@ -172,7 +172,7 @@ When user selects role - special hint appears
     Click Button    ${SHARE CANCEL}
 
 Sharing works
-    [tags]    Passing_19.2
+    [tags]
     Log in to Auto Tests System    ${email}
     ${random email}    Get Random Email    ${BASE EMAIL}
     Share To    ${random email}    ${ADMIN TEXT}
@@ -180,7 +180,7 @@ Sharing works
     Remove User Permissions    ${random email}
 
 Admin cannot delete or edit self
-    [tags]    C41904    Threaded    Passing_19.2
+    [tags]    C41904    Threaded
     Log in to Auto Tests System    ${EMAIL ADMIN}
     Wait Until Elements Are Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
@@ -188,7 +188,7 @@ Admin cannot delete or edit self
     Elements Should Not Be Visible    ${ACCESS LEVEL DROPDOWN}    ${REMOVE USER BUTTON}
 
 Admin cannot edit self via share
-    [tags]    C41904    Threaded    Passing_19.2
+    [tags]    C41904    Threaded
     Log in to Auto Tests System    ${EMAIL ADMIN}
     Wait Until Elements Are Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
@@ -208,7 +208,7 @@ Admin cannot edit self via share
     Click Button    ${SHARE CANCEL}
 
 Owner cannot edit self via share
-    [tags]    C41904    Threaded    Passing_19.2
+    [tags]    C41904    Threaded
     Log in to Auto Tests System    ${EMAIL OWNER}
     Wait Until Elements Are Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
@@ -227,7 +227,7 @@ Owner cannot edit self via share
     Check For Alert    ${CHANGING OWN PERMISSIONS IS NOT ALLOWED}
 
 Admin cannot delete or edit other admins
-    [tags]    C41905    Passing_19.2
+    [tags]    C41905
     Go To    ${url}/register
     ${random email}    Get Random Email    ${BASE EMAIL}
     Register    mark    harmill    ${random email}    ${password}
@@ -243,7 +243,7 @@ Admin cannot delete or edit other admins
     Remove User Permissions    ${random email}
 
 Admin cannot invite another admin
-    [tags]    C41905    Threaded    Passing_19.2
+    [tags]    C41905    Threaded
     Log in to Auto Tests System    ${EMAIL ADMIN}
     Wait Until Elements Are Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
@@ -260,7 +260,7 @@ Admin cannot invite another admin
     Click Button    ${SHARE CANCEL}
 
 Edit permission works
-    [tags]    C41900    Passing_19.2
+    [tags]    C41900
     ${random email}    Get Random Email    ${BASE EMAIL}
     # Maximize Browser Window
     Log in to Auto Tests System    ${email}
@@ -272,7 +272,7 @@ Edit permission works
     Remove User Permissions    ${random email}
 
 Delete user works
-    [tags]    email    C41903    Passing_19.2
+    [tags]    email    C41903
     Go To    ${url}/register
     ${random email}    Get Random Email    ${BASE EMAIL}
     Register    mark    harmill    ${random email}    ${password}
@@ -297,7 +297,7 @@ Delete user works
     Wait Until Element is Visible    ${YOU HAVE NO SYSTEMS}
 
 Share with registered user works and sends him notification
-    [tags]    email    C41888    Passing_19.2
+    [tags]    email    C41888
     #log in as noperm to check language and change its language to the current testing language
     #otherwise it may receive the notification in another language and fail the email subject comparison
     Log In    ${EMAIL NOPERM}    ${password}
@@ -377,7 +377,7 @@ Sharing system with a user who is already in the list updates their permissions
     Remove User Permissions    ${random email}
 
 Check share email for registered user
-    [tags]    C47297    Passing_19.2
+    [tags]    C47297
     #log in as noperm to check language and change its language to the current testing language
     #otherwise it may receive the notification in another language and fail the email subject comparison
     Log In    ${EMAIL NOPERM}    ${password}
@@ -423,13 +423,13 @@ Check share email for registered user
     Remove User Permissions    ${EMAIL NOPERM}
 
 User with client custom settings has access to system
-    [tags]    Threaded    Passing_19.2
+    [tags]    Threaded
     Log in to Auto Tests System    ${EMAIL CLIENT CUSTOM}
     Location Should Be    ${url}/systems/${AUTO_TESTS SYSTEM ID}
     Verify In System    ${AUTO TESTS}
 
 User can be invited with client custom permissions
-    [tags]    Passing_19.2
+    [tags]
     Log in to Auto Tests System    ${EMAIL OWNER}
     ${random email}    Get Random Email    ${BASE EMAIL}
     Share To    ${random email}    Client Custom
