@@ -32,6 +32,10 @@ const appRoutes: Routes = [
                 component: NxSystemAdminComponent
             },
             {
+                path: 'share',
+                component: NxSystemUsersComponent,
+            },
+            {
                 path: 'users',
                 component: NxSystemUsersComponent,
             },

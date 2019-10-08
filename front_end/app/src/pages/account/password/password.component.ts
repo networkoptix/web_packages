@@ -91,6 +91,8 @@ export class NxAccountPasswordComponent implements OnInit, AfterViewInit {
                 this.account = account;
                 this.setOriginal();
             });
+
+        this.applyService.setVisible();
     }
 
     ngAfterViewInit() {

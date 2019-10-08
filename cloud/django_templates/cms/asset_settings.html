@@ -19,6 +19,7 @@
     <p><a href="{% url 'download_package' asset.id %}" download>Download package (zip)</a></p>
     <p><a href="{% url 'download_package' asset.id %}?draft" download>Download package draft (zip)</a></p>
     <p><a href="{% url 'download_structure_from_db' asset.id %}" download>Download structure (json)</a></p>
+    <p><a href="{% url 'download_structure_from_db' asset.id %}?format=html" download>Download structure (html)</a></p>
 </div>
 <h3>Update Asset</h3>
 <div>

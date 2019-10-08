@@ -28,7 +28,7 @@ Open New Browser On Failure
     Open Browser and go to URL    ${url}
 
 Log in to downloads/history
-    Go To    ${url}/downloads/history
+    Go To    ${url}/downloads/releases
     Log In    ${email}    ${password}    button=None
     Validate Log In
 
@@ -62,6 +62,7 @@ loop links
 
 *** Test Cases ***
 History link is not in the downloads page for user without access
+    [tags]    Passing_19.2
     Log In    ${EMAIL VIEWER}    ${password}
     Validate Log In
     Wait Until Element Is Visible    ${DOWNLOAD LINK}
@@ -69,7 +70,8 @@ History link is not in the downloads page for user without access
     Register Keyword To Run On Failure    NONE
     Run Keyword And Expect Error    *    Wait Until Element Is Visible    ${RELEASE HISTORY BUTTON}
 
-History link is in the downloads page for user with access and takes you to /downloads/history
+History link is in the downloads page for user with access and takes you to /downloads/releases
+    [tags]    Passing_19.2
     Log In    ${email}    ${password}
     Validate Log In
     Wait Until Element Is Visible    ${DOWNLOAD LINK}
@@ -78,31 +80,32 @@ History link is in the downloads page for user with access and takes you to /dow
     Click Link    ${WINDOWS TAB}
     Wait Until Elements Are Visible    ${DOWNLOAD WINDOWS VMS LINK}    ${RELEASE HISTORY BUTTON}
     Click Link    ${RELEASE HISTORY BUTTON}
-    Location Should Be    ${url}/downloads/history
+    Location Should Be    ${url}/downloads/releases
 
 Going to the history page anonymous asks for login and closing takes you to 404
-    Go To    ${url}/downloads/history
+    Go To    ${url}/downloads/releases
     Wait Until Element Is Visible    ${LOG IN CLOSE BUTTON}
     Click Button    ${LOG IN CLOSE BUTTON}
     Location Should Be    ${url}/404
 
 Going to the history page anonymous asks for login and login shows history page
-    Go To    ${url}/downloads/history
+    Go To    ${url}/downloads/releases
     Log In    ${email}   ${password}    button=None
     Validate Log In
     Wait Until Element Is Visible    ${RELEASES TAB}
     Location Should Be    ${url}/downloads/releases
 
 Going to the history page anonymous and logging in with someone who doesn't have access takes you to 404
-    Go To    ${url}/downloads/history
+    Go To    ${url}/downloads/releases
     Log In    ${EMAIL VIEWER}   ${password}    button=None
     Wait Until Elements Are Visible    ${PAGE NOT FOUND}    ${TAKE ME HOME}
     Location Should Be    ${url}/404
 
 Going to the history page while logged in as someone who doesn't have access takes you to 404
+    [tags]    Passing_19.2
     Log In    ${EMAIL VIEWER}    ${password}
     Validate Log In
-    Go To    ${url}/downloads/history
+    Go To    ${url}/downloads/releases
     Wait Until Elements Are Visible    ${PAGE NOT FOUND}    ${TAKE ME HOME}
     Location Should Be    ${url}/404
 

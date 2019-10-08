@@ -20,9 +20,9 @@ def detect_language_by_request(request):
     if request.user.is_authenticated:
         lang = request.user.language
 
-    # 2. try session valie
+    # 2. try session value
     if not lang:
-        lang = request.session.get('language', False)
+        lang = request.session.get('language', None)
 
     # 3. Try cookie value (saved in browser some time ago)
     if not lang:
@@ -31,10 +31,9 @@ def detect_language_by_request(request):
 
     # 4. Try ACCEPT_LANGUAGE header
     if not lang and 'HTTP_ACCEPT_LANGUAGE' in request.META:
-        languages = request.META['HTTP_ACCEPT_LANGUAGE']
-        languages = languages.split(';')[0]
-        languages = languages.split(',')
-        for l in languages:
+        # "en-US,en;q=0.9" -> ["en-Us, en", "q=0.9"] -> "en-Us, en" -> ["en-Us", "en"]
+        request_languages = request.META['HTTP_ACCEPT_LANGUAGE'].split(';')[0].split(',')
+        for l in request_languages:
             if l in languages:
                 lang = l
                 break

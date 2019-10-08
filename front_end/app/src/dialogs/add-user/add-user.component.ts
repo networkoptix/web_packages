@@ -79,7 +79,11 @@ export class AddUserModalContent {
     doShare() {
         this.user.role = this.selectedPermission;
 
-        return this.system.saveUser(this.user, this.user.role);
+        return this.system.saveUser(this.user, this.user.role).then((user) => {
+            return this.system.getUsers(true).then(() => {
+                return new Promise(resolve => setTimeout(() => resolve(user)));
+            });
+        });
     }
 
     ngOnInit() {
@@ -149,13 +153,8 @@ export class AddUserModalContent {
             }
         }, {
             successMessage: this.LANG.dialogs.sharing.permissionsSaved
-        }).then((userId) => {
-            this.system.getUsers(true).then(() => {
-                // Timeout allows observable in the settings component to update the side menu.
-                setTimeout(() => {
-                    this.activeModal.close(userId.id);
-                });
-            });
+        }).then((user) => {
+            this.activeModal.close(user.id);
         });
     }
 

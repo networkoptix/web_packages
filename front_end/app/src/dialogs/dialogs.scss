@@ -43,12 +43,22 @@
     }
 }
 
+.modal-backdrop {
+    &.fade {
+        transition : none !important;
+    }
+}
+
 .modal {
+    &.fade {
+        transition: none !important;
+    }
+    
     &-holder {
         animation : slide-up-fade-in ease .1s;
 
         .modal-dialog {
-            transition : transform 0.2s ease-out !important;
+            transition : none;
             margin-top : 96px; // double the header height
         }
     }

@@ -38,8 +38,8 @@ class NoptixLibrary(object):
 
     def get_many_random_emails(self, howMany, email):
         emails = []
-        for x in xrange(0, int(howMany)):
-            emails.append(self.get_random_email())
+        for x in range(0, int(howMany)):
+            emails.append(self.get_random_email(email))
             time.sleep(.2)
         return emails
 

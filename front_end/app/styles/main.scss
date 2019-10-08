@@ -123,6 +123,7 @@ nx-app {
 .block-container {
   max-width: $fluid-container-max-width;
   width: 100%;
+  padding: 0 16px;
 }
 
 @mixin keyframe ($animation_name) {
@@ -790,6 +791,14 @@ h1 .badge {
     -webkit-column-count: 2;
     /* Safari and Chrome */
     column-count: 2;
+}
+
+.min-w-80 {
+    min-width: 80px;
+}
+
+.min-w-120 {
+    min-width: 120px;
 }
 
 .wide-button {

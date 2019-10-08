@@ -15,6 +15,7 @@ import { NxAccountService }        from '../../../services/account.service';
 import { NxProcessService }        from '../../../services/process.service';
 import { NxUtilsService }          from '../../../services/utils.service';
 import { NxRibbonService }         from '../../../components/ribbon/ribbon.service';
+import { NxToastService }          from '../../../dialogs/toast.service';
 
 @Component({
     selector   : 'nx-system-settings-component',
@@ -40,6 +41,8 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     unsharing: any;
     deletingSystem: any;
 
+    menuVisible: boolean;
+    footerVisible: boolean;
     systemId: any;
     systemNoAccess: boolean;
     canMerge: boolean;
@@ -77,6 +80,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 private menuService: NxMenuService,
                 location: Location,
                 private ribbonService: NxRibbonService,
+                private toastService: NxToastService,
                 private meta: Meta
     ) {
         this.location = location;
@@ -84,7 +88,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.meta.updateTag({name: 'viewport', content: this.CONFIG.meta.viewport.desktopLayout});
+        this.pageService.setDesktopLayout();
         this.LANG = this.language.getTranslations();
         this.pageService.setPageTitle(this.LANG.pageTitles.system);
         this.init();
@@ -102,9 +106,16 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 }
                 this.system = undefined;
                 this.ribbonService.hide();
+                this.menuVisible = false;
                 this.getSystemInfo();
             }
         });
+
+        this.settingsService
+            .footerSubject
+            .subscribe((value) => {
+                this.footerVisible = value;
+            });
 
         this.content = {
             selectedSection   : '',         // updated by selectedSectionSubject
@@ -194,7 +205,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         this.system.stopPoll();
         this.ribbonService.hide();
-        this.meta.updateTag({name: 'viewport', content: this.CONFIG.meta.viewport.default});
+        this.pageService.setDefaultLayout();
     }
 
     getSystemInfo() {
@@ -222,11 +233,23 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                             this.settingsService.system = system;
                             this.updateAlert();
                             this.updateMenu();
+                            this.checkShare();
+                            this.menuVisible = true;
                         }
                     });
                 }
             });
+    }
 
+    checkShare() {
+        if (this.settingsService.share) {
+            if (this.system.systemAvailable) {
+                this.settingsService.addUser();
+            } else {
+                this.toastService.show(this.LANG.system.shareOffline, {classname: 'danger', delay: this.CONFIG.alertTimeout, autohide: true});
+            }
+            this.settingsService.share = false;
+        }
     }
 
     updateAlert() {

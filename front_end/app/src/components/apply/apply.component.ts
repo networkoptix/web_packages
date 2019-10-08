@@ -23,6 +23,8 @@ export class NxApplyComponent {
     @Input('') discard: any;
     @Input() form: NgForm;
 
+    applyVisible: boolean;
+
     @HostListener('document:keypress', ['$event'])
     handleKeyboardEvent(event: KeyboardEvent) {
         if (event.key === 'Enter' && document.activeElement.tagName === 'INPUT' && this.processButton) {

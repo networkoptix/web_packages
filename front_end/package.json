@@ -1,6 +1,6 @@
 {
     "name": "cloudPortal",
-    "version": "19.1.0",
+    "version": "19.2.0",
     "dependencies": {
         "@angular/animations": "~8.2.0",
         "@angular/cdk": "~8.1.2",
@@ -143,7 +143,6 @@
         "setupTestFrameworkScriptFile": "<rootDir>/src/setupJest.ts"
     },
     "scripts": {
-        "special": "npm run update-lang; npm run merge-lang; npm run compile-lang; webpack-dev-server --config webpack.special.js --open --hot --inline",
         "serve": "npm run update-lang; npm run merge-lang; npm run compile-lang; webpack-dev-server --config webpack.dev.js --open --hot --inline",
         "serve-ipvd": "npm run update-lang; npm run merge-lang; npm run compile-lang; webpack-dev-server --config webpack.ipvd-dev.js --open --hot --inline",
         "build": "npm run update-lang; npm run merge-lang; npm run compile-lang; webpack --config webpack.prod.js --progress --profile --bail",

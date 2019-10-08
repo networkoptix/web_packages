@@ -62,7 +62,7 @@ def authenticate(request):
     if "HTTP_AUTHORIZATION" in request.META:
         credentials = request.META['HTTP_AUTHORIZATION'].split()
         if credentials[0].lower() == "basic":
-            email, password = base64.b64decode(credentials[1]).split(':', 1)
+            email, password = base64.b64decode(credentials[1]).decode('utf-8').split(':', 1)
             user = django.contrib.auth.authenticate(request=request, username=email, password=password)
 
     if user is None:

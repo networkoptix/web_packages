@@ -83,11 +83,11 @@ should show system name in header with no dropdown if user has only one system
     Delete All Emails
     Close Mailbox
     Log Out
-    Log In    ${EMAIL NOPERM}    ${password}
+    Log In    ${EMAIL NOPERM}    ${password}    None
     Validate Log In
     Wait Until Element Is Visible    ${SYSTEM NAME AUTO TESTS HEADER}
     Log Out
-    Log In    ${EMAIL OWNER}    ${password}
+    Log In    ${EMAIL OWNER}    ${password}    None
     Validate Log In
     Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
     Remove User Permissions    ${EMAIL NOPERM}
@@ -199,7 +199,7 @@ should show the system page instead of all systems when user only has one
     Delete All Emails
     Close Mailbox
     Log Out
-    Log In    ${EMAIL NOPERM}    ${password}
+    Log In    ${EMAIL NOPERM}    ${password}    None
     Validate Log In
     Wait Until Element Is Visible    ${SYSTEM NAME}
     Log Out
@@ -292,8 +292,12 @@ Search should only be visible with 9 or more systems
     Close Mailbox
     Log Out
 
-    Log In    ${EMAIL VIEWER}    ${password}
+    Log In    ${EMAIL VIEWER}    ${password}    None
     Validate Log In
+    Wait Until Element Is Visible    ${SYSTEMS DROPDOWN}
+    Click Button    ${SYSTEMS DROPDOWN}
+    Wait Until Element Is Visible    ${ALL SYSTEMS}
+    Click Link    ${ALL SYSTEMS}
     Wait Until Elements Are Visible    ${SYSTEMS SEARCH INPUT}    ${AUTO TESTS TITLE}    ${AUTO TESTS USER}    ${AUTO TESTS OPEN NX}
     Log Out
 
@@ -308,10 +312,14 @@ Search should only be visible with 9 or more systems
 
     Log In    ${EMAIL VIEWER}    ${password}    None
     Validate Log In
+    Wait Until Element Is Visible    ${SYSTEMS DROPDOWN}
+    Click Button    ${SYSTEMS DROPDOWN}
+    Wait Until Element Is Visible    ${ALL SYSTEMS}
+    Click Link    ${ALL SYSTEMS}
     Elements Should Not Be Visible    ${SYSTEMS SEARCH INPUT}
     Log Out
 
-    Log In    ${EMAIL OWNER}    ${password}    None
+    Log In    ${EMAIL OWNER}    ${password}
     Validate Log In
     Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
     Wait Until Elements Are Visible    ${RENAME SYSTEM}    ${DISCONNECT FROM NX}    ${USERS LIST LINK}
@@ -324,8 +332,12 @@ Search should only be visible with 9 or more systems
     Close Mailbox
     Log Out
 
-    Log In    ${EMAIL VIEWER}    ${password}
+    Log In    ${EMAIL VIEWER}    ${password}    None
     Validate Log In
+    Wait Until Element Is Visible    ${SYSTEMS DROPDOWN}
+    Click Button    ${SYSTEMS DROPDOWN}
+    Wait Until Element Is Visible    ${ALL SYSTEMS}
+    Click Link    ${ALL SYSTEMS}
     Wait Until Element Is Visible    ${SYSTEMS SEARCH INPUT}
     Log Out
 

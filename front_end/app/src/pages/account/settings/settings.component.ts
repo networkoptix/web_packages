@@ -106,6 +106,8 @@ export class NxAccountSettingsComponent implements OnInit, AfterViewInit {
         if (this.localStorage && this.localStorage.get('langChanged')) {
             this.localStorage.set('langChanged', false);
         }
+
+        this.applyService.setVisible();
     }
 
     ngAfterViewInit() {

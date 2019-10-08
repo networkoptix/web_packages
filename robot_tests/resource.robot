@@ -46,15 +46,17 @@ Open Browser With Options
 Set Chrome Options
     [Documentation]    Set Chrome options for headless mode
     ${options}=    Evaluate    sys.modules['selenium.webdriver'].ChromeOptions()    sys, selenium.webdriver
-    : FOR    ${option}    IN    @{chrome_arguments}
-    \    Call Method    ${options}    add_argument    ${option}
+    FOR    ${option}    IN    @{chrome_arguments}
+        Call Method    ${options}    add_argument    ${option}
+    END
     [Return]    ${options}
 
 Set Chrome Options Headless
     [Documentation]    Set Chrome options for headless mode
     ${options}=    Evaluate    sys.modules['selenium.webdriver'].ChromeOptions()    sys, selenium.webdriver
-    : FOR    ${option}    IN    @{chrome_arguments_headless}
-    \    Call Method    ${options}    add_argument    ${option}
+    FOR    ${option}    IN    @{chrome_arguments_headless}
+        Call Method    ${options}    add_argument    ${option}
+    END
     [Return]    ${options}
 
 Check Language Anonymous
@@ -89,9 +91,11 @@ Log In
     Run Keyword Unless    '''${button}''' == "None"    Wait Until Element Is Visible    ${button}
     Run Keyword Unless    '''${button}''' == "None"    Click Link    ${button}
     Wait Until Elements Are Visible    ${EMAIL INPUT}    ${PASSWORD INPUT}    ${REMEMBER ME CHECKBOX VISIBLE}    ${FORGOT PASSWORD}    ${LOG IN CLOSE BUTTON}
-    Sleep    .5
+    Sleep    1
     Input Text    ${EMAIL INPUT}    ${email}
+    Sleep    0.25
     Input Text    ${PASSWORD INPUT}    ${password}
+    Sleep    0.25
     Wait Until Element Is Visible    ${LOG IN BUTTON}
     Click Button    ${LOG IN BUTTON}
 
@@ -116,9 +120,12 @@ Validate Log Out
     Wait Until Page Contains Element    ${ANONYMOUS BODY}
     Check Language Anonymous
 
+Validate on Register Page
+    Wait Until Elements Are Visible    ${REGISTER FIRST NAME INPUT}    ${REGISTER LAST NAME INPUT}    ${REGISTER PASSWORD INPUT}    ${CREATE ACCOUNT BUTTON}
+
 Register
     [arguments]    ${first name}    ${last name}    ${email}    ${password}    ${checked}=false
-    Wait Until Elements Are Visible    ${REGISTER FIRST NAME INPUT}    ${REGISTER LAST NAME INPUT}    ${REGISTER PASSWORD INPUT}    ${CREATE ACCOUNT BUTTON}
+    Validate on Register Page
     Input Text    ${REGISTER FIRST NAME INPUT}    ${first name}
     Input Text    ${REGISTER LAST NAME INPUT}    ${last name}
     ${read only}    Run Keyword And Return Status    Wait Until Element Is Visible    ${REGISTER EMAIL INPUT LOCKED}    5
@@ -193,6 +200,10 @@ Share To
     [arguments]    ${email}    ${permissions}
     Wait Until Element Is Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
+#remove user first to force share email to be sent.
+    ${User In List}=   Set Variable    //nx-system-settings-component//nx-menu//nx-level-3-item//span[text()='${email}']/../../../a
+    ${user exists}    Run Keyword And Return Status    Page Should Contain Link    ${User In List}
+    Run Keyword If    ${user exists}    Remove User Permissions    ${email}
     Wait Until Element Is Enabled    ${SHARE BUTTON SYSTEMS}
     Click Button    ${SHARE BUTTON SYSTEMS}
     Wait Until Elements Are Visible    ${SHARE EMAIL}    ${SHARE BUTTON MODAL}
@@ -206,37 +217,78 @@ Share To
     Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
 
 Edit User Permissions In Systems
-    [arguments]    ${user email}    ${permissions}
+    [arguments]    ${user email address}    ${permissions}
     Wait Until Element Is Not Visible    ${SHARE MODAL}
-    Wait Until Element Is Visible    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${user email}')]
-    Mouse Over    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${user email}')]
-    Wait Until Element Is Visible    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${user email}')]/following-sibling::td/a[@ng-click='editShare(user)']/span[contains(text(),"${EDIT USER BUTTON TEXT}")]/..
-    Click Element    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${user email}')]/following-sibling::td/a[@ng-click='editShare(user)']/span[contains(text(),"${EDIT USER BUTTON TEXT}")]/..
-    Wait Until Element Is Visible    ${EDIT PERMISSIONS DROPDOWN}
-    Click Element    ${EDIT PERMISSIONS DROPDOWN}
-    Wait Until Element Is Visible    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${permissions}']
-    Click Link    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${permissions}']/..
-    Click Button    ${EDIT PERMISSIONS SAVE}
-    Wait Until Page Does Not Contain Element    ${SHARE MODAL}
-    Check For Alert    ${NEW PERMISSIONS SAVED}
+    Wait Until Elements Are Visible    ${USER EMAIL}    ${ACCESS LEVEL DROPDOWN}
+    Element Text Should Be    ${USER EMAIL}    ${user email address}
+    Select user in Users List    ${user email address}
+    Change User Permissions    ${permissions}
+    Element Text Should Be    ${ACCESS LEVEL DROPDOWN}    ${permissions}
+    ${original timeout}=   Set Selenium Timeout    60
+    Wait Until Element Is Visible    ${ACCOUNT SAVE}
+    Click Button    ${ACCOUNT SAVE}
+    Sleep    3
+    Wait Until Element Is Not Visible    ${ACCOUNT SAVE}
+    Set Selenium Timeout    ${original timeout}
 
 Check User Permissions
-    [arguments]    ${user email}    ${permissions}    ${timeout}=${selenium_timeout}
-    Wait Until Element Is Visible    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${user email}')]/following-sibling::td/span[contains(text(),"${permissions}")]    ${timeout}
+    [arguments]    ${user email address}    ${permissions}    ${timeout}=${selenium_timeout}
+    ${original timeout}=   Set Selenium Timeout    ${timeout}
+
+    Select user in Users List    ${user email address}
+
+    ${s}=   Run Keyword And Return Status    Wait Until Element is Visible    ${ACCESS LEVEL DROPDOWN}    10
+    Run Keyword If    ${s} == True    Element Text Should Be    ${ACCESS LEVEL DROPDOWN}    ${permissions}
+
+    Run Keyword If    '${permissions}' == '${OWNER TEXT}'
+    ...    Element Text Should Be    ${HELP BLOCK}
+    ...    Unrestricted access including the ability to share and connect/disconnect System from cloud
+    Run Keyword If    '${permissions}' == '${ADMIN TEXT}'
+    ...    Element Text Should Be    ${HELP BLOCK}
+    ...    Unrestricted access including the ability to share
+    Run Keyword If    '${permissions}' == '${ADV VIEWER TEXT}'
+    ...    Element Text Should Be    ${HELP BLOCK}
+    ...    Can view live video, browse the archive, control PTZ etc
+    Run Keyword If    '${permissions}' == '${VIEWER TEXT}'
+    ...    Element Text Should Be    ${HELP BLOCK}
+    ...    Can view live video and browse the archive
+    Run Keyword If    '${permissions}' == '${LIVE VIEWER TEXT}'
+    ...    Element Text Should Be    ${HELP BLOCK}
+    ...    Can only view live video
+    Run Keyword If    '${permissions}' == '${CUSTOM TEXT}'
+    ...    Element Text Should Be    ${HELP BLOCK}
+    ...    Use the Nx Witness Client application to set up custom permissions
+
+    Set Selenium Timeout    ${original timeout}
+
+Change User Permissions
+    [arguments]    ${permissions}
+    Wait Until Elements Are Visible    ${USER EMAIL}    ${ACCESS LEVEL DROPDOWN}
+    Click Button    ${ACCESS LEVEL DROPDOWN}
+    ${p}=   Set Variable    ${ACCESS LEVEL DROPDOWN}/..${DROPDOWN MENU LIST}/li[contains(@class,'dropdown-item-container')]/a/span[text()='${permissions}']
+    Wait Until Element Is Visible    ${p}
+    Click Link    ${p}/..
 
 Remove User Permissions
-    [arguments]    ${user email}
-    Wait Until Element Is Visible    ${USERS LIST LINK}
-    Click Link    ${USERS LIST LINK}
-    ${User In List}=   Set Variable    //nx-system-settings-component//nx-menu//nx-level-3-item//span[text()='${user email}']/../../../a
-    Click Link    ${User In List}
+    [arguments]    ${user email address}
+    ${User In List}=   Select user in Users List    ${user email address}
     Wait Until Element Is Visible    ${REMOVE USER BUTTON}
     Click Button    ${REMOVE USER BUTTON}
-    Wait Until Element Is Visible    ${DELETE USER BUTTON}
-    Click Button    ${DELETE USER BUTTON}
-    ${PERMISSIONS WERE REMOVED FROM EMAIL}    Replace String    ${PERMISSIONS WERE REMOVED FROM}    %email%    ${user email}
+    Wait Until Element Is Visible    ${REMOVE BUTTON}
+    Click Button    ${REMOVE BUTTON}
+    ${PERMISSIONS WERE REMOVED FROM EMAIL}    Replace String    ${PERMISSIONS WERE REMOVED FROM}    %email%    ${user email address}
     Check For Alert    ${PERMISSIONS WERE REMOVED FROM EMAIL}
     Wait Until Element Is Not Visible    ${User In List}
+
+Select user in Users List
+    [arguments]    ${user email address}
+    Wait Until Elements Are Visible    ${USERS LIST LINK}
+    Click Link    ${USERS LIST LINK}
+    ${User In List}=   Set Variable    //nx-system-settings-component//nx-menu//nx-level-3-item//span[text()='${user email address}']/../../../a
+    Click Link    ${User In List}
+    Wait Until Elements Are Visible    ${USER EMAIL}
+    Element Text Should Be    ${USER EMAIL}    ${user email address}
+    [return]    ${user email address}
 
 Check For Alert
     [arguments]    ${alert text}    ${timeout}=${selenium_timeout}
@@ -274,14 +326,22 @@ Failure Tasks
     Close Mailbox
 
 Wait Until Elements Are Visible
-    [arguments]    @{elements}
-    :FOR     ${element}  IN  @{elements}
-    \  Wait Until Element Is Visible    ${element}
+    [arguments]    @{elements}    ${timeout}=${selenium_timeout}
+    FOR     ${element}  IN  @{elements}
+        Wait Until Element Is Visible    ${element}    ${timeout}
+    END
 
 Elements Should Not Be Visible
-    [arguments]    @{elements}
-    :FOR     ${element}  IN  @{elements}
-    \  Element Should Not Be Visible    ${element}
+    [arguments]    @{elements}    ${timeout}=${selenium_timeout}
+    FOR     ${element}  IN  @{elements}
+        Element Should Not Be Visible    ${element}    ${timeout}
+    END
+
+Wait Until Page Does Not Contain Elements
+    [arguments]    @{elements}    ${timeout}=${selenium_timeout}
+    FOR     ${element}  IN  @{elements}
+        Wait Until Page Does Not Contain Element    ${element}    ${timeout}
+    END
 
 #Reset resources
 Clean up email noperm
@@ -301,22 +361,24 @@ Clean up random emails
     Log In    ${EMAIL OWNER}    ${password}
     Validate Log In
     Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
-    ${status}    Run Keyword And Return Status    Wait Until Element Is Visible    //div[@process-loading='gettingSystemUsers']//tbody//tr//td[contains(text(), 'noptixautoqa+15')]
+    ${status}    Run Keyword And Return Status    Wait Until Element Is Visible
+    ...    ${USERS LIST}//nx-level-3-item//span[contains(text(),'noptixautoqa+15')]/../../../a
     Run Keyword If    ${status}    Find and remove emails
     Close Browser
 
 Find and remove emails
-    ${random emails}    Get WebElements    //div[@process-loading='gettingSystemUsers']//tbody//tr//td[contains(text(), 'noptixautoqa+15')]
-    :FOR    ${element}    IN    @{random emails}
-    \  ${email}    Get Text    ${element}
-    \  Mouse Over    ${element}
-    \  Wait Until Element Is Visible    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${email}')]/following-sibling::td/a[@ng-click='unshare(user)']/span['&nbsp&nbspDelete']
-    \  Click Element    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${email}')]/following-sibling::td/a[@ng-click='unshare(user)']/span['&nbsp&nbspDelete']
-    \  Wait Until Element Is Visible    ${DELETE USER BUTTON}
-    \  Click Button    ${DELETE USER BUTTON}
-    \  ${PERMISSIONS WERE REMOVED FROM EMAIL}    Replace String    ${PERMISSIONS WERE REMOVED FROM}    %email%    ${email}
-    \  Check For Alert    ${PERMISSIONS WERE REMOVED FROM EMAIL}
-    \  Wait Until Element Is Not Visible    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${email}')]
+    ${random emails}    Get WebElements    ${USERS LIST}//nx-level-3-item//span[contains(text(),'noptixautoqa+15')]/../../../a
+    FOR    ${element}    IN    @{random emails}
+        ${email}    Get Text    ${element}
+        Click Link    ${element}
+        Wait Until Element Is Visible    ${REMOVE USER BUTTON}
+        Click Button    ${REMOVE USER BUTTON}
+        Wait Until Elements Are Visible    ${REMOVE MODAL}    ${REMOVE BUTTON}    ${REMOVE CANCEL BUTTON}
+        Click Button    ${REMOVE BUTTON}
+        ${PERMISSIONS WERE REMOVED FROM EMAIL}    Replace String    ${PERMISSIONS WERE REMOVED FROM}    %email%    ${email}
+        Check For Alert    ${PERMISSIONS WERE REMOVED FROM EMAIL}
+        Wait Until Element Is Not Visible    ${USERS LIST}//nx-level-3-item//span[contains(text(),'${email}')]/../../../a
+    END
 
 Reset user noperm first/last name
     Register Keyword To Run On Failure    None
@@ -376,7 +438,7 @@ Make sure notowner is in the system
     ${status}    Run Keyword And Return Status    Wait Until Element Is Visible    ${NOT OWNER IN SYSTEM}
     Run Keyword Unless    ${status}    Share To    ${EMAIL NOT OWNER}    ${VIEWER TEXT}
     Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
-    ${email}    Wait For Email    recipient=${EMAIL VIEWER}    timeout=120    status=UNSEEN
+    ${email}    Wait For Email    recipient=${EMAIL NOT OWNER}    timeout=120    status=UNSEEN
     Delete All Emails
     Close Browser
 
@@ -397,7 +459,7 @@ Reset System Names
     Open Browser and go to URL    ${url}/systems/${AUTOTESTS OFFLINE SYSTEM ID}
     Log In    ${EMAIL OWNER}    ${BASE PASSWORD}    None
     Validate Log In
-    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${SHARE BUTTON SYSTEMS}    ${OPEN IN NX BUTTON}    ${RENAME SYSTEM}
+    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}
     Click Button    ${RENAME SYSTEM}
     Wait Until Elements Are Visible    ${RENAME CANCEL}    ${RENAME SAVE}    ${RENAME INPUT}
     Clear Element Text    ${RENAME INPUT}
@@ -407,7 +469,7 @@ Reset System Names
     Verify In System    Auto Tests 2
 
     Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
-    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${SHARE BUTTON SYSTEMS}    ${OPEN IN NX BUTTON}    ${RENAME SYSTEM}
+    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}
     Click Button    ${RENAME SYSTEM}
     Wait Until Elements Are Visible    ${RENAME CANCEL}    ${RENAME SAVE}    ${RENAME INPUT}
     Clear Element Text    ${RENAME INPUT}

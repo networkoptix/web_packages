@@ -236,9 +236,10 @@ Handles two tabs, updates second tab state if logout is done on first
     Select Window    @{tabs}[0]
     Location Should Be    ${url}/register
     Reload Page
-    Wait Until Element is Visible    ${CONTINUE BUTTON}
-    Click Button    ${CONTINUE BUTTON}
-    Wait Until Page Does Not Contain Element    ${CONTINUE MODAL}
+    Wait Until Element is Visible    ${LOGGED IN STAY LOGGED IN BUTTON}
+    Click Button    ${LOGGED IN STAY LOGGED IN BUTTON}
+    Sleep    2
+    Wait Until Page Does Not Contain Elements    ${BACKDROP}    ${MODAL DIALOG}
     Validate Log In
     Log Out
     Validate Log Out
@@ -278,7 +279,7 @@ Log in more than 5 times
     Validate Log In
 
 User is logged out of browser after a password change in another browser
-    [tags]    C41837
+    [tags]    C41837    Bug_19.2
     Log In    ${email}    ${password}
     Validate Log In
     Open Browser and go to URL    ${url}
@@ -290,14 +291,18 @@ User is logged out of browser after a password change in another browser
     Wait Until Elements are Visible
     ...    ${CURRENT PASSWORD INPUT}
     ...    ${NEW PASSWORD INPUT}
+    Element Should Not Be Visible
     ...    ${CHANGE PASSWORD BUTTON}
     Input Text    ${CURRENT PASSWORD INPUT}    ${password}
     Input Text    ${NEW PASSWORD INPUT}    ${ALT PASSWORD}
+    Wait Until Element Is Visible
+    ...    ${CHANGE PASSWORD BUTTON}
     Click Button    ${CHANGE PASSWORD BUTTON}
     Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
     Switch Browser    2
     # wait for server to disconnect user
     sleep    30
+  Log    CLOUD-3710 Regression: User changes his password in another browser
     Wait Until Element is Visible    ${LOG IN MODAL}
     Click Element    ${LOG IN CLOSE BUTTON}
     Validate Log Out
@@ -310,8 +315,9 @@ User is logged out of browser after a password change in another browser
     Wait Until Elements are Visible
     ...    ${CURRENT PASSWORD INPUT}
     ...    ${NEW PASSWORD INPUT}
-    ...    ${CHANGE PASSWORD BUTTON}
     Input Text    ${CURRENT PASSWORD INPUT}    ${ALT PASSWORD}
     Input Text    ${NEW PASSWORD INPUT}    ${password}
+    Wait Until Element Is Visible
+    ...    ${CHANGE PASSWORD BUTTON}
     Click Button    ${CHANGE PASSWORD BUTTON}
     Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}

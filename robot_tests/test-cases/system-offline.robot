@@ -16,9 +16,9 @@ Log in to Autotests 2 System
     Go To    ${url}/systems/${AUTOTESTS OFFLINE SYSTEM ID}
     Log In    ${email}    ${password}    None
     Validate Log In
-    Run Keyword If    '${email}' == '${EMAIL OWNER}'    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${SHARE BUTTON SYSTEMS}    ${OPEN IN NX BUTTON}    ${RENAME SYSTEM}
-    Run Keyword If    '${email}' == '${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${SHARE BUTTON SYSTEMS}    ${OPEN IN NX BUTTON}    ${RENAME SYSTEM}
-    Run Keyword Unless    '${email}' == '${EMAIL OWNER}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${OPEN IN NX BUTTON}
+    Run Keyword If    '${email}' == '${EMAIL OWNER}'    Wait Until Elements Are Visible    ${RENAME SYSTEM}    ${DISCONNECT FROM NX}
+    Run Keyword If    '${email}' == '${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${RENAME SYSTEM}    ${DISCONNECT FROM MY ACCOUNT}
+    Run Keyword Unless    '${email}' == '${EMAIL OWNER}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
 
 Restart
     Register Keyword To Run On Failure    NONE
@@ -37,6 +37,8 @@ the page is opened and shows the user list to owner
     [tags]    C41881    Threaded
     Log in to Autotests 2 System    ${EMAIL OWNER}
     Location Should Be    ${url}/systems/${AUTOTESTS OFFLINE SYSTEM ID}
+    Wait Until Elements Are Visible    ${USERS LIST LINK}
+    Click Link    ${USERS LIST LINK}
     Wait Until Element Is Visible    ${USERS LIST}
 
 should confirm, if owner deletes system (You are going to disconnect your system from cloud)
@@ -57,21 +59,27 @@ should confirm, if not owner deletes system (You will lose access to this system
     Wait Until Elements Are Visible    ${DISCONNECT FORM}    ${DISCONNECT FORM HEADER}    ${DISCONNECT FORM CANCEL}
     Click Element    ${DISCONNECT FORM}
     Click Button    ${DISCONNECT FORM CANCEL}
-    Wait Until Page Does Not Contain Element    ${DELETE USER MODAL}
+    Wait Until Page Does Not Contain Element    ${REMOVE USER MODAL}
 
 share button should be disabled
     [tags]    C41881    Threaded
-    Set Window Size    1920    1080
     Log in to Autotests 2 System    ${EMAIL OWNER}
     Wait Until Page Does Not Contain Element    //div[contains(@uib-modal-backdrop, "modal-backdrop")]
+    Wait Until Elements Are Visible    ${USERS LIST LINK}
+    Click Link    ${USERS LIST LINK}
     Wait Until Element Is Visible    ${SHARE BUTTON DISABLED}
 
 open in nx button should be disabled
     [tags]    C41881    Threaded
     Log in to Autotests 2 System    ${EMAIL OWNER}
+    Wait Until Element Is Visible    ${SYSTEMS DROPDOWN}
+    Click Element    ${SYSTEMS DROPDOWN}
+  Log    CLOUD-3702 Systems Dropdown menu label & contents not updated when accessing system by direct URL
     Wait Until Element Is Visible    ${OPEN IN NX BUTTON DISABLED}
     Log Out
     Log in to Autotests 2 System    ${EMAIL VIEWER}
+    Wait Until Element Is Visible    ${SYSTEMS DROPDOWN}
+    Click Element    ${SYSTEMS DROPDOWN}
     Wait Until Element Is Visible    ${OPEN IN NX BUTTON DISABLED}
 
 should show offline next to system name
@@ -85,12 +93,12 @@ should show offline next to system name
 should not be able to delete/edit users
     [tags]    Threaded
     Log in to Autotests 2 System    ${EMAIL OWNER}
-    Wait Until Element Is Visible    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${EMAIL VIEWER}')]
-    Mouse Over    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${EMAIL VIEWER}')]
-#This sleep is to make sure that I am not looking for the element before it loads.  That could give a false positive.
-    Sleep    3
-    Wait Until Element Is Not Visible    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${EMAIL VIEWER}')]/following-sibling::td/a[@ng-click='editShare(user)']/span[contains(text(),'Edit')]/..
-    Wait Until Element Is Not Visible    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${EMAIL VIEWER}')]/following-sibling::td/a[@ng-click='unshare(user)']/span['&nbsp&nbspDelete']
+    Wait Until Elements Are Visible    ${USERS LIST LINK}
+    Click Link    ${USERS LIST LINK}
+    ${User In List}=   Set Variable    ${USERS LIST}//nx-level-3-item//span[text()='${EMAIL VIEWER}']/../../../a
+    Wait Until Element Is Visible    ${User In List}
+    Click Link    ${User In List}
+    Wait Until Elements Are Visible    ${ACCESS LEVEL DROPDOWN}${DISABLED}    ${REMOVE USER BUTTON}${DISABLED}
 
 should open System page by link to not authorized user and redirect to homepage, if he does not log in
     [tags]    Threaded
@@ -145,7 +153,7 @@ clicking save with no input in rename dialog throws error
     [tags]    C41880    Threaded
     Log in to Autotests 2 System    ${EMAIL OWNER}
     Wait Until Element Is Visible    ${RENAME SYSTEM}
-    Wait Until Elements Are Visible    ${RENAME SYSTEM}    ${OPEN IN NX BUTTON}    ${DISCONNECT FROM NX}    ${SHARE BUTTON SYSTEMS}
+    Wait Until Elements Are Visible    ${RENAME SYSTEM}    ${DISCONNECT FROM NX}
     Click Button    ${RENAME SYSTEM}
     Wait Until Elements Are Visible    ${RENAME CANCEL}    ${RENAME SAVE}    ${RENAME INPUT}
     sleep    2
@@ -158,30 +166,35 @@ clicking save with no input in rename dialog throws error
 does not show Share button to viewer, advanced viewer, live viewer
     [tags]    Threaded
     @{emails}    Set Variable    ${EMAIL VIEWER}    ${EMAIL LIVE VIEWER}    ${EMAIL ADV VIEWER}
-    :FOR    ${user}    IN    @{emails}
-    \  Log in to Autotests 2 System    ${user}
-    \  Register Keyword To Run On Failure    NONE
-    \  Run Keyword And Expect Error    *    Wait Until Element Is Visible    ${SHARE BUTTON SYSTEMS}
-    \  Run Keyword And Expect Error    *    Wait Until Element Is Visible    ${RENAME SYSTEM}
-    \  Register Keyword To Run On Failure    Failure Tasks
-    \  Element Should Not Be Visible    ${SHARE BUTTON SYSTEMS}
-    \  Log Out
+    FOR    ${user}    IN    @{emails}
+        Log in to Autotests 2 System    ${user}
+      #The commented out logic takes 3 times longer than the new line to effectively accomplish the same thing.
+        # Register Keyword To Run On Failure    NONE
+        # Run Keyword And Expect Error    *    Wait Until Element Is Visible    ${SHARE BUTTON SYSTEMS}
+        # Run Keyword And Expect Error    *    Wait Until Element Is Visible    ${RENAME SYSTEM}
+        # Register Keyword To Run On Failure    Failure Tasks
+        # Element Should Not Be Visible    ${SHARE BUTTON SYSTEMS}
+        Elements Should Not Be Visible    ${RENAME SYSTEM}    ${USERS LIST LINK}    ${SHARE BUTTON SYSTEMS}
+        Log Out
+    END
 
 Your permissions is shown for non-owners
     [tags]    Threaded    C41881
     ${users}         Set Variable    ${EMAIL ADVVIEWER}    ${EMAIL VIEWER}    ${EMAIL LIVEVIEWER}    ${EMAIL CUSTOM}    ${EMAIL ADMIN}
     ${users text}    Set Variable    ${ADV VIEWER TEXT}    ${VIEWER TEXT}     ${LIVE VIEWER TEXT}    ${CUSTOM TEXT}     ${ADMIN TEXT}
-    :FOR    ${user}  ${text}  IN ZIP  ${users}  ${users text}
-    \    Log in to Auto Tests 2 System    ${user}
-    \    Wait Until Elements Are Visible    ${OWNER NAME}    ${OWNER EMAIL}    ${YOUR PERMISSIONS}    ${YOUR PERMISSIONS}/b[contains(text(),"${text}")]
-    \    Log Out
+    ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    testFirstName testLastName
+    FOR    ${user}  ${text}  IN ZIP  ${users}  ${users text}
+        Log in to Auto Tests 2 System    ${user}
+        Wait Until Elements Are Visible    ${current owner name}    ${OWNER EMAIL}    ${YOUR ACCESS LEVEL}    ${YOUR ACCESS LEVEL}/span[contains(text(),"${text}")]
+        Log Out
+    END
 
-should show (your system) for owner and (owner's name) for non-owners
+should show (you) for owner and (owner's name & email) for non-owners
     [tags]    C41881    Threaded
     Log in to AutoTests 2 System    ${EMAIL OWNER}
-    Wait Until Element Is Visible    //h2[text()='${YOUR SYSTEM TEXT}']
-    Wait Until Element Is Not Visible    //h2[text()='${OWNER TEXT}']
+    ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    you
+    Wait Until Elements Are Visible    ${RENAME SYSTEM}    ${DISCONNECT FROM NX}    ${current owner name}
     Log Out
     Log in to Autotests 2 System    ${EMAIL VIEWER}
-    Wait Until Elements Are Visible    //h2[text()\='${OWNER TEXT}']    //a[text()\='${EMAIL OWNER}']
-    Wait Until Element Is Not Visible    //h2[text()='${YOUR SYSTEM TEXT}']
+    ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    testFirstName testLastName
+    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${current owner name}    ${OWNER EMAIL}

@@ -191,6 +191,7 @@ export class NxApplyService {
         const compFactory = this.factoryResolver.resolveComponentFactory(NxApplyComponent);
         this.component.clear();
         this.applyComponentRef = this.component.createComponent(compFactory);
+        (<NxApplyComponent>this.applyComponentRef.instance).applyVisible = false;
     }
 
     private setDiscardFunction(func: any) {
@@ -206,6 +207,10 @@ export class NxApplyService {
     public setForm(form: NgForm) {
         this.form = form;
         (<NxApplyComponent>this.applyComponentRef.instance).form = form;
+    }
+
+    public setVisible() {
+        (<NxApplyComponent>this.applyComponentRef.instance).applyVisible = true;
     }
 
     /**
