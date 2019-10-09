@@ -31,6 +31,10 @@ class NoptixLibrary(object):
     def paste_text(self, locator):
         locator.send_keys(Keys.CONTROL + 'v')
 
+    def delete_all_text(self, locator):
+        locator.send_keys(Keys.CONTROL + 'a')
+        locator.send_keys(Keys.BACKSPACE)
+
     def get_random_email(self, email):
         index = email.find('@')
         email = email[:index] + '+' + str(time.time()) + email[index:]

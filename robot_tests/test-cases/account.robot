@@ -11,8 +11,6 @@ ${url}         ${ENV}
 ${CZECH ALERT}    Váš účet byl úspěšně uložen
 ${FIRST NAME IS REQUIRED}      //span[@class='error-text ng-star-inserted' and contains(text(),"${FIRST NAME IS REQUIRED TEXT}")]
 ${LAST NAME IS REQUIRED}       //span[@class='error-text ng-star-inserted' and contains(text(),"${LAST NAME IS REQUIRED TEXT}")]
-${FIRST NAME ERROR}            ${ACCOUNT FIRST NAME}/parent::div/parent::div[contains(@class, "has-error")]
-${LAST NAME ERROR}             ${ACCOUNT LAST NAME}/parent::div/parent::div[contains(@class, "has-error")]
 
 *** Keywords ***
 Verify in Account Page
@@ -119,9 +117,11 @@ First name is required
     Log In    ${EMAIL NOPERM}    ${password}    button=None
     Validate Log In
     Verify in Account Page
-    Input Text    ${ACCOUNT FIRST NAME}    ${EMPTY}
+    ${locator}=   Get WebElement    ${ACCOUNT FIRST NAME}
+    Delete All Text    ${locator}
     Click Element    ${ACCOUNT LAST NAME}
-    Wait Until Element is Visible    ${FIRST NAME ERROR}
+    Element Style Should Be    ${ACCOUNT FIRST NAME}    border-color    ${ERROR COLOR}
+    Element Style Should Be    ${ACCOUNT FIRST NAME}    color    ${ERROR COLOR WITH OPACITY}
     Element Should Be Visible    ${FIRST NAME IS REQUIRED}
 
 Last name is required
@@ -130,9 +130,11 @@ Last name is required
     Log In    ${EMAIL NOPERM}    ${password}    button=None
     Validate Log In
     Verify in Account Page
-    Input Text    ${ACCOUNT LAST NAME}    ${EMPTY}
+    ${locator}=   Get WebElement    ${ACCOUNT LAST NAME}
+    Delete All Text    ${locator}
     Click Element    ${ACCOUNT FIRST NAME}
-    Wait Until Element is Visible    ${LAST NAME ERROR}
+    Element Style Should Be    ${ACCOUNT LAST NAME}    border-color    ${ERROR COLOR}
+    Element Style Should Be    ${ACCOUNT LAST NAME}    color    ${ERROR COLOR WITH OPACITY}
     Element Should Be Visible    ${LAST NAME IS REQUIRED}
 
 SPACE for first name is not valid
@@ -175,9 +177,6 @@ Should respond to tab and go in the correct order
     Log In    ${EMAIL NOPERM}    ${password}    button=None
     Validate Log In
     Verify in Account Page
-    Press Key    ${ACCOUNT DROPDOWN}    ${TAB}
-    Element Should Be Focused    ${ACCOUNT EMAIL}
-    Press Key    ${ACCOUNT EMAIL}    ${TAB}
     Element Should Be Focused    ${ACCOUNT FIRST NAME}
     Press Key    ${ACCOUNT FIRST NAME}    ${TAB}
     Element Should Be Focused    ${ACCOUNT LAST NAME}
@@ -185,83 +184,44 @@ Should respond to tab and go in the correct order
     Element Should Be Focused    ${ACCOUNT LANGUAGE DROPDOWN}
     Press Key    ${ACCOUNT LANGUAGE DROPDOWN}    ${ENTER}
     Press Key    ${ACCOUNT LANGUAGE DROPDOWN}    ${TAB}
-    Element Should Be Focused    //form[@name="accountForm"]//a//span[1]/..
-    Press Key    //form[@name="accountForm"]//a//span[1]/..    ${ENTER}
+    Element Should Be Focused    //nx-language-select//a//span[1]/..
+    Press Key    //nx-language-select//a//span[1]/..    ${ENTER}
     Element Should Be Visible    ${ACCOUNT LANGUAGE DROPDOWN}/span[@lang="cs_CZ"]
     Press Key    ${ACCOUNT LANGUAGE DROPDOWN}    ${TAB}
     Element Should Be Focused    ${ACCOUNT SAVE}
     Press Key    ${ACCOUNT SAVE}    ${ENTER}
-    Sleep    2    #wait for the language to change
-    Check For Alert    ${CZECH ALERT}
 
 Language is changeable on the account page
     [tags]    C41574
     Go To    ${url}/account
     Log In    ${EMAIL NOPERM}    ${password}    button=None
     Validate Log In
-    FOR    ${lang}    ${account}   IN ZIP    ${LANGUAGES LIST}    ${LANGUAGES ACCOUNT TEXT LIST}
+    FOR    ${lang}    ${account}   IN ZIP    ${LANGUAGES LIST}    ${LANGUAGES ACCOUNT INFORMATION TEXT LIST}
         Sleep    1
         Verify in Account Page
         Run Keyword Unless    "${lang}"=="${LANGUAGE}"
         ...    Click Button    ${ACCOUNT LANGUAGE DROPDOWN}
         Run Keyword Unless    "${lang}"=="${LANGUAGE}"
-        ...    Wait Until Element is Visible    //form[@name='accountForm']//button/following-sibling::ul//span[@lang='${lang}']
+        ...    Wait Until Element is Visible    //nx-language-select//button/following-sibling::ul//span[@lang='${lang}']
         Run Keyword Unless    "${lang}"=="${LANGUAGE}"
-        ...    Click Element    //form[@name='accountForm']//button/following-sibling::ul//span[@lang='${lang}']/..
-        Click Button    ${ACCOUNT SAVE}
+        ...    Click Element    //nx-language-select//button/following-sibling::ul//span[@lang='${lang}']/..
+        Run Keyword Unless    "${lang}"=="${LANGUAGE}"    Click Button    ${ACCOUNT SAVE}
         Sleep    1    #to allow the system to change languages
         Run Keyword Unless    "${lang}"=="${LANGUAGE}"
-        ...    Wait Until Element is Visible    //h1[text()='${account}']
+        ...    Wait Until Element is Visible    //header/span[text()='${account}']
     END
     Wait Until Element is Visible    ${ACCOUNT LANGUAGE DROPDOWN}
     Click Button    ${ACCOUNT LANGUAGE DROPDOWN}
     Wait Until Element is Visible
-    ...    //form[@name='accountForm']//button/following-sibling::ul//span[@lang='${LANGUAGE}']/..
+    ...    //nx-language-select//button/following-sibling::ul//span[@lang='${LANGUAGE}']/..
     Click Element
-    ...    //form[@name='accountForm']//button/following-sibling::ul//span[@lang='${LANGUAGE}']/..
+    ...    //nx-language-select//button/following-sibling::ul//span[@lang='${LANGUAGE}']/..
     Click Button    ${ACCOUNT SAVE}
     Sleep    1
     Verify in Account Page
-    Wait Until Element is Visible    //h1['${ACCOUNT TEXT}']
+    Wait Until Element is Visible    //header/span[text()='${account}']
 
-Language changed in account is new default
-    [tags]    C41574
-    Go To    ${url}/account
-    Log In    ${EMAIL NOPERM}    ${password}    button=None
-    Validate Log In
-    Verify in Account Page
-    Click Button    ${ACCOUNT LANGUAGE DROPDOWN}
-    Wait Until Element is Visible
-    ...    //form[@name='accountForm']//button/following-sibling::ul//span[@lang='en_US']/..
-    Click Element
-    ...    //form[@name='accountForm']//button/following-sibling::ul//span[@lang='en_US']/..
-    Click Button    ${ACCOUNT SAVE}
-    Wait Until Element is Visible    //h1[text()='Account']
-    Close Browser
-
-    Open Browser and go to URL    ${url}
-    Wait Until Element is Visible    ${LANGUAGE DROPDOWN}    20
-    Click Button    ${LANGUAGE DROPDOWN}
-    Wait Until Element is Visible    //nx-footer//span[@lang='ru_RU']/..
-    Click Element    //nx-footer//span[@lang='ru_RU']/..
-    Wait Until Element is Visible    ${LANGUAGE DROPDOWN}/span[@lang='ru_RU']    5
-    Sleep    1    #to wait for language to fully change before continuing.
-    Go To    ${url}/account
-    Wait Until Elements are Visible
-    ...    ${EMAIL INPUT}
-    ...    ${PASSWORD INPUT}
-    ...    ${REMEMBER ME CHECKBOX VISIBLE}
-    ...    ${FORGOT PASSWORD}
-    ...    ${LOG IN CLOSE BUTTON}
-    Input Text    ${EMAIL INPUT}    ${EMAIL NOPERM}
-    Input Text    ${PASSWORD INPUT}    ${password}
-    Wait Until Element is Visible    ${LOG IN BUTTON}
-    Click Button    ${LOG IN BUTTON}
-    Wait Until Page Contains Element    ${AUTHORIZED BODY}
-    Wait Until Elements are Visible    ${ACCOUNT DROPDOWN}
-    Wait Until Element is Visible    //h1[text()='Account']
-
-Language change in account page affects emails
+Language change affects emails
     [tags]    C41575
     ${russian subject}    Set Variable    Восстановление пароля
     Go To    ${url}/account
@@ -270,9 +230,9 @@ Language change in account page affects emails
     Verify in Account Page
     Click Button    ${ACCOUNT LANGUAGE DROPDOWN}
     Wait Until Element is Visible
-    ...    //form[@name='accountForm']//button/following-sibling::ul//span[@lang='ru_RU']/..
+    ...    //nx-language-select//button/following-sibling::ul//span[@lang='ru_RU']/..
     Click Element
-    ...    //form[@name='accountForm']//button/following-sibling::ul//span[@lang='ru_RU']/..
+    ...    //nx-language-select//button/following-sibling::ul//span[@lang='ru_RU']/..
     Click Button    ${ACCOUNT SAVE}
     Sleep    5
     Close Browser
@@ -299,4 +259,4 @@ Language change in account page affects emails
     ...    ${BASE PORT}
     Delete All Emails
     Close Mailbox
-    Check Language
+    Check Langauge Logged In
