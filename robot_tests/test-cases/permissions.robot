@@ -172,7 +172,6 @@ When user selects role - special hint appears
     Click Button    ${SHARE CANCEL}
 
 Sharing works
-    [tags]
     Log in to Auto Tests System    ${email}
     ${random email}    Get Random Email    ${BASE EMAIL}
     Share To    ${random email}    ${ADMIN TEXT}
@@ -429,7 +428,6 @@ User with client custom settings has access to system
     Verify In System    ${AUTO TESTS}
 
 User can be invited with client custom permissions
-    [tags]
     Log in to Auto Tests System    ${EMAIL OWNER}
     ${random email}    Get Random Email    ${BASE EMAIL}
     Share To    ${random email}    Client Custom
