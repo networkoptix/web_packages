@@ -456,7 +456,7 @@ export class NxSystem extends System implements OnDestroy {
     deleteFromCurrentAccount() {
         if (this.currentUser && this.isAvailable) {
             // Handling promise to satisfy the linter.
-            this.mediaserver.deleteUser(this.currentUser.id).toPromise.then(() => {}); // Try to remove me from the system directly
+            this.mediaserver.deleteUser(this.currentUser.id).toPromise().then(() => {}); // Try to remove me from the system directly
         }
         // Anyway - send another request to cloud_db to remove my this
         return this.cloudApi.unshare(this.id, this.currentUserEmail).toPromise();
