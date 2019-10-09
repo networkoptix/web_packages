@@ -14,6 +14,7 @@ import { NxAccountPasswordComponent } from './password/password.component';
 import { NxAccountSettingsModule } from './settings/settings.module';
 import { NxAccountPasswordModule } from './password/password.module';
 import { ApplyGuard } from '../../routeGuards/applyGuard';
+import { AuthGuard } from '../../routeGuards/authGuard';
 
 @Injectable()
 export class TypeResolver implements Resolve<any> {
@@ -27,7 +28,7 @@ export class TypeResolver implements Resolve<any> {
 
 const appRoutes: Routes = [
     {
-        path: 'account', component: NxAccountComponent,
+        path: 'account', component: NxAccountComponent, canActivate: [AuthGuard],
         children: [
             { path: '', component: NxAccountSettingsComponent, canDeactivate: [ApplyGuard] },
             { path: 'password', component: NxAccountPasswordComponent, canDeactivate: [ApplyGuard] }

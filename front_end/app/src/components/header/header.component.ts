@@ -5,14 +5,15 @@ import {
 import {
     ActivatedRoute, NavigationEnd, Event,
     Router, RoutesRecognized
-}                            from '@angular/router';
-import { NxConfigService }   from '../../services/nx-config';
-import { NxAppStateService } from '../../services/nx-app-state.service';
-import { NxAccountService }  from '../../services/account.service';
-import { NxDialogsService }  from '../../dialogs/dialogs.service';
-import { NxSessionService }  from '../../services/session.service';
-import { NxSystemsService }  from '../../services/systems.service';
-import { WINDOW }            from '../../services/window-provider';
+}                              from '@angular/router';
+import { NxConfigService }     from '../../services/nx-config';
+import { NxAppStateService }   from '../../services/nx-app-state.service';
+import { NxAccountService }    from '../../services/account.service';
+import { NxDialogsService }    from '../../dialogs/dialogs.service';
+import { NxSessionService }    from '../../services/session.service';
+import { NxSystemsService }    from '../../services/systems.service';
+import { WINDOW }              from '../../services/window-provider';
+import { LocalStorageService } from 'ngx-store';
 
 @Component({
     selector: 'nx-header',
@@ -29,6 +30,8 @@ export class NxHeaderComponent implements OnInit {
     activeSystem: any = {};
     singleSystem: any = {};
     inline: any;
+    navVisible: boolean;
+    dropdownsVisible: boolean;
     viewHeader: boolean;
     systemCounter: number;
     loginState: any;
@@ -42,6 +45,7 @@ export class NxHeaderComponent implements OnInit {
                 private dialogs: NxDialogsService,
                 private accountService: NxAccountService,
                 private sessionService: NxSessionService,
+                private localStorage: LocalStorageService,
                 private router: Router,
     ) {
         this.CONFIG = this._config.getConfig();
@@ -57,25 +61,42 @@ export class NxHeaderComponent implements OnInit {
         // this.route.queryParams.subscribe(params => {
         //     this.inline = params['inline'] !== 'undefined';
         // });
-
+        this.navVisible = false;
+        this.dropdownsVisible = false;
         this.viewHeader = this.CONFIG.showHeaderAndFooter;
         this.active = {};
-        this.updateActive();
+
+        this.sessionService.loginStateSubject.subscribe((state) => {
+            this.accountService
+                .get()
+                .then(account => {
+                    if (account) {
+                        this.dropdownsVisible = true;
+                    }
+                });
+        });
+
 
         this.router.events
               .subscribe((event: Event) => {
                   if (event instanceof RoutesRecognized) {
                       this.systemId = event.state.root.firstChild.params.systemId;
+                      this.localStorage.set('systemId', this.systemId);
                   }
 
                   if (event instanceof NavigationEnd) {
                       // You only receive NavigationEnd events
                       if (this.systemId && !this.systems) {
-                          this.systemsService.forceUpdateSystems();
+                          this.systemsService
+                              .forceUpdateSystems()
+                              .toPromise().then(() => {
+                                  this.updateActiveSystem();
+                                  this.updateActive();
+                              });
+                      } else {
+                          this.updateActiveSystem();
+                          this.updateActive();
                       }
-
-                      this.updateActiveSystem();
-                      this.updateActive();
                   }
               });
 
@@ -97,6 +118,9 @@ export class NxHeaderComponent implements OnInit {
             if (!systems) {
                 return;
             }
+
+            this.systemId = this.localStorage.get('systemId');
+
             if (!this.systemId && this.route.firstChild && this.route.firstChild.snapshot.params.systemId) {
                 this.systemId = this.route.firstChild.snapshot.params.systemId;
             }
@@ -127,6 +151,7 @@ export class NxHeaderComponent implements OnInit {
         this.active.register = this.isActive('/register');
         this.active.view = this.isActive('/view');
         this.active.settings = this.systemId && this.isActive('/systems') && !this.isActive('/view');
+        this.navVisible = true;
     }
 
     updateActiveSystem() {

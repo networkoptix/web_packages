@@ -115,6 +115,7 @@
     "Page not found": "Page not found",
     "Password": "Password",
     "Password is required": "Password is required",
+    "Password reset instructions are sent to Email": "Password reset instructions are sent to Email",
     "Password successfully saved": "Password successfully saved",
     "Password:": "Password:",
     "Please enter a valid Email": "Please enter a valid Email",
@@ -269,12 +270,12 @@
     "devices": "devices",
     "dialogs": {
         "cancelButton": "Cancel",
-        "continueAs": "Continue as {email}",
+        "changeAccountLogged": "You are already logged in with as {email}",
         "createNewAccount": "Create New Account",
         "download": "Download %VMS_NAME%",
+        "loggedFromOther": "You will be logged in with a different account",
         "loginButton": "Log in",
         "loginTitle": "Log in to %CLOUD_NAME%",
-        "loginWithDifferentAccount": "You are already logged in with a different account",
         "logoutAuthorisedContinueButton": "Continue",
         "logoutAuthorisedLogoutButton": "Log Out",
         "logoutAuthorisedTitle": "You are already logged in",
@@ -305,7 +306,6 @@
         },
         "noClientDetectedTitle": "Install %VMS_NAME% to view your System",
         "okButton": "OK",
-        "remainAs": "Remain logged as {email} ",
         "sharing": {
             "confirmOwner": "If you change System owner, you will revoke ownership from the current account. This action is irreversible. Are you sure?",
             "editShareConfirmButton": "Save",
@@ -313,7 +313,9 @@
             "permissionsSaved": "New permissions saved",
             "shareConfirmButton": "Add",
             "shareTitle": "Add"
-        }
+        },
+        "stayAs": "Stay logged as {email} ",
+        "stayLoggedIn": "Stay Logged In"
     },
     "dialogs.merge.connectToCloud": "Connect System you want to merge with this one to <strong>{{cloudName}}</strong> or merge locally using <strong>{{vmsName}}</strong> Client.",
     "dialogs.merge.mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from the <strong>{{primarySystem}}</strong>.",
@@ -412,7 +414,7 @@
         "cantGetSystemInfoPrefix": "System info is unavailable",
         "cantGetSystemsListPrefix": "System list is unavailable",
         "cantGetUsersListPrefix": "Users list is unavailable",
-        "cantOpenClient": "%VMS_NAME% application is not detected. <a href=\"/download\">Download</a>",
+        "cantOpenClient": "%VMS_NAME% application is not detected.",
         "cantRegisterPrefix": "Error occurred",
         "cantSendActivationPrefix": "Cannot send confirmation Email",
         "cantSendConfirmationPrefix": "Cannot send confirmation Email",

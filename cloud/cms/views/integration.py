@@ -2,6 +2,8 @@ from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 
+from django.db.models import Q
+
 from cloud import settings
 from api.helpers.exceptions import api_success, handle_exceptions
 
@@ -141,31 +143,57 @@ def get_integrations(request):
         return api_success([])
     integration_list = []
 
-    # Only known users can see Drafts and reviews
+    # Leaving here temporarily for reference
+    # # Only known users can see Drafts and reviews
+    # if not request.user.is_anonymous:
+    #     drafts = Asset.objects. \
+    #         filter(asset_type__type=INTEGRATION,
+    #                contentversion__assetcustomizationreview__customization__name=settings.CUSTOMIZATION).distinct()
+    #
+    #     # Users without manager permissions will see only their integration (accepted, reviews, drafts).
+    #     if not UserGroupsToAssetPermissions.\
+    #             check_customization_permission(request.user, settings.CUSTOMIZATION, 'cms.publish_version'):
+    #         drafts = drafts.filter(id__in=request.user.assets).distinct()
+    #         integration_list = make_integrations_json(drafts.filter(preview_status=Asset.PREVIEW_STATUS.draft),
+    #                                                   show_drafts=True, user=request.user)
+    #         # If the integration store is disabled show developers their approved integrations
+    #         if not is_enabled:
+    #             integration_list.extend(make_integrations_json(drafts, user=request.user))
+    #
+    #     # If the integration store is disabled Manager level users will see all accepted and pending integrations
+    #     elif not is_enabled:
+    #         integration_list.extend(make_integrations_json(integrations, user=request.user))
+    #
+    #     # Shows pending reviews. If the users is not a manager they will only see their pending reviews
+    #     # Otherwise they will see all of the pending reviews
+    #     drafts = drafts.filter(contentversion__assetcustomizationreview__state=PENDING)
+    #     integration_list.extend(make_integrations_json(drafts, show_pending=True, user=request.user))
+    #
+    # if is_enabled:
+    #     integration_list.extend(make_integrations_json(integrations, user=request.user))
+
+    is_portal_manager = UserGroupsToAssetPermissions. \
+                check_customization_permission(request.user, settings.CUSTOMIZATION, 'cms.publish_version')
+
     if not request.user.is_anonymous:
-        drafts = Asset.objects. \
-            filter(asset_type__type=INTEGRATION,
-                   contentversion__assetcustomizationreview__customization__name=settings.CUSTOMIZATION).distinct()
+        own_integrations = integrations.filter(Q(id__in=request.user.assets) | Q(created_by=request.user)).distinct()
+        # If portal manager/superuser
+        if is_portal_manager:
+            review_integrations = integrations.filter(
+                contentversion__assetcustomizationreview__state=PENDING,
+                contentversion__assetcustomizationreview__customization__name=settings.CUSTOMIZATION,
+            ).distinct()
+        else:
+            review_integrations = own_integrations
 
-        # Users without manager permissions will see only their integration (accepted, reviews, drafts).
-        if not UserGroupsToAssetPermissions.\
-                check_customization_permission(request.user, settings.CUSTOMIZATION, 'cms.publish_version'):
-            drafts = drafts.filter(id__in=request.user.assets).distinct()
-            integration_list = make_integrations_json(drafts.filter(preview_status=Asset.PREVIEW_STATUS.draft),
-                                                      show_drafts=True, user=request.user)
-            # If the integration store is disabled show developers their approved integrations
-            if not is_enabled:
-                integration_list.extend(make_integrations_json(drafts, user=request.user))
+        if own_integrations:
+            integration_list.extend(make_integrations_json(own_integrations, user=request.user, show_drafts=True))
+        if review_integrations:
+            integration_list.extend(make_integrations_json(review_integrations, user=request.user, show_pending=True))
 
-        # If the integration store is disabled Manager level users will see all accepted and pending integrations
-        elif not is_enabled:
-            integration_list.extend(make_integrations_json(integrations, user=request.user))
-
-        # Shows pending reviews. If the users is not a manager they will only see their pending reviews
-        # Otherwise they will see all of the pending reviews
-        drafts = drafts.filter(contentversion__assetcustomizationreview__state=PENDING)
-        integration_list.extend(make_integrations_json(drafts, show_pending=True, user=request.user))
-
-    if is_enabled:
+    if is_enabled or is_portal_manager:
         integration_list.extend(make_integrations_json(integrations, user=request.user))
+    else:
+        integration_list.extend(make_integrations_json(own_integrations, user=request.user))
+
     return api_success({'data': integration_list})

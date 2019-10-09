@@ -115,6 +115,7 @@
     "Page not found": "Không tìm thấy trang",
     "Password": "Mật khẩu",
     "Password is required": "Mật khẩu là bắt buộc",
+    "Password reset instructions are sent to Email": "Password reset instructions are sent to Email",
     "Password successfully saved": "Thay đổi mật khẩu thành công",
     "Password:": "Mật khẩu:",
     "Please enter a valid Email": "Vui lòng nhập Email hợp lệ",
@@ -269,12 +270,12 @@
     "devices": "thiết bị",
     "dialogs": {
         "cancelButton": "Hủy bỏ",
-        "continueAs": "Continue as {email}",
+        "changeAccountLogged": "You are already logged in with as {email}",
         "createNewAccount": "Create New Account",
         "download": "Tải xuống %VMS_NAME%",
+        "loggedFromOther": "You will be logged in with a different account",
         "loginButton": "Đăng nhập",
         "loginTitle": "Đăng nhập vào %CLOUD_NAME%",
-        "loginWithDifferentAccount": "You are already logged in with a different account",
         "logoutAuthorisedContinueButton": "Tiếp tục",
         "logoutAuthorisedLogoutButton": "Đăng xuất",
         "logoutAuthorisedTitle": "Bạn đã đăng nhập",
@@ -305,7 +306,6 @@
         },
         "noClientDetectedTitle": "Cài đặt %VMS_NAME% để xem Hệ thống của bạn",
         "okButton": "Xác định",
-        "remainAs": "Remain logged as {email} ",
         "sharing": {
             "confirmOwner": "Nếu bạn thay sở hữu hệ thống, bạn sẽ thu hồi quyền sở hữu hiện tại của mình. Không thể phục hồi sở hữu cũ. Bạn có chắc không?",
             "editShareConfirmButton": "Tiết kiệm",
@@ -313,7 +313,9 @@
             "permissionsSaved": "Cấp phép mới được lưu",
             "shareConfirmButton": "Thêm",
             "shareTitle": "Thêm"
-        }
+        },
+        "stayAs": "Stay logged as {email} ",
+        "stayLoggedIn": "Stay Logged In"
     },
     "dialogs.merge.connectToCloud": "Kết nối Hệ thống mà bạn muốn hợp nhất với hệ thống này thành <strong>{{cloudName}}</strong> hoặc hợp nhất cục bộ bằng <strong>{{vmsName}}</strong> Client.",
     "dialogs.merge.mergeConfirmation": "Bạn sắp hợp nhất Hệ thống <strong>{{primarySystem}}</strong> và <strong>{{secondarySystem}}</strong>. Các cấu hình và tên sẽ được lấy từ <strong>{{primarySystem}}</strong>.",
@@ -412,7 +414,7 @@
         "cantGetSystemInfoPrefix": "Thông tin hệ thống không khả dụng",
         "cantGetSystemsListPrefix": "Danh sách hệ thống không khả dụng",
         "cantGetUsersListPrefix": "Danh sách người dùng không khả dụng",
-        "cantOpenClient": "Ứng dụng %VMS_NAME% ứng dụng không tìm thấy. <a href=\"/download\">Tải xuống</a>",
+        "cantOpenClient": "%VMS_NAME% application is not detected.",
         "cantRegisterPrefix": "Xảy ra lỗi",
         "cantSendActivationPrefix": "Không thể gửi Email xác nhận",
         "cantSendConfirmationPrefix": "Không thể gửi Email xác nhận",

@@ -19,6 +19,7 @@ import { MergeModalContent }         from './merge/merge.component';
 import { NxConfigService }           from '../services/nx-config';
 import { NxAccountService }          from '../services/account.service';
 import { ApplyModalContent }         from './apply/apply.component';
+import { RemoveUserModalContent }    from './remove-user/remove-user.component';
 
 @Injectable({ providedIn: 'root' })
 export class NxDialogsService {
@@ -78,7 +79,7 @@ export class NxDialogsService {
             buttonType : 'default',
             cancelLabel: this.LANG.dialogs.cancelButton,
             buttonClass: 'btn-primary',
-            stacked: footerClass || '',
+            footerClass: footerClass || '',
             hasFooter  : true,
             cancellable: true,
             closable   : true,
@@ -87,8 +88,12 @@ export class NxDialogsService {
         return this.createModal(GenericModalContent, options, params);
     }
 
-    apply(applyFunc, discardFunc) {
-        return this.createModal(ApplyModalContent, {}, {applyFunc, discardFunc});
+    apply(applyFunc, discardFunc, form) {
+        // Blur activeElement to prevent ExpressionChangedAfterItHasBeenCheckedError
+        if (document.activeElement instanceof HTMLElement) {
+            document.activeElement.blur();
+        }
+        return this.createModal(ApplyModalContent, {}, {applyFunc, discardFunc, form});
     }
 
     confirm(message, title, actionLabel, actionType?, cancelLabel?, footerClass?) {
@@ -104,7 +109,7 @@ export class NxDialogsService {
             buttonType : actionType || 'default',
             cancelLabel,
             buttonClass : actionType || 'btn-primary',
-            stacked: footerClass || '',
+            footerClass: footerClass || '',
             hasFooter : true,
             cancellable : false,
             closable : true,
@@ -145,7 +150,7 @@ export class NxDialogsService {
             });
     }
 
-    addUser(account: NxAccountService, system?, user?) {
+    addUser(account, system, user?) {
         const options: any = {
             windowClass: 'modal-holder',
             backdrop   : 'static'
@@ -173,6 +178,21 @@ export class NxDialogsService {
         };
 
         return this.createModal(DisconnectModalContent, options, params);
+    }
+
+    removeUser(system, user) {
+        const options: any = {
+            windowClass: 'modal-holder',
+            backdrop   : 'static'
+        };
+
+        const params: any = {
+            system,
+            user,
+            closable   : true,
+        };
+
+        return this.createModal(RemoveUserModalContent, options, params);
     }
 
     rename(systemId, systemName) {

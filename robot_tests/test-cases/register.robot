@@ -185,16 +185,18 @@ should open Privacy Policy in a new page
     Select Window    @{windows}[1]
     Location Should Be    ${PRIVACY POLICY URL FULL}
 
-should suggest user to log out, if he was logged in and goes to registration link
+should suggest user to create new account, if he was logged in and goes to registration link
     Log In    ${EMAIL VIEWER}    ${password}
     Validate Log In
     Go To    ${url}/register
-    Wait Until Elements Are Visible    ${LOGGED IN CONTINUE BUTTON}    ${LOGGED IN LOG OUT BUTTON}
-    Click Button    ${LOGGED IN CONTINUE BUTTON}
+    Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${LOGGED IN NEW ACCOUNT BUTTON}
+    Click Button    ${LOGGED IN STAY LOGGED IN BUTTON}
+    Wait Until Elements Are Visible    ${SYSTEMS DROPDOWN}    ${ACCOUNT DROPDOWN}    ${SYSTEMS SEARCH INPUT}    ${SYSTEMS TILE}
+    Location Should Be    ${url}/systems
     Go To    ${url}/register
-    Wait Until Elements Are Visible    ${LOGGED IN CONTINUE BUTTON}    ${LOGGED IN LOG OUT BUTTON}
-    Click Button    ${LOGGED IN LOG OUT BUTTON}
-    Validate Log Out
+    Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${LOGGED IN NEW ACCOUNT BUTTON}
+    Click Button    ${LOGGED IN NEW ACCOUNT BUTTON}
+    Validate on Register Page
 
 should display promo-block, if user goes to registration from native app
     Go To    ${url}/register?from=client

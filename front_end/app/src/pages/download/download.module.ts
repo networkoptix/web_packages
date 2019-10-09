@@ -39,19 +39,15 @@ export class OsResolver implements Resolve<any> {
     }
 
     resolve() {
-        this.platform = this.platformMatch[this.deviceInfo.os.toLowerCase()].toLowerCase();
-        if (this.platform) {
-            this.router.navigate(['/download/' + this.platform]);
-            return empty;
-        }
-
-        return this.deviceInfo;
+        this.platform = this.platformMatch[this.deviceInfo.os.toLowerCase()] || 'windows';
+        this.router.navigate(['/download/' + this.platform.toLowerCase()]);
+        return empty;
     }
 }
 
 const appRoutes: Routes = [
     // {path: 'downloads', component: DownloadComponent},
-    {path: '', redirectTo: 'download', pathMatch: 'full'},
+    // {path: '', redirectTo: 'download', pathMatch: 'full'},
     {path: 'download', component: DownloadComponent, resolve: { platform: OsResolver }},
     {path: 'download/:platform', component: DownloadComponent}
 ];

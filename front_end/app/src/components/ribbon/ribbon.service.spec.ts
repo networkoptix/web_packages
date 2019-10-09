@@ -19,6 +19,7 @@ describe('NxRibbonService', () => {
         expect(service.context.message).toBe('');
         expect(service.context.text).toBe('');
         expect(service.context.url).toBe('');
+        expect(service.context.type).toBe('');
     }));
 
     it('show() should emit data to contextSubject',
@@ -27,7 +28,8 @@ describe('NxRibbonService', () => {
                     visibility: true,
                     message: 'Alcohol! Because no great story started with someone eating a salad.',
                     text : 'Go back',
-                    url    : '/admin/cms/asset'
+                    url    : '/admin/cms/asset',
+                    type: ''
                 };
                 service.contextSubject = new BehaviorSubject(context);
 
@@ -44,7 +46,8 @@ describe('NxRibbonService', () => {
                     visibility: false,
                     message   : '',
                     text      : '',
-                    url       : ''
+                    url       : '',
+                    type      : ''
                 };
                 service.contextSubject = new BehaviorSubject(context);
 

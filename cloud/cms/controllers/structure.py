@@ -200,15 +200,24 @@ def process_zip(file_descriptor, user, asset, update_structure, update_content):
                 # Ideally, the only difference is specific data values
 
                 context_template = context.contexttemplate_set.first()
+                if context_template:
+                    context_template = context_template.template
+                else:
+                    log_messages.append(('error', f'Template does not exist for context {context.name}'))
+                    continue
 
-                # normalise json file
-                # here is the problem: we parse json as text file to extract values, which might be not the best
-                # course of action, but it lets us parse any tags, not only json-name-based
+                """
+                    1. Load file content as json so we can use it for finding the correct value for duplicate nested
+                       keys.
+                    2. Using the normalized template and content files we can verify that structure exist in both files.
+                """
+                file_json = None
                 if name.endswith('json'):
-                    file_content = json.dumps(json.loads(file_content), indent=4, separators=(',', ': '))
+                    file_json = json.loads(file_content)
+                    file_content = json.dumps(file_json, indent=4, separators=(',', ': '))
                     context_template = json.dumps(json.loads(context_template), indent=4, separators=(',', ': '))
 
-                context_template_lines = context_template.template.split("\n")
+                context_template_lines = context_template.split("\n")
 
                 for structure in context.datastructure_set.all():
                     if DataStructure.is_file_or_image(structure.type):
@@ -227,24 +236,62 @@ def process_zip(file_descriptor, user, asset, update_structure, update_content):
                     template_line = re.escape(template_line)
                     escape_name = re.escape(structure.name)
                     template_line = template_line.replace(escape_name, replace_str)
+                    structure_is_str = DataStructure.is_string(structure.type)
 
+                    # Non string structures do not have the " so we need to remove them to get the value.
+                    if not structure_is_str:
+                        template_line = template_line.replace('"(', '(').replace(')"', ')')
+
+                    # Multiselect needs special treatment because regex cannot catch multiple lines.
+                    if structure.type == structure.DATA_TYPES.multiselect:
+                        template_line += "?"
                     if structure.type != structure.DATA_TYPES.html:
                         template_line += "$"
 
-                    # try to parse file_content with regex
-                    result = re.search(template_line, file_content, re.MULTILINE)
-                    if not result:
+                    # 3. Get all matches for a key. We dont care about how far its nested.
+                    results = re.findall(template_line, file_content, re.MULTILINE)
+                    if not len(results):
                         log_messages.append(('warning', f'No line in file {name} for data structure {structure.name}, '
                                                         f'template: {template_line}'))
                         continue
 
+                    value = results[0]
+                    # If our context is a json and we got multiple results we need to find its true value.
+                    # If its a multiselect we try to find the value anyways.
+                    if file_json and len(results) > 1 or structure.type == structure.DATA_TYPES.multiselect:
+                        # We need a temporary copy so that we can keep moving through a nested dictionary which has an
+                        # unknown depth.
+                        tmp_dict = file_json
+                        """
+                            Split up the structure name and use it as keys.
+                            1. Remove the % from the start and end.
+                            2. Split the string by . to get all of the keys.
+                            
+                            Ex: %mobile.ios.bundleIdentifier% -> ['mobile', 'ios', 'bundleIdentifier']
+                            1. %mobile.ios.bundleIdentifier% -> mobile.ios.bundleIdentifier
+                            2. mobile.ios.bundleIdentifier -> ['mobile', 'ios', 'bundleIdentifier']
+                        """
+                        keys = escape_name.strip('%').split('\\.')
+                        for key in keys:
+                            if key not in tmp_dict:
+                                break
+                            tmp_dict = tmp_dict[key]
+                        else:
+                            # If all of the keys are found then tmp_dict has our value
+                            value = tmp_dict
+                    # Value is a str and needs to be cast the correct type.
+                    elif not structure_is_str:
+                        value = json.loads(value)
+
                     # if there is a value - compare it with latest draft
-                    value = result.group(1)
                     current_value = structure.find_actual_value(asset, draft=True)
                     if value == current_value:
                         continue
 
                     records_created += 1
+
+                    if structure.type == structure.DATA_TYPES.multiselect:
+                        value = json.dumps(value)
 
                     # save if needed
                     record = DataRecord(asset=asset,
@@ -272,7 +319,7 @@ def process_zip(file_descriptor, user, asset, update_structure, update_content):
         if update_structure:
             # if set_defaults or data structure has no default value - save it
             if structure.default != data64:
-                structure.default = data64
+                structure.placeholder = data64
                 structures_changed += 1
                 structure.save()
 
@@ -332,6 +379,7 @@ def update_data_structure(context, has_lang, record, order, preserve_file=False)
     data_structure.public = record.get("public", True)
     data_structure.protected = record.get("protected", False)
     data_structure.translatable = record.get("translatable", context.translatable)
+    data_structure.unique = record.get("unique", False)
     data_structure.description = record.get("description", "")
     data_structure.placeholder = record.get("placeholder", "")
     data_structure.type = DataStructure.get_type_by_name(record.get("type", "text"))

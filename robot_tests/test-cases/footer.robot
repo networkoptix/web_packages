@@ -66,26 +66,3 @@ Copyright leads to the proper site
     ${tabs}=   Get Window Handles
     Select Window    @{tabs}[1]
     Location Should Be    ${COPYRIGHT URL}
-
-Change interface language
-    [tags]    C41549
-    FOR    ${lang}    ${account}   IN ZIP    ${LANGUAGES LIST}    ${LANGUAGES CREATE ACCOUNT TEXT LIST}
-        Sleep    2
-        Run Keyword Unless    "${lang}"=="${LANGUAGE}"
-        ...    Wait Until Element is Visible    ${LANGUAGE DROPDOWN}
-        Run Keyword Unless    "${lang}"=="${LANGUAGE}"
-        ...    Click Button    ${LANGUAGE DROPDOWN}
-        Run Keyword Unless    "${lang}"=="${LANGUAGE}"
-        ...    Wait Until Element is Visible    //nx-footer//span[@lang='${lang}']/..
-        Run Keyword Unless    "${lang}"=="${LANGUAGE}"
-        ...    Click Element    //nx-footer//span[@lang='${lang}']/..
-        Sleep    2    #to allow the system to change languages
-        Run Keyword Unless    "${lang}"=="${LANGUAGE}"
-        ...    Wait Until Element is Visible    ${CREATE ACCOUNT BODY}
-    END
-    Wait Until Element is Visible    ${LANGUAGE DROPDOWN}
-    Click Button    ${LANGUAGE DROPDOWN}
-    Wait Until Element is Visible    //nx-footer//span[@lang='${lang}']/..
-    Click Element    //nx-footer//span[@lang='${lang}']/..
-    Sleep    1
-    Wait Until Element is Visible    ${CREATE ACCOUNT BODY}

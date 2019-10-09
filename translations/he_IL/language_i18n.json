@@ -115,6 +115,7 @@
     "Page not found": "דף לא נמצא",
     "Password": "סיסמה",
     "Password is required": "נדרשת סיסמא",
+    "Password reset instructions are sent to Email": "Password reset instructions are sent to Email",
     "Password successfully saved": "הסיסמה נשמרה בהצלחה",
     "Password:": "סיסמה:",
     "Please enter a valid Email": "אנא הכנס כתובת דוא\"ל חוקית",
@@ -269,12 +270,12 @@
     "devices": "מכשירים",
     "dialogs": {
         "cancelButton": "ביטול",
-        "continueAs": "Continue as {email}",
+        "changeAccountLogged": "You are already logged in with as {email}",
         "createNewAccount": "Create New Account",
         "download": "הורד את %VMS_NAME%",
+        "loggedFromOther": "You will be logged in with a different account",
         "loginButton": "התחברות",
         "loginTitle": "היכנס ל- %CLOUD_NAME%",
-        "loginWithDifferentAccount": "You are already logged in with a different account",
         "logoutAuthorisedContinueButton": "המשך",
         "logoutAuthorisedLogoutButton": "יציאה",
         "logoutAuthorisedTitle": "אתה כבר מחובר",
@@ -305,7 +306,6 @@
         },
         "noClientDetectedTitle": "התקן את %VMS_NAME% כדי לצפות במערכת שלך",
         "okButton": "אישור",
-        "remainAs": "Remain logged as {email} ",
         "sharing": {
             "confirmOwner": "אם תשנה את 'בעל המערכת', תשלול את הבעלות מהחשבון הנוכחי. פעולה זו היא בלתי הפיכה. האם להמשיך?",
             "editShareConfirmButton": "שמור",
@@ -313,7 +313,9 @@
             "permissionsSaved": "הרשאות חדשות נשמרו",
             "shareConfirmButton": "הוסף",
             "shareTitle": "הוסף"
-        }
+        },
+        "stayAs": "Stay logged as {email} ",
+        "stayLoggedIn": "Stay Logged In"
     },
     "dialogs.merge.connectToCloud": "חבר מערכת שברצונך למזג עם מערכת זו <strong>{{cloudName}}</strong> או מזג מקומי באמצעות <strong>{{vmsName}}</strong> לקוח.",
     "dialogs.merge.mergeConfirmation": "אתה עומד למזג מערכות <strong>{{primarySystem}}</strong> ו - <strong>{{secondarySystem}}</strong>. ההגדרות והשם יילקחו מ <strong>{{primarySystem}}</strong>.",
@@ -412,7 +414,7 @@
         "cantGetSystemInfoPrefix": "מידע מערכת לא זמין",
         "cantGetSystemsListPrefix": "רשימת המערכת אינה זמינה",
         "cantGetUsersListPrefix": "רשימת המשתמשים אינה זמינה",
-        "cantOpenClient": "%VMS_NAME% יישום לא אותר. <a href=\"/download\"> הורדה</a>",
+        "cantOpenClient": "%VMS_NAME% application is not detected.",
         "cantRegisterPrefix": "אירעה שגיאה",
         "cantSendActivationPrefix": "אין אפשרות לשלוח מייל אישור",
         "cantSendConfirmationPrefix": "אין אפשרות לשלוח מייל אישור",

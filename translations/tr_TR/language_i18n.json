@@ -115,6 +115,7 @@
     "Page not found": "Sayfa bulunamadı",
     "Password": "Parola",
     "Password is required": "Parola gerekmektedir",
+    "Password reset instructions are sent to Email": "Şifre sıfırlama talimatları E-posta adresine gönderildi",
     "Password successfully saved": "Parola başarıyla kaydedildi",
     "Password:": "Şifre:",
     "Please enter a valid Email": "Lütfen geçerli bir E-posta girin",
@@ -269,12 +270,12 @@
     "devices": "aygıtlar",
     "dialogs": {
         "cancelButton": "İptal",
-        "continueAs": "Continue as {email}",
-        "createNewAccount": "Create New Account",
+        "changeAccountLogged": "You are already logged in with as {email}",
+        "createNewAccount": "Yeni Hesap Oluştur",
         "download": "İndir %VMS_NAME%",
+        "loggedFromOther": "Farklı bir hesapla giriş yapacaksınız",
         "loginButton": "Giriş yap",
         "loginTitle": "%CLOUD_NAME% e giriş yapın",
-        "loginWithDifferentAccount": "You are already logged in with a different account",
         "logoutAuthorisedContinueButton": "Devam et",
         "logoutAuthorisedLogoutButton": "Oturumu Kapat",
         "logoutAuthorisedTitle": "Zaten giriş yapılmış",
@@ -305,7 +306,6 @@
         },
         "noClientDetectedTitle": "Sisteminizi görüntülemek için %VMS_NAME%'i yükleyin",
         "okButton": "Tamam",
-        "remainAs": "Remain logged as {email} ",
         "sharing": {
             "confirmOwner": "Sistem sahibini değiştirirseniz, hesabınızdaki yetkileri iptal edersiniz. Bu eylem geri döndürülemez. Emin misiniz?",
             "editShareConfirmButton": "Kaydet",
@@ -313,7 +313,9 @@
             "permissionsSaved": "Yeni izin kaydedildi",
             "shareConfirmButton": "Ekle",
             "shareTitle": "Ekle"
-        }
+        },
+        "stayAs": "Stay logged as {email} ",
+        "stayLoggedIn": "Stay Logged In"
     },
     "dialogs.merge.connectToCloud": "Birleştirmek istediğiniz <strong>{{cloudName}}</strong> sistemine bağlanın veya yerel sistemi <strong>{{vmsName}}</strong> kullanarak birleştirin.",
     "dialogs.merge.mergeConfirmation": "<strong>{{primarySystem}}</strong> sistemi ile <strong>{{secondarySystem}}</strong> sistemini birleştirmek üzeresiniz. İsim ve ayarlar <strong>{{primarySystem}}</strong> sisteminden alınacaktır.",
@@ -412,7 +414,7 @@
         "cantGetSystemInfoPrefix": "Kullanıcı listesi kullanılamıyor",
         "cantGetSystemsListPrefix": "Kullanıcı listesi kullanılamıyor",
         "cantGetUsersListPrefix": "Kullanıcı listesi kullanılamıyor",
-        "cantOpenClient": "%VMS_NAME% uygulama algılanmadı. <a href=\"/download\">İndir</a>",
+        "cantOpenClient": "%VMS_NAME% uygulama algılanmadı.",
         "cantRegisterPrefix": "Hata oluştu",
         "cantSendActivationPrefix": "Onay e-posta gönderemezsiniz",
         "cantSendConfirmationPrefix": "Onay e-posta gönderemezsiniz",

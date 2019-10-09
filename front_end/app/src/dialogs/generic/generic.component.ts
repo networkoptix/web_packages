@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewEncapsulation, HostListener } from '@angular/core';
+import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
 import { Location }                                    from '@angular/common';
 import { NgbActiveModal, NgbModal, NgbModalRef }       from '@ng-bootstrap/ng-bootstrap';
 import { NxLanguageProviderService }                   from '../../services/nx-language-provider';
@@ -19,20 +19,13 @@ export class GenericModalContent implements OnInit {
     @Input() hasFooter;
     @Input() cancellable;
     @Input() closable;
-    @Input() stacked;
+    @Input() footerClass;
 
     constructor(public activeModal: NgbActiveModal,
     ) {}
 
-    @HostListener('document:click', ['$event'])
-    onLinkClick(event: any) {
-        if (event.target.localName === 'a') {
-            this.close('canceled');
-        }
-    }
-
     ngOnInit() {
-        this.stacked = this.stacked || '';
+        this.footerClass = this.footerClass || '';
         this.buttonClass = this.buttonClass || '';
         this.closable = !!this.closable;
     }

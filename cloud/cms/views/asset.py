@@ -6,14 +6,16 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib import admin
 from django.http.response import HttpResponse, HttpResponseBadRequest
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 import os
 import json
 from cloud import settings
 from api.helpers.exceptions import APIRequestException, APINotFoundException, api_success, handle_exceptions, require_params
 from api.helpers.permissions import make_customization_visible_to_user
-from cms.controllers import filldata, generate_structure, modify_db, structure
+from cms.controllers import filldata, generate_structure, modify_db, structure, structure_to_html
 from cms.forms import *
+from cms.permissions import IsSuperuser
 
 from django.contrib.admin import AdminSite
 
@@ -253,14 +255,10 @@ def response_attachment(data, filename, content_type):
     return response
 
 
-@require_http_methods(["GET", "POST"])
-@permission_required('cms.change_asset')
+@api_view(["GET", "POST"])
+@permission_classes((IsSuperuser,))
 def asset_settings(request, asset_id):
     asset = Asset.objects.get(pk=asset_id)
-
-    if not UserGroupsToAssetPermissions.check_permission(request.user, asset, 'cms.edit_content'):
-        raise PermissionDenied
-
     form = None
     if request.method == "POST":
         form = AssetSettingsForm(request.POST, request.FILES)
@@ -329,13 +327,20 @@ def asset_settings(request, asset_id):
 @permission_required('cms.change_asset')
 def download_current_structure(request, asset_id):
     use_actual_values = "get_values" in request.GET
+    output_format = request.GET.get("format", "json")
     asset = Asset.objects.filter(id=asset_id).last()
     if asset_id and asset:
         if not UserGroupsToAssetPermissions.check_permission(request.user, asset, 'cms.edit_content'):
             raise PermissionDenied
         data = generate_structure.from_database(asset, use_actual_values)
-        content = json.dumps(data, ensure_ascii=False, indent=4, separators=(',', ': '))
-        return response_attachment(content, 'structure.json', 'application')
+        file_name = "structure.json"
+        if output_format == "html":
+            data = data[0]
+            content = structure_to_html.process_structure_json(data)
+            file_name = f"{data['type']}.html"
+        else:
+            content = json.dumps(data, ensure_ascii=False, indent=4, separators=(',', ': '))
+        return response_attachment(content, file_name, 'application')
     return HttpResponseBadRequest("Asset not given or found")
 
 
@@ -356,12 +361,11 @@ def download_file(request, path):
     raise HttpResponseBadRequest("File does not exist")
 
 
-@require_http_methods(["GET"])
-@permission_required('cms.change_asset')
+@api_view(["GET"])
+@permission_classes((IsAuthenticated,))
 def download_package(request, asset_id):
     asset = Asset.objects.get(id=asset_id)
-
-    if not UserGroupsToAssetPermissions.check_permission(request.user, asset, 'cms.edit_content'):
+    if not request.user.has_perm("cms.can_download_package"):
         raise PermissionDenied
 
     version_id = request.GET['version_id'] if 'version_id' in request.GET else None
@@ -390,9 +394,12 @@ def download_package(request, asset_id):
 
 
 @api_view(["GET"])
-@permission_required('cms.change_asset')
-@handle_exceptions
+@permission_classes((IsAuthenticated,))
 def get_asset_ids_by_asset_type(request):
+
+    if not request.user.has_perm("cms.can_download_package"):
+        raise PermissionDenied
+
     require_params(request, ("name", "type"))
 
     name = request.GET["name"]
@@ -402,10 +409,8 @@ def get_asset_ids_by_asset_type(request):
     if not asset_type:
         raise APINotFoundException("Could not find a matching asset type")
 
-    if UserGroupsToAssetPermissions.check_permission(request.user, 'cms.force_update'):
-        asset_ids = asset_type.asset_set.values_list('id', flat=True)
-        if customization:
-            asset_ids = asset_ids.filter(customizations__name__in=[customization])
-    else:
-        asset_ids = []
+    asset_ids = asset_type.asset_set.values_list('id', flat=True)
+    if customization:
+        asset_ids = asset_ids.filter(customizations__name__in=[customization])
+
     return api_success(asset_ids)

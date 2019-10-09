@@ -115,6 +115,7 @@
     "Page not found": "Página não encontrada",
     "Password": "Password",
     "Password is required": "A senha é obrigatória",
+    "Password reset instructions are sent to Email": "Password reset instructions are sent to Email",
     "Password successfully saved": "Senha guardada com sucesso",
     "Password:": "Senha:",
     "Please enter a valid Email": "Por favor, introduza um email válido",
@@ -269,12 +270,12 @@
     "devices": "dispositivos",
     "dialogs": {
         "cancelButton": "Cancelar",
-        "continueAs": "Continue as {email}",
+        "changeAccountLogged": "You are already logged in with as {email}",
         "createNewAccount": "Create New Account",
         "download": "Baixar %VMS_NAME%",
+        "loggedFromOther": "You will be logged in with a different account",
         "loginButton": "Entrar",
         "loginTitle": "Logar em %CLOUD_NAME%",
-        "loginWithDifferentAccount": "You are already logged in with a different account",
         "logoutAuthorisedContinueButton": "Continuar",
         "logoutAuthorisedLogoutButton": "Terminar sessão",
         "logoutAuthorisedTitle": "Já tem sessão iniciada",
@@ -305,7 +306,6 @@
         },
         "noClientDetectedTitle": "Instalar %VMS_NAME% para visualizar o seu sistema",
         "okButton": "OK",
-        "remainAs": "Remain logged as {email} ",
         "sharing": {
             "confirmOwner": "Se alterar o proprietário do sistema, você revogará a propriedade da conta actual. Esta acção é irreversível. Tem certeza?",
             "editShareConfirmButton": "Gravar",
@@ -313,7 +313,9 @@
             "permissionsSaved": "Novas permissões guardadas",
             "shareConfirmButton": "Adicionar",
             "shareTitle": "Adicionar"
-        }
+        },
+        "stayAs": "Stay logged as {email} ",
+        "stayLoggedIn": "Stay Logged In"
     },
     "dialogs.merge.connectToCloud": "Ligar ao Sistema que deseja fazer a fusão com este para <strong>{{cloudName}}</strong> ou fazer a fusão localmente usando <strong>{{vmsName}}</strong> Client.",
     "dialogs.merge.mergeConfirmation": "Está prestes a fundir os sistemas <strong>{{primarySystem}}</strong> e <strong>{{secondarySystem}}</strong>. As definições e o nome serão baseados a partir do <strong>{{primarySystem}}</strong>.",
@@ -412,7 +414,7 @@
         "cantGetSystemInfoPrefix": "Informações do sistema indisponível",
         "cantGetSystemsListPrefix": "A lista de Sistemas não está disponível",
         "cantGetUsersListPrefix": "A lista de utilizadores não está disponível",
-        "cantOpenClient": "Aplicação %VMS_NAME% Não está a ser detecteda. <a href=\"/download\">Descarregar</a>",
+        "cantOpenClient": "%VMS_NAME% application is not detected.",
         "cantRegisterPrefix": "Ocorreu um erro",
         "cantSendActivationPrefix": "Não é possível enviar um email de confirmação",
         "cantSendConfirmationPrefix": "Não é possível enviar um email de confirmação",

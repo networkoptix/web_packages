@@ -42,7 +42,7 @@
             {% get_datastructure_type data_structure as data_structure_type %}
             {% is_external_file_or_image field.name original as is_external %}
             {% is_protected data_structure asset as protected %}
-            {% has_value field.name asset original language as record_exists %}
+            {% has_value field.name asset original language_code as record_exists %}
             <label {% if data_structure.advanced or protected %} class="text-danger" {% endif %}
                     for="{{ field.name }}">{{ field.label }}{% if not data_structure.optional %}*{% endif %}
                 {% if user.is_superuser %}<p class="help">{{ field.name }}</p>{% endif %}
@@ -60,10 +60,10 @@
                             {% if 'background' in data_structure.meta_settings and data_structure.meta_settings.background != 'transparent' %}
                                 {# TODO: Note that optional was here #}
                                 {{ data_structure.meta_settings.background }}
-                            {% elif not record_exists %}
-                                preview-image
+                            {% else %}
+                                default-background
                             {% endif %}
-                            context-preview {% if not record_exists %} optional-image {% endif %}"
+                            context-preview {% if not record_exists %} placeholder-image {% endif %}"
                              src="data:image/png;base64,{{ field.value }}">
                     </div>
 
@@ -77,10 +77,10 @@
                             <img class="
                                 {% if 'background' in data_structure.meta_settings and data_structure.meta_settings.background != 'transparent' %}
                                     {{ data_structure.meta_settings.background }}
-                                {% elif not record_exists %}
-                                    preview-image
+                                {% else %}
+                                    default-background
                                 {% endif %}
-                                context-preview {% if data_structure.optional and not record_exists %} optional-image {% endif %}"
+                                context-preview {% if not record_exists %} placeholder-image {% endif %}"
                                  src="{{ field.value }}">
                         {% else %}
                         <a href={% if not is_external %}

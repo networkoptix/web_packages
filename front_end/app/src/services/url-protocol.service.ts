@@ -137,20 +137,32 @@ export class NxUrlProtocolService {
             // ugly thing!
             // see CLOUD-716 for more information
 
-            // @ts-ignore
-            this.window.protocolCheck(link);
-
             return new Promise<any>((resolve, reject) => {
-                setTimeout(() => {
-                    this.accountService
-                       .checkVisitedKey(authKey)
-                       .then((visited) => {
-                           if (!visited) {
-                               return reject(visited);
-                           }
-                           return resolve(visited);
-                       });
-                }, this.CONFIG.openClientTimeout);
+                /* The browser opens a dialog that we cannot directly detect or get a response from.
+                 * However, when the browser dialog opens it causes the page to blur so we use that to detect what
+                 * happens.
+                 * If the page blurs only once that means that the user probably canceled the dialog.
+                 * If the page blurs more than once the vms client probably opened.
+                 */
+                let blurCount = 0;
+                this.window.onblur = (event) => {
+                    blurCount += 1;
+                };
+                // Check on before unload
+                // @ts-ignore
+                this.window.protocolCheck(link, (_) => reject(), () => {
+                    setTimeout(() => {
+                        this.accountService
+                            .checkVisitedKey(authKey)
+                            .then((visited) => {
+                                this.window.onblur = undefined;
+                                if (!visited && blurCount > 1) {
+                                    return reject(visited);
+                                }
+                                return resolve(visited);
+                            });
+                        }, this.CONFIG.openClientTimeout);
+                });
             });
         });
     }

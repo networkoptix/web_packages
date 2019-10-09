@@ -13,6 +13,7 @@ import { combineLatest }    from 'rxjs';
 import { NxMenuService }    from '../../../components/menu/menu.service';
 import { NxDialogsService } from '../../../dialogs/dialogs.service';
 import { NxAccountService } from '../../../services/account.service';
+import { NxPageService }    from '../../../services/page.service';
 
 @Component({
     selector   : 'integration-detail-component',
@@ -43,6 +44,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                 private language: NxLanguageProviderService,
                 private menuService: NxMenuService,
                 private accountService: NxAccountService,
+                private pageService: NxPageService,
                 location: Location,
     ) {
         this.location = location;
@@ -50,6 +52,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        this.pageService.setDesktopLayout();
         this.menuService
             .selectedDetailsSection
             .subscribe(selection => {
@@ -125,6 +128,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         this.ribbonService.hide();
         this.plugin = undefined;
+        this.pageService.setDefaultLayout();
     }
 
     openMessageDialog() {

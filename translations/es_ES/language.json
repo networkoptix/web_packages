@@ -142,21 +142,6 @@
     "mergeFailedTitle": "La fusión de sistemas falló",
     "commonText": "Error al fusionar los sistemas <strong>{{primarySystem}}</strong> y <strong>{{secondarySystem}}</strong>."
   },
-  "passwordRequirements": {
-    "good": "bueno",
-    "fair": "regular",
-    "fairMessage": "Uso de números, letras mayúsculas y minúsculas y caracteres especiales para hacer su contraseña más fuerte",
-    "minLength": "demasiado corto",
-    "minLengthMessage": "La contraseña debe tener al menos 8 caracteres",
-    "required": "incorrecto",
-    "requiredMessage": "Utilice sólo letras, números y símbolos de teclado, evite los espacios iniciales y finales",
-    "weak": "débil",
-    "weakMessage": "Uso de números, letras mayúsculas y minúsculas y caracteres especiales para hacer su contraseña más fuerte",
-    "strongMessage": "¡Contraseña segura!",
-    "common": "muy común",
-    "commonMessage": "Esta contraseña se encuentra entre los más populares en el mundo",
-    "missingMessage": "Se requiere contraseña"
-  },
   "system": {
     "yourSystem": "Su Sistema",
     "mySystemSearch": "IMeMyMine",

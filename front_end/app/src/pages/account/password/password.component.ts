@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, ViewContainerRef, ViewChildren, QueryList } from '@angular/core';
 import { NxConfigService }           from '../../../services/nx-config';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { NxAccountService }          from '../../../services/account.service';
@@ -10,6 +10,8 @@ import { NxSystemsService }          from '../../../services/systems.service';
 import { NxMenuService }             from '../../../components/menu/menu.service';
 import { NxApplyService, Watcher }   from '../../../services/apply.service';
 import { NxPageService }             from '../../../services/page.service';
+import { NgForm }                    from '@angular/forms';
+import { first }                     from 'rxjs/operators';
 
 @Component({
     selector   : 'nx-account-password-component',
@@ -17,12 +19,13 @@ import { NxPageService }             from '../../../services/page.service';
     styleUrls  : ['password.component.scss']
 })
 
-export class NxAccountPasswordComponent implements OnInit {
+export class NxAccountPasswordComponent implements OnInit, AfterViewInit {
     @ViewChild('applyContainer', {read: ViewContainerRef, static: true}) applyContainer;
-    @ViewChild('passwordForm', {read: ElementRef, static: false}) form: ElementRef;
+    @ViewChildren('passwordForm', {read: NgForm}) formQueryList: QueryList<NgForm>;
 
     CONFIG: any;
     LANG: any;
+    form: NgForm;
 
     account: any = {};
     pass: any = {};
@@ -78,16 +81,25 @@ export class NxAccountPasswordComponent implements OnInit {
         });
 
         this.applyService.initPageWatcher(this.applyContainer, this.changePassword, () => {
-            this.form.nativeElement.reset();
+            this.form.reset();
             this.applyService.reset();
         }, Object.values(this.watchers));
 
         this.accountService
-            .requireLogin()
+            .get()
             .then((account) => {
                 this.account = account;
                 this.setOriginal();
             });
+
+        this.applyService.setVisible();
+    }
+
+    ngAfterViewInit() {
+        this.formQueryList.changes.pipe(first()).subscribe((changes) => {
+            this.form = changes.first;
+            this.applyService.setForm(this.form);
+        });
     }
 
     setOriginal() {

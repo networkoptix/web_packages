@@ -5,6 +5,7 @@ from datetime import datetime
 from distutils.util import strtobool
 from django.db import models
 from django.db.utils import ProgrammingError
+from django.utils.functional import cached_property
 from django.conf import settings
 from django.core.exceptions import ValidationError, FieldError
 from jsonfield import JSONField
@@ -283,6 +284,11 @@ class AssetType(models.Model):
 
 
 class Asset(models.Model):
+
+    class Meta:
+        permissions = (
+            ("can_download_package", "Can Download Asset Package"),
+        )
     name = models.CharField(max_length=255)
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, null=True,
@@ -475,13 +481,14 @@ class Context(models.Model):
         for datastructure in self.datastructure_set.all():
             records = datastructure.datarecord_set.filter(asset=asset)
             last_record = records.last()
-            last_record_value = last_record.value if last_record else None
-            if datastructure.type in [DataStructure.DATA_TYPES.object,
-                                      DataStructure.DATA_TYPES.array,
-                                      DataStructure.DATA_TYPES.multiselect]:
-                datastructure.default = json.loads(datastructure.default)
-                if last_record_value:
-                    last_record_value = json.loads(last_record_value)
+            last_record_value = last_record.cast_value if last_record else None
+            datastructure.default = DataStructure.cast_value(datastructure, datastructure.default)
+
+            if type(datastructure.default) in [int, bool]:
+                datastructure.default = str(datastructure.default)
+            if type(last_record_value) in [int, bool]:
+                last_record_value = str(last_record_value)
+
             if not datastructure.optional and not datastructure.default and \
                     (not records.exists() or not last_record_value):
                 return INCOMPLETE[0]
@@ -551,7 +558,8 @@ class DataStructure(models.Model):
                          (9, 'check_box', 'Check Box'),
                          (10, 'object', 'Object'),
                          (11, 'array', 'Array'),
-                         (12, 'multiselect', 'Multiselect'))
+                         (12, 'multiselect', 'Multiselect'),
+                         (13, 'integer', 'Integer'))
 
     type = models.IntegerField(choices=DATA_TYPES, default=DATA_TYPES.text)
     default = models.TextField(default='', blank=True)
@@ -571,20 +579,10 @@ class DataStructure(models.Model):
     def __str__(self):
         return self.name
 
-    @staticmethod
-    def get_type_by_name(name):
-        if name[0].islower():
-            return getattr(DataStructure.DATA_TYPES, name, DataStructure.DATA_TYPES.text)
-
-        for index, _name in DataStructure.DATA_TYPES:
-            if _name == name:
-                return index
-        return 0
-
     def find_actual_value(self, asset=None, language=None, version_id=None, draft=False):
         content_value = ""
         if not asset:
-            return self.default
+            return DataStructure.cast_value(self, self.default)
         content_record = DataRecord.objects.filter(asset=asset, data_structure=self)
         if not draft:
             content_record = content_record.\
@@ -600,7 +598,7 @@ class DataStructure(models.Model):
 
         if content_record.exists():
             if not version_id:
-                content_value = content_record.last().value
+                content_value = content_record.last().cast_value
             else:  # Here find a datarecord with version_id
                 # which is not more than version_id
                 # filter only accepted content_records
@@ -618,32 +616,17 @@ class DataStructure(models.Model):
                     content_record = content_record.last()
 
                 if content_record:
-                    content_value = content_record.value
+                    content_value = content_record.cast_value
 
         # if no value or optional and type file - use default value from structure
-        if not content_value and (not self.optional or
-                                  self.optional and self.type in [DataStructure.DATA_TYPES.file,
-                                                                  DataStructure.DATA_TYPES.image,
-                                                                  DataStructure.DATA_TYPES.external_file,
-                                                                  DataStructure.DATA_TYPES.external_image,
-                                                                  DataStructure.DATA_TYPES.check_box,
-                                                                  DataStructure.DATA_TYPES.multiselect]):
-            content_value = self.default
-
-        if self.type == DataStructure.DATA_TYPES.check_box:
-            content_value = strtobool(content_value) == 1 if content_value else False
-        if self.type in [DataStructure.DATA_TYPES.array, DataStructure.DATA_TYPES.object,
-                         DataStructure.DATA_TYPES.multiselect]:
-            content_value = json.loads(content_value) if content_value else None
-
-            if self.type == DataStructure.DATA_TYPES.multiselect:
-                # If an option has an id, change the value to a dict with the id and the value
-                for choice in self.meta_settings['options']:
-                    if type(choice) == dict:
-                        for i in range(len(content_value)):
-                            if content_value[i] == choice['label']:
-                                content_value[i] = choice
-                                break
+        if content_value == "" and (not self.optional or
+                                    self.optional and self.type in [DataStructure.DATA_TYPES.file,
+                                                                    DataStructure.DATA_TYPES.image,
+                                                                    DataStructure.DATA_TYPES.external_file,
+                                                                    DataStructure.DATA_TYPES.external_image,
+                                                                    DataStructure.DATA_TYPES.check_box,
+                                                                    DataStructure.DATA_TYPES.multiselect]):
+            content_value = DataStructure.cast_value(self, self.default)
 
         return content_value
 
@@ -651,10 +634,54 @@ class DataStructure(models.Model):
         return self.protected and asset.version_id() > 0
 
     @staticmethod
+    def cast_value(data_structure, value):
+        if data_structure.type == DataStructure.DATA_TYPES.check_box:
+            return bool(strtobool(value)) if value else False
+
+        elif data_structure.type == DataStructure.DATA_TYPES.integer:
+            return int(value) if value else 0
+
+        elif data_structure.type in [DataStructure.DATA_TYPES.object, DataStructure.DATA_TYPES.array,
+                                     DataStructure.DATA_TYPES.multiselect]:
+            if not value:
+                if data_structure.type in [DataStructure.DATA_TYPES.object]:
+                    value = {}
+                else:
+                    value = []
+            else:
+                value = json.loads(value)
+
+            if data_structure.type == DataStructure.DATA_TYPES.multiselect:
+                for choice in data_structure.meta_settings['options']:
+                    if type(choice) == dict:
+                        for i in range(len(value)):
+                            if value[i] == choice['label']:
+                                value[i] = choice
+                                break
+
+        return value
+
+    @staticmethod
+    def get_type_by_name(name):
+        if name[0].islower():
+            return getattr(DataStructure.DATA_TYPES, name, DataStructure.DATA_TYPES.text)
+
+        for index, _name in DataStructure.DATA_TYPES:
+            if _name == name:
+                return index
+        return 0
+
+    @staticmethod
     def is_file_or_image(data_type):
         if type(data_type) is not int:
             data_type = DataStructure.get_type_by_name(data_type)
         return data_type in [DataStructure.DATA_TYPES.image, DataStructure.DATA_TYPES.file]
+
+    @staticmethod
+    def is_string(data_type):
+        return data_type in [DataStructure.DATA_TYPES.text, DataStructure.DATA_TYPES.long_text,
+                             DataStructure.DATA_TYPES.guid, DataStructure.DATA_TYPES.html,
+                             DataStructure.DATA_TYPES.select]
 
     @property
     def is_image(self):
@@ -908,6 +935,10 @@ class DataRecord(models.Model):
         if self.language:
             return f"{self.data_structure.name}-{self.language.code}"
         return self.data_structure.name
+
+    @cached_property
+    def cast_value(self):
+        return self.data_structure.cast_value(self.data_structure, self.value)
 
     def save(self, *args, **kwargs):
         if not self.data_structure.translatable:

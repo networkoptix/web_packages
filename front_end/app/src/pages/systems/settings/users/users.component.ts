@@ -17,6 +17,8 @@ import { NxProcessService }                     from '../../../../services/proce
 import { NxSystem, NxSystemRole, NxSystemUser } from '../../../../services/system.service';
 import { NxApplyService, Watcher }              from '../../../../services/apply.service';
 import { NxUriService }                         from '../../../../services/uri.service';
+import { Subscription }                         from 'rxjs';
+import { NxToastService }                       from '../../../../dialogs/toast.service';
 
 @Component({
     selector   : 'nx-system-user-component',
@@ -32,11 +34,12 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
     accessDescription: string;
     editUser: any;
     locked: any;
-    removingUserProcess: any;
+    nextUserId: string;
     selectedUser: NxSystemUser;
     systemAvailable: boolean;
     system: NxSystem;
     viewContainerRef: ViewContainerRef;
+    systemSubscription: Subscription;
 
     userEnabled = new Watcher<boolean>();
     userRole = new Watcher<string>();
@@ -59,6 +62,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 private menuService: NxMenuService,
                 private processService: NxProcessService,
                 private uriService: NxUriService,
+                private toastService: NxToastService,
                 location: Location) {
         this.location = location;
         this.viewContainerRef = viewContainerRef;
@@ -68,6 +72,8 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.LANG = this.language.getTranslations();
         this.pageService.setPageTitle(this.LANG.pageTitles.systems);
+
+        this.settingsService.share = this.route.snapshot.routeConfig.path === 'share';
 
         this.route
             .params
@@ -79,7 +85,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 }
             });
 
-        this.settingsService.systemSubject
+        this.systemSubscription = this.settingsService.systemSubject
             .pipe(filter(data => data !== undefined))
             .subscribe((system) => {
                 this.system = system;
@@ -105,61 +111,55 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         }, [this.userEnabled, this.userRole]);
     }
 
+    ngOnDestroy(): void {
+        this.systemSubscription.unsubscribe();
+    }
+
     initProcesses(): void {
         this.editUser = this.processService.createProcess(() => {
-            if (this.locked[this.selectedUser.email]) {
+            const selectedUser = this.selectedUser;
+            if (this.locked[selectedUser.email]) {
                 return;
             }
-            this.locked[this.selectedUser.email] = true;
-            return this.system.saveUser(this.selectedUser, this.selectedUser.role);
+            this.locked[selectedUser.email] = true;
+            return this.system.saveUser(selectedUser, selectedUser.role).then(() => {
+                return this.system.getUsers(true);
+            }).then(() => {
+                this.locked[selectedUser.email] = false;
+                return;
+            });
         }, {}).then(() => {
-            this.locked[this.selectedUser.email] = false;
-            return this.system.getUsers(true).then(_ => {
-                setTimeout(_ => {
-                    this.applyService.reset();
-                });
+            setTimeout(() => {
+                this.applyService.hardReset();
             });
         });
-
-        this.removingUserProcess = this.processService.createProcess(() => {
-            return this.system.deleteUser(this.selectedUser);
-        }, {
-            successMessage: this.LANG.system.permissionsRemoved.replace('{{email}}', this.selectedUser ? this.selectedUser.email : ''),
-            errorPrefix   : this.LANG.errorCodes.cantSharePrefix
-        }).then(() => {
-            this.locked[this.selectedUser.email] = false;
-            this.selectedUser = undefined;
-            this.settingsService.loadUsers();
-        });
     }
 
-    ngOnDestroy(): void {
-
-    }
-
-    removeUser(user) {
-        this.selectedUser = user;
+    removeUser() {
+        const user = this.selectedUser;
         if (this.locked[user.email]) {
             return;
         }
         this.locked[user.email] = true;
+        this.calcNextUserId();
 
-        this.dialogs
-            .confirm(this.LANG.system.confirmUnshare,
-                this.LANG.system.confirmUnshareTitle,
-                this.LANG.system.confirmUnshareAction,
-                'btn-danger', this.LANG.dialogs.cancelButton)
-            .then((result) => {
-                if (result) {
-                    this.selectedUser = user;
-                    // Handling promise to satisfy the linter.
-                    this.removingUserProcess.run().then(() => {});
-                } else {
-                    this.locked[user.email] = false;
-                }
-            }, () => {
+        this.dialogs.removeUser(this.system, user).then((result) => {
+            if (result) {
+                delete this.locked[user.email];
+                this.uriService.updateURI(`systems/${this.system.id}/users/${this.nextUserId}`);
+                this.menuService.setDetailsSection(this.nextUserId);
+            } else {
                 this.locked[user.email] = false;
-            });
+            }
+        });
+    }
+
+    calcNextUserId () {
+        const currentUserIndex = this.system.users.findIndex((user) => {
+            return user.id === this.selectedUser.id;
+        });
+        const nextUserIndex = currentUserIndex + 1 !== this.system.users.length ? currentUserIndex + 1 : currentUserIndex - 1;
+        this.nextUserId = this.system.mediaserver.cleanId(this.system.users[nextUserIndex].id);
     }
 
     setUser() {
@@ -172,6 +172,8 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             }
             if (typeof(user) === 'undefined') {
                 user = this.system.users[0];
+                const userId = this.system.mediaserver.cleanId(user.id);
+                this.uriService.updateURI(`systems/${this.system.id}/users/${userId}`);
             }
 
             // If there's no users skip setting section and permissions
@@ -184,6 +186,10 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             this.setPermission(this.selectedUser.role);
             this.userEnabled.value = this.selectedUser.isEnabled;
             this.applyService.reset();
+
+            this.settingsService.footerSubject.next(true);
+
+            setTimeout(() => this.applyService.setVisible());
         }
     }
 

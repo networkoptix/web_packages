@@ -119,7 +119,7 @@
 		"vendor": "Tillverkare",
 		"model": "Modell",
 		"hardwareType": "Typ",
-		"maxResolution": "<span>Max</span><br><span>Resolution</span>",
+		"maxResolution": "<span>Max</span><br><span>Upplösning</span>",
 		"maxFps": "<span>Max</span><br><span>FPS</span>",
 		"primaryCodec": "Kodek",
 		"isAudioSupported": "Ljud",
@@ -154,7 +154,7 @@
 		"disclaimer": "Denna lista är begränsad till enheter som finns på {{vmsName}} där användare har tillåtit automatisk rapportering av enhetsspecifikationer till {{companyName}}. Ingen personlig information samlas in och varje användare förblir helt anonym."
 	},
 	"integration": {
-		"myIntegrationsLabel": "Mine",
+		"myIntegrationsLabel": "Mina",
 		"previewRibbonText": "Den här sidan är en förhandsvisning av de senaste ändringarna, och den matchar inte den offentligt tillgängliga versionen.",
 		"backToEditText": "Tillbaka till redigeringsgränssnittet",
 		"Access Control": "Åtkomstkontroll",
@@ -196,16 +196,17 @@
 	"dialogs": {
 		"okButton": "OK",
 		"cancelButton": "Avbryt",
-		"continueAs": "Continue as {email}",
-		"createNewAccount": "Create New Account",
+		"createNewAccount": "Skapa nytt konto",
+		"changeAccountLogged": "You are already logged in with as {email}",
+		"loggedFromOther": "Du kommer att vara inloggad med ett annat konto",
 		"loginTitle": "Logga in på %CLOUD_NAME%",
 		"loginButton": "Logga in",
-		"loginWithDifferentAccount": "You are already logged in with a different account",
 		"logoutAuthorisedTitle": "Du är redan inloggad",
 		"logoutAuthorisedContinueButton": "Fortsätt",
 		"logoutAuthorisedLogoutButton": "Logga ut",
 		"noClientDetectedTitle": "Installera %VMS_NAME% om du vill visa ditt System",
-		"remainAs": "Remain logged as {email} ",
+		"stayAs": "Stay logged as {email} ",
+		"stayLoggedIn": "Stay Logged In",
 		"download": "Ladda ner %VMS_NAME%",
 		"merge": {
 			"connectToCloud": "Anslut system du vill slå samman med den här till <strong>{{cloudName}}</strong> eller slå ihop lokalt med <strong>{{vmsName}}</strong> Client.",
@@ -274,7 +275,7 @@
 		"passwordMismatch": "Fel lösenord",
 		"cantEditYourself": "Ändring av egna behörigheter är inte tillåtet",
 		"cantEditAdmin": "Detta konto har administratörsrättigheter",
-		"cantOpenClient": "%VMS_NAME% programmet hittades inte. <a href=\"/download\">Ladda ner</a>",
+		"cantOpenClient": "%VMS_NAME% programmet hittades inte.",
 		"lostConnection": "Anslutning till {{systemName}} förlorad",
 		"thisSystem": "systemet",
 		"oldSafariNotSupported": "Versioner av Safari äldre än 10 stöds inte",
@@ -300,7 +301,7 @@
 		"missingMessage": "Lösenord krävs"
 	},
 	"registration": {
-		"agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
+		"agreement": "Jag godkänner <a href=\"/content/eula\" target=\"_blank\">Villkor &\nVillkor</a> och <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Sekretesspolicy</a>"
 	},
 	"system": {
 		"yourSystem": "Ditt system",
@@ -412,9 +413,9 @@
 	"Support": "Support",
 	"Supported Devices": "Enheter som stöds",
 	"Terms": "Villkor",
-	"pleaseSelect": "Please select...",
-	"WHEN_MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{{targetSystemName}}</strong> System, and this system will be deleted.",
-	"FAILED_SYSTEM_DESCR": "This link is broken,<br>System may be disconnected from %CLOUD_NAME%,<br>Access to this System may be revoked, <br>or you may be logged into a different account.",
+	"pleaseSelect": "Vänligen välj...",
+	"WHEN_MERGE_FINISHES": "När sammanslagningen är klar kommer alla användare och kameror från detta system att bli tillgängliga i <strong>{{targetSystemName}}</strong> System, och detta system kommer att raderas.",
+	"FAILED_SYSTEM_DESCR": "Denna länk är trasig,<br>System kan kopplas bort från %CLOUD_NAME%,<br>Åtkomst till detta system kan återkallas, <br>eller så kan du logga in på ett annat konto.",
 	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "Du har inga system anslutna till %CLOUD_NAME%",
 	"NO_SYSTEMS_LOGIN": "Logga in på ditt system med %VMS_NAME%",
 	"NO_SYSTEMS_GOTO_ADMINISTRATION": "Gå till fliken \"Cloud\" i dialogrutan \"Systemadministration\"",

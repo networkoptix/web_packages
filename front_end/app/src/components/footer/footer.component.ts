@@ -2,7 +2,8 @@ import { Component, Input, OnInit } from '@angular/core';
 import { DomSanitizer }      from '@angular/platform-browser';
 import { NxConfigService }   from '../../services/nx-config';
 import { NxAppStateService } from '../../services/nx-app-state.service';
-import { ActivatedRoute, Router }            from '@angular/router';
+import { ActivatedRoute }            from '@angular/router';
+import { NxSettingsService } from '../../pages/systems/settings/settings.service';
 
 @Component({
     selector: 'nx-footer',
@@ -25,7 +26,7 @@ import { ActivatedRoute, Router }            from '@angular/router';
                 private _config: NxConfigService,
                 private appState: NxAppStateService,
                 private route: ActivatedRoute,
-                private router: Router) {
+                private systemSettingsService: NxSettingsService) {
         this.config = this._config.getConfig();
     }
 
@@ -39,12 +40,36 @@ import { ActivatedRoute, Router }            from '@angular/router';
             this.viewFooter = visible;
         });
 
-        this.route.url.subscribe((a) => {
-            this.classes = [];
-            const url = this.router.url;
-            if (url === '/account/password') {
-                this.classes.push('col-xxxl-6');
+        this.route.url.subscribe(() => {
+            this.updateFooterStyling();
+        });
+
+        this.systemSettingsService.systemSubject.subscribe((system) => {
+            if (system) {
+                this.updateFooterStyling();
             }
         });
+    }
+
+    updateFooterStyling() {
+        if (this.route.routeConfig) {
+            this.classes = [];
+            const path = this.route.routeConfig.path;
+            const system = this.systemSettingsService.system;
+
+            if (path === 'account') {
+                const childPath = this.route.firstChild.routeConfig.path;
+                if (childPath === 'password') {
+                    this.classes.push('col-xxxl-6');
+                }
+            }
+
+            if (path === 'systems/:systemId' && system) {
+                const childPath = this.route.firstChild.routeConfig.path;
+                if (childPath === '' && system.isMine || childPath.includes('users')) {
+                    this.classes.push('col-xxxl-6');
+                }
+            }
+        }
     }
 }

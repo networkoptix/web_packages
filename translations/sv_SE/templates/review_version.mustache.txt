@@ -2,7 +2,7 @@ Det finns en ny version av {{ message.asset }} ({{message.asset_type}}) för att
 
 Klicka på länken för att se utkast {{ message.id }} för {{ message.asset }}
 
-Link to review: {{ config.portal_url }}/admin/cms/assetcustomizationreview/{{ message.id }}/change/
+Länk till recension: {{ config.portal_url }}/ admin / cms / assetcustomizationreview /{{ message.id }}/ Change /
 
 På den här sidan kan du
 1) Skapa en förhandsgranskning för att se de senaste ändringarna.

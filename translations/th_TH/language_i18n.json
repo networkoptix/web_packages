@@ -115,6 +115,7 @@
     "Page not found": "ไม่พบหน้านี้",
     "Password": "รหัสผ่าน",
     "Password is required": "จำเป็นต้องใช้รหัสผ่าน",
+    "Password reset instructions are sent to Email": "Password reset instructions are sent to Email",
     "Password successfully saved": "บันทึกรหัสผ่านเรียบร้อยแล้ว",
     "Password:": "รหัสผ่าน:",
     "Please enter a valid Email": "โปรดป้อนอีเมลที่ถูกต้อง",
@@ -269,12 +270,12 @@
     "devices": "อุุปกรณ์",
     "dialogs": {
         "cancelButton": "ยกเลิก",
-        "continueAs": "Continue as {email}",
+        "changeAccountLogged": "You are already logged in with as {email}",
         "createNewAccount": "Create New Account",
         "download": "ดาวน์โหลด %VMS_NAME%",
+        "loggedFromOther": "You will be logged in with a different account",
         "loginButton": "ลงชื่อเข้าสู่ระบบ",
         "loginTitle": "เข้าสู่ระบบ %CLOUD_NAME%",
-        "loginWithDifferentAccount": "You are already logged in with a different account",
         "logoutAuthorisedContinueButton": "ดำเนิน​การ",
         "logoutAuthorisedLogoutButton": "ออกจากระบบ",
         "logoutAuthorisedTitle": "คุณกำลังอยู่ในระบบ",
@@ -305,7 +306,6 @@
         },
         "noClientDetectedTitle": "ติดตั้ง %VMS_NAME% เพื่อดูระบบของคุณ",
         "okButton": "ตกลง",
-        "remainAs": "Remain logged as {email} ",
         "sharing": {
             "confirmOwner": "หากคุณเปลี่ยนเจ้าของระบบคุณจะยกเลิกการเป็นเจ้าของจากบัญชีปัจจุบัน การกระทำนี้ไม่สามารถย้อนกลับได้ คุณแน่ใจไหม?",
             "editShareConfirmButton": "บันทึก",
@@ -313,7 +313,9 @@
             "permissionsSaved": "อนุญาตสิทธิ์ใหม่แล้ว",
             "shareConfirmButton": "เพิ่ม",
             "shareTitle": "เพิ่ม"
-        }
+        },
+        "stayAs": "Stay logged as {email} ",
+        "stayLoggedIn": "Stay Logged In"
     },
     "dialogs.merge.connectToCloud": "เชื่อมต่อระบบที่คุณต้องการผสานกับระบบนี้กับ <strong>{{cloudName}}</strong> หรือผสานภายในเครื่องโดยใช้ไคลเอ็นต์ <strong>{{vmsName}}</strong>",
     "dialogs.merge.mergeConfirmation": "คุณกำลังจะรวมระบบ <strong>{{primarySystem}}</strong> และ <strong>{{secondarySystem}}</strong>การตั้งค่าและชื่อจะถูกนำมาจาก <strong>{{primarySystem}}</strong>",
@@ -412,7 +414,7 @@
         "cantGetSystemInfoPrefix": "ข้อมูลระบบไม่พร้อมใช้งาน",
         "cantGetSystemsListPrefix": "รายการระบบไม่พร้อมใช้งาน",
         "cantGetUsersListPrefix": "รายการผู้ใช้ไม่พร้อมใช้งาน",
-        "cantOpenClient": "ไม่พบแอ็พพลิเคชัน %VMS_NAME% <a href=\"/download\">Download</a>",
+        "cantOpenClient": "%VMS_NAME% application is not detected.",
         "cantRegisterPrefix": "เกิดข้อผิดพลาด",
         "cantSendActivationPrefix": "ไม่สามารถส่งอีเมลยืนยัน",
         "cantSendConfirmationPrefix": "ไม่สามารถส่งอีเมลยืนยัน",

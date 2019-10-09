@@ -197,13 +197,18 @@ should prompt log user out if he visits restore password link from email
     Wait Until Elements Are Visible    ${RESTORE PASSWORD EMAIL INPUT}    ${RESET PASSWORD BUTTON}
     Input Text    ${RESTORE PASSWORD EMAIL INPUT}    ${email}
     Click Button    ${RESET PASSWORD BUTTON}
+    ${RESET EMAIL SENT MESSAGE TEXT}    Replace String    ${RESET EMAIL SENT MESSAGE TEXT}    %email%    ${email}
+    Wait Until Element Is Visible    ${RESET EMAIL SENT MESSAGE}
+    ${text}    Get Text    ${RESET EMAIL SENT MESSAGE}
+    ${replaced}    Replace String    ${text}    \n    ${SPACE}
+    Should Match    ${replaced}    ${RESET EMAIL SENT MESSAGE TEXT}
     ${link}    Get Email Link    ${email}    restore_password
     Go To    ${link}
-    Wait Until Elements Are Visible    ${LOGGED IN CONTINUE BUTTON}    ${LOGGED IN LOG OUT BUTTON}
-    Click Button    ${LOGGED IN CONTINUE BUTTON}
+    Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${LOGGED IN LOG OUT BUTTON}
+    Click Button    ${LOGGED IN STAY LOGGED IN BUTTON}
     Validate Log In
     Go To    ${link}
-    Wait Until Elements Are Visible    ${LOGGED IN CONTINUE BUTTON}    ${LOGGED IN LOG OUT BUTTON}
+    Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${LOGGED IN LOG OUT BUTTON}
     Click Button    ${LOGGED IN LOG OUT BUTTON}
     Validate Log Out
     Wait Until Elements Are Visible    ${RESET PASSWORD INPUT}    ${SAVE PASSWORD}

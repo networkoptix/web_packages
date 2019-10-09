@@ -135,8 +135,8 @@ class CustomContextForm(forms.Form):
                     attrs={'cols': 120, 'rows': 25, 'class': 'tinymce'})
 
             if data_structure.type == DataStructure.DATA_TYPES.image:
-                if not record_value and not DataStructure.DATA_TYPES.external_image:
-                    record_value = data_structure.default
+                if not record_value:
+                    record_value = data_structure.placeholder or data_structure.default
                 self.fields[data_structure.name] = forms.ImageField(label=ds_label,
                                                                     help_text=ds_description,
                                                                     initial=record_value,
@@ -150,8 +150,8 @@ class CustomContextForm(forms.Form):
             elif data_structure.type in [DataStructure.DATA_TYPES.file,
                                          DataStructure.DATA_TYPES.external_file,
                                          DataStructure.DATA_TYPES.external_image]:
-                if not record_value and not data_structure.optional:
-                    record_value = data_structure.default
+                if not record_value:
+                    record_value = data_structure.placeholder or data_structure.default
                 self.fields[data_structure.name] = forms.FileField(label=ds_label,
                                                                    help_text=ds_description,
                                                                    initial=record_value,

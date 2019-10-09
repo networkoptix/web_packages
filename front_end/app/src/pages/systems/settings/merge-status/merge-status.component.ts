@@ -24,7 +24,7 @@ export class NxSystemMergeStatusComponent implements OnInit {
                 private language: NxLanguageProviderService,
                 private settingsService: NxSettingsService,
                 private dialogs: NxDialogsService,
-                private systemsSerivce: NxSystemsService) {
+                private systemsService: NxSystemsService) {
         this.config = this._config.getConfig();
     }
 
@@ -52,7 +52,7 @@ export class NxSystemMergeStatusComponent implements OnInit {
     }
 
     getMergeTarget(targetSystemId) {
-        return this.systemsSerivce.systems.find((system) => targetSystemId === system.id);
+        return this.systemsService.systems.find((system) => targetSystemId === system.id);
     }
 
     setMergeStatus(mergeInfo) {

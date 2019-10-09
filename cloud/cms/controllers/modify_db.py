@@ -83,8 +83,9 @@ def is_datarecord_unique(asset, data_structure, value, customizations=None):
     ).values_list('id', flat=True))
 
     asset_ids_found = []
+    not_accepted_asset_ids_found = []
 
-    not_accepted_version_ids = []
+    version_ids = []
     # Find all versions of assets that may cause conflict
     for review in AssetCustomizationReview.objects.filter(
             version__asset__id__in=asset_ids, version__datarecord__data_structure=data_structure
@@ -93,27 +94,20 @@ def is_datarecord_unique(asset, data_structure, value, customizations=None):
         if asset_id not in asset_ids_found:
             if review.state == AssetCustomizationReview.REVIEW_STATES.accepted:
                 asset_ids_found.append(asset_id)
-            else:
-                not_accepted_version_ids.append(review.version.id)
+                version_ids.append(review.version.id)
+            elif asset_id not in not_accepted_asset_ids_found:
+                not_accepted_asset_ids_found.append(asset_id)
+                version_ids.append(review.version.id)
 
     asset_ids_found.clear()
-    asset_ids_published_found = []
 
     for datarecord in DataRecord.objects.filter(
             asset_id__in=asset_ids, data_structure=data_structure
     ).order_by('-pk').select_related('asset'):
         if datarecord.version:
-            # If datarecord has a new version that is still pending/rejected/blocked, check value
-            if datarecord.version in not_accepted_version_ids:
-                if datarecord.value == value:
-                    return False
-            # If datarecord has a published version or older version, make sure we
-            # don't have a newer one already
-            elif datarecord.asset.id not in asset_ids_published_found:
-                if datarecord.value == value:
-                    return False
-                else:
-                    asset_ids_published_found.append(datarecord.asset.id)
+            if datarecord.version.id in version_ids and datarecord.value == value:
+                return False
+            asset_ids_found.append(datarecord.asset.id)
         # If datarecord is unversioned, check that we haven't seen one for this asset yet
         elif datarecord.asset.id not in asset_ids_found:
             if datarecord.value == value:
@@ -135,7 +129,11 @@ def save_unrevisioned_records(asset, context, language, data_structures,
         new_record_value = ""
         external_file = None
         delete_file = False
+        has_error = False
+        records_exist = data_structure.datarecord_set.filter(asset=asset).exists()
         is_file_or_image = DataStructure.is_file_or_image(data_structure.type)
+        is_file = is_file_or_image or data_structure.type in [DataStructure.DATA_TYPES.external_file,
+                                                              DataStructure.DATA_TYPES.external_image]
         latest_value = data_structure.find_actual_value(asset, ds_language, draft=True)
         # If the DataStructure is supposed to be an image convert to base64 and
         # error check
@@ -149,52 +147,44 @@ def save_unrevisioned_records(asset, context, language, data_structures,
             This will create a new record making images/files behave like the other data structure types
             Places to touch are here and cms/forms.py
         """
+        # If the file was uploaded the value will change
+        if is_file:
+            new_record_value = latest_value
         if is_file_or_image:
             # If a file has been uploaded try to save it
             if data_structure_name in request_files:
-                if request_files[data_structure_name]:
-                    new_record_value, file_errors = upload_file(data_structure, request_files[data_structure_name])
-                    if file_errors:
-                        upload_errors.extend(file_errors)
-                        continue
-            # No file was uploaded and there is a record means the user didn't change anything so skip.
-            elif not data_structure.optional and latest_value:
-                continue
-            # No file was uploaded and the user didn't delete an optional data structure so skip.
-            elif data_structure.optional and 'delete_' + data_structure_name not in request_data:
+                new_record_value, file_errors = upload_file(data_structure, request_files[data_structure_name])
+                if file_errors:
+                    upload_errors.extend(file_errors)
+                    continue
+
+            elif 'delete_' + data_structure_name in request_data:
+                delete_file = request_data['delete_' + data_structure_name]
+
+            elif data_structure.optional:
                 continue
 
         elif data_structure.type == DataStructure.DATA_TYPES.guid:
-
             # if the guid is valid it will go to the next set of checks
-            new_record_value = request_data[data_structure_name] if data_structure_name in request_data else ""
-            is_guid = re.match(GUID_REGEXP, new_record_value)
+            new_record_value = request_data[data_structure_name]
 
             # if its option and not a valid guid set error message and go to next DataStructure
-            if new_record_value and not is_guid:
+            if new_record_value and not re.match(GUID_REGEXP, new_record_value):
                 upload_errors.append((data_structure_name, 'Invalid GUID {} it should formatted like {}'
                                       .format(new_record_value, "{XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXX}")))
                 continue
 
             # no guid submitted or default value and is not optional generate a guid
-            elif not data_structure.optional and not new_record_value:  # and not data_structure.default:
+            elif not new_record_value and not data_structure.optional:
                 new_record_value = '{' + str(uuid.uuid4()) + '}'
                 upload_errors.append((data_structure_name,
                                       'No submitted GUID or default value. GUID has been generated as {}'
                                       .format(new_record_value)))
 
         elif data_structure.type in [DataStructure.DATA_TYPES.select, DataStructure.DATA_TYPES.multiselect]:
-            values = request_data.getlist(data_structure_name)
-            if 'options' in data_structure.meta_settings and data_structure.meta_settings['options']:
-                if data_structure.type == DataStructure.DATA_TYPES.multiselect:
-                    new_record_value = json.dumps(values)
-                else:
-                    new_record_value = values[0]
-            else:
-                if data_structure.type == DataStructure.DATA_TYPES.multiselect:
-                    new_record_value = '[]'
-                else:
-                    new_record_value = ''
+            new_record_value = request_data.getlist(data_structure_name, "")
+            if new_record_value != "" and data_structure.type == DataStructure.DATA_TYPES.select:
+                new_record_value = new_record_value[0]
 
         elif data_structure.type in [DataStructure.DATA_TYPES.external_file, DataStructure.DATA_TYPES.external_image]:
 
@@ -220,42 +210,49 @@ def save_unrevisioned_records(asset, context, language, data_structures,
                 external_file.save()
 
                 new_record_value = external_file.file.url
-            # No file was uploaded and there is a record means the user didn't change anything so skip
-            elif not data_structure.optional and latest_value:
-                continue
-            # No file was uploaded and the user didn't delete an optional data structure so skip
-            elif data_structure.optional and 'delete_' + data_structure_name not in request_data:
-                continue
 
-            # Mark this file for deletion
-            elif 'delete_' + data_structure_name in request_data and request_data['delete_' + data_structure_name]:
-                delete_file = True
+            elif 'delete_' + data_structure_name in request_data:
+                delete_file = request_data['delete_' + data_structure_name]
+
+            elif data_structure.optional:
+                continue
 
         elif data_structure.type == DataStructure.DATA_TYPES.check_box:
             new_record_value = data_structure_name in request_data
 
-        elif data_structure.type in [DataStructure.DATA_TYPES.object, DataStructure.DATA_TYPES.array]:
-            new_record_value = request_data[data_structure_name]
-            if not new_record_value:
-                if data_structure.type is DataStructure.DATA_TYPES.object:
-                    new_record_value = '{}'
-                elif data_structure.type is DataStructure.DATA_TYPES.array:
-                    new_record_value = '[]'
+        elif data_structure.type == DataStructure.DATA_TYPES.integer:
             try:
-                new_record_value = json.loads(new_record_value)
+                new_record_value = int(request_data[data_structure_name])
+            except ValueError:
+                upload_errors.append((data_structure_name, "This field has can only be integers."))
+                continue
+
+            if 'min' in data_structure.meta_settings and new_record_value < int(data_structure.meta_settings['min']):
+                error_text = f"Value: {new_record_value} is less than the minimum: " \
+                             f"{int(data_structure.meta_settings['min'])}"
+                upload_errors.append((data_structure_name, error_text))
+                has_error = True
+            if 'max' in data_structure.meta_settings and new_record_value > int(data_structure.meta_settings['max']):
+                error_text = f"Value: {new_record_value} is more than the maximum: " \
+                             f"{int(data_structure.meta_settings['max'])}"
+                upload_errors.append((data_structure_name, error_text))
+                has_error = True
+
+        elif data_structure.type in [DataStructure.DATA_TYPES.object, DataStructure.DATA_TYPES.array]:
+            try:
+                new_record_value = DataStructure.cast_value(data_structure, request_data[data_structure_name])
                 if data_structure.type == DataStructure.DATA_TYPES.array and type(new_record_value) != list:
                     raise ValueError
                 elif data_structure.type == DataStructure.DATA_TYPES.object and type(new_record_value) != dict:
                     raise ValueError
 
-                new_record_value = json.dumps(new_record_value, indent=4, separators=(',', ': '))
             except ValueError:
                 upload_errors.append((data_structure_name, "Json was incorrectly formatted."))
                 continue
 
-        elif data_structure_name in request_data:
+        else:
             new_record_value = request_data[data_structure_name]
-            if data_structure.type == DataStructure.DATA_TYPES.text and 'regex' in data_structure.meta_settings:
+            if 'regex' in data_structure.meta_settings:
                 pattern = data_structure.meta_settings['regex']
                 if pattern == '':
                     pattern = '.*$'
@@ -263,7 +260,8 @@ def save_unrevisioned_records(asset, context, language, data_structures,
                     pattern = f'{pattern}$'
                 if new_record_value and not re.match(pattern, new_record_value):
                     upload_errors.append((data_structure_name, 'Invalid input'))
-                    continue
+                    has_error = True
+
             if 'char_limit' in data_structure.meta_settings:
                 char_limit = int(data_structure.meta_settings['char_limit'])
                 if len(new_record_value) > char_limit:
@@ -271,20 +269,28 @@ def save_unrevisioned_records(asset, context, language, data_structures,
                         (data_structure_name,
                          'Character limit exceeded. Text was {} characters but should not be more than {} characters'.
                          format(len(new_record_value), char_limit)))
+                    has_error = True
 
-        # If the data structure is not option and no record exists and nothing was uploaded try to use the default value
-        if not data_structure.optional and not new_record_value and not is_file_or_image:
-            if not latest_value:
-                new_record_value = data_structure.default
-                if new_record_value:
-                    upload_errors.append((data_structure_name, "This field cannot be blank. Using default value"))
-                else:
-                    upload_errors.append((data_structure_name, "This field cannot be blank"))
-                    continue
+        if has_error:
+            continue
+
+        # If the data structure is not optional and has no value use the default.
+        if new_record_value in ["", {}, []] and not data_structure.optional:
+            # If there is a default value use it. Otherwise don't fill it prevent it.
+            if data_structure.default != "" and not records_exist:
+                # Gets the default value and will cast the default value
+                new_record_value = data_structure.find_actual_value(asset=asset)
+                upload_errors.append((data_structure_name, "This field cannot be blank. Using default value"))
             else:
+                upload_errors.append((data_structure_name, "This field cannot be blank"))
                 continue
 
-        if new_record_value == latest_value and not delete_file and not external_file and not is_file_or_image:
+        if new_record_value == latest_value and not delete_file:
+            continue
+
+        # Multiselect is a special case because it adds the label and other info.
+        if data_structure.type == DataStructure.DATA_TYPES.multiselect and \
+                latest_value == DataStructure.cast_value(data_structure, json.dumps(new_record_value)):
             continue
 
         if data_structure.advanced and not (user.is_superuser or user.has_perm('cms.edit_advanced')):
@@ -294,6 +300,14 @@ def save_unrevisioned_records(asset, context, language, data_structures,
         if data_structure.unique and not is_datarecord_unique(asset, data_structure, new_record_value):
             upload_errors.append((data_structure_name, "This field must be unique"))
             continue
+
+        # Remove value for delete_file
+        if delete_file:
+            new_record_value = ""
+
+        # Temporary until CLOUD-3362 is done
+        if type(new_record_value) in [list, dict]:
+            new_record_value = json.dumps(new_record_value)
 
         record = DataRecord(asset=asset,
                             data_structure=data_structure,
@@ -391,12 +405,12 @@ def asset_has_required_data(asset, version_id=None):
         records = datastructure.datarecord_set.filter(asset=asset)
         if version_id:
             records = records.filter(version__id__lte=version_id)
-        last_record_value = records.last().value if records.last() else None
+        last_record_value = records.last().value if records.last() else ""
         if last_record_value and datastructure.type in [DataStructure.DATA_TYPES.array,
                                                         DataStructure.DATA_TYPES.object,
                                                         DataStructure.DATA_TYPES.multiselect]:
             last_record_value = json.loads(last_record_value)
-        if not datastructure.optional and (not records.exists() or not last_record_value):
+        if not datastructure.optional and not datastructure.default and (not records.exists() or last_record_value == ""):
             ds_name = datastructure.label if datastructure.label else datastructure.name
             errors.append((ds_name,
                            "This field cannot be blank. Go to the {} page and fill in {}.".

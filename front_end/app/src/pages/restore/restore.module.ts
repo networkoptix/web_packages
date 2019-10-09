@@ -8,7 +8,7 @@ import { ComponentsModule }              from '../../components/components.modul
 
 import { DirectivesModule }   from '../../directives/directives.module';
 import { NxRestoreComponent } from './restore.component';
-import { TranslateDirective } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 
 export class ParamResolver implements Resolve<any> {
     constructor() {
@@ -55,6 +55,7 @@ const appRoutes: Routes = [
         UpgradeModule,
         ComponentsModule,
         FormsModule,
+        TranslateModule,
         RouterModule.forChild(appRoutes),
         DirectivesModule
     ],

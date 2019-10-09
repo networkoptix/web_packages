@@ -115,6 +115,7 @@
     "Page not found": "Siden ble ikke funnet",
     "Password": "Passord",
     "Password is required": "Passord er påkrevd",
+    "Password reset instructions are sent to Email": "Password reset instructions are sent to Email",
     "Password successfully saved": "Passordet ble lagret",
     "Password:": "Passord:",
     "Please enter a valid Email": "Vennligst skriv inn en gyldig e-post",
@@ -269,12 +270,12 @@
     "devices": "enheter",
     "dialogs": {
         "cancelButton": "Avbryt",
-        "continueAs": "Continue as {email}",
+        "changeAccountLogged": "You are already logged in with as {email}",
         "createNewAccount": "Create New Account",
         "download": "Last ned %VMS_NAME%",
+        "loggedFromOther": "You will be logged in with a different account",
         "loginButton": "Logg Inn",
         "loginTitle": "Logg inn på %CLOUD_NAME%",
-        "loginWithDifferentAccount": "You are already logged in with a different account",
         "logoutAuthorisedContinueButton": "Fortsette",
         "logoutAuthorisedLogoutButton": "Logg ut",
         "logoutAuthorisedTitle": "Du er allerede innlogget",
@@ -305,7 +306,6 @@
         },
         "noClientDetectedTitle": "Installer %VMS_NAME% for å koble til ditt System",
         "okButton": "OK",
-        "remainAs": "Remain logged as {email} ",
         "sharing": {
             "confirmOwner": "Hvis du endrer System-eier, vil du tilbakekalle eierskapet fra gjeldende konto. Denne handlingen er irreversibel. Er du sikker?",
             "editShareConfirmButton": "Lagre",
@@ -313,7 +313,9 @@
             "permissionsSaved": "Nye tillatelser lagret",
             "shareConfirmButton": "Legg til",
             "shareTitle": "Legg til"
-        }
+        },
+        "stayAs": "Stay logged as {email} ",
+        "stayLoggedIn": "Stay Logged In"
     },
     "dialogs.merge.connectToCloud": "Koble System du vil slå sammen med denne til <strong>{{cloudName}}</strong> eller slå sammen lokalt ved hjelp av <strong>{{vmsName}}</strong> Klienten.",
     "dialogs.merge.mergeConfirmation": "Du er i ferd med å slå sammen systemene <strong>{{primarySystem}}</strong> og <strong>{{secondarySystem}}</strong>. Innstillinger og navnet vil bli tatt fra <strong>{{primarySystem}}</strong>.",
@@ -412,7 +414,7 @@
         "cantGetSystemInfoPrefix": "Systeminformasjon er utilgjengelig",
         "cantGetSystemsListPrefix": "Systemlisten er utilgjengelig",
         "cantGetUsersListPrefix": "Brukerlisten er utilgjengelig",
-        "cantOpenClient": "%VMS_NAME% programmet er ikke oppdaget. <a href=\"/download\">Last ned</a>",
+        "cantOpenClient": "%VMS_NAME% application is not detected.",
         "cantRegisterPrefix": "En feil oppstod",
         "cantSendActivationPrefix": "Kan ikke sende bekreftelse via e-post",
         "cantSendConfirmationPrefix": "Kan ikke sende bekreftelse via e-post",

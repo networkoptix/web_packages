@@ -1,6 +1,6 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { Location }                             from '@angular/common';
-import { ActivatedRoute }                       from '@angular/router';
+import { ActivatedRoute, Router }               from '@angular/router';
 import { NxConfigService }                      from '../../../services/nx-config';
 import { NxLanguageProviderService }            from '../../../services/nx-language-provider';
 
@@ -10,6 +10,8 @@ import { NxSystemsService }     from '../../../services/systems.service';
 import { NxAccountService }     from '../../../services/account.service';
 import { NxUrlProtocolService } from '../../../services/url-protocol.service';
 import { NxProcessService }     from '../../../services/process.service';
+import { debounceTime }         from 'rxjs/operators';
+import { Subject }              from 'rxjs';
 
 @Component({
     selector   : 'nx-systems-list-component',
@@ -29,6 +31,7 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
     filteredSystems: any;
     systemSelected: any;
     userEmail: string;
+    searchChanged = new Subject();
 
     private setupDefaults() {
         this.CONFIG = this.configService.getConfig();
@@ -47,6 +50,7 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
                 private systemsService: NxSystemsService,
                 private accountService: NxAccountService,
                 private processService: NxProcessService,
+                private router: Router,
                 private location: Location,
     ) {
         this.setupDefaults();
@@ -91,6 +95,12 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
             errorPrefix    : this.LANG.errorCodes.cantGetSystemsListPrefix,
             logoutForbidden: true
         });
+
+        this.searchChanged
+            .pipe(debounceTime(this.CONFIG.search.debounceTime))
+            .subscribe(() => {
+                this.searchSystems();
+            });
     }
 
     getSystemOwnerName(system, currentEmail) {
@@ -117,8 +127,13 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
         }
     }
 
+    setSearch(value) {
+        this.search.value = value;
+        this.searchChanged.next();
+    }
+
     openSystem(system) {
-        this.location.go('/systems/' + system.id);
+        this.router.navigate(['/systems/' + system.id]);
     }
 
     ngOnDestroy(): void {

@@ -1,17 +1,15 @@
 *** Settings ***
 Resource          ../resource.robot
 Suite Setup       Open Restore Password Dialog
-Test Teardown     Run Keyword If Test Failed    Restart
 Test Template     Test Email Invalid
+Test Teardown     Run Keyword If Test Failed    Restart
 Suite Teardown    Close Browser
 Force Tags        email    form    Threaded File
 
 *** Variables ***
 ${url}    ${ENV}
 ${password}     ${BASE PASSWORD}
-# ${EMAIL IS REQUIRED}   //span[@ng-if='restorePassword.email.$touched && restorePassword.email.$error.required' and contains(text(),'${EMAIL IS REQUIRED TEXT}')]
 ${EMAIL IS REQUIRED}   //span[contains(@class,'input-error') and contains(text(),'${EMAIL IS REQUIRED TEXT}')]
-# ${EMAIL INVALID}       //span[@ng-if='restorePassword.email.$touched && restorePassword.email.$error.email' and contains(text(),"${EMAIL INVALID TEXT}")]
 ${EMAIL INVALID}       //span[contains(@class,'input-error') and contains(text(),'${EMAIL INVALID TEXT}')]
 
 *** Test Cases ***                        EMAIL
@@ -59,10 +57,6 @@ Restart
     Open Restore Password Dialog
 
 Open Restore Password Dialog
-    # Re-Setting strings with different string qualifiers due to Hebrew having accent characters that can prematurely truncate the strings.
-    # Should refactor initial variable settings around line 12 above to use Regexp Escape keyword to properly escape the strings.
-    Run Keyword If    "${LANGUAGE}"=="he_IL"    Set Suite Variable    ${EMAIL INVALID}    //span[@ng-if='restorePassword.email.$touched && restorePassword.email.$error.email' and contains(text(),'${EMAIL INVALID TEXT}')]
-    Run Keyword If    "${LANGUAGE}"=="he_IL"    Set Suite Variable    ${EMAIL IS REQUIRED}    //span[@ng-if='restorePassword.email.$touched && restorePassword.email.$error.required' and contains(text(),'${EMAIL IS REQUIRED TEXT}')]
     ${email}    Get Random Email    ${BASE EMAIL}
     Open Browser and go to URL    ${url}/register
     Register    mark    hamill    ${email}    ${password}
@@ -73,13 +67,15 @@ Open Restore Password Dialog
 
 Test Email Invalid
     [Arguments]   ${email}
+    Wait Until Element Is Visible    ${RESTORE PASSWORD EMAIL INPUT}
     Input Text    ${RESTORE PASSWORD EMAIL INPUT}    ${email}
     Click Button    ${RESET PASSWORD BUTTON}
     Run Keyword Unless    '${email}'=='${EMAIL UNREGISTERED}' or '${email}'=='${SPACE}myemail@gmail.com' or '${email}'=='myemail@gmail.com${SPACE}'    Check Email Outline    ${email}
     Run Keyword If    '${email}'=='${EMAIL UNREGISTERED}'    Check For Alert Dismissable    ${CANNOT SEND CONFIRMATION EMAIL} ${ACCOUNT DOES NOT EXIST}
+    Run Keyword If    '${email}'=='${SPACE}myemail@gmail.com' or '${email}'=='myemail@gmail.com${SPACE}'    Go To    ${url}/restore_password
 
 Check Email Outline
     [Arguments]    ${email}
     Wait Until Element Is Visible    ${RESTORE PASSWORD EMAIL INPUT}/../parent::div/parent::div/div/span[contains(@class,'input-error')]
-    Run Keyword If    "${email}"=="${EMPTY}" or "${email}"=="${SPACE}"    Element Should Be Visible    ${EMAIL IS REQUIRED}
-    Run Keyword Unless    "${email}"=="${EMPTY}" or "${email}"=="${SPACE}"    Element Should Be Visible    ${EMAIL INVALID}
+    Run Keyword If    "${email}"=="${EMPTY}" or "${email}"=="${SPACE}"    Wait Until Element Is Visible    ${EMAIL IS REQUIRED}
+    Run Keyword Unless    "${email}"=="${EMPTY}" or "${email}"=="${SPACE}"    Wait Until Element Is Visible    ${EMAIL INVALID}

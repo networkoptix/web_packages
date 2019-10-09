@@ -703,7 +703,7 @@
             "name": "%IPVD_ENABLED%",
             "description": "Allows users to see the supported devices in the footer.",
             "type": "check_box",
-            "value": false,
+            "value": true,
             "optional": true,
             "advanced": true
           },

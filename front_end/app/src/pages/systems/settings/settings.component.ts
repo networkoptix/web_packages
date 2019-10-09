@@ -3,6 +3,7 @@ import { Location }                                    from '@angular/common';
 import { ActivatedRoute }                              from '@angular/router';
 import { NxConfigService }                             from '../../../services/nx-config';
 import { NxLanguageProviderService }                   from '../../../services/nx-language-provider';
+import { Meta }                                        from '@angular/platform-browser';
 
 import { NxPageService }     from '../../../services/page.service';
 import { NxDialogsService }  from '../../../dialogs/dialogs.service';
@@ -10,12 +11,11 @@ import { NxSettingsService } from './settings.service';
 import { NxMenuService }     from '../../../components/menu/menu.service';
 import { NxSystemService }         from '../../../services/system.service';
 import { NxSystemsService }        from '../../../services/systems.service';
-import { NxNoSystemsComponent }    from '../no-systems/no-systems.component';
-import { NxModalAddUserComponent } from '../../../dialogs/add-user/add-user.component';
-import { NxModalGenericComponent } from '../../../dialogs/generic/generic.component';
 import { NxAccountService }        from '../../../services/account.service';
 import { NxProcessService }        from '../../../services/process.service';
 import { NxUtilsService }          from '../../../services/utils.service';
+import { NxRibbonService }         from '../../../components/ribbon/ribbon.service';
+import { NxToastService }          from '../../../dialogs/toast.service';
 
 @Component({
     selector   : 'nx-system-settings-component',
@@ -41,6 +41,8 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     unsharing: any;
     deletingSystem: any;
 
+    menuVisible: boolean;
+    footerVisible: boolean;
     systemId: any;
     systemNoAccess: boolean;
     canMerge: boolean;
@@ -77,13 +79,16 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 private processService: NxProcessService,
                 private menuService: NxMenuService,
                 location: Location,
-                private addUserModal: NxModalAddUserComponent,
+                private ribbonService: NxRibbonService,
+                private toastService: NxToastService,
+                private meta: Meta
     ) {
         this.location = location;
         this.setupDefaults();
     }
 
     ngOnInit(): void {
+        this.pageService.setDesktopLayout();
         this.LANG = this.language.getTranslations();
         this.pageService.setPageTitle(this.LANG.pageTitles.system);
         this.init();
@@ -100,9 +105,17 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     this.system.stopPoll();
                 }
                 this.system = undefined;
+                this.ribbonService.hide();
+                this.menuVisible = false;
                 this.getSystemInfo();
             }
         });
+
+        this.settingsService
+            .footerSubject
+            .subscribe((value) => {
+                this.footerVisible = value;
+            });
 
         this.content = {
             selectedSection   : '',         // updated by selectedSectionSubject
@@ -126,18 +139,18 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 this.content = { ...this.content }; // trigger onChange
             });
 
-       this.menuService
+        this.menuService
             .selectedSubSectionSubject
             .subscribe(selection => {
                 this.content.selectedSubSection = selection;
-                this.content = { ...this.content }; // trigger onChange
+                this.content = {...this.content}; // trigger onChange
             });
 
-       this.menuService
+        this.menuService
             .selectedDetailsSection
             .subscribe(selection => {
                 this.content.selectedDetailsSection = selection;
-                this.content = { ...this.content }; // trigger onChange
+                this.content = {...this.content}; // trigger onChange
             });
 
         if (this.CONFIG.accessRoles.options) {
@@ -191,14 +204,12 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.system.stopPoll();
-    }
-
-    getSystem() {
-        return this.system;
+        this.ribbonService.hide();
+        this.pageService.setDefaultLayout();
     }
 
     getSystemInfo() {
-        this.settingsService.setSystem(undefined);
+        this.settingsService.system = undefined;
         this.accountService
             .get()
             .then((account) => {
@@ -210,7 +221,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     this.system
                         .getInfo(true)
                         .then(() => {
-                            this.settingsService.setSystem(this.system);
+                            this.settingsService.system = this.system;
                         })
                         .catch((response) => {
                             this.system.forbidden = true;
@@ -219,16 +230,37 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
                     this.system.systemSubject.subscribe((system) => {
                         if (system !== undefined) {
-                            this.settingsService.setSystem(system);
-                            this.updateSomething();
+                            this.settingsService.system = system;
+                            this.updateAlert();
+                            this.updateMenu();
+                            this.checkShare();
+                            this.menuVisible = true;
                         }
                     });
                 }
             });
-
     }
 
-    updateSomething() {
+    checkShare() {
+        if (this.settingsService.share) {
+            if (this.system.isAvailable) {
+                this.settingsService.addUser();
+            } else {
+                this.toastService.show(this.LANG.system.shareOffline, {classname: 'danger', delay: this.CONFIG.alertTimeout, autohide: true});
+            }
+            this.settingsService.share = false;
+        }
+    }
+
+    updateAlert() {
+        if (!this.system.isOnline) {
+            this.ribbonService.show(this.LANG.system.offlineAlertRibbon, '', '', 'alert');
+        } else {
+            this.ribbonService.hide();
+        }
+    }
+
+    updateMenu() {
         this.systemNoAccess = false;
 
         if (this.system.permissions.editUsers) {

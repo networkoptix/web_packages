@@ -1,4 +1,4 @@
 <h1>안녕하세요, {{ message.userFullName }}</h1>
 
-<a href="mailto:{{ message.sender_email }}">{{ message.sender_name }}</a>gave the following feedback{{#message.asset}} for {{ message.asset }}{{/message.asset}}:
+<a href="mailto:{{ message.sender_email }}">{{ message.sender_name }}</a> 가 {{ message.asset }}{{/message.asset}}대해 다음 피드백{{#message.asset}} 을 제공했습니다.
 <div>{{ message.message }}</div>

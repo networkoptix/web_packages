@@ -79,7 +79,11 @@ export class AddUserModalContent {
     doShare() {
         this.user.role = this.selectedPermission;
 
-        return this.system.saveUser(this.user, this.user.role);
+        return this.system.saveUser(this.user, this.user.role).then((user) => {
+            return this.system.getUsers(true).then(() => {
+                return new Promise(resolve => setTimeout(() => resolve(user)));
+            });
+        });
     }
 
     ngOnInit() {
@@ -149,9 +153,8 @@ export class AddUserModalContent {
             }
         }, {
             successMessage: this.LANG.dialogs.sharing.permissionsSaved
-        }).then(() => {
-            this.system.getUsers();
-            this.activeModal.close(true);
+        }).then((user) => {
+            this.activeModal.close(user.id);
         });
     }
 

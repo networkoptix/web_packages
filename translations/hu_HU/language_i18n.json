@@ -115,6 +115,7 @@
     "Page not found": "Az oldal nem található",
     "Password": "Jelszó",
     "Password is required": "Jelszó megadása szükséges",
+    "Password reset instructions are sent to Email": "Password reset instructions are sent to Email",
     "Password successfully saved": "Jelszó sikeresen frissítve",
     "Password:": "Jelszó:",
     "Please enter a valid Email": "Kérjük adjon meg valós e-mail címet",
@@ -269,12 +270,12 @@
     "devices": "eszközök",
     "dialogs": {
         "cancelButton": "Mégsem",
-        "continueAs": "Continue as {email}",
+        "changeAccountLogged": "You are already logged in with as {email}",
         "createNewAccount": "Create New Account",
         "download": "%VMS_NAME% letöltése",
+        "loggedFromOther": "You will be logged in with a different account",
         "loginButton": "Bejelentkezés",
         "loginTitle": "Bejelentkezés ide: %CLOUD_NAME%",
-        "loginWithDifferentAccount": "You are already logged in with a different account",
         "logoutAuthorisedContinueButton": "Folyatatás",
         "logoutAuthorisedLogoutButton": "Kijelentkezés",
         "logoutAuthorisedTitle": "Már bejelentkezett",
@@ -305,7 +306,6 @@
         },
         "noClientDetectedTitle": "Telepítse a %VMS_NAME% alkalmazást a rendszer megtekintéshez",
         "okButton": "OK",
-        "remainAs": "Remain logged as {email} ",
         "sharing": {
             "confirmOwner": "Ha megváltoztatja a rendszertulajdonost, érvényteleníti a tulajdonjogot ehhez a fiókhoz. Ez a művelet nem fordítható vissza. Folytatja?",
             "editShareConfirmButton": "Mentés",
@@ -313,7 +313,9 @@
             "permissionsSaved": "Új engedélyek mentve",
             "shareConfirmButton": "Hozzáadás",
             "shareTitle": "Hozzáadás"
-        }
+        },
+        "stayAs": "Stay logged as {email} ",
+        "stayLoggedIn": "Stay Logged In"
     },
     "dialogs.merge.connectToCloud": "Csatlakoztassa az egyesíteni kívánt rendszert ezzel együtt <strong>{{cloudName}}</strong> vagy egyesítse helyileg <strong>{{vmsName}}</strong> klienst használva.",
     "dialogs.merge.mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from the <strong>{{primarySystem}}</strong>.",
@@ -412,7 +414,7 @@
         "cantGetSystemInfoPrefix": "A rendszerinformáció nem érhető el",
         "cantGetSystemsListPrefix": "A rendszerlista nem érhető el",
         "cantGetUsersListPrefix": "A felhasználólista nem érhető el",
-        "cantOpenClient": "%VMS_NAME% nincs törölve. <a href=\"/download\">Letöltés</a>",
+        "cantOpenClient": "%VMS_NAME% application is not detected.",
         "cantRegisterPrefix": "Hiba történt",
         "cantSendActivationPrefix": "Megerősítő e-mailt nem lehet elküldeni",
         "cantSendConfirmationPrefix": "Megerősítő e-mailt nem lehet elküldeni",

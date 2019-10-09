@@ -239,6 +239,8 @@ def downloads(request):
         # End of fallback section for old structure and old versions
 
         build_number = latest_version.split('.')[-1]
+        if ' ' in build_number:
+            build_number = build_number.split(' ')[0]
         updates_path = updates_record['updates_prefix']
 
         # get downloads.json for specific version. If get there - version is at least 3.0, so downloads.json is present
@@ -249,7 +251,7 @@ def downloads(request):
         downloads_json['releaseNotes'] = updates_record['release_notes']
         downloads_json['releaseUrl'] = updates_path + '/' + build_number + '/'
         # add release notes to downloads.json
-        # evaluate file pathss
+        # evaluate file paths
         # release_notes = updates_record['release_notes']
 
         global_cache.set(cache_key, json.dumps(downloads_json))

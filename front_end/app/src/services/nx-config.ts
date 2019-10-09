@@ -144,7 +144,7 @@ export class NxConfigService {
                     'owner'
                 ]
             },
-            emailRegex                    : '^[-!#$%&\'*+/=?^_`{}|~0-9a-zA-Z]+(\\.[-!#$%&\'*+/=?^_`{}|~0-9a-zA-Z]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\\.)+[a-zA-Z]{2,6}\\.?$',
+            emailRegex                    : '^[-!#$%&\'*+/=?^_`{}|~0-9a-zA-Z]+(\\.[-!#$%&\'*+/=?^_`{}|~0-9a-zA-Z]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\\.)+[a-zA-Z]{2,63}\\.?$',
             passwordRequirements          : {
                 minLength         : 8,
                 maxLength         : 255,
@@ -313,6 +313,12 @@ export class NxConfigService {
                     id: 'password',
                     path: '/password'
                 },
+            },
+            meta: {
+                viewport: {
+                    default: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no',
+                    desktopLayout: 'width=768, maximum-scale=1, user-scalable=yes, shrink-to-fit=no'
+                }
             },
             myIntegrationTagId            : 'mine',
             companyLink                   : '',

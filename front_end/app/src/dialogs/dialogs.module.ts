@@ -7,6 +7,7 @@ import { LoginModalContent }                            from './login/login.comp
 import { DisconnectModalContent }                       from './disconnect/disconnect.component';
 import { RenameModalContent }                           from './rename/rename.component';
 import { AddUserModalContent, NxModalAddUserComponent } from './add-user/add-user.component';
+import { RemoveUserModalContent, NxModalRemoveUserComponent } from './remove-user/remove-user.component';
 import { MergeModalContent }                            from './merge/merge.component';
 import { MessageModalContent }                          from './message/message.component';
 import { EmbedModalContent }                            from './embed/embed.component';
@@ -18,15 +19,17 @@ import { ClipboardModule }                              from 'ngx-clipboard';
 import { GenericModalContent, NxModalGenericComponent } from './generic/generic.component';
 import { NxDialogsService }                             from './dialogs.service';
 import { ApplyModalContent, NxModalApplyComponent }     from './apply/apply.component';
+import { RouterModule }                                 from '@angular/router';
 
 @NgModule({
-    imports        : [
+    imports: [
         CommonModule,
         FormsModule,
         TranslateModule,
         ClipboardModule,
         ComponentsModule,
         DirectivesModule,
+        RouterModule,
     ],
     declarations   : [
         LoginModalContent,
@@ -35,10 +38,12 @@ import { ApplyModalContent, NxModalApplyComponent }     from './apply/apply.comp
         AddUserModalContent,
         MergeModalContent,
         MessageModalContent,
+        RemoveUserModalContent,
         EmbedModalContent,
         GenericModalContent,
         NxModalGenericComponent,
         NxModalAddUserComponent,
+        NxModalRemoveUserComponent,
         ApplyModalContent,
         NxModalApplyComponent,
     ],
@@ -49,10 +54,12 @@ import { ApplyModalContent, NxModalApplyComponent }     from './apply/apply.comp
         AddUserModalContent,
         MergeModalContent,
         MessageModalContent,
+        RemoveUserModalContent,
         EmbedModalContent,
         GenericModalContent,
         NxModalGenericComponent,
         NxModalAddUserComponent,
+        NxModalRemoveUserComponent,
         ApplyModalContent,
         NxModalApplyComponent,
     ],
@@ -60,6 +67,7 @@ import { ApplyModalContent, NxModalApplyComponent }     from './apply/apply.comp
         NxDialogsService,
         NxModalGenericComponent,
         NxModalAddUserComponent,
+        NxModalRemoveUserComponent,
         NxModalApplyComponent,
     ],
     exports        : []

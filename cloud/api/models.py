@@ -108,7 +108,8 @@ class Account(AbstractBaseUser, PermissionsMixin):
     class Meta:
         permissions = (
             ("can_view_release", "Can view releases and patches"),
-            ('invite_users', 'Invite users'),
+            ("invite_users", "Invite users"),
+            ("ignore_exceptions", "Downgrades log level of exceptions to INFO")
         )
 
     objects = AccountManager()
@@ -147,6 +148,13 @@ class Account(AbstractBaseUser, PermissionsMixin):
         if not UserGroupsToAssetPermissions.check_customization_permission(self, CUSTOMIZATION):
             return []
 
+        permissions = []
+        for group in self.groups.all():
+            permissions.extend([permission.codename for permission in group.permissions.all()])
+        return list(set(permissions))
+
+    @property
+    def global_permissions(self):
         permissions = []
         for group in self.groups.all():
             permissions.extend([permission.codename for permission in group.permissions.all()])

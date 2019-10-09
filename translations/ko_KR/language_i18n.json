@@ -115,6 +115,7 @@
     "Page not found": "페이지를 찾을 수 없음",
     "Password": "패스워드",
     "Password is required": "패스워드가 필요합니다.",
+    "Password reset instructions are sent to Email": "패스워드 재설정 지침이 이메일 으로 전송되었습니다.",
     "Password successfully saved": "암호가 정상적으로 저장되었습니다",
     "Password:": "비밀번호:",
     "Please enter a valid Email": "유효한 이메일을 입력하십시오",
@@ -166,7 +167,7 @@
     "User": "사용자:",
     "User disabled": "사용자 비활성화 됨",
     "View": "보기",
-    "WHEN_MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{{targetSystemName}}</strong> System, and this system will be deleted.",
+    "WHEN_MERGE_FINISHES": "병합이 완료되면이 시스템의 모든 사용자와 카메라가 <strong>{{targetSystemName}}</strong> 시스템에서 사용 가능해지며이 시스템이 삭제됩니다.",
     "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.": "Google 크롬 또는 Mozilla Firefox의 최신 버전을 설치하는 것을 권장하지만 다른 최신 웹 브라우저를 사용할 수 있습니다.",
     "What's New?": "무엇이 새로운가?",
     "Works with:": "와 연동되다:",
@@ -269,12 +270,12 @@
     "devices": "장치",
     "dialogs": {
         "cancelButton": "취소",
-        "continueAs": "{email} 으로 계속",
+        "changeAccountLogged": "You are already logged in with as {email}",
         "createNewAccount": "새 계정 만들기",
         "download": "%VMS_NAME% 다운로드",
+        "loggedFromOther": "다른 계정으로 로그인 하게 될것입니다",
         "loginButton": "로그인",
         "loginTitle": "%CLOUD_NAME%에 로그인",
-        "loginWithDifferentAccount": "이미 다른 계정으로 로그인했습니다",
         "logoutAuthorisedContinueButton": "계속",
         "logoutAuthorisedLogoutButton": "로그 아웃",
         "logoutAuthorisedTitle": "이미 로그인 되어 있습니다",
@@ -305,7 +306,6 @@
         },
         "noClientDetectedTitle": "시스템이 성공적으로 %VMS_NAME% 에서 분리 되었습니다",
         "okButton": "확인",
-        "remainAs": "{email} 기록 된 상태로 유지 ",
         "sharing": {
             "confirmOwner": "시스템 소유자를 변경하면 현재 계정에서 소유권이 박탈 됩니다. 이 작업은 되돌릴 수 없습니다. 확실합니까?",
             "editShareConfirmButton": "저장",
@@ -313,7 +313,9 @@
             "permissionsSaved": "새 권한이 저장되었습니다.",
             "shareConfirmButton": "추가",
             "shareTitle": "추가"
-        }
+        },
+        "stayAs": "Stay logged as {email} ",
+        "stayLoggedIn": "Stay Logged In"
     },
     "dialogs.merge.connectToCloud": "이 시스템과 머지하려는 시스템을 <strong>{{cloudName}}</strong> 에 연결하거나 <strong>{{vmsName}}</strong> 클라이언트를 사용하여 로컬로 머지하십시오.",
     "dialogs.merge.mergeConfirmation": "시스템 <strong>{{primarySystem}}</strong> 과 <strong>{{secondarySystem}}</strong>를 머지하려고합니다. 설정과 이름은 <strong>{{primarySystem}}</strong>에서 가져옵니다.",
@@ -412,7 +414,7 @@
         "cantGetSystemInfoPrefix": "시스템 정보가 없습니다.",
         "cantGetSystemsListPrefix": "시스템 목록이 없습니다.",
         "cantGetUsersListPrefix": "사용자 목록이 없습니다.",
-        "cantOpenClient": "%VMS_NAME% 프로그램이 감지되지 않았습니다. <a href=\"/download\"> 다운로드 </a>",
+        "cantOpenClient": "%VMS_NAME% 응용 프로그램이 감지되지 않습니다.",
         "cantRegisterPrefix": "오류가 발생했습니다.",
         "cantSendActivationPrefix": "확인 이메일을 보낼 수 없습니다.",
         "cantSendConfirmationPrefix": "확인 이메일을 보낼 수 없습니다.",
@@ -602,5 +604,5 @@
     "testedVersionLabel": "{{vmsName}} 버전에서 테스트되었습니다.",
     "testedVersionsLabel": "테스트된 {{vmsName}} 버전:",
     "users": "사용자",
-    "you": "you"
+    "you": "당신"
 }

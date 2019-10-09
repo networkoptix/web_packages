@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            table {
+                border-spacing: unset;
+                border-collapse: collapse;
+            }
+            th {
+                padding: 0.5rem 0;
+            }
+            td {
+                padding: 0.5rem;
+            }
+            .table-wrap tr:first-child {
+                background-color: #2FA2DB !important;
+            }
+            .border-bottom {
+                border-bottom: solid 1px gray;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Expected data for pages</h1>
+        {{#contexts}}
+            <h2>{{#label}}{{label}}{{/label}}{{^label}}{{name}}{{/label}}</h2>
+            <table style="border-spacing: 15px;">
+                {{#name}}
+                <tr>
+                    <td>Name (Tag):</td>
+                    <td>{{name}}</td>
+                </tr>
+                {{/name}}
+                {{#file_path}}
+                <tr>
+                    <td>File path:</td>
+                    <td>{{file_path}}</td>
+                </tr>
+                {{/file_path}}
+
+                {{#description}}
+                <tr>
+                    <td>Description:</td>
+                    <td>{{{description}}}</td>
+                </tr>
+                {{/description}}
+                {{#url}}
+                <tr>
+                    <td>Url:</td>
+                    <td>{{url}}</td>
+                </tr>
+                {{/url}}
+                {{#translatable}}
+                <tr>
+                    <td>Translatable:</td>
+                    <td>{{translatable}}</td>
+                </tr>
+                {{/translatable}}
+            </table>
+            <div class="table-wrap">
+                <table class="relative-table wrapped" style="width: 100%" role="grid" border="0">
+                    <tr style="color: white">
+                        <th align="left">Label</th>
+                        <th align="left">Name (Tag)</th>
+                        <th align="left">Description</th>
+                        <th align="left">Settings</th>
+                    </tr>
+                    {{#values}}
+                    <tr class="border-bottom">
+                        <td align="left">
+                            {{#label}}{{label}}{{/label}}
+                            {{^label}}–{{/label}}
+                        </td>
+                        <td align="left">
+                            {{#name}}{{name}}{{/name}}
+                            {{^name}}–{{/name}}
+                        </td>
+                        <td align="left">
+                            {{#description}}{{{description}}}{{/description}}
+                            {{^description}}–{{/description}}
+                        </td>
+                        <td align="left">
+                            {{#type}}Type: {{type}}&nbsp;&nbsp;&nbsp;{{/type}}
+                            {{#value}}Default: {{{value}}}&nbsp;&nbsp;&nbsp;{{/value}}
+                            {{#nice_meta}}{{{nice_meta}}}{{/nice_meta}}
+                        </td>
+                    </tr>
+                    {{/values}}
+                </table>
+            </div>
+        {{/contexts}}
+    </body>
+</html>

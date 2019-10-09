@@ -39,8 +39,10 @@ TRAFFIC_RELAY_PROTOCOL = 'https://'
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '03-b9bxxpjxsga(qln0@3szw3+xnu%6ph_l*sz-xr_4^xxrj!_'
 
+# Celery worker should never run in debug mode. If it is running with debug then it will hang after sometime.
+CELERY_WORKER = 'celery' in sys.argv[0]
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = 'debug' in conf and conf['debug'] or LOCAL_ENVIRONMENT
+DEBUG = ('debug' in conf and conf['debug'] or LOCAL_ENVIRONMENT) and not CELERY_WORKER
 
 ALLOWED_HOSTS = ['*']
 
@@ -67,6 +69,7 @@ INSTALLED_APPS = (
     'storages',
 
     'django_celery_results',
+    'django_celery_beat',
     'rest_framework',
     'rest_hooks',
     'corsheaders',
@@ -123,6 +126,7 @@ ADMIN_DASHBOARD = ('cms.models.ContentVersion',
                    'cms.models.UserGroupsToAssetType',
                    'cms.models.DeploymentStatus',
                    '*.auth.models.Permission',
+                   'django_celery_beat.*',
                    'django_celery_results.*',
                    'notifications.models.*',
                    'push_notifications.models.*',
@@ -428,6 +432,8 @@ CORS_URLS_REGEX = r'^/api/(?:login|ping|systems/(?:dis)?connect)'
 
 SESSION_COOKIE_SECURE = not LOCAL_ENVIRONMENT
 CSRF_COOKIE_SECURE = not LOCAL_ENVIRONMENT
+SESSION_COOKIE_AGE = 60 * 60 * 24 # 1 day
+AUTHENTICATED_SESSION_COOKIE_AGE = 60 * 60 * 24 * 14 # 2 weeks
 
 USE_ASYNC_QUEUE = True
 

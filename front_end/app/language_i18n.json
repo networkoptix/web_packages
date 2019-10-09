@@ -105,6 +105,7 @@
     "NO_SYSTEMS_LOGIN": "Log in to your System using %VMS_NAME%",
     "NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "You have no Systems connected to %CLOUD_NAME%",
     "New Password": "New Password",
+    "No unsaved changes": "No unsaved changes",
     "Nothing Found": "Nothing Found",
     "OK": "OK",
     "Ok": "Ok",
@@ -115,6 +116,7 @@
     "Page not found": "Page not found",
     "Password": "Password",
     "Password is required": "Password is required",
+    "Password reset instructions are sent to Email": "Password reset instructions are sent to Email",
     "Password successfully saved": "Password successfully saved",
     "Password:": "Password:",
     "Please enter a valid Email": "Please enter a valid Email",
@@ -269,8 +271,7 @@
     "devices": "devices",
     "dialogs": {
         "cancelButton": "Cancel",
-        "changeAccountLogged": "You are already logged in with a different account",
-        "continueAs": "Continue as {email}",
+        "changeAccountLogged": "You are already logged in with as {email}",
         "createNewAccount": "Create New Account",
         "download": "Download %VMS_NAME%",
         "loggedFromOther": "You will be logged in with a different account",
@@ -306,7 +307,6 @@
         },
         "noClientDetectedTitle": "Install %VMS_NAME% to view your System",
         "okButton": "OK",
-        "remainAs": "Remain logged as {email} ",
         "sharing": {
             "confirmOwner": "If you change System owner, you will revoke ownership from the current account. This action is irreversible. Are you sure?",
             "editShareConfirmButton": "Save",
@@ -314,7 +314,9 @@
             "permissionsSaved": "New permissions saved",
             "shareConfirmButton": "Add",
             "shareTitle": "Add"
-        }
+        },
+        "stayAs": "Stay logged as {email} ",
+        "stayLoggedIn": "Stay Logged In"
     },
     "dialogs.merge.connectToCloud": "Connect System you want to merge with this one to <strong>{{cloudName}}</strong> or merge locally using <strong>{{vmsName}}</strong> Client.",
     "dialogs.merge.mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from the <strong>{{primarySystem}}</strong>.",
@@ -326,10 +328,14 @@
     "downloads": {
         "appTypes": {
             "bundle": "Client and Server",
+            "camera_sdk": "Video Source SDK",
             "client": "Client only",
+            "metadata_sdk": "Metadata SDK",
             "package": "Package",
             "server": "Server only",
-            "servertool": "Configuration tool"
+            "servertool": "Configuration tool",
+            "storage_sdk": "Storage SDK",
+            "video_source_sdk": "Video Source SDK"
         },
         "groups": {
             "android": {
@@ -380,8 +386,11 @@
             "bananapi": "Banana Pi",
             "bpi": "Nx1",
             "linux64": "x64",
+            "linux_arm32": "x32",
+            "linux_arm64": "x64",
             "mac": "X",
             "rpi": " Raspberry Pi",
+            "universal": "SDK",
             "win64": "x64"
         },
         "releasesTypes": {
@@ -413,7 +422,7 @@
         "cantGetSystemInfoPrefix": "System info is unavailable",
         "cantGetSystemsListPrefix": "System list is unavailable",
         "cantGetUsersListPrefix": "Users list is unavailable",
-        "cantOpenClient": "%VMS_NAME% application is not detected. <a href=\"/download\">Download</a>",
+        "cantOpenClient": "%VMS_NAME% application is not detected.",
         "cantRegisterPrefix": "Error occurred",
         "cantSendActivationPrefix": "Cannot send confirmation Email",
         "cantSendConfirmationPrefix": "Cannot send confirmation Email",
@@ -569,20 +578,22 @@
         "confirmRenameAction": "Save",
         "confirmRenameTitle": "System name",
         "confirmUnshare": "This user will not be able to access System. Are you sure?",
-        "confirmUnshareAction": "Delete",
+        "confirmUnshareAction": "Remove",
         "confirmUnshareFromMe": "You are about to disconnect this System from your account. You will not be able to access this System anymore. Are you sure?",
         "confirmUnshareFromMeAction": "Disconnect",
         "confirmUnshareFromMeTitle": "Disconnect System?",
-        "confirmUnshareTitle": "Delete user?",
+        "confirmUnshareTitle": "Remove user?",
         "mergeFailed": "System merge failed",
         "mergeStart": "Systems have started merging",
         "mergeSuccess": "System merge completed",
         "mergeSystemTitle": "Merge Systems",
         "mySystemSearch": "IMeMyMine",
         "offline": "System is offline",
+        "offlineAlertRibbon": "System is offline. Some settings may not be available.",
         "openClient": "Open in %VMS_NAME%",
         "openClientNoSystem": "Open %VMS_NAME%",
         "permissionsRemoved": "Permissions were removed from {{email}}",
+        "shareOffline": "Cannot share system while it is offline",
         "successDeleted": "System {{systemName}} is successfully deleted from your account",
         "successDisconnected": "System is successfully disconnected from %CLOUD_NAME%",
         "successRename": "System name saved",

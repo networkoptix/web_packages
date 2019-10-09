@@ -119,8 +119,8 @@
 		"vendor": "Виробник",
 		"model": "Модель",
 		"hardwareType": "Тип",
-		"maxResolution": "<span>Max</span><br><span>Resolution</span>",
-		"maxFps": "<span>Max</span><br><span>FPS</span>",
+		"maxResolution": "<span>Макс.</span><br><span>Роздільна здатність</span>",
+		"maxFps": "<span>Макс.</span><br><span>FPS</span>",
 		"primaryCodec": "Кодек",
 		"isAudioSupported": "Аудіо",
 		"isTwAudioSupported": "2-канальний звуковий потік",
@@ -154,7 +154,7 @@
 		"disclaimer": "Цей список обмежується пристроями, знайденими в {{vmsName}} де користувачі дозволили автоматичну звітність характеристик пристрою до {{companyName}}. Жодна особиста інформація не збирається і кожен користувач залишається повністю анонімним."
 	},
 	"integration": {
-		"myIntegrationsLabel": "Mine",
+		"myIntegrationsLabel": "Мій",
 		"previewRibbonText": "Ця сторінка є попереднім переглядом останніх змін і не відповідає загальнодоступній версії.",
 		"backToEditText": "Повернутися до інтерфейсів редагування",
 		"Access Control": "Контроль доступу",
@@ -196,16 +196,17 @@
 	"dialogs": {
 		"okButton": "ОК",
 		"cancelButton": "Відмінити",
-		"continueAs": "Continue as {email}",
-		"createNewAccount": "Create New Account",
+		"createNewAccount": "Створити новий обліковий запис",
+		"changeAccountLogged": "You are already logged in with as {email}",
+		"loggedFromOther": "You will be logged in with a different account",
 		"loginTitle": "Увійти до %CLOUD_NAME%",
 		"loginButton": "Увійти",
-		"loginWithDifferentAccount": "You are already logged in with a different account",
 		"logoutAuthorisedTitle": "Ви вже увійшли",
 		"logoutAuthorisedContinueButton": "Продовжити",
 		"logoutAuthorisedLogoutButton": "Вийти",
 		"noClientDetectedTitle": "Встановіть %VMS_NAME% для роботи з системою",
-		"remainAs": "Remain logged as {email} ",
+		"stayAs": "Stay logged as {email} ",
+		"stayLoggedIn": "Stay Logged In",
 		"download": "Завантажити %VMS_NAME%",
 		"merge": {
 			"connectToCloud": "Підключіть систему, яку хочете об’єднати з цією <strong>{{cloudName}}</strong> або об’єднайте локально з <strong>{{vmsName}}</strong> Клієнтом.",
@@ -274,7 +275,7 @@
 		"passwordMismatch": "Невірний пароль",
 		"cantEditYourself": "Зміна власних дозволів не допускається",
 		"cantEditAdmin": "Цей користувач має права адміністратора",
-		"cantOpenClient": "Додаток %VMS_NAME% не виявлено. <a href=\"/download\">Завантажити</a>",
+		"cantOpenClient": "%VMS_NAME% application is not detected.",
 		"lostConnection": "Підключення до {{systemName}} втрачено",
 		"thisSystem": "система",
 		"oldSafariNotSupported": "Версії Safari старше 10 не підтримуються",
@@ -300,7 +301,7 @@
 		"missingMessage": "Необхідно вказати пароль"
 	},
 	"registration": {
-		"agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
+		"agreement": "Я згоден з <a href=\"/content/eula\" target=\"_blank\">Правилами і\nумовами,</a> і <a href=\"%PRIVACY_LINK%\" target=\"_blank\">політикою конфіденційності</a>"
 	},
 	"system": {
 		"yourSystem": "Ваша система",
@@ -412,9 +413,9 @@
 	"Support": "Підтримка",
 	"Supported Devices": "Пристрої, що підтримуються",
 	"Terms": "Умови",
-	"pleaseSelect": "Please select...",
-	"WHEN_MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{{targetSystemName}}</strong> System, and this system will be deleted.",
-	"FAILED_SYSTEM_DESCR": "This link is broken,<br>System may be disconnected from %CLOUD_NAME%,<br>Access to this System may be revoked, <br>or you may be logged into a different account.",
+	"pleaseSelect": "Будь ласка виберіть...",
+	"WHEN_MERGE_FINISHES": "Після завершення об’єднання всі користувачі та камери із цієї системи стануть доступними в<strong>{{targetSystemName}}</strong>, а ця система буде видалена.",
+	"FAILED_SYSTEM_DESCR": "Це посилання не працює, <br>Система може бути відключена від %CLOUD_NAME%,<br> Доступ до цієї системи може бути скасований <br> або ви можете входити в інший обліковий запис.",
 	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "У вас немає систем, підключених до %CLOUD_NAME%",
 	"NO_SYSTEMS_LOGIN": "Увійдіть в систему за допомогою %VMS_NAME%",
 	"NO_SYSTEMS_GOTO_ADMINISTRATION": "Перейдіть на вкладку \"Хмара\" у діалоговому вікні \"Системне адміністрування\"",
