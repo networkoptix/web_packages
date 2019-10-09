@@ -366,6 +366,7 @@ Sharing system with a user who is already in the list updates their permissions
     ...    port=${BASE PORT}
     ...    user=${BASE EMAIL}
     ...    is_secure=True
+  # TOOD Fix the next line intermittently failing.
     Run Keyword And Expect Error    *    Wait For Email    recipient=${EMAIL ADMIN}    timeout=30
     Delete All Emails
     Check User Permissions    ${random email}    ${ADMIN TEXT}
