@@ -167,12 +167,6 @@ does not show Share button to viewer, advanced viewer, live viewer
     @{emails}    Set Variable    ${EMAIL VIEWER}    ${EMAIL LIVE VIEWER}    ${EMAIL ADV VIEWER}
     FOR    ${user}    IN    @{emails}
         Log in to Autotests 2 System    ${user}
-      #The commented out logic takes 3 times longer than the new line to effectively accomplish the same thing.
-        # Register Keyword To Run On Failure    NONE
-        # Run Keyword And Expect Error    *    Wait Until Element Is Visible    ${SHARE BUTTON SYSTEMS}
-        # Run Keyword And Expect Error    *    Wait Until Element Is Visible    ${RENAME SYSTEM}
-        # Register Keyword To Run On Failure    Failure Tasks
-        # Element Should Not Be Visible    ${SHARE BUTTON SYSTEMS}
         Elements Should Not Be Visible    ${RENAME SYSTEM}    ${USERS LIST LINK}    ${SHARE BUTTON SYSTEMS}
         Log Out
     END
