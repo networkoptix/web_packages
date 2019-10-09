@@ -87,7 +87,7 @@ should show system name in header with no dropdown if user has only one system
     Validate Log In
     Wait Until Element Is Visible    ${SYSTEM NAME AUTO TESTS HEADER}
     Log Out
-    Log In    ${EMAIL OWNER}    ${password}    None
+    Log In    ${EMAIL OWNER}    ${password}
     Validate Log In
     Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
     Remove User Permissions    ${EMAIL NOPERM}
