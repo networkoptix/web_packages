@@ -399,8 +399,8 @@ class NxSystemAPI {
     }
 
     getHealthValues() {
-        // return this.get('/ec2/metrics/values');
-        return this.http.get('/getdata');
+        return this.get('/ec2/metrics/values');
+        // return this.http.get('/getdata');
     }
 }
 

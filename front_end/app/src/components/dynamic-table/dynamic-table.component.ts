@@ -18,8 +18,8 @@ interface Params {
     encapsulation: ViewEncapsulation.None
 })
 export class NxDynamicTableComponent implements OnChanges, OnInit {
-    @Input('headers') _headers: any[];
-    @Input('elements') _elements: any[];
+    @Input('headers') _headers: any[any];
+    @Input('elements') _elements: any[any];
     @Input() params: any = {};
 
     @Output() public onRowClick: EventEmitter<any> = new EventEmitter<any>();
@@ -27,7 +27,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
     CONFIG: any;
 
     elements: any;
-    headers: any[];
+    headers: any[any];
 
     elementOrder: any[];
 
@@ -58,7 +58,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
         this.pagedItems = [];
         this.pagerMaxSize = this.CONFIG.ipvd.pagerMaxSize;
         this.currentPage = 1;
-        this.pageSize = 22; // this.CONFIG.layout.tableLarge.rows;
+        this.pageSize = this.CONFIG.layout.tableLarge.rows;
     }
 
     private setDebugAndBetaMode () {
@@ -68,19 +68,21 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
 
     ngOnChanges(changes: SimpleChanges) {
         if (this._headers) {
-            const headers: any = {...this._headers};
-            headers.headers = headers.values;
-            this.headers = [...headers.headers];
-            this.elementOrder = headers.headers.map(header => header.id);
+            // Only include headers that have 'table' in display
+            this.headers = this._headers.values.filter((header) => {
+                return header.display.includes('table');
+            });
+
+            this.elementOrder = this.headers.map(header => header.id);
         }
         if (this._elements) {
-            const elements = Object.values({...this._elements});
-            // Array.from({length: 20}).forEach(_ => {
+            // const elements = Object.values({...this._elements});
+            // Array.from({length: 5}).forEach(_ => {
             //     elements.forEach(e => elements.push(e));
             // });
-            this.elements = elements.map(({info: camera}: any) => {
+            this.elements = Object.values({...this._elements}).map(({[this._headers.id]: entity}: any) => {
                 return this.elementOrder.map(key => {
-                    return camera[key];
+                    return entity[key];
                 });
             });
             console.log(`Number of cameras: ${this.elements.length}`);
@@ -93,6 +95,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
     }
 
     setClickedRow(element) {
+        // console.log(element);
     }
 
     setPage(page: number, keep?: boolean) {

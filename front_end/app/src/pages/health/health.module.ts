@@ -7,9 +7,9 @@ import { RouterModule, Routes }              from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { TranslateModule }  from '@ngx-translate/core';
-import { ComponentsModule } from '../../../components/components.module';
+import { ComponentsModule } from '../../components/components.module';
 
-import { AuthGuard } from '../../../routeGuards/authGuard';
+import { AuthGuard } from '../../routeGuards/authGuard';
 
 import { NxHealthComponent } from './health.component';
 
