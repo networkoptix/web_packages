@@ -93,12 +93,8 @@ Share button - opens dialog
 Sharing link /systems/{system_id}/share - opens dialog
     [tags]    Threaded
     Log in to Auto Tests System    ${email}
-    # ${location}    Get Location
-    # Go To    ${location}/share
-    Wait Until Elements Are Visible    ${USERS LIST LINK}
-    Click Link    ${USERS LIST LINK}
-    Wait Until Element is Enabled    ${SHARE BUTTON SYSTEMS}
-    Click Button    ${SHARE BUTTON SYSTEMS}
+    ${location}    Get Location
+    Go To    ${location}/share
     Wait Until Element is Visible    ${SHARE MODAL}
     Click Button    ${SHARE CLOSE}
     Wait Until Page Does Not Contain Element    ${SHARE MODAL}
@@ -108,43 +104,31 @@ Sharing link for anonymous - first ask login, then show share dialog
     Log in to Auto Tests System    ${email}
     ${location}    Get Location
     Log Out
-    # Go To    ${location}/share
-    Go To    ${location}
+    Go To    ${location}/share
     Log In    ${email}    ${password}    button=None
-    Wait Until Elements Are Visible    ${USERS LIST LINK}
-    Click Link    ${USERS LIST LINK}
-    Wait Until Element is Enabled    ${SHARE BUTTON SYSTEMS}
-    Click Button    ${SHARE BUTTON SYSTEMS}
     Wait Until Element is Visible    ${SHARE MODAL}
     Click Button    ${SHARE CLOSE}
     Wait Until Page Does Not Contain Element    ${SHARE MODAL}
 
 After closing dialog, called by link - clear link
-    [tags]    C41888    Threaded
-    Set Window Size    1920    1080
+    [tags]    C41888    Threaded    CLOUD-3733
     Log in to Auto Tests System    ${email}
-    Wait Until Elements Are Visible    ${USERS LIST LINK}
-    Click Link    ${USERS LIST LINK}
     ${location}    Get Location
 
 #Check Cancel Button
-    # Go To    ${location}/share
-    Wait Until Element is Enabled    ${SHARE BUTTON SYSTEMS}
-    Click Button    ${SHARE BUTTON SYSTEMS}
+    Go To    ${location}/share
     Wait Until Elements are Visible    ${SHARE MODAL}    ${SHARE CANCEL}
     Click Button    ${SHARE CANCEL}
     Wait Until Element is Not Visible    ${SHARE MODAL}
-    Location Should Be    ${location}
+    ${location2}    Get Location
 
 #Check 'X' Button
-    # Go To    ${location}/share
-    Wait Until Element is Enabled    ${SHARE BUTTON SYSTEMS}
-    Click Button    ${SHARE BUTTON SYSTEMS}
+    Go To    ${location}/share
     Wait Until Elements are Visible    ${SHARE MODAL}    ${SHARE CLOSE}
     Wait Until Element is Visible    ${SHARE CLOSE}
     Click Button    ${SHARE CLOSE}
     Wait Until Element is Not Visible    ${SHARE MODAL}
-    Location Should Be    ${location}
+    Location Should Be    ${location2}
 
 Sharing roles are ordered: more access is on top of the list with options
     [tags]    Threaded
