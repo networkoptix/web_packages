@@ -63,13 +63,13 @@ Reset DB and Open New Browser On Failure
 
 *** Test Cases ***
 Can be accessed via dropdown or direct link
-    [tags]    C41576    title-check
+    [tags]    C41576
     Go To    ${url}/account/password
     Log In    ${email}    ${password}    None
     Validate Log In
     Wait Until Elements Are Visible    ${CURRENT PASSWORD INPUT}    ${NEW PASSWORD INPUT}
     Location Should Be    ${url}/account/password
-    Title Should Be    Change password - ${CLOUD NAME}
+    Title Should Be    Change password - ${PRODUCT_NAME}
     Go To    ${url}
     Wait Until Element Is Visible    ${AUTO TESTS TITLE}
     Wait Until Element Is Visible    ${ACCOUNT DROPDOWN}
