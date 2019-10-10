@@ -21,7 +21,7 @@ import { NxDynamicTableComponent } from './dynamic-table.component';
     providers: [
     ],
     declarations: [
-        NxDynamicTableComponent
+        NxDynamicTableComponent,
     ],
     bootstrap: [],
     entryComponents: [

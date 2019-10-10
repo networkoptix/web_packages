@@ -4,6 +4,9 @@ import { ActivatedRoute } from '@angular/router';
 import { NxAccountService } from '../../services/account.service';
 import { NxConfigService } from '../../services/nx-config';
 import { NxSystem, NxSystemService } from '../../services/system.service';
+import { NxMenuService } from '../../components/menu/menu.service';
+import { map } from 'rxjs/operators';
+import { combineLatest } from 'rxjs';
 
 
 @Component({
@@ -24,7 +27,8 @@ export class NxHealthComponent implements OnInit {
     constructor(private accountService: NxAccountService,
                 private configService: NxConfigService,
                 private systemService: NxSystemService,
-                private route: ActivatedRoute
+                private route: ActivatedRoute,
+                private menuservice: NxMenuService,
     ) {
         this.CONFIG = this.configService.getConfig();
     }
@@ -32,11 +36,21 @@ export class NxHealthComponent implements OnInit {
     ngOnInit(): void {
         this.menu = {
             selectedSection   : '',         // updated by selectedSectionSubject
-            selectedSubSection: '',         // updated by selectedSubSectionSubject
-            system            : {},         // updated by getSystemInfo
             base              : `${this.CONFIG.systemHealthMenu.baseUrl}${this.system && this.system.id || ''}`,
-            level1            : []
+            level1            : [
+                {
+                    id: 'alerts',
+                    label: 'Alerts',
+                    path: 'alerts'
+                }
+            ]
         };
+
+        this.menuservice.selectedSectionSubject.subscribe(selection => {
+            this.menu.selectedSection = selection;
+            this.menu = {...this.menu}; // trigger onChange
+        });
+
         this.route.params.subscribe((params: any) => {
             const systemId = params.systemId;
             this.accountService.get().then((account) => {
@@ -53,7 +67,8 @@ export class NxHealthComponent implements OnInit {
                         Object.keys(this.manifest).forEach((asset) => {
                             menu.level1.push({
                                 id: asset,
-                                label: asset
+                                label: asset,
+                                path: asset
                             });
                         });
 

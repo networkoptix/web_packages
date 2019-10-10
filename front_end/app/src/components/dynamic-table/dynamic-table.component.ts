@@ -26,8 +26,8 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
 
     CONFIG: any;
 
-    elements: any;
-    headers: any[any];
+    elements: any = [];
+    headers: any = {};
 
     elementOrder: any[];
 
@@ -68,27 +68,38 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
 
     ngOnChanges(changes: SimpleChanges) {
         if (this._headers) {
+            this.headers = {};
             // Only include headers that have 'table' in display
-            this.headers = this._headers.values.filter((header) => {
-                return header.display.includes('table');
+            this._headers.forEach((headerGroup) => {
+                this.headers[headerGroup.id] = headerGroup.values.filter((header) => {
+                    return header.display.includes('table');
+                });
             });
-
-            this.elementOrder = this.headers.map(header => header.id);
         }
         if (this._elements) {
+            this.elements = [];
             // const elements = Object.values({...this._elements});
             // Array.from({length: 5}).forEach(_ => {
             //     elements.forEach(e => elements.push(e));
             // });
-            this.elements = Object.values({...this._elements}).map(({[this._headers.id]: entity}: any) => {
-                return this.elementOrder.map(key => {
-                    return entity[key];
+
+            this.elements = Object.values({...this._elements}).map((entity: any) => {
+                let element = [];
+                Object.keys(this.headers).forEach((headerGroup) => {
+                    element = element.concat(
+                        this.headers[headerGroup].map((header) => {
+                            return entity[headerGroup][header.id];
+                        })
+                    );
                 });
+                return element;
             });
             console.log(`Number of cameras: ${this.elements.length}`);
             this.setPage(1, true);
         }
     }
+
+    public keepOriginalOrder = (a, b) => a.key;
 
     ngOnInit() {
         this.setDebugAndBetaMode();

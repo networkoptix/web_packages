@@ -130,6 +130,12 @@ window.L = {};
                     .when('/health/:systemId', {
                         template: ''
                     })
+                    .when('/health/:systemId/alerts', {
+
+                    })
+                    .when('/health/:systemId/:metric', {
+
+                    })
                     .when('/systems/:systemId/users', {
                         template: ''
                     })
