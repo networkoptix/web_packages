@@ -18,7 +18,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
                     </ng-template>
                     
                     <ng-template #text>
-                        <span class="toast-content">{{ toast.textOrTpl }}</span>
+                        <span class="toast-content" [innerHTML]="toast.textOrTpl"></span>
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close"
                                 *ngIf="!toast.autohide" (click)="remove(toast)">
                             <span aria-hidden="true">&times;</span>
