@@ -41,16 +41,16 @@ class NoptixLibrary(object):
                 raise AssertionError('Failure to convert locator to WebElement!')
 
     def copy_text(self, locator):
-        locator = self.convert_xpath_to_webelement(locator)
+        locator = self.convert_locator_to_webelement(locator)
         locator.send_keys(Keys.CONTROL + 'a')
         locator.send_keys(Keys.CONTROL + 'c')
 
     def paste_text(self, locator):
-        locator = self.convert_xpath_to_webelement(locator)
+        locator = self.convert_locator_to_webelement(locator)
         locator.send_keys(Keys.CONTROL + 'v')
 
     def delete_all_text(self, locator):
-        locator = self.convert_xpath_to_webelement(locator)
+        locator = self.convert_locator_to_webelement(locator)
         locator.send_keys(Keys.CONTROL + 'a')
         locator.send_keys(Keys.BACKSPACE)
 
