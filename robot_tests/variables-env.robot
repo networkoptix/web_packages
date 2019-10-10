@@ -1,6 +1,5 @@
 *** Variables ***
 
-${CLOUD NAME}                         Nx Cloud
 ${LOCAL}                              https://localhost:9000/
 ${CLOUD TEST}                         https://cloud-test.hdw.mx
 ${CLOUD DEV}                          https://cloud-dev2.hdw.mx
