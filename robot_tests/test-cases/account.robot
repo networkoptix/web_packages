@@ -117,8 +117,7 @@ First name is required
     Log In    ${EMAIL NOPERM}    ${password}    button=None
     Validate Log In
     Verify in Account Page
-    ${locator}=   Get WebElement    ${ACCOUNT FIRST NAME}
-    Delete All Text    ${locator}
+    Delete All Text    ${ACCOUNT FIRST NAME}
     Click Element    ${ACCOUNT LAST NAME}
     Element Style Should Be    ${ACCOUNT FIRST NAME}    border-color    ${ERROR COLOR}
     Element Style Should Be    ${ACCOUNT FIRST NAME}    color    ${ERROR COLOR WITH OPACITY}

@@ -165,10 +165,9 @@ Allows copy-paste in input fields
     Click Link    ${LOG IN NAV BAR}
     Wait Until Element is Visible    ${EMAIL INPUT}
     Input Text    ${EMAIL INPUT}    Copy Paste Test
-    ${locator}    Get WebElement    ${EMAIL INPUT}
-    Copy Text    ${locator}
-    Clear Element Text    ${locator}
-    Paste Text    ${locator}
+    Copy Text    ${EMAIL INPUT}
+    Clear Element Text    ${EMAIL INPUT}
+    Paste Text    ${EMAIL INPUT}
     Textfield Should Contain    ${EMAIL INPUT}    Copy Paste Test
 
 Should respond to Esc key and close dialog
