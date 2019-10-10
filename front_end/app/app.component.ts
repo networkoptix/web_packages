@@ -35,7 +35,6 @@ export class AppComponent {
     deviceInfo: any;
     allowedDevices: {};
     hlsIsSupported: boolean;
-    headerPadding: string;
 
     constructor(private cookieService: CookieService,
                 private deviceService: DeviceDetectorService,
@@ -157,15 +156,6 @@ export class AppComponent {
         }
 
         this.CONFIG.showHeaderAndFooter = true;
-        // this.headerPadding = 'headerPadding';
-        //
-        // this.ribbonService.contextSubject.subscribe((context) => {
-        //     if (context.visibility) {
-        //         this.headerPadding = 'headerAndRibbonPadding';
-        //     } else {
-        //         this.headerPadding = 'headerPadding';
-        //     }
-        // });
 
         // Updates query params for components without routes.
         this.router.events.pipe(

@@ -44,4 +44,11 @@
         color: $dark9;
         text-align: center;
     }
+
+    a {
+        text-decoration: none;
+        &:hover {
+            opacity: .8;
+        }
+    }
 }
