@@ -127,15 +127,6 @@ window.L = {};
                     .when('/account', {
                         template: ''
                     })
-                    .when('/health/:systemId', {
-                        template: ''
-                    })
-                    .when('/health/:systemId/alerts', {
-
-                    })
-                    .when('/health/:systemId/:metric', {
-
-                    })
                     .when('/systems/:systemId/users', {
                         template: ''
                     })
@@ -149,6 +140,15 @@ window.L = {};
                     .when('/systems/:systemId/view/:cameraId', {
                         templateUrl: CONFIG.viewsDir + 'view.html',
                         controller: 'ViewPageCtrl'
+                    })
+                    .when('/systems/:systemId/health', {
+                        template: ''
+                    })
+                    .when('/systems/:systemId/health/alerts', {
+                        template: ''
+                    })
+                    .when('/systems/:systemId/health/:metric', {
+                        template: ''
                     })
                     .when('/systems/:systemId/share', {
                         template: ''

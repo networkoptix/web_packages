@@ -20,7 +20,7 @@ import { NxSystemMetricsComponent } from './metrics/metrics.component';
 
 const appRoutes: Routes = [
     {
-        path    : 'health/:systemId', component: NxHealthComponent, canActivate: [AuthGuard],
+        path    : 'systems/:systemId/health', component: NxHealthComponent, canActivate: [AuthGuard],
         children : [
             {
                 path: '', redirectTo: 'alerts',

@@ -150,7 +150,8 @@ export class NxHeaderComponent implements OnInit {
         this.active.integrations = this.isActive('/integrations');
         this.active.register = this.isActive('/register');
         this.active.view = this.isActive('/view');
-        this.active.settings = this.systemId && this.isActive('/systems') && !this.isActive('/view');
+        this.active.information = this.isActive('/health');
+        this.active.settings = this.systemId && this.isActive('/systems') && !this.isActive('/view') && !this.isActive('/health');
         this.navVisible = true;
     }
 

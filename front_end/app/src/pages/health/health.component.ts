@@ -36,7 +36,7 @@ export class NxHealthComponent implements OnInit {
     ngOnInit(): void {
         this.menu = {
             selectedSection   : '',         // updated by selectedSectionSubject
-            base              : `${this.CONFIG.systemHealthMenu.baseUrl}${this.system && this.system.id || ''}`,
+            base              : `${this.CONFIG.systemMenu.baseUrl}${this.system && this.system.id || ''}${this.CONFIG.systemHealthMenu.baseUrl}`,
             level1            : [
                 {
                     id: 'alerts',
@@ -56,7 +56,7 @@ export class NxHealthComponent implements OnInit {
             this.accountService.get().then((account) => {
                 this.account = account;
                 this.system = this.systemService.createSystem(systemId, account.email);
-                this.menu.base = `${this.CONFIG.systemHealthMenu.baseUrl}${this.system.id}`;
+                this.menu.base = `${this.CONFIG.systemMenu.baseUrl}${this.system.id}${this.CONFIG.systemHealthMenu.baseUrl}`;
 
                 this.system.getInfo().then(() => {
                     const manifest$ = this.system.mediaserver.getHealthManifest();
@@ -67,7 +67,7 @@ export class NxHealthComponent implements OnInit {
                         Object.keys(this.manifest).forEach((asset) => {
                             menu.level1.push({
                                 id: asset,
-                                label: asset,
+                                label: this.toCapitalizedWords(asset),
                                 path: asset
                             });
                         });
@@ -82,4 +82,14 @@ export class NxHealthComponent implements OnInit {
             });
         });
     }
+
+    // Temporary camelCase converter
+    toCapitalizedWords(name) {
+        const words = name.match(/[A-Za-z][a-z]*/g) || [];
+        return words.map(this.capitalize).join(' ');
+    }
+
+    capitalize(word) {
+        return word.charAt(0).toUpperCase() + word.substring(1);
+}
 }
