@@ -4,7 +4,7 @@ import { TranslateModule }                         from '@ngx-translate/core';
 import { downgradeComponent } from '@angular/upgrade/static';
 import { RouterModule }                            from '@angular/router';
 import { FormsModule }                             from '@angular/forms';
-import { NgbToastModule }                from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule, NgbToastModule }                from '@ng-bootstrap/ng-bootstrap';
 
 import { DirectivesModule }               from '../directives/directives.module';
 import { NxProcessButtonComponent }       from './process-button/process-button.component';
@@ -40,7 +40,8 @@ import { ToastsContainer }           from './toast/toast.component';
 import { NxHeaderComponent }         from './header/header.component';
 import { NxNavLocationDropdown }     from './dropdowns/nav-location/nav.component';
 import { NxApplyComponent }          from './apply/apply.component';
-import { DynamicTableModule }        from './dynamic-table/dynamic-table.module';
+import { NxDynamicTableComponent }   from './dynamic-table/dynamic-table.component';
+import { NxDynamicTablePanelComponent } from './dynamic-table-panel/dynamic-table-panel.component';
 
 @NgModule({
     imports: [
@@ -51,7 +52,7 @@ import { DynamicTableModule }        from './dynamic-table/dynamic-table.module'
         FormsModule,
         MenuModule,
         NgbToastModule,
-        DynamicTableModule,
+        NgbModule,
     ],
     declarations   : [
         NxGenericDropdown,
@@ -85,6 +86,8 @@ import { DynamicTableModule }        from './dynamic-table/dynamic-table.module'
         NxSwitchComponent,
         NxApplyComponent,
         ToastsContainer,
+        NxDynamicTableComponent,
+        NxDynamicTablePanelComponent
     ],
     entryComponents: [
         NxGenericDropdown,
@@ -118,6 +121,8 @@ import { DynamicTableModule }        from './dynamic-table/dynamic-table.module'
         NxSwitchComponent,
         NxApplyComponent,
         ToastsContainer,
+        NxDynamicTableComponent,
+        NxDynamicTablePanelComponent
     ],
     providers      : [
         NxProcessButtonComponent,
@@ -142,6 +147,8 @@ import { DynamicTableModule }        from './dynamic-table/dynamic-table.module'
         NxSwitchComponent,
         NxApplyComponent,
         ToastsContainer,
+        NxDynamicTableComponent,
+        NxDynamicTablePanelComponent,
 
         NxRibbonService,
     ],
@@ -177,9 +184,10 @@ import { DynamicTableModule }        from './dynamic-table/dynamic-table.module'
         NxSwitchComponent,
         NxApplyComponent,
         ToastsContainer,
+        NxDynamicTableComponent,
+        NxDynamicTablePanelComponent,
 
         MenuModule,
-        DynamicTableModule,
     ]
 })
 export class ComponentsModule {

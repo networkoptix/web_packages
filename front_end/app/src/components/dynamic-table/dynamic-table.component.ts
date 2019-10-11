@@ -21,6 +21,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
     @Input('headers') _headers: any[any];
     @Input('elements') _elements: any[any];
     @Input() params: any = {};
+    @Input() activeEntity;
 
     @Output() public onRowClick: EventEmitter<any> = new EventEmitter<any>();
 
@@ -29,12 +30,10 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
     elements: any = [];
     headers: any = {};
 
-    elementOrder: any[];
-
+    public selectedEntity;
     public selectedHeader;
     public showHeaders;
 
-    private selectedCamera;
     private sortOrderASC: boolean;
     private debug: boolean;
     private beta: boolean;
@@ -50,6 +49,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
     serviceHeaders;
 
     constructor(private configService: NxConfigService,
+                private utilsService: NxUtilsService,
                 private router: Router) {
 
         this.CONFIG = this.configService.getConfig();
@@ -68,45 +68,29 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
 
     ngOnChanges(changes: SimpleChanges) {
         if (this._headers) {
-            this.headers = {};
-            // Only include headers that have 'table' in display
-            this._headers.forEach((headerGroup) => {
-                this.headers[headerGroup.id] = headerGroup.values.filter((header) => {
-                    return header.display.includes('table');
-                });
-            });
+            this.headers = this._headers;
         }
         if (this._elements) {
-            this.elements = [];
-            // const elements = Object.values({...this._elements});
+            this.elements = Object.values(this._elements);
             // Array.from({length: 5}).forEach(_ => {
-            //     elements.forEach(e => elements.push(e));
+            //     this.elements.forEach(e => this.elements.push(e));
             // });
-
-            this.elements = Object.values({...this._elements}).map((entity: any) => {
-                let element = [];
-                Object.keys(this.headers).forEach((headerGroup) => {
-                    element = element.concat(
-                        this.headers[headerGroup].map((header) => {
-                            return entity[headerGroup][header.id];
-                        })
-                    );
-                });
-                return element;
-            });
+            // console.log(this.elements);
             console.log(`Number of cameras: ${this.elements.length}`);
             this.setPage(1, true);
         }
+        if (changes.activeEntity) {
+            this.selectedEntity = this.activeEntity;
+        }
     }
-
-    public keepOriginalOrder = (a, b) => a.key;
 
     ngOnInit() {
         this.setDebugAndBetaMode();
     }
 
     setClickedRow(element) {
-        // console.log(element);
+        this.onRowClick.emit(element);
+        this.selectedEntity = element;
     }
 
     setPage(page: number, keep?: boolean) {

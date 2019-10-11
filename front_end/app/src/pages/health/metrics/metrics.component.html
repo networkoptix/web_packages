@@ -1,4 +1,21 @@
-<div *ngIf="selectedData && selectedValues" class="col-12 p-0 pr-2 pr-xl-0" >
-    <nx-dynamic-table [headers]="selectedData" [elements]="selectedValues"></nx-dynamic-table>
-<!--                <div><pre>{{selectedData | json}}</pre></div>-->
+<div class="row">
+    <div *ngIf="selectedData && selectedValues"
+         class="col-12 col-md-7 col-xl-9">
+        <nx-dynamic-table
+                [headers]="selectedData"
+                [elements]="selectedValues"
+                (onRowClick)="setActiveEntity($event)"
+                [activeEntity]="activeEntity"></nx-dynamic-table>
+    <!--                <div><pre>{{selectedData | json}}</pre></div>-->
+    </div>
+
+    <div class="col-12 col-md-5 col-xl-3"
+         *ngIf="activeEntity">
+
+        <nx-dynamic-table-panel-component
+                [activeEntity]="activeEntity"
+                [panelParams]="selectedPanelData"
+                (onCloseView)="resetActiveEntity()">
+        </nx-dynamic-table-panel-component>
+    </div>
 </div>

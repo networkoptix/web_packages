@@ -1,0 +1,20 @@
+<div class="panel col-12" *ngIf="activeEntity">
+    <nx-block type='gray'>
+        <header>
+            <div class="panel-title">
+                <span>Title</span>
+            </div>
+            <span class="glyphicon close-icon detailsClose"
+                  (click)="closeView()">
+            </span>
+        </header>
+
+        <nx-section *ngFor="let paramGroup of panelParams| keyvalue: utilsService.keepOriginalOrder">
+            <h4 *ngIf="paramGroup.value.length">{{paramGroup.key}}</h4>
+            <div class="row" *ngFor="let param of paramGroup.value">
+                <div class="col-7">{{param.name || param.id}}</div>
+                <div class="col-5 ellipsis">{{activeEntity[paramGroup.key][param.id]}}</div>
+            </div>
+        </nx-section>
+    </nx-block>
+</div>

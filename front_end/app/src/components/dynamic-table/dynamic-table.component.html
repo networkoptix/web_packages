@@ -4,7 +4,7 @@
         <table class="table table-hover nx-table">
             <thead>
                 <tr>
-                    <ng-container *ngFor="let headerGroup of headers | keyvalue:keepOriginalOrder">
+                    <ng-container *ngFor="let headerGroup of headers | keyvalue: utilsService.keepOriginalOrder">
                         <th *ngFor="let header of headerGroup.value" class="align-bottom"
                             (click)="toggleHeaderSort(header)">
                             <div class="caption d-flex">
@@ -21,13 +21,15 @@
                 </tr>
             </thead>
             <tbody>
-                <tr class="table-row-spacer"></tr>
+<!--                <tr class="table-row-spacer"></tr>-->
                 <tr *ngFor="let item of pagedItems"
-                    [ngClass]="{'selected': item.sortKey == selectedCamera}"
+                    [ngClass]="{'selected': item == selectedEntity}"
                     (click)="setClickedRow(item);">
-                    <td *ngFor="let field of item">{{field}}</td>
+                    <ng-container *ngFor="let headerGroup of headers | keyvalue: utilsService.keepOriginalOrder">
+                        <td *ngFor="let header of headerGroup.value">{{item[headerGroup.key][header.id]}}</td>
+                    </ng-container>
                 </tr>
-                <tr class="table-row-spacer"></tr>
+<!--                <tr class="table-row-spacer"></tr>-->
             </tbody>
         </table>
     </div>

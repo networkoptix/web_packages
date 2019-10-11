@@ -18,14 +18,19 @@ export class NxSystemMetricsComponent implements OnInit {
     CONFIG: any;
     account: any;
     manifest: any;
+    tableHeaders: any;
+    panelParams: any;
     system: NxSystem;
     values: any;
     metricId: any;
 
     selectedData: any;
     selectedValues: any;
+    selectedPanelData: any;
 
     menu: any;
+    activeEntity: any;
+
     constructor(private accountService: NxAccountService,
                 private configService: NxConfigService,
                 private systemService: NxSystemService,
@@ -40,9 +45,11 @@ export class NxSystemMetricsComponent implements OnInit {
             this.metricId = params.metric;
             this.menuService.setSection(this.metricId);
             if (this.manifest && this.values) {
-                this.selectedData = this.manifest[this.metricId];
+                this.selectedData = this.tableHeaders[this.metricId];
+                this.selectedPanelData = this.panelParams[this.metricId];
                 this.selectedValues = this.values[this.metricId];
             }
+            this.resetActiveEntity();
         });
         this.route.parent.params.subscribe((params: any) => {
             const systemId = params.systemId;
@@ -60,12 +67,43 @@ export class NxSystemMetricsComponent implements OnInit {
                         }))
                         .subscribe((result: any) => {
                             this.manifest = result.manifestRequest.reply;
-                            this.selectedData = this.manifest[this.metricId];
                             this.values = result.valuesRequest.reply;
+                            this.initializeHeaders();
+                            this.selectedData = this.tableHeaders[this.metricId];
+                            this.selectedPanelData = this.panelParams[this.metricId];
                             this.selectedValues = this.values[this.metricId];
                         });
                 });
             });
         });
+    }
+
+    initializeHeaders() {
+        this.tableHeaders = this.filterManifestHeaders('table');
+        this.panelParams = this.filterManifestHeaders('panel');
+    }
+
+    filterManifestHeaders(displayFilter: string) {
+        const headers = {};
+        Object.keys(this.manifest).forEach((metricId) => {
+            headers[metricId] = {};
+            this.manifest[metricId].forEach((headerGroup) => {
+                const group = headerGroup.values.filter((header) => {
+                    return header.display.includes(displayFilter);
+                });
+                if (group.length) {
+                    headers[metricId][headerGroup.id] = group;
+                }
+            });
+        });
+        return headers;
+    }
+
+    setActiveEntity(entity) {
+        this.activeEntity = entity;
+    }
+
+    resetActiveEntity() {
+        this.activeEntity = undefined;
     }
 }

@@ -27,6 +27,8 @@ export class NxUtilsService {
         };
     }
 
+    public keepOriginalOrder = (a, b) => a.key;
+
     static byResolution(fn, order) {
         return (a, b) => {
             const x = fn(a).map(Number);
