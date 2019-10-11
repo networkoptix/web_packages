@@ -167,6 +167,8 @@ ${REMOVE CANCEL BUTTON}               ${MODAL DIALOG}//button[contains(text(),"$
 ${USERS LIST LINK}                    //a[@id='users']
 ${USERS LIST}                         ${USERS LIST LINK}/../../div[contains(@class,'level-3-items')]
 
+${SYSTEM ADMINISTRATION LINK}         //a[@id='admin']
+
 ${SHARE BUTTON SYSTEMS}               //nx-system-settings-component//nx-menu//nx-menu-button//button
 ${SHARE BUTTON DISABLED}              ${SHARE BUTTON SYSTEMS}${DISABLED}
 
