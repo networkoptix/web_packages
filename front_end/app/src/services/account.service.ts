@@ -49,7 +49,15 @@ export class NxAccountService {
             if (loginState === null) {
                 this.logout();
             } else if (loginState !== '') {
-                this.loginStateSubject.next(loginState);
+                this.get()
+                    .then((account) => {
+                        // prevent stale loginState
+                        if (account) {
+                            this.loginStateSubject.next(loginState);
+                        } else {
+                            this.clearLoginState();
+                        }
+                    });
             }
         });
 
