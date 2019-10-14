@@ -209,8 +209,9 @@ export class NxApplyService {
         (<NxApplyComponent>this.applyComponentRef.instance).form = form;
     }
 
-    public setVisible() {
-        (<NxApplyComponent>this.applyComponentRef.instance).applyVisible = true;
+    public setVisible(state?) {
+        state = (state === undefined) ? true : state;
+        (<NxApplyComponent>this.applyComponentRef.instance).applyVisible = state;
     }
 
     /**
