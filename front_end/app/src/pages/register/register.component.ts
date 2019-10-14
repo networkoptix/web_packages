@@ -20,8 +20,6 @@ import { NxCloudApiService }         from '../../services/nx-cloud-api';
 
 export class NxRegisterComponent implements OnInit {
 
-    @Input() uriParamCode;
-
     LANG: any = {};
 
     uriParam: string;
@@ -87,7 +85,7 @@ export class NxRegisterComponent implements OnInit {
         if (this.code) {
             let decoded: string;
             try {
-                decoded = atob(this.uriParamCode);
+                decoded = atob(this.code);
                 this.accountInfo.email = decoded.substring(decoded.indexOf(':') + 1);
                 this.lockEmail = true;
             } catch (ex) {}
