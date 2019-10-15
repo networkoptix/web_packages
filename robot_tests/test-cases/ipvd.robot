@@ -166,9 +166,7 @@ Text search
     Wait Until Element Has Class    ${IPVD PREVIOUS PAGE BUTTON}    disabled
     Click Element    ${IPVD NEXT PAGE BUTTON}
     Location should be    ${baseurl}?search=h&page=2
-    Wait Until Element Does Not Have Class
-    ...    ${IPVD PREVIOUS PAGE BUTTON}
-    ...    disabled
+    Wait Until Element Does Not Have Class    ${IPVD PREVIOUS PAGE BUTTON}    disabled
 
     Log    Step 4
     Click Element    ${IPVD PREVIOUS PAGE BUTTON}
@@ -180,15 +178,11 @@ Text search
     Wait Until Element Has Class    ${IPVD NEXT PAGE BUTTON}    disabled
 
     Log    Step 6
-    Wait Until Element Does Not Have Class
-    ...    ${IPVD PREVIOUS PAGE BUTTON}
-    ...    disabled
+    Wait Until Element Does Not Have Class    ${IPVD PREVIOUS PAGE BUTTON}    disabled
     ${page1}=   IPVD Active Page Number
     Click Element    ${IPVD PREVIOUS PAGE BUTTON}
     ${page2}=   IPVD Active Page Number
-    Should be True
-    ...    ${page2}-${page1} == -1
-    ...    Problem selecting Previous page of results
+    Should be True    ${page2}-${page1} == -1    Problem selecting Previous page of results
 
     Log    Step 7
     Click Element    ${IPVD CLEAR TEXT SEARCH BUTTON}
@@ -306,29 +300,20 @@ Text in Search Input is kept after clicking X on Applied Features filter indicat
     Click Element    ${IPVD DEVS FILTER PTZ CAMERAS}
     IPVD Text Search    Axis
     ${numberOfFiltersApplied}=   Get Text    ${IPVD FILTERS APPLIED BUTTON}
-    Should be Equal As Strings
-    ...    ${numberOfFiltersApplied}
-    ...    2 ${IPVD FILTERS APPLIED TEXT}
-    Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages
-    ...    1
-    ...    Axis
-    Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages
-    ...    8
-    ...    ●
+    Should be Equal As Strings    ${numberOfFiltersApplied}    2 ${IPVD FILTERS APPLIED TEXT}
+    Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages    1    Axis
+    Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages    8    ●
 
     Log    Step 2
     Click Element    ${IPVD ADV SEARCH BUTTON}
-    Click Element
-    ...    ${IPVD ADV FEATURES PTZ}${IPVD ADV FEATURES CLOSE BUTTON}
+    Click Element    ${IPVD ADV FEATURES PTZ}${IPVD ADV FEATURES CLOSE BUTTON}
     ${numberOfFiltersApplied}=   Get Text    ${IPVD FILTERS APPLIED BUTTON}
     Should be Equal As Strings
     ...    ${numberOfFiltersApplied}
     ...    ${IPVD ADV FILTER TYPE} – ${IPVD ADV TYPE CAMERA}
     ${filterText}=   Get Element Attribute    ${IPVD SEARCH BAR}    value
     Should be Equal As Strings    ${filterText}    Axis
-    Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages
-    ...    1
-    ...    Axis
+    Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages    1    Axis
 
 Advanced search
     [tags]    C48968    IPVD
@@ -345,11 +330,8 @@ Advanced search
     ...    ${IPVD ADV FEATURES PTZ}/div
     ...    background-color
     ...    ${COLOR LIGHT16 RGB}
-    Wait until Elements are Visible
-    ...    ${IPVD ADV FEATURES PTZ}${IPVD ADV FEATURES CLOSE BUTTON}
-    Wait until Element has Class
-    ...    ${IPVD ADV FEATURES PTZ}/div
-    ...    badge-selected
+    Wait until Element is Visible    ${IPVD ADV FEATURES PTZ}${IPVD ADV FEATURES CLOSE BUTTON}
+    Wait until Element has Class    ${IPVD ADV FEATURES PTZ}/div    badge-selected
 
     Log    Step 3
     Verify Button Arrow Direction   ${IPVD ADV FILTERS MIN RES}    Down
