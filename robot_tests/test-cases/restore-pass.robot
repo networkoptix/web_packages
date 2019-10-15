@@ -204,12 +204,12 @@ should prompt log user out if he visits restore password link from email
     Should Match    ${replaced}    ${RESET EMAIL SENT MESSAGE TEXT}
     ${link}    Get Email Link    ${email}    restore_password
     Go To    ${link}
-    Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${LOGGED IN LOG OUT BUTTON}
+    Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${LOGGED IN CANCEL BUTTON}
     Click Button    ${LOGGED IN STAY LOGGED IN BUTTON}
     Validate Log In
     Go To    ${link}
-    Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${LOGGED IN LOG OUT BUTTON}
-    Click Button    ${LOGGED IN LOG OUT BUTTON}
+    Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${LOGGED IN CANCEL BUTTON}
+    Click Button    ${LOGGED IN CANCEL BUTTON}
     Validate Log Out
     Wait Until Elements Are Visible    ${RESET PASSWORD INPUT}    ${SAVE PASSWORD}
 
