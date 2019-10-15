@@ -45,10 +45,7 @@
         text-align: center;
     }
 
-    a {
-        text-decoration: none;
-        &:hover {
-            opacity: .8;
-        }
+    a:hover {
+        opacity: .8;
     }
 }
