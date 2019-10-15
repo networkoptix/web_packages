@@ -38,9 +38,7 @@ Validate Landing Page Contents
     ...    ${search_placeholder}
     ...    Search by model or manufacturer
     ...    ignore_case=true
-    Element should contain
-    ...    ${IPVD ADV SEARCH BUTTON}
-    ...    ${IPVD ADV SEARCH BUTTON TEXT}
+    Element should contain    ${IPVD ADV SEARCH BUTTON}    ${IPVD ADV SEARCH BUTTON TEXT}
     Element should contain
     ...    ${IPVD MANUFACTURERS PANE}//header/span
     ...    manufacturers
@@ -101,10 +99,7 @@ IPVD Text Search Expecting No Results
     Click Element    ${IPVD SEARCH BAR}
     Element should be Focused    ${IPVD SEARCH BAR}
     Input Text    ${IPVD SEARCH BAR}    ${SearchString}
-    Elements should Not be Visible
-    ...    ${IPVD TABLE}
-    ...    ${IPVD PAGINATION}
-    ...    ${IPVD EXPORT TO CSV}
+    Elements should Not be Visible    ${IPVD TABLE}    ${IPVD PAGINATION}    ${IPVD EXPORT TO CSV}
 
 IPVD Table Row Count
     [Arguments]    ${AllPages}=False
@@ -137,10 +132,7 @@ Validate IPVD Device Table Column contains Desired Value in all Rows on all Page
 Validate IPVD Device Table Column contains Desired Value in all Rows
     [Arguments]    ${column}    ${SearchString}
     ${rowCount}=   Validate IPVD Device Table Not Empty
-    Table Column should Contain
-    ...    ${IPVD TABLE}
-    ...    ${column}
-    ...    ${SearchString}
+    Table Column should Contain    ${IPVD TABLE}    ${column}    ${SearchString}
     :FOR    ${rowNumber}    IN RANGE    1    ${rowCount}+1
     \    Element should be Visible    ${IPVD TABLE ROWS}\[${rowNumber}]/td\[${column}]//div[contains(text(),'${SearchString}')]
 
@@ -213,12 +205,8 @@ Verify IPVD Advanced Search is Closed
     ...    ${IPVD ADV SEARCH BUTTON}
     ...    background-color
     ...    ${COLOR LIGHT4 RGB}
-    Verify Button Arrow Direction
-    ...    ${IPVD ADV SEARCH BUTTON}
-    ...    Down
-    Wait until Element does Not have Class
-    ...    ${IPVD ADV SEARCH BUTTON}
-    ...    selected
+    Verify Button Arrow Direction    ${IPVD ADV SEARCH BUTTON}    Down
+    Wait until Element does Not have Class    ${IPVD ADV SEARCH BUTTON}    selected
     Elements should Not be Visible
     # IPVD Advanced Filters
     ...    ${IPVD ADV FILTERS MIN RES}
@@ -242,12 +230,8 @@ Verify IPVD Advanced Search is Open
     ...    ${IPVD ADV SEARCH BUTTON}
     ...    background-color
     ...    ${COLOR LIGHT16 RGB}
-    Verify Button Arrow Direction
-    ...    ${IPVD ADV SEARCH BUTTON}
-    ...    Up
-    Wait until Element has Class
-    ...    ${IPVD ADV SEARCH BUTTON}
-    ...    selected
+    Verify Button Arrow Direction    ${IPVD ADV SEARCH BUTTON}    Up
+    Wait until Element has Class    ${IPVD ADV SEARCH BUTTON}    selected
     Wait until Elements are Visible
     # IPVD Advanced Filters
     ...    ${IPVD ADV FILTERS MIN RES}
@@ -265,17 +249,11 @@ Verify IPVD Advanced Search is Open
     ...    ${IPVD ADV FEATURES MULTI SENSOR}
 
 Validate Manufacturer More Count
-    Wait until Elements are Visible
-    ...    ${IPVD MANUFACTURERS PANE}
-    ...    ${IPVD AND MORE}
+    Wait until Elements are Visible    ${IPVD MANUFACTURERS PANE}    ${IPVD AND MORE}
     ${count}=   Get Text    ${IPVD MANUFACTURERS PANE}//h4/header
-    ${count}=   Remove String Using Regexp
-    ...    ${count}
-    ...    \\ ${IPVD MANUFACTURERS TEXT}
+    ${count}=   Remove String Using Regexp    ${count}    \\ ${IPVD MANUFACTURERS TEXT}
     ${more}=   Get Text    ${IPVD AND MORE}
-    ${more}=   Remove String Using Regexp
-    ...    ${more}
-    ...    \\D
+    ${more}=   Remove String Using Regexp    ${more}    \\D
     Should be True    ${more} == ${count}-${IPVD VENDORS SHOWN}
     ...    Expected ${more} to be ${count} minus ${IPVD VENDORS SHOWN}.
 
@@ -296,9 +274,7 @@ Validate Request Form Initial State
 
 Validate Privacy Policy
     Element should be Visible    ${IPVD FEEDBACK PRIVACY POLICY}
-    ${url}=   Get Element Attribute
-    ...    ${IPVD FEEDBACK PRIVACY POLICY}
-    ...    href
+    ${url}=   Get Element Attribute    ${IPVD FEEDBACK PRIVACY POLICY}    href
     Should Contain    ${url}    privacy    # TODO: CLOUD-2949
     # Should Contain    ${url}    ${PRIVACY POLICY URL}
     Click Element    ${IPVD FEEDBACK PRIVACY POLICY}

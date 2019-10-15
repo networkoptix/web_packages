@@ -433,8 +433,7 @@ Advanced search
 # I have commented these out as they are causing errors on a part of the code that is
 # only accessible in debug mode.  Once analytics is a standard then we will revisit.
     # Log    Step 13
-    # Click Element
-    # ...    ${IPVD ADV FEATURES CLOSE BUTTON}
+    # Click Element    ${IPVD ADV FEATURES CLOSE BUTTON}
     # Validate on IPVD Page
     # Go To IPVD Page with arguments    ?debug=true
     # Click Element    ${IPVD ADV SEARCH BUTTON}
@@ -443,58 +442,31 @@ Advanced search
     # Click Element
     # ...    ${IPVD ADV FILTERS ANALYTICS}${IPVD ADV FILTERS DROPDOWN MENU ITEMS}/div/label[text()='Entering the area']
     # Click Element    ${IPVD ADV FILTERS ANALYTICS}
-    # Element Text should be
-    # ...    ${IPVD ADV FILTERS ANALYTICS}
-    # ...    Entering the area
-    # Element Text should be
-    # ...    ${IPVD FILTERS APPLIED BUTTON}
-    # ...    Entering the area
-    # Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages
-    # ...    10
-    # ...    ●
+    # Element Text should be    ${IPVD ADV FILTERS ANALYTICS}    Entering the area
+    # Element Text should be    ${IPVD FILTERS APPLIED BUTTON}    Entering the area
+    # Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages    10    ●
 
     # Log    Step 14
     # Click Element    ${IPVD ADV FILTERS ANALYTICS}
     # Click Element
     # ...    ${IPVD ADV FILTERS ANALYTICS}${IPVD ADV FILTERS DROPDOWN MENU ITEMS}/div/label[text()='Somebody appeared']
     # Click Element    ${IPVD ADV FILTERS ANALYTICS}
-    # Element Text should be
-    # ...    ${IPVD ADV FILTERS ANALYTICS}
-    # ...    2 ${IPVD FILTERS SELECTED TEXT}
-    # Element Text should be
-    # ...    ${IPVD FILTERS APPLIED BUTTON}
-    # ...    2 ${IPVD FILTERS ANALYTICS TEXT}
-    # Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages
-    # ...    10
-    # ...    ●
+    # Element Text should be    ${IPVD ADV FILTERS ANALYTICS}    2 ${IPVD FILTERS SELECTED TEXT}
+    # Element Text should be    ${IPVD FILTERS APPLIED BUTTON}    2 ${IPVD FILTERS ANALYTICS TEXT}
+    # Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages    10    ●
 
     # Log    Step 15
-    # Click Element
-    # ...    ${IPVD ADV FEATURES PTZ}
-    # Element Text should be
-    # ...    ${IPVD FILTERS APPLIED BUTTON}
-    # ...    3 ${IPVD FILTERS APPLIED TEXT}
-    # Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages
-    # ...    8
-    # ...    ●
-    # Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages
-    # ...    10
-    # ...    ●
+    # Click Element    ${IPVD ADV FEATURES PTZ}
+    # Element Text should be    ${IPVD FILTERS APPLIED BUTTON}    3 ${IPVD FILTERS APPLIED TEXT}
+    # Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages    8    ●
+    # Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages    10    ●
 
     # Log    Step 16
     # Click Element    ${IPVD ADV FILTERS ANALYTICS}
     # Click Element
     # ...    ${IPVD ADV FILTERS ANALYTICS}${IPVD ADV FILTERS DROPDOWN MENU ITEMS}/div/label[text()='Somebody appeared']
     # Click Element    ${IPVD ADV FILTERS ANALYTICS}
-    # Element Text should be
-    # ...    ${IPVD ADV FILTERS ANALYTICS}
-    # ...    Entering the area
-    # Element Text should be
-    # ...    ${IPVD FILTERS APPLIED BUTTON}
-    # ...    2 ${IPVD FILTERS APPLIED TEXT}
-    # Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages
-    # ...    8
-    # ...    ●
-    # Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages
-    # ...    10
-    # ...    ●
+    # Element Text should be    ${IPVD ADV FILTERS ANALYTICS}    Entering the area
+    # Element Text should be    ${IPVD FILTERS APPLIED BUTTON}    2 ${IPVD FILTERS APPLIED TEXT}
+    # Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages    8    ●
+    # Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages    10    ●
