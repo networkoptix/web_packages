@@ -27,15 +27,19 @@ export class NxSystemsService implements OnDestroy {
         this.systemsPoll = pollService.createPoll(this.cloudApi.systems(), this.CONFIG.updateInterval);
     }
 
-    forceUpdateSystems() {
+    forceUpdateSystems(userEmail?) {
+        if (userEmail) {
+            this.currentUser = userEmail;
+        }
+
         return this.cloudApi.systems().pipe(tap((systems) => {
             this.processSystems(systems);
             this.systemsSubject.next(systems);
         }));
     }
 
-    forceUpdateSystemsAsPromise() {
-        return this.forceUpdateSystems().toPromise();
+    forceUpdateSystemsAsPromise(userEmail?) {
+        return this.forceUpdateSystems(userEmail).toPromise();
     }
 
     getSystemOwnerName (system, currentUserEmail, forOrder?) {
@@ -81,6 +85,7 @@ export class NxSystemsService implements OnDestroy {
     getSystemAsPromise(systemId, useCache = true) {
         return this.getSystem(systemId, useCache).toPromise();
     }
+
     getSystems(userEmail) {
         this.currentUser = userEmail;
         if (this.activeSubscription) {
@@ -103,6 +108,7 @@ export class NxSystemsService implements OnDestroy {
             this.systemsPoll.unsubscribe();
         }
     }
+
     private processSystems(systems) {
         this.systems = this.sortSystems(systems, this.currentUser);
         this.systems.forEach((system) => {

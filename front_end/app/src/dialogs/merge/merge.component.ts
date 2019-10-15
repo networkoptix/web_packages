@@ -40,7 +40,7 @@ export class MergeModalContent {
 
     account: any;
 
-    @ViewChild('mergeForm', { static: true }) mergeForm: HTMLFormElement;
+    @ViewChild('mergeForm', { static: false }) mergeForm: HTMLFormElement;
 
     constructor(public activeModal: NgbActiveModal,
                 public renderer: Renderer2,
@@ -73,12 +73,14 @@ export class MergeModalContent {
             this.account = account;
         });
 
-
         this.initProcesses();
     }
 
     initProcesses() {
         this.mergingProcess = this.processService.createProcess(() => {
+            if (!this.password) {
+                return Promise.reject({ error: { data: {resultCode : 'missingPassword'}}});
+            }
             return this.cloudApi.merge(this.primarySystem.id, this.secondarySystem.id, this.password);
         }, {
             errorCodes: {
@@ -87,6 +89,9 @@ export class MergeModalContent {
                 },
                 vmsRequestFailure: () => {
                     return this.LANG.system.mergeFailed;
+                },
+                missingPassword: () => {
+
                 },
                 wrongPassword: () => {
                     this.mergeForm.controls.mergePassword.setErrors({ wrongPassword: true });
@@ -106,12 +111,23 @@ export class MergeModalContent {
                     this.CONFIG.systemStatuses.slave
             });
         }, (error) => {
-            if (error.data.resultCode !== 'wrongPassword') {
+            const errorCode = error.resultCode || error.data && error.data.resultCode;
+            if (errorCode === 'missingPassword') {
+                this.mergeForm.controls.mergePassword.setErrors({ required: true });
+                return;
+            }
+            if (errorCode !== 'wrongPassword') {
                 /* Get the names of the primary and secondary system.
                    Next try to figure out which system caused the problem.
                    If the primary system's stateOfHealth is not online set it as the failedSystem.
                    Otherwise the secondary system is set as the failedSystem no matter what.
                  */
+
+                if (!error.data) {
+                    error.data = {};
+                }
+
+                error.data.resultCode = errorCode;
                 // Set the name of the primary system.
                 error.data.primarySystemName = this.primarySystem.name;
                 // If name is undefined try looking in info for the name.
@@ -217,22 +233,25 @@ export class MergeModalContent {
 
     precheckSystemMerge() {
         this.targetSystem = this.systemService.createSystem(this.targetSystem.id, this.account.email);
-        return this.targetSystem.getUsersDataFromTheSystem().then(() => {
-            return Promise.all([
-                this.system.mediaserver.getMediaServers().toPromise().catch(error => {
-                    return Promise.reject({system: 'current', errorResponse: error});
-                }),
-                this.targetSystem.mediaserver.getMediaServers().toPromise().catch(error => {
-                    return Promise.reject({system: 'target', errorResponse: error});
-                })
-            ]).then(res => {
-                this.tooManySystems = res.map(req => req.length)
-                                         .reduce((acc, cur) => acc + cur) > this.CONFIG.maxServers;
 
-                return Promise.resolve({});
+        return this.targetSystem.getInfo(true, false).then((system) => {
+            return this.targetSystem.getUsersDataFromTheSystem().then(() => {
+                return Promise.all([
+                    this.system.mediaserver.getMediaServers().toPromise().catch(error => {
+                        return Promise.reject({ system: 'current', errorResponse: error });
+                    }),
+                    this.targetSystem.mediaserver.getMediaServers().toPromise().catch(error => {
+                        return Promise.reject({ system: 'target', errorResponse: error });
+                    })
+                ]).then(res => {
+                    this.tooManySystems = res.map(req => req.length)
+                                             .reduce((acc, cur) => acc + cur) > this.CONFIG.maxServers;
+
+                    return Promise.resolve({});
+                });
+            }, (err) => {
+                return Promise.reject(err);
             });
-        }, (err) => {
-            return err;
         });
     }
 

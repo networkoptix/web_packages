@@ -137,7 +137,7 @@
                            [(ngModel)]="password" #mergePassword="ngModel"
                            id="mergePassword" autocomplete="new-password"
                            name="mergePassword" type="password"
-                           required nxFocusMe>
+                           nxFocusMe>
                     <div *ngIf="mergePassword.invalid && mergePassword.touched && !wrongPassword">
                         <label class="input-error" translate>Password is required</label>
                     </div>
