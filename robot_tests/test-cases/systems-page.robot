@@ -72,8 +72,8 @@ should show the no systems connected message when you have no systems
     Validate Log In
     Wait Until Element Is Visible    ${YOU HAVE NO SYSTEMS}
 
-should show system name in header with no dropdown if user has only one system
-    [tags]    C41569    Threaded
+should show system name in header dropdown with "Open in Nx Witness" button if user has only one system
+    [tags]    C41569    Threaded    123
     Log In    ${EMAIL OWNER}    ${password}
     Validate Log In
     Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
@@ -85,7 +85,10 @@ should show system name in header with no dropdown if user has only one system
     Log Out
     Log In    ${EMAIL NOPERM}    ${password}    None
     Validate Log In
-    Wait Until Element Is Visible    ${SYSTEM NAME AUTO TESTS HEADER}
+    Wait Until Element Is Visible    ${SYSTEMS DROPDOWN}
+    Click Button    ${SYSTEMS DROPDOWN}
+    Wait Until Element Is Visible    ${OPEN IN NX BUTTON}
+    Click Button    ${OPEN IN NX BUTTON}
     Log Out
     Log In    ${EMAIL OWNER}    ${password}
     Validate Log In
