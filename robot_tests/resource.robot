@@ -33,14 +33,14 @@ Regular Open Browser
     Set Screenshot Directory    ${SCREENSHOT_DIRECTORY}
     ${chrome_options}=    Set Chrome Options
     Create Webdriver    ${BROWSER}    chrome_options=${chrome_options}
-    Maximize Browser Window
+    Set Window Size    1920    1080
     Go To    ${ENV}
 
 Open Browser With Options
     Set Screenshot Directory    ${SCREENSHOT_DIRECTORY}
     ${chrome_options}=    Set Chrome Options Headless
     Create Webdriver    Chrome    chrome_options=${chrome_options}
-    Maximize Browser Window
+    Set Window Size    1920    1080
     Go to    ${ENV}
 
 Set Chrome Options

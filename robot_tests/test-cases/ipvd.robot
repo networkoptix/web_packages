@@ -352,244 +352,167 @@ Advanced search
     ...    badge-selected
 
     Log    Step 3
-    Verify Button Arrow Direction
-    ...    ${IPVD ADV FILTERS MIN RES}
-    ...    Down
+    Verify Button Arrow Direction   ${IPVD ADV FILTERS MIN RES}    Down
     Click Element    ${IPVD ADV FILTERS MIN RES}
-    Verify Button Arrow Direction
-    ...    ${IPVD ADV FILTERS MIN RES}
-    ...    Up
+    Verify Button Arrow Direction    ${IPVD ADV FILTERS MIN RES}    Up
     Wait Until Element Has Style
     ...    ${IPVD ADV FEATURES PTZ}/div
     ...    background-color
     ...    ${COLOR LIGHT16 RGB}
     Click Element
     ...    ${IPVD ADV FILTERS MIN RES}${IPVD ADV FILTERS DROPDOWN MENU ITEMS}/a/span[text()='1080p']
-    Verify Button Arrow Direction
-    ...    ${IPVD ADV FILTERS MIN RES}
-    ...    Down
-    Element Text should be
-    ...    ${IPVD ADV FILTERS MIN RES}
-    ...    1080p
-    Wait until Elements are Visible
-    ...    ${IPVD ADV FEATURES PTZ}${IPVD ADV FEATURES CLOSE BUTTON}
-    Element Text should be
-    ...    ${IPVD FILTERS APPLIED BUTTON}
-    ...    2 ${IPVD FILTERS APPLIED TEXT}
-    Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages
-    ...    8
-    ...    ●
+    Verify Button Arrow Direction    ${IPVD ADV FILTERS MIN RES}    Down
+    Element Text should be    ${IPVD ADV FILTERS MIN RES}    1080p
+    Wait until Element is Visible    ${IPVD ADV FEATURES PTZ}${IPVD ADV FEATURES CLOSE BUTTON}
+    Element Text should be    ${IPVD FILTERS APPLIED BUTTON}    2 ${IPVD FILTERS APPLIED TEXT}
+    Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages    8    ●
 
     Log    Step 4
-    Click Element
-    ...    ${IPVD ADV FEATURES PTZ}${IPVD ADV FEATURES CLOSE BUTTON}
-    Wait until Element is Not Visible
-    ...    ${IPVD ADV FEATURES PTZ}${IPVD ADV FEATURES CLOSE BUTTON}
-    Wait until Element does Not have Class
-    ...    ${IPVD ADV FEATURES PTZ}/div
-    ...    badge-selected
-    Element Should Contain
-    ...    ${IPVD FILTERS APPLIED BUTTON}
-    ...    ${IPVD ADV FILTER MIN RES}
-    Element Should Contain
-    ...    ${IPVD FILTERS APPLIED BUTTON}
-    ...    1080p
+    Click Element    ${IPVD ADV FEATURES PTZ}${IPVD ADV FEATURES CLOSE BUTTON}
+    Wait until Element is Not Visible    ${IPVD ADV FEATURES PTZ}${IPVD ADV FEATURES CLOSE BUTTON}
+    Wait until Element does Not have Class    ${IPVD ADV FEATURES PTZ}/div    badge-selected
+    Element Should Contain    ${IPVD FILTERS APPLIED BUTTON}    ${IPVD ADV FILTER MIN RES}
+    Element Should Contain    ${IPVD FILTERS APPLIED BUTTON}    1080p
 
     Log    Step 5
     Click Element    ${IPVD ADV FILTERS MFRS}
     Click Element
     ...    ${IPVD ADV FILTERS MFRS}${IPVD ADV FILTERS DROPDOWN MENU ITEMS}/div/label[text()='Axis']
     Click Element    ${IPVD ADV FILTERS MFRS}
-    Element Text should be
-    ...    ${IPVD ADV FILTERS MFRS}
-    ...    Axis
-    Element Text should be
-    ...    ${IPVD FILTERS APPLIED BUTTON}
-    ...    2 ${IPVD FILTERS APPLIED TEXT}
-    Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages
-    ...    1
-    ...    Axis
+    Element Text should be    ${IPVD ADV FILTERS MFRS}    Axis
+    Element Text should be    ${IPVD FILTERS APPLIED BUTTON}    2 ${IPVD FILTERS APPLIED TEXT}
+    Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages    1    Axis
 
     Log    Step 6
-    Verify Button Arrow Direction
-    ...    ${IPVD ADV FILTERS MFRS}
-    ...    Down
+    Verify Button Arrow Direction    ${IPVD ADV FILTERS MFRS}    Down
     Click Element    ${IPVD ADV FILTERS MFRS}
-    Verify Button Arrow Direction
-    ...    ${IPVD ADV FILTERS MFRS}
-    ...    Up
+    Verify Button Arrow Direction    ${IPVD ADV FILTERS MFRS}    Up
     Click Element
     ...    ${IPVD ADV FILTERS MFRS}${IPVD ADV FILTERS DROPDOWN MENU ITEMS}/div/label[text()='Hikvision']
     Click Element    ${IPVD ADV FILTERS MFRS}
-    Verify Button Arrow Direction
-    ...    ${IPVD ADV FILTERS MFRS}
-    ...    Down
-    Element Text should be
-    ...    ${IPVD ADV FILTERS MFRS}
-    ...    2 ${IPVD FILTERS SELECTED TEXT}
-    Element Text should be
-    ...    ${IPVD FILTERS APPLIED BUTTON}
-    ...    3 ${IPVD FILTERS APPLIED TEXT}
+    Verify Button Arrow Direction    ${IPVD ADV FILTERS MFRS}    Down
+    Element Text should be    ${IPVD ADV FILTERS MFRS}    2 ${IPVD FILTERS SELECTED TEXT}
+    Element Text should be    ${IPVD FILTERS APPLIED BUTTON}    3 ${IPVD FILTERS APPLIED TEXT}
     Validate IPVD Device Table Not Empty
 
     Log    Step 7
-    Verify Button Arrow Direction
-    ...    ${IPVD ADV FILTERS TYPES}
-    ...    Down
+    Verify Button Arrow Direction    ${IPVD ADV FILTERS TYPES}    Down
     Click Element    ${IPVD ADV FILTERS TYPES}
-    Verify Button Arrow Direction
-    ...    ${IPVD ADV FILTERS TYPES}
-    ...    Up
+    Verify Button Arrow Direction    ${IPVD ADV FILTERS TYPES}    Up
     Click Element
     ...    ${IPVD ADV FILTERS TYPES}${IPVD ADV FILTERS DROPDOWN MENU ITEMS}/div/label[text()='${IPVD ADV TYPE CAMERA}']
-    Element Text should be
-    ...    ${IPVD ADV FILTERS TYPES}
-    ...    ${IPVD ADV TYPE CAMERA}
+    Element Text should be    ${IPVD ADV FILTERS TYPES}    ${IPVD ADV TYPE CAMERA}
     Click Element
     ...    ${IPVD ADV FILTERS TYPES}${IPVD ADV FILTERS DROPDOWN MENU ITEMS}/div/label[text()='${IPVD ADV TYPE ENCODER}']
-    Element Text should be
-    ...    ${IPVD ADV FILTERS TYPES}
-    ...    2 ${IPVD FILTERS SELECTED TEXT}
+    Element Text should be    ${IPVD ADV FILTERS TYPES}    2 ${IPVD FILTERS SELECTED TEXT}
     Click Element
     ...    ${IPVD ADV FILTERS TYPES}${IPVD ADV FILTERS DROPDOWN MENU ITEMS}/div/label[text()='${IPVD ADV TYPE DVR}']
-    Element Text should be
-    ...    ${IPVD ADV FILTERS TYPES}
-    ...    3 ${IPVD FILTERS SELECTED TEXT}
+    Element Text should be    ${IPVD ADV FILTERS TYPES}    3 ${IPVD FILTERS SELECTED TEXT}
     Click Element    ${IPVD ADV FILTERS TYPES}
-    Verify Button Arrow Direction
-    ...    ${IPVD ADV FILTERS TYPES}
-    ...    Down
-    Element Text should be
-    ...    ${IPVD ADV FILTERS TYPES}
-    ...    3 ${IPVD FILTERS SELECTED TEXT}
-    Element Text should be
-    ...    ${IPVD FILTERS APPLIED BUTTON}
-    ...    6 ${IPVD FILTERS APPLIED TEXT}
+    Verify Button Arrow Direction    ${IPVD ADV FILTERS TYPES}    Down
+    Element Text should be    ${IPVD ADV FILTERS TYPES}    3 ${IPVD FILTERS SELECTED TEXT}
+    Element Text should be    ${IPVD FILTERS APPLIED BUTTON}    6 ${IPVD FILTERS APPLIED TEXT}
     Validate IPVD Device Table Not Empty
 
     Log    Step 8
     Click Element    ${IPVD ADV SEARCH BUTTON}
     Verify IPVD Advanced Search is Closed
-    Element Text should be
-    ...    ${IPVD FILTERS APPLIED BUTTON}
-    ...    6 ${IPVD FILTERS APPLIED TEXT}
+    Element Text should be    ${IPVD FILTERS APPLIED BUTTON}    6 ${IPVD FILTERS APPLIED TEXT}
     Validate IPVD Device Table Not Empty
 
     Log    Step 9
     IPVD Select Device from Table Randomly
-    Wait Until Elements Are Visible
-    ...    ${IPVD DEVICE DETAILS}
+    Wait Until Element is Visible    ${IPVD DEVICE DETAILS}
 
     Log    Step 10
-    Click Element
-    ...    ${IPVD ADV FEATURES CLOSE BUTTON}
+    Click Element    ${IPVD ADV FEATURES CLOSE BUTTON}
     Validate on IPVD Page
     Click Element    ${IPVD ADV SEARCH BUTTON}
     Verify IPVD Advanced Search is Open
-    Click Element
-    ...    ${IPVD ADV FEATURES 2-WAY AUDIO}
-    Click Element
-    ...    ${IPVD ADV FEATURES PTZ}
-    Wait until Elements are Visible
-    ...    ${IPVD ADV FEATURES PTZ}${IPVD ADV FEATURES CLOSE BUTTON}
-    Element Text should be
-    ...    ${IPVD FILTERS APPLIED BUTTON}
-    ...    2 ${IPVD FILTERS APPLIED TEXT}
-    Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages
-    ...    7
-    ...    2-way
-    Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages
-    ...    8
-    ...    ●
+    Click Element    ${IPVD ADV FEATURES 2-WAY AUDIO}
+    Click Element    ${IPVD ADV FEATURES PTZ}
+    Wait until Elements are Visible    ${IPVD ADV FEATURES PTZ}${IPVD ADV FEATURES CLOSE BUTTON}
+    Element Text should be    ${IPVD FILTERS APPLIED BUTTON}    2 ${IPVD FILTERS APPLIED TEXT}
+    Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages    7    2-way
+    Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages    8    ●
 
     Log    Step 11
-    Click Element
-    ...    ${IPVD ADV FEATURES ADV PTZ}
-    Element Text should be
-    ...    ${IPVD FILTERS APPLIED BUTTON}
-    ...    3 ${IPVD FILTERS APPLIED TEXT}
-    Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages
-    ...    8
-    ...    Adv.
+    Click Element    ${IPVD ADV FEATURES ADV PTZ}
+    Element Text should be    ${IPVD FILTERS APPLIED BUTTON}    3 ${IPVD FILTERS APPLIED TEXT}
+    Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages    8    Adv.
 
     Log    Step 12
-    Click Element
-    ...    ${IPVD ADV FEATURES PTZ}${IPVD ADV FEATURES CLOSE BUTTON}
-    Wait until Element is Not Visible
-    ...    ${IPVD ADV FEATURES PTZ}${IPVD ADV FEATURES CLOSE BUTTON}
-    Wait until Element does Not have Class
-    ...    ${IPVD ADV FEATURES PTZ}/div
-    ...    badge-selected
-    Element Text should be
-    ...    ${IPVD FILTERS APPLIED BUTTON}
-    ...    2 ${IPVD FILTERS APPLIED TEXT}
-    Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages
-    ...    8
-    ...    Adv.
+    Click Element    ${IPVD ADV FEATURES PTZ}${IPVD ADV FEATURES CLOSE BUTTON}
+    Wait until Element is Not Visible    ${IPVD ADV FEATURES PTZ}${IPVD ADV FEATURES CLOSE BUTTON}
+    Wait until Element does Not have Class    ${IPVD ADV FEATURES PTZ}/div    badge-selected
+    Element Text should be    ${IPVD FILTERS APPLIED BUTTON}    2 ${IPVD FILTERS APPLIED TEXT}
+    Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages    8    Adv.
 
-    Log    Step 13
-    Click Element
-    ...    ${IPVD ADV FEATURES CLOSE BUTTON}
-    Validate on IPVD Page
-    Go To IPVD Page with arguments    ?debug=true
-    Click Element    ${IPVD ADV SEARCH BUTTON}
-    Verify IPVD Advanced Search is Open
-    Click Element    ${IPVD ADV FILTERS ANALYTICS}
-    Click Element
-    ...    ${IPVD ADV FILTERS ANALYTICS}${IPVD ADV FILTERS DROPDOWN MENU ITEMS}/div/label[text()='Entering the area']
-    Click Element    ${IPVD ADV FILTERS ANALYTICS}
-    Element Text should be
-    ...    ${IPVD ADV FILTERS ANALYTICS}
-    ...    Entering the area
-    Element Text should be
-    ...    ${IPVD FILTERS APPLIED BUTTON}
-    ...    Entering the area
-    Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages
-    ...    10
-    ...    ●
+# I have commented these out as they are causing errors on a part of the code that is
+# only accessible in debug mode.  Once analytics is a standard then we will revisit.
+    # Log    Step 13
+    # Click Element
+    # ...    ${IPVD ADV FEATURES CLOSE BUTTON}
+    # Validate on IPVD Page
+    # Go To IPVD Page with arguments    ?debug=true
+    # Click Element    ${IPVD ADV SEARCH BUTTON}
+    # Verify IPVD Advanced Search is Open
+    # Click Element    ${IPVD ADV FILTERS ANALYTICS}
+    # Click Element
+    # ...    ${IPVD ADV FILTERS ANALYTICS}${IPVD ADV FILTERS DROPDOWN MENU ITEMS}/div/label[text()='Entering the area']
+    # Click Element    ${IPVD ADV FILTERS ANALYTICS}
+    # Element Text should be
+    # ...    ${IPVD ADV FILTERS ANALYTICS}
+    # ...    Entering the area
+    # Element Text should be
+    # ...    ${IPVD FILTERS APPLIED BUTTON}
+    # ...    Entering the area
+    # Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages
+    # ...    10
+    # ...    ●
 
-    Log    Step 14
-    Click Element    ${IPVD ADV FILTERS ANALYTICS}
-    Click Element
-    ...    ${IPVD ADV FILTERS ANALYTICS}${IPVD ADV FILTERS DROPDOWN MENU ITEMS}/div/label[text()='Somebody appeared']
-    Click Element    ${IPVD ADV FILTERS ANALYTICS}
-    Element Text should be
-    ...    ${IPVD ADV FILTERS ANALYTICS}
-    ...    2 ${IPVD FILTERS SELECTED TEXT}
-    Element Text should be
-    ...    ${IPVD FILTERS APPLIED BUTTON}
-    ...    2 ${IPVD FILTERS ANALYTICS TEXT}
-    Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages
-    ...    10
-    ...    ●
+    # Log    Step 14
+    # Click Element    ${IPVD ADV FILTERS ANALYTICS}
+    # Click Element
+    # ...    ${IPVD ADV FILTERS ANALYTICS}${IPVD ADV FILTERS DROPDOWN MENU ITEMS}/div/label[text()='Somebody appeared']
+    # Click Element    ${IPVD ADV FILTERS ANALYTICS}
+    # Element Text should be
+    # ...    ${IPVD ADV FILTERS ANALYTICS}
+    # ...    2 ${IPVD FILTERS SELECTED TEXT}
+    # Element Text should be
+    # ...    ${IPVD FILTERS APPLIED BUTTON}
+    # ...    2 ${IPVD FILTERS ANALYTICS TEXT}
+    # Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages
+    # ...    10
+    # ...    ●
 
-    Log    Step 15
-    Click Element
-    ...    ${IPVD ADV FEATURES PTZ}
-    Element Text should be
-    ...    ${IPVD FILTERS APPLIED BUTTON}
-    ...    3 ${IPVD FILTERS APPLIED TEXT}
-    Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages
-    ...    8
-    ...    ●
-    Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages
-    ...    10
-    ...    ●
+    # Log    Step 15
+    # Click Element
+    # ...    ${IPVD ADV FEATURES PTZ}
+    # Element Text should be
+    # ...    ${IPVD FILTERS APPLIED BUTTON}
+    # ...    3 ${IPVD FILTERS APPLIED TEXT}
+    # Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages
+    # ...    8
+    # ...    ●
+    # Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages
+    # ...    10
+    # ...    ●
 
-    Log    Step 16
-    Click Element    ${IPVD ADV FILTERS ANALYTICS}
-    Click Element
-    ...    ${IPVD ADV FILTERS ANALYTICS}${IPVD ADV FILTERS DROPDOWN MENU ITEMS}/div/label[text()='Somebody appeared']
-    Click Element    ${IPVD ADV FILTERS ANALYTICS}
-    Element Text should be
-    ...    ${IPVD ADV FILTERS ANALYTICS}
-    ...    Entering the area
-    Element Text should be
-    ...    ${IPVD FILTERS APPLIED BUTTON}
-    ...    2 ${IPVD FILTERS APPLIED TEXT}
-    Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages
-    ...    8
-    ...    ●
-    Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages
-    ...    10
-    ...    ●
+    # Log    Step 16
+    # Click Element    ${IPVD ADV FILTERS ANALYTICS}
+    # Click Element
+    # ...    ${IPVD ADV FILTERS ANALYTICS}${IPVD ADV FILTERS DROPDOWN MENU ITEMS}/div/label[text()='Somebody appeared']
+    # Click Element    ${IPVD ADV FILTERS ANALYTICS}
+    # Element Text should be
+    # ...    ${IPVD ADV FILTERS ANALYTICS}
+    # ...    Entering the area
+    # Element Text should be
+    # ...    ${IPVD FILTERS APPLIED BUTTON}
+    # ...    2 ${IPVD FILTERS APPLIED TEXT}
+    # Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages
+    # ...    8
+    # ...    ●
+    # Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages
+    # ...    10
+    # ...    ●

@@ -373,7 +373,7 @@ ${PRIVACY POLICY HEADER}              //h1[contains(text(),'Personal data and pr
 
 ${DROPDOWN MENU}                      /..//div[contains(@class,'dropdown-menu')]
 ${DROPDOWN MENU LIST}                 ${DROPDOWN MENU}/ul[contains(@class,'dropdown-menu--list')]
-${DROPDOWN MENU ITEMS}                ${DROPDOWN MENU LIST}/li[contains(@class,'dropdown-item-container')]/a/span[not(text()='All Systems')]/../../../li
+${DROPDOWN MENU ITEMS}                ${DROPDOWN MENU LIST}/li[contains(@class,'dropdown-item-container')]/../../..//li
 
 ${DISABLED}                           \[@disabled]
 
