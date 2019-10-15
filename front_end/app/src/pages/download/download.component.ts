@@ -113,13 +113,7 @@ export class DownloadComponent implements OnInit, OnDestroy {
 
     private calcDownloadButton(platformName) {
         const platform = this.sortedPlatforms.find(platform => platform.name === platformName);
-        this.downloadButton = undefined;
-        if (platform.name === 'sdk') {
-            this.downloadButton = platform.files.find((installer) => installer.formatName === this.LANG.downloads.appTypes.metadata_sdk);
-        }
-        if (!this.downloadButton) {
-            this.downloadButton = platform.files[0];
-        }
+        this.downloadButton = platform.files[0];
     }
 
     private getDownloads() {
@@ -156,16 +150,16 @@ export class DownloadComponent implements OnInit, OnDestroy {
                                     return this.downloads.groups[platform.name].appTypes.includes(installer.appType);
                             }
                         }).map((installer) => {
-                            const translatedPlatform = this.LANG.downloads.platforms[installer.platform];
-                            const translatedAppType = this.LANG.downloads.appTypes[installer.appType];
-                            if (platform.name === 'sdk' && translatedAppType) {
-                                installer.formatName = translatedAppType;
-                            } else if (translatedPlatform && translatedAppType) {
-                                installer.formatName = `${translatedPlatform} - ${translatedAppType}`;
-                            } else if (installer.niceName) {
-                                installer.formatName = installer.niceName;
-                            } else {
-                                installer.formatName = `${installer.platform} - ${this.LANG.downloads.appTypes.package}`;
+                            if (!installer.niceName) {
+                                const translatedPlatform = this.LANG.downloads.platforms[installer.platform];
+                                const translatedAppType = this.LANG.downloads.appTypes[installer.appType];
+                                if (platform.name === 'sdk' && translatedAppType) {
+                                    installer.niceName = translatedAppType;
+                                } else if (translatedPlatform && translatedAppType) {
+                                    installer.niceName = `${translatedPlatform} - ${translatedAppType}`;
+                                } else {
+                                    installer.niceName = `${installer.platform} - ${this.LANG.downloads.appTypes.package}`;
+                                }
                             }
                             installer.url = `${this.downloadsData.releaseUrl}${installer.path}`;
                             return installer;
