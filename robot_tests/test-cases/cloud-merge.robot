@@ -224,6 +224,7 @@ Wrong and empty password
     Wait Until Element Is Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
     Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
     Validate system available    API made system 2
+    Go to System Administration
     Wait Until Element Is Visible    ${MERGE BUTTON SYSTEM}
     Click Button    ${MERGE BUTTON SYSTEM}
     Wait Until Elements Are Visible
@@ -431,6 +432,7 @@ Merge with 3.0
     Go to Users List
     Wait Until Element Is Enabled    ${SHARE BUTTON SYSTEMS}    180
 
+    Go to System Administration
     Merge    API made system 1    API made system 1    API made system 1
     Validate Merge
 
@@ -460,6 +462,7 @@ Merge with 3.0
     Go to Users List
     Wait Until Element Is Enabled    ${SHARE BUTTON SYSTEMS}    180
 
+    Go to System Administration
     Merge    API made system 1    API made system 2    API made system 2
 
     Check For Alert    ${SYSTEMS MERGE FAILED TEXT}
@@ -467,6 +470,7 @@ Merge with 3.0
     Click Button    ${MERGE FAILED OK BUTTON}
     Element Should Not Be Visible    ${MERGE FAILED DIALOG HEADER}
 
+    Go to System Administration
     Merge    API made system 1    API made system 2    API made system 2
 
     Check For Alert    ${SYSTEMS MERGE FAILED TEXT}
@@ -508,6 +512,7 @@ From secondary system merge to primary with no other systems
     Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
     Validate system available    API made system 2
 
+    Go to System Administration
     Merge    API made system 1    API made system 1    API made system 1
     Validate Merge
 
@@ -553,6 +558,7 @@ From secondary system merge to primary with other systems
     Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 3")]
     Validate system available    API made system 3
 
+    Go to System Administration
     Merge    API made system 1    API made system 1    API made system 1
     Validate Merge
 
@@ -593,6 +599,7 @@ From primary system
     Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
     Validate system available    API made system 1
 
+    Go to System Administration
     Merge    API made system 1    API made system 2    API made system 2
     Validate Merge
 

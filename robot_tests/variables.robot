@@ -183,7 +183,7 @@ ${MERGE BUTTON SYSTEM DISABLED}       //button[@disabled]/span[text()="${MERGE S
 ${MERGE DIALOG}                       //nx-modal-merge-content
 ${MERGE FORM}                         //form[@name="mergeForm"]
 ${MERGE SYSTEM DROPDOWN}              ${MERGE DIALOG}//button[@id="genericSelect"]
-${MERGE X BUTTON}                     ${MERGE DIALOG}//button[@class="close"]
+${MERGE X BUTTON}                     ${MERGE DIALOG}//button[contains(@class,"close")]
 ${MERGE OK BUTTON}                    ${MERGE DIALOG}//button[contains(@class,"btn btn-primary") and contains(text(),"${OK TEXT}")]
 ${MERGE CANCEL BUTTON}                ${MERGE DIALOG}//button[@class="btn btn-default"]
 ${MERGE BUTTON MODAL}                 ${MERGE DIALOG}//button[@class="btn btn-primary" and contains(text(),"${MERGE SYSTEMS TEXT}")]
