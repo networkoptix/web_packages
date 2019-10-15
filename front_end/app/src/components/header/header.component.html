@@ -74,14 +74,7 @@
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right auth-visible" *ngIf="dropdownsVisible">
-                    <li *ngIf="singleSystem" class="no-hover collapse-second hidden-collapse">
-                        <a href="/systems/{{activeSystem.id}}" class="m-0 border-0">
-                            <span class="glyphicon glyphicon-home"></span>
-                            <span class="ellipsis">{{activeSystem.name}}</span>
-                        </a>
-                    </li>
-
-                    <li *ngIf="systemCounter && !singleSystem" class="collapse-second">
+                    <li *ngIf="systemCounter" class="collapse-second">
                         <nx-systems
                                 [endpoint]="active"
                                 [systems]="systems"

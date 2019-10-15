@@ -20,8 +20,6 @@ import { NxCloudApiService }         from '../../services/nx-cloud-api';
 
 export class NxRegisterComponent implements OnInit {
 
-    @Input() uriParamCode;
-
     LANG: any = {};
 
     uriParam: string;
@@ -65,8 +63,9 @@ export class NxRegisterComponent implements OnInit {
         this.context.process = this.localStorage.get('regProcess');
 
         this.uriParam = this.route.snapshot.data.uriParam;
+
         if (this.route.snapshot.params.code) {
-            this.code = this.route.snapshot.params.code;
+            this.code = decodeURIComponent(this.route.snapshot.params.code);
         }
 
         if (this.uriParam === 'registerSuccess') {
@@ -82,12 +81,13 @@ export class NxRegisterComponent implements OnInit {
             this.accountService.logoutAuthorised();
         } else if (this.activated) {
             this.accountService.redirectAuthorised();
+            return;
         }
 
         if (this.code) {
             let decoded: string;
             try {
-                decoded = atob(this.uriParamCode);
+                decoded = atob(this.code);
                 this.accountInfo.email = decoded.substring(decoded.indexOf(':') + 1);
                 this.lockEmail = true;
             } catch (ex) {}

@@ -49,7 +49,15 @@ export class NxAccountService {
             if (loginState === null) {
                 this.logout();
             } else if (loginState !== '') {
-                this.loginStateSubject.next(loginState);
+                this.get()
+                    .then((account) => {
+                        // prevent stale loginState
+                        if (account) {
+                            this.loginStateSubject.next(loginState);
+                        } else {
+                            this.clearLoginState();
+                        }
+                    });
             }
         });
 
@@ -78,13 +86,17 @@ export class NxAccountService {
     }
 
     setupAccount(account) {
+        // cleanup
+        if (this.account && this.account.timer) {
+            this.account.timer.unsubscribe();
+        }
         this.account = account;
 
         // Set up timer
-        const timer$ = timer(0, this.CONFIG.updateInterval);
+        const timer$ = timer(this.CONFIG.updateInterval, this.CONFIG.updateInterval);
 
         // Update account to unsure any external changes are applied to this session
-        timer$.subscribe(() => {
+        this.account.timer = timer$.subscribe(() => {
             this.cloudApi
                 .account()
                 .then((account) => {
@@ -269,14 +281,14 @@ export class NxAccountService {
                 this.cloudApi
                     .logout()
                     .finally(() => {
+                        this.account.timer.unsubscribe();
                         this.account = undefined;
                         this.sessionService.invalidateSession(); // Clear session
                         if (!doNotRedirect) {
-                            return this.router.navigate([this.CONFIG.redirectUnauthorised])
-                                .finally(this.document.location.reload());
+                            return this.router.navigate([this.CONFIG.redirectUnauthorised]);
                         }
                         setTimeout(() => {
-                            return this.document.location.reload();
+                            return this.router.navigate([this.router.url]);
                         });
                     });
             }

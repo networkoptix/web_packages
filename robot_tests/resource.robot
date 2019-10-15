@@ -33,14 +33,14 @@ Regular Open Browser
     Set Screenshot Directory    ${SCREENSHOT_DIRECTORY}
     ${chrome_options}=    Set Chrome Options
     Create Webdriver    ${BROWSER}    chrome_options=${chrome_options}
-    Maximize Browser Window
+    Set Window Size    1920    1080
     Go To    ${ENV}
 
 Open Browser With Options
     Set Screenshot Directory    ${SCREENSHOT_DIRECTORY}
     ${chrome_options}=    Set Chrome Options Headless
     Create Webdriver    Chrome    chrome_options=${chrome_options}
-    Maximize Browser Window
+    Set Window Size    1920    1080
     Go to    ${ENV}
 
 Set Chrome Options
@@ -83,7 +83,7 @@ Set Language
     Click Button    ${LANGUAGE DROPDOWN}
     Wait Until Element Is Visible    ${LANGUAGE TO SELECT}
     Click Element    ${LANGUAGE TO SELECT}
-    Wait Until Element Is Visible    ${LANGUAGE DROPDOWN}/span[@lang='${lang}']    5
+    Wait Until Element Is Visible    ${LANGUAGE DROPDOWN}/span[@lang='${lang}']    20
     Sleep    5    #to wait for language to fully change before continuing.  This caused issues with login.
 
 Log In
@@ -101,7 +101,7 @@ Log In
 
 Validate Log In
     Wait Until Page Contains Element    ${AUTHORIZED BODY}    10
-    Wait Until Elements Are Visible    ${ACCOUNT DROPDOWN}
+    Wait Until Element is Visible    ${ACCOUNT DROPDOWN}
     Check Langauge Logged In
     Sleep    1    #this is a test to see if it eliminates a problem with the login dialog popping up on logout
 
@@ -122,6 +122,7 @@ Validate Log Out
 
 Validate on Register Page
     Wait Until Elements Are Visible    ${REGISTER FIRST NAME INPUT}    ${REGISTER LAST NAME INPUT}    ${REGISTER PASSWORD INPUT}    ${CREATE ACCOUNT BUTTON}
+    Run keyword and continue on failure    Title should be    Create account in ${PRODUCT_NAME}
 
 Register
     [arguments]    ${first name}    ${last name}    ${email}    ${password}    ${checked}=false
@@ -138,6 +139,7 @@ Validate Register Success
     [arguments]    ${location}=${url}/register/success
     Wait Until Element Is Visible    ${ACCOUNT CREATION SUCCESS}
     Location Should Be    ${location}
+    Run keyword and continue on failure    Title should be    Welcome to ${PRODUCT_NAME}
 
 Validate Register Email Received
     [arguments]    ${recipient}
@@ -195,6 +197,14 @@ Restore password
     Log In    ${email}    ${BASE PASSWORD}    None
     Validate Log In
     Close Browser
+
+Go to Users List
+    Wait Until Elements Are Visible    ${USERS LIST LINK}
+    Click Link    ${USERS LIST LINK}
+
+Go to System Administration
+    Wait Until Elements Are Visible    ${SYSTEM ADMINISTRATION LINK}
+    Click Link    ${SYSTEM ADMINISTRATION LINK}
 
 Share To
     [arguments]    ${email}    ${permissions}
@@ -350,8 +360,10 @@ Clean up email noperm
     Log In    ${EMAIL OWNER}    ${password}
     Validate Log In
     Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
+    Verify In System    Auto Tests
     Register Keyword To Run On Failure    NONE
-    Run Keyword And Ignore Error    Remove User Permissions    ${EMAIL NOPERM}
+    ${status}=   Run Keyword And Return Status    Wait Until Element Is Visible    //nx-system-settings-component//nx-menu//nx-level-3-item//span[text()='${EMAIL NOPERM}']/../../../a    5
+    Run Keyword If    ${status}    Run Keyword And Ignore Error    Remove User Permissions    ${EMAIL NOPERM}
     Register Keyword To Run On Failure    Failure Tasks
     Close Browser
 
@@ -361,6 +373,8 @@ Clean up random emails
     Log In    ${EMAIL OWNER}    ${password}
     Validate Log In
     Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
+    Wait Until Elements Are Visible    ${USERS LIST LINK}
+    Click Link    ${USERS LIST LINK}
     ${status}    Run Keyword And Return Status    Wait Until Element Is Visible
     ...    ${USERS LIST}//nx-level-3-item//span[contains(text(),'noptixautoqa+15')]/../../../a
     Run Keyword If    ${status}    Find and remove emails
@@ -369,15 +383,8 @@ Clean up random emails
 Find and remove emails
     ${random emails}    Get WebElements    ${USERS LIST}//nx-level-3-item//span[contains(text(),'noptixautoqa+15')]/../../../a
     FOR    ${element}    IN    @{random emails}
-        ${email}    Get Text    ${element}
-        Click Link    ${element}
-        Wait Until Element Is Visible    ${REMOVE USER BUTTON}
-        Click Button    ${REMOVE USER BUTTON}
-        Wait Until Elements Are Visible    ${REMOVE MODAL}    ${REMOVE BUTTON}    ${REMOVE CANCEL BUTTON}
-        Click Button    ${REMOVE BUTTON}
-        ${PERMISSIONS WERE REMOVED FROM EMAIL}    Replace String    ${PERMISSIONS WERE REMOVED FROM}    %email%    ${email}
-        Check For Alert    ${PERMISSIONS WERE REMOVED FROM EMAIL}
-        Wait Until Element Is Not Visible    ${USERS LIST}//nx-level-3-item//span[contains(text(),'${email}')]/../../../a
+        ${email}    Get Text    ${USERS LIST}//nx-level-3-item//span[contains(text(),'noptixautoqa+15')]/../../../a
+        Remove User Permissions    ${email}
     END
 
 Reset user noperm first/last name

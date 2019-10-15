@@ -152,7 +152,8 @@ export class AddUserModalContent {
                 return this.doShare();
             }
         }, {
-            successMessage: this.LANG.dialogs.sharing.permissionsSaved
+            successMessage: this.LANG.dialogs.sharing.permissionsSaved,
+            errorPrefix: this.LANG.errorCodes.cantSharePrefix
         }).then((user) => {
             this.activeModal.close(user.id);
         });

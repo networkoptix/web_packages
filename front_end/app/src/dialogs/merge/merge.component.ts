@@ -22,7 +22,7 @@ export class MergeModalContent {
     LANG: any;
     checking: boolean;
     checkMergeabilityProcess: any;
-    config: any;
+    CONFIG: any;
     mergingProcess: any;
     multipleSystems: boolean;
     outOfDate: boolean;
@@ -38,6 +38,8 @@ export class MergeModalContent {
     tooManySystems: boolean;
     wrongPassword: boolean;
 
+    account: any;
+
     @ViewChild('mergeForm', { static: true }) mergeForm: HTMLFormElement;
 
     constructor(public activeModal: NgbActiveModal,
@@ -49,7 +51,7 @@ export class MergeModalContent {
                 private systemService: NxSystemService,
                 private systemsService: NxSystemsService
     ) {
-        this.config = this.configService.getConfig();
+        this.CONFIG = this.configService.getConfig();
         this.checking = false;
         this.state = 'select';
         this.wrongPassword = false;
@@ -66,6 +68,11 @@ export class MergeModalContent {
         this.targetSystemDropdown = this.makeSelectorList([this.targetSystem])[0];
         this.systemMergeable = this.checkMergeability(this.targetSystem);
         this.systemError = !this.multipleSystems || this.outOfDate;
+
+        this.user.get().then((account) => {
+            this.account = account;
+        });
+
 
         this.initProcesses();
     }
@@ -95,8 +102,8 @@ export class MergeModalContent {
             this.activeModal.close({
                 anotherSystemId: this.targetSystem.id,
                 role: this.primarySystem.id === this.system.id ?
-                    this.configService.config.systemStatuses.master :
-                    this.configService.config.systemStatuses.slave
+                    this.CONFIG.systemStatuses.master :
+                    this.CONFIG.systemStatuses.slave
             });
         }, (error) => {
             if (error.data.resultCode !== 'wrongPassword') {
@@ -145,9 +152,10 @@ export class MergeModalContent {
             this.checking = false;
             this.targetSystemDropdown.name = this.addStatus(this.targetSystem);
             this.systemMergeable = this.checkMergeability(this.targetSystem);
-            if (!res.system && this.systemMergeable === '' || this.config.allowDebugMode) {
+            if (!res.system && this.systemMergeable === '' || this.CONFIG.allowDebugMode) {
                 return this.updateState();
             }
+        }, (error) => {
         });
     }
 
@@ -178,7 +186,7 @@ export class MergeModalContent {
         }
 
         // HTML required for dropdown list
-        return `<span>${system.name}</span><span class="text-muted">${status}</span>`;
+        return `<span>${system.name || system.info.name}</span><span class="text-muted">${status}</span>`;
     }
 
     // Add system can merge where added to systems form api call
@@ -208,21 +216,24 @@ export class MergeModalContent {
     }
 
     precheckSystemMerge() {
-        this.targetSystem = this.systemService.createSystem(this.targetSystem.id, this.user.email);
+        this.targetSystem = this.systemService.createSystem(this.targetSystem.id, this.account.email);
         return this.targetSystem.getUsersDataFromTheSystem().then(() => {
             return Promise.all([
-                this.system.mediaserver.getMediaServers().catch(error => {
+                this.system.mediaserver.getMediaServers().toPromise().catch(error => {
                     return Promise.reject({system: 'current', errorResponse: error});
                 }),
-                this.targetSystem.mediaserver.getMediaServers().catch(error => {
+                this.targetSystem.mediaserver.getMediaServers().toPromise().catch(error => {
                     return Promise.reject({system: 'target', errorResponse: error});
                 })
             ]).then(res => {
-                this.tooManySystems = res.map(req => req.data.length)
-                    .reduce((acc, cur) => acc + cur) > this.config.maxServers;
-                return {};
+                this.tooManySystems = res.map(req => req.length)
+                                         .reduce((acc, cur) => acc + cur) > this.CONFIG.maxServers;
+
+                return Promise.resolve({});
             });
-        }, (err) => err);
+        }, (err) => {
+            return err;
+        });
     }
 
     makeSelectorList(systems) {

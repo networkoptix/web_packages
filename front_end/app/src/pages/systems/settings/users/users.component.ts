@@ -188,8 +188,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             this.applyService.reset();
 
             this.settingsService.footerSubject.next(true);
-
-            setTimeout(() => this.applyService.setVisible());
+            setTimeout(() => this.applyService.setVisible(this.selectedUser.canBeEdited));
         }
     }
 

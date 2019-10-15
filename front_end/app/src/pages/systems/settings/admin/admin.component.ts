@@ -81,7 +81,11 @@ export class NxSystemAdminComponent implements OnInit {
                     }, {
                         successMessage: this.LANG.system.successDeleted.replace('{{systemName}}', this.system.info.name),
                         errorPrefix   : this.LANG.errorCodes.cantUnshareWithMeSystemPrefix
-                    }).then(() => this.updateAndGoToSystems(), (error) => error);
+                    }).then(() => {
+                        this.updateAndGoToSystems();
+                    }, (error) => {
+                        return error;
+                    });
                 }
             });
 
@@ -116,7 +120,7 @@ export class NxSystemAdminComponent implements OnInit {
             // User is not owner. Deleting means he'll lose access to it
             this.dialogs.confirm(this.LANG.system.confirmUnshareFromMe, this.LANG.system.confirmUnshareFromMeTitle, this.LANG.system.confirmUnshareFromMeAction, 'btn-danger', 'Cancel')
                 .then((result) => {
-                    if (result) {
+                    if (result === true) {
                         this.deletingSystem.run();
                     }
                 });
