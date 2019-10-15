@@ -285,8 +285,7 @@ export class NxAccountService {
                         this.account = undefined;
                         this.sessionService.invalidateSession(); // Clear session
                         if (!doNotRedirect) {
-                            return this.router.navigate([this.CONFIG.redirectUnauthorised])
-                                .finally(this.document.location.reload());
+                            return this.router.navigate([this.CONFIG.redirectUnauthorised]);
                         }
                         setTimeout(() => {
                             return this.router.navigate([this.router.url]);
