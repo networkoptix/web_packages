@@ -26,7 +26,11 @@
                     [ngClass]="{'selected': item == selectedEntity}"
                     (click)="setClickedRow(item);">
                     <ng-container *ngFor="let headerGroup of headers | keyvalue: utilsService.keepOriginalOrder">
-                        <td *ngFor="let header of headerGroup.value">{{item[headerGroup.key][header.id]}}</td>
+                        <td *ngFor="let header of headerGroup.value">
+                            <ng-container *ngIf="item[headerGroup.key] && item[headerGroup.key][header.id] != undefined">
+                                {{item[headerGroup.key][header.id]}}
+                            </ng-container>
+                        </td>
                     </ng-container>
                 </tr>
 <!--                <tr class="table-row-spacer"></tr>-->
