@@ -162,6 +162,39 @@ clicking save with no input in rename dialog throws error
     Wait Until Elements Are Visible    ${RENAME INPUT WITH ERROR}    ${SYSTEM NAME IS REQUIRED}
     Click Button    ${RENAME CANCEL}
 
+Owner is able to rename offline system via Cloud
+    [Tags]    C41889
+    Log in to Autotests 2 System    ${EMAIL OWNER}
+    Wait Until Elements Are Visible   ${RENAME SYSTEM}    ${DISCONNECT FROM NX}
+    ${current name}=   Get text    ${SYSTEM NAME}
+    # Rename
+    Click Button    ${RENAME SYSTEM}
+    Wait Until Elements Are Visible   ${RENAME INPUT}    ${RENAME SAVE}    ${RENAME CANCEL}    ${RENAME X BUTTON}
+    ${new name}=   Get random system name
+    Input text    ${RENAME INPUT}    ${new name}
+    Click button    ${RENAME SAVE}
+    Log Out
+    Validate Log Out
+
+    # Make sure new name is saved
+    Log in to Autotests 2 System    ${EMAIL OWNER}
+    Validate Log In
+    Run keyword and continue on failure    Element text should be     ${SYSTEM NAME}   ${new name}
+
+    # Return to initial name
+    Click Button    ${RENAME SYSTEM}
+    Wait Until Elements Are Visible   ${RENAME INPUT}    ${RENAME SAVE}    ${RENAME CANCEL}    ${RENAME X BUTTON}
+    Input text    ${RENAME INPUT}    ${current name}
+    Click button    ${RENAME SAVE}
+    Log Out
+    Validate Log Out
+
+    # Make sure old name is saved
+    Log in to Autotests 2 System    ${EMAIL OWNER}
+    Validate Log In
+    Run keyword and continue on failure    Element text should be     ${SYSTEM NAME}    ${current name}
+    Log Out
+
 does not show Share button to viewer, advanced viewer, live viewer
     [tags]    Threaded
     @{emails}    Set Variable    ${EMAIL VIEWER}    ${EMAIL LIVE VIEWER}    ${EMAIL ADV VIEWER}
