@@ -179,7 +179,7 @@ Owner is able to rename offline system via Cloud
     # Make sure new name is saved
     Log in to Autotests 2 System    ${EMAIL OWNER}
     Validate Log In
-    Run keyword and continue on failure    Element text should be     ${SYSTEM NAME}   ${new name}
+    Wait until keyword succeeds    3s    1s    Element text should be     ${SYSTEM NAME}   ${new name}
 
     # Return to initial name
     Click Button    ${RENAME SYSTEM}
@@ -192,7 +192,7 @@ Owner is able to rename offline system via Cloud
     # Make sure old name is saved
     Log in to Autotests 2 System    ${EMAIL OWNER}
     Validate Log In
-    Run keyword and continue on failure    Element text should be     ${SYSTEM NAME}    ${current name}
+    Wait until keyword succeeds    3s    1s    Element text should be     ${SYSTEM NAME}    ${current name}
     Log Out
 
 does not show Share button to viewer, advanced viewer, live viewer
