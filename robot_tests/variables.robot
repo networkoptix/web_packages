@@ -251,10 +251,10 @@ ${DISCARD CHANGES BUTTON}             ${MODAL DIALOG}//button[contains(text(), '
 
 #Downloads
 ${DOWNLOADS HEADER}                   //h1[contains(text(),"Download")]
-${DOWNLOAD WINDOWS VMS LINK}          //a[contains(text(),"Windows x64 - Client and Server")]/../..
-${DOWNLOAD UBUNTU VMS LINK}           //a[contains(text(),"Ubuntu x64 - Client")]/../..
-${DOWNLOAD MAC OS VMS LINK}           //a[contains(text(),"Mac OS - Client")]/../..
-${DOWNLOAD ARM VMS LINK}              //a[contains(text(),"ARM") and contains(text(),"Client")]/../..
+${DOWNLOAD WINDOWS VMS LINK}          //a[contains(text(),"Windows x64 - Client & Server")]
+${DOWNLOAD UBUNTU VMS LINK}           //a[contains(text(),"Ubuntu x64 - Client")]
+${DOWNLOAD MAC OS VMS LINK}           //a[contains(text(),"Mac OS - Client")]
+${DOWNLOAD ARM VMS LINK}              //a[contains(text(),"ARM") and contains(text(),"Client")]
 ${ITUNES STORE DOWNLOAD BUTTON}       //a[contains(@class,"mobile-link iOS")]
 ${PLAY STORE DOWNLOAD BUTTON}         //a[contains(@class,"mobile-link Android")]
 
