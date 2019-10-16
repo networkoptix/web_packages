@@ -6,7 +6,8 @@ import { NxConfigService } from '../../../services/nx-config';
 import { NxSystem, NxSystemService } from '../../../services/system.service';
 import { NxMenuService } from '../../../components/menu/menu.service';
 import { combineLatest } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, concatMap } from 'rxjs/operators';
+import { NxHealthService } from '../health.service';
 
 
 @Component({
@@ -17,16 +18,20 @@ import { map } from 'rxjs/operators';
 export class NxSystemMetricsComponent implements OnInit {
     CONFIG: any;
     account: any;
-    manifest: any;
-    tableHeaders: any;
-    panelParams: any;
+
     system: NxSystem;
-    values: any;
     metricId: any;
 
+    manifest: any;
+    values: any;
+    alarms: any;
+
+    tableHeaders: any;
+    panelParams: any;
+
     selectedData: any;
-    selectedValues: any;
     selectedPanelData: any;
+    selectedValues: any;
 
     menu: any;
     activeEntity: any;
@@ -36,6 +41,7 @@ export class NxSystemMetricsComponent implements OnInit {
                 private systemService: NxSystemService,
                 private route: ActivatedRoute,
                 private menuService: NxMenuService,
+                private healthService: NxHealthService,
     ) {
         this.CONFIG = this.configService.getConfig();
     }
@@ -51,31 +57,20 @@ export class NxSystemMetricsComponent implements OnInit {
             }
             this.resetActiveEntity();
         });
-        this.route.parent.params.subscribe((params: any) => {
-            const systemId = params.systemId;
-            this.accountService.get().then((account) => {
-                this.account = account;
-                this.system = this.systemService.createSystem(systemId, account.email);
 
-                // TODO: Move/use service to not hit api multiple times
-                this.system.getInfo().then(() => {
-                    const manifest$ = this.system.mediaserver.getHealthManifest();
-                    const values$ = this.system.mediaserver.getHealthValues();
-                    combineLatest(manifest$, values$)
-                        .pipe(map(([manifestRequest, valuesRequest]) => {
-                            return {manifestRequest, valuesRequest};
-                        }))
-                        .subscribe((result: any) => {
-                            this.manifest = result.manifestRequest.reply;
-                            this.values = result.valuesRequest.reply;
-                            this.initializeHeaders();
-                            this.selectedData = this.tableHeaders[this.metricId];
-                            this.selectedPanelData = this.panelParams[this.metricId];
-                            this.selectedValues = this.values[this.metricId];
-                        });
-                });
-            });
-        });
+        combineLatest(this.healthService.manifestSubject, this.healthService.valuesSubject, this.healthService.alarmsSubject).subscribe(
+            ([manifest, values, alarms]) => {
+                if (manifest && values && alarms) {
+                    this.manifest = manifest;
+                    this.values = values;
+                    this.alarms = alarms;
+                    this.initializeHeaders();
+                    this.selectedData = this.tableHeaders[this.metricId];
+                    this.selectedPanelData = this.panelParams[this.metricId];
+                    this.selectedValues = this.values[this.metricId];
+                }
+            }
+        );
     }
 
     initializeHeaders() {

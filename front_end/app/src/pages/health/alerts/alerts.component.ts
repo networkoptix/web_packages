@@ -5,6 +5,8 @@ import { NxAccountService } from '../../../services/account.service';
 import { NxConfigService } from '../../../services/nx-config';
 import { NxSystem, NxSystemService } from '../../../services/system.service';
 import { NxMenuService } from '../../../components/menu/menu.service';
+import { combineLatest } from 'rxjs';
+import { NxHealthService } from '../health.service';
 
 
 @Component({
@@ -15,18 +17,24 @@ import { NxMenuService } from '../../../components/menu/menu.service';
 export class NxSystemAlertsComponent implements OnInit {
     CONFIG: any;
     account: any;
-    manifest: any;
+
     system: NxSystem;
+
+    manifest: any;
     values: any;
+    alarms: any;
 
-    selectedData: any;
+    tableHeaders: any;
+    // panelParams: any;
+    //
+    // selectedData: any;
+    // selectedPanelData: any;
+    selectedValues: any;
 
-    menu: any;
-    constructor(private accountService: NxAccountService,
+    constructor(private menuService: NxMenuService,
                 private configService: NxConfigService,
-                private systemService: NxSystemService,
                 private route: ActivatedRoute,
-                private menuService: NxMenuService
+                private healthService: NxHealthService,
     ) {
         this.CONFIG = this.configService.getConfig();
     }
@@ -34,34 +42,52 @@ export class NxSystemAlertsComponent implements OnInit {
     ngOnInit(): void {
         this.menuService.setSection('alerts');
 
-        // this.route.params.subscribe((params: any) => {
-        //     const systemId = params.systemId;
-        //     this.accountService.get().then((account) => {
-        //         this.account = account;
-        //         this.system = this.systemService.createSystem(systemId, account.email);
-        //         this.menu.base = `${this.CONFIG.systemHealthMenu.baseUrl}${this.system.id}`;
-        //
-        //         this.system.getInfo().then(() => {
-        //             const manifest$ = this.system.mediaserver.getHealthManifest();
-        //             const values$ = this.system.mediaserver.getHealthValues();
-        //             manifest$.subscribe(request => {
-        //                 this.manifest = request.reply;
-        //                 const menu = {...this.menu};
-        //                 Object.keys(this.manifest).forEach((asset) => {
-        //                     menu.level1.push({
-        //                         id: asset,
-        //                         label: asset
-        //                     });
-        //                 });
-        //
-        //                 this.menu = {...menu};
-        //                 this.selectedData = this.manifest.cameras[0];
-        //             });
-        //             values$.subscribe(request => {
-        //                 this.values = request.reply;
-        //             });
-        //         });
-        //     });
-        // });
+        combineLatest(
+            this.healthService.manifestSubject, this.healthService.valuesSubject, this.healthService.alarmsSubject
+        ).subscribe(
+            ([manifest, values, alarms]) => {
+                if (manifest && values && alarms) {
+                    this.manifest = manifest;
+                    this.values = values;
+                    this.alarms = [...alarms];
+                    this.initializeAlarms();
+                    this.initializeHeader();
+                }
+            }
+        );
+    }
+
+    initializeAlarms() {
+        this.alarms.forEach((alarm, index) => {
+            this.alarms[index] = {'': alarm};
+            if (alarm.resource) {
+                this.alarms[index][''].server = this.values[alarm.label][alarm.resource].info.server || alarm.resource;
+            }
+            // Replace with actual name once api is updated
+            this.alarms[index][''].type = alarm.label;
+        });
+    }
+
+    initializeHeader() {
+        this.tableHeaders = {
+            '':
+                [
+                    {
+                        display: 'table',
+                        name: 'Type',
+                        id: 'type'
+                    },
+                    {
+                        display: 'table',
+                        name: 'Server',
+                        id: 'server'
+                    },
+                    {
+                        display: 'table',
+                        name: 'Alert',
+                        id: 'text'
+                    }
+                ]
+        };
     }
 }

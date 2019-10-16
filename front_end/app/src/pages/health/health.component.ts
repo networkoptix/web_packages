@@ -7,6 +7,7 @@ import { NxSystem, NxSystemService } from '../../services/system.service';
 import { NxMenuService } from '../../components/menu/menu.service';
 import { map } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
+import { NxHealthService } from './health.service';
 
 
 @Component({
@@ -17,11 +18,7 @@ import { combineLatest } from 'rxjs';
 export class NxHealthComponent implements OnInit {
     CONFIG: any;
     account: any;
-    manifest: any;
     system: NxSystem;
-    values: any;
-
-    selectedData: any;
 
     menu: any;
     constructor(private accountService: NxAccountService,
@@ -29,6 +26,7 @@ export class NxHealthComponent implements OnInit {
                 private systemService: NxSystemService,
                 private route: ActivatedRoute,
                 private menuservice: NxMenuService,
+                private healthService: NxHealthService
     ) {
         this.CONFIG = this.configService.getConfig();
     }
@@ -61,23 +59,26 @@ export class NxHealthComponent implements OnInit {
                 this.system.getInfo().then(() => {
                     const manifest$ = this.system.mediaserver.getHealthManifest();
                     const values$ = this.system.mediaserver.getHealthValues();
-                    manifest$.subscribe(request => {
-                        this.manifest = request.reply;
-                        const menu = {...this.menu};
-                        Object.keys(this.manifest).forEach((asset) => {
-                            menu.level1.push({
-                                id: asset,
-                                label: this.toCapitalizedWords(asset),
-                                path: asset
-                            });
-                        });
+                    const alarms$ = this.system.mediaserver.getHealthAlarms();
+                    combineLatest(manifest$, values$, alarms$)
+                        .pipe(map(([manifestRequest, valuesRequest, alarmsRequest]) => {
+                            return {manifestRequest, valuesRequest, alarmsRequest};
+                        }))
+                        .subscribe((result: any) => {
+                            this.healthService.manifest = result.manifestRequest.reply;
+                            this.healthService.values = result.valuesRequest.reply;
+                            this.healthService.alarms = result.alarmsRequest.reply;
 
-                        this.menu = {...menu};
-                        this.selectedData = this.manifest.cameras[0];
-                    });
-                    values$.subscribe(request => {
-                        this.values = request.reply;
-                    });
+                            const menu = {...this.menu};
+                            Object.keys(this.healthService.manifest).forEach((asset) => {
+                                menu.level1.push({
+                                    id: asset,
+                                    label: this.toCapitalizedWords(asset),
+                                    path: asset
+                                });
+                            });
+                            this.menu = {...menu};
+                        });
                 });
             });
         });

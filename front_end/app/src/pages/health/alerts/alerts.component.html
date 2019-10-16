@@ -1,1 +1,19 @@
-<h2>Coming soon</h2>
+<div class="row">
+    <div *ngIf="tableHeaders && alarms"
+         class="col-12 col-md-7 col-xl-9">
+        <nx-dynamic-table
+                [tableHeader]="alarms.length + ' alerts'"
+                [headers]="tableHeaders"
+                [elements]="alarms"></nx-dynamic-table>
+    </div>
+
+<!--    <div class="col-12 col-md-5 col-xl-3"-->
+<!--         *ngIf="activeEntity">-->
+
+<!--        <nx-dynamic-table-panel-component-->
+<!--                [activeEntity]="activeEntity"-->
+<!--                [panelParams]="selectedPanelData"-->
+<!--                (onCloseView)="resetActiveEntity()">-->
+<!--        </nx-dynamic-table-panel-component>-->
+<!--    </div>-->
+</div>

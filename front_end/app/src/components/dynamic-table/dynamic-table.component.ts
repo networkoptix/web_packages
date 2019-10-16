@@ -18,8 +18,9 @@ interface Params {
     encapsulation: ViewEncapsulation.None
 })
 export class NxDynamicTableComponent implements OnChanges, OnInit {
-    @Input('headers') _headers: any[any];
-    @Input('elements') _elements: any[any];
+    @Input('tableHeader') tableHeader = '';
+    @Input('headers') _headers: any = [];
+    @Input('elements') _elements: any = [];
     @Input() params: any = {};
     @Input() activeEntity;
 

@@ -44,6 +44,17 @@
     background-color: $light1;
   }
 
+  .table-header {
+    background-color: $additional_light1;
+    border-bottom: 1px solid $light3;
+    padding: .5rem;
+    color: $dark9;
+    font-family: $font-family-medium;
+    font-weight: 500 !important;
+    font-size: $font-size-base;
+    height: 2rem;
+  }
+
   .nx-table {
     min-width : 1045px;
 

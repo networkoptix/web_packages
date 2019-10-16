@@ -402,6 +402,9 @@ class NxSystemAPI {
         return this.get('/ec2/metrics/values');
         // return this.http.get('/getdata');
     }
+    getHealthAlarms() {
+        return this.get('/ec2/metrics/alarms');
+    }
 }
 
 
