@@ -78,9 +78,13 @@ export class MergeModalContent {
 
     initProcesses() {
         this.mergingProcess = this.processService.createProcess(() => {
+            this.wrongPassword = false;
+            this.mergeForm.controls.mergePassword.setErrors(undefined);
+
             if (!this.password) {
                 return Promise.reject({ error: { data: {resultCode : 'missingPassword'}}});
             }
+
             return this.cloudApi.merge(this.primarySystem.id, this.secondarySystem.id, this.password);
         }, {
             errorCodes: {
@@ -91,14 +95,15 @@ export class MergeModalContent {
                     return this.LANG.system.mergeFailed;
                 },
                 missingPassword: () => {
-
+                    this.mergeForm.controls.mergePassword.setErrors({ required: true });
                 },
                 wrongPassword: () => {
+                    this.wrongPassword = true;
                     this.mergeForm.controls.mergePassword.setErrors({ wrongPassword: true });
-                    this.password = '';
+                    // Do not reset the value - it will reset errors for this field
+                    // this.password = '';
 
                     this.renderer.selectRootElement('#mergePassword').focus();
-                    this.wrongPassword = true;
                 },
             },
             successMessage: this.LANG.system.mergeStart
@@ -112,51 +117,49 @@ export class MergeModalContent {
             });
         }, (error) => {
             const errorCode = error.resultCode || error.data && error.data.resultCode;
-            if (errorCode === 'missingPassword') {
-                this.mergeForm.controls.mergePassword.setErrors({ required: true });
+            if (errorCode === 'missingPassword' || errorCode === 'wrongPassword') {
                 return;
             }
-            if (errorCode !== 'wrongPassword') {
-                /* Get the names of the primary and secondary system.
-                   Next try to figure out which system caused the problem.
-                   If the primary system's stateOfHealth is not online set it as the failedSystem.
-                   Otherwise the secondary system is set as the failedSystem no matter what.
-                 */
 
-                if (!error.data) {
-                    error.data = {};
-                }
+            /* Get the names of the primary and secondary system.
+               Next try to figure out which system caused the problem.
+               If the primary system's stateOfHealth is not online set it as the failedSystem.
+               Otherwise the secondary system is set as the failedSystem no matter what.
+             */
 
-                error.data.resultCode = errorCode;
-                // Set the name of the primary system.
-                error.data.primarySystemName = this.primarySystem.name;
-                // If name is undefined try looking in info for the name.
-                if (error.data.primarySystemName === undefined) {
-                    error.data.primarySystemName = this.primarySystem.info && this.primarySystem.info.name;
-                }
-
-                // Set the name of the secondary system.
-                error.data.secondarySystemName = this.secondarySystem.name;
-
-                // If name is undefined try looking in info for the name.
-                if (error.data.secondarySystemName === undefined) {
-                    error.data.secondarySystemName = this.secondarySystem.info && this.secondarySystem.info.name;
-                }
-
-                // Check the state of health
-                let primaryState = this.primarySystem.stateOfHealth;
-                // If stateOfHealth is undefined check in info for stateOfHealth.
-                if (primaryState === undefined) {
-                    primaryState = this.primarySystem.info && this.primarySystem.info.stateOfHealth;
-                }
-
-                // Assume the secondary system is the issue unless the primary system is not online.
-                error.data.failedSystemName = error.data.secondarySystemName;
-                if (primaryState !== 'online') {
-                    error.data.failedSystemName = error.data.primarySystemName;
-                }
-                this.activeModal.dismiss(error.data);
+            if (!error.data) {
+                error.data = {};
             }
+
+            error.data.resultCode = errorCode;
+            // Set the name of the primary system.
+            error.data.primarySystemName = this.primarySystem.name;
+            // If name is undefined try looking in info for the name.
+            if (error.data.primarySystemName === undefined) {
+                error.data.primarySystemName = this.primarySystem.info && this.primarySystem.info.name;
+            }
+
+            // Set the name of the secondary system.
+            error.data.secondarySystemName = this.secondarySystem.name;
+
+            // If name is undefined try looking in info for the name.
+            if (error.data.secondarySystemName === undefined) {
+                error.data.secondarySystemName = this.secondarySystem.info && this.secondarySystem.info.name;
+            }
+
+            // Check the state of health
+            let primaryState = this.primarySystem.stateOfHealth;
+            // If stateOfHealth is undefined check in info for stateOfHealth.
+            if (primaryState === undefined) {
+                primaryState = this.primarySystem.info && this.primarySystem.info.stateOfHealth;
+            }
+
+            // Assume the secondary system is the issue unless the primary system is not online.
+            error.data.failedSystemName = error.data.secondarySystemName;
+            if (primaryState !== 'online') {
+                error.data.failedSystemName = error.data.primarySystemName;
+            }
+            this.activeModal.dismiss(error.data);
         });
 
         this.checkMergeabilityProcess = this.processService.createProcess(() => {
