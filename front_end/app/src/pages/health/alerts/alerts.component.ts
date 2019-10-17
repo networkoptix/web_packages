@@ -57,7 +57,14 @@ export class NxSystemAlertsComponent implements OnInit {
         this.alarms.forEach((alarm, index) => {
             this.alarms[index] = {'': alarm};
             if (alarm.resource) {
-                this.alarms[index][''].server = this.values[alarm.label][alarm.resource].info.server || alarm.resource;
+                let server = this.values[alarm.label][alarm.resource].info.server;
+                if (!server && alarm.labels === 'servers') {
+                    server = alarm.resource;
+                }
+
+                if (server) {
+                    this.alarms[index][''].server = this.values.servers[server]._.name;
+                }
             }
             // Replace with actual name once api is updated
             this.alarms[index][''].type = alarm.label;

@@ -1,7 +1,7 @@
 <!--<nx-pre-loader type="page" *ngIf="!pagedItems"></nx-pre-loader>-->
 <div class="nx-table-wrapper" id="nx-table">
+    <div *ngIf="tableHeader" class="table-header" [innerText]="tableHeader"></div>
     <div class="table-wrapper">
-        <div *ngIf="tableHeader" class="table-header" [innerText]="tableHeader"></div>
         <table class="table table-hover nx-table">
             <thead>
                 <tr>

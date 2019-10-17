@@ -46,13 +46,14 @@
 
   .table-header {
     background-color: $additional_light1;
-    border-bottom: 1px solid $light3;
     padding: .5rem;
     color: $dark9;
     font-family: $font-family-medium;
     font-weight: 500 !important;
     font-size: $font-size-base;
     height: 2rem;
+    border: 1px solid $light3;
+    border-bottom: none;
   }
 
   .nx-table {
