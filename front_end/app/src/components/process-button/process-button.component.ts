@@ -35,6 +35,7 @@ export class NxProcessButtonComponent implements OnInit {
         for (const ctrl in this.form.form.controls) {
             if (this.form.form.controls.hasOwnProperty(ctrl)) {
                 this.form.form.get(ctrl).markAsTouched();
+                this.form.form.get(ctrl).markAsDirty();
             }
         }
     }
