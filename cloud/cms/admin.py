@@ -492,7 +492,7 @@ admin.site.register(Asset, AssetAdmin)
 class ContextAdmin(CMSAdmin):
     list_display = ('name', 'description', 'url', 'translatable', 'is_global', 'hidden', 'deprecated')
     list_filter = ('asset_type', 'translatable', 'is_global', 'hidden', 'deprecated')
-    # actions = ('delete_selected',)
+    actions = ('delete_selected',)
 
 
 admin.site.register(Context, ContextAdmin)
@@ -511,7 +511,7 @@ class DataStructureAdmin(CMSAdmin):
     list_display = ('context', 'label', 'name', 'description', 'translatable', 'type', 'deprecated')
     list_filter = ('type', 'translatable', 'context__asset_type', 'deprecated')
     search_fields = ('context__name', 'name', 'description', 'type')
-    # actions = ('delete_selected',)
+    actions = ('delete_selected',)
 
 
 admin.site.register(DataStructure, DataStructureAdmin)

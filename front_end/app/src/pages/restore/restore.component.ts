@@ -25,7 +25,7 @@ export class NxRestoreComponent implements OnInit {
     LANG: any = {};
     CONFIG: any = {};
 
-    restorePasswordWithCode: any;
+    change: any;
     restore: any;
     data: any;
     restoring: any;
@@ -91,7 +91,7 @@ export class NxRestoreComponent implements OnInit {
         this.changeSuccess = (this.uriParam === 'changeSuccess');
 
 
-        this.restorePasswordWithCode = this.processService.createProcess(() => {
+        this.change = this.processService.createProcess(() => {
             return this.cloudApiService.restorePassword(this.data.restoreCode, this.data.newPassword);
         }, {
             errorCodes        : {

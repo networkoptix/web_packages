@@ -86,7 +86,6 @@ do
     dir=${dir%*/}
     SKIN=${dir/..\/skins\//}
     ./build_skin.sh $SKIN $VMS_REPOSITORY
-    break
 done
 
 cp ../cloud/cloud/cloud_portal.yaml $TARGET_DIR/_source

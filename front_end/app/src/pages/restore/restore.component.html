@@ -45,7 +45,7 @@
         </form>
     </div>
     <div *ngIf="data.restoreCode || changeSuccess">
-        <div *ngIf="restorePasswordWithCode.success || changeSuccess">
+        <div *ngIf="change.success || changeSuccess">
             <h1 class="process-success" translate>
                 Password successfully saved
             </h1>
@@ -54,7 +54,7 @@
             </div>
         </div>
 
-        <form name="formRestorePasswordWithCode" #formRestorePasswordWithCode="ngForm" class="form-horizontal" *ngIf="!restorePasswordWithCode.success && !changeSuccess"
+        <form name="restorePasswordWithCode" #restorePasswordWithCode="ngForm" class="form-horizontal" *ngIf="!change.success && !changeSuccess"
               novalidate>
 
             <h1 translate>Set New Password</h1>
@@ -68,7 +68,7 @@
                             name="newPassword"
                             componentId="newPassword"
                             [(ngModel)]="data.newPassword"
-                            [form]="formRestorePasswordWithCode"
+                            [form]="restorePasswordWithCode"
                             #newPassword="ngModel">
                     </nx-password-input>
                 </div>
@@ -143,8 +143,8 @@
             <div class="form-group row">
                 <div class="offset-sm-4 col-sm-8">
                     <nx-process-button
-                            [process]="restorePasswordWithCode"
-                            [form]="formRestorePasswordWithCode"
+                            [process]="change"
+                            [form]="restorePasswordWithCode"
                             [buttonText]="LANG.activeActions.setNewPassword">
                     </nx-process-button>
                 </div>

@@ -18,7 +18,6 @@ IP_MAX_LENGTH = 255
 
 def get_ip(request):
     ip = request.META.get('HTTP_X_FORWARDED_FOR')
-
     if settings.LOCAL_ENVIRONMENT and not ip:  # When ran locally there is no http_x_forwared_for
         return ''
 
