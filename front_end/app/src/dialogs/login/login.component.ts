@@ -158,9 +158,11 @@ export class LoginModalContent implements OnInit {
             }
         }).then(() => {
             this.activeModal.close();
+
             if (this.keepPage) {
                 if (this.location.path() === '') {
-                    this.location.go(this.CONFIG.redirectAuthorised);
+                    // force app reload to init user's language etc.
+                    window.location.href = this.CONFIG.redirectAuthorised;
                 } else {
                     // TODO: remove window reload once we separate session state from account service
                     window.location.reload();
@@ -168,10 +170,11 @@ export class LoginModalContent implements OnInit {
             } else if (this.next) {
                 // sanitize this.next
                 this.next = NxUtilsService.getRelativeLocation(this.next);
-                this.location.go(this.next);
+                window.location.href = this.next;
             } else {
                 setTimeout(() => {
-                    this.location.go(this.CONFIG.redirectAuthorised);
+                    // force app reload to init user's language etc.
+                    window.location.href = this.CONFIG.redirectAuthorised;
                 });
             }
         });
