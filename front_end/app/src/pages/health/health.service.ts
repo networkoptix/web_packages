@@ -9,6 +9,11 @@ export class NxHealthService {
     valuesSubject = new BehaviorSubject(undefined);
     alarmsSubject = new BehaviorSubject(undefined);
 
+    tableHeaders: any;
+    panelParams: any;
+
+    ready: boolean;
+
     constructor() {}
 
     get manifest() {

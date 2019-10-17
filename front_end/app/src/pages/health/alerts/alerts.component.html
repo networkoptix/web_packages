@@ -4,16 +4,18 @@
         <nx-dynamic-table
                 [tableHeader]="alarms.length + ' alerts'"
                 [headers]="tableHeaders"
-                [elements]="alarms"></nx-dynamic-table>
+                [elements]="alarms"
+                (onRowClick)="setActiveEntity($event)"
+                [activeEntity]="activeTableEntity"></nx-dynamic-table>
     </div>
 
-<!--    <div class="col-12 col-md-5 col-xl-3"-->
-<!--         *ngIf="activeEntity">-->
+    <div class="col-12 col-md-5 col-xl-3"
+         *ngIf="activePanelEntity">
 
-<!--        <nx-dynamic-table-panel-component-->
-<!--                [activeEntity]="activeEntity"-->
-<!--                [panelParams]="selectedPanelData"-->
-<!--                (onCloseView)="resetActiveEntity()">-->
-<!--        </nx-dynamic-table-panel-component>-->
-<!--    </div>-->
+        <nx-dynamic-table-panel-component
+                [activeEntity]="activePanelEntity"
+                [panelParams]="selectedPanelData"
+                (onCloseView)="resetActiveEntity()">
+        </nx-dynamic-table-panel-component>
+    </div>
 </div>

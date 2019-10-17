@@ -78,10 +78,33 @@ export class NxHealthComponent implements OnInit {
                                 });
                             });
                             this.menu = {...menu};
+                            this.initializeHeaders();
+                            this.healthService.ready = true;
                         });
                 });
             });
         });
+    }
+
+    initializeHeaders() {
+        this.healthService.tableHeaders = this.filterManifestHeaders('table');
+        this.healthService.panelParams = this.filterManifestHeaders('panel');
+    }
+
+    filterManifestHeaders(displayFilter: string) {
+        const headers = {};
+        Object.keys(this.healthService.manifest).forEach((metricId) => {
+            headers[metricId] = {};
+            this.healthService.manifest[metricId].forEach((headerGroup) => {
+                const group = headerGroup.values.filter((header) => {
+                    return header.display.includes(displayFilter);
+                });
+                if (group.length) {
+                    headers[metricId][headerGroup.id] = group;
+                }
+            });
+        });
+        return headers;
     }
 
     // Temporary camelCase converter

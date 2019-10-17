@@ -26,9 +26,6 @@ export class NxSystemMetricsComponent implements OnInit {
     values: any;
     alarms: any;
 
-    tableHeaders: any;
-    panelParams: any;
-
     selectedData: any;
     selectedPanelData: any;
     selectedValues: any;
@@ -50,48 +47,24 @@ export class NxSystemMetricsComponent implements OnInit {
         this.route.params.subscribe((params: any) => {
             this.metricId = params.metric;
             this.menuService.setSection(this.metricId);
-            if (this.manifest && this.values) {
-                this.selectedData = this.tableHeaders[this.metricId];
-                this.selectedPanelData = this.panelParams[this.metricId];
-                this.selectedValues = this.values[this.metricId];
-            }
+            this.selectedData = this.healthService.tableHeaders[this.metricId];
+            this.selectedPanelData = this.healthService.panelParams[this.metricId];
+            this.selectedValues = this.healthService.valuesSubject.getValue()[this.metricId];
             this.resetActiveEntity();
         });
 
-        combineLatest(this.healthService.manifestSubject, this.healthService.valuesSubject, this.healthService.alarmsSubject).subscribe(
-            ([manifest, values, alarms]) => {
-                if (manifest && values && alarms) {
-                    this.manifest = manifest;
-                    this.values = values;
-                    this.alarms = alarms;
-                    this.initializeHeaders();
-                    this.selectedData = this.tableHeaders[this.metricId];
-                    this.selectedPanelData = this.panelParams[this.metricId];
-                    this.selectedValues = this.values[this.metricId];
-                }
-            }
-        );
-    }
-
-    initializeHeaders() {
-        this.tableHeaders = this.filterManifestHeaders('table');
-        this.panelParams = this.filterManifestHeaders('panel');
-    }
-
-    filterManifestHeaders(displayFilter: string) {
-        const headers = {};
-        Object.keys(this.manifest).forEach((metricId) => {
-            headers[metricId] = {};
-            this.manifest[metricId].forEach((headerGroup) => {
-                const group = headerGroup.values.filter((header) => {
-                    return header.display.includes(displayFilter);
-                });
-                if (group.length) {
-                    headers[metricId][headerGroup.id] = group;
-                }
-            });
-        });
-        return headers;
+        // combineLatest(this.healthService.manifestSubject, this.healthService.valuesSubject, this.healthService.alarmsSubject).subscribe(
+        //     ([manifest, values, alarms]) => {
+        //         if (manifest && values && alarms) {
+        //             this.manifest = manifest;
+        //             this.values = values;
+        //             this.alarms = alarms;
+        //             this.selectedData = this.healthService.tableHeaders[this.metricId];
+        //             this.selectedPanelData = this.healthService.panelParams[this.metricId];
+        //             this.selectedValues = this.values[this.metricId];
+        //         }
+        //     }
+        // );
     }
 
     setActiveEntity(entity) {

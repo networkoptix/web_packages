@@ -31,6 +31,10 @@ export class NxSystemAlertsComponent implements OnInit {
     // selectedPanelData: any;
     selectedValues: any;
 
+    activeTableEntity: any;
+    activePanelEntity: any;
+    selectedPanelData: any;
+
     constructor(private menuService: NxMenuService,
                 private configService: NxConfigService,
                 private route: ActivatedRoute,
@@ -42,19 +46,11 @@ export class NxSystemAlertsComponent implements OnInit {
     ngOnInit(): void {
         this.menuService.setSection('alerts');
 
-        combineLatest(
-            this.healthService.manifestSubject, this.healthService.valuesSubject, this.healthService.alarmsSubject
-        ).subscribe(
-            ([manifest, values, alarms]) => {
-                if (manifest && values && alarms) {
-                    this.manifest = manifest;
-                    this.values = values;
-                    this.alarms = [...alarms];
-                    this.initializeAlarms();
-                    this.initializeHeader();
-                }
-            }
-        );
+        this.manifest = this.healthService.manifestSubject.getValue();
+        this.values = this.healthService.valuesSubject.getValue();
+        this.alarms = [...this.healthService.alarmsSubject.getValue()];
+        this.initializeAlarms();
+        this.initializeHeader();
     }
 
     initializeAlarms() {
@@ -89,5 +85,21 @@ export class NxSystemAlertsComponent implements OnInit {
                     }
                 ]
         };
+    }
+
+    setActiveEntity(alarm) {
+        const alarmValues = alarm[''];
+        if (alarmValues.resource && alarmValues.resource) {
+            this.activeTableEntity = alarm;
+            this.activePanelEntity = this.values[alarmValues.label][alarmValues.resource];
+            this.selectedPanelData = this.healthService.panelParams[alarmValues.label];
+        } else {
+            this.resetActiveEntity();
+        }
+    }
+
+    resetActiveEntity() {
+        this.activeTableEntity = undefined;
+        this.activePanelEntity = undefined;
     }
 }
