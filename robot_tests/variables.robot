@@ -131,7 +131,7 @@ ${ACCOUNT CREATION SUCCESS}           //h1[@class="process-success d-flex align-
 ${ACTIVATION SUCCESS}                 //h1[@class='process-success' and contains(text(),"${ACCOUNT SUCCESSFULLY ACTIVATED TEXT}")]
 ${SUCCESS LOG IN BUTTON}              //h1[@class='process-success' and contains(text(),"${ACCOUNT SUCCESSFULLY ACTIVATED TEXT}")]/following-sibling::h1/a[text()="${LOG IN BUTTON TEXT}"]
 
-${SYSTEM NAME OFFLINE}                //nx-ribbon/div[contains(@class,'alert-ribbon')]/div[@class='message' and text()='System is offline. Some settings may not be available.']
+${SYSTEM NAME OFFLINE}                //nx-ribbon/div[contains(@class,'alert-ribbon')]/div[@class='message' and text()='${SYSTEM IS OFFLINE TEXT}']
 
 #In system settings
 ${SYSTEM NAME}                        //h2[contains(@class,"system-name")]
