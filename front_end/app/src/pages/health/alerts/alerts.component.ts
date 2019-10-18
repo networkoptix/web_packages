@@ -35,6 +35,9 @@ export class NxSystemAlertsComponent implements OnInit {
     activePanelEntity: any;
     selectedPanelData: any;
 
+    alertsValues: any;
+    alertsCount: number;
+
     constructor(private menuService: NxMenuService,
                 private configService: NxConfigService,
                 private route: ActivatedRoute,
@@ -48,33 +51,54 @@ export class NxSystemAlertsComponent implements OnInit {
 
         this.manifest = this.healthService.manifestSubject.getValue();
         this.values = this.healthService.valuesSubject.getValue();
-        this.alarms = [...this.healthService.alarmsSubject.getValue()];
+        this.alarms = {...this.healthService.alarmsSubject.getValue()};
         this.initializeAlarms();
         this.initializeHeader();
+        this.countAlerts();
+    }
+
+    countAlerts() {
+        this.alertsCount = 0;
+        Object.values(this.alarms).forEach((group) => {
+            this.alertsCount += Object.keys(group).length;
+        });
     }
 
     initializeAlarms() {
-        this.alarms.forEach((alarm, index) => {
-            this.alarms[index] = {'': alarm};
-            if (alarm.resource) {
-                let server = this.values[alarm.label][alarm.resource].info.server;
-                if (!server && alarm.labels === 'servers') {
-                    server = alarm.resource;
-                }
+        this.alertsValues = [];
+        Object.entries(this.alarms).forEach(([metric, entities]) => {
+            Object.entries(entities).forEach(([entity, groups]) => {
+                Object.entries(groups).forEach(([group, params]) => {
+                    Object.entries(params).forEach(([param, alarms]) => {
+                        alarms.forEach(alarm => {
+                            const alert: any = {_: {}};
+                            let server = this.values[metric][entity].info.server;
+                            if (!server && metric === 'servers') {
+                                server = entity;
+                            }
 
-                if (server) {
-                    this.alarms[index][''].server = this.values.servers[server]._.name;
-                }
-            }
-            // Replace with actual name once api is updated
-            this.alarms[index][''].type = alarm.label;
+                            if (server) {
+                                alert._.server = this.values.servers[server]._.name;
+                            }
+                            alert._.type = this.manifest[metric].resource;
+                            alert._.text = alarm.text;
+                            alert.resource = entity;
+                            alert.metric = metric;
+                            this.alertsValues.push(alert);
+                        });
+                    });
+                });
+            });
         });
     }
 
     initializeHeader() {
         this.tableHeaders = {
-            '':
-                [
+            id: 'alerts',
+            values: [{
+                id: '_',
+                name: '',
+                values: [
                     {
                         display: 'table',
                         name: 'Type',
@@ -91,15 +115,15 @@ export class NxSystemAlertsComponent implements OnInit {
                         id: 'text'
                     }
                 ]
+            }]
         };
     }
 
     setActiveEntity(alarm) {
-        const alarmValues = alarm[''];
-        if (alarmValues.resource && alarmValues.resource) {
+        if (alarm.resource) {
             this.activeTableEntity = alarm;
-            this.activePanelEntity = this.values[alarmValues.label][alarmValues.resource];
-            this.selectedPanelData = this.healthService.panelParams[alarmValues.label];
+            this.activePanelEntity = this.values[alarm.metric][alarm.resource];
+            this.selectedPanelData = this.healthService.panelParams[alarm.metric];
         } else {
             this.resetActiveEntity();
         }

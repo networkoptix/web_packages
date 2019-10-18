@@ -2,9 +2,9 @@
     <div *ngIf="tableHeaders && alarms"
          class="col-12 col-md-7 col-xl-9">
         <nx-dynamic-table
-                [tableHeader]="alarms.length + ' alerts'"
+                [tableHeader]="alertsCount + ' alerts'"
                 [headers]="tableHeaders"
-                [elements]="alarms"
+                [elements]="alertsValues"
                 (onRowClick)="setActiveEntity($event)"
                 [activeEntity]="activeTableEntity"></nx-dynamic-table>
     </div>

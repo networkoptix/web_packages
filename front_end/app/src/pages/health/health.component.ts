@@ -69,6 +69,8 @@ export class NxHealthComponent implements OnInit {
                             this.healthService.values = result.valuesRequest.reply;
                             this.healthService.alarms = result.alarmsRequest.reply;
 
+                            this.initializeManifest();
+                            this.initializeHeaders();
                             const menu = {...this.menu};
                             Object.keys(this.healthService.manifest).forEach((asset) => {
                                 menu.level1.push({
@@ -78,12 +80,19 @@ export class NxHealthComponent implements OnInit {
                                 });
                             });
                             this.menu = {...menu};
-                            this.initializeHeaders();
                             this.healthService.ready = true;
                         });
                 });
             });
         });
+    }
+
+    initializeManifest() {
+        const manifest = {};
+        this.healthService.manifest.forEach(metric => {
+            manifest[metric.id] = metric;
+        });
+        this.healthService.manifest = manifest;
     }
 
     initializeHeaders() {
@@ -94,13 +103,14 @@ export class NxHealthComponent implements OnInit {
     filterManifestHeaders(displayFilter: string) {
         const headers = {};
         Object.keys(this.healthService.manifest).forEach((metricId) => {
-            headers[metricId] = {};
-            this.healthService.manifest[metricId].forEach((headerGroup) => {
+            const metric = this.healthService.manifest[metricId];
+            headers[metric.id] = metric;
+            headers[metric.id].values.forEach((headerGroup, index) => {
                 const group = headerGroup.values.filter((header) => {
                     return header.display.includes(displayFilter);
                 });
                 if (group.length) {
-                    headers[metricId][headerGroup.id] = group;
+                    headers[metric.id].values[index].values = group;
                 }
             });
         });

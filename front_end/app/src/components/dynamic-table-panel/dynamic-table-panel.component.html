@@ -2,21 +2,21 @@
     <nx-block type='gray'>
         <header>
             <div class="panel-title">
-                <span>{{activeEntity._.name}}</span>
+                <span>{{activeEntity._ ? activeEntity._.name : activeEntity.info.name}}</span>
             </div>
             <span class="glyphicon close-icon detailsClose"
                   (click)="closeView()">
             </span>
         </header>
 
-        <ng-container *ngFor="let paramGroup of panelParams| keyvalue: utilsService.keepOriginalOrder">
-            <nx-section *ngIf="paramGroup.key !== '_'">
-                <h4 *ngIf="paramGroup.value.length">{{paramGroup.key}}</h4>
-                <div class="row" *ngFor="let param of paramGroup.value">
+        <ng-container *ngFor="let paramGroup of panelParams.values">
+            <nx-section *ngIf="paramGroup.id !== '_'">
+                <h4 *ngIf="paramGroup.values.length">{{paramGroup.name}}</h4>
+                <div class="row" *ngFor="let param of paramGroup.values">
                     <div class="col-7">{{param.name || param.id}}</div>
                     <div class="col-5 ellipsis"
-                         *ngIf="activeEntity[paramGroup.key] && activeEntity[paramGroup.key][param.id] != undefined">
-                        {{activeEntity[paramGroup.key][param.id]}}
+                         *ngIf="activeEntity[paramGroup.id] && activeEntity[paramGroup.id][param.id] != undefined">
+                        {{activeEntity[paramGroup.id][param.id]}}
                     </div>
                 </div>
             </nx-section>

@@ -20,23 +20,23 @@ export class NxHealthService {
         return this.manifestSubject.getValue();
     }
 
-    set manifest(system) {
-        this.manifestSubject.next(system);
+    set manifest(manifest) {
+        this.manifestSubject.next(manifest);
     }
 
     get values() {
         return this.valuesSubject.getValue();
     }
 
-    set values(system) {
-        this.valuesSubject.next(system);
+    set values(values) {
+        this.valuesSubject.next(values);
     }
 
     get alarms() {
         return this.alarmsSubject.getValue();
     }
 
-    set alarms(system) {
-        this.alarmsSubject.next(system);
+    set alarms(alarms) {
+        this.alarmsSubject.next(alarms);
     }
 }

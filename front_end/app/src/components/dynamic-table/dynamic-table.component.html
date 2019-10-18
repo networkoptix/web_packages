@@ -5,11 +5,11 @@
         <table class="table table-hover nx-table">
             <thead>
                 <tr>
-                    <ng-container *ngFor="let headerGroup of headers | keyvalue: utilsService.keepOriginalOrder">
-                        <th *ngFor="let header of headerGroup.value" class="align-bottom"
+                    <ng-container *ngFor="let headerGroup of headers.values">
+                        <th *ngFor="let header of headerGroup.values" class="align-bottom"
                             (click)="toggleHeaderSort(header)">
                             <div class="caption d-flex">
-                                <div class="ellipsis" [innerHTML]="header.name || header.id"></div>
+                                <div class="ellipsis" [innerHTML]="header.name"></div>
                                 <div class="sort-dir nav-arrow"
                                      [style.visibility]="(header == selectedHeader) ? 'visible' : 'hidden'"
                                      [ngClass]="{'up': !sortOrderASC}">
@@ -26,9 +26,9 @@
                 <tr *ngFor="let item of pagedItems"
                     [ngClass]="{'selected': item == selectedEntity}"
                     (click)="setClickedRow(item);">
-                    <ng-container *ngFor="let headerGroup of headers | keyvalue: utilsService.keepOriginalOrder">
-                        <td *ngFor="let header of headerGroup.value">
-                            {{item[headerGroup.key] && [undefined, ''].indexOf(item[headerGroup.key][header.id]) === -1 ? item[headerGroup.key][header.id] : '–'}}
+                    <ng-container *ngFor="let headerGroup of headers.values">
+                        <td *ngFor="let header of headerGroup.values">
+                            {{item[headerGroup.id] && [undefined, ''].indexOf(item[headerGroup.id][header.id]) === -1 ? item[headerGroup.id][header.id] : '–'}}
                         </td>
                     </ng-container>
                 </tr>
