@@ -1,5 +1,5 @@
-import { Component, Input, OnInit }  from '@angular/core';
-import { ActivatedRoute }            from '@angular/router';
+import { Component, Input, OnInit } from '@angular/core';
+import { ActivatedRoute, Router }   from '@angular/router';
 
 import { NxUriService }              from '../../services/uri.service';
 import { NxPageService }             from '../../services/page.service';
@@ -52,6 +52,7 @@ export class NxRestoreComponent implements OnInit {
                 private uriService: NxUriService,
                 private dialogs: NxDialogsService,
                 private route: ActivatedRoute,
+                private router: Router,
                 private language: NxLanguageProviderService,
                 private pageService: NxPageService,
     ) {
@@ -89,6 +90,24 @@ export class NxRestoreComponent implements OnInit {
         this.restoring = (this.uriParam === 'restoring');
         this.restoringSuccess = (this.uriParam === 'restoringSuccess');
         this.changeSuccess = (this.uriParam === 'changeSuccess');
+
+        if (this.data.restoreCode) {
+            this.accountService.logoutAuthorised();
+            const code = this.data.restoreCode;
+            this.accountService
+                .checkCode(code)
+                .then(registered => {
+                    if (!registered) {
+                        // send to registration form with the code
+                        this.router.navigate(['/register/' + code]);
+                    } else {
+                        this.router.navigate(['/activate/' + code]);
+                    }
+                }, () => {
+                    // Wrong activation code or some error - send to activation page
+                    this.router.navigate(['/activate/' + code]);
+                });
+        }
 
 
         this.change = this.processService.createProcess(() => {

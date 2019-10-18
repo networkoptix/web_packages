@@ -138,22 +138,7 @@ export class NxActivateComponent implements OnInit {
 
         if (this.accountInfo.activateCode) {
             this.accountService.logoutAuthorised();
-            const code = this.accountInfo.activateCode;
-            this.accountService
-                .checkCode(code)
-                .then(registered => {
-                    if (!registered) {
-                        // send to registration form with the code
-                        // TODO: AJS and A7 routers freak out about route change *****
-                        // this.router.navigate([' / register / ' + code]);
-                        this.location.go('/ register / ' + code);
-                    } else {
-                        this.checkActivate();
-                    }
-                }, () => {
-                    // Wrong activation code or some error - do nothing, keep user on this page
-                    this.checkActivate();
-                });
+            this.checkActivate();
         }
     }
 
