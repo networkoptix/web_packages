@@ -14,10 +14,17 @@
                 <h4 *ngIf="paramGroup.values.length">{{paramGroup.name}}</h4>
                 <div class="row" *ngFor="let param of paramGroup.values">
                     <div class="col-7">{{param.name || param.id}}</div>
-                    <div class="col-5 ellipsis"
-                         *ngIf="activeEntity[paramGroup.id] && activeEntity[paramGroup.id][param.id] != undefined">
-                        {{activeEntity[paramGroup.id][param.id].text}}
+                    <div class="col-5"
+                         *ngIf="activeEntity[paramGroup.id] && activeEntity[paramGroup.id][param.id]; else noValue"
+                         [title]="activeEntity[paramGroup.id][param.id].tooltip">
+                        <span [ngClass]="activeEntity[paramGroup.id][param.id].class"
+                              [innerText]="[undefined, ''].indexOf(activeEntity[paramGroup.id][param.id].text) === -1
+                              ? activeEntity[paramGroup.id][param.id].text : '–'"></span>
+                        <span class="pl-1" [innerText]="activeEntity[paramGroup.id][param.id].icon"></span>
                     </div>
+                    <ng-template #noValue>
+                        <div class="col-5">–</div>
+                    </ng-template>
                 </div>
             </nx-section>
         </ng-container>

@@ -112,4 +112,14 @@
             width    : 100%;
         }
     }
+
+    .error {
+        font-family: $font-family-medium;
+        color: $red_l2;
+    }
+
+    .warning {
+        font-family: $font-family-medium;
+        color: $yellow_main;
+    }
 }
