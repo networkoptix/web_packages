@@ -128,11 +128,25 @@
           background : transparentize($brand_core, 0.9);
         }
 
+        td {
+          .error {
+            font-family: $font-family-medium;
+            color: $red_l2;
+          }
+
+          .warning {
+            font-family: $font-family-medium;
+            color: $yellow_main;
+          }
+        }
+
         &.selected, &:active, &:focus {
           background : $light16;
 
           td {
-            color : $light1;
+            &, span {
+              color : $light1 !important;
+            }
 
             .icon-negative {
               color : $light1;

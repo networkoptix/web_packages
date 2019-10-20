@@ -68,9 +68,10 @@ export class NxHealthComponent implements OnInit {
                             this.healthService.manifest = result.manifestRequest.reply;
                             this.healthService.values = result.valuesRequest.reply;
                             this.healthService.alarms = result.alarmsRequest.reply;
-
+                            this.processValues();
                             this.initializeManifest();
                             this.initializeHeaders();
+
                             const menu = {...this.menu};
                             Object.keys(this.healthService.manifest).forEach((asset) => {
                                 menu.level1.push({
@@ -98,6 +99,98 @@ export class NxHealthComponent implements OnInit {
     initializeHeaders() {
         this.healthService.tableHeaders = this.filterManifestHeaders('table');
         this.healthService.panelParams = this.filterManifestHeaders('panel');
+        this.addAlarmToTableHeaders();
+    }
+
+    addAlarmToTableHeaders() {
+        Object.keys(this.healthService.tableHeaders).forEach(metric => {
+            if (!this.healthService.tableHeaders[metric].values._) {
+                this.healthService.tableHeaders[metric].values._ = {
+                    id: '_',
+                    values: {}
+                };
+            }
+            this.healthService.tableHeaders[metric].values.unshift({
+                id: '_',
+                name: '',
+                values: [
+                    {
+                        display: 'table',
+                        id: 'alarm',
+                        name: ''
+                    }
+                ]
+            });
+        });
+    }
+
+    highestAlarm(alarms) {
+        // Return first error alarm, otherwise return first alarm found;
+        let highest;
+        for (const alarm of alarms) {
+            if (alarm.level === 'error') {
+                return alarm;
+            } else if (!highest) {
+                highest = alarm;
+            }
+        }
+        return highest;
+    }
+
+    processValues() {
+        Object.entries(this.healthService.values).forEach(([metric, entities]) => {
+            Object.entries(entities).forEach(([entity, groups]) => {
+                let alarmCount = 0;
+                let highestAlarm;
+                Object.entries(groups).forEach(([group, params]) => {
+                    Object.entries(params).forEach(([param, value]) => {
+                        const alarms = this.healthService.alarms[metric] && this.healthService.alarms[metric][entity]
+                            && this.healthService.alarms[metric][entity][group]
+                            && this.healthService.alarms[metric][entity][group][param];
+                        let alarm;
+                        if (alarms) {
+                            alarm = this.highestAlarm(alarms);
+                            if (!highestAlarm || alarm.level === 'error' && highestAlarm.level === 'warning') {
+                                highestAlarm = alarm;
+                            }
+                            alarmCount++;
+                        }
+                        this.healthService.values[metric][entity][group][param] = {
+                            text: value,
+                            class: alarm ? alarm.level : '',
+                            tooltip: alarm ? alarm.text : '',
+                            icon: alarm ? `${alarm.level}_icon` : '',
+                        };
+                    });
+                });
+
+                if (!this.healthService.values[metric][entity]._) {
+                    this.healthService.values[metric][entity]._ = {};
+                }
+                this.healthService.values[metric][entity]._.alarm = {
+                    text: ' '
+                };
+
+                if (highestAlarm) {
+                    this.healthService.values[metric][entity]._.alarm.icon = `${highestAlarm.level}_icon`;
+                    if (this.healthService.values[metric][entity]._.name) {
+                        this.healthService.values[metric][entity]._.name.class = highestAlarm.level;
+                    }
+                    if (alarmCount > 1) {
+                        const tooltip = `${alarmCount} alerts`;
+                        if (this.healthService.values[metric][entity]._.name) {
+                            this.healthService.values[metric][entity]._.name.tooltip = tooltip;
+                        }
+                        this.healthService.values[metric][entity]._.alarm.toolip = tooltip;
+                    } else {
+                        if (this.healthService.values[metric][entity]._.name) {
+                            this.healthService.values[metric][entity]._.name.tooltip = highestAlarm.text;
+                        }
+                        this.healthService.values[metric][entity]._.alarm.tooltip = highestAlarm.text;
+                    }
+                }
+            });
+        });
     }
 
     filterManifestHeaders(displayFilter: string) {

@@ -49,7 +49,7 @@ export class NxSystemMetricsComponent implements OnInit {
             this.menuService.setSection(this.metricId);
             this.selectedData = this.healthService.tableHeaders[this.metricId];
             this.selectedPanelData = this.healthService.panelParams[this.metricId];
-            this.selectedValues = this.healthService.valuesSubject.getValue()[this.metricId];
+            this.selectedValues = this.healthService.values[this.metricId];
             this.resetActiveEntity();
         });
 

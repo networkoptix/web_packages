@@ -2,7 +2,7 @@
     <nx-block type='gray'>
         <header>
             <div class="panel-title">
-                <span>{{activeEntity._ ? activeEntity._.name : activeEntity.info.name}}</span>
+                <span>{{activeEntity._ ? activeEntity._.name.text : activeEntity.info.name.text}}</span>
             </div>
             <span class="glyphicon close-icon detailsClose"
                   (click)="closeView()">
@@ -16,7 +16,7 @@
                     <div class="col-7">{{param.name || param.id}}</div>
                     <div class="col-5 ellipsis"
                          *ngIf="activeEntity[paramGroup.id] && activeEntity[paramGroup.id][param.id] != undefined">
-                        {{activeEntity[paramGroup.id][param.id]}}
+                        {{activeEntity[paramGroup.id][param.id].text}}
                     </div>
                 </div>
             </nx-section>

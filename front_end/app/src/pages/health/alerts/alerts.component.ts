@@ -72,16 +72,16 @@ export class NxSystemAlertsComponent implements OnInit {
                     Object.entries(params).forEach(([param, alarms]) => {
                         alarms.forEach(alarm => {
                             const alert: any = {_: {}};
-                            let server = this.values[metric][entity].info.server;
+                            let server = this.values[metric][entity].info.server.text;
                             if (!server && metric === 'servers') {
                                 server = entity;
                             }
 
                             if (server) {
-                                alert._.server = this.values.servers[server]._.name;
+                                alert._.server = {text: this.values.servers[server]._.name.text};
                             }
-                            alert._.type = this.manifest[metric].resource;
-                            alert._.text = alarm.text;
+                            alert._.type = {text: this.manifest[metric].resource};
+                            alert._.text = {text: alarm.text};
                             alert.resource = entity;
                             alert.metric = metric;
                             this.alertsValues.push(alert);
