@@ -281,11 +281,17 @@ export class NxAccountService {
                 this.cloudApi
                     .logout()
                     .finally(() => {
-                        this.account.timer.unsubscribe();
+                        if (this.account && this.account.timer) {
+                            this.account.timer.unsubscribe();
+                        }
                         this.account = undefined;
                         this.sessionService.invalidateSession(); // Clear session
                         if (!doNotRedirect) {
-                            return this.router.navigate([this.CONFIG.redirectUnauthorised]);
+                            return this.router
+                                       .navigate([this.CONFIG.redirectUnauthorised])
+                                       .finally(() => {
+                                           setTimeout(() => window.location.reload());
+                                       });
                         }
                         setTimeout(() => {
                             return this.router.navigate([this.router.url]);

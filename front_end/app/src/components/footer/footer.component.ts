@@ -39,37 +39,5 @@ import { NxSettingsService } from '../../pages/systems/settings/settings.service
         this.appState.footerVisibleObservable.subscribe((visible) => {
             this.viewFooter = visible;
         });
-
-        this.route.url.subscribe(() => {
-            this.updateFooterStyling();
-        });
-
-        this.systemSettingsService.systemSubject.subscribe((system) => {
-            if (system) {
-                this.updateFooterStyling();
-            }
-        });
-    }
-
-    updateFooterStyling() {
-        if (this.route.routeConfig) {
-            this.classes = [];
-            const path = this.route.routeConfig.path;
-            const system = this.systemSettingsService.system;
-
-            if (path === 'account') {
-                const childPath = this.route.firstChild.routeConfig.path;
-                if (childPath === 'password') {
-                    this.classes.push('col-xxxl-6');
-                }
-            }
-
-            if (path === 'systems/:systemId' && system) {
-                const childPath = this.route.firstChild.routeConfig.path;
-                if (childPath === '' && system.isMine || childPath.includes('users')) {
-                    this.classes.push('col-xxxl-6');
-                }
-            }
-        }
     }
 }

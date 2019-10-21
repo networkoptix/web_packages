@@ -174,6 +174,11 @@ export class LoginModalContent implements OnInit {
                     this.location.go(this.CONFIG.redirectAuthorised);
                 });
             }
+        }, (error) => {
+            if (error.resultCode === 'portalError') {
+                // close dialog ... process will show toaster
+                this.activeModal.close();
+            }
         });
     }
 

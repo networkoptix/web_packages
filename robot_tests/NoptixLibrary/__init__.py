@@ -7,6 +7,7 @@ import imaplib
 import os.path
 import re
 import time
+from datetime import date
 from email.parser import HeaderParser
 from platform import system
 from random import *
@@ -71,6 +72,9 @@ class NoptixLibrary(object):
         email = email[:index] + \
             "+!#$%'*-/=?^_`{|}~" + str(time.time()) + email[index:]
         return email
+
+    def get_random_system_name(self):
+        return "System: " + date.today().strftime("%m-%d-%y") + " " + str(randint(1, 100))
 
     def get_element_style(self, locator, styleAttribute):
         seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')

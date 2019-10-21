@@ -150,7 +150,7 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
 
             if (!this.CONFIG.publicReleases) {
                 this.accountService
-                    .get()
+                    .requireLogin()
                     .then(account => {
                         this.canViewRelease = account && (account.is_superuser || account.permissions.indexOf(this.CONFIG.permissions.canViewRelease) > -1);
 

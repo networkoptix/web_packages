@@ -107,7 +107,7 @@ export class NxSystemAdminComponent implements OnInit {
     updateAndGoToSystems() {
         this.userDisconnectSystem = true;
         this.systemsService
-            .forceUpdateSystems()
+            .forceUpdateSystems(this.accountService.getEmail())
             .subscribe(() => {
                 setTimeout(() => {
                     window.location.href = '/systems';
@@ -136,7 +136,7 @@ export class NxSystemAdminComponent implements OnInit {
                        }
 
                        this.pageService.setPageTitle(this.system.info.name + ' -');
-                       this.systemsService.forceUpdateSystems();
+                       this.systemsService.forceUpdateSystems(this.accountService.getEmail());
                    });
     }
 

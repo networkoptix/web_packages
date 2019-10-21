@@ -177,5 +177,6 @@
     "CHECKING TEXT"                        :    "Checking...",
     "ENTER PASSWORD TO CONTINUE TEXT"      :    "Enter password for your account to continue",
     "INCOMPATIBLE"                         :    "incompatible",
-    "CONNECTION TO SYSTEM LOST"            :    "Connection to %SYSTEM NAME% lost"
+    "CONNECTION TO SYSTEM LOST"            :    "Connection to %SYSTEM NAME% lost",
+    "SYSTEM IS OFFLINE TEXT"               :    "System is offline. Some settings may not be available."
 }

@@ -131,7 +131,7 @@ ${ACCOUNT CREATION SUCCESS}           //h1[@class="process-success d-flex align-
 ${ACTIVATION SUCCESS}                 //h1[@class='process-success' and contains(text(),"${ACCOUNT SUCCESSFULLY ACTIVATED TEXT}")]
 ${SUCCESS LOG IN BUTTON}              //h1[@class='process-success' and contains(text(),"${ACCOUNT SUCCESSFULLY ACTIVATED TEXT}")]/following-sibling::h1/a[text()="${LOG IN BUTTON TEXT}"]
 
-${SYSTEM NAME OFFLINE}                //nx-ribbon/div[contains(@class,'alert-ribbon')]/div[@class='message' and text()='System is offline. Some settings may not be available.']
+${SYSTEM NAME OFFLINE}                //nx-ribbon/div[contains(@class,'alert-ribbon')]/div[@class='message' and text()='${SYSTEM IS OFFLINE TEXT}']
 
 #In system settings
 ${SYSTEM NAME}                        //h2[contains(@class,"system-name")]
@@ -183,7 +183,7 @@ ${MERGE BUTTON SYSTEM DISABLED}       //button[@disabled]/span[text()="${MERGE S
 ${MERGE DIALOG}                       //nx-modal-merge-content
 ${MERGE FORM}                         //form[@name="mergeForm"]
 ${MERGE SYSTEM DROPDOWN}              ${MERGE DIALOG}//button[@id="genericSelect"]
-${MERGE X BUTTON}                     ${MERGE DIALOG}//button[@class="close"]
+${MERGE X BUTTON}                     ${MERGE DIALOG}//button[contains(@class,"close")]
 ${MERGE OK BUTTON}                    ${MERGE DIALOG}//button[contains(@class,"btn btn-primary") and contains(text(),"${OK TEXT}")]
 ${MERGE CANCEL BUTTON}                ${MERGE DIALOG}//button[@class="btn btn-default"]
 ${MERGE BUTTON MODAL}                 ${MERGE DIALOG}//button[@class="btn btn-primary" and contains(text(),"${MERGE SYSTEMS TEXT}")]
@@ -251,10 +251,10 @@ ${DISCARD CHANGES BUTTON}             ${MODAL DIALOG}//button[contains(text(), '
 
 #Downloads
 ${DOWNLOADS HEADER}                   //h1[contains(text(),"Download")]
-${DOWNLOAD WINDOWS VMS LINK}          //a[contains(text(),"Windows x64 - Client and Server")]/../..
-${DOWNLOAD UBUNTU VMS LINK}           //a[contains(text(),"Ubuntu x64 - Client")]/../..
-${DOWNLOAD MAC OS VMS LINK}           //a[contains(text(),"Mac OS - Client")]/../..
-${DOWNLOAD ARM VMS LINK}              //a[contains(text(),"ARM") and contains(text(),"Client")]/../..
+${DOWNLOAD WINDOWS VMS LINK}          //a[contains(text(),"Windows x64 - Client & Server")]
+${DOWNLOAD UBUNTU VMS LINK}           //a[contains(text(),"Ubuntu x64 - Client")]
+${DOWNLOAD MAC OS VMS LINK}           //a[contains(text(),"Mac OS - Client")]
+${DOWNLOAD ARM VMS LINK}              //a[contains(text(),"ARM") and contains(text(),"Client")]
 ${ITUNES STORE DOWNLOAD BUTTON}       //a[contains(@class,"mobile-link iOS")]
 ${PLAY STORE DOWNLOAD BUTTON}         //a[contains(@class,"mobile-link Android")]
 

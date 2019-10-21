@@ -20,7 +20,7 @@
                    id="password" autocomplete="new-password"
                    name="password" type="password"
                    required nxFocusMe>
-            <div *ngIf="password.invalid && password.touched && !wrongPassword">
+            <div *ngIf="password.invalid && password.touched && password.dirty && !wrongPassword">
                 <div class="input-error" translate>Password is required</div>
             </div>
             <div *ngIf="password.invalid && wrongPassword">
