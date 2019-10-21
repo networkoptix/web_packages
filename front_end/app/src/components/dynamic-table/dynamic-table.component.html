@@ -4,6 +4,15 @@
     <div class="table-wrapper">
         <table class="table table-hover nx-table">
             <thead>
+                <tr class="header-groups">
+                    <th *ngFor="let headerGroup of headers.values"
+                        [colSpan]="headerGroup.values.length">
+                        <div *ngIf="headerGroup.name"
+                             [style.border-color]="'darkgray'"
+                             [style.color]="'gray'"
+                             [innerText]="headerGroup.name"></div>
+                    </th>
+                </tr>
                 <tr>
                     <ng-container *ngFor="let headerGroup of headers.values">
                         <th *ngFor="let header of headerGroup.values" class="align-bottom"

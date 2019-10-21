@@ -64,8 +64,17 @@
     }
 
     thead {
+      .header-groups {
+        th div {
+          font-family: $font-family-regular;
+          line-height: 16px;
+          border-bottom: 1px solid;
+          padding-bottom: 4px;
+        }
+      }
+
       th {
-        padding          : .5rem 0;
+        padding          : .5rem 24px .5rem 0;
         color            : $dark9;
         font-family      : $font-family-medium;
         font-weight      : 500 !important;
@@ -95,6 +104,7 @@
           overflow-wrap : initial;
           overflow      : hidden;
           text-overflow : ellipsis;
+          padding-right: 24px;
 
           .sort-dir {
             //top: 0;
@@ -128,18 +138,6 @@
           background : transparentize($brand_core, 0.9);
         }
 
-        td {
-          .error {
-            font-family: $font-family-medium;
-            color: $red_l2;
-          }
-
-          .warning {
-            font-family: $font-family-medium;
-            color: $yellow_main;
-          }
-        }
-
         &.selected, &:active, &:focus {
           background : $light16;
 
@@ -155,7 +153,7 @@
         }
 
         td {
-          padding      : 0;
+          padding      : 0 24px 0 0;
           font-family  : $font-family-regular;
           font-size    : $font-size-base;
           color        : $dark9;
@@ -164,6 +162,16 @@
 
           &:first-of-type {
             padding-left : .25rem;
+          }
+
+          .error {
+            font-family: $font-family-medium;
+            color: $red_l2;
+          }
+
+          .warning {
+            font-family: $font-family-medium;
+            color: $yellow_main;
           }
         }
       }
