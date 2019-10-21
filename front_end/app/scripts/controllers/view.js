@@ -6,11 +6,11 @@
         .module('cloudApp')
         .controller('ViewPageCtrl', [ '$rootScope', '$scope', '$window', 'nxAccountService', 'system', '$routeParams', 'systemAPI', 'nxDialogsService',
             '$location', '$q', '$poll', 'camerasProvider',
-            'nxConfigService', 'languageService', 'nxAppStateService', 'nxPageService',
+            'nxConfigService', 'languageService', 'nxAppStateService', 'nxPageService', 'nxHeaderService',
 
             function ($rootScope, $scope, $window, nxAccountService, system, $routeParams, systemAPI, nxDialogsService,
                       $location, $q, $poll, camerasProvider,
-                      nxConfigService, languageService, nxAppStateService, nxPageService) {
+                      nxConfigService, languageService, nxAppStateService, nxPageService, nxHeaderService) {
     
                 const CONFIG = nxConfigService.getConfig();
                 const LANG = languageService.lang;
@@ -61,7 +61,10 @@
                         $q.all([systemInfoRequest, systemAuthRequest]).then(function (result) {
                             $scope.system = $scope.currentSystem.mediaserver;
                             $scope.hasCameras = false;
-        
+                            
+                            // Notify header that system was changed (for display purposes)
+                            nxHeaderService.systemIdSubject.next($scope.currentSystem.id);
+                            
                             if ($scope.currentSystem.isOnline) {
                                 $scope.camerasProvider = camerasProvider.getProvider($scope.system);
                                 $scope.camerasProvider

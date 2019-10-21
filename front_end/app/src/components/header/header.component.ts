@@ -6,14 +6,18 @@ import {
     ActivatedRoute, NavigationEnd, Event,
     Router, RoutesRecognized
 }                              from '@angular/router';
-import { NxConfigService }     from '../../services/nx-config';
-import { NxAppStateService }   from '../../services/nx-app-state.service';
-import { NxAccountService }    from '../../services/account.service';
-import { NxDialogsService }    from '../../dialogs/dialogs.service';
-import { NxSessionService }    from '../../services/session.service';
-import { NxSystemsService }    from '../../services/systems.service';
-import { WINDOW }              from '../../services/window-provider';
-import { LocalStorageService } from 'ngx-store';
+import { NxConfigService }        from '../../services/nx-config';
+import { NxAppStateService }      from '../../services/nx-app-state.service';
+import { NxAccountService }       from '../../services/account.service';
+import { NxDialogsService }       from '../../dialogs/dialogs.service';
+import { NxSessionService }       from '../../services/session.service';
+import { NxSystemsService }       from '../../services/systems.service';
+import { WINDOW }                 from '../../services/window-provider';
+import { LocalStorageService }    from 'ngx-store';
+import { BehaviorSubject, timer } from 'rxjs';
+import { take }                   from 'rxjs/operators';
+import { NxSystemsDropdown }      from '../dropdowns/systems/systems.component';
+import { NxHeaderService }        from '../../services/nx-header.service';
 
 @Component({
     selector: 'nx-header',
@@ -36,6 +40,9 @@ export class NxHeaderComponent implements OnInit {
     systemCounter: number;
     loginState: any;
 
+    getUrlSystemId: any;
+    untilHaveID: any;
+
     constructor(@Inject(WINDOW) private window: Window,
                 private renderer: Renderer2,
                 private _config: NxConfigService,
@@ -47,6 +54,7 @@ export class NxHeaderComponent implements OnInit {
                 private sessionService: NxSessionService,
                 private localStorage: LocalStorageService,
                 private router: Router,
+                private headerService: NxHeaderService,
     ) {
         this.CONFIG = this._config.getConfig();
     }
@@ -55,27 +63,62 @@ export class NxHeaderComponent implements OnInit {
         return this.window.location.pathname.indexOf(val) >= 0;
     }
 
+    private systemIdUpdate(id) {
+        this.systemId = id;
+        this.localStorage.set('systemId', this.systemId);
+
+        if (this.systemId && !this.systems) {
+            this.systemsService
+                .forceUpdateSystems()
+                .toPromise().then(() => {
+                    this.updateActiveSystem();
+                    this.updateActive();
+            });
+        } else {
+            this.updateActiveSystem();
+            this.updateActive();
+        }
+    }
+
+    private startTimerSystemIdUpdate() {
+        this.untilHaveID = timer(200, 200);
+        this.getUrlSystemId = this.untilHaveID.subscribe(() => {
+            if (window.location.pathname.indexOf('/systems/') === 0) {
+                const uriSystemId = window.location.pathname.split('/')[2];
+
+                if (uriSystemId === this.systemId) {
+                    this.getUrlSystemId.unsubscribe();
+                    return;
+                }
+
+                this.systemIdUpdate(uriSystemId);
+            }
+        });
+    }
+
     ngOnInit() {
         // TODO: root route is maintained by AJS - replace this once we get rid of it.
         this.inline = this.window.location.search.indexOf('inline') > 0;
         // this.route.queryParams.subscribe(params => {
         //     this.inline = params['inline'] !== 'undefined';
         // });
+
+        // TODO: (Only for display purpose) Temporary solution until we move View to A8
+        // View is still under AJS and it doesn't trigger route change
+        this.startTimerSystemIdUpdate(); // ensure update on page reload
+
+        // notification from view.js
+        this.headerService.systemIdSubject.subscribe((systemId) => {
+            if (systemId) {
+                this.systemIdUpdate(systemId);
+            }
+        });
+        // TODO: END
+
         this.navVisible = false;
         this.dropdownsVisible = false;
         this.viewHeader = this.CONFIG.showHeaderAndFooter;
         this.active = {};
-
-        this.sessionService.loginStateSubject.subscribe((state) => {
-            this.accountService
-                .get()
-                .then(account => {
-                    if (account) {
-                        this.dropdownsVisible = true;
-                    }
-                });
-        });
-
 
         this.router.events
               .subscribe((event: Event) => {
@@ -101,6 +144,14 @@ export class NxHeaderComponent implements OnInit {
               });
 
         this.sessionService.loginStateSubject.subscribe((loginState) => {
+            this.accountService
+                .get()
+                .then(account => {
+                    if (account) {
+                        this.dropdownsVisible = true;
+                    }
+                });
+
             this.loginState = loginState;
             if (loginState) {
                 this.renderer.removeClass(document.body, 'loading');
