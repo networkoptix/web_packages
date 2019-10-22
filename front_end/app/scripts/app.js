@@ -152,12 +152,10 @@ window.L = {};
                     })
                     .when('/embed/:systemId/view/:cameraId', {
                         templateUrl: CONFIG.viewsDir + 'view.html',
-                        controller : 'ViewPageCtrl',
-                        resolve: {
-                            cleanSlate: [function () {
-                                CONFIG.showHeaderAndFooter = false;
-                            }]
-                        }
+                        controller: 'ViewPageCtrl',
+                    })
+                    .when('/embed/ipvd', {
+                        template:'',
                     })
                     .when('/activate', {
                         template: ''

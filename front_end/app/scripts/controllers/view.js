@@ -20,9 +20,6 @@
                 $scope.systemReady = false;
                 $scope.hasCameras = false;
     
-                // Check if page is displayed inside an iframe
-                $scope.isInIframe = ($window.location !== $window.parent.location);
-    
                 function delayedUpdateSystemInfo() {
                     var pollingSystemUpdate = $poll(function () {
                         return $scope.currentSystem.update();
@@ -39,10 +36,7 @@
                 $scope.isInIframe = ($window.location !== $window.parent.location);
                 
                 if ($scope.isInIframe) {
-                    $rootScope.$emit('nx.layout.header', {
-                        state: true, // hide it
-                        loc: 'ViewPageCtrl - inIframe'
-                    });
+                    nxAppStateService.setHeaderVisibility(false);
                     nxAppStateService.setFooterVisibility(false);
                 }
     
