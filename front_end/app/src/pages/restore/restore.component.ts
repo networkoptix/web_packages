@@ -101,7 +101,7 @@ export class NxRestoreComponent implements OnInit {
                         // send to registration form with the code
                         this.router.navigate(['/register/' + code]);
                     } else {
-                        this.router.navigate(['/activate/' + code]);
+                        this.router.navigate(['/restore_password/' + code]);
                     }
                 }, () => {
                     // Wrong activation code or some error - send to activation page
