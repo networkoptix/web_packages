@@ -65,11 +65,43 @@
 
     thead {
       .header-groups {
-        th div {
-          font-family: $font-family-regular;
-          line-height: 16px;
-          border-bottom: 1px solid;
-          padding-bottom: 4px;
+        th {
+          div {
+            font-family: $font-family-regular;
+            line-height: 16px;
+            border-bottom: 1px solid;
+            padding-bottom: 4px;
+          }
+
+          .group-1 {
+            color: $light10;
+            border-color: $light10;
+          }
+
+          .group-2 {
+            color: $blue500;
+            border-color: $blue50;
+          }
+
+          .group-3 {
+            color: $pink500;
+            border-color: $pink50;
+          }
+
+          .group-4 {
+            color: $purple500;
+            border-color: $purple50;
+          }
+
+          .group-5 {
+            color: $cyan500;
+            border-color: $cyan50;
+          }
+
+          .group-6 {
+            color: $green500;
+            border-color: $green50;
+          }
         }
       }
 

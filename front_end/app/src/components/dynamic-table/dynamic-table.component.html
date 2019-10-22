@@ -5,11 +5,10 @@
         <table class="table table-hover nx-table">
             <thead>
                 <tr class="header-groups">
-                    <th *ngFor="let headerGroup of headers.values"
+                    <th *ngFor="let headerGroup of headers.values; index as index;"
                         [colSpan]="headerGroup.values.length">
                         <div *ngIf="headerGroup.name"
-                             [style.border-color]="'darkgray'"
-                             [style.color]="'gray'"
+                             [ngClass]="'group-' + ((index - 2) % 6 + 1)"
                              [innerText]="headerGroup.name"></div>
                     </th>
                 </tr>
