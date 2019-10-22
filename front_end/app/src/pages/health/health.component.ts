@@ -126,15 +126,12 @@ export class NxHealthComponent implements OnInit {
 
     highestAlarm(alarms) {
         // Return first error alarm, otherwise return first alarm found;
-        let highest;
         for (const alarm of alarms) {
             if (alarm.level === 'error') {
                 return alarm;
-            } else if (!highest) {
-                highest = alarm;
             }
         }
-        return highest;
+        return alarms[0];
     }
 
     processValues() {
