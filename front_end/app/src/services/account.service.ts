@@ -13,6 +13,7 @@ import { NxApplyService }            from './apply.service';
 
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { ReplaySubject, timer }               from 'rxjs';
+import { WINDOW }                             from './window-provider';
 
 @Injectable({
     providedIn: 'root'
@@ -27,6 +28,7 @@ export class NxAccountService {
     loginStateSubject = new ReplaySubject(1);
 
     constructor(@Inject(DOCUMENT) private document: any,
+                @Inject(WINDOW) private window: Window,
                 private config: NxConfigService,
                 private language: NxLanguageProviderService,
                 private cloudApi: NxCloudApiService,
@@ -251,10 +253,9 @@ export class NxAccountService {
     }
 
     loginWithAuthKey(authKey: string) {
-        const auth = atob(authKey);
-        const index = auth.indexOf(':');
-        const tempLogin = auth.substring(0, index);
-        const tempPassword = auth.substring(index + 1);
+        const auth = atob(authKey).split(':');
+        const tempLogin = auth[0];
+        const tempPassword = auth[1];
 
         return this.login(tempLogin, tempPassword, false)
             .then(() => {
@@ -290,11 +291,12 @@ export class NxAccountService {
                             return this.router
                                        .navigate([this.CONFIG.redirectUnauthorised])
                                        .finally(() => {
-                                           setTimeout(() => window.location.reload());
+                                           setTimeout(() => this.window.location.reload());
                                        });
                         }
+
                         setTimeout(() => {
-                            return this.router.navigate([this.router.url]);
+                            return this.window.location.reload();
                         });
                     });
             }
@@ -343,28 +345,43 @@ export class NxAccountService {
     }
 
     private handleAuthKeyLogin(auth) {
-        this.get().then((account) => {
-            if (!account) {
-                return this.loginWithAuthKey(auth).then(() => {
-                    return this.document.location.reload();
-                });
-            }
-            return this.dialogs.confirm('',
-                this.LANG.dialogs.loggedFromOther,
-                this.LANG.dialogs.okButton,
-                undefined,
-                this.LANG.dialogs.stayAs.replace('{email}', account.email),
-                'long-cancel-button'
-            ).then((result) => {
-                if (result === true) {
-                    this.logout(true);
-                } else {
-                    const queryParams = {auth: undefined, from: undefined};
-                    return this.router
-                        .navigate([], { queryParams , queryParamsHandling: 'merge'})
-                        .then(() => this.document.location.reload());
+        this.get()
+            .then((account) => {
+                if (!account) {
+                    return this.loginWithAuthKey(auth).then(() => {
+                        return this.document.location.reload();
+                    });
                 }
+                return this.dialogs
+                           .confirm('',
+                               this.LANG.dialogs.loggedFromOther,
+                               this.LANG.dialogs.okButton,
+                               undefined,
+                               this.LANG.dialogs.stayAs.replace('{email}', account.email),
+                               'long-cancel-button'
+                           ).then((result) => {
+                               if (result === true) {
+                                   return this.cloudApi
+                                       .logout()
+                                       .finally(() => {
+                                           if (this.account && this.account.timer) {
+                                               this.account.timer.unsubscribe();
+                                           }
+                                           this.account = undefined;
+                                           this.localStorageService.clear('all'); // Clear session
+                                           // this.sessionService.invalidateSession(); // Clear session
+
+                                           return this.loginWithAuthKey(auth).then(() => {
+                                               return this.document.location.reload();
+                                           });
+                                       });
+                               } else {
+                                   const queryParams = { auth: undefined, from: undefined };
+                                   return this.router
+                                              .navigate([], { queryParams, queryParamsHandling: 'merge' })
+                                              .then(() => this.document.location.reload());
+                               }
+                        });
             });
-        });
     }
 }
