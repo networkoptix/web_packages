@@ -4,5 +4,5 @@
 </div>
 
 <div class="clearfix alert-ribbon ribbon" *ngIf="showRibbon && type === 'alert'">
-    <div class="message">{{message}}</div>
+    <div class="message">{{message}} <a *ngIf="action" [href]="actionUrl" target="_blank">{{action}}</a></div>
 </div>

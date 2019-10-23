@@ -3,17 +3,12 @@
 <ng-container *ngIf="system">
     <div *ngIf="!system.forbidden" class="block-container mt-3">
         <div class="row">
-            <!-- Fixed elements don't respect sizing of parents, so we need to set container within the fixed element -->
-            <div class="block-container fixed-sidebar">
-                <div class="row">
-                    <div class="d-flex flex-column px-0 px-md-2 col-12 col-md-4 col-xl-3 fill-screen-height"
-                         [ngClass]="{'fill-screen-height': !ribbonService.context.visibility,
-                     'fill-screen-height-alert': ribbonService.context.visibility}">
-                        <nx-system-merge></nx-system-merge>
-                        <nx-pre-loader *ngIf="!menuVisible"></nx-pre-loader>
-                        <nx-menu *ngIf="menuVisible" [content]="content"></nx-menu>
-                    </div>
-                </div>
+            <!-- Calculate height of menu, offset by height of header div and 16px on top and bottom -->
+            <div class="fixed-sidebar col-12 d-flex flex-column ml-md-2 fill-screen-height"
+                 [ngStyle]="{'height': 'calc(100% - ('+ headerHeight + 'px + 32px))'}">
+                <nx-system-merge></nx-system-merge>
+                <nx-pre-loader *ngIf="!menuVisible"></nx-pre-loader>
+                <nx-menu *ngIf="menuVisible" [content]="content"></nx-menu>
             </div>
 
             <!-- Offset for the fixed menu -->
