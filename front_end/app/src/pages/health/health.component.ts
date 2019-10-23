@@ -192,8 +192,8 @@ export class NxHealthComponent implements OnInit {
 
     filterManifestHeaders(displayFilter: string) {
         const headers = {};
-        Object.keys(this.healthService.manifest).forEach((metricId) => {
-            const metric = this.healthService.manifest[metricId];
+        Object.values(this.healthService.manifest).forEach((metricValue) => {
+            const metric = JSON.parse(JSON.stringify(metricValue));
             headers[metric.id] = metric;
             headers[metric.id].values.forEach((headerGroup, index) => {
                 const group = headerGroup.values.filter((header) => {
