@@ -156,10 +156,10 @@ export class NxSystemAdminComponent implements OnInit {
                        if (!error.primarySystemName && !error.secondarySystemName) {
                            return;
                        }
-                       const commonErrorMsg = this.LANG.merging.commonText
+                       const commonErrorMsg = this.LANG.dialogs.merge.commonText
                                                   .replace('{{primarySystem}}', error.primarySystemName)
                                                   .replace('{{secondarySystem}}', error.secondarySystemName);
-                       let responseError = this.LANG.errorCodes[error.errorText] || this.LANG.errorCodes[error.responseCode];
+                       let responseError = this.LANG.errorCodes[error.errorText] || this.LANG.errorCodes[error.resultCode];
                        if (!responseError) {
                            responseError = this.LANG.errorCodes.unknownMergeError;
                        } else {
@@ -172,7 +172,7 @@ export class NxSystemAdminComponent implements OnInit {
                        // Handling promise to satisfy the linter.
                        this.dialogs.confirm(
                                dialogBody,
-                               this.LANG.merging.mergeFailedTitle,
+                               this.LANG.dialogs.merge.mergeFailedTitle,
                                this.LANG.dialogs.okButton,
                                'btn-primary',
                                undefined).then(() => {});

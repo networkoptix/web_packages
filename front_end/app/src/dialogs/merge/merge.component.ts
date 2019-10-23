@@ -134,6 +134,7 @@ export class MergeModalContent {
             }
 
             error.data.resultCode = errorCode;
+            error.data.errorText = error && error.errorText || '';
             // Set the name of the primary system.
             error.data.primarySystemName = this.primarySystem.name;
             // If name is undefined try looking in info for the name.
