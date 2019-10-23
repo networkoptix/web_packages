@@ -328,8 +328,8 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     id,
                     icon : user.isCloud ? 'glyphicon-cloud' : '',
                     label: user.email,
-                    additionalLabel: user.role.name,
-                    path: 'users/' + id,
+                    additionalLabel:  this.LANG.accessRoles[user.role.name] && this.LANG.accessRoles[user.role.name].label || user.role.name,
+                    path : 'users/' + id,
                     isEnabled: user.isEnabled,
                 });
             });
