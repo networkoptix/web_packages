@@ -95,7 +95,7 @@ export class NxIpvdComponent implements OnInit {
         this.resolutions = [];
         this.hardwareTypes = [];
 
-        this.uriPath = '/' + this.route.snapshot.url[0].path;
+        this.uriPath = '/' + this.route.snapshot.url.map(e => e.path).join('/');
     }
 
     constructor(private configService: NxConfigService,

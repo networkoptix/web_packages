@@ -78,7 +78,7 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
 
         this.CONFIG = this.configService.getConfig();
         this.LANG = this.language.getTranslations();
-        this.uriPath = '/' + this._route.snapshot.url[0].path;
+        this.uriPath = '/' + this._route.snapshot.url.map(e => e.path).join('/');
 
         this.location.subscribe((event: PopStateEvent) => {
             // force search component update

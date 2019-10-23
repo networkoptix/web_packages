@@ -115,10 +115,21 @@ export class NxHeaderComponent implements OnInit {
         });
         // TODO: END
 
+        // TODO: experiment iFrame
+        // this.headerService.visibilitySubject.subscribe((state) => {
+        //     if (state !== undefined) {
+        //         this.viewHeader = state;
+        //     }
+        // });
+
         this.navVisible = false;
         this.dropdownsVisible = false;
         this.viewHeader = this.CONFIG.showHeaderAndFooter;
         this.active = {};
+
+        this.appState.headerVisibleSubject.subscribe((visible) => {
+            this.viewHeader = visible;
+        });
 
         this.router.events
               .subscribe((event: Event) => {
