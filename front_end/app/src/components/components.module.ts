@@ -40,8 +40,6 @@ import { ToastsContainer }           from './toast/toast.component';
 import { NxHeaderComponent }         from './header/header.component';
 import { NxNavLocationDropdown }     from './dropdowns/nav-location/nav.component';
 import { NxApplyComponent }          from './apply/apply.component';
-import { NxDynamicTableComponent }   from './dynamic-table/dynamic-table.component';
-import { NxDynamicTablePanelComponent } from './dynamic-table-panel/dynamic-table-panel.component';
 
 @NgModule({
     imports: [
@@ -86,8 +84,6 @@ import { NxDynamicTablePanelComponent } from './dynamic-table-panel/dynamic-tabl
         NxSwitchComponent,
         NxApplyComponent,
         ToastsContainer,
-        NxDynamicTableComponent,
-        NxDynamicTablePanelComponent
     ],
     entryComponents: [
         NxGenericDropdown,
@@ -121,8 +117,6 @@ import { NxDynamicTablePanelComponent } from './dynamic-table-panel/dynamic-tabl
         NxSwitchComponent,
         NxApplyComponent,
         ToastsContainer,
-        NxDynamicTableComponent,
-        NxDynamicTablePanelComponent
     ],
     providers      : [
         NxProcessButtonComponent,
@@ -147,8 +141,6 @@ import { NxDynamicTablePanelComponent } from './dynamic-table-panel/dynamic-tabl
         NxSwitchComponent,
         NxApplyComponent,
         ToastsContainer,
-        NxDynamicTableComponent,
-        NxDynamicTablePanelComponent,
 
         NxRibbonService,
     ],
@@ -184,8 +176,6 @@ import { NxDynamicTablePanelComponent } from './dynamic-table-panel/dynamic-tabl
         NxSwitchComponent,
         NxApplyComponent,
         ToastsContainer,
-        NxDynamicTableComponent,
-        NxDynamicTablePanelComponent,
 
         MenuModule,
     ]

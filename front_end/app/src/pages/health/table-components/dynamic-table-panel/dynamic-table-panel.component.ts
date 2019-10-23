@@ -2,9 +2,9 @@ import {
     Component, EventEmitter, Input,
     OnInit, Output, SimpleChanges
 }                          from '@angular/core';
-import { NxConfigService } from '../../services/nx-config';
-import { NxUriService }    from '../../services/uri.service';
-import { NxUtilsService }  from '../../services/utils.service';
+import { NxConfigService } from '../../../../services/nx-config';
+import { NxUriService }    from '../../../../services/uri.service';
+import { NxUtilsService }  from '../../../../services/utils.service';
 
 @Component({
     selector   : 'nx-dynamic-table-panel-component',

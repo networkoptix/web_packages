@@ -4,8 +4,8 @@ import {
     OnInit, ViewEncapsulation, Inject, PLATFORM_ID
 } from '@angular/core';
 import { Router }                    from '@angular/router';
-import { NxConfigService } from '../../services/nx-config';
-import { NxUtilsService } from '../../services/utils.service';
+import { NxConfigService } from '../../../../services/nx-config';
+import { NxUtilsService } from '../../../../services/utils.service';
 
 interface Params {
     [key: string]: any;

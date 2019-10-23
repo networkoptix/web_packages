@@ -12,10 +12,10 @@ import { ComponentsModule } from '../../components/components.module';
 import { AuthGuard } from '../../routeGuards/authGuard';
 
 import { NxHealthComponent } from './health.component';
-import { NxSystemAlertsModule } from './alerts/alerts.module';
 import { NxSystemAlertsComponent } from './alerts/alerts.component';
-import { NxSystemMetricssModule } from './metrics/metrics.module';
 import { NxSystemMetricsComponent } from './metrics/metrics.component';
+import { NxDynamicTableComponent } from './table-components/dynamic-table/dynamic-table.component';
+import { NxDynamicTablePanelComponent } from './table-components/dynamic-table-panel/dynamic-table-panel.component';
 
 
 const appRoutes: Routes = [
@@ -45,21 +45,27 @@ const appRoutes: Routes = [
         NgbModule,
         TranslateModule,
         ComponentsModule,
-        NxSystemAlertsModule,
-        NxSystemMetricssModule,
 
         RouterModule.forChild(appRoutes)
     ],
     providers      : [],
     declarations   : [
-        NxHealthComponent
+        NxHealthComponent,
+        NxSystemAlertsComponent,
+        NxSystemMetricsComponent,
+        NxDynamicTableComponent,
+        NxDynamicTablePanelComponent,
     ],
     bootstrap      : [],
     entryComponents: [
-        NxHealthComponent
+        NxHealthComponent,
+        NxSystemAlertsComponent,
+        NxSystemMetricsComponent
     ],
     exports: [
-        NxHealthComponent
+        NxHealthComponent,
+        NxSystemAlertsComponent,
+        NxSystemMetricsComponent,
     ]
 })
 export class NxHealthModule {
