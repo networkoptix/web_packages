@@ -25,7 +25,7 @@
                                     (click)="rename()"><span class="ellipsis" translate>Rename</span>
                             </button>
                         </div>
-                        <div class="float-left mr-2" *ngIf="system.isMine">
+                        <div class="float-left mr-2" *ngIf="system.isMine && systemsService.systems.length > 1">
                             <button class="btn btn-default"
                                     [disabled]="(currentlyMerging || !system.isOnline || !system.isAvailable) && !(debugMode || betaMode)"
                                     (click)="mergeSystems()"><span class="ellipsis"

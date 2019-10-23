@@ -26,6 +26,7 @@ export class NxAccountService {
     requestingLogin: any;
     account: any;
     loginStateSubject = new ReplaySubject(1);
+    loginDialogActive: boolean;
 
     constructor(@Inject(DOCUMENT) private document: any,
                 @Inject(WINDOW) private window: Window,
@@ -45,6 +46,7 @@ export class NxAccountService {
         this.CONFIG = this.config.getConfig();
         this.LANG = this.language.getTranslations();
         this.loggingOut = false;
+        this.loginDialogActive = false;
 
         // Distinct until changed is used to prevent the logout function from looping.
         this.sessionService.loginStateSubject.pipe(distinctUntilChanged()).subscribe((loginState) => {
@@ -173,7 +175,8 @@ export class NxAccountService {
     requireLogin() {
         return this.get()
             .then((account) => {
-                if (!account) {
+                if (!account && !this.loginDialogActive) {
+                    this.loginDialogActive = true
                     return this.dialogs
                         .login(this, true, true).then(() => {
                             return this.get().then((account) => {
@@ -182,7 +185,11 @@ export class NxAccountService {
                         })
                         .catch(() => {
                             this.location.path(this.CONFIG.redirectUnauthorised);
+                        }).finally(() => {
+                            this.loginDialogActive = false;
                         });
+                } else if (this.loginDialogActive) {
+                    return undefined;
                 }
                 return account;
             });
