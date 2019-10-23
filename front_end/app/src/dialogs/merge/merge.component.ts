@@ -165,12 +165,18 @@ export class MergeModalContent {
         this.checkMergeabilityProcess = this.processService.createProcess(() => {
             this.checking = true;
             this.systemMergeable = '';
-            return this.precheckSystemMerge();
-        }, { errorCodes: {}})
+            return this.precheckSystemMerge().finally(() => {
+                this.checking = false;
+                this.targetSystemDropdown.name = this.addStatus(this.targetSystem);
+                this.systemMergeable = this.checkMergeability(this.targetSystem);
+            });
+        }, {
+            errorCodes: {
+                target: () => {},
+                system: () => {}
+            }
+        })
         .then((res) => {
-            this.checking = false;
-            this.targetSystemDropdown.name = this.addStatus(this.targetSystem);
-            this.systemMergeable = this.checkMergeability(this.targetSystem);
             if (!res.system && this.systemMergeable === '' || this.CONFIG.allowDebugMode) {
                 return this.updateState();
             }
@@ -241,10 +247,10 @@ export class MergeModalContent {
             return this.targetSystem.getUsersDataFromTheSystem().then(() => {
                 return Promise.all([
                     this.system.mediaserver.getMediaServers().toPromise().catch(error => {
-                        return Promise.reject({ system: 'current', errorResponse: error });
+                        return Promise.reject({error: { data: { resultCode:  'current'}, errorResponse: error }});
                     }),
                     this.targetSystem.mediaserver.getMediaServers().toPromise().catch(error => {
-                        return Promise.reject({ system: 'target', errorResponse: error });
+                        return Promise.reject({ error: { data: { resultCode: 'target'}, errorResponse: error }});
                     })
                 ]).then(res => {
                     this.tooManySystems = res.map(req => req.length)
