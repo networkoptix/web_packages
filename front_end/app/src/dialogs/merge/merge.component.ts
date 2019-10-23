@@ -62,12 +62,14 @@ export class MergeModalContent {
         this.primarySystem = this.system;
         this.multipleSystems = this.systems.length > 0;
         this.outOfDate = this.multipleSystems && !this.system.canMerge;
-        this.processedSystems = this.makeSelectorList(this.systems);
-        this.targetSystem = this.selectDefaultSystem();
-        this.secondarySystem = this.targetSystem;
-        this.targetSystemDropdown = this.makeSelectorList([this.targetSystem])[0];
-        this.systemMergeable = this.checkMergeability(this.targetSystem);
         this.systemError = !this.multipleSystems || this.outOfDate;
+        if (this.multipleSystems) {
+            this.processedSystems = this.makeSelectorList(this.systems);
+            this.targetSystem = this.selectDefaultSystem();
+            this.secondarySystem = this.targetSystem;
+            this.targetSystemDropdown = this.makeSelectorList([this.targetSystem])[0];
+            this.systemMergeable = this.checkMergeability(this.targetSystem);
+        }
 
         this.user.get().then((account) => {
             this.account = account;
