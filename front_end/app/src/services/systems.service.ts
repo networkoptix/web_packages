@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { of, ReplaySubject } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { tap, map } from 'rxjs/operators';
 
 import { NxConfigService } from './nx-config';
 import { NxLanguageProviderService } from './nx-language-provider';
@@ -27,15 +27,19 @@ export class NxSystemsService implements OnDestroy {
         this.systemsPoll = pollService.createPoll(this.cloudApi.systems(), this.CONFIG.updateInterval);
     }
 
-    forceUpdateSystems() {
+    forceUpdateSystems(userEmail?) {
+        if (userEmail) {
+            this.currentUser = userEmail;
+        }
+
         return this.cloudApi.systems().pipe(tap((systems) => {
             this.processSystems(systems);
             this.systemsSubject.next(systems);
         }));
     }
 
-    forceUpdateSystemsAsPromise() {
-        return this.forceUpdateSystems().toPromise();
+    forceUpdateSystemsAsPromise(userEmail?) {
+        return this.forceUpdateSystems(userEmail).toPromise();
     }
 
     getSystemOwnerName (system, currentUserEmail, forOrder?) {
@@ -61,7 +65,7 @@ export class NxSystemsService implements OnDestroy {
         });
     }
 
-    getSystem(systemId) {
+    getSystem(systemId, useCache = true) {
         let system;
         if (this.systems && this.systems.length > 0) {
             system = this.systems.find((system) => {
@@ -69,16 +73,19 @@ export class NxSystemsService implements OnDestroy {
             });
         }
 
-        if (system) { // Cache success
+        if (system && useCache) { // Cache success
             return of(system);
         } else { // Cache miss
-            return this.cloudApi.systems(systemId);
+            return this.cloudApi.systems(systemId).pipe(map((systems) => {
+                return systems[0];
+            }));
         }
     }
 
-    getSystemAsPromise(systemId) {
-        return this.getSystem(systemId).toPromise();
+    getSystemAsPromise(systemId, useCache = true) {
+        return this.getSystem(systemId, useCache).toPromise();
     }
+
     getSystems(userEmail) {
         this.currentUser = userEmail;
         if (this.activeSubscription) {
@@ -101,6 +108,7 @@ export class NxSystemsService implements OnDestroy {
             this.systemsPoll.unsubscribe();
         }
     }
+
     private processSystems(systems) {
         this.systems = this.sortSystems(systems, this.currentUser);
         this.systems.forEach((system) => {

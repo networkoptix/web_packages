@@ -9,8 +9,9 @@ import { WINDOW }                    from './src/services/window-provider';
 import { NxLanguageProviderService } from './src/services/nx-language-provider';
 import { NxConfigService }           from './src/services/nx-config';
 import { NxApplyService }            from './src/services/apply.service';
-import { NxQueryParamService } from './src/services/query-param.service';
-import { NxRibbonService } from './src/components/ribbon/ribbon.service';
+import { NxQueryParamService }       from './src/services/query-param.service';
+import { NxRibbonService }           from './src/components/ribbon/ribbon.service';
+import { NxAppStateService }         from './src/services/nx-app-state.service';
 
 @Component({
     selector: 'nx-app',
@@ -35,6 +36,7 @@ export class AppComponent {
     deviceInfo: any;
     allowedDevices: {};
     hlsIsSupported: boolean;
+    isInIframe: boolean;
 
     constructor(private cookieService: CookieService,
                 private deviceService: DeviceDetectorService,
@@ -43,6 +45,7 @@ export class AppComponent {
                 private config: NxConfigService,
                 private language: NxLanguageProviderService,
                 private applyService: NxApplyService,
+                private appStateService: NxAppStateService,
                 private queryParamService: NxQueryParamService,
                 private router: Router,
                 private ribbonService: NxRibbonService,
@@ -155,7 +158,15 @@ export class AppComponent {
             this.CONFIG.viewsDir = this.CONFIG.previewPath + '/' + this.CONFIG.viewsDir;
         }
 
-        this.CONFIG.showHeaderAndFooter = true;
+        this.CONFIG.showHeaderAndFooter = true; // Default state
+
+        // Check if page is displayed inside an iframe
+        this.isInIframe = (window.location !== window.parent.location);
+
+        if (this.isInIframe) {
+            this.appStateService.setHeaderVisibility(false);
+            this.appStateService.setFooterVisibility(false);
+        }
 
         // Updates query params for components without routes.
         this.router.events.pipe(

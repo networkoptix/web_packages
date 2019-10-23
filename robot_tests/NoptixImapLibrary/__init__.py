@@ -301,7 +301,7 @@ class NoptixImapLibrary(object):
         self._init_multipart_walk()
 
     def wait_for_email(self, **kwargs):
-        """Wait for email message to arrived base on any given filter criteria.
+        """Wait for email message to arrive based on any given filter criteria.
         Returns email index of the latest email message received.
 
         Arguments:

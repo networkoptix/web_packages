@@ -89,19 +89,26 @@
 			}
 		},
 		"platforms": {
-			"win64": "x64",
-			"linux64": "x64",
-			"mac": "X",
 			"bananapi": "Banana Pi",
 			"bpi": "Nx1",
-			"rpi": " Raspberry Pi"
+			"linux64": "x64",
+			"linux_arm32": "x32",
+			"linux_arm64": "x64",
+			"mac": "X",
+			"rpi": " Raspberry Pi",
+			"universal": "SDK",
+			"win64": "x64"
 		},
 		"appTypes": {
-			"client": "Client only",
-			"server": "Server only",
 			"bundle": "Client and Server",
+			"camera_sdk": "Video Source SDK",
+			"client": "Client only",
+			"metadata_sdk": "Metadata SDK",
+			"package": "Package",
+			"server": "Server only",
 			"servertool": "Configuration tool",
-			"package": "Package"
+			"storage_sdk": "Storage SDK",
+			"video_source_sdk": "Video Source SDK"
 		},
 		"releasesTypes": {
 			"beta": "Beta",
@@ -322,15 +329,16 @@
 		"confirmUnshareFromMeTitle": "Disconnect System?",
 		"confirmUnshareFromMeAction": "Disconnect",
 		"confirmUnshare": "This user will not be able to access System. Are you sure?",
-		"confirmUnshareTitle": "Delete user?",
-		"confirmUnshareAction": "Delete",
+		"confirmUnshareTitle": "Remove user?",
+		"confirmUnshareAction": "Remove",
 		"successDisconnected": "System is successfully disconnected from %CLOUD_NAME%",
 		"successDeleted": "System {{systemName}} is successfully deleted from your account",
 		"mergeFailed": "System merge failed",
 		"mergeStart": "Systems have started merging",
 		"mergeSuccess": "System merge completed",
 		"permissionsRemoved": "Permissions were removed from {{email}}",
-		"unknownName": "Unknown Name for System (Caused by cloud merge)"
+		"unknownName": "Unknown Name for System (Caused by cloud merge)",
+		"shareOffline": "Cannot share system while it is offline"
 	},
 	"systemStatuses": {
 		"activated": "activated",

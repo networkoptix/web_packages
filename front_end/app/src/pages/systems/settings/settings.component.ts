@@ -17,6 +17,7 @@ import { NxUtilsService }          from '../../../services/utils.service';
 import { NxRibbonService }         from '../../../components/ribbon/ribbon.service';
 import { fromEvent } from 'rxjs/observable/fromEvent';
 import { debounceTime } from 'rxjs/operators';
+import { NxToastService }          from '../../../dialogs/toast.service';
 
 @Component({
     selector: 'nx-system-settings-component',
@@ -41,6 +42,8 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     unsharing: any;
     deletingSystem: any;
 
+    menuVisible: boolean;
+    footerVisible: boolean;
     systemId: any;
     systemNoAccess: boolean;
     canMerge: boolean;
@@ -80,6 +83,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 private menuService: NxMenuService,
                 location: Location,
                 private ribbonService: NxRibbonService,
+                private toastService: NxToastService,
                 private meta: Meta
     ) {
         this.location = location;
@@ -105,9 +109,16 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 }
                 this.system = undefined;
                 this.ribbonService.hide();
+                this.menuVisible = false;
                 this.getSystemInfo();
             }
         });
+
+        this.settingsService
+            .footerSubject
+            .subscribe((value) => {
+                this.footerVisible = value;
+            });
 
         this.content = {
             selectedSection: '',         // updated by selectedSectionSubject
@@ -235,11 +246,23 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                             this.settingsService.system = system;
                             this.updateAlert();
                             this.updateMenu();
+                            this.checkShare();
+                            this.menuVisible = true;
                         }
                     });
                 }
             });
+    }
 
+    checkShare() {
+        if (this.settingsService.share) {
+            if (this.system.isAvailable) {
+                this.settingsService.addUser();
+            } else {
+                this.toastService.show(this.LANG.system.shareOffline, {classname: 'danger', delay: this.CONFIG.alertTimeout, autohide: true});
+            }
+            this.settingsService.share = false;
+        }
     }
 
     updateAlert() {
@@ -303,7 +326,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 const id = user.id.replace(/{|}/g, '');
                 usersNode.level3.push({
                     id,
-                    icon: 'glyphicon-cloud',
+                    icon : user.isCloud ? 'glyphicon-cloud' : '',
                     label: user.email,
                     additionalLabel: user.role.name,
                     path: 'users/' + id,

@@ -15,8 +15,8 @@
             </p>
             <p class="help-block-no-height"
                [innerHTML]="'dialogs.merge.connectToCloud' | translate: {
-                    cloudName: language.cloudName,
-                    vmsName: language.vmsName
+                    cloudName: CONFIG.cloudName,
+                    vmsName: CONFIG.vmsName
                }">
             </p>
         </div>
@@ -34,7 +34,7 @@
                 class="btn btn-primary wide-button" (click)="activeModal.close()">
             {{ 'OK' | translate}}
         </button>
-        <button *ngIf="config.allowDebugMode" type="button" class="btn btn-danger"
+        <button *ngIf="CONFIG.allowDebugMode" type="button" class="btn btn-danger"
                 (click)="systemError = false; outOfDate = false;">Go to Merge (Debug)</button>
     </div>
 </div>
@@ -52,12 +52,12 @@
                 </div>
                 <ng-template #notChecking>
                     <p *ngIf="systemMergeable == 'unavailable'" class="help-block-no-height warning-label mb-2">
-                        <span [translate]="'dialogs.merge.systemUnavailable'" [translateParams]="{ targetSystem: targetSystem.name }"></span>
-                        <span>&nbsp;<a [href]="config.supportLink" target="_blank" translate>support</a>.</span>
+                        <span [innerHTML]="'dialogs.merge.systemUnavailable' | translate: { targetSystem: targetSystem.name || targetSystem.info.name }"></span>
+                        <span>&nbsp;<a [href]="CONFIG.supportLink" target="_blank" translate>support</a>.</span>
                     </p>
                     <p *ngIf="systemMergeable == 'primaryUnavailable'" class="help-block-no-height warning-label mb-2">
-                        <span [translate]="'dialogs.merge.systemUnavailable'" [translateParams]="{ targetSystem: system.name }"></span>
-                        <span>&nbsp;<a [href]="config.supportLink" target="_blank" translate>support</a>.</span>
+                        <span [innerHTML]="'dialogs.merge.systemUnavailable' | translate: { targetSystem: system.name || system.info.name}"></span>
+                        <span>&nbsp;<a [href]="CONFIG.supportLink" target="_blank" translate>support</a>.</span>
                     </p>
                     <p *ngIf="systemMergeable == 'offline'"
                        class="help-block-no-height warning-label mb-2"
@@ -114,10 +114,10 @@
         <div *ngIf="state == 'warning'">
             <div class="modal-body">
                 <p translate>
-                    There will be more than <strong>{{ config.maxServers }}</strong> servers in the merged System.
+                    There will be more than <strong>{{ CONFIG.maxServers }}</strong> servers in the merged System.
                 </p>
                 <p translate>Systems of such size may work but will be unstable and have troubles with updates and synchronisation.</p>
-                <p>{{language.recommendSupport.a_recommend}} <a [href]="config.supportLink" target="_blank">{{language.recommendSupport.b_support}}</a> {{language.recommendSupport.c_proceeding}}</p>
+                <p>{{LANG.recommendSupport.a_recommend}} <a [href]="CONFIG.supportLink" target="_blank">{{LANG.recommendSupport.b_support}}</a> {{LANG.recommendSupport.c_proceeding}}</p>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-primary" (click)="updateState()" translate>Ok</button>
@@ -137,11 +137,11 @@
                            [(ngModel)]="password" #mergePassword="ngModel"
                            id="mergePassword" autocomplete="new-password"
                            name="mergePassword" type="password"
-                           required nxFocusMe>
-                    <div *ngIf="mergePassword.invalid && mergePassword.touched && !wrongPassword">
+                           nxFocusMe>
+                    <div *ngIf="mergePassword.invalid && mergePassword.errors.required && !wrongPassword">
                         <label class="input-error" translate>Password is required</label>
                     </div>
-                    <div *ngIf="mergePassword.invalid && wrongPassword">
+                    <div *ngIf="mergePassword.invalid && mergePassword.errors.wrongPassword">
                         <label class="input-error" translate>Wrong password</label>
                     </div>
                 </div>

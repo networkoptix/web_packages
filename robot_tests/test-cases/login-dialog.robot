@@ -165,10 +165,9 @@ Allows copy-paste in input fields
     Click Link    ${LOG IN NAV BAR}
     Wait Until Element is Visible    ${EMAIL INPUT}
     Input Text    ${EMAIL INPUT}    Copy Paste Test
-    ${locator}    Get WebElement    ${EMAIL INPUT}
-    Copy Text    ${locator}
-    Clear Element Text    ${locator}
-    Paste Text    ${locator}
+    Copy Text    ${EMAIL INPUT}
+    Clear Element Text    ${EMAIL INPUT}
+    Paste Text    ${EMAIL INPUT}
     Textfield Should Contain    ${EMAIL INPUT}    Copy Paste Test
 
 Should respond to Esc key and close dialog
@@ -236,9 +235,10 @@ Handles two tabs, updates second tab state if logout is done on first
     Select Window    @{tabs}[0]
     Location Should Be    ${url}/register
     Reload Page
-    Wait Until Element is Visible    ${CONTINUE BUTTON}
-    Click Button    ${CONTINUE BUTTON}
-    Wait Until Page Does Not Contain Element    ${CONTINUE MODAL}
+    Wait Until Element is Visible    ${LOGGED IN STAY LOGGED IN BUTTON}
+    Click Button    ${LOGGED IN STAY LOGGED IN BUTTON}
+    Sleep    2
+    Wait Until Page Does Not Contain Elements    ${BACKDROP}    ${MODAL DIALOG}
     Validate Log In
     Log Out
     Validate Log Out
@@ -264,54 +264,16 @@ Log in more than 5 times
     ...    ${PASSWORD INPUT}
     ...    ${LOG IN CLOSE BUTTON}
     Input Text    ${EMAIL INPUT}    ${email}
-    :FOR  ${x}  IN RANGE  6
-    \  sleep    2
-    \  Input Text    ${PASSWORD INPUT}    incorrect
-    \  Wait Until Element is Visible    ${LOG IN BUTTON}
-    \  Click Button    ${LOG IN BUTTON}
-    \  Sleep    1
+    FOR  ${x}  IN RANGE  6
+        Sleep    2
+        Input Text    ${PASSWORD INPUT}    incorrect
+        Wait Until Element is Visible    ${LOG IN BUTTON}
+        Click Button    ${LOG IN BUTTON}
+        Sleep    1
+    END
     Wait Until Element is Visible    ${TOO MANY ATTEMPTS MESSAGE}
     Sleep    65
     Input Text    ${PASSWORD INPUT}    ${BASE PASSWORD}
     Wait Until Element is Visible    ${LOG IN BUTTON}
     Click Button    ${LOG IN BUTTON}
     Validate Log In
-
-User is logged out of browser after a password change in another browser
-    [tags]    C41837
-    Log In    ${email}    ${password}
-    Validate Log In
-    Open Browser and go to URL    ${url}
-    Log In    ${email}    ${password}
-    Validate Log In
-    Switch Browser    1
-    Go To    ${url}/account/password
-    Sleep    1
-    Wait Until Elements are Visible
-    ...    ${CURRENT PASSWORD INPUT}
-    ...    ${NEW PASSWORD INPUT}
-    ...    ${CHANGE PASSWORD BUTTON}
-    Input Text    ${CURRENT PASSWORD INPUT}    ${password}
-    Input Text    ${NEW PASSWORD INPUT}    ${ALT PASSWORD}
-    Click Button    ${CHANGE PASSWORD BUTTON}
-    Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
-    Switch Browser    2
-    # wait for server to disconnect user
-    sleep    30
-    Wait Until Element is Visible    ${LOG IN MODAL}
-    Click Element    ${LOG IN CLOSE BUTTON}
-    Validate Log Out
-    Sleep    1
-
-    Log In    ${email}    ${ALT PASSWORD}
-    Validate Log In
-    Go To    ${url}/account/password
-    Sleep    1
-    Wait Until Elements are Visible
-    ...    ${CURRENT PASSWORD INPUT}
-    ...    ${NEW PASSWORD INPUT}
-    ...    ${CHANGE PASSWORD BUTTON}
-    Input Text    ${CURRENT PASSWORD INPUT}    ${ALT PASSWORD}
-    Input Text    ${NEW PASSWORD INPUT}    ${password}
-    Click Button    ${CHANGE PASSWORD BUTTON}
-    Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}

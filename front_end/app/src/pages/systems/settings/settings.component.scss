@@ -33,12 +33,8 @@ nx-block {
 
   // replicate col-xl-3
   @include media-breakpoint-up(xl) {
-    width: calc((100% - (#{$grid-gutter-width} + #{$scrollbar-height})) / 4)
-  }
-
-  // replicate col-xxxl-2 with max width of block-container
-  @include media-breakpoint-up(xxxl) {
-    width: calc(#{$fluid-container-max-width} / 6);
+    width: calc((100% - (#{$grid-gutter-width} + #{$scrollbar-height})) / 4);
+    max-width:  calc((#{$fluid-container-max-width} - #{$grid-gutter-width}) / 4);
   }
 }
 

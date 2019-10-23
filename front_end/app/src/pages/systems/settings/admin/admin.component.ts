@@ -20,7 +20,7 @@ import { NxSystem }                  from '../../../../services/system.service';
     styleUrls  : ['admin.component.scss']
 })
 
-export class NxSystemAdminComponent implements OnInit, OnDestroy {
+export class NxSystemAdminComponent implements OnInit {
     CONFIG: any = {};
     LANG: any = {};
     system: NxSystem;
@@ -71,6 +71,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             .subscribe((system) => {
                 this.system = system;
                 if (system) {
+                    this.settingsService.footerSubject.next(true);
                     this.userRole = system.accessRole;
                     if (system.accessRole in this.LANG.accessRoles) {
                         this.userRole = this.LANG.accessRoles[system.accessRole].label;
@@ -80,13 +81,13 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                     }, {
                         successMessage: this.LANG.system.successDeleted.replace('{{systemName}}', this.system.info.name),
                         errorPrefix   : this.LANG.errorCodes.cantUnshareWithMeSystemPrefix
-                    }).then(() => this.updateAndGoToSystems(), (error) => error);
+                    }).then(() => {
+                        this.updateAndGoToSystems();
+                    }, (error) => {
+                        return error;
+                    });
                 }
             });
-
-    }
-
-    ngOnDestroy(): void {
 
     }
 
@@ -106,7 +107,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     updateAndGoToSystems() {
         this.userDisconnectSystem = true;
         this.systemsService
-            .forceUpdateSystems()
+            .forceUpdateSystems(this.accountService.getEmail())
             .subscribe(() => {
                 setTimeout(() => {
                     window.location.href = '/systems';
@@ -119,7 +120,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             // User is not owner. Deleting means he'll lose access to it
             this.dialogs.confirm(this.LANG.system.confirmUnshareFromMe, this.LANG.system.confirmUnshareFromMeTitle, this.LANG.system.confirmUnshareFromMeAction, 'btn-danger', 'Cancel')
                 .then((result) => {
-                    if (result) {
+                    if (result === true) {
                         this.deletingSystem.run();
                     }
                 });
@@ -135,7 +136,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                        }
 
                        this.pageService.setPageTitle(this.system.info.name + ' -');
-                       this.systemsService.forceUpdateSystems();
+                       this.systemsService.forceUpdateSystems(this.accountService.getEmail());
                    });
     }
 

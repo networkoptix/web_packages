@@ -72,8 +72,8 @@ should show the no systems connected message when you have no systems
     Validate Log In
     Wait Until Element Is Visible    ${YOU HAVE NO SYSTEMS}
 
-should show system name in header with no dropdown if user has only one system
-    [tags]    C41569    Threaded
+should show system name in header dropdown with "Open in Nx Witness" button if user has only one system
+    [tags]    C41569    Threaded    123
     Log In    ${EMAIL OWNER}    ${password}
     Validate Log In
     Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
@@ -85,9 +85,12 @@ should show system name in header with no dropdown if user has only one system
     Log Out
     Log In    ${EMAIL NOPERM}    ${password}    None
     Validate Log In
-    Wait Until Element Is Visible    ${SYSTEM NAME AUTO TESTS HEADER}
+    Wait Until Element Is Visible    ${SYSTEMS DROPDOWN}
+    Click Button    ${SYSTEMS DROPDOWN}
+    Wait Until Element Is Visible    ${OPEN IN NX BUTTON}
+    Click Button    ${OPEN IN NX BUTTON}
     Log Out
-    Log In    ${EMAIL OWNER}    ${password}    None
+    Log In    ${EMAIL OWNER}    ${password}
     Validate Log In
     Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
     Remove User Permissions    ${EMAIL NOPERM}
@@ -100,11 +103,8 @@ User have several systems linked to his account
     # Expected Result
     Wait Until Element Is Visible    ${SYSTEMS DROPDOWN}
     ${count1}=   Get Text    ${SYSTEMS DROPDOWN}
-    ${count1}=   Remove String Using Regexp
-    ...    ${count1}
-    ...    \\D
-    Should Be True
-    ...    ${count1} > 12
+    ${count1}=   Remove String Using Regexp    ${count1}    \\D
+    Should Be True    ${count1} > 12
     ...    The Systems count was expected to be more than 12, but is ${count1}.
 
     Log    Step 2
@@ -115,15 +115,12 @@ User have several systems linked to his account
     ...    ${SYSTEMS DROPDOWN}${DROPDOWN MENU ITEMS}
     ...    ${ALL SYSTEMS}
     ${count2}=   Get Element Count
-    ...    ${SYSTEMS DROPDOWN}${DROPDOWN MENU ITEMS}
-    Should Be Equal As Integers
-    ...    ${count1}
-    ...    ${count2}
-    ${elements}=   Get WebElements
-    ...    ${SYSTEMS DROPDOWN}${DROPDOWN MENU ITEMS}
+    ...    ${SYSTEMS DROPDOWN}${DROPDOWN MENU LIST}/li[contains(@class,'dropdown-item-container')]/a/span[not(text()='All Systems')]/../../../li
+
+    Should Be Equal As Integers   ${count1}    ${count2}
+    ${elements}=   Get WebElements    ${SYSTEMS DROPDOWN}${DROPDOWN MENU ITEMS}
     # Confirm height of dropdown menu list is less than total height of all list items within
-    ${ulWidth}    ${ulHeight}=   Get Element Size
-    ...    ${SYSTEMS DROPDOWN}${DROPDOWN MENU LIST}
+    ${ulWidth}    ${ulHeight}=   Get Element Size    ${SYSTEMS DROPDOWN}${DROPDOWN MENU LIST}
     ${e}=   Get From List    ${elements}    0
     ${liWidth}    ${liHeight}=   Get Element Size    ${e}
     Should be True    ${ulHeight} < (${liHeight}*${count1})
@@ -140,13 +137,9 @@ User have several systems linked to his account
     Click Element    ${x}
     # Expected Result
     Location Should Contain    ${h}
-    Wait Until Element Contains
-    ...    ${SYSTEM NAME}
-    ...    ${n}
+    Wait Until Element Contains    ${SYSTEM NAME}    ${n}
     ${system}=   Get Text    ${SYSTEMS DROPDOWN}/span[contains(@class,'ellipsis')]
-    Should Be Equal As Strings
-    ...    ${n}
-    ...    ${system}
+    Should Be Equal As Strings    ${n}    ${system}
 
     Log    Step 4
     Click Element    ${SYSTEMS DROPDOWN}
@@ -162,13 +155,9 @@ User have several systems linked to his account
     FOR    ${element}    IN     @{elements}
         ${n2}=   Get Text    ${element}
         ${x1}=   Evaluate    ${x}+1
-        ${x}=   Set Variable If    "${n2}" == "${n}"
-        ...    ${x1}
-        ...    ${x}
+        ${x}=   Set Variable If    "${n2}" == "${n}"    ${x1}    ${x}
     END
-    Should Be Equal As Integers
-    ...    ${x}    1
-    ...    Expected only 1 System named ${n}, but found ${x}
+    Should Be Equal As Integers    ${x}    1    Expected only 1 System named ${n}, but found ${x}
 
     Log    Step 5
     Wait Until Element Is Visible    ${ALL SYSTEMS}
@@ -178,15 +167,10 @@ User have several systems linked to his account
     Should End With    ${l}    /systems
     Wait Until Element Is Visible    ${SYSTEMS DROPDOWN}//span[text()]/span/..
     ${count3}=   Get Text    ${SYSTEMS DROPDOWN}//span[text()]/span/..
-    ${count3}=   Remove String Using Regexp
-    ...    ${count3}
-    ...    \\D
-    Should Be True
-    ...    ${count3} > 12
+    ${count3}=   Remove String Using Regexp    ${count3}    \\D
+    Should Be True    ${count3} > 12
     ...    The Systems count was expected to be more than 12, but is ${count3}.
-    Should Be Equal As Integers
-    ...    ${count1}
-    ...    ${count3}
+    Should Be Equal As Integers    ${count1}    ${count3}
 
 should show the system page instead of all systems when user only has one
     [tags]    C41878

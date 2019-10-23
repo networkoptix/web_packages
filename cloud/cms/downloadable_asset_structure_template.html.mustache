@@ -4,27 +4,23 @@
         <style>
             table {
                 border-spacing: unset;
+                border-collapse: collapse;
             }
-            .table-wrap tr:nth-child(odd) {
-                background-color:white;
+            th {
+                padding: 0.5rem 0;
             }
-			.table-wrap tr:nth-child(even) {
-				background-color: lightgrey;
-			}
+            td {
+                padding: 0.5rem;
+            }
+            .table-wrap tr:first-child {
+                background-color: #2FA2DB !important;
+            }
+            .border-bottom {
+                border-bottom: solid 1px gray;
+            }
         </style>
     </head>
     <body>
-<!--        <h1>Asset Type: {{type}}</h1>-->
-<!--        <table style="border-spacing: 15px;">-->
-<!--            <tr>-->
-<!--                <td >Can Preview:</td>-->
-<!--                <td >{{can_preview}}</td>-->
-<!--            </tr>-->
-<!--            <tr>-->
-<!--                <td >Single Customization:</td>-->
-<!--                <td >{{single_customization}}</td>-->
-<!--            </tr>-->
-<!--        </table>-->
         <h1>Expected data for pages</h1>
         {{#contexts}}
             <h2>{{#label}}{{label}}{{/label}}{{^label}}{{name}}{{/label}}</h2>
@@ -63,32 +59,31 @@
             </table>
             <div class="table-wrap">
                 <table class="relative-table wrapped" style="width: 100%" role="grid" border="0">
-                    <colgroup>
-                        <col style="width: 5.23845%">
-                        <col style="width: 3.16209%">
-                        <col style="width: 3.01875%">
-                        <col style="width: 5.4923%">
-                        <col style="width: 10.9987%">
-                        <col style="width: 10.4722%">
-                    </colgroup>
-                    <tr>
-                        <th align="center" ></th>
-                        <th align="center" >Label</th>
-                        <th align="center" >Name (Tag)</th>
-                        <th align="center" >Type</th>
-                        <th align="center" >Description</th>
-                        <th align="center" >Default Value</th>
-                        <th align="center" >Settings</th>
+                    <tr style="color: white">
+                        <th align="left">Label</th>
+                        <th align="left">Name (Tag)</th>
+                        <th align="left">Description</th>
+                        <th align="left">Settings</th>
                     </tr>
                     {{#values}}
-                    <tr>
-                        <td align="center" >{{index}}</td>
-                        <td align="center" >{{label}}</td>
-                        <td align="center" >{{name}}</td>
-                        <td align="center" >{{type}}</td>
-                        <td align="center"  style="width: 300px">{{{description}}}</td>
-                        <td align="center" >{{{value}}}</td>
-                        <td align="center" >{{{nice_meta}}}</td>
+                    <tr class="border-bottom">
+                        <td align="left">
+                            {{#label}}{{label}}{{/label}}
+                            {{^label}}–{{/label}}
+                        </td>
+                        <td align="left">
+                            {{#name}}{{name}}{{/name}}
+                            {{^name}}–{{/name}}
+                        </td>
+                        <td align="left">
+                            {{#description}}{{{description}}}{{/description}}
+                            {{^description}}–{{/description}}
+                        </td>
+                        <td align="left">
+                            {{#type}}Type: {{type}}&nbsp;&nbsp;&nbsp;{{/type}}
+                            {{#value}}Default: {{{value}}}&nbsp;&nbsp;&nbsp;{{/value}}
+                            {{#nice_meta}}{{{nice_meta}}}{{/nice_meta}}
+                        </td>
                     </tr>
                     {{/values}}
                 </table>

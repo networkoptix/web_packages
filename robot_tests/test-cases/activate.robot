@@ -202,16 +202,16 @@ link works and suggests to log out user, if he was logged in, buttons operate co
     Validate Log In
     Go To    ${link1}
     Wait Until Page Contains Element    ${ACTIVATION SUCCESS}
-    Wait Until Element Is Visible    ${LOGGED IN CONTINUE BUTTON}
-    Click Button    ${LOGGED IN CONTINUE BUTTON}
+    Wait Until Element Is Visible    ${LOGGED IN STAY LOGGED IN BUTTON}
+    Click Button    ${LOGGED IN STAY LOGGED IN BUTTON}
     Validate Log In
     Log Out
     Log In    ${email1}    ${password}
     Validate Log In
     Go To    ${link2}
     Wait Until Page Contains Element    ${ACTIVATION SUCCESS}
-    Wait Until Element Is Visible    ${LOGGED IN LOG OUT BUTTON}
-    Click Button    ${LOGGED IN LOG OUT BUTTON}
+    Wait Until Element Is Visible    ${LOGGED IN CANCEL BUTTON}
+    Click Button    ${LOGGED IN CANCEL BUTTON}
     Validate Log Out
     Log In    ${email2}    ${password}
     Validate Log In

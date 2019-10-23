@@ -6,14 +6,20 @@ import { BehaviorSubject }           from 'rxjs';
     providedIn: 'root'
 })
 export class NxAppStateService {
-    config: any;
-    footerVisibleObservable = new BehaviorSubject(true);
+    CONFIG: any;
 
-    constructor(private _config: NxConfigService) {
-        this.config = this._config.getConfig();
+    footerVisibleSubject = new BehaviorSubject(true);
+    headerVisibleSubject = new BehaviorSubject(true);
+
+    constructor(private config: NxConfigService) {
+        this.CONFIG = this.config.getConfig();
     }
 
     setFooterVisibility(visibile) {
-        this.footerVisibleObservable.next(visibile);
+        this.footerVisibleSubject.next(visibile);
+    }
+
+    setHeaderVisibility(visibile) {
+        this.headerVisibleSubject.next(visibile);
     }
 }

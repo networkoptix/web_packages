@@ -212,9 +212,9 @@ export class NxSystem extends System implements OnDestroy {
         }
     }
 
-    getInfoAndPermissions() {
+    getInfoAndPermissions(useCache = true) {
         return this.systemsService
-            .getSystemAsPromise(this.id)
+            .getSystemAsPromise(this.id, useCache)
             .then((response: any) => {
                 const error = this.cloudApi.checkResponseHasError(response);
                 if (error) {
@@ -239,13 +239,13 @@ export class NxSystem extends System implements OnDestroy {
             });
     }
 
-    getInfo(force?) {
+    getInfo(force?, useCache = true) {
         if (force) {
             this.infoPromise = undefined;
         }
         if (!this.infoPromise) {
             this.infoPromise = this.updateSystemAuth().then(() => {
-                return this.getInfoAndPermissions();
+                return this.getInfoAndPermissions(useCache);
             });
         }
         return this.infoPromise;
@@ -456,7 +456,7 @@ export class NxSystem extends System implements OnDestroy {
     deleteFromCurrentAccount() {
         if (this.currentUser && this.isAvailable) {
             // Handling promise to satisfy the linter.
-            this.mediaserver.deleteUser(this.currentUser.id).toPromise.then(() => {}); // Try to remove me from the system directly
+            this.mediaserver.deleteUser(this.currentUser.id).toPromise().then(() => {}); // Try to remove me from the system directly
         }
         // Anyway - send another request to cloud_db to remove my this
         return this.cloudApi.unshare(this.id, this.currentUserEmail).toPromise();
@@ -486,11 +486,13 @@ export class NxSystem extends System implements OnDestroy {
     }
 
     update() {
-        return from(this.getInfo(true)).pipe(flatMap((res) => {
-            if (this.permissions.editUsers) {
-                return from(this.getUsers(true));
-            }
-            return of(true);
+        return of('').pipe(flatMap(_ => {
+            return this.getInfo(true, false).then(_ => {
+                if (this.permissions.editUsers) {
+                    return from(this.getUsers(true));
+                }
+                return of(true);
+            });
         }));
     }
 }
