@@ -25,6 +25,10 @@ export class NxUriService {
         return this._pageOffset;
     }
 
+    getURL() {
+        return this.router.url.split('?')[0];
+    }
+
     getURI(): Observable<any> {
         return this.route.queryParams;
     }

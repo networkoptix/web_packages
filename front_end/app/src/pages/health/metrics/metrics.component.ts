@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { NxAccountService } from '../../../services/account.service';
-import { NxConfigService } from '../../../services/nx-config';
+import { NxAccountService }          from '../../../services/account.service';
+import { NxConfigService }           from '../../../services/nx-config';
 import { NxSystem, NxSystemService } from '../../../services/system.service';
-import { NxMenuService } from '../../../components/menu/menu.service';
-import { combineLatest } from 'rxjs';
-import { map, concatMap } from 'rxjs/operators';
-import { NxHealthService } from '../health.service';
+import { NxMenuService }             from '../../../components/menu/menu.service';
+import { combineLatest }             from 'rxjs';
+import { map, concatMap }            from 'rxjs/operators';
+import { NxHealthService }           from '../health.service';
+import { NxUriService }              from '../../../services/uri.service';
 
 
 @Component({
@@ -44,14 +45,16 @@ export class NxSystemMetricsComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.route.params.subscribe((params: any) => {
-            this.metricId = params.metric;
-            this.menuService.setSection(this.metricId);
-            this.selectedData = this.healthService.tableHeaders[this.metricId];
-            this.selectedPanelData = this.healthService.panelParams[this.metricId];
-            this.selectedValues = this.healthService.values[this.metricId];
-            this.resetActiveEntity();
-        });
+        this.route
+            .params
+            .subscribe((params: any) => {
+                this.metricId = params.metric;
+                this.menuService.setSection(this.metricId);
+                this.selectedData = this.healthService.tableHeaders[this.metricId];
+                this.selectedPanelData = this.healthService.panelParams[this.metricId];
+                this.selectedValues = this.healthService.values[this.metricId];
+                this.resetActiveEntity();
+            });
 
         // combineLatest(this.healthService.manifestSubject, this.healthService.valuesSubject, this.healthService.alarmsSubject).subscribe(
         //     ([manifest, values, alarms]) => {

@@ -2,14 +2,19 @@ import {
     Component, Input, Output, EventEmitter,
     OnChanges, SimpleChanges,
     OnInit, ViewEncapsulation, Inject, PLATFORM_ID
-} from '@angular/core';
-import { Router }                    from '@angular/router';
-import { NxConfigService } from '../../../../services/nx-config';
-import { NxUtilsService } from '../../../../services/utils.service';
+}                                                         from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { NxConfigService }                                from '../../../../services/nx-config';
+import { NxUtilsService }                                 from '../../../../services/utils.service';
+import { NxUriService }                                   from '../../../../services/uri.service';
 
 interface Params {
     [key: string]: any;
 }
+
+const GROUP_ID = 0;
+const PARAM_ID = 1;
+const SORT_DIR = 2;
 
 @Component({
     selector     : 'nx-dynamic-table',
@@ -35,6 +40,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
     public selectedHeader;
     public showHeaders;
 
+    private sortByColumn: any;
     private sortOrderASC: boolean;
     private debug: boolean;
     private beta: boolean;
@@ -50,9 +56,11 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
     serviceHeaders;
 
     constructor(private configService: NxConfigService,
+                private uri: NxUriService,
                 private utilsService: NxUtilsService,
-                private router: Router) {
-
+                private router: Router,
+                private route: ActivatedRoute,
+    ) {
         this.CONFIG = this.configService.getConfig();
         this._elements = this._elements || [];
 
@@ -68,25 +76,42 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (this._headers) {
-            this.headers = this._headers;
+        if (changes._headers) {
+            this.headers = changes._headers.currentValue;
+            this.selectedHeader = undefined;
+
+            if (changes._headers.previousValue !== undefined &&
+                    changes._headers.previousValue !== changes._headers.currentValue) {
+                this.uri.resetURI(this.uri.getURL());
+            } else {
+                this.uri
+                    .getURI()
+                    .subscribe((params) => {
+
+                    });
+            }
         }
-        if (this._elements) {
-            this.elements = Object.values(this._elements);
-            // Array.from({length: 5}).forEach(_ => {
-            //     this.elements.forEach(e => this.elements.push(e));
-            // });
-            // console.log(this.elements);
-            console.log(`Number of cameras: ${this.elements.length}`);
+        if (changes._elements) {
+            this.elements = Object.values(changes._elements.currentValue);
+            this.sortOrderASC = true;
+            this.selectedHeader = undefined;
             this.setPage(1, true);
         }
         if (changes.activeEntity) {
-            this.selectedEntity = this.activeEntity;
+            this.selectedEntity = changes.activeEntity.currentValue;
         }
     }
 
     ngOnInit() {
         this.setDebugAndBetaMode();
+
+        const params = this.route.snapshot.queryParams;
+        if (params.sortBy) {
+            const sortBy = params.sortBy.split(',');
+            this.sortOrderASC = (sortBy[SORT_DIR] === 'ASC');
+            this.selectedHeader = sortBy[PARAM_ID];
+            this.toggleSort(sortBy[GROUP_ID], sortBy[PARAM_ID], false);
+        }
     }
 
     setClickedRow(element) {
@@ -122,13 +147,29 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
         return !(typeof x === 'string' || typeof x === 'number');
     }
 
-    toggleHeaderSort(param) {
-        const column = this.headers.findIndex((header) => header.id === param.id);
-        const getElement = element => element[column];
-        this.elements.sort(NxUtilsService.byParam(getElement, true));
-        // this.elements.sort((a, b) => {
-        //     return a[column] < b[column] ? -1 : 1;
-        // });
+    toggleSort(groupId, paramId, updateURI?) {
+        if (this.selectedHeader !== paramId) {
+            this.sortOrderASC = true;
+        }
+        this.selectedHeader = paramId;
+
+        if (updateURI || updateURI === undefined) {
+            const queryParams: Params = {};
+
+            queryParams.page = undefined;
+            queryParams.sortBy = groupId + ',' + paramId;
+            queryParams.sortBy += (this.sortOrderASC) ? ',ASC' : ',DESC';
+
+            this.uri.updateURI(this.uri.getURL(), queryParams);
+        }
+
+        const sortParam = (elm) => {
+            return elm[groupId][paramId].text;
+        };
+
+        this.elements.sort(NxUtilsService.byParam(sortParam, this.sortOrderASC));
+        this.sortOrderASC = !this.sortOrderASC;
+
         this.setPage(1);
     }
 }
