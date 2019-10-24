@@ -68,9 +68,9 @@ export class NxHealthComponent implements OnInit {
                             this.healthService.manifest = result.manifestRequest.reply;
                             this.healthService.values = result.valuesRequest.reply;
                             this.healthService.alarms = result.alarmsRequest.reply;
-                            this.processValues();
                             this.initializeManifest();
                             this.initializeHeaders();
+                            this.processValues();
 
                             const menu = {...this.menu};
                             Object.keys(this.healthService.manifest).forEach((asset) => {
@@ -134,31 +134,47 @@ export class NxHealthComponent implements OnInit {
         return alarms[0];
     }
 
+    formatValue(header, value) {
+        if (header.format) {
+            const format = header.format;
+            if (typeof value === 'number') {
+                value = value.toFixed(2);
+            }
+            return `${value} ${format}`;
+
+        }
+        return value;
+    }
+
     processValues() {
         Object.entries(this.healthService.values).forEach(([metric, entities]) => {
             Object.entries(entities).forEach(([entity, groups]) => {
                 let alarmCount = 0;
                 let highestAlarm;
-                Object.entries(groups).forEach(([group, params]) => {
-                    Object.entries(params).forEach(([param, value]) => {
-                        const alarms = this.healthService.alarms[metric] && this.healthService.alarms[metric][entity]
-                            && this.healthService.alarms[metric][entity][group]
-                            && this.healthService.alarms[metric][entity][group][param];
-                        let alarm;
-                        if (alarms) {
-                            alarm = this.highestAlarm(alarms);
-                            if (!highestAlarm || alarm.level === 'error' && highestAlarm.level === 'warning') {
-                                highestAlarm = alarm;
+                this.healthService.manifest[metric].values.forEach(group => {
+                    if (this.healthService.values[metric][entity][group.id]) {
+                        group.values.forEach(header => {
+                            if (this.healthService.values[metric][entity][group.id][header.id]) {
+                                const alarms = this.healthService.alarms[metric] && this.healthService.alarms[metric][entity]
+                                    && this.healthService.alarms[metric][entity][group.id]
+                                    && this.healthService.alarms[metric][entity][group.id][header.id];
+                                let alarm;
+                                if (alarms) {
+                                    alarm = this.highestAlarm(alarms);
+                                    if (!highestAlarm || alarm.level === 'error' && highestAlarm.level === 'warning') {
+                                        highestAlarm = alarm;
+                                    }
+                                    alarmCount++;
+                                }
+                                this.healthService.values[metric][entity][group.id][header.id] = {
+                                    text: this.formatValue(header, this.healthService.values[metric][entity][group.id][header.id]),
+                                    class: alarm ? alarm.level : '',
+                                    tooltip: alarm ? alarm.text : '',
+                                    icon: alarm ? `${alarm.level}_icon` : '',
+                                };
                             }
-                            alarmCount++;
-                        }
-                        this.healthService.values[metric][entity][group][param] = {
-                            text: value,
-                            class: alarm ? alarm.level : '',
-                            tooltip: alarm ? alarm.text : '',
-                            icon: alarm ? `${alarm.level}_icon` : '',
-                        };
-                    });
+                        });
+                    }
                 });
 
                 if (!this.healthService.values[metric][entity]._) {
@@ -215,5 +231,5 @@ export class NxHealthComponent implements OnInit {
 
     capitalize(word) {
         return word.charAt(0).toUpperCase() + word.substring(1);
-}
+    }
 }
