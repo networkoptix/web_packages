@@ -264,9 +264,9 @@ ${MAC OS TAB}                         //a[@id="macos"]
 ${ARM TAB}                            //a[@id="arm"]
 
 #History
-${RELEASES TAB}                       //span[@class='tab-heading' and text()='Releases']/..
-${PATCHES TAB}                        //span[@class='tab-heading' and text()='Patches']/..
-${BETAS TAB}                          //span[@class='tab-heading' and text()='Betas']/..
+${RELEASES TAB}                       //span[contains(@class,'tab-heading') and text()='Releases']/..
+${PATCHES TAB}                        //span[contains(@class,'tab-heading') and text()='Patches']/..
+${BETAS TAB}                          //span[contains(@class,'tab-heading') and text()='Betas']/..
 ${RELEASE NUMBER}                     //div[contains(@class,"active")]//h1
 
 #IPVD
