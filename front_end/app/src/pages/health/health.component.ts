@@ -134,14 +134,45 @@ export class NxHealthComponent implements OnInit {
         return alarms[0];
     }
 
+    secondsToTime(seconds) {
+        let time = '';
+
+        const days = Math.floor(seconds / (3600 * 24));
+        seconds  -= days * 3600 * 24;
+        if (days) {
+            time += `${days}d `;
+        }
+
+        const hours   = Math.floor(seconds / 3600);
+        seconds  -= hours * 3600;
+        if (hours) {
+            time += `${hours}h `;
+        }
+
+        const min = Math.floor(seconds / 60);
+        seconds  -= min * 60;
+        if (hours) {
+            time += `${min}m `;
+        }
+
+        seconds = seconds.toFixed(0);
+        time += `${seconds}s`;
+
+        return time;
+    }
+
     formatValue(header, value) {
         if (header.format) {
             const format = header.format;
-            if (typeof value === 'number') {
-                value = value.toFixed(2);
+            const valueFormats = this.CONFIG.healthMonitoring.valueFormats;
+            if (valueFormats[format]) {
+                return `${(value * valueFormats[format].multiplier).toFixed(valueFormats[format].decimals)} ${format.display || format}`;
+            } else if (format === 'durationS') {
+                return this.secondsToTime(value);
+            } else {
+                console.log(`Format not recognized: ${format}`);
+                return `${value} ${format}`;
             }
-            return `${value} ${format}`;
-
         }
         return value;
     }
