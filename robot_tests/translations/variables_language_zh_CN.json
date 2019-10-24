@@ -43,6 +43,7 @@
     "SHARE PERMISSIONS HINT CUSTOM": "使用 %VMS_NAME% 客户端应用程序可以设置自定义权限",
     "SYSTEM NAME IS REQUIRED TEXT": "系统名称是必需的",
     "ACCOUNT TEXT": "帐户",
+    "ACCOUNT INFORMATION": "帐户信息",
     "EDIT USER BUTTON TEXT": "编辑",
     "REMOVE USER BUTTON TEXT": "移除用户",
     "REMOVE BUTTON TEXT": "删除",
@@ -83,7 +84,7 @@
     "PASSWORD TOO COMMON TEXT": "此密码是在世界顶级最受欢迎的密码",
     "PASSWORD IS WEAK TEXT": "使用数字、 上层和小写字母和特殊字符，使您更强的密码",
     "TERMS AND CONDITIONS ERROR TEXT": "请审阅并同意条款及条件和隐私政策, 以便继续进行",
-    "THIS LINK IS BROKEN TEXT": "此链接已断开，<br>\n            系统可能会断开连接从 %PRODUCT_NAME%，<br>\n            访问此系统可能被吊销，<br>\n            或您可以登录到一个不同的帐户",
+    "THIS LINK IS BROKEN TEXT": "This link is broken,System may be disconnected from Nx Cloud,Access to this System may be revoked, or you may be logged into a different account.",
     "PAGE NOT FOUND TEXT": "找不到页面",
     "TAKE ME HOME TEXT": "带我回家",
     "OPEN NX WITNESS BUTTON TEXT": "打开 %VMS_NAME%",
@@ -154,5 +155,6 @@
     "CHECKING TEXT": "检查中...",
     "ENTER PASSWORD TO CONTINUE TEXT": "输入您帐户的密码以继续",
     "INCOMPATIBLE": "不兼容",
-    "CONNECTION TO SYSTEM LOST": "与%SYSTEM NAME％的连线断开"
+    "CONNECTION TO SYSTEM LOST": "与%SYSTEM NAME％的连线断开",
+    "SYSTEM IS OFFLINE TEXT": "System is offline. Some settings may not be available."
 }

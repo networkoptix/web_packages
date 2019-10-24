@@ -89,19 +89,26 @@
 			}
 		},
 		"platforms": {
-			"win64": "x64",
-			"linux64": "x64",
-			"mac": "X",
 			"bananapi": "Banana Pi",
 			"bpi": "Nx1",
-			"rpi": " Raspberry Pi"
+			"linux64": "x64",
+			"linux_arm32": "x32",
+			"linux_arm64": "x64",
+			"mac": "X",
+			"rpi": " Raspberry Pi",
+			"universal": "SDK",
+			"win64": "x64"
 		},
 		"appTypes": {
-			"client": "Cliente solamente",
-			"server": "Servidor solamente",
 			"bundle": "Cliente y Servidor",
+			"camera_sdk": "Fuente de video SDK",
+			"client": "Cliente solamente",
+			"metadata_sdk": "SDK de metadatos",
+			"package": "Paquete",
+			"server": "Servidor solamente",
 			"servertool": "Herramienta de configuración",
-			"package": "Paquete"
+			"storage_sdk": "SDK de Almacenamiento",
+			"video_source_sdk": "Fuente de video SDK"
 		},
 		"releasesTypes": {
 			"beta": "Beta",
@@ -197,7 +204,7 @@
 		"okButton": "OK",
 		"cancelButton": "Cancelar",
 		"createNewAccount": "Crear Nueva Cuenta",
-		"changeAccountLogged": "You are already logged in with as {email}",
+		"changeAccountLogged": "Ya has iniciado sesión con {email}",
 		"loggedFromOther": "Se iniciará sesión con una cuenta diferente",
 		"loginTitle": "Inicie sesión en %CLOUD_NAME%",
 		"loginButton": "Inicia sesión",
@@ -205,12 +212,14 @@
 		"logoutAuthorisedContinueButton": "Continuar",
 		"logoutAuthorisedLogoutButton": "Cerrar Sessión",
 		"noClientDetectedTitle": "Instalar %VMS_NAME% para ver su sistema",
-		"stayAs": "Stay logged as {email} ",
-		"stayLoggedIn": "Stay Logged In",
+		"stayAs": "Mantener registrado como {email} ",
+		"stayLoggedIn": "Permanecer conectado",
 		"download": "Descargar %VMS_NAME%",
 		"merge": {
+			"commonText": "Error al fusionar los sistemas <strong>{{primarySystem}}</strong> y <strong>{{secondarySystem}}</strong>.",
 			"connectToCloud": "Conectar el sistema que desea fusionar con este a <strong>{{cloudName}}</strong> o fusionar localmente usando <strong>{{vmsName}}</strong> Cliente.",
 			"mergeConfirmation": "Estás a punto de fusionar sistemas <strong>{{primarySystem}}</strong> y <strong>{{secondarySystem}}</strong>. Los ajustes y el nombre serán tomados de los <strong>{{primarySystem}}</strong>.",
+			"mergeFailedTitle": "La fusión de sistemas falló",
 			"primaryCannotMerge": "El sistema {{targetSystem}} tiene una versión de software más nueva que es incompatible con el sistema actual. Actualizar el sistema actual al <a href=\"/download\" target=\"_blank\" translate>última versión</a> de fusionarse con el {{targetSystem}} del sistema.",
 			"primarySystemOffline": "El sistema {{primarySystem}} está desconectado y no puede ser fusionado con el Sistema {{targetSystem}}.",
 			"secondaryCannotMerge": "El sistema {{targetSystem}} tiene una versión de software anterior que es incompatible con el sistema actual. Actualice {{targetSystem}} a la <a href=\"/download\" target=\"_blank\" translate>última compilación</a> para fusionarla con la actual.",
@@ -308,6 +317,7 @@
 		"mySystemSearch": "IMeMyMine",
 		"unavailable": "El sistema es inalcanzable",
 		"offline": "Sistema está desconectado",
+		"offlineAlertRibbon": "System is offline. Some settings may not be available.",
 		"openClient": "Abierto en %VMS_NAME%",
 		"openClientNoSystem": "Abrir %VMS_NAME%",
 		"confirmMergeAction": "Combinar",
@@ -321,15 +331,16 @@
 		"confirmUnshareFromMeTitle": "Desconectar el Sistema?",
 		"confirmUnshareFromMeAction": "Desconectar",
 		"confirmUnshare": "Este usuario no podrá acceder el sistema. ¿Está seguro?",
-		"confirmUnshareTitle": "¿Eliminar el usuario?",
-		"confirmUnshareAction": "Borrar",
+		"confirmUnshareTitle": "¿Eliminar usuario?",
+		"confirmUnshareAction": "Eliminar",
 		"successDisconnected": "El sistema se desconecta con éxito de %CLOUD_NAME%",
 		"successDeleted": "Sistema {{systemName}} se ha eliminado de su cuenta",
 		"mergeFailed": "La fusión de sistemas falló",
 		"mergeStart": "Los sistemas han comenzado a fusionarse",
 		"mergeSuccess": "Fusión del sistema completada",
 		"permissionsRemoved": "Los permisos fueron removidos de {{email}}",
-		"unknownName": "Nombre desconocido para el sistema (causado por la fusión en la nube)"
+		"unknownName": "Nombre desconocido para el sistema (causado por la fusión en la nube)",
+		"shareOffline": "Cannot share system while it is offline"
 	},
 	"systemStatuses": {
 		"activated": "activado",

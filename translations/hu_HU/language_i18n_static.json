@@ -89,19 +89,26 @@
 			}
 		},
 		"platforms": {
-			"win64": "x64",
-			"linux64": "x64",
-			"mac": "X",
 			"bananapi": "Banana Pi",
 			"bpi": "Nx1",
-			"rpi": " Raspberry Pi"
+			"linux64": "x64",
+			"linux_arm32": "x32",
+			"linux_arm64": "x64",
+			"mac": "X",
+			"rpi": " Raspberry Pi",
+			"universal": "SDK",
+			"win64": "x64"
 		},
 		"appTypes": {
-			"client": "Csak kliens",
-			"server": "Csak szerver",
 			"bundle": "Kliens és szerver",
+			"camera_sdk": "Video Source SDK",
+			"client": "Csak kliens",
+			"metadata_sdk": "Metadata SDK",
+			"package": "Package",
+			"server": "Csak szerver",
 			"servertool": "Konfigurációs eszköz",
-			"package": "Package"
+			"storage_sdk": "Tároló SDK",
+			"video_source_sdk": "Video Source SDK"
 		},
 		"releasesTypes": {
 			"beta": "Béta",
@@ -209,8 +216,10 @@
 		"stayLoggedIn": "Stay Logged In",
 		"download": "%VMS_NAME% letöltése",
 		"merge": {
+			"commonText": "A rendszerek <strong>{{primarySystem}}</strong> és <strong>{{secondarySystem}}</strong>egyesítése sikertelen.",
 			"connectToCloud": "Csatlakoztassa az egyesíteni kívánt rendszert ezzel együtt <strong>{{cloudName}}</strong> vagy egyesítse helyileg <strong>{{vmsName}}</strong> klienst használva.",
 			"mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from the <strong>{{primarySystem}}</strong>.",
+			"mergeFailedTitle": "A rendszerek egyesítése sikertelen",
 			"primaryCannotMerge": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} System.",
 			"primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}.",
 			"secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
@@ -308,6 +317,7 @@
 		"mySystemSearch": "IMeMyMine",
 		"unavailable": "Rendszer nem elérhető",
 		"offline": "A rendszer offline",
+		"offlineAlertRibbon": "System is offline. Some settings may not be available.",
 		"openClient": "%VMS_NAME% Megnyitása",
 		"openClientNoSystem": "%VMS_NAME% Megnyitása",
 		"confirmMergeAction": "Összefésülés",
@@ -321,7 +331,7 @@
 		"confirmUnshareFromMeTitle": "Leválasztja a rendszert?",
 		"confirmUnshareFromMeAction": "Szétkapcsolás",
 		"confirmUnshare": "Ez a felhasználó nem fog tudni csatlakozni a rendszerhez. Folytatja?",
-		"confirmUnshareTitle": "Törli a felhasználót?",
+		"confirmUnshareTitle": "Remove user?",
 		"confirmUnshareAction": "Törlés",
 		"successDisconnected": "Rendszer sikeresen bontotta %CLOUD_NAME% kapcsolatát",
 		"successDeleted": "{{systemName}} rendszer sikeresen törölve a fiókból",
@@ -329,7 +339,8 @@
 		"mergeStart": "A rendszerek egyesülnek",
 		"mergeSuccess": "A rendszer egyesítése befejeződött",
 		"permissionsRemoved": "{{email}} engedélyei vissavonva",
-		"unknownName": "Ismeretlen név a rendszerhez (felhő egyesítése okozta)"
+		"unknownName": "Ismeretlen név a rendszerhez (felhő egyesítése okozta)",
+		"shareOffline": "Cannot share system while it is offline"
 	},
 	"systemStatuses": {
 		"activated": "aktiválva",

@@ -89,19 +89,26 @@
 			}
 		},
 		"platforms": {
-			"win64": "x64",
-			"linux64": "x64",
-			"mac": "X",
 			"bananapi": "Banana Pi",
 			"bpi": "Nx1",
-			"rpi": " Raspberry Pi"
+			"linux64": "x64",
+			"linux_arm32": "x32",
+			"linux_arm64": "x64",
+			"mac": "X",
+			"rpi": " Raspberry Pi",
+			"universal": "SDK",
+			"win64": "x64"
 		},
 		"appTypes": {
-			"client": "Tylko klient",
-			"server": "Tylko serwer",
 			"bundle": "Klient i serwer",
+			"camera_sdk": "SDK źródła wideo",
+			"client": "Tylko klient",
+			"metadata_sdk": "SDK dla metadanych",
+			"package": "Pakiet",
+			"server": "Tylko serwer",
 			"servertool": "Narzędzie konfiguracji",
-			"package": "Pakiet"
+			"storage_sdk": "Pakiet SDK do integrowania pamięci masowych",
+			"video_source_sdk": "SDK źródła wideo"
 		},
 		"releasesTypes": {
 			"beta": "Beta",
@@ -197,7 +204,7 @@
 		"okButton": "OK",
 		"cancelButton": "Anuluj",
 		"createNewAccount": "Utwórz nowe konto",
-		"changeAccountLogged": "You are already logged in with as {email}",
+		"changeAccountLogged": "Jesteś już zalogowany jako {email}",
 		"loggedFromOther": "Zostaniesz zalogowany przy użyciu innego konta",
 		"loginTitle": "Zaloguj do %CLOUD_NAME%",
 		"loginButton": "Zaloguj",
@@ -205,12 +212,14 @@
 		"logoutAuthorisedContinueButton": "Kontynuuj",
 		"logoutAuthorisedLogoutButton": "Wyloguj",
 		"noClientDetectedTitle": "Zainstaluj %VMS_NAME%, aby przejrzeć swój system",
-		"stayAs": "Stay logged as {email} ",
-		"stayLoggedIn": "Stay Logged In",
+		"stayAs": "Pozostań zalogowany jako {email} ",
+		"stayLoggedIn": "Nie wylogowuj mnie",
 		"download": "Pobierz %VMS_NAME%",
 		"merge": {
+			"commonText": "Nie udało się złączyć systemów <strong>{{primarySystem}}</strong> i <strong>{{secondarySystem}}</strong>.",
 			"connectToCloud": "System, który chcesz złączyć z tym systemem, podłącz do <strong>{{cloudName}}</strong> lub złącz je lokalnie za pomocą klienta <strong>{{vmsName}}</strong>.",
 			"mergeConfirmation": "Zamierzasz złączyć systemy <strong>{{primarySystem}}</strong> i <strong>{{secondarySystem}}</strong>. Ustawienia i nazwa zostaną pobrane z <strong>{{primarySystem}}</strong>.",
+			"mergeFailedTitle": "Łączenie systemów nie powiodło się",
 			"primaryCannotMerge": "System {{targetSystem}} ma nowszą wersję oprogramowania, która jest niezgodna z bieżącym systemem. Zaktualizuj bieżący system do <a href=\"/download\" target=\"_blank\" translate>najnowszej kompilacji</a>, aby złączyć go z systemem {{targetSystem}}.",
 			"primarySystemOffline": "System {{primarySystem}} jest w trybie offline i nie można go złączyć z systemem {{targetSystem}}.",
 			"secondaryCannotMerge": "System {{targetSystem}} ma starszą wersję oprogramowania, która jest niezgodna z bieżącym systemem. Zaktualizuj system {{targetSystem}} do <a href=\"/download\" target=\"_blank\" translate>najnowszej kompilacji</a>, aby złączyć go z bieżącym systemem.",
@@ -308,6 +317,7 @@
 		"mySystemSearch": "IMeMyMine",
 		"unavailable": "System jest niedostępny",
 		"offline": "Serwer jest odłączony",
+		"offlineAlertRibbon": "System is offline. Some settings may not be available.",
 		"openClient": "Otwórz w %VMS_NAME%",
 		"openClientNoSystem": "Otwórz %VMS_NAME%",
 		"confirmMergeAction": "Złącz",
@@ -329,7 +339,8 @@
 		"mergeStart": "Rozpoczęto złączanie systemów",
 		"mergeSuccess": "Zakończono łączenie systemu",
 		"permissionsRemoved": "Uprawnienia zostały usunięte z {{email}}",
-		"unknownName": "Nieznana nazwa systemu (złączenie w chmurze)"
+		"unknownName": "Nieznana nazwa systemu (złączenie w chmurze)",
+		"shareOffline": "Cannot share system while it is offline"
 	},
 	"systemStatuses": {
 		"activated": "aktywny",

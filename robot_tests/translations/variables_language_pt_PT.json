@@ -43,6 +43,7 @@
     "SHARE PERMISSIONS HINT CUSTOM": "Use a aplicação Cliente %VMS_NAME% para configurar permissões personalizadas",
     "SYSTEM NAME IS REQUIRED TEXT": "O nome do sistema é obrigatório",
     "ACCOUNT TEXT": "Conta",
+    "ACCOUNT INFORMATION": "Account Information",
     "EDIT USER BUTTON TEXT": "Editar",
     "REMOVE USER BUTTON TEXT": "Remove User",
     "REMOVE BUTTON TEXT": "Remover",
@@ -83,7 +84,7 @@
     "PASSWORD TOO COMMON TEXT": "Esta senha está principais senhas mais populares no mundo",
     "PASSWORD IS WEAK TEXT": "Use números, letras maiúsculas e minúsculas e caracteres especiais para tornar a sua senha mais forte",
     "TERMS AND CONDITIONS ERROR TEXT": "Por favor, reveja e concorde com os Termos e Condições e Política de Privacidade, a fim de prosseguir",
-    "THIS LINK IS BROKEN TEXT": "Este link está quebrado, <br>\n            O Sistema pode estar desconectado de %PRODUCT_NAME%, <br>\n            O acesso a este sistema pode estar revogado, <br>\n            ou você pode estar logado em uma conta diferente",
+    "THIS LINK IS BROKEN TEXT": "This link is broken,System may be disconnected from Nx Cloud,Access to this System may be revoked, or you may be logged into a different account.",
     "PAGE NOT FOUND TEXT": "Página não encontrada",
     "TAKE ME HOME TEXT": "Leve-me à Pág. principal",
     "OPEN NX WITNESS BUTTON TEXT": "Abrir %VMS_NAME%",
@@ -154,5 +155,6 @@
     "CHECKING TEXT": "A verificar...",
     "ENTER PASSWORD TO CONTINUE TEXT": "Insira a senha da sua conta para continuar",
     "INCOMPATIBLE": "incompatível",
-    "CONNECTION TO SYSTEM LOST": "Perdida a conexão com %SYSTEM NAME%"
+    "CONNECTION TO SYSTEM LOST": "Perdida a conexão com %SYSTEM NAME%",
+    "SYSTEM IS OFFLINE TEXT": "System is offline. Some settings may not be available."
 }

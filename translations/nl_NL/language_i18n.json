@@ -105,6 +105,7 @@
     "NO_SYSTEMS_LOGIN": "Log in op uw systeem met %VMS_NAME%",
     "NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "U heeft geen systemen verbonden met %CLOUD_NAME%",
     "New Password": "Nieuw wachtwoord",
+    "No unsaved changes": "No unsaved changes",
     "Nothing Found": "Niets gevonden",
     "OK": "Oké",
     "Ok": "Oké",
@@ -125,6 +126,7 @@
     "Release Notes": "Release Notes",
     "Release notes": "Versiewijzigingen",
     "Remember me": "Onthoud mij",
+    "Remove User": "Gebruiker verwijderen",
     "Rename": "Naam wijzigen",
     "Requirements": "Vereisten",
     "Resend activation email": "Stuur activeringsmail opnieuw",
@@ -270,7 +272,7 @@
     "devices": "apparaten",
     "dialogs": {
         "cancelButton": "Annuleren",
-        "changeAccountLogged": "You are already logged in with as {email}",
+        "changeAccountLogged": "U bent al ingelogd met als {email}",
         "createNewAccount": "Creëer een nieuw account",
         "download": "Download %VMS_NAME%",
         "loggedFromOther": "U wordt met een ander account ingelogd",
@@ -280,8 +282,10 @@
         "logoutAuthorisedLogoutButton": "Uitloggen",
         "logoutAuthorisedTitle": "U bent reeds ingelogd",
         "merge": {
+            "commonText": "Kan systemen <strong>{{primarySystem}}</strong> en <strong>{{secondarySystem}}</strong>niet samenvoegen.",
             "connectToCloud": "Verbind het systeem dat u met deze wilt samenvoegen tot <strong>{{cloudName}}</strong> of plaats lokaal samen met behulp van de <strong>{{vmsName}}</strong> Client.",
             "mergeConfirmation": "U staat op het punt Systems <strong>{{primarySystem}}</strong> en <strong>{{secondarySystem}}</strong>samen te voegen. Instellingen en de naam worden overgenomen van de <strong>{{primarySystem}}</strong>.",
+            "mergeFailedTitle": "Het samenvoegen van systemen is mislukt",
             "primaryCannotMerge": "Systeem {{targetSystem}} heeft een nieuwere softwareversie die niet compatibel is met het huidige systeem. Werk het huidige systeem bij naar de laatste <a href=\"/download\" target=\"_blank\" translate>build</a> om het samen te voegen met het {{targetSystem}} systeem.",
             "primarySystemOffline": "Systeem {{primarySystem}} is offline en kan niet worden samengevoegd met systeem {{targetSystem}}.",
             "secondaryCannotMerge": "Systeem {{targetSystem}} heeft een oudere softwareversie die niet compatibel is met het huidige systeem. Update {{targetSystem}} naar de <a href=\"/download\" target=\"_blank\" translate>laatste build</a> om deze samen te voegen met de huidige.",
@@ -314,8 +318,8 @@
             "shareConfirmButton": "Toevoegen",
             "shareTitle": "Toevoegen"
         },
-        "stayAs": "Stay logged as {email} ",
-        "stayLoggedIn": "Stay Logged In"
+        "stayAs": "Blijf aangemeld als {email} ",
+        "stayLoggedIn": "Ingelogd blijven"
     },
     "dialogs.merge.connectToCloud": "Verbind het systeem dat u met deze wilt samenvoegen tot <strong>{{cloudName}}</strong> of plaats lokaal samen met behulp van de <strong>{{vmsName}}</strong> Client.",
     "dialogs.merge.mergeConfirmation": "U staat op het punt Systems <strong>{{primarySystem}}</strong> en <strong>{{secondarySystem}}</strong>samen te voegen. Instellingen en de naam worden overgenomen van de <strong>{{primarySystem}}</strong>.",
@@ -327,10 +331,14 @@
     "downloads": {
         "appTypes": {
             "bundle": "Client en Server",
+            "camera_sdk": "Video Source SDK",
             "client": "Alleen client",
+            "metadata_sdk": "Metadata SDK",
             "package": "Package",
             "server": "Alleen server",
-            "servertool": "Configuratie tool"
+            "servertool": "Configuratie tool",
+            "storage_sdk": "Storage SDK",
+            "video_source_sdk": "Video Source SDK"
         },
         "groups": {
             "android": {
@@ -381,8 +389,11 @@
             "bananapi": "Banana Pi",
             "bpi": "Nx1",
             "linux64": "x64",
+            "linux_arm32": "x32",
+            "linux_arm64": "x64",
             "mac": "X",
             "rpi": " Raspberry Pi",
+            "universal": "SDK",
             "win64": "x64"
         },
         "releasesTypes": {
@@ -581,9 +592,11 @@
         "mergeSystemTitle": "Systemen Samenvoegen",
         "mySystemSearch": "IMeMyMine",
         "offline": "Systeem is offline",
+        "offlineAlertRibbon": "System is offline. Some settings may not be available.",
         "openClient": "Open in %VMS_NAME%",
         "openClientNoSystem": "Open %VMS_NAME%",
         "permissionsRemoved": "Toestemmingen zijn verwijderd voor {{email}}",
+        "shareOffline": "Cannot share system while it is offline",
         "successDeleted": "Systeem {{systemName}} is succesvol verwijderd van uw account",
         "successDisconnected": "Systeem is met succes losgekoppeld van %CLOUD_NAME%",
         "successRename": "Systeemnaam opgeslagen",

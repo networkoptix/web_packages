@@ -43,6 +43,7 @@
     "SHARE PERMISSIONS HINT CUSTOM": "Använd %VMS_NAME% klientprogrammet för att ställa in anpassade behörigheter",
     "SYSTEM NAME IS REQUIRED TEXT": "Systemnamn krävs",
     "ACCOUNT TEXT": "Konto",
+    "ACCOUNT INFORMATION": "Kontoinformation",
     "EDIT USER BUTTON TEXT": "Redigera",
     "REMOVE USER BUTTON TEXT": "Remove User",
     "REMOVE BUTTON TEXT": "Ta bort",
@@ -83,7 +84,7 @@
     "PASSWORD TOO COMMON TEXT": "Detta lösenord är i topp populäraste lösenord i världen",
     "PASSWORD IS WEAK TEXT": "Använd siffror, stora bokstäver och specialtecken för att göra ditt lösenord starkare",
     "TERMS AND CONDITIONS ERROR TEXT": "Läs och godkänn användarvillkoren och sekretesspolicy för att fortsätta",
-    "THIS LINK IS BROKEN TEXT": "Den här länken är trasig, <br>\n            Systemet kan kopplas från %PRODUCT_NAME%, <br>\n            Tillgång till det här systemet kan återkallas, <br>\n            eller du kan vara inloggad på ett annat konto",
+    "THIS LINK IS BROKEN TEXT": "This link is broken,System may be disconnected from Nx Cloud,Access to this System may be revoked, or you may be logged into a different account.",
     "PAGE NOT FOUND TEXT": "Det gick inte att hitta sidan",
     "TAKE ME HOME TEXT": "Ta mig hem",
     "OPEN NX WITNESS BUTTON TEXT": "Öppna %VMS_NAME%",
@@ -154,5 +155,6 @@
     "CHECKING TEXT": "Kontrollerar...",
     "ENTER PASSWORD TO CONTINUE TEXT": "Ange lösenord för ditt konto för att fortsätta",
     "INCOMPATIBLE": "oförenlig",
-    "CONNECTION TO SYSTEM LOST": "Anslutning till %SYSTEM NAME% förlorad"
+    "CONNECTION TO SYSTEM LOST": "Anslutning till %SYSTEM NAME% förlorad",
+    "SYSTEM IS OFFLINE TEXT": "System is offline. Some settings may not be available."
 }

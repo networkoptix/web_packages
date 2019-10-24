@@ -89,19 +89,26 @@
 			}
 		},
 		"platforms": {
-			"win64": "x64",
-			"linux64": "x64",
-			"mac": "X",
 			"bananapi": "Banana Pi",
 			"bpi": "Nx1",
-			"rpi": " Raspberry Pi"
+			"linux64": "x64",
+			"linux_arm32": "x32",
+			"linux_arm64": "x64",
+			"mac": "X",
+			"rpi": " Raspberry Pi",
+			"universal": "SDK",
+			"win64": "x64"
 		},
 		"appTypes": {
-			"client": "לקוח בלבד",
-			"server": "שרת בלבד",
 			"bundle": "לקוח ושרת",
+			"camera_sdk": "מקור וידאו SDK",
+			"client": "לקוח בלבד",
+			"metadata_sdk": "Metadata SDK",
+			"package": "חבילה",
+			"server": "שרת בלבד",
 			"servertool": "כלי תצורה",
-			"package": "חבילה"
+			"storage_sdk": "אחסון SDK",
+			"video_source_sdk": "מקור וידאו SDK"
 		},
 		"releasesTypes": {
 			"beta": "Beta",
@@ -209,8 +216,10 @@
 		"stayLoggedIn": "Stay Logged In",
 		"download": "הורד את %VMS_NAME%",
 		"merge": {
+			"commonText": "מיזוג מערכות נכשל<strong>{{primarySystem}}</strong> ו - <strong>{{secondarySystem}}</strong>.",
 			"connectToCloud": "חבר מערכת שברצונך למזג עם מערכת זו <strong>{{cloudName}}</strong> או מזג מקומי באמצעות <strong>{{vmsName}}</strong> לקוח.",
 			"mergeConfirmation": "אתה עומד למזג מערכות <strong>{{primarySystem}}</strong> ו - <strong>{{secondarySystem}}</strong>. ההגדרות והשם יילקחו מ <strong>{{primarySystem}}</strong>.",
+			"mergeFailedTitle": "מיזוג המערכות נכשל",
 			"primaryCannotMerge": "למערכת {{targetSystem}} יש גרסת תוכנה חדשה יותר שאינה תואמת למערכת הנוכחית. עדכן את המערכת הנוכחית <a href=\"/download\" target=\"_blank\" translate>לגרסא המתאימה</a> כדי למזג אותו עם {{targetSystem}}.",
 			"primarySystemOffline": "מערכת {{primarySystem}} במצב לא מקוון ולא ניתן למזגה עם הנוכחית.",
 			"secondaryCannotMerge": "למערכת {{targetSystem}} יש גרסת תוכנה ישנה יותר שאינה תואמת למערכת הנוכחית. עדכן {{targetSystem}} ל <a href=\"/download\" target=\"_blank\" translate>לגרסא האחרונה</a> על מנת למזג אותו עם הנוכחי.",
@@ -308,6 +317,7 @@
 		"mySystemSearch": "IMeMyMine",
 		"unavailable": "המערכת אינה זמינה",
 		"offline": "השרת אינו זמין",
+		"offlineAlertRibbon": "System is offline. Some settings may not be available.",
 		"openClient": "פתח ב %VMS_NAME%",
 		"openClientNoSystem": "פתח %VMS_NAME%",
 		"confirmMergeAction": "לְמַזֵג",
@@ -321,15 +331,16 @@
 		"confirmUnshareFromMeTitle": "נתק מערכת?",
 		"confirmUnshareFromMeAction": "נתק",
 		"confirmUnshare": "משתמש זה לא יוכל לגשת למערכת. האם אתה בטוח?",
-		"confirmUnshareTitle": "מחק משתמש?",
-		"confirmUnshareAction": "מחיקה",
+		"confirmUnshareTitle": "Remove user?",
+		"confirmUnshareAction": "הסר",
 		"successDisconnected": "המערכת התנתקה בהצלחה מ %CLOUD_NAME%",
 		"successDeleted": "המערכת {{systemName}} נמחקה בהצלחה מהחשבון שלך",
 		"mergeFailed": "מיזוג המערכת נכשל",
 		"mergeStart": "מיזוג מערכות החל",
 		"mergeSuccess": "מיזוג המערכת הושלם",
 		"permissionsRemoved": "ההרשאות הוסרו מ- {{email}}",
-		"unknownName": "שם לא ידוע עבור מערכת (נגרמה על ידי מיזוג ענן)"
+		"unknownName": "שם לא ידוע עבור מערכת (נגרמה על ידי מיזוג ענן)",
+		"shareOffline": "Cannot share system while it is offline"
 	},
 	"systemStatuses": {
 		"activated": "הופעל",

@@ -138,10 +138,6 @@
     "FAIL": "系统 <strong>{{failedSystem}}</strong> 目前无法连上。<br>请稍后再试一次, 或联系 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">支持</a>。",
     "unknownMergeError": "不明错误。您可以尝试刷新页面并重复尝试。如果问题仍然存在 - 请联系 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">支持</a>。"
   },
-  "merging": {
-    "mergeFailedTitle": "系统合并失败",
-    "commonText": "无法合并系统 <strong>{{primarySystem}}</strong> 和 <strong>{{secondarySystem}}</strong>。"
-  },
   "system": {
     "yourSystem": "您的系统",
     "mySystemSearch": "我的",

@@ -138,10 +138,6 @@
     "FAIL": "システム <strong>{{failedSystem}}</strong> は現在到達不能です。<br>しばらくしてからもう一度試すか、<a href=\"%SUPPORT_LINK%\" target=\"_blank\">サポート</a>に連絡してください。",
     "unknownMergeError": "不明なエラー。ページを更新して試行を繰り返すことができます。問題が解決しない場合は <a href=\"%SUPPORT_LINK%\" target=\"_blank\">サポート</a>に連絡してください。"
   },
-  "merging": {
-    "mergeFailedTitle": "システムの統合に失敗しました",
-    "commonText": "システム <strong>{{primarySystem}}</strong> および <strong>{{secondarySystem}}</strong>を統合できませんでした。"
-  },
   "system": {
     "yourSystem": "お使いのシステム",
     "mySystemSearch": "IMeMyMine",

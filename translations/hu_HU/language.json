@@ -138,10 +138,6 @@
     "FAIL": "A <strong>{{failedSystem}}</strong> rendszer jelenleg nem érhető el.<br>Próbálkozzon újra néhány perc múlva, vagy lépjen kapcsolatba a <a href=\"%SUPPORT_LINK%\" target=\"_blank\">támogatással</a>.",
     "unknownMergeError": "Unknown error. You can try to refresh the page and repeat attempt. If the problem persists – please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>."
   },
-  "merging": {
-    "mergeFailedTitle": "A rendszerek egyesítése sikertelen",
-    "commonText": "A rendszerek <strong>{{primarySystem}}</strong> és <strong>{{secondarySystem}}</strong>egyesítése sikertelen."
-  },
   "system": {
     "yourSystem": "Az Ön rendszere",
     "mySystemSearch": "IMeMyMine",

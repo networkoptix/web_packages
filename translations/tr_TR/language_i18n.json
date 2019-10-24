@@ -105,6 +105,7 @@
     "NO_SYSTEMS_LOGIN": "%VMS_NAME% adresini kullanarak Sisteminize giriş yapın",
     "NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "%CLOUD_NAME% ile bağlı hiçbir Sisteminiz yok",
     "New Password": "Yeni Parola",
+    "No unsaved changes": "No unsaved changes",
     "Nothing Found": "Hiçbir şey Bulunamadı",
     "OK": "Tamam",
     "Ok": "Tamam",
@@ -125,6 +126,7 @@
     "Release Notes": "Sürüm Notları",
     "Release notes": "Yayıncı Notları",
     "Remember me": "Beni Hatırla",
+    "Remove User": "Kullanıcıyı Sil",
     "Rename": "Yeniden Adlandır",
     "Requirements": "Gereksinimler",
     "Resend activation email": "Doğrulama e-postasını yeniden gönder",
@@ -270,7 +272,7 @@
     "devices": "aygıtlar",
     "dialogs": {
         "cancelButton": "İptal",
-        "changeAccountLogged": "You are already logged in with as {email}",
+        "changeAccountLogged": "Bu mail {email} ile zaten giriş yapmışsınız",
         "createNewAccount": "Yeni Hesap Oluştur",
         "download": "İndir %VMS_NAME%",
         "loggedFromOther": "Farklı bir hesapla giriş yapacaksınız",
@@ -280,8 +282,10 @@
         "logoutAuthorisedLogoutButton": "Oturumu Kapat",
         "logoutAuthorisedTitle": "Zaten giriş yapılmış",
         "merge": {
+            "commonText": "Sistem <strong>{{primarySystem}}</strong> ve <strong>{{secondarySystem}}</strong> birleştirilemedi.",
             "connectToCloud": "Birleştirmek istediğiniz <strong>{{cloudName}}</strong> sistemine bağlanın veya yerel sistemi <strong>{{vmsName}}</strong> kullanarak birleştirin.",
             "mergeConfirmation": "<strong>{{primarySystem}}</strong> sistemi ile <strong>{{secondarySystem}}</strong> sistemini birleştirmek üzeresiniz. İsim ve ayarlar <strong>{{primarySystem}}</strong> sisteminden alınacaktır.",
+            "mergeFailedTitle": "Sistem birleştirme işlemi başarısız oldu",
             "primaryCannotMerge": "Sistem {{targetSystem}}, mevcut sistemle uyumlu olmayan daha yeni bir yazılım sürümüne sahip. Geçerli sistemi, {{targetSystem}} Sistemle birleştirmek için en son <a href=\"/download\" target=\"_blank\" translate>derleme</a> güncelleyin.",
             "primarySystemOffline": "Sistem {{primarySystem}} çevrimdışıdır ve Sistem {{targetSystem}} ile birleştirilemez.",
             "secondaryCannotMerge": "Sistem {{targetSystem}}, mevcut sistemle uyumlu olmayan daha eski bir yazılım sürümüne sahip. Geçerli olanla birleştirmek için {{targetSystem}} en son <a href=\"/download\" target=\"_blank\" translate>derleme</a> güncelleyin.",
@@ -314,8 +318,8 @@
             "shareConfirmButton": "Ekle",
             "shareTitle": "Ekle"
         },
-        "stayAs": "Stay logged as {email} ",
-        "stayLoggedIn": "Stay Logged In"
+        "stayAs": "Bu email {email} ile bağlı kal ",
+        "stayLoggedIn": "Oturum açık kalsın"
     },
     "dialogs.merge.connectToCloud": "Birleştirmek istediğiniz <strong>{{cloudName}}</strong> sistemine bağlanın veya yerel sistemi <strong>{{vmsName}}</strong> kullanarak birleştirin.",
     "dialogs.merge.mergeConfirmation": "<strong>{{primarySystem}}</strong> sistemi ile <strong>{{secondarySystem}}</strong> sistemini birleştirmek üzeresiniz. İsim ve ayarlar <strong>{{primarySystem}}</strong> sisteminden alınacaktır.",
@@ -327,10 +331,14 @@
     "downloads": {
         "appTypes": {
             "bundle": "İstemci ve sunucu",
+            "camera_sdk": "Video Source SDK",
             "client": "Yalnızca istemci",
+            "metadata_sdk": "Metadata SDK",
             "package": "Paket",
             "server": "Yalnızca sunucu",
-            "servertool": "Konfigürasyon aracı"
+            "servertool": "Konfigürasyon aracı",
+            "storage_sdk": "Depolama için SDK",
+            "video_source_sdk": "Video Source SDK"
         },
         "groups": {
             "android": {
@@ -381,8 +389,11 @@
             "bananapi": "Banana Pi",
             "bpi": "Nx1",
             "linux64": "x64",
+            "linux_arm32": "x32",
+            "linux_arm64": "x64",
             "mac": "X",
             "rpi": " Raspberry Pi",
+            "universal": "SDK",
             "win64": "x64"
         },
         "releasesTypes": {
@@ -570,20 +581,22 @@
         "confirmRenameAction": "Kaydet",
         "confirmRenameTitle": "Sistem Adı",
         "confirmUnshare": "Bu kullanıcı Sistem'e erişemez. Emin misiniz?",
-        "confirmUnshareAction": "Sil",
+        "confirmUnshareAction": "Kaldır",
         "confirmUnshareFromMe": "Hesabınızın bu sistemle bağlantısını kesmek üzeresiniz. Bundan sonra bu sisteme erişim sağlayamayacaksınız. Emin misiniz?",
         "confirmUnshareFromMeAction": "Bağlantıyı kes",
         "confirmUnshareFromMeTitle": "Sistemle bağlantıyı kes?",
-        "confirmUnshareTitle": "Kullanıcıyı sil?",
+        "confirmUnshareTitle": "Kullanıcı kaldırılsın mı?",
         "mergeFailed": "Sistem birleştirme işlemi başarısız oldu",
         "mergeStart": "Sistemler birleştirilmeye başlandı",
         "mergeSuccess": "Sistem birleştirme tamamlandı",
         "mergeSystemTitle": "Sistemleri Birleştir",
         "mySystemSearch": "IMeMyMine",
         "offline": "Sistem çevrimdışı",
+        "offlineAlertRibbon": "System is offline. Some settings may not be available.",
         "openClient": "%VMS_NAME% içinde aç",
         "openClientNoSystem": "Aç%VMS_NAME%",
         "permissionsRemoved": "İzinler {{email}}'den kaldırıldı",
+        "shareOffline": "Cannot share system while it is offline",
         "successDeleted": "{{systemName}} sistemi hesabınızdan başarıyla silindi",
         "successDisconnected": "Sistem %CLOUD_NAME%'den başarıyla çıkarıldı",
         "successRename": "Sistem ismi kaydedildi",

@@ -43,6 +43,7 @@
     "SHARE PERMISSIONS HINT CUSTOM": "Käytä %VMS_NAME% Client -sovellusta mukautettujen käyttöoikeuksien määrittämiseen",
     "SYSTEM NAME IS REQUIRED TEXT": "Järjestelmän nimi on pakollinen",
     "ACCOUNT TEXT": "Oma tili",
+    "ACCOUNT INFORMATION": "Account Information",
     "EDIT USER BUTTON TEXT": "Muokkaa",
     "REMOVE USER BUTTON TEXT": "Remove User",
     "REMOVE BUTTON TEXT": "Poista",
@@ -83,7 +84,7 @@
     "PASSWORD TOO COMMON TEXT": "Tämä salasana on maailman suosituimpia salasanoja",
     "PASSWORD IS WEAK TEXT": "Käytä numeroita, isoja ja pieniä kirjaimia ja erikoismerkkejä vahvistaaksesi salasanasi",
     "TERMS AND CONDITIONS ERROR TEXT": "Tarkista ja hyväksy käyttöehdot ja tietosuojakäytäntö, jotta voit jatkaa",
-    "THIS LINK IS BROKEN TEXT": "Tämä linkki on rikki, <br>\n            Järjestelmä saattaa olla irroitettu %PRODUCT_NAME%, <br>: sta\n            Tämän järjestelmän käyttöoikeus on voitu peruuttaa, <br>\n            tai olet ehkä kirjautunut toiseen tiliin",
+    "THIS LINK IS BROKEN TEXT": "This link is broken,System may be disconnected from Nx Cloud,Access to this System may be revoked, or you may be logged into a different account.",
     "PAGE NOT FOUND TEXT": "Sivua ei löydy",
     "TAKE ME HOME TEXT": "Palaa koti-valikkoon",
     "OPEN NX WITNESS BUTTON TEXT": "Avaa %VMS_NAME%",
@@ -154,5 +155,6 @@
     "CHECKING TEXT": "Tarkistetaan...",
     "ENTER PASSWORD TO CONTINUE TEXT": "Syötä tilisi salasana jatkaaksesi",
     "INCOMPATIBLE": "yhteensopimaton",
-    "CONNECTION TO SYSTEM LOST": "Yhteys %SYSTEM NAME% katkesi"
+    "CONNECTION TO SYSTEM LOST": "Yhteys %SYSTEM NAME% katkesi",
+    "SYSTEM IS OFFLINE TEXT": "System is offline. Some settings may not be available."
 }
