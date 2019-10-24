@@ -2,12 +2,23 @@
     <div *ngIf="selectedData && selectedValues"
          class="col-12 col-md-7 col-xl-9">
         <nx-dynamic-table
+                *ngIf="metricId !== 'systems'"
                 [headers]="selectedData"
                 [elements]="selectedValues"
                 (onRowClick)="setActiveEntity($event)"
                 [activeEntity]="activeEntity">
         </nx-dynamic-table>
-    <!--                <div><pre>{{selectedData | json}}</pre></div>-->
+
+        <!-- Single entity placeholder -->
+        <nx-block *ngIf="metricId === 'systems'">
+            <nx-section *ngFor="let group of selectedPanelData.values">
+                <div class="row" *ngFor="let header of group.values">
+                    <div class="col-7">{{header.name}}</div>
+                    <div class="col-5">{{objectValues(selectedValues)[0][group.id] && objectValues(selectedValues)[0][group.id][header.id]
+                    && objectValues(selectedValues)[0][group.id][header.id].text || '–'}}</div>
+                </div>
+            </nx-section>
+        </nx-block>
     </div>
 
     <div class="col-12 col-md-5 col-xl-3"

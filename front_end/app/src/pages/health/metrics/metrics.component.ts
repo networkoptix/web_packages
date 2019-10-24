@@ -34,6 +34,8 @@ export class NxSystemMetricsComponent implements OnInit {
     menu: any;
     activeEntity: any;
 
+    objectValues = Object.values;
+
     constructor(private accountService: NxAccountService,
                 private configService: NxConfigService,
                 private systemService: NxSystemService,

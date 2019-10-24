@@ -246,9 +246,7 @@ export class NxHealthComponent implements OnInit {
                 const group = headerGroup.values.filter((header) => {
                     return header.display.includes(displayFilter);
                 });
-                if (group.length) {
-                    headers[metric.id].values[index].values = group;
-                }
+                headers[metric.id].values[index].values = group;
             });
         });
         return headers;
