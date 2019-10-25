@@ -182,7 +182,7 @@ export class NxHealthComponent implements OnInit {
             } else if (format === 'durationS') {
                 return this.secondsToTime(value);
             } else {
-                console.log(`Format not recognized: ${format}`);
+                console.error(`Format not recognized: ${format}`);
                 return `${value} ${format}`;
             }
         }
