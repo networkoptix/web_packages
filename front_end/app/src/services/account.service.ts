@@ -176,7 +176,7 @@ export class NxAccountService {
         return this.get()
             .then((account) => {
                 if (!account && !this.loginDialogActive) {
-                    this.loginDialogActive = true
+                    this.loginDialogActive = true;
                     return this.dialogs
                         .login(this, true, true).then(() => {
                             return this.get().then((account) => {
@@ -359,36 +359,40 @@ export class NxAccountService {
                         return this.document.location.reload();
                     });
                 }
-                return this.dialogs
-                           .confirm('',
-                               this.LANG.dialogs.loggedFromOther,
-                               this.LANG.dialogs.okButton,
-                               undefined,
-                               this.LANG.dialogs.stayAs.replace('{email}', account.email),
-                               'long-cancel-button'
-                           ).then((result) => {
-                               if (result === true) {
-                                   return this.cloudApi
-                                       .logout()
-                                       .finally(() => {
-                                           if (this.account && this.account.timer) {
-                                               this.account.timer.unsubscribe();
-                                           }
-                                           this.account = undefined;
-                                           this.localStorageService.clear('all'); // Clear session
-                                           // this.sessionService.invalidateSession(); // Clear session
 
-                                           return this.loginWithAuthKey(auth).then(() => {
-                                               return this.document.location.reload();
-                                           });
+                this.cloudApi.checkAuthCode(auth).then(async (result: any) => {
+                    if (result.email === account.email) {
+                        return;
+                    }
+
+                    const response = await this.dialogs
+                                               .confirm('',
+                                                       this.LANG.dialogs.loggedFromOther,
+                                                       this.LANG.dialogs.okButton,
+                                                       undefined,
+                                                       this.LANG.dialogs.stayAs.replace('{email}', account.email),
+                                                       'long-cancel-button')
+                    if (response === true) {
+                        return this.cloudApi
+                                   .logout()
+                                   .finally(() => {
+                                       if (this.account && this.account.timer) {
+                                           this.account.timer.unsubscribe();
+                                       }
+                                       this.account = undefined;
+                                       this.localStorageService.clear('all'); // Clear session
+                                       // this.sessionService.invalidateSession(); // Clear session
+                                       return this.loginWithAuthKey(auth).then(() => {
+                                           return this.document.location.reload();
                                        });
-                               } else {
-                                   const queryParams = { auth: undefined, from: undefined };
-                                   return this.router
-                                              .navigate([], { queryParams, queryParamsHandling: 'merge' })
-                                              .then(() => this.document.location.reload());
-                               }
-                        });
+                                   });
+                    } else {
+                        const queryParams = { auth: undefined, from: undefined };
+                        return this.router
+                                   .navigate([], { queryParams, queryParamsHandling: 'merge' })
+                                   .then(() => this.document.location.reload());
+                    }
+                });
             });
     }
 }

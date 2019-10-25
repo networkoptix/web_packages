@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'^account/changePassword$',     account.change_password),
     url(r'^account/authKey$',            account.auth_key),
     url(r'^account/checkCode$',          account.check_code_in_portal),
+    url(r'^account/checkAuthCode$',      account.check_auth_code),
     url(r'^account/?$',                  account.index),
 
 

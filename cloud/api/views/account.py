@@ -246,6 +246,16 @@ def check_code_in_portal(request):
     return api_success({'emailExists': email_exists})
 
 
+@api_view(['POST'])
+@permission_classes((IsAuthenticated,))
+@handle_exceptions
+def check_auth_code(request):
+    require_params(request, ('code',))
+    code = request.data['code']
+    (email, temp_password) = Account.extract_temp_credentials(code)
+    user = django.contrib.auth.authenticate(request=request, username=email, password=temp_password)
+    return api_success({'email': user.email})
+
 class AccountAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
         # Don't forget to filter out results depending on the visitor !
