@@ -40,10 +40,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
     public selectedHeader;
     public showHeaders;
 
-    private sortByColumn: any;
     private sortOrderASC: boolean;
-    private debug: boolean;
-    private beta: boolean;
 
     offset: number;
     currentPage: number;
@@ -68,11 +65,6 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
         this.pagerMaxSize = this.CONFIG.ipvd.pagerMaxSize;
         this.currentPage = 1;
         this.pageSize = this.CONFIG.layout.tableLarge.rows;
-    }
-
-    private setDebugAndBetaMode () {
-        this.debug = (this.params.debug !== undefined);
-        this.beta = (this.params.beta !== undefined);
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -103,8 +95,6 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
     }
 
     ngOnInit() {
-        this.setDebugAndBetaMode();
-
         const params = this.route.snapshot.queryParams;
         if (params.sortBy) {
             const sortBy = params.sortBy.split(',');

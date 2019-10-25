@@ -89,9 +89,20 @@ export class NxHealthComponent implements OnInit {
         });
     }
 
+    colorHeaderGroups(metric) {
+        let counter = 0;
+        metric.values = metric.values.map((group) => {
+            if (group.id !== '_') {
+                group.colorClass = `group-${counter++ % 6 + 1}`;
+            }
+            return group;
+        });
+    }
+
     initializeManifest() {
         const manifest = {};
         this.healthService.manifest.forEach(metric => {
+            this.colorHeaderGroups(metric);
             manifest[metric.id] = metric;
         });
         this.healthService.manifest = manifest;
