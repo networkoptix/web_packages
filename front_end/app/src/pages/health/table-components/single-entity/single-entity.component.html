@@ -1,0 +1,24 @@
+<div class="d-flex flex-column">
+    <h2>{{entity._ && entity._.name ? entity._.name.text : entity.info.name.text}}</h2>
+    <ng-container *ngFor="let paramGroup of params.values">
+        <nx-block *ngIf="paramGroup.id !== '_'" class="mt-3">
+            <header [innerText]="paramGroup.name"></header>
+            <nx-section>
+                <div class="row" *ngFor="let param of paramGroup.values">
+                    <div class="col-5">{{param.name || param.id}}</div>
+                    <div class="col-3"
+                         *ngIf="entity[paramGroup.id] && entity[paramGroup.id][param.id]; else noValue"
+                         [title]="entity[paramGroup.id][param.id].tooltip">
+                                <span [ngClass]="entity[paramGroup.id][param.id].class"
+                                      [innerText]="[undefined, ''].indexOf(entity[paramGroup.id][param.id].text) === -1
+                                      ? entity[paramGroup.id][param.id].text : '–'"></span>
+                        <span class="pl-1" [innerText]="entity[paramGroup.id][param.id].icon"></span>
+                    </div>
+                    <ng-template #noValue>
+                        <div class="col-5">–</div>
+                    </ng-template>
+                </div>
+            </nx-section>
+        </nx-block>
+    </ng-container>
+</div>

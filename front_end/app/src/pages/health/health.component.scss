@@ -1,0 +1,14 @@
+@import '../../../styles/theme_palette';
+@import '../../../styles/theme_variables';
+
+nx-system-health-component {
+  .error {
+    font-family: $font-family-medium;
+    color: $red_l2;
+  }
+
+  .warning {
+    font-family: $font-family-medium;
+    color: $yellow_main;
+  }
+}

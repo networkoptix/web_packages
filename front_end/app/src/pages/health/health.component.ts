@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { NxAccountService } from '../../services/account.service';
@@ -13,7 +13,8 @@ import { NxHealthService } from './health.service';
 @Component({
     selector   : 'nx-system-health-component',
     templateUrl: 'health.component.html',
-    styleUrls  : ['health.component.scss']
+    styleUrls  : ['health.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class NxHealthComponent implements OnInit {
     CONFIG: any;

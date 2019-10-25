@@ -34,6 +34,8 @@ export class NxSystemMetricsComponent implements OnInit {
     menu: any;
     activeEntity: any;
 
+    multiEntity = true;
+    objectKeys = Object.keys;
     objectValues = Object.values;
 
     constructor(private accountService: NxAccountService,
@@ -50,12 +52,16 @@ export class NxSystemMetricsComponent implements OnInit {
         this.route
             .params
             .subscribe((params: any) => {
+                this.multiEntity = true;
                 this.metricId = params.metric;
                 this.menuService.setSection(this.metricId);
                 this.selectedData = this.healthService.tableHeaders[this.metricId];
                 this.selectedPanelData = this.healthService.panelParams[this.metricId];
                 this.selectedValues = this.healthService.values[this.metricId];
                 this.resetActiveEntity();
+                if (Object.keys(this.selectedValues).length === 1) {
+                    this.multiEntity = false;
+                }
             });
 
         // combineLatest(this.healthService.manifestSubject, this.healthService.valuesSubject, this.healthService.alarmsSubject).subscribe(
