@@ -89,7 +89,10 @@ class NxSystemAPI {
     }
 
     private generateGetUrl(url: string, data: any, absUrl?: boolean) {
-        const params = new HttpParams(data);
+        let params = new HttpParams();
+        Object.keys(data).forEach((key: string) => {
+            params = params.set(key, data[key]);
+        });
         if (absUrl) {
             const proto = window.location.protocol;
             const hostName = window.location.hostname;
@@ -99,7 +102,7 @@ class NxSystemAPI {
         } else {
             url = `${this.urlBase}${url}`;
         }
-        return `${url}/${params}`;
+        return `${url}&${params}`;
     }
 
     private get(url: string, params?: any) {
@@ -298,7 +301,7 @@ class NxSystemAPI {
     /* End of Cameras and Servers */
 
     /* Formatting urls */
-    previewUrl(cameraId, time, width, height) {
+    previewUrl(cameraId, time?, width?, height?) {
         const data: any = {
             cameraId: this.cleanId(cameraId)
         };

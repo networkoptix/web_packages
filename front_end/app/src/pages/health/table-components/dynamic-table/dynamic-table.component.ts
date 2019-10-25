@@ -84,7 +84,10 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
             }
         }
         if (changes._elements) {
-            this.elements = Object.values(changes._elements.currentValue);
+            this.elements = Object.entries(changes._elements.currentValue).map((element: any) => {
+                element[1].id = element[0];
+                return element[1];
+            });
             this.sortOrderASC = true;
             this.selectedHeader = undefined;
             this.setPage(1, true);

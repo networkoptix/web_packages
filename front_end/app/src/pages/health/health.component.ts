@@ -55,6 +55,7 @@ export class NxHealthComponent implements OnInit {
             this.accountService.get().then((account) => {
                 this.account = account;
                 this.system = this.systemService.createSystem(systemId, account.email);
+                this.healthService.system = this.system;
                 this.menu.base = `${this.CONFIG.systemMenu.baseUrl}${this.system.id}${this.CONFIG.systemHealthMenu.baseUrl}`;
 
                 this.system.getInfo().then(() => {

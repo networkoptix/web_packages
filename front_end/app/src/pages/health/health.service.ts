@@ -8,6 +8,7 @@ export class NxHealthService {
     manifestSubject = new BehaviorSubject(undefined);
     valuesSubject = new BehaviorSubject(undefined);
     alarmsSubject = new BehaviorSubject(undefined);
+    systemSubject = new BehaviorSubject(undefined);
 
     tableHeaders: any;
     panelParams: any;
@@ -38,5 +39,13 @@ export class NxHealthService {
 
     set alarms(alarms) {
         this.alarmsSubject.next(alarms);
+    }
+
+    get system() {
+        return this.systemSubject.getValue();
+    }
+
+    set system(system) {
+        this.systemSubject.next(system);
     }
 }

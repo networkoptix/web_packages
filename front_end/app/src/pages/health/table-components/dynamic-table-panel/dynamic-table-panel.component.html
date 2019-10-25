@@ -8,7 +8,11 @@
                   (click)="closeView()">
             </span>
         </header>
-
+        <ng-container *ngIf="panelParams.id === 'cameras'">
+            <nx-thumbnail [cameraId]="activeEntity.id"
+                          [cameraState]="activeEntity.availability.status.text"
+            ></nx-thumbnail>
+        </ng-container>
         <ng-container *ngFor="let paramGroup of panelParams.values">
             <nx-section *ngIf="paramGroup.id !== '_'">
                 <h4 *ngIf="paramGroup.values.length">{{paramGroup.name}}</h4>

@@ -17,6 +17,7 @@ import { NxSystemMetricsComponent } from './metrics/metrics.component';
 import { NxDynamicTableComponent } from './table-components/dynamic-table/dynamic-table.component';
 import { NxDynamicTablePanelComponent } from './table-components/dynamic-table-panel/dynamic-table-panel.component';
 import { NxSingleEntityComponent } from './table-components/single-entity/single-entity.component';
+import NxThumbnailComponent from "./table-components/thumbnail/thumbnail.component";
 
 
 const appRoutes: Routes = [
@@ -56,13 +57,15 @@ const appRoutes: Routes = [
         NxSystemMetricsComponent,
         NxDynamicTableComponent,
         NxDynamicTablePanelComponent,
-        NxSingleEntityComponent
+        NxSingleEntityComponent,
+        NxThumbnailComponent
     ],
     bootstrap      : [],
     entryComponents: [
         NxHealthComponent,
         NxSystemAlertsComponent,
-        NxSystemMetricsComponent
+        NxSystemMetricsComponent,
+        NxThumbnailComponent,
     ],
     exports: [
         NxHealthComponent,

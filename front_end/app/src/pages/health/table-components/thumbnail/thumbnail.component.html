@@ -1,0 +1,34 @@
+<div class="hm-camera-preview">
+    <div class="mr-3">
+        <div class="preview-header">Now</div>
+        <div class="full thumbnail-preview">
+            <img *ngIf="cameraState === 'Online'; else noLivePreview"[src]="livePreview" (error)="thumbnailError('now')"/>
+            <ng-template #noLivePreview>
+                <div *ngIf="cameraState === 'Offline'" class="live-preview">OFFLINE</div>
+                <div *ngIf="cameraState === 'Unauthorized'" class="live-preview">AUTHENTICATION REQUIRED</div>
+            </ng-template>
+        </div>
+    </div>
+    <div>
+        <div>
+            <div class="preview-header">{{midnightTime | date: 'MM/dd/yyyy, HH:mm'}}</div>
+            <div class="mini thumbnail-preview">
+                <img *ngIf="midnightPreview; else noMidnightPreview"
+                     [src]="midnightPreview" (error)="thumbnailError('midnight')"/>
+                <ng-template #noMidnightPreview>
+                    <div class="mini-preview-offline"></div>
+                </ng-template>
+            </div>
+        </div>
+        <div>
+            <div class="preview-header">{{noonTime | date: 'MM/dd/yyyy, HH:mm'}}</div>
+            <div class="mini thumbnail-preview">
+                <img *ngIf="noonPreview; else noNoonPreview"
+                     [src]="noonPreview" (error)="thumbnailError('noon')"/>
+                <ng-template #noNoonPreview>
+                    <div class="mini-preview-offline"></div>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+</div>
