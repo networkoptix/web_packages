@@ -1,13 +1,14 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { NxAccountService } from '../../services/account.service';
-import { NxConfigService } from '../../services/nx-config';
+import { NxAccountService }          from '../../services/account.service';
+import { NxConfigService }           from '../../services/nx-config';
 import { NxSystem, NxSystemService } from '../../services/system.service';
-import { NxMenuService } from '../../components/menu/menu.service';
-import { map } from 'rxjs/operators';
-import { combineLatest } from 'rxjs';
-import { NxHealthService } from './health.service';
+import { NxMenuService }             from '../../components/menu/menu.service';
+import { map }                       from 'rxjs/operators';
+import { combineLatest }             from 'rxjs';
+import { NxHealthService }           from './health.service';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
 
 
 @Component({
@@ -17,18 +18,23 @@ import { NxHealthService } from './health.service';
     encapsulation: ViewEncapsulation.None
 })
 export class NxHealthComponent implements OnInit {
+    LANG: any;
     CONFIG: any;
     account: any;
     system: NxSystem;
 
     menu: any;
+    systemReady: boolean;
+
     constructor(private accountService: NxAccountService,
                 private configService: NxConfigService,
                 private systemService: NxSystemService,
                 private route: ActivatedRoute,
                 private menuservice: NxMenuService,
-                private healthService: NxHealthService
+                private healthService: NxHealthService,
+                private languageService: NxLanguageProviderService,
     ) {
+        this.LANG = this.languageService.getTranslations();
         this.CONFIG = this.configService.getConfig();
     }
 
@@ -62,6 +68,9 @@ export class NxHealthComponent implements OnInit {
                     const manifest$ = this.system.mediaserver.getHealthManifest();
                     const values$ = this.system.mediaserver.getHealthValues();
                     const alarms$ = this.system.mediaserver.getHealthAlarms();
+
+                    this.systemReady = true;
+
                     combineLatest(manifest$, values$, alarms$)
                         .pipe(map(([manifestRequest, valuesRequest, alarmsRequest]) => {
                             return {manifestRequest, valuesRequest, alarmsRequest};

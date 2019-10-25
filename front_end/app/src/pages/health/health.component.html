@@ -1,3 +1,11 @@
+<nx-page-placeholder *ngIf="!healthService.ready"
+                     [condition]="systemReady && !system.isOnline"
+                     [placeholderTitle]="LANG.common.systemOffline"
+                     [iconClass]="'server-offline'"
+                     preloader="true"
+                     class="page-placeholder offline">
+</nx-page-placeholder>
+
 <div *ngIf="healthService.ready">
     <div class="container row d-flex mt-3 m-0 pl-3" style="max-width: 1440px;">
 

@@ -40,6 +40,7 @@ import { ToastsContainer }           from './toast/toast.component';
 import { NxHeaderComponent }         from './header/header.component';
 import { NxNavLocationDropdown }     from './dropdowns/nav-location/nav.component';
 import { NxApplyComponent }          from './apply/apply.component';
+import { NxPagePlaceholderComponent } from './placeholders/page/page-placeholder.component';
 
 @NgModule({
     imports: [
@@ -83,6 +84,7 @@ import { NxApplyComponent }          from './apply/apply.component';
         NxClientButtonComponent,
         NxSwitchComponent,
         NxApplyComponent,
+        NxPagePlaceholderComponent,
         ToastsContainer,
     ],
     entryComponents: [
@@ -116,6 +118,7 @@ import { NxApplyComponent }          from './apply/apply.component';
         NxClientButtonComponent,
         NxSwitchComponent,
         NxApplyComponent,
+        NxPagePlaceholderComponent,
         ToastsContainer,
     ],
     providers      : [
@@ -140,6 +143,7 @@ import { NxApplyComponent }          from './apply/apply.component';
         NxClientButtonComponent,
         NxSwitchComponent,
         NxApplyComponent,
+        NxPagePlaceholderComponent,
         ToastsContainer,
 
         NxRibbonService,
@@ -175,6 +179,7 @@ import { NxApplyComponent }          from './apply/apply.component';
         NxClientButtonComponent,
         NxSwitchComponent,
         NxApplyComponent,
+        NxPagePlaceholderComponent,
         ToastsContainer,
 
         MenuModule,

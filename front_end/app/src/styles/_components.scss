@@ -1,0 +1,31 @@
+.page-placeholder {
+    position : absolute;
+    z-index  : 99;
+    width: 100%;
+    height: calc(100% - 48px);
+    /*If the system is offline this should cover everything.
+                     Must always be the highest z-index*/
+    
+    & > .placeholder {
+        opacity : 1;
+    }
+    
+    .placeholder > .placeholder-content {
+        top : 40%;
+    }
+    
+    &.offline {
+        @media (max-width : 991px) {
+            & > .placeholder {
+                height   : auto !important;
+                position : relative;
+                margin   : 50px 0;
+                
+                & > .placeholder-content {
+                    top       : 0;
+                    transform : none;
+                }
+            }
+        }
+    }
+}
