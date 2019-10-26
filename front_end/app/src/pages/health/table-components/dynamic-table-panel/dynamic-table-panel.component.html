@@ -17,8 +17,13 @@
             <nx-section *ngIf="paramGroup.id !== '_'">
                 <h4 *ngIf="paramGroup.values.length">{{paramGroup.name}}</h4>
                 <div class="row" *ngFor="let param of paramGroup.values">
-                    <div class="col-7">{{param.name || param.id}}</div>
-                    <div class="col-5"
+                    <div class="col-7 nx-panel">
+                        <div class="row-title">
+                            <span>{{param.name || param.id}}</span>
+                        </div>
+                        <div class="row-line"></div>
+                    </div>
+                    <div class="col-5 pl-0 d-flex align-items-end"
                          *ngIf="activeEntity[paramGroup.id] && activeEntity[paramGroup.id][param.id]; else noValue"
                          [title]="activeEntity[paramGroup.id][param.id].tooltip">
                         <span [ngClass]="activeEntity[paramGroup.id][param.id].class"
@@ -27,7 +32,7 @@
                         <span class="pl-1" [innerText]="activeEntity[paramGroup.id][param.id].icon"></span>
                     </div>
                     <ng-template #noValue>
-                        <div class="col-5">–</div>
+                        <div class="col-5 d-flex align-items-end">–</div>
                     </ng-template>
                 </div>
             </nx-section>

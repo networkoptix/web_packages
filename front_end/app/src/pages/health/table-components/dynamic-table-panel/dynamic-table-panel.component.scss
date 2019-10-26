@@ -112,4 +112,29 @@
             width    : 100%;
         }
     }
+    
+    .nx-panel {
+        display: flex;
+        height : fit-content;
+    
+        .row-title {
+            height  : fit-content;
+            width   : fit-content;
+            float   : left;
+            z-index : 9;
+        
+            span {
+                background-color : $light4;
+                padding-right    : 4px;
+            }
+        }
+    
+        .row-line {
+            border-bottom : 1px solid $light7;
+            width         : calc(100% - 1rem);
+            position      : absolute;
+            bottom        : 5px;
+            height        : 14px;
+        }
+    }
 }
