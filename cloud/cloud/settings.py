@@ -510,6 +510,7 @@ NOTIFICATIONS_CONFIG = {
     }
 }
 
+CONFIG_ERROR = "Customization Configuration Error. Please Notify Release Engineers."
 BROADCAST_NOTIFICATIONS_SUPERUSERS_ONLY = DEBUG
 NOTIFICATIONS_AUTO_SUBSCRIBE = False
 
