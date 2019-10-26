@@ -204,6 +204,7 @@ export class NxHealthComponent implements OnInit {
             Object.entries(entities).forEach(([entity, groups]) => {
                 let alarmCount = 0;
                 let highestAlarm;
+                this.healthService.values[metric][entity].id = entity;
                 this.healthService.manifest[metric].values.forEach(group => {
                     if (this.healthService.values[metric][entity][group.id]) {
                         group.values.forEach(header => {

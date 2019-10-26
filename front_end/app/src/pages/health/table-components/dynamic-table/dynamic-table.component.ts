@@ -35,6 +35,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
 
     elements: any = [];
     headers: any = {};
+    queryParams;
 
     public selectedEntity;
     public selectedHeader;
@@ -64,46 +65,48 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
         this.pagedItems = [];
         this.pagerMaxSize = this.CONFIG.ipvd.pagerMaxSize;
         this.currentPage = 1;
-        this.pageSize = this.CONFIG.layout.tableLarge.rows;
+        this.pageSize = 2 || this.CONFIG.layout.tableLarge.rows;
     }
 
     ngOnChanges(changes: SimpleChanges) {
+        if (changes.activeEntity) {
+            this.selectedEntity = changes.activeEntity.currentValue;
+        }
+
         if (changes._headers) {
             this.headers = changes._headers.currentValue;
             this.selectedHeader = undefined;
 
             if (changes._headers.previousValue !== undefined &&
                     changes._headers.previousValue !== changes._headers.currentValue) {
-                this.uri.resetURI(this.uri.getURL());
-            } else {
-                this.uri
-                    .getURI()
-                    .subscribe((params) => {
-
-                    });
+                const queryParams: Params = {};
+                queryParams.page = undefined;
+                queryParams.sortBy = undefined;
+                this.uri.updateURI(this.uri.getURL(), queryParams);
             }
         }
         if (changes._elements) {
-            this.elements = Object.entries(changes._elements.currentValue).map((element: any) => {
-                element[1].id = element[0];
-                return element[1];
-            });
+            this.elements = Object.values(changes._elements.currentValue);
+      // For testing pagination
+      // Array.from({length: 5}).forEach(_ => {
+      //   this.elements.forEach(e => this.elements.push(e));
+      // });
+      // console.log(this.elements);
             this.sortOrderASC = true;
             this.selectedHeader = undefined;
-            this.setPage(1, true);
-        }
-        if (changes.activeEntity) {
-            this.selectedEntity = changes.activeEntity.currentValue;
         }
     }
 
     ngOnInit() {
-        const params = this.route.snapshot.queryParams;
-        if (params.sortBy) {
-            const sortBy = params.sortBy.split(',');
+        this.queryParams = this.route.snapshot.queryParams;
+        if (this.queryParams.sortBy) {
+            const sortBy = this.queryParams.sortBy.split(',');
             this.sortOrderASC = (sortBy[SORT_DIR] === 'ASC');
             this.selectedHeader = sortBy[PARAM_ID];
+
             this.toggleSort(sortBy[GROUP_ID], sortBy[PARAM_ID], false);
+        } else {
+            this.setPage(1);
         }
     }
 
@@ -112,10 +115,20 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
         this.selectedEntity = element;
     }
 
-    setPage(page: number, keep?: boolean) {
-        this.currentPage = page;
+    setPage(page: number, keep?: boolean, entity?) {
+        if (this.params && this.params.id && this.selectedEntity) {
+            const index = this.elements.findIndex((element) => {
+                return element.id === this.params.id;
+            });
+            if (index !== -1) {
+                this.currentPage = Math.floor(index / this.pageSize) + 1;
+            }
+        } else if (this.queryParams && this.queryParams.page) { // this.params.page is string - no strict comparison
+            this.currentPage = this.queryParams.page;
+        } else {
+            this.currentPage = page;
+        }
 
-        const pageParam = (this.currentPage === 1) ? undefined : this.currentPage;
         // preserve window offset
         // this.uri.pageOffset = window.pageYOffset;
 
@@ -123,11 +136,13 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
         const endIndex = startIndex + this.pageSize;
         this.pagedItems = this.elements.slice(startIndex, endIndex);
 
-        if (this.params && this.params.page !== pageParam) { // this.params.page is string - no strict comparison
+        const paramPage = (this.currentPage === 1) ? undefined : this.currentPage;
+        if (paramPage && !this.params.id) {
             const queryParams: Params = {};
             queryParams.page = (this.currentPage === 1) ? undefined : this.currentPage;
-
-            // this.uri.updateURI('', queryParams);
+            this.uri.updateURI(this.uri.getURL(), queryParams);
+        } else if (this.params.id) {
+            this.params.id = undefined;
         }
     }
 

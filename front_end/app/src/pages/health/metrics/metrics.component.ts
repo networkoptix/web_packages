@@ -10,6 +10,9 @@ import { map, concatMap }            from 'rxjs/operators';
 import { NxHealthService }           from '../health.service';
 import { NxUriService }              from '../../../services/uri.service';
 
+interface Params {
+    [key: string]: any;
+}
 
 @Component({
     selector   : 'nx-system-metrics-component',
@@ -22,6 +25,7 @@ export class NxSystemMetricsComponent implements OnInit {
 
     system: NxSystem;
     metricId: any;
+    params: any  = {};
 
     manifest: any;
     values: any;
@@ -44,15 +48,22 @@ export class NxSystemMetricsComponent implements OnInit {
                 private route: ActivatedRoute,
                 private menuService: NxMenuService,
                 private healthService: NxHealthService,
+                private uri: NxUriService,
     ) {
         this.CONFIG = this.configService.getConfig();
     }
 
     ngOnInit(): void {
+        let idParam = this.route.snapshot.queryParamMap.get('id');
         this.route
             .params
             .subscribe((params: any) => {
                 this.multiEntity = true;
+                if (this.metricId) {
+                    const queryParams: Params = {};
+                    queryParams.id = undefined;
+                    this.uri.updateURI(this.uri.getURL(), queryParams);
+                }
                 this.metricId = params.metric;
                 this.menuService.setSection(this.metricId);
                 this.selectedData = this.healthService.tableHeaders[this.metricId];
@@ -61,6 +72,14 @@ export class NxSystemMetricsComponent implements OnInit {
                 this.resetActiveEntity();
                 if (Object.keys(this.selectedValues).length === 1) {
                     this.multiEntity = false;
+                }
+
+                if (idParam) {
+                    this.setActiveEntity(idParam);
+                    this.params.id = idParam;
+                    idParam = undefined;
+                } else {
+                    this.params.id = undefined;
                 }
             });
 
@@ -79,7 +98,18 @@ export class NxSystemMetricsComponent implements OnInit {
     }
 
     setActiveEntity(entity) {
-        this.activeEntity = entity;
+        const queryParams: Params = {};
+        if (typeof entity === 'string') {
+            this.activeEntity = this.selectedValues[entity];
+            if (!this.activeEntity) {
+                queryParams.id = undefined;
+                this.uri.updateURI(this.uri.getURL(), queryParams);
+            }
+        } else {
+            this.activeEntity = entity;
+            queryParams.id = entity.id;
+            this.uri.updateURI(this.uri.getURL(), queryParams);
+        }
     }
 
     resetActiveEntity() {
