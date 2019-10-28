@@ -34,18 +34,19 @@
                 <tr *ngFor="let item of pagedItems"
                     [ngClass]="{'selected': item == selectedEntity}"
                     (click)="setClickedRow(item);">
+
                     <ng-container *ngFor="let headerGroup of headers.values; first as firstGroup">
                         <ng-container *ngFor="let header of headerGroup.values; first as firstHeader">
-                            <td *ngIf="item[headerGroup.id] && item[headerGroup.id][header.id]; else noValue"
-                                [title]="item[headerGroup.id][header.id].tooltip || ''">
-                                <img *ngIf="firstGroup && firstHeader && item[headerGroup.id][header.id].icon"
+                            <td *ngIf="firstGroup && item[headerGroup.id] && item[headerGroup.id][header.id].icon; else showValue">
+                                <img *ngIf="firstHeader"
                                       [src]="'/static/icons/' + item[headerGroup.id][header.id].icon + '.svg'">
-                                <span [innerText]="[undefined, ''].indexOf(item[headerGroup.id][header.id].text) === -1
-                                ? item[headerGroup.id][header.id].text : '–'"
-                                      [ngClass]="item[headerGroup.id][header.id].class">
-                                </span>
                             </td>
-                            <ng-template #noValue><td>–</td></ng-template>
+                            <ng-template #showValue>
+                                <td [title]="item && item[headerGroup.id] && item[headerGroup.id][header.id] && item[headerGroup.id][header.id].tooltip || ''">
+                                    <span [innerText]="item && item[headerGroup.id] && item[headerGroup.id][header.id] && item[headerGroup.id][header.id].text || '-'">
+                                    </span>
+                                </td>
+                            </ng-template>
                         </ng-container>
                     </ng-container>
                 </tr>

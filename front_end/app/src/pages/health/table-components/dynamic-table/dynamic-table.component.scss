@@ -121,7 +121,9 @@
         border           : none;
 
         &:first-of-type {
-          padding-left : .5rem;
+          padding : 0;
+          width   : 48px;
+          display : block;
         }
 
         &.table-title {
@@ -197,7 +199,11 @@
           height       : 26px;
 
           &:first-of-type {
-            padding-left : .25rem;
+            padding : 0;
+            width   : 48px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
           }
 
           .error {
