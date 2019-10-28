@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 59.1 (86144) - https://sketch.com -->
+    <title>Actions/Color/Alert</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Actions/Color/Alert" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group" transform="translate(2.000000, 2.000000)" fill="#F02C2C" fill-rule="nonzero">
+            <path d="M8.76542109,0.197891967 L8.90387068,0.284643156 C9.0814766,0.409458953 9.23022976,0.57001074 9.33958593,0.756048272 L15.7964323,11.7404838 C16.2192356,12.45976 15.9621732,13.376042 15.2222674,13.787057 C14.9891204,13.9165693 14.7252417,13.9846922 14.4567143,13.9846922 L1.54302163,13.9846922 C0.690834315,13.9846922 -1.24344979e-14,13.3131194 -1.24344979e-14,12.4846922 C-1.24344979e-14,12.2236518 0.070076817,11.9671304 0.203303682,11.7404838 L6.66015003,0.756048272 C7.05808256,0.0790824655 7.91642413,-0.182099409 8.63289283,0.13218159 L8.76542109,0.197891967 Z" id="Triangle"></path>
+        </g>
+        <rect id="Rectangle" stroke="#FFFFFF" fill="#D8D8D8" x="9.5" y="12.5" width="1" height="1"></rect>
+        <polygon id="Line" fill="#FFFFFF" fill-rule="nonzero" points="11 6 9 6 9 11 11 11"></polygon>
+    </g>
+</svg>

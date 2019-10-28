@@ -87,8 +87,9 @@ export class NxHealthComponent implements OnInit {
                             Object.keys(this.healthService.manifest).forEach((asset) => {
                                 menu.level1.push({
                                     id: asset,
-                                    label: this.toCapitalizedWords(asset),
-                                    path: asset
+                                    label: this.healthService.manifest[asset].name,
+                                    path: asset,
+                                    svg: asset
                                 });
                             });
                             this.menu = {...menu};
@@ -224,7 +225,7 @@ export class NxHealthComponent implements OnInit {
                                     text: this.formatValue(header, this.healthService.values[metric][entity][group.id][header.id]),
                                     class: alarm ? alarm.level : '',
                                     tooltip: alarm ? alarm.text : '',
-                                    icon: alarm ? `${alarm.level}_icon` : '',
+                                    icon: alarm ? alarm.level : '',
                                 };
                             }
                         });
@@ -239,7 +240,7 @@ export class NxHealthComponent implements OnInit {
                 };
 
                 if (highestAlarm) {
-                    this.healthService.values[metric][entity]._.alarm.icon = `${highestAlarm.level}_icon`;
+                    this.healthService.values[metric][entity]._.alarm.icon = highestAlarm.level;
                     if (this.healthService.values[metric][entity]._.name) {
                         this.healthService.values[metric][entity]._.name.class = highestAlarm.level;
                     }

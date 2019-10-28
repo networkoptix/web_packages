@@ -65,7 +65,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
         this.pagedItems = [];
         this.pagerMaxSize = this.CONFIG.ipvd.pagerMaxSize;
         this.currentPage = 1;
-        this.pageSize = 2 || this.CONFIG.layout.tableLarge.rows;
+        this.pageSize = this.CONFIG.layout.tableLarge.rows;
     }
 
     ngOnChanges(changes: SimpleChanges) {

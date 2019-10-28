@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 59.1 (86144) - https://sketch.com -->
+    <title>Devices/Bold/Camera</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Devices/Bold/Camera" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M17,4 C17.55,4 18,4.45 18,5 L18,5 L18,7 C18,7.55 17.55,8 17,8 L17,8 L17,10 C17,13.859 13.859,17 10,17 C6.14,17 3,13.859 3,10 L3,10 L3,8 C2.45,8 2,7.55 2,7 L2,7 L2,5 C2,4.45 2.45,4 3,4 L3,4 Z M15,8 L5,8 L5,10 C5,12.757 7.243,15 10,15 C12.757,15 15,12.757 15,10 L15,10 L15,8 Z M10,10.3 C10.9388841,10.3 11.7,11.0611159 11.7,12 C11.7,12.9388841 10.9388841,13.7 10,13.7 C9.06111593,13.7 8.3,12.9388841 8.3,12 C8.3,11.0611159 9.06111593,10.3 10,10.3 Z" id="Combined-Shape" fill="#7D97A4" fill-rule="nonzero"></path>
+    </g>
+</svg>

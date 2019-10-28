@@ -38,8 +38,8 @@
                         <ng-container *ngFor="let header of headerGroup.values; first as firstHeader">
                             <td *ngIf="item[headerGroup.id] && item[headerGroup.id][header.id]; else noValue"
                                 [title]="item[headerGroup.id][header.id].tooltip || ''">
-                                <span *ngIf="firstGroup && firstHeader && item[headerGroup.id][header.id].icon"
-                                      [innerText]="item[headerGroup.id][header.id].icon"></span>
+                                <img *ngIf="firstGroup && firstHeader && item[headerGroup.id][header.id].icon"
+                                      [src]="'/static/icons/' + item[headerGroup.id][header.id].icon + '.svg'">
                                 <span [innerText]="[undefined, ''].indexOf(item[headerGroup.id][header.id].text) === -1
                                 ? item[headerGroup.id][header.id].text : '–'"
                                       [ngClass]="item[headerGroup.id][header.id].class">

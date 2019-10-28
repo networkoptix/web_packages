@@ -7,5 +7,8 @@
     <div class="menu-level-1-icon" *ngIf="item.icon">
         <span class="m-0 glyphicon" [ngClass]="item.icon"></span>
     </div>
+    <div class="menu-level-1-icon" *ngIf="item.svg">
+        <img [src]="'/static/icons/' + item.svg +'.svg'">
+    </div>
     {{item.label}}
 </a>
