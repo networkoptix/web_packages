@@ -66,6 +66,10 @@
     thead {
       .header-groups {
         th {
+          padding-bottom: 0;
+          padding-top: 8px;
+          white-space : nowrap;
+          
           div {
             font-family: $font-family-regular;
             line-height: 16px;
@@ -136,7 +140,6 @@
           overflow-wrap : initial;
           overflow      : hidden;
           text-overflow : ellipsis;
-          padding-right: 24px;
 
           .sort-dir {
             //top: 0;
@@ -191,6 +194,7 @@
           color        : $dark9;
           line-height  : 1rem;
           border       : none;
+          height       : 26px;
 
           &:first-of-type {
             padding-left : .25rem;
