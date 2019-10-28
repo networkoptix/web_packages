@@ -122,10 +122,12 @@
             width   : fit-content;
             float   : left;
             z-index : 9;
+            max-width: calc(100% - 1.5rem); // min with for line -> 16px + right padding (white space)
         
             span {
                 background-color : $light4;
                 padding-right    : 4px;
+                word-break : keep-all;
             }
         }
     
