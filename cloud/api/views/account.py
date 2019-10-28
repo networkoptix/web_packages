@@ -256,6 +256,7 @@ def check_auth_code(request):
     user = django.contrib.auth.authenticate(request=request, username=email, password=temp_password)
     return api_success({'email': user.email})
 
+
 class AccountAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
         # Don't forget to filter out results depending on the visitor !
