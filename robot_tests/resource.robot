@@ -176,8 +176,8 @@ Activate
 Restore password
     [arguments]    ${email}
     #log in to user to make sure their language is set to the current
+    Open Browser and go to URL    ${url}
     Log    Kyle disabled checking the user's langauge before sending. If it's not working blame him
-    # Open Browser and go to URL    ${url}
     # Log In    ${email}    ${password}
     # Validate Log In
     # Log Out
