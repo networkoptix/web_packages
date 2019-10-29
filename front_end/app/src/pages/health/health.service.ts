@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { NxUtilsService } from '../../services/utils.service';
+import { NxConfigService } from '../../services/nx-config';
 
 @Injectable({
     providedIn: 'root'
@@ -15,7 +17,12 @@ export class NxHealthService {
 
     ready: boolean;
 
-    constructor() {}
+    CONFIG: any;
+
+    constructor(private utilsService: NxUtilsService,
+                private configService: NxConfigService) {
+        this.CONFIG = this.configService.getConfig();
+    }
 
     get manifest() {
         return this.manifestSubject.getValue();
@@ -47,5 +54,21 @@ export class NxHealthService {
 
     set system(system) {
         this.systemSubject.next(system);
+    }
+
+    formatValue(header, value) {
+        if (header.format) {
+            const format = header.format;
+            const valueFormats = this.CONFIG.healthMonitoring.valueFormats;
+            if (valueFormats[format]) {
+                return `${(value * valueFormats[format].multiplier).toFixed(valueFormats[format].decimals)} ${format.display || format}`;
+            } else if (format === 'durationS') {
+                return this.utilsService.secondsToTime(value);
+            } else {
+                console.error(`Format not recognized: ${format}`);
+                return `${value} ${format}`;
+            }
+        }
+        return value;
     }
 }

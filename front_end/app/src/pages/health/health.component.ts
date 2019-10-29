@@ -157,49 +157,6 @@ export class NxHealthComponent implements OnInit {
         return alarms[0];
     }
 
-    secondsToTime(seconds) {
-        let time = '';
-
-        const days = Math.floor(seconds / (3600 * 24));
-        seconds  -= days * 3600 * 24;
-        if (days) {
-            time += `${days}d `;
-        }
-
-        const hours   = Math.floor(seconds / 3600);
-        seconds  -= hours * 3600;
-        if (hours) {
-            time += `${hours}h `;
-        }
-
-        const min = Math.floor(seconds / 60);
-        seconds  -= min * 60;
-        if (hours) {
-            time += `${min}m `;
-        }
-
-        seconds = seconds.toFixed(0);
-        time += `${seconds}s`;
-
-        return time;
-    }
-
-    formatValue(header, value) {
-        if (header.format) {
-            const format = header.format;
-            const valueFormats = this.CONFIG.healthMonitoring.valueFormats;
-            if (valueFormats[format]) {
-                return `${(value * valueFormats[format].multiplier).toFixed(valueFormats[format].decimals)} ${format.display || format}`;
-            } else if (format === 'durationS') {
-                return this.secondsToTime(value);
-            } else {
-                console.error(`Format not recognized: ${format}`);
-                return `${value} ${format}`;
-            }
-        }
-        return value;
-    }
-
     processValues() {
         Object.entries(this.healthService.values).forEach(([metric, entities]) => {
             Object.entries(entities).forEach(([entity, groups]) => {
@@ -222,7 +179,7 @@ export class NxHealthComponent implements OnInit {
                                     alarmCount++;
                                 }
                                 this.healthService.values[metric][entity][group.id][header.id] = {
-                                    text: this.formatValue(header, this.healthService.values[metric][entity][group.id][header.id]),
+                                    text: this.healthService.formatValue(header, this.healthService.values[metric][entity][group.id][header.id]),
                                     class: alarm ? alarm.level : '',
                                     tooltip: alarm ? alarm.text : '',
                                     icon: alarm ? alarm.level : '',

@@ -74,4 +74,31 @@ export class NxUtilsService {
             return href;
         }
     }
+
+    public secondsToTime(seconds) {
+        let time = '';
+
+        const days = Math.floor(seconds / (3600 * 24));
+        seconds  -= days * 3600 * 24;
+        if (days) {
+            time += `${days}d `;
+        }
+
+        const hours   = Math.floor(seconds / 3600);
+        seconds  -= hours * 3600;
+        if (hours) {
+            time += `${hours}h `;
+        }
+
+        const min = Math.floor(seconds / 60);
+        seconds  -= min * 60;
+        if (hours) {
+            time += `${min}m `;
+        }
+
+        seconds = seconds.toFixed(0);
+        time += `${seconds}s`;
+
+        return time;
+    }
 }
