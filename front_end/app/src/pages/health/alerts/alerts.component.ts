@@ -82,6 +82,7 @@ export class NxSystemAlertsComponent implements OnInit {
                             }
                             alert._.type = {text: this.manifest[metric].resource};
                             alert._.text = {text: alarm.text};
+                            alert._.alarm = {icon: alarm.level};
                             alert.resource = entity;
                             alert.metric = metric;
                             this.alertsValues.push(alert);
@@ -99,6 +100,11 @@ export class NxSystemAlertsComponent implements OnInit {
                 id: '_',
                 name: '',
                 values: [
+                    {
+                        display: 'table',
+                        name: '',
+                        id: 'alarm',
+                    },
                     {
                         display: 'table',
                         name: 'Type',
