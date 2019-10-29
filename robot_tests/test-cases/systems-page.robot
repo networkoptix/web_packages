@@ -15,6 +15,7 @@ Check Systems Text
     [arguments]    ${user}
     Sleep    1
     Log Out
+    Validate Log Out
     Log In    ${user}    ${password}
     Validate Log In
     Wait Until Page Contains Element    ${AUTO TESTS USER}
