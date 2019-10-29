@@ -188,7 +188,7 @@ ${MERGE OK BUTTON}                    ${MERGE DIALOG}//button[contains(@class,"b
 ${MERGE CANCEL BUTTON}                ${MERGE DIALOG}//button[@class="btn btn-default"]
 ${MERGE BUTTON MODAL}                 ${MERGE DIALOG}//button[@class="btn btn-primary" and contains(text(),"${MERGE SYSTEMS TEXT}")]
 ${MERGE PASSWORD INPUT}               ${MERGE DIALOG}//input[@id="mergePassword"]
-${CURRENTLY MERGING CARD}             //div[@ng-if="currentlyMerging"]
+${CURRENTLY MERGING CARD}             //div[contains(@class,"card-body")]
 ${CURRENTLY MERGING DOTS}             ${CURRENTLY MERGING CARD}//div[contains(@class, "circleG circleG_")]
 ${MERGE NOT OWNER MESSAGE 2}          ${MERGE DIALOG}//p[@class='help-block-no-height'][2]
 ${MERGE FAILED DIALOG HEADER}         //nx-modal-generic-content//h1[contains(text(),"${SYSTEMS MERGE FAILED TEXT}")]

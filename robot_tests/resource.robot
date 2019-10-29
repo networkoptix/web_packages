@@ -17,7 +17,7 @@ ${headless}    true
 @{chrome_arguments}    --disable-gpu    --no-sandbox    --log-level=3    --start-maximized
 @{chrome_arguments_headless}    --disable-infobars    --headless    --disable-gpu    --no-sandbox    --log-level=3
 ${speed}    0
-${selenium_timeout}    20
+${selenium_timeout}    30
 
 *** Keywords ***
 Open Browser and go to URL
@@ -304,7 +304,6 @@ Select user in Users List
 Check For Alert
     [arguments]    ${alert text}    ${timeout}=${selenium_timeout}
     Wait Until Element Is Visible    ${ALERT}    ${timeout}
-    Element Should Be Visible    ${ALERT}
     Element Text Should Be    ${ALERT}    ${alert text}
     Wait Until Page Does Not Contain Element    ${ALERT}
 
@@ -317,9 +316,11 @@ Check For Alert Dismissable
 
 Verify In System
     [arguments]    ${system name}
+    Go to System Administration
     Wait Until Element Is Visible    //h2[contains(@class,"system-name") and contains(text(), '${system name}')]
 
 Disconnect from cloud
+    Go to System Administration
     Wait Until Element Is Visible    ${DISCONNECT FROM NX}
     Click Element    ${DISCONNECT FROM NX}
     Wait Until Elements Are Visible    ${DISCONNECT FORM CANCEL}    ${DISCONNECT FORM DISCONNECT BUTTON}    ${DISCONNECT PASSWORD INPUT}
