@@ -95,7 +95,7 @@ ${REGISTER FORM}                      //form[@id='registerForm']
 ${REGISTER FIRST NAME INPUT}          ${REGISTER FORM}//input[@id='firstName']
 ${REGISTER LAST NAME INPUT}           ${REGISTER FORM}//input[@id='lastName']
 ${REGISTER EMAIL INPUT}               ${REGISTER FORM}//input[@id='registerEmail']
-${REGISTER EMAIL INPUT LOCKED}        ${REGISTER FORM}//input['readOnly' and @ng-if='lockEmail']
+${REGISTER EMAIL INPUT LOCKED}        ${REGISTER FORM}//input[@name='registerEmailLocked']
 ${REGISTER PASSWORD INPUT}            ${REGISTER FORM}//input[@id='registerPassword']
 
 ${TERMS AND CONDITIONS CHECKBOX VISIBLE}    ${REGISTER FORM}//label[@class="nx-checkbox"]/span[contains(@class,"tick")]//*[local-name() = 'svg']

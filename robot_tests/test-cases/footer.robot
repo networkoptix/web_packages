@@ -40,6 +40,7 @@ Support leads to the proper support site
     [tags]    C41544    Threaded
     Wait Until Element is Visible    ${FOOTER SUPPORT LINK}
     Click Link    ${FOOTER SUPPORT LINK}
+    Sleep    1
     ${tabs}=   Get Window Handles
     Select Window    @{tabs}[1]
     Location Should Contain    ${SUPPORT URL}
@@ -48,6 +49,7 @@ Terms leads to the proper EULA site
     [tags]    C41545    Threaded
     Wait Until Element is Visible    ${FOOTER TERMS LINK}
     Click Link    ${FOOTER TERMS LINK}
+    Sleep    1
     Location Should Be    ${ENV}${TERMS URL}
 
 Privacy leads to the proper page
@@ -63,6 +65,7 @@ Copyright leads to the proper site
     [tags]    C41547    Threaded
     Wait Until Element is Visible    ${FOOTER COPYRIGHT LINK}
     Click Link    ${FOOTER COPYRIGHT LINK}
+    Sleep    1
     ${tabs}=   Get Window Handles
     Select Window    @{tabs}[1]
     Location Should Be    ${COPYRIGHT URL}
