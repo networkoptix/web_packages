@@ -8,14 +8,15 @@ import { NgbModule }            from '@ng-bootstrap/ng-bootstrap';
 
 import { NxSandboxComponent } from './sandbox.component';
 import { ComponentsModule }   from '../../components/components.module';
-import { DialogsModule }   from '../../dialogs/dialogs.module';
+import { DialogsModule }      from '../../dialogs/dialogs.module';
+import { PipesModule }        from '../../pipes/pipes.module';
 
 const appRoutes: Routes = [
     { path: 'sandbox', component: NxSandboxComponent }
 ];
 
 @NgModule({
-    imports        : [
+    imports: [
         DialogsModule,
         CommonModule,
         BrowserModule,
@@ -23,8 +24,9 @@ const appRoutes: Routes = [
         NgbModule,
         FormsModule,
         ComponentsModule,
+        PipesModule,
 
-        RouterModule.forChild(appRoutes)
+        RouterModule.forChild(appRoutes),
     ],
     providers      : [],
     declarations   : [

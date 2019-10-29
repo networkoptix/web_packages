@@ -21,12 +21,14 @@ import { ComponentsModule }  from './src/components/components.module';
 import { DialogsModule }     from './src/dialogs/dialogs.module';
 import { PagesModule }       from './src/pages/pages.module';
 import { DirectivesModule }  from './src/directives/directives.module';
+import { PipesModule }       from './src/pipes/pipes.module';
 import { NxConfigService }   from './src/services/nx-config';
 import { ServiceModule }     from './src/services/services.module';
 import { LayoutModule }      from '@angular/cdk/layout';
 import { WINDOWS_PROVIDERS } from './src/services/window-provider';
 import { initializeApp }     from './src/pages/push-notifications/push-notifications.module';
 import { AuthGuard }         from './src/routeGuards/authGuard';
+
 
 // AoT requires an exported function for factories
 
@@ -65,20 +67,20 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
         DialogsModule,
         PagesModule,
         DirectivesModule,
+        PipesModule,
         ServiceModule,
         AngularFireModule,
         AngularFireMessagingModule,
         TranslateModule.forRoot(),
         DeviceDetectorModule.forRoot(),
         RouterModule.forRoot([], {
-            initialNavigation: true,
+            initialNavigation        : true,
             scrollPositionRestoration: 'enabled',
             anchorScrolling          : 'enabled',
             enableTracing            : false
         })
     ],
-    entryComponents: [
-    ],
+    entryComponents: [],
     providers      : [
         NgbToast,
         NgbModal,
@@ -90,16 +92,18 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
         { provide: LocationStrategy, useClass: PathLocationStrategy },
         { provide: UrlHandlingStrategy, useClass: HybridUrlHandlingStrategy },
         {
-            provide: FirebaseOptionsToken,
-            deps: [NxConfigService],
+            provide   : FirebaseOptionsToken,
+            deps      : [NxConfigService],
             useFactory: initializeApp
         },
         AuthGuard,
     ],
     declarations   : [
-        AppComponent
+        AppComponent,
     ],
-    bootstrap      : [ AppComponent ]
+    exports        : [
+    ],
+    bootstrap      : [AppComponent]
 })
 
 export class AppModule {

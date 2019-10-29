@@ -1,6 +1,7 @@
-import { Component, ViewChild } from '@angular/core';
-import { NgForm }               from '@angular/forms';
-import { NxDialogsService }     from '../../dialogs/dialogs.service';
+import { Component, ViewChild }          from '@angular/core';
+import { NgForm }                        from '@angular/forms';
+import { NxDialogsService }              from '../../dialogs/dialogs.service';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
     selector   : 'sandbox-component',
@@ -22,12 +23,18 @@ export class NxSandboxComponent {
     itemsSelected: any;
     filter: any;
     autohide: boolean;
+    ipvdEmbedUrl: SafeResourceUrl;
 
     submitted = false;
 
     @ViewChild('testForm', { static: true }) public testForm: NgForm;
 
     private setupDefaults() {
+        let host = '//' + window.location.hostname;
+        if (host === '//localhost' || host === '//127.0.0.1') {
+            host += ':9000';
+        }
+        this.ipvdEmbedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(host + '/embed/ipvd');
 
         this.show = false;
         this.show5 = false;
@@ -125,7 +132,8 @@ export class NxSandboxComponent {
 
     }
 
-    constructor(private dialogs: NxDialogsService) {
+    constructor(private dialogs: NxDialogsService,
+                private sanitizer: DomSanitizer) {
         this.setupDefaults();
     }
 
