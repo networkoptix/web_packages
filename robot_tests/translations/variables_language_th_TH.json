@@ -21,6 +21,7 @@
     "NEW PERMISSIONS SAVED": "อนุญาตสิทธิ์ใหม่แล้ว",
     "PERMISSIONS WERE REMOVED FROM": "สิทธิ์ถูกนำออกจาก %email%",
     "SYSYEM DELETED FROM ACCOUNT": "ระบบ {{system_name}} จะถูกลบออกจากบัญชีของคุณเรียบร้อยแล้ว",
+    "CANNOT SHARE SYSTEM": "Cannot share System: ",
     "CHANGING OWN PERMISSIONS IS NOT ALLOWED": "ไม่อนุญาตให้เปลี่ยนสิทธิ์ของตัวเอง",
     "RESET SUCCESS MESSAGE TEXT": "บันทึกรหัสผ่านเรียบร้อยแล้ว",
     "YOUR ACCOUNT IS SUCCESSFULLY SAVED": "บันทึกบัญชีของคุณเรียบร้อยแล้ว",
@@ -156,5 +157,19 @@
     "ENTER PASSWORD TO CONTINUE TEXT": "ป้อนรหัสผ่านสำหรับบัญชีของคุณเพื่อดำเนินการต่อ",
     "INCOMPATIBLE": "เข้ากันไม่ได้",
     "CONNECTION TO SYSTEM LOST": "การเชื่อมต่อกับ %SYSTEM NAME% หายไป",
-    "SYSTEM IS OFFLINE TEXT": "System is offline. Some settings may not be available."
+    "SYSTEM IS OFFLINE TEXT": "System is offline. Some settings may not be available.",
+    "ALL INTEGRATIONS TEXT": "การบูรณาการทั้งหมด",
+    "INTEGRATION DOWNLOADS TEXT": "ดาวน์โหลด",
+    "INTEGRATION REQUIREMENTS TEXT": "ความต้องการ",
+    "INTEGRATION HOW IT WORKS TEXT": "ระบบนี้ทำงานอย่างไร",
+    "INTEGRATION HOW TO SETUP TEXT": "วิธีการตั้งค่า",
+    "INTEGRATION TAGS TEXT": "แท็ก",
+    "INTEGRATION CONTACT TEXT": "รายชื่อผู้ติดต่อ",
+    "INTEGRATION GET IN TOUCH TEXT": "ได้รับการติดต่อ",
+    "INTEGRATION GET IN TOUCH WITH TEXT": "Get in touch with",
+    "INTEGRATION DEVELOPER TEXT": "นักพัฒนา",
+    "INTEGRATION TERMS OF USE TEXT": "เงื่อนไขการใช้งาน",
+    "INTEGRATION SUPPORT TEXT": "ทีมช่วยเหลือ",
+    "INTEGRATION SUPPORT URL TEXT": "URL สนับสนุน",
+    "INTEGRATION SUPPORT EMAIL TEXT": "รองรับ E-mail"
 }

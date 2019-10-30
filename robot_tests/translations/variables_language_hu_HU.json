@@ -21,6 +21,7 @@
     "NEW PERMISSIONS SAVED": "Új engedélyek mentve",
     "PERMISSIONS WERE REMOVED FROM": "%email% engedélyei vissavonva",
     "SYSYEM DELETED FROM ACCOUNT": "{{system_name}} rendszer sikeresen törölve a fiókból",
+    "CANNOT SHARE SYSTEM": "Cannot share System: ",
     "CHANGING OWN PERMISSIONS IS NOT ALLOWED": "Saját engedélyek módosítása nem engedélyezett",
     "RESET SUCCESS MESSAGE TEXT": "Jelszó sikeresen frissítve",
     "YOUR ACCOUNT IS SUCCESSFULLY SAVED": "A fiók mentése sikeres",
@@ -156,5 +157,19 @@
     "ENTER PASSWORD TO CONTINUE TEXT": "Adja meg a fiókjának jelszavát a folytatáshoz",
     "INCOMPATIBLE": "inkompatibilis",
     "CONNECTION TO SYSTEM LOST": "Connection to %SYSTEM NAME% lost",
-    "SYSTEM IS OFFLINE TEXT": "System is offline. Some settings may not be available."
+    "SYSTEM IS OFFLINE TEXT": "System is offline. Some settings may not be available.",
+    "ALL INTEGRATIONS TEXT": "All Integrations",
+    "INTEGRATION DOWNLOADS TEXT": "Downloads",
+    "INTEGRATION REQUIREMENTS TEXT": "Requirements",
+    "INTEGRATION HOW IT WORKS TEXT": "How it works",
+    "INTEGRATION HOW TO SETUP TEXT": "How to setup?",
+    "INTEGRATION TAGS TEXT": "Címke",
+    "INTEGRATION CONTACT TEXT": "Contact",
+    "INTEGRATION GET IN TOUCH TEXT": "Get in touch",
+    "INTEGRATION GET IN TOUCH WITH TEXT": "Get in touch with",
+    "INTEGRATION DEVELOPER TEXT": "Developer",
+    "INTEGRATION TERMS OF USE TEXT": "Terms of Use",
+    "INTEGRATION SUPPORT TEXT": "Támogatás",
+    "INTEGRATION SUPPORT URL TEXT": "Support URL",
+    "INTEGRATION SUPPORT EMAIL TEXT": "Support E-mail"
 }

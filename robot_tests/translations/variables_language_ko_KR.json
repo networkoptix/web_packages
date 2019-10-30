@@ -21,6 +21,7 @@
     "NEW PERMISSIONS SAVED": "새 권한이 저장되었습니다.",
     "PERMISSIONS WERE REMOVED FROM": "권한이 %email% 에서 제거 되었습니다.",
     "SYSYEM DELETED FROM ACCOUNT": "시스템 {{system_name}} 이 (가) 귀하의 계정에서 성공적으로 삭제되었습니다.",
+    "CANNOT SHARE SYSTEM": "Cannot share System: ",
     "CHANGING OWN PERMISSIONS IS NOT ALLOWED": "자신의 사용 권한 변경은 허용 되지 않습니다.",
     "RESET SUCCESS MESSAGE TEXT": "암호가 정상적으로 저장되었습니다",
     "YOUR ACCOUNT IS SUCCESSFULLY SAVED": "계정이 성공적으로 저장되었습니다.",
@@ -156,5 +157,19 @@
     "ENTER PASSWORD TO CONTINUE TEXT": "계속 하려면 귀하의 계정에 대 한 패스워드를 입력하십시요",
     "INCOMPATIBLE": "호환 되지 않음",
     "CONNECTION TO SYSTEM LOST": "%SYSTEM NAME % 연결 끊김",
-    "SYSTEM IS OFFLINE TEXT": "System is offline. Some settings may not be available."
+    "SYSTEM IS OFFLINE TEXT": "System is offline. Some settings may not be available.",
+    "ALL INTEGRATIONS TEXT": "모든 통합",
+    "INTEGRATION DOWNLOADS TEXT": "다운로드",
+    "INTEGRATION REQUIREMENTS TEXT": "요건",
+    "INTEGRATION HOW IT WORKS TEXT": "작동 방식",
+    "INTEGRATION HOW TO SETUP TEXT": "설정하는 방법?",
+    "INTEGRATION TAGS TEXT": "태그",
+    "INTEGRATION CONTACT TEXT": "연락처",
+    "INTEGRATION GET IN TOUCH TEXT": "연락하기",
+    "INTEGRATION GET IN TOUCH WITH TEXT": "Get in touch with",
+    "INTEGRATION DEVELOPER TEXT": "개발자",
+    "INTEGRATION TERMS OF USE TEXT": "이용 약관",
+    "INTEGRATION SUPPORT TEXT": "지원",
+    "INTEGRATION SUPPORT URL TEXT": "지원 URL",
+    "INTEGRATION SUPPORT EMAIL TEXT": "지원 이메일"
 }

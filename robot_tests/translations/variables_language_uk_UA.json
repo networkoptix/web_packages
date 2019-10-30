@@ -21,6 +21,7 @@
     "NEW PERMISSIONS SAVED": "Нові права доступу збережені",
     "PERMISSIONS WERE REMOVED FROM": "%email% був позбавлений повноважень",
     "SYSYEM DELETED FROM ACCOUNT": "Система {{system_name}} успішно видалена з вашого облікового запису",
+    "CANNOT SHARE SYSTEM": "Cannot share System: ",
     "CHANGING OWN PERMISSIONS IS NOT ALLOWED": "Зміна власних дозволів не допускається",
     "RESET SUCCESS MESSAGE TEXT": "Пароль змінено успішно",
     "YOUR ACCOUNT IS SUCCESSFULLY SAVED": "Ваш обліковий запис успішно збережено",
@@ -156,5 +157,19 @@
     "ENTER PASSWORD TO CONTINUE TEXT": "Введіть пароль для продовження",
     "INCOMPATIBLE": "несумісно",
     "CONNECTION TO SYSTEM LOST": "Підключення до %SYSTEM NAME% втрачено",
-    "SYSTEM IS OFFLINE TEXT": "System is offline. Some settings may not be available."
+    "SYSTEM IS OFFLINE TEXT": "System is offline. Some settings may not be available.",
+    "ALL INTEGRATIONS TEXT": "Всі інтеграції",
+    "INTEGRATION DOWNLOADS TEXT": "Завантаження",
+    "INTEGRATION REQUIREMENTS TEXT": "Вимоги",
+    "INTEGRATION HOW IT WORKS TEXT": "Як це працює",
+    "INTEGRATION HOW TO SETUP TEXT": "Як налаштувати?",
+    "INTEGRATION TAGS TEXT": "Теги",
+    "INTEGRATION CONTACT TEXT": "Контакт",
+    "INTEGRATION GET IN TOUCH TEXT": "Зв'язатися з нами",
+    "INTEGRATION GET IN TOUCH WITH TEXT": "Get in touch with",
+    "INTEGRATION DEVELOPER TEXT": "Розробник",
+    "INTEGRATION TERMS OF USE TEXT": "Умови використання",
+    "INTEGRATION SUPPORT TEXT": "Підтримка",
+    "INTEGRATION SUPPORT URL TEXT": "URL підтримки",
+    "INTEGRATION SUPPORT EMAIL TEXT": "Email підтримки"
 }

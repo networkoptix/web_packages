@@ -219,7 +219,7 @@
 			"commonText": "Falha ao mesclar Sistemas <strong>{{primarySystem}}</strong> e <strong>{{secondarySystem}}</strong>.",
 			"connectToCloud": "Conecte o sistema que você deseja mesclar com este para <strong>{{cloudName}}</strong> ou mesclar localmente usando <strong>{{vmsName}}</strong> Cliente.",
 			"mergeConfirmation": "Você está prestes a mesclar sistemas <strong>{{primarySystem}}</strong> e <strong>{{secondarySystem}}</strong>. As configurações e o nome serão tiradas do <strong>{{primarySystem}}</strong>.",
-			"mergeFailedTitle": "Falha na fusão de Sistemas",
+			"mergeFailedTitle": "Falha na mesclagem do sistema",
 			"primaryCannotMerge": "O sistema {{targetSystem}} tem uma versão de software mais recente que é incompatível com o sistema atual. Atualize o sistema atual para a versão mais recente <a href=\"/download\" target=\"_blank\" translate></a> para mesclar com o sistema {{targetSystem}}.",
 			"primarySystemOffline": "O sistema {{primarySystem}} está offline e não pode ser mesclado com o sistema {{targetSystem}}.",
 			"secondaryCannotMerge": "O sistema {{targetSystem}} tem uma versão mais antiga do software que é incompatível com o sistema atual. Atualize {{targetSystem}} para a versão mais recente <a href=\"/download\" target=\"_blank\" translate></a> para mesclar com o atual.",

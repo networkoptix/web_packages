@@ -317,7 +317,7 @@
 		"mySystemSearch": "IMeMyMine",
 		"unavailable": "Sistem erişilebilir değil",
 		"offline": "Sistem çevrimdışı",
-		"offlineAlertRibbon": "System is offline. Some settings may not be available.",
+		"offlineAlertRibbon": "Sistem çevrimdışı. Bazı ayarlara erişim olmayabilir.",
 		"openClient": "%VMS_NAME% içinde aç",
 		"openClientNoSystem": "Aç%VMS_NAME%",
 		"confirmMergeAction": "Birleştir",
@@ -340,7 +340,7 @@
 		"mergeSuccess": "Sistem birleştirme tamamlandı",
 		"permissionsRemoved": "İzinler {{email}}'den kaldırıldı",
 		"unknownName": "Sistem için Bilinmeyen Ad (Bulut birleştirme yüzünden)",
-		"shareOffline": "Cannot share system while it is offline"
+		"shareOffline": "Çevrimdışıyken sistem paylaşılamıyor"
 	},
 	"systemStatuses": {
 		"activated": "aktif edildi",

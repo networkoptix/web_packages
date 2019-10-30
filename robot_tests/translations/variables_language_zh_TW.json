@@ -21,6 +21,7 @@
     "NEW PERMISSIONS SAVED": "新權限已儲存",
     "PERMISSIONS WERE REMOVED FROM": "權限從 %email% 被移除",
     "SYSYEM DELETED FROM ACCOUNT": "從您的帳號成功刪除系統 {{system_name}}",
+    "CANNOT SHARE SYSTEM": "Cannot share System: ",
     "CHANGING OWN PERMISSIONS IS NOT ALLOWED": "不允許變更自己的權限",
     "RESET SUCCESS MESSAGE TEXT": "密碼已成功儲存",
     "YOUR ACCOUNT IS SUCCESSFULLY SAVED": "您的帳號已成功儲存",
@@ -156,5 +157,19 @@
     "ENTER PASSWORD TO CONTINUE TEXT": "輸入您帳戶的密碼以繼續",
     "INCOMPATIBLE": "不相容",
     "CONNECTION TO SYSTEM LOST": "與%SYSTEM NAME％的連線斷開",
-    "SYSTEM IS OFFLINE TEXT": "System is offline. Some settings may not be available."
+    "SYSTEM IS OFFLINE TEXT": "System is offline. Some settings may not be available.",
+    "ALL INTEGRATIONS TEXT": "所有整合",
+    "INTEGRATION DOWNLOADS TEXT": "下載",
+    "INTEGRATION REQUIREMENTS TEXT": "要求",
+    "INTEGRATION HOW IT WORKS TEXT": "新手教學",
+    "INTEGRATION HOW TO SETUP TEXT": "如何設定？",
+    "INTEGRATION TAGS TEXT": "標籤",
+    "INTEGRATION CONTACT TEXT": "聯絡資訊",
+    "INTEGRATION GET IN TOUCH TEXT": "聯繫我們",
+    "INTEGRATION GET IN TOUCH WITH TEXT": "Get in touch with",
+    "INTEGRATION DEVELOPER TEXT": "開發人員",
+    "INTEGRATION TERMS OF USE TEXT": "使用條款",
+    "INTEGRATION SUPPORT TEXT": "支援",
+    "INTEGRATION SUPPORT URL TEXT": "支援URL",
+    "INTEGRATION SUPPORT EMAIL TEXT": "支援電子郵件"
 }

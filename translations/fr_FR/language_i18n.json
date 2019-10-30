@@ -285,7 +285,7 @@
             "commonText": "Échec de la fusion des systèmes <strong>{{primarySystem}}</strong> et <strong>{{secondarySystem}}</strong>.",
             "connectToCloud": "Connectez le système que vous souhaitez fusionner avec celui-ci à <strong>{{cloudName}}</strong> ou fusionner localement à l'aide de <strong>{{vmsName}}</strong> Client.",
             "mergeConfirmation": "Vous êtes sur le point de fusionner les systèmes <strong>{{primarySystem}}</strong> et <strong>{{secondarySystem}}</strong>. Les réglages et le nom seront pris à partir du <strong>{{primarySystem}}</strong>.",
-            "mergeFailedTitle": "Fusion des systèmes a échoué",
+            "mergeFailedTitle": "Fusion système a échoué",
             "primaryCannotMerge": "Système {{targetSystem}} a une version logicielle plus récente incompatible avec le système actuel. Mettre à jour le système actuel a la <a href=\"/download\" target=\"_blank\" translate>dernière version</a> pour fusionner avec le {{targetSystem}} système.",
             "primarySystemOffline": "Le système {{primarySystem}} est hors ligne et ne peut pas être fusionné avec le système {{targetSystem}}.",
             "secondaryCannotMerge": "Système {{targetSystem}} a une version de logiciel plus ancienne incompatible avec le système actuel. Mettre à jour {{targetSystem}} à <a href=\"/download\" target=\"_blank\" translate>dernière version</a> pour fusionner avec l'actuel.",

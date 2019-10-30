@@ -317,7 +317,7 @@
 		"mySystemSearch": "IMeMyMine",
 		"unavailable": "System ist nicht erreichbar",
 		"offline": "System ist offline",
-		"offlineAlertRibbon": "System is offline. Some settings may not be available.",
+		"offlineAlertRibbon": "Das System ist offline. Einige Einstellungen sind möglicherweise nicht verfügbar.",
 		"openClient": "In %VMS_NAME% öffnen",
 		"openClientNoSystem": "Öffnen Sie %VMS_NAME%",
 		"confirmMergeAction": "Zusammenführen",
@@ -340,7 +340,7 @@
 		"mergeSuccess": "Systemzusammenführung abgeschlossen",
 		"permissionsRemoved": "Berechtigungen wurden von {{email}} entfernt",
 		"unknownName": "Unbekannter Name für das System (verursacht durch Cloud-Merge)",
-		"shareOffline": "Cannot share system while it is offline"
+		"shareOffline": "Das System kann nicht freigegeben werden, solange es offline ist"
 	},
 	"systemStatuses": {
 		"activated": "aktiviert",

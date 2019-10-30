@@ -21,6 +21,7 @@
     "NEW PERMISSIONS SAVED": "Cấp phép mới được lưu",
     "PERMISSIONS WERE REMOVED FROM": "Các quyền đã bị xóa khỏi %email%",
     "SYSYEM DELETED FROM ACCOUNT": "Tài khoản {{system_name}} đã xóa thành công từ hệ thống của bạn",
+    "CANNOT SHARE SYSTEM": "Cannot share System: ",
     "CHANGING OWN PERMISSIONS IS NOT ALLOWED": "Không cho phép thay đổi quyền riêng tư",
     "RESET SUCCESS MESSAGE TEXT": "Thay đổi mật khẩu thành công",
     "YOUR ACCOUNT IS SUCCESSFULLY SAVED": "Tài khoản của bạn đã được lưu thành công",
@@ -156,5 +157,19 @@
     "ENTER PASSWORD TO CONTINUE TEXT": "Nhập mật khẩu cho tài khoản của bạn để tiếp tục",
     "INCOMPATIBLE": "không tương thích",
     "CONNECTION TO SYSTEM LOST": "Mất kết nối với %SYSTEM NAME%",
-    "SYSTEM IS OFFLINE TEXT": "System is offline. Some settings may not be available."
+    "SYSTEM IS OFFLINE TEXT": "System is offline. Some settings may not be available.",
+    "ALL INTEGRATIONS TEXT": "Tất cả tích hợp",
+    "INTEGRATION DOWNLOADS TEXT": "Tải xuống",
+    "INTEGRATION REQUIREMENTS TEXT": "Yêu cầu",
+    "INTEGRATION HOW IT WORKS TEXT": "Làm thế nào nó hoạt động",
+    "INTEGRATION HOW TO SETUP TEXT": "Làm thế nào để thiết lập?",
+    "INTEGRATION TAGS TEXT": "Thẻ",
+    "INTEGRATION CONTACT TEXT": "Liên hệ",
+    "INTEGRATION GET IN TOUCH TEXT": "Liên lạc",
+    "INTEGRATION GET IN TOUCH WITH TEXT": "Get in touch with",
+    "INTEGRATION DEVELOPER TEXT": "Nhà phát triển",
+    "INTEGRATION TERMS OF USE TEXT": "Điều khoản sử dụng",
+    "INTEGRATION SUPPORT TEXT": "Hỗ trợ",
+    "INTEGRATION SUPPORT URL TEXT": "URL Hỗ trợ",
+    "INTEGRATION SUPPORT EMAIL TEXT": "Hỗ trợ Email"
 }

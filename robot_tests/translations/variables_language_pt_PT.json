@@ -21,6 +21,7 @@
     "NEW PERMISSIONS SAVED": "Novas permissões guardadas",
     "PERMISSIONS WERE REMOVED FROM": "As permissões foram removidas de %email%",
     "SYSYEM DELETED FROM ACCOUNT": "O sistema {{system_name}} foi apagado com sucesso da sua conta",
+    "CANNOT SHARE SYSTEM": "Cannot share System: ",
     "CHANGING OWN PERMISSIONS IS NOT ALLOWED": "Não é permitido alterar as permissões próprias",
     "RESET SUCCESS MESSAGE TEXT": "Senha guardada com sucesso",
     "YOUR ACCOUNT IS SUCCESSFULLY SAVED": "A sua conta foi gravada com sucesso",
@@ -156,5 +157,19 @@
     "ENTER PASSWORD TO CONTINUE TEXT": "Insira a senha da sua conta para continuar",
     "INCOMPATIBLE": "incompatível",
     "CONNECTION TO SYSTEM LOST": "Perdida a conexão com %SYSTEM NAME%",
-    "SYSTEM IS OFFLINE TEXT": "System is offline. Some settings may not be available."
+    "SYSTEM IS OFFLINE TEXT": "System is offline. Some settings may not be available.",
+    "ALL INTEGRATIONS TEXT": "All Integrations",
+    "INTEGRATION DOWNLOADS TEXT": "Downloads",
+    "INTEGRATION REQUIREMENTS TEXT": "Requirements",
+    "INTEGRATION HOW IT WORKS TEXT": "How it works",
+    "INTEGRATION HOW TO SETUP TEXT": "How to setup?",
+    "INTEGRATION TAGS TEXT": "Tags",
+    "INTEGRATION CONTACT TEXT": "Contact",
+    "INTEGRATION GET IN TOUCH TEXT": "Get in touch",
+    "INTEGRATION GET IN TOUCH WITH TEXT": "Get in touch with",
+    "INTEGRATION DEVELOPER TEXT": "Developer",
+    "INTEGRATION TERMS OF USE TEXT": "Terms of Use",
+    "INTEGRATION SUPPORT TEXT": "Suporte",
+    "INTEGRATION SUPPORT URL TEXT": "Support URL",
+    "INTEGRATION SUPPORT EMAIL TEXT": "Support E-mail"
 }

@@ -21,6 +21,7 @@
     "NEW PERMISSIONS SAVED": "Nová oprávnění byla uložena",
     "PERMISSIONS WERE REMOVED FROM": "Oprávnění byla odstraněna z adresy %email%",
     "SYSYEM DELETED FROM ACCOUNT": "Systém {{system_name}} byl úspěšně odstraněna z Vašeho účtu",
+    "CANNOT SHARE SYSTEM": "Cannot share System: ",
     "CHANGING OWN PERMISSIONS IS NOT ALLOWED": "Změna vlastních oprávnění není povolena",
     "RESET SUCCESS MESSAGE TEXT": "Heslo bylo úspěšně uloženo",
     "YOUR ACCOUNT IS SUCCESSFULLY SAVED": "Váš účet byl úspěšně uložen",
@@ -156,5 +157,19 @@
     "ENTER PASSWORD TO CONTINUE TEXT": "Chcete-li pokračovat, zadejte heslo",
     "INCOMPATIBLE": "nekompatibilní",
     "CONNECTION TO SYSTEM LOST": "Připojení k %SYSTEM NAME% bylo ztraceno",
-    "SYSTEM IS OFFLINE TEXT": "System is offline. Some settings may not be available."
+    "SYSTEM IS OFFLINE TEXT": "System is offline. Some settings may not be available.",
+    "ALL INTEGRATIONS TEXT": "Všechny integrace",
+    "INTEGRATION DOWNLOADS TEXT": "Stažené",
+    "INTEGRATION REQUIREMENTS TEXT": "Požadavky",
+    "INTEGRATION HOW IT WORKS TEXT": "Jak to funguje",
+    "INTEGRATION HOW TO SETUP TEXT": "Jak nastavit?",
+    "INTEGRATION TAGS TEXT": "Značky",
+    "INTEGRATION CONTACT TEXT": "Kontakty",
+    "INTEGRATION GET IN TOUCH TEXT": "Buďte v kontaktu",
+    "INTEGRATION GET IN TOUCH WITH TEXT": "Get in touch with",
+    "INTEGRATION DEVELOPER TEXT": "Vývojář",
+    "INTEGRATION TERMS OF USE TEXT": "Smluvní podmínky",
+    "INTEGRATION SUPPORT TEXT": "Podpora",
+    "INTEGRATION SUPPORT URL TEXT": "URL podpory",
+    "INTEGRATION SUPPORT EMAIL TEXT": "Email podpory"
 }

@@ -21,6 +21,7 @@
     "NEW PERMISSIONS SAVED": "新しい権限が保存されました",
     "PERMISSIONS WERE REMOVED FROM": "%email% から権限が削除されました",
     "SYSYEM DELETED FROM ACCOUNT": "システム {{system_name}} はあなたのアカウントから正常に削除されました",
+    "CANNOT SHARE SYSTEM": "Cannot share System: ",
     "CHANGING OWN PERMISSIONS IS NOT ALLOWED": "自分の権限を変更することはできません",
     "RESET SUCCESS MESSAGE TEXT": "パスワードを更新しました",
     "YOUR ACCOUNT IS SUCCESSFULLY SAVED": "あなたのアカウントは正常に保存されました",
@@ -156,5 +157,19 @@
     "ENTER PASSWORD TO CONTINUE TEXT": "アカウントのパスワードを入力して続行してください",
     "INCOMPATIBLE": "互換性なし",
     "CONNECTION TO SYSTEM LOST": "%SYSTEM NAME%への接続が失われました",
-    "SYSTEM IS OFFLINE TEXT": "System is offline. Some settings may not be available."
+    "SYSTEM IS OFFLINE TEXT": "System is offline. Some settings may not be available.",
+    "ALL INTEGRATIONS TEXT": "すべての統合",
+    "INTEGRATION DOWNLOADS TEXT": "ダウンロード",
+    "INTEGRATION REQUIREMENTS TEXT": "条件",
+    "INTEGRATION HOW IT WORKS TEXT": "使い方",
+    "INTEGRATION HOW TO SETUP TEXT": "設定方法",
+    "INTEGRATION TAGS TEXT": "タグ",
+    "INTEGRATION CONTACT TEXT": "お問い合わせ",
+    "INTEGRATION GET IN TOUCH TEXT": "連絡する",
+    "INTEGRATION GET IN TOUCH WITH TEXT": "Get in touch with",
+    "INTEGRATION DEVELOPER TEXT": "開発者",
+    "INTEGRATION TERMS OF USE TEXT": "利用規約",
+    "INTEGRATION SUPPORT TEXT": "サポート",
+    "INTEGRATION SUPPORT URL TEXT": "サポートURL",
+    "INTEGRATION SUPPORT EMAIL TEXT": "サポート Eメール"
 }

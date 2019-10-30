@@ -317,7 +317,7 @@
 		"mySystemSearch": "IMeMyMine",
 		"unavailable": "Systeem is onbereikbaar",
 		"offline": "Systeem is offline",
-		"offlineAlertRibbon": "System is offline. Some settings may not be available.",
+		"offlineAlertRibbon": "Systeem is offline. Sommige instellingen zijn mogelijk niet beschikbaar.",
 		"openClient": "Open in %VMS_NAME%",
 		"openClientNoSystem": "Open %VMS_NAME%",
 		"confirmMergeAction": "Samenvoegen",
@@ -340,7 +340,7 @@
 		"mergeSuccess": "Systeem samenvoegen voltooid",
 		"permissionsRemoved": "Toestemmingen zijn verwijderd voor {{email}}",
 		"unknownName": "Onbekende naam voor systeem (veroorzaakt door samenvoeging in de cloud)",
-		"shareOffline": "Cannot share system while it is offline"
+		"shareOffline": "Kan systeem niet delen terwijl het offline is"
 	},
 	"systemStatuses": {
 		"activated": "geactiveerd",

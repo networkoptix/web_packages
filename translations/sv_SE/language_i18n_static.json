@@ -317,7 +317,7 @@
 		"mySystemSearch": "JagMigMinMin",
 		"unavailable": "Systemet är oåtkomligt",
 		"offline": "Systemet är offline",
-		"offlineAlertRibbon": "System is offline. Some settings may not be available.",
+		"offlineAlertRibbon": "Systemet är offline. Vissa inställningar kanske inte är tillgängliga.",
 		"openClient": "Öppet i %VMS_NAME%",
 		"openClientNoSystem": "Öppna %VMS_NAME%",
 		"confirmMergeAction": "Sammanfoga",
@@ -340,7 +340,7 @@
 		"mergeSuccess": "Systemsammanslagning slutförd",
 		"permissionsRemoved": "Rättigheterna togs bort från {{email}}",
 		"unknownName": "Okänt namn för system (orsakad av molnsammanslagning)",
-		"shareOffline": "Cannot share system while it is offline"
+		"shareOffline": "Kan inte dela systemet medan det är offline"
 	},
 	"systemStatuses": {
 		"activated": "aktiverad",

@@ -285,7 +285,7 @@
             "commonText": "システム <strong>{{primarySystem}}</strong> および <strong>{{secondarySystem}}</strong>を統合できませんでした。",
             "connectToCloud": "これと統合したいシステムを <strong>{{cloudName}}</strong> に接続するか、 <strong>{{vmsName}}</strong> クライアントを使用してローカルに統合します。",
             "mergeConfirmation": "<strong>{{primarySystem}}</strong> と <strong>{{secondarySystem}}</strong>を統合しようとしています。設定と名前は <strong>{{primarySystem}}</strong>から取得されます。",
-            "mergeFailedTitle": "システムの統合に失敗しました",
+            "mergeFailedTitle": "システム統合が失敗しました",
             "primaryCannotMerge": "システム{{targetSystem}} には、現在のシステムと互換性のない新しいソフトウェアバージョンがあります。現在のシステムを<a href=\"/download\" target=\"_blank\" translate>最新のビルド</a>に更新し、{{targetSystem}} システムと統合します。",
             "primarySystemOffline": "システム {{primarySystem}} はオフラインのため、システム{{targetSystem}} と統合することはできません。",
             "secondaryCannotMerge": "システム {{targetSystem}} には、現在のシステムと互換性のない古いソフトウェアバージョンがあります。{{targetSystem}} を <a href=\"/download\" target=\"_blank\" translate>最新のビルド</a> に更新して、現在のものと統合します。",

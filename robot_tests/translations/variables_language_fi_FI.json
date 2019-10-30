@@ -21,6 +21,7 @@
     "NEW PERMISSIONS SAVED": "Uudet käyttöoikeudet tallennettu",
     "PERMISSIONS WERE REMOVED FROM": "Käyttöoikeudet poistettiin %email%",
     "SYSYEM DELETED FROM ACCOUNT": "Järjestelmä {{system_name}} poistetaan onnistuneesti tililtäsi",
+    "CANNOT SHARE SYSTEM": "Cannot share System: ",
     "CHANGING OWN PERMISSIONS IS NOT ALLOWED": "Oman käyttöoikeuden muuttaminen ei ole sallittua",
     "RESET SUCCESS MESSAGE TEXT": "Salasana tallennettu onnistuneesti",
     "YOUR ACCOUNT IS SUCCESSFULLY SAVED": "Tilisi on onnistuneesti päivitetty",
@@ -156,5 +157,19 @@
     "ENTER PASSWORD TO CONTINUE TEXT": "Syötä tilisi salasana jatkaaksesi",
     "INCOMPATIBLE": "yhteensopimaton",
     "CONNECTION TO SYSTEM LOST": "Yhteys %SYSTEM NAME% katkesi",
-    "SYSTEM IS OFFLINE TEXT": "System is offline. Some settings may not be available."
+    "SYSTEM IS OFFLINE TEXT": "System is offline. Some settings may not be available.",
+    "ALL INTEGRATIONS TEXT": "Kaikki integraatiot",
+    "INTEGRATION DOWNLOADS TEXT": "Lataukset",
+    "INTEGRATION REQUIREMENTS TEXT": "Vaatimukset",
+    "INTEGRATION HOW IT WORKS TEXT": "Kuinka se toimii",
+    "INTEGRATION HOW TO SETUP TEXT": "Kuinka asennetaan?",
+    "INTEGRATION TAGS TEXT": "Tunnisteet",
+    "INTEGRATION CONTACT TEXT": "Yhteyshenkilö",
+    "INTEGRATION GET IN TOUCH TEXT": "Ota yhteyttä",
+    "INTEGRATION GET IN TOUCH WITH TEXT": "Get in touch with",
+    "INTEGRATION DEVELOPER TEXT": "Kehittäjä",
+    "INTEGRATION TERMS OF USE TEXT": "Käyttöehdot",
+    "INTEGRATION SUPPORT TEXT": "Tuki",
+    "INTEGRATION SUPPORT URL TEXT": "Tueni-URL-osoite",
+    "INTEGRATION SUPPORT EMAIL TEXT": "Tuen sähköposti"
 }

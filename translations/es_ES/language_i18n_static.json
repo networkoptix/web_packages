@@ -317,7 +317,7 @@
 		"mySystemSearch": "IMeMyMine",
 		"unavailable": "El sistema es inalcanzable",
 		"offline": "Sistema está desconectado",
-		"offlineAlertRibbon": "System is offline. Some settings may not be available.",
+		"offlineAlertRibbon": "El sistema está desconectado. Algunas configuraciones pueden no estar disponibles.",
 		"openClient": "Abierto en %VMS_NAME%",
 		"openClientNoSystem": "Abrir %VMS_NAME%",
 		"confirmMergeAction": "Combinar",
@@ -340,7 +340,7 @@
 		"mergeSuccess": "Fusión del sistema completada",
 		"permissionsRemoved": "Los permisos fueron removidos de {{email}}",
 		"unknownName": "Nombre desconocido para el sistema (causado por la fusión en la nube)",
-		"shareOffline": "Cannot share system while it is offline"
+		"shareOffline": "No se puede compartir el sistema mientras está desconectado"
 	},
 	"systemStatuses": {
 		"activated": "activado",

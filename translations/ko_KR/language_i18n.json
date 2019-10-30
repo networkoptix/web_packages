@@ -285,7 +285,7 @@
             "commonText": "시스템 <strong>{{primarySystem}}</strong> 및 <strong>{{secondarySystem}}</strong>를 머지 하는데 실패 했습니다.",
             "connectToCloud": "이 시스템과 머지하려는 시스템을 <strong>{{cloudName}}</strong> 에 연결하거나 <strong>{{vmsName}}</strong> 클라이언트를 사용하여 로컬로 머지하십시오.",
             "mergeConfirmation": "시스템 <strong>{{primarySystem}}</strong> 과 <strong>{{secondarySystem}}</strong>를 머지하려고합니다. 설정과 이름은 <strong>{{primarySystem}}</strong>에서 가져옵니다.",
-            "mergeFailedTitle": "시스템 머지 실패",
+            "mergeFailedTitle": "시스템 머지에 실패했습니다.",
             "primaryCannotMerge": "시스템 {{targetSystem}} 은 현재 시스템과 호환 되지 않는 최근 소프트웨어 버전이 있습니다. 현재 시스템을 {{targetSystem}} 시스템으로 머지하려면 <a href=\"/download\" target=\"_blank\" translate>최신 빌드</a> 로 업데이트 하십시요.",
             "primarySystemOffline": "{{primarySystem}} 시스템이 오프라인 상태이며 {{targetSystem}} 시스템과 병합 할 수 없습니다.",
             "secondaryCannotMerge": "시스템 {{targetSystem}} 에 현재 시스템과 호환되지 않는 이전 소프트웨어 버전이 있습니다. 병합하기 위해 {{targetSystem}} 를 받는 사람 <a href=\"/download\" target=\"_blank\" translate>최신 빌드</a> 로 업데이트 하십시요.",

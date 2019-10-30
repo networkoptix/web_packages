@@ -21,6 +21,7 @@
     "NEW PERMISSIONS SAVED": "Новые полномочия сохранены",
     "PERMISSIONS WERE REMOVED FROM": "%email% был лишен полномочий",
     "SYSYEM DELETED FROM ACCOUNT": "Система {{system_name}} успешно удалена из вашей учетной записи",
+    "CANNOT SHARE SYSTEM": "Cannot share System: ",
     "CHANGING OWN PERMISSIONS IS NOT ALLOWED": "Не допускается изменение собственных полномочий",
     "RESET SUCCESS MESSAGE TEXT": "Пароль успешно сохранен",
     "YOUR ACCOUNT IS SUCCESSFULLY SAVED": "Ваша учетная запись успешно сохранена",
@@ -156,5 +157,19 @@
     "ENTER PASSWORD TO CONTINUE TEXT": "Введите пароль для своей учетной записи, чтобы продолжить",
     "INCOMPATIBLE": "несовместима",
     "CONNECTION TO SYSTEM LOST": "Подключение к %SYSTEM NAME% потеряно",
-    "SYSTEM IS OFFLINE TEXT": "System is offline. Some settings may not be available."
+    "SYSTEM IS OFFLINE TEXT": "System is offline. Some settings may not be available.",
+    "ALL INTEGRATIONS TEXT": "Все интеграции",
+    "INTEGRATION DOWNLOADS TEXT": "Загрузки",
+    "INTEGRATION REQUIREMENTS TEXT": "Требования",
+    "INTEGRATION HOW IT WORKS TEXT": "Принцип работы",
+    "INTEGRATION HOW TO SETUP TEXT": "Как установить?",
+    "INTEGRATION TAGS TEXT": "Теги",
+    "INTEGRATION CONTACT TEXT": "Связь",
+    "INTEGRATION GET IN TOUCH TEXT": "Связаться с нами",
+    "INTEGRATION GET IN TOUCH WITH TEXT": "Get in touch with",
+    "INTEGRATION DEVELOPER TEXT": "Разработчик",
+    "INTEGRATION TERMS OF USE TEXT": "Условия использования",
+    "INTEGRATION SUPPORT TEXT": "Техническая поддержка",
+    "INTEGRATION SUPPORT URL TEXT": "Страница поддержки",
+    "INTEGRATION SUPPORT EMAIL TEXT": "Электронная почта поддержки"
 }
