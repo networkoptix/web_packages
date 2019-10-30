@@ -74,11 +74,11 @@ export class NxSystemAlertsComponent implements OnInit {
                             const alert: any = {_: {}};
                             let server = this.values[metric][entity].info.server.text;
                             if (!server && metric === 'servers') {
-                                server = entity;
+                                server = this.values.servers[entity]._.name.text;
                             }
 
                             if (server) {
-                                alert._.server = {text: this.values.servers[server]._.name.text};
+                                alert._.server = {text: server};
                             }
                             alert._.type = {text: this.manifest[metric].resource};
                             alert._.text = {text: alarm.text};
