@@ -6,9 +6,14 @@ img {
     max-width: 100%;
 }
 
+.camera-preview-offline {
+    top: 0 !important;
+}
+
 .hm-camera-preview {
     display: flex;
-    height: 168px;
+    flex-wrap: wrap;
+    min-height: 168px;
     padding: 8px 16px 16px 16px;
     border-bottom: 1px solid $light6;
 }
@@ -18,10 +23,6 @@ img {
     font-size: 16px;
     opacity: 0.6;
     text-align: center;
-}
-
-.mini-preview-offline {
-    top: 0 !important;
 }
 
 .preview-header {

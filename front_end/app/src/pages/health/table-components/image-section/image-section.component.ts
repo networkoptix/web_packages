@@ -2,16 +2,19 @@ import { Component, Input, OnInit, SimpleChange } from '@angular/core';
 import { NxHealthService } from '../../health.service';
 
 @Component({
-    selector   : 'nx-thumbnail',
-    templateUrl: './thumbnail.component.html',
-    styleUrls: ['./thumbnail.component.scss']
+    selector   : 'nx-image-section',
+    templateUrl: './image-section.component.html',
+    styleUrls: ['./image-section.component.scss']
 })
-export default class NxThumbnailComponent implements OnInit {
+export class NxImageSectionComponent implements OnInit {
     @Input() cameraId: string;
     @Input() cameraState: string;
+    liveLoaded: boolean;
     livePreview: string;
+    midnightLoaded: boolean;
     midnightPreview: string;
     midnightTime: any;
+    noonLoaded: boolean;
     noonPreview: string;
     noonTime: any;
 
@@ -21,9 +24,12 @@ export default class NxThumbnailComponent implements OnInit {
     }
 
     ngOnChanges(changes: SimpleChange) {
+        this.liveLoaded = false;
         this.livePreview = '';
+        this.midnightLoaded = false;
         this.midnightPreview = '';
         this.midnightTime = '';
+        this.noonLoaded = false;
         this.noonPreview = '';
         this.noonTime = '';
         this.updateThumbnails();
@@ -32,12 +38,15 @@ export default class NxThumbnailComponent implements OnInit {
     thumbnailError(preview) {
         switch (preview) {
             case 'midnight':
+                this.midnightLoaded = true;
                 this.midnightPreview = '';
                 break;
             case 'noon':
+                this.noonLoaded = true;
                 this.noonPreview = '';
                 break;
             case 'now':
+                this.liveLoaded = true;
                 this.livePreview = '';
                 break;
         }
@@ -45,24 +54,19 @@ export default class NxThumbnailComponent implements OnInit {
 
     updateThumbnails() {
         if (typeof this.cameraId === 'undefined') {
-            this.livePreview = '';
             return;
         }
 
-        const now = new Date();
-        const midnight = new Date().setHours(0, 0, 0, 0);
-        const checkNoon = new Date().setHours(12, 0, 0, 0);
-        let noon = checkNoon;
-        // If noon has not happened for today yet take noon from yesterday.
-        if (now.getTime() < checkNoon) {
-            noon = new Date(now.getDate() - 1).setHours(12, 0, 0, 0);
+        if (this.cameraState !== 'Online') {
+            this.liveLoaded = true;
         }
 
-        this.midnightTime = midnight;
-        this.noonTime = noon;
+        const now = new Date();
+        this.midnightTime = now.getTime();
+        this.noonTime = now.getTime();
 
         this.livePreview = this.healthService.system.mediaserver.previewUrl(this.cameraId);
-        this.midnightPreview = this.healthService.system.mediaserver.previewUrl(this.cameraId, midnight) + '&method=precise';
-        this.noonPreview = this.healthService.system.mediaserver.previewUrl(this.cameraId, noon) + '&method=precise';
+        this.midnightPreview = this.healthService.system.mediaserver.previewUrl(this.cameraId, this.midnightTime);
+        this.noonPreview = this.healthService.system.mediaserver.previewUrl(this.cameraId, this.noonTime);
     }
 }
