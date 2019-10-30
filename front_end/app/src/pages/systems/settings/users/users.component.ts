@@ -131,6 +131,8 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         }, {}).then(() => {
             setTimeout(() => {
                 this.applyService.hardReset();
+                this.setUser();
+                this.applyService.reset();
             });
         });
     }
