@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 59.1 (86144) - https://sketch.com -->
-    <title>Actions/Color/Alert</title>
-    <desc>Created with Sketch.</desc>
-    <g id="Actions/Color/Alert" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Group" transform="translate(2.000000, 2.000000)" fill="#F02C2C" fill-rule="nonzero">
-            <path d="M8.76542109,0.197891967 L8.90387068,0.284643156 C9.0814766,0.409458953 9.23022976,0.57001074 9.33958593,0.756048272 L15.7964323,11.7404838 C16.2192356,12.45976 15.9621732,13.376042 15.2222674,13.787057 C14.9891204,13.9165693 14.7252417,13.9846922 14.4567143,13.9846922 L1.54302163,13.9846922 C0.690834315,13.9846922 -1.24344979e-14,13.3131194 -1.24344979e-14,12.4846922 C-1.24344979e-14,12.2236518 0.070076817,11.9671304 0.203303682,11.7404838 L6.66015003,0.756048272 C7.05808256,0.0790824655 7.91642413,-0.182099409 8.63289283,0.13218159 L8.76542109,0.197891967 Z" id="Triangle"></path>
-        </g>
-        <rect id="Rectangle" stroke="#FFFFFF" fill="#D8D8D8" x="9.5" y="12.5" width="1" height="1"></rect>
-        <polygon id="Line" fill="#FFFFFF" fill-rule="nonzero" points="11 6 9 6 9 11 11 11"></polygon>
-    </g>
+<svg version="1.1" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+<title>Actions/Color/Alert</title>
+<desc>Created with Sketch.</desc>
+<g fill="none" fill-rule="evenodd">
+<g transform="translate(2 3)">
+<g fill="#F02C2C" fill-rule="nonzero">
+<path d="m8.7654 0.19789 0.13845 0.086751c0.17761 0.12482 0.32636 0.28537 0.43572 0.47141l6.4568 10.984c0.4228 0.71928 0.16574 1.6356-0.57416 2.0466-0.23315 0.12951-0.49703 0.19764-0.76555 0.19764h-12.914c-0.85219 0-1.543-0.67157-1.543-1.5 0-0.26104 0.070077-0.51756 0.2033-0.74421l6.4568-10.984c0.39793-0.67697 1.2563-0.93815 1.9727-0.62387l0.13253 0.06571z"/>
+</g>
+<rect x="7.2" y="10.4" width="1.6" height="1.6" fill="#fff"/>
+<polygon points="8.8 4 7.2 4 7.2 9 8.8 9" fill="#fff" fill-rule="nonzero"/>
+</g>
+</g>
 </svg>

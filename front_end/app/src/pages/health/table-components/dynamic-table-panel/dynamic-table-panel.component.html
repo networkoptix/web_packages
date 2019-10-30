@@ -29,9 +29,10 @@
                         <span [ngClass]="activeEntity[paramGroup.id][param.id].class"
                               [innerText]="[undefined, ''].indexOf(activeEntity[paramGroup.id][param.id].text) === -1
                               ? activeEntity[paramGroup.id][param.id].text : '–'"></span>
-                        <img *ngIf="activeEntity[paramGroup.id][param.id].icon"
-                             [src]="'/static/icons/' + activeEntity[paramGroup.id][param.id].icon + '.svg'"
-                             class="pl-1">
+                        <svg-icon *ngIf="activeEntity[paramGroup.id][param.id].icon"
+                                  [src]="CONFIG.icons.dir + activeEntity[paramGroup.id][param.id].icon + '.svg'"
+                                  [svgStyle]="{'width.px': '20'}"
+                                  class="pl-1"></svg-icon>
                     </div>
                     <ng-template #noValue>
                         <div class="col-5 d-flex align-items-end">–</div>

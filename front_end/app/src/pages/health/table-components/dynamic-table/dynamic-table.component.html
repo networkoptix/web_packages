@@ -38,12 +38,14 @@
                     <ng-container *ngFor="let headerGroup of headers.values; first as firstGroup">
                         <ng-container *ngFor="let header of headerGroup.values; first as firstHeader">
                             <td *ngIf="firstGroup && item[headerGroup.id] && item[headerGroup.id][header.id].icon; else showValue">
-                                <img *ngIf="firstHeader"
-                                      [src]="'/static/icons/' + item[headerGroup.id][header.id].icon + '.svg'">
+                                <svg-icon *ngIf="firstHeader"
+                                          [svgStyle]="{'width.px': '20'}"
+                                          [src]="CONFIG.icons.dir + item[headerGroup.id][header.id].icon + '.svg'"></svg-icon>
                             </td>
                             <ng-template #showValue>
                                 <td [title]="item && item[headerGroup.id] && item[headerGroup.id][header.id] && item[headerGroup.id][header.id].tooltip || ''">
-                                    <span [innerText]="item && item[headerGroup.id] && item[headerGroup.id][header.id] && item[headerGroup.id][header.id].text || '-'">
+                                    <span [innerText]="item && item[headerGroup.id] && item[headerGroup.id][header.id] && item[headerGroup.id][header.id].text || '-'"
+                                          [ngClass]="item && item[headerGroup.id] && item[headerGroup.id][header.id] && item[headerGroup.id][header.id].class || ''">
                                     </span>
                                 </td>
                             </ng-template>

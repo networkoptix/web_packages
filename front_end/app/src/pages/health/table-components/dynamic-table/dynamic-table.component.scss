@@ -183,6 +183,15 @@
               color : $light1 !important;
             }
 
+            svg {
+              path {
+                fill : $light1 !important;
+              }
+              rect, polygon {
+                fill : $light16 !important;
+              }
+            }
+
             .icon-negative {
               color : $light1;
             }
@@ -315,3 +324,6 @@
   }
 }
 
+.test * {
+  fill: limegreen;
+}

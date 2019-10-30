@@ -17,7 +17,8 @@ import { NxSystemMetricsComponent } from './metrics/metrics.component';
 import { NxDynamicTableComponent } from './table-components/dynamic-table/dynamic-table.component';
 import { NxDynamicTablePanelComponent } from './table-components/dynamic-table-panel/dynamic-table-panel.component';
 import { NxSingleEntityComponent } from './table-components/single-entity/single-entity.component';
-import NxThumbnailComponent from "./table-components/thumbnail/thumbnail.component";
+import NxThumbnailComponent from './table-components/thumbnail/thumbnail.component';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 
 
 const appRoutes: Routes = [
@@ -39,7 +40,7 @@ const appRoutes: Routes = [
 ];
 
 @NgModule({
-    imports        : [
+    imports: [
         CommonModule,
         BrowserModule,
         UpgradeModule,
@@ -47,6 +48,7 @@ const appRoutes: Routes = [
         NgbModule,
         TranslateModule,
         ComponentsModule,
+        AngularSvgIconModule,
 
         RouterModule.forChild(appRoutes)
     ],

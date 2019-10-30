@@ -46,7 +46,8 @@ export class NxHealthComponent implements OnInit {
                 {
                     id: 'alerts',
                     label: 'Alerts',
-                    path: 'alerts'
+                    path: 'alerts',
+                    svg: 'alerts'
                 }
             ]
         };

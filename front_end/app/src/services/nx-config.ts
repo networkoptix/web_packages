@@ -199,7 +199,8 @@ export class NxConfigService {
                     { name: 'arm', src: '/static/icons/integration_tile_os_arm.svg' },
                     { name: 'linux', src: '/static/icons/integration_tile_os_linux.svg' },
                     { name: 'windows', src: '/static/icons/integration_tile_os_windows.svg' }
-                ]
+                ],
+                dir: '/static/icons/',
             },
             webclient                     : {
                 useServerTime              : true,
