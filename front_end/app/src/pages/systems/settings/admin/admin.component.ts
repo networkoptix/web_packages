@@ -57,7 +57,7 @@ export class NxSystemAdminComponent implements OnInit {
         this.settings = {
             disconnectDisabled: merging,
             mergeDisabled: (merging || available) && !(this.debugMode || this.betaMode),
-            renameDisabled: merging && this.system.mergeInfo.role !== 'master',
+            renameDisabled: merging && this.system.mergeInfo && this.system.mergeInfo.role !== 'master',
             showMerge: this.system.isMine && this.systemsService.systems.length > 1
         };
     }
