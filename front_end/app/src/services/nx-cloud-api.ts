@@ -181,7 +181,7 @@ export class NxCloudApiService {
             first_name  : account.first_name,
             last_name   : account.last_name,
             is_staff    : account.is_staff,
-            is_superuser: true,
+            is_superuser: account.is_superuser || false,
             language    : account.language,
             permissions : account.permissions
         };

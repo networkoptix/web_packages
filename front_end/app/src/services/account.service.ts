@@ -121,7 +121,7 @@ export class NxAccountService {
         });
     }
 
-    get() {
+    get(forceUpdate = false) {
         if (this.requestingLogin) {
             // login is requesting, so we wait
             return this.requestingLogin
@@ -131,7 +131,7 @@ export class NxAccountService {
                        });
         }
 
-        if (this.account) {
+        if (this.account && !forceUpdate) {
             return new Promise(resolve => {
                 return resolve(this.account);
             });

@@ -64,28 +64,28 @@ export class NxAccountSettingsComponent implements OnInit, AfterViewInit {
         this.pageService.setPageTitle(this.LANG.pageTitles.account);
 
         this.save = this.processService.createProcess(() => {
-            return this.cloudApiService.accountPost(this.account);
+            return this.cloudApiService.accountPost(this.account).then(() => {
+                if (this.langCode !== this.account.language) {
+                    return this.cloudApiService
+                        .changeLanguage(this.langCode)
+                        .then(() => {
+                            this.localStorage.set('langChanged', true);
+                            setTimeout(() => window.location.reload()); // reload window to catch new language
+                            return;
+                        });
+                }
+                return this.systemsService.forceUpdateSystemsAsPromise();
+            }).finally(() => {
+                this.accountService.get(true);
+            });
         }, {
             successMessage: this.LANG.account.accountSavedSuccess,
             errorPrefix: this.LANG.errorCodes.cantChangeAccountPrefix,
             logoutForbidden: true
         }).then((result) => {
-            if (this.langCode !== this.account.language) {
-                this.cloudApiService
-                    .changeLanguage(this.langCode)
-                    .then(() => {
-                        this.localStorage.set('langChanged', true);
-                        window.location.reload(); // reload window to catch new language
-                    });
-            } else {
-                this.systemsService.forceUpdateSystems();
-            }
-
-
             this.applyService.hardReset();
             this.setOriginal();
             this.applyService.reset();
-
             return result;
         });
 
