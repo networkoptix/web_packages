@@ -104,6 +104,7 @@ export class NxSystem extends System implements OnDestroy {
     activeSubscription: any;
     currentUserEmail: string;
     currentUser: NxSystemUser;
+    lostConnection: boolean;
     mediaserver: any;
 
     infoPromise: any;
@@ -120,6 +121,7 @@ export class NxSystem extends System implements OnDestroy {
         this.systemApiService = systemApiService;
         this.pollService = pollService;
         this.systemsService = systemsService;
+        this.lostConnection = false;
         this.init();
         this.initSystem(systemId, currentUserEmail);
     }
@@ -235,7 +237,7 @@ export class NxSystem extends System implements OnDestroy {
                 this.mergeInfo = response.mergeInfo;
 
                 this.checkPermissions();
-                return this;
+                return Promise.resolve(this);
             });
     }
 
@@ -492,6 +494,8 @@ export class NxSystem extends System implements OnDestroy {
                     return from(this.getUsers(true));
                 }
                 return of(true);
+            }).catch(() => {
+                this.lostConnection = true;
             });
         }));
     }

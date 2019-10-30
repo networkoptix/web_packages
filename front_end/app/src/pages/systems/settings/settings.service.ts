@@ -15,7 +15,6 @@ export class NxSettingsService implements OnDestroy {
     footerSubject = new BehaviorSubject(false);
     systemSubject = new BehaviorSubject(undefined);
     selectedSectionSubject = new BehaviorSubject([]);
-    plugin: any = {};
 
     share: boolean;
 

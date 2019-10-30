@@ -1,5 +1,5 @@
 import {
-    Component, OnDestroy, OnInit
+    Component, OnInit
 }                                    from '@angular/core';
 import { Location }                  from '@angular/common';
 import { ActivatedRoute }            from '@angular/router';
@@ -71,11 +71,14 @@ export class NxSystemAdminComponent implements OnInit {
             .subscribe((system) => {
                 this.system = system;
                 if (system) {
-                    this.settingsService.footerSubject.next(true);
-                    this.userRole = system.accessRole;
-                    if (system.accessRole in this.LANG.accessRoles) {
-                        this.userRole = this.LANG.accessRoles[system.accessRole].label;
-                    }
+                    this.system.systemSubject.subscribe(() => {
+                        this.currentlyMerging = typeof(this.system.mergeInfo) !== 'undefined';
+                        this.settingsService.footerSubject.next(true);
+                        this.userRole = system.accessRole;
+                        if (system.accessRole in this.LANG.accessRoles) {
+                            this.userRole = this.LANG.accessRoles[system.accessRole].label;
+                        }
+                    });
                     this.deletingSystem = this.processService.createProcess(() => {
                         return this.system.deleteFromCurrentAccount();
                     }, {
@@ -121,7 +124,7 @@ export class NxSystemAdminComponent implements OnInit {
             this.dialogs.confirm(this.LANG.system.confirmUnshareFromMe, this.LANG.system.confirmUnshareFromMeTitle, this.LANG.system.confirmUnshareFromMeAction, 'btn-danger', 'Cancel')
                 .then((result) => {
                     if (result === true) {
-                        this.deletingSystem.run();
+                        return this.deletingSystem.run();
                     }
                 });
         }
@@ -142,7 +145,6 @@ export class NxSystemAdminComponent implements OnInit {
 
     mergeSystems() {
         this.systems = this.systemsService.getMySystems(this.accountService.getEmail(), this.system.id);
-
         this.currentlyMerging = true;
         this.settingsService.system = this.system;
 
@@ -151,6 +153,8 @@ export class NxSystemAdminComponent implements OnInit {
                    .then((mergeInfo) => {
                        if (mergeInfo) {
                            this.system.mergeInfo = mergeInfo;
+                           const systemId = mergeInfo.role === 'master' ? this.system.id : mergeInfo.anotherSystemId;
+                           this.systemsService.addToMergeList(systemId);
                        }
                    }, (error) => {
                        if (!error.primarySystemName && !error.secondarySystemName) {
@@ -176,9 +180,7 @@ export class NxSystemAdminComponent implements OnInit {
                                this.LANG.dialogs.okButton,
                                'btn-primary',
                                undefined).then(() => {});
-                   })
-                   .finally(() => {
-                       this.currentlyMerging = false;
+                   }).finally(() => {
                        this.settingsService.system = this.system;
                    });
     }

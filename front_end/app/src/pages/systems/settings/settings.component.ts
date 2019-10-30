@@ -1,6 +1,5 @@
-import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
-import { Location }                                    from '@angular/common';
-import { ActivatedRoute }                              from '@angular/router';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NxConfigService }                             from '../../../services/nx-config';
 import { NxLanguageProviderService }                   from '../../../services/nx-language-provider';
 import { Meta }                                        from '@angular/platform-browser';
@@ -33,13 +32,11 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     LANG: any = {};
     plugin: any;
     content: any = {};
-    location: any;
 
     account: any;
     system: any;
     gettingSystem: any;
     systems: any;
-    unsharing: any;
     deletingSystem: any;
 
     menuVisible: boolean;
@@ -81,12 +78,11 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 private settingsService: NxSettingsService,
                 private processService: NxProcessService,
                 private menuService: NxMenuService,
-                location: Location,
                 private ribbonService: NxRibbonService,
+                private router: Router,
                 private toastService: NxToastService,
                 private meta: Meta
     ) {
-        this.location = location;
         this.setupDefaults();
     }
 
@@ -227,6 +223,10 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             .get()
             .then((account) => {
                 if (account) {
+                    // Starts the systems poll if starting on a system.
+                    if (!this.systemsService.systemsPoll.destination.observers.length) {
+                        this.systemsService.getSystems(account.email);
+                    }
                     this.account = account;
                     this.system = this.systemService.createSystem(this.systemId, this.account.email);
                     this.gettingSystem.run();
@@ -247,6 +247,9 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                             this.updateAlert();
                             this.updateMenu();
                             this.checkShare();
+                            if (this.system.lostConnection) {
+                                return this.connectionLost();
+                            }
                             this.menuVisible = true;
                         }
                     });
@@ -345,19 +348,17 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     cleanUrl() {
-        this.location.path('/systems/' + this.systemId, false);
+        return this.router.navigate(['/systems', this.systemId]);
     }
 
     connectionLost() {
         this.dialogs.notify(this.LANG.errorCodes.lostConnection.replace('{{systemName}}',
             this.system.info.name || this.LANG.errorCodes.thisSystem), 'warning');
-        this.location.path('/systems');
+        setTimeout(() => this.router.navigate(['/systems']), this.CONFIG.alertTimeout);
     }
 
     normalizePermissionString(permissions) {
         return permissions.split('|').sort().join('|');
     }
-
-
 }
 

@@ -160,6 +160,7 @@ export class NxHeaderComponent implements OnInit {
                 .then(account => {
                     if (account) {
                         this.dropdownsVisible = true;
+                        this.systemsService.getSystem(account.email);
                     }
                 });
 
