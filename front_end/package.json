@@ -26,6 +26,7 @@
         "angular-resource": "1.5.8",
         "angular-route": "1.5.8",
         "angular-sanitize": "1.5.8",
+        "angular-svg-icon": "^8.0.0",
         "angular2-csv": "^0.2.9",
         "bootstrap": "4.3.1",
         "core-js": "2.6.9",
