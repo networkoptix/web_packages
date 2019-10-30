@@ -14,6 +14,14 @@ import { NxAccountService }          from '../../../../services/account.service'
 import { NxProcessService }          from '../../../../services/process.service';
 import { NxSystem }                  from '../../../../services/system.service';
 
+interface Settings {
+    disconnectDisabled: boolean;
+    mergeDisabled: boolean;
+    renameDisabled: boolean;
+    showMerge: boolean;
+}
+
+
 @Component({
     selector   : 'nx-system-admin-component',
     templateUrl: 'admin.component.html',
@@ -33,6 +41,7 @@ export class NxSystemAdminComponent implements OnInit {
     currentlyMerging: boolean;
     debugMode: boolean;
     betaMode: boolean;
+    settings: Settings;
 
     private setupDefaults() {
         this.CONFIG = this.configService.getConfig();
@@ -40,6 +49,17 @@ export class NxSystemAdminComponent implements OnInit {
         this.debugMode = this.CONFIG.allowDebugMode;
         this.betaMode = this.CONFIG.allowBetaMode;
         this.menuService.setSection('admin');
+    }
+
+    private updateSettings(forceMergeState?: boolean) {
+        const merging = typeof(this.system.mergeInfo) !== 'undefined' || forceMergeState;
+        const available = !this.system.isOnline || !this.system.isAvailable;
+        this.settings = {
+            disconnectDisabled: merging,
+            mergeDisabled: (merging || available) && !(this.debugMode || this.betaMode),
+            renameDisabled: merging && this.system.mergeInfo.role !== 'master',
+            showMerge: this.system.isMine && this.systemsService.systems.length > 1
+        };
     }
 
     constructor(private accountService: NxAccountService,
@@ -62,6 +82,13 @@ export class NxSystemAdminComponent implements OnInit {
     ngOnInit(): void {
         this.LANG = this.language.getTranslations();
         this.pageService.setPageTitle(this.LANG.pageTitles.systems);
+        this.currentlyMerging = false;
+        this.settings = {
+            disconnectDisabled: false,
+            mergeDisabled: false,
+            renameDisabled: false,
+            showMerge: true
+        };
         this.init();
     }
 
@@ -72,12 +99,12 @@ export class NxSystemAdminComponent implements OnInit {
                 this.system = system;
                 if (system) {
                     this.system.systemSubject.subscribe(() => {
-                        this.currentlyMerging = typeof(this.system.mergeInfo) !== 'undefined';
                         this.settingsService.footerSubject.next(true);
                         this.userRole = system.accessRole;
                         if (system.accessRole in this.LANG.accessRoles) {
                             this.userRole = this.LANG.accessRoles[system.accessRole].label;
                         }
+                        this.updateSettings(this.currentlyMerging);
                     });
                     this.deletingSystem = this.processService.createProcess(() => {
                         return this.system.deleteFromCurrentAccount();
@@ -146,6 +173,7 @@ export class NxSystemAdminComponent implements OnInit {
     mergeSystems() {
         this.systems = this.systemsService.getMySystems(this.accountService.getEmail(), this.system.id);
         this.currentlyMerging = true;
+        this.updateSettings(this.currentlyMerging);
         this.settingsService.system = this.system;
 
         return this.dialogs
@@ -181,6 +209,8 @@ export class NxSystemAdminComponent implements OnInit {
                                'btn-primary',
                                undefined).then(() => {});
                    }).finally(() => {
+                       this.currentlyMerging = false;
+                       this.updateSettings(this.currentlyMerging);
                        this.settingsService.system = this.system;
                    });
     }
