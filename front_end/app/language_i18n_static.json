@@ -224,7 +224,12 @@
 			"primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}.",
 			"secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
 			"systemOffline": "System {{targetSystem}} is offline and cannot be merged with the current one.",
-			"systemUnavailable": "System {{targetSystem}} is currently unreachable. Try again in a few minutes or contact"
+			"systemUnavailable": "System {{targetSystem}} is currently unreachable. Try again in a few minutes or contact",
+			"recommendSupport": {
+				"a_recommend": "We'd recommend consulting with",
+				"b_support": "support",
+				"c_proceeding": "before proceeding."
+			}
 		},
 		"message": {
 			"failedToSend": "Message has failed to send.",
