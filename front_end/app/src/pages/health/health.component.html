@@ -17,6 +17,21 @@
                           [svgStyle]="{'width.px': '20'}"></svg-icon>
                 <a href="#" class="pl-1" (click)="exportReport()">Download Full Report</a>
             </div>
+            <div class="mt-3 px-2">
+                <ngx-file-drop *ngIf="!importedData.imported" dropZoneLabel="Drop report here to import"
+                               dropZoneClassName="importZone"
+                               contentClassName="contentZone"
+                               accept="json"
+                               [directory]="false"
+                               [multiple]="false"
+                               [showBrowseBtn]="false"
+                               (onFileDrop)="fileDropped($event)">
+                </ngx-file-drop>
+                <div *ngIf="importedData.imported" class="importInfo">
+                    <p>System: {{importedData.system}}</p>
+                    <p>Generated: {{importedData.time}}</p>
+                </div>
+            </div>
         </div>
 
         <div class="col-12 col-lg-9 col-xl-10 pt-3 pt-lg-0 px-0 pl-lg-3">

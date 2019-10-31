@@ -408,6 +408,10 @@ class NxSystemAPI {
     getHealthAlarms() {
         return this.get('/ec2/metrics/alarms');
     }
+
+    getAggregateHealthReport() {
+        return this.get('/api/aggregator?exec_cmd=ec2%2Fmetrics%2Fmanifest&exec_cmd=ec2%2Fmetrics%2Fvalues&exec_cmd=ec2%2Fmetrics%2Falarms');
+    }
 }
 
 

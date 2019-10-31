@@ -1,16 +1,14 @@
 import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { NxAccountService }          from '../../services/account.service';
 import { NxConfigService }           from '../../services/nx-config';
 import { NxSystem, NxSystemService } from '../../services/system.service';
 import { NxMenuService }             from '../../components/menu/menu.service';
-import { map }                       from 'rxjs/operators';
-import { combineLatest }             from 'rxjs';
 import { NxHealthService }           from './health.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxUtilsService }            from '../../services/utils.service';
-
+import { FileSystemFileEntry, NgxFileDropEntry }      from 'ngx-file-drop';
 
 @Component({
     selector   : 'nx-system-health-component',
@@ -28,11 +26,13 @@ export class NxHealthComponent implements OnInit {
     systemReady: boolean;
 
     reportSnapshot: any;
+    importedData: any = {};
 
     constructor(private accountService: NxAccountService,
                 private configService: NxConfigService,
                 private systemService: NxSystemService,
                 private route: ActivatedRoute,
+                private router: Router,
                 private menuservice: NxMenuService,
                 private healthService: NxHealthService,
                 private languageService: NxLanguageProviderService,
@@ -43,6 +43,7 @@ export class NxHealthComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.healthService.ready = false;
         this.menu = {
             selectedSection   : '',         // updated by selectedSectionSubject
             base              : `${this.CONFIG.systemMenu.baseUrl}${this.system && this.system.id || ''}${this.CONFIG.systemHealthMenu.baseUrl}`,
@@ -70,40 +71,42 @@ export class NxHealthComponent implements OnInit {
                 this.menu.base = `${this.CONFIG.systemMenu.baseUrl}${this.system.id}${this.CONFIG.systemHealthMenu.baseUrl}`;
 
                 this.system.getInfo().then(() => {
-                    const manifest$ = this.system.mediaserver.getHealthManifest();
-                    const values$ = this.system.mediaserver.getHealthValues();
-                    const alarms$ = this.system.mediaserver.getHealthAlarms();
-
                     this.systemReady = true;
 
-                    combineLatest(manifest$, values$, alarms$)
-                        .pipe(map(([manifestRequest, valuesRequest, alarmsRequest]) => {
-                            return {manifestRequest, valuesRequest, alarmsRequest};
-                        }))
+                    this.system.mediaserver.getAggregateHealthReport()
                         .subscribe((result: any) => {
-                            this.healthService.manifest = result.manifestRequest.reply;
-                            this.healthService.values = result.valuesRequest.reply;
-                            this.healthService.alarms = result.alarmsRequest.reply;
-                            this.createSnapshot();
-                            this.initializeManifest();
-                            this.initializeHeaders();
-                            this.processValues();
-
-                            const menu = {...this.menu};
-                            Object.keys(this.healthService.manifest).forEach((asset) => {
-                                menu.level1.push({
-                                    id: asset,
-                                    label: this.healthService.manifest[asset].name,
-                                    path: asset,
-                                    svg: asset
-                                });
-                            });
-                            this.menu = {...menu};
-                            this.healthService.ready = true;
+                            this.setupReport(result);
                         });
                 });
             });
         });
+    }
+
+    setupReport(data) {
+        this.healthService.ready = false;
+        this.menu.level1 = [this.menu.level1[0]];
+        this.healthService.manifest = data.reply['ec2/metrics/manifest'].reply;
+        this.healthService.values = data.reply['ec2/metrics/values'].reply;
+        this.healthService.alarms = data.reply['ec2/metrics/alarms'].reply;
+        this.createSnapshot(data);
+        this.initializeManifest();
+        this.initializeHeaders();
+        this.processValues();
+
+        const menu = {...this.menu};
+        Object.keys(this.healthService.manifest).forEach((asset) => {
+            menu.level1.push({
+                id: asset,
+                label: this.healthService.manifest[asset].name,
+                path: asset,
+                svg: asset
+            });
+        });
+        this.menu = {...menu};
+        // Allow time for change detection so child components can reinitialize
+        setTimeout(() => {
+            this.healthService.ready = true;
+        }, 200);
     }
 
     colorHeaderGroups(metric) {
@@ -239,17 +242,11 @@ export class NxHealthComponent implements OnInit {
         return headers;
     }
 
-    createSnapshot() {
+    createSnapshot(data) {
         const systems: any = Object.values(this.healthService.values.systems);
-        this.reportSnapshot = {
-            reply: {
-                '/ec2/metrics/alarms': JSON.parse(JSON.stringify(this.healthService.alarms)),
-                '/ec2/metrics/manifest': JSON.parse(JSON.stringify(this.healthService.manifest)),
-                '/ec2/metrics/values': JSON.parse(JSON.stringify(this.healthService.values))
-            },
-            time: new Date().toJSON(),
-            system: systems[0].info.name
-        };
+        this.reportSnapshot = JSON.parse(JSON.stringify(data));
+        this.reportSnapshot.time = new Date().toJSON();
+        this.reportSnapshot.system = systems[0].info.name;
     }
 
     exportReport() {
@@ -260,5 +257,28 @@ export class NxHealthComponent implements OnInit {
             filename = `report-${this.reportSnapshot.time}.json`;
         }
         this.utilsService.saveAsBlob(JSON.stringify(this.reportSnapshot), filename, 'application/json');
+    }
+
+    fileDropped(files: NgxFileDropEntry[]) {
+        const fileEntry = files[0].fileEntry as FileSystemFileEntry;
+        const fileReader = new FileReader();
+        fileReader.onload = _ => {
+            const data = JSON.parse(fileReader.result as string);
+            this.setupReport(data);
+            this.router.navigate([this.menu.base + 'alerts']);
+            let time = '-';
+            if (data.time) {
+                time = new Date(data.time).toUTCString();
+            }
+            this.importedData = {
+                imported: true,
+                system: data.system || '-',
+                time
+            };
+        };
+
+        fileEntry.file((file: File) => {
+            fileReader.readAsText(file);
+        });
     }
 }

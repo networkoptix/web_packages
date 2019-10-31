@@ -28,4 +28,27 @@ nx-system-health-component {
       fill: $light16;
     }
   }
+
+  .importZone {
+    border: 2px dashed $light13;
+    border-radius: 4px;
+    min-height: 50px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  .contentZone, .importInfo p {
+    font-size: $font-size-lg;
+    color: $light16;
+    font-family: $font-family-medium;
+  }
+
+  .importInfo {
+    p {
+      font-size: $font-size-base;
+      color: $light16;
+      font-family: $font-family-regular;
+    }
+  }
 }

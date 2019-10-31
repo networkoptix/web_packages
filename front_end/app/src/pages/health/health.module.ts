@@ -19,6 +19,7 @@ import { NxDynamicTablePanelComponent } from './table-components/dynamic-table-p
 import { NxSingleEntityComponent } from './table-components/single-entity/single-entity.component';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NxImageSectionComponent } from './table-components/image-section/image-section.component';
+import { NgxFileDropModule } from 'ngx-file-drop';
 
 
 const appRoutes: Routes = [
@@ -49,6 +50,7 @@ const appRoutes: Routes = [
         TranslateModule,
         ComponentsModule,
         AngularSvgIconModule,
+        NgxFileDropModule,
 
         RouterModule.forChild(appRoutes)
     ],
