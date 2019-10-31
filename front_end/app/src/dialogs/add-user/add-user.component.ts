@@ -87,7 +87,6 @@ export class AddUserModalContent {
     }
 
     ngOnInit() {
-        debugger;
         this.title = (!this.user) ? this.LANG.dialogs.sharing.shareTitle : this.LANG.dialogs.sharing.editShareTitle;
         this.buttonText = this.LANG.dialogs.sharing.shareConfirmButton;
         this.isNewShare = false;
