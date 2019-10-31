@@ -11,4 +11,21 @@ nx-system-health-component {
     font-family: $font-family-medium;
     color: $yellow_main;
   }
+
+  .menuLinks {
+    a {
+      text-decoration: none;
+      color: $light16;
+      font-family: $font-family-medium;
+      font-size: $h5-font-size;
+
+      &:hover {
+        color: $light12;
+      }
+    }
+
+    svg * {
+      fill: $light16;
+    }
+  }
 }

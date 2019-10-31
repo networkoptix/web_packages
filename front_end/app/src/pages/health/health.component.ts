@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { NxAccountService }          from '../../services/account.service';
@@ -9,6 +9,7 @@ import { map }                       from 'rxjs/operators';
 import { combineLatest }             from 'rxjs';
 import { NxHealthService }           from './health.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxUtilsService }            from '../../services/utils.service';
 
 
 @Component({
@@ -26,6 +27,8 @@ export class NxHealthComponent implements OnInit {
     menu: any;
     systemReady: boolean;
 
+    reportSnapshot: any;
+
     constructor(private accountService: NxAccountService,
                 private configService: NxConfigService,
                 private systemService: NxSystemService,
@@ -33,6 +36,7 @@ export class NxHealthComponent implements OnInit {
                 private menuservice: NxMenuService,
                 private healthService: NxHealthService,
                 private languageService: NxLanguageProviderService,
+                private utilsService: NxUtilsService,
     ) {
         this.LANG = this.languageService.getTranslations();
         this.CONFIG = this.configService.getConfig();
@@ -80,6 +84,7 @@ export class NxHealthComponent implements OnInit {
                             this.healthService.manifest = result.manifestRequest.reply;
                             this.healthService.values = result.valuesRequest.reply;
                             this.healthService.alarms = result.alarmsRequest.reply;
+                            this.createSnapshot();
                             this.initializeManifest();
                             this.initializeHeaders();
                             this.processValues();
@@ -234,13 +239,26 @@ export class NxHealthComponent implements OnInit {
         return headers;
     }
 
-    // Temporary camelCase converter
-    toCapitalizedWords(name) {
-        const words = name.match(/[A-Za-z][a-z]*/g) || [];
-        return words.map(this.capitalize).join(' ');
+    createSnapshot() {
+        const systems: any = Object.values(this.healthService.values.systems);
+        this.reportSnapshot = {
+            reply: {
+                '/ec2/metrics/alarms': JSON.parse(JSON.stringify(this.healthService.alarms)),
+                '/ec2/metrics/manifest': JSON.parse(JSON.stringify(this.healthService.manifest)),
+                '/ec2/metrics/values': JSON.parse(JSON.stringify(this.healthService.values))
+            },
+            time: new Date().toJSON(),
+            system: systems[0].info.name
+        };
     }
 
-    capitalize(word) {
-        return word.charAt(0).toUpperCase() + word.substring(1);
+    exportReport() {
+        let filename;
+        if (this.reportSnapshot.system) {
+            filename = `report-${this.reportSnapshot.system}-${this.reportSnapshot.time}.json`;
+        } else {
+            filename = `report-${this.reportSnapshot.time}.json`;
+        }
+        this.utilsService.saveAsBlob(JSON.stringify(this.reportSnapshot), filename, 'application/json');
     }
 }
