@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { NxAccountService } from '../../../services/account.service';
-import { NxConfigService } from '../../../services/nx-config';
-import { NxSystem, NxSystemService } from '../../../services/system.service';
-import { NxMenuService } from '../../../components/menu/menu.service';
-import { combineLatest } from 'rxjs';
-import { NxHealthService } from '../health.service';
+import { NxAccountService }                    from '../../../services/account.service';
+import { NxConfigService }                     from '../../../services/nx-config';
+import { NxSystem, NxSystemService }           from '../../../services/system.service';
+import { NxMenuService }                       from '../../../components/menu/menu.service';
+import { combineLatest }                       from 'rxjs';
+import { NxHealthService }                     from '../health.service';
+import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 
 
 @Component({
@@ -19,6 +20,8 @@ export class NxSystemAlertsComponent implements OnInit {
     account: any;
 
     system: NxSystem;
+    mobileDetailMode: boolean;
+    breakpoint: string;
 
     manifest: any;
     values: any;
@@ -42,8 +45,10 @@ export class NxSystemAlertsComponent implements OnInit {
                 private configService: NxConfigService,
                 private route: ActivatedRoute,
                 private healthService: NxHealthService,
+                private breakpointObserver: BreakpointObserver,
     ) {
         this.CONFIG = this.configService.getConfig();
+        this.breakpoint = '(max-width: 767px)';
     }
 
     ngOnInit(): void {
@@ -55,6 +60,12 @@ export class NxSystemAlertsComponent implements OnInit {
         this.initializeAlarms();
         this.initializeHeader();
         this.countAlerts();
+
+        this.breakpointObserver
+            .observe([this.breakpoint])
+            .subscribe((state: BreakpointState) => {
+                this.mobileDetailMode = (state.matches && this.activePanelEntity);
+            });
     }
 
     countAlerts() {
@@ -130,6 +141,10 @@ export class NxSystemAlertsComponent implements OnInit {
             this.activeTableEntity = alarm;
             this.activePanelEntity = this.values[alarm.metric][alarm.resource];
             this.selectedPanelData = this.healthService.panelParams[alarm.metric];
+
+            if (this.breakpointObserver.isMatched(this.breakpoint)) {
+                this.mobileDetailMode = true;
+            }
         } else {
             this.resetActiveEntity();
         }
@@ -138,5 +153,7 @@ export class NxSystemAlertsComponent implements OnInit {
     resetActiveEntity() {
         this.activeTableEntity = undefined;
         this.activePanelEntity = undefined;
+        this.selectedPanelData = undefined;
+        this.mobileDetailMode = false;
     }
 }

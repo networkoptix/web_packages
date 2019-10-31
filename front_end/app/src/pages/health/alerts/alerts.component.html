@@ -1,6 +1,6 @@
 <div class="row">
-    <div *ngIf="tableHeaders && alarms"
-         class="col-12 col-md-7 col-xl-9">
+    <div *ngIf="tableHeaders && alarms && !mobileDetailMode"
+        [ngClass]="{'col-12': !activePanelEntity, 'col-md-7 col-xl-8' : activePanelEntity}">
         <nx-dynamic-table
                 [tableHeader]="alertsCount + ' alerts'"
                 [headers]="tableHeaders"
@@ -9,7 +9,17 @@
                 [activeEntity]="activeTableEntity"></nx-dynamic-table>
     </div>
 
-    <div class="col-12 col-md-5 col-xl-3"
+    <div class="row pl-3 pb-3"
+         *ngIf="activePanelEntity"
+         [style.display]="!mobileDetailMode ? 'none' : 'block'">
+
+        <button class="btn btn-default btn-back" (click)="resetActiveEntity()">
+            <span class="back-arrow"></span>
+            <span translate>All results</span>
+        </button>
+    </div>
+
+    <div class="col-12 col-md-5 col-xl-4"
          *ngIf="activePanelEntity">
 
         <nx-dynamic-table-panel-component

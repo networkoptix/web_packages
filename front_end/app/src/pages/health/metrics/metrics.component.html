@@ -1,6 +1,6 @@
 <div class="row">
-    <div *ngIf="selectedData && selectedValues"
-         class="col-12 col-md-7 col-xl-9">
+    <div *ngIf="selectedData && selectedValues && !mobileDetailMode"
+         [ngClass]="{'col-12': !activeEntity, 'col-md-7 col-xl-8' : activeEntity}">
         <nx-dynamic-table
                 *ngIf="multiEntity"
                 [headers]="selectedData"
@@ -17,7 +17,17 @@
 
     </div>
 
-    <div class="col-12 col-md-5 col-xl-3"
+    <div class="row pl-3 pb-3"
+         *ngIf="activeEntity"
+         [style.display]="!mobileDetailMode ? 'none' : 'block'">
+
+        <button class="btn btn-default btn-back" (click)="resetActiveEntity()">
+            <span class="back-arrow"></span>
+            <span translate>All results</span>
+        </button>
+    </div>
+
+    <div class="col-12 col-md-5 col-xl-4"
          *ngIf="activeEntity">
 
         <nx-dynamic-table-panel-component

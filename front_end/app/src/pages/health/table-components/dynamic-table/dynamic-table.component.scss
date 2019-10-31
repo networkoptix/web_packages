@@ -57,7 +57,7 @@
   }
 
   .nx-table {
-    min-width : 1045px;
+    // min-width : 1045px;
 
     .table-row-spacer {
       height : .5rem;
@@ -123,7 +123,6 @@
         &:first-of-type {
           padding : 0;
           width   : 48px;
-          display : block;
         }
 
         &.table-title {
@@ -201,7 +200,7 @@
         td {
           padding      : 0 24px 0 0;
           font-family  : $font-family-regular;
-          font-size    : $font-size-base;
+          font-size    : $font-size-sm;
           color        : $dark9;
           line-height  : 1rem;
           border       : none;

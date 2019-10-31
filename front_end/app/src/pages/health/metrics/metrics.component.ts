@@ -1,14 +1,15 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { ActivatedRoute }                       from '@angular/router';
 
 import { NxAccountService }          from '../../../services/account.service';
-import { NxConfigService }           from '../../../services/nx-config';
-import { NxSystem, NxSystemService } from '../../../services/system.service';
-import { NxMenuService }             from '../../../components/menu/menu.service';
-import { combineLatest }             from 'rxjs';
-import { map, concatMap }            from 'rxjs/operators';
-import { NxHealthService }           from '../health.service';
-import { NxUriService }              from '../../../services/uri.service';
+import { NxConfigService }                     from '../../../services/nx-config';
+import { NxSystem, NxSystemService }           from '../../../services/system.service';
+import { NxMenuService }                       from '../../../components/menu/menu.service';
+import { combineLatest }                       from 'rxjs';
+import { map, concatMap }                      from 'rxjs/operators';
+import { NxHealthService }                     from '../health.service';
+import { NxUriService }                        from '../../../services/uri.service';
+import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 
 interface Params {
     [key: string]: any;
@@ -17,7 +18,8 @@ interface Params {
 @Component({
     selector   : 'nx-system-metrics-component',
     templateUrl: 'metrics.component.html',
-    styleUrls  : ['metrics.component.scss']
+    styleUrls  : ['metrics.component.scss'],
+    encapsulation: ViewEncapsulation.None,
 })
 export class NxSystemMetricsComponent implements OnInit {
     CONFIG: any;
@@ -26,6 +28,8 @@ export class NxSystemMetricsComponent implements OnInit {
     system: NxSystem;
     metricId: any;
     params: any  = {};
+    mobileDetailMode: boolean;
+    breakpoint: string;
 
     manifest: any;
     values: any;
@@ -49,8 +53,10 @@ export class NxSystemMetricsComponent implements OnInit {
                 private menuService: NxMenuService,
                 private healthService: NxHealthService,
                 private uri: NxUriService,
+                private breakpointObserver: BreakpointObserver,
     ) {
         this.CONFIG = this.configService.getConfig();
+        this.breakpoint = '(max-width: 767px)';
     }
 
     ngOnInit(): void {
@@ -83,18 +89,11 @@ export class NxSystemMetricsComponent implements OnInit {
                 }
             });
 
-        // combineLatest(this.healthService.manifestSubject, this.healthService.valuesSubject, this.healthService.alarmsSubject).subscribe(
-        //     ([manifest, values, alarms]) => {
-        //         if (manifest && values && alarms) {
-        //             this.manifest = manifest;
-        //             this.values = values;
-        //             this.alarms = alarms;
-        //             this.selectedData = this.healthService.tableHeaders[this.metricId];
-        //             this.selectedPanelData = this.healthService.panelParams[this.metricId];
-        //             this.selectedValues = this.values[this.metricId];
-        //         }
-        //     }
-        // );
+        this.breakpointObserver
+            .observe([this.breakpoint])
+            .subscribe((state: BreakpointState) => {
+                this.mobileDetailMode = (state.matches && this.activeEntity);
+            });
     }
 
     setActiveEntity(entity) {
@@ -109,10 +108,15 @@ export class NxSystemMetricsComponent implements OnInit {
             this.activeEntity = entity;
             queryParams.id = entity.id;
             this.uri.updateURI(this.uri.getURL(), queryParams);
+
+            if (this.breakpointObserver.isMatched(this.breakpoint)) {
+                this.mobileDetailMode = true;
+            }
         }
     }
 
     resetActiveEntity() {
         this.activeEntity = undefined;
+        this.mobileDetailMode = false;
     }
 }

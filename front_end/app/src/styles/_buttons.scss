@@ -178,6 +178,7 @@ button, .btn {
         background-position : center;
         transform           : scaleX(-1);
         float               : left;
+        margin-left         : .5rem;
         margin-right        : .5rem;
         
         @media only screen and (-webkit-min-device-pixel-ratio : 2), only screen and (min-device-pixel-ratio : 2) {

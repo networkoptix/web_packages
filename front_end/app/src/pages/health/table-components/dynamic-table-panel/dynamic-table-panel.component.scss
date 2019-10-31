@@ -113,30 +113,39 @@
         }
     }
     
-    .nx-panel {
-        display: flex;
-        height : fit-content;
-    
-        .row-title {
+    .nx-panel-row {
+        .nx-panel {
+            display : flex;
             height  : fit-content;
-            width   : fit-content;
-            float   : left;
-            z-index : 9;
-            max-width: calc(100% - 1.5rem); // min with for line -> 16px + right padding (white space)
         
-            span {
-                background-color : $light4;
-                padding-right    : 4px;
-                word-break : keep-all;
+            .row-title {
+                height      : fit-content;
+                width       : fit-content;
+                float       : left;
+                z-index     : 9;
+                max-width   : calc(100% - 1.5rem); // min with for line -> 16px + right padding (white space)
+                line-height : 16px;
+                margin      : 4px 0;
+            
+                span {
+                    background-color : $light4;
+                    padding-right    : 4px;
+                    word-break       : keep-all;
+                }
+            }
+        
+            .row-line {
+                border-bottom : 1px solid $light7;
+                width         : calc(100% - 1rem);
+                position      : absolute;
+                bottom        : 4px;
+                height        : 14px;
             }
         }
-    
-        .row-line {
-            border-bottom : 1px solid $light7;
-            width         : calc(100% - 1rem);
-            position      : absolute;
-            bottom        : 5px;
-            height        : 14px;
+        
+        .row-value {
+            line-height : 16px;
+            margin      : 4px 0;
         }
     }
 }

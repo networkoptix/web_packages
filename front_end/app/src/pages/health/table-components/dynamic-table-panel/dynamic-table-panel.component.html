@@ -16,7 +16,7 @@
         <ng-container *ngFor="let paramGroup of panelParams.values">
             <nx-section *ngIf="paramGroup.id !== '_'">
                 <h4 *ngIf="paramGroup.values.length">{{paramGroup.name}}</h4>
-                <div class="row" *ngFor="let param of paramGroup.values">
+                <div class="row nx-panel-row" *ngFor="let param of paramGroup.values">
                     <div class="col-7 nx-panel">
                         <div class="row-title">
                             <span>{{param.name || param.id}}</span>
@@ -26,16 +26,20 @@
                     <div class="col-5 pl-0 d-flex align-items-end"
                          *ngIf="activeEntity[paramGroup.id] && activeEntity[paramGroup.id][param.id]; else noValue"
                          [title]="activeEntity[paramGroup.id][param.id].tooltip">
-                        <span [ngClass]="activeEntity[paramGroup.id][param.id].class"
+                        <span class="row-value"
+                              [ngClass]="activeEntity[paramGroup.id][param.id].class"
                               [innerText]="[undefined, ''].indexOf(activeEntity[paramGroup.id][param.id].text) === -1
                               ? activeEntity[paramGroup.id][param.id].text : '–'"></span>
                         <svg-icon *ngIf="activeEntity[paramGroup.id][param.id].icon"
                                   [src]="CONFIG.icons.dir + activeEntity[paramGroup.id][param.id].icon + '.svg'"
-                                  [svgStyle]="{'width.px': '20'}"
-                                  class="pl-1"></svg-icon>
+                                  [svgStyle]="{'width.px': '20', 'margin-top': '-4px'}"
+                                  style="height: 16px"
+                                  class="pl-1 mt-1 mb-1"></svg-icon>
                     </div>
                     <ng-template #noValue>
-                        <div class="col-5 d-flex align-items-end">–</div>
+                        <div class="col-5 pl-0 d-flex align-items-end">
+                            <span class="row-value">–</span>
+                        </div>
                     </ng-template>
                 </div>
             </nx-section>
