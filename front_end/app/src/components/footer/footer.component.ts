@@ -36,7 +36,7 @@ import { NxSettingsService } from '../../pages/systems/settings/settings.service
         this.copyrightYear = this.config.copyrightYear;
         this.footerItems = this.config.footerItems;
 
-        this.appState.footerVisibleObservable.subscribe((visible) => {
+        this.appState.footerVisibleSubject.subscribe((visible) => {
             this.viewFooter = visible;
         });
     }

@@ -105,6 +105,7 @@
     "NO_SYSTEMS_LOGIN": "Iniciar sesión en tu sistema utilizando %VMS_NAME%",
     "NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "No tienes sistemas conectados a %CLOUD_NAME%",
     "New Password": "Nueva contraseña",
+    "No unsaved changes": "No hay cambios sin guardar",
     "Nothing Found": "No hay resultados",
     "OK": "OK",
     "Ok": "Ok",
@@ -125,6 +126,7 @@
     "Release Notes": "Notas de la versión",
     "Release notes": "Notas de la versión",
     "Remember me": "Recuérdame",
+    "Remove User": "Eliminar usuario",
     "Rename": "Renombra",
     "Requirements": "Requerimientos",
     "Resend activation email": "Reenviar correo de activación",
@@ -270,7 +272,7 @@
     "devices": "dispositivos",
     "dialogs": {
         "cancelButton": "Cancelar",
-        "changeAccountLogged": "You are already logged in with as {email}",
+        "changeAccountLogged": "Ya has iniciado sesión con {email}",
         "createNewAccount": "Crear Nueva Cuenta",
         "download": "Descargar %VMS_NAME%",
         "loggedFromOther": "Se iniciará sesión con una cuenta diferente",
@@ -280,8 +282,10 @@
         "logoutAuthorisedLogoutButton": "Cerrar Sessión",
         "logoutAuthorisedTitle": "Ya se ha conectado",
         "merge": {
+            "commonText": "Error al fusionar los sistemas <strong>{{primarySystem}}</strong> y <strong>{{secondarySystem}}</strong>.",
             "connectToCloud": "Conectar el sistema que desea fusionar con este a <strong>{{cloudName}}</strong> o fusionar localmente usando <strong>{{vmsName}}</strong> Cliente.",
             "mergeConfirmation": "Estás a punto de fusionar sistemas <strong>{{primarySystem}}</strong> y <strong>{{secondarySystem}}</strong>. Los ajustes y el nombre serán tomados de los <strong>{{primarySystem}}</strong>.",
+            "mergeFailedTitle": "La fusión de sistemas falló",
             "primaryCannotMerge": "El sistema {{targetSystem}} tiene una versión de software más nueva que es incompatible con el sistema actual. Actualizar el sistema actual al <a href=\"/download\" target=\"_blank\" translate>última versión</a> de fusionarse con el {{targetSystem}} del sistema.",
             "primarySystemOffline": "El sistema {{primarySystem}} está desconectado y no puede ser fusionado con el Sistema {{targetSystem}}.",
             "secondaryCannotMerge": "El sistema {{targetSystem}} tiene una versión de software anterior que es incompatible con el sistema actual. Actualice {{targetSystem}} a la <a href=\"/download\" target=\"_blank\" translate>última compilación</a> para fusionarla con la actual.",
@@ -314,8 +318,8 @@
             "shareConfirmButton": "Añadir",
             "shareTitle": "Añadir"
         },
-        "stayAs": "Stay logged as {email} ",
-        "stayLoggedIn": "Stay Logged In"
+        "stayAs": "Mantener registrado como {email} ",
+        "stayLoggedIn": "Permanecer conectado"
     },
     "dialogs.merge.connectToCloud": "Conectar el sistema que desea fusionar con este a <strong>{{cloudName}}</strong> o fusionar localmente usando <strong>{{vmsName}}</strong> Cliente.",
     "dialogs.merge.mergeConfirmation": "Estás a punto de fusionar sistemas <strong>{{primarySystem}}</strong> y <strong>{{secondarySystem}}</strong>. Los ajustes y el nombre serán tomados de los <strong>{{primarySystem}}</strong>.",
@@ -327,10 +331,14 @@
     "downloads": {
         "appTypes": {
             "bundle": "Cliente y Servidor",
+            "camera_sdk": "Fuente de video SDK",
             "client": "Cliente solamente",
+            "metadata_sdk": "SDK de metadatos",
             "package": "Paquete",
             "server": "Servidor solamente",
-            "servertool": "Herramienta de configuración"
+            "servertool": "Herramienta de configuración",
+            "storage_sdk": "SDK de Almacenamiento",
+            "video_source_sdk": "Fuente de video SDK"
         },
         "groups": {
             "android": {
@@ -381,8 +389,11 @@
             "bananapi": "Banana Pi",
             "bpi": "Nx1",
             "linux64": "x64",
+            "linux_arm32": "x32",
+            "linux_arm64": "x64",
             "mac": "X",
             "rpi": " Raspberry Pi",
+            "universal": "SDK",
             "win64": "x64"
         },
         "releasesTypes": {
@@ -570,20 +581,22 @@
         "confirmRenameAction": "Guardar",
         "confirmRenameTitle": "Nombre del sistema",
         "confirmUnshare": "Este usuario no podrá acceder el sistema. ¿Está seguro?",
-        "confirmUnshareAction": "Borrar",
+        "confirmUnshareAction": "Eliminar",
         "confirmUnshareFromMe": "Está a punto de desconectar este sistema de su cuenta. Usted no podrá acceder a este sistema. ¿Está seguro?",
         "confirmUnshareFromMeAction": "Desconectar",
         "confirmUnshareFromMeTitle": "Desconectar el Sistema?",
-        "confirmUnshareTitle": "¿Eliminar el usuario?",
+        "confirmUnshareTitle": "¿Eliminar usuario?",
         "mergeFailed": "La fusión de sistemas falló",
         "mergeStart": "Los sistemas han comenzado a fusionarse",
         "mergeSuccess": "Fusión del sistema completada",
         "mergeSystemTitle": "Unir Sistemas",
         "mySystemSearch": "IMeMyMine",
         "offline": "Sistema está desconectado",
+        "offlineAlertRibbon": "El sistema está desconectado. Algunas configuraciones pueden no estar disponibles.",
         "openClient": "Abierto en %VMS_NAME%",
         "openClientNoSystem": "Abrir %VMS_NAME%",
         "permissionsRemoved": "Los permisos fueron removidos de {{email}}",
+        "shareOffline": "No se puede compartir el sistema mientras está desconectado",
         "successDeleted": "Sistema {{systemName}} se ha eliminado de su cuenta",
         "successDisconnected": "El sistema se desconecta con éxito de %CLOUD_NAME%",
         "successRename": "Nombre del sistema guardado",

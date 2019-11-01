@@ -133,6 +133,10 @@ export class NxCloudApiService {
         return this.http.post(this.CONFIG.apiBase + '/account/checkCode', { code }).toPromise();
     }
 
+    checkAuthCode(code) {
+        return this.http.post(this.CONFIG.apiBase + '/account/checkAuthCode', { code }).toPromise();
+    }
+
     login(email, password, remember) {
         // clearCache();
         return this.http.post(this.CONFIG.apiBase + '/account/login', {
@@ -177,7 +181,7 @@ export class NxCloudApiService {
             first_name  : account.first_name,
             last_name   : account.last_name,
             is_staff    : account.is_staff,
-            is_superuser: true,
+            is_superuser: account.is_superuser || false,
             language    : account.language,
             permissions : account.permissions
         };

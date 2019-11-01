@@ -89,19 +89,26 @@
 			}
 		},
 		"platforms": {
-			"win64": "x64",
-			"linux64": "x64",
-			"mac": "X",
 			"bananapi": "Banana Pi",
 			"bpi": "Nx1",
-			"rpi": " Raspberry Pi"
+			"linux64": "x64",
+			"linux_arm32": "x32",
+			"linux_arm64": "x64",
+			"mac": "X",
+			"rpi": " Raspberry Pi",
+			"universal": "SDK",
+			"win64": "x64"
 		},
 		"appTypes": {
-			"client": "Тільки клієнт",
-			"server": "Тільки сервер",
 			"bundle": "Клієнт і сервер",
+			"camera_sdk": "SDK джерела відео",
+			"client": "Тільки клієнт",
+			"metadata_sdk": "Metadata SDK",
+			"package": "Package",
+			"server": "Тільки сервер",
 			"servertool": "Інструмент налаштування",
-			"package": "Package"
+			"storage_sdk": "SDK для інтеграції сховищ",
+			"video_source_sdk": "SDK джерела відео"
 		},
 		"releasesTypes": {
 			"beta": "Beta",
@@ -197,20 +204,22 @@
 		"okButton": "ОК",
 		"cancelButton": "Відмінити",
 		"createNewAccount": "Створити новий обліковий запис",
-		"changeAccountLogged": "You are already logged in with as {email}",
-		"loggedFromOther": "You will be logged in with a different account",
+		"changeAccountLogged": "Ви вже ввійшли з {email}",
+		"loggedFromOther": "Ви ввійдете в інший обліковий запис",
 		"loginTitle": "Увійти до %CLOUD_NAME%",
 		"loginButton": "Увійти",
 		"logoutAuthorisedTitle": "Ви вже увійшли",
 		"logoutAuthorisedContinueButton": "Продовжити",
 		"logoutAuthorisedLogoutButton": "Вийти",
 		"noClientDetectedTitle": "Встановіть %VMS_NAME% для роботи з системою",
-		"stayAs": "Stay logged as {email} ",
-		"stayLoggedIn": "Stay Logged In",
+		"stayAs": "Залишайтеся зареєстрованими як {email} ",
+		"stayLoggedIn": "Залишайтеся в системі",
 		"download": "Завантажити %VMS_NAME%",
 		"merge": {
+			"commonText": "Не вдалося об’єднати системи <strong>{{primarySystem}}</strong> та <strong>{{secondarySystem}}</strong>.",
 			"connectToCloud": "Підключіть систему, яку хочете об’єднати з цією <strong>{{cloudName}}</strong> або об’єднайте локально з <strong>{{vmsName}}</strong> Клієнтом.",
 			"mergeConfirmation": "Ви збираєтеся об’єднати системи <strong>{{primarySystem}}</strong> та <strong>{{secondarySystem}}</strong>. Ім'я та налаштування будуть взяті з <strong>{{primarySystem}}</strong>.",
+			"mergeFailedTitle": "Не вдалося об’єднати систему",
 			"primaryCannotMerge": "Система {{targetSystem}} має нову версію Пз, несумісну з поточною системою. Оновіть поточну Систему до <a href=\"/download\" target=\"_blank\" translate>останньої збірки</a> для об’єднання з {{targetSystem}} Системою.",
 			"primarySystemOffline": "Система {{primarySystem}} офлайн і не може бути об'єднана з Системою {{targetSystem}}.",
 			"secondaryCannotMerge": "Система {{targetSystem}} має стару версію Пз, несумісну з поточною системою. Оновіть {{targetSystem}} до <a href=\"/download\" target=\"_blank\" translate>останньої збірки</a> для об’єднання з поточною системою.",
@@ -275,7 +284,7 @@
 		"passwordMismatch": "Невірний пароль",
 		"cantEditYourself": "Зміна власних дозволів не допускається",
 		"cantEditAdmin": "Цей користувач має права адміністратора",
-		"cantOpenClient": "%VMS_NAME% application is not detected.",
+		"cantOpenClient": "Додаток %VMS_NAME% не виявлено.",
 		"lostConnection": "Підключення до {{systemName}} втрачено",
 		"thisSystem": "система",
 		"oldSafariNotSupported": "Версії Safari старше 10 не підтримуються",
@@ -308,6 +317,7 @@
 		"mySystemSearch": "ЯМійМоя",
 		"unavailable": "Система недоступна",
 		"offline": "Система знаходиться поза мережею",
+		"offlineAlertRibbon": "System is offline. Some settings may not be available.",
 		"openClient": "Відкрити в %VMS_NAME%",
 		"openClientNoSystem": "Відкрити %VMS_NAME%",
 		"confirmMergeAction": "Об'єднати",
@@ -329,7 +339,8 @@
 		"mergeStart": "Злиття систем почалося",
 		"mergeSuccess": "Злиття системи завершено",
 		"permissionsRemoved": "{{email}} був позбавлений повноважень",
-		"unknownName": "Невідоме ім’я для системи (викликане злиттям хмари)"
+		"unknownName": "Невідоме ім’я для системи (викликане злиттям хмари)",
+		"shareOffline": "Cannot share system while it is offline"
 	},
 	"systemStatuses": {
 		"activated": "активовано",

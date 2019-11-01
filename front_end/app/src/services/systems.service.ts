@@ -1,11 +1,12 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { of, ReplaySubject } from 'rxjs';
-import { tap, map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 
 import { NxConfigService } from './nx-config';
 import { NxLanguageProviderService } from './nx-language-provider';
 import { NxCloudApiService } from './nx-cloud-api';
 import { NxPollService } from './poll.service';
+import { NxToastService } from '../dialogs/toast.service';
 
 @Injectable({
     providedIn: 'root'
@@ -15,16 +16,36 @@ export class NxSystemsService implements OnDestroy {
     LANG: any;
     activeSubscription: any;
     currentUser: string;
+    mergingSystems: any;
     systems: any;
     systemsPoll: any;
     systemsSubject = new ReplaySubject(0);
+
     constructor(private cloudApi: NxCloudApiService,
                 private config: NxConfigService,
                 private language: NxLanguageProviderService,
-                private pollService: NxPollService) {
+                private pollService: NxPollService,
+                private toastService: NxToastService
+    ) {
         this.LANG = this.language.getTranslations();
         this.CONFIG = this.config.getConfig();
         this.systemsPoll = pollService.createPoll(this.cloudApi.systems(), this.CONFIG.updateInterval);
+        this.mergingSystems = new Set();
+    }
+    addToMergeList(systemId) {
+        this.mergingSystems.add(systemId);
+    }
+
+    removeFromMergeList(systemId) {
+        if (this.mergingSystems.has(systemId)) {
+            this.mergingSystems.delete(systemId);
+            const options = {
+                    autoHide: true,
+                    classname: 'success',
+                    delay: this.CONFIG.alertTimeout
+                };
+            this.toastService.show(this.LANG.system.mergeSuccess, options);
+        }
     }
 
     forceUpdateSystems(userEmail?) {
@@ -117,6 +138,11 @@ export class NxSystemsService implements OnDestroy {
                 system.capabilities.indexOf(this.CONFIG.systemCapabilities.cloudMerge) > -1
                 || this.CONFIG.allowDebugMode
                 || this.CONFIG.allowBetaMode);
+            if (system.mergeInfo !== undefined) {
+                this.addToMergeList(system.id);
+            } else if (this.mergingSystems.has(system.id)) {
+                this.removeFromMergeList(system.id);
+            }
         });
     }
 

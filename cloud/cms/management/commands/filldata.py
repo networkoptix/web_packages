@@ -20,16 +20,17 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         customization = Customization.objects.filter(name=options['customization']).first()
         if not customization:
-            logger.error('Customization {0} was automatically generated. Ask Boris to configure cloud for {0}.'
-                         .format(options['customization']))
+            customization_option = options['customization']
+            logger.warning(f'Customization {customization_option} was automatically generated.'
+                           f'{settings.CONFIG_ERROR} To configure cloud for {customization_option}.')
             en_us = Language.objects.get(code="en_US")
-            customization = Customization(name=options['customization'], default_language=en_us)
+            customization = Customization(name=customization_option, default_language=en_us)
             customization.save()
             customization.languages.add(en_us)
             customization.save()
 
         asset = structure.find_or_add_asset_with_single_customization('Cloud Portal', customization,
-                                                                          'cloud_portal', '')
+                                                                      'cloud_portal', '')
 
         for i in range(settings.FILLDATA_TRIES):
             result = filldata.init_skin(asset, options['preview'], workers=1)

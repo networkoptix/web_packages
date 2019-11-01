@@ -1,28 +1,31 @@
-import { Location }                  from '@angular/common';
-import { Component, HostListener, Inject } from '@angular/core';
-import { CookieService }             from 'ngx-cookie-service';
-import { DeviceDetectorService }     from 'ngx-device-detector';
-import { Title }                     from '@angular/platform-browser';
-import { ActivationStart, Event, Router } from '@angular/router';
-import { filter }                    from 'rxjs/operators';
-import { WINDOW }                    from './src/services/window-provider';
-import { NxLanguageProviderService } from './src/services/nx-language-provider';
-import { NxConfigService }           from './src/services/nx-config';
-import { NxApplyService }            from './src/services/apply.service';
-import { NxQueryParamService } from './src/services/query-param.service';
-import { NxRibbonService } from './src/components/ribbon/ribbon.service';
+import { Location }                                               from '@angular/common';
+import { Component, HostListener, Inject }                        from '@angular/core';
+import { CookieService }                                          from 'ngx-cookie-service';
+import { DeviceDetectorService }                                  from 'ngx-device-detector';
+import { Title }                                                  from '@angular/platform-browser';
+import { ActivatedRoute, ActivationStart, Event, Router } from '@angular/router';
+import { filter }                                                 from 'rxjs/operators';
+import { WINDOW }                                                 from './src/services/window-provider';
+import { NxLanguageProviderService }                              from './src/services/nx-language-provider';
+import { NxConfigService }                                        from './src/services/nx-config';
+import { NxApplyService }                                         from './src/services/apply.service';
+import { NxQueryParamService }                                    from './src/services/query-param.service';
+import { NxRibbonService }                                        from './src/components/ribbon/ribbon.service';
+import { NxAppStateService }         from './src/services/nx-app-state.service';
 
 @Component({
     selector: 'nx-app',
-    template: `
-        <div class="fixed-top">
-            <nx-ribbon *ngIf="!ribbonService.context.type"></nx-ribbon>
-            <nx-header></nx-header>
-            <nx-ribbon *ngIf="ribbonService.context.type === 'alert'"></nx-ribbon>
-        </div>
-        <div [ngClass]="headerPadding">
-            <router-outlet></router-outlet>
-            <div ng-view="" ng-model-options="{ updateOn: 'blur' }"></div>
+    template: `        
+        <div class="outerContainer">
+            <div class="headerContainer">
+                <nx-header></nx-header>
+                <nx-ribbon></nx-ribbon>
+            </div>
+        
+            <div class="mainContainer" style="">
+                <router-outlet></router-outlet>
+                <div ng-view="" ng-model-options="{ updateOn: 'blur' }"></div>
+            </div>
         </div>
         <app-toasts aria-live="polite" aria-atomic="true"></app-toasts>
     `
@@ -33,7 +36,7 @@ export class AppComponent {
     deviceInfo: any;
     allowedDevices: {};
     hlsIsSupported: boolean;
-    headerPadding: string;
+    isInIframe: boolean;
 
     constructor(private cookieService: CookieService,
                 private deviceService: DeviceDetectorService,
@@ -42,6 +45,7 @@ export class AppComponent {
                 private config: NxConfigService,
                 private language: NxLanguageProviderService,
                 private applyService: NxApplyService,
+                private appStateService: NxAppStateService,
                 private queryParamService: NxQueryParamService,
                 private router: Router,
                 private ribbonService: NxRibbonService,
@@ -154,16 +158,17 @@ export class AppComponent {
             this.CONFIG.viewsDir = this.CONFIG.previewPath + '/' + this.CONFIG.viewsDir;
         }
 
-        this.CONFIG.showHeaderAndFooter = true;
-        this.headerPadding = 'headerPadding';
+        this.CONFIG.showHeaderAndFooter = true; // Default state
 
-        this.ribbonService.contextSubject.subscribe((context) => {
-            if (context.visibility) {
-                this.headerPadding = 'headerAndRibbonPadding';
-            } else {
-                this.headerPadding = 'headerPadding';
-            }
-        });
+        // (Smart check) Check if page is displayed inside an iframe
+        // this.isInIframe = (window.location !== window.parent.location);
+
+        // Route check if page is displayed inside an iframe
+        this.isInIframe = (window.location.pathname.indexOf('/embed') === 0);
+        if (this.isInIframe) {
+            this.appStateService.setHeaderVisibility(false);
+            this.appStateService.setFooterVisibility(false);
+        }
 
         // Updates query params for components without routes.
         this.router.events.pipe(

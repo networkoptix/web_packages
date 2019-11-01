@@ -22,6 +22,7 @@
     "NEW PERMISSIONS SAVED"                :    "New permissions saved",
     "PERMISSIONS WERE REMOVED FROM"        :    "Permissions were removed from %email%",
     "SYSYEM DELETED FROM ACCOUNT"          :    "System {{system_name}} is successfully deleted from your account",
+    "CANNOT SHARE SYSTEM"                  :    "Cannot share System: ",
     "CHANGING OWN PERMISSIONS IS NOT ALLOWED" : "Changing own permissions is not allowed",
 
     "RESET SUCCESS MESSAGE TEXT"           :    "Password successfully saved",
@@ -178,5 +179,19 @@
     "ENTER PASSWORD TO CONTINUE TEXT"      :    "Enter password for your account to continue",
     "INCOMPATIBLE"                         :    "incompatible",
     "CONNECTION TO SYSTEM LOST"            :    "Connection to %SYSTEM NAME% lost",
-    "SYSTEM IS OFFLINE TEXT"               :    "System is offline. Some settings may not be available."
+    "SYSTEM IS OFFLINE TEXT"               :    "System is offline. Some settings may not be available.",
+    "ALL INTEGRATIONS TEXT"                :    "All Integrations",
+    "INTEGRATION DOWNLOADS TEXT"           :    "Downloads",
+    "INTEGRATION REQUIREMENTS TEXT"        :    "Requirements",
+    "INTEGRATION HOW IT WORKS TEXT"        :    "How it works",
+    "INTEGRATION HOW TO SETUP TEXT"        :    "How to setup?",
+    "INTEGRATION TAGS TEXT"                :    "Tags",
+    "INTEGRATION CONTACT TEXT"             :    "Contact",
+    "INTEGRATION GET IN TOUCH TEXT"        :    "Get in touch",
+    "INTEGRATION GET IN TOUCH WITH TEXT"   :    "Get in touch with",
+    "INTEGRATION DEVELOPER TEXT"           :    "Developer",
+    "INTEGRATION TERMS OF USE TEXT"        :    "Terms of Use",
+    "INTEGRATION SUPPORT TEXT"             :    "Support",
+    "INTEGRATION SUPPORT URL TEXT"         :    "Support URL",
+    "INTEGRATION SUPPORT EMAIL TEXT"       :    "Support E-mail"
 }

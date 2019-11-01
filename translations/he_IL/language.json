@@ -138,10 +138,6 @@
     "FAIL": "המערכת <strong>{{failedSystem}}</strong> אינה זמינה כעת.<br>נסה שוב בעוד מספר דקות או צור קשר עם <a href=\"%SUPPORT_LINK%\" target=\"_blank\">תמיכה</a>.",
     "unknownMergeError": "שגיאה לא ידועה, באפשרותך לנסות לרענן את הדף ולנסות שוב. אם הבעיה נמשכת, צור קשר עם <a href=\"%SUPPORT_LINK%\" target=\"_blank\">התמיכה</a>."
   },
-  "merging": {
-    "mergeFailedTitle": "מיזוג המערכות נכשל",
-    "commonText": "מיזוג מערכות נכשל<strong>{{primarySystem}}</strong> ו - <strong>{{secondarySystem}}</strong>."
-  },
   "system": {
     "yourSystem": "המערכת שלך",
     "mySystemSearch": "IMeMyMine",

@@ -138,10 +138,6 @@
     "FAIL": "System <strong>{{failedSystem}}</strong> er for tiden ikke tilgjengelig.<br>Prøv igjen om noen få minutter eller kontakt <a href=\"%SUPPORT_LINK%\" target=\"_blank\">brukerstøtte</a>.",
     "unknownMergeError": "Ukjent feil. Du kan prøve å oppdatere siden og gjenta forsøk. Hvis problemet vedvarer, vennligst kontakt <a href=\"%SUPPORT_LINK%\" target=\"_blank\">brukerstøtte</a>."
   },
-  "merging": {
-    "mergeFailedTitle": "Systemsammenslåing mislyktes",
-    "commonText": "Kunne ikke slå sammen systemer <strong>{{primarySystem}}</strong> og <strong>{{secondarySystem}}</strong>."
-  },
   "system": {
     "yourSystem": "Ditt system",
     "mySystemSearch": "IMeMyMine",

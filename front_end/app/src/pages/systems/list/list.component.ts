@@ -137,7 +137,6 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.systemsService.stopPoll();
     }
 
 }

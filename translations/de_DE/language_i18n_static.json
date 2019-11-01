@@ -89,19 +89,26 @@
 			}
 		},
 		"platforms": {
-			"win64": "x64",
-			"linux64": "x64",
-			"mac": "X",
 			"bananapi": "Banana Pi",
 			"bpi": "Nx1",
-			"rpi": " Raspberry Pi"
+			"linux64": "x64",
+			"linux_arm32": "x32",
+			"linux_arm64": "x64",
+			"mac": "X",
+			"rpi": " Raspberry Pi",
+			"universal": "SDK",
+			"win64": "x64"
 		},
 		"appTypes": {
-			"client": "Nur Client",
-			"server": "Nur Server",
 			"bundle": "Client und Server",
+			"camera_sdk": "Video Source SDK",
+			"client": "Nur Client",
+			"metadata_sdk": "Metadaten-SDK",
+			"package": "Paket",
+			"server": "Nur Server",
 			"servertool": "Konfigurationstool",
-			"package": "Paket"
+			"storage_sdk": "Storage SDK",
+			"video_source_sdk": "Video Source SDK"
 		},
 		"releasesTypes": {
 			"beta": "Beta",
@@ -196,21 +203,23 @@
 	"dialogs": {
 		"okButton": "Ok",
 		"cancelButton": "Abbrechen",
-		"createNewAccount": "Create New Account",
-		"changeAccountLogged": "You are already logged in with as {email}",
-		"loggedFromOther": "You will be logged in with a different account",
+		"createNewAccount": "Neues Konto anlegen",
+		"changeAccountLogged": "Sie sind bereits angemeldet als {email}",
+		"loggedFromOther": "Sie werden mit einem anderen Konto angemeldet",
 		"loginTitle": "Anmelden bei %CLOUD_NAME%",
 		"loginButton": "Anmelden",
 		"logoutAuthorisedTitle": "Sie sind bereits eingeloggt",
 		"logoutAuthorisedContinueButton": "Fortfahren",
 		"logoutAuthorisedLogoutButton": "Abmelden",
 		"noClientDetectedTitle": "Installieren Sie %VMS_NAME%, um Ihr System anzusehen",
-		"stayAs": "Stay logged as {email} ",
-		"stayLoggedIn": "Stay Logged In",
+		"stayAs": "Bleiben Sie angemeldet als {email} ",
+		"stayLoggedIn": "Angemeldet bleiben",
 		"download": "%VMS_NAME% herunterladen",
 		"merge": {
+			"commonText": "Fehler beim Zusammenführen der Systeme <strong>{{primarySystem}}</strong> und <strong>{{secondarySystem}}</strong>.",
 			"connectToCloud": "Verbinden Sie das System, mit dem Sie fusionieren möchten, mit <strong>{{cloudName}}</strong> oder fusionieren Sie lokal mit dem <strong>{{vmsName}}</strong>-Client.",
 			"mergeConfirmation": "Sie sind dabei, die Systeme <strong>{{primarySystem}}</strong> und <strong>{{secondarySystem}}</strong> zusammenzuführen. Die Einstellungen und der Name werden von diesem System <strong>{{primarySystem}}</strong>verwendet.",
+			"mergeFailedTitle": "Systemzusammenführung fehlgeschlagen",
 			"primaryCannotMerge": "Das System {{targetSystem}} hat eine neuere Softwareversion, die mit dem aktuellen System nicht kompatibel ist. Aktualisieren Sie das aktuelle System auf die <a href=\"/download\" target=\"_blank\" translate>neueste Buildversion</a> um es mit diesem System {{targetSystem}} zusammenzuführen.",
 			"primarySystemOffline": "System {{primarySystem}} ist offline und kann nicht mit dem System {{targetSystem}} zusammengeführt werden.",
 			"secondaryCannotMerge": "Das System {{targetSystem}} hat eine ältere Softwareversion, die mit dem aktuellen System nicht kompatibel ist. Aktualisieren Sie das System {{targetSystem}} auf die <a href=\"/download\" target=\"_blank\" translate>neueste Buildversion</a> um es mit dem aktuellen System zusammenzuführen.",
@@ -275,7 +284,7 @@
 		"passwordMismatch": "Falsches Passwort",
 		"cantEditYourself": "Eigene Berechtigungen zu ändern ist nicht erlaubt",
 		"cantEditAdmin": "Dieser Benutzer hat Administratorberechtigungen",
-		"cantOpenClient": "%VMS_NAME% application is not detected.",
+		"cantOpenClient": "%VMS_NAME% Anwendung wurde nicht erkannt.",
 		"lostConnection": "Verbindung zu {{systemName}} verloren",
 		"thisSystem": "das System",
 		"oldSafariNotSupported": "Versionen von Safari älter als 10 werden nicht unterstützt",
@@ -308,6 +317,7 @@
 		"mySystemSearch": "IMeMyMine",
 		"unavailable": "System ist nicht erreichbar",
 		"offline": "System ist offline",
+		"offlineAlertRibbon": "Das System ist offline. Einige Einstellungen sind möglicherweise nicht verfügbar.",
 		"openClient": "In %VMS_NAME% öffnen",
 		"openClientNoSystem": "Öffnen Sie %VMS_NAME%",
 		"confirmMergeAction": "Zusammenführen",
@@ -321,7 +331,7 @@
 		"confirmUnshareFromMeTitle": "System trennen?",
 		"confirmUnshareFromMeAction": "Trennen",
 		"confirmUnshare": "Dieser Benutzer wird nicht in der Lage sein auf das System zuzugreifen. Sind Sie sich sicher?",
-		"confirmUnshareTitle": "Benutzer löschen?",
+		"confirmUnshareTitle": "Nutzer entfernen?",
 		"confirmUnshareAction": "Löschen",
 		"successDisconnected": "Das System wurde erfolgreich von %CLOUD_NAME% getrennt",
 		"successDeleted": "Das System {{systemName}} wurde erfolgreich von Ihrem Account gelöscht",
@@ -329,7 +339,8 @@
 		"mergeStart": "Systeme haben mit dem Zusammenführen begonnen",
 		"mergeSuccess": "Systemzusammenführung abgeschlossen",
 		"permissionsRemoved": "Berechtigungen wurden von {{email}} entfernt",
-		"unknownName": "Unbekannter Name für das System (verursacht durch Cloud-Merge)"
+		"unknownName": "Unbekannter Name für das System (verursacht durch Cloud-Merge)",
+		"shareOffline": "Das System kann nicht freigegeben werden, solange es offline ist"
 	},
 	"systemStatuses": {
 		"activated": "aktiviert",

@@ -105,6 +105,7 @@
     "NO_SYSTEMS_LOGIN": "Kirjaudu järjestelmään käyttämällä %VMS_NAME%",
     "NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "Sinulla ei ole järjestelmiä, jotka on kytketty %CLOUD_NAME%",
     "New Password": "Uusi Salasana",
+    "No unsaved changes": "No unsaved changes",
     "Nothing Found": "Mitään ei löytynyt",
     "OK": "OK",
     "Ok": "Ok",
@@ -125,6 +126,7 @@
     "Release Notes": "Julkaisutiedot",
     "Release notes": "Julkaisutiedot",
     "Remember me": "Muista minut",
+    "Remove User": "Remove User",
     "Rename": "Nimeä uudelleen",
     "Requirements": "Vaatimukset",
     "Resend activation email": "Lähetä vahvistussähköposti uudelleen",
@@ -280,8 +282,10 @@
         "logoutAuthorisedLogoutButton": "Kirjaudu ulos",
         "logoutAuthorisedTitle": "Olet jo kirjautunut sisään",
         "merge": {
+            "commonText": "Järjestelmien yhdistäminen <strong>{{primarySystem}}</strong> ja <strong>{{secondarySystem}}</strong>epäonnistui.",
             "connectToCloud": "Yhdistä järjestelmä, johon haluat yhdistää tämän, <strong>{{cloudName}}</strong> tai yhdistä paikallisesti <strong>{{vmsName}}</strong> -Client-sovelluksen avulla.",
             "mergeConfirmation": "Olet yhdistämässä järjestelmiä <strong>{{primarySystem}}</strong> ja <strong>{{secondarySystem}}</strong>. Asetukset ja nimi otetaan <strong>{{primarySystem}}</strong>.",
+            "mergeFailedTitle": "Järjestelmien yhdistäminen epäonnistui",
             "primaryCannotMerge": "Järjestelmässä {{targetSystem}} on uudempi ohjelmistoversio, joka ei ole yhteensopiva nykyisen järjestelmän kanssa. Päivitä nykyinen järjestelmä <a href=\"/download\" target=\"_blank\" translate>uusimpaan</a>: een yhdistääksesi se {{targetSystem}} järjestelmään.",
             "primarySystemOffline": "Järjestelmä {{primarySystem}} on offline-tilassa eikä sitä voi yhdistää järjestelmään {{targetSystem}}.",
             "secondaryCannotMerge": "Järjestelmässä {{targetSystem}} on vanhempi ohjelmistoversio, joka ei ole yhteensopiva nykyisen järjestelmän kanssa. Päivitä nykyinen järjestelmä <a href=\"/download\" target=\"_blank\" translate>uusimpaan</a>: een yhdistääksesi se {{targetSystem}} järjestelmään.",
@@ -327,10 +331,14 @@
     "downloads": {
         "appTypes": {
             "bundle": "Client ja palvelin",
+            "camera_sdk": "Videolähteen SDK",
             "client": "Vain Client-sovellus",
+            "metadata_sdk": "Metadata SDK",
             "package": "Paketti",
             "server": "Vain palvelin-sovellus",
-            "servertool": "Konfigurointityökalu"
+            "servertool": "Konfigurointityökalu",
+            "storage_sdk": "Storage SDK",
+            "video_source_sdk": "Videolähteen SDK"
         },
         "groups": {
             "android": {
@@ -381,8 +389,11 @@
             "bananapi": "Banana Pi",
             "bpi": "Nx1",
             "linux64": "x64",
+            "linux_arm32": "x32",
+            "linux_arm64": "x64",
             "mac": "X",
             "rpi": " Raspberry Pi",
+            "universal": "SDK",
             "win64": "x64"
         },
         "releasesTypes": {
@@ -574,16 +585,18 @@
         "confirmUnshareFromMe": "Olet poistamassa tämän järjestelmän tilistäsi. Et voi enää käyttää tätä järjestelmää. Oletko varma?",
         "confirmUnshareFromMeAction": "Katkaise yhteys",
         "confirmUnshareFromMeTitle": "Katkaise yhteys järjestelmään?",
-        "confirmUnshareTitle": "Poista käyttäjä?",
+        "confirmUnshareTitle": "Remove user?",
         "mergeFailed": "Järjestelmien yhdistäminen epäonnistui",
         "mergeStart": "Järjestelmät ovat alkaneet yhdistyä",
         "mergeSuccess": "Järjestelmän yhdistäminen on valmis",
         "mergeSystemTitle": "Yhdistä järjestelmät",
         "mySystemSearch": "IMeMyMine",
         "offline": "Järjestelmään ei saada yhteyttä",
+        "offlineAlertRibbon": "System is offline. Some settings may not be available.",
         "openClient": "Avaa %VMS_NAME%",
         "openClientNoSystem": "Avaa %VMS_NAME%",
         "permissionsRemoved": "Käyttöoikeudet poistettiin {{email}}",
+        "shareOffline": "Cannot share system while it is offline",
         "successDeleted": "Järjestelmä {{systemName}} poistetaan onnistuneesti tililtäsi",
         "successDisconnected": "Järjestelmä irrotetaan onnistuneesti %CLOUD_NAME%",
         "successRename": "Järjestelmän nimi on tallennettu",

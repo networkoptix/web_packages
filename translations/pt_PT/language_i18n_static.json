@@ -89,19 +89,26 @@
 			}
 		},
 		"platforms": {
-			"win64": "x64",
-			"linux64": "x64",
-			"mac": "X",
 			"bananapi": "Banana Pi",
 			"bpi": "Nx1",
-			"rpi": " Raspberry Pi"
+			"linux64": "x64",
+			"linux_arm32": "x32",
+			"linux_arm64": "x64",
+			"mac": "X",
+			"rpi": " Raspberry Pi",
+			"universal": "SDK",
+			"win64": "x64"
 		},
 		"appTypes": {
-			"client": "Somente cliente",
-			"server": "Somente servidor",
 			"bundle": "Cliente e Servidor",
+			"camera_sdk": "Video Source SDK",
+			"client": "Somente cliente",
+			"metadata_sdk": "Metadata SDK",
+			"package": "Package",
+			"server": "Somente servidor",
 			"servertool": "Ferramenta de configuração",
-			"package": "Package"
+			"storage_sdk": "Storage SDK",
+			"video_source_sdk": "Video Source SDK"
 		},
 		"releasesTypes": {
 			"beta": "Beta",
@@ -209,8 +216,10 @@
 		"stayLoggedIn": "Stay Logged In",
 		"download": "Baixar %VMS_NAME%",
 		"merge": {
+			"commonText": "Falha na fusão dos sistemas <strong>{{primarySystem}}</strong> e <strong>{{secondarySystem}}</strong>.",
 			"connectToCloud": "Ligar ao Sistema que deseja fazer a fusão com este para <strong>{{cloudName}}</strong> ou fazer a fusão localmente usando <strong>{{vmsName}}</strong> Client.",
 			"mergeConfirmation": "Está prestes a fundir os sistemas <strong>{{primarySystem}}</strong> e <strong>{{secondarySystem}}</strong>. As definições e o nome serão baseados a partir do <strong>{{primarySystem}}</strong>.",
+			"mergeFailedTitle": "Falha na fusão de Sistemas",
 			"primaryCannotMerge": "O sistema {{targetSystem}} tem uma versão de software mais recente que é incompatível com o sistema atual. Atualize o sistema atual com o <a href=\"/download\" target=\"_blank\" translate>build</a> mais recente para efectuar a fusão com o Sistema {{targetSystem}}.",
 			"primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}.",
 			"secondaryCannotMerge": "O sistema {{targetSystem}} tem uma versão de software mais antiga que é incompatível com o sistema atual. Atualize o sistema {{targetSystem}} para o <a href=\"/download\" target=\"_blank\" translate>build</a> mais recente para efectuar a fusão com este Sistema.",
@@ -308,6 +317,7 @@
 		"mySystemSearch": "IMeMyMine",
 		"unavailable": "O sistema está inacessível",
 		"offline": "O sistema está offline",
+		"offlineAlertRibbon": "System is offline. Some settings may not be available.",
 		"openClient": "Abrir em %VMS_NAME%",
 		"openClientNoSystem": "Abrir %VMS_NAME%",
 		"confirmMergeAction": "\"Merge\"",
@@ -321,15 +331,16 @@
 		"confirmUnshareFromMeTitle": "Desconectar o Sistema?",
 		"confirmUnshareFromMeAction": "Desconectar",
 		"confirmUnshare": "Este utilizador não será capaz de aceder ao sistema. Tem certeza?",
-		"confirmUnshareTitle": "Apagar utilizador?",
-		"confirmUnshareAction": "Apagar",
+		"confirmUnshareTitle": "Remove user?",
+		"confirmUnshareAction": "Remover",
 		"successDisconnected": "O Sistema foi desconectado de %CLOUD_NAME% com sucesso",
 		"successDeleted": "O sistema {{systemName}} foi apagado com sucesso da sua conta",
 		"mergeFailed": "Falha na fusão de Sistemas",
 		"mergeStart": "Os sistemas começaram a fusão",
 		"mergeSuccess": "Fusão do sistema concluída",
 		"permissionsRemoved": "As permissões foram removidas de {{email}}",
-		"unknownName": "Nome do Sistema desconhecido (causado pela fusão pela cloud)"
+		"unknownName": "Nome do Sistema desconhecido (causado pela fusão pela cloud)",
+		"shareOffline": "Cannot share system while it is offline"
 	},
 	"systemStatuses": {
 		"activated": "activado",

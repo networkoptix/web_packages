@@ -62,12 +62,14 @@ export class MergeModalContent {
         this.primarySystem = this.system;
         this.multipleSystems = this.systems.length > 0;
         this.outOfDate = this.multipleSystems && !this.system.canMerge;
-        this.processedSystems = this.makeSelectorList(this.systems);
-        this.targetSystem = this.selectDefaultSystem();
-        this.secondarySystem = this.targetSystem;
-        this.targetSystemDropdown = this.makeSelectorList([this.targetSystem])[0];
-        this.systemMergeable = this.checkMergeability(this.targetSystem);
         this.systemError = !this.multipleSystems || this.outOfDate;
+        if (this.multipleSystems) {
+            this.processedSystems = this.makeSelectorList(this.systems);
+            this.targetSystem = this.selectDefaultSystem();
+            this.secondarySystem = this.targetSystem;
+            this.targetSystemDropdown = this.makeSelectorList([this.targetSystem])[0];
+            this.systemMergeable = this.checkMergeability(this.targetSystem);
+        }
 
         this.user.get().then((account) => {
             this.account = account;
@@ -132,6 +134,7 @@ export class MergeModalContent {
             }
 
             error.data.resultCode = errorCode;
+            error.data.errorText = error && error.errorText || '';
             // Set the name of the primary system.
             error.data.primarySystemName = this.primarySystem.name;
             // If name is undefined try looking in info for the name.
@@ -165,12 +168,18 @@ export class MergeModalContent {
         this.checkMergeabilityProcess = this.processService.createProcess(() => {
             this.checking = true;
             this.systemMergeable = '';
-            return this.precheckSystemMerge();
-        }, { errorCodes: {}})
+            return this.precheckSystemMerge().finally(() => {
+                this.checking = false;
+                this.targetSystemDropdown.name = this.addStatus(this.targetSystem);
+                this.systemMergeable = this.checkMergeability(this.targetSystem);
+            });
+        }, {
+            errorCodes: {
+                target: () => {},
+                system: () => {}
+            }
+        })
         .then((res) => {
-            this.checking = false;
-            this.targetSystemDropdown.name = this.addStatus(this.targetSystem);
-            this.systemMergeable = this.checkMergeability(this.targetSystem);
             if (!res.system && this.systemMergeable === '' || this.CONFIG.allowDebugMode) {
                 return this.updateState();
             }
@@ -241,10 +250,10 @@ export class MergeModalContent {
             return this.targetSystem.getUsersDataFromTheSystem().then(() => {
                 return Promise.all([
                     this.system.mediaserver.getMediaServers().toPromise().catch(error => {
-                        return Promise.reject({ system: 'current', errorResponse: error });
+                        return Promise.reject({error: { data: { resultCode:  'current'}, errorResponse: error }});
                     }),
                     this.targetSystem.mediaserver.getMediaServers().toPromise().catch(error => {
-                        return Promise.reject({ system: 'target', errorResponse: error });
+                        return Promise.reject({ error: { data: { resultCode: 'target'}, errorResponse: error }});
                     })
                 ]).then(res => {
                     this.tooManySystems = res.map(req => req.length)

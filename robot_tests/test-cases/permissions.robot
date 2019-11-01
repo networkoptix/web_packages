@@ -186,7 +186,7 @@ Admin cannot edit self via share
     Click Link
     ...    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${VIEWER TEXT}']/..
     Click Button    ${SHARE BUTTON MODAL}
-    Check For Alert    ${CHANGING OWN PERMISSIONS IS NOT ALLOWED}
+    Check For Alert    ${CANNOT SHARE SYSTEM}${CHANGING OWN PERMISSIONS IS NOT ALLOWED}
     Wait Until Element is Visible    ${SHARE CANCEL}
     Click Button    ${SHARE CANCEL}
 
@@ -207,7 +207,7 @@ Owner cannot edit self via share
     ...    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${VIEWER TEXT}']/..
     Click Button    ${SHARE BUTTON MODAL}
     Click Button    ${SHARE CLOSE}
-    Check For Alert    ${CHANGING OWN PERMISSIONS IS NOT ALLOWED}
+    Check For Alert    ${CANNOT SHARE SYSTEM}${CHANGING OWN PERMISSIONS IS NOT ALLOWED}
 
 Admin cannot delete or edit other admins
     [tags]    C41905

@@ -138,10 +138,6 @@
     "FAIL": "El sistema <strong>{{failedSystem}}</strong> es actualmente inalcanzable.<br>Vuelva a intentarlo en unos momentos o póngase en contacto con <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
     "unknownMergeError": "Error desconocido. Puede intentar actualizar la página y repetir el intento. Si el problema persiste, por favor contacte con el soporte <a href=\"%SUPPORT_LINK%\" target=\"_blank\"></a>."
   },
-  "merging": {
-    "mergeFailedTitle": "La fusión de sistemas falló",
-    "commonText": "Error al fusionar los sistemas <strong>{{primarySystem}}</strong> y <strong>{{secondarySystem}}</strong>."
-  },
   "system": {
     "yourSystem": "Su Sistema",
     "mySystemSearch": "IMeMyMine",

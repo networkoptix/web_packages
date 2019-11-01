@@ -17,7 +17,7 @@ ${headless}    true
 @{chrome_arguments}    --disable-gpu    --no-sandbox    --log-level=3    --start-maximized
 @{chrome_arguments_headless}    --disable-infobars    --headless    --disable-gpu    --no-sandbox    --log-level=3
 ${speed}    0
-${selenium_timeout}    20
+${selenium_timeout}    30
 
 *** Keywords ***
 Open Browser and go to URL
@@ -177,10 +177,11 @@ Restore password
     [arguments]    ${email}
     #log in to user to make sure their language is set to the current
     Open Browser and go to URL    ${url}
-    Log In    ${email}    ${password}
-    Validate Log In
-    Log Out
-    Validate Log Out
+    Log    Kyle disabled checking the user's langauge before sending. If it's not working blame him
+    # Log In    ${email}    ${password}
+    # Validate Log In
+    # Log Out
+    # Validate Log Out
     Go To    ${url}/restore_password
     Wait Until Elements Are Visible    ${RESTORE PASSWORD EMAIL INPUT}    ${RESET PASSWORD BUTTON}
     Input Text    ${RESTORE PASSWORD EMAIL INPUT}    ${email}
@@ -303,7 +304,6 @@ Select user in Users List
 Check For Alert
     [arguments]    ${alert text}    ${timeout}=${selenium_timeout}
     Wait Until Element Is Visible    ${ALERT}    ${timeout}
-    Element Should Be Visible    ${ALERT}
     Element Text Should Be    ${ALERT}    ${alert text}
     Wait Until Page Does Not Contain Element    ${ALERT}
 
@@ -316,9 +316,11 @@ Check For Alert Dismissable
 
 Verify In System
     [arguments]    ${system name}
+    Go to System Administration
     Wait Until Element Is Visible    //h2[contains(@class,"system-name") and contains(text(), '${system name}')]
 
 Disconnect from cloud
+    Go to System Administration
     Wait Until Element Is Visible    ${DISCONNECT FROM NX}
     Click Element    ${DISCONNECT FROM NX}
     Wait Until Elements Are Visible    ${DISCONNECT FORM CANCEL}    ${DISCONNECT FORM DISCONNECT BUTTON}    ${DISCONNECT PASSWORD INPUT}

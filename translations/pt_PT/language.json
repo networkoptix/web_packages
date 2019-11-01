@@ -1,6 +1,6 @@
 {
   "language": "pt_PT",
-  "language_name": "Português",
+  "language_name": "Português (Portugal)",
   "cloudName": "%CLOUD_NAME%",
   "vmsName": "%VMS_NAME%",
   "clientProtocol": "%CLIENT_PROTOCOL%:",
@@ -137,10 +137,6 @@
     "INCOMPATIBLE": "Os sistemas têm versões de software diferentes. Por favor, actualize os dois para o <a href=\"/download\">build mais recente</a>.",
     "FAIL": "O sistema <strong>{{failedSystem}}</strong> está actualmente inacessível.<br> Tente novamente em alguns instantes ou entre em contato com o <a href=\"%SUPPORT_LINK%\" target=\"_blank\">suporte</a>.",
     "unknownMergeError": "Unknown error. You can try to refresh the page and repeat attempt. If the problem persists – please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>."
-  },
-  "merging": {
-    "mergeFailedTitle": "Falha na fusão de Sistemas",
-    "commonText": "Falha na fusão dos sistemas <strong>{{primarySystem}}</strong> e <strong>{{secondarySystem}}</strong>."
   },
   "system": {
     "yourSystem": "O seu Sistema",

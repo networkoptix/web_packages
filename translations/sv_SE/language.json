@@ -138,10 +138,6 @@
     "FAIL": "System <strong>{{failedSystem}}</strong> är för närvarande oåtkomligt.<br>Försök igen om några minuter eller kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
     "unknownMergeError": "Okänt fel. Du kan försöka uppdatera sidan och upprepa försöket. Om problemet kvarstår - kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>."
   },
-  "merging": {
-    "mergeFailedTitle": "Systemsammanslagning misslyckades",
-    "commonText": "Misslyckades med att slå samman system <strong>{{primarySystem}}</strong> och <strong>{{secondarySystem}}</strong>."
-  },
   "system": {
     "yourSystem": "Ditt system",
     "mySystemSearch": "JagMigMinMin",

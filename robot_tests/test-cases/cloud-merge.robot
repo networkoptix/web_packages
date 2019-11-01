@@ -11,6 +11,7 @@ Force Tags        Threaded File    merge
 ${email}             ${EMAIL OWNER}
 ${password}          ${BASE PASSWORD}
 ${url}               ${ENV}
+${merge timeout}     180
 ${email admin no reg}    noptixautoqa+adminunreg@gmail.com
 ${email viewer no reg}    noptixautoqa+viewerunreg@gmail.com
 ${email client custom no reg}    noptixautoqa+clientcustomunreg@gmail.com
@@ -284,12 +285,13 @@ Only one system connected to Cloud Account
     Log Out
     Log In    ${EMAIL MERGE OWNER 2}    ${password}
     Validate Log In
+    Wait Until Element Is Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
     Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
     Validate system available    API made system 2
+    Go to System Administration
     Wait Until Element Is Visible    ${MERGE BUTTON SYSTEM}
     Wait Until Element Is Enabled    ${MERGE BUTTON SYSTEM}    180
     Click Button    ${MERGE BUTTON SYSTEM}
-    Sleep    2
 
     Wait Until Elements Are Visible
     ...    ${MERGE NOT OWNER MESSAGE 2}
@@ -345,8 +347,10 @@ Only one system connected to Cloud Account
     ...    API made system 2
     log in    ${user}    ${password}
     Validate Log in
+    Wait Until Element Is Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
     Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
     Validate system available    API made system 2
+    Go to System Administration
     Wait Until Element Is Visible    ${MERGE BUTTON SYSTEM}
     Wait Until Element Is Enabled    ${MERGE BUTTON SYSTEM}    180
     Click Button    ${MERGE BUTTON SYSTEM}
@@ -383,12 +387,14 @@ Merge with 3.0
     Elements Should Not Be Visible    ${MERGE BUTTON SYSTEM}
     Go To    ${url}/systems
     Validate Log In
+    Wait Until Element Is Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
     Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
     Wait Until Elements Are Visible
     ...    ${DISCONNECT FROM NX}
     ...    ${RENAME SYSTEM}
     Go to Users List
     Wait Until Element Is Enabled    ${SHARE BUTTON SYSTEMS}    180
+    Go to System Administration
     Wait Until Element Is Enabled    ${MERGE BUTTON SYSTEM}
     Click Button    ${MERGE BUTTON SYSTEM}
     Wait Until Elements Are Visible
@@ -416,6 +422,7 @@ Merge with 3.0
     ...    API made system 2
     log in    ${user}    ${password}
     Validate Log in
+    Wait Until Element Is Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
     Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
     Wait Until Elements Are Visible
     ...    ${DISCONNECT FROM NX}
@@ -424,6 +431,7 @@ Merge with 3.0
     Wait Until Element Is Enabled    ${SHARE BUTTON SYSTEMS}    180
     Go To    ${url}/systems
     Validate Log In
+    Wait Until Element Is Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
     Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
     Verify In System    API made system 2
     Wait Until Elements Are Visible
@@ -504,11 +512,13 @@ From secondary system merge to primary with no other systems
     ...    API made system 2
     log in    ${user}    ${password}
     Validate Log in
+    Wait Until Element Is Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
     Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
     Validate system available    API made system 1
     Go To    ${url}/systems
     Reload Page
     Validate Log In
+    Wait Until Element Is Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
     Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
     Validate system available    API made system 2
 
@@ -520,7 +530,7 @@ From secondary system merge to primary with no other systems
     ...    ${CONNECTION TO SYSTEM LOST}
     ...    %SYSTEM NAME%
     ...    API made system 2
-    Check for alert    ${alert message}    timeout=120
+    Check for alert    ${alert message}    timeout=${merge timeout}
     Wait Until Element Is Visible    ${USERS LIST}
     Wait Until Element Is Not Visible    ${CURRENTLY MERGING CARD}    120
     Validate system available    API made system 1
@@ -547,14 +557,17 @@ From secondary system merge to primary with other systems
     ...    API made system 3
     log in    ${user}    ${password}
     Validate Log in
+    Wait Until Element Is Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
     Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
     Validate system available    API made system 1
     Go To    ${url}/systems
     Validate Log In
+    Wait Until Element Is Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
     Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
     Validate system available    API made system 2
     Go To    ${url}/systems
     Validate Log In
+    Wait Until Element Is Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 3")]
     Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 3")]
     Validate system available    API made system 3
 
@@ -566,7 +579,7 @@ From secondary system merge to primary with other systems
     ...    ${CONNECTION TO SYSTEM LOST}
     ...    %SYSTEM NAME%
     ...    API made system 3
-    Check for alert    ${alert message}    timeout=120
+    Check for alert    ${alert message}    timeout=${merge timeout}
     Wait Until Elements Are Visible
     ...    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
     ...    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
@@ -591,11 +604,13 @@ From primary system
     ...    API made system 1
     log in    ${user}    ${password}
     Validate Log in
+    Wait Until Element Is Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
     Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
     Validate system available    API made system 2
     Go To    ${url}/systems
     Reload Page
     Validate Log In
+    Wait Until Element Is Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
     Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
     Validate system available    API made system 1
 
@@ -603,6 +618,7 @@ From primary system
     Merge    API made system 1    API made system 2    API made system 2
     Validate Merge
 
+    Go to Users List
     Wait Until Element Is Visible    ${USERS LIST}
     Wait Until Element Is Not Visible    ${CURRENTLY MERGING CARD}    120
     Check For Alert Dismissable    ${SYSTEM MERGE COMPLETED TEXT}
@@ -631,10 +647,12 @@ Merge with different types of users
     ...    network=bridge
     Log In    ${user}    ${password}
     Validate Log in
+    Wait Until Element Is Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
     Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
     Validate system available    API made system 1
     Go To    ${url}/systems
     Validate Log In
+    Wait Until Element Is Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
     Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
     Validate system available    API made system 2
     Go to System Administration
@@ -646,7 +664,7 @@ Merge with different types of users
     ...    ${CONNECTION TO SYSTEM LOST}
     ...    %SYSTEM NAME%
     ...    API made system 2
-    Check for alert    ${alert message}    timeout=120
+    Check for alert    ${alert message}    timeout=${merge timeout}
     Validate system available    API made system 1
     FOR     ${idx}    IN RANGE    90
         ${result}    Run Keyword And Ignore Error    Wait Until Element Is Visible

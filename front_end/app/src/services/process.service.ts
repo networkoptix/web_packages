@@ -116,7 +116,7 @@ class Process {
             }
             return;
         }, (error) => {
-            if (error.error) {
+            if (error && error.error) {
                 error = error.error;
             }
             this.handleError(error);

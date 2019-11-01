@@ -13,6 +13,7 @@ import { NxApplyService }            from './apply.service';
 
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { ReplaySubject, timer }               from 'rxjs';
+import { WINDOW }                             from './window-provider';
 
 @Injectable({
     providedIn: 'root'
@@ -25,8 +26,10 @@ export class NxAccountService {
     requestingLogin: any;
     account: any;
     loginStateSubject = new ReplaySubject(1);
+    loginDialogActive: boolean;
 
     constructor(@Inject(DOCUMENT) private document: any,
+                @Inject(WINDOW) private window: Window,
                 private config: NxConfigService,
                 private language: NxLanguageProviderService,
                 private cloudApi: NxCloudApiService,
@@ -43,6 +46,7 @@ export class NxAccountService {
         this.CONFIG = this.config.getConfig();
         this.LANG = this.language.getTranslations();
         this.loggingOut = false;
+        this.loginDialogActive = false;
 
         // Distinct until changed is used to prevent the logout function from looping.
         this.sessionService.loginStateSubject.pipe(distinctUntilChanged()).subscribe((loginState) => {
@@ -117,7 +121,7 @@ export class NxAccountService {
         });
     }
 
-    get() {
+    get(forceUpdate = false) {
         if (this.requestingLogin) {
             // login is requesting, so we wait
             return this.requestingLogin
@@ -127,7 +131,7 @@ export class NxAccountService {
                        });
         }
 
-        if (this.account) {
+        if (this.account && !forceUpdate) {
             return new Promise(resolve => {
                 return resolve(this.account);
             });
@@ -171,7 +175,8 @@ export class NxAccountService {
     requireLogin() {
         return this.get()
             .then((account) => {
-                if (!account) {
+                if (!account && !this.loginDialogActive) {
+                    this.loginDialogActive = true;
                     return this.dialogs
                         .login(this, true, true).then(() => {
                             return this.get().then((account) => {
@@ -180,7 +185,11 @@ export class NxAccountService {
                         })
                         .catch(() => {
                             this.location.path(this.CONFIG.redirectUnauthorised);
+                        }).finally(() => {
+                            this.loginDialogActive = false;
                         });
+                } else if (this.loginDialogActive) {
+                    return undefined;
                 }
                 return account;
             });
@@ -251,10 +260,9 @@ export class NxAccountService {
     }
 
     loginWithAuthKey(authKey: string) {
-        const auth = atob(authKey);
-        const index = auth.indexOf(':');
-        const tempLogin = auth.substring(0, index);
-        const tempPassword = auth.substring(index + 1);
+        const auth = atob(authKey).split(':');
+        const tempLogin = auth[0];
+        const tempPassword = auth[1];
 
         return this.login(tempLogin, tempPassword, false)
             .then(() => {
@@ -290,11 +298,12 @@ export class NxAccountService {
                             return this.router
                                        .navigate([this.CONFIG.redirectUnauthorised])
                                        .finally(() => {
-                                           setTimeout(() => window.location.reload());
+                                           setTimeout(() => this.window.location.reload());
                                        });
                         }
+
                         setTimeout(() => {
-                            return this.router.navigate([this.router.url]);
+                            return this.window.location.reload();
                         });
                     });
             }
@@ -343,28 +352,47 @@ export class NxAccountService {
     }
 
     private handleAuthKeyLogin(auth) {
-        this.get().then((account) => {
-            if (!account) {
-                return this.loginWithAuthKey(auth).then(() => {
-                    return this.document.location.reload();
-                });
-            }
-            return this.dialogs.confirm('',
-                this.LANG.dialogs.loggedFromOther,
-                this.LANG.dialogs.okButton,
-                undefined,
-                this.LANG.dialogs.stayAs.replace('{email}', account.email),
-                'long-cancel-button'
-            ).then((result) => {
-                if (result === true) {
-                    this.logout(true);
-                } else {
-                    const queryParams = {auth: undefined, from: undefined};
-                    return this.router
-                        .navigate([], { queryParams , queryParamsHandling: 'merge'})
-                        .then(() => this.document.location.reload());
+        this.get()
+            .then((account) => {
+                if (!account) {
+                    return this.loginWithAuthKey(auth).then(() => {
+                        return this.document.location.reload();
+                    });
                 }
+
+                this.cloudApi.checkAuthCode(auth).then(async (result: any) => {
+                    if (result.email === account.email) {
+                        return;
+                    }
+
+                    const response = await this.dialogs
+                                               .confirm('',
+                                                       this.LANG.dialogs.loggedFromOther,
+                                                       this.LANG.dialogs.okButton,
+                                                       undefined,
+                                                       this.LANG.dialogs.stayAs.replace('{email}', account.email),
+                                                       'long-cancel-button')
+                    if (response === true) {
+                        return this.cloudApi
+                                   .logout()
+                                   .finally(() => {
+                                       if (this.account && this.account.timer) {
+                                           this.account.timer.unsubscribe();
+                                       }
+                                       this.account = undefined;
+                                       this.localStorageService.clear('all'); // Clear session
+                                       // this.sessionService.invalidateSession(); // Clear session
+                                       return this.loginWithAuthKey(auth).then(() => {
+                                           return this.document.location.reload();
+                                       });
+                                   });
+                    } else {
+                        const queryParams = { auth: undefined, from: undefined };
+                        return this.router
+                                   .navigate([], { queryParams, queryParamsHandling: 'merge' })
+                                   .then(() => this.document.location.reload());
+                    }
+                });
             });
-        });
     }
 }

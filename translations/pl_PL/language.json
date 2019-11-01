@@ -138,10 +138,6 @@
     "FAIL": "System <strong>{{failedSystem}}</strong> jest obecnie niedostępny.<br>Spróbuj ponownie za kilka minut lub skontaktuj się z <a href=\"%SUPPORT_LINK%\" target=\"_blank\">działem wsparcia technicznego</a>.",
     "unknownMergeError": "Nieznany błąd. Można odświeżyć stronę i spróbować ponownie. Jeśli problem będzie się powtarzał - proszę skontaktować się z <a href=\"%SUPPORT_LINK%\" target=\"_blank\">działem wsparcia technicznego</a>."
   },
-  "merging": {
-    "mergeFailedTitle": "Łączenie systemów nie powiodło się",
-    "commonText": "Nie udało się złączyć systemów <strong>{{primarySystem}}</strong> i <strong>{{secondarySystem}}</strong>."
-  },
   "system": {
     "yourSystem": "Twój system",
     "mySystemSearch": "IMeMyMine",

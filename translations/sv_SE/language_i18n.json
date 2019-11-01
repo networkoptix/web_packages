@@ -105,6 +105,7 @@
     "NO_SYSTEMS_LOGIN": "Logga in på ditt system med %VMS_NAME%",
     "NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "Du har inga system anslutna till %CLOUD_NAME%",
     "New Password": "Nytt Lösenord",
+    "No unsaved changes": "Inga osparade ändringar",
     "Nothing Found": "Inget hittades",
     "OK": "OK",
     "Ok": "Ok",
@@ -125,6 +126,7 @@
     "Release Notes": "Ändringslogg",
     "Release notes": "Ändringslogg",
     "Remember me": "Kom ihåg mig",
+    "Remove User": "Ta Bort Användare",
     "Rename": "Döp om",
     "Requirements": "Krav",
     "Resend activation email": "Skicka om aktiveringsmejl",
@@ -270,7 +272,7 @@
     "devices": "enheter",
     "dialogs": {
         "cancelButton": "Avbryt",
-        "changeAccountLogged": "You are already logged in with as {email}",
+        "changeAccountLogged": "Du är redan inloggad som {email}",
         "createNewAccount": "Skapa nytt konto",
         "download": "Ladda ner %VMS_NAME%",
         "loggedFromOther": "Du kommer att vara inloggad med ett annat konto",
@@ -280,8 +282,10 @@
         "logoutAuthorisedLogoutButton": "Logga ut",
         "logoutAuthorisedTitle": "Du är redan inloggad",
         "merge": {
+            "commonText": "Misslyckades med att slå samman system <strong>{{primarySystem}}</strong> och <strong>{{secondarySystem}}</strong>.",
             "connectToCloud": "Anslut system du vill slå samman med den här till <strong>{{cloudName}}</strong> eller slå ihop lokalt med <strong>{{vmsName}}</strong> Client.",
             "mergeConfirmation": "Du håller på att slå samman system <strong>{{primarySystem}}</strong> och <strong>{{secondarySystem}}</strong>. Inställningar och namnet kommer att tas från <strong>{{primarySystem}}</strong>.",
+            "mergeFailedTitle": "Systemsammanslagning misslyckades",
             "primaryCannotMerge": "System {{targetSystem}} har en nyare mjukvaruversion som inte är kompatibel med det aktuella systemet. Uppdatera det nuvarande systemet till <a href=\"/download\" target=\"_blank\" translate>senaste bygg</a> att slå samman det med {{targetSystem}} systemet.",
             "primarySystemOffline": "System {{primarySystem}} är offline och kan inte slås samman med System {{targetSystem}}.",
             "secondaryCannotMerge": "System {{targetSystem}} har en äldre programversion som inte är kompatibel med det aktuella systemet. Uppdatera {{targetSystem}} till <a href=\"/download\" target=\"_blank\" translate>senaste version</a> att slå samman den med den nuvarande.",
@@ -314,8 +318,8 @@
             "shareConfirmButton": "Lägg till",
             "shareTitle": "Lägg till"
         },
-        "stayAs": "Stay logged as {email} ",
-        "stayLoggedIn": "Stay Logged In"
+        "stayAs": "Håll loggad som {email} ",
+        "stayLoggedIn": "Kom ihåg mig"
     },
     "dialogs.merge.connectToCloud": "Anslut system du vill slå samman med den här till <strong>{{cloudName}}</strong> eller slå ihop lokalt med <strong>{{vmsName}}</strong> Client.",
     "dialogs.merge.mergeConfirmation": "Du håller på att slå samman system <strong>{{primarySystem}}</strong> och <strong>{{secondarySystem}}</strong>. Inställningar och namnet kommer att tas från <strong>{{primarySystem}}</strong>.",
@@ -327,10 +331,14 @@
     "downloads": {
         "appTypes": {
             "bundle": "Klient och Server",
+            "camera_sdk": "Videokälla SDK",
             "client": "Endast klient",
+            "metadata_sdk": "Metadata SDK",
             "package": "Paket",
             "server": "Endast server",
-            "servertool": "Konfigurationsverktyg"
+            "servertool": "Konfigurationsverktyg",
+            "storage_sdk": "Lagrings SDK",
+            "video_source_sdk": "Videokälla SDK"
         },
         "groups": {
             "android": {
@@ -381,8 +389,11 @@
             "bananapi": "Banana Pi",
             "bpi": "Nx1",
             "linux64": "x64",
+            "linux_arm32": "x32",
+            "linux_arm64": "x64",
             "mac": "X",
             "rpi": " Raspberry Pi",
+            "universal": "SDK",
             "win64": "x64"
         },
         "releasesTypes": {
@@ -570,20 +581,22 @@
         "confirmRenameAction": "Spara",
         "confirmRenameTitle": "Systemets namn",
         "confirmUnshare": "Den här användaren kan inte komma åt System. Är du säker?",
-        "confirmUnshareAction": "Radera",
+        "confirmUnshareAction": "Ta bort",
         "confirmUnshareFromMe": "Du håller på att koppla bort det här systemet från ditt konto. Du kommer inte längre få tillgång till det här systemet. Är du säker?",
         "confirmUnshareFromMeAction": "Koppla från",
         "confirmUnshareFromMeTitle": "Koppla ifrån systemet?",
-        "confirmUnshareTitle": "Radera användaren?",
+        "confirmUnshareTitle": "Ta bort användare?",
         "mergeFailed": "Systemsammanslagning misslyckades",
         "mergeStart": "System har börjat slås samman",
         "mergeSuccess": "Systemsammanslagning slutförd",
         "mergeSystemTitle": "Sammanfoga system",
         "mySystemSearch": "JagMigMinMin",
         "offline": "Systemet är offline",
+        "offlineAlertRibbon": "Systemet är offline. Vissa inställningar kanske inte är tillgängliga.",
         "openClient": "Öppet i %VMS_NAME%",
         "openClientNoSystem": "Öppna %VMS_NAME%",
         "permissionsRemoved": "Rättigheterna togs bort från {{email}}",
+        "shareOffline": "Kan inte dela systemet medan det är offline",
         "successDeleted": "System {{systemName}} har tagits bort från ditt konto",
         "successDisconnected": "Systemet har kopplats bort från %CLOUD_NAME%",
         "successRename": "Systemnamnet sparat",

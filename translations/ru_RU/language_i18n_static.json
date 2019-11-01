@@ -89,19 +89,26 @@
 			}
 		},
 		"platforms": {
-			"win64": "x64",
-			"linux64": "x64",
-			"mac": "X",
 			"bananapi": "Banana Pi",
 			"bpi": "Nx1",
-			"rpi": " Raspberry Pi"
+			"linux64": "x64",
+			"linux_arm32": "x32",
+			"linux_arm64": "x64",
+			"mac": "X",
+			"rpi": " Raspberry Pi",
+			"universal": "SDK",
+			"win64": "x64"
 		},
 		"appTypes": {
-			"client": "Только клиент",
-			"server": "Только сервер",
 			"bundle": "Клиент и сервер",
+			"camera_sdk": "SDK источника видео",
+			"client": "Только клиент",
+			"metadata_sdk": "Metadata SDK",
+			"package": "Пакет",
+			"server": "Только сервер",
 			"servertool": "Инструмент настройки",
-			"package": "Пакет"
+			"storage_sdk": "SDK для интеграции хранилищ",
+			"video_source_sdk": "SDK источника видео"
 		},
 		"releasesTypes": {
 			"beta": "Beta",
@@ -209,8 +216,10 @@
 		"stayLoggedIn": "Stay Logged In",
 		"download": "Скачать %VMS_NAME%",
 		"merge": {
+			"commonText": "Не удалось объединить системы <strong>{{primarySystem}}</strong> и <strong>{{secondarySystem}}</strong>.",
 			"connectToCloud": "Подключите систему, которую вы хотите объединить с этой, к <strong>{{cloudName}}</strong> или выполните объединение локально, используя <strong>{{vmsName}}</strong> Client.",
 			"mergeConfirmation": "Вы собираетесь объединить системы <strong>{{primarySystem}}</strong> и <strong>{{secondarySystem}}</strong>. Настройки и название будут взяты из <strong>{{primarySystem}}</strong>.",
+			"mergeFailedTitle": "Объединение систем не удалось",
 			"primaryCannotMerge": "Система {{targetSystem}} имеет более новую версию программного обеспечения, несовместимую с текущей Системой. Обновите текущую Систему до <a href=\"/download\" target=\"_blank\" translate>последней сборки</a> чтобы объединить ее с Системой {{targetSystem}}.",
 			"primarySystemOffline": "Система {{primarySystem}} не находится в сети и не может быть объединена с системой {{targetSystem}}.",
 			"secondaryCannotMerge": "Система {{targetSystem}} имеет более старую версию программного обеспечения, несовместимую с текущей Системой. Обновите {{targetSystem}} до <a href=\"/download\" target=\"_blank\" translate>последней сборки</a> чтобы объединить ее с текущей.",
@@ -308,6 +317,7 @@
 		"mySystemSearch": "ЯМойМоя",
 		"unavailable": "Система недоступна",
 		"offline": "Система не в сети",
+		"offlineAlertRibbon": "System is offline. Some settings may not be available.",
 		"openClient": "Открыть в %VMS_NAME%",
 		"openClientNoSystem": "Открыть %VMS_NAME%",
 		"confirmMergeAction": "Объединить",
@@ -329,7 +339,8 @@
 		"mergeStart": "Объединение систем началось",
 		"mergeSuccess": "Слияние системы завершено",
 		"permissionsRemoved": "{{email}} был лишен полномочий",
-		"unknownName": "Неизвестное имя для системы (вызвано облачным объединением систем)"
+		"unknownName": "Неизвестное имя для системы (вызвано облачным объединением систем)",
+		"shareOffline": "Cannot share system while it is offline"
 	},
 	"systemStatuses": {
 		"activated": "активирован",

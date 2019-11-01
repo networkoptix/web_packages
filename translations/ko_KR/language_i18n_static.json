@@ -89,19 +89,26 @@
 			}
 		},
 		"platforms": {
-			"win64": "x64",
-			"linux64": "x64",
-			"mac": "X",
 			"bananapi": "Banana Pi",
 			"bpi": "Nx1",
-			"rpi": "Raspberry Pi"
+			"linux64": "x64",
+			"linux_arm32": "x32",
+			"linux_arm64": "x64",
+			"mac": "X",
+			"rpi": "Raspberry Pi",
+			"universal": "SDK",
+			"win64": "x64"
 		},
 		"appTypes": {
-			"client": "클라이언트만",
-			"server": "서버 만",
 			"bundle": "클라이언트와 서버",
+			"camera_sdk": "비디오 소스 SDK",
+			"client": "클라이언트만",
+			"metadata_sdk": "Metadata SDK",
+			"package": "패키지",
+			"server": "서버 만",
 			"servertool": "구성 도구",
-			"package": "패키지"
+			"storage_sdk": "저장소 관련 SDK",
+			"video_source_sdk": "비디오 소스 SDK"
 		},
 		"releasesTypes": {
 			"beta": "베타",
@@ -197,7 +204,7 @@
 		"okButton": "확인",
 		"cancelButton": "취소",
 		"createNewAccount": "새 계정 만들기",
-		"changeAccountLogged": "You are already logged in with as {email}",
+		"changeAccountLogged": "이미 {email} 로 로그인 되어있습니다",
 		"loggedFromOther": "다른 계정으로 로그인 하게 될것입니다",
 		"loginTitle": "%CLOUD_NAME%에 로그인",
 		"loginButton": "로그인",
@@ -205,12 +212,14 @@
 		"logoutAuthorisedContinueButton": "계속",
 		"logoutAuthorisedLogoutButton": "로그 아웃",
 		"noClientDetectedTitle": "시스템이 성공적으로 %VMS_NAME% 에서 분리 되었습니다",
-		"stayAs": "Stay logged as {email} ",
-		"stayLoggedIn": "Stay Logged In",
+		"stayAs": "{email} 로 로그인 상태 유지 ",
+		"stayLoggedIn": "로그인 상태 유지",
 		"download": "%VMS_NAME% 다운로드",
 		"merge": {
+			"commonText": "시스템 <strong>{{primarySystem}}</strong> 및 <strong>{{secondarySystem}}</strong>를 머지 하는데 실패 했습니다.",
 			"connectToCloud": "이 시스템과 머지하려는 시스템을 <strong>{{cloudName}}</strong> 에 연결하거나 <strong>{{vmsName}}</strong> 클라이언트를 사용하여 로컬로 머지하십시오.",
 			"mergeConfirmation": "시스템 <strong>{{primarySystem}}</strong> 과 <strong>{{secondarySystem}}</strong>를 머지하려고합니다. 설정과 이름은 <strong>{{primarySystem}}</strong>에서 가져옵니다.",
+			"mergeFailedTitle": "시스템 머지에 실패했습니다.",
 			"primaryCannotMerge": "시스템 {{targetSystem}} 은 현재 시스템과 호환 되지 않는 최근 소프트웨어 버전이 있습니다. 현재 시스템을 {{targetSystem}} 시스템으로 머지하려면 <a href=\"/download\" target=\"_blank\" translate>최신 빌드</a> 로 업데이트 하십시요.",
 			"primarySystemOffline": "{{primarySystem}} 시스템이 오프라인 상태이며 {{targetSystem}} 시스템과 병합 할 수 없습니다.",
 			"secondaryCannotMerge": "시스템 {{targetSystem}} 에 현재 시스템과 호환되지 않는 이전 소프트웨어 버전이 있습니다. 병합하기 위해 {{targetSystem}} 를 받는 사람 <a href=\"/download\" target=\"_blank\" translate>최신 빌드</a> 로 업데이트 하십시요.",
@@ -308,6 +317,7 @@
 		"mySystemSearch": "IMeMyMine",
 		"unavailable": "시스템에 연결할 수 없습니다.",
 		"offline": "시스템이 오프라인 상태입니다.",
+		"offlineAlertRibbon": "System is offline. Some settings may not be available.",
 		"openClient": "%VMS_NAME%에서 열기",
 		"openClientNoSystem": "%VMS_NAME% 열기",
 		"confirmMergeAction": "병합",
@@ -321,7 +331,7 @@
 		"confirmUnshareFromMeTitle": "시스템 연결을 끊으시겠습니까?",
 		"confirmUnshareFromMeAction": "연결 끊기",
 		"confirmUnshare": "이 사용자는 시스템에 액세스 할 수 없게 됩니다. 확실합니까?",
-		"confirmUnshareTitle": "사용자 삭제?",
+		"confirmUnshareTitle": "사용자를 삭제 하시겠습니까?",
 		"confirmUnshareAction": "삭제",
 		"successDisconnected": "시스템이 %CLOUD_NAME%에서 성공적으로 연결 해제되었습니다.",
 		"successDeleted": "시스템 {{systemName}} 이 (가) 귀하의 계정에서 성공적으로 삭제되었습니다.",
@@ -329,7 +339,8 @@
 		"mergeStart": "시스템이 머지를 시작했습니다.",
 		"mergeSuccess": "시스템 머지가 완료되었습니다.",
 		"permissionsRemoved": "권한이 {{email}} 에서 제거 되었습니다.",
-		"unknownName": "시스템의 알 수없는 이름 (클라우드 머지로 인해 발생)"
+		"unknownName": "시스템의 알 수없는 이름 (클라우드 머지로 인해 발생)",
+		"shareOffline": "Cannot share system while it is offline"
 	},
 	"systemStatuses": {
 		"activated": "활성화 됨",

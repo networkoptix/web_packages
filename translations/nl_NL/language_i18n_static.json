@@ -89,19 +89,26 @@
 			}
 		},
 		"platforms": {
-			"win64": "x64",
-			"linux64": "x64",
-			"mac": "X",
 			"bananapi": "Banana Pi",
 			"bpi": "Nx1",
-			"rpi": " Raspberry Pi"
+			"linux64": "x64",
+			"linux_arm32": "x32",
+			"linux_arm64": "x64",
+			"mac": "X",
+			"rpi": " Raspberry Pi",
+			"universal": "SDK",
+			"win64": "x64"
 		},
 		"appTypes": {
-			"client": "Alleen client",
-			"server": "Alleen server",
 			"bundle": "Client en Server",
+			"camera_sdk": "Video Source SDK",
+			"client": "Alleen client",
+			"metadata_sdk": "Metadata SDK",
+			"package": "Package",
+			"server": "Alleen server",
 			"servertool": "Configuratie tool",
-			"package": "Package"
+			"storage_sdk": "Storage SDK",
+			"video_source_sdk": "Video Source SDK"
 		},
 		"releasesTypes": {
 			"beta": "Beta",
@@ -197,7 +204,7 @@
 		"okButton": "Oké",
 		"cancelButton": "Annuleren",
 		"createNewAccount": "Creëer een nieuw account",
-		"changeAccountLogged": "You are already logged in with as {email}",
+		"changeAccountLogged": "U bent al ingelogd met als {email}",
 		"loggedFromOther": "U wordt met een ander account ingelogd",
 		"loginTitle": "Meld u aan bij %CLOUD_NAME%",
 		"loginButton": "Inloggen",
@@ -205,12 +212,14 @@
 		"logoutAuthorisedContinueButton": "Doorgaan",
 		"logoutAuthorisedLogoutButton": "Uitloggen",
 		"noClientDetectedTitle": "Installeer %VMS_NAME% om uw systeem te bekijken",
-		"stayAs": "Stay logged as {email} ",
-		"stayLoggedIn": "Stay Logged In",
+		"stayAs": "Blijf aangemeld als {email} ",
+		"stayLoggedIn": "Ingelogd blijven",
 		"download": "Download %VMS_NAME%",
 		"merge": {
+			"commonText": "Kan systemen <strong>{{primarySystem}}</strong> en <strong>{{secondarySystem}}</strong>niet samenvoegen.",
 			"connectToCloud": "Verbind het systeem dat u met deze wilt samenvoegen tot <strong>{{cloudName}}</strong> of plaats lokaal samen met behulp van de <strong>{{vmsName}}</strong> Client.",
 			"mergeConfirmation": "U staat op het punt Systems <strong>{{primarySystem}}</strong> en <strong>{{secondarySystem}}</strong>samen te voegen. Instellingen en de naam worden overgenomen van de <strong>{{primarySystem}}</strong>.",
+			"mergeFailedTitle": "Het samenvoegen van systemen is mislukt",
 			"primaryCannotMerge": "Systeem {{targetSystem}} heeft een nieuwere softwareversie die niet compatibel is met het huidige systeem. Werk het huidige systeem bij naar de laatste <a href=\"/download\" target=\"_blank\" translate>build</a> om het samen te voegen met het {{targetSystem}} systeem.",
 			"primarySystemOffline": "Systeem {{primarySystem}} is offline en kan niet worden samengevoegd met systeem {{targetSystem}}.",
 			"secondaryCannotMerge": "Systeem {{targetSystem}} heeft een oudere softwareversie die niet compatibel is met het huidige systeem. Update {{targetSystem}} naar de <a href=\"/download\" target=\"_blank\" translate>laatste build</a> om deze samen te voegen met de huidige.",
@@ -308,6 +317,7 @@
 		"mySystemSearch": "IMeMyMine",
 		"unavailable": "Systeem is onbereikbaar",
 		"offline": "Systeem is offline",
+		"offlineAlertRibbon": "Systeem is offline. Sommige instellingen zijn mogelijk niet beschikbaar.",
 		"openClient": "Open in %VMS_NAME%",
 		"openClientNoSystem": "Open %VMS_NAME%",
 		"confirmMergeAction": "Samenvoegen",
@@ -329,7 +339,8 @@
 		"mergeStart": "Systemen zijn begonnen samen te voegen",
 		"mergeSuccess": "Systeem samenvoegen voltooid",
 		"permissionsRemoved": "Toestemmingen zijn verwijderd voor {{email}}",
-		"unknownName": "Onbekende naam voor systeem (veroorzaakt door samenvoeging in de cloud)"
+		"unknownName": "Onbekende naam voor systeem (veroorzaakt door samenvoeging in de cloud)",
+		"shareOffline": "Kan systeem niet delen terwijl het offline is"
 	},
 	"systemStatuses": {
 		"activated": "geactiveerd",

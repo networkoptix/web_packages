@@ -89,7 +89,6 @@ MIDDLEWARE = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'cloud.logger.CatchExceptionMiddleware',
 )
@@ -510,6 +509,7 @@ NOTIFICATIONS_CONFIG = {
     }
 }
 
+CONFIG_ERROR = "Customization Configuration Error. Please Notify Release Engineers."
 BROADCAST_NOTIFICATIONS_SUPERUSERS_ONLY = DEBUG
 NOTIFICATIONS_AUTO_SUBSCRIBE = False
 

@@ -91,6 +91,30 @@ function stop_docker_containers() {
     fi
 }
 
+function build_mediaserver_image() {
+    DEB_NAME=$1
+    VERSION=$2
+    docker image build robot_tests/Docker --tag "mediaserver:$VERSION" --build-arg mediaserver_deb=$DEB_NAME
+}
+
+function run_mediaserver() {
+    VERSION=$1
+    PORTS="$2"
+    EMAIL=$3
+    PASSWORD=$4
+    for PORT in $PORTS
+    do
+        echo "Starting mediaserver $PORT"
+        docker run -d -p $PORT:7001 --name "auto-nx-server-$PORT" --tmpfs /run --tmpfs /run/lock -v /sys/fs/cgroup:/sys/fs/cgroup:ro "mediaserver:$VERSION"
+        python cloud/manage.py bindsystem $EMAIL $PASSWORD "auto-nx-server-$PORT" http://localhost:$PORT
+        echo
+    done
+}
+
+function stop_mediaserver() {
+    docker ps | grep auto-nx-server- | awk '{print $1}' | xargs docker rm -f
+}
+
 for command in $@
 do
     case "$command" in
@@ -159,8 +183,25 @@ do
         stop_docker)
             stop_docker_containers
             ;;
+        build_mediaserver)
+            DEB_NAME=$2
+            VERSION=$3
+            build_mediaserver_image $DEB_NAME $VERSION
+            break
+            ;;
+        run_mediaserver)
+            VERSION=$2
+            PORTS="$3"
+            EMAIL=$4
+            PASSWORD=$5
+            run_mediaserver $VERSION "$PORTS" $EMAIL $PASSWORD
+            break
+            ;;
+         stop_mediaserver)
+            stop_mediaserver
+            ;;
         *)
-            echo Usage: cloud_shortcuts '[init|add_env|build_frontend|login_db|rebuild_frontend|set_cloud_instance|setup_cms|setup_db|setup_env|start_celery|start_docker|stop_docker]'
+            echo Usage: cloud_shortcuts '[init|add_env|build_frontend|login_db|rebuild_frontend|set_cloud_instance|setup_cms|setup_db|setup_env|start_celery|start_docker|stop_docker|build_mediaserver|run_mediaserver|stop_mediaserver]'
             echo 'init - Does everything. Only run this once'
             echo 'add_env - Adds LOCAL_ENV to your bash profile'
             echo 'build_frontend - Builds the frontend'
@@ -173,6 +214,9 @@ do
             echo 'start_celery - Starts celery worker (This uses sqs queue based on local settings)'
             echo 'start_docker - Starts docker containers used by cloud'
             echo 'stop_docker - Stops docker containers used by cloud'
+            echo 'build_mediaserver - Creates a mediaserver image. Please add the deb file to cloud_portal/robot_tests/Docker. Usage "./cloud_helper.sh build_mediaserver {deb file} {version}"'
+            echo 'run_mediaserver - Creates containers for mediaservers and connects them to cloud. Usage "./cloud_helper.sh run_mediaservers {version} {ports} {email} {password}"'
+            echo 'stop_mediaserver - Stops all containers made by this script'
             ;;
     esac
 done

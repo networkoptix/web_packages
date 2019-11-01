@@ -138,10 +138,6 @@
     "FAIL": "시스템 <strong>{{failedSystem}}</strong>에 현재 연결할 수 없습니다.<br> 조금 있다 다시 시도 하거나 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">지원</a> 에 문의하십시요.",
     "unknownMergeError": "알수없는 오류. 페이지를 새로 고치고 시도를 반복 할 수 있습니다. 문제가 지속되면 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">지원</a>문의하십시오."
   },
-  "merging": {
-    "mergeFailedTitle": "시스템 머지 실패",
-    "commonText": "시스템 <strong>{{primarySystem}}</strong> 및 <strong>{{secondarySystem}}</strong>를 머지 하는데 실패 했습니다."
-  },
   "system": {
     "yourSystem": "귀하의 시스템",
     "mySystemSearch": "IMeMyMine",

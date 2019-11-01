@@ -24,6 +24,8 @@ ${PASSWORD TOO COMMON}         //span[contains(@class,'input-error') and contain
 ${PASSWORD IS WEAK}            //span[contains(@class,'input-error') and contains(text(),'${PASSWORD IS WEAK TEXT}')]
 
 *** Test Cases ***                                    NEW PW
+Empty New Password                                    ${EMPTY}
+    [tags]    C26260
 Password Too Short asdfghj                            ${7char password}
     [tags]    C41876
 Common Password qweasd123                             ${common password}
@@ -44,8 +46,6 @@ Leading Space Password                                ${SPACE}${BASE PASSWORD}
     [tags]    C41876
 Trailing Space Password                               ${BASE PASSWORD}${SPACE}
     [tags]    C41876
-Empty New Password                                    ${EMPTY}
-    [tags]    C26260
 Fair New Password                                     ${fair password}
     [tags]    C41876
 Good New Password                                     ${BASE PASSWORD}
@@ -72,7 +72,6 @@ Open Restore Password Dialog With Link
 
 Test Password Invalid
     [Arguments]   ${new pw}
-    Reload Page
     Wait Until Elements Are Visible    ${RESET PASSWORD INPUT}    ${SAVE PASSWORD}
     Input Text    ${RESET PASSWORD INPUT}    ${new pw}
     Check New Password Badge    ${new pw}

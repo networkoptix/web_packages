@@ -38,6 +38,7 @@ const appRoutes: Routes = [
             {
                 path: 'users',
                 component: NxSystemUsersComponent,
+                canDeactivate: [ApplyGuard]
             },
             {
                 path: 'users/:userId',

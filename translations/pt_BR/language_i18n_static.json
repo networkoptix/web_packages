@@ -89,19 +89,26 @@
 			}
 		},
 		"platforms": {
-			"win64": "x64",
-			"linux64": "x64",
-			"mac": "X",
 			"bananapi": "Banana Pi",
 			"bpi": "Nx1",
-			"rpi": " Raspberry Pi"
+			"linux64": "x64",
+			"linux_arm32": "x32",
+			"linux_arm64": "x64",
+			"mac": "X",
+			"rpi": " Raspberry Pi",
+			"universal": "SDK",
+			"win64": "x64"
 		},
 		"appTypes": {
-			"client": "Somente cliente",
-			"server": "Somente servidor",
 			"bundle": "Cliente e Servidor",
+			"camera_sdk": "Fonte de vídeo SDK",
+			"client": "Somente cliente",
+			"metadata_sdk": "Metadata SDK",
+			"package": "Pacote",
+			"server": "Somente servidor",
 			"servertool": "Ferramenta de configuração",
-			"package": "Pacote"
+			"storage_sdk": "SDK de armazenamento",
+			"video_source_sdk": "Fonte de vídeo SDK"
 		},
 		"releasesTypes": {
 			"beta": "Beta",
@@ -209,8 +216,10 @@
 		"stayLoggedIn": "Stay Logged In",
 		"download": "Baixar %VMS_NAME%",
 		"merge": {
+			"commonText": "Falha ao mesclar Sistemas <strong>{{primarySystem}}</strong> e <strong>{{secondarySystem}}</strong>.",
 			"connectToCloud": "Conecte o sistema que você deseja mesclar com este para <strong>{{cloudName}}</strong> ou mesclar localmente usando <strong>{{vmsName}}</strong> Cliente.",
 			"mergeConfirmation": "Você está prestes a mesclar sistemas <strong>{{primarySystem}}</strong> e <strong>{{secondarySystem}}</strong>. As configurações e o nome serão tiradas do <strong>{{primarySystem}}</strong>.",
+			"mergeFailedTitle": "Falha na mesclagem do sistema",
 			"primaryCannotMerge": "O sistema {{targetSystem}} tem uma versão de software mais recente que é incompatível com o sistema atual. Atualize o sistema atual para a versão mais recente <a href=\"/download\" target=\"_blank\" translate></a> para mesclar com o sistema {{targetSystem}}.",
 			"primarySystemOffline": "O sistema {{primarySystem}} está offline e não pode ser mesclado com o sistema {{targetSystem}}.",
 			"secondaryCannotMerge": "O sistema {{targetSystem}} tem uma versão mais antiga do software que é incompatível com o sistema atual. Atualize {{targetSystem}} para a versão mais recente <a href=\"/download\" target=\"_blank\" translate></a> para mesclar com o atual.",
@@ -308,6 +317,7 @@
 		"mySystemSearch": "IMeMyMine",
 		"unavailable": "O sistema está inacessível",
 		"offline": "O sistema está offline",
+		"offlineAlertRibbon": "System is offline. Some settings may not be available.",
 		"openClient": "Abrir em %VMS_NAME%",
 		"openClientNoSystem": "Abrir %VMS_NAME%",
 		"confirmMergeAction": "\"Merge\"",
@@ -321,15 +331,16 @@
 		"confirmUnshareFromMeTitle": "Desconectar o Sistema?",
 		"confirmUnshareFromMeAction": "Desconectar",
 		"confirmUnshare": "Este utilizador não será capaz de aceder ao sistema. Tem certeza?",
-		"confirmUnshareTitle": "Apagar utilizador?",
-		"confirmUnshareAction": "Apagar",
+		"confirmUnshareTitle": "Remove user?",
+		"confirmUnshareAction": "Remover",
 		"successDisconnected": "O Sistema foi desconectado de %CLOUD_NAME% com sucesso",
 		"successDeleted": "O sistema {{systemName}} foi apagado com sucesso da sua conta",
 		"mergeFailed": "Falha na mesclagem do sistema",
 		"mergeStart": "Sistemas começaram a se fundir",
 		"mergeSuccess": "Mesclagem de sistema concluída",
 		"permissionsRemoved": "As permissões foram removidas de {{email}}",
-		"unknownName": "Nome desconhecido para o sistema (Causado pela mescla de nuvem)"
+		"unknownName": "Nome desconhecido para o sistema (Causado pela mescla de nuvem)",
+		"shareOffline": "Cannot share system while it is offline"
 	},
 	"systemStatuses": {
 		"activated": "ativado",

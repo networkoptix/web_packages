@@ -1,5 +1,5 @@
 import {
-    Component, OnDestroy, OnInit
+    Component, OnInit
 }                                    from '@angular/core';
 import { Location }                  from '@angular/common';
 import { ActivatedRoute }            from '@angular/router';
@@ -13,6 +13,14 @@ import { NxSystemsService }          from '../../../../services/systems.service'
 import { NxAccountService }          from '../../../../services/account.service';
 import { NxProcessService }          from '../../../../services/process.service';
 import { NxSystem }                  from '../../../../services/system.service';
+
+interface Settings {
+    disconnectDisabled: boolean;
+    mergeDisabled: boolean;
+    renameDisabled: boolean;
+    showMerge: boolean;
+}
+
 
 @Component({
     selector   : 'nx-system-admin-component',
@@ -33,6 +41,7 @@ export class NxSystemAdminComponent implements OnInit {
     currentlyMerging: boolean;
     debugMode: boolean;
     betaMode: boolean;
+    settings: Settings;
 
     private setupDefaults() {
         this.CONFIG = this.configService.getConfig();
@@ -40,6 +49,17 @@ export class NxSystemAdminComponent implements OnInit {
         this.debugMode = this.CONFIG.allowDebugMode;
         this.betaMode = this.CONFIG.allowBetaMode;
         this.menuService.setSection('admin');
+    }
+
+    private updateSettings(forceMergeState?: boolean) {
+        const merging = typeof(this.system.mergeInfo) !== 'undefined' || forceMergeState;
+        const available = !this.system.isOnline || !this.system.isAvailable;
+        this.settings = {
+            disconnectDisabled: merging,
+            mergeDisabled: (merging || available) && !(this.debugMode || this.betaMode),
+            renameDisabled: merging && this.system.mergeInfo && this.system.mergeInfo.role !== 'master',
+            showMerge: this.system.isMine && this.systemsService.systems.length > 1
+        };
     }
 
     constructor(private accountService: NxAccountService,
@@ -62,6 +82,13 @@ export class NxSystemAdminComponent implements OnInit {
     ngOnInit(): void {
         this.LANG = this.language.getTranslations();
         this.pageService.setPageTitle(this.LANG.pageTitles.systems);
+        this.currentlyMerging = false;
+        this.settings = {
+            disconnectDisabled: false,
+            mergeDisabled: false,
+            renameDisabled: false,
+            showMerge: true
+        };
         this.init();
     }
 
@@ -71,11 +98,14 @@ export class NxSystemAdminComponent implements OnInit {
             .subscribe((system) => {
                 this.system = system;
                 if (system) {
-                    this.settingsService.footerSubject.next(true);
-                    this.userRole = system.accessRole;
-                    if (system.accessRole in this.LANG.accessRoles) {
-                        this.userRole = this.LANG.accessRoles[system.accessRole].label;
-                    }
+                    this.system.systemSubject.subscribe(() => {
+                        this.settingsService.footerSubject.next(true);
+                        this.userRole = system.accessRole;
+                        if (system.accessRole in this.LANG.accessRoles) {
+                            this.userRole = this.LANG.accessRoles[system.accessRole].label;
+                        }
+                        this.updateSettings(this.currentlyMerging);
+                    });
                     this.deletingSystem = this.processService.createProcess(() => {
                         return this.system.deleteFromCurrentAccount();
                     }, {
@@ -121,7 +151,7 @@ export class NxSystemAdminComponent implements OnInit {
             this.dialogs.confirm(this.LANG.system.confirmUnshareFromMe, this.LANG.system.confirmUnshareFromMeTitle, this.LANG.system.confirmUnshareFromMeAction, 'btn-danger', 'Cancel')
                 .then((result) => {
                     if (result === true) {
-                        this.deletingSystem.run();
+                        return this.deletingSystem.run();
                     }
                 });
         }
@@ -142,8 +172,8 @@ export class NxSystemAdminComponent implements OnInit {
 
     mergeSystems() {
         this.systems = this.systemsService.getMySystems(this.accountService.getEmail(), this.system.id);
-
         this.currentlyMerging = true;
+        this.updateSettings(this.currentlyMerging);
         this.settingsService.system = this.system;
 
         return this.dialogs
@@ -151,15 +181,17 @@ export class NxSystemAdminComponent implements OnInit {
                    .then((mergeInfo) => {
                        if (mergeInfo) {
                            this.system.mergeInfo = mergeInfo;
+                           const systemId = mergeInfo.role === 'master' ? this.system.id : mergeInfo.anotherSystemId;
+                           this.systemsService.addToMergeList(systemId);
                        }
                    }, (error) => {
                        if (!error.primarySystemName && !error.secondarySystemName) {
                            return;
                        }
-                       const commonErrorMsg = this.LANG.merging.commonText
+                       const commonErrorMsg = this.LANG.dialogs.merge.commonText
                                                   .replace('{{primarySystem}}', error.primarySystemName)
                                                   .replace('{{secondarySystem}}', error.secondarySystemName);
-                       let responseError = this.LANG.errorCodes[error.errorText] || this.LANG.errorCodes[error.responseCode];
+                       let responseError = this.LANG.errorCodes[error.errorText] || this.LANG.errorCodes[error.resultCode];
                        if (!responseError) {
                            responseError = this.LANG.errorCodes.unknownMergeError;
                        } else {
@@ -172,13 +204,13 @@ export class NxSystemAdminComponent implements OnInit {
                        // Handling promise to satisfy the linter.
                        this.dialogs.confirm(
                                dialogBody,
-                               this.LANG.merging.mergeFailedTitle,
+                               this.LANG.dialogs.merge.mergeFailedTitle,
                                this.LANG.dialogs.okButton,
                                'btn-primary',
                                undefined).then(() => {});
-                   })
-                   .finally(() => {
+                   }).finally(() => {
                        this.currentlyMerging = false;
+                       this.updateSettings(this.currentlyMerging);
                        this.settingsService.system = this.system;
                    });
     }
