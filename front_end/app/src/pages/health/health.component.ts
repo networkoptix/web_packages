@@ -10,6 +10,7 @@ import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxUtilsService }            from '../../services/utils.service';
 import { FileSystemFileEntry, NgxFileDropEntry }      from 'ngx-file-drop';
 import { DOCUMENT }                  from '@angular/common';
+import { NxRibbonService }           from '../../components/ribbon/ribbon.service';
 
 @Component({
     selector   : 'nx-system-health-component',
@@ -41,6 +42,7 @@ export class NxHealthComponent implements OnInit {
                 private healthService: NxHealthService,
                 private languageService: NxLanguageProviderService,
                 private utilsService: NxUtilsService,
+                private ribbonService: NxRibbonService,
                 @Inject(DOCUMENT) private document: any,
     ) {
         this.LANG = this.languageService.getTranslations();
@@ -293,6 +295,8 @@ export class NxHealthComponent implements OnInit {
                 system: data.system || '-',
                 time
             };
+            // String is here because it does not need to be translated and probably doesn't belong in CONFIG
+            this.ribbonService.show('You are viewing an imported report, refresh the page to get a fresh report', '', '');
         };
 
         fileEntry.file((file: File) => {
