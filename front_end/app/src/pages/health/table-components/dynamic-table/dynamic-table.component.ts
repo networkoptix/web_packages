@@ -75,7 +75,6 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
         }
 
         if (changes._headers) {
-            console.log(changes._headers);
             this.headers = changes._headers.currentValue;
             this.selectedHeader = undefined;
 
