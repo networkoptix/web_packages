@@ -1,0 +1,231 @@
+{
+  "language": "nl_BE",
+  "language_name": "Dutch (Belguim)",
+  "cloudName": "%CLOUD_NAME%",
+  "vmsName": "%VMS_NAME%",
+  "clientProtocol": "%CLIENT_PROTOCOL%:",
+  "pageTitles": {
+    "template": "{{title}} %CLOUD_NAME%",
+    "default": "%CLOUD_NAME%",
+    "registerSuccess": "Welkom bij",
+    "register": "Maak een account aan in",
+    "changePassword": "Wachtwoord wijzigen -",
+    "account": "Account instellingen -",
+    "systems": "Systemen -",
+    "system": "Systeem -",
+    "systemShare": "Deel Systeem -",
+    "activate": "Activeer account -",
+    "activateSent": "Activeer account -",
+    "activateSuccess": "Account geactiveerd -",
+    "activateCode": "Activeer account -",
+    "restorePassword": "Reset wachtwoord -",
+    "restorePasswordSuccess": "Wachtwoord opgeslagen -",
+    "restorePasswordCode": "Reset wachtwoord -",
+    "view": "Bekijk camera's - ",
+    "debug": "Debug",
+    "login": "Log in -",
+    "download": "Download %VMS_NAME%",
+    "downloadPlatform": "Download %VMS_NAME% voor ",
+    "pageNotFound": "Pagina niet gevonden"
+  },
+  "systemStatuses": {
+    "activated": "geactiveerd",
+    "incompatible": "niet compatibel",
+    "merging": "samenvoegen",
+    "notActivated": "niet geactiveerd",
+    "online": "online",
+    "offline": "offline",
+    "unavailable": "niet beschikbaar"
+  },
+  "accessRoles": {
+    "disabled": {
+      "label": "Uitgeschakeld",
+      "description": "Gebruiker is uitgeschakeld en kan niet aanmelden in het systeem"
+    },
+    "Owner": {
+      "label": "Eigenaar",
+      "description": "Onbeperkt toegang, inclusief de mogelijkheid om systeem te delen en te verbinden / te verbreken vanuit de cloud"
+    },
+    "Viewer": {
+      "label": "Viewer",
+      "description": "Kan live video bekijken en zoeken in opgenomen beelden"
+    },
+    "Live Viewer": {
+      "label": "Live kijker",
+      "description": "Kan alleen live video bekijken"
+    },
+    "Advanced Viewer": {
+      "label": "Geavanceerde Viewer",
+      "description": "Kan live video bekijken, bladeren in het archief, PTZ bedienen, enz"
+    },
+    "Administrator": {
+      "label": "Administrator",
+      "description": "Onbeperkt toegang inclusief de mogelijkheid om te delen"
+    },
+    "Custom": {
+      "label": "Aangepast",
+      "description": "Gebruik de %VMS_NAME% client-applicatie om aangepaste rechten in te stellen"
+    },
+    "cloudAdmin": {
+      "label": "Administrator",
+      "description": "Kan systeem configureren en delen"
+    },
+    "customRole": {
+      "label": "Aangepaste rollen",
+      "description": "Aangepaste gebruikersrol die is opgegeven in systeem"
+    },
+    "owner": {
+      "label": "Eigenaar",
+      "description": "Onbeperkt toegang, inclusief de mogelijkheid om systeem te delen en te verbinden / te verbreken vanuit de cloud"
+    },
+    "viewer": {
+      "label": "Viewer",
+      "description": "Kan live video bekijken en zoeken in opgenomen beelden"
+    },
+    "liveViewer": {
+      "label": "Live kijker",
+      "description": "Kan alleen live video bekijken"
+    },
+    "advancedViewer": {
+      "label": "Geavanceerde Viewer",
+      "description": "Kan live video bekijken, zoeken in opgenomen beelden, camera configureren, PTZ, enz. bedienen"
+    },
+    "custom": {
+      "label": "Aangepast",
+      "description": "Gebruik de %VMS_NAME% client-applicatie om aangepaste rechten in te stellen"
+    }
+  },
+  "errorCodes": {
+    "ok": "oke",
+    "cantSendActivationPrefix": "Kan geen bevestigingsmail versturen",
+    "cantDisconnectSystemPrefix": "Kan het systeem niet verwijderen",
+    "cantUnshareWithMeSystemPrefix": "Kan het systeem niet verwijderen",
+    "cantSharePrefix": "Kan het systeem niet delen",
+    "cantGetUsersListPrefix": "Gebruikerslijst is niet beschikbaar",
+    "cantGetSystemsListPrefix": "Systeemlijst is niet beschikbaar",
+    "cantRegisterPrefix": "Fout opgetreden",
+    "cantGetSystemInfoPrefix": "Systeeminformatie is niet beschikbaar",
+    "cantChangeAccountPrefix": "Kan geen wijzigingen opslaan",
+    "cantChangePasswordPrefix": "Wachtwoord kan niet worden opgeslagen",
+    "cantActivatePrefix": "Kan uw account niet activeren",
+    "cantSendConfirmationPrefix": "Kan geen bevestigingsmail versturen",
+    "notAuthorized": "Wachtwoord onjuist",
+    "brokenAccount": "Onverwacht probleem met account. <a href=\"/restore_password\"> account herstellen</a>",
+    "wrongParameters": "Sommige parameters op het formulier zijn onjuist",
+    "wrongCode": "Account is al geactiveerd of de bevestigingscode is onjuist",
+    "wrongCodeRestore": "Bevestigingscode is al gebruikt of niet correct",
+    "wrongAuthCode": "Code is verlopen of onjuist",
+    "forbidden": "U hebt geen rechten om deze actie uit te voeren",
+    "accountNotActivated": "Dit account is nog niet geactiveerd. <a href=\"/activate\">Stuur de activeringslink opnieuw</a>",
+    "accountBlocked": "Dit account is tijdelijk geblokkeerd. Probeer het over een paar minuten opnieuw.",
+    "notFound": "Niet gevonden",
+    "alreadyExists": "Deze account bestaat al",
+    "unknownError": "Er is een onverwachte fout opgetreden",
+    "accountAlreadyActivated": "Deze account is al geactiveerd",
+    "emailNotFound": "Account bestaat niet.",
+    "EmailAlreadyExists": "Dit e-mailadres is al geregistreerd",
+    "oldPasswordMistmatch": "Dit wachtwoord is onjuist.",
+    "passwordMismatch": "Wachtwoord onjuist",
+    "cantEditYourself": "Het wijzigen van eigen machtigingen is niet toegestaan",
+    "cantEditAdmin": "Deze gebruiker heeft beheerdersrechten",
+    "cantOpenClient": "%VMS_NAME% applicatie is niet gedetecteerd. <a href=\"/download\">Download</a>",
+    "lostConnection": "Verbinding met {{systemName}} verloren",
+    "thisSystem": "het systeem",
+    "oldSafariNotSupported": "Versies van Safari ouder dan versie 10 worden niet ondersteund",
+    "DUPLICATE_MEDIASERVER_FOUND": "Sommige servers zijn aanwezig in beide systemen - in de geselecteerde en in de huidige. <br>Verwijder offline en incompatibele servers van elk systeem en probeer het opnieuw.",
+    "mergedSystemIsOffline": "Systeem <strong>{{failedSystem}}</strong> is offline.",
+    "INCOMPATIBLE": "Systemen hebben verschillende softwareversies. Werk ze alstublieft bij naar de laatste <a href=\"/download\">build</a>.",
+    "FAIL": "Systeem <strong>{{failedSystem}}</strong> is momenteel niet bereikbaar.<br>Probeer het over een paar momenten opnieuw of neem contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">ondersteuning</a>.",
+    "unknownMergeError": "Onbekende fout. U kunt proberen de pagina te vernieuwen en de poging herhalen. Als het probleem zich blijft voordoen, neem dan contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>."
+  },
+  "system": {
+    "yourSystem": "Uw systeem",
+    "mySystemSearch": "IMeMyMine",
+    "unavailable": "Systeem is onbereikbaar",
+    "offline": "Systeem is offline",
+    "openClient": "Open in %VMS_NAME%",
+    "openClientNoSystem": "Open %VMS_NAME%",
+    "confirmMergeAction": "Samenvoegen",
+    "mergeSystemTitle": "Systemen Samenvoegen",
+    "confirmRenameTitle": "Systeemnaam",
+    "confirmRenameAction": "Opslaan",
+    "successRename": "Systeemnaam opgeslagen",
+    "confirmDisconnectTitle": "Ontkoppel het systeem van %CLOUD_NAME%?",
+    "confirmDisconnectAction": "Verbinding verbreken",
+    "confirmUnshareFromMe": "U zal niet meer kunnen inloggen in dit systeem.",
+    "confirmUnshareFromMeTitle": "Wilt u dit systeem loskoppelen van uw account?",
+    "confirmUnshareFromMeAction": "Verbinding verbreken",
+    "confirmUnshareTitle": "Gebruiker verwijderen?",
+    "confirmUnshareAction": "Verwijder",
+    "successDisconnected": "Systeem is met succes ontkoppeld van %CLOUD_NAME%",
+    "successDeleted": "Systeem {{systemName}} is succesvol verwijderd van uw account",
+    "mergeFailed": "Het samenvoegen van systemen is mislukt",
+    "mergeStart": "Systemen zijn begonnen met het samenvoegen",
+    "mergeSuccess": "Systeem samenvoegen voltooid",
+    "permissionsRemoved": "Machtigingen zijn verwijderd uit {{email}}",
+    "unknownName": "Onbekende naam voor systeem (veroorzaakt door samenvoeging in de cloud)"
+  },
+  "regActions": {
+    "passwordLabel": "Password",
+    "createAccount": "Account aanmaken"
+  },
+  "header": {
+    "allSystems": "Alle systemen",
+    "systems": "Systemen"
+  },
+  "common": {
+    "cameraLinks": {
+      "highStream": "Hoge stroom",
+      "lowStream": "Lage stroom",
+      "transcoding": "Transcoding",
+      "unknown": "Onbekend",
+      "copyToClipboard": "kopiëren naar klembord",
+      "copyDefaultText": "kopiëren",
+      "copyActiveText": "gekopieerd naar het klembord"
+    },
+    "systemOffline": "Systeem Offline",
+    "systemHasNoCameras": "GEEN CAMERA'S",
+    "systemUnreachable": "SYSTEEM NIET BEREIKBAAR",
+    "cameraStates": {
+      "offline": "Offline",
+      "error": "Fout",
+      "errorLoading": "Er is een fout opgetreden bij het laden van deze video.",
+      "unauthorized": "Authentication required",
+      "noData": "Geen data",
+      "iOSVideoTooLarge": "iOS ondersteunt geen video die groter is dan FullHD (2MP: 1920x1080).",
+      "flashRequired": "Gelieve <a href='https://get.adobe.com/flashplayer/' target='_blank'> Adobe Flash</a> te installeren voor het afspelen van video's.",
+      "flashOrWebmRequired": "Gelieve <a href='https://get.adobe.com/flashplayer/' target='_blank'> Adobe Flash</a> of <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> te installeren voor het afspelen van video's in Internet Explorer.",
+      "noArmSupport": "Deze browser of dit apparaat ondersteunt geen videoweergave van ARM-gebaseerde servers.",
+      "noFormat": "Deze browser ondersteunt het afspelen van videobeelden van deze camera niet.",
+      "ieNoWebm": "Installeer alstublieft <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> voor Internet Explorer.",
+      "ieWin10": "Gebruik alsjeblieft de browsers Microsoft Edge of Google Chrome.",
+      "ubuntuNX": "Deze browser ondersteunt geen video van ARM-gebaseerde servers. Gebruik alsjeblieft de Chromium-browser."
+    },
+    "searchCamPlaceholder": "Zoek",
+    "resolution": {
+      "auto": "Automatisch",
+      "high": "Hoog",
+      "low": "Laag"
+    },
+    "chromeCastWarning": "Chromecast vraagt veel systeem resources en kan problemen veroorzaken op uw server.",
+    "voiceCommands": {
+      "play": "afspelen",
+      "pause": "pauze",
+      "live": "ga naar Live | live weergeven",
+      "view": "bekijk + [camera naam]",
+      "search": "vind + [tekst voor zoekbalk]",
+      "clear search": "zoekopdracht wissen",
+      "expand server": "vouw server + [servernaam] uit",
+      "collapse server": "vouw server + [servernaam] samen",
+      "expand all servers": "vouw alle servers uit",
+      "collapse all servers": "vouw alle servers samen",
+      "stop listening": "stop met luisteren",
+      "help": "help | toon commando's"
+    }
+  },
+  "recommendSupport": {
+    "a_recommend": "We raden aan om te overleggen met",
+    "b_support": "ondersteuning",
+    "c_proceeding": "voordat u verder gaat."
+  }
+}

@@ -2,7 +2,7 @@ from os import system, path, remove, listdir
 import json
 import codecs
 import time
-from queue import threaded_test_run
+from queue1 import threaded_test_run
 from datetime import datetime
 from check_server import ping
 import sys

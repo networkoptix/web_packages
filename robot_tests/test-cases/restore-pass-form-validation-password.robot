@@ -15,15 +15,17 @@ ${weak password}               asqwerdf
 ${symbol password}             !@#$%^&*()_-+=;:'"`~,./\|?[]{}
 ${fair password}               qweasd1234
 
-${FORM WITH ERROR}             //form[@name='restorePasswordWithCode']//input[@type='password' and contains(@class,'ng-invalid')]
+${FORM WITH ERROR}             //form[@name='restorePasswordWithCode']//nx-password-input[contains(@class,'ng-invalid')]/input
 
-${PASSWORD IS REQUIRED}        //span[@ng-if='form[id].$error.required' and contains(text(),'${PASSWORD IS REQUIRED TEXT}')]
-${PASSWORD SPECIAL CHARS}      //span[contains(@ng-if,'form[id].$error.pattern &&') and contains(@ng-if,'!form[id].$error.minlength') and contains(text(),'${PASSWORD SPECIAL CHARS TEXT}')]
-${PASSWORD TOO SHORT}          //span[contains(@ng-if,'form[id].$error.minlength') and contains(text(),'${PASSWORD TOO SHORT TEXT}')]
-${PASSWORD TOO COMMON}         //span[contains(@ng-if,'form[id].$error.common &&') and contains(@ng-if,'!form[id].$error.required') and contains(text(),'${PASSWORD TOO COMMON TEXT}')]
-${PASSWORD IS WEAK}            //span[contains(@ng-if,'form[id].$error.weak &&') and contains(@ng-if,'!form[id].$error.common &&') and contains(@ng-if,'!form[id].$error.minlength') and contains(@ng-if,'!form[id].$error.pattern &&') and contains(@ng-if,'!form[id].$error.required &&') and contains(text(),'${PASSWORD IS WEAK TEXT}')]
+${PASSWORD IS REQUIRED}        //span[contains(@class,'input-error') and contains(text(),'${PASSWORD IS REQUIRED TEXT}')]
+${PASSWORD SPECIAL CHARS}      //span[contains(@class,'input-error') and contains(text(),'${PASSWORD SPECIAL CHARS TEXT}')]
+${PASSWORD TOO SHORT}          //span[contains(@class,'input-error') and contains(text(),'${PASSWORD TOO SHORT TEXT}')]
+${PASSWORD TOO COMMON}         //span[contains(@class,'input-error') and contains(text(),'${PASSWORD TOO COMMON TEXT}')]
+${PASSWORD IS WEAK}            //span[contains(@class,'input-error') and contains(text(),'${PASSWORD IS WEAK TEXT}')]
 
 *** Test Cases ***                                    NEW PW
+Empty New Password                                    ${EMPTY}
+    [tags]    C26260
 Password Too Short asdfghj                            ${7char password}
     [tags]    C41876
 Common Password qweasd123                             ${common password}
@@ -44,8 +46,6 @@ Leading Space Password                                ${SPACE}${BASE PASSWORD}
     [tags]    C41876
 Trailing Space Password                               ${BASE PASSWORD}${SPACE}
     [tags]    C41876
-Empty New Password                                    ${EMPTY}
-    [tags]    C26260
 Fair New Password                                     ${fair password}
     [tags]    C41876
 Good New Password                                     ${BASE PASSWORD}
@@ -72,7 +72,6 @@ Open Restore Password Dialog With Link
 
 Test Password Invalid
     [Arguments]   ${new pw}
-    Reload Page
     Wait Until Elements Are Visible    ${RESET PASSWORD INPUT}    ${SAVE PASSWORD}
     Input Text    ${RESET PASSWORD INPUT}    ${new pw}
     Check New Password Badge    ${new pw}

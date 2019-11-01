@@ -4,32 +4,6 @@
   "cloudName": "%CLOUD_NAME%",
   "vmsName": "%VMS_NAME%",
   "clientProtocol": "%CLIENT_PROTOCOL%:",
-  "dialogs": {
-    "okButton": "Xác nhận",
-    "cancelButton": "Hủy bỏ",
-    "loginTitle": "Log in to %CLOUD_NAME%",
-    "loginButton": "Đăng nhập",
-    "logoutAuthorisedTitle": "Bạn đã đăng nhập",
-    "logoutAuthorisedContinueButton": "Tiếp tục",
-    "logoutAuthorisedLogoutButton": "Đăng xuất",
-    "messageFailed": "Message has failed to send.",
-    "messageSent": "Message has been sent.",
-    "noClientDetectedTitle": "Cài đặt %VMS_NAME% để xem Hệ thống của bạn",
-    "download": "Tải xuống %VMS_NAME%"
-  },
-  "messageDialog": {
-    "title": {
-      "integration": "Email for {{product}}",
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Feedback about {{product}}"
-    },
-    "topic": {
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Feedback about {{product}}",
-      "contact_sales": "Contact sales for {{product}}",
-      "contact_support": "Contact support for {{product}}"
-    }
-  },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
     "default": "%CLOUD_NAME%",
@@ -114,7 +88,7 @@
     },
     "advancedViewer": {
       "label": "Trình xem nâng cao",
-      "description": "Có thể xem video trực tiếp, duyệt các kho lưu trữ, cấu hình máy ảnh, điều khiển PTZ vv"
+      "description": "Có thể xem video trực tiếp, duyệt các kho lưu trữ, cấu hình camera, điều khiển PTZ vv"
     },
     "custom": {
       "label": "Tùy chỉnh",
@@ -140,7 +114,7 @@
     "wrongParameters": "Một số thông số trên biểu mẫu không chính xác",
     "wrongCode": "Tài khoản đã được kích hoạt hoặc mã xác nhận không chính xác",
     "wrongCodeRestore": "Mã xác nhận đã được sử dụng hoặc không chính xác",
-    "wrongAuthCode": "Code is expired or incorrect",
+    "wrongAuthCode": "Mã đã hết hạn hoặc không chính xác",
     "forbidden": "Bạn không có quyền thực hiện công việc này",
     "accountNotActivated": "Tài khoản này chưa được kích hoạt. <a href=\"/activate\">Gửi liên kết kích hoạt lại</a>",
     "accountBlocked": "Tài khoản này tạm thời bị chặn, xin vui lòng thử lại sau vài phút.",
@@ -162,34 +136,7 @@
     "mergedSystemIsOffline": "Hệ thống <strong>{{failedSystem}}</strong> đang ngoại tuyến.",
     "INCOMPATIBLE": "Hệ thống đang có các phiên bản phần mềm khác nhau. Vui lòng cập nhật tất cả lên <a href=\"/download\">phiên bản mới nhất</a>.",
     "FAIL": "Hệ thống <strong>{{failedSystem}}</strong> hiện không thể truy cập được.<br>Vu lòng thử lại sau vài phút hoặc liên hệ với <a href=\"%SUPPORT_LINK%\" target=\"_blank\"> để được hỗ trợ</a>.",
-    "unknownMergeError": "Unknown error. You can try to refresh the page and repeat attempt. If the problem persists – please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>."
-  },
-  "merging": {
-    "mergeFailedTitle": "Hợp nhất hệ thống không thành công",
-    "commonText": "Không thể hợp nhất Hệ thống <strong>{{primarySystem}}</strong> và <strong>{{secondarySystem}}</strong>."
-  },
-  "passwordRequirements": {
-    "good": "tốt",
-    "fair": "công bằng",
-    "fairMessage": "Sử dụng số, chữ hoa và chữ thường và ký tự đặc biệt để làm cho mật khẩu của bạn mạnh mẽ hơn",
-    "minLength": "quá ngắn",
-    "minLengthMessage": "Mật khẩu phải chứa ít nhất 8 ký tự",
-    "required": "không chính xác",
-    "requiredMessage": "Chỉ sử dụng chữ cái Latin, số và ký hiệu bàn phím, tránh các khoảng trống đầu và cuối",
-    "weak": "yếu",
-    "weakMessage": "Sử dụng số, chữ hoa và chữ thường và ký tự đặc biệt để làm cho mật khẩu của bạn mạnh mẽ hơn",
-    "strongMessage": "Mật khẩu mạnh!",
-    "common": "quá phổ biến",
-    "commonMessage": "Mật khẩu này nằm trong mật khẩu phổ biến nhất trên thế giới",
-    "missingMessage": "Mật khẩu là bắt buộc"
-  },
-  "sharing": {
-    "confirmOwner": "Nếu bạn thay sở hữu hệ thống, bạn sẽ thu hồi quyền sở hữu hiện tại của mình. Không thể phục hồi sở hữu cũ. Bạn có chắc không?",
-    "shareTitle": "Chia sẻ",
-    "shareConfirmButton": "Chia sẻ",
-    "editShareTitle": "Quyền chỉnh sửa",
-    "editShareConfirmButton": "Tiết kiệm",
-    "permissionsSaved": "Cấp phép mới được lưu"
+    "unknownMergeError": "Lỗi không rõ. Bạn có thể thử làm mới trang và lặp lại thử. Nếu vấn đề vẫn còn - vui lòng liên hệ với <a href=\"%SUPPORT_LINK%\" target=\"_blank\">hỗ trợ</a>."
   },
   "system": {
     "yourSystem": "Hệ thống của bạn",
@@ -203,35 +150,20 @@
     "confirmRenameTitle": "Tên hệ thống",
     "confirmRenameAction": "Tiết kiệm",
     "successRename": "Đã lưu tên hệ thống",
-    "confirmDisconnectTitle": "Disconnect System from %CLOUD_NAME%?",
+    "confirmDisconnectTitle": "Hệ thống đã ngắt kết nối từ %CLOUD_NAME%?",
     "confirmDisconnectAction": "Ngắt kết nối",
-    "confirmUnshareFromMe": "Bạn sẽ ngắt kết nối Hệ thống này khỏi tài khoản của bạn. Bạn sẽ không thể truy cập Hệ thống này nữa. Bạn có chắc không?",
-    "confirmUnshareFromMeTitle": "Ngắt kết nối hệ thống?",
+    "confirmUnshareFromMe": "You will not be able to lgo into this System anymore.",
+    "confirmUnshareFromMeTitle": "Disconnect System from your Account?",
     "confirmUnshareFromMeAction": "Ngắt kết nối",
-    "confirmUnshare": "Người dùng này sẽ không thể truy cập vào Hệ thống. Bạn có chắc không?",
-    "confirmUnshareTitle": "Xóa người dùng?",
-    "confirmUnshareAction": "Xóa bỏ",
-    "successDisconnected": "System is successfully disconnected from %CLOUD_NAME%",
+    "confirmUnshareTitle": "Remove user?",
+    "confirmUnshareAction": "Tẩy",
+    "successDisconnected": "Hệ thống được ngắt kết nối thành công từ %CLOUD_NAME%",
     "successDeleted": "Tài khoản {{systemName}} đã xóa thành công từ hệ thống của bạn",
     "mergeFailed": "Hợp nhất hệ thống không thành công",
     "mergeStart": "Các hệ thống đã được hợp nhất",
-    "mergeSuccess": "System merge completed",
+    "mergeSuccess": "Hoàn thành hợp nhất hệ thống",
     "permissionsRemoved": "Các quyền đã bị xóa khỏi {{email}}",
     "unknownName": "Tên không xác định cho hệ thống (do hợp nhất Cloud)"
-  },
-  "account": {
-    "accountSavedSuccess": "Tài khoản của bạn đã được lưu thành công",
-    "activationLinkSent": "Link kích hoạt đã được gửi",
-    "passwordChangedSuccess": "Tài khoản của bạn đã được lưu thành công",
-    "changePassword": "Đổi mật khẩu",
-    "newPasswordLabel": "Mật khẩu mới",
-    "saveChanges": "Tiết kiệm"
-  },
-  "activeActions": {
-    "sendConfirm": "Gửi lại link kích hoạt",
-    "resetPassword": "Đặt lại mật khẩu",
-    "setNewPassword": "Lưu mật khẩu",
-    "setNewPasswordLabel": "Mật khẩu mới"
   },
   "regActions": {
     "passwordLabel": "Mật khẩu",
@@ -246,20 +178,21 @@
       "highStream": "Luồng tốc độ cao",
       "lowStream": "Luồng tốc độ thấp",
       "transcoding": "Đang chuyển mã",
-      "unknown": "Không xác định",
+      "unknown": "Không biết",
       "copyToClipboard": "chép vào bảng nháp",
       "copyDefaultText": "sao chép",
       "copyActiveText": "sao chép vào clipboard"
     },
     "systemOffline": "Hệ thống offline",
-    "systemHasNoCameras": "KHÔNG CÓ MÁY ẢNH",
-    "systemUnreachable": "SYSTEM IS UNREACHABLE",
+    "systemHasNoCameras": "KHÔNG CÓ CAMERA",
+    "systemUnreachable": "HỆ THỐNG KHÔNG GIỚI HẠN",
     "cameraStates": {
       "offline": "Ẩn",
       "error": "Lỗi",
+      "errorLoading": "An error occurred while loading this video.",
       "unauthorized": "Yêu cầu xác thực",
       "noData": "Không có dữ liệu",
-      "iosVideoTooLarge": "ios không hỗ trợ video lớn hơn fullHD (2MP: 1920x1080).",
+      "iOSVideoTooLarge": "ios không hỗ trợ video lớn hơn fullHD (2MP: 1920x1080).",
       "flashRequired": "Vui lòng <a href='https://get.adobe.com/flashplayer/' target='_blank'>cài đặt Adobe Flash</a> để phát video.",
       "flashOrWebmRequired": "Vui lòng <a href='https://get.adobe.com/flashplayer/' target='_blank'>cài đặt Adobe Flash</a> hoặc<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> để phát video trong Internet Explorer.",
       "noArmSupport": "Trình duyệt hoặc thiết bị này không hỗ trợ xem video từ máy chủ trên nền ARM.",

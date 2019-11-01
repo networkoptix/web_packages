@@ -10,19 +10,21 @@ export class NxRibbonService {
         visibility: false,
         message: '',
         text: '',
-        url: ''
+        url: '',
+        type: ''
     };
     contextSubject = new BehaviorSubject(this.context);
 
     constructor() {
     }
 
-    show(message, text, url) {
+    show(message, text, url, type?) {
         this.context = {
             visibility: true,
             message,
             text,
-            url
+            url,
+            type
         };
         this.contextSubject.next(this.context);
     }
@@ -32,7 +34,8 @@ export class NxRibbonService {
             visibility: false,
             message: '',
             text: '',
-            url: ''
+            url: '',
+            type: ''
         };
         this.contextSubject.next(this.context);
     }

@@ -1,0 +1,3 @@
+안녕하세요, {{ message.userFullName }}
+{{ message.sender_name}} ({{ message.sender_email }})에 {{ message.asset }}에 대한 피드백이 있습니다.
+<pre>{{ message.message }}</pre>

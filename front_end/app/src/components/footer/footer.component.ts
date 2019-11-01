@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { DomSanitizer }      from '@angular/platform-browser';
 import { NxConfigService }   from '../../services/nx-config';
 import { NxAppStateService } from '../../services/nx-app-state.service';
+import { ActivatedRoute }            from '@angular/router';
+import { NxSettingsService } from '../../pages/systems/settings/settings.service';
 
 @Component({
     selector: 'nx-footer',
@@ -16,9 +18,15 @@ import { NxAppStateService } from '../../services/nx-app-state.service';
     footerItems: any;
     viewFooter: boolean;
 
+    // options
+    @Input() center: boolean;
+    classes: string[] = [];
+
     constructor(private sanitizer: DomSanitizer,
                 private _config: NxConfigService,
-                private appState: NxAppStateService) {
+                private appState: NxAppStateService,
+                private route: ActivatedRoute,
+                private systemSettingsService: NxSettingsService) {
         this.config = this._config.getConfig();
     }
 
@@ -27,7 +35,8 @@ import { NxAppStateService } from '../../services/nx-app-state.service';
         this.companyName = this.config.companyName;
         this.copyrightYear = this.config.copyrightYear;
         this.footerItems = this.config.footerItems;
-        this.appState.footerVisibleObservable.subscribe((visible) => {
+
+        this.appState.footerVisibleSubject.subscribe((visible) => {
             this.viewFooter = visible;
         });
     }

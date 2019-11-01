@@ -1,56 +1,81 @@
-import { Component, Inject, OnInit, Input, ViewEncapsulation, Renderer2, ViewChild } from '@angular/core';
-import { Location }                                                                  from '@angular/common';
-import { NgbModal, NgbActiveModal, NgbModalRef }                                     from '@ng-bootstrap/ng-bootstrap';
-import { EmailValidator, NgForm }                                                    from '@angular/forms';
-import { NxConfigService }                                                           from '../../services/nx-config';
-import {TranslateService} from "@ngx-translate/core";
+import {
+    Component, Inject, Input, OnInit,
+    Renderer2, ViewChild
+} from '@angular/core';
+import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
+import { EmailValidator, NgForm }    from '@angular/forms';
+import { NxConfigService }           from '../../services/nx-config';
+import { WINDOW }                    from '../../services/window-provider';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxProcessService }          from '../../services/process.service';
+import { NxCloudApiService }         from '../../services/nx-cloud-api';
+
+
+export interface MessageParams {
+    disclaimer: string;
+    email?: string;
+    asset: string;
+    assetId?: string;
+    to?: string;
+}
+
+interface Topic {
+    id: string;
+    name: string;
+}
 
 @Component({
     selector: 'nx-modal-message-content',
     templateUrl: 'message.component.html',
     styleUrls: []
 })
-export class MessageModalContent {
+export class MessageModalContent implements OnInit {
+    @Input() account;
     @Input() messageType;
-    @Input() productId;
-    @Input() product;
+    @Input() data;
     @Input() closable;
-    @Input() config;
 
-    lang: any;
+    LANG: any;
+
+    config: any;
     placeholder: string;
     sendMessage: any;
     userName: string;
     userEmail: string;
     message: string;
-    contact: boolean;
     agree: boolean;
     title: string;
     topic: string;
-    topics: any;
+    topicMessage: string;
+    topics: Topic[];
+    url: string;
 
-    @ViewChild('feedbackForm') public feedbackForm: NgForm;
+    @ViewChild('feedbackForm', { static: true }) public feedbackForm: NgForm;
 
     constructor(private activeModal: NgbActiveModal,
                 private renderer: Renderer2,
-                private translation: TranslateService,
-                @Inject('account') private account: any,
-                @Inject('process') private process: any,
-                @Inject('cloudApiService') private cloudApi: any,
-                @Inject('languageService') private language: any
-                ) {
-
-        this.lang = this.translation.translations[this.translation.currentLang];
+                private language: NxLanguageProviderService,
+                private configService: NxConfigService,
+                private processService: NxProcessService,
+                private cloudApiService: NxCloudApiService,
+                @Inject(WINDOW) private window: Window,
+    ) {
         this.placeholder = '';
         this.topic = '';
+        this.topicMessage = '';
+        this.url = this.window.location.href;
+        this.config = configService.getConfig();
     }
 
     ngOnInit() {
+        this.LANG = this.language.getTranslations();
+
         this.initForm();
-        this.sendMessage = this.process.init(() => {
-            return this.cloudApi.sendMessage(this.topic, this.productId, this.message, this.userName, this.userEmail, this.contact);
+        this.sendMessage = this.processService.createProcess(() => {
+            const asset = this.data.assetId || this.data.asset;
+            return this.cloudApiService.sendMessage(this.topic, asset, this.message, this.userName, this.userEmail).toPromise();
         }, {
-            successMessage: this.language.lang.dialogs.messageSent
+            successMessage: this.LANG.dialogs.message.sent
         }).then(() => {
             this.activeModal.close(true);
         });
@@ -63,17 +88,22 @@ export class MessageModalContent {
     initForm() {
         switch (this.messageType) {
             case this.config.messageType.ipvd_page :
-                this.placeholder = this.lang.messageDialogPlaceholders.feedback;
+                this.placeholder = this.LANG.messageDialogPlaceholders.feedback;
                 break;
             default :
                 this.placeholder = '';
         }
 
-        this.title = this.language.lang.messageDialog.title[this.messageType].replace('{{product}}', this.product);
+        const title = this.LANG.dialogs.message.title[this.messageType];
+        if (this.messageType !== this.config.messageType.integration) {
+            this.title = title.replace('{{asset}}', this.data.asset);
+        } else {
+            this.title = title.replace('{{companyName}}', this.data.to);
+        }
         this.topics = this.config.messageTopics[this.messageType].map((topic) => {
             return {
                 id: topic,
-                name: this.language.lang.messageDialog.topic[topic].replace('{{product}}', this.product)
+                name: this.LANG.dialogs.message.topic[topic].replace('{{asset}}', this.data.asset)
             };
         });
 
@@ -82,61 +112,15 @@ export class MessageModalContent {
         this.account
             .get()
             .then((account) => {
-                this.userName = account.first_name + ' ' + account.last_name ;
-                this.userEmail = account.email;
+                if (account) {
+                    this.userName = `${account.first_name} ${account.last_name}`;
+                    this.userEmail = account.email;
+                }
             });
     }
 
-    setTopic(topic) {
+    setTopic(topic: any) {
         this.topic = topic.id;
-    }
-}
-
-@Component({
-    selector: 'nx-modal-message',
-    template: '',
-    encapsulation: ViewEncapsulation.None,
-    styleUrls: []
-})
-
-export class NxModalMessageComponent implements OnInit {
-    config: any;
-    modalRef: NgbModalRef;
-
-    constructor(private configService: NxConfigService,
-                private modalService: NgbModal) {
-        this.config = configService.getConfig();
-    }
-
-    private dialog(type, product, productId) {
-        // TODO: Refactor dialog to use generic dialog
-        // TODO: retire loading ModalContent (CLOUD-2493)
-        this.modalRef = this.modalService.open(MessageModalContent,
-                {
-                            windowClass: 'modal-holder',
-                            backdrop: 'static'
-                        });
-        this.modalRef.componentInstance.closable = true;
-        this.modalRef.componentInstance.messageType = type;
-        this.modalRef.componentInstance.product = product;
-        this.modalRef.componentInstance.productId = productId;
-        this.modalRef.componentInstance.config = this.config;
-
-
-        return this.modalRef;
-    }
-
-    open(type, product?, productId?) {
-        if (productId === undefined) {
-            productId = '';
-        }
-        if (product === undefined) {
-            product = '';
-        }
-
-        return this.dialog(type, product, productId).result;
-    }
-
-    ngOnInit() {
+        this.topicMessage = topic.name;
     }
 }

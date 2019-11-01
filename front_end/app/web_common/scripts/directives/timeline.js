@@ -314,9 +314,15 @@
                                 mouseOverElements = null;
                                 return;
                             }
+                            
                             if (event.touches) {
-                                event.pageX = event.touches[0].pageX;
-                                event.pageY = event.touches[0].pageY;
+                                try {
+                                    event.pageX = event.touches[0].pageX;
+                                    event.pageY = event.touches[0].pageY;
+                                } catch (e) {
+                                    // Sometimes iOS TouchEvent is readonly
+                                    // X and Y have correct values though
+                                }
                             }
                             
                             if ($(event.target).is('canvas') && event.offsetX) {

@@ -2,16 +2,20 @@
     <div class="card-body">
         <h2 class="mb-3">Hệ thống của bạn</h2>
         <p>
-            <button ng-disabled="currentlyMerging && !isMaster" class="btn btn-default" ng-click="rename()">Đổi tên hệ thống</button>
+            <button class="btn btn-default mw-100"
+                    ng-disabled="currentlyMerging && !isMaster"
+                    ng-click="rename()"><div class="ellipsis">Rename System</div></button>
         </p>
         <p ng-if="systems.length > 1 && system.canMerge || configCanMerge || debugMode || betaMode">
-            <button class="btn btn-default"
+            <button class="btn btn-default mw-100"
                     ng-disabled="(currentlyMerging || !system.isOnline || !system.isAvailable) && !(debugMode || betaMode)"
-                    ng-click="mergeSystems()">Hợp nhất với một hệ thống khác</button>
+                    ng-click="mergeSystems()"><div class="ellipsis"> Hợp nhất với hệ thống khác </div></button>
         </p>
         <hr />
-        <button ng-disabled="currentlyMerging" class="btn btn-default" ng-click="disconnect()">Disconnect from
-            <span class="product-name">&nbsp;%CLOUD_NAME%</span></button>
+        <button class="btn btn-default mw-100"
+                ng-disabled="currentlyMerging"
+                ng-click="disconnect()">
+            <div class="ellipsis">Disconnect from <span class="product-name">&nbsp;%CLOUD_NAME%</span></div></button>
     </div>
 </div>
 <div class="card card-condensed" ng-if="!system.isMine">
@@ -21,13 +25,20 @@
         <a ng-href="mailto:{{system.info.ownerAccountEmail}}">{{system.info.ownerAccountEmail}}</a>
         <hr>
         <p>
-            Bạn được phép: <b> {{$root.L.accessRoles[system.accessRole].label || System.accessRole}} </b>
+            Quyền của bạn:
+            <b>{{permission}}</b>
         </p>
 
         <p ng-if="system.permissions.isAdmin">
-            <button class="btn btn-default" ng-click="rename()" ng-disabled="currentlyMerging && !isMaster">Đổi tên hệ thống</button>
+            <button class="btn btn-default mw-100"
+                    ng-click="rename()"
+                    ng-disabled="currentlyMerging && !isMaster">
+                <div class="ellipsis">Rename System</div></button>
         </p>
-        <button class="btn btn-default" ng-click="delete()" ng-disabled="currentlyMerging">Ngắt kết nối khỏi tài khoản của tôi</button>
+        <button class="btn btn-default mw-100"
+                ng-click="delete()"
+                ng-disabled="currentlyMerging">
+            <div class="ellipsis">Disconnect from my account</div></button>
     </div>
 </div>
 <div class="mt-3 card card-default" ng-if="currentlyMerging">
@@ -56,7 +67,7 @@
             <div class="merge-info-text light-text">
                 <p>Tùy thuộc vào kích thước của cơ sở dữ liệu có thể mất đến vài giờ.</p>
                 <p>Cho đến khi hợp nhất xong bạn có thể đăng nhập vào hệ thống này và xem video, nhưng không thể thay đổi bất kỳ cài đặt.</p>
-                <p>Khi hợp nhất kết thúc, tất cả người dùng và máy ảnh từ hệ thống này sẽ sẵn sàng
+                <p>Khi hợp nhất kết thúc, tất cả người dùng và camera từ hệ thống này sẽ sẵn sàng
                     trong <strong>{{mergeTargetSystem.name}}</strong> Hệ thống, và hệ thống này sẽ bị xóa.</p>
             </div>
         </div>

@@ -1,5 +1,3 @@
-from __future__ import absolute_import
-
 import os
 
 from celery import Celery
@@ -22,10 +20,11 @@ app.config_from_object('django.conf:settings')
 app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
 
 
-@app.on_after_configure.connect
+@app.on_after_finalize.connect
 def setup_periodic_tasks(sender, **kwargs):
     logger.info("Setting up periodic tasks")
-    sender.add_periodic_task(crontab(0, 0, day_of_month='1'), clean_logs.s(), queue='broadcast-notifications',)
+    sender.add_periodic_task(crontab(hour=0, minute=0, day_of_month='1'),
+                             clean_logs.s(), name="clean logs", queue='broadcast-notifications')
 
 
 @app.task(bind=True)

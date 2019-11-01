@@ -1,6 +1,3 @@
 Hello {{ message.userFullName }}
-{{ message.sender_name}} ({{ message.sender_email }}) a következő visszajelzést adta {{ message.product }}:
+{{ message.sender_name}} ({{ message.sender_email }}) gave the following feedback{{#message.asset}} for {{ message.asset }}{{/message.asset}}:
 <pre>{{ message.message }}</pre>
-
-------------------------------------------
-Elérhető a felhasználó: {{ message.sender_to_be_contacted}}

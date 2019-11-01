@@ -12,7 +12,7 @@ from django.shortcuts import redirect
 from api.helpers.exceptions import handle_exceptions, APIRequestException, APIServiceException,\
     api_success, ErrorCodes, get_client_ip
 from api.models import Account
-from cms.models import Customization, Product, UserGroupsToProductPermissions, cloud_portal_customization_cache
+from cms.models import Customization, Asset, UserGroupsToAssetPermissions, cloud_portal_customization_cache
 from notifications import notifications_api
 from notifications.models import *
 from notifications.tasks import send_to_all_users
@@ -78,9 +78,9 @@ def send_event(request):
         if 'type' in request.data\
             and request.data['type'] not in [MESSAGE_TYPES.ipvd_feedback_page,
                                              MESSAGE_TYPES.ipvd_feedback_device]\
-                and 'productId' not in request.data:
+                and 'asset' not in request.data:
             validation_error = True
-            error_data['productId'] = ['This field is required.']
+            error_data['asset'] = ['This field is required.']
 
         if 'message' not in request.data:
             validation_error = True
@@ -98,24 +98,23 @@ def send_event(request):
             raise APIRequestException('Not enough parameters in request', ErrorCodes.wrong_parameters,
                                       error_data=error_data)
 
-        product_id = ''
+        asset_id = ''
         if request.data['type'] not in [MESSAGE_TYPES.ipvd_feedback_page,
                                         MESSAGE_TYPES.ipvd_feedback_device]:
-            product = Product.objects.filter(id=request.data['productId']).first()
-            if product:
-                request.data['product'] = product.name
-                product_id = product.id
+            asset = Asset.objects.filter(id=request.data['asset']).first()
+            if asset:
+                request.data['asset'] = asset.name
+                asset_id = asset.id
         else:
-            request.data['product'] = request.data['productId']
+            request.data['type'] = MESSAGE_TYPES.ipvd_feedback
 
         request.data['sender_email'] = request.data['userEmail']
         request.data['sender_name'] = request.data['userName']
-        request.data['sender_to_be_contacted'] = request.data['contact']
 
         ip = get_client_ip(request)
         logging.info("ip: {}\t user: {}\nrequest data: {}".format(ip, request.user, request.data))
 
-        notifications_api.send_feedback(request.data['type'], product_id, request.data)
+        notifications_api.send_feedback(request.data['type'], asset_id, request.data)
 
     except ValidationError as error:
         error_data = error.detail if hasattr(error, 'detail') else None
@@ -189,7 +188,7 @@ def cloud_notification_action(request):
         customizations = request.data.getlist('customizations')
 
     for customization in customizations:
-        if not UserGroupsToProductPermissions.check_customization_permission(request.user,
+        if not UserGroupsToAssetPermissions.check_customization_permission(request.user,
                                                                              customization,
                                                                              'send_cloud_notification'):
             raise PermissionDenied

@@ -1,0 +1,3 @@
+Merhaba, {{ message.userFullName }}
+{{ message.sender_name}} ({{ message.sender_email }}) {{ message.asset }}hakkında geri bildirimde bulunuyor:
+<pre>{{ message.message }}</pre>

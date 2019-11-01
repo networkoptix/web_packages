@@ -2,7 +2,8 @@
     <camera-view-informer
             flags="videoFlags"
             preloader="loading && !debugMode"
-            preview="preview">
+            preview="preview"
+            player="player">
     </camera-view-informer>
 
     <div class="videoplayer" id="{{playerId}}" ng-if="flashls" ng-class="[loading && !debugMode ? 'drop-back' : '', getRotation()]"

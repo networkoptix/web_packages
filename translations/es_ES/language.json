@@ -4,32 +4,6 @@
   "cloudName": "%CLOUD_NAME%",
   "vmsName": "%VMS_NAME%",
   "clientProtocol": "%CLIENT_PROTOCOL%:",
-  "dialogs": {
-    "okButton": "Aceptar",
-    "cancelButton": "Cancelar",
-    "loginTitle": "Log in to %CLOUD_NAME%",
-    "loginButton": "Inicia sesión",
-    "logoutAuthorisedTitle": "Ya se ha conectado",
-    "logoutAuthorisedContinueButton": "Continuar",
-    "logoutAuthorisedLogoutButton": "Cerrar Sessión",
-    "messageFailed": "El mensaje no se ha podido enviar.",
-    "messageSent": "El mensaje ha sido enviado.",
-    "noClientDetectedTitle": "Instalar %VMS_NAME% para ver su sistema",
-    "download": "Descargar %VMS_NAME%"
-  },
-  "messageDialog": {
-    "title": {
-      "integration": "Email for {{product}}",
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Feedback about {{product}}"
-    },
-    "topic": {
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Feedback about {{product}}",
-      "contact_sales": "Contact sales for {{product}}",
-      "contact_support": "Contact support for {{product}}"
-    }
-  },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
     "default": "%CLOUD_NAME%",
@@ -105,7 +79,7 @@
       "description": "Acceso sin restricciones, incluyendo la capacidad para compartir y conectar/desconectar el sistema de la nube"
     },
     "viewer": {
-      "label": "Observador",
+      "label": "Espectador",
       "description": "Puede ver video en vivo y ver el archivo"
     },
     "liveViewer": {
@@ -113,7 +87,7 @@
       "description": "Sólo puede ver vídeo en vivo"
     },
     "advancedViewer": {
-      "label": "Observador avanzado",
+      "label": "Visor avanzado",
       "description": "Puede ver el vídeo vivo, hojear el archivo, configurar cámaras, controlar PTZ etc"
     },
     "custom": {
@@ -140,7 +114,7 @@
     "wrongParameters": "Algunos parámetros en el formulario son incorrectos",
     "wrongCode": "Ya está activada la cuenta o el código de confirmación es incorrecto",
     "wrongCodeRestore": "Código de confirmación ya sea usado o está incorrecta",
-    "wrongAuthCode": "Code is expired or incorrect",
+    "wrongAuthCode": "El código ha caducado o es incorrecto",
     "forbidden": "No tiene permisos para realizar esta acción",
     "accountNotActivated": "Esta cuenta no ha sido activada. <a href=\"/activate\"> Enviar enlace de activación de nuevo</a>",
     "accountBlocked": "Esta cuenta está bloqueada. Por favor, intente nuevamente en unos minutos.",
@@ -162,34 +136,7 @@
     "mergedSystemIsOffline": "El sistema <strong>{{failedSystem}}</strong> está desconectado.",
     "INCOMPATIBLE": "Los sistemas tienen diferentes versiones de software. Por favor, actualice ambos a la <a href=\"/download\">última versión</a>.",
     "FAIL": "El sistema <strong>{{failedSystem}}</strong> es actualmente inalcanzable.<br>Vuelva a intentarlo en unos momentos o póngase en contacto con <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-    "unknownMergeError": "Unknown error. You can try to refresh the page and repeat attempt. If the problem persists – please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>."
-  },
-  "merging": {
-    "mergeFailedTitle": "La fusión de sistemas falló",
-    "commonText": "Error al fusionar los sistemas <strong>{{primarySystem}}</strong> y <strong>{{secondarySystem}}</strong>."
-  },
-  "passwordRequirements": {
-    "good": "bueno",
-    "fair": "regular",
-    "fairMessage": "Uso de números, letras mayúsculas y minúsculas y caracteres especiales para hacer su contraseña más fuerte",
-    "minLength": "demasiado corto",
-    "minLengthMessage": "La contraseña debe tener al menos 8 caracteres",
-    "required": "incorrecto",
-    "requiredMessage": "Utilice sólo letras, números y símbolos de teclado, evite los espacios iniciales y finales",
-    "weak": "débil",
-    "weakMessage": "Uso de números, letras mayúsculas y minúsculas y caracteres especiales para hacer su contraseña más fuerte",
-    "strongMessage": "¡Contraseña segura!",
-    "common": "muy común",
-    "commonMessage": "Esta contraseña se encuentra entre los más populares en el mundo",
-    "missingMessage": "Se requiere contraseña"
-  },
-  "sharing": {
-    "confirmOwner": "Si se cambia el dueño del sistema, revocará la titularidad de esta cuenta. Esta acción es irreversible. ¿Está seguro?",
-    "shareTitle": "Compartir",
-    "shareConfirmButton": "Compartir",
-    "editShareTitle": "Editar permisos",
-    "editShareConfirmButton": "Guardar",
-    "permissionsSaved": "Nuevos permisos guardados"
+    "unknownMergeError": "Error desconocido. Puede intentar actualizar la página y repetir el intento. Si el problema persiste, por favor contacte con el soporte <a href=\"%SUPPORT_LINK%\" target=\"_blank\"></a>."
   },
   "system": {
     "yourSystem": "Su Sistema",
@@ -203,35 +150,20 @@
     "confirmRenameTitle": "Nombre del sistema",
     "confirmRenameAction": "Guardar",
     "successRename": "Nombre del sistema guardado",
-    "confirmDisconnectTitle": "Disconnect System from %CLOUD_NAME%?",
+    "confirmDisconnectTitle": "¿Desconectar el Sistema de %CLOUD_NAME%?",
     "confirmDisconnectAction": "Desconectar",
-    "confirmUnshareFromMe": "Está a punto de desconectar este sistema de su cuenta. Usted no podrá acceder a este sistema. ¿Está seguro?",
-    "confirmUnshareFromMeTitle": "Desconectar el Sistema?",
+    "confirmUnshareFromMe": "Ya no podrás acceder a este sistema.",
+    "confirmUnshareFromMeTitle": "¿Desconectar el sistema de tu cuenta?",
     "confirmUnshareFromMeAction": "Desconectar",
-    "confirmUnshare": "Este usuario no podrá acceder el sistema. ¿Está seguro?",
-    "confirmUnshareTitle": "¿Eliminar el usuario?",
-    "confirmUnshareAction": "Borrar",
-    "successDisconnected": "System is successfully disconnected from %CLOUD_NAME%",
+    "confirmUnshareTitle": "¿Eliminar usuario?",
+    "confirmUnshareAction": "Eliminar",
+    "successDisconnected": "El sistema se desconecta con éxito de %CLOUD_NAME%",
     "successDeleted": "Sistema {{systemName}} se ha eliminado de su cuenta",
     "mergeFailed": "La fusión de sistemas falló",
     "mergeStart": "Los sistemas han comenzado a fusionarse",
     "mergeSuccess": "Fusión del sistema completada",
     "permissionsRemoved": "Los permisos fueron removidos de {{email}}",
     "unknownName": "Nombre desconocido para el sistema (causado por la fusión en la nube)"
-  },
-  "account": {
-    "accountSavedSuccess": "Su cuenta se ha guardado",
-    "activationLinkSent": "Enlace de activación",
-    "passwordChangedSuccess": "Su cuenta se ha guardado",
-    "changePassword": "Cambiar contraseña",
-    "newPasswordLabel": "Nueva contraseña",
-    "saveChanges": "Guardar"
-  },
-  "activeActions": {
-    "sendConfirm": "Reenviar enlace de activación",
-    "resetPassword": "Restablecer contraseña",
-    "setNewPassword": "Guardar contraseña",
-    "setNewPasswordLabel": "Nueva contraseña"
   },
   "regActions": {
     "passwordLabel": "Contraseña",
@@ -246,20 +178,21 @@
       "highStream": "Corriente de alta",
       "lowStream": "Corriente de baja",
       "transcoding": "Transcodificación",
-      "unknown": "Uesconocido",
+      "unknown": "Desconocido",
       "copyToClipboard": "copiar al portapapeles",
       "copyDefaultText": "copiar",
       "copyActiveText": "copiado al portapapeles"
     },
     "systemOffline": "Sistema está desconectado",
     "systemHasNoCameras": "NO CÁMARAS",
-    "systemUnreachable": "SYSTEM IS UNREACHABLE",
+    "systemUnreachable": "SISTEMA ILOCALIZABLE",
     "cameraStates": {
       "offline": "Desconectado",
       "error": "Error",
+      "errorLoading": "Ocurrió un error al cargar el video.",
       "unauthorized": "Autenticación necesaria",
       "noData": "No hay datos",
-      "iosVideoTooLarge": "iOS no soporta video más grande que el fullHD (2MP: 1920 x 1080).",
+      "iOSVideoTooLarge": "iOS no soporta video más grande que el fullHD (2MP: 1920 x 1080).",
       "flashRequired": "Por favor, instale <a href='https://get.adobe.com/flashplayer/' target='_blank'>instalar Adobe Flash</a> para reproducir videos.",
       "flashOrWebmRequired": "<a href='https://get.adobe.com/flashplayer/' target='_blank'>instale Adobe Flash</a> or<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> para reproducir vídeo en Internet Explorer.",
       "noArmSupport": "Este navegador o dispositivo no admite la reproducción de vídeo desde servidores basados ​​en ARM.",
@@ -271,7 +204,7 @@
     "searchCamPlaceholder": "Búsqueda",
     "resolution": {
       "auto": "Auto",
-      "high": "Elevado",
+      "high": "Alto",
       "low": "Bajo"
     },
     "chromeCastWarning": "Chromecast consume muchos recursos y puede causar problemas en tu servidor.",
@@ -279,7 +212,7 @@
       "play": "reproducir",
       "pause": "pausa",
       "live": "go to live | show me live",
-      "view": "vista + [nombre de la cámara]",
+      "view": "view + [camera name]",
       "search": "find + [text for searchbar]",
       "clear search": "borrar búsqueda",
       "expand server": "expand server + [server name]",

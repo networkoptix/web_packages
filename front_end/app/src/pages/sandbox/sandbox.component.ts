@@ -1,5 +1,7 @@
-import { Component, ViewChild } from '@angular/core';
-import { NgForm }               from '@angular/forms';
+import { Component, ViewChild }          from '@angular/core';
+import { NgForm }                        from '@angular/forms';
+import { NxDialogsService }              from '../../dialogs/dialogs.service';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
     selector   : 'sandbox-component',
@@ -20,12 +22,19 @@ export class NxSandboxComponent {
     items: any;
     itemsSelected: any;
     filter: any;
+    autohide: boolean;
+    ipvdEmbedUrl: SafeResourceUrl;
 
     submitted = false;
 
-    @ViewChild('testForm') public testForm: NgForm;
+    @ViewChild('testForm', { static: true }) public testForm: NgForm;
 
     private setupDefaults() {
+        let host = '//' + window.location.hostname;
+        if (host === '//localhost' || host === '//127.0.0.1') {
+            host += ':9000';
+        }
+        this.ipvdEmbedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(host + '/embed/ipvd');
 
         this.show = false;
         this.show5 = false;
@@ -123,7 +132,8 @@ export class NxSandboxComponent {
 
     }
 
-    constructor() {
+    constructor(private dialogs: NxDialogsService,
+                private sanitizer: DomSanitizer) {
         this.setupDefaults();
     }
 
@@ -150,6 +160,10 @@ export class NxSandboxComponent {
     modelChanged(result: any) {
         // ensure 'change' will be triggered
         this.itemsSelected = [...result];
+    }
+
+    notify(msg: string, type: string) {
+        this.dialogs.notify(msg, type, this.autohide);
     }
 }
 

@@ -11,7 +11,7 @@
 
   ::-webkit-scrollbar {
       width: initial;
-      height:8px;
+      height: $scrollbar-height;
   }
   ::-webkit-scrollbar-thumb {
       -webkit-border-radius:initial;
@@ -45,15 +45,13 @@
   }
   
   .nx-table {
-    table-layout  : auto;
-    min-width     : 700px;
-    white-space   : nowrap;
-    margin-bottom : 0;
+    min-width : 1045px;
+    
+    .table-row-spacer {
+      height : .5rem;
+    }
     
     thead {
-      background-color : $additional_light1;
-      border-bottom    : 1px solid $light3;
-      
       th {
         padding          : .5rem 0;
         color            : $dark9;
@@ -82,6 +80,9 @@
         .caption {
           position : relative;
           height   : 2rem;
+          overflow-wrap : initial;
+          overflow      : hidden;
+          text-overflow : ellipsis;
       
           .sort-dir {
             //top: 0;
@@ -104,8 +105,8 @@
     }
     
     tbody {
-      padding : .5rem 0;
-      display : table-cell;
+      //padding : .5rem 0;
+      //display : table-cell;
       
       tr {
         height : rem(24px);
@@ -229,6 +230,12 @@
         }
       }
     }
+  }
+}
+
+.vendor {
+  @include media-breakpoint-down(md) {
+    background-color: $light4;
   }
 }
 

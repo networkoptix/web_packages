@@ -1,28 +1,46 @@
 {
+	"account": {
+		"accountSavedSuccess": "Tài khoản của bạn đã được lưu thành công",
+		"activationLinkSent": "Link kích hoạt đã được gửi",
+		"passwordChangedSuccess": "Tài khoản của bạn đã được lưu thành công",
+		"changePassword": "Đổi mật khẩu",
+		"newPasswordLabel": "Mật khẩu mới",
+		"saveChanges": "Tiết kiệm",
+		"accountSettings": "Cài đặt tài khoản"
+	},
+	"activeActions": {
+		"sendConfirm": "Gửi lại link kích hoạt",
+		"resetPassword": "Đặt lại mật khẩu",
+		"setNewPassword": "Lưu mật khẩu",
+		"setNewPasswordLabel": "Mật khẩu mới"
+	},
+	"clientProtocol": "%CLIENT_PROTOCOL%:",
 	"search": {
 		"Search": "Tìm kiếm",
-		"search_ipvd": "Search by model or manufacturer",
-		"filter applied": "filter applied",
-		"filters applied": "filters applied",
-		"Any": "Any",
-		"selected": "selected",
-		"vendor": "Manufacturer",
-		"vendors": "manufacturers",
+		"search_ipvd": "Tìm kiếm theo mô hình hoặc nhà sản xuất",
+		"filter applied": "áp dụng bộ lọc",
+		"filters applied": "bộ lọc được áp dụng",
+		"Any": "Bất kỳ",
+		"selected": "đã chọn",
+		"vendor": "Nhà sản xuất",
+		"vendors": "Nhà sản xuất của",
 		"hardwareType": "Kiểu",
-		"hardwareTypes": "types",
-		"minResolution": "Minimum Resolution"
+		"hardwareTypes": "Các loại",
+		"minResolution": "Độ phân giải tối thiểu",
+		"analytics": "Phân tích",
+		"analyticsSelected": "sự kiện phân tích"
 	},
 	"cameraFilters": {
-		"ptz": "PTZ cameras",
-		"aptz": "Cameras with advanced PTZ",
-		"fisheye": "Fisheye cameras",
-		"H265": "H.265 Cameras",
-		"IO": "I / O modules",
-		"multiSensor": "Multi-sensor cameras",
-		"TwWayAudio": "2-way audio devices",
-		"audio": "Cameras with audio",
-		"encoder": "Encoders",
-		"highRes": "Extra high resolution cameras"
+		"ptz": "Camera PTZ",
+		"aptz": "Camera với PTZ tiên tiến",
+		"fisheye": "Camera mắt cá",
+		"H265": "Cameras H.265",
+		"IO": "Mô đun I / O",
+		"multiSensor": "Camera đa cảm biến",
+		"TwWayAudio": "Thiết bị âm thanh 2 chiều",
+		"audio": "Camera có âm thanh",
+		"encoder": "Bộ mã hóa",
+		"highRes": "Camera độ phân giải cao"
 	},
 	"downloads": {
 		"mobile": {
@@ -62,102 +80,355 @@
 			"arm": {
 				"label": "ARM",
 				"shortLabel": "ARM",
-				"supported": "Debian/Ubuntu based"
+				"supported": "<a href='/content/arm'>ARM based servers support policy</a>"
 			},
 			"sdk": {
 				"label": "SDK",
 				"shortLabel": "SDK",
-				"supported": "C++ cross platform SDK"
+				"supported": "SDK đa nền tảng C ++"
 			}
 		},
 		"platforms": {
-			"win64": "x64",
-			"linux64": "x64",
-			"mac": "X",
 			"bananapi": "Banana Pi",
 			"bpi": "Nx1",
-			"rpi": " Raspberry Pi"
+			"linux64": "x64",
+			"linux_arm32": "x32",
+			"linux_arm64": "x64",
+			"mac": "X",
+			"rpi": " Raspberry Pi",
+			"universal": "SDK",
+			"win64": "x64"
 		},
 		"appTypes": {
-			"client": "Chỉ máy trạm",
-			"server": "Chỉ máy chủ",
 			"bundle": "Máy chủ và Máy trạm",
+			"camera_sdk": "SDK nguồn video",
+			"client": "Chỉ máy trạm",
+			"metadata_sdk": "Metadata SDK",
+			"package": "Gói",
+			"server": "Chỉ máy chủ",
 			"servertool": "Công cụ cấu hình",
-			"package": "Package"
+			"storage_sdk": "SDK lưu trữ",
+			"video_source_sdk": "SDK nguồn video"
 		},
 		"releasesTypes": {
 			"beta": "Beta",
 			"betas": "Betas",
 			"rc": "Release Candidate",
 			"release": "Release",
-			"releases": "Phát hành",
+			"releases": "Releases",
 			"patch": "Patch",
-			"patches": "Bản vá lỗi"
+			"patches": "Patches"
 		}
 	},
 	"ipvd": {
-		"count": "Count",
-		"vendor": "Manufacturer",
+		"resolutionArea": "Khu vực",
+		"count": "Đếm",
+		"vendor": "Nhà sản xuất",
 		"model": "Kiểu mẫu",
 		"hardwareType": "Kiểu",
-		"maxResolution": "Max Resolution",
-		"maxFps": "Max FPS",
+		"maxResolution": "<span>Max</span><br><span>Resolution</span>",
+		"maxFps": "<span>Max</span><br><span>FPS</span>",
 		"primaryCodec": "Codec",
 		"isAudioSupported": "Âm thanh",
-		"isTwAudioSupported": "2-way Audio",
+		"isTwAudioSupported": "Âm thanh 2 chiều",
 		"isPtzSupported": "PTZ",
-		"isAptzSupported": "Advanced PTZ",
-		"isAptzSupportedShort": "Adv. PTZ",
+		"isAptzSupported": "PTZ nâng cao",
+		"isAptzSupportedShort": "PTZ nâng cao",
 		"isFisheye": "Fisheye",
 		"isMdSupported": "Vận động",
 		"isIoSupported": "I/O",
 		"isH265": "H.265",
-		"isMultiSensor": "Multi Sensor",
+		"isMultiSensor": "Đa cảm biến",
+		"isAnalyticsSupported": "Phân tích",
 		"camera": "Máy chụp hình",
-		"multiSensorCamera": "Multi-Sensor Camera",
-		"encoder": "Encoder",
+		"multiSensorCamera": "Camera đa cảm biến",
+		"encoder": "Bộ mã hóa",
 		"dvr": "DVR",
-		"other": "Other",
-		"PTZ cameras": "PTZ cameras",
-		"Advanced PTZ cameras": "Advanced PTZ cameras",
-		"Fisheye Cameras": "Fisheye Cameras",
-		"Cameras supporting H.265": "Cameras supporting H.265",
-		"I / O modules": "I / O modules",
-		"Multisensor Cameras": "Multisensor Cameras",
-		"Cameras with 2-way audio": "Cameras with 2-way audio",
-		"Extra high resolution cameras": "Extra high resolution cameras",
+		"other": "Khác",
+		"PTZ cameras": "Camera PTZ",
+		"Advanced PTZ cameras": "Camera PTZ nâng cao",
+		"Fisheye Cameras": "Camera mắt cá",
+		"Cameras supporting H.265": "Camera hỗ trợ H.265",
+		"I / O modules": "Mô đun I / O",
+		"Multisensor Cameras": "Camera đa điểm",
+		"Cameras with 2-way audio": "Camera có âm thanh 2 chiều",
+		"Extra high resolution cameras": "Camera độ phân giải cao",
 		"feedback": {
-			"a_Please": "Please",
-			"b_Link": "submit a request",
-			"c_Info": "for additional questions/concerns regarding supported devices."
-		}
+			"a_Please": "Xin vui lòng",
+			"b_Link": "gửi yêu cầu",
+			"c_Info": "cho các câu hỏi / mối quan tâm bổ sung về các thiết bị được hỗ trợ."
+		},
+		"disclaimer": "Danh sách này được giới hạn ở các thiết bị được tìm thấy trên {{vmsName}} nơi người dùng đã cho phép tự động báo cáo thông số kỹ thuật của thiết bị thành {{companyName}}. Không có thông tin cá nhân được thu thập và mỗi người dùng vẫn hoàn toàn ẩn danh."
 	},
 	"integration": {
-		"previewRibbonText": "This page is a preview of the latest changes, and it doesn't match publicly available version.",
-		"backToEditText": "Back to the editing interfaces",
-		"Access Control": "Access Control",
-		"Connector": "Connector",
-		"Data Analytics": "Data Analytics",
-		"Drone": "Drone",
+		"myIntegrationsLabel": "Mine",
+		"previewRibbonText": "Trang này là bản xem trước của những thay đổi mới nhất và nó không phù hợp với phiên bản có sẵn công khai.",
+		"backToEditText": "Quay lại giao diện chỉnh sửa",
+		"Access Control": "Kiểm soát truy cập",
+		"Connector": "Kết nối",
+		"Data Analytics": "Phân tích dữ liệu",
+		"Drone": "Máy bay không người lái",
 		"Health Monitor": "Theo dõi tài nguyên hệ thống",
 		"Storage": "Lưu trữ"
 	},
 	"messageDialogPlaceholders": {
-		"feedback": "Make sure you include your camera model and manufacturer..."
+		"feedback": "Đảm bảo bạn bao gồm kiểu máy ảnh và nhà sản xuất..."
 	},
 	"pageTitles": {
-		"supportedDevices": "Supported Devices",
-		"integrations": "Integrations"
+		"template": "{{title}} %CLOUD_NAME%",
+		"default": "%CLOUD_NAME%",
+		"registerSuccess": "Chào mừng bạn đến",
+		"register": "Tạo tài khoản tại",
+		"changePassword": "Đổi mật khẩu -",
+		"account": "Cài đặt tài khoản -",
+		"systems": "Hệ thống -",
+		"system": "Hệ thống -",
+		"systemShare": "Chia sẻ Hệ thống -",
+		"activate": "Kích hoạt tài khoản -",
+		"activateSent": "Kích hoạt tài khoản -",
+		"activateSuccess": "Tài khoản đã kích hoạt -",
+		"activateCode": "Kích hoạt tài khoản -",
+		"restorePassword": "Đặt lại mật khẩu -",
+		"restorePasswordSuccess": "Đã lưu mật khẩu -",
+		"restorePasswordCode": "Đặt lại mật khẩu -",
+		"view": "Xem camera ",
+		"debug": "Gỡ rối",
+		"login": "Đăng nhập -",
+		"download": "Tải xuống %VMS_NAME%",
+		"downloadPlatform": "Tải xuống %VMS_NAME% cho ",
+		"pageNotFound": "Không tìm thấy trang",
+		"supportedDevices": "Thiết bị hỗ trợ",
+		"integrations": "Tích hợp"
 	},
 	"dialogs": {
+		"okButton": "Xác định",
+		"cancelButton": "Hủy bỏ",
+		"createNewAccount": "Create New Account",
+		"changeAccountLogged": "You are already logged in with as {email}",
+		"loggedFromOther": "You will be logged in with a different account",
+		"loginTitle": "Đăng nhập vào %CLOUD_NAME%",
+		"loginButton": "Đăng nhập",
+		"logoutAuthorisedTitle": "Bạn đã đăng nhập",
+		"logoutAuthorisedContinueButton": "Tiếp tục",
+		"logoutAuthorisedLogoutButton": "Đăng xuất",
+		"noClientDetectedTitle": "Cài đặt %VMS_NAME% để xem Hệ thống của bạn",
+		"stayAs": "Stay logged as {email} ",
+		"stayLoggedIn": "Stay Logged In",
+		"download": "Tải xuống %VMS_NAME%",
 		"merge": {
-			"connectToCloud": "Connect System you want to merge with this one to <strong>{{cloudName}}</strong> or merge locally using <strong>{{vmsName}}</strong> Client.",
-			"mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from the <strong>{{primarySystem}}</strong>.",
-			"primaryCannotMerge": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} System.",
-			"primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}.",
-			"secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
-			"systemOffline": "System {{targetSystem}} is offline and cannot be merged with the current one.",
-			"systemUnavailable": "System {{targetSystem}} is currently unreachable. Try again in a few minutes or contact"
+			"commonText": "Không thể hợp nhất Hệ thống <strong>{{primarySystem}}</strong> và <strong>{{secondarySystem}}</strong>.",
+			"connectToCloud": "Kết nối Hệ thống mà bạn muốn hợp nhất với hệ thống này thành <strong>{{cloudName}}</strong> hoặc hợp nhất cục bộ bằng <strong>{{vmsName}}</strong> Client.",
+			"mergeConfirmation": "Bạn sắp hợp nhất Hệ thống <strong>{{primarySystem}}</strong> và <strong>{{secondarySystem}}</strong>. Các cấu hình và tên sẽ được lấy từ <strong>{{primarySystem}}</strong>.",
+			"mergeFailedTitle": "Hợp nhất hệ thống không thành công",
+			"primaryCannotMerge": "Hệ thống {{targetSystem}} có phiên bản phần mềm mới hơn không tương thích với Hệ thống hiện tại. Cập nhật các hệ thống hiện tại lên <a href=\"/download\" target=\"_blank\" translate>mới nhất build</a>để hợp nhất với hệ thống {{targetSystem}}.",
+			"primarySystemOffline": "Hệ thống {{primarySystem}} đang ngoại tuyến và không thể hợp nhất với Hệ thống {{targetSystem}}.",
+			"secondaryCannotMerge": "Hệ thống {{targetSystem}} có phiên bản phần mềm mới hơn không tương thích với Hệ thống hiện tại. Cập nhật các hệ thống hiện tại lên <a href=\"/download\" target=\"_blank\" translate>mới nhất build</a>để hợp nhất với hệ thống {{targetSystem}}.",
+			"systemOffline": "Hệ thống {{targetSystem}} đang ngoại tuyến và không thể hợp nhất với hệ thống hiện tại.",
+			"systemUnavailable": "Hệ thống {{targetSystem}} hiện không thể truy cập được. Hãy thử lại sau vài phút hoặc liên hệ"
+		},
+		"message": {
+			"failedToSend": "Tin nhắn đã không gửi được.",
+			"sent": "Tin nhắn đã được gửi.",
+			"title": {
+				"integration": "Liên lạc với {{companyName}}",
+				"ipvd_feedback_page": "Phản hồi cho trang camera",
+				"ipvd_feedback_device": "Phản hồi về {{asset}}"
+			},
+			"topic": {
+				"contact_sales": "Liên hệ bán hàng cho {{asset}}",
+				"contact_support": "Liên hệ hỗ trợ cho {{asset}}",
+				"integration_feedback": "Phản hồi cho tích hợp {{asset}}",
+				"ipvd_feedback_page": "Phản hồi cho trang camera",
+				"ipvd_feedback_device": "Phản hồi về {{asset}}"
+			}
+		},
+		"sharing": {
+			"confirmOwner": "Nếu bạn thay sở hữu hệ thống, bạn sẽ thu hồi quyền sở hữu hiện tại của mình. Không thể phục hồi sở hữu cũ. Bạn có chắc không?",
+			"shareTitle": "Thêm",
+			"shareConfirmButton": "Thêm",
+			"editShareTitle": "Quyền chỉnh sửa",
+			"editShareConfirmButton": "Tiết kiệm",
+			"permissionsSaved": "Cấp phép mới được lưu"
 		}
-	}
+	},
+	"errorCodes": {
+		"ok": "ok",
+		"cantSendActivationPrefix": "Không thể gửi Email xác nhận",
+		"cantDisconnectSystemPrefix": "Không thể xóa bỏ hệ thống",
+		"cantUnshareWithMeSystemPrefix": "Không thể xóa bỏ hệ thống",
+		"cantSharePrefix": "Không thể chia sẻ Hệ thống",
+		"cantGetUsersListPrefix": "Danh sách người dùng không khả dụng",
+		"cantGetSystemsListPrefix": "Danh sách hệ thống không khả dụng",
+		"cantRegisterPrefix": "Xảy ra lỗi",
+		"cantGetSystemInfoPrefix": "Thông tin hệ thống không khả dụng",
+		"cantChangeAccountPrefix": "Không thể lưu thay đổi",
+		"cantChangePasswordPrefix": "Không thể lưu mật khẩu",
+		"cantActivatePrefix": "Không thể kích hoạt tài khoản của bạn",
+		"cantSendConfirmationPrefix": "Không thể gửi Email xác nhận",
+		"notAuthorized": "Sai mật khẩu",
+		"brokenAccount": "Vấn đề không mong muốn với tài khoản. <a href=\"/restore_password\">Khôi phục tài khoản</a>",
+		"wrongParameters": "Một số thông số trên biểu mẫu không chính xác",
+		"wrongCode": "Tài khoản đã được kích hoạt hoặc mã xác nhận không chính xác",
+		"wrongCodeRestore": "Mã xác nhận đã được sử dụng hoặc không chính xác",
+		"wrongAuthCode": "Mã đã hết hạn hoặc không chính xác",
+		"forbidden": "Bạn không có quyền thực hiện công việc này",
+		"accountNotActivated": "Tài khoản này chưa được kích hoạt. <a href=\"/activate\">Gửi liên kết kích hoạt lại</a>",
+		"accountBlocked": "Tài khoản này tạm thời bị chặn, xin vui lòng thử lại sau vài phút.",
+		"notFound": "Không tìm thấy",
+		"alreadyExists": "Tài khoản này đã tồn tại",
+		"unknownError": "Đã xảy ra lỗi không mong muốn",
+		"accountAlreadyActivated": "Tài khoản này đã được kích hoạt",
+		"emailNotFound": "Tài khoản không tồn tại.",
+		"EmailAlreadyExists": "Email này đã được đăng ký",
+		"oldPasswordMistmatch": "Mật khẩu hiện tại không đúng.",
+		"passwordMismatch": "Sai mật khẩu",
+		"cantEditYourself": "Không cho phép thay đổi quyền riêng tư",
+		"cantEditAdmin": "Người dùng này có quyền quản trị viên",
+		"cantOpenClient": "%VMS_NAME% application is not detected.",
+		"lostConnection": "Kết nối với {{systemName}} bị mất",
+		"thisSystem": "hệ thống",
+		"oldSafariNotSupported": "Không hỗ trợ các phiên bản cũ hơn Safari 10",
+		"DUPLICATE_MEDIASERVER_FOUND": "Một số máy chủ liệt kê tồn tại trong cả hệ thống được chọn và hệ thống hiện tại.<br>Xóa các máy chủ ngoại tuyến và không tương thích khỏi mỗi Hệ thống và thử lại.",
+		"mergedSystemIsOffline": "Hệ thống <strong>{{failedSystem}}</strong> đang ngoại tuyến.",
+		"INCOMPATIBLE": "Hệ thống đang có các phiên bản phần mềm khác nhau. Vui lòng cập nhật tất cả lên <a href=\"/download\">phiên bản mới nhất</a>.",
+		"FAIL": "Hệ thống <strong>{{failedSystem}}</strong> hiện không thể truy cập được.<br>Vu lòng thử lại sau vài phút hoặc liên hệ với <a href=\"%SUPPORT_LINK%\" target=\"_blank\"> để được hỗ trợ</a>.",
+		"unknownMergeError": "Lỗi không rõ. Bạn có thể thử làm mới trang và lặp lại thử. Nếu vấn đề vẫn còn - vui lòng liên hệ với <a href=\"%SUPPORT_LINK%\" target=\"_blank\">hỗ trợ</a>."
+	},
+	"passwordRequirements": {
+		"good": "tốt",
+		"fair": "công bằng",
+		"fairMessage": "Sử dụng số, chữ hoa và chữ thường và ký tự đặc biệt để làm cho mật khẩu của bạn mạnh mẽ hơn",
+		"minLength": "quá ngắn",
+		"minLengthMessage": "Mật khẩu phải chứa ít nhất 8 ký tự",
+		"required": "không chính xác",
+		"requiredMessage": "Chỉ sử dụng chữ cái Latin, số và ký hiệu bàn phím, tránh các khoảng trống đầu và cuối",
+		"weak": "yếu",
+		"weakMessage": "Sử dụng số, chữ hoa và chữ thường và ký tự đặc biệt để làm cho mật khẩu của bạn mạnh mẽ hơn",
+		"strongMessage": "Mật khẩu mạnh!",
+		"common": "quá phổ biến",
+		"commonMessage": "Mật khẩu này nằm trong mật khẩu phổ biến nhất trên thế giới",
+		"missingMessage": "Mật khẩu là bắt buộc"
+	},
+	"registration": {
+		"agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
+	},
+	"system": {
+		"yourSystem": "Hệ thống của bạn",
+		"mySystemSearch": "IMeMyMine",
+		"unavailable": "Hệ thống không thể truy cập được",
+		"offline": "Hệ thống offline",
+		"offlineAlertRibbon": "System is offline. Some settings may not be available.",
+		"openClient": "Mở trong %VMS_NAME%",
+		"openClientNoSystem": "Mở %VMS_NAME%",
+		"confirmMergeAction": "Gộp lại",
+		"mergeSystemTitle": "Hợp nhất hệ thống",
+		"confirmRenameTitle": "Tên hệ thống",
+		"confirmRenameAction": "Tiết kiệm",
+		"successRename": "Đã lưu tên hệ thống",
+		"confirmDisconnectTitle": "Hệ thống đã ngắt kết nối từ %CLOUD_NAME%?",
+		"confirmDisconnectAction": "Ngắt kết nối",
+		"confirmUnshareFromMe": "Bạn sẽ ngắt kết nối Hệ thống này khỏi tài khoản của bạn. Bạn sẽ không thể truy cập Hệ thống này nữa. Bạn có chắc không?",
+		"confirmUnshareFromMeTitle": "Ngắt kết nối hệ thống?",
+		"confirmUnshareFromMeAction": "Ngắt kết nối",
+		"confirmUnshare": "Người dùng này sẽ không thể truy cập vào Hệ thống. Bạn có chắc không?",
+		"confirmUnshareTitle": "Remove user?",
+		"confirmUnshareAction": "Tẩy",
+		"successDisconnected": "Hệ thống được ngắt kết nối thành công từ %CLOUD_NAME%",
+		"successDeleted": "Tài khoản {{systemName}} đã xóa thành công từ hệ thống của bạn",
+		"mergeFailed": "Hợp nhất hệ thống không thành công",
+		"mergeStart": "Các hệ thống đã được hợp nhất",
+		"mergeSuccess": "Hoàn thành hợp nhất hệ thống",
+		"permissionsRemoved": "Các quyền đã bị xóa khỏi {{email}}",
+		"unknownName": "Tên không xác định cho hệ thống (do hợp nhất Cloud)",
+		"shareOffline": "Cannot share system while it is offline"
+	},
+	"systemStatuses": {
+		"activated": "đã kích hoạt",
+		"incompatible": "không tương thích",
+		"merging": "đang tích hợp",
+		"notActivated": "chưa kích hoạt",
+		"online": "trực tuyến",
+		"offline": "ngoại tuyến",
+		"unavailable": "không khả dụng"
+	},
+	"accessRoles": {
+		"disabled": {
+			"label": "Vô hiệu hóa",
+			"description": "Người dùng bị vô hiệu và không thể đăng nhập vào Hệ thống"
+		},
+		"Owner": {
+			"label": "Chủ nhân",
+			"description": "Truy cập không giới hạn bao gồm khả năng chia sẻ và kết nối / ngắt kết nối Hệ thống từ đám mây"
+		},
+		"Viewer": {
+			"label": "Người xem",
+			"description": "Có thể xem video trực tuyến và duyệt qua kho lưu trữ"
+		},
+		"Live Viewer": {
+			"label": "Xem trực tiếp",
+			"description": "Chỉ có thể xem video trực tiếp"
+		},
+		"Advanced Viewer": {
+			"label": "Trình xem nâng cao",
+			"description": "Có thể xem video trực tiếp, duyệt kho lưu trữ, kiểm soát PTZ"
+		},
+		"Administrator": {
+			"label": "Giám sát viên",
+			"description": "Truy cập không giới hạn bao gồm khả năng chia sẻ"
+		},
+		"Custom": {
+			"label": "Tùy chỉnh",
+			"description": "Sử dụng ứng dụng Khách hàng %VMS_NAME% để thiết lập quyền tùy chỉnh"
+		},
+		"cloudAdmin": {
+			"label": "Giám sát viên",
+			"description": "Có thể cấu hình Hệ thống và chia sẻ nó"
+		},
+		"customRole": {
+			"label": "Tùy chỉnh role",
+			"description": "Thiết lập người dùng được chỉ định trong Hệ thống"
+		},
+		"owner": {
+			"label": "Chủ nhân",
+			"description": "Truy cập không giới hạn bao gồm khả năng chia sẻ và kết nối / ngắt kết nối Hệ thống từ đám mây"
+		},
+		"viewer": {
+			"label": "Người xem",
+			"description": "Có thể xem video trực tuyến và duyệt qua kho lưu trữ"
+		},
+		"liveViewer": {
+			"label": "Xem trực tiếp",
+			"description": "Chỉ có thể xem video trực tiếp"
+		},
+		"advancedViewer": {
+			"label": "Trình xem nâng cao",
+			"description": "Có thể xem video trực tiếp, duyệt các kho lưu trữ, cấu hình camera, điều khiển PTZ vv"
+		},
+		"custom": {
+			"label": "Tùy chỉnh",
+			"description": "Sử dụng ứng dụng Khách hàng %VMS_NAME% để thiết lập quyền tùy chỉnh"
+		}
+	},
+	"privacyPolicy": {
+		"integration": "Bằng cách gửi biểu mẫu này, bạn đồng ý liên hệ bằng {{INTEGRATION_COMPANY}} và / hoặc %COMPANY_NAME%.\nBạn sẽ tìm thấy {{INTEGRATION_COMPANY}} chính sách bảo mật <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">ở đây</a> và %COMPANY_NAME% chính sách bảo mật <a href=\"%PRIVACY_LINK%\" target=\"blank\">ở đây</a> bao gồm hướng dẫn về cách rút lại sự đồng ý của bạn.",
+		"ipvd": "Bằng cách gửi biểu mẫu này, bạn đồng ý liên hệ bằng %COMPANY_NAME%.\nBạn sẽ tìm thấy %COMPANY_NAME% chính sách bảo mật <a href=\"%PRIVACY_LINK%\" target=\"blank\">ở đây</a> bao gồm hướng dẫn về cách rút lại sự đồng ý của bạn."
+	},
+	"systemAdministration": "Quản trị hệ thống",
+	"users": "Người sử dụng",
+	"testedVersionLabel": "Đã thử nghiệm trên phiên bản {{vmsName}}:",
+	"testedVersionsLabel": "Đã thử nghiệm trên {{vmsName}} phiên bản:",
+	"About %CLOUD_NAME%": "Khoảng %CLOUD_NAME%",
+	"Download %VMS_NAME%": "Tải xuống %VMS_NAME%",
+	"Integrations": "Tích hợp",
+	"Privacy": "Quyền riêng tư",
+	"Support": "Hỗ trợ",
+	"Supported Devices": "Thiết bị hỗ trợ",
+	"Terms": "Điều khoản",
+	"pleaseSelect": "Please select...",
+	"WHEN_MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{{targetSystemName}}</strong> System, and this system will be deleted.",
+	"FAILED_SYSTEM_DESCR": "This link is broken,<br>System may be disconnected from %CLOUD_NAME%,<br>Access to this System may be revoked, <br>or you may be logged into a different account.",
+	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "Hệ thống được kết nối với %CLOUD_NAME%",
+	"NO_SYSTEMS_LOGIN": "Đăng nhập vào Hệ thống của bạn bằng cách sử dụng %VMS_NAME%",
+	"NO_SYSTEMS_GOTO_ADMINISTRATION": "Đi tới tab \"Cloud\" trong hộp thoại \"Quản trị Hệ thống\"",
+	"NO_SYSTEMS_CONNECT_SYSTEM": "Nhấn \"Kết nối hệ thống với %CLOUD_NAME%\""
 }

@@ -4,32 +4,6 @@
   "cloudName": "%CLOUD_NAME%",
   "vmsName": "%VMS_NAME%",
   "clientProtocol": "%CLIENT_PROTOCOL%:",
-  "dialogs": {
-    "okButton": "אישור",
-    "cancelButton": "ביטול",
-    "loginTitle": "Log in to %CLOUD_NAME%",
-    "loginButton": "התחבר",
-    "logoutAuthorisedTitle": "אתה כבר מחובר",
-    "logoutAuthorisedContinueButton": "המשך",
-    "logoutAuthorisedLogoutButton": "יציאה",
-    "messageFailed": "שליחת ההודעה נכשלה.",
-    "messageSent": "ההודעה נשלחה.",
-    "noClientDetectedTitle": "התקן את %VMS_NAME% כדי לצפות במערכת שלך",
-    "download": "הורד את %VMS_NAME%"
-  },
-  "messageDialog": {
-    "title": {
-      "integration": "Email for {{product}}",
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Feedback about {{product}}"
-    },
-    "topic": {
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Feedback about {{product}}",
-      "contact_sales": "Contact sales for {{product}}",
-      "contact_support": "Contact support for {{product}}"
-    }
-  },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
     "default": "%CLOUD_NAME%",
@@ -109,7 +83,7 @@
       "description": "ניתן להציג וידאו חי ולעיין בארכיון"
     },
     "liveViewer": {
-      "label": "צופה בוידאו חי",
+      "label": "צופה בשידור חי",
       "description": "יכול לצפות רק בוידאו חי"
     },
     "advancedViewer": {
@@ -140,7 +114,7 @@
     "wrongParameters": "פרמטרים מסוימים בטופס אינם נכונים",
     "wrongCode": "החשבון כבר הופעל או שקוד האישור שגוי",
     "wrongCodeRestore": "קוד האישור כבר בשימוש או שגוי",
-    "wrongAuthCode": "Code is expired or incorrect",
+    "wrongAuthCode": "קוד האימות פג או שגוי",
     "forbidden": "אין לך הרשאות לביצוע פעולה זו",
     "accountNotActivated": "חשבון זה אינו פעיל עדיין. <a href=\"/activate\"> שלח שוב קישור להפעלה </a>",
     "accountBlocked": "חשבון זה נחסם באופן זמני. נסה שוב בעוד מספר דקות.",
@@ -162,34 +136,7 @@
     "mergedSystemIsOffline": "מערכת <strong>{{failedSystem}}</strong> לא מקוונת.",
     "INCOMPATIBLE": "למערכות יש גרסאות תוכנה שונות. אנא עדכן את שניהם ל <a href=\"/download\">לגרסא האחרונה</a>.",
     "FAIL": "המערכת <strong>{{failedSystem}}</strong> אינה זמינה כעת.<br>נסה שוב בעוד מספר דקות או צור קשר עם <a href=\"%SUPPORT_LINK%\" target=\"_blank\">תמיכה</a>.",
-    "unknownMergeError": "Unknown error. You can try to refresh the page and repeat attempt. If the problem persists – please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>."
-  },
-  "merging": {
-    "mergeFailedTitle": "מיזוג המערכות נכשל",
-    "commonText": "מיזוג מערכות נכשל<strong>{{primarySystem}}</strong> ו - <strong>{{secondarySystem}}</strong>."
-  },
-  "passwordRequirements": {
-    "good": "טוב",
-    "fair": "הוגן",
-    "fairMessage": "השתמש במספרים, אותיות גדולות וקטנות ותווים מיוחדים כדי להפוך את הסיסמה שלך חזקה יותר",
-    "minLength": "קצר מדי",
-    "minLengthMessage": "הסיסמה חייבת להכיל 8 תווים לפחות",
-    "required": "שגוי",
-    "requiredMessage": "השתמש רק באותיות לטיניות, מספרים וסמלים במקלדת, הימנע מרווחים בהתחלה ובסוף",
-    "weak": "חלש",
-    "weakMessage": "השתמש במספרים, אותיות גדולות וקטנות ותווים מיוחדים כדי להפוך את הסיסמה שלך חזקה יותר",
-    "strongMessage": "סיסמא חזקה!",
-    "common": "נפוץ מדי",
-    "commonMessage": "סיסמה זו חלשה מאחר והיא מהסיסמאות הפופולריות ביותר בעולם",
-    "missingMessage": "נדרשת סיסמא"
-  },
-  "sharing": {
-    "confirmOwner": "אם תשנה את 'בעל המערכת', תשלול את הבעלות מהחשבון הנוכחי. פעולה זו היא בלתי הפיכה. האם להמשיך?",
-    "shareTitle": "שתף",
-    "shareConfirmButton": "שתף",
-    "editShareTitle": "ערוך הרשאות",
-    "editShareConfirmButton": "שמור",
-    "permissionsSaved": "הרשאות חדשות נשמרו"
+    "unknownMergeError": "שגיאה לא ידועה, באפשרותך לנסות לרענן את הדף ולנסות שוב. אם הבעיה נמשכת, צור קשר עם <a href=\"%SUPPORT_LINK%\" target=\"_blank\">התמיכה</a>."
   },
   "system": {
     "yourSystem": "המערכת שלך",
@@ -203,35 +150,20 @@
     "confirmRenameTitle": "שם מערכת",
     "confirmRenameAction": "שמור",
     "successRename": "שם המערכת נשמר",
-    "confirmDisconnectTitle": "Disconnect System from %CLOUD_NAME%?",
+    "confirmDisconnectTitle": "נתק את מערכת מ %CLOUD_NAME%?",
     "confirmDisconnectAction": "נתק",
-    "confirmUnshareFromMe": "אתה עומד לנתק את המערכת מהחשבון שלך. לא תוכל עוד לגשת למערכת זו. האם להמשיך?",
-    "confirmUnshareFromMeTitle": "נתק מערכת?",
-    "confirmUnshareFromMeAction": "התנתק",
-    "confirmUnshare": "משתמש זה לא יוכל לגשת למערכת. האם אתה בטוח?",
-    "confirmUnshareTitle": "מחק משתמש?",
-    "confirmUnshareAction": "מחק",
-    "successDisconnected": "System is successfully disconnected from %CLOUD_NAME%",
+    "confirmUnshareFromMe": "You will not be able to lgo into this System anymore.",
+    "confirmUnshareFromMeTitle": "Disconnect System from your Account?",
+    "confirmUnshareFromMeAction": "נתק",
+    "confirmUnshareTitle": "Remove user?",
+    "confirmUnshareAction": "הסר",
+    "successDisconnected": "המערכת התנתקה בהצלחה מ %CLOUD_NAME%",
     "successDeleted": "המערכת {{systemName}} נמחקה בהצלחה מהחשבון שלך",
     "mergeFailed": "מיזוג המערכת נכשל",
     "mergeStart": "מיזוג מערכות החל",
     "mergeSuccess": "מיזוג המערכת הושלם",
     "permissionsRemoved": "ההרשאות הוסרו מ- {{email}}",
     "unknownName": "שם לא ידוע עבור מערכת (נגרמה על ידי מיזוג ענן)"
-  },
-  "account": {
-    "accountSavedSuccess": "החשבון שלך נשמר בהצלחה",
-    "activationLinkSent": "קישור הפעלה נשלח",
-    "passwordChangedSuccess": "החשבון שלך נשמר בהצלחה",
-    "changePassword": "שנה סיסמא",
-    "newPasswordLabel": "סיסמה חדשה",
-    "saveChanges": "שמור"
-  },
-  "activeActions": {
-    "sendConfirm": "שלח את קישור ההפעלה שוב",
-    "resetPassword": "איפוס סיסמה",
-    "setNewPassword": "שמור סיסמה",
-    "setNewPasswordLabel": "סיסמה חדשה"
   },
   "regActions": {
     "passwordLabel": "סיסמה",
@@ -253,17 +185,18 @@
     },
     "systemOffline": "השרת אינו זמין",
     "systemHasNoCameras": ". אין מצלמות",
-    "systemUnreachable": "SYSTEM IS UNREACHABLE",
+    "systemUnreachable": "אי אפשר להגיע למערכת",
     "cameraStates": {
       "offline": "לא מקוון",
       "error": "שגיאה",
+      "errorLoading": "An error occurred while loading this video.",
       "unauthorized": "נדרש אימות",
       "noData": "אין נתונים",
-      "iosVideoTooLarge": "iOS אינה תומכת בוידאו גדול מ fullHD (2MP: 1920 x 1080).",
+      "iOSVideoTooLarge": "iOS אינה תומכת בוידאו גדול מ fullHD (2MP: 1920 x 1080).",
       "flashRequired": "אנא התקן <a href='https://get.adobe.com/flashplayer/' target='_blank'> את Adobe Flash</a> להפעלת וידאו משרתים מבוססי Arm.",
       "flashOrWebmRequired": "יש <a href='https://get.adobe.com/flashplayer/' target='_blank'> להתקין Adobe Flash</a> או <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'> WebM codec</a> עבור הצגת וידאו ב- Internet Explorer.",
       "noArmSupport": "דפדפן או התקן זה אינו תומך בהפעלת וידאו משרתים מבוססי ARM.",
-      "noFormat": "דפדפן זה אינו תומך בשחזור וידאו ממצלמה זו.",
+      "noFormat": "דפדפן זה אינו תומך בשיחזור וידאו ממצלמה זו.",
       "ieNoWebm": "התקן את <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> עבור Internet Explorer.",
       "ieWin10": "השתמש ב- Microsoft Edge או בדפדפן Google Chrome.",
       "ubuntuNX": "דפדפן זה אינו תומך בווידאו משרתים מבוססי ARM. בבקשה, השתמש בדפדפן Chromium במקום זאת."

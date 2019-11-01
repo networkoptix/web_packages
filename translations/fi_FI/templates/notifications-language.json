@@ -2,19 +2,34 @@
   "activate_account": {
     "emailSubject": "Aktivoi tilisi"
   },
+  "cloud_invite": {
+    "emailSubject": "Sinut on kutsuttu järjestelmään %CLOUD_NAME%"
+  },
+  "cloud_notification": {
+    "emailSubject": "{{message.subject}}"
+  },
+  "contact_sales": {
+    "emailSubject": "Myyntikysely {{message.asset}}"
+  },
+  "contact_support": {
+    "emailSubject": "Tukipyyntö {{message.asset}}"
+  },
+  "integration_feedback": {
+    "emailSubject": "Palaute{{message.asset}}"
+  },
+  "ipvd_feedback": {
+    "emailSubject": "Kameran sivun palaute{{#message.asset}} {{message.asset}}{{/message.asset}}"
+  },
+  "review_version": {
+    "emailSubject": "{{message.asset_type}}: {{message.asset}} on uusi versio tarkistettavaksi"
+  },
   "restore_password": {
     "emailSubject": "Nollaa salasanasi"
   },
   "system_invite": {
-    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} kutsuu sinut %PRODUCT_NAME%{{/message.sharer_name}}{{^message.sharer_name}}Videohallintaärjestelmä {{message.system_name}} jaettiin kanssasi{{/message.sharer_name}}"
+    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} kutsuu sinut %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}Videohallintaärjestelmä {{message.system_name}} jaettiin kanssasi{{/message.sharer_name}}"
   },
   "system_shared": {
     "emailSubject": "Videohallintajärjestelmä {{message.system_name}} jaettiin kanssasi"
-  },
-  "review_version": {
-    "emailSubject": "Versio {{message.id}} on valmis tarkistettavaksi"
-  },
-  "cloud_notification": {
-    "emailSubject": "{{message.subject}}"
   }
 }

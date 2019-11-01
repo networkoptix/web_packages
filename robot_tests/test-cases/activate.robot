@@ -1,6 +1,6 @@
 *** Settings ***
 Resource          ../resource.robot
-Suite Setup       Open Browser and go to URL    ${url}
+Suite Setup       Clear Emails
 Test Setup        Restart
 Test Teardown     Run Keyword If Test Failed    Open New Browser On Failure
 Suite Teardown    Close All Browsers
@@ -12,7 +12,14 @@ ${url}         ${ENV}
 ${symbol password}    pass!@#$%^&*()_-+=;:'"`~,./\|?[]{}
 
 *** Keywords ***
+Clear emails
+    Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
+    ${emails}    Run Keyword And Ignore Error    Wait For Email    timeout=120
+    Run Keyword And Ignore Error    Delete all emails
+    Close Mailbox
+
 Restart
+    Open Browser and go to URL    ${url}
     Register Keyword To Run On Failure    NONE
     ${status}    Run Keyword And Return Status    Validate Log Out
     Register Keyword To Run On Failure    Failure Tasks
@@ -195,16 +202,16 @@ link works and suggests to log out user, if he was logged in, buttons operate co
     Validate Log In
     Go To    ${link1}
     Wait Until Page Contains Element    ${ACTIVATION SUCCESS}
-    Wait Until Element Is Visible    ${LOGGED IN CONTINUE BUTTON}
-    Click Button    ${LOGGED IN CONTINUE BUTTON}
+    Wait Until Element Is Visible    ${LOGGED IN STAY LOGGED IN BUTTON}
+    Click Button    ${LOGGED IN STAY LOGGED IN BUTTON}
     Validate Log In
     Log Out
     Log In    ${email1}    ${password}
     Validate Log In
     Go To    ${link2}
     Wait Until Page Contains Element    ${ACTIVATION SUCCESS}
-    Wait Until Element Is Visible    ${LOGGED IN LOG OUT BUTTON}
-    Click Button    ${LOGGED IN LOG OUT BUTTON}
+    Wait Until Element Is Visible    ${LOGGED IN CANCEL BUTTON}
+    Click Button    ${LOGGED IN CANCEL BUTTON}
     Validate Log Out
     Log In    ${email2}    ${password}
     Validate Log In

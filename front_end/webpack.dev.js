@@ -1,50 +1,79 @@
 const fs = require('fs');
-const path = require('path');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const common = require('./webpack.common.js');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 const ENV = process.env.ENV = process.env.NODE_ENV = 'dev';
+const host = '0.0.0.0';
+const port = 9000;
+const cloudInstance = process.env.CLOUD_INSTANCE || 'https://cloud-dev2.hdw.mx';
+const localStatic = `https://${host}:${port}`;
 
 module.exports = merge(common, {
     devtool  : 'cheap-module-eval-source-map',
     devServer: {
         contentBase       : './dist',
         hot               : true,
-        host              : '0.0.0.0',
-        port              : 9000,
+        host              : host,
+        port              : port,
         proxy             : [
+            // Uncomment to test local translation strings
+            // {
+            //     context: ['/api/utils/language'],
+            //     target: localStatic,
+            //     pathRewrite: {'^/api/utils/language': 'language_compiled.json'},
+            //     changeOrigin: true,
+            //     secure: false
+            // },
             {
                 context: [ '/api/', '/gateway/' ],
-                //target : 'http://cloud-local',
-                // target : 'https://cloud-dev2.hdw.mx',
-                target : 'https://cloud-test.hdw.mx',
+                target : cloudInstance,
                 changeOrigin: true,
-                //secure: false
+                secure: false
 
             },
-            // Rewrite English translations and static pages to be served from DEV files
             {
                 context     : '/static/lang_en_US/',
-                target      : 'https://0.0.0.0:9000',
-                pathRewrite : { '^/static/lang_en_US': '' },
+                target      : cloudInstance,
                 changeOrigin: true,
                 secure      : false
             },
-            // Rewrite Russian translations and static pages to be served from DEV files
             {
                 context: '/static/lang_ru_RU/',
-                target: 'https://0.0.0.0:9000',
-                pathRewrite: {'^/static/lang_ru_RU': ''},
+                target: cloudInstance,
+                changeOrigin: true,
+                secure: false
+            },
+            {
+                context: '/static/lang_de_DE/',
+                target: cloudInstance,
+                changeOrigin: true,
+                secure: false
+            },
+            {
+                context: '/static/lang_he_IL/',
+                target: cloudInstance,
+                changeOrigin: true,
+                secure: false
+            },
+            {
+                context: '/static/lang_pt_BR/',
+                target: cloudInstance,
+                changeOrigin: true,
+                secure: false
+            },
+            {
+                context: '/static/images/',
+                target: cloudInstance,
                 changeOrigin: true,
                 secure: false
             },
             {
                 context     : '/static/',
-                target      : 'https://0.0.0.0:9000',
+                target      : localStatic,
                 pathRewrite : { '^/static': '' },
                 changeOrigin: true,
                 secure      : false
@@ -67,15 +96,6 @@ module.exports = merge(common, {
 
         // make some resources available while serve the project locally
         new CopyWebpackPlugin([
-            {
-                from: 'images',
-                to  : 'static/images'
-            },
-            // Local test for i18n *********************
-            {
-                from: '../../translations/ru_RU/',
-                to  : 'static/lang_ru_RU/'
-            },
             // *****************************************
             // Local test for commonPasswordsList ******
             {
@@ -87,7 +107,6 @@ module.exports = merge(common, {
     ],
     output: {
         filename  : 'scripts/[name].js',
-        // path      : path.resolve(__dirname, 'dist'),
         publicPath: '/'
     },
     module   : {
@@ -107,7 +126,6 @@ module.exports = merge(common, {
                             loader : 'css-loader',
                             options: {
                                 url      : false,
-                                //minimize : true,
                                 sourceMap: true
                             }
                         },

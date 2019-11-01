@@ -1,6 +1,3 @@
-Olá {{ message.userFullName }}
-{{ message.sender_name}} ({{ message.sender_email }}) deu o seguinte feedback para {{ message.product }}:
+Olá, {{ message.userFullName }}
+{{ message.sender_name}} ({{ message.sender_email }}) deu o seguinte feedback{{#message.asset}} para {{ message.asset }}{{/message.asset}}}:
 <pre>{{ message.message }}</pre>
-
-------------------------------------------
-Pode o usuário ser contatado: {{ message.sender_to_be_contacted}}

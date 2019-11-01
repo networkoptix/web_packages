@@ -54,3 +54,10 @@ Save User
     ${resp}=    Post Request    Save User session    /ec2/saveUser    json=${data}
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()}
+
+Integration Store is Enabled
+    [Arguments]    ${auth}
+    Create Digest Session    Get Integration Store status    ${ENV}    ${auth}
+    ${resp}=    Get Request    Get Integration Store status    /api/utils/cloudCapabilities/
+    Should Be Equal As Strings    ${resp.status_code}    200
+    Return From Keyword    ${resp.json()['integrationStoreEnabled']}

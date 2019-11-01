@@ -2,9 +2,9 @@
 <div class="container auth-hidden">
     <h1 class="process-success d-flex align-items-center flex-column mt-5"
         ng-if="(register.success || registerSuccess) && !activated">
-        <span> Účet je vytvořen.</span>
-        <span> Potvrzovací zpráva odeslána </span>
-       </strong></span>{{account.email}}</1>
+        <span>Účet je vytvořen.</span>
+<span>Potvrzovací zpráva odeslána</span>
+<span><strong>{{account.email}}</strong></span>
     </h1>
 
     <h1 class="process-success d-flex align-items-center flex-column mt-5"
@@ -62,7 +62,7 @@
             <div class="col-md-4">
                 <div><span class="help-block input-error" ng-if="registerForm.registerEmail.$touched && registerForm.registerEmail.$error.required">Email je povinný</span></div>
                 <div><span class="help-block input-error" ng-if="registerForm.registerEmail.$touched && registerForm.registerEmail.$error.email">Prosím zadejte platný email</span></div>
-                <div><span class="help-block input-error" ng-if="registerForm.registerEmail.$error.alreadyExists">This Email has been already registered in %CLOUD_NAME%</span></div>
+                <div><span class="help-block input-error" ng-if="registerForm.registerEmail.$error.alreadyExists">Tento Email je již zaregistrován v %CLOUD_NAME%</span></div>
             </div>
         </div>
 

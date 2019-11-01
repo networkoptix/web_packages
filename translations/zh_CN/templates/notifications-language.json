@@ -3,28 +3,31 @@
     "emailSubject": "激活您的帐户"
   },
   "cloud_invite": {
-    "emailSubject": "You have been invited to %CLOUD_NAME%"
+    "emailSubject": "您已被邀请到 %CLOUD_NAME%"
   },
   "cloud_notification": {
     "emailSubject": "{{message.subject}}"
   },
   "contact_sales": {
-    "emailSubject": "Sales inquiry for {{message.product}}"
+    "emailSubject": "{{message.asset}} 的產品咨询"
   },
   "contact_support": {
-    "emailSubject": "Support request for {{message.product}}"
+    "emailSubject": "{{message.asset}} 的技术支持"
+  },
+  "integration_feedback": {
+    "emailSubject": "{{message.asset}} 的反馈"
   },
   "ipvd_feedback": {
-    "emailSubject": "Camera Page Feedback for {{message.product}}"
+    "emailSubject": "关于 {{message.asset}}{{/message.asset}} 摄像机页面反馈{{#message.asset}}"
   },
   "review_version": {
-    "emailSubject": "{{message.product_type}}: {{message.product}} has a new version to review"
+    "emailSubject": "{{message.asset_type}}： {{message.asset}} 有新版本可供检视"
   },
   "restore_password": {
     "emailSubject": "重新设置密码"
   },
   "system_invite": {
-    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} invites you to %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}Video system {{message.system_name}} was shared with you{{/message.sharer_name}}"
+    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} 邀请您至 %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}视频系统 {{message.system_name}} 与您分享{{/message.sharer_name}}"
   },
   "system_shared": {
     "emailSubject": "与你分享了视频系统 {{message.system_name}}"

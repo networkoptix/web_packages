@@ -1,0 +1,10 @@
+Det er en ny versjon for {{ message.asset }}({{message.asset_type}}) å se gjennom.
+
+Klikk på lenken for å se utkast {{ message.id }} for {{ message.asset }}
+
+Link to review: {{ config.portal_url }}/admin/cms/assetcustomizationreview/{{ message.id }}/change/
+
+På denne siden kan du
+1) Opprett en forhåndsvisning for å se de nyeste endringene.
+2) Publiser denne versjonen som vil oppdatere alt innhold.
+3) Rediger sammenhenger ved å klikke på redigeringsopptaksknappen. For å se disse endringene må du opprette en ny versjon.

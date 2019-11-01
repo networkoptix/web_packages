@@ -1,0 +1,3 @@
+Hei, {{ message.userFullName }}
+{{ message.sender_name}} ({{ message.sender_email }}) antoi palautetta{{#message.asset}} ja {{ message.asset }}{{/message.asset}}:
+<pre>{{ message.message }}</pre>

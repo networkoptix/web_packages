@@ -2,16 +2,20 @@
     <div class="card-body">
         <h2 class="mb-3">Ваша система</h2>
         <p>
-            <button ng-disabled="currentlyMerging && !isMaster" class="btn btn-default" ng-click="rename()">Переименовать систему</button>
+            <button class="btn btn-default mw-100"
+                    ng-disabled="currentlyMerging && !isMaster"
+                    ng-click="rename()"><div class="ellipsis">Переименовать систему</div></button>
         </p>
         <p ng-if="systems.length > 1 && system.canMerge || configCanMerge || debugMode || betaMode">
-            <button class="btn btn-default"
+            <button class="btn btn-default mw-100"
                     ng-disabled="(currentlyMerging || !system.isOnline || !system.isAvailable) && !(debugMode || betaMode)"
-                    ng-click="mergeSystems()">Объединить с другой системой</button>
+                    ng-click="mergeSystems()"><div class="ellipsis">Объединить с другой системой</div></button>
         </p>
         <hr />
-        <button ng-disabled="currentlyMerging" class="btn btn-default" ng-click="disconnect()">Disconnect from
-            <span class="product-name">&nbsp;%CLOUD_NAME%</span></button>
+        <button class="btn btn-default mw-100"
+                ng-disabled="currentlyMerging"
+                ng-click="disconnect()">
+            <div class="ellipsis">Отключиться от <span class="product-name">&nbsp;%CLOUD_NAME%</span></div></button>
     </div>
 </div>
 <div class="card card-condensed" ng-if="!system.isMine">
@@ -21,13 +25,20 @@
         <a ng-href="mailto:{{system.info.ownerAccountEmail}}">{{system.info.ownerAccountEmail}}</a>
         <hr>
         <p>
-            Ваши полномочия: <b>{{$root.L.accessRoles[system.accessRole].label || system.accessRole}}</b>
+            Ваши полномочия:
+            <b>{{permission}}</b>
         </p>
 
         <p ng-if="system.permissions.isAdmin">
-            <button class="btn btn-default" ng-click="rename()" ng-disabled="currentlyMerging && !isMaster">Переименовать систему</button>
+            <button class="btn btn-default mw-100"
+                    ng-click="rename()"
+                    ng-disabled="currentlyMerging && !isMaster">
+                <div class="ellipsis">Переименовать систему</div></button>
         </p>
-        <button class="btn btn-default" ng-click="delete()" ng-disabled="currentlyMerging">Отвязать от учетной записи</button>
+        <button class="btn btn-default mw-100"
+                ng-click="delete()"
+                ng-disabled="currentlyMerging">
+            <div class="ellipsis">Отключиться от моей учетной записи</div></button>
     </div>
 </div>
 <div class="mt-3 card card-default" ng-if="currentlyMerging">

@@ -7,8 +7,11 @@
 @import '~bootstrap/scss/mixins/breakpoints';
 
 .ipvd {
+    max-width : 1438px;
     
-    max-width : 1440px;
+    &.extended {
+        max-width : 1551px;
+    }
     
     nx-vendor-list {
         .card {
@@ -36,7 +39,11 @@
     /*** overwrite default table of component cam-table ***/
     .nx-table-wrapper {
         margin : 0;
-        max-width: 1048px;
+        max-width: 1047px;
+    
+        &.extended {
+            max-width : 1130px;
+        }
         
         .nx-table-header {
             padding : .5rem .75rem;
@@ -44,8 +51,8 @@
         
         .nx-table {
             th {
-                display : inline-block;
-                white-space: normal;
+                //display : inline-block;
+                //white-space: normal;
     
                 .caption {
                     line-height : 1rem;
@@ -58,27 +65,45 @@
     
                 &:nth-child(1) {
                     padding-left : 1rem;
-                    width : 175px;
+                    max-width : 175px;
+    
+                    .caption {
+                        div:first-of-type {
+                            width : 80%;
+                        }
+                    }
                 }
     
                 &.debug {
                     &:nth-child(1) {
-                        width : 130px;
+                        max-width : 130px;
                     }
                 }
 
                 &:nth-child(2) {
-                    width : 150px;
+                    max-width : 150px;
+    
+                    .caption {
+                        div:first-of-type {
+                            max-width : 80%;
+                        }
+                    }
                 }
     
                 &.debug {
                     &:nth-child(2) {
-                        width : 130px;
+                        max-width : 130px;
                     }
                 }
                 
                 &:nth-child(3) {
-                    width : 110px;
+                    max-width : 110px;
+    
+                    .caption {
+                        div:first-of-type {
+                            width : 80%;
+                        }
+                    }
                 }
     
                 &:nth-child(4) {
@@ -143,9 +168,9 @@
             }
             
             td {
-                display : inline-block;
-                vertical-align : middle;
-                padding : rem(4px) 1rem rem(4px) 0;
+                //display : inline-block;
+                //vertical-align : middle;
+                //padding : rem(4px) 1rem rem(4px) 0;
     
                 &:nth-child(n+1) > div {
                     white-space : normal;
@@ -208,11 +233,15 @@
                 }
     
                 &:nth-child(9) {
-                    width : 80px;
+                    width : 78px;
                 }
                 
                 &:nth-child(11) { // I/O last column
                     width : 60px;
+                }
+    
+                &:nth-child(12) {
+                    width : 85px;
                 }
             }
         }

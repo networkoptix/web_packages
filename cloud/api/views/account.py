@@ -5,6 +5,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.serializers import ValidationError
+from django.conf import settings
 from django.utils import timezone
 
 from api.controllers.cloud_api import Account
@@ -34,19 +35,21 @@ def register(request):
     data['IP'] = get_ip(request)
 
     account = models.Account.objects.filter(email=data['email']).first()
-    if not (account and not account.is_active):
+    if not account or account.is_active:
         AccountManager.check_email_in_portal(data['email'], False)  # Check if account is in Cloud_db
+        serializer = CreateAccountSerializer(data=data)
+        if not serializer.is_valid():
+            raise APIRequestException('Wrong form parameters', ErrorCodes.wrong_parameters,
+                                      error_data=serializer.errors)
+        logger.debug('/api/account/register calling serializer.save')
+        serializer.save()
     else:
         AccountManager().register_cloud_invite_user(data['email'], data['password'], data)
-        logger.debug('/api/account/register completed')
-        return api_success()
-    serializer = CreateAccountSerializer(data=data)
-    if not serializer.is_valid():
-        raise APIRequestException('Wrong form parameters', ErrorCodes.wrong_parameters, error_data=serializer.errors)
-    logger.debug('/api/account/register calling serializer.save')
-    serializer.save()
+
+    logger.debug('/api/account/register checking if activated')
+    activated = AccountManager().check_if_activated(data['email'], data['password'], data.pop('IP', ''))
     logger.debug('/api/account/register completed')
-    return api_success()
+    return api_success({'activated': activated})
 
 
 @api_view(['POST'])
@@ -77,6 +80,8 @@ def login(request):
 
     if 'remember' not in request.data or not request.data['remember']:
         request.session.set_expiry(0)
+    else:
+        request.session.set_expiry(settings.AUTHENTICATED_SESSION_COOKIE_AGE)
 
     django.contrib.auth.login(request, user)
 
@@ -239,6 +244,17 @@ def check_code_in_portal(request):
     (temp_password, email) = Account.extract_temp_credentials(code)
     email_exists = AccountManager.is_email_in_portal(email)
     return api_success({'emailExists': email_exists})
+
+
+@api_view(['POST'])
+@permission_classes((IsAuthenticated,))
+@handle_exceptions
+def check_auth_code(request):
+    require_params(request, ('code',))
+    code = request.data['code']
+    (email, temp_password) = Account.extract_temp_credentials(code)
+    user = django.contrib.auth.authenticate(request=request, username=email, password=temp_password)
+    return api_success({'email': user.email})
 
 
 class AccountAutocomplete(autocomplete.Select2QuerySetView):

@@ -1,8 +1,8 @@
-There is a new version for {{ message.product }}({{message.product_type}}) to review.
+İncelenecek {{ message.asset }} ({{message.asset_type}}) sürüm var.
 
-Taslak {{ message.id }} için {{ message.product }} incelemek için bağlantıyı tıklayın
+Taslak {{ message.id }} için {{ message.asset }} incelemek için bağlantıyı tıklayın
 
-Link to review: {{ config.portal_url }}/admin/cms/productcustomizationreview/{{ message.id }}/change/
+Gözden geçirme bağlantısı: {{ config.portal_url }}/ admin / cms / assetcustomizationreview /{{ message.id }}/ change /
 
 Bu sayfada şunları yapabilirsiniz
 1) En son değişiklikleri görmek için bir önizleme oluşturun.

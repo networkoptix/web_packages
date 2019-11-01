@@ -4,32 +4,6 @@
   "cloudName": "%CLOUD_NAME%",
   "vmsName": "%VMS_NAME%",
   "clientProtocol": "%CLIENT_PROTOCOL%:",
-  "dialogs": {
-    "okButton": "OK",
-    "cancelButton": "Mégse",
-    "loginTitle": "Log in to %CLOUD_NAME%",
-    "loginButton": "Bejelentkezés",
-    "logoutAuthorisedTitle": "Már bejelentkezett",
-    "logoutAuthorisedContinueButton": "Folyatatás",
-    "logoutAuthorisedLogoutButton": "Kijelentkezés",
-    "messageFailed": "Message has failed to send.",
-    "messageSent": "Message has been sent.",
-    "noClientDetectedTitle": "Telepítse a %VMS_NAME% alkalmazást a rendszer megtekintéshez",
-    "download": "%VMS_NAME% letöltése"
-  },
-  "messageDialog": {
-    "title": {
-      "integration": "Email for {{product}}",
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Feedback about {{product}}"
-    },
-    "topic": {
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Feedback about {{product}}",
-      "contact_sales": "Contact sales for {{product}}",
-      "contact_support": "Contact support for {{product}}"
-    }
-  },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
     "default": "%CLOUD_NAME%",
@@ -56,7 +30,7 @@
   },
   "systemStatuses": {
     "activated": "aktiválva",
-    "incompatible": "Inkompatibilis",
+    "incompatible": "inkompatibilis",
     "merging": "egyesülő",
     "notActivated": "nincs aktiválva",
     "online": "online",
@@ -164,33 +138,6 @@
     "FAIL": "A <strong>{{failedSystem}}</strong> rendszer jelenleg nem érhető el.<br>Próbálkozzon újra néhány perc múlva, vagy lépjen kapcsolatba a <a href=\"%SUPPORT_LINK%\" target=\"_blank\">támogatással</a>.",
     "unknownMergeError": "Unknown error. You can try to refresh the page and repeat attempt. If the problem persists – please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>."
   },
-  "merging": {
-    "mergeFailedTitle": "A rendszerek egyesítése sikertelen",
-    "commonText": "A rendszerek <strong>{{primarySystem}}</strong> és <strong>{{secondarySystem}}</strong>egyesítése sikertelen."
-  },
-  "passwordRequirements": {
-    "good": "jó",
-    "fair": "elegendő",
-    "fairMessage": "Használjon számokat, kis és nagybetűket és speciális karaktereket az erősebb jelszó érdekében",
-    "minLength": "túl rövid",
-    "minLengthMessage": "A jelszónak legalább 8 karakterből kell állnia",
-    "required": "nem megfelelő",
-    "requiredMessage": "Csak latin betűket, számokat és billentyűzet szimbólumok használhatók, kerülje a szóközöket",
-    "weak": "gyenge",
-    "weakMessage": "Használjon számokat, kis és nagybetűket és speciális karaktereket az erősebb jelszó érdekében",
-    "strongMessage": "Erős jelszó!",
-    "common": "túl gyakori",
-    "commonMessage": "Ez a jelszó a leggyakoribb jelszavak egyike",
-    "missingMessage": "Jelszó megadása szükséges"
-  },
-  "sharing": {
-    "confirmOwner": "Ha megváltoztatja a rendszertulajdonost, érvényteleníti a tulajdonjogot ehhez a fiókhoz. Ez a művelet nem fordítható vissza. Folytatja?",
-    "shareTitle": "Megosztás",
-    "shareConfirmButton": "Megosztás",
-    "editShareTitle": "Engedélyek szerkesztése",
-    "editShareConfirmButton": "Mentés",
-    "permissionsSaved": "Új engedélyek mentve"
-  },
   "system": {
     "yourSystem": "Az Ön rendszere",
     "mySystemSearch": "IMeMyMine",
@@ -203,35 +150,20 @@
     "confirmRenameTitle": "Rendszer neve",
     "confirmRenameAction": "Mentés",
     "successRename": "Rendszer neve mentve",
-    "confirmDisconnectTitle": "Disconnect System from %CLOUD_NAME%?",
+    "confirmDisconnectTitle": "Megszünteti a kapcsolatot %CLOUD_NAME% felhővel?",
     "confirmDisconnectAction": "Szétkapcsolás",
-    "confirmUnshareFromMe": "A rendszer leválasztására készül fiókjáról. Többé nem fog tudni kapcsolódni a rendszerhez. Folytatja?",
-    "confirmUnshareFromMeTitle": "Leválasztja a rendszert?",
+    "confirmUnshareFromMe": "You will not be able to lgo into this System anymore.",
+    "confirmUnshareFromMeTitle": "Disconnect System from your Account?",
     "confirmUnshareFromMeAction": "Szétkapcsolás",
-    "confirmUnshare": "Ez a felhasználó nem fog tudni csatlakozni a rendszerhez. Folytatja?",
-    "confirmUnshareTitle": "Törli a felhasználót?",
+    "confirmUnshareTitle": "Remove user?",
     "confirmUnshareAction": "Törlés",
-    "successDisconnected": "System is successfully disconnected from %CLOUD_NAME%",
+    "successDisconnected": "Rendszer sikeresen bontotta %CLOUD_NAME% kapcsolatát",
     "successDeleted": "{{systemName}} rendszer sikeresen törölve a fiókból",
     "mergeFailed": "A rendszeregyesítés sikertelen",
     "mergeStart": "A rendszerek egyesülnek",
-    "mergeSuccess": "System merge completed",
+    "mergeSuccess": "A rendszer egyesítése befejeződött",
     "permissionsRemoved": "{{email}} engedélyei vissavonva",
     "unknownName": "Ismeretlen név a rendszerhez (felhő egyesítése okozta)"
-  },
-  "account": {
-    "accountSavedSuccess": "A fiók mentése sikeres",
-    "activationLinkSent": "Aktiválási link elküldve",
-    "passwordChangedSuccess": "A fiók mentése sikeres",
-    "changePassword": "Jelszómódosítás",
-    "newPasswordLabel": "Új jelszó",
-    "saveChanges": "Mentés"
-  },
-  "activeActions": {
-    "sendConfirm": "Aktiválási link újraküldése",
-    "resetPassword": "Jelszó visszaállítása",
-    "setNewPassword": "Jelszó mentése",
-    "setNewPasswordLabel": "Új jelszó"
   },
   "regActions": {
     "passwordLabel": "Jelszó",
@@ -257,9 +189,10 @@
     "cameraStates": {
       "offline": "Offline",
       "error": "Hiba",
+      "errorLoading": "Hiba történt a videó betöltése közben.",
       "unauthorized": "Hitelesítés szükséges",
       "noData": "Nincs adat",
-      "iosVideoTooLarge": "Az iOS nem támogat FullHD-nál (2MP: 1920x1080) nagyobb videót.",
+      "iOSVideoTooLarge": "Az iOS nem támogat FullHD-nál (2MP: 1920x1080) nagyobb videót.",
       "flashRequired": "Kérjük <a href='https://get.adobe.com/flashplayer/' target='_blank'>telepítsen Adobe Flasht</a> a videók lejátszásához.",
       "flashOrWebmRequired": "Kérjük <a href='https://get.adobe.com/flashplayer/' target='_blank'>telepítsen Adobe Flasht</a>vagy<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec-et</a> a videó Internet Explorerben történő lejátszásához.",
       "noArmSupport": "Ez a böngésző vagy eszköz nem támogatja az ARM-alapú szerverről történő videofájl lejátszást.",
@@ -270,15 +203,15 @@
     },
     "searchCamPlaceholder": "Keresés",
     "resolution": {
-      "auto": "Auto",
-      "high": "Elsődleges",
+      "auto": "Autómatikus",
+      "high": "Magas",
       "low": "Alacsony"
     },
     "chromeCastWarning": "A Chromecast erőforrás-igényes, és problémákat okozhat a kiszolgálón.",
     "voiceCommands": {
       "play": "letjátszás",
       "pause": "szünet",
-      "live": "élőbe menni | mutatsd élőben",
+      "live": "go to live | show me live",
       "view": "nézet + [kamera neve]",
       "search": "keresés + [szöveg a keresősávhoz]",
       "clear search": "keresés törlése",

@@ -1,35 +1,9 @@
 {
   "language": "pt_PT",
-  "language_name": "Português",
+  "language_name": "Português (Portugal)",
   "cloudName": "%CLOUD_NAME%",
   "vmsName": "%VMS_NAME%",
   "clientProtocol": "%CLIENT_PROTOCOL%:",
-  "dialogs": {
-    "okButton": "OK",
-    "cancelButton": "Cancelar",
-    "loginTitle": "Log in to %CLOUD_NAME%",
-    "loginButton": "Entrar",
-    "logoutAuthorisedTitle": "Já tem sessão iniciada",
-    "logoutAuthorisedContinueButton": "Continuar",
-    "logoutAuthorisedLogoutButton": "Terminar sessão",
-    "messageFailed": "Message has failed to send.",
-    "messageSent": "Message has been sent.",
-    "noClientDetectedTitle": "Instalar %VMS_NAME% para visualizar o seu sistema",
-    "download": "Baixar %VMS_NAME%"
-  },
-  "messageDialog": {
-    "title": {
-      "integration": "Email for {{product}}",
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Feedback about {{product}}"
-    },
-    "topic": {
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Feedback about {{product}}",
-      "contact_sales": "Contact sales for {{product}}",
-      "contact_support": "Contact support for {{product}}"
-    }
-  },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
     "default": "%CLOUD_NAME%",
@@ -89,7 +63,7 @@
       "description": "Acesso não restrito incluindo a capacidade de partilhar"
     },
     "Custom": {
-      "label": "Personalizadas",
+      "label": "Personalizado",
       "description": "Use a aplicação Cliente %VMS_NAME% para configurar permissões personalizadas"
     },
     "cloudAdmin": {
@@ -117,7 +91,7 @@
       "description": "Pode ver vídeos ao vivo, navegar no arquivo, configurar câmaras, controlar PTZ etc"
     },
     "custom": {
-      "label": "Personalizadas",
+      "label": "Personalizado",
       "description": "Use a aplicação Cliente %VMS_NAME% para configurar permissões personalizadas"
     }
   },
@@ -134,7 +108,7 @@
     "cantChangeAccountPrefix": "Não é possível guardar as alterações",
     "cantChangePasswordPrefix": "Não é possível guardar a senha",
     "cantActivatePrefix": "Não é possível activar a sua conta",
-    "cantSendConfirmationPrefix": "Não é possível enviar o email de confirmação",
+    "cantSendConfirmationPrefix": "Não é possível enviar um email de confirmação",
     "notAuthorized": "Senha incorrecta",
     "brokenAccount": "Problema inesperado com a conta. <a href=\"/restore_password\">Restaurar conta</a>",
     "wrongParameters": "Alguns parâmetros no formulário estão incorretos",
@@ -164,33 +138,6 @@
     "FAIL": "O sistema <strong>{{failedSystem}}</strong> está actualmente inacessível.<br> Tente novamente em alguns instantes ou entre em contato com o <a href=\"%SUPPORT_LINK%\" target=\"_blank\">suporte</a>.",
     "unknownMergeError": "Unknown error. You can try to refresh the page and repeat attempt. If the problem persists – please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>."
   },
-  "merging": {
-    "mergeFailedTitle": "Falha na fusão de Sistemas",
-    "commonText": "Falha na fusão dos sistemas <strong>{{primarySystem}}</strong> e <strong>{{secondarySystem}}</strong>."
-  },
-  "passwordRequirements": {
-    "good": "bom",
-    "fair": "justo",
-    "fairMessage": "Use números, letras maiúsculas e minúsculas e caracteres especiais para tornar a sua senha mais forte",
-    "minLength": "demasiado curta",
-    "minLengthMessage": "A senha deve conter pelo menos 8 caracteres",
-    "required": "incorreta",
-    "requiredMessage": "Use apenas letras latinas, números e símbolos do teclado, evite espaços à esquerda e à direita",
-    "weak": "fraco",
-    "weakMessage": "Use números, letras maiúsculas e minúsculas e caracteres especiais para tornar a sua senha mais forte",
-    "strongMessage": "Senha forte!",
-    "common": "demasiado comum",
-    "commonMessage": "Esta senha está principais senhas mais populares no mundo",
-    "missingMessage": "A senha é necessária"
-  },
-  "sharing": {
-    "confirmOwner": "Se alterar o proprietário do sistema, você revogará a propriedade da conta actual. Esta acção é irreversível. Tem certeza?",
-    "shareTitle": "Partilhar",
-    "shareConfirmButton": "Partilhar",
-    "editShareTitle": "Editar Permissões",
-    "editShareConfirmButton": "Gravar",
-    "permissionsSaved": "Novas permissões guardadas"
-  },
   "system": {
     "yourSystem": "O seu Sistema",
     "mySystemSearch": "IMeMyMine",
@@ -199,42 +146,27 @@
     "openClient": "Abrir em %VMS_NAME%",
     "openClientNoSystem": "Abrir %VMS_NAME%",
     "confirmMergeAction": "\"Merge\"",
-    "mergeSystemTitle": "Fundir Sistemas",
+    "mergeSystemTitle": "\"Merge\" dos Sistemas",
     "confirmRenameTitle": "Nome do Sistema",
     "confirmRenameAction": "Gravar",
     "successRename": "Nome do sistema guardado",
     "confirmDisconnectTitle": "Disconnect System from %CLOUD_NAME%?",
     "confirmDisconnectAction": "Desconectar",
-    "confirmUnshareFromMe": "Está prestes a desconectar este Sistema da sua conta. Não poderá mais aceder a este Sistema. Tem certeza?",
-    "confirmUnshareFromMeTitle": "Desconectar o Sistema?",
+    "confirmUnshareFromMe": "You will not be able to lgo into this System anymore.",
+    "confirmUnshareFromMeTitle": "Disconnect System from your Account?",
     "confirmUnshareFromMeAction": "Desconectar",
-    "confirmUnshare": "Este utilizador não será capaz de aceder ao sistema. Tem certeza?",
-    "confirmUnshareTitle": "Apagar utilizador?",
-    "confirmUnshareAction": "Apagar",
-    "successDisconnected": "System is successfully disconnected from %CLOUD_NAME%",
+    "confirmUnshareTitle": "Remove user?",
+    "confirmUnshareAction": "Remover",
+    "successDisconnected": "O Sistema foi desconectado de %CLOUD_NAME% com sucesso",
     "successDeleted": "O sistema {{systemName}} foi apagado com sucesso da sua conta",
     "mergeFailed": "Falha na fusão de Sistemas",
-    "mergeStart": "Systems have started merging",
-    "mergeSuccess": "System merge completed",
+    "mergeStart": "Os sistemas começaram a fusão",
+    "mergeSuccess": "Fusão do sistema concluída",
     "permissionsRemoved": "As permissões foram removidas de {{email}}",
-    "unknownName": "Unknown Name for System (Caused by cloud merge)"
-  },
-  "account": {
-    "accountSavedSuccess": "A sua conta foi gravada com sucesso",
-    "activationLinkSent": "Link de activação enviado",
-    "passwordChangedSuccess": "A sua conta foi gravada com sucesso",
-    "changePassword": "Alterar senha",
-    "newPasswordLabel": "Nova senha",
-    "saveChanges": "Gravar"
-  },
-  "activeActions": {
-    "sendConfirm": "Reenviar Link de Activação",
-    "resetPassword": "Reset da Senha",
-    "setNewPassword": "Guardar password",
-    "setNewPasswordLabel": "Nova senha"
+    "unknownName": "Nome do Sistema desconhecido (causado pela fusão pela cloud)"
   },
   "regActions": {
-    "passwordLabel": "Senha",
+    "passwordLabel": "Password",
     "createAccount": "Criar conta"
   },
   "header": {
@@ -255,18 +187,19 @@
     "systemHasNoCameras": "SEM CÂMARAS",
     "systemUnreachable": "SYSTEM IS UNREACHABLE",
     "cameraStates": {
-      "offline": "Offline",
+      "offline": "Desligado",
       "error": "Erro",
+      "errorLoading": "An error occurred while loading this video.",
       "unauthorized": "Necessária autenticação",
       "noData": "Sem dados",
-      "iosVideoTooLarge": "O iOS não suporta vídeos maiores que fullHD (2MP: 1920x1080).",
+      "iOSVideoTooLarge": "O iOS não suporta vídeos maiores que fullHD (2MP: 1920x1080).",
       "flashRequired": "Por favor, <a href='https://get.adobe.com/flashplayer/' target='_blank'>instale o Adobe Flash</a> para reproduzir vídeos.",
       "flashOrWebmRequired": "Por favor <a href='https://get.adobe.com/flashplayer/' target='_blank'>instale o Adobe Flash</a> ou o <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>codec WebM</a> para reproduzir vídeo no Internet Explorer.",
       "noArmSupport": "Este navegador ou dispositivo não suporta a reprodução de vídeo a partir de servidores baseados em ARM.",
       "noFormat": "Este browser não suporta a reprodução de vídeo desta câmara.",
       "ieNoWebm": "Por favor, instale <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>codec WebM</a> para o Internet Explorer.",
       "ieWin10": "Por favor, utilize browsers Microsoft Edge ou Google Chrome.",
-      "ubuntuNX": "Este navegador não suporta vídeo de servidores baseados em ARM. Por favor, use o navegador Chromium."
+      "ubuntuNX": "Este browser não suporta vídeo a partir de servidores baseados em ARM. Por favor, use o browser Chromium."
     },
     "searchCamPlaceholder": "Pesquisar",
     "resolution": {

@@ -1,0 +1,40 @@
+@import '../../styles/typography';
+
+.foreground-messages-content {
+  max-height: 800px;
+}
+
+.footnote {
+  font-style: italic;
+  color: $gray-light;
+  font-size: 11px;
+}
+
+.table td {
+  height: 32px;
+}
+
+.devices table {
+  width: 100%;
+  table-layout: fixed;
+}
+
+.devices tr {
+  white-space: nowrap;
+}
+
+.devices th, .devices td{
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  width: 70px;
+  overflow: hidden;
+  padding-left: 0;
+  padding-right: 0;
+  margin: 0;
+}
+
+.subscriptions {
+  overflow-x: auto;
+  width: 100%;
+  white-space: nowrap;
+}

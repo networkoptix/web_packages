@@ -27,7 +27,7 @@ $text-color:              $dark9;
 $navbar-default-bg:       $light1;
 $navbar-default-link-color: $dark10;
 $navbar-margin-bottom:    10px;
-$navbar-height:           56px;
+$navbar-height:           48px;
 
 
 $common-border-color:   $light5;
@@ -198,15 +198,21 @@ $grid-breakpoints : (
         md: 768px,
         lg: 992px,
         xl: 1200px,
-        xxl: 1440px
+        xxl: 1440px,
+        xxxl: 1600px
 );
 $container-max-widths : (
         sm: 540px,
         md: 720px,
         lg: 960px,
         xl: 1140px,
-        xxl: 1380px
+        xxl: 1380px,
+        xxxl: 1540px
 );
+
+$fluid-container-max-width: 1440px;
+
+$scrollbar-height: 8px;
 
 /* badge component */
 $badge-font-size: rem(12px);

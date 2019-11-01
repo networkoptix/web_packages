@@ -1,3 +1,6 @@
+import collections
+from math import log2
+
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from django.core.cache import cache, caches
@@ -12,8 +15,7 @@ import requests
 from cloud import settings
 from django.shortcuts import redirect
 
-from cms.models import DataStructure, get_cloud_portal_product,\
-    cloud_portal_customization_cache, UserGroupsToProductPermissions
+from cms.models import cloud_portal_customization_cache, UserGroupsToAssetPermissions
 
 logger = logging.getLogger(__name__)
 
@@ -28,6 +30,7 @@ def get_cloud_capabilities_from_cache():
 def get_settings_from_cache():
     customization_cache = cloud_portal_customization_cache(settings.CUSTOMIZATION, 'config')
     return {
+        'availableDownloadsPlatform': customization_cache['available_downloads_platform'],
         'cloudName': customization_cache['cloud_name'],
         'vmsName': customization_cache['vms_name'],
         'cloudMerge': customization_cache['cloud_merge'],
@@ -37,17 +40,20 @@ def get_settings_from_cache():
         'feedbackEnabled': customization_cache['feedback_enabled'],
         'footerItems': customization_cache['footer_items'],
         'integrationFilterItems': customization_cache['integration_filter_items'],
+        'integrationFilterLimitation': customization_cache['integration_filter_limitation'],
         'integrationStoreEnabled': customization_cache['integration_store_enabled'],
         'trafficRelayHost': settings.TRAFFIC_RELAY_HOST,
         'publicDownloads': customization_cache['public_downloads'],
         'publicReleases': customization_cache['public_releases'],
+        'showAnalyticsEvents': customization_cache['show_analytics_events'],
         'sortSupportedDevicesByPopularity': customization_cache['sort_supported_devices_by_popularity'],
         'supportLink': customization_cache['support_link'],
         'privacyLink': customization_cache['privacy_link'],
         'supportedResolutions': customization_cache['supported_resolutions'],
         'supportedHardwareTypes': customization_cache['supported_hardware_types'],
         'searchTags': customization_cache['search_tags'],
-        'vendorsShown': customization_cache['vendors_shown']
+        'vendorsShown': customization_cache['vendors_shown'],
+        'pushConfig': customization_cache['push_config']
     }
 
 
@@ -64,7 +70,7 @@ def visited_key(request):
         key = 'visited_key_' + request.query_params['key']
         value = global_cache.get(key, False)
 
-        logger.debug('check visited: {0}: {1}'.format(key, value))
+        logger.debug(f'check visited: {key}: {value}')
 
     else:
         # Save cache value here
@@ -73,7 +79,7 @@ def visited_key(request):
         value = datetime.datetime.now().strftime('%c')
         global_cache.set(key, value, settings.LINKS_LIVE_TIMEOUT)
 
-        logger.debug('visited: {0}: {1}'.format(key, value))
+        logger.debug(f'visited: {key}: {value}')
 
     return Response({'visited': value})
 
@@ -84,7 +90,7 @@ def language(request):
     if request.method == 'GET':  # Get language for current user
         from util.helpers import detect_language_by_request
         lang = detect_language_by_request(request)
-        language_file = '/static/lang_{0}/language.json'.format(lang)
+        language_file = f'/static/lang_{lang}/language_compiled.json'
         # Return: redirect to language.json file for selected language
         response = redirect(language_file)
 
@@ -110,11 +116,11 @@ def language(request):
 
 
 @api_view(['GET'])
-@permission_classes((IsAuthenticated, ))
+@permission_classes((AllowAny, ))
 @handle_exceptions
 def downloads_history(request):
     # TODO: later we can check specific permissions
-    can_view_releases = UserGroupsToProductPermissions.\
+    can_view_releases = UserGroupsToAssetPermissions.\
         check_customization_permission(request.user, settings.CUSTOMIZATION, 'api.can_view_release')
     public_release_history = get_settings_from_cache()['publicReleases']
     if not public_release_history and not can_view_releases:
@@ -124,9 +130,9 @@ def downloads_history(request):
     downloads_json = requests.get(downloads_url)
 
     if downloads_json.status_code == 404:
-        logger.error(
-            "downloads.json doesn't exist for customization: {0}, Ask Boris to fix that (publish and accept a "
-            "release)".format(settings.CUSTOMIZATION)
+        logger.warning(
+            f"downloads.json doesn't exist for customization: {settings.CUSTOMIZATION}, {settings.CONFIG_ERROR} "
+            f"(publish and accept a release)"
         )
         return Response(None)
 
@@ -143,7 +149,7 @@ def download_build(request, build):
     # TODO: later we can check specific permissions
     customization = settings.CUSTOMIZATION
     public_release_history = get_settings_from_cache()['publicReleases']
-    can_view_releases = UserGroupsToProductPermissions.\
+    can_view_releases = UserGroupsToAssetPermissions.\
         check_customization_permission(request.user, customization, 'api.can_view_release')
     if not public_release_history and not can_view_releases:
         raise APIForbiddenException("Not authorized", ErrorCodes.forbidden)
@@ -171,7 +177,7 @@ def download_build(request, build):
 
     # find settings for customizations
     if customization not in updates_json:
-        logger.error('Customization not in updates.json: {0}. Ask Boris to fix that.'.format(customization))
+        logger.warning(f'Customization not in updates.json: {customization}. {settings.CONFIG_ERROR}')
         customization = 'default'
 
     updates_record = updates_json[customization]
@@ -186,10 +192,12 @@ def download_build(request, build):
 def downloads(request):
     global_cache = caches['global']
     customization = settings.CUSTOMIZATION
-    public_downloads = get_settings_from_cache()['publicDownloads']
+    settings_cache = get_settings_from_cache()
+
+    public_downloads = settings_cache['publicDownloads']
     if not public_downloads and not request.user.is_authenticated:
         raise APIForbiddenException("Not authorized", ErrorCodes.not_authorized)
-    cache_key = "downloads_" + customization
+    cache_key = f"downloads_{customization}"
     if request.method == 'POST':  # clear cache on POST request - only for this customization
         global_cache.set(cache_key, False)
     downloads_json = global_cache.get(cache_key, False)
@@ -201,7 +209,7 @@ def downloads(request):
 
         # find settings for customizations
         if customization not in updates_json:
-            logger.error('Customization not in updates.json: {0}. Ask Boris to fix that.'.format(customization))
+            logger.warning(f"Customization not in updates.json: {customization}. {settings.CONFIG_ERROR}")
             return Response(None)
         updates_record = updates_json[customization]
         latest_version = updates_record['download_version'] if 'download_version' in updates_record else None
@@ -209,27 +217,29 @@ def downloads(request):
         # Fallback section for old structure and old versions
         if not latest_version or latest_version.startswith('2'):
             if latest_version and latest_version.startswith('2'):
-                logger.error('No 3.0 downloadable release for customization: {0}. '
-                             'Ask Boris to fix that.'.format(customization))
+                logger.warning(f'No 3.0 downloadable release for customization: {customization}. '
+                               f'{settings.CONFIG_ERROR}')
             else:
-                logger.error('No download_version in updates.json for customization: {0}. '
-                             'Ask Boris to fix that.'.format(customization))
+                logger.warning(f'No download_version in updates.json for customization: {customization}. '
+                               f'{settings.CONFIG_ERROR}')
             latest_release = None
             if 'current_release' in updates_record:
                 latest_release = updates_record['current_release']
             if not latest_release:  # Hack for new customizations
-                logger.error('No official release for customization: {0}. '
-                             'Ask Boris to fix that.'.format(customization))
+                logger.warning(f'No official release for customization: {customization}. '
+                             f'{settings.CONFIG_ERROR}')
                 latest_release = '3.0'
             if latest_release.startswith('2'):  # latest release is 2.* - fallback for 3.0
                 latest_release = '3.0'
             if latest_release not in updates_record['releases']:
-                logger.error('No 3.0 release for customization: {0}. Ask Boris to fix that.'.format(customization))
+                logger.warning(f'No 3.0 release for customization: {customization}. {settings.CONFIG_ERROR}')
                 return Response(None)
             latest_version = updates_record['releases'][latest_release]
         # End of fallback section for old structure and old versions
 
         build_number = latest_version.split('.')[-1]
+        if ' ' in build_number:
+            build_number = build_number.split(' ')[0]
         updates_path = updates_record['updates_prefix']
 
         # get downloads.json for specific version. If get there - version is at least 3.0, so downloads.json is present
@@ -240,7 +250,7 @@ def downloads(request):
         downloads_json['releaseNotes'] = updates_record['release_notes']
         downloads_json['releaseUrl'] = updates_path + '/' + build_number + '/'
         # add release notes to downloads.json
-        # evaluate file pathss
+        # evaluate file paths
         # release_notes = updates_record['release_notes']
 
         global_cache.set(cache_key, json.dumps(downloads_json))
@@ -248,8 +258,7 @@ def downloads(request):
         downloads_json = json.loads(downloads_json)
 
     # Remove platforms that are not marked as available.
-    available_platforms = DataStructure.objects.get(name='%AVAILABLE_DOWNLOADS_PLATFORM%').\
-        find_actual_value(get_cloud_portal_product())
+    available_platforms = settings_cache['availableDownloadsPlatform']
     platforms = []
     for platform in downloads_json['platforms']:
         if platform['name'] in available_platforms:
@@ -283,10 +292,11 @@ def get_ipvd(request):
         # check cache and return cached item if any
         ipvd = cache.get("ipvd", dict())
 
-        if all(k in ipvd for k in ("cameras", "vendors", "num_cameras")):
+        if all(k in ipvd for k in ("cameras", "vendors", "analytics", "num_cameras")):
             return Response({
                 "cameras": ipvd["cameras"],
                 "vendors": ipvd["vendors"],
+                "analytics": ipvd["analytics"],
                 "num_cameras": ipvd["num_cameras"],
                 "cached": True
             })
@@ -296,14 +306,52 @@ def get_ipvd(request):
         cameras = requests.get(url, "[]").json()
 
         # build vendor list
+        analytics_events = set()
         vendors_dict = {}
         camera_names = []
 
         for camera in cameras:
+            camera["firmwares"] = json.loads(camera["firmwares"]) if camera["firmwares"] else {}
+
+            firmwares = []
+            max_firmware_count = 0
+            total_camera_count = 0
+
+            for firmware in camera["firmwares"]:
+                if re.match('[<>]+', firmware):
+                    continue
+
+                count = camera["firmwares"][firmware]
+
+                firmwares.append({'count': count, 'name': firmware})
+
+                total_camera_count += count
+                if count > max_firmware_count:
+                    max_firmware_count = count
+
+            for firmware in firmwares:
+                percentage = round((firmware["count"] / total_camera_count) * 100)
+                percentage = str(percentage) + "%" if percentage else "< 1"
+                firmware["percentage"] = percentage
+
+                pow_var = log2(200) / log2(max_firmware_count) if max_firmware_count > 200 else 1
+                length = round(100 * pow(firmware["count"] / max_firmware_count, pow_var))
+                length = length if length >= 2 else 2
+                firmware["barLength"] = length
+
+            firmwares.sort(key=lambda x: x["count"], reverse=True)
+
+            camera["firmwares"] = firmwares
+            camera["maxFirmwareCount"] = max_firmware_count
+            camera["totalCameraCount"] = total_camera_count
+
             camera["isH265"] = camera["primaryCodec"] == 'H.265'
 
             if camera["hardwareType"] == "Camera" and camera["isMultiSensor"]:
                 camera["hardwareType"] = 'Multi-Sensor Camera'
+                camera["hardwareTypeId"] = 'multiSensorCamera'
+            else:
+                camera["hardwareTypeId"] = camera["hardwareType"].lower()
 
             res = camera["maxResolution"].split('x')
             if len(res) == 2:
@@ -326,14 +374,20 @@ def get_ipvd(request):
                     alias = alias.strip()
                     camera_names.append(camera["vendor"].replace(" ", "") + alias.replace(" ", ""))
 
+            for event in camera['analyticsEvents']:
+                analytics_events.add(event)
+
         num_cameras = len(set(camera_names))
         # ---------------------
 
         vendors = list(vendors_dict.values())
+        analytics = list(analytics_events)
+        analytics.sort()
 
         ipvd = {
             "cameras": cameras,
             "vendors": vendors,
+            "analytics": analytics,
             "num_cameras": num_cameras
         }
 

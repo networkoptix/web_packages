@@ -4,24 +4,21 @@
 
     angular
         .module('cloudApp')
-        .controller('ViewPageCtrl', [ '$rootScope', '$scope', '$window', 'account', 'system', '$routeParams', 'systemAPI', 'dialogs',
-            '$location', '$q', '$poll', 'authorizationCheckService', 'camerasProvider',
-            'nxConfigService', 'languageService', 'nxAppStateService', 'nxPageService',
+        .controller('ViewPageCtrl', [ '$rootScope', '$scope', '$window', 'nxAccountService', 'system', '$routeParams', 'systemAPI', 'nxDialogsService',
+            '$location', '$q', '$poll', 'camerasProvider',
+            'nxConfigService', 'languageService', 'nxAppStateService', 'nxPageService', 'nxHeaderService',
 
-            function ($rootScope, $scope, $window, account, system, $routeParams, systemAPI, dialogs,
-                      $location, $q, $poll, authorizationCheckService, camerasProvider,
-                      nxConfigService, languageService, nxAppStateService, nxPageService) {
+            function ($rootScope, $scope, $window, nxAccountService, system, $routeParams, systemAPI, nxDialogsService,
+                      $location, $q, $poll, camerasProvider,
+                      nxConfigService, languageService, nxAppStateService, nxPageService, nxHeaderService) {
     
                 const CONFIG = nxConfigService.getConfig();
                 const LANG = languageService.lang;
-    
+
                 nxPageService.setPageTitle(LANG.pageTitles.view);
                 
                 $scope.systemReady = false;
                 $scope.hasCameras = false;
-    
-                // Check if page is displayed inside an iframe
-                $scope.isInIframe = ($window.location !== $window.parent.location);
     
                 function delayedUpdateSystemInfo() {
                     var pollingSystemUpdate = $poll(function () {
@@ -39,30 +36,29 @@
                 $scope.isInIframe = ($window.location !== $window.parent.location);
                 
                 if ($scope.isInIframe) {
-                    $rootScope.$emit('nx.layout.header', {
-                        state: true, // hide it
-                        loc: 'ViewPageCtrl - inIframe'
-                    });
+                    nxAppStateService.setHeaderVisibility(false);
                     nxAppStateService.setFooterVisibility(false);
                 }
-                
-                function systemError(){
+    
+                function systemError () {
                     $scope.unreachable = true;
                 }
-                
-                authorizationCheckService
+    
+                nxAccountService
                     .requireLogin()
                     .then(function (account) {
                         $scope.unreachable = false;
                         $scope.currentSystem = system($routeParams.systemId, account.email);
                         var systemInfoRequest = $scope.currentSystem.getInfo();
                         var systemAuthRequest = $scope.currentSystem.updateSystemAuth();
-
-                        $q.all([ systemInfoRequest, systemAuthRequest ]).then(function () {
+    
+                        $q.all([systemInfoRequest, systemAuthRequest]).then(function (result) {
                             $scope.system = $scope.currentSystem.mediaserver;
-
                             $scope.hasCameras = false;
-
+                            
+                            // Notify header that system was changed (for display purposes)
+                            nxHeaderService.systemIdSubject.next($scope.currentSystem.id);
+                            
                             if ($scope.currentSystem.isOnline) {
                                 $scope.camerasProvider = camerasProvider.getProvider($scope.system);
                                 $scope.camerasProvider
@@ -72,7 +68,7 @@
                                             $scope.camerasProvider.getCameras(cameras.data);
                                             $scope.systemReady = true;
                                             $scope.hasCameras = (Object.keys($scope.camerasProvider.cameras).length);
-
+                        
                                             if ($scope.hasCameras) {
                                                 delayedUpdateSystemInfo();
                                             }
@@ -87,11 +83,11 @@
                 
 
                 var cancelSubscription = $scope.$on('unauthorized_' + $routeParams.systemId, function () {
-                    dialogs.notify(LANG.errorCodes.lostConnection.replace('{{systemName}}',
+                    nxDialogsService.notify(LANG.errorCodes.lostConnection.replace('{{systemName}}',
                         $scope.currentSystem.info.name || LANG.errorCodes.thisSystem), 'warning');
     
                     if ($scope.isInIframe) {
-                        $location.path(CONFIG.viewsDir + '404.html');
+                        $location.path('/404');
                     } else {
                         $location.path('/systems');
                     }

@@ -1,9 +1,4 @@
-<h1>Hello, {{ message.userFullName }}</h1>
+<h1>안녕하세요, {{ message.userFullName }}</h1>
 
-<a href="mailto:{{ message.sender_email }}">{{ message.sender_name }}</a>has the following sales question about the {{ message.product }}:
+<a href="mailto:{{ message.sender_email }}">{{ message.sender_name }}</a> 가 {{ message.asset }}에 대해 다음과 같은 판매 질문이 있습니다.
 <div>{{ message.message }}</div>
-<br />
-<hr />
-<div>
-    Can user be contacted: {{ message.sender_to_be_contacted}}
-</div>

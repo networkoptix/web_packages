@@ -9,7 +9,7 @@
     </div>
 
     <div class="modal-body">
-        <div class="form-group" validate-field>
+        <div class="form-group">
             <input class="form-control"
                    [(ngModel)]="systemName"
                    id="systemName"
@@ -27,7 +27,7 @@
     <div class="modal-footer">
         <nx-process-button [process]="rename"
                            [form]="renameForm"
-                           action-type="'primary'"
+                           [actionType]="'primary'"
                            buttonText="{{ 'Save' | translate }}"></nx-process-button>
 
         <button type="button" class="btn btn-default" (click)="close()" translate>Cancel</button>

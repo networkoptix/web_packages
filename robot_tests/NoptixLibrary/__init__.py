@@ -7,27 +7,53 @@ import imaplib
 import os.path
 import re
 import time
+from datetime import date
 from email.parser import HeaderParser
 from platform import system
 from random import *
 from requests import head
 from robot.libraries.BuiltIn import BuiltIn
+from robot.api import logger
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
 from SeleniumLibrary.utils import (is_falsy, is_truthy, secs_to_timestr,
                                    timestr_to_secs, SELENIUM_VERSION)
+from selenium.webdriver.support.color import Color
+from selenium.webdriver.remote.webelement import WebElement
 
 
 class NoptixLibrary(object):
 
+    def convert_locator_to_webelement(self, locator):
+        seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
+        logger.debug('Attempting to convert locator to WebElement...')
+
+        if type(locator) is WebElement:
+            logger.debug('Already a WebElement.')
+            return locator
+        elif type(locator) is str:
+            try:
+                element = seleniumlib.find_element(locator)
+                logger.debug('Converted to WebElement')
+                return element
+            except:
+                raise AssertionError('Failure to convert locator to WebElement!')
+
     def copy_text(self, locator):
+        locator = self.convert_locator_to_webelement(locator)
         locator.send_keys(Keys.CONTROL + 'a')
         locator.send_keys(Keys.CONTROL + 'c')
 
     def paste_text(self, locator):
+        locator = self.convert_locator_to_webelement(locator)
         locator.send_keys(Keys.CONTROL + 'v')
+
+    def delete_all_text(self, locator):
+        locator = self.convert_locator_to_webelement(locator)
+        locator.send_keys(Keys.CONTROL + 'a')
+        locator.send_keys(Keys.BACKSPACE)
 
     def get_random_email(self, email):
         index = email.find('@')
@@ -36,8 +62,8 @@ class NoptixLibrary(object):
 
     def get_many_random_emails(self, howMany, email):
         emails = []
-        for x in xrange(0, int(howMany)):
-            emails.append(self.get_random_email())
+        for x in range(0, int(howMany)):
+            emails.append(self.get_random_email(email))
             time.sleep(.2)
         return emails
 
@@ -46,6 +72,29 @@ class NoptixLibrary(object):
         email = email[:index] + \
             "+!#$%'*-/=?^_`{|}~" + str(time.time()) + email[index:]
         return email
+
+    def get_random_system_name(self):
+        return "System: " + date.today().strftime("%m-%d-%y") + " " + str(randint(1, 100))
+
+    def get_element_style(self, locator, styleAttribute):
+        seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
+        not_found = None
+
+        try:
+            element = seleniumlib.find_element(locator)
+            value = element.value_of_css_property(styleAttribute)
+            print('style: ' + styleAttribute + ', value: ' + value)
+            return value
+        except:
+            not_found = "No element found with style attribute " + styleAttribute
+            raise AssertionError(not_found)
+
+    def element_style_should_be(self, locator, styleAttribute, expectedValue):
+        observedValue = self.get_element_style(locator, styleAttribute)
+        if observedValue == expectedValue:
+            pass
+        else:
+            raise AssertionError("Expected: " + expectedValue + "\nObserved: " + observedValue)
 
     def wait_until_textfield_contains(self, locator, expected, timeout=10):
         seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
@@ -64,6 +113,20 @@ class NoptixLibrary(object):
         raise Exception("No element found with text " + expected)
 
     def wait_until_element_has_style(self, locator, styleAttribute, expected, timeout=10):
+        timeout = timeout + time.time()
+        not_found = "No element found with style " + expected
+
+        while time.time() < timeout:
+            try:
+                value = self.get_element_style(locator, styleAttribute)
+                if value == expected:
+                    return
+            except:
+                pass
+            time.sleep(.2)
+        raise AssertionError(not_found)
+
+    def wait_until_element_has_class(self, locator, expected, timeout=10):
         seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
         timeout = timeout + time.time()
         not_found = None
@@ -71,13 +134,110 @@ class NoptixLibrary(object):
         while time.time() < timeout:
             try:
                 element = seleniumlib.find_element(locator)
-                value = element.value_of_css_property(styleAttribute)
-                if value == expected:
+                classAttribute = element.get_attribute('class')
+                if expected in classAttribute:
                     return
             except:
-                not_found = "No element found with style " + expected
+                not_found = "No element found with class " + expected
             time.sleep(.2)
         raise AssertionError(not_found)
+
+    def wait_until_element_does_not_have_class(self, locator, expected, timeout=10):
+        seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
+        timeout = timeout + time.time()
+        found = None
+
+        while time.time() < timeout:
+            try:
+                element = seleniumlib.find_element(locator)
+                classAttribute = element.get_attribute('class')
+                if expected not in classAttribute:
+                    return
+            except:
+                found = "Element found with class '" + expected + "' when it was not expected"
+            time.sleep(.2)
+        raise AssertionError(found)
+
+    def colors_are_same(self, color1, color2):
+        return (Color.from_string(color1).rgba == Color.from_string(color2).rgba)
+
+    def verify_button_arrow_direction(self, locator, expected, timeout=10):
+        seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
+        not_found = "No button arrow elements found"
+        # expected is 'Up' or 'Down'
+        expected = expected.strip().lower()
+        logger.debug('expected: ' + expected)
+
+        logger.debug('locator: ' + locator)
+
+        navArrows = "//div[@class='nav-arrow']/span"
+        logger.debug('navArrows: ' + navArrows)
+
+        locators = locator+navArrows
+        logger.debug('locators: ' + locators)
+
+        # 'rotate(45deg)'
+        pos = 'matrix(0.707107, 0.707107, -0.707107, 0.707107, 0, 0)'
+        # 'rotate(-45deg)'
+        neg = 'matrix(0.707107, -0.707107, 0.707107, 0.707107, 0, 0)'
+
+        logger.debug('pos: '+pos)
+        logger.debug('neg: '+neg)
+
+        # First, find parent element
+        to = timeout + time.time()
+        element = None
+        while (time.time() < to and element is None):
+            try:
+                element = seleniumlib.find_element(locator)
+                logger.debug('element: ' + str(element))
+            except:
+                pass
+            time.sleep(.2)
+        if (element is None):
+            raise AssertionError(not_found)
+
+        # Next, find child arrow elements
+        to = timeout + time.time()
+        elements = None
+        while (time.time() < to and elements is None):
+            try:
+                elements = seleniumlib.find_elements(locators)
+                logger.debug('elements count: ' + str(len(elements)))
+                logger.debug('elements: ' + str(elements))
+            except:
+                pass
+            time.sleep(.2)
+        if (len(elements) == 0):
+            raise AssertionError(not_found)
+
+        logger.debug('elements[0]: ' + str(elements[0]))
+        logger.debug('elements[1]: ' + str(elements[1]))
+
+        # Then, determine the transform values
+        span1 = elements[0].value_of_css_property('transform')
+        span2 = elements[1].value_of_css_property('transform')
+
+        logger.debug('span1: ' + str(span1))
+        logger.debug('span2: ' + str(span2))
+
+        # Finally, check that the values match expectation
+        if expected == 'up':
+            logger.debug('span1?=' + neg)
+            logger.debug('span2?=' + pos)
+            if span1 == neg and span2 == pos:
+                logger.info('result: ' + expected)
+                return
+            else:
+                raise AssertionError(not_found)
+        elif expected == 'down':
+            logger.debug('span1?=' + pos)
+            logger.debug('span2?=' + neg)
+            if span1 == pos and span2 == neg:
+                logger.info('result: ' + expected)
+                return
+            else:
+                raise AssertionError(not_found)
 
     def check_online_or_offline(self, elements, offlineText):
         for element in elements:
@@ -99,9 +259,9 @@ class NoptixLibrary(object):
     so that it is not a byte string.  Then use decode_header to decode the
     base64 string into unicode bytes.  Then finally we take that string and
     decode with UTF-8 to get the actual text.  Note that in some cases decoding
-    UTF-8 is unnecessary (english, spanish, etc.) so the else statement clears 
+    UTF-8 is unnecessary (english, spanish, etc.) so the else statement clears
     any remaining junk.  Here is the process:
-    
+
     1.  Initial value:  b'Subject: =?utf-8?b?INCQ0LrRgtC40LLQuNGA0YPQudGC0LUg0YPRh9C10YLQvdGD0Y4g0LfQsNC/?=\r\n =?utf-8?b?0LjRgdGM?=\r\n\r\n'
     2.  Decoded ASCII:  Subject: =?utf-8?b?INCQ0LrRgtC40LLQuNGA0YPQudGC0LUg0YPRh9C10YLQvdGD0Y4g0LfQsNC/?= =?utf-8?b?0LjRgdGM?=
     3.  Decoded header: [(b'Subject: ', None), (b' \xd0\x90\xd0\xba\xd1\x82\xd0\xb8\xd0\xb2\xd0\xb8\xd1\x80\xd1\x83\xd0\xb9\xd1\x82\xd0\xb5 \xd1\x83\xd1\x87\xd0\xb5\xd1\x82\xd0\xbd\xd1\x83\xd1\x8e \xd0\xb7\xd0\xb0\xd0\xbf\xd0\xb8\xd1\x81\xd1\x8c', 'utf-8')]
@@ -181,8 +341,8 @@ class NoptixLibrary(object):
 
     def build_image(self):
         client = docker.from_env()
-        return client.images.build(path="/home/kyle/develop/nx_vms/cloud_portal/robot_tests/Docker", 
-                            tag="mediaserver", 
+        return client.images.build(path="/home/kyle/develop/nx_vms/cloud_portal/robot_tests/Docker",
+                            tag="mediaserver",
                             buildargs={"mediaserver_deb":"nxwitness-server-4.0.0.28541-linux64-beta-test.deb"})
 
     def run_container(self, image, port, network):

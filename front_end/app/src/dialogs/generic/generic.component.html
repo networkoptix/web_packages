@@ -4,13 +4,15 @@
             (click)="activeModal.close()" *ngIf="closable">
         <div class="close-content"><span class="close-icon"></span></div>
     </button>
-    <h1 class="modal-title">{{title}}</h1>
+    <h1 class="modal-title" [ngClass]="{'closable': closable}">
+        <span class="ellipsis">{{title}}</span>
+    </h1>
 </div>
 <div class="modal-body" *ngIf="message">
     <p [innerHTML]="message"></p>
 </div>
 
-<div class="modal-footer" *ngIf="hasFooter">
+<div class="modal-footer" *ngIf="hasFooter" [ngClass]="footerClass">
     <button type="button" class="btn"
             [ngClass]="buttonClass" *ngIf="cancellable"
             (click)="close('CANCEL')"
@@ -22,6 +24,7 @@
     </button>
     <button type="button" class="btn btn-default"
             *ngIf="!cancellable && cancelLabel"
-            (click)="close()">{{cancelLabel}}
+            (click)="close(cancelLabel)">
+        <span class="ellipsis">{{cancelLabel}}</span>
     </button>
 </div>

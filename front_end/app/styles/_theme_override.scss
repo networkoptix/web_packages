@@ -12,6 +12,10 @@ body {
     padding : 0;
 }
 
+.d-contents {
+    display : contents;
+}
+
 .card {
     border-radius : 2px;
     box-shadow    : 0 1px 2px transparentize($dark15, 0.9);
@@ -20,6 +24,7 @@ body {
         padding : rem(16px);
         h2 {
             font-size: rem(20px);
+            display: inline;
         }
     }
 
@@ -156,13 +161,13 @@ hr {
 
 @mixin kill-glyphicon {
     background-size  : 112px 80px;
-    background-image : url('/static/images/portal_icons.png') !important;
+    background-image : url('/static/images/sprite_common.png') !important;
     &:before {
         content : none;
     }
 
     @media only screen and (-webkit-min-device-pixel-ratio : 2), only screen and (min-device-pixel-ratio : 2) {
-        background-image : url('/static/images/portal_icons@2x.png');
+        background-image : url('/static/images/sprite_common@2x.png');
     }
 }
 
@@ -226,6 +231,7 @@ select {
         position         : absolute;
         right            : 2px;
         z-index          : 9;
+        top              : 0;
 
         .glyphicon {
             margin : 0;
@@ -234,19 +240,23 @@ select {
 }
 
 #badge-large {
-    height    : 2rem;
-    font-family: $font-family-regular;
-    font-size : rem(13px);
-    padding   : 0 12px;
-    line-height: 2rem;
+    height    : 2rem !important;
+    font-family: $font-family-regular !important;
+    font-weight : 400 !important;
+    font-size : rem(13px) !important;
+    padding   : 0 12px !important;
+    line-height: 2rem !important;
 }
 
 .badge {
     
     & {
-        background-color: $light4;
-        color: $light16;
-        height: 20px;
+        background-color : $light4;
+        color            : $light16;
+        height           : 20px;
+        font-family      : $font-family-regular;
+        font-weight      : 400;
+        line-height      : 12px;
         
         &.large {
             @extend #badge-large;
@@ -265,8 +275,9 @@ select {
     }
 
     &-default {
-        background-color : $light8;
-        color: $light1;
+        background-color : $light8 !important;
+        color: $light1 !important;
+        line-height : rem(14px);
     }
 
     &-primary {

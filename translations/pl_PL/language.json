@@ -4,32 +4,6 @@
   "cloudName": "%CLOUD_NAME%",
   "vmsName": "%VMS_NAME%",
   "clientProtocol": "%CLIENT_PROTOCOL%:",
-  "dialogs": {
-    "okButton": "OK",
-    "cancelButton": "Anuluj",
-    "loginTitle": "Log in to %CLOUD_NAME%",
-    "loginButton": "Zaloguj",
-    "logoutAuthorisedTitle": "Jesteś już zalogowany",
-    "logoutAuthorisedContinueButton": "Kontynuuj",
-    "logoutAuthorisedLogoutButton": "Wyloguj",
-    "messageFailed": "Wysyłanie wiadomości nie powiodło się.",
-    "messageSent": "Wiadomość została wysłana.",
-    "noClientDetectedTitle": "Zainstaluj %VMS_NAME%, aby przejrzeć swój system",
-    "download": "Pobierz %VMS_NAME%"
-  },
-  "messageDialog": {
-    "title": {
-      "integration": "Email for {{product}}",
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Feedback about {{product}}"
-    },
-    "topic": {
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Feedback about {{product}}",
-      "contact_sales": "Contact sales for {{product}}",
-      "contact_support": "Contact support for {{product}}"
-    }
-  },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
     "default": "%CLOUD_NAME%",
@@ -140,7 +114,7 @@
     "wrongParameters": "Niektóre parametry na formularzu są niepoprawne",
     "wrongCode": "Konto jest już aktywne lub kod potwierdzenia jest nieprawidłowy",
     "wrongCodeRestore": "Kod potwierdzenia został już użyty lub jest nieprawidłowy",
-    "wrongAuthCode": "Code is expired or incorrect",
+    "wrongAuthCode": "Kod wygasł lub jest nieprawidłowy",
     "forbidden": "Nie masz uprawnień do wykonania tej operacji",
     "accountNotActivated": "To konto nie jest jeszcze aktywne. <a href=\"/activate\">Wyślij ponownie link aktywacyjny</a>",
     "accountBlocked": "Konto jest tymczasowo zablokowane. Prosimy spróbować ponownie za kilka minut.",
@@ -162,34 +136,7 @@
     "mergedSystemIsOffline": "System <strong>{{failedSystem}}</strong> jest w trybie offline.",
     "INCOMPATIBLE": "Systemy mają różne wersje oprogramowania. Zaktualizuj oba z nich do <a href=\"/download\">najnowszej wersji</a>.",
     "FAIL": "System <strong>{{failedSystem}}</strong> jest obecnie niedostępny.<br>Spróbuj ponownie za kilka minut lub skontaktuj się z <a href=\"%SUPPORT_LINK%\" target=\"_blank\">działem wsparcia technicznego</a>.",
-    "unknownMergeError": "Unknown error. You can try to refresh the page and repeat attempt. If the problem persists – please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>."
-  },
-  "merging": {
-    "mergeFailedTitle": "Łączenie systemów nie powiodło się",
-    "commonText": "Nie udało się złączyć systemów <strong>{{primarySystem}}</strong> i <strong>{{secondarySystem}}</strong>."
-  },
-  "passwordRequirements": {
-    "good": "dobre",
-    "fair": "średnie",
-    "fairMessage": "Użyj liczb, wielkich i małych liter oraz znaków specjalnych, aby ustawić bezpieczniejsze hasło",
-    "minLength": "za krótkie",
-    "minLengthMessage": "Hasło musi zawierać co najmniej 8 znaków",
-    "required": "nieprawidłowe",
-    "requiredMessage": "Używaj tylko liter łacińskich, cyfr i symboli z klawiatury, unikając spacji na początku i na końcu",
-    "weak": "słabe",
-    "weakMessage": "Użyj liczb, wielkich i małych liter oraz znaków specjalnych, aby ustawić bezpieczniejsze hasło",
-    "strongMessage": "Bezpieczne hasło!",
-    "common": "zbyt popularne",
-    "commonMessage": "To hasło znajduje się na liście najczęściej stosowanych haseł na świecie",
-    "missingMessage": "Hasło jest wymagane"
-  },
-  "sharing": {
-    "confirmOwner": "Jeśli zmienisz właściciela systemu, odbierzesz mu kontrolę nad bieżącym kontem. Ta operacja jest nieodwracalna. Czy na pewno kontynuować?",
-    "shareTitle": "Udostępnij",
-    "shareConfirmButton": "Udostępnij",
-    "editShareTitle": "Edytuj uprawnienia",
-    "editShareConfirmButton": "Zachowaj",
-    "permissionsSaved": "Zapisano nowe uprawnienia"
+    "unknownMergeError": "Nieznany błąd. Można odświeżyć stronę i spróbować ponownie. Jeśli problem będzie się powtarzał - proszę skontaktować się z <a href=\"%SUPPORT_LINK%\" target=\"_blank\">działem wsparcia technicznego</a>."
   },
   "system": {
     "yourSystem": "Twój system",
@@ -203,35 +150,20 @@
     "confirmRenameTitle": "Nazwa systemu",
     "confirmRenameAction": "Zachowaj",
     "successRename": "Zapisana nazwa systemu",
-    "confirmDisconnectTitle": "Disconnect System from %CLOUD_NAME%?",
+    "confirmDisconnectTitle": "Odłączyć system od %CLOUD_NAME%?",
     "confirmDisconnectAction": "Rozłącz",
-    "confirmUnshareFromMe": "Zamierzasz odłączyć ten system od swojego konta. Nie będziesz już mieć dostępu do tego systemu. Czy na pewno kontynuować?",
-    "confirmUnshareFromMeTitle": "Odłączyć system?",
+    "confirmUnshareFromMe": "Nie będziesz już mógł zalogować się do tego systemu.",
+    "confirmUnshareFromMeTitle": "Odłączyć system od Twojego konta?",
     "confirmUnshareFromMeAction": "Rozłącz",
-    "confirmUnshare": "Ten użytkownik nie będzie mógł uzyskać dostępu do systemu. Czy na pewno kontynuować?",
     "confirmUnshareTitle": "Usunąć użytkownika?",
     "confirmUnshareAction": "Usuń",
-    "successDisconnected": "System is successfully disconnected from %CLOUD_NAME%",
+    "successDisconnected": "System został pomyślnie odłączony od %CLOUD_NAME%",
     "successDeleted": "System {{systemName}} został pomyślnie usunięty z Twojego konta",
     "mergeFailed": "Łączenie systemu nie powiodło się",
     "mergeStart": "Rozpoczęto złączanie systemów",
     "mergeSuccess": "Zakończono łączenie systemu",
     "permissionsRemoved": "Uprawnienia zostały usunięte z {{email}}",
     "unknownName": "Nieznana nazwa systemu (złączenie w chmurze)"
-  },
-  "account": {
-    "accountSavedSuccess": "Twoje konto zostało pomyślnie zapisane",
-    "activationLinkSent": "Wysłano link aktywacyjny",
-    "passwordChangedSuccess": "Twoje konto zostało pomyślnie zapisane",
-    "changePassword": "Zmień hasło",
-    "newPasswordLabel": "Nowe hasło",
-    "saveChanges": "Zachowaj"
-  },
-  "activeActions": {
-    "sendConfirm": "Wyślij ponownie link aktywacyjny",
-    "resetPassword": "Resetuj hasło",
-    "setNewPassword": "Zapisz hasło",
-    "setNewPasswordLabel": "Nowe hasło"
   },
   "regActions": {
     "passwordLabel": "Hasło",
@@ -253,13 +185,14 @@
     },
     "systemOffline": "Serwer jest odłączony",
     "systemHasNoCameras": "BRAK KAMER",
-    "systemUnreachable": "SYSTEM IS UNREACHABLE",
+    "systemUnreachable": "SYSTEM JEST NIEDOSTĘPNY",
     "cameraStates": {
       "offline": "Offline",
       "error": "Błąd",
+      "errorLoading": "Wystąpił błąd podczas ładowania tego wideo.",
       "unauthorized": "Wymagane uwierzytelnienie",
       "noData": "Brak danych",
-      "iosVideoTooLarge": "iOS nie obsługuje wideo większego niż FullHD (2MP: 1920x1080).",
+      "iOSVideoTooLarge": "iOS nie obsługuje wideo większego niż FullHD (2MP: 1920x1080).",
       "flashRequired": "Aby odtwarzać filmy wideo, proszę <a href='https://get.adobe.com/flashplayer/' target='_blank'>zainstalować Adobe Flash</a>.",
       "flashOrWebmRequired": "Proszę <a href='https://get.adobe.com/flashplayer/' target='_blank'>zainstalować Adobe Flash</a> lub <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>kodek WebM</a> w celu odtwarzania wideo w przeglądarce Internet Explorer.",
       "noArmSupport": "Ta przeglądarka lub system nie obsługują odtwarzania wideo na serwerze bazującym na architekturze ARM.",
@@ -271,8 +204,8 @@
     "searchCamPlaceholder": "Szukaj",
     "resolution": {
       "auto": "Auto",
-      "high": "Wysoki",
-      "low": "Niski"
+      "high": "Wysoka",
+      "low": "Niska"
     },
     "chromeCastWarning": "Chromecast wymaga dużej ilości zasobów i może powodować problemy na serwerze.",
     "voiceCommands": {

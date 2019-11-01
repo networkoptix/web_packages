@@ -70,7 +70,15 @@ import * as angular from 'angular';
 
         return {
             checkResponseHasError: function (data) {
-                if (data && data.data && data.data.resultCode && data.data.resultCode != CONFIG.responseOk) {
+                var result = false;
+                if (data && data.resultCode) {
+                    result = data.resultCode;
+                }
+                if (data.data && data.data.resultCode) {
+                    result = data.data.resultCode;
+                }
+
+                if (result !== CONFIG.responseOk) {
                     return data;
                 }
                 return false;
@@ -164,12 +172,12 @@ import * as angular from 'angular';
             getSystemAuth: function (systemId) {
                 return $http.get(apiBase + '/systems/' + systemId + '/auth');
             },
-            getLanguages: cacheGet('/static/languages.json', true),
-            changeLanguage: function (language) {
-                return $http.post(apiBase + '/utils/language/', {
-                    language: language
-                });
-            },
+            // getLanguages: cacheGet('/static/languages.json', true),
+            // changeLanguage: function (language) {
+            //     return $http.post(apiBase + '/utils/language/', {
+            //         language: language
+            //     });
+            // },
             getDownloads: function () {
                 return $http.get(apiBase + '/utils/downloads');
             },
@@ -213,12 +221,9 @@ import * as angular from 'angular';
                     password: password
                 });
             },
-            sendMessage: function(type, productId, message, userName?, userEmail?, contact?) {
-                if (typeof(contact) === 'undefined') {
-                    contact = false;
-                }
+            sendMessage: function(type, asset, message, userName?, userEmail?) {
                 return $http.post(apiBase + '/feedback', {
-                    message, productId, type, userName, userEmail, contact
+                    message, asset, type, userName, userEmail
                 });
 
             },

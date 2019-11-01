@@ -1,6 +1,6 @@
-<h1>Tässä on uusi versio {{ message.product }}</h1>
-<p>Napsauta linkkiä, jolla voit tarkastella luonnosta {{ message.id }} {{ message.product }}</p>
-<a class="btn" href="{{ config.portal_url }}/admin/cms/version/{{ message.id }}/">Tarkista versio</a>
+<h1>On olemassa uusi versio {{ message.asset }} ({{ message.asset_type }}) tarkistettavana</h1>
+<p>Napsauta linkkiä, jolla voit tarkastella luonnosta {{ message.id }} {{ message.asset }}</p>
+<a class="btn" href="{{ config.portal_url }}/admin/cms/assetcustomizationreview/{{ message.id }}/change/">Tarkista versio</a>
 <h4>Tällä sivulla voit</h4>
 <ul>
 	<li>Luoda esikatselun nähdäksesi uusimmat muutokset.</li>

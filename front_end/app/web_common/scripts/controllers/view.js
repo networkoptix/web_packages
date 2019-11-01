@@ -5,11 +5,11 @@
     angular.module('nxCommon').controller('ViewCtrl',
         ['$scope', '$rootScope', '$location', '$routeParams', 'cameraRecords', 'chromeCast', '$q',
             'camerasProvider', '$sessionStorage', '$localStorage', '$timeout', 'systemAPI', 'voiceControl',
-            'dialogs', 'nxConfigService', 'languageService',
+            'nxDialogsService', 'nxConfigService', 'languageService', 'nxHeaderService',
             
             function ($scope, $rootScope, $location, $routeParams, cameraRecords, chromeCast, $q,
                       camerasProvider, $sessionStorage, $localStorage, $timeout, systemAPI, voiceControl,
-                      dialogs, nxConfigService, languageService) {
+                      nxDialogsService, nxConfigService, languageService, nxHeaderService) {
                 
                 const CONFIG = nxConfigService.getConfig();
                 const LANG = languageService.lang;
@@ -420,7 +420,7 @@
                 
                 $scope.showEmbed = function () {
                     $scope.showSettings = false;
-                    dialogs.embed({});
+                    nxDialogsService.embed({});
                 };
                 
                 $scope.selectResolution = function (resolution) {

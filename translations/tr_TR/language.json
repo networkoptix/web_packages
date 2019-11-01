@@ -4,32 +4,6 @@
   "cloudName": "%CLOUD_NAME%",
   "vmsName": "%VMS_NAME%",
   "clientProtocol": "%CLIENT_PROTOCOL%:",
-  "dialogs": {
-    "okButton": "Tamam",
-    "cancelButton": "İptal",
-    "loginTitle": "Log in to %CLOUD_NAME%",
-    "loginButton": "Giriş yap",
-    "logoutAuthorisedTitle": "Zaten giriş yapılmış",
-    "logoutAuthorisedContinueButton": "Devam et",
-    "logoutAuthorisedLogoutButton": "Oturumu Kapat",
-    "messageFailed": "Mesaj gönderilemedi.",
-    "messageSent": "Mesaj gönderildi.",
-    "noClientDetectedTitle": "Sisteminizi görüntülemek için %VMS_NAME%'i yükleyin",
-    "download": "İndir %VMS_NAME%"
-  },
-  "messageDialog": {
-    "title": {
-      "integration": "Email for {{product}}",
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Feedback about {{product}}"
-    },
-    "topic": {
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Feedback about {{product}}",
-      "contact_sales": "Contact sales for {{product}}",
-      "contact_support": "Contact support for {{product}}"
-    }
-  },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
     "default": "%CLOUD_NAME%",
@@ -73,7 +47,7 @@
       "description": "Sistem'i buluttan paylaşma / bağlanma ve bağlantıyı kesme gibi sınırsız erişim"
     },
     "Viewer": {
-      "label": "İzleyici",
+      "label": "İzleyiciler",
       "description": "Canlı video görüntüleyebilir ve arşive gözatabilir"
     },
     "Live Viewer": {
@@ -105,11 +79,11 @@
       "description": "Sistem'i buluttan paylaşma / bağlanma ve bağlantıyı kesme gibi sınırsız erişim"
     },
     "viewer": {
-      "label": "İzleyici",
+      "label": "İzleyiciler",
       "description": "Canlı video görüntüleyebilir ve arşive gözatabilir"
     },
     "liveViewer": {
-      "label": "Canlı İzleme",
+      "label": "Canlı İzleyici",
       "description": "Sadece canlı vidyo izleyebilir"
     },
     "advancedViewer": {
@@ -140,7 +114,7 @@
     "wrongParameters": "Formdaki bazı parametreler yanlış",
     "wrongCode": "Hesap zaten etkinleştirildi veya onay kodu yanlış",
     "wrongCodeRestore": "Onay kodu zaten kullanılmış veya yanlış",
-    "wrongAuthCode": "Code is expired or incorrect",
+    "wrongAuthCode": "Kodun süresi dolmuş veya yanlış",
     "forbidden": "Bu işlemi gerçekleştirecek izinlere sahip değilsiniz",
     "accountNotActivated": "Bu hesap henüz etkinleştirilmedi. <a href=\"/activate\">Yalnızca etkinleştirme bağlantısını gönder</a>",
     "accountBlocked": "Bu hesap geçici olarak kilitlendi. Lütfen bir süre sonra tekrar deneyin.",
@@ -162,34 +136,7 @@
     "mergedSystemIsOffline": "Sistem <strong>{{failedSystem}}</strong> çevrimdışı.",
     "INCOMPATIBLE": "Sistemler farklı yazılım sürümlerine sahiptir. Lütfen her ikisini de en son <a href=\"/download\">sürümüne</a>.",
     "FAIL": "Sistem <strong>{{failedSystem}}</strong> şu anda erişilemiyor.<br>Birkaç dakika sonra tekrar deneyin veya iletişim <a href=\"%SUPPORT_LINK%\" target=\"_blank\">destek</a>.",
-    "unknownMergeError": "Unknown error. You can try to refresh the page and repeat attempt. If the problem persists – please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>."
-  },
-  "merging": {
-    "mergeFailedTitle": "Sistem birleştirme işlemi başarısız oldu",
-    "commonText": "Sistem <strong>{{primarySystem}}</strong> ve <strong>{{secondarySystem}}</strong> birleştirilemedi."
-  },
-  "passwordRequirements": {
-    "good": "iyi",
-    "fair": "idare eder",
-    "fairMessage": "Parolanın güçlü olması için \nküçük büyük harf ve özel karakterler kullanın",
-    "minLength": "çok kısa",
-    "minLengthMessage": "Şifre en az 8 karakter içermelidir",
-    "required": "yanlış",
-    "requiredMessage": "Sadece alfanümerik ve klavye karakterleri kullanın",
-    "weak": "zayıf",
-    "weakMessage": "Parolanın güçlü olması için \nküçük büyük harf ve özel karakterler kullanın",
-    "strongMessage": "Güçlü parola!",
-    "common": "çok yaygın",
-    "commonMessage": "Dünyada en çok kullanılan parolayı seçtiniz",
-    "missingMessage": "Parola gerekmektedir"
-  },
-  "sharing": {
-    "confirmOwner": "Sistem sahibini değiştirirseniz, hesabınızdaki yetkileri iptal edersiniz. Bu eylem geri döndürülemez. Emin misiniz?",
-    "shareTitle": "Paylaş",
-    "shareConfirmButton": "Paylaş",
-    "editShareTitle": "İzinleri düzenle",
-    "editShareConfirmButton": "Kaydet",
-    "permissionsSaved": "Yeni izin kaydedildi"
+    "unknownMergeError": "Bilinmeyen hata. Sayfayı yenilemeyi deneyebilir ve denemeyi tekrarlayabilirsiniz. Sorun devam ederse, lütfen <a href=\"%SUPPORT_LINK%\" target=\"_blank\">destek</a>iletişim kurun."
   },
   "system": {
     "yourSystem": "Sistem",
@@ -203,35 +150,20 @@
     "confirmRenameTitle": "Sistem Adı",
     "confirmRenameAction": "Kaydet",
     "successRename": "Sistem ismi kaydedildi",
-    "confirmDisconnectTitle": "Disconnect System from %CLOUD_NAME%?",
+    "confirmDisconnectTitle": "%CLOUD_NAME% den bağlantıyı kesmek istiyor musunuz?",
     "confirmDisconnectAction": "Bağlantıyı kes",
-    "confirmUnshareFromMe": "Hesabınızın bu sistemle bağlantısını kesmek üzeresiniz. Bundan sonra bu sisteme erişim sağlayamayacaksınız. Emin misiniz?",
-    "confirmUnshareFromMeTitle": "Sistemle bağlantıyı kes?",
+    "confirmUnshareFromMe": "Artık bu sisteme giriş yapamazsınız.",
+    "confirmUnshareFromMeTitle": "Sisteminizin bağlantısı hesabınızdan kesilecek?",
     "confirmUnshareFromMeAction": "Bağlantıyı kes",
-    "confirmUnshare": "Bu kullanıcı Sistem'e erişemez. Emin misiniz?",
-    "confirmUnshareTitle": "Kullanıcıyı sil?",
-    "confirmUnshareAction": "Sil",
-    "successDisconnected": "System is successfully disconnected from %CLOUD_NAME%",
+    "confirmUnshareTitle": "Kullanıcı kaldırılsın mı?",
+    "confirmUnshareAction": "Kaldır",
+    "successDisconnected": "Sistem %CLOUD_NAME%'den başarıyla çıkarıldı",
     "successDeleted": "{{systemName}} sistemi hesabınızdan başarıyla silindi",
     "mergeFailed": "Sistem birleştirme işlemi başarısız oldu",
     "mergeStart": "Sistemler birleştirilmeye başlandı",
     "mergeSuccess": "Sistem birleştirme tamamlandı",
     "permissionsRemoved": "İzinler {{email}}'den kaldırıldı",
     "unknownName": "Sistem için Bilinmeyen Ad (Bulut birleştirme yüzünden)"
-  },
-  "account": {
-    "accountSavedSuccess": "Hesabınız başarıyla kaydedildi",
-    "activationLinkSent": "Aktivasyon linki gönderildi",
-    "passwordChangedSuccess": "Hesabınız başarıyla kaydedildi",
-    "changePassword": "Parola Değiştir",
-    "newPasswordLabel": "Yeni Parola",
-    "saveChanges": "Kaydet"
-  },
-  "activeActions": {
-    "sendConfirm": "Aktivasyon linki gönder",
-    "resetPassword": "Parolayı sıfırla",
-    "setNewPassword": "Parolayı kaydet",
-    "setNewPasswordLabel": "Yeni Parola"
   },
   "regActions": {
     "passwordLabel": "Parola",
@@ -247,25 +179,26 @@
       "lowStream": "Düşük çözünürlük",
       "transcoding": "Dönüştürme",
       "unknown": "Bilinmeyen",
-      "copyToClipboard": "panoya kopyala",
+      "copyToClipboard": "panoya yapıştır",
       "copyDefaultText": "kopyala",
       "copyActiveText": "panoya kopyalandı"
     },
     "systemOffline": "Sistem çevrimdışı",
     "systemHasNoCameras": "KAMERA YOK",
-    "systemUnreachable": "SYSTEM IS UNREACHABLE",
+    "systemUnreachable": "SİSTEM KULLANILAMAZ",
     "cameraStates": {
       "offline": "Çevrimdışı",
       "error": "Hata",
+      "errorLoading": "Video yüklenirken bir sorun oluştu.",
       "unauthorized": "Kimlik doğrulaması gerekli",
       "noData": "Veri bulunamadı",
-      "iosVideoTooLarge": "iOS, fullHD'den daha büyük videoyu desteklemez (2MP: 1920x1080).",
+      "iOSVideoTooLarge": "iOS, fullHD'den daha büyük videoyu desteklemez (2MP: 1920x1080).",
       "flashRequired": "Videoları oynatmak için lütfen <a href='https://get.adobe.com/flashplayer/' target='_blank'>Adobe Flash</a>'i yükleyin.",
       "flashOrWebmRequired": "Internet Explorer'da video oynatmak için lütfen <a href='https://get.adobe.com/flashplayer/' target='_blank'> Adobe Flash</a> veya<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec'i</a> yükleyin.",
       "noArmSupport": "Bu tarayıcı veya aygıt, ARM tabanlı sunuculardan video oynatmayı desteklemez.",
-      "noFormat": "Bu tarayıcı bu kameradan video oynatmayı desteklemiyor.",
+      "noFormat": "Bu tarayıcı veya cihaz bu kameradan video oynatmayı desteklemez.",
       "ieNoWebm": "Internet Explorer için <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> yükleyin.",
-      "ieWin10": "Lütfen Microsoft Edge veya Google Chrome tarayıcılarını kullanın.",
+      "ieWin10": "Lütfen, Microsoft Edge veya Google Chrome tarayıcılarını kullanın.",
       "ubuntuNX": "Bu tarayıcı, ARM tabanlı sunuculardan gelen videoyu desteklemez. Bunun yerine, Chromium tarayıcıyı kullanın."
     },
     "searchCamPlaceholder": "Arama",
@@ -274,12 +207,12 @@
       "high": "Yüksek",
       "low": "Düşük"
     },
-    "chromeCastWarning": "Chromecast kaynak kullanımını arttırabilir ve sunucunuzda sorunlara neden olabilir.",
+    "chromeCastWarning": "Chromecast kaynak yoğunluğudur ve sunucunuzda sorunlara neden olabilir.",
     "voiceCommands": {
       "play": "oynat",
       "pause": "duraklat",
       "live": "go to live | show me live",
-      "view": "görüntüle + [kamera adı]",
+      "view": "view + [camera name]",
       "search": "find + [text for searchbar]",
       "clear search": "aramayı temizle",
       "expand server": "expand server + [server name]",

@@ -1,0 +1,3 @@
+Xin chào, {{ message.userFullName }}
+{{ message.sender_name}} ({{ message.sender_email }}) có phản hồi về {{ message.asset }}:
+<pre>{{ message.message }}</pre>

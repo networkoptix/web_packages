@@ -1,0 +1,3 @@
+Hallo, {{ message.userFullName }}
+{{ message.sender_name}} ({{ message.sender_email }}) heeft de feedback betreft {{ message.asset }}:
+<pre>{{ message.message }}</pre>

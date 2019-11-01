@@ -65,8 +65,28 @@ button.btn-danger > a{
     color: #FAFBFC !important;
 }
 
-img.preview-image{
+img.default-background{
     background-image: url('/static/cms_images/transparent_bg.png');
+}
+
+img.black {
+    background-color: black;
+}
+
+img.white {
+    background-color: white;
+}
+
+img.dark {
+    background-color: #212a2f;
+}
+
+img.light {
+    background-color: #fafbfb;
+}
+
+.placeholder-image{
+    opacity: 0.5;
 }
 
 .context-preview{
@@ -78,10 +98,6 @@ img.preview-image{
 .review-preview{
     max-height: 200px;
     max-width: 200px;
-}
-
-.optional-image{
-    opacity: 0.5;
 }
 
 .truncate-email{

@@ -50,10 +50,10 @@ export class NxCheckboxComponent implements OnInit, ControlValueAccessor, Valida
     private state: string;
     private value: any;
     private cbxStates = {
-        'false': 'unchecked',
-        'true': 'checked',
-        'disabled': 'disabled',
-        'or-else': 'tristate'
+        false: 'unchecked',
+        true: 'checked',
+        disabled: 'disabled',
+        undefined: 'tristate'
     };
 
     // Placeholders for the callbacks which are later provided

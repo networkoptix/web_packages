@@ -47,7 +47,7 @@ module.exports = {
     },
     plugins: [
         new webpack.DefinePlugin({
-            PRODUCTION: JSON.stringify(isProd)
+            PRODUCTION: JSON.stringify(isProd),
         }),
 
         //Development plugins
@@ -77,6 +77,11 @@ module.exports = {
                 from: '',
                 to: '',
                 ignore: thingsToIgnore
+            },
+            // Firebase service worker runs separately from angular, these scripts need to be available to it
+            {
+                from: 'scripts/vendor/firebase*.js',
+                to: '',
             }
         ]),
 

@@ -1,12 +1,12 @@
 こんにちは
 
-You have been invited to %CLOUD_NAME%.
+%CLOUD_NAME% に登録されました。
 {{#message.message}}
 
 {{ message.message }}
 
 {{/message.message}}
-Please create account on %CLOUD_NAME%
+%CLOUD_NAME%アカウントを作成してください
 メールアドレスを使用して指示に従ってください
 
-登録してシステムを表示: {{ config.portal_url }}/登録/{{ message.code }}
+このリンクを使用してアカウント登録してください: {{ config.portal_url }}/登録/{{ message.code }}

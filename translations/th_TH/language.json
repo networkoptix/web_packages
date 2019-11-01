@@ -4,32 +4,6 @@
   "cloudName": "%CLOUD_NAME%",
   "vmsName": "%VMS_NAME%",
   "clientProtocol": "%CLIENT_PROTOCOL%:",
-  "dialogs": {
-    "okButton": "ตกลง",
-    "cancelButton": "ยกเลิก",
-    "loginTitle": "Log in to %CLOUD_NAME%",
-    "loginButton": "ลงชื่อเข้าสู่ระบบ",
-    "logoutAuthorisedTitle": "คุณกำลังอยู่ในระบบ",
-    "logoutAuthorisedContinueButton": "ดำเนิน​การ",
-    "logoutAuthorisedLogoutButton": "ออกจากระบบ",
-    "messageFailed": "ไม่สามารถส่งข้อความได้",
-    "messageSent": "ส่งข้อความแล้ว",
-    "noClientDetectedTitle": "ติดตั้ง %VMS_NAME% เพื่อดูระบบของคุณ",
-    "download": "ดาวน์โหลด %VMS_NAME%"
-  },
-  "messageDialog": {
-    "title": {
-      "integration": "Email for {{product}}",
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Feedback about {{product}}"
-    },
-    "topic": {
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Feedback about {{product}}",
-      "contact_sales": "Contact sales for {{product}}",
-      "contact_support": "Contact support for {{product}}"
-    }
-  },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
     "default": "%CLOUD_NAME%",
@@ -140,7 +114,7 @@
     "wrongParameters": "พารามิเตอร์บางอย่างในแบบฟอร์มไม่ถูกต้อง",
     "wrongCode": "บัญชีถูกเปิดใช้งานหรือรหัสยืนยันไม่ถูกต้อง",
     "wrongCodeRestore": "ใช้รหัสยืนยันแล้วหรือไม่ถูกต้อง",
-    "wrongAuthCode": "Code is expired or incorrect",
+    "wrongAuthCode": "รหัสหมดอายุหรือไม่ถูกต้อง",
     "forbidden": "การเข้าถึงถูกปฏิเสธ คุณไม่มีสิทธิ์ดำเนินการนี้.",
     "accountNotActivated": "บัญชีนี้ยังไม่เปิดใช้งาน <a href=\"/activate\"> ส่งลิงก์การเปิดใช้งานอีกครั้ง </a>",
     "accountBlocked": "บัญชีนี้ถูกปิดแล้ว โปรดลองอีกครั้งในไม่กี่นาที.",
@@ -162,34 +136,7 @@
     "mergedSystemIsOffline": "ระบบ <strong>{{failedSystem}}</strong> ออฟไลน์",
     "INCOMPATIBLE": "ระบบมีเวอร์ชั่นซอฟต์แวร์ที่ต่างกัน โปรดอัปเดตไปที่ <a href=\"/download\">รุ่นล่าสุด</a>",
     "FAIL": "ระบบ <strong>{{failedSystem}}</strong> ไม่สามารถเข้าถึงได้ในขณะนี้<br>ลองอีกครั้งในภายหลังหรือติดต่อฝ่ายสนับสนุน <a href=\"%SUPPORT_LINK%\" target=\"_blank\"></a>",
-    "unknownMergeError": "Unknown error. You can try to refresh the page and repeat attempt. If the problem persists – please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>."
-  },
-  "merging": {
-    "mergeFailedTitle": "การรวมระบบล้มเหลว",
-    "commonText": "ไม่สามารถรวมระบบ <strong>{{primarySystem}}</strong> และ <strong>{{secondarySystem}}</strong>"
-  },
-  "passwordRequirements": {
-    "good": "ดี",
-    "fair": "ยุติธรรม",
-    "fairMessage": "ใช้ตัวเลขตัวพิมพ์ใหญ่และตัวพิมพ์เล็กและตัวอักษรพิเศษเพื่อทำให้รหัสผ่านของคุณแข็งแกร่งขึ้น",
-    "minLength": "สั้นเกินไป",
-    "minLengthMessage": "รหัสผ่านต้องมีอักขระอย่างน้อย 8 ตัว",
-    "required": "ไม่ถูกต้อง",
-    "requiredMessage": "ใช้อักษรละตินตัวเลขและสัญลักษณ์แป้นพิมพ์เท่านั้นหลีกเลี่ยงช่องว่างด้านบนและด้านหลัง",
-    "weak": "อ่อนแอ",
-    "weakMessage": "ใช้ตัวเลขตัวพิมพ์ใหญ่และตัวพิมพ์เล็กและตัวอักษรพิเศษเพื่อทำให้รหัสผ่านของคุณแข็งแกร่งขึ้น",
-    "strongMessage": "รหัสผ่านที่แข็งแกร่ง!",
-    "common": "บ่อยเกินไป",
-    "commonMessage": "รหัสผ่านนี้อยู่ในรหัสผ่านที่ได้รับความนิยมมากที่สุดในโลก",
-    "missingMessage": "จำเป็นต้องใช้รหัสผ่าน"
-  },
-  "sharing": {
-    "confirmOwner": "หากคุณเปลี่ยนเจ้าของระบบคุณจะยกเลิกการเป็นเจ้าของจากบัญชีปัจจุบัน การกระทำนี้ไม่สามารถย้อนกลับได้ คุณแน่ใจไหม?",
-    "shareTitle": "แชร์",
-    "shareConfirmButton": "แชร์",
-    "editShareTitle": "แก้ไขสิทธิ์",
-    "editShareConfirmButton": "บันทึก",
-    "permissionsSaved": "อนุญาตสิทธิ์ใหม่แล้ว"
+    "unknownMergeError": "ข้อผิดพลาดที่ไม่รู้จัก. คุณสามารถลองรีเฟรชหน้าและพยายามซ้ำ หากปัญหายังคงมีอยู่ - กรุณาติดต่อ <a href=\"%SUPPORT_LINK%\" target=\"_blank\">สนับสนุน</a>"
   },
   "system": {
     "yourSystem": "ระบบของคุณ",
@@ -203,35 +150,20 @@
     "confirmRenameTitle": "ชื่อระบบ",
     "confirmRenameAction": "บันทึก",
     "successRename": "ระบบเปลี่ยนชื่อ",
-    "confirmDisconnectTitle": "Disconnect System from %CLOUD_NAME%?",
+    "confirmDisconnectTitle": "ยกเลิกการเชื่อมต่อระบบจาก %CLOUD_NAME%?",
     "confirmDisconnectAction": "ตัดการเชื่อมต่อ",
-    "confirmUnshareFromMe": "คุณกำลังจะยกเลิกการเชื่อมต่อระบบนี้จากบัญชีของคุณ คุณจะไม่สามารถเข้าถึงระบบนี้ได้อีกต่อไป คุณแน่ใจไหม?",
-    "confirmUnshareFromMeTitle": "ยกเลิกการเชื่อมต่อระบบหรือไม่?",
+    "confirmUnshareFromMe": "You will not be able to lgo into this System anymore.",
+    "confirmUnshareFromMeTitle": "Disconnect System from your Account?",
     "confirmUnshareFromMeAction": "ตัดการเชื่อมต่อ",
-    "confirmUnshare": "ผู้ใช้รายนี้จะไม่สามารถเข้าใช้งานระบบได้ คุณแน่ใจไหม?",
-    "confirmUnshareTitle": "ลบผู้ใช้หรือไม่?",
-    "confirmUnshareAction": "ลบ",
-    "successDisconnected": "System is successfully disconnected from %CLOUD_NAME%",
+    "confirmUnshareTitle": "Remove user?",
+    "confirmUnshareAction": "เอาออก",
+    "successDisconnected": "ระบบถูกตัดการเชื่อมต่อเรียบร้อยแล้วจาก %CLOUD_NAME%",
     "successDeleted": "ระบบ {{systemName}} จะถูกลบออกจากบัญชีของคุณเรียบร้อยแล้ว",
     "mergeFailed": "การผสานระบบล้มเหลว",
     "mergeStart": "ระบบได้รวมเข้าด้วยกันเรียบร้อยแล้ว",
     "mergeSuccess": "ผสานระบบเสร็จสมบูรณ์",
     "permissionsRemoved": "สิทธิ์ถูกนำออกจาก {{email}}",
     "unknownName": "ชื่อที่ไม่รู้จักสำหรับระบบ (เกิดจากการผสานคลาวด์)"
-  },
-  "account": {
-    "accountSavedSuccess": "บันทึกบัญชีของคุณเรียบร้อยแล้ว",
-    "activationLinkSent": "ส่งการเปิดใช้งานแล้ว",
-    "passwordChangedSuccess": "บันทึกบัญชีของคุณเรียบร้อยแล้ว",
-    "changePassword": "เปลี่ยนรหัสผ่าน",
-    "newPasswordLabel": "สร้างรหัสผ่านใหม่",
-    "saveChanges": "บันทึก"
-  },
-  "activeActions": {
-    "sendConfirm": "ส่งการเชื่อมโยงการเปิดใช้งานอีกครั้ง",
-    "resetPassword": "รีเซ็ตรหัสผ่าน",
-    "setNewPassword": "บันทึกรหัสผ่าน",
-    "setNewPasswordLabel": "สร้างรหัสผ่านใหม่"
   },
   "regActions": {
     "passwordLabel": "รหัสผ่าน",
@@ -248,18 +180,19 @@
       "transcoding": "การแปลงรหัส",
       "unknown": "ม่รู้จัก",
       "copyToClipboard": "คัดลอกไปยังคลิปบอร์ด",
-      "copyDefaultText": "สำเนา",
+      "copyDefaultText": "คัดลอก",
       "copyActiveText": "คัดลอกไปยังคลิปบอร์ด"
     },
     "systemOffline": "ระบบออฟไลน์",
     "systemHasNoCameras": "ไม่พบกล้อง",
-    "systemUnreachable": "SYSTEM IS UNREACHABLE",
+    "systemUnreachable": "ระบบไม่สามารถเข้าถึงได้",
     "cameraStates": {
       "offline": "ออฟไลน์",
       "error": "ข้อผิดพลาด",
+      "errorLoading": "เกิดข้อผิดพลาดขณะโหลดวิดีโอนี้",
       "unauthorized": "จำเป็นต้องระบุตัวตนผู้ใช้",
       "noData": "ไม่มีข้อมูล",
-      "iosVideoTooLarge": "iOS ไม่สนับสนุนวิดีโอที่ใหญ่กว่า fullHD (2MP: 1920x1080)",
+      "iOSVideoTooLarge": "iOS ไม่สนับสนุนวิดีโอที่ใหญ่กว่า fullHD (2MP: 1920x1080)",
       "flashRequired": "โปรด <a href='https://get.adobe.com/flashplayer/' target='_blank'> ติดตั้ง Adobe Flash</a> สำหรับเล่นวิดีโอ",
       "flashOrWebmRequired": "โปรด <a href='https://get.adobe.com/flashplayer/' target='_blank'> ติดตั้ง Adobe Flash</a> หรือ<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> สำหรับเล่นวิดีโอใน Internet Explorer",
       "noArmSupport": "เบราว์เซอร์หรืออุปกรณ์นี้ไม่สนับสนุนการเล่นวิดีโอจากเซิร์ฟเวอร์ที่ใช้ ARM",

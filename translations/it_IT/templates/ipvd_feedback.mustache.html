@@ -1,9 +1,4 @@
 <h1>Buongiorno, {{ message.userFullName }}</h1>
 
-<a href="mailto:{{ message.sender_email }}">{{ message.sender_name }}</a>ha dato il seguente feedback per {{ message.product }}:
+{{ message.sender_email }} ({{ message.sender_name }}) ha dato il seguente feedback{{#message.asset}} per {{ message.asset }}{{/message.asset}}:
 <div>{{ message.message }}</div>
-<br />
-<hr />
-<div>
-    L'utente può essere contattato: {{ message.sender_to_be_contacted}}
-</div>

@@ -10,7 +10,6 @@
 @import '_theme_override';
 // Components
 @import '_anchor';
-@import '_header';
 @import '_arrows';
 @import '_checkbox';
 @import '_option';
@@ -18,21 +17,30 @@
 @import '_faq';
 
 @import '../web_common/styles/common';
+@import '../src/components/content-block/content-block.component';
 
 html {
     @include rem-baseline;
     position: relative;
     min-height: 100%;
-    overflow-y: scroll; /* CLOUD-373: this is hack: we fix vertical scroll to prevent the page from shaking when it appears or disappears*/
+    height: 100%;
+    margin: 0;
 }
 
 body {
-    @include media-breakpoint-up(lg) {
-        margin-bottom : 80px;
-    }
-
     min-width : 360px;
     padding   : 0 !important;
+    height: 100%;
+    margin: 0;
+}
+
+.outerContainer {
+  display: flex; flex-direction: column; height: 100%;
+}
+
+.mainContainer {
+    flex: 1 1 auto;
+    overflow-y: scroll; /* CLOUD-373: this is hack: we fix vertical scroll to prevent the page from shaking when it appears or disappears*/
 }
 
 [data-whatintent='mouse'] *:focus {
@@ -100,6 +108,14 @@ html.webclient-page{
 }
 
 nx-app {
+    .headerPadding {
+      padding-top: $navbar-height;
+    }
+
+    .headerAndRibbonPadding {
+      padding-top: $navbar-height + 32px;
+    }
+
     .placeholder {
         position: absolute;
         background-color: transparent;
@@ -114,6 +130,12 @@ nx-app {
             z-index   : -1;
         }
     }
+}
+
+.block-container {
+  max-width: $fluid-container-max-width;
+  width: 100%;
+  padding: 0 16px;
 }
 
 @mixin keyframe ($animation_name) {
@@ -217,7 +239,26 @@ nx-app {
     }
   }
 
+  &.dropdown-process-btn {
+    width: 100%;
+    margin-top: 8px;
+    margin-bottom: 12px;
 
+    .loading {
+      max-width: calc(100% - 24px);
+      margin: 0 12px;
+      border: 1px solid $light6;
+    }
+
+    button {
+      min-width: calc(100% - 24px);
+      border: 1px solid $light6;
+      height: 28px;
+      font-size: $font-size-base;
+      margin: 0 12px !important;
+      white-space: nowrap;
+    }
+  }
 }
 
 a.disabled {
@@ -290,19 +331,6 @@ a.disabled {
 }
 .light-color{
   color:    $gray-light;
-}
-
-.no-data-panel {
-    width            : 100%;
-    z-index          : 100;
-    text-align       : center;
-    background-color : $body-bg;
-    padding          : 2rem 0;
-
-    &-body {
-        font-size   : $h3-font-size;
-        font-family : $font-family-light;
-    }
 }
 
 @include media-breakpoint-down(sm) {
@@ -392,10 +420,14 @@ a.disabled {
     display: none;
 }
 
-.ellipsis{
-  overflow: hidden;
-  text-overflow: ellipsis;
+.ellipsis {
+    overflow      : hidden;
+    text-overflow : ellipsis;
+    white-space   : nowrap;
+    max-width     : 100%;
+    line-height   : initial;
 }
+
 @mixin ellipsis{
   overflow: hidden;
   text-overflow: ellipsis;
@@ -403,27 +435,7 @@ a.disabled {
   max-width: 100%;
   line-height: initial;
 }
-.user-name{
-  @include ellipsis;
-}
-td{
-    &.user-name{
-      max-width: 175px;
-    }
-    &.user-email{
-      @include ellipsis;
-      max-width: 240px;
-    }
-    &.user-role{
-      @include ellipsis;
-      max-width: 120px;
-    }
-}
-.button-cell{
-    padding-right: 6px !important;
-    padding-left: 6px !important;
-    text-align: center;
-}
+
 .system-button {
   user-select: none;
   cursor: pointer;
@@ -476,8 +488,8 @@ td{
 }
 
 
-/* add beta-symbol after product name everywhere */
-/*.product-name.add-version:after{
+/* add beta-symbol after asset name everywhere */
+/*.asset-name.add-version:after{
   content: "\03B2";
   font-style: italic;
   opacity: 0.5;
@@ -487,42 +499,6 @@ td{
 
 .inline-block{
   display: inline-block;
-}
-
-
-.ng-toast {
-  margin-top: 34px;
-
-  .alert {
-    margin-bottom: 8px;
-
-      @include media-breakpoint-down(sm) {
-      min-width: 100%;
-    }
-
-      @include media-breakpoint-up(sm) {
-      min-width: 600px;
-    }
-
-
-    &.ng-animate {
-      transition: 0.5s linear all;
-
-      &.ng-enter {
-        opacity: 0;
-      }
-      &.ng-enter-active{
-        opacity: 1;
-      }
-
-      &.ng-leave {
-        opacity: 1;
-      }
-      &.ng-leave-active{
-        opacity: 0;
-      }
-    }
-  }
 }
 
 .alert-top{
@@ -580,37 +556,17 @@ td{
     }
 }
 
-.promo-block {
-    padding    : 32px 74px;
-    text-align : center;
-    
-    h2, h4 {
-        color           : $light15;
-        font-family     : $font-family-bold;
-        justify-content : center;
-    }
-    
-    h4 {
-        margin : 0.5rem !important;
-    }
-    
-    .welcome-caption {
-        justify-content : center;
-        color           : $brand_core;
-    }
-}
-
-@include media-breakpoint-up(sm) {
-    .promo-block {
-        padding: 32px 30px;
-    }
-}
-
-@include media-breakpoint-up(lg) {
-    .promo-block {
-        padding: 32px 74px;
-    }
-}
+//@include media-breakpoint-up(sm) {
+//    .promo-block {
+//        padding: 32px 30px;
+//    }
+//}
+//
+//@include media-breakpoint-up(lg) {
+//    .promo-block {
+//        padding: 32px 74px;
+//    }
+//}
 
 .error-page{
     color:$dark10;
@@ -673,37 +629,67 @@ td{
     }
 }
 
-.cloud-icon img{
-  height: 60px;
-}
-
 .jumbotron {
-    .cloud-icon img {
-        height : 100px;
-    }
-
+    padding: 80px 0 0 0;
     .welcome-caption {
-        font-size       : 63px;
-        color           : $brand-primary !important;
+        font-size       : 64px;
+        font-family     : $font-family-light;
         justify-content : center;
         line-height     : 1;
+        padding: 8px 0;
+        margin-top: 0;
+        margin-bottom: 16px;
     }
 
     .lead {
-        margin-bottom : 15px;
-        font-size     : $h2-font-size;
-        font-family   : $font-family-light;
+        margin-bottom : 48px;
+        padding-bottom: 1px;
+        font-size     : 18px;
+        font-family   : $font-family-regular;
     }
 
     .promo-block {
+        @extend .card;
+        text-align : center;
+        padding: 0;
+        margin: 0 8px 16px;
+
+        @include media-breakpoint-up(sm) {
+            flex: 0 0 calc(100%/3 - 16px);
+        }
+
         h2 {
-            font-family : $font-family-medium;
+            @extend .card--header;
+            font-family     : $font-family-medium;
+            font-size       : 18px;
+            line-height     : unset;
+            padding-top     : 103px;
+            padding-bottom  : 35px;
+            background: $additional_light1 no-repeat 50% 20px;
+            background-size: auto 64px;
+        }
+
+        &:nth-of-type(1) h2 {
+          background-image: url('/static/images/promo/landing_promo_1.png');
+        }
+
+        &:nth-of-type(2) h2 {
+          background-image: url('/static/images/promo/landing_promo_2.png');
+        }
+
+        &:nth-of-type(3) h2 {
+          background-image: url('/static/images/promo/landing_promo_3.png');
+        }
+
+        h2, h4 {
+            justify-content : center;
         }
 
         h4 {
-            margin      : 0.5rem 0;
-            font-family : $font-family-light;
-            font-size   : $h4-font-size;
+            font-family     : $font-family-regular;
+            font-size       : 14px;
+            margin          : 20px 16px;
+            line-height     : 1.4;
         }
     }
 }
@@ -819,78 +805,12 @@ h1 .badge {
     column-count: 2;
 }
 
-@mixin icon{
-  display: inline-block;
-  background-size: 112px 80px;
-  width: 16px;
-  height: 16px;
-  margin-right: 5px;
-  background-image: url('/static/images/portal_icons.png');
-  @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min-device-pixel-ratio: 2) {
-    background-image: url('/static/images/portal_icons@2x.png');
-  }
+.min-w-80 {
+    min-width: 80px;
 }
 
-@mixin kill-glyphicon{
-  @include icon;
-  &:before{
-    content:none;
-  }
-}
-
-.glyphicon-home{
-    @include kill-glyphicon;
-    width: 24px;
-    height: 24px;
-    background-position: -24px -32px;
-}
-
-.glyphicon-user{
-    @include kill-glyphicon;
-    width: 24px;
-    height: 24px;
-    background-position: 0 -32px;
-}
-
-.glyphicon-menu-hamburger{
-    @include kill-glyphicon;
-    width: 20px;
-    height: 18px;
-    background-position: -50px -34px;
-}
-
-.glyphicon-share{
-    @include kill-glyphicon;
-    background-position: -16px 0;
-}
-
-.glyphicon-eye-open{
-    @include kill-glyphicon;
-    background-position: -80px 0;
-}
-
-.glyphicon-eye-close{
-    @include kill-glyphicon;
-    background-position: -80px -16px;
-}
-
-.glyphicon-pencil {
-    @include kill-glyphicon;
-    background-position: -47px 0;
-}
-
-.glyphicon-remove {
-    @include kill-glyphicon;
-    background-position: -64px 0;
-}
-
-.close-icon {
-  @include icon;
-  background-position: -32px 0;
-}
-.tag-close-icon {
-    @include icon;
-    background-position: -96px 0;
+.min-w-120 {
+    min-width: 120px;
 }
 
 .wide-button {

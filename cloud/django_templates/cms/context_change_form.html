@@ -15,9 +15,9 @@
     <div class="breadcrumbs">
         <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
         &rsaquo; <a href="{% url 'admin:app_list' app_label=opts.app_label %}">{{ opts.app_config.verbose_name }}</a>
-        &rsaquo; <a href="{% url 'admin:cms_product_changelist' %}">{{ product_opts.verbose_name_plural|capfirst }}</a>
-        &rsaquo; <a href="{% url 'admin:cms_product_change' product.id %}"> {{ product.name }}</a>
-        &rsaquo; <a href="{% url 'admin:pages' product.id %}"> Pages </a>
+        &rsaquo; <a href="{% url 'admin:cms_asset_changelist' %}">{{ asset_opts.verbose_name_plural|capfirst }}</a>
+        &rsaquo; <a href="{% url 'admin:cms_asset_change' asset.id %}"> {{ asset.name }}</a>
+        &rsaquo; <a href="{% url 'admin:pages' asset.id %}"> Pages </a>
         &rsaquo; {% trans 'Edit'%} <span>{{ original.get_nice_name }}</span>
     </div>
 {% endblock %}
@@ -27,7 +27,7 @@
 <form id="context_form" class="aligned" action="" enctype="multipart/form-data" method="post" novalidate>
     {% csrf_token %}
     <input type="hidden" name="context_id" value="{{ original.id }}">
-    <input type="hidden" name="product_id" value="{{ product.id }}">
+    <input type="hidden" name="asset_id" value="{{ asset.id }}">
     <input type="hidden" name="currentLanguage" value="{{ language_code }}">
     <input type="hidden" id="languageChanged">
     {% for field in custom_form %}
@@ -41,10 +41,11 @@
             {% get_data_structure field.name original as data_structure %}
             {% get_datastructure_type data_structure as data_structure_type %}
             {% is_external_file_or_image field.name original as is_external %}
-            {% has_value field.name product original language as record_exists %}
-            <label {% if data_structure.advanced %} class="text-danger" {% endif %}
-                    for="id_{{ field.name }}">{{ field.label }}{% if not data_structure.optional %}*{% endif %}
-                <p class="help">{{ field.name }}</p>
+            {% is_protected data_structure asset as protected %}
+            {% has_value field.name asset original language_code as record_exists %}
+            <label {% if data_structure.advanced or protected %} class="text-danger" {% endif %}
+                    for="{{ field.name }}">{{ field.label }}{% if not data_structure.optional %}*{% endif %}
+                {% if user.is_superuser %}<p class="help">{{ field.name }}</p>{% endif %}
                 {% if not data_structure.optional %} <p class="help">required</p> {% endif %}
             </label>
             <div id="{{ field.name }}" class="ml-160">
@@ -55,7 +56,14 @@
                                           name="delete_{{ field.name }}" value="false"/>&nbsp;Clear Value</label>
                             <br><br>
                         {% endif %}
-                        <img class="preview-image context-preview {% if data_structure.optional and not record_exists %} optional-image {% endif %}"
+                        <img class="
+                            {% if 'background' in data_structure.meta_settings and data_structure.meta_settings.background != 'transparent' %}
+                                {# TODO: Note that optional was here #}
+                                {{ data_structure.meta_settings.background }}
+                            {% else %}
+                                default-background
+                            {% endif %}
+                            context-preview {% if not record_exists %} placeholder-image {% endif %}"
                              src="data:image/png;base64,{{ field.value }}">
                     </div>
 
@@ -66,15 +74,22 @@
                                           value="false"/>&nbsp;Clear Value</label>
                         {% endif %}
                         {% if data_structure_type == EXTERNAL_IMAGE %}
-                            <img class="preview-image context-preview {% if data_structure.optional and not record_exists %} optional-image {% endif %}"
+                            <img class="
+                                {% if 'background' in data_structure.meta_settings and data_structure.meta_settings.background != 'transparent' %}
+                                    {{ data_structure.meta_settings.background }}
+                                {% else %}
+                                    default-background
+                                {% endif %}
+                                context-preview {% if not record_exists %} placeholder-image {% endif %}"
                                  src="{{ field.value }}">
                         {% else %}
                         <a href={% if not is_external %}
-                                    "{% url 'download_file' field.name %}?lang={{ language_code }}&draft"
+                                    "{% url 'download_file' field.name %}?asset_id={{ asset.id }}&lang={{ language_code }}&draft"
                                 {% else %}
                                     "{{ field.value }}"
                                 {% endif %} download>
-                            {% if data_structure.optional and not record_exists %}
+                            {% if not record_exists %}
+                                {# TODO: Note that data_structure.optional was here #}
                                 Download Example
                             {% else %}
                                 Download
@@ -96,7 +111,7 @@
         </div>
     </div>
     {% endfor %}
-    {% has_permission user product 'cms.edit_content' as can_edit_content %}
+    {% has_permission user asset 'cms.edit_content' as can_edit_content %}
     {% if can_edit_content %}
         <div class="submit-row">
             {% if preview_link %}
@@ -104,10 +119,10 @@
             {% endif %}
             {% if user.is_superuser and context.file_path %}
                 <a class="btn btn-sm btn-default"
-                   href="{% url 'download_file' context.file_path %}?lang={{ language.code }}&draft"
+                   href="{% url 'download_file' context.file_path %}?asset_id={{ asset.id }}&lang={{ language.code }}&draft"
                    download>Download Draft</a>
             {% endif %}
-            {% if product.can_preview_on_portal %}
+            {% if asset.can_preview_on_portal %}
                 <button class="btn btn-sm btn-info" type="submit" name="Preview">Save draft & Open preview</button>
             {% else %}
                 <button class="btn btn-sm btn-info" type="submit" name="SaveDraft">Save Draft</button>
@@ -119,12 +134,14 @@
 </form>
 
 <script>
+    var bytesToMb = "{{ BYTES_TO_MB }}";
+
     {% if preview_link %}
-        window.open("{{ preview_link }}");
+        window.open("{{ preview_link | safe }}", '', '_blank,noopener,noreferrer');
     {% endif %}
 
     function openPreview() {
-        window.open("{{ preview_link }}");
+        window.open("{{ preview_link | safe }}", '', '_blank,noopener,noreferrer');
     }
 
     function wasTouched() {
@@ -158,6 +175,44 @@
         document.getElementById('context_form').submit();
     }
 
+    var submitButtons = $('.submit-row button[type=submit]');
+    function disableSubmitButtons(state) {
+        for(var j=0; j < submitButtons.length; ++j) {
+            submitButtons[j].disabled = state;
+        }
+    }
+
+    var files = $('[type=file]');
+    function fileHandler(event){
+        var element = event.target;
+        var upload_files = element.files;
+        var errorList = $(element).parents('div').siblings('ul.errorlist');
+        $(errorList).html("");
+
+        if (element.hasOwnProperty('size') && upload_files.length > 0 && upload_files[0].size > element.size) {
+            var errorMsg = "<li>The file's size it too large. Its size was ";
+            errorMsg += (upload_files[0].size/bytesToMb).toFixed(2).toString();
+            errorMsg += "MB but must be less than ";
+            errorMsg += (element.size/bytesToMb).toFixed(2).toString() + "MB</li>";
+            $(errorList).append(errorMsg);
+            disableSubmitButtons(true);
+        } else {
+            // Check if all of the other files are valid.
+            for (var j = 0; j < files.length; ++j) {
+                // If any are invalid disable submit buttons
+                if(files[j].hasOwnProperty('size') && files[j].files.length > 0 && files[j].size < files[j].files[0].size) {
+                    disableSubmitButtons(true);
+                    return;
+                }
+            }
+            disableSubmitButtons(false);
+        }
+    }
+
+    for(var i = 0; i < files.length; ++i) {
+        files[i].addEventListener('change', fileHandler);
+    }
+
     var brandVariables = document.getElementsByClassName('brand-variable');
     for(var i = 0; i < brandVariables.length; i++) {
         var cv = brandVariables[i];
@@ -186,9 +241,23 @@
         langSelector.addEventListener('change', languageChanged, false);
     }
     $('[data-toggle="tooltip"]').tooltip();
+    $('[type=reset]').click(function() {
+        var $errorLists =$('ul.errorlist');
+        for (var i=0; i < $errorLists.length; ++i) {
+            $($errorLists[i]).html("");
+        }
+        disableSubmitButtons(false);
+    });
 
     tinymce.init({
         selector: '.tinymce',
+        paste_postprocess: function(plugin, args) {
+            $(args.node).find('img').each(function () {
+                $(this).on('error', function() {
+                    tinymce.activeEditor.dom.remove(tinymce.activeEditor.dom.select('img[src="' + this.currentSrc +'"]'));
+                });
+            });
+        },
         menubar: false,
         resize: 'both',
         theme: 'advanced',

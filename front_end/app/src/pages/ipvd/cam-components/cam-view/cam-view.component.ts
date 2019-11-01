@@ -3,6 +3,7 @@ import {
     OnInit, Output, SimpleChanges
 }                          from '@angular/core';
 import { NxConfigService } from '../../../../services/nx-config';
+import { NxUriService }    from '../../../../services/uri.service';
 
 @Component({
     selector   : 'nx-cam-view',
@@ -12,30 +13,50 @@ import { NxConfigService } from '../../../../services/nx-config';
 export class CamViewComponent implements OnInit {
 
     @Input() activeCamera: any;
-    // private _activeCamera: any;
     @Output() public onCloseView: EventEmitter<any> = new EventEmitter<any>();
     @Output() public onFeedbackClick: EventEmitter<any> = new EventEmitter<any>();
 
     CONFIG: any = {};
     firmwares: any = [];
     firmwaresToShow: number;
-    showAll: boolean;
+    analyticsToShow: number;
+    showAllFirmware: boolean;
+    showAllEvents: boolean;
+    debug: any;
+    beta: any;
+    params: any;
+    showAnalytics: boolean;
+    showCameraAnalytics: boolean;
 
-    constructor(private configService: NxConfigService) {
+    constructor(private configService: NxConfigService,
+                private uri: NxUriService) {
         this.CONFIG = this.configService.getConfig();
     }
 
     ngOnInit() {
-        this.firmwareCleanUp();
-        this.firmwaresToShow = this.CONFIG.ipvd.firmwaresToShow;
-        this.showAll = false;
+        this.uri
+            .getURI()
+            .subscribe(params => {
+                this.params = params;
+                this.debug = (params.debug !== undefined);
+                this.beta = (params.beta !== undefined);
+
+                this.showAnalytics = this.CONFIG.ipvd.showAnalyticsEvents || this.debug || this.beta;
+                this.showCameraAnalytics = this.showAnalytics && this.activeCamera.isAnalyticsSupported;
+            });
+
+        this.firmwaresToShow = 1; // this.CONFIG.ipvd.firmwaresToShow;
+        this.analyticsToShow = this.CONFIG.ipvd.analyticsToShow;
+        this.showAllFirmware = false;
+        this.showAllEvents = false;
     }
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes.activeCamera) {
-            this.firmwareCleanUp();
-            this.firmwaresToShow = this.CONFIG.ipvd.firmwaresToShow;
-            this.showAll = false;
+            this.showCameraAnalytics = this.showAnalytics && changes.activeCamera.currentValue.isAnalyticsSupported;
+            this.firmwares = changes.activeCamera.currentValue.firmwares || [];
+            this.showAllFirmware = false;
+            this.showAllEvents = false;
         }
     }
 
@@ -47,22 +68,5 @@ export class CamViewComponent implements OnInit {
     closeView() {
         this.activeCamera = undefined;
         this.onCloseView.emit(this.activeCamera);
-    }
-
-    firmwareCleanUp() {
-        if (this.activeCamera.firmwares) {
-            this.firmwares = this.activeCamera.firmwares.filter((fw) => !fw.name.match(/[<>]+/g));
-        }
-    }
-
-    firmwarePercentage(count, total) {
-        const percentage = Math.round((count / total) * 100);
-        return percentage ? percentage + '%' : '< 1';
-    }
-
-    firmwareLength(count, maxFirmware) {
-        // Make sure we don't return 0
-        const pow = maxFirmware > 200 ? Math.log2(200) / Math.log2(maxFirmware) : 1;
-        return Math.round(100 * Math.pow(count / maxFirmware, pow));
     }
 }

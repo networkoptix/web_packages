@@ -2,16 +2,20 @@
     <div class="card-body">
         <h2 class="mb-3">귀하의 시스템</h2>
         <p>
-            <button ng-disabled="currentlyMerging && !isMaster" class="btn btn-default" ng-click="rename()">시스템 이름 바꾸기</button>
+            <button class="btn btn-default mw-100"
+                    ng-disabled="currentlyMerging && !isMaster"
+                    ng-click="rename()"><div class="ellipsis"> 시스템 이름 바꾸기 </div></button>
         </p>
         <p ng-if="systems.length > 1 && system.canMerge || configCanMerge || debugMode || betaMode">
-            <button class="btn btn-default"
+            <button class="btn btn-default mw-100"
                     ng-disabled="(currentlyMerging || !system.isOnline || !system.isAvailable) && !(debugMode || betaMode)"
-                    ng-click="mergeSystems()">다른 시스템과 병합</button>
+                    ng-click="mergeSystems()"><div class="ellipsis"> 다른 시스템과 병합 </div></button>
         </p>
         <hr />
-        <button ng-disabled="currentlyMerging" class="btn btn-default" ng-click="disconnect()">Disconnect from
-            <span class="product-name">&nbsp;%CLOUD_NAME%</span></button>
+        <button class="btn btn-default mw-100"
+                ng-disabled="currentlyMerging"
+                ng-click="disconnect()">
+            <div class="ellipsis"> <span class="product-name">&nbsp;%CLOUD_NAME%</span> 에서 연결 끊기</div></button>
     </div>
 </div>
 <div class="card card-condensed" ng-if="!system.isMine">
@@ -21,14 +25,19 @@
         <a ng-href="mailto:{{system.info.ownerAccountEmail}}">{{system.info.ownerAccountEmail}}</a>
         <hr>
         <p>
-            당신의 권한:
-<b>{{$root.L.accessRoles[system.accessRole].label || system.accessRole}}</b>
+            당신의 권한: <b>{{permission}}</b>
         </p>
 
         <p ng-if="system.permissions.isAdmin">
-            <button class="btn btn-default" ng-click="rename()" ng-disabled="currentlyMerging && !isMaster">시스템 이름 바꾸기</button>
+            <button class="btn btn-default mw-100"
+                    ng-click="rename()"
+                    ng-disabled="currentlyMerging && !isMaster">
+                <div class="ellipsis"> 시스템 이름 바꾸기 </div></button>
         </p>
-        <button class="btn btn-default" ng-click="delete()" ng-disabled="currentlyMerging">내 계정에서 분리</button>
+        <button class="btn btn-default mw-100"
+                ng-click="delete()"
+                ng-disabled="currentlyMerging">
+            <div class="ellipsis"> 내 계정에서 연결 해제 </div></button>
     </div>
 </div>
 <div class="mt-3 card card-default" ng-if="currentlyMerging">

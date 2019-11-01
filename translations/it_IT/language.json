@@ -4,32 +4,6 @@
   "cloudName": "%CLOUD_NAME%",
   "vmsName": "%VMS_NAME%",
   "clientProtocol": "%CLIENT_PROTOCOL%:",
-  "dialogs": {
-    "okButton": "Ok",
-    "cancelButton": "Annulla",
-    "loginTitle": "Log in to %CLOUD_NAME%",
-    "loginButton": "Accesso",
-    "logoutAuthorisedTitle": "Ha già effettuato l'accesso",
-    "logoutAuthorisedContinueButton": "Continua",
-    "logoutAuthorisedLogoutButton": "Disconnetti",
-    "messageFailed": "Impossibile inviare il messaggio.",
-    "messageSent": "Il messaggio è stato inviato.",
-    "noClientDetectedTitle": "Installa %VMS_NAME% per visualizzare il suo sistema",
-    "download": "Scarica %VMS_NAME%"
-  },
-  "messageDialog": {
-    "title": {
-      "integration": "Email for {{product}}",
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Feedback about {{product}}"
-    },
-    "topic": {
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Feedback about {{product}}",
-      "contact_sales": "Contact sales for {{product}}",
-      "contact_support": "Contact support for {{product}}"
-    }
-  },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
     "default": "%CLOUD_NAME%",
@@ -140,7 +114,7 @@
     "wrongParameters": "Alcuni parametri nel modulo non sono corretti",
     "wrongCode": "L'account è già attivato o il codice di conferma non è corretto",
     "wrongCodeRestore": "Il codice di conferma è già utilizzato o errato",
-    "wrongAuthCode": "Code is expired or incorrect",
+    "wrongAuthCode": "Il codice è scaduto o errato",
     "forbidden": "Non ha il permesso per effettuare questa azione",
     "accountNotActivated": "Questo account non è ancora stato attivato. <a href=\"/activate\">Invia nuovamente il link di attivazione</a>",
     "accountBlocked": "Questo account è temporaneamente bloccato. Riprova tra qualche minuto.",
@@ -162,34 +136,7 @@
     "mergedSystemIsOffline": "Il sistema <strong>{{failedSystem}}</strong> non è in linea.",
     "INCOMPATIBLE": "I sistemi hanno diverse versioni del software. Si prega di aggiornarli entrambi all'ultimo <a href=\"/download\">build</a>.",
     "FAIL": "Il sistema <strong>{{failedSystem}}</strong> è attualmente irraggiungibile.<br>Riprovare tra qualche istante o contattare <a href=\"%SUPPORT_LINK%\" target=\"_blank\">il supporto</a>.",
-    "unknownMergeError": "Unknown error. You can try to refresh the page and repeat attempt. If the problem persists – please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>."
-  },
-  "merging": {
-    "mergeFailedTitle": "Unione di sistemi fallita",
-    "commonText": "Impossibile unire i sistemi <strong>{{primarySystem}}</strong> e <strong>{{secondarySystem}}</strong>."
-  },
-  "passwordRequirements": {
-    "good": "buono",
-    "fair": "giusta",
-    "fairMessage": "Utilizzare numeri, lettere maiuscole e minuscole e caratteri speciali per rendere più sicura la password",
-    "minLength": "troppo corto",
-    "minLengthMessage": "La password deve contenere almeno 8 caratteri",
-    "required": "errato",
-    "requiredMessage": "Usa solo lettere latine, numeri e simboli della tastiera, evita spazi iniziali e finali",
-    "weak": "debole",
-    "weakMessage": "Utilizzare numeri, lettere maiuscole e minuscole e caratteri speciali per rendere più sicura la password",
-    "strongMessage": "Password sicura!",
-    "common": "troppo comune",
-    "commonMessage": "Questa password è nelle migliori e più popolari password utilizzate nel mondo",
-    "missingMessage": "È richiesta la password"
-  },
-  "sharing": {
-    "confirmOwner": "Se cambi proprietario del sistema, revocherai la proprietà dall'account corrente. Questa azione è irreversibile. E' sicuro?",
-    "shareTitle": "Condividere",
-    "shareConfirmButton": "Condividere",
-    "editShareTitle": "Modifica Permessi",
-    "editShareConfirmButton": "Salvare",
-    "permissionsSaved": "Nuove autorizzazioni salvate"
+    "unknownMergeError": "Errore sconosciuto. Puoi provare ad aggiornare la pagina e ripetere il tentativo. Se il problema persiste, contatta l'assistenza <a href=\"%SUPPORT_LINK%\" target=\"_blank\"></a>."
   },
   "system": {
     "yourSystem": "Il suo sistema",
@@ -203,35 +150,20 @@
     "confirmRenameTitle": "Nome del sistema",
     "confirmRenameAction": "Salvare",
     "successRename": "Nome del sistema salvato",
-    "confirmDisconnectTitle": "Disconnect System from %CLOUD_NAME%?",
+    "confirmDisconnectTitle": "Scollegare il sistema da %CLOUD_NAME%?",
     "confirmDisconnectAction": "Scollegamento",
-    "confirmUnshareFromMe": "Sta per disconnettere questo Sistema dal suo account. Non sara' in più in grado di accedere a questo Sistema. E' sicuro?",
-    "confirmUnshareFromMeTitle": "Scollegare il sistema da?",
+    "confirmUnshareFromMe": "Non sarai più in grado di accedere a questo Sistema.",
+    "confirmUnshareFromMeTitle": "Disconnettere il sistema dal tuo account?",
     "confirmUnshareFromMeAction": "Scollegamento",
-    "confirmUnshare": "Questo utente non sarà in grado di accedere al sistema. E' sicuro?",
-    "confirmUnshareTitle": "Cancella utente?",
-    "confirmUnshareAction": "Elimina",
-    "successDisconnected": "System is successfully disconnected from %CLOUD_NAME%",
+    "confirmUnshareTitle": "Rimuovere l'utente?",
+    "confirmUnshareAction": "Rimuovere",
+    "successDisconnected": "Il sistema è stato scollegato correttamente da %CLOUD_NAME%",
     "successDeleted": "Il sistema {{systemName}} è stato eliminato correttamente dal suo account",
     "mergeFailed": "Unione di sistemi fallita",
     "mergeStart": "I sistemi hanno iniziato ad unirsi",
     "mergeSuccess": "Unione del sistema completata",
     "permissionsRemoved": "Le autorizzazioni sono state rimosse da {{email}}",
     "unknownName": "Nome sconosciuto per il sistema (causato da cloud merge)"
-  },
-  "account": {
-    "accountSavedSuccess": "Il suo account è stato salvato con successo",
-    "activationLinkSent": "Link di attivazione inviato",
-    "passwordChangedSuccess": "Il suo account è stato salvato con successo",
-    "changePassword": "Cambia Password",
-    "newPasswordLabel": "Nuova password",
-    "saveChanges": "Salvare"
-  },
-  "activeActions": {
-    "sendConfirm": "Rinvia il link di attivazione",
-    "resetPassword": "Reimpostare la password",
-    "setNewPassword": "Salva password",
-    "setNewPasswordLabel": "Nuova password"
   },
   "regActions": {
     "passwordLabel": "Password",
@@ -253,13 +185,14 @@
     },
     "systemOffline": "Il sistema è offline",
     "systemHasNoCameras": "NON CI SONO TELECAMERE",
-    "systemUnreachable": "SYSTEM IS UNREACHABLE",
+    "systemUnreachable": "Il sistema è inaccessibile",
     "cameraStates": {
       "offline": "Offiline",
       "error": "Errore",
+      "errorLoading": "Si è verificato un errore durante il caricamento di questo video.",
       "unauthorized": "Autenticazione richiesta",
       "noData": "Nessun dato",
-      "iosVideoTooLarge": "iOS non supporta video più grandi di FullHD (2MP: 1920x1080).",
+      "iOSVideoTooLarge": "iOS non supporta video più grandi di FullHD (2MP: 1920x1080).",
       "flashRequired": "Si prega di <a href='https://get.adobe.com/flashplayer/' target='_blank'>installare Adobe Flash</a> per la riproduzione di video.",
       "flashOrWebmRequired": "Si prega di <a href='https://get.adobe.com/flashplayer/' target='_blank'>installare Adobe Flash</a> o<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>codec WebM</a> per la riproduzione di video in Internet Explorer.",
       "noArmSupport": "Questo browser o dispositivo non supporta la riproduzione di video da server basati su ARM.",

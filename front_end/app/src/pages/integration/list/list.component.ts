@@ -1,11 +1,10 @@
 import {
     Component, OnDestroy,
-    Input, SimpleChanges, OnChanges
+    Input, SimpleChanges, OnChanges, OnInit
 } from '@angular/core';
 
 import { NxConfigService }           from '../../../services/nx-config';
 import { NxRibbonService }           from '../../../components/ribbon/ribbon.service';
-import { TranslateService }          from '@ngx-translate/core';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { IntegrationService }        from '../integration.service';
 
@@ -15,27 +14,24 @@ import { IntegrationService }        from '../integration.service';
     styleUrls  : ['list.component.scss']
 })
 
-export class NxIntegrationsListComponent implements OnDestroy, OnChanges {
+export class NxIntegrationsListComponent implements OnInit, OnDestroy, OnChanges {
 
     @Input() list;
 
-    config: any;
-    lang: any;
+    CONFIG: any;
+    LANG: any;
+
+    haveInReviewOrDraft: boolean;
 
     private setupDefaults() {
-        this.config = this.configService.getConfig();
-        this.language
-            .translationsSubject
-            .subscribe((lang) => {
-                this.lang = lang;
-            });
+        this.CONFIG = this.configService.getConfig();
+        this.LANG = this.language.getTranslations();
     }
 
     constructor(private configService: NxConfigService,
                 private integrations: IntegrationService,
                 private ribbonService: NxRibbonService,
-                private language: NxLanguageProviderService,
-                private translate: TranslateService) {
+                private language: NxLanguageProviderService) {
 
         this.setupDefaults();
     }
@@ -44,10 +40,12 @@ export class NxIntegrationsListComponent implements OnDestroy, OnChanges {
         this.ribbonService.hide();
     }
 
+    ngOnInit() {
+    }
+
     ngOnChanges(changes: SimpleChanges) {
-        let haveInReviewOrDraft = false;
+        let haveInReviewOrDraft;
         if (changes.list.currentValue) {
-            // inject platform icons info
             changes.list.currentValue.some(plugin => {
                 if (plugin.pending || plugin.draft) {
                     haveInReviewOrDraft = true;
@@ -56,13 +54,19 @@ export class NxIntegrationsListComponent implements OnDestroy, OnChanges {
             });
 
             if (haveInReviewOrDraft) {
-                this.ribbonService.show(
-                        this.lang[this.translate.currentLang].integration.previewRibbonText,
-                        this.lang[this.translate.currentLang].integration.backToEditText,
-                        this.config.links.admin.product.replace('%ID%/pages/', '')
-                );
+                this.showRibbon();
+            } else {
+                this.ribbonService.hide();
             }
         }
+    }
+
+    private showRibbon(): void {
+        this.ribbonService.show(
+                this.LANG.integration.previewRibbonText,
+                this.LANG.integration.backToEditText,
+                this.CONFIG.links.admin.asset.replace('%ID%/pages/', '')
+        );
     }
 }
 

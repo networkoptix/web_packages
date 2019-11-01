@@ -1,11 +1,11 @@
-Welcome to %CLOUD_NAME%
+Willkommen bei %CLOUD_NAME%
 
 {{#message.sharer_name}}
-{{message.sharer_name}} ({{message.sharer_email}}) is inviting you to join %CLOUD_NAME% and shared the system {{message.system_name}} with you.
+{{message.sharer_name}} ({{message.sharer_email}}) lädt Sie zu %CLOUD_NAME% ein und teile das System {{message.system_name}} mit Ihnen.
 {{/message.sharer_name}}
 
 {{^message.sharer_name}}
-You are invited you to join %CLOUD_NAME%.
+Sie wurden eingeladen, sich bei %CLOUD_NAME% anzuschließen.
 Ihnen wurde der Zugriff auf {{message.system_name}} gewährt.
 {{/message.sharer_name}}
 

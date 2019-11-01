@@ -4,32 +4,6 @@
   "cloudName": "%CLOUD_NAME%",
   "vmsName": "%VMS_NAME%",
   "clientProtocol": "%CLIENT_PROTOCOL%:",
-  "dialogs": {
-    "okButton": "ОК",
-    "cancelButton": "Відміна",
-    "loginTitle": "Log in to %CLOUD_NAME%",
-    "loginButton": "Вхід",
-    "logoutAuthorisedTitle": "Ви вже увійшли",
-    "logoutAuthorisedContinueButton": "Продовжити",
-    "logoutAuthorisedLogoutButton": "Вийти",
-    "messageFailed": "Не вдалося надіслати повідомлення.",
-    "messageSent": "Повідомлення відправлено.",
-    "noClientDetectedTitle": "Встановіть %VMS_NAME% для роботи з системою",
-    "download": "Завантажити %VMS_NAME%"
-  },
-  "messageDialog": {
-    "title": {
-      "integration": "Email for {{product}}",
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Feedback about {{product}}"
-    },
-    "topic": {
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Feedback about {{product}}",
-      "contact_sales": "Contact sales for {{product}}",
-      "contact_support": "Contact support for {{product}}"
-    }
-  },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
     "default": "%CLOUD_NAME%",
@@ -140,7 +114,7 @@
     "wrongParameters": "Деякі параметри у формі невірні",
     "wrongCode": "Обліковий запис вже активовано або код підтвердження невірний",
     "wrongCodeRestore": "Код підтвердження вже використовується або невірний",
-    "wrongAuthCode": "Code is expired or incorrect",
+    "wrongAuthCode": "Код закінчився або неправильний",
     "forbidden": "У вас немає дозволів для виконання цієї дії",
     "accountNotActivated": "Цей акаунт ще не активовано. <a href=\"/activate\">Надіслати посилання для активації ще раз</a>",
     "accountBlocked": "Цей обліковий запис тимчасово заблоковано. Будь ласка, спробуйте ще раз через декілька хвилин.",
@@ -162,34 +136,7 @@
     "mergedSystemIsOffline": "Система<strong>{{failedSystem}}</strong>офлайн.",
     "INCOMPATIBLE": "Системи мають різні версії програмного забезпечення. Будь ласка, поновіть їх до<a href=\"/download\">останньої збірки</a>.",
     "FAIL": "Система<strong>{{failedSystem}}</strong>в даний час недоступна.<br>Повторіть спробу через кілька хвилин або зверніться до <a href=\"%SUPPORT_LINK%\" target=\"_blank\">підтримки</a>.",
-    "unknownMergeError": "Unknown error. You can try to refresh the page and repeat attempt. If the problem persists – please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>."
-  },
-  "merging": {
-    "mergeFailedTitle": "Злиття систем невдалося",
-    "commonText": "Не вдалося об’єднати системи <strong>{{primarySystem}}</strong> та <strong>{{secondarySystem}}</strong>."
-  },
-  "passwordRequirements": {
-    "good": "хороший",
-    "fair": "середній",
-    "fairMessage": "Для надійності паролю використовуйте цифри, букви верхнього та нижнього регістру та спеціальні символи",
-    "minLength": "занадто короткий",
-    "minLengthMessage": "Пароль повинен містити принаймні 8 символів",
-    "required": "некоректний",
-    "requiredMessage": "Використовуйте тільки латинські букви, цифри і символи клавіатури, уникайте початкових та кінцевих пробілів",
-    "weak": "слабкий",
-    "weakMessage": "Для надійності паролю використовуйте цифри, букви верхнього та нижнього регістру та спеціальні символи",
-    "strongMessage": "Сильний пароль!",
-    "common": "занадто поширений",
-    "commonMessage": "Цей пароль входить у список найпопулярніших паролів у світі",
-    "missingMessage": "Необхідно вказати пароль"
-  },
-  "sharing": {
-    "confirmOwner": "Якщо змінити власника системи, вона більше не буде належати до поточного облікового запису. Ця дія є незворотньою. Ви впевнені?",
-    "shareTitle": "Загальний доступ",
-    "shareConfirmButton": "Загальний доступ",
-    "editShareTitle": "Редагувати права доступу",
-    "editShareConfirmButton": "Зберегти",
-    "permissionsSaved": "Нові права доступу збережені"
+    "unknownMergeError": "Невідома помилка. Спробуйте оновити сторінку та повторити спробу. Якщо проблема не вирішена - зверніть в службу <a href=\"%SUPPORT_LINK%\" target=\"_blank\">підтримка</a>."
   },
   "system": {
     "yourSystem": "Ваша система",
@@ -203,35 +150,20 @@
     "confirmRenameTitle": "Назва системи",
     "confirmRenameAction": "Зберегти",
     "successRename": "Ім'я системи збережено",
-    "confirmDisconnectTitle": "Disconnect System from %CLOUD_NAME%?",
+    "confirmDisconnectTitle": "Відключити систему від %CLOUD_NAME%?",
     "confirmDisconnectAction": "Відключити",
-    "confirmUnshareFromMe": "Ви збираєтеся відключити цю систему від свого облікового запису. Ви більше не зможете отримати доступ до цієї системи. Ти впевнений?",
-    "confirmUnshareFromMeTitle": "Відключити систему?",
+    "confirmUnshareFromMe": "Ви більше не зможете увійти в цю Систему.",
+    "confirmUnshareFromMeTitle": "Відключити систему від облікового запису?",
     "confirmUnshareFromMeAction": "Відключити",
-    "confirmUnshare": "Цей користувач не зможе отримати доступ до системи. Ти впевнений?",
     "confirmUnshareTitle": "Видалити користувача?",
     "confirmUnshareAction": "Видалити",
-    "successDisconnected": "System is successfully disconnected from %CLOUD_NAME%",
+    "successDisconnected": "Система успішно відключена від %CLOUD_NAME%",
     "successDeleted": "Система {{systemName}} успішно видалена з вашого облікового запису",
     "mergeFailed": "Не вдалося об’єднати систему",
     "mergeStart": "Злиття систем почалося",
     "mergeSuccess": "Злиття системи завершено",
     "permissionsRemoved": "{{email}} був позбавлений повноважень",
     "unknownName": "Невідоме ім’я для системи (викликане злиттям хмари)"
-  },
-  "account": {
-    "accountSavedSuccess": "Ваш обліковий запис успішно збережено",
-    "activationLinkSent": "Посилання для активації відправлене",
-    "passwordChangedSuccess": "Ваш обліковий запис успішно збережено",
-    "changePassword": "Змінити пароль",
-    "newPasswordLabel": "Новий пароль",
-    "saveChanges": "Зберегти"
-  },
-  "activeActions": {
-    "sendConfirm": "Відправити посилання активації ще раз",
-    "resetPassword": "Відновити пароль",
-    "setNewPassword": "Зберегти пароль",
-    "setNewPasswordLabel": "Новий пароль"
   },
   "regActions": {
     "passwordLabel": "Пароль",
@@ -246,20 +178,21 @@
       "highStream": "Висока якість",
       "lowStream": "Низька якість",
       "transcoding": "Перекодування",
-      "unknown": "Невідомо",
+      "unknown": "Невідомий",
       "copyToClipboard": "копіювати в буфер обміну",
       "copyDefaultText": "копіювати",
       "copyActiveText": "скопійовано до буфера обміну"
     },
     "systemOffline": "Система знаходиться поза мережею",
     "systemHasNoCameras": "НЕМАЄ КАМЕР",
-    "systemUnreachable": "SYSTEM IS UNREACHABLE",
+    "systemUnreachable": "СИСТЕМА НЕДОСТУПНА",
     "cameraStates": {
       "offline": "Поза мережею",
       "error": "Помилка",
-      "unauthorized": "Потрібна авторизація",
+      "errorLoading": "Під час завантаження цього відео сталася помилка.",
+      "unauthorized": "Потрібна аутентифікація",
       "noData": "Немає даних",
-      "iosVideoTooLarge": "iOS не підтримує відео з розшиненням більшим за fullHD (2MP: 1920x1080).",
+      "iOSVideoTooLarge": "iOS не підтримує відео з розшиненням більшим за fullHD (2MP: 1920x1080).",
       "flashRequired": "Будь ласка, <a href='https://get.adobe.com/flashplayer/' target='_blank'>встановіть Adobe Flash</a> для відтворення відео.",
       "flashOrWebmRequired": "Відео не може бути відтворено. Можливо, потрібно <a href='https://get.adobe.com/flashplayer/' target='_blank'>встановитиAdobe Flash</a> або<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>кодек WebM</a> для відтворення відео в Internet Explorer.",
       "noArmSupport": "Цей браузер або пристрій не підтримує відтворення відео з серверів на базі ARM.",
@@ -276,7 +209,7 @@
     },
     "chromeCastWarning": "Chromecast ресурсоємний і може спричинити проблеми на вашому сервері.",
     "voiceCommands": {
-      "play": "відтворити",
+      "play": "відтворення",
       "pause": "пауза",
       "live": "go to live | show me live",
       "view": "view + [camera name]",

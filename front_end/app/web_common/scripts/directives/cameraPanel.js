@@ -82,11 +82,17 @@
 
                     if (!selected) {
                         if (Object.keys(scope.cameras).length !== 0 && !!scope.mediaServers) {
-                            scope.selectCamera(scope.cameras[scope.mediaServers[0].id][0]);
-                            scope.storage.serverStates[scope.mediaServers[0].id] = true; // expand default
-                            scope.mediaServers[0].expanded = true;
-                            scope.toggleInfo = false;
-                            scope.storage.infoStatus = scope.toggleInfo;
+                            scope.mediaServers.some(function (server) {
+                                if (scope.cameras[server.id]) {
+                                    scope.selectCamera(scope.cameras[server.id][0]);
+                                    scope.storage.serverStates[server.id] = true; // expand default
+                                    scope.mediaServers[0].expanded = true;
+                                    scope.toggleInfo = false;
+                                    scope.storage.infoStatus = scope.toggleInfo;
+                                    
+                                    return true;
+                                }
+                            });
                         }
                     }
 

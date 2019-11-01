@@ -9,7 +9,27 @@ from cloud import settings
 from cms.admin import CMSAdmin
 from api.forms import *
 from api.models import *
+from cms.models import *
 from django_csv_exports.admin import CSVExportAdmin
+
+from django.contrib.auth.models import Permission
+
+
+@admin.register(Permission)
+class PermissionAdmin(CMSAdmin):
+    list_display = ['id', 'name', 'codename', 'asset_groups']
+    search_fields = ['codename', 'name']
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def asset_groups(self, obj):
+        return list(UserGroupsToAssetPermissions.objects
+                    .filter(group__permissions__id__in=[obj.id])
+                    .values_list('asset__name', 'group__name'))
+
+    asset_groups.short_description = 'Asset - Groups'
+    asset_groups.allow_tags = True
 
 
 class CustomizationFilter(SimpleListFilter):
@@ -59,15 +79,15 @@ class GroupFilter(SimpleListFilter):
 
 @admin.register(Account)
 class AccountAdmin(CMSAdmin, CSVExportAdmin):
-    list_display = ('short_email', 'short_first_name', 'short_last_name', 'created_date', 'last_login',
-                    'is_staff', 'language', 'customization', 'user_groups')
+    list_display = ['short_email', 'short_first_name', 'short_last_name', 'created_date', 'last_login',
+                    'is_staff', 'language', 'customization']
     # forbid changing all fields which can be edited by user in cloud portal except sub
     readonly_fields = ('email', 'first_name', 'last_name', 'created_date', 'activated_date', 'last_login',
                        'language', 'customization')
 
     exclude = ("user_permissions",)
 
-    list_filter = ('is_staff', 'created_date', 'last_login', CustomizationFilter, GroupFilter, )
+    list_filter = ['is_staff', 'created_date', 'last_login', CustomizationFilter]
     search_fields = ('email', 'first_name', 'last_name', 'customization', 'language', 'groups__name')
 
     csv_fields = ('email', 'first_name', 'last_name', 'created_date', 'last_login',
@@ -94,18 +114,32 @@ class AccountAdmin(CMSAdmin, CSVExportAdmin):
             qs = qs.filter(customization__in=show_customizations).distinct()
         return qs
 
+    def get_list_filter(self, request):
+        if UserGroupsToAssetPermissions.check_customization_permission(
+                request.user, settings.CUSTOMIZATION, 'api.change_proxygroup'
+        ):
+            return self.list_filter + [GroupFilter]
+        return self.list_filter
+
+    def get_list_display(self, request):
+        if UserGroupsToAssetPermissions.check_customization_permission(
+                request.user, settings.CUSTOMIZATION, 'api.change_proxygroup'
+        ):
+            return self.list_display + ['user_groups']
+        return self.list_display
+
     def has_add_permission(self, request):  # Only superuser can add users
         return False
 
     def has_change_permission(self, request, obj=None):
-        return UserGroupsToProductPermissions.\
+        return UserGroupsToAssetPermissions.\
             check_customization_change_account(request.user, settings.CUSTOMIZATION)
 
     def has_delete_permission(self, request, obj=None):  # No deleting users at all
         return False
 
     def has_view_permission(self, request, obj=None):
-        return UserGroupsToProductPermissions.\
+        return UserGroupsToAssetPermissions.\
             check_customization_change_account(request.user, settings.CUSTOMIZATION)
 
     def get_urls(self):
@@ -177,10 +211,15 @@ class GroupAdmin(admin.ModelAdmin):
     form = GroupAdminForm
     # Filter permissions horizontal as well.
     filter_horizontal = ['permissions']
-    list_display = ('name', 'list_permissions', )
+    list_display = ('name', 'list_permissions', 'assets', 'asset_types')
 
     def list_permissions(self, obj):
         return [permission.name for permission in obj.permissions.all()]
 
     list_permissions.short_description = 'Group of permissions'
-    list_permissions.allow_tags = True
+
+    def assets(self, obj):
+        return [relation.asset.name for relation in obj.usergroupstoassetpermissions_set.all()]
+
+    def asset_types(self, obj):
+        return [relation.asset_type.name or AssetType.ASSET_TYPES[relation.asset_type.type] for relation in obj.usergroupstoassettype_set.all()]

@@ -1,12 +1,12 @@
 import {
     Component, forwardRef, Input, OnChanges, OnInit, SimpleChanges, ViewEncapsulation
-} from '@angular/core';
-import { NxConfigService }        from '../../services/nx-config';
-import { NG_VALUE_ACCESSOR }      from '@angular/forms';
-import { ActivatedRoute }         from '@angular/router';
-import { NxUriService }           from '../../services/uri.service';
-import { TranslateService }       from '@ngx-translate/core';
-import { NxUtilsService }         from '../../services/utils.service';
+}                                    from '@angular/core';
+import { NxConfigService }           from '../../services/nx-config';
+import { NG_VALUE_ACCESSOR }         from '@angular/forms';
+import { ActivatedRoute }            from '@angular/router';
+import { NxUriService }              from '../../services/uri.service';
+import { NxUtilsService }            from '../../services/utils.service';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
 
 /* USAGE
  <nx-vendor-list
@@ -31,73 +31,73 @@ export class NxVendorListComponent implements OnInit, OnChanges {
     @Input() vendors: any;
     @Input() cameras: any;
 
-    CONFIG: any;
+    LANG: any = {};
+    CONFIG: any = {};
 
     public debug: boolean;
     public filters: any = [];
     public remainingVendors: number;
 
-    private lang: any = {};
     private uriPath: string;
     private filter: any = {};
     private ASC = true;
     private DESC = false;
 
-    constructor(CONFIG: NxConfigService,
-                private translate: TranslateService,
+    constructor(private config: NxConfigService,
+                private language: NxLanguageProviderService,
                 private uri: NxUriService,
-                private _route: ActivatedRoute) {
-
-        this.CONFIG = CONFIG.getConfig();
+                private _route: ActivatedRoute,
+    ) {
+        this.LANG = this.language.getTranslations();
+        this.CONFIG = this.config.getConfig();
         this.debug = false;
-        this.uriPath = '/' + this._route.snapshot.url[0].path;
-        this.lang = this.translate.translations[this.translate.currentLang];
+        this.uriPath = '/' + this._route.snapshot.url.map(e => e.path).join('/');
 
         this.filters = [
             {
-                label: this.lang.cameraFilters.highRes,
+                label: this.LANG.cameraFilters.highRes,
                 select: {id: 'resolution', value: '8mp'},
                 multiselect: { id: 'hardwareTypes', value: 'camera' }
             },
             {
-                label: this.lang.cameraFilters.aptz,
+                label: this.LANG.cameraFilters.aptz,
                 tagId: 'isAptzSupported',
                 multiselect: { id: 'hardwareTypes', value: 'camera' }
             },
             {
-                label: this.lang.cameraFilters.ptz,
+                label: this.LANG.cameraFilters.ptz,
                 tagId: 'isPtzSupported',
                 multiselect: { id: 'hardwareTypes', value: 'camera' }
             },
             {
-                label: this.lang.cameraFilters.audio,
+                label: this.LANG.cameraFilters.audio,
                 tagId: 'isAudioSupported',
                 multiselect: {id: 'hardwareTypes', value: 'camera'}
             },
             {
-                label: this.lang.cameraFilters.H265,
+                label: this.LANG.cameraFilters.H265,
                 tagId: 'isH265',
                 multiselect: { id: 'hardwareTypes', value: 'camera' }
             },
             {
-                label: this.lang.cameraFilters.encoder,
+                label: this.LANG.cameraFilters.encoder,
                 multiselect: { id: 'hardwareTypes', value: 'encoder' }
             },
             {
-                label: this.lang.cameraFilters.TwWayAudio,
+                label: this.LANG.cameraFilters.TwWayAudio,
                 tagId: 'isTwAudioSupported'
             },
             {
-                label: this.lang.cameraFilters.multiSensor,
+                label: this.LANG.cameraFilters.multiSensor,
                 multiselect: { id: 'hardwareTypes', value: 'multiSensorCamera' }
             },
             {
-                label: this.lang.cameraFilters.fisheye,
+                label: this.LANG.cameraFilters.fisheye,
                 tagId: 'isFisheye',
                 multiselect: { id: 'hardwareTypes', value: 'camera' }
             },
             {
-                label: this.lang.cameraFilters.IO,
+                label: this.LANG.cameraFilters.IO,
                 tagId: 'isIoSupported',
                 multiselect: { id: 'hardwareTypes', value: 'other' }
             }

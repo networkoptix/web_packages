@@ -10,16 +10,17 @@ VMS_REPOSITORY="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../.."
 [[ "$VMS_REPOSITORY" =~ (.*)\/cloud_portal.* ]]; REPO=${BASH_REMATCH[1]}
 
 #If we are not using the repository we should update necessary files
-if [[ ! $PWD =~ $REPO ]]
-then
+if [[ ! $PWD =~ $REPO ]]; then
     echo "Updating Cloud Portal sources"
-    if [ -e "cloud_portal" ]
-    then
+    if [ -e "cloud_portal" ]; then
         pushd cloud_portal
             for entry in $(ls -A $VMS_REPOSITORY/cloud_portal/)
             do
-                if [ "$entry" = "front_end" ]
-                then
+                if [ "$entry" == "robot_tests" ]; then
+                    continue
+                fi
+
+                if [ "$entry" == "front_end" ] ; then
                     pushd $entry
                     for element in $(ls -A $VMS_REPOSITORY/cloud_portal/$entry/)
                     do
@@ -36,7 +37,8 @@ then
             done
         popd
     else
-        cp -pr $VMS_REPOSITORY/cloud_portal cloud_portal
+        echo "Blindly Copying cloud_portal"
+        rsync -pr --exclude="robot_tests" $VMS_REPOSITORY/cloud_portal .
     fi
 
     mkdir -p webadmin
@@ -57,6 +59,7 @@ echo "pip install requirements"
 [ ! -d "env" ] && virtualenv env -p python3.7
 . ./env/bin/activate
 pip install -r build_scripts/requirements.txt
+
 
 pushd front_end
     echo "npm install cloud portal"

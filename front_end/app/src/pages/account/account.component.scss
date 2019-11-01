@@ -1,0 +1,16 @@
+@import '../../../styles/theme_variables';
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/mixins/breakpoints';
+
+.label, .error {
+  width: 1px;
+  border-spacing: 5px;
+}
+
+.error-text {
+  font-family: $font-family-regular;
+  font-size: rem(13px);
+  line-height: 1rem;
+  color: $error !important;
+}

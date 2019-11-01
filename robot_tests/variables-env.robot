@@ -42,19 +42,20 @@ ${TEST LAST NAME}                     testLastName
 
 #Related to Auto Tests system
 ${AUTO TESTS}                         Auto Tests
-${AUTO TESTS TITLE}                   //div[@ng-repeat='system in systems | filter:searchSystems as filtered track by system.id']//h2[text()='Auto Tests']
-${AUTO TESTS USER}                    //div[@ng-repeat='system in systems | filter:searchSystems as filtered track by system.id']//h2[text()='Auto Tests']/following-sibling::span[contains(@class,'user-name')]
-${AUTO TESTS OPEN NX}                 //div[@ng-repeat='system in systems | filter:searchSystems as filtered track by system.id']//h2[text()='Auto Tests']/..//button[@ng-click='checkForm()']
-${SYSTEM NAME AUTO TESTS HEADER}      //header//li/a/span[text()="Auto Tests"]
-${SYSTEMS TILE}                       //div[@ng-repeat="system in systems | filter:searchSystems as filtered track by system.id"]
-${NOT OWNER IN SYSTEM}                //div[@process-loading='gettingSystemUsers']//tbody//tr//td[contains(text(), '${EMAIL NOT OWNER}')]
-${VIEWER IN SYSTEM}                   //div[@process-loading='gettingSystemUsers']//tbody//tr//td[contains(text(), '${EMAIL VIEWER}')]
+${AUTO TESTS TITLE}                   ${SYSTEMS TILE}//h2[text()='${AUTO TESTS}']
+${AUTO TESTS USER}                    ${SYSTEMS TILE}//h2[text()='${AUTO TESTS}']/following-sibling::span[contains(@class,'user-name')]
+${AUTO TESTS OPEN NX}                 ${SYSTEMS TILE}//h2[text()='${AUTO TESTS}']/..//nx-client-button
+${SYSTEM NAME AUTO TESTS HEADER}      //header//li/a/span[text()="${AUTO TESTS}"]
+${SYSTEMS TILE}                       //div[contains(@class,'system-button')]
+${NOT OWNER IN SYSTEM}                //div[@process-loading='gettingSystemUsers']//tbody//tr//td[contains(text(),'${EMAIL NOT OWNER}')]
+${VIEWER IN SYSTEM}                   //div[@process-loading='gettingSystemUsers']//tbody//tr//td[contains(text(),'${EMAIL VIEWER}')]
 
-${DIFFERENT OWNER TITLE}              //div[@ng-repeat='system in systems | filter:searchSystems as filtered track by system.id']//h2[text()='different owner']
+${DIFFERENT OWNER TITLE}              ${SYSTEMS TILE}//h2[text()='different owner']
 
 #AUTO TESTS 2 is an offline system used for testing offline status on the systems page and offline status on the system page
 ${AUTO TESTS 2}                       Auto Tests 2
-${AUTOTESTS OFFLINE}                  //div[@ng-repeat='system in systems | filter:searchSystems as filtered track by system.id']//h2[contains(text(),'Auto Tests 2')]/following-sibling::span[contains(text(), "${AUTOTESTS OFFLINE TEXT}")]
-${AUTOTESTS OFFLINE OPEN NX}          //div[@ng-repeat='system in systems | filter:searchSystems as filtered track by system.id']//h2[contains(text(),'Auto Tests 2')]/..//button[@ng-click='checkForm()']
+${AUTO TESTS OFFLINE TITLE}           ${SYSTEMS TILE}//h2[text()='${AUTO TESTS 2}']
+${AUTOTESTS OFFLINE}                  ${AUTO TESTS OFFLINE TITLE}/following-sibling::span[contains(text(),"${AUTOTESTS OFFLINE TEXT}")]
+${AUTOTESTS OFFLINE OPEN NX}          ${AUTO TESTS OFFLINE TITLE}/..//nx-client-button
 
 ${OUTLINE ERROR COLOR}                rgb(217, 42, 42)

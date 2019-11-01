@@ -1,16 +1,15 @@
-import { Component, Inject, OnInit, Input, ViewEncapsulation } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
-import { Location } from '@angular/common';
-import { NgbModal, NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { EmailValidator } from '@angular/forms';
+import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
+import { Location }                                    from '@angular/common';
+import { NgbActiveModal, NgbModal, NgbModalRef }       from '@ng-bootstrap/ng-bootstrap';
+import { NxLanguageProviderService }                   from '../../services/nx-language-provider';
+import { DomSanitizer }                                from '@angular/platform-browser';
 
 @Component({
     selector: 'nx-modal-generic-content',
     templateUrl: 'generic.component.html',
-    styleUrls: []
+    styleUrls: ['generic.component.scss']
 })
 export class GenericModalContent implements OnInit {
-    @Input() language;
     @Input() message;
     @Input() title;
     @Input() actionLabel;
@@ -20,11 +19,13 @@ export class GenericModalContent implements OnInit {
     @Input() hasFooter;
     @Input() cancellable;
     @Input() closable;
+    @Input() footerClass;
 
-    constructor(public activeModal: NgbActiveModal) {
-    }
+    constructor(public activeModal: NgbActiveModal,
+    ) {}
 
     ngOnInit() {
+        this.footerClass = this.footerClass || '';
         this.buttonClass = this.buttonClass || '';
         this.closable = !!this.closable;
     }
@@ -33,8 +34,8 @@ export class GenericModalContent implements OnInit {
         this.activeModal.close(true);
     }
 
-    close() {
-        this.activeModal.close();
+    close(action?) {
+        this.activeModal.close(action);
     }
 }
 
@@ -47,28 +48,31 @@ export class GenericModalContent implements OnInit {
 
 export class NxModalGenericComponent implements OnInit {
     modalRef: NgbModalRef;
+    LANG: any;
 
-    constructor(@Inject('languageService') private language: any,
-                private domSanitizer: DomSanitizer,
+    constructor(private domSanitizer: DomSanitizer,
                 private location: Location,
-                private modalService: NgbModal) {
+                private modalService: NgbModal,
+                private language: NxLanguageProviderService,
+    ) {
+        this.LANG = this.language.getTranslations();
     }
 
-    private dialog(message, title, actionLabel, actionType?, cancelLabel?,
+    private dialog(message, title, actionLabel, actionType?, cancelLabel?, footerClass?,
                    hasFooter?, cancellable?, closable?) {
         this.modalRef = this.modalService.open(GenericModalContent,
                 {
                             windowClass: 'modal-holder',
                             backdrop: 'static'
                         });
-        this.modalRef.componentInstance.language = this.language.lang;
 
-        this.modalRef.componentInstance.message = this.domSanitizer.bypassSecurityTrustHtml(message);
+        this.modalRef.componentInstance.message = message ? this.domSanitizer.bypassSecurityTrustHtml(message) : '';
         this.modalRef.componentInstance.title = title;
         this.modalRef.componentInstance.actionLabel = actionLabel;
         this.modalRef.componentInstance.buttonType = actionType || 'default';
         this.modalRef.componentInstance.cancelLabel = cancelLabel;
         this.modalRef.componentInstance.buttonClass = actionType || 'btn-primary';
+        this.modalRef.componentInstance.footerClass = footerClass || '';
 
         this.modalRef.componentInstance.hasFooter = hasFooter;
         this.modalRef.componentInstance.cancellable = cancellable;
@@ -77,21 +81,23 @@ export class NxModalGenericComponent implements OnInit {
         return this.modalRef;
     }
 
-    openConfirm(message, title, actionLabel, actionType?, cancelLabel?) {
+    openConfirm(message, title, actionLabel, actionType?, cancelLabel?, footerClass?) {
         return this.dialog(message, title, actionLabel,
             actionType,
             cancelLabel,
+            footerClass,
             true,
             false,
             true)
             .result;
     }
 
-    openAlert(message, title) {
+    openAlert(message, title, footerClass?) {
         return this.dialog(message, title,
-            this.language.lang.dialogs.okButton,
+            this.LANG.dialogs.okButton,
             null,
-            this.language.lang.dialogs.cancelButton,
+            this.LANG.dialogs.cancelButton,
+            footerClass,
             true,
             true,
             true)

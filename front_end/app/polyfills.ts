@@ -3,7 +3,8 @@ import 'core-js/es7/reflect';
 require('zone.js/dist/zone');
 
 if (!Element.prototype.matches) {
-  Element.prototype.matches = Element.prototype.msMatchesSelector;
+  Element.prototype.matches = (<any>Element.prototype).msMatchesSelector ||
+          Element.prototype.webkitMatchesSelector;
 }
 
 if (process.env.ENV === 'production') {

@@ -4,7 +4,7 @@ from django.core.mail.backends.smtp import EmailBackend
 from email.mime.image import MIMEImage  # python 3
 import json
 import os
-from cms.models import cloud_portal_customization_cache, check_update_cache, get_cloud_portal_product
+from cms.models import cloud_portal_customization_cache, check_update_cache, get_cloud_portal_asset
 from cms.controllers import filldata 
 from django.core.cache import cache
 
@@ -41,6 +41,10 @@ def email_cache(customization_name, cache_type, value=None, force=None):
 
 
 def send(email, msg_type, message, language_code, customization_name):
+    try:
+        email = json.loads(email)
+    except json.JSONDecodeError:
+        email = (email,)
 
     customization_cache = cloud_portal_customization_cache(customization_name, 'email')
 
@@ -70,7 +74,7 @@ def send(email, msg_type, message, language_code, customization_name):
     )
 
     msg = EmailMultiAlternatives(
-        subject, email_txt_body, email_from, to=(email,))
+        subject, email_txt_body, email_from, to=email)
     msg.content_subtype = 'plain'  # Main content is now text/html
     msg.attach_alternative(email_html_body, "text/html")
 
@@ -111,7 +115,7 @@ def read_file(customization_name, filename, language_code=""):
     translated_name = filename.replace("{{language}}", language_code)
     if translated_name not in files_cache:
         files_cache[translated_name] = filldata.read_customized_file(filename,
-                                                                     get_cloud_portal_product(customization_name),
+                                                                     get_cloud_portal_asset(customization_name),
                                                                      language_code)
         email_cache(customization_name, 'files', files_cache)
     return files_cache[translated_name]

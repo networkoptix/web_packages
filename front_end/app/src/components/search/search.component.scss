@@ -92,13 +92,19 @@
         }
     }
     
-    .drop-container {
-        @include media-breakpoint-up(md) {
-            max-width: $collapse-second-width; // medium break point
+    .filter-label {
+        margin-right: 2px; // prevent flex overlap with next button's border
+        white-space: nowrap;
+
+        &:hover {
+            color: $light1;
         }
+    }
+    
+    .drop-container {
+        max-width: 992px;
         
         .drop {
-            
             padding : 0 1rem 0 0;
             @include media-breakpoint-down(sm) {
                 padding-right : 0;
@@ -106,12 +112,12 @@
         
             &:last-of-type {
                 padding-right : 0;
-                
-                @include media-breakpoint-up(xxl) {
-                    padding-right : 1rem;
-                }
             }
         }
+    }
+    
+    .search-tags {
+        margin-bottom: 4px !important;
     }
     
     .pagination {

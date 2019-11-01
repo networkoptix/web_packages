@@ -4,32 +4,6 @@
   "cloudName": "%CLOUD_NAME%",
   "vmsName": "%VMS_NAME%",
   "clientProtocol": "%CLIENT_PROTOCOL%:",
-  "dialogs": {
-    "okButton": "OK",
-    "cancelButton": "Cancel",
-    "loginTitle": "Log in to %CLOUD_NAME%",
-    "loginButton": "Log in",
-    "logoutAuthorisedTitle": "You are already logged in",
-    "logoutAuthorisedContinueButton": "Continue",
-    "logoutAuthorisedLogoutButton": "Log Out",
-    "messageFailed": "Message has failed to send.",
-    "messageSent": "Message has been sent.",
-    "noClientDetectedTitle": "Install %VMS_NAME% to view your System",
-    "download": "Download %VMS_NAME%"
-  },
-  "messageDialog": {
-    "title": {
-      "integration": "Email for {{product}}",
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Feedback about {{product}}"
-    },
-    "topic": {
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Feedback about {{product}}",
-      "contact_sales": "Contact sales for {{product}}",
-      "contact_support": "Contact support for {{product}}"
-    }
-  },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
     "default": "%CLOUD_NAME%",
@@ -164,33 +138,6 @@
     "FAIL": "System <strong>{{failedSystem}}</strong> is currently unreachable.<br>Try again in a few moments or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
     "unknownMergeError": "Unknown error. You can try to refresh the page and repeat attempt. If the problem persists – please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>."
   },
-  "merging": {
-    "mergeFailedTitle": "Systems merge failed",
-    "commonText": "Failed to merge Systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>."
-  },
-  "passwordRequirements": {
-    "good": "good",
-    "fair": "fair",
-    "fairMessage": "Use numbers, upper and lower case letters and special characters to make your password stronger",
-    "minLength": "too short",
-    "minLengthMessage": "Password must contain at least 8 characters",
-    "required": "incorrect",
-    "requiredMessage": "Use only latin letters, numbers and keyboard symbols, avoid leading and trailing spaces",
-    "weak": "weak",
-    "weakMessage": "Use numbers, upper and lower case letters and special characters to make your password stronger",
-    "strongMessage": "Strong password!",
-    "common": "too common",
-    "commonMessage": "This password is in top most popular passwords in the world",
-    "missingMessage": "Password is required"
-  },
-  "sharing": {
-    "confirmOwner": "If you change System owner, you will revoke ownership from the current account. This action is irreversible. Are you sure?",
-    "shareTitle": "Share",
-    "shareConfirmButton": "Share",
-    "editShareTitle": "Edit Permissions",
-    "editShareConfirmButton": "Save",
-    "permissionsSaved": "New permissions saved"
-  },
   "system": {
     "yourSystem": "Your System",
     "mySystemSearch": "IMeMyMine",
@@ -205,12 +152,11 @@
     "successRename": "System name saved",
     "confirmDisconnectTitle": "Disconnect System from %CLOUD_NAME%?",
     "confirmDisconnectAction": "Disconnect",
-    "confirmUnshareFromMe": "You are about to disconnect this System from your account. You will not be able to access this System anymore. Are you sure?",
-    "confirmUnshareFromMeTitle": "Disconnect System?",
+    "confirmUnshareFromMe": "You will not be able to lgo into this System anymore.",
+    "confirmUnshareFromMeTitle": "Disconnect System from your Account?",
     "confirmUnshareFromMeAction": "Disconnect",
-    "confirmUnshare": "This user will not be able to access System. Are you sure?",
-    "confirmUnshareTitle": "Delete user?",
-    "confirmUnshareAction": "Delete",
+    "confirmUnshareTitle": "Remove user?",
+    "confirmUnshareAction": "Remove",
     "successDisconnected": "System is successfully disconnected from %CLOUD_NAME%",
     "successDeleted": "System {{systemName}} is successfully deleted from your account",
     "mergeFailed": "System merge failed",
@@ -218,20 +164,6 @@
     "mergeSuccess": "System merge completed",
     "permissionsRemoved": "Permissions were removed from {{email}}",
     "unknownName": "Unknown Name for System (Caused by cloud merge)"
-  },
-  "account": {
-    "accountSavedSuccess": "Your account is successfully saved",
-    "activationLinkSent": "Activation Link Sent",
-    "passwordChangedSuccess": "Your account is successfully saved",
-    "changePassword": "Change Password",
-    "newPasswordLabel": "New password",
-    "saveChanges": "Save"
-  },
-  "activeActions": {
-    "sendConfirm": "Resend activation link",
-    "resetPassword": "Reset Password",
-    "setNewPassword": "Save password",
-    "setNewPasswordLabel": "New password"
   },
   "regActions": {
     "passwordLabel": "Password",
@@ -257,9 +189,10 @@
     "cameraStates": {
       "offline": "Offline",
       "error": "Error",
+      "errorLoading": "An error occurred while loading this video.",
       "unauthorized": "Authentication required",
       "noData": "No data",
-      "iosVideoTooLarge": "iOS does not support video larger than fullHD (2MP: 1920x1080).",
+      "iOSVideoTooLarge": "iOS does not support video larger than fullHD (2MP: 1920x1080).",
       "flashRequired": "Please <a href='https://get.adobe.com/flashplayer/' target='_blank'>install Adobe Flash</a> for playing videos.",
       "flashOrWebmRequired": "Please <a href='https://get.adobe.com/flashplayer/' target='_blank'>install Adobe Flash</a> or<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> for playing video in Internet Explorer.",
       "noArmSupport": "This browser or device does not support video playback from ARM-based servers.",

@@ -1,4 +1,4 @@
-<nx-pre-loader type="page" *ngIf="!list"></nx-pre-loader>
+<nx-pre-loader *ngIf="!list"></nx-pre-loader>
 
 <div class="col text-placeholder d-flex align-items-center"
      *ngIf="list && !list.length"
@@ -17,13 +17,20 @@
                     <div class="card--header-logo"
                          [style.backgroundImage]="'url(' + plugin.information.logo + ')'">
                     </div>
-                    <div class="card--header-info">
-                        <div class="version" [innerHTML]="plugin.versionDetails.version"></div>
+                    <div class="card--header-info" *ngIf="plugin.requirementsAndCompatibility">
                         <div class="platforms">
-                            <div *ngFor="let icon of plugin.information.platforms.icons">
+                            <div *ngFor="let icon of plugin.requirementsAndCompatibility.platforms.icons">
                                 <img [src]="icon.src">
                             </div>
                         </div>
+
+                        <div class="version"
+                             *ngIf="plugin.requirementsAndCompatibility.testedVersionsString"
+                             [innerHTML]="plugin.requirementsAndCompatibility.testedVersionsString"></div>
+
+                        <div class="label"
+                             *ngIf="CONFIG && plugin.requirementsAndCompatibility.testedVersionsString"
+                            translate>Works with:</div>
                     </div>
                 </header>
 
@@ -33,18 +40,26 @@
                 </nx-section>
 
                 <footer>
-                    <h3 class="float-left m-0 mt-1 mr-1" *ngIf="plugin.pending">
+                    <div class="float-left m-0 mt-1 mr-1" *ngIf="plugin.pending">
                         <span class="badge badge-danger" translate>In Review</span>
-                    </h3>
-                    <h3 class="float-left m-0 mt-1 mr-1" *ngIf="plugin.draft">
+                    </div>
+                    <div class="float-left m-0 mt-1 mr-1" *ngIf="plugin.draft">
                         <span class="badge badge-danger" translate>Draft</span>
-                    </h3>
-                    <h3 class="float-left m-0 mt-1 mr-1" *ngFor="let type of plugin.information.type">
-                        <span class="badge">{{type}}</span>
-                    </h3>
+                    </div>
+                    <div *ngFor="let type of plugin.information.type">
+                        <div class="float-left m-0 mt-1 mr-1" *ngIf="type.id != 'mine'">
+                            <span class="badge">{{type.label}}</span>
+                        </div>
+                    </div>
+                    <div class="float-left m-0 mt-1 mr-1" *ngIf="plugin.mine">
+                        <span class="badge badge-brand" translate>Mine</span>
+                    </div>
                 </footer>
             </nx-block>
         </a>
     </div>
 </div>
 
+<div class="row px-4">
+    <nx-footer></nx-footer>
+</div>

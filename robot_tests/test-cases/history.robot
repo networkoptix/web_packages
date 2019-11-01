@@ -28,7 +28,7 @@ Open New Browser On Failure
     Open Browser and go to URL    ${url}
 
 Log in to downloads/history
-    Go To    ${url}/downloads/history
+    Go To    ${url}/downloads/releases
     Log In    ${email}    ${password}    button=None
     Validate Log In
 
@@ -43,23 +43,26 @@ loop expanders
     ...    ELSE    Get WebElements    ${first section}/../..//div/a
     Run Keyword Unless    ${expandables}    Fail    Expandables was empty
     #open the expanders
-    : FOR    ${platform}    IN    @{expandables}
-    \    Click Link    ${platform}
-    \    ${downloads}=    Run Keyword If    ${FULL}==True    Get WebElements    //div[contains(@class,"active")]//div/a/../ul/li/a
-    \    ...    ELSE    Get WebElements    ${first section}/../..//div/ul/li/a
-    \    loop links    ${downloads}
+    FOR    ${platform}    IN    @{expandables}
+        Click Link    ${platform}
+        ${downloads}=    Run Keyword If    ${FULL}==True    Get WebElements    //div[contains(@class,"active")]//div/a/../ul/li/a
+        ...    ELSE    Get WebElements    ${first section}/../..//div/ul/li/a
+        loop links    ${downloads}
+    END
 
 #check each link in each expander for validity
 loop links
     [arguments]    ${downloads}
-    : FOR    ${download}    IN    @{downloads}
-    \    ${link}    Get Element Attribute    ${download}    href
-    \    ${matches}    Get Regexp Matches    ${link}    ${DOWNLOADS DOMAIN}
-    \    Run Keyword If    ${matches}    Check File Exists    ${link}
+    FOR    ${download}    IN    @{downloads}
+        ${link}    Get Element Attribute    ${download}    href
+        ${matches}    Get Regexp Matches    ${link}    ${DOWNLOADS DOMAIN}
+        Run Keyword If    ${matches}    Check File Exists    ${link}
     ...    ELSE    Fail    URL did not begin with ${DOWNLOADS DOMAIN}
+    END
 
 *** Test Cases ***
 History link is not in the downloads page for user without access
+    [tags]    Passing_19.2
     Log In    ${EMAIL VIEWER}    ${password}
     Validate Log In
     Wait Until Element Is Visible    ${DOWNLOAD LINK}
@@ -67,7 +70,8 @@ History link is not in the downloads page for user without access
     Register Keyword To Run On Failure    NONE
     Run Keyword And Expect Error    *    Wait Until Element Is Visible    ${RELEASE HISTORY BUTTON}
 
-History link is in the downloads page for user with access and takes you to /downloads/history
+History link is in the downloads page for user with access and takes you to /downloads/releases
+    [tags]    Passing_19.2
     Log In    ${email}    ${password}
     Validate Log In
     Wait Until Element Is Visible    ${DOWNLOAD LINK}
@@ -76,31 +80,34 @@ History link is in the downloads page for user with access and takes you to /dow
     Click Link    ${WINDOWS TAB}
     Wait Until Elements Are Visible    ${DOWNLOAD WINDOWS VMS LINK}    ${RELEASE HISTORY BUTTON}
     Click Link    ${RELEASE HISTORY BUTTON}
-    Location Should Be    ${url}/downloads/history
+    Location Should Be    ${url}/downloads/releases
 
-Going to the history page anonymous asks for login and closing takes you back to home
-    Go To    ${url}/downloads/history
+Going to the history page anonymous asks for login and closing takes you to 404
+    Go To    ${url}/downloads/releases
     Wait Until Element Is Visible    ${LOG IN CLOSE BUTTON}
     Click Button    ${LOG IN CLOSE BUTTON}
-    Location Should Be    ${url}/
+    Sleep    1
+    Location Should Be    ${url}/404
 
 Going to the history page anonymous asks for login and login shows history page
-    Go To    ${url}/downloads/history
+    Go To    ${url}/downloads/releases
     Log In    ${email}   ${password}    button=None
     Validate Log In
     Wait Until Element Is Visible    ${RELEASES TAB}
     Location Should Be    ${url}/downloads/releases
 
 Going to the history page anonymous and logging in with someone who doesn't have access takes you to 404
-    Go To    ${url}/downloads/history
+    Go To    ${url}/downloads/releases
     Log In    ${EMAIL VIEWER}   ${password}    button=None
     Wait Until Elements Are Visible    ${PAGE NOT FOUND}    ${TAKE ME HOME}
+    Sleep    1
     Location Should Be    ${url}/404
 
 Going to the history page while logged in as someone who doesn't have access takes you to 404
+    [tags]    Passing_19.2
     Log In    ${EMAIL VIEWER}    ${password}
     Validate Log In
-    Go To    ${url}/downloads/history
+    Go To    ${url}/downloads/releases
     Wait Until Elements Are Visible    ${PAGE NOT FOUND}    ${TAKE ME HOME}
     Location Should Be    ${url}/404
 

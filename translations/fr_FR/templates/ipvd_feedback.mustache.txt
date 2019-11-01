@@ -1,6 +1,3 @@
 Bonjour {{ message.userFullName }},
-{{ message.sender_name}} ({{ message.sender_email }}) a donné le retour suivant pour {{ message.product }}:
+{{ message.sender_name}} ({{ message.sender_email }}) a donné le commentaire suivant {{#message.asset}} pour {{ message.asset }}{{/message.asset}}:
 <pre>{{ message.message }}</pre>
-
-------------------------------------------
-L'usager peut-il être contacté: {{ message.sender_to_be_contacted}}

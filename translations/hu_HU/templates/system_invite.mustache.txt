@@ -1,4 +1,4 @@
-Welcome to %CLOUD_NAME%
+Üdvözlet a %CLOUD_NAME% felhőben
 
 {{#message.sharer_name}}
 {{message.sharer_name}} ({{message.sharer_email}}) is inviting you to join %CLOUD_NAME% and shared the system {{message.system_name}} with you.

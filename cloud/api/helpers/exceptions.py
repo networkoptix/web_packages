@@ -85,7 +85,9 @@ def api_success(data=None, status_code=status.HTTP_200_OK):
 def require_params(request, params_list):
     error_data = {}
     for param in params_list:
-        if param not in request.data or request.data[param] == '':
+        if request.method == "POST" and (param not in request.data or request.data[param] == ''):
+            error_data[param] = ['This field is required.']
+        elif request.method == "GET" and (param not in request.GET):
             error_data[param] = ['This field is required.']
 
     if error_data:
@@ -359,6 +361,9 @@ def log_error(request, error, log_level):
                    error_formatted,
                    traceback.format_exc()
                    ).replace("Traceback", "")  # remove Traceback word from handled exceptions
+    # Explicit check so that it will not affect superusers.
+    if request.user.is_authenticated and 'ignore_exceptions' in request.user.global_permissions:
+        log_level = logging.INFO
 
     logger.log(log_level, error_formatted)
     return error_formatted

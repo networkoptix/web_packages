@@ -1,0 +1,190 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+   <title>Cloud Admin Dashboard &gt; Asset Management &gt; Assets &gt; Edit asset</title>
+   <meta name="generator" content="Help & Manual">
+   <meta name="keywords" content="">
+   <meta name="description" content="Edit asset">
+   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+   <link type="text/css" href="default.css" rel="stylesheet">
+   <link type="text/css" href="custom.css" rel="stylesheet">
+   <script type="text/javascript" src="nsh.js"></script>
+
+<script type="text/javascript">   
+// Toggle Toggler 
+
+var toggleCount=false;
+var switchState;
+
+function toggleToggles() {
+
+    if (!toggleCount) {
+     toggleCount = true;
+     HMToggleExpandAll(true);
+     switchState = true;
+     }
+   
+     else if (switchState) {
+        HMToggleExpandAll(false);
+        switchState = false;
+        }
+        
+     else  {
+        HMToggleExpandAll(true);
+        switchState = true;
+        } 
+    }
+</script>
+   
+<!-- non-scrolling headers for CHM and browser-based help, local styles-->
+<style type="text/css" media="screen"> 
+html, body {    
+      margin:0; 
+      padding:0; 
+      overflow: hidden; 
+      background: #FFFFFF; 
+   }
+ 
+div#printheader { 
+   display: none;
+   }
+   #idheader { 
+      width:100%; 
+      height:auto; 
+      padding: 0; 
+      margin: 0; 
+} 
+    #idheaderbg  {
+    background: #6F6F6F; 
+}
+   #callout-table, #overview-table {display:block; position:relative; top:0; left:0;}
+   #callout-icon {display:block; position:absolute; top:-11px; left:-11px;}
+   #callout-icon-flag {display:block; position:absolute; top:-11px; left:-8px;}
+   #callout-table a {text-decoration: none; color: blue;}
+   #callout-table a:visited {text-decoration: none; color: blue;}
+   #overview-table a {text-decoration: none; color: black;}
+   #overview-table a:visited {text-decoration: none; color: black;}
+   #callout-table a:hover, #overview-table a:hover {text-decoration: underline;}
+   p.help-url { margin: 20px 0 5px 0; text-align: center; font-size: 80%; text-decoration: none }
+   </style>
+<!--[if lt IE 7]>
+<style type="text/css">
+  #idcontent {padding: 0px;} 
+  #innerdiv {padding: 10px 5px 5px 10px ;} 
+</style> 
+<![endif]-->
+   <noscript>
+   <style type="text/css">
+   html, body { overflow: auto; }
+   </style> 
+   </noscript>
+<style type="text/css" media="print">
+span.f_Heading1 { color: black; }
+#idheader, #printheader img { display:none; }
+#printheader { display: block; margin-top: 20px; }
+#idcontent { margin-top: 10px; }
+</style>   
+   <script type="text/javascript" src="jquery.js"></script>
+   <script type="text/javascript" src="helpman_settings.js"></script>
+   <script type="text/javascript" src="helpman_topicinit.js"></script>
+
+   <script type="text/javascript">
+     HMSyncTOC("index.html", "edit_asset.htm");
+   </script>
+   <script type="text/javascript" src="highlight.js"></script>
+   <script type="text/javascript">
+     $(document).ready(function(){highlight();});
+   </script>
+</head>
+<body>
+<!--ZOOMSTOP-->
+
+<div id="printheader"><h1 class="p_Heading1"><span class="f_Heading1">Edit asset</span></h1>
+</div>
+<div id="idheader">
+<div id="idheaderbg">
+<table width="100%" border="0" cellspacing="0" cellpadding="0" 
+       style="margin: 0px; background: url(header_bg.jpg);">
+
+  <tr valign="bottom">
+    <td align="left" valign="bottom" class="topichead">
+   <p class="crumbs" id="idnav"><b>Navigation:</b>&nbsp;
+   
+   <a href="cloud_admin_dashboard.htm">Cloud Admin Dashboard</a> &gt; <a href="asset_management.htm">Asset Management</a> &gt; <a href="assets.htm">Assets</a>&nbsp;&gt;</p>
+   <h1 class="p_Heading1"><span class="f_Heading1">Edit asset</span></h1>
+
+    </td>
+    <td align="right" width="120" valign="middle" class="topichead" id="idnav">
+    
+     <a href="change_asset.htm"
+        onmouseover="document.images.prev.src='btn_prev_h.gif'" 
+        onmouseout="document.images.prev.src='btn_prev_n.gif'"
+        ><img name=prev src="btn_prev_n.gif" border=0 alt="Previous page"
+        ></a><a href="assets.htm"
+        onmouseover="document.images.main.src='btn_home_h.gif'" 
+        onmouseout="document.images.main.src='btn_home_n.gif'"><img name=main src="btn_home_n.gif" border=0 alt="Return to chapter overview"
+        ></a><a href="add_asset.htm"
+        onmouseover="document.images.next.src='btn_next_h.gif'" 
+        onmouseout="document.images.next.src='btn_next_n.gif'"><img name=next src="btn_next_n.gif" border=0 alt="Next page"
+        ></a>
+    </td>
+  </tr>
+  <tr><td colspan="2" style="height: 3px; background: url(header_bg_shadow.gif)"></td></tr>
+</table>
+</div>
+
+<!-- The following code displays Expand All/Collapse All links  below the header in topics containing toggles -->
+  
+
+</div>  
+
+
+
+<div id="idcontent"><div id="innerdiv"> 
+<!--ZOOMRESTART-->
+<p class="p_BodyText"><span class="f_BodyText">The information on this page is useful for both Editing an Integration and Editing a Cloud portal. It covers what certain buttons do, different types of fields, and the various language options.</span></p>
+<p class="p_BodyText"><span class="f_BodyText">&nbsp;</span></p>
+<p class="p_BodyText"><a id="info"></a><span class="f_BodyText" style="text-decoration: underline;">Editing Tips</span></p>
+<p class="p_BodyText"><span class="f_BodyText">Click on a page name to enter changes for that page. </span><span class="f_BodyTextIndent">When you click in an editable field, the field outline will change to blue.</span></p>
+<p style="text-align: left; padding: 0px 0px 0px 13px; margin: 2px 0px 2px 14px;"><span style="font-size:11pt; font-family: 'Arial Unicode MS','Lucida Sans Unicode','Arial';color:#000000;display:inline-block;width:13px;margin-left:-13px">&#8226;</span><span class="f_BodyTextIndent">Required fields are indicated with an asterisk (</span><span class="f_BodyTextIndent" style="font-weight: bold;">*</span><span class="f_BodyTextIndent">).</span></p><p style="text-align: left; padding: 0px 0px 0px 13px; margin: 2px 0px 2px 14px;"><span style="font-size:11pt; font-family: 'Arial Unicode MS','Lucida Sans Unicode','Arial';color:#000000;display:inline-block;width:13px;margin-left:-13px">&#8226;</span><span class="f_BodyTextIndent">Advanced fields are shown in </span><span class="f_BodyTextIndent" style="font-weight: bold; color: #ff0000;">red</span><span class="f_BodyTextIndent">. The contents in these fields is provided by Network Optix.</span></p><p style="text-align: left; padding: 0px 0px 0px 13px; margin: 2px 0px 2px 14px;"><span style="font-size:11pt; font-family: 'Arial Unicode MS','Lucida Sans Unicode','Arial';color:#000000;display:inline-block;width:13px;margin-left:-13px">&#8226;</span><span class="f_BodyTextIndent">Non-editable fields have a </span><span class="f_BodyTextIndent" style="background-color: #d7d5cb;">grey background block</span><span class="f_BodyTextIndent">.</span></p><p style="text-align: left; padding: 0px 0px 0px 13px; margin: 2px 0px 2px 14px;"><span style="font-size:11pt; font-family: 'Arial Unicode MS','Lucida Sans Unicode','Arial';color:#000000;display:inline-block;width:13px;margin-left:-13px">&#8226;</span><span class="f_BodyTextIndent">The</span><span class="f_BodyText"> </span><span class="f_BodyText" style="font-weight: bold;">database label</span><span class="f_BodyText"> (e.g. </span><span class="f_CodeExample" style="font-weight: normal;">%SUPPORT_LINK%</span><span class="f_BodyText">), field content (e.g. &quot;App ID for iOS mobile application&quot;), and any limits </span><span style="font-size: 11pt; font-family: Calibri;">(</span><span style="font-size: 11pt; font-family: Calibri; font-style: italic;">ex.</span><span style="font-size: 11pt; font-family: Calibri;"> required f</span><span class="f_BodyTextIndent">ile type, maximum number of characters</span><span style="font-size: 11pt; font-family: Calibri;">) are shown </span><span class="f_BodyText">for each field. You can use a </span><span class="f_BodyTextIndent">Cloud Portal </span><span class="f_BodyText">database label as a </span><span class="f_BodyTextIndent">variable in any other field.</span></p><p style="text-align: left; padding: 0px 0px 0px 13px; margin: 2px 0px 2px 14px;"><span style="font-size:11pt; font-family: 'Arial Unicode MS','Lucida Sans Unicode','Arial';color:#000000;display:inline-block;width:13px;margin-left:-13px">&#8226;</span><span class="f_BodyText">Click on </span><span class="f_BodyText" style="font-weight: bold;">Link to Page</span><span class="f_BodyText"> to view the current (published) version of a page.</span><br />
+<span class="f_BodyText">&nbsp;</span></p><p class="p_BodyText"><span class="f_BodyText" style="text-decoration: underline;">Saving Page Changes</span></p>
+<p class="p_BodyText"><span class="f_BodyText">Once changes are entered you have several options:</span></p>
+<p class="p_BodyTextIndent"><img src="button_savedraft_zoom75.png" width="136" height="24" alt="button_savedraft" style="border:none" /><span class="f_BodyTextIndent"> – saves a draft of pages changes before publishing so you can return to work in progress and generates a preview page. You will see the message &quot;</span><span class="f_BodyTextIndent" style="font-style: italic;">Changes have been saved. Preview has been created.</span><span class="f_BodyTextIndent">&quot;</span></p>
+<p class="p_BodyTextIndent"><img src="button_openpreview_zoom75.png" width="80" height="24" alt="button_openpreview" style="border:none" /><span class="f_ImageCaption"> </span><span class="f_BodyTextIndent">–</span><span class="f_ImageCaption"> </span><span class="f_BodyTextIndent">click at the bottom of the page to view the updated page in a new browser tab.</span></p>
+<p class="p_BodyTextIndent"><img src="button_submitreview_zoom75.png" width="94" height="24" alt="button_submitreview" style="border:none" /><span class="f_BodyTextIndent"> – submit pages for review.</span></p>
+<p class="p_BodyTextIndent"><img src="button_reset_zoom75.png" width="44" height="24" alt="button_reset" style="border:none" /><span class="f_BodyTextIndent"> – undoes changes made since the last time the page was saved.</span></p>
+<p class="p_BodyText"><img src="note_zoom50.png" width="16" height="16" alt="note" style="border:none" /><span class="f_ImageCaption"> </span><span class="f_BodyTextIndent"> Edits</span><span class="f_BodyText"> to the portal can be previewed in draft format at any time without affecting live pages.</span></p>
+<p class="p_BodyText"><span class="f_BodyText">&nbsp;</span></p>
+<p class="p_BodyText"><a id="htmlfields"></a><span class="f_BodyText" style="text-decoration: underline;">HTML Editor Fields</span></p>
+<p class="p_BodyText"><span class="f_BodyTextIndent">Certain page fields are also HTML editors and therefore allow for text formatting and the use of hyperlinks. Click on the </span><span class="f_BodyTextIndent" style="font-weight: bold;">Edit HTML source</span><span class="f_BodyTextIndent"> icon (</span><img src="hmfile_hash_0c8df7b3.png" width="26" height="16" alt="HTML editor icon" style="border:none" /><span class="f_BodyTextIndent">) to open an editor that displays HTML code. You can also paste formatted Word content into these fields intact using the </span><span class="f_BodyTextIndent" style="font-weight: bold;">Paste from Word</span><span class="f_BodyTextIndent"> icon.</span></p>
+<p class="p_BodyText"><img src="toolbar.png" width="475" height="31" alt="toolbar" style="border:none" /></p>
+<p>&nbsp;</p>
+<p class="p_BodyText"><a id="selectingalanguage"></a><span class="f_BodyText" style="text-decoration: underline;">Selecting a Language</span></p>
+<p class="p_BodyText"><span class="f_BodyText">Some pages have a language selection option. Selecting a language for a given page only changes a predefined set of Cloud Portal interface elements, such as the log in dialog, revision notice emails, or the shortcut tabs at the bottom of the landing page. This setting does not translate the contents of all fields on a page. For the entire page to be in a given language, the content of user-editable fields must be entered in that language.</span></p>
+<p class="p_BodyText"><span class="f_BodyText">It is important to note that a separate template is saved for each language option you select. Each template must be saved, edited, and reviewed independently.</span></p>
+<p class="p_BodyText"><span class="f_BodyText">Additional language support for the Cloud Portal is part of your customization agreement with Network Optix. Though you may see many translation options when editing page content, only certain language options will be available according to your customization contract. &quot;Default&quot; in the language pull-down menu indicates the default language for the customization you are viewing.</span></p>
+<p class="p_BodyText"><img src="languages22.jpg" width="237" height="451" alt="Languages22" style="border:none" /></p>
+
+<!--ZOOMSTOP-->
+</div></div>
+<script type="text/javascript">
+
+var lastSlashPos = document.URL.lastIndexOf("/") > document.URL.lastIndexOf("\\") ? document.URL.lastIndexOf("/") : document.URL.lastIndexOf("\\");
+if( document.URL.substring(lastSlashPos + 1, lastSlashPos + 4).toLowerCase() != "~hh" )
+{
+ if (document.all) setTimeout(function() {nsrInit();},20); 
+    else nsrInit();
+ } 
+
+
+</script>
+</body>
+</html>
+
+
+
+
+
+
+

@@ -1,9 +1,4 @@
 <h1>Witaj {{ message.userFullName }}</h1>
 
-<a href="mailto:{{ message.sender_email }}">{{ message.sender_name }}</a>przesłał następującą opinię o {{ message.product }}:
+<a href="mailto:{{ message.sender_email }}">{{ message.sender_name }}</a> przesłał następującą opinię {{#message.asset}} do {{ message.asset }}{{/message.asset}}:
 <div>{{ message.message }}</div>
-<br />
-<hr />
-<div>
-    Zgoda na kontakt z użytkownikiem: {{ message.sender_to_be_contacted}}
-</div>

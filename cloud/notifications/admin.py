@@ -1,3 +1,4 @@
+from django.apps import apps
 from django.conf import settings
 from django.contrib import admin
 from django.utils.html import format_html
@@ -8,7 +9,14 @@ import pytz
 from .models import *
 from .forms import *
 from django_celery_results.models import TaskResult
+from push_notifications import models as push_notifications_models
+from push_notifications.admin import GCMDeviceAdmin
 admin.site.unregister(TaskResult)
+
+# Unregister unused push_notifications model admins
+app = apps.get_app_config('push_notifications')
+for model_name, model in app.models.items():
+    admin.site.unregister(model)
 
 
 class NotificationAdmin(admin.ModelAdmin):
@@ -16,9 +24,6 @@ class NotificationAdmin(admin.ModelAdmin):
         return False
 
     def has_delete_permission(self, request, obj=None):
-        return False
-
-    def has_view_permission(self, request, obj=None):
         return False
 
 
@@ -65,11 +70,12 @@ class EventAdmin(NotificationAdmin):
 
 @admin.register(Feedback)
 class FeedbackAdmin(NotificationAdmin):
-    list_display = ('product_name', 'target_product', 'type', 'sender_name', 'sender_email',
-                    'created_date', 'sender_to_be_contacted')
-    list_filter = ('sender_to_be_contacted', 'type', 'created_date')
+    list_display = ('asset_name', 'target_asset', 'type', 'sender_name', 'sender_email',
+                    'created_date')
+    list_filter = ('type', 'created_date')
+    list_display_links = ('target_asset',)
     readonly_fields = ('message',)
-    search_fields = ('product_name', 'sender_name', 'sender_email')
+    search_fields = ('asset_name', 'sender_name', 'sender_email')
 
     def get_readonly_fields(self, request, obj=None):
         return self.list_display + self.readonly_fields
@@ -190,3 +196,12 @@ class TaskResultAdmin(admin.ModelAdmin):
 
     clean_old_tasks.short_description = "Remove tasks older than {} days"\
         .format(settings.CLEAR_HISTORY_RECORDS_OLDER_THAN_X_DAYS)
+
+
+@admin.register(PushSubscription)
+class PushSubscriptionAdmin(admin.ModelAdmin):
+    form = PushSubscriptionForm
+
+
+admin.site.register(PushDevice, GCMDeviceAdmin)
+admin.site.register(PushNotification)

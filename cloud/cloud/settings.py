@@ -16,9 +16,10 @@ import re
 import json
 import sys
 from util.config import get_config
+from cloud.logger import downgrade_unauthorized_requests
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-LOCAL_ENVIRONMENT = 'runserver' in sys.argv
+LOCAL_ENVIRONMENT = 'runserver' in sys.argv or os.getenv('LOCAL_ENV', False)
 conf = get_config()
 
 
@@ -38,8 +39,10 @@ TRAFFIC_RELAY_PROTOCOL = 'https://'
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '03-b9bxxpjxsga(qln0@3szw3+xnu%6ph_l*sz-xr_4^xxrj!_'
 
+# Celery worker should never run in debug mode. If it is running with debug then it will hang after sometime.
+CELERY_WORKER = 'celery' in sys.argv[0]
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = 'debug' in conf and conf['debug'] or LOCAL_ENVIRONMENT
+DEBUG = ('debug' in conf and conf['debug'] or LOCAL_ENVIRONMENT) and not CELERY_WORKER
 
 ALLOWED_HOSTS = ['*']
 
@@ -66,11 +69,13 @@ INSTALLED_APPS = (
     'storages',
 
     'django_celery_results',
+    'django_celery_beat',
     'rest_framework',
     'rest_hooks',
     'corsheaders',
-    'notifications',
+    'push_notifications',
     'api',
+    'notifications',
     'cms',
     'zapier',
     'tinymce'
@@ -84,7 +89,6 @@ MIDDLEWARE = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'cloud.logger.CatchExceptionMiddleware',
 )
@@ -102,6 +106,8 @@ if LOCAL_ENVIRONMENT:
         os.path.join(STATIC_LOCATION, CUSTOMIZATION, "static"),
         os.path.join(STATIC_LOCATION, CUSTOMIZATION, "static/lang_en_US"),
     )
+    PREVIEW_URL = '/preview/'
+    PREVIEW_LOCATION = os.path.join(STATIC_LOCATION, CUSTOMIZATION, "preview")
 
 ADMIN_TOOLS_INDEX_DASHBOARD = 'cloud.dashboard.CustomIndexDashboard'
 ADMIN_TOOLS_MENU = 'cms.menu.CustomMenu'
@@ -114,10 +120,15 @@ ADMIN_DASHBOARD = ('cms.models.ContentVersion',
                    'cms.models.DataStructure',
                    'cms.models.ExternalFile',
                    'cms.models.Language',
-                   'cms.models.ProductType',
-                   'cms.models.UserGroupsToProductPermissions',
+                   'cms.models.AssetType',
+                   'cms.models.UserGroupsToAssetPermissions',
+                   'cms.models.UserGroupsToAssetType',
+                   'cms.models.DeploymentStatus',
+                   '*.auth.models.Permission',
+                   'django_celery_beat.*',
                    'django_celery_results.*',
                    'notifications.models.*',
+                   'push_notifications.models.*',
                    'rest_hooks.*',
                    'zapier.models.*'
                    )
@@ -156,36 +167,51 @@ WSGI_APPLICATION = 'cloud.wsgi.application'
 
 cloud_db = conf['cloud_database']
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'HOST': cloud_db['host'],
-        'PORT': cloud_db['port'],
-        'USER': cloud_db['username'],
-        'PASSWORD': cloud_db['password'],
-        'NAME': cloud_db['database'],
-        'OPTIONS': {
-            'sql_mode': 'TRADITIONAL',
-            'charset': 'utf8mb4',
-            'init_command': 'SET \
-                character_set_server=utf8mb4,\
-                collation_server = utf8mb4_unicode_ci'
+if cloud_db and cloud_db['host'] != '$DB_HOST':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'HOST': cloud_db['host'],
+            'PORT': cloud_db['port'],
+            'USER': cloud_db['username'],
+            'PASSWORD': cloud_db['password'],
+            'NAME': cloud_db['database'],
+            'OPTIONS': {
+                'sql_mode': 'TRADITIONAL',
+                'charset': 'utf8mb4',
+                'init_command': 'SET \
+                    character_set_server=utf8mb4,\
+                    collation_server = utf8mb4_unicode_ci'
+            }
         }
     }
-}
 
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache'
-    },
-    "global": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://redis:6379/1",
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+if not LOCAL_ENVIRONMENT:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.locmem.LocMemCache"
+        },
+        "global": {
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": "redis://redis:6379/1",
+            "OPTIONS": {
+                "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            }
         }
     }
-}
+else:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.locmem.LocMemCache"
+        },
+        "global": {
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": "redis://localhost:6379/1",
+            "OPTIONS": {
+                "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            }
+        }
+    }
 
 
 if LOCAL_ENVIRONMENT:
@@ -214,6 +240,12 @@ USE_TZ = False
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'filters': {
+        'downgrade_unauthorized': {
+            '()': 'django.utils.log.CallbackFilter',
+            'callback': downgrade_unauthorized_requests
+        }
+    },
     'formatters': {
         'verbose': {
             'format': '[%(levelname)s] %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
@@ -226,6 +258,7 @@ LOGGING = {
         'console': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
+            'filters': ['downgrade_unauthorized'],
             'formatter': 'verbose'
         },
         'mail_admins': {
@@ -314,8 +347,15 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PERMISSION_CLASSES': (
        'rest_framework.permissions.AllowAny',
+    ),
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
     )
 }
+
+if DEBUG:
+    REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] += ('rest_framework.renderers.BrowsableAPIRenderer',)
+
 # Used for Zapier
 HOOK_EVENTS = {
     'user.send_zap_request': None
@@ -391,10 +431,13 @@ CORS_URLS_REGEX = r'^/api/(?:login|ping|systems/(?:dis)?connect)'
 
 SESSION_COOKIE_SECURE = not LOCAL_ENVIRONMENT
 CSRF_COOKIE_SECURE = not LOCAL_ENVIRONMENT
+SESSION_COOKIE_AGE = 60 * 60 * 24 # 1 day
+AUTHENTICATED_SESSION_COOKIE_AGE = 60 * 60 * 24 * 14 # 2 weeks
 
 USE_ASYNC_QUEUE = True
 
 ADMINS = conf['admins']
+LOGOUT_REDIRECT_URL = "/"
 
 EMAIL_SUBJECT_PREFIX = ''
 EMAIL_HOST = conf['smtp']['host']
@@ -437,11 +480,20 @@ NOTIFICATIONS_CONFIG = {
     'contact_support': {
         'engine': 'email'
     },
+    'integration_feedback': {
+        'engine': 'email'
+    },
+    'ipvd_feedback': {
+        'engine': 'email'
+    },
     'ipvd_feedback_page': {
         'engine': 'email'
     },
     'ipvd_feedback_detail': {
         'engine': 'email'
+    },
+    'push_notification': {
+        'queue': 'push-notification'
     },
     'restore_password': {
         'engine': 'email'
@@ -457,6 +509,7 @@ NOTIFICATIONS_CONFIG = {
     }
 }
 
+CONFIG_ERROR = "Customization Configuration Error. Please Notify Release Engineers."
 BROADCAST_NOTIFICATIONS_SUPERUSERS_ONLY = DEBUG
 NOTIFICATIONS_AUTO_SUBSCRIBE = False
 
@@ -482,3 +535,22 @@ SUPERUSER_DOMAIN = '@networkoptix.com'  # Only user from this domain can have su
 DJANGO_EXPORTS_REQUIRE_PERM = False
 # Use if you want to disable the global django admin action. This setting is set to True by default.
 DJANGO_CSV_GLOBAL_EXPORTS_ENABLED = False
+
+# Push Notifications
+# Ask Roman Barsegian for config if you need push to work locally
+fcm = conf.get('fcm')
+if fcm:
+    PUSH_NOTIFICATIONS_SETTINGS = {
+        'FCM_API_KEY': fcm.get('priv_key'),
+        'MAX_RETRIES': 3,
+        'RETRY_INTERVAL': 20,
+        'PUBLIC': {
+            'apiKey': fcm.get('pub_key'),
+            'authDomain': fcm.get('auth_domain'),
+            'databaseURL': fcm.get('db_url'),
+            'projectId': fcm.get('project_id'),
+            'storageBucket': fcm.get('storage_bucket'),
+            'messagingSenderId': fcm.get('messaging_sender_id'),
+            'appId': fcm.get('app_id')
+        }
+    }

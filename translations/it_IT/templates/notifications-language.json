@@ -1,30 +1,33 @@
 {
   "activate_account": {
-    "emailSubject": "Attivazione Account"
+    "emailSubject": "Attivi il suo Account"
   },
   "cloud_invite": {
-    "emailSubject": "You have been invited to %CLOUD_NAME%"
+    "emailSubject": "Sei stato invitato a %CLOUD_NAME%"
   },
   "cloud_notification": {
     "emailSubject": "{{message.subject}}"
   },
   "contact_sales": {
-    "emailSubject": "Sales inquiry for {{message.product}}"
+    "emailSubject": "Richiesta informazioni di vendita per {{message.asset}}"
   },
   "contact_support": {
-    "emailSubject": "Support request for {{message.product}}"
+    "emailSubject": "Richiesta di supporto per {{message.asset}}"
+  },
+  "integration_feedback": {
+    "emailSubject": "Feedback per {{message.asset}}"
   },
   "ipvd_feedback": {
-    "emailSubject": "Feedback della pagina della telecamera per {{message.product}}"
+    "emailSubject": "Feedback pagina telecamera{{#message.asset}} per {{message.asset}}{{/message.asset}}"
   },
   "review_version": {
-    "emailSubject": "{{message.product_type}}: {{message.product}} has a new version to review"
+    "emailSubject": "{{message.asset_type}}: {{message.asset}} ha una nuova versione da revisionare"
   },
   "restore_password": {
     "emailSubject": "Reimpostare la password"
   },
   "system_invite": {
-    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} invites you to %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}Video system {{message.system_name}} was shared with you{{/message.sharer_name}}"
+    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} ti invita a %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}Il sistema video {{message.system_name}} è stato condiviso con te{/message.sharer_name}}"
   },
   "system_shared": {
     "emailSubject": "Sistema video {{message.system_name}} è stato condiviso con te"

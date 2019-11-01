@@ -1,17 +1,18 @@
 <nx-pre-loader type="page" *ngIf="!pagedItems.length"></nx-pre-loader>
 
-<div class="nx-table-wrapper" id="nx-table">
+<div class="nx-table-wrapper" id="nx-table" [ngClass]="{'extended': showAnalytics}">
     <div class="table-wrapper">
         <table class="table table-hover nx-table">
             <thead>
                 <tr>
                     <th *ngFor="let header of showHeaders"
                         class="align-bottom"
-                        (click)="toggleHeaderSort(header)"
-                        [ngClass]="{'debug' : debug}">
+                        [title]="getCleanTitle(header)"
+                        (click)="toggleHeaderSort(header)">
+
 
                         <div class="caption d-flex">
-                            <div class="" [innerHTML]="header"></div>
+                            <div class="ellipsis" [innerHTML]="header"></div>
                             <div class="sort-dir nav-arrow"
                                  [style.visibility]="(header == selectedHeader) ? 'visible' : 'hidden'"
                                  [ngClass]="{'up': !sortOrderASC}">
@@ -24,12 +25,12 @@
                 </tr>
             </thead>
             <tbody>
+                <tr class="table-row-spacer"></tr>
                 <tr *ngFor="let item of pagedItems;"
                     [ngClass]="{'selected': item.sortKey == selectedCamera}"
                     (click)="setClickedRow(item);">
 
-                    <td *ngFor="let p of showParametersFor(item)" class="text-left"
-                        [ngClass]="{'debug' : debug}">
+                    <td *ngFor="let p of showParametersFor(item)" class="text-left">
 
                         <div *ngIf="!isBoolean(item[p]) && item[p] !== 0 && item[p] !== '0x0'; else icon">{{item[p]}}</div>
                         <ng-template #icon>
@@ -37,6 +38,7 @@
                         </ng-template>
                     </td>
                 </tr>
+                <tr class="table-row-spacer"></tr>
             </tbody>
         </table>
     </div>

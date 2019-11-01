@@ -1,11 +1,18 @@
+import json
 from django.db import models
 from django.utils import timezone
 from jsonfield import JSONField
 from django.conf import settings
+from django.core.exceptions import ValidationError
+from django.core.validators import MaxLengthValidator
 from django.db.models import Q
+from model_utils import Choices
+from push_notifications.models import GCMDevice, GCMDeviceManager
 from rest_framework import serializers
-from cms.models import Customization, Product
+from cms.models import Customization, Asset, DataStructure
 from api.models import Account
+
+import json
 
 # When cloudportal is ran locally it uses amqp by default. BROKER_TRANSPORT_OPTIONS is related to sqs.
 # This allows cloud notifications to run locally without changing settings to use sqs.
@@ -15,8 +22,10 @@ USE_SQS_FOR_CLOUD_NOTIFICATIONS = hasattr(settings, "BROKER_TRANSPORT_OPTIONS")
 class MessageTypes(object):
     contact_sales = "contact_sales"
     contact_support = "contact_support"
+    integration_feedback = "integration_feedback"
     ipvd_feedback_page = "ipvd_feedback_page"
     ipvd_feedback_device = "ipvd_feedback_device"
+    ipvd_feedback = "ipvd_feedback"
 
 
 class Event(models.Model):
@@ -45,11 +54,15 @@ class Event(models.Model):
         subscriptions = subscriptions.filter(Q(enabled=True) | Q(enabled=1))
         # 2. For each subscription create a message and send it
         for subscription in subscriptions.all():
-            user = Account.objects.get(email=subscription.user_email)
-            self.data['userFullName'] = user.get_full_name()
+            user = Account.objects.filter(email=subscription.user_email).first()
+
+            if user:
+                self.data['userFullName'] = user.get_full_name()
+
             message = Message(
                 message=self.data,
-                user_email=user.email,
+                user_email=subscription.user_email,
+                customization=user.customization if user else settings.CUSTOMIZATION,
                 type=self.type,
                 event=self
             )
@@ -63,7 +76,7 @@ class Subscription(models.Model):
                               help_text="What's the target? (release type, customization or cloud instance)")
     type = models.CharField(max_length=255, default='', blank=True,
                             help_text="What's the event? (submitted_release, published_{{type}}, cloud_...)")
-    user_email = models.CharField(max_length=255)
+    user_email = models.EmailField()
     created_date = models.DateTimeField(auto_now_add=True)
     enabled = models.BooleanField(default=True)
 
@@ -111,11 +124,10 @@ class Message(models.Model):
 class Feedback(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     message = models.TextField(default='', blank=True)
-    product_name = models.CharField(max_length=255)
+    asset_name = models.CharField(max_length=255)
     sender_name = models.CharField(max_length=255)
     sender_email = models.CharField(max_length=255)
-    sender_to_be_contacted = models.BooleanField()
-    target_product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    target_asset = models.ForeignKey(Asset, on_delete=models.CASCADE)
     type = models.CharField(max_length=255)
 
     def send(self):
@@ -123,29 +135,30 @@ class Feedback(models.Model):
         data = {
             'sender_name': self.sender_name,
             'sender_email': self.sender_email,
-            'sender_to_be_contacted': self.sender_to_be_contacted,
-            'product': self.product_name,
+            'asset': self.asset_name,
             'message': self.message
         }
-        event = Event.objects.create(type=self.type, object=self.target_product.id, data=data)
+        event = Event.objects.create(type=self.type, object=self.target_asset.id, data=data)
         event.send()
 
         # Send email to the contact email for an integration.
-        if self.target_product.contact_email:
-            contact_email = self.target_product.contact_email
+        data_structure = DataStructure.objects.filter(
+            name='supportEmail', context__asset_type=self.target_asset.asset_type,
+            context__name__in=['support', 'Settings']
+        ).last()
+        contact_email = data_structure.find_actual_value(
+            asset=self.target_asset, version_id=self.target_asset.version_id()
+        )
+        emails = [self.sender_email]
+        if contact_email:
+            emails.append(contact_email)
 
-            contact_customization = Account.objects.filter(email=contact_email).first()
-            if contact_customization:
-                contact_customization = contact_customization.customization
-            else:
-                contact_customization = settings.CUSTOMIZATION
-
-            msg = Message.objects.create(user_email=contact_email,
-                                         type=self.type,
-                                         customization=contact_customization,
-                                         message=data,
-                                         event=event)
-            msg.send()
+        msg = Message.objects.create(user_email=json.dumps(emails),
+                                     type=self.type,
+                                     customization=settings.CUSTOMIZATION,
+                                     message=data,
+                                     event=event)
+        msg.send()
 
 
 class MessageStatusSerializer(serializers.ModelSerializer):  # model to use when checking on message status
@@ -170,3 +183,57 @@ class CloudNotification(models.Model):
 
     def __str__(self):
         return self.subject
+
+
+class PushDevice(GCMDevice):
+    model = models.CharField(max_length=255)
+
+
+class PushSubscription(models.Model):
+    SUB_TYPES = Choices((0, 'cloud', 'cloud'), (1, 'local', 'local'))
+    type = models.IntegerField(choices=SUB_TYPES, default=SUB_TYPES.cloud)
+
+    system_id = models.UUIDField()
+    active = models.BooleanField(default=True)
+    device = models.ForeignKey(PushDevice, blank=True, null=True, on_delete=models.CASCADE)
+
+    account = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.CASCADE)
+    subscription_id = models.UUIDField(blank=True, null=True)
+    username = models.CharField(max_length=255, blank=True, null=True)
+
+
+class PushNotification(models.Model):
+    SIZE_LIMIT = 4000
+
+    title = models.CharField(max_length=255)
+    body = models.TextField(max_length=SIZE_LIMIT, validators=[MaxLengthValidator(SIZE_LIMIT)])
+    payload = models.TextField(
+        max_length=SIZE_LIMIT, blank=True, null=True, validators=[MaxLengthValidator(SIZE_LIMIT)]
+    )
+    options = models.TextField(blank=True, null=True)
+    subscriptions = models.ManyToManyField(PushSubscription)
+
+    raw_system_id = models.CharField(max_length=255, default='')
+    raw_targets = models.TextField(null=True)
+    result_data = models.TextField(null=True, blank=True)
+
+    def clean(self):
+        if len(self.title + self.body + self.payload) > self.SIZE_LIMIT:
+            raise ValidationError(f'Title, body, and payload cannot total more than {self.SIZE_LIMIT}')
+        super(PushNotification, self).clean()
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super(PushNotification, self).save(*args, **kwargs)
+
+    def send_notifications(self, device_tokens=None):
+        if device_tokens:
+            devices = PushDevice.objects.filter(registration_id__in=device_tokens)
+        else:
+            active_subs = self.subscriptions.filter(active=True)
+            devices = PushDevice.objects.filter(pushsubscription__in=active_subs).distinct()
+
+        payload = json.loads(self.payload) if self.payload else {}
+        options = json.loads(self.options) if self.options else {}
+
+        return devices.send_message(self.body, title=self.title, extra=payload, **options)

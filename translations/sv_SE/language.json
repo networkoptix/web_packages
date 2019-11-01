@@ -1,35 +1,9 @@
 {
-  "language": "en_US",
+  "language": "sv_SE",
   "language_name": "Svenska",
   "cloudName": "%CLOUD_NAME%",
   "vmsName": "%VMS_NAME%",
   "clientProtocol": "%CLIENT_PROTOCOL%:",
-  "dialogs": {
-    "okButton": "OK",
-    "cancelButton": "Avbryt",
-    "loginTitle": "Log in to %CLOUD_NAME%",
-    "loginButton": "Logga in",
-    "logoutAuthorisedTitle": "Du är redan inloggad",
-    "logoutAuthorisedContinueButton": "Fortsätt",
-    "logoutAuthorisedLogoutButton": "Logga ut",
-    "messageFailed": "Meddelandet gick inte att skicka.",
-    "messageSent": "Meddelandet har skickats.",
-    "noClientDetectedTitle": "Installera %VMS_NAME% om du vill visa ditt System",
-    "download": "Ladda ner %VMS_NAME%"
-  },
-  "messageDialog": {
-    "title": {
-      "integration": "Email for {{product}}",
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Feedback about {{product}}"
-    },
-    "topic": {
-      "ipvd_feedback_page": "Feedback for cameras page",
-      "ipvd_feedback_device": "Feedback about {{product}}",
-      "contact_sales": "Contact sales for {{product}}",
-      "contact_support": "Contact support for {{product}}"
-    }
-  },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
     "default": "%CLOUD_NAME%",
@@ -140,7 +114,7 @@
     "wrongParameters": "Vissa parametrar på formuläret är felaktiga",
     "wrongCode": "Kontot är redan aktiverat eller bekräftelsekoden är felaktig",
     "wrongCodeRestore": "Bekräftelsekoden är redan använd eller felaktig",
-    "wrongAuthCode": "Code is expired or incorrect",
+    "wrongAuthCode": "Koden är utgått eller felaktig",
     "forbidden": "Du har inte behörighet att utföra denna åtgärd",
     "accountNotActivated": "Det här kontot är inte aktiverat än. <a href=\"/activate\">Skicka aktiveringslänk igen</a>",
     "accountBlocked": "Det här kontot är tillfälligt blockerat. Vänligen försök igen om några minuter.",
@@ -162,34 +136,7 @@
     "mergedSystemIsOffline": "Systemet <strong>{{failedSystem}}</strong> är offline.",
     "INCOMPATIBLE": "Systemen har olika mjukvaruversioner. Vänligen uppdatera dem båda till <a href=\"/download\">senaste version</a>.",
     "FAIL": "System <strong>{{failedSystem}}</strong> är för närvarande oåtkomligt.<br>Försök igen om några minuter eller kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-    "unknownMergeError": "Unknown error. You can try to refresh the page and repeat attempt. If the problem persists – please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>."
-  },
-  "merging": {
-    "mergeFailedTitle": "Systemsammanslagning misslyckades",
-    "commonText": "Misslyckades med att slå samman system <strong>{{primarySystem}}</strong> och <strong>{{secondarySystem}}</strong>."
-  },
-  "passwordRequirements": {
-    "good": "bra",
-    "fair": "skapligt",
-    "fairMessage": "Använd siffror, stora bokstäver och specialtecken för att göra ditt lösenord starkare",
-    "minLength": "för kort",
-    "minLengthMessage": "Lösenordet måste innehålla minst 8 tecken",
-    "required": "felaktig",
-    "requiredMessage": "Använd endast latinska bokstäver, siffror och tangentbordssymboler, undvik ledande och efterföljande mellanslag",
-    "weak": "svagt",
-    "weakMessage": "Använd siffror, stora bokstäver och specialtecken för att göra ditt lösenord starkare",
-    "strongMessage": "Starkt lösenord!",
-    "common": "för vanligt",
-    "commonMessage": "Detta lösenord är i topp populäraste lösenord i världen",
-    "missingMessage": "Lösenord krävs"
-  },
-  "sharing": {
-    "confirmOwner": "Om du ändrar systemägaren återkallar du ägandet från det aktuella kontot. Denna åtgärd är oåterkallelig. Är du säker?",
-    "shareTitle": "Dela",
-    "shareConfirmButton": "Dela",
-    "editShareTitle": "Ändra behörigheter",
-    "editShareConfirmButton": "Spara",
-    "permissionsSaved": "Nya behörigheter sparades"
+    "unknownMergeError": "Okänt fel. Du kan försöka uppdatera sidan och upprepa försöket. Om problemet kvarstår - kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>."
   },
   "system": {
     "yourSystem": "Ditt system",
@@ -203,35 +150,20 @@
     "confirmRenameTitle": "Systemets namn",
     "confirmRenameAction": "Spara",
     "successRename": "Systemnamnet sparat",
-    "confirmDisconnectTitle": "Disconnect System from %CLOUD_NAME%?",
+    "confirmDisconnectTitle": "Koppla bort systemet från %CLOUD_NAME%?",
     "confirmDisconnectAction": "Koppla från",
-    "confirmUnshareFromMe": "Du håller på att koppla bort det här systemet från ditt konto. Du kommer inte längre få tillgång till det här systemet. Är du säker?",
-    "confirmUnshareFromMeTitle": "Koppla ifrån systemet?",
+    "confirmUnshareFromMe": "Du kommer inte att kunna logga in i det här systemet längre.",
+    "confirmUnshareFromMeTitle": "Koppla bort systemet från ditt konto?",
     "confirmUnshareFromMeAction": "Koppla från",
-    "confirmUnshare": "Den här användaren kan inte komma åt System. Är du säker?",
-    "confirmUnshareTitle": "Radera användaren?",
-    "confirmUnshareAction": "Radera",
-    "successDisconnected": "System is successfully disconnected from %CLOUD_NAME%",
+    "confirmUnshareTitle": "Ta bort användare?",
+    "confirmUnshareAction": "Ta bort",
+    "successDisconnected": "Systemet har kopplats bort från %CLOUD_NAME%",
     "successDeleted": "System {{systemName}} har tagits bort från ditt konto",
     "mergeFailed": "Systemsammanslagning misslyckades",
     "mergeStart": "System har börjat slås samman",
     "mergeSuccess": "Systemsammanslagning slutförd",
     "permissionsRemoved": "Rättigheterna togs bort från {{email}}",
     "unknownName": "Okänt namn för system (orsakad av molnsammanslagning)"
-  },
-  "account": {
-    "accountSavedSuccess": "Ditt konto har sparats",
-    "activationLinkSent": "Aktiveringslänk skickad",
-    "passwordChangedSuccess": "Ditt konto har sparats",
-    "changePassword": "Ändra lösenord",
-    "newPasswordLabel": "Nytt lösenord",
-    "saveChanges": "Spara"
-  },
-  "activeActions": {
-    "sendConfirm": "Skicka aktiveringslänk igen",
-    "resetPassword": "Återställ lösenord",
-    "setNewPassword": "Spara lösenord",
-    "setNewPasswordLabel": "Nytt lösenord"
   },
   "regActions": {
     "passwordLabel": "Lösenord",
@@ -253,13 +185,14 @@
     },
     "systemOffline": "System Offline",
     "systemHasNoCameras": "INGA KAMEROR",
-    "systemUnreachable": "SYSTEM IS UNREACHABLE",
+    "systemUnreachable": "SYSTEMET är inte tillgängligt",
     "cameraStates": {
-      "offline": "Offline",
+      "offline": "Frånkopplade",
       "error": "Fel",
+      "errorLoading": "Ett fel uppstod vid laddning av den här videon.",
       "unauthorized": "Autentisering krävs",
       "noData": "Data saknas",
-      "iosVideoTooLarge": "ios stöder inte video större än fullHD (2MP: 1920x1080).",
+      "iOSVideoTooLarge": "ios stöder inte video större än fullHD (2MP: 1920x1080).",
       "flashRequired": "Var god <a href='https://get.adobe.com/flashplayer/' target='_blank'>installera Adobe Flash</a> för att spela upp videor.",
       "flashOrWebmRequired": "Var god <a href='https://get.adobe.com/flashplayer/' target='_blank'>installera Adobe Flash</a> eller<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> för att spela video i Internet Explorer.",
       "noArmSupport": "Denna webbläsare eller enhet stöder inte videouppspelning från ARM-baserade servrar.",

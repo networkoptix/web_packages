@@ -7,8 +7,8 @@ import * as angular from 'angular';
 // Special service for operating with systems at high-level
 
     angular.module('cloudApp')
-            .factory('system', ['cloudApi', 'systemAPI', '$q', 'uuid2', '$log', 'systemsProvider', 'nxConfigService', 'languageService',
-                function (cloudApi, systemAPI, $q, uuid2, $log, systemsProvider, nxConfigService, languageService) {
+            .factory('system', ['cloudApi', 'systemAPI', '$q', 'uuid2', '$log', 'nxSystemsService', 'nxConfigService', 'languageService',
+                function (cloudApi, systemAPI, $q, uuid2, $log, nxSystemsService, nxConfigService, languageService) {
 
                     let systems = {};
                     const CONFIG = nxConfigService.getConfig();
@@ -17,7 +17,7 @@ import * as angular from 'angular';
                     function System(systemId, currentUserEmail) {
                         this.id = systemId;
                         this.users = [];
-                        this.isAvailable = false;
+                        this.isAvailable = undefined; // don't assume before info is received
                         this.isOnline = false;
                         this.isMine = false;
                         this.userRoles = [];
@@ -43,7 +43,7 @@ import * as angular from 'angular';
                     }
 
                     System.prototype.updateSystemAuth = function (force) {
-                        if (!force && this.auth) { //no need to update
+                        if (!force && this.auth) { // no need to update
                             return $q.resolve(true);
                         }
                         this.auth = false;
@@ -88,25 +88,20 @@ import * as angular from 'angular';
                     };
 
                     System.prototype.getInfoAndPermissions = function () {
-                        return systemsProvider.getSystem(this.id).then((result) => {
-                            let error = false;
-                            if (error = cloudApi.checkResponseHasError(result)) {
-                                return $q.reject(error);
-                            }
-
-                            if (!result.data.length) {
+                        return nxSystemsService.getSystemAsPromise(this.id).then((system) => {
+                            if (!system) {
                                 return $q.reject({ data: { resultCode: 'forbidden' } });
                             }
                             if (this.info) {
-                                _.extend(this.info, result.data[0]); // Update
+                                _.extend(this.info, system); // Update
                             } else {
-                                this.info = result.data[0];
+                                this.info = system;
                             }
 
                             this.isOnline = this.info.stateOfHealth == CONFIG.systemStatuses.onlineStatus;
                             this.isMine = this.info.ownerAccountEmail == this.currentUserEmail;
                             this.canMerge = this.isMine && (this.info.capabilities && this.info.capabilities.indexOf(CONFIG.systemCapabilities.cloudMerge) > -1);
-                            this.mergeInfo = result.data[0].mergeInfo;
+                            this.mergeInfo = system.mergeInfo;
 
                             this.checkPermissions();
 
@@ -128,19 +123,21 @@ import * as angular from 'angular';
                     };
 
                     System.prototype.getUsersCachedInCloud = function () {
-                        this.isAvailable = false;
                         this.updateSystemState();
                         return cloudApi.users(this.id).then((result) => {
+                            if (result.data && result.data.resultCode === 'forbidden') {
+                                return result.data;
+                            }
                             _.each(result.data, (user) => {
                                 user.permissions = normalizePermissionString(user.customPermissions);
                                 user.email = user.accountEmail;
-                                if (user.email == this.currentUserEmail) {
+                                if (user.email === this.currentUserEmail) {
                                     this.currentUserRecord = user;
                                     this.checkPermissions(true);
                                 }
                             });
                             return result.data;
-                        })
+                        });
                     };
 
                     function normalizePermissionString(permissions) {
@@ -186,7 +183,7 @@ import * as angular from 'angular';
 
                     System.prototype.findAccessRole = function (user) {
                         if (!user.isEnabled) {
-                            return { name: 'Disabled' }
+                            return { name: 'Disabled' };
                         }
                         let roles = this.accessRoles || CONFIG.accessRoles.predefinedRoles;
                         let role = _.find(roles, (role) => {
@@ -231,7 +228,7 @@ import * as angular from 'angular';
                                 user.role = this.findAccessRole(user);
                                 user.accessRole = user.role.name;
 
-                                if (user.email == this.currentUserEmail) {
+                                if (user.email === this.currentUserEmail) {
                                     this.currentUserRecord = user;
                                     this.checkPermissions();
                                 }
@@ -245,15 +242,16 @@ import * as angular from 'angular';
                                 $log.error('Aggregated request to server has failed', result);
                                 return $q.reject();
                             }
-                            let usersList = result.data.reply['ec2/getUsers'];
-                            let userRoles = result.data.reply['ec2/getUserRoles'];
-                            let predefinedRoles = result.data.reply['ec2/getPredefinedRoles'];
+                            const usersList = result.data.reply['ec2/getUsers'];
+                            const userRoles = result.data.reply['ec2/getUserRoles'];
+                            const predefinedRoles = result.data.reply['ec2/getPredefinedRoles'];
                             this.isAvailable = true;
                             this.updateSystemState();
                             return processUsers(usersList, userRoles, predefinedRoles);
-                        }, () => {
+                        }, (err) => {
                             this.isAvailable = false;
                             this.updateSystemState();
+                            return Promise.reject(err);
                         });
                     };
 
@@ -261,11 +259,12 @@ import * as angular from 'angular';
                         if (!this.usersPromise || reload) {
                             let promise = null;
                             if (this.isOnline) { // Two separate cases - either we get info from the system (presuming it has actual names)
-                                promise = this.getUsersDataFromTheSystem(this.id).catch(() => {
-                                    return this.getUsersCachedInCloud(this.id);
-                                });
+                                promise = this.getUsersDataFromTheSystem()
+                                    .catch(() => {
+                                        return this.getUsersCachedInCloud();
+                                    });
                             } else { // or we get old cached data from the cloud
-                                promise = this.getUsersCachedInCloud(this.id);
+                                promise = this.getUsersCachedInCloud();
                             }
 
                             this.usersPromise = promise.then((users) => {
@@ -326,7 +325,7 @@ import * as angular from 'angular';
                         user.permissions = role.permissions || '';
 
                         // TODO: remove later
-                        //cloudApi.share(this.id, user.email, accessRole);
+                        // cloudApi.share(this.id, user.email, accessRole);
 
                         return this.mediaserver.saveUser(user).then((result) => {
                             user.role = role;
@@ -345,12 +344,12 @@ import * as angular from 'angular';
                             this.mediaserver.deleteUser(this.currentUserRecord.id); // Try to remove me from the system directly
                         }
                         return cloudApi.unshare(this.id, this.currentUserEmail).then(() => {
-                            delete systems[this.id]
+                            delete systems[this.id];
                         }); // Anyway - send another request to cloud_db to remove mythis
                     };
 
                     System.prototype.update = function () {
-                        this.infoPromise = null; //Clear cache
+                        this.infoPromise = null; // Clear cache
                         return this.getInfo().then(() => {
                             if (this.usersPromise) {
                                 this.usersPromise = null;

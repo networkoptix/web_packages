@@ -48,7 +48,7 @@
         </div>
         <div class="form-group row" validate-field>
             <div class="col-md-4 justify-content-start justify-content-md-end">
-                <label for="registerEmail" class="text-left text-md-right control-label">Email</label>
+                <label for="registerEmail" class="text-left text-md-right control-label">E-mail</label>
             </div>
             <div class="col-md-4">
                 <input ng-hide="lockEmail" type="email" class="form-control"
@@ -62,7 +62,7 @@
             <div class="col-md-4">
                 <div><span class="help-block input-error" ng-if="registerForm.registerEmail.$touched && registerForm.registerEmail.$error.required">L'email è obbligatoria</span></div>
                 <div><span class="help-block input-error" ng-if="registerForm.registerEmail.$touched && registerForm.registerEmail.$error.email">Inserisca un'e-mail valida</span></div>
-                <div><span class="help-block input-error" ng-if="registerForm.registerEmail.$error.alreadyExists">This Email has been already registered in %CLOUD_NAME%</span></div>
+                <div><span class="help-block input-error" ng-if="registerForm.registerEmail.$error.alreadyExists">Questa E-mail è già stata registrata in %CLOUD_NAME%</span></div>
             </div>
         </div>
 
