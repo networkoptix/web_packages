@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit }                   from '@angular/core';
 import { NxConfigService }                     from '../../../services/nx-config';
-import { NxSystem }           from '../../../services/system.service';
+import { NxSystem }                            from '../../../services/system.service';
 import { NxMenuService }                       from '../../../components/menu/menu.service';
 import { NxHealthService }                     from '../health.service';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
+import { Observable, of }                      from 'rxjs';
 
 
 @Component({
@@ -12,6 +13,11 @@ import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
     styleUrls  : ['alerts.component.scss']
 })
 export class NxSystemAlertsComponent implements OnInit {
+
+    private static ALERTS = 'alertType';
+    private static TYPES = 'deviceType';
+    private static SERVERS = 'serverInstance';
+
     CONFIG: any;
 
     filterModel: any;
@@ -23,6 +29,7 @@ export class NxSystemAlertsComponent implements OnInit {
     values: any;
 
     tableHeaders: any;
+    alerts: any;
 
     activeTableEntity: any;
     activePanelEntity: any;
@@ -45,15 +52,17 @@ export class NxSystemAlertsComponent implements OnInit {
     ngOnInit(): void {
         this.menuService.setSection('alerts');
 
-        this.addFilterAlarms();
-        this.addFilterTypes();
         this.addFilterServers();
+        this.addFilterTypes();
+        this.addFilterAlarms();
 
         this.manifest = this.healthService.manifest;
         this.values = this.healthService.values;
 
         this.initializeHeader();
         this.countAlerts();
+
+        this.alerts = this.healthService.alertsValues;
 
         this.breakpointObserver
             .observe([this.breakpoint])
@@ -63,7 +72,36 @@ export class NxSystemAlertsComponent implements OnInit {
     }
 
     modelChanged(model) {
+        this.alertsSearch(this.healthService.alertsValues, this.filterModel)
+            .subscribe((alerts) => {
+                this.alerts = alerts;
+            });
+    }
 
+    alertsSearch(values, filter): Observable<any> {
+        let alarms;
+        let types;
+        let servers;
+
+        if (filter.selects.find(x => x.id === NxSystemAlertsComponent.ALERTS) !== undefined) {
+            alarms = filter.selects.find(x => x.id === NxSystemAlertsComponent.ALERTS).selected;
+        }
+        if (filter.selects.find(x => x.id === NxSystemAlertsComponent.TYPES) !== undefined) {
+            types = filter.selects.find(x => x.id === NxSystemAlertsComponent.TYPES).selected;
+        }
+        if (filter.selects.find(x => x.id === NxSystemAlertsComponent.SERVERS) !== undefined) {
+            servers = filter.selects.find(x => x.id === NxSystemAlertsComponent.SERVERS).selected;
+        }
+
+        const alerts = values.filter(alert => {
+            if (alarms && alarms.value !== '0' && alert._.alarm.icon !== alarms.value) {
+                return false;
+            }
+
+            return true;
+        });
+
+        return of(alerts);
     }
 
     resetFilterModel() {
@@ -79,8 +117,8 @@ export class NxSystemAlertsComponent implements OnInit {
     addFilterAlarms() {
         const alertItems = [
             { value: '0', name: 'All alerts' },
-            { value: 'Warnings', name: 'Only warnings' },
-            { value: 'Errors', name: 'Only errors' }
+            { value: 'warning', name: 'Only warnings' },
+            { value: 'error', name: 'Only errors' }
         ];
 
         this.filterModel.selects.push(

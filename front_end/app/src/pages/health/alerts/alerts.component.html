@@ -15,7 +15,7 @@
         <nx-dynamic-table
                 [tableHeader]="alertsCount + ' alerts'"
                 [headers]="tableHeaders"
-                [elements]="healthService.alertsValues"
+                [elements]="alerts"
                 (onRowClick)="setActiveEntity($event)"
                 [activeEntity]="activeTableEntity"></nx-dynamic-table>
     </div>
