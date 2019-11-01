@@ -296,7 +296,7 @@ export class NxHealthComponent implements OnInit {
                 time
             };
             // String is here because it does not need to be translated and probably doesn't belong in CONFIG
-            this.ribbonService.show('You are viewing an imported report, refresh the page to get a fresh report', '', '');
+            this.ribbonService.show('You are viewing an imported report, refresh the page to get a fresh report', '', '', 'alert');
         };
 
         fileEntry.file((file: File) => {
