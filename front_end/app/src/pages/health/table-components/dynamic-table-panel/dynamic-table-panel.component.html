@@ -2,7 +2,7 @@
     <nx-block type='gray'>
         <header>
             <div class="panel-title">
-                <span>{{activeEntity._  && activeEntity._.name ? activeEntity._.name.text : activeEntity.info.name.text}}</span>
+                <span [innerText]="name"></span>
             </div>
             <span class="glyphicon close-icon detailsClose"
                   (click)="closeView()">

@@ -1,6 +1,6 @@
 import {
-    Component, EventEmitter, Input,
-    OnInit, Output, SimpleChanges
+    Component, EventEmitter, Input, OnChanges,
+    Output, SimpleChanges
 }                          from '@angular/core';
 import { NxConfigService } from '../../../../services/nx-config';
 import { NxUriService }    from '../../../../services/uri.service';
@@ -11,7 +11,7 @@ import { NxUtilsService }  from '../../../../services/utils.service';
     templateUrl: './dynamic-table-panel.component.html',
     styleUrls  : ['./dynamic-table-panel.component.scss']
 })
-export class NxDynamicTablePanelComponent implements OnInit {
+export class NxDynamicTablePanelComponent implements OnChanges {
 
     @Input() panelParams: any;
     @Input() activeEntity: any;
@@ -19,54 +19,27 @@ export class NxDynamicTablePanelComponent implements OnInit {
     // @Output() public onFeedbackClick: EventEmitter<any> = new EventEmitter<any>();
 
     CONFIG: any = {};
-    // firmwares: any = [];
-    // firmwaresToShow: number;
-    // analyticsToShow: number;
-    // showAllFirmware: boolean;
-    showAllEvents: boolean;
-    debug: any;
-    beta: any;
-    params: any;
-    // showAnalytics: boolean;
-    showCameraAnalytics: boolean;
+    name: string;
 
-    constructor(private configService: NxConfigService,
-                private uri: NxUriService,
-                private utilsService: NxUtilsService) {
+    constructor(private configService: NxConfigService) {
         this.CONFIG = this.configService.getConfig();
     }
 
-    ngOnInit() {
-        // this.uri
-        //     .getURI()
-        //     .subscribe(params => {
-        //         this.params = params;
-        //         this.debug = (params.debug !== undefined);
-        //         this.beta = (params.beta !== undefined);
-        //
-        //         this.showAnalytics = this.CONFIG.ipvd.showAnalyticsEvents || this.debug || this.beta;
-        //         this.showCameraAnalytics = this.showAnalytics && this.activeCamera.isAnalyticsSupported;
-        //     });
-
-        // this.firmwaresToShow = 1; // this.CONFIG.ipvd.firmwaresToShow;
-        // this.analyticsToShow = this.CONFIG.ipvd.analyticsToShow;
-        // this.showAllFirmware = false;
-        // this.showAllEvents = false;
-    }
-
     ngOnChanges(changes: SimpleChanges) {
-        // if (changes.activeCamera) {
-        //     this.showCameraAnalytics = this.showAnalytics && changes.activeCamera.currentValue.isAnalyticsSupported;
-        //     this.firmwares = changes.activeCamera.currentValue.firmwares || [];
-        //     this.showAllFirmware = false;
-        //     this.showAllEvents = false;
-        // }
+        if (changes.activeEntity && changes.activeEntity.currentValue) {
+            this.findName(changes.activeEntity.currentValue);
+        }
     }
 
-    // sendFeedback() {
-    //     this.onFeedbackClick.emit(this.activeCamera);
-    //     return false;
-    // }
+    findName(entity) {
+        if (entity._ && entity._.name) {
+            this.name = entity._.name.text;
+        } else if (entity.info && entity.info.name) {
+            this.name = entity.info.name;
+        } else {
+            this.name = '–';
+        }
+    }
 
     closeView() {
         this.activeEntity = undefined;
