@@ -69,11 +69,13 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
     }
 
     ngOnChanges(changes: SimpleChanges) {
+        let setPageNeeded = false;
         if (changes.activeEntity) {
             this.selectedEntity = changes.activeEntity.currentValue;
         }
 
         if (changes._headers) {
+            console.log(changes._headers);
             this.headers = changes._headers.currentValue;
             this.selectedHeader = undefined;
 
@@ -86,6 +88,9 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
             }
         }
         if (changes._elements) {
+            if (changes._elements.previousValue) {
+                setPageNeeded = true;
+            }
             this.elements = Object.values(changes._elements.currentValue);
       // For testing pagination
       // Array.from({length: 5}).forEach(_ => {
@@ -94,6 +99,9 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
       // console.log(this.elements);
             this.sortOrderASC = true;
             this.selectedHeader = undefined;
+            if (setPageNeeded) {
+                this.setPage(1);
+            }
         }
     }
 
