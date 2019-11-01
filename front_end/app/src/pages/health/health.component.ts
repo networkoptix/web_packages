@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Inject, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { NxAccountService }          from '../../services/account.service';
@@ -18,7 +18,7 @@ import { NxRibbonService }           from '../../components/ribbon/ribbon.servic
     styleUrls  : ['health.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class NxHealthComponent implements OnInit {
+export class NxHealthComponent implements OnInit, OnDestroy {
     LANG: any;
     CONFIG: any;
     account: any;
@@ -98,6 +98,10 @@ export class NxHealthComponent implements OnInit {
                 });
             });
         });
+    }
+
+    ngOnDestroy(): void {
+        this.ribbonService.hide();
     }
 
     setupReport(data) {
