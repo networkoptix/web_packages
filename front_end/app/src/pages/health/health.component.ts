@@ -9,6 +9,7 @@ import { NxHealthService }           from './health.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxUtilsService }            from '../../services/utils.service';
 import { FileSystemFileEntry, NgxFileDropEntry }      from 'ngx-file-drop';
+import { DOCUMENT }                  from '@angular/common';
 
 @Component({
     selector   : 'nx-system-health-component',
@@ -26,6 +27,9 @@ export class NxHealthComponent implements OnInit {
     systemReady: boolean;
 
     reportSnapshot: any;
+
+    dragCount = 0;
+    importShow: boolean;
     importedData: any = {};
 
     constructor(private accountService: NxAccountService,
@@ -37,12 +41,24 @@ export class NxHealthComponent implements OnInit {
                 private healthService: NxHealthService,
                 private languageService: NxLanguageProviderService,
                 private utilsService: NxUtilsService,
+                @Inject(DOCUMENT) private document: any,
     ) {
         this.LANG = this.languageService.getTranslations();
         this.CONFIG = this.configService.getConfig();
     }
 
     ngOnInit(): void {
+        this.document.addEventListener('dragenter', event => {
+            if (++this.dragCount > 0 && event.dataTransfer.types[0] === 'Files') {
+                this.importShow = true;
+            }
+        });
+        this.document.addEventListener('dragleave', event => {
+            if (--this.dragCount < 1 && event.dataTransfer.types[0] === 'Files') {
+                this.importShow = false;
+            }
+        });
+
         this.healthService.ready = false;
         this.menu = {
             selectedSection   : '',         // updated by selectedSectionSubject
@@ -260,6 +276,8 @@ export class NxHealthComponent implements OnInit {
     }
 
     fileDropped(files: NgxFileDropEntry[]) {
+        this.dragCount = 0;
+        this.importShow = false;
         const fileEntry = files[0].fileEntry as FileSystemFileEntry;
         const fileReader = new FileReader();
         fileReader.onload = _ => {
@@ -280,5 +298,9 @@ export class NxHealthComponent implements OnInit {
         fileEntry.file((file: File) => {
             fileReader.readAsText(file);
         });
+    }
+
+    fileLeave() {
+        this.dragCount = 1;
     }
 }

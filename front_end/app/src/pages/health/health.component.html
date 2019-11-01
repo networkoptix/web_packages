@@ -18,19 +18,20 @@
                 <a href="#" class="pl-1" (click)="exportReport()">Download Full Report</a>
             </div>
             <div class="mt-3 px-2">
-                <ngx-file-drop *ngIf="!importedData.imported" dropZoneLabel="Drop report here to import"
+                <div *ngIf="importedData.imported" class="importInfo pb-2">
+                    <p>System: {{importedData.system}}</p>
+                    <p>Generated: {{importedData.time}}</p>
+                </div>
+                <ngx-file-drop *ngIf="importShow" dropZoneLabel="Drop report here to import"
                                dropZoneClassName="importZone"
                                contentClassName="contentZone"
                                accept="json"
                                [directory]="false"
                                [multiple]="false"
                                [showBrowseBtn]="false"
+                               (onFileLeave)="fileLeave()"
                                (onFileDrop)="fileDropped($event)">
                 </ngx-file-drop>
-                <div *ngIf="importedData.imported" class="importInfo">
-                    <p>System: {{importedData.system}}</p>
-                    <p>Generated: {{importedData.time}}</p>
-                </div>
             </div>
         </div>
 
