@@ -110,6 +110,7 @@ export class NxHealthComponent implements OnInit {
         this.initializeManifest();
         this.initializeHeaders();
         this.processValues();
+        this.initializeAlarms();
 
         const menu = {...this.menu};
         Object.keys(this.healthService.manifest).forEach((asset) => {
@@ -120,6 +121,16 @@ export class NxHealthComponent implements OnInit {
                 svg: asset
             });
         });
+        menu.level1[0].alerts = [
+            {
+                count: this.healthService.alertsCount.error,
+                type: 'error'
+            },
+            {
+                count: this.healthService.alertsCount.warning,
+                type: 'warning'
+            }
+        ];
         this.menu = {...menu};
         // Allow time for change detection so child components can reinitialize
         setTimeout(() => {
@@ -245,16 +256,48 @@ export class NxHealthComponent implements OnInit {
         });
     }
 
+    initializeAlarms() {
+        Object.keys(this.healthService.alertsCount).forEach(type => {
+            this.healthService.alertsCount[type] = 0;
+        });
+        this.healthService.alertsValues = [];
+        Object.entries(this.healthService.alarms).forEach(([metric, entities]) => {
+            Object.entries(entities).forEach(([entity, groups]) => {
+                Object.entries(groups).forEach(([group, params]) => {
+                    Object.entries(params).forEach(([param, alarms]) => {
+                        alarms.forEach(alarm => {
+                            const alert: any = {_: {}};
+                            let server = this.healthService.values[metric][entity].info.server.text;
+                            if (!server && metric === 'servers') {
+                                server = this.healthService.values.servers[entity]._.name.text;
+                            }
+
+                            if (server) {
+                                alert._.server = {text: server};
+                            }
+                            alert._.type = {text: this.healthService.manifest[metric].resource};
+                            alert._.text = {text: alarm.text};
+                            alert._.alarm = {icon: alarm.level};
+                            alert.resource = entity;
+                            alert.metric = metric;
+                            this.healthService.alertsValues.push(alert);
+                            this.healthService.alertsCount[alarm.level]++;
+                        });
+                    });
+                });
+            });
+        });
+    }
+
     filterManifestHeaders(displayFilter: string) {
         const headers = {};
         Object.values(this.healthService.manifest).forEach((metricValue) => {
             const metric = JSON.parse(JSON.stringify(metricValue));
             headers[metric.id] = metric;
             headers[metric.id].values.forEach((headerGroup, index) => {
-                const group = headerGroup.values.filter((header) => {
+                headers[metric.id].values[index].values = headerGroup.values.filter(header => {
                     return header.display.includes(displayFilter);
                 });
-                headers[metric.id].values[index].values = group;
             });
         });
         return headers;

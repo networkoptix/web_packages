@@ -1,10 +1,10 @@
 <div class="row">
-    <div *ngIf="tableHeaders && alarms && !mobileDetailMode"
+    <div *ngIf="tableHeaders && healthService.alertsValues && !mobileDetailMode"
         [ngClass]="{'col-12': !activePanelEntity, 'col-md-7 col-xl-8' : activePanelEntity}">
         <nx-dynamic-table
                 [tableHeader]="alertsCount + ' alerts'"
                 [headers]="tableHeaders"
-                [elements]="alertsValues"
+                [elements]="healthService.alertsValues"
                 (onRowClick)="setActiveEntity($event)"
                 [activeEntity]="activeTableEntity"></nx-dynamic-table>
     </div>
@@ -24,7 +24,7 @@
 
         <nx-dynamic-table-panel-component
                 [activeEntity]="activePanelEntity"
-                [panelParams]="selectedPanelData"
+                [panelParams]="activePanelParams"
                 (onCloseView)="resetActiveEntity()">
         </nx-dynamic-table-panel-component>
     </div>

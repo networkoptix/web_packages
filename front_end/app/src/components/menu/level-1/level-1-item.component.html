@@ -12,4 +12,7 @@
                   [svgStyle]="{'width.px': '24', 'height.px': '24' }"></svg-icon>
     </div>
     {{item.label}}
+    <div *ngIf="item.alerts" class="menu-level-1-alerts">
+        <nx-alert-counter *ngFor="let alert of item.alerts" class="pr-2" [count]="alert.count" [type]="alert.type"></nx-alert-counter>
+    </div>
 </a>

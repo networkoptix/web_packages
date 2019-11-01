@@ -15,6 +15,12 @@ export class NxHealthService {
     tableHeaders: any;
     panelParams: any;
 
+    alertsValues: any;
+    alertsCount = {
+        warning: 0,
+        error: 0
+    };
+
     ready: boolean;
 
     CONFIG: any;
