@@ -1,7 +1,7 @@
 <div class="nx-search">
 
-    <div class="row m-0">
-        <div class="col-12 p-0">
+    <div class="row m-0" [ngClass]="{'mb-3' : layout == 'selectors'}">
+        <div class="col-12 p-0" *ngIf="layout != 'selectors'">
             <div class="d-block d-md-inline-flex flex-md-row w-100">
                 <div class="search-group" [ngClass]="{'mr-3' : layout == 'full'}">
                     <span class="glyphicon glyphicon-search icon-search"></span>
@@ -44,12 +44,14 @@
         </div>
 
         <div class="row col-12 m-0 p-0"
-             [hidden]="!showAdvancedOptions" *ngIf="localFilter.tags">
-            <div class="drop-container row col-12 mt-3 m-0 p-0"
+             [hidden]="!showAdvancedOptions && layout != 'selectors'"
+              *ngIf="localFilter.tags && localFilter.tags.length || localFilter.selects && localFilter.selects.length || localFilter.multiselects && localFilter.multiselects.length">
+            <div class="drop-container row col-12 m-0 p-0"
+                 [ngClass]="{'mt-3' : layout != 'selectors'}"
                  *ngIf="localFilter.selects && localFilter.selects.length || localFilter.multiselects && localFilter.multiselects.length">
 
                 <div class="drop col-12 col-md-3 mt-3 mt-md-0" *ngFor="let select of localFilter.selects">
-                    <label style="text-transform: capitalize">{{ select.label }}</label>
+                    <label style="text-transform: capitalize" *ngIf="select.label != ''">{{ select.label }}</label>
                     <nx-select [name]="select.label"
                                [items]="select.items"
                                [(ngModel)]="select.selected"
@@ -71,7 +73,7 @@
 
             <div class="search-tags m-0 p-0"
                  [ngClass]="{'mt-2' : layout != 'full', 'mt-3': layout == 'full'}"
-                 [hidden]="!showAdvancedOptions && localFilter.tags && localFilter.tags.length">
+                 *ngIf="localFilter.tags && localFilter.tags.length">
 
                 <div class="col-12 p-0">
                     <div class="form-group m-0">

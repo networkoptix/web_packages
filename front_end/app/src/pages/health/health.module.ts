@@ -14,12 +14,13 @@ import { AuthGuard } from '../../routeGuards/authGuard';
 import { NxHealthComponent } from './health.component';
 import { NxSystemAlertsComponent } from './alerts/alerts.component';
 import { NxSystemMetricsComponent } from './metrics/metrics.component';
-import { NxDynamicTableComponent } from './table-components/dynamic-table/dynamic-table.component';
+import { NxDynamicTableComponent }      from './table-components/dynamic-table/dynamic-table.component';
 import { NxDynamicTablePanelComponent } from './table-components/dynamic-table-panel/dynamic-table-panel.component';
-import { NxSingleEntityComponent } from './table-components/single-entity/single-entity.component';
-import { AngularSvgIconModule } from 'angular-svg-icon';
-import { NxImageSectionComponent } from './table-components/image-section/image-section.component';
-import { NgxFileDropModule } from 'ngx-file-drop';
+import { NxSingleEntityComponent }      from './table-components/single-entity/single-entity.component';
+import { AngularSvgIconModule }         from 'angular-svg-icon';
+import { NxImageSectionComponent }      from './table-components/image-section/image-section.component';
+import { NgxFileDropModule }            from 'ngx-file-drop';
+import { FormsModule }                  from '@angular/forms';
 
 
 const appRoutes: Routes = [
@@ -46,6 +47,7 @@ const appRoutes: Routes = [
         BrowserModule,
         UpgradeModule,
         RouterModule,
+        FormsModule,
         NgbModule,
         TranslateModule,
         ComponentsModule,

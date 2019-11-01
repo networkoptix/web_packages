@@ -1,4 +1,15 @@
 <div class="row">
+
+    <div class="col-12">
+        <nx-search
+                name="filterModel"
+                [ngModel]="filterModel"
+                (ngModelChange)="modelChanged($event)"
+                layout="selectors"
+                ngDefaultControl>
+        </nx-search>
+    </div>
+
     <div *ngIf="tableHeaders && healthService.alertsValues && !mobileDetailMode"
         [ngClass]="{'col-12': !activePanelEntity, 'col-md-7 col-xl-8' : activePanelEntity}">
         <nx-dynamic-table

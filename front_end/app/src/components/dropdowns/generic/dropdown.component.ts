@@ -76,7 +76,9 @@ export class NxGenericDropdown implements OnInit, ControlValueAccessor {
         if (changes.selected.currentValue) {
             this.selected = changes.selected.currentValue;
         } else {
-            this.selected = {name: this.message};
+            if (!this.selected) {
+                this.selected = { name: this.message };
+            }
         }
     }
 

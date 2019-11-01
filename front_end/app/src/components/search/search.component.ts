@@ -1,16 +1,15 @@
 import {
     Component, OnInit, Input,
-    forwardRef, ViewEncapsulation, KeyValueDiffer, KeyValueDiffers
-} from '@angular/core';
-import { NG_VALUE_ACCESSOR, ControlValueAccessor }                         from '@angular/forms';
-import { ActivatedRoute, Event as NavigationEvent, NavigationEnd, Router } from '@angular/router';
-import { Location }                                                        from '@angular/common';
-import { NxConfigService }                            from '../../services/nx-config';
-import { isArray }                                    from 'rxjs/internal-compatibility';
-import { NxUriService }                               from '../../services/uri.service';
-import { filter, debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { Subject }                                    from 'rxjs/Subject';
-import { NxLanguageProviderService }                  from '../../services/nx-language-provider';
+    forwardRef, ViewEncapsulation, KeyValueDiffers
+}                                                  from '@angular/core';
+import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
+import { ActivatedRoute, Router }                  from '@angular/router';
+import { Location }                                from '@angular/common';
+import { Subject }                                 from 'rxjs/Subject';
+import { isArray }                                 from 'rxjs/internal-compatibility';
+import { NxConfigService }                         from '../../services/nx-config';
+import { NxUriService }                            from '../../services/uri.service';
+import { NxLanguageProviderService }               from '../../services/nx-language-provider';
 
 /* Usage
  <nx-search
@@ -22,13 +21,17 @@ import { NxLanguageProviderService }                  from '../../services/nx-la
      ngDefaultControl?>
  </nx-search>
 
+ * "Selectors" layout (used in Health Monitor page)
+ - will hide search box and toggle button
+ - will show advanced search and selected filters buttons (tags)
+
  * "Compact" layout (used in Integration page)
     - will hide labels and adjust spacing
     - will not show advanced search and filters selected buttons
 
  * "Full" layout (used in IPVD page)
     - will show labels and adjust spacing
-    - will show advanced search and selected filters buttons
+    - will show advanced search and selected filters buttons (tags)
 
  */
 
@@ -160,7 +163,9 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
                     if (this.params[select.id]) {
                         select.selected = select.items.find((item) => item.name === this.params[select.id]);
                     } else {
-                        select.selected = { value: '0', name: 'All' };
+                        if (!select.selected) {
+                            select.selected = { value: '0', name: 'All' };
+                        }
                     }
                 });
         }

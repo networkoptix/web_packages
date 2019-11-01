@@ -79,7 +79,6 @@ import { WINDOWS_PROVIDERS } from '../app/src/services/window-provider';
         NxMultiSelectDropdown,
         NxPreLoaderComponent,
         NxProcessButtonComponent,
-        NxSearchComponent,
         NxTagComponent,
         NxVendorListComponent,
         NxArrowNavDirective,

@@ -14,6 +14,8 @@ import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 export class NxSystemAlertsComponent implements OnInit {
     CONFIG: any;
 
+    filterModel: any;
+
     mobileDetailMode: boolean;
     breakpoint: string;
 
@@ -35,13 +37,21 @@ export class NxSystemAlertsComponent implements OnInit {
     ) {
         this.CONFIG = this.configService.getConfig();
         this.breakpoint = '(max-width: 767px)';
+        this.filterModel = {
+            selects : []
+        };
     }
 
     ngOnInit(): void {
         this.menuService.setSection('alerts');
 
+        this.addFilterAlarms();
+        this.addFilterTypes();
+        this.addFilterServers();
+
         this.manifest = this.healthService.manifest;
         this.values = this.healthService.values;
+
         this.initializeHeader();
         this.countAlerts();
 
@@ -50,6 +60,82 @@ export class NxSystemAlertsComponent implements OnInit {
             .subscribe((state: BreakpointState) => {
                 this.mobileDetailMode = (state.matches && this.activePanelEntity);
             });
+    }
+
+    modelChanged(model) {
+
+    }
+
+    resetFilterModel() {
+        if (this.filterModel.selects) {
+            this.filterModel.selects.forEach((filter) => {
+                filter.selected = filter.items[0];
+            });
+        }
+
+        this.filterModel = { ...this.filterModel };
+    }
+
+    addFilterAlarms() {
+        const alertItems = [
+            { value: '0', name: 'All alerts' },
+            { value: 'Warnings', name: 'Only warnings' },
+            { value: 'Errors', name: 'Only errors' }
+        ];
+
+        this.filterModel.selects.push(
+                {
+                    id      : 'alertType',
+                    label   : '',
+                    items   : alertItems,
+                    selected: alertItems[0]
+                });
+    }
+
+    addFilterTypes() {
+        const typesItems = Object.keys(this.healthService.alarms)
+                                 .map(v => (
+                                         { value: v, name: v })
+                                 );
+        typesItems.unshift({ value: '0', name: 'All Device Types'});
+
+        this.filterModel.selects.push(
+                {
+                    id      : 'deviceType',
+                    label   : '',
+                    items   : typesItems,
+                    selected: typesItems[0]
+                });
+    }
+
+    addFilterServers() {
+        const serverItems = [];
+
+        for (const [key, value] of Object.entries(this.healthService.values.servers)) {
+            const val: any = value;
+            serverItems.push({ value: val._.name.text, name: val._.name.text });
+        }
+
+        serverItems.unshift({ value: '0', name: 'All Servers' });
+
+        this.filterModel.selects.push(
+                {
+                    id      : 'serverInstance',
+                    label   : '',
+                    items   : serverItems,
+                    selected: serverItems[0]
+                });
+    }
+
+    isFilterEmpty() {
+        let singleselect = false;
+        if (this.filterModel.selects) {
+            this.filterModel.selects.forEach(select => {
+                singleselect = singleselect || (select.selected.value > 0) || (select.selected.value !== '0'); // 0 is default choice
+            });
+        }
+
+        return !singleselect;
     }
 
     countAlerts() {
