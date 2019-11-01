@@ -1,9 +1,9 @@
-<label class="nx-radio" [for]="componentId" (click)="changeState($event)" [ngClass]="{'disabled': disabled}">
+<label class="nx-radio" [for]="componentId" (click)="changeState()" [ngClass]="{'disabled': disabled}">
     <input type="radio"
            [id]="componentId"
            [value]="value"
            [attr.disabled]="disabled ? '' : null"
-           (click)="changeState($event)">
+           (click)="changeState()">
 
     <span class="check"
           [ngClass]="state">
