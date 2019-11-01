@@ -267,13 +267,13 @@ export class NxHealthComponent implements OnInit {
                     Object.entries(params).forEach(([param, alarms]) => {
                         alarms.forEach(alarm => {
                             const alert: any = {_: {}};
-                            let server = this.healthService.values[metric][entity].info.server.text;
+                            let server = this.healthService.values[metric][entity].info.server;
                             if (!server && metric === 'servers') {
-                                server = this.healthService.values.servers[entity]._.name.text;
+                                server = this.healthService.values.servers[entity]._.name;
                             }
 
                             if (server) {
-                                alert._.server = {text: server};
+                                alert._.server = {text: server.text};
                             }
                             alert._.type = {text: this.healthService.manifest[metric].resource};
                             alert._.text = {text: alarm.text};
