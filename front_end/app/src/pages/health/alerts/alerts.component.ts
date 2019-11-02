@@ -94,6 +94,14 @@ export class NxSystemAlertsComponent implements OnInit {
         }
 
         const alerts = values.filter(alert => {
+            if (servers && servers.value !== '0' && alert._.server.text !== servers.value) {
+                return false;
+            }
+
+            if (types && types.value !== '0' && alert._.type.text !== types.value) {
+                return false;
+            }
+
             if (alarms && alarms.value !== '0' && alert._.alarm.icon !== alarms.value) {
                 return false;
             }
@@ -116,7 +124,7 @@ export class NxSystemAlertsComponent implements OnInit {
 
     addFilterAlarms() {
         const alertItems = [
-            { value: '0', name: 'All alerts' },
+            { value: '0', name: 'All Alerts' },
             { value: 'warning', name: 'Only warnings' },
             { value: 'error', name: 'Only errors' }
         ];
@@ -131,10 +139,15 @@ export class NxSystemAlertsComponent implements OnInit {
     }
 
     addFilterTypes() {
-        const typesItems = Object.keys(this.healthService.alarms)
-                                 .map(v => (
-                                         { value: v, name: v })
-                                 );
+        const typesItems = [];
+
+        for (const [key, value] of Object.entries(this.healthService.manifest)) {
+            const val: any = value;
+            if (val.resource !== '') {
+                typesItems.push({ value: val.resource, name: val.resource });
+            }
+        }
+
         typesItems.unshift({ value: '0', name: 'All Device Types'});
 
         this.filterModel.selects.push(

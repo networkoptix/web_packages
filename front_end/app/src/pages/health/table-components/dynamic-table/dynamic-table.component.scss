@@ -5,6 +5,14 @@
 @import '~bootstrap/scss/variables';
 @import '~bootstrap/scss/mixins/breakpoints';
 
+nx-dynamic-table {
+  .text-placeholder {
+    color       : $light16;
+    font-family : $font-family-regular;
+    font-size   : rem(20px);
+    height      : 2rem;
+  }
+}
 
 .nx-table-wrapper {
   margin-bottom: 40px;

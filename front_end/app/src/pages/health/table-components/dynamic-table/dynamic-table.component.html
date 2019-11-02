@@ -1,5 +1,11 @@
 <!--<nx-pre-loader type="page" *ngIf="!pagedItems"></nx-pre-loader>-->
-<div class="nx-table-wrapper" id="nx-table">
+<div class="row px-3 m-0 d-flex">
+
+    <div class="text-placeholder order-1 order-md-0 m-0 p-0 pr-2 col-md-7 col-xl-9"
+         *ngIf="!pagedItems.length" translate>Nothing Found</div>
+</div>
+
+<div class="nx-table-wrapper" id="nx-table" *ngIf="pagedItems.length">
     <div *ngIf="tableHeader" class="table-header" [innerText]="tableHeader"></div>
     <div class="table-wrapper">
         <table class="table table-hover nx-table">
