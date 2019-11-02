@@ -25,6 +25,8 @@ export class NxHealthService {
         error: 0
     };
 
+    resourceNames = {};
+
     ready: boolean;
 
     CONFIG: any;
@@ -67,19 +69,24 @@ export class NxHealthService {
     }
 
     formatValue(header, value) {
+        let retValue = value;
         if (header.format) {
             const format = header.format;
             const valueFormats = this.CONFIG.healthMonitoring.valueFormats;
             if (valueFormats[format]) {
-                return `${(value * valueFormats[format].multiplier).toFixed(valueFormats[format].decimals)} ${format.display || format}`;
+                retValue =  `${(value * valueFormats[format].multiplier).toFixed(valueFormats[format].decimals)} ${format.display || format}`;
             } else if (format === 'durationS') {
-                return this.utilsService.secondsToTime(value);
+                retValue = this.utilsService.secondsToTime(value);
+            } else if (format === 'resource') {
+                retValue = this.resourceNames[value] || value;
+            } else if (format === 'thumbnail') {
+                retValue = this.resourceNames[value] || value;
             } else {
                 console.error(`Format not recognized: ${format}`);
-                return `${value} ${format}`;
+                retValue = `${value} ${format}`;
             }
         }
-        return value;
+        return {text: retValue, format: header.format || ''};
     }
 
     alertsSearch(values, filter): Observable<any> {

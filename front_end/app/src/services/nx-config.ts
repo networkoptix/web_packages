@@ -333,7 +333,7 @@ export class NxConfigService {
                     'B': {multiplier: 1, decimals: 0},
                     'GBps': {display: 'GB/s', multiplier: 1 / 1000 ** 3, decimals: 2},
                     'MBps': {display: 'MB/s', multiplier: 1 / 1000 ** 2, decimals: 2},
-                    'kBps': {display: 'kB/s', multiplier: 1 / 1000, decimals: 2},
+                    'KBps': {display: 'kB/s', multiplier: 1 / 1000, decimals: 2},
                     'Bps': {display: 'B/s', multiplier: 1, decimals: 0},
                     'Gbps': {display: 'Gbit/s', multiplier: 1 / 1000 ** 3, decimals: 2},
                     'Mbps': {display: 'Mbit/s', multiplier: 1 / 1000 ** 2, decimals: 2},

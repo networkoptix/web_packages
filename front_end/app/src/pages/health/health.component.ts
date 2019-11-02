@@ -111,6 +111,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         this.healthService.values = data.reply['ec2/metrics/values'].reply;
         this.healthService.alarms = data.reply['ec2/metrics/alarms'].reply;
         this.createSnapshot(data);
+        this.createResourceList();
         this.initializeManifest();
         this.initializeHeaders();
         this.processValues();
@@ -199,6 +200,20 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         return alarms[0];
     }
 
+    createResourceList() {
+        this.healthService.resourceNames = {};
+        Object.values(this.healthService.values).forEach(metric => {
+            Object.entries(metric).forEach(([resourceId, entity]) => {
+                Object.values(entity).some((group: any) => {
+                    if (group.name) {
+                        this.healthService.resourceNames[resourceId] = group.name;
+                    }
+                    return group.name;
+                });
+            });
+        });
+    }
+
     processValues() {
         Object.entries(this.healthService.values).forEach(([metric, entities]) => {
             Object.entries(entities).forEach(([entity, groups]) => {
@@ -206,9 +221,9 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                 let highestAlarm;
                 this.healthService.values[metric][entity].id = entity;
                 this.healthService.manifest[metric].values.forEach(group => {
-                    if (this.healthService.values[metric][entity][group.id]) {
+                    if (this.healthService.values[metric][entity][group.id] !== undefined) {
                         group.values.forEach(header => {
-                            if (this.healthService.values[metric][entity][group.id][header.id]) {
+                            if (this.healthService.values[metric][entity][group.id][header.id] !== undefined) {
                                 const alarms = this.healthService.alarms[metric] && this.healthService.alarms[metric][entity]
                                     && this.healthService.alarms[metric][entity][group.id]
                                     && this.healthService.alarms[metric][entity][group.id][header.id];
@@ -220,8 +235,11 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                                     }
                                     alarmCount++;
                                 }
+                                const formattedVal = this.healthService.formatValue(
+                                    header, this.healthService.values[metric][entity][group.id][header.id]
+                                );
                                 this.healthService.values[metric][entity][group.id][header.id] = {
-                                    text: this.healthService.formatValue(header, this.healthService.values[metric][entity][group.id][header.id]),
+                                    ...formattedVal,
                                     class: alarm ? alarm.level : '',
                                     tooltip: alarm ? alarm.text : '',
                                     icon: alarm ? alarm.level : '',
