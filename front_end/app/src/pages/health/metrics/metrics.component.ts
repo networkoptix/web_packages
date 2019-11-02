@@ -65,17 +65,12 @@ export class NxSystemMetricsComponent implements OnInit {
             .params
             .subscribe((params: any) => {
                 this.multiEntity = true;
-                if (this.metricId) {
-                    const queryParams: Params = {};
-                    queryParams.id = undefined;
-                    this.uri.updateURI(this.uri.getURL(), queryParams);
-                }
                 this.metricId = params.metric;
                 this.menuService.setSection(this.metricId);
                 this.selectedData = this.healthService.tableHeaders[this.metricId];
                 this.selectedPanelData = this.healthService.panelParams[this.metricId];
                 this.selectedValues = this.healthService.values[this.metricId];
-                this.resetActiveEntity();
+                this.resetActiveEntity(false);
                 if (Object.keys(this.selectedValues).length === 1) {
                     this.multiEntity = false;
                 }
@@ -102,12 +97,12 @@ export class NxSystemMetricsComponent implements OnInit {
             this.activeEntity = this.selectedValues[entity];
             if (!this.activeEntity) {
                 queryParams.id = undefined;
-                this.uri.updateURI(this.uri.getURL(), queryParams);
+                this.uri.updateURI(undefined, queryParams);
             }
         } else {
             this.activeEntity = entity;
             queryParams.id = entity.id;
-            this.uri.updateURI(this.uri.getURL(), queryParams);
+            this.uri.updateURI(undefined, queryParams);
 
             if (this.breakpointObserver.isMatched(this.breakpoint)) {
                 this.mobileDetailMode = true;
@@ -115,8 +110,13 @@ export class NxSystemMetricsComponent implements OnInit {
         }
     }
 
-    resetActiveEntity() {
+    resetActiveEntity(updateURI = true) {
         this.activeEntity = undefined;
+        if (updateURI) {
+            const queryParams: Params = {};
+            queryParams.id = undefined;
+            this.uri.updateURI(undefined, queryParams);
+        }
         this.mobileDetailMode = false;
     }
 }

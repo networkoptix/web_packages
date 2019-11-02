@@ -83,7 +83,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
                 const queryParams: Params = {};
                 queryParams.page = undefined;
                 queryParams.sortBy = undefined;
-                this.uri.updateURI(this.uri.getURL(), queryParams);
+                this.uri.updateURI(undefined, queryParams);
             }
         }
         if (changes._elements) {
@@ -105,7 +105,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
     }
 
     ngOnInit() {
-        this.queryParams = this.route.snapshot.queryParams;
+        this.queryParams = {...this.route.snapshot.queryParams};
         if (this.queryParams.sortBy) {
             const sortBy = this.queryParams.sortBy.split(',');
             this.sortOrderASC = (sortBy[SORT_DIR] === 'ASC');
@@ -122,7 +122,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
         this.selectedEntity = element;
     }
 
-    setPage(page: number, keep?: boolean, entity?) {
+    setPage(page: number) {
         if (this.params && this.params.id && this.selectedEntity) {
             const index = this.elements.findIndex((element) => {
                 return element.id === this.params.id;
@@ -130,27 +130,22 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
             if (index !== -1) {
                 this.currentPage = Math.floor(index / this.pageSize) + 1;
             }
-        } else if (this.queryParams && this.queryParams.page) { // this.params.page is string - no strict comparison
+            this.params.id = undefined;
+        } else if (this.queryParams && this.queryParams.page) {
             this.currentPage = this.queryParams.page;
+            this.queryParams.page = undefined;
         } else {
             this.currentPage = page;
         }
-
-        // preserve window offset
-        // this.uri.pageOffset = window.pageYOffset;
 
         const startIndex = (this.currentPage - 1) * this.pageSize;
         const endIndex = startIndex + this.pageSize;
         this.pagedItems = this.elements.slice(startIndex, endIndex);
 
         const paramPage = (this.currentPage === 1) ? undefined : this.currentPage;
-        if (paramPage && !this.params.id) {
-            const queryParams: Params = {};
-            queryParams.page = (this.currentPage === 1) ? undefined : this.currentPage;
-            this.uri.updateURI(this.uri.getURL(), queryParams);
-        } else if (this.params.id) {
-            this.params.id = undefined;
-        }
+        const queryParams: Params = {};
+        queryParams.page = paramPage;
+        this.uri.updateURI(undefined, queryParams);
     }
 
     getCleanTitle(text: string): string {
@@ -175,7 +170,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
             queryParams.sortBy = groupId + ',' + paramId;
             queryParams.sortBy += (this.sortOrderASC) ? ',ASC' : ',DESC';
 
-            this.uri.updateURI(this.uri.getURL(), queryParams);
+            this.uri.updateURI(undefined, queryParams);
         }
 
         const sortParam = (elm) => {
