@@ -1,12 +1,16 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { NxUtilsService } from '../../services/utils.service';
-import { NxConfigService } from '../../services/nx-config';
+import { Injectable }                      from '@angular/core';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { NxUtilsService }                  from '../../services/utils.service';
+import { NxConfigService }                 from '../../services/nx-config';
 
 @Injectable({
     providedIn: 'root'
 })
 export class NxHealthService {
+    private static ALERTS = 'alertType';
+    private static TYPES = 'deviceType';
+    private static SERVERS = 'serverInstance';
+
     manifestSubject = new BehaviorSubject(undefined);
     valuesSubject = new BehaviorSubject(undefined);
     alarmsSubject = new BehaviorSubject(undefined);
@@ -76,5 +80,39 @@ export class NxHealthService {
             }
         }
         return value;
+    }
+
+    alertsSearch(values, filter): Observable<any> {
+        let alarms;
+        let types;
+        let servers;
+
+        if (filter.selects.find(x => x.id === NxHealthService.ALERTS) !== undefined) {
+            alarms = filter.selects.find(x => x.id === NxHealthService.ALERTS).selected;
+        }
+        if (filter.selects.find(x => x.id === NxHealthService.TYPES) !== undefined) {
+            types = filter.selects.find(x => x.id === NxHealthService.TYPES).selected;
+        }
+        if (filter.selects.find(x => x.id === NxHealthService.SERVERS) !== undefined) {
+            servers = filter.selects.find(x => x.id === NxHealthService.SERVERS).selected;
+        }
+
+        const alerts = values.filter(alert => {
+            if (servers && servers.value !== '0' && alert._.server.text !== servers.value) {
+                return false;
+            }
+
+            if (types && types.value !== '0' && alert._.type.text !== types.value) {
+                return false;
+            }
+
+            if (alarms && alarms.value !== '0' && alert._.alarm.icon !== alarms.value) {
+                return false;
+            }
+
+            return true;
+        });
+
+        return of(alerts);
     }
 }

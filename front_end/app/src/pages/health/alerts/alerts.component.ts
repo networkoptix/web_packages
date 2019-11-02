@@ -14,10 +14,6 @@ import { Observable, of }                      from 'rxjs';
 })
 export class NxSystemAlertsComponent implements OnInit {
 
-    private static ALERTS = 'alertType';
-    private static TYPES = 'deviceType';
-    private static SERVERS = 'serverInstance';
-
     CONFIG: any;
 
     filterModel: any;
@@ -72,44 +68,11 @@ export class NxSystemAlertsComponent implements OnInit {
     }
 
     modelChanged(model) {
-        this.alertsSearch(this.healthService.alertsValues, this.filterModel)
+        this.healthService
+            .alertsSearch(this.healthService.alertsValues, this.filterModel)
             .subscribe((alerts) => {
                 this.alerts = alerts;
             });
-    }
-
-    alertsSearch(values, filter): Observable<any> {
-        let alarms;
-        let types;
-        let servers;
-
-        if (filter.selects.find(x => x.id === NxSystemAlertsComponent.ALERTS) !== undefined) {
-            alarms = filter.selects.find(x => x.id === NxSystemAlertsComponent.ALERTS).selected;
-        }
-        if (filter.selects.find(x => x.id === NxSystemAlertsComponent.TYPES) !== undefined) {
-            types = filter.selects.find(x => x.id === NxSystemAlertsComponent.TYPES).selected;
-        }
-        if (filter.selects.find(x => x.id === NxSystemAlertsComponent.SERVERS) !== undefined) {
-            servers = filter.selects.find(x => x.id === NxSystemAlertsComponent.SERVERS).selected;
-        }
-
-        const alerts = values.filter(alert => {
-            if (servers && servers.value !== '0' && alert._.server.text !== servers.value) {
-                return false;
-            }
-
-            if (types && types.value !== '0' && alert._.type.text !== types.value) {
-                return false;
-            }
-
-            if (alarms && alarms.value !== '0' && alert._.alarm.icon !== alarms.value) {
-                return false;
-            }
-
-            return true;
-        });
-
-        return of(alerts);
     }
 
     resetFilterModel() {
