@@ -48,6 +48,7 @@
               *ngIf="localFilter.tags && localFilter.tags.length || localFilter.selects && localFilter.selects.length || localFilter.multiselects && localFilter.multiselects.length">
             <div class="drop-container row col-12 m-0 p-0"
                  [ngClass]="{'mt-3' : layout != 'selectors'}"
+                 [ngStyle]="{'max-width': layout == 'selectors' ? '100%': '992px'}"
                  *ngIf="localFilter.selects && localFilter.selects.length || localFilter.multiselects && localFilter.multiselects.length">
 
                 <div class="drop col-12 col-md-3 mt-3 mt-md-0" *ngFor="let select of localFilter.selects">
@@ -68,6 +69,13 @@
                                      (ngModelChange)="modelChanged()"
                                      canSelectAll>
                     </nx-multi-select>
+                </div>
+
+                <div class="drop col-12 col-md-3 mt-3 mt-md-0" *ngIf="numberFilters && layout == 'selectors'">
+                    <button class="float-right btn btn-text has-icon" (click)="resetFilters()">
+                        <span class="close"></span>
+                        <span translate>Clear filters</span>
+                    </button>
                 </div>
             </div>
 

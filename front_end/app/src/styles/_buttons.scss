@@ -288,7 +288,6 @@ button, .btn {
 }
 
 .btn-text {
-    height          : 20px;
     font-size       : 13px;
     color           : $light16;
     text-decoration : none;
@@ -305,15 +304,16 @@ button, .btn {
     }
     
     &.has-icon {
-        padding-left : 20px;
+        padding-left : 25px;
+        position: relative;
     }
     
     span {
-        line-height: 20px;
         
         &.close {
-            left : 10px;
-            top  : 1px;
+            left : 0;
+            width  : 16px;
+            height : 16px;
     
             &:before, &:after {
                 background-color: $light16;
