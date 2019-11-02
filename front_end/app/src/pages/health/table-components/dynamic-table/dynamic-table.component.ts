@@ -87,10 +87,10 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
             }
         }
         if (changes._elements) {
-            if (changes._elements.previousValue) {
-                setPageNeeded = true;
-            }
             this.elements = Object.values(changes._elements.currentValue);
+            if (changes._elements.previousValue) {
+                this.setPage(1);
+            }
       // For testing pagination
       // Array.from({length: 5}).forEach(_ => {
       //   this.elements.forEach(e => this.elements.push(e));
@@ -98,9 +98,6 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
       // console.log(this.elements);
             this.sortOrderASC = true;
             this.selectedHeader = undefined;
-            if (setPageNeeded) {
-                this.setPage(1);
-            }
         }
     }
 
