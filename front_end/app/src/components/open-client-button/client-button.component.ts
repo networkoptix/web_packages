@@ -54,6 +54,10 @@ export class NxClientButtonComponent implements OnInit, OnDestroy {
         this.openClient = this.processService.createProcess(() => {
             return this.urlProtocol
                 .open(this.system && this.system.id);
+        }, {
+            errorCodes: {
+                notVisited: () => false
+            }
         }).then(() => {}, () => {
             // message, title, actionLabel, actionType
             if (this.modalActive || this.canceled) {
