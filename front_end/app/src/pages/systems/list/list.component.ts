@@ -1,6 +1,6 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { Location }                             from '@angular/common';
-import { ActivatedRoute }                       from '@angular/router';
+import { ActivatedRoute, Router }               from '@angular/router';
 import { NxConfigService }                      from '../../../services/nx-config';
 import { NxLanguageProviderService }            from '../../../services/nx-language-provider';
 
@@ -50,6 +50,7 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
                 private systemsService: NxSystemsService,
                 private accountService: NxAccountService,
                 private processService: NxProcessService,
+                private router: Router,
                 private location: Location,
     ) {
         this.setupDefaults();
@@ -132,11 +133,10 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
     }
 
     openSystem(system) {
-        this.location.go('/systems/' + system.id);
+        this.router.navigate(['/systems/' + system.id]);
     }
 
     ngOnDestroy(): void {
-        this.systemsService.stopPoll();
     }
 
 }

@@ -116,7 +116,7 @@ class Process {
             }
             return;
         }, (error) => {
-            if (error.error) {
+            if (error && error.error) {
                 error = error.error;
             }
             this.handleError(error);
@@ -148,20 +148,21 @@ class Process {
     }
 
     private formatError(error, errorCodes) {
-        if (!error || !error.resultCode) {
+        const errorCode = error && error.data && error.data.resultCode || error && error.resultCode || error;
+        if (!errorCode) {
             return this.LANG.errorCodes.unknownError;
         }
-        if (errorCodes && typeof (errorCodes[error.resultCode]) !== 'undefined') {
-            if (typeof(errorCodes[error.resultCode]) === 'function') {
-                const result = (errorCodes[error.resultCode])(error) || false;
+        if (errorCodes && typeof (errorCodes[errorCode]) !== 'undefined') {
+            if (typeof(errorCodes[errorCode]) === 'function') {
+                const result = (errorCodes[errorCode])(error) || false;
                 if (result !== true) {
                     return result;
                 }
             } else {
-                return errorCodes[error.resultCode];
+                return errorCodes[errorCode];
             }
         }
-        return this.LANG.errorCodes[error.resultCode] || this.LANG.errorCodes.unknownError;
+        return this.LANG.errorCodes[errorCode] || this.LANG.errorCodes.unknownError;
     }
 
     private handleError(data) {

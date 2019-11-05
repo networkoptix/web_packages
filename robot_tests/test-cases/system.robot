@@ -59,7 +59,7 @@ should confirm, if owner deletes system (You are going to disconnect your system
     Wait Until Elements Are Visible    ${DISCONNECT FORM}    ${DISCONNECT FORM HEADER}
     Click Element    ${DISCONNECT FORM}
     Click Button    ${DISCONNECT FORM CANCEL}
-    Wait Until Page Does Not Contain Element    ${DELETE USER MODAL}
+    Wait Until Page Does Not Contain Element    ${REMOVE USER MODAL}
 
 should confirm, if not owner deletes system (You will lose access to this system)
     [tags]    Threaded
@@ -72,7 +72,7 @@ should confirm, if not owner deletes system (You will lose access to this system
     Sleep    .5
     Wait Until Element Is Visible    ${DISCONNECT MODAL CANCEL}
     Click Button    ${DISCONNECT MODAL CANCEL}
-    Wait Until Page Does Not Contain Element    ${DELETE USER MODAL}
+    Wait Until Page Does Not Contain Element    ${REMOVE USER MODAL}
 
 Cancel should cancel disconnection and disconnect should remove it when not owner
     [tags]    C41884

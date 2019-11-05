@@ -6,11 +6,11 @@
         .module('cloudApp')
         .controller('ViewPageCtrl', [ '$rootScope', '$scope', '$window', 'nxAccountService', 'system', '$routeParams', 'systemAPI', 'nxDialogsService',
             '$location', '$q', '$poll', 'camerasProvider',
-            'nxConfigService', 'languageService', 'nxAppStateService', 'nxPageService',
+            'nxConfigService', 'languageService', 'nxAppStateService', 'nxPageService', 'nxHeaderService',
 
             function ($rootScope, $scope, $window, nxAccountService, system, $routeParams, systemAPI, nxDialogsService,
                       $location, $q, $poll, camerasProvider,
-                      nxConfigService, languageService, nxAppStateService, nxPageService) {
+                      nxConfigService, languageService, nxAppStateService, nxPageService, nxHeaderService) {
     
                 const CONFIG = nxConfigService.getConfig();
                 const LANG = languageService.lang;
@@ -19,9 +19,6 @@
                 
                 $scope.systemReady = false;
                 $scope.hasCameras = false;
-    
-                // Check if page is displayed inside an iframe
-                $scope.isInIframe = ($window.location !== $window.parent.location);
     
                 function delayedUpdateSystemInfo() {
                     var pollingSystemUpdate = $poll(function () {
@@ -39,10 +36,7 @@
                 $scope.isInIframe = ($window.location !== $window.parent.location);
                 
                 if ($scope.isInIframe) {
-                    $rootScope.$emit('nx.layout.header', {
-                        state: true, // hide it
-                        loc: 'ViewPageCtrl - inIframe'
-                    });
+                    nxAppStateService.setHeaderVisibility(false);
                     nxAppStateService.setFooterVisibility(false);
                 }
     
@@ -61,7 +55,10 @@
                         $q.all([systemInfoRequest, systemAuthRequest]).then(function (result) {
                             $scope.system = $scope.currentSystem.mediaserver;
                             $scope.hasCameras = false;
-        
+                            
+                            // Notify header that system was changed (for display purposes)
+                            nxHeaderService.systemIdSubject.next($scope.currentSystem.id);
+                            
                             if ($scope.currentSystem.isOnline) {
                                 $scope.camerasProvider = camerasProvider.getProvider($scope.system);
                                 $scope.camerasProvider

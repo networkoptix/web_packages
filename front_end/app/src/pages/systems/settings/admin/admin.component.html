@@ -1,7 +1,7 @@
 <nx-pre-loader *ngIf="!system"></nx-pre-loader>
 
 <div *ngIf="system" class="row d-flex align-items-start">
-    <div class="col-12 col-xxxl-6">
+    <div class="col-12">
         <nx-block header-style="extended">
             <header>
                 <h2 class="system-name mb-2">{{system.info.name}}</h2>
@@ -18,26 +18,28 @@
             </header>
 
             <nx-section *ngIf="system.permissions.isAdmin">
-                <div class="row">
-                    <div class="col-xl-7">
+                <div class="row m-0">
+                    <div class="col-xl-7 pl-0">
                         <div class="float-left mr-2">
                             <button class="btn btn-default"
+                                    [disabled]="settings.renameDisabled"
                                     (click)="rename()"><span class="ellipsis" translate>Rename</span>
                             </button>
                         </div>
-                        <div class="float-left mr-2" *ngIf="system.isMine">
+                        <div class="float-left mr-2" *ngIf="settings.showMerge">
                             <button class="btn btn-default"
-                                    [disabled]="(currentlyMerging || !system.isOnline || !system.isAvailable) && !(debugMode || betaMode)"
-                                    (click)="mergeSystems()"><span class="ellipsis"
-                                                                   translate>Merge with Another System</span>
+                                    [disabled]="settings.mergeDisabled"
+                                    (click)="mergeSystems()">
+                                <span class="ellipsis" translate>Merge with Another System</span>
                             </button>
                         </div>
                     </div>
-                    <div class="col-xl-5 mt-2 mt-xl-0">
+                    <div class="col-xl-5 p-0 mt-2 mt-xl-0">
                         <div class="float-xl-right" *ngIf="system.isMine">
-                            <button [disabled]="currentlyMerging"
+                            <button [disabled]="settings.disconnectDisabled"
                                     class="btn btn-default"
-                                    (click)="disconnect()"><span class="ellipsis" translate>Disconnect from %CLOUD_NAME%</span>
+                                    (click)="disconnect()">
+                                <span class="ellipsis" translate>Disconnect from %CLOUD_NAME%</span>
                             </button>
                         </div>
                     </div>
@@ -45,17 +47,16 @@
             </nx-section>
         </nx-block>
     </div>
-    <div class="col-12 col-xxxl-6 mt-3 mt-xxxl-0" *ngIf="!system.isMine">
+    <div class="col-12 mt-3" *ngIf="!system.isMine">
         <nx-block>
             <nx-section>
                 <span class="system-owner" translate>Your access level<span>&nbsp;– </span>
                     <span class="name">{{ userRole }}</span>
                 </span>
                 <div class="mt-2">
-                    <button [disabled]="currentlyMerging"
+                    <button [disabled]="settings.disconnectDisabled"
                             class="btn btn-default"
-                            (click)="delete()" translate>Disconnect from My Account
-                    </button>
+                            (click)="delete()" translate>Disconnect from My Account</button>
                 </div>
             </nx-section>
         </nx-block>

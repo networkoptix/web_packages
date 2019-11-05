@@ -89,19 +89,26 @@
 			}
 		},
 		"platforms": {
-			"win64": "x64",
-			"linux64": "x64",
-			"mac": "X",
 			"bananapi": "Banana Pi",
 			"bpi": "Nx1",
-			"rpi": " Raspberry Pi"
+			"linux64": "x64",
+			"linux_arm32": "x32",
+			"linux_arm64": "x64",
+			"mac": "X",
+			"rpi": " Raspberry Pi",
+			"universal": "SDK",
+			"win64": "x64"
 		},
 		"appTypes": {
-			"client": "Solo cliente",
-			"server": "Solo server",
 			"bundle": "Client e Server",
+			"camera_sdk": "SDK sorgente video",
+			"client": "Solo cliente",
+			"metadata_sdk": "Metadata SDK",
+			"package": "Pacchetto",
+			"server": "Solo server",
 			"servertool": "Strumenti di configurazione",
-			"package": "Pacchetto"
+			"storage_sdk": "SDK di archiviazione",
+			"video_source_sdk": "SDK sorgente video"
 		},
 		"releasesTypes": {
 			"beta": "Beta",
@@ -197,7 +204,7 @@
 		"okButton": "OK",
 		"cancelButton": "Annulla",
 		"createNewAccount": "Crea nuovo account",
-		"changeAccountLogged": "You are already logged in with as {email}",
+		"changeAccountLogged": "Hai già effettuato l'accesso con {email}",
 		"loggedFromOther": "Verrà effettuato l'accesso con un altro account",
 		"loginTitle": "Accedi a %CLOUD_NAME%",
 		"loginButton": "Accesso",
@@ -205,17 +212,24 @@
 		"logoutAuthorisedContinueButton": "Continua",
 		"logoutAuthorisedLogoutButton": "Disconnetti",
 		"noClientDetectedTitle": "Installa %VMS_NAME% per visualizzare il suo sistema",
-		"stayAs": "Stay logged as {email} ",
-		"stayLoggedIn": "Stay Logged In",
+		"stayAs": "Rimani collegato come {email} ",
+		"stayLoggedIn": "Rimani collegato",
 		"download": "Scarica %VMS_NAME%",
 		"merge": {
+			"commonText": "Impossibile unire i sistemi <strong>{{primarySystem}}</strong> e <strong>{{secondarySystem}}</strong>.",
 			"connectToCloud": "Connetti il Sistema che vuoi unire con questo <strong>{{cloudName}}</strong> o unisci localmente usando <strong>{{vmsName}}</strong> il Client.",
 			"mergeConfirmation": "Stai per unire i Sistemi <strong>{{primarySystem}}</strong> e <strong>{{secondarySystem}}</strong>. Le impostazioni e il nome verranno presi da <strong>{{primarySystem}}</strong>.",
+			"mergeFailedTitle": "Unione di sistemi fallita",
 			"primaryCannotMerge": "Il sistema {{targetSystem}} ha una versione più recente del software che è incompatibile con il sistema corrente. Aggiornare il sistema attuale alla <a href=\"/download\" target=\"_blank\" translate>versione più recente</a> per unirsi con il {{targetSystem}} sistema.",
 			"primarySystemOffline": "Il sistema {{primarySystem}} è offline e non può essere unito al sistema {{targetSystem}}.",
 			"secondaryCannotMerge": "Il sistema {{targetSystem}} ha una versione più recente del software che è incompatibile con il sistema corrente. Aggiornare il sistema attuale alla <a href=\"/download\" target=\"_blank\" translate>versione più recente</a> per unirsi con il {{targetSystem}} sistema corrente.",
 			"systemOffline": "Il sistema {{targetSystem}} è offline e non può essere unito a quello corrente.",
-			"systemUnavailable": "Il sistema {{targetSystem}} è attualmente irraggiungibile. Riprova tra qualche minuto o contatta"
+			"systemUnavailable": "Il sistema {{targetSystem}} è attualmente irraggiungibile. Riprova tra qualche minuto o contatta",
+			"recommendSupport": {
+				"a_recommend": "Raccomandiamo di consultarsi con",
+				"b_support": "supporto",
+				"c_proceeding": "prima di procedere."
+			}
 		},
 		"message": {
 			"failedToSend": "Impossibile inviare il messaggio.",
@@ -308,6 +322,7 @@
 		"mySystemSearch": "IMeMyMine",
 		"unavailable": "Il server è irraggiungibile",
 		"offline": "Il sistema è offline",
+		"offlineAlertRibbon": "System is offline. Some settings may not be available.",
 		"openClient": "Apri in %VMS_NAME%",
 		"openClientNoSystem": "Apri in %VMS_NAME%",
 		"confirmMergeAction": "Unisci",
@@ -321,15 +336,16 @@
 		"confirmUnshareFromMeTitle": "Scollegare il sistema da?",
 		"confirmUnshareFromMeAction": "Scollegamento",
 		"confirmUnshare": "Questo utente non sarà in grado di accedere al sistema. E' sicuro?",
-		"confirmUnshareTitle": "Cancella utente?",
-		"confirmUnshareAction": "Elimina",
+		"confirmUnshareTitle": "Rimuovere l'utente?",
+		"confirmUnshareAction": "Rimuovere",
 		"successDisconnected": "Il sistema è stato scollegato correttamente da %CLOUD_NAME%",
 		"successDeleted": "Il sistema {{systemName}} è stato eliminato correttamente dal suo account",
 		"mergeFailed": "Unione di sistemi fallita",
 		"mergeStart": "I sistemi hanno iniziato ad unirsi",
 		"mergeSuccess": "Unione del sistema completata",
 		"permissionsRemoved": "Le autorizzazioni sono state rimosse da {{email}}",
-		"unknownName": "Nome sconosciuto per il sistema (causato da cloud merge)"
+		"unknownName": "Nome sconosciuto per il sistema (causato da cloud merge)",
+		"shareOffline": "Cannot share system while it is offline"
 	},
 	"systemStatuses": {
 		"activated": "attivato",

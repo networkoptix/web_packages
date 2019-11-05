@@ -104,6 +104,7 @@ export class NxSystem extends System implements OnDestroy {
     activeSubscription: any;
     currentUserEmail: string;
     currentUser: NxSystemUser;
+    lostConnection: boolean;
     mediaserver: any;
 
     infoPromise: any;
@@ -120,6 +121,7 @@ export class NxSystem extends System implements OnDestroy {
         this.systemApiService = systemApiService;
         this.pollService = pollService;
         this.systemsService = systemsService;
+        this.lostConnection = false;
         this.init();
         this.initSystem(systemId, currentUserEmail);
     }
@@ -212,9 +214,9 @@ export class NxSystem extends System implements OnDestroy {
         }
     }
 
-    getInfoAndPermissions() {
+    getInfoAndPermissions(useCache = true) {
         return this.systemsService
-            .getSystemAsPromise(this.id)
+            .getSystemAsPromise(this.id, useCache)
             .then((response: any) => {
                 const error = this.cloudApi.checkResponseHasError(response);
                 if (error) {
@@ -235,17 +237,17 @@ export class NxSystem extends System implements OnDestroy {
                 this.mergeInfo = response.mergeInfo;
 
                 this.checkPermissions();
-                return this;
+                return Promise.resolve(this);
             });
     }
 
-    getInfo(force?) {
+    getInfo(force?, useCache = true) {
         if (force) {
             this.infoPromise = undefined;
         }
         if (!this.infoPromise) {
             this.infoPromise = this.updateSystemAuth().then(() => {
-                return this.getInfoAndPermissions();
+                return this.getInfoAndPermissions(useCache);
             });
         }
         return this.infoPromise;
@@ -412,11 +414,11 @@ export class NxSystem extends System implements OnDestroy {
         user.email = user.email.toLowerCase();
         let userCreated = false;
 
-        if (!user.userId) {
-            if (user.email === this.currentUserEmail) {
-                return Promise.reject({ resultCode: 'cantEditYourself' });
-            }
+        if (user.email === this.currentUserEmail) {
+            return Promise.reject({ resultCode: 'cantEditYourself' });
+        }
 
+        if (!user.userId) {
             let existingUser = this.users.find((u) => {
                 return user.email === u.email;
             });
@@ -456,7 +458,7 @@ export class NxSystem extends System implements OnDestroy {
     deleteFromCurrentAccount() {
         if (this.currentUser && this.isAvailable) {
             // Handling promise to satisfy the linter.
-            this.mediaserver.deleteUser(this.currentUser.id).toPromise.then(() => {}); // Try to remove me from the system directly
+            this.mediaserver.deleteUser(this.currentUser.id).toPromise().then(() => {}); // Try to remove me from the system directly
         }
         // Anyway - send another request to cloud_db to remove my this
         return this.cloudApi.unshare(this.id, this.currentUserEmail).toPromise();
@@ -486,11 +488,15 @@ export class NxSystem extends System implements OnDestroy {
     }
 
     update() {
-        return from(this.getInfo(true)).pipe(flatMap((res) => {
-            if (this.permissions.editUsers) {
-                return from(this.getUsers(true));
-            }
-            return of(true);
+        return of('').pipe(flatMap(_ => {
+            return this.getInfo(true, false).then(_ => {
+                if (this.permissions.editUsers) {
+                    return from(this.getUsers(true));
+                }
+                return of(true);
+            }).catch(() => {
+                this.lostConnection = true;
+            });
         }));
     }
 }

@@ -15,8 +15,7 @@ import requests
 from cloud import settings
 from django.shortcuts import redirect
 
-from cms.models import DataStructure, get_cloud_portal_asset,\
-    cloud_portal_customization_cache, UserGroupsToAssetPermissions
+from cms.models import cloud_portal_customization_cache, UserGroupsToAssetPermissions
 
 logger = logging.getLogger(__name__)
 
@@ -131,8 +130,8 @@ def downloads_history(request):
     downloads_json = requests.get(downloads_url)
 
     if downloads_json.status_code == 404:
-        logger.error(
-            f"downloads.json doesn't exist for customization: {settings.CUSTOMIZATION}, Ask Boris to fix that "
+        logger.warning(
+            f"downloads.json doesn't exist for customization: {settings.CUSTOMIZATION}, {settings.CONFIG_ERROR} "
             f"(publish and accept a release)"
         )
         return Response(None)
@@ -178,7 +177,7 @@ def download_build(request, build):
 
     # find settings for customizations
     if customization not in updates_json:
-        logger.error(f'Customization not in updates.json: {customization}. Ask Boris to fix that.')
+        logger.warning(f'Customization not in updates.json: {customization}. {settings.CONFIG_ERROR}')
         customization = 'default'
 
     updates_record = updates_json[customization]
@@ -210,7 +209,7 @@ def downloads(request):
 
         # find settings for customizations
         if customization not in updates_json:
-            logger.error(f"Customization not in updates.json: {customization}. Ask Boris to fix that.")
+            logger.warning(f"Customization not in updates.json: {customization}. {settings.CONFIG_ERROR}")
             return Response(None)
         updates_record = updates_json[customization]
         latest_version = updates_record['download_version'] if 'download_version' in updates_record else None
@@ -218,22 +217,22 @@ def downloads(request):
         # Fallback section for old structure and old versions
         if not latest_version or latest_version.startswith('2'):
             if latest_version and latest_version.startswith('2'):
-                logger.error(f'No 3.0 downloadable release for customization: {customization}. '
-                             'Ask Boris to fix that.')
+                logger.warning(f'No 3.0 downloadable release for customization: {customization}. '
+                               f'{settings.CONFIG_ERROR}')
             else:
-                logger.error(f'No download_version in updates.json for customization: {customization}. '
-                             'Ask Boris to fix that.')
+                logger.warning(f'No download_version in updates.json for customization: {customization}. '
+                               f'{settings.CONFIG_ERROR}')
             latest_release = None
             if 'current_release' in updates_record:
                 latest_release = updates_record['current_release']
             if not latest_release:  # Hack for new customizations
-                logger.error(f'No official release for customization: {customization}. '
-                             'Ask Boris to fix that.')
+                logger.warning(f'No official release for customization: {customization}. '
+                             f'{settings.CONFIG_ERROR}')
                 latest_release = '3.0'
             if latest_release.startswith('2'):  # latest release is 2.* - fallback for 3.0
                 latest_release = '3.0'
             if latest_release not in updates_record['releases']:
-                logger.error(f'No 3.0 release for customization: {customization}. Ask Boris to fix that.')
+                logger.warning(f'No 3.0 release for customization: {customization}. {settings.CONFIG_ERROR}')
                 return Response(None)
             latest_version = updates_record['releases'][latest_release]
         # End of fallback section for old structure and old versions

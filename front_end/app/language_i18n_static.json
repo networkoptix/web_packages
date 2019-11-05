@@ -216,13 +216,20 @@
 		"stayLoggedIn": "Stay Logged In",
 		"download": "Download %VMS_NAME%",
 		"merge": {
+			"commonText": "Failed to merge Systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>.",
 			"connectToCloud": "Connect System you want to merge with this one to <strong>{{cloudName}}</strong> or merge locally using <strong>{{vmsName}}</strong> Client.",
 			"mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from the <strong>{{primarySystem}}</strong>.",
+			"mergeFailedTitle": "System merge failed",
 			"primaryCannotMerge": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} System.",
 			"primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}.",
 			"secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
 			"systemOffline": "System {{targetSystem}} is offline and cannot be merged with the current one.",
-			"systemUnavailable": "System {{targetSystem}} is currently unreachable. Try again in a few minutes or contact"
+			"systemUnavailable": "System {{targetSystem}} is currently unreachable. Try again in a few minutes or contact",
+			"recommendSupport": {
+				"a_recommend": "We'd recommend consulting with",
+				"b_support": "support",
+				"c_proceeding": "before proceeding."
+			}
 		},
 		"message": {
 			"failedToSend": "Message has failed to send.",
@@ -329,15 +336,16 @@
 		"confirmUnshareFromMeTitle": "Disconnect System?",
 		"confirmUnshareFromMeAction": "Disconnect",
 		"confirmUnshare": "This user will not be able to access System. Are you sure?",
-		"confirmUnshareTitle": "Delete user?",
-		"confirmUnshareAction": "Delete",
+		"confirmUnshareTitle": "Remove user?",
+		"confirmUnshareAction": "Remove",
 		"successDisconnected": "System is successfully disconnected from %CLOUD_NAME%",
 		"successDeleted": "System {{systemName}} is successfully deleted from your account",
 		"mergeFailed": "System merge failed",
 		"mergeStart": "Systems have started merging",
 		"mergeSuccess": "System merge completed",
 		"permissionsRemoved": "Permissions were removed from {{email}}",
-		"unknownName": "Unknown Name for System (Caused by cloud merge)"
+		"unknownName": "Unknown Name for System (Caused by cloud merge)",
+		"shareOffline": "Cannot share system while it is offline"
 	},
 	"systemStatuses": {
 		"activated": "activated",

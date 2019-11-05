@@ -105,6 +105,7 @@
     "NO_SYSTEMS_LOGIN": "เข้าสู่ระบบโดยใช้ %VMS_NAME%",
     "NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "คุณไม่มีระบบเชื่อมต่อกับ %CLOUD_NAME%",
     "New Password": "สร้างรหัสผ่านใหม่",
+    "No unsaved changes": "No unsaved changes",
     "Nothing Found": "ไม่พบสิ่งใด!",
     "OK": "ตกลง",
     "Ok": "ตกลง",
@@ -125,6 +126,7 @@
     "Release Notes": "หมายเหตุ",
     "Release notes": "หมายเหตุการเผยแพร่",
     "Remember me": "จดจำ",
+    "Remove User": "Remove User",
     "Rename": "เปลี่ยนชื่อ",
     "Requirements": "ความต้องการ",
     "Resend activation email": "ส่งอีเมลยืนยันซ้ำ",
@@ -280,10 +282,17 @@
         "logoutAuthorisedLogoutButton": "ออกจากระบบ",
         "logoutAuthorisedTitle": "คุณกำลังอยู่ในระบบ",
         "merge": {
+            "commonText": "ไม่สามารถรวมระบบ <strong>{{primarySystem}}</strong> และ <strong>{{secondarySystem}}</strong>",
             "connectToCloud": "เชื่อมต่อระบบที่คุณต้องการผสานกับระบบนี้กับ <strong>{{cloudName}}</strong> หรือผสานภายในเครื่องโดยใช้ไคลเอ็นต์ <strong>{{vmsName}}</strong>",
             "mergeConfirmation": "คุณกำลังจะรวมระบบ <strong>{{primarySystem}}</strong> และ <strong>{{secondarySystem}}</strong>การตั้งค่าและชื่อจะถูกนำมาจาก <strong>{{primarySystem}}</strong>",
+            "mergeFailedTitle": "การผสานระบบล้มเหลว",
             "primaryCannotMerge": "ระบบ {{targetSystem}} มีซอฟต์แวร์เวอร์ชันใหม่กว่าที่ไม่สามารถใช้กับระบบปัจจุบันได้ อัพเดตระบบปัจจุบันเป็น <a href=\"/download\" target=\"_blank\" translate>บิลด์ล่าสุด</a> เพื่อรวมเข้ากับ {{targetSystem}} ระบบ",
             "primarySystemOffline": "ระบบ {{primarySystem}} เป็นออฟไลน์และไม่สามารถผสานกับระบบปัจจุบันได้ {{targetSystem}}",
+            "recommendSupport": {
+                "a_recommend": "เราขอแนะนำให้ปรึกษากับ",
+                "b_support": "ทีมช่วยเหลือ",
+                "c_proceeding": "ก่อนดำเนินการต่อ"
+            },
             "secondaryCannotMerge": "ระบบ {{targetSystem}} มีซอฟต์แวร์รุ่นเก่าที่เข้ากันไม่ได้กับระบบปัจจุบัน อัปเดต {{targetSystem}} เป็น <a href=\"/download\" target=\"_blank\" translate>บิลด์ล่าสุด</a> เพื่อรวมเข้ากับบิลด์ปัจจุบัน",
             "systemOffline": "ระบบ {{targetSystem}} เป็นแบบออฟไลน์และไม่สามารถผสานกับระบบปัจจุบันได้",
             "systemUnavailable": "ระบบ {{targetSystem}} ไม่สามารถเข้าถึงได้ในขณะนี้ ลองอีกครั้งในไม่กี่นาทีหรือติดต่อ"
@@ -327,10 +336,14 @@
     "downloads": {
         "appTypes": {
             "bundle": "ไคลเอ็นต์และเซิร์ฟเวอร์",
+            "camera_sdk": "SDK แหล่งวิดีโอ",
             "client": "ไคลเอ็นต์เท่านั้น",
+            "metadata_sdk": "Metadata SDK",
             "package": "แพคเกจ",
             "server": "เซิร์ฟเวอร์เท่านั้น",
-            "servertool": "เครื่องมือกำหนดค่า"
+            "servertool": "เครื่องมือกำหนดค่า",
+            "storage_sdk": "SDK ที่เก็บข้อมูล",
+            "video_source_sdk": "SDK แหล่งวิดีโอ"
         },
         "groups": {
             "android": {
@@ -381,8 +394,11 @@
             "bananapi": "Banana Pi",
             "bpi": "Nx1",
             "linux64": "x64",
+            "linux_arm32": "x32",
+            "linux_arm64": "x64",
             "mac": "X",
             "rpi": " Raspberry Pi",
+            "universal": "SDK",
             "win64": "x64"
         },
         "releasesTypes": {
@@ -570,20 +586,22 @@
         "confirmRenameAction": "บันทึก",
         "confirmRenameTitle": "ชื่อระบบ",
         "confirmUnshare": "ผู้ใช้รายนี้จะไม่สามารถเข้าใช้งานระบบได้ คุณแน่ใจไหม?",
-        "confirmUnshareAction": "ลบ",
+        "confirmUnshareAction": "เอาออก",
         "confirmUnshareFromMe": "คุณกำลังจะยกเลิกการเชื่อมต่อระบบนี้จากบัญชีของคุณ คุณจะไม่สามารถเข้าถึงระบบนี้ได้อีกต่อไป คุณแน่ใจไหม?",
         "confirmUnshareFromMeAction": "ตัดการเชื่อมต่อ",
         "confirmUnshareFromMeTitle": "ยกเลิกการเชื่อมต่อระบบหรือไม่?",
-        "confirmUnshareTitle": "ลบผู้ใช้หรือไม่?",
+        "confirmUnshareTitle": "Remove user?",
         "mergeFailed": "การผสานระบบล้มเหลว",
         "mergeStart": "ระบบได้รวมเข้าด้วยกันเรียบร้อยแล้ว",
         "mergeSuccess": "ผสานระบบเสร็จสมบูรณ์",
         "mergeSystemTitle": "รวมระบบ",
         "mySystemSearch": "IMeMyMine",
         "offline": "ระบบออฟไลน์",
+        "offlineAlertRibbon": "System is offline. Some settings may not be available.",
         "openClient": "เปิดใน %VMS_NAME%",
         "openClientNoSystem": "เปิด %VMS_NAME%",
         "permissionsRemoved": "สิทธิ์ถูกนำออกจาก {{email}}",
+        "shareOffline": "Cannot share system while it is offline",
         "successDeleted": "ระบบ {{systemName}} จะถูกลบออกจากบัญชีของคุณเรียบร้อยแล้ว",
         "successDisconnected": "ระบบถูกตัดการเชื่อมต่อเรียบร้อยแล้วจาก %CLOUD_NAME%",
         "successRename": "ระบบเปลี่ยนชื่อ",

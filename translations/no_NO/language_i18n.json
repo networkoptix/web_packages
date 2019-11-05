@@ -105,6 +105,7 @@
     "NO_SYSTEMS_LOGIN": "Logg inn på systemet ditt med %VMS_NAME%",
     "NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "Du har ingen systemer koblet til %CLOUD_NAME%",
     "New Password": "Nytt passord",
+    "No unsaved changes": "No unsaved changes",
     "Nothing Found": "Ingenting funnet",
     "OK": "OK",
     "Ok": "Ok",
@@ -125,6 +126,7 @@
     "Release Notes": "Utgivelsesnotater",
     "Release notes": "Utgivelsesnotater",
     "Remember me": "Husk meg",
+    "Remove User": "Remove User",
     "Rename": "Endre navn",
     "Requirements": "Krav",
     "Resend activation email": "Send aktiverings e-post igjen",
@@ -280,10 +282,17 @@
         "logoutAuthorisedLogoutButton": "Logg ut",
         "logoutAuthorisedTitle": "Du er allerede innlogget",
         "merge": {
+            "commonText": "Kunne ikke slå sammen systemer <strong>{{primarySystem}}</strong> og <strong>{{secondarySystem}}</strong>.",
             "connectToCloud": "Koble System du vil slå sammen med denne til <strong>{{cloudName}}</strong> eller slå sammen lokalt ved hjelp av <strong>{{vmsName}}</strong> Klienten.",
             "mergeConfirmation": "Du er i ferd med å slå sammen systemene <strong>{{primarySystem}}</strong> og <strong>{{secondarySystem}}</strong>. Innstillinger og navnet vil bli tatt fra <strong>{{primarySystem}}</strong>.",
+            "mergeFailedTitle": "Systemsammenslåing mislyktes",
             "primaryCannotMerge": "System {{targetSystem}} har en nyere programvareversjon som ikke er kompatibel med gjeldende system. Oppdater det nåværende systemet til <a href=\"/download\" target=\"_blank\" translate>siste versjon</a> å slå det sammen med {{targetSystem}} systemet.",
             "primarySystemOffline": "System {{primarySystem}} er frakoblet og kan ikke slås sammen med System {{targetSystem}}.",
+            "recommendSupport": {
+                "a_recommend": "Vi anbefaler å konsultere med",
+                "b_support": "brukerstøtte",
+                "c_proceeding": "før du fortsetter."
+            },
             "secondaryCannotMerge": "System {{targetSystem}} har en eldre programvareversjon som ikke er kompatibel med gjeldende system. Oppdater {{targetSystem}} til <a href=\"/download\" target=\"_blank\" translate>siste bygg</a> å slå dert sammen med det nåværende.",
             "systemOffline": "System {{targetSystem}} er frakoblet og kan ikke slås sammen med det nåværende.",
             "systemUnavailable": "System {{targetSystem}} er for tiden ikke tilgjengelig. Prøv igjen om noen få minutter eller kontakt"
@@ -327,10 +336,14 @@
     "downloads": {
         "appTypes": {
             "bundle": "Klient og server",
+            "camera_sdk": "Videokilde SDK",
             "client": "Kun klient",
+            "metadata_sdk": "Metadata SDK",
             "package": "Pakke",
             "server": "Kun Server",
-            "servertool": "Konfigurasjonsverktøy"
+            "servertool": "Konfigurasjonsverktøy",
+            "storage_sdk": "Lagrings SDK",
+            "video_source_sdk": "Videokilde SDK"
         },
         "groups": {
             "android": {
@@ -381,8 +394,11 @@
             "bananapi": "Banana Pi",
             "bpi": "Nx1",
             "linux64": "x64",
+            "linux_arm32": "x32",
+            "linux_arm64": "x64",
             "mac": "X",
             "rpi": " Raspberry Pi",
+            "universal": "SDK",
             "win64": "x64"
         },
         "releasesTypes": {
@@ -570,20 +586,22 @@
         "confirmRenameAction": "Lagre",
         "confirmRenameTitle": "Systemnavn",
         "confirmUnshare": "Denne brukeren kan ikke ha tilgang til System. Er du sikker?",
-        "confirmUnshareAction": "Slett",
+        "confirmUnshareAction": "Fjern",
         "confirmUnshareFromMe": "Du er i ferd med å koble fra dette systemet fra kontoen din. Du vil ikke kunne få tilgang til dette systemet lenger. Er du sikker?",
         "confirmUnshareFromMeAction": "Koble fra",
         "confirmUnshareFromMeTitle": "Koble fra systemet?",
-        "confirmUnshareTitle": "Slett bruker?",
+        "confirmUnshareTitle": "Remove user?",
         "mergeFailed": "Systemsammenslåing mislyktes",
         "mergeStart": "Systemene blir slått sammen",
         "mergeSuccess": "Systemsammenslåing fullført",
         "mergeSystemTitle": "Slå sammen systemer",
         "mySystemSearch": "IMeMyMine",
         "offline": "Systemet er offline",
+        "offlineAlertRibbon": "System is offline. Some settings may not be available.",
         "openClient": "Åpent i %VMS_NAME%",
         "openClientNoSystem": "Åpne %VMS_NAME%",
         "permissionsRemoved": "Tillatelser ble fjernet fra {{email}}",
+        "shareOffline": "Cannot share system while it is offline",
         "successDeleted": "System {{systemName}} er slettet fra kontoen din",
         "successDisconnected": "Systemet er frakoblet fra %CLOUD_NAME%",
         "successRename": "Systemnavn lagret",

@@ -105,6 +105,7 @@
     "NO_SYSTEMS_LOGIN": "Connectez-vous à votre système à l’aide de %VMS_NAME%",
     "NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "Vous n’avez pas de systèmes connectés à %CLOUD_NAME%",
     "New Password": "Nouveau mot de passe",
+    "No unsaved changes": "No unsaved changes",
     "Nothing Found": "Rien trouvé",
     "OK": "OK",
     "Ok": "Ok",
@@ -125,6 +126,7 @@
     "Release Notes": "Notes de Version",
     "Release notes": "Notes de Version",
     "Remember me": "Se souvenir de moi",
+    "Remove User": "Remove User",
     "Rename": "Renommer",
     "Requirements": "Exigences",
     "Resend activation email": "Renvoyer courriel d'activation",
@@ -280,10 +282,17 @@
         "logoutAuthorisedLogoutButton": "Déconnecter",
         "logoutAuthorisedTitle": "Vous êtes déjà connecté",
         "merge": {
+            "commonText": "Échec de la fusion des systèmes <strong>{{primarySystem}}</strong> et <strong>{{secondarySystem}}</strong>.",
             "connectToCloud": "Connectez le système que vous souhaitez fusionner avec celui-ci à <strong>{{cloudName}}</strong> ou fusionner localement à l'aide de <strong>{{vmsName}}</strong> Client.",
             "mergeConfirmation": "Vous êtes sur le point de fusionner les systèmes <strong>{{primarySystem}}</strong> et <strong>{{secondarySystem}}</strong>. Les réglages et le nom seront pris à partir du <strong>{{primarySystem}}</strong>.",
+            "mergeFailedTitle": "Fusion système a échoué",
             "primaryCannotMerge": "Système {{targetSystem}} a une version logicielle plus récente incompatible avec le système actuel. Mettre à jour le système actuel a la <a href=\"/download\" target=\"_blank\" translate>dernière version</a> pour fusionner avec le {{targetSystem}} système.",
             "primarySystemOffline": "Le système {{primarySystem}} est hors ligne et ne peut pas être fusionné avec le système {{targetSystem}}.",
+            "recommendSupport": {
+                "a_recommend": "Nous recommandons de consulter avec",
+                "b_support": "support",
+                "c_proceeding": "avant de procéder."
+            },
             "secondaryCannotMerge": "Système {{targetSystem}} a une version de logiciel plus ancienne incompatible avec le système actuel. Mettre à jour {{targetSystem}} à <a href=\"/download\" target=\"_blank\" translate>dernière version</a> pour fusionner avec l'actuel.",
             "systemOffline": "Système {{targetSystem}} est hors ligne et ne peut pas être fusionné avec le système actuel.",
             "systemUnavailable": "Système {{targetSystem}} est actuellement inaccessible. Réessayez dans quelques minutes ou contactez"
@@ -327,10 +336,14 @@
     "downloads": {
         "appTypes": {
             "bundle": "Client et serveur",
+            "camera_sdk": "Source vidéo SDK",
             "client": "Client seulement",
+            "metadata_sdk": "Metadata SDK",
             "package": "Paquet",
             "server": "Server seulement",
-            "servertool": "Outil de configuration"
+            "servertool": "Outil de configuration",
+            "storage_sdk": "Stockage SDK",
+            "video_source_sdk": "Source vidéo SDK"
         },
         "groups": {
             "android": {
@@ -381,8 +394,11 @@
             "bananapi": "Banana Pi",
             "bpi": "Nx1",
             "linux64": "x64",
+            "linux_arm32": "x32",
+            "linux_arm64": "x64",
             "mac": "X",
             "rpi": " Raspberry Pi",
+            "universal": "SDK",
             "win64": "x64"
         },
         "releasesTypes": {
@@ -574,16 +590,18 @@
         "confirmUnshareFromMe": "Vous êtes sur le point de déconnecter ce système de votre compte. Vous ne serez plus en mesure d’accéder à ce système. Êtes-Vous sûr ?",
         "confirmUnshareFromMeAction": "Déconnecter",
         "confirmUnshareFromMeTitle": "Déconnecter système?",
-        "confirmUnshareTitle": "Supprimer usager?",
+        "confirmUnshareTitle": "Remove user?",
         "mergeFailed": "Fusion système a échoué",
         "mergeStart": "Les systèmes ont commencé à fusionner",
         "mergeSuccess": "Fusion du système terminée",
         "mergeSystemTitle": "Fusionner systèmes",
         "mySystemSearch": "IMeMyMine",
         "offline": "System Hors ligne",
+        "offlineAlertRibbon": "System is offline. Some settings may not be available.",
         "openClient": "Ouvert à %VMS_NAME%",
         "openClientNoSystem": "Ouvrir %VMS_NAME%",
         "permissionsRemoved": "Autorisations retirées de {{email}}",
+        "shareOffline": "Cannot share system while it is offline",
         "successDeleted": "Système {{systemName}} a correctement été supprimé de votre compte",
         "successDisconnected": "Système correctement déconnecté de %CLOUD_NAME%",
         "successRename": "Nom du système sauvegardé",

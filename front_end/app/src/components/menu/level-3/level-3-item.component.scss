@@ -41,15 +41,16 @@
         height: 4px;
         z-index: 2;
     }
-
+    
     &-icon {
-        float           : left;
-        margin-right    : .5rem;
-        display         : flex;
-        align-items     : center;
-        justify-content : center;
-        width           : 18px;
-        height          : 26px;
+        float               : left;
+        margin-right        : .5rem;
+        display             : flex;
+        align-items         : center;
+        justify-content     : center;
+        width               : 18px;
+        height              : 26px;
+        background-position : -99px -135px;
     }
 
     &.selected {
@@ -57,7 +58,11 @@
             color: $light1 !important;
             background-color: $light16 !important;
         }
-
+    
+        .menu-level-3-icon {
+            background-position : -123px -135px;
+        }
+        
         .menu-level-3-additional {
             font-family : $font-family-regular;
         }
@@ -73,7 +78,7 @@
 }
 
 .menu-level-3-additional {
-    color : $light16;
+    color : $light13;
     font-family: $font-family-regular;
 }
 

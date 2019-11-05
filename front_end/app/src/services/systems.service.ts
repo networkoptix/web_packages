@@ -1,11 +1,12 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { of, ReplaySubject } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 
 import { NxConfigService } from './nx-config';
 import { NxLanguageProviderService } from './nx-language-provider';
 import { NxCloudApiService } from './nx-cloud-api';
 import { NxPollService } from './poll.service';
+import { NxToastService } from '../dialogs/toast.service';
 
 @Injectable({
     providedIn: 'root'
@@ -15,27 +16,51 @@ export class NxSystemsService implements OnDestroy {
     LANG: any;
     activeSubscription: any;
     currentUser: string;
+    mergingSystems: any;
     systems: any;
     systemsPoll: any;
     systemsSubject = new ReplaySubject(0);
+
     constructor(private cloudApi: NxCloudApiService,
                 private config: NxConfigService,
                 private language: NxLanguageProviderService,
-                private pollService: NxPollService) {
+                private pollService: NxPollService,
+                private toastService: NxToastService
+    ) {
         this.LANG = this.language.getTranslations();
         this.CONFIG = this.config.getConfig();
         this.systemsPoll = pollService.createPoll(this.cloudApi.systems(), this.CONFIG.updateInterval);
+        this.mergingSystems = new Set();
+    }
+    addToMergeList(systemId) {
+        this.mergingSystems.add(systemId);
     }
 
-    forceUpdateSystems() {
+    removeFromMergeList(systemId) {
+        if (this.mergingSystems.has(systemId)) {
+            this.mergingSystems.delete(systemId);
+            const options = {
+                    autoHide: true,
+                    classname: 'success',
+                    delay: this.CONFIG.alertTimeout
+                };
+            this.toastService.show(this.LANG.system.mergeSuccess, options);
+        }
+    }
+
+    forceUpdateSystems(userEmail?) {
+        if (userEmail) {
+            this.currentUser = userEmail;
+        }
+
         return this.cloudApi.systems().pipe(tap((systems) => {
             this.processSystems(systems);
             this.systemsSubject.next(systems);
         }));
     }
 
-    forceUpdateSystemsAsPromise() {
-        return this.forceUpdateSystems().toPromise();
+    forceUpdateSystemsAsPromise(userEmail?) {
+        return this.forceUpdateSystems(userEmail).toPromise();
     }
 
     getSystemOwnerName (system, currentUserEmail, forOrder?) {
@@ -61,7 +86,7 @@ export class NxSystemsService implements OnDestroy {
         });
     }
 
-    getSystem(systemId) {
+    getSystem(systemId, useCache = true) {
         let system;
         if (this.systems && this.systems.length > 0) {
             system = this.systems.find((system) => {
@@ -69,16 +94,19 @@ export class NxSystemsService implements OnDestroy {
             });
         }
 
-        if (system) { // Cache success
+        if (system && useCache) { // Cache success
             return of(system);
         } else { // Cache miss
-            return this.cloudApi.systems(systemId);
+            return this.cloudApi.systems(systemId).pipe(map((systems) => {
+                return systems[0];
+            }));
         }
     }
 
-    getSystemAsPromise(systemId) {
-        return this.getSystem(systemId).toPromise();
+    getSystemAsPromise(systemId, useCache = true) {
+        return this.getSystem(systemId, useCache).toPromise();
     }
+
     getSystems(userEmail) {
         this.currentUser = userEmail;
         if (this.activeSubscription) {
@@ -101,6 +129,7 @@ export class NxSystemsService implements OnDestroy {
             this.systemsPoll.unsubscribe();
         }
     }
+
     private processSystems(systems) {
         this.systems = this.sortSystems(systems, this.currentUser);
         this.systems.forEach((system) => {
@@ -109,6 +138,11 @@ export class NxSystemsService implements OnDestroy {
                 system.capabilities.indexOf(this.CONFIG.systemCapabilities.cloudMerge) > -1
                 || this.CONFIG.allowDebugMode
                 || this.CONFIG.allowBetaMode);
+            if (system.mergeInfo !== undefined) {
+                this.addToMergeList(system.id);
+            } else if (this.mergingSystems.has(system.id)) {
+                this.removeFromMergeList(system.id);
+            }
         });
     }
 

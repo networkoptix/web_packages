@@ -51,7 +51,7 @@ export class NxVendorListComponent implements OnInit, OnChanges {
         this.LANG = this.language.getTranslations();
         this.CONFIG = this.config.getConfig();
         this.debug = false;
-        this.uriPath = '/' + this._route.snapshot.url[0].path;
+        this.uriPath = '/' + this._route.snapshot.url.map(e => e.path).join('/');
 
         this.filters = [
             {

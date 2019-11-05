@@ -16,7 +16,8 @@ import { CsvButtonComponent } from './cam-components/csv-button/csv-button.compo
 import { BoolIconComponent }  from './cam-components/bool-icon/bool-icon.component';
 
 const appRoutes: Routes = [
-    { path: 'ipvd', component: NxIpvdComponent }
+    { path: 'ipvd', component: NxIpvdComponent },
+    { path: 'embed/ipvd', component: NxIpvdComponent },
 ];
 
 @NgModule({

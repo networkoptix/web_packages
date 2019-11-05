@@ -89,7 +89,6 @@ MIDDLEWARE = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'cloud.logger.CatchExceptionMiddleware',
 )
@@ -510,7 +509,9 @@ NOTIFICATIONS_CONFIG = {
     }
 }
 
-BROADCAST_NOTIFICATIONS_SUPERUSERS_ONLY = DEBUG
+CONFIG_ERROR = "Customization Configuration Error. Please Notify Release Engineers."
+# Can not trust DEBUG because it is automatically set False for celery workers to prevent memory leak
+BROADCAST_NOTIFICATIONS_SUPERUSERS_ONLY = 'debug' in conf and conf['debug']
 NOTIFICATIONS_AUTO_SUBSCRIBE = False
 
 IPVD_CONNECT = 'https://cameras.networkoptix.com/api/v1/cacameras/'

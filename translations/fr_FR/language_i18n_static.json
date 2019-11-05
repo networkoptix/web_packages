@@ -89,19 +89,26 @@
 			}
 		},
 		"platforms": {
-			"win64": "x64",
-			"linux64": "x64",
-			"mac": "X",
 			"bananapi": "Banana Pi",
 			"bpi": "Nx1",
-			"rpi": " Raspberry Pi"
+			"linux64": "x64",
+			"linux_arm32": "x32",
+			"linux_arm64": "x64",
+			"mac": "X",
+			"rpi": " Raspberry Pi",
+			"universal": "SDK",
+			"win64": "x64"
 		},
 		"appTypes": {
-			"client": "Client seulement",
-			"server": "Server seulement",
 			"bundle": "Client et serveur",
+			"camera_sdk": "Source vidéo SDK",
+			"client": "Client seulement",
+			"metadata_sdk": "Metadata SDK",
+			"package": "Paquet",
+			"server": "Server seulement",
 			"servertool": "Outil de configuration",
-			"package": "Paquet"
+			"storage_sdk": "Stockage SDK",
+			"video_source_sdk": "Source vidéo SDK"
 		},
 		"releasesTypes": {
 			"beta": "Beta",
@@ -209,13 +216,20 @@
 		"stayLoggedIn": "Stay Logged In",
 		"download": "Télécharger %VMS_NAME%",
 		"merge": {
+			"commonText": "Échec de la fusion des systèmes <strong>{{primarySystem}}</strong> et <strong>{{secondarySystem}}</strong>.",
 			"connectToCloud": "Connectez le système que vous souhaitez fusionner avec celui-ci à <strong>{{cloudName}}</strong> ou fusionner localement à l'aide de <strong>{{vmsName}}</strong> Client.",
 			"mergeConfirmation": "Vous êtes sur le point de fusionner les systèmes <strong>{{primarySystem}}</strong> et <strong>{{secondarySystem}}</strong>. Les réglages et le nom seront pris à partir du <strong>{{primarySystem}}</strong>.",
+			"mergeFailedTitle": "Fusion système a échoué",
 			"primaryCannotMerge": "Système {{targetSystem}} a une version logicielle plus récente incompatible avec le système actuel. Mettre à jour le système actuel a la <a href=\"/download\" target=\"_blank\" translate>dernière version</a> pour fusionner avec le {{targetSystem}} système.",
 			"primarySystemOffline": "Le système {{primarySystem}} est hors ligne et ne peut pas être fusionné avec le système {{targetSystem}}.",
 			"secondaryCannotMerge": "Système {{targetSystem}} a une version de logiciel plus ancienne incompatible avec le système actuel. Mettre à jour {{targetSystem}} à <a href=\"/download\" target=\"_blank\" translate>dernière version</a> pour fusionner avec l'actuel.",
 			"systemOffline": "Système {{targetSystem}} est hors ligne et ne peut pas être fusionné avec le système actuel.",
-			"systemUnavailable": "Système {{targetSystem}} est actuellement inaccessible. Réessayez dans quelques minutes ou contactez"
+			"systemUnavailable": "Système {{targetSystem}} est actuellement inaccessible. Réessayez dans quelques minutes ou contactez",
+			"recommendSupport": {
+				"a_recommend": "Nous recommandons de consulter avec",
+				"b_support": "support",
+				"c_proceeding": "avant de procéder."
+			}
 		},
 		"message": {
 			"failedToSend": "Échec d’envoi du message.",
@@ -308,6 +322,7 @@
 		"mySystemSearch": "IMeMyMine",
 		"unavailable": "Le système est inaccessible",
 		"offline": "System Hors ligne",
+		"offlineAlertRibbon": "System is offline. Some settings may not be available.",
 		"openClient": "Ouvert à %VMS_NAME%",
 		"openClientNoSystem": "Ouvrir %VMS_NAME%",
 		"confirmMergeAction": "Fusionner",
@@ -321,7 +336,7 @@
 		"confirmUnshareFromMeTitle": "Déconnecter système?",
 		"confirmUnshareFromMeAction": "Déconnecter",
 		"confirmUnshare": "Cet usager ne sera pas en mesure d’accéder au système. Êtes-vous sûr?",
-		"confirmUnshareTitle": "Supprimer usager?",
+		"confirmUnshareTitle": "Remove user?",
 		"confirmUnshareAction": "Supprimer",
 		"successDisconnected": "Système correctement déconnecté de %CLOUD_NAME%",
 		"successDeleted": "Système {{systemName}} a correctement été supprimé de votre compte",
@@ -329,7 +344,8 @@
 		"mergeStart": "Les systèmes ont commencé à fusionner",
 		"mergeSuccess": "Fusion du système terminée",
 		"permissionsRemoved": "Autorisations retirées de {{email}}",
-		"unknownName": "Nom inconnu pour le système (causé par la fusion nuage)"
+		"unknownName": "Nom inconnu pour le système (causé par la fusion nuage)",
+		"shareOffline": "Cannot share system while it is offline"
 	},
 	"systemStatuses": {
 		"activated": "activé",

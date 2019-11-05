@@ -24,11 +24,19 @@ Log In To Change Password Page
     Go To    ${url}/account/password
     Log In    ${email}    ${password}    None
     Validate Log In
-    Wait Until Elements Are Visible    ${CURRENT PASSWORD INPUT}    ${NEW PASSWORD INPUT}    ${CHANGE PASSWORD BUTTON}
+    Wait Until Elements Are Visible    ${CURRENT PASSWORD INPUT}    ${NEW PASSWORD INPUT}
+
+Discard Changes and Log Out
+    Click Button    ${ACCOUNT DROPDOWN}
+    Wait Until Element Is Visible    ${LOG OUT BUTTON}
+    Click Link    ${LOG OUT BUTTON}
+    Wait until Elements are Visible    ${MODAL DIALOG}    ${DISCARD CHANGES BUTTON}
+    Click Button    ${DISCARD CHANGES BUTTON}
+    Validate Log Out
 
 Reset user password to base
     [arguments]    ${email}    ${current password}
-    Wait Until Elements Are Visible    ${CURRENT PASSWORD INPUT}    ${NEW PASSWORD INPUT}    ${CHANGE PASSWORD BUTTON}
+    Wait Until Elements Are Visible    ${CURRENT PASSWORD INPUT}    ${NEW PASSWORD INPUT}
     Input Text    ${CURRENT PASSWORD INPUT}    ${current password}
     Input Text    ${NEW PASSWORD INPUT}    ${BASE PASSWORD}
     Click Button    ${CHANGE PASSWORD BUTTON}
@@ -57,15 +65,16 @@ Can be accessed via dropdown or direct link
     Go To    ${url}/account/password
     Log In    ${email}    ${password}    None
     Validate Log In
-    Wait Until Elements Are Visible    ${CURRENT PASSWORD INPUT}    ${NEW PASSWORD INPUT}    ${CHANGE PASSWORD BUTTON}
+    Wait Until Elements Are Visible    ${CURRENT PASSWORD INPUT}    ${NEW PASSWORD INPUT}
     Location Should Be    ${url}/account/password
+    Title Should Be    Change password - ${PRODUCT_NAME}
     Go To    ${url}
     Wait Until Element Is Visible    ${AUTO TESTS TITLE}
     Wait Until Element Is Visible    ${ACCOUNT DROPDOWN}
     Click Button    ${ACCOUNT DROPDOWN}
     Wait Until Elements Are Visible    ${CHANGE PASSWORD BUTTON DROPDOWN}    ${ACCOUNT SETTINGS BUTTON}    ${LOG OUT BUTTON}
     Click Link    ${CHANGE PASSWORD BUTTON DROPDOWN}
-    Wait Until Elements Are Visible    ${CURRENT PASSWORD INPUT}    ${NEW PASSWORD INPUT}    ${CHANGE PASSWORD BUTTON}
+    Wait Until Elements Are Visible    ${CURRENT PASSWORD INPUT}    ${NEW PASSWORD INPUT}
     Location Should Be    ${url}/account/password
 
 password can be changed
@@ -152,12 +161,12 @@ displays password masked, shows password and changes eye icon when clicked
     Should Be Equal    '${input type}'    'password'
     ${input type}    Get Element Attribute    ${NEW PASSWORD INPUT}    type
     Should Be Equal    '${input type}'    'password'
-    Click Element    ${CHANGE PASS EYE ICON OPEN}
-    Wait Until Element Is Visible    ${CHANGE PASS EYE ICON CLOSED}
-    ${input type}    Get Element Attribute    ${NEW PASSWORD INPUT}    type
-    Should Be Equal    '${input type}'    'text'
     Click Element    ${CHANGE PASS EYE ICON CLOSED}
     Wait Until Element Is Visible    ${CHANGE PASS EYE ICON OPEN}
+    ${input type}    Get Element Attribute    ${NEW PASSWORD INPUT}    type
+    Should Be Equal    '${input type}'    'text'
+    Click Element    ${CHANGE PASS EYE ICON OPEN}
+    Wait Until Element Is Visible    ${CHANGE PASS EYE ICON CLOSED}
     ${input type}    Get Element Attribute    ${NEW PASSWORD INPUT}    type
     Should Be Equal    '${input type}'    'password'
 
@@ -170,6 +179,7 @@ Password can't be changed if current password is not provided or incorrect
     Input Text    ${CURRENT PASSWORD INPUT}    ${password}
     Input Text    ${NEW PASSWORD INPUT}    ${EMPTY}
     Click Button    ${CHANGE PASSWORD BUTTON}
-    Log Out
+    Discard Changes and Log Out
+    Go To  ${url}
     Log In    ${email}    ${password}
     Validate Log In

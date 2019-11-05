@@ -89,19 +89,26 @@
 			}
 		},
 		"platforms": {
-			"win64": "x64",
-			"linux64": "x64",
-			"mac": "X",
 			"bananapi": "Banana Pi",
 			"bpi": "Nx1",
-			"rpi": " Raspberry Pi"
+			"linux64": "x64",
+			"linux_arm32": "x32",
+			"linux_arm64": "x64",
+			"mac": "X",
+			"rpi": " Raspberry Pi",
+			"universal": "SDK",
+			"win64": "x64"
 		},
 		"appTypes": {
-			"client": "ไคลเอ็นต์เท่านั้น",
-			"server": "เซิร์ฟเวอร์เท่านั้น",
 			"bundle": "ไคลเอ็นต์และเซิร์ฟเวอร์",
+			"camera_sdk": "SDK แหล่งวิดีโอ",
+			"client": "ไคลเอ็นต์เท่านั้น",
+			"metadata_sdk": "Metadata SDK",
+			"package": "แพคเกจ",
+			"server": "เซิร์ฟเวอร์เท่านั้น",
 			"servertool": "เครื่องมือกำหนดค่า",
-			"package": "แพคเกจ"
+			"storage_sdk": "SDK ที่เก็บข้อมูล",
+			"video_source_sdk": "SDK แหล่งวิดีโอ"
 		},
 		"releasesTypes": {
 			"beta": "Beta",
@@ -209,13 +216,20 @@
 		"stayLoggedIn": "Stay Logged In",
 		"download": "ดาวน์โหลด %VMS_NAME%",
 		"merge": {
+			"commonText": "ไม่สามารถรวมระบบ <strong>{{primarySystem}}</strong> และ <strong>{{secondarySystem}}</strong>",
 			"connectToCloud": "เชื่อมต่อระบบที่คุณต้องการผสานกับระบบนี้กับ <strong>{{cloudName}}</strong> หรือผสานภายในเครื่องโดยใช้ไคลเอ็นต์ <strong>{{vmsName}}</strong>",
 			"mergeConfirmation": "คุณกำลังจะรวมระบบ <strong>{{primarySystem}}</strong> และ <strong>{{secondarySystem}}</strong>การตั้งค่าและชื่อจะถูกนำมาจาก <strong>{{primarySystem}}</strong>",
+			"mergeFailedTitle": "การผสานระบบล้มเหลว",
 			"primaryCannotMerge": "ระบบ {{targetSystem}} มีซอฟต์แวร์เวอร์ชันใหม่กว่าที่ไม่สามารถใช้กับระบบปัจจุบันได้ อัพเดตระบบปัจจุบันเป็น <a href=\"/download\" target=\"_blank\" translate>บิลด์ล่าสุด</a> เพื่อรวมเข้ากับ {{targetSystem}} ระบบ",
 			"primarySystemOffline": "ระบบ {{primarySystem}} เป็นออฟไลน์และไม่สามารถผสานกับระบบปัจจุบันได้ {{targetSystem}}",
 			"secondaryCannotMerge": "ระบบ {{targetSystem}} มีซอฟต์แวร์รุ่นเก่าที่เข้ากันไม่ได้กับระบบปัจจุบัน อัปเดต {{targetSystem}} เป็น <a href=\"/download\" target=\"_blank\" translate>บิลด์ล่าสุด</a> เพื่อรวมเข้ากับบิลด์ปัจจุบัน",
 			"systemOffline": "ระบบ {{targetSystem}} เป็นแบบออฟไลน์และไม่สามารถผสานกับระบบปัจจุบันได้",
-			"systemUnavailable": "ระบบ {{targetSystem}} ไม่สามารถเข้าถึงได้ในขณะนี้ ลองอีกครั้งในไม่กี่นาทีหรือติดต่อ"
+			"systemUnavailable": "ระบบ {{targetSystem}} ไม่สามารถเข้าถึงได้ในขณะนี้ ลองอีกครั้งในไม่กี่นาทีหรือติดต่อ",
+			"recommendSupport": {
+				"a_recommend": "เราขอแนะนำให้ปรึกษากับ",
+				"b_support": "ทีมช่วยเหลือ",
+				"c_proceeding": "ก่อนดำเนินการต่อ"
+			}
 		},
 		"message": {
 			"failedToSend": "ไม่สามารถส่งข้อความได้",
@@ -308,6 +322,7 @@
 		"mySystemSearch": "IMeMyMine",
 		"unavailable": "ระบบไม่สามารถเข้าถึงได้",
 		"offline": "ระบบออฟไลน์",
+		"offlineAlertRibbon": "System is offline. Some settings may not be available.",
 		"openClient": "เปิดใน %VMS_NAME%",
 		"openClientNoSystem": "เปิด %VMS_NAME%",
 		"confirmMergeAction": "ผสาน",
@@ -321,15 +336,16 @@
 		"confirmUnshareFromMeTitle": "ยกเลิกการเชื่อมต่อระบบหรือไม่?",
 		"confirmUnshareFromMeAction": "ตัดการเชื่อมต่อ",
 		"confirmUnshare": "ผู้ใช้รายนี้จะไม่สามารถเข้าใช้งานระบบได้ คุณแน่ใจไหม?",
-		"confirmUnshareTitle": "ลบผู้ใช้หรือไม่?",
-		"confirmUnshareAction": "ลบ",
+		"confirmUnshareTitle": "Remove user?",
+		"confirmUnshareAction": "เอาออก",
 		"successDisconnected": "ระบบถูกตัดการเชื่อมต่อเรียบร้อยแล้วจาก %CLOUD_NAME%",
 		"successDeleted": "ระบบ {{systemName}} จะถูกลบออกจากบัญชีของคุณเรียบร้อยแล้ว",
 		"mergeFailed": "การผสานระบบล้มเหลว",
 		"mergeStart": "ระบบได้รวมเข้าด้วยกันเรียบร้อยแล้ว",
 		"mergeSuccess": "ผสานระบบเสร็จสมบูรณ์",
 		"permissionsRemoved": "สิทธิ์ถูกนำออกจาก {{email}}",
-		"unknownName": "ชื่อที่ไม่รู้จักสำหรับระบบ (เกิดจากการผสานคลาวด์)"
+		"unknownName": "ชื่อที่ไม่รู้จักสำหรับระบบ (เกิดจากการผสานคลาวด์)",
+		"shareOffline": "Cannot share system while it is offline"
 	},
 	"systemStatuses": {
 		"activated": "เปิดใช้งาน",

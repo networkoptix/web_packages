@@ -89,19 +89,26 @@
 			}
 		},
 		"platforms": {
-			"win64": "x64",
-			"linux64": "x64",
-			"mac": "X",
 			"bananapi": "Banana Pi",
 			"bpi": "Nx1",
-			"rpi": " Raspberry Pi"
+			"linux64": "x64",
+			"linux_arm32": "x32",
+			"linux_arm64": "x64",
+			"mac": "X",
+			"rpi": " Raspberry Pi",
+			"universal": "SDK",
+			"win64": "x64"
 		},
 		"appTypes": {
-			"client": "Vain Client-sovellus",
-			"server": "Vain palvelin-sovellus",
 			"bundle": "Client ja palvelin",
+			"camera_sdk": "Videolähteen SDK",
+			"client": "Vain Client-sovellus",
+			"metadata_sdk": "Metadata SDK",
+			"package": "Paketti",
+			"server": "Vain palvelin-sovellus",
 			"servertool": "Konfigurointityökalu",
-			"package": "Paketti"
+			"storage_sdk": "Storage SDK",
+			"video_source_sdk": "Videolähteen SDK"
 		},
 		"releasesTypes": {
 			"beta": "Beta",
@@ -209,13 +216,20 @@
 		"stayLoggedIn": "Stay Logged In",
 		"download": "Lataa %VMS_NAME%",
 		"merge": {
+			"commonText": "Järjestelmien yhdistäminen <strong>{{primarySystem}}</strong> ja <strong>{{secondarySystem}}</strong>epäonnistui.",
 			"connectToCloud": "Yhdistä järjestelmä, johon haluat yhdistää tämän, <strong>{{cloudName}}</strong> tai yhdistä paikallisesti <strong>{{vmsName}}</strong> -Client-sovelluksen avulla.",
 			"mergeConfirmation": "Olet yhdistämässä järjestelmiä <strong>{{primarySystem}}</strong> ja <strong>{{secondarySystem}}</strong>. Asetukset ja nimi otetaan <strong>{{primarySystem}}</strong>.",
+			"mergeFailedTitle": "Järjestelmien yhdistäminen epäonnistui",
 			"primaryCannotMerge": "Järjestelmässä {{targetSystem}} on uudempi ohjelmistoversio, joka ei ole yhteensopiva nykyisen järjestelmän kanssa. Päivitä nykyinen järjestelmä <a href=\"/download\" target=\"_blank\" translate>uusimpaan</a>: een yhdistääksesi se {{targetSystem}} järjestelmään.",
 			"primarySystemOffline": "Järjestelmä {{primarySystem}} on offline-tilassa eikä sitä voi yhdistää järjestelmään {{targetSystem}}.",
 			"secondaryCannotMerge": "Järjestelmässä {{targetSystem}} on vanhempi ohjelmistoversio, joka ei ole yhteensopiva nykyisen järjestelmän kanssa. Päivitä nykyinen järjestelmä <a href=\"/download\" target=\"_blank\" translate>uusimpaan</a>: een yhdistääksesi se {{targetSystem}} järjestelmään.",
 			"systemOffline": "Järjestelmä {{targetSystem}} on offline-tilassa eikä sitä voi yhdistää nykyiseen.",
-			"systemUnavailable": "Järjestelmä {{targetSystem}} ei ole tällä hetkellä tavoitettavissa. Yritä uudelleen muutamassa minuutissa tai ota yhteyttä"
+			"systemUnavailable": "Järjestelmä {{targetSystem}} ei ole tällä hetkellä tavoitettavissa. Yritä uudelleen muutamassa minuutissa tai ota yhteyttä",
+			"recommendSupport": {
+				"a_recommend": "Suosittelemme konsultointia",
+				"b_support": "tuki",
+				"c_proceeding": "ennen etenemistä."
+			}
 		},
 		"message": {
 			"failedToSend": "Viestin lähetys epäonnistui.",
@@ -308,6 +322,7 @@
 		"mySystemSearch": "IMeMyMine",
 		"unavailable": "Järjestelmä ei ole tavoitettavissa",
 		"offline": "Järjestelmään ei saada yhteyttä",
+		"offlineAlertRibbon": "System is offline. Some settings may not be available.",
 		"openClient": "Avaa %VMS_NAME%",
 		"openClientNoSystem": "Avaa %VMS_NAME%",
 		"confirmMergeAction": "Yhdistä",
@@ -321,7 +336,7 @@
 		"confirmUnshareFromMeTitle": "Katkaise yhteys järjestelmään?",
 		"confirmUnshareFromMeAction": "Katkaise yhteys",
 		"confirmUnshare": "Tämä käyttäjä ei voi käyttää järjestelmää. Oletko varma?",
-		"confirmUnshareTitle": "Poista käyttäjä?",
+		"confirmUnshareTitle": "Remove user?",
 		"confirmUnshareAction": "Poista",
 		"successDisconnected": "Järjestelmä irrotetaan onnistuneesti %CLOUD_NAME%",
 		"successDeleted": "Järjestelmä {{systemName}} poistetaan onnistuneesti tililtäsi",
@@ -329,7 +344,8 @@
 		"mergeStart": "Järjestelmät ovat alkaneet yhdistyä",
 		"mergeSuccess": "Järjestelmän yhdistäminen on valmis",
 		"permissionsRemoved": "Käyttöoikeudet poistettiin {{email}}",
-		"unknownName": "Järjestelmän tuntematon nimi (pilviliitoksen aiheuttama)"
+		"unknownName": "Järjestelmän tuntematon nimi (pilviliitoksen aiheuttama)",
+		"shareOffline": "Cannot share system while it is offline"
 	},
 	"systemStatuses": {
 		"activated": "aktivoitu",

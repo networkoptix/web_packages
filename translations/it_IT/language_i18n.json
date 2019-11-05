@@ -105,6 +105,7 @@
     "NO_SYSTEMS_LOGIN": "Accedere al sistema utilizzando %VMS_NAME%",
     "NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "Non hai Sistemi collegati a %CLOUD_NAME%",
     "New Password": "Nuova password",
+    "No unsaved changes": "No unsaved changes",
     "Nothing Found": "Non è stato trovato nulla",
     "OK": "OK",
     "Ok": "Ok",
@@ -125,6 +126,7 @@
     "Release Notes": "Note di rilascio",
     "Release notes": "Note di rilascio",
     "Remember me": "Ricordami su questo computer",
+    "Remove User": "Rimuovi utente",
     "Rename": "Rinominare",
     "Requirements": "Requisiti",
     "Resend activation email": "Invia nuovamente l'email di attivazione",
@@ -270,7 +272,7 @@
     "devices": "dispositivi",
     "dialogs": {
         "cancelButton": "Annulla",
-        "changeAccountLogged": "You are already logged in with as {email}",
+        "changeAccountLogged": "Hai già effettuato l'accesso con {email}",
         "createNewAccount": "Crea nuovo account",
         "download": "Scarica %VMS_NAME%",
         "loggedFromOther": "Verrà effettuato l'accesso con un altro account",
@@ -280,10 +282,17 @@
         "logoutAuthorisedLogoutButton": "Disconnetti",
         "logoutAuthorisedTitle": "Ha già effettuato l'accesso",
         "merge": {
+            "commonText": "Impossibile unire i sistemi <strong>{{primarySystem}}</strong> e <strong>{{secondarySystem}}</strong>.",
             "connectToCloud": "Connetti il Sistema che vuoi unire con questo <strong>{{cloudName}}</strong> o unisci localmente usando <strong>{{vmsName}}</strong> il Client.",
             "mergeConfirmation": "Stai per unire i Sistemi <strong>{{primarySystem}}</strong> e <strong>{{secondarySystem}}</strong>. Le impostazioni e il nome verranno presi da <strong>{{primarySystem}}</strong>.",
+            "mergeFailedTitle": "Unione di sistemi fallita",
             "primaryCannotMerge": "Il sistema {{targetSystem}} ha una versione più recente del software che è incompatibile con il sistema corrente. Aggiornare il sistema attuale alla <a href=\"/download\" target=\"_blank\" translate>versione più recente</a> per unirsi con il {{targetSystem}} sistema.",
             "primarySystemOffline": "Il sistema {{primarySystem}} è offline e non può essere unito al sistema {{targetSystem}}.",
+            "recommendSupport": {
+                "a_recommend": "Raccomandiamo di consultarsi con",
+                "b_support": "supporto",
+                "c_proceeding": "prima di procedere."
+            },
             "secondaryCannotMerge": "Il sistema {{targetSystem}} ha una versione più recente del software che è incompatibile con il sistema corrente. Aggiornare il sistema attuale alla <a href=\"/download\" target=\"_blank\" translate>versione più recente</a> per unirsi con il {{targetSystem}} sistema corrente.",
             "systemOffline": "Il sistema {{targetSystem}} è offline e non può essere unito a quello corrente.",
             "systemUnavailable": "Il sistema {{targetSystem}} è attualmente irraggiungibile. Riprova tra qualche minuto o contatta"
@@ -314,8 +323,8 @@
             "shareConfirmButton": "Inserisci",
             "shareTitle": "Inserisci"
         },
-        "stayAs": "Stay logged as {email} ",
-        "stayLoggedIn": "Stay Logged In"
+        "stayAs": "Rimani collegato come {email} ",
+        "stayLoggedIn": "Rimani collegato"
     },
     "dialogs.merge.connectToCloud": "Connetti il Sistema che vuoi unire con questo <strong>{{cloudName}}</strong> o unisci localmente usando <strong>{{vmsName}}</strong> il Client.",
     "dialogs.merge.mergeConfirmation": "Stai per unire i Sistemi <strong>{{primarySystem}}</strong> e <strong>{{secondarySystem}}</strong>. Le impostazioni e il nome verranno presi da <strong>{{primarySystem}}</strong>.",
@@ -327,10 +336,14 @@
     "downloads": {
         "appTypes": {
             "bundle": "Client e Server",
+            "camera_sdk": "SDK sorgente video",
             "client": "Solo cliente",
+            "metadata_sdk": "Metadata SDK",
             "package": "Pacchetto",
             "server": "Solo server",
-            "servertool": "Strumenti di configurazione"
+            "servertool": "Strumenti di configurazione",
+            "storage_sdk": "SDK di archiviazione",
+            "video_source_sdk": "SDK sorgente video"
         },
         "groups": {
             "android": {
@@ -381,8 +394,11 @@
             "bananapi": "Banana Pi",
             "bpi": "Nx1",
             "linux64": "x64",
+            "linux_arm32": "x32",
+            "linux_arm64": "x64",
             "mac": "X",
             "rpi": " Raspberry Pi",
+            "universal": "SDK",
             "win64": "x64"
         },
         "releasesTypes": {
@@ -570,20 +586,22 @@
         "confirmRenameAction": "Salvare",
         "confirmRenameTitle": "Nome del sistema",
         "confirmUnshare": "Questo utente non sarà in grado di accedere al sistema. E' sicuro?",
-        "confirmUnshareAction": "Elimina",
+        "confirmUnshareAction": "Rimuovere",
         "confirmUnshareFromMe": "Sta per disconnettere questo Sistema dal suo account. Non sara' in più in grado di accedere a questo Sistema. E' sicuro?",
         "confirmUnshareFromMeAction": "Scollegamento",
         "confirmUnshareFromMeTitle": "Scollegare il sistema da?",
-        "confirmUnshareTitle": "Cancella utente?",
+        "confirmUnshareTitle": "Rimuovere l'utente?",
         "mergeFailed": "Unione di sistemi fallita",
         "mergeStart": "I sistemi hanno iniziato ad unirsi",
         "mergeSuccess": "Unione del sistema completata",
         "mergeSystemTitle": "Unione dei sistemi",
         "mySystemSearch": "IMeMyMine",
         "offline": "Il sistema è offline",
+        "offlineAlertRibbon": "System is offline. Some settings may not be available.",
         "openClient": "Apri in %VMS_NAME%",
         "openClientNoSystem": "Apri in %VMS_NAME%",
         "permissionsRemoved": "Le autorizzazioni sono state rimosse da {{email}}",
+        "shareOffline": "Cannot share system while it is offline",
         "successDeleted": "Il sistema {{systemName}} è stato eliminato correttamente dal suo account",
         "successDisconnected": "Il sistema è stato scollegato correttamente da %CLOUD_NAME%",
         "successRename": "Nome del sistema salvato",

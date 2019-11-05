@@ -165,7 +165,7 @@ class Account(object):
     @staticmethod
     def extract_temp_credentials(code):
         try:
-            (temp_password, email) = base64.b64decode(code).decode('utf-8').split(":")
+            (temp_password, email) = base64.b64decode(code + "===").decode('utf-8').split(":")
         except TypeError:
             raise APIRequestException(f"Activation code has wrong structure - TypeError: {code}", ErrorCodes.wrong_code)
         except ValueError:

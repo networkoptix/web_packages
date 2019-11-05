@@ -89,19 +89,26 @@
 			}
 		},
 		"platforms": {
-			"win64": "x64",
-			"linux64": "x64",
-			"mac": "X",
 			"bananapi": "Banana Pi",
 			"bpi": "Nx1",
-			"rpi": " Raspberry Pi"
+			"linux64": "x64",
+			"linux_arm32": "x32",
+			"linux_arm64": "x64",
+			"mac": "X",
+			"rpi": " Raspberry Pi",
+			"universal": "SDK",
+			"win64": "x64"
 		},
 		"appTypes": {
-			"client": "Pouze klient",
-			"server": "Pouze server",
 			"bundle": "Klient a server",
+			"camera_sdk": "SDK zdroje videa",
+			"client": "Pouze klient",
+			"metadata_sdk": "Metadata SDK",
+			"package": "Balíček",
+			"server": "Pouze server",
 			"servertool": "Nástroj konfigurace",
-			"package": "Balíček"
+			"storage_sdk": "SDK pro úložiště",
+			"video_source_sdk": "SDK zdroje videa"
 		},
 		"releasesTypes": {
 			"beta": "Beta",
@@ -209,13 +216,20 @@
 		"stayLoggedIn": "Stay Logged In",
 		"download": "Stáhnout %VMS_NAME%",
 		"merge": {
+			"commonText": "Nelze sloučit systémy <strong>{{primarySystem}}</strong> a <strong>{{secondarySystem}}</strong>.",
 			"connectToCloud": "Připojit systém, který chcete sloučit s tímto na <strong>{{cloudName}}</strong> nebo sloučit lokálně pomocí <strong>{{vmsName}}</strong> Klienta.",
 			"mergeConfirmation": "Chystáte se sloučit systémy <strong>{{primarySystem}}</strong> a <strong>{{secondarySystem}}</strong>. Nastavení a název budou převzaty z <strong>{{primarySystem}}</strong>.",
+			"mergeFailedTitle": "Spojení systémů selhalo",
 			"primaryCannotMerge": "Systém {{targetSystem}} má novější verzi softwaru, která je nekompatibilní s aktuálním systémem. Aktualizujte aktuální systém na <a href=\"/download\" target=\"_blank\" translate>nejnovější verzi </a> pro sloučení se systémem {{targetSystem}}.",
 			"primarySystemOffline": "Systém {{primarySystem}} je offline a nelze jej sloučit se systémem {{targetSystem}}.",
 			"secondaryCannotMerge": "Systém {{targetSystem}} má starší verzi softwaru, která není kompatibilní s aktuálním systémem. Aktualizujte {{targetSystem}} <a href=\"/download\" target=\"_blank\" translate> na nejnovější verzi </a> pro sloučení se systémem.",
 			"systemOffline": "Systém {{targetSystem}} je offline a nelze jej sloučit se stávajícím systémem.",
-			"systemUnavailable": "Systém {{targetSystem}} je v současné době nedostupný. Opakujte akci za několik minut nebo kontaktujte"
+			"systemUnavailable": "Systém {{targetSystem}} je v současné době nedostupný. Opakujte akci za několik minut nebo kontaktujte",
+			"recommendSupport": {
+				"a_recommend": "Doporučujeme konzultaci s",
+				"b_support": "podpora",
+				"c_proceeding": "než budete pokračovat."
+			}
 		},
 		"message": {
 			"failedToSend": "Zprávu se nepodařilo odeslat.",
@@ -308,6 +322,7 @@
 		"mySystemSearch": "IMeMyMine",
 		"unavailable": "Systém je nedostupný",
 		"offline": "Systém je offline",
+		"offlineAlertRibbon": "System is offline. Some settings may not be available.",
 		"openClient": "Otevřít v %VMS_NAME%",
 		"openClientNoSystem": "Otevřít %VMS_NAME%",
 		"confirmMergeAction": "Sloučit",
@@ -321,15 +336,16 @@
 		"confirmUnshareFromMeTitle": "Odpojit systém?",
 		"confirmUnshareFromMeAction": "Odpojit",
 		"confirmUnshare": "Tento uživatel nebude mít přístup k systému. Přejete si pokračovat?",
-		"confirmUnshareTitle": "Smazat uživatele?",
-		"confirmUnshareAction": "Smazat",
+		"confirmUnshareTitle": "Remove user?",
+		"confirmUnshareAction": "Odstranit",
 		"successDisconnected": "Systém byl úspěšně odpojen od %CLOUD_NAME%",
 		"successDeleted": "Systém {{systemName}} byl úspěšně odstraněna z Vašeho účtu",
 		"mergeFailed": "Spojení systémů selhalo",
 		"mergeStart": "Systémy se spojují",
 		"mergeSuccess": "Sloučení systému bylo dokončeno",
 		"permissionsRemoved": "Oprávnění byla odstraněna z adresy {{email}}",
-		"unknownName": "Neznámý název systému (problém s cloudovým spojením)"
+		"unknownName": "Neznámý název systému (problém s cloudovým spojením)",
+		"shareOffline": "Cannot share system while it is offline"
 	},
 	"systemStatuses": {
 		"activated": "aktivováno",

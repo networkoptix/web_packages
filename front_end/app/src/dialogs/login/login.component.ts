@@ -90,20 +90,17 @@ export class LoginModalContent implements OnInit {
         });
     }
 
-    gotoRegister() {
-        // TODO: Repace this once 'register' page is moved to A5
-        // AJS and A5 routers freak out about route change *****
-        // this.location.go('/register');
-        this.document.location.href = '/register';
-        this.activeModal.close();
-    }
-
     resetForm() {
         if (!this.loginForm.valid) {
             this.loginForm.controls.login_password.setErrors(undefined);
             this.wrongPassword = false;
             this.accountBlocked = false;
         }
+    }
+
+    setEmail(email) {
+        this.auth.email = email;
+        this.localStorage.set('email', this.auth.email);
     }
 
     ngOnInit() {
@@ -176,6 +173,11 @@ export class LoginModalContent implements OnInit {
                 setTimeout(() => {
                     this.location.go(this.CONFIG.redirectAuthorised);
                 });
+            }
+        }, (error) => {
+            if (error.resultCode === 'portalError') {
+                // close dialog ... process will show toaster
+                this.activeModal.close();
             }
         });
     }

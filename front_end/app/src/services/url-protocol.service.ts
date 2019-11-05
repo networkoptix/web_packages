@@ -150,14 +150,14 @@ export class NxUrlProtocolService {
                 };
                 // Check on before unload
                 // @ts-ignore
-                this.window.protocolCheck(link, (_) => reject(), () => {
+                this.window.protocolCheck(link, (_) => reject({resultCode: this.CONFIG.openClientError}), () => {
                     setTimeout(() => {
                         this.accountService
                             .checkVisitedKey(authKey)
                             .then((visited) => {
                                 this.window.onblur = undefined;
                                 if (!visited && blurCount > 1) {
-                                    return reject(visited);
+                                    return reject({resultCode: this.CONFIG.openClientError});
                                 }
                                 return resolve(visited);
                             });

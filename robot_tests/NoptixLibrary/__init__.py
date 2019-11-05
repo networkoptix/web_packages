@@ -7,6 +7,7 @@ import imaplib
 import os.path
 import re
 import time
+from datetime import date
 from email.parser import HeaderParser
 from platform import system
 from random import *
@@ -20,16 +21,39 @@ from selenium.common.exceptions import NoSuchElementException
 from SeleniumLibrary.utils import (is_falsy, is_truthy, secs_to_timestr,
                                    timestr_to_secs, SELENIUM_VERSION)
 from selenium.webdriver.support.color import Color
+from selenium.webdriver.remote.webelement import WebElement
 
 
 class NoptixLibrary(object):
 
+    def convert_locator_to_webelement(self, locator):
+        seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
+        logger.debug('Attempting to convert locator to WebElement...')
+
+        if type(locator) is WebElement:
+            logger.debug('Already a WebElement.')
+            return locator
+        elif type(locator) is str:
+            try:
+                element = seleniumlib.find_element(locator)
+                logger.debug('Converted to WebElement')
+                return element
+            except:
+                raise AssertionError('Failure to convert locator to WebElement!')
+
     def copy_text(self, locator):
+        locator = self.convert_locator_to_webelement(locator)
         locator.send_keys(Keys.CONTROL + 'a')
         locator.send_keys(Keys.CONTROL + 'c')
 
     def paste_text(self, locator):
+        locator = self.convert_locator_to_webelement(locator)
         locator.send_keys(Keys.CONTROL + 'v')
+
+    def delete_all_text(self, locator):
+        locator = self.convert_locator_to_webelement(locator)
+        locator.send_keys(Keys.CONTROL + 'a')
+        locator.send_keys(Keys.BACKSPACE)
 
     def get_random_email(self, email):
         index = email.find('@')
@@ -38,8 +62,8 @@ class NoptixLibrary(object):
 
     def get_many_random_emails(self, howMany, email):
         emails = []
-        for x in xrange(0, int(howMany)):
-            emails.append(self.get_random_email())
+        for x in range(0, int(howMany)):
+            emails.append(self.get_random_email(email))
             time.sleep(.2)
         return emails
 
@@ -48,6 +72,9 @@ class NoptixLibrary(object):
         email = email[:index] + \
             "+!#$%'*-/=?^_`{|}~" + str(time.time()) + email[index:]
         return email
+
+    def get_random_system_name(self):
+        return "System: " + date.today().strftime("%m-%d-%y") + " " + str(randint(1, 100))
 
     def get_element_style(self, locator, styleAttribute):
         seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')

@@ -105,6 +105,7 @@
     "NO_SYSTEMS_LOGIN": "%VMS_NAME%을 사용하여 시스템에 로그인하십시오.",
     "NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "%CLOUD_NAME%에 연결된 시스템이 없습니다",
     "New Password": "신규 사용자",
+    "No unsaved changes": "No unsaved changes",
     "Nothing Found": "결과 없음",
     "OK": "확인",
     "Ok": "승인",
@@ -125,6 +126,7 @@
     "Release Notes": "업데이트 내용",
     "Release notes": "업데이트 내용",
     "Remember me": "기억하기",
+    "Remove User": "사용자 삭제",
     "Rename": "이름변경",
     "Requirements": "요건",
     "Resend activation email": "활성화 이메일 재전송",
@@ -270,7 +272,7 @@
     "devices": "장치",
     "dialogs": {
         "cancelButton": "취소",
-        "changeAccountLogged": "You are already logged in with as {email}",
+        "changeAccountLogged": "이미 {email} 로 로그인 되어있습니다",
         "createNewAccount": "새 계정 만들기",
         "download": "%VMS_NAME% 다운로드",
         "loggedFromOther": "다른 계정으로 로그인 하게 될것입니다",
@@ -280,10 +282,17 @@
         "logoutAuthorisedLogoutButton": "로그 아웃",
         "logoutAuthorisedTitle": "이미 로그인 되어 있습니다",
         "merge": {
+            "commonText": "시스템 <strong>{{primarySystem}}</strong> 및 <strong>{{secondarySystem}}</strong>를 머지 하는데 실패 했습니다.",
             "connectToCloud": "이 시스템과 머지하려는 시스템을 <strong>{{cloudName}}</strong> 에 연결하거나 <strong>{{vmsName}}</strong> 클라이언트를 사용하여 로컬로 머지하십시오.",
             "mergeConfirmation": "시스템 <strong>{{primarySystem}}</strong> 과 <strong>{{secondarySystem}}</strong>를 머지하려고합니다. 설정과 이름은 <strong>{{primarySystem}}</strong>에서 가져옵니다.",
+            "mergeFailedTitle": "시스템 머지에 실패했습니다.",
             "primaryCannotMerge": "시스템 {{targetSystem}} 은 현재 시스템과 호환 되지 않는 최근 소프트웨어 버전이 있습니다. 현재 시스템을 {{targetSystem}} 시스템으로 머지하려면 <a href=\"/download\" target=\"_blank\" translate>최신 빌드</a> 로 업데이트 하십시요.",
             "primarySystemOffline": "{{primarySystem}} 시스템이 오프라인 상태이며 {{targetSystem}} 시스템과 병합 할 수 없습니다.",
+            "recommendSupport": {
+                "a_recommend": "와 상담 하는 것을 제안 합니다.",
+                "b_support": "지원",
+                "c_proceeding": "계속하기 전에."
+            },
             "secondaryCannotMerge": "시스템 {{targetSystem}} 에 현재 시스템과 호환되지 않는 이전 소프트웨어 버전이 있습니다. 병합하기 위해 {{targetSystem}} 를 받는 사람 <a href=\"/download\" target=\"_blank\" translate>최신 빌드</a> 로 업데이트 하십시요.",
             "systemOffline": "시스템 {{targetSystem}} 은 오프라인이며 현재 시스템과 머지 할 수 없습니다.",
             "systemUnavailable": "시스템 {{targetSystem}} 에 현재 연결할 수 없습니다. 몇 분 후에 다시 시도하거나 문의하십시오."
@@ -314,8 +323,8 @@
             "shareConfirmButton": "추가",
             "shareTitle": "추가"
         },
-        "stayAs": "Stay logged as {email} ",
-        "stayLoggedIn": "Stay Logged In"
+        "stayAs": "{email} 로 로그인 상태 유지 ",
+        "stayLoggedIn": "로그인 상태 유지"
     },
     "dialogs.merge.connectToCloud": "이 시스템과 머지하려는 시스템을 <strong>{{cloudName}}</strong> 에 연결하거나 <strong>{{vmsName}}</strong> 클라이언트를 사용하여 로컬로 머지하십시오.",
     "dialogs.merge.mergeConfirmation": "시스템 <strong>{{primarySystem}}</strong> 과 <strong>{{secondarySystem}}</strong>를 머지하려고합니다. 설정과 이름은 <strong>{{primarySystem}}</strong>에서 가져옵니다.",
@@ -327,10 +336,14 @@
     "downloads": {
         "appTypes": {
             "bundle": "클라이언트와 서버",
+            "camera_sdk": "비디오 소스 SDK",
             "client": "클라이언트만",
+            "metadata_sdk": "Metadata SDK",
             "package": "패키지",
             "server": "서버 만",
-            "servertool": "구성 도구"
+            "servertool": "구성 도구",
+            "storage_sdk": "저장소 관련 SDK",
+            "video_source_sdk": "비디오 소스 SDK"
         },
         "groups": {
             "android": {
@@ -381,8 +394,11 @@
             "bananapi": "Banana Pi",
             "bpi": "Nx1",
             "linux64": "x64",
+            "linux_arm32": "x32",
+            "linux_arm64": "x64",
             "mac": "X",
             "rpi": "Raspberry Pi",
+            "universal": "SDK",
             "win64": "x64"
         },
         "releasesTypes": {
@@ -574,16 +590,18 @@
         "confirmUnshareFromMe": "이 시스템을 당신의 계정과의 연결을 해제하려고합니다. 더 이상이 시스템에 액세스 할 수 없습니다. 확실합니까?",
         "confirmUnshareFromMeAction": "연결 끊기",
         "confirmUnshareFromMeTitle": "시스템 연결을 끊으시겠습니까?",
-        "confirmUnshareTitle": "사용자 삭제?",
+        "confirmUnshareTitle": "사용자를 삭제 하시겠습니까?",
         "mergeFailed": "시스템 머지에 실패했습니다.",
         "mergeStart": "시스템이 머지를 시작했습니다.",
         "mergeSuccess": "시스템 머지가 완료되었습니다.",
         "mergeSystemTitle": "병합 시스템",
         "mySystemSearch": "IMeMyMine",
         "offline": "시스템이 오프라인 상태입니다.",
+        "offlineAlertRibbon": "System is offline. Some settings may not be available.",
         "openClient": "%VMS_NAME%에서 열기",
         "openClientNoSystem": "%VMS_NAME% 열기",
         "permissionsRemoved": "권한이 {{email}} 에서 제거 되었습니다.",
+        "shareOffline": "Cannot share system while it is offline",
         "successDeleted": "시스템 {{systemName}} 이 (가) 귀하의 계정에서 성공적으로 삭제되었습니다.",
         "successDisconnected": "시스템이 %CLOUD_NAME%에서 성공적으로 연결 해제되었습니다.",
         "successRename": "시스템 이름 저장",

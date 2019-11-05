@@ -89,19 +89,26 @@
 			}
 		},
 		"platforms": {
-			"win64": "x64",
-			"linux64": "x64",
-			"mac": "X",
 			"bananapi": "Banana Pi",
 			"bpi": "Nx1",
-			"rpi": " Raspberry Pi"
+			"linux64": "x64",
+			"linux_arm32": "x32",
+			"linux_arm64": "x64",
+			"mac": "X",
+			"rpi": " Raspberry Pi",
+			"universal": "SDK",
+			"win64": "x64"
 		},
 		"appTypes": {
-			"client": "Chỉ máy trạm",
-			"server": "Chỉ máy chủ",
 			"bundle": "Máy chủ và Máy trạm",
+			"camera_sdk": "SDK nguồn video",
+			"client": "Chỉ máy trạm",
+			"metadata_sdk": "Metadata SDK",
+			"package": "Gói",
+			"server": "Chỉ máy chủ",
 			"servertool": "Công cụ cấu hình",
-			"package": "Gói"
+			"storage_sdk": "SDK lưu trữ",
+			"video_source_sdk": "SDK nguồn video"
 		},
 		"releasesTypes": {
 			"beta": "Beta",
@@ -209,13 +216,20 @@
 		"stayLoggedIn": "Stay Logged In",
 		"download": "Tải xuống %VMS_NAME%",
 		"merge": {
+			"commonText": "Không thể hợp nhất Hệ thống <strong>{{primarySystem}}</strong> và <strong>{{secondarySystem}}</strong>.",
 			"connectToCloud": "Kết nối Hệ thống mà bạn muốn hợp nhất với hệ thống này thành <strong>{{cloudName}}</strong> hoặc hợp nhất cục bộ bằng <strong>{{vmsName}}</strong> Client.",
 			"mergeConfirmation": "Bạn sắp hợp nhất Hệ thống <strong>{{primarySystem}}</strong> và <strong>{{secondarySystem}}</strong>. Các cấu hình và tên sẽ được lấy từ <strong>{{primarySystem}}</strong>.",
+			"mergeFailedTitle": "Hợp nhất hệ thống không thành công",
 			"primaryCannotMerge": "Hệ thống {{targetSystem}} có phiên bản phần mềm mới hơn không tương thích với Hệ thống hiện tại. Cập nhật các hệ thống hiện tại lên <a href=\"/download\" target=\"_blank\" translate>mới nhất build</a>để hợp nhất với hệ thống {{targetSystem}}.",
 			"primarySystemOffline": "Hệ thống {{primarySystem}} đang ngoại tuyến và không thể hợp nhất với Hệ thống {{targetSystem}}.",
 			"secondaryCannotMerge": "Hệ thống {{targetSystem}} có phiên bản phần mềm mới hơn không tương thích với Hệ thống hiện tại. Cập nhật các hệ thống hiện tại lên <a href=\"/download\" target=\"_blank\" translate>mới nhất build</a>để hợp nhất với hệ thống {{targetSystem}}.",
 			"systemOffline": "Hệ thống {{targetSystem}} đang ngoại tuyến và không thể hợp nhất với hệ thống hiện tại.",
-			"systemUnavailable": "Hệ thống {{targetSystem}} hiện không thể truy cập được. Hãy thử lại sau vài phút hoặc liên hệ"
+			"systemUnavailable": "Hệ thống {{targetSystem}} hiện không thể truy cập được. Hãy thử lại sau vài phút hoặc liên hệ",
+			"recommendSupport": {
+				"a_recommend": "Chúng tôi khuyên bạn nên tham khảo ý kiến với",
+				"b_support": "hỗ trợ",
+				"c_proceeding": "trước khi tiến hành."
+			}
 		},
 		"message": {
 			"failedToSend": "Tin nhắn đã không gửi được.",
@@ -308,6 +322,7 @@
 		"mySystemSearch": "IMeMyMine",
 		"unavailable": "Hệ thống không thể truy cập được",
 		"offline": "Hệ thống offline",
+		"offlineAlertRibbon": "System is offline. Some settings may not be available.",
 		"openClient": "Mở trong %VMS_NAME%",
 		"openClientNoSystem": "Mở %VMS_NAME%",
 		"confirmMergeAction": "Gộp lại",
@@ -321,15 +336,16 @@
 		"confirmUnshareFromMeTitle": "Ngắt kết nối hệ thống?",
 		"confirmUnshareFromMeAction": "Ngắt kết nối",
 		"confirmUnshare": "Người dùng này sẽ không thể truy cập vào Hệ thống. Bạn có chắc không?",
-		"confirmUnshareTitle": "Xóa người dùng?",
-		"confirmUnshareAction": "Xóa bỏ",
+		"confirmUnshareTitle": "Remove user?",
+		"confirmUnshareAction": "Tẩy",
 		"successDisconnected": "Hệ thống được ngắt kết nối thành công từ %CLOUD_NAME%",
 		"successDeleted": "Tài khoản {{systemName}} đã xóa thành công từ hệ thống của bạn",
 		"mergeFailed": "Hợp nhất hệ thống không thành công",
 		"mergeStart": "Các hệ thống đã được hợp nhất",
 		"mergeSuccess": "Hoàn thành hợp nhất hệ thống",
 		"permissionsRemoved": "Các quyền đã bị xóa khỏi {{email}}",
-		"unknownName": "Tên không xác định cho hệ thống (do hợp nhất Cloud)"
+		"unknownName": "Tên không xác định cho hệ thống (do hợp nhất Cloud)",
+		"shareOffline": "Cannot share system while it is offline"
 	},
 	"systemStatuses": {
 		"activated": "đã kích hoạt",

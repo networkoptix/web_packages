@@ -89,19 +89,26 @@
 			}
 		},
 		"platforms": {
-			"win64": "x64",
-			"linux64": "x64",
-			"mac": "X",
 			"bananapi": "Banana Pi",
 			"bpi": "Nx1",
-			"rpi": " Raspberry Pi"
+			"linux64": "x64",
+			"linux_arm32": "x32",
+			"linux_arm64": "x64",
+			"mac": "X",
+			"rpi": " Raspberry Pi",
+			"universal": "SDK",
+			"win64": "x64"
 		},
 		"appTypes": {
-			"client": "Endast klient",
-			"server": "Endast server",
 			"bundle": "Klient och Server",
+			"camera_sdk": "Videokälla SDK",
+			"client": "Endast klient",
+			"metadata_sdk": "Metadata SDK",
+			"package": "Paket",
+			"server": "Endast server",
 			"servertool": "Konfigurationsverktyg",
-			"package": "Paket"
+			"storage_sdk": "Lagrings SDK",
+			"video_source_sdk": "Videokälla SDK"
 		},
 		"releasesTypes": {
 			"beta": "Beta",
@@ -197,7 +204,7 @@
 		"okButton": "OK",
 		"cancelButton": "Avbryt",
 		"createNewAccount": "Skapa nytt konto",
-		"changeAccountLogged": "You are already logged in with as {email}",
+		"changeAccountLogged": "Du är redan inloggad som {email}",
 		"loggedFromOther": "Du kommer att vara inloggad med ett annat konto",
 		"loginTitle": "Logga in på %CLOUD_NAME%",
 		"loginButton": "Logga in",
@@ -205,17 +212,24 @@
 		"logoutAuthorisedContinueButton": "Fortsätt",
 		"logoutAuthorisedLogoutButton": "Logga ut",
 		"noClientDetectedTitle": "Installera %VMS_NAME% om du vill visa ditt System",
-		"stayAs": "Stay logged as {email} ",
-		"stayLoggedIn": "Stay Logged In",
+		"stayAs": "Håll loggad som {email} ",
+		"stayLoggedIn": "Kom ihåg mig",
 		"download": "Ladda ner %VMS_NAME%",
 		"merge": {
+			"commonText": "Misslyckades med att slå samman system <strong>{{primarySystem}}</strong> och <strong>{{secondarySystem}}</strong>.",
 			"connectToCloud": "Anslut system du vill slå samman med den här till <strong>{{cloudName}}</strong> eller slå ihop lokalt med <strong>{{vmsName}}</strong> Client.",
 			"mergeConfirmation": "Du håller på att slå samman system <strong>{{primarySystem}}</strong> och <strong>{{secondarySystem}}</strong>. Inställningar och namnet kommer att tas från <strong>{{primarySystem}}</strong>.",
+			"mergeFailedTitle": "Systemsammanslagning misslyckades",
 			"primaryCannotMerge": "System {{targetSystem}} har en nyare mjukvaruversion som inte är kompatibel med det aktuella systemet. Uppdatera det nuvarande systemet till <a href=\"/download\" target=\"_blank\" translate>senaste bygg</a> att slå samman det med {{targetSystem}} systemet.",
 			"primarySystemOffline": "System {{primarySystem}} är offline och kan inte slås samman med System {{targetSystem}}.",
 			"secondaryCannotMerge": "System {{targetSystem}} har en äldre programversion som inte är kompatibel med det aktuella systemet. Uppdatera {{targetSystem}} till <a href=\"/download\" target=\"_blank\" translate>senaste version</a> att slå samman den med den nuvarande.",
 			"systemOffline": "System {{targetSystem}} är offline och kan inte slås samman med det nuvarande.",
-			"systemUnavailable": "System {{targetSystem}} är för närvarande inte tillgängligt. Försök igen om några minuter eller kontakta"
+			"systemUnavailable": "System {{targetSystem}} är för närvarande inte tillgängligt. Försök igen om några minuter eller kontakta",
+			"recommendSupport": {
+				"a_recommend": "Vi rekommenderar att vi konsulterar med",
+				"b_support": "support",
+				"c_proceeding": "innan fortsättning."
+			}
 		},
 		"message": {
 			"failedToSend": "Meddelandet gick inte att skicka.",
@@ -308,6 +322,7 @@
 		"mySystemSearch": "JagMigMinMin",
 		"unavailable": "Systemet är oåtkomligt",
 		"offline": "Systemet är offline",
+		"offlineAlertRibbon": "Systemet är offline. Vissa inställningar kanske inte är tillgängliga.",
 		"openClient": "Öppet i %VMS_NAME%",
 		"openClientNoSystem": "Öppna %VMS_NAME%",
 		"confirmMergeAction": "Sammanfoga",
@@ -321,15 +336,16 @@
 		"confirmUnshareFromMeTitle": "Koppla ifrån systemet?",
 		"confirmUnshareFromMeAction": "Koppla från",
 		"confirmUnshare": "Den här användaren kan inte komma åt System. Är du säker?",
-		"confirmUnshareTitle": "Radera användaren?",
-		"confirmUnshareAction": "Radera",
+		"confirmUnshareTitle": "Ta bort användare?",
+		"confirmUnshareAction": "Ta bort",
 		"successDisconnected": "Systemet har kopplats bort från %CLOUD_NAME%",
 		"successDeleted": "System {{systemName}} har tagits bort från ditt konto",
 		"mergeFailed": "Systemsammanslagning misslyckades",
 		"mergeStart": "System har börjat slås samman",
 		"mergeSuccess": "Systemsammanslagning slutförd",
 		"permissionsRemoved": "Rättigheterna togs bort från {{email}}",
-		"unknownName": "Okänt namn för system (orsakad av molnsammanslagning)"
+		"unknownName": "Okänt namn för system (orsakad av molnsammanslagning)",
+		"shareOffline": "Kan inte dela systemet medan det är offline"
 	},
 	"systemStatuses": {
 		"activated": "aktiverad",

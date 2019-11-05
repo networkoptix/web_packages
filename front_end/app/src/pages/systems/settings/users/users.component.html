@@ -1,7 +1,7 @@
 <nx-pre-loader *ngIf=" !system || !system.users || !selectedUser"></nx-pre-loader>
 
 <div *ngIf="system" class="row d-flex align-items-start auth-visible">
-    <div class="col-12 col-xxxl-6">
+    <div class="col-12">
         <nx-block *ngIf="selectedUser" header-style="extended">
             <header>
                 <div class="float-right d-flex">
@@ -39,8 +39,8 @@
             <nx-section *ngIf="selectedUser.canBeDeleted && system.currentUser.isAdmin">
                 <div class="float-left mr-2">
                     <button class="btn btn-default"
-                            [disabled]="!systemAvailable"
-                            (click)="removeUser()">Remove User</button>
+                            [disabled]="!systemAvailable || applyService.locked"
+                            (click)="removeUser()" translate>Remove User</button>
                 </div>
             </nx-section>
         </nx-block>

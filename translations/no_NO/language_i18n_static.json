@@ -89,19 +89,26 @@
 			}
 		},
 		"platforms": {
-			"win64": "x64",
-			"linux64": "x64",
-			"mac": "X",
 			"bananapi": "Banana Pi",
 			"bpi": "Nx1",
-			"rpi": " Raspberry Pi"
+			"linux64": "x64",
+			"linux_arm32": "x32",
+			"linux_arm64": "x64",
+			"mac": "X",
+			"rpi": " Raspberry Pi",
+			"universal": "SDK",
+			"win64": "x64"
 		},
 		"appTypes": {
-			"client": "Kun klient",
-			"server": "Kun Server",
 			"bundle": "Klient og server",
+			"camera_sdk": "Videokilde SDK",
+			"client": "Kun klient",
+			"metadata_sdk": "Metadata SDK",
+			"package": "Pakke",
+			"server": "Kun Server",
 			"servertool": "Konfigurasjonsverktøy",
-			"package": "Pakke"
+			"storage_sdk": "Lagrings SDK",
+			"video_source_sdk": "Videokilde SDK"
 		},
 		"releasesTypes": {
 			"beta": "Beta",
@@ -209,13 +216,20 @@
 		"stayLoggedIn": "Stay Logged In",
 		"download": "Last ned %VMS_NAME%",
 		"merge": {
+			"commonText": "Kunne ikke slå sammen systemer <strong>{{primarySystem}}</strong> og <strong>{{secondarySystem}}</strong>.",
 			"connectToCloud": "Koble System du vil slå sammen med denne til <strong>{{cloudName}}</strong> eller slå sammen lokalt ved hjelp av <strong>{{vmsName}}</strong> Klienten.",
 			"mergeConfirmation": "Du er i ferd med å slå sammen systemene <strong>{{primarySystem}}</strong> og <strong>{{secondarySystem}}</strong>. Innstillinger og navnet vil bli tatt fra <strong>{{primarySystem}}</strong>.",
+			"mergeFailedTitle": "Systemsammenslåing mislyktes",
 			"primaryCannotMerge": "System {{targetSystem}} har en nyere programvareversjon som ikke er kompatibel med gjeldende system. Oppdater det nåværende systemet til <a href=\"/download\" target=\"_blank\" translate>siste versjon</a> å slå det sammen med {{targetSystem}} systemet.",
 			"primarySystemOffline": "System {{primarySystem}} er frakoblet og kan ikke slås sammen med System {{targetSystem}}.",
 			"secondaryCannotMerge": "System {{targetSystem}} har en eldre programvareversjon som ikke er kompatibel med gjeldende system. Oppdater {{targetSystem}} til <a href=\"/download\" target=\"_blank\" translate>siste bygg</a> å slå dert sammen med det nåværende.",
 			"systemOffline": "System {{targetSystem}} er frakoblet og kan ikke slås sammen med det nåværende.",
-			"systemUnavailable": "System {{targetSystem}} er for tiden ikke tilgjengelig. Prøv igjen om noen få minutter eller kontakt"
+			"systemUnavailable": "System {{targetSystem}} er for tiden ikke tilgjengelig. Prøv igjen om noen få minutter eller kontakt",
+			"recommendSupport": {
+				"a_recommend": "Vi anbefaler å konsultere med",
+				"b_support": "brukerstøtte",
+				"c_proceeding": "før du fortsetter."
+			}
 		},
 		"message": {
 			"failedToSend": "Meldingen har ikke sendt.",
@@ -308,6 +322,7 @@
 		"mySystemSearch": "IMeMyMine",
 		"unavailable": "Systemet er ikke tilgjengelig",
 		"offline": "Systemet er offline",
+		"offlineAlertRibbon": "System is offline. Some settings may not be available.",
 		"openClient": "Åpent i %VMS_NAME%",
 		"openClientNoSystem": "Åpne %VMS_NAME%",
 		"confirmMergeAction": "Slå sammen",
@@ -321,15 +336,16 @@
 		"confirmUnshareFromMeTitle": "Koble fra systemet?",
 		"confirmUnshareFromMeAction": "Koble fra",
 		"confirmUnshare": "Denne brukeren kan ikke ha tilgang til System. Er du sikker?",
-		"confirmUnshareTitle": "Slett bruker?",
-		"confirmUnshareAction": "Slett",
+		"confirmUnshareTitle": "Remove user?",
+		"confirmUnshareAction": "Fjern",
 		"successDisconnected": "Systemet er frakoblet fra %CLOUD_NAME%",
 		"successDeleted": "System {{systemName}} er slettet fra kontoen din",
 		"mergeFailed": "Systemsammenslåing mislyktes",
 		"mergeStart": "Systemene blir slått sammen",
 		"mergeSuccess": "Systemsammenslåing fullført",
 		"permissionsRemoved": "Tillatelser ble fjernet fra {{email}}",
-		"unknownName": "Ukjent navn for system (forårsaket av cloud-sammenslåing)"
+		"unknownName": "Ukjent navn for system (forårsaket av cloud-sammenslåing)",
+		"shareOffline": "Cannot share system while it is offline"
 	},
 	"systemStatuses": {
 		"activated": "aktivert",

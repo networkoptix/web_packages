@@ -1,9 +1,7 @@
 {
   "language": "pt_PT",
-  "language_name": "Português",
+  "language_name": "Português (Portugal)",
   "cloudName": "%CLOUD_NAME%",
-  "vmsName": "%VMS_NAME%",
-  "clientProtocol": "%CLIENT_PROTOCOL%:",
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
     "default": "%CLOUD_NAME%",
@@ -27,73 +25,6 @@
     "download": "Baixar %VMS_NAME%",
     "downloadPlatform": "Baixar %VMS_NAME% para ",
     "pageNotFound": "Página não encontrada"
-  },
-  "systemStatuses": {
-    "activated": "activado",
-    "incompatible": "incompatível",
-    "merging": "mesclagem",
-    "notActivated": "não activado",
-    "online": "online",
-    "offline": "offline",
-    "unavailable": "indisponível"
-  },
-  "accessRoles": {
-    "disabled": {
-      "label": "Desabilitado",
-      "description": "O utilizador está desactivado e não pode efectuar login no sistema"
-    },
-    "Owner": {
-      "label": "Dono",
-      "description": "Acesso não restrito, incluindo a capacidade de partilhar e conectar/desconectar o sistema da \"Cloud\""
-    },
-    "Viewer": {
-      "label": "Visualizador",
-      "description": "Pode visualizar o vídeo ao vivo e pesquisar o arquivo"
-    },
-    "Live Viewer": {
-      "label": "Visualizador ao vivo",
-      "description": "Só pode visualizar o vídeo ao vivo"
-    },
-    "Advanced Viewer": {
-      "label": "Visualizador Avançado",
-      "description": "Pode ver vídeos ao vivo, pesquisar os arquivos, configurar câmaras, controlar PTZ etc"
-    },
-    "Administrator": {
-      "label": "Administrador",
-      "description": "Acesso não restrito incluindo a capacidade de partilhar"
-    },
-    "Custom": {
-      "label": "Personalizado",
-      "description": "Use a aplicação Cliente %VMS_NAME% para configurar permissões personalizadas"
-    },
-    "cloudAdmin": {
-      "label": "Administrador",
-      "description": "Pode configurar o Sistema e partilhá-lo"
-    },
-    "customRole": {
-      "label": "Perfil Personalizado",
-      "description": "Perfil de utilizador personalizado especificado no Sistema"
-    },
-    "owner": {
-      "label": "Dono",
-      "description": "Acesso não restrito, incluindo a capacidade de partilhar e conectar/desconectar o sistema da \"Cloud\""
-    },
-    "viewer": {
-      "label": "Visualizador",
-      "description": "Pode visualizar o vídeo ao vivo e pesquisar o arquivo"
-    },
-    "liveViewer": {
-      "label": "Visualizador ao vivo",
-      "description": "Só pode visualizar o vídeo ao vivo"
-    },
-    "advancedViewer": {
-      "label": "Visualizador Avançado",
-      "description": "Pode ver vídeos ao vivo, navegar no arquivo, configurar câmaras, controlar PTZ etc"
-    },
-    "custom": {
-      "label": "Personalizado",
-      "description": "Use a aplicação Cliente %VMS_NAME% para configurar permissões personalizadas"
-    }
   },
   "errorCodes": {
     "ok": "ok",
@@ -137,45 +68,6 @@
     "INCOMPATIBLE": "Os sistemas têm versões de software diferentes. Por favor, actualize os dois para o <a href=\"/download\">build mais recente</a>.",
     "FAIL": "O sistema <strong>{{failedSystem}}</strong> está actualmente inacessível.<br> Tente novamente em alguns instantes ou entre em contato com o <a href=\"%SUPPORT_LINK%\" target=\"_blank\">suporte</a>.",
     "unknownMergeError": "Unknown error. You can try to refresh the page and repeat attempt. If the problem persists – please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>."
-  },
-  "merging": {
-    "mergeFailedTitle": "Falha na fusão de Sistemas",
-    "commonText": "Falha na fusão dos sistemas <strong>{{primarySystem}}</strong> e <strong>{{secondarySystem}}</strong>."
-  },
-  "system": {
-    "yourSystem": "O seu Sistema",
-    "mySystemSearch": "IMeMyMine",
-    "unavailable": "O sistema está inacessível",
-    "offline": "O sistema está offline",
-    "openClient": "Abrir em %VMS_NAME%",
-    "openClientNoSystem": "Abrir %VMS_NAME%",
-    "confirmMergeAction": "\"Merge\"",
-    "mergeSystemTitle": "\"Merge\" dos Sistemas",
-    "confirmRenameTitle": "Nome do Sistema",
-    "confirmRenameAction": "Gravar",
-    "successRename": "Nome do sistema guardado",
-    "confirmDisconnectTitle": "Disconnect System from %CLOUD_NAME%?",
-    "confirmDisconnectAction": "Desconectar",
-    "confirmUnshareFromMe": "You will not be able to lgo into this System anymore.",
-    "confirmUnshareFromMeTitle": "Disconnect System from your Account?",
-    "confirmUnshareFromMeAction": "Desconectar",
-    "confirmUnshareTitle": "Remove user?",
-    "confirmUnshareAction": "Remover",
-    "successDisconnected": "O Sistema foi desconectado de %CLOUD_NAME% com sucesso",
-    "successDeleted": "O sistema {{systemName}} foi apagado com sucesso da sua conta",
-    "mergeFailed": "Falha na fusão de Sistemas",
-    "mergeStart": "Os sistemas começaram a fusão",
-    "mergeSuccess": "Fusão do sistema concluída",
-    "permissionsRemoved": "As permissões foram removidas de {{email}}",
-    "unknownName": "Nome do Sistema desconhecido (causado pela fusão pela cloud)"
-  },
-  "regActions": {
-    "passwordLabel": "Password",
-    "createAccount": "Criar conta"
-  },
-  "header": {
-    "allSystems": "Todos os sistemas",
-    "systems": "Sistemas"
   },
   "common": {
     "cameraLinks": {
@@ -226,10 +118,5 @@
       "stop listening": "parar de ouvir",
       "help": "help | show commands"
     }
-  },
-  "recommendSupport": {
-    "a_recommend": "Recomendamos consultar com",
-    "b_support": "suporte",
-    "c_proceeding": "antes de proceder."
   }
 }

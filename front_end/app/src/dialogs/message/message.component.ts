@@ -119,7 +119,7 @@ export class MessageModalContent implements OnInit {
             });
     }
 
-    setTopic(topic: Topic) {
+    setTopic(topic: any) {
         this.topic = topic.id;
         this.topicMessage = topic.name;
     }

@@ -1,7 +1,7 @@
 <div class="mb-3 card menu" *ngIf="currentlyMerging">
     <div class="card-body" *ngIf="isMaster && system.isMine">
         <div class="position-relative">
-            <nx-pre-loader *ngIf="!system" type=""></nx-pre-loader>
+            <nx-pre-loader [type]="'small'"></nx-pre-loader>
         </div>
         <br>
         <div *ngIf="mergeTargetSystem.name" >
@@ -14,7 +14,7 @@
     </div>
     <div class="card-body" *ngIf="!isMaster || !system.isMine">
         <div class="position-relative">
-            <nx-pre-loader *ngIf="currentlyMerging" type="small"></nx-pre-loader>
+            <nx-pre-loader [type]="'small'"></nx-pre-loader>
         </div>
         <br>
         <div *ngIf="mergeTargetSystem.name">

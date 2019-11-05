@@ -2,8 +2,6 @@
   "language": "tr_TR",
   "language_name": "Türk",
   "cloudName": "%CLOUD_NAME%",
-  "vmsName": "%VMS_NAME%",
-  "clientProtocol": "%CLIENT_PROTOCOL%:",
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
     "default": "%CLOUD_NAME%",
@@ -27,73 +25,6 @@
     "download": "İndir %VMS_NAME%",
     "downloadPlatform": "İndir %VMS_NAME% ",
     "pageNotFound": "Sayfa bulunamadı"
-  },
-  "systemStatuses": {
-    "activated": "aktif edildi",
-    "incompatible": "uyumsuz",
-    "merging": "birleştirme",
-    "notActivated": "aktif edilmemiş",
-    "online": "çevrimiçi",
-    "offline": "çevrimdışı",
-    "unavailable": "kullanılamaz"
-  },
-  "accessRoles": {
-    "disabled": {
-      "label": "Devre Dışı Bırak",
-      "description": "Kullanıcı devre dışı bırakılmış, sisteme giriş yapamaz"
-    },
-    "Owner": {
-      "label": "Sahip",
-      "description": "Sistem'i buluttan paylaşma / bağlanma ve bağlantıyı kesme gibi sınırsız erişim"
-    },
-    "Viewer": {
-      "label": "İzleyiciler",
-      "description": "Canlı video görüntüleyebilir ve arşive gözatabilir"
-    },
-    "Live Viewer": {
-      "label": "Canlı İzleyici",
-      "description": "Sadece canlı vidyo izleyebilir"
-    },
-    "Advanced Viewer": {
-      "label": "Gelişmiş Görüntüleyici",
-      "description": "Canlı vidyo izleyebilir, arşive gözatabilir, kameraları ayarlayabilir, PTZ'yi kontrol edebilir vs"
-    },
-    "Administrator": {
-      "label": "Yönetici",
-      "description": "Sınırsız erişim, paylaşma imkanı dahil"
-    },
-    "Custom": {
-      "label": "Özel Ayarlar",
-      "description": "Özel izinler ayarlamak için %VMS_NAME% İstemci uygulamasını kullanın"
-    },
-    "cloudAdmin": {
-      "label": "Yönetici",
-      "description": "Sistemi yapılandırabilir ve paylaşabilir"
-    },
-    "customRole": {
-      "label": "Özel rol",
-      "description": "Sisteminde belirtilen özel kullanıcı rolü"
-    },
-    "owner": {
-      "label": "Sahip",
-      "description": "Sistem'i buluttan paylaşma / bağlanma ve bağlantıyı kesme gibi sınırsız erişim"
-    },
-    "viewer": {
-      "label": "İzleyiciler",
-      "description": "Canlı video görüntüleyebilir ve arşive gözatabilir"
-    },
-    "liveViewer": {
-      "label": "Canlı İzleyici",
-      "description": "Sadece canlı vidyo izleyebilir"
-    },
-    "advancedViewer": {
-      "label": "Gelişmiş Görüntüleyici",
-      "description": "Canlı vidyo izleyebilir, arşivi görüntüleyebilir, kameraları ayarlayabilir, PTZ'yi kontrol edebilir"
-    },
-    "custom": {
-      "label": "Özel Ayarlar",
-      "description": "Özel izinler ayarlamak için %VMS_NAME% İstemci uygulamasını kullanın"
-    }
   },
   "errorCodes": {
     "ok": "tamam",
@@ -137,45 +68,6 @@
     "INCOMPATIBLE": "Sistemler farklı yazılım sürümlerine sahiptir. Lütfen her ikisini de en son <a href=\"/download\">sürümüne</a>.",
     "FAIL": "Sistem <strong>{{failedSystem}}</strong> şu anda erişilemiyor.<br>Birkaç dakika sonra tekrar deneyin veya iletişim <a href=\"%SUPPORT_LINK%\" target=\"_blank\">destek</a>.",
     "unknownMergeError": "Bilinmeyen hata. Sayfayı yenilemeyi deneyebilir ve denemeyi tekrarlayabilirsiniz. Sorun devam ederse, lütfen <a href=\"%SUPPORT_LINK%\" target=\"_blank\">destek</a>iletişim kurun."
-  },
-  "merging": {
-    "mergeFailedTitle": "Sistem birleştirme işlemi başarısız oldu",
-    "commonText": "Sistem <strong>{{primarySystem}}</strong> ve <strong>{{secondarySystem}}</strong> birleştirilemedi."
-  },
-  "system": {
-    "yourSystem": "Sistem",
-    "mySystemSearch": "IMeMyMine",
-    "unavailable": "Sistem erişilebilir değil",
-    "offline": "Sistem çevrimdışı",
-    "openClient": "%VMS_NAME% içinde aç",
-    "openClientNoSystem": "Aç%VMS_NAME%",
-    "confirmMergeAction": "Birleştir",
-    "mergeSystemTitle": "Sistemleri Birleştir",
-    "confirmRenameTitle": "Sistem Adı",
-    "confirmRenameAction": "Kaydet",
-    "successRename": "Sistem ismi kaydedildi",
-    "confirmDisconnectTitle": "%CLOUD_NAME% den bağlantıyı kesmek istiyor musunuz?",
-    "confirmDisconnectAction": "Bağlantıyı kes",
-    "confirmUnshareFromMe": "Artık bu sisteme giriş yapamazsınız.",
-    "confirmUnshareFromMeTitle": "Sisteminizin bağlantısı hesabınızdan kesilecek?",
-    "confirmUnshareFromMeAction": "Bağlantıyı kes",
-    "confirmUnshareTitle": "Kullanıcı kaldırılsın mı?",
-    "confirmUnshareAction": "Kaldır",
-    "successDisconnected": "Sistem %CLOUD_NAME%'den başarıyla çıkarıldı",
-    "successDeleted": "{{systemName}} sistemi hesabınızdan başarıyla silindi",
-    "mergeFailed": "Sistem birleştirme işlemi başarısız oldu",
-    "mergeStart": "Sistemler birleştirilmeye başlandı",
-    "mergeSuccess": "Sistem birleştirme tamamlandı",
-    "permissionsRemoved": "İzinler {{email}}'den kaldırıldı",
-    "unknownName": "Sistem için Bilinmeyen Ad (Bulut birleştirme yüzünden)"
-  },
-  "regActions": {
-    "passwordLabel": "Parola",
-    "createAccount": "Hesap oluştur"
-  },
-  "header": {
-    "allSystems": "Tüm sistemler",
-    "systems": "Sistemler"
   },
   "common": {
     "cameraLinks": {
@@ -226,10 +118,5 @@
       "stop listening": "dinlemeyi durdur",
       "help": "help | show commands"
     }
-  },
-  "recommendSupport": {
-    "a_recommend": "Danışmanızı tavsiye ederiz",
-    "b_support": "destek",
-    "c_proceeding": "işlemden önce."
   }
 }

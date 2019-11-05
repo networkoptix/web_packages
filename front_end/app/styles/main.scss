@@ -23,12 +23,24 @@ html {
     @include rem-baseline;
     position: relative;
     min-height: 100%;
-    overflow-y: scroll; /* CLOUD-373: this is hack: we fix vertical scroll to prevent the page from shaking when it appears or disappears*/
+    height: 100%;
+    margin: 0;
 }
 
 body {
     min-width : 360px;
     padding   : 0 !important;
+    height: 100%;
+    margin: 0;
+}
+
+.outerContainer {
+  display: flex; flex-direction: column; height: 100%;
+}
+
+.mainContainer {
+    flex: 1 1 auto;
+    overflow-y: scroll; /* CLOUD-373: this is hack: we fix vertical scroll to prevent the page from shaking when it appears or disappears*/
 }
 
 [data-whatintent='mouse'] *:focus {
@@ -782,6 +794,14 @@ h1 .badge {
     -webkit-column-count: 2;
     /* Safari and Chrome */
     column-count: 2;
+}
+
+.min-w-80 {
+    min-width: 80px;
+}
+
+.min-w-120 {
+    min-width: 120px;
 }
 
 .wide-button {

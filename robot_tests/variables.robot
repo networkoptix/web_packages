@@ -9,14 +9,17 @@ ${BROWSER}                            Chrome
 
 ${LANGUAGE DROPDOWN}                  //nx-language-select//button[@id='dropdownMenuButton']
 ${LANGUAGE TO SELECT}                 //nx-language-select//span[@lang='${LANGUAGE}']/..
-${DOWNLOAD LINK}                      //footer//a[@href="/download"]
+${DOWNLOAD LINK}                      //footer//a[@href="/download" and @class="ng-star-inserted"]
 
-@{LANGUAGES LIST}                        en_US           en_GB           ru_RU               fr_FR         de_DE              es_ES         hu_HU             zh_CN     zh_TW    ja_JP       ko_KR       tr_TR          th_TH         nl_NL            he_IL      pl_PL         vi_VN
-@{LANGUAGES ACCOUNT TEXT LIST}           Account         Account         Учетная запись      Compte        Account            Cuenta        Fiók              帐户      帳號     アカウント      계정         Hesap         บัญชีผู้ใช้  Account         חשבון        Konto         Tài khoản
+@{LANGUAGES LIST}                             en_US                  en_GB                  ru_RU                           fr_FR                  de_DE                 es_ES                       hu_HU                  zh_CN      zh_TW      ja_JP          ko_KR       tr_TR              th_TH                  nl_NL                he_IL                  pl_PL                  vi_VN
+@{LANGUAGES ACCOUNT TEXT LIST}                Account                Account                Учетная запись                  Compte                 Account               Cuenta                      Fiók                   帐户        帳號       アカウント        계정         Hesap             บัญชีผู้ใช้                 Account             חשבון                   Konto                  Tài khoản
+@{LANGUAGES ACCOUNT INFORMATION TEXT LIST}    Account Information    Account Information    Информация об учетной записи    Account Information    Kontoinformationen    Información de la Cuenta    Account Information    帐户信息    帳戶資訊    アカウント情報    계정 정보    Hesap Bilgileri    Account Information    Accountinformatie    Account Information    Informacje o koncie    Account Information
+
 @{LANGUAGES CREATE ACCOUNT TEXT LIST}    Create Account  Create Account  Зарегистрироваться  Créer compte  Account erstellen  Crear Cuenta  Fiók létrehozása  创建帐户  新建帳號  アカウント作成  계정 만들기  Hesap oluştur  สร้างบัญชี   Account aanmaken  צור חשבון   Utwórz konto  Tạo tài khoản
 @{USER TYPE LIST}    ${OWNER TEXT}    ${ADMIN TEXT}    ${ADV VIEWER TEXT}    ${VIEWER TEXT}    ${LIVE VIEWER TEXT}    ${CUSTOM TEXT}
 
-${BACKDROP}                           //ngb-modal-window
+${BACKDROP}                           //ngb-modal-backdrop
+${MODAL DIALOG}                       //ngb-modal-window/div[contains(@class,'modal-dialog')]/div[contains(@class,'modal-content')]
 
 ${COMBO TEXT}                         Кенг☿☂⊗⅓您都可以`~!@#$%계정이 이
 ${CYRILLIC TEXT}                      Кенгшщзх
@@ -78,10 +81,11 @@ ${RESET EYE ICON OPEN}                ${RESET PASSWORD FORM}${EYE ICON OPEN}
 ${RESET EYE ICON CLOSED}              ${RESET PASSWORD FORM}${EYE ICON CLOSED}
 
 #Change Password
-${CHANGE PASSWORD FORM}               //form[@name='passwordForm']
-${CURRENT PASSWORD INPUT}             //form[@name='passwordForm']//input[@ng-model='pass.password']
-${NEW PASSWORD INPUT}                 //form[@name='passwordForm']//password-input[@ng-model='pass.newPassword']//input
-${CHANGE PASSWORD BUTTON}             //form[@name='passwordForm']//button[@ng-click='checkForm()']
+${CHANGE PASSWORD FORM}               //nx-account-password-component//form
+${CURRENT PASSWORD INPUT}             ${CHANGE PASSWORD FORM}//input[@id='password']
+${NEW PASSWORD INPUT}                 ${CHANGE PASSWORD FORM}//input[@id='newPassword']
+${CHANGE PASSWORD BUTTON}             //nx-account-password-component//nx-apply//nx-process-button//button
+${CANCEL CHANGES BUTTON}              //nx-account-password-component//nx-apply//button[contains(text(), "Cancel")]
 ${PASSWORD IS REQUIRED}               //span[contains(@class,'input-error') and contains(text(),"${PASSWORD IS REQUIRED TEXT}")]
 ${CHANGE PASS EYE ICON OPEN}          ${CHANGE PASSWORD FORM}${EYE ICON OPEN}
 ${CHANGE PASS EYE ICON CLOSED}        ${CHANGE PASSWORD FORM}${EYE ICON CLOSED}
@@ -91,7 +95,7 @@ ${REGISTER FORM}                      //form[@id='registerForm']
 ${REGISTER FIRST NAME INPUT}          ${REGISTER FORM}//input[@id='firstName']
 ${REGISTER LAST NAME INPUT}           ${REGISTER FORM}//input[@id='lastName']
 ${REGISTER EMAIL INPUT}               ${REGISTER FORM}//input[@id='registerEmail']
-${REGISTER EMAIL INPUT LOCKED}        ${REGISTER FORM}//input['readOnly' and @ng-if='lockEmail']
+${REGISTER EMAIL INPUT LOCKED}        ${REGISTER FORM}//input[@name='registerEmailLocked']
 ${REGISTER PASSWORD INPUT}            ${REGISTER FORM}//input[@id='registerPassword']
 
 ${TERMS AND CONDITIONS CHECKBOX VISIBLE}    ${REGISTER FORM}//label[@class="nx-checkbox"]/span[contains(@class,"tick")]//*[local-name() = 'svg']
@@ -127,7 +131,7 @@ ${ACCOUNT CREATION SUCCESS}           //h1[@class="process-success d-flex align-
 ${ACTIVATION SUCCESS}                 //h1[@class='process-success' and contains(text(),"${ACCOUNT SUCCESSFULLY ACTIVATED TEXT}")]
 ${SUCCESS LOG IN BUTTON}              //h1[@class='process-success' and contains(text(),"${ACCOUNT SUCCESSFULLY ACTIVATED TEXT}")]/following-sibling::h1/a[text()="${LOG IN BUTTON TEXT}"]
 
-${SYSTEM NAME OFFLINE}                //nx-ribbon/div[contains(@class,'alert-ribbon')]/div[@class='message' and text()='System is offline. Some settings may not be available.']
+${SYSTEM NAME OFFLINE}                //nx-ribbon/div[contains(@class,'alert-ribbon')]/div[@class='message']/span[text()='${SYSTEM IS OFFLINE TEXT}']
 
 #In system settings
 ${SYSTEM NAME}                        //h2[contains(@class,"system-name")]
@@ -144,6 +148,8 @@ ${SYSTEM NAME IS REQUIRED}            //form[@name='renameForm']//span[@class='i
 
 ${SYSTEM USER DETAILS}                //nx-system-settings-component//nx-block/..
 
+${USER EMAIL}                         ${SYSTEM USER DETAILS}//header//h2[contains(@class,'user-email')]
+${USER NAME}                          ${USER EMAIL}/following-sibling::span[contains(@class,'user-name')]
 ${OWNER LABEL}                        ${SYSTEM USER DETAILS}//header//h2/following-sibling::span[contains(@class,'system-owner')]/span[contains(text(),'${OWNER TEXT}')]
 ${OWNER NAME}                         ${OWNER LABEL}//following-sibling::span//span[contains(text(),'%OWNER_NAME%')]
 ${OWNER EMAIL}                        ${OWNER LABEL}/following-sibling::span/span[contains(text(),"${EMAIL OWNER}")]
@@ -152,13 +158,16 @@ ${YOUR ACCESS LEVEL}                  ${SYSTEM USER DETAILS}//nx-section//span[c
 ${DISCONNECT FROM MY ACCOUNT}         //button[contains(text(),'Disconnect from My Account')]
 
 ${ACCESS LEVEL DROPDOWN}              ${SYSTEM USER DETAILS}//nx-section//button[@id='permissionsSelect']
-${REMOVE USER BUTTON}                 //button[contains(text(),'${REMOVE USER BUTTON TEXT}')]
-${DELETE USER MODAL}                  //ngb-modal-window
-${DELETE USER BUTTON}                 //button[contains(text(),'${DELETE USER BUTTON TEXT}')]
-${DELETE USER CANCEL BUTTON}          //ngb-modal-window//button[contains(text(),"${CANCEL BUTTON TEXT}")]
+${HELP BLOCK}                         ${SYSTEM USER DETAILS}//nx-section//span[contains(@class,'help-block')]
+${REMOVE USER BUTTON}                 ${SYSTEM USER DETAILS}//button[contains(text(),'${REMOVE USER BUTTON TEXT}')]
+${REMOVE USER MODAL}                  ${MODAL DIALOG}
+${REMOVE BUTTON}                      ${MODAL DIALOG}//button[contains(text(),'${REMOVE BUTTON TEXT}')]
+${REMOVE CANCEL BUTTON}               ${MODAL DIALOG}//button[contains(text(),"${CANCEL BUTTON TEXT}")]
 
 ${USERS LIST LINK}                    //a[@id='users']
 ${USERS LIST}                         ${USERS LIST LINK}/../../div[contains(@class,'level-3-items')]
+
+${SYSTEM ADMINISTRATION LINK}         //a[@id='admin']
 
 ${SHARE BUTTON SYSTEMS}               //nx-system-settings-component//nx-menu//nx-menu-button//button
 ${SHARE BUTTON DISABLED}              ${SHARE BUTTON SYSTEMS}${DISABLED}
@@ -169,17 +178,17 @@ ${SYSTEMS SEARCH INPUT}               //nx-systems-list-component//div[contains(
 ${SYSTEM SEARCH X BUTTON}             ${SYSTEMS SEARCH INPUT}//preceding::a[contains(@class,'input-overlay-right')]
 
 #Merge
-${MERGE BUTTON SYSTEM}                //button/span[text()="${MERGE SYSTEM BUTTON TEXT}"]
+${MERGE BUTTON SYSTEM}                //button/span[text()="${MERGE SYSTEM BUTTON TEXT}"]/..
 ${MERGE BUTTON SYSTEM DISABLED}       //button[@disabled]/span[text()="${MERGE SYSTEM BUTTON TEXT}"]
 ${MERGE DIALOG}                       //nx-modal-merge-content
 ${MERGE FORM}                         //form[@name="mergeForm"]
 ${MERGE SYSTEM DROPDOWN}              ${MERGE DIALOG}//button[@id="genericSelect"]
-${MERGE X BUTTON}                     ${MERGE DIALOG}//button[@class="close"]
+${MERGE X BUTTON}                     ${MERGE DIALOG}//button[contains(@class,"close")]
 ${MERGE OK BUTTON}                    ${MERGE DIALOG}//button[contains(@class,"btn btn-primary") and contains(text(),"${OK TEXT}")]
 ${MERGE CANCEL BUTTON}                ${MERGE DIALOG}//button[@class="btn btn-default"]
 ${MERGE BUTTON MODAL}                 ${MERGE DIALOG}//button[@class="btn btn-primary" and contains(text(),"${MERGE SYSTEMS TEXT}")]
 ${MERGE PASSWORD INPUT}               ${MERGE DIALOG}//input[@id="mergePassword"]
-${CURRENTLY MERGING CARD}             //div[@ng-if="currentlyMerging"]
+${CURRENTLY MERGING CARD}             //div[contains(@class,"card-body")]
 ${CURRENTLY MERGING DOTS}             ${CURRENTLY MERGING CARD}//div[contains(@class, "circleG circleG_")]
 ${MERGE NOT OWNER MESSAGE 2}          ${MERGE DIALOG}//p[@class='help-block-no-height'][2]
 ${MERGE FAILED DIALOG HEADER}         //nx-modal-generic-content//h1[contains(text(),"${SYSTEMS MERGE FAILED TEXT}")]
@@ -199,7 +208,6 @@ ${DISCONNECT FORM HEADER}             //h1["${DISCONNECT FORM HEADER TEXT}"]
 ${DISCONNECT PASSWORD INPUT}          ${DISCONNECT FORM}//input[@id="password"]
 ${DISCONNECT FORM DISCONNECT BUTTON}    ${DISCONNECT FORM}//button[contains(text(),"${DISCONNECT BUTTON TEXT}")]
 
-${MODAL DIALOG}                       //ngb-modal-window/div[contains(@class,'modal-dialog')]/div[contains(@class,'modal-content')]
 #Disconnect from my account
 ${DISCONNECT MODAL WARNING}              ${MODAL DIALOG}//p[contains(text(),"${DISCONNECT MODAL WARNING TEXT}")]
 # extra spaces here temporarily
@@ -236,15 +244,17 @@ ${ACCOUNT EMAIL}                      //account//a[@id='settings']
 ${ACCOUNT FIRST NAME}                 //form[@name='accountForm']//input[@id='firstName']
 ${ACCOUNT LAST NAME}                  //form[@name='accountForm']//input[@id='lastName']
 ${ACCOUNT LANGUAGE DROPDOWN}          //nx-language-select//button[@id='dropdownMenuButton']
-${ACCOUNT SAVE}                       //nx-account-settings-component//nx-apply//nx-process-button//button
-${ACCOUNT CANCEL}                     //nx-account-settings-component//nx-apply/div/button
+${ACCOUNT SAVE}                       //nx-apply//nx-process-button//button
+${ACCOUNT CANCEL}                     //nx-apply/div/button
+${APPLY CHANGES BUTTON}               ${MODAL DIALOG}//button[contains(text(), 'Apply')]
+${DISCARD CHANGES BUTTON}             ${MODAL DIALOG}//button[contains(text(), 'Discard')]
 
 #Downloads
 ${DOWNLOADS HEADER}                   //h1[contains(text(),"Download")]
-${DOWNLOAD WINDOWS VMS LINK}          //h3[text()="Download Nx Witness"]//following-sibling::div[contains(text(),"Windows x64 - Client & Server")]/../..
-${DOWNLOAD UBUNTU VMS LINK}           //h3[text()="Download Nx Witness"]//following-sibling::div[contains(text(),"Ubuntu x64 - Client")]/../..
-${DOWNLOAD MAC OS VMS LINK}           //h3[text()="Download Nx Witness"]//following-sibling::div[contains(text(),"Mac OS - Client")]/../..
-${DOWNLOAD ARM VMS LINK}              //h3[text()="Download Nx Witness"]//following-sibling::div[contains(text(),"ARM") and contains(text(),"Client")]/../..
+${DOWNLOAD WINDOWS VMS LINK}          //a[contains(text(),"Windows x64 - Client & Server")]
+${DOWNLOAD UBUNTU VMS LINK}           //a[contains(text(),"Ubuntu x64 - Client")]
+${DOWNLOAD MAC OS VMS LINK}           //a[contains(text(),"Mac OS - Client")]
+${DOWNLOAD ARM VMS LINK}              //a[contains(text(),"ARM") and contains(text(),"Client")]
 ${ITUNES STORE DOWNLOAD BUTTON}       //a[contains(@class,"mobile-link iOS")]
 ${PLAY STORE DOWNLOAD BUTTON}         //a[contains(@class,"mobile-link Android")]
 
@@ -254,10 +264,88 @@ ${MAC OS TAB}                         //a[@id="macos"]
 ${ARM TAB}                            //a[@id="arm"]
 
 #History
-${RELEASES TAB}                       //span[@class='tab-heading' and text()='Releases']/..
-${PATCHES TAB}                        //span[@class='tab-heading' and text()='Patches']/..
-${BETAS TAB}                          //span[@class='tab-heading' and text()='Betas']/..
+${RELEASES TAB}                       //span[contains(@class,'tab-heading') and text()='Releases']/..
+${PATCHES TAB}                        //span[contains(@class,'tab-heading') and text()='Patches']/..
+${BETAS TAB}                          //span[contains(@class,'tab-heading') and text()='Betas']/..
 ${RELEASE NUMBER}                     //div[contains(@class,"active")]//h1
+
+#Integration Landing Page
+${INTEGRATIONS COMPONENT}             //nx-app//integrations-component/div[@class="intergations"]
+${INTEGRATIONS SEARCH}                ${INTEGRATIONS COMPONENT}//nx-search[@name="filterModel"]/div[@class="nx-search"]
+${INTEGRATIONS SEARCH INPUT}          ${INTEGRATIONS SEARCH}//input[contains(@class, "search-input") and @placeholder="Search")]
+${INTEGRATIONS SEARCH CLOSE BUTTON}   ${INTEGRATIONS SEARCH}//button[contains(@class, "search-clear")]
+${INTEGRATIONS SEARCH ICON}           ${INTEGRATIONS SEARCH}//span[contains(@class, "icon-search")]
+${INTEGRATIONS SEARCH FILTER}         ${INTEGRATIONS SEARCH}//div[contains(@class, "search-tags")]//nav[contains(@aria-label, "table")]/ul[contains(@class, "pagination")]
+${INTEGRATIONS SEARCH FILTER ITEM}    ${INTEGRATIONS SEARCH FILTER}/li/div
+${INTEGRATIONS CATALOG}               ${INTEGRATIONS COMPONENT}//integrations-list-component/div[1]
+
+#Integration Tile
+${INTEGRATION TILE}                   ${INTEGRATIONS COMPONENT}//integrations-list-component//nx-block/div[contains(@class, "card")]
+${INTEGRATION TEST INEGRATION LINK}   ${INTEGRATIONS COMPONENT}//a[contains(@href, "39")]
+${INTEGRATION TILE LOGO}              ${INTEGRATION TILE}//div[contains(@class, "card--header-logo")]
+${INTEGRATION TILE INFO}              ${INTEGRATION TILE}//div[contains(@class, "card--header-info")]
+${INTEGRATION TILE NAME}              ${INTEGRATION TILE}//div[contains(@class, "card--body-name")]
+${INTEGRATION TILE TEXT}              ${INTEGRATION TILE}//div[contains(@class, "card--body-descr")]
+${INTEGRATION TILE HEADER}            ${INTEGRATION TILE}//div[@class="card--header"]
+${INTEGRATION TILE BODY}              ${INTEGRATION TILE}//nx-section/child::div[@class="card--body"]
+${INTEGRATION TILE FOOTER}            ${INTEGRATION TILE}//div[@class="card--footer")]
+
+#Integration Details Page
+${INTEGRATION DETAILS COMPONENT}          //nx-app//integration-detail-component/div[contains(@class, "integration-details")]
+${INTEGRATION CARD}                       ${INTEGRATION DETAILS COMPONENT}//nx-block/div[@class="card"]
+${INTEGRATION ALL INTEGRATIONS}           ${INTEGRATION DETAILS COMPONENT}//button/span[contains(text(), "${ALL INTEGRATIONS TEXT}")]
+${INTEGRATION RIGHT PANEL}                ${INTEGRATION DETAILS COMPONENT}//div[@class="right-menu"]
+${INTEGRATION DOWNLOADS SECTION}          ${INTEGRATION RIGHT PANEL}//nx-block/div[@class="card gray"]/child::div/child::h4/child::header[contains(text(), "${INTEGRATION DOWNLOADS TEXT}")]
+${INTEGRATION REQUIREMENTS SECTION}       ${INTEGRATION RIGHT PANEL}//nx-block/div[@class="card gray"]/child::div/child::h4/child::header[contains(text(), "${INTEGRATION REQUIREMENTS TEXT}")]
+${INTEGRATION HOW IT WORKS HEADER}        ${INTEGRATION CARD}//header[contains(text(), "${INTEGRATION HOW IT WORKS TEXT}")]
+${INTEGRATION HOW TO SETUP HEADER}        ${INTEGRATION CARD}//header[contains(text(), "${INTEGRATION HOW TO SETUP TEXT}")]
+
+#Integration Details Left Panel
+${INTEGRATION TITLE}                            ${INTEGRATION DETAILS COMPONENT}//div[contains(@class, "title")]
+${INTEGRATION VERSION}                          ${INTEGRATION DETAILS COMPONENT}//div[contains(@class, "version")]
+${INTEGRATION HOW IT WORKS LINK}                ${INTEGRATION DETAILS COMPONENT}//nx-menu//a/child::div/child::span[text()="${INTEGRATION HOW IT WORKS TEXT}"]
+${INTEGRATION HOW IT WORKS VIDEO}               ${INTEGRATION DETAILS COMPONENT}//nx-external-video
+${INTEGRATION HOW IT WORKS CAROUSEL}            ${INTEGRATION DETAILS COMPONENT}//nx-carousel//div[contains(@class, "carousel")]
+${INTEGRATION HOW TO SETUP LINK}                ${INTEGRATION DETAILS COMPONENT}//nx-menu//a[@id="how-to-setup"]/child::div/child::span[contains(text(), "${INTEGRATION HOW TO SETUP TEXT}")]
+${INTEGRATION HOW TO SETUP VIDEO}               ${INTEGRATION HOW IT WORKS VIDEO}
+${INTEGRATION HOW TO SETUP CAROUSEL}            ${INTEGRATION HOW IT WORKS CAROUSEL}
+${INTEGRATION CAROUSEL RIGHT BUTTON}            ${INTEGRATION DETAILS COMPONENT}//nx-carousel//span[@role="button"]/div[contains(@class, "right")]
+${INTEGRATION CAROUSEL LEFT BUTTON}             ${INTEGRATION DETAILS COMPONENT}
+${INTEGRATION CAROUSEL PREVIEW}                 ${INTEGRATION DETAILS COMPONENT}//nx-carousel//div[@class= "btn-group carousel-preview"]
+${INTEGRATION CAROUSEL SCREENSHOT NAME}         ${INTEGRATION DETAILS COMPONENT}//div[contains(@class, "carousel-item-caption")]
+${INTEGRATION TAGS SECTION}                     ${INTEGRATION DETAILS COMPONENT}//div/child::div/child::label[contains(text(), "${INTEGRATION TAGS TEXT}")]
+${INTEGRATION GET IN TOUCH LABEL}               ${INTEGRATION DETAILS COMPONENT}//label[contains(text(), "${INTEGRATION CONTACT TEXT}")]
+${INTEGRATION GET IN TOUCH BUTTON}              ${INTEGRATION DETAILS COMPONENT}//button[contains(@class, "btn btn-primary")]
+${INTEGRATION DEVELOPER LABEL}                  ${INTEGRATION DETAILS COMPONENT}//label[contains(text(), "${INTEGRATION DEVELOPER TEXT}")]
+#${INTEGRATION DEVELOPER COMPANY LINK}           ${INTEGRATION DETAILS COMPONENT}
+${INTEGRATION DEVELOPER TERMS OF USE LINK}      ${INTEGRATION DETAILS COMPONENT}//a[contains(text(), "${INTEGRATION TERMS OF USE TEXT}")]
+${INTEGRATION SUPPORT LABEL}                    ${INTEGRATION DETAILS COMPONENT}//label[contains(text(), "${INTEGRATION SUPPORT TEXT}")]
+${INTEGRATION SUPPORT LINK}                     ${INTEGRATION DETAILS COMPONENT}//a[contains(text(), "${INTEGRATION SUPPORT URL TEXT}")]
+${INTEGRATION SUPPORT EMAIL}                    ${INTEGRATION DETAILS COMPONENT}//a[contains(text(), "${INTEGRATION SUPPORT EMAIL TEXT}")]
+
+#Get in Touch Modal
+${INTEGRATION GET IN TOUCH FORM}                //ngb-modal-window//div[@class="modal-content"]//form[@name="messageForm"]
+${INTEGRATION GET IN TOUCH HEADER}              ${INTEGRATION GET IN TOUCH FORM}//div[contains(@class, "header")]
+${INTEGRATION GET IN TOUCH TITLE}               ${INTEGRATION GET IN TOUCH HEADER}//h1[contains(@class, "title")]
+${INTEGRATION GET IN TOUCH CLOSE BUTTON}        ${INTEGRATION GET IN TOUCH HEADER}//button[contains(@class, "close")]
+${INTEGRATION GET IN TOUCH CLOSE BUTTON ICON}   ${INTEGRATION GET IN TOUCH HEADER}//div[contains(@class, "close-content")]/span[contains(@class, "close-icon")]
+${INTEGRATION GET IN TOUCH BODY}                ${INTEGRATION GET IN TOUCH FORM}//div[contains(@class, "body")]/form[@name="feedbackForm"]
+${INTEGRATION GET IN TOUCH FOOTER}              ${INTEGRATION GET IN TOUCH FORM}//div[contains(@class, "footer")]
+${INTEGRATION GET IN TOUCH TO EMAIL LABEL}      ${INTEGRATION GET IN TOUCH BODY}//label[@for="to_email"]
+${INTEGRATION GET IN TOUCH TO EMAIL CONTENT}    ${INTEGRATION GET IN TOUCH BODY}//div[@id="to_email"]
+${INTEGRATION GET IN TOUCH NAME LABEL}          ${INTEGRATION GET IN TOUCH BODY}//label[@for="user_name"]
+${INTEGRATION GET IN TOUCH NAME INPUT}          ${INTEGRATION GET IN TOUCH BODY}//input[@id="user_name"]
+${INTEGRATION GET IN TOUCH EMAIL LABEL}         ${INTEGRATION GET IN TOUCH BODY}//label[@for="user_email"]
+${INTEGRATION GET IN TOUCH EMAIL INPUT}         ${INTEGRATION GET IN TOUCH BODY}//input[@id="user_email"]
+${INTEGRATION GET IN TOUCH TOPIC LABEL}         ${INTEGRATION GET IN TOUCH BODY}//label[@for="topic"]
+${INTEGRATION GET IN TOUCH DROPDOWN BUTTON}     ${INTEGRATION GET IN TOUCH BODY}//button[@id="genericSelect"]
+${INTEGRATION GET IN TOUCH DROPDOWN ICON}       ${INTEGRATION GET IN TOUCH BODY}//div[@class="dropdown"]//div[@class="nav-arrow"]
+${INTEGRATION GET IN TOUCH MESSAGE LABEL}       ${INTEGRATION GET IN TOUCH BODY}//label[@for="message"]
+${INTEGRATION GET IN TOUCH MESSAGE INPUT}       ${INTEGRATION GET IN TOUCH BODY}//textarea[@id="message"]
+${INTEGRATION GET IN TOUCH BOTTOM TEXT}         ${INTEGRATION GET IN TOUCH BODY}//div[contains(@class, "form-group")]/child::a
+${INTEGRATION GET IN TOUCH SEND BUTTON}         ${INTEGRATION GET IN TOUCH FOOTER}//nx-process-button/div/button
+${INTEGRATION GET IN TOUCH CANCEL BUTTON}       ${INTEGRATION GET IN TOUCH FOOTER}//button[contains(@type, "button")]
+
 
 #IPVD
 ${IPVD TITLE}                         //header//li[@class="active"]/a[contains(text(),"${IPVD TITLE TEXT}")]
@@ -361,9 +449,9 @@ ${RELEASE NUMBER}                     //div[contains(@class,"active")]//div[@ng-
 
 ${PRIVACY POLICY HEADER}              //h1[contains(text(),'Personal data and privacy policy')]
 
-${DROPDOWN MENU}                      /../div[contains(@class,'dropdown-menu')]
+${DROPDOWN MENU}                      /..//div[contains(@class,'dropdown-menu')]
 ${DROPDOWN MENU LIST}                 ${DROPDOWN MENU}/ul[contains(@class,'dropdown-menu--list')]
-${DROPDOWN MENU ITEMS}                ${DROPDOWN MENU LIST}/li[contains(@class,'dropdown-item-container')]/a/span[not(text()='All Systems')]/../../../li
+${DROPDOWN MENU ITEMS}                ${DROPDOWN MENU LIST}/li[contains(@class,'dropdown-item-container')]/../../..//li
 
 ${DISABLED}                           \[@disabled]
 
@@ -377,13 +465,10 @@ ${PASSWORD IS GOOD BADGE}             //span[contains(@class,"badge") and contai
 ${PASSWORD INCORRECT BADGE}           //span[contains(@class,"badge") and contains(text(),"${PASSWORD INCORRECT BADGE TEXT}")]
 
 #Already logged in modal
-${LOGGED IN STAY LOGGED IN BUTTON}    //ngb-modal-window//button[contains(text(),'${STAY LOGGED IN BUTTON TEXT}')]
-${LOGGED IN OK BUTTON}                //ngb-modal-window//button[contains(text(),'${OK TEXT}')]
-${LOGGED IN NEW ACCOUNT BUTTON}       //ngb-modal-window//button/span[contains(text(),'${CREATE NEW ACCOUNT BUTTON TEXT}')]/..
-${LOGGED IN LOG OUT BUTTON}           //ngb-modal-window//button/span[contains(text(),'${LOG OUT BUTTON TEXT}')]/..
-
-${CONTINUE BUTTON}                    //ngb-modal-window//button[contains(text(),'${CONTINUE BUTTON TEXT}')]
-${CONTINUE MODAL}                     //ngb-modal-window
+${LOGGED IN STAY LOGGED IN BUTTON}    ${MODAL DIALOG}//button[contains(text(),'${STAY LOGGED IN BUTTON TEXT}')]
+${LOGGED IN OK BUTTON}                ${MODAL DIALOG}//button[contains(text(),'${OK TEXT}')]
+${LOGGED IN NEW ACCOUNT BUTTON}       ${MODAL DIALOG}//button/span[contains(text(),'${CREATE NEW ACCOUNT BUTTON TEXT}')]/..
+${LOGGED IN CANCEL BUTTON}           ${MODAL DIALOG}//button/span[contains(text(),'${CANCEL BUTTON TEXT}')]/..
 
 ${300CHARS}                           QWErtyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmyy
 ${255CHARS}                           QWErtyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopasdfghhkljzxcvbnmqwertyuiopas

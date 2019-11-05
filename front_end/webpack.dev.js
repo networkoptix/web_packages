@@ -60,6 +60,12 @@ module.exports = merge(common, {
                 secure: false
             },
             {
+                context: '/static/lang_pt_BR/',
+                target: cloudInstance,
+                changeOrigin: true,
+                secure: false
+            },
+            {
                 context: '/static/images/',
                 target: cloudInstance,
                 changeOrigin: true,

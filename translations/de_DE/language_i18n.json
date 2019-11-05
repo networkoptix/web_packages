@@ -105,6 +105,7 @@
     "NO_SYSTEMS_LOGIN": "Melden Sie sich in Ihrem System mit %VMS_NAME% an",
     "NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "Es ist kein System mit %CLOUD_NAME% verbunden",
     "New Password": "Neues Passwort",
+    "No unsaved changes": "Keine ungespeicherten Änderungen",
     "Nothing Found": "Nichts gefunden",
     "OK": "Ok",
     "Ok": "Ok",
@@ -115,7 +116,7 @@
     "Page not found": "Seite nicht gefunden",
     "Password": "Passwort",
     "Password is required": "Passwort ist erforderlich",
-    "Password reset instructions are sent to Email": "Password reset instructions are sent to Email",
+    "Password reset instructions are sent to Email": "Anweisungen für die Passwortzurücksetzung wurden an die E-Mail verschickt",
     "Password successfully saved": "Passwort erfolgreich gespeichert",
     "Password:": "Passwort:",
     "Please enter a valid Email": "Geben Sie bitte eine gültige Email an",
@@ -125,6 +126,7 @@
     "Release Notes": "Release Notes",
     "Release notes": "Release Notes",
     "Remember me": "Anmeldeinformationen merken",
+    "Remove User": "Nutzer löschen",
     "Rename": "Umbenennen",
     "Requirements": "Anforderungen",
     "Resend activation email": "Aktivierungsmail erneut senden",
@@ -270,20 +272,27 @@
     "devices": "Geräte",
     "dialogs": {
         "cancelButton": "Abbrechen",
-        "changeAccountLogged": "You are already logged in with as {email}",
-        "createNewAccount": "Create New Account",
+        "changeAccountLogged": "Sie sind bereits angemeldet als {email}",
+        "createNewAccount": "Neues Konto anlegen",
         "download": "%VMS_NAME% herunterladen",
-        "loggedFromOther": "You will be logged in with a different account",
+        "loggedFromOther": "Sie werden mit einem anderen Konto angemeldet",
         "loginButton": "Anmelden",
         "loginTitle": "Anmelden bei %CLOUD_NAME%",
         "logoutAuthorisedContinueButton": "Fortfahren",
         "logoutAuthorisedLogoutButton": "Abmelden",
         "logoutAuthorisedTitle": "Sie sind bereits eingeloggt",
         "merge": {
+            "commonText": "Fehler beim Zusammenführen der Systeme <strong>{{primarySystem}}</strong> und <strong>{{secondarySystem}}</strong>.",
             "connectToCloud": "Verbinden Sie das System, mit dem Sie fusionieren möchten, mit <strong>{{cloudName}}</strong> oder fusionieren Sie lokal mit dem <strong>{{vmsName}}</strong>-Client.",
             "mergeConfirmation": "Sie sind dabei, die Systeme <strong>{{primarySystem}}</strong> und <strong>{{secondarySystem}}</strong> zusammenzuführen. Die Einstellungen und der Name werden von diesem System <strong>{{primarySystem}}</strong>verwendet.",
+            "mergeFailedTitle": "Systemzusammenführung fehlgeschlagen",
             "primaryCannotMerge": "Das System {{targetSystem}} hat eine neuere Softwareversion, die mit dem aktuellen System nicht kompatibel ist. Aktualisieren Sie das aktuelle System auf die <a href=\"/download\" target=\"_blank\" translate>neueste Buildversion</a> um es mit diesem System {{targetSystem}} zusammenzuführen.",
             "primarySystemOffline": "System {{primarySystem}} ist offline und kann nicht mit dem System {{targetSystem}} zusammengeführt werden.",
+            "recommendSupport": {
+                "a_recommend": "Wir empfehlen die Beratung mit",
+                "b_support": "support",
+                "c_proceeding": "bevor Sie fortfahren."
+            },
             "secondaryCannotMerge": "Das System {{targetSystem}} hat eine ältere Softwareversion, die mit dem aktuellen System nicht kompatibel ist. Aktualisieren Sie das System {{targetSystem}} auf die <a href=\"/download\" target=\"_blank\" translate>neueste Buildversion</a> um es mit dem aktuellen System zusammenzuführen.",
             "systemOffline": "System {{targetSystem}} ist offline und kann nicht mit dem aktuellen zusammengeführt werden.",
             "systemUnavailable": "System {{targetSystem}} ist derzeit nicht erreichbar. Versuchen Sie es in einigen Minuten erneut oder wenden Sie sich an"
@@ -314,8 +323,8 @@
             "shareConfirmButton": "Hinzufügen",
             "shareTitle": "Hinzufügen"
         },
-        "stayAs": "Stay logged as {email} ",
-        "stayLoggedIn": "Stay Logged In"
+        "stayAs": "Bleiben Sie angemeldet als {email} ",
+        "stayLoggedIn": "Angemeldet bleiben"
     },
     "dialogs.merge.connectToCloud": "Verbinden Sie das System, mit dem Sie fusionieren möchten, mit <strong>{{cloudName}}</strong> oder fusionieren Sie lokal mit dem <strong>{{vmsName}}</strong>-Client.",
     "dialogs.merge.mergeConfirmation": "Sie sind dabei, die Systeme <strong>{{primarySystem}}</strong> und <strong>{{secondarySystem}}</strong> zusammenzuführen. Die Einstellungen und der Name werden von diesem System <strong>{{primarySystem}}</strong>verwendet.",
@@ -327,10 +336,14 @@
     "downloads": {
         "appTypes": {
             "bundle": "Client und Server",
+            "camera_sdk": "Video Source SDK",
             "client": "Nur Client",
+            "metadata_sdk": "Metadaten-SDK",
             "package": "Paket",
             "server": "Nur Server",
-            "servertool": "Konfigurationstool"
+            "servertool": "Konfigurationstool",
+            "storage_sdk": "Storage SDK",
+            "video_source_sdk": "Video Source SDK"
         },
         "groups": {
             "android": {
@@ -381,8 +394,11 @@
             "bananapi": "Banana Pi",
             "bpi": "Nx1",
             "linux64": "x64",
+            "linux_arm32": "x32",
+            "linux_arm64": "x64",
             "mac": "X",
             "rpi": " Raspberry Pi",
+            "universal": "SDK",
             "win64": "x64"
         },
         "releasesTypes": {
@@ -414,7 +430,7 @@
         "cantGetSystemInfoPrefix": "Systeminfo ist nicht verfügbar",
         "cantGetSystemsListPrefix": "Systemliste ist nicht verfügbar",
         "cantGetUsersListPrefix": "Benutzerliste ist nicht verfügbar",
-        "cantOpenClient": "%VMS_NAME% application is not detected.",
+        "cantOpenClient": "%VMS_NAME% Anwendung wurde nicht erkannt.",
         "cantRegisterPrefix": "Ein Fehler ist aufgetreten",
         "cantSendActivationPrefix": "Bestätigungsmail konnte nicht gesendet werden",
         "cantSendConfirmationPrefix": "Bestätigungsmail konnte nicht gesendet werden",
@@ -574,16 +590,18 @@
         "confirmUnshareFromMe": "Sie sind dabei dieses System von Ihrem Account zu trennen. Sie werden nicht mehr auf dieses System zugreifen können. Sind Sie sich sicher?",
         "confirmUnshareFromMeAction": "Trennen",
         "confirmUnshareFromMeTitle": "System trennen?",
-        "confirmUnshareTitle": "Benutzer löschen?",
+        "confirmUnshareTitle": "Nutzer entfernen?",
         "mergeFailed": "Systemzusammenführung fehlgeschlagen",
         "mergeStart": "Systeme haben mit dem Zusammenführen begonnen",
         "mergeSuccess": "Systemzusammenführung abgeschlossen",
         "mergeSystemTitle": "Systeme zusammenführen",
         "mySystemSearch": "IMeMyMine",
         "offline": "System ist offline",
+        "offlineAlertRibbon": "Das System ist offline. Einige Einstellungen sind möglicherweise nicht verfügbar.",
         "openClient": "In %VMS_NAME% öffnen",
         "openClientNoSystem": "Öffnen Sie %VMS_NAME%",
         "permissionsRemoved": "Berechtigungen wurden von {{email}} entfernt",
+        "shareOffline": "Das System kann nicht freigegeben werden, solange es offline ist",
         "successDeleted": "Das System {{systemName}} wurde erfolgreich von Ihrem Account gelöscht",
         "successDisconnected": "Das System wurde erfolgreich von %CLOUD_NAME% getrennt",
         "successRename": "Systemname wurde gespeichert",

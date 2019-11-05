@@ -2,8 +2,6 @@
   "language": "uk_UA",
   "language_name": "Українська",
   "cloudName": "%CLOUD_NAME%",
-  "vmsName": "%VMS_NAME%",
-  "clientProtocol": "%CLIENT_PROTOCOL%:",
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
     "default": "%CLOUD_NAME%",
@@ -27,73 +25,6 @@
     "download": "Завантажити %VMS_NAME%",
     "downloadPlatform": "Завантажити %VMS_NAME% для ",
     "pageNotFound": "Сторінку не знайдено"
-  },
-  "systemStatuses": {
-    "activated": "активовано",
-    "incompatible": "несумісно",
-    "merging": "злиття",
-    "notActivated": "не активовано",
-    "online": "oнлайн",
-    "offline": "поза мережею",
-    "unavailable": "недоступний"
-  },
-  "accessRoles": {
-    "disabled": {
-      "label": "Вимкнено",
-      "description": "Користувач вимкнений і не може ввійти в систему"
-    },
-    "Owner": {
-      "label": "Власник",
-      "description": "Необмежений доступ, включаючи управління спільним доступом та підключенням/відключення системи до/від хмари"
-    },
-    "Viewer": {
-      "label": "Відео з камер і архів",
-      "description": "Можна переглядати відео в реальному часі та переглядати архів"
-    },
-    "Live Viewer": {
-      "label": "Відео в реальному часі",
-      "description": "Можна переглядати лише відео в реальному часі"
-    },
-    "Advanced Viewer": {
-      "label": "Перегляд і налаштування",
-      "description": "Може дивитися живе відео, архів, управляти PTZ і т. Д"
-    },
-    "Administrator": {
-      "label": "Адміністратор",
-      "description": "Необмежений доступ, включаючи можливість керування спільним доступом"
-    },
-    "Custom": {
-      "label": "Особливі",
-      "description": "Використовуйте додаток %VMS_NAME% для налаштування особливих повноважень"
-    },
-    "cloudAdmin": {
-      "label": "Адміністратор",
-      "description": "Може налаштувати систему та загальний доступ"
-    },
-    "customRole": {
-      "label": "Особлива роль",
-      "description": "Особлива роль, налаштована в системі"
-    },
-    "owner": {
-      "label": "Власник",
-      "description": "Необмежений доступ, включаючи управління спільним доступом та підключенням/відключення системи до/від хмари"
-    },
-    "viewer": {
-      "label": "Відео з камер і архів",
-      "description": "Можна переглядати відео в реальному часі та переглядати архів"
-    },
-    "liveViewer": {
-      "label": "Відео в реальному часі",
-      "description": "Можна переглядати лише відео в реальному часі"
-    },
-    "advancedViewer": {
-      "label": "Перегляд і налаштування",
-      "description": "Може дивитися відео в реальному часі, архів, змінювати налаштування камер, керувари RTZ і т. д"
-    },
-    "custom": {
-      "label": "Особливі",
-      "description": "Використовуйте додаток %VMS_NAME% для налаштування особливих повноважень"
-    }
   },
   "errorCodes": {
     "ok": "ок",
@@ -137,45 +68,6 @@
     "INCOMPATIBLE": "Системи мають різні версії програмного забезпечення. Будь ласка, поновіть їх до<a href=\"/download\">останньої збірки</a>.",
     "FAIL": "Система<strong>{{failedSystem}}</strong>в даний час недоступна.<br>Повторіть спробу через кілька хвилин або зверніться до <a href=\"%SUPPORT_LINK%\" target=\"_blank\">підтримки</a>.",
     "unknownMergeError": "Невідома помилка. Спробуйте оновити сторінку та повторити спробу. Якщо проблема не вирішена - зверніть в службу <a href=\"%SUPPORT_LINK%\" target=\"_blank\">підтримка</a>."
-  },
-  "merging": {
-    "mergeFailedTitle": "Злиття систем невдалося",
-    "commonText": "Не вдалося об’єднати системи <strong>{{primarySystem}}</strong> та <strong>{{secondarySystem}}</strong>."
-  },
-  "system": {
-    "yourSystem": "Ваша система",
-    "mySystemSearch": "ЯМійМоя",
-    "unavailable": "Система недоступна",
-    "offline": "Система знаходиться поза мережею",
-    "openClient": "Відкрити в %VMS_NAME%",
-    "openClientNoSystem": "Відкрити %VMS_NAME%",
-    "confirmMergeAction": "Об'єднати",
-    "mergeSystemTitle": "Об'єднати системи",
-    "confirmRenameTitle": "Назва системи",
-    "confirmRenameAction": "Зберегти",
-    "successRename": "Ім'я системи збережено",
-    "confirmDisconnectTitle": "Відключити систему від %CLOUD_NAME%?",
-    "confirmDisconnectAction": "Відключити",
-    "confirmUnshareFromMe": "Ви більше не зможете увійти в цю Систему.",
-    "confirmUnshareFromMeTitle": "Відключити систему від облікового запису?",
-    "confirmUnshareFromMeAction": "Відключити",
-    "confirmUnshareTitle": "Видалити користувача?",
-    "confirmUnshareAction": "Видалити",
-    "successDisconnected": "Система успішно відключена від %CLOUD_NAME%",
-    "successDeleted": "Система {{systemName}} успішно видалена з вашого облікового запису",
-    "mergeFailed": "Не вдалося об’єднати систему",
-    "mergeStart": "Злиття систем почалося",
-    "mergeSuccess": "Злиття системи завершено",
-    "permissionsRemoved": "{{email}} був позбавлений повноважень",
-    "unknownName": "Невідоме ім’я для системи (викликане злиттям хмари)"
-  },
-  "regActions": {
-    "passwordLabel": "Пароль",
-    "createAccount": "Створити обліковий запис"
-  },
-  "header": {
-    "allSystems": "Всі системи",
-    "systems": "Системи"
   },
   "common": {
     "cameraLinks": {
@@ -226,10 +118,5 @@
       "stop listening": "припинити прослуховування",
       "help": "help | show commands"
     }
-  },
-  "recommendSupport": {
-    "a_recommend": "Ми рекомендуємо проконсультуватися з",
-    "b_support": "підтримка",
-    "c_proceeding": "перед тим, як продовжити."
   }
 }

@@ -1,6 +1,5 @@
-import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
-import { Location }                                    from '@angular/common';
-import { ActivatedRoute }                              from '@angular/router';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NxConfigService }                             from '../../../services/nx-config';
 import { NxLanguageProviderService }                   from '../../../services/nx-language-provider';
 import { Meta }                                        from '@angular/platform-browser';
@@ -15,15 +14,17 @@ import { NxAccountService }        from '../../../services/account.service';
 import { NxProcessService }        from '../../../services/process.service';
 import { NxUtilsService }          from '../../../services/utils.service';
 import { NxRibbonService }         from '../../../components/ribbon/ribbon.service';
+import { fromEvent } from 'rxjs/observable/fromEvent';
+import { debounceTime } from 'rxjs/operators';
+import { NxToastService }          from '../../../dialogs/toast.service';
 
 @Component({
-    selector   : 'nx-system-settings-component',
+    selector: 'nx-system-settings-component',
     templateUrl: 'settings.component.html',
-    styleUrls  : ['settings.component.scss']
+    styleUrls: ['settings.component.scss']
 })
 
 export class NxSystemSettingsComponent implements OnInit, OnDestroy {
-
     @Input() uriParamSystemId;
     @Input() callShare;
 
@@ -31,15 +32,15 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     LANG: any = {};
     plugin: any;
     content: any = {};
-    location: any;
 
     account: any;
     system: any;
     gettingSystem: any;
     systems: any;
-    unsharing: any;
     deletingSystem: any;
 
+    menuVisible: boolean;
+    footerVisible: boolean;
     systemId: any;
     systemNoAccess: boolean;
     canMerge: boolean;
@@ -53,6 +54,8 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     gettingSystemUsers: any;
     selectedUser: any;
 
+    headerHeight: number;
+
     private setupDefaults() {
         this.CONFIG = this.configService.getConfig();
         this.debugMode = this.CONFIG.allowDebugMode;
@@ -61,7 +64,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.configCanMerge = this.CONFIG.cloudMerge || false;
         this.systemNoAccess = false;
         this.userDisconnectSystem = false;
-        this.selectedUser = { email: '' };
+        this.selectedUser = {email: ''};
     }
 
     constructor(private route: ActivatedRoute,
@@ -75,11 +78,11 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 private settingsService: NxSettingsService,
                 private processService: NxProcessService,
                 private menuService: NxMenuService,
-                location: Location,
                 private ribbonService: NxRibbonService,
+                private router: Router,
+                private toastService: NxToastService,
                 private meta: Meta
     ) {
-        this.location = location;
         this.setupDefaults();
     }
 
@@ -102,21 +105,28 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 }
                 this.system = undefined;
                 this.ribbonService.hide();
+                this.menuVisible = false;
                 this.getSystemInfo();
             }
         });
 
+        this.settingsService
+            .footerSubject
+            .subscribe((value) => {
+                this.footerVisible = value;
+            });
+
         this.content = {
-            selectedSection   : '',         // updated by selectedSectionSubject
+            selectedSection: '',         // updated by selectedSectionSubject
             selectedSubSection: '',         // updated by selectedSubSectionSubject
-            system            : {},         // updated by getSystemInfo
-            base              : this.CONFIG.systemMenu.baseUrl + this.systemId,
-            level1            : [
+            system: {},         // updated by getSystemInfo
+            base: this.CONFIG.systemMenu.baseUrl + this.systemId,
+            level1: [
                 {
-                    id   : this.CONFIG.systemMenu.admin.id,
-                    icon : this.CONFIG.systemMenu.admin.icon,
+                    id: this.CONFIG.systemMenu.admin.id,
+                    icon: this.CONFIG.systemMenu.admin.icon,
                     label: this.LANG.systemAdministration,
-                    path : this.CONFIG.systemMenu.admin.path,
+                    path: this.CONFIG.systemMenu.admin.path,
                 }
             ]
         };
@@ -125,7 +135,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             .selectedSectionSubject
             .subscribe(selection => {
                 this.content.selectedSection = selection;
-                this.content = { ...this.content }; // trigger onChange
+                this.content = {...this.content}; // trigger onChange
             });
 
         this.menuService
@@ -154,14 +164,14 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         // Retrieve users list
         this.gettingSystemUsers = this.processService.createProcess(() => {
             return this.system
-                       .getUsers()
-                       .then(() => {
-                           if (this.callShare) {
-                               this.settingsService
-                                   .addUser()
-                                   .finally(this.cleanUrl);
-                           }
-                       });
+                .getUsers()
+                .then(() => {
+                    if (this.callShare) {
+                        this.settingsService
+                            .addUser()
+                            .finally(this.cleanUrl);
+                    }
+                });
         }, {
             errorPrefix: this.LANG.errorCodes.cantGetUsersListPrefix
         });
@@ -170,13 +180,13 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.gettingSystem = this.processService.createProcess(() => {
             return this.system.getInfo(true); // Force reload system info when opening page
         }, {
-            errorCodes : {
+            errorCodes: {
                 forbidden: (error) => {
                     // Special handling for not having an access to the system
                     this.systemNoAccess = true;
                     return false;
                 },
-                notFound : (error) => {
+                notFound: (error) => {
                     // Special handling for not having an access to the system
                     this.systemNoAccess = true;
                     return false;
@@ -189,6 +199,16 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
         // var cancelSubscription = this.$on("unauthorized_" + $routeParams.systemId, connectionLost);
 
+        // We listen to window resize and measure header height to know how much to offset the fixed menu by
+        fromEvent(window, 'resize').pipe(debounceTime(500)).subscribe((event: any) => {
+            if (event.target.innerWidth >= 768) {
+                this.setHeaderHeight();
+            }
+        });
+    }
+
+    setHeaderHeight() {
+        this.headerHeight = document.getElementsByClassName('headerContainer')[0].scrollHeight;
     }
 
     ngOnDestroy() {
@@ -203,6 +223,10 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             .get()
             .then((account) => {
                 if (account) {
+                    // Starts the systems poll if starting on a system.
+                    if (!this.systemsService.systemsPoll.destination.observers.length) {
+                        this.systemsService.getSystems(account.email);
+                    }
                     this.account = account;
                     this.system = this.systemService.createSystem(this.systemId, this.account.email);
                     this.gettingSystem.run();
@@ -222,11 +246,26 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                             this.settingsService.system = system;
                             this.updateAlert();
                             this.updateMenu();
+                            this.checkShare();
+                            if (this.system.lostConnection) {
+                                return this.connectionLost();
+                            }
+                            this.menuVisible = true;
                         }
                     });
                 }
             });
+    }
 
+    checkShare() {
+        if (this.settingsService.share) {
+            if (this.system.isAvailable) {
+                this.settingsService.addUser();
+            } else {
+                this.toastService.show(this.LANG.system.shareOffline, {classname: 'danger', delay: this.CONFIG.alertTimeout, autohide: true});
+            }
+            this.settingsService.share = false;
+        }
     }
 
     updateAlert() {
@@ -235,6 +274,9 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         } else {
             this.ribbonService.hide();
         }
+        setTimeout(() => {
+            this.setHeaderHeight();
+        });
     }
 
     updateMenu() {
@@ -246,17 +288,17 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
             if (!usersNode) {
                 usersNode = {
-                    id    : this.CONFIG.systemMenu.users.id,
-                    icon  : this.CONFIG.systemMenu.users.icon,
-                    label : this.LANG.users,
-                    path  : this.CONFIG.systemMenu.users.path,
+                    id: this.CONFIG.systemMenu.users.id,
+                    icon: this.CONFIG.systemMenu.users.icon,
+                    label: this.LANG.users,
+                    path: this.CONFIG.systemMenu.users.path,
                     level2: [
                         {
-                            id   : this.CONFIG.systemMenu.buttons.id,
+                            id: this.CONFIG.systemMenu.buttons.id,
                             items: [
                                 {
-                                    id      : 'addUser',
-                                    label   : this.LANG['Add User'],
+                                    id: 'addUser',
+                                    label: this.LANG['Add User'],
                                     disabled: true
                                 }
                             ],
@@ -278,7 +320,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             usersNode.level3 = [];
 
             const byParam = NxUtilsService.byParam((user) => {
-                    return user.email;
+                return user.email;
             }, NxUtilsService.sortASC);
 
             this.system.users.sort(byParam);
@@ -287,9 +329,9 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 const id = user.id.replace(/{|}/g, '');
                 usersNode.level3.push({
                     id,
-                    icon : 'glyphicon-cloud',
+                    icon : user.isCloud ? 'glyphicon-cloud' : '',
                     label: user.email,
-                    additionalLabel:  user.role.name,
+                    additionalLabel:  this.LANG.accessRoles[user.role.name] && this.LANG.accessRoles[user.role.name].label || user.role.name,
                     path : 'users/' + id,
                     isEnabled: user.isEnabled,
                 });
@@ -302,23 +344,21 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             }
         }
 
-        this.content = { ...this.content };
+        this.content = {...this.content};
     }
 
     cleanUrl() {
-        this.location.path('/systems/' + this.systemId, false);
+        return this.router.navigate(['/systems', this.systemId]);
     }
 
     connectionLost() {
         this.dialogs.notify(this.LANG.errorCodes.lostConnection.replace('{{systemName}}',
-                this.system.info.name || this.LANG.errorCodes.thisSystem), 'warning');
-        this.location.path('/systems');
+            this.system.info.name || this.LANG.errorCodes.thisSystem), 'warning');
+        setTimeout(() => this.router.navigate(['/systems']), this.CONFIG.alertTimeout);
     }
 
     normalizePermissionString(permissions) {
         return permissions.split('|').sort().join('|');
     }
-
-
 }
 

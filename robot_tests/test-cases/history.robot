@@ -86,6 +86,7 @@ Going to the history page anonymous asks for login and closing takes you to 404
     Go To    ${url}/downloads/releases
     Wait Until Element Is Visible    ${LOG IN CLOSE BUTTON}
     Click Button    ${LOG IN CLOSE BUTTON}
+    Sleep    1
     Location Should Be    ${url}/404
 
 Going to the history page anonymous asks for login and login shows history page
@@ -99,6 +100,7 @@ Going to the history page anonymous and logging in with someone who doesn't have
     Go To    ${url}/downloads/releases
     Log In    ${EMAIL VIEWER}   ${password}    button=None
     Wait Until Elements Are Visible    ${PAGE NOT FOUND}    ${TAKE ME HOME}
+    Sleep    1
     Location Should Be    ${url}/404
 
 Going to the history page while logged in as someone who doesn't have access takes you to 404

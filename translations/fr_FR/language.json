@@ -2,8 +2,6 @@
   "language": "fr_FR",
   "language_name": "Français",
   "cloudName": "%CLOUD_NAME%",
-  "vmsName": "%VMS_NAME%",
-  "clientProtocol": "%CLIENT_PROTOCOL%:",
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
     "default": "%CLOUD_NAME%",
@@ -27,73 +25,6 @@
     "download": "Télécharger %VMS_NAME%",
     "downloadPlatform": "Télécharger %VMS_NAME% pour ",
     "pageNotFound": "Page non trouvée"
-  },
-  "systemStatuses": {
-    "activated": "activé",
-    "incompatible": "incompatible",
-    "merging": "fusion",
-    "notActivated": "non activé",
-    "online": "en ligne",
-    "offline": "hors ligne",
-    "unavailable": "non disponible"
-  },
-  "accessRoles": {
-    "disabled": {
-      "label": "Désactivé",
-      "description": "L’utilisateur est désactivé et ne peut pas connecter au système"
-    },
-    "Owner": {
-      "label": "Propriétaire",
-      "description": "Accès illimité, y compris la possibilité de partager et de connecter/déconnecter le système de nuage"
-    },
-    "Viewer": {
-      "label": "Visualisateur",
-      "description": "Peut afficher la vidéo en direct et parcourir les archives"
-    },
-    "Live Viewer": {
-      "label": "Visualiseur en direct",
-      "description": "Peut seulement voir vidéo en direct"
-    },
-    "Advanced Viewer": {
-      "label": "Visualisateur avancé",
-      "description": "Peut visionner vidéo en direct, parcourir les archives, contrôler le PTZ, etc"
-    },
-    "Administrator": {
-      "label": "Administrateur",
-      "description": "Accès illimité, y compris la possibilité de partager"
-    },
-    "Custom": {
-      "label": "Personnalisé",
-      "description": "Utiliser l'application client %VMS_NAME% pour configurer des autorisations personnalisées"
-    },
-    "cloudAdmin": {
-      "label": "Administrateur",
-      "description": "Peut configurer le système et le partager"
-    },
-    "customRole": {
-      "label": "Rôle personnalisé",
-      "description": "Rôle d’usager personnalisé spécifié dans le système"
-    },
-    "owner": {
-      "label": "Propriétaire",
-      "description": "Accès illimité, y compris la possibilité de partager et de connecter/déconnecter le système de nuage"
-    },
-    "viewer": {
-      "label": "Visualisateur",
-      "description": "Peut afficher la vidéo en direct et parcourir les archives"
-    },
-    "liveViewer": {
-      "label": "Visualiseur en direct",
-      "description": "Peut seulement voir vidéo en direct"
-    },
-    "advancedViewer": {
-      "label": "Visualisateur avancé",
-      "description": "Peut voir la vidéo en direct, parcourir l’archive, configurer les caméras, contrôle PTZ etc"
-    },
-    "custom": {
-      "label": "Personnalisé",
-      "description": "Utiliser l'application client %VMS_NAME% pour configurer des autorisations personnalisées"
-    }
   },
   "errorCodes": {
     "ok": "ok",
@@ -137,45 +68,6 @@
     "INCOMPATIBLE": "Les systèmes ont des versions de logiciel différentes. Veuillez mettre à jour les deux versions vers <a href=\"/download\">la dernière version</a>.",
     "FAIL": "Le système <strong>{{failedSystem}}</strong> est actuellement inaccessible. <br>Essayez à nouveau dans quelques instants ou contactez <a href=\"%SUPPORT_LINK%\" target=\"_blank\"> support</a>.",
     "unknownMergeError": "Erreur inconnue. Vous pouvez essayer de rafraîchir la page et répéter la tentative. Si le problème persiste – veuillez contacter <a href=\"%SUPPORT_LINK%\" target=\"_blank\">le support</a>."
-  },
-  "merging": {
-    "mergeFailedTitle": "Fusion des systèmes a échoué",
-    "commonText": "Échec de la fusion des systèmes <strong>{{primarySystem}}</strong> et <strong>{{secondarySystem}}</strong>."
-  },
-  "system": {
-    "yourSystem": "Votre système",
-    "mySystemSearch": "IMeMyMine",
-    "unavailable": "Le système est inaccessible",
-    "offline": "System Hors ligne",
-    "openClient": "Ouvert à %VMS_NAME%",
-    "openClientNoSystem": "Ouvrir %VMS_NAME%",
-    "confirmMergeAction": "Fusionner",
-    "mergeSystemTitle": "Fusionner systèmes",
-    "confirmRenameTitle": "Nom système",
-    "confirmRenameAction": "Enregistrer",
-    "successRename": "Nom du système sauvegardé",
-    "confirmDisconnectTitle": "Déconnecter le système de %CLOUD_NAME% ?",
-    "confirmDisconnectAction": "Déconnecter",
-    "confirmUnshareFromMe": "You will not be able to lgo into this System anymore.",
-    "confirmUnshareFromMeTitle": "Disconnect System from your Account?",
-    "confirmUnshareFromMeAction": "Déconnecter",
-    "confirmUnshareTitle": "Remove user?",
-    "confirmUnshareAction": "Supprimer",
-    "successDisconnected": "Système correctement déconnecté de %CLOUD_NAME%",
-    "successDeleted": "Système {{systemName}} a correctement été supprimé de votre compte",
-    "mergeFailed": "Fusion système a échoué",
-    "mergeStart": "Les systèmes ont commencé à fusionner",
-    "mergeSuccess": "Fusion du système terminée",
-    "permissionsRemoved": "Autorisations retirées de {{email}}",
-    "unknownName": "Nom inconnu pour le système (causé par la fusion nuage)"
-  },
-  "regActions": {
-    "passwordLabel": "Mot de passe",
-    "createAccount": "Créer compte"
-  },
-  "header": {
-    "allSystems": "Tous les systèmes",
-    "systems": "Systèmes"
   },
   "common": {
     "cameraLinks": {
@@ -226,10 +118,5 @@
       "stop listening": "arrêter l’écoute",
       "help": "help | show commands"
     }
-  },
-  "recommendSupport": {
-    "a_recommend": "Nous recommandons de consulter avec",
-    "b_support": "support",
-    "c_proceeding": "avant de procéder."
   }
 }
