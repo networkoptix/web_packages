@@ -510,7 +510,8 @@ NOTIFICATIONS_CONFIG = {
 }
 
 CONFIG_ERROR = "Customization Configuration Error. Please Notify Release Engineers."
-BROADCAST_NOTIFICATIONS_SUPERUSERS_ONLY = DEBUG
+# Can not trust DEBUG because it is automatically set False for celery workers to prevent memory leak
+BROADCAST_NOTIFICATIONS_SUPERUSERS_ONLY = 'debug' in conf and conf['debug']
 NOTIFICATIONS_AUTO_SUBSCRIBE = False
 
 IPVD_CONNECT = 'https://cameras.networkoptix.com/api/v1/cacameras/'
