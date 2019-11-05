@@ -224,7 +224,12 @@
 			"primarySystemOffline": "Система {{primarySystem}} офлайн і не може бути об'єднана з Системою {{targetSystem}}.",
 			"secondaryCannotMerge": "Система {{targetSystem}} має стару версію Пз, несумісну з поточною системою. Оновіть {{targetSystem}} до <a href=\"/download\" target=\"_blank\" translate>останньої збірки</a> для об’єднання з поточною системою.",
 			"systemOffline": "Система {{targetSystem}} офлайн і не може бути об'єднана.",
-			"systemUnavailable": "Система {{targetSystem}} наразі недоступна. Повторіть спробу через декілька хвилин або зв'яжіться з нами"
+			"systemUnavailable": "Система {{targetSystem}} наразі недоступна. Повторіть спробу через декілька хвилин або зв'яжіться з нами",
+			"recommendSupport": {
+				"a_recommend": "Ми рекомендуємо проконсультуватися з",
+				"b_support": "підтримка",
+				"c_proceeding": "перед тим, як продовжити."
+			}
 		},
 		"message": {
 			"failedToSend": "Не вдалося надіслати повідомлення.",

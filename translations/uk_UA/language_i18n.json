@@ -288,6 +288,11 @@
             "mergeFailedTitle": "Не вдалося об’єднати систему",
             "primaryCannotMerge": "Система {{targetSystem}} має нову версію Пз, несумісну з поточною системою. Оновіть поточну Систему до <a href=\"/download\" target=\"_blank\" translate>останньої збірки</a> для об’єднання з {{targetSystem}} Системою.",
             "primarySystemOffline": "Система {{primarySystem}} офлайн і не може бути об'єднана з Системою {{targetSystem}}.",
+            "recommendSupport": {
+                "a_recommend": "Ми рекомендуємо проконсультуватися з",
+                "b_support": "підтримка",
+                "c_proceeding": "перед тим, як продовжити."
+            },
             "secondaryCannotMerge": "Система {{targetSystem}} має стару версію Пз, несумісну з поточною системою. Оновіть {{targetSystem}} до <a href=\"/download\" target=\"_blank\" translate>останньої збірки</a> для об’єднання з поточною системою.",
             "systemOffline": "Система {{targetSystem}} офлайн і не може бути об'єднана.",
             "systemUnavailable": "Система {{targetSystem}} наразі недоступна. Повторіть спробу через декілька хвилин або зв'яжіться з нами"

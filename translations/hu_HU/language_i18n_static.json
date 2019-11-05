@@ -224,7 +224,12 @@
 			"primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}.",
 			"secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
 			"systemOffline": "A {{targetSystem}} rendszer offline állapotban van, emiatt nem lehet egyesíteni a meglévővel.",
-			"systemUnavailable": "A {{targetSystem}} rendszer jelenleg nem érhető el. Néhány perc múlva próbálkozzon újra"
+			"systemUnavailable": "A {{targetSystem}} rendszer jelenleg nem érhető el. Néhány perc múlva próbálkozzon újra",
+			"recommendSupport": {
+				"a_recommend": "Javasoljuk, hogy konzultáljon erről",
+				"b_support": "támogatás",
+				"c_proceeding": "mielőtt folytatná."
+			}
 		},
 		"message": {
 			"failedToSend": "Message has failed to send.",

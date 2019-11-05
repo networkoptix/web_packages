@@ -224,7 +224,12 @@
 			"primarySystemOffline": "O sistema {{primarySystem}} está offline e não pode ser mesclado com o sistema {{targetSystem}}.",
 			"secondaryCannotMerge": "O sistema {{targetSystem}} tem uma versão mais antiga do software que é incompatível com o sistema atual. Atualize {{targetSystem}} para a versão mais recente <a href=\"/download\" target=\"_blank\" translate></a> para mesclar com o atual.",
 			"systemOffline": "O sistema {{targetSystem}} está offline e não pode ser mesclado com o atual.",
-			"systemUnavailable": "O sistema {{targetSystem}} está atualmente inacessível. Tente novamente em alguns minutos ou contato"
+			"systemUnavailable": "O sistema {{targetSystem}} está atualmente inacessível. Tente novamente em alguns minutos ou contato",
+			"recommendSupport": {
+				"a_recommend": "Recomendamos consulta com",
+				"b_support": "suporte",
+				"c_proceeding": "antes de prosseguir."
+			}
 		},
 		"message": {
 			"failedToSend": "Falha no envio da mensagem.",

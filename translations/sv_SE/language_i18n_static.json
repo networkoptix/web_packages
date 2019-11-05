@@ -224,7 +224,12 @@
 			"primarySystemOffline": "System {{primarySystem}} är offline och kan inte slås samman med System {{targetSystem}}.",
 			"secondaryCannotMerge": "System {{targetSystem}} har en äldre programversion som inte är kompatibel med det aktuella systemet. Uppdatera {{targetSystem}} till <a href=\"/download\" target=\"_blank\" translate>senaste version</a> att slå samman den med den nuvarande.",
 			"systemOffline": "System {{targetSystem}} är offline och kan inte slås samman med det nuvarande.",
-			"systemUnavailable": "System {{targetSystem}} är för närvarande inte tillgängligt. Försök igen om några minuter eller kontakta"
+			"systemUnavailable": "System {{targetSystem}} är för närvarande inte tillgängligt. Försök igen om några minuter eller kontakta",
+			"recommendSupport": {
+				"a_recommend": "Vi rekommenderar att vi konsulterar med",
+				"b_support": "support",
+				"c_proceeding": "innan fortsättning."
+			}
 		},
 		"message": {
 			"failedToSend": "Meddelandet gick inte att skicka.",

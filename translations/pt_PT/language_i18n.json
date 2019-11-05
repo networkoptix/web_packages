@@ -288,6 +288,11 @@
             "mergeFailedTitle": "Falha na fusão de Sistemas",
             "primaryCannotMerge": "O sistema {{targetSystem}} tem uma versão de software mais recente que é incompatível com o sistema atual. Atualize o sistema atual com o <a href=\"/download\" target=\"_blank\" translate>build</a> mais recente para efectuar a fusão com o Sistema {{targetSystem}}.",
             "primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}.",
+            "recommendSupport": {
+                "a_recommend": "Recomendamos consultar com",
+                "b_support": "suporte",
+                "c_proceeding": "antes de proceder."
+            },
             "secondaryCannotMerge": "O sistema {{targetSystem}} tem uma versão de software mais antiga que é incompatível com o sistema atual. Atualize o sistema {{targetSystem}} para o <a href=\"/download\" target=\"_blank\" translate>build</a> mais recente para efectuar a fusão com este Sistema.",
             "systemOffline": "O sistema {{targetSystem}} está offline e não pode ser fundido com o atual.",
             "systemUnavailable": "O sistema {{targetSystem}} está atualmente inacessível. Tente novamente em alguns minutos ou entre em contato"

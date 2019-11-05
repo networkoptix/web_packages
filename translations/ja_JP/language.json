@@ -2,8 +2,6 @@
   "language": "ja_JP",
   "language_name": "日本語",
   "cloudName": "%CLOUD_NAME%",
-  "vmsName": "%VMS_NAME%",
-  "clientProtocol": "%CLIENT_PROTOCOL%:",
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
     "default": "%CLOUD_NAME%",
@@ -27,73 +25,6 @@
     "download": "%VMS_NAME% をダウンロード",
     "downloadPlatform": "%VMS_NAME% をダウンロード ",
     "pageNotFound": "ページが見つかりません"
-  },
-  "systemStatuses": {
-    "activated": "アクティベート済",
-    "incompatible": "互換性なし",
-    "merging": "統合中",
-    "notActivated": "アクティベートされていません",
-    "online": "オンライン",
-    "offline": "オフライン",
-    "unavailable": "利用できません"
-  },
-  "accessRoles": {
-    "disabled": {
-      "label": "無効",
-      "description": "ユーザーが無効の為にシステムにログインできません"
-    },
-    "Owner": {
-      "label": "オーナー",
-      "description": "クラウドからの共有とシステムの接続/切断を含む無制限のアクセス"
-    },
-    "Viewer": {
-      "label": "ビューアー",
-      "description": "ライブ ビデオとアーカイブを閲覧できます"
-    },
-    "Live Viewer": {
-      "label": "ライブビューアー",
-      "description": "ライブビデオのみ閲覧可能"
-    },
-    "Advanced Viewer": {
-      "label": "拡張ビューアー",
-      "description": "ライブ表示、アーカイブ表示、PTZコントロール 等"
-    },
-    "Administrator": {
-      "label": "アドミニストレーター",
-      "description": "共有する機能を含む無制限のアクセス"
-    },
-    "Custom": {
-      "label": "カスタム",
-      "description": "%VMS_NAME% クライアント アプリケーションを使用してカスタム権限を設定する"
-    },
-    "cloudAdmin": {
-      "label": "アドミニストレーター",
-      "description": "システムを設定して共有することができます"
-    },
-    "customRole": {
-      "label": "カスタムの役割",
-      "description": "システムで指定されたカスタムのユーザーの役割"
-    },
-    "owner": {
-      "label": "オーナー",
-      "description": "クラウドからの共有とシステムの接続/切断を含む無制限のアクセス"
-    },
-    "viewer": {
-      "label": "ビューアー",
-      "description": "ライブ ビデオとアーカイブを閲覧できます"
-    },
-    "liveViewer": {
-      "label": "ライブビューアー",
-      "description": "ライブビデオのみ閲覧可能"
-    },
-    "advancedViewer": {
-      "label": "拡張ビューアー",
-      "description": "ライブ表示、アーカイブ表示、カメラ設定、PTZコントロール 等ができます"
-    },
-    "custom": {
-      "label": "カスタム",
-      "description": "%VMS_NAME% クライアント アプリケーションを使用してカスタム権限を設定する"
-    }
   },
   "errorCodes": {
     "ok": "ok",
@@ -137,41 +68,6 @@
     "INCOMPATIBLE": "システムには異なるソフトウェアバージョンがあります。両方とも <a href=\"/download\">最新のビルド</a>を更新してください。",
     "FAIL": "システム <strong>{{failedSystem}}</strong> は現在到達不能です。<br>しばらくしてからもう一度試すか、<a href=\"%SUPPORT_LINK%\" target=\"_blank\">サポート</a>に連絡してください。",
     "unknownMergeError": "不明なエラー。ページを更新して試行を繰り返すことができます。問題が解決しない場合は <a href=\"%SUPPORT_LINK%\" target=\"_blank\">サポート</a>に連絡してください。"
-  },
-  "system": {
-    "yourSystem": "お使いのシステム",
-    "mySystemSearch": "IMeMyMine",
-    "unavailable": "システムに到達できません",
-    "offline": "システムはオフラインです",
-    "openClient": "%VMS_NAME% で開く",
-    "openClientNoSystem": "%VMS_NAME% を開く",
-    "confirmMergeAction": "統合",
-    "mergeSystemTitle": "システム統合",
-    "confirmRenameTitle": "システム名",
-    "confirmRenameAction": "保存",
-    "successRename": "システム名は保存されました",
-    "confirmDisconnectTitle": "%CLOUD_NAME% からシステムを切断しますか？",
-    "confirmDisconnectAction": "切断",
-    "confirmUnshareFromMe": "これ以上このシステムにアクセスできなくなります。",
-    "confirmUnshareFromMeTitle": "アカウントからシステムを切断しますか？",
-    "confirmUnshareFromMeAction": "切断",
-    "confirmUnshareTitle": "ユーザーを削除しますか?",
-    "confirmUnshareAction": "削除",
-    "successDisconnected": "システムは %CLOUD_NAME% から正常に切断されました",
-    "successDeleted": "システム {{systemName}} はあなたのアカウントから正常に削除されました",
-    "mergeFailed": "システム統合が失敗しました",
-    "mergeStart": "システムが統合を開始しました",
-    "mergeSuccess": "システムが統合されました",
-    "permissionsRemoved": "{{email}} から権限が削除されました",
-    "unknownName": "システムの名前が不明です（クラウド統合が原因）"
-  },
-  "regActions": {
-    "passwordLabel": "パスワード",
-    "createAccount": "アカウント作成"
-  },
-  "header": {
-    "allSystems": "すべてのシステム",
-    "systems": "システム"
   },
   "common": {
     "cameraLinks": {
@@ -222,10 +118,5 @@
       "stop listening": "聞くのをやめる",
       "help": "ヘルプ| 表示コマンド"
     }
-  },
-  "recommendSupport": {
-    "a_recommend": "相談を推奨",
-    "b_support": "サポート",
-    "c_proceeding": "続行する前に"
   }
 }

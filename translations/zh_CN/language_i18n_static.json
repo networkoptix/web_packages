@@ -224,7 +224,12 @@
 			"primarySystemOffline": "系统 {{primarySystem}} 处于离线状态，无法合并系統{{targetSystem}}。",
 			"secondaryCannotMerge": "系统 {{targetSystem}} 具有较旧的软件版本，与当前系统不兼容。请将 {{targetSystem}} 更新到 <a href=\"/download\" target=\"_blank\" translate>最新版本</a>, 以将与其当前版本合并。",
 			"systemOffline": "系统 {{targetSystem}} 处于离线状态，无法与当前系统合并。",
-			"systemUnavailable": "系统 {{targetSystem}} 目前无法访问。请在几分钟后再试一次"
+			"systemUnavailable": "系统 {{targetSystem}} 目前无法访问。请在几分钟后再试一次",
+			"recommendSupport": {
+				"a_recommend": "建议您进行咨询",
+				"b_support": "技术支持",
+				"c_proceeding": "在继续执行之前："
+			}
 		},
 		"message": {
 			"failedToSend": "訊息无法发送。",

@@ -2,8 +2,6 @@
   "language": "he_IL",
   "language_name": "עברית",
   "cloudName": "%CLOUD_NAME%",
-  "vmsName": "%VMS_NAME%",
-  "clientProtocol": "%CLIENT_PROTOCOL%:",
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
     "default": "%CLOUD_NAME%",
@@ -27,73 +25,6 @@
     "download": "הורד את %VMS_NAME%",
     "downloadPlatform": "הורד %VMS_NAME% עבור ",
     "pageNotFound": "דף לא נמצא"
-  },
-  "systemStatuses": {
-    "activated": "הופעל",
-    "incompatible": "אינו תואם",
-    "merging": "מיזוג",
-    "notActivated": "לא הופעל",
-    "online": "מקוון",
-    "offline": "לא מקוון",
-    "unavailable": "לא זמין"
-  },
-  "accessRoles": {
-    "disabled": {
-      "label": "כבוי",
-      "description": "המשתמש מושבת ולא מצליח להיכנס למערכת"
-    },
-    "Owner": {
-      "label": "בעלים",
-      "description": "גישה בלתי מוגבלת כולל היכולת לשתף ולחבר / לנתק את המערכת מהענן"
-    },
-    "Viewer": {
-      "label": "צופה",
-      "description": "ניתן להציג וידאו חי ולעיין בארכיון"
-    },
-    "Live Viewer": {
-      "label": "צופה בשידור חי",
-      "description": "יכול לצפות רק בוידאו חי"
-    },
-    "Advanced Viewer": {
-      "label": "צופה מתקדם",
-      "description": "יכול לצפות בוידאו חי, לצפות בארכיון, להגדיר מצלמות, לשלוט PTZ וכו '"
-    },
-    "Administrator": {
-      "label": "מנהל",
-      "description": "גישה בלתי מוגבלת כולל את היכולת לשתף"
-    },
-    "Custom": {
-      "label": "התאמה אישית",
-      "description": "השתמש ב %VMS_NAME% כדי להגדיר הרשאות מותאמות אישית"
-    },
-    "cloudAdmin": {
-      "label": "מנהל",
-      "description": "יכול להגדיר מערכת ולשתף"
-    },
-    "customRole": {
-      "label": "תפקיד מותאם אישית",
-      "description": "תפקיד משתמש מותאם אישית שצוין במערכת"
-    },
-    "owner": {
-      "label": "בעלים",
-      "description": "גישה בלתי מוגבלת כולל היכולת לשתף ולחבר / לנתק את המערכת מהענן"
-    },
-    "viewer": {
-      "label": "צופה",
-      "description": "ניתן להציג וידאו חי ולעיין בארכיון"
-    },
-    "liveViewer": {
-      "label": "צופה בשידור חי",
-      "description": "יכול לצפות רק בוידאו חי"
-    },
-    "advancedViewer": {
-      "label": "צופה מתקדם",
-      "description": "יכול לצפות בוידאו חי, לצפות בארכיון, להגדיר מצלמות, לשלוט PTZ וכו '"
-    },
-    "custom": {
-      "label": "התאמה אישית",
-      "description": "השתמש ב %VMS_NAME% כדי להגדיר הרשאות מותאמות אישית"
-    }
   },
   "errorCodes": {
     "ok": "אישור",
@@ -137,41 +68,6 @@
     "INCOMPATIBLE": "למערכות יש גרסאות תוכנה שונות. אנא עדכן את שניהם ל <a href=\"/download\">לגרסא האחרונה</a>.",
     "FAIL": "המערכת <strong>{{failedSystem}}</strong> אינה זמינה כעת.<br>נסה שוב בעוד מספר דקות או צור קשר עם <a href=\"%SUPPORT_LINK%\" target=\"_blank\">תמיכה</a>.",
     "unknownMergeError": "שגיאה לא ידועה, באפשרותך לנסות לרענן את הדף ולנסות שוב. אם הבעיה נמשכת, צור קשר עם <a href=\"%SUPPORT_LINK%\" target=\"_blank\">התמיכה</a>."
-  },
-  "system": {
-    "yourSystem": "המערכת שלך",
-    "mySystemSearch": "IMeMyMine",
-    "unavailable": "המערכת אינה זמינה",
-    "offline": "השרת אינו זמין",
-    "openClient": "פתח ב %VMS_NAME%",
-    "openClientNoSystem": "פתח %VMS_NAME%",
-    "confirmMergeAction": "לְמַזֵג",
-    "mergeSystemTitle": "מיזוג מערכות",
-    "confirmRenameTitle": "שם מערכת",
-    "confirmRenameAction": "שמור",
-    "successRename": "שם המערכת נשמר",
-    "confirmDisconnectTitle": "נתק את מערכת מ %CLOUD_NAME%?",
-    "confirmDisconnectAction": "נתק",
-    "confirmUnshareFromMe": "You will not be able to lgo into this System anymore.",
-    "confirmUnshareFromMeTitle": "Disconnect System from your Account?",
-    "confirmUnshareFromMeAction": "נתק",
-    "confirmUnshareTitle": "Remove user?",
-    "confirmUnshareAction": "הסר",
-    "successDisconnected": "המערכת התנתקה בהצלחה מ %CLOUD_NAME%",
-    "successDeleted": "המערכת {{systemName}} נמחקה בהצלחה מהחשבון שלך",
-    "mergeFailed": "מיזוג המערכת נכשל",
-    "mergeStart": "מיזוג מערכות החל",
-    "mergeSuccess": "מיזוג המערכת הושלם",
-    "permissionsRemoved": "ההרשאות הוסרו מ- {{email}}",
-    "unknownName": "שם לא ידוע עבור מערכת (נגרמה על ידי מיזוג ענן)"
-  },
-  "regActions": {
-    "passwordLabel": "סיסמה",
-    "createAccount": "צור חשבון"
-  },
-  "header": {
-    "allSystems": "כל המערכות",
-    "systems": "מערכות"
   },
   "common": {
     "cameraLinks": {
@@ -222,10 +118,5 @@
       "stop listening": "עצור האזנה",
       "help": "help | show commands"
     }
-  },
-  "recommendSupport": {
-    "a_recommend": "אנו ממליצים להתייעץ עם",
-    "b_support": "תמיכה",
-    "c_proceeding": "לפני המשך עיבוד."
   }
 }
