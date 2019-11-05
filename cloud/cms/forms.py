@@ -125,6 +125,7 @@ class CustomContextForm(forms.Form):
             if data_structure.type in [DataStructure.DATA_TYPES.object,
                                        DataStructure.DATA_TYPES.array]:
                 record_value = json.dumps(record_value, indent=4, separators=(',', ': '))
+                widget_type = forms.Textarea()
 
             elif data_structure.type == DataStructure.DATA_TYPES.html:
                 widget_type = forms.Textarea(
