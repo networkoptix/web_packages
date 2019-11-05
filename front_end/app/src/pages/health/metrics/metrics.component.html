@@ -1,4 +1,16 @@
 <div class="row">
+
+    <div class="col-12 mb-3">
+        <nx-search
+                name="filterModel"
+                [ngModel]="filterModel"
+                (ngModelChange)="modelChanged($event)"
+                layout="compact"
+                [placeholder]="LANG.search.Search"
+                ngDefaultControl>
+        </nx-search>
+    </div>
+
     <div *ngIf="selectedData && selectedValues && !mobileDetailMode"
          [ngClass]="{'col-12': !activeEntity, 'col-md-7 col-xl-8' : activeEntity}">
         <nx-dynamic-table

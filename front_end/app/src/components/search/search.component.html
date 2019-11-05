@@ -5,9 +5,8 @@
             <div class="d-block d-md-inline-flex flex-md-row w-100">
                 <div class="search-group" [ngClass]="{'mr-3' : layout == 'full'}">
                     <span class="glyphicon glyphicon-search icon-search"></span>
-                    <input [(ngModel)]="localFilter.query"
-                           [ngModelOptions]="{debounceTime : CONFIG.search.debounceTime}"
-                           (ngModelChange)="modelChanged()"
+                    <input [ngModel]="localFilter.query"
+                           (ngModelChange)="onSearchType($event)"
                            [ngClass]="{'non-empty': localFilter.query && localFilter.query != ''}"
                            [maxLength]="CONFIG.search.maxLength"
                            type="text"

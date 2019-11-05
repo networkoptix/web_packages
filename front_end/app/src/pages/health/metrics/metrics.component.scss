@@ -1,7 +1,7 @@
 nx-system-metrics-component {
     .nx-table-wrapper .nx-table thead th {
-        &:nth-child(n+8) > .caption .ellipsis {
-            width       : 100px;
+        &:nth-child(n+2) > .caption .ellipsis {
+            min-width   : 80px;
             white-space : unset;
             line-height : 16px;
         }

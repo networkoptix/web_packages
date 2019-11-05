@@ -69,7 +69,6 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        let setPageNeeded = false;
         if (changes.activeEntity) {
             this.selectedEntity = changes.activeEntity.currentValue;
         }

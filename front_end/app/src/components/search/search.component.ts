@@ -64,7 +64,6 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
     LANG: any = {};
 
     private params: any = {};
-    private uriPath: string;
     private showAdvancedOptions: boolean;
 
     public advSearch = false;
@@ -81,7 +80,6 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
 
         this.CONFIG = this.configService.getConfig();
         this.LANG = this.language.getTranslations();
-        this.uriPath = this.uri.getURL();
 
         this.location.subscribe((event: PopStateEvent) => {
             // force search component update
@@ -107,6 +105,8 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
                 this.params.search = params.search || '';
                 this.params.selects = [];
                 this.params.multiselects = [];
+
+                this.updateFilter();
             });
 
         this.searchUpdated.asObservable()
@@ -130,7 +130,7 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
         this.onTouchedCallback();
     }
 
-    onSearchType(value: string) {
+    onSearchType(value: any) {
         this.searchUpdated.next(value);
     }
 
@@ -183,7 +183,8 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
         }
 
         this.numberOfOptionsSelected();
-        this.onChangeCallback(this.localFilter);
+        // the component relaying on model change may not be ready
+        setTimeout(() => this.onChangeCallback(this.localFilter));
 
     }
 
@@ -390,9 +391,9 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
                     });
                 }
         }
-
+console.log('setRouteParams ->');
         this.uri.pageOffset = window.pageYOffset;
-        this.uri.updateURI(this.uriPath, queryParams);
+        this.uri.updateURI(this.uri.getURL(), queryParams);
         return true;
     }
 

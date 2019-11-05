@@ -10,6 +10,7 @@ import { map, concatMap }                      from 'rxjs/operators';
 import { NxHealthService }                     from '../health.service';
 import { NxUriService }                        from '../../../services/uri.service';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
+import { NxLanguageProviderService }           from '../../../services/nx-language-provider';
 
 interface Params {
     [key: string]: any;
@@ -23,8 +24,10 @@ interface Params {
 })
 export class NxSystemMetricsComponent implements OnInit {
     CONFIG: any;
+    LANG: any;
     account: any;
 
+    filterModel: any;
     system: NxSystem;
     metricId: any;
     params: any  = {};
@@ -48,6 +51,7 @@ export class NxSystemMetricsComponent implements OnInit {
 
     constructor(private accountService: NxAccountService,
                 private configService: NxConfigService,
+                private languageService: NxLanguageProviderService,
                 private systemService: NxSystemService,
                 private route: ActivatedRoute,
                 private menuService: NxMenuService,
@@ -56,11 +60,18 @@ export class NxSystemMetricsComponent implements OnInit {
                 private breakpointObserver: BreakpointObserver,
     ) {
         this.CONFIG = this.configService.getConfig();
+        this.LANG  = this.languageService.getTranslations();
         this.breakpoint = '(max-width: 767px)';
+
+        this.filterModel = {
+            query: ''
+        };
     }
 
     ngOnInit(): void {
         let idParam = this.route.snapshot.queryParamMap.get('id');
+        const searchParam = this.route.snapshot.queryParamMap.get('search');
+
         this.route
             .params
             .subscribe((params: any) => {
@@ -69,10 +80,13 @@ export class NxSystemMetricsComponent implements OnInit {
                 this.menuService.setSection(this.metricId);
                 this.selectedData = this.healthService.tableHeaders[this.metricId];
                 this.selectedPanelData = this.healthService.panelParams[this.metricId];
-                this.selectedValues = this.healthService.values[this.metricId];
                 this.resetActiveEntity(false);
-                if (Object.keys(this.selectedValues).length === 1) {
-                    this.multiEntity = false;
+
+                if (!searchParam.length) {
+                    this.selectedValues = this.healthService.values[this.metricId];
+                    if (Object.keys(this.selectedValues).length === 1) {
+                        this.multiEntity = false;
+                    }
                 }
 
                 if (idParam) {
@@ -89,6 +103,20 @@ export class NxSystemMetricsComponent implements OnInit {
             .subscribe((state: BreakpointState) => {
                 this.mobileDetailMode = (state.matches && this.activeEntity);
             });
+    }
+
+    modelChanged(model) {
+        if (model.query !== this.filterModel.query) {
+            this.filterModel.query = model.query;
+            this.healthService
+                .itemsSearch(this.healthService.values[this.metricId], this.filterModel)
+                .subscribe((items) => {
+                    this.selectedValues = items;
+                    if (Object.keys(this.selectedValues).length === 1) {
+                        this.multiEntity = false;
+                    }
+                });
+        }
     }
 
     setActiveEntity(entity) {

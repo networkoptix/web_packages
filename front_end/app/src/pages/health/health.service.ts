@@ -89,6 +89,38 @@ export class NxHealthService {
         return {text: retValue, format: header.format || ''};
     }
 
+    itemsSearch(values, filter): Observable<any> {
+        let items: any = {};
+
+        function filterItem(c, queryTerm) {
+            return (c.searchTags.includes(queryTerm));
+        }
+
+        if (filter.query === '') {
+            items = values;
+        } else {
+            const query = filter.query.toLowerCase();
+            const queryTerms = query.trim()
+                                    .split(/[\s,\|]+/)
+                                    .filter((elm) => {
+                                        return elm !== '';
+                                    })
+                                    .map(term => {
+                                        return term.replace(/-/g, '').toLowerCase();
+                                    });
+
+            Object.entries(values).forEach(([metric, value]) => {
+                queryTerms.every(queryTerm => {
+                    if (filterItem(value, queryTerm)) {
+                        items[metric] = value;
+                    }
+                });
+            });
+        }
+
+        return of(items);
+    }
+
     alertsSearch(values, filter): Observable<any> {
         let alarms;
         let types;

@@ -4,13 +4,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NxAccountService }          from '../../services/account.service';
 import { NxConfigService }           from '../../services/nx-config';
 import { NxSystem, NxSystemService } from '../../services/system.service';
-import { NxMenuService }             from '../../components/menu/menu.service';
-import { NxHealthService }           from './health.service';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxUtilsService }            from '../../services/utils.service';
-import { FileSystemFileEntry, NgxFileDropEntry }      from 'ngx-file-drop';
-import { DOCUMENT }                  from '@angular/common';
-import { NxRibbonService }           from '../../components/ribbon/ribbon.service';
+import { NxMenuService }                         from '../../components/menu/menu.service';
+import { NxHealthService }                       from './health.service';
+import { NxLanguageProviderService }             from '../../services/nx-language-provider';
+import { NxUtilsService }                        from '../../services/utils.service';
+import { FileSystemFileEntry, NgxFileDropEntry } from 'ngx-file-drop';
+import { DOCUMENT }                              from '@angular/common';
+import { NxRibbonService }                       from '../../components/ribbon/ribbon.service';
 
 @Component({
     selector   : 'nx-system-health-component',
@@ -219,7 +219,10 @@ export class NxHealthComponent implements OnInit, OnDestroy {
             Object.entries(entities).forEach(([entity, groups]) => {
                 let alarmCount = 0;
                 let highestAlarm;
+
                 this.healthService.values[metric][entity].id = entity;
+                this.healthService.values[metric][entity].searchTags = [];
+
                 this.healthService.manifest[metric].values.forEach(group => {
                     if (this.healthService.values[metric][entity][group.id] !== undefined) {
                         group.values.forEach(header => {
@@ -238,12 +241,17 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                                 const formattedVal = this.healthService.formatValue(
                                     header, this.healthService.values[metric][entity][group.id][header.id]
                                 );
+
                                 this.healthService.values[metric][entity][group.id][header.id] = {
                                     ...formattedVal,
                                     class: alarm ? alarm.level : '',
                                     tooltip: alarm ? alarm.text : '',
                                     icon: alarm ? alarm.level : '',
                                 };
+
+                                if (typeof formattedVal.text === 'string') { // Should numbers should be searchable?
+                                    this.healthService.values[metric][entity].searchTags += formattedVal.text.replace(/-/g, '').toLowerCase() + ' ';
+                                }
                             }
                         });
                     }
