@@ -224,7 +224,12 @@
 			"primarySystemOffline": "Systém {{primarySystem}} je offline a nelze jej sloučit se systémem {{targetSystem}}.",
 			"secondaryCannotMerge": "Systém {{targetSystem}} má starší verzi softwaru, která není kompatibilní s aktuálním systémem. Aktualizujte {{targetSystem}} <a href=\"/download\" target=\"_blank\" translate> na nejnovější verzi </a> pro sloučení se systémem.",
 			"systemOffline": "Systém {{targetSystem}} je offline a nelze jej sloučit se stávajícím systémem.",
-			"systemUnavailable": "Systém {{targetSystem}} je v současné době nedostupný. Opakujte akci za několik minut nebo kontaktujte"
+			"systemUnavailable": "Systém {{targetSystem}} je v současné době nedostupný. Opakujte akci za několik minut nebo kontaktujte",
+			"recommendSupport": {
+				"a_recommend": "Doporučujeme konzultaci s",
+				"b_support": "podpora",
+				"c_proceeding": "než budete pokračovat."
+			}
 		},
 		"message": {
 			"failedToSend": "Zprávu se nepodařilo odeslat.",

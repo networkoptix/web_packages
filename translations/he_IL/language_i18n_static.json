@@ -224,7 +224,12 @@
 			"primarySystemOffline": "מערכת {{primarySystem}} במצב לא מקוון ולא ניתן למזגה עם הנוכחית.",
 			"secondaryCannotMerge": "למערכת {{targetSystem}} יש גרסת תוכנה ישנה יותר שאינה תואמת למערכת הנוכחית. עדכן {{targetSystem}} ל <a href=\"/download\" target=\"_blank\" translate>לגרסא האחרונה</a> על מנת למזג אותו עם הנוכחי.",
 			"systemOffline": "מערכת {{targetSystem}} במצב לא מקוון ולא ניתן למזגה עם הנוכחית.",
-			"systemUnavailable": "לא ניתן להגיע למערכת {{targetSystem}}. נסה שוב בעוד מספר דקות או צור קשר"
+			"systemUnavailable": "לא ניתן להגיע למערכת {{targetSystem}}. נסה שוב בעוד מספר דקות או צור קשר",
+			"recommendSupport": {
+				"a_recommend": "אנו ממליצים להתייעץ עם",
+				"b_support": "תמיכה",
+				"c_proceeding": "לפני המשך עיבוד."
+			}
 		},
 		"message": {
 			"failedToSend": "שליחת ההודעה נכשלה.",

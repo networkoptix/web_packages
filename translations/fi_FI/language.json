@@ -2,8 +2,6 @@
   "language": "fi_FI",
   "language_name": "Suomi",
   "cloudName": "%CLOUD_NAME%",
-  "vmsName": "%VMS_NAME%",
-  "clientProtocol": "%CLIENT_PROTOCOL%:",
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
     "default": "%CLOUD_NAME%",
@@ -27,73 +25,6 @@
     "download": "Lataa %VMS_NAME%",
     "downloadPlatform": "Lataa %VMS_NAME% ",
     "pageNotFound": "Sivua ei löydy"
-  },
-  "systemStatuses": {
-    "activated": "aktivoitu",
-    "incompatible": "yhteensopimaton",
-    "merging": "liitetään",
-    "notActivated": "ei aktivoitu",
-    "online": "yhteys muodostettu",
-    "offline": "ei yhteyttä",
-    "unavailable": "ei saatavilla"
-  },
-  "accessRoles": {
-    "disabled": {
-      "label": "Poissa käytöstä",
-      "description": "Käyttäjä on poistettu käytöstä ja ei voi kirjautua järjestelmään"
-    },
-    "Owner": {
-      "label": "Omistaja",
-      "description": "Rajoittamaton pääsy, mukaan lukien kyky jakaa ja yhdistää / irroittaa järjestelmää pilvestä"
-    },
-    "Viewer": {
-      "label": "Katsoja",
-      "description": "Voi katsella reaaliaikaista videota ja selata arkistoa"
-    },
-    "Live Viewer": {
-      "label": "Reaaliaikainen katselu",
-      "description": "Voit katsella vain reaaliaikaista videota"
-    },
-    "Advanced Viewer": {
-      "label": "Edistyneempi katselu",
-      "description": "Voi katsella reaaliaikasta videota, selata arkistoa, määrittää kameroita, ohjata PTZ: tä jne"
-    },
-    "Administrator": {
-      "label": "Järjestelmänvalvoja",
-      "description": "Rajoittamaton pääsy mukaan lukien kyky jakaa"
-    },
-    "Custom": {
-      "label": "Asiakassuhde",
-      "description": "Käytä %VMS_NAME% Client -sovellusta mukautettujen käyttöoikeuksien määrittämiseen"
-    },
-    "cloudAdmin": {
-      "label": "Järjestelmänvalvoja",
-      "description": "Voi konfiguroida järjestelmää ja jakaa sen"
-    },
-    "customRole": {
-      "label": "Mukautettu rooli",
-      "description": "Mukautettu käyttäjärooli Järjestelmässä"
-    },
-    "owner": {
-      "label": "Omistaja",
-      "description": "Rajoittamaton pääsy, mukaan lukien kyky jakaa ja yhdistää / irroittaa järjestelmää pilvestä"
-    },
-    "viewer": {
-      "label": "Katsoja",
-      "description": "Voi katsella reaaliaikaista videota ja selata arkistoa"
-    },
-    "liveViewer": {
-      "label": "Reaaliaikainen katselu",
-      "description": "Voit katsella vain reaaliaikaista videota"
-    },
-    "advancedViewer": {
-      "label": "Edistyneempi katselu",
-      "description": "Voi katsella reaaliaikasta videota, selata arkistoa, määrittää kameroita, ohjata PTZ: tä jne"
-    },
-    "custom": {
-      "label": "Asiakassuhde",
-      "description": "Käytä %VMS_NAME% Client -sovellusta mukautettujen käyttöoikeuksien määrittämiseen"
-    }
   },
   "errorCodes": {
     "ok": "ok",
@@ -137,41 +68,6 @@
     "INCOMPATIBLE": "Järjestelmissä on erilaisia ohjelmistoversioita. Päivitä molemmat <a href=\"/download\">viimeisin versio</a>kohdalle.",
     "FAIL": "Järjestelmä <strong>{{failedSystem}}</strong> ei ole tällä hetkellä saavutettavissa.<br>Yritä uudelleen hetken kuluttua tai ota yhteys <a href=\"%SUPPORT_LINK%\" target=\"_blank\">tukeen</a>.",
     "unknownMergeError": "Tuntematon virhe. Voit yrittää päivittää sivua ja toistaa yrityksen. Jos ongelma jatkuu - ota yhteyttä <a href=\"%SUPPORT_LINK%\" target=\"_blank\">tukeen</a>."
-  },
-  "system": {
-    "yourSystem": "Järjestelmäsi",
-    "mySystemSearch": "IMeMyMine",
-    "unavailable": "Järjestelmä ei ole tavoitettavissa",
-    "offline": "Järjestelmään ei saada yhteyttä",
-    "openClient": "Avaa %VMS_NAME%",
-    "openClientNoSystem": "Avaa %VMS_NAME%",
-    "confirmMergeAction": "Yhdistä",
-    "mergeSystemTitle": "Yhdistä järjestelmät",
-    "confirmRenameTitle": "Järjestelmänimi",
-    "confirmRenameAction": "Tallenna",
-    "successRename": "Järjestelmän nimi on tallennettu",
-    "confirmDisconnectTitle": "Irrota järjestelmä %CLOUD_NAME%?",
-    "confirmDisconnectAction": "Katkaise yhteys",
-    "confirmUnshareFromMe": "You will not be able to lgo into this System anymore.",
-    "confirmUnshareFromMeTitle": "Disconnect System from your Account?",
-    "confirmUnshareFromMeAction": "Katkaise yhteys",
-    "confirmUnshareTitle": "Remove user?",
-    "confirmUnshareAction": "Poista",
-    "successDisconnected": "Järjestelmä irrotetaan onnistuneesti %CLOUD_NAME%",
-    "successDeleted": "Järjestelmä {{systemName}} poistetaan onnistuneesti tililtäsi",
-    "mergeFailed": "Järjestelmien yhdistäminen epäonnistui",
-    "mergeStart": "Järjestelmät ovat alkaneet yhdistyä",
-    "mergeSuccess": "Järjestelmän yhdistäminen on valmis",
-    "permissionsRemoved": "Käyttöoikeudet poistettiin {{email}}",
-    "unknownName": "Järjestelmän tuntematon nimi (pilviliitoksen aiheuttama)"
-  },
-  "regActions": {
-    "passwordLabel": "Salasana",
-    "createAccount": "Luo tili"
-  },
-  "header": {
-    "allSystems": "Kaikki järjestelmät",
-    "systems": "Järjestelmät"
   },
   "common": {
     "cameraLinks": {
@@ -222,10 +118,5 @@
       "stop listening": "lopeta kuuntelu",
       "help": "help | show commands"
     }
-  },
-  "recommendSupport": {
-    "a_recommend": "Suosittelemme konsultointia",
-    "b_support": "tuki",
-    "c_proceeding": "ennen etenemistä."
   }
 }

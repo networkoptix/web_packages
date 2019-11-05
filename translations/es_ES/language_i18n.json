@@ -288,6 +288,11 @@
             "mergeFailedTitle": "La fusión de sistemas falló",
             "primaryCannotMerge": "El sistema {{targetSystem}} tiene una versión de software más nueva que es incompatible con el sistema actual. Actualizar el sistema actual al <a href=\"/download\" target=\"_blank\" translate>última versión</a> de fusionarse con el {{targetSystem}} del sistema.",
             "primarySystemOffline": "El sistema {{primarySystem}} está desconectado y no puede ser fusionado con el Sistema {{targetSystem}}.",
+            "recommendSupport": {
+                "a_recommend": "Recomendamos consultar con",
+                "b_support": "asistencia",
+                "c_proceeding": "antes de continuar."
+            },
             "secondaryCannotMerge": "El sistema {{targetSystem}} tiene una versión de software anterior que es incompatible con el sistema actual. Actualice {{targetSystem}} a la <a href=\"/download\" target=\"_blank\" translate>última compilación</a> para fusionarla con la actual.",
             "systemOffline": "El sistema {{targetSystem}} está fuera de línea y no se puede combinar con el actual.",
             "systemUnavailable": "El sistema {{targetSystem}} es actualmente inalcanzable. Inténtalo de nuevo en unos minutos o contacta"

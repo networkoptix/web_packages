@@ -2,8 +2,6 @@
   "language": "en_UK",
   "language_name": "English (UK)",
   "cloudName": "%CLOUD_NAME%",
-  "vmsName": "%VMS_NAME%",
-  "clientProtocol": "%CLIENT_PROTOCOL%:",
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
     "default": "%CLOUD_NAME%",
@@ -27,73 +25,6 @@
     "download": "Download %VMS_NAME%",
     "downloadPlatform": "Download %VMS_NAME% for ",
     "pageNotFound": "Page not found"
-  },
-  "systemStatuses": {
-    "activated": "activated",
-    "incompatible": "incompatible",
-    "merging": "merging",
-    "notActivated": "not activated",
-    "online": "online",
-    "offline": "offline",
-    "unavailable": "unavailable"
-  },
-  "accessRoles": {
-    "disabled": {
-      "label": "Disabled",
-      "description": "User is disabled and cannot log in to System"
-    },
-    "Owner": {
-      "label": "Owner",
-      "description": "Unrestricted access including the ability to share and connect/disconnect System from cloud"
-    },
-    "Viewer": {
-      "label": "Viewer",
-      "description": "Can view live video and browse the archive"
-    },
-    "Live Viewer": {
-      "label": "Live Viewer",
-      "description": "Can only view live video"
-    },
-    "Advanced Viewer": {
-      "label": "Advanced Viewer",
-      "description": "Can view live video, browse the archive, control PTZ etc"
-    },
-    "Administrator": {
-      "label": "Administrator",
-      "description": "Unrestricted access including the ability to share"
-    },
-    "Custom": {
-      "label": "Custom",
-      "description": "Use the %VMS_NAME% Client application to set up custom permissions"
-    },
-    "cloudAdmin": {
-      "label": "Administrator",
-      "description": "Can configure System and share it"
-    },
-    "customRole": {
-      "label": "Custom role",
-      "description": "Custom user role specified in System"
-    },
-    "owner": {
-      "label": "Owner",
-      "description": "Unrestricted access including the ability to share and connect/disconnect System from cloud"
-    },
-    "viewer": {
-      "label": "Viewer",
-      "description": "Can view live video and browse the archive"
-    },
-    "liveViewer": {
-      "label": "Live Viewer",
-      "description": "Can only view live video"
-    },
-    "advancedViewer": {
-      "label": "Advanced Viewer",
-      "description": "Can view live video, browse the archive, configure cameras, control PTZ etc"
-    },
-    "custom": {
-      "label": "Custom",
-      "description": "Use the %VMS_NAME% Client application to set up custom permissions"
-    }
   },
   "errorCodes": {
     "ok": "ok",
@@ -137,41 +68,6 @@
     "INCOMPATIBLE": "Systems have different software versions. Please update both of them to the <a href=\"/download\">latest build</a>.",
     "FAIL": "System <strong>{{failedSystem}}</strong> is currently unreachable.<br>Try again in a few moments or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
     "unknownMergeError": "Unknown error. You can try to refresh the page and repeat attempt. If the problem persists – please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>."
-  },
-  "system": {
-    "yourSystem": "Your System",
-    "mySystemSearch": "IMeMyMine",
-    "unavailable": "System is unreachable",
-    "offline": "System is offline",
-    "openClient": "Open in %VMS_NAME%",
-    "openClientNoSystem": "Open %VMS_NAME%",
-    "confirmMergeAction": "Merge",
-    "mergeSystemTitle": "Merge Systems",
-    "confirmRenameTitle": "System name",
-    "confirmRenameAction": "Save",
-    "successRename": "System name saved",
-    "confirmDisconnectTitle": "Disconnect System from %CLOUD_NAME%?",
-    "confirmDisconnectAction": "Disconnect",
-    "confirmUnshareFromMe": "You will not be able to lgo into this System anymore.",
-    "confirmUnshareFromMeTitle": "Disconnect System from your Account?",
-    "confirmUnshareFromMeAction": "Disconnect",
-    "confirmUnshareTitle": "Remove user?",
-    "confirmUnshareAction": "Remove",
-    "successDisconnected": "System is successfully disconnected from %CLOUD_NAME%",
-    "successDeleted": "System {{systemName}} is successfully deleted from your account",
-    "mergeFailed": "System merge failed",
-    "mergeStart": "Systems have started merging",
-    "mergeSuccess": "System merge completed",
-    "permissionsRemoved": "Permissions were removed from {{email}}",
-    "unknownName": "Unknown Name for System (Caused by cloud merge)"
-  },
-  "regActions": {
-    "passwordLabel": "Password",
-    "createAccount": "Create Account"
-  },
-  "header": {
-    "allSystems": "All Systems",
-    "systems": "Systems"
   },
   "common": {
     "cameraLinks": {
@@ -222,10 +118,5 @@
       "stop listening": "stop listening",
       "help": "help | show commands"
     }
-  },
-  "recommendSupport": {
-    "a_recommend": "We'd recommend consulting with",
-    "b_support": "support",
-    "c_proceeding": "before proceeding."
   }
 }

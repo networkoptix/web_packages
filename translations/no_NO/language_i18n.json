@@ -288,6 +288,11 @@
             "mergeFailedTitle": "Systemsammenslåing mislyktes",
             "primaryCannotMerge": "System {{targetSystem}} har en nyere programvareversjon som ikke er kompatibel med gjeldende system. Oppdater det nåværende systemet til <a href=\"/download\" target=\"_blank\" translate>siste versjon</a> å slå det sammen med {{targetSystem}} systemet.",
             "primarySystemOffline": "System {{primarySystem}} er frakoblet og kan ikke slås sammen med System {{targetSystem}}.",
+            "recommendSupport": {
+                "a_recommend": "Vi anbefaler å konsultere med",
+                "b_support": "brukerstøtte",
+                "c_proceeding": "før du fortsetter."
+            },
             "secondaryCannotMerge": "System {{targetSystem}} har en eldre programvareversjon som ikke er kompatibel med gjeldende system. Oppdater {{targetSystem}} til <a href=\"/download\" target=\"_blank\" translate>siste bygg</a> å slå dert sammen med det nåværende.",
             "systemOffline": "System {{targetSystem}} er frakoblet og kan ikke slås sammen med det nåværende.",
             "systemUnavailable": "System {{targetSystem}} er for tiden ikke tilgjengelig. Prøv igjen om noen få minutter eller kontakt"

@@ -103,7 +103,7 @@
 			"bundle": "Клиент и сервер",
 			"camera_sdk": "SDK источника видео",
 			"client": "Только клиент",
-			"metadata_sdk": "Metadata SDK",
+			"metadata_sdk": "Метаданные SDK",
 			"package": "Пакет",
 			"server": "Только сервер",
 			"servertool": "Инструмент настройки",
@@ -203,17 +203,17 @@
 	"dialogs": {
 		"okButton": "OK",
 		"cancelButton": "Отменить",
-		"createNewAccount": "Create New Account",
-		"changeAccountLogged": "You are already logged in with as {email}",
-		"loggedFromOther": "You will be logged in with a different account",
+		"createNewAccount": "Создать новую учетную запись",
+		"changeAccountLogged": "Вы уже вошли как {email}",
+		"loggedFromOther": "Вы будете авторизованы под другой учетной записью",
 		"loginTitle": "Войти в %CLOUD_NAME%",
 		"loginButton": "Войти",
 		"logoutAuthorisedTitle": "Вы уже выполнили вход",
 		"logoutAuthorisedContinueButton": "Продолжить",
 		"logoutAuthorisedLogoutButton": "Выход",
 		"noClientDetectedTitle": "Установите %VMS_NAME% для работы с системой",
-		"stayAs": "Stay logged as {email} ",
-		"stayLoggedIn": "Stay Logged In",
+		"stayAs": "Оставаться зарегистрированным как {email} ",
+		"stayLoggedIn": "Оставаться в системе",
 		"download": "Скачать %VMS_NAME%",
 		"merge": {
 			"commonText": "Не удалось объединить системы <strong>{{primarySystem}}</strong> и <strong>{{secondarySystem}}</strong>.",
@@ -224,7 +224,12 @@
 			"primarySystemOffline": "Система {{primarySystem}} не находится в сети и не может быть объединена с системой {{targetSystem}}.",
 			"secondaryCannotMerge": "Система {{targetSystem}} имеет более старую версию программного обеспечения, несовместимую с текущей Системой. Обновите {{targetSystem}} до <a href=\"/download\" target=\"_blank\" translate>последней сборки</a> чтобы объединить ее с текущей.",
 			"systemOffline": "Система {{targetSystem}} не находится в сети и не может быть объединена с текущей.",
-			"systemUnavailable": "Система {{targetSystem}} в данный момент недоступна. Повторите попытку через несколько минут или свяжитесь с"
+			"systemUnavailable": "Система {{targetSystem}} в данный момент недоступна. Повторите попытку через несколько минут или свяжитесь с",
+			"recommendSupport": {
+				"a_recommend": "Мы рекомендуем проконсультироваться с",
+				"b_support": "техническая поддержка",
+				"c_proceeding": "прежде чем продолжить."
+			}
 		},
 		"message": {
 			"failedToSend": "Не удалось отправить сообщение.",
@@ -284,7 +289,7 @@
 		"passwordMismatch": "Неправильный пароль",
 		"cantEditYourself": "Не допускается изменение собственных полномочий",
 		"cantEditAdmin": "Этот пользователь имеет полномочия администратора",
-		"cantOpenClient": "%VMS_NAME% application is not detected.",
+		"cantOpenClient": "Приложение %VMS_NAME% не обнаружено.",
 		"lostConnection": "Подключение к {{systemName}} потеряно",
 		"thisSystem": "система",
 		"oldSafariNotSupported": "Версии Safari старше 10 не поддерживаются",
@@ -317,7 +322,7 @@
 		"mySystemSearch": "ЯМойМоя",
 		"unavailable": "Система недоступна",
 		"offline": "Система не в сети",
-		"offlineAlertRibbon": "System is offline. Some settings may not be available.",
+		"offlineAlertRibbon": "Система не в сети. Некоторые настройки могут быть недоступны.",
 		"openClient": "Открыть в %VMS_NAME%",
 		"openClientNoSystem": "Открыть %VMS_NAME%",
 		"confirmMergeAction": "Объединить",
@@ -340,7 +345,7 @@
 		"mergeSuccess": "Слияние системы завершено",
 		"permissionsRemoved": "{{email}} был лишен полномочий",
 		"unknownName": "Неизвестное имя для системы (вызвано облачным объединением систем)",
-		"shareOffline": "Cannot share system while it is offline"
+		"shareOffline": "Невозможно поделиться системой, пока она не в сети"
 	},
 	"systemStatuses": {
 		"activated": "активирован",

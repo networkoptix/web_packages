@@ -636,6 +636,8 @@ class AssetCustomizationReviewAdmin(CMSAdmin):
         return qs
 
     def get_readonly_fields(self, request, obj=None):
+        if obj is None:
+            return self.readonly_fields
         if request.user != obj.version.asset.created_by and\
                 obj.state != AssetCustomizationReview.REVIEW_STATES.rejected:
             return self.readonly_fields
@@ -648,6 +650,9 @@ class AssetCustomizationReviewAdmin(CMSAdmin):
             return True
         elif obj:
             return request.user == obj.version.asset.created_by
+        return False
+
+    def has_add_permission(self, request):
         return False
 
     @staticmethod

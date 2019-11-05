@@ -224,7 +224,12 @@
 			"primarySystemOffline": "System {{primarySystem}} jest w trybie offline i nie można go złączyć z systemem {{targetSystem}}.",
 			"secondaryCannotMerge": "System {{targetSystem}} ma starszą wersję oprogramowania, która jest niezgodna z bieżącym systemem. Zaktualizuj system {{targetSystem}} do <a href=\"/download\" target=\"_blank\" translate>najnowszej kompilacji</a>, aby złączyć go z bieżącym systemem.",
 			"systemOffline": "System {{targetSystem}} jest w trybie offline i nie można go złączyć z bieżącym systemem.",
-			"systemUnavailable": "System {{targetSystem}} jest obecnie niedostępny. Spróbuj ponownie za kilka minut lub skontaktuj się"
+			"systemUnavailable": "System {{targetSystem}} jest obecnie niedostępny. Spróbuj ponownie za kilka minut lub skontaktuj się",
+			"recommendSupport": {
+				"a_recommend": "Zalecamy skonsultowanie się z",
+				"b_support": "wsparcie",
+				"c_proceeding": "przed kontynuowaniem."
+			}
 		},
 		"message": {
 			"failedToSend": "Wysyłanie wiadomości nie powiodło się.",

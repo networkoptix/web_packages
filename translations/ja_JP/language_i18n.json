@@ -288,6 +288,11 @@
             "mergeFailedTitle": "システム統合が失敗しました",
             "primaryCannotMerge": "システム{{targetSystem}} には、現在のシステムと互換性のない新しいソフトウェアバージョンがあります。現在のシステムを<a href=\"/download\" target=\"_blank\" translate>最新のビルド</a>に更新し、{{targetSystem}} システムと統合します。",
             "primarySystemOffline": "システム {{primarySystem}} はオフラインのため、システム{{targetSystem}} と統合することはできません。",
+            "recommendSupport": {
+                "a_recommend": "相談を推奨",
+                "b_support": "サポート",
+                "c_proceeding": "続行する前に"
+            },
             "secondaryCannotMerge": "システム {{targetSystem}} には、現在のシステムと互換性のない古いソフトウェアバージョンがあります。{{targetSystem}} を <a href=\"/download\" target=\"_blank\" translate>最新のビルド</a> に更新して、現在のものと統合します。",
             "systemOffline": "システム {{targetSystem}} はオフラインのため、現在のシステムと統合することはできません。",
             "systemUnavailable": "システム {{targetSystem}} は現在到達不能です。数分後にもう一度試すか、連絡してください"

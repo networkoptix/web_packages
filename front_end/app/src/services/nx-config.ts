@@ -25,6 +25,7 @@ export class NxConfigService {
             cacheTimeout     : 20 * 1000, // Cache lives for 30 seconds
             updateInterval   : 30 * 1000, // Update content on pages every 30 seconds
             openClientTimeout: 20 * 1000, // 20 seconds we wait for client to open
+            openClientError: 'notVisited',
 
             openMobileClientTimeout  : 300, // 300ms for mobile browsers
             timelineMouseEventTimeout: 300, // milliseconds

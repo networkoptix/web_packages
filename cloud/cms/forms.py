@@ -122,19 +122,16 @@ class CustomContextForm(forms.Form):
             disabled = disabled or (not data_structure.translatable and language != asset.default_language
                                     and context.translatable)
 
-            if data_structure.type in [DataStructure.DATA_TYPES.long_text,
-                                       DataStructure.DATA_TYPES.object,
+            if data_structure.type in [DataStructure.DATA_TYPES.object,
                                        DataStructure.DATA_TYPES.array]:
-                if data_structure.type in [DataStructure.DATA_TYPES.object,
-                                           DataStructure.DATA_TYPES.array]:
-                    record_value = json.dumps(record_value, indent=4, separators=(',', ': '))
-                widget_type = forms.Textarea(attrs={'placeholder': data_structure.default})
+                record_value = json.dumps(record_value, indent=4, separators=(',', ': '))
+                widget_type = forms.Textarea()
 
-            if data_structure.type == DataStructure.DATA_TYPES.html:
+            elif data_structure.type == DataStructure.DATA_TYPES.html:
                 widget_type = forms.Textarea(
-                    attrs={'cols': 120, 'rows': 25, 'class': 'tinymce'})
+                    attrs={'cols': 120, 'rows': 25, 'class': 'tinymce', 'placeholder': data_structure.placeholder})
 
-            if data_structure.type == DataStructure.DATA_TYPES.image:
+            elif data_structure.type == DataStructure.DATA_TYPES.image:
                 if not record_value:
                     record_value = data_structure.placeholder or data_structure.default
                 self.fields[data_structure.name] = forms.ImageField(label=ds_label,
@@ -202,6 +199,9 @@ class CustomContextForm(forms.Form):
                                                                       required=False,
                                                                       disabled=disabled)
                 continue
+
+            elif data_structure.type == DataStructure.DATA_TYPES.long_text:
+                widget_type = forms.Textarea(attrs={'placeholder': data_structure.placeholder})
 
             validator = RegexValidator('')
             if data_structure.type == DataStructure.DATA_TYPES.text and 'regex' in data_structure.meta_settings:

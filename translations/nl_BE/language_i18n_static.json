@@ -224,7 +224,12 @@
 			"primarySystemOffline": "Systeem {{primarySystem}} is offline en kan niet worden samengevoegd met {{targetSystem}}.",
 			"secondaryCannotMerge": "Systeem {{targetSystem}} heeft een oudere softwareversie die niet compatibel is met het huidige systeem. Update {{targetSystem}} naar de <a href=\"/download\" target=\"_blank\" translate>nieuwste versie</a> om deze samen te voegen met de huidige versie.",
 			"systemOffline": "Systeem {{targetSystem}} is offline en kan niet worden samengevoegd met de huidige.",
-			"systemUnavailable": "Systeem {{targetSystem}} is momenteel niet bereikbaar. Probeer het over een paar minuten opnieuw of neem contact op met"
+			"systemUnavailable": "Systeem {{targetSystem}} is momenteel niet bereikbaar. Probeer het over een paar minuten opnieuw of neem contact op met",
+			"recommendSupport": {
+				"a_recommend": "We raden aan om te overleggen met",
+				"b_support": "ondersteuning",
+				"c_proceeding": "voordat u verder gaat."
+			}
 		},
 		"message": {
 			"failedToSend": "Bericht kan niet worden verzonden.",

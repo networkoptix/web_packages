@@ -224,7 +224,12 @@
 			"primarySystemOffline": "System {{primarySystem}} er frakoblet og kan ikke slås sammen med System {{targetSystem}}.",
 			"secondaryCannotMerge": "System {{targetSystem}} har en eldre programvareversjon som ikke er kompatibel med gjeldende system. Oppdater {{targetSystem}} til <a href=\"/download\" target=\"_blank\" translate>siste bygg</a> å slå dert sammen med det nåværende.",
 			"systemOffline": "System {{targetSystem}} er frakoblet og kan ikke slås sammen med det nåværende.",
-			"systemUnavailable": "System {{targetSystem}} er for tiden ikke tilgjengelig. Prøv igjen om noen få minutter eller kontakt"
+			"systemUnavailable": "System {{targetSystem}} er for tiden ikke tilgjengelig. Prøv igjen om noen få minutter eller kontakt",
+			"recommendSupport": {
+				"a_recommend": "Vi anbefaler å konsultere med",
+				"b_support": "brukerstøtte",
+				"c_proceeding": "før du fortsetter."
+			}
 		},
 		"message": {
 			"failedToSend": "Meldingen har ikke sendt.",
