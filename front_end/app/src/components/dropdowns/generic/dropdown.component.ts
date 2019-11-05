@@ -67,9 +67,9 @@ export class NxGenericDropdown implements OnInit, ControlValueAccessor {
         // detect changes in list of items and changes in selected to support clear option
         if (changes.items && changes.items.currentValue) {
             if (this.selected) {
-                this.selected = changes.items.currentValue.filter(x => x.name === this.selected.name)[0];
+                this.selected = changes.items.currentValue.filter(x => x.value === this.selected.value)[0];
             } else {
-                this.selected = {name: this.message};
+                this.selected = {name: this.message, value: '0'};
             }
         }
 

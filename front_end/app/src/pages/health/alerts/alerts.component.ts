@@ -88,8 +88,8 @@ export class NxSystemAlertsComponent implements OnInit {
     addFilterAlarms() {
         const alertItems = [
             { value: '0', name: 'All Alerts' },
-            { value: 'warning', name: 'Only warnings' },
-            { value: 'error', name: 'Only errors' }
+            { value: 'warning', name: 'Only Warnings' },
+            { value: 'error', name: 'Only Errors' }
         ];
 
         this.filterModel.selects.push(
@@ -127,7 +127,7 @@ export class NxSystemAlertsComponent implements OnInit {
 
         for (const [key, value] of Object.entries(this.healthService.values.servers)) {
             const val: any = value;
-            serverItems.push({ value: val._.name.text, name: val._.name.text });
+            serverItems.push({ value: key, name: val._.name.text });
         }
 
         serverItems.unshift({ value: '0', name: 'All Servers' });

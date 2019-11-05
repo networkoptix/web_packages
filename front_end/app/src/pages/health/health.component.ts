@@ -238,7 +238,8 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                                     }
                                     alarmCount++;
                                 }
-                                const formattedVal = this.healthService.formatValue(
+
+                                const formattedVal: any = this.healthService.formatValue(
                                     header, this.healthService.values[metric][entity][group.id][header.id]
                                 );
 
@@ -303,7 +304,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                             }
 
                             if (server) {
-                                alert._.server = {text: server.text};
+                                alert._.server = {text: server.text, id: entity};
                             }
                             alert._.type = {text: this.healthService.manifest[metric].resource};
                             alert._.text = {text: alarm.text};

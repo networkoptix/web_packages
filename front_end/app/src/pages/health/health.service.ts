@@ -126,18 +126,23 @@ export class NxHealthService {
         let types;
         let servers;
 
-        if (filter.selects.find(x => x.id === NxHealthService.ALERTS) !== undefined) {
-            alarms = filter.selects.find(x => x.id === NxHealthService.ALERTS).selected;
+        const typeAlert = filter.selects.find(x => x.id === NxHealthService.ALERTS);
+        if (typeAlert !== undefined) {
+            alarms = typeAlert.selected;
         }
-        if (filter.selects.find(x => x.id === NxHealthService.TYPES) !== undefined) {
-            types = filter.selects.find(x => x.id === NxHealthService.TYPES).selected;
+
+        const typeTypes = filter.selects.find(x => x.id === NxHealthService.TYPES);
+        if (typeTypes !== undefined) {
+            types = typeTypes.selected;
         }
-        if (filter.selects.find(x => x.id === NxHealthService.SERVERS) !== undefined) {
-            servers = filter.selects.find(x => x.id === NxHealthService.SERVERS).selected;
+
+        const typeServers = filter.selects.find(x => x.id === NxHealthService.SERVERS);
+        if (typeServers !== undefined) {
+            servers = typeServers.selected;
         }
 
         const alerts = values.filter(alert => {
-            if (servers && servers.value !== '0' && alert._.server.text !== servers.value) {
+            if (servers && servers.value !== '0' && alert._.server.id !== servers.value) {
                 return false;
             }
 
