@@ -414,11 +414,11 @@ export class NxSystem extends System implements OnDestroy {
         user.email = user.email.toLowerCase();
         let userCreated = false;
 
-        if (!user.userId) {
-            if (user.email === this.currentUserEmail) {
-                return Promise.reject({ resultCode: 'cantEditYourself' });
-            }
+        if (user.email === this.currentUserEmail) {
+            return Promise.reject({ resultCode: 'cantEditYourself' });
+        }
 
+        if (!user.userId) {
             let existingUser = this.users.find((u) => {
                 return user.email === u.email;
             });
