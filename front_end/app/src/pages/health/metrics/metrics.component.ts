@@ -82,7 +82,7 @@ export class NxSystemMetricsComponent implements OnInit {
                 this.selectedPanelData = this.healthService.panelParams[this.metricId];
                 this.resetActiveEntity(false);
 
-                if (!searchParam.length) {
+                if (!searchParam || !searchParam.length) {
                     this.selectedValues = this.healthService.values[this.metricId];
                     if (Object.keys(this.selectedValues).length === 1) {
                         this.multiEntity = false;
