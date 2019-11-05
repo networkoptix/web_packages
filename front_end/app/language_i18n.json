@@ -37,6 +37,7 @@
     "Change Password": "Change Password",
     "Checking...": "Checking...",
     "Choose which properties should be visible to customers:": "Choose which properties should be visible to customers:",
+    "Clear filters": "Clear filters",
     "Close": "Close",
     "Codec": "Codec",
     "Collapse": "Collapse",
@@ -84,6 +85,7 @@
     "I/O": "I/O",
     "In Review": "In Review",
     "In-Client Upgrade:": "In-Client Upgrade:",
+    "Information": "Information",
     "Integrations": "Integrations",
     "Language": "Language",
     "Last Name": "Last Name",
@@ -269,6 +271,56 @@
         "ptz": "PTZ cameras"
     },
     "clientProtocol": "%CLIENT_PROTOCOL%:",
+    "common": {
+        "cameraLinks": {
+            "copyActiveText": "copied to clipboard",
+            "copyDefaultText": "copy",
+            "copyToClipboard": "copy to clipboard",
+            "highStream": "High stream",
+            "lowStream": "Low stream",
+            "transcoding": "Transcoding",
+            "unknown": "Unknown"
+        },
+        "cameraStates": {
+            "error": "Error",
+            "errorLoading": "An error occurred while loading this video.",
+            "flashOrWebmRequired": "Please <a href='https://get.adobe.com/flashplayer/' target='_blank'>install Adobe Flash</a> or<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> for playing video in Internet Explorer.",
+            "flashRequired": "Please <a href='https://get.adobe.com/flashplayer/' target='_blank'>install Adobe Flash</a> for playing videos.",
+            "iOSVideoTooLarge": "iOS does not support video larger than fullHD (2MP: 1920x1080).",
+            "ieNoWebm": "Please, install <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> for Internet Explorer.",
+            "ieWin10": "Please, use Microsoft Edge or Google Chrome browsers.",
+            "noArmSupport": "This browser or device does not support video playback from ARM-based servers.",
+            "noData": "No data",
+            "noFormat": "This browser does not support video playback from this camera.",
+            "offline": "Offline",
+            "ubuntuNX": "This browser does not support video from ARM-based servers. Please, use Chromium browser instead.",
+            "unauthorized": "Authentication required"
+        },
+        "chromeCastWarning": "Chromecast is resource intensive and may cause issues on your server.",
+        "resolution": {
+            "auto": "Auto",
+            "high": "High",
+            "low": "Low"
+        },
+        "searchCamPlaceholder": "Search",
+        "systemHasNoCameras": "NO CAMERAS",
+        "systemOffline": "System Offline",
+        "systemUnreachable": "SYSTEM IS UNREACHABLE",
+        "voiceCommands": {
+            "clear search": "clear search",
+            "collapse all servers": "collapse all servers",
+            "collapse server": "collapse server + [server name]",
+            "expand all servers": "expand all servers",
+            "expand server": "expand server + [server name]",
+            "help": "help | show commands",
+            "live": "go to live | show me live",
+            "pause": "pause",
+            "play": "play",
+            "search": "find + [text for searchbar]",
+            "stop listening": "stop listening",
+            "view": "view + [camera name]"
+        }
+    },
     "devices": "devices",
     "dialogs": {
         "cancelButton": "Cancel",

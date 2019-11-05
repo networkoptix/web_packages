@@ -7,7 +7,6 @@ export class NxUrlSafePipe implements PipeTransform {
     }
 
     transform(url) {
-        debugger;
         return this.sanitizer.bypassSecurityTrustResourceUrl(url);
     }
 }

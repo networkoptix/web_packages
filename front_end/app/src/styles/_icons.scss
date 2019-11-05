@@ -115,3 +115,33 @@
     @include icon;
     background-position : -96px 0;
 }
+
+@mixin web-icon {
+    display          : inline-block;
+    background-size  : 192px 408px;
+    background-image : url(/static/images/web_interface_sprite.png);
+    @media only screen and (-webkit-min-device-pixel-ratio : 2), only screen and (min-device-pixel-ratio : 2) {
+        background-image : url(/static/images/web_interface_sprite@2x.png);
+    }
+}
+
+.camera-view-offline {
+    @include web-icon;
+    width               : 96px !important;
+    height              : 96px !important;
+    background-position : -96px -216px;
+}
+
+.server-offline {
+    @include web-icon;
+    width               : 96px !important;
+    height              : 96px !important;
+    background-position : -96px -316px;
+}
+
+.camera-view-error {
+    @include web-icon;
+    width               : 96px !important;
+    height              : 96px !important;
+    background-position : 0px -316px;
+}

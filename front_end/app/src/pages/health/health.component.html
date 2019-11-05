@@ -1,0 +1,43 @@
+<nx-page-placeholder *ngIf="!healthService.ready"
+                     [condition]="systemReady && !system.isOnline"
+                     [placeholderTitle]="LANG.common.systemOffline"
+                     [iconClass]="'server-offline'"
+                     preloader="true"
+                     class="page-placeholder offline">
+</nx-page-placeholder>
+
+<div *ngIf="healthService.ready">
+    <div class="container row d-flex mt-3 m-0 pl-3 pr-3" style="max-width: 1440px;">
+
+        <div class="p-0 col-12 col-lg-3 col-xl-2">
+            <nx-menu [content]="menu"></nx-menu>
+            <hr>
+            <div class="menuLinks px-2">
+                <svg-icon [src]="CONFIG.icons.dir + 'download.svg'"
+                          [svgStyle]="{'width.px': '20'}"></svg-icon>
+                <a href="#" class="pl-1" (click)="exportReport()">Download Full Report</a>
+            </div>
+            <div class="mt-3 px-2">
+                <div *ngIf="importedData.imported" class="importInfo pb-2">
+                    <p>System: {{importedData.system}}</p>
+                    <p>Generated: {{importedData.time}}</p>
+                </div>
+                <ngx-file-drop *ngIf="importShow" dropZoneLabel="Drop report here to import"
+                               dropZoneClassName="importZone"
+                               contentClassName="contentZone"
+                               accept="json"
+                               [directory]="false"
+                               [multiple]="false"
+                               [showBrowseBtn]="false"
+                               (onFileLeave)="fileLeave()"
+                               (onFileDrop)="fileDropped($event)">
+                </ngx-file-drop>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-9 col-xl-10 pt-3 pt-lg-0 px-0 pl-lg-3">
+            <router-outlet></router-outlet>
+            <nx-footer></nx-footer>
+        </div>
+    </div>
+</div>

@@ -141,6 +141,15 @@ window.L = {};
                         templateUrl: CONFIG.viewsDir + 'view.html',
                         controller: 'ViewPageCtrl'
                     })
+                    .when('/systems/:systemId/health', {
+                        template: ''
+                    })
+                    .when('/systems/:systemId/health/alerts', {
+                        template: ''
+                    })
+                    .when('/systems/:systemId/health/:metric', {
+                        template: ''
+                    })
                     .when('/systems/:systemId/share', {
                         template: ''
                     })

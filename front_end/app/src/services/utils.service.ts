@@ -1,5 +1,7 @@
-import { Injectable }      from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { NxConfigService } from './nx-config';
+import { DOCUMENT }        from '@angular/common';
+import { WINDOW }          from './window-provider';
 
 @Injectable({
     providedIn: 'root'
@@ -10,7 +12,9 @@ export class NxUtilsService {
     public static sortASC = true;
     public static sortDESC = false;
 
-    constructor(private config: NxConfigService) {
+    constructor(private config: NxConfigService,
+                @Inject(WINDOW) private window: Window,
+                @Inject(DOCUMENT) private document: any) {
         this.CONFIG = this.config.getConfig();
     }
 
@@ -26,6 +30,8 @@ export class NxUtilsService {
             return 0;
         };
     }
+
+    public keepOriginalOrder = (a, b) => a.key;
 
     static byResolution(fn, order) {
         return (a, b) => {
@@ -71,5 +77,46 @@ export class NxUtilsService {
             // href not recognized as valid url
             return href;
         }
+    }
+
+    public secondsToTime(seconds) {
+        let time = '';
+
+        const days = Math.floor(seconds / (3600 * 24));
+        seconds  -= days * 3600 * 24;
+        if (days) {
+            time += `${days}d `;
+        }
+
+        const hours   = Math.floor(seconds / 3600);
+        seconds  -= hours * 3600;
+        if (hours) {
+            time += `${hours}h `;
+        }
+
+        const min = Math.floor(seconds / 60);
+        seconds  -= min * 60;
+        if (hours) {
+            time += `${min}m `;
+        }
+
+        seconds = seconds.toFixed(0);
+        time += `${seconds}s`;
+
+        return time;
+    }
+
+    public saveAsBlob(data, filename, type) {
+        const blob: Blob = new Blob([data], {type});
+        const objectUrl = URL.createObjectURL(blob);
+        const a: HTMLAnchorElement = this.document.createElement('a') as HTMLAnchorElement;
+
+        a.href = objectUrl;
+        a.download = filename;
+        this.document.body.appendChild(a);
+        a.click();
+
+        this.document.body.removeChild(a);
+        URL.revokeObjectURL(objectUrl);
     }
 }

@@ -19,6 +19,7 @@ import { NxOverviewModule }          from './integration/details/overview/overvi
 import { NxSetupModule }             from './integration/details/setup/setup.module';
 import { NxSettingsModule }          from './systems/settings/settings.module';
 import { NxSystemsListModule }       from './systems/list/list.module';
+import { NxHealthModule }            from './health/health.module';
 import { NxAccountModule }           from './account/account.module';
 import { NxRestoreModule }           from './restore/restore.module';
 import { Nx404Module }               from './404/404.module';
@@ -46,6 +47,7 @@ import { PushNotificationsModule } from './push-notifications/push-notifications
         NxOverviewModule,
         NxSetupModule,
         NxSettingsModule,
+        NxHealthModule,
         NxSystemsListModule,
         NxAccountModule,
         NxDebugModule,
@@ -65,6 +67,7 @@ import { PushNotificationsModule } from './push-notifications/push-notifications
         IntegrationsModule,
         IntegrationsListModule,
         NxSettingsModule,
+        NxHealthModule,
         ContentModule,          // TODO: Remove it after test
         RightMenuModule,        // TODO: Remove it after test
         PushNotificationsModule,

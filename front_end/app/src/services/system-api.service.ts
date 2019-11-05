@@ -89,7 +89,10 @@ class NxSystemAPI {
     }
 
     private generateGetUrl(url: string, data: any, absUrl?: boolean) {
-        const params = new HttpParams(data);
+        let params = new HttpParams();
+        Object.keys(data).forEach((key: string) => {
+            params = params.set(key, data[key]);
+        });
         if (absUrl) {
             const proto = window.location.protocol;
             const hostName = window.location.hostname;
@@ -99,7 +102,7 @@ class NxSystemAPI {
         } else {
             url = `${this.urlBase}${url}`;
         }
-        return `${url}/${params}`;
+        return `${url}&${params}`;
     }
 
     private get(url: string, params?: any) {
@@ -298,7 +301,7 @@ class NxSystemAPI {
     /* End of Cameras and Servers */
 
     /* Formatting urls */
-    previewUrl(cameraId, time, width, height) {
+    previewUrl(cameraId, time?, width?, height?) {
         const data: any = {
             cameraId: this.cleanId(cameraId)
         };
@@ -391,6 +394,23 @@ class NxSystemAPI {
             }
         }
         this.location.path(`${systemLink}/view/${this.cleanId(cameraId)}`, false);
+    }
+
+    /* Health Monitor */
+    getHealthManifest() {
+        return this.get('/ec2/metrics/manifest');
+    }
+
+    getHealthValues() {
+        return this.get('/ec2/metrics/values');
+        // return this.http.get('/getdata');
+    }
+    getHealthAlarms() {
+        return this.get('/ec2/metrics/alarms');
+    }
+
+    getAggregateHealthReport() {
+        return this.get('/api/aggregator?exec_cmd=ec2%2Fmetrics%2Fmanifest&exec_cmd=ec2%2Fmetrics%2Fvalues&exec_cmd=ec2%2Fmetrics%2Falarms');
     }
 }
 

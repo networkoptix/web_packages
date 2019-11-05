@@ -1,0 +1,51 @@
+<div class="row">
+
+    <div class="col-12 mb-3">
+        <nx-search
+                name="filterModel"
+                [ngModel]="filterModel"
+                (ngModelChange)="modelChanged($event)"
+                layout="compact"
+                [placeholder]="LANG.search.Search"
+                ngDefaultControl>
+        </nx-search>
+    </div>
+
+    <div *ngIf="selectedData && selectedValues && !mobileDetailMode"
+         [ngClass]="{'col-12': !activeEntity, 'col-md-7 col-xl-8' : activeEntity}">
+        <nx-dynamic-table
+                *ngIf="multiEntity"
+                [headers]="selectedData"
+                [elements]="selectedValues"
+                (onRowClick)="setActiveEntity($event)"
+                [activeEntity]="activeEntity"
+                [params]="params">
+        </nx-dynamic-table>
+
+        <nx-single-entity
+                *ngIf="!multiEntity"
+                [params]="selectedPanelData"
+                [entity]="objectValues(selectedValues)[0]"></nx-single-entity>
+
+    </div>
+
+    <div class="row pl-3 pb-3"
+         *ngIf="activeEntity"
+         [style.display]="!mobileDetailMode ? 'none' : 'block'">
+
+        <button class="btn btn-default btn-back" (click)="resetActiveEntity()">
+            <span class="back-arrow"></span>
+            <span translate>All results</span>
+        </button>
+    </div>
+
+    <div class="col-12 col-md-5 col-xl-4"
+         *ngIf="activeEntity">
+
+        <nx-dynamic-table-panel-component
+                [activeEntity]="activeEntity"
+                [panelParams]="selectedPanelData"
+                (onCloseView)="resetActiveEntity()">
+        </nx-dynamic-table-panel-component>
+    </div>
+</div>

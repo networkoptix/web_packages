@@ -325,7 +325,6 @@ export class CamTableComponent implements OnChanges, OnInit {
 
                 if (this.params.page) {
                     this.setPage(+this.params.page, true);
-                } else {
                     this.setPage(1, true);
                 }
             }

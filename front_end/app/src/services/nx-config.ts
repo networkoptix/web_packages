@@ -200,7 +200,8 @@ export class NxConfigService {
                     { name: 'arm', src: '/static/icons/integration_tile_os_arm.svg' },
                     { name: 'linux', src: '/static/icons/integration_tile_os_linux.svg' },
                     { name: 'windows', src: '/static/icons/integration_tile_os_windows.svg' }
-                ]
+                ],
+                dir: '/static/icons/',
             },
             webclient                     : {
                 useServerTime              : true,
@@ -287,6 +288,9 @@ export class NxConfigService {
                 maxLength   : 200,
                 debounceTime: 500 // ms
             },
+            systemHealthMenu: {
+                baseUrl: '/health/'
+            },
             systemMenu  : {
                 baseUrl: '/systems/',
                 admin  : {
@@ -319,6 +323,25 @@ export class NxConfigService {
                 viewport: {
                     default: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no',
                     desktopLayout: 'width=768, maximum-scale=1, user-scalable=yes, shrink-to-fit=no'
+                }
+            },
+            healthMonitoring: {
+                valueFormats: {
+                    '%': {multiplier: 100, decimals: 0},
+                    'GB': {multiplier: 1 / 1024 ** 3, decimals: 2},
+                    'MB': {multiplier: 1 / 1024 ** 2, decimals: 2},
+                    'KB': {multiplier: 1 / 1024, decimals: 2},
+                    'B': {multiplier: 1, decimals: 0},
+                    'GBps': {display: 'GB/s', multiplier: 1 / 1000 ** 3, decimals: 2},
+                    'MBps': {display: 'MB/s', multiplier: 1 / 1000 ** 2, decimals: 2},
+                    'KBps': {display: 'kB/s', multiplier: 1 / 1000, decimals: 2},
+                    'Bps': {display: 'B/s', multiplier: 1, decimals: 0},
+                    'Gbps': {display: 'Gbit/s', multiplier: 1 / 1000 ** 3, decimals: 2},
+                    'Mbps': {display: 'Mbit/s', multiplier: 1 / 1000 ** 2, decimals: 2},
+                    'kbps': {display: 'kbit/s', multiplier: 1 / 1000, decimals: 2},
+                    'bps': {display: 'bit/s', multiplier: 1, decimals: 0},
+                    'MPix/s': {multiplier: 1, decimals: 0},
+                    'Transactions/s': {multiplier: 1, decimals: 1},
                 }
             },
             myIntegrationTagId            : 'mine',

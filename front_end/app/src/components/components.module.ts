@@ -4,7 +4,7 @@ import { TranslateModule }                         from '@ngx-translate/core';
 import { downgradeComponent } from '@angular/upgrade/static';
 import { RouterModule }                            from '@angular/router';
 import { FormsModule }                             from '@angular/forms';
-import { NgbToastModule }                from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule, NgbToastModule }                from '@ng-bootstrap/ng-bootstrap';
 
 import { DirectivesModule }               from '../directives/directives.module';
 import { NxProcessButtonComponent }       from './process-button/process-button.component';
@@ -39,7 +39,8 @@ import { NxSwitchComponent }         from './switch/switch.component';
 import { ToastsContainer }           from './toast/toast.component';
 import { NxHeaderComponent }         from './header/header.component';
 import { NxNavLocationDropdown }     from './dropdowns/nav-location/nav.component';
-import { NxApplyComponent }           from './apply/apply.component';
+import { NxApplyComponent }          from './apply/apply.component';
+import { NxPagePlaceholderComponent } from './placeholders/page/page-placeholder.component';
 
 @NgModule({
     imports: [
@@ -49,7 +50,8 @@ import { NxApplyComponent }           from './apply/apply.component';
         RouterModule,
         FormsModule,
         MenuModule,
-        NgbToastModule
+        NgbToastModule,
+        NgbModule,
     ],
     declarations   : [
         NxGenericDropdown,
@@ -82,6 +84,7 @@ import { NxApplyComponent }           from './apply/apply.component';
         NxClientButtonComponent,
         NxSwitchComponent,
         NxApplyComponent,
+        NxPagePlaceholderComponent,
         ToastsContainer,
     ],
     entryComponents: [
@@ -115,6 +118,7 @@ import { NxApplyComponent }           from './apply/apply.component';
         NxClientButtonComponent,
         NxSwitchComponent,
         NxApplyComponent,
+        NxPagePlaceholderComponent,
         ToastsContainer,
     ],
     providers      : [
@@ -139,6 +143,7 @@ import { NxApplyComponent }           from './apply/apply.component';
         NxClientButtonComponent,
         NxSwitchComponent,
         NxApplyComponent,
+        NxPagePlaceholderComponent,
         ToastsContainer,
 
         NxRibbonService,
@@ -174,6 +179,7 @@ import { NxApplyComponent }           from './apply/apply.component';
         NxClientButtonComponent,
         NxSwitchComponent,
         NxApplyComponent,
+        NxPagePlaceholderComponent,
         ToastsContainer,
 
         MenuModule,

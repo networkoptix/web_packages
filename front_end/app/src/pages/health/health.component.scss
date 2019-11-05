@@ -1,0 +1,54 @@
+@import '../../../styles/theme_palette';
+@import '../../../styles/theme_variables';
+
+nx-system-health-component {
+  .error {
+    font-family: $font-family-medium;
+    color: $red_l2;
+  }
+
+  .warning {
+    font-family: $font-family-medium;
+    color: $yellow_main;
+  }
+
+  .menuLinks {
+    a {
+      text-decoration: none;
+      color: $light16;
+      font-family: $font-family-medium;
+      font-size: $h5-font-size;
+
+      &:hover {
+        color: $light12;
+      }
+    }
+
+    svg * {
+      fill: $light16;
+    }
+  }
+
+  .importZone {
+    border: 2px dashed $light13;
+    border-radius: 4px;
+    min-height: 50px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  .contentZone, .importInfo p {
+    font-size: $font-size-lg;
+    color: $light16;
+    font-family: $font-family-medium;
+  }
+
+  .importInfo {
+    p {
+      font-size: $font-size-base;
+      color: $light16;
+      font-family: $font-family-regular;
+    }
+  }
+}
