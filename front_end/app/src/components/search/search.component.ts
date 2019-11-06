@@ -59,6 +59,7 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
     public numberFilters = 0;
     public filterSelected: any;
     public localFilter: any = {};
+    public bypassedParams: any = {};
 
     CONFIG: any;
     LANG: any = {};
@@ -137,6 +138,29 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
     updateFilter(params?) {
         if (params && params.value) {
             this.params = params.value;
+        }
+
+        // queryParam changed but it's not part of search - don't update model to avoid unnecessary trips
+        const bypassParams = ['page', 'id'];
+        let hasBypassed = false;
+
+        bypassParams.forEach((param) => {
+            if (!this.params[param] && this.bypassedParams[param] || this.params[param] && this.params[param] !== this.bypassedParams[param]) {
+                this.bypassedParams[param] = this.params[param];
+                hasBypassed = true;
+            }
+        });
+
+        if (hasBypassed) {
+            this.updateFilter();
+            return;
+        }
+        // ------------------------------------------------------------- END
+
+        if (!this.params.id && this.localFilter.id || this.params.id && this.params.id !== this.localFilter.id) {
+            this.localFilter.id = this.params.id;
+            this.updateFilter();
+            return;
         }
 
         this.localFilter.query = this.params.search || '';
