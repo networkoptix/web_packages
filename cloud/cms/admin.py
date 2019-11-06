@@ -332,6 +332,8 @@ class AssetAdmin(CMSAdmin):
 
     def get_fields(self, request, obj=None):
         fields = [field for field in self.form.base_fields]
+        if not request.user.is_superuser:
+            fields.remove('protected')
         if obj:
             fields.remove('publish_all_customizations')
             if not request.user.is_superuser and not obj.asset_type.single_customization:
