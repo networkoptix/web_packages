@@ -70,6 +70,7 @@ export class NxRegisterComponent implements OnInit {
 
         if (this.uriParam === 'registerSuccess') {
             this.registerSuccess = true;
+            this.pageService.setPageTitle(this.LANG.pageTitles.registerSuccess);
         }
 
         if (this.uriParam === 'activated') {
