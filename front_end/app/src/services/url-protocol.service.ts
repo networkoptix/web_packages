@@ -156,7 +156,13 @@ export class NxUrlProtocolService {
                             .checkVisitedKey(authKey)
                             .then((visited) => {
                                 this.window.onblur = undefined;
-                                if (!visited && blurCount > 1) {
+                                /* Explanation for blurCount !== 1
+                                 * switch(blurCount)
+                                 *      case 0: The browser dialog didnt show up, but it thought the dialog did show up.
+                                 *      case 1: The browser dialog was canceled.
+                                 *      case > 1: The browser opened the app but the code didnt work.
+                                 */
+                                if (!visited && blurCount !== 1) {
                                     return reject({resultCode: this.CONFIG.openClientError});
                                 }
                                 return resolve(visited);
