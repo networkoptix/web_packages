@@ -1,12 +1,12 @@
 *** Settings ***
-Library           SeleniumLibrary    run_on_failure=Failure Tasks
-Library           String
-Library           Collections
-Library           NoptixImapLibrary/
-Library           NoptixLibrary/
-Resource          variables.robot
-Resource          ${variables_file}
-Variables         getIds.py    ${ENV}
+Library      SeleniumLibrary    run_on_failure=Failure Tasks
+Library      String
+Library      Collections
+Library      NoptixImapLibrary/
+Library      NoptixLibrary/
+Resource     variables.robot
+Resource     ${variables_file}
+Variables    getIds.py    ${ENV}
 
 
 *** variables ***
@@ -364,7 +364,7 @@ Clean up email noperm
     Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
     Verify In System    Auto Tests
     Register Keyword To Run On Failure    NONE
-    ${status}=   Run Keyword And Return Status    Wait Until Element Is Visible    //nx-system-settings-component//nx-menu//nx-level-3-item//span[text()='${EMAIL NOPERM}']/../../../a    5
+    ${status}=   Run Keyword And Return Status    Wait Until Element Is Visible    //nx-system-settings-component//nx-menu//nx-level-3-item//span[text()='${EMAIL NOPERM}']    5
     Run Keyword If    ${status}    Run Keyword And Ignore Error    Remove User Permissions    ${EMAIL NOPERM}
     Register Keyword To Run On Failure    Failure Tasks
     Close Browser

@@ -48,8 +48,11 @@ Support leads to the proper support site
 Terms leads to the proper EULA site
     [tags]    C41545    Threaded
     Wait Until Element is Visible    ${FOOTER TERMS LINK}
+    sleep    1
     Click Link    ${FOOTER TERMS LINK}
     Sleep    1
+    @{tabs}=   Get Window Handles
+    Select Window    @{tabs}[1]
     Location Should Be    ${ENV}${TERMS URL}
 
 Privacy leads to the proper page
