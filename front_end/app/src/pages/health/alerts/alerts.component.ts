@@ -32,6 +32,7 @@ export class NxSystemAlertsComponent implements OnInit {
     activePanelParams: any;
 
     alertsCount: number;
+    alertCards: any;
 
     constructor(private menuService: NxMenuService,
                 private configService: NxConfigService,
@@ -57,6 +58,7 @@ export class NxSystemAlertsComponent implements OnInit {
 
         this.initializeHeader();
         this.countAlerts();
+        this.processAlerts();
 
         this.alerts = this.healthService.alertsValues;
 
@@ -154,6 +156,33 @@ export class NxSystemAlertsComponent implements OnInit {
 
     countAlerts() {
         this.alertsCount = Object.values(this.healthService.alertsCount).reduce((a, b) => a + b);
+    }
+
+    processAlerts() {
+        /*
+         * 1.Reduce converts array of alerts into object
+         * [{metric: name, _ :{icon: alarmLevel}}] => { resourceType: {alarmLevel: count} }
+         * 2. Map converts object into array of alerts sorted by resourceTypes
+         * { resourceType: {alarmLevel: count} } => [{resourceType: name,  alarms : [{alarmLevel: count}]}]
+         * Note: alarm levels are sorted alphabetically
+         */
+        this.alertCards = Object.entries(this.healthService.alertsValues.reduce((obj, item) => {
+            if (!(item.metric in obj)) {
+                obj[item.metric] = {};
+            }
+            if (!(item._.alarm.icon in obj[item.metric])) {
+                obj[item.metric][item._.alarm.icon] = 0;
+            }
+            obj[item.metric][item._.alarm.icon] += 1;
+            return obj;
+        }, {})).map(([resource, alerts]) => {
+            return {
+                alerts: Object.entries(alerts).map(([level, count]) => {
+                    return { level, count };
+                }).sort((a: any, b: any) => a.level < b.level ? -1 : 1),
+                resource
+            };
+        });
     }
 
     initializeHeader() {

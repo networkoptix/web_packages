@@ -1,0 +1,14 @@
+<div class="card">
+    <div class="card-header">{{data.resource | titlecase}}</div>
+    <div class="card-body">
+        <div *ngFor="let alert of data.alerts" class="d-flex justify-content-between" [ngClass]="{'test': !alert.count}">
+            <div>{{alert.level | titlecase}}</div>
+            <div class="d-inline-flex">
+                <svg-icon *ngIf="alert.count" class="mr-1"
+                          [svgStyle]="{'width.px': '20'}"
+                          [src]="CONFIG.icons.dir + alert.level + '.svg'"></svg-icon>
+                <div>{{alert.count}}</div>
+            </div>
+        </div>
+    </div>
+</div>

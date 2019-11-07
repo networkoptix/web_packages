@@ -21,6 +21,7 @@ import { AngularSvgIconModule }         from 'angular-svg-icon';
 import { NxImageSectionComponent }      from './table-components/image-section/image-section.component';
 import { NgxFileDropModule }            from 'ngx-file-drop';
 import { FormsModule }                  from '@angular/forms';
+import { NxSystemAlertCardComponent } from './card/card.component';
 
 
 const appRoutes: Routes = [
@@ -64,7 +65,8 @@ const appRoutes: Routes = [
         NxDynamicTableComponent,
         NxDynamicTablePanelComponent,
         NxSingleEntityComponent,
-        NxImageSectionComponent
+        NxImageSectionComponent,
+        NxSystemAlertCardComponent
     ],
     bootstrap      : [],
     entryComponents: [
