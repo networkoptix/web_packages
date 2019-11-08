@@ -57,7 +57,13 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
     headerHeight: number;
 
+    private footerSubscription: Subscription;
+    private menuSectionSubscription: Subscription;
+    private menuSubSectionSubscription: Subscription;
+    private menuSelectedDetailsSubscription: Subscription;
     private resizeSubscription: Subscription;
+    private routerParamsSubscription: Subscription;
+    private systemSubscription: Subscription;
 
     private setupDefaults() {
         this.CONFIG = this.configService.getConfig();
@@ -98,7 +104,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
     init(): void {
         // this.systemId = this.uriParamSystemId;
-        this.route.params.subscribe(params => {
+        this.routerParamsSubscription = this.route.params.subscribe(params => {
             if (params.systemId) {
                 this.systemId = params.systemId;
                 this.content.base = this.CONFIG.systemMenu.baseUrl + this.systemId;
@@ -113,7 +119,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             }
         });
 
-        this.settingsService
+        this.footerSubscription = this.settingsService
             .footerSubject
             .subscribe((value) => {
                 this.footerVisible = value;
@@ -134,21 +140,21 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             ]
         };
 
-        this.menuService
+        this.menuSectionSubscription = this.menuService
             .selectedSectionSubject
             .subscribe(selection => {
                 this.content.selectedSection = selection;
                 this.content = {...this.content}; // trigger onChange
             });
 
-        this.menuService
+        this.menuSubSectionSubscription = this.menuService
             .selectedSubSectionSubject
             .subscribe(selection => {
                 this.content.selectedSubSection = selection;
                 this.content = {...this.content}; // trigger onChange
             });
 
-        this.menuService
+        this.menuSelectedDetailsSubscription = this.menuService
             .selectedDetailsSection
             .subscribe(selection => {
                 this.content.selectedDetailsSection = selection;
@@ -218,7 +224,13 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.system.stopPoll();
         this.ribbonService.hide();
         this.pageService.setDefaultLayout();
+        this.footerSubscription.unsubscribe();
+        this.menuSectionSubscription.unsubscribe();
+        this.menuSubSectionSubscription.unsubscribe();
+        this.menuSelectedDetailsSubscription.unsubscribe();
         this.resizeSubscription.unsubscribe();
+        this.routerParamsSubscription.unsubscribe();
+        this.systemSubscription.unsubscribe();
     }
 
     getSystemInfo() {
@@ -245,7 +257,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                         });
 
 
-                    this.system.systemSubject.subscribe((system) => {
+                    this.systemSubscription = this.system.systemSubject.subscribe((system) => {
                         if (system !== undefined) {
                             this.settingsService.system = system;
                             this.updateAlert();

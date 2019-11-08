@@ -1,7 +1,7 @@
 import {
-    Component, Inject, OnInit,
+    Component, Inject, OnDestroy, OnInit,
     Renderer2
-}                            from '@angular/core';
+} from '@angular/core';
 import {
     ActivatedRoute, NavigationEnd, Event,
     Router, RoutesRecognized
@@ -14,9 +14,7 @@ import { NxSessionService }       from '../../services/session.service';
 import { NxSystemsService }       from '../../services/systems.service';
 import { WINDOW }                 from '../../services/window-provider';
 import { LocalStorageService }    from 'ngx-store';
-import { BehaviorSubject, timer } from 'rxjs';
-import { take }                   from 'rxjs/operators';
-import { NxSystemsDropdown }      from '../dropdowns/systems/systems.component';
+import { Subscription, timer } from 'rxjs';
 import { NxHeaderService }        from '../../services/nx-header.service';
 
 @Component({
@@ -24,7 +22,7 @@ import { NxHeaderService }        from '../../services/nx-header.service';
     templateUrl: 'header.component.html',
     styleUrls: [ 'header.component.scss' ]
 })
-export class NxHeaderComponent implements OnInit {
+export class NxHeaderComponent implements OnInit, OnDestroy {
 
     CONFIG: any = {};
 
@@ -42,6 +40,11 @@ export class NxHeaderComponent implements OnInit {
 
     getUrlSystemId: any;
     untilHaveID: any;
+    private headerSubscription: Subscription;
+    private loginSubscription: Subscription;
+    private routerSubscription: Subscription;
+    private systemSubscription: Subscription;
+    private systemIdSubscription: Subscription;
 
     constructor(@Inject(WINDOW) private window: Window,
                 private renderer: Renderer2,
@@ -96,6 +99,14 @@ export class NxHeaderComponent implements OnInit {
         });
     }
 
+    ngOnDestroy() {
+        this.headerSubscription.unsubscribe();
+        this.loginSubscription.unsubscribe();
+        this.routerSubscription.unsubscribe();
+        this.systemSubscription.unsubscribe();
+        this.systemIdSubscription.unsubscribe();
+    }
+
     ngOnInit() {
         // TODO: root route is maintained by AJS - replace this once we get rid of it.
         this.inline = this.window.location.search.indexOf('inline') > 0;
@@ -108,7 +119,7 @@ export class NxHeaderComponent implements OnInit {
         this.startTimerSystemIdUpdate(); // ensure update on page reload
 
         // notification from view.js
-        this.headerService.systemIdSubject.subscribe((systemId) => {
+        this.systemIdSubscription = this.headerService.systemIdSubject.subscribe((systemId) => {
             if (systemId) {
                 this.systemIdUpdate(systemId);
             }
@@ -127,11 +138,11 @@ export class NxHeaderComponent implements OnInit {
         this.viewHeader = this.CONFIG.showHeaderAndFooter;
         this.active = {};
 
-        this.appState.headerVisibleSubject.subscribe((visible) => {
+        this.headerSubscription = this.appState.headerVisibleSubject.subscribe((visible) => {
             this.viewHeader = visible;
         });
 
-        this.router.events
+        this.routerSubscription = this.router.events
               .subscribe((event: Event) => {
                   if (event instanceof RoutesRecognized) {
                       this.systemId = event.state.root.firstChild.params.systemId;
@@ -154,7 +165,7 @@ export class NxHeaderComponent implements OnInit {
                   }
               });
 
-        this.sessionService.loginStateSubject.subscribe((loginState) => {
+        this.loginSubscription = this.sessionService.loginStateSubject.subscribe((loginState) => {
             this.accountService
                 .get()
                 .then(account => {
@@ -180,7 +191,7 @@ export class NxHeaderComponent implements OnInit {
             }
         });
 
-        this.systemsService.systemsSubject.subscribe((systems) => {
+        this.systemSubscription = this.systemsService.systemsSubject.subscribe((systems) => {
             if (!systems) {
                 return;
             }

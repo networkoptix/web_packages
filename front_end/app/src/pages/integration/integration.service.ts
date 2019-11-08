@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy }       from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import { NxCloudApiService }           from '../../services/nx-cloud-api';
 import { NxConfigService }             from '../../services/nx-config';
 import { NxUtilsService }              from '../../services/utils.service';
@@ -20,10 +20,9 @@ export class IntegrationService implements OnDestroy {
     CONFIG: any = {};
 
     pluginsSubject = new BehaviorSubject(undefined);
-    // selectedSectionSubject = new BehaviorSubject([]);
     plugin: any = {};
-    inReview: boolean;
     haveCustomBuild: boolean;
+    private integrationSubject: Subscription;
 
     constructor(private api: NxCloudApiService,
                 private configService: NxConfigService,
@@ -31,7 +30,7 @@ export class IntegrationService implements OnDestroy {
     ) {
         this.CONFIG = this.configService.getConfig();
 
-        this.getIntegrations()
+        this.integrationSubject = this.getIntegrations()
             .subscribe(result => {
                 const plugins = result && result.data || [];
 
@@ -270,6 +269,7 @@ export class IntegrationService implements OnDestroy {
     // }
 
     ngOnDestroy() {
+        this.integrationSubject.unsubscribe();
         this.pluginsSubject.unsubscribe();
     }
 }

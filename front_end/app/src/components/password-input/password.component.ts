@@ -3,7 +3,7 @@ import {
     OnInit,
     Input,
     forwardRef,
-    ViewEncapsulation
+    ViewEncapsulation, OnDestroy
 } from '@angular/core';
 import { NxConfigService }           from '../../services/nx-config';
 import { NxCloudApiService }         from '../../services/nx-cloud-api';
@@ -14,6 +14,7 @@ import {
     Validator,
     FormControl
 }                                    from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector   : 'nx-password-input',
@@ -33,7 +34,7 @@ import {
     ],
     encapsulation: ViewEncapsulation.None
 })
-export class NxPasswordComponent implements OnInit, ControlValueAccessor, Validator {
+export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAccessor, Validator {
 
     @Input() form: any;
     @Input() componentId: string;
@@ -44,6 +45,7 @@ export class NxPasswordComponent implements OnInit, ControlValueAccessor, Valida
     passwordToggle: boolean;
 
     private value: string;
+    private passwordSubscription: Subscription;
 
     // Placeholders for the callbacks which are later provided
     // by the Control Value Accessor
@@ -108,7 +110,7 @@ export class NxPasswordComponent implements OnInit, ControlValueAccessor, Valida
 
     private loadCommonPasswords() {
         if (!this.CONFIG.commonPasswordsList) {
-            this.api.getCommonPasswords()
+            this.passwordSubscription = this.api.getCommonPasswords()
                 .subscribe(data => {
                     this.CONFIG.commonPasswordsList = data;
                 });
@@ -154,6 +156,10 @@ export class NxPasswordComponent implements OnInit, ControlValueAccessor, Valida
         // update the form
         this.onChangeCallback(this.value);
         this.form.form.get(this.componentId).markAsUntouched();
+    }
+
+    ngOnDestroy() {
+        this.passwordSubscription.unsubscribe();
     }
 
     ngOnInit() {

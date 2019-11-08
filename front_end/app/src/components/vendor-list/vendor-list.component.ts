@@ -1,12 +1,13 @@
 import {
-    Component, forwardRef, Input, OnChanges, OnInit, SimpleChanges, ViewEncapsulation
-}                                    from '@angular/core';
+    Component, forwardRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewEncapsulation
+} from '@angular/core';
 import { NxConfigService }           from '../../services/nx-config';
 import { NG_VALUE_ACCESSOR }         from '@angular/forms';
 import { ActivatedRoute }            from '@angular/router';
 import { NxUriService }              from '../../services/uri.service';
 import { NxUtilsService }            from '../../services/utils.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { Subscription } from 'rxjs';
 
 /* USAGE
  <nx-vendor-list
@@ -27,7 +28,7 @@ import { NxLanguageProviderService } from '../../services/nx-language-provider';
         multi      : true
     }]
 })
-export class NxVendorListComponent implements OnInit, OnChanges {
+export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
     @Input() vendors: any;
     @Input() cameras: any;
 
@@ -42,6 +43,7 @@ export class NxVendorListComponent implements OnInit, OnChanges {
     private filter: any = {};
     private ASC = true;
     private DESC = false;
+    private uriSubscription: Subscription;
 
     constructor(private config: NxConfigService,
                 private language: NxLanguageProviderService,
@@ -104,9 +106,12 @@ export class NxVendorListComponent implements OnInit, OnChanges {
         ];
     }
 
+    ngOnDestroy() {
+        this.uriSubscription.unsubscribe();
+    }
+
     ngOnInit() {
-        this.uri
-            .getURI()
+        this.uriSubscription = this.uri.getURI()
             .subscribe(params => {
                 if (params.debug !== undefined) {
                     this.debug = true;
