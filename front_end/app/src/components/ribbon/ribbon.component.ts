@@ -1,17 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NxRibbonService } from './ribbon.service';
+import { distinctUntilChanged, filter } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'nx-ribbon',
     templateUrl: 'ribbon.component.html',
     styleUrls: ['ribbon.component.scss'],
 })
-export class NxRibbonComponent implements OnInit {
+export class NxRibbonComponent implements OnInit, OnDestroy {
     message: string;
     action: string;
     actionUrl: string;
     showRibbon: boolean;
     type: string;
+    private ribbonSubscription: Subscription;
 
     private setupDefaults() {
         this.showRibbon = false;
@@ -23,16 +26,21 @@ export class NxRibbonComponent implements OnInit {
 
     constructor(private ribbonService: NxRibbonService) {
         this.setupDefaults();
+    }
 
-        this.ribbonService.contextSubject.subscribe(context => {
+    ngOnDestroy() {
+        this.ribbonSubscription.unsubscribe();
+    }
+
+    ngOnInit() {
+        this.ribbonSubscription = this.ribbonService.contextSubject.pipe(
+            distinctUntilChanged((contextA, contextB) => JSON.stringify(contextA) === JSON.stringify(contextB))
+        ).subscribe(context => {
             this.showRibbon = context.visibility || false;
             this.message = context.message || '';
             this.action = context.text || '';
             this.actionUrl = context.url || '';
             this.type = context.type || '';
         });
-    }
-
-    ngOnInit() {
     }
 }
