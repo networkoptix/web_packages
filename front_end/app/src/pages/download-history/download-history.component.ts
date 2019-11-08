@@ -16,6 +16,7 @@ import { NxAccountService }                                     from '../../serv
 import { NxCloudApiService }                                    from '../../services/nx-cloud-api';
 import { NxUriService }                                         from '../../services/uri.service';
 import { filter }                                               from 'rxjs/operators';
+import {Subscription} from "rxjs";
 
 @Component({
     selector   : 'download-history',
@@ -40,6 +41,7 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
     downloadsData: any;
     noteTypes: any;
     linkbase: any;
+    private routerSubscription: Subscription;
 
     @ViewChild('tabs', { static: false })
     public tabs: NgbTabset;
@@ -67,8 +69,7 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
         this.setupDefaults();
 
         if (isPlatformBrowser(this.platformId)) {
-            this.router
-                .events
+            this.routerSubscription = this.router.events
                 .pipe(
                     filter(event => event instanceof ActivationEnd)
                 )
@@ -169,6 +170,7 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
+        this.routerSubscription.unsubscribe();
         this.sub.unsubscribe();
     }
 }

@@ -40,6 +40,7 @@ export class DownloadComponent implements OnInit, OnDestroy {
     tabsVisible: boolean;
     activeTab: string;
     sortedPlatforms: any;
+    private routerSubscription: Subscription;
 
     @ViewChild('tabs', { static: false })
     public tabs: NgbTabset;
@@ -87,7 +88,7 @@ export class DownloadComponent implements OnInit, OnDestroy {
         this.setupDefaults();
 
         if (isPlatformBrowser(this.platformId)) {
-            this.router
+            this.routerSubscription = this.router
                 .events
                 .pipe(
                     filter(event => event instanceof ActivationEnd)
@@ -228,6 +229,7 @@ export class DownloadComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
+        this.routerSubscription.unsubscribe();
         this.sub.unsubscribe();
     }
 }

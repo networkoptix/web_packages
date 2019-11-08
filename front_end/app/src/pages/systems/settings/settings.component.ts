@@ -17,6 +17,7 @@ import { NxRibbonService }         from '../../../components/ribbon/ribbon.servi
 import { fromEvent } from 'rxjs/observable/fromEvent';
 import { debounceTime } from 'rxjs/operators';
 import { NxToastService }          from '../../../dialogs/toast.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'nx-system-settings-component',
@@ -55,6 +56,8 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     selectedUser: any;
 
     headerHeight: number;
+
+    private resizeSubscription: Subscription;
 
     private setupDefaults() {
         this.CONFIG = this.configService.getConfig();
@@ -200,7 +203,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         // var cancelSubscription = this.$on("unauthorized_" + $routeParams.systemId, connectionLost);
 
         // We listen to window resize and measure header height to know how much to offset the fixed menu by
-        fromEvent(window, 'resize').pipe(debounceTime(500)).subscribe((event: any) => {
+        this.resizeSubscription = fromEvent(window, 'resize').pipe(debounceTime(500)).subscribe((event: any) => {
             if (event.target.innerWidth >= 768) {
                 this.setHeaderHeight();
             }
@@ -215,6 +218,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.system.stopPoll();
         this.ribbonService.hide();
         this.pageService.setDefaultLayout();
+        this.resizeSubscription.unsubscribe();
     }
 
     getSystemInfo() {

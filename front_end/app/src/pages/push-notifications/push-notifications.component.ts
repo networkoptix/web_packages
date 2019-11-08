@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { AngularFireMessaging } from '@angular/fire/messaging';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { timer } from 'rxjs/observable/timer';
 import { NxSystemsService } from '../../services/systems.service';
 import { NxAccountService } from '../../services/account.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'push-notifications-component',
@@ -12,7 +13,7 @@ import { NxAccountService } from '../../services/account.service';
     styleUrls: ['push-notifications.component.scss']
 })
 
-export class PushComponent implements OnInit {
+export class PushComponent implements OnInit, OnDestroy {
     private notification: any;
     private systems: any;
     private devices: any;
@@ -26,6 +27,7 @@ export class PushComponent implements OnInit {
     private receivedMessages: any;
     private subChanges: boolean;
     private account: any;
+    private timeSubscription: Subscription;
     location: Location;
 
     private setupDefaults() {
@@ -58,6 +60,10 @@ export class PushComponent implements OnInit {
         this.location = location;
     }
 
+    ngOnDestroy() {
+        this.timeSubscription.unsubscribe();
+    }
+
     ngOnInit(): void {
         this.accountService.requireLogin().then(account => {
             if (!(account && account.email.endsWith('@networkoptix.com'))) {
@@ -72,7 +78,7 @@ export class PushComponent implements OnInit {
     }
 
     setSystems() {
-        timer(10000, 10000).subscribe(() => this.updateSubStates());
+        this.timeSubscription = timer(10000, 10000).subscribe(() => this.updateSubStates());
         this.systemsService.forceUpdateSystemsAsPromise().then(
             () => {
                 this.systems = this.systemsService.systems;
