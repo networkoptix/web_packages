@@ -39,8 +39,8 @@ About page is correctly displayed
 Support leads to the proper support site
     [tags]    C41544    Threaded
     Wait Until Element is Visible    ${FOOTER SUPPORT LINK}
-    Click Link    ${FOOTER SUPPORT LINK}
     Sleep    1
+    Click Link    ${FOOTER SUPPORT LINK}
     ${tabs}=   Get Window Handles
     Select Window    @{tabs}[1]
     Location Should Contain    ${SUPPORT URL}
@@ -48,9 +48,8 @@ Support leads to the proper support site
 Terms leads to the proper EULA site
     [tags]    C41545    Threaded
     Wait Until Element is Visible    ${FOOTER TERMS LINK}
-    sleep    1
-    Click Link    ${FOOTER TERMS LINK}
     Sleep    1
+    Click Link    ${FOOTER TERMS LINK}
     @{tabs}=   Get Window Handles
     Select Window    @{tabs}[1]
     Location Should Be    ${ENV}${TERMS URL}
@@ -58,8 +57,8 @@ Terms leads to the proper EULA site
 Privacy leads to the proper page
     [tags]    C41546    Threaded
     Wait Until Element is Visible    ${FOOTER PRIVACY LINK}
-    Click Link    ${FOOTER PRIVACY LINK}
     Sleep    1
+    Click Link    ${FOOTER PRIVACY LINK}
     @{tabs}=   Get Window Handles
     Select Window    @{tabs}[1]
     Location Should Be    ${PRIVACY POLICY URL FULL}
@@ -67,8 +66,8 @@ Privacy leads to the proper page
 Copyright leads to the proper site
     [tags]    C41547    Threaded
     Wait Until Element is Visible    ${FOOTER COPYRIGHT LINK}
-    Click Link    ${FOOTER COPYRIGHT LINK}
     Sleep    1
+    Click Link    ${FOOTER COPYRIGHT LINK}
     ${tabs}=   Get Window Handles
     Select Window    @{tabs}[1]
     Location Should Be    ${COPYRIGHT URL}
