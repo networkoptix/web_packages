@@ -245,9 +245,10 @@ should display same user data as user provided during registration
     Log in to Auto Tests System    ${EMAIL OWNER}
     Share To    ${random email}    ${ADMIN TEXT}
     Log Out
+    Validate Log Out
 
 #verify user was added with appropriate name
-    Log In    ${random email}    ${password}    None
+    Log In    ${random email}    ${password}
     Wait Until Elements Are Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
 #click link containing user's email
@@ -258,6 +259,7 @@ should display same user data as user provided during registration
 
 #remove new user from system
     Log Out
+    Validate Log Out
     Log in to Auto Tests System    ${EMAIL OWNER}
     Remove User Permissions    ${random email}
     Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True

@@ -189,11 +189,21 @@ if cloud_db and cloud_db['host'] != '$DB_HOST':
 if not LOCAL_ENVIRONMENT:
     CACHES = {
         "default": {
-            "BACKEND": "django.core.cache.backends.locmem.LocMemCache"
+            "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+            "TIMEOUT": None
         },
         "global": {
             "BACKEND": "django_redis.cache.RedisCache",
             "LOCATION": "redis://redis:6379/1",
+            "TIMEOUT": None,
+            "OPTIONS": {
+                "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            }
+        },
+        "integrations": {
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": "redis://redis:6379/1",
+            "TIMEOUT": None,
             "OPTIONS": {
                 "CLIENT_CLASS": "django_redis.client.DefaultClient",
             }
@@ -202,11 +212,21 @@ if not LOCAL_ENVIRONMENT:
 else:
     CACHES = {
         "default": {
-            "BACKEND": "django.core.cache.backends.locmem.LocMemCache"
+            "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+            "TIMEOUT": None
         },
         "global": {
             "BACKEND": "django_redis.cache.RedisCache",
             "LOCATION": "redis://localhost:6379/1",
+            "TIMEOUT": None,
+            "OPTIONS": {
+                "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            }
+        },
+        "integrations": {
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": "redis://localhost:6379/1",
+            "TIMEOUT": None,
             "OPTIONS": {
                 "CLIENT_CLASS": "django_redis.client.DefaultClient",
             }

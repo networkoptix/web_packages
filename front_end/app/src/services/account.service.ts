@@ -316,6 +316,7 @@ export class NxAccountService {
             if (account) {
                 const isRegister = this.router.url.includes('/register');
                 const isRestore = this.router.url.includes('/restore_password');
+                const isActivate = this.router.url.includes('/activate');
 
                 let cancelLabel = '';
                 if (isRegister) {
@@ -332,7 +333,7 @@ export class NxAccountService {
                         cancelLabel,
                     ''
                 ).then((result) => {
-                    if ((isRestore || isRegister) && result === cancelLabel) {
+                    if ((isRestore || isRegister || isActivate) && result === cancelLabel) {
                         return this.logout(true);
                     } else {
                         return this.redirectAuthorised();

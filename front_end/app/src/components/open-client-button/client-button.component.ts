@@ -58,7 +58,9 @@ export class NxClientButtonComponent implements OnInit, OnDestroy {
             errorCodes: {
                 notVisited: () => false
             }
-        }).then(() => {}, () => {
+        }).then(() => {
+            this.modalActive = false;
+        }, () => {
             // message, title, actionLabel, actionType
             if (this.modalActive || this.canceled) {
                 return;

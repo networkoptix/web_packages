@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { of, ReplaySubject } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { distinctUntilChanged, map, tap } from 'rxjs/operators';
 
 import { NxConfigService } from './nx-config';
 import { NxLanguageProviderService } from './nx-language-provider';
@@ -112,8 +112,10 @@ export class NxSystemsService implements OnDestroy {
         if (this.activeSubscription) {
             this.activeSubscription.unsubscribe();
         }
-        this.activeSubscription = this.systemsPoll.subscribe((systems) => {
-            this.processSystems(systems);
+        this.activeSubscription = this.systemsPoll.pipe(
+            tap(systems => this.processSystems(systems)),
+            distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
+        ).subscribe(() => {
             this.systemsSubject.next(this.systems);
         });
     }
