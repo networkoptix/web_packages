@@ -1,10 +1,11 @@
-import { Component, OnInit }  from '@angular/core';
+import { Component, OnDestroy, OnInit }  from '@angular/core';
 import { Location }           from '@angular/common';
 import { IntegrationService } from './integration.service';
 import { NxUriService }       from '../../services/uri.service';
 import { NxConfigService }    from '../../services/nx-config';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { Title }              from '@angular/platform-browser';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector   : 'integrations-component',
@@ -12,7 +13,7 @@ import { Title }              from '@angular/platform-browser';
     styleUrls  : ['integrations.component.scss']
 })
 
-export class NxIntegrationsComponent implements OnInit {
+export class NxIntegrationsComponent implements OnInit, OnDestroy {
     private CONFIG: any = {};
     private LANG: any = {};
 
@@ -20,6 +21,9 @@ export class NxIntegrationsComponent implements OnInit {
     private elements: any;
     private emptyFilter: any = {};
     private filterModel: any = {};
+
+    private integrationSubscription: Subscription;
+    private uriSubscription: Subscription;
     location: any;
     params: any;
 
@@ -53,6 +57,10 @@ export class NxIntegrationsComponent implements OnInit {
         this.location = location;
         this.setupDefaults();
     }
+    ngOnDestroy() {
+        this.integrationSubscription.unsubscribe();
+        this.uriSubscription.unsubscribe();
+    }
 
     ngOnInit(): void {
         this.CONFIG = this.config.getConfig();
@@ -61,14 +69,14 @@ export class NxIntegrationsComponent implements OnInit {
 
         // Example URI
         // /integrations?search=node
-        this.uri
+        this.uriSubscription = this.uri
             .getURI()
             .subscribe(params => {
                 this.params = { ...params };
                 this.filterModel.query = this.params.search || '';
             });
 
-        this.integrations
+        this.integrationSubscription = this.integrations
             .pluginsSubject
             .subscribe((result: any) => {
                 if (result) {

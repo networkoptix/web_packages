@@ -1,16 +1,17 @@
 import {
-    Component, EventEmitter, Input,
+    Component, EventEmitter, Input, OnDestroy,
     OnInit, Output, SimpleChanges
-}                          from '@angular/core';
+} from '@angular/core';
 import { NxConfigService } from '../../../../services/nx-config';
 import { NxUriService }    from '../../../../services/uri.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector   : 'nx-cam-view',
     templateUrl: './cam-view.component.html',
     styleUrls  : ['./cam-view.component.scss']
 })
-export class CamViewComponent implements OnInit {
+export class CamViewComponent implements OnInit, OnDestroy {
 
     @Input() activeCamera: any;
     @Output() public onCloseView: EventEmitter<any> = new EventEmitter<any>();
@@ -28,13 +29,19 @@ export class CamViewComponent implements OnInit {
     showAnalytics: boolean;
     showCameraAnalytics: boolean;
 
+    private uriSubscription: Subscription;
+
     constructor(private configService: NxConfigService,
                 private uri: NxUriService) {
         this.CONFIG = this.configService.getConfig();
     }
 
+    ngOnDestroy() {
+        this.uriSubscription.unsubscribe();
+    }
+
     ngOnInit() {
-        this.uri
+        this.uriSubscription = this.uri
             .getURI()
             .subscribe(params => {
                 this.params = params;

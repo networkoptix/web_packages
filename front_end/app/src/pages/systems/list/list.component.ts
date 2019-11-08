@@ -11,7 +11,7 @@ import { NxAccountService }     from '../../../services/account.service';
 import { NxUrlProtocolService } from '../../../services/url-protocol.service';
 import { NxProcessService }     from '../../../services/process.service';
 import { debounceTime }         from 'rxjs/operators';
-import { Subject }              from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 
 @Component({
     selector   : 'nx-systems-list-component',
@@ -32,6 +32,8 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
     systemSelected: any;
     userEmail: string;
     searchChanged = new Subject();
+    private searchSubscription: Subscription;
+    private systemSubscription: Subscription;
 
     private setupDefaults() {
         this.CONFIG = this.configService.getConfig();
@@ -70,7 +72,7 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
                 }
             });
 
-        this.systemsService.systemsSubject.subscribe((systems) => {
+        this.systemSubscription = this.systemsService.systemsSubject.subscribe((systems) => {
             this.systems = systems;
             if (this.systems === undefined) {
                 return;
@@ -96,7 +98,7 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
             logoutForbidden: true
         });
 
-        this.searchChanged
+        this.searchSubscription = this.searchChanged
             .pipe(debounceTime(this.CONFIG.search.debounceTime))
             .subscribe(() => {
                 this.searchSystems();
@@ -137,6 +139,8 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
+        this.searchSubscription.unsubscribe();
+        this.systemSubscription.unsubscribe();
     }
 
 }

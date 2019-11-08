@@ -39,10 +39,12 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
     systemAvailable: boolean;
     system: NxSystem;
     viewContainerRef: ViewContainerRef;
-    systemSubscription: Subscription;
 
     userEnabled = new Watcher<boolean>();
     userRole = new Watcher<string>();
+
+    private routeParamsSubscription: Subscription;
+    private systemSubscription: Subscription;
 
     private setupDefaults() {
         this.CONFIG = this.configService.getConfig();
@@ -75,7 +77,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
 
         this.settingsService.share = this.route.snapshot.routeConfig.path === 'share';
 
-        this.route
+        this.routeParamsSubscription = this.route
             .params
             .subscribe(params => {
                 if (params.userId) {
@@ -112,6 +114,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
+        this.routeParamsSubscription.unsubscribe();
         this.systemSubscription.unsubscribe();
     }
 

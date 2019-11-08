@@ -1,4 +1,4 @@
-import { Inject, Injectable }        from '@angular/core';
+import { Inject, Injectable, OnDestroy } from '@angular/core';
 import { DOCUMENT, Location }        from '@angular/common';
 import { LocalStorageService }       from 'ngx-store';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -12,13 +12,13 @@ import { NxQueryParamService }       from './query-param.service';
 import { NxApplyService }            from './apply.service';
 
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { ReplaySubject, timer }               from 'rxjs';
+import { ReplaySubject, Subscription, timer } from 'rxjs';
 import { WINDOW }                             from './window-provider';
 
 @Injectable({
     providedIn: 'root'
 })
-export class NxAccountService {
+export class NxAccountService implements OnDestroy {
     CONFIG: any;
     LANG: any;
     location: any;
@@ -27,6 +27,9 @@ export class NxAccountService {
     account: any;
     loginStateSubject = new ReplaySubject(1);
     loginDialogActive: boolean;
+
+    private loginSubscription: Subscription;
+    private queryParamSubscription: Subscription;
 
     constructor(@Inject(DOCUMENT) private document: any,
                 @Inject(WINDOW) private window: Window,
@@ -49,30 +52,36 @@ export class NxAccountService {
         this.loginDialogActive = false;
 
         // Distinct until changed is used to prevent the logout function from looping.
-        this.sessionService.loginStateSubject.pipe(distinctUntilChanged()).subscribe((loginState) => {
-            if (loginState === null) {
-                this.logout();
-            } else if (loginState !== '') {
-                this.get()
-                    .then((account) => {
-                        // prevent stale loginState
-                        if (account) {
-                            this.loginStateSubject.next(loginState);
-                        } else {
-                            this.clearLoginState();
-                        }
-                    });
-            }
-        });
+        this.loginSubscription = this.sessionService.loginStateSubject.pipe(distinctUntilChanged())
+            .subscribe((loginState) => {
+                if (loginState === null) {
+                    this.logout();
+                } else if (loginState !== '') {
+                    this.get()
+                        .then((account) => {
+                            // prevent stale loginState
+                            if (account) {
+                                this.loginStateSubject.next(loginState);
+                            } else {
+                                this.clearLoginState();
+                            }
+                        });
+                }
+            });
 
         // Handles login with auth param everywhere.
-        this.queryParamService.queryParamsSubject.pipe(
+        this.queryParamSubscription = this.queryParamService.queryParamsSubject.pipe(
             debounceTime(100), distinctUntilChanged()
         ).subscribe((params: any) => {
             if (params.auth) {
                 this.handleAuthKeyLogin(params.auth);
             }
         });
+    }
+
+    ngOnDestroy() {
+        this.loginSubscription.unsubscribe();
+        this.queryParamSubscription.unsubscribe();
     }
 
     clearLoginState() {

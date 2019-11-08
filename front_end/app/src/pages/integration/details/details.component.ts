@@ -9,7 +9,7 @@ import { MessageParams }          from '../../../dialogs/message/message.compone
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 
 import { map }              from 'rxjs/operators';
-import { combineLatest }    from 'rxjs';
+import {combineLatest, Subscription} from 'rxjs';
 import { NxMenuService }    from '../../../components/menu/menu.service';
 import { NxDialogsService } from '../../../dialogs/dialogs.service';
 import { NxAccountService } from '../../../services/account.service';
@@ -28,6 +28,10 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
     plugin: any;
     content: any = {};
     location: any;
+
+    private integrationSubscription: Subscription;
+    private menuDetailsSubscription: Subscription;
+    private routeSubscription: Subscription;
 
     private setupDefaults() {
         this.CONFIG = this.configService.getConfig();
@@ -53,14 +57,14 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.pageService.setDesktopLayout();
-        this.menuService
+        this.menuDetailsSubscription = this.menuService
             .selectedDetailsSection
             .subscribe(selection => {
                 this.content.selectedDetailsSection = selection;
                 this.content = {...this.content}; // trigger onChange
         });
 
-        combineLatest(this.route.params, this.route.queryParams)
+        this.routeSubscription = combineLatest(this.route.params, this.route.queryParams)
                 .pipe(map(results => ({ params: results[0], query: results[1] })))
                 .subscribe(results => {
 
@@ -98,7 +102,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                         };
 
                         // @ts-ignore
-                        this.integrationService.getIntegrationBy(results.params.id, results.query.state)
+                        this.integrationSubscription = this.integrationService.getIntegrationBy(results.params.id, results.query.state)
                             .subscribe(result => {
                                 if (result.length) {
                                     // @ts-ignore
@@ -129,6 +133,9 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
         this.ribbonService.hide();
         this.plugin = undefined;
         this.pageService.setDefaultLayout();
+        this.integrationSubscription.unsubscribe();
+        this.menuDetailsSubscription.unsubscribe();
+        this.routeSubscription.unsubscribe();
     }
 
     openMessageDialog() {

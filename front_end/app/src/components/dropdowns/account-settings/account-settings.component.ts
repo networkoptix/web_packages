@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Location }          from '@angular/common';
 import { NxConfigService }   from '../../../services/nx-config';
 import { NxAccountService }  from '../../../services/account.service';
 import { NxSessionService }  from '../../../services/session.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'nx-account-settings-select',
@@ -10,7 +11,7 @@ import { NxSessionService }  from '../../../services/session.service';
     styleUrls: ['account-settings.component.scss']
 })
 
-export class NxAccountSettingsDropdown implements OnInit {
+export class NxAccountSettingsDropdown implements OnInit, OnDestroy {
     config: any;
     settings = {
         email: '',
@@ -18,6 +19,7 @@ export class NxAccountSettingsDropdown implements OnInit {
         is_superuser: false
     };
     show: boolean;
+    private loginSubscription: Subscription;
 
     constructor(private accountService: NxAccountService,
                 private _config: NxConfigService,
@@ -27,9 +29,13 @@ export class NxAccountSettingsDropdown implements OnInit {
         this.show = false;
     }
 
-    ngOnInit(): void {
+    ngOnDestroy() {
+        this.loginSubscription.unsubscribe();
+    }
+
+    ngOnInit()  {
         this.getAccount();
-        this.accountService.loginStateSubject
+        this.loginSubscription = this.accountService.loginStateSubject
             .subscribe(() => {
                 this.getAccount();
             });

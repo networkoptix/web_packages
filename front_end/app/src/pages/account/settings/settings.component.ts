@@ -1,4 +1,13 @@
-import { Component, OnInit, AfterViewInit, ViewContainerRef, ViewChild, ViewChildren, QueryList } from '@angular/core';
+import {
+    Component,
+    OnInit,
+    AfterViewInit,
+    ViewContainerRef,
+    ViewChild,
+    ViewChildren,
+    QueryList,
+    OnDestroy
+} from '@angular/core';
 import { NxConfigService }           from '../../../services/nx-config';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { NxAccountService }          from '../../../services/account.service';
@@ -13,6 +22,7 @@ import { NxApplyService, Watcher }   from '../../../services/apply.service';
 import { NxPageService }             from '../../../services/page.service';
 import { NgForm }                    from '@angular/forms';
 import { first }                     from 'rxjs/operators';
+import {Subscription} from "rxjs";
 
 @Component({
     selector   : 'nx-account-settings-component',
@@ -20,7 +30,7 @@ import { first }                     from 'rxjs/operators';
     styleUrls  : ['settings.component.scss']
 })
 
-export class NxAccountSettingsComponent implements OnInit, AfterViewInit {
+export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild('applyContainer', {read: ViewContainerRef, static: true}) applyContainer;
     @ViewChildren('accountForm', {read: NgForm}) formQueryList: QueryList<NgForm>;
 
@@ -36,6 +46,8 @@ export class NxAccountSettingsComponent implements OnInit, AfterViewInit {
         lastName: new Watcher<string>(),
         langCode: new Watcher<string>(),
     };
+
+    private formSubscription: Subscription;
 
 
     private setupDefaults() {
@@ -60,7 +72,11 @@ export class NxAccountSettingsComponent implements OnInit, AfterViewInit {
         this.setupDefaults();
     }
 
-    ngOnInit(): void {
+    ngOnDestroy() {
+        this.formSubscription.unsubscribe();
+    }
+
+    ngOnInit()  {
         this.pageService.setPageTitle(this.LANG.pageTitles.account);
 
         this.save = this.processService.createProcess(() => {
@@ -111,7 +127,7 @@ export class NxAccountSettingsComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        this.formQueryList.changes.pipe(first()).subscribe((changes) => {
+        this.formSubscription = this.formQueryList.changes.pipe(first()).subscribe((changes) => {
             this.applyService.setForm(changes.first);
         });
     }

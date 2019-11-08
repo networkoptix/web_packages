@@ -1,19 +1,18 @@
 import {
-    Component, Inject, OnInit, Input,
-    ViewEncapsulation, Renderer2,
-    ChangeDetectorRef, ViewChild
-}                                                from '@angular/core';
+    Component, OnInit, Input, Renderer2, ViewChild, OnDestroy, AfterViewInit
+} from '@angular/core';
 import { Location }                              from '@angular/common';
-import { NgbModal, NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { NxConfigService }                       from '../../services/nx-config';
 import { NxLanguageProviderService }             from '../../services/nx-language-provider';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector   : 'nx-modal-embed-content',
     templateUrl: 'embed.component.html',
     styleUrls  : []
 })
-export class EmbedModalContent {
+export class EmbedModalContent implements OnInit, OnDestroy, AfterViewInit {
     @Input() systemId;
     @Input() disconnect;
     @Input() closable;
@@ -23,6 +22,7 @@ export class EmbedModalContent {
     auth: any;
     params: any;
     embedUrl: string;
+    private formChangesSubscription: Subscription;
 
     @ViewChild('embedForm', { static: true }) embedForm;
 
@@ -49,12 +49,16 @@ export class EmbedModalContent {
         this.LANG = this.language.getTranslations();
     }
 
+    ngOnDestroy() {
+        this.formChangesSubscription.unsubscribe();
+    }
+
     ngOnInit() {
         this.createEmbedUrl(this.params);
     }
 
     ngAfterViewInit() {
-        this.embedForm.form.valueChanges.subscribe((changes) => {
+        this.formChangesSubscription = this.embedForm.form.valueChanges.subscribe((changes) => {
             this.createEmbedUrl(changes);
         });
     }
