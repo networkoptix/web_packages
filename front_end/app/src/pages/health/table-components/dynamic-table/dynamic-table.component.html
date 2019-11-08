@@ -23,9 +23,9 @@
                 <tr>
                     <ng-container *ngFor="let headerGroup of headers.values">
                         <th *ngFor="let header of headerGroup.values" class="align-bottom"
-                            (click)="toggleSort(headerGroup.id, header.id)">
+                            (click)="toggleSort(headerGroup.id, header.id, true)">
                             <div class="caption d-flex align-items-end">
-                                <div class="ellipsis" [innerHTML]="header.name"></div>
+                                <div class="ellipsis" [innerHTML]="header.name.replace(':', ':<br>')"></div>
                                 <div class="sort-dir nav-arrow"
                                      [style.visibility]="(header.id == selectedHeader) ? 'visible' : 'hidden'"
                                      [ngClass]="{'up': !sortOrderASC}">
@@ -68,7 +68,7 @@
     <div class="vertical-align ml-0 clearfix">
         <nav aria-label="Cameras table navigation" class="pagination-nav pt-3 pb-3">
             <ngb-pagination
-                    [collectionSize]="elements.length"
+                    [collectionSize]="_elements.length"
                     [maxSize]="pagerMaxSize"
                     [pageSize]="pageSize"
                     [page]="currentPage"

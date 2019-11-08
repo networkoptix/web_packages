@@ -48,28 +48,32 @@ export class NxUriService {
     }
 
     updateURI(navigateTo?: string, queryParams: any = {}, replace?) {
-        const params: Params = {navigateTo, queryParams, replace};
-        this.queue.push(params);
+
+        // TODO: Temporary removing queue as it creates more issues then solves
+        // discussed with Nick how we can improve it but for know it works -- TT
+
+        // const params: Params = {navigateTo, queryParams, replace};
+        // this.queue.push(params);
 
         // Keeps checking queue until it's turn to navigate
-        const interval = setInterval(_ => {
-            if (this.queue._store[0] === params) {
+        // const interval = setInterval(_ => {
+        //     if (this.queue._store[0] === params) {
                 if (!navigateTo) {
                     navigateTo = this.getURL();
                 }
                 replace = replace ? replace : false;
                 // changes the route without moving from the current view
-                this.router.navigate([navigateTo], {
+                return this.router.navigate([navigateTo], {
                     queryParams,
                     relativeTo: this.route,
                     replaceUrl: replace,
                     queryParamsHandling: 'merge'
-                }).then(_ => {
-                    this.queue.pop();
-                    clearInterval(interval);
+                // }).then(_ => {
+                //     this.queue.pop();
+                //     clearInterval(interval);
                 });
-            }
-        });
+        //     }
+        // }, 50);
     }
 
     resetURI(navigateTo: string, queryParams: any = {}) {

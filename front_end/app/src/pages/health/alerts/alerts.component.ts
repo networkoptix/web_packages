@@ -1,10 +1,12 @@
-import { Component, OnInit }                   from '@angular/core';
+import { Component, OnDestroy, OnInit }        from '@angular/core';
 import { NxConfigService }                     from '../../../services/nx-config';
 import { NxSystem }                            from '../../../services/system.service';
 import { NxMenuService }                       from '../../../components/menu/menu.service';
 import { NxHealthService }                     from '../health.service';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
-import { Observable, of }                      from 'rxjs';
+import { Observable, of, SubscriptionLike }    from 'rxjs';
+import { NxUriService }                        from '../../../services/uri.service';
+import { ActivatedRoute }                      from '@angular/router';
 
 
 @Component({
@@ -12,12 +14,15 @@ import { Observable, of }                      from 'rxjs';
     templateUrl: 'alerts.component.html',
     styleUrls  : ['alerts.component.scss']
 })
-export class NxSystemAlertsComponent implements OnInit {
+export class NxSystemAlertsComponent implements OnInit, OnDestroy {
 
     CONFIG: any;
 
     filterModel: any;
+    params: any = {};
 
+    breakpointSubscription: SubscriptionLike;
+    healtSusbscription: SubscriptionLike;
     mobileDetailMode: boolean;
     breakpoint: string;
 
@@ -62,16 +67,21 @@ export class NxSystemAlertsComponent implements OnInit {
 
         this.alerts = this.healthService.alertsValues;
 
-        this.breakpointObserver
+        this.breakpointSubscription = this.breakpointObserver
             .observe([this.breakpoint])
             .subscribe((state: BreakpointState) => {
                 this.mobileDetailMode = (state.matches && this.activePanelEntity);
             });
     }
 
+    ngOnDestroy() {
+        this.breakpointSubscription.unsubscribe();
+        this.healtSusbscription.unsubscribe();
+    }
+
     modelChanged(model) {
-        this.healthService
-            .alertsSearch(this.healthService.alertsValues, this.filterModel)
+        this.healtSusbscription = this.healthService
+            .alertsSearch(this.healthService.alertsValues, model)
             .subscribe((alerts) => {
                 this.alerts = alerts;
             });

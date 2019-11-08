@@ -1,15 +1,16 @@
 import {
     Component, OnInit, Input,
-    forwardRef, ViewEncapsulation, KeyValueDiffers
-}                                                  from '@angular/core';
+    forwardRef, ViewEncapsulation, KeyValueDiffers, OnDestroy
+} from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { ActivatedRoute, Router }                  from '@angular/router';
-import { Location }                                from '@angular/common';
-import { Subject }                                 from 'rxjs/Subject';
-import { isArray }                                 from 'rxjs/internal-compatibility';
-import { NxConfigService }                         from '../../services/nx-config';
-import { NxUriService }                            from '../../services/uri.service';
-import { NxLanguageProviderService }               from '../../services/nx-language-provider';
+import { Location }                       from '@angular/common';
+import { Subject }                        from 'rxjs/Subject';
+import { isArray }                        from 'rxjs/internal-compatibility';
+import { NxConfigService }                from '../../services/nx-config';
+import { NxUriService }                   from '../../services/uri.service';
+import { NxLanguageProviderService }      from '../../services/nx-language-provider';
+import { Subscription, SubscriptionLike } from 'rxjs';
 
 /* Usage
  <nx-search
@@ -51,7 +52,7 @@ interface Params {
     styleUrls    : ['./search.component.scss']
 })
 
-export class NxSearchComponent implements OnInit, ControlValueAccessor {
+export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccessor {
     @Input() layout: any;
     @Input() placeholder: any;
     @Input() dataLoaded: boolean;
@@ -59,10 +60,12 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
     public numberFilters = 0;
     public filterSelected: any;
     public localFilter: any = {};
-    public bypassedParams: any = {};
 
     CONFIG: any;
     LANG: any = {};
+
+    private searchSubscription: Subscription;
+    private locationSubscription: SubscriptionLike;
 
     private params: any = {};
     private showAdvancedOptions: boolean;
@@ -82,7 +85,7 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
         this.CONFIG = this.configService.getConfig();
         this.LANG = this.language.getTranslations();
 
-        this.location.subscribe((event: PopStateEvent) => {
+        this.locationSubscription = this.location.subscribe((event: PopStateEvent) => {
             // force search component update
             setTimeout(() => this.updateFilter(this.uri.getURI()));
         });
@@ -99,24 +102,21 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
 
         // Example URI
         // /ipvd?search=Axis&tags=isAptzSupported&resolution=SVGA&vendors=Axis,30X,Sony
-        this._route
-            .queryParams
-            .subscribe(params => {
-                this.params = { ...params };
-                this.params.search = params.search || '';
-                this.params.selects = [];
-                this.params.multiselects = [];
+        this.params = this._route.snapshot.queryParams;
+        this.updateFilter(undefined, false);
 
-                this.updateFilter();
-            });
-
-        this.searchUpdated.asObservable()
+        this.searchSubscription = this.searchUpdated.asObservable()
             .debounceTime(this.CONFIG.search.debounceTime)
             .distinctUntilChanged()
             .subscribe(data => {
                 this.localFilter.query = data;
                 this.modelChanged();
             });
+    }
+
+    ngOnDestroy () {
+        this.locationSubscription.unsubscribe();
+        this.searchSubscription.unsubscribe();
     }
 
     // Placeholders for the callbacks which are later provided
@@ -135,35 +135,16 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
         this.searchUpdated.next(value);
     }
 
-    updateFilter(params?) {
+    updateFilter(params?, resetUri?) {
         if (params && params.value) {
             this.params = params.value;
         }
 
-        // queryParam changed but it's not part of search - don't update model to avoid unnecessary trips
-        const bypassParams = ['page', 'id'];
-        let hasBypassed = false;
+        this.localFilter.query = '';
 
-        bypassParams.forEach((param) => {
-            if (!this.params[param] && this.bypassedParams[param] || this.params[param] && this.params[param] !== this.bypassedParams[param]) {
-                this.bypassedParams[param] = this.params[param];
-                hasBypassed = true;
-            }
-        });
-
-        if (hasBypassed) {
-            this.updateFilter();
-            return;
+        if (this.params.search && this.params.search.length > 0) {
+            this.localFilter.query = this.params.search;
         }
-        // ------------------------------------------------------------- END
-
-        if (!this.params.id && this.localFilter.id || this.params.id && this.params.id !== this.localFilter.id) {
-            this.localFilter.id = this.params.id;
-            this.updateFilter();
-            return;
-        }
-
-        this.localFilter.query = this.params.search || '';
 
         if (this.localFilter.tags && this.localFilter.tags.length) {
             this.localFilter.tags.forEach(tag => tag.value = false);
@@ -208,8 +189,7 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
 
         this.numberOfOptionsSelected();
         // the component relaying on model change may not be ready
-        setTimeout(() => this.onChangeCallback(this.localFilter));
-
+        this.modelChanged(undefined, resetUri);
     }
 
     writeValue(value: any): void {
@@ -225,7 +205,7 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
                     (this.localFilter.tags && this.localFilter.tags.length);
 
             // Update model with query params
-            this.updateFilter();
+            this.updateFilter(undefined, false);
         }
     }
 
@@ -372,7 +352,7 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
         this.numberOfOptionsSelected();
     }
 
-    setRouteParams(forControl?): boolean {
+    setRouteParams(forControl?, resetUri?): boolean {
         const queryParams: Params = {};
 
         switch (forControl) {
@@ -415,16 +395,22 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
                     });
                 }
         }
-console.log('setRouteParams ->');
+
+        // reset pagination and sorting
+        if (resetUri !== false) {
+            queryParams.page = undefined;
+            queryParams.sortBy = undefined;
+        }
+
         this.uri.pageOffset = window.pageYOffset;
         this.uri.updateURI(this.uri.getURL(), queryParams);
         return true;
     }
 
-    modelChanged(byControl?) {
-        if (this.setRouteParams(byControl)) {
-            this.onChangeCallback(this.localFilter);
+    modelChanged(byControl?, resetUri?) {
+        if (this.setRouteParams(byControl, resetUri)) {
             this.numberOfOptionsSelected();
+            setTimeout(() => this.onChangeCallback(this.localFilter));
         }
     }
 }

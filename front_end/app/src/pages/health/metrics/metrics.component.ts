@@ -1,16 +1,15 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute }                       from '@angular/router';
 
-import { NxAccountService }          from '../../../services/account.service';
+import { NxAccountService }                    from '../../../services/account.service';
 import { NxConfigService }                     from '../../../services/nx-config';
 import { NxSystem, NxSystemService }           from '../../../services/system.service';
 import { NxMenuService }                       from '../../../components/menu/menu.service';
-import { combineLatest }                       from 'rxjs';
-import { map, concatMap }                      from 'rxjs/operators';
 import { NxHealthService }                     from '../health.service';
 import { NxUriService }                        from '../../../services/uri.service';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { NxLanguageProviderService }           from '../../../services/nx-language-provider';
+import { SubscriptionLike }                    from 'rxjs';
 
 interface Params {
     [key: string]: any;
@@ -46,8 +45,11 @@ export class NxSystemMetricsComponent implements OnInit {
     activeEntity: any;
 
     multiEntity = true;
-    objectKeys = Object.keys;
     objectValues = Object.values;
+
+    routeSubscription: SubscriptionLike;
+    breakpointSubscription: SubscriptionLike;
+    healthSubscription: SubscriptionLike;
 
     constructor(private accountService: NxAccountService,
                 private configService: NxConfigService,
@@ -72,7 +74,7 @@ export class NxSystemMetricsComponent implements OnInit {
         let idParam = this.route.snapshot.queryParamMap.get('id');
         const searchParam = this.route.snapshot.queryParamMap.get('search');
 
-        this.route
+        this.routeSubscription = this.route
             .params
             .subscribe((params: any) => {
                 this.multiEntity = true;
@@ -98,25 +100,28 @@ export class NxSystemMetricsComponent implements OnInit {
                 }
             });
 
-        this.breakpointObserver
+        this.breakpointSubscription = this.breakpointObserver
             .observe([this.breakpoint])
             .subscribe((state: BreakpointState) => {
                 this.mobileDetailMode = (state.matches && this.activeEntity);
             });
     }
 
+    ngOnDestroy() {
+        this.routeSubscription.unsubscribe();
+        this.breakpointSubscription.unsubscribe();
+        this.healthSubscription.unsubscribe();
+    }
+
     modelChanged(model) {
-        if (model.query !== this.filterModel.query) {
-            this.filterModel.query = model.query;
-            this.healthService
-                .itemsSearch(this.healthService.values[this.metricId], this.filterModel)
-                .subscribe((items) => {
-                    this.selectedValues = items;
-                    if (Object.keys(this.selectedValues).length === 1) {
-                        this.multiEntity = false;
-                    }
-                });
-        }
+        this.healthSubscription = this.healthService
+            .itemsSearch(this.healthService.values[this.metricId], model)
+            .subscribe((items) => {
+                this.selectedValues = items;
+                if (Object.keys(this.selectedValues).length === 1) {
+                    this.multiEntity = false;
+                }
+            });
     }
 
     setActiveEntity(entity) {
