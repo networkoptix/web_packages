@@ -1,6 +1,6 @@
 import {
     Component, OnInit, Input,
-    forwardRef, ViewEncapsulation, KeyValueDiffer, KeyValueDiffers
+    forwardRef, ViewEncapsulation, KeyValueDiffer, KeyValueDiffers, OnDestroy
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor }                         from '@angular/forms';
 import { ActivatedRoute, Event as NavigationEvent, NavigationEnd, Router } from '@angular/router';
@@ -11,6 +11,7 @@ import { NxUriService }                               from '../../services/uri.s
 import { filter, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Subject }                                    from 'rxjs/Subject';
 import { NxLanguageProviderService }                  from '../../services/nx-language-provider';
+import { SubscriptionLike }                           from 'rxjs';
 
 /* Usage
  <nx-search
@@ -48,7 +49,7 @@ interface Params {
     styleUrls    : ['./search.component.scss']
 })
 
-export class NxSearchComponent implements OnInit, ControlValueAccessor {
+export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccessor {
     @Input() layout: any;
     @Input() placeholder: any;
     @Input() dataLoaded: boolean;
@@ -68,6 +69,10 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
 
     private searchUpdated: any = Subject;
 
+    locationSubscription: SubscriptionLike;
+    routeSubscription: SubscriptionLike;
+    searchSubscription: SubscriptionLike;
+
     constructor(private _router: Router,
                 private _route: ActivatedRoute,
                 private location: Location,
@@ -80,7 +85,7 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
         this.LANG = this.language.getTranslations();
         this.uriPath = '/' + this._route.snapshot.url.map(e => e.path).join('/');
 
-        this.location.subscribe((event: PopStateEvent) => {
+        this.locationSubscription = this.location.subscribe((event: PopStateEvent) => {
             // force search component update
             setTimeout(() => this.updateFilter(this.uri.getURI()));
         });
@@ -97,7 +102,7 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
 
         // Example URI
         // /ipvd?search=Axis&tags=isAptzSupported&resolution=SVGA&vendors=Axis,30X,Sony
-        this._route
+        this.routeSubscription = this._route
             .queryParams
             .subscribe(params => {
                 this.params = { ...params };
@@ -106,13 +111,19 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
                 this.params.multiselects = [];
             });
 
-        this.searchUpdated.asObservable()
+        this.searchSubscription = this.searchUpdated.asObservable()
             .debounceTime(this.CONFIG.search.debounceTime)
             .distinctUntilChanged()
             .subscribe(data => {
                 this.localFilter.query = data;
                 this.modelChanged();
             });
+    }
+
+    ngOnDestroy() {
+        this.locationSubscription.unsubscribe();
+        this.routeSubscription.unsubscribe();
+        this.searchSubscription.unsubscribe();
     }
 
     // Placeholders for the callbacks which are later provided

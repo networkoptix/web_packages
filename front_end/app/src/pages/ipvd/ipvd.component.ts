@@ -16,6 +16,7 @@ import { Title }                     from '@angular/platform-browser';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxDialogsService }          from '../../dialogs/dialogs.service';
 import { NxAccountService }          from '../../services/account.service';
+import { SubscriptionLike }          from 'rxjs';
 
 interface Params {
     [key: string]: any;
@@ -60,6 +61,12 @@ export class NxIpvdComponent implements OnInit {
     breakpoint: string;
     showAnalytics: boolean;
 
+    breakpointSubscription: SubscriptionLike;
+    routerSubscription: SubscriptionLike;
+    locationSubscription: SubscriptionLike;
+    uriSubscription: SubscriptionLike;
+    cameraReloadSubscription: SubscriptionLike;
+    cameraGetSubscription: SubscriptionLike;
 
     private setupDefaults() {
         this.allowedParameters = [
@@ -116,12 +123,12 @@ export class NxIpvdComponent implements OnInit {
         this.setupDefaults();
 
         if (isPlatformBrowser(this.platformId)) {
-            this.router.events.subscribe((event: NavigationEnd) => {
+            this.routerSubscription = this.router.events.subscribe((event: NavigationEnd) => {
                 window.scroll(0, this.uri.pageOffset);
             });
         }
 
-        this.location.subscribe((event: PopStateEvent) => {
+        this.locationSubscription = this.location.subscribe((event: PopStateEvent) => {
             // force view component update without URI update
             setTimeout(() => {
                 if (!this.params.camera && this.activeCamera) {
@@ -136,7 +143,7 @@ export class NxIpvdComponent implements OnInit {
     ngOnInit() {
         // Example URI
         // /ipvd?vendors=30X&camera=IPPTZ-ELS2IRL30X-ATI
-        this.uri
+        this.uriSubscription = this.uri
             .getURI()
             .subscribe(params => {
                 this.params = params;
@@ -167,11 +174,20 @@ export class NxIpvdComponent implements OnInit {
 
         this.activate();
 
-        this.breakpointObserver
+        this.breakpointSubscription = this.breakpointObserver
             .observe([this.breakpoint])
             .subscribe((state: BreakpointState) => {
                 this.mobileDetailMode = (state.matches && this.activeCamera);
             });
+    }
+
+    ngOnDestroy() {
+        this.breakpointSubscription.unsubscribe();
+        this.routerSubscription.unsubscribe();
+        this.locationSubscription.unsubscribe();
+        this.uriSubscription.unsubscribe();
+        this.cameraReloadSubscription.unsubscribe();
+        this.cameraGetSubscription.unsubscribe();
     }
 
     resetFilterModel() {
@@ -267,13 +283,13 @@ export class NxIpvdComponent implements OnInit {
     }
 
     reset() {
-        this.cameraService
+        this.cameraReloadSubscription = this.cameraService
             .reloadIPVD()
             .subscribe();
     }
 
     activate() {
-        this.cameraService
+        this.cameraGetSubscription = this.cameraService
             .getIPVD()
             .subscribe(data => {
                 this.cameras = data.cameras;
