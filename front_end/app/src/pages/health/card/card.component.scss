@@ -1,2 +1,12 @@
 @import '../../../../styles/theme_palette';
 @import '../../../../styles/theme_variables';
+
+.card-header {
+    background-color: $additional_light1;
+    color: $dark9;
+    font-size: 14px;
+}
+
+.muted {
+    opacity: 0.5;
+}

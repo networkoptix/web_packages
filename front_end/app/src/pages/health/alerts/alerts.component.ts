@@ -176,21 +176,27 @@ export class NxSystemAlertsComponent implements OnInit, OnDestroy {
          * { resourceType: {alarmLevel: count} } => [{resourceType: name,  alarms : [{alarmLevel: count}]}]
          * Note: alarm levels are sorted alphabetically
          */
-        this.alertCards = Object.entries(this.healthService.alertsValues.reduce((obj, item) => {
-            if (!(item.metric in obj)) {
-                obj[item.metric] = {};
-            }
-            if (!(item._.alarm.icon in obj[item.metric])) {
-                obj[item.metric][item._.alarm.icon] = 0;
-            }
-            obj[item.metric][item._.alarm.icon] += 1;
+        const alarmTypes = Object.values(this.healthService.manifest).filter((resource: any) => {
+            return resource.name !== 'Systems';
+        }).reduce((obj: any, item: any) => {
+            obj[item.id] = {
+                alarms: {
+                    error: 0,
+                    warning: 0,
+                },
+                name: item.name
+            };
             return obj;
-        }, {})).map(([resource, alerts]) => {
+        }, {});
+        this.healthService.alertsValues.forEach((item) => {
+            alarmTypes[item.metric].alarms[item._.alarm.icon] += 1;
+        });
+        this.alertCards = Object.values(alarmTypes).map((alarmType: any) => {
             return {
-                alerts: Object.entries(alerts).map(([level, count]) => {
+                alerts: Object.entries(alarmType.alarms).map(([level, count]) => {
                     return { level, count };
                 }).sort((a: any, b: any) => a.level < b.level ? -1 : 1),
-                resource
+                name: alarmType.name
             };
         });
     }
