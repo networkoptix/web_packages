@@ -1,17 +1,7 @@
-import { Inject, Injectable, PLATFORM_ID }       from '@angular/core';
-import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
-import { Observable }                            from 'rxjs';
-import { isPlatformBrowser, Location }           from '@angular/common';
-
-class Queue<T> {
-  _store: T[] = [];
-  push(val: T) {
-    this._store.push(val);
-  }
-  pop(): T | undefined {
-    return this._store.shift();
-  }
-}
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { ActivatedRoute, Router }          from '@angular/router';
+import { Observable }                      from 'rxjs';
+import { Location }                        from '@angular/common';
 
 interface Params {
     [key: string]: any;
@@ -21,8 +11,6 @@ interface Params {
     providedIn: 'root'
 })
 export class NxUriService {
-    queue: Queue<Params> = new Queue<Params>();
-
     private _pageOffset: number;
 
     constructor(private router: Router,
@@ -48,32 +36,17 @@ export class NxUriService {
     }
 
     updateURI(navigateTo?: string, queryParams: any = {}, replace?) {
-
-        // TODO: Temporary removing queue as it creates more issues then solves
-        // discussed with Nick how we can improve it but for know it works -- TT
-
-        // const params: Params = {navigateTo, queryParams, replace};
-        // this.queue.push(params);
-
-        // Keeps checking queue until it's turn to navigate
-        // const interval = setInterval(_ => {
-        //     if (this.queue._store[0] === params) {
-                if (!navigateTo) {
-                    navigateTo = this.getURL();
-                }
-                replace = replace ? replace : false;
-                // changes the route without moving from the current view
-                return this.router.navigate([navigateTo], {
-                    queryParams,
-                    relativeTo: this.route,
-                    replaceUrl: replace,
-                    queryParamsHandling: 'merge'
-                // }).then(_ => {
-                //     this.queue.pop();
-                //     clearInterval(interval);
-                });
-        //     }
-        // }, 50);
+        if (!navigateTo) {
+            navigateTo = this.getURL();
+        }
+        replace = replace ? replace : false;
+        // changes the route without moving from the current view
+        return this.router.navigate([navigateTo], {
+            queryParams,
+            relativeTo: this.route,
+            replaceUrl: replace,
+            queryParamsHandling: 'merge'
+        });
     }
 
     resetURI(navigateTo: string, queryParams: any = {}) {

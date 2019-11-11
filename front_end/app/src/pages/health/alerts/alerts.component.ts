@@ -7,6 +7,7 @@ import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { Observable, of, SubscriptionLike }    from 'rxjs';
 import { NxUriService }                        from '../../../services/uri.service';
 import { ActivatedRoute }                      from '@angular/router';
+import deepEqual = require('deep-equal');
 
 
 @Component({
@@ -18,11 +19,11 @@ export class NxSystemAlertsComponent implements OnInit, OnDestroy {
 
     CONFIG: any;
 
+    localfilter: any = {};
     filterModel: any;
     params: any = {};
 
     breakpointSubscription: SubscriptionLike;
-    healtSusbscription: SubscriptionLike;
     mobileDetailMode: boolean;
     breakpoint: string;
 
@@ -76,15 +77,11 @@ export class NxSystemAlertsComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.breakpointSubscription.unsubscribe();
-        this.healtSusbscription.unsubscribe();
     }
 
     modelChanged(model) {
-        this.healtSusbscription = this.healthService
-            .alertsSearch(this.healthService.alertsValues, model)
-            .subscribe((alerts) => {
-                this.alerts = alerts;
-            });
+        this.alerts = this.healthService
+                          .alertsSearch(this.healthService.alertsValues, model);
     }
 
     resetFilterModel() {

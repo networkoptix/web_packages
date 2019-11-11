@@ -49,7 +49,6 @@ export class NxSystemMetricsComponent implements OnInit {
 
     routeSubscription: SubscriptionLike;
     breakpointSubscription: SubscriptionLike;
-    healthSubscription: SubscriptionLike;
 
     constructor(private accountService: NxAccountService,
                 private configService: NxConfigService,
@@ -110,18 +109,16 @@ export class NxSystemMetricsComponent implements OnInit {
     ngOnDestroy() {
         this.routeSubscription.unsubscribe();
         this.breakpointSubscription.unsubscribe();
-        this.healthSubscription.unsubscribe();
     }
 
     modelChanged(model) {
-        this.healthSubscription = this.healthService
-            .itemsSearch(this.healthService.values[this.metricId], model)
-            .subscribe((items) => {
-                this.selectedValues = items;
-                if (Object.keys(this.selectedValues).length === 1) {
-                    this.multiEntity = false;
-                }
-            });
+        this.selectedValues = this.healthService
+                                  .itemsSearch(this.healthService.values[this.metricId], model);
+
+        if (Object.keys(this.selectedValues).length === 1) {
+            this.multiEntity = false;
+        }
+
     }
 
     setActiveEntity(entity) {

@@ -26,7 +26,7 @@
             </thead>
             <tbody>
                 <tr class="table-row-spacer"></tr>
-                <tr *ngFor="let item of pagedItems;"
+                <tr *ngFor="let item of pagedItems; trackBy: trackPagedItem"
                     [ngClass]="{'selected': item.sortKey == selectedCamera}"
                     (click)="setClickedRow(item);">
 

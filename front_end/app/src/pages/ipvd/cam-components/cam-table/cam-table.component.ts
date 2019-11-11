@@ -110,6 +110,13 @@ export class CamTableComponent implements OnChanges, OnInit {
         this.pageSize = this.CONFIG.layout.tableLarge.rows;
     }
 
+    trackPagedItem(index, item) {
+        if (!item) {
+            return undefined;
+        }
+        return item.sortKey;
+    }
+
     private setDebugAndBetaMode () {
         this.debug = (this.params.debug !== undefined);
         this.beta = (this.params.beta !== undefined);

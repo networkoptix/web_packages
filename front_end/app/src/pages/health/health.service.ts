@@ -89,7 +89,7 @@ export class NxHealthService {
         return {text: retValue, format: header.format || ''};
     }
 
-    itemsSearch(values, filter): Observable<any> {
+    itemsSearch(values, filter) {
         let items: any = {};
 
         function filterItem(c, queryTerm) {
@@ -118,25 +118,25 @@ export class NxHealthService {
             });
         }
 
-        return of(items);
+        return items;
     }
 
-    alertsSearch(values, filter): Observable<any> {
+    alertsSearch(values, filter) {
         let alarms;
         let types;
         let servers;
 
-        const typeAlert = filter.selects.find(x => x.id === NxHealthService.ALERTS);
+        const typeAlert = filter.selects && filter.selects.find(x => x.id === NxHealthService.ALERTS);
         if (typeAlert !== undefined) {
             alarms = typeAlert.selected;
         }
 
-        const typeTypes = filter.selects.find(x => x.id === NxHealthService.TYPES);
+        const typeTypes = filter.selects && filter.selects.find(x => x.id === NxHealthService.TYPES);
         if (typeTypes !== undefined) {
             types = typeTypes.selected;
         }
 
-        const typeServers = filter.selects.find(x => x.id === NxHealthService.SERVERS);
+        const typeServers = filter.selects && filter.selects.find(x => x.id === NxHealthService.SERVERS);
         if (typeServers !== undefined) {
             servers = typeServers.selected;
         }
@@ -157,6 +157,6 @@ export class NxHealthService {
             return true;
         });
 
-        return of(alerts);
+        return alerts;
     }
 }
