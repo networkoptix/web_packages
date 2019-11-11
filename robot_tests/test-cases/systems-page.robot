@@ -85,7 +85,6 @@ should show system name in header dropdown with "Open in Nx Witness" button if u
     Delete All Emails
     Close Mailbox
     Log Out
-    Validate Log Out
     Log In    ${EMAIL NOPERM}    ${password}
     Validate Log In
     Wait Until Element Is Visible    ${SYSTEMS DROPDOWN}
@@ -93,7 +92,6 @@ should show system name in header dropdown with "Open in Nx Witness" button if u
     Wait Until Element Is Visible    ${OPEN IN NX BUTTON}
     Click Button    ${OPEN IN NX BUTTON}
     Log Out
-    Validate Log Out
     Log In    ${EMAIL OWNER}    ${password}
     Validate Log In
     Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
@@ -187,12 +185,10 @@ should show the system page instead of all systems when user only has one
     Delete All Emails
     Close Mailbox
     Log Out
-    Validate Log Out
     Log In    ${EMAIL NOPERM}    ${password}
     Validate Log In
     Wait Until Element Is Visible    ${SYSTEM NAME}
     Log Out
-    Validate Log Out
     Log In    ${EMAIL OWNER}    ${password}
     Validate Log In
     Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
@@ -281,7 +277,6 @@ Search should only be visible with 9 or more systems
     Delete All Emails
     Close Mailbox
     Log Out
-    Validate Log Out
 
     Log In    ${EMAIL VIEWER}    ${password}
     Validate Log In
@@ -291,7 +286,6 @@ Search should only be visible with 9 or more systems
     Click Link    ${ALL SYSTEMS}
     Wait Until Elements Are Visible    ${SYSTEMS SEARCH INPUT}    ${AUTO TESTS TITLE}    ${AUTO TESTS USER}    ${AUTO TESTS OPEN NX}
     Log Out
-    Validate Log Out
 
     Log In    ${EMAIL OWNER}    ${password}
     Validate Log In
@@ -301,7 +295,6 @@ Search should only be visible with 9 or more systems
     Wait Until Elements Are Visible    ${REMOVE USER BUTTON}    ${SHARE BUTTON SYSTEMS}
     Remove User Permissions    ${EMAIL VIEWER}
     Log Out
-    Validate Log Out
 
     Log In    ${EMAIL VIEWER}    ${password}
     Validate Log In
@@ -311,7 +304,6 @@ Search should only be visible with 9 or more systems
     Click Link    ${ALL SYSTEMS}
     Elements Should Not Be Visible    ${SYSTEMS SEARCH INPUT}
     Log Out
-    Validate Log Out
 
     Log In    ${EMAIL OWNER}    ${password}
     Validate Log In
@@ -325,7 +317,6 @@ Search should only be visible with 9 or more systems
     Delete All Emails
     Close Mailbox
     Log Out
-    Validate Log Out
 
     Log In    ${EMAIL VIEWER}    ${password}
     Validate Log In
@@ -335,7 +326,6 @@ Search should only be visible with 9 or more systems
     Click Link    ${ALL SYSTEMS}
     Wait Until Element Is Visible    ${SYSTEMS SEARCH INPUT}
     Log Out
-    Validate Log Out
 
 should update owner name in systems list, if it's changed
     [tags]
@@ -354,7 +344,6 @@ should update owner name in systems list, if it's changed
     Click Button    ${ACCOUNT SAVE}
     Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
     Log Out
-    Validate Log Out
     Log In    ${EMAIL ADMIN}    ${password}
     Validate Log In
     Go To    ${url}/systems
