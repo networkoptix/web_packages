@@ -413,7 +413,6 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
     }
 
     modelChanged(resetUri?) {
-        debugger;
         this.setRouteParams(resetUri);
             // .then(() => {
                 this.numberOfOptionsSelected();

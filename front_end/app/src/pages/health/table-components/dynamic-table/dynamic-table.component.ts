@@ -102,7 +102,6 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
         this.uriSubscription = this.uri
             .getURI()
             .subscribe(params => {
-debugger;
                 if (this.params.sortBy !== params.sortBy) {
                     if (params.sortBy) {
                         this.sortBy(params.sortBy);
