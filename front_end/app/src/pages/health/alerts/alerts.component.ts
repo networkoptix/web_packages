@@ -191,7 +191,9 @@ export class NxSystemAlertsComponent implements OnInit, OnDestroy {
         this.alertCards = Object.values(alarmTypes).map((alarmType: any) => {
             return {
                 alerts: Object.entries(alarmType.alarms).map(([level, count]) => {
-                    return { level, count };
+                    // If level is error and type is server convert to offline. Otherwise append an s to level.
+                    const name = level === 'error' && alarmType.name === 'Servers' ? 'Offline' : `${level}s`;
+                    return { count, level, name };
                 }).sort((a: any, b: any) => a.level < b.level ? -1 : 1),
                 name: alarmType.name
             };
