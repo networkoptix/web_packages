@@ -340,7 +340,7 @@ export class NxConfigService {
                     'Mbps': {display: 'Mbit/s', multiplier: 1 / 1000 ** 2, decimals: 2},
                     'kbps': {display: 'kbit/s', multiplier: 1 / 1000, decimals: 2},
                     'bps': {display: 'bit/s', multiplier: 1, decimals: 0},
-                    'MPix/s': {multiplier: 1, decimals: 0},
+                    'MPix/s': {multiplier: 1 / 1000 ** 2, decimals: 0},
                     'Transactions/s': {multiplier: 1, decimals: 1},
                 }
             },
