@@ -152,7 +152,7 @@ should not allow to use one restore link twice
     Wait Until Elements Are Visible    ${RESET PASSWORD INPUT}    ${SAVE PASSWORD}
     Input Text    ${RESET PASSWORD INPUT}    ${ALT PASSWORD}
     Click Button    ${SAVE PASSWORD}
-    Check For Alert Dismissable    ${CANNOT SAVE PASSWORD} ${CODE USED/INCORRECT}
+    Check For Alert Dismissable    ${CANNOT SAVE PASSWORD}${SPACE}${SPACE}${CODE USED/INCORRECT}
 
 should make not-activated user active by restoring password
     [tags]    email    C41871    Threaded

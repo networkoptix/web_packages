@@ -213,11 +213,12 @@ Should show your system for owner and owner name for non-owners
     :FOR    ${user}    IN    @{EMAILS LIST}
     \  Run Keyword Unless    "${user}"=="${EMAIL OWNER}"    Check Systems Text    ${user}
 
-Should not show systems dropdown with no systems
-    [tags]    C41568    Threaded
-    Log In    ${EMAIL NOPERM}    ${password}
-    Validate Log In
-    Element Should Not Be Visible    ${SYSTEMS DROPDOWN}
+# should be removed and updated for what the dropdown should show with other systems
+# Should not show systems dropdown with no systems
+#     [tags]    C41568    Threaded
+#     Log In    ${EMAIL NOPERM}    ${password}
+#     Validate Log In
+    # Element Should Not Be Visible    ${SYSTEMS DROPDOWN}
 
 Search should highlight system name
     [tags]    C41891    Threaded

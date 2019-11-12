@@ -296,6 +296,7 @@ Select user in Users List
     Wait Until Elements Are Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
     ${User In List}=   Set Variable    //nx-system-settings-component//nx-menu//nx-level-3-item//span[text()='${user email address}']/../../../a
+    Wait Until Element Is Visible    ${User In List}
     Click Link    ${User In List}
     Wait Until Elements Are Visible    ${USER EMAIL}
     Element Text Should Be    ${USER EMAIL}    ${user email address}
