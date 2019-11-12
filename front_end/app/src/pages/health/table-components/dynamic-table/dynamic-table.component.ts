@@ -184,14 +184,19 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
             this.uri.updateURI(undefined, queryParams);
         }
 
-        const sortParam = (elm) => {
-            try {
-                return elm[groupId][paramId].text;
-            } catch (e) {
+        function sortFunc() {
+            if (paramId === 'alarm') {
+                return (elm) => {
+                    return elm[groupId][paramId].icon || '';
+                };
+            } else {
+                return (elm) => {
+                    return elm[groupId][paramId].text || '';
+                };
             }
-        };
+        }
 
-        this._elements.sort(NxUtilsService.byParam(sortParam, this.sortOrderASC));
+        this._elements.sort(NxUtilsService.byParam(sortFunc(), this.sortOrderASC));
         this.sortOrderASC = !this.sortOrderASC;
 
         if (updateURI || updateURI === undefined) {
