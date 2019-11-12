@@ -23,6 +23,7 @@ import { NxImageSectionComponent }      from './table-components/image-section/i
 import { NgxFileDropModule }            from 'ngx-file-drop';
 import { FormsModule }                  from '@angular/forms';
 import { NxSystemAlertCardComponent } from './card/card.component';
+import {PipesModule} from "../../pipes/pipes.module";
 
 
 const appRoutes: Routes = [
@@ -55,6 +56,7 @@ const appRoutes: Routes = [
         ComponentsModule,
         AngularSvgIconModule,
         NgxFileDropModule,
+        PipesModule,
 
         RouterModule.forChild(appRoutes)
     ],

@@ -1,25 +1,19 @@
-<div class="hm-camera-section">
-    <nx-pre-loader *ngIf="!liveLoaded || !midnightLoaded || !noonLoaded" class="w-100"></nx-pre-loader>
-    <div [ngClass]="{ 'd-none': !liveLoaded || !midnightLoaded || !noonLoaded}">
+<div *ngIf="thumbnails.length" class="hm-camera-section">
+    <nx-pre-loader *ngIf="!ready" class="w-100"></nx-pre-loader>
+    <div [ngClass]="{ 'd-none': !ready }">
         <div class="mr-3 mb-2">
-            <nx-health-image (loaded)="liveLoaded = $event"
-                             [state]="cameraState"
-                             [time]="'now'"
+            <nx-health-image (loaded)="thumbnails[0].loaded = $event; showPreloader();"
+                             [state]="state"
+                             [time]="thumbnails[0].time | NxHealthDate: 'MM/dd/yyyy, HH:mm'"
                              [isPrimary]="true"
-                             [url]="livePreview"></nx-health-image>
+                             [url]="thumbnails[0].url"></nx-health-image>
         </div>
-        <div class="d-flex flex-wrap">
-            <div class="mr-3">
-                <nx-health-image (loaded)="midnightLoaded = $event"
-                                 [state]="cameraState"
-                                 [time]="midnightTime | date: 'MM/dd/yyyy, HH:mm'"
-                                 [url]="midnightPreview"></nx-health-image>
-            </div>
-            <div>
-                <nx-health-image (loaded)="noonLoaded = $event"
-                                 [state]="cameraState"
-                                 [time]="noonTime | date: 'MM/dd/yyyy, HH:mm'"
-                                 [url]="noonPreview"></nx-health-image>
+        <div *ngIf="thumbnails.length > 1" class="d-flex flex-wrap">
+            <div *ngFor="let thumbnail of thumbnails.slice(1)" class="mr-3">
+                <nx-health-image (loaded)="thumbnail.loaded = $event; showPreloader();"
+                                 [state]="state"
+                                 [time]="thumbnail.time | NxHealthDate: 'MM/dd/yyyy, HH:mm'"
+                                 [url]="thumbnail.url"></nx-health-image>
             </div>
         </div>
     </div>

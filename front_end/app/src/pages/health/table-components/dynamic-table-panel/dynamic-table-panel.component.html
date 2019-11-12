@@ -9,9 +9,7 @@
             </span>
         </header>
         <ng-container *ngIf="panelParams.id === 'cameras'">
-            <nx-image-section [cameraId]="activeEntity.id"
-                              [cameraState]="activeEntity.availability.status.text"
-            ></nx-image-section>
+            <nx-image-section [cameraInfo]="activeEntity"></nx-image-section>
         </ng-container>
         <ng-container *ngFor="let paramGroup of panelParams.values">
             <nx-section *ngIf="paramGroup.id !== '_'">
