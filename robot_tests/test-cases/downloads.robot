@@ -26,7 +26,7 @@ Open New Browser On Failure
     Open Browser and go to URL    ${url}
 
 Go to download page
-    Wait Until Elements Are Visible    ${DOWNLOAD LINK}    //h2[@class="text-center"]
+    Wait Until Elements Are Visible    ${DOWNLOAD LINK}    //h2[@class\="text-center"]
     Click Link    ${DOWNLOAD LINK}
     Wait Until Element Is Visible    ${LOG IN CLOSE BUTTON}
     Log In    ${email}    ${password}    button=None
