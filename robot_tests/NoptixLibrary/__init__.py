@@ -361,7 +361,7 @@ class NoptixLibrary(object):
         client = docker.from_env()
         return client.images.build(path="/home/kyle/develop/nx_vms/cloud_portal/robot_tests/Docker",
                             tag="mediaserver",
-                            buildargs={"mediaserver_deb":"nxwitness-server-4.0.0.28541-linux64-beta-test.deb"})
+                            buildargs={"mediaserver_deb":"nxwitness-server-4.0.0.29698-linux64-beta-test.deb"})
 
     def run_container(self, image, port, network):
         tmp = {'/run':'', '/run/lock':''}
