@@ -666,14 +666,4 @@ Merge with different types of users
     FOR    ${key}    IN    @{all users dict.keys()}
         Check User Permissions    ${all users dict["${key}"]}    ${key}    timeout=10
     END
-    ${user row}=    Set Variable
-    ...    //nx-menu//a[@class='menu-level-3']//span[@class='user' and text()='${email admin no reg}]
-    ${delete user button}=    Set Variable
-    ...    /following-sibling::td/a[@ng-click='unshare(user)']/span[contains(text(),'${REMOVE BUTTON TEXT}')]
-    ${edit user button}=    Set Variable
-    ...    /following-sibling::td/a[@ng-click='editShare(user)']/span[contains(text(),'${EDIT USER BUTTON TEXT}')]/..
-    Mouse Over    ${user row}
-    Wait Until Elements are Visible
-    ...    ${user row}${delete user button}
-    ...    ${user row}${edit user button}
     Disconnect from cloud
