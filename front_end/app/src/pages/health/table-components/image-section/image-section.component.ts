@@ -35,23 +35,6 @@ export class NxImageSectionComponent implements OnInit {
         this.updateThumbnails();
     }
 
-    thumbnailError(preview) {
-        switch (preview) {
-            case 'midnight':
-                this.midnightLoaded = true;
-                this.midnightPreview = '';
-                break;
-            case 'noon':
-                this.noonLoaded = true;
-                this.noonPreview = '';
-                break;
-            case 'now':
-                this.liveLoaded = true;
-                this.livePreview = '';
-                break;
-        }
-    }
-
     updateThumbnails() {
         if (typeof this.cameraId === 'undefined') {
             return;

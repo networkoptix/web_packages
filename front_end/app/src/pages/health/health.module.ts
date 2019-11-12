@@ -18,6 +18,7 @@ import { NxDynamicTableComponent }      from './table-components/dynamic-table/d
 import { NxDynamicTablePanelComponent } from './table-components/dynamic-table-panel/dynamic-table-panel.component';
 import { NxSingleEntityComponent }      from './table-components/single-entity/single-entity.component';
 import { AngularSvgIconModule }         from 'angular-svg-icon';
+import { NxImageComponent }             from './table-components/image/image.component';
 import { NxImageSectionComponent }      from './table-components/image-section/image-section.component';
 import { NgxFileDropModule }            from 'ngx-file-drop';
 import { FormsModule }                  from '@angular/forms';
@@ -65,6 +66,7 @@ const appRoutes: Routes = [
         NxDynamicTableComponent,
         NxDynamicTablePanelComponent,
         NxSingleEntityComponent,
+        NxImageComponent,
         NxImageSectionComponent,
         NxSystemAlertCardComponent
     ],
@@ -73,7 +75,8 @@ const appRoutes: Routes = [
         NxHealthComponent,
         NxSystemAlertsComponent,
         NxSystemMetricsComponent,
-        NxImageSectionComponent
+        NxImageSectionComponent,
+        NxImageComponent
     ],
     exports: [
         NxHealthComponent,
