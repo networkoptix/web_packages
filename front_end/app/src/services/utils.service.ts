@@ -94,14 +94,17 @@ export class NxUtilsService {
             time += `${hours}h `;
         }
 
-        const min = Math.floor(seconds / 60);
-        seconds  -= min * 60;
-        if (hours) {
-            time += `${min}m `;
+        const minutes = Math.floor(seconds / 60);
+        seconds  -= minutes * 60;
+        if (minutes) {
+            time += `${minutes}m `;
         }
 
-        seconds = seconds.toFixed(0);
-        time += `${seconds}s`;
+        if (seconds) {
+            time += `${seconds.toFixed(0)}s`;
+        } else {
+            time = time.trim();
+        }
 
         return time;
     }
