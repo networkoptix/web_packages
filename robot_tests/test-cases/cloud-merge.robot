@@ -659,7 +659,7 @@ Merge with different types of users
     Validate system available    API made system 1
     FOR     ${idx}    IN RANGE    90
         ${result}    Run Keyword And Ignore Error    Wait Until Element Is Visible
-        ...    //nx-menu//a[@class='menu-level-3']//span[@class= 'user' and text()='${email admin no reg}']
+        ...    //nx-menu//a[@class='menu-level-3']//span[@class='user' and text()='${email admin no reg}']
         Run Keyword Unless    '${result[0]}'=='PASS'    Reload Page
         Exit For Loop If    '${result[0]}'=='PASS'
     END
@@ -667,7 +667,7 @@ Merge with different types of users
         Check User Permissions    ${all users dict["${key}"]}    ${key}    timeout=10
     END
     ${user row}=    Set Variable
-    ...    //nx-menu//a[@class='menu-level-3']//span[@class= 'user' and text()='${email admin no reg}]
+    ...    //nx-menu//a[@class='menu-level-3']//span[@class='user' and text()='${email admin no reg}]
     ${delete user button}=    Set Variable
     ...    /following-sibling::td/a[@ng-click='unshare(user)']/span[contains(text(),'${REMOVE BUTTON TEXT}')]
     ${edit user button}=    Set Variable
