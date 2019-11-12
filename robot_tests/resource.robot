@@ -147,7 +147,7 @@ Validate Register Email Received
     ${email}    Wait For Email    recipient=${recipient}    timeout=120    status=UNSEEN
     Check Email Subject    ${email}    ${ACTIVATE YOUR ACCOUNT EMAIL SUBJECT}    ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}
     Should Not Be Equal    ${email}    ${EMPTY}
-    Delete All Emails
+    Delete Email    ${email}
     Close Mailbox
 
 Get Email Link
@@ -161,7 +161,7 @@ Get Email Link
     Run Keyword If    "${link type}"=="register"    Check Email Subject    ${email}    ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}
     ${links}    Get NX Links From Email    ${email}    ${link type}
     log    ${links}
-    Delete All Emails
+    Delete Email    ${email}
     Close Mailbox
     Return From Keyword    ${links}
 
