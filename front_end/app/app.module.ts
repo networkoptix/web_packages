@@ -28,6 +28,7 @@ import { LayoutModule }      from '@angular/cdk/layout';
 import { WINDOWS_PROVIDERS } from './src/services/window-provider';
 import { initializeApp }     from './src/pages/push-notifications/push-notifications.module';
 import { AuthGuard }         from './src/routeGuards/authGuard';
+import { HMGuard }          from './src/routeGuards/hmGuard';
 
 
 // AoT requires an exported function for factories
@@ -97,6 +98,7 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
             useFactory: initializeApp
         },
         AuthGuard,
+        HMGuard,
     ],
     declarations   : [
         AppComponent,

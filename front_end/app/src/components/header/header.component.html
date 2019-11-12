@@ -43,7 +43,8 @@
                     <li [ngClass]="{ 'active' :active.settings}">
                         <a class="inset" href="/systems/{{activeSystem.id}}" translate>Settings</a>
                     </li>
-                    <li [ngClass]="{ 'active' :active.information}">
+                    <li [ngClass]="{ 'active' :active.information}"
+                        *ngIf="canSeeInfo">
                         <a class="inset" href="/systems/{{activeSystem.id}}/health" translate>Information</a>
                     </li>
                 </ul>

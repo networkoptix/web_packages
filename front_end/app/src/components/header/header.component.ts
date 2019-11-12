@@ -8,14 +8,16 @@ import {
 }                              from '@angular/router';
 import { NxConfigService }        from '../../services/nx-config';
 import { NxAppStateService }      from '../../services/nx-app-state.service';
-import { NxAccountService }       from '../../services/account.service';
-import { NxDialogsService }       from '../../dialogs/dialogs.service';
-import { NxSessionService }       from '../../services/session.service';
-import { NxSystemsService }       from '../../services/systems.service';
-import { WINDOW }                 from '../../services/window-provider';
-import { LocalStorageService }    from 'ngx-store';
-import { Subscription, timer } from 'rxjs';
-import { NxHeaderService }        from '../../services/nx-header.service';
+import { NxAccountService }    from '../../services/account.service';
+import { NxDialogsService }          from '../../dialogs/dialogs.service';
+import { NxSessionService }          from '../../services/session.service';
+import { NxSystemsService }          from '../../services/systems.service';
+import { WINDOW }                    from '../../services/window-provider';
+import { LocalStorageService }       from 'ngx-store';
+import { Subscription, timer }       from 'rxjs';
+import { NxHeaderService }           from '../../services/nx-header.service';
+import { NxSystemService }           from '../../services/system.service';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
 
 @Component({
     selector: 'nx-header',
@@ -25,7 +27,11 @@ import { NxHeaderService }        from '../../services/nx-header.service';
 export class NxHeaderComponent implements OnInit, OnDestroy {
 
     CONFIG: any = {};
+    LANG: any = {};
 
+    user: any = {};
+    canSeeInfo: boolean;
+    system: any = {};
     systems: any;
     systemId: any;
     active: any = {};
@@ -52,7 +58,9 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                 private appState: NxAppStateService,
                 private route: ActivatedRoute,
                 private systemsService: NxSystemsService,
+                private systemService: NxSystemService,
                 private dialogs: NxDialogsService,
+                private languageService: NxLanguageProviderService,
                 private accountService: NxAccountService,
                 private sessionService: NxSessionService,
                 private localStorage: LocalStorageService,
@@ -60,6 +68,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                 private headerService: NxHeaderService,
     ) {
         this.CONFIG = this._config.getConfig();
+        this.LANG = this.languageService.getTranslations();
     }
 
     private isActive(val) {
@@ -242,8 +251,26 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
             return;
         }
 
-        this.activeSystem = this.systems.find((system) => {
-            return this.systemId === system.id;
-        });
+        if (this.systemId) {
+            this.activeSystem = this.systems.find((system) => {
+                return this.systemId === system.id;
+            });
+
+            this.accountService
+                .get()
+                .then(account => {
+                    if (account) {
+                        this.user = account;
+
+                        this.system = this.systemService.createSystem(this.activeSystem.id, this.user.email);
+                        this.system
+                            .getInfoAndPermissions()
+                            .then((system) => {
+                                this.canSeeInfo = (['cloudadmin', 'owner', 'administrator'].includes(system.accessRole.toLowerCase()));
+                            });
+
+                    }
+                });
+        }
     }
 }
