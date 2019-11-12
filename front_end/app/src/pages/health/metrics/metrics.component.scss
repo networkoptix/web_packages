@@ -1,3 +1,6 @@
+@import '../../../../styles/theme_palette';
+@import '../../../../styles/theme_variables';
+
 nx-system-metrics-component {
     .nx-table-wrapper .nx-table thead th {
         &:nth-child(n+2) > .caption .ellipsis {
@@ -5,5 +8,11 @@ nx-system-metrics-component {
             white-space : unset;
             line-height : 16px;
         }
+    }
+    .text-placeholder {
+        color       : $light16;
+        font-family : $font-family-regular;
+        font-size   : rem(20px);
+        height      : 2rem;
     }
 }

@@ -13,19 +13,21 @@
 
     <div *ngIf="selectedData && selectedValues && !mobileDetailMode"
          [ngClass]="{'col-12': !activeEntity, 'col-md-7 col-xl-8' : activeEntity}">
-        <nx-dynamic-table
-                *ngIf="multiEntity"
-                [headers]="selectedData"
-                [elements]="selectedValues"
-                (onRowClick)="setActiveEntity($event)"
-                [activeEntity]="activeEntity">
-        </nx-dynamic-table>
-
-        <nx-single-entity
-                *ngIf="!multiEntity"
-                [params]="selectedPanelData"
-                [entity]="objectValues(selectedValues)[0]"></nx-single-entity>
-
+        <div [ngSwitch]="selectedCount">
+            <div *ngSwitchCase="0" class="row p-0 m-0 d-flex">
+                <div class="text-placeholder order-1 order-md-0 m-0 p-0 pr-2 col-md-7 col-xl-9" translate>Nothing Found</div>
+            </div>
+            <nx-single-entity
+                    *ngSwitchCase="1"
+                    [params]="selectedPanelData"
+                    [entity]="objectValues(selectedValues)[0]"></nx-single-entity>
+            <nx-dynamic-table *ngSwitchDefault
+                    [headers]="selectedData"
+                    [elements]="selectedValues"
+                    (onRowClick)="setActiveEntity($event)"
+                    [activeEntity]="activeEntity">
+            </nx-dynamic-table>
+        </div>
     </div>
 
     <div class="row pl-3 pb-3"

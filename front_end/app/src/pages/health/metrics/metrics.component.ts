@@ -40,11 +40,11 @@ export class NxSystemMetricsComponent implements OnInit {
     selectedData: any;
     selectedPanelData: any;
     selectedValues: any;
+    selectedCount: number;
 
     menu: any;
     activeEntity: any;
 
-    multiEntity = true;
     objectValues = Object.values;
 
     routeSubscription: SubscriptionLike;
@@ -76,7 +76,7 @@ export class NxSystemMetricsComponent implements OnInit {
         this.routeSubscription = this.route
             .params
             .subscribe((params: any) => {
-                this.multiEntity = true;
+                this.selectedCount = 0;
                 this.metricId = params.metric;
                 this.menuService.setSection(this.metricId);
                 this.selectedData = this.healthService.tableHeaders[this.metricId];
@@ -84,10 +84,8 @@ export class NxSystemMetricsComponent implements OnInit {
                 this.resetActiveEntity(false);
 
                 if (!searchParam || !searchParam.length) {
-                    this.selectedValues = this.healthService.values[this.metricId];
-                    if (Object.keys(this.selectedValues).length === 1) {
-                        this.multiEntity = false;
-                    }
+                    this.selectedValues = this.healthService.values[this.metricId] || {};
+                    this.selectedCount = Object.values(this.selectedValues).length;
                 }
 
                 if (idParam) {
@@ -110,12 +108,9 @@ export class NxSystemMetricsComponent implements OnInit {
 
     modelChanged(model) {
         this.selectedValues = this.healthService
-                                  .itemsSearch(this.healthService.values[this.metricId], model);
+                                  .itemsSearch(this.healthService.values[this.metricId], model) || {};
 
-        if (Object.keys(this.selectedValues).length === 1) {
-            this.multiEntity = false;
-        }
-
+        this.selectedCount = Object.values(this.selectedValues).length;
     }
 
     setActiveEntity(entity) {
