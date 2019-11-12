@@ -29,7 +29,7 @@ export class NxSystemMetricsComponent implements OnInit {
     filterModel: any;
     system: NxSystem;
     metricId: any;
-    params: any  = {};
+
     mobileDetailMode: boolean;
     breakpoint: string;
 
@@ -92,10 +92,7 @@ export class NxSystemMetricsComponent implements OnInit {
 
                 if (idParam) {
                     this.setActiveEntity(idParam);
-                    this.params.id = idParam;
                     idParam = undefined;
-                } else {
-                    this.params.id = undefined;
                 }
             });
 

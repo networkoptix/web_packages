@@ -109,6 +109,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
 
         // Example URI
         // /ipvd?search=Axis&tags=isAptzSupported&resolution=SVGA&vendors=Axis,30X,Sony
+        // Update on reload
         this.params = this._route.snapshot.queryParams;
         // this.updateFilter(undefined, false);
 
@@ -222,6 +223,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
                     (this.localFilter.tags && this.localFilter.tags.length);
 
             // Update model with query params
+            this.params = this._route.snapshot.queryParams;
             this.updateFilter(undefined, false);
         }
     }
@@ -402,21 +404,14 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
 
         this.uri.pageOffset = window.pageYOffset;
 
-        // reset pagination and sorting
-        if (resetUri !== false) {
-            queryParams.page = undefined;
-            queryParams.sortBy = undefined;
-            return this.uri.updateURI(this.uri.getURL(), queryParams);
-        }
-
-        return Promise.resolve();
+        return this.uri.updateURI(this.uri.getURL(), queryParams);
     }
 
     modelChanged(resetUri?) {
-        this.setRouteParams(resetUri);
-            // .then(() => {
+        this.setRouteParams(resetUri)
+            .then(() => {
                 this.numberOfOptionsSelected();
                 this.onChangeCallback(this.localFilter);
-            // });
+            });
     }
 }

@@ -29,7 +29,7 @@ export class IpvdSearchService {
         this._vendors = list;
     }
 
-    ipvdSearch(camerasData, filter): Observable<any> {
+    ipvdSearch(camerasData, filter) {
         const query = filter.query.toLowerCase();
         const queryTerms = query.trim().split(' ');
         const preferredVendors = '';
@@ -121,6 +121,6 @@ export class IpvdSearchService {
             return key;
         });
 
-        return of(cameras);
+        return cameras;
     }
 }

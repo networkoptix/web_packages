@@ -36,7 +36,6 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
 
     _elements: any = [];
     headers: any = {};
-    queryParams;
     params: any = {};
 
     public selectedEntity;
@@ -54,8 +53,6 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
     pagerMaxSize: number;
     serviceParams;
     serviceHeaders;
-
-    uriSubscription: SubscriptionLike;
 
     constructor(private configService: NxConfigService,
                 private uri: NxUriService,
@@ -99,30 +96,19 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
     }
 
     ngOnInit() {
-        this.uriSubscription = this.uri
-            .getURI()
-            .subscribe(params => {
-                if (this.params.sortBy !== params.sortBy) {
-                    if (params.sortBy) {
-                        this.sortBy(params.sortBy);
-                        this.setPagedItems();
-                    } else {
-                        this.sortOrderASC = true;
-                        this.selectedHeader = undefined;
-                    }
-                }
+        this.params = {...this.route.snapshot.queryParams};
+        if (this.params.sortBy) {
+            this.sortBy(this.params.sortBy);
+            this.setPagedItems();
+        } else {
+            this.sortOrderASC = true;
+            this.selectedHeader = undefined;
+        }
 
-                if (this.params.page !== params.page) {
-                    this.currentPage = params.page || 1;
-                }
-
-                this.params = {...params};
-
-            });
+        this.currentPage = this.params.page || 1;
     }
 
     ngOnDestroy() {
-        this.uriSubscription.unsubscribe();
     }
 
     sortBy(param) {
@@ -153,9 +139,9 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
                 this.currentPage = Math.floor(index / this.pageSize) + 1;
             }
             this.params.id = undefined;
-        } else if (this.queryParams && this.queryParams.page) {
-            this.currentPage = this.queryParams.page;
-            this.queryParams.page = undefined;
+        } else if (this.params && this.params.page) {
+            this.currentPage = this.params.page;
+            this.params.page = undefined;
         } else {
             this.currentPage = page;
         }

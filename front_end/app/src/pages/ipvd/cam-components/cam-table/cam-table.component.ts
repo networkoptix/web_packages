@@ -1,14 +1,15 @@
 import {
     Component, Input, Output, EventEmitter,
     OnChanges, SimpleChanges,
-    OnInit, ViewEncapsulation, Inject, PLATFORM_ID
+    OnInit, ViewEncapsulation, Inject, PLATFORM_ID, OnDestroy
 } from '@angular/core';
 
-import { NxConfigService }           from '../../../../services/nx-config';
-import { NxUriService }              from '../../../../services/uri.service';
-import { NxUtilsService }            from '../../../../services/utils.service';
-import { Router }                    from '@angular/router';
-import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
+import { NxConfigService }                         from '../../../../services/nx-config';
+import { NxUriService }                            from '../../../../services/uri.service';
+import { NxUtilsService }                          from '../../../../services/utils.service';
+import { Router }                                  from '@angular/router';
+import { NxLanguageProviderService }               from '../../../../services/nx-language-provider';
+import { Subject, Subscription, SubscriptionLike } from 'rxjs';
 
 interface Params {
     [key: string]: any;
@@ -20,9 +21,7 @@ interface Params {
     styleUrls    : ['./cam-table.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class CamTableComponent implements OnChanges, OnInit {
-
-    // @Input() headers: string[];
+export class CamTableComponent implements OnChanges, OnDestroy, OnInit {
     @Input() elements: any[];
     @Input() allowedParameters: string[];
     @Input() activeCamera: any;
@@ -39,7 +38,6 @@ export class CamTableComponent implements OnChanges, OnInit {
     private results;
     private cameraHeaders;
     private paramsShown;
-    // private lang;
     private debug: boolean;
     private beta: boolean;
 
@@ -55,6 +53,8 @@ export class CamTableComponent implements OnChanges, OnInit {
     showAnalytics: boolean;
     serviceParams;
     serviceHeaders;
+
+    uriSubscription: SubscriptionLike;
 
     // Options for the Excel export
     public csvFilename: any;
@@ -108,6 +108,8 @@ export class CamTableComponent implements OnChanges, OnInit {
         this.pagerMaxSize = this.CONFIG.ipvd.pagerMaxSize;
         this.currentPage = 1;
         this.pageSize = this.CONFIG.layout.tableLarge.rows;
+
+        this.uriSubscription = new Subject<any>();
     }
 
     trackPagedItem(index, item) {
@@ -297,57 +299,12 @@ export class CamTableComponent implements OnChanges, OnInit {
 
         if (changes.params) {
 
-            this.setDebugAndBetaMode();
 
-            if (!this.debug && !this.beta) {
-                this.filterAllowedParams(this.serviceHeaders, this.serviceParams);
-            }
-
-            this.showAnalytics = this.CONFIG.ipvd.showAnalyticsEvents || this.params.debug || this.params.beta;
-            this.showHeaders = this.cameraHeaders;
-
-            if (!changes.params.firstChange &&
-                    changes.params.currentValue.page === changes.params.previousValue.page &&
-                    changes.params.currentValue.camera === changes.params.previousValue.camera) {
-                // Params changed - reset the pagination
-                this.setPage(1, true);
-
-            } else if (changes.params.currentValue.page) {
-                this.setPage(+changes.params.currentValue.page, true);
-            }
-
-            if (this.params.sortBy) {
-                const sortBy = this.params.sortBy.split(',');
-                const direction = (sortBy[1] === 'ASC');
-                const column = this.cameraHeaders.find(x => {
-                    return x === this.LANG.ipvd[sortBy[0]];
-                });
-
-                if (this.sortOrderASC === direction && column === this.selectedHeader) {
-                    return; // do not sort if sorted
-                }
-
-                this.sortOrderASC = direction;
-                this.toggleSort(sortBy[0], true);
-
-                if (this.params.page) {
-                    this.setPage(+this.params.page, true);
-                    this.setPage(1, true);
-                }
-            }
-
-            if (this.params.camera) {
-                const row = this.pagedItems.findIndex((camera) => {
-                    return camera.model === this.params.camera;
-                });
-
-                const camera = this.pagedItems.find((camera) => {
-                    return camera.model === this.params.camera;
-                });
-
-                this.setClickedRow(camera);
-            }
         }
+    }
+
+    ngOnDestroy() {
+        this.uriSubscription.unsubscribe();
     }
 
     ngOnInit() {
@@ -361,6 +318,50 @@ export class CamTableComponent implements OnChanges, OnInit {
         if (!this.showAnalytics) {
             this.filterAllowedParams([this.LANG.ipvd.isAnalyticsSupported], ['isAnalyticsSupported']);
         }
+
+        this.uriSubscription = this.uri
+            .getURI()
+            .subscribe(params => {
+                this.params = params;
+                this.setDebugAndBetaMode();
+
+                if (!this.params.debug && !this.params.beta) {
+                    this.filterAllowedParams(this.serviceHeaders, this.serviceParams);
+                }
+
+                this.showAnalytics = this.CONFIG.ipvd.showAnalyticsEvents || this.params.debug || this.params.beta;
+                this.showHeaders = this.cameraHeaders;
+
+                if (this.params.sortBy) {
+                    const sortBy = this.params.sortBy.split(',');
+                    const direction = (sortBy[1] === 'ASC');
+                    const column = this.cameraHeaders.find(x => {
+                        return x === this.LANG.ipvd[sortBy[0]];
+                    });
+
+                    if (this.sortOrderASC === direction && column === this.selectedHeader) {
+                        return; // do not sort if sorted
+                    }
+
+                    this.sortOrderASC = direction;
+                    this.toggleSort(sortBy[0], true);
+
+                }
+
+                this.setPage(this.params.page || 1, true);
+
+                if (this.params.camera) {
+                    const row = this.pagedItems.findIndex((camera) => {
+                        return camera.model === this.params.camera;
+                    });
+
+                    const camera = this.pagedItems.find((camera) => {
+                        return camera.model === this.params.camera;
+                    });
+
+                    this.setClickedRow(camera);
+                }
+            });
     }
 
     setClickedRow(element) {

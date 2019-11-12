@@ -17,6 +17,7 @@ import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxDialogsService }          from '../../dialogs/dialogs.service';
 import { NxAccountService }          from '../../services/account.service';
 import { SubscriptionLike }          from 'rxjs';
+import { isArray }                   from 'rxjs/internal-compatibility';
 
 interface Params {
     [key: string]: any;
@@ -64,7 +65,6 @@ export class NxIpvdComponent implements OnInit {
     breakpointSubscription: SubscriptionLike;
     routerSubscription: SubscriptionLike;
     locationSubscription: SubscriptionLike;
-    uriSubscription: SubscriptionLike;
     cameraReloadSubscription: SubscriptionLike;
     cameraGetSubscription: SubscriptionLike;
 
@@ -143,21 +143,32 @@ export class NxIpvdComponent implements OnInit {
     ngOnInit() {
         // Example URI
         // /ipvd?vendors=30X&camera=IPPTZ-ELS2IRL30X-ATI
-        this.uriSubscription = this.uri
-            .getURI()
-            .subscribe(params => {
-                this.params = params;
-                this.debug = (params.debug !== undefined);
-                this.beta = (params.beta !== undefined);
+        this.params = this.route.snapshot.queryParams;
+        const numParams = Object.keys(this.params).length;
+        if (numParams !== 0) {
+            this.debug = (this.params.debug !== undefined);
+            this.beta = (this.params.beta !== undefined);
+            this.hasNoSearch = (numParams === 1 && (this.params.debug || this.params.beta));
+        } else {
+            this.hasNoSearch = true;
+            this.resetFilterModel();
+        }
 
-                const numParams = Object.keys(this.params).length;
-                if (numParams !== 0) {
-                    this.hasNoSearch = (numParams === 1 && (this.params.debug || this.params.beta));
-                } else {
-                    this.hasNoSearch = true;
-                    this.resetFilterModel();
-                }
-            });
+        // this.uriSubscription = this.uri
+        //     .getURI()
+        //     .subscribe(params => {
+        //         this.params = params;
+        //         this.debug = (params.debug !== undefined);
+        //         this.beta = (params.beta !== undefined);
+        //
+        //         const numParams = Object.keys(this.params).length;
+        //         if (numParams !== 0) {
+        //             this.hasNoSearch = (numParams === 1 && (this.params.debug || this.params.beta));
+        //         } else {
+        //             this.hasNoSearch = true;
+        //             this.resetFilterModel();
+        //         }
+        //     });
 
 
         this.LANG = this.language.getTranslations();
@@ -185,11 +196,60 @@ export class NxIpvdComponent implements OnInit {
         this.breakpointSubscription.unsubscribe();
         this.routerSubscription.unsubscribe();
         this.locationSubscription.unsubscribe();
-        this.uriSubscription.unsubscribe();
         this.cameraGetSubscription.unsubscribe();
 
         if (this.cameraReloadSubscription) {
             this.cameraReloadSubscription.unsubscribe();
+        }
+    }
+
+    updateFilterModel() {
+
+        this.filterModel.query = '';
+
+        if (this.params.search && this.params.search.length > 0) {
+            this.filterModel.query = this.params.search;
+        }
+
+        if (this.filterModel.tags && this.filterModel.tags.length) {
+            this.filterModel.tags.forEach(tag => tag.value = false);
+            if (this.params.tags) {
+                this.params.tags
+                    .split(',')
+                    .forEach((tagName) => {
+                        this.filterModel.tags.find((tag) => {
+                            if (tag.id === tagName) {
+                                tag.value = true;
+                            }
+                        });
+                    });
+            }
+        }
+
+        if (this.filterModel.selects && this.filterModel.selects.length) {
+            this.filterModel
+                .selects
+                .find((select) => {
+                    if (this.params[select.id]) {
+                        select.selected = select.items.find((item) => item.name === this.params[select.id]);
+                    } else {
+                        if (!select.selected) {
+                            select.selected = { value: '0', name: 'All' };
+                        }
+                    }
+                });
+        }
+
+        if (this.filterModel.multiselects && this.filterModel.multiselects.length) {
+            this.filterModel
+                .multiselects
+                .find((select) => {
+                    if (this.params[select.id]) {
+                        select.selected = isArray(this.params[select.id]) ? this.params[select.id] : this.params[select.id].split(',');
+                    } else {
+                        select.selected = [];
+                    }
+                });
         }
     }
 
@@ -321,6 +381,8 @@ export class NxIpvdComponent implements OnInit {
                             selected: []
                         });
 
+                this.updateFilterModel();
+                this.searchVendor();
                 // Trigger model change for search component
                 this.filterModel = { ...this.filterModel };
             });
@@ -372,17 +434,16 @@ export class NxIpvdComponent implements OnInit {
 
         if (this.cameras && this.cameras.length) {
             if (this.filterEmpty()) {
-                this.cameraSearchService
-                    .ipvdSearch(this.cameras, this.filterModel)
-                    .subscribe(cameras => {
-                        this.noResult = (cameras.length === 0);
-                        if (!this.noResult) {
-                            this.camerasTable = this.preFilterCameraTable(cameras);
-                        } else {
-                            this.camerasTable = [];
-                        }
-                        this.setActiveCamera();
-                    });
+                const cameras = this.cameraSearchService
+                              .ipvdSearch(this.cameras, this.filterModel);
+
+                this.noResult = (cameras.length === 0);
+                if (!this.noResult) {
+                    this.camerasTable = this.preFilterCameraTable(cameras);
+                } else {
+                    this.camerasTable = [];
+                }
+                this.setActiveCamera();
             } else {
                 this.hasNoSearch = true;
                 this.noResult = false;
@@ -394,7 +455,11 @@ export class NxIpvdComponent implements OnInit {
                 queryParams.debug = (this.debug) ? true : undefined;
                 queryParams.beta = (this.beta) ? true : undefined;
                 this.uri.resetURI(this.uriPath, queryParams);
+
+                this.params = queryParams;
             }
+
+            this.filterModel = {...this.filterModel}; // enforce model update for other components
         }
     }
 
@@ -418,23 +483,21 @@ export class NxIpvdComponent implements OnInit {
             return camera.sortKey === (elementSelected.sortKey || elementSelected.value.sortKey);
         });
 
-        setTimeout(() => {
-            if (this.activeCamera && this.activeCamera.sortKey === selectedCamera.sortKey) {
-                return;
-            }
-            this.activeCamera = {... selectedCamera};
-            this.showAll = false;
+        if (this.activeCamera && this.activeCamera.sortKey === selectedCamera.sortKey) {
+            return;
+        }
+        this.activeCamera = {... selectedCamera};
+        this.showAll = false;
 
-            const queryParams: Params = {};
-            queryParams.camera = selectedCamera.model || selectedCamera.value.model;
-            this.uri.updateURI(this.uriPath, queryParams);
+        const queryParams: Params = {};
+        queryParams.camera = selectedCamera.model || selectedCamera.value.model;
+        this.uri.updateURI(this.uriPath, queryParams);
 
-            if (this.breakpointObserver.isMatched(this.breakpoint)) {
-                this.mobileDetailMode = true;
-            }
+        if (this.breakpointObserver.isMatched(this.breakpoint)) {
+            this.mobileDetailMode = true;
+        }
 
-            this.toggleCamview = true;
-        }, 10);
+        this.toggleCamview = true;
     }
 
 
@@ -454,6 +517,10 @@ export class NxIpvdComponent implements OnInit {
     }
 
     resetActiveCamera(skipUpdateURI?) {
+        if (!this.activeCamera) {
+            return;
+        }
+
         if (!skipUpdateURI) {
             const queryParams: Params = {};
             queryParams.camera = undefined;
