@@ -42,7 +42,7 @@ export class HMGuard implements CanActivate {
                     return this.system
                         .getInfoAndPermissions()
                         .then((system) => {
-                            return (['cloudadmin', 'owner', 'administrator'].includes(system.accessRole.toLowerCase()));
+                            return (this.CONFIG.accessRoles.adminAccess.includes(system.accessRole.toLowerCase()));
                         });
 
                 }

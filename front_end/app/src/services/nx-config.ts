@@ -90,6 +90,7 @@ export class NxConfigService {
                 cloudMerge: 'cloudMerge'
             },
             accessRoles                   : {
+                adminAccess              : ['cloudadmin', 'owner', 'administrator'],
                 unshare                  : 'none',
                 default                  : 'Viewer',
                 disabled                 : 'disabled',
