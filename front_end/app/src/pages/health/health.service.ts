@@ -9,7 +9,7 @@ import { NxConfigService }                 from '../../services/nx-config';
 export class NxHealthService {
     private static ALERTS = 'alertType';
     private static TYPES = 'deviceType';
-    private static SERVERS = 'serverInstance';
+    private static SERVERS = 'server';
 
     manifestSubject = new BehaviorSubject(undefined);
     valuesSubject = new BehaviorSubject(undefined);
