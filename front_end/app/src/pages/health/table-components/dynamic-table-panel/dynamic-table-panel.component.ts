@@ -35,7 +35,7 @@ export class NxDynamicTablePanelComponent implements OnChanges {
         if (entity._ && entity._.name) {
             this.name = entity._.name.text;
         } else if (entity.info && entity.info.name) {
-            this.name = entity.info.name;
+            this.name = entity.info.name.text;
         } else {
             this.name = '–';
         }

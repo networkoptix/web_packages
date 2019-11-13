@@ -193,9 +193,7 @@ export class NxSystemAlertsComponent implements OnInit, OnDestroy {
          * { resourceType: {alarmLevel: count} } => [{resourceType: name,  alarms : [{alarmLevel: count}]}]
          * Note: alarm levels are sorted alphabetically
          */
-        const alarmTypes = Object.values(this.healthService.manifest).filter((resource: any) => {
-            return resource.name !== 'Systems';
-        }).reduce((obj: any, item: any) => {
+        const alarmTypes = Object.values(this.healthService.manifest).reduce((obj: any, item: any) => {
             obj[item.id] = {
                 alarms: {
                     error: 0,
@@ -245,7 +243,7 @@ export class NxSystemAlertsComponent implements OnInit, OnDestroy {
                     {
                         display: 'table',
                         name: 'Alert',
-                        id: 'text'
+                        id: 'message'
                     }
                 ]
             }]
