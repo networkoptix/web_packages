@@ -300,13 +300,11 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                     Object.entries(params).forEach(([param, alarms]) => {
                         alarms.forEach(alarm => {
                             const alert: any = {_: {}};
-                            let server = this.healthService.values[metric][entity].info.server;
+                            const server = this.healthService.values[metric][entity].info.server;
                             if (!server && metric === 'servers') {
-                                server = this.healthService.values.servers[entity]._.name;
-                            }
-
-                            if (server) {
-                                alert._.server = {text: server.text, id: entity};
+                                alert._.server = {text: this.healthService.values.servers[entity]._.name.text, id: entity};
+                            } else {
+                                alert._.server = {text: server.text, id: server.value};
                             }
                             alert._.type = {text: this.healthService.manifest[metric].resource};
                             alert._.text = {text: alarm.text};

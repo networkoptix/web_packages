@@ -86,7 +86,7 @@ export class NxHealthService {
                 retValue = `${value} ${format}`;
             }
         }
-        return {text: retValue, format: header.format || ''};
+        return {text: retValue, format: header.format || '', value};
     }
 
     itemsSearch(values, filter) {
