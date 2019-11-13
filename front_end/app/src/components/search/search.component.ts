@@ -184,7 +184,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
                 .selects
                 .find((select) => {
                     if (this.params[select.id]) {
-                        select.selected = select.items.find((item) => item.name === this.params[select.id]);
+                        select.selected = select.items.find((item) => item.value === this.params[select.id]);
                     } else {
                         if (!select.selected) {
                             select.selected = { value: '0', name: 'All' };
@@ -388,7 +388,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
             this.localFilter.selects.forEach((select) => {
                 queryParams[select.id] = undefined;
                 if (+select.selected.value !== 0) {
-                    queryParams[select.id] = select.selected.name;
+                    queryParams[select.id] = select.selected.value;
                 }
             });
         }

@@ -90,7 +90,21 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
         if (changes.elements) {
             if (!deepEqual(changes.elements.currentValue, changes.elements.previousValue)) {
                 this._elements = Object.values(changes.elements.currentValue);
-                this.setPage(this.currentPage);
+
+                if (changes.elements.previousValue) {
+                    setTimeout(() => {
+                        const queryParams: Params = {};
+                        queryParams.sortBy = undefined;
+                        queryParams.page = undefined;
+                        this.uri
+                            .updateURI(undefined, queryParams)
+                            .then(() => {
+                                this.setPage(1);
+                                this.sortOrderASC = true;
+                                this.selectedHeader = undefined;
+                            });
+                    });
+                }
             }
         }
     }
@@ -99,13 +113,12 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
         this.params = {...this.route.snapshot.queryParams};
         if (this.params.sortBy) {
             this.sortBy(this.params.sortBy);
-            this.setPagedItems();
         } else {
             this.sortOrderASC = true;
             this.selectedHeader = undefined;
         }
 
-        this.currentPage = this.params.page || 1;
+        this.setPage(this.params.page || 1);
     }
 
     ngOnDestroy() {
@@ -131,6 +144,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
     }
 
     setPage(page: number) {
+        this.params = { ...this.route.snapshot.queryParams };
         if (this.params && this.params.id && this.selectedEntity) {
             const index = this._elements.findIndex((element) => {
                 return element.id === this.params.id;
@@ -139,9 +153,9 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
                 this.currentPage = Math.floor(index / this.pageSize) + 1;
             }
             this.params.id = undefined;
-        } else if (this.params && this.params.page) {
-            this.currentPage = this.params.page;
-            this.params.page = undefined;
+        // } else if (this.params && this.params.page) {
+        //     this.currentPage = this.params.page;
+        //     this.params.page = undefined;
         } else {
             this.currentPage = page;
         }

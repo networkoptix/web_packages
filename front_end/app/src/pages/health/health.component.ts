@@ -107,6 +107,8 @@ export class NxHealthComponent implements OnInit, OnDestroy {
     setupReport(data) {
         this.healthService.ready = false;
         this.menu.level1 = [this.menu.level1[0]];
+
+        // TODO: Handle server error
         this.healthService.manifest = data.reply['ec2/metrics/manifest'].reply;
         this.healthService.values = data.reply['ec2/metrics/values'].reply;
         this.healthService.alarms = data.reply['ec2/metrics/alarms'].reply;

@@ -40,7 +40,8 @@ export class NxSystemAlertsComponent implements OnInit, OnDestroy {
     alertsCount: number;
     alertCards: any;
 
-    constructor(private menuService: NxMenuService,
+    constructor(private route: ActivatedRoute,
+                private menuService: NxMenuService,
                 private configService: NxConfigService,
                 private healthService: NxHealthService,
                 private breakpointObserver: BreakpointObserver,
@@ -53,6 +54,7 @@ export class NxSystemAlertsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        this.params = this.route.snapshot.queryParams;
         this.menuService.setSection('alerts');
 
         this.addFilterServers();
@@ -66,7 +68,8 @@ export class NxSystemAlertsComponent implements OnInit, OnDestroy {
         this.countAlerts();
         this.processAlerts();
 
-        this.alerts = this.healthService.alertsValues;
+        this.alerts = this.healthService
+                          .alertsSearch(this.healthService.alertsValues, this.filterModel);
 
         this.breakpointSubscription = this.breakpointObserver
             .observe([this.breakpoint])
@@ -95,28 +98,39 @@ export class NxSystemAlertsComponent implements OnInit, OnDestroy {
     }
 
     addFilterAlarms() {
+        let selected;
         const alertItems = [
             { value: '0', name: 'All Alerts' },
             { value: 'warning', name: 'Only Warnings' },
             { value: 'error', name: 'Only Errors' }
         ];
 
+        selected = alertItems.filter((item) => {
+            return this.params.alertType === item.value;
+        })[0];
+
         this.filterModel.selects.push(
                 {
                     id      : 'alertType',
                     label   : '',
                     items   : alertItems,
-                    selected: alertItems[0]
+                    selected: selected || alertItems[0]
                 });
     }
 
     addFilterTypes() {
         const typesItems = [];
+        let selected;
 
         for (const [key, value] of Object.entries(this.healthService.manifest)) {
             const val: any = value;
             if (val.resource !== '') {
-                typesItems.push({ value: val.resource, name: val.resource });
+                const item = { value: val.resource, name: val.resource };
+                typesItems.push(item);
+
+                if (this.params.deviceType === val.resource) {
+                    selected = item;
+                }
             }
         }
 
@@ -127,26 +141,32 @@ export class NxSystemAlertsComponent implements OnInit, OnDestroy {
                     id      : 'deviceType',
                     label   : '',
                     items   : typesItems,
-                    selected: typesItems[0]
+                    selected: selected || typesItems[0]
                 });
     }
 
     addFilterServers() {
         const serverItems = [];
+        let selected;
 
         for (const [key, value] of Object.entries(this.healthService.values.servers)) {
             const val: any = value;
-            serverItems.push({ value: key, name: val._.name.text });
+            const item = { value: key, name: val._.name.text };
+            serverItems.push(item);
+
+            if (this.params.server === key) {
+                selected = item;
+            }
         }
 
         serverItems.unshift({ value: '0', name: 'All Servers' });
 
         this.filterModel.selects.push(
                 {
-                    id      : 'serverInstance',
+                    id      : 'server',
                     label   : '',
                     items   : serverItems,
-                    selected: serverItems[0]
+                    selected: selected || serverItems[0]
                 });
     }
 
