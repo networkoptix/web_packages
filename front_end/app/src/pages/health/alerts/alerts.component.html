@@ -8,7 +8,7 @@
         <hr>
     </div>
 
-    <div class="col-12">
+    <div class="col-12" *ngIf="!mobileDetailMode">
         <nx-search
                 name="filterModel"
                 [ngModel]="filterModel"
@@ -18,33 +18,34 @@
         </nx-search>
     </div>
 
-    <div *ngIf="tableHeaders && healthService.alertsValues && !mobileDetailMode"
-        [ngClass]="{'col-12': !activePanelEntity, 'col-md-7 col-xl-8' : activePanelEntity}">
-        <nx-dynamic-table
-                [tableHeader]="alertsCount + ' alerts'"
-                [headers]="tableHeaders"
-                [elements]="alerts"
-                (onRowClick)="setActiveEntity($event)"
-                [activeEntity]="activeTableEntity"></nx-dynamic-table>
-    </div>
+    <div class="d-flex w-100">
+        <div *ngIf="tableHeaders && healthService.alertsValues && !mobileDetailMode"
+            class="px-2 overflow-auto">
+            <nx-dynamic-table
+                    [tableHeader]="alertsCount + ' alerts'"
+                    [headers]="tableHeaders"
+                    [elements]="alerts"
+                    (onRowClick)="setActiveEntity($event)"
+                    [activeEntity]="activeTableEntity"></nx-dynamic-table>
+        </div>
 
-    <div class="row pl-3 pb-3"
-         *ngIf="activePanelEntity"
-         [style.display]="!mobileDetailMode ? 'none' : 'block'">
+        <div class="col-12 col-md-5 col-lg-5 col-xl-4 col-xxl-3"
+             *ngIf="activePanelEntity">
 
-        <button class="btn btn-default btn-back" (click)="resetActiveEntity()">
-            <span class="back-arrow"></span>
-            <span translate>All results</span>
-        </button>
-    </div>
+            <div class="row pl-3 pb-3"
+                 [style.display]="!mobileDetailMode ? 'none' : 'block'">
 
-    <div class="col-12 col-md-5 col-xl-4"
-         *ngIf="activePanelEntity">
+                <button class="btn btn-default btn-back" (click)="resetActiveEntity()">
+                    <span class="back-arrow"></span>
+                    <span translate>All results</span>
+                </button>
+            </div>
 
-        <nx-dynamic-table-panel-component
-                [activeEntity]="activePanelEntity"
-                [panelParams]="activePanelParams"
-                (onCloseView)="resetActiveEntity()">
-        </nx-dynamic-table-panel-component>
+            <nx-dynamic-table-panel-component
+                    [activeEntity]="activePanelEntity"
+                    [panelParams]="activePanelParams"
+                    (onCloseView)="resetActiveEntity()">
+            </nx-dynamic-table-panel-component>
+        </div>
     </div>
 </div>

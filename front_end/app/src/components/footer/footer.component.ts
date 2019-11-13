@@ -46,4 +46,11 @@ import { Subscription } from 'rxjs';
             this.viewFooter = visible;
         });
     }
+
+    trackItem(index, item) {
+        if (!item) {
+            return undefined;
+        }
+        return item.url;
+    }
 }
