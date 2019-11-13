@@ -39,6 +39,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
     params: any = {};
 
     public selectedEntity;
+    public selectedGroup;
     public selectedHeader;
     public showHeaders;
 
@@ -115,6 +116,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
             this.sortBy(this.params.sortBy);
         } else {
             this.sortOrderASC = true;
+            this.selectedGroup = undefined;
             this.selectedHeader = undefined;
         }
 
@@ -127,6 +129,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
     sortBy(param) {
         const sortBy = param.split(',');
         this.sortOrderASC = (sortBy[SORT_DIR] === 'ASC');
+        this.selectedGroup = sortBy[GROUP_ID];
         this.selectedHeader = sortBy[PARAM_ID];
 
         this.toggleSort(sortBy[GROUP_ID], sortBy[PARAM_ID], false);
@@ -183,9 +186,10 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
     }
 
     toggleSort(groupId, paramId, updateURI?) {
-        if (this.selectedHeader !== paramId) {
+        if (this.selectedGroup !== groupId || this.selectedHeader !== paramId) {
             this.sortOrderASC = true;
         }
+        this.selectedGroup = groupId;
         this.selectedHeader = paramId;
 
         if (updateURI || updateURI === undefined) {
@@ -201,11 +205,11 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
         function sortFunc() {
             if (paramId === 'alarm') {
                 return (elm) => {
-                    return elm[groupId][paramId].icon || '';
+                    return elm[groupId] && elm[groupId][paramId] && elm[groupId][paramId].icon || '';
                 };
             } else {
                 return (elm) => {
-                    return elm[groupId][paramId].text || '';
+                    return elm[groupId] && elm[groupId][paramId] && elm[groupId][paramId].text || '';
                 };
             }
         }

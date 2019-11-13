@@ -27,7 +27,7 @@
                             <div class="caption d-flex align-items-end">
                                 <div class="ellipsis" [innerHTML]="header.name.replace(':', ':<br>')"></div>
                                 <div class="sort-dir nav-arrow"
-                                     [style.visibility]="(header.id == selectedHeader) ? 'visible' : 'hidden'"
+                                     [style.visibility]="(headerGroup.id == selectedGroup && header.id == selectedHeader) ? 'visible' : 'hidden'"
                                      [ngClass]="{'up': !sortOrderASC}">
                                     <span></span>
                                     <span></span>
