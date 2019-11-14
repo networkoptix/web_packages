@@ -3,6 +3,7 @@
            [id]="componentId"
            [attr.checked]="value ? '' : null"
            [attr.disabled]="disabled ? '' : null"
+           aria-describedby="description ? description : null"
            (click)="changeState($event)">
 
     <span class="tick"

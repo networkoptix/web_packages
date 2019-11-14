@@ -42,6 +42,7 @@ export class NxSystemAdminComponent implements OnInit {
     debugMode: boolean;
     betaMode: boolean;
     settings: Settings;
+    checkboxStatuses: any = {};
 
     private setupDefaults() {
         this.CONFIG = this.configService.getConfig();
@@ -49,6 +50,15 @@ export class NxSystemAdminComponent implements OnInit {
         this.debugMode = this.CONFIG.allowDebugMode;
         this.betaMode = this.CONFIG.allowBetaMode;
         this.menuService.setSection('admin');
+        this.checkboxStatuses = {
+            autoDiscovery: false,
+            sendCrashStats: false,
+            autoOptimizeCameraSettings: false,
+            auditTrail: false,
+            allowOnlySecure: false,
+            encryptVideoTraffic: false,
+            limitSessionDuration: false,
+        }
     }
 
     private updateSettings(forceMergeState?: boolean) {

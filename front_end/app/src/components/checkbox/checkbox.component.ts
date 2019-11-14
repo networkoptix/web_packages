@@ -43,6 +43,7 @@ export class NxCheckboxComponent implements OnInit, ControlValueAccessor, Valida
     @Input() required: any;
     @Input() checked: any;
     @Input() disabled: any;
+    @Input() description: string;
     @Output() onClick = new EventEmitter<string>();
 
     private touched: boolean;
