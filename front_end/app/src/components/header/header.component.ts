@@ -247,18 +247,13 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         if (!this.systems) {
             return;
         }
-
         if (this.singleSystem) { // Special case for a single system - it always active
             this.activeSystem = this.systems[0];
-            return;
-        }
-
-        if (this.systemId) {
+        } else if (this.systemId) {
             this.activeSystem = this.systems.find((system) => {
                 return this.systemId === system.id;
             });
-
-            return this.accountService
+            this.accountService
                 .get()
                 .then(account => {
                     if (account) {
@@ -273,7 +268,8 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
 
                     }
                 });
+        } else {
+            this.activeSystem = {};
         }
-        this.activeSystem = {};
     }
 }
