@@ -269,7 +269,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                     }
                 });
         } else {
-            this.activeSystem = {};
+            this.activeSystem = undefined;
         }
     }
 }
