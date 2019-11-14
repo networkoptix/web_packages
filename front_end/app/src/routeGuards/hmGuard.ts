@@ -10,7 +10,6 @@ import { Observable }                from 'rxjs';
 import { NxAccountService }          from '../services/account.service';
 import { NxConfigService }           from '../services/nx-config';
 import { NxSystem, NxSystemService } from '../services/system.service';
-import { System }                    from '../../../../../open/node_integration/src';
 
 
 @Injectable()
