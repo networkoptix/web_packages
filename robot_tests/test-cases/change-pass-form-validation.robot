@@ -101,7 +101,7 @@ Check Old Password Outline
     Element Should Be Visible    ${CURRENT PASSWORD IS REQUIRED}
 
 Check Old Password Alert
-    Check For Alert    ${CANNOT SAVE PASSWORD} ${PASSWORD INCORRECT}
+    Check For Alert    ${CANNOT SAVE PASSWORD}${SPACE}${SPACE}${PASSWORD INCORRECT}
 
 Check New Password Outline
     [Arguments]    ${new pw}

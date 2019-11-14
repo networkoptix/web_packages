@@ -22,6 +22,7 @@ from SeleniumLibrary.utils import (is_falsy, is_truthy, secs_to_timestr,
                                    timestr_to_secs, SELENIUM_VERSION)
 from selenium.webdriver.support.color import Color
 from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.remote.webdriver import WebDriver
 
 
 class NoptixLibrary(object):
@@ -155,6 +156,23 @@ class NoptixLibrary(object):
                     return
             except:
                 found = "Element found with class '" + expected + "' when it was not expected"
+            time.sleep(.2)
+        raise AssertionError(found)
+
+    def wait_until_location_is(self, url, timeout=10):
+        seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
+        timeout = timeout + time.time()
+        found = None
+        
+        while time.time() < timeout:
+            try:
+                currentUrl = seleniumlib.get_location()
+                print(currentUrl)
+                if url == currentUrl:
+                    return
+            except Exception as e:
+                print(e)
+                found = "url was not {} but was {}".format(url, currentUrl)
             time.sleep(.2)
         raise AssertionError(found)
 
@@ -343,7 +361,7 @@ class NoptixLibrary(object):
         client = docker.from_env()
         return client.images.build(path="/home/kyle/develop/nx_vms/cloud_portal/robot_tests/Docker",
                             tag="mediaserver",
-                            buildargs={"mediaserver_deb":"nxwitness-server-4.0.0.28541-linux64-beta-test.deb"})
+                            buildargs={"mediaserver_deb":"nxwitness-server-4.0.0.29698-linux64-beta-test.deb"})
 
     def run_container(self, image, port, network):
         tmp = {'/run':'', '/run/lock':''}

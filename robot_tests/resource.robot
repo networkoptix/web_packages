@@ -62,7 +62,7 @@ Set Chrome Options Headless
 Check Language Anonymous
 #    Wait Until Page Contains Element    ${LANGUAGE DROPDOWN}/span[@lang='en_US']
     Register Keyword To Run On Failure    NONE
-    ${status}=    Run Keyword And Return Status    Wait Until Element Is Visible    ${LANGUAGE DROPDOWN}/span[@lang='${LANGUAGE}']    5
+    ${status}=    Run Keyword And Return Status    Wait Until Element Is Visible    ${LANGUAGE DROPDOWN}/span[@lang='${LANGUAGE}']    15
     Register Keyword To Run On Failure    Failure Tasks
     Run Keyword If    "${status}"=="False"    Set Language
 
@@ -71,7 +71,7 @@ Check Langauge Logged In
     # this is a temorary fix.  Future update will use API calls
     ${previous location}=   Get Location
     Go To    ${ENV}/account
-    ${status}=    Run Keyword And Return Status    Wait Until Element Is Visible    ${ACCOUNT LANGUAGE DROPDOWN}/span[@lang='${LANGUAGE}']    5
+    ${status}=    Run Keyword And Return Status    Wait Until Element Is Visible    ${ACCOUNT LANGUAGE DROPDOWN}/span[@lang='${LANGUAGE}']    15
     Register Keyword To Run On Failure    Failure Tasks
     Run Keyword If    "${status}"=="False"    Set Language
     Run Keyword If    "${status}"=="False"    Click Button    ${ACCOUNT SAVE}
@@ -147,7 +147,7 @@ Validate Register Email Received
     ${email}    Wait For Email    recipient=${recipient}    timeout=120    status=UNSEEN
     Check Email Subject    ${email}    ${ACTIVATE YOUR ACCOUNT EMAIL SUBJECT}    ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}
     Should Not Be Equal    ${email}    ${EMPTY}
-    Delete All Emails
+    Delete Email    ${email}
     Close Mailbox
 
 Get Email Link
@@ -161,7 +161,7 @@ Get Email Link
     Run Keyword If    "${link type}"=="register"    Check Email Subject    ${email}    ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}
     ${links}    Get NX Links From Email    ${email}    ${link type}
     log    ${links}
-    Delete All Emails
+    Delete Email    ${email}
     Close Mailbox
     Return From Keyword    ${links}
 
@@ -176,8 +176,8 @@ Activate
 Restore password
     [arguments]    ${email}
     #log in to user to make sure their language is set to the current
-    Open Browser and go to URL    ${url}
     Log    Kyle disabled checking the user's langauge before sending. If it's not working blame him
+    # Open Browser and go to URL    ${url}
     # Log In    ${email}    ${password}
     # Validate Log In
     # Log Out
@@ -200,8 +200,8 @@ Restore password
     Close Browser
 
 Go to Users List
-    Wait Until Elements Are Visible    ${USERS LIST LINK}
-    Click Link    ${USERS LIST LINK}
+    ${location}=   Get Location
+    Go To    ${location}/users
 
 Go to System Administration
     Wait Until Elements Are Visible    ${SYSTEM ADMINISTRATION LINK}
@@ -296,6 +296,7 @@ Select user in Users List
     Wait Until Elements Are Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
     ${User In List}=   Set Variable    //nx-system-settings-component//nx-menu//nx-level-3-item//span[text()='${user email address}']/../../../a
+    Wait Until Element Is Visible    ${User In List}
     Click Link    ${User In List}
     Wait Until Elements Are Visible    ${USER EMAIL}
     Element Text Should Be    ${USER EMAIL}    ${user email address}
@@ -303,16 +304,14 @@ Select user in Users List
 
 Check For Alert
     [arguments]    ${alert text}    ${timeout}=${selenium_timeout}
-    Wait Until Element Is Visible    ${ALERT}    ${timeout}
-    Element Text Should Be    ${ALERT}    ${alert text}
-    Wait Until Page Does Not Contain Element    ${ALERT}
+    Wait Until Element Is Visible    ${ALERT}/../span[contains(text(),"${alert text}")]    ${timeout}
+    Wait Until Page Does Not Contain Element    ${ALERT}/../span[contains(text(),"${alert text}")]    ${timeout}
 
 Check For Alert Dismissable
-    [arguments]    ${alert text}
-    Wait Until Elements Are Visible    ${ALERT}    ${ALERT CLOSE}
-    Element Text Should Be    ${ALERT}    ${alert text}
+    [arguments]    ${alert text}    ${timeout}=${selenium_timeout}
+    Wait Until Elements Are Visible    ${ALERT CLOSE}    ${ALERT}/../span[contains(text(),"${alert text}")]    timeout=${timeout}
     Click Button    ${ALERT CLOSE}
-    Wait Until Page Does Not Contain Element    ${ALERT}
+    Wait Until Page Does Not Contain Element    ${ALERT}/../span[contains(text(),"${alert text}")]
 
 Verify In System
     [arguments]    ${system name}
@@ -326,7 +325,8 @@ Disconnect from cloud
     Wait Until Elements Are Visible    ${DISCONNECT FORM CANCEL}    ${DISCONNECT FORM DISCONNECT BUTTON}    ${DISCONNECT PASSWORD INPUT}
     Input Text    ${DISCONNECT PASSWORD INPUT}    ${BASE PASSWORD}
     Click Button    ${DISCONNECT FORM DISCONNECT BUTTON}
-    Check For Alert    ${SUCCESSFULLY DISCONNECTED}
+#    Check For Alert    ${SUCCESSFULLY DISCONNECTED}
+    Sleep    5
 
 Failure Tasks
     [timeout]    5 minutes

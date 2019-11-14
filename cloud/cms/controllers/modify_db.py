@@ -376,7 +376,8 @@ def generate_preview_link(context=None, asset=None, state=""):
             return f"{settings.INTEGRATION_STORE_PAGE}/{asset.id}?state={state}"
         elif asset.is_asset_type(AssetType.ASSET_TYPES.article):
             article_url = DataRecord.objects.filter(asset=asset, data_structure__name='url').last()
-            return f'/content/{article_url.value}?' + urlencode({'state': state, 'id': asset.id})
+            article_url = article_url.value if article_url else "tmp_url"
+            return f'/content/{article_url}?' + urlencode({'state': state, 'id': asset.id})
 
     return f"{context.url}?preview" if context else "/content/about?preview"
 
