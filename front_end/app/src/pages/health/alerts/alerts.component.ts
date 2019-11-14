@@ -9,6 +9,9 @@ import { NxUriService }                        from '../../../services/uri.servi
 import { ActivatedRoute }                      from '@angular/router';
 import deepEqual = require('deep-equal');
 
+interface Params {
+    [key: string]: any;
+}
 
 @Component({
     selector   : 'nx-system-alerts-component',
@@ -44,6 +47,7 @@ export class NxSystemAlertsComponent implements OnInit, OnDestroy {
                 private menuService: NxMenuService,
                 private configService: NxConfigService,
                 private healthService: NxHealthService,
+                private uriService: NxUriService,
                 private breakpointObserver: BreakpointObserver,
     ) {
         this.CONFIG = this.configService.getConfig();
@@ -70,6 +74,13 @@ export class NxSystemAlertsComponent implements OnInit, OnDestroy {
 
         this.alerts = this.healthService
                           .alertsSearch(this.healthService.alertsValues, this.filterModel);
+
+        if (this.params.id && this.params.metric) {
+            const alarm = this.alerts.find((alert) => {
+                return alert.entity === this.params.id && alert.metric === this.params.metric;
+            });
+            this.setActiveEntity(alarm, false);
+        }
 
         this.breakpointSubscription = this.breakpointObserver
             .observe([this.breakpoint])
@@ -250,11 +261,18 @@ export class NxSystemAlertsComponent implements OnInit, OnDestroy {
         };
     }
 
-    setActiveEntity(alarm) {
-        if (alarm.resource) {
+    setActiveEntity(alarm, updateURI = true) {
+        if (alarm.entity) {
             this.activeTableEntity = alarm;
             this.activePanelEntity = this.values[alarm.metric][alarm.entity];
             this.activePanelParams = this.healthService.panelParams[alarm.metric];
+
+            if (updateURI) {
+                const queryParams: Params = {};
+                queryParams.id = alarm.entity;
+                queryParams.metric = alarm.metric;
+                this.uriService.updateURI(undefined, queryParams);
+            }
 
             if (this.breakpointObserver.isMatched(this.breakpoint)) {
                 this.mobileDetailMode = true;
@@ -264,10 +282,17 @@ export class NxSystemAlertsComponent implements OnInit, OnDestroy {
         }
     }
 
-    resetActiveEntity() {
+    resetActiveEntity(updateURI = true) {
         this.activeTableEntity = undefined;
         this.activePanelEntity = undefined;
         this.activePanelParams = undefined;
         this.mobileDetailMode = false;
+
+        if (updateURI) {
+            const queryParams: Params = {};
+            queryParams.id = undefined;
+            queryParams.metric = undefined;
+            this.uriService.updateURI(undefined, queryParams);
+        }
     }
 }

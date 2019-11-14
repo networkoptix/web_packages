@@ -147,21 +147,9 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
     }
 
     setPage(page: number) {
+        // TODO: possible optimization - we may not need snapshot params here
         this.params = { ...this.route.snapshot.queryParams };
-        if (this.params && this.params.id && this.selectedEntity) {
-            const index = this._elements.findIndex((element) => {
-                return element.id === this.params.id;
-            });
-            if (index !== -1) {
-                this.currentPage = Math.floor(index / this.pageSize) + 1;
-            }
-            this.params.id = undefined;
-        // } else if (this.params && this.params.page) {
-        //     this.currentPage = this.params.page;
-        //     this.params.page = undefined;
-        } else {
-            this.currentPage = page;
-        }
+        this.currentPage = page;
 
         const pageParam = (this.currentPage === 1) ? undefined : this.currentPage;
         // preserve window offset
