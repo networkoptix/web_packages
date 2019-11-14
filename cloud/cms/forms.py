@@ -103,7 +103,7 @@ class CustomContextForm(forms.Form):
                     ds_description += generate_branding_variables(data_structure)
 
             if data_structure.type == DataStructure.DATA_TYPES.guid:
-                ds_description += "<br>GUID format is '{XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXX}' using hexadecimal " \
+                ds_description += "<br>GUID format is '{XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX}' using hexadecimal " \
                                   "characters (0-9, a-f, A-F)"
 
             ds_language = language
