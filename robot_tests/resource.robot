@@ -100,7 +100,6 @@ Log In
     Click Button    ${LOG IN BUTTON}
 
 Validate Log In
-    Wait Until Page Contains Element    ${AUTHORIZED BODY}    10
     Wait Until Element is Visible    ${ACCOUNT DROPDOWN}
     Check Langauge Logged In
     Sleep    1    #this is a test to see if it eliminates a problem with the login dialog popping up on logout
@@ -448,7 +447,7 @@ Make sure notowner is in the system
     Run Keyword Unless    ${status}    Share To    ${EMAIL NOT OWNER}    ${VIEWER TEXT}
     Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
     ${email}    Wait For Email    recipient=${EMAIL NOT OWNER}    timeout=120    status=UNSEEN
-    Delete All Emails
+    Delete Email    ${email}
     Close Browser
 
 Make sure viewer is in the system
@@ -461,7 +460,7 @@ Make sure viewer is in the system
     Run Keyword Unless    ${status}    Share To    ${EMAIL VIEWER}    ${VIEWER TEXT}
     Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
     ${email}    Wait For Email    recipient=${EMAIL VIEWER}    timeout=120    status=UNSEEN
-    Delete All Emails
+    Delete Email    ${email}
     Close Browser
 
 Reset System Names

@@ -309,7 +309,7 @@ Share with registered user works and sends him notification
     ...    ${BASE EMAIL PASSWORD}
     ...    ${BASE HOST}
     ...    ${BASE PORT}
-    Delete All Emails
+    Delete Email    ${emailID}
     Close Mailbox
     Log Out
     Log in to Auto Tests System    ${EMAIL NOPERM}

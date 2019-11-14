@@ -256,6 +256,6 @@ Language change affects emails
     ...    ${BASE EMAIL PASSWORD}
     ...    ${BASE HOST}
     ...    ${BASE PORT}
-    Delete All Emails
+    Delete Email    ${email}
     Close Mailbox
     Check Langauge Logged In
