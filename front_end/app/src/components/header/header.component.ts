@@ -129,7 +129,6 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
 
         // notification from view.js
         this.systemIdSubscription = this.headerService.systemIdSubject.subscribe((systemId) => {
-            console.log(systemId);
             if (systemId) {
                 this.systemIdUpdate(systemId);
             }
