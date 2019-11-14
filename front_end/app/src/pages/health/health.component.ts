@@ -252,7 +252,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                                 this.healthService.values[metric][entity][group.id][header.id] = {
                                     ...formattedVal,
                                     class: alarm ? alarm.level : '',
-                                    tooltip: alarm ? alarm.text : '',
+                                    tooltip: alarm ? this.getAlertText(metric, entity, alarm.text) : '',
                                     icon: alarm ? alarm.level : '',
                                 };
 
@@ -284,13 +284,23 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                         this.healthService.values[metric][entity]._.alarm.toolip = tooltip;
                     } else {
                         if (this.healthService.values[metric][entity]._.name) {
-                            this.healthService.values[metric][entity]._.name.tooltip = highestAlarm.text;
+                            this.healthService.values[metric][entity]._.name.tooltip = this.getAlertText(metric, entity, highestAlarm.text);
                         }
-                        this.healthService.values[metric][entity]._.alarm.tooltip = highestAlarm.text;
+                        this.healthService.values[metric][entity]._.alarm.tooltip = this.getAlertText(metric, entity, highestAlarm.text);
                     }
                 }
             });
         });
+    }
+
+    getAlertText(metric, entity, message) {
+        const resourceName = this.healthService.manifest[metric].resource;
+        const entityName = this.healthService.findEntityName(this.healthService.values[metric][entity]);
+        if (resourceName && entityName !== '–') {
+            return `${resourceName} ${entityName} ${message}`;
+        } else {
+            return message;
+        }
     }
 
     initializeAlarms() {
@@ -315,8 +325,15 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                             alert._.type = {text: this.healthService.manifest[metric].resource || this.healthService.manifest[metric].name};
                             alert._.message = {text: alarm.text};
                             alert._.alarm = {icon: alarm.level};
-                            alert.resource = entity;
+
                             alert.metric = metric;
+                            alert.entity = entity;
+
+                            const resourceName = this.healthService.manifest[metric].resource;
+                            const entityName = this.healthService.findEntityName(this.healthService.values[metric][entity]);
+                            if (resourceName && entityName !== '–') {
+                                alert._.message.text = this.getAlertText(metric, entity, alert._.message.text);
+                            }
                             this.healthService.alertsValues.push(alert);
                             this.healthService.alertsCount[alarm.level]++;
                         });

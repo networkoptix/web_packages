@@ -159,4 +159,14 @@ export class NxHealthService {
 
         return alerts;
     }
+
+    findEntityName(entity) {
+        if (entity._ && entity._.name) {
+            return entity._.name.text;
+        } else if (entity.info && entity.info.name) {
+            return entity.info.name.text;
+        } else {
+            return '–';
+        }
+    }
 }

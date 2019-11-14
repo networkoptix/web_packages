@@ -253,7 +253,7 @@ export class NxSystemAlertsComponent implements OnInit, OnDestroy {
     setActiveEntity(alarm) {
         if (alarm.resource) {
             this.activeTableEntity = alarm;
-            this.activePanelEntity = this.values[alarm.metric][alarm.resource];
+            this.activePanelEntity = this.values[alarm.metric][alarm.entity];
             this.activePanelParams = this.healthService.panelParams[alarm.metric];
 
             if (this.breakpointObserver.isMatched(this.breakpoint)) {
