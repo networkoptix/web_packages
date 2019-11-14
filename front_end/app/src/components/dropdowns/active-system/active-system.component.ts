@@ -49,9 +49,9 @@ export class NxActiveSystemDropdown implements OnInit, OnDestroy, OnChanges {
     ngOnChanges(changes: SimpleChanges) {
         this.updateActive();
         if (changes.activeSystem) {
-            if (changes.activeSystem.currentValue === undefined) {
+            if (!('id' in changes.activeSystem.currentValue)) {
                 this.activeSystem = {id: '0'}; // Avoid JS timing error (in console)
-            } else {
+            } else if (changes.activeSystem.currentValue.id !== '0') {
                 this.canViewInfo = this.CONFIG.accessRoles.adminAccess
                     .includes(changes.activeSystem.currentValue.accessRole.toLowerCase());
             }

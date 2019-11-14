@@ -129,6 +129,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
 
         // notification from view.js
         this.systemIdSubscription = this.headerService.systemIdSubject.subscribe((systemId) => {
+            console.log(systemId);
             if (systemId) {
                 this.systemIdUpdate(systemId);
             }
@@ -154,8 +155,10 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         this.routerSubscription = this.router.events
               .subscribe((event: Event) => {
                   if (event instanceof RoutesRecognized) {
-                      this.systemId = event.state.root.firstChild.params.systemId;
+                      this.systemId = event.state.root.firstChild.params.systemId || '';
                       this.localStorage.set('systemId', this.systemId);
+                      this.updateActiveSystem();
+                      this.updateActive();
                   }
 
                   if (event instanceof NavigationEnd) {
@@ -256,7 +259,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                 return this.systemId === system.id;
             });
 
-            this.accountService
+            return this.accountService
                 .get()
                 .then(account => {
                     if (account) {
@@ -272,5 +275,6 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                     }
                 });
         }
+        this.activeSystem = {};
     }
 }
