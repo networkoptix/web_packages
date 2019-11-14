@@ -25,6 +25,7 @@ import { NgxFileDropModule }            from 'ngx-file-drop';
 import { FormsModule }                  from '@angular/forms';
 import { NxSystemAlertCardComponent }   from './card/card.component';
 import { PipesModule }                  from '../../pipes/pipes.module';
+import { NxUpdateInfoComponent }        from './update-info/update-info.component';
 
 const appRoutes: Routes = [
     {
@@ -70,7 +71,8 @@ const appRoutes: Routes = [
         NxSingleEntityComponent,
         NxImageComponent,
         NxImageSectionComponent,
-        NxSystemAlertCardComponent
+        NxSystemAlertCardComponent,
+        NxUpdateInfoComponent
     ],
     bootstrap      : [],
     entryComponents: [
@@ -78,7 +80,8 @@ const appRoutes: Routes = [
         NxSystemAlertsComponent,
         NxSystemMetricsComponent,
         NxImageSectionComponent,
-        NxImageComponent
+        NxImageComponent,
+        NxUpdateInfoComponent
     ],
     exports: [
         NxHealthComponent,

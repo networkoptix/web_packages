@@ -13,15 +13,18 @@
             <nx-menu [content]="menu"></nx-menu>
             <hr>
             <div class="menuLinks px-2">
-                <svg-icon [src]="CONFIG.icons.dir + 'download.svg'"
-                          [svgStyle]="{'width.px': '20'}"></svg-icon>
-                <a href="#" class="pl-1" (click)="exportReport()">Download Full Report</a>
-            </div>
-            <div class="mt-3 px-2">
+                <nx-health-update *ngIf="!importedData.imported" (updateHealth)="updateValues()"></nx-health-update>
                 <div *ngIf="importedData.imported" class="importInfo pb-2">
                     <p>System: {{importedData.system}}</p>
                     <p>Generated: {{importedData.time}}</p>
                 </div>
+                <div>
+                    <svg-icon [src]="CONFIG.icons.dir + 'download.svg'"
+                               [svgStyle]="{'width.px': '20'}"></svg-icon>
+                    <a href="#" class="pl-1" (click)="exportReport()">Download Full Report</a>
+                </div>
+            </div>
+            <div class="mt-3 px-2">
                 <ngx-file-drop *ngIf="importShow" dropZoneLabel="Drop report here to import"
                                dropZoneClassName="importZone"
                                contentClassName="contentZone"

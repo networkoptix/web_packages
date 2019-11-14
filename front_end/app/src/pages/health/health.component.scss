@@ -14,16 +14,18 @@ nx-system-health-component {
 
   .menuLinks {
     a {
-      text-decoration: none;
-      color: $light16;
+      text-decoration: none !important;
+      color: $light16 !important;
       font-family: $font-family-medium;
       font-size: $h5-font-size;
 
       &:hover {
-        color: $light12;
+        color: $light12 !important;
       }
     }
-
+    svg {
+      cursor: pointer;
+    }
     svg * {
       fill: $light16;
     }
