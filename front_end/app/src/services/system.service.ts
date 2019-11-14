@@ -190,6 +190,10 @@ export class NxSystem extends System implements OnDestroy {
         }
     }
 
+    canViewInfo() {
+        return this.CONFIG.accessRoles.adminAccess.includes(this.accessRole.toLowerCase());
+    }
+
     checkPermissions() {
         this.permissions = {};
         this.accessRole = this.info.accessRole;

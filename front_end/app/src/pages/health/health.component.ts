@@ -83,6 +83,8 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         this.route.params.subscribe((params: any) => {
             const systemId = params.systemId;
             this.accountService.get().then((account) => {
+                this.healthService.ready = false;
+                this.systemReady = false;
                 this.account = account;
                 this.system = this.systemService.createSystem(systemId, account.email);
                 this.healthService.system = this.system;
@@ -94,6 +96,8 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                     this.system.mediaserver.getAggregateHealthReport()
                         .subscribe((result: any) => {
                             this.setupReport(result);
+                        }, () => {
+                            this.healthService.ready = false;
                         });
                 });
             });

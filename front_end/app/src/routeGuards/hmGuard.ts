@@ -42,7 +42,11 @@ export class HMGuard implements CanActivate {
                     return this.system
                         .getInfoAndPermissions()
                         .then((system) => {
-                            return (this.CONFIG.accessRoles.adminAccess.includes(system.accessRole.toLowerCase()));
+                            const canView = system.canViewInfo();
+                            if (!canView) {
+                                return this.router.navigate([`/systems/${systemId}`]);
+                            }
+                            return canView;
                         });
 
                 }

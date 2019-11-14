@@ -266,7 +266,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                         this.system
                             .getInfoAndPermissions()
                             .then((system) => {
-                                this.canSeeInfo = (['cloudadmin', 'owner', 'administrator'].includes(system.accessRole.toLowerCase()));
+                                this.canSeeInfo = system.canViewInfo();
                             });
 
                     }

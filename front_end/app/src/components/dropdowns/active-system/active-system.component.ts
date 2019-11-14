@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, OnDestroy, SimpleChanges, OnChanges } from '@angular/core';
 import { Location }                                                      from '@angular/common';
-import { ActivatedRoute }                                                from '@angular/router';
+import { NxConfigService } from '../../../services/nx-config';
+
 
 @Component({
     selector: 'nx-active-system',
@@ -10,19 +11,20 @@ import { ActivatedRoute }                                                from '@
 
 export class NxActiveSystemDropdown implements OnInit, OnDestroy, OnChanges {
     @Input() activeSystem: any;
+    CONFIG: any;
 
     active = {
-        register: false,
+        health: false,
+        settings: false,
         view: false,
-        settings: false
     };
-    routeSystemId: string;
+    canViewInfo: boolean;
     params: any;
     show: boolean;
 
-    constructor(private location: Location,
-                private route: ActivatedRoute) {
-
+    constructor(private config: NxConfigService,
+                private location: Location) {
+        this.CONFIG = this.config.getConfig();
         this.show = false;
     }
 
@@ -31,9 +33,10 @@ export class NxActiveSystemDropdown implements OnInit, OnDestroy, OnChanges {
     }
 
     private updateActive() {
-        this.active.register = this.isActive('/register');
+        this.active.health = this.isActive('/health');
         this.active.view = this.isActive('/view');
-        this.active.settings = !this.isActive('/register') && !this.isActive('/view');
+        this.active.settings = !(this.active.view || this.active.health);
+        this.show = false;
     }
 
     ngOnInit(): void {
@@ -45,9 +48,13 @@ export class NxActiveSystemDropdown implements OnInit, OnDestroy, OnChanges {
 
     ngOnChanges(changes: SimpleChanges) {
         this.updateActive();
-
-        if (changes.activeSystem && changes.activeSystem.currentValue === undefined) {
-            this.activeSystem = {id:'0'}; // Avoid JS timing error (in console)
+        if (changes.activeSystem) {
+            if (changes.activeSystem.currentValue === undefined) {
+                this.activeSystem = {id: '0'}; // Avoid JS timing error (in console)
+            } else {
+                this.canViewInfo = this.CONFIG.accessRoles.adminAccess
+                    .includes(changes.activeSystem.currentValue.accessRole.toLowerCase());
+            }
         }
     }
 }

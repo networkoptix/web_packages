@@ -1,8 +1,5 @@
-import { Component, OnInit, Input, SimpleChanges, Inject, OnChanges } from '@angular/core';
-import { ActivatedRoute }                                             from '@angular/router';
-import { Location }                                                   from '@angular/common';
-import { Utils }                                                      from '../../../utils/helpers';
-import { NxConfigService }                                            from '../../../services/nx-config';
+import { Component, OnInit, Input, SimpleChanges, OnChanges } from '@angular/core';
+import { NxConfigService }                                    from '../../../services/nx-config';
 
 @Component({
     selector: 'nx-systems',
@@ -18,17 +15,15 @@ export class NxSystemsDropdown implements OnInit, OnChanges {
     config: any;
     systemCounter: number;
     active = {
+        health: false,
         register: false,
+        settings: false,
         view: false,
-        settings: false
     };
-    routeSystemId: string;
     params: any;
     show: boolean;
 
-    constructor(private configService: NxConfigService,
-                private location: Location,
-                private route: ActivatedRoute) {
+    constructor(private configService: NxConfigService) {
 
         this.show = false;
         this.config = configService.getConfig();
@@ -45,12 +40,15 @@ export class NxSystemsDropdown implements OnInit, OnChanges {
             url += '/view';
         }
 
+        if (this.endpoint.information) {
+            url += '/health/';
+        }
+
         return url;
     }
 
 
     ngOnInit(): void {
-        // this.updateActive();
         this.systemCounter = this.systems.length;
     }
 
