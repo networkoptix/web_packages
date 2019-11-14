@@ -109,7 +109,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit {
         this.currentPage = 1;
         this.pageSize = this.CONFIG.layout.tableLarge.rows;
 
-        this.uriSubscription = new Subject<any>();
+        this.uriSubscription = new Subscription();
     }
 
     trackPagedItem(index, item) {
