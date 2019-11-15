@@ -6,5 +6,15 @@
 @import '~bootstrap/scss/mixins/breakpoints';
 
 nx-single-entity{
-  display: block;
+    display: block;
+
+    .row-line {
+        border-bottom : 1px solid $light3;
+        flex-grow: 1;
+        min-width: 16px;
+        position: relative;
+        bottom: 4px;
+        left: 0;
+        margin-left: 8px;
+    }
 }
