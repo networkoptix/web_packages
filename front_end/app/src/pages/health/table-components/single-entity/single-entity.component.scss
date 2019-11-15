@@ -8,13 +8,27 @@
 nx-single-entity{
     display: block;
 
-    .row-line {
-        border-bottom : 1px solid $light3;
-        flex-grow: 1;
-        min-width: 16px;
-        position: relative;
-        bottom: 4px;
-        left: 0;
-        margin-left: 8px;
+    .row-name {
+        & {
+            position: relative;
+        }
+
+        & span {
+            position: relative;
+            z-index: 2;
+            background-color: $light1;
+            padding-right: 8px;
+        }
+
+        &:after {
+            content: "";
+            position: absolute;
+            bottom: 4px;
+            left: 0;
+            right: 0;
+            border-bottom: 1px solid $light3;
+            z-index: 1;
+            min-width: 16px;
+        }
     }
 }

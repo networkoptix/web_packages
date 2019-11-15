@@ -4,10 +4,9 @@
         <nx-block *ngIf="paramGroup.id !== '_'" class="mt-3">
             <header [innerText]="paramGroup.name"></header>
             <nx-section>
-                <div class="row" *ngFor="let param of paramGroup.values">
-                    <div class="col-5 d-flex align-items-end pr-0">
-                        <div>{{param.name || param.id}}</div>
-                        <div class="row-line"></div>
+                <div class="row d-flex align-items-end" *ngFor="let param of paramGroup.values">
+                    <div class="col-5 pr-0">
+                        <div class="row-name"><span>{{param.name || param.id}}</span></div>
                     </div>
                     <div class="col-3"
                          *ngIf="entity[paramGroup.id] && entity[paramGroup.id][param.id]; else noValue"
