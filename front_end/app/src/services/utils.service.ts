@@ -80,30 +80,23 @@ export class NxUtilsService {
     }
 
     public secondsToTime(seconds) {
-        let time = '';
+        const timeUnits = ['d', 'h', 'm', 's'];
+        const timeDivisors = [60 * 60 * 24, 60 * 60, 60, 1];
+        const timeValues = [];
+        let time = '0s';
 
-        const days = Math.floor(seconds / (3600 * 24));
-        seconds  -= days * 3600 * 24;
-        if (days) {
-            time += `${days}d `;
+        for (const divisor of timeDivisors) {
+            const val = Math.floor(seconds / divisor);
+            seconds -= val * divisor;
+            timeValues.push(val);
         }
 
-        const hours   = Math.floor(seconds / 3600);
-        seconds  -= hours * 3600;
-        if (hours) {
-            time += `${hours}h `;
-        }
-
-        const minutes = Math.floor(seconds / 60);
-        seconds  -= minutes * 60;
-        if (minutes) {
-            time += `${minutes}m `;
-        }
-
-        if (seconds) {
-            time += `${seconds.toFixed(0)}s`;
-        } else {
-            time = time.trim();
+        const first = timeValues.findIndex(val => val > 0);
+        if (first !== -1) {
+            time = `${timeValues[first]}${timeUnits[first]}`;
+            if (first < timeUnits.length - 1 && timeValues[first + 1]) {
+                time += ` ${timeValues[first + 1]}${timeUnits[first + 1]}`;
+            }
         }
 
         return time;
