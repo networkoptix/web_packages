@@ -69,23 +69,41 @@ export class NxHealthService {
     }
 
     formatValue(header, value) {
+        function roundInt(val) {
+            if (typeof val === 'number') {
+                if (Math.abs(val) >= 10) {
+                    return Math.round(val);
+                } else {
+                    return parseFloat(val.toFixed(2));
+                }
+            }
+            return val;
+        }
+
         let retValue = value;
+        let formatDisplay = header.format || '';
         if (header.format) {
             const format = header.format;
             const valueFormats = this.CONFIG.healthMonitoring.valueFormats;
             if (valueFormats[format]) {
-                retValue =  `${(value * valueFormats[format].multiplier).toFixed(valueFormats[format].decimals)} ${format.display || format}`;
+                retValue = roundInt(retValue * valueFormats[format].multiplier);
+                formatDisplay = valueFormats[format].display || header.format;
+                retValue = `${retValue} ${formatDisplay}`;
             } else if (format === 'durationS') {
-                retValue = this.utilsService.secondsToTime(value);
+                retValue = this.utilsService.secondsToTime(retValue);
             } else if (format === 'resource') {
-                retValue = this.resourceNames[value] || value;
+                retValue = this.resourceNames[retValue] || retValue;
             } else if (format === 'thumbnail') {
-                retValue = this.resourceNames[value] || value;
+                retValue = this.resourceNames[retValue] || retValue;
             } else {
                 console.error(`Format not recognized: ${format}`);
-                retValue = `${value} ${format}`;
+                retValue = roundInt(retValue);
+                retValue = `${retValue} ${format}`;
             }
+        } else {
+            retValue = roundInt(retValue);
         }
+
         return {text: retValue, format: header.format || '', value};
     }
 
