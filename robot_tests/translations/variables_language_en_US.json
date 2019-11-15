@@ -181,6 +181,7 @@
     "CONNECTION TO SYSTEM LOST"            :    "Connection to %SYSTEM NAME% lost",
     "SYSTEM IS OFFLINE TEXT"               :    "System is offline. Some settings may not be available.",
     "ALL INTEGRATIONS TEXT"                :    "All Integrations",
+    "INTEGRATIONS TITLE TEXT"              :    "Integrations",
     "INTEGRATION DOWNLOADS TEXT"           :    "Downloads",
     "INTEGRATION REQUIREMENTS TEXT"        :    "Requirements",
     "INTEGRATION HOW IT WORKS TEXT"        :    "How it works",

@@ -1,30 +1,30 @@
 *** Settings ***
 Library    Collections
+Library    SeleniumLibrary
 Resource          ../resource.robot
 Resource          ../APIresource.robot
 Resource          ../variables.robot
 Resource          ../variables-env.robot
 
-Suite Setup       Open Browser and Go To Integrations Page Anonimous
-#Test Setup        Go To Integrations Page
+Suite Setup       Open Browser and Go To Integrations Page Anonymous
 Test Teardown     Run Keyword If Test Failed   Go To Integrations Page
 Suite Teardown    Close All Browsers
 Force Tags        integrations
 
 *** Variables ***
 ${url}        ${ENV}/integrations
-${title}      Integrations - ${PRODUCT_NAME}
+${title}      ${INTEGRATIONS TITLE TEXT} - ${PRODUCT_NAME}
 @{auth}       ${BASE EMAIL}    ${BASE EMAIL PASSWORD}
 
 *** Keywords ***
-Open Browser and Go To Integrations Page Anonimous
+Open Browser and Go To Integrations Page Anonymous
     ${is enabled}=   Integration Store is Enabled    ${auth}
     Run keyword If    ${is enabled} == ${True}    Open browser    ${url}    ${BROWSER}
     ...    ELSE    Fatal Error    Tests cannot be executed. Please enable Integration Store in CMS.
 
 Go To Integrations Page
     Go To    ${url}
-    Validate Landing Page
+    Validate Integrations Landing Page
 
 Validate Integrations Landing Page
     Wait Until Elements Are Visible
@@ -68,7 +68,7 @@ Validate Integration Details Page
 #    Should Contain    ${integration tile contents}    ${INTEGRATION TILE NAME}
 #    Should Contain    ${integration tile contents}    ${INTEGRATION TILE TEXT}
 
-Validate Get in Touch Form
+Validate "Get in Touch" Form
     Run keyword and continue on failure    Wait Until Elements Are Visible
     ...    ${INTEGRATION GET IN TOUCH FORM}
     ...    ${INTEGRATION GET IN TOUCH HEADER}
@@ -88,10 +88,19 @@ Validate Get in Touch Form
     ...    ${INTEGRATION GET IN TOUCH DROPDOWN ICON}
     ...    ${INTEGRATION GET IN TOUCH MESSAGE LABEL}
     ...    ${INTEGRATION GET IN TOUCH MESSAGE INPUT}
-    ...    ${INTEGRATION GET IN TOUCH BOTTOM TEXT}
+    ...    ${INTEGRATION GET IN TOUCH PRIVACY LINKS}
     ...    ${INTEGRATION GET IN TOUCH SEND BUTTON}
     ...    ${INTEGRATION GET IN TOUCH CANCEL BUTTON}
 
+Fill in "Get in Touch" Form and Submit
+    [Arguments]
+    ...    ${name}=${TEST FIRST NAME}${SPACE}${TEST LAST NAME}
+    ...    ${email}=${ALT BASE EMAIL}
+    ...    ${message}=Test Get in Touch Form
+    Input Text    ${INTEGRATION GET IN TOUCH NAME INPUT}    ${name}
+    Input Text    ${INTEGRATION GET IN TOUCH EMAIL INPUT}    ${email}
+    Input Text    ${INTEGRATION GET IN TOUCH MESSAGE INPUT}    ${message}
+    Click Button    ${INTEGRATION GET IN TOUCH SEND BUTTON}
 
 *** Test Cases ***
 Integration Store title and URL are correct
@@ -102,7 +111,7 @@ Integration Store title and URL are correct
 
 #Integration Store catalog
 #    [Tags]    C54622
-#    @{integration tiles}=   Get WebElements   ${INTEGRATION TILE}
+#    @{integration tiles}=   Get WebElements    ${INTEGRATION TILE}
 #    Log List    ${integration tiles}
 #    FOR    ${integration tile}    IN    @{integration tiles}
 #        Validate Integration Tile    ${integration tile}
@@ -118,7 +127,35 @@ Integration Store Integration Details
     CLick Link    ${INTEGRATION TEST INEGRATION LINK}
     Validate Integration Details Page
 
-Send messages using Integration Contact Get in touch form
+Send messages using Integration Contact "Get in touch" form
     [Tags]    C54681
-    Click Element   ${INTEGRATION GET IN TOUCH BUTTON}
-    Validate Get in Touch Form
+    Click Element    ${INTEGRATION GET IN TOUCH BUTTON}
+    Validate "Get in Touch" Form
+
+    Log    Validating close buttons
+    Click Element    ${INTEGRATION GET IN TOUCH CLOSE BUTTON}
+    Element Should Not Be Visible    ${INTEGRATION GET IN TOUCH FORM}
+    Click Element    ${INTEGRATION GET IN TOUCH BUTTON}
+    Click Element    ${INTEGRATION GET IN TOUCH CANCEL BUTTON}
+    Element Should Not Be Visible    ${INTEGRATION GET IN TOUCH FORM}
+    Click Element    ${INTEGRATION GET IN TOUCH BUTTON}
+
+    Log    Validating privacy links
+    @{privacy links}=   Get WebElements    ${INTEGRATION GET IN TOUCH PRIVACY LINKS}
+    ${num of privacy links}=   Get length    ${privacy links}
+    Should be equal as numbers    ${num of privacy links}    2
+    ${privacy link href}=   Get Element Attribute    @{privacy links}[1]    href
+    Should Contain    ${privacy link href}    ${PRIVACY POLICY URL HREF}
+
+    Log    Send messages - positive
+    Input Text    ${INTEGRATION GET IN TOUCH NAME INPUT}    ${TEST FIRST NAME} ${TEST LAST NAME}
+    Input Text    ${INTEGRATION GET IN TOUCH EMAIL INPUT}    ${ALT BASE EMAIL}
+    Input Text    ${INTEGRATION GET IN TOUCH MESSAGE INPUT}    Test Get in Touch Form
+    Click Button    ${INTEGRATION GET IN TOUCH SEND BUTTON}
+    Wait Util Element Is Visible    ${INTEGRATION GET IN TOUCH FORM}
+
+
+
+
+
+
