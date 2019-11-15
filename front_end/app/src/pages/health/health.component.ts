@@ -406,9 +406,9 @@ export class NxHealthComponent implements OnInit, OnDestroy {
     }
 
     updateValues() {
-        this.system.mediaserver.getHealthValues().subscribe((data) => {
-            this.healthService.values = data.reply;
-            this.processValues();
+        this.healthService.ready = false;
+        this.system.mediaserver.getAggregateHealthReport().subscribe((data) => {
+            this.setupReport(data);
         });
     }
 }
