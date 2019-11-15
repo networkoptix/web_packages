@@ -47,7 +47,8 @@
                         <ng-container *ngFor="let header of headerGroup.values; first as firstHeader">
                             <td *ngIf="firstGroup && item[headerGroup.id] && item[headerGroup.id][header.id] && item[headerGroup.id][header.id].icon; else showValue">
                                 <svg-icon *ngIf="firstHeader"
-                                          [svgStyle]="{'width.px': '20'}"
+                                          [title]="item && item[headerGroup.id] && item[headerGroup.id][header.id] && item[headerGroup.id][header.id].tooltip || ''"
+                                          [svgStyle]="{'width.px': '20', 'pointer-events': 'none'}"
                                           [src]="CONFIG.icons.dir + item[headerGroup.id][header.id].icon + '.svg'"></svg-icon>
                             </td>
                             <ng-template #showValue>

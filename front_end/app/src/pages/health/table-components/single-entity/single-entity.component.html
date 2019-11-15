@@ -17,7 +17,7 @@
                                       ? entity[paramGroup.id][param.id].text : '–'"></span>
                         <svg-icon class="pl-1"
                                   *ngIf="entity[paramGroup.id][param.id].icon"
-                                  [svgStyle]="{'width.px': '20'}"
+                                  [svgStyle]="{'width.px': '20', 'pointer-events': 'none'}"
                                   [src]="CONFIG.icons.dir + entity[paramGroup.id][param.id].icon + '.svg'"></svg-icon>
                     </div>
                     <ng-template #noValue>

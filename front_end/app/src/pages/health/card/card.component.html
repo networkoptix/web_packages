@@ -3,12 +3,7 @@
     <div class="card-body">
         <div *ngFor="let alert of data.alerts" class="d-flex justify-content-between" [ngClass]="{'muted': !alert.count}">
             <div>{{alert.name | titlecase}}</div>
-            <div class="d-inline-flex">
-                <svg-icon *ngIf="alert.count" class="mr-1"
-                          [svgStyle]="{'width.px': '20'}"
-                          [src]="CONFIG.icons.dir + alert.level + '.svg'"></svg-icon>
-                <div>{{alert.count}}</div>
-            </div>
+            <nx-alert-counter [count]="alert.count" [type]="alert.level"></nx-alert-counter>
         </div>
     </div>
 </div>

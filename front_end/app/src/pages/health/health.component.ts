@@ -281,7 +281,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                         if (this.healthService.values[metric][entity]._.name) {
                             this.healthService.values[metric][entity]._.name.tooltip = tooltip;
                         }
-                        this.healthService.values[metric][entity]._.alarm.toolip = tooltip;
+                        this.healthService.values[metric][entity]._.alarm.tooltip = tooltip;
                     } else {
                         if (this.healthService.values[metric][entity]._.name) {
                             this.healthService.values[metric][entity]._.name.tooltip = this.getAlertText(metric, entity, highestAlarm.text);
