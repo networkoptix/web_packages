@@ -148,11 +148,8 @@ Send messages using Integration Contact "Get in touch" form
     Should Contain    ${privacy link href}    ${PRIVACY POLICY URL HREF}
 
     Log    Send messages - positive
-    Input Text    ${INTEGRATION GET IN TOUCH NAME INPUT}    ${TEST FIRST NAME} ${TEST LAST NAME}
-    Input Text    ${INTEGRATION GET IN TOUCH EMAIL INPUT}    ${ALT BASE EMAIL}
-    Input Text    ${INTEGRATION GET IN TOUCH MESSAGE INPUT}    Test Get in Touch Form
-    Click Button    ${INTEGRATION GET IN TOUCH SEND BUTTON}
-    Wait Util Element Is Visible    ${INTEGRATION GET IN TOUCH FORM}
+    Fill in "Get in Touch" Form and Submit
+    Wait Until Element Is Not Visible    ${INTEGRATION GET IN TOUCH FORM}
 
 
 
