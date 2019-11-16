@@ -29,6 +29,7 @@ export class NxSystemMetricsComponent implements OnInit {
     filterModel: any;
     system: NxSystem;
     metricId: any;
+    initialId: any;
 
     mobileDetailMode: boolean;
     breakpoint: string;
@@ -70,7 +71,7 @@ export class NxSystemMetricsComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        let idParam = this.route.snapshot.queryParamMap.get('id');
+        this.initialId = this.route.snapshot.queryParamMap.get('id');
         const searchParam = this.route.snapshot.queryParamMap.get('search');
 
         this.routeSubscription = this.route
@@ -86,11 +87,10 @@ export class NxSystemMetricsComponent implements OnInit {
                 if (!searchParam || !searchParam.length) {
                     this.selectedValues = this.healthService.values[this.metricId] || {};
                     this.selectedCount = Object.values(this.selectedValues).length;
-                }
-
-                if (idParam) {
-                    this.setActiveEntity(idParam);
-                    idParam = undefined;
+                    this.handleInitialId();
+                } else {
+                    this.filterModel.query = searchParam || '';
+                    this.search();
                 }
             });
 
@@ -106,11 +106,27 @@ export class NxSystemMetricsComponent implements OnInit {
         this.breakpointSubscription.unsubscribe();
     }
 
+    handleInitialId() {
+        if (this.initialId) {
+            this.setActiveEntity(this.initialId);
+            this.initialId = undefined;
+        }
+    }
+
     modelChanged(model) {
+        this.filterModel.query = model.query;
+        this.search();
+    }
+
+    search() {
         this.selectedValues = this.healthService
-                                  .itemsSearch(this.healthService.values[this.metricId], model) || {};
+                                  .itemsSearch(this.healthService.values[this.metricId], this.filterModel) || {};
 
         this.selectedCount = Object.values(this.selectedValues).length;
+        this.handleInitialId();
+        if (this.activeEntity && !this.selectedValues[this.activeEntity.id]) {
+            this.resetActiveEntity();
+        }
     }
 
     setActiveEntity(entity) {

@@ -111,7 +111,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
         // /ipvd?search=Axis&tags=isAptzSupported&resolution=SVGA&vendors=Axis,30X,Sony
         // Update on reload
         this.params = this._route.snapshot.queryParams;
-        // this.updateFilter(undefined, false);
+        this.updateFilter(undefined, false);
 
         this.searchSubscription = this.searchUpdated
             .debounceTime(this.CONFIG.search.debounceTime)
