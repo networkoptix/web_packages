@@ -46,6 +46,8 @@ export class HMGuard implements CanActivate {
                                 return this.router.navigate([`/systems/${systemId}`]);
                             }
                             return canView;
+                        }, _ => {
+                            return this.router.navigate([`/systems/${systemId}`]);
                         });
 
                 }
