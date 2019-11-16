@@ -1,5 +1,7 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnDestroy, ViewChild } from '@angular/core';
 import { NxHealthService } from '../../health.service';
+import { fromEvent, Subscription } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 
 
 interface ThumbNail {
@@ -13,16 +15,31 @@ interface ThumbNail {
     templateUrl: './image-section.component.html',
     styleUrls: ['./image-section.component.scss']
 })
-export class NxImageSectionComponent implements OnChanges {
+export class NxImageSectionComponent implements OnChanges, AfterViewInit, OnDestroy {
     @Input() cameraInfo: any;
+    @ViewChild('imageWidth', {static: false}) imageSize: ElementRef;
     cameraId: string;
+    changeRow: boolean;
     ready: boolean;
     state: string;
     thumbnails: ThumbNail[];
 
+    fromEventSubscription: Subscription;
+
     constructor(private healthService: NxHealthService) {
         this.thumbnails = [];
         this.ready = false;
+    }
+
+    ngOnDestroy() {
+        this.fromEventSubscription.unsubscribe();
+    }
+
+    ngAfterViewInit() {
+        this.changeRow = this.imageSize.nativeElement.offsetWidth < 360;
+        this.fromEventSubscription = fromEvent(window, 'resize').pipe(debounceTime(10)).subscribe((e) => {
+            this.changeRow = this.imageSize.nativeElement.offsetWidth < 360;
+        });
     }
 
     ngOnChanges(changes: any) {
@@ -40,7 +57,7 @@ export class NxImageSectionComponent implements OnChanges {
                 return {
                     loaded: false,
                     time,
-                    url: this.healthService.system.mediaserver.previewUrl(this.cameraId, time === 'now' ? '' : time)
+                    url: this.healthService.system.mediaserver.previewUrl(this.cameraId, time)
                 };
             }).sort((a: any, b: any) => {
                 if (a.time === 'now') {

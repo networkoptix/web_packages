@@ -102,7 +102,7 @@ class NxSystemAPI {
         } else {
             url = `${this.urlBase}${url}`;
         }
-        return `${url}&${params}`;
+        return `${url}${url.indexOf('?') > -1 ? '&' : '?'}${params}`;
     }
 
     private get(url: string, params?: any) {
