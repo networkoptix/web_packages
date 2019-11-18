@@ -38,6 +38,8 @@ export class NxSystemMetricsComponent implements OnInit {
     values: any;
     alarms: any;
 
+    metricValuesLen: number;
+
     selectedData: any;
     selectedPanelData: any;
     selectedValues: any;
@@ -83,6 +85,8 @@ export class NxSystemMetricsComponent implements OnInit {
                 this.selectedData = this.healthService.tableHeaders[this.metricId];
                 this.selectedPanelData = this.healthService.panelParams[this.metricId];
                 this.resetActiveEntity(false);
+
+                this.metricValuesLen = Object.values(this.healthService.values[this.metricId]).length;
 
                 if (!searchParam || !searchParam.length) {
                     this.selectedValues = this.healthService.values[this.metricId] || {};

@@ -1,7 +1,7 @@
 <div class="row">
 
     <div class="col-12 mb-3"
-         *ngIf="!mobileDetailMode">
+         *ngIf="!mobileDetailMode && metricValuesLen > 1">
         <nx-search
                 name="filterModel"
                 [ngModel]="filterModel"
@@ -15,7 +15,7 @@
     <div class="d-flex w-100">
         <div *ngIf="selectedData && selectedValues && !mobileDetailMode"
              class="px-2 overflow-auto">
-            <div [ngSwitch]="selectedCount">
+            <div [ngSwitch]="metricValuesLen">
                 <div *ngSwitchCase="0" class="row p-0 m-0 d-flex">
                     <div class="text-placeholder order-1 order-md-0 m-0 p-0 pr-2" translate>Nothing Found</div>
                 </div>
