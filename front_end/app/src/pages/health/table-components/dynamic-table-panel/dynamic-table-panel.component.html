@@ -15,7 +15,7 @@
             <ng-container *ngFor="let paramGroup of panelParams.values">
                 <div *ngIf="paramGroup.id !== '_'" class="pb-3">
                     <h4 *ngIf="paramGroup.values.length">{{paramGroup.name}}</h4>
-                    <div class="row nx-panel-row" *ngFor="let param of paramGroup.values">
+                    <div class="row nx-panel-row align-items-end" *ngFor="let param of paramGroup.values">
                         <div class="col-7 nx-panel">
                             <div class="row-title">
                                 <span>{{param.name || param.id}}</span>

@@ -135,10 +135,10 @@
             }
         
             .row-line {
-                border-bottom : 1px solid $light7;
+                border-bottom : 1px dotted $light7;
                 width         : calc(100% - 1rem);
                 position      : absolute;
-                bottom        : 4px;
+                bottom        : 6px;
                 height        : 14px;
             }
         }
