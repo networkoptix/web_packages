@@ -1,5 +1,5 @@
 import {
-    Component, OnInit
+    Component, OnInit, ViewChild, ElementRef
 }                                    from '@angular/core';
 import { Location }                  from '@angular/common';
 import { ActivatedRoute }            from '@angular/router';
@@ -13,6 +13,7 @@ import { NxSystemsService }          from '../../../../services/systems.service'
 import { NxAccountService }          from '../../../../services/account.service';
 import { NxProcessService }          from '../../../../services/process.service';
 import { NxSystem }                  from '../../../../services/system.service';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 interface Settings {
     disconnectDisabled: boolean;
@@ -43,6 +44,13 @@ export class NxSystemAdminComponent implements OnInit {
     betaMode: boolean;
     settings: Settings;
     checkboxStatuses: any = {};
+    limitSessionTimeUnits: any;
+    selectedTimeUnit: string;
+    selectedTimeUnitObject: any;
+    timeUnitCount: number;
+
+    @ViewChild('timeUnitTracker', {static: false})
+    timeUnitTracker: ElementRef;
 
     private setupDefaults() {
         this.CONFIG = this.configService.getConfig();
@@ -50,15 +58,6 @@ export class NxSystemAdminComponent implements OnInit {
         this.debugMode = this.CONFIG.allowDebugMode;
         this.betaMode = this.CONFIG.allowBetaMode;
         this.menuService.setSection('admin');
-        this.checkboxStatuses = {
-            autoDiscovery: false,
-            sendCrashStats: false,
-            autoOptimizeCameraSettings: false,
-            auditTrail: false,
-            allowOnlySecure: false,
-            encryptVideoTraffic: false,
-            limitSessionDuration: false,
-        }
     }
 
     private updateSettings(forceMergeState?: boolean) {
@@ -99,6 +98,27 @@ export class NxSystemAdminComponent implements OnInit {
             renameDisabled: false,
             showMerge: true
         };
+
+        this.checkboxStatuses = {
+            autoDiscovery: false,
+            sendCrashStats: false,
+            autoOptimizeCameraSettings: false,
+            auditTrail: false,
+            allowOnlySecure: false,
+            encryptVideoTraffic: false,
+            limitSessionDuration: false,
+        };
+        this.limitSessionTimeUnits = [
+            { value: 'Minutes', name: 'Minutes', id: 1, max: 60 },
+            { value: 'Hours', name: 'Hours', id: 2, max: 24 },
+            { value: 'Days', name: 'Days', id: 3, max: 366 },
+            { value: 'Months', name: 'Months', id: 4, max: 12 },
+        ];
+        this.selectedTimeUnit = 'Hours';
+        this.selectedTimeUnitObject = this.limitSessionTimeUnits
+                                         .find(e => e.name === this.selectedTimeUnit);
+        this.timeUnitCount = 1;
+
         this.init();
     }
 
@@ -129,6 +149,10 @@ export class NxSystemAdminComponent implements OnInit {
                 }
             });
 
+    }
+
+    ngAfterViewInit() {
+        this.updateTimeUnitInput(this.selectedTimeUnitObject);
     }
 
     disconnect() {
@@ -223,6 +247,20 @@ export class NxSystemAdminComponent implements OnInit {
                        this.updateSettings(this.currentlyMerging);
                        this.settingsService.system = this.system;
                    });
+    }
+
+    updateTimeUnitInput(timeUnit) {
+        const { max } = timeUnit;
+        const el = this.timeUnitTracker;
+        if (el.nativeElement.value > max) {
+            el.nativeElement.value = max;
+        }
+        el.nativeElement.setAttribute('max', max);
+
+        if (this.selectedTimeUnit !== timeUnit.name) {
+            this.selectedTimeUnit = timeUnit.name;
+            this.selectedTimeUnitObject = timeUnit;
+        }
     }
 }
 

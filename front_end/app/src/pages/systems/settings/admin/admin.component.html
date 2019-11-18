@@ -61,8 +61,7 @@
                                 componentId="autoDiscovery"
                                 [(ngModel)]="checkboxStatuses.autoDiscovery"
                                 #autoDiscovery="ngModel"
-                                description="autoDiscoveryHelpBlock"
-                                required>
+                                description="autoDiscoveryHelpBlock">
                             </nx-checkbox>
                             <label class="control-label mb-0" for="autoDiscovery">
                                 <span translate>Enable auto discovery of cameras and servers</span>
@@ -80,8 +79,7 @@
                                 componentId="sendCrashStats"
                                 [(ngModel)]="checkboxStatuses.sendCrashStats"
                                 #sendCrashStats="ngModel"
-                                description="sendCrashStatusHelpBlock"
-                                required>
+                                description="sendCrashStatusHelpBlock">
                             </nx-checkbox>
 
                             <label class="control-label mb-0" for="sendCrashStats">
@@ -98,8 +96,7 @@
                                 name="autoOptimizeCameraSettings"
                                 componentId="autoOptimizeCameraSettings"
                                 [(ngModel)]="checkboxStatuses.autoOptimizeCameraSettings"
-                                #autoOptimizeCameraSettings="ngModel"
-                                required>
+                                #autoOptimizeCameraSettings="ngModel">
                             </nx-checkbox>
 
                             <label class="control-label mb-0" for="autoOptimizeCameraSettings">
@@ -125,8 +122,7 @@
                                 componentId="auditTrail"
                                 [(ngModel)]="checkboxStatuses.auditTrail"
                                 #auditTrail="ngModel"
-                                description="auditTrailHelpBlock"
-                                required>
+                                description="auditTrailHelpBlock">
                             </nx-checkbox>
 
                             <label class="control-label mb-0" for="auditTrail">
@@ -144,8 +140,7 @@
                                 name="allowOnlySecure"
                                 componentId="allowOnlySecure"
                                 [(ngModel)]="checkboxStatuses.allowOnlySecure"
-                                #allowOnlySecure="ngModel"
-                                required>
+                                #allowOnlySecure="ngModel">
                             </nx-checkbox>
 
                             <label class="control-label mb-0" for="allowOnlySecure">
@@ -157,8 +152,7 @@
                                 name="encryptVideoTraffic"
                                 componentId="encryptVideoTraffic"
                                 [(ngModel)]="checkboxStatuses.encryptVideoTraffic"
-                                #encryptVideoTraffic="ngModel"
-                                required>
+                                #encryptVideoTraffic="ngModel">
                             </nx-checkbox>
 
                             <label class="control-label mb-0" for="encryptVideoTraffic">
@@ -176,13 +170,24 @@
                                 name="limitSessionDuration"
                                 componentId="limitSessionDuration"
                                 [(ngModel)]="checkboxStatuses.limitSessionDuration"
-                                #limitSessionDuration="ngModel"
-                                required>
+                                #limitSessionDuration="ngModel">
                             </nx-checkbox>
 
                             <label class="control-label mb-0" for="limitSessionDuration">
-                                <span translate>Limit session duration</span>
+                                <span translate>Limit session duration to</span>
                             </label>
+                        </div>
+                        <div class="row ml-4 mt-2">
+                            <input #timeUnitTracker 
+                                   [(ngModel)]="timeUnitCount" 
+                                   [ngModelOptions]="{standalone: true}" 
+                                   type="number" 
+                                   min="1" 
+                                   class="form-control text-center col-3">
+                            <nx-select class="col-3"
+                                       [items]="limitSessionTimeUnits" 
+                                       [selected]="selectedTimeUnitObject"
+                                       (onSelected)="updateTimeUnitInput($event)"></nx-select>
                         </div>
                     </div>
                 </form>
