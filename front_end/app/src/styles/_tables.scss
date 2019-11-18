@@ -118,3 +118,10 @@
         }
     }
 }
+
+.table-wrapper {
+      overflow-x       : auto;
+      box-shadow       : none;
+      border           : 1px solid $light4;
+      background-color : $light1;
+    }
