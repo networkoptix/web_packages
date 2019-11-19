@@ -188,10 +188,9 @@ export class LoginModalContent implements OnInit {
 
     close() {
         // prevent unnecessary reload
+        this.activeModal.close('canceled');
         if (!this.keepPage) { // && this.accountService.getEmail() === undefined) {
             return this.router.navigate([this.CONFIG.redirectUnauthorised]);
         }
-
-        this.activeModal.close('canceled');
     }
 }
