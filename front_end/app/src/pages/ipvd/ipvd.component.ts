@@ -186,8 +186,11 @@ export class NxIpvdComponent implements OnInit {
         this.routerSubscription.unsubscribe();
         this.locationSubscription.unsubscribe();
         this.uriSubscription.unsubscribe();
-        this.cameraReloadSubscription.unsubscribe();
         this.cameraGetSubscription.unsubscribe();
+
+        if (this.cameraReloadSubscription) {
+            this.cameraReloadSubscription.unsubscribe();
+        }
     }
 
     resetFilterModel() {
