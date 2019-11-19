@@ -19,7 +19,7 @@ THREADABLE_FILE_LIST = ("activate", "cloud-merge", "register-form-validation", "
                         "restore-pass-form-validation-password", "share-form-validation", 
                         "ipvd-form-feedback-validation", "ipvd-form-request-validation")
 
-TEST_LIST = get_threaded_names("Threaded")
+TEST_LIST = list(set((test[0] for test in get_threaded_names("Threaded"))))
 
 # Collect the list of tests that need to be run serially.
 # Note we do not use individual cases here and only want the files themselves.
@@ -29,7 +29,7 @@ SERIAL_LIST = list(set((test[0] for test in get_threaded_names("Unthreaded"))))
 
 
 q = queue.Queue(maxsize=0)
-NUM_THREADS = 8
+NUM_THREADS = 6
 
 # actually runs the commands in the queue
 def do_stuff(q):
@@ -59,14 +59,14 @@ def threaded_test_run(loc, lang):
     # loop through the threadable tests and add a command to run each
     for idx, file in enumerate(TEST_LIST):
         CMD_LIST.append(
-            'robot --loglevel trace -v ENV:{} -v SCREENSHOTDIRECTORY:{} -V getvars.py:{} -t "{}" --output {}.xml  {}.robot'
-                .format(ENVIRONMENT, path.join(loc, "combined-results"), lang, file[1], path.join(loc, file[0]+"multi"+str(idx)), path.join("test-cases",file[0])))
+            'robot --loglevel trace -i threaded -e "Threaded File" -v ENV:{} -v SCREENSHOTDIRECTORY:{} -V getvars.py:{} --output {}.xml  {}.robot'
+                .format(ENVIRONMENT, path.join(loc, "combined-results"), lang, path.join(loc, file+"multi"+str(idx)), path.join("test-cases",file)))
 
     # loop through the serial tests and run them
-    for idx, file in enumerate(SERIAL_LIST):
-        system(
-            'robot --loglevel trace -v ENV:{} -v SCREENSHOTDIRECTORY:{} -V getvars.py:{} -e Threaded -e "Threaded File" --output {}.xml {}.robot'
-                .format(ENVIRONMENT, path.join(loc, 'combined-results'), lang, path.join(loc, file+"multi"+str(idx+200)), path.join("test-cases", file)))
+    # for idx, file in enumerate(SERIAL_LIST):
+    #     system(
+    #         'robot --loglevel trace -v ENV:{} -v SCREENSHOTDIRECTORY:{} -V getvars.py:{} -e Threaded -e "Threaded File" --output {}.xml {}.robot'
+    #             .format(ENVIRONMENT, path.join(loc, 'combined-results'), lang, path.join(loc, file+"multi"+str(idx+200)), path.join("test-cases", file)))
 
     # fill the queue with all the commands
     for cmd in CMD_LIST:
