@@ -9,11 +9,9 @@ nx-single-entity{
     display: block;
 
     .row-name {
-        & {
-            position: relative;
-        }
+        position: relative;
 
-        & span {
+        span {
             position: relative;
             z-index: 2;
             background-color: $light1;
