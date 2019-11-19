@@ -1,10 +1,18 @@
 @import '../../../../styles/theme_palette';
 @import '../../../../styles/theme_variables';
 
+.card {
+    height: 100%;
+}
+
 .card-header {
     background-color: $additional_light1;
     color: $dark9;
     font-size: 14px;
+}
+
+.counter {
+    height:22px;
 }
 
 .muted {

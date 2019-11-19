@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-12">
-        <div class="d-flex p-0">
-            <div *ngFor="let alert of alertCards" class="col-2 mr-3 px-0">
+        <div class="d-flex flex-wrap p-0">
+            <div *ngFor="let alert of alertCards" class="col-2 mr-3 mb-2 px-0 card-container">
                 <nx-system-alert-card-component [data]="alert"></nx-system-alert-card-component>
             </div>
         </div>
