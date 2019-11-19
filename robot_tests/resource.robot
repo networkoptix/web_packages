@@ -101,6 +101,7 @@ Log In
 
 Validate Log In
     Wait Until Element is Visible    ${ACCOUNT DROPDOWN}
+    Sleep    1
     Check Langauge Logged In
     Sleep    1    #this is a test to see if it eliminates a problem with the login dialog popping up on logout
 
