@@ -304,6 +304,16 @@ class AssetAdmin(CMSAdmin):
             return True
         return False
 
+    def changelist_view(self, request, extra_context=None):
+        filters_dict = caches['filters'].get(request.user.id) or {}
+        if not request.META['QUERY_STRING']:
+            if request.path_info in filters_dict:
+                return redirect(f'{request.path_info}?{filters_dict[request.path_info]}')
+        else:
+            filters_dict[request.path_info] = request.META['QUERY_STRING']
+            caches['filters'].set(request.user.id, filters_dict)
+        return super(AssetAdmin, self).changelist_view(request, extra_context)
+
     def change_view(self, request, object_id, form_url='', extra_context=None):
         extra_context = extra_context or {}
         extra_context['current_versions'] = []

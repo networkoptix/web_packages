@@ -1,6 +1,7 @@
 import traceback
 from django.conf import settings
 from django.http import HttpResponse
+from django.shortcuts import redirect
 from rest_framework import status
 
 import logging
@@ -37,4 +38,22 @@ class HeaderMiddleware(object):
             for key in cookies.keys():
                 cookies[key]["samesite"] = ""
             response.cookies.update(cookies)
+        return response
+
+
+class FilterErrorMiddleware(object):
+    # Redirects if user enters a filter querystring that causes a database error
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        response = self.get_response(request)
+        if request.path_info.startswith('/admin') and hasattr(response, 'template_name'):
+            if type(response.template_name) == list:
+                template_name = response.template_name[0]
+            else:
+                template_name = response.template_name
+            if 'invalid_setup' in template_name:
+                return redirect(request.path_info + '?e=1')
+
         return response

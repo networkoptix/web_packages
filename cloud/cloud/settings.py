@@ -91,7 +91,8 @@ MIDDLEWARE = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'cloud.middleware.CatchExceptionMiddleware'
+    'cloud.middleware.CatchExceptionMiddleware',
+    'cloud.middleware.FilterErrorMiddleware',
 )
 
 ROOT_URLCONF = 'cloud.urls'
@@ -187,53 +188,28 @@ if cloud_db and cloud_db['host'] != '$DB_HOST':
         }
     }
 
-if not LOCAL_ENVIRONMENT:
-    CACHES = {
-        "default": {
-            "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
-            "TIMEOUT": None
-        },
-        "global": {
-            "BACKEND": "django_redis.cache.RedisCache",
-            "LOCATION": "redis://redis:6379/1",
-            "TIMEOUT": None,
-            "OPTIONS": {
-                "CLIENT_CLASS": "django_redis.client.DefaultClient",
-            }
-        },
-        "integrations": {
-            "BACKEND": "django_redis.cache.RedisCache",
-            "LOCATION": "redis://redis:6379/1",
-            "TIMEOUT": None,
-            "OPTIONS": {
-                "CLIENT_CLASS": "django_redis.client.DefaultClient",
-            }
-        }
+REDIS_CACHE = {
+    "BACKEND": "django_redis.cache.RedisCache",
+    "TIMEOUT": None,
+    "OPTIONS": {
+        "CLIENT_CLASS": "django_redis.client.DefaultClient",
     }
-else:
-    CACHES = {
-        "default": {
-            "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
-            "TIMEOUT": None
-        },
-        "global": {
-            "BACKEND": "django_redis.cache.RedisCache",
-            "LOCATION": "redis://localhost:6379/1",
-            "TIMEOUT": None,
-            "OPTIONS": {
-                "CLIENT_CLASS": "django_redis.client.DefaultClient",
-            }
-        },
-        "integrations": {
-            "BACKEND": "django_redis.cache.RedisCache",
-            "LOCATION": "redis://localhost:6379/1",
-            "TIMEOUT": None,
-            "OPTIONS": {
-                "CLIENT_CLASS": "django_redis.client.DefaultClient",
-            }
-        }
-    }
+}
 
+if not LOCAL_ENVIRONMENT:
+    REDIS_CACHE['LOCATION'] = 'redis://redis:6379/1'
+else:
+    REDIS_CACHE['LOCATION'] = 'redis://localhost:6379/1'
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "TIMEOUT": None
+    },
+    "global": REDIS_CACHE,
+    "integrations": REDIS_CACHE,
+    "filters": REDIS_CACHE
+}
 
 if LOCAL_ENVIRONMENT:
     conf["cloud_db"]["url"] = 'https://cloud-test.hdw.mx/cdb'
