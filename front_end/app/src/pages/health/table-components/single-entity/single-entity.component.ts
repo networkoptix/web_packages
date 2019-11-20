@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
+import { Component, Input, OnChanges, ViewEncapsulation } from '@angular/core';
 import { NxConfigService }                                from '../../../../services/nx-config';
 import { NxUtilsService }                                 from '../../../../services/utils.service';
 import { NxHealthService } from '../../health.service';
@@ -9,7 +9,7 @@ import { NxHealthService } from '../../health.service';
     styleUrls    : ['./single-entity.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class NxSingleEntityComponent implements OnInit {
+export class NxSingleEntityComponent implements OnChanges {
     @Input() params: any;
     @Input() entity: any;
 
@@ -23,11 +23,11 @@ export class NxSingleEntityComponent implements OnInit {
         this.CONFIG = this.configService.getConfig();
     }
 
-    ngOnInit() {
+    ngOnChanges(): void {
         this.copyParams = {...this.params};
         this.copyParams.values = this.copyParams.values.filter((value) => value.id !== '_');
-        if ('_' in this.copyParams) {
-            delete this.copyParams['_'];
+        if (this.copyParams.values.length && this.copyParams.values[0].id === '_') {
+            this.copyParams.values.shift();
         }
         this.entityName = this.healthService.findEntityName(this.entity);
     }

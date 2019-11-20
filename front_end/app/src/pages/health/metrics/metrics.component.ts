@@ -43,7 +43,6 @@ export class NxSystemMetricsComponent implements OnInit {
     selectedData: any;
     selectedPanelData: any;
     selectedValues: any;
-    selectedCount: number;
 
     menu: any;
     activeEntity: any;
@@ -79,7 +78,6 @@ export class NxSystemMetricsComponent implements OnInit {
         this.routeSubscription = this.route
             .params
             .subscribe((params: any) => {
-                this.selectedCount = 0;
                 this.metricId = params.metric;
                 this.menuService.setSection(this.metricId);
                 this.selectedData = this.healthService.tableHeaders[this.metricId];
@@ -90,7 +88,6 @@ export class NxSystemMetricsComponent implements OnInit {
 
                 if (!searchParam || !searchParam.length) {
                     this.selectedValues = this.healthService.values[this.metricId] || {};
-                    this.selectedCount = Object.values(this.selectedValues).length;
                     this.handleInitialId();
                 } else {
                     this.filterModel.query = searchParam || '';
@@ -126,7 +123,6 @@ export class NxSystemMetricsComponent implements OnInit {
         this.selectedValues = this.healthService
                                   .itemsSearch(this.healthService.values[this.metricId], this.filterModel) || {};
 
-        this.selectedCount = Object.values(this.selectedValues).length;
         this.handleInitialId();
         if (this.activeEntity && !this.selectedValues[this.activeEntity.id]) {
             this.resetActiveEntity();
