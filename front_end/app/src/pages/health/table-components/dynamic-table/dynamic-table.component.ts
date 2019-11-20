@@ -29,6 +29,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
     @Input('headers') _headers: any = [];
     @Input('elements') elements: any = [];
     @Input() activeEntity;
+    @Input() showGroups = true;
 
     @Output() public onRowClick: EventEmitter<any> = new EventEmitter<any>();
 

@@ -10,7 +10,7 @@
     <div class="table-wrapper">
         <table class="table table-hover nx-table">
             <thead>
-                <tr class="header-groups">
+                <tr class="header-groups" *ngIf="showGroups">
                     <ng-container *ngFor="let headerGroup of headers.values; index as index;">
                         <th *ngIf="headerGroup.values.length > 0"
                             [colSpan]="headerGroup.values.length">

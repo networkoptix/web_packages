@@ -24,6 +24,7 @@
             <nx-dynamic-table
                     [tableHeader]="alertsCount + ' alerts'"
                     [headers]="tableHeaders"
+                    [showGroups]="false"
                     [elements]="alerts"
                     (onRowClick)="setActiveEntity($event)"
                     [activeEntity]="activeTableEntity"></nx-dynamic-table>

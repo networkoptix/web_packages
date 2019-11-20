@@ -48,12 +48,13 @@ nx-dynamic-table {
     
     .table-header {
       background-color : $additional_light1;
-      padding          : .5rem;
+      padding          : 1rem;
       color            : $dark9;
       font-family      : $font-family-medium;
       font-weight      : 500 !important;
-      font-size        : $font-size-base;
-      height           : 2rem;
+      font-size        : rem(15px);
+      line-height      : rem(15px);
+      height           : 3rem;
       border           : 1px solid $light3;
       border-bottom    : none;
     }
@@ -112,7 +113,7 @@ nx-dynamic-table {
         }
         
         th {
-          padding        : .5rem 24px .5rem 0;
+          padding-right  : 24px;
           color          : $dark9;
           font-family    : $font-family-medium;
           font-weight    : 500 !important;
@@ -143,7 +144,7 @@ nx-dynamic-table {
           
           .caption {
             position      : relative;
-            height        : 2rem;
+            height: 1rem;
             overflow-wrap : initial;
             overflow      : hidden;
             text-overflow : ellipsis;
