@@ -83,7 +83,7 @@ INSTALLED_APPS = (
 
 
 MIDDLEWARE = (
-    'cloud.debug.HeaderMiddleware',
+    'cloud.middleware.HeaderMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -91,7 +91,7 @@ MIDDLEWARE = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'cloud.logger.CatchExceptionMiddleware'
+    'cloud.middleware.CatchExceptionMiddleware'
 )
 
 ROOT_URLCONF = 'cloud.urls'
