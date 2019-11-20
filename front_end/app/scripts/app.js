@@ -162,6 +162,11 @@ window.L = {};
                     .when('/embed/:systemId/view/:cameraId', {
                         templateUrl: CONFIG.viewsDir + 'view.html',
                         controller: 'ViewPageCtrl',
+                        resolve: {
+                            embed: function () {
+                                return true;
+                            }
+                        }
                     })
                     .when('/embed/ipvd', {
                         template:'',

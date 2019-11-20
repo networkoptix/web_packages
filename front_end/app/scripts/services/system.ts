@@ -47,10 +47,12 @@ import * as angular from 'angular';
                             return $q.resolve(true);
                         }
                         this.auth = false;
-                        return cloudApi.getSystemAuth(this.id).then((data) => {
-                            this.auth = true;
-                            return this.mediaserver.setAuthKeys(data.data.authGet, data.data.authPost, data.data.authPlay);
-                        });
+                        return cloudApi
+                                .getSystemAuth(this.id)
+                                .then((data) => {
+                                    this.auth = true;
+                                    return this.mediaserver.setAuthKeys(data.data.authGet, data.data.authPost, data.data.authPlay);
+                                });
                     };
 
                     System.prototype.updateSystemState = function () {

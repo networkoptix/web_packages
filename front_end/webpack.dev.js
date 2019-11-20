@@ -15,6 +15,7 @@ const localStatic = `https://${host}:${port}`;
 module.exports = merge(common, {
     devtool  : 'cheap-module-eval-source-map',
     devServer: {
+        disableHostCheck  : true,
         contentBase       : './dist',
         hot               : true,
         host              : host,

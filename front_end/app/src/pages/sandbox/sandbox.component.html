@@ -2,6 +2,32 @@
     <h1>SANDBOX</h1>
 
     <ngb-tabset #tabs>
+        <ngb-tab id="IFrame">
+            <ng-template ngbTabTitle>
+                <span class="tab-heading">IFrame</span>
+            </ng-template>
+            <ng-template ngbTabContent>
+                <div class="row">
+                    <div class="col-6">
+                        <br/>
+                        <br/>
+                        <iframe style="width: 100%; height: 600px;"
+                                [src]="ipvdEmbedUrl">
+                            Your browser doesn't support iframe.
+                        </iframe>
+                    </div>
+                    <div class="col-6">
+                        <br/>
+                        <br/>
+<!--                        <iframe style="width: 100%; height: 600px;"-->
+<!--                                [src]="cameraEmbedUrl">-->
+<!--                            Your browser doesn't support iframe.-->
+<!--                        </iframe>-->
+                    </div>
+                </div>
+            </ng-template>
+        </ngb-tab>
+
         <ngb-tab id="Toastr">
             <ng-template ngbTabTitle>
                 <span class="tab-heading">Toastr</span>
@@ -166,24 +192,6 @@
                                 <small class="text-muted">Last updated 3 mins ago</small>
                             </p>
                         </div>
-                    </div>
-                </div>
-            </ng-template>
-        </ngb-tab>
-
-        <ngb-tab id="IFrame">
-            <ng-template ngbTabTitle>
-                <span class="tab-heading">IFrame</span>
-            </ng-template>
-            <ng-template ngbTabContent>
-                <div class="row">
-                    <div class="col-12">
-                        <br/>
-                        <br/>
-                        <iframe style="width: 700px; height: 500px;"
-                                [src]="ipvdEmbedUrl">
-                            Your browser doesn't support iframe.
-                        </iframe>
                     </div>
                 </div>
             </ng-template>

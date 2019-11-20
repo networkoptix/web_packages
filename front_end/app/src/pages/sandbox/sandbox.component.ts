@@ -24,6 +24,7 @@ export class NxSandboxComponent {
     filter: any;
     autohide: boolean;
     ipvdEmbedUrl: SafeResourceUrl;
+    // cameraEmbedUrl: SafeResourceUrl;
 
     submitted = false;
 
@@ -34,7 +35,12 @@ export class NxSandboxComponent {
         if (host === '//localhost' || host === '//127.0.0.1') {
             host += ':9000';
         }
+
         this.ipvdEmbedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(host + '/embed/ipvd');
+
+        // camera auth should not be used with the same domain as it screws login info - test should be done in external
+        // environment like JSFiddle
+        // this.cameraEmbedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(host + '/embed/XXXXXXX/view/XXXXXXXXXX?nocameras&noheader&nocontrols&auth=XXXXXXXXXX');
 
         this.show = false;
         this.show5 = false;

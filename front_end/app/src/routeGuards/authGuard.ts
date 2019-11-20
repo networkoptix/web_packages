@@ -27,6 +27,12 @@ export class AuthGuard implements CanActivate {
         if (state.root.queryParams.auth) {
             return true;
         }
+
+        // check if requested in iFrame
+        if (window.location !== window.parent.location) {
+            return false;
+        }
+
         return this.accountService.requireLogin().then((account) => {
             return account !== undefined;
         });

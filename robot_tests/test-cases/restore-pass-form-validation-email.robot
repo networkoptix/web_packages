@@ -57,13 +57,7 @@ Restart
     Open Restore Password Dialog
 
 Open Restore Password Dialog
-    ${email}    Get Random Email    ${BASE EMAIL}
-    Open Browser and go to URL    ${url}/register
-    Register    mark    hamill    ${email}    ${password}
-    ${link}    Get Email Link    ${email}    activate
-    Close Browser
-    Open Browser and go to URL    ${link}
-    Go To    ${url}/restore_password
+    Open Browser and go to URL    ${url}/restore_password
     Wait Until Elements Are Visible    ${RESTORE PASSWORD EMAIL INPUT}    ${RESET PASSWORD BUTTON}
 
 Test Email Invalid
