@@ -52,9 +52,6 @@ import * as angular from 'angular';
                                 .then((data) => {
                                     this.auth = true;
                                     return this.mediaserver.setAuthKeys(data.data.authGet, data.data.authPost, data.data.authPlay);
-                                })
-                                .catch((error) => {
-                                    debugger;
                                 });
                     };
 
