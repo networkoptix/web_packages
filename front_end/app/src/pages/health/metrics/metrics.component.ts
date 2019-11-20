@@ -87,10 +87,11 @@ export class NxSystemMetricsComponent implements OnInit {
                 this.metricValuesLen = Object.values(this.healthService.values[this.metricId]).length;
 
                 if (!searchParam || !searchParam.length) {
+                    this.filterModel.query = '';
                     this.selectedValues = this.healthService.values[this.metricId] || {};
                     this.handleInitialId();
                 } else {
-                    this.filterModel.query = searchParam || '';
+                    this.filterModel.query = searchParam;
                     this.search();
                 }
             });

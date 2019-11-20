@@ -48,8 +48,7 @@ body {
 }
 
 [data-whatintent='keyboard'] button:focus:not([disabled]):not(.disabled),
-[data-whatintent='keyboard'] a:focus:not([disabled]):not(.disabled),
-[data-whatintent='mouse'] a:focus:not([disabled]):not(.disabled) {
+[data-whatintent='keyboard'] a:focus:not([disabled]):not(.disabled) {
     outline : none !important;
     @extend #outline;
 
