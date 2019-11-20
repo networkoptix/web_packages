@@ -296,10 +296,10 @@ should display same user data as shown in user account
     Log Out
 
     Log in to Auto Tests System    ${email}
-    Wait Until Elements Are Visible    ${USERS LIST LINK}
-    Click Link    ${USERS LIST LINK}
+    Go to Users List
 #click link containing user's email
     ${User In List}=   Set Variable    //nx-system-settings-component//nx-menu//nx-level-3-item//span[text()='${random email}']/../../../a
+    Wait Until Element Is Visible    ${User In List}
     Click Link    ${User In List}
 #verify name displayed
     Wait Until Element Is Visible    //nx-system-user-component//nx-block//header/span[contains(text(),'${COMBO TEXT} ${COMBO TEXT}')]
