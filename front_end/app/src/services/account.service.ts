@@ -247,7 +247,7 @@ export class NxAccountService implements OnDestroy {
                                    this.logoutAuthorised();
                                }
 
-                               return Promise.resolve({ data: { resultCode: this.CONFIG.responseOk } });
+                               return Promise.resolve({ data: { account: result, resultCode: this.CONFIG.responseOk } });
                            }
 
                            if (result.email) { // (result.data.resultCode === L.errorCodes.ok)
@@ -255,7 +255,7 @@ export class NxAccountService implements OnDestroy {
                                this.sessionService.loginState = result.email; // Forcing changing loginState to reload interface
                            }
 
-                           return Promise.resolve({ data: { resultCode: this.CONFIG.responseOk } });
+                           return Promise.resolve({ data: { account: result, resultCode: this.CONFIG.responseOk } });
                        }
                        return Promise.reject({ error: { resultCode: result.resultCode }});
 
@@ -266,6 +266,11 @@ export class NxAccountService implements OnDestroy {
                        }
                    });
         return this.requestingLogin;
+    }
+
+    // Temporary aid for AJS
+    getCredentialsFromAuth(authKey: string) {
+        return atob(authKey).split(':');
     }
 
     loginWithAuthKey(authKey: string) {
@@ -360,6 +365,8 @@ export class NxAccountService implements OnDestroy {
         }
         return true;
     }
+
+
 
     private handleAuthKeyLogin(auth) {
         this.get()
