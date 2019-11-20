@@ -270,7 +270,7 @@ Search should only be visible with 9 or more systems
     Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
     Wait Until Elements Are Visible    ${RENAME SYSTEM}    ${DISCONNECT FROM NX}    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
-    Wait Until Elements Are Visible    ${REMOVE USER BUTTON}    ${SHARE BUTTON SYSTEMS}
+    Wait Until Element Is Visible    ${SHARE BUTTON SYSTEMS}
     Share To    ${EMAIL VIEWER}    ${VIEWER TEXT}
     Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
     ${email}    Wait For Email    recipient=${EMAIL VIEWER}    timeout=120    status=UNSEEN
