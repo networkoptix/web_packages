@@ -1,5 +1,8 @@
 @import '../../../styles/theme_palette';
 @import '../../../styles/theme_variables';
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/mixins/breakpoints';
 
 nx-system-health-component {
   .error {
@@ -10,6 +13,12 @@ nx-system-health-component {
   .warning {
     font-family: $font-family-medium;
     color: $yellow_main;
+  }
+  
+  .menu-block {
+    @include media-breakpoint-up(lg) {
+      position: fixed;
+    }
   }
 
   .menuLinks {
