@@ -15,6 +15,7 @@ export class NxSandboxComponent {
     group: string;
     agree: boolean;
     show: boolean;
+    toggleDisabled: boolean;
     show5: boolean;
     edit: boolean;
     sections: any;
@@ -42,6 +43,7 @@ export class NxSandboxComponent {
         // environment like JSFiddle
         // this.cameraEmbedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(host + '/embed/XXXXXXX/view/XXXXXXXXXX?nocameras&noheader&nocontrols&auth=XXXXXXXXXX');
 
+        this.toggleDisabled = true;
         this.show = false;
         this.show5 = false;
         this.blah = 'blah1';

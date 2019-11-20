@@ -15,7 +15,7 @@ import {
       [(ngModel)]="user.remember_me"
       (click)?="onClick($event)"
       checked?
-      disabled?
+      disabled? | [disabled]='isDisabled'?
       required?>
 </nx-checkbox>
 */
