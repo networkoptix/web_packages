@@ -171,7 +171,7 @@ def save_unrevisioned_records(asset, context, language, data_structures,
             # if its option and not a valid guid set error message and go to next DataStructure
             if new_record_value and not re.match(GUID_REGEXP, new_record_value):
                 upload_errors.append((data_structure_name, 'Invalid GUID {} it should formatted like {}'
-                                      .format(new_record_value, "{XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXX}")))
+                                      .format(new_record_value, "{XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX}")))
                 continue
 
             # no guid submitted or default value and is not optional generate a guid

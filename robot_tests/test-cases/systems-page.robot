@@ -81,7 +81,7 @@ should show system name in header dropdown with "Open in Nx Witness" button if u
     Share To    ${EMAIL NOPERM}    ${VIEWER TEXT}
     Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
     ${email}    Wait For Email    recipient=${EMAIL NOPERM}    timeout=120    status=UNSEEN
-    Delete All Emails
+    Delete Email    ${email}
     Close Mailbox
     Log Out
     Log In    ${EMAIL NOPERM}    ${password}
@@ -181,7 +181,7 @@ should show the system page instead of all systems when user only has one
     Share To    ${EMAIL NOPERM}    ${VIEWER TEXT}
     Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
     ${email}    Wait For Email    recipient=${EMAIL NOPERM}    timeout=120    status=UNSEEN
-    Delete All Emails
+    Delete Email    ${email}
     Close Mailbox
     Log Out
     Log In    ${EMAIL NOPERM}    ${password}
@@ -274,7 +274,7 @@ Search should only be visible with 9 or more systems
     Share To    ${EMAIL VIEWER}    ${VIEWER TEXT}
     Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
     ${email}    Wait For Email    recipient=${EMAIL VIEWER}    timeout=120    status=UNSEEN
-    Delete All Emails
+    Delete Email    ${email}
     Close Mailbox
     Log Out
 
@@ -314,7 +314,7 @@ Search should only be visible with 9 or more systems
     Share To    ${EMAIL VIEWER}    ${VIEWER TEXT}
     Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
     ${email}    Wait For Email    recipient=${EMAIL VIEWER}    timeout=120    status=UNSEEN
-    Delete All Emails
+    Delete Email    ${email}
     Close Mailbox
     Log Out
 

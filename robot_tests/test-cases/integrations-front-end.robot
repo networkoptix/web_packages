@@ -9,6 +9,7 @@ Suite Setup       Open Browser and Go To Integrations Page Anonimous
 #Test Setup        Go To Integrations Page
 Test Teardown     Run Keyword If Test Failed   Go To Integrations Page
 Suite Teardown    Close All Browsers
+Force Tags        integrations
 
 *** Variables ***
 ${url}        ${ENV}/integrations

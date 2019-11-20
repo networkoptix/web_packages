@@ -54,7 +54,7 @@ export class NxLandingComponent implements OnInit, OnDestroy {
                     this.accountService.redirectAuthorised();
                     this.userEmail = this.accountService.getEmail();
                 }, () => {
-                    if (this.router.url === '/login' && !this.localStorage.get('login')) {
+                    if (this.router.url.includes('/login') && !this.localStorage.get('login')) {
                         this.localStorage.set('login', true);
                         this.login = this.dialogs.login(this.accountService, false, false);
                         this.pageService.setPageTitle(this.LANG.pageTitles.login);

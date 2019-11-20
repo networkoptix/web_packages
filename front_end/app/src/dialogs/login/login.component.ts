@@ -156,11 +156,13 @@ export class LoginModalContent implements OnInit {
                 },
                 portalError: this.LANG.errorCodes.brokenAccount
             }
-        }).then(() => {
+        }).then((result) => {
             this.activeModal.close();
             if (this.keepPage) {
                 if (this.location.path() === '') {
                     this.location.go(this.CONFIG.redirectAuthorised);
+                    // ensure language reload as translations are loaded on page load
+                    window.location.reload();
                 } else {
                     // TODO: remove window reload once we separate session state from account service
                     window.location.reload();
@@ -169,9 +171,11 @@ export class LoginModalContent implements OnInit {
                 // sanitize this.next
                 this.next = NxUtilsService.getRelativeLocation(this.next);
                 this.location.go(this.next);
+                window.location.reload(); // ensure language reload
             } else {
                 setTimeout(() => {
                     this.location.go(this.CONFIG.redirectAuthorised);
+                    window.location.reload(); // ensure language reload
                 });
             }
         }, (error) => {
@@ -184,10 +188,9 @@ export class LoginModalContent implements OnInit {
 
     close() {
         // prevent unnecessary reload
+        this.activeModal.close('canceled');
         if (!this.keepPage) { // && this.accountService.getEmail() === undefined) {
             return this.router.navigate([this.CONFIG.redirectUnauthorised]);
         }
-
-        this.activeModal.close('canceled');
     }
 }

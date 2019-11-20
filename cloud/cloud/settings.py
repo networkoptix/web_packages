@@ -83,6 +83,7 @@ INSTALLED_APPS = (
 
 
 MIDDLEWARE = (
+    'cloud.middleware.HeaderMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -90,7 +91,7 @@ MIDDLEWARE = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'cloud.logger.CatchExceptionMiddleware',
+    'cloud.middleware.CatchExceptionMiddleware'
 )
 
 ROOT_URLCONF = 'cloud.urls'
@@ -451,8 +452,8 @@ CORS_URLS_REGEX = r'^/api/(?:login|ping|systems/(?:dis)?connect)'
 
 SESSION_COOKIE_SECURE = not LOCAL_ENVIRONMENT
 CSRF_COOKIE_SECURE = not LOCAL_ENVIRONMENT
-SESSION_COOKIE_AGE = 60 * 60 * 24 # 1 day
-AUTHENTICATED_SESSION_COOKIE_AGE = 60 * 60 * 24 * 14 # 2 weeks
+SESSION_COOKIE_AGE = 60 * 60 * 24  # 1 day
+AUTHENTICATED_SESSION_COOKIE_AGE = 60 * 60 * 24 * 14  # 2 weeks
 
 USE_ASYNC_QUEUE = True
 
