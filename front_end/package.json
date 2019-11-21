@@ -47,7 +47,7 @@
         "rxjs-compat": "6.5.2",
         "screenfull": "3.3.3",
         "underscore": "1.9.1",
-        "what-input": "5.1.1",
+        "what-input": "5.2.6",
         "zone.js": "0.10.0"
     },
     "devDependencies": {
