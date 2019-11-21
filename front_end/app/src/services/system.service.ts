@@ -503,6 +503,10 @@ export class NxSystem extends System implements OnDestroy {
             });
         }));
     }
+
+    updateOrGetSystemSettings(updateParams = {}) {
+        return this.mediaserver.updateOrGetSettings(updateParams);
+    }
 }
 
 

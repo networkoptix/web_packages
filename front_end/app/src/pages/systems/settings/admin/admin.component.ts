@@ -1,5 +1,6 @@
 import {
-    Component, OnInit, ViewChild, ElementRef
+    Component, OnInit, ViewChild, Inject,
+    ElementRef, ViewContainerRef
 }                                    from '@angular/core';
 import { Location }                  from '@angular/common';
 import { ActivatedRoute }            from '@angular/router';
@@ -13,6 +14,7 @@ import { NxSystemsService }          from '../../../../services/systems.service'
 import { NxAccountService }          from '../../../../services/account.service';
 import { NxProcessService }          from '../../../../services/process.service';
 import { NxSystem }                  from '../../../../services/system.service';
+import { NxApplyService, Watcher }   from '../../../../services/apply.service';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 interface Settings {
@@ -43,11 +45,26 @@ export class NxSystemAdminComponent implements OnInit {
     debugMode: boolean;
     betaMode: boolean;
     settings: Settings;
+    originalStatuses: any = {};
+    changedStatuses: any = {};
     checkboxStatuses: any = {};
     limitSessionTimeUnits: any;
     selectedTimeUnit: string;
     selectedTimeUnitObject: any;
     timeUnitCount: number;
+    viewContainerRef: ViewContainerRef;
+    saveSettings: any;
+    resetVideoEncryptionIfDisabled: any;
+
+    settingsWatchers: any = {
+        autoDiscoveryEnabled: new Watcher<boolean>(),
+        statisticsAllowed: new Watcher<boolean>(),
+        cameraSettingsOptimization: new Watcher<boolean>(),
+        auditTrailEnabled: new Watcher<boolean>(),
+        trafficEncryptionForced: new Watcher<boolean>(),
+        videoTrafficEncryptionForced: new Watcher<boolean>(),
+        sessionLimitMinutes: new Watcher<number>(),
+    };
 
     @ViewChild('timeUnitTracker', {static: false})
     timeUnitTracker: ElementRef;
@@ -71,7 +88,9 @@ export class NxSystemAdminComponent implements OnInit {
         };
     }
 
-    constructor(private accountService: NxAccountService,
+    constructor(@Inject(ViewContainerRef) viewContainerRef,
+                private accountService: NxAccountService,
+                private applyService: NxApplyService,
                 private processService: NxProcessService,
                 private route: ActivatedRoute,
                 private configService: NxConfigService,
@@ -83,6 +102,7 @@ export class NxSystemAdminComponent implements OnInit {
                 private menuService: NxMenuService,
                 location: Location,
     ) {
+        this.viewContainerRef = viewContainerRef;
         this.location = location;
         this.setupDefaults();
     }
@@ -99,25 +119,30 @@ export class NxSystemAdminComponent implements OnInit {
             showMerge: true
         };
 
-        this.checkboxStatuses = {
-            autoDiscovery: false,
-            sendCrashStats: false,
-            autoOptimizeCameraSettings: false,
-            auditTrail: false,
-            allowOnlySecure: false,
-            encryptVideoTraffic: false,
-            limitSessionDuration: false,
-        };
         this.limitSessionTimeUnits = [
-            { value: 'Minutes', name: 'Minutes', id: 1, max: 60 },
-            { value: 'Hours', name: 'Hours', id: 2, max: 24 },
-            { value: 'Days', name: 'Days', id: 3, max: 366 },
-            { value: 'Months', name: 'Months', id: 4, max: 12 },
+            { value: 'Minute(s)', name: 'Minute(s)', id: 1, max: 60 },
+            { value: 'Hour(s)', name: 'Hour(s)', id: 2, max: 24 },
         ];
-        this.selectedTimeUnit = 'Hours';
+        this.selectedTimeUnit = 'Hour(s)';
         this.selectedTimeUnitObject = this.limitSessionTimeUnits
                                          .find(e => e.name === this.selectedTimeUnit);
         this.timeUnitCount = 1;
+
+        this.resetVideoEncryptionIfDisabled = () => {
+            const encryptTraffic = this.settingsWatchers['trafficEncryptionForced'].value;
+            const encryptVideo = this.settingsWatchers['videoTrafficEncryptionForced'].value;
+            if (!encryptTraffic && encryptVideo) {
+                this.settingsWatchers['videoTrafficEncryptionForced'].value = false;
+            }
+        }
+
+        this.initProcesses();
+
+        this.applyService.initPageWatcher(
+            this.viewContainerRef,
+            this.saveSettings,
+            () => this.applyService.reset(),
+            Object.values(this.settingsWatchers));
 
         this.init();
     }
@@ -136,19 +161,60 @@ export class NxSystemAdminComponent implements OnInit {
                         }
                         this.updateSettings(this.currentlyMerging);
                     });
+
+                    this.system.updateOrGetSystemSettings()
+                        .then(res => {
+                            const { settings } = res.reply;
+
+                            Object.keys(this.settingsWatchers).forEach(setting => {
+                                if (setting in settings) {
+                                    const curr = settings[setting];
+                                    this.settingsWatchers[setting].value = parseInt(curr) || curr === 'true';
+                                }
+                            });
+                            this.applyService.setVisible(true);
+                        });
+
                     this.deletingSystem = this.processService.createProcess(() => {
                         return this.system.deleteFromCurrentAccount();
                     }, {
                         successMessage: this.LANG.system.successDeleted.replace('{{systemName}}', this.system.info.name),
                         errorPrefix   : this.LANG.errorCodes.cantUnshareWithMeSystemPrefix
-                    }).then(() => {
-                        this.updateAndGoToSystems();
-                    }, (error) => {
-                        return error;
-                    });
+                    })
+                        .then(() => {
+                            this.updateAndGoToSystems();
+                        }, (error) => {
+                            return error;
+                        });
                 }
             });
 
+    }
+
+    initProcesses(): void {
+        this.saveSettings = this.processService.createProcess(() => {
+            const changes = {};
+            Object.keys(this.settingsWatchers).forEach(setting => {
+                const obj = this.settingsWatchers[setting];
+                if (obj.value !== obj.originalValue) {
+                    changes[setting] = obj.value;
+                }
+            })
+            // if changes is empty, it will return system settings
+            return this.system.updateOrGetSystemSettings(changes)
+                .then(success => console.log('SUCCESS!', success));
+
+
+            // return this.system.saveUser(selectedUser, selectedUser.role).then(() => {
+            //     return this.system.getUsers(true);
+            // })
+            // .then(() => {
+            // setTimeout(() => {
+            //     this.applyService.hardReset();
+            //     this.setUser();
+            //     this.applyService.reset();
+            // });
+        });
     }
 
     ngAfterViewInit() {
@@ -252,15 +318,16 @@ export class NxSystemAdminComponent implements OnInit {
     updateTimeUnitInput(timeUnit) {
         const { max } = timeUnit;
         const el = this.timeUnitTracker;
-        if (el.nativeElement.value > max) {
-            el.nativeElement.value = max;
-        }
-        el.nativeElement.setAttribute('max', max);
+        if (el) {
+            if (el.nativeElement.value > max) {
+                el.nativeElement.value = max;
+            }
+            el.nativeElement.setAttribute('max', max);
 
-        if (this.selectedTimeUnit !== timeUnit.name) {
-            this.selectedTimeUnit = timeUnit.name;
-            this.selectedTimeUnitObject = timeUnit;
+            if (this.selectedTimeUnit !== timeUnit.name) {
+                this.selectedTimeUnit = timeUnit.name;
+                this.selectedTimeUnitObject = timeUnit;
+            }
         }
     }
 }
-

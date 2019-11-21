@@ -226,6 +226,10 @@ class NxSystemAPI {
     getSystemTime () {
         return this.get('/api/synchronizedTime');
     }
+
+    updateOrGetSettings(updateParams) {
+        return this.get('/api/systemSettings', updateParams).toPromise();
+    }
     /* End of Server settings */
 
     /* Working with users*/
