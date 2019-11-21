@@ -25,7 +25,6 @@ export class NxSingleEntityComponent implements OnChanges {
 
     ngOnChanges(): void {
         this.copyParams = {...this.params};
-        this.copyParams.values = this.copyParams.values.filter((value) => value.id !== '_');
         if (this.copyParams.values.length && this.copyParams.values[0].id === '_') {
             this.copyParams.values.shift();
         }
