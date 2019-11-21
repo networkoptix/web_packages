@@ -4,6 +4,7 @@ Library      String
 Library      Collections
 Library      NoptixImapLibrary/
 Library      NoptixLibrary/
+Library      NoptixLibrary/CloudPortalAPI.py
 Resource     variables.robot
 Resource     ${variables_file}
 Variables    getIds.py    ${ENV}
@@ -198,6 +199,14 @@ Restore password
     Log In    ${email}    ${BASE PASSWORD}    None
     Validate Log In
     Close Browser
+
+Restore Password using API
+    [Arguments]    ${email}
+    CloudPortalAPI.Restore Password    ${ENV}    ${email}    None    None
+    ${link}=   Get Email Link    ${email}    restore_password
+    ${code}=   Get Code From Email Link    ${link}
+    CloudPortalAPI.Restore Password    ${ENV}    ${email}    ${code}   ${BASE PASSWORD}
+    CloudPortalAPI.Log In    ${ENV}    ${email}    ${BASE PASSWORD}
 
 Go to Users List
     ${location}=   Get Location

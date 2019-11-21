@@ -55,10 +55,10 @@ Clean up
     ${status}    Run Keyword And Return Status    Validate Log In
     Register Keyword To Run On Failure    Failure Tasks
     Run Keyword If    ${status}    Log Out
-    Restore password    ${email}
+    Restore Password using API    ${email}
 
 Reset DB and Open New Browser On Failure
-    Restore Password    ${email}
+    Restore Password using API    ${email}
     Close Browser
     Open Browser and go to URL    ${url}
 

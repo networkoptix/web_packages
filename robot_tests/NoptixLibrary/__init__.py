@@ -74,6 +74,10 @@ class NoptixLibrary(object):
             "+!#$%'*-/=?^_`{|}~" + str(time.time()) + email[index:]
         return email
 
+    def get_code_from_email_link(self, url):
+        url_parts = url.split('/')
+        return url_parts[-1]
+
     def get_random_system_name(self):
         return "System: " + date.today().strftime("%m-%d-%y") + " " + str(randint(1, 100))
 
