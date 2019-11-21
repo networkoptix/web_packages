@@ -135,11 +135,21 @@ window.L = {};
                     })
                     .when('/systems/:systemId/view', {
                         templateUrl: CONFIG.viewsDir + 'view.html',
-                        controller: 'ViewPageCtrl'
+                        controller: 'ViewPageCtrl',
+                        resolve: {
+                            embed: function () {
+                                return false;
+                            }
+                        }
                     })
                     .when('/systems/:systemId/view/:cameraId', {
                         templateUrl: CONFIG.viewsDir + 'view.html',
-                        controller: 'ViewPageCtrl'
+                        controller: 'ViewPageCtrl',
+                        resolve: {
+                            embed: function () {
+                                return false;
+                            }
+                        }
                     })
                     .when('/systems/:systemId/health', {
                         template: ''
