@@ -87,7 +87,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
                         .then(() => {
                             this.localStorage.set('langChanged', true);
                             setTimeout(() => window.location.reload()); // reload window to catch new language
-                            return;
+                            return false;
                         });
                 }
                 return this.systemsService.forceUpdateSystemsAsPromise();
@@ -120,6 +120,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
             });
 
         if (this.localStorage && this.localStorage.get('langChanged')) {
+            this.dialogs.notify(this.LANG.account.accountSavedSuccess, 'success');
             this.localStorage.set('langChanged', false);
         }
 
