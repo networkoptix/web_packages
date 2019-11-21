@@ -159,7 +159,9 @@ export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAcces
     }
 
     ngOnDestroy() {
-        this.passwordSubscription.unsubscribe();
+        if (this.passwordSubscription) {
+            this.passwordSubscription.unsubscribe();
+        }
     }
 
     ngOnInit() {
