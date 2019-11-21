@@ -82,6 +82,7 @@ Cancel should cancel disconnection and disconnect should remove it when not owne
     Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
     Wait Until Elements Are Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
+    Sleep    .5
     Wait Until Element Is Visible    ${SHARE BUTTON SYSTEMS}
     Click Button    ${SHARE BUTTON SYSTEMS}
     Wait Until Elements Are Visible    ${SHARE EMAIL}    ${SHARE BUTTON MODAL}
@@ -253,6 +254,7 @@ should display same user data as user provided during registration
     Click Link    ${USERS LIST LINK}
 #click link containing user's email
     ${User In List}=   Set Variable    //nx-system-settings-component//nx-menu//nx-level-3-item//span[text()='${random email}']/../../../a
+    Wait Until Element Is Visible    ${User In List}
     Click Link    ${User In List}
 #verify name displayed
     Wait Until Element Is Visible    //nx-system-user-component//nx-block//header/span[contains(text(),'${COMBO TEXT} ${COMBO TEXT}')]

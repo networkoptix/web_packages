@@ -134,6 +134,7 @@ User have several systems linked to his account
     ${l}=   Set Variable    ${SYSTEMS DROPDOWN}${DROPDOWN MENU ITEMS}\[${r1}]
     ${h}=   Get Element Attribute    ${l}/a    href
     ${n}=   Get Text    ${l}//span[@class='system-name']
+    Wait Until Element Is Visible    ${x}
     Scroll Element Into View    ${x}
     Click Element    ${x}
     # Expected Result

@@ -76,6 +76,7 @@ Check Langauge Logged In
     Register Keyword To Run On Failure    Failure Tasks
     Run Keyword If    "${status}"=="False"    Set Language
     Run Keyword If    "${status}"=="False"    Click Button    ${ACCOUNT SAVE}
+    Sleep    5
     Go To    ${previous location}
 
 Set Language
