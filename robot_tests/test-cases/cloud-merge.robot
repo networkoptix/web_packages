@@ -281,6 +281,8 @@ Only one system connected to Cloud Account
     Go to Users List
     Wait Until Element Is Enabled    ${SHARE BUTTON SYSTEMS}    180
     Share To    ${EMAIL MERGE OWNER 2}    ${ADMIN TEXT}
+    ${email}    Wait For Email    recipient=${EMAIL MERGE OWNER 2}    timeout=120    status=UNSEEN
+    Delete Email    ${email}
     Log Out
     Log In    ${EMAIL MERGE OWNER 2}    ${password}
     Validate Log In
