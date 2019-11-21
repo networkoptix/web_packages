@@ -55,6 +55,7 @@ export class NxSystemAdminComponent implements OnInit {
     viewContainerRef: ViewContainerRef;
     saveSettings: any;
     resetVideoEncryptionIfDisabled: any;
+    setWarningMessageThroughApplyService: any;
 
     settingsWatchers: any = {
         autoDiscoveryEnabled: new Watcher<boolean>(),
@@ -133,6 +134,14 @@ export class NxSystemAdminComponent implements OnInit {
             const encryptVideo = this.settingsWatchers['videoTrafficEncryptionForced'].value;
             if (!encryptTraffic && encryptVideo) {
                 this.settingsWatchers['videoTrafficEncryptionForced'].value = false;
+            }
+        }
+
+        this.setWarningMessageThroughApplyService = () => {
+            if (this.settingsWatchers['videoTrafficEncryptionForced'].value === true) {
+                this.applyService.setWarn('Encrypting video traffic will significantly increase SPU usage.');
+            } else {
+                this.applyService.setWarn('');
             }
         }
 

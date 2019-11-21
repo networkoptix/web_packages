@@ -21,6 +21,7 @@ export class NxApplyComponent {
     @Input('') show: boolean;
     @Input('') save: any;
     @Input('') discard: any;
+    @Input('') warn: string;
     @Input() form: NgForm;
 
     applyVisible: boolean;

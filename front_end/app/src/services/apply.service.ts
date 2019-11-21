@@ -214,6 +214,10 @@ export class NxApplyService {
         (<NxApplyComponent>this.applyComponentRef.instance).applyVisible = state;
     }
 
+    public setWarn(message) {
+        (<NxApplyComponent>this.applyComponentRef.instance).warn = message;
+    }
+
     /**
      * Whats happening here
      * 1) For each watcher create a new observable that only fires when the observable

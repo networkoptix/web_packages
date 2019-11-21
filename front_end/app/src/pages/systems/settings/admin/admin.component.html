@@ -151,6 +151,7 @@
                                 componentId="videoTrafficEncryptionForced"
                                 [(ngModel)]="settingsWatchers.videoTrafficEncryptionForced.value"
                                 [disabled]="!settingsWatchers.trafficEncryptionForced.value"
+                                (click)="setWarningMessageThroughApplyService()"
                                 #videoTrafficEncryptionForced="ngModel">
                             </nx-checkbox>
 

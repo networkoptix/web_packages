@@ -1,12 +1,15 @@
 @import '../../../styles/theme_palette';
 
 .placeholder-text {
-    height : 48px;
     color  : $light13;
     
     &-no-changes {
-        height      : 32px;
         display     : flex;
         align-items : center;
     }
 }
+
+.warning-text {
+    color : $red-l2;
+}
+
