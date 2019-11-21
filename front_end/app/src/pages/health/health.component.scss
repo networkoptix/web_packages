@@ -14,10 +14,26 @@ nx-system-health-component {
     font-family: $font-family-medium;
     color: $yellow_main;
   }
-  
-  .menu-block {
+
+  .fixed-sidebar {
+    hr {
+      width: 100%;
+    }
+
+    @include media-breakpoint-down(sm) {
+      height: auto !important;
+    }
+
+    // replicate col-lg-3
     @include media-breakpoint-up(lg) {
       position: fixed;
+      left: 0;
+      width: calc((100% - (#{$grid-gutter-width} + #{$scrollbar-height})) / 12 * 3)
+    }
+
+    // replicate col-xl-2
+    @include media-breakpoint-up(xl) {
+      width: calc((100% - (#{$grid-gutter-width} + #{$scrollbar-height})) / 12 * 2);
     }
   }
 
