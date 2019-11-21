@@ -11,6 +11,8 @@ import { NxUtilsService }                        from '../../services/utils.serv
 import { FileSystemFileEntry, NgxFileDropEntry } from 'ngx-file-drop';
 import { DOCUMENT }                              from '@angular/common';
 import { NxRibbonService }                       from '../../components/ribbon/ribbon.service';
+import { fromEvent, Subscription }               from 'rxjs';
+import { debounceTime }                          from 'rxjs/operators';
 
 @Component({
     selector   : 'nx-system-health-component',
@@ -32,6 +34,9 @@ export class NxHealthComponent implements OnInit, OnDestroy {
     dragCount = 0;
     importShow: boolean;
     importedData: any = {};
+    headerHeight: number;
+
+    private resizeSubscription: Subscription;
 
     constructor(private accountService: NxAccountService,
                 private configService: NxConfigService,
@@ -102,6 +107,17 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                 });
             });
         });
+
+        // We listen to window resize and measure header height to know how much to offset the fixed menu by
+        this.resizeSubscription = fromEvent(window, 'resize').pipe(debounceTime(100)).subscribe((event: any) => {
+            if (event.target.innerWidth >= 768) {
+                this.setHeaderHeight();
+            }
+        });
+    }
+
+    setHeaderHeight() {
+        this.headerHeight = document.getElementsByClassName('headerContainer')[0].scrollHeight;
     }
 
     ngOnDestroy(): void {
@@ -394,6 +410,9 @@ export class NxHealthComponent implements OnInit, OnDestroy {
             };
             // String is here because it does not need to be translated and probably doesn't belong in CONFIG
             this.ribbonService.show('You are viewing an imported report, refresh the page to get a fresh report', '', '', 'alert');
+            setTimeout(() => {
+                this.setHeaderHeight();
+            });
         };
 
         fileEntry.file((file: File) => {

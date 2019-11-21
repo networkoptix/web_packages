@@ -9,7 +9,7 @@
 <div *ngIf="healthService.ready" class="py-0 px-3 mw-100 mt-3">
     <div class="row">
         <div class="fixed-sidebar col-12 d-flex flex-column ml-lg-2 fill-screen-height"
-             [ngStyle]="{'height': 'calc(100% - ('+ 1 + 'px + 32px))'}">
+             [ngStyle]="{'height': 'calc(100% - ('+ headerHeight + 'px + 32px))'}">
             <nx-menu [content]="menu"></nx-menu>
             <hr/>
             <div class="menuLinks px-2">
