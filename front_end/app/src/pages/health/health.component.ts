@@ -122,6 +122,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
+        this.resizeSubscription.unsubscribe();
         this.ribbonService.hide();
     }
 
