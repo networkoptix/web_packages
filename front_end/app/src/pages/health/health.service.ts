@@ -16,6 +16,7 @@ export class NxHealthService {
     alarmsSubject = new BehaviorSubject(undefined);
     systemSubject = new BehaviorSubject(undefined);
 
+    importedData: boolean;
     tableHeaders: any;
     panelParams: any;
 
@@ -34,6 +35,7 @@ export class NxHealthService {
     constructor(private utilsService: NxUtilsService,
                 private configService: NxConfigService) {
         this.CONFIG = this.configService.getConfig();
+        this.importedData = false;
     }
 
     get manifest() {

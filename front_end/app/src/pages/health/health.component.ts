@@ -67,6 +67,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         });
 
         this.healthService.ready = false;
+        this.healthService.importedData = false;
         this.menu = {
             selectedSection   : '',         // updated by selectedSectionSubject
             base              : `${this.CONFIG.systemMenu.baseUrl}${this.system && this.system.id || ''}${this.CONFIG.systemHealthMenu.baseUrl}`,
@@ -393,6 +394,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
     fileDropped(files: NgxFileDropEntry[]) {
         this.dragCount = 0;
         this.importShow = false;
+        this.healthService.importedData = true;
         const fileEntry = files[0].fileEntry as FileSystemFileEntry;
         const fileReader = new FileReader();
         fileReader.onload = _ => {

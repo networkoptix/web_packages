@@ -8,7 +8,7 @@
                   (click)="closeView()">
             </span>
         </header>
-        <ng-container *ngIf="panelParams.id === 'cameras'">
+        <ng-container *ngIf="panelParams.id === 'cameras' && !healthService.importedData">
             <nx-image-section [cameraInfo]="activeEntity"></nx-image-section>
         </ng-container>
         <nx-section>
