@@ -180,12 +180,13 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
             this.accountService
                 .get()
                 .then(account => {
+                    this.renderer.removeClass(document.body, 'loading');
+
                     if (account) {
                         this.dropdownsVisible = true;
                         this.systemsService.getSystem(account.email);
 
                         this.loginState = true;
-                        this.renderer.removeClass(document.body, 'loading');
                         this.renderer.removeClass(document.body, 'anonymous');
                         this.renderer.addClass(document.body, 'authorized');
                         this.systemsService
@@ -193,8 +194,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                             .toPromise()
                             .then(() => this.updateActive());
                     } else {
-                        this.loginState = true;
-                        this.renderer.removeClass(document.body, 'loading');
+                        this.loginState = false;
                         this.renderer.removeClass(document.body, 'authorized');
                         this.renderer.addClass(document.body, 'anonymous');
                     }
