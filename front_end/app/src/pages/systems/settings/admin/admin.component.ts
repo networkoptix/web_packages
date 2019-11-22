@@ -1,6 +1,6 @@
 import {
-    Component, OnInit, ViewChild, Inject,
-    ElementRef, ViewContainerRef
+    Component, OnInit, Inject, ViewChildren, QueryList,
+    ElementRef, ViewContainerRef, AfterViewInit
 }                                    from '@angular/core';
 import { Location }                  from '@angular/common';
 import { ActivatedRoute }            from '@angular/router';
@@ -24,14 +24,13 @@ interface Settings {
     showMerge: boolean;
 }
 
-
 @Component({
     selector   : 'nx-system-admin-component',
     templateUrl: 'admin.component.html',
     styleUrls  : ['admin.component.scss']
 })
 
-export class NxSystemAdminComponent implements OnInit {
+export class NxSystemAdminComponent implements OnInit, AfterViewInit {
     CONFIG: any = {};
     LANG: any = {};
     system: NxSystem;
@@ -52,6 +51,7 @@ export class NxSystemAdminComponent implements OnInit {
     selectedTimeUnit: string;
     selectedTimeUnitObject: any;
     timeUnitCount: number;
+    currentMaxTimeUnit: number;
     viewContainerRef: ViewContainerRef;
     saveSettings: any;
     resetVideoEncryptionIfDisabled: any;
@@ -67,8 +67,7 @@ export class NxSystemAdminComponent implements OnInit {
         sessionLimitMinutes: new Watcher<number>(),
     };
 
-    @ViewChild('timeUnitTracker', {static: false})
-    timeUnitTracker: ElementRef;
+    @ViewChildren('timeUnitTracker') timeUnitTracker: QueryList<ElementRef>;
 
     private setupDefaults() {
         this.CONFIG = this.configService.getConfig();
@@ -121,13 +120,12 @@ export class NxSystemAdminComponent implements OnInit {
         };
 
         this.limitSessionTimeUnits = [
-            { value: 'Minute(s)', name: 'Minute(s)', id: 1, max: 60 },
+            { value: 'Minute(s)', name: 'Minute(s)', id: 1, max: 600 },
             { value: 'Hour(s)', name: 'Hour(s)', id: 2, max: 24 },
         ];
         this.selectedTimeUnit = 'Hour(s)';
         this.selectedTimeUnitObject = this.limitSessionTimeUnits
                                          .find(e => e.name === this.selectedTimeUnit);
-        this.timeUnitCount = 1;
 
         this.initForApplyService();
         
@@ -230,7 +228,9 @@ export class NxSystemAdminComponent implements OnInit {
     }
 
     ngAfterViewInit() {
-        this.updateTimeUnitInput(this.selectedTimeUnitObject);
+        this.timeUnitTracker.changes.subscribe((elements: QueryList <ElementRef>) => {
+            this.updateTimeUnitInput(this.selectedTimeUnitObject);
+        });
     }
 
     disconnect() {
@@ -328,18 +328,26 @@ export class NxSystemAdminComponent implements OnInit {
     }
 
     updateTimeUnitInput(timeUnit) {
-        const { max } = timeUnit;
-        const el = this.timeUnitTracker;
-        if (el) {
-            if (el.nativeElement.value > max) {
-                el.nativeElement.value = max;
-            }
-            el.nativeElement.setAttribute('max', max);
+        this.currentMaxTimeUnit = timeUnit.max;
+        const el = this.timeUnitTracker.first;
+        if (el.nativeElement.value > this.currentMaxTimeUnit) {
+            el.nativeElement.value = this.currentMaxTimeUnit;
+        }
+        el.nativeElement.setAttribute('max', this.currentMaxTimeUnit);
 
-            if (this.selectedTimeUnit !== timeUnit.name) {
-                this.selectedTimeUnit = timeUnit.name;
-                this.selectedTimeUnitObject = timeUnit;
-            }
+        if (this.selectedTimeUnit !== timeUnit.name) {
+            this.selectedTimeUnit = timeUnit.name;
+            this.selectedTimeUnitObject = timeUnit;
+        }
+    }
+
+    validationCheckForNumberAndMax() {
+        // checks if entering a value NaN (+-.) or less than min
+        if (!this.timeUnitCount || this.timeUnitCount < 1) {
+            this.timeUnitCount = undefined;
+        }
+        if (this.timeUnitCount > this.currentMaxTimeUnit) {
+            this.timeUnitCount = this.currentMaxTimeUnit;
         }
     }
 }

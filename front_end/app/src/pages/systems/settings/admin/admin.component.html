@@ -113,8 +113,7 @@
                 <h4 translate>Security</h4>
             </header>
             <nx-section>
-                <form id="registerForm" class="form-horizontal" #registerForm="ngForm"
-                      *ngIf="!registerSuccess" novalidate autocomplete="off">
+                <form id="systemSettingsForm" class="form-horizontal" novalidate autocomplete="off">
                     <div class="form-check p-0 mr-4">
                         <div class="d-flex align-items-center">
                             <nx-checkbox
@@ -177,7 +176,8 @@
                         <div class="row ml-4 mt-2">
                             <input #timeUnitTracker 
                                    [(ngModel)]="timeUnitCount" 
-                                   [ngModelOptions]="{standalone: true}" 
+                                   [ngModelOptions]="{standalone: true}"
+                                   (keyup)="validationCheckForNumberAndMax()"
                                    type="number" 
                                    min="1" 
                                    class="form-control text-center col-3">
