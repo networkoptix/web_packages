@@ -7,7 +7,8 @@ export class NxFocusMeDirective implements OnInit {
     }
 
     ngOnInit() {
-        setTimeout(() => {
+        (() => {
+            setTimeout
             this._elementRef.nativeElement.focus();
         });
     }

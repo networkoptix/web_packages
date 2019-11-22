@@ -1,6 +1,6 @@
 import {
-    Component, Inject,
-    OnInit, PLATFORM_ID,
+    Component, ElementRef, Inject,
+    OnInit, PLATFORM_ID, ViewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { isPlatformBrowser, Location }           from '@angular/common';
@@ -18,10 +18,14 @@ import { NxDialogsService }          from '../../dialogs/dialogs.service';
 import { NxAccountService }          from '../../services/account.service';
 import { SubscriptionLike }          from 'rxjs';
 import { isArray }                   from 'rxjs/internal-compatibility';
+import { NxAppStateService }         from '../../services/nx-app-state.service';
+import { NxScrollMechanicsService }  from '../../services/scroll-mechanics.service';
 
 interface Params {
     [key: string]: any;
 }
+
+
 
 @Component({
     selector     : 'ipvd',
@@ -67,6 +71,10 @@ export class NxIpvdComponent implements OnInit {
     locationSubscription: SubscriptionLike;
     cameraReloadSubscription: SubscriptionLike;
     cameraGetSubscription: SubscriptionLike;
+    windowSizeSubscription: SubscriptionLike;
+
+    @ViewChild('viewContainer', { static: false }) viewContainer: ElementRef;
+    @ViewChild('tableContainer', { static: false }) tableContainer: ElementRef;
 
     private setupDefaults() {
         this.allowedParameters = [
@@ -118,6 +126,7 @@ export class NxIpvdComponent implements OnInit {
                 private router: Router,
                 private title: Title,
                 private accountService: NxAccountService,
+                private scrollMechanicsService: NxScrollMechanicsService,
                 @Inject(PLATFORM_ID) private platformId: object,
     ) {
         this.setupDefaults();
@@ -137,6 +146,20 @@ export class NxIpvdComponent implements OnInit {
             });
         });
 
+        this.windowSizeSubscription = this.scrollMechanicsService
+            .windowSizeSubject
+            .subscribe(() => {
+
+                if (this.viewContainer && this.viewContainer.nativeElement) {
+                    this.scrollMechanicsService.setElementViewWidth(this.viewContainer.nativeElement.clientWidth);
+                }
+                if (this.tableContainer && this.tableContainer.nativeElement) {
+                    let width = this.tableContainer.nativeElement.clientWidth;
+                    width = (this.activeCamera) ? width - 8 : width; /* -gutter */
+                    this.scrollMechanicsService.setElementTableWidth(width);
+                }
+            });
+
         this.CONFIG = this.configService.getConfig();
     }
 
@@ -153,23 +176,6 @@ export class NxIpvdComponent implements OnInit {
             this.hasNoSearch = true;
             this.resetFilterModel();
         }
-
-        // this.uriSubscription = this.uri
-        //     .getURI()
-        //     .subscribe(params => {
-        //         this.params = params;
-        //         this.debug = (params.debug !== undefined);
-        //         this.beta = (params.beta !== undefined);
-        //
-        //         const numParams = Object.keys(this.params).length;
-        //         if (numParams !== 0) {
-        //             this.hasNoSearch = (numParams === 1 && (this.params.debug || this.params.beta));
-        //         } else {
-        //             this.hasNoSearch = true;
-        //             this.resetFilterModel();
-        //         }
-        //     });
-
 
         this.LANG = this.language.getTranslations();
         this.title.setTitle(this.LANG.pageTitles.supportedDevices);
@@ -197,6 +203,7 @@ export class NxIpvdComponent implements OnInit {
         this.routerSubscription.unsubscribe();
         this.locationSubscription.unsubscribe();
         this.cameraGetSubscription.unsubscribe();
+        this.windowSizeSubscription.unsubscribe();
 
         if (this.cameraReloadSubscription) {
             this.cameraReloadSubscription.unsubscribe();
@@ -498,6 +505,10 @@ export class NxIpvdComponent implements OnInit {
         }
 
         this.toggleCamview = true;
+        setTimeout(() => {
+            this.scrollMechanicsService.setElementViewWidth(this.viewContainer.nativeElement.clientWidth);
+            this.scrollMechanicsService.setElementTableWidth(this.tableContainer.nativeElement.clientWidth - 8/* -gutter */);
+        });
     }
 
 
@@ -530,5 +541,7 @@ export class NxIpvdComponent implements OnInit {
         this.activeCamera = undefined;
         this.mobileDetailMode = false;
         this.toggleCamview = false;
+
+        this.scrollMechanicsService.setElementTableWidth(0);
     }
 }

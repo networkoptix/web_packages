@@ -5,13 +5,16 @@ import { DeviceDetectorService }                                  from 'ngx-devi
 import { Title }                                                  from '@angular/platform-browser';
 import { ActivatedRoute, ActivationStart, Event, Router } from '@angular/router';
 import { filter }                                                 from 'rxjs/operators';
-import { WINDOW }                                                 from './src/services/window-provider';
-import { NxLanguageProviderService }                              from './src/services/nx-language-provider';
-import { NxConfigService }                                        from './src/services/nx-config';
-import { NxApplyService }                                         from './src/services/apply.service';
-import { NxQueryParamService }                                    from './src/services/query-param.service';
-import { NxRibbonService }                                        from './src/components/ribbon/ribbon.service';
+import { WINDOW }                    from './src/services/window-provider';
+import { NxLanguageProviderService } from './src/services/nx-language-provider';
+import { NxConfigService }           from './src/services/nx-config';
+import { NxApplyService }            from './src/services/apply.service';
+import { NxQueryParamService }       from './src/services/query-param.service';
+import { NxRibbonService }           from './src/components/ribbon/ribbon.service';
 import { NxAppStateService }         from './src/services/nx-app-state.service';
+import { Observable, Subscription }  from 'rxjs';
+import 'rxjs-compat/add/observable/fromEvent';
+import { NxScrollMechanicsService }  from './src/services/scroll-mechanics.service';
 
 @Component({
     selector: 'nx-app',
@@ -22,7 +25,7 @@ import { NxAppStateService }         from './src/services/nx-app-state.service';
                 <nx-ribbon></nx-ribbon>
             </div>
         
-            <div class="mainContainer" style="">
+            <div class="mainContainer" nxScrollHelper>
                 <router-outlet></router-outlet>
                 <div ng-view="" ng-model-options="{ updateOn: 'blur' }"></div>
             </div>
@@ -38,6 +41,8 @@ export class AppComponent {
     hlsIsSupported: boolean;
     isInIframe: boolean;
 
+    eventSubscription: Subscription;
+
     constructor(private cookieService: CookieService,
                 private deviceService: DeviceDetectorService,
                 private location: Location,
@@ -46,12 +51,15 @@ export class AppComponent {
                 private language: NxLanguageProviderService,
                 private applyService: NxApplyService,
                 private appStateService: NxAppStateService,
+                private scrollMechanicsService: NxScrollMechanicsService,
                 private queryParamService: NxQueryParamService,
                 private router: Router,
                 private ribbonService: NxRibbonService,
                 @Inject(WINDOW) private window: Window) {
 
         this.CONFIG = this.config.getConfig();
+
+        this.scrollMechanicsService.setWindowSize(window.innerHeight, window.innerWidth);
 
         // TODO: Componentize this
         this.allowedDevices = {
@@ -185,6 +193,11 @@ export class AppComponent {
             window.history.go(1);
             this.applyService.showDialog().catch(() => {});
         }
+    }
+
+    @HostListener('window:resize', ['$event'])
+    onResize(event) {
+        this.scrollMechanicsService.setWindowSize(event.target.innerHeight, event.target.innerWidth);
     }
 
     public setTitle(newTitle: string) {

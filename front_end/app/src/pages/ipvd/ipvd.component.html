@@ -18,7 +18,7 @@
             Nothing Found
         </div>
 
-        <div class="order-1 order-md-0 m-0 p-0"
+        <div class="order-1 order-md-0 m-0 p-0" #tableContainer
              *ngIf="camerasTable.length"
              [ngClass]="{'toggle': toggleCamview, 'pr-2' : toggleCamview, 'col-12': !toggleCamview, 'col-md-7 col-xl-9' : toggleCamview}"
              [style.display]="mobileDetailMode ? 'none' : 'block'">
@@ -43,7 +43,7 @@
         </div>
 
         <div class="order-0 order-md-1 pb-3 pl-0 pl-md-2 pr-0 col-12 col-md-5 col-xl-3"
-             *ngIf="activeCamera">
+             *ngIf="activeCamera" #viewContainer>
 
             <nx-cam-view
                     [activeCamera]="activeCamera"
@@ -69,21 +69,17 @@
         </nx-vendor-list>
     </div>
 
-    <div class="row px-3 m-0"
-         *ngIf="vendors">
+<!--    <div class="row px-3 m-0"-->
+<!--         *ngIf="vendors">-->
 
-        <p *ngIf="CONFIG.feedbackEnabled && LANG && LANG.ipvd" dir="auto">
-            <span [translate]="'ipvd.disclaimer'"
-                  [translateParams]="{companyName: company, vmsName: vmsName}">
-            </span>
-            <span>
-                {{LANG.ipvd.feedback.a_Please}} <a href (click)="openFeedback('page')">{{LANG.ipvd.feedback.b_Link}}</a> {{LANG.ipvd.feedback.c_Info}}
-            </span>
-        </p>
-        <button *ngIf="debug" (click)="reset()">reset</button>
-    </div>
-
-    <div class="row px-3 m-0">
-        <nx-footer></nx-footer>
-    </div>
+<!--        <p *ngIf="CONFIG.feedbackEnabled && LANG && LANG.ipvd" dir="auto">-->
+<!--            <span [translate]="'ipvd.disclaimer'"-->
+<!--                  [translateParams]="{companyName: company, vmsName: vmsName}">-->
+<!--            </span>-->
+<!--            <span>-->
+<!--                {{LANG.ipvd.feedback.a_Please}} <a href (click)="openFeedback('page')">{{LANG.ipvd.feedback.b_Link}}</a> {{LANG.ipvd.feedback.c_Info}}-->
+<!--            </span>-->
+<!--        </p>-->
+<!--        <button *ngIf="debug" (click)="reset()">reset</button>-->
+<!--    </div>-->
 </div>

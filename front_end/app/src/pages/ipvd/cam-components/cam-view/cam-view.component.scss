@@ -1,11 +1,24 @@
 @import '../../../../../styles/theme_palette';
 @import '../../../../../styles/theme_variables';
 @import '../../../../styles/mixins';
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/mixins/breakpoints';
 
 .camview {
     padding          : 0;
     background-color : $light4;
     border-top       : 1px solid transparent;
+    
+    &.view-scroll-fixed-top {
+        position : fixed;
+        top      : 48px + 16px; // header + padding
+    }
+    
+    &.view-scroll-fixed-bottom {
+        position : fixed;
+        bottom   : 16px;
+    }
     
     .card {
         margin : 0 !important;

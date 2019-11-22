@@ -1,15 +1,17 @@
 import {
     Component, Input, Output, EventEmitter,
     OnChanges, SimpleChanges,
-    OnInit, ViewEncapsulation, Inject, PLATFORM_ID, OnDestroy
-} from '@angular/core';
-
-import { NxConfigService }                         from '../../../../services/nx-config';
-import { NxUriService }                            from '../../../../services/uri.service';
-import { NxUtilsService }                          from '../../../../services/utils.service';
-import { Router }                                  from '@angular/router';
-import { NxLanguageProviderService }               from '../../../../services/nx-language-provider';
-import { Subject, Subscription, SubscriptionLike } from 'rxjs';
+    OnInit, ViewEncapsulation, Inject,
+    PLATFORM_ID, OnDestroy, AfterViewInit,
+    ElementRef, ViewChild,
+}                                         from '@angular/core';
+import { NxConfigService }                from '../../../../services/nx-config';
+import { NxUriService }                   from '../../../../services/uri.service';
+import { NxUtilsService }                 from '../../../../services/utils.service';
+import { Router }                         from '@angular/router';
+import { NxLanguageProviderService }      from '../../../../services/nx-language-provider';
+import { Subscription, SubscriptionLike } from 'rxjs';
+import { NxScrollMechanicsService }       from '../../../../services/scroll-mechanics.service';
 
 interface Params {
     [key: string]: any;
@@ -21,7 +23,7 @@ interface Params {
     styleUrls    : ['./cam-table.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class CamTableComponent implements OnChanges, OnDestroy, OnInit {
+export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterViewInit {
     @Input() elements: any[];
     @Input() allowedParameters: string[];
     @Input() activeCamera: any;
@@ -54,6 +56,14 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit {
     serviceParams;
     serviceHeaders;
 
+    windowSize: any = {};
+    windowScroll: any;
+    clientHeight: number;
+    offsetHeight: number;
+    scrollHeight: number;
+    tableScrollFixed: boolean;
+    elementWidth: any;
+
     uriSubscription: SubscriptionLike;
 
     // Options for the Excel export
@@ -71,11 +81,13 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit {
         removeNewLines  : true
     };
 
+    @ViewChild('nxTable', { static: false }) camerasTable: ElementRef;
 
     constructor(private router: Router,
                 private language: NxLanguageProviderService,
                 private uri: NxUriService,
                 private config: NxConfigService,
+                private scrollMechanicsService: NxScrollMechanicsService,
                 @Inject(PLATFORM_ID) private platformId: object) {
 
         this.LANG = this.language.getTranslations();
@@ -83,6 +95,10 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit {
 
         this.sortOrderASC = true;
         this._elements = this.elements;
+
+        this.windowSize = {};
+        this.windowScroll = 0;
+        this.tableScrollFixed = false;
 
         this.serviceHeaders = [this.LANG.ipvd.count, this.LANG.ipvd.resolutionArea];
         this.serviceParams = ['count', 'resolutionArea'];
@@ -104,6 +120,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit {
             this.LANG.ipvd.resolutionArea
         ];
 
+        this.elementWidth = '100%';
         this.pagedItems = [];
         this.pagerMaxSize = this.CONFIG.ipvd.pagerMaxSize;
         this.currentPage = 1;
@@ -296,11 +313,6 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit {
                 this.selectedCamera = changes.activeCamera.currentValue.sortKey;
             }
         }
-
-        if (changes.params) {
-
-
-        }
     }
 
     ngOnDestroy() {
@@ -364,6 +376,42 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit {
             });
     }
 
+    ngAfterViewInit(): void {
+        this.calcElementScrollMechanics();
+
+        this.scrollMechanicsService
+            .windowScrollSubject
+            .subscribe(() => {
+                this.calcElementScrollMechanics();
+            });
+
+        this.scrollMechanicsService
+            .elementTableWidthSubject
+            .subscribe(() => {
+                const width = this.scrollMechanicsService.elementTableWidthSubject.getValue();
+                this.elementWidth = (width > 0) ? width + 'px' : '100%';
+            });
+
+        this.scrollMechanicsService
+            .offsetSubject
+            .subscribe(() => {
+                setTimeout(() => this.scrollHeight = this.scrollMechanicsService.getElementOffset(this.camerasTable.nativeElement));
+            });
+    }
+
+    calcElementScrollMechanics() {
+        this.windowSize = this.scrollMechanicsService.windowSizeSubject.getValue();
+        this.windowScroll = this.scrollMechanicsService.windowScrollSubject.getValue();
+
+        this.clientHeight = this.camerasTable.nativeElement.clientHeight;
+
+        if (this.clientHeight < this.windowSize.height && this.windowScroll >= this.scrollHeight - NxScrollMechanicsService.SCROLL_OFFSET) {
+            this.tableScrollFixed = true;
+        } else {
+            this.tableScrollFixed = false;
+        }
+    }
+
     setClickedRow(element) {
         if (element) {
             this.uri.pageOffset = window.pageYOffset;
@@ -384,6 +432,8 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit {
         const startIndex = (this.currentPage - 1) * this.pageSize;
         const endIndex = startIndex + this.pageSize;
         this.pagedItems = this._elements.slice(startIndex, endIndex);
+
+        setTimeout(() => this.scrollHeight = this.scrollMechanicsService.getElementOffset(this.camerasTable.nativeElement));
 
         if (this.params && this.params.page != pageParam) { // this.params.page is string - no strict comparison
             const queryParams: Params = {};

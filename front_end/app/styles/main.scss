@@ -38,8 +38,12 @@ body {
   display: flex; flex-direction: column; height: 100%;
 }
 
+.headerContainer {
+    z-index: 9999;
+}
+
 .mainContainer {
-    flex: 1 1 auto;
+    //flex: 1 1 auto;
     overflow-y: scroll; /* CLOUD-373: this is hack: we fix vertical scroll to prevent the page from shaking when it appears or disappears*/
 }
 

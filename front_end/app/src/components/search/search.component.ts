@@ -12,6 +12,7 @@ import { NxUriService }                                     from '../../services
 import { NxLanguageProviderService }                        from '../../services/nx-language-provider';
 import { OperatorFunction, Subscription, SubscriptionLike } from 'rxjs';
 import { debounceTime }                                     from 'rxjs-compat/operator/debounceTime';
+import { NxScrollMechanicsService }                         from '../../services/scroll-mechanics.service';
 
 /* Usage
  <nx-search
@@ -77,13 +78,15 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
     private searchUpdated: any = Subject;
     private modelUpdated: any = Subject;
 
-    constructor(private _router: Router,
-                private _route: ActivatedRoute,
-                private location: Location,
-                private uri: NxUriService,
-                private configService: NxConfigService,
-                private language: NxLanguageProviderService,
-                private differs: KeyValueDiffers) {
+    constructor(
+            private _router: Router,
+            private _route: ActivatedRoute,
+            private location: Location,
+            private uri: NxUriService,
+            private configService: NxConfigService,
+            private language: NxLanguageProviderService,
+            private scrollMechanicsService: NxScrollMechanicsService,
+    ) {
 
         this.CONFIG = this.configService.getConfig();
         this.LANG = this.language.getTranslations();
@@ -241,6 +244,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
 
     toggleOptions() {
         this.showAdvancedOptions = !this.showAdvancedOptions;
+        this.scrollMechanicsService.offsetSubject.next(this.showAdvancedOptions);
         return false;
     }
 
