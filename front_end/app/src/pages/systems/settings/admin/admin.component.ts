@@ -129,24 +129,8 @@ export class NxSystemAdminComponent implements OnInit {
                                          .find(e => e.name === this.selectedTimeUnit);
         this.timeUnitCount = 1;
 
-        this.resetVideoEncryptionIfDisabled = () => {
-            const encryptTraffic = this.settingsWatchers['trafficEncryptionForced'].value;
-            const encryptVideo = this.settingsWatchers['videoTrafficEncryptionForced'].value;
-            if (!encryptTraffic && encryptVideo) {
-                this.settingsWatchers['videoTrafficEncryptionForced'].value = false;
-            }
-        }
-
-        this.setWarningMessageThroughApplyService = () => {
-            if (this.settingsWatchers['videoTrafficEncryptionForced'].value === true) {
-                this.applyService.setWarn('Encrypting video traffic will significantly increase SPU usage.');
-            } else {
-                this.applyService.setWarn('');
-            }
-        }
-
-        this.initProcesses();
-
+        this.initForApplyService();
+        
         this.applyService.initPageWatcher(
             this.viewContainerRef,
             this.saveSettings,
@@ -154,6 +138,51 @@ export class NxSystemAdminComponent implements OnInit {
             Object.values(this.settingsWatchers));
 
         this.init();
+    }
+
+    initForApplyService(): void {
+        this.resetVideoEncryptionIfDisabled = () => {
+            const encryptTraffic = this.settingsWatchers['trafficEncryptionForced'].value;
+            const encryptVideo = this.settingsWatchers['videoTrafficEncryptionForced'].value;
+            if (!encryptTraffic && encryptVideo) {
+                this.settingsWatchers['videoTrafficEncryptionForced'].value = false;
+            }
+        };
+
+        this.setWarningMessageThroughApplyService = () => {
+            if (this.settingsWatchers['videoTrafficEncryptionForced'].value === true) {
+                this.applyService.setWarn('Encrypting video traffic will significantly increase SPU usage.');
+            } else {
+                this.applyService.setWarn('');
+            }
+        };
+
+        this.saveSettings = this.processService.createProcess(() => {
+            const changes = {};
+            Object.keys(this.settingsWatchers).forEach(setting => {
+                const obj = this.settingsWatchers[setting];
+                if (obj.value !== obj.originalValue) {
+                    changes[setting] = obj.value;
+                    obj.originalValue = obj.value;
+                }
+            });
+            return this.system.updateOrGetSystemSettings(changes)
+                .then(success => {
+                    this.applyService.locked = false;
+                    console.log('SUCCESS!', success);
+                });
+
+
+            // return this.system.saveUser(selectedUser, selectedUser.role).then(() => {
+            //     return this.system.getUsers(true);
+            // })
+            // .then(() => {
+            // setTimeout(() => {
+            //     this.applyService.hardReset();
+            //     this.setUser();
+            //     this.applyService.reset();
+            // });
+        });
     }
 
     init(): void {
@@ -198,32 +227,6 @@ export class NxSystemAdminComponent implements OnInit {
                 }
             });
 
-    }
-
-    initProcesses(): void {
-        this.saveSettings = this.processService.createProcess(() => {
-            const changes = {};
-            Object.keys(this.settingsWatchers).forEach(setting => {
-                const obj = this.settingsWatchers[setting];
-                if (obj.value !== obj.originalValue) {
-                    changes[setting] = obj.value;
-                }
-            })
-            // if changes is empty, it will return system settings
-            return this.system.updateOrGetSystemSettings(changes)
-                .then(success => console.log('SUCCESS!', success));
-
-
-            // return this.system.saveUser(selectedUser, selectedUser.role).then(() => {
-            //     return this.system.getUsers(true);
-            // })
-            // .then(() => {
-            // setTimeout(() => {
-            //     this.applyService.hardReset();
-            //     this.setUser();
-            //     this.applyService.reset();
-            // });
-        });
     }
 
     ngAfterViewInit() {
