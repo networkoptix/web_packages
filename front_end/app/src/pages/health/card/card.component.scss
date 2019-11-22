@@ -7,12 +7,19 @@
 
 .card-header {
     background-color: $additional_light1;
+    border-bottom: 1px solid $light4;
     color: $dark9;
-    font-size: 14px;
+    font-size: 15px;
+    font-family: $font-family-medium;
+    line-height: 24px;
 }
 
-.counter {
-    height:22px;
+.card-body {
+    padding: 8px 16px;
+}
+
+.h-24 {
+    height: 24px;
 }
 
 .muted {
