@@ -182,7 +182,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                             .toPromise()
                             .then(() => this.updateActive());
                     } else {
-                        this.loginState = true;
+                        this.loginState = false;
                         this.renderer.removeClass(document.body, 'loading');
                         this.renderer.removeClass(document.body, 'authorized');
                         this.renderer.addClass(document.body, 'anonymous');
