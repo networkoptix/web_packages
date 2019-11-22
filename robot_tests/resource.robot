@@ -373,6 +373,7 @@ Clean up email noperm
     Validate Log In
     Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
     Verify In System    Auto Tests
+    Go To Users List
     Register Keyword To Run On Failure    NONE
     ${status}=   Run Keyword And Return Status    Wait Until Element Is Visible    //nx-system-settings-component//nx-menu//nx-level-3-item//span[text()='${EMAIL NOPERM}']    5
     Run Keyword If    ${status}    Run Keyword And Ignore Error    Remove User Permissions    ${EMAIL NOPERM}
@@ -384,9 +385,7 @@ Clean up random emails
     Open Browser and Go To URL    ${url}
     Log In    ${EMAIL OWNER}    ${password}
     Validate Log In
-    Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
-    Wait Until Elements Are Visible    ${USERS LIST LINK}
-    Click Link    ${USERS LIST LINK}
+    Go To Users List
     ${status}    Run Keyword And Return Status    Wait Until Element Is Visible
     ...    ${USERS LIST}//nx-level-3-item//span[contains(text(),'noptixautoqa+15')]/../../../a
     Run Keyword If    ${status}    Find and remove emails

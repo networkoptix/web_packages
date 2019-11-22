@@ -292,7 +292,7 @@ Search should only be visible with 9 or more systems
     Validate Log In
     Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
     Wait Until Elements Are Visible    ${RENAME SYSTEM}    ${DISCONNECT FROM NX}    ${USERS LIST LINK}
-    Click Link    ${USERS LIST LINK}
+    Go to Users List
     Wait Until Elements Are Visible    ${REMOVE USER BUTTON}    ${SHARE BUTTON SYSTEMS}
     Remove User Permissions    ${EMAIL VIEWER}
     Log Out
