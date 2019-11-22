@@ -93,9 +93,7 @@ export class NxHealthService {
                 retValue = `${retValue} ${formatDisplay}`;
             } else if (format === 'durationS') {
                 retValue = this.utilsService.secondsToTime(retValue);
-            } else if (format === 'resource') {
-                retValue = this.resourceNames[retValue] || retValue;
-            } else if (format === 'thumbnail') {
+            } else if (['resource', 'thumbnail'].includes(format)) {
                 retValue = this.resourceNames[retValue] || retValue;
             } else {
                 console.error(`Format not recognized: ${format}`);
