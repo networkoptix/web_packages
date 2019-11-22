@@ -73,7 +73,7 @@ export class NxSystemMetricsComponent implements OnInit {
 
     ngOnInit(): void {
         this.initialId = this.route.snapshot.queryParamMap.get('id');
-        const searchParam = this.route.snapshot.queryParamMap.get('search');
+        let searchParam = this.route.snapshot.queryParamMap.get('search');
 
         this.routeSubscription = this.route
             .params
@@ -92,6 +92,7 @@ export class NxSystemMetricsComponent implements OnInit {
                     this.handleInitialId();
                 } else {
                     this.filterModel.query = searchParam;
+                    searchParam = undefined;
                     this.search();
                 }
             });
