@@ -113,7 +113,7 @@ nx-dynamic-table {
         }
         
         th {
-          padding-right  : 24px;
+          padding:  0 24px 0 0;
           color          : $dark9;
           font-family    : $font-family-medium;
           font-weight    : 500 !important;
@@ -144,10 +144,15 @@ nx-dynamic-table {
           
           .caption {
             position      : relative;
-            height: 1rem;
+            height        : fit-content;
             overflow-wrap : initial;
             overflow      : hidden;
             text-overflow : ellipsis;
+
+            .text-container {
+              line-height: 16px;
+              padding: 8px 0 8px 0;
+            }
             
             .sort-dir {
               //top: 0;
@@ -156,6 +161,7 @@ nx-dynamic-table {
               bottom   : 0;
               width    : 18px;
               height   : 18px;
+              margin-bottom: 8px;
               
               &:after {
                 content : ' ';
