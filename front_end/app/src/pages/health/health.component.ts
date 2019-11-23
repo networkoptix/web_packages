@@ -91,21 +91,23 @@ export class NxHealthComponent implements OnInit, OnDestroy {
             this.accountService.get().then((account) => {
                 this.healthService.ready = false;
                 this.systemReady = false;
-                this.account = account;
-                this.system = this.systemService.createSystem(systemId, account.email);
-                this.healthService.system = this.system;
-                this.menu.base = `${this.CONFIG.systemMenu.baseUrl}${this.system.id}${this.CONFIG.systemHealthMenu.baseUrl}`;
+                if (account) {
+                    this.account = account;
+                    this.system = this.systemService.createSystem(systemId, account.email);
+                    this.healthService.system = this.system;
+                    this.menu.base = `${this.CONFIG.systemMenu.baseUrl}${this.system.id}${this.CONFIG.systemHealthMenu.baseUrl}`;
 
-                this.system.getInfo().then(() => {
-                    this.systemReady = true;
+                    this.system.getInfo().then(() => {
+                        this.systemReady = true;
 
-                    this.system.mediaserver.getAggregateHealthReport()
-                        .subscribe((result: any) => {
-                            this.setupReport(result);
-                        }, () => {
-                            this.healthService.ready = false;
-                        });
-                });
+                        this.system.mediaserver.getAggregateHealthReport()
+                            .subscribe((result: any) => {
+                                this.setupReport(result);
+                            }, () => {
+                                this.healthService.ready = false;
+                            });
+                    });
+                }
             });
         });
 

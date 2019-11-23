@@ -1,0 +1,70 @@
+import { NgModule } from '@angular/core';
+import { BrowserModule, Title } from '@angular/platform-browser';
+import { Location, PathLocationStrategy, LocationStrategy, CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+
+import { TranslateModule } from '@ngx-translate/core';
+import { WebStorageModule } from 'ngx-store';
+
+import { HealthMonitorComponent } from './health-monitor.component';
+
+// Components
+
+
+// Dialogs
+
+
+// Directives
+
+
+// Health page
+import { NxHealthComponent } from '../app/src/pages/health/health.component';
+
+// Services
+import { WINDOWS_PROVIDERS } from '../app/src/services/window-provider';
+import { NxHealthModule } from '../app/src/pages/health/health.module';
+import { NxSearchComponent } from '../app/src/components/search/search.component';
+
+@NgModule({
+    imports: [
+        CommonModule,
+        BrowserModule,
+        FormsModule,
+        NxHealthModule,
+        HttpClientModule,
+        NgbModule,
+        WebStorageModule,
+        TranslateModule.forRoot(),
+        RouterModule.forRoot([
+            { path: '**', redirectTo: 'health' },
+            { path: 'health', component: NxHealthComponent }
+        ], {
+            initialNavigation: true,
+            scrollPositionRestoration: 'enabled',
+            anchorScrolling          : 'enabled',
+            enableTracing            : false
+        })
+    ],
+    entryComponents: [
+        HealthMonitorComponent
+    ],
+    providers: [
+        Location,
+        Title,
+        WINDOWS_PROVIDERS,
+        { provide: LocationStrategy, useClass: PathLocationStrategy },
+    ],
+    declarations: [
+        HealthMonitorComponent
+    ],
+    bootstrap: [
+        HealthMonitorComponent
+    ]
+})
+export class HealthMonitorPageModule {
+    ngDoBootstrap() {
+    }
+}
