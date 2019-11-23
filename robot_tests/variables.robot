@@ -272,11 +272,11 @@ ${RELEASE NUMBER}                     //div[contains(@class,"active")]//h1
 #Integration Landing Page
 ${INTEGRATIONS COMPONENT}             //nx-app//integrations-component/div[@class="intergations"]
 ${INTEGRATIONS SEARCH}                ${INTEGRATIONS COMPONENT}//nx-search[@name="filterModel"]/div[@class="nx-search"]
-${INTEGRATIONS SEARCH INPUT}          ${INTEGRATIONS SEARCH}//input[contains(@class, "search-input") and @placeholder="Search")]
+${INTEGRATIONS SEARCH INPUT}          ${INTEGRATIONS SEARCH}//input[contains(@class, "search-input") and contains(@placeholder, "Search")]
 ${INTEGRATIONS SEARCH CLOSE BUTTON}   ${INTEGRATIONS SEARCH}//button[contains(@class, "search-clear")]
 ${INTEGRATIONS SEARCH ICON}           ${INTEGRATIONS SEARCH}//span[contains(@class, "icon-search")]
 ${INTEGRATIONS SEARCH FILTER}         ${INTEGRATIONS SEARCH}//div[contains(@class, "search-tags")]//nav[contains(@aria-label, "table")]/ul[contains(@class, "pagination")]
-${INTEGRATIONS SEARCH FILTER ITEM}    ${INTEGRATIONS SEARCH FILTER}/li/div
+${INTEGRATIONS SEARCH FILTER ITEM}    ${INTEGRATIONS SEARCH FILTER}/li
 ${INTEGRATIONS CATALOG}               ${INTEGRATIONS COMPONENT}//integrations-list-component/div[1]
 
 #Integration Tile
@@ -287,8 +287,9 @@ ${INTEGRATION TILE INFO}              ${INTEGRATION TILE}//div[contains(@class, 
 ${INTEGRATION TILE NAME}              ${INTEGRATION TILE}//div[contains(@class, "card--body-name")]
 ${INTEGRATION TILE TEXT}              ${INTEGRATION TILE}//div[contains(@class, "card--body-descr")]
 ${INTEGRATION TILE HEADER}            ${INTEGRATION TILE}//div[@class="card--header"]
-${INTEGRATION TILE BODY}              ${INTEGRATION TILE}//nx-section/child::div[@class="card--body"]
-${INTEGRATION TILE FOOTER}            ${INTEGRATION TILE}//div[@class="card--footer")]
+#${INTEGRATION TILE BODY}              ${INTEGRATION TILE}//nx-section/child::div[@class="card--body"]
+${INTEGRATION TILE FOOTER}            ${INTEGRATION TILE}//div[@class="card--footer"]
+@{INTEGRATION TILE ELEMENTS}          ${INTEGRATION TILE HEADER}    ${INTEGRATION TILE FOOTER}    ${INTEGRATION TILE LOGO}    ${INTEGRATION TILE INFO}    ${INTEGRATION TILE NAME}    ${INTEGRATION TILE TEXT}
 
 #Integration Details Page
 ${INTEGRATION DETAILS COMPONENT}          //nx-app//integration-detail-component/div[contains(@class, "integration-details")]

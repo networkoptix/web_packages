@@ -32,6 +32,21 @@ Validate Integrations Landing Page
     ...    ${INTEGRATIONS SEARCH FILTER}
     ...    ${INTEGRATIONS CATALOG}
 
+Get Number of Integration Tiles
+    @{integration tiles}=   Get WebElements    ${INTEGRATION TILE}
+    ${number of integrations}=   Get Length    ${integration tiles}
+    [Return]    ${number of integrations}
+
+Validate changes when input text into search field
+    [Arguments]    ${text}
+    ${initial number of tiles}=   Get Number of Integration Tiles
+    Input Text    ${INTEGRATIONS SEARCH INPUT}    ${text}
+    Wait Until Element Is Visible    ${INTEGRATIONS SEARCH CLOSE BUTTON}
+    ${current url}=   Get Location
+    Should Contain    ${current url}    ?search=${text}
+    ${new number of tiles}=    Get Number of Integration Tiles
+    Should Be True    ${new number of tiles} < ${initial number of tiles}
+
 Validate Integration Details Page
     Run keyword and continue on failure    Wait Until Elements Are Visible
     ...    ${INTEGRATION ALL INTEGRATIONS}
@@ -56,17 +71,16 @@ Validate Integration Details Page
     ...    ${INTEGRATION REQUIREMENTS SECTION}
     ...    ${INTEGRATION HOW IT WORKS HEADER}
 
-#Validate Integration Tile
-#    [Arguments]    ${integration tile}
-#    @{integration tile contents}=   Get Child WebElements    ${integration tile}
-#    Log List    ${integration tile contents}
-#    Should Contain    ${integration tile contents}    ${INTEGRATION TILE HEADER}
-#    Should Contain    ${integration tile contents}    ${INTEGRATION TILE BODY}
-#    Should Contain    ${integration tile contents}    ${INTEGRATION TILE FOOTER}
-#    Should Contain    ${integration tile contents}    ${INTEGRATION TILE LOGO}
-#    Should Contain    ${integration tile contents}    ${INTEGRATION TILE INFO}
-#    Should Contain    ${integration tile contents}    ${INTEGRATION TILE NAME}
-#    Should Contain    ${integration tile contents}    ${INTEGRATION TILE TEXT}
+Validate Integration Tile
+    [Arguments]    ${integration tile}
+    @{integration tile contents}=   Get Child WebElements    ${integration tile}
+    Log List    ${integration tile contents}
+    Should Contain    ${integration tile contents}    ${INTEGRATION TILE HEADER}
+    Should Contain    ${integration tile contents}    ${INTEGRATION TILE FOOTER}
+    Should Contain    ${integration tile contents}    ${INTEGRATION TILE LOGO}
+    Should Contain    ${integration tile contents}    ${INTEGRATION TILE INFO}
+    Should Contain    ${integration tile contents}    ${INTEGRATION TILE NAME}
+    Should Contain    ${integration tile contents}    ${INTEGRATION TILE TEXT}
 
 Validate "Get in Touch" Form
     Run keyword and continue on failure    Wait Until Elements Are Visible
@@ -104,6 +118,7 @@ Fill in "Get in Touch" Form and Submit
 
 *** Test Cases ***
 Integration Store title and URL are correct
+    [Tags]    C54622
     Location Should Be    ${url}
     Run keyword and expect error    Title should have been 'Integrations - Nx Cloud' but was 'Integrations'.
     ...    Title Should Be    ${title}
@@ -117,9 +132,19 @@ Integration Store title and URL are correct
 #        Validate Integration Tile    ${integration tile}
 #    END
 
-#Integration Store Search
-#    [Tags]    	C54620
-#
+Integration Store Search
+    [Tags]    	C54620
+    Wait Until Elements Are Visible
+    ...  ${INTEGRATIONS SEARCH INPUT}
+    ...  ${INTEGRATIONS SEARCH ICON}
+    ...  ${INTEGRATIONS SEARCH FILTER}
+
+    ${number of filters}=    Get Element Count    ${INTEGRATIONS SEARCH FILTER ITEM}
+    Should be equal as numbers    ${number of filters}    7
+
+    Validate changes when input text into search field    v
+    Validate changes when input text into search field    vi
+    Validate changes when input text into search field    vis
 
 Integration Store Integration Details
     [Tags]    C54623
