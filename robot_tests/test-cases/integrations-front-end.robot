@@ -139,12 +139,19 @@ Integration Store Search
     ...  ${INTEGRATIONS SEARCH ICON}
     ...  ${INTEGRATIONS SEARCH FILTER}
 
+    ${initial number of tiles}=   Get Number of Integration Tiles
     ${number of filters}=    Get Element Count    ${INTEGRATIONS SEARCH FILTER ITEM}
     Should be equal as numbers    ${number of filters}    7
 
     Validate changes when input text into search field    v
     Validate changes when input text into search field    vi
     Validate changes when input text into search field    vis
+
+    Click Element    ${INTEGRATIONS SEARCH CLOSE BUTTON}
+    ${number of tiles}=   Get Number of Integration Tiles
+    Should be equal as numbers    ${initial number of tiles}   ${number of tiles}
+    ${actual url}=   Get Location
+    Should be equal as strings    ${actual url}    ${url}
 
 Integration Store Integration Details
     [Tags]    C54623
