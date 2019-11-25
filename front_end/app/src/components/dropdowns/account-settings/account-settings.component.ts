@@ -4,7 +4,9 @@ import { NxConfigService }   from '../../../services/nx-config';
 import { NxAccountService }  from '../../../services/account.service';
 import { NxSessionService }  from '../../../services/session.service';
 import { Subscription } from 'rxjs';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 
+@AutoUnsubscribe()
 @Component({
     selector: 'nx-account-settings-select',
     templateUrl: 'account-settings.component.html',
@@ -29,9 +31,7 @@ export class NxAccountSettingsDropdown implements OnInit, OnDestroy {
         this.show = false;
     }
 
-    ngOnDestroy() {
-        this.loginSubscription.unsubscribe();
-    }
+    ngOnDestroy() {}
 
     ngOnInit()  {
         this.getAccount();

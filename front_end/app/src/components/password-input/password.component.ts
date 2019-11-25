@@ -15,7 +15,9 @@ import {
     FormControl
 }                                    from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 
+@AutoUnsubscribe()
 @Component({
     selector   : 'nx-password-input',
     templateUrl: 'password.component.html',
@@ -158,11 +160,7 @@ export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAcces
         this.form.form.get(this.componentId).markAsUntouched();
     }
 
-    ngOnDestroy() {
-        if (this.passwordSubscription) {
-            this.passwordSubscription.unsubscribe();
-        }
-    }
+    ngOnDestroy() {}
 
     ngOnInit() {
         this.fairPassword = true;

@@ -12,6 +12,7 @@ import { filter, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Subject }                                    from 'rxjs/Subject';
 import { NxLanguageProviderService }                  from '../../services/nx-language-provider';
 import { SubscriptionLike }                           from 'rxjs';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 
 /* Usage
  <nx-search
@@ -37,6 +38,7 @@ interface Params {
     [key: string]: any;
 }
 
+@AutoUnsubscribe()
 @Component({
     selector     : 'nx-search',
     templateUrl  : './search.component.html',
@@ -120,11 +122,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
             });
     }
 
-    ngOnDestroy() {
-        this.locationSubscription.unsubscribe();
-        this.routeSubscription.unsubscribe();
-        this.searchSubscription.unsubscribe();
-    }
+    ngOnDestroy() {}
 
     // Placeholders for the callbacks which are later provided
     // by the Control Value Accessor

@@ -5,7 +5,9 @@ import {
 import { NxConfigService } from '../../../../services/nx-config';
 import { NxUriService }    from '../../../../services/uri.service';
 import { Subscription } from 'rxjs';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 
+@AutoUnsubscribe()
 @Component({
     selector   : 'nx-cam-view',
     templateUrl: './cam-view.component.html',
@@ -36,9 +38,7 @@ export class CamViewComponent implements OnInit, OnDestroy {
         this.CONFIG = this.configService.getConfig();
     }
 
-    ngOnDestroy() {
-        this.uriSubscription.unsubscribe();
-    }
+    ngOnDestroy() {}
 
     ngOnInit() {
         this.uriSubscription = this.uri

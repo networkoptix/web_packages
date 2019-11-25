@@ -19,7 +19,9 @@ import { NxApplyService, Watcher }              from '../../../../services/apply
 import { NxUriService }                         from '../../../../services/uri.service';
 import { Subscription }                         from 'rxjs';
 import { NxToastService }                       from '../../../../dialogs/toast.service';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 
+@AutoUnsubscribe()
 @Component({
     selector   : 'nx-system-user-component',
     templateUrl: 'users.component.html',
@@ -116,13 +118,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         }, [this.userEnabled, this.userRole]);
     }
 
-    ngOnDestroy(): void {
-        this.routeParamsSubscription.unsubscribe();
-        this.systemSubscription.unsubscribe();
-        if (this.userSubscription) {
-            this.userSubscription.unsubscribe();
-        }
-    }
+    ngOnDestroy(): void {}
 
     initProcesses(): void {
         this.editUser = this.processService.createProcess(() => {

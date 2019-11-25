@@ -5,7 +5,9 @@ import { NxAppStateService } from '../../services/nx-app-state.service';
 import { ActivatedRoute }            from '@angular/router';
 import { NxSettingsService } from '../../pages/systems/settings/settings.service';
 import { Subscription } from 'rxjs';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 
+@AutoUnsubscribe()
 @Component({
     selector: 'nx-footer',
     templateUrl: 'footer.component.html',
@@ -32,9 +34,7 @@ import { Subscription } from 'rxjs';
         this.config = this._config.getConfig();
     }
 
-    ngOnDestroy() {
-        this.footerSubscription.unsubscribe();
-    }
+    ngOnDestroy() {}
 
     ngOnInit() {
         this.companyLink = this.config.companyLink;

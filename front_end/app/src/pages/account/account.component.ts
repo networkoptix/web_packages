@@ -11,7 +11,9 @@ import { NxCloudApiService }         from '../../services/nx-cloud-api';
 import { NxSystemsService }          from '../../services/systems.service';
 import { NxMenuService }             from '../../components/menu/menu.service';
 import { Subscription } from 'rxjs';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 
+@AutoUnsubscribe()
 @Component({
     selector   : 'account',
     templateUrl: 'account.component.html',
@@ -58,9 +60,7 @@ export class NxAccountComponent implements OnInit, OnDestroy {
         this.setupDefaults();
     }
 
-    ngOnDestroy() {
-        this.menuDetailSubscription.unsubscribe();
-    }
+    ngOnDestroy() {}
 
     ngOnInit(): void {
         this.accountService.get()

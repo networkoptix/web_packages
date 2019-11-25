@@ -9,12 +9,14 @@ import { MessageParams }          from '../../../dialogs/message/message.compone
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 
 import { map }              from 'rxjs/operators';
-import {combineLatest, Subscription} from 'rxjs';
+import { combineLatest, Subscription } from 'rxjs';
 import { NxMenuService }    from '../../../components/menu/menu.service';
 import { NxDialogsService } from '../../../dialogs/dialogs.service';
 import { NxAccountService } from '../../../services/account.service';
 import { NxPageService }    from '../../../services/page.service';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 
+@AutoUnsubscribe()
 @Component({
     selector   : 'integration-detail-component',
     templateUrl: 'details.component.html',
@@ -133,9 +135,6 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
         this.ribbonService.hide();
         this.plugin = undefined;
         this.pageService.setDefaultLayout();
-        this.integrationSubscription.unsubscribe();
-        this.menuDetailsSubscription.unsubscribe();
-        this.routeSubscription.unsubscribe();
     }
 
     openMessageDialog() {

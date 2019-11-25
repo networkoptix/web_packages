@@ -18,7 +18,9 @@ import { fromEvent } from 'rxjs/observable/fromEvent';
 import { debounceTime } from 'rxjs/operators';
 import { NxToastService }          from '../../../dialogs/toast.service';
 import { Subscription } from 'rxjs';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 
+@AutoUnsubscribe()
 @Component({
     selector: 'nx-system-settings-component',
     templateUrl: 'settings.component.html',
@@ -224,13 +226,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.system.stopPoll();
         this.ribbonService.hide();
         this.pageService.setDefaultLayout();
-        this.footerSubscription.unsubscribe();
-        this.menuSectionSubscription.unsubscribe();
-        this.menuSubSectionSubscription.unsubscribe();
-        this.menuSelectedDetailsSubscription.unsubscribe();
-        this.resizeSubscription.unsubscribe();
-        this.routerParamsSubscription.unsubscribe();
-        this.systemSubscription.unsubscribe();
     }
 
     getSystemInfo() {

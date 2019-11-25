@@ -17,11 +17,13 @@ import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxDialogsService }          from '../../dialogs/dialogs.service';
 import { NxAccountService }          from '../../services/account.service';
 import { SubscriptionLike }          from 'rxjs';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 
 interface Params {
     [key: string]: any;
 }
 
+@AutoUnsubscribe()
 @Component({
     selector     : 'ipvd',
     templateUrl  : 'ipvd.component.html',
@@ -181,17 +183,7 @@ export class NxIpvdComponent implements OnInit {
             });
     }
 
-    ngOnDestroy() {
-        this.breakpointSubscription.unsubscribe();
-        this.routerSubscription.unsubscribe();
-        this.locationSubscription.unsubscribe();
-        this.uriSubscription.unsubscribe();
-        this.cameraGetSubscription.unsubscribe();
-
-        if (this.cameraReloadSubscription) {
-            this.cameraReloadSubscription.unsubscribe();
-        }
-    }
+    ngOnDestroy() {}
 
     resetFilterModel() {
         this.filterModel.search = '';

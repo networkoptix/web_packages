@@ -16,7 +16,9 @@ import { WINDOW }                 from '../../services/window-provider';
 import { LocalStorageService }    from 'ngx-store';
 import { Subscription, timer } from 'rxjs';
 import { NxHeaderService }        from '../../services/nx-header.service';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 
+@AutoUnsubscribe()
 @Component({
     selector: 'nx-header',
     templateUrl: 'header.component.html',
@@ -99,13 +101,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         });
     }
 
-    ngOnDestroy() {
-        this.headerSubscription.unsubscribe();
-        this.loginSubscription.unsubscribe();
-        this.routerSubscription.unsubscribe();
-        this.systemSubscription.unsubscribe();
-        this.systemIdSubscription.unsubscribe();
-    }
+    ngOnDestroy() {}
 
     ngOnInit() {
         // TODO: root route is maintained by AJS - replace this once we get rid of it.

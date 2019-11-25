@@ -6,7 +6,9 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { NxConfigService }                       from '../../services/nx-config';
 import { NxLanguageProviderService }             from '../../services/nx-language-provider';
 import { Subscription } from 'rxjs';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 
+@AutoUnsubscribe()
 @Component({
     selector   : 'nx-modal-embed-content',
     templateUrl: 'embed.component.html',
@@ -49,9 +51,7 @@ export class EmbedModalContent implements OnInit, OnDestroy, AfterViewInit {
         this.LANG = this.language.getTranslations();
     }
 
-    ngOnDestroy() {
-        this.formChangesSubscription.unsubscribe();
-    }
+    ngOnDestroy() {}
 
     ngOnInit() {
         this.createEmbedUrl(this.params);

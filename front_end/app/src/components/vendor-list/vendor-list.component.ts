@@ -8,6 +8,7 @@ import { NxUriService }              from '../../services/uri.service';
 import { NxUtilsService }            from '../../services/utils.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { Subscription } from 'rxjs';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 
 /* USAGE
  <nx-vendor-list
@@ -17,6 +18,7 @@ import { Subscription } from 'rxjs';
  </nx-vendor-list>
  */
 
+@AutoUnsubscribe()
 @Component({
     selector   : 'nx-vendor-list',
     templateUrl: 'vendor-list.component.html',
@@ -106,9 +108,7 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
         ];
     }
 
-    ngOnDestroy() {
-        this.uriSubscription.unsubscribe();
-    }
+    ngOnDestroy() {}
 
     ngOnInit() {
         this.uriSubscription = this.uri.getURI()
