@@ -226,7 +226,7 @@ else:
         "deployment": {
             "BACKEND": "django_redis.cache.RedisCache",
             "LOCATION": "redis://localhost:6379/1",
-            "TIMEOUT": "1800",
+            "TIMEOUT": None,
             "OPTIONS": {
                 "CLIENT_CLASS": "django_redis.client.DefaultClient",
             }
