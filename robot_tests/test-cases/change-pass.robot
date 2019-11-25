@@ -21,7 +21,7 @@ Open browser and set user language to current
     Log Out
 
 Log In To Change Password Page
-    CloudPortalAPI.Log In    ${ENV}    ${email}    ${password}
+    Log In    ${ENV}    ${email}    ${password}
     Go To    ${url}/account/password
     Wait Until Elements Are Visible    ${CURRENT PASSWORD INPUT}    ${NEW PASSWORD INPUT}
 
