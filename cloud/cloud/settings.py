@@ -124,7 +124,6 @@ ADMIN_DASHBOARD = ('cms.models.ContentVersion',
                    'cms.models.AssetType',
                    'cms.models.UserGroupsToAssetPermissions',
                    'cms.models.UserGroupsToAssetType',
-                   'cms.models.DeploymentStatus',
                    '*.auth.models.Permission',
                    'django_celery_beat.*',
                    'django_celery_results.*',
@@ -193,6 +192,14 @@ if not LOCAL_ENVIRONMENT:
             "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
             "TIMEOUT": None
         },
+        "deployment": {
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": "redis://redis:6379/1",
+            "TIMEOUT": "1800",
+            "OPTIONS": {
+                "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            }
+        },
         "global": {
             "BACKEND": "django_redis.cache.RedisCache",
             "LOCATION": "redis://redis:6379/1",
@@ -216,6 +223,14 @@ else:
             "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
             "TIMEOUT": None
         },
+        "deployment": {
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": "redis://localhost:6379/1",
+            "TIMEOUT": "1800",
+            "OPTIONS": {
+                "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            }
+        },
         "global": {
             "BACKEND": "django_redis.cache.RedisCache",
             "LOCATION": "redis://localhost:6379/1",
@@ -233,6 +248,8 @@ else:
             }
         }
     }
+
+DEPLOYMENT_READY = 'ready'
 
 
 if LOCAL_ENVIRONMENT:
