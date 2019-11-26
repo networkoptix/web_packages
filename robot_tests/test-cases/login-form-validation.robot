@@ -66,7 +66,7 @@ Outline Error
     ...    Check Email Outline
 
 Check Email Outline
-    Wait Until Element Has Style    ${EMAIL INPUT}    border-color    ${OUTLINE ERROR COLOR}
+    Wait Until Element Has Style    ${EMAIL INPUT}    border-color    ${ERROR COLOR}
 
 Check Password Outline
     ${class}    Get Element Attribute    ${PASSWORD INPUT}    class

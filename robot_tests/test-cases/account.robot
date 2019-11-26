@@ -9,8 +9,6 @@ force tags    account
 ${password}    ${BASE PASSWORD}
 ${url}         ${ENV}
 ${CZECH ALERT}    Váš účet byl úspěšně uložen
-${FIRST NAME IS REQUIRED}      //span[@class='error-text ng-star-inserted' and contains(text(),"${FIRST NAME IS REQUIRED TEXT}")]
-${LAST NAME IS REQUIRED}       //span[@class='error-text ng-star-inserted' and contains(text(),"${LAST NAME IS REQUIRED TEXT}")]
 
 *** Keywords ***
 Verify in Account Page

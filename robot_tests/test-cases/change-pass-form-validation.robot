@@ -25,7 +25,7 @@ ${PASSWORD TOO COMMON}
 ${PASSWORD IS WEAK}
 ...    //span[contains(@class, 'input-error') and contains(text(),'${PASSWORD IS WEAK TEXT}')]
 ${CURRENT PASSWORD IS REQUIRED}
-...    //span[contains(@class, 'error-text') and contains(text(),"${CURRENT PASSWORD IS REQUIRED TEXT}")]
+...    //span[contains(@class, 'input-error') and contains(text(),"${CURRENT PASSWORD IS REQUIRED TEXT}")]
 
 *** Test Cases ***              OLD PW                    NEW PW
 Incorrect Old Password          ${7char password}         ${BASE PASSWORD}
