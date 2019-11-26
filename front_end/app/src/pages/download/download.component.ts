@@ -87,7 +87,7 @@ export class DownloadComponent implements OnInit, OnDestroy {
     }
 
     private detectOS(): string {
-        return this.platformMatch[this.deviceService.getDeviceInfo().os];
+        return this.platformMatch[this.deviceService.getDeviceInfo().os].toLowerCase();
     }
 
     public beforeChange($event: NgbTabChangeEvent) {
@@ -174,7 +174,7 @@ export class DownloadComponent implements OnInit, OnDestroy {
                 if (!this.sortedPlatforms.some(platform => platform.name === this.platform)) {
                     this.platform = this.detectOS();
                 }
-
+                this.calcDownloadButton(this.platform);
                 this.setTitle(this.platform);
 
                 setTimeout(() => {
