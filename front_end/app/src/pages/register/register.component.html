@@ -189,7 +189,7 @@
                         required>
                 </nx-checkbox>
 
-                <label for="accept" [innerHTML]="'registration.agreement' | translate"></label>
+                <label for="accept" class="m-0" [innerHTML]="'registration.agreement' | translate"></label>
             </div>
             <div class="col-md-4">
                 <div *ngIf="accept.touched && accept.errors && accept.errors.requiredError">
