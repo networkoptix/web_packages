@@ -136,7 +136,7 @@ export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
             this.viewScrollFixedTop = false;
         }
 
-        if (this.clientHeight > this.windowSize.height - NxScrollMechanicsService.SCROLL_OFFSET - 6 && (this.clientHeight - this.windowSize.height + 16) < (this.windowScroll - this.scrollHeight)) {
+        if (this.clientHeight > this.windowSize.height - NxScrollMechanicsService.SCROLL_OFFSET - 8 && (this.clientHeight - this.windowSize.height + 18) < (this.windowScroll - this.scrollHeight)) {
             this.viewScrollFixedBottom = true;
         } else {
             this.viewScrollFixedBottom = false;
