@@ -195,7 +195,7 @@ if not LOCAL_ENVIRONMENT:
         "deployment": {
             "BACKEND": "django_redis.cache.RedisCache",
             "LOCATION": "redis://redis:6379/1",
-            "TIMEOUT": "1800",
+            "TIMEOUT": None,
             "OPTIONS": {
                 "CLIENT_CLASS": "django_redis.client.DefaultClient",
             }
