@@ -88,16 +88,6 @@ export class NxAccountService implements OnDestroy {
         this.sessionService.invalidateSession();
     }
 
-    // checkLoginState(): Promise<boolean> {
-    //         return new Promise<boolean>((resolve, reject) => {
-    //             if (this.sessionService.loginState) {
-    //                 resolve(true);
-    //             }
-    //
-    //             reject(false);
-    //         });
-    // }
-
     setupAccount(account) {
         // cleanup
         if (this.account && this.account.timer) {
