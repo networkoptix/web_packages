@@ -7,7 +7,7 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class NxScrollMechanicsService {
     CONFIG: any;
-    windowSizeSubject = new BehaviorSubject({});
+    windowSizeSubject = new BehaviorSubject({height: 0, width: 0});
     windowScrollSubject = new BehaviorSubject(0);
     elementTableWidthSubject = new BehaviorSubject(0);
     elementViewWidthSubject = new BehaviorSubject(0);

@@ -11,8 +11,8 @@ import { NxUtilsService }                        from '../../services/utils.serv
 import { FileSystemFileEntry, NgxFileDropEntry } from 'ngx-file-drop';
 import { DOCUMENT }                              from '@angular/common';
 import { NxRibbonService }                       from '../../components/ribbon/ribbon.service';
-import { fromEvent, Subscription }               from 'rxjs';
-import { debounceTime }                          from 'rxjs/operators';
+import { Subscription }               from 'rxjs';
+import { NxScrollMechanicsService }              from '../../services/scroll-mechanics.service';
 
 @Component({
     selector   : 'nx-system-health-component',
@@ -48,6 +48,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                 private languageService: NxLanguageProviderService,
                 private utilsService: NxUtilsService,
                 private ribbonService: NxRibbonService,
+                private scrollMechanicsService: NxScrollMechanicsService,
                 @Inject(DOCUMENT) private document: any,
     ) {
         this.LANG = this.languageService.getTranslations();
@@ -112,8 +113,8 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         });
 
         // We listen to window resize and measure header height to know how much to offset the fixed menu by
-        this.resizeSubscription = fromEvent(window, 'resize').pipe(debounceTime(100)).subscribe((event: any) => {
-            if (event.target.innerWidth >= 768) {
+        this.resizeSubscription = this.scrollMechanicsService.windowSizeSubject.subscribe(({width}) => {
+            if (width >= 768) {
                 this.setHeaderHeight();
             }
         });

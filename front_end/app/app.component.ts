@@ -4,7 +4,7 @@ import { CookieService }                                          from 'ngx-cook
 import { DeviceDetectorService }                                  from 'ngx-device-detector';
 import { Title }                                                  from '@angular/platform-browser';
 import { ActivatedRoute, ActivationStart, Event, Router } from '@angular/router';
-import { filter }                                                 from 'rxjs/operators';
+import { filter, debounceTime }                                                 from 'rxjs/operators';
 import { WINDOW }                    from './src/services/window-provider';
 import { NxLanguageProviderService } from './src/services/nx-language-provider';
 import { NxConfigService }           from './src/services/nx-config';
@@ -12,7 +12,7 @@ import { NxApplyService }            from './src/services/apply.service';
 import { NxQueryParamService }       from './src/services/query-param.service';
 import { NxRibbonService }           from './src/components/ribbon/ribbon.service';
 import { NxAppStateService }         from './src/services/nx-app-state.service';
-import { Observable, Subscription }  from 'rxjs';
+import { fromEvent, Subscription } from 'rxjs';
 import 'rxjs-compat/add/observable/fromEvent';
 import { NxScrollMechanicsService }  from './src/services/scroll-mechanics.service';
 
@@ -184,6 +184,10 @@ export class AppComponent {
         ).subscribe(({ snapshot: { queryParams } }: ActivationStart) => {
             this.queryParamService.queryParams = queryParams;
         });
+
+        fromEvent(window, 'resize').pipe(debounceTime(100)).subscribe((event: any) => {
+            this.scrollMechanicsService.setWindowSize(event.target.innerHeight, event.target.innerWidth);
+        });
     }
 
     // Todo: Revisit using this when the hybrid app is killed.
@@ -193,11 +197,6 @@ export class AppComponent {
             window.history.go(1);
             this.applyService.showDialog().catch(() => {});
         }
-    }
-
-    @HostListener('window:resize', ['$event'])
-    onResize(event) {
-        this.scrollMechanicsService.setWindowSize(event.target.innerHeight, event.target.innerWidth);
     }
 
     public setTitle(newTitle: string) {

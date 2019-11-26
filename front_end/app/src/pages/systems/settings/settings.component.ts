@@ -2,7 +2,6 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NxConfigService }                             from '../../../services/nx-config';
 import { NxLanguageProviderService }                   from '../../../services/nx-language-provider';
-import { Meta }                                        from '@angular/platform-browser';
 
 import { NxPageService }     from '../../../services/page.service';
 import { NxDialogsService }  from '../../../dialogs/dialogs.service';
@@ -14,11 +13,10 @@ import { NxAccountService }        from '../../../services/account.service';
 import { NxProcessService }        from '../../../services/process.service';
 import { NxUtilsService }          from '../../../services/utils.service';
 import { NxRibbonService }         from '../../../components/ribbon/ribbon.service';
-import { fromEvent } from 'rxjs/observable/fromEvent';
-import { debounceTime } from 'rxjs/operators';
 import { NxToastService }          from '../../../dialogs/toast.service';
 import { Subscription } from 'rxjs';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
+import { NxScrollMechanicsService } from '../../../services/scroll-mechanics.service';
 
 @AutoUnsubscribe()
 @Component({
@@ -92,7 +90,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 private ribbonService: NxRibbonService,
                 private router: Router,
                 private toastService: NxToastService,
-                private meta: Meta
+                private scrollMechanicsService: NxScrollMechanicsService,
     ) {
         this.setupDefaults();
     }
@@ -211,8 +209,8 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         // var cancelSubscription = this.$on("unauthorized_" + $routeParams.systemId, connectionLost);
 
         // We listen to window resize and measure header height to know how much to offset the fixed menu by
-        this.resizeSubscription = fromEvent(window, 'resize').pipe(debounceTime(500)).subscribe((event: any) => {
-            if (event.target.innerWidth >= 768) {
+        this.resizeSubscription = this.scrollMechanicsService.windowSizeSubject.subscribe(({width}) => {
+            if (width >= 768) {
                 this.setHeaderHeight();
             }
         });
