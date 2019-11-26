@@ -12,7 +12,9 @@ import { NxUrlProtocolService } from '../../../services/url-protocol.service';
 import { NxProcessService }     from '../../../services/process.service';
 import { debounceTime }         from 'rxjs/operators';
 import { Subject, Subscription } from 'rxjs';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 
+@AutoUnsubscribe()
 @Component({
     selector   : 'nx-systems-list-component',
     templateUrl: 'list.component.html',
@@ -138,10 +140,7 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
         this.router.navigate(['/systems/' + system.id]);
     }
 
-    ngOnDestroy(): void {
-        this.searchSubscription.unsubscribe();
-        this.systemSubscription.unsubscribe();
-    }
+    ngOnDestroy(): void {}
 
 }
 

@@ -2,7 +2,9 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NxRibbonService } from './ribbon.service';
 import { distinctUntilChanged, filter } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 
+@AutoUnsubscribe()
 @Component({
     selector: 'nx-ribbon',
     templateUrl: 'ribbon.component.html',
@@ -28,9 +30,7 @@ export class NxRibbonComponent implements OnInit, OnDestroy {
         this.setupDefaults();
     }
 
-    ngOnDestroy() {
-        this.ribbonSubscription.unsubscribe();
-    }
+    ngOnDestroy() {}
 
     ngOnInit() {
         this.ribbonSubscription = this.ribbonService.contextSubject.pipe(

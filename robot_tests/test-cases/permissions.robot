@@ -113,22 +113,21 @@ Sharing link for anonymous - first ask login, then show share dialog
 After closing dialog, called by link - clear link
     [tags]    C41888    Threaded    CLOUD-3733
     Log in to Auto Tests System    ${email}
-    ${location}    Get Location
 
 #Check Cancel Button
-    Go To    ${location}/share
+    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}/share
     Wait Until Elements are Visible    ${SHARE MODAL}    ${SHARE CANCEL}
     Click Button    ${SHARE CANCEL}
     Wait Until Element is Not Visible    ${SHARE MODAL}
-    ${location2}    Get Location
+    Wait Until Location contains    ${url}/systems/${AUTO TESTS SYSTEM ID}/users
 
 #Check 'X' Button
-    Go To    ${location}/share
+    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}/share
     Wait Until Elements are Visible    ${SHARE MODAL}    ${SHARE CLOSE}
     Wait Until Element is Visible    ${SHARE CLOSE}
     Click Button    ${SHARE CLOSE}
     Wait Until Element is Not Visible    ${SHARE MODAL}
-    Location Should Be    ${location2}
+    Wait Until Location Contains    ${url}/systems/${AUTO TESTS SYSTEM ID}/users
 
 Sharing roles are ordered: more access is on top of the list with options
     [tags]    Threaded

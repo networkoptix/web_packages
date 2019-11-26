@@ -6,7 +6,9 @@ import { timer } from 'rxjs/observable/timer';
 import { NxSystemsService } from '../../services/systems.service';
 import { NxAccountService } from '../../services/account.service';
 import { Subscription } from 'rxjs';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 
+@AutoUnsubscribe()
 @Component({
     selector: 'push-notifications-component',
     templateUrl: 'push-notifications.component.html',
@@ -60,9 +62,7 @@ export class PushComponent implements OnInit, OnDestroy {
         this.location = location;
     }
 
-    ngOnDestroy() {
-        this.timeSubscription.unsubscribe();
-    }
+    ngOnDestroy() {}
 
     ngOnInit(): void {
         this.accountService.requireLogin().then(account => {

@@ -1,6 +1,6 @@
 import {
     Component, OnInit, Input,
-    forwardRef, ViewEncapsulation, KeyValueDiffers, OnDestroy
+    forwardRef, ViewEncapsulation, OnDestroy
 }                                                  from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { ActivatedRoute, Router }                           from '@angular/router';
@@ -10,10 +10,9 @@ import { isArray }                                          from 'rxjs/internal-
 import { NxConfigService }                                  from '../../services/nx-config';
 import { NxUriService }                                     from '../../services/uri.service';
 import { NxLanguageProviderService }                        from '../../services/nx-language-provider';
-import { OperatorFunction, Subscription, SubscriptionLike } from 'rxjs';
-import { debounceTime }                                     from 'rxjs-compat/operator/debounceTime';
+import { Subscription, SubscriptionLike } from 'rxjs';
 import { NxScrollMechanicsService }                         from '../../services/scroll-mechanics.service';
-
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 /* Usage
  <nx-search
      name="NAME"
@@ -42,6 +41,7 @@ interface Params {
     [key: string]: any;
 }
 
+@AutoUnsubscribe()
 @Component({
     selector     : 'nx-search',
     templateUrl  : './search.component.html',
@@ -131,11 +131,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
             });
     }
 
-    ngOnDestroy () {
-        this.locationSubscription.unsubscribe();
-        this.searchSubscription.unsubscribe();
-        this.modelSubscription.unsubscribe();
-    }
+    ngOnDestroy() {}
 
     // Placeholders for the callbacks which are later provided
     // by the Control Value Accessor

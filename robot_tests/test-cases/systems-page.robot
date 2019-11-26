@@ -134,6 +134,7 @@ User have several systems linked to his account
     ${l}=   Set Variable    ${SYSTEMS DROPDOWN}${DROPDOWN MENU ITEMS}\[${r1}]
     ${h}=   Get Element Attribute    ${l}/a    href
     ${n}=   Get Text    ${l}//span[@class='system-name']
+    Wait Until Element Is Visible    ${x}
     Scroll Element Into View    ${x}
     Click Element    ${x}
     # Expected Result
@@ -214,11 +215,11 @@ Should show your system for owner and owner name for non-owners
     \  Run Keyword Unless    "${user}"=="${EMAIL OWNER}"    Check Systems Text    ${user}
 
 # should be removed and updated for what the dropdown should show with other systems
-# Should not show systems dropdown with no systems
-#     [tags]    C41568    Threaded
-#     Log In    ${EMAIL NOPERM}    ${password}
-#     Validate Log In
-    # Element Should Not Be Visible    ${SYSTEMS DROPDOWN}
+Should not show systems dropdown with no systems
+    [tags]    C41568    Threaded
+    Log In    ${EMAIL NOPERM}    ${password}
+    Validate Log In
+    Element Should Not Be Visible    ${SYSTEMS DROPDOWN}
 
 Search should highlight system name
     [tags]    C41891    Threaded
@@ -273,7 +274,7 @@ Search should only be visible with 9 or more systems
     Wait Until Element Is Visible    ${SHARE BUTTON SYSTEMS}
     Share To    ${EMAIL VIEWER}    ${VIEWER TEXT}
     Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
-    ${email}    Wait For Email    recipient=${EMAIL VIEWER}    timeout=120    status=UNSEEN
+    ${email}    Wait For Email    recipient=${EMAIL VIEWER}    timeout=180    status=UNSEEN
     Delete Email    ${email}
     Close Mailbox
     Log Out
@@ -291,8 +292,8 @@ Search should only be visible with 9 or more systems
     Validate Log In
     Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
     Wait Until Elements Are Visible    ${RENAME SYSTEM}    ${DISCONNECT FROM NX}    ${USERS LIST LINK}
-    Click Link    ${USERS LIST LINK}
-    Wait Until Elements Are Visible    ${REMOVE USER BUTTON}    ${SHARE BUTTON SYSTEMS}
+    Go to Users List
+    Wait Until Elements Are Visible    ${USERS LIST}    ${SHARE BUTTON SYSTEMS}
     Remove User Permissions    ${EMAIL VIEWER}
     Log Out
 
@@ -310,7 +311,7 @@ Search should only be visible with 9 or more systems
     Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
     Wait Until Elements Are Visible    ${RENAME SYSTEM}    ${DISCONNECT FROM NX}    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
-    Wait Until Elements Are Visible    ${REMOVE USER BUTTON}    ${SHARE BUTTON SYSTEMS}
+    Wait Until Elements Are Visible    ${USERS LIST}    ${SHARE BUTTON SYSTEMS}
     Share To    ${EMAIL VIEWER}    ${VIEWER TEXT}
     Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
     ${email}    Wait For Email    recipient=${EMAIL VIEWER}    timeout=120    status=UNSEEN

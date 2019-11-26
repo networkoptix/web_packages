@@ -125,7 +125,6 @@ ADMIN_DASHBOARD = ('cms.models.ContentVersion',
                    'cms.models.AssetType',
                    'cms.models.UserGroupsToAssetPermissions',
                    'cms.models.UserGroupsToAssetType',
-                   'cms.models.DeploymentStatus',
                    '*.auth.models.Permission',
                    'django_celery_beat.*',
                    'django_celery_results.*',
@@ -206,6 +205,7 @@ CACHES = {
         "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
         "TIMEOUT": None
     },
+    "deployment": REDIS_CACHE,
     "global": REDIS_CACHE,
     "integrations": REDIS_CACHE,
     "filters": REDIS_CACHE

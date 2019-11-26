@@ -22,8 +22,10 @@ import { NxApplyService, Watcher }   from '../../../services/apply.service';
 import { NxPageService }             from '../../../services/page.service';
 import { NgForm }                    from '@angular/forms';
 import { first }                     from 'rxjs/operators';
-import {Subscription} from "rxjs";
+import { Subscription } from 'rxjs';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 
+@AutoUnsubscribe()
 @Component({
     selector   : 'nx-account-settings-component',
     templateUrl: 'settings.component.html',
@@ -73,7 +75,6 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
     }
 
     ngOnDestroy() {
-        this.formSubscription.unsubscribe();
     }
 
     ngOnInit()  {

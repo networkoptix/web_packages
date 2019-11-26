@@ -7,7 +7,9 @@ import { NxConfigService }          from '../../../../services/nx-config';
 import { NxUriService }             from '../../../../services/uri.service';
 import { Subscription }             from 'rxjs';
 import { NxScrollMechanicsService } from '../../../../services/scroll-mechanics.service';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 
+@AutoUnsubscribe()
 @Component({
     selector   : 'nx-cam-view',
     templateUrl: './cam-view.component.html',
@@ -57,9 +59,7 @@ export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
         this.elementWidth = '100%';
     }
 
-    ngOnDestroy() {
-        this.uriSubscription.unsubscribe();
-    }
+    ngOnDestroy() {}
 
     ngOnInit() {
         this.uriSubscription = this.uri

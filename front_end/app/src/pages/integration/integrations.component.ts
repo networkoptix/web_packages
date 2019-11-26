@@ -6,7 +6,9 @@ import { NxConfigService }    from '../../services/nx-config';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { Title }              from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 
+@AutoUnsubscribe()
 @Component({
     selector   : 'integrations-component',
     templateUrl: 'integrations.component.html',
@@ -57,10 +59,7 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
         this.location = location;
         this.setupDefaults();
     }
-    ngOnDestroy() {
-        this.integrationSubscription.unsubscribe();
-        this.uriSubscription.unsubscribe();
-    }
+    ngOnDestroy() {}
 
     ngOnInit(): void {
         this.CONFIG = this.config.getConfig();

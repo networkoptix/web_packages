@@ -14,7 +14,9 @@ import { NxAccountService }             from '../../services/account.service';
 import { NxCloudApiService }            from '../../services/nx-cloud-api';
 import { NxUriService }                 from '../../services/uri.service';
 import { Observable, Subscription }     from 'rxjs';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 
+@AutoUnsubscribe()
 @Component({
     selector   : 'download-component',
     templateUrl: 'download.component.html',
@@ -228,8 +230,5 @@ export class DownloadComponent implements OnInit, OnDestroy {
         }
     }
 
-    ngOnDestroy() {
-        this.routerSubscription.unsubscribe();
-        this.sub.unsubscribe();
-    }
+    ngOnDestroy() {}
 }

@@ -19,7 +19,9 @@ import { NxApplyService, Watcher }              from '../../../../services/apply
 import { NxUriService }                         from '../../../../services/uri.service';
 import { Subscription }                         from 'rxjs';
 import { NxToastService }                       from '../../../../dialogs/toast.service';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 
+@AutoUnsubscribe()
 @Component({
     selector   : 'nx-system-user-component',
     templateUrl: 'users.component.html',
@@ -45,6 +47,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
 
     private routeParamsSubscription: Subscription;
     private systemSubscription: Subscription;
+    private userSubscription: Subscription;
 
     private setupDefaults() {
         this.CONFIG = this.configService.getConfig();
@@ -91,7 +94,6 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             .pipe(filter(data => data !== undefined))
             .subscribe((system) => {
                 this.system = system;
-
                 // Route guard did not worked :( ... so doing it the old way
                 if (!this.system.permissions || !this.system.permissions.editUsers) {
                     this.uriService.updateURI('systems/' + this.system.id, {});
@@ -99,9 +101,12 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 }
 
                 this.systemAvailable = this.system.isAvailable && this.system.mergeInfo === undefined;
-                if (!this.selectedUser || !this.selectedUser.email) {
-                    this.setUser();
+                if (this.userSubscription) {
+                    this.userSubscription.unsubscribe();
                 }
+                this.userSubscription = this.system.systemSubject.subscribe(() => {
+                    this.setUser();
+                });
             });
 
         this.initProcesses();
@@ -113,10 +118,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         }, [this.userEnabled, this.userRole]);
     }
 
-    ngOnDestroy(): void {
-        this.routeParamsSubscription.unsubscribe();
-        this.systemSubscription.unsubscribe();
-    }
+    ngOnDestroy(): void {}
 
     initProcesses(): void {
         this.editUser = this.processService.createProcess(() => {

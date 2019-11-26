@@ -209,7 +209,7 @@ should prompt log user out if he visits restore password link from email
     Validate Log In
     Go To    ${link}
     Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${LOGGED IN LOG OUT BUTTON}
-    Click Button    ${LOGGED IN CANCEL BUTTON}
+    Click Button    ${LOGGED IN LOG OUT BUTTON}
     Validate Log Out
     Wait Until Elements Are Visible    ${RESET PASSWORD INPUT}    ${SAVE PASSWORD}
 

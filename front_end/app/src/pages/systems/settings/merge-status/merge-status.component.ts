@@ -4,8 +4,9 @@ import { NxConfigService } from '../../../../services/nx-config';
 import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
 import { NxSystemsService } from '../../../../services/systems.service';
 import { Subscription } from 'rxjs';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 
-
+@AutoUnsubscribe()
 @Component({
     selector   : 'nx-system-merge',
     templateUrl: 'merge-status.component.html',
@@ -29,9 +30,7 @@ export class NxSystemMergeStatusComponent implements OnInit, OnDestroy {
         this.config = this._config.getConfig();
     }
 
-    ngOnDestroy() {
-        this.systemSubscription.unsubscribe();
-    }
+    ngOnDestroy() {}
 
     ngOnInit(): void {
         this.LANG = this.language.getTranslations();

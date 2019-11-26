@@ -16,8 +16,10 @@ import { NxAccountService }                                     from '../../serv
 import { NxCloudApiService }                                    from '../../services/nx-cloud-api';
 import { NxUriService }                                         from '../../services/uri.service';
 import { filter }                                               from 'rxjs/operators';
-import {Subscription} from "rxjs";
+import { Subscription } from 'rxjs';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 
+@AutoUnsubscribe()
 @Component({
     selector   : 'download-history',
     templateUrl: 'download-history.component.html',
@@ -169,9 +171,6 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
         });
     }
 
-    ngOnDestroy() {
-        this.routerSubscription.unsubscribe();
-        this.sub.unsubscribe();
-    }
+    ngOnDestroy() {}
 }
 

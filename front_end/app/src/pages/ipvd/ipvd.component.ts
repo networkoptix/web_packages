@@ -18,15 +18,14 @@ import { NxDialogsService }          from '../../dialogs/dialogs.service';
 import { NxAccountService }          from '../../services/account.service';
 import { SubscriptionLike }          from 'rxjs';
 import { isArray }                   from 'rxjs/internal-compatibility';
-import { NxAppStateService }         from '../../services/nx-app-state.service';
 import { NxScrollMechanicsService }  from '../../services/scroll-mechanics.service';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 
 interface Params {
     [key: string]: any;
 }
 
-
-
+@AutoUnsubscribe()
 @Component({
     selector     : 'ipvd',
     templateUrl  : 'ipvd.component.html',
@@ -198,17 +197,7 @@ export class NxIpvdComponent implements OnInit {
             });
     }
 
-    ngOnDestroy() {
-        this.breakpointSubscription.unsubscribe();
-        this.routerSubscription.unsubscribe();
-        this.locationSubscription.unsubscribe();
-        this.cameraGetSubscription.unsubscribe();
-        this.windowSizeSubscription.unsubscribe();
-
-        if (this.cameraReloadSubscription) {
-            this.cameraReloadSubscription.unsubscribe();
-        }
-    }
+    ngOnDestroy() {}
 
     updateFilterModel() {
 
