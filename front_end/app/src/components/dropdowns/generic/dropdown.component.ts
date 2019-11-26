@@ -57,6 +57,13 @@ export class NxGenericDropdown implements OnInit, ControlValueAccessor {
     ngOnInit(): void {
     }
 
+    trackItem(index, item) {
+        if (!item) {
+            return undefined;
+        }
+        return item.value;
+    }
+
     change(item) {
         this.selected = item;
         this.onSelected.emit(item);

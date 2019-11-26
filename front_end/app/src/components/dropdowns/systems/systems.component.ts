@@ -29,7 +29,10 @@ export class NxSystemsDropdown implements OnInit, OnChanges {
         this.config = configService.getConfig();
     }
 
-    trackByFn(index, item) {
+    trackItem(index, item) {
+        if (!item) {
+            return undefined;
+        }
         return item.id;
     }
 

@@ -1,7 +1,7 @@
 <div class="row px-0">
     <div class="w-100">
         <div class="d-flex flex-wrap p-0">
-            <div *ngFor="let alert of alertCards" class="mb-2 mx-2 card-container">
+            <div *ngFor="let alert of alertCards; trackBy: trackItem" class="mb-2 mx-2 card-container">
                 <nx-system-alert-card-component [data]="alert"></nx-system-alert-card-component>
             </div>
             <ng-container *ngIf="alertCardCount % 2">

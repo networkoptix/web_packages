@@ -90,6 +90,13 @@ export class NxSystemAlertsComponent implements OnInit, OnDestroy {
             });
     }
 
+    trackItem(index, item) {
+        if (!item) {
+            return undefined;
+        }
+        return item.entity;
+    }
+
     ngOnDestroy() {
         this.breakpointSubscription.unsubscribe();
     }

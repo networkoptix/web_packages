@@ -107,6 +107,13 @@ export class NxMultiSelectDropdown implements OnInit, ControlValueAccessor, OnCh
         });
     }
 
+    trackItem(index, item) {
+        if (!item) {
+            return undefined;
+        }
+        return item.id;
+    }
+
     updateItems() {
         this.items.forEach((item) => {
             item.selected = (this.innerValue !== undefined) ? (this.innerValue.indexOf(item.id) > -1) : false;
