@@ -211,6 +211,8 @@ CACHES = {
     "filters": REDIS_CACHE
 }
 
+DEPLOYMENT_READY = 'ready'
+
 if LOCAL_ENVIRONMENT:
     conf["cloud_db"]["url"] = 'https://cloud-test.hdw.mx/cdb'
 
