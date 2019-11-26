@@ -53,7 +53,7 @@
             <nx-section>
                 <div class="m-0">
                 <form id="systemSettingsForm" class="form-horizontal" #systemSettingsForm="ngForm"
-                    *ngIf="!registerSuccess" novalidate autocomplete="off">
+                    novalidate autocomplete="off">
                     <div class="form-check pl-0">
                         <div class="d-flex align-items-center">
                             <nx-checkbox
@@ -165,7 +165,7 @@
                             <nx-checkbox
                                 name="sessionLimitMinutes"
                                 componentId="sessionLimitMinutes"
-                                [(ngModel)]="settingsWatchers.sessionLimitMinutes.value"
+                                [(ngModel)]="settingsWatchers.sessionLimitToggle.value"
                                 #sessionLimitMinutes="ngModel">
                             </nx-checkbox>
 
@@ -173,17 +173,19 @@
                                 <span translate>Limit session duration to</span>
                             </label>
                         </div>
-                        <div class="row ml-4 mt-2">
-                            <input #timeUnitTracker 
-                                   [(ngModel)]="timeUnitCount" 
-                                   [ngModelOptions]="{standalone: true}"
-                                   (keyup)="validationCheckForNumberAndMax()"
-                                   type="number" 
-                                   min="1" 
-                                   class="form-control text-center col-3">
+                        <div *ngIf="settingsWatchers.sessionLimitToggle.value" class="row ml-4 mt-2">
+                            <input #timeUnitTracker
+                                    [(ngModel)]="timeUnitCount"
+                                    (change)="updateTimeUnitWatcher()"
+                                    [ngModelOptions]="{standalone: true}"
+                                    (keydown)="storePreviousValue()"
+                                    (keyup)="validationCheckForInput($event)"
+                                    type="number" 
+                                    min="1" 
+                                    class="form-control text-center col-3">
                             <nx-select class="col-3"
                                        [items]="limitSessionTimeUnits" 
-                                       [selected]="selectedTimeUnitObject"
+                                       [selected]="selectedTimeUnit"
                                        (onSelected)="updateTimeUnitInput($event)"></nx-select>
                         </div>
                     </div>
