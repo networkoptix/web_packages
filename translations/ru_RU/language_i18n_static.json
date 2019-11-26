@@ -345,7 +345,8 @@
 		"mergeSuccess": "Слияние системы завершено",
 		"permissionsRemoved": "{{email}} был лишен полномочий",
 		"unknownName": "Неизвестное имя для системы (вызвано облачным объединением систем)",
-		"shareOffline": "Невозможно поделиться системой, пока она не в сети"
+		"shareOffline": "Невозможно поделиться системой, пока она не в сети",
+		"shareUnauthorized": "You do not have permission to share this system"
 	},
 	"systemStatuses": {
 		"activated": "активирован",

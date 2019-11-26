@@ -602,6 +602,7 @@
         "openClientNoSystem": "Öppna %VMS_NAME%",
         "permissionsRemoved": "Rättigheterna togs bort från {{email}}",
         "shareOffline": "Kan inte dela systemet medan det är offline",
+        "shareUnauthorized": "You do not have permission to share this system",
         "successDeleted": "System {{systemName}} har tagits bort från ditt konto",
         "successDisconnected": "Systemet har kopplats bort från %CLOUD_NAME%",
         "successRename": "Systemnamnet sparat",

@@ -118,5 +118,9 @@
       "stop listening": "detener escucha",
       "help": "help | show commands"
     }
+  },
+  "system": {
+    "offline": "Sistema está desconectado",
+    "unavailable": "El sistema es inalcanzable"
   }
 }

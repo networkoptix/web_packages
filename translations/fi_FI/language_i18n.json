@@ -602,6 +602,7 @@
         "openClientNoSystem": "Avaa %VMS_NAME%",
         "permissionsRemoved": "Käyttöoikeudet poistettiin {{email}}",
         "shareOffline": "Cannot share system while it is offline",
+        "shareUnauthorized": "You do not have permission to share this system",
         "successDeleted": "Järjestelmä {{systemName}} poistetaan onnistuneesti tililtäsi",
         "successDisconnected": "Järjestelmä irrotetaan onnistuneesti %CLOUD_NAME%",
         "successRename": "Järjestelmän nimi on tallennettu",

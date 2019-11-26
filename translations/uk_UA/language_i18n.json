@@ -602,6 +602,7 @@
         "openClientNoSystem": "Відкрити %VMS_NAME%",
         "permissionsRemoved": "{{email}} був позбавлений повноважень",
         "shareOffline": "Cannot share system while it is offline",
+        "shareUnauthorized": "You do not have permission to share this system",
         "successDeleted": "Система {{systemName}} успішно видалена з вашого облікового запису",
         "successDisconnected": "Система успішно відключена від %CLOUD_NAME%",
         "successRename": "Ім'я системи збережено",

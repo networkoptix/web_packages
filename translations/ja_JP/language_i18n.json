@@ -602,6 +602,7 @@
         "openClientNoSystem": "%VMS_NAME% を開く",
         "permissionsRemoved": "{{email}} から権限が削除されました",
         "shareOffline": "Cannot share system while it is offline",
+        "shareUnauthorized": "You do not have permission to share this system",
         "successDeleted": "システム {{systemName}} はあなたのアカウントから正常に削除されました",
         "successDisconnected": "システムは %CLOUD_NAME% から正常に切断されました",
         "successRename": "システム名は保存されました",

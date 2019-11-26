@@ -118,5 +118,9 @@
       "stop listening": "slutt å lytte",
       "help": "help | show commands"
     }
+  },
+  "system": {
+    "offline": "Systemet er offline",
+    "unavailable": "Systemet er ikke tilgjengelig"
   }
 }

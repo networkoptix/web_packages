@@ -602,6 +602,7 @@
         "openClientNoSystem": "Abrir %VMS_NAME%",
         "permissionsRemoved": "Los permisos fueron removidos de {{email}}",
         "shareOffline": "No se puede compartir el sistema mientras está desconectado",
+        "shareUnauthorized": "No tienes permiso para compartir este sistema",
         "successDeleted": "Sistema {{systemName}} se ha eliminado de su cuenta",
         "successDisconnected": "El sistema se desconecta con éxito de %CLOUD_NAME%",
         "successRename": "Nombre del sistema guardado",

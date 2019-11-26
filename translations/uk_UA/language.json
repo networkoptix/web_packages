@@ -118,5 +118,9 @@
       "stop listening": "припинити прослуховування",
       "help": "help | show commands"
     }
+  },
+  "system": {
+    "offline": "Система знаходиться поза мережею",
+    "unavailable": "Система недоступна"
   }
 }

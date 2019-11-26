@@ -345,7 +345,8 @@
 		"mergeSuccess": "Hoàn thành hợp nhất hệ thống",
 		"permissionsRemoved": "Các quyền đã bị xóa khỏi {{email}}",
 		"unknownName": "Tên không xác định cho hệ thống (do hợp nhất Cloud)",
-		"shareOffline": "Cannot share system while it is offline"
+		"shareOffline": "Cannot share system while it is offline",
+		"shareUnauthorized": "You do not have permission to share this system"
 	},
 	"systemStatuses": {
 		"activated": "đã kích hoạt",

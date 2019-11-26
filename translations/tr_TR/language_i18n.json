@@ -602,6 +602,7 @@
         "openClientNoSystem": "Aç%VMS_NAME%",
         "permissionsRemoved": "İzinler {{email}}'den kaldırıldı",
         "shareOffline": "Çevrimdışıyken sistem paylaşılamıyor",
+        "shareUnauthorized": "You do not have permission to share this system",
         "successDeleted": "{{systemName}} sistemi hesabınızdan başarıyla silindi",
         "successDisconnected": "Sistem %CLOUD_NAME%'den başarıyla çıkarıldı",
         "successRename": "Sistem ismi kaydedildi",

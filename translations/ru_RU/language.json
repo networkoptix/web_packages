@@ -118,5 +118,9 @@
       "stop listening": "прекратить прослушивание",
       "help": "help | show commands"
     }
+  },
+  "system": {
+    "offline": "Система не в сети",
+    "unavailable": "Система недоступна"
   }
 }

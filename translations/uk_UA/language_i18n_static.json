@@ -345,7 +345,8 @@
 		"mergeSuccess": "Злиття системи завершено",
 		"permissionsRemoved": "{{email}} був позбавлений повноважень",
 		"unknownName": "Невідоме ім’я для системи (викликане злиттям хмари)",
-		"shareOffline": "Cannot share system while it is offline"
+		"shareOffline": "Cannot share system while it is offline",
+		"shareUnauthorized": "You do not have permission to share this system"
 	},
 	"systemStatuses": {
 		"activated": "активовано",

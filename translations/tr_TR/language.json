@@ -118,5 +118,9 @@
       "stop listening": "dinlemeyi durdur",
       "help": "help | show commands"
     }
+  },
+  "system": {
+    "offline": "Sistem çevrimdışı",
+    "unavailable": "Sistem erişilebilir değil"
   }
 }

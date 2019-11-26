@@ -118,5 +118,9 @@
       "stop listening": "interrompere l'ascolto",
       "help": "help | show commands"
     }
+  },
+  "system": {
+    "offline": "Il sistema è offline",
+    "unavailable": "Il server è irraggiungibile"
   }
 }

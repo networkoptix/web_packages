@@ -602,6 +602,7 @@
         "openClientNoSystem": "פתח %VMS_NAME%",
         "permissionsRemoved": "ההרשאות הוסרו מ- {{email}}",
         "shareOffline": "Cannot share system while it is offline",
+        "shareUnauthorized": "You do not have permission to share this system",
         "successDeleted": "המערכת {{systemName}} נמחקה בהצלחה מהחשבון שלך",
         "successDisconnected": "המערכת התנתקה בהצלחה מ %CLOUD_NAME%",
         "successRename": "שם המערכת נשמר",

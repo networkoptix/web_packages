@@ -118,5 +118,9 @@
       "stop listening": "stop met luisteren",
       "help": "help | show commands"
     }
+  },
+  "system": {
+    "offline": "Systeem is offline",
+    "unavailable": "Systeem is onbereikbaar"
   }
 }

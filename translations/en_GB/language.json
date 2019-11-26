@@ -118,5 +118,9 @@
       "stop listening": "stop listening",
       "help": "help | show commands"
     }
+  },
+  "system": {
+    "offline": "System is offline",
+    "unavailable": "System is unreachable"
   }
 }

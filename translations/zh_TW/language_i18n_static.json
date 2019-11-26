@@ -322,7 +322,7 @@
 		"mySystemSearch": "我的",
 		"unavailable": "無法連接至系統",
 		"offline": "系統處於離線狀態",
-		"offlineAlertRibbon": "System is offline. Some settings may not be available.",
+		"offlineAlertRibbon": "系統離線。某些設定可能無法使用。",
 		"openClient": "在 %VMS_NAME% 中打開",
 		"openClientNoSystem": "開啟 %VMS_NAME%",
 		"confirmMergeAction": "合併",
@@ -345,7 +345,8 @@
 		"mergeSuccess": "系統合併完成",
 		"permissionsRemoved": "權限從 {{email}} 被移除",
 		"unknownName": "未知的系統名稱（由雲合併引起）",
-		"shareOffline": "Cannot share system while it is offline"
+		"shareOffline": "離線時無法共用系統",
+		"shareUnauthorized": "You do not have permission to share this system"
 	},
 	"systemStatuses": {
 		"activated": "啟動",

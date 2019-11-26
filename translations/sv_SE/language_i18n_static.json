@@ -345,7 +345,8 @@
 		"mergeSuccess": "Systemsammanslagning slutförd",
 		"permissionsRemoved": "Rättigheterna togs bort från {{email}}",
 		"unknownName": "Okänt namn för system (orsakad av molnsammanslagning)",
-		"shareOffline": "Kan inte dela systemet medan det är offline"
+		"shareOffline": "Kan inte dela systemet medan det är offline",
+		"shareUnauthorized": "You do not have permission to share this system"
 	},
 	"systemStatuses": {
 		"activated": "aktiverad",

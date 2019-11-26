@@ -118,5 +118,9 @@
       "stop listening": "停止监听",
       "help": "help | show commands"
     }
+  },
+  "system": {
+    "offline": "系统处于离线状态",
+    "unavailable": "系统无法访问"
   }
 }

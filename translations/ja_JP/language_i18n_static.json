@@ -345,7 +345,8 @@
 		"mergeSuccess": "システムが統合されました",
 		"permissionsRemoved": "{{email}} から権限が削除されました",
 		"unknownName": "システムの名前が不明です（クラウド統合が原因）",
-		"shareOffline": "Cannot share system while it is offline"
+		"shareOffline": "Cannot share system while it is offline",
+		"shareUnauthorized": "You do not have permission to share this system"
 	},
 	"systemStatuses": {
 		"activated": "アクティベート済",

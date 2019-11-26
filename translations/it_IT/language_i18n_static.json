@@ -345,7 +345,8 @@
 		"mergeSuccess": "Unione del sistema completata",
 		"permissionsRemoved": "Le autorizzazioni sono state rimosse da {{email}}",
 		"unknownName": "Nome sconosciuto per il sistema (causato da cloud merge)",
-		"shareOffline": "Cannot share system while it is offline"
+		"shareOffline": "Cannot share system while it is offline",
+		"shareUnauthorized": "You do not have permission to share this system"
 	},
 	"systemStatuses": {
 		"activated": "attivato",
