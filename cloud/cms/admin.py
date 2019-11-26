@@ -13,6 +13,8 @@ from cms.forms import *
 from cms.controllers.modify_db import get_records_for_version
 from cms.views.asset import page_editor, review
 
+admin.site.disable_action('delete_selected')  # Remove delete action from all models in admin
+
 
 def clone_asset(request, asset_id):
     asset = Asset.objects.get(id=asset_id)

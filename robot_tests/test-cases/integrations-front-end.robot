@@ -57,7 +57,7 @@ Validate Integration Details Page
     ...    ${INTEGRATION GET IN TOUCH LABEL}
     ...    ${INTEGRATION GET IN TOUCH BUTTON}
     ...    ${INTEGRATION DEVELOPER LABEL}
-#    ...    ${INTEGRATION DEVELOPER COMPANY LINK}
+    ...    ${INTEGRATION DEVELOPER COMPANY LINK}
     ...    ${INTEGRATION DEVELOPER TERMS OF USE LINK}
     ...    ${INTEGRATION SUPPORT LABEL}
     ...    ${INTEGRATION SUPPORT LINK}
@@ -79,7 +79,7 @@ Validate Integration Tile
     Should Contain    ${integration tile contents}    ${INTEGRATION TILE FOOTER}
     Should Contain    ${integration tile contents}    ${INTEGRATION TILE LOGO}
     Should Contain    ${integration tile contents}    ${INTEGRATION TILE INFO}
-    Should Contain    ${integration tile contents}    ${INTEGRATION TILE NAME}
+    Should Contain    ${integration tile contents}    ${INTEGRATION TILE NAME}IronYun
     Should Contain    ${integration tile contents}    ${INTEGRATION TILE TEXT}
 
 Validate "Get in Touch" Form
@@ -141,7 +141,7 @@ Integration Store Search
 
     ${initial number of tiles}=   Get Number of Integration Tiles
     ${number of filters}=    Get Element Count    ${INTEGRATIONS SEARCH FILTER ITEM}
-    Should be equal as numbers    ${number of filters}    7
+    Should be equal as numbers    ${number of filters}    9
 
     Validate changes when input text into search field    v
     Validate changes when input text into search field    vi
@@ -152,6 +152,23 @@ Integration Store Search
     Should be equal as numbers    ${initial number of tiles}   ${number of tiles}
     ${actual url}=   Get Location
     Should be equal as strings    ${actual url}    ${url}
+
+    Input Text     ${INTEGRATIONS SEARCH INPUT}    vis
+    Click Element    ${INTEGRATIONS SEARCH FILTER}/li[5]
+    Location Should Be    ${url}?search=vis&tags=faceRecognition
+    Click Element    ${INTEGRATIONS SEARCH FILTER}/li[8]
+    Location Should Be    ${url}?search=vis&tags=faceRecognition,storage
+    Click Element    ${INTEGRATIONS SEARCH FILTER}/li[8]//span[contains(@class, "tag-close-icon")]
+    Location Should Be    ${url}?search=vis&tags=faceRecognition
+    Go Back
+    Location Should Be    ${url}?search=vis&tags=faceRecognition,storage
+    Go Back
+    Location Should Be    ${url}?search=vis&tags=faceRecognition
+    Go Back
+    Location Should Be    ${url}?search=vis
+    Go Forward
+    Location Should Be    ${url}?search=vis&tags=faceRecognition
+
 
 Integration Store Integration Details
     [Tags]    C54623

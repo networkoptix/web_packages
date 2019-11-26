@@ -13,7 +13,7 @@ import { NxLanguageProviderService }    from '../../services/nx-language-provide
 import { NxAccountService }             from '../../services/account.service';
 import { NxCloudApiService }            from '../../services/nx-cloud-api';
 import { NxUriService }                 from '../../services/uri.service';
-import { Observable, Subscription }     from 'rxjs';
+import { Subscription }                 from 'rxjs';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 
 @AutoUnsubscribe()
@@ -37,7 +37,6 @@ export class DownloadComponent implements OnInit, OnDestroy {
     downloadButton: any;
     downloads: any;
     downloadsData: any;
-    platformMatch: {};
     canSeeHistory: boolean;
     tabsVisible: boolean;
     activeTab: string;
@@ -64,15 +63,6 @@ export class DownloadComponent implements OnInit, OnDestroy {
         };
 
         this.sortedPlatforms = [];
-
-        this.platformMatch = {
-            unix   : 'Linux',
-            linux  : 'Linux',
-            mac    : 'MacOS',
-            windows: 'Windows',
-            arm    : 'Arm',
-            sdk    : 'SDK'
-        };
     }
 
     constructor(private cloudApi: NxCloudApiService,
@@ -101,10 +91,6 @@ export class DownloadComponent implements OnInit, OnDestroy {
                     }
                 });
         }
-    }
-
-    private detectOS(): string {
-        return this.platformMatch[this.deviceService.getDeviceInfo().os.toLowerCase()];
     }
 
     public beforeChange($event: NgbTabChangeEvent) {
@@ -175,9 +161,9 @@ export class DownloadComponent implements OnInit, OnDestroy {
                 });
 
                 if (!this.sortedPlatforms.some(platform => platform.name === this.platform)) {
-                    this.platform = this.detectOS();
+                    this.platform = this.deviceService.getDeviceInfo().os.toLowerCase();
                 }
-
+                this.calcDownloadButton(this.platform);
                 this.setTitle(this.platform);
 
                 setTimeout(() => {

@@ -27,6 +27,11 @@ from selenium.webdriver.remote.webdriver import WebDriver
 
 class NoptixLibrary(object):
 
+    def go_forward(self):
+        """Simulates the user clicking the forward button on their browser."""
+        seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
+        seleniumlib.driver.forward()
+
     def convert_locator_to_webelement(self, locator):
         seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
         logger.debug('Attempting to convert locator to WebElement...')
