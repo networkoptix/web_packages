@@ -183,3 +183,11 @@ camera-view-informer {
     display:inline;
     background-color:yellow;
 }
+
+.two-columns{
+    -moz-column-count: 2;
+    /* Firefox */
+    -webkit-column-count: 2;
+    /* Safari and Chrome */
+    column-count: 2;
+}

@@ -1,3 +1,6 @@
+@import '../../styles/theme_variables';
+@import '../../src/components/content-block/content-block.component';
+
 .page-placeholder {
     position : absolute;
     z-index  : 99;
@@ -27,5 +30,98 @@
                 }
             }
         }
+    }
+}
+
+.card {
+    &.hoverable {
+        margin-bottom : 10px;
+        
+        &:hover {
+            box-shadow : 0 2px 5px 0 transparentize($dark15, 0.8);
+        }
+    }
+    
+    table {
+        margin : 0;
+    }
+}
+
+.jumbotron {
+    padding : 80px 0 0 0;
+    
+    .welcome-caption {
+        font-size       : 64px;
+        font-family     : $font-family-light;
+        justify-content : center;
+        line-height     : 1;
+        padding         : 8px 0;
+        margin-top      : 0;
+        margin-bottom   : 16px;
+    }
+    
+    .lead {
+        margin-bottom  : 48px;
+        padding-bottom : 1px;
+        font-size      : 18px;
+        font-family    : $font-family-regular;
+    }
+    
+    .promo-block {
+        @extend .card;
+        text-align : center;
+        padding    : 0;
+        margin     : 0 8px 16px;
+        
+        @include media-breakpoint-up(sm) {
+            flex : 0 0 calc(100% / 3 - 16px);
+        }
+        
+        h2 {
+            @extend .card--header;
+            font-family     : $font-family-medium;
+            font-size       : 18px;
+            line-height     : unset;
+            padding-top     : 103px;
+            padding-bottom  : 35px;
+            background      : $additional_light1 no-repeat 50% 20px;
+            background-size : auto 64px;
+        }
+        
+        &:nth-of-type(1) h2 {
+            background-image : url('/static/images/promo/landing_promo_1.png');
+        }
+        
+        &:nth-of-type(2) h2 {
+            background-image : url('/static/images/promo/landing_promo_2.png');
+        }
+        
+        &:nth-of-type(3) h2 {
+            background-image : url('/static/images/promo/landing_promo_3.png');
+        }
+        
+        h2, h4 {
+            justify-content : center;
+        }
+        
+        h4 {
+            font-family : $font-family-regular;
+            font-size   : 14px;
+            margin      : 20px 16px;
+            line-height : 1.4;
+        }
+    }
+}
+
+landing-display-component {
+    .promo-block {
+        position         : relative;
+        display          : flex;
+        flex-direction   : column;
+        min-width        : 0;
+        word-wrap        : break-word;
+        background-color : #fff;
+        background-clip  : border-box;
+        border           : 1px solid rgba(0, 0, 0, 0.125);
     }
 }

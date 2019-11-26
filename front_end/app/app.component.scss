@@ -1,6 +1,7 @@
-// A5 styles
+@import 'styles/_theme_variables';
 
 // Common
+@import 'src/styles/_mixins';
 @import 'src/styles/_typography';
 @import 'src/styles/_buttons';
 @import 'src/styles/_forms';
@@ -17,3 +18,28 @@
 @import './src/dialogs/dialogs';
 @import './src/components/dropdowns/dropdowns';
 @import './src/components/toast/toast.component';
+
+nx-app {
+    .headerPadding {
+        padding-top : $navbar-height;
+    }
+    
+    .headerAndRibbonPadding {
+        padding-top : $navbar-height + 32px;
+    }
+    
+    .placeholder {
+        position         : absolute;
+        background-color : transparent;
+        
+        &.page {
+            @include media-breakpoint-up(lg) {
+                position : fixed;
+            }
+            top       : 50%;
+            left      : 50%;
+            transform : translate(-50%, -50%);
+            z-index   : -1;
+        }
+    }
+}

@@ -41,14 +41,18 @@ body {
     &-condensed {
         .card-body {
             padding : 12px 16px 14px;
-
-            .user-name {
-                font-size     : $font-size-sm;
-                font-family   : $font-family-medium;
-                height        : 16px;
-                margin-bottom : 0;
+            
+            h2 {
+                display : inline !important;
             }
 
+            .user-name {
+                font-size     : $font-size-sm !important;
+                font-family   : $font-family-medium;
+                height        : 16px;
+                margin-bottom : 0 !important;
+            }
+    
             .process-button {
                 margin-top : 12px;
             }
@@ -105,9 +109,9 @@ hr {
     margin-bottom : 16px;
 }
 
-.buttons-panel {
-    display : flex;
-}
+//.buttons-panel {
+//    display : flex;
+//}
 
 .alert {
     font-size      : $h4-font-size;
