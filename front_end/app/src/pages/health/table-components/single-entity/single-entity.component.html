@@ -9,7 +9,7 @@
                 <div class="row d-flex align-items-end mb-1" *ngFor="let param of paramGroup.values">
                     <div class="col-5 pr-0">
                         <div class="row-name">
-                            <span>{{param.name || param.id}}</span>
+                            <span>{{param.description || param.name || param.id}}</span>
                         </div>
                     </div>
                     <div class="col-7"

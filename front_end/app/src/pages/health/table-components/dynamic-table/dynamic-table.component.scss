@@ -6,6 +6,8 @@
 @import '~bootstrap/scss/mixins/breakpoints';
 
 nx-dynamic-table {
+  cursor: default;
+
   .text-placeholder {
     color       : $light16;
     font-family : $font-family-regular;

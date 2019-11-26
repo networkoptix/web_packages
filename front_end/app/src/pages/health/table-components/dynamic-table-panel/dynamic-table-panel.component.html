@@ -18,7 +18,7 @@
                     <div class="row nx-panel-row align-items-end" *ngFor="let param of paramGroup.values">
                         <div class="col-7 nx-panel">
                             <div class="row-title">
-                                <span>{{param.name || param.id}}</span>
+                                <span>{{param.description || param.name || param.id}}</span>
                             </div>
                             <div class="row-line"></div>
                         </div>

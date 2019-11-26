@@ -243,7 +243,10 @@ export class NxHealthComponent implements OnInit, OnDestroy {
     processValues() {
         Object.entries(this.healthService.values).forEach(([metric, entities]) => {
             Object.entries(entities).forEach(([entity, groups]) => {
-                let alarmCount = 0;
+                const alarmCount = {
+                    warning: 0,
+                    error: 0
+                };
                 let highestAlarm;
 
                 this.healthService.values[metric][entity].id = entity;
@@ -262,7 +265,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                                     if (!highestAlarm || alarm.level === 'error' && highestAlarm.level === 'warning') {
                                         highestAlarm = alarm;
                                     }
-                                    alarmCount++;
+                                    alarmCount[alarm.level]++;
                                 }
 
                                 const formattedVal: any = this.healthService.formatValue(
@@ -296,8 +299,15 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                     if (this.healthService.values[metric][entity]._.name) {
                         this.healthService.values[metric][entity]._.name.class = highestAlarm.level;
                     }
-                    if (alarmCount > 1) {
-                        const tooltip = `${alarmCount} alerts`;
+                    const level = highestAlarm.level;
+                    const count = alarmCount[level];
+
+                    if (count > 1) {
+                        let name = this.healthService.findEntityName(this.healthService.values[metric][entity]);
+                        name = name ? `${name} ` : '';
+                        const resourceName = this.healthService.manifest[metric].resource;
+                        const tooltip = `${resourceName} ${name}has ${count} different ${level}s`;
+
                         if (this.healthService.values[metric][entity]._.name) {
                             this.healthService.values[metric][entity]._.name.tooltip = tooltip;
                         }

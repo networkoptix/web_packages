@@ -24,7 +24,8 @@
                     <ng-container *ngFor="let headerGroup of headers.values">
                         <th *ngFor="let header of headerGroup.values" class="align-bottom"
                             (click)="toggleSort(headerGroup.id, header.id, true)">
-                            <div class="caption d-flex align-items-end">
+                            <div class="caption d-flex align-items-end"
+                                 [title]="header.description || header.name">
                                 <div class="text-container ellipsis" [innerHTML]="header.name.replace(':', ':<br>')"></div>
                                 <div class="sort-dir nav-arrow"
                                      [style.visibility]="(headerGroup.id == selectedGroup && header.id == selectedHeader) ? 'visible' : 'hidden'"
