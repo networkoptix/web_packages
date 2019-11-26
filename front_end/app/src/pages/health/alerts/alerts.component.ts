@@ -42,6 +42,7 @@ export class NxSystemAlertsComponent implements OnInit, OnDestroy {
 
     alertsCount: number;
     alertCards: any;
+    alertCardCount: number;
 
     constructor(private route: ActivatedRoute,
                 private menuService: NxMenuService,
@@ -227,6 +228,7 @@ export class NxSystemAlertsComponent implements OnInit, OnDestroy {
                 name: alarmType.name
             };
         });
+        this.alertCardCount = Object.keys(this.alertCards).length;
     }
 
     initializeHeader() {
