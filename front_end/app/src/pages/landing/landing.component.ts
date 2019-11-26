@@ -47,20 +47,22 @@ export class NxLandingComponent implements OnInit, OnDestroy {
             this.loaded = true;
         } else {
             this.accountService
-                .checkLoginState()
-                .then(() => {
+                .get()
+                .then(account => {
                     // TODO: remove this hack after we retire AJS
                     // downgraded component cause this page to load twice and we end up with two login dialogs
-                    this.accountService.redirectAuthorised();
-                    this.userEmail = this.accountService.getEmail();
-                }, () => {
-                    if (this.router.url.includes('/login') && !this.localStorage.get('login')) {
-                        this.localStorage.set('login', true);
-                        this.login = this.dialogs.login(this.accountService, false, false);
-                        this.pageService.setPageTitle(this.LANG.pageTitles.login);
+                    if (account) {
+                        this.accountService.redirectAuthorised();
+                        this.userEmail = this.accountService.getEmail();
                     } else {
-                        this.loaded = true;
-                        this.pageService.setPageTitle(this.LANG.pageTitles.default);
+                        if (this.router.url.includes('/login') && !this.localStorage.get('login')) {
+                            this.localStorage.set('login', true);
+                            this.login = this.dialogs.login(this.accountService, false, false);
+                            this.pageService.setPageTitle(this.LANG.pageTitles.login);
+                        } else {
+                            this.loaded = true;
+                            this.pageService.setPageTitle(this.LANG.pageTitles.default);
+                        }
                     }
                 }).catch(() => {
                     this.pageService.setPageTitle(this.LANG.pageTitles.default);
