@@ -161,7 +161,7 @@ Check Password Badge
     ...    ELSE IF    '''${pass}'''=='''${CYRILLIC TEXT}''' or '''${pass}'''=='''${SMILEY TEXT}''' or '''${pass}'''=='''${GLYPH TEXT}''' or '''${pass}'''=='''${TM TEXT}''' or '''${pass}'''=='''${SPACE}${BASE PASSWORD}''' or '''${pass}'''=='''${BASE PASSWORD}${SPACE}'''
     ...    Element Should Be Visible    ${PASSWORD INCORRECT BADGE}
     ...    ELSE IF    '''${pass}'''=='''${symbol password}'''
-    ...   Move focus and check badge    ${PASSWORD IS FAIR BADGE}
+    ...    Move focus and check badge    ${PASSWORD IS FAIR BADGE}
     ...    ELSE IF    '''${pass}'''=='''${BASE PASSWORD}'''
     ...    Move focus and check badge    ${PASSWORD IS GOOD BADGE}
 

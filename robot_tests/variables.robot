@@ -457,13 +457,13 @@ ${DROPDOWN MENU ITEMS}                ${DROPDOWN MENU LIST}/li[contains(@class,'
 ${DISABLED}                           \[@disabled]
 
 #Password badges
-${PASSWORD BADGE}                     //span[contains(@class,"badge")]
-${PASSWORD TOO SHORT BADGE}           //span[contains(@class,"badge") and contains(text(),'${PASSWORD TOO SHORT BADGE TEXT}')]
-${PASSWORD TOO COMMON BADGE}          //span[contains(@class,"badge") and contains(text(),'${PASSWORD TOO COMMON BADGE TEXT}')]
-${PASSWORD IS WEAK BADGE}             //span[contains(@class,"badge") and contains(text(),'${PASSWORD IS WEAK BADGE TEXT}')]
-${PASSWORD IS FAIR BADGE}             //span[contains(@class,"badge") and contains(text(),'${PASSWORD IS FAIR BADGE TEXT}')]
-${PASSWORD IS GOOD BADGE}             //span[contains(@class,"badge") and contains(text(),'${PASSWORD IS GOOD BADGE TEXT}')]
-${PASSWORD INCORRECT BADGE}           //span[contains(@class,"badge") and contains(text(),"${PASSWORD INCORRECT BADGE TEXT}")]
+${PASSWORD BADGE}                     //span//div[contains(@class,"badge")]
+${PASSWORD TOO SHORT BADGE}           //span//div[contains(@class,"badge") and contains(text(),'${PASSWORD TOO SHORT BADGE TEXT}')]
+${PASSWORD TOO COMMON BADGE}          //span//div[contains(@class,"badge") and contains(text(),'${PASSWORD TOO COMMON BADGE TEXT}')]
+${PASSWORD IS WEAK BADGE}             //span//div[contains(@class,"badge") and contains(text(),'${PASSWORD IS WEAK BADGE TEXT}')]
+${PASSWORD IS FAIR BADGE}             //span//div[contains(@class,"badge") and contains(text(),'${PASSWORD IS FAIR BADGE TEXT}')]
+${PASSWORD IS GOOD BADGE}             //span//div[contains(@class,"badge") and contains(text(),'${PASSWORD IS GOOD BADGE TEXT}')]
+${PASSWORD INCORRECT BADGE}           //span//div[contains(@class,"badge") and contains(text(),"${PASSWORD INCORRECT BADGE TEXT}")]
 
 #Already logged in modal
 ${LOGGED IN STAY LOGGED IN BUTTON}    ${MODAL DIALOG}//button[contains(text(),'${STAY LOGGED IN BUTTON TEXT}')]
