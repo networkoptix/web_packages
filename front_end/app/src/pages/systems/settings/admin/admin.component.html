@@ -1,7 +1,7 @@
 <nx-pre-loader *ngIf="!system"></nx-pre-loader>
 
 <div *ngIf="system" class="row d-flex align-items-start">
-    <div class="col-12">
+    <div class="col-12 system-settings">
         <nx-block header-style="extended">
             <header>
                 <h2 class="system-name mb-2">{{system.info.name}}</h2>
@@ -67,12 +67,15 @@
                                 <span translate>Enable auto discovery of cameras and servers</span>
                             </label>
                         </div>
-                        <span id="autoDiscoveryEnabledHelpBlock" class="form-text text-muted helper-block col-lg-9 col-xl-8 p-0 pl-4" translate>
+                        <label id="autoDiscoveryEnabledHelpBlock" 
+                            class="form-text text-muted helper-block col-lg-9 col-xl-8 p-0 pl-4" 
+                            for="autoDiscoveryEnabled"
+                            translate>
                             When enabled, system will discover new cameras and servers. Also, 
                             it will automatically and persistently send discovery requests to 
                             cameras in order to get the camera's status update. 
                             Failover enabled on some servers ignore status check prohibition.
-                        </span>
+                        </label>
                         <div class="d-flex align-items-center mt-1">
                             <nx-checkbox
                                 name="statisticsAllowed"
@@ -86,11 +89,14 @@
                                 <span translate>Send anonymous usage and crash statistics to developers</span>
                             </label>
                         </div>
-                        <span id="sendCrashStatusHelpBlock" class="form-text text-muted helper-block col-lg-9 col-xl-8 p-0 pl-4" translate>
+                        <label id="sendCrashStatusHelpBlock" 
+                            class="form-text text-muted helper-block col-lg-9 col-xl-8 p-0 pl-4"
+                            for="sendCrashStatus" 
+                            translate>
                             Includes information about the System, such as camera modules, 
                             firmware versions, number of servers, etc. 
                             Does not include any personal information and is completely anonymous.
-                        </span>
+                        </label>
                         <div class="d-flex align-items-center mt-1">
                             <nx-checkbox
                                 name="cameraSettingsOptimization"
@@ -128,9 +134,12 @@
                                 <span translate>Enable audit trail</span>
                             </label>
                         </div>
-                        <span id="auditTrailEnabledHelpBlock" class="form-text text-muted helper-block col-lg-9 col-xl-8 p-0 pl-4" translate>
+                        <label id="auditTrailEnabledHelpBlock" 
+                            class="form-text text-muted helper-block col-lg-9 col-xl-8 p-0 pl-4" 
+                            for="auditTrailEnabled"
+                            translate>
                             Tracks and logs all user actions.
-                        </span>
+                        </label>
                         <div class="d-flex align-items-center mt-1">
                             <nx-checkbox
                                 name="trafficEncryptionForced"
@@ -154,13 +163,19 @@
                                 #videoTrafficEncryptionForced="ngModel">
                             </nx-checkbox>
 
-                            <label class="control-label mb-0" for="videoTrafficEncryptionForced">
+                            <label class="control-label mb-0" 
+                                [ngClass]="!settingsWatchers.trafficEncryptionForced.value ? 'disabled-label' : ''" 
+                                for="videoTrafficEncryptionForced">
                                 <span translate>Encrypt video traffic</span>
                             </label>
                         </div>
-                        <span id="videoTrafficEncryptionForcedHelpBlock" class="form-text text-muted helper-block col-lg-9 col-xl-8 p-0 pl-4" translate>
+                        <label id="videoTrafficEncryptionForcedHelpBlock" 
+                            class="form-text text-muted helper-block col-lg-9 col-xl-8 p-0 pl-4" 
+                            [ngClass]="!settingsWatchers.trafficEncryptionForced.value ? 'disabled-helper-block' : ''"
+                            for="videoTrafficEncryptionForced"
+                            translate>
                             Only client-server video traffic can be encrypted.
-                        </span>
+                        </label>
                         <div class="d-flex align-items-center mt-1">
                             <nx-checkbox
                                 name="sessionLimitMinutes"

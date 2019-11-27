@@ -13,3 +13,12 @@
     font-family : $font-family-medium;
     line-height: 1.2;
 }
+
+.system-settings label {
+    cursor: pointer;
+}
+
+.system-settings .disabled-helper-block, .system-settings .disabled-label {
+    opacity: 0.3;
+    cursor: default;
+}
