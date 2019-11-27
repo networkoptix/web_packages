@@ -191,7 +191,7 @@ export class NxSystemAdminComponent implements OnInit {
                 }
             }
             return this.system.updateOrGetSystemSettings(changes)
-                .then(() => this.applyService.locked = false);
+                .then(() => this.applyService.reset());
         });
     }
 
@@ -209,42 +209,45 @@ export class NxSystemAdminComponent implements OnInit {
                         }
                         this.updateSettings(this.currentlyMerging);
                     });
-
-                    this.system.updateOrGetSystemSettings()
-                        .then(res => {
-                            const { settings } = res.reply;
-
-                            Object.keys(this.settingsWatchers).forEach(setting => {
-                                if (setting in settings) {
-                                    let curr = settings[setting];
-                                    /**
-                                     * sets initial values for system & security settings
-                                     * limitSessionDuration is the only one that's a number & not a boolean,
-                                     * so it needs custom code to handle
-                                     */
-                                    if (isNaN(curr)) {
-                                        this.settingsWatchers[setting].value = curr === 'true';
-                                    } else {
-                                        curr = parseInt(curr);
-                                        this.settingsWatchers.sessionLimitToggle.value = Boolean(curr);
-                                        this.timeUnitCount = curr;
-                                        if (curr % 60 === 0) {
-                                            this.timeUnitCount /= 60;
-                                            this.settingsWatchers.sessionLimitUnit.value = 'Hour(s)';
+                    if (!this.applyService.locked) {
+                        this.system.updateOrGetSystemSettings()
+                            .then(res => {
+                                const { settings } = res.reply;
+                                this.applyService.setVisible(false);
+                                this.applyService.hardReset();
+                                const sw = this.settingsWatchers;
+                                Object.keys(sw).forEach(setting => {
+                                    if (setting in settings) {
+                                        let curr = settings[setting];
+                                        /**
+                                         * sets initial values for system & security settings
+                                         * limitSessionDuration is the only one that's a number & not a boolean,
+                                         * so it needs custom code to handle
+                                         */
+                                        if (isNaN(curr)) {
+                                            sw[setting].value = curr === 'true';
                                         } else {
-                                            this.settingsWatchers.sessionLimitUnit.value = 'Minute(s)';
+                                            curr = parseInt(curr);
+                                            sw.sessionLimitToggle.value = Boolean(curr);
+                                            this.timeUnitCount = curr;
+                                            if (curr % 60 === 0) {
+                                                this.timeUnitCount /= 60;
+                                                sw.sessionLimitUnit.value = 'Hour(s)';
+                                            } else {
+                                                sw.sessionLimitUnit.value = 'Minute(s)';
+                                            }
+                                            sw[setting].value = this.timeUnitCount;
+                                            this.timeUnitCount = this.timeUnitCount || 24;
+                                            this.selectedTimeUnit = this.limitSessionTimeUnits
+                                                                        .find(e => e.name === sw.sessionLimitUnit.value);
+                                            this.updateTimeUnitInput(this.selectedTimeUnit);
                                         }
-                                        this.settingsWatchers[setting].value = this.timeUnitCount;
-                                        this.timeUnitCount = this.timeUnitCount || 24;
-                                        this.selectedTimeUnit = this.limitSessionTimeUnits
-                                                                    .find(e => e.name === this.settingsWatchers.sessionLimitUnit.value);
-                                        this.updateTimeUnitInput(this.selectedTimeUnit);
                                     }
-                                }
+                                });
+                                this.applyService.reset();
+                                this.applyService.setVisible(true);
                             });
-
-                            this.applyService.setVisible(true);
-                        });
+                    }
 
                     this.deletingSystem = this.processService.createProcess(() => {
                         return this.system.deleteFromCurrentAccount();

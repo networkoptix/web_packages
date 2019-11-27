@@ -29,7 +29,8 @@ const appRoutes: Routes = [
         children: [
             {
                 path: '',
-                component: NxSystemAdminComponent
+                component: NxSystemAdminComponent,
+                canDeactivate: [ApplyGuard]
             },
             {
                 path: 'share',
