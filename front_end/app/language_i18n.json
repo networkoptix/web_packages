@@ -673,6 +673,15 @@
         "openClient": "Open in %VMS_NAME%",
         "openClientNoSystem": "Open %VMS_NAME%",
         "permissionsRemoved": "Permissions were removed from {{email}}",
+        "settings": {
+            "sessionLimitDuration": {
+                "hours": "Hour(s)",
+                "minutes": "Minute(s)"
+            },
+            "warningMessages": {
+                "videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+            }
+        },
         "shareOffline": "Cannot share system while it is offline",
         "shareUnauthorized": "You do not have permission to share this system",
         "successDeleted": "System {{systemName}} is successfully deleted from your account",

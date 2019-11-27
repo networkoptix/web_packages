@@ -1,4 +1,5 @@
 @import '../../../../styles/typography';
+@import '../../../../../styles/theme_palette';
 
 .system-owner {
     font-family : $font-family-regular;
@@ -16,6 +17,25 @@
 
 .system-settings label {
     cursor: pointer;
+}
+
+.system-settings label.control-label {
+    color: $dark9;
+    &:hover {
+        color: $dark1;
+    }
+}
+
+.system-settings .helper-block {
+    color: $light16;
+    font-family: $font-family-regular;
+    font-size: 12px;
+    margin: 2px 0 8px 22px;
+    line-height: 16px;
+}
+
+.system-settings nx-block div.checkbox-block:last-of-type + .helper-block {
+    margin-bottom: 0;
 }
 
 .system-settings .disabled-helper-block, .system-settings .disabled-label {

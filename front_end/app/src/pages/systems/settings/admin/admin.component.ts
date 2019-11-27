@@ -114,14 +114,14 @@ export class NxSystemAdminComponent implements OnInit {
         this.currentlyMerging = false;
         this.settings = {
             disconnectDisabled: false,
-            mergeDisabled: false, // can I stop refresh with this variable?
+            mergeDisabled: false,
             renameDisabled: false,
             showMerge: true
         };
 
         this.limitSessionTimeUnits = [
-            { value: 'Minute(s)', name: 'Minute(s)', id: 1, max: 600 },
-            { value: 'Hour(s)', name: 'Hour(s)', id: 2, max: 600 },
+            { value: 'Minute(s)', name: this.LANG.system.settings.sessionLimitDuration.minutes, id: 1, max: 600 },
+            { value: 'Hour(s)', name: this.LANG.system.settings.sessionLimitDuration.hours, id: 2, max: 600 },
         ];
 
         this.initForApplyService();
@@ -146,7 +146,7 @@ export class NxSystemAdminComponent implements OnInit {
 
         this.setWarningMessageThroughApplyService = () => {
             if (this.settingsWatchers.videoTrafficEncryptionForced.value === true) {
-                this.applyService.setWarn('Encrypting video traffic will significantly increase SPU usage.');
+                this.applyService.setWarn(this.LANG.system.settings.warningMessages.videoEncryption);
             } else {
                 this.applyService.setWarn('');
             }

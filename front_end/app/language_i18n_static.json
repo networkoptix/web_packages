@@ -346,7 +346,16 @@
 		"permissionsRemoved": "Permissions were removed from {{email}}",
 		"unknownName": "Unknown Name for System (Caused by cloud merge)",
 		"shareOffline": "Cannot share system while it is offline",
-		"shareUnauthorized": "You do not have permission to share this system"
+		"shareUnauthorized": "You do not have permission to share this system",
+		"settings": {
+			"sessionLimitDuration": {
+				"hours": "Hour(s)",
+				"minutes": "Minute(s)"
+			},
+			"warningMessages": {
+				"videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+			}
+		}
 	},
 	"systemStatuses": {
 		"activated": "activated",
