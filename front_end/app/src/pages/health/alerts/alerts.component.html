@@ -1,4 +1,9 @@
-<div class="row px-0">
+<nx-page-placeholder [condition]="!healthService.alertsValues.length"
+                     type="NO_ALERTS"
+                     class="section-placeholder">
+</nx-page-placeholder>
+
+<div class="row px-0" *ngIf="healthService.alertsValues.length">
     <div class="w-100">
         <div class="d-flex flex-wrap p-0">
             <div *ngFor="let alert of alertCards; trackBy: trackItem" class="mb-2 mx-2 card-container">

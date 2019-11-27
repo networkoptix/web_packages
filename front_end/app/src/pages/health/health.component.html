@@ -1,9 +1,18 @@
-<nx-page-placeholder *ngIf="!healthService.ready"
+<nx-page-placeholder *ngIf="!healthService.ready && !hasServerError && !outdatedVersion"
                      [condition]="systemReady && !system.isOnline"
-                     [placeholderTitle]="LANG.common.systemOffline"
-                     [iconClass]="'server-offline'"
+                     type="OFFLINE"
                      preloader="true"
-                     class="page-placeholder offline">
+                     class="page-placeholder">
+</nx-page-placeholder>
+
+<nx-page-placeholder [condition]="hasServerError"
+                     type="500"
+                     class="section-placeholder">
+</nx-page-placeholder>
+
+<nx-page-placeholder [condition]="outdatedVersion"
+                     type="NEW_VERSION"
+                     class="section-placeholder">
 </nx-page-placeholder>
 
 <div *ngIf="healthService.ready" class="py-0 px-3 mw-100 mt-3">

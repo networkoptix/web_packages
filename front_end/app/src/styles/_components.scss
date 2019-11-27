@@ -1,6 +1,21 @@
 @import '../../styles/theme_variables';
 @import '../../src/components/content-block/content-block.component';
 
+.section-placeholder {
+    position: relative;
+    display: flex;
+    
+    .page-placeholder {
+        .placeholder-content {
+            transform: none !important;
+    
+            .placeholder-icon {
+                margin: 80px 0 40px;
+            }
+        }
+    }
+}
+
 .page-placeholder {
     position : absolute;
     z-index  : 99;

@@ -38,6 +38,9 @@ export class NxHealthComponent implements OnInit, OnDestroy {
     importedData: any = {};
     headerHeight: number;
 
+    hasServerError: boolean;
+    outdatedVersion: boolean;
+
     private resizeSubscription: Subscription;
 
     constructor(private accountService: NxAccountService,
@@ -55,6 +58,8 @@ export class NxHealthComponent implements OnInit, OnDestroy {
     ) {
         this.LANG = this.languageService.getTranslations();
         this.CONFIG = this.configService.getConfig();
+        this.hasServerError = false;
+        this.outdatedVersion = false;
     }
 
     ngOnInit(): void {
@@ -129,10 +134,21 @@ export class NxHealthComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {}
 
     setupReport(data) {
+        // Handle server error
+        if (!data.reply) {
+            this.hasServerError = true;
+            return;
+        }
+
+        // TODO: Handle outdated version -- adjust param name once server team provide this feature
+        if (data.outdatedVersion) {
+            this.outdatedVersion = true;
+            return;
+        }
+
         this.healthService.ready = false;
         this.menu.level1 = [this.menu.level1[0]];
 
-        // TODO: Handle server error
         this.healthService.manifest = data.reply['ec2/metrics/manifest'].reply;
         this.healthService.values = data.reply['ec2/metrics/values'].reply;
         this.healthService.alarms = data.reply['ec2/metrics/alarms'].reply;

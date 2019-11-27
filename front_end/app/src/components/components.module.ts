@@ -34,13 +34,14 @@ import { NxMultiSelectDropdown }     from './dropdowns/multi-select/multi-select
 import { NxLandingDisplayComponent } from './landing-display/landing-display.component';
 import { NxPasswordComponent }       from './password-input/password.component';
 import { NxEmailComponent }          from './email-input/email.component';
-import { NxClientButtonComponent }   from './open-client-button/client-button.component';
-import { NxSwitchComponent }         from './switch/switch.component';
-import { ToastsContainer }           from './toast/toast.component';
-import { NxHeaderComponent }         from './header/header.component';
-import { NxNavLocationDropdown }     from './dropdowns/nav-location/nav.component';
-import { NxApplyComponent }          from './apply/apply.component';
+import { NxClientButtonComponent }    from './open-client-button/client-button.component';
+import { NxSwitchComponent }          from './switch/switch.component';
+import { ToastsContainer }            from './toast/toast.component';
+import { NxHeaderComponent }          from './header/header.component';
+import { NxNavLocationDropdown }      from './dropdowns/nav-location/nav.component';
+import { NxApplyComponent }           from './apply/apply.component';
 import { NxPagePlaceholderComponent } from './placeholders/page/page-placeholder.component';
+import { AngularSvgIconModule }       from 'angular-svg-icon';
 
 @NgModule({
     imports: [
@@ -52,6 +53,7 @@ import { NxPagePlaceholderComponent } from './placeholders/page/page-placeholder
         MenuModule,
         NgbToastModule,
         NgbModule,
+        AngularSvgIconModule,
     ],
     declarations   : [
         NxGenericDropdown,
