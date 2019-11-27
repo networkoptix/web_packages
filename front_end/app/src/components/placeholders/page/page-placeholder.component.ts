@@ -1,5 +1,5 @@
-import { Component, Input, OnInit }  from '@angular/core';
-import { NxLanguageProviderService } from '../../../services/nx-language-provider';
+import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { NxLanguageProviderService }                   from '../../../services/nx-language-provider';
 
 /* Usage
 <nx-page-placeholder
@@ -16,14 +16,15 @@ import { NxLanguageProviderService } from '../../../services/nx-language-provide
 @Component({
     selector: 'nx-page-placeholder',
     templateUrl: 'page-placeholder.component.html',
-    styleUrls: ['page-placeholder.component.scss']
+    styleUrls: ['page-placeholder.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class NxPagePlaceholderComponent implements OnInit {
     @Input() type: string;
     @Input() iconClass: string;
     @Input() placeholderTitle: string;
     @Input() message: string;
-    @Input() preloader: string;
+    @Input() preloader: boolean;
     @Input() condition: boolean;
 
     LANG: any;
@@ -37,27 +38,32 @@ export class NxPagePlaceholderComponent implements OnInit {
     }
 
     ngOnInit() {
-        switch (this.type) {
-            case 'OFFLINE' :
-                this.placeholderTitle = this.LANG.common.systemOffline;
-                this.message = this.LANG.common.systemOfflineMessage;
-                this.iconClass = 'server-offline';
-                break;
-            case 'NO_ALERTS' :
-                this.placeholderTitle = this.LANG.common.systemNoAlerts;
-                this.message = this.LANG.common.systemNoAlertsMessage;
-                this.iconName = 'NoActions';
-                break;
-            case '500' :
-                this.placeholderTitle = this.LANG.common.systemServerError;
-                this.message = this.LANG.common.systemServerErrorMessage;
-                this.iconName = '500';
-                break;
-            case 'NEW_VERSION' :
-                this.placeholderTitle = this.LANG.common.systemNewVersion;
-                this.message = this.LANG.common.systemNewVersionMessage;
-                this.iconName = 'NewVersion';
-                break;
+        if (this.type) {
+            this.preloader = false;
+            this.condition = true;
+
+            switch (this.type) {
+                case 'OFFLINE' :
+                    this.placeholderTitle = this.LANG.common.systemOffline;
+                    this.message = this.LANG.common.systemOfflineMessage;
+                    this.iconClass = 'server-offline';
+                    break;
+                case 'NO_ALERTS' :
+                    this.placeholderTitle = this.LANG.common.systemNoAlerts;
+                    this.message = this.LANG.common.systemNoAlertsMessage;
+                    this.iconName = 'NoActions';
+                    break;
+                case '500' :
+                    this.placeholderTitle = this.LANG.common.systemServerError;
+                    this.message = this.LANG.common.systemServerErrorMessage;
+                    this.iconName = '500';
+                    break;
+                case 'NEW_VERSION' :
+                    this.placeholderTitle = this.LANG.common.systemNewVersion;
+                    this.message = this.LANG.common.systemNewVersionMessage;
+                    this.iconName = 'NewVersion';
+                    break;
+            }
         }
     }
 }

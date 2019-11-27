@@ -71,9 +71,7 @@ $preloader_small_circle_distance : 8px;
     }
 }
 
-.section-placeholder {
-
-}
+.section-placeholder {}
 
 .page-placeholder {
     width            : 100%;
@@ -116,6 +114,12 @@ $preloader_small_circle_distance : 8px;
         
         .placeholder-icon {
             margin-bottom : 24px;
+    
+            svg{
+                .brand_element {
+                    fill : $brand_core;
+                }
+            }
         }
         
         .placeholder-title {

@@ -380,8 +380,8 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                             if (resourceName && entityName !== '–') {
                                 alert._.message.text = this.getAlertText(metric, entity, alert._.message.text);
                             }
-                            this.healthService.alertsValues.push(alert);
-                            this.healthService.alertsCount[alarm.level]++;
+                            // this.healthService.alertsValues.push(alert);
+                            // this.healthService.alertsCount[alarm.level]++;
                         });
                     });
                 });

@@ -9,7 +9,7 @@
         <path d="M199,83.6195175 L243,125.494294 L243,159.8 C243,161.015026 242.015026,162 240.8,162 L157.2,162 C155.984974,162 155,161.015026 155,159.8 L155,125.494294 L199,83.6195175 Z M198.369593,70.3225036 L147.847179,121.408986 L136.594074,110.013817 L198.338688,47.5798415 L260.40592,109.996293 L249.183826,121.422642 L198.369593,70.3225036 Z" id="Home" stroke="#212A2F" stroke-width="2" fill="#FFFFFF"></path>
         <path d="M191,130 L208,130 L208,122.5 C208,117.80558 204.19442,114 199.5,114 C194.80558,114 191,117.80558 191,122.5 L191,130 Z" id="Rectangle" stroke="#212A2F" stroke-width="4"></path>
         <path d="M189,129 L209,129 C211.761424,129 214,131.238576 214,134 L214,162 L184,162 L184,134 C184,131.238576 186.238576,129 189,129 Z" id="Rectangle" stroke="#212A2F" stroke-width="2" fill="#455A67"></path>
-        <circle id="Oval" stroke="#212A2F" stroke-width="2" fill="#2EA2DB" cx="290" cy="67" r="11"></circle>
+        <circle id="Oval" stroke="#212A2F" stroke-width="2" class="brand_element" fill="#2EA2DB" cx="290" cy="67" r="11"></circle>
         <polygon id="Path-4" fill="#212A2F" fill-rule="nonzero" points="291 95 291 83 289 83 289 95"></polygon>
         <polygon id="Path-4" fill="#212A2F" fill-rule="nonzero" points="306 68 318 68 318 66 306 66"></polygon>
         <polygon id="Path-4" fill="#212A2F" fill-rule="nonzero" points="302.020815 56.3933983 310.506097 47.9081169 309.091883 46.4939033 300.606602 54.9791847"></polygon>
