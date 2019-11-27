@@ -55,3 +55,15 @@ class CloudPortalAPI(object):
             change_lang = set_acc_lang_session.post(env + '/api/utils/language', lang_data)
             set_acc_lang_session.close()
             return change_lang.status_code
+
+    def disconnect(self, env, email, password, system_id):
+        disconnect_session = self.log_in(env, email, password)
+        with disconnect_session:
+            disconnect_data = {
+                'system_id': system_id,
+                'password': password
+            }
+            disconnect_session.headers.update({'X-CSRFToken': disconnect_session.cookies['csrftoken']})
+            resp = disconnect_session.post(env + '/api/systems/disconnect', disconnect_data)
+            disconnect_session.close()
+            return resp.status_code
