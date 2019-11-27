@@ -336,6 +336,15 @@ class Asset(models.Model):
     def is_integration(self):
         return self.is_asset_type(AssetType.ASSET_TYPES.integration)
 
+    @property
+    def is_dirty(self):
+        version_id = self.contentversion_set.last().id if self.contentversion_set.exists() else 0
+        records_for_version = self.datarecord_set.filter(version__id=version_id)
+        if not records_for_version.exists():
+            return self.datarecord_set.exists()
+        most_recent_record = records_for_version.latest('created_date')
+        return self.datarecord_set.filter(created_date__gt=most_recent_record.created_date).exists()
+
     def is_asset_type(self, asset_type):
         return self.asset_type.type == asset_type
 

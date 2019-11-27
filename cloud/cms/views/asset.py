@@ -111,6 +111,7 @@ def context_editor_action(request, asset, context_id, language_code):
             else:
                 # Asset errors only applies to assets with type integration
                 asset_errors = modify_db.send_version_for_review(asset, request.user)
+                asset.change_preview_status(asset.PREVIEW_STATUS.review)
                 saved_msg += " A new version has been created."
 
         if upload_errors or asset_errors:
@@ -119,9 +120,14 @@ def context_editor_action(request, asset, context_id, language_code):
         else:
             if 'Preview' in request_data:
                 if asset.can_preview_on_portal:
-                    saved_msg += " Preview has been created."
-                    asset.change_preview_status(asset.PREVIEW_STATUS.draft)
-                    preview_link = modify_db.generate_preview_link(context, asset, state=DRAFT)
+                    if asset.is_dirty:
+                        saved_msg += " Preview has been created."
+                        asset.change_preview_status(asset.PREVIEW_STATUS.draft)
+                        preview_link = modify_db.generate_preview_link(context, asset, state=DRAFT)
+                    else:
+                        add_upload_error_messages(request, "{}", [
+                            ("Cannot create preview for this asset no value was changed.", "")
+                        ])
                 else:
                     add_upload_error_messages(request, "{}", [
                         ("Cannot create preview for this asset on this portal.", "")

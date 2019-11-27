@@ -79,7 +79,7 @@ def make_integrations_json(integrations, contexts=None, show_pending=False, show
 
             integration_dict = INTEGRATION_CACHE[customization_id_state_key]
             # If the integration doesnt exist or the version is wrong recalculate it
-            if not integration_dict or integration_dict['version'] != current_version:
+            if not integration_dict or integration_dict['version'] != current_version or show_drafts:
                 integration_dict = dict()
                 for context in contexts:
                     # Make context json friendly
@@ -120,7 +120,8 @@ def make_integrations_json(integrations, contexts=None, show_pending=False, show
                     integration_dict['draft'] = show_drafts
                 integration_dict['version'] = current_version
                 integration_dict['id'] = integration.id
-                INTEGRATION_CACHE[customization_id_state_key] = integration_dict
+                if not show_drafts:
+                    INTEGRATION_CACHE[customization_id_state_key] = integration_dict
 
             # Create a copy to remove the version key.
             # Version key is used to check if the internal version has been changed for a specific state of the asset.
