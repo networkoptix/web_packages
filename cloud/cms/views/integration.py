@@ -118,6 +118,8 @@ def make_integrations_json(integrations, contexts=None, show_pending=False, show
                 if show_drafts or show_pending:
                     integration_dict['pending'] = show_pending
                     integration_dict['draft'] = show_drafts
+                else:
+                    integration_dict['lastModified'] = integration.last_modified
                 integration_dict['version'] = current_version
                 integration_dict['id'] = integration.id
                 if not show_drafts:

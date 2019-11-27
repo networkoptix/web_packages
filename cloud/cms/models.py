@@ -345,6 +345,13 @@ class Asset(models.Model):
         most_recent_record = records_for_version.latest('created_date')
         return self.datarecord_set.filter(created_date__gt=most_recent_record.created_date).exists()
 
+    @property
+    def last_modified(self):
+        current_version = self.version_id()
+        if not current_version:
+            return ''
+        return ContentVersion.objects.get(id=current_version).accepted_date.strftime('%m/%d/%Y')
+
     def is_asset_type(self, asset_type):
         return self.asset_type.type == asset_type
 
