@@ -111,14 +111,17 @@ export class IpvdSearchService {
             return queryTerms.every(term => {
                 return filterCamera(camera, term);
             });
-        }).sort(camera => {
-            const key = (camera.vendor + camera.model).toLowerCase();
+        }).sort((cameraA: any, cameraB: any) => {
+            const keyA = (cameraA.vendor + cameraA.model).toLowerCase();
+            const keyB = (cameraB.vendor + cameraB.model).toLowerCase();
 
-            if (preferredVendors.indexOf(camera.vendor.toLowerCase()) !== -1) {
-                return '!' + key;
+            if (preferredVendors.indexOf(cameraA.vendor.toLowerCase()) !== -1) {
+                return -1;
             }
-
-            return key;
+            if (preferredVendors.indexOf(cameraB.vendor.toLowerCase()) !== -1) {
+                return 1;
+            }
+            return keyA < keyB ? -1 : 1;
         });
 
         return cameras;

@@ -32,6 +32,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
     @Input() params: any = {};
 
     @Output() public onRowClick: EventEmitter<any> = new EventEmitter<any>();
+    @Output() public onFeedbackClick: EventEmitter<any> = new EventEmitter<any>()
 
     public selectedHeader;
     public showHeaders;
