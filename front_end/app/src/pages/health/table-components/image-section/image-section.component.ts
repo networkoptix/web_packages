@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnDestroy, View
 import { NxHealthService } from '../../health.service';
 import { fromEvent, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
-
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 
 interface ThumbNail {
     loaded: boolean;
@@ -10,6 +10,7 @@ interface ThumbNail {
     url: string;
 }
 
+@AutoUnsubscribe()
 @Component({
     selector   : 'nx-image-section',
     templateUrl: './image-section.component.html',
@@ -31,9 +32,7 @@ export class NxImageSectionComponent implements OnChanges, AfterViewInit, OnDest
         this.ready = false;
     }
 
-    ngOnDestroy() {
-        this.fromEventSubscription.unsubscribe();
-    }
+    ngOnDestroy() {}
 
     ngAfterViewInit() {
         this.changeRow = this.imageSize.nativeElement.offsetWidth < 360;

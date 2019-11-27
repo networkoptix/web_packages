@@ -13,7 +13,9 @@ import { DOCUMENT }                              from '@angular/common';
 import { NxRibbonService }                       from '../../components/ribbon/ribbon.service';
 import { Subscription }               from 'rxjs';
 import { NxScrollMechanicsService }              from '../../services/scroll-mechanics.service';
+import { AutoUnsubscribe }                       from 'ngx-auto-unsubscribe';
 
+@AutoUnsubscribe()
 @Component({
     selector   : 'nx-system-health-component',
     templateUrl: 'health.component.html',
@@ -124,10 +126,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         this.headerHeight = document.getElementsByClassName('headerContainer')[0].scrollHeight;
     }
 
-    ngOnDestroy(): void {
-        this.resizeSubscription.unsubscribe();
-        this.ribbonService.hide();
-    }
+    ngOnDestroy(): void {}
 
     setupReport(data) {
         this.healthService.ready = false;

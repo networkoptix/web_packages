@@ -10,11 +10,13 @@ import { NxUriService }                        from '../../../services/uri.servi
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { NxLanguageProviderService }           from '../../../services/nx-language-provider';
 import { SubscriptionLike }                    from 'rxjs';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 
 interface Params {
     [key: string]: any;
 }
 
+@AutoUnsubscribe()
 @Component({
     selector   : 'nx-system-metrics-component',
     templateUrl: 'metrics.component.html',
@@ -104,10 +106,7 @@ export class NxSystemMetricsComponent implements OnInit {
             });
     }
 
-    ngOnDestroy() {
-        this.routeSubscription.unsubscribe();
-        this.breakpointSubscription.unsubscribe();
-    }
+    ngOnDestroy() {}
 
     handleInitialId() {
         if (this.initialId) {

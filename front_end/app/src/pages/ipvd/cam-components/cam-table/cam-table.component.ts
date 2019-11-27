@@ -12,11 +12,13 @@ import { Router }                         from '@angular/router';
 import { NxLanguageProviderService }      from '../../../../services/nx-language-provider';
 import { Subscription, SubscriptionLike } from 'rxjs';
 import { NxScrollMechanicsService }       from '../../../../services/scroll-mechanics.service';
+import { AutoUnsubscribe }                from 'ngx-auto-unsubscribe';
 
 interface Params {
     [key: string]: any;
 }
 
+@AutoUnsubscribe()
 @Component({
     selector     : 'nx-cam-table',
     templateUrl  : './cam-table.component.html',
@@ -315,9 +317,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
         }
     }
 
-    ngOnDestroy() {
-        this.uriSubscription.unsubscribe();
-    }
+    ngOnDestroy() {}
 
     ngOnInit() {
         this.setDebugAndBetaMode();

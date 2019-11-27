@@ -2,7 +2,9 @@ import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewEncapsulation }
 import { Subscription, timer } from 'rxjs';
 import { NxUtilsService } from '../../../services/utils.service';
 import { NxConfigService } from '../../../services/nx-config';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 
+@AutoUnsubscribe()
 @Component({
     selector: 'nx-health-update',
     templateUrl: './update-info.component.html',
@@ -21,9 +23,7 @@ export class NxUpdateInfoComponent implements OnInit, OnDestroy {
         this.CONFIG = this.config.getConfig();
     }
 
-    ngOnDestroy() {
-        this.timerSubscription.unsubscribe();
-    }
+    ngOnDestroy() {}
 
     ngOnInit() {
         this.initUpdateTime();

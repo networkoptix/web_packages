@@ -7,12 +7,14 @@ import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { Observable, of, SubscriptionLike }    from 'rxjs';
 import { NxUriService }                        from '../../../services/uri.service';
 import { ActivatedRoute }                      from '@angular/router';
+import { AutoUnsubscribe }                     from 'ngx-auto-unsubscribe';
 import deepEqual = require('deep-equal');
 
 interface Params {
     [key: string]: any;
 }
 
+@AutoUnsubscribe()
 @Component({
     selector   : 'nx-system-alerts-component',
     templateUrl: 'alerts.component.html',
@@ -97,9 +99,7 @@ export class NxSystemAlertsComponent implements OnInit, OnDestroy {
         return item.entity;
     }
 
-    ngOnDestroy() {
-        this.breakpointSubscription.unsubscribe();
-    }
+    ngOnDestroy() {}
 
     modelChanged(model) {
         this.alerts = this.healthService
