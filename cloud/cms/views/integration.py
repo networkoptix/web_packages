@@ -211,6 +211,7 @@ def get_integrations(request):
 
     is_portal_manager = UserGroupsToAssetPermissions. \
                 check_customization_permission(request.user, settings.CUSTOMIZATION, 'cms.publish_version')
+    own_integrations = []
 
     if not request.user.is_anonymous:
         own_integrations = integrations.filter(Q(id__in=request.user.assets) | Q(created_by=request.user)).distinct()

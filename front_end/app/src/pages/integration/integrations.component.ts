@@ -6,6 +6,7 @@ import { NxConfigService }    from '../../services/nx-config';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { Title }              from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
+import { NxAccountService } from '../../services/account.service';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 
 @AutoUnsubscribe()
@@ -28,6 +29,7 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
     private uriSubscription: Subscription;
     location: any;
     params: any;
+    account: any;
 
     selectors = {
         access   : false,
@@ -55,6 +57,7 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
                 private config: NxConfigService,
                 private language: NxLanguageProviderService,
                 private title: Title,
+                private accountService: NxAccountService,
                 location: Location) {
         this.location = location;
         this.setupDefaults();
@@ -75,24 +78,26 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
                 this.filterModel.query = this.params.search || '';
             });
 
-        this.integrationSubscription = this.integrations
-            .pluginsSubject
-            .subscribe((result: any) => {
-                if (result) {
-                    if (!this.CONFIG.integrationStoreEnabled) {
+        this.accountService.get()
+            .then(account => {
+                this.integrationSubscription = this.integrations
+                    .pluginsSubject
+                    .subscribe((result: any) => {
+                        if (result) {
+                            if (!this.CONFIG.integrationStoreEnabled && !(account && account.is_staff)) {
+                                this.location.go('404');
+                            } else {
+                                this.allElements = result;
+                                this.setTags();
+                                this.setFilter();
+                            }
+                        } else {
+                            this.elements = undefined;
+                        }
+                    }, error => {
+                        console.error('Integration plugins error -> ', error);
                         this.location.go('404');
-                    } else {
-                        this.allElements = result;
-                        this.setTags();
-                        this.setFilter();
-                    }
-                } else {
-                    this.elements = undefined;
-                }
-            },
-            error => {
-                console.error('Integration plugins error -> ', error);
-                this.location.go('404');
+                    });
             });
     }
 
