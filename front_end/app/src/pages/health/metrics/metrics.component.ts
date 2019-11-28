@@ -85,8 +85,7 @@ export class NxSystemMetricsComponent implements OnInit {
                 this.selectedData = this.healthService.tableHeaders[this.metricId];
                 this.selectedPanelData = this.healthService.panelParams[this.metricId];
                 this.resetActiveEntity(false);
-
-                this.metricValuesLen = Object.values(this.healthService.values[this.metricId]).length;
+                this.metricValuesLen = this.metricId in this.healthService.values ? Object.values(this.healthService.values[this.metricId]).length : 0;
 
                 if (!searchParam || !searchParam.length) {
                     this.filterModel.query = '';
