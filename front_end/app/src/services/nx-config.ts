@@ -329,10 +329,12 @@ export class NxConfigService {
             healthMonitoring: {
                 valueFormats: {
                     '%': {multiplier: 100, decimals: 0},
-                    'GB': {multiplier: 1 / 1024 ** 3, decimals: 2},
-                    'MB': {multiplier: 1 / 1024 ** 2, decimals: 2},
-                    'KB': {multiplier: 1 / 1024, decimals: 2},
-                    'B': {multiplier: 1, decimals: 0},
+                    'TB': {multiplier: 1 / 1024 ** 4},
+                    'GB': {multiplier: 1 / 1024 ** 3},
+                    'MB': {multiplier: 1 / 1024 ** 2},
+                    'KB': {multiplier: 1 / 1024},
+                    'B': {multiplier: 1},
+                    // Start deprecated formats
                     'GBps': {display: 'GB/s', multiplier: 1 / 1000 ** 3, decimals: 2},
                     'MBps': {display: 'MB/s', multiplier: 1 / 1000 ** 2, decimals: 2},
                     'KBps': {display: 'kB/s', multiplier: 1 / 1000, decimals: 2},
@@ -341,8 +343,20 @@ export class NxConfigService {
                     'Mbps': {display: 'Mbit/s', multiplier: 1 / 1000 ** 2, decimals: 2},
                     'kbps': {display: 'kbit/s', multiplier: 1 / 1000, decimals: 2},
                     'bps': {display: 'bit/s', multiplier: 1, decimals: 0},
-                    'MPix/s': {multiplier: 1 / 1000 ** 2, decimals: 0},
                     'Transactions/s': {multiplier: 1, decimals: 1},
+                    // End deprecated formats
+                    'TB/s': {multiplier: 1 / 1024 ** 4},
+                    'GB/s': {multiplier: 1 / 1024 ** 3},
+                    'MB/s': {multiplier: 1 / 1024 ** 2},
+                    'KB/s': {multiplier: 1 / 1024},
+                    'B/s': {multiplier: 1},
+                    'Tbit/s': {multiplier: 1 / 1000 ** 4},
+                    'Gbit/s': {multiplier: 1 / 1000 ** 3},
+                    'Mbit/s': {multiplier: 1 / 1000 ** 2},
+                    'Kbit/s': {multiplier: 1 / 1000},
+                    'bit/s': {multiplier: 1},
+                    'MPix/s': {multiplier: 1 / 1000 ** 2, decimals: 0},
+                    'Tr/s': {multiplier: 1},
                 }
             },
             myIntegrationTagId            : 'mine',
