@@ -165,13 +165,11 @@
 
                     <span class="input-error"
                           *ngIf="registerPassword.errors &&
-                                 registerPassword.errors.minlength">{{ LANG.passwordRequirements.minLengthMessage}}
-                    </span>
+                                 registerPassword.errors.minlength">{{ LANG.passwordRequirements.minLengthMessage}}</span>
                     <span class="input-error"
                           *ngIf="registerPassword.errors &&
                                  registerPassword.errors.pattern &&
-                                 !registerPassword.errors.minlength">{{ LANG.passwordRequirements.requiredMessage}}
-                    </span>
+                                 !registerPassword.errors.minlength">{{ LANG.passwordRequirements.requiredMessage}}</span>
                     <span class="input-error"
                           *ngIf="registerPassword.errors &&
                                  registerPassword.errors.required">{{ LANG.passwordRequirements.missingMessage}}</span>
