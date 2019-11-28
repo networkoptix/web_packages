@@ -254,7 +254,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                     if (account) {
                         this.user = account;
 
-                        this.system = this.systemService.createSystem(this.activeSystem.id, this.user.email);
+                        this.system = this.systemService.createSystem(this.user.email, this.activeSystem.id);
                         this.system
                             .getInfoAndPermissions()
                             .then((system) => {

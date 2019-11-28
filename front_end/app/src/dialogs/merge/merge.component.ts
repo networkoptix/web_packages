@@ -244,7 +244,7 @@ export class MergeModalContent {
     }
 
     precheckSystemMerge() {
-        this.targetSystem = this.systemService.createSystem(this.targetSystem.id, this.account.email);
+        this.targetSystem = this.systemService.createSystem(this.account.email, this.targetSystem.id);
 
         return this.targetSystem.getInfo(true, false).then((system) => {
             return this.targetSystem.getUsersDataFromTheSystem().then(() => {

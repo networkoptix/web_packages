@@ -237,7 +237,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                         this.systemsService.getSystems(account.email);
                     }
                     this.account = account;
-                    this.system = this.systemService.createSystem(this.systemId, this.account.email);
+                    this.system = this.systemService.createSystem(this.account.email, this.systemId);
                     this.gettingSystem.run();
 
                     this.system

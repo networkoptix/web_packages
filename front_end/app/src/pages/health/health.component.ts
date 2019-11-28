@@ -14,6 +14,7 @@ import { NxRibbonService }                       from '../../components/ribbon/r
 import { Subscription }               from 'rxjs';
 import { NxScrollMechanicsService }              from '../../services/scroll-mechanics.service';
 import { AutoUnsubscribe }                       from 'ngx-auto-unsubscribe';
+import { NxSystemAPIService } from '../../services/system-api.service';
 
 @AutoUnsubscribe()
 @Component({
@@ -46,6 +47,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
     constructor(private accountService: NxAccountService,
                 private configService: NxConfigService,
                 private systemService: NxSystemService,
+                private serverApi: NxSystemAPIService,
                 private route: ActivatedRoute,
                 private router: Router,
                 private menuservice: NxMenuService,
@@ -99,9 +101,9 @@ export class NxHealthComponent implements OnInit, OnDestroy {
             this.accountService.get().then((account) => {
                 this.healthService.ready = false;
                 this.systemReady = false;
-                if (account) {
+                if (typeof account !== 'undefined') {
                     this.account = account;
-                    this.system = this.systemService.createSystem(systemId, account.email);
+                    this.system = this.systemService.createSystem(account.email, systemId);
                     this.healthService.system = this.system;
                     this.menu.base = `${this.CONFIG.systemMenu.baseUrl}${this.system.id}${this.CONFIG.systemHealthMenu.baseUrl}`;
 
@@ -115,6 +117,22 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                                 this.healthService.ready = false;
                             });
                     });
+                } else {
+                    // TODO: Fix auth. Cant go to other metrics.
+                    const authKey = this.route.snapshot.queryParams.auth;
+                    this.healthService.ready = true;
+                    this.systemReady = true;
+                    const server = this.serverApi.createConnection(
+                        undefined, undefined,
+                        undefined, () => {}
+                    );
+                    server.setAuthKeys(authKey, authKey, '');
+                    server.getAggregateHealthReport()
+                        .subscribe((result: any) => {
+                            this.setupReport(result);
+                        }, () => {
+                            // this.healthService.ready = false;
+                        });
                 }
             });
         });
@@ -145,6 +163,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
             this.outdatedVersion = true;
             return;
         }
+        console.log('gogogo');
 
         this.healthService.ready = false;
         this.menu.level1 = [this.menu.level1[0]];

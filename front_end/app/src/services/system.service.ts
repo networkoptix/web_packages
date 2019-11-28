@@ -113,7 +113,7 @@ export class NxSystem extends System implements OnDestroy {
 
     systemSubject = new ReplaySubject(0);
 
-    constructor(CONFIG, LANG, cloudApi, systemApiService, pollService, systemsService, systemId, currentUserEmail) {
+    constructor(CONFIG, LANG, cloudApi, systemApiService, pollService, systemsService, currentUserEmail, systemId?, serverId?) {
         super();
         this.CONFIG = CONFIG;
         this.LANG = LANG;
@@ -123,7 +123,7 @@ export class NxSystem extends System implements OnDestroy {
         this.systemsService = systemsService;
         this.lostConnection = false;
         this.init();
-        this.initSystem(systemId, currentUserEmail);
+        this.initSystem(currentUserEmail, systemId, serverId);
     }
 
     ngOnDestroy() {
@@ -140,8 +140,8 @@ export class NxSystem extends System implements OnDestroy {
         });
     }
 
-    initSystem(systemId, currentUserEmail) {
-        this.id = systemId;
+    initSystem(currentUserEmail, systemId?, serverId?) {
+        this.id = systemId || serverId;
         this.users = [];
         this.isAvailable = false;
         this.isOnline = false;
@@ -153,7 +153,7 @@ export class NxSystem extends System implements OnDestroy {
         this.accessRoles = this.CONFIG.accessRoles.predefinedRoles;
 
         this.currentUserEmail = currentUserEmail;
-        this.mediaserver = this.systemApiService.createConnection(currentUserEmail, systemId, undefined, () => {
+        this.mediaserver = this.systemApiService.createConnection(currentUserEmail, systemId, serverId, () => {
             /* Unauthorised request handler
                Some options here:
                    - Access was revoked
@@ -529,18 +529,19 @@ export class NxSystemService {
         this.systemsCache = {};
     }
 
-    createSystem(systemId, currentUserEmail) {
+    createSystem(currentUserEmail, systemId, serverId?) {
         let system;
-        if (systemId in this.systemsCache) {
-            system = this.systemsCache[systemId];
+        const id = systemId || serverId;
+        if (id in this.systemsCache) {
+            system = this.systemsCache[id];
         } else {
             system = new NxSystem(
                 this.CONFIG, this.LANG,
                 this.cloudApi, this.systemApiService,
                 this.pollService, this.systemsService,
-                systemId, currentUserEmail
+                currentUserEmail, systemId, serverId
             );
-            this.systemsCache[systemId] = system;
+            this.systemsCache[id] = system;
         }
         system.startPoll();
         return system;

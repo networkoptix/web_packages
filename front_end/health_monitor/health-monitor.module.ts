@@ -27,6 +27,8 @@ import { NxHealthComponent } from '../app/src/pages/health/health.component';
 import { WINDOWS_PROVIDERS } from '../app/src/services/window-provider';
 import { NxHealthModule } from '../app/src/pages/health/health.module';
 import { NxSearchComponent } from '../app/src/components/search/search.component';
+import {NxSystemAlertsComponent} from "../app/src/pages/health/alerts/alerts.component";
+import {NxSystemMetricsComponent} from "../app/src/pages/health/metrics/metrics.component";
 
 @NgModule({
     imports: [
@@ -40,7 +42,20 @@ import { NxSearchComponent } from '../app/src/components/search/search.component
         TranslateModule.forRoot(),
         RouterModule.forRoot([
             { path: '**', redirectTo: 'health' },
-            { path: 'health', component: NxHealthComponent }
+            { path: 'health', component: NxHealthComponent,
+                children: [
+                    {
+                        path: '', redirectTo: 'alerts',
+                        pathMatch: 'full'
+                    },
+                    {
+                        path: 'alerts', component: NxSystemAlertsComponent,
+                    },
+                    {
+                        path: ':metric', component: NxSystemMetricsComponent,
+                    }
+                ]
+            }
         ], {
             initialNavigation: true,
             scrollPositionRestoration: 'enabled',

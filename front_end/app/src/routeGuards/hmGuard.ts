@@ -37,7 +37,7 @@ export class HMGuard implements CanActivate {
             .get()
             .then(account => {
                 if (account) {
-                    this.system = this.systemService.createSystem(systemId, account.email);
+                    this.system = this.systemService.createSystem(account.email, systemId);
                     return this.system
                         .getInfoAndPermissions()
                         .then((system) => {
