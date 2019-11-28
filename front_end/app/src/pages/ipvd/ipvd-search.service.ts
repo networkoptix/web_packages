@@ -112,7 +112,6 @@ export class IpvdSearchService {
                 return filterCamera(camera, term);
             });
         }).sort((cameraA: any, cameraB: any) => {
-            console.log(cameraA, cameraB)
             if (preferredVendors.indexOf(cameraA.vendor.toLowerCase()) !== -1) {
                 return -1;
             }
