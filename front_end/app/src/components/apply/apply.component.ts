@@ -18,10 +18,10 @@ import { NxProcessButtonComponent } from '../process-button/process-button.compo
 export class NxApplyComponent {
     @ViewChild(NxProcessButtonComponent, {static: false}) processButton: NxProcessButtonComponent;
 
-    @Input('') show: boolean;
-    @Input('') save: any;
-    @Input('') discard: any;
-    @Input('') warn: string;
+    @Input() show: boolean;
+    @Input() save: any;
+    @Input() discard: any;
+    @Input() warn: string;
     @Input() form: NgForm;
 
     applyVisible: boolean;

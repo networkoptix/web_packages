@@ -67,6 +67,9 @@ export class NxSystemAdminComponent implements OnInit {
         sessionLimitUnit: new Watcher<string>(),
     };
 
+    readonly minutes: string = 'Minute(s)';
+    readonly hours: string = 'Hour(s)';
+
     @ViewChildren('timeUnitTracker') timeUnitTracker: QueryList<ElementRef>;
 
     private setupDefaults() {
@@ -120,8 +123,8 @@ export class NxSystemAdminComponent implements OnInit {
         };
 
         this.limitSessionTimeUnits = [
-            { value: 'Minute(s)', name: this.LANG.system.settings.sessionLimitDuration.minutes, id: 1, max: 600 },
-            { value: 'Hour(s)', name: this.LANG.system.settings.sessionLimitDuration.hours, id: 2, max: 600 },
+            { value: this.minutes, name: this.LANG.system.settings.sessionLimitDuration.minutes, id: 1, max: 600 },
+            { value: this.hours, name: this.LANG.system.settings.sessionLimitDuration.hours, id: 2, max: 600 },
         ];
 
         this.initForApplyService();

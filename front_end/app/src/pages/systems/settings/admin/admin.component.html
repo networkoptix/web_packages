@@ -82,16 +82,16 @@
                                 componentId="statisticsAllowed"
                                 [(ngModel)]="settingsWatchers.statisticsAllowed.value"
                                 #statisticsAllowed="ngModel"
-                                description="sendCrashStatusHelpBlock">
+                                description="statisticsAllowedHelpBlock">
                             </nx-checkbox>
 
                             <label class="control-label mb-0" for="statisticsAllowed">
                                 <span translate>Send anonymous usage and crash statistics to developers</span>
                             </label>
                         </div>
-                        <label id="sendCrashStatusHelpBlock" 
+                        <label id="statisticsAllowedHelpBlock" 
                             class="form-text helper-block col-lg-9 col-xl-8 p-0"
-                            for="sendCrashStatus" 
+                            for="statisticsAllowed" 
                             translate>
                             Includes information about the System, such as camera modules, 
                             firmware versions, number of servers, etc. 
