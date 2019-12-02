@@ -476,8 +476,11 @@ class Context(models.Model):
         REJECTED = ('Rejected', 3)
         PUBLISHED = ('Published', 4)
 
+        customization = settings.CUSTOMIZATION
+        if asset.asset_type.single_customization and asset.customizations.exists():
+            customization = asset.customizations.first().name
         reviews = AssetCustomizationReview.objects.filter(version__asset=asset,
-                                                          customization__name=settings.CUSTOMIZATION)
+                                                          customization__name=customization)
         # Starting point so we don't get incorrect status with unpublished assets
         if reviews.filter(state=AssetCustomizationReview.REVIEW_STATES.accepted).first():
             state = PUBLISHED
