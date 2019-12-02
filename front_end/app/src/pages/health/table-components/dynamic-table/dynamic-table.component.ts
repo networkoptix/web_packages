@@ -8,7 +8,7 @@ import { NxConfigService }        from '../../../../services/nx-config';
 import { NxUtilsService }         from '../../../../services/utils.service';
 import { NxUriService }           from '../../../../services/uri.service';
 import deepEqual = require('deep-equal');
-import { SubscriptionLike }       from 'rxjs';
+import { NxHealthService }        from '../../health.service';
 
 interface Params {
     [key: string]: any;
@@ -61,6 +61,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
                 private utilsService: NxUtilsService,
                 private router: Router,
                 private route: ActivatedRoute,
+                private healthService: NxHealthService,
     ) {
         this.CONFIG = this.configService.getConfig();
         this.elements = this.elements || [];

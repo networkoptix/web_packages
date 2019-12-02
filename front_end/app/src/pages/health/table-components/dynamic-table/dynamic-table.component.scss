@@ -6,6 +6,20 @@
 @import '~bootstrap/scss/mixins/breakpoints';
 
 nx-dynamic-table {
+  .experimental {
+    .error {
+      font-family: $font-family-medium;
+      color: $dark9 !important;
+      border-bottom: 2px solid $red_l2;
+    }
+
+    .warning {
+      font-family: $font-family-medium;
+      color: $dark9 !important;
+      border-bottom: 2px solid $yellow_main;;
+    }
+  }
+
   cursor: default;
 
   .text-placeholder {
