@@ -180,7 +180,6 @@ def process_zip(file_descriptor, user, asset, update_structure, update_content):
                     # JSON file
                     values, template = templatify_json(json.loads(file_content))
                     file_content = json.dumps(template, indent=4, separators=(',', ': '))
-                    pass
 
                 context_template = context.contexttemplate_set.first()
                 if not context_template:

@@ -527,7 +527,7 @@ class ContextTemplate(models.Model):
         unique_together = ('context', 'language', 'skin')
 
     context = models.ForeignKey(Context, on_delete=models.CASCADE)
-    language = models.ForeignKey(Language, null=True, on_delete=models.CASCADE)
+    language = models.ForeignKey(Language, blank=True, null=True, on_delete=models.CASCADE)
     template = models.TextField()
     skin = models.CharField(max_length=16, default='', blank=True)
     # Skin is a bit hacky for now:
