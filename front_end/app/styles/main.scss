@@ -45,6 +45,7 @@ body {
 .mainContainer {
     //flex: 1 1 auto;
     overflow-y: scroll; /* CLOUD-373: this is hack: we fix vertical scroll to prevent the page from shaking when it appears or disappears*/
+    height: 100%;
 }
 
 [data-whatintent='mouse'] *:focus {
