@@ -1,8 +1,9 @@
 import {
     Component, ElementRef, Input, OnChanges,
-    OnInit, SimpleChanges
-}                          from '@angular/core';
+    OnInit, SimpleChanges, ViewEncapsulation
+} from '@angular/core';
 import { NxConfigService } from '../../services/nx-config';
+import { NONE_TYPE }       from '@angular/compiler/src/output/output_ast';
 
 /* Usage
 <nx-menu>
@@ -12,7 +13,8 @@ import { NxConfigService } from '../../services/nx-config';
 @Component({
     selector: 'nx-menu',
     templateUrl: 'menu.component.html',
-    styleUrls: ['menu.component.scss']
+    styleUrls: ['menu.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class NxMenuComponent implements OnInit, OnChanges {
     @Input() content: any;
@@ -78,6 +80,13 @@ export class NxMenuComponent implements OnInit, OnChanges {
         }
 
         return buttons;
+    }
+
+    trackItem(index, item) {
+        if (!item) {
+            return undefined;
+        }
+        return item.id;
     }
 
     // *** Breadcrumb for usage of named (auxiliary) router outlet

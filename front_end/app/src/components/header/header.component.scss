@@ -1,6 +1,7 @@
 @import '~bootstrap/scss/functions';
 @import '~bootstrap/scss/variables';
 @import '~bootstrap/scss/mixins/breakpoints';
+@import '../../styles/mixins';
 
 @import '../../../styles/native-theme/theme_palette';
 @import '../../../styles/theme_palette';
@@ -102,6 +103,7 @@ $header-collapsing-width-1 : 1px;
             text-decoration : none;
             
             & > span.ellipsis {
+                @include ellipsis;
                 white-space    : nowrap;
                 display        : inline-block;
                 vertical-align : bottom;

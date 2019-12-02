@@ -57,6 +57,7 @@
         &, * {
             color: $light1 !important;
             background-color: $light16 !important;
+            min-height: auto;
         }
     
         .menu-level-3-icon {
@@ -70,6 +71,11 @@
 
     &.item-disabled {
         color : $light13;
+    }
+    
+    .ellipsis {
+        @include ellipsis;
+        line-height : inherit;
     }
 
     //span {

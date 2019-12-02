@@ -1,6 +1,7 @@
 @import '../../../styles/theme_palette';
 @import '../../../styles/theme_variables';
 @import 'variables';
+@import '../../styles/mixins';
 
 .dropdown, .dropup {
     .lang-sm {
@@ -34,9 +35,7 @@ header {
         
         .dropdown-menu {
             border-top                 : 1px solid $light6;
-            border-radius              : 0;
-            border-bottom-left-radius  : 2px;
-            border-bottom-right-radius : 2px;
+            border-radius              : 0 0 2px 2px;
         }
     }
 }
@@ -89,6 +88,7 @@ header {
         }
         
         .ellipsis {
+            @include ellipsis;
             // set text max-width so dropdown button will match spec width
             @media (max-width : $collapse-first-width) {
                 max-width : 150px;
