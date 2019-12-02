@@ -42,4 +42,13 @@
     nx-block div.checkbox-block:last-of-type + .helper-block {
         margin-bottom: 0;
     }
+
+    .time-unit-input {
+        width: 70px;
+        margin-right: 8px;
+    }
+
+    .time-unit-select {
+        width: 110px;
+    }
 }

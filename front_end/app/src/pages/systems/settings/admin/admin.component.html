@@ -68,7 +68,7 @@
                             </label>
                         </div>
                         <label id="autoDiscoveryEnabledHelpBlock" 
-                            class="form-text helper-block col-lg-9 col-xl-8 p-0" 
+                            class="form-text helper-block col-11 col-lg-9 col-xl-8 p-0" 
                             for="autoDiscoveryEnabled"
                             translate>
                             When enabled, system will discover new cameras and servers. Also, 
@@ -90,7 +90,7 @@
                             </label>
                         </div>
                         <label id="statisticsAllowedHelpBlock" 
-                            class="form-text helper-block col-lg-9 col-xl-8 p-0"
+                            class="form-text helper-block col-11 col-lg-9 col-xl-8 p-0"
                             for="statisticsAllowed" 
                             translate>
                             Includes information about the System, such as camera modules, 
@@ -135,7 +135,7 @@
                             </label>
                         </div>
                         <label id="auditTrailEnabledHelpBlock" 
-                            class="form-text helper-block col-lg-9 col-xl-8 p-0" 
+                            class="form-text helper-block col-11 col-lg-9 col-xl-8 p-0" 
                             for="auditTrailEnabled"
                             translate>
                             Tracks and logs all user actions.
@@ -170,7 +170,7 @@
                             </label>
                         </div>
                         <label id="videoTrafficEncryptionForcedHelpBlock" 
-                            class="form-text helper-block col-lg-9 col-xl-8 p-0" 
+                            class="form-text helper-block col-11 col-lg-9 col-xl-8 p-0" 
                             [ngClass]="!settingsWatchers.trafficEncryptionForced.value ? 'disabled-helper-block' : ''"
                             for="videoTrafficEncryptionForced"
                             translate>
@@ -197,8 +197,8 @@
                                     (keyup)="validationCheckForInput($event)"
                                     type="number" 
                                     min="1" 
-                                    class="form-control text-center col-3">
-                            <nx-select class="col-3"
+                                    class="form-control text-center time-unit-input">
+                            <nx-select class="time-unit-select"
                                        [items]="limitSessionTimeUnits" 
                                        [selected]="selectedTimeUnit"
                                        (onSelected)="updateTimeUnitInput($event)"></nx-select>
