@@ -1,4 +1,4 @@
-<div class="panel col-12" *ngIf="activeEntity">
+<div class="panel col-12" *ngIf="activeEntity" [ngClass]="{'experimental': healthService.experimental}">
     <nx-block type='gray'>
         <header>
             <div class="panel-title">
