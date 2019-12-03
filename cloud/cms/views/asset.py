@@ -110,9 +110,13 @@ def context_editor_action(request, asset, context_id, language_code):
                 messages.warning(request, "{} - {}".format(asset.name, warning_no_error_msg))
             else:
                 # Asset errors only applies to assets with type integration
-                asset_errors = modify_db.send_version_for_review(asset, request.user)
-                asset.change_preview_status(asset.PREVIEW_STATUS.review)
-                saved_msg += " A new version has been created."
+                if not asset.is_dirty:
+                    error_msg = "Cannot send for review no value was changed for this asset."
+                    messages.warning(request, f"{asset.name} - {error_msg}")
+                else:
+                    asset_errors = modify_db.send_version_for_review(asset, request.user)
+                    asset.change_preview_status(asset.PREVIEW_STATUS.review)
+                    saved_msg += " A new version has been created."
 
         if upload_errors or asset_errors:
             add_upload_error_messages(request, "Upload error for {}. {}", upload_errors)
