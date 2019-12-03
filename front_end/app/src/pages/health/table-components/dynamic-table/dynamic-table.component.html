@@ -5,7 +5,7 @@
          *ngIf="!pagedItems.length" translate>Nothing Found</div>
 </div>
 
-<div class="nx-table-wrapper" id="nx-table" *ngIf="pagedItems.length" [ngClass]="{'experimental': healthService.experimental}">
+<div class="nx-table-wrapper" id="nx-table" *ngIf="pagedItems.length" [ngClass]="{'experimental': healthService.experimental}" #dynamicTable>
     <div *ngIf="tableHeader" class="table-header" [innerText]="tableHeader"></div>
     <div class="table-wrapper">
         <table class="table table-hover nx-table">
@@ -38,7 +38,7 @@
                     </ng-container>
                 </tr>
             </thead>
-            <tbody>
+            <tbody #tableBody>
                 <tr class="table-row-spacer"></tr>
                 <tr *ngFor="let item of pagedItems"
                     [ngClass]="{'selected': item == selectedEntity}"
@@ -75,7 +75,7 @@
                     [pageSize]="pageSize"
                     [page]="currentPage"
                     [rotate]="true"
-                    (pageChange)="setPage($event)"></ngb-pagination>
+                    (pageChange)="setPage($event)"></ngb-pagination>{{dimensions | json}} | {{windowSize && windowSize.height || 0}} | {{pageSize}}
         </nav>
     </div>
 </div>

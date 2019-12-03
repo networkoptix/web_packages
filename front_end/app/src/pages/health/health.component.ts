@@ -163,7 +163,6 @@ export class NxHealthComponent implements OnInit, OnDestroy {
             this.outdatedVersion = true;
             return;
         }
-        console.log('gogogo');
 
         this.healthService.ready = false;
         this.menu.level1 = [this.menu.level1[0]];

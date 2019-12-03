@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { ActivatedRoute }                       from '@angular/router';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ActivatedRoute }                                                             from '@angular/router';
 
 import { NxAccountService }                    from '../../../services/account.service';
 import { NxConfigService }                     from '../../../services/nx-config';
@@ -23,7 +23,7 @@ interface Params {
     styleUrls  : ['metrics.component.scss'],
     encapsulation: ViewEncapsulation.None,
 })
-export class NxSystemMetricsComponent implements OnInit {
+export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
     CONFIG: any;
     LANG: any;
     account: any;
@@ -53,6 +53,14 @@ export class NxSystemMetricsComponent implements OnInit {
 
     routeSubscription: SubscriptionLike;
     breakpointSubscription: SubscriptionLike;
+
+    elementTilesHeight: number;
+    elementSearchHeight: number;
+    elementTableHeight: number;
+    containerDimensions: any = [];
+
+    @ViewChild('search', { static: false }) elementSearch: ElementRef;
+    @ViewChild('table', { static: false }) elementTable: ElementRef;
 
     constructor(private accountService: NxAccountService,
                 private configService: NxConfigService,
@@ -103,6 +111,13 @@ export class NxSystemMetricsComponent implements OnInit {
             .subscribe((state: BreakpointState) => {
                 this.mobileDetailMode = (state.matches && this.activeEntity);
             });
+    }
+
+    ngAfterViewInit() {
+        this.elementTableHeight = this.elementTable.nativeElement.offsetHeight;
+        this.elementSearchHeight = this.elementSearch.nativeElement.offsetHeight;
+
+        this.containerDimensions = [this.elementSearchHeight, this.elementTableHeight];
     }
 
     ngOnDestroy() {}

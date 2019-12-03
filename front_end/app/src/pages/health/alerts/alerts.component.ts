@@ -1,7 +1,7 @@
-import { Component, OnDestroy, OnInit }        from '@angular/core';
-import { NxConfigService }                     from '../../../services/nx-config';
-import { NxSystem }                            from '../../../services/system.service';
-import { NxMenuService }                       from '../../../components/menu/menu.service';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { NxConfigService }                                                    from '../../../services/nx-config';
+import { NxSystem }                                                           from '../../../services/system.service';
+import { NxMenuService }                                                      from '../../../components/menu/menu.service';
 import { NxHealthService }                     from '../health.service';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { Observable, of, SubscriptionLike }    from 'rxjs';
@@ -9,6 +9,7 @@ import { NxUriService }                        from '../../../services/uri.servi
 import { ActivatedRoute }                      from '@angular/router';
 import { AutoUnsubscribe }                     from 'ngx-auto-unsubscribe';
 import deepEqual = require('deep-equal');
+import { NxScrollMechanicsService }            from '../../../services/scroll-mechanics.service';
 
 interface Params {
     [key: string]: any;
@@ -20,7 +21,7 @@ interface Params {
     templateUrl: 'alerts.component.html',
     styleUrls  : ['alerts.component.scss']
 })
-export class NxSystemAlertsComponent implements OnInit, OnDestroy {
+export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy {
 
     CONFIG: any;
 
@@ -46,12 +47,22 @@ export class NxSystemAlertsComponent implements OnInit, OnDestroy {
     alertCards: any;
     alertCardCount: number;
 
+    elementTilesHeight: number;
+    elementSearchHeight: number;
+    elementTableHeight: number;
+    containerDimensions: any = [];
+
+    @ViewChild('tiles', { static: false }) elementTiles: ElementRef;
+    @ViewChild('search', { static: false }) elementSearch: ElementRef;
+    @ViewChild('table', { static: false }) elementTable: ElementRef;
+
     constructor(private route: ActivatedRoute,
                 private menuService: NxMenuService,
                 private configService: NxConfigService,
                 private healthService: NxHealthService,
                 private uriService: NxUriService,
                 private breakpointObserver: BreakpointObserver,
+                private scrollMechanicsService: NxScrollMechanicsService,
     ) {
         this.CONFIG = this.configService.getConfig();
         this.breakpoint = '(max-width: 767px)';
@@ -90,6 +101,14 @@ export class NxSystemAlertsComponent implements OnInit, OnDestroy {
             .subscribe((state: BreakpointState) => {
                 this.mobileDetailMode = (state.matches && this.activePanelEntity);
             });
+    }
+
+    ngAfterViewInit() {
+        this.elementTableHeight = this.elementTable.nativeElement.offsetHeight;
+        this.elementSearchHeight = this.elementSearch.nativeElement.offsetHeight;
+        this.elementTilesHeight = this.elementTiles.nativeElement.offsetHeight;
+
+        this.containerDimensions = [this.elementTilesHeight, this.elementSearchHeight, this.elementTableHeight];
     }
 
     trackItem(index, item) {

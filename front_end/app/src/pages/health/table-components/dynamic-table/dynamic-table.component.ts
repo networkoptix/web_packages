@@ -1,14 +1,16 @@
-import {
-    Component, Input, Output, EventEmitter,
-    OnChanges, SimpleChanges,
-    OnInit, ViewEncapsulation
-}                                 from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { NxConfigService }        from '../../../../services/nx-config';
-import { NxUtilsService }         from '../../../../services/utils.service';
-import { NxUriService }           from '../../../../services/uri.service';
 import deepEqual = require('deep-equal');
-import { NxHealthService }        from '../../health.service';
+import {
+    Component, Input, Output,
+    EventEmitter, OnChanges, SimpleChanges,
+    OnInit, ViewEncapsulation,
+    ViewChild, ElementRef,
+}                                   from '@angular/core';
+import { ActivatedRoute, Router }   from '@angular/router';
+import { NxConfigService }          from '../../../../services/nx-config';
+import { NxUtilsService }           from '../../../../services/utils.service';
+import { NxUriService }             from '../../../../services/uri.service';
+import { NxHealthService }          from '../../health.service';
+import { NxScrollMechanicsService } from '../../../../services/scroll-mechanics.service';
 
 interface Params {
     [key: string]: any;
@@ -28,6 +30,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
     @Input('tableHeader') tableHeader = '';
     @Input('headers') _headers: any = [];
     @Input('elements') elements: any = [];
+    @Input() dimensions;
     @Input() activeEntity;
     @Input() showGroups = true;
 
@@ -56,12 +59,21 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
     serviceParams;
     serviceHeaders;
 
+    windowSize: any;
+
+    // CSS does not use CONFIG so this is here to avoid confusion if changing the value
+    private static ROW_HEIGHT = 26;
+
+    @ViewChild('tableBody', { static: false }) tableBody: ElementRef;
+    @ViewChild('dynamicTable', { static: false }) table: ElementRef;
+
     constructor(private configService: NxConfigService,
                 private uri: NxUriService,
                 private utilsService: NxUtilsService,
                 private router: Router,
                 private route: ActivatedRoute,
                 private healthService: NxHealthService,
+                private scrollMechanicsService: NxScrollMechanicsService,
     ) {
         this.CONFIG = this.configService.getConfig();
         this.elements = this.elements || [];
@@ -70,9 +82,27 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
         this.pagerMaxSize = this.CONFIG.ipvd.pagerMaxSize;
         this.currentPage = 1;
         this.pageSize = this.CONFIG.layout.tableLarge.rows;
+
     }
 
     ngOnChanges(changes: SimpleChanges) {
+        if (changes.dimensions && changes.dimensions.currentValue.length) {
+            /*
+                ngOnChanges may trigger while not all elements are rendered
+                and will report wrong dimensions.
+                ... this is why some hard coded stuff and math
+             */
+            this.windowSize = this.scrollMechanicsService.windowSizeSubject.getValue();
+            const TABLE_BODY_HEIGHT = this.pageSize * NxDynamicTableComponent.ROW_HEIGHT;
+            const ELEMENTS_HEIGHT = changes.dimensions.currentValue.reduce((prev, curr) => prev + curr, 0) - TABLE_BODY_HEIGHT;
+            const PADDING = 16;
+            const PAGINATION_HEIGHT = 64;
+            const AVAIL_SPACE = this.windowSize.height - PAGINATION_HEIGHT - ELEMENTS_HEIGHT - 2 * NxDynamicTableComponent.ROW_HEIGHT  - 2 * PADDING;
+
+            this.pageSize = Math.ceil(AVAIL_SPACE / NxDynamicTableComponent.ROW_HEIGHT);
+            this.setPagedItems();
+        }
+
         if (changes.activeEntity) {
             this.selectedEntity = changes.activeEntity.currentValue;
         }

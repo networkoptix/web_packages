@@ -1,6 +1,6 @@
 <div class="row">
 
-    <div class="col-12 mb-3"
+    <div class="col-12 mb-3" #search
          *ngIf="!mobileDetailMode && metricValuesLen > 1">
         <nx-search
                 name="filterModel"
@@ -12,7 +12,7 @@
         </nx-search>
     </div>
 
-    <div class="d-flex w-100">
+    <div class="d-flex w-100" #table>
         <div *ngIf="selectedData && selectedValues && !mobileDetailMode"
              class="px-2 overflow-auto">
             <div [ngSwitch]="metricValuesLen">
@@ -22,8 +22,10 @@
                 <nx-single-entity
                         *ngSwitchCase="1"
                         [params]="selectedPanelData"
-                        [entity]="objectValues(selectedValues)[0]"></nx-single-entity>
+                        [entity]="objectValues(selectedValues)[0]">
+                </nx-single-entity>
                 <nx-dynamic-table *ngSwitchDefault
+                                  [dimensions]="containerDimensions"
                                   [headers]="selectedData"
                                   [elements]="selectedValues"
                                   (onRowClick)="setActiveEntity($event)"
