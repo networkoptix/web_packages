@@ -39,8 +39,10 @@ export class NxPagePlaceholderComponent implements OnInit {
 
     ngOnInit() {
         if (this.type) {
-            this.preloader = false;
-            this.condition = true;
+            if (!this.preloader && !this.condition) {
+                this.preloader = false;
+                this.condition = true;
+            }
 
             switch (this.type) {
                 case 'OFFLINE' :
