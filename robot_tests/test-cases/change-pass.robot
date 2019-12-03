@@ -21,7 +21,7 @@ Open browser and set user language to current
     Log Out
 
 Log In To Change Password Page
-    Log In    ${email}    ${password}
+    Log In    ${email}    ${BASE PASSWORD}
     Go To    ${url}/account/password
     Wait Until Elements Are Visible    ${CURRENT PASSWORD INPUT}    ${NEW PASSWORD INPUT}
 
@@ -50,7 +50,6 @@ Restart
     ${status}    Run Keyword And Return Status    Validate Log In
     Register Keyword To Run On Failure    Failure Tasks
     Run Keyword If    ${status}    Log Out
-    Validate Log Out
     Go To    ${url}
 
 Clean up
@@ -97,7 +96,7 @@ password is actually changed, so login works with new password
     Input Text    ${NEW PASSWORD INPUT}    ${ALT PASSWORD}
     Click Button    ${CHANGE PASSWORD BUTTON}
     Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
-    CloudPortalAPI.Log Out
+    Log Out
     Go To    ${url}/account/password
     Log In    ${email}    ${password}    None
     Wait Until Element Is Visible    ${WRONG PASSWORD MESSAGE}
@@ -111,11 +110,11 @@ password with symbols pass!@#$%^&*()_-+=;:'"`~,./\|?[]{} is valid
     Input Text    ${NEW PASSWORD INPUT}    ${symbol password}
     Click Button    ${CHANGE PASSWORD BUTTON}
     Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
-    CloudPortalAPI.Log Out    ${ENV}
+    Log Out
     Go To    ${url}/account/password
     Log In    ${email}    ${password}    None
     Wait Until Element Is Visible    ${WRONG PASSWORD MESSAGE}
-    CloudPortalAPI.Log In    ${url}    ${email}    ${ALT PASSWORD}
+    CloudPortalAPI.Log In    ${url}    ${email}    ${symbol password}
     Reset user password to base    ${email}    ${symbol password}
 
 password with space in the middle is valid
@@ -125,11 +124,11 @@ password with space in the middle is valid
     Input Text    ${NEW PASSWORD INPUT}    ${space password}
     Click Button    ${CHANGE PASSWORD BUTTON}
     Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
-    CloudPortalAPI.Log Out    ${ENV}
+    Log Out
     Go To    ${url}/account/password
     Log In    ${email}    ${password}    None
     Wait Until Element Is Visible    ${WRONG PASSWORD MESSAGE}
-    CloudPortalAPI.Log In    ${url}    ${email}    ${ALT PASSWORD}
+    CloudPortalAPI.Log In    ${url}    ${email}    ${space password}
     Reset user password to base    ${email}    ${space password}
 
 more than 255 symbols can be entered in new password field and then are cut to 255
@@ -184,4 +183,4 @@ Password can't be changed if current password is not provided or incorrect
     Click Button    ${CHANGE PASSWORD BUTTON}
     Discard Changes and Log Out
     Go To  ${url}
-    CloudPortalAPI.Log In    ${url}    ${email}    ${ALT PASSWORD}
+    CloudPortalAPI.Log In    ${url}    ${email}    ${BASE PASSWORD}
