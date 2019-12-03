@@ -127,7 +127,10 @@ def process_zip(file_descriptor, user, asset, update_structure, update_content):
     log_messages = []
     zip_file = ZipFile(file_descriptor)
     # zipfile.namelist()
-    root = zip_file.namelist()[0]
+    root = None
+    first_file = zip_file.namelist()[0]
+    if zip_file.getinfo(first_file).is_dir():
+        root = first_file
     structures_changed = 0
     records_created = 0
     asset_type = asset.asset_type
@@ -330,7 +333,7 @@ def process_zip(file_descriptor, user, asset, update_structure, update_content):
                 continue
             records_created += 1
 
-            # add new dataRecrod
+            # add new dataRecord
             record = DataRecord(
                 asset=asset,
                 data_structure=structure,
