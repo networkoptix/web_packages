@@ -14,13 +14,6 @@ ${password}    ${BASE PASSWORD}
 ${url}         ${ENV}
 
 *** Keywords ***
-Check Log In
-    ${random email}    Get Random Email    ${BASE EMAIL}
-    Log In    ${random email}    ${password}
-    Wait Until Element Is Visible    ${ACCOUNT NOT FOUND}
-    Log In    ${email}    ${password}    None
-    Validate Log In
-
 Open New Browser On Failure
     Close Browser
     Open Browser and go to URL    ${url}

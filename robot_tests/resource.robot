@@ -107,6 +107,14 @@ Validate Log In
     Check Langauge Logged In
     Sleep    1    #this is a test to see if it eliminates a problem with the login dialog popping up on logout
 
+Check Log In
+    [arguments]    ${button}=${LOG IN NAV BAR}
+    ${random email}    Get Random Email    ${BASE EMAIL}
+    Log In    ${random email}    ${password}    ${button}
+    Wait Until Element Is Visible    ${ACCOUNT NOT FOUND}
+    Log In    ${email}    ${password}    None
+    Validate Log In
+
 Log Out
     Wait Until Page Does Not Contain Element    ${BACKDROP}
     Wait Until Page Contains Element    ${LOG OUT BUTTON}
@@ -293,6 +301,7 @@ Change User Permissions
 Remove User Permissions
     [arguments]    ${user email address}
     ${User In List}=   Select user in Users List    ${user email address}
+    Go To Users List
     Wait Until Element Is Visible    ${REMOVE USER BUTTON}
     Click Button    ${REMOVE USER BUTTON}
     Wait Until Element Is Visible    ${REMOVE BUTTON}

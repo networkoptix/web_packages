@@ -186,7 +186,7 @@ should allow logged in user visit restore password page
     Wait Until Elements Are Visible    ${RESTORE PASSWORD EMAIL INPUT}    ${RESET PASSWORD BUTTON}
 
 should prompt log user out if he visits restore password link from email
-    [tags]    email    Threaded
+    [tags]    email    Threaded    C63394
     ${email}    Get Random Email    ${BASE EMAIL}
     Go To    ${url}/register
     Register    mark    hamill    ${email}    ${password}
