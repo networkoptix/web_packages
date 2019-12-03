@@ -320,7 +320,7 @@ def process_zip(file_descriptor, user, asset, update_structure, update_content):
         # logger.info(f"Name: {name}\tContext: {structure.context.name}\n\n")
         if update_structure:
             # if set_defaults or data structure has no default value - save it
-            if structure.default != data64:
+            if structure.placeholder != data64:
                 structure.placeholder = data64
                 structures_changed += 1
                 structure.save()
