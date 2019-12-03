@@ -43,7 +43,6 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
         this.CONFIG = this.config.getConfig();
 
         this.allElements = [];
-        this.elements = [];
 
         this.emptyFilter = {
             query: ''
