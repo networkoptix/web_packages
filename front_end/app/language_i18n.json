@@ -270,7 +270,6 @@
         "setNewPassword": "Save password",
         "setNewPasswordLabel": "New password"
     },
-    "andXMore": "... and {{value}} more",
     "cameraFilters": {
         "H265": "H.265 Cameras",
         "IO": "I / O modules",
@@ -703,6 +702,7 @@
     },
     "testedVersionLabel": "Tested on {{vmsName}} version:",
     "testedVersionsLabel": "Tested on {{vmsName}} versions:",
+    "topXByVolume": "Top {{value}} by volume:",
     "users": "Users",
     "you": "you"
 }

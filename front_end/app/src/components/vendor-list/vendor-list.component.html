@@ -6,16 +6,20 @@
     </header>
 
     <nx-section>
-        <div class="float-left mr-1 mb-1" *ngFor="let vendor of vendors">
+        <div class="mb-2"
+             *ngIf="vendors.length !== allVendors.length"
+             [translate]="'topXByVolume'"
+             [translateParams]="{value: CONFIG.ipvd.vendorsShown}">
+        </div>
+        <div class="float-left mr-1 mb-1" *ngFor="let vendor of vendors; trackBy: trackItem">
             <nx-tag element="btn"
                     size="large"
                     (click)="setVendor(vendor)"
-                    [value]="null">
-                {{vendor.name}} <span *ngIf="debug">({{vendor.count}})</span>
+                    [value]="null">{{vendor.name}} <span *ngIf="debug">({{vendor.count}})</span>
             </nx-tag>
         </div>
         <div class="manufacture-info">
-            <span [translate]="'andXMore'" [translateParams]="{value: remainingVendors}"></span>
+            <button class="btn btn-default" #buttonElement (click)="toggleVendorsShown(buttonElement)">Show All</button>
         </div>
     </nx-section>
 </nx-block>

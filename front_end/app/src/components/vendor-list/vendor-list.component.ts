@@ -1,20 +1,22 @@
 import {
-    Component, forwardRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewEncapsulation
+    Component, forwardRef, Input,
+    OnChanges, OnDestroy, OnInit, Renderer2,
+    SimpleChanges, ViewEncapsulation
 } from '@angular/core';
-import { NxConfigService }           from '../../services/nx-config';
 import { NG_VALUE_ACCESSOR }         from '@angular/forms';
 import { ActivatedRoute }            from '@angular/router';
+import { Subscription }              from 'rxjs';
+import { NxConfigService }           from '../../services/nx-config';
 import { NxUriService }              from '../../services/uri.service';
 import { NxUtilsService }            from '../../services/utils.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { Subscription } from 'rxjs';
-import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
+import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 
 /* USAGE
  <nx-vendor-list
- vendors=[]
- cameras=[]
- [(ngModel)]="filterModel">
+     vendors=[]
+     cameras=[]
+     [(ngModel)]="filterModel">
  </nx-vendor-list>
  */
 
@@ -39,6 +41,7 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
 
     public debug: boolean;
     public filters: any = [];
+    public allVendors;
     public remainingVendors: number;
 
     private uriPath: string;
@@ -51,6 +54,7 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
                 private language: NxLanguageProviderService,
                 private uri: NxUriService,
                 private _route: ActivatedRoute,
+                private renderer: Renderer2,
     ) {
         this.LANG = this.language.getTranslations();
         this.CONFIG = this.config.getConfig();
@@ -132,22 +136,42 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes.vendors) {
-
-            const byCountDESC = NxUtilsService.byParam((elm) => {
-                return elm.count;
-            }, NxUtilsService.sortDESC);
-
-            const byNameASC = NxUtilsService.byParam((elm) => {
-                return elm.name.toLowerCase();
-            }, NxUtilsService.sortASC);
-
+            this.allVendors = changes.vendors.currentValue;
             this.remainingVendors = changes.vendors.currentValue.length - this.CONFIG.ipvd.vendorsShown;
-            this.vendors = changes.vendors
-                    .currentValue
-                    .sort(byCountDESC)
-                    .slice(0, this.CONFIG.ipvd.vendorsShown)
-                    .sort(byNameASC);
+
+            this.setVendorsShown(changes.vendors.currentValue);
         }
+    }
+
+    setVendorsShown(vendors) {
+        const byCountDESC = NxUtilsService.byParam((elm) => {
+            return elm.count;
+        }, NxUtilsService.sortDESC);
+
+        const byNameASC = NxUtilsService.byParam((elm) => {
+            return elm.name.toLowerCase();
+        }, NxUtilsService.sortASC);
+
+        this.vendors = vendors.sort(byCountDESC)
+                              .slice(0, this.CONFIG.ipvd.vendorsShown)
+                              .sort(byNameASC);
+    }
+
+    toggleVendorsShown(element) {
+        if (this.vendors.length !== this.allVendors.length) {
+            this.vendors = this.allVendors;
+            this.renderer.setProperty(element, 'innerText', 'Show Top ' + this.CONFIG.ipvd.vendorsShown);
+        } else {
+            this.setVendorsShown(this.allVendors);
+            this.renderer.setProperty(element, 'innerText', 'Show All');
+        }
+    }
+
+    trackItem(index, item) {
+        if (!item) {
+            return undefined;
+        }
+        return item.name;
     }
 
     /**
