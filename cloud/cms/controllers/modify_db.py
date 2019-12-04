@@ -182,7 +182,8 @@ def save_unrevisioned_records(asset, context, language, data_structures,
                                       .format(new_record_value)))
 
         elif data_structure.type in [DataStructure.DATA_TYPES.select, DataStructure.DATA_TYPES.multiselect]:
-            new_record_value = request_data.getlist(data_structure_name, "")
+            getlist_default_value = [] if data_structure.type == DataStructure.DATA_TYPES.multiselect else ""
+            new_record_value = request_data.getlist(data_structure_name, getlist_default_value)
             if new_record_value != "" and data_structure.type == DataStructure.DATA_TYPES.select:
                 new_record_value = new_record_value[0]
 
@@ -407,11 +408,18 @@ def asset_has_required_data(asset, version_id=None):
         if version_id:
             records = records.filter(version__id__lte=version_id)
         last_record_value = records.last().value if records.last() else ""
-        if last_record_value and datastructure.type in [DataStructure.DATA_TYPES.array,
-                                                        DataStructure.DATA_TYPES.object,
-                                                        DataStructure.DATA_TYPES.multiselect]:
-            last_record_value = json.loads(last_record_value)
-        if not datastructure.optional and not datastructure.default and (not records.exists() or last_record_value == ""):
+        has_default_value = datastructure.default != ""
+        if datastructure.type in [DataStructure.DATA_TYPES.array,
+                                  DataStructure.DATA_TYPES.object,
+                                  DataStructure.DATA_TYPES.multiselect]:
+            if last_record_value:
+                last_record_value = json.loads(last_record_value)
+            default_value = json.loads(datastructure.default)
+            if datastructure.type == DataStructure.DATA_TYPES.object:
+                has_default_value = len(default_value.keys()) > 0
+            else:
+                has_default_value = len(default_value) > 0
+        if not datastructure.optional and not has_default_value and (not records.exists() or last_record_value == ""):
             ds_name = datastructure.label if datastructure.label else datastructure.name
             errors.append((ds_name,
                            "This field cannot be blank. Go to the {} page and fill in {}.".

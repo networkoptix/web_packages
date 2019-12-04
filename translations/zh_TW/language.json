@@ -118,5 +118,9 @@
       "stop listening": "停止聽取",
       "help": "help | show commands"
     }
+  },
+  "system": {
+    "offline": "系統處於離線狀態",
+    "unavailable": "無法連接至系統"
   }
 }

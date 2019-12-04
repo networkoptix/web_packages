@@ -345,7 +345,8 @@
 		"mergeSuccess": "Fusión del sistema completada",
 		"permissionsRemoved": "Los permisos fueron removidos de {{email}}",
 		"unknownName": "Nombre desconocido para el sistema (causado por la fusión en la nube)",
-		"shareOffline": "No se puede compartir el sistema mientras está desconectado"
+		"shareOffline": "No se puede compartir el sistema mientras está desconectado",
+		"shareUnauthorized": "No tienes permiso para compartir este sistema"
 	},
 	"systemStatuses": {
 		"activated": "activado",

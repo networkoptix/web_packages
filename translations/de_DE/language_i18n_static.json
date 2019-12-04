@@ -345,7 +345,8 @@
 		"mergeSuccess": "Systemzusammenführung abgeschlossen",
 		"permissionsRemoved": "Berechtigungen wurden von {{email}} entfernt",
 		"unknownName": "Unbekannter Name für das System (verursacht durch Cloud-Merge)",
-		"shareOffline": "Das System kann nicht freigegeben werden, solange es offline ist"
+		"shareOffline": "Das System kann nicht freigegeben werden, solange es offline ist",
+		"shareUnauthorized": "You do not have permission to share this system"
 	},
 	"systemStatuses": {
 		"activated": "aktiviert",

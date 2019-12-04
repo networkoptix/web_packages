@@ -118,5 +118,9 @@
       "stop listening": "หยุดฟัง",
       "help": "help | show commands"
     }
+  },
+  "system": {
+    "offline": "ระบบออฟไลน์",
+    "unavailable": "ระบบไม่สามารถเข้าถึงได้"
   }
 }

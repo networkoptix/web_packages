@@ -545,3 +545,11 @@ Get Parent WebElement
     ...    find_element
     ...    by=xpath    value=parent::*
     [return]    ${parent}
+
+Get All Descendant WebElements
+    [Arguments]    ${element}
+    ${descendants}=   Call Method
+    ...    ${element}
+    ...    find_elements
+    ...    by=xpath    value=.//*
+    [Return]    ${descendants}

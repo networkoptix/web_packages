@@ -273,7 +273,7 @@ admin.site.register(AssetType, AssetTypeAdmin)
 
 
 class AssetAdmin(CMSAdmin):
-    list_display = ('asset_settings', 'edit_asset_button', 'name', 'asset_type', 'customizations_list', )
+    list_display = ('asset_settings', 'edit_asset_button', 'name', 'asset_type', 'customizations_list', 'last_modified', )
     list_display_links = ('name',)
     list_filter = ('asset_type', CustomizationFilter,)
     search_fields = ('name', 'created_by__email',)

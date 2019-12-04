@@ -118,5 +118,9 @@
       "stop listening": "figyelés leállítása",
       "help": "súgó | parancsok megjelenítése"
     }
+  },
+  "system": {
+    "offline": "A rendszer offline",
+    "unavailable": "Rendszer nem elérhető"
   }
 }

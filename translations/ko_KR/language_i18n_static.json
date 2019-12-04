@@ -103,7 +103,7 @@
 			"bundle": "클라이언트와 서버",
 			"camera_sdk": "비디오 소스 SDK",
 			"client": "클라이언트만",
-			"metadata_sdk": "Metadata SDK",
+			"metadata_sdk": "메타 데이터 SDK",
 			"package": "패키지",
 			"server": "서버 만",
 			"servertool": "구성 도구",
@@ -322,7 +322,7 @@
 		"mySystemSearch": "IMeMyMine",
 		"unavailable": "시스템에 연결할 수 없습니다.",
 		"offline": "시스템이 오프라인 상태입니다.",
-		"offlineAlertRibbon": "System is offline. Some settings may not be available.",
+		"offlineAlertRibbon": "시스템이 오프라인 상태입니다. 일부 설정을 사용하지 못할 수 있습니다.",
 		"openClient": "%VMS_NAME%에서 열기",
 		"openClientNoSystem": "%VMS_NAME% 열기",
 		"confirmMergeAction": "병합",
@@ -345,7 +345,8 @@
 		"mergeSuccess": "시스템 머지가 완료되었습니다.",
 		"permissionsRemoved": "권한이 {{email}} 에서 제거 되었습니다.",
 		"unknownName": "시스템의 알 수없는 이름 (클라우드 머지로 인해 발생)",
-		"shareOffline": "Cannot share system while it is offline"
+		"shareOffline": "오프라인 상태에서 시스템을 공유 할 수 없습니다",
+		"shareUnauthorized": "You do not have permission to share this system"
 	},
 	"systemStatuses": {
 		"activated": "활성화 됨",

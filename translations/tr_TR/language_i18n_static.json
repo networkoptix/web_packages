@@ -345,7 +345,8 @@
 		"mergeSuccess": "Sistem birleştirme tamamlandı",
 		"permissionsRemoved": "İzinler {{email}}'den kaldırıldı",
 		"unknownName": "Sistem için Bilinmeyen Ad (Bulut birleştirme yüzünden)",
-		"shareOffline": "Çevrimdışıyken sistem paylaşılamıyor"
+		"shareOffline": "Çevrimdışıyken sistem paylaşılamıyor",
+		"shareUnauthorized": "You do not have permission to share this system"
 	},
 	"systemStatuses": {
 		"activated": "aktif edildi",

@@ -118,5 +118,9 @@
       "stop listening": "zastavení poslech",
       "help": "help | show commands"
     }
+  },
+  "system": {
+    "offline": "Systém je offline",
+    "unavailable": "Systém je nedostupný"
   }
 }

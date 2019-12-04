@@ -170,21 +170,11 @@
                 line-height : 15px;
             }
             
-            .second-row {
+            .minor-text {
                 margin-top : 5px;
-                
-                .version {
-                    font-family : $font-family-regular;
-                    color       : $light16;
-                    float       : left;
-                    font-size   : 11px;
-                }
-                
-                .platforms {
-                    color   : $light10;
-                    float   : right;
-                    display : flex;
-                }
+                font-family : $font-family-regular;
+                color       : $light16;
+                font-size   : 11px;
             }
         }
     }

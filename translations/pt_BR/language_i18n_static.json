@@ -345,7 +345,8 @@
 		"mergeSuccess": "Mesclagem de sistema concluída",
 		"permissionsRemoved": "As permissões foram removidas de {{email}}",
 		"unknownName": "Nome desconhecido para o sistema (Causado pela mescla de nuvem)",
-		"shareOffline": "Cannot share system while it is offline"
+		"shareOffline": "Cannot share system while it is offline",
+		"shareUnauthorized": "You do not have permission to share this system"
 	},
 	"systemStatuses": {
 		"activated": "ativado",

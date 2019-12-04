@@ -336,6 +336,22 @@ class Asset(models.Model):
     def is_integration(self):
         return self.is_asset_type(AssetType.ASSET_TYPES.integration)
 
+    @property
+    def is_dirty(self):
+        version_id = self.contentversion_set.last().id if self.contentversion_set.exists() else 0
+        records_for_version = self.datarecord_set.filter(version__id=version_id)
+        if not records_for_version.exists():
+            return self.datarecord_set.exists()
+        most_recent_record = records_for_version.latest('created_date')
+        return self.datarecord_set.filter(created_date__gt=most_recent_record.created_date).exists()
+
+    @property
+    def last_modified(self):
+        current_version = self.version_id()
+        if not current_version:
+            return ''
+        return ContentVersion.objects.get(id=current_version).accepted_date.strftime('%m/%d/%Y')
+
     def is_asset_type(self, asset_type):
         return self.asset_type.type == asset_type
 
@@ -460,8 +476,11 @@ class Context(models.Model):
         REJECTED = ('Rejected', 3)
         PUBLISHED = ('Published', 4)
 
+        customization = settings.CUSTOMIZATION
+        if asset.asset_type.single_customization and asset.customizations.exists():
+            customization = asset.customizations.first().name
         reviews = AssetCustomizationReview.objects.filter(version__asset=asset,
-                                                          customization__name=settings.CUSTOMIZATION)
+                                                          customization__name=customization)
         # Starting point so we don't get incorrect status with unpublished assets
         if reviews.filter(state=AssetCustomizationReview.REVIEW_STATES.accepted).first():
             state = PUBLISHED
@@ -511,7 +530,7 @@ class ContextTemplate(models.Model):
         unique_together = ('context', 'language', 'skin')
 
     context = models.ForeignKey(Context, on_delete=models.CASCADE)
-    language = models.ForeignKey(Language, null=True, on_delete=models.CASCADE)
+    language = models.ForeignKey(Language, blank=True, null=True, on_delete=models.CASCADE)
     template = models.TextField()
     skin = models.CharField(max_length=16, default='', blank=True)
     # Skin is a bit hacky for now:

@@ -602,6 +602,7 @@
         "openClientNoSystem": "Mở %VMS_NAME%",
         "permissionsRemoved": "Các quyền đã bị xóa khỏi {{email}}",
         "shareOffline": "Cannot share system while it is offline",
+        "shareUnauthorized": "You do not have permission to share this system",
         "successDeleted": "Tài khoản {{systemName}} đã xóa thành công từ hệ thống của bạn",
         "successDisconnected": "Hệ thống được ngắt kết nối thành công từ %CLOUD_NAME%",
         "successRename": "Đã lưu tên hệ thống",

@@ -118,5 +118,9 @@
       "stop listening": "przestań słuchać",
       "help": "pomoc | pokaż polecenia"
     }
+  },
+  "system": {
+    "offline": "Serwer jest odłączony",
+    "unavailable": "System jest niedostępny"
   }
 }

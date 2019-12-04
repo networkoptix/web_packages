@@ -1136,6 +1136,9 @@
                 }, {
                   "id": "storage",
                   "label": "Storage"
+                }, {
+                  "id": "other",
+                  "label": "Other"
                 }
               ]
             }
@@ -2061,6 +2064,7 @@
             "optional": true,
             "meta": {
               "options": [
+                "4.1",
                 "4.0",
                 "3.2",
                 "3.1",

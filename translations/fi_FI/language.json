@@ -118,5 +118,9 @@
       "stop listening": "lopeta kuuntelu",
       "help": "help | show commands"
     }
+  },
+  "system": {
+    "offline": "Järjestelmään ei saada yhteyttä",
+    "unavailable": "Järjestelmä ei ole tavoitettavissa"
   }
 }

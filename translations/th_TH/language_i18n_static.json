@@ -345,7 +345,8 @@
 		"mergeSuccess": "ผสานระบบเสร็จสมบูรณ์",
 		"permissionsRemoved": "สิทธิ์ถูกนำออกจาก {{email}}",
 		"unknownName": "ชื่อที่ไม่รู้จักสำหรับระบบ (เกิดจากการผสานคลาวด์)",
-		"shareOffline": "Cannot share system while it is offline"
+		"shareOffline": "Cannot share system while it is offline",
+		"shareUnauthorized": "You do not have permission to share this system"
 	},
 	"systemStatuses": {
 		"activated": "เปิดใช้งาน",

@@ -118,5 +118,9 @@
       "stop listening": "聞くのをやめる",
       "help": "ヘルプ| 表示コマンド"
     }
+  },
+  "system": {
+    "offline": "システムはオフラインです",
+    "unavailable": "システムに到達できません"
   }
 }

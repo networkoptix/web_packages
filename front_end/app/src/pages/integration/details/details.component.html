@@ -11,9 +11,12 @@
             <nx-block header-style="slim" type="menu top">
                 <header>
                     <div *ngIf="plugin.information" class="title">{{plugin.information.name}}</div>
-                    <div class="second-row">
-                        <div *ngIf="plugin.versionDetails" class="version"
+                    <div class="minor-text d-flex justify-content-between">
+                        <div *ngIf="plugin.versionDetails"
                              [innerHTML]="plugin.versionDetails.version">
+                        </div>
+                        <div *ngIf="plugin.lastModified">
+                            <span translate>Updated</span>&nbsp;<span>{{plugin.lastModified}}</span>
                         </div>
                     </div>
                 </header>

@@ -345,7 +345,8 @@
 		"mergeSuccess": "Systeem samenvoegen voltooid",
 		"permissionsRemoved": "Toestemmingen zijn verwijderd voor {{email}}",
 		"unknownName": "Onbekende naam voor systeem (veroorzaakt door samenvoeging in de cloud)",
-		"shareOffline": "Kan systeem niet delen terwijl het offline is"
+		"shareOffline": "Kan systeem niet delen terwijl het offline is",
+		"shareUnauthorized": "You do not have permission to share this system"
 	},
 	"systemStatuses": {
 		"activated": "geactiveerd",

@@ -118,5 +118,9 @@
       "stop listening": "עצור האזנה",
       "help": "help | show commands"
     }
+  },
+  "system": {
+    "offline": "השרת אינו זמין",
+    "unavailable": "המערכת אינה זמינה"
   }
 }

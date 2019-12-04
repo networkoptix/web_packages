@@ -19,11 +19,11 @@ ${title}      ${INTEGRATIONS TITLE TEXT} - ${PRODUCT_NAME}
 *** Keywords ***
 Open Browser and Go To Integrations Page Anonymous
     ${is enabled}=   Integration Store is Enabled    ${auth}
-    Run keyword If    ${is enabled} == ${True}    Open browser    ${url}    ${BROWSER}
+    Run keyword If    ${is enabled} == ${True}    Open Browser and go to URL    ${url}
     ...    ELSE    Fatal Error    Tests cannot be executed. Please enable Integration Store in CMS.
 
 Go To Integrations Page
-    Go To    ${url}
+    Open Browser and go to URL    ${url}
     Validate Integrations Landing Page
 
 Validate Integrations Landing Page
@@ -72,15 +72,23 @@ Validate Integration Details Page
     ...    ${INTEGRATION HOW IT WORKS HEADER}
 
 Validate Integration Tile
-    [Arguments]    ${integration tile}
-    @{integration tile contents}=   Get Child WebElements    ${integration tile}
-    Log List    ${integration tile contents}
-    Should Contain    ${integration tile contents}    ${INTEGRATION TILE HEADER}
-    Should Contain    ${integration tile contents}    ${INTEGRATION TILE FOOTER}
-    Should Contain    ${integration tile contents}    ${INTEGRATION TILE LOGO}
-    Should Contain    ${integration tile contents}    ${INTEGRATION TILE INFO}
-    Should Contain    ${integration tile contents}    ${INTEGRATION TILE NAME}IronYun
-    Should Contain    ${integration tile contents}    ${INTEGRATION TILE TEXT}
+    [Arguments]    ${index}    ${integration tile element}
+    @{integration tile contents}=   Get All Descendant WebElements    ${integration tile element}
+    FOR    ${tile element}    IN    @{INTEGRATION TILE ELEMENTS}
+        ${webelement}=   Convert Locator To WebElement    (${tile element})[${index}+1]
+        Run keyword and continue on failure    Should Contain    ${integration tile contents}    ${webelement}
+    END
+
+# If a number of integrations is too big, it's better to validate couple of random integration tiles.
+# To do so just replace a FOR loop in "Integration Store catalog" test with "Validate Random Tile N times" keyword call
+# with list of tiles and desired number of random checks as parameters
+Validate Random Tile N times
+    [Arguments]    ${integration tiles}    ${N}
+    ${number of tiles}=   Get Length   ${integration tiles}
+    FOR    ${index}    IN    1  ${N}
+        ${random index}= 	Evaluate	random.randint(0, ${number of tiles})	modules=random
+        Validate Integration Tile    ${random index}    @{integration tiles}[${random index}]
+    END
 
 Validate "Get in Touch" Form
     Run keyword and continue on failure    Wait Until Elements Are Visible
@@ -124,13 +132,14 @@ Integration Store title and URL are correct
     ...    Title Should Be    ${title}
     Validate Integrations Landing Page
 
-#Integration Store catalog
-#    [Tags]    C54622
-#    @{integration tiles}=   Get WebElements    ${INTEGRATION TILE}
-#    Log List    ${integration tiles}
-#    FOR    ${integration tile}    IN    @{integration tiles}
-#        Validate Integration Tile    ${integration tile}
-#    END
+Integration Store catalog
+    [Tags]    C54622
+    @{integration tiles}=   Get WebElements    ${INTEGRATION TILE}
+    ${number of tiles}=   Get Length    ${integration tiles}
+    FOR    ${index}    IN RANGE    0    ${number of tiles}
+        Validate Integration Tile    ${index}    @{integration tiles}[${index}]
+    END
+#    Validate Random Tile N times    ${integration tiles}    3
 
 Integration Store Search
     [Tags]    	C54620

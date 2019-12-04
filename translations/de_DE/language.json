@@ -118,5 +118,9 @@
       "stop listening": "Abhören stoppen",
       "help": "Hilfe | Befehle anzeigen"
     }
+  },
+  "system": {
+    "offline": "System ist offline",
+    "unavailable": "System ist nicht erreichbar"
   }
 }

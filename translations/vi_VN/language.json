@@ -118,5 +118,9 @@
       "stop listening": "dừng nghe",
       "help": "help | show commands"
     }
+  },
+  "system": {
+    "offline": "Hệ thống offline",
+    "unavailable": "Hệ thống không thể truy cập được"
   }
 }
