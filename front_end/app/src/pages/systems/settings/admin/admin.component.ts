@@ -1,6 +1,4 @@
-import {
-    Component, OnInit
-}                                    from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Location }                  from '@angular/common';
 import { ActivatedRoute }            from '@angular/router';
 import { NxConfigService }           from '../../../../services/nx-config';
@@ -13,6 +11,8 @@ import { NxSystemsService }          from '../../../../services/systems.service'
 import { NxAccountService }          from '../../../../services/account.service';
 import { NxProcessService }          from '../../../../services/process.service';
 import { NxSystem }                  from '../../../../services/system.service';
+import { Subscription } from 'rxjs';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 
 interface Settings {
     disconnectDisabled: boolean;
@@ -21,14 +21,14 @@ interface Settings {
     showMerge: boolean;
 }
 
-
+@AutoUnsubscribe()
 @Component({
     selector   : 'nx-system-admin-component',
     templateUrl: 'admin.component.html',
     styleUrls  : ['admin.component.scss']
 })
 
-export class NxSystemAdminComponent implements OnInit {
+export class NxSystemAdminComponent implements OnInit, OnDestroy {
     CONFIG: any = {};
     LANG: any = {};
     system: NxSystem;
@@ -42,6 +42,7 @@ export class NxSystemAdminComponent implements OnInit {
     debugMode: boolean;
     betaMode: boolean;
     settings: Settings;
+    systemSubscription: Subscription;
 
     private setupDefaults() {
         this.CONFIG = this.configService.getConfig();
@@ -96,9 +97,9 @@ export class NxSystemAdminComponent implements OnInit {
         this.settingsService
             .systemSubject
             .subscribe((system) => {
-                this.system = system;
                 if (system) {
-                    this.system.systemSubject.subscribe(() => {
+                    this.system = system;
+                    this.systemSubscription = system.systemSubject.subscribe(() => {
                         this.settingsService.footerSubject.next(true);
                         this.userRole = system.accessRole;
                         if (system.accessRole in this.LANG.accessRoles) {
@@ -213,6 +214,9 @@ export class NxSystemAdminComponent implements OnInit {
                        this.updateSettings(this.currentlyMerging);
                        this.settingsService.system = this.system;
                    });
+    }
+
+    ngOnDestroy() {
     }
 }
 

@@ -86,9 +86,6 @@ export class NxConfigService {
                 master      : 'master',
                 slave       : 'slave'
             },
-            systemCapabilities            : {
-                cloudMerge: 'cloudMerge'
-            },
             accessRoles                   : {
                 unshare                  : 'none',
                 default                  : 'Viewer',
