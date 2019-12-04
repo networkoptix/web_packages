@@ -251,7 +251,9 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                             this.system.forbidden = true;
                         });
 
-
+                    if (this.systemSubscription) {
+                        this.systemSubscription.unsubscribe();
+                    }
                     this.systemSubscription = this.system.systemSubject.subscribe((system) => {
                         if (system !== undefined) {
                             this.settingsService.system = system;
