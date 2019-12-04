@@ -40,7 +40,9 @@ Regular Open Browser
 Open Browser With Options
     Set Screenshot Directory    ${SCREENSHOT_DIRECTORY}
     ${chrome_options}=    Set Chrome Options Headless
-    Create Webdriver    Chrome    chrome_options=${chrome_options}
+    ${system}=    Evaluate    platform.system()    platform
+    Run Keyword if    "${system}"=="Darwin"      Create Webdriver    Chrome    chrome_options=${chrome_options}    executable_path=/usr/local/bin/chromedriver
+    ...            ELSE    Create Webdriver    Chrome    chrome_options=${chrome_options}
     Set Window Size    1920    1080
     Go to    ${ENV}
 
@@ -102,7 +104,8 @@ Log In
     Click Button    ${LOG IN BUTTON}
 
 Validate Log In
-    Wait Until Element is Visible    ${ACCOUNT DROPDOWN}
+    [arguments]    ${timeout}=${selenium_timeout}
+    Wait Until Element is Visible    ${ACCOUNT DROPDOWN}    ${timeout}
     Sleep    1
     Check Langauge Logged In
     Sleep    1    #this is a test to see if it eliminates a problem with the login dialog popping up on logout
