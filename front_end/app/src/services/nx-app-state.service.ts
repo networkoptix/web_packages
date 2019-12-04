@@ -1,5 +1,5 @@
 import { Injectable }                from '@angular/core';
-import { NxConfigService}            from './nx-config';
+import { NxConfigService }            from './nx-config';
 import { BehaviorSubject }           from 'rxjs';
 
 @Injectable({
@@ -10,6 +10,7 @@ export class NxAppStateService {
 
     footerVisibleSubject = new BehaviorSubject(true);
     headerVisibleSubject = new BehaviorSubject(true);
+    readySubject = new BehaviorSubject(false);
 
     constructor(private config: NxConfigService) {
         this.CONFIG = this.config.getConfig();
@@ -21,5 +22,13 @@ export class NxAppStateService {
 
     setHeaderVisibility(visibile) {
         this.headerVisibleSubject.next(visibile);
+    }
+
+    set ready(ready) {
+        this.readySubject.next(ready);
+    }
+
+    get ready() {
+        return this.readySubject.getValue();
     }
 }

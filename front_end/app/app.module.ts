@@ -37,7 +37,7 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
     shouldProcessUrl(url: UrlTree) {
         const remainingRoutes = url.toString().match('\/(systems|embed)\/[A-Za-z0-9\-:]+\/view\/?(?:[A-Za-z0-9\-:]+)?');
 
-        return (url.toString() !== '/' && !remainingRoutes);
+        return (!remainingRoutes);
     }
 
     extract(url: UrlTree) {

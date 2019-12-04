@@ -11,9 +11,10 @@ import { NxSessionService }          from './session.service';
 import { NxQueryParamService }       from './query-param.service';
 import { NxApplyService }            from './apply.service';
 
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { distinctUntilChanged } from 'rxjs/operators';
 import { ReplaySubject, Subscription, timer } from 'rxjs';
 import { WINDOW }                             from './window-provider';
+import { NxAppStateService }                  from './nx-app-state.service';
 
 @Injectable({
     providedIn: 'root'
@@ -27,6 +28,7 @@ export class NxAccountService implements OnDestroy {
     account: any;
     loginStateSubject = new ReplaySubject(1);
     loginDialogActive: boolean;
+    reloading: boolean;
 
     private loginSubscription: Subscription;
     private queryParamSubscription: Subscription;
@@ -44,6 +46,7 @@ export class NxAccountService implements OnDestroy {
                 private router: Router,
                 private activatedRoute: ActivatedRoute,
                 private applyService: NxApplyService,
+                private appStateService: NxAppStateService
     ) {
         this.location = this.locationService;
         this.CONFIG = this.config.getConfig();
@@ -71,7 +74,7 @@ export class NxAccountService implements OnDestroy {
 
         // Handles login with auth param everywhere.
         this.queryParamSubscription = this.queryParamService.queryParamsSubject.pipe(
-            debounceTime(100), distinctUntilChanged()
+            distinctUntilChanged()
         ).subscribe((params: any) => {
             if (params.auth) {
                 this.handleAuthKeyLogin(params.auth);
@@ -364,8 +367,10 @@ export class NxAccountService implements OnDestroy {
                 if (!account) {
                     return this.loginWithAuthKey(auth).then(() => {
                         return this.document.location.reload();
-                    });
+                    }).catch(() => this.appStateService.ready = true);
                 }
+
+                this.appStateService.ready = true;
 
                 this.cloudApi.checkAuthCode(auth).then(async (result: any) => {
                     if (result.email === account.email) {

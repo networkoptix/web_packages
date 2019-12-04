@@ -4,7 +4,7 @@ import { CookieService }                                          from 'ngx-cook
 import { DeviceDetectorService }                                  from 'ngx-device-detector';
 import { Title }                                                  from '@angular/platform-browser';
 import { ActivatedRoute, ActivationStart, Event, Router } from '@angular/router';
-import { filter, debounceTime }                                                 from 'rxjs/operators';
+import { filter, debounceTime, timeout, finalize } from 'rxjs/operators';
 import { WINDOW }                    from './src/services/window-provider';
 import { NxLanguageProviderService } from './src/services/nx-language-provider';
 import { NxConfigService }           from './src/services/nx-config';
@@ -15,11 +15,12 @@ import { NxAppStateService }         from './src/services/nx-app-state.service';
 import { fromEvent, Subscription } from 'rxjs';
 import 'rxjs-compat/add/observable/fromEvent';
 import { NxScrollMechanicsService }  from './src/services/scroll-mechanics.service';
+import { NxUriService } from './src/services/uri.service';
 
 @Component({
     selector: 'nx-app',
     template: `        
-        <div class="outerContainer">
+        <div class="outerContainer" *ngIf="appStateService.ready">
             <div class="headerContainer">
                 <nx-header></nx-header>
                 <nx-ribbon></nx-ribbon>
@@ -30,6 +31,7 @@ import { NxScrollMechanicsService }  from './src/services/scroll-mechanics.servi
                 <div ng-view="" ng-model-options="{ updateOn: 'blur' }"></div>
             </div>
         </div>
+        <nx-pre-loader type="page" *ngIf="!appStateService.ready"></nx-pre-loader>
         <app-toasts aria-live="polite" aria-atomic="true"></app-toasts>
     `
 })
@@ -55,9 +57,17 @@ export class AppComponent {
                 private queryParamService: NxQueryParamService,
                 private router: Router,
                 private ribbonService: NxRibbonService,
+                private uriService: NxUriService,
                 @Inject(WINDOW) private window: Window) {
 
         this.CONFIG = this.config.getConfig();
+
+        const authUriSub = this.uriService.getURI().pipe(timeout(3000), finalize(() => authUriSub.unsubscribe())).subscribe(params => {
+            if (params.auth) {
+                authUriSub.unsubscribe();
+            }
+            this.appStateService.ready = !params.auth;
+        }, () => {});
 
         this.scrollMechanicsService.setWindowSize(window.innerHeight, window.innerWidth);
 

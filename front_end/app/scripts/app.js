@@ -264,7 +264,7 @@ window.L = {};
                     })
                     .when('/', {
                         // // TODO: keep until we retire AJS
-                        template: '<landing-component></landing-component>'
+                        template: ''
                         // title: ''/*lang.pageTitles.startPage*/,
                         // templateUrl: CONFIG.viewsDir + 'startPage.html',
                         // controller: 'StartPageCtrl'
