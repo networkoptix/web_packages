@@ -14,22 +14,24 @@
 
     <div class="d-flex w-100" #table>
         <div *ngIf="selectedData && selectedValues && !mobileDetailMode"
-             class="px-2 overflow-auto">
-            <div [ngSwitch]="metricValuesLen">
-                <div *ngSwitchCase="0" class="row p-0 m-0 d-flex">
-                    <div class="text-placeholder order-1 order-md-0 m-0 p-0 pr-2" translate>Nothing Found</div>
-                </div>
+             class="row col-12 m-0 px-2 overflow-auto">
+
+            <div *ngIf="metricValuesLen === 0" class="row p-0 m-0 d-flex">
+                <div class="text-placeholder order-1 order-md-0 m-0 p-0 pr-2" translate>Nothing Found</div>
+            </div>
+            <div *ngIf="metricValuesLen === 1" class="col-12 col-xl-7 col-xxxl-5 px-0">
                 <nx-single-entity
-                        *ngSwitchCase="1"
                         [params]="selectedPanelData"
                         [entity]="objectValues(selectedValues)[0]">
                 </nx-single-entity>
-                <nx-dynamic-table *ngSwitchDefault
-                                  [dimensions]="containerDimensions"
-                                  [headers]="selectedData"
-                                  [elements]="selectedValues"
-                                  (onRowClick)="setActiveEntity($event)"
-                                  [activeEntity]="activeEntity">
+            </div>
+            <div *ngIf="metricValuesLen > 1" class="col-12 p-0">
+                <nx-dynamic-table
+                        [dimensions]="containerDimensions"
+                        [headers]="selectedData"
+                        [elements]="selectedValues"
+                        (onRowClick)="setActiveEntity($event)"
+                        [activeEntity]="activeEntity">
                 </nx-dynamic-table>
             </div>
         </div>
