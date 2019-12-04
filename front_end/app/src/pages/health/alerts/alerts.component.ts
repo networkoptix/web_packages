@@ -83,11 +83,11 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         this.values = this.healthService.values;
 
         this.initializeHeader();
-        this.countAlerts();
         this.processAlerts();
 
         this.alerts = this.healthService
                           .alertsSearch(this.healthService.alertsValues, this.filterModel);
+        this.countAlerts();
 
         if (this.params.id && this.params.metric) {
             const alarm = this.alerts.find((alert) => {
@@ -123,6 +123,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
     modelChanged(model) {
         this.alerts = this.healthService
                           .alertsSearch(this.healthService.alertsValues, model);
+        this.countAlerts();
     }
 
     resetFilterModel() {
@@ -220,7 +221,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
     }
 
     countAlerts() {
-        this.alertsCount = Object.values(this.healthService.alertsCount).reduce((a, b) => a + b);
+        this.alertsCount = Object.values(this.alerts).length;
     }
 
     processAlerts() {
