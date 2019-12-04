@@ -69,9 +69,6 @@
                         master: 'master',
                         slave: 'slave'
                     },
-                    systemCapabilities: {
-                        cloudMerge: 'cloudMerge'
-                    },
                     accessRoles: {
                         unshare: 'none',
                         default: 'Viewer',
