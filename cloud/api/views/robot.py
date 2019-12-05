@@ -12,4 +12,5 @@ def get_code(request):
     require_params(request, ('email', 'type'))
     data = request.data
     message = Message.objects.filter(user_email=data['email'], type=data['type']).ordered_by('id').last()
-    return api_success({"code": message.message['code']})
+    code = message.message['code'] if message else 'Does not exist'
+    return api_success({"code": code})
