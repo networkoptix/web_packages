@@ -60,6 +60,7 @@ should open register page in anonymous state
     Go To    ${url}/register
     Location should be    ${url}/register
     Wait Until Element Is Visible    ${REGISTER FORM}
+    Check Log In    button=None
 
 should register user with correct credentials
     ${email}    Get Random Email    ${BASE EMAIL}

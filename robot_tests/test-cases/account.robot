@@ -264,3 +264,4 @@ should open account page in anonymous state
     Go To    ${url}/account
     Location should be    ${url}/account
     Wait Until Element Is Visible    ${LOG IN MODAL} 
+    Check Log In    button=None

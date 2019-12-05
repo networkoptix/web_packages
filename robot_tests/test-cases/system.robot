@@ -328,4 +328,5 @@ should open a system page in anonymous state
     Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
     Location should be    ${url}/systems/${AUTO TESTS SYSTEM ID}
     Wait Until Element Is Visible    ${LOG IN MODAL} 
+    Check Log In    button=None
     

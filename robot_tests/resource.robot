@@ -115,7 +115,7 @@ Check Log In
     ${random email}    Get Random Email    ${BASE EMAIL}
     Log In    ${random email}    ${password}    ${button}
     Wait Until Element Is Visible    ${ACCOUNT NOT FOUND}
-    Log In    ${email}    ${password}    None
+    Log In    ${EMAIL OWNER}    ${password}    None
     Validate Log In
 
 Log Out

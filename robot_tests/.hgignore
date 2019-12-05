@@ -7,3 +7,5 @@ syntax: glob
 Docker/Video
 Docker/Data
 .project
+.pydevproject
+org.eclipse.core.resources.prefs

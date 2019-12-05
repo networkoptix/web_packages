@@ -128,4 +128,5 @@ should open downloads releases page in anonymous state
     [tags]    anonymous
     Go To    ${url}/downloads/releases
     Location should be    ${url}/downloads/releases
-    Wait Until Element Is Visible    ${LOG IN MODAL} 
+    Wait Until Element Is Visible    ${LOG IN MODAL}
+    Check Log In    button=None 

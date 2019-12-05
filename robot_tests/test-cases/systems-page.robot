@@ -357,3 +357,4 @@ should open systems page in anonymous state
     Go To    ${url}/systems
     Location should be    ${url}/systems
     Wait Until Element Is Visible    ${LOG IN MODAL} 
+    Check Log In    button=None 
