@@ -40,12 +40,6 @@ Share with Adminstrator
     Click Button    ${SHARE PERMISSIONS DROPDOWN}${admin selector}/..
     Click Button    ${SHARE BUTTON MODAL}
 
-Check Log In
-    Log In    ${EMAIL UNREGISTERED}    ${password}
-    Check For Alert    ${ACCOUNT DOES NOT EXIST}
-    Log In    ${email}    ${password}    None
-    Validate Log In
-
 Check Special Hint
     [arguments]    ${type}
     Wait Until Element is Visible    ${SHARE PERMISSIONS DROPDOWN}
