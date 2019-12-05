@@ -11,5 +11,5 @@ from notifications.models import Message
 def get_code(request):
     require_params(request, ('email', 'type'))
     data = request.data
-    message = Message.objects.get(user_email=data['email'], type=data['type'])
+    message = Message.objects.filter(user_email=data['email'], type=data['type']).ordered_by('id').last()
     return api_success({"code": message.message['code']})
