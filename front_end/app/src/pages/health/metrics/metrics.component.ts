@@ -114,10 +114,14 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        this.elementTableHeight = this.elementTable.nativeElement.offsetHeight;
-        this.elementSearchHeight = this.elementSearch.nativeElement.offsetHeight;
+        if (this.elementTable && this.elementSearch) {
+            this.elementTableHeight = this.elementTable.nativeElement.offsetHeight;
+            this.elementSearchHeight = this.elementSearch.nativeElement.offsetHeight;
 
-        this.containerDimensions = [this.elementSearchHeight, this.elementTableHeight];
+            setTimeout(() => {
+                this.containerDimensions = [this.elementSearchHeight, this.elementTableHeight];
+            }, 100);
+        }
     }
 
     ngOnDestroy() {}

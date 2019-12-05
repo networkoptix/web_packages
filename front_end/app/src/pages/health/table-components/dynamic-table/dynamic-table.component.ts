@@ -64,9 +64,6 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
     // CSS does not use CONFIG so this is here to avoid confusion if changing the value
     private static ROW_HEIGHT = 26;
 
-    @ViewChild('tableBody', { static: false }) tableBody: ElementRef;
-    @ViewChild('dynamicTable', { static: false }) table: ElementRef;
-
     constructor(private configService: NxConfigService,
                 private uri: NxUriService,
                 private utilsService: NxUtilsService,
@@ -82,7 +79,13 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
         this.pagerMaxSize = this.CONFIG.ipvd.pagerMaxSize;
         this.currentPage = 1;
         this.pageSize = this.CONFIG.layout.tableLarge.rows;
+    }
 
+    trackItem(index, item) {
+        if (!item) {
+            return undefined;
+        }
+        return item.id;
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -97,9 +100,13 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
             const ELEMENTS_HEIGHT = changes.dimensions.currentValue.reduce((prev, curr) => prev + curr, 0) - TABLE_BODY_HEIGHT;
             const PADDING = 16;
             const PAGINATION_HEIGHT = 64;
-            const AVAIL_SPACE = this.windowSize.height - PAGINATION_HEIGHT - ELEMENTS_HEIGHT - 2 * NxDynamicTableComponent.ROW_HEIGHT  - 2 * PADDING;
+            let availSpace = this.windowSize.height - PAGINATION_HEIGHT - ELEMENTS_HEIGHT - 2 * PADDING;
 
-            this.pageSize = Math.ceil(AVAIL_SPACE / NxDynamicTableComponent.ROW_HEIGHT);
+            if (this.tableHeader) {
+                availSpace -= 2 * NxDynamicTableComponent.ROW_HEIGHT;
+            }
+
+            this.pageSize = Math.ceil(availSpace / NxDynamicTableComponent.ROW_HEIGHT);
             this.setPagedItems();
         }
 
@@ -123,21 +130,19 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
         if (changes.elements) {
             if (!deepEqual(changes.elements.currentValue, changes.elements.previousValue)) {
                 this._elements = Object.values(changes.elements.currentValue);
+                this.setPage(1);
 
-                if (changes.elements.previousValue) {
-                    setTimeout(() => {
-                        const queryParams: Params = {};
-                        queryParams.sortBy = undefined;
-                        queryParams.page = undefined;
-                        this.uri
-                            .updateURI(undefined, queryParams)
-                            .then(() => {
-                                this.setPage(1);
-                                this.sortOrderASC = true;
-                                this.selectedHeader = undefined;
-                            });
-                    });
-                }
+                setTimeout(() => {
+                    const queryParams: Params = {};
+                    queryParams.sortBy = undefined;
+                    queryParams.page = undefined;
+                    this.uri
+                        .updateURI(undefined, queryParams)
+                        .then(() => {
+                            this.sortOrderASC = true;
+                            this.selectedHeader = undefined;
+                        });
+                });
             }
         }
     }

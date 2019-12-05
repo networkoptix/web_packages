@@ -5,13 +5,15 @@
          *ngIf="!pagedItems.length" translate>Nothing Found</div>
 </div>
 
-<div class="nx-table-wrapper" id="nx-table" *ngIf="pagedItems.length" [ngClass]="{'experimental': healthService.experimental}" #dynamicTable>
+<div class="nx-table-wrapper" id="nx-table"
+     *ngIf="pagedItems.length" [ngClass]="{'experimental': healthService.experimental}" #dynamicTable>
+
     <div *ngIf="tableHeader" class="table-header" [innerText]="tableHeader"></div>
     <div class="table-wrapper">
         <table class="table table-hover nx-table">
             <thead>
                 <tr class="header-groups" *ngIf="showGroups">
-                    <ng-container *ngFor="let headerGroup of headers.values; index as index;">
+                    <ng-container *ngFor="let headerGroup of headers.values; index as index; trackBy: trackItem">
                         <th *ngIf="headerGroup.values.length > 0"
                             [colSpan]="headerGroup.values.length">
                             <div *ngIf="headerGroup.name"
@@ -21,8 +23,8 @@
                     </ng-container>
                 </tr>
                 <tr>
-                    <ng-container *ngFor="let headerGroup of headers.values">
-                        <th *ngFor="let header of headerGroup.values" class="align-bottom"
+                    <ng-container *ngFor="let headerGroup of headers.values; trackBy: trackItem">
+                        <th *ngFor="let header of headerGroup.values; trackBy: trackItem" class="align-bottom"
                             (click)="toggleSort(headerGroup.id, header.id, true)">
                             <div class="caption d-flex align-items-end"
                                  [title]="header.description || header.name">
@@ -40,12 +42,12 @@
             </thead>
             <tbody #tableBody>
                 <tr class="table-row-spacer"></tr>
-                <tr *ngFor="let item of pagedItems"
+                <tr *ngFor="let item of pagedItems; trackBy: trackItem"
                     [ngClass]="{'selected': item == selectedEntity}"
                     (click)="setClickedRow(item);">
 
-                    <ng-container *ngFor="let headerGroup of headers.values; first as firstGroup">
-                        <ng-container *ngFor="let header of headerGroup.values; first as firstHeader">
+                    <ng-container *ngFor="let headerGroup of headers.values; first as firstGroup; trackBy: trackItem">
+                        <ng-container *ngFor="let header of headerGroup.values; first as firstHeader; trackBy: trackItem">
                             <td *ngIf="firstGroup && item[headerGroup.id] && item[headerGroup.id][header.id] && item[headerGroup.id][header.id].icon; else showValue">
                                 <svg-icon *ngIf="firstHeader"
                                           [title]="item && item[headerGroup.id] && item[headerGroup.id][header.id] && item[headerGroup.id][header.id].tooltip || ''"
@@ -75,7 +77,7 @@
                     [pageSize]="pageSize"
                     [page]="currentPage"
                     [rotate]="true"
-                    (pageChange)="setPage($event)"></ngb-pagination>
+                    (pageChange)="setPage($event)"></ngb-pagination>{{pageSize}}
         </nav>
     </div>
 </div>
