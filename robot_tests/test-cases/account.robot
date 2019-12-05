@@ -44,6 +44,7 @@ Can access the account page from dropdown
     Click Button    ${ACCOUNT DROPDOWN}
     Wait Until Element is Visible    ${ACCOUNT SETTINGS BUTTON}
     Click Link    ${ACCOUNT SETTINGS BUTTON}
+    Title Should Be    ${ACCOUNT SETTINGS TEXT} - ${PRODUCT_NAME}
     Verify in account page
 
 Can access the account page from direct link while logged in
@@ -261,7 +262,6 @@ Language change affects emails
     
 should open account page in anonymous state
     [tags]    anonymous
-    Go To    ${url}/account
-    Location should be    ${url}/account
+    Run keyword and continue on failure    Open page anonymously    account    ${ACCOUNT SETTINGS TEXT} - ${PRODUCT_NAME}
     Wait Until Element Is Visible    ${LOG IN MODAL} 
     Check Log In    button=None

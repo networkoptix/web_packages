@@ -46,6 +46,12 @@ Open Browser With Options
     Set Window Size    1920    1080
     Go to    ${ENV}
 
+Open page anonymously
+    [Arguments]    ${address}    ${title}
+    Go To    ${url}/${address}
+    Location should be    ${url}/${address}
+    Title should be    ${title}
+
 Set Chrome Options
     [Documentation]    Set Chrome options for headless mode
     ${options}=    Evaluate    sys.modules['selenium.webdriver'].ChromeOptions()    sys, selenium.webdriver
@@ -102,6 +108,7 @@ Log In
     Sleep    0.25
     Wait Until Element Is Visible    ${LOG IN BUTTON}
     Click Button    ${LOG IN BUTTON}
+    Sleep    1
 
 Validate Log In
     [arguments]    ${timeout}=${selenium_timeout}
@@ -348,6 +355,9 @@ Disconnect from cloud
     Click Button    ${DISCONNECT FORM DISCONNECT BUTTON}
 #    Check For Alert    ${SUCCESSFULLY DISCONNECTED}
     Sleep    5
+
+#Disconnect from cloud
+
 
 Failure Tasks
     [timeout]    5 minutes
