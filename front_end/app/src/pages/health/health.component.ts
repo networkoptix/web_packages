@@ -179,12 +179,15 @@ export class NxHealthComponent implements OnInit, OnDestroy {
 
         const menu = {...this.menu};
         Object.keys(this.healthService.manifest).forEach((asset) => {
-            menu.level1.push({
-                id: asset,
-                label: this.healthService.manifest[asset].name,
-                path: asset,
-                svg: asset
-            });
+            // Do not show menu item if no values -- @tagir will update spec for 20.1
+            if (Object.keys(this.healthService.values[asset]).length) {
+                menu.level1.push({
+                    id   : asset,
+                    label: this.healthService.manifest[asset].name,
+                    path : asset,
+                    svg  : asset
+                });
+            }
         });
         menu.level1[0].alerts = [
             {

@@ -1,5 +1,10 @@
-<div class="row">
+<nx-page-placeholder
+        placeholderTitle="No {{metricName}}"
+        [condition]="metricValuesLen === 0"
+        class="section-placeholder">
+</nx-page-placeholder>
 
+<div class="row">
     <div class="col-12 mb-3" #search
          *ngIf="!mobileDetailMode && metricValuesLen > 1">
         <nx-search
@@ -16,9 +21,6 @@
         <div *ngIf="selectedData && selectedValues && !mobileDetailMode"
              class="row col-12 m-0 px-2 overflow-auto">
 
-            <div *ngIf="metricValuesLen === 0" class="row p-0 m-0 d-flex">
-                <div class="text-placeholder order-1 order-md-0 m-0 p-0 pr-2" translate>Nothing Found</div>
-            </div>
             <div *ngIf="metricValuesLen === 1" class="col-12 col-xl-7 col-xxxl-5 px-0">
                 <nx-single-entity
                         [params]="selectedPanelData"

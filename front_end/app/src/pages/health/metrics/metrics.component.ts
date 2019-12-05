@@ -48,6 +48,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
 
     menu: any;
     activeEntity: any;
+    metricName: string;
 
     objectValues = Object.values;
 
@@ -75,6 +76,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
         this.CONFIG = this.configService.getConfig();
         this.LANG  = this.languageService.getTranslations();
         this.breakpoint = '(max-width: 767px)';
+        this.containerDimensions = [];
 
         this.filterModel = {
             query: ''
@@ -89,6 +91,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
             .params
             .subscribe((params: any) => {
                 this.metricId = params.metric;
+                this.metricName = this.healthService.manifest[this.metricId].name;
                 this.menuService.setSection(this.metricId);
                 this.selectedData = this.healthService.tableHeaders[this.metricId];
                 this.selectedPanelData = this.healthService.panelParams[this.metricId];
@@ -118,9 +121,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
             this.elementTableHeight = this.elementTable.nativeElement.offsetHeight;
             this.elementSearchHeight = this.elementSearch.nativeElement.offsetHeight;
 
-            setTimeout(() => {
-                this.containerDimensions = [this.elementSearchHeight, this.elementTableHeight];
-            }, 100);
+            setTimeout(() => this.containerDimensions = [this.elementSearchHeight, this.elementTableHeight], 100);
         }
     }
 
