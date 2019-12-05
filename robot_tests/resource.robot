@@ -110,6 +110,14 @@ Validate Log In
     Check Langauge Logged In
     Sleep    1    #this is a test to see if it eliminates a problem with the login dialog popping up on logout
 
+Check Log In
+    [arguments]    ${button}=${LOG IN NAV BAR}
+    ${random email}    Get Random Email    ${BASE EMAIL}
+    Log In    ${random email}    ${password}    ${button}
+    Wait Until Element Is Visible    ${ACCOUNT NOT FOUND}
+    Log In    ${email}    ${password}    None
+    Validate Log In
+
 Log Out
     Wait Until Page Does Not Contain Element    ${BACKDROP}
     Wait Until Page Contains Element    ${LOG OUT BUTTON}
@@ -397,7 +405,7 @@ Clean up random emails
 Find and remove emails
     ${random emails}    Get WebElements    ${USERS LIST}//nx-level-3-item//span[contains(text(),'noptixautoqa+15')]/../../../a
     FOR    ${element}    IN    @{random emails}
-        ${email}    Get Text    ${USERS LIST}//nx-level-3-item//span[contains(text(),'noptixautoqa+15')]/../../../a
+        ${email}    Get Text    ${USERS LIST}//nx-level-3-item//span[contains(text(),'noptixautoqa+15')]
         Remove User Permissions    ${email}
     END
 
