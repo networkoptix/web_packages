@@ -19,7 +19,7 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
 from SeleniumLibrary.utils import (is_falsy, is_truthy, secs_to_timestr,
-                                   timestr_to_secs, SELENIUM_VERSION)
+                                   timestr_to_secs)
 from selenium.webdriver.support.color import Color
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.remote.webdriver import WebDriver
