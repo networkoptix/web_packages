@@ -184,3 +184,9 @@ Password can't be changed if current password is not provided or incorrect
     Discard Changes and Log Out
     Go To  ${url}
     CloudPortalAPI.Log In    ${url}    ${email}    ${BASE PASSWORD}
+    
+should open change password page in anonymous state
+    [tags]    anonymous
+    Go To    ${url}/account/password
+    Location should be    ${url}/account/password
+    Wait Until Element Is Visible    ${LOG IN MODAL} 

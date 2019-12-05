@@ -56,7 +56,7 @@ should open register page in anonymous state by clicking Register button on home
 
 #I am assuming this means directly going to the /register url and not clicking a button
 should open register page in anonymous state
-    [tags]    C24211
+    [tags]    C24211    anonymous
     Go To    ${url}/register
     Location should be    ${url}/register
     Wait Until Element Is Visible    ${REGISTER FORM}

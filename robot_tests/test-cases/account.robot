@@ -258,3 +258,9 @@ Language change affects emails
     Delete Email    ${email}
     Close Mailbox
     Check Langauge Logged In
+    
+should open account page in anonymous state
+    [tags]    anonymous
+    Go To    ${url}/account
+    Location should be    ${url}/account
+    Wait Until Element Is Visible    ${LOG IN MODAL} 
