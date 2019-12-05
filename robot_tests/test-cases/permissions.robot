@@ -47,6 +47,7 @@ Check Special Hint
     Set Suite Variable    ${dropdown type}    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${type}']
     Run Keyword If    "${LANGUAGE}"=="nl_NL"    Set Suite Variable    ${dropdown type}    ${SHARE MODAL}//nx-permissions-select//li//span[text()="${type}"]
     Wait Until Element is Visible    ${dropdown type}
+    Sleep    1
     Click Link    ${dropdown type}/..
     ${type}    Convert To Uppercase    ${type}
     Run Keyword If    "${type}"=="${ADMIN TEXT}"          Wait Until Element Contains
@@ -150,7 +151,8 @@ When user selects role - special hint appears
 
 Sharing works
     Log in to Auto Tests System    ${email}
-    ${random email}    Get Random Email    ${BASE EMAIL}
+    ${random email}=   Get Random Email    ${BASE EMAIL}
+    Go To Users List
     Share To    ${random email}    ${ADMIN TEXT}
     Check User Permissions    ${random email}    ${ADMIN TEXT}
     Remove User Permissions    ${random email}
@@ -176,6 +178,7 @@ Admin cannot edit self via share
     Click Button    ${SHARE PERMISSIONS DROPDOWN}
     Wait Until Element is Visible
     ...    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${VIEWER TEXT}']
+    Sleep    1
     Click Link
     ...    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${VIEWER TEXT}']/..
     Click Button    ${SHARE BUTTON MODAL}
@@ -196,8 +199,10 @@ Owner cannot edit self via share
     Click Button    ${SHARE PERMISSIONS DROPDOWN}
     Wait Until Element is Visible
     ...    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${VIEWER TEXT}']
+    Sleep    1
     Click Link
     ...    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${VIEWER TEXT}']/..
+    Sleep    1
     Click Button    ${SHARE BUTTON MODAL}
     Click Button    ${SHARE CLOSE}
     Check For Alert    ${CANNOT SHARE SYSTEM}${SPACE}${SPACE}${CHANGING OWN PERMISSIONS IS NOT ALLOWED}

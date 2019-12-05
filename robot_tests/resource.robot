@@ -240,7 +240,9 @@ Share To
     Wait Until Element Is Visible    ${SHARE PERMISSIONS DROPDOWN}
     Click Button    ${SHARE PERMISSIONS DROPDOWN}
     Wait Until Element Is Visible    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${permissions}']
+    Sleep    1
     Click Link    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${permissions}']/..
+    Sleep    1
     Click Button    ${SHARE BUTTON MODAL}
     Check For Alert    ${NEW PERMISSIONS SAVED}
     Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
@@ -294,14 +296,14 @@ Change User Permissions
     [arguments]    ${permissions}
     Wait Until Elements Are Visible    ${USER EMAIL}    ${ACCESS LEVEL DROPDOWN}
     Click Button    ${ACCESS LEVEL DROPDOWN}
-    ${p}=   Set Variable    ${ACCESS LEVEL DROPDOWN}/..${DROPDOWN MENU LIST}/li[contains(@class,'dropdown-item-container')]/a/span[text()='${permissions}']
+    ${p}=   Set Variable    ${ACCESS LEVEL DROPDOWN}/..${DROPDOWN MENU LIST}/li[contains(@class,'dropdown-item-container')]/a[contains(@class, "dropdown-item")]/span[text()='${permissions}']/..
     Wait Until Element Is Visible    ${p}
-    Click Link    ${p}/..
-
+    sleep    1
+    Click Link    ${p}
+#
 Remove User Permissions
     [arguments]    ${user email address}
     ${User In List}=   Select user in Users List    ${user email address}
-    Go To Users List
     Wait Until Element Is Visible    ${REMOVE USER BUTTON}
     Click Button    ${REMOVE USER BUTTON}
     Wait Until Element Is Visible    ${REMOVE BUTTON}
@@ -394,8 +396,9 @@ Clean up random emails
     Open Browser and Go To URL    ${url}
     Log In    ${EMAIL OWNER}    ${password}
     Validate Log In
+    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
     Go To Users List
-    ${status}    Run Keyword And Return Status    Wait Until Element Is Visible
+    ${status}    Run Keyword And Return Status    Wait Until Page Contains Element
     ...    ${USERS LIST}//nx-level-3-item//span[contains(text(),'noptixautoqa+15')]/../../../a
     Run Keyword If    ${status}    Find and remove emails
     Close Browser
@@ -403,7 +406,7 @@ Clean up random emails
 Find and remove emails
     ${random emails}    Get WebElements    ${USERS LIST}//nx-level-3-item//span[contains(text(),'noptixautoqa+15')]/../../../a
     FOR    ${element}    IN    @{random emails}
-        ${email}    Get Text    ${USERS LIST}//nx-level-3-item//span[contains(text(),'noptixautoqa+15')]/../../../a
+        ${email}    Get Text    ${USERS LIST}//nx-level-3-item//span[contains(text(),'noptixautoqa+15')]
         Remove User Permissions    ${email}
     END
 
