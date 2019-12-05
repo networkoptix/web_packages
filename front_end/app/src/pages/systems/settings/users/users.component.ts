@@ -105,7 +105,9 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                     this.userSubscription.unsubscribe();
                 }
                 this.userSubscription = this.system.systemSubject.subscribe(() => {
-                    this.setUser();
+                    if (!this.applyService.locked) {
+                        this.setUser();
+                    }
                 });
             });
 

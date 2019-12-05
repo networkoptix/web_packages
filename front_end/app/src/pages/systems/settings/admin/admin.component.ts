@@ -37,7 +37,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
     userDisconnectSystem: any;
     deletingSystem: any;
-    userRole: string;
     currentlyMerging: boolean;
     debugMode: boolean;
     betaMode: boolean;
@@ -101,10 +100,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                     this.system = system;
                     this.systemSubscription = system.systemSubject.subscribe(() => {
                         this.settingsService.footerSubject.next(true);
-                        this.userRole = system.accessRole;
-                        if (system.accessRole in this.LANG.accessRoles) {
-                            this.userRole = this.LANG.accessRoles[system.accessRole].label;
-                        }
                         this.updateSettings(this.currentlyMerging);
                     });
                     this.deletingSystem = this.processService.createProcess(() => {
@@ -214,6 +209,14 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                        this.updateSettings(this.currentlyMerging);
                        this.settingsService.system = this.system;
                    });
+    }
+
+    updateUserRole() {
+        let userRole = this.system.accessRole;
+        if (this.system.accessRole in this.LANG.accessRoles) {
+            userRole = this.LANG.accessRoles[this.system.accessRole].label;
+        }
+        return userRole;
     }
 
     ngOnDestroy() {
