@@ -62,12 +62,17 @@ export class AppComponent {
 
         this.CONFIG = this.config.getConfig();
 
-        const authUriSub = this.uriService.getURI().pipe(timeout(3000), finalize(() => authUriSub.unsubscribe())).subscribe(params => {
-            if (params.auth) {
-                authUriSub.unsubscribe();
-            }
-            this.appStateService.ready = !params.auth;
-        }, () => {});
+        // Allows 3 seconds for auth query param to be detected and set appstate.ready to false.
+        // This makes sure only the preloader is shown before the page is refreshed to a logged in state.
+        // After 3 seconds we unsubscribe to make sure we don't change the ready state while the app is already loaded
+        const authUriSub = this.uriService.getURI()
+            .pipe(timeout(3000), finalize(() => authUriSub.unsubscribe()))
+            .subscribe(params => {
+                if (params.auth) {
+                    authUriSub.unsubscribe();
+                }
+                this.appStateService.ready = !params.auth;
+            }, () => {});
 
         this.scrollMechanicsService.setWindowSize(window.innerHeight, window.innerWidth);
 
