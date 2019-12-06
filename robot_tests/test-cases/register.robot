@@ -36,6 +36,7 @@ should open register page in anonymous state by clicking Register button on top 
     Wait Until Element Is Visible    ${CREATE ACCOUNT HEADER}
     Click Link    ${CREATE ACCOUNT HEADER}
     Location Should Be    ${url}/register
+    Run keyword and continue on failure    Title Should Be    ${REGISTER TITLE TEXT} - ${PRODUCT_NAME}
 
 should open register page from register success page by clicking Register button on top right corner
     [tags]    email
@@ -57,8 +58,7 @@ should open register page in anonymous state by clicking Register button on home
 #I am assuming this means directly going to the /register url and not clicking a button
 should open register page in anonymous state
     [tags]    C24211    anonymous
-    Go To    ${url}/register
-    Location should be    ${url}/register
+    Run keyword and continue on failure    Open page anonymously    ${url}/register    ${REGISTER TITLE TEXT} - ${PRODUCT_NAME}
     Wait Until Element Is Visible    ${REGISTER FORM}
     Check Log In    button=None
 

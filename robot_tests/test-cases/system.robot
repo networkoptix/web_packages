@@ -51,6 +51,8 @@ systems dropdown should allow you to go back to the systems page
     Wait Until Element Is Visible    ${ALL SYSTEMS}
     Click Link    ${ALL SYSTEMS}
     Location Should Be    ${url}/systems
+    Run keyword and continue on failure    Title Should Be    ${SYSTEMS TITLE TEXT} - ${PRODUCT_NAME}
+
 
 should confirm, if owner deletes system (You are going to disconnect your system from cloud)
     [tags]    Threaded
