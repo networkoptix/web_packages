@@ -419,3 +419,40 @@ User can be invited with client custom permissions
     Remove User Permissions    ${random email}
     Delete All Emails
     Close Mailbox
+    
+Disable enable User on Cloud Portal correctly affects the User on Cloud Portal
+    [tags]    C63390
+    # Step 1
+    Log in to Auto Tests System    ${email}
+    Check User Permissions    ${EMAIL NOT OWNER}    ${VIEWER TEXT}
+    # Step 2
+    Set Checkbox Value   ${DISABLE USER SWITCH}    false
+    Wait Until Elements Are Visible    ${ACCOUNT SAVE}   
+    Click Button    ${ACCOUNT SAVE}
+    Sleep    2 
+    Check User Permissions    ${EMAIL NOT OWNER}    ${VIEWER TEXT}
+    Element Text Should Be    ${USER DISABLED MSG}    ${USER DISABLED TEXT}
+    # Step 3
+    Log Out
+    Go To    ${ENV}/systems
+    Log In   ${EMAIL NOT OWNER}    ${BASE PASSWORD}    button=None
+    Wait Until Location Is    ${ENV}/systems
+    Sleep    5
+    Page Should Contain Element    ${YOU HAVE NO SYSTEMS} 
+    # Step 4
+    Log Out
+    Log in to Auto Tests System    ${email}
+    Check User Permissions    ${EMAIL NOT OWNER}    ${VIEWER TEXT}
+    Set Checkbox Value   ${DISABLE USER SWITCH}    true
+    Wait Until Elements Are Visible    ${ACCOUNT SAVE}  
+    Click Button    ${ACCOUNT SAVE} 
+    Sleep    2  
+    Check User Permissions    ${EMAIL NOT OWNER}    ${VIEWER TEXT}
+    Page Should Not Contain Element   ${USER DISABLED MSG}
+    # Step 5
+    Log Out
+    Log in to Auto Tests System    ${EMAIL NOT OWNER}
+    Page Should Not Contain Element    ${YOU HAVE NO SYSTEMS}  
+    
+    
+        
