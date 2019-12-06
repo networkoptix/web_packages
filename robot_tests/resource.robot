@@ -255,12 +255,10 @@ Edit User Permissions In Systems
     Select user in Users List    ${user email address}
     Change User Permissions    ${permissions}
     Element Text Should Be    ${ACCESS LEVEL DROPDOWN}    ${permissions}
-    ${original timeout}=   Set Selenium Timeout    60
     Wait Until Element Is Visible    ${ACCOUNT SAVE}
     Click Button    ${ACCOUNT SAVE}
     Sleep    3
     Wait Until Element Is Not Visible    ${ACCOUNT SAVE}
-    Set Selenium Timeout    ${original timeout}
 
 Check User Permissions
     [arguments]    ${user email address}    ${permissions}    ${timeout}=${selenium_timeout}
@@ -296,11 +294,13 @@ Change User Permissions
     [arguments]    ${permissions}
     Wait Until Elements Are Visible    ${USER EMAIL}    ${ACCESS LEVEL DROPDOWN}
     Click Button    ${ACCESS LEVEL DROPDOWN}
+    Sleep    1
     ${p}=   Set Variable    ${ACCESS LEVEL DROPDOWN}/..${DROPDOWN MENU LIST}/li[contains(@class,'dropdown-item-container')]/a[contains(@class, "dropdown-item")]/span[text()='${permissions}']/..
     Wait Until Element Is Visible    ${p}
-    sleep    1
+    Sleep    1
     Click Link    ${p}
-#
+    Sleep    1
+
 Remove User Permissions
     [arguments]    ${user email address}
     ${User In List}=   Select user in Users List    ${user email address}
