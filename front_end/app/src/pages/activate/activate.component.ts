@@ -8,7 +8,7 @@ import { NxDialogsService }          from '../../dialogs/dialogs.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxProcessService }          from '../../services/process.service';
 import { NxUrlProtocolService }      from '../../services/url-protocol.service';
-import { LocalStorageService }       from 'ngx-store';
+import { SessionStorageService }     from 'ngx-store';
 import { NxAccountService }          from '../../services/account.service';
 import { NxCloudApiService }         from '../../services/nx-cloud-api';
 
@@ -50,16 +50,19 @@ export class NxActivateComponent implements OnInit {
         }, {
             errorCodes : {
                 notFound : () => {
+                    this.sessionStorage.set('activationSuccess', '');
                     this.activationSuccess = false;
                     this.loading = false;
                     return false;
                 },
                 notAuthorized : () => {
+                    this.sessionStorage.set('activationSuccess', '');
                     this.activationSuccess = false;
                     this.loading = false;
                     return false;
                 },
                 accountActivated : () => {
+                    this.sessionStorage.set('activationSuccess', '');
                     this.activationSuccess = false;
                     this.loading = false;
                     return false;
@@ -68,6 +71,7 @@ export class NxActivateComponent implements OnInit {
             errorPrefix: this.LANG.errorCodes.cantActivatePrefix
         }).then(() => {
             this.pageService.setPageTitle(this.LANG.pageTitles.activateSuccess);
+            this.sessionStorage.set('activationSuccess', true);
             this.activationSuccess = true;
             this.loading = false;
             this.dialogs.dismiss();
@@ -92,7 +96,7 @@ export class NxActivateComponent implements OnInit {
     constructor(private processService: NxProcessService,
                 private cloudApiService: NxCloudApiService,
                 private urlProtocol: NxUrlProtocolService,
-                private localStorage: LocalStorageService,
+                private sessionStorage: SessionStorageService,
                 private accountService: NxAccountService,
                 private uriService: NxUriService,
                 private dialogs: NxDialogsService,
@@ -100,16 +104,16 @@ export class NxActivateComponent implements OnInit {
                 private router: Router,
                 private language: NxLanguageProviderService,
                 private pageService: NxPageService,
-                location: Location) {
+    ) {
 
         this.setupDefaults();
-        this.location = location;
     }
 
     ngOnInit(): void {
         // Process service trigger route reload (maybe AJS? ) ... revise this after we remove AJS
         this.uriParam = this.route.snapshot.data.uriParam;
         this.uriParamCode = this.route.snapshot.params.code;
+
 
         this.accountInfo = {
             newPassword : '',
@@ -119,6 +123,15 @@ export class NxActivateComponent implements OnInit {
 
         this.reactivating = (this.uriParam === 'reactivating');
         this.activationSuccess = (this.uriParam === 'activationSuccess');
+
+        if (!this.sessionStorage.get(this.uriParam)) {
+            this.activationSuccess = false;
+            this.accountService.redirectToHome();
+
+            return;
+        } else {
+            this.sessionStorage.set('activationSuccess', '');
+        }
 
         this.loading = true;
 
