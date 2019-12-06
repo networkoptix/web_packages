@@ -438,7 +438,7 @@ Disable enable User on Cloud Portal correctly affects the User on Cloud Portal
     Log In   ${EMAIL NOT OWNER}    ${BASE PASSWORD}    button=None
     Wait Until Location Is    ${ENV}/systems
     Sleep    5
-    Page Should Contain Element    ${YOU HAVE NO SYSTEMS} 
+    Wait Until Element is Visible    ${YOU HAVE NO SYSTEMS} 
     # Step 4
     Log Out
     Log in to Auto Tests System    ${email}
