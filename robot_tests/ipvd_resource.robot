@@ -189,7 +189,7 @@ Validate on IPVD Page
     ...    ${IPVD AND MORE}
     ...    ${IPVD DEVICES PANE}
     ...    ${IPVD LANDING PAGE TEXT}
-    Run keyword and continue on failure    Title should be    Supported Devices
+    Run keyword and continue on failure    Title should be    ${IPVD TITLE TEXT} - ${PRODUCT_NAME}
     Elements should Not be Visible
     ...    ${IPVD TABLE}
     ...    ${IPVD DEVICE DETAILS}

@@ -47,9 +47,9 @@ Open Browser With Options
     Go to    ${ENV}
 
 Open page anonymously
-    [Arguments]    ${address}    ${title}
-    Go To    ${url}/${address}
-    Location should be    ${url}/${address}
+    [Arguments]    ${url}    ${title}
+    Go To    ${url}
+    Location should be    ${url}
     Title should be    ${title}
 
 Set Chrome Options
@@ -355,9 +355,6 @@ Disconnect from cloud
     Click Button    ${DISCONNECT FORM DISCONNECT BUTTON}
 #    Check For Alert    ${SUCCESSFULLY DISCONNECTED}
     Sleep    5
-
-#Disconnect from cloud
-
 
 Failure Tasks
     [timeout]    5 minutes

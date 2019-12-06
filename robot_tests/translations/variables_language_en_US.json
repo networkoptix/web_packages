@@ -40,6 +40,7 @@
     "CANNOT SEND CONFIRMATION EMAIL"       :    "Cannot send confirmation Email:",
     "ACCOUNT DOES NOT EXIST"               :    "Account does not exist.",
     "CODE USED/INCORRECT"                  :    "Confirmation code is already used or incorrect",
+    "CHANGE PASSWORD TITLE TEXT"           :    "Change password",
 
     "SHARE PERMISSIONS HINT ADMINISTRATOR" :    "Unrestricted access including the ability to share",
     "SHARE PERMISSIONS HINT ADVANCED VIEWER" :  "Can view live video, browse the archive, control PTZ etc",
@@ -51,6 +52,7 @@
 
     "ACCOUNT TEXT"                         :    "Account",
     "ACCOUNT INFORMATION"                  :    "Account Information",
+    "ACCOUNT SETTINGS TEXT"                :    "Account settings",
 
     "EDIT USER BUTTON TEXT"                :    "Edit",
     "REMOVE USER BUTTON TEXT"              :    "Remove User",
@@ -194,5 +196,10 @@
     "INTEGRATION TERMS OF USE TEXT"        :    "Terms of Use",
     "INTEGRATION SUPPORT TEXT"             :    "Support",
     "INTEGRATION SUPPORT URL TEXT"         :    "Support URL",
-    "INTEGRATION SUPPORT EMAIL TEXT"       :    "Support E-mail"
+    "INTEGRATION SUPPORT EMAIL TEXT"       :    "Support E-mail",
+
+    "REGISTER TITLE TEXT"                  :    "Create account in",
+    "DOWNLOAD TITLE TEXT"                  :    "Download %VMS_NAME%",
+    "RELEASE HISTORY TITLE TEXT"           :    "Release history",
+    "IPVD TITLE TEXT"                      :    "Supported Devices",
 }
