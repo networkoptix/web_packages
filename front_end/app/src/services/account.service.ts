@@ -52,7 +52,9 @@ export class NxAccountService implements OnDestroy {
         this.loginDialogActive = false;
 
         // Distinct until changed is used to prevent the logout function from looping.
-        this.loginSubscription = this.sessionService.loginStateSubject.pipe(distinctUntilChanged())
+        this.loginSubscription = this.sessionService.loginStateSubject
+            .debounceTime(500)
+            .pipe(distinctUntilChanged())
             .subscribe((loginState) => {
                 if (loginState === null) {
                     this.logout();
