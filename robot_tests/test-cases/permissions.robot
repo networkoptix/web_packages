@@ -437,7 +437,6 @@ Disable enable User on Cloud Portal correctly affects the User on Cloud Portal
     Go To    ${ENV}/systems
     Log In   ${EMAIL NOT OWNER}    ${BASE PASSWORD}    button=None
     Wait Until Location Is    ${ENV}/systems
-    Sleep    5
     Wait Until Element is Visible    ${YOU HAVE NO SYSTEMS} 
     # Step 4
     Log Out
@@ -453,6 +452,59 @@ Disable enable User on Cloud Portal correctly affects the User on Cloud Portal
     Log Out
     Log in to Auto Tests System    ${EMAIL NOT OWNER}
     Page Should Not Contain Element    ${YOU HAVE NO SYSTEMS}  
+ 
+Administrator can add, disable and enable Viewer
+    [tags]    C63391
+    # Prep - create new user to be added to autotest system
+    Go To    ${url}/register
+    ${random email} =    Get Random Email    ${BASE EMAIL}
+    Register    mark    harmill    ${random email}    ${BASE PASSWORD}
+    Activate    ${random email}
+    # Step 1 & 2
+    Log in to Auto Tests System    ${EMAIL ADMIN}
+    Share To    ${random email}   ${VIEWER TEXT} 
+    Select user in Users List    ${random email}
+    # Step 3
+    Log Out
+    Go To     ${ENV}/systems
+    Log In    ${random email}    ${BASE PASSWORD}    button=None
+    Validate Log In
+    Page Should Not Contain Element    ${YOU HAVE NO SYSTEMS}
+    Wait Until Element Is Visible    ${YOUR ACCESS LEVEL}/span[contains(text(),'${VIEWER TEXT}')]  
+    # Step 4
+    Log Out
+    Log in to Auto Tests System    ${EMAIL ADMIN}
+    Check User Permissions    ${random email}    ${VIEWER TEXT}
+    Set Checkbox Value   ${DISABLE USER SWITCH}    false
+    Wait Until Elements Are Visible    ${ACCOUNT SAVE}   
+    Click Button    ${ACCOUNT SAVE}
+    Sleep    2 
+    Check User Permissions    ${EMAIL NOT OWNER}    ${VIEWER TEXT}
+    Element Text Should Be    ${USER DISABLED MSG}    ${USER DISABLED TEXT}
+    # Step 5
+    Log Out
+    Go To    ${ENV}/systems
+    Log In   ${random email}    ${BASE PASSWORD}    button=None
+    Validate Log In
+    Wait Until Location Is    ${ENV}/systems
+    Wait Until Element is Visible    ${YOU HAVE NO SYSTEMS} 
+    # Step 6
+    Log Out
+    Log in to Auto Tests System    ${EMAIL ADMIN}
+    Check User Permissions    ${random email}    ${VIEWER TEXT}
+    Set Checkbox Value   ${DISABLE USER SWITCH}    true
+    Wait Until Elements Are Visible    ${ACCOUNT SAVE}  
+    Click Button    ${ACCOUNT SAVE} 
+    Sleep    2  
+    Check User Permissions    ${random email}    ${VIEWER TEXT}
+    Page Should Not Contain Element   ${USER DISABLED MSG}
+    # Step 7
+    Log Out
+    Go To     ${ENV}/systems
+    Log In    ${random email}    ${BASE PASSWORD}    button=None
+    Validate Log In
+    Page Should Not Contain Element    ${YOU HAVE NO SYSTEMS}
+    Wait Until Element Is Visible    ${YOUR ACCESS LEVEL}/span[contains(text(),'${VIEWER TEXT}')]
     
-    
-        
+
+       

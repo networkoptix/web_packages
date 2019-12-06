@@ -40,7 +40,9 @@ Regular Open Browser
 Open Browser With Options
     Set Screenshot Directory    ${SCREENSHOT_DIRECTORY}
     ${chrome_options}=    Set Chrome Options Headless
-    Create Webdriver    Chrome    chrome_options=${chrome_options}
+    ${system}=    Evaluate    platform.system()    platform
+    Run Keyword if    "${system}"=="Darwin"      Create Webdriver    Chrome    chrome_options=${chrome_options}    executable_path=/usr/local/bin/chromedriver
+    ...            ELSE    Create Webdriver    Chrome    chrome_options=${chrome_options}
     Set Window Size    1920    1080
     Go to    ${ENV}
 
