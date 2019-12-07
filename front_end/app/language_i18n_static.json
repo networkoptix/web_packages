@@ -239,7 +239,7 @@
 				"ipvd_feedback_page": "Feedback for cameras page",
 				"ipvd_feedback_device": "Feedback about {{asset}}"
 			},
-			"topic": {
+			"subject": {
 				"contact_sales": "Contact sales for {{asset}}",
 				"contact_support": "Contact support for {{asset}}",
 				"integration_feedback": "Feedback for integration {{asset}}",

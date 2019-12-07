@@ -141,6 +141,7 @@
     "Settings": "Settings",
     "Show All": "Show All",
     "Some of your servers don't support cloud System merge because of outdated software version.": "Some of your servers don't support cloud System merge because of outdated software version.",
+    "Subject": "Subject",
     "Support": "Support",
     "Support E-mail": "Support E-mail",
     "Support URL": "Support URL",
@@ -162,7 +163,6 @@
     "This device has reported to support some analytics events, but we don't have exact information about them.": "This device has reported to support some analytics events, but we don't have exact information about them.",
     "To": "To",
     "Too many attempts. Try again in a minute.": "Too many attempts. Try again in a minute.",
-    "Topic": "Topic",
     "Until merge is finished you can log in to this system and watch video, but cannot change any settings.": "Until merge is finished you can log in to this system and watch video, but cannot change any settings.",
     "Update them to the": "Update them to the",
     "Updated": "Updated",
@@ -299,15 +299,15 @@
         "message": {
             "failedToSend": "Message has failed to send.",
             "sent": "Message has been sent.",
-            "title": {
-                "integration": "Get in touch with {{companyName}}",
-                "ipvd_feedback_device": "Feedback about {{asset}}",
-                "ipvd_feedback_page": "Feedback for cameras page"
-            },
-            "topic": {
+            "subject": {
                 "contact_sales": "Contact sales for {{asset}}",
                 "contact_support": "Contact support for {{asset}}",
                 "integration_feedback": "Feedback for integration {{asset}}",
+                "ipvd_feedback_device": "Feedback about {{asset}}",
+                "ipvd_feedback_page": "Feedback for cameras page"
+            },
+            "title": {
+                "integration": "Get in touch with {{companyName}}",
                 "ipvd_feedback_device": "Feedback about {{asset}}",
                 "ipvd_feedback_page": "Feedback for cameras page"
             }
