@@ -76,13 +76,14 @@ Check Language Anonymous
     Run Keyword Unless    "${lang}"=="${LANGUAGE}"   Set Language Anonymous
 
 Check Langauge Logged In
+    # TODO Move checking language and validating loggin in to "Log in" keyword
     Register Keyword To Run On Failure    NONE
     # this is a temorary fix.  Future update will use API calls
     ${previous location}=   Get Location
     Go To    ${ENV}/account
     ${status}=    Run Keyword And Return Status    Wait Until Element Is Visible    ${ACCOUNT LANGUAGE DROPDOWN}/span[@lang='${LANGUAGE}']    15
     Register Keyword To Run On Failure    Failure Tasks
-    Run Keyword If    "${status}"=="False"    Set Language
+    Run Keyword If    "${status}"=="False"    Set Language Anonymous
     Run Keyword If    "${status}"=="False"    Click Button    ${ACCOUNT SAVE}
     Sleep    5
     Go To    ${previous location}
