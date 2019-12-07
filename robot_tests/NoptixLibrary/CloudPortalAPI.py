@@ -1,5 +1,5 @@
 import requests
-
+from selenium import webdriver
 
 class CloudPortalAPI(object):
 
@@ -12,6 +12,10 @@ class CloudPortalAPI(object):
             s.post(env + '/api/account/login', login_data)
             return s
 
+    # TODO implement logging out using API where appropriate
+    # def log_out(self, env):
+    #     result = requests.post(env + '/api/account/logout')
+    #     return result.status_code
 
     def change_password(self, env, email, old_password, new_password):
         change_pass_session = self.log_in(env, email, old_password)
@@ -25,7 +29,6 @@ class CloudPortalAPI(object):
             change_pass_session.close()
             return change_pass.status_code
 
-
     def restore_password(self, env, email, code=None, new_password=None):
         with requests.Session() as restore_pass_session:
             data = {
@@ -37,10 +40,13 @@ class CloudPortalAPI(object):
             restore_pass_session.close()
             return resp.status_code
 
+    def get_language_anonymous(self, env):
+        resp = requests.get(env + '/api/utils/language')
+        return resp.json()['ajs']['language']
+
     def get_account_language(self, env, email, password):
         get_acc_lang_session = self.log_in(env, email, password)
         with get_acc_lang_session:
-            get_acc_lang_session.headers.update({'X-CSRFToken': get_acc_lang_session.cookies['csrftoken']})
             resp = get_acc_lang_session.get(env + '/api/utils/language')
             get_acc_lang_session.close()
             return resp.json()['ajs']['language']
@@ -67,3 +73,8 @@ class CloudPortalAPI(object):
             resp = disconnect_session.post(env + '/api/systems/disconnect', disconnect_data)
             disconnect_session.close()
             return resp.status_code
+
+# main() is here only for testing the methods of the class and does not affect keywords usage
+if __name__ == "__main__":
+    cp = CloudPortalAPI()
+    print(cp.get_language_anonymous('https://cloud-test.hdw.mx'))

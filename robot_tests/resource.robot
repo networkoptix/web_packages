@@ -68,12 +68,12 @@ Set Chrome Options Headless
     END
     [Return]    ${options}
 
+
 Check Language Anonymous
-#    Wait Until Page Contains Element    ${LANGUAGE DROPDOWN}/span[@lang='en_US']
     Register Keyword To Run On Failure    NONE
-    ${status}=    Run Keyword And Return Status    Wait Until Element Is Visible    ${LANGUAGE DROPDOWN}/span[@lang='${LANGUAGE}']    15
+    ${lang}=   Get Language Anonymous    ${ENV}
     Register Keyword To Run On Failure    Failure Tasks
-    Run Keyword If    "${status}"=="False"    Set Language
+    Run Keyword Unless    "${lang}"=="${LANGUAGE}"   Set Language Anonymous
 
 Check Langauge Logged In
     Register Keyword To Run On Failure    NONE
@@ -87,7 +87,7 @@ Check Langauge Logged In
     Sleep    5
     Go To    ${previous location}
 
-Set Language
+Set Language Anonymous
     [arguments]    ${lang}=${LANGUAGE}
     Wait Until Element Is Visible    ${LANGUAGE DROPDOWN}
     Click Button    ${LANGUAGE DROPDOWN}
