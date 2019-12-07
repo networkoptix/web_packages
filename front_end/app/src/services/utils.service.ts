@@ -79,29 +79,6 @@ export class NxUtilsService {
         }
     }
 
-    public secondsToTime(seconds) {
-        const timeUnits = ['d', 'h', 'm', 's'];
-        const timeDivisors = [60 * 60 * 24, 60 * 60, 60, 1];
-        const timeValues = [];
-        let time = '0s';
-
-        for (const divisor of timeDivisors) {
-            const val = Math.floor(seconds / divisor);
-            seconds -= val * divisor;
-            timeValues.push(val);
-        }
-
-        const first = timeValues.findIndex(val => val > 0);
-        if (first !== -1) {
-            time = `${timeValues[first]}${timeUnits[first]}`;
-            if (first < timeUnits.length - 1 && timeValues[first + 1]) {
-                time += ` ${timeValues[first + 1]}${timeUnits[first + 1]}`;
-            }
-        }
-
-        return time;
-    }
-
     public saveAsBlob(data, filename, type) {
         const blob: Blob = new Blob([data], {type});
         const objectUrl = URL.createObjectURL(blob);

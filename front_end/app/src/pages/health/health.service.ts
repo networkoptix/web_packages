@@ -1,6 +1,5 @@
 import { Injectable }                      from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { NxUtilsService }                  from '../../services/utils.service';
 import { NxConfigService }                 from '../../services/nx-config';
 
 @Injectable({
@@ -35,8 +34,7 @@ export class NxHealthService {
     // Remove before release
     experimental = false;
 
-    constructor(private utilsService: NxUtilsService,
-                private configService: NxConfigService) {
+    constructor(private configService: NxConfigService) {
         this.CONFIG = this.configService.getConfig();
         this.importedData = false;
     }
@@ -73,6 +71,36 @@ export class NxHealthService {
         this.systemSubject.next(system);
     }
 
+    secondsToTime(seconds, format = 'duration') {
+        const timeUnits = ['d', 'h', 'm', 's'];
+        const timeDivisors = {d: 60 * 60 * 24, h: 60 * 60, m: 60, s: 1};
+        const timeValues = {d: 0, h: 0, m: 0, s: 0};
+        let time = '';
+
+        for (const unit of timeUnits) {
+            const val = Math.floor(seconds / timeDivisors[unit]);
+            seconds -= val * timeDivisors[unit];
+            timeValues[unit] = val;
+        }
+
+        if (timeValues.d) {
+            time += `${timeValues.d}d `;
+        }
+
+        if (format === 'durationDh') {
+            time += `${timeValues.d}h`;
+        } else if (format === 'updateTime') {
+            if (timeValues.h) {
+                time += `${timeValues.h}h `;
+            }
+            time += `${timeValues.m}m`;
+        } else {
+            time += `${timeValues.h.toString().padStart(2, '0')}:${timeValues.m.toString().padStart(2, '0')}:${timeValues.s.toString().padStart(2, '0')}`;
+        }
+
+        return time;
+    }
+
     formatValue(header, value) {
         function roundInt(val) {
             if (typeof val === 'number') {
@@ -94,8 +122,8 @@ export class NxHealthService {
                 retValue = roundInt(retValue * valueFormats[format].multiplier);
                 formatDisplay = valueFormats[format].display || header.format;
                 retValue = `${retValue} ${formatDisplay}`;
-            } else if (format === 'durationS') {
-                retValue = this.utilsService.secondsToTime(retValue);
+            } else if (format.includes('duration')) {
+                retValue = this.secondsToTime(retValue, format);
             } else if (['resource', 'thumbnail'].includes(format)) {
                 retValue = this.resourceNames[retValue] || retValue;
             } else {

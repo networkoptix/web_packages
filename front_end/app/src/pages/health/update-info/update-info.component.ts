@@ -2,6 +2,7 @@ import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewEncapsulation }
 import { Subscription, timer } from 'rxjs';
 import { NxUtilsService } from '../../../services/utils.service';
 import { NxConfigService } from '../../../services/nx-config';
+import { NxHealthService } from '../health.service';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 
 @AutoUnsubscribe()
@@ -19,7 +20,7 @@ export class NxUpdateInfoComponent implements OnInit, OnDestroy {
     timerSubscription: Subscription;
 
     constructor(private config: NxConfigService,
-                private utilService: NxUtilsService) {
+                private healthService: NxHealthService) {
         this.CONFIG = this.config.getConfig();
     }
 
@@ -42,7 +43,7 @@ export class NxUpdateInfoComponent implements OnInit, OnDestroy {
         const minute = 60 * 1000;
         this.timerSubscription = timer(0, minute).subscribe((minutes) => {
             if (minutes) {
-                const time = this.utilService.secondsToTime(minutes * 60);
+                const time = this.healthService.secondsToTime(minutes * 60, 'updateTime');
                 this.lastUpdate = `${time.replace(/m/, ' min')} ago`;
             }
         });
