@@ -250,6 +250,7 @@ ${ACCOUNT SAVE}                       //nx-apply//nx-process-button//button
 ${ACCOUNT CANCEL}                     //nx-apply/div/button
 ${APPLY CHANGES BUTTON}               ${MODAL DIALOG}//button[contains(text(), 'Apply')]
 ${DISCARD CHANGES BUTTON}             ${MODAL DIALOG}//button[contains(text(), 'Discard')]
+${NO UNSAVED CHANGES}                 //nx-apply//div[text()='${NO UNSAVED CHANGES TEXT}']
 
 #Downloads
 ${DOWNLOADS HEADER}                   //h1[contains(text(),"Download")]
