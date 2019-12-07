@@ -1195,7 +1195,7 @@
             "description": "Link to integration's Terms of Use page.",
             "placeholder": "https://www.example.com",
             "type": "text",
-            "optional": false,
+            "optional": true,
             "meta": {
               "regex": "^https?:\\/\\/([\\da-z\\.-]+)\\.([a-z\\.]{2,6})([\\/\\w \\.-]*)*\\/?$"
             }
