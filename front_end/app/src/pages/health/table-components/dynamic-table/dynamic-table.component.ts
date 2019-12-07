@@ -107,6 +107,9 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
             }
 
             this.pageSize = Math.ceil(availSpace / NxDynamicTableComponent.ROW_HEIGHT);
+            if (this.pageSize < 5) {
+                this.pageSize = 5;
+            }
             this.setPagedItems();
         }
 
