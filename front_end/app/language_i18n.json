@@ -619,8 +619,8 @@
         "online": "online",
         "unavailable": "unavailable"
     },
-    "testedVersionLabel": "Tested on {{vmsName}} version:",
-    "testedVersionsLabel": "Tested on {{vmsName}} versions:",
+    "testedVersionLabel": "Tested with {{vmsName}} version:",
+    "testedVersionsLabel": "Tested with {{vmsName}} versions:",
     "users": "Users",
     "you": "you"
 }
