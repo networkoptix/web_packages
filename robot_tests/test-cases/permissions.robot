@@ -429,7 +429,7 @@ Disable enable User on Cloud Portal correctly affects the User on Cloud Portal
     Set Checkbox Value   ${DISABLE USER SWITCH}    false
     Wait Until Elements Are Visible    ${ACCOUNT SAVE}   
     Click Button    ${ACCOUNT SAVE}
-    Sleep    2 
+    Wait Until Element Is Visible    ${NO UNSAVED CHANGES}  
     Check User Permissions    ${EMAIL NOT OWNER}    ${VIEWER TEXT}
     Element Text Should Be    ${USER DISABLED MSG}    ${USER DISABLED TEXT}
     # Step 3
@@ -445,7 +445,7 @@ Disable enable User on Cloud Portal correctly affects the User on Cloud Portal
     Set Checkbox Value   ${DISABLE USER SWITCH}    true
     Wait Until Elements Are Visible    ${ACCOUNT SAVE}  
     Click Button    ${ACCOUNT SAVE} 
-    Sleep    2  
+    Wait Until Element Is Visible    ${NO UNSAVED CHANGES}  
     Check User Permissions    ${EMAIL NOT OWNER}    ${VIEWER TEXT}
     Page Should Not Contain Element   ${USER DISABLED MSG}
     # Step 5

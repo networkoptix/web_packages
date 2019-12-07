@@ -316,8 +316,8 @@ Remove User Permissions
 
 Select user in Users List
     [arguments]    ${user email address}
-    Wait Until Elements Are Visible    ${USERS LIST LINK}
-    Click Link    ${USERS LIST LINK}
+    ${status}=   Run Keyword And Return Status    Wait Until Element Is Visible   ${SHARE BUTTON SYSTEMS}   5
+    Run Keyword Unless    ${status}   Go To Users List
     ${User In List}=   Set Variable    //nx-system-settings-component//nx-menu//nx-level-3-item//span[text()='${user email address}']/../../../a
     Wait Until Element Is Visible    ${User In List}
     Click Link    ${User In List}
