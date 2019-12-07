@@ -160,7 +160,7 @@ ${DISCONNECT FROM MY ACCOUNT}         //button[contains(text(),'Disconnect from 
 ${ACCESS LEVEL DROPDOWN}              ${SYSTEM USER DETAILS}//nx-section//button[@id='permissionsSelect']
 ${HELP BLOCK}                         ${SYSTEM USER DETAILS}//nx-section//span[contains(@class,'help-block')]
 ${REMOVE USER BUTTON}                 ${SYSTEM USER DETAILS}//button[contains(text(),'${REMOVE USER BUTTON TEXT}')]
-${DISABLE USER SWITCH}                ${SYSTEM USER DETAILS}//input[@id='undefined']  
+${DISABLE USER SWITCH}                ${SYSTEM USER DETAILS}//input[@id='undefined']
 ${USER DISABLED MSG}                  ${SYSTEM USER DETAILS}//span[contains(@class,'text-danger')]
 ${REMOVE USER MODAL}                  ${MODAL DIALOG}
 ${REMOVE BUTTON}                      ${MODAL DIALOG}//button[contains(text(),'${REMOVE BUTTON TEXT}')]
@@ -239,7 +239,7 @@ ${EDIT PERMISSIONS ADVANCED VIEWER}   //form[@name='shareForm']//select[@ng-mode
 ${EDIT PERMISSIONS VIEWER}            //form[@name='shareForm']//select[@ng-model='user.role']//option[@label='Viewer']
 ${EDIT PERMISSIONS LIVE VIEWER}       //form[@name='shareForm']//select[@ng-model='user.role']//option[@label='Live Viewer']
 ${EDIT PERMISSIONS CUSTOM}            //form[@name='shareForm']//select[@ng-model='user.role']//option[@label='Custom']
-${EDIT PERMISSIONS HINT}              //form[@name='shareForm']//span[contains(@class,'help-block')]              
+${EDIT PERMISSIONS HINT}              //form[@name='shareForm']//span[contains(@class,'help-block')]
 
 #Account Page
 ${ACCOUNT EMAIL}                      //account//a[@id='settings']
@@ -481,10 +481,3 @@ ${255CHARS}                           QWErtyuiopasdfghhkljzxcvbnmqwertyuiopasdfg
 #Eye icons for password forms
 ${EYE ICON OPEN}             //span[@class="glyphicon glyphicon-eye-open ng-star-inserted"]
 ${EYE ICON CLOSED}           //span[@class="glyphicon glyphicon-eye-close ng-star-inserted"]
-
-#ASCII
-${ESCAPE}                             \\27
-${ENTER}                              \\13
-${TAB}                                \\9
-${SPACEBAR}                           \\32
-${BACKSPACE}                          \\8

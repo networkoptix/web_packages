@@ -175,18 +175,18 @@ Should respond to tab and go in the correct order
     Validate Log In
     Verify in Account Page
     Element Should Be Focused    ${ACCOUNT FIRST NAME}
-    Press Key    ${ACCOUNT FIRST NAME}    ${TAB}
+    Press Keys    ${ACCOUNT FIRST NAME}    TAB
     Element Should Be Focused    ${ACCOUNT LAST NAME}
-    Press Key    ${ACCOUNT LAST NAME}    ${TAB}
+    Press Keys    ${ACCOUNT LAST NAME}    TAB
     Element Should Be Focused    ${ACCOUNT LANGUAGE DROPDOWN}
-    Press Key    ${ACCOUNT LANGUAGE DROPDOWN}    ${ENTER}
-    Press Key    ${ACCOUNT LANGUAGE DROPDOWN}    ${TAB}
+    Press Keys    ${ACCOUNT LANGUAGE DROPDOWN}    ENTER
+    Press Keys    ${ACCOUNT LANGUAGE DROPDOWN}    TAB
     Element Should Be Focused    //nx-language-select//a//span[1]/..
-    Press Key    //nx-language-select//a//span[1]/..    ${ENTER}
-    Element Should Be Visible    ${ACCOUNT LANGUAGE DROPDOWN}/span[@lang="cs_CZ"]
-    Press Key    ${ACCOUNT LANGUAGE DROPDOWN}    ${TAB}
+    Press Keys    //nx-language-select//a//span[1]/..    ENTER
+    Element Should Be Visible    ${ACCOUNT LANGUAGE DROPDOWN}/span[@lang="cz_CZ"]
+    Press Keys    ${ACCOUNT LANGUAGE DROPDOWN}    TAB
     Element Should Be Focused    ${ACCOUNT SAVE}
-    Press Key    ${ACCOUNT SAVE}    ${ENTER}
+    Press Keys   ${ACCOUNT SAVE}    ENTER
 
 Language is changeable on the account page
     [tags]    C41574

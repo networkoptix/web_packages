@@ -158,7 +158,7 @@ Clicking save with no input in rename dialog throws error
     Log in to Autotests 2 System    ${EMAIL OWNER}
     Open Rename System Dialog
     Input Text    ${RENAME INPUT}    ${SPACE}
-    Press Key    ${RENAME INPUT}    ${BACKSPACE}
+    Press Keys    ${RENAME INPUT}    BACKSPACE
     Click Button    ${RENAME SAVE}
     Wait Until Elements Are Visible    ${RENAME INPUT WITH ERROR}    ${SYSTEM NAME IS REQUIRED}
     Click Button    ${RENAME CANCEL}

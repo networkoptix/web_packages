@@ -119,7 +119,7 @@ should respond to Enter key and save data
     Input Text    ${REGISTER EMAIL INPUT}    ${email}
     Input Text    ${REGISTER PASSWORD INPUT}    ${password}
     Click Element    ${TERMS AND CONDITIONS CHECKBOX VISIBLE}
-    Press Key    ${REGISTER PASSWORD INPUT}    ${ENTER}
+    Press Keys    ${REGISTER PASSWORD INPUT}    ENTER
     Validate Register Success
 
 should respond to Tab key
@@ -128,40 +128,40 @@ should respond to Tab key
     Click Link    ${CREATE ACCOUNT HEADER}
     Wait Until Elements Are Visible    ${REGISTER FIRST NAME INPUT}    ${REGISTER LAST NAME INPUT}    ${REGISTER EMAIL INPUT}    ${REGISTER PASSWORD INPUT}
     Element Should Be Focused    ${REGISTER FIRST NAME INPUT}
-    Press Key    ${REGISTER FIRST NAME INPUT}    ${TAB}
+    Press Keys    ${REGISTER FIRST NAME INPUT}    TAB
     Element Should Be Focused    ${REGISTER LAST NAME INPUT}
-    Press Key    ${REGISTER LAST NAME INPUT}    ${TAB}
+    Press Keys    ${REGISTER LAST NAME INPUT}    TAB
     Element Should Be Focused    ${REGISTER EMAIL INPUT}
     Sleep    1
-    Press Key    ${REGISTER EMAIL INPUT}    ${TAB}
+    Press Keys    ${REGISTER EMAIL INPUT}    TAB
     Element Should Be Focused    ${REGISTER PASSWORD INPUT}
-    Press Key    ${REGISTER PASSWORD INPUT}    ${TAB}
+    Press Keys    ${REGISTER PASSWORD INPUT}    TAB
     Element Should Be Focused    ${TERMS AND CONDITIONS CHECKBOX REAL}
 
-    Press Key    ${TERMS AND CONDITIONS CHECKBOX REAL}    ${SPACEBAR}
+    Press Keys    ${TERMS AND CONDITIONS CHECKBOX REAL}    SPACE
     Wait Until Page Contains Element    ${TERMS AND CONDITIONS CHECKBOX VISIBLE}/../../span[contains(@class,"checked")]
-    Press Key    ${TERMS AND CONDITIONS CHECKBOX REAL}    ${SPACEBAR}
+    Press Keys    ${TERMS AND CONDITIONS CHECKBOX REAL}    SPACE
     Wait Until Page Contains Element    ${TERMS AND CONDITIONS CHECKBOX VISIBLE}/../../span[contains(@class,"unchecked")]
 
-    Press Key    ${TERMS AND CONDITIONS CHECKBOX REAL}    ${TAB}
-    Press Key    ${TERMS AND CONDITIONS LINK}    ${ENTER}
+    Press Keys    ${TERMS AND CONDITIONS CHECKBOX REAL}    TAB
+    Press Keys    ${TERMS AND CONDITIONS LINK}    ENTER
     Element Should Be Focused    ${TERMS AND CONDITIONS LINK}
     ${tabs}    Get Window Handles
     Select Window    @{tabs}[1]
     Location Should Be    ${url}/content/eula
     Select Window    @{tabs}[0]
-    Press Key    ${TERMS AND CONDITIONS LINK}    ${TAB}
+    Press Keys    ${TERMS AND CONDITIONS LINK}    TAB
     Element Should Be Focused    ${PRIVACY POLICY LINK}
-    Press Key    ${PRIVACY POLICY LINK}    ${ENTER}
+    Press Keys    ${PRIVACY POLICY LINK}    ENTER
     ${tabs}    Get Window Handles
     Select Window    @{tabs}[2]
     Location Should Be    ${PRIVACY POLICY URL FULL}
     Select Window    @{tabs}[0]
 
     Clear Register Fields
-    Press Key    ${PRIVACY POLICY LINK}    ${TAB}
+    Press Keys    ${PRIVACY POLICY LINK}    TAB
     Element Should Be Focused    ${CREATE ACCOUNT BUTTON}
-    Press Key    ${CREATE ACCOUNT BUTTON}    ${ENTER}
+    Press Keys    ${CREATE ACCOUNT BUTTON}    ENTER
     Run Keyword If    "${LANGUAGE}"=="he_IL"    Set Suite Variable    ${EMAIL IS REQUIRED}    //span[@ng-if="registerForm.registerEmail.$touched && registerForm.registerEmail.$error.required" and contains(text(),'${EMAIL IS REQUIRED TEXT}')]
     Wait Until Elements Are Visible    ${FIRST NAME IS REQUIRED}    ${LAST NAME IS REQUIRED}    ${EMAIL IS REQUIRED}    ${PASSWORD IS REQUIRED}
 

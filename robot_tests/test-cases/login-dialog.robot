@@ -175,7 +175,7 @@ Should respond to Esc key and close dialog
     Wait Until Element is Visible    ${LOG IN NAV BAR}
     Click Link    ${LOG IN NAV BAR}
     Wait Until Element is Visible    ${PASSWORD INPUT}
-    Press Key    ${PASSWORD INPUT}    ${ESCAPE}
+    Press Keys    ${PASSWORD INPUT}    ESCAPE
     Wait Until Element Is Not Visible    ${LOG IN MODAL}
     Element Should Not Be Visible    ${LOG IN MODAL}
 
@@ -187,7 +187,7 @@ Should respond to Enter key and log in
     Input Text    ${EMAIL INPUT}    ${email}
     Input Text    ${PASSWORD INPUT}    ${password}
     Wait Until Element is Visible    ${LOG IN BUTTON}
-    Press Key    ${PASSWORD INPUT}    ${ENTER}
+    Press Keys    ${PASSWORD INPUT}    ENTER
     Validate Log In
 
 Should respond to Tab key
@@ -196,7 +196,7 @@ Should respond to Tab key
     Click Link    ${LOG IN NAV BAR}
     Wait Until Element is Visible    ${EMAIL INPUT}
     Set Focus To Element    ${EMAIL INPUT}
-    Press Key    ${EMAIL INPUT}    ${TAB}
+    Press Keys    ${EMAIL INPUT}    TAB
     Element Should Be Focused    ${PASSWORD INPUT}
 
 Should respond to Space key and toggle checkbox
@@ -205,9 +205,9 @@ Should respond to Space key and toggle checkbox
     Click Link    ${LOG IN NAV BAR}
     Wait Until Element is Visible    ${REMEMBER ME CHECKBOX VISIBLE}
     Set Focus To Element    ${REMEMBER ME CHECKBOX REAL}
-    Press Key    ${REMEMBER ME CHECKBOX REAL}    ${SPACEBAR}
+    Press Keys    ${REMEMBER ME CHECKBOX REAL}    SPACE
     Checkbox Should Not Be Selected    ${REMEMBER ME CHECKBOX REAL}
-    Press Key    ${REMEMBER ME CHECKBOX REAL}    ${SPACEBAR}
+    Press Keys    ${REMEMBER ME CHECKBOX REAL}    SPACE
     Checkbox Should Be Selected    ${REMEMBER ME CHECKBOX REAL}
 
 Handles two tabs, updates second tab state if logout is done on first

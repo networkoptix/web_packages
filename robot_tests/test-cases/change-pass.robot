@@ -143,17 +143,17 @@ pressing Enter key saves data
     Log In To Change Password Page
     Input Text    ${CURRENT PASSWORD INPUT}    ${password}
     Input Text    ${NEW PASSWORD INPUT}    ${password}
-    Press Key    ${NEW PASSWORD INPUT}    ${ENTER}
+    Press Keys    ${NEW PASSWORD INPUT}    ENTER
     Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
 
 pressing Tab key moves focus to the next element
     [tags]    C41841
     Log In To Change Password Page
     Input Text    ${CURRENT PASSWORD INPUT}    ${password}
-    Press Key    ${CURRENT PASSWORD INPUT}    ${TAB}
+    Press Keys    ${CURRENT PASSWORD INPUT}    TAB
     Element Should Be Focused    ${NEW PASSWORD INPUT}
     Input Text    ${NEW PASSWORD INPUT}    ${password}
-    Press Key    ${NEW PASSWORD INPUT}    ${TAB}
+    Press Keys    ${NEW PASSWORD INPUT}    TAB
     Element Should Be Focused    ${CHANGE PASSWORD BUTTON}
 
 displays password masked, shows password and changes eye icon when clicked

@@ -245,7 +245,7 @@ Wrong and empty password
     Input Text    ${MERGE PASSWORD INPUT}    qwerasdf
     Click Button    ${MERGE BUTTON MODAL}
     Wait Until Element Is Visible    ${MERGE PASSWORD INCORRECT}
-    Press Key    ${MERGE BUTTON MODAL}    ${ESCAPE}
+    Press Keys    ${MERGE BUTTON MODAL}    ESCAPE
     Disconnect from cloud
     Disconnect from cloud
 
@@ -320,7 +320,7 @@ Only one system connected to Cloud Account
     ...    ${MERGE DIALOG}//p[contains(text(),'${MERGE NOT OWNER MESSAGE 1 TEXT}')]
     ...    ${MERGE OK BUTTON}
     ...    ${MERGE X BUTTON}
-    Press Key    ${MERGE OK BUTTON}    ${ESCAPE}
+    Press Keys    ${MERGE OK BUTTON}    ESCAPE
     Wait Until Element Is Not Visible    ${MERGE DIALOG}
 
     Disconnect from cloud
