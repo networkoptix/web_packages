@@ -104,12 +104,11 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
     }
 
     ngAfterViewInit() {
-        if (this.elementTable && this.elementSearch && this.elementTiles) {
-            this.elementTableHeight = this.elementTable.nativeElement.offsetHeight;
+        if (this.elementSearch && this.elementTiles) {
             this.elementSearchHeight = this.elementSearch.nativeElement.offsetHeight;
             this.elementTilesHeight = this.elementTiles.nativeElement.offsetHeight;
 
-            setTimeout(() => this.containerDimensions = [this.elementTilesHeight, this.elementSearchHeight, this.elementTableHeight], 100);
+            this.containerDimensions = [this.elementTilesHeight, 40];
         }
     }
 
