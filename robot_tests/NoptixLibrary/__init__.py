@@ -58,8 +58,12 @@ class NoptixLibrary(object):
 
     def delete_all_text(self, locator):
         locator = self.convert_locator_to_webelement(locator)
-        locator.send_keys(Keys.CONTROL + 'a')
-        locator.send_keys(Keys.BACKSPACE)
+        if self.get_os()=="MacOS":
+            locator.send_keys(Keys.COMMAND + 'a')
+            locator.send_keys(Keys.BACKSPACE)
+        else:     
+            locator.send_keys(Keys.CONTROL + 'a')
+            locator.send_keys(Keys.BACKSPACE)
 
     def get_random_email(self, email):
         index = email.find('@')

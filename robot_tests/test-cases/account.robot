@@ -26,6 +26,7 @@ Restart
     ${status}    Run Keyword And Return Status    Validate Log In
     Register Keyword To Run On Failure    Failure Tasks
     Run Keyword If    ${status}    Log Out
+    Validate Log Out
     Go To    ${url}
 
 Reset DB and Open New Browser On Failure
