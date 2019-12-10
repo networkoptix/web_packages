@@ -61,7 +61,6 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
     containerDimensions: any = [];
 
     @ViewChild('search', { static: false }) elementSearch: ElementRef;
-    @ViewChild('table', { static: false }) elementTable: ElementRef;
 
     constructor(private accountService: NxAccountService,
                 private configService: NxConfigService,
@@ -117,11 +116,10 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        if (this.elementTable && this.elementSearch) {
-            this.elementTableHeight = this.elementTable.nativeElement.offsetHeight;
+        if (this.elementSearch) {
             this.elementSearchHeight = this.elementSearch.nativeElement.offsetHeight;
 
-            setTimeout(() => this.containerDimensions = [this.elementSearchHeight, this.elementTableHeight], 100);
+            this.containerDimensions = [this.elementSearchHeight + 16];
         }
     }
 
