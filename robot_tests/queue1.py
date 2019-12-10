@@ -24,7 +24,7 @@ TEST_LIST = list(set((test[0] for test in get_threaded_names("Threaded"))))
 # Collect the list of tests that need to be run serially
 # Note we do not use individual cases here and only want the files themselves.
 # They will be filtered by excluding the "threaded" and "threaded file"
-# tags and remove repeats
+# tags and remove repeats.
 SERIAL_LIST = list(set((test[0] for test in get_threaded_names("Unthreaded"))))
 
 
