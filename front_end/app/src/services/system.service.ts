@@ -5,7 +5,7 @@ import { NxCloudApiService } from './nx-cloud-api';
 import { NxSystemsService } from './systems.service';
 import { Injectable, OnDestroy } from '@angular/core';
 import { NxSystemAPIService } from './system-api.service';
-import { from, of, ReplaySubject } from 'rxjs';
+import { BehaviorSubject, from, of } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
 import { NxPollService } from './poll.service';
 
@@ -104,14 +104,30 @@ export class NxSystem extends System implements OnDestroy {
     activeSubscription: any;
     currentUserEmail: string;
     currentUser: NxSystemUser;
-    lostConnection: boolean;
     mediaserver: any;
 
     infoPromise: any;
     usersPromise: any;
     systemPoll: any;
 
-    systemSubject = new ReplaySubject(0);
+    connectionSubject = new BehaviorSubject<boolean>(false);
+    infoSubject = new BehaviorSubject<NxSystem>(undefined);
+
+    get lostConnection() {
+        return this.connectionSubject.getValue();
+    }
+
+    set lostConnection(value) {
+        this.connectionSubject.next(value);
+    }
+
+    get systemInfo() {
+        return this.infoSubject.getValue();
+    }
+
+    set systemInfo(system: NxSystem) {
+        this.infoSubject.next(system);
+    }
 
     constructor(CONFIG, LANG, cloudApi, systemApiService, pollService, systemsService, currentUserEmail, systemId?, serverId?) {
         super();
@@ -406,9 +422,9 @@ export class NxSystem extends System implements OnDestroy {
                     return userARole < userBRole ? -1 : 1;
                 });
                 // If system is reported to be online - try to get actual users list
-                this.systemSubject.next(this);
+                this.systemInfo = this;
                 return this.users;
-            }).then(() => {}); // Handling promise to satisfy the linter.
+            }); // Handling promise to satisfy the linter.
 
         }
         return this.usersPromise;
@@ -473,8 +489,8 @@ export class NxSystem extends System implements OnDestroy {
             this.activeSubscription.unsubscribe();
         }
         if (this.mediaserver.authGet) {
-            this.activeSubscription = this.systemPoll.subscribe((system) => {
-                this.systemSubject.next(this);
+            this.activeSubscription = this.systemPoll.subscribe(_ => {
+                this.systemInfo = this;
             });
         } else {
             setTimeout(() => this.startPoll(), 1000);
@@ -488,7 +504,7 @@ export class NxSystem extends System implements OnDestroy {
         if (this.activeSubscription) {
             this.activeSubscription.unsubscribe();
         }
-        this.systemSubject = new ReplaySubject(0);
+        this.systemInfo = undefined;
     }
 
     update() {

@@ -99,12 +99,11 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                     this.uriService.updateURI('systems/' + this.system.id, {});
                     return;
                 }
-
-                this.systemAvailable = this.system.isAvailable && this.system.mergeInfo === undefined;
                 if (this.userSubscription) {
                     this.userSubscription.unsubscribe();
                 }
-                this.userSubscription = this.system.systemSubject.subscribe(() => {
+                this.userSubscription = this.system.infoSubject.subscribe(() => {
+                    this.systemAvailable = this.system.isAvailable && this.system.mergeInfo === undefined;
                     if (!this.applyService.locked) {
                         this.setUser();
                     }

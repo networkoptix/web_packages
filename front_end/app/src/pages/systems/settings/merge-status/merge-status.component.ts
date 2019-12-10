@@ -5,6 +5,7 @@ import { NxLanguageProviderService } from '../../../../services/nx-language-prov
 import { NxSystemsService } from '../../../../services/systems.service';
 import { Subscription } from 'rxjs';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
+import { filter } from 'rxjs/operators';
 
 @AutoUnsubscribe()
 @Component({
@@ -21,6 +22,7 @@ export class NxSystemMergeStatusComponent implements OnInit, OnDestroy {
     mergeTargetSystem: any;
     system: any;
 
+    private infoSubscription: Subscription;
     private systemSubscription: Subscription;
 
     constructor(private _config: NxConfigService,
@@ -34,17 +36,18 @@ export class NxSystemMergeStatusComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.LANG = this.language.getTranslations();
-        this.systemSubscription = this.settingsService.systemSubject.subscribe((system) => {
-            if (system === undefined) {
-                return;
-            }
-            this.system = system;
-            if (this.system.mergeInfo) {
-                this.setMergeStatus(this.system.mergeInfo);
-            } else {
-                this.currentlyMerging = false;
-            }
-        });
+        this.systemSubscription = this.settingsService.systemSubject
+            .pipe(filter(system => system !== undefined))
+            .subscribe((system) => {
+                this.system = system;
+                this.infoSubscription = this.system.infoSubject.subscribe(_ => {
+                   if (this.system.mergeInfo) {
+                       this.setMergeStatus(this.system.mergeInfo);
+                   } else {
+                       this.currentlyMerging = false;
+                   }
+                });
+            });
     }
 
     getMergeTarget(targetSystemId) {

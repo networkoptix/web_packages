@@ -15,6 +15,7 @@ import { NxUtilsService }          from '../../../services/utils.service';
 import { NxRibbonService }         from '../../../components/ribbon/ribbon.service';
 import { NxToastService }          from '../../../dialogs/toast.service';
 import { Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { NxScrollMechanicsService } from '../../../services/scroll-mechanics.service';
 
@@ -57,6 +58,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
     headerHeight: number;
 
+    private connectionSubscription: Subscription;
     private footerSubscription: Subscription;
     private menuSectionSubscription: Subscription;
     private menuSubSectionSubscription: Subscription;
@@ -238,7 +240,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     }
                     this.account = account;
                     this.system = this.systemService.createSystem(this.account.email, this.systemId);
-                    this.gettingSystem.run();
+                    this.gettingSystem.run().catch();
 
                     this.system
                         .getInfo(true)
@@ -252,18 +254,23 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     if (this.systemSubscription) {
                         this.systemSubscription.unsubscribe();
                     }
-                    this.systemSubscription = this.system.systemSubject.subscribe((system) => {
-                        if (system !== undefined) {
-                            this.settingsService.system = system;
+                    this.systemSubscription = this.system.infoSubject
+                        .pipe(filter((system: any) => system !== undefined))
+                        .subscribe(_ => {
                             this.updateAlert();
                             this.updateMenu();
                             this.checkShare();
-                            if (this.system.lostConnection) {
-                                return this.connectionLost();
-                            }
                             this.menuVisible = true;
-                        }
-                    });
+                        });
+
+                    if (this.connectionSubscription) {
+                        this.connectionSubscription.unsubscribe();
+                    }
+                    this.connectionSubscription = this.system.connectionSubject
+                        .pipe(filter((connectionLost: boolean) => connectionLost))
+                        .subscribe(_ => {
+                            this.connectionLost();
+                        });
                 }
             });
     }
