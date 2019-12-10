@@ -266,20 +266,6 @@
             "type": "long_text"
           },
           {
-            "label": "Landing page large image",
-            "name": "static/images/promo/cloud.png",
-            "optional": true,
-            "advanced": true,
-            "value": "",
-            "description": "Image for the front page. Image must have transparent background.",
-            "type": "image",
-            "meta": {
-              "background": "light",
-              "format": "png",
-              "height_ge": 220
-            }
-          },
-          {
             "label": "Subtitle",
             "name": "%SUBTITLE%",
             "value": "Welcome!",
