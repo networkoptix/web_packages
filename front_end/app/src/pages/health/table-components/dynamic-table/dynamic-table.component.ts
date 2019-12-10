@@ -61,6 +61,8 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
 
     windowSize: any;
 
+    @ViewChild('thead', { static: false }) thead: ElementRef;
+    @ViewChild('tableHeaderElement', { static: false }) tableHeaderElement: ElementRef;
     // CSS does not use CONFIG so this is here to avoid confusion if changing the value
     private static ROW_HEIGHT = 26;
 
@@ -96,20 +98,21 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
                 ... this is why some hard coded stuff and math
              */
             this.windowSize = this.scrollMechanicsService.windowSizeSubject.getValue();
-            const TABLE_BODY_HEIGHT = this.pageSize * NxDynamicTableComponent.ROW_HEIGHT;
-            const ELEMENTS_HEIGHT = changes.dimensions.currentValue.reduce((prev, curr) => prev + curr, 0) - TABLE_BODY_HEIGHT;
+            const ELEMENTS_HEIGHT = changes.dimensions.currentValue.reduce((prev, curr) => prev + curr, 0);
+            const THEAD_HEIGHT = this.thead.nativeElement.offsetHeight;
             const PADDING = 16;
             const PAGINATION_HEIGHT = 64;
-            let availSpace = this.windowSize.height - PAGINATION_HEIGHT - ELEMENTS_HEIGHT - 2 * PADDING;
+            let availSpace = this.windowSize.height - PAGINATION_HEIGHT - ELEMENTS_HEIGHT - 4 * PADDING - THEAD_HEIGHT - 48;
 
             if (this.tableHeader) {
-                availSpace -= 2 * NxDynamicTableComponent.ROW_HEIGHT;
+                availSpace -= this.tableHeaderElement.nativeElement.offsetHeight;
             }
 
             this.pageSize = Math.ceil(availSpace / NxDynamicTableComponent.ROW_HEIGHT);
             if (this.pageSize < 5) {
                 this.pageSize = 5;
             }
+
             this.setPagedItems();
         }
 
