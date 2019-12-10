@@ -351,3 +351,10 @@ should update owner name in systems list, if it's changed
     Wait Until Elements Are Visible    ${AUTO TESTS TITLE}    ${AUTO TESTS USER}    ${AUTO TESTS OPEN NX}
     Wait Until Element Contains    ${AUTO TESTS USER}    newFirstName newLastName
     Reset user owner first/last name
+    
+should open systems page in anonymous state
+    [tags]    anonymous
+    Go To    ${url}/systems
+    Location should be    ${url}/systems
+    Wait Until Element Is Visible    ${LOG IN MODAL} 
+    Check Log In    button=None 

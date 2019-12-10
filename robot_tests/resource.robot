@@ -46,6 +46,12 @@ Open Browser With Options
     Set Window Size    1920    1080
     Go to    ${ENV}
 
+Open page anonymously
+    [Arguments]    ${url}    ${title}
+    Go To    ${url}
+    Location should be    ${url}
+    Title should be    ${title}
+
 Set Chrome Options
     [Documentation]    Set Chrome options for headless mode
     ${options}=    Evaluate    sys.modules['selenium.webdriver'].ChromeOptions()    sys, selenium.webdriver
@@ -62,26 +68,27 @@ Set Chrome Options Headless
     END
     [Return]    ${options}
 
+
 Check Language Anonymous
-#    Wait Until Page Contains Element    ${LANGUAGE DROPDOWN}/span[@lang='en_US']
     Register Keyword To Run On Failure    NONE
-    ${status}=    Run Keyword And Return Status    Wait Until Element Is Visible    ${LANGUAGE DROPDOWN}/span[@lang='${LANGUAGE}']    15
+    ${lang}=   Get Language Anonymous    ${ENV}
     Register Keyword To Run On Failure    Failure Tasks
-    Run Keyword If    "${status}"=="False"    Set Language
+    Run Keyword Unless    "${lang}"=="${LANGUAGE}"   Set Language Anonymous
 
 Check Langauge Logged In
+    # TODO Move checking language and validating loggin in to "Log in" keyword
     Register Keyword To Run On Failure    NONE
     # this is a temorary fix.  Future update will use API calls
     ${previous location}=   Get Location
     Go To    ${ENV}/account
     ${status}=    Run Keyword And Return Status    Wait Until Element Is Visible    ${ACCOUNT LANGUAGE DROPDOWN}/span[@lang='${LANGUAGE}']    15
     Register Keyword To Run On Failure    Failure Tasks
-    Run Keyword If    "${status}"=="False"    Set Language
+    Run Keyword If    "${status}"=="False"    Set Language Anonymous
     Run Keyword If    "${status}"=="False"    Click Button    ${ACCOUNT SAVE}
     Sleep    5
     Go To    ${previous location}
 
-Set Language
+Set Language Anonymous
     [arguments]    ${lang}=${LANGUAGE}
     Wait Until Element Is Visible    ${LANGUAGE DROPDOWN}
     Click Button    ${LANGUAGE DROPDOWN}
@@ -102,9 +109,11 @@ Log In
     Sleep    0.25
     Wait Until Element Is Visible    ${LOG IN BUTTON}
     Click Button    ${LOG IN BUTTON}
+    Sleep    1
 
 Validate Log In
-    Wait Until Element is Visible    ${ACCOUNT DROPDOWN}
+    [arguments]    ${timeout}=${selenium_timeout}
+    Wait Until Element is Visible    ${ACCOUNT DROPDOWN}    ${timeout}
     Sleep    1
     Check Langauge Logged In
     Sleep    1    #this is a test to see if it eliminates a problem with the login dialog popping up on logout
@@ -114,7 +123,7 @@ Check Log In
     ${random email}    Get Random Email    ${BASE EMAIL}
     Log In    ${random email}    ${password}    ${button}
     Wait Until Element Is Visible    ${ACCOUNT NOT FOUND}
-    Log In    ${email}    ${password}    None
+    Log In    ${EMAIL OWNER}    ${password}    None
     Validate Log In
 
 Log Out

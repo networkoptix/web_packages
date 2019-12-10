@@ -540,6 +540,7 @@ export class NxSystemService {
             );
             this.systemsCache[id] = system;
         }
+        system.lostConnection = false;
         system.startPoll();
         return system;
     }

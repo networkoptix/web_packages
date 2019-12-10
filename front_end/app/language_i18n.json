@@ -153,6 +153,7 @@
     "Settings": "Settings",
     "Show All": "Show All",
     "Some of your servers don't support cloud System merge because of outdated software version.": "Some of your servers don't support cloud System merge because of outdated software version.",
+    "Subject": "Subject",
     "Support": "Support",
     "Support E-mail": "Support E-mail",
     "Support URL": "Support URL",
@@ -175,7 +176,6 @@
     "This device has reported to support some analytics events, but we don't have exact information about them.": "This device has reported to support some analytics events, but we don't have exact information about them.",
     "To": "To",
     "Too many attempts. Try again in a minute.": "Too many attempts. Try again in a minute.",
-    "Topic": "Topic",
     "Tracks and logs all user actions.": "Tracks and logs all user actions.",
     "Until merge is finished you can log in to this system and watch video, but cannot change any settings.": "Until merge is finished you can log in to this system and watch video, but cannot change any settings.",
     "Update them to the": "Update them to the",
@@ -189,7 +189,6 @@
     "When enabled, system will discover new cameras and servers. Also, \n                            it will automatically and persistently send discovery requests to \n                            cameras in order to get the camera's status update. \n                            Failover enabled on some servers ignore status check prohibition.": "When enabled, system will discover new cameras and servers. Also, \n                            it will automatically and persistently send discovery requests to \n                            cameras in order to get the camera's status update. \n                            Failover enabled on some servers ignore status check prohibition.",
     "Works with:": "Works with:",
     "Wrong password": "Wrong password",
-    "You can merge only those cloud Systems, where you have the \"Owner\" permissions.": "You can merge only those cloud Systems, where you have the \"Owner\" permissions.",
     "You can only merge Systems where you are the owner.": "You can only merge Systems where you are the owner.",
     "You have registered in %CLOUD_NAME%": "You have registered in %CLOUD_NAME%",
     "Your Email": "Your Email",
@@ -371,15 +370,15 @@
         "message": {
             "failedToSend": "Message has failed to send.",
             "sent": "Message has been sent.",
-            "title": {
-                "integration": "Get in touch with {{companyName}}",
-                "ipvd_feedback_device": "Feedback about {{asset}}",
-                "ipvd_feedback_page": "Feedback for cameras page"
-            },
-            "topic": {
+            "subject": {
                 "contact_sales": "Contact sales for {{asset}}",
                 "contact_support": "Contact support for {{asset}}",
                 "integration_feedback": "Feedback for integration {{asset}}",
+                "ipvd_feedback_device": "Feedback about {{asset}}",
+                "ipvd_feedback_page": "Feedback for cameras page"
+            },
+            "title": {
+                "integration": "Get in touch with {{companyName}}",
                 "ipvd_feedback_device": "Feedback about {{asset}}",
                 "ipvd_feedback_page": "Feedback for cameras page"
             }
@@ -626,8 +625,8 @@
     "phoneNumberWithLabel": "Tel: {{number}}",
     "pleaseSelect": "Please select...",
     "privacyPolicy": {
-        "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent.",
-        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent."
+        "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a> which include instruction on how to withdraw your consent.",
+        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a> which include instruction on how to withdraw your consent."
     },
     "registration": {
         "agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
@@ -700,8 +699,8 @@
         "online": "online",
         "unavailable": "unavailable"
     },
-    "testedVersionLabel": "Tested on {{vmsName}} version:",
-    "testedVersionsLabel": "Tested on {{vmsName}} versions:",
+    "testedVersionLabel": "Tested with {{vmsName}} version:",
+    "testedVersionsLabel": "Tested with {{vmsName}} versions:",
     "topXByVolume": "Top {{value}} by volume:",
     "users": "Users",
     "you": "you"

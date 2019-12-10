@@ -11,5 +11,6 @@ from notifications.models import Message
 def get_code(request):
     require_params(request, ('email', 'type'))
     data = request.data
-    message = Message.objects.get(user_email=data['email'], type=data['type'])
-    return api_success({"code": message.message['code']})
+    message = Message.objects.filter(user_email=data['email'], type=data['type']).last()
+    code = message.message.get('code', 'Does not exist') if message else 'Does not exist'
+    return api_success({"code": code})

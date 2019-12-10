@@ -188,7 +188,6 @@ Reset state
     END
     Run Keyword Unless    "${state[0]}"=="PASS"    Disconnect from cloud
     Log Out
-    Validate Log Out
     Log In    ${EMAIL MERGE OWNER 2}    ${password}
     Validate Log In
     ${state}    Run Keyword And Ignore Error    Element Should Be Visible    ${YOU HAVE NO SYSTEMS}

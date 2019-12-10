@@ -239,7 +239,7 @@
 				"ipvd_feedback_page": "Feedback for cameras page",
 				"ipvd_feedback_device": "Feedback about {{asset}}"
 			},
-			"topic": {
+			"subject": {
 				"contact_sales": "Contact sales for {{asset}}",
 				"contact_support": "Contact support for {{asset}}",
 				"integration_feedback": "Feedback for integration {{asset}}",
@@ -425,8 +425,8 @@
 		}
 	},
 	"privacyPolicy": {
-		"integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent.",
-		"ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent."
+		"integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a> which include instruction on how to withdraw your consent.",
+		"ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a> which include instruction on how to withdraw your consent."
 	},
 	"common": {
 		"cameraLinks": {
@@ -487,8 +487,8 @@
 	},
 	"systemAdministration": "System Administration",
 	"users": "Users",
-	"testedVersionLabel": "Tested on {{vmsName}} version:",
-	"testedVersionsLabel": "Tested on {{vmsName}} versions:",
+	"testedVersionLabel": "Tested with {{vmsName}} version:",
+	"testedVersionsLabel": "Tested with {{vmsName}} versions:",
 	"About %CLOUD_NAME%": "About %CLOUD_NAME%",
 	"Download %VMS_NAME%": "Download %VMS_NAME%",
 	"Integrations": "Integrations",

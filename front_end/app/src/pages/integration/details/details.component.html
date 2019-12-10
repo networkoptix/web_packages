@@ -57,11 +57,11 @@
                 <div>
                     <label class="group-label" translate>Developer</label>
                 </div>
-                <div *ngIf="plugin.information.companyName">
+                <div *ngIf="plugin.information.companyName && plugin.information.companyWeb">
                     <a [href]="plugin.information.companyWeb"
                        target="_blank">{{plugin.information.companyName}}</a>
                 </div>
-                <div *ngIf="plugin.information.companyWeb">
+                <div *ngIf="plugin.information.termsOfUseLink">
                     <a [href]="plugin.information.termsOfUseLink"
                        target="_blank" translate>Terms of Use</a>
                 </div>

@@ -26,7 +26,6 @@ Restart
     ${status}    Run Keyword And Return Status    Validate Log In
     Register Keyword To Run On Failure    Failure Tasks
     Run Keyword If    ${status}    Log Out
-    Validate Log Out
     Go To    ${url}
 
 Reset DB and Open New Browser On Failure
@@ -43,6 +42,7 @@ Can access the account page from dropdown
     Click Button    ${ACCOUNT DROPDOWN}
     Wait Until Element is Visible    ${ACCOUNT SETTINGS BUTTON}
     Click Link    ${ACCOUNT SETTINGS BUTTON}
+    Title Should Be    ${ACCOUNT SETTINGS TEXT} - ${PRODUCT_NAME}
     Verify in account page
 
 Can access the account page from direct link while logged in
@@ -257,3 +257,9 @@ Language change affects emails
     Delete Email    ${email}
     Close Mailbox
     Check Langauge Logged In
+    
+should open account page in anonymous state
+    [tags]    anonymous
+    Run keyword and continue on failure    Open page anonymously    ${url}/account    ${ACCOUNT SETTINGS TEXT} - ${PRODUCT_NAME}
+    Wait Until Element Is Visible    ${LOG IN MODAL} 
+    Check Log In    button=None

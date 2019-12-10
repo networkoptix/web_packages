@@ -59,12 +59,14 @@ Download link takes you to the /downloads page
     ${os}=   Get OS
     ${os}    Convert To Lowercase    ${os}
     Wait Until Location Is    ${url}/download/${os}
+    Run keyword and continue on failure    Title Should Be    ${DOWNLOAD TITLE TEXT} - ${PRODUCT_NAME}
 #    Wait Until Element Is Visible    ${LOG IN MODAL}
 
 Going to the downloads page anonymous asks for login and closing takes you back to home
     [tags]    C42069
     Wait Until Element Is Visible    ${DOWNLOAD LINK}
     Click Link    ${DOWNLOAD LINK}
+    Run keyword and continue on failure    Title Should Be    ${DOWNLOAD TITLE TEXT} - ${PRODUCT_NAME}
     Wait Until Element Is Visible    ${LOG IN CLOSE BUTTON}
     Click Button    ${LOG IN CLOSE BUTTON}
     Wait Until Location Is    ${url}/

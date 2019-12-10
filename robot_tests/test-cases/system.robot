@@ -51,6 +51,8 @@ systems dropdown should allow you to go back to the systems page
     Wait Until Element Is Visible    ${ALL SYSTEMS}
     Click Link    ${ALL SYSTEMS}
     Location Should Be    ${url}/systems
+    Run keyword and continue on failure    Title Should Be    ${SYSTEMS TITLE TEXT} - ${PRODUCT_NAME}
+
 
 should confirm, if owner deletes system (You are going to disconnect your system from cloud)
     [tags]    Threaded
@@ -322,3 +324,11 @@ should show (your system) for owner and (owner's name) for non-owners
     FOR    ${user}    IN    @{EMAILS LIST}
         Run Keyword Unless    "${user}"=="${EMAIL OWNER}"    Check System Text    ${user}
     END
+    
+should open a system page in anonymous state
+    [tags]    anonymous
+    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
+    Location should be    ${url}/systems/${AUTO TESTS SYSTEM ID}
+    Wait Until Element Is Visible    ${LOG IN MODAL} 
+    Check Log In    button=None
+    
