@@ -102,3 +102,21 @@
     -o-animation: rotating 2s linear infinite;
     animation: rotating 2s linear infinite;
 }
+
+@mixin keyframe($animation_name) {
+    @-webkit-keyframes #{$animation-name} {
+        @content;
+    }
+    
+    @-moz-keyframes #{$animation-name} {
+        @content;
+    }
+    
+    @-o-keyframes #{$animation-name} {
+        @content;
+    }
+    
+    @keyframes #{$animation-name} {
+        @content;
+    }
+}

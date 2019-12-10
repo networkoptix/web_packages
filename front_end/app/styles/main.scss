@@ -123,38 +123,6 @@ html.webclient-page{
   padding: 0 16px;
 }
 
-//@mixin keyframe ($animation_name) {
-//    @-webkit-keyframes #{$animation-name} {
-//        @content;
-//    }
-//
-//    @-moz-keyframes #{$animation-name} {
-//        @content;
-//    }
-//
-//    @-o-keyframes #{$animation-name} {
-//        @content;
-//    }
-//
-//    @keyframes #{$animation-name} {
-//        @content;
-//    }
-//}
-//
-//@include keyframe(bubblingG) {
-//    0% {
-//        opacity:1;
-//	}
-//
-//	77% {
-//	    opacity:0;
-//	}
-//
-//	100% {
-//	    opacity:0;
-//	}
-//}
-
 a.disabled {
   /* Make the disabled links grayish*/
   color: gray;

@@ -2,8 +2,23 @@
 @import '../../../styles/_theme_palette';
 @import '../../../styles/custom/_custom_palette';
 @import '../../../styles/_theme_variables';
+@import '../../styles/mixins';
 
 nx-process-button {
+    @include keyframe(bubblingG) {
+        0% {
+            opacity:1;
+    	}
+
+    	77% {
+    	    opacity:0;
+    	}
+
+    	100% {
+    	    opacity:0;
+    	}
+    }
+    
     .process-button {
         height : 32px; // IE11 cannot calculate it :(
         display  : inline-block;
