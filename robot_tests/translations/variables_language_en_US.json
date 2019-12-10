@@ -207,5 +207,6 @@
     "DOWNLOAD TITLE TEXT"                  :    "Download %VMS_NAME%",
     "RELEASE HISTORY TITLE TEXT"           :    "Release history",
     "IPVD TITLE TEXT"                      :    "Supported Devices",
-    "SYSTEMS TITLE TEXT"                   :    "Systems"
+    "SYSTEMS TITLE TEXT"                   :    "Systems",
+    "NO PERMISSION TO SHARE TEXT"		   :	"You do not have permission to share this system"
 }

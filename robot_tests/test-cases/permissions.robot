@@ -506,5 +506,50 @@ Administrator can add, disable and enable Viewer
     Page Should Not Contain Element    ${YOU HAVE NO SYSTEMS}
     Wait Until Element Is Visible    ${YOUR ACCESS LEVEL}/span[contains(text(),'${VIEWER TEXT}')]
     
-
-       
+Only Admin and Owner can access the share URL
+    # Owner test
+    Log in to Auto Tests System    ${EMAIL OWNER}
+    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}/share
+    Wait Until Elements are Visible    ${SHARE EMAIL}    ${SHARE BUTTON MODAL}
+    Click Button    ${SHARE CANCEL}
+    Log Out
+    Validate Log Out
+    # Admin test
+    Log in to Auto Tests System    ${EMAIL ADMIN}
+    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}/share
+    Wait Until Elements are Visible    ${SHARE EMAIL}    ${SHARE BUTTON MODAL}
+    Click Button    ${SHARE CANCEL}
+    Log Out
+    Validate Log Out
+    # Viewer test
+    Log in to Auto Tests System    ${EMAIL VIEWER}
+    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}/share
+    Check For Alert    ${NO PERMISSION TO SHARE TEXT}
+    Log Out
+    Validate Log Out
+    # Custom test
+    Log in to Auto Tests System    ${EMAIL CUSTOM}
+    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}/share
+    Check For Alert    ${NO PERMISSION TO SHARE TEXT}
+    Log Out
+    Validate Log Out
+    # Client Custom test
+    Log in to Auto Tests System    ${EMAIL CLIENT CUSTOM}
+    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}/share
+    Check For Alert    ${NO PERMISSION TO SHARE TEXT}
+    Log Out
+    Validate Log Out
+    # Advanced Viewer test
+    Log in to Auto Tests System    ${EMAIL ADV VIEWER} 
+    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}/share
+    Check For Alert    ${NO PERMISSION TO SHARE TEXT}
+    Log Out
+    Validate Log Out
+    # Live Viewer test
+    Log in to Auto Tests System    ${EMAIL LIVE VIEWER}
+    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}/share
+    Check For Alert    ${NO PERMISSION TO SHARE TEXT}
+    Log Out
+    Validate Log Out
+    
+          
