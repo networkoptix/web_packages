@@ -30,7 +30,12 @@ def get_article(request, url_param, **kwargs):
             state=AssetCustomizationReview.REVIEW_STATES.accepted, customization__name=settings.CUSTOMIZATION
         ).order_by('-reviewed_date').first()
         if review:
+            # Check that that the asset's current url still matches
             article = review.version.asset
+            version = article.version_id(settings.CUSTOMIZATION)
+            url_ds = DataStructure.objects.get(context__asset_type=article.asset_type, name='url')
+            if url_ds.find_actual_value(asset=article, version_id=version) != url_param:
+                article = None
 
     # If article is not found, then return a 404
     if article:
