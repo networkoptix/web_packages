@@ -117,7 +117,6 @@ export class MessageModalContent implements OnInit {
     }
 
     setSubject(subject: any) {
-        console.log(subject);
         this.subject = subject.id;
         this.subjectMessage = subject.name;
     }
