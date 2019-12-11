@@ -143,7 +143,7 @@ export class NxSystemsService implements OnDestroy {
             if (system.mergeInfo !== undefined) {
                 this.addToMergeList(system.id);
             } else if (this.mergingSystems.has(system.id)) {
-                this.removeFromMergeList(system.id);
+                setTimeout(_ => this.removeFromMergeList(system.id), 500);
             }
         });
     }

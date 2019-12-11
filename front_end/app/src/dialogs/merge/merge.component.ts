@@ -263,6 +263,8 @@ export class MergeModalContent {
                 });
             }, (err) => {
                 return Promise.reject(err);
+            }).finally(() => {
+                this.targetSystem.stopPoll();
             });
         });
     }
