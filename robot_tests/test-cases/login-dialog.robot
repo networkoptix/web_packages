@@ -205,9 +205,9 @@ Should respond to Space key and toggle checkbox
     Click Link    ${LOG IN NAV BAR}
     Wait Until Element is Visible    ${REMEMBER ME CHECKBOX VISIBLE}
     Set Focus To Element    ${REMEMBER ME CHECKBOX REAL}
-    Press Keys    ${REMEMBER ME CHECKBOX REAL}    SPACE
+    Press Keys    None    SPACE
     Checkbox Should Not Be Selected    ${REMEMBER ME CHECKBOX REAL}
-    Press Keys    ${REMEMBER ME CHECKBOX REAL}    SPACE
+    Press Keys    None    SPACE
     Checkbox Should Be Selected    ${REMEMBER ME CHECKBOX REAL}
 
 Handles two tabs, updates second tab state if logout is done on first
