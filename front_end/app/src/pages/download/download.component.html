@@ -41,8 +41,8 @@
                                                 </div>
                                             </div>
                                         </a>
-                                        <p *ngIf="LANG.downloads.groups[platform.name].supported"
-                                           [innerHTML]="LANG.downloads.groups[platform.name].supported">
+                                        <p *ngIf="CONFIG.testedOperatingSystems[platform.name]"
+                                           [innerHTML]="CONFIG.testedOperatingSystems[platform.name]">
                                         </p>
                                     </div>
                                 </div>

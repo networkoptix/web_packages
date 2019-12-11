@@ -136,6 +136,7 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
                 'supported_resolutions': asset.read_global_value("%SUPPORTED_RESOLUTIONS%"),
                 'supported_hardware_types': asset.read_global_value("%SUPPORTED_HARDWARE_TYPES%"),
                 'search_tags': asset.read_global_value("%SEARCH_TAGS%"),
+                'tested_operating_systems': asset.read_global_value("%TESTED_OPERATING_SYSTEMS%"),
                 'vendors_shown': asset.read_global_value("%VENDORS_SHOWN%"),
                 'cloud_name': asset.read_global_value("%CLOUD_NAME%"),
                 'vms_name': asset.read_global_value("%VMS_NAME%"),

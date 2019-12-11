@@ -161,6 +161,8 @@ export class AppComponent {
         // @ts-ignore
         this.CONFIG.ipvd.searchTags = window.SETTINGS.searchTags;
         // @ts-ignore
+        this.CONFIG.testedOperatingSystems = window.SETTINGS.testedOperatingSystems;
+        // @ts-ignore
         this.CONFIG.ipvd.vendorsShown = parseInt(window.SETTINGS.vendorsShown);
         // @ts-ignore
         this.CONFIG.pushConfig = window.SETTINGS.pushConfig;

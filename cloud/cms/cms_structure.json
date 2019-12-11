@@ -266,20 +266,6 @@
             "type": "long_text"
           },
           {
-            "label": "Landing page large image",
-            "name": "static/images/promo/cloud.png",
-            "optional": true,
-            "advanced": true,
-            "value": "",
-            "description": "Image for the front page. Image must have transparent background.",
-            "type": "image",
-            "meta": {
-              "background": "light",
-              "format": "png",
-              "height_ge": 220
-            }
-          },
-          {
             "label": "Subtitle",
             "name": "%SUBTITLE%",
             "value": "Welcome!",
@@ -672,6 +658,18 @@
             }
           },
           {
+            "label": "Tested Operating Systems",
+            "name": "%TESTED_OPERATING_SYSTEMS%",
+            "description": "List of operating systems that were tested.",
+            "advanced": true,
+            "type": "object",
+            "value": {
+              "linux": "Ubuntu LTS: 16.04, 18.04",
+              "macos": "OS X 10.13: \"High Sierra\", 10.14: “Mojave”, 10.15 “Catalina”.",
+              "windows": "Windows 7, 8, 8.1, 10/Enterprise, 2008 R2, 2012, 2012 R2, 2016 v1607"
+            }
+          },
+          {
             "label": "Reveal cloud merge",
             "name": "%CLOUD_MERGE%",
             "description": "Shows the cloud merge button for all systems.",
@@ -707,7 +705,6 @@
             "optional": true,
             "advanced": true
           },
-
           {
             "name": "supportEmail",
             "label": "Support E-mail",

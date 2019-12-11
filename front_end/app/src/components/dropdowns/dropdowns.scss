@@ -63,11 +63,9 @@ header {
             }
         }
     
-        .multi-column {
-            &.columns-2 {
-                left: auto;
-                right: 0;
-            }
+        .dropdown-menu {
+            left: auto;
+            right: 0;
         }
     }
     
