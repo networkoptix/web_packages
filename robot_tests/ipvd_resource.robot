@@ -134,7 +134,7 @@ Validate IPVD Device Table Column contains Desired Value in all Rows
     ${rowCount}=   Validate IPVD Device Table Not Empty
     Table Column should Contain    ${IPVD TABLE}    ${column}    ${SearchString}
     :FOR    ${rowNumber}    IN RANGE    1    ${rowCount}+1
-    \    Element should be Visible    ${IPVD TABLE ROWS}\[${rowNumber}]/td\[${column}]//div[contains(text(),'${SearchString}')]
+    \    Wait Until Element is Visible    ${IPVD TABLE ROWS}\[${rowNumber}]/td\[${column}]//div[contains(text(),'${SearchString}')]
 
 IPVD Select Device from Table Column by Value
     [Arguments]    ${column}    ${SearchString}
@@ -189,13 +189,13 @@ Validate on IPVD Page
     ...    ${IPVD AND MORE}
     ...    ${IPVD DEVICES PANE}
     ...    ${IPVD LANDING PAGE TEXT}
-    Run keyword and continue on failure    Title should be    ${IPVD TITLE TEXT} - ${PRODUCT_NAME}
+    Run keyword and continue on failure    Title should be    ${IPVD TITLE TEXT}
     Elements should Not be Visible
     ...    ${IPVD TABLE}
     ...    ${IPVD DEVICE DETAILS}
     ...    ${IPVD PAGINATION}
     ...    ${IPVD EXPORT TO CSV}
-    Validate Manufacturer More Count
+   # Validate Manufacturer More Count
 
 
 Verify IPVD Advanced Search is Closed
