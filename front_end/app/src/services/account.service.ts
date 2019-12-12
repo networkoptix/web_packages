@@ -11,7 +11,7 @@ import { NxSessionService }          from './session.service';
 import { NxQueryParamService }       from './query-param.service';
 import { NxApplyService }            from './apply.service';
 
-import { distinctUntilChanged } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { ReplaySubject, Subscription, timer } from 'rxjs';
 import { WINDOW }                             from './window-provider';
 import { NxAppStateService }                  from './nx-app-state.service';
@@ -56,8 +56,7 @@ export class NxAccountService implements OnDestroy {
 
         // Distinct until changed is used to prevent the logout function from looping.
         this.loginSubscription = this.sessionService.loginStateSubject
-            .debounceTime(500)
-            .pipe(distinctUntilChanged())
+            .pipe(debounceTime(500), distinctUntilChanged())
             .subscribe((loginState) => {
                 if (loginState === null) {
                     this.logout();
@@ -385,7 +384,7 @@ export class NxAccountService implements OnDestroy {
                                                        this.LANG.dialogs.okButton,
                                                        undefined,
                                                        this.LANG.dialogs.stayAs.replace('{email}', account.email),
-                                                       'long-cancel-button')
+                                                       'long-cancel-button');
                     if (response === true) {
                         return this.cloudApi
                                    .logout()

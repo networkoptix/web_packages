@@ -15,7 +15,6 @@ const babelLoader = {
 let isProd = false;
 
 let thingsToIgnore = [
-    'icons/**',
     'src/**/__snapshots__/**',
     'src/**/*.ts',
     'views/**',

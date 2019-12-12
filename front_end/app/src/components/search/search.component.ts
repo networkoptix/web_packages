@@ -13,6 +13,7 @@ import { NxLanguageProviderService }                        from '../../services
 import { Subscription, SubscriptionLike } from 'rxjs';
 import { NxScrollMechanicsService }                         from '../../services/scroll-mechanics.service';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
+import { debounceTime } from 'rxjs/operators';
 /* Usage
  <nx-search
      name="NAME"
@@ -118,14 +119,14 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
         });
 
         this.searchSubscription = this.searchUpdated
-            .debounceTime(this.CONFIG.search.debounceTime)
+            .pipe(debounceTime(this.CONFIG.search.debounceTime))
             .subscribe(data => {
                 this.localFilter.query = data;
                 this.modelChanged();
             });
 
         this.modelSubscription = this.modelUpdated
-            .debounceTime(this.CONFIG.search.debounceTime)
+            .pipe(debounceTime(this.CONFIG.search.debounceTime))
             .subscribe(data => {
                 this.modelChanged();
             });

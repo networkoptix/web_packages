@@ -6,8 +6,6 @@
     <title></title>
     <meta name="description" content="">
 
-    <base href="/">
-
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no">
 
     <link rel="icon" href="static/images/favicon.ico" type="image/x-icon">
@@ -23,7 +21,7 @@
 
 
 </head>
-<body class="loading">
+<body class="loading hm-standalone">
 <!--[if lt IE 7]>
 <p class="browsehappy">You are using an outdated browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
 <![endif]-->
@@ -51,38 +49,13 @@
             window.LANG = JSON.parse(this.response);
         }
     };
-    xhttpLanguage.open("GET", "/api/utils/language", false);
+    xhttpLanguage.open("GET", "/static/language_compiled.json", false);
     xhttpLanguage.send();
-
-    var xhttpSettings = new XMLHttpRequest();
-    xhttpSettings.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-            window.SETTINGS = JSON.parse(this.response);
-        }
-    };
-    xhttpSettings.open("GET", "/api/utils/settings", false);
-    xhttpSettings.send();
 </script>
 
 <% for (key in htmlWebpackPlugin.files.chunks) { %>
 <script type="text/javascript" src="/static<%= htmlWebpackPlugin.files.chunks[key].entry %>"></script>
 <% } %>
-
-<!-- Google Tag Manager -->
-<!--<script async>(function (w, d, s, l, i) {-->
-<!--    w[l] = w[l] || [];-->
-<!--    w[l].push({-->
-<!--        'gtm.start':-->
-<!--            new Date().getTime(), event: 'gtm.js'-->
-<!--    });-->
-<!--    var f = d.getElementsByTagName(s)[0],-->
-<!--        j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';-->
-<!--    j.async = true;-->
-<!--    j.src =-->
-<!--        '//www.googletagmanager.com/gtm.js?id=' + i + dl;-->
-<!--    f.parentNode.insertBefore(j, f);-->
-<!--})(window, document, 'script', 'dataLayer', Config.googleTagsCode);</script>-->
-<!-- End Google Tag Manager -->
 
 </body>
 </html>

@@ -1,5 +1,5 @@
 <nx-page-placeholder *ngIf="!healthService.ready && !hasServerError && !outdatedVersion"
-                     [condition]="systemReady && !system.isOnline"
+                     [condition]="systemReady && system && !system.isOnline"
                      type="OFFLINE"
                      preloader="true"
                      class="page-placeholder">

@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule, Title } from '@angular/platform-browser';
-import { Location, PathLocationStrategy, LocationStrategy, CommonModule } from '@angular/common';
+import { Location, HashLocationStrategy, LocationStrategy, CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
@@ -27,8 +27,8 @@ import { NxHealthComponent } from '../app/src/pages/health/health.component';
 import { WINDOWS_PROVIDERS } from '../app/src/services/window-provider';
 import { NxHealthModule } from '../app/src/pages/health/health.module';
 import { NxSearchComponent } from '../app/src/components/search/search.component';
-import {NxSystemAlertsComponent} from "../app/src/pages/health/alerts/alerts.component";
-import {NxSystemMetricsComponent} from "../app/src/pages/health/metrics/metrics.component";
+import { NxSystemAlertsComponent } from '../app/src/pages/health/alerts/alerts.component';
+import { NxSystemMetricsComponent } from '../app/src/pages/health/metrics/metrics.component';
 
 @NgModule({
     imports: [
@@ -41,7 +41,6 @@ import {NxSystemMetricsComponent} from "../app/src/pages/health/metrics/metrics.
         WebStorageModule,
         TranslateModule.forRoot(),
         RouterModule.forRoot([
-            { path: '**', redirectTo: 'health' },
             { path: 'health', component: NxHealthComponent,
                 children: [
                     {
@@ -55,8 +54,10 @@ import {NxSystemMetricsComponent} from "../app/src/pages/health/metrics/metrics.
                         path: ':metric', component: NxSystemMetricsComponent,
                     }
                 ]
-            }
+            },
+            { path: '**', redirectTo: 'health' }
         ], {
+            useHash: true,
             initialNavigation: true,
             scrollPositionRestoration: 'enabled',
             anchorScrolling          : 'enabled',
@@ -70,7 +71,7 @@ import {NxSystemMetricsComponent} from "../app/src/pages/health/metrics/metrics.
         Location,
         Title,
         WINDOWS_PROVIDERS,
-        { provide: LocationStrategy, useClass: PathLocationStrategy },
+        { provide: LocationStrategy, useClass: HashLocationStrategy },
     ],
     declarations: [
         HealthMonitorComponent

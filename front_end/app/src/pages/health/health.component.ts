@@ -14,7 +14,7 @@ import { NxRibbonService }                       from '../../components/ribbon/r
 import { Subscription }               from 'rxjs';
 import { NxScrollMechanicsService }              from '../../services/scroll-mechanics.service';
 import { AutoUnsubscribe }                       from 'ngx-auto-unsubscribe';
-import { NxSystemAPIService } from '../../services/system-api.service';
+import { NxSystemAPI, NxSystemAPIService } from '../../services/system-api.service';
 
 @AutoUnsubscribe()
 @Component({
@@ -28,6 +28,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
     CONFIG: any;
     account: any;
     system: NxSystem;
+    server: NxSystemAPI;
 
     menu: any;
     systemReady: boolean;
@@ -80,7 +81,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         this.healthService.importedData = false;
         this.menu = {
             selectedSection   : '',         // updated by selectedSectionSubject
-            base              : `${this.CONFIG.systemMenu.baseUrl}${this.system && this.system.id || ''}${this.CONFIG.systemHealthMenu.baseUrl}`,
+            base              : '', // `${this.CONFIG.systemMenu.baseUrl}${this.system && this.system.id || ''}${this.CONFIG.systemHealthMenu.baseUrl}`,
             level1            : [
                 {
                     id: 'alerts',
@@ -118,20 +119,17 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                             });
                     });
                 } else {
-                    // TODO: Fix auth. Cant go to other metrics.
-                    const authKey = this.route.snapshot.queryParams.auth;
-                    this.healthService.ready = true;
                     this.systemReady = true;
-                    const server = this.serverApi.createConnection(
+                    this.server = this.serverApi.createConnection(
                         undefined, undefined,
                         undefined, () => {}
                     );
-                    server.setAuthKeys(authKey, authKey, '');
-                    server.getAggregateHealthReport()
+                    this.menu.base = '/health';
+                    this.server.getAggregateHealthReport()
                         .subscribe((result: any) => {
                             this.setupReport(result);
                         }, () => {
-                            // this.healthService.ready = false;
+                            this.healthService.ready = false;
                         });
                 }
             });
@@ -478,8 +476,14 @@ export class NxHealthComponent implements OnInit, OnDestroy {
 
     updateValues() {
         this.healthService.ready = false;
-        this.system.mediaserver.getAggregateHealthReport().subscribe((data) => {
-            this.setupReport(data);
-        });
+        if (this.system) {
+            this.system.mediaserver.getAggregateHealthReport().subscribe((data) => {
+                this.setupReport(data);
+            });
+        } else if (this.server) {
+            this.server.getAggregateHealthReport().subscribe((data) => {
+                this.setupReport(data);
+            });
+        }
     }
 }
