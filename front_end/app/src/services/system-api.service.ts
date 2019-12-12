@@ -20,7 +20,7 @@ interface User {
 }
 
 
-class NxSystemAPI {
+export class NxSystemAPI {
     /*
     * System API is a unified service for making API requests to media servers
     *
