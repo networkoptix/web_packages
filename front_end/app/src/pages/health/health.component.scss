@@ -5,31 +5,6 @@
 @import '~bootstrap/scss/mixins/breakpoints';
 
 nx-system-health-component {
-  .experimental {
-    tr:active, tr:focus, .selected {
-      td {
-        &, span {
-          .error, .warning {
-            color: $light1 !important;
-            border-bottom: 2px solid $light1 !important;
-          }
-        }
-      }
-    }
-
-    .error {
-      font-family: $font-family-medium;
-      color: $dark9 !important;
-      border-bottom: 2px solid $red_l2;
-    }
-
-    .warning {
-      font-family: $font-family-medium;
-      color: $dark9 !important;
-      border-bottom: 2px solid $yellow_d1;
-    }
-  }
-
   .error {
     font-family: $font-family-medium;
     color: $red_l2;

@@ -6,7 +6,7 @@
 </div>
 
 <div class="nx-table-wrapper" id="nx-table"
-     *ngIf="pagedItems.length" [ngClass]="{'experimental': healthService.experimental}" #dynamicTable>
+     *ngIf="pagedItems.length" #dynamicTable>
 
     <div *ngIf="tableHeader" class="table-header" [innerText]="tableHeader" #tableHeaderElement></div>
     <div class="table-wrapper">

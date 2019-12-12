@@ -31,9 +31,6 @@ export class NxHealthService {
 
     CONFIG: any;
 
-    // Remove before release
-    experimental = false;
-
     constructor(private configService: NxConfigService) {
         this.CONFIG = this.configService.getConfig();
         this.importedData = false;
