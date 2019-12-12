@@ -8,9 +8,9 @@ from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, UpdateMo
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
-from api.controllers.cloud_api import Account as Clouddb_Account
+from api.controllers.cloud_api import Account as Clouddb_Account, System as Clouddb_System
 from api.helpers.exceptions import handle_exceptions, APIRequestException, APIServiceException,\
-    api_success, get_client_ip, APINotAuthorisedException, ErrorCodes
+    api_success, get_client_ip, APINotAuthorisedException, ErrorCodes, APILogicException
 from api.models import Account
 from notifications.tasks import send_push_notification
 from notifications.models import PushNotification, PushDevice, PushSubscription
@@ -26,11 +26,16 @@ class CloudBasicAuthentication(BasicAuthentication):
         try:
             ip = get_client_ip(request)
             clouddb_account = Clouddb_Account.get(user, password, ip)
-        except APINotAuthorisedException:
-            raise exceptions.AuthenticationFailed('Invalid email/password.')
+        except (APINotAuthorisedException, APILogicException):
+            # raise exceptions.AuthenticationFailed('Invalid email/password.')
+            clouddb_account = Clouddb_System.get(user, password, user)
 
         if 'email' in clouddb_account:
             account = Account.objects.filter(email=clouddb_account['email']).first()
+
+        # Handle system auth (maybe temporary)
+        elif 'systems' in clouddb_account and 'ownerAccountEmail' in clouddb_account['systems'][0]:
+            account = Account.objects.filter(email=clouddb_account['systems'][0]['ownerAccountEmail']).first()
 
         request.data['clouddb_account'] = clouddb_account
         request.data['username'] = user
