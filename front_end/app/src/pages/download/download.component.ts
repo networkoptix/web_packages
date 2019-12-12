@@ -145,7 +145,7 @@ export class DownloadComponent implements OnInit, OnDestroy {
                         platform.files = platform.files.filter((installer) => {
                             switch (platform.name) {
                                 case 'sdk':
-                                    return installer.path.indexOf('sdk') > -1;
+                                    return this.downloads.groups[platform.name].appTypes.includes(installer.platform);
                                 default:
                                     return this.downloads.groups[platform.name].appTypes.includes(installer.appType);
                             }
