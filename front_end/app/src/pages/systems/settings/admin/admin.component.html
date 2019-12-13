@@ -62,7 +62,8 @@
             <header>
                 <h4 translate>System Settings</h4>
             </header>
-            <nx-section>
+            <nx-pre-loader *ngIf="!settingsWatchersSet"></nx-pre-loader>
+            <nx-section *ngIf="settingsWatchersSet">
                 <div class="m-0">
                 <form id="systemSettingsForm" class="form-horizontal" #systemSettingsForm="ngForm"
                     novalidate autocomplete="off">
@@ -130,7 +131,8 @@
             <header>
                 <h4 translate>Security</h4>
             </header>
-            <nx-section>
+            <nx-pre-loader *ngIf="!settingsWatchersSet"></nx-pre-loader>
+            <nx-section *ngIf="settingsWatchersSet">
                 <form id="systemSettingsForm" class="form-horizontal" novalidate autocomplete="off">
                     <div class="form-check p-0 mr-4">
                         <div class="d-flex checkbox-block align-items-center">
