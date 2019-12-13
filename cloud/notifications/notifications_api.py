@@ -111,21 +111,29 @@ def log_push_result(notification_object, message, level=logging.INFO, device_tok
 
 
 def get_system(notification_object, request_data):
-    try:
-        system = cloud_api.System.get(
-            request_data['username'], request_data['password'], notification_object.raw_system_id
-        )
-        return system['systems'][0]
-    except Exception as exception:
-        if isinstance(exception, exceptions.APINotAuthorisedException):
-            log_push_result(notification_object, 'Invalid cloud credentials for system')
-        elif isinstance(exception, exceptions.APILogicException):
-            log_push_result(
-                notification_object, f'APILogicException: ' +
-                                     'likely invalid system_id or cloud account not authorized for the system'
-            )
+    # If system credentials used, system should be in request_data
+    if 'system' in request_data:
+        if request_data['system']['id'] == notification_object.raw_system_id:
+            return request_data['system']
         else:
-            raise exception
+            log_push_result(notification_object, 'System credentials do not match target system')
+            return None
+    else:
+        try:
+            system = cloud_api.System.get(
+                request_data['username'], request_data['password'], notification_object.raw_system_id
+            )
+            return system['systems'][0]
+        except Exception as exception:
+            if isinstance(exception, exceptions.APINotAuthorisedException):
+                log_push_result(notification_object, 'Invalid cloud credentials for system')
+            elif isinstance(exception, exceptions.APILogicException):
+                log_push_result(
+                    notification_object, f'APILogicException: ' +
+                                         'likely invalid system_id or cloud account not authorized for the system'
+                )
+            else:
+                raise exception
 
 
 def process_push_response(response, notification_object, dry_run=False):
