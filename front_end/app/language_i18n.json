@@ -669,8 +669,8 @@
         "permissionsRemoved": "Permissions were removed from {{email}}",
         "settings": {
             "sessionLimitDuration": {
-                "hours": "Hour(s)",
-                "minutes": "Minute(s)"
+                "hours": "hours",
+                "minutes": "minutes"
             },
             "warningMessages": {
                 "videoEncryption": "Encrypting video traffic will significantly increase SPU usage."

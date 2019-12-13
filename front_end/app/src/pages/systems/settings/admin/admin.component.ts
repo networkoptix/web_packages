@@ -69,8 +69,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         sessionLimitUnit: new Watcher<string>(),
     };
 
-    readonly minutes: string = 'Minute(s)';
-    readonly hours: string = 'Hour(s)';
+    readonly minutes: string = 'minutes';
+    readonly hours: string = 'hours';
 
     @ViewChildren('timeUnitTracker') timeUnitTracker: QueryList<ElementRef>;
 
@@ -182,7 +182,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                     const minutesMatch = obj.value === obj.originalValue;
                     const unitMatch = sw.sessionLimitUnit.value === sw.sessionLimitUnit.originalValue;
                     if (!minutesMatch || !unitMatch) {
-                        const hourMultiplier = sw.sessionLimitUnit.value === 'Hour(s)' ? 60 : 1;
+                        const hourMultiplier = sw.sessionLimitUnit.value === this.hours ? 60 : 1;
                         changes[setting] = this.timeUnitCount * hourMultiplier;
                         obj.originalValue = obj.value;
                         if (!unitMatch) {
@@ -233,9 +233,9 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                                             this.timeUnitCount = curr;
                                             if (curr % 60 === 0) {
                                                 this.timeUnitCount /= 60;
-                                                sw.sessionLimitUnit.value = 'Hour(s)';
+                                                sw.sessionLimitUnit.value = this.hours;
                                             } else {
-                                                sw.sessionLimitUnit.value = 'Minute(s)';
+                                                sw.sessionLimitUnit.value = this.minutes;
                                             }
                                             sw[setting].value = this.timeUnitCount;
                                             this.timeUnitCount = this.timeUnitCount || 24;
@@ -404,8 +404,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
     updateTimeUnitWatcher() {
         const sw = this.settingsWatchers;
-        if (sw.sessionLimitUnit.value === 'Minute(s)' && this.timeUnitCount % 60 === 0) {
-            sw.sessionLimitUnit.value = 'Hour(s)';
+        if (sw.sessionLimitUnit.value === this.minutes && this.timeUnitCount % 60 === 0) {
+            sw.sessionLimitUnit.value = this.hours;
             this.selectedTimeUnit = this.limitSessionTimeUnits
                                         .find(e => e.name === sw.sessionLimitUnit.value);
             this.timeUnitCount /= 60;
