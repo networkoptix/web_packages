@@ -105,7 +105,7 @@
     "NO_SYSTEMS_LOGIN": "Zaloguj się do swojego systemu używając %VMS_NAME%",
     "NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "Nie masz systemów podłączonych do %CLOUD_NAME%",
     "New Password": "Nowe hasło",
-    "No unsaved changes": "No unsaved changes",
+    "No unsaved changes": "Bez niezapisanych zmian",
     "Nothing Found": "Nic nie znaleziono",
     "OK": "OK",
     "Ok": "OK",
@@ -141,6 +141,7 @@
     "Settings": "Ustawienia",
     "Show All": "Pokaż wszystko",
     "Some of your servers don't support cloud System merge because of outdated software version.": "Niektóre serwery nie obsługują złączania w chmurze z powodu przestarzałej wersji oprogramowania.",
+    "Subject": "Subject",
     "Support": "Wsparcie",
     "Support E-mail": "E-mail do wsparcia technicznego",
     "Support URL": "Adres WWW wsparcia technicznego",
@@ -162,7 +163,6 @@
     "This device has reported to support some analytics events, but we don't have exact information about them.": "To urządzenie zgłosiło, że wspiera niektóre zdarzenia analityczne, ale nie mamy dokładnych informacji o nich.",
     "To": "Do",
     "Too many attempts. Try again in a minute.": "Zbyt wiele prób. Spróbuj ponownie za minutę.",
-    "Topic": "Temat",
     "Until merge is finished you can log in to this system and watch video, but cannot change any settings.": "W trakcie złączania systemów można logować się do nich i odtwarzać wideo, ale nie można zmieniać ich konfiguracji. ",
     "Update them to the": "Zaktualizuj je do",
     "Updated": "Zaktualizowano",
@@ -174,7 +174,6 @@
     "What's New?": "Co nowego?",
     "Works with:": "Współpracuje z:",
     "Wrong password": "Nieprawidłowe hasło",
-    "You can merge only those cloud Systems, where you have the \"Owner\" permissions.": "Można złączyć tylko te systemy w chmurze, których jesteś właścicielem.",
     "You can only merge Systems where you are the owner.": "Możesz złączać tylko takie systemy, których jesteś właścicielem.",
     "You have registered in %CLOUD_NAME%": "Zarejestrowałeś się w %CLOUD_NAME%",
     "Your Email": "Twój adres e-mail",
@@ -300,15 +299,15 @@
         "message": {
             "failedToSend": "Wysyłanie wiadomości nie powiodło się.",
             "sent": "Wiadomość została wysłana.",
+            "subject": {
+                "integration_feedback": "Opinia dotycząca integracji {{asset}}",
+                "ipvd_feedback_device": "Opinie dotyczące {{asset}}",
+                "ipvd_feedback_page": "Opinia dotycząca listy kamer",
+                "sales_inquiry": "Zapytanie handlowe o {{asset}}",
+                "technical_inquiry": "Technical inquiry for {{asset}}"
+            },
             "title": {
                 "integration": "Skontaktuj się z {{companyName}}",
-                "ipvd_feedback_device": "Opinie dotyczące {{asset}}",
-                "ipvd_feedback_page": "Opinia dotycząca listy kamer"
-            },
-            "topic": {
-                "contact_sales": "Kontakt do sprzedawcy {{asset}}",
-                "contact_support": "Kontakt do wsparcia technicznego {{asset}}",
-                "integration_feedback": "Opinia dotycząca integracji {{asset}}",
                 "ipvd_feedback_device": "Opinie dotyczące {{asset}}",
                 "ipvd_feedback_page": "Opinia dotycząca listy kamer"
             }
@@ -361,16 +360,13 @@
             },
             "linux": {
                 "label": "Ubuntu Linux",
-                "shortLabel": "Ubuntu",
-                "supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+                "shortLabel": "Ubuntu"
             },
             "mac": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "macos": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "sdk": {
                 "label": "SDK",
@@ -378,8 +374,7 @@
                 "supported": "C++ cross platform SDK"
             },
             "windows": {
-                "label": "Windows",
-                "supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+                "label": "Windows"
             }
         },
         "mobile": {
@@ -555,8 +550,8 @@
     "phoneNumberWithLabel": "Tel: {{number}}",
     "pleaseSelect": "Proszę wybrać...",
     "privacyPolicy": {
-        "integration": "Przesyłając ten formularz, zgadzasz się na kontakt od %INTEGRATION_COMPANY% i/lub %COMPANY_NAME%.\nPolitykę prywatności firmy %INTEGRATION_COMPANY% znajdziesz <a href=\"%INTEGRATION_PRIVACY_POLICY%\" target=\"blank\">tutaj</a>, a politykę prywatności firmy %COMPANY_NAME% <a href=\"%PRIVACY_LINK%\" target=\"blank\">tutaj</a>. Zawierają one instrukcje dotyczące wycofania zgody.",
-        "ipvd": "Przesyłając ten formularz zgadzasz się na kontakt przez %COMPANY_NAME%.\nPolitykę prywatności firmy %COMPANY_NAME% znajdziesz <a href=\"%PRIVACY_LINK%\" target=\"blank\">tutaj</a>. Zawiera ona instrukcje dotyczące wycofania zgody."
+        "integration": "Przesyłając ten formularz, zgadzasz się na kontakt od %INTEGRATION_COMPANY% i/lub %COMPANY_NAME%.\nPolitykę prywatności firmy %INTEGRATION_COMPANY% znajdziesz <a href=\"%INTEGRATION_PRIVACY_POLICY%\" target=\"_blank\">tutaj</a>, a politykę prywatności firmy %COMPANY_NAME% <a href=\"%PRIVACY_LINK%\" target=\"_blank\">tutaj</a>. Zawierają one instrukcje dotyczące wycofania zgody.",
+        "ipvd": "Przesyłając ten formularz zgadzasz się na kontakt przez %COMPANY_NAME%.\nPolitykę prywatności firmy %COMPANY_NAME% znajdziesz <a href=\"%PRIVACY_LINK%\" target=\"_blank\">tutaj</a>. Zawiera ona instrukcje dotyczące wycofania zgody."
     },
     "registration": {
         "agreement": "Wyrażam zgodę na <a href=\"/content/eula\" target=\"_blank\">Zasady i warunki</a> oraz na <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Politykę prywatności</a>"
@@ -597,12 +592,12 @@
         "mergeSystemTitle": "Złącz systemy",
         "mySystemSearch": "IMeMyMine",
         "offline": "Serwer jest odłączony",
-        "offlineAlertRibbon": "System is offline. Some settings may not be available.",
+        "offlineAlertRibbon": "System jest offline. Niektóre ustawienia mogą być niedostępne.",
         "openClient": "Otwórz w %VMS_NAME%",
         "openClientNoSystem": "Otwórz %VMS_NAME%",
         "permissionsRemoved": "Uprawnienia zostały usunięte z {{email}}",
-        "shareOffline": "Cannot share system while it is offline",
-        "shareUnauthorized": "You do not have permission to share this system",
+        "shareOffline": "Nie można udostępnić systemu, gdy jest on offline",
+        "shareUnauthorized": "Nie masz uprawnień do udostępniania tego systemu",
         "successDeleted": "System {{systemName}} został pomyślnie usunięty z Twojego konta",
         "successDisconnected": "System został pomyślnie odłączony od %CLOUD_NAME%",
         "successRename": "Zapisana nazwa systemu",
@@ -620,8 +615,8 @@
         "online": "online",
         "unavailable": "niedostępny"
     },
-    "testedVersionLabel": "Testowane na {{vmsName}} w wersji:",
-    "testedVersionsLabel": "Testowane na {{vmsName}} w wersjach:",
+    "testedVersionLabel": "Tested with {{vmsName}} version:",
+    "testedVersionsLabel": "Tested with {{vmsName}} versions:",
     "users": "Użytkownicy",
     "you": "Ty"
 }

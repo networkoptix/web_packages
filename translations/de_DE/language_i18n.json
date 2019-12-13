@@ -141,6 +141,7 @@
     "Settings": "Einstellungen",
     "Show All": "Alle anzeigen",
     "Some of your servers don't support cloud System merge because of outdated software version.": "Einige Ihrer Server unterstützen das Zusammenführen von Cloudsystemen aufgrund einer veralteten Softwareversion nicht.",
+    "Subject": "Subject",
     "Support": "Support",
     "Support E-mail": "Support Email",
     "Support URL": "Support-URL",
@@ -162,7 +163,6 @@
     "This device has reported to support some analytics events, but we don't have exact information about them.": "Es wurde gemeldet, dass dieses Gerät einige Analytikereignisse unterstützt, wir haben jedoch keine genauen Informationen darüber.",
     "To": "Zu",
     "Too many attempts. Try again in a minute.": "Zu viele Versuche. Versuchen Sie es später erneut.",
-    "Topic": "Thema",
     "Until merge is finished you can log in to this system and watch video, but cannot change any settings.": "Bis die Zusammenführung abgeschlossen ist, können Sie sich bei diesem System anmelden und Videos ansehen, aber keine Einstellungen ändern.",
     "Update them to the": "Aktualisieren Sie sie auf",
     "Updated": "Aktualisiert",
@@ -174,7 +174,6 @@
     "What's New?": "Was ist neu?",
     "Works with:": "Arbeitet mit:",
     "Wrong password": "Falsches Passwort",
-    "You can merge only those cloud Systems, where you have the \"Owner\" permissions.": "Sie können nur die Cloudsysteme zusammenführen, bei denen Sie die Berechtigungen \"Besitzer\" haben.",
     "You can only merge Systems where you are the owner.": "Sie können nur Cloudsysteme zusammenführen, in welchen Sie Besitzer sind.",
     "You have registered in %CLOUD_NAME%": "Sie haben sich in %CLOUD_NAME% registriert",
     "Your Email": "Ihre Email",
@@ -300,15 +299,15 @@
         "message": {
             "failedToSend": "Nachricht konnte nicht gesendet werden.",
             "sent": "Die Nachricht wurde gesendet.",
+            "subject": {
+                "integration_feedback": "Feedback zur Integration {{asset}}",
+                "ipvd_feedback_device": "Feedback zu {{asset}}",
+                "ipvd_feedback_page": "Feedback zur Kameraseite",
+                "sales_inquiry": "Verkaufsanfrage für {{asset}}",
+                "technical_inquiry": "Technical inquiry for {{asset}}"
+            },
             "title": {
                 "integration": "Kontaktieren Sie {{companyName}}",
-                "ipvd_feedback_device": "Feedback zu {{asset}}",
-                "ipvd_feedback_page": "Feedback zur Kameraseite"
-            },
-            "topic": {
-                "contact_sales": "Kontaktiere Vertrieb für {{asset}}",
-                "contact_support": "Kontaktiere Support für {{asset}}",
-                "integration_feedback": "Feedback zur Integration {{asset}}",
                 "ipvd_feedback_device": "Feedback zu {{asset}}",
                 "ipvd_feedback_page": "Feedback zur Kameraseite"
             }
@@ -361,16 +360,13 @@
             },
             "linux": {
                 "label": "Ubuntu Linux",
-                "shortLabel": "Ubuntu",
-                "supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+                "shortLabel": "Ubuntu"
             },
             "mac": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "macos": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "sdk": {
                 "label": "SDK",
@@ -378,8 +374,7 @@
                 "supported": "C++ plattformübergreifendes SDK"
             },
             "windows": {
-                "label": "Windows",
-                "supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+                "label": "Windows"
             }
         },
         "mobile": {
@@ -555,8 +550,8 @@
     "phoneNumberWithLabel": "Tel: {{number}}",
     "pleaseSelect": "Bitte auswählen...",
     "privacyPolicy": {
-        "integration": "Mit dem Absenden dieses Formulars erklären Sie sich damit einverstanden, dass Sie von {{INTEGRATION_COMPANY}}} und/oder %COMPANY_NAME% kontaktiert werden.\nSie finden die {{INTEGRATION_COMPANY}}} Datenschutzerklärung <a href=\"{{INTEGRATION_PRIVACY_POLICY}}}\" target=\"blank\">hier</a> und die %COMPANY_NAME% Datenschutzerklärung <a href=\"%PRIVACY_LINK%\" target=\"blank\">hier</a>, die Anweisungen enthalten, wie Sie Ihre Zustimmung widerrufen können.",
-        "ipvd": "Mit dem Absenden dieses Formulars erklären Sie sich damit einverstanden, dass Sie von %COMPANY_NAME% kontaktiert werden.\nSie finden %COMPANY_NAME% Datenschutzerklärung <a href=\"%PRIVACY_LINK%\" target=\"blank\">hier</a>, die Anweisungen zum Widerruf Ihrer Einwilligung enthält."
+        "integration": "Mit dem Absenden dieses Formulars erklären Sie sich damit einverstanden, dass Sie von {{INTEGRATION_COMPANY}}} und/oder %COMPANY_NAME% kontaktiert werden.\nSie finden die {{INTEGRATION_COMPANY}}} Datenschutzerklärung <a href=\"{{INTEGRATION_PRIVACY_POLICY}}}\" target=\"_blank\">hier</a> und die %COMPANY_NAME% Datenschutzerklärung <a href=\"%PRIVACY_LINK%\" target=\"_blank\">hier</a>, die Anweisungen enthalten, wie Sie Ihre Zustimmung widerrufen können.",
+        "ipvd": "Mit dem Absenden dieses Formulars erklären Sie sich damit einverstanden, dass Sie von %COMPANY_NAME% kontaktiert werden.\nSie finden %COMPANY_NAME% Datenschutzerklärung <a href=\"%PRIVACY_LINK%\" target=\"_blank\">hier</a>, die Anweisungen zum Widerruf Ihrer Einwilligung enthält."
     },
     "registration": {
         "agreement": "Ich stimme den <a href=\"/content/eula\" target=\"_blank\">Allgemeinen Geschäftsbedingungen</a> und der <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Datenschutzrichtlinie</a> zu"
@@ -602,7 +597,7 @@
         "openClientNoSystem": "Öffnen Sie %VMS_NAME%",
         "permissionsRemoved": "Berechtigungen wurden von {{email}} entfernt",
         "shareOffline": "Das System kann nicht freigegeben werden, solange es offline ist",
-        "shareUnauthorized": "You do not have permission to share this system",
+        "shareUnauthorized": "Sie sind nicht berechtigt, dieses System freizugeben",
         "successDeleted": "Das System {{systemName}} wurde erfolgreich von Ihrem Account gelöscht",
         "successDisconnected": "Das System wurde erfolgreich von %CLOUD_NAME% getrennt",
         "successRename": "Systemname wurde gespeichert",
@@ -620,8 +615,8 @@
         "online": "online",
         "unavailable": "nicht verfügbar"
     },
-    "testedVersionLabel": "Getestet auf {{vmsName}} Version:",
-    "testedVersionsLabel": "Getestet auf {{vmsName}} Versionen:",
+    "testedVersionLabel": "Tested with {{vmsName}} version:",
+    "testedVersionsLabel": "Tested with {{vmsName}} versions:",
     "users": "Benutzer",
     "you": "du"
 }

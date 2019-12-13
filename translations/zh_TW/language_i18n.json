@@ -141,6 +141,7 @@
     "Settings": "設定",
     "Show All": "顯示全部",
     "Some of your servers don't support cloud System merge because of outdated software version.": "由於軟體版本過舊, 您的某些伺服器不支援雲系統合併。",
+    "Subject": "Subject",
     "Support": "支援",
     "Support E-mail": "支援電子郵件",
     "Support URL": "支援URL",
@@ -162,7 +163,6 @@
     "This device has reported to support some analytics events, but we don't have exact information about them.": "據傳此設備支援某些分析事件，但我們並沒有關於它們的確切資訊。",
     "To": "發送到",
     "Too many attempts. Try again in a minute.": "嘗試次數過多，請稍後再試。",
-    "Topic": "主題",
     "Until merge is finished you can log in to this system and watch video, but cannot change any settings.": "在合併完成前, 您可以登入到此系統並觀看影片, 但不能更改任何設定。",
     "Update them to the": "更新到",
     "Updated": "更新",
@@ -174,7 +174,6 @@
     "What's New?": "最新消息!",
     "Works with:": "適用於：",
     "Wrong password": "密碼不正確",
-    "You can merge only those cloud Systems, where you have the \"Owner\" permissions.": "您只能合併那些擁有“所有者”權限的雲系統。",
     "You can only merge Systems where you are the owner.": "當您的權限為擁有者時, 就可以合併系統",
     "You have registered in %CLOUD_NAME%": "您已在%CLOUD_NAME% 中註冊",
     "Your Email": "您的信箱",
@@ -300,15 +299,15 @@
         "message": {
             "failedToSend": "訊息發送失敗",
             "sent": "訊息已發送",
+            "subject": {
+                "integration_feedback": "整合 {{asset}} 的回饋意見",
+                "ipvd_feedback_device": "{{asset}} 的回饋意見",
+                "ipvd_feedback_page": "攝影機頁面的回饋意見",
+                "sales_inquiry": "{{asset}}的產品諮詢",
+                "technical_inquiry": "Technical inquiry for {{asset}}"
+            },
             "title": {
                 "integration": "與 {{companyName}} 聯繫",
-                "ipvd_feedback_device": "{{asset}} 的回饋意見",
-                "ipvd_feedback_page": "攝影機頁面的回饋意見"
-            },
-            "topic": {
-                "contact_sales": "聯繫 {{asset}} 業務",
-                "contact_support": "聯繫 {{asset}} 技術支援",
-                "integration_feedback": "整合 {{asset}} 的回饋意見",
                 "ipvd_feedback_device": "{{asset}} 的回饋意見",
                 "ipvd_feedback_page": "攝影機頁面的回饋意見"
             }
@@ -361,16 +360,13 @@
             },
             "linux": {
                 "label": "Ubuntu Linux",
-                "shortLabel": "Ubuntu",
-                "supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+                "shortLabel": "Ubuntu"
             },
             "mac": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "macos": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "sdk": {
                 "label": "SDK",
@@ -378,8 +374,7 @@
                 "supported": "C ++跨平台SDK"
             },
             "windows": {
-                "label": "Windows",
-                "supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+                "label": "Windows"
             }
         },
         "mobile": {
@@ -555,8 +550,8 @@
     "phoneNumberWithLabel": "電話： {{number}}",
     "pleaseSelect": "請選擇...",
     "privacyPolicy": {
-        "integration": "提交表單即表示您同意與{{INTEGRATION_COMPANY}} 和/或 %COMPANY_NAME%聯繫。\n您可在<a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">瀏覽 {{INTEGRATION_COMPANY}} 隱私政策 </a> 和 %COMPANY_NAME% 隱私政策 <a href=\"%PRIVACY_LINK%\" target=\"blank\">這裡</a> 可了解如何撤銷您的同意。",
-        "ipvd": "提交表單即表示同意 %COMPANY_NAME%與您聯繫。\n您可在<a href=\"%PRIVACY_LINK%\" target=\"blank\">瀏覽 %COMPANY_NAME% 隱私政策</a> ，其中包含如何撤回同意。"
+        "integration": "提交表單即表示您同意與{{INTEGRATION_COMPANY}} 和/或 %COMPANY_NAME%聯繫。\n您可在<a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">瀏覽 {{INTEGRATION_COMPANY}} 隱私政策 </a> 和 %COMPANY_NAME% 隱私政策 <a href=\"%PRIVACY_LINK%\" target=\"_blank\">這裡</a> 可了解如何撤銷您的同意。",
+        "ipvd": "提交表單即表示同意 %COMPANY_NAME%與您聯繫。\n您可在<a href=\"%PRIVACY_LINK%\" target=\"_blank\">瀏覽 %COMPANY_NAME% 隱私政策</a> ，其中包含如何撤回同意。"
     },
     "registration": {
         "agreement": "我同意<a href=\"/content/eula\" target=\"_blank\">合約條款</a>和<a href=\"%PRIVACY_LINK%\" target=\"_blank\">隱私政策</a>"
@@ -620,8 +615,8 @@
         "online": "線上",
         "unavailable": "不可用的"
     },
-    "testedVersionLabel": "測試 {{vmsName}} 版本：",
-    "testedVersionsLabel": "測試 {{vmsName}} 版本：",
+    "testedVersionLabel": "Tested with {{vmsName}} version:",
+    "testedVersionsLabel": "Tested with {{vmsName}} versions:",
     "users": "使用者",
     "you": "您"
 }

@@ -116,7 +116,7 @@
     "Page not found": "Siden ble ikke funnet",
     "Password": "Passord",
     "Password is required": "Passord er påkrevd",
-    "Password reset instructions are sent to Email": "Password reset instructions are sent to Email",
+    "Password reset instructions are sent to Email": "Instruksjoner for tilbakestilling av passord sendes til E-post",
     "Password successfully saved": "Passordet ble lagret",
     "Password:": "Passord:",
     "Please enter a valid Email": "Vennligst skriv inn en gyldig e-post",
@@ -141,6 +141,7 @@
     "Settings": "Innstillingar",
     "Show All": "Vis alle",
     "Some of your servers don't support cloud System merge because of outdated software version.": "Noen av serverne dine støtter ikke Cloud-systemfusjonen på grunn av utdatert programvareversjon.",
+    "Subject": "Subject",
     "Support": "Brukerstøtte",
     "Support E-mail": "Brukerstøtte E-post",
     "Support URL": "Brukerstøtte URL",
@@ -162,7 +163,6 @@
     "This device has reported to support some analytics events, but we don't have exact information about them.": "Denne enheten har rapportert å støtte noen analysehendelser, men vi har ikke nøyaktig informasjon om dem.",
     "To": "Til",
     "Too many attempts. Try again in a minute.": "For mange forsøk. Prøv igjen om et minutt.",
-    "Topic": "Emne",
     "Until merge is finished you can log in to this system and watch video, but cannot change any settings.": "Inntil fusjonen er ferdig kan du logge inn på dette systemet og se på video, men kan ikke endre noen innstillinger.",
     "Update them to the": "Oppdater dem til",
     "Updated": "Oppdatert",
@@ -174,7 +174,6 @@
     "What's New?": "Hva er nytt?",
     "Works with:": "Fungerer med:",
     "Wrong password": "Feil passord",
-    "You can merge only those cloud Systems, where you have the \"Owner\" permissions.": "Du kan bare slå sammen de Cloud Systemene, hvor du har \"Eier\" -tillatelsene.",
     "You can only merge Systems where you are the owner.": "Du kan bare slå sammen systemer der du er eieren.",
     "You have registered in %CLOUD_NAME%": "Du har registrert deg i %CLOUD_NAME%",
     "Your Email": "Din e-post",
@@ -300,15 +299,15 @@
         "message": {
             "failedToSend": "Meldingen har ikke sendt.",
             "sent": "Meldingen er sendt.",
+            "subject": {
+                "integration_feedback": "Tilbakemelding for integrasjon {{asset}}",
+                "ipvd_feedback_device": "Tilbakemelding for {{asset}}",
+                "ipvd_feedback_page": "Tilbakemelding for kameraer-siden",
+                "sales_inquiry": "Salgsforespørsel for {{asset}}",
+                "technical_inquiry": "Technical inquiry for {{asset}}"
+            },
             "title": {
                 "integration": "Kom i kontakt med {{companyName}}",
-                "ipvd_feedback_device": "Tilbakemelding for {{asset}}",
-                "ipvd_feedback_page": "Tilbakemelding for kameraer-siden"
-            },
-            "topic": {
-                "contact_sales": "Kontakt salg for {{asset}}",
-                "contact_support": "Kontakt brukerstøtte for {{asset}}",
-                "integration_feedback": "Tilbakemelding for integrasjon {{asset}}",
                 "ipvd_feedback_device": "Tilbakemelding for {{asset}}",
                 "ipvd_feedback_page": "Tilbakemelding for kameraer-siden"
             }
@@ -361,16 +360,13 @@
             },
             "linux": {
                 "label": "Ubuntu Linux",
-                "shortLabel": "Ubuntu",
-                "supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+                "shortLabel": "Ubuntu"
             },
             "mac": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "macos": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "sdk": {
                 "label": "SDK",
@@ -378,8 +374,7 @@
                 "supported": "C + + kryssplattform SDK"
             },
             "windows": {
-                "label": "Windows",
-                "supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+                "label": "Windows"
             }
         },
         "mobile": {
@@ -555,8 +550,8 @@
     "phoneNumberWithLabel": "Tlf: {{number}}",
     "pleaseSelect": "Please select...",
     "privacyPolicy": {
-        "integration": "Ved å sende inn dette skjemaet samtykker du til å bli kontaktet av {{INTEGRATION_COMPANY}} og / eller %COMPANY_NAME%.\nDu vil finne {{INTEGRATION_COMPANY}} personvernregler <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">her</a> og %COMPANY_NAME% personvernregler <a href=\"%PRIVACY_LINK%\" target=\"blank\">her</a> som inkluderer instruksjoner om hvordan du kan trekke tilbake ditt samtykke.",
-        "ipvd": "Ved å sende inn dette skjemaet samtykker du i å bli kontaktet av %COMPANY_NAME%.\nDu vil finne %COMPANY_NAME% personvernregler <a href=\"%PRIVACY_LINK%\" target=\"blank\">her</a> som inkluderer instruksjoner om hvordan du kan trekke tilbake ditt samtykke."
+        "integration": "Ved å sende inn dette skjemaet samtykker du til å bli kontaktet av {{INTEGRATION_COMPANY}} og / eller %COMPANY_NAME%.\nDu vil finne {{INTEGRATION_COMPANY}} personvernregler <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">her</a> og %COMPANY_NAME% personvernregler <a href=\"%PRIVACY_LINK%\" target=\"_blank\">her</a> som inkluderer instruksjoner om hvordan du kan trekke tilbake ditt samtykke.",
+        "ipvd": "Ved å sende inn dette skjemaet samtykker du i å bli kontaktet av %COMPANY_NAME%.\nDu vil finne %COMPANY_NAME% personvernregler <a href=\"%PRIVACY_LINK%\" target=\"_blank\">her</a> som inkluderer instruksjoner om hvordan du kan trekke tilbake ditt samtykke."
     },
     "registration": {
         "agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
@@ -620,8 +615,8 @@
         "online": "online",
         "unavailable": "utilgjengelig"
     },
-    "testedVersionLabel": "Testet på {{vmsName}} versjon:",
-    "testedVersionsLabel": "Testet på {{vmsName}} versjoner:",
+    "testedVersionLabel": "Tested with {{vmsName}} version:",
+    "testedVersionsLabel": "Tested with {{vmsName}} versions:",
     "users": "Brukere",
     "you": "you"
 }

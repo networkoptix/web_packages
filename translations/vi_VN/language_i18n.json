@@ -116,7 +116,7 @@
     "Page not found": "Không tìm thấy trang",
     "Password": "Mật khẩu",
     "Password is required": "Mật khẩu là bắt buộc",
-    "Password reset instructions are sent to Email": "Password reset instructions are sent to Email",
+    "Password reset instructions are sent to Email": "Đặt lại mật khẩu được gửi tới Email",
     "Password successfully saved": "Thay đổi mật khẩu thành công",
     "Password:": "Mật khẩu:",
     "Please enter a valid Email": "Vui lòng nhập Email hợp lệ",
@@ -141,6 +141,7 @@
     "Settings": "Cài đặt",
     "Show All": "Hiển thị tất cả",
     "Some of your servers don't support cloud System merge because of outdated software version.": "Một số máy chủ của bạn không hỗ trợ Hợp nhất hệ thống đám mây vì dùng phiên bản phần mềm cũ.",
+    "Subject": "Subject",
     "Support": "Hỗ trợ",
     "Support E-mail": "Hỗ trợ Email",
     "Support URL": "URL Hỗ trợ",
@@ -162,7 +163,6 @@
     "This device has reported to support some analytics events, but we don't have exact information about them.": "Thiết bị này đã được báo cáo để hỗ trợ một số sự kiện phân tích, nhưng chúng tôi không có thông tin chính xác về chúng.",
     "To": "Đến",
     "Too many attempts. Try again in a minute.": "Quá nhiều lần thử. Vui lòng thử lại sau một phút.",
-    "Topic": "Chủ đề",
     "Until merge is finished you can log in to this system and watch video, but cannot change any settings.": "Cho đến khi hợp nhất xong bạn có thể đăng nhập vào hệ thống này và xem video, nhưng không thể thay đổi bất kỳ cài đặt.",
     "Update them to the": "Cập nhật chúng lên",
     "Updated": "Được cập nhật",
@@ -174,7 +174,6 @@
     "What's New?": "Có gì mới?",
     "Works with:": "Hoạt động với:",
     "Wrong password": "Sai mật khẩu",
-    "You can merge only those cloud Systems, where you have the \"Owner\" permissions.": "Bạn chỉ có thể hợp nhất các Hệ thống đám mây mà bạn có quyền \"Owner\".",
     "You can only merge Systems where you are the owner.": "Bạn chỉ có thể hợp nhất Hệ thống nếu bạn là chủ sở hữu.",
     "You have registered in %CLOUD_NAME%": "Bạn đã đăng ký tại %CLOUD_NAME%",
     "Your Email": "Email của bạn",
@@ -300,15 +299,15 @@
         "message": {
             "failedToSend": "Tin nhắn đã không gửi được.",
             "sent": "Tin nhắn đã được gửi.",
+            "subject": {
+                "integration_feedback": "Phản hồi cho tích hợp {{asset}}",
+                "ipvd_feedback_device": "Phản hồi về {{asset}}",
+                "ipvd_feedback_page": "Phản hồi cho trang camera",
+                "sales_inquiry": "Yêu cầu bán hàng cho {{asset}}",
+                "technical_inquiry": "Technical inquiry for {{asset}}"
+            },
             "title": {
                 "integration": "Liên lạc với {{companyName}}",
-                "ipvd_feedback_device": "Phản hồi về {{asset}}",
-                "ipvd_feedback_page": "Phản hồi cho trang camera"
-            },
-            "topic": {
-                "contact_sales": "Liên hệ bán hàng cho {{asset}}",
-                "contact_support": "Liên hệ hỗ trợ cho {{asset}}",
-                "integration_feedback": "Phản hồi cho tích hợp {{asset}}",
                 "ipvd_feedback_device": "Phản hồi về {{asset}}",
                 "ipvd_feedback_page": "Phản hồi cho trang camera"
             }
@@ -361,16 +360,13 @@
             },
             "linux": {
                 "label": "Ubuntu Linux",
-                "shortLabel": "Ubuntu",
-                "supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+                "shortLabel": "Ubuntu"
             },
             "mac": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "macos": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "sdk": {
                 "label": "SDK",
@@ -378,8 +374,7 @@
                 "supported": "SDK đa nền tảng C ++"
             },
             "windows": {
-                "label": "Windows",
-                "supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+                "label": "Windows"
             }
         },
         "mobile": {
@@ -555,8 +550,8 @@
     "phoneNumberWithLabel": "Điện thoại: {{number}}",
     "pleaseSelect": "Please select...",
     "privacyPolicy": {
-        "integration": "Bằng cách gửi biểu mẫu này, bạn đồng ý liên hệ bằng {{INTEGRATION_COMPANY}} và / hoặc %COMPANY_NAME%.\nBạn sẽ tìm thấy {{INTEGRATION_COMPANY}} chính sách bảo mật <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">ở đây</a> và %COMPANY_NAME% chính sách bảo mật <a href=\"%PRIVACY_LINK%\" target=\"blank\">ở đây</a> bao gồm hướng dẫn về cách rút lại sự đồng ý của bạn.",
-        "ipvd": "Bằng cách gửi biểu mẫu này, bạn đồng ý liên hệ bằng %COMPANY_NAME%.\nBạn sẽ tìm thấy %COMPANY_NAME% chính sách bảo mật <a href=\"%PRIVACY_LINK%\" target=\"blank\">ở đây</a> bao gồm hướng dẫn về cách rút lại sự đồng ý của bạn."
+        "integration": "Bằng cách gửi biểu mẫu này, bạn đồng ý liên hệ bằng {{INTEGRATION_COMPANY}} và / hoặc %COMPANY_NAME%.\nBạn sẽ tìm thấy {{INTEGRATION_COMPANY}} chính sách bảo mật <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">ở đây</a> và %COMPANY_NAME% chính sách bảo mật <a href=\"%PRIVACY_LINK%\" target=\"_blank\">ở đây</a> bao gồm hướng dẫn về cách rút lại sự đồng ý của bạn.",
+        "ipvd": "Bằng cách gửi biểu mẫu này, bạn đồng ý liên hệ bằng %COMPANY_NAME%.\nBạn sẽ tìm thấy %COMPANY_NAME% chính sách bảo mật <a href=\"%PRIVACY_LINK%\" target=\"_blank\">ở đây</a> bao gồm hướng dẫn về cách rút lại sự đồng ý của bạn."
     },
     "registration": {
         "agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
@@ -620,8 +615,8 @@
         "online": "trực tuyến",
         "unavailable": "không khả dụng"
     },
-    "testedVersionLabel": "Đã thử nghiệm trên phiên bản {{vmsName}}:",
-    "testedVersionsLabel": "Đã thử nghiệm trên {{vmsName}} phiên bản:",
+    "testedVersionLabel": "Tested with {{vmsName}} version:",
+    "testedVersionsLabel": "Tested with {{vmsName}} versions:",
     "users": "Người sử dụng",
     "you": "you"
 }

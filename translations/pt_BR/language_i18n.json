@@ -116,7 +116,7 @@
     "Page not found": "Página não encontrada",
     "Password": "Senha",
     "Password is required": "A senha é obrigatória",
-    "Password reset instructions are sent to Email": "Password reset instructions are sent to Email",
+    "Password reset instructions are sent to Email": "Instruções de redefinição de senha são enviadas para o e-mail",
     "Password successfully saved": "Senha guardada com sucesso",
     "Password:": "Senha:",
     "Please enter a valid Email": "Por favor, introduza um email válido",
@@ -141,6 +141,7 @@
     "Settings": "Definições",
     "Show All": "Mostrar Tudo",
     "Some of your servers don't support cloud System merge because of outdated software version.": "Alguns dos seus servidores não suportam a junção do sistema de nuvem devido a versão de software desatualizada.",
+    "Subject": "Subject",
     "Support": "Suporte",
     "Support E-mail": "E-mail de suporte",
     "Support URL": "URL de suporte",
@@ -162,7 +163,6 @@
     "This device has reported to support some analytics events, but we don't have exact information about them.": "Este dispositivo relatou que suporta alguns eventos de análise, mas não temos informações precisas sobre eles.",
     "To": "Para",
     "Too many attempts. Try again in a minute.": "Demasiadas tentativas. Tente novamente mais tarde.",
-    "Topic": "Tópico",
     "Until merge is finished you can log in to this system and watch video, but cannot change any settings.": "Até que o \"Merge\" seja concluído, pode efetuar o login nesse sistema e reproduzir vídeo, mas não pode alterar as definições.",
     "Update them to the": "Atualize-os para o",
     "Updated": "Atualizado",
@@ -174,7 +174,6 @@
     "What's New?": "O que há de novo?",
     "Works with:": "Funciona com:",
     "Wrong password": "Senha incorreta",
-    "You can merge only those cloud Systems, where you have the \"Owner\" permissions.": "Você pode fazer o \"Merge\" dos sistemas em Cloud apenas onde você tiver as permissões de \"Proprietário\".",
     "You can only merge Systems where you are the owner.": "Você só pode mesclar Sistemas onde você é o proprietário.",
     "You have registered in %CLOUD_NAME%": "Você registou em %CLOUD_NAME%",
     "Your Email": "Seu E-mail",
@@ -300,15 +299,15 @@
         "message": {
             "failedToSend": "Falha no envio da mensagem.",
             "sent": "A mensagem foi enviada.",
+            "subject": {
+                "integration_feedback": "Feedback para integração {{asset}}",
+                "ipvd_feedback_device": "Comentários sobre {{asset}}",
+                "ipvd_feedback_page": "Feedback para página de câmaras",
+                "sales_inquiry": "Pesquisa de vendas para {{asset}}",
+                "technical_inquiry": "Technical inquiry for {{asset}}"
+            },
             "title": {
                 "integration": "Entre em contato com {{companyName}}",
-                "ipvd_feedback_device": "Comentários sobre {{asset}}",
-                "ipvd_feedback_page": "Feedback para página de câmaras"
-            },
-            "topic": {
-                "contact_sales": "Entre em contato com vendas para {{asset}}",
-                "contact_support": "Contate o suporte para {{asset}}",
-                "integration_feedback": "Feedback para integração {{asset}}",
                 "ipvd_feedback_device": "Comentários sobre {{asset}}",
                 "ipvd_feedback_page": "Feedback para página de câmaras"
             }
@@ -361,16 +360,13 @@
             },
             "linux": {
                 "label": "Ubuntu Linux",
-                "shortLabel": "Ubuntu",
-                "supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+                "shortLabel": "Ubuntu"
             },
             "mac": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "macos": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "sdk": {
                 "label": "SDK",
@@ -378,8 +374,7 @@
                 "supported": "C++ cruzar plataforma SDK"
             },
             "windows": {
-                "label": "Windows",
-                "supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+                "label": "Windows"
             }
         },
         "mobile": {
@@ -555,8 +550,8 @@
     "phoneNumberWithLabel": "Tel: {{number}}",
     "pleaseSelect": "Please select...",
     "privacyPolicy": {
-        "integration": "Ao enviar este formulário você concorda em ser contatado por {{INTEGRATION_COMPANY}} e/ou %COMPANY_NAME%.\nVocê encontrará {{INTEGRATION_COMPANY}} política de privacidade <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">aqui</a> e %COMPANY_NAME% Política de Privacidade aqui <a href=\"%PRIVACY_LINK%\" target=\"blank\">aqui</a> que incluem instruções sobre como retirar seu consentimento.",
-        "ipvd": "Ao enviar este formulário você concorda em ser contatado por %COMPANY_NAME%.\nVocê encontrará %COMPANY_NAME% política de privacidade <a href=\"%PRIVACY_LINK%\" target=\"blank\">aqui</a> que inclui instruções sobre como retirar seu consentimento."
+        "integration": "Ao enviar este formulário você concorda em ser contatado por {{INTEGRATION_COMPANY}} e/ou %COMPANY_NAME%.\nVocê encontrará {{INTEGRATION_COMPANY}} política de privacidade <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">aqui</a> e %COMPANY_NAME% Política de Privacidade aqui <a href=\"%PRIVACY_LINK%\" target=\"_blank\">aqui</a> que incluem instruções sobre como retirar seu consentimento.",
+        "ipvd": "Ao enviar este formulário você concorda em ser contatado por %COMPANY_NAME%.\nVocê encontrará %COMPANY_NAME% política de privacidade <a href=\"%PRIVACY_LINK%\" target=\"_blank\">aqui</a> que inclui instruções sobre como retirar seu consentimento."
     },
     "registration": {
         "agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
@@ -620,8 +615,8 @@
         "online": "online",
         "unavailable": "indisponível"
     },
-    "testedVersionLabel": "Testado em versão {{vmsName}}:",
-    "testedVersionsLabel": "Testado em versões de {{vmsName}}:",
+    "testedVersionLabel": "Tested with {{vmsName}} version:",
+    "testedVersionsLabel": "Tested with {{vmsName}} versions:",
     "users": "Utilizadores",
     "you": "you"
 }

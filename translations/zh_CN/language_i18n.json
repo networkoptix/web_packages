@@ -141,6 +141,7 @@
     "Settings": "设置",
     "Show All": "全部显示",
     "Some of your servers don't support cloud System merge because of outdated software version.": "由于软件版本过时, 您的某些服务器不支持云系统合并。",
+    "Subject": "Subject",
     "Support": "技术支持",
     "Support E-mail": "支持电子邮件",
     "Support URL": "支持 URL",
@@ -162,7 +163,6 @@
     "This device has reported to support some analytics events, but we don't have exact information about them.": "据传此设备支援某些分析事件，但我们并没有关于它们的确切信息。",
     "To": "发送至",
     "Too many attempts. Try again in a minute.": "尝试次数过多，请稍后重试。",
-    "Topic": "主题",
     "Until merge is finished you can log in to this system and watch video, but cannot change any settings.": "在合并完成前，您可以登录到此系统并观看视频，但无法更改任何配置",
     "Update them to the": "更新到",
     "Updated": "更新",
@@ -174,7 +174,6 @@
     "What's New?": "最新动态",
     "Works with:": "适用于：",
     "Wrong password": "错误的密码。",
-    "You can merge only those cloud Systems, where you have the \"Owner\" permissions.": "您只能合并那些拥有“所有者”权限的云系统。",
     "You can only merge Systems where you are the owner.": "当您的权限为拥有者时，就可以合并系统",
     "You have registered in %CLOUD_NAME%": "您已在 %CLOUD_NAME% 中注册",
     "Your Email": "您的电邮",
@@ -300,15 +299,15 @@
         "message": {
             "failedToSend": "訊息无法发送。",
             "sent": "訊息已傳送。",
+            "subject": {
+                "integration_feedback": "集成{{asset}} 反馈",
+                "ipvd_feedback_device": "关于 {{asset}} 反馈",
+                "ipvd_feedback_page": "摄像机页面反馈",
+                "sales_inquiry": "{{asset}} 的產品咨询",
+                "technical_inquiry": "Technical inquiry for {{asset}}"
+            },
             "title": {
                 "integration": "与 {{companyName}} 联系",
-                "ipvd_feedback_device": "关于 {{asset}} 反馈",
-                "ipvd_feedback_page": "摄像机页面反馈"
-            },
-            "topic": {
-                "contact_sales": "联系{{asset}} 销售人员",
-                "contact_support": "联系{{asset}} 技术支持",
-                "integration_feedback": "集成{{asset}} 反馈",
                 "ipvd_feedback_device": "关于 {{asset}} 反馈",
                 "ipvd_feedback_page": "摄像机页面反馈"
             }
@@ -361,16 +360,13 @@
             },
             "linux": {
                 "label": "Ubuntu Linux",
-                "shortLabel": "Ubuntu",
-                "supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+                "shortLabel": "Ubuntu"
             },
             "mac": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "macos": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "sdk": {
                 "label": "SDK",
@@ -378,8 +374,7 @@
                 "supported": "C ++跨平台SDK"
             },
             "windows": {
-                "label": "Windows",
-                "supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+                "label": "Windows"
             }
         },
         "mobile": {
@@ -555,8 +550,8 @@
     "phoneNumberWithLabel": "电话： {{number}}",
     "pleaseSelect": "请选择...",
     "privacyPolicy": {
-        "integration": "提交表单即表示您同意与{{INTEGRATION_COMPANY}} 和/或 %COMPANY_NAME%联系。\n您可在<a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">浏览{{INTEGRATION_COMPANY}} 隐私政策</a> 和%COMPANY_NAME% 隐私政策<a href=\"%PRIVACY_LINK%\" target=\" blank\">这里</a> 可了解如何撤销您的同意。",
-        "ipvd": "提交表单即表示同意 %COMPANY_NAME%与您联系。\n您可在<a href=\"%PRIVACY_LINK%\" target=\"blank\">浏览 %COMPANY_NAME% 隐私政策</a> ，其中包含如何撤回同意。"
+        "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a> which include instruction on how to withdraw your consent.",
+        "ipvd": "提交表单即表示同意 %COMPANY_NAME%与您联系。\n您可在<a href=\"%PRIVACY_LINK%\" target=\"_blank\">浏览 %COMPANY_NAME% 隐私政策</a> ，其中包含如何撤回同意。"
     },
     "registration": {
         "agreement": "我同意<a href=\"/content/eula\" target=\"_blank\">合约条款</a>和<a href=\"%PRIVACY_LINK%\" target=\"_blank\">隐私政策</a>"
@@ -620,8 +615,8 @@
         "online": "在线",
         "unavailable": "不可用"
     },
-    "testedVersionLabel": "测试 {{vmsName}} 版本：",
-    "testedVersionsLabel": "测试 {{vmsName}} 版本：",
+    "testedVersionLabel": "Tested with {{vmsName}} version:",
+    "testedVersionsLabel": "Tested with {{vmsName}} versions:",
     "users": "用户",
     "you": "您"
 }

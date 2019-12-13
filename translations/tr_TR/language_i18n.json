@@ -141,6 +141,7 @@
     "Settings": "Ayarlar",
     "Show All": "Tümünü Göster",
     "Some of your servers don't support cloud System merge because of outdated software version.": "Sunucularınızın bazıları, eski yazılım sürümleri nedeniyle bulut sistem birleştirme özelliğini desteklemiyor.",
+    "Subject": "Subject",
     "Support": "Destek",
     "Support E-mail": "Destek maili",
     "Support URL": "Destek URL'si",
@@ -162,7 +163,6 @@
     "This device has reported to support some analytics events, but we don't have exact information about them.": "Bu cihaz bazı analitik etkinliklerini desteklediğini bildirdi, ancak bunlar hakkında kesin bir bilgimiz yok.",
     "To": "Kime",
     "Too many attempts. Try again in a minute.": "Çok fazla deneme yapıldı. Daha sonra tekrar deneyin.",
-    "Topic": "Konu",
     "Until merge is finished you can log in to this system and watch video, but cannot change any settings.": "Birleştirme tamamlanana kadar bu sisteme giriş yapabilir ve video izleyebilir, ancak herhangi bir ayarı değiştiremezsiniz.",
     "Update them to the": "Onları güncelle",
     "Updated": "Güncellendi",
@@ -174,7 +174,6 @@
     "What's New?": "Ne Yenilikler Var?",
     "Works with:": "İle çalışır:",
     "Wrong password": "Hatalı parola",
-    "You can merge only those cloud Systems, where you have the \"Owner\" permissions.": "Yalnızca \"Sahip\" izinlerine sahip olduğunuz bulut Sistemlerini birleştirebilirsiniz.",
     "You can only merge Systems where you are the owner.": "Yalnızca sahip olduğunuz Sistemleri birleştirebilirsiniz.",
     "You have registered in %CLOUD_NAME%": "%CLOUD_NAME% içinde kayıtlı",
     "Your Email": "E-posta Adresiniz",
@@ -300,15 +299,15 @@
         "message": {
             "failedToSend": "Mesaj gönderilemedi.",
             "sent": "Mesaj gönderildi.",
+            "subject": {
+                "integration_feedback": "Entegrasyon için geri bildirim {{asset}}",
+                "ipvd_feedback_device": "{{asset}} hakkında geri bildirim",
+                "ipvd_feedback_page": "Kameralar sayfası için geri bildirim",
+                "sales_inquiry": "{{asset}} için satış talebi",
+                "technical_inquiry": "Technical inquiry for {{asset}}"
+            },
             "title": {
                 "integration": "{{companyName}} ile iletişime geçin",
-                "ipvd_feedback_device": "{{asset}} hakkında geri bildirim",
-                "ipvd_feedback_page": "Kameralar sayfası için geri bildirim"
-            },
-            "topic": {
-                "contact_sales": "Satış için {{asset}} iletişime geçin",
-                "contact_support": "{{asset}} için Destek İste",
-                "integration_feedback": "Entegrasyon için geri bildirim {{asset}}",
                 "ipvd_feedback_device": "{{asset}} hakkında geri bildirim",
                 "ipvd_feedback_page": "Kameralar sayfası için geri bildirim"
             }
@@ -361,16 +360,13 @@
             },
             "linux": {
                 "label": "Ubuntu Linux",
-                "shortLabel": "Ubuntu",
-                "supported": "Ubuntu 14.04 LTS, 16.04 LTS, LTS"
+                "shortLabel": "Ubuntu"
             },
             "mac": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "macos": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "sdk": {
                 "label": "SDK",
@@ -378,8 +374,7 @@
                 "supported": "C++ cross platform SDK"
             },
             "windows": {
-                "label": "Windows",
-                "supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+                "label": "Windows"
             }
         },
         "mobile": {
@@ -555,8 +550,8 @@
     "phoneNumberWithLabel": "Tel: {{number}}",
     "pleaseSelect": "Lütfen seçiniz...",
     "privacyPolicy": {
-        "integration": "Bu formu göndererek, {{INTEGRATION_COMPANY}} ve / veya %COMPANY_NAME%ile irtibata geçmeyi kabul edersiniz.\nSen bulacaksınız {{INTEGRATION_COMPANY}} gizlilik politikasını <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">burada</a> ve %COMPANY_NAME% gizlilik politikasını <a href=\"%PRIVACY_LINK%\" target=\"blank\">Burada</a> onayınızı geri çekmek konusunda talimat içerir.",
-        "ipvd": "Bu formu göndererek, %COMPANY_NAME%ile iletişime geçmeyi kabul edersiniz.\nBurada, onayınızı nasıl geri çekeceğinizle ilgili talimatları içeren %COMPANY_NAME% gizlilik politikasını <a href=\"%PRIVACY_LINK%\" target=\"blank\">burada</a> bulacaksınız."
+        "integration": "Bu formu göndererek, {{INTEGRATION_COMPANY}} ve / veya %COMPANY_NAME%ile irtibata geçmeyi kabul edersiniz.\nSen bulacaksınız {{INTEGRATION_COMPANY}} gizlilik politikasını <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">burada</a> ve %COMPANY_NAME% gizlilik politikasını <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Burada</a> onayınızı geri çekmek konusunda talimat içerir.",
+        "ipvd": "Bu formu göndererek, %COMPANY_NAME%ile iletişime geçmeyi kabul edersiniz.\nBurada, onayınızı nasıl geri çekeceğinizle ilgili talimatları içeren %COMPANY_NAME% gizlilik politikasını <a href=\"%PRIVACY_LINK%\" target=\"_blank\">burada</a> bulacaksınız."
     },
     "registration": {
         "agreement": "Kabul et <a href=\"/content/eula\" target=\"_blank\">Şartlar ve Koşullar</a>ve<a href=\"%PRIVACY_LINK%\" target=\"_blank\">Gizlilik Politikası</a>"
@@ -602,7 +597,7 @@
         "openClientNoSystem": "Aç%VMS_NAME%",
         "permissionsRemoved": "İzinler {{email}}'den kaldırıldı",
         "shareOffline": "Çevrimdışıyken sistem paylaşılamıyor",
-        "shareUnauthorized": "You do not have permission to share this system",
+        "shareUnauthorized": "Bu sistemi paylaşma izniniz yok",
         "successDeleted": "{{systemName}} sistemi hesabınızdan başarıyla silindi",
         "successDisconnected": "Sistem %CLOUD_NAME%'den başarıyla çıkarıldı",
         "successRename": "Sistem ismi kaydedildi",
@@ -620,8 +615,8 @@
         "online": "çevrimiçi",
         "unavailable": "kullanılamaz"
     },
-    "testedVersionLabel": "{{vmsName}} versiyonda test edildi:",
-    "testedVersionsLabel": "{{vmsName}} versiyonda test edildi:",
+    "testedVersionLabel": "Tested with {{vmsName}} version:",
+    "testedVersionsLabel": "Tested with {{vmsName}} versions:",
     "users": "Kullanıcılar",
     "you": "sen"
 }

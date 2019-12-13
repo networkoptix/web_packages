@@ -105,7 +105,7 @@
     "NO_SYSTEMS_LOGIN": "Увійдіть в систему за допомогою %VMS_NAME%",
     "NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "У вас немає систем, підключених до %CLOUD_NAME%",
     "New Password": "Новий Пароль",
-    "No unsaved changes": "No unsaved changes",
+    "No unsaved changes": "Немає незбережених змін",
     "Nothing Found": "Нічого не знайдено",
     "OK": "ОК",
     "Ok": "Ок",
@@ -126,7 +126,7 @@
     "Release Notes": "Зауваження до релізу",
     "Release notes": "Список змін",
     "Remember me": "Запам'ятати мене",
-    "Remove User": "Remove User",
+    "Remove User": "Видалити користувача",
     "Rename": "Змінити Назву",
     "Requirements": "Вимоги",
     "Resend activation email": "Повторно вислати лист з активацією",
@@ -141,6 +141,7 @@
     "Settings": "Налаштування",
     "Show All": "Показати Всі",
     "Some of your servers don't support cloud System merge because of outdated software version.": "Деякі ваші сервери не підтримують злиття системної хмари через застарілу версію програмного забезпечення.",
+    "Subject": "Subject",
     "Support": "Підтримка",
     "Support E-mail": "Email підтримки",
     "Support URL": "URL підтримки",
@@ -162,7 +163,6 @@
     "This device has reported to support some analytics events, but we don't have exact information about them.": "Цей пристрій повідомив, що підтримує деякі аналітичні події, але ми не маємо точної інформації про них.",
     "To": "До",
     "Too many attempts. Try again in a minute.": "Забагато спроб. Спробуйте пізніше.",
-    "Topic": "Тема",
     "Until merge is finished you can log in to this system and watch video, but cannot change any settings.": "Поки не завершиться об’єднання, ви можете увійти до цієї системи та подивитися відео, але не зможете змінити будь-які налаштування.",
     "Update them to the": "Оновіть іх до",
     "Updated": "Оновлено",
@@ -174,7 +174,6 @@
     "What's New?": "Що нового?",
     "Works with:": "Працює з:",
     "Wrong password": "Невірний пароль",
-    "You can merge only those cloud Systems, where you have the \"Owner\" permissions.": "Ви можете обє’днати лише ті Хмарні системи, у який є дозволи Власника.",
     "You can only merge Systems where you are the owner.": "Ви можете об’єднати тільки ті системи, якими володієте.",
     "You have registered in %CLOUD_NAME%": "Ви зареєстровані в %CLOUD_NAME%",
     "Your Email": "Ваш E-Mail",
@@ -300,15 +299,15 @@
         "message": {
             "failedToSend": "Не вдалося надіслати повідомлення.",
             "sent": "Повідомлення відправлено.",
+            "subject": {
+                "integration_feedback": "Зворотній зв'язок для інтеграції {{asset}}",
+                "ipvd_feedback_device": "Відгук про {{asset}}",
+                "ipvd_feedback_page": "Зворотній зв’язок для сторінки камер",
+                "sales_inquiry": "Запит на продаж {{asset}}",
+                "technical_inquiry": "Technical inquiry for {{asset}}"
+            },
             "title": {
                 "integration": "Зв’яжіться з {{companyName}}",
-                "ipvd_feedback_device": "Відгук про {{asset}}",
-                "ipvd_feedback_page": "Зворотній зв’язок для сторінки камер"
-            },
-            "topic": {
-                "contact_sales": "Зв'яжіться з відділом продажів за {{asset}}",
-                "contact_support": "Зверніться до служби підтримки за {{asset}}",
-                "integration_feedback": "Зворотній зв'язок для інтеграції {{asset}}",
                 "ipvd_feedback_device": "Відгук про {{asset}}",
                 "ipvd_feedback_page": "Зворотній зв’язок для сторінки камер"
             }
@@ -338,7 +337,7 @@
             "bundle": "Клієнт і сервер",
             "camera_sdk": "SDK джерела відео",
             "client": "Тільки клієнт",
-            "metadata_sdk": "Metadata SDK",
+            "metadata_sdk": "Метадані SDK",
             "package": "Package",
             "server": "Тільки сервер",
             "servertool": "Інструмент налаштування",
@@ -361,16 +360,13 @@
             },
             "linux": {
                 "label": "Ubuntu Linux",
-                "shortLabel": "Ubuntu",
-                "supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+                "shortLabel": "Ubuntu"
             },
             "mac": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "macos": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "sdk": {
                 "label": "SDK",
@@ -378,8 +374,7 @@
                 "supported": "C ++ крос-платформенний SDK"
             },
             "windows": {
-                "label": "Windows",
-                "supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+                "label": "Windows"
             }
         },
         "mobile": {
@@ -555,8 +550,8 @@
     "phoneNumberWithLabel": "Тел.: {{number}}",
     "pleaseSelect": "Будь ласка виберіть...",
     "privacyPolicy": {
-        "integration": "Надіславши цю форму, ви погоджуєтеся зв'язатися з {{INTEGRATION_COMPANY}} та / або %COMPANY_NAME%.\nВи знайдете {{INTEGRATION_COMPANY}} Політику конфіденційності <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">тут</a> і %COMPANY_NAME% Політика конфіденційності <a href=\"%PRIVACY_LINK%\" target=\"blank\">тут</a> які містять інструкцію про те, як зняти вашу згоду.",
-        "ipvd": "Надсилаючи цю форму, ви погоджуєтесь зв'язатися з нами %COMPANY_NAME%.\nВи знайдете %COMPANY_NAME% політику конфіденційності <a href=\"%PRIVACY_LINK%\" target=\"blank\">тут</a> яка містить інструкцію про те, як скасувати вашу згоду."
+        "integration": "Надіславши цю форму, ви погоджуєтеся зв'язатися з {{INTEGRATION_COMPANY}} та / або %COMPANY_NAME%.\nВи знайдете {{INTEGRATION_COMPANY}} Політику конфіденційності <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">тут</a> і %COMPANY_NAME% Політика конфіденційності <a href=\"%PRIVACY_LINK%\" target=\"_blank\">тут</a> які містять інструкцію про те, як зняти вашу згоду.",
+        "ipvd": "Надсилаючи цю форму, ви погоджуєтесь зв'язатися з нами %COMPANY_NAME%.\nВи знайдете %COMPANY_NAME% політику конфіденційності <a href=\"%PRIVACY_LINK%\" target=\"_blank\">тут</a> яка містить інструкцію про те, як скасувати вашу згоду."
     },
     "registration": {
         "agreement": "Я згоден з <a href=\"/content/eula\" target=\"_blank\">Правилами і\nумовами,</a> і <a href=\"%PRIVACY_LINK%\" target=\"_blank\">політикою конфіденційності</a>"
@@ -597,12 +592,12 @@
         "mergeSystemTitle": "Об'єднати системи",
         "mySystemSearch": "ЯМійМоя",
         "offline": "Система знаходиться поза мережею",
-        "offlineAlertRibbon": "System is offline. Some settings may not be available.",
+        "offlineAlertRibbon": "Система відключена. Деякі налаштування можуть бути недоступні.",
         "openClient": "Відкрити в %VMS_NAME%",
         "openClientNoSystem": "Відкрити %VMS_NAME%",
         "permissionsRemoved": "{{email}} був позбавлений повноважень",
-        "shareOffline": "Cannot share system while it is offline",
-        "shareUnauthorized": "You do not have permission to share this system",
+        "shareOffline": "Не можна поділитись системою, поки вона не підключена в режимі офлайн",
+        "shareUnauthorized": "Ви не маєте прав для створення цього клієнта",
         "successDeleted": "Система {{systemName}} успішно видалена з вашого облікового запису",
         "successDisconnected": "Система успішно відключена від %CLOUD_NAME%",
         "successRename": "Ім'я системи збережено",
@@ -620,8 +615,8 @@
         "online": "oнлайн",
         "unavailable": "недоступний"
     },
-    "testedVersionLabel": "Протестовано за {{vmsName}} версій:",
-    "testedVersionsLabel": "Протестовано за {{vmsName}} версій:",
+    "testedVersionLabel": "Tested with {{vmsName}} version:",
+    "testedVersionsLabel": "Tested with {{vmsName}} versions:",
     "users": "Користувачі",
     "you": "ти"
 }

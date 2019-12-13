@@ -53,21 +53,17 @@
 		},
 		"groups": {
 			"windows": {
-				"label": "Windows",
-				"supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+				"label": "Windows"
 			},
 			"mac": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"linux": {
 				"label": "Ubuntu Linux",
-				"shortLabel": "Ubuntu",
-				"supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+				"shortLabel": "Ubuntu"
 			},
 			"macos": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"ios": {
 				"label": "iOS",
@@ -239,9 +235,9 @@
 				"ipvd_feedback_page": "Feedback för kamerans sida",
 				"ipvd_feedback_device": "Feedback om {{asset}}"
 			},
-			"topic": {
-				"contact_sales": "Kontakta försäljning för {{asset}}",
-				"contact_support": "Kontakta support för {{asset}}",
+			"subject": {
+				"sales_inquiry": "Försäljningsförfrågan för {{asset}}",
+				"technical_inquiry": "Technical inquiry for {{asset}}",
 				"integration_feedback": "Feedback för integration {{asset}}",
 				"ipvd_feedback_page": "Feedback för kamerans sida",
 				"ipvd_feedback_device": "Feedback om {{asset}}"
@@ -346,7 +342,7 @@
 		"permissionsRemoved": "Rättigheterna togs bort från {{email}}",
 		"unknownName": "Okänt namn för system (orsakad av molnsammanslagning)",
 		"shareOffline": "Kan inte dela systemet medan det är offline",
-		"shareUnauthorized": "You do not have permission to share this system"
+		"shareUnauthorized": "Du har inte behörighet att dela detta system"
 	},
 	"systemStatuses": {
 		"activated": "aktiverad",
@@ -416,13 +412,13 @@
 		}
 	},
 	"privacyPolicy": {
-		"integration": "Genom att skicka in denna blankett accepterar du att du kontaktas av {{INTEGRATION_COMPANY}} och / eller %COMPANY_NAME%.\nDu hittar {{INTEGRATION_COMPANY}} sekretesspolicy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">här</a> och %COMPANY_NAME% sekretesspolicy <a href=\"%PRIVACY_LINK%\" target=\"blank\">här</a> som innehåller anvisningar om hur du återkallar ditt samtycke.",
-		"ipvd": "Genom att skicka in denna blankett accepterar du att du kontaktas av %COMPANY_NAME%.\nDu hittar %COMPANY_NAME% sekretesspolicy <a href=\"%PRIVACY_LINK%\" target=\"blank\">här</a> som innehåller instruktioner om hur du återkallar ditt samtycke."
+		"integration": "Genom att skicka in denna blankett accepterar du att du kontaktas av {{INTEGRATION_COMPANY}} och / eller %COMPANY_NAME%.\nDu hittar {{INTEGRATION_COMPANY}} sekretesspolicy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">här</a> och %COMPANY_NAME% sekretesspolicy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">här</a> som innehåller anvisningar om hur du återkallar ditt samtycke.",
+		"ipvd": "Genom att skicka in denna blankett accepterar du att du kontaktas av %COMPANY_NAME%.\nDu hittar %COMPANY_NAME% sekretesspolicy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">här</a> som innehåller instruktioner om hur du återkallar ditt samtycke."
 	},
 	"systemAdministration": "Systemadministration",
 	"users": "Användare",
-	"testedVersionLabel": "Testat på {{vmsName}} version:",
-	"testedVersionsLabel": "Testat på {{vmsName}} versioner:",
+	"testedVersionLabel": "Tested with {{vmsName}} version:",
+	"testedVersionsLabel": "Tested with {{vmsName}} versions:",
 	"About %CLOUD_NAME%": "Om %CLOUD_NAME%",
 	"Download %VMS_NAME%": "Ladda ner %VMS_NAME%",
 	"Integrations": "Integrationer",

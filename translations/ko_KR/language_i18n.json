@@ -141,6 +141,7 @@
     "Settings": "설정",
     "Show All": "모두 보이기",
     "Some of your servers don't support cloud System merge because of outdated software version.": "일부 서버는 오래된 소프트웨어 버전으로 인해 클라우드 시스템 머지를 지원하지 않습니다.",
+    "Subject": "Subject",
     "Support": "지원",
     "Support E-mail": "지원 이메일",
     "Support URL": "지원 URL",
@@ -162,7 +163,6 @@
     "This device has reported to support some analytics events, but we don't have exact information about them.": "이 기기는 일부 분석 이벤트를 지원하는 것으로보고되었지만 정확한 정보는 없습니다.",
     "To": "받는 사람",
     "Too many attempts. Try again in a minute.": "시도 횟수가 너무 많습니다. 1 분 후에 다시 시도하십시오.",
-    "Topic": "주제",
     "Until merge is finished you can log in to this system and watch video, but cannot change any settings.": "병합이 완료 될 때까지 현재 시스템에 접속하여 비디오를 볼 수는 있지만 설정을 변경할 수는 없습니다.",
     "Update them to the": "로 업데이트",
     "Updated": "업데이트됨",
@@ -174,7 +174,6 @@
     "What's New?": "무엇이 새로운가?",
     "Works with:": "와 연동되다:",
     "Wrong password": "패스워드가 틀립니다.",
-    "You can merge only those cloud Systems, where you have the \"Owner\" permissions.": "\"소유자\"권한을 가진 클라우드 시스템 만 병합 할 수 있습니다.",
     "You can only merge Systems where you are the owner.": "소유자 인 시스템 만 머지 할 수 있습니다.",
     "You have registered in %CLOUD_NAME%": "%CLOUD_NAME% 에 등록했습니다.",
     "Your Email": "당신의 이메일",
@@ -300,15 +299,15 @@
         "message": {
             "failedToSend": "메시지 전송 실패",
             "sent": "메시지가 전송되었습니다.",
+            "subject": {
+                "integration_feedback": "{{asset}} 통합에 대한 피드백",
+                "ipvd_feedback_device": "{{asset}} 에 대한 피드백",
+                "ipvd_feedback_page": "카메라 페이지에 대한 피드백",
+                "sales_inquiry": "{{asset}}에 대한 판매 문의",
+                "technical_inquiry": "Technical inquiry for {{asset}}"
+            },
             "title": {
                 "integration": "{{companyName}} 과 연락",
-                "ipvd_feedback_device": "{{asset}} 에 대한 피드백",
-                "ipvd_feedback_page": "카메라 페이지에 대한 피드백"
-            },
-            "topic": {
-                "contact_sales": "{{asset}} 에 대해 영업팀에 문의",
-                "contact_support": "{{asset}} 대해 지원팀에 문의",
-                "integration_feedback": "{{asset}} 통합에 대한 피드백",
                 "ipvd_feedback_device": "{{asset}} 에 대한 피드백",
                 "ipvd_feedback_page": "카메라 페이지에 대한 피드백"
             }
@@ -361,16 +360,13 @@
             },
             "linux": {
                 "label": "Ubuntu Linux",
-                "shortLabel": "Ubuntu",
-                "supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+                "shortLabel": "Ubuntu"
             },
             "mac": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "macos": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "sdk": {
                 "label": "SDK",
@@ -378,8 +374,7 @@
                 "supported": "C ++ 크로스 플랫폼 SDK"
             },
             "windows": {
-                "label": "Windows",
-                "supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+                "label": "Windows"
             }
         },
         "mobile": {
@@ -555,8 +550,8 @@
     "phoneNumberWithLabel": "전화: {{number}}",
     "pleaseSelect": "선택하십시오",
     "privacyPolicy": {
-        "integration": "이 양식을 제출하면 {{INTEGRATION_COMPANY}} 및 / 또는 %COMPANY_NAME%로 연락하는 것에 동의하게됩니다.\n{{INTEGRATION_COMPANY}} 개인 정보 보호 정책 <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">여기에</a> 과 %COMPANY_NAME% 개인 정보 보호 정책 <a href=\"%PRIVACY_LINK%\" target=\"blank\">여기에</a> 에서 동의를 철회하는 방법에 대한 지침을 찾을 수 있습니다.",
-        "ipvd": "이 양식을 제출하면 %COMPANY_NAME%으로 연락하는 데 동의하는 것입니다.\n%COMPANY_NAME% 개인 정보 보호 정책 <a href=\"%PRIVACY_LINK%\" target=\"blank\">여기에</a> 에서 동의를 철회하는 방법에 대한 지침을 찾을 수 있습니다."
+        "integration": "이 양식을 제출하면 {{INTEGRATION_COMPANY}} 및 / 또는 %COMPANY_NAME%로 연락하는 것에 동의하게됩니다.\n{{INTEGRATION_COMPANY}} 개인 정보 보호 정책 <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">여기에</a> 과 %COMPANY_NAME% 개인 정보 보호 정책 <a href=\"%PRIVACY_LINK%\" target=\"_blank\">여기에</a> 에서 동의를 철회하는 방법에 대한 지침을 찾을 수 있습니다.",
+        "ipvd": "이 양식을 제출하면 %COMPANY_NAME%으로 연락하는 데 동의하는 것입니다.\n%COMPANY_NAME% 개인 정보 보호 정책 <a href=\"%PRIVACY_LINK%\" target=\"_blank\">여기에</a> 에서 동의를 철회하는 방법에 대한 지침을 찾을 수 있습니다."
     },
     "registration": {
         "agreement": "나는 <a href=\"/content/eula\" target=\"_blank\">약관 &\n조건</a> 및 <a href=\"%PRIVACY_LINK%\" target=\"_blank\">개인 정보 취급 방침</a> 에 동의합니다"
@@ -602,7 +597,7 @@
         "openClientNoSystem": "%VMS_NAME% 열기",
         "permissionsRemoved": "권한이 {{email}} 에서 제거 되었습니다.",
         "shareOffline": "오프라인 상태에서 시스템을 공유 할 수 없습니다",
-        "shareUnauthorized": "You do not have permission to share this system",
+        "shareUnauthorized": "이 시스템을 공유 할 권한이 없습니다",
         "successDeleted": "시스템 {{systemName}} 이 (가) 귀하의 계정에서 성공적으로 삭제되었습니다.",
         "successDisconnected": "시스템이 %CLOUD_NAME%에서 성공적으로 연결 해제되었습니다.",
         "successRename": "시스템 이름 저장",
@@ -620,8 +615,8 @@
         "online": "온라인",
         "unavailable": "사용할 수 없음"
     },
-    "testedVersionLabel": "{{vmsName}} 버전에서 테스트되었습니다.",
-    "testedVersionsLabel": "테스트된 {{vmsName}} 버전:",
+    "testedVersionLabel": "Tested with {{vmsName}} version:",
+    "testedVersionsLabel": "Tested with {{vmsName}} versions:",
     "users": "사용자",
     "you": "당신"
 }

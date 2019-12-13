@@ -53,21 +53,17 @@
 		},
 		"groups": {
 			"windows": {
-				"label": "Windows",
-				"supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+				"label": "Windows"
 			},
 			"mac": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"linux": {
 				"label": "Ubuntu Linux",
-				"shortLabel": "Ubuntu",
-				"supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+				"shortLabel": "Ubuntu"
 			},
 			"macos": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"ios": {
 				"label": "iOS",
@@ -239,9 +235,9 @@
 				"ipvd_feedback_page": "Palaute kameran sivulle",
 				"ipvd_feedback_device": "Palaute{{asset}}"
 			},
-			"topic": {
-				"contact_sales": "Ota yhteyttä {{asset}} myyntiin",
-				"contact_support": "Pyydä tukea {{asset}}",
+			"subject": {
+				"sales_inquiry": "Myyntikysely {{asset}}",
+				"technical_inquiry": "Technical inquiry for {{asset}}",
 				"integration_feedback": "Palaute integraatiosta {{asset}}",
 				"ipvd_feedback_page": "Palaute kameran sivulle",
 				"ipvd_feedback_device": "Palaute{{asset}}"
@@ -416,13 +412,13 @@
 		}
 	},
 	"privacyPolicy": {
-		"integration": "Lähettämällä tämän lomakkeen hyväksyt, että sinuun otetaan yhteyttä {{INTEGRATION_COMPANY}} ja / tai %COMPANY_NAME%.\nLöydät {{INTEGRATION_COMPANY}} tietosuojakäytäntöä <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">täältä</a> ja %COMPANY_NAME% tietosuojakäytäntöä <a href=\"%PRIVACY_LINK%\" target=\"blank\">täältä</a> jotka sisältävät ohjeet suostumuksen peruuttamiselle.",
-		"ipvd": "Lähettämällä tämän lomakkeen hyväksyt %COMPANY_NAME%.\nLöydät %COMPANY_NAME% tietosuojakäytäntö <a href=\"%PRIVACY_LINK%\" target=\"blank\">täällä</a>, joka sisältää ohjeita siitä, miten peruuttaa suostumuksesi."
+		"integration": "Lähettämällä tämän lomakkeen hyväksyt, että sinuun otetaan yhteyttä {{INTEGRATION_COMPANY}} ja / tai %COMPANY_NAME%.\nLöydät {{INTEGRATION_COMPANY}} tietosuojakäytäntöä <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">täältä</a> ja %COMPANY_NAME% tietosuojakäytäntöä <a href=\"%PRIVACY_LINK%\" target=\"_blank\">täältä</a> jotka sisältävät ohjeet suostumuksen peruuttamiselle.",
+		"ipvd": "Lähettämällä tämän lomakkeen hyväksyt %COMPANY_NAME%.\nLöydät %COMPANY_NAME% tietosuojakäytäntö <a href=\"%PRIVACY_LINK%\" target=\"_blank\">täällä</a>, joka sisältää ohjeita siitä, miten peruuttaa suostumuksesi."
 	},
 	"systemAdministration": "Järjestelmän hallinta",
 	"users": "Käyttäjät",
-	"testedVersionLabel": "Testattu {{vmsName}} versiolla:",
-	"testedVersionsLabel": "Testattu {{vmsName}} versiolla:",
+	"testedVersionLabel": "Tested with {{vmsName}} version:",
+	"testedVersionsLabel": "Tested with {{vmsName}} versions:",
 	"About %CLOUD_NAME%": "Tietoja %CLOUD_NAME%",
 	"Download %VMS_NAME%": "Lataa %VMS_NAME%",
 	"Integrations": "Integraatiot",

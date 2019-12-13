@@ -53,21 +53,17 @@
 		},
 		"groups": {
 			"windows": {
-				"label": "Windows",
-				"supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+				"label": "Windows"
 			},
 			"mac": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"linux": {
 				"label": "Ubuntu Linux",
-				"shortLabel": "Ubuntu",
-				"supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+				"shortLabel": "Ubuntu"
 			},
 			"macos": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"ios": {
 				"label": "iOS",
@@ -239,9 +235,9 @@
 				"ipvd_feedback_page": "Отзыв о странице камер",
 				"ipvd_feedback_device": "Отзыв о {{asset}}"
 			},
-			"topic": {
-				"contact_sales": "Связаться с отделом продаж по поводу {{asset}}",
-				"contact_support": "Обратитесь в службу поддержки по поводу {{asset}}",
+			"subject": {
+				"sales_inquiry": "Запрос на продажу {{asset}}",
+				"technical_inquiry": "Technical inquiry for {{asset}}",
 				"integration_feedback": "Отзыв об интеграции {{asset}}",
 				"ipvd_feedback_page": "Отзыв о странице камер",
 				"ipvd_feedback_device": "Отзыв о {{asset}}"
@@ -346,7 +342,7 @@
 		"permissionsRemoved": "{{email}} был лишен полномочий",
 		"unknownName": "Неизвестное имя для системы (вызвано облачным объединением систем)",
 		"shareOffline": "Невозможно поделиться системой, пока она не в сети",
-		"shareUnauthorized": "You do not have permission to share this system"
+		"shareUnauthorized": "У вас нет разрешения на объединение этой системы"
 	},
 	"systemStatuses": {
 		"activated": "активирован",
@@ -416,13 +412,13 @@
 		}
 	},
 	"privacyPolicy": {
-		"integration": "Отправляя эту форму, вы соглашаетесь на получение информации от {{INTEGRATION_COMPANY}} и/или %COMPANY_NAME%.\nПолитика конфиденциальности {{INTEGRATION_COMPANY}} с инструкциями о том, как отозвать ваше согласие, доступна <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">здесь</a>, а %COMPANY_NAME% - <a href=\"%PRIVACY_LINK%\" target=\"blank\">здесь</a>.",
-		"ipvd": "Отправляя эту форму, вы соглашаетесь на получение информации от %COMPANY_NAME%.\nПолитика конфиденциальности %COMPANY_NAME% с инструкциями о том, как отозвать ваше согласие, доступна <a href=\"%PRIVACY_LINK%\" target=\"blank\">здесь</a>."
+		"integration": "Отправляя эту форму, вы соглашаетесь на получение информации от {{INTEGRATION_COMPANY}} и/или %COMPANY_NAME%.\nПолитика конфиденциальности {{INTEGRATION_COMPANY}} с инструкциями о том, как отозвать ваше согласие, доступна <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">здесь</a>, а %COMPANY_NAME% - <a href=\"%PRIVACY_LINK%\" target=\"_blank\">здесь</a>.",
+		"ipvd": "Отправляя эту форму, вы соглашаетесь на получение информации от %COMPANY_NAME%.\nПолитика конфиденциальности %COMPANY_NAME% с инструкциями о том, как отозвать ваше согласие, доступна <a href=\"%PRIVACY_LINK%\" target=\"_blank\">здесь</a>."
 	},
 	"systemAdministration": "Администрирование системы",
 	"users": "Пользователи",
-	"testedVersionLabel": "Проверено на версии {{vmsName}}:",
-	"testedVersionsLabel": "Проверено на версиях {{vmsName}}:",
+	"testedVersionLabel": "Tested with {{vmsName}} version:",
+	"testedVersionsLabel": "Tested with {{vmsName}} versions:",
 	"About %CLOUD_NAME%": "О %CLOUD_NAME%",
 	"Download %VMS_NAME%": "Скачать %VMS_NAME%",
 	"Integrations": "Интеграции",
@@ -432,7 +428,7 @@
 	"Terms": "Условия использования",
 	"pleaseSelect": "Пожалуйста, выберите...",
 	"WHEN_MERGE_FINISHES": "После завершения объединения все пользователи и камеры из этой системы станут доступны в <strong>{{targetSystemName}}</strong>, а эта система будет удалена.",
-	"FAILED_SYSTEM_DESCR": "Эта ссылка не работает,<br>Система могла быть отключена от %CLOUD_NAME%,<br>доступ к этой системе мог быть отозван<br>или вы вошли под другой учетной записью.",
+	"FAILED_SYSTEM_DESCR": "Эта ссылка не работает,<br>Система могла быть отключена от %CLOUD_NAME%,<br>доступ к этой системе мог быть отозван <br>или вы вошли под другой учетной записью.",
 	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "У вас нет систем, подключенных к %CLOUD_NAME%",
 	"NO_SYSTEMS_LOGIN": "Войдите в систему с помощью %VMS_NAME%",
 	"NO_SYSTEMS_GOTO_ADMINISTRATION": "Перейдите на вкладку \"Облако\" в окне \"Системное администрирование\"",

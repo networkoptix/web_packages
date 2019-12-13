@@ -12,7 +12,7 @@
     "emailSubject": "สอบถามรายละเอียดการขายสำหรับ {{message.asset}}"
   },
   "contact_support": {
-    "emailSubject": "ขอรับการสนับสนุนสำหรับ {{message.asset}}"
+    "emailSubject": "Technical inquiry for {{message.asset}}"
   },
   "integration_feedback": {
     "emailSubject": "ข้อเสนอแนะเกี่ยวกับ {{message.asset}}"

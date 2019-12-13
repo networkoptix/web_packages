@@ -37,6 +37,7 @@
     "CANNOT SEND CONFIRMATION EMAIL": "Kan inte skicka bekräftelse E-mail:",
     "ACCOUNT DOES NOT EXIST": "Kontot existerar inte.",
     "CODE USED/INCORRECT": "Bekräftelsekoden är redan använd eller felaktig",
+    "CHANGE PASSWORD TITLE TEXT": "Ändra lösenord",
     "SHARE PERMISSIONS HINT ADMINISTRATOR": "Obegränsad tillgång, inklusive möjligheten att dela",
     "SHARE PERMISSIONS HINT ADVANCED VIEWER": "Kan visa live video, bläddra i arkivet, konfigurera kameror, styra PTZ etc",
     "SHARE PERMISSIONS HINT VIEWER": "Kan visa live video och bläddra i arkivet",
@@ -45,6 +46,7 @@
     "SYSTEM NAME IS REQUIRED TEXT": "Systemnamn krävs",
     "ACCOUNT TEXT": "Konto",
     "ACCOUNT INFORMATION": "Kontoinformation",
+    "ACCOUNT SETTINGS TEXT": "Kontoinställningar",
     "EDIT USER BUTTON TEXT": "Redigera",
     "REMOVE USER BUTTON TEXT": "Ta Bort Användare",
     "REMOVE BUTTON TEXT": "Ta bort",
@@ -95,7 +97,7 @@
     "PASSWORD IS FAIR BADGE TEXT": "skapligt",
     "PASSWORD IS GOOD BADGE TEXT": "bra",
     "PASSWORD INCORRECT BADGE TEXT": "felaktig",
-    "IPVD TITLE TEXT": "IP-videoenheter som stöds",
+    "IPVD TITLE TEXT": "Enheter som stöds",
     "IPVD SEARCH PLACEHOLDER TEXT": "Sök efter modell eller tillverkare",
     "IPVD FILTERS APPLIED TEXT": "filter används",
     "IPVD FILTERS ANALYTICS TEXT": "analyshändelse",
@@ -172,5 +174,9 @@
     "INTEGRATION TERMS OF USE TEXT": "Användarvillkor",
     "INTEGRATION SUPPORT TEXT": "Support",
     "INTEGRATION SUPPORT URL TEXT": "Support URL",
-    "INTEGRATION SUPPORT EMAIL TEXT": "Support Email"
+    "INTEGRATION SUPPORT EMAIL TEXT": "Support Email",
+    "REGISTER TITLE TEXT": "Skapa konto i",
+    "DOWNLOAD TITLE TEXT": "Ladda ner %VMS_NAME%",
+    "RELEASE HISTORY TITLE TEXT": "Utgivningshistoriken",
+    "SYSTEMS TITLE TEXT": "System"
 }

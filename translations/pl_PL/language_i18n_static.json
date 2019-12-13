@@ -53,21 +53,17 @@
 		},
 		"groups": {
 			"windows": {
-				"label": "Windows",
-				"supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+				"label": "Windows"
 			},
 			"mac": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"linux": {
 				"label": "Ubuntu Linux",
-				"shortLabel": "Ubuntu",
-				"supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+				"shortLabel": "Ubuntu"
 			},
 			"macos": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"ios": {
 				"label": "iOS",
@@ -239,9 +235,9 @@
 				"ipvd_feedback_page": "Opinia dotycząca listy kamer",
 				"ipvd_feedback_device": "Opinie dotyczące {{asset}}"
 			},
-			"topic": {
-				"contact_sales": "Kontakt do sprzedawcy {{asset}}",
-				"contact_support": "Kontakt do wsparcia technicznego {{asset}}",
+			"subject": {
+				"sales_inquiry": "Zapytanie handlowe o {{asset}}",
+				"technical_inquiry": "Technical inquiry for {{asset}}",
 				"integration_feedback": "Opinia dotycząca integracji {{asset}}",
 				"ipvd_feedback_page": "Opinia dotycząca listy kamer",
 				"ipvd_feedback_device": "Opinie dotyczące {{asset}}"
@@ -322,7 +318,7 @@
 		"mySystemSearch": "IMeMyMine",
 		"unavailable": "System jest niedostępny",
 		"offline": "Serwer jest odłączony",
-		"offlineAlertRibbon": "System is offline. Some settings may not be available.",
+		"offlineAlertRibbon": "System jest offline. Niektóre ustawienia mogą być niedostępne.",
 		"openClient": "Otwórz w %VMS_NAME%",
 		"openClientNoSystem": "Otwórz %VMS_NAME%",
 		"confirmMergeAction": "Złącz",
@@ -345,8 +341,8 @@
 		"mergeSuccess": "Zakończono łączenie systemu",
 		"permissionsRemoved": "Uprawnienia zostały usunięte z {{email}}",
 		"unknownName": "Nieznana nazwa systemu (złączenie w chmurze)",
-		"shareOffline": "Cannot share system while it is offline",
-		"shareUnauthorized": "You do not have permission to share this system"
+		"shareOffline": "Nie można udostępnić systemu, gdy jest on offline",
+		"shareUnauthorized": "Nie masz uprawnień do udostępniania tego systemu"
 	},
 	"systemStatuses": {
 		"activated": "aktywny",
@@ -416,13 +412,13 @@
 		}
 	},
 	"privacyPolicy": {
-		"integration": "Przesyłając ten formularz, zgadzasz się na kontakt od %INTEGRATION_COMPANY% i/lub %COMPANY_NAME%.\nPolitykę prywatności firmy %INTEGRATION_COMPANY% znajdziesz <a href=\"%INTEGRATION_PRIVACY_POLICY%\" target=\"blank\">tutaj</a>, a politykę prywatności firmy %COMPANY_NAME% <a href=\"%PRIVACY_LINK%\" target=\"blank\">tutaj</a>. Zawierają one instrukcje dotyczące wycofania zgody.",
-		"ipvd": "Przesyłając ten formularz zgadzasz się na kontakt przez %COMPANY_NAME%.\nPolitykę prywatności firmy %COMPANY_NAME% znajdziesz <a href=\"%PRIVACY_LINK%\" target=\"blank\">tutaj</a>. Zawiera ona instrukcje dotyczące wycofania zgody."
+		"integration": "Przesyłając ten formularz, zgadzasz się na kontakt od %INTEGRATION_COMPANY% i/lub %COMPANY_NAME%.\nPolitykę prywatności firmy %INTEGRATION_COMPANY% znajdziesz <a href=\"%INTEGRATION_PRIVACY_POLICY%\" target=\"_blank\">tutaj</a>, a politykę prywatności firmy %COMPANY_NAME% <a href=\"%PRIVACY_LINK%\" target=\"_blank\">tutaj</a>. Zawierają one instrukcje dotyczące wycofania zgody.",
+		"ipvd": "Przesyłając ten formularz zgadzasz się na kontakt przez %COMPANY_NAME%.\nPolitykę prywatności firmy %COMPANY_NAME% znajdziesz <a href=\"%PRIVACY_LINK%\" target=\"_blank\">tutaj</a>. Zawiera ona instrukcje dotyczące wycofania zgody."
 	},
 	"systemAdministration": "Administracja systemem",
 	"users": "Użytkownicy",
-	"testedVersionLabel": "Testowane na {{vmsName}} w wersji:",
-	"testedVersionsLabel": "Testowane na {{vmsName}} w wersjach:",
+	"testedVersionLabel": "Tested with {{vmsName}} version:",
+	"testedVersionsLabel": "Tested with {{vmsName}} versions:",
 	"About %CLOUD_NAME%": "Informacje o %CLOUD_NAME%",
 	"Download %VMS_NAME%": "Pobierz %VMS_NAME%",
 	"Integrations": "Integracje",

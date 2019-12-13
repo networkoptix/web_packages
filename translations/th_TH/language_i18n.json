@@ -116,7 +116,7 @@
     "Page not found": "ไม่พบหน้านี้",
     "Password": "รหัสผ่าน",
     "Password is required": "จำเป็นต้องใช้รหัสผ่าน",
-    "Password reset instructions are sent to Email": "Password reset instructions are sent to Email",
+    "Password reset instructions are sent to Email": "คำแนะนำในการรีเซ็ตรหัสผ่านจะถูกส่งไปที่ Email",
     "Password successfully saved": "บันทึกรหัสผ่านเรียบร้อยแล้ว",
     "Password:": "รหัสผ่าน:",
     "Please enter a valid Email": "โปรดป้อนอีเมลที่ถูกต้อง",
@@ -141,6 +141,7 @@
     "Settings": "การตั้งค่า",
     "Show All": "แสดงทั้งหมด",
     "Some of your servers don't support cloud System merge because of outdated software version.": "เซิร์ฟเวอร์บางตัวของคุณไม่รองรับการรวมระบบคลาวด์เนื่องจากรุ่นซอฟต์แวร์ที่ล้าสมัย",
+    "Subject": "Subject",
     "Support": "ทีมช่วยเหลือ",
     "Support E-mail": "รองรับ E-mail",
     "Support URL": "URL สนับสนุน",
@@ -162,7 +163,6 @@
     "This device has reported to support some analytics events, but we don't have exact information about them.": "อุปกรณ์นี้ได้รายงานว่าสนับสนุนเหตุการณ์การวิเคราะห์บางอย่าง แต่เราไม่มีข้อมูลที่แน่นอนเกี่ยวกับพวกเขา",
     "To": "ถึง",
     "Too many attempts. Try again in a minute.": "คุณพยายามเข้าระบบมากเกินไป กรุณารออีกสักพักแล้วเข้าใหม่",
-    "Topic": "หัวข้อ",
     "Until merge is finished you can log in to this system and watch video, but cannot change any settings.": "จนกว่าการผสานจะเสร็จสิ้นคุณสามารถเข้าสู่ระบบนี้และชมวิดีโอ แต่ไม่สามารถเปลี่ยนการตั้งค่าใด ๆ ได้",
     "Update them to the": "อัปเดตเป็น",
     "Updated": "อัพเดต",
@@ -174,7 +174,6 @@
     "What's New?": "มีอะไรใหม่ๆ?",
     "Works with:": "ทำงานร่วมกับ:",
     "Wrong password": "รหัสผ่านผิด",
-    "You can merge only those cloud Systems, where you have the \"Owner\" permissions.": "คุณสามารถรวมเฉพาะระบบคลาวด์เหล่านี้ซึ่งคุณมีสิทธิ์ \"เจ้าของ\" เท่านั้น",
     "You can only merge Systems where you are the owner.": "คุณสามารถผสานระบบคลาวด์ที่คุณเป็นเจ้าของได้",
     "You have registered in %CLOUD_NAME%": "คุณได้ลงทะเบียนไว้ใน %CLOUD_NAME%",
     "Your Email": "อีเมล์ของคุณ",
@@ -300,15 +299,15 @@
         "message": {
             "failedToSend": "ไม่สามารถส่งข้อความได้",
             "sent": "ส่งข้อความแล้ว",
+            "subject": {
+                "integration_feedback": "ข้อเสนอแนะสำหรับการรวม {{asset}}",
+                "ipvd_feedback_device": "ข้อเสนอแนะเกี่ยวกับ {{asset}}",
+                "ipvd_feedback_page": "ข้อเสนอแนะสำหรับหน้ากล้อง",
+                "sales_inquiry": "สอบถามรายละเอียดการขายสำหรับ {{asset}}",
+                "technical_inquiry": "Technical inquiry for {{asset}}"
+            },
             "title": {
                 "integration": "ติดต่อกับ {{companyName}}",
-                "ipvd_feedback_device": "ข้อเสนอแนะเกี่ยวกับ {{asset}}",
-                "ipvd_feedback_page": "ข้อเสนอแนะสำหรับหน้ากล้อง"
-            },
-            "topic": {
-                "contact_sales": "ติดต่อฝ่ายขายสำหรับ {{asset}}",
-                "contact_support": "ติดต่อฝ่ายสนับสนุนสำหรับ {{asset}}",
-                "integration_feedback": "ข้อเสนอแนะสำหรับการรวม {{asset}}",
                 "ipvd_feedback_device": "ข้อเสนอแนะเกี่ยวกับ {{asset}}",
                 "ipvd_feedback_page": "ข้อเสนอแนะสำหรับหน้ากล้อง"
             }
@@ -361,16 +360,13 @@
             },
             "linux": {
                 "label": "Ubuntu Linux",
-                "shortLabel": "Ubuntu",
-                "supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+                "shortLabel": "Ubuntu"
             },
             "mac": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "macos": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "sdk": {
                 "label": "SDK",
@@ -378,8 +374,7 @@
                 "supported": "C ++ SDK ข้ามแพลตฟอร์ม"
             },
             "windows": {
-                "label": "Windows",
-                "supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+                "label": "Windows"
             }
         },
         "mobile": {
@@ -555,8 +550,8 @@
     "phoneNumberWithLabel": "โทร: {{number}}",
     "pleaseSelect": "Please select...",
     "privacyPolicy": {
-        "integration": "โดยการส่งแบบฟอร์มนี้คุณตกลงที่จะได้รับการติดต่อจาก {{INTEGRATION_COMPANY}} และ / หรือ %COMPANY_NAME%\nคุณจะพบ {{INTEGRATION_COMPANY}} นโยบายความเป็นส่วนตัว <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">ที่นี่</a> และ %COMPANY_NAME% นโยบายความเป็นส่วนตัว <a href=\"%PRIVACY_LINK%\" target=\"blank\">ที่นี่</a> ซึ่งรวมถึงคำแนะนำเกี่ยวกับวิธีการถอนการยินยอมของคุณ",
-        "ipvd": "โดยการส่งแบบฟอร์มนี้คุณตกลงที่จะได้รับการติดต่อจาก %COMPANY_NAME%\nคุณจะได้พบกับ %COMPANY_NAME% นโยบายความเป็นส่วนตัว <a href=\"%PRIVACY_LINK%\" target=\"blank\">ที่นี่</a> ซึ่งรวมถึงคำแนะนำเกี่ยวกับวิธีการถอนความยินยอมของคุณ"
+        "integration": "โดยการส่งแบบฟอร์มนี้คุณตกลงที่จะได้รับการติดต่อจาก {{INTEGRATION_COMPANY}} และ / หรือ %COMPANY_NAME%\nคุณจะพบ {{INTEGRATION_COMPANY}} นโยบายความเป็นส่วนตัว <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">ที่นี่</a> และ %COMPANY_NAME% นโยบายความเป็นส่วนตัว <a href=\"%PRIVACY_LINK%\" target=\"_blank\">ที่นี่</a> ซึ่งรวมถึงคำแนะนำเกี่ยวกับวิธีการถอนการยินยอมของคุณ",
+        "ipvd": "โดยการส่งแบบฟอร์มนี้คุณตกลงที่จะได้รับการติดต่อจาก %COMPANY_NAME%\nคุณจะได้พบกับ %COMPANY_NAME% นโยบายความเป็นส่วนตัว <a href=\"%PRIVACY_LINK%\" target=\"_blank\">ที่นี่</a> ซึ่งรวมถึงคำแนะนำเกี่ยวกับวิธีการถอนความยินยอมของคุณ"
     },
     "registration": {
         "agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
@@ -620,8 +615,8 @@
         "online": "ออนไลน์",
         "unavailable": "ไม่พร้อมใช้งาน"
     },
-    "testedVersionLabel": "ทดสอบกับรุ่น {{vmsName}}:",
-    "testedVersionsLabel": "ทดสอบกับรุ่น {{vmsName}}:",
+    "testedVersionLabel": "Tested with {{vmsName}} version:",
+    "testedVersionsLabel": "Tested with {{vmsName}} versions:",
     "users": "ผู้ใช้งาน",
     "you": "you"
 }

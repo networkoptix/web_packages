@@ -68,7 +68,7 @@
     "Enter password for your account to continue": "Введите пароль для своей учетной записи, чтобы продолжить",
     "Enter password to continue.": "Введите пароль для продолжения.",
     "Export all to CSV": "Экспортировать все в CSV",
-    "FAILED_SYSTEM_DESCR": "Эта ссылка не работает,<br>Система могла быть отключена от %CLOUD_NAME%,<br>доступ к этой системе мог быть отозван<br>или вы вошли под другой учетной записью.",
+    "FAILED_SYSTEM_DESCR": "Эта ссылка не работает,<br>Система могла быть отключена от %CLOUD_NAME%,<br>доступ к этой системе мог быть отозван <br>или вы вошли под другой учетной записью.",
     "FPS(max)": "FPS(макс)",
     "Failed to access System": "Не удалось получить доступ к системе",
     "Finishing systems merge": "Объединение систем заканчивается",
@@ -141,6 +141,7 @@
     "Settings": "Настройки",
     "Show All": "Показать всё",
     "Some of your servers don't support cloud System merge because of outdated software version.": "Некоторые из ваших серверов не поддерживают слияние облачных систем из-за устаревшей версии программного обеспечения.",
+    "Subject": "Subject",
     "Support": "Техническая поддержка",
     "Support E-mail": "Электронная почта поддержки",
     "Support URL": "Страница поддержки",
@@ -162,7 +163,6 @@
     "This device has reported to support some analytics events, but we don't have exact information about them.": "Это устройство сообщило о поддержке некоторых событий аналитики, но у нас нет точной информации о них.",
     "To": "Куда",
     "Too many attempts. Try again in a minute.": "Слишком много попыток. Повторите позже.",
-    "Topic": "Тема",
     "Until merge is finished you can log in to this system and watch video, but cannot change any settings.": "До окончания объединения вы можете войти в эту систему и посмотреть видео, но не можете изменить какие-либо настройки.",
     "Update them to the": "Обновите их до",
     "Updated": "Обновлено",
@@ -174,7 +174,6 @@
     "What's New?": "﻿Что нового?",
     "Works with:": "Работает с:",
     "Wrong password": "Неправильный пароль",
-    "You can merge only those cloud Systems, where you have the \"Owner\" permissions.": "Вы можете объединить только те облачные системы, где у вас есть полномочия «Владелец».",
     "You can only merge Systems where you are the owner.": "Вы можете объединять только те облачные системы, где вы являетесь владельцем.",
     "You have registered in %CLOUD_NAME%": "Вы зарегистрировались в %CLOUD_NAME%",
     "Your Email": "Ваш Email",
@@ -300,15 +299,15 @@
         "message": {
             "failedToSend": "Не удалось отправить сообщение.",
             "sent": "Сообщение отправлено.",
+            "subject": {
+                "integration_feedback": "Отзыв об интеграции {{asset}}",
+                "ipvd_feedback_device": "Отзыв о {{asset}}",
+                "ipvd_feedback_page": "Отзыв о странице камер",
+                "sales_inquiry": "Запрос на продажу {{asset}}",
+                "technical_inquiry": "Technical inquiry for {{asset}}"
+            },
             "title": {
                 "integration": "Связаться с {{companyName}}",
-                "ipvd_feedback_device": "Отзыв о {{asset}}",
-                "ipvd_feedback_page": "Отзыв о странице камер"
-            },
-            "topic": {
-                "contact_sales": "Связаться с отделом продаж по поводу {{asset}}",
-                "contact_support": "Обратитесь в службу поддержки по поводу {{asset}}",
-                "integration_feedback": "Отзыв об интеграции {{asset}}",
                 "ipvd_feedback_device": "Отзыв о {{asset}}",
                 "ipvd_feedback_page": "Отзыв о странице камер"
             }
@@ -361,16 +360,13 @@
             },
             "linux": {
                 "label": "Ubuntu Linux",
-                "shortLabel": "Ubuntu",
-                "supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+                "shortLabel": "Ubuntu"
             },
             "mac": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "macos": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "sdk": {
                 "label": "SDK",
@@ -378,8 +374,7 @@
                 "supported": "Кроссплатформенный SDK C++"
             },
             "windows": {
-                "label": "Windows",
-                "supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+                "label": "Windows"
             }
         },
         "mobile": {
@@ -555,8 +550,8 @@
     "phoneNumberWithLabel": "Тел: {{number}}",
     "pleaseSelect": "Пожалуйста, выберите...",
     "privacyPolicy": {
-        "integration": "Отправляя эту форму, вы соглашаетесь на получение информации от {{INTEGRATION_COMPANY}} и/или %COMPANY_NAME%.\nПолитика конфиденциальности {{INTEGRATION_COMPANY}} с инструкциями о том, как отозвать ваше согласие, доступна <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">здесь</a>, а %COMPANY_NAME% - <a href=\"%PRIVACY_LINK%\" target=\"blank\">здесь</a>.",
-        "ipvd": "Отправляя эту форму, вы соглашаетесь на получение информации от %COMPANY_NAME%.\nПолитика конфиденциальности %COMPANY_NAME% с инструкциями о том, как отозвать ваше согласие, доступна <a href=\"%PRIVACY_LINK%\" target=\"blank\">здесь</a>."
+        "integration": "Отправляя эту форму, вы соглашаетесь на получение информации от {{INTEGRATION_COMPANY}} и/или %COMPANY_NAME%.\nПолитика конфиденциальности {{INTEGRATION_COMPANY}} с инструкциями о том, как отозвать ваше согласие, доступна <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">здесь</a>, а %COMPANY_NAME% - <a href=\"%PRIVACY_LINK%\" target=\"_blank\">здесь</a>.",
+        "ipvd": "Отправляя эту форму, вы соглашаетесь на получение информации от %COMPANY_NAME%.\nПолитика конфиденциальности %COMPANY_NAME% с инструкциями о том, как отозвать ваше согласие, доступна <a href=\"%PRIVACY_LINK%\" target=\"_blank\">здесь</a>."
     },
     "registration": {
         "agreement": "Я согласен с <a href=\"/content/eula\" target=\"_blank\">условиями</a> и <a href=\"%PRIVACY_LINK%\" target=\"_blank\">правилами конфиденциальности</a>"
@@ -602,7 +597,7 @@
         "openClientNoSystem": "Открыть %VMS_NAME%",
         "permissionsRemoved": "{{email}} был лишен полномочий",
         "shareOffline": "Невозможно поделиться системой, пока она не в сети",
-        "shareUnauthorized": "You do not have permission to share this system",
+        "shareUnauthorized": "У вас нет разрешения на объединение этой системы",
         "successDeleted": "Система {{systemName}} успешно удалена из вашей учетной записи",
         "successDisconnected": "Система успешно отключена от %CLOUD_NAME%",
         "successRename": "Имя системы сохранено",
@@ -620,8 +615,8 @@
         "online": "в сети",
         "unavailable": "недоступен"
     },
-    "testedVersionLabel": "Проверено на версии {{vmsName}}:",
-    "testedVersionsLabel": "Проверено на версиях {{vmsName}}:",
+    "testedVersionLabel": "Tested with {{vmsName}} version:",
+    "testedVersionsLabel": "Tested with {{vmsName}} versions:",
     "users": "Пользователи",
     "you": "вы"
 }

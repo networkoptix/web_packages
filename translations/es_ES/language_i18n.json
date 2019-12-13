@@ -141,6 +141,7 @@
     "Settings": "Configuración",
     "Show All": "Mostrar todo",
     "Some of your servers don't support cloud System merge because of outdated software version.": "Algunos de sus servidores no admiten la combinación de sistemas en la nube debido a una versión de software desactualizada.",
+    "Subject": "Subject",
     "Support": "Asistencia",
     "Support E-mail": "Correo electrónico de soporte",
     "Support URL": "URL de soporte",
@@ -162,7 +163,6 @@
     "This device has reported to support some analytics events, but we don't have exact information about them.": "Se ha informado que este dispositivo es compatible con algunos eventos de analíticas, pero no tenemos información exacta sobre ellos.",
     "To": "A",
     "Too many attempts. Try again in a minute.": "Demasiados intentos. Inténtalo de nuevo en un minuto.",
-    "Topic": "Tema",
     "Until merge is finished you can log in to this system and watch video, but cannot change any settings.": "Hasta que finalice la fusión, puede iniciar sesión en este sistema y ver el video, pero no puede cambiar ninguna configuración.",
     "Update them to the": "Actualizarlos a",
     "Updated": "Actualizado",
@@ -174,7 +174,6 @@
     "What's New?": "¿Qué hay de nuevo?",
     "Works with:": "Funciona con:",
     "Wrong password": "Contraseña incorrecta",
-    "You can merge only those cloud Systems, where you have the \"Owner\" permissions.": "Puede fusionar esos sistemas en la nube, solo cuando tiene los permisos de \"Propietario\".",
     "You can only merge Systems where you are the owner.": "Sólo puede fusionar Sistemas donde usted es el propietario.",
     "You have registered in %CLOUD_NAME%": "Te has registrado en %CLOUD_NAME%",
     "Your Email": "Tu correo electrónico",
@@ -300,15 +299,15 @@
         "message": {
             "failedToSend": "El mensaje no se ha podido enviar.",
             "sent": "El mensaje ha sido enviado.",
+            "subject": {
+                "integration_feedback": "Comentarios para la integración {{asset}}",
+                "ipvd_feedback_device": "Comentarios sobre {{asset}}",
+                "ipvd_feedback_page": "Comentarios sobre la página de cámaras",
+                "sales_inquiry": "Consulta de ventas para {{asset}}",
+                "technical_inquiry": "Technical inquiry for {{asset}}"
+            },
             "title": {
                 "integration": "Ponte en contacto con {{companyName}}",
-                "ipvd_feedback_device": "Comentarios sobre {{asset}}",
-                "ipvd_feedback_page": "Comentarios sobre la página de cámaras"
-            },
-            "topic": {
-                "contact_sales": "Contactar a ventas para {{asset}}",
-                "contact_support": "Contactar a soporte para {{asset}}",
-                "integration_feedback": "Comentarios para la integración {{asset}}",
                 "ipvd_feedback_device": "Comentarios sobre {{asset}}",
                 "ipvd_feedback_page": "Comentarios sobre la página de cámaras"
             }
@@ -361,16 +360,13 @@
             },
             "linux": {
                 "label": "Ubuntu Linux",
-                "shortLabel": "Ubuntu",
-                "supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+                "shortLabel": "Ubuntu"
             },
             "mac": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "macos": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "sdk": {
                 "label": "SDK",
@@ -378,8 +374,7 @@
                 "supported": "C ++ multiplataforma SDK"
             },
             "windows": {
-                "label": "Windows",
-                "supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+                "label": "Windows"
             }
         },
         "mobile": {
@@ -555,8 +550,8 @@
     "phoneNumberWithLabel": "Tel: {{number}}",
     "pleaseSelect": "Por favor, seleccione...",
     "privacyPolicy": {
-        "integration": "Al enviar este formulario, usted acepta ser contactado por {{INTEGRATION_COMPANY}} y / o %COMPANY_NAME%.\nEncontrará {{INTEGRATION_COMPANY}} política de privacidad <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">aquí</a> y %COMPANY_NAME% política de privacidad <a href=\"%PRIVACY_LINK%\" target=\"blank\">aquí</a> que incluyen instrucciones sobre cómo retirar su consentimiento.",
-        "ipvd": "Al enviar este formulario, usted acepta ser contactado por %COMPANY_NAME%.\nEncontrará %COMPANY_NAME% política de privacidad <a href=\"%PRIVACY_LINK%\" target=\"blank\">aquí</a> que incluye instrucciones sobre cómo retirar su consentimiento."
+        "integration": "Al enviar este formulario, usted acepta ser contactado por {{INTEGRATION_COMPANY}} y / o %COMPANY_NAME%.\nEncontrará {{INTEGRATION_COMPANY}} política de privacidad <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">aquí</a> y %COMPANY_NAME% política de privacidad <a href=\"%PRIVACY_LINK%\" target=\"_blank\">aquí</a> que incluyen instrucciones sobre cómo retirar su consentimiento.",
+        "ipvd": "Al enviar este formulario, usted acepta ser contactado por %COMPANY_NAME%.\nEncontrará %COMPANY_NAME% política de privacidad <a href=\"%PRIVACY_LINK%\" target=\"_blank\">aquí</a> que incluye instrucciones sobre cómo retirar su consentimiento."
     },
     "registration": {
         "agreement": "Acepto los <a href=\"/content/eula\" target=\"_blank\">Términos y\nCondiciones</a> y <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Política de Privacidad</a>"
@@ -620,8 +615,8 @@
         "online": "en línea",
         "unavailable": "no disponible"
     },
-    "testedVersionLabel": "Probado en la versión {{vmsName}}:",
-    "testedVersionsLabel": "Probado en {{vmsName}} versiones:",
+    "testedVersionLabel": "Tested with {{vmsName}} version:",
+    "testedVersionsLabel": "Tested with {{vmsName}} versions:",
     "users": "Usuarios",
     "you": "usted"
 }

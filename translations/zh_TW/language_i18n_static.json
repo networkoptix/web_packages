@@ -53,21 +53,17 @@
 		},
 		"groups": {
 			"windows": {
-				"label": "Windows",
-				"supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+				"label": "Windows"
 			},
 			"mac": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"linux": {
 				"label": "Ubuntu Linux",
-				"shortLabel": "Ubuntu",
-				"supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+				"shortLabel": "Ubuntu"
 			},
 			"macos": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"ios": {
 				"label": "iOS",
@@ -239,9 +235,9 @@
 				"ipvd_feedback_page": "攝影機頁面的回饋意見",
 				"ipvd_feedback_device": "{{asset}} 的回饋意見"
 			},
-			"topic": {
-				"contact_sales": "聯繫 {{asset}} 業務",
-				"contact_support": "聯繫 {{asset}} 技術支援",
+			"subject": {
+				"sales_inquiry": "{{asset}}的產品諮詢",
+				"technical_inquiry": "Technical inquiry for {{asset}}",
 				"integration_feedback": "整合 {{asset}} 的回饋意見",
 				"ipvd_feedback_page": "攝影機頁面的回饋意見",
 				"ipvd_feedback_device": "{{asset}} 的回饋意見"
@@ -416,13 +412,13 @@
 		}
 	},
 	"privacyPolicy": {
-		"integration": "提交表單即表示您同意與{{INTEGRATION_COMPANY}} 和/或 %COMPANY_NAME%聯繫。\n您可在<a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">瀏覽 {{INTEGRATION_COMPANY}} 隱私政策 </a> 和 %COMPANY_NAME% 隱私政策 <a href=\"%PRIVACY_LINK%\" target=\"blank\">這裡</a> 可了解如何撤銷您的同意。",
-		"ipvd": "提交表單即表示同意 %COMPANY_NAME%與您聯繫。\n您可在<a href=\"%PRIVACY_LINK%\" target=\"blank\">瀏覽 %COMPANY_NAME% 隱私政策</a> ，其中包含如何撤回同意。"
+		"integration": "提交表單即表示您同意與{{INTEGRATION_COMPANY}} 和/或 %COMPANY_NAME%聯繫。\n您可在<a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">瀏覽 {{INTEGRATION_COMPANY}} 隱私政策 </a> 和 %COMPANY_NAME% 隱私政策 <a href=\"%PRIVACY_LINK%\" target=\"_blank\">這裡</a> 可了解如何撤銷您的同意。",
+		"ipvd": "提交表單即表示同意 %COMPANY_NAME%與您聯繫。\n您可在<a href=\"%PRIVACY_LINK%\" target=\"_blank\">瀏覽 %COMPANY_NAME% 隱私政策</a> ，其中包含如何撤回同意。"
 	},
 	"systemAdministration": "系統管理",
 	"users": "使用者",
-	"testedVersionLabel": "測試 {{vmsName}} 版本：",
-	"testedVersionsLabel": "測試 {{vmsName}} 版本：",
+	"testedVersionLabel": "Tested with {{vmsName}} version:",
+	"testedVersionsLabel": "Tested with {{vmsName}} versions:",
 	"About %CLOUD_NAME%": "關於 %CLOUD_NAME%",
 	"Download %VMS_NAME%": "下載 %VMS_NAME%",
 	"Integrations": "整合",

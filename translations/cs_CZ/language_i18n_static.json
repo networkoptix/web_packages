@@ -53,21 +53,17 @@
 		},
 		"groups": {
 			"windows": {
-				"label": "Windows",
-				"supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+				"label": "Windows"
 			},
 			"mac": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"linux": {
 				"label": "Ubuntu Linux",
-				"shortLabel": "Ubuntu",
-				"supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+				"shortLabel": "Ubuntu"
 			},
 			"macos": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"ios": {
 				"label": "iOS",
@@ -161,7 +157,7 @@
 		"disclaimer": "Tento seznam je omezen na zařízení nalezená na {{vmsName}} kde uživatelé povolili automatické hlášení specifikací zařízení na {{companyName}}. Nejsou shromažďovány žádné osobní údaje a každý uživatel zůstává zcela anonymní."
 	},
 	"integration": {
-		"myIntegrationsLabel": "Mine",
+		"myIntegrationsLabel": "Těžit",
 		"previewRibbonText": "Tato stránka je náhled nejnovějších změn a neodpovídá veřejně dostupné verzi.",
 		"backToEditText": "Zpět na editační rozhraní",
 		"Access Control": "Kontrola Přístupu",
@@ -239,9 +235,9 @@
 				"ipvd_feedback_page": "Zpětná vazba pro kameru",
 				"ipvd_feedback_device": "Zpětná vazba pro {{asset}}"
 			},
-			"topic": {
-				"contact_sales": "Kontaktovat obchod ohledně {{asset}}",
-				"contact_support": "Kontaktovat podporu ohledně{{asset}}",
+			"subject": {
+				"sales_inquiry": "Dotaz na prodejce o {{asset}}",
+				"technical_inquiry": "Technical inquiry for {{asset}}",
 				"integration_feedback": "Zpětná vazba pro integraci {{asset}}",
 				"ipvd_feedback_page": "Zpětná vazba pro kameru",
 				"ipvd_feedback_device": "Zpětná vazba pro {{asset}}"
@@ -289,7 +285,7 @@
 		"passwordMismatch": "Chybné heslo",
 		"cantEditYourself": "Změna vlastních oprávnění není povolena",
 		"cantEditAdmin": "Tento uživatel má oprávnění správce",
-		"cantOpenClient": "%VMS_NAME% application is not detected.",
+		"cantOpenClient": "Aplikace %VMS_NAME% není nalezena.",
 		"lostConnection": "Připojení k {{systemName}} se ztratilo",
 		"thisSystem": "systém",
 		"oldSafariNotSupported": "Verze Safari starší než 10 není podporována",
@@ -346,7 +342,7 @@
 		"permissionsRemoved": "Oprávnění byla odstraněna z adresy {{email}}",
 		"unknownName": "Neznámý název systému (problém s cloudovým spojením)",
 		"shareOffline": "Cannot share system while it is offline",
-		"shareUnauthorized": "You do not have permission to share this system"
+		"shareUnauthorized": "Nemáte oprávnění ke sdílení tohoto systému"
 	},
 	"systemStatuses": {
 		"activated": "aktivováno",
@@ -416,13 +412,13 @@
 		}
 	},
 	"privacyPolicy": {
-		"integration": "Odesláním tohoto formuláře souhlasíte s tím, že budete kontaktováni {{INTEGRATION_COMPANY}} a / nebo %COMPANY_NAME%.\nZde najdete {{INTEGRATION_COMPANY}} zásady ochrany osobních údajů <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">zde</a> a %COMPANY_NAME% zásady ochrany osobních údajů <a href=\"%PRIVACY_LINK%\" target=\"blank\">zde</a> které obsahují pokyny, jak svůj souhlas odvolat.",
-		"ipvd": "Odesláním tohoto formuláře souhlasíte, že budete kontaktováni %COMPANY_NAME%.\nZde najdete %COMPANY_NAME% zásady ochrany <a href=\"%PRIVACY_LINK%\" target=\"blank\">zde</a>, které zahrnují instrukce o tom, jak se odvolat svůj souhlas."
+		"integration": "Odesláním tohoto formuláře souhlasíte s tím, že budete kontaktováni {{INTEGRATION_COMPANY}} a / nebo %COMPANY_NAME%.\nZde najdete {{INTEGRATION_COMPANY}} zásady ochrany osobních údajů <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">zde</a> a %COMPANY_NAME% zásady ochrany osobních údajů <a href=\"%PRIVACY_LINK%\" target=\"_blank\">zde</a> které obsahují pokyny, jak svůj souhlas odvolat.",
+		"ipvd": "Odesláním tohoto formuláře souhlasíte, že budete kontaktováni %COMPANY_NAME%.\nZde najdete %COMPANY_NAME% zásady ochrany <a href=\"%PRIVACY_LINK%\" target=\"_blank\">zde</a>, které zahrnují instrukce o tom, jak se odvolat svůj souhlas."
 	},
 	"systemAdministration": "Správce systému",
 	"users": "Uživatelé",
-	"testedVersionLabel": "Testováno na {{vmsName}} verzi:",
-	"testedVersionsLabel": "Testováno na {{vmsName}} verzích:",
+	"testedVersionLabel": "Tested with {{vmsName}} version:",
+	"testedVersionsLabel": "Tested with {{vmsName}} versions:",
 	"About %CLOUD_NAME%": "O aplikaci %CLOUD_NAME%",
 	"Download %VMS_NAME%": "Stáhnout %VMS_NAME%",
 	"Integrations": "Integrace",
@@ -432,7 +428,7 @@
 	"Terms": "Podmínky",
 	"pleaseSelect": "Please select...",
 	"WHEN_MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{{targetSystemName}}</strong> System, and this system will be deleted.",
-	"FAILED_SYSTEM_DESCR": "This link is broken,<br>System may be disconnected from %CLOUD_NAME%,<br>Access to this System may be revoked, <br>or you may be logged into a different account.",
+	"FAILED_SYSTEM_DESCR": "Tento odkaz je nefunkční,<br>Systém může být odpojen od %CLOUD_NAME%,<br>Přístup k tomuto systému může být zrušen, <br>nebo můžete být přihlášen k jinému účtu.",
 	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "Nemáte žádné systémy připojené k %CLOUD_NAME%",
 	"NO_SYSTEMS_LOGIN": "Přihlaste se k Vašemu systému pomocí %VMS_NAME%",
 	"NO_SYSTEMS_GOTO_ADMINISTRATION": "Přejděte na záložku \"Cloud\" v dialogovém okně \"Správa systému\"",

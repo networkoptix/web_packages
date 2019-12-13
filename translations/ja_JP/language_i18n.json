@@ -116,7 +116,7 @@
     "Page not found": "ページが見つかりません",
     "Password": "パスワード",
     "Password is required": "パスワードが必要です",
-    "Password reset instructions are sent to Email": "Password reset instructions are sent to Email",
+    "Password reset instructions are sent to Email": "パスワードリセットの指示がメールで送信されます",
     "Password successfully saved": "パスワードを更新しました",
     "Password:": "パスワード:",
     "Please enter a valid Email": "有効なEmailを入力してください",
@@ -141,6 +141,7 @@
     "Settings": "設定",
     "Show All": "すべて表示",
     "Some of your servers don't support cloud System merge because of outdated software version.": "ソフトウェアのバージョンが古いため、一部のサーバーはクラウドシステムの統合がサポートされません",
+    "Subject": "Subject",
     "Support": "サポート",
     "Support E-mail": "サポート Eメール",
     "Support URL": "サポートURL",
@@ -162,7 +163,6 @@
     "This device has reported to support some analytics events, but we don't have exact information about them.": "このデバイスはいくつかの分析イベントをサポートすることが報告されていますが、正確な情報はありません。",
     "To": "宛先",
     "Too many attempts. Try again in a minute.": "試行回数が多すぎます。暫くしてからもう一度お試しください。",
-    "Topic": "トピック",
     "Until merge is finished you can log in to this system and watch video, but cannot change any settings.": "システムにログインして映像を表示する事はできますが、統合が完了するまで設定を変更することはできません。",
     "Update them to the": "更新",
     "Updated": "更新",
@@ -174,7 +174,6 @@
     "What's New?": "新着情報",
     "Works with:": "で動作します：",
     "Wrong password": "パスワードが違います",
-    "You can merge only those cloud Systems, where you have the \"Owner\" permissions.": "オーナー権限のあるクラウドシステムのみを統合することができます。",
     "You can only merge Systems where you are the owner.": "オーナーであるシステムのみを統合できます。",
     "You have registered in %CLOUD_NAME%": "%CLOUD_NAME% に登録されました",
     "Your Email": "あなたのEメール",
@@ -300,15 +299,15 @@
         "message": {
             "failedToSend": "メッセージを送信できませんでした。",
             "sent": "メッセージが送信されました。",
+            "subject": {
+                "integration_feedback": "{{asset}} 統合のためのフィードバック",
+                "ipvd_feedback_device": "{{asset}} についてのフィードバック",
+                "ipvd_feedback_page": "カメラページへのフィードバック",
+                "sales_inquiry": "{{asset}}販売問い合わせ",
+                "technical_inquiry": "Technical inquiry for {{asset}}"
+            },
             "title": {
                 "integration": "{{companyName}} と連絡を取る",
-                "ipvd_feedback_device": "{{asset}} についてのフィードバック",
-                "ipvd_feedback_page": "カメラページへのフィードバック"
-            },
-            "topic": {
-                "contact_sales": "{{asset}} についてセールスに連絡する",
-                "contact_support": "{{asset}} についてサポートに連絡する",
-                "integration_feedback": "{{asset}} 統合のためのフィードバック",
                 "ipvd_feedback_device": "{{asset}} についてのフィードバック",
                 "ipvd_feedback_page": "カメラページへのフィードバック"
             }
@@ -361,16 +360,13 @@
             },
             "linux": {
                 "label": "Ubuntu Linux",
-                "shortLabel": "Ubuntu",
-                "supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+                "shortLabel": "Ubuntu"
             },
             "mac": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "macos": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "sdk": {
                 "label": "SDK",
@@ -378,8 +374,7 @@
                 "supported": "C ++クロスプラットフォームSDK"
             },
             "windows": {
-                "label": "Windows",
-                "supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+                "label": "Windows"
             }
         },
         "mobile": {
@@ -555,8 +550,8 @@
     "phoneNumberWithLabel": "電話： {{number}}",
     "pleaseSelect": "選択してください",
     "privacyPolicy": {
-        "integration": "このフォームを送信することにより、あなたは {{INTEGRATION_COMPANY}} または %COMPANY_NAME%、あるいはその両方から連絡を受けることに同意します。\n{{INTEGRATION_COMPANY}} プライバシーポリシー <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">ここ</a> と %COMPANY_NAME% プライバシーポリシー <a href=\"%PRIVACY_LINK%\" target=\"blank\">ここ</a> には同意を撤回する方法に関する指示が含まれています。",
-        "ipvd": "このフォームを送信することにより、あなたは %COMPANY_NAME%から連絡を受けることに同意します。\n %COMPANY_NAME% プライバシーポリシー <a href=\"%PRIVACY_LINK%\" target=\"blank\">ここ</a>には同意を撤回する方法についての指示が含まれています。"
+        "integration": "このフォームを送信することにより、あなたは {{INTEGRATION_COMPANY}} または %COMPANY_NAME%、あるいはその両方から連絡を受けることに同意します。\n{{INTEGRATION_COMPANY}} プライバシーポリシー <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">ここ</a> と %COMPANY_NAME% プライバシーポリシー <a href=\"%PRIVACY_LINK%\" target=\"_blank\">ここ</a> には同意を撤回する方法に関する指示が含まれています。",
+        "ipvd": "このフォームを送信することにより、あなたは %COMPANY_NAME%から連絡を受けることに同意します。\n %COMPANY_NAME% プライバシーポリシー <a href=\"%PRIVACY_LINK%\" target=\"_blank\">ここ</a>には同意を撤回する方法についての指示が含まれています。"
     },
     "registration": {
         "agreement": "<a href=\"/content/eula\" target=\"_blank\">利用規約、条件</a>および<a href=\"%PRIVACY_LINK%\" target=\"_blank\">プライバシーポリシー</a>に同意します"
@@ -620,8 +615,8 @@
         "online": "オンライン",
         "unavailable": "利用できません"
     },
-    "testedVersionLabel": "{{vmsName}} バージョンでテスト済み：",
-    "testedVersionsLabel": "{{vmsName}} バージョンでテスト済み：",
+    "testedVersionLabel": "Tested with {{vmsName}} version:",
+    "testedVersionsLabel": "Tested with {{vmsName}} versions:",
     "users": "ユーザー",
     "you": "あなた"
 }

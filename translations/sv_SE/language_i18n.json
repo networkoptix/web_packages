@@ -141,6 +141,7 @@
     "Settings": "Inställningar",
     "Show All": "Visa alla",
     "Some of your servers don't support cloud System merge because of outdated software version.": "Några av dina servrar stöder inte systemfusion i moln på grund av föråldrad programvaruversion.",
+    "Subject": "Subject",
     "Support": "Support",
     "Support E-mail": "Support Email",
     "Support URL": "Support URL",
@@ -162,7 +163,6 @@
     "This device has reported to support some analytics events, but we don't have exact information about them.": "Den här enheten har rapporterat stödja vissa analyshändelser, men vi har inte exakt information om dem.",
     "To": "Till",
     "Too many attempts. Try again in a minute.": "Alltför många försök. Försök igen om någon minut.",
-    "Topic": "Ämne",
     "Until merge is finished you can log in to this system and watch video, but cannot change any settings.": "Innan sammanslagningen är klar kan du logga in på det här systemet och titta på video, men kan inte ändra några inställningar.",
     "Update them to the": "Uppdatera dem till",
     "Updated": "Uppdaterad",
@@ -174,7 +174,6 @@
     "What's New?": "Vad är nytt?",
     "Works with:": "Fungerar med:",
     "Wrong password": "Fel lösenord",
-    "You can merge only those cloud Systems, where you have the \"Owner\" permissions.": "Du kan sammanfoga endast de Cloud Systems, där du har behörigheterna \"Ägare\".",
     "You can only merge Systems where you are the owner.": "Du kan slå samman cloud system där du är ägare.",
     "You have registered in %CLOUD_NAME%": "Du har registrerat dig i %CLOUD_NAME%",
     "Your Email": "Din E-postadress",
@@ -300,15 +299,15 @@
         "message": {
             "failedToSend": "Meddelandet gick inte att skicka.",
             "sent": "Meddelandet har skickats.",
+            "subject": {
+                "integration_feedback": "Feedback för integration {{asset}}",
+                "ipvd_feedback_device": "Feedback om {{asset}}",
+                "ipvd_feedback_page": "Feedback för kamerans sida",
+                "sales_inquiry": "Försäljningsförfrågan för {{asset}}",
+                "technical_inquiry": "Technical inquiry for {{asset}}"
+            },
             "title": {
                 "integration": "Kom i kontakt med {{companyName}}",
-                "ipvd_feedback_device": "Feedback om {{asset}}",
-                "ipvd_feedback_page": "Feedback för kamerans sida"
-            },
-            "topic": {
-                "contact_sales": "Kontakta försäljning för {{asset}}",
-                "contact_support": "Kontakta support för {{asset}}",
-                "integration_feedback": "Feedback för integration {{asset}}",
                 "ipvd_feedback_device": "Feedback om {{asset}}",
                 "ipvd_feedback_page": "Feedback för kamerans sida"
             }
@@ -361,16 +360,13 @@
             },
             "linux": {
                 "label": "Ubuntu Linux",
-                "shortLabel": "Ubuntu",
-                "supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+                "shortLabel": "Ubuntu"
             },
             "mac": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "macos": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "sdk": {
                 "label": "SDK",
@@ -378,8 +374,7 @@
                 "supported": "C++ plattformsoberoende SDK"
             },
             "windows": {
-                "label": "Windows",
-                "supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+                "label": "Windows"
             }
         },
         "mobile": {
@@ -555,8 +550,8 @@
     "phoneNumberWithLabel": "Tel: {{number}}",
     "pleaseSelect": "Vänligen välj...",
     "privacyPolicy": {
-        "integration": "Genom att skicka in denna blankett accepterar du att du kontaktas av {{INTEGRATION_COMPANY}} och / eller %COMPANY_NAME%.\nDu hittar {{INTEGRATION_COMPANY}} sekretesspolicy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">här</a> och %COMPANY_NAME% sekretesspolicy <a href=\"%PRIVACY_LINK%\" target=\"blank\">här</a> som innehåller anvisningar om hur du återkallar ditt samtycke.",
-        "ipvd": "Genom att skicka in denna blankett accepterar du att du kontaktas av %COMPANY_NAME%.\nDu hittar %COMPANY_NAME% sekretesspolicy <a href=\"%PRIVACY_LINK%\" target=\"blank\">här</a> som innehåller instruktioner om hur du återkallar ditt samtycke."
+        "integration": "Genom att skicka in denna blankett accepterar du att du kontaktas av {{INTEGRATION_COMPANY}} och / eller %COMPANY_NAME%.\nDu hittar {{INTEGRATION_COMPANY}} sekretesspolicy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">här</a> och %COMPANY_NAME% sekretesspolicy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">här</a> som innehåller anvisningar om hur du återkallar ditt samtycke.",
+        "ipvd": "Genom att skicka in denna blankett accepterar du att du kontaktas av %COMPANY_NAME%.\nDu hittar %COMPANY_NAME% sekretesspolicy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">här</a> som innehåller instruktioner om hur du återkallar ditt samtycke."
     },
     "registration": {
         "agreement": "Jag godkänner <a href=\"/content/eula\" target=\"_blank\">Villkor &\nVillkor</a> och <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Sekretesspolicy</a>"
@@ -602,7 +597,7 @@
         "openClientNoSystem": "Öppna %VMS_NAME%",
         "permissionsRemoved": "Rättigheterna togs bort från {{email}}",
         "shareOffline": "Kan inte dela systemet medan det är offline",
-        "shareUnauthorized": "You do not have permission to share this system",
+        "shareUnauthorized": "Du har inte behörighet att dela detta system",
         "successDeleted": "System {{systemName}} har tagits bort från ditt konto",
         "successDisconnected": "Systemet har kopplats bort från %CLOUD_NAME%",
         "successRename": "Systemnamnet sparat",
@@ -620,8 +615,8 @@
         "online": "uppkopplad",
         "unavailable": "inte tillgänglig"
     },
-    "testedVersionLabel": "Testat på {{vmsName}} version:",
-    "testedVersionsLabel": "Testat på {{vmsName}} versioner:",
+    "testedVersionLabel": "Tested with {{vmsName}} version:",
+    "testedVersionsLabel": "Tested with {{vmsName}} versions:",
     "users": "Användare",
     "you": "du"
 }

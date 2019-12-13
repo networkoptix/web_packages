@@ -53,21 +53,17 @@
 		},
 		"groups": {
 			"windows": {
-				"label": "Windows",
-				"supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+				"label": "Windows"
 			},
 			"mac": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"linux": {
 				"label": "Ubuntu Linux",
-				"shortLabel": "Ubuntu",
-				"supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+				"shortLabel": "Ubuntu"
 			},
 			"macos": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"ios": {
 				"label": "iOS",
@@ -103,7 +99,7 @@
 			"bundle": "Клієнт і сервер",
 			"camera_sdk": "SDK джерела відео",
 			"client": "Тільки клієнт",
-			"metadata_sdk": "Metadata SDK",
+			"metadata_sdk": "Метадані SDK",
 			"package": "Package",
 			"server": "Тільки сервер",
 			"servertool": "Інструмент налаштування",
@@ -239,9 +235,9 @@
 				"ipvd_feedback_page": "Зворотній зв’язок для сторінки камер",
 				"ipvd_feedback_device": "Відгук про {{asset}}"
 			},
-			"topic": {
-				"contact_sales": "Зв'яжіться з відділом продажів за {{asset}}",
-				"contact_support": "Зверніться до служби підтримки за {{asset}}",
+			"subject": {
+				"sales_inquiry": "Запит на продаж {{asset}}",
+				"technical_inquiry": "Technical inquiry for {{asset}}",
 				"integration_feedback": "Зворотній зв'язок для інтеграції {{asset}}",
 				"ipvd_feedback_page": "Зворотній зв’язок для сторінки камер",
 				"ipvd_feedback_device": "Відгук про {{asset}}"
@@ -322,7 +318,7 @@
 		"mySystemSearch": "ЯМійМоя",
 		"unavailable": "Система недоступна",
 		"offline": "Система знаходиться поза мережею",
-		"offlineAlertRibbon": "System is offline. Some settings may not be available.",
+		"offlineAlertRibbon": "Система відключена. Деякі налаштування можуть бути недоступні.",
 		"openClient": "Відкрити в %VMS_NAME%",
 		"openClientNoSystem": "Відкрити %VMS_NAME%",
 		"confirmMergeAction": "Об'єднати",
@@ -345,8 +341,8 @@
 		"mergeSuccess": "Злиття системи завершено",
 		"permissionsRemoved": "{{email}} був позбавлений повноважень",
 		"unknownName": "Невідоме ім’я для системи (викликане злиттям хмари)",
-		"shareOffline": "Cannot share system while it is offline",
-		"shareUnauthorized": "You do not have permission to share this system"
+		"shareOffline": "Не можна поділитись системою, поки вона не підключена в режимі офлайн",
+		"shareUnauthorized": "Ви не маєте прав для створення цього клієнта"
 	},
 	"systemStatuses": {
 		"activated": "активовано",
@@ -416,13 +412,13 @@
 		}
 	},
 	"privacyPolicy": {
-		"integration": "Надіславши цю форму, ви погоджуєтеся зв'язатися з {{INTEGRATION_COMPANY}} та / або %COMPANY_NAME%.\nВи знайдете {{INTEGRATION_COMPANY}} Політику конфіденційності <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">тут</a> і %COMPANY_NAME% Політика конфіденційності <a href=\"%PRIVACY_LINK%\" target=\"blank\">тут</a> які містять інструкцію про те, як зняти вашу згоду.",
-		"ipvd": "Надсилаючи цю форму, ви погоджуєтесь зв'язатися з нами %COMPANY_NAME%.\nВи знайдете %COMPANY_NAME% політику конфіденційності <a href=\"%PRIVACY_LINK%\" target=\"blank\">тут</a> яка містить інструкцію про те, як скасувати вашу згоду."
+		"integration": "Надіславши цю форму, ви погоджуєтеся зв'язатися з {{INTEGRATION_COMPANY}} та / або %COMPANY_NAME%.\nВи знайдете {{INTEGRATION_COMPANY}} Політику конфіденційності <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">тут</a> і %COMPANY_NAME% Політика конфіденційності <a href=\"%PRIVACY_LINK%\" target=\"_blank\">тут</a> які містять інструкцію про те, як зняти вашу згоду.",
+		"ipvd": "Надсилаючи цю форму, ви погоджуєтесь зв'язатися з нами %COMPANY_NAME%.\nВи знайдете %COMPANY_NAME% політику конфіденційності <a href=\"%PRIVACY_LINK%\" target=\"_blank\">тут</a> яка містить інструкцію про те, як скасувати вашу згоду."
 	},
 	"systemAdministration": "Адміністрування системи",
 	"users": "Користувачі",
-	"testedVersionLabel": "Протестовано за {{vmsName}} версій:",
-	"testedVersionsLabel": "Протестовано за {{vmsName}} версій:",
+	"testedVersionLabel": "Tested with {{vmsName}} version:",
+	"testedVersionsLabel": "Tested with {{vmsName}} versions:",
 	"About %CLOUD_NAME%": "Про %CLOUD_NAME%",
 	"Download %VMS_NAME%": "Завантажити %VMS_NAME%",
 	"Integrations": "Інтеграції",

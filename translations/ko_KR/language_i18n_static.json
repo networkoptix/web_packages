@@ -53,21 +53,17 @@
 		},
 		"groups": {
 			"windows": {
-				"label": "Windows",
-				"supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+				"label": "Windows"
 			},
 			"mac": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"linux": {
 				"label": "Ubuntu Linux",
-				"shortLabel": "Ubuntu",
-				"supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+				"shortLabel": "Ubuntu"
 			},
 			"macos": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"ios": {
 				"label": "iOS",
@@ -239,9 +235,9 @@
 				"ipvd_feedback_page": "카메라 페이지에 대한 피드백",
 				"ipvd_feedback_device": "{{asset}} 에 대한 피드백"
 			},
-			"topic": {
-				"contact_sales": "{{asset}} 에 대해 영업팀에 문의",
-				"contact_support": "{{asset}} 대해 지원팀에 문의",
+			"subject": {
+				"sales_inquiry": "{{asset}}에 대한 판매 문의",
+				"technical_inquiry": "Technical inquiry for {{asset}}",
 				"integration_feedback": "{{asset}} 통합에 대한 피드백",
 				"ipvd_feedback_page": "카메라 페이지에 대한 피드백",
 				"ipvd_feedback_device": "{{asset}} 에 대한 피드백"
@@ -346,7 +342,7 @@
 		"permissionsRemoved": "권한이 {{email}} 에서 제거 되었습니다.",
 		"unknownName": "시스템의 알 수없는 이름 (클라우드 머지로 인해 발생)",
 		"shareOffline": "오프라인 상태에서 시스템을 공유 할 수 없습니다",
-		"shareUnauthorized": "You do not have permission to share this system"
+		"shareUnauthorized": "이 시스템을 공유 할 권한이 없습니다"
 	},
 	"systemStatuses": {
 		"activated": "활성화 됨",
@@ -416,13 +412,13 @@
 		}
 	},
 	"privacyPolicy": {
-		"integration": "이 양식을 제출하면 {{INTEGRATION_COMPANY}} 및 / 또는 %COMPANY_NAME%로 연락하는 것에 동의하게됩니다.\n{{INTEGRATION_COMPANY}} 개인 정보 보호 정책 <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">여기에</a> 과 %COMPANY_NAME% 개인 정보 보호 정책 <a href=\"%PRIVACY_LINK%\" target=\"blank\">여기에</a> 에서 동의를 철회하는 방법에 대한 지침을 찾을 수 있습니다.",
-		"ipvd": "이 양식을 제출하면 %COMPANY_NAME%으로 연락하는 데 동의하는 것입니다.\n%COMPANY_NAME% 개인 정보 보호 정책 <a href=\"%PRIVACY_LINK%\" target=\"blank\">여기에</a> 에서 동의를 철회하는 방법에 대한 지침을 찾을 수 있습니다."
+		"integration": "이 양식을 제출하면 {{INTEGRATION_COMPANY}} 및 / 또는 %COMPANY_NAME%로 연락하는 것에 동의하게됩니다.\n{{INTEGRATION_COMPANY}} 개인 정보 보호 정책 <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">여기에</a> 과 %COMPANY_NAME% 개인 정보 보호 정책 <a href=\"%PRIVACY_LINK%\" target=\"_blank\">여기에</a> 에서 동의를 철회하는 방법에 대한 지침을 찾을 수 있습니다.",
+		"ipvd": "이 양식을 제출하면 %COMPANY_NAME%으로 연락하는 데 동의하는 것입니다.\n%COMPANY_NAME% 개인 정보 보호 정책 <a href=\"%PRIVACY_LINK%\" target=\"_blank\">여기에</a> 에서 동의를 철회하는 방법에 대한 지침을 찾을 수 있습니다."
 	},
 	"systemAdministration": "관리자",
 	"users": "사용자",
-	"testedVersionLabel": "{{vmsName}} 버전에서 테스트되었습니다.",
-	"testedVersionsLabel": "테스트된 {{vmsName}} 버전:",
+	"testedVersionLabel": "Tested with {{vmsName}} version:",
+	"testedVersionsLabel": "Tested with {{vmsName}} versions:",
 	"About %CLOUD_NAME%": "%CLOUD_NAME% 정보",
 	"Download %VMS_NAME%": "%VMS_NAME% 다운로드",
 	"Integrations": "연동",
