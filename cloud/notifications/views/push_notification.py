@@ -21,27 +21,43 @@ import json
 from django.conf import settings
 
 
-class CloudBasicAuthentication(BasicAuthentication):
+class CloudSystemBasicAuthentication(BasicAuthentication):
+    def authenticate_credentials(self, user, password, request=None):
+        try:
+            ip = get_client_ip(request)
+            # System credentials should fail account.get and raise an exception
+            Clouddb_Account.get(user, password, ip)
+            raise exceptions.AuthenticationFailed('Must use system credentials, not account credentials')
+        except (APINotAuthorisedException, APILogicException):
+            try:
+                system_response = Clouddb_System.get(user, password, user)
+                if 'systems' in system_response and system_response['systems'][0]:
+                    request.data['system'] = system_response['systems'][0]
+                else:
+                    raise exceptions.AuthenticationFailed('Invalid system credentials')
+            except APINotAuthorisedException:
+                raise exceptions.AuthenticationFailed('Invalid system credentials')
+
+        request.data['username'] = user
+        request.data['password'] = password
+
+        return None, None
+
+
+class CloudAccountBasicAuthentication(BasicAuthentication):
     def authenticate_credentials(self, user, password, request=None):
         try:
             ip = get_client_ip(request)
             clouddb_account = Clouddb_Account.get(user, password, ip)
         except (APINotAuthorisedException, APILogicException):
-            # raise exceptions.AuthenticationFailed('Invalid email/password.')
-            clouddb_account = Clouddb_System.get(user, password, user)
+            raise exceptions.AuthenticationFailed('Invalid email/password')
 
-        if 'email' in clouddb_account:
-            account = Account.objects.filter(email=clouddb_account['email']).first()
+        account = Account.objects.filter(email=clouddb_account['email']).first()
 
-        # Handle system auth (maybe temporary)
-        elif 'systems' in clouddb_account and 'ownerAccountEmail' in clouddb_account['systems'][0]:
-            account = Account.objects.filter(email=clouddb_account['systems'][0]['ownerAccountEmail']).first()
-
-        request.data['clouddb_account'] = clouddb_account
         request.data['username'] = user
         request.data['password'] = password
 
-        return (account, None)
+        return account, None
 
 
 class CloudSessionAuthentication(SessionAuthentication):
@@ -65,7 +81,7 @@ class CloudSessionAuthentication(SessionAuthentication):
 
 @api_view(['POST'])
 @permission_classes((AllowAny,))
-@authentication_classes((CloudBasicAuthentication, CloudSessionAuthentication))
+@authentication_classes((CloudSystemBasicAuthentication, CloudSessionAuthentication))
 def push_notification(request):
     serializer = NotificationSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
@@ -92,7 +108,7 @@ def push_notification(request):
 
 @api_view(['GET', 'POST'])
 @permission_classes((IsAuthenticated,))
-@authentication_classes((CloudBasicAuthentication, CloudSessionAuthentication))
+@authentication_classes((CloudAccountBasicAuthentication, CloudSessionAuthentication))
 def register_device(request):
     if request.method == 'GET':
         serializer = RegisterDeviceSerializer(data=request.GET)
@@ -130,7 +146,7 @@ def register_device(request):
 
 class DeviceSubscriptionListView(ListAPIView):
     serializer_class = DeviceSubscriptionsSerializer
-    authentication_classes = (CloudBasicAuthentication, CloudSessionAuthentication)
+    authentication_classes = (CloudAccountBasicAuthentication, CloudSessionAuthentication)
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
@@ -142,7 +158,7 @@ class DeviceSubscriptionListView(ListAPIView):
 
 
 class Subscribe(UpdateModelMixin, CreateModelMixin, RetrieveModelMixin, GenericAPIView):
-    authentication_classes = (CloudBasicAuthentication, CloudSessionAuthentication)
+    authentication_classes = (CloudAccountBasicAuthentication, CloudSessionAuthentication)
     permission_classes = (IsAuthenticated, )
     serializer_class = SubscriptionSerializer
     lookup_fields = ('deviceToken', 'systemId')
