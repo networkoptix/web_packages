@@ -262,7 +262,6 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                     this.system
                         .getInfoAndPermissions()
                         .then((system) => {
-                            debugger;
                             this.canSeeInfo = system.canViewInfo();
                         });
                 }
