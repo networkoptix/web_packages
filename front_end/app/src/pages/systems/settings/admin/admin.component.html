@@ -46,6 +46,18 @@
                 </div>
             </nx-section>
         </nx-block>
+        <nx-block type="mt-3" *ngIf="!system.isMine">
+            <nx-section>
+                <span class="system-owner" translate>Your access level<span>&nbsp;– </span>
+                    <span class="name" [innerHTML]="updateUserRole()"></span>
+                </span>
+                <div class="mt-2">
+                    <button [disabled]="settings.disconnectDisabled"
+                            class="btn btn-default"
+                            (click)="delete()" translate>Disconnect from My Account</button>
+                </div>
+            </nx-section>
+        </nx-block>
         <nx-block type="mt-3" *ngIf="system.permissions.isAdmin">
             <header>
                 <h4 translate>System Settings</h4>
@@ -208,19 +220,4 @@
             </nx-section>
         </nx-block>
     </div>
-    <div class="col-12 mt-3" *ngIf="!system.isMine">
-        <nx-block>
-            <nx-section>
-                <span class="system-owner" translate>Your access level<span>&nbsp;– </span>
-                    <span class="name" [innerHTML]="updateUserRole()"></span>
-                </span>
-                <div class="mt-2">
-                    <button [disabled]="settings.disconnectDisabled"
-                            class="btn btn-default"
-                            (click)="delete()" translate>Disconnect from My Account</button>
-                </div>
-            </nx-section>
-        </nx-block>
-    </div>
-
 </div>
