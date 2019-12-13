@@ -91,29 +91,8 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes.dimensions && changes.dimensions.currentValue.length) {
-            /*
-                ngOnChanges may trigger while not all elements are rendered
-                and will report wrong dimensions.
-                ... this is why some hard coded stuff and math
-             */
-            this.windowSize = this.scrollMechanicsService.windowSizeSubject.getValue();
-            const ELEMENTS_HEIGHT = changes.dimensions.currentValue.reduce((prev, curr) => prev + curr, 0);
-            const THEAD_HEIGHT = this.thead.nativeElement.offsetHeight;
-            const PADDING = 16;
-            const PAGINATION_HEIGHT = 64;
-            let availSpace = this.windowSize.height - PAGINATION_HEIGHT - ELEMENTS_HEIGHT - 4 * PADDING - THEAD_HEIGHT - 48;
-
-            if (this.tableHeader) {
-                availSpace -= this.tableHeaderElement.nativeElement.offsetHeight;
-            }
-
-            this.pageSize = Math.ceil(availSpace / NxDynamicTableComponent.ROW_HEIGHT);
-            if (this.pageSize < 5) {
-                this.pageSize = 5;
-            }
-
-            this.setPagedItems();
+        if (changes.dimensions && !changes.dimensions.firstChange && changes.dimensions.currentValue.length) {
+            this.setTableDimensions();
         }
 
         if (changes.activeEntity) {
@@ -150,6 +129,32 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
                         });
                 });
             }
+        }
+    }
+
+    private setTableDimensions() {
+        this.windowSize = this.scrollMechanicsService.windowSizeSubject.getValue();
+        const ELEMENTS_HEIGHT = this.dimensions.reduce((prev, curr) => prev + curr, 0);
+        const THEAD_HEIGHT = this.thead.nativeElement.offsetHeight;
+        const PADDING = 16;
+        const PAGINATION_HEIGHT = 64;
+        let availSpace = this.windowSize.height - PAGINATION_HEIGHT - ELEMENTS_HEIGHT - 4 * PADDING - THEAD_HEIGHT - 48;
+
+        if (this.tableHeader) {
+            availSpace -= this.tableHeaderElement.nativeElement.offsetHeight;
+        }
+
+        this.pageSize = Math.ceil(availSpace / NxDynamicTableComponent.ROW_HEIGHT);
+        if (this.pageSize < 5) {
+            this.pageSize = 5;
+        }
+
+        this.setPagedItems();
+    }
+
+    ngAfterViewInit() {
+        if (this.dimensions.length) {
+            this.setTableDimensions();
         }
     }
 
