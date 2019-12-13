@@ -15,6 +15,7 @@ import { Subscription }               from 'rxjs';
 import { NxScrollMechanicsService }              from '../../services/scroll-mechanics.service';
 import { AutoUnsubscribe }                       from 'ngx-auto-unsubscribe';
 import { NxSystemAPI, NxSystemAPIService } from '../../services/system-api.service';
+import { NxAppStateService } from '../../services/nx-app-state.service';
 
 @AutoUnsubscribe()
 @Component({
@@ -46,6 +47,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
     private resizeSubscription: Subscription;
 
     constructor(private accountService: NxAccountService,
+                private appStateService: NxAppStateService,
                 private configService: NxConfigService,
                 private systemService: NxSystemService,
                 private serverApi: NxSystemAPIService,
@@ -137,7 +139,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
 
         // We listen to window resize and measure header height to know how much to offset the fixed menu by
         this.resizeSubscription = this.scrollMechanicsService.windowSizeSubject.subscribe(({width}) => {
-            if (width >= 768) {
+            if (width >= 768 && this.appStateService.headerVisibleSubject.getValue()) {
                 this.setHeaderHeight();
             }
         });

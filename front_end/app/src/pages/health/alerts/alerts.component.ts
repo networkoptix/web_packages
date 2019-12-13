@@ -108,7 +108,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
             this.elementSearchHeight = this.elementSearch.nativeElement.offsetHeight;
             this.elementTilesHeight = this.elementTiles.nativeElement.offsetHeight;
 
-            this.containerDimensions = [this.elementTilesHeight, 40];
+            setTimeout(() => this.containerDimensions = [this.elementTilesHeight, 40]);
         }
     }
 
