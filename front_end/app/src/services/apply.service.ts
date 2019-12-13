@@ -100,6 +100,7 @@ export class NxApplyService {
             });
         }
         this.locked = false;
+        this.setWarn('');
     }
 
     // Resets all watchers to their first value that wasn't undefined.
@@ -110,6 +111,7 @@ export class NxApplyService {
             });
         }
         this.locked = false;
+        this.setWarn('');
     }
 
     touched() {
