@@ -102,12 +102,12 @@ export class DownloadComponent implements OnInit, OnDestroy {
 
     private calcDownloadButton(platformName) {
         const platform = this.sortedPlatforms.find(platform => platform.name === platformName);
-        this.downloadButton = platform.files[0];
+        this.downloadButton = platform && platform.files[0] || '';
     }
 
     private getDownloads() {
         this.sub = this.route.params.subscribe(params => {
-            this.platform = params.platform;
+            this.platform = params.platform.toLowerCase();
 
             for (const mobile in this.downloads.mobile) {
                 if (this.downloads.mobile[ mobile ].os === this.activeOs) {
@@ -161,7 +161,9 @@ export class DownloadComponent implements OnInit, OnDestroy {
                 });
 
                 if (!this.sortedPlatforms.some(platform => platform.name === this.platform)) {
-                    this.platform = this.deviceService.getDeviceInfo().os.toLowerCase();
+                    const configDownloads = this.CONFIG.downloads;
+                    const detectedOS = this.deviceService.getDeviceInfo().os.toLowerCase();
+                    this.platform = configDownloads.platformMatch[detectedOS] || configDownloads.groups.windows.name;
                 }
                 this.calcDownloadButton(this.platform);
                 this.setTitle(this.platform);

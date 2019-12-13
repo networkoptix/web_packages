@@ -187,6 +187,14 @@ export class NxConfigService {
                         os      : '',
                         appTypes: []
                     }
+                },
+                platformMatch: {
+                    unix: 'Linux',
+                    linux: 'Linux',
+                    mac: 'MacOS',
+                    windows: 'Windows',
+                    arm: 'ARM',
+                    skd: 'SDK'
                 }
             },
             icons                         : {
