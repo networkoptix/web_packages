@@ -331,6 +331,17 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 this.content.level1.push(usersNode);
             }
 
+            let serversNode = this.content.level1.filter((node) => node.id === this.CONFIG.systemMenu.servers.id)[0];
+            if (!serversNode) {
+                serversNode = {
+                    id: this.CONFIG.systemMenu.servers.id,
+                    icon: this.CONFIG.systemMenu.servers.icon,
+                    label: this.LANG.servers,
+                    path: this.CONFIG.systemMenu.servers.path,
+                };
+                this.content.level1.push(serversNode);
+            }
+
             // Retain buttons
             if (usersNode.level2.length && usersNode.level2[0].id === 'buttons') {
                 // usersNode.level2 = [usersNode.level2[0]];
@@ -340,6 +351,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             }
 
             usersNode.level3 = [];
+            serversNode.level3 = [];
 
             const byParam = NxUtilsService.byParam((user) => {
                 return user.email;
@@ -356,6 +368,16 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     additionalLabel:  this.LANG.accessRoles[user.role.name] && this.LANG.accessRoles[user.role.name].label || user.role.name,
                     path : 'users/' + id,
                     isEnabled: user.isEnabled,
+                });
+            });
+
+            this.system.servers.forEach(server => {
+                serversNode.level3.push({
+                    id: server.id,
+                    icon: '',
+                    label: server.name,
+                    path: `servers/${server.id}`,
+                    additionalLabel: server.addParams.find(el => el.name === 'publicIp').value,
                 });
             });
         } else {

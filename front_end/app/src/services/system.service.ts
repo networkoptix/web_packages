@@ -45,6 +45,31 @@ export interface NxSystemUser {
     userRoleId: string;
 }
 
+export interface NxSystemServer {
+    addParams: any[];
+    allowAutoRedundancy: boolean;
+    authKey: string;
+    backupBitrate: number;
+    backupDaysOfTheWeek: string;
+    backupDuration: number;
+    backupStart: number;
+    backupType: string;
+    flags: string;
+    id: string;
+    maxCameras: number;
+    metadataStorageId: string;
+    name: string;
+    networkAddresses: string;
+    osInfo: string;
+    parentId: string;
+    status: string;
+    storage: any[];
+    systemInfo: string;
+    typeId: string;
+    url: string;
+    version: string;
+}
+
 
 interface SystemInterface {
     accessRole: any;
@@ -59,6 +84,7 @@ interface SystemInterface {
     permissions: any;
     stateMessage: string;
     users: NxSystemUser[];
+    servers: NxSystemServer[];
 }
 
 
@@ -75,6 +101,7 @@ class System implements SystemInterface {
     permissions: any;
     stateMessage: string;
     users: NxSystemUser[];
+    servers: NxSystemServer[];
 
     constructor () {
         this.accessRole = '';
@@ -89,6 +116,7 @@ class System implements SystemInterface {
         this.permissions = undefined;
         this.stateMessage = '';
         this.users = [];
+        this.servers = [];
     }
 }
 
@@ -159,6 +187,7 @@ export class NxSystem extends System implements OnDestroy {
     initSystem(currentUserEmail, systemId?, serverId?) {
         this.id = systemId || serverId;
         this.users = [];
+        this.servers = [];
         this.isAvailable = false;
         this.isOnline = false;
         this.isMine = false;
@@ -484,6 +513,17 @@ export class NxSystem extends System implements OnDestroy {
         return this.cloudApi.unshare(this.id, this.currentUserEmail).toPromise();
     }
 
+    getServers() {
+        return this.mediaserver.getMediaServers().toPromise()
+            .then((result: any) => {
+                if (!result) {
+                    return Promise.reject(`Request to server has failed ${result}`);
+                }
+                this.servers = result;
+                // consider implementing this.updateSystemState();
+            });
+    }
+
     startPoll() {
         if (this.activeSubscription) {
             this.activeSubscription.unsubscribe();
@@ -509,11 +549,10 @@ export class NxSystem extends System implements OnDestroy {
 
     update() {
         return of('').pipe(flatMap(_ => {
-            return this.getInfo(true, false).then(_ => {
-                return from(this.getUsers(true));
-            }).catch(_ => {
-                this.lostConnection = true;
-            });
+            return this.getInfo(true, false)
+                .then(_ => this.getServers())
+                .then(_ => from(this.getUsers(true)))
+                .catch(_ => this.lostConnection = true);
         }));
     }
 

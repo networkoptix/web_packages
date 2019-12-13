@@ -13,9 +13,11 @@ import { ComponentsModule } from '../../../components/components.module';
 
 import { NxSystemAdminModule }       from './admin/admin.module';
 import { NxSystemUsersModule }       from './users/users.module';
+import { NxSystemServersModule }     from './servers/servers.module';
 import { NxSystemMergeStatusModule } from './merge-status/merge-status.module';
 import { NxSystemAdminComponent }    from './admin/admin.component';
 import { NxSystemUsersComponent }    from './users/users.component';
+import { NxSystemServersComponent }  from './servers/servers.component';
 import { NxNoSystemsComponent }      from '../no-systems/no-systems.component';
 import { ApplyGuard }                from '../../../routeGuards/applyGuard';
 import { AuthGuard }                 from '../../../routeGuards/authGuard';
@@ -45,6 +47,16 @@ const appRoutes: Routes = [
                 path: 'users/:userId',
                 component: NxSystemUsersComponent,
                 canDeactivate: [ApplyGuard]
+            },
+            {
+                path: 'servers',
+                component: NxSystemServersComponent,
+                canDeactivate: [ApplyGuard]
+            },
+            {
+                path: 'servers/:serverId',
+                component: NxSystemServersComponent,
+                canDeactivate: [ApplyGuard]
             }
         ]
     }
@@ -62,6 +74,7 @@ const appRoutes: Routes = [
         NxSystemMergeStatusModule,
         NxSystemAdminModule,
         NxSystemUsersModule,
+        NxSystemServersModule,
 
         RouterModule.forChild(appRoutes)
     ],

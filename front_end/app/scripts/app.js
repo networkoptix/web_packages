@@ -133,6 +133,12 @@ window.L = {};
                     .when('/systems/:systemId/users/:userId', {
                         template: ''
                     })
+                    .when('/systems/:systemId/servers', {
+                        template: ''
+                    })
+                    .when('/systems/:systemId/servers/:serverId', {
+                        template: ''
+                    })
                     .when('/systems/:systemId/view', {
                         templateUrl: CONFIG.viewsDir + 'view.html',
                         controller: 'ViewPageCtrl',

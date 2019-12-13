@@ -643,6 +643,7 @@
         "vendor": "Manufacturer",
         "vendors": "Manufacturers"
     },
+    "servers": "Servers",
     "servers in the merged System.": "servers in the merged System.",
     "support": "support",
     "system": {

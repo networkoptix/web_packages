@@ -483,6 +483,7 @@
 	},
 	"systemAdministration": "System Administration",
 	"users": "Users",
+	"servers": "Servers",
 	"testedVersionLabel": "Tested with {{vmsName}} version:",
 	"testedVersionsLabel": "Tested with {{vmsName}} versions:",
 	"About %CLOUD_NAME%": "About %CLOUD_NAME%",

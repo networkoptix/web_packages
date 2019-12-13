@@ -301,6 +301,11 @@ export class NxConfigService {
                     icon: 'glyphicon-users',
                     path: 'users'
                 },
+                servers: {
+                    id  : 'servers',
+                    icon: 'glyphicon-menu-hamburger',
+                    path: 'servers'
+                },
                 buttons: {
                     id  : 'buttons'
                 }
