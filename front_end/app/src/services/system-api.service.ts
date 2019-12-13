@@ -107,7 +107,9 @@ export class NxSystemAPI {
 
     private get(url: string, params?: any) {
         params = params || {};
-        params.auth = this.authGet;
+        if (this.authGet) {
+            params.auth = this.authGet;
+        }
         const fullUrl = `${this.urlBase}${url}`;
         return this.http.get(fullUrl, {params}).pipe(
             retryWhen((request) => this.retryHandler(request))
@@ -117,7 +119,11 @@ export class NxSystemAPI {
     private post(url: string, data?: any) {
         data = data || {};
         const fullUrl = `${this.urlBase}${url}`;
-        return this.http.post(fullUrl, data, {params: {auth: this.authPost}}).pipe(
+        const params: any = {};
+        if (this.authPost) {
+            params.auth = this.authPost;
+        }
+        return this.http.post(fullUrl, data, {params}).pipe(
             retryWhen((request) => this.retryHandler(request))
         );
     }
