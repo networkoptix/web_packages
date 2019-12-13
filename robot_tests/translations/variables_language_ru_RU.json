@@ -46,7 +46,7 @@
     "SYSTEM NAME IS REQUIRED TEXT": "Требуется имя системы",
     "ACCOUNT TEXT": "Учетная запись",
     "ACCOUNT INFORMATION": "Информация об учетной записи",
-    "ACCOUNT SETTINGS TEXT": "Account settings",
+    "ACCOUNT SETTINGS TEXT": "Настройки учетной записи",
     "EDIT USER BUTTON TEXT": "Правка",
     "REMOVE USER BUTTON TEXT": "Удалить пользователя",
     "REMOVE BUTTON TEXT": "Удалить",
@@ -183,5 +183,10 @@
     "RELEASE HISTORY TITLE TEXT": "Release history",
     "IPVD TITLE TEXT": "Поддерживаемые устройства",
     "SYSTEMS TITLE TEXT": "Системы",
-    "NO PERMISSION TO SHARE TEXT": "У вас нет разрешения на объединение этой системы"
+    "NO PERMISSION TO SHARE TEXT": "У вас нет разрешения на объединение этой системы",
+    "DISCARD CHANGES BUTTON TEXT"		   :	"Отклонить",
+    "APPLY CHANGES BUTTON TEXT"			   :	"Применить",
+    "CANCEL CHANGES BUTTON TEXT"		   :	"Отменить",
+    "DOWNLOADS HEADER TEXT"				   :	"Скачать",
+    "WELCOME TEXT"						   :	"Добро пожаловать в"
 }
