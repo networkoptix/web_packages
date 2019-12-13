@@ -56,6 +56,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     saveSettings: any;
     resetVideoEncryptionIfDisabled: any;
     setWarningMessageThroughApplyService: any;
+    settingsWatchersSet: boolean;
 
     settingsWatchers: any = {
         autoDiscoveryEnabled: new Watcher<boolean>(),
@@ -128,6 +129,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             { value: this.minutes, name: this.LANG.system.settings.sessionLimitDuration.minutes, id: 1, max: 600 },
             { value: this.hours, name: this.LANG.system.settings.sessionLimitDuration.hours, id: 2, max: 600 },
         ];
+
+        this.settingsWatchersSet = false;
 
         this.initForApplyService();
 
@@ -245,6 +248,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                                         }
                                     }
                                 });
+                                this.settingsWatchersSet = true;
                                 this.applyService.reset();
                                 this.applyService.setVisible(true);
                             });
