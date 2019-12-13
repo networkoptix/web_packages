@@ -101,6 +101,9 @@
     "PASSWORD TOO COMMON TEXT"             :    "This password is in top most popular passwords in the world",
     "PASSWORD IS WEAK TEXT"                :    "Use numbers, upper and lower case letters and special characters to make your password stronger",
     "TERMS AND CONDITIONS ERROR TEXT"      :    "Please review and agree to the Terms and Conditions and Privacy policy in order to proceed",
+    "DISCARD CHANGES BUTTON TEXT"		   :	"Discard",
+    "APPLY CHANGES BUTTON TEXT"			   :	"Apply",
+    "CANCEL CHANGES BUTTON TEXT"		   :	"Cancel",
 
     "THIS LINK IS BROKEN TEXT"             :    "This link is broken,System may be disconnected from %PRODUCT_NAME%,Access to this System may be revoked, or you may be logged into a different account.",
 
@@ -204,8 +207,10 @@
 
     "REGISTER TITLE TEXT"                  :    "Create account in",
     "DOWNLOAD TITLE TEXT"                  :    "Download %VMS_NAME%",
+    "DOWNLOADS HEADER TEXT"				   :	"Download",
     "RELEASE HISTORY TITLE TEXT"           :    "Release history",
     "IPVD TITLE TEXT"                      :    "Supported Devices",
     "SYSTEMS TITLE TEXT"                   :    "Systems",
-    "NO PERMISSION TO SHARE TEXT"		   :	"You do not have permission to share this system"
+    "NO PERMISSION TO SHARE TEXT"		   :	"You do not have permission to share this system",
+    "WELCOME TEXT"						   :	"Welcome to"
 }

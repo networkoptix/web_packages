@@ -97,7 +97,7 @@ Check Old Password Outline
 #    ...    ${CURRENT PASSWORD INPUT}/parent::div/parent::div[contains(@class,'has-error')]
     ${class_attribute_value}=   Get Element Attribute     ${CURRENT PASSWORD INPUT}    class
     Should Contain    ${class_attribute_value}    invalid   touched
-    Page Should Contain    Current password is required
+    Page Should Contain    ${CURRENT PASSWORD IS REQUIRED TEXT}
     Element Should Be Visible    ${CURRENT PASSWORD IS REQUIRED}
 
 Check Old Password Alert

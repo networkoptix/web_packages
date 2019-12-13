@@ -46,20 +46,27 @@ class NoptixLibrary(object):
                 return element
             except:
                 raise AssertionError('Failure to convert locator to WebElement!')
-
+            
     def copy_text(self, locator):
         locator = self.convert_locator_to_webelement(locator)
-        locator.send_keys(Keys.CONTROL + 'a')
-        locator.send_keys(Keys.CONTROL + 'c')
+        if self.get_os()=="MacOS":
+            locator.send_keys(Keys.SHIFT, Keys.UP)
+            locator.send_keys(Keys.CONTROL, Keys.INSERT)
+        else:    
+            locator.send_keys(Keys.CONTROL + 'a')
+            locator.send_keys(Keys.CONTROL + 'c')
 
     def paste_text(self, locator):
         locator = self.convert_locator_to_webelement(locator)
-        locator.send_keys(Keys.CONTROL + 'v')
+        if self.get_os()=="MacOS":
+            locator.send_keys(Keys.SHIFT, Keys.INSERT)
+        else:    
+            locator.send_keys(Keys.CONTROL + 'v')
 
     def delete_all_text(self, locator):
         locator = self.convert_locator_to_webelement(locator)
         if self.get_os()=="MacOS":
-            locator.send_keys(Keys.COMMAND + 'a')
+            locator.send_keys(Keys.SHIFT, Keys.UP)
             locator.send_keys(Keys.BACKSPACE)
         else:     
             locator.send_keys(Keys.CONTROL + 'a')

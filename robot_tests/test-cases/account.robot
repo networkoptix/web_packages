@@ -117,8 +117,8 @@ First name is required
     Verify in Account Page
     Delete All Text    ${ACCOUNT FIRST NAME}
     Click Element    ${ACCOUNT LAST NAME}
-    Element Style Should Be    ${ACCOUNT FIRST NAME}    border-color    ${ERROR COLOR}
-    Element Style Should Be    ${ACCOUNT FIRST NAME}    color    ${ERROR COLOR WITH OPACITY}
+    Wait Until Element Has Style    ${ACCOUNT FIRST NAME}    border-color    ${ERROR COLOR}
+    Wait Until Element Has Style   ${ACCOUNT FIRST NAME}    color    ${ERROR COLOR WITH OPACITY}
     Element Should Be Visible    ${FIRST NAME IS REQUIRED}
 
 Last name is required
@@ -130,8 +130,8 @@ Last name is required
     ${locator}=   Get WebElement    ${ACCOUNT LAST NAME}
     Delete All Text    ${locator}
     Click Element    ${ACCOUNT FIRST NAME}
-    Element Style Should Be    ${ACCOUNT LAST NAME}    border-color    ${ERROR COLOR}
-    Element Style Should Be    ${ACCOUNT LAST NAME}    color    ${ERROR COLOR WITH OPACITY}
+    Wait Until Element Has Style    ${ACCOUNT LAST NAME}    border-color    ${ERROR COLOR}
+    Wait Until Element Has Style   ${ACCOUNT LAST NAME}    color    ${ERROR COLOR WITH OPACITY}
     Element Should Be Visible    ${LAST NAME IS REQUIRED}
 
 SPACE for first name is not valid
