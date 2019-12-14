@@ -39,6 +39,7 @@ export class NxSystemServersComponent implements OnInit {
     system: NxSystem;
     viewContainerRef: ViewContainerRef;
     serverIdFromParams: any;
+    selectedServer: any;
     
     private serverSubscription: Subscription;
     private systemSubscription: Subscription;
@@ -96,7 +97,6 @@ export class NxSystemServersComponent implements OnInit {
         //     showMerge: true
         // };
 
-        this.setServer();
 
         this.routeParamsSubscription = this.route
             .params
@@ -117,19 +117,20 @@ export class NxSystemServersComponent implements OnInit {
                 console.log('system subscription', system);
                 this.system = system;
                 // Route guard did not worked :( ... so doing it the old way
-                // if (!this.system.permissions || !this.system.permissions.editUsers) {
-                //     this.uriService.updateURI('systems/' + this.system.id, {});
-                //     return;
-                // }
-                // if (this.serverSubscription) {
-                //     this.serverSubscription.unsubscribe();
-                // }
-                // this.serverSubscription = this.system.infoSubject.subscribe(() => {
-                //     // this.systemAvailable = this.system.isAvailable && this.system.mergeInfo === undefined;
-                //     if (!this.applyService.locked) {
-                //         // this.setUser();
-                //     }
-                // });
+                if (!this.system.permissions || !this.system.permissions.editUsers) {
+                    this.uriService.updateURI('systems/' + this.system.id, {});
+                    return;
+                }
+                if (this.serverSubscription) {
+                    this.serverSubscription.unsubscribe();
+                }
+                this.serverSubscription = this.system.infoSubject.subscribe(() => {
+                    // this.systemAvailable = this.system.isAvailable && this.system.mergeInfo === undefined;
+                    this.setServer();
+                    if (!this.applyService.locked) {
+                        // this.setUser();
+                    }
+                });
             });
 
         // this.initForApplyService();
@@ -151,10 +152,18 @@ export class NxSystemServersComponent implements OnInit {
             });
         }
         if (typeof(server) === 'undefined') {
-            console.log('this.system', this.system);
+            console.log('this.system pre-set', this.system);
+            server = this.system.servers[0];
             // server = this.system.servers[0];
             // console.log('server in setServer', server);
             // this.uriService.updateURI(`systems/${this.system.id}/servers/${server.id}`);
+        }
+
+        if (server) {
+            server.publicIp = server.addParams.find(param => param.name === 'publicIp').value;
+            server.osName = JSON.parse(server.osInfo).platform;
+            this.selectedServer = server;
+            console.log('selectedServer', this.selectedServer);
         }
 
         // // If there's no users skip setting section and permissions

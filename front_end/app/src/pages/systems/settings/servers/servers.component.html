@@ -1,3 +1,52 @@
-<div>
-    Servers!
+<div class="row auth-visible">
+    <div class="col-12">
+        <nx-block *ngIf="selectedServer" header-style="extended">
+            <header>
+                <h2>{{ selectedServer.name }}</h2>
+                <div>
+                    <span>IP</span>
+                    <span>{{ selectedServer.publicIp }}</span>
+                </div>
+                <div>
+                    <span>OS</span>
+                    <span>{{ selectedServer.osName }}</span>
+                </div>
+                <div>
+                    <span>Version</span>
+                    <span>{{ selectedServer.version }}</span>
+                </div>
+            </header>
+            <nx-section>
+                <div class="d-flex justify-content-between">
+                    <div class="d-flex">
+                        <button>
+                            <span class="ellipsis" translate>Rename</span>
+                        </button>
+                        <button>
+                            <span class="ellipsis" translate>Restart</span>
+                        </button>
+                    </div>
+                    <div class="d-flex">
+                        <button>
+                            <span class="ellipsis" translate>Detach from the System</span>
+                        </button>
+                        <button>
+                            <span class="ellipsis" translate>Reset to Defaults</span>
+                        </button>
+                    </div>
+                </div>
+            </nx-section>
+        </nx-block>
+        <nx-block type="mt-3" *ngIf="selectedServer">
+            <header>
+                <h2>Settings</h2>
+            </header>
+            <nx-section>
+                <div class="d-flex">
+                    <span class="ellipsis" translate>Port</span>
+                    <input type="number">
+                </div>
+            </nx-section>
+        </nx-block>
+    </div>
 </div>
