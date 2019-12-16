@@ -19,6 +19,16 @@ export class ParamResolver implements Resolve<any> {
 }
 
 @Injectable()
+export class ActivateResolver implements Resolve<any> {
+    constructor() {
+    }
+
+    resolve() {
+        return 'activating';
+    }
+}
+
+@Injectable()
 export class ActivatedResolver implements Resolve<any> {
     constructor() {
     }
@@ -31,7 +41,7 @@ export class ActivatedResolver implements Resolve<any> {
 const appRoutes: Routes = [
     { path: 'activate', component: NxActivateComponent, resolve: { uriParam: ParamResolver} },
     { path: 'activate/success', component: NxActivateComponent, resolve: { uriParam: ActivatedResolver } },
-    { path: 'activate/:code', component: NxActivateComponent }
+    { path: 'activate/:code', component: NxActivateComponent, resolve: { uriParam: ActivateResolver } }
 ];
 
 @NgModule({
@@ -47,6 +57,7 @@ const appRoutes: Routes = [
     ],
     providers      : [
         ParamResolver,
+        ActivateResolver,
         ActivatedResolver,
     ],
     declarations   : [
