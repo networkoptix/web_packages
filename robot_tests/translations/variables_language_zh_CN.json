@@ -89,6 +89,9 @@
     "PASSWORD TOO COMMON TEXT": "此密码是在世界顶级最受欢迎的密码",
     "PASSWORD IS WEAK TEXT": "使用数字、 上层和小写字母和特殊字符，使您更强的密码",
     "TERMS AND CONDITIONS ERROR TEXT": "请审阅并同意条款及条件和隐私政策, 以便继续进行",
+    "DISCARD CHANGES BUTTON TEXT": "抛弃",
+    "APPLY CHANGES BUTTON TEXT": "应用",
+    "CANCEL CHANGES BUTTON TEXT": "撤消",
     "THIS LINK IS BROKEN TEXT": "此连结已损毁, 系统可能会从%PRODUCT_NAME%,于此系统的权限可能被注销,或请您用不同的帐戶登录.",
     "PAGE NOT FOUND TEXT": "找不到页面",
     "TAKE ME HOME TEXT": "带我回家",
@@ -149,7 +152,7 @@
     "MERGE SYSTEM BUTTON TEXT": "与其他系统合并",
     "MERGE SYSTEMS TEXT": "合并系统",
     "SYSTEM MERGING TEXT": "系统开始合并中",
-    "MERGE NOT OWNER MESSAGE 1 TEXT": "您只能合并那些拥有“所有者”权限的云系统。",
+    "MERGE NOT OWNER MESSAGE 1 TEXT": "当您的权限为拥有者时，就可以合并系统",
     "MERGE NOT OWNER MESSAGE 2 TEXT": "请至%PRODUCT_NAME%云连接您要与此系统合并的另一系统，或透过%VMS_NAME%客户端应用程式于本地合并",
     "CANNOT MERGE WITH OFFLINE SYSTEM TEXT": "%SYSTEM NAME% 处于离线状态，无法与当前系统合并。",
     "SYSTEMS MERGE FAILED TEXT": "系统合并失败",
@@ -180,8 +183,10 @@
     "INTEGRATION GET IN TOUCH MESSAGE SENT": "訊息已傳送。",
     "REGISTER TITLE TEXT": "创建帐户中",
     "DOWNLOAD TITLE TEXT": "下载 %VMS_NAME%",
+    "DOWNLOADS HEADER TEXT": "下载",
     "RELEASE HISTORY TITLE TEXT": "Release history",
     "IPVD TITLE TEXT": "支持设备",
     "SYSTEMS TITLE TEXT": "系统",
-    "NO PERMISSION TO SHARE TEXT": "You do not have permission to share this system"
+    "NO PERMISSION TO SHARE TEXT": "You do not have permission to share this system",
+    "WELCOME TEXT": "欢迎来到"
 }
