@@ -2,15 +2,35 @@
 @import '../../../../styles/theme_variables';
 @import '~bootstrap/scss/mixins/breakpoints';
 
-.card-container {
-    min-width: 135px;
-    max-width: 165px;
-    @include media-breakpoint-down (lg) {
-        min-width: 165px;
+nx-system-alerts-component {
+    .card-container {
+        min-width: 135px;
+        max-width: 165px;
+        @include media-breakpoint-down(lg) {
+            min-width: 165px;
+        }
+        // If grid-breakpoint sm is used at a width of 567px the bottom card takes entire row
+        @media (max-width: 566px) {
+            flex-grow: 1;
+            max-width: unset;
+        }
     }
-    // If grid-breakpoint sm is used at a width of 567px the bottom card takes entire row
-    @media (max-width: 566px) {
-        flex-grow: 1;
-        max-width: unset;
+    
+    .data-wrapper {
+        @include media-breakpoint-down(md) {
+            width: 100%;
+        }
+        
+        @media (min-width: 1280px) {
+            min-width: 700px !important;
+        }
+        
+        @media (min-width: 1440px) {
+            min-width: 800px !important;
+        }
+        
+        @media (min-width: 1920px) {
+            min-width: 900px !important;
+        }
     }
 }

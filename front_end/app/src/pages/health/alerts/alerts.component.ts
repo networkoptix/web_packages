@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { NxConfigService }                                                    from '../../../services/nx-config';
 import { NxSystem }                                                           from '../../../services/system.service';
 import { NxMenuService }                                                      from '../../../components/menu/menu.service';
@@ -19,7 +19,8 @@ interface Params {
 @Component({
     selector   : 'nx-system-alerts-component',
     templateUrl: 'alerts.component.html',
-    styleUrls  : ['alerts.component.scss']
+    styleUrls  : ['alerts.component.scss'],
+    encapsulation: ViewEncapsulation.None,
 })
 export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy {
 
