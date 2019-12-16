@@ -7,10 +7,10 @@
 <div class="row">
     <div class="d-flex align-items-start w-100" #table>
         <div *ngIf="selectedData && selectedValues && !mobileDetailMode"
-             class="px-2 overflow-auto"
+             class="px-2 overflow-x-auto data-wrapper"
              [ngClass]="metricValuesLen === 1 ? 'row col-12' : ''">
 
-        <div class="col-12 mb-3 p-0" #search
+            <div class="col-12 mb-3 p-0" #search
                  *ngIf="!mobileDetailMode && metricValuesLen > 1">
                 <nx-search
                         name="filterModel"

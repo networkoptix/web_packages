@@ -106,12 +106,14 @@
         
         .drop {
             padding : 0 1rem 0 0;
+            min-width: 200px;
             @include media-breakpoint-down(sm) {
                 padding-right : 0;
             }
         
             &:last-of-type {
                 padding-right : 0;
+                margin-bottom : 0 !important;
             }
         }
     }

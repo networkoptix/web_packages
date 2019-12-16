@@ -2,6 +2,20 @@
 @import '../../../../styles/theme_variables';
 
 nx-system-metrics-component {
+    .data-wrapper {
+        @media (min-width: 1280px) {
+            min-width: 700px !important;
+        }
+    
+        @media (min-width: 1440px) {
+            min-width: 800px !important;
+        }
+    
+        @media (min-width: 1920px) {
+            min-width: 900px !important;
+        }
+    }
+    
     .nx-table-wrapper .nx-table thead th {
         &:nth-child(n+2) > .caption .ellipsis {
             width       : max-content;
@@ -9,6 +23,7 @@ nx-system-metrics-component {
             line-height : 16px;
         }
     }
+    
     .text-placeholder {
         color       : $light16;
         font-family : $font-family-regular;
