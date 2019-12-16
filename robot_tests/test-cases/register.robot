@@ -13,7 +13,7 @@ ${url}         ${ENV}
 *** Keywords ***
 Restart
     Register Keyword To Run On Failure    NONE
-    ${status}    Run Keyword And Return Status    Validate Log In
+    ${status}    Run Keyword And Return Status    Validate Log In    timeout=5
     Register Keyword To Run On Failure    Failure Tasks
     Run Keyword If    ${status}    Log Out
     Go To    ${url}
@@ -274,3 +274,24 @@ Check registration email links, colors, cloud name, and user name
     \    check in list    ${expected links}    ${link}
     Delete Email    ${email}
     Close Mailbox
+    
+Check automatic loggout when registering new account while logged in
+    [tags]    C63393
+    Log In    ${EMAIL VIEWER}     ${BASE PASSWORD}
+    Validate Log In
+    Go To    ${ENV}/register
+    Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${LOGGED IN NEW ACCOUNT BUTTON}
+    Element Text Should Be    ${MODAL DIALOG}//h1/span[contains(text(),'${EMAIL VIEWER}')]    You are already logged in with as ${EMAIL VIEWER}  
+    Click Button     ${MODAL DIALOG}//button[@class="close ng-star-inserted"]
+    Location Should Be    ${ENV}/systems
+    Go To    ${ENV}/register
+    Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${LOGGED IN NEW ACCOUNT BUTTON}
+    Element Text Should Be    ${MODAL DIALOG}//h1/span[contains(text(),'${EMAIL VIEWER}')]    You are already logged in with as ${EMAIL VIEWER}  
+    Click Button     ${LOGGED IN STAY LOGGED IN BUTTON}
+    Location Should Be    ${ENV}/systems
+    Go To    ${ENV}/register
+    Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${LOGGED IN NEW ACCOUNT BUTTON}
+    Element Text Should Be    ${MODAL DIALOG}//h1/span[contains(text(),'${EMAIL VIEWER}')]    You are already logged in with as ${EMAIL VIEWER}  
+    Click Button     ${LOGGED IN NEW ACCOUNT BUTTON}
+    Wait Until Location Is    ${ENV}/register
+    Wait Until Elements Are Visible    ${REGISTER FORM} 
