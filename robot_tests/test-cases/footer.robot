@@ -50,6 +50,7 @@ Terms leads to the proper EULA site
     Wait Until Element is Visible    ${FOOTER TERMS LINK}
     Sleep    1
     Click Link    ${FOOTER TERMS LINK}
+    Wait Until Number Of Tabs Are Open    2 
     @{tabs}=   Get Window Handles
     Select Window    @{tabs}[1]
     Location Should Be    ${ENV}${TERMS URL}
