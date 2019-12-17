@@ -119,7 +119,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
         if (this.elementSearch) {
             this.elementSearchHeight = this.elementSearch.nativeElement.offsetHeight;
 
-            this.containerDimensions = [this.elementSearchHeight + 16];
+            setTimeout(() => this.containerDimensions = [this.elementSearchHeight + 16]);
         }
     }
 

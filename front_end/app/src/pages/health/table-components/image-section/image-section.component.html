@@ -1,5 +1,5 @@
 <div *ngIf="thumbnails.length" class="hm-camera-section" #imageWidth>
-    <nx-pre-loader *ngIf="!ready" class="w-100"></nx-pre-loader>
+    <nx-pre-loader *ngIf="!ready" [type]="'hm-camera-preview'" class="w-100"></nx-pre-loader>
     <div [ngClass]="{ 'd-none': !ready}" class="align-self-start">
         <div class="d-flex flex-wrap">
             <div class="mr-3 mb-2">
