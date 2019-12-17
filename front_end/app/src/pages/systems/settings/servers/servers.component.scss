@@ -1,0 +1,14 @@
+
+@import '../../../../styles/typography';
+@import '../../../../../styles/theme_palette';
+
+.server-info {
+    font-family : $font-family-regular;
+    font-size   : $font-size-base;
+    color: $dark9;
+
+    .port-input {
+        height: 28px;
+        width: 80px;
+    }
+}

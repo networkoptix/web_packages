@@ -1,11 +1,11 @@
 <div class="row auth-visible">
-    <div class="col-12">
+    <div class="col-12 server-info">
         <nx-block *ngIf="selectedServer" header-style="extended">
             <header>
                 <h2>{{ selectedServer.name }}</h2>
                 <div>
                     <span>IP</span>
-                    <span>{{ selectedServer.publicIp }}</span>
+                    <span>{{ selectedServer.ip }}</span>
                 </div>
                 <div>
                     <span>OS</span>
@@ -39,12 +39,22 @@
         </nx-block>
         <nx-block type="mt-3" *ngIf="selectedServer">
             <header>
-                <h2>Settings</h2>
+                <h4 translate>Settings</h4>
             </header>
-            <nx-section>
-                <div class="d-flex">
-                    <span class="ellipsis" translate>Port</span>
-                    <input type="number">
+            <nx-section class="pl-3">
+                <div class="d-flex align-items-center">
+                    <span class="ellipsis mr-2" translate>Port</span>
+                    <input 
+                        class="port-input pl-2" 
+                        type="number"
+                        min="1"
+                        max="65535"
+                        [(ngModel)]="ipPortWatcher.value"
+                        (keydown)="storePreviousValue($event)"
+                        (keyup)="validationCheckForInput()"
+                        [disabled]="!system.permissions.editAdmins"
+                        (change)="onPortChange()"
+                    >
                 </div>
             </nx-section>
         </nx-block>

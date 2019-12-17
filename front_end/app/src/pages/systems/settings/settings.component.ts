@@ -336,7 +336,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 serversNode = {
                     id: this.CONFIG.systemMenu.servers.id,
                     icon: this.CONFIG.systemMenu.servers.icon,
-                    label: this.LANG.servers,
+                    label: this.LANG.servers.servers,
                     path: this.CONFIG.systemMenu.servers.path,
                 };
                 this.content.level1.push(serversNode);

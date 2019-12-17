@@ -46,7 +46,8 @@ export class NxSystemServersComponent implements OnInit {
     private routeParamsSubscription: Subscription;
 
     saveSettings: any;
-    // ipPortWatcher: any = new Watcher<number>();
+    ipPortWatcher: any = new Watcher<number>();
+    previousInputValue: number;
 
     private setupDefaults() {
         // this.CONFIG = this.configService.getConfig();
@@ -114,6 +115,7 @@ export class NxSystemServersComponent implements OnInit {
         this.systemSubscription = this.settingsService.systemSubject
             .pipe(filter(data => data !== undefined))
             .subscribe((system) => {
+                this.settingsService.footerSubject.next(true);
                 console.log('system subscription', system);
                 this.system = system;
                 // Route guard did not worked :( ... so doing it the old way
@@ -125,21 +127,21 @@ export class NxSystemServersComponent implements OnInit {
                     this.serverSubscription.unsubscribe();
                 }
                 this.serverSubscription = this.system.infoSubject.subscribe(() => {
+                    console.log('serverSubscription called');
                     // this.systemAvailable = this.system.isAvailable && this.system.mergeInfo === undefined;
-                    this.setServer();
                     if (!this.applyService.locked) {
-                        // this.setUser();
+                        this.setServer();
                     }
                 });
             });
 
-        // this.initForApplyService();
+        this.initForApplyService();
 
-        // this.applyService.initPageWatcher(
-        //     this.viewContainerRef,
-        //     this.saveSettings,
-        //     () => this.applyService.reset(),
-        //     this.ipPortWatcher);
+        this.applyService.initPageWatcher(
+            this.viewContainerRef,
+            this.saveSettings,
+            () => this.applyService.reset(),
+            [this.ipPortWatcher]);
 
         this.init();
     }
@@ -160,10 +162,15 @@ export class NxSystemServersComponent implements OnInit {
         }
 
         if (server) {
-            server.publicIp = server.addParams.find(param => param.name === 'publicIp').value;
+            const { url } = server;
+            const [ip, port] = url.slice(url.indexOf('//') + 2).split(':');
+            server.ip = ip;
             server.osName = JSON.parse(server.osInfo).platform;
+            this.ipPortWatcher.value = port;
             this.selectedServer = server;
             console.log('selectedServer', this.selectedServer);
+            console.log('ipWatcher on set', this.ipPortWatcher);
+            this.applyService.setVisible(true);
         }
 
         // // If there's no users skip setting section and permissions
@@ -181,18 +188,18 @@ export class NxSystemServersComponent implements OnInit {
         // setTimeout(() => this.applyService.setVisible(this.selectedUser.canBeEdited));
     }
 
-    // initForApplyService(): void {
-    //     this.saveSettings = this.processService.createProcess(() => {
-    //         const port = this.ipPortWatcher;
-    //         if (port.value !== port.originalValue) {
-    //             this.system.updateOrGetSystemSettings()
-    //                 .then(() => {
-    //                     port.originalValue = port.value;
-    //                     this.applyService.reset();
-    //                 });
-    //         }
-    //     });
-    // }
+    initForApplyService(): void {
+        this.saveSettings = this.processService.createProcess(() => {
+            const port = this.ipPortWatcher;
+            if (port.value !== port.originalValue) {
+                this.system.changeServerPort(port.value)
+                    .then(() => {
+                        port.originalValue = port.value;
+                        this.applyService.reset();
+                    });
+            }
+        });
+    }
 
     init(): void {
         this.settingsService
@@ -275,34 +282,31 @@ export class NxSystemServersComponent implements OnInit {
 
     // this.pageService.setPageTitle(this.system.info.name + ' -');
 
-    // updateTimeUnitInput(timeUnit) {
-    //     this.currentMaxTimeUnit = timeUnit.max;
-    //     const el = this.timeUnitTracker.first;
-    //     if (el) {
-    //         if (el.nativeElement.value > this.currentMaxTimeUnit) {
-    //             el.nativeElement.value = this.currentMaxTimeUnit;
-    //         }
-    //         el.nativeElement.setAttribute('max', this.currentMaxTimeUnit);
+    storePreviousValue(e) {
+        // prevents [.+-e] from being inputed
+        if (e.key === '.' || e.key === '+' || e.key === '-' || e.key === 'e') {
+            e.preventDefault();
+        }
+        this.previousInputValue = this.ipPortWatcher.value;
+    }
 
-    //         if (this.selectedTimeUnit !== timeUnit.name) {
-    //             this.settingsWatchers.sessionLimitUnit.value = timeUnit.name;
-    //             this.selectedTimeUnit = timeUnit;
-    //         }
-    //     }
-    // }
+    validationCheckForInput() {
+        // checks if entering a value less than min or greater than max
+        // null exception for less than since it gets cast to 0
+        if (
+            (this.ipPortWatcher.value < 1 && this.ipPortWatcher.value !== null)
+            || this.ipPortWatcher.value > 65535
+        ) {
+            this.ipPortWatcher.value = this.previousInputValue;
+        }
+        this.onPortChange();
+    }
 
-    // updateTimeUnitWatcher() {
-    //     const sw = this.settingsWatchers;
-    //     if (sw.sessionLimitUnit.value === 'Minute(s)' && this.timeUnitCount % 60 === 0) {
-    //         sw.sessionLimitUnit.value = 'Hour(s)';
-    //         this.selectedTimeUnit = this.limitSessionTimeUnits
-    //                                     .find(e => e.name === sw.sessionLimitUnit.value);
-    //         this.timeUnitCount /= 60;
-    //     }
-    //     if (this.timeUnitCount === undefined) {
-    //         sw.sessionLimitMinutes.value = 0;
-    //     } else {
-    //         sw.sessionLimitMinutes.value = this.timeUnitCount;
-    //     }
-    // }
+    onPortChange() {
+        if (this.ipPortWatcher.value < 1024 && this.ipPortWatcher.value !== null) {
+            this.applyService.setWarn(this.LANG.servers.portWarning);
+        } else {
+            this.applyService.setWarn('');
+        }
+    }
 }

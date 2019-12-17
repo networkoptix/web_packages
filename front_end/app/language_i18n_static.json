@@ -483,7 +483,10 @@
 	},
 	"systemAdministration": "System Administration",
 	"users": "Users",
-	"servers": "Servers",
+	"servers": {
+        "servers": "Servers",
+        "portWarning": "Port numbers less than 1024 are restricted. Server may become unaccesssible."
+    },
 	"testedVersionLabel": "Tested with {{vmsName}} version:",
 	"testedVersionsLabel": "Tested with {{vmsName}} versions:",
 	"About %CLOUD_NAME%": "About %CLOUD_NAME%",

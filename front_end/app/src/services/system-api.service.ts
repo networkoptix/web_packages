@@ -229,6 +229,10 @@ export class NxSystemAPI {
     updateOrGetSettings(updateParams) {
         return this.get('/api/systemSettings', updateParams).toPromise();
     }
+
+    changePort(port) {
+        return this.post('/api/configure', { port }).toPromise();
+    }
     /* End of Server settings */
 
     /* Working with users*/

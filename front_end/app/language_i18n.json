@@ -50,6 +50,7 @@
     "Current Password": "Current Password",
     "Current password is required": "Current password is required",
     "Depending of the size of the database it may take up to several hours.": "Depending of the size of the database it may take up to several hours.",
+    "Detach from the System": "Detach from the System",
     "Developer": "Developer",
     "Discard": "Discard",
     "Disconnect": "Disconnect",
@@ -132,6 +133,7 @@
     "Please enter a valid Email": "Please enter a valid Email",
     "Please review and agree to the Terms and Conditions and Privacy policy in order to proceed": "Please review and agree to the Terms and Conditions and Privacy policy in order to proceed",
     "Popularity": "Popularity",
+    "Port": "Port",
     "Privacy": "Privacy",
     "Release Notes": "Release Notes",
     "Release notes": "Release notes",
@@ -141,7 +143,9 @@
     "Requirements": "Requirements",
     "Resend activation email": "Resend activation email",
     "Resend activation link": "Resend activation link",
+    "Reset to Defaults": "Reset to Defaults",
     "Resolution(max)": "Resolution(max)",
+    "Restart": "Restart",
     "Save": "Save",
     "Search in google": "Search in google",
     "Secondary Stream": "Secondary Stream",
@@ -643,7 +647,10 @@
         "vendor": "Manufacturer",
         "vendors": "Manufacturers"
     },
-    "servers": "Servers",
+    "servers": {
+        "portWarning": "Port numbers less than 1024 are restricted. Server may become unaccesssible.",
+        "servers": "Servers"
+    },
     "servers in the merged System.": "servers in the merged System.",
     "support": "support",
     "system": {
