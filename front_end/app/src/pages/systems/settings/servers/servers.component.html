@@ -1,6 +1,6 @@
 <div class="row auth-visible">
-    <div class="col-12 server-info">
-        <nx-block *ngIf="selectedServer" header-style="extended">
+    <div class="col-12 server-info" *ngIf="selectedServer">
+        <nx-block header-style="extended">
             <header>
                 <h2>{{ selectedServer.name }}</h2>
                 <div>
@@ -37,7 +37,7 @@
                 </div>
             </nx-section>
         </nx-block>
-        <nx-block type="mt-3" *ngIf="selectedServer">
+        <nx-block type="mt-3">
             <header>
                 <h4 translate>Settings</h4>
             </header>
