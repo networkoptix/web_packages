@@ -21,6 +21,8 @@
     "All Systems": "Всі системи",
     "All cloud users will be deleted.": "Всі хмарні користувачі будуть видалені.",
     "All results": "Всі результати",
+    "Allow only secure connections": "Дозволити лише безпечні з'єднання",
+    "Allow system to optimize camera settings": "Allow system to optimize camera settings",
     "Analytics": "Аналітика",
     "Analytics Event": "Подія Аналітики",
     "Analytics Events": "Події Analytics",
@@ -37,6 +39,7 @@
     "Change Password": "Змінити пароль",
     "Checking...": "Перевірка...",
     "Choose which properties should be visible to customers:": "Виберіть, які властивості мають бути видимі для клієнтів:",
+    "Clear filters": "Clear filters",
     "Close": "Закрити",
     "Codec": "Кодек",
     "Collapse": "Згорнути",
@@ -64,6 +67,9 @@
     "Email": "Email",
     "Email is required": "Електронна пошта обов'язкова",
     "Embed": "Вбудувати",
+    "Enable audit trail": "Увімкнути аудит",
+    "Enable auto discovery of cameras and servers": "Enable auto discovery of cameras and servers",
+    "Encrypt video traffic": "Шифрувати відео трафік",
     "Enter \"Public User\" credentials:": "Введіть облікові дані для ролі «Публічний користувач»:",
     "Enter password for your account to continue": "Введіть пароль для продовження",
     "Enter password to continue.": "Введіть пароль, щоб продовжити.",
@@ -84,12 +90,15 @@
     "I/O": "Ввід/вивід",
     "In Review": "В огляді",
     "In-Client Upgrade:": "Вбудоване оновлення клієнта:",
+    "Includes information about the System, such as camera modules, \n                            firmware versions, number of servers, etc. \n                            Does not include any personal information and is completely anonymous.": "Includes information about the System, such as camera modules, \n                            firmware versions, number of servers, etc. \n                            Does not include any personal information and is completely anonymous.",
+    "Information": "Інформація про продукт",
     "Integrations": "Інтеграції",
     "Language": "Мова",
     "Last Name": "Прізвище",
     "Last name": "Прізвище",
     "Last name is required": "Поле \"Прізвище\" обов'язкове до заповнення",
     "Latest version": "Остання версія",
+    "Limit session duration to": "Limit session duration to",
     "Log In": "Увійти",
     "Log Out": "Вийти",
     "Log in to %CLOUD_NAME%": "Увійти до %CLOUD_NAME%",
@@ -105,10 +114,11 @@
     "NO_SYSTEMS_LOGIN": "Увійдіть в систему за допомогою %VMS_NAME%",
     "NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "У вас немає систем, підключених до %CLOUD_NAME%",
     "New Password": "Новий Пароль",
-    "No unsaved changes": "No unsaved changes",
+    "No unsaved changes": "Немає незбережених змін",
     "Nothing Found": "Нічого не знайдено",
     "OK": "ОК",
     "Ok": "Ок",
+    "Only client-server video traffic can be encrypted.": "Only client-server video traffic can be encrypted.",
     "Other packages:": "Інші пакети:",
     "Other releases, patches and beta versions": "Інші релізи, патчі і бета-версії",
     "Owner": "Власник",
@@ -126,7 +136,7 @@
     "Release Notes": "Зауваження до релізу",
     "Release notes": "Список змін",
     "Remember me": "Запам'ятати мене",
-    "Remove User": "Remove User",
+    "Remove User": "Видалити користувача",
     "Rename": "Змінити Назву",
     "Requirements": "Вимоги",
     "Resend activation email": "Повторно вислати лист з активацією",
@@ -135,17 +145,21 @@
     "Save": "Зберегти",
     "Search in google": "Пошук у Google",
     "Secondary Stream": "Другий Потік",
+    "Security": "Безпека",
     "Send": "Надіслати",
+    "Send anonymous usage and crash statistics to developers": "Send anonymous usage and crash statistics to developers",
     "Send feedback about this device": "Надіслати відгук про цей пристрій",
     "Set New Password": "Встановити новий пароль",
     "Settings": "Налаштування",
     "Show All": "Показати Всі",
     "Some of your servers don't support cloud System merge because of outdated software version.": "Деякі ваші сервери не підтримують злиття системної хмари через застарілу версію програмного забезпечення.",
+    "Subject": "Тема",
     "Support": "Підтримка",
     "Support E-mail": "Email підтримки",
     "Support URL": "URL підтримки",
     "Supported Devices": "Пристрої, що підтримуються",
     "Supported IP Video Devices": "Підтримувані ІР-пристрої",
+    "System Settings": "Системні параметри",
     "System name": "Назва системи",
     "System name is required": "Ім'я системи обов'язкове",
     "System will be accessible through local network with local administrator account.": "Система буде доступна через локальну мережу з локальним обліковим записом адміністратора.",
@@ -162,7 +176,7 @@
     "This device has reported to support some analytics events, but we don't have exact information about them.": "Цей пристрій повідомив, що підтримує деякі аналітичні події, але ми не маємо точної інформації про них.",
     "To": "До",
     "Too many attempts. Try again in a minute.": "Забагато спроб. Спробуйте пізніше.",
-    "Topic": "Тема",
+    "Tracks and logs all user actions.": "Відстежує і реєструє всі дії користувача.",
     "Until merge is finished you can log in to this system and watch video, but cannot change any settings.": "Поки не завершиться об’єднання, ви можете увійти до цієї системи та подивитися відео, але не зможете змінити будь-які налаштування.",
     "Update them to the": "Оновіть іх до",
     "Updated": "Оновлено",
@@ -172,9 +186,9 @@
     "WHEN_MERGE_FINISHES": "Після завершення об’єднання всі користувачі та камери із цієї системи стануть доступними в<strong>{{targetSystemName}}</strong>, а ця система буде видалена.",
     "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.": "Ми рекомендуємо встановлювати останні версії Google Chrome або Mozilla Firefox, але ви можете використовувати будь-який інший сучасний веб-браузер.",
     "What's New?": "Що нового?",
+    "When enabled, system will discover new cameras and servers. Also, \n                            it will automatically and persistently send discovery requests to \n                            cameras in order to get the camera's status update. \n                            Failover enabled on some servers ignore status check prohibition.": "When enabled, system will discover new cameras and servers. Also, \n                            it will automatically and persistently send discovery requests to \n                            cameras in order to get the camera's status update. \n                            Failover enabled on some servers ignore status check prohibition.",
     "Works with:": "Працює з:",
     "Wrong password": "Невірний пароль",
-    "You can merge only those cloud Systems, where you have the \"Owner\" permissions.": "Ви можете обє’днати лише ті Хмарні системи, у який є дозволи Власника.",
     "You can only merge Systems where you are the owner.": "Ви можете об’єднати тільки ті системи, якими володієте.",
     "You have registered in %CLOUD_NAME%": "Ви зареєстровані в %CLOUD_NAME%",
     "Your Email": "Ваш E-Mail",
@@ -255,7 +269,6 @@
         "setNewPassword": "Зберегти пароль",
         "setNewPasswordLabel": "Новий пароль"
     },
-    "andXMore": "... і ще {{value}}",
     "cameraFilters": {
         "H265": "Камери H.265",
         "IO": "Модулі вводу-виводу",
@@ -269,6 +282,63 @@
         "ptz": "PTZ камери"
     },
     "clientProtocol": "%CLIENT_PROTOCOL%:",
+    "common": {
+        "cameraLinks": {
+            "copyActiveText": "скопійовано до буфера обміну",
+            "copyDefaultText": "копіювати",
+            "copyToClipboard": "копіювати в буфер обміну",
+            "highStream": "Висока якість",
+            "lowStream": "Низька якість",
+            "transcoding": "Перекодування",
+            "unknown": "Невідомий"
+        },
+        "cameraStates": {
+            "error": "Помилка",
+            "errorLoading": "Під час завантаження цього відео сталася помилка.",
+            "flashOrWebmRequired": "Відео не може бути відтворено. Можливо, потрібно <a href='https://get.adobe.com/flashplayer/' target='_blank'>встановитиAdobe Flash</a> або<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>кодек WebM</a> для відтворення відео в Internet Explorer.",
+            "flashRequired": "Будь ласка, <a href='https://get.adobe.com/flashplayer/' target='_blank'>встановіть Adobe Flash</a> для відтворення відео.",
+            "iOSVideoTooLarge": "iOS не підтримує відео з розшиненням більшим за fullHD (2MP: 1920x1080).",
+            "ieNoWebm": "Відео не може бути відтворено. Можливо, потрібно <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>кодек WebM</a> для Internet Explorer.",
+            "ieWin10": "Будь ласка, використовуйте веб-перегляд Microsoft Edge або Google Chrome.",
+            "noArmSupport": "Цей браузер або пристрій не підтримує відтворення відео з серверів на базі ARM.",
+            "noData": "Немає даних",
+            "noFormat": "Цей веб-переглядач не підтримує відтворення відео з цієї камери.",
+            "offline": "Поза мережею",
+            "ubuntuNX": "Цей веб-переглядач не підтримує відео з серверів на базі ARM. Замість цього скористайтеся браузером Chromium.",
+            "unauthorized": "Потрібна аутентифікація"
+        },
+        "chromeCastWarning": "Chromecast ресурсоємний і може спричинити проблеми на вашому сервері.",
+        "resolution": {
+            "auto": "Авто",
+            "high": "Високий",
+            "low": "Низький"
+        },
+        "searchCamPlaceholder": "Пошук",
+        "systemHasNoCameras": "НЕМАЄ КАМЕР",
+        "systemNewVersion": "Update your system",
+        "systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
+        "systemNoAlerts": "No Alerts",
+        "systemNoAlertsMessage": "Your system must be doing well!",
+        "systemOffline": "Система знаходиться поза мережею",
+        "systemOfflineMessage": "This system is offline and cannot be accessed right now.",
+        "systemServerError": "Внутрішня помилка сервера",
+        "systemServerErrorMessage": "An error occurred, please, try again later. An error occurred, please try again later. If the problem continues, please contact your support team.",
+        "systemUnreachable": "СИСТЕМА НЕДОСТУПНА",
+        "voiceCommands": {
+            "clear search": "очистити вікно пошуку",
+            "collapse all servers": "згорнути всі сервери",
+            "collapse server": "collapse server + [server name]",
+            "expand all servers": "розгорнути всі сервери",
+            "expand server": "expand server + [server name]",
+            "help": "help | show commands",
+            "live": "go to live | show me live",
+            "pause": "пауза",
+            "play": "відтворення",
+            "search": "find + [text for searchbar]",
+            "stop listening": "припинити прослуховування",
+            "view": "view + [camera name]"
+        }
+    },
     "devices": "пристрої",
     "dialogs": {
         "cancelButton": "Відмінити",
@@ -300,15 +370,15 @@
         "message": {
             "failedToSend": "Не вдалося надіслати повідомлення.",
             "sent": "Повідомлення відправлено.",
-            "title": {
-                "integration": "Зв’яжіться з {{companyName}}",
-                "ipvd_feedback_device": "Відгук про {{asset}}",
-                "ipvd_feedback_page": "Зворотній зв’язок для сторінки камер"
-            },
-            "topic": {
+            "subject": {
                 "contact_sales": "Зв'яжіться з відділом продажів за {{asset}}",
                 "contact_support": "Зверніться до служби підтримки за {{asset}}",
                 "integration_feedback": "Зворотній зв'язок для інтеграції {{asset}}",
+                "ipvd_feedback_device": "Відгук про {{asset}}",
+                "ipvd_feedback_page": "Зворотній зв’язок для сторінки камер"
+            },
+            "title": {
+                "integration": "Зв’яжіться з {{companyName}}",
                 "ipvd_feedback_device": "Відгук про {{asset}}",
                 "ipvd_feedback_page": "Зворотній зв’язок для сторінки камер"
             }
@@ -338,7 +408,7 @@
             "bundle": "Клієнт і сервер",
             "camera_sdk": "SDK джерела відео",
             "client": "Тільки клієнт",
-            "metadata_sdk": "Metadata SDK",
+            "metadata_sdk": "Метадані SDK",
             "package": "Package",
             "server": "Тільки сервер",
             "servertool": "Інструмент налаштування",
@@ -361,16 +431,13 @@
             },
             "linux": {
                 "label": "Ubuntu Linux",
-                "shortLabel": "Ubuntu",
-                "supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+                "shortLabel": "Ubuntu"
             },
             "mac": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "macos": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "sdk": {
                 "label": "SDK",
@@ -378,8 +445,7 @@
                 "supported": "C ++ крос-платформенний SDK"
             },
             "windows": {
-                "label": "Windows",
-                "supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+                "label": "Windows"
             }
         },
         "mobile": {
@@ -555,8 +621,8 @@
     "phoneNumberWithLabel": "Тел.: {{number}}",
     "pleaseSelect": "Будь ласка виберіть...",
     "privacyPolicy": {
-        "integration": "Надіславши цю форму, ви погоджуєтеся зв'язатися з {{INTEGRATION_COMPANY}} та / або %COMPANY_NAME%.\nВи знайдете {{INTEGRATION_COMPANY}} Політику конфіденційності <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">тут</a> і %COMPANY_NAME% Політика конфіденційності <a href=\"%PRIVACY_LINK%\" target=\"blank\">тут</a> які містять інструкцію про те, як зняти вашу згоду.",
-        "ipvd": "Надсилаючи цю форму, ви погоджуєтесь зв'язатися з нами %COMPANY_NAME%.\nВи знайдете %COMPANY_NAME% політику конфіденційності <a href=\"%PRIVACY_LINK%\" target=\"blank\">тут</a> яка містить інструкцію про те, як скасувати вашу згоду."
+        "integration": "Надіславши цю форму, ви погоджуєтеся зв'язатися з {{INTEGRATION_COMPANY}} та / або %COMPANY_NAME%.\nВи знайдете {{INTEGRATION_COMPANY}} Політику конфіденційності <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">тут</a> і %COMPANY_NAME% Політика конфіденційності <a href=\"%PRIVACY_LINK%\" target=\"_blank\">тут</a> які містять інструкцію про те, як зняти вашу згоду.",
+        "ipvd": "Надсилаючи цю форму, ви погоджуєтесь зв'язатися з нами %COMPANY_NAME%.\nВи знайдете %COMPANY_NAME% політику конфіденційності <a href=\"%PRIVACY_LINK%\" target=\"_blank\">тут</a> яка містить інструкцію про те, як скасувати вашу згоду."
     },
     "registration": {
         "agreement": "Я згоден з <a href=\"/content/eula\" target=\"_blank\">Правилами і\nумовами,</a> і <a href=\"%PRIVACY_LINK%\" target=\"_blank\">політикою конфіденційності</a>"
@@ -597,12 +663,21 @@
         "mergeSystemTitle": "Об'єднати системи",
         "mySystemSearch": "ЯМійМоя",
         "offline": "Система знаходиться поза мережею",
-        "offlineAlertRibbon": "System is offline. Some settings may not be available.",
+        "offlineAlertRibbon": "Система відключена. Деякі налаштування можуть бути недоступні.",
         "openClient": "Відкрити в %VMS_NAME%",
         "openClientNoSystem": "Відкрити %VMS_NAME%",
         "permissionsRemoved": "{{email}} був позбавлений повноважень",
-        "shareOffline": "Cannot share system while it is offline",
-        "shareUnauthorized": "You do not have permission to share this system",
+        "settings": {
+            "sessionLimitDuration": {
+                "hours": "години",
+                "minutes": "хвилини"
+            },
+            "warningMessages": {
+                "videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+            }
+        },
+        "shareOffline": "Не можна поділитись системою, поки вона не підключена в режимі офлайн",
+        "shareUnauthorized": "Ви не маєте прав для створення цього клієнта",
         "successDeleted": "Система {{systemName}} успішно видалена з вашого облікового запису",
         "successDisconnected": "Система успішно відключена від %CLOUD_NAME%",
         "successRename": "Ім'я системи збережено",
@@ -620,8 +695,9 @@
         "online": "oнлайн",
         "unavailable": "недоступний"
     },
-    "testedVersionLabel": "Протестовано за {{vmsName}} версій:",
-    "testedVersionsLabel": "Протестовано за {{vmsName}} версій:",
+    "testedVersionLabel": "Протестовано за допомогою {{vmsName}} версії:",
+    "testedVersionsLabel": "Протестовано {{vmsName}} версій:",
+    "topXByVolume": "Top {{value}} by volume:",
     "users": "Користувачі",
     "you": "ти"
 }

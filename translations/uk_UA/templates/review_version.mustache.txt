@@ -2,7 +2,7 @@
 
 Натисніть на посилання, щоб переглянути чернетку {{ message.id }} для {{ message.asset }}
 
-Link to review: {{ config.portal_url }}/admin/cms/assetcustomizationreview/{{ message.id }}/change/
+Посилання для перевірки: {{ config.portal_url }}/admin/cms/productcustomizationreview/{{ message.id }}/change/
 
 На цій сторінці ви можете
 1) Створити попередній перегляд, щоб переглянути останні зміни.

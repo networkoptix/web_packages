@@ -53,21 +53,17 @@
 		},
 		"groups": {
 			"windows": {
-				"label": "Windows",
-				"supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+				"label": "Windows"
 			},
 			"mac": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"linux": {
 				"label": "Ubuntu Linux",
-				"shortLabel": "Ubuntu",
-				"supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+				"shortLabel": "Ubuntu"
 			},
 			"macos": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"ios": {
 				"label": "iOS",
@@ -239,7 +235,7 @@
 				"ipvd_feedback_page": "Feedback for cameras page",
 				"ipvd_feedback_device": "Feedback about {{asset}}"
 			},
-			"topic": {
+			"subject": {
 				"contact_sales": "Contact sales for {{asset}}",
 				"contact_support": "Contact support for {{asset}}",
 				"integration_feedback": "Feedback for integration {{asset}}",
@@ -346,7 +342,16 @@
 		"permissionsRemoved": "Permissions were removed from {{email}}",
 		"unknownName": "Unknown Name for System (Caused by cloud merge)",
 		"shareOffline": "Cannot share system while it is offline",
-		"shareUnauthorized": "You do not have permission to share this system"
+		"shareUnauthorized": "You do not have permission to share this system",
+		"settings": {
+			"sessionLimitDuration": {
+				"hours": "hours",
+				"minutes": "minutes"
+			},
+			"warningMessages": {
+				"videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+			}
+		}
 	},
 	"systemStatuses": {
 		"activated": "activated",
@@ -416,13 +421,70 @@
 		}
 	},
 	"privacyPolicy": {
-		"integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent.",
-		"ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent."
+		"integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a> which include instruction on how to withdraw your consent.",
+		"ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a> which include instruction on how to withdraw your consent."
+	},
+	"common": {
+		"cameraLinks": {
+			"highStream": "High stream",
+			"lowStream": "Low stream",
+			"transcoding": "Transcoding",
+			"unknown": "Unknown",
+			"copyToClipboard": "copy to clipboard",
+			"copyDefaultText": "copy",
+			"copyActiveText": "copied to clipboard"
+		},
+		"systemOffline": "System Offline",
+		"systemOfflineMessage": "This system is offline and cannot be accessed right now.",
+		"systemNoAlerts": "No Alerts",
+		"systemNoAlertsMessage": "Your system must be doing well!",
+		"systemServerError": "Internal server error",
+		"systemServerErrorMessage": "An error occurred, please, try again later. An error occurred, please try again later. If the problem continues, please contact your support team.",
+		"systemNewVersion": "Update your system",
+		"systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
+		"systemHasNoCameras": "NO CAMERAS",
+		"systemUnreachable": "SYSTEM IS UNREACHABLE",
+		"cameraStates": {
+			"offline": "Offline",
+			"error": "Error",
+			"errorLoading": "An error occurred while loading this video.",
+			"unauthorized": "Authentication required",
+			"noData": "No data",
+			"iOSVideoTooLarge": "iOS does not support video larger than fullHD (2MP: 1920x1080).",
+			"flashRequired": "Please <a href='https://get.adobe.com/flashplayer/' target='_blank'>install Adobe Flash</a> for playing videos.",
+			"flashOrWebmRequired": "Please <a href='https://get.adobe.com/flashplayer/' target='_blank'>install Adobe Flash</a> or<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> for playing video in Internet Explorer.",
+			"noArmSupport": "This browser or device does not support video playback from ARM-based servers.",
+			"noFormat": "This browser does not support video playback from this camera.",
+			"ieNoWebm": "Please, install <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> for Internet Explorer.",
+			"ieWin10": "Please, use Microsoft Edge or Google Chrome browsers.",
+			"ubuntuNX": "This browser does not support video from ARM-based servers. Please, use Chromium browser instead."
+		},
+		"searchCamPlaceholder": "Search",
+		"resolution": {
+			"auto": "Auto",
+			"high": "High",
+			"low": "Low"
+		},
+		"chromeCastWarning": "Chromecast is resource intensive and may cause issues on your server.",
+		"voiceCommands": {
+			"play": "play",
+			"pause": "pause",
+			"live": "go to live | show me live",
+			"view": "view + [camera name]",
+			"search": "find + [text for searchbar]",
+			"clear search": "clear search",
+			"expand server": "expand server + [server name]",
+			"collapse server": "collapse server + [server name]",
+			"expand all servers": "expand all servers",
+			"collapse all servers": "collapse all servers",
+			"stop listening": "stop listening",
+			"help": "help | show commands"
+		}
 	},
 	"systemAdministration": "System Administration",
 	"users": "Users",
-	"testedVersionLabel": "Tested on {{vmsName}} version:",
-	"testedVersionsLabel": "Tested on {{vmsName}} versions:",
+	"testedVersionLabel": "Tested with {{vmsName}} version:",
+	"testedVersionsLabel": "Tested with {{vmsName}} versions:",
 	"About %CLOUD_NAME%": "About %CLOUD_NAME%",
 	"Download %VMS_NAME%": "Download %VMS_NAME%",
 	"Integrations": "Integrations",

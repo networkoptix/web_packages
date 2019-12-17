@@ -21,6 +21,8 @@
     "All Systems": "ระบบทั้งหมด",
     "All cloud users will be deleted.": "ผู้ใช้ระบบคลาวด์ทั้งหมดจะถูกลบ",
     "All results": "ผลลัพธ์ทั้งหมด",
+    "Allow only secure connections": "อนุญาตเฉพาะการเชื่อมต่อที่ปลอดภัย",
+    "Allow system to optimize camera settings": "อนุญาตให้ระบบที่จะเพิ่มประสิทธิภาพการตั้งค่ากล้อง",
     "Analytics": "การวิเคราะห์",
     "Analytics Event": "วิเคราะห์เหตุการณ์",
     "Analytics Events": "วิเคราะห์เหตุการณ์",
@@ -37,6 +39,7 @@
     "Change Password": "เปลี่ยนรหัสผ่าน",
     "Checking...": "กำลังตรวจสอบ...",
     "Choose which properties should be visible to customers:": "เลือกคุณสมบัติที่ควรจะมองเห็นได้สำหรับลูกค้า:",
+    "Clear filters": "Clear filters",
     "Close": "ปิด",
     "Codec": "ตัวแปลงสัญญาณ",
     "Collapse": "ยุบ",
@@ -64,6 +67,9 @@
     "Email": "อีเมลล์",
     "Email is required": "ต้องระบุอีเมล",
     "Embed": "ฝัง",
+    "Enable audit trail": "เปิดใช้งานการการตรวจสอบ",
+    "Enable auto discovery of cameras and servers": "Enable auto discovery of cameras and servers",
+    "Encrypt video traffic": "เข้ารหัสการเข้าชมวิดีโอ",
     "Enter \"Public User\" credentials:": "ป้อนข้อมูลประจำตัว \"ผู้ใช้สาธารณะ\":",
     "Enter password for your account to continue": "ป้อนรหัสผ่านสำหรับบัญชีของคุณเพื่อดำเนินการต่อ",
     "Enter password to continue.": "ป้อนรหัสผ่านเพื่อดำเนินการต่อ",
@@ -84,12 +90,15 @@
     "I/O": "I / O",
     "In Review": "ในการตรวจสอบ",
     "In-Client Upgrade:": "การปรับรุ่นในไคลเอ็นต์:",
+    "Includes information about the System, such as camera modules, \n                            firmware versions, number of servers, etc. \n                            Does not include any personal information and is completely anonymous.": "Includes information about the System, such as camera modules, \n                            firmware versions, number of servers, etc. \n                            Does not include any personal information and is completely anonymous.",
+    "Information": "ข้อมูล",
     "Integrations": "Integration",
     "Language": "เลือกภาษา:",
     "Last Name": "Last Name",
     "Last name": "นามสกุล",
     "Last name is required": "ต้องระบุนามสกุล",
     "Latest version": "เวอร์ชั่นล่าสุด",
+    "Limit session duration to": "Limit session duration to",
     "Log In": "เข้าสู่ระบบ",
     "Log Out": "ออกจากระบบ",
     "Log in to %CLOUD_NAME%": "เข้าสู่ระบบ %CLOUD_NAME%",
@@ -109,6 +118,7 @@
     "Nothing Found": "ไม่พบสิ่งใด!",
     "OK": "ตกลง",
     "Ok": "ตกลง",
+    "Only client-server video traffic can be encrypted.": "Only client-server video traffic can be encrypted.",
     "Other packages:": "แพคเกจอื่น ๆ:",
     "Other releases, patches and beta versions": "รุ่นอื่น ๆ แพทช์และรุ่นเบต้า",
     "Owner": "เจ้าของ",
@@ -116,7 +126,7 @@
     "Page not found": "ไม่พบหน้านี้",
     "Password": "รหัสผ่าน",
     "Password is required": "จำเป็นต้องใช้รหัสผ่าน",
-    "Password reset instructions are sent to Email": "Password reset instructions are sent to Email",
+    "Password reset instructions are sent to Email": "คำแนะนำในการรีเซ็ตรหัสผ่านจะถูกส่งไปที่ Email",
     "Password successfully saved": "บันทึกรหัสผ่านเรียบร้อยแล้ว",
     "Password:": "รหัสผ่าน:",
     "Please enter a valid Email": "โปรดป้อนอีเมลที่ถูกต้อง",
@@ -135,17 +145,21 @@
     "Save": "บันทึก",
     "Search in google": "ค้นหาใน google",
     "Secondary Stream": "สตรีมรอง",
+    "Security": "ความปลอดภัย",
     "Send": "ส่ง",
+    "Send anonymous usage and crash statistics to developers": "Send anonymous usage and crash statistics to developers",
     "Send feedback about this device": "ส่งข้อเสนอแนะเกี่ยวกับอุปกรณ์นี้",
     "Set New Password": "ตั้งรหัสผ่านใหม่",
     "Settings": "การตั้งค่า",
     "Show All": "แสดงทั้งหมด",
     "Some of your servers don't support cloud System merge because of outdated software version.": "เซิร์ฟเวอร์บางตัวของคุณไม่รองรับการรวมระบบคลาวด์เนื่องจากรุ่นซอฟต์แวร์ที่ล้าสมัย",
+    "Subject": "Subject",
     "Support": "ทีมช่วยเหลือ",
     "Support E-mail": "รองรับ E-mail",
     "Support URL": "URL สนับสนุน",
     "Supported Devices": "อุปกรณ์ที่รองรับ",
     "Supported IP Video Devices": "อุปกรณ์วิดีโอ IP ที่รองรับ",
+    "System Settings": "การตั้งค่าระบบ",
     "System name": "ชื่อระบบ",
     "System name is required": "ต้องระบุชื่อ",
     "System will be accessible through local network with local administrator account.": "ระบบสามารถเข้าถึงได้ผ่านเครือข่ายท้องถิ่นด้วยบัญชีผู้ดูแลระบบภายใน",
@@ -162,7 +176,7 @@
     "This device has reported to support some analytics events, but we don't have exact information about them.": "อุปกรณ์นี้ได้รายงานว่าสนับสนุนเหตุการณ์การวิเคราะห์บางอย่าง แต่เราไม่มีข้อมูลที่แน่นอนเกี่ยวกับพวกเขา",
     "To": "ถึง",
     "Too many attempts. Try again in a minute.": "คุณพยายามเข้าระบบมากเกินไป กรุณารออีกสักพักแล้วเข้าใหม่",
-    "Topic": "หัวข้อ",
+    "Tracks and logs all user actions.": "ติดตามและบันทึกการทำงานของผู้ใช้ทั้งหมด",
     "Until merge is finished you can log in to this system and watch video, but cannot change any settings.": "จนกว่าการผสานจะเสร็จสิ้นคุณสามารถเข้าสู่ระบบนี้และชมวิดีโอ แต่ไม่สามารถเปลี่ยนการตั้งค่าใด ๆ ได้",
     "Update them to the": "อัปเดตเป็น",
     "Updated": "อัพเดต",
@@ -172,9 +186,9 @@
     "WHEN_MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{{targetSystemName}}</strong> System, and this system will be deleted.",
     "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.": "เราขอแนะนำให้ติดตั้ง Google Chrome หรือ Mozilla Firefox เวอร์ชันล่าสุด แต่คุณสามารถใช้เว็บเบราเซอร์สมัยใหม่อื่น ๆ ได้",
     "What's New?": "มีอะไรใหม่ๆ?",
+    "When enabled, system will discover new cameras and servers. Also, \n                            it will automatically and persistently send discovery requests to \n                            cameras in order to get the camera's status update. \n                            Failover enabled on some servers ignore status check prohibition.": "When enabled, system will discover new cameras and servers. Also, \n                            it will automatically and persistently send discovery requests to \n                            cameras in order to get the camera's status update. \n                            Failover enabled on some servers ignore status check prohibition.",
     "Works with:": "ทำงานร่วมกับ:",
     "Wrong password": "รหัสผ่านผิด",
-    "You can merge only those cloud Systems, where you have the \"Owner\" permissions.": "คุณสามารถรวมเฉพาะระบบคลาวด์เหล่านี้ซึ่งคุณมีสิทธิ์ \"เจ้าของ\" เท่านั้น",
     "You can only merge Systems where you are the owner.": "คุณสามารถผสานระบบคลาวด์ที่คุณเป็นเจ้าของได้",
     "You have registered in %CLOUD_NAME%": "คุณได้ลงทะเบียนไว้ใน %CLOUD_NAME%",
     "Your Email": "อีเมล์ของคุณ",
@@ -255,7 +269,6 @@
         "setNewPassword": "บันทึกรหัสผ่าน",
         "setNewPasswordLabel": "สร้างรหัสผ่านใหม่"
     },
-    "andXMore": "... และอีก {{value}}",
     "cameraFilters": {
         "H265": "กล้อง H.265",
         "IO": "I/O โมดูล",
@@ -269,6 +282,63 @@
         "ptz": "กล้อง PTZ"
     },
     "clientProtocol": "%CLIENT_PROTOCOL%:",
+    "common": {
+        "cameraLinks": {
+            "copyActiveText": "คัดลอกไปยังคลิปบอร์ด",
+            "copyDefaultText": "คัดลอก",
+            "copyToClipboard": "คัดลอกไปยังคลิปบอร์ด",
+            "highStream": "สตรีมสูง",
+            "lowStream": "สตรีมต่ำ",
+            "transcoding": "การแปลงรหัส",
+            "unknown": "ม่รู้จัก"
+        },
+        "cameraStates": {
+            "error": "ข้อผิดพลาด",
+            "errorLoading": "เกิดข้อผิดพลาดขณะโหลดวิดีโอนี้",
+            "flashOrWebmRequired": "โปรด <a href='https://get.adobe.com/flashplayer/' target='_blank'> ติดตั้ง Adobe Flash</a> หรือ<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> สำหรับเล่นวิดีโอใน Internet Explorer",
+            "flashRequired": "โปรด <a href='https://get.adobe.com/flashplayer/' target='_blank'> ติดตั้ง Adobe Flash</a> สำหรับเล่นวิดีโอ",
+            "iOSVideoTooLarge": "iOS ไม่สนับสนุนวิดีโอที่ใหญ่กว่า fullHD (2MP: 1920x1080)",
+            "ieNoWebm": "โปรดติดตั้ง <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> สำหรับ Internet Explorer",
+            "ieWin10": "โปรดใช้ Microsoft Edge หรือเบราว์เซอร์ Google Chrome",
+            "noArmSupport": "เบราว์เซอร์หรืออุปกรณ์นี้ไม่สนับสนุนการเล่นวิดีโอจากเซิร์ฟเวอร์ที่ใช้ ARM",
+            "noData": "ไม่มีข้อมูล",
+            "noFormat": "เบราเซอร์หรืออุปกรณ์นี้ไม่รองรับการเล่นวิดีโอจากกล้องนี้",
+            "offline": "ออฟไลน์",
+            "ubuntuNX": "เบราว์เซอร์นี้ไม่สนับสนุนวิดีโอจากเซิร์ฟเวอร์ที่ใช้ ARM โปรดใช้เบราว์เซอร์ Chromium แทน",
+            "unauthorized": "จำเป็นต้องระบุตัวตนผู้ใช้"
+        },
+        "chromeCastWarning": "Chromecast เป็นทรัพยากรที่เข้มข้นและอาจทำให้เกิดปัญหาบนเซิร์ฟเวอร์ของคุณ",
+        "resolution": {
+            "auto": "อัตโนมัติ",
+            "high": "สูง",
+            "low": "ต่ำ"
+        },
+        "searchCamPlaceholder": "ค้นหา",
+        "systemHasNoCameras": "ไม่พบกล้อง",
+        "systemNewVersion": "Update your system",
+        "systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
+        "systemNoAlerts": "No Alerts",
+        "systemNoAlertsMessage": "Your system must be doing well!",
+        "systemOffline": "ระบบออฟไลน์",
+        "systemOfflineMessage": "This system is offline and cannot be accessed right now.",
+        "systemServerError": "Internal server error",
+        "systemServerErrorMessage": "An error occurred, please, try again later. An error occurred, please try again later. If the problem continues, please contact your support team.",
+        "systemUnreachable": "ระบบไม่สามารถเข้าถึงได้",
+        "voiceCommands": {
+            "clear search": "ล้างการค้นหา",
+            "collapse all servers": "ยุบเซิร์ฟเวอร์ทั้งหมด",
+            "collapse server": "collapse server + [server name]",
+            "expand all servers": "ขยายเซิร์ฟเวอร์ทั้งหมด",
+            "expand server": "expand server + [server name]",
+            "help": "help | show commands",
+            "live": "go to live | show me live",
+            "pause": "หยุด",
+            "play": "เล่น",
+            "search": "find + [text for searchbar]",
+            "stop listening": "หยุดฟัง",
+            "view": "view + [camera name]"
+        }
+    },
     "devices": "อุุปกรณ์",
     "dialogs": {
         "cancelButton": "ยกเลิก",
@@ -300,15 +370,15 @@
         "message": {
             "failedToSend": "ไม่สามารถส่งข้อความได้",
             "sent": "ส่งข้อความแล้ว",
-            "title": {
-                "integration": "ติดต่อกับ {{companyName}}",
-                "ipvd_feedback_device": "ข้อเสนอแนะเกี่ยวกับ {{asset}}",
-                "ipvd_feedback_page": "ข้อเสนอแนะสำหรับหน้ากล้อง"
-            },
-            "topic": {
+            "subject": {
                 "contact_sales": "ติดต่อฝ่ายขายสำหรับ {{asset}}",
                 "contact_support": "ติดต่อฝ่ายสนับสนุนสำหรับ {{asset}}",
                 "integration_feedback": "ข้อเสนอแนะสำหรับการรวม {{asset}}",
+                "ipvd_feedback_device": "ข้อเสนอแนะเกี่ยวกับ {{asset}}",
+                "ipvd_feedback_page": "ข้อเสนอแนะสำหรับหน้ากล้อง"
+            },
+            "title": {
+                "integration": "ติดต่อกับ {{companyName}}",
                 "ipvd_feedback_device": "ข้อเสนอแนะเกี่ยวกับ {{asset}}",
                 "ipvd_feedback_page": "ข้อเสนอแนะสำหรับหน้ากล้อง"
             }
@@ -361,16 +431,13 @@
             },
             "linux": {
                 "label": "Ubuntu Linux",
-                "shortLabel": "Ubuntu",
-                "supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+                "shortLabel": "Ubuntu"
             },
             "mac": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "macos": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "sdk": {
                 "label": "SDK",
@@ -378,8 +445,7 @@
                 "supported": "C ++ SDK ข้ามแพลตฟอร์ม"
             },
             "windows": {
-                "label": "Windows",
-                "supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+                "label": "Windows"
             }
         },
         "mobile": {
@@ -555,8 +621,8 @@
     "phoneNumberWithLabel": "โทร: {{number}}",
     "pleaseSelect": "Please select...",
     "privacyPolicy": {
-        "integration": "โดยการส่งแบบฟอร์มนี้คุณตกลงที่จะได้รับการติดต่อจาก {{INTEGRATION_COMPANY}} และ / หรือ %COMPANY_NAME%\nคุณจะพบ {{INTEGRATION_COMPANY}} นโยบายความเป็นส่วนตัว <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">ที่นี่</a> และ %COMPANY_NAME% นโยบายความเป็นส่วนตัว <a href=\"%PRIVACY_LINK%\" target=\"blank\">ที่นี่</a> ซึ่งรวมถึงคำแนะนำเกี่ยวกับวิธีการถอนการยินยอมของคุณ",
-        "ipvd": "โดยการส่งแบบฟอร์มนี้คุณตกลงที่จะได้รับการติดต่อจาก %COMPANY_NAME%\nคุณจะได้พบกับ %COMPANY_NAME% นโยบายความเป็นส่วนตัว <a href=\"%PRIVACY_LINK%\" target=\"blank\">ที่นี่</a> ซึ่งรวมถึงคำแนะนำเกี่ยวกับวิธีการถอนความยินยอมของคุณ"
+        "integration": "โดยการส่งแบบฟอร์มนี้คุณตกลงที่จะได้รับการติดต่อจาก {{INTEGRATION_COMPANY}} และ / หรือ %COMPANY_NAME%\nคุณจะพบ {{INTEGRATION_COMPANY}} นโยบายความเป็นส่วนตัว <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">ที่นี่</a> และ %COMPANY_NAME% นโยบายความเป็นส่วนตัว <a href=\"%PRIVACY_LINK%\" target=\"_blank\">ที่นี่</a> ซึ่งรวมถึงคำแนะนำเกี่ยวกับวิธีการถอนการยินยอมของคุณ",
+        "ipvd": "โดยการส่งแบบฟอร์มนี้คุณตกลงที่จะได้รับการติดต่อจาก %COMPANY_NAME%\nคุณจะได้พบกับ %COMPANY_NAME% นโยบายความเป็นส่วนตัว <a href=\"%PRIVACY_LINK%\" target=\"_blank\">ที่นี่</a> ซึ่งรวมถึงคำแนะนำเกี่ยวกับวิธีการถอนความยินยอมของคุณ"
     },
     "registration": {
         "agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
@@ -601,6 +667,15 @@
         "openClient": "เปิดใน %VMS_NAME%",
         "openClientNoSystem": "เปิด %VMS_NAME%",
         "permissionsRemoved": "สิทธิ์ถูกนำออกจาก {{email}}",
+        "settings": {
+            "sessionLimitDuration": {
+                "hours": "ชั่วโมง",
+                "minutes": "นาที"
+            },
+            "warningMessages": {
+                "videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+            }
+        },
         "shareOffline": "Cannot share system while it is offline",
         "shareUnauthorized": "You do not have permission to share this system",
         "successDeleted": "ระบบ {{systemName}} จะถูกลบออกจากบัญชีของคุณเรียบร้อยแล้ว",
@@ -620,8 +695,9 @@
         "online": "ออนไลน์",
         "unavailable": "ไม่พร้อมใช้งาน"
     },
-    "testedVersionLabel": "ทดสอบกับรุ่น {{vmsName}}:",
-    "testedVersionsLabel": "ทดสอบกับรุ่น {{vmsName}}:",
+    "testedVersionLabel": "Tested with {{vmsName}} version:",
+    "testedVersionsLabel": "Tested with {{vmsName}} versions:",
+    "topXByVolume": "Top {{value}} by volume:",
     "users": "ผู้ใช้งาน",
     "you": "you"
 }

@@ -53,21 +53,17 @@
 		},
 		"groups": {
 			"windows": {
-				"label": "Windows",
-				"supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+				"label": "Windows"
 			},
 			"mac": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"linux": {
 				"label": "Ubuntu Linux",
-				"shortLabel": "Ubuntu",
-				"supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+				"shortLabel": "Ubuntu"
 			},
 			"macos": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"ios": {
 				"label": "iOS",
@@ -239,7 +235,7 @@
 				"ipvd_feedback_page": "摄像机页面反馈",
 				"ipvd_feedback_device": "关于 {{asset}} 反馈"
 			},
-			"topic": {
+			"subject": {
 				"contact_sales": "联系{{asset}} 销售人员",
 				"contact_support": "联系{{asset}} 技术支持",
 				"integration_feedback": "集成{{asset}} 反馈",
@@ -346,7 +342,16 @@
 		"permissionsRemoved": "权限从 {{email}} 被刪除",
 		"unknownName": "未知的系统名称（由云合并引起）",
 		"shareOffline": "离线时无法共享系统",
-		"shareUnauthorized": "You do not have permission to share this system"
+		"shareUnauthorized": "You do not have permission to share this system",
+		"settings": {
+			"sessionLimitDuration": {
+				"hours": "小时",
+				"minutes": "分"
+			},
+			"warningMessages": {
+				"videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+			}
+		}
 	},
 	"systemStatuses": {
 		"activated": "激活",
@@ -416,13 +421,70 @@
 		}
 	},
 	"privacyPolicy": {
-		"integration": "提交表单即表示您同意与{{INTEGRATION_COMPANY}} 和/或 %COMPANY_NAME%联系。\n您可在<a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">浏览{{INTEGRATION_COMPANY}} 隐私政策</a> 和%COMPANY_NAME% 隐私政策<a href=\"%PRIVACY_LINK%\" target=\" blank\">这里</a> 可了解如何撤销您的同意。",
-		"ipvd": "提交表单即表示同意 %COMPANY_NAME%与您联系。\n您可在<a href=\"%PRIVACY_LINK%\" target=\"blank\">浏览 %COMPANY_NAME% 隐私政策</a> ，其中包含如何撤回同意。"
+		"integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a> which include instruction on how to withdraw your consent.",
+		"ipvd": "提交表单即表示同意 %COMPANY_NAME%与您联系。\n您可在<a href=\"%PRIVACY_LINK%\" target=\"_blank\">浏览 %COMPANY_NAME% 隐私政策</a> ，其中包含如何撤回同意。"
+	},
+	"common": {
+		"cameraLinks": {
+			"highStream": "高流",
+			"lowStream": "低流",
+			"transcoding": "转码",
+			"unknown": "未知的",
+			"copyToClipboard": "复制到剪贴板",
+			"copyDefaultText": "复制",
+			"copyActiveText": "已复制到剪贴板"
+		},
+		"systemOffline": "系统处于离线状态",
+		"systemOfflineMessage": "This system is offline and cannot be accessed right now.",
+		"systemNoAlerts": "No Alerts",
+		"systemNoAlertsMessage": "Your system must be doing well!",
+		"systemServerError": "Internal server error",
+		"systemServerErrorMessage": "An error occurred, please, try again later. An error occurred, please try again later. If the problem continues, please contact your support team.",
+		"systemNewVersion": "Update your system",
+		"systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
+		"systemHasNoCameras": "无摄像机",
+		"systemUnreachable": "系统无法连接",
+		"cameraStates": {
+			"offline": "离线",
+			"error": "错误",
+			"errorLoading": "载入影片时发生错误",
+			"unauthorized": "需要身份验证",
+			"noData": "无数据",
+			"iOSVideoTooLarge": "iOS不支持大于fullHD (2MP：1920x1080) 的视频。",
+			"flashRequired": "请 <a href=\"https://get.adobe.com/flashplayer/\" target=\"_blank\">安装 Adobe Flash</a> 播放视频。",
+			"flashOrWebmRequired": "请 <a href=\"https://get.adobe.com/flashplayer/\" target=\"_blank\">安装 Adobe Flash</a> 或 <a href=\"https://tools.google.com/dlpage/webmmf/\" target=\"_blank\">WebM 编解码器</a> 以在 Ie 中播放视频。",
+			"noArmSupport": "此浏览器或设备不支持基于ARM的服务器的视频播放。",
+			"noFormat": "此浏览器不支持本相机的视频播放。",
+			"ieNoWebm": "请为 Ie 安装 <a href=\"https://tools.google.com/dlpage/webmmf/\" target=\"_blank\">WebM 编解码器</a>。",
+			"ieWin10": "请使用Microsoft Edge或Google Chrome浏览器。",
+			"ubuntuNX": "此浏览器不支持从基于 ARM 服务器的视频。请改为使用 Chromium 浏览器。"
+		},
+		"searchCamPlaceholder": "搜索",
+		"resolution": {
+			"auto": "自动",
+			"high": "高",
+			"low": "低"
+		},
+		"chromeCastWarning": "Chromecast是资源密集型的，可能会导致您的服务器出现问题。",
+		"voiceCommands": {
+			"play": "播放",
+			"pause": "暂停",
+			"live": "go to live | show me live",
+			"view": "view + [camera name]",
+			"search": "find + [text for searchbar]",
+			"clear search": "清除搜索",
+			"expand server": "expand server + [server name]",
+			"collapse server": "collapse server + [server name]",
+			"expand all servers": "展开所有服务器",
+			"collapse all servers": "隐藏所有服务器",
+			"stop listening": "停止监听",
+			"help": "help | show commands"
+		}
 	},
 	"systemAdministration": "系统管理",
 	"users": "用户",
-	"testedVersionLabel": "测试 {{vmsName}} 版本：",
-	"testedVersionsLabel": "测试 {{vmsName}} 版本：",
+	"testedVersionLabel": "Tested with {{vmsName}} version:",
+	"testedVersionsLabel": "Tested with {{vmsName}} versions:",
 	"About %CLOUD_NAME%": "关于 %CLOUD_NAME%",
 	"Download %VMS_NAME%": "下载 %VMS_NAME%",
 	"Integrations": "集成",

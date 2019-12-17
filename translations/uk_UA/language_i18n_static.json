@@ -53,21 +53,17 @@
 		},
 		"groups": {
 			"windows": {
-				"label": "Windows",
-				"supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+				"label": "Windows"
 			},
 			"mac": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"linux": {
 				"label": "Ubuntu Linux",
-				"shortLabel": "Ubuntu",
-				"supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+				"shortLabel": "Ubuntu"
 			},
 			"macos": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"ios": {
 				"label": "iOS",
@@ -103,7 +99,7 @@
 			"bundle": "Клієнт і сервер",
 			"camera_sdk": "SDK джерела відео",
 			"client": "Тільки клієнт",
-			"metadata_sdk": "Metadata SDK",
+			"metadata_sdk": "Метадані SDK",
 			"package": "Package",
 			"server": "Тільки сервер",
 			"servertool": "Інструмент налаштування",
@@ -239,7 +235,7 @@
 				"ipvd_feedback_page": "Зворотній зв’язок для сторінки камер",
 				"ipvd_feedback_device": "Відгук про {{asset}}"
 			},
-			"topic": {
+			"subject": {
 				"contact_sales": "Зв'яжіться з відділом продажів за {{asset}}",
 				"contact_support": "Зверніться до служби підтримки за {{asset}}",
 				"integration_feedback": "Зворотній зв'язок для інтеграції {{asset}}",
@@ -322,7 +318,7 @@
 		"mySystemSearch": "ЯМійМоя",
 		"unavailable": "Система недоступна",
 		"offline": "Система знаходиться поза мережею",
-		"offlineAlertRibbon": "System is offline. Some settings may not be available.",
+		"offlineAlertRibbon": "Система відключена. Деякі налаштування можуть бути недоступні.",
 		"openClient": "Відкрити в %VMS_NAME%",
 		"openClientNoSystem": "Відкрити %VMS_NAME%",
 		"confirmMergeAction": "Об'єднати",
@@ -345,8 +341,17 @@
 		"mergeSuccess": "Злиття системи завершено",
 		"permissionsRemoved": "{{email}} був позбавлений повноважень",
 		"unknownName": "Невідоме ім’я для системи (викликане злиттям хмари)",
-		"shareOffline": "Cannot share system while it is offline",
-		"shareUnauthorized": "You do not have permission to share this system"
+		"shareOffline": "Не можна поділитись системою, поки вона не підключена в режимі офлайн",
+		"shareUnauthorized": "Ви не маєте прав для створення цього клієнта",
+		"settings": {
+			"sessionLimitDuration": {
+				"hours": "години",
+				"minutes": "хвилини"
+			},
+			"warningMessages": {
+				"videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+			}
+		}
 	},
 	"systemStatuses": {
 		"activated": "активовано",
@@ -416,13 +421,70 @@
 		}
 	},
 	"privacyPolicy": {
-		"integration": "Надіславши цю форму, ви погоджуєтеся зв'язатися з {{INTEGRATION_COMPANY}} та / або %COMPANY_NAME%.\nВи знайдете {{INTEGRATION_COMPANY}} Політику конфіденційності <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">тут</a> і %COMPANY_NAME% Політика конфіденційності <a href=\"%PRIVACY_LINK%\" target=\"blank\">тут</a> які містять інструкцію про те, як зняти вашу згоду.",
-		"ipvd": "Надсилаючи цю форму, ви погоджуєтесь зв'язатися з нами %COMPANY_NAME%.\nВи знайдете %COMPANY_NAME% політику конфіденційності <a href=\"%PRIVACY_LINK%\" target=\"blank\">тут</a> яка містить інструкцію про те, як скасувати вашу згоду."
+		"integration": "Надіславши цю форму, ви погоджуєтеся зв'язатися з {{INTEGRATION_COMPANY}} та / або %COMPANY_NAME%.\nВи знайдете {{INTEGRATION_COMPANY}} Політику конфіденційності <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">тут</a> і %COMPANY_NAME% Політика конфіденційності <a href=\"%PRIVACY_LINK%\" target=\"_blank\">тут</a> які містять інструкцію про те, як зняти вашу згоду.",
+		"ipvd": "Надсилаючи цю форму, ви погоджуєтесь зв'язатися з нами %COMPANY_NAME%.\nВи знайдете %COMPANY_NAME% політику конфіденційності <a href=\"%PRIVACY_LINK%\" target=\"_blank\">тут</a> яка містить інструкцію про те, як скасувати вашу згоду."
+	},
+	"common": {
+		"cameraLinks": {
+			"highStream": "Висока якість",
+			"lowStream": "Низька якість",
+			"transcoding": "Перекодування",
+			"unknown": "Невідомий",
+			"copyToClipboard": "копіювати в буфер обміну",
+			"copyDefaultText": "копіювати",
+			"copyActiveText": "скопійовано до буфера обміну"
+		},
+		"systemOffline": "Система знаходиться поза мережею",
+		"systemOfflineMessage": "This system is offline and cannot be accessed right now.",
+		"systemNoAlerts": "No Alerts",
+		"systemNoAlertsMessage": "Your system must be doing well!",
+		"systemServerError": "Внутрішня помилка сервера",
+		"systemServerErrorMessage": "An error occurred, please, try again later. An error occurred, please try again later. If the problem continues, please contact your support team.",
+		"systemNewVersion": "Update your system",
+		"systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
+		"systemHasNoCameras": "НЕМАЄ КАМЕР",
+		"systemUnreachable": "СИСТЕМА НЕДОСТУПНА",
+		"cameraStates": {
+			"offline": "Поза мережею",
+			"error": "Помилка",
+			"errorLoading": "Під час завантаження цього відео сталася помилка.",
+			"unauthorized": "Потрібна аутентифікація",
+			"noData": "Немає даних",
+			"iOSVideoTooLarge": "iOS не підтримує відео з розшиненням більшим за fullHD (2MP: 1920x1080).",
+			"flashRequired": "Будь ласка, <a href='https://get.adobe.com/flashplayer/' target='_blank'>встановіть Adobe Flash</a> для відтворення відео.",
+			"flashOrWebmRequired": "Відео не може бути відтворено. Можливо, потрібно <a href='https://get.adobe.com/flashplayer/' target='_blank'>встановитиAdobe Flash</a> або<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>кодек WebM</a> для відтворення відео в Internet Explorer.",
+			"noArmSupport": "Цей браузер або пристрій не підтримує відтворення відео з серверів на базі ARM.",
+			"noFormat": "Цей веб-переглядач не підтримує відтворення відео з цієї камери.",
+			"ieNoWebm": "Відео не може бути відтворено. Можливо, потрібно <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>кодек WebM</a> для Internet Explorer.",
+			"ieWin10": "Будь ласка, використовуйте веб-перегляд Microsoft Edge або Google Chrome.",
+			"ubuntuNX": "Цей веб-переглядач не підтримує відео з серверів на базі ARM. Замість цього скористайтеся браузером Chromium."
+		},
+		"searchCamPlaceholder": "Пошук",
+		"resolution": {
+			"auto": "Авто",
+			"high": "Високий",
+			"low": "Низький"
+		},
+		"chromeCastWarning": "Chromecast ресурсоємний і може спричинити проблеми на вашому сервері.",
+		"voiceCommands": {
+			"play": "відтворення",
+			"pause": "пауза",
+			"live": "go to live | show me live",
+			"view": "view + [camera name]",
+			"search": "find + [text for searchbar]",
+			"clear search": "очистити вікно пошуку",
+			"expand server": "expand server + [server name]",
+			"collapse server": "collapse server + [server name]",
+			"expand all servers": "розгорнути всі сервери",
+			"collapse all servers": "згорнути всі сервери",
+			"stop listening": "припинити прослуховування",
+			"help": "help | show commands"
+		}
 	},
 	"systemAdministration": "Адміністрування системи",
 	"users": "Користувачі",
-	"testedVersionLabel": "Протестовано за {{vmsName}} версій:",
-	"testedVersionsLabel": "Протестовано за {{vmsName}} версій:",
+	"testedVersionLabel": "Протестовано за допомогою {{vmsName}} версії:",
+	"testedVersionsLabel": "Протестовано {{vmsName}} версій:",
 	"About %CLOUD_NAME%": "Про %CLOUD_NAME%",
 	"Download %VMS_NAME%": "Завантажити %VMS_NAME%",
 	"Integrations": "Інтеграції",

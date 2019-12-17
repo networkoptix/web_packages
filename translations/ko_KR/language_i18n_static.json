@@ -53,21 +53,17 @@
 		},
 		"groups": {
 			"windows": {
-				"label": "Windows",
-				"supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+				"label": "Windows"
 			},
 			"mac": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"linux": {
 				"label": "Ubuntu Linux",
-				"shortLabel": "Ubuntu",
-				"supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+				"shortLabel": "Ubuntu"
 			},
 			"macos": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"ios": {
 				"label": "iOS",
@@ -239,7 +235,7 @@
 				"ipvd_feedback_page": "카메라 페이지에 대한 피드백",
 				"ipvd_feedback_device": "{{asset}} 에 대한 피드백"
 			},
-			"topic": {
+			"subject": {
 				"contact_sales": "{{asset}} 에 대해 영업팀에 문의",
 				"contact_support": "{{asset}} 대해 지원팀에 문의",
 				"integration_feedback": "{{asset}} 통합에 대한 피드백",
@@ -346,7 +342,16 @@
 		"permissionsRemoved": "권한이 {{email}} 에서 제거 되었습니다.",
 		"unknownName": "시스템의 알 수없는 이름 (클라우드 머지로 인해 발생)",
 		"shareOffline": "오프라인 상태에서 시스템을 공유 할 수 없습니다",
-		"shareUnauthorized": "You do not have permission to share this system"
+		"shareUnauthorized": "이 시스템을 공유 할 권한이 없습니다",
+		"settings": {
+			"sessionLimitDuration": {
+				"hours": "시간",
+				"minutes": "분"
+			},
+			"warningMessages": {
+				"videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+			}
+		}
 	},
 	"systemStatuses": {
 		"activated": "활성화 됨",
@@ -416,13 +421,70 @@
 		}
 	},
 	"privacyPolicy": {
-		"integration": "이 양식을 제출하면 {{INTEGRATION_COMPANY}} 및 / 또는 %COMPANY_NAME%로 연락하는 것에 동의하게됩니다.\n{{INTEGRATION_COMPANY}} 개인 정보 보호 정책 <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">여기에</a> 과 %COMPANY_NAME% 개인 정보 보호 정책 <a href=\"%PRIVACY_LINK%\" target=\"blank\">여기에</a> 에서 동의를 철회하는 방법에 대한 지침을 찾을 수 있습니다.",
-		"ipvd": "이 양식을 제출하면 %COMPANY_NAME%으로 연락하는 데 동의하는 것입니다.\n%COMPANY_NAME% 개인 정보 보호 정책 <a href=\"%PRIVACY_LINK%\" target=\"blank\">여기에</a> 에서 동의를 철회하는 방법에 대한 지침을 찾을 수 있습니다."
+		"integration": "이 양식을 제출하면 {{INTEGRATION_COMPANY}} 및 / 또는 %COMPANY_NAME%로 연락하는 것에 동의하게됩니다.\n{{INTEGRATION_COMPANY}} 개인 정보 보호 정책 <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">여기에</a> 과 %COMPANY_NAME% 개인 정보 보호 정책 <a href=\"%PRIVACY_LINK%\" target=\"_blank\">여기에</a> 에서 동의를 철회하는 방법에 대한 지침을 찾을 수 있습니다.",
+		"ipvd": "이 양식을 제출하면 %COMPANY_NAME%으로 연락하는 데 동의하는 것입니다.\n%COMPANY_NAME% 개인 정보 보호 정책 <a href=\"%PRIVACY_LINK%\" target=\"_blank\">여기에</a> 에서 동의를 철회하는 방법에 대한 지침을 찾을 수 있습니다."
+	},
+	"common": {
+		"cameraLinks": {
+			"highStream": "고해상도 스트림",
+			"lowStream": "낮은 스트림",
+			"transcoding": "트랜스코딩",
+			"unknown": "알 수 없음",
+			"copyToClipboard": "클립보드에 복사",
+			"copyDefaultText": "복사",
+			"copyActiveText": "클립보드에 복사됨"
+		},
+		"systemOffline": "시스템 오프라인",
+		"systemOfflineMessage": "This system is offline and cannot be accessed right now.",
+		"systemNoAlerts": "No Alerts",
+		"systemNoAlertsMessage": "Your system must be doing well!",
+		"systemServerError": "인터넷 서버 오류",
+		"systemServerErrorMessage": "An error occurred, please, try again later. An error occurred, please try again later. If the problem continues, please contact your support team.",
+		"systemNewVersion": "Update your system",
+		"systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
+		"systemHasNoCameras": "카메라 없음",
+		"systemUnreachable": "시스템이 연결이 않됩니다",
+		"cameraStates": {
+			"offline": "오프라인",
+			"error": "오류",
+			"errorLoading": "이 영상을로드하는 중에 오류가 발생했습니다.",
+			"unauthorized": "인증이 필요합니다",
+			"noData": "데이터 없음",
+			"iOSVideoTooLarge": "iOS는 fullHD (2MP: 1920x1080) 보다 큰 비디오를 지원하지 않습니다.",
+			"flashRequired": "동영상을 재생하기 위하여 <a href='https://get.adobe.com/flashplayer/' target='_blank'>어도비플래쉬</a>를 설치하십시오.",
+			"flashOrWebmRequired": "Internet Explorer에서 비디오를 재생하려면 <a href='https://get.adobe.com/flashplayer/' target='_blank'> Adobe Flash</a> 또는 <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a>을 설치하십시오.",
+			"noArmSupport": "이 브라우저 또는 장치는 ARM 기반 서버의 비디오 재생을 지원하지 않습니다.",
+			"noFormat": "이 브라우저는 현 카메라로 부터 비디오 재생을 지원하지 않습니다.",
+			"ieNoWebm": "Internet Explorer에 <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'> WebM 코덱</a>를 설치 하십시요.",
+			"ieWin10": "Microsoft Edge 또는 Google 크롬 브라우저를 사용하십시오.",
+			"ubuntuNX": "이 브라우저는 ARM 기반 서버의 비디오를 지원하지 않습니다. 대신 Chromium 브라우저를 사용하십시오."
+		},
+		"searchCamPlaceholder": "검색",
+		"resolution": {
+			"auto": "자동",
+			"high": "고해상도",
+			"low": "저해상도"
+		},
+		"chromeCastWarning": "크롬캐스트는 많은 리소스가 요구되어 서버에 문제가 발생할 수 있습니다.",
+		"voiceCommands": {
+			"play": "재생",
+			"pause": "일시정지",
+			"live": "go to live | show me live",
+			"view": "view + [camera name]",
+			"search": "찾기 + [text for searchbar]",
+			"clear search": "검색창 지우기",
+			"expand server": "서버확장 + [server name]",
+			"collapse server": "서버축소 + [server name]",
+			"expand all servers": "모든 서버 확장",
+			"collapse all servers": "모든 서버 축소",
+			"stop listening": "듣기 중지",
+			"help": "도움말 | 명령 표시"
+		}
 	},
 	"systemAdministration": "관리자",
 	"users": "사용자",
-	"testedVersionLabel": "{{vmsName}} 버전에서 테스트되었습니다.",
-	"testedVersionsLabel": "테스트된 {{vmsName}} 버전:",
+	"testedVersionLabel": "Tested with {{vmsName}} version:",
+	"testedVersionsLabel": "Tested with {{vmsName}} versions:",
 	"About %CLOUD_NAME%": "%CLOUD_NAME% 정보",
 	"Download %VMS_NAME%": "%VMS_NAME% 다운로드",
 	"Integrations": "연동",

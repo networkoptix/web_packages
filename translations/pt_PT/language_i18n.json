@@ -21,6 +21,8 @@
     "All Systems": "Todos os sistemas",
     "All cloud users will be deleted.": "Todos os utilizadores da \"Cloud\" serão apagados.",
     "All results": "All results",
+    "Allow only secure connections": "Permitir apenas conexões seguras",
+    "Allow system to optimize camera settings": "Permitir o sistema optimizar as definições das câmaras",
     "Analytics": "Analytics",
     "Analytics Event": "Evento de Analytics",
     "Analytics Events": "Analytics Events",
@@ -37,6 +39,7 @@
     "Change Password": "Alterar senha",
     "Checking...": "A verificar...",
     "Choose which properties should be visible to customers:": "Escolha quais propriedades devem estar visíveis para os clientes:",
+    "Clear filters": "Clear filters",
     "Close": "Fechar",
     "Codec": "Codec",
     "Collapse": "Ocultar",
@@ -64,6 +67,9 @@
     "Email": "Email",
     "Email is required": "O e-mail é obrigatório",
     "Embed": "Incorporar",
+    "Enable audit trail": "Activar Trilho de Auditoria",
+    "Enable auto discovery of cameras and servers": "Enable auto discovery of cameras and servers",
+    "Encrypt video traffic": "Encriptar o tráfego de vídeo",
     "Enter \"Public User\" credentials:": "Digite as credenciais do \"Utilizador público\":",
     "Enter password for your account to continue": "Insira a senha da sua conta para continuar",
     "Enter password to continue.": "Digite a senha para continuar.",
@@ -84,12 +90,15 @@
     "I/O": "I/O",
     "In Review": "In Review",
     "In-Client Upgrade:": "Atualização dentro do Cliente:",
+    "Includes information about the System, such as camera modules, \n                            firmware versions, number of servers, etc. \n                            Does not include any personal information and is completely anonymous.": "Includes information about the System, such as camera modules, \n                            firmware versions, number of servers, etc. \n                            Does not include any personal information and is completely anonymous.",
+    "Information": "Informação",
     "Integrations": "Integrations",
     "Language": "Idioma",
     "Last Name": "Last Name",
     "Last name": "Último nome",
     "Last name is required": "O apelido é obrigatório",
     "Latest version": "Versão mais recente",
+    "Limit session duration to": "Limit session duration to",
     "Log In": "Iniciar sessão",
     "Log Out": "Terminar sessão",
     "Log in to %CLOUD_NAME%": "Logar em %CLOUD_NAME%",
@@ -109,6 +118,7 @@
     "Nothing Found": "Nothing Found",
     "OK": "OK",
     "Ok": "Ok",
+    "Only client-server video traffic can be encrypted.": "Only client-server video traffic can be encrypted.",
     "Other packages:": "Outros pacotes:",
     "Other releases, patches and beta versions": "Outras versões, patches e versões beta",
     "Owner": "Dono",
@@ -116,7 +126,7 @@
     "Page not found": "Página não encontrada",
     "Password": "Password",
     "Password is required": "A senha é obrigatória",
-    "Password reset instructions are sent to Email": "Password reset instructions are sent to Email",
+    "Password reset instructions are sent to Email": "As instruções de reset de senha são enviadas para o e-mail",
     "Password successfully saved": "Senha guardada com sucesso",
     "Password:": "Senha:",
     "Please enter a valid Email": "Por favor, introduza um email válido",
@@ -135,17 +145,21 @@
     "Save": "Gravar",
     "Search in google": "Search in google",
     "Secondary Stream": "Secondary Stream",
+    "Security": "Segurança",
     "Send": "Send",
+    "Send anonymous usage and crash statistics to developers": "Send anonymous usage and crash statistics to developers",
     "Send feedback about this device": "Send feedback about this device",
     "Set New Password": "Definir nova senha",
     "Settings": "Definições",
     "Show All": "Mostrar Tudo",
     "Some of your servers don't support cloud System merge because of outdated software version.": "Alguns de seus servidores não suportam a fusão do sistema em cloud devido à versão desactualizada do software.",
+    "Subject": "Subject",
     "Support": "Suporte",
     "Support E-mail": "Support E-mail",
     "Support URL": "Support URL",
     "Supported Devices": "Supported Devices",
     "Supported IP Video Devices": "Dispositivos de Vídeo IP Suportados",
+    "System Settings": "Definições de Sistema",
     "System name": "Nome do Sistema",
     "System name is required": "O nome do sistema é obrigatório",
     "System will be accessible through local network with local administrator account.": "O sistema estará acessível através da rede local com conta de administrador local.",
@@ -162,7 +176,7 @@
     "This device has reported to support some analytics events, but we don't have exact information about them.": "Este dispositivo reportou que suporta alguns eventos de analytics, mas não temos informações exatas sobre eles.",
     "To": "To",
     "Too many attempts. Try again in a minute.": "Demasiadas tentativas. Tente novamente dentro de um minuto.",
-    "Topic": "Topic",
+    "Tracks and logs all user actions.": "Rastreia e regista todas as acções do utilizador.",
     "Until merge is finished you can log in to this system and watch video, but cannot change any settings.": "Até que o \"Merge\" seja concluído, pode efectuar o login nesse sistema e reproduzir vídeo, mas não pode alterar as definições.",
     "Update them to the": "Update them to the",
     "Updated": "Updated",
@@ -172,9 +186,9 @@
     "WHEN_MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{{targetSystemName}}</strong> System, and this system will be deleted.",
     "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.": "Recomendamos instalar as versões mais recentes do Google Chrome ou do Mozilla Firefox, mas pode usar qualquer outro browser moderno.",
     "What's New?": "What's New?",
+    "When enabled, system will discover new cameras and servers. Also, \n                            it will automatically and persistently send discovery requests to \n                            cameras in order to get the camera's status update. \n                            Failover enabled on some servers ignore status check prohibition.": "When enabled, system will discover new cameras and servers. Also, \n                            it will automatically and persistently send discovery requests to \n                            cameras in order to get the camera's status update. \n                            Failover enabled on some servers ignore status check prohibition.",
     "Works with:": "Works with:",
     "Wrong password": "Senha incorrecta",
-    "You can merge only those cloud Systems, where you have the \"Owner\" permissions.": "Você pode fazer o \"Merge\" dos sistemas em Cloud apenas onde você tiver as permissões de \"Proprietário\".",
     "You can only merge Systems where you are the owner.": "Só pode fazer a Fusão de Sistemas de onde seja o proprietário.",
     "You have registered in %CLOUD_NAME%": "Você registou em %CLOUD_NAME%",
     "Your Email": "Your Email",
@@ -255,7 +269,6 @@
         "setNewPassword": "Guardar password",
         "setNewPasswordLabel": "Nova senha"
     },
-    "andXMore": "... and {{value}} more",
     "cameraFilters": {
         "H265": "H.265 Cameras",
         "IO": "I / O modules",
@@ -269,6 +282,63 @@
         "ptz": "PTZ cameras"
     },
     "clientProtocol": "%CLIENT_PROTOCOL%:",
+    "common": {
+        "cameraLinks": {
+            "copyActiveText": "copiado para o Clipboard",
+            "copyDefaultText": "copiar",
+            "copyToClipboard": "copiar para o Clipboard",
+            "highStream": "High stream",
+            "lowStream": "Low stream",
+            "transcoding": "Transcoding",
+            "unknown": "Desconhecido"
+        },
+        "cameraStates": {
+            "error": "Erro",
+            "errorLoading": "An error occurred while loading this video.",
+            "flashOrWebmRequired": "Por favor <a href='https://get.adobe.com/flashplayer/' target='_blank'>instale o Adobe Flash</a> ou o <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>codec WebM</a> para reproduzir vídeo no Internet Explorer.",
+            "flashRequired": "Por favor, <a href='https://get.adobe.com/flashplayer/' target='_blank'>instale o Adobe Flash</a> para reproduzir vídeos.",
+            "iOSVideoTooLarge": "O iOS não suporta vídeos maiores que fullHD (2MP: 1920x1080).",
+            "ieNoWebm": "Por favor, instale <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>codec WebM</a> para o Internet Explorer.",
+            "ieWin10": "Por favor, utilize browsers Microsoft Edge ou Google Chrome.",
+            "noArmSupport": "Este navegador ou dispositivo não suporta a reprodução de vídeo a partir de servidores baseados em ARM.",
+            "noData": "Sem dados",
+            "noFormat": "Este browser não suporta a reprodução de vídeo desta câmara.",
+            "offline": "Desligado",
+            "ubuntuNX": "Este browser não suporta vídeo a partir de servidores baseados em ARM. Por favor, use o browser Chromium.",
+            "unauthorized": "Necessária autenticação"
+        },
+        "chromeCastWarning": "O Chromecast consome muitos recursos e pode causar problemas no seu servidor.",
+        "resolution": {
+            "auto": "Auto",
+            "high": "Alta",
+            "low": "Baixa"
+        },
+        "searchCamPlaceholder": "Pesquisar",
+        "systemHasNoCameras": "SEM CÂMARAS",
+        "systemNewVersion": "Update your system",
+        "systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
+        "systemNoAlerts": "No Alerts",
+        "systemNoAlertsMessage": "Your system must be doing well!",
+        "systemOffline": "Sistema Offline",
+        "systemOfflineMessage": "This system is offline and cannot be accessed right now.",
+        "systemServerError": "Erro interno do servidor",
+        "systemServerErrorMessage": "An error occurred, please, try again later. An error occurred, please try again later. If the problem continues, please contact your support team.",
+        "systemUnreachable": "SYSTEM IS UNREACHABLE",
+        "voiceCommands": {
+            "clear search": "limpar pesquisa",
+            "collapse all servers": "recolher todos os servidores",
+            "collapse server": "collapse server + [server name]",
+            "expand all servers": "expandir todos os servidores",
+            "expand server": "expand server + [server name]",
+            "help": "help | show commands",
+            "live": "go to live | show me live",
+            "pause": "pausa",
+            "play": "reproduzir",
+            "search": "find + [text for searchbar]",
+            "stop listening": "parar de ouvir",
+            "view": "view + [camera name]"
+        }
+    },
     "devices": "dispositivos",
     "dialogs": {
         "cancelButton": "Cancelar",
@@ -300,15 +370,15 @@
         "message": {
             "failedToSend": "Message has failed to send.",
             "sent": "Message has been sent.",
-            "title": {
-                "integration": "Get in touch with {{companyName}}",
-                "ipvd_feedback_device": "Feedback about {{asset}}",
-                "ipvd_feedback_page": "Feedback for cameras page"
-            },
-            "topic": {
+            "subject": {
                 "contact_sales": "Contact sales for {{asset}}",
                 "contact_support": "Contact support for {{asset}}",
                 "integration_feedback": "Feedback for integration {{asset}}",
+                "ipvd_feedback_device": "Feedback about {{asset}}",
+                "ipvd_feedback_page": "Feedback for cameras page"
+            },
+            "title": {
+                "integration": "Get in touch with {{companyName}}",
                 "ipvd_feedback_device": "Feedback about {{asset}}",
                 "ipvd_feedback_page": "Feedback for cameras page"
             }
@@ -361,16 +431,13 @@
             },
             "linux": {
                 "label": "Ubuntu Linux",
-                "shortLabel": "Ubuntu",
-                "supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+                "shortLabel": "Ubuntu"
             },
             "mac": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "macos": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "sdk": {
                 "label": "SDK",
@@ -378,8 +445,7 @@
                 "supported": "C++ cross platform SDK"
             },
             "windows": {
-                "label": "Windows",
-                "supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+                "label": "Windows"
             }
         },
         "mobile": {
@@ -555,8 +621,8 @@
     "phoneNumberWithLabel": "Tel: {{number}}",
     "pleaseSelect": "Please select...",
     "privacyPolicy": {
-        "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent.",
-        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent."
+        "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a> which include instruction on how to withdraw your consent.",
+        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a> which include instruction on how to withdraw your consent."
     },
     "registration": {
         "agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
@@ -601,6 +667,15 @@
         "openClient": "Abrir em %VMS_NAME%",
         "openClientNoSystem": "Abrir %VMS_NAME%",
         "permissionsRemoved": "As permissões foram removidas de {{email}}",
+        "settings": {
+            "sessionLimitDuration": {
+                "hours": "hora",
+                "minutes": "minuto"
+            },
+            "warningMessages": {
+                "videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+            }
+        },
         "shareOffline": "Cannot share system while it is offline",
         "shareUnauthorized": "You do not have permission to share this system",
         "successDeleted": "O sistema {{systemName}} foi apagado com sucesso da sua conta",
@@ -620,8 +695,9 @@
         "online": "online",
         "unavailable": "indisponível"
     },
-    "testedVersionLabel": "Tested on {{vmsName}} version:",
-    "testedVersionsLabel": "Tested on {{vmsName}} versions:",
+    "testedVersionLabel": "Tested with {{vmsName}} version:",
+    "testedVersionsLabel": "Tested with {{vmsName}} versions:",
+    "topXByVolume": "Top {{value}} by volume:",
     "users": "Utilizadores",
     "you": "you"
 }
