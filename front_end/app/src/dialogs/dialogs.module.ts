@@ -15,6 +15,7 @@ import { downgradeInjectable }                          from '@angular/upgrade/s
 import { FormsModule, EmailValidator }                  from '@angular/forms';
 import { TranslateModule }                              from '@ngx-translate/core';
 import { ClipboardModule }                              from 'ngx-clipboard';
+import { RenameServerModalContent }                     from './rename-server/rename-server.component';
 
 import { GenericModalContent, NxModalGenericComponent } from './generic/generic.component';
 import { NxDialogsService }                             from './dialogs.service';
@@ -46,6 +47,7 @@ import { RouterModule }                                 from '@angular/router';
         NxModalRemoveUserComponent,
         ApplyModalContent,
         NxModalApplyComponent,
+        RenameServerModalContent,
     ],
     entryComponents: [
         LoginModalContent,
@@ -62,6 +64,7 @@ import { RouterModule }                                 from '@angular/router';
         NxModalRemoveUserComponent,
         ApplyModalContent,
         NxModalApplyComponent,
+        RenameServerModalContent,
     ],
     providers      : [
         NxDialogsService,

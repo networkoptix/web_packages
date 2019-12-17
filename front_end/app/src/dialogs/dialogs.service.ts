@@ -20,6 +20,7 @@ import { NxConfigService }           from '../services/nx-config';
 import { NxAccountService }          from '../services/account.service';
 import { ApplyModalContent }         from './apply/apply.component';
 import { RemoveUserModalContent }    from './remove-user/remove-user.component';
+import { RenameServerModalContent }  from './rename-server/rename-server.component';
 
 @Injectable({ providedIn: 'root' })
 export class NxDialogsService {
@@ -208,6 +209,21 @@ export class NxDialogsService {
         };
 
         return this.createModal(RenameModalContent, options, params);
+    }
+
+    renameServer(serverId, serverName) {
+        const options: any = {
+            windowClass: 'modal-holder',
+            backdrop   : 'static'
+        };
+
+        const params: any = {
+            serverId,
+            serverName,
+            closable: true,
+        }
+
+        return this.createModal(RenameServerModalContent, options, params);
     }
 
     merge(system, systems, user) {

@@ -244,6 +244,14 @@ export class NxSystemServersComponent implements OnInit {
 
     }
 
+    renameServer() {
+        const serverId = this.selectedServer.id.slice(1, -1);
+        const serverName = this.selectedServer.name;
+        return this.dialogs
+            .renameServer(serverId, serverName)
+            .then(name => this.selectedServer.name = name);
+    }
+
     disconnect() {
         // if (this.system.isMine) {
         //     // User is the owner. Deleting system means unbinding it and disconnecting all accounts

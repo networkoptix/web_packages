@@ -19,18 +19,21 @@
             <nx-section>
                 <div class="d-flex justify-content-between">
                     <div class="d-flex">
-                        <button>
+                        <button 
+                            class="btn btn-default mr-2"
+                            (click)="renameServer()"
+                        >
                             <span class="ellipsis" translate>Rename</span>
                         </button>
-                        <button>
+                        <button class="btn btn-default">
                             <span class="ellipsis" translate>Restart</span>
                         </button>
                     </div>
                     <div class="d-flex">
-                        <button>
+                        <button class="btn btn-default mr-2">
                             <span class="ellipsis" translate>Detach from the System</span>
                         </button>
-                        <button>
+                        <button class="btn btn-default">
                             <span class="ellipsis" translate>Reset to Defaults</span>
                         </button>
                     </div>

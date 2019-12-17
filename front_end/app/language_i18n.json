@@ -153,6 +153,8 @@
     "Send": "Send",
     "Send anonymous usage and crash statistics to developers": "Send anonymous usage and crash statistics to developers",
     "Send feedback about this device": "Send feedback about this device",
+    "Server name": "Server name",
+    "Server name is required": "Server name is required",
     "Set New Password": "Set New Password",
     "Settings": "Settings",
     "Show All": "Show All",
@@ -649,7 +651,8 @@
     },
     "servers": {
         "portWarning": "Port numbers less than 1024 are restricted. Server may become unaccesssible.",
-        "servers": "Servers"
+        "servers": "Servers",
+        "successRename": "Server name renamed."
     },
     "servers in the merged System.": "servers in the merged System.",
     "support": "support",
