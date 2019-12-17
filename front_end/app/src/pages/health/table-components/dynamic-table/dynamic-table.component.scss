@@ -243,6 +243,7 @@ nx-dynamic-table {
               align-items     : center;
             }
           }
+
           .long-text {
             width: 170px !important;
           }
@@ -257,6 +258,9 @@ nx-dynamic-table {
           }
           .volume {
             max-width: 74px !important;
+          }
+          .no-max-width {
+            max-width: unset !important;
           }
         }
       }

@@ -375,6 +375,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
             this.healthService.alertsCount[type] = 0;
         });
         this.healthService.alertsValues = [];
+        const unset = this.CONFIG.healthMonitoring.classFormats.unset;
         Object.entries(this.healthService.alarms).forEach(([metric, entities]) => {
             Object.entries(entities).forEach(([entity, groups]) => {
                 Object.entries(groups).forEach(([group, params]) => {
@@ -390,7 +391,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                                 alert._.server = {text: '', id: ''};
                             }
                             alert._.type = {text: this.healthService.manifest[metric].resource || this.healthService.manifest[metric].name};
-                            alert._.message = {text: alarm.text};
+                            alert._.message = {text: alarm.text, formatClass: unset};
                             alert._.alarm = {icon: alarm.level};
 
                             alert.metric = metric;

@@ -132,7 +132,12 @@ export class NxHealthService {
             retValue = roundInt(retValue);
         }
 
-        return {text: retValue, format: header.format || '', value};
+        return {
+            text: retValue,
+            format: header.format || '',
+            formatClass: this.CONFIG.healthMonitoring.classFormats[header.format] || '',
+            value
+        };
     }
 
     itemsSearch(values, filter) {
