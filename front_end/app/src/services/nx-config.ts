@@ -365,6 +365,23 @@ export class NxConfigService {
                     'MPix/s': {multiplier: 1 / 1000 ** 2},
                     'KPix/s': {multiplier: 1 / 1000},
                     'Tr/s': {multiplier: 1},
+                },
+                classFormats: {
+                    'longText': 'long-text',
+                    'shortText': 'short-text',
+                    'text': 'text',
+                    'number': '',
+                    'GB': 'volume',
+                    'KB': 'volume',
+                    'MB': 'volume',
+                    'TB': 'volume',
+                    '%': 'percent',
+                    'Mpix/s': '',
+                    'MB/s': '',
+                    'Mbit/s': '',
+                    'KB/s': '',
+                    'KBit/s': '',
+                    'Tr/s': ''
                 }
             },
             myIntegrationTagId            : 'mine',
