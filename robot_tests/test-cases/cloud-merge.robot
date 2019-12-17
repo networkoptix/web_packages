@@ -159,7 +159,7 @@ Remove containers
 
 Startup
     Open Browser and go to URL    ${url}
-    ${image}    Build Image
+    ${image}    Build Image    ${ENV}
     Set Suite Variable    ${image}    ${image}
 
 Restart
