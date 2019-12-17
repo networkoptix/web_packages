@@ -53,21 +53,17 @@
 		},
 		"groups": {
 			"windows": {
-				"label": "Windows",
-				"supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+				"label": "Windows"
 			},
 			"mac": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"linux": {
 				"label": "Ubuntu Linux",
-				"shortLabel": "Ubuntu",
-				"supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+				"shortLabel": "Ubuntu"
 			},
 			"macos": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"ios": {
 				"label": "iOS",
@@ -161,7 +157,7 @@
 		"disclaimer": "Tento seznam je omezen na zařízení nalezená na {{vmsName}} kde uživatelé povolili automatické hlášení specifikací zařízení na {{companyName}}. Nejsou shromažďovány žádné osobní údaje a každý uživatel zůstává zcela anonymní."
 	},
 	"integration": {
-		"myIntegrationsLabel": "Mine",
+		"myIntegrationsLabel": "Těžit",
 		"previewRibbonText": "Tato stránka je náhled nejnovějších změn a neodpovídá veřejně dostupné verzi.",
 		"backToEditText": "Zpět na editační rozhraní",
 		"Access Control": "Kontrola Přístupu",
@@ -239,7 +235,7 @@
 				"ipvd_feedback_page": "Zpětná vazba pro kameru",
 				"ipvd_feedback_device": "Zpětná vazba pro {{asset}}"
 			},
-			"topic": {
+			"subject": {
 				"contact_sales": "Kontaktovat obchod ohledně {{asset}}",
 				"contact_support": "Kontaktovat podporu ohledně{{asset}}",
 				"integration_feedback": "Zpětná vazba pro integraci {{asset}}",
@@ -289,7 +285,7 @@
 		"passwordMismatch": "Chybné heslo",
 		"cantEditYourself": "Změna vlastních oprávnění není povolena",
 		"cantEditAdmin": "Tento uživatel má oprávnění správce",
-		"cantOpenClient": "%VMS_NAME% application is not detected.",
+		"cantOpenClient": "Aplikace %VMS_NAME% není nalezena.",
 		"lostConnection": "Připojení k {{systemName}} se ztratilo",
 		"thisSystem": "systém",
 		"oldSafariNotSupported": "Verze Safari starší než 10 není podporována",
@@ -346,7 +342,16 @@
 		"permissionsRemoved": "Oprávnění byla odstraněna z adresy {{email}}",
 		"unknownName": "Neznámý název systému (problém s cloudovým spojením)",
 		"shareOffline": "Cannot share system while it is offline",
-		"shareUnauthorized": "You do not have permission to share this system"
+		"shareUnauthorized": "Nemáte oprávnění ke sdílení tohoto systému",
+		"settings": {
+			"sessionLimitDuration": {
+				"hours": "hodiny",
+				"minutes": "minuty"
+			},
+			"warningMessages": {
+				"videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+			}
+		}
 	},
 	"systemStatuses": {
 		"activated": "aktivováno",
@@ -416,13 +421,70 @@
 		}
 	},
 	"privacyPolicy": {
-		"integration": "Odesláním tohoto formuláře souhlasíte s tím, že budete kontaktováni {{INTEGRATION_COMPANY}} a / nebo %COMPANY_NAME%.\nZde najdete {{INTEGRATION_COMPANY}} zásady ochrany osobních údajů <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">zde</a> a %COMPANY_NAME% zásady ochrany osobních údajů <a href=\"%PRIVACY_LINK%\" target=\"blank\">zde</a> které obsahují pokyny, jak svůj souhlas odvolat.",
-		"ipvd": "Odesláním tohoto formuláře souhlasíte, že budete kontaktováni %COMPANY_NAME%.\nZde najdete %COMPANY_NAME% zásady ochrany <a href=\"%PRIVACY_LINK%\" target=\"blank\">zde</a>, které zahrnují instrukce o tom, jak se odvolat svůj souhlas."
+		"integration": "Odesláním tohoto formuláře souhlasíte s tím, že budete kontaktováni {{INTEGRATION_COMPANY}} a / nebo %COMPANY_NAME%.\nZde najdete {{INTEGRATION_COMPANY}} zásady ochrany osobních údajů <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">zde</a> a %COMPANY_NAME% zásady ochrany osobních údajů <a href=\"%PRIVACY_LINK%\" target=\"_blank\">zde</a> které obsahují pokyny, jak svůj souhlas odvolat.",
+		"ipvd": "Odesláním tohoto formuláře souhlasíte, že budete kontaktováni %COMPANY_NAME%.\nZde najdete %COMPANY_NAME% zásady ochrany <a href=\"%PRIVACY_LINK%\" target=\"_blank\">zde</a>, které zahrnují instrukce o tom, jak se odvolat svůj souhlas."
+	},
+	"common": {
+		"cameraLinks": {
+			"highStream": "Hlavní stream",
+			"lowStream": "Vedlejší stream",
+			"transcoding": "Překódování",
+			"unknown": "Neznámý",
+			"copyToClipboard": "kopírovat do schránky",
+			"copyDefaultText": "kopírovat",
+			"copyActiveText": "zkopírováno do schránky"
+		},
+		"systemOffline": "Systém je offline",
+		"systemOfflineMessage": "This system is offline and cannot be accessed right now.",
+		"systemNoAlerts": "No Alerts",
+		"systemNoAlertsMessage": "Your system must be doing well!",
+		"systemServerError": "Interní chyba serveru",
+		"systemServerErrorMessage": "An error occurred, please, try again later. An error occurred, please try again later. If the problem continues, please contact your support team.",
+		"systemNewVersion": "Update your system",
+		"systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
+		"systemHasNoCameras": "ŽÁDNÉ KAMERY",
+		"systemUnreachable": "SYSTÉM JE NEDOSTUPNÝ",
+		"cameraStates": {
+			"offline": "Offline",
+			"error": "Chyba",
+			"errorLoading": "An error occurred while loading this video.",
+			"unauthorized": "Autentifikace je vyžadována",
+			"noData": "Žádná data",
+			"iOSVideoTooLarge": "iOS nepodporuje video větší než fullHD (2MP: 1920 × 1080).",
+			"flashRequired": "Pro přehrání videa si prosím <a href='https://get.adobe.com/flashplayer/' target='_blank'>nainstalujte Adobe Flash</a>.",
+			"flashOrWebmRequired": "Pro přehrávání videa v aplikaci Internet Explorer si prosím <a href='https://get.adobe.com/flashplayer/' target='_blank'>nainstalujte Adobe Flash</a> nebo<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM kodek</a>.",
+			"noArmSupport": "Tento prohlížeč nebo zařízení nepodporuje přehrávání videa ze serverů se systémem ARM.",
+			"noFormat": "Tento prohlížeč nepodporuje přehrávání videa z této kamery.",
+			"ieNoWebm": "Pro aplikaci Internet Explorer si prosím nainstalujte <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>kodeku WebM</a>.",
+			"ieWin10": "Prosím použijte prohlížeč Microsoft Edge nebo Google Chrome.",
+			"ubuntuNX": "Tento prohlížeč nepodporuje video ze serverů se systémem ARM. Použijte místo toho prohlížeč Chromium."
+		},
+		"searchCamPlaceholder": "Hledat",
+		"resolution": {
+			"auto": "Auto",
+			"high": "Vysoká",
+			"low": "Nízký"
+		},
+		"chromeCastWarning": "Chromecast je náročný na systémové zdroje a může způsobit problémy na vašem serveru.",
+		"voiceCommands": {
+			"play": "přehrát",
+			"pause": "pozastavit",
+			"live": "go to live | show me live",
+			"view": "view + [camera name]",
+			"search": "find + [text for searchbar]",
+			"clear search": "smazat hledání",
+			"expand server": "expand server + [server name]",
+			"collapse server": "collapse server + [server name]",
+			"expand all servers": "rozbalit všechny servery",
+			"collapse all servers": "sbalit všechny servery",
+			"stop listening": "zastavení poslech",
+			"help": "help | show commands"
+		}
 	},
 	"systemAdministration": "Správce systému",
 	"users": "Uživatelé",
-	"testedVersionLabel": "Testováno na {{vmsName}} verzi:",
-	"testedVersionsLabel": "Testováno na {{vmsName}} verzích:",
+	"testedVersionLabel": "Tested with {{vmsName}} version:",
+	"testedVersionsLabel": "Tested with {{vmsName}} versions:",
 	"About %CLOUD_NAME%": "O aplikaci %CLOUD_NAME%",
 	"Download %VMS_NAME%": "Stáhnout %VMS_NAME%",
 	"Integrations": "Integrace",
@@ -432,7 +494,7 @@
 	"Terms": "Podmínky",
 	"pleaseSelect": "Please select...",
 	"WHEN_MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{{targetSystemName}}</strong> System, and this system will be deleted.",
-	"FAILED_SYSTEM_DESCR": "This link is broken,<br>System may be disconnected from %CLOUD_NAME%,<br>Access to this System may be revoked, <br>or you may be logged into a different account.",
+	"FAILED_SYSTEM_DESCR": "Tento odkaz je nefunkční,<br>Systém může být odpojen od %CLOUD_NAME%,<br>Přístup k tomuto systému může být zrušen, <br>nebo můžete být přihlášen k jinému účtu.",
 	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "Nemáte žádné systémy připojené k %CLOUD_NAME%",
 	"NO_SYSTEMS_LOGIN": "Přihlaste se k Vašemu systému pomocí %VMS_NAME%",
 	"NO_SYSTEMS_GOTO_ADMINISTRATION": "Přejděte na záložku \"Cloud\" v dialogovém okně \"Správa systému\"",

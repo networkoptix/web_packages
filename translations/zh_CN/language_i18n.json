@@ -21,6 +21,8 @@
     "All Systems": "所有系统",
     "All cloud users will be deleted.": "所有云用户将被删除。",
     "All results": "所有结果",
+    "Allow only secure connections": "仅允许安全连接",
+    "Allow system to optimize camera settings": "Allow system to optimize camera settings",
     "Analytics": "分析",
     "Analytics Event": "分析事件",
     "Analytics Events": "分析事件",
@@ -37,6 +39,7 @@
     "Change Password": "更改密码",
     "Checking...": "检查中...",
     "Choose which properties should be visible to customers:": "请选择客户可享有哪些权限：",
+    "Clear filters": "Clear filters",
     "Close": "关闭",
     "Codec": "编码器",
     "Collapse": "收起",
@@ -64,6 +67,9 @@
     "Email": "邮箱",
     "Email is required": "电子邮件是必填栏位",
     "Embed": "内嵌",
+    "Enable audit trail": "启用使用者行为记录",
+    "Enable auto discovery of cameras and servers": "Enable auto discovery of cameras and servers",
+    "Encrypt video traffic": "加密视频通信量",
     "Enter \"Public User\" credentials:": "请输入“公共用户”凭据：",
     "Enter password for your account to continue": "输入您帐户的密码以继续",
     "Enter password to continue.": "输入您的密码以继续",
@@ -84,12 +90,15 @@
     "I/O": "I/O",
     "In Review": "审核中",
     "In-Client Upgrade:": "客户端升级：",
+    "Includes information about the System, such as camera modules, \n                            firmware versions, number of servers, etc. \n                            Does not include any personal information and is completely anonymous.": "Includes information about the System, such as camera modules, \n                            firmware versions, number of servers, etc. \n                            Does not include any personal information and is completely anonymous.",
+    "Information": "信息",
     "Integrations": "集成",
     "Language": "语言:",
     "Last Name": "姓",
     "Last name": "姓氏",
     "Last name is required": "姓氏是必填项",
     "Latest version": "最新版本",
+    "Limit session duration to": "Limit session duration to",
     "Log In": "登录",
     "Log Out": "退出登录",
     "Log in to %CLOUD_NAME%": "登录到 %CLOUD_NAME%",
@@ -109,6 +118,7 @@
     "Nothing Found": "无搜寻结果",
     "OK": "确定",
     "Ok": "确定",
+    "Only client-server video traffic can be encrypted.": "Only client-server video traffic can be encrypted.",
     "Other packages:": "其他软件包︰",
     "Other releases, patches and beta versions": "其他正式版，补丁和测试版本",
     "Owner": "所有者",
@@ -135,17 +145,21 @@
     "Save": "保存",
     "Search in google": "用谷歌（Google）搜索",
     "Secondary Stream": "副码流",
+    "Security": "安全性",
     "Send": "发送",
+    "Send anonymous usage and crash statistics to developers": "Send anonymous usage and crash statistics to developers",
     "Send feedback about this device": "留下您对于此设备的意见",
     "Set New Password": "设置新密码",
     "Settings": "设置",
     "Show All": "全部显示",
     "Some of your servers don't support cloud System merge because of outdated software version.": "由于软件版本过时, 您的某些服务器不支持云系统合并。",
+    "Subject": "Subject",
     "Support": "技术支持",
     "Support E-mail": "支持电子邮件",
     "Support URL": "支持 URL",
     "Supported Devices": "支持设备",
     "Supported IP Video Devices": "支持的IP视频设备",
+    "System Settings": "系统设置",
     "System name": "系统名称",
     "System name is required": "系统名称是必需的",
     "System will be accessible through local network with local administrator account.": "系统将可通过本地网络的本地管理员帐户。",
@@ -162,7 +176,7 @@
     "This device has reported to support some analytics events, but we don't have exact information about them.": "据传此设备支援某些分析事件，但我们并没有关于它们的确切信息。",
     "To": "发送至",
     "Too many attempts. Try again in a minute.": "尝试次数过多，请稍后重试。",
-    "Topic": "主题",
+    "Tracks and logs all user actions.": "跟踪和记录所有用户操作",
     "Until merge is finished you can log in to this system and watch video, but cannot change any settings.": "在合并完成前，您可以登录到此系统并观看视频，但无法更改任何配置",
     "Update them to the": "更新到",
     "Updated": "更新",
@@ -172,9 +186,9 @@
     "WHEN_MERGE_FINISHES": "合并完成后, 此系统中的所有用户和摄相机都将可用于<strong>{{targetSystemName}}</strong>, 同时此系统将被删除",
     "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.": "建议您安装最新版本的Google Chrome或Mozilla Firefox，或可以使用任何其他最新的网络浏览器。",
     "What's New?": "最新动态",
+    "When enabled, system will discover new cameras and servers. Also, \n                            it will automatically and persistently send discovery requests to \n                            cameras in order to get the camera's status update. \n                            Failover enabled on some servers ignore status check prohibition.": "When enabled, system will discover new cameras and servers. Also, \n                            it will automatically and persistently send discovery requests to \n                            cameras in order to get the camera's status update. \n                            Failover enabled on some servers ignore status check prohibition.",
     "Works with:": "适用于：",
     "Wrong password": "错误的密码。",
-    "You can merge only those cloud Systems, where you have the \"Owner\" permissions.": "您只能合并那些拥有“所有者”权限的云系统。",
     "You can only merge Systems where you are the owner.": "当您的权限为拥有者时，就可以合并系统",
     "You have registered in %CLOUD_NAME%": "您已在 %CLOUD_NAME% 中注册",
     "Your Email": "您的电邮",
@@ -255,7 +269,6 @@
         "setNewPassword": "保存密码",
         "setNewPasswordLabel": "新密码"
     },
-    "andXMore": "...... 还有 {{value}} 个",
     "cameraFilters": {
         "H265": "H.265 摄像机",
         "IO": "I/O 模块",
@@ -269,6 +282,63 @@
         "ptz": "PTZ摄像机"
     },
     "clientProtocol": "%CLIENT_PROTOCOL%",
+    "common": {
+        "cameraLinks": {
+            "copyActiveText": "已复制到剪贴板",
+            "copyDefaultText": "复制",
+            "copyToClipboard": "复制到剪贴板",
+            "highStream": "高流",
+            "lowStream": "低流",
+            "transcoding": "转码",
+            "unknown": "未知的"
+        },
+        "cameraStates": {
+            "error": "错误",
+            "errorLoading": "载入影片时发生错误",
+            "flashOrWebmRequired": "请 <a href=\"https://get.adobe.com/flashplayer/\" target=\"_blank\">安装 Adobe Flash</a> 或 <a href=\"https://tools.google.com/dlpage/webmmf/\" target=\"_blank\">WebM 编解码器</a> 以在 Ie 中播放视频。",
+            "flashRequired": "请 <a href=\"https://get.adobe.com/flashplayer/\" target=\"_blank\">安装 Adobe Flash</a> 播放视频。",
+            "iOSVideoTooLarge": "iOS不支持大于fullHD (2MP：1920x1080) 的视频。",
+            "ieNoWebm": "请为 Ie 安装 <a href=\"https://tools.google.com/dlpage/webmmf/\" target=\"_blank\">WebM 编解码器</a>。",
+            "ieWin10": "请使用Microsoft Edge或Google Chrome浏览器。",
+            "noArmSupport": "此浏览器或设备不支持基于ARM的服务器的视频播放。",
+            "noData": "无数据",
+            "noFormat": "此浏览器不支持本相机的视频播放。",
+            "offline": "离线",
+            "ubuntuNX": "此浏览器不支持从基于 ARM 服务器的视频。请改为使用 Chromium 浏览器。",
+            "unauthorized": "需要身份验证"
+        },
+        "chromeCastWarning": "Chromecast是资源密集型的，可能会导致您的服务器出现问题。",
+        "resolution": {
+            "auto": "自动",
+            "high": "高",
+            "low": "低"
+        },
+        "searchCamPlaceholder": "搜索",
+        "systemHasNoCameras": "无摄像机",
+        "systemNewVersion": "Update your system",
+        "systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
+        "systemNoAlerts": "No Alerts",
+        "systemNoAlertsMessage": "Your system must be doing well!",
+        "systemOffline": "系统处于离线状态",
+        "systemOfflineMessage": "This system is offline and cannot be accessed right now.",
+        "systemServerError": "Internal server error",
+        "systemServerErrorMessage": "An error occurred, please, try again later. An error occurred, please try again later. If the problem continues, please contact your support team.",
+        "systemUnreachable": "系统无法连接",
+        "voiceCommands": {
+            "clear search": "清除搜索",
+            "collapse all servers": "隐藏所有服务器",
+            "collapse server": "collapse server + [server name]",
+            "expand all servers": "展开所有服务器",
+            "expand server": "expand server + [server name]",
+            "help": "help | show commands",
+            "live": "go to live | show me live",
+            "pause": "暂停",
+            "play": "播放",
+            "search": "find + [text for searchbar]",
+            "stop listening": "停止监听",
+            "view": "view + [camera name]"
+        }
+    },
     "devices": "设备",
     "dialogs": {
         "cancelButton": "撤消",
@@ -300,15 +370,15 @@
         "message": {
             "failedToSend": "訊息无法发送。",
             "sent": "訊息已傳送。",
-            "title": {
-                "integration": "与 {{companyName}} 联系",
-                "ipvd_feedback_device": "关于 {{asset}} 反馈",
-                "ipvd_feedback_page": "摄像机页面反馈"
-            },
-            "topic": {
+            "subject": {
                 "contact_sales": "联系{{asset}} 销售人员",
                 "contact_support": "联系{{asset}} 技术支持",
                 "integration_feedback": "集成{{asset}} 反馈",
+                "ipvd_feedback_device": "关于 {{asset}} 反馈",
+                "ipvd_feedback_page": "摄像机页面反馈"
+            },
+            "title": {
+                "integration": "与 {{companyName}} 联系",
                 "ipvd_feedback_device": "关于 {{asset}} 反馈",
                 "ipvd_feedback_page": "摄像机页面反馈"
             }
@@ -361,16 +431,13 @@
             },
             "linux": {
                 "label": "Ubuntu Linux",
-                "shortLabel": "Ubuntu",
-                "supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+                "shortLabel": "Ubuntu"
             },
             "mac": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "macos": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "sdk": {
                 "label": "SDK",
@@ -378,8 +445,7 @@
                 "supported": "C ++跨平台SDK"
             },
             "windows": {
-                "label": "Windows",
-                "supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+                "label": "Windows"
             }
         },
         "mobile": {
@@ -555,8 +621,8 @@
     "phoneNumberWithLabel": "电话： {{number}}",
     "pleaseSelect": "请选择...",
     "privacyPolicy": {
-        "integration": "提交表单即表示您同意与{{INTEGRATION_COMPANY}} 和/或 %COMPANY_NAME%联系。\n您可在<a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">浏览{{INTEGRATION_COMPANY}} 隐私政策</a> 和%COMPANY_NAME% 隐私政策<a href=\"%PRIVACY_LINK%\" target=\" blank\">这里</a> 可了解如何撤销您的同意。",
-        "ipvd": "提交表单即表示同意 %COMPANY_NAME%与您联系。\n您可在<a href=\"%PRIVACY_LINK%\" target=\"blank\">浏览 %COMPANY_NAME% 隐私政策</a> ，其中包含如何撤回同意。"
+        "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a> which include instruction on how to withdraw your consent.",
+        "ipvd": "提交表单即表示同意 %COMPANY_NAME%与您联系。\n您可在<a href=\"%PRIVACY_LINK%\" target=\"_blank\">浏览 %COMPANY_NAME% 隐私政策</a> ，其中包含如何撤回同意。"
     },
     "registration": {
         "agreement": "我同意<a href=\"/content/eula\" target=\"_blank\">合约条款</a>和<a href=\"%PRIVACY_LINK%\" target=\"_blank\">隐私政策</a>"
@@ -601,6 +667,15 @@
         "openClient": "在 %VMS_NAME% 中打开",
         "openClientNoSystem": "打开 %VMS_NAME%",
         "permissionsRemoved": "权限从 {{email}} 被刪除",
+        "settings": {
+            "sessionLimitDuration": {
+                "hours": "小时",
+                "minutes": "分"
+            },
+            "warningMessages": {
+                "videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+            }
+        },
         "shareOffline": "离线时无法共享系统",
         "shareUnauthorized": "You do not have permission to share this system",
         "successDeleted": "从您的帐户成功删除系统 {{systemName}}",
@@ -620,8 +695,9 @@
         "online": "在线",
         "unavailable": "不可用"
     },
-    "testedVersionLabel": "测试 {{vmsName}} 版本：",
-    "testedVersionsLabel": "测试 {{vmsName}} 版本：",
+    "testedVersionLabel": "Tested with {{vmsName}} version:",
+    "testedVersionsLabel": "Tested with {{vmsName}} versions:",
+    "topXByVolume": "Top {{value}} by volume:",
     "users": "用户",
     "you": "您"
 }

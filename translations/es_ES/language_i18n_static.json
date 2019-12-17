@@ -53,21 +53,17 @@
 		},
 		"groups": {
 			"windows": {
-				"label": "Windows",
-				"supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+				"label": "Windows"
 			},
 			"mac": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"linux": {
 				"label": "Ubuntu Linux",
-				"shortLabel": "Ubuntu",
-				"supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+				"shortLabel": "Ubuntu"
 			},
 			"macos": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"ios": {
 				"label": "iOS",
@@ -239,7 +235,7 @@
 				"ipvd_feedback_page": "Comentarios sobre la página de cámaras",
 				"ipvd_feedback_device": "Comentarios sobre {{asset}}"
 			},
-			"topic": {
+			"subject": {
 				"contact_sales": "Contactar a ventas para {{asset}}",
 				"contact_support": "Contactar a soporte para {{asset}}",
 				"integration_feedback": "Comentarios para la integración {{asset}}",
@@ -346,7 +342,16 @@
 		"permissionsRemoved": "Los permisos fueron removidos de {{email}}",
 		"unknownName": "Nombre desconocido para el sistema (causado por la fusión en la nube)",
 		"shareOffline": "No se puede compartir el sistema mientras está desconectado",
-		"shareUnauthorized": "No tienes permiso para compartir este sistema"
+		"shareUnauthorized": "No tienes permiso para compartir este sistema",
+		"settings": {
+			"sessionLimitDuration": {
+				"hours": "horas",
+				"minutes": "minutos"
+			},
+			"warningMessages": {
+				"videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+			}
+		}
 	},
 	"systemStatuses": {
 		"activated": "activado",
@@ -416,13 +421,70 @@
 		}
 	},
 	"privacyPolicy": {
-		"integration": "Al enviar este formulario, usted acepta ser contactado por {{INTEGRATION_COMPANY}} y / o %COMPANY_NAME%.\nEncontrará {{INTEGRATION_COMPANY}} política de privacidad <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">aquí</a> y %COMPANY_NAME% política de privacidad <a href=\"%PRIVACY_LINK%\" target=\"blank\">aquí</a> que incluyen instrucciones sobre cómo retirar su consentimiento.",
-		"ipvd": "Al enviar este formulario, usted acepta ser contactado por %COMPANY_NAME%.\nEncontrará %COMPANY_NAME% política de privacidad <a href=\"%PRIVACY_LINK%\" target=\"blank\">aquí</a> que incluye instrucciones sobre cómo retirar su consentimiento."
+		"integration": "Al enviar este formulario, usted acepta ser contactado por {{INTEGRATION_COMPANY}} y / o %COMPANY_NAME%.\nEncontrará {{INTEGRATION_COMPANY}} política de privacidad <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">aquí</a> y %COMPANY_NAME% política de privacidad <a href=\"%PRIVACY_LINK%\" target=\"_blank\">aquí</a> que incluyen instrucciones sobre cómo retirar su consentimiento.",
+		"ipvd": "Al enviar este formulario, usted acepta ser contactado por %COMPANY_NAME%.\nEncontrará %COMPANY_NAME% política de privacidad <a href=\"%PRIVACY_LINK%\" target=\"_blank\">aquí</a> que incluye instrucciones sobre cómo retirar su consentimiento."
+	},
+	"common": {
+		"cameraLinks": {
+			"highStream": "Corriente de alta",
+			"lowStream": "Corriente de baja",
+			"transcoding": "Transcodificación",
+			"unknown": "Desconocido",
+			"copyToClipboard": "copiar al portapapeles",
+			"copyDefaultText": "copiar",
+			"copyActiveText": "copiado al portapapeles"
+		},
+		"systemOffline": "Sistema está desconectado",
+		"systemOfflineMessage": "This system is offline and cannot be accessed right now.",
+		"systemNoAlerts": "No Alerts",
+		"systemNoAlertsMessage": "Your system must be doing well!",
+		"systemServerError": "Error de servidor interno",
+		"systemServerErrorMessage": "An error occurred, please, try again later. An error occurred, please try again later. If the problem continues, please contact your support team.",
+		"systemNewVersion": "Update your system",
+		"systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
+		"systemHasNoCameras": "NO CÁMARAS",
+		"systemUnreachable": "SISTEMA ILOCALIZABLE",
+		"cameraStates": {
+			"offline": "Desconectado",
+			"error": "Error",
+			"errorLoading": "Ocurrió un error al cargar el video.",
+			"unauthorized": "Autenticación necesaria",
+			"noData": "No hay datos",
+			"iOSVideoTooLarge": "iOS no soporta video más grande que el fullHD (2MP: 1920 x 1080).",
+			"flashRequired": "Por favor, instale <a href='https://get.adobe.com/flashplayer/' target='_blank'>instalar Adobe Flash</a> para reproducir videos.",
+			"flashOrWebmRequired": "<a href='https://get.adobe.com/flashplayer/' target='_blank'>instale Adobe Flash</a> or<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> para reproducir vídeo en Internet Explorer.",
+			"noArmSupport": "Este navegador o dispositivo no admite la reproducción de vídeo desde servidores basados ​​en ARM.",
+			"noFormat": "Este navegador no admite reproducción de video desde esta cámara.",
+			"ieNoWebm": "Por favor, instale <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> para Internet Explorer.",
+			"ieWin10": "Utilice navegadores Microsoft Edge o Google Chrome.",
+			"ubuntuNX": "Este navegador no admite vídeo de servidores basados ​​en ARM. Por favor, utilice el navegador Chromium en su lugar."
+		},
+		"searchCamPlaceholder": "Búsqueda",
+		"resolution": {
+			"auto": "Auto",
+			"high": "Alto",
+			"low": "Bajo"
+		},
+		"chromeCastWarning": "Chromecast consume muchos recursos y puede causar problemas en tu servidor.",
+		"voiceCommands": {
+			"play": "reproducir",
+			"pause": "pausa",
+			"live": "go to live | show me live",
+			"view": "view + [camera name]",
+			"search": "find + [text for searchbar]",
+			"clear search": "borrar búsqueda",
+			"expand server": "expand server + [server name]",
+			"collapse server": "collapse server + [server name]",
+			"expand all servers": "expandir todos los servidores",
+			"collapse all servers": "colapsar todos los servidores",
+			"stop listening": "detener escucha",
+			"help": "help | show commands"
+		}
 	},
 	"systemAdministration": "Administración del sistema",
 	"users": "Usuarios",
-	"testedVersionLabel": "Probado en la versión {{vmsName}}:",
-	"testedVersionsLabel": "Probado en {{vmsName}} versiones:",
+	"testedVersionLabel": "Tested with {{vmsName}} version:",
+	"testedVersionsLabel": "Tested with {{vmsName}} versions:",
 	"About %CLOUD_NAME%": "Sobre %CLOUD_NAME%",
 	"Download %VMS_NAME%": "Descargar %VMS_NAME%",
 	"Integrations": "Integraciones",

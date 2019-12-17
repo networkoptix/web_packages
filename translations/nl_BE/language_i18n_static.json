@@ -53,21 +53,17 @@
 		},
 		"groups": {
 			"windows": {
-				"label": "Windows",
-				"supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+				"label": "Windows"
 			},
 			"mac": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"linux": {
 				"label": "Ubuntu Linux",
-				"shortLabel": "Ubuntu",
-				"supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+				"shortLabel": "Ubuntu"
 			},
 			"macos": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"ios": {
 				"label": "iOS",
@@ -239,7 +235,7 @@
 				"ipvd_feedback_page": "Feedback voor camera's pagina",
 				"ipvd_feedback_device": "Feedback over {{asset}}"
 			},
-			"topic": {
+			"subject": {
 				"contact_sales": "Contacteer verkoop voor {{asset}}",
 				"contact_support": "Contacteer support voor {{asset}}",
 				"integration_feedback": "Feedback voor integratie {{asset}}",
@@ -346,7 +342,16 @@
 		"permissionsRemoved": "Machtigingen zijn verwijderd uit {{email}}",
 		"unknownName": "Onbekende naam voor systeem (veroorzaakt door samenvoeging in de cloud)",
 		"shareOffline": "Kan het systeem niet delen terwijl het offline is",
-		"shareUnauthorized": "You do not have permission to share this system"
+		"shareUnauthorized": "U heeft geen toestemming om dit systeem te delen",
+		"settings": {
+			"sessionLimitDuration": {
+				"hours": "uren",
+				"minutes": "minuten"
+			},
+			"warningMessages": {
+				"videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+			}
+		}
 	},
 	"systemStatuses": {
 		"activated": "geactiveerd",
@@ -416,8 +421,65 @@
 		}
 	},
 	"privacyPolicy": {
-		"integration": "Door dit formulier in te dienen, ga je akkoord met contactering door {{INTEGRATION_COMPANY}} en/of %COMPANY_NAME%.\nJe vindt {{INTEGRATION_COMPANY}} privacybeleid <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">hier</a> en %COMPANY_NAME% privacybeleid <a href=\"%PRIVACY_LINK%\" target=\"blank\">hier</a> welke instructies bevat over hoe je toestemming kan intrekken.",
-		"ipvd": "Door dit formulier in te dienen, ga je akkoord met contactering door %COMPANY_NAME%.\nJe vindt %COMPANY_NAME% privacy beleid <a href=\"%PRIVACY_LINK%\" target=\"blank\">hier</a> welke instructies bevat over hoe je toestemming moet intrekken."
+		"integration": "Door dit formulier in te dienen, ga je akkoord met contactering door {{INTEGRATION_COMPANY}} en/of %COMPANY_NAME%.\nJe vindt {{INTEGRATION_COMPANY}} privacybeleid <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">hier</a> en %COMPANY_NAME% privacybeleid <a href=\"%PRIVACY_LINK%\" target=\"_blank\">hier</a> welke instructies bevat over hoe je toestemming kan intrekken.",
+		"ipvd": "Door dit formulier in te dienen, ga je akkoord met contactering door %COMPANY_NAME%.\nJe vindt %COMPANY_NAME% privacy beleid <a href=\"%PRIVACY_LINK%\" target=\"_blank\">hier</a> welke instructies bevat over hoe je toestemming moet intrekken."
+	},
+	"common": {
+		"cameraLinks": {
+			"highStream": "Hoge stroom",
+			"lowStream": "Lage stroom",
+			"transcoding": "Transcoding",
+			"unknown": "Onbekend",
+			"copyToClipboard": "kopiëren naar klembord",
+			"copyDefaultText": "kopiëren",
+			"copyActiveText": "gekopieerd naar het klembord"
+		},
+		"systemOffline": "Systeem Offline",
+		"systemOfflineMessage": "This system is offline and cannot be accessed right now.",
+		"systemNoAlerts": "No Alerts",
+		"systemNoAlertsMessage": "Your system must be doing well!",
+		"systemServerError": "Interne Server Fout",
+		"systemServerErrorMessage": "An error occurred, please, try again later. An error occurred, please try again later. If the problem continues, please contact your support team.",
+		"systemNewVersion": "Update your system",
+		"systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
+		"systemHasNoCameras": "GEEN CAMERA'S",
+		"systemUnreachable": "SYSTEEM NIET BEREIKBAAR",
+		"cameraStates": {
+			"offline": "Offline",
+			"error": "Fout",
+			"errorLoading": "Er is een fout opgetreden bij het laden van deze video.",
+			"unauthorized": "Authentication required",
+			"noData": "Geen data",
+			"iOSVideoTooLarge": "iOS ondersteunt geen video die groter is dan FullHD (2MP: 1920x1080).",
+			"flashRequired": "Gelieve <a href='https://get.adobe.com/flashplayer/' target='_blank'> Adobe Flash</a> te installeren voor het afspelen van video's.",
+			"flashOrWebmRequired": "Gelieve <a href='https://get.adobe.com/flashplayer/' target='_blank'> Adobe Flash</a> of <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> te installeren voor het afspelen van video's in Internet Explorer.",
+			"noArmSupport": "Deze browser of dit apparaat ondersteunt geen videoweergave van ARM-gebaseerde servers.",
+			"noFormat": "Deze browser ondersteunt het afspelen van videobeelden van deze camera niet.",
+			"ieNoWebm": "Installeer alstublieft <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> voor Internet Explorer.",
+			"ieWin10": "Gebruik alsjeblieft de browsers Microsoft Edge of Google Chrome.",
+			"ubuntuNX": "Deze browser ondersteunt geen video van ARM-gebaseerde servers. Gebruik alsjeblieft de Chromium-browser."
+		},
+		"searchCamPlaceholder": "Zoek",
+		"resolution": {
+			"auto": "Automatisch",
+			"high": "Hoog",
+			"low": "Laag"
+		},
+		"chromeCastWarning": "Chromecast vraagt veel systeem resources en kan problemen veroorzaken op uw server.",
+		"voiceCommands": {
+			"play": "afspelen",
+			"pause": "pauze",
+			"live": "ga naar Live | live weergeven",
+			"view": "bekijk + [camera naam]",
+			"search": "vind + [tekst voor zoekbalk]",
+			"clear search": "zoekopdracht wissen",
+			"expand server": "vouw server + [servernaam] uit",
+			"collapse server": "vouw server + [servernaam] samen",
+			"expand all servers": "vouw alle servers uit",
+			"collapse all servers": "vouw alle servers samen",
+			"stop listening": "stop met luisteren",
+			"help": "help | toon commando's"
+		}
 	},
 	"systemAdministration": "Systeem Administratie",
 	"users": "Gebruikers",

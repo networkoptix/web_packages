@@ -53,21 +53,17 @@
 		},
 		"groups": {
 			"windows": {
-				"label": "Windows",
-				"supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+				"label": "Windows"
 			},
 			"mac": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"linux": {
 				"label": "Ubuntu Linux",
-				"shortLabel": "Ubuntu",
-				"supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+				"shortLabel": "Ubuntu"
 			},
 			"macos": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"ios": {
 				"label": "iOS",
@@ -239,7 +235,7 @@
 				"ipvd_feedback_page": "Tilbakemelding for kameraer-siden",
 				"ipvd_feedback_device": "Tilbakemelding for {{asset}}"
 			},
-			"topic": {
+			"subject": {
 				"contact_sales": "Kontakt salg for {{asset}}",
 				"contact_support": "Kontakt brukerstøtte for {{asset}}",
 				"integration_feedback": "Tilbakemelding for integrasjon {{asset}}",
@@ -346,7 +342,16 @@
 		"permissionsRemoved": "Tillatelser ble fjernet fra {{email}}",
 		"unknownName": "Ukjent navn for system (forårsaket av cloud-sammenslåing)",
 		"shareOffline": "Cannot share system while it is offline",
-		"shareUnauthorized": "You do not have permission to share this system"
+		"shareUnauthorized": "You do not have permission to share this system",
+		"settings": {
+			"sessionLimitDuration": {
+				"hours": "timer",
+				"minutes": "minutter"
+			},
+			"warningMessages": {
+				"videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+			}
+		}
 	},
 	"systemStatuses": {
 		"activated": "aktivert",
@@ -416,13 +421,70 @@
 		}
 	},
 	"privacyPolicy": {
-		"integration": "Ved å sende inn dette skjemaet samtykker du til å bli kontaktet av {{INTEGRATION_COMPANY}} og / eller %COMPANY_NAME%.\nDu vil finne {{INTEGRATION_COMPANY}} personvernregler <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">her</a> og %COMPANY_NAME% personvernregler <a href=\"%PRIVACY_LINK%\" target=\"blank\">her</a> som inkluderer instruksjoner om hvordan du kan trekke tilbake ditt samtykke.",
-		"ipvd": "Ved å sende inn dette skjemaet samtykker du i å bli kontaktet av %COMPANY_NAME%.\nDu vil finne %COMPANY_NAME% personvernregler <a href=\"%PRIVACY_LINK%\" target=\"blank\">her</a> som inkluderer instruksjoner om hvordan du kan trekke tilbake ditt samtykke."
+		"integration": "Ved å sende inn dette skjemaet samtykker du til å bli kontaktet av {{INTEGRATION_COMPANY}} og / eller %COMPANY_NAME%.\nDu vil finne {{INTEGRATION_COMPANY}} personvernregler <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">her</a> og %COMPANY_NAME% personvernregler <a href=\"%PRIVACY_LINK%\" target=\"_blank\">her</a> som inkluderer instruksjoner om hvordan du kan trekke tilbake ditt samtykke.",
+		"ipvd": "Ved å sende inn dette skjemaet samtykker du i å bli kontaktet av %COMPANY_NAME%.\nDu vil finne %COMPANY_NAME% personvernregler <a href=\"%PRIVACY_LINK%\" target=\"_blank\">her</a> som inkluderer instruksjoner om hvordan du kan trekke tilbake ditt samtykke."
+	},
+	"common": {
+		"cameraLinks": {
+			"highStream": "Høy kvalitet",
+			"lowStream": "Lav kvalitet",
+			"transcoding": "Transkoding",
+			"unknown": "Ukjent",
+			"copyToClipboard": "kopiere til utklippstavle",
+			"copyDefaultText": "kopiere",
+			"copyActiveText": "kopiert til utklippstavlen"
+		},
+		"systemOffline": "System Offline",
+		"systemOfflineMessage": "This system is offline and cannot be accessed right now.",
+		"systemNoAlerts": "No Alerts",
+		"systemNoAlertsMessage": "Your system must be doing well!",
+		"systemServerError": "Intern server feil",
+		"systemServerErrorMessage": "An error occurred, please, try again later. An error occurred, please try again later. If the problem continues, please contact your support team.",
+		"systemNewVersion": "Update your system",
+		"systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
+		"systemHasNoCameras": "INGEN KAMERAER",
+		"systemUnreachable": "SYSTEMET ER UTILGJENGELIG",
+		"cameraStates": {
+			"offline": "Frakoblet",
+			"error": "Feil",
+			"errorLoading": "En feil oppstod under lasting av videoen.",
+			"unauthorized": "Krever innlogging",
+			"noData": "Ingen video/opptak",
+			"iOSVideoTooLarge": "iOS støtter ikke video som er større enn fullHD (2MP: 1920x1080).",
+			"flashRequired": "Vennligst <a href='https://get.adobe.com/flashplayer/' target='_blank'>installer Adobe Flash</a> for å spille av videoer.",
+			"flashOrWebmRequired": "Vennligst <a href='https://get.adobe.com/flashplayer/' target='_blank'>installer Adobe Flash</a> eller<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> for å spille av video i Internet Explorer.",
+			"noArmSupport": "Denne nettleseren eller enheten støtter ikke videoavspilling fra ARM-baserte servere.",
+			"noFormat": "Denne nettleseren støtter ikke videoavspilling fra dette kameraet.",
+			"ieNoWebm": "Vennligst installer <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> for Internet Explorer.",
+			"ieWin10": "Vennligst bruk Microsoft Edge- eller Google Chrome-nettlesere.",
+			"ubuntuNX": "Denne nettleseren støtter ikke video fra ARM-baserte servere. Vennligst bruk Chrome-nettleseren i stedet."
+		},
+		"searchCamPlaceholder": "Søk",
+		"resolution": {
+			"auto": "Auto",
+			"high": "Høy",
+			"low": "Lav"
+		},
+		"chromeCastWarning": "Chromecast er ressursintensiv og kan forårsake problemer på serveren.",
+		"voiceCommands": {
+			"play": "spill av",
+			"pause": "pause",
+			"live": "go to live | show me live",
+			"view": "view + [camera name]",
+			"search": "find + [text for searchbar]",
+			"clear search": "nullstill søk",
+			"expand server": "expand server + [server name]",
+			"collapse server": "collapse server + [server name]",
+			"expand all servers": "utvide alle servere",
+			"collapse all servers": "kollapse alle servere",
+			"stop listening": "slutt å lytte",
+			"help": "help | show commands"
+		}
 	},
 	"systemAdministration": "Systemadministrasjon",
 	"users": "Brukere",
-	"testedVersionLabel": "Testet på {{vmsName}} versjon:",
-	"testedVersionsLabel": "Testet på {{vmsName}} versjoner:",
+	"testedVersionLabel": "Tested with {{vmsName}} version:",
+	"testedVersionsLabel": "Tested with {{vmsName}} versions:",
 	"About %CLOUD_NAME%": "Om %CLOUD_NAME%",
 	"Download %VMS_NAME%": "Last ned %VMS_NAME%",
 	"Integrations": "Integrasjoner",

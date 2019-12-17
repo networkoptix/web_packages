@@ -53,21 +53,17 @@
 		},
 		"groups": {
 			"windows": {
-				"label": "Windows",
-				"supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+				"label": "Windows"
 			},
 			"mac": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"linux": {
 				"label": "Ubuntu Linux",
-				"shortLabel": "Ubuntu",
-				"supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+				"shortLabel": "Ubuntu"
 			},
 			"macos": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"ios": {
 				"label": "iOS",
@@ -239,7 +235,7 @@
 				"ipvd_feedback_page": "Palaute kameran sivulle",
 				"ipvd_feedback_device": "Palaute{{asset}}"
 			},
-			"topic": {
+			"subject": {
 				"contact_sales": "Ota yhteyttä {{asset}} myyntiin",
 				"contact_support": "Pyydä tukea {{asset}}",
 				"integration_feedback": "Palaute integraatiosta {{asset}}",
@@ -346,7 +342,16 @@
 		"permissionsRemoved": "Käyttöoikeudet poistettiin {{email}}",
 		"unknownName": "Järjestelmän tuntematon nimi (pilviliitoksen aiheuttama)",
 		"shareOffline": "Cannot share system while it is offline",
-		"shareUnauthorized": "You do not have permission to share this system"
+		"shareUnauthorized": "You do not have permission to share this system",
+		"settings": {
+			"sessionLimitDuration": {
+				"hours": "tuntia",
+				"minutes": "minuuttia"
+			},
+			"warningMessages": {
+				"videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+			}
+		}
 	},
 	"systemStatuses": {
 		"activated": "aktivoitu",
@@ -416,13 +421,70 @@
 		}
 	},
 	"privacyPolicy": {
-		"integration": "Lähettämällä tämän lomakkeen hyväksyt, että sinuun otetaan yhteyttä {{INTEGRATION_COMPANY}} ja / tai %COMPANY_NAME%.\nLöydät {{INTEGRATION_COMPANY}} tietosuojakäytäntöä <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">täältä</a> ja %COMPANY_NAME% tietosuojakäytäntöä <a href=\"%PRIVACY_LINK%\" target=\"blank\">täältä</a> jotka sisältävät ohjeet suostumuksen peruuttamiselle.",
-		"ipvd": "Lähettämällä tämän lomakkeen hyväksyt %COMPANY_NAME%.\nLöydät %COMPANY_NAME% tietosuojakäytäntö <a href=\"%PRIVACY_LINK%\" target=\"blank\">täällä</a>, joka sisältää ohjeita siitä, miten peruuttaa suostumuksesi."
+		"integration": "Lähettämällä tämän lomakkeen hyväksyt, että sinuun otetaan yhteyttä {{INTEGRATION_COMPANY}} ja / tai %COMPANY_NAME%.\nLöydät {{INTEGRATION_COMPANY}} tietosuojakäytäntöä <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">täältä</a> ja %COMPANY_NAME% tietosuojakäytäntöä <a href=\"%PRIVACY_LINK%\" target=\"_blank\">täältä</a> jotka sisältävät ohjeet suostumuksen peruuttamiselle.",
+		"ipvd": "Lähettämällä tämän lomakkeen hyväksyt %COMPANY_NAME%.\nLöydät %COMPANY_NAME% tietosuojakäytäntö <a href=\"%PRIVACY_LINK%\" target=\"_blank\">täällä</a>, joka sisältää ohjeita siitä, miten peruuttaa suostumuksesi."
+	},
+	"common": {
+		"cameraLinks": {
+			"highStream": "High stream",
+			"lowStream": "Low stream",
+			"transcoding": "Transkoodaus",
+			"unknown": "Tuntematon",
+			"copyToClipboard": "kopioi leikepöydälle",
+			"copyDefaultText": "kopioi",
+			"copyActiveText": "kopioitu leikepöydälle"
+		},
+		"systemOffline": "Järjestelmään ei saada yhteyttä",
+		"systemOfflineMessage": "This system is offline and cannot be accessed right now.",
+		"systemNoAlerts": "No Alerts",
+		"systemNoAlertsMessage": "Your system must be doing well!",
+		"systemServerError": "Sisäinen palvelinvirhe",
+		"systemServerErrorMessage": "An error occurred, please, try again later. An error occurred, please try again later. If the problem continues, please contact your support team.",
+		"systemNewVersion": "Update your system",
+		"systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
+		"systemHasNoCameras": "Ei kameroita",
+		"systemUnreachable": "JÄRJESTELMÄÄN EI SAADA YHTEYTTÄ",
+		"cameraStates": {
+			"offline": "Offline-tilassa",
+			"error": "Virhe",
+			"errorLoading": "An error occurred while loading this video.",
+			"unauthorized": "Tunnistus vaaditaan",
+			"noData": "Ei dataa",
+			"iOSVideoTooLarge": "iOS ei tue videota, joka on suurempi kuin fullHD (2MP: 1920x1080).",
+			"flashRequired": "Siirry<a href='https://get.adobe.com/flashplayer/' target='_blank'>Asenna Adobe Flash</a> videoiden toistamiseen.",
+			"flashOrWebmRequired": "Ota <a href='https://get.adobe.com/flashplayer/' target='_blank'>Asenna Adobe Flash</a> tai<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM koodekin</a> videon toistamiseen Internet Explorer.",
+			"noArmSupport": "Tämä selain tai laite ei tue videotoistoa ARM-pohjaisista palvelimista.",
+			"noFormat": "Tämä selain ei tue videon toistoa tästä kamerasta.",
+			"ieNoWebm": "Asenna <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM-koodekki</a> Internet Exploreriin.",
+			"ieWin10": "Käytä Microsoft Edgen tai Google Chromen selaimia.",
+			"ubuntuNX": "Tämä selain ei tue ARM-pohjaisia palvelimia. Käytä sen sijaan Chromium-selainta."
+		},
+		"searchCamPlaceholder": "Etsi",
+		"resolution": {
+			"auto": "Automaattinen",
+			"high": "Korkea",
+			"low": "Matala"
+		},
+		"chromeCastWarning": "Chromecast on resursseja kuormittava ja saattaa aiheuttaa ongelmia palvelimellasi.",
+		"voiceCommands": {
+			"play": "toista",
+			"pause": "tauko",
+			"live": "go to live | show me live",
+			"view": "view + [camera name]",
+			"search": "find + [text for searchbar]",
+			"clear search": "tyhjennä haku",
+			"expand server": "expand server + [server name]",
+			"collapse server": "collapse server + [server name]",
+			"expand all servers": "laajenna kaikki palvelimet",
+			"collapse all servers": "kokoa kaikki palvelimet",
+			"stop listening": "lopeta kuuntelu",
+			"help": "help | show commands"
+		}
 	},
 	"systemAdministration": "Järjestelmän hallinta",
 	"users": "Käyttäjät",
-	"testedVersionLabel": "Testattu {{vmsName}} versiolla:",
-	"testedVersionsLabel": "Testattu {{vmsName}} versiolla:",
+	"testedVersionLabel": "Tested with {{vmsName}} version:",
+	"testedVersionsLabel": "Tested with {{vmsName}} versions:",
 	"About %CLOUD_NAME%": "Tietoja %CLOUD_NAME%",
 	"Download %VMS_NAME%": "Lataa %VMS_NAME%",
 	"Integrations": "Integraatiot",

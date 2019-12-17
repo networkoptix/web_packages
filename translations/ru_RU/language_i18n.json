@@ -21,6 +21,8 @@
     "All Systems": "Все системы",
     "All cloud users will be deleted.": "Все облачные пользователи будут удалены.",
     "All results": "Все результаты",
+    "Allow only secure connections": "Разрешать только безопасные соединения",
+    "Allow system to optimize camera settings": "Разрешить системе оптимизировать настройки камер",
     "Analytics": "Аналитика",
     "Analytics Event": "Событие аналитики",
     "Analytics Events": "События аналитики",
@@ -37,6 +39,7 @@
     "Change Password": "Изменить пароль",
     "Checking...": "Проверка...",
     "Choose which properties should be visible to customers:": "Выберите, какие свойства должны быть видны клиентам:",
+    "Clear filters": "Clear filters",
     "Close": "Закрыть",
     "Codec": "Кодек",
     "Collapse": "Свернуть",
@@ -64,11 +67,14 @@
     "Email": "Email",
     "Email is required": "Email обязателен для заполнения",
     "Embed": "Встроить",
+    "Enable audit trail": "Включить аудит",
+    "Enable auto discovery of cameras and servers": "Enable auto discovery of cameras and servers",
+    "Encrypt video traffic": "Шифровать видео трафик",
     "Enter \"Public User\" credentials:": "Введите учетные данные для роли «Публичный пользователь»:",
     "Enter password for your account to continue": "Введите пароль для своей учетной записи, чтобы продолжить",
     "Enter password to continue.": "Введите пароль для продолжения.",
     "Export all to CSV": "Экспортировать все в CSV",
-    "FAILED_SYSTEM_DESCR": "Эта ссылка не работает,<br>Система могла быть отключена от %CLOUD_NAME%,<br>доступ к этой системе мог быть отозван<br>или вы вошли под другой учетной записью.",
+    "FAILED_SYSTEM_DESCR": "Эта ссылка не работает,<br>Система могла быть отключена от %CLOUD_NAME%,<br>доступ к этой системе мог быть отозван, <br>или вы вошли под другой учетной записью.",
     "FPS(max)": "FPS(макс)",
     "Failed to access System": "Не удалось получить доступ к системе",
     "Finishing systems merge": "Объединение систем заканчивается",
@@ -84,12 +90,15 @@
     "I/O": "I/O",
     "In Review": "На рассмотрении",
     "In-Client Upgrade:": "Обновления из клиента:",
+    "Includes information about the System, such as camera modules, \n                            firmware versions, number of servers, etc. \n                            Does not include any personal information and is completely anonymous.": "Includes information about the System, such as camera modules, \n                            firmware versions, number of servers, etc. \n                            Does not include any personal information and is completely anonymous.",
+    "Information": "Информация",
     "Integrations": "Интеграции",
     "Language": "Язык",
     "Last Name": "Фамилия",
     "Last name": "Фамилия",
     "Last name is required": "Фамилия обязательна для заполнения",
     "Latest version": "Последняя версия",
+    "Limit session duration to": "Limit session duration to",
     "Log In": "Войти",
     "Log Out": "Выход",
     "Log in to %CLOUD_NAME%": "Войти в %CLOUD_NAME%",
@@ -109,6 +118,7 @@
     "Nothing Found": "Ничего не найдено",
     "OK": "OK",
     "Ok": "Ok",
+    "Only client-server video traffic can be encrypted.": "Only client-server video traffic can be encrypted.",
     "Other packages:": "Другие пакеты:",
     "Other releases, patches and beta versions": "Другие релизы, патчи и бета-версии",
     "Owner": "Владелец",
@@ -135,17 +145,21 @@
     "Save": "Сохранить",
     "Search in google": "Поиск в Google",
     "Secondary Stream": "Вторичный поток",
+    "Security": "Безопасность",
     "Send": "Отправить",
+    "Send anonymous usage and crash statistics to developers": "Send anonymous usage and crash statistics to developers",
     "Send feedback about this device": "Отправить отзыв об этом устройстве",
     "Set New Password": "Задать новый пароль",
     "Settings": "Настройки",
     "Show All": "Показать всё",
     "Some of your servers don't support cloud System merge because of outdated software version.": "Некоторые из ваших серверов не поддерживают слияние облачных систем из-за устаревшей версии программного обеспечения.",
+    "Subject": "Subject",
     "Support": "Техническая поддержка",
     "Support E-mail": "Электронная почта поддержки",
     "Support URL": "Страница поддержки",
     "Supported Devices": "Поддерживаемые устройства",
     "Supported IP Video Devices": "Поддерживаемые IP-видеоустройства",
+    "System Settings": "Системные настройки",
     "System name": "Имя системы",
     "System name is required": "Требуется имя системы",
     "System will be accessible through local network with local administrator account.": "Система будет доступна через локальную сеть с учетной записью локального администратора.",
@@ -162,7 +176,7 @@
     "This device has reported to support some analytics events, but we don't have exact information about them.": "Это устройство сообщило о поддержке некоторых событий аналитики, но у нас нет точной информации о них.",
     "To": "Куда",
     "Too many attempts. Try again in a minute.": "Слишком много попыток. Повторите позже.",
-    "Topic": "Тема",
+    "Tracks and logs all user actions.": "Отслеживает и регистрирует все действия пользователя.",
     "Until merge is finished you can log in to this system and watch video, but cannot change any settings.": "До окончания объединения вы можете войти в эту систему и посмотреть видео, но не можете изменить какие-либо настройки.",
     "Update them to the": "Обновите их до",
     "Updated": "Обновлено",
@@ -172,9 +186,9 @@
     "WHEN_MERGE_FINISHES": "После завершения объединения все пользователи и камеры из этой системы станут доступны в <strong>{{targetSystemName}}</strong>, а эта система будет удалена.",
     "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.": "Мы рекомендуем устанавливать последние версии Google Chrome или Mozilla Firefox, но вы можете использовать любой другой современный веб-браузер.",
     "What's New?": "﻿Что нового?",
+    "When enabled, system will discover new cameras and servers. Also, \n                            it will automatically and persistently send discovery requests to \n                            cameras in order to get the camera's status update. \n                            Failover enabled on some servers ignore status check prohibition.": "When enabled, system will discover new cameras and servers. Also, \n                            it will automatically and persistently send discovery requests to \n                            cameras in order to get the camera's status update. \n                            Failover enabled on some servers ignore status check prohibition.",
     "Works with:": "Работает с:",
     "Wrong password": "Неправильный пароль",
-    "You can merge only those cloud Systems, where you have the \"Owner\" permissions.": "Вы можете объединить только те облачные системы, где у вас есть полномочия «Владелец».",
     "You can only merge Systems where you are the owner.": "Вы можете объединять только те облачные системы, где вы являетесь владельцем.",
     "You have registered in %CLOUD_NAME%": "Вы зарегистрировались в %CLOUD_NAME%",
     "Your Email": "Ваш Email",
@@ -255,7 +269,6 @@
         "setNewPassword": "Сохранить пароль",
         "setNewPasswordLabel": "Новый пароль"
     },
-    "andXMore": "... и еще {{value}}",
     "cameraFilters": {
         "H265": "Камеры H.265",
         "IO": "Модули ввода/вывода",
@@ -269,6 +282,63 @@
         "ptz": "Камеры PTZ"
     },
     "clientProtocol": "%CLIENT_PROTOCOL%:",
+    "common": {
+        "cameraLinks": {
+            "copyActiveText": "скопировано в буфер обмена",
+            "copyDefaultText": "копировать",
+            "copyToClipboard": "скопировать в буфер обмена",
+            "highStream": "Выс. кач-во",
+            "lowStream": "Низ. кач-во",
+            "transcoding": "Перекодирование",
+            "unknown": "Неизвестный"
+        },
+        "cameraStates": {
+            "error": "Ошибка",
+            "errorLoading": "При загрузке этого видео произошла ошибка.",
+            "flashOrWebmRequired": "Видео не может быть воспроизведено. Возможно, требуется <a href='https://get.adobe.com/flashplayer/' target='_blank'>установить Adobe Flash</a> или <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>кодек WebM</a> для воспроизведения видео с серверов в Internet Explorer.",
+            "flashRequired": "Пожалуйста, <a href='https://get.adobe.com/flashplayer/' target='_blank'>установите Adobe Flash</a> для воспроизведения видео.",
+            "iOSVideoTooLarge": "iOS не поддерживает видео с разрешением больше чем fullHD (2MP: 1920x1080).",
+            "ieNoWebm": "Видео не может быть воспроизведено. Возможно, требуется <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>кодек WebM</a> для Internet Explorer.",
+            "ieWin10": "Пожалуйста, используйте браузеры Microsoft Edge или Google Chrome.",
+            "noArmSupport": "Этот браузер или устройство не поддерживает воспроизведение видео с серверов на базе ARM.",
+            "noData": "Нет данных",
+            "noFormat": "Этот браузер не поддерживает воспроизведение видео с этой камеры.",
+            "offline": "Не в сети",
+            "ubuntuNX": "Этот обозреватель не поддерживает воспроизведение видео с серверов на базе ARM. Требуется обозреватель Chromium.",
+            "unauthorized": "Требуется аутентификация"
+        },
+        "chromeCastWarning": "Chromecast является ресурсоемким и может вызывать проблемы на вашем сервере.",
+        "resolution": {
+            "auto": "Авто",
+            "high": "Выс",
+            "low": "Низ"
+        },
+        "searchCamPlaceholder": "Поиск",
+        "systemHasNoCameras": "НЕТ КАМЕР",
+        "systemNewVersion": "Update your system",
+        "systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
+        "systemNoAlerts": "No Alerts",
+        "systemNoAlertsMessage": "Your system must be doing well!",
+        "systemOffline": "Система не в сети",
+        "systemOfflineMessage": "This system is offline and cannot be accessed right now.",
+        "systemServerError": "Внутренняя ошибка сервера",
+        "systemServerErrorMessage": "An error occurred, please, try again later. An error occurred, please try again later. If the problem continues, please contact your support team.",
+        "systemUnreachable": "СИСТЕМА НЕДОСТУПНА",
+        "voiceCommands": {
+            "clear search": "очистить поиск",
+            "collapse all servers": "свернуть все серверы",
+            "collapse server": "collapse server + [server name]",
+            "expand all servers": "развернуть все серверы",
+            "expand server": "expand server + [server name]",
+            "help": "help | show commands",
+            "live": "go to live | show me live",
+            "pause": "пауза",
+            "play": "воспроизвести",
+            "search": "find + [text for searchbar]",
+            "stop listening": "прекратить прослушивание",
+            "view": "view + [camera name]"
+        }
+    },
     "devices": "устройства",
     "dialogs": {
         "cancelButton": "Отменить",
@@ -300,15 +370,15 @@
         "message": {
             "failedToSend": "Не удалось отправить сообщение.",
             "sent": "Сообщение отправлено.",
-            "title": {
-                "integration": "Связаться с {{companyName}}",
-                "ipvd_feedback_device": "Отзыв о {{asset}}",
-                "ipvd_feedback_page": "Отзыв о странице камер"
-            },
-            "topic": {
+            "subject": {
                 "contact_sales": "Связаться с отделом продаж по поводу {{asset}}",
                 "contact_support": "Обратитесь в службу поддержки по поводу {{asset}}",
                 "integration_feedback": "Отзыв об интеграции {{asset}}",
+                "ipvd_feedback_device": "Отзыв о {{asset}}",
+                "ipvd_feedback_page": "Отзыв о странице камер"
+            },
+            "title": {
+                "integration": "Связаться с {{companyName}}",
                 "ipvd_feedback_device": "Отзыв о {{asset}}",
                 "ipvd_feedback_page": "Отзыв о странице камер"
             }
@@ -361,16 +431,13 @@
             },
             "linux": {
                 "label": "Ubuntu Linux",
-                "shortLabel": "Ubuntu",
-                "supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+                "shortLabel": "Ubuntu"
             },
             "mac": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "macos": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "sdk": {
                 "label": "SDK",
@@ -378,8 +445,7 @@
                 "supported": "Кроссплатформенный SDK C++"
             },
             "windows": {
-                "label": "Windows",
-                "supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+                "label": "Windows"
             }
         },
         "mobile": {
@@ -555,8 +621,8 @@
     "phoneNumberWithLabel": "Тел: {{number}}",
     "pleaseSelect": "Пожалуйста, выберите...",
     "privacyPolicy": {
-        "integration": "Отправляя эту форму, вы соглашаетесь на получение информации от {{INTEGRATION_COMPANY}} и/или %COMPANY_NAME%.\nПолитика конфиденциальности {{INTEGRATION_COMPANY}} с инструкциями о том, как отозвать ваше согласие, доступна <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">здесь</a>, а %COMPANY_NAME% - <a href=\"%PRIVACY_LINK%\" target=\"blank\">здесь</a>.",
-        "ipvd": "Отправляя эту форму, вы соглашаетесь на получение информации от %COMPANY_NAME%.\nПолитика конфиденциальности %COMPANY_NAME% с инструкциями о том, как отозвать ваше согласие, доступна <a href=\"%PRIVACY_LINK%\" target=\"blank\">здесь</a>."
+        "integration": "Отправляя эту форму, вы соглашаетесь на получение информации от {{INTEGRATION_COMPANY}} и/или %COMPANY_NAME%.\nПолитика конфиденциальности {{INTEGRATION_COMPANY}} с инструкциями о том, как отозвать ваше согласие, доступна <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">здесь</a>, а %COMPANY_NAME% - <a href=\"%PRIVACY_LINK%\" target=\"_blank\">здесь</a>.",
+        "ipvd": "Отправляя эту форму, вы соглашаетесь на получение информации от %COMPANY_NAME%.\nПолитика конфиденциальности %COMPANY_NAME% с инструкциями о том, как отозвать ваше согласие, доступна <a href=\"%PRIVACY_LINK%\" target=\"_blank\">здесь</a>."
     },
     "registration": {
         "agreement": "Я согласен с <a href=\"/content/eula\" target=\"_blank\">условиями</a> и <a href=\"%PRIVACY_LINK%\" target=\"_blank\">правилами конфиденциальности</a>"
@@ -601,8 +667,17 @@
         "openClient": "Открыть в %VMS_NAME%",
         "openClientNoSystem": "Открыть %VMS_NAME%",
         "permissionsRemoved": "{{email}} был лишен полномочий",
+        "settings": {
+            "sessionLimitDuration": {
+                "hours": "часа",
+                "minutes": "минуты"
+            },
+            "warningMessages": {
+                "videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+            }
+        },
         "shareOffline": "Невозможно поделиться системой, пока она не в сети",
-        "shareUnauthorized": "You do not have permission to share this system",
+        "shareUnauthorized": "У вас нет разрешения на объединение этой системы",
         "successDeleted": "Система {{systemName}} успешно удалена из вашей учетной записи",
         "successDisconnected": "Система успешно отключена от %CLOUD_NAME%",
         "successRename": "Имя системы сохранено",
@@ -620,8 +695,9 @@
         "online": "в сети",
         "unavailable": "недоступен"
     },
-    "testedVersionLabel": "Проверено на версии {{vmsName}}:",
-    "testedVersionsLabel": "Проверено на версиях {{vmsName}}:",
+    "testedVersionLabel": "Tested with {{vmsName}} version:",
+    "testedVersionsLabel": "Tested with {{vmsName}} versions:",
+    "topXByVolume": "Top {{value}} by volume:",
     "users": "Пользователи",
     "you": "вы"
 }

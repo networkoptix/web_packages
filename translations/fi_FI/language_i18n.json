@@ -21,6 +21,8 @@
     "All Systems": "Kaikki järjestelmät",
     "All cloud users will be deleted.": "Kaikki pilvipalvelun käyttäjät poistetaan.",
     "All results": "Kaikki tulokset",
+    "Allow only secure connections": "Salli vain suojatut yhteydet",
+    "Allow system to optimize camera settings": "Allow system to optimize camera settings",
     "Analytics": "Analytiikka",
     "Analytics Event": "Analytiikka-tapahtuma",
     "Analytics Events": "Analytiikka-tapahtumat",
@@ -37,6 +39,7 @@
     "Change Password": "Vaihda salasana",
     "Checking...": "Tarkistetaan...",
     "Choose which properties should be visible to customers:": "Valitse, mitkä ominaisuudet näkyvät asiakkaille:",
+    "Clear filters": "Clear filters",
     "Close": "Sulje",
     "Codec": "Koodekki",
     "Collapse": "Tiivistä",
@@ -64,6 +67,9 @@
     "Email": "Sähköposti",
     "Email is required": "Sähköpostiosoite vaaditaan",
     "Embed": "Sulautettu",
+    "Enable audit trail": "Ota käyttöön auditointi",
+    "Enable auto discovery of cameras and servers": "Enable auto discovery of cameras and servers",
+    "Encrypt video traffic": "Salaa videoliikenne",
     "Enter \"Public User\" credentials:": "Anna \"Julkisen käyttäjän\" käyttäjätunnukset:",
     "Enter password for your account to continue": "Syötä tilisi salasana jatkaaksesi",
     "Enter password to continue.": "Syötä salasanasi jatkaaksesi.",
@@ -84,12 +90,15 @@
     "I/O": "I/O",
     "In Review": "Tarkistuksessa",
     "In-Client Upgrade:": "Client-sovelluksen päivitys:",
+    "Includes information about the System, such as camera modules, \n                            firmware versions, number of servers, etc. \n                            Does not include any personal information and is completely anonymous.": "Includes information about the System, such as camera modules, \n                            firmware versions, number of servers, etc. \n                            Does not include any personal information and is completely anonymous.",
+    "Information": "Tiedot",
     "Integrations": "Integraatiot",
     "Language": "Kieli",
     "Last Name": "Last Name",
     "Last name": "Sukunimi",
     "Last name is required": "Sukunimi on pakollinen",
     "Latest version": "Uusin versio",
+    "Limit session duration to": "Limit session duration to",
     "Log In": "Kirjaudu sisään",
     "Log Out": "Kirjaudu ulos",
     "Log in to %CLOUD_NAME%": "Kirjaudu sisään %CLOUD_NAME%",
@@ -109,6 +118,7 @@
     "Nothing Found": "Mitään ei löytynyt",
     "OK": "OK",
     "Ok": "Ok",
+    "Only client-server video traffic can be encrypted.": "Only client-server video traffic can be encrypted.",
     "Other packages:": "Muut paketit:",
     "Other releases, patches and beta versions": "Muut julkaisut, korjaukset ja beta-versiot",
     "Owner": "Omistaja",
@@ -116,7 +126,7 @@
     "Page not found": "Sivua ei löydy",
     "Password": "Salasana",
     "Password is required": "Salasana tarvitaan",
-    "Password reset instructions are sent to Email": "Password reset instructions are sent to Email",
+    "Password reset instructions are sent to Email": "Salasanan nollausohjeet lähetetään sähköpostitse",
     "Password successfully saved": "Salasana tallennettu onnistuneesti",
     "Password:": "Salasana:",
     "Please enter a valid Email": "Anna voimassa oleva sähköpostiosoite",
@@ -135,17 +145,21 @@
     "Save": "Tallenna",
     "Search in google": "Hae googlesta",
     "Secondary Stream": "Toissijainen streami",
+    "Security": "Turvallisuus",
     "Send": "Lähetä",
+    "Send anonymous usage and crash statistics to developers": "Send anonymous usage and crash statistics to developers",
     "Send feedback about this device": "Lähetä palautetta tästä laitteesta",
     "Set New Password": "Aseta uusi salasana",
     "Settings": "Asetukset",
     "Show All": "Näytä kaikki",
     "Some of your servers don't support cloud System merge because of outdated software version.": "Jotkin palvelimet eivät tue pilvijärjestelmän yhdistämistä vanhentuneiden ohjelmistoversioiden vuoksi.",
+    "Subject": "Subject",
     "Support": "Tuki",
     "Support E-mail": "Tuen sähköposti",
     "Support URL": "Tueni-URL-osoite",
     "Supported Devices": "Tuetut laitteet",
     "Supported IP Video Devices": "Tuetut IP-kamerat",
+    "System Settings": "Järjestelmäasetukset",
     "System name": "Järjestelmänimi",
     "System name is required": "Järjestelmän nimi on pakollinen",
     "System will be accessible through local network with local administrator account.": "Järjestelmä on käytettävissä paikallisen verkon kautta paikallisen järjestelmänvalvojan tilillä.",
@@ -162,7 +176,7 @@
     "This device has reported to support some analytics events, but we don't have exact information about them.": "Tämän laitteen on ilmoitettu tukevan joitain analytiikkatapahtumia, mutta meillä ei ole tarkkaa tietoa niistä.",
     "To": "Jotta",
     "Too many attempts. Try again in a minute.": "Liian monta yritystä. Yritä myöhemmin uudelleen.",
-    "Topic": "Aihe",
+    "Tracks and logs all user actions.": "Seuraa ja kirjaa kaikki käyttäjätoiminnot.",
     "Until merge is finished you can log in to this system and watch video, but cannot change any settings.": "Ennen yhdistämistä voit kirjautua tähän järjestelmään ja katsoa videota, mutta et voi muuttaa asetuksia.",
     "Update them to the": "Päivitä ne",
     "Updated": "Päivitetty",
@@ -172,9 +186,9 @@
     "WHEN_MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{{targetSystemName}}</strong> System, and this system will be deleted.",
     "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.": "Suosittelemme asentamaan Google Chromen tai Mozilla Firefoxin uusimmat versiot, mutta voit käyttää mitä tahansa muuta modernia web-selainta.",
     "What's New?": "Mitä uutta?",
+    "When enabled, system will discover new cameras and servers. Also, \n                            it will automatically and persistently send discovery requests to \n                            cameras in order to get the camera's status update. \n                            Failover enabled on some servers ignore status check prohibition.": "When enabled, system will discover new cameras and servers. Also, \n                            it will automatically and persistently send discovery requests to \n                            cameras in order to get the camera's status update. \n                            Failover enabled on some servers ignore status check prohibition.",
     "Works with:": "Toimii:",
     "Wrong password": "Väärä salasana",
-    "You can merge only those cloud Systems, where you have the \"Owner\" permissions.": "Voit yhdistää vain niitä pilvijärjestelmiä, joissa sinulla on \"Omistaja\" -oikeudet.",
     "You can only merge Systems where you are the owner.": "Voit yhdistää pilvijärjestelmät, joissa olet omistajana.",
     "You have registered in %CLOUD_NAME%": "Olet rekisteröitynyt %CLOUD_NAME%",
     "Your Email": "Sähköpostiosoitteesi",
@@ -255,7 +269,6 @@
         "setNewPassword": "Tallenna salasana",
         "setNewPasswordLabel": "Uusi salasana"
     },
-    "andXMore": "... ja vielä {{value}}",
     "cameraFilters": {
         "H265": "H.265 Kamerat",
         "IO": "I / O-moduulit",
@@ -269,6 +282,63 @@
         "ptz": "PTZ-kamerat"
     },
     "clientProtocol": "%CLIENT_PROTOCOL%:",
+    "common": {
+        "cameraLinks": {
+            "copyActiveText": "kopioitu leikepöydälle",
+            "copyDefaultText": "kopioi",
+            "copyToClipboard": "kopioi leikepöydälle",
+            "highStream": "High stream",
+            "lowStream": "Low stream",
+            "transcoding": "Transkoodaus",
+            "unknown": "Tuntematon"
+        },
+        "cameraStates": {
+            "error": "Virhe",
+            "errorLoading": "An error occurred while loading this video.",
+            "flashOrWebmRequired": "Ota <a href='https://get.adobe.com/flashplayer/' target='_blank'>Asenna Adobe Flash</a> tai<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM koodekin</a> videon toistamiseen Internet Explorer.",
+            "flashRequired": "Siirry<a href='https://get.adobe.com/flashplayer/' target='_blank'>Asenna Adobe Flash</a> videoiden toistamiseen.",
+            "iOSVideoTooLarge": "iOS ei tue videota, joka on suurempi kuin fullHD (2MP: 1920x1080).",
+            "ieNoWebm": "Asenna <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM-koodekki</a> Internet Exploreriin.",
+            "ieWin10": "Käytä Microsoft Edgen tai Google Chromen selaimia.",
+            "noArmSupport": "Tämä selain tai laite ei tue videotoistoa ARM-pohjaisista palvelimista.",
+            "noData": "Ei dataa",
+            "noFormat": "Tämä selain ei tue videon toistoa tästä kamerasta.",
+            "offline": "Offline-tilassa",
+            "ubuntuNX": "Tämä selain ei tue ARM-pohjaisia palvelimia. Käytä sen sijaan Chromium-selainta.",
+            "unauthorized": "Tunnistus vaaditaan"
+        },
+        "chromeCastWarning": "Chromecast on resursseja kuormittava ja saattaa aiheuttaa ongelmia palvelimellasi.",
+        "resolution": {
+            "auto": "Automaattinen",
+            "high": "Korkea",
+            "low": "Matala"
+        },
+        "searchCamPlaceholder": "Etsi",
+        "systemHasNoCameras": "Ei kameroita",
+        "systemNewVersion": "Update your system",
+        "systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
+        "systemNoAlerts": "No Alerts",
+        "systemNoAlertsMessage": "Your system must be doing well!",
+        "systemOffline": "Järjestelmään ei saada yhteyttä",
+        "systemOfflineMessage": "This system is offline and cannot be accessed right now.",
+        "systemServerError": "Sisäinen palvelinvirhe",
+        "systemServerErrorMessage": "An error occurred, please, try again later. An error occurred, please try again later. If the problem continues, please contact your support team.",
+        "systemUnreachable": "JÄRJESTELMÄÄN EI SAADA YHTEYTTÄ",
+        "voiceCommands": {
+            "clear search": "tyhjennä haku",
+            "collapse all servers": "kokoa kaikki palvelimet",
+            "collapse server": "collapse server + [server name]",
+            "expand all servers": "laajenna kaikki palvelimet",
+            "expand server": "expand server + [server name]",
+            "help": "help | show commands",
+            "live": "go to live | show me live",
+            "pause": "tauko",
+            "play": "toista",
+            "search": "find + [text for searchbar]",
+            "stop listening": "lopeta kuuntelu",
+            "view": "view + [camera name]"
+        }
+    },
     "devices": "laitteet",
     "dialogs": {
         "cancelButton": "Peruuta",
@@ -300,15 +370,15 @@
         "message": {
             "failedToSend": "Viestin lähetys epäonnistui.",
             "sent": "Viesti on lähetetty.",
-            "title": {
-                "integration": "Ota yhteyttä {{companyName}}",
-                "ipvd_feedback_device": "Palaute{{asset}}",
-                "ipvd_feedback_page": "Palaute kameran sivulle"
-            },
-            "topic": {
+            "subject": {
                 "contact_sales": "Ota yhteyttä {{asset}} myyntiin",
                 "contact_support": "Pyydä tukea {{asset}}",
                 "integration_feedback": "Palaute integraatiosta {{asset}}",
+                "ipvd_feedback_device": "Palaute{{asset}}",
+                "ipvd_feedback_page": "Palaute kameran sivulle"
+            },
+            "title": {
+                "integration": "Ota yhteyttä {{companyName}}",
                 "ipvd_feedback_device": "Palaute{{asset}}",
                 "ipvd_feedback_page": "Palaute kameran sivulle"
             }
@@ -361,16 +431,13 @@
             },
             "linux": {
                 "label": "Ubuntu Linux",
-                "shortLabel": "Ubuntu",
-                "supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+                "shortLabel": "Ubuntu"
             },
             "mac": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "macos": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "sdk": {
                 "label": "SDK",
@@ -378,8 +445,7 @@
                 "supported": "C ++: n cross platform SDK"
             },
             "windows": {
-                "label": "Windows",
-                "supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+                "label": "Windows"
             }
         },
         "mobile": {
@@ -555,8 +621,8 @@
     "phoneNumberWithLabel": "Puh: {{number}}",
     "pleaseSelect": "Please select...",
     "privacyPolicy": {
-        "integration": "Lähettämällä tämän lomakkeen hyväksyt, että sinuun otetaan yhteyttä {{INTEGRATION_COMPANY}} ja / tai %COMPANY_NAME%.\nLöydät {{INTEGRATION_COMPANY}} tietosuojakäytäntöä <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">täältä</a> ja %COMPANY_NAME% tietosuojakäytäntöä <a href=\"%PRIVACY_LINK%\" target=\"blank\">täältä</a> jotka sisältävät ohjeet suostumuksen peruuttamiselle.",
-        "ipvd": "Lähettämällä tämän lomakkeen hyväksyt %COMPANY_NAME%.\nLöydät %COMPANY_NAME% tietosuojakäytäntö <a href=\"%PRIVACY_LINK%\" target=\"blank\">täällä</a>, joka sisältää ohjeita siitä, miten peruuttaa suostumuksesi."
+        "integration": "Lähettämällä tämän lomakkeen hyväksyt, että sinuun otetaan yhteyttä {{INTEGRATION_COMPANY}} ja / tai %COMPANY_NAME%.\nLöydät {{INTEGRATION_COMPANY}} tietosuojakäytäntöä <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">täältä</a> ja %COMPANY_NAME% tietosuojakäytäntöä <a href=\"%PRIVACY_LINK%\" target=\"_blank\">täältä</a> jotka sisältävät ohjeet suostumuksen peruuttamiselle.",
+        "ipvd": "Lähettämällä tämän lomakkeen hyväksyt %COMPANY_NAME%.\nLöydät %COMPANY_NAME% tietosuojakäytäntö <a href=\"%PRIVACY_LINK%\" target=\"_blank\">täällä</a>, joka sisältää ohjeita siitä, miten peruuttaa suostumuksesi."
     },
     "registration": {
         "agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
@@ -601,6 +667,15 @@
         "openClient": "Avaa %VMS_NAME%",
         "openClientNoSystem": "Avaa %VMS_NAME%",
         "permissionsRemoved": "Käyttöoikeudet poistettiin {{email}}",
+        "settings": {
+            "sessionLimitDuration": {
+                "hours": "tuntia",
+                "minutes": "minuuttia"
+            },
+            "warningMessages": {
+                "videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+            }
+        },
         "shareOffline": "Cannot share system while it is offline",
         "shareUnauthorized": "You do not have permission to share this system",
         "successDeleted": "Järjestelmä {{systemName}} poistetaan onnistuneesti tililtäsi",
@@ -620,8 +695,9 @@
         "online": "yhteys muodostettu",
         "unavailable": "ei saatavilla"
     },
-    "testedVersionLabel": "Testattu {{vmsName}} versiolla:",
-    "testedVersionsLabel": "Testattu {{vmsName}} versiolla:",
+    "testedVersionLabel": "Tested with {{vmsName}} version:",
+    "testedVersionsLabel": "Tested with {{vmsName}} versions:",
+    "topXByVolume": "Top {{value}} by volume:",
     "users": "Käyttäjät",
     "you": "you"
 }

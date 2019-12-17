@@ -1,8 +1,8 @@
 {
     "2-Way Audio": "2-Way Audio",
     "About %CLOUD_NAME%": "About %CLOUD_NAME%",
-    "Access Level": "Access Level",
-    "Access level": "Access level",
+    "Access Level": "Hozzáférési szint",
+    "Access level": "Hozzáférés szint",
     "Account Information": "Account Information",
     "Account Settings": "Fiókbeállítások",
     "Account is already activated or confirmation code is incorrect": "A fiók van már aktiválva van, vagy a megerősítési kód hibás",
@@ -12,7 +12,7 @@
     "Account not found": "A fiók nem található",
     "Activate your account": "Aktiváld a fiókod",
     "Actual number of events supported by this camera may be bigger.": "Actual number of events supported by this camera may be bigger.",
-    "Add User": "Add User",
+    "Add User": "Felhasználó hozzáadása",
     "Additional Requirements": "Additional Requirements",
     "Administration": "Administration",
     "Advanced PTZ": "Advanced PTZ",
@@ -21,6 +21,8 @@
     "All Systems": "Minden rendszer",
     "All cloud users will be deleted.": "Minden felhő felhasználó törlésre kerül.",
     "All results": "All results",
+    "Allow only secure connections": "Csak biztonságos kapcsolatok engedélyezése",
+    "Allow system to optimize camera settings": "Kamera beállítások optimalizálásának engedélyezése a rendszer számára",
     "Analytics": "Analytics",
     "Analytics Event": "Analitikai esemény",
     "Analytics Events": "Analytics Events",
@@ -37,6 +39,7 @@
     "Change Password": "Jelszómódosítás",
     "Checking...": "Ellenőrzés...",
     "Choose which properties should be visible to customers:": "Válassza ki, hogy mely tulajdonságok láthatók az ügyfelek számára:",
+    "Clear filters": "Clear filters",
     "Close": "Bezárás",
     "Codec": "Kodek",
     "Collapse": "Collapse",
@@ -51,7 +54,7 @@
     "Discard": "Elvetés",
     "Disconnect": "Szétkapcsolás",
     "Disconnect System from %CLOUD_NAME%?": "Megszünteti a kapcsolatot %CLOUD_NAME% felhővel?",
-    "Disconnect from %CLOUD_NAME%": "Disconnect from %CLOUD_NAME%",
+    "Disconnect from %CLOUD_NAME%": "Leválasztás %CLOUD_NAME% termékről",
     "Disconnect from My Account": "Disconnect from My Account",
     "Download": "Letöltés",
     "Download %VMS_NAME%": "%VMS_NAME% letöltése",
@@ -64,6 +67,9 @@
     "Email": "E-mail",
     "Email is required": "Email megadása szükséges",
     "Embed": "Beágyazás",
+    "Enable audit trail": "Audit napló engedélyezése",
+    "Enable auto discovery of cameras and servers": "Enable auto discovery of cameras and servers",
+    "Encrypt video traffic": "A videoforgalom titkosítása",
     "Enter \"Public User\" credentials:": "Adja meg a \"nyilvános felhasználó\" hitelesítő adatait:",
     "Enter password for your account to continue": "Adja meg a fiókjának jelszavát a folytatáshoz",
     "Enter password to continue.": "Adja meg a jelszót a folytatáshoz.",
@@ -84,12 +90,15 @@
     "I/O": "I/O",
     "In Review": "In Review",
     "In-Client Upgrade:": "In-Kliens frissítés:",
+    "Includes information about the System, such as camera modules, \n                            firmware versions, number of servers, etc. \n                            Does not include any personal information and is completely anonymous.": "Includes information about the System, such as camera modules, \n                            firmware versions, number of servers, etc. \n                            Does not include any personal information and is completely anonymous.",
+    "Information": "Információ",
     "Integrations": "Integrations",
     "Language": "Nyelv",
     "Last Name": "Last Name",
     "Last name": "Vezetéknév",
     "Last name is required": "Vezetéknév megadása szükséges",
     "Latest version": "Legújabb verzió",
+    "Limit session duration to": "Limit session duration to",
     "Log In": "Bejelentkezés",
     "Log Out": "Kijelentkezés",
     "Log in to %CLOUD_NAME%": "Bejelentkezés ide: %CLOUD_NAME%",
@@ -109,6 +118,7 @@
     "Nothing Found": "Nothing Found",
     "OK": "OK",
     "Ok": "Ok",
+    "Only client-server video traffic can be encrypted.": "Only client-server video traffic can be encrypted.",
     "Other packages:": "Egyéb csomagok:",
     "Other releases, patches and beta versions": "Egyéb kiadások, javítások és béta verziók",
     "Owner": "Tulajdonos",
@@ -116,7 +126,7 @@
     "Page not found": "Az oldal nem található",
     "Password": "Jelszó",
     "Password is required": "Jelszó megadása szükséges",
-    "Password reset instructions are sent to Email": "Password reset instructions are sent to Email",
+    "Password reset instructions are sent to Email": "Jelszóvisszaállítási teendők megadását e-mailen megküldtük",
     "Password successfully saved": "Jelszó sikeresen frissítve",
     "Password:": "Jelszó:",
     "Please enter a valid Email": "Kérjük adjon meg valós e-mail címet",
@@ -135,17 +145,21 @@
     "Save": "Mentés",
     "Search in google": "Search in google",
     "Secondary Stream": "Másodlagos stream",
+    "Security": "Biztonság",
     "Send": "Küldés",
+    "Send anonymous usage and crash statistics to developers": "Send anonymous usage and crash statistics to developers",
     "Send feedback about this device": "Send feedback about this device",
     "Set New Password": "Új jelszó beállítása",
     "Settings": "Beállítások",
     "Show All": "Mindet mutat",
     "Some of your servers don't support cloud System merge because of outdated software version.": "A szerverek némelyike nem támogatja a felhő rendszer egyesítését, az elavult szoftver verziója miatt.",
+    "Subject": "Subject",
     "Support": "Támogatás",
     "Support E-mail": "Support E-mail",
     "Support URL": "Support URL",
     "Supported Devices": "Supported Devices",
     "Supported IP Video Devices": "Supported IP Video Devices",
+    "System Settings": "Rendszerbeállítások",
     "System name": "Rendszer neve",
     "System name is required": "Adja meg a rendszer nevét",
     "System will be accessible through local network with local administrator account.": "A rendszer a helyi hálózatból továbbra is elérhető lesz a helyi adminisztrátor fiókkal.",
@@ -162,7 +176,7 @@
     "This device has reported to support some analytics events, but we don't have exact information about them.": "This device has reported to support some analytics events, but we don't have exact information about them.",
     "To": "To",
     "Too many attempts. Try again in a minute.": "Túl sok próbálkozás. Próbálja újra később.",
-    "Topic": "Topic",
+    "Tracks and logs all user actions.": "Az összes felhasználói műveletet nyomon követi és naplózza.",
     "Until merge is finished you can log in to this system and watch video, but cannot change any settings.": "Amíg az egyesítés befejeződik, be tud jelentkezni a rendszerbe és megtekinthet videókat, de közben nem módosíthatja a beállításokat.",
     "Update them to the": "Frissítse azokat a",
     "Updated": "Updated",
@@ -172,9 +186,9 @@
     "WHEN_MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{{targetSystemName}}</strong> System, and this system will be deleted.",
     "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.": "Javasoljuk, hogy telepítse a Google Chrome vagy a Mozilla Firefox legújabb verzióit, de bármilyen más modern webböngészőt is használhat.",
     "What's New?": "What's New?",
+    "When enabled, system will discover new cameras and servers. Also, \n                            it will automatically and persistently send discovery requests to \n                            cameras in order to get the camera's status update. \n                            Failover enabled on some servers ignore status check prohibition.": "When enabled, system will discover new cameras and servers. Also, \n                            it will automatically and persistently send discovery requests to \n                            cameras in order to get the camera's status update. \n                            Failover enabled on some servers ignore status check prohibition.",
     "Works with:": "Works with:",
     "Wrong password": "Hibás jelszó",
-    "You can merge only those cloud Systems, where you have the \"Owner\" permissions.": "Csak azokat a felhőrendszereket egyesítheti, amelyekben a \"Tulajdonos\" jogosultságok vannak.",
     "You can only merge Systems where you are the owner.": "Csak olyan felhő-rendszereket vonhat össze, ahol tulajdonos.",
     "You have registered in %CLOUD_NAME%": "Regisztráltáltál a %CLOUD_NAME% szofverben",
     "Your Email": "Your Email",
@@ -255,7 +269,6 @@
         "setNewPassword": "Jelszó mentése",
         "setNewPasswordLabel": "Új jelszó"
     },
-    "andXMore": "... and {{value}} more",
     "cameraFilters": {
         "H265": "H.265 Cameras",
         "IO": "I / O modules",
@@ -269,6 +282,63 @@
         "ptz": "PTZ cameras"
     },
     "clientProtocol": "%CLIENT_PROTOCOL%:",
+    "common": {
+        "cameraLinks": {
+            "copyActiveText": "vágólapra másolva",
+            "copyDefaultText": "másolás",
+            "copyToClipboard": "másolás vágólapra",
+            "highStream": "Elsődleges stream",
+            "lowStream": "Másodlagos stream",
+            "transcoding": "Transzkódolás",
+            "unknown": "Ismeretlen"
+        },
+        "cameraStates": {
+            "error": "Hiba",
+            "errorLoading": "Hiba történt a videó betöltése közben.",
+            "flashOrWebmRequired": "Kérjük <a href='https://get.adobe.com/flashplayer/' target='_blank'>telepítsen Adobe Flasht</a>vagy<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec-et</a> a videó Internet Explorerben történő lejátszásához.",
+            "flashRequired": "Kérjük <a href='https://get.adobe.com/flashplayer/' target='_blank'>telepítsen Adobe Flasht</a> a videók lejátszásához.",
+            "iOSVideoTooLarge": "Az iOS nem támogat FullHD-nál (2MP: 1920x1080) nagyobb videót.",
+            "ieNoWebm": "Kérjük telepítsen <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec-et</a> at Internet Explorerben.",
+            "ieWin10": "Kérjük, használjon Microsoft Edge vagy Google Chrome böngészőt.",
+            "noArmSupport": "Ez a böngésző vagy eszköz nem támogatja az ARM-alapú szerverről történő videofájl lejátszást.",
+            "noData": "Nincs adat",
+            "noFormat": "Ez a böngésző nem támogatja erről a kameráról történő videofájl lejátszást.",
+            "offline": "Offline",
+            "ubuntuNX": "Ez a böngésző nem támogatja a videók ARM-alapú szerverről való lejátszását. Használjon helyette Chromium böngészőt.",
+            "unauthorized": "Hitelesítés szükséges"
+        },
+        "chromeCastWarning": "A Chromecast erőforrás-igényes, és problémákat okozhat a kiszolgálón.",
+        "resolution": {
+            "auto": "Autómatikus",
+            "high": "Magas",
+            "low": "Alacsony"
+        },
+        "searchCamPlaceholder": "Keresés",
+        "systemHasNoCameras": "NINCSENEK KAMERÁK",
+        "systemNewVersion": "Update your system",
+        "systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
+        "systemNoAlerts": "No Alerts",
+        "systemNoAlertsMessage": "Your system must be doing well!",
+        "systemOffline": "A rendszer offline",
+        "systemOfflineMessage": "This system is offline and cannot be accessed right now.",
+        "systemServerError": "Belső Szerverhiba",
+        "systemServerErrorMessage": "An error occurred, please, try again later. An error occurred, please try again later. If the problem continues, please contact your support team.",
+        "systemUnreachable": "SYSTEM IS UNREACHABLE",
+        "voiceCommands": {
+            "clear search": "keresés törlése",
+            "collapse all servers": "összes szerver összecsukása",
+            "collapse server": "szerver összecsukása + [szerver neve]",
+            "expand all servers": "összes szerver kibontása",
+            "expand server": "szerver kibontása + [szerver neve]",
+            "help": "súgó | parancsok megjelenítése",
+            "live": "go to live | show me live",
+            "pause": "szünet",
+            "play": "letjátszás",
+            "search": "keresés + [szöveg a keresősávhoz]",
+            "stop listening": "figyelés leállítása",
+            "view": "nézet + [kamera neve]"
+        }
+    },
     "devices": "eszközök",
     "dialogs": {
         "cancelButton": "Mégsem",
@@ -300,15 +370,15 @@
         "message": {
             "failedToSend": "Message has failed to send.",
             "sent": "Message has been sent.",
-            "title": {
-                "integration": "Get in touch with {{companyName}}",
-                "ipvd_feedback_device": "Feedback about {{asset}}",
-                "ipvd_feedback_page": "Feedback for cameras page"
-            },
-            "topic": {
+            "subject": {
                 "contact_sales": "Contact sales for {{asset}}",
                 "contact_support": "Contact support for {{asset}}",
                 "integration_feedback": "Feedback for integration {{asset}}",
+                "ipvd_feedback_device": "Feedback about {{asset}}",
+                "ipvd_feedback_page": "Feedback for cameras page"
+            },
+            "title": {
+                "integration": "Get in touch with {{companyName}}",
                 "ipvd_feedback_device": "Feedback about {{asset}}",
                 "ipvd_feedback_page": "Feedback for cameras page"
             }
@@ -361,16 +431,13 @@
             },
             "linux": {
                 "label": "Ubuntu Linux",
-                "shortLabel": "Ubuntu",
-                "supported": "Ubuntu 14.04 LTS, 16.04 LTS, LTS"
+                "shortLabel": "Ubuntu"
             },
             "mac": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "macos": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "sdk": {
                 "label": "SDK",
@@ -378,8 +445,7 @@
                 "supported": "C ++ kereszt platform SDK"
             },
             "windows": {
-                "label": "Windows",
-                "supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+                "label": "Windows"
             }
         },
         "mobile": {
@@ -555,8 +621,8 @@
     "phoneNumberWithLabel": "Tel: {{number}}",
     "pleaseSelect": "Please select...",
     "privacyPolicy": {
-        "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent.",
-        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent."
+        "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a> which include instruction on how to withdraw your consent.",
+        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a> which include instruction on how to withdraw your consent."
     },
     "registration": {
         "agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
@@ -601,6 +667,15 @@
         "openClient": "%VMS_NAME% Megnyitása",
         "openClientNoSystem": "%VMS_NAME% Megnyitása",
         "permissionsRemoved": "{{email}} engedélyei vissavonva",
+        "settings": {
+            "sessionLimitDuration": {
+                "hours": "órák",
+                "minutes": "perc"
+            },
+            "warningMessages": {
+                "videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+            }
+        },
         "shareOffline": "Cannot share system while it is offline",
         "shareUnauthorized": "You do not have permission to share this system",
         "successDeleted": "{{systemName}} rendszer sikeresen törölve a fiókból",
@@ -620,8 +695,9 @@
         "online": "online",
         "unavailable": "nem elérhető"
     },
-    "testedVersionLabel": "Tested on {{vmsName}} version:",
-    "testedVersionsLabel": "Tested on {{vmsName}} versions:",
+    "testedVersionLabel": "Tested with {{vmsName}} version:",
+    "testedVersionsLabel": "Tested with {{vmsName}} versions:",
+    "topXByVolume": "Top {{value}} by volume:",
     "users": "Felhasználók",
     "you": "you"
 }

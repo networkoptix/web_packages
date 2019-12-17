@@ -53,21 +53,17 @@
 		},
 		"groups": {
 			"windows": {
-				"label": "Windows",
-				"supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+				"label": "Windows"
 			},
 			"mac": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"linux": {
 				"label": "Ubuntu Linux",
-				"shortLabel": "Ubuntu",
-				"supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+				"shortLabel": "Ubuntu"
 			},
 			"macos": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"ios": {
 				"label": "iOS",
@@ -239,7 +235,7 @@
 				"ipvd_feedback_page": "Feedback per la pagina delle telecamere",
 				"ipvd_feedback_device": "Feedback su {{asset}}"
 			},
-			"topic": {
+			"subject": {
 				"contact_sales": "Contatta le vendite per {{asset}}",
 				"contact_support": "Contatta l'assistenza per {{asset}}",
 				"integration_feedback": "Feedback per l'integrazione {{asset}}",
@@ -322,7 +318,7 @@
 		"mySystemSearch": "IMeMyMine",
 		"unavailable": "Il server è irraggiungibile",
 		"offline": "Il sistema è offline",
-		"offlineAlertRibbon": "System is offline. Some settings may not be available.",
+		"offlineAlertRibbon": "Il sistema non è in linea. Alcune impostazioni potrebbero non essere disponibili.",
 		"openClient": "Apri in %VMS_NAME%",
 		"openClientNoSystem": "Apri in %VMS_NAME%",
 		"confirmMergeAction": "Unisci",
@@ -345,8 +341,17 @@
 		"mergeSuccess": "Unione del sistema completata",
 		"permissionsRemoved": "Le autorizzazioni sono state rimosse da {{email}}",
 		"unknownName": "Nome sconosciuto per il sistema (causato da cloud merge)",
-		"shareOffline": "Cannot share system while it is offline",
-		"shareUnauthorized": "You do not have permission to share this system"
+		"shareOffline": "Impossibile condividere il sistema mentre è offline",
+		"shareUnauthorized": "Non hai i permessi per condividere questo sistema",
+		"settings": {
+			"sessionLimitDuration": {
+				"hours": "ore",
+				"minutes": "minuti"
+			},
+			"warningMessages": {
+				"videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+			}
+		}
 	},
 	"systemStatuses": {
 		"activated": "attivato",
@@ -416,13 +421,70 @@
 		}
 	},
 	"privacyPolicy": {
-		"integration": "Inviando questo modulo accetti di essere contattato da {{INTEGRATION_COMPANY}} e / o %COMPANY_NAME%.\nTroverai l'informativa sulla privacy dal {{INTEGRATION_COMPANY}} <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">qui</a> e %COMPANY_NAME% informativa sulla privacy <a href=\"%PRIVACY_LINK%\" target=\"blank\">qui</a> che includono istruzioni su come revocare il tuo consenso.",
-		"ipvd": "Inviando questo modulo accetti di essere contattato da %COMPANY_NAME%.\nTroverai l'informativa sulla privacy %COMPANY_NAME%<a href=\"%PRIVACY_LINK%\" target=\"blank\">qui</a> che includono istruzioni su come revocare il tuo consenso."
+		"integration": "Inviando questo modulo accetti di essere contattato da {{INTEGRATION_COMPANY}} e / o %COMPANY_NAME%.\nTroverai l'informativa sulla privacy {{INTEGRATION_COMPANY}} <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">qui</a> e %COMPANY_NAME% informativa sulla privacy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">qui</a> che includono istruzioni su come revocare il tuo consenso.",
+		"ipvd": "Inviando questo modulo accetti di essere contattato da %COMPANY_NAME%.\nTroverai l'informativa sulla privacy %COMPANY_NAME%<a href=\"%PRIVACY_LINK%\" target=\"_blank\">qui</a> che includono istruzioni su come revocare il tuo consenso."
+	},
+	"common": {
+		"cameraLinks": {
+			"highStream": "Flusso Primario",
+			"lowStream": "Flusso secondario",
+			"transcoding": "Transcodifica",
+			"unknown": "Sconosciuto",
+			"copyToClipboard": "copia negli appunti",
+			"copyDefaultText": "copia",
+			"copyActiveText": "copiato negli appunti"
+		},
+		"systemOffline": "Il sistema è offline",
+		"systemOfflineMessage": "This system is offline and cannot be accessed right now.",
+		"systemNoAlerts": "No Alerts",
+		"systemNoAlertsMessage": "Your system must be doing well!",
+		"systemServerError": "Errore interno del server",
+		"systemServerErrorMessage": "An error occurred, please, try again later. An error occurred, please try again later. If the problem continues, please contact your support team.",
+		"systemNewVersion": "Update your system",
+		"systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
+		"systemHasNoCameras": "NON CI SONO TELECAMERE",
+		"systemUnreachable": "Il sistema è inaccessibile",
+		"cameraStates": {
+			"offline": "Offiline",
+			"error": "Errore",
+			"errorLoading": "Si è verificato un errore durante il caricamento di questo video.",
+			"unauthorized": "Autenticazione richiesta",
+			"noData": "Nessun dato",
+			"iOSVideoTooLarge": "iOS non supporta video più grandi di FullHD (2MP: 1920x1080).",
+			"flashRequired": "Si prega di <a href='https://get.adobe.com/flashplayer/' target='_blank'>installare Adobe Flash</a> per la riproduzione di video.",
+			"flashOrWebmRequired": "Si prega di <a href='https://get.adobe.com/flashplayer/' target='_blank'>installare Adobe Flash</a> o<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>codec WebM</a> per la riproduzione di video in Internet Explorer.",
+			"noArmSupport": "Questo browser o dispositivo non supporta la riproduzione di video da server basati su ARM.",
+			"noFormat": "Questo browser non supporta la riproduzione di video da questa telecamera.",
+			"ieNoWebm": "Si prega di installare <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>il codec WebM </a> per Internet Explorer.",
+			"ieWin10": "Si prega di utilizzare i browser Microsoft Edge o Google Chrome.",
+			"ubuntuNX": "Questo browser non supporta i video da server basati su ARM. Per favore, utilizzare il browser Chromium."
+		},
+		"searchCamPlaceholder": "Ricerca",
+		"resolution": {
+			"auto": "Automatico",
+			"high": "Alta",
+			"low": "Basso"
+		},
+		"chromeCastWarning": "Chromecast richiede molte risorse e potrebbe causare problemi al suo server.",
+		"voiceCommands": {
+			"play": "riproduci",
+			"pause": "pausa",
+			"live": "go to live | show me live",
+			"view": "view + [camera name]",
+			"search": "find + [text for searchbar]",
+			"clear search": "cancella ricerca",
+			"expand server": "expand server + [server name]",
+			"collapse server": "collapse server + [server name]",
+			"expand all servers": "espandere tutti i server",
+			"collapse all servers": "comprimi tutti i server",
+			"stop listening": "interrompere l'ascolto",
+			"help": "help | show commands"
+		}
 	},
 	"systemAdministration": "Amministratore di sistema",
 	"users": "Utenti",
 	"testedVersionLabel": "Verificato sulla versione {{vmsName}}:",
-	"testedVersionsLabel": "Verificato sulle versioni {{vmsName}}:",
+	"testedVersionsLabel": "Verificato sulla versione {{vmsName}}:",
 	"About %CLOUD_NAME%": "Informazioni su %CLOUD_NAME%",
 	"Download %VMS_NAME%": "Scarica %VMS_NAME%",
 	"Integrations": "Integrazioni",
