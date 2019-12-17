@@ -381,7 +381,8 @@ export class NxConfigService {
                     'Mbit/s': '',
                     'KB/s': '',
                     'KBit/s': '',
-                    'Tr/s': ''
+                    'Tr/s': '',
+                    'unset': 'no-max-width'
                 }
             },
             myIntegrationTagId            : 'mine',
