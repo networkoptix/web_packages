@@ -55,7 +55,9 @@
                                           [src]="CONFIG.icons.dir + item[headerGroup.id][header.id].icon + '.svg'"></svg-icon>
                             </td>
                             <ng-template #showValue>
-                                <td [title]="item && item[headerGroup.id] && item[headerGroup.id][header.id] && item[headerGroup.id][header.id].tooltip || ''">
+                                <td class="ellipsis"
+                                    [title]="item && item[headerGroup.id] && item[headerGroup.id][header.id] && item[headerGroup.id][header.id].tooltip || ''"
+                                    [ngClass]="CONFIG.healthMonitoring.classFormats[item && item[headerGroup.id] && item[headerGroup.id][header.id] && item[headerGroup.id][header.id].format] || ''">
                                     <span [innerText]="item && item[headerGroup.id] && item[headerGroup.id][header.id] && item[headerGroup.id][header.id].text || '-'"
                                           [ngClass]="item && item[headerGroup.id] && item[headerGroup.id][header.id] && item[headerGroup.id][header.id].class || ''">
                                     </span>
