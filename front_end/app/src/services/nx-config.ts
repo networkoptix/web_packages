@@ -185,7 +185,7 @@ export class NxConfigService {
                     sdk    : {
                         name    : 'sdk',
                         os      : '',
-                        appTypes: []
+                        appTypes: ['universal']
                     }
                 },
                 platformMatch: {
