@@ -315,3 +315,22 @@ User is logged out of browser after a password change in another browser
     Input Text    ${NEW PASSWORD INPUT}    ${password}
     Click Button    ${CHANGE PASSWORD BUTTON}
     Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
+    
+Remember Me Checkbox
+    [Tags]    C41567
+    Log    Step 1
+    Log In With Remember Me    ${email}    ${password}    
+    Validate Log In
+    Log    Step 2
+    Persist Current Login State    ${url}
+    Validate Log In
+    Log    Step 3
+    Log Out
+    Persist Current Login State    ${url}
+    Validate Log Out
+    Log In With Remember Me    ${email}    ${password}     remember me=False
+    Log    Step 4
+    Validate Log In
+    Persist Current Login State    ${url}
+    Validate Log Out
+    
