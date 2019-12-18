@@ -97,14 +97,6 @@ export class NxCloudApiService {
         });
     }
 
-    saveMediaServerUserAttributes(serverId, serverName) {
-        return this.http.post(`${this.CONFIG.apiBase}/ec2/saveMediaServerUserAttributes`, {
-            serverId,
-            serverName
-        }).toPromise()
-            .then(res => res);
-    }
-
     sendMessage(type, asset, message, userName?, userEmail?) {
         return this.http.post(this.CONFIG.apiBase + '/feedback', {
             message, asset, type, userName, userEmail

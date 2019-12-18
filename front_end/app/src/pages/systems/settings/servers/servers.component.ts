@@ -248,8 +248,7 @@ export class NxSystemServersComponent implements OnInit {
         const serverId = this.selectedServer.id.slice(1, -1);
         const serverName = this.selectedServer.name;
         return this.dialogs
-            .renameServer(serverId, serverName)
-            .then(name => this.selectedServer.name = name);
+            .renameServer(this.system, serverId, serverName);
     }
 
     restartServer() {

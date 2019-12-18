@@ -214,13 +214,14 @@ export class NxDialogsService {
         return this.createModal(RenameModalContent, options, params);
     }
 
-    renameServer(serverId, serverName) {
+    renameServer(system, serverId, serverName) {
         const options: any = {
             windowClass: 'modal-holder',
             backdrop   : 'static'
         };
 
         const params: any = {
+            system,
             serverId,
             serverName,
             closable: true,

@@ -561,7 +561,12 @@ export class NxSystem extends System implements OnDestroy {
     }
 
     changeServerPort(port) {
-        return this.mediaserver.changePort(port)
+        return this.mediaserver.changePort(port);
+    }
+
+    renameServer(serverId, serverName) {
+        return this.mediaserver.renameServer(serverId, serverName)
+            .then(() => this.update().toPromise());
     }
 }
 

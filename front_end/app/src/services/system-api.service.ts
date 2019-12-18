@@ -233,6 +233,10 @@ export class NxSystemAPI {
     changePort(port) {
         return this.post('/api/configure', { port }).toPromise();
     }
+
+    renameServer(serverId, serverName) {
+        return this.post('/ec2/saveMediaServerUserAttributes', { serverId, serverName }).toPromise();
+    }
     /* End of Server settings */
 
     /* Working with users*/

@@ -377,7 +377,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     icon: '',
                     label: server.name,
                     path: `servers/${server.id}`,
-                    additionalLabel: server.addParams.find(el => el.name === 'publicIp').value,
+                    additionalLabel: server.url.split(':')[1].slice(2),
                 });
             });
         } else {
