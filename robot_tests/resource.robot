@@ -111,6 +111,22 @@ Log In
     Click Button    ${LOG IN BUTTON}
     Sleep    1
 
+Log In With Remember Me
+    [arguments]    ${email}    ${password}    ${button}=${LOG IN NAV BAR}    ${remember me}=True
+    Run Keyword Unless    '''${button}''' == "None"    Wait Until Element Is Visible    ${button}
+    Run Keyword Unless    '''${button}''' == "None"    Click Link    ${button}
+    Wait Until Elements Are Visible    ${EMAIL INPUT}    ${PASSWORD INPUT}    ${REMEMBER ME CHECKBOX VISIBLE}    ${FORGOT PASSWORD}    ${LOG IN CLOSE BUTTON}
+    Sleep    1
+    Input Text    ${EMAIL INPUT}    ${email}
+    Sleep    0.25
+    Input Text    ${PASSWORD INPUT}    ${password}
+    Sleep    0.25
+    Wait Until Element Is Visible    ${LOG IN BUTTON}
+    Run Keyword If    ${remember me}==True     Select Checkbox    ${REMEMBER ME CHECKBOX REAL} 
+    ...    ELSE    Unselect Checkbox    ${REMEMBER ME CHECKBOX REAL}
+    Click Button    ${LOG IN BUTTON}
+    Sleep    1
+
 Validate Log In
     [arguments]    ${timeout}=${selenium_timeout}
     Wait Until Element is Visible    ${ACCOUNT DROPDOWN}    ${timeout}
@@ -573,3 +589,44 @@ Wait Until Number Of Tabs Are Open
     @{tabs}=   Get Window Handles
     ${current tabs} =    Get length    ${tabs}
     Wait For Condition       return ${current tabs}==${number}
+    
+Save Cookies
+    ${saved cookie1} =     Get Cookie    _ga
+    ${saved cookie2} =     Get Cookie    _gat_UA-51046510-4
+    ${saved cookie3} =     Get Cookie    _gid
+    ${saved cookie4} =     Get Cookie    csrftoken
+    ${saved cookie5} =     Get Cookie    language
+    ${saved cookie6} =     Get Cookie    sessionid
+    ${cookies} =     Create List    ${saved cookie1}    ${saved cookie2}    ${saved cookie3}    ${saved cookie4}    ${saved cookie5}    ${saved cookie6} 
+    [return]     ${cookies}     
+    
+Apply Saved Cookies
+    [arguments]   ${cookies}
+    Delete All Cookies
+    #Add Cookie    ${cookies[0].name}    ${cookies[0].value}     
+    Add Cookie    ${cookies[1].name}    ${cookies[1].value} 
+    Add Cookie    ${cookies[2].name}    ${cookies[2].value} 
+    Add Cookie    ${cookies[3].name}    ${cookies[3].value} 
+    Add Cookie    ${cookies[4].name}    ${cookies[4].value} 
+    ${session expiry} =    Convert To String    ${cookies[5].expiry}    
+    Run Keyword Unless    "${session expiry}"=="None"
+    ...    Add Cookie    ${cookies[5].name}    ${cookies[5].value}     expiry=${session expiry}
+    Reload Page
+    
+Persist Current Login State
+    [arguments]    ${url}
+    ${cookies} =    Save Cookies
+    Close Browser
+    Open Browser and go to URL    ${url}
+    Apply Saved Cookies    ${cookies}
+    # Logs to inspect values of cookies before and after applying them for debugging
+    # Log Many     ${cookies[0].name} ${cookies[0].value}     
+    # ...   ${cookies[1].name} ${cookies[1].value}     
+    # ...   ${cookies[2].name} ${cookies[2].value}    
+    # ...   ${cookies[3].name} ${cookies[3].value}     
+    # ...   ${cookies[4].name} ${cookies[4].value}     
+    # ...   ${cookies[5].name} ${cookies[5].value}
+    # ${current cookie4} =     Get Cookie    csrftoken
+    # Log    ${current cookie4.name} ${current cookie4.value}
+    # ${current cookie6} =     Get Cookie    sessionid
+    # Log    ${current cookie6.name} ${current cookie6.value} ${current cookie6.expiry}
