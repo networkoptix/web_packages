@@ -213,7 +213,7 @@ Your permissions is shown for non-owners
 Should show (you) for owner and (owner's name & email) for non-owners
     [Tags]    C41881    Threaded
     Log in to AutoTests 2 System    ${EMAIL OWNER}
-    ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    you
+    ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    ${YOU TEXT}
     Wait Until Element Is Visible    ${current owner name}
     Log Out
     Log in to Autotests 2 System    ${EMAIL VIEWER}

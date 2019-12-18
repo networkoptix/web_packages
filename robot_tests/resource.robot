@@ -138,7 +138,7 @@ Log In With Remember Me
     Sleep    1
 
 Validate Log In
-    [Arguments]    ${timeout}=${selenium_timeout}
+    [arguments]    ${timeout}=${selenium_timeout}
     Wait Until Element is Visible    ${ACCOUNT DROPDOWN}    ${timeout}
     Check Language Logged In    ${email}    ${password}
     Sleep    0.5    #this is a test to see if it eliminates a problem with the login dialog popping up on logout
@@ -306,22 +306,22 @@ Check User Permissions
 
     Run Keyword If    '${permissions}' == '${OWNER TEXT}'
     ...    Element Text Should Be    ${HELP BLOCK}
-    ...    Unrestricted access including the ability to share and connect/disconnect System from cloud
+    ...    ${UNRESTRICTED ACCESS CONNECT TEXT}
     Run Keyword If    '${permissions}' == '${ADMIN TEXT}'
     ...    Element Text Should Be    ${HELP BLOCK}
-    ...    Unrestricted access including the ability to share
+    ...    ${UNRESTRICTED ACCESS SHARE TEXT}
     Run Keyword If    '${permissions}' == '${ADV VIEWER TEXT}'
     ...    Element Text Should Be    ${HELP BLOCK}
-    ...    Can view live video, browse the archive, control PTZ etc
+    ...    ${CAN VIEW BROWSE CONTROL PTZ TEXT}
     Run Keyword If    '${permissions}' == '${VIEWER TEXT}'
     ...    Element Text Should Be    ${HELP BLOCK}
-    ...    Can view live video and browse the archive
+    ...    ${CAN VIEW BROWSE TEXT}
     Run Keyword If    '${permissions}' == '${LIVE VIEWER TEXT}'
     ...    Element Text Should Be    ${HELP BLOCK}
-    ...    Can only view live video
+    ...    ${CAN ONLY VIEW TEXT}
     Run Keyword If    '${permissions}' == '${CUSTOM TEXT}'
     ...    Element Text Should Be    ${HELP BLOCK}
-    ...    Use the Nx Witness Client application to set up custom permissions
+    ...    ${USE CLIENT TO SET PERMISSIONS TEXT}
 
     Set Selenium Timeout    ${original timeout}
 
