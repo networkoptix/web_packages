@@ -364,13 +364,13 @@ class NoptixLibrary(object):
         serverVersion = ""
         if env == "https://cloud-test.hdw.mx":
             serverVersion = "4.1.0.30149"
-        elif: env == "https://cloud-dev3/hdw.mx":
+        elif env == "https://cloud-dev3.hdw.mx":
             serverVersion = "4.1.0.30027"
         client = docker.from_env()
         return client.images.build(path="/home/kyle/develop/nx/cloud_portal/robot_tests/Docker",
                             tag="mediaserver",
                             buildargs={"mediaserver_deb":"nxwitness-server-{}-linux64-beta-test.deb".format(serverVersion)})
-        
+
     def run_container(self, image, port, network):
         tmp = {'/run':'', '/run/lock':''}
         vol = {'/sys/fs/cgroup': {
