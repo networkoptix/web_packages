@@ -1,6 +1,6 @@
 @import '../../../styles/_mixins.scss';
 nx-health-update {
-    svg:hover {
+    a:hover svg {
         @include rotate;
     }
 }
