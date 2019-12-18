@@ -39,20 +39,28 @@ nx-system-health-component {
 
   .menuLinks {
     a {
-      text-decoration: none !important;
-      color: $light16 !important;
-      font-family: $font-family-medium;
-      font-size: $h5-font-size;
+      svg-icon {
+        padding-right: 2px;
 
-      &:hover {
-        color: $light12 !important;
+        svg {
+          cursor: pointer;
+          margin-top: -2px;
+        }
       }
-    }
-    svg {
-      cursor: pointer;
-    }
-    svg * {
-      fill: $light16;
+
+      svg * {
+        fill: $light16;
+      }
+
+      &:hover svg * {
+        fill: $dark15;
+      }
+
+      &:focus, &:active {
+        svg * {
+          fill: $light16;
+        }
+      }
     }
   }
 
