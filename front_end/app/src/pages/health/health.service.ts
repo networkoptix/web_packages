@@ -85,7 +85,7 @@ export class NxHealthService {
         }
 
         if (format === 'durationDh') {
-            time += `${timeValues.d}h`;
+            time += `${timeValues.h}h`;
         } else if (format === 'updateTime') {
             if (timeValues.h) {
                 time += `${timeValues.h}h `;
