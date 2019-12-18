@@ -309,19 +309,19 @@ Check User Permissions
     ...    ${UNRESTRICTED ACCESS CONNECT TEXT}
     Run Keyword If    '${permissions}' == '${ADMIN TEXT}'
     ...    Element Text Should Be    ${HELP BLOCK}
-    ...    ${UNRESTRICTED ACCESS SHARE TEXT}
+    ...    ${SHARE PERMISSIONS HINT ADMINISTRATOR}
     Run Keyword If    '${permissions}' == '${ADV VIEWER TEXT}'
     ...    Element Text Should Be    ${HELP BLOCK}
-    ...    ${CAN VIEW BROWSE CONTROL PTZ TEXT}
+    ...    ${SHARE PERMISSIONS HINT ADVANCED VIEWER}
     Run Keyword If    '${permissions}' == '${VIEWER TEXT}'
     ...    Element Text Should Be    ${HELP BLOCK}
-    ...    ${CAN VIEW BROWSE TEXT}
+    ...    ${SHARE PERMISSIONS HINT VIEWER}
     Run Keyword If    '${permissions}' == '${LIVE VIEWER TEXT}'
     ...    Element Text Should Be    ${HELP BLOCK}
-    ...    ${CAN ONLY VIEW TEXT}
+    ...    ${SHARE PERMISSIONS HINT LIVE VIEWER}
     Run Keyword If    '${permissions}' == '${CUSTOM TEXT}'
     ...    Element Text Should Be    ${HELP BLOCK}
-    ...    ${USE CLIENT TO SET PERMISSIONS TEXT}
+    ...    ${SHARE PERMISSIONS HINT CUSTOM}
 
     Set Selenium Timeout    ${original timeout}
 
