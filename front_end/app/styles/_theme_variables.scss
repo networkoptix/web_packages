@@ -219,3 +219,9 @@ $badge-font-size: rem(12px);
 $badge-border-radius: rem(2px);
 $badge-padding-x : rem(8px);
 $badge-padding-y : rem(3px);
+
+// CSS Grid layout
+$grid-menu-width: 20%;
+$grid-content-width: calc(80% - 1rem);
+$grid-table-width: 70%;
+$grid-panel-width: calc(30% - 1rem);

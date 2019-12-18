@@ -1,16 +1,18 @@
 import {
-    Component, EventEmitter, Input, OnChanges,
-    Output, SimpleChanges
-}                          from '@angular/core';
+    AfterViewInit,
+    Component, ElementRef, EventEmitter, Input, OnChanges,
+    Output, SimpleChanges, ViewChild
+} from '@angular/core';
 import { NxConfigService } from '../../../../services/nx-config';
 import { NxHealthService } from '../../health.service';
+import { NxScrollMechanicsService } from "../../../../services/scroll-mechanics.service";
 
 @Component({
     selector   : 'nx-dynamic-table-panel-component',
     templateUrl: './dynamic-table-panel.component.html',
     styleUrls  : ['./dynamic-table-panel.component.scss']
 })
-export class NxDynamicTablePanelComponent implements OnChanges {
+export class NxDynamicTablePanelComponent implements OnChanges, AfterViewInit {
 
     @Input() panelParams: any;
     @Input() activeEntity: any;
@@ -20,8 +22,21 @@ export class NxDynamicTablePanelComponent implements OnChanges {
     CONFIG: any = {};
     name: string;
 
+    windowSize: any = {};
+    windowScroll: any;
+    clientHeight: number;
+    offsetHeight: number;
+    scrollHeight: number;
+    viewScrollFixedTop: boolean;
+    viewScrollFixedBottom: boolean;
+    elementWidth: any;
+
+    @ViewChild('nxPanelView', { static: false }) nxPanelView: ElementRef;
+
     constructor(private configService: NxConfigService,
-                private healthService: NxHealthService) {
+                private healthService: NxHealthService,
+                private scrollMechanicsService: NxScrollMechanicsService,
+    ) {
         this.CONFIG = this.configService.getConfig();
     }
 
@@ -34,5 +49,50 @@ export class NxDynamicTablePanelComponent implements OnChanges {
     closeView() {
         this.activeEntity = undefined;
         this.onCloseView.emit(this.activeEntity);
+    }
+
+    ngAfterViewInit(): void {
+        setTimeout(() => {
+            this.scrollHeight = this.scrollMechanicsService.getElementOffset(this.nxPanelView.nativeElement);
+            this.calcElementScrollMechanics();
+        });
+
+        this.scrollMechanicsService
+                .windowScrollSubject
+                .subscribe(() => {
+                    this.calcElementScrollMechanics();
+                });
+
+        this.scrollMechanicsService
+                .elementViewWidthSubject
+                .subscribe(() => {
+                    const width = this.scrollMechanicsService.elementViewWidthSubject.getValue();
+                    this.elementWidth = (width > 0) ? (width - 8 /* -gutter */) + 'px' : '100%';
+                });
+
+        this.scrollMechanicsService
+                .offsetSubject
+                .subscribe(() => {
+                    setTimeout(() => this.scrollHeight = this.scrollMechanicsService.getElementOffset(this.nxPanelView.nativeElement));
+                });
+    }
+
+    calcElementScrollMechanics() {
+        this.windowSize = this.scrollMechanicsService.windowSizeSubject.getValue();
+        this.windowScroll = this.scrollMechanicsService.windowScrollSubject.getValue();
+
+        this.clientHeight = this.nxPanelView.nativeElement.clientHeight;
+
+        if (this.clientHeight < this.windowSize.height - NxScrollMechanicsService.SCROLL_OFFSET - 6 && this.windowScroll >= this.scrollHeight - NxScrollMechanicsService.SCROLL_OFFSET) {
+            this.viewScrollFixedTop = true;
+        } else {
+            this.viewScrollFixedTop = false;
+        }
+
+        if (this.clientHeight > this.windowSize.height - NxScrollMechanicsService.SCROLL_OFFSET - 8 && (this.clientHeight - this.windowSize.height + 18) < (this.windowScroll - this.scrollHeight)) {
+            this.viewScrollFixedBottom = true;
+        } else {
+            this.viewScrollFixedBottom = false;
+        }
     }
 }

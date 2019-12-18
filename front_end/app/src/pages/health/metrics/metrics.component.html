@@ -4,14 +4,16 @@
         class="section-placeholder">
 </nx-page-placeholder>
 
-<div class="row">
-    <div class="d-flex align-items-start w-100" #table>
-        <div *ngIf="selectedData && selectedValues && !mobileDetailMode"
-             class="px-2 overflow-x-auto data-wrapper"
-             [ngClass]="metricValuesLen === 1 ? 'row col-12' : ''">
 
-            <div class="col-12 mb-3 p-0" #search
+<div class="gridMetricContent"
+     [ngClass]="fixedLayoutClass"
+     *ngIf="healthService.alertsValues.length">
+
+    <div class="gridMetricContentComponent" *ngIf="selectedData && selectedValues && !mobileDetailMode">
+        <div class="gridMetricContentComponentWrapper">
+            <div class="mb-3 p-0" #search
                  *ngIf="!mobileDetailMode && metricValuesLen > 1">
+
                 <nx-search
                         name="filterModel"
                         [ngModel]="filterModel"
@@ -28,7 +30,7 @@
                         [entity]="objectValues(selectedValues)[0]">
                 </nx-single-entity>
             </div>
-            <div *ngIf="metricValuesLen > 1" class="col-12 p-0">
+            <div *ngIf="metricValuesLen > 1" class="p-0" #tableContainer>
                 <nx-dynamic-table
                         [dimensions]="containerDimensions"
                         [headers]="selectedData"
@@ -38,11 +40,11 @@
                 </nx-dynamic-table>
             </div>
         </div>
+    </div>
 
-        <div class="col-12 col-md-5 col-xl-4 col-xxl-3 pb-3"
-             *ngIf="activeEntity">
-
-            <div class="row pl-3 pb-3"
+    <div class="gridMetricContentPanelComponent">
+        <div class="gridMetricContentPanelComponentWrapper pb-3" *ngIf="activeEntity">
+            <div class="pl-3 pb-3"
                  [style.display]="!mobileDetailMode ? 'none' : 'block'">
 
                 <button class="btn btn-default btn-back" (click)="resetActiveEntity()">
@@ -59,3 +61,61 @@
         </div>
     </div>
 </div>
+
+
+<!--<div class="row">-->
+<!--    <div class="d-flex align-items-start w-100" #table>-->
+<!--        <div *ngIf="selectedData && selectedValues && !mobileDetailMode"-->
+<!--             class="px-2 overflow-x-auto data-wrapper"-->
+<!--             [ngStyle]="{'width': activeEntity? 'inherit' : undefined}"-->
+<!--             [ngClass]="metricValuesLen === 1 ? 'row col-12' : ''">-->
+
+<!--            <div class="col-12 mb-3 p-0" #search-->
+<!--                 *ngIf="!mobileDetailMode && metricValuesLen > 1">-->
+<!--                <nx-search-->
+<!--                        name="filterModel"-->
+<!--                        [ngModel]="filterModel"-->
+<!--                        (ngModelChange)="modelChanged($event)"-->
+<!--                        layout="compact"-->
+<!--                        [placeholder]="LANG.search.Search"-->
+<!--                        ngDefaultControl>-->
+<!--                </nx-search>-->
+<!--            </div>-->
+
+<!--            <div *ngIf="metricValuesLen === 1" class="col-12 col-xl-7 col-xxxl-5 px-2">-->
+<!--                <nx-single-entity-->
+<!--                        [params]="selectedPanelData"-->
+<!--                        [entity]="objectValues(selectedValues)[0]">-->
+<!--                </nx-single-entity>-->
+<!--            </div>-->
+<!--            <div *ngIf="metricValuesLen > 1" class="col-12 p-0" #tableContainer>-->
+<!--                <nx-dynamic-table nxScrollHelper-->
+<!--                        [dimensions]="containerDimensions"-->
+<!--                        [headers]="selectedData"-->
+<!--                        [elements]="selectedValues"-->
+<!--                        (onRowClick)="setActiveEntity($event)"-->
+<!--                        [activeEntity]="activeEntity">-->
+<!--                </nx-dynamic-table>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        <div class="col-12 col-md-5 col-xl-4 col-xxl-3 pb-3"-->
+<!--             *ngIf="activeEntity" #viewContainer>-->
+
+<!--            <div class="row pl-3 pb-3"-->
+<!--                 [style.display]="!mobileDetailMode ? 'none' : 'block'">-->
+
+<!--                <button class="btn btn-default btn-back" (click)="resetActiveEntity()">-->
+<!--                    <span class="back-arrow"></span>-->
+<!--                    <span translate>All results</span>-->
+<!--                </button>-->
+<!--            </div>-->
+
+<!--            <nx-dynamic-table-panel-component-->
+<!--                    [activeEntity]="activeEntity"-->
+<!--                    [panelParams]="selectedPanelData"-->
+<!--                    (onCloseView)="resetActiveEntity()">-->
+<!--            </nx-dynamic-table-panel-component>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->

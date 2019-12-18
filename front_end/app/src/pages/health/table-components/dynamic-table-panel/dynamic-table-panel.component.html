@@ -1,5 +1,6 @@
-<div class="panel col-12" *ngIf="activeEntity">
-    <nx-block type='gray'>
+<div class="panel col-12"
+     *ngIf="activeEntity" #nxPanelView>
+    <nx-block type='gray' header-class="sticky1rem">
         <header>
             <div class="panel-title">
                 <span [innerText]="name"></span>

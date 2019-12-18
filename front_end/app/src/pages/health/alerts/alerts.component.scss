@@ -3,6 +3,42 @@
 @import '~bootstrap/scss/mixins/breakpoints';
 
 nx-system-alerts-component {
+    
+    .gridMetricContent {
+        display: grid;
+        grid-gap: 1rem;
+        grid-template-columns: fit-content(100%) $grid-panel-width; // <- if table is less than 70% of screen width
+        border: 1px solid purple;
+        height: 100%;
+        
+        // if table is more than 70% of screen width
+        &.fixedLayout {
+            &--with-panel {
+                grid-template-columns: $grid-table-width $grid-panel-width;
+            }
+            
+            &--no-panel {
+                grid-template-columns: 100%;
+            }
+        }
+        
+        &Component {
+            border: 1px solid darkcyan;
+            
+            &Wrapper {
+                position: sticky;
+                top: 1rem;
+            }
+        }
+        
+        &PanelComponent {
+            &Wrapper {
+            
+            }
+        }
+    }
+    
+    
     .card-container {
         min-width: 135px;
         max-width: 165px;
@@ -22,11 +58,11 @@ nx-system-alerts-component {
         }
         
         @media (min-width: 1280px) {
-            min-width: 700px !important;
+            min-width: 702px !important;
         }
         
         @media (min-width: 1440px) {
-            min-width: 800px !important;
+            min-width: 802px !important;
         }
         
         @media (min-width: 1920px) {

@@ -7,14 +7,25 @@
     background-color : $light4;
     border-top       : 1px solid transparent;
     
-    .card {
-        margin : 0 !important;
-    }
-    
     h2 {
         font-size : 0.9375rem;
         color     : $dark9;
     }
+    
+    &.view-scroll-fixed-top {
+        position: fixed;
+        top: 48px + 16px; // header + padding
+    }
+    
+    &.view-scroll-fixed-bottom {
+        position: fixed;
+        bottom: 16px;
+    }
+    
+    .card {
+        margin: 0 !important;
+    }
+    
     
     .camview-link {
         height : 24px;

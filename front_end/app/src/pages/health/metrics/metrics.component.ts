@@ -1,4 +1,12 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+    AfterViewInit,
+    Component,
+    ContentChild,
+    ElementRef,
+    OnInit,
+    ViewChild,
+    ViewEncapsulation
+} from '@angular/core';
 import { ActivatedRoute }                                                             from '@angular/router';
 
 import { NxAccountService }                    from '../../../services/account.service';
@@ -11,6 +19,7 @@ import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { NxLanguageProviderService }           from '../../../services/nx-language-provider';
 import { SubscriptionLike }                    from 'rxjs';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
+import { NxScrollMechanicsService } from "../../../services/scroll-mechanics.service";
 
 interface Params {
     [key: string]: any;
@@ -60,7 +69,13 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
     elementTableHeight: number;
     containerDimensions: any = [];
 
+    windowSizeSubscription: any;
+
+    fixedLayoutClass: string;
+
     @ViewChild('search', { static: false }) elementSearch: ElementRef;
+    @ViewChild('viewContainer', { static: false }) viewContainer: ElementRef;
+    @ViewChild('tableContainer', { static: false }) tableContainer: ElementRef;
 
     constructor(private accountService: NxAccountService,
                 private configService: NxConfigService,
@@ -71,6 +86,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
                 private healthService: NxHealthService,
                 private uri: NxUriService,
                 private breakpointObserver: BreakpointObserver,
+                private scrollMechanicsService: NxScrollMechanicsService,
     ) {
         this.CONFIG = this.configService.getConfig();
         this.LANG  = this.languageService.getTranslations();
@@ -80,6 +96,19 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
         this.filterModel = {
             query: ''
         };
+
+        this.windowSizeSubscription = this.scrollMechanicsService
+                .windowSizeSubject
+                .subscribe(() => {
+                    if (this.viewContainer && this.viewContainer.nativeElement) {
+                        this.scrollMechanicsService.setElementViewWidth(this.viewContainer.nativeElement.clientWidth);
+                    }
+                    if (this.tableContainer && this.tableContainer.nativeElement) {
+                        let width = this.tableContainer.nativeElement.clientWidth;
+                        width = (this.activeEntity) ? width - 8 : width; /* -gutter */
+                        this.scrollMechanicsService.setElementTableWidth(width);
+                    }
+                });
     }
 
     ngOnInit(): void {
@@ -94,8 +123,8 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
                 this.menuService.setSection(this.metricId);
                 this.selectedData = this.healthService.tableHeaders[this.metricId];
                 this.selectedPanelData = this.healthService.panelParams[this.metricId];
-                this.resetActiveEntity(false);
                 this.metricValuesLen = this.metricId in this.healthService.values ? Object.values(this.healthService.values[this.metricId]).length : 0;
+                this.resetActiveEntity(false);
 
                 if (!searchParam || !searchParam.length) {
                     this.filterModel.query = '';
@@ -116,11 +145,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        if (this.elementSearch) {
-            this.elementSearchHeight = this.elementSearch.nativeElement.offsetHeight;
-
-            setTimeout(() => this.containerDimensions = [this.elementSearchHeight + 16]);
-        }
+        this.setLayout();
     }
 
     ngOnDestroy() {}
@@ -164,6 +189,13 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
                 this.mobileDetailMode = true;
             }
         }
+
+        this.setLayout();
+
+        // setTimeout(() => {
+        //     this.scrollMechanicsService.setElementViewWidth(this.viewContainer.nativeElement.clientWidth);
+        //     this.scrollMechanicsService.setElementTableWidth(this.tableContainer.nativeElement.clientWidth - 8/* -gutter */);
+        // });
     }
 
     resetActiveEntity(updateURI = true) {
@@ -174,5 +206,29 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
             this.uri.updateURI(undefined, queryParams);
         }
         this.mobileDetailMode = false;
+        setTimeout(() => this.setLayout());
+    }
+
+    private setLayout() {
+        if (this.metricValuesLen === 1) {
+            this.fixedLayoutClass = 'fixedLayout--no-panel';
+        } else {
+            if (this.tableContainer) {
+                // measure table (not wrapper) width
+                const tableWidth = this.tableContainer.nativeElement.querySelectorAll('table')[0].offsetWidth;
+                // const wrapperWidth = this.tableContainer.nativeElement.offsetWidth;
+                let windowWidth = this.scrollMechanicsService.windowSizeSubject.getValue().width;
+                // Table occupy 50% of the screen (20% menu and 30% right panel)
+                windowWidth /= 2;
+                windowWidth += 4 * 16; // four gutters for both grids
+
+                const isTableFit = (windowWidth > tableWidth);
+                if (this.activeEntity) {
+                    this.fixedLayoutClass = (isTableFit) ? '' : 'fixedLayout--with-panel';
+                } else {
+                    this.fixedLayoutClass = (isTableFit) ? '' : 'fixedLayout--no-panel';
+                }
+            }
+        }
     }
 }
