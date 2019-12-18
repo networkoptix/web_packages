@@ -148,7 +148,7 @@ Check Log In
     ${random email}    Get Random Email    ${BASE EMAIL}
     Log In    ${random email}    ${password}    ${button}
     Wait Until Element Is Visible    ${ACCOUNT NOT FOUND}
-    Log In    ${EMAIL OWNER}    ${password}    None
+    Log In    ${EMAIL OWNER}    ${password}    button=None
 
 Log Out
     Wait Until Page Does Not Contain Element    ${BACKDROP}
