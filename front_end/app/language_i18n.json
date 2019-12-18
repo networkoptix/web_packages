@@ -673,7 +673,7 @@
                 "minutes": "minutes"
             },
             "warningMessages": {
-                "videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+                "videoEncryption": "Encrypting video traffic will significantly increase CPU usage."
             }
         },
         "shareOffline": "Cannot share system while it is offline",
