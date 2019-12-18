@@ -147,7 +147,7 @@ Validate Log In
 Check Log In
     [arguments]    ${button}=${LOG IN NAV BAR}
     ${random email}    Get Random Email    ${BASE EMAIL}
-    Log In    ${random email}    ${password}    ${button}
+    Log In    ${random email}    ${password}      validate=False     button=${button}
     Wait Until Element Is Visible    ${ACCOUNT NOT FOUND}
     Log In    ${EMAIL OWNER}    ${password}    button=None
 
