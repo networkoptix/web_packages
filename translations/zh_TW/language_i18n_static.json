@@ -236,8 +236,8 @@
 				"ipvd_feedback_device": "{{asset}} 的回饋意見"
 			},
 			"subject": {
-				"contact_sales": "聯繫 {{asset}} 業務",
-				"contact_support": "聯繫 {{asset}} 技術支援",
+				"sales_inquiry": "{{asset}}的產品諮詢",
+				"technical_inquiry": "Technical inquiry for {{asset}}",
 				"integration_feedback": "整合 {{asset}} 的回饋意見",
 				"ipvd_feedback_page": "攝影機頁面的回饋意見",
 				"ipvd_feedback_device": "{{asset}} 的回饋意見"

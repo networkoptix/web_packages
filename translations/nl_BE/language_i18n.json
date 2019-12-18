@@ -371,11 +371,11 @@
             "failedToSend": "Bericht kan niet worden verzonden.",
             "sent": "Bericht is verzonden.",
             "subject": {
-                "contact_sales": "Contacteer verkoop voor {{asset}}",
-                "contact_support": "Contacteer support voor {{asset}}",
                 "integration_feedback": "Feedback voor integratie {{asset}}",
                 "ipvd_feedback_device": "Feedback over {{asset}}",
-                "ipvd_feedback_page": "Feedback voor camera's pagina"
+                "ipvd_feedback_page": "Feedback voor camera's pagina",
+                "sales_inquiry": "Verkoopaanvraag voor {{asset}}",
+                "technical_inquiry": "Technical inquiry for {{asset}}"
             },
             "title": {
                 "integration": "Neem contact op met {{companyName}}",
@@ -695,9 +695,8 @@
         "online": "online",
         "unavailable": "niet beschikbaar"
     },
-    "testedVersionLabel": "Getest op {{vmsName}} versie:",
-    "testedVersionsLabel": "Getest op {{vmsName}} versies:",
-    "topXByVolume": "Top {{value}} by volume:",
+    "testedVersionLabel": "Tested with {{vmsName}} version:",
+    "testedVersionsLabel": "Tested with {{vmsName}} versions:",
     "users": "Gebruikers",
     "you": "u"
 }

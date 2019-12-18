@@ -371,11 +371,11 @@
             "failedToSend": "Échec d’envoi du message.",
             "sent": "Message a été envoyé.",
             "subject": {
-                "contact_sales": "Contacter les ventes pour {{asset}}",
-                "contact_support": "Contacter le support pour {{asset}}",
                 "integration_feedback": "Commentaires pour l'intégration {{asset}}",
                 "ipvd_feedback_device": "Commentaires sur {{asset}}",
-                "ipvd_feedback_page": "Commentaires sur la page des caméras"
+                "ipvd_feedback_page": "Commentaires sur la page des caméras",
+                "sales_inquiry": "Demande de vente pour {{asset}}",
+                "technical_inquiry": "Technical inquiry for {{asset}}"
             },
             "title": {
                 "integration": "Entrez en contact avec {{companyName}}",
@@ -697,7 +697,6 @@
     },
     "testedVersionLabel": "Tested with {{vmsName}} version:",
     "testedVersionsLabel": "Tested with {{vmsName}} versions:",
-    "topXByVolume": "Top {{value}} by volume:",
     "users": "Usagers",
     "you": "toi"
 }

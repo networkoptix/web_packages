@@ -371,11 +371,11 @@
             "failedToSend": "Не вдалося надіслати повідомлення.",
             "sent": "Повідомлення відправлено.",
             "subject": {
-                "contact_sales": "Зв'яжіться з відділом продажів за {{asset}}",
-                "contact_support": "Зверніться до служби підтримки за {{asset}}",
                 "integration_feedback": "Зворотній зв'язок для інтеграції {{asset}}",
                 "ipvd_feedback_device": "Відгук про {{asset}}",
-                "ipvd_feedback_page": "Зворотній зв’язок для сторінки камер"
+                "ipvd_feedback_page": "Зворотній зв’язок для сторінки камер",
+                "sales_inquiry": "Запит на продаж {{asset}}",
+                "technical_inquiry": "Technical inquiry for {{asset}}"
             },
             "title": {
                 "integration": "Зв’яжіться з {{companyName}}",
@@ -695,9 +695,8 @@
         "online": "oнлайн",
         "unavailable": "недоступний"
     },
-    "testedVersionLabel": "Протестовано за допомогою {{vmsName}} версії:",
-    "testedVersionsLabel": "Протестовано {{vmsName}} версій:",
-    "topXByVolume": "Top {{value}} by volume:",
+    "testedVersionLabel": "Tested with {{vmsName}} version:",
+    "testedVersionsLabel": "Tested with {{vmsName}} versions:",
     "users": "Користувачі",
     "you": "ти"
 }

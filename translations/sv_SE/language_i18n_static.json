@@ -236,8 +236,8 @@
 				"ipvd_feedback_device": "Feedback om {{asset}}"
 			},
 			"subject": {
-				"contact_sales": "Kontakta försäljning för {{asset}}",
-				"contact_support": "Kontakta support för {{asset}}",
+				"sales_inquiry": "Försäljningsförfrågan för {{asset}}",
+				"technical_inquiry": "Technical inquiry for {{asset}}",
 				"integration_feedback": "Feedback för integration {{asset}}",
 				"ipvd_feedback_page": "Feedback för kamerans sida",
 				"ipvd_feedback_device": "Feedback om {{asset}}"

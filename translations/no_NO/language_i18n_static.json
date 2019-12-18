@@ -236,8 +236,8 @@
 				"ipvd_feedback_device": "Tilbakemelding for {{asset}}"
 			},
 			"subject": {
-				"contact_sales": "Kontakt salg for {{asset}}",
-				"contact_support": "Kontakt brukerstøtte for {{asset}}",
+				"sales_inquiry": "Salgsforespørsel for {{asset}}",
+				"technical_inquiry": "Technical inquiry for {{asset}}",
 				"integration_feedback": "Tilbakemelding for integrasjon {{asset}}",
 				"ipvd_feedback_page": "Tilbakemelding for kameraer-siden",
 				"ipvd_feedback_device": "Tilbakemelding for {{asset}}"

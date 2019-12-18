@@ -236,8 +236,8 @@
 				"ipvd_feedback_device": "Feedback about {{asset}}"
 			},
 			"subject": {
-				"contact_sales": "Contact sales for {{asset}}",
-				"contact_support": "Contact support for {{asset}}",
+				"sales_inquiry": "Sales inquiry for {{asset}}",
+				"technical_inquiry": "Technical inquiry for {{asset}}",
 				"integration_feedback": "Feedback for integration {{asset}}",
 				"ipvd_feedback_page": "Feedback for cameras page",
 				"ipvd_feedback_device": "Feedback about {{asset}}"

@@ -236,8 +236,8 @@
 				"ipvd_feedback_device": "ข้อเสนอแนะเกี่ยวกับ {{asset}}"
 			},
 			"subject": {
-				"contact_sales": "ติดต่อฝ่ายขายสำหรับ {{asset}}",
-				"contact_support": "ติดต่อฝ่ายสนับสนุนสำหรับ {{asset}}",
+				"sales_inquiry": "สอบถามรายละเอียดการขายสำหรับ {{asset}}",
+				"technical_inquiry": "Technical inquiry for {{asset}}",
 				"integration_feedback": "ข้อเสนอแนะสำหรับการรวม {{asset}}",
 				"ipvd_feedback_page": "ข้อเสนอแนะสำหรับหน้ากล้อง",
 				"ipvd_feedback_device": "ข้อเสนอแนะเกี่ยวกับ {{asset}}"

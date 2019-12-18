@@ -236,8 +236,8 @@
 				"ipvd_feedback_device": "Feedback over {{asset}}"
 			},
 			"subject": {
-				"contact_sales": "Neem contact op met sales voor {{asset}}",
-				"contact_support": "Neem contact op met ondersteuning voor {{asset}}",
+				"sales_inquiry": "Verkoopaanvraag voor {{asset}}",
+				"technical_inquiry": "Technical inquiry for {{asset}}",
 				"integration_feedback": "Feedback voor integratie {{asset}}",
 				"ipvd_feedback_page": "Feedback voor de camerapagina",
 				"ipvd_feedback_device": "Feedback over {{asset}}"

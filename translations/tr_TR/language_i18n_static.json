@@ -236,8 +236,8 @@
 				"ipvd_feedback_device": "{{asset}} hakkında geri bildirim"
 			},
 			"subject": {
-				"contact_sales": "Satış için {{asset}} iletişime geçin",
-				"contact_support": "{{asset}} için Destek İste",
+				"sales_inquiry": "{{asset}} için satış talebi",
+				"technical_inquiry": "Technical inquiry for {{asset}}",
 				"integration_feedback": "Entegrasyon için geri bildirim {{asset}}",
 				"ipvd_feedback_page": "Kameralar sayfası için geri bildirim",
 				"ipvd_feedback_device": "{{asset}} hakkında geri bildirim"

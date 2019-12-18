@@ -236,8 +236,8 @@
 				"ipvd_feedback_device": "משוב על {{asset}}"
 			},
 			"subject": {
-				"contact_sales": "צור קשר עם מחלקת המכירות עבור {{asset}}",
-				"contact_support": "צור קשר עם התמיכה בנוגע ל- {{asset}}",
+				"sales_inquiry": "שאלת מכירות עבור {{asset}}",
+				"technical_inquiry": "Technical inquiry for {{asset}}",
 				"integration_feedback": "משוב לאינטגרציה {{asset}}",
 				"ipvd_feedback_page": "משוב עבור דף מצלמות",
 				"ipvd_feedback_device": "משוב על {{asset}}"
@@ -483,8 +483,8 @@
 	},
 	"systemAdministration": "ניהול המערכת",
 	"users": "משתמשים",
-	"testedVersionLabel": "נבדק עם {{vmsName}} גרסה:",
-	"testedVersionsLabel": "נבדק עם {{vmsName}} בגרסאות:",
+	"testedVersionLabel": "Tested with {{vmsName}} version:",
+	"testedVersionsLabel": "Tested with {{vmsName}} versions:",
 	"About %CLOUD_NAME%": "אודות %CLOUD_NAME%",
 	"Download %VMS_NAME%": "הורד את %VMS_NAME%",
 	"Integrations": "אינטגרציות",

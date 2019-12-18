@@ -371,11 +371,11 @@
             "failedToSend": "Tin nhắn đã không gửi được.",
             "sent": "Tin nhắn đã được gửi.",
             "subject": {
-                "contact_sales": "Liên hệ bán hàng cho {{asset}}",
-                "contact_support": "Liên hệ hỗ trợ cho {{asset}}",
                 "integration_feedback": "Phản hồi cho tích hợp {{asset}}",
                 "ipvd_feedback_device": "Phản hồi về {{asset}}",
-                "ipvd_feedback_page": "Phản hồi cho trang camera"
+                "ipvd_feedback_page": "Phản hồi cho trang camera",
+                "sales_inquiry": "Yêu cầu bán hàng cho {{asset}}",
+                "technical_inquiry": "Technical inquiry for {{asset}}"
             },
             "title": {
                 "integration": "Liên lạc với {{companyName}}",
@@ -697,7 +697,6 @@
     },
     "testedVersionLabel": "Tested with {{vmsName}} version:",
     "testedVersionsLabel": "Tested with {{vmsName}} versions:",
-    "topXByVolume": "Top {{value}} by volume:",
     "users": "Người sử dụng",
     "you": "you"
 }

@@ -371,11 +371,11 @@
             "failedToSend": "Mesaj gönderilemedi.",
             "sent": "Mesaj gönderildi.",
             "subject": {
-                "contact_sales": "Satış için {{asset}} iletişime geçin",
-                "contact_support": "{{asset}} için Destek İste",
                 "integration_feedback": "Entegrasyon için geri bildirim {{asset}}",
                 "ipvd_feedback_device": "{{asset}} hakkında geri bildirim",
-                "ipvd_feedback_page": "Kameralar sayfası için geri bildirim"
+                "ipvd_feedback_page": "Kameralar sayfası için geri bildirim",
+                "sales_inquiry": "{{asset}} için satış talebi",
+                "technical_inquiry": "Technical inquiry for {{asset}}"
             },
             "title": {
                 "integration": "{{companyName}} ile iletişime geçin",
@@ -697,7 +697,6 @@
     },
     "testedVersionLabel": "Tested with {{vmsName}} version:",
     "testedVersionsLabel": "Tested with {{vmsName}} versions:",
-    "topXByVolume": "Top {{value}} by volume:",
     "users": "Kullanıcılar",
     "you": "sen"
 }

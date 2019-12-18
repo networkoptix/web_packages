@@ -236,8 +236,8 @@
 				"ipvd_feedback_device": "Отзыв о {{asset}}"
 			},
 			"subject": {
-				"contact_sales": "Связаться с отделом продаж по поводу {{asset}}",
-				"contact_support": "Обратитесь в службу поддержки по поводу {{asset}}",
+				"sales_inquiry": "Запрос на продажу {{asset}}",
+				"technical_inquiry": "Technical inquiry for {{asset}}",
 				"integration_feedback": "Отзыв об интеграции {{asset}}",
 				"ipvd_feedback_page": "Отзыв о странице камер",
 				"ipvd_feedback_device": "Отзыв о {{asset}}"

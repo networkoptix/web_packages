@@ -12,7 +12,7 @@
     "emailSubject": "Запрос на продажу {{message.asset}}"
   },
   "contact_support": {
-    "emailSubject": "Запрос на поддержку по {{message.asset}}"
+    "emailSubject": "Technical inquiry for {{message.asset}}"
   },
   "integration_feedback": {
     "emailSubject": "Отзыв о {{message.asset}}"

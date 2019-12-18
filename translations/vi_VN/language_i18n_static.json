@@ -236,8 +236,8 @@
 				"ipvd_feedback_device": "Phản hồi về {{asset}}"
 			},
 			"subject": {
-				"contact_sales": "Liên hệ bán hàng cho {{asset}}",
-				"contact_support": "Liên hệ hỗ trợ cho {{asset}}",
+				"sales_inquiry": "Yêu cầu bán hàng cho {{asset}}",
+				"technical_inquiry": "Technical inquiry for {{asset}}",
 				"integration_feedback": "Phản hồi cho tích hợp {{asset}}",
 				"ipvd_feedback_page": "Phản hồi cho trang camera",
 				"ipvd_feedback_device": "Phản hồi về {{asset}}"

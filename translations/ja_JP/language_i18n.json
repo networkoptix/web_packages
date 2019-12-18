@@ -371,11 +371,11 @@
             "failedToSend": "メッセージを送信できませんでした。",
             "sent": "メッセージが送信されました。",
             "subject": {
-                "contact_sales": "{{asset}} についてセールスに連絡する",
-                "contact_support": "{{asset}} についてサポートに連絡する",
                 "integration_feedback": "{{asset}} 統合のためのフィードバック",
                 "ipvd_feedback_device": "{{asset}} についてのフィードバック",
-                "ipvd_feedback_page": "カメラページへのフィードバック"
+                "ipvd_feedback_page": "カメラページへのフィードバック",
+                "sales_inquiry": "{{asset}}販売問い合わせ",
+                "technical_inquiry": "Technical inquiry for {{asset}}"
             },
             "title": {
                 "integration": "{{companyName}} と連絡を取る",
@@ -697,7 +697,6 @@
     },
     "testedVersionLabel": "Tested with {{vmsName}} version:",
     "testedVersionsLabel": "Tested with {{vmsName}} versions:",
-    "topXByVolume": "Top {{value}} by volume:",
     "users": "ユーザー",
     "you": "あなた"
 }

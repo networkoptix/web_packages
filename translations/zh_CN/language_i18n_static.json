@@ -236,8 +236,8 @@
 				"ipvd_feedback_device": "关于 {{asset}} 反馈"
 			},
 			"subject": {
-				"contact_sales": "联系{{asset}} 销售人员",
-				"contact_support": "联系{{asset}} 技术支持",
+				"sales_inquiry": "{{asset}} 的產品咨询",
+				"technical_inquiry": "Technical inquiry for {{asset}}",
 				"integration_feedback": "集成{{asset}} 反馈",
 				"ipvd_feedback_page": "摄像机页面反馈",
 				"ipvd_feedback_device": "关于 {{asset}} 反馈"

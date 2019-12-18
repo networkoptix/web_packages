@@ -371,11 +371,11 @@
             "failedToSend": "Zprávu se nepodařilo odeslat.",
             "sent": "Zpráva byla odeslána.",
             "subject": {
-                "contact_sales": "Kontaktovat obchod ohledně {{asset}}",
-                "contact_support": "Kontaktovat podporu ohledně{{asset}}",
                 "integration_feedback": "Zpětná vazba pro integraci {{asset}}",
                 "ipvd_feedback_device": "Zpětná vazba pro {{asset}}",
-                "ipvd_feedback_page": "Zpětná vazba pro kameru"
+                "ipvd_feedback_page": "Zpětná vazba pro kameru",
+                "sales_inquiry": "Dotaz na prodejce o {{asset}}",
+                "technical_inquiry": "Technical inquiry for {{asset}}"
             },
             "title": {
                 "integration": "Spojte se s {{companyName}}",

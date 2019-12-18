@@ -371,6 +371,17 @@
             "failedToSend": "Meddelandet gick inte att skicka.",
             "sent": "Meddelandet har skickats.",
             "subject": {
+                "integration_feedback": "Feedback för integration {{asset}}",
+                "ipvd_feedback_device": "Feedback om {{asset}}",
+                "ipvd_feedback_page": "Feedback för kamerans sida",
+                "sales_inquiry": "Försäljningsförfrågan för {{asset}}",
+                "technical_inquiry": "Technical inquiry for {{asset}}"
+            },
+            "title": {
+                "integration": "Kom i kontakt med {{companyName}}",
+                "ipvd_feedback_device": "Feedback om {{asset}}",
+                "ipvd_feedback_page": "Feedback för kamerans sida"
+            "subject": {
                 "contact_sales": "Kontakta försäljning för {{asset}}",
                 "contact_support": "Kontakta support för {{asset}}",
                 "integration_feedback": "Feedback för integration {{asset}}",
@@ -695,9 +706,8 @@
         "online": "uppkopplad",
         "unavailable": "inte tillgänglig"
     },
-    "testedVersionLabel": "Testat på {{vmsName}} version:",
-    "testedVersionsLabel": "Testat på {{vmsName}} version:",
-    "topXByVolume": "Top {{value}} by volume:",
+    "testedVersionLabel": "Tested with {{vmsName}} version:",
+    "testedVersionsLabel": "Tested with {{vmsName}} versions:",
     "users": "Användare",
     "you": "du"
 }

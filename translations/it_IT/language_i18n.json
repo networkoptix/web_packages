@@ -371,11 +371,11 @@
             "failedToSend": "Impossibile inviare il messaggio.",
             "sent": "Il messaggio è stato inviato.",
             "subject": {
-                "contact_sales": "Contatta le vendite per {{asset}}",
-                "contact_support": "Contatta l'assistenza per {{asset}}",
                 "integration_feedback": "Feedback per l'integrazione {{asset}}",
                 "ipvd_feedback_device": "Feedback su {{asset}}",
-                "ipvd_feedback_page": "Feedback per la pagina delle telecamere"
+                "ipvd_feedback_page": "Feedback per la pagina delle telecamere",
+                "sales_inquiry": "Richiesta informazioni di vendita per {{asset}}",
+                "technical_inquiry": "Technical inquiry for {{asset}}"
             },
             "title": {
                 "integration": "Contatta {{companyName}}",
@@ -695,9 +695,8 @@
         "online": "online",
         "unavailable": "non disponibile"
     },
-    "testedVersionLabel": "Verificato sulla versione {{vmsName}}:",
-    "testedVersionsLabel": "Verificato sulla versione {{vmsName}}:",
-    "topXByVolume": "Top {{value}} by volume:",
+    "testedVersionLabel": "Tested with {{vmsName}} version:",
+    "testedVersionsLabel": "Tested with {{vmsName}} versions:",
     "users": "Utenti",
     "you": "tu"
 }

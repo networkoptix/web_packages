@@ -371,11 +371,11 @@
             "failedToSend": "Message has failed to send.",
             "sent": "Message has been sent.",
             "subject": {
-                "contact_sales": "Contact sales for {{asset}}",
-                "contact_support": "Contact support for {{asset}}",
                 "integration_feedback": "Feedback for integration {{asset}}",
                 "ipvd_feedback_device": "Feedback about {{asset}}",
-                "ipvd_feedback_page": "Feedback for cameras page"
+                "ipvd_feedback_page": "Feedback for cameras page",
+                "sales_inquiry": "Sales inquiry for {{asset}}",
+                "technical_inquiry": "Technical inquiry for {{asset}}"
             },
             "title": {
                 "integration": "Get in touch with {{companyName}}",

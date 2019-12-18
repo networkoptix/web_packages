@@ -371,11 +371,11 @@
             "failedToSend": "메시지 전송 실패",
             "sent": "메시지가 전송되었습니다.",
             "subject": {
-                "contact_sales": "{{asset}} 에 대해 영업팀에 문의",
-                "contact_support": "{{asset}} 대해 지원팀에 문의",
                 "integration_feedback": "{{asset}} 통합에 대한 피드백",
                 "ipvd_feedback_device": "{{asset}} 에 대한 피드백",
-                "ipvd_feedback_page": "카메라 페이지에 대한 피드백"
+                "ipvd_feedback_page": "카메라 페이지에 대한 피드백",
+                "sales_inquiry": "{{asset}}에 대한 판매 문의",
+                "technical_inquiry": "Technical inquiry for {{asset}}"
             },
             "title": {
                 "integration": "{{companyName}} 과 연락",
@@ -697,7 +697,6 @@
     },
     "testedVersionLabel": "Tested with {{vmsName}} version:",
     "testedVersionsLabel": "Tested with {{vmsName}} versions:",
-    "topXByVolume": "Top {{value}} by volume:",
     "users": "사용자",
     "you": "당신"
 }

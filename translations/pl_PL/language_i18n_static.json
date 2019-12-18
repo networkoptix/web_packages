@@ -236,8 +236,8 @@
 				"ipvd_feedback_device": "Opinie dotyczące {{asset}}"
 			},
 			"subject": {
-				"contact_sales": "Kontakt do sprzedawcy {{asset}}",
-				"contact_support": "Kontakt do wsparcia technicznego {{asset}}",
+				"sales_inquiry": "Zapytanie handlowe o {{asset}}",
+				"technical_inquiry": "Technical inquiry for {{asset}}",
 				"integration_feedback": "Opinia dotycząca integracji {{asset}}",
 				"ipvd_feedback_page": "Opinia dotycząca listy kamer",
 				"ipvd_feedback_device": "Opinie dotyczące {{asset}}"

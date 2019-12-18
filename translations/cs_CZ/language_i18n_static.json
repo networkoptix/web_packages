@@ -236,8 +236,8 @@
 				"ipvd_feedback_device": "Zpětná vazba pro {{asset}}"
 			},
 			"subject": {
-				"contact_sales": "Kontaktovat obchod ohledně {{asset}}",
-				"contact_support": "Kontaktovat podporu ohledně{{asset}}",
+				"sales_inquiry": "Dotaz na prodejce o {{asset}}",
+				"technical_inquiry": "Technical inquiry for {{asset}}",
 				"integration_feedback": "Zpětná vazba pro integraci {{asset}}",
 				"ipvd_feedback_page": "Zpětná vazba pro kameru",
 				"ipvd_feedback_device": "Zpětná vazba pro {{asset}}"

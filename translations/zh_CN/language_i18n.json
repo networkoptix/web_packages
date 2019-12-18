@@ -371,11 +371,11 @@
             "failedToSend": "訊息无法发送。",
             "sent": "訊息已傳送。",
             "subject": {
-                "contact_sales": "联系{{asset}} 销售人员",
-                "contact_support": "联系{{asset}} 技术支持",
                 "integration_feedback": "集成{{asset}} 反馈",
                 "ipvd_feedback_device": "关于 {{asset}} 反馈",
-                "ipvd_feedback_page": "摄像机页面反馈"
+                "ipvd_feedback_page": "摄像机页面反馈",
+                "sales_inquiry": "{{asset}} 的產品咨询",
+                "technical_inquiry": "Technical inquiry for {{asset}}"
             },
             "title": {
                 "integration": "与 {{companyName}} 联系",
@@ -697,7 +697,6 @@
     },
     "testedVersionLabel": "Tested with {{vmsName}} version:",
     "testedVersionsLabel": "Tested with {{vmsName}} versions:",
-    "topXByVolume": "Top {{value}} by volume:",
     "users": "用户",
     "you": "您"
 }

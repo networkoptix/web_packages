@@ -236,8 +236,8 @@
 				"ipvd_feedback_device": "Comentarios sobre {{asset}}"
 			},
 			"subject": {
-				"contact_sales": "Contactar a ventas para {{asset}}",
-				"contact_support": "Contactar a soporte para {{asset}}",
+				"sales_inquiry": "Consulta de ventas para {{asset}}",
+				"technical_inquiry": "Technical inquiry for {{asset}}",
 				"integration_feedback": "Comentarios para la integración {{asset}}",
 				"ipvd_feedback_page": "Comentarios sobre la página de cámaras",
 				"ipvd_feedback_device": "Comentarios sobre {{asset}}"

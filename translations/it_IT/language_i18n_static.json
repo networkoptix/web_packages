@@ -236,8 +236,8 @@
 				"ipvd_feedback_device": "Feedback su {{asset}}"
 			},
 			"subject": {
-				"contact_sales": "Contatta le vendite per {{asset}}",
-				"contact_support": "Contatta l'assistenza per {{asset}}",
+				"sales_inquiry": "Richiesta informazioni di vendita per {{asset}}",
+				"technical_inquiry": "Technical inquiry for {{asset}}",
 				"integration_feedback": "Feedback per l'integrazione {{asset}}",
 				"ipvd_feedback_page": "Feedback per la pagina delle telecamere",
 				"ipvd_feedback_device": "Feedback su {{asset}}"
@@ -483,8 +483,8 @@
 	},
 	"systemAdministration": "Amministratore di sistema",
 	"users": "Utenti",
-	"testedVersionLabel": "Verificato sulla versione {{vmsName}}:",
-	"testedVersionsLabel": "Verificato sulla versione {{vmsName}}:",
+	"testedVersionLabel": "Tested with {{vmsName}} version:",
+	"testedVersionsLabel": "Tested with {{vmsName}} versions:",
 	"About %CLOUD_NAME%": "Informazioni su %CLOUD_NAME%",
 	"Download %VMS_NAME%": "Scarica %VMS_NAME%",
 	"Integrations": "Integrazioni",

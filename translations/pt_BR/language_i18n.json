@@ -371,11 +371,11 @@
             "failedToSend": "Falha no envio da mensagem.",
             "sent": "A mensagem foi enviada.",
             "subject": {
-                "contact_sales": "Entre em contato com vendas para {{asset}}",
-                "contact_support": "Contate o suporte para {{asset}}",
                 "integration_feedback": "Feedback para integração {{asset}}",
                 "ipvd_feedback_device": "Comentários sobre {{asset}}",
-                "ipvd_feedback_page": "Feedback para página de câmaras"
+                "ipvd_feedback_page": "Feedback para página de câmaras",
+                "sales_inquiry": "Pesquisa de vendas para {{asset}}",
+                "technical_inquiry": "Technical inquiry for {{asset}}"
             },
             "title": {
                 "integration": "Entre em contato com {{companyName}}",
@@ -697,7 +697,6 @@
     },
     "testedVersionLabel": "Tested with {{vmsName}} version:",
     "testedVersionsLabel": "Tested with {{vmsName}} versions:",
-    "topXByVolume": "Top {{value}} by volume:",
     "users": "Utilizadores",
     "you": "you"
 }

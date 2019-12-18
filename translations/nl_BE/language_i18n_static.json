@@ -236,8 +236,8 @@
 				"ipvd_feedback_device": "Feedback over {{asset}}"
 			},
 			"subject": {
-				"contact_sales": "Contacteer verkoop voor {{asset}}",
-				"contact_support": "Contacteer support voor {{asset}}",
+				"sales_inquiry": "Verkoopaanvraag voor {{asset}}",
+				"technical_inquiry": "Technical inquiry for {{asset}}",
 				"integration_feedback": "Feedback voor integratie {{asset}}",
 				"ipvd_feedback_page": "Feedback voor camera's pagina",
 				"ipvd_feedback_device": "Feedback over {{asset}}"
@@ -483,8 +483,8 @@
 	},
 	"systemAdministration": "Systeem Administratie",
 	"users": "Gebruikers",
-	"testedVersionLabel": "Getest op {{vmsName}} versie:",
-	"testedVersionsLabel": "Getest op {{vmsName}} versies:",
+	"testedVersionLabel": "Tested with {{vmsName}} version:",
+	"testedVersionsLabel": "Tested with {{vmsName}} versions:",
 	"About %CLOUD_NAME%": "Over %CLOUD_NAME%",
 	"Download %VMS_NAME%": "Download %VMS_NAME%",
 	"Integrations": "Integraties",

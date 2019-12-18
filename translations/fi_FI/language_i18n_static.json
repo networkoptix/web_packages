@@ -236,8 +236,8 @@
 				"ipvd_feedback_device": "Palaute{{asset}}"
 			},
 			"subject": {
-				"contact_sales": "Ota yhteyttä {{asset}} myyntiin",
-				"contact_support": "Pyydä tukea {{asset}}",
+				"sales_inquiry": "Myyntikysely {{asset}}",
+				"technical_inquiry": "Technical inquiry for {{asset}}",
 				"integration_feedback": "Palaute integraatiosta {{asset}}",
 				"ipvd_feedback_page": "Palaute kameran sivulle",
 				"ipvd_feedback_device": "Palaute{{asset}}"
