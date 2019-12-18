@@ -25,15 +25,24 @@
                         >
                             <span class="ellipsis" translate>Rename</span>
                         </button>
-                        <button class="btn btn-default">
+                        <button 
+                            class="btn btn-default"
+                            (click)="restartServer()"    
+                        >
                             <span class="ellipsis" translate>Restart</span>
                         </button>
                     </div>
                     <div class="d-flex">
-                        <button class="btn btn-default mr-2">
+                        <button 
+                            class="btn btn-default mr-2"
+                            (click)="detachServer()"
+                        >
                             <span class="ellipsis" translate>Detach from the System</span>
                         </button>
-                        <button class="btn btn-default">
+                        <button 
+                            class="btn btn-default"
+                            (click)="resetServer()"
+                        >
                             <span class="ellipsis" translate>Reset to Defaults</span>
                         </button>
                     </div>

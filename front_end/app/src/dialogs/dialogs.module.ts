@@ -16,6 +16,9 @@ import { FormsModule, EmailValidator }                  from '@angular/forms';
 import { TranslateModule }                              from '@ngx-translate/core';
 import { ClipboardModule }                              from 'ngx-clipboard';
 import { RenameServerModalContent }                     from './rename-server/rename-server.component';
+import { RestartServerModalContent }                    from './restart-server/restart-server.component';
+import { DetachServerModalContent }                     from './detach-server/detach-server.component';
+import { ResetServerModalContent }                      from './reset-server/reset-server.component';
 
 import { GenericModalContent, NxModalGenericComponent } from './generic/generic.component';
 import { NxDialogsService }                             from './dialogs.service';
@@ -48,6 +51,9 @@ import { RouterModule }                                 from '@angular/router';
         ApplyModalContent,
         NxModalApplyComponent,
         RenameServerModalContent,
+        RestartServerModalContent,
+        DetachServerModalContent,
+        ResetServerModalContent,
     ],
     entryComponents: [
         LoginModalContent,
@@ -65,6 +71,9 @@ import { RouterModule }                                 from '@angular/router';
         ApplyModalContent,
         NxModalApplyComponent,
         RenameServerModalContent,
+        RestartServerModalContent,
+        DetachServerModalContent,
+        ResetServerModalContent,
     ],
     providers      : [
         NxDialogsService,

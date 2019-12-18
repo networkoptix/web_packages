@@ -252,6 +252,33 @@ export class NxSystemServersComponent implements OnInit {
             .then(name => this.selectedServer.name = name);
     }
 
+    restartServer() {
+        return this.dialogs
+            .restartServer()
+            .then(server => {
+                console.log('returned server', server);
+                // selectedServer.status = 'offline';
+            });
+    }
+
+    detachServer() {
+        return this.dialogs
+            .detachServer()
+            .then(detach => {
+                console.log('returned in detach', detach);
+                // server should probably get removed from the menu?
+            });
+    }
+
+    resetServer() {
+        return this.dialogs
+            .resetServer()
+            .then(reset => {
+                console.log('returned in reset', reset);
+                // will take some time to reset and then restart the server
+            });
+    }
+
     disconnect() {
         // if (this.system.isMine) {
         //     // User is the owner. Deleting system means unbinding it and disconnecting all accounts

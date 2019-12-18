@@ -21,6 +21,9 @@ import { NxAccountService }          from '../services/account.service';
 import { ApplyModalContent }         from './apply/apply.component';
 import { RemoveUserModalContent }    from './remove-user/remove-user.component';
 import { RenameServerModalContent }  from './rename-server/rename-server.component';
+import { RestartServerModalContent } from './restart-server/restart-server.component';
+import { DetachServerModalContent }  from './detach-server/detach-server.component';
+import { ResetServerModalContent }   from './reset-server/reset-server.component';
 
 @Injectable({ providedIn: 'root' })
 export class NxDialogsService {
@@ -221,9 +224,48 @@ export class NxDialogsService {
             serverId,
             serverName,
             closable: true,
-        }
+        };
 
         return this.createModal(RenameServerModalContent, options, params);
+    }
+
+    restartServer() {
+        const options: any = {
+            windowClass: 'modal-holder',
+            backdrop   : 'static'
+        };
+
+        const params: any = {
+            closable: true,
+        };
+
+        return this.createModal(RestartServerModalContent, options, params);
+    }
+
+    detachServer() {
+        const options: any = {
+            windowClass: 'modal-holder',
+            backdrop   : 'static'
+        };
+
+        const params: any = {
+            closable: true,
+        };
+
+        return this.createModal(DetachServerModalContent, options, params);
+    }
+
+    resetServer() {
+        const options: any = {
+            windowClass: 'modal-holder',
+            backdrop   : 'static'
+        };
+
+        const params: any = {
+            closable: true,
+        };
+
+        return this.createModal(ResetServerModalContent, options, params);
     }
 
     merge(system, systems, user) {
