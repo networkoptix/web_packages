@@ -16,7 +16,6 @@ ${url}                 ${ENV}
 Open browser and set user language to current
     Open Browser and go to URL    ${url}
     Log In    ${email}    ${password}
-    Validate Log In
     sleep    3
     Log Out
 
@@ -68,7 +67,7 @@ Reset DB and Open New Browser On Failure
 Can be accessed via dropdown or direct link
     [tags]    C41576
     Go To    ${url}/account/password
-    Log In    ${email}    ${password}    None
+    Log In    ${email}    ${password}    ${False}    None
     Validate Log In
     Wait Until Elements Are Visible    ${CURRENT PASSWORD INPUT}    ${NEW PASSWORD INPUT}
     Location Should Be    ${url}/account/password

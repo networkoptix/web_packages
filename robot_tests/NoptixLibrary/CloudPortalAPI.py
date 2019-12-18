@@ -1,21 +1,29 @@
 import requests
 from selenium import webdriver
 
+
+env = 'https://cloud-test.hdw.mx'
+
 class CloudPortalAPI(object):
 
     def log_in(self, env, email, password):
-        with requests.Session() as s:
+        with requests.Session() as login_session:
             login_data = {
                 'email': email,
                 'password': password
             }
-            s.post(env + '/api/account/login', login_data)
-            return s
+            login_session.post(env + '/api/account/login', login_data)
+            return login_session
+
 
     # TODO implement logging out using API where appropriate
-    # def log_out(self, env):
-    #     result = requests.post(env + '/api/account/logout')
-    #     return result.status_code
+    def log_out(self, env, session_id, csrftoken):
+        with requests.Session() as logout_session:
+            logout_session.headers.update({'X-CSRFToken': csrftoken})
+            logout_session.headers.update({'cookie': 'csrftoken=' + csrftoken + '; sessionid=' + session_id})
+            resp = logout_session.post(env + '/api/account/logout')
+            logout_session.close()
+            return resp.status_code
 
     def change_password(self, env, email, old_password, new_password):
         change_pass_session = self.log_in(env, email, old_password)
@@ -77,4 +85,7 @@ class CloudPortalAPI(object):
 # main() is here only for testing the methods of the class and does not affect keywords usage
 if __name__ == "__main__":
     cp = CloudPortalAPI()
-    print(cp.get_language_anonymous('https://cloud-test.hdw.mx'))
+    print(cp.get_language_anonymous(env))
+    s = cp.log_in(env, 'qaburbank@gmail.com', 'QWEasd!@#')
+    print(s)
+    print(cp.log_out(env, s.cookies['sessionid']))
