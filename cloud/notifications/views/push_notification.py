@@ -124,8 +124,9 @@ def register_device(request):
         data = serializer.validated_data
 
         error_data = dict()
+        device = PushDevice.objects.filter(registration_id=data['deviceToken']).first()
 
-        if not PushDevice.objects.filter(registration_id=data['deviceToken']).exists():
+        if not device:
             device = PushDevice(
                 registration_id=data['deviceToken'], model=data['model'], name=data['name'], cloud_message_type='FCM',
                 user=request.user
@@ -136,7 +137,12 @@ def register_device(request):
             else:
                 error_data['deviceToken'] = "Token could not be validated"
         else:
-            error_data['deviceToken'] = "Device with this deviceToken already exists"
+            device.model = data['model']
+            device.name = data['name']
+            if device.user != request.user:
+                device.pushsubscription_set.all().delete()
+                device.user = request.user
+            device.save()
 
         if error_data:
             raise ValidationError(error_data)
