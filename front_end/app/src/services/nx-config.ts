@@ -389,6 +389,13 @@ export class NxConfigService {
             cloudName                     : '',
             vmsName                       : '',
             pushConfig                    : '',
+            servers : {
+                port: {
+                    max: 65535,
+                    min: 1,
+                    restrictedMax: 1024,
+                },
+            }
         };
     }
 

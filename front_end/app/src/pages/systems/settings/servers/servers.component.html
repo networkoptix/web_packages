@@ -59,8 +59,8 @@
                     <input 
                         class="port-input pl-2" 
                         type="number"
-                        min="1"
-                        max="65535"
+                        [min]="CONFIG.servers.port.min"
+                        [max]="CONFIG.servers.port.max"
                         [(ngModel)]="ipPortWatcher.value"
                         (keydown)="storePreviousValue($event)"
                         (keyup)="validationCheckForInput()"

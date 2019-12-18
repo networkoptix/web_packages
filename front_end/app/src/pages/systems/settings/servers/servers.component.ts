@@ -50,7 +50,7 @@ export class NxSystemServersComponent implements OnInit {
     previousInputValue: number;
 
     private setupDefaults() {
-        // this.CONFIG = this.configService.getConfig();
+        this.CONFIG = this.configService.getConfig();
 
         // this.debugMode = this.CONFIG.allowDebugMode;
         // this.betaMode = this.CONFIG.allowBetaMode;
@@ -191,7 +191,10 @@ export class NxSystemServersComponent implements OnInit {
     initForApplyService(): void {
         this.saveSettings = this.processService.createProcess(() => {
             const port = this.ipPortWatcher;
-            if (port.value !== port.originalValue) {
+            if (!port.value) {
+                port.value = port.originalValue;
+                this.applyService.reset();
+            } else if (port.value !== port.originalValue) {
                 this.system.changeServerPort(port.value)
                     .then(() => {
                         port.originalValue = port.value;
@@ -328,8 +331,8 @@ export class NxSystemServersComponent implements OnInit {
         // checks if entering a value less than min or greater than max
         // null exception for less than since it gets cast to 0
         if (
-            (this.ipPortWatcher.value < 1 && this.ipPortWatcher.value !== null)
-            || this.ipPortWatcher.value > 65535
+            (this.ipPortWatcher.value < this.CONFIG.servers.port.min && this.ipPortWatcher.value !== null)
+            || this.ipPortWatcher.value > this.CONFIG.servers.port.max
         ) {
             this.ipPortWatcher.value = this.previousInputValue;
         }
@@ -337,7 +340,7 @@ export class NxSystemServersComponent implements OnInit {
     }
 
     onPortChange() {
-        if (this.ipPortWatcher.value < 1024 && this.ipPortWatcher.value !== null) {
+        if (this.ipPortWatcher.value < this.CONFIG.servers.port.restrictedMax && this.ipPortWatcher.value !== null) {
             this.applyService.setWarn(this.LANG.servers.portWarning);
         } else {
             this.applyService.setWarn('');
