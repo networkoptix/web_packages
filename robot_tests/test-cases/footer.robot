@@ -41,6 +41,7 @@ Support leads to the proper support site
     Wait Until Element is Visible    ${FOOTER SUPPORT LINK}
     Sleep    1
     Click Link    ${FOOTER SUPPORT LINK}
+    Wait Until Number Of Tabs Are Open    2
     ${tabs}=   Get Window Handles
     Select Window    @{tabs}[1]
     Location Should Contain    ${SUPPORT URL}
@@ -60,6 +61,7 @@ Privacy leads to the proper page
     Wait Until Element is Visible    ${FOOTER PRIVACY LINK}
     Sleep    1
     Click Link    ${FOOTER PRIVACY LINK}
+    Wait Until Number Of Tabs Are Open    2
     @{tabs}=   Get Window Handles
     Select Window    @{tabs}[1]
     Location Should Be    ${PRIVACY POLICY URL FULL}
@@ -69,6 +71,7 @@ Copyright leads to the proper site
     Wait Until Element is Visible    ${FOOTER COPYRIGHT LINK}
     Sleep    1
     Click Link    ${FOOTER COPYRIGHT LINK}
+    Wait Until Number Of Tabs Are Open    2
     ${tabs}=   Get Window Handles
     Select Window    @{tabs}[1]
     Location Should Be    ${COPYRIGHT URL}
