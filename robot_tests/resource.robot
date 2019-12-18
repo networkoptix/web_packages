@@ -95,6 +95,7 @@ Check Language Logged In
     Register Keyword To Run On Failure    NONE
     ${curr lang}=   Get Account Language   ${ENV}    ${email}    ${password}
     Run Keyword Unless    '${curr lang}' == '${LANGUAGE}'    Set Account Language    ${ENV}    ${email}    ${password}    ${LANGUAGE}
+    Run Keyword Unless    '${curr lang}' == '${LANGUAGE}'    Reload Page      
 
 Set Language Anonymous
     [arguments]    ${lang}=${LANGUAGE}
