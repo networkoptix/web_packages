@@ -388,7 +388,7 @@ export class NxConfigService {
                     'MB/s': '',
                     'Mbit/s': '',
                     'KB/s': '',
-                    'KBit/s': '',
+                    'Kbit/s': '',
                     'Tr/s': '',
                     'unset': 'no-max-width'
                 }
