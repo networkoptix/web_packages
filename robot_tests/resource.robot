@@ -95,7 +95,7 @@ Check Language Logged In
     Register Keyword To Run On Failure    NONE
     ${curr lang}=   Get Account Language   ${ENV}    ${email}    ${password}
     Run Keyword Unless    '${curr lang}' == '${LANGUAGE}'    Set Account Language    ${ENV}    ${email}    ${password}    ${LANGUAGE}
-    Run Keyword Unless    '${curr lang}' == '${LANGUAGE}'    Reload Page      
+    Run Keyword Unless    '${curr lang}' == '${LANGUAGE}'    Reload Page
 
 Set Language Anonymous
     [arguments]    ${lang}=${LANGUAGE}
@@ -141,7 +141,6 @@ Log In With Remember Me
 Validate Log In
     [arguments]    ${timeout}=${selenium_timeout}
     Wait Until Element is Visible    ${ACCOUNT DROPDOWN}    ${timeout}
-    Check Language Logged In    ${email}    ${password}
     Sleep    0.5    #this is a test to see if it eliminates a problem with the login dialog popping up on logout
 
 Check Log In
