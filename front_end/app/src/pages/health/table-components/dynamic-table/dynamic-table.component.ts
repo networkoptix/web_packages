@@ -146,16 +146,17 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
     }
 
     private setTableDimensions() {
-        debugger;
+
+        this.scrollMechanicsService.setElementTableWidth(this.camerasTable.nativeElement.offsetWidth);
 
         this.windowSize = this.scrollMechanicsService.windowSizeSubject.getValue();
 
-        const table = this.camerasTable.nativeElement;
         const ELEMENTS_HEIGHT = this.dimensions.reduce((prev, curr) => prev + curr, 0);
         const THEAD_HEIGHT = this.thead.nativeElement.offsetHeight;
         const PADDING = 16;
         const PAGINATION_HEIGHT = 64;
-        let availSpace = this.windowSize.height - PAGINATION_HEIGHT - ELEMENTS_HEIGHT - 4 * PADDING - THEAD_HEIGHT - 48;
+
+        let availSpace = this.windowSize.height - 4 * PADDING - ELEMENTS_HEIGHT - THEAD_HEIGHT - 48 - PAGINATION_HEIGHT;
 
         if (this.tableHeader) {
             availSpace -= this.tableHeaderElement.nativeElement.offsetHeight;
@@ -183,9 +184,9 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
     }
 
     ngAfterViewInit(): void {
-        // if (this.dimensions.length) {
+        if (this.dimensions.length) {
             this.setTableDimensions();
-        // }
+        }
 
         // this.calcElementScrollMechanics();
 

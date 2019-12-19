@@ -69,7 +69,8 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
     elementTableHeight: number;
     containerDimensions: any = [];
 
-    windowSizeSubscription: any;
+    tableWidthSubscription: SubscriptionLike;
+    windowSizeSubscription: SubscriptionLike;
 
     fixedLayoutClass: string;
 
@@ -97,18 +98,15 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
             query: ''
         };
 
-        this.windowSizeSubscription = this.scrollMechanicsService
-                .windowSizeSubject
-                .subscribe(() => {
-                    if (this.viewContainer && this.viewContainer.nativeElement) {
-                        this.scrollMechanicsService.setElementViewWidth(this.viewContainer.nativeElement.clientWidth);
-                    }
-                    if (this.tableContainer && this.tableContainer.nativeElement) {
-                        let width = this.tableContainer.nativeElement.clientWidth;
-                        width = (this.activeEntity) ? width - 8 : width; /* -gutter */
-                        this.scrollMechanicsService.setElementTableWidth(width);
-                    }
-                });
+        // Breadcrumbs for making search bar same width as dynamic table
+        // this.tableWidthSubscription = this.scrollMechanicsService
+        //         .elementTableWidthSubject
+        //         .subscribe(() => {
+        //             setTimeout(() => {
+        //                 this.elementSearch.nativeElement.style.width = this.scrollMechanicsService.elementTableWidthSubject.getValue() + 'px';
+        //             });
+        //         });
+        // ***************************************************************
     }
 
     ngOnInit(): void {
@@ -137,6 +135,10 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
                 }
             });
 
+        this.windowSizeSubscription = this.scrollMechanicsService.windowSizeSubject.subscribe(({ width }) => {
+            this.setLayout();
+        });
+
         this.breakpointSubscription = this.breakpointObserver
             .observe([this.breakpoint])
             .subscribe((state: BreakpointState) => {
@@ -146,6 +148,11 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
 
     ngAfterViewInit() {
         this.setLayout();
+        if (this.elementSearch) {
+            this.elementSearchHeight = this.elementSearch.nativeElement.offsetHeight;
+
+            setTimeout(() => this.containerDimensions = [this.elementSearchHeight + 16]);
+        }
     }
 
     ngOnDestroy() {}
@@ -216,7 +223,6 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
             if (this.tableContainer) {
                 // measure table (not wrapper) width
                 const tableWidth = this.tableContainer.nativeElement.querySelectorAll('table')[0].offsetWidth;
-                // const wrapperWidth = this.tableContainer.nativeElement.offsetWidth;
                 let windowWidth = this.scrollMechanicsService.windowSizeSubject.getValue().width;
                 // Table occupy 50% of the screen (20% menu and 30% right panel)
                 windowWidth /= 2;

@@ -6,9 +6,9 @@ nx-system-alerts-component {
     
     .gridMetricContent {
         display: grid;
-        grid-gap: 1rem;
+        grid-column-gap: 1rem;
         grid-template-columns: fit-content(100%) $grid-panel-width; // <- if table is less than 70% of screen width
-        border: 1px solid purple;
+        //border: 1px solid purple;
         height: 100%;
         
         // if table is more than 70% of screen width
@@ -23,7 +23,7 @@ nx-system-alerts-component {
         }
         
         &Component {
-            border: 1px solid darkcyan;
+            //border: 1px solid darkcyan;
             
             &Wrapper {
                 position: sticky;

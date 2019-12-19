@@ -62,7 +62,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
     @ViewChild('tiles', { static: false }) elementTiles: ElementRef;
     @ViewChild('search', { static: false }) elementSearch: ElementRef;
     @ViewChild('table', { static: false }) elementTable: ElementRef;
-    @ViewChild('tableContainer', { static: false }) tableContainer: ElementRef;
+    // @ViewChild('tableContainer', { static: false }) tableContainer: ElementRef;
 
     constructor(private route: ActivatedRoute,
                 private menuService: NxMenuService,
@@ -78,15 +78,19 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
             selects : []
         };
 
-        this.windowSizeSubscription = this.scrollMechanicsService
-                .windowSizeSubject
-                .subscribe(() => {
-                    // if (this.elementTable && this.elementTable.nativeElement) {
-                    //     let width = this.elementTable.nativeElement.clientWidth;
-                    //     width = (this.activeTableEntity) ? width + 32 : width; /* -gutter */
-                    //     this.scrollMechanicsService.setElementTableWidth(width);
-                    // }
-                });
+        this.windowSizeSubscription = this.scrollMechanicsService.windowSizeSubject.subscribe(({ width }) => {
+            this.setLayout();
+        });
+
+        // this.windowSizeSubscription = this.scrollMechanicsService
+        //         .windowSizeSubject
+        //         .subscribe(() => {
+        //             // if (this.elementTable && this.elementTable.nativeElement) {
+        //             //     let width = this.elementTable.nativeElement.clientWidth;
+        //             //     width = (this.activeTableEntity) ? width + 32 : width; /* -gutter */
+        //             //     this.scrollMechanicsService.setElementTableWidth(width);
+        //             // }
+        //         });
     }
 
     ngOnInit(): void {
@@ -123,12 +127,14 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
 
     ngAfterViewInit() {
         this.setLayout();
-        // if (this.elementSearch && this.elementTiles) {
-        //     this.elementSearchHeight = this.elementSearch.nativeElement.offsetHeight;
-        //     this.elementTilesHeight = this.elementTiles.nativeElement.offsetHeight;
-        //
-        //     setTimeout(() => this.containerDimensions = [this.elementTilesHeight, 40]);
-        // }
+        if (this.elementSearch && this.elementTiles) {
+            setTimeout(() => {
+                this.elementSearchHeight = this.elementSearch.nativeElement.offsetHeight;
+                this.elementTilesHeight = this.elementTiles.nativeElement.offsetHeight;
+                this.containerDimensions = [this.elementTilesHeight, this.elementSearchHeight + 8 /*margin*/, 17 /*separator = 1px + padding*/];
+            });
+        }
+
         //
         // if (this.elementTable && this.elementTable.nativeElement) {
         //     let width = this.elementTable.nativeElement.clientWidth;
@@ -336,11 +342,12 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
             if (this.breakpointObserver.isMatched(this.breakpoint)) {
                 this.mobileDetailMode = true;
             }
+
+            setTimeout(() => this.setLayout());
+
         } else {
             this.resetActiveEntity();
         }
-
-        setTimeout(() => this.setLayout());
     }
 
     resetActiveEntity(updateURI = true) {
@@ -348,6 +355,8 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         this.activePanelEntity = undefined;
         this.activePanelParams = undefined;
         this.mobileDetailMode = false;
+
+        setTimeout(() => this.setLayout());
 
         if (updateURI) {
             const queryParams: Params = {};
@@ -358,13 +367,13 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
     }
 
     private setLayout() {
-        if (this.tableContainer) {
+        if (this.elementTable) {
             // measure table (not wrapper) width
-            const tableWidth = this.tableContainer.nativeElement.querySelectorAll('table')[0].offsetWidth;
+            const tableWidth = this.elementTable.nativeElement.querySelectorAll('table')[0].offsetWidth;
             // const wrapperWidth = this.tableContainer.nativeElement.offsetWidth;
             let windowWidth = this.scrollMechanicsService.windowSizeSubject.getValue().width;
             // Table occupy 50% of the screen (20% menu and 30% right panel)
-            windowWidth /= 2;
+            windowWidth *= .55;
             windowWidth += 4 * 16; // four gutters for both grids
 
             const isTableFit = (windowWidth > tableWidth);

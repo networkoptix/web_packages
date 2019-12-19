@@ -11,19 +11,6 @@
 
     <div class="gridMetricContentComponent" *ngIf="selectedData && selectedValues && !mobileDetailMode">
         <div class="gridMetricContentComponentWrapper">
-            <div class="mb-3 p-0" #search
-                 *ngIf="!mobileDetailMode && metricValuesLen > 1">
-
-                <nx-search
-                        name="filterModel"
-                        [ngModel]="filterModel"
-                        (ngModelChange)="modelChanged($event)"
-                        layout="compact"
-                        [placeholder]="LANG.search.Search"
-                        ngDefaultControl>
-                </nx-search>
-            </div>
-
             <div *ngIf="metricValuesLen === 1" class="col-12 col-xl-7 col-xxxl-5 px-2">
                 <nx-single-entity
                         [params]="selectedPanelData"
@@ -31,6 +18,18 @@
                 </nx-single-entity>
             </div>
             <div *ngIf="metricValuesLen > 1" class="p-0" #tableContainer>
+                <div class="mb-3 p-0" #search
+                     *ngIf="!mobileDetailMode && metricValuesLen > 1">
+
+                    <nx-search
+                            name="filterModel"
+                            [ngModel]="filterModel"
+                            (ngModelChange)="modelChanged($event)"
+                            layout="compact"
+                            [placeholder]="LANG.search.Search"
+                            ngDefaultControl>
+                    </nx-search>
+                </div>
                 <nx-dynamic-table
                         [dimensions]="containerDimensions"
                         [headers]="selectedData"
