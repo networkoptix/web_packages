@@ -38,7 +38,7 @@
 		"groups": {
 			"windows": {
 				"label": "Vindu",
-				"supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+				"supported": "7, 8, 8.1, 10/Enterprise, 2008 R2, 2012, 2012 R2, 2016 v1607"
 			},
 			"mac": {
 				"label": "Mac OS",
@@ -47,7 +47,7 @@
 			"linux": {
 				"label": "Ubuntu Linux",
 				"shortLabel": "Ubuntu",
-				"supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+				"supported": "Ubuntu LTS: 16.04, 18.04"
 			},
 			"macos": {
 				"label": "Mac OS",
