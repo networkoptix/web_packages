@@ -15,7 +15,7 @@ from api.models import Account
 from notifications.tasks import send_push_notification
 from notifications.models import PushNotification, PushDevice, PushSubscription
 from notifications.serializers import NotificationSerializer, RegisterDeviceSerializer, SubscriptionSerializer, \
-    DeviceSubscriptionsSerializer
+    DeviceSubscriptionsSerializer, UnregisterDeviceSerializer
 
 import json
 from django.conf import settings
@@ -148,6 +148,26 @@ def register_device(request):
             raise ValidationError(error_data)
 
         return api_success()
+
+
+@api_view(['POST'])
+@permission_classes((IsAuthenticated,))
+@authentication_classes((CloudAccountBasicAuthentication, CloudSessionAuthentication))
+def unregister_device(request):
+    serializer = UnregisterDeviceSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    data = serializer.validated_data
+
+    device = PushDevice.objects.filter(registration_id=data['deviceToken']).first()
+    error_data = dict()
+
+    if device:
+        device.delete()
+        return api_success()
+    else:
+        error_data['deviceToken'] = 'Device does not exist'
+        raise ValidationError(error_data)
+
 
 
 class DeviceSubscriptionListView(ListAPIView):

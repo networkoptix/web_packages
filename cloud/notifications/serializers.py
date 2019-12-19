@@ -27,6 +27,10 @@ class RegisterDeviceSerializer(serializers.Serializer):
     model = serializers.CharField()
 
 
+class UnregisterDeviceSerializer(serializers.Serializer):
+    deviceToken = serializers.CharField()
+
+
 class SubscriptionSerializer(serializers.Serializer):
     systemId = serializers.UUIDField()
     deviceToken = serializers.CharField(required=False, default='')
