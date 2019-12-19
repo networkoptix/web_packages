@@ -69,18 +69,12 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
                 private configService: NxConfigService,
                 private healthService: NxHealthService,
                 private uriService: NxUriService,
-                private breakpointObserver: BreakpointObserver,
                 private scrollMechanicsService: NxScrollMechanicsService,
     ) {
         this.CONFIG = this.configService.getConfig();
-        this.breakpoint = '(max-width: 767px)';
         this.filterModel = {
             selects : []
         };
-
-        this.windowSizeSubscription = this.scrollMechanicsService.windowSizeSubject.subscribe(({ width }) => {
-            this.setLayout();
-        });
 
         // this.windowSizeSubscription = this.scrollMechanicsService
         //         .windowSizeSubject
@@ -118,11 +112,15 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
             this.setActiveEntity(alarm, false);
         }
 
-        this.breakpointSubscription = this.breakpointObserver
-            .observe([this.breakpoint])
-            .subscribe((state: BreakpointState) => {
-                this.mobileDetailMode = (state.matches && this.activePanelEntity);
-            });
+        this.windowSizeSubscription = this.scrollMechanicsService.windowSizeSubject.subscribe(({ width }) => {
+            this.setLayout();
+
+            if (this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.lg)) {
+                this.mobileDetailMode = (this.activePanelEntity !== undefined);
+            } else {
+                this.mobileDetailMode = false;
+            }
+        });
     }
 
     ngAfterViewInit() {
@@ -339,7 +337,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
                 this.uriService.updateURI(undefined, queryParams);
             }
 
-            if (this.breakpointObserver.isMatched(this.breakpoint)) {
+            if (this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.lg)) {
                 this.mobileDetailMode = true;
             }
 
@@ -382,6 +380,10 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
             } else {
                 this.fixedLayoutClass = (isTableFit) ? '' : 'fixedLayout--no-panel';
             }
+        }
+
+        if (this.mobileDetailMode && this.activePanelEntity) {
+            this.fixedLayoutClass = 'fixedLayout--no-panel';
         }
     }
 }

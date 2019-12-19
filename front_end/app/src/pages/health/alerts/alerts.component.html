@@ -9,8 +9,8 @@
      *ngIf="healthService.alertsValues.length">
 
     <div class="gridMetricContentComponent">
-        <div class="gridMetricContentComponentWrapper">
-            <div class="d-flex flex-wrap p-0" #tiles>
+        <div class="gridMetricContentComponentWrapper" >
+            <div class="d-flex flex-wrap p-0" *ngIf="!mobileDetailMode" #tiles>
                 <div *ngFor="let alert of alertCards; trackBy: trackItem" class="mb-3 mr-3 card-container">
                     <nx-system-alert-card-component [data]="alert"></nx-system-alert-card-component>
                 </div>
@@ -47,7 +47,7 @@
 
     <div class="gridMetricContentPanelComponent">
         <div class="gridMetricContentPanelComponentWrapper pb-3" *ngIf="activePanelEntity">
-            <div class="pl-3 pb-3"
+            <div class="pb-3"
                  [style.display]="!mobileDetailMode ? 'none' : 'block'">
 
                 <button class="btn btn-default btn-back" (click)="resetActiveEntity()">

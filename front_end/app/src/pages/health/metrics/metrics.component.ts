@@ -86,12 +86,10 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
                 private menuService: NxMenuService,
                 private healthService: NxHealthService,
                 private uri: NxUriService,
-                private breakpointObserver: BreakpointObserver,
                 private scrollMechanicsService: NxScrollMechanicsService,
     ) {
         this.CONFIG = this.configService.getConfig();
         this.LANG  = this.languageService.getTranslations();
-        this.breakpoint = '(max-width: 767px)';
         this.containerDimensions = [];
 
         this.filterModel = {
@@ -137,13 +135,13 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
 
         this.windowSizeSubscription = this.scrollMechanicsService.windowSizeSubject.subscribe(({ width }) => {
             this.setLayout();
-        });
 
-        this.breakpointSubscription = this.breakpointObserver
-            .observe([this.breakpoint])
-            .subscribe((state: BreakpointState) => {
-                this.mobileDetailMode = (state.matches && this.activeEntity);
-            });
+            if (this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.lg)) {
+                this.mobileDetailMode = (this.activeEntity !== undefined);
+            } else {
+                this.mobileDetailMode = false;
+            }
+        });
     }
 
     ngAfterViewInit() {
@@ -192,7 +190,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
             queryParams.id = entity.id;
             this.uri.updateURI(undefined, queryParams);
 
-            if (this.breakpointObserver.isMatched(this.breakpoint)) {
+            if (this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.lg)) {
                 this.mobileDetailMode = true;
             }
         }
@@ -234,6 +232,10 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
                 } else {
                     this.fixedLayoutClass = (isTableFit) ? '' : 'fixedLayout--no-panel';
                 }
+            }
+
+            if (this.mobileDetailMode && this.activeEntity) {
+                this.fixedLayoutClass = 'fixedLayout--no-panel';
             }
         }
     }

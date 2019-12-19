@@ -15,8 +15,8 @@ nx-system-health-component {
     height: 100%;
     
     &.mobileLayout {
-      grid-row-gap: 1rem;
-      grid-template-rows: 1fr;
+      grid-row-gap: .5rem;
+      grid-template-rows: fit-content(100%) 1fr;
       grid-template-columns: 100%;
     }
   
