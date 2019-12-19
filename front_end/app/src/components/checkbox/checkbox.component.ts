@@ -82,7 +82,6 @@ export class NxCheckboxComponent implements OnInit, ControlValueAccessor, Valida
     }
 
     ngOnInit() {
-        this.disabled = (this.disabled !== undefined);  // optional param
         this.required = (this.required !== undefined);  // optional param
         this.description = this.description || undefined;
 
