@@ -5,7 +5,6 @@ import {
 }                                   from '@angular/core';
 import { NxConfigService }          from '../../../../services/nx-config';
 import { NxHealthService }          from '../../health.service';
-import { NxScrollMechanicsService } from "../../../../services/scroll-mechanics.service";
 
 @Component({
     selector   : 'nx-dynamic-table-panel-component',
@@ -35,7 +34,6 @@ export class NxDynamicTablePanelComponent implements OnChanges {
 
     constructor(private configService: NxConfigService,
                 private healthService: NxHealthService,
-                private scrollMechanicsService: NxScrollMechanicsService,
     ) {
         this.CONFIG = this.configService.getConfig();
     }

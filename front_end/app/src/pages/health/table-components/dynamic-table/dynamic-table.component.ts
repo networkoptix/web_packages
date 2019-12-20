@@ -107,9 +107,6 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
 
         if (changes.activeEntity) {
             this.selectedEntity = changes.activeEntity.currentValue;
-            if (!this.selectedEntity) {
-                this.scrollMechanicsService.setElementTableWidth(0);
-            }
         }
 
         if (changes.headers) {
@@ -146,9 +143,6 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
     }
 
     private setTableDimensions() {
-
-        this.scrollMechanicsService.setElementTableWidth(this.camerasTable.nativeElement.offsetWidth);
-
         this.windowSize = this.scrollMechanicsService.windowSizeSubject.getValue();
 
         const ELEMENTS_HEIGHT = this.dimensions.reduce((prev, curr) => prev + curr, 0);
