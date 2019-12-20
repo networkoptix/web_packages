@@ -24,7 +24,7 @@ import { NxAccountModule }           from './account/account.module';
 import { NxRestoreModule }           from './restore/restore.module';
 import { Nx404Module }               from './404/404.module';
 import { NxDebugModule }             from './debug/debug.module';
-import { NxLayoutModule }            from './layout/layout.module';
+import { NxGridLayoutModule }        from './layout/layout.module';
 import { PushNotificationsModule }   from './push-notifications/push-notifications.module';
 
 @NgModule({
@@ -52,7 +52,7 @@ import { PushNotificationsModule }   from './push-notifications/push-notificatio
         NxSystemsListModule,
         NxAccountModule,
         NxDebugModule,
-        NxLayoutModule,
+        NxGridLayoutModule,
         Nx404Module,  // Must be last module for routing
     ],
     declarations   : [],
@@ -77,7 +77,7 @@ import { PushNotificationsModule }   from './push-notifications/push-notificatio
         Angular2CsvModule,
         LandingModule,
         NxDebugModule,
-        NxLayoutModule,
+        NxGridLayoutModule,
         Nx404Module, // Must be last module for routing
     ]
 })

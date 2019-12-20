@@ -2,15 +2,14 @@ import { NgModule }             from '@angular/core';
 import { CommonModule }         from '@angular/common';
 import { BrowserModule }        from '@angular/platform-browser';
 import { UpgradeModule }        from '@angular/upgrade/static';
-import { RouterModule, Routes } from '@angular/router';
-import { TranslateModule }  from '@ngx-translate/core';
+import { TranslateModule }      from '@ngx-translate/core';
 
-import { NxLayoutComponent } from './layout.component';
+import { NxGridLayoutComponent } from './layout.component';
 import { ComponentsModule } from '../../components/components.module';
 
-const appRoutes: Routes = [
-    { path: 'layout', component: NxLayoutComponent },
-];
+// const appRoutes: Routes = [
+//     { path: 'layout', component: NxGridLayoutComponent },
+// ];
 
 @NgModule({
     imports        : [
@@ -20,19 +19,19 @@ const appRoutes: Routes = [
         TranslateModule,
         ComponentsModule,
 
-        RouterModule.forChild(appRoutes)
+        // RouterModule.forChild(appRoutes)
     ],
     providers      : [],
     declarations   : [
-        NxLayoutComponent,
+        NxGridLayoutComponent,
     ],
     bootstrap      : [],
     entryComponents: [
-        NxLayoutComponent,
+        NxGridLayoutComponent,
     ],
     exports        : [
-        NxLayoutComponent,
+        NxGridLayoutComponent
     ]
 })
-export class NxLayoutModule {
+export class NxGridLayoutModule {
 }

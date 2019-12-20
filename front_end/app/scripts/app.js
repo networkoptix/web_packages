@@ -208,9 +208,6 @@ window.L = {};
                     .when('/debug', {
                         template: ''
                     })
-                    .when('/layout', {
-                        template: ''
-                    })
                     .when('/login', {
                         template: ''
                     })
