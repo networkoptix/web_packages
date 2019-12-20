@@ -244,7 +244,7 @@ Searching for owner email should only show systems with that owner
     Log In    ${EMAIL OWNER}    ${password}
     Wait Until Elements Are Visible    ${SYSTEMS SEARCH INPUT}    ${AUTO TESTS TITLE}    ${AUTO TESTS USER}    ${AUTO TESTS OPEN NX}
     Input Text    ${SYSTEMS SEARCH INPUT}    ${EMAIL OWNER}
-    Run Keyword And Expect Error    *    Element Should Not Be Visible    ${DIFFERENT OWNER TITLE}
+    Run Keyword And Expect Error    *    Element Should Be Visible    ${DIFFERENT OWNER TITLE}
 
 Search should only be visible with 9 or more systems
     [tags]    C41890
@@ -257,10 +257,10 @@ Search should only be visible with 9 or more systems
     Sleep    15
     #Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
    # Sleep    15
-    Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
-    ${email}    Wait For Email    recipient=${EMAIL VIEWER}    timeout=180   status=UNSEEN
-    Delete Email    ${email}
-    Close Mailbox
+   # Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
+   # ${email}    Wait For Email    recipient=${EMAIL VIEWER}    timeout=180   status=UNSEEN
+   # Delete Email    ${email}
+   # Close Mailbox
     Log Out
     Sleep    1
     Log In    ${EMAIL VIEWER}    ${password}
@@ -307,6 +307,13 @@ Search should only be visible with 9 or more systems
     Click Link    ${ALL SYSTEMS}
     Wait Until Element Is Visible    ${SYSTEMS SEARCH INPUT}
     Log Out
+    
+should open systems page in anonymous state
+    [tags]    anonymous
+    Go To    ${url}/systems
+    Location should be    ${url}/systems
+    Wait Until Element Is Visible    ${LOG IN MODAL} 
+    Check Log In    button=None 
 
 should update owner name in systems list, if it's changed
     [tags]
@@ -330,9 +337,3 @@ should update owner name in systems list, if it's changed
     Wait Until Element Contains    ${AUTO TESTS USER}    newFirstName newLastName
     Reset user owner first/last name
     
-should open systems page in anonymous state
-    [tags]    anonymous
-    Go To    ${url}/systems
-    Location should be    ${url}/systems
-    Wait Until Element Is Visible    ${LOG IN MODAL} 
-    Check Log In    button=None 
