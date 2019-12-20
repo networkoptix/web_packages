@@ -12,6 +12,10 @@ nx-system-metrics-component {
         grid-template-columns: fit-content(100%) $grid-panel-width; // <- if table is less than 70% of screen width
         height: 100%;
     
+        @include media-breakpoint-up(xxxxl) {
+            grid-template-columns: fit-content(100%) $grid-super-wide-panel-width;
+        }
+    
         // if table is more than 70% of screen width
         &.fixedLayout {
             &--with-panel {

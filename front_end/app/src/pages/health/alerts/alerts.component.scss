@@ -9,6 +9,10 @@ nx-system-alerts-component {
         grid-column-gap: 1rem;
         grid-template-columns: fit-content(100%) $grid-panel-width; // <- if table is less than 70% of screen width
         height: 100%;
+    
+        @include media-breakpoint-up(xxxxl) {
+            grid-template-columns: fit-content(100%) $grid-super-wide-panel-width;
+        }
         
         // if table is more than 70% of screen width
         &.fixedLayout {
@@ -17,6 +21,10 @@ nx-system-alerts-component {
     
                 @include media-breakpoint-down(lg) {
                     grid-template-columns: $grid-narrow-table-width $grid-narrow-panel-width;
+                }
+    
+                @include media-breakpoint-up(xxxxl) {
+                    grid-template-columns: $grid-super-wide-table-width $grid-super-wide-panel-width;
                 }
             }
             
