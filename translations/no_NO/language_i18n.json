@@ -342,7 +342,7 @@
     "devices": "enheter",
     "dialogs": {
         "cancelButton": "Avbryt",
-        "changeAccountLogged": "You are already logged in with as {email}",
+        "changeAccountLogged": "You are already logged in as {email}",
         "createNewAccount": "Create New Account",
         "download": "Last ned %VMS_NAME%",
         "loggedFromOther": "You will be logged in with a different account",
@@ -673,7 +673,7 @@
                 "minutes": "minutter"
             },
             "warningMessages": {
-                "videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+                "videoEncryption": "Kryptering av videotrafikk vil øke CPU-bruken betydelig."
             }
         },
         "shareOffline": "Cannot share system while it is offline",
@@ -697,6 +697,7 @@
     },
     "testedVersionLabel": "Tested with {{vmsName}} version:",
     "testedVersionsLabel": "Tested with {{vmsName}} versions:",
+    "topXByVolume": "Top {{value}} by volume:",
     "users": "Brukere",
     "you": "you"
 }

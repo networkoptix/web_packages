@@ -12,7 +12,7 @@
     "emailSubject": "Consulta de ventas para {{message.asset}}"
   },
   "contact_support": {
-    "emailSubject": "Technical inquiry for {{message.asset}}"
+    "emailSubject": "Consulta técnica para {{message.asset}}"
   },
   "integration_feedback": {
     "emailSubject": "Feedback para {{message.asset}}"

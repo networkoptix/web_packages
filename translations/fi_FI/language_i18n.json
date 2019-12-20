@@ -342,7 +342,7 @@
     "devices": "laitteet",
     "dialogs": {
         "cancelButton": "Peruuta",
-        "changeAccountLogged": "You are already logged in with as {email}",
+        "changeAccountLogged": "You are already logged in as {email}",
         "createNewAccount": "Create New Account",
         "download": "Lataa %VMS_NAME%",
         "loggedFromOther": "You will be logged in with a different account",
@@ -673,7 +673,7 @@
                 "minutes": "minuuttia"
             },
             "warningMessages": {
-                "videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+                "videoEncryption": "Videoliikenteen salaaminen lisää merkittävästi suorittimen käyttöä."
             }
         },
         "shareOffline": "Cannot share system while it is offline",
@@ -697,6 +697,7 @@
     },
     "testedVersionLabel": "Tested with {{vmsName}} version:",
     "testedVersionsLabel": "Tested with {{vmsName}} versions:",
+    "topXByVolume": "Top {{value}} by volume:",
     "users": "Käyttäjät",
     "you": "you"
 }

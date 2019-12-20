@@ -342,7 +342,7 @@
     "devices": "デバイス",
     "dialogs": {
         "cancelButton": "キャンセル",
-        "changeAccountLogged": "You are already logged in with as {email}",
+        "changeAccountLogged": "You are already logged in as {email}",
         "createNewAccount": "Create New Account",
         "download": "%VMS_NAME% をダウンロード",
         "loggedFromOther": "You will be logged in with a different account",
@@ -673,7 +673,7 @@
                 "minutes": "分"
             },
             "warningMessages": {
-                "videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+                "videoEncryption": "ビデオトラフィックを暗号化すると、CPU使用率が大幅に増加します。"
             }
         },
         "shareOffline": "Cannot share system while it is offline",
@@ -697,6 +697,7 @@
     },
     "testedVersionLabel": "Tested with {{vmsName}} version:",
     "testedVersionsLabel": "Tested with {{vmsName}} versions:",
+    "topXByVolume": "Top {{value}} by volume:",
     "users": "ユーザー",
     "you": "あなた"
 }

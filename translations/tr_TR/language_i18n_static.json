@@ -200,7 +200,7 @@
 		"okButton": "Tamam",
 		"cancelButton": "İptal",
 		"createNewAccount": "Yeni Hesap Oluştur",
-		"changeAccountLogged": "Bu mail {email} ile zaten giriş yapmışsınız",
+		"changeAccountLogged": "You are already logged in as {email}",
 		"loggedFromOther": "Farklı bir hesapla giriş yapacaksınız",
 		"loginTitle": "%CLOUD_NAME% e giriş yapın",
 		"loginButton": "Giriş yap",
@@ -349,7 +349,7 @@
 				"minutes": "dakika"
 			},
 			"warningMessages": {
-				"videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+				"videoEncryption": "Video trafiğini şifrelemek, CPU kullanımını önemli ölçüde artıracaktır."
 			}
 		}
 	},
@@ -435,13 +435,13 @@
 			"copyActiveText": "panoya kopyalandı"
 		},
 		"systemOffline": "Sistem çevrimdışı",
-		"systemOfflineMessage": "This system is offline and cannot be accessed right now.",
-		"systemNoAlerts": "No Alerts",
-		"systemNoAlertsMessage": "Your system must be doing well!",
+		"systemOfflineMessage": "Bu sistem çevrimdışı ve şu anda erişilemiyor.",
+		"systemNoAlerts": "Uyarı Yok",
+		"systemNoAlertsMessage": "Sisteminiz iyi çalışıyor olmalı!",
 		"systemServerError": "Yerel sunucu hatası",
-		"systemServerErrorMessage": "An error occurred, please, try again later. An error occurred, please try again later. If the problem continues, please contact your support team.",
-		"systemNewVersion": "Update your system",
-		"systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
+		"systemServerErrorMessage": "Bir hata oluştu, daha sonra tekrar deneyin. Bir hata oluştu, daha sonra tekrar deneyin. Sorun devam ederse, lütfen destek ekibinize başvurun.",
+		"systemNewVersion": "Sisteminizi güncelleyin",
+		"systemNewVersionMessage": "Mevcut sürümünüz bu özellik ile uyumlu değil. Lütfen bu özelliği kullanmak için sunucularınızı en son sürüme güncelleyin.",
 		"systemHasNoCameras": "KAMERA YOK",
 		"systemUnreachable": "SİSTEM KULLANILAMAZ",
 		"cameraStates": {

@@ -342,7 +342,7 @@
     "devices": "thiết bị",
     "dialogs": {
         "cancelButton": "Hủy bỏ",
-        "changeAccountLogged": "You are already logged in with as {email}",
+        "changeAccountLogged": "You are already logged in as {email}",
         "createNewAccount": "Create New Account",
         "download": "Tải xuống %VMS_NAME%",
         "loggedFromOther": "You will be logged in with a different account",
@@ -673,7 +673,7 @@
                 "minutes": "phút"
             },
             "warningMessages": {
-                "videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+                "videoEncryption": "Mã hóa lưu lượng video sẽ tăng đáng kể việc sử dụng CPU."
             }
         },
         "shareOffline": "Cannot share system while it is offline",
@@ -697,6 +697,7 @@
     },
     "testedVersionLabel": "Tested with {{vmsName}} version:",
     "testedVersionsLabel": "Tested with {{vmsName}} versions:",
+    "topXByVolume": "Top {{value}} by volume:",
     "users": "Người sử dụng",
     "you": "you"
 }

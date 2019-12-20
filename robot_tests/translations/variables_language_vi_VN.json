@@ -188,5 +188,9 @@
     "IPVD TITLE TEXT": "Thiết bị hỗ trợ",
     "SYSTEMS TITLE TEXT": "Hệ thống",
     "NO PERMISSION TO SHARE TEXT": "You do not have permission to share this system",
-    "WELCOME TEXT": "Chào mừng bạn đến"
+    "WELCOME TEXT": "Chào mừng bạn đến",
+    "YOU ARE ALREADY LOGGED IN TEXT": "You are already logged in as",
+    "DISCONNECT FROM MY ACCOUNT TEXT": "Disconnect from My Account",
+    "YOU TEXT": "you",
+    "UNRESTRICTED ACCESS CONNECT TEXT": "Truy cập không giới hạn bao gồm khả năng chia sẻ và kết nối / ngắt kết nối Hệ thống từ đám mây"
 }

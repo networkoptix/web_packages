@@ -102,7 +102,6 @@
     "PASSWORD IS FAIR BADGE TEXT": "kohtalainen",
     "PASSWORD IS GOOD BADGE TEXT": "hyvä",
     "PASSWORD INCORRECT BADGE TEXT": "virheellinen",
-    "IPVD TITLE TEXT": "Tuetut laitteet",
     "IPVD SEARCH PLACEHOLDER TEXT": "Hae mallin tai valmistajan mukaan",
     "IPVD FILTERS APPLIED TEXT": "suodattimia käytetty",
     "IPVD FILTERS ANALYTICS TEXT": "analytiikka-tapahtumat",
@@ -189,5 +188,9 @@
     "IPVD TITLE TEXT": "Tuetut laitteet",
     "SYSTEMS TITLE TEXT": "Järjestelmät",
     "NO PERMISSION TO SHARE TEXT": "You do not have permission to share this system",
-    "WELCOME TEXT": "Tervetuloa"
+    "WELCOME TEXT": "Tervetuloa",
+    "YOU ARE ALREADY LOGGED IN TEXT": "You are already logged in as",
+    "DISCONNECT FROM MY ACCOUNT TEXT": "Disconnect from My Account",
+    "YOU TEXT": "you",
+    "UNRESTRICTED ACCESS CONNECT TEXT": "Rajoittamaton pääsy, mukaan lukien kyky jakaa ja yhdistää / irroittaa järjestelmää pilvestä"
 }

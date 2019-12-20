@@ -188,5 +188,9 @@
     "IPVD TITLE TEXT": "Пристрої, що підтримуються",
     "SYSTEMS TITLE TEXT": "Системи",
     "NO PERMISSION TO SHARE TEXT": "Ви не маєте прав для створення цього клієнта",
-    "WELCOME TEXT": "Ласкаво просимо на"
+    "WELCOME TEXT": "Ласкаво просимо на",
+    "YOU ARE ALREADY LOGGED IN TEXT": "You are already logged in as",
+    "DISCONNECT FROM MY ACCOUNT TEXT": "Від'єднатись від мого облікового запису",
+    "YOU TEXT": "ти",
+    "UNRESTRICTED ACCESS CONNECT TEXT": "Необмежений доступ, включаючи управління спільним доступом та підключенням/відключення системи до/від хмари"
 }

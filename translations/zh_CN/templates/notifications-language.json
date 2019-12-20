@@ -12,7 +12,7 @@
     "emailSubject": "{{message.asset}} 的產品咨询"
   },
   "contact_support": {
-    "emailSubject": "Technical inquiry for {{message.asset}}"
+    "emailSubject": "{{message.asset}} 的技术咨询"
   },
   "integration_feedback": {
     "emailSubject": "{{message.asset}} 的反馈"

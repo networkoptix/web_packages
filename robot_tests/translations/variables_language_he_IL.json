@@ -188,5 +188,9 @@
     "IPVD TITLE TEXT": "מכשירים נתמכים",
     "SYSTEMS TITLE TEXT": "מערכות",
     "NO PERMISSION TO SHARE TEXT": "You do not have permission to share this system",
-    "WELCOME TEXT": "ברוכים הבאים ל"
+    "WELCOME TEXT": "ברוכים הבאים ל",
+    "YOU ARE ALREADY LOGGED IN TEXT": "You are already logged in as",
+    "DISCONNECT FROM MY ACCOUNT TEXT": "התנתק מהחשבון שלי",
+    "YOU TEXT": "you",
+    "UNRESTRICTED ACCESS CONNECT TEXT": "גישה בלתי מוגבלת כולל היכולת לשתף ולחבר / לנתק את המערכת מהענן"
 }

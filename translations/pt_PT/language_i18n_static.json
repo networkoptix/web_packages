@@ -200,7 +200,7 @@
 		"okButton": "OK",
 		"cancelButton": "Cancelar",
 		"createNewAccount": "Create New Account",
-		"changeAccountLogged": "You are already logged in with as {email}",
+		"changeAccountLogged": "You are already logged in as {email}",
 		"loggedFromOther": "You will be logged in with a different account",
 		"loginTitle": "Logar em %CLOUD_NAME%",
 		"loginButton": "Entrar",
@@ -349,7 +349,7 @@
 				"minutes": "minuto"
 			},
 			"warningMessages": {
-				"videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+				"videoEncryption": "A encriptação do tráfego de vídeo irá aumentar significativamente o uso de CPU."
 			}
 		}
 	},

@@ -188,5 +188,9 @@
     "IPVD TITLE TEXT": "Supported Devices",
     "SYSTEMS TITLE TEXT": "Rendszerek",
     "NO PERMISSION TO SHARE TEXT": "You do not have permission to share this system",
-    "WELCOME TEXT": "Üdvözöljük"
+    "WELCOME TEXT": "Üdvözöljük",
+    "YOU ARE ALREADY LOGGED IN TEXT": "You are already logged in as",
+    "DISCONNECT FROM MY ACCOUNT TEXT": "Disconnect from My Account",
+    "YOU TEXT": "you",
+    "UNRESTRICTED ACCESS CONNECT TEXT": "Korlátlan jog, mely tartalmazza a felhőhöz való csatlakozást, megosztást, leválasztást"
 }

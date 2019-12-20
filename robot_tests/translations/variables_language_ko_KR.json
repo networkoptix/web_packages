@@ -188,5 +188,9 @@
     "IPVD TITLE TEXT": "지원되는 기기들",
     "SYSTEMS TITLE TEXT": "시스템",
     "NO PERMISSION TO SHARE TEXT": "이 시스템을 공유 할 권한이 없습니다",
-    "WELCOME TEXT": "에 오신 것을 환영합니다"
+    "WELCOME TEXT": "에 오신 것을 환영합니다",
+    "YOU ARE ALREADY LOGGED IN TEXT": "이미 로그인 한 상태입니다",
+    "DISCONNECT FROM MY ACCOUNT TEXT": "내 계정에서 연결 해제",
+    "YOU TEXT": "당신",
+    "UNRESTRICTED ACCESS CONNECT TEXT": "클라우드에서 시스템을 공유하고 연결 / 연결 해제하는 기능을 포함한 무제한 액세스"
 }

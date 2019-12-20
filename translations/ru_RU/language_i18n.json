@@ -153,7 +153,7 @@
     "Settings": "Настройки",
     "Show All": "Показать всё",
     "Some of your servers don't support cloud System merge because of outdated software version.": "Некоторые из ваших серверов не поддерживают слияние облачных систем из-за устаревшей версии программного обеспечения.",
-    "Subject": "Subject",
+    "Subject": "Тема",
     "Support": "Техническая поддержка",
     "Support E-mail": "Электронная почта поддержки",
     "Support URL": "Страница поддержки",
@@ -342,7 +342,7 @@
     "devices": "устройства",
     "dialogs": {
         "cancelButton": "Отменить",
-        "changeAccountLogged": "Вы уже вошли как {email}",
+        "changeAccountLogged": "You are already logged in as {email}",
         "createNewAccount": "Создать новую учетную запись",
         "download": "Скачать %VMS_NAME%",
         "loggedFromOther": "Вы будете авторизованы под другой учетной записью",
@@ -375,7 +375,7 @@
                 "ipvd_feedback_device": "Отзыв о {{asset}}",
                 "ipvd_feedback_page": "Отзыв о странице камер",
                 "sales_inquiry": "Запрос на продажу {{asset}}",
-                "technical_inquiry": "Technical inquiry for {{asset}}"
+                "technical_inquiry": "Технический запрос для {{asset}}"
             },
             "title": {
                 "integration": "Связаться с {{companyName}}",
@@ -673,7 +673,7 @@
                 "minutes": "минуты"
             },
             "warningMessages": {
-                "videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+                "videoEncryption": "Шифрование видео трафика значительно увеличит нагрузку на процессор."
             }
         },
         "shareOffline": "Невозможно поделиться системой, пока она не в сети",
@@ -695,8 +695,9 @@
         "online": "в сети",
         "unavailable": "недоступен"
     },
-    "testedVersionLabel": "Tested with {{vmsName}} version:",
-    "testedVersionsLabel": "Tested with {{vmsName}} versions:",
+    "testedVersionLabel": "Проверено на версии {{vmsName}}:",
+    "testedVersionsLabel": "Проверено на версии {{vmsName}}:",
+    "topXByVolume": "Top {{value}} by volume:",
     "users": "Пользователи",
     "you": "вы"
 }

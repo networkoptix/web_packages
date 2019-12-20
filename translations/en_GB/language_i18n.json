@@ -342,7 +342,7 @@
     "devices": "devices",
     "dialogs": {
         "cancelButton": "Cancel",
-        "changeAccountLogged": "You are already logged in with as {email}",
+        "changeAccountLogged": "You are already logged in as {email}",
         "createNewAccount": "Create New Account",
         "download": "Download %VMS_NAME%",
         "loggedFromOther": "You will be logged in with a different account",
@@ -673,7 +673,7 @@
                 "minutes": "minutes"
             },
             "warningMessages": {
-                "videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+                "videoEncryption": "Encrypting video traffic will significantly increase CPU usage."
             }
         },
         "shareOffline": "Cannot share system while it is offline",
@@ -697,6 +697,7 @@
     },
     "testedVersionLabel": "Tested with {{vmsName}} version:",
     "testedVersionsLabel": "Tested with {{vmsName}} versions:",
+    "topXByVolume": "Top {{value}} by volume:",
     "users": "Users",
     "you": "you"
 }

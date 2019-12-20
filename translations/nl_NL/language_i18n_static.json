@@ -200,7 +200,7 @@
 		"okButton": "Oké",
 		"cancelButton": "Annuleren",
 		"createNewAccount": "Creëer een nieuw account",
-		"changeAccountLogged": "U bent al ingelogd met als {email}",
+		"changeAccountLogged": "You are already logged in as {email}",
 		"loggedFromOther": "U wordt met een ander account ingelogd",
 		"loginTitle": "Meld u aan bij %CLOUD_NAME%",
 		"loginButton": "Inloggen",
@@ -237,7 +237,7 @@
 			},
 			"subject": {
 				"sales_inquiry": "Verkoopaanvraag voor {{asset}}",
-				"technical_inquiry": "Technical inquiry for {{asset}}",
+				"technical_inquiry": "Technische aanvraag voor {{asset}}",
 				"integration_feedback": "Feedback voor integratie {{asset}}",
 				"ipvd_feedback_page": "Feedback voor de camerapagina",
 				"ipvd_feedback_device": "Feedback over {{asset}}"
@@ -349,7 +349,7 @@
 				"minutes": "minuut"
 			},
 			"warningMessages": {
-				"videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+				"videoEncryption": "De encryptie van het videoverkeer zal het CPU-gebruik aanzienlijk verhogen."
 			}
 		}
 	},

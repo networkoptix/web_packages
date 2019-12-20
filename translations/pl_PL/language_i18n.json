@@ -22,7 +22,7 @@
     "All cloud users will be deleted.": "Wszyscy użytkownicy chmury zostaną usunięci.",
     "All results": "Wszystkie wyniki",
     "Allow only secure connections": "Zezwalaj tylko na bezpieczne połączenia",
-    "Allow system to optimize camera settings": "Allow system to optimize camera settings",
+    "Allow system to optimize camera settings": "Zezwalaj systemowi na optymalizowanie ustawień w kamerze",
     "Analytics": "Analityka",
     "Analytics Event": "Zdarzenie analityczne",
     "Analytics Events": "Zdarzenia analityczne",
@@ -39,7 +39,7 @@
     "Change Password": "Zmień hasło",
     "Checking...": "sprawdzanie...",
     "Choose which properties should be visible to customers:": "Wybierz właściwości, które powinny być widoczne dla klientów:",
-    "Clear filters": "Clear filters",
+    "Clear filters": "Wyczyść filtry",
     "Close": "Zamknij",
     "Codec": "Kodek",
     "Collapse": "Zwiń",
@@ -68,7 +68,7 @@
     "Email is required": "E-mail jest wymagany",
     "Embed": "Osadź",
     "Enable audit trail": "Zapisuj dziennik dostępu",
-    "Enable auto discovery of cameras and servers": "Enable auto discovery of cameras and servers",
+    "Enable auto discovery of cameras and servers": "Włącz automatyczne wykrywanie kamer i serwerów",
     "Encrypt video traffic": "Szyfruj transmisję wideo",
     "Enter \"Public User\" credentials:": "Wprowadź dane logowania \"Użytkownika publicznego\":",
     "Enter password for your account to continue": "Wprowadź hasło do swojego konta, aby kontynuować",
@@ -90,7 +90,7 @@
     "I/O": "I/O",
     "In Review": "W trakcie przeglądu",
     "In-Client Upgrade:": "Aktualizacja klienta:",
-    "Includes information about the System, such as camera modules, \n                            firmware versions, number of servers, etc. \n                            Does not include any personal information and is completely anonymous.": "Includes information about the System, such as camera modules, \n                            firmware versions, number of servers, etc. \n                            Does not include any personal information and is completely anonymous.",
+    "Includes information about the System, such as camera modules, \n                            firmware versions, number of servers, etc. \n                            Does not include any personal information and is completely anonymous.": "Obejmuje informacje o systemie, takie jak moduły kamer, \n                            wersji firmware, liczbę serwerów itp. \n                            Nie zawiera żadnych danych osobowych i jest całkowicie anonimowe.",
     "Information": "Informacja",
     "Integrations": "Integracje",
     "Language": "Język",
@@ -98,7 +98,7 @@
     "Last name": "Nazwisko",
     "Last name is required": "Nazwisko jest wymagane",
     "Latest version": "Najnowsza wersja",
-    "Limit session duration to": "Limit session duration to",
+    "Limit session duration to": "Ogranicz czas sesji do",
     "Log In": "Zaloguj się",
     "Log Out": "Wyloguj",
     "Log in to %CLOUD_NAME%": "Zaloguj do %CLOUD_NAME%",
@@ -118,7 +118,7 @@
     "Nothing Found": "Nic nie znaleziono",
     "OK": "OK",
     "Ok": "OK",
-    "Only client-server video traffic can be encrypted.": "Only client-server video traffic can be encrypted.",
+    "Only client-server video traffic can be encrypted.": "Tylko ruch wideo klient-serwer może być szyfrowany.",
     "Other packages:": "Inne pakiety:",
     "Other releases, patches and beta versions": "Inne wydania, poprawki i wersje beta",
     "Owner": "Właściciel",
@@ -147,7 +147,7 @@
     "Secondary Stream": "Drugi strumień",
     "Security": "Bezpieczeństwo",
     "Send": "Wyślij",
-    "Send anonymous usage and crash statistics to developers": "Send anonymous usage and crash statistics to developers",
+    "Send anonymous usage and crash statistics to developers": "Wysyłaj do programistów anonimowe statystyki użytkowania i awarii",
     "Send feedback about this device": "Prześlij opinię o tym urządzeniu",
     "Set New Password": "Ustaw nowe hasło",
     "Settings": "Ustawienia",
@@ -186,7 +186,7 @@
     "WHEN_MERGE_FINISHES": "Po złączeniu systemów wszyscy użytkownicy i kamery z tego systemu będą również dostępne w systemie <strong>{{targetSystemName}}</strong>, a ten system zostanie usunięty.",
     "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.": "Zalecamy zainstalowanie najnowszych wersji Google Chrome lub Mozilla Firefox, ale możesz także użyć dowolnej innej nowoczesnej przeglądarki internetowej.",
     "What's New?": "Co nowego?",
-    "When enabled, system will discover new cameras and servers. Also, \n                            it will automatically and persistently send discovery requests to \n                            cameras in order to get the camera's status update. \n                            Failover enabled on some servers ignore status check prohibition.": "When enabled, system will discover new cameras and servers. Also, \n                            it will automatically and persistently send discovery requests to \n                            cameras in order to get the camera's status update. \n                            Failover enabled on some servers ignore status check prohibition.",
+    "When enabled, system will discover new cameras and servers. Also, \n                            it will automatically and persistently send discovery requests to \n                            cameras in order to get the camera's status update. \n                            Failover enabled on some servers ignore status check prohibition.": "Po włączeniu system wykryje nowe kamery i serwery. Ponadto \n                            automatycznie będzie ciągle wysyłał zapytania do \n                            kamer w celu uzyskania aktualizacji ich stanów. \n                            Tryb fail-over na niektórych serwerach ignoruje blokadę sprawdzania stanów.",
     "Works with:": "Współpracuje z:",
     "Wrong password": "Nieprawidłowe hasło",
     "You can only merge Systems where you are the owner.": "Możesz złączać tylko takie systemy, których jesteś właścicielem.",
@@ -315,14 +315,14 @@
         },
         "searchCamPlaceholder": "Szukaj",
         "systemHasNoCameras": "BRAK KAMER",
-        "systemNewVersion": "Update your system",
-        "systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
-        "systemNoAlerts": "No Alerts",
-        "systemNoAlertsMessage": "Your system must be doing well!",
+        "systemNewVersion": "Zaktualizuj swój system",
+        "systemNewVersionMessage": "Twoja aktualna wersja jest niezgodna z tą funkcją. Zaktualizuj swoje serwery do najnowszej wersji, aby korzystać z tej funkcji.",
+        "systemNoAlerts": "Brak alarmów",
+        "systemNoAlertsMessage": "Wygląda na to, że Twój system działa dobrze!",
         "systemOffline": "Serwer jest odłączony",
-        "systemOfflineMessage": "This system is offline and cannot be accessed right now.",
+        "systemOfflineMessage": "Ten system jest w trybie offline i nie można teraz uzyskać do niego dostępu.",
         "systemServerError": "Wewnętrzny błąd serwera",
-        "systemServerErrorMessage": "An error occurred, please, try again later. An error occurred, please try again later. If the problem continues, please contact your support team.",
+        "systemServerErrorMessage": "Wystąpił błąd. Proszę spróbować później. Jeśli problem będzie się powtarzał, skontaktuj się z zespołem pomocy technicznej.",
         "systemUnreachable": "SYSTEM JEST NIEDOSTĘPNY",
         "voiceCommands": {
             "clear search": "wyczyść wyszukiwanie",
@@ -342,7 +342,7 @@
     "devices": "urządzenia",
     "dialogs": {
         "cancelButton": "Anuluj",
-        "changeAccountLogged": "Jesteś już zalogowany jako {email}",
+        "changeAccountLogged": "You are already logged in as {email}",
         "createNewAccount": "Utwórz nowe konto",
         "download": "Pobierz %VMS_NAME%",
         "loggedFromOther": "Zostaniesz zalogowany przy użyciu innego konta",
@@ -375,7 +375,7 @@
                 "ipvd_feedback_device": "Opinie dotyczące {{asset}}",
                 "ipvd_feedback_page": "Opinia dotycząca listy kamer",
                 "sales_inquiry": "Zapytanie handlowe o {{asset}}",
-                "technical_inquiry": "Technical inquiry for {{asset}}"
+                "technical_inquiry": "Zapytanie techniczne do {{asset}}"
             },
             "title": {
                 "integration": "Skontaktuj się z {{companyName}}",
@@ -673,7 +673,7 @@
                 "minutes": "minut"
             },
             "warningMessages": {
-                "videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+                "videoEncryption": "Szyfrowanie transmisji wideo znacząco zwiększy użycie procesora."
             }
         },
         "shareOffline": "Nie można udostępnić systemu, gdy jest on offline",
@@ -695,8 +695,9 @@
         "online": "online",
         "unavailable": "niedostępny"
     },
-    "testedVersionLabel": "Tested with {{vmsName}} version:",
-    "testedVersionsLabel": "Tested with {{vmsName}} versions:",
+    "testedVersionLabel": "Testowane w {{vmsName}} w wersji:",
+    "testedVersionsLabel": "Testowane w {{vmsName}} w wersjach:",
+    "topXByVolume": "Maks. {{value}} według objętości:",
     "users": "Użytkownicy",
     "you": "Ty"
 }

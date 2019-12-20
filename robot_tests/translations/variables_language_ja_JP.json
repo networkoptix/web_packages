@@ -188,5 +188,9 @@
     "IPVD TITLE TEXT": "サポートされているデバイス",
     "SYSTEMS TITLE TEXT": "システム",
     "NO PERMISSION TO SHARE TEXT": "You do not have permission to share this system",
-    "WELCOME TEXT": "ようこそ"
+    "WELCOME TEXT": "ようこそ",
+    "YOU ARE ALREADY LOGGED IN TEXT": "You are already logged in as",
+    "DISCONNECT FROM MY ACCOUNT TEXT": "アカウントから離れる",
+    "YOU TEXT": "あなた",
+    "UNRESTRICTED ACCESS CONNECT TEXT": "クラウドからの共有とシステムの接続/切断を含む無制限のアクセス"
 }

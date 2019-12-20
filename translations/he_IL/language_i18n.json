@@ -342,7 +342,7 @@
     "devices": "מכשירים",
     "dialogs": {
         "cancelButton": "ביטול",
-        "changeAccountLogged": "אתה מחובר כבר כ- {email}",
+        "changeAccountLogged": "You are already logged in as {email}",
         "createNewAccount": "Create New Account",
         "download": "הורד את %VMS_NAME%",
         "loggedFromOther": "You will be logged in with a different account",
@@ -374,8 +374,8 @@
                 "integration_feedback": "משוב לאינטגרציה {{asset}}",
                 "ipvd_feedback_device": "משוב על {{asset}}",
                 "ipvd_feedback_page": "משוב עבור דף מצלמות",
-                "sales_inquiry": "שאלת מכירות עבור {{asset}}",
-                "technical_inquiry": "Technical inquiry for {{asset}}"
+                "sales_inquiry": "בירור מכירות עבור {{asset}}",
+                "technical_inquiry": "בירור טכני עבור {{asset}}"
             },
             "title": {
                 "integration": "צור קשר עם {{companyName}}",
@@ -673,7 +673,7 @@
                 "minutes": "דקות"
             },
             "warningMessages": {
-                "videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+                "videoEncryption": "הצפנת תעבורת וידאו תגדיל באופן משמעותי את השימוש במעבד."
             }
         },
         "shareOffline": "Cannot share system while it is offline",
@@ -695,8 +695,9 @@
         "online": "מקוון",
         "unavailable": "לא זמין"
     },
-    "testedVersionLabel": "Tested with {{vmsName}} version:",
-    "testedVersionsLabel": "Tested with {{vmsName}} versions:",
+    "testedVersionLabel": "נבדק עם {{vmsName}} גרסה:",
+    "testedVersionsLabel": "נבדק עם {{vmsName}} בגרסאות:",
+    "topXByVolume": "Top {{value}} by volume:",
     "users": "משתמשים",
     "you": "you"
 }
