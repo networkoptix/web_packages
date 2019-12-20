@@ -69,7 +69,7 @@
 			"sdk": {
 				"label": "SDK",
 				"shortLabel": "SDK",
-				"supported": "SDK cross-platform C ++"
+				"supported": "C++ cross platform SDK"
 			}
 		},
 		"platforms": {
