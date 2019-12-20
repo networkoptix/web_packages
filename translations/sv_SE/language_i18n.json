@@ -381,17 +381,6 @@
                 "integration": "Kom i kontakt med {{companyName}}",
                 "ipvd_feedback_device": "Feedback om {{asset}}",
                 "ipvd_feedback_page": "Feedback för kamerans sida"
-            "subject": {
-                "contact_sales": "Kontakta försäljning för {{asset}}",
-                "contact_support": "Kontakta support för {{asset}}",
-                "integration_feedback": "Feedback för integration {{asset}}",
-                "ipvd_feedback_device": "Feedback om {{asset}}",
-                "ipvd_feedback_page": "Feedback för kamerans sida"
-            },
-            "title": {
-                "integration": "Kom i kontakt med {{companyName}}",
-                "ipvd_feedback_device": "Feedback om {{asset}}",
-                "ipvd_feedback_page": "Feedback för kamerans sida"
             }
         },
         "noClientDetectedTitle": "Installera %VMS_NAME% om du vill visa ditt System",
