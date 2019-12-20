@@ -38,11 +38,11 @@
 		"groups": {
 			"windows": {
 				"label": "Windows",
-				"supported": "7, 8, 8.1, 10, Servidor 2008, Servidor 2012"
+				"supported": "7, 8, 8.1, 10/Enterprise, 2008 R2, 2012, 2012 R2, 2016 v1607"
 			},
 			"mac": {
 				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitán, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"supported": "OS X 10.13: \"High Sierra\", 10.14: \"Mojave\", 10.15 \"Catalina\""
 			},
 			"linux": {
 				"label": "Ubuntu Linux",
@@ -51,7 +51,7 @@
 			},
 			"macos": {
 				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitán, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"supported": "OS X 10.13: \"High Sierra\", 10.14: \"Mojave\", 10.15 \"Catalina\""
 			},
 			"ios": {
 				"label": "iOS",
@@ -69,7 +69,7 @@
 			"sdk": {
 				"label": "SDK",
 				"shortLabel": "SDK",
-				"supported": "C ++ multiplataforma SDK"
+				"supported": "C++ cross platform SDK"
 			}
 		},
 		"platforms": {

@@ -218,11 +218,11 @@
             "sdk": {
                 "label": "SDK",
                 "shortLabel": "SDK",
-                "supported": "C ++ multiplataforma SDK"
+                "supported": "C++ cross platform SDK"
             },
             "windows": {
                 "label": "Windows",
-                "supported": "7, 8, 8.1, 10, Servidor 2008, Servidor 2012"
+                "supported": "7, 8, 8.1, 10/Enterprise, 2008 R2, 2012, 2012 R2, 2016 v1607"
             }
         },
         "mobile": {
