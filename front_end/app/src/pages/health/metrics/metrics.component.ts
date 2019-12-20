@@ -1,25 +1,22 @@
 import {
     AfterViewInit,
     Component,
-    ContentChild,
     ElementRef,
     OnInit,
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { ActivatedRoute }                                                             from '@angular/router';
-
+import { ActivatedRoute }                      from '@angular/router';
 import { NxAccountService }                    from '../../../services/account.service';
 import { NxConfigService }                     from '../../../services/nx-config';
 import { NxSystem, NxSystemService }           from '../../../services/system.service';
 import { NxMenuService }                       from '../../../components/menu/menu.service';
 import { NxHealthService }                     from '../health.service';
 import { NxUriService }                        from '../../../services/uri.service';
-import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { NxLanguageProviderService }           from '../../../services/nx-language-provider';
 import { SubscriptionLike }                    from 'rxjs';
-import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
-import { NxScrollMechanicsService } from "../../../services/scroll-mechanics.service";
+import { AutoUnsubscribe }                     from 'ngx-auto-unsubscribe';
+import { NxScrollMechanicsService }            from "../../../services/scroll-mechanics.service";
 
 interface Params {
     [key: string]: any;
@@ -69,14 +66,13 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
     elementTableHeight: number;
     containerDimensions: any = [];
 
-    tableWidthSubscription: SubscriptionLike;
     windowSizeSubscription: SubscriptionLike;
 
     fixedLayoutClass: string;
 
     @ViewChild('search', { static: false }) elementSearch: ElementRef;
-    @ViewChild('viewContainer', { static: false }) viewContainer: ElementRef;
     @ViewChild('tableContainer', { static: false }) tableContainer: ElementRef;
+    @ViewChild('area', { static: false }) area: ElementRef;
 
     constructor(private accountService: NxAccountService,
                 private configService: NxConfigService,
@@ -134,13 +130,12 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
             });
 
         this.windowSizeSubscription = this.scrollMechanicsService.windowSizeSubject.subscribe(({ width }) => {
-            this.setLayout();
-
             if (this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.lg)) {
                 this.mobileDetailMode = (this.activeEntity !== undefined);
             } else {
                 this.mobileDetailMode = false;
             }
+            setTimeout(() => this.setLayout());
         });
     }
 
@@ -196,11 +191,6 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
         }
 
         this.setLayout();
-
-        // setTimeout(() => {
-        //     this.scrollMechanicsService.setElementViewWidth(this.viewContainer.nativeElement.clientWidth);
-        //     this.scrollMechanicsService.setElementTableWidth(this.tableContainer.nativeElement.clientWidth - 8/* -gutter */);
-        // });
     }
 
     resetActiveEntity(updateURI = true) {
@@ -221,12 +211,12 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
             if (this.tableContainer) {
                 // measure table (not wrapper) width
                 const tableWidth = this.tableContainer.nativeElement.querySelectorAll('table')[0].offsetWidth;
-                let windowWidth = this.scrollMechanicsService.windowSizeSubject.getValue().width;
-                // Table occupy 50% of the screen (20% menu and 30% right panel)
-                windowWidth /= 2;
-                windowWidth += 4 * 16; // four gutters for both grids
+                // area available
+                const areaWidth = this.area.nativeElement.offsetWidth;
+                // area available to the table (2/3 + gutters
+                const availAreaWidth = areaWidth / 3 * 2 + 46;
 
-                const isTableFit = (windowWidth > tableWidth);
+                const isTableFit = (availAreaWidth > tableWidth);
                 if (this.activeEntity) {
                     this.fixedLayoutClass = (isTableFit) ? '' : 'fixedLayout--with-panel';
                 } else {

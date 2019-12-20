@@ -2,9 +2,9 @@ import {
     AfterViewInit,
     Component, ElementRef, EventEmitter, Input, OnChanges,
     Output, SimpleChanges, ViewChild
-} from '@angular/core';
-import { NxConfigService } from '../../../../services/nx-config';
-import { NxHealthService } from '../../health.service';
+}                                   from '@angular/core';
+import { NxConfigService }          from '../../../../services/nx-config';
+import { NxHealthService }          from '../../health.service';
 import { NxScrollMechanicsService } from "../../../../services/scroll-mechanics.service";
 
 @Component({
@@ -12,7 +12,7 @@ import { NxScrollMechanicsService } from "../../../../services/scroll-mechanics.
     templateUrl: './dynamic-table-panel.component.html',
     styleUrls  : ['./dynamic-table-panel.component.scss']
 })
-export class NxDynamicTablePanelComponent implements OnChanges, AfterViewInit {
+export class NxDynamicTablePanelComponent implements OnChanges {
 
     @Input() panelParams: any;
     @Input() activeEntity: any;
@@ -49,50 +49,5 @@ export class NxDynamicTablePanelComponent implements OnChanges, AfterViewInit {
     closeView() {
         this.activeEntity = undefined;
         this.onCloseView.emit(this.activeEntity);
-    }
-
-    ngAfterViewInit(): void {
-        setTimeout(() => {
-            this.scrollHeight = this.scrollMechanicsService.getElementOffset(this.nxPanelView.nativeElement);
-            this.calcElementScrollMechanics();
-        });
-
-        this.scrollMechanicsService
-                .windowScrollSubject
-                .subscribe(() => {
-                    this.calcElementScrollMechanics();
-                });
-
-        this.scrollMechanicsService
-                .elementViewWidthSubject
-                .subscribe(() => {
-                    const width = this.scrollMechanicsService.elementViewWidthSubject.getValue();
-                    this.elementWidth = (width > 0) ? (width - 8 /* -gutter */) + 'px' : '100%';
-                });
-
-        this.scrollMechanicsService
-                .offsetSubject
-                .subscribe(() => {
-                    setTimeout(() => this.scrollHeight = this.scrollMechanicsService.getElementOffset(this.nxPanelView.nativeElement));
-                });
-    }
-
-    calcElementScrollMechanics() {
-        this.windowSize = this.scrollMechanicsService.windowSizeSubject.getValue();
-        this.windowScroll = this.scrollMechanicsService.windowScrollSubject.getValue();
-
-        this.clientHeight = this.nxPanelView.nativeElement.clientHeight;
-
-        if (this.clientHeight < this.windowSize.height - NxScrollMechanicsService.SCROLL_OFFSET - 6 && this.windowScroll >= this.scrollHeight - NxScrollMechanicsService.SCROLL_OFFSET) {
-            this.viewScrollFixedTop = true;
-        } else {
-            this.viewScrollFixedTop = false;
-        }
-
-        if (this.clientHeight > this.windowSize.height - NxScrollMechanicsService.SCROLL_OFFSET - 8 && (this.clientHeight - this.windowSize.height + 18) < (this.windowScroll - this.scrollHeight)) {
-            this.viewScrollFixedBottom = true;
-        } else {
-            this.viewScrollFixedBottom = false;
-        }
     }
 }

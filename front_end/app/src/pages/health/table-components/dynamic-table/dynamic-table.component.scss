@@ -18,16 +18,6 @@ nx-dynamic-table {
   .table-scroll-fixed {
     position: fixed;
     top: 48px + 16px; // header + padding
-    
-    //@include media-breakpoint-up(md) {
-    //  // calculate 7 columns grid to fit fixed positioned table
-    //  width: calc(((100% - (#{$grid-gutter-width} * 2)) / 12.16 * 7));
-    //}
-    //
-    //@include media-breakpoint-up(xl) {
-    //  // calculate 8 columns grid to fit fixed positioned table
-    //  width: calc(((100% - (#{$grid-gutter-width} * 2)) / 10.76 * 8));
-    //}
   }
   
   .nx-table-wrapper {

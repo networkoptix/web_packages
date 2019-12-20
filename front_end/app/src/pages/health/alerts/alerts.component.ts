@@ -6,7 +6,6 @@ import {
 import { NxConfigService }                     from '../../../services/nx-config';
 import { NxMenuService }                       from '../../../components/menu/menu.service';
 import { NxHealthService }                     from '../health.service';
-import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { SubscriptionLike }                    from 'rxjs';
 import { NxUriService }                        from '../../../services/uri.service';
 import { ActivatedRoute }                      from '@angular/router';
@@ -62,6 +61,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
     @ViewChild('tiles', { static: false }) elementTiles: ElementRef;
     @ViewChild('search', { static: false }) elementSearch: ElementRef;
     @ViewChild('table', { static: false }) elementTable: ElementRef;
+    @ViewChild('area', { static: false }) area: ElementRef;
     // @ViewChild('tableContainer', { static: false }) tableContainer: ElementRef;
 
     constructor(private route: ActivatedRoute,
@@ -75,16 +75,6 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         this.filterModel = {
             selects : []
         };
-
-        // this.windowSizeSubscription = this.scrollMechanicsService
-        //         .windowSizeSubject
-        //         .subscribe(() => {
-        //             // if (this.elementTable && this.elementTable.nativeElement) {
-        //             //     let width = this.elementTable.nativeElement.clientWidth;
-        //             //     width = (this.activeTableEntity) ? width + 32 : width; /* -gutter */
-        //             //     this.scrollMechanicsService.setElementTableWidth(width);
-        //             // }
-        //         });
     }
 
     ngOnInit(): void {
@@ -113,13 +103,13 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         }
 
         this.windowSizeSubscription = this.scrollMechanicsService.windowSizeSubject.subscribe(({ width }) => {
-            this.setLayout();
-
             if (this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.lg)) {
                 this.mobileDetailMode = (this.activePanelEntity !== undefined);
             } else {
                 this.mobileDetailMode = false;
             }
+
+            setTimeout(() => this.setLayout());
         });
     }
 
@@ -132,13 +122,6 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
                 this.containerDimensions = [this.elementTilesHeight, this.elementSearchHeight + 8 /*margin*/, 17 /*separator = 1px + padding*/];
             });
         }
-
-        //
-        // if (this.elementTable && this.elementTable.nativeElement) {
-        //     let width = this.elementTable.nativeElement.clientWidth;
-        //     width = (this.activeTableEntity) ? width + 32 : width; /* +padding */
-        //     this.scrollMechanicsService.setElementTableWidth(width);
-        // }
     }
 
     trackItem(index, item) {
@@ -368,13 +351,12 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         if (this.elementTable) {
             // measure table (not wrapper) width
             const tableWidth = this.elementTable.nativeElement.querySelectorAll('table')[0].offsetWidth;
-            // const wrapperWidth = this.tableContainer.nativeElement.offsetWidth;
-            let windowWidth = this.scrollMechanicsService.windowSizeSubject.getValue().width;
-            // Table occupy 50% of the screen (20% menu and 30% right panel)
-            windowWidth *= .55;
-            windowWidth += 4 * 16; // four gutters for both grids
+            // area available
+            const areaWidth = this.area.nativeElement.offsetWidth;
+            // area available to the table (2/3 + gutters
+            const availAreaWidth = areaWidth/3*2 + 46;
 
-            const isTableFit = (windowWidth > tableWidth);
+            const isTableFit = (availAreaWidth > tableWidth);
             if (this.activeTableEntity) {
                 this.fixedLayoutClass = (isTableFit) ? '' : 'fixedLayout--with-panel';
             } else {

@@ -4,7 +4,7 @@ import {
     EventEmitter, OnChanges, SimpleChanges,
     OnInit, ViewEncapsulation,
     ViewChild, ElementRef, AfterViewInit, HostListener, Renderer2,
-} from '@angular/core';
+}                                   from '@angular/core';
 import { ActivatedRoute, Router }   from '@angular/router';
 import { NxConfigService }          from '../../../../services/nx-config';
 import { NxUtilsService }           from '../../../../services/utils.service';
@@ -187,44 +187,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         if (this.dimensions.length) {
             this.setTableDimensions();
         }
-
-        // this.calcElementScrollMechanics();
-
-        // this.scrollMechanicsService
-        //         .windowScrollSubject
-        //         .subscribe(() => {
-        //             this.calcElementScrollMechanics();
-        //         });
-
-        // this.scrollMechanicsService
-        //         .elementTableWidthSubject
-        //         .subscribe(() => {
-        //             const width = this.scrollMechanicsService.elementTableWidthSubject.getValue();
-        //             this.elementWidth = (width > 0) ? width + 'px' : 'auto';
-        //             if (this.activeEntity && width > 0) {
-        //                 this.elementWidth = width + 8 /*gutter*/ + 'px';
-        //             }
-        //         });
-
-        // this.scrollMechanicsService
-        //         .offsetSubject
-        //         .subscribe(() => {
-        //             setTimeout(() => this.scrollHeight = this.scrollMechanicsService.getElementOffset(this.camerasTable.nativeElement));
-        //         });
     }
-
-    // calcElementScrollMechanics() {
-    //     this.windowSize = this.scrollMechanicsService.windowSizeSubject.getValue();
-    //     this.windowScroll = this.scrollMechanicsService.windowScrollSubject.getValue();
-    //
-    //     this.clientHeight = this.camerasTable.nativeElement.clientHeight;
-    //
-    //     if (this.clientHeight < this.windowSize.height && this.windowScroll >= this.scrollHeight - NxScrollMechanicsService.SCROLL_OFFSET) {
-    //         this.tableScrollFixed = true;
-    //     } else {
-    //         this.tableScrollFixed = false;
-    //     }
-    // }
 
     ngOnDestroy() {
     }
