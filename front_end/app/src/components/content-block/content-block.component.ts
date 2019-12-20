@@ -43,6 +43,7 @@ export class NxContentBlockComponent implements OnInit {
 
     haveHeader: boolean;
     haveFooter: boolean;
+    headerClasses: string;
 
     @ViewChild('headerWrapper', { static: true }) headerWrapper: ElementRef;
     @ViewChild('footerWrapper', { static: true }) footerWrapper: ElementRef;
@@ -60,5 +61,8 @@ export class NxContentBlockComponent implements OnInit {
         this.hoverable = (this.hoverable !== undefined);
 
         this.headerStyle = (this.headerStyle) ? this.headerStyle + '-header' : '';
+        this.headerClass = (this.headerClass) ? this.headerClass : '';
+
+        this.headerClasses = this.headerStyle + this.headerClass;
     }
 }

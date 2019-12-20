@@ -151,6 +151,8 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         this.locked[user.email] = true;
         this.calcNextUserId();
 
+        this.applyService.reset();
+
         this.dialogs.removeUser(this.system, user).then((result) => {
             if (result) {
                 delete this.locked[user.email];

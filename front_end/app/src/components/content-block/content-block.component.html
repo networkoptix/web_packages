@@ -5,8 +5,7 @@
 
     <div class="card--header" #headerWrapper
          [hidden]="!haveHeader"
-         [ngStyle]="headerStyle"
-         [ngClass]="headerClass">
+         [ngClass]="headerClasses">
         <h4>
             <ng-content select="header"></ng-content>
         </h4>
