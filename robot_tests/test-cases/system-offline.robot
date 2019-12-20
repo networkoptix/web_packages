@@ -14,8 +14,7 @@ ${url}         ${ENV}
 Log in to Autotests 2 System
     [arguments]    ${email}
     Go To    ${url}/systems/${AUTOTESTS OFFLINE SYSTEM ID}
-    Log In    ${email}    ${password}    None
-    Validate Log In
+    Log In    ${email}    ${password}    button=None
     Wait Until Elements Are Visible    ${SYSTEM NAME OFFLINE}    ${SYSTEM ADMINISTRATION LINK}
     Run Keyword If    '${email}' == '${EMAIL OWNER}'    Wait Until Elements Are Visible
     ...    ${DISCONNECT FROM NX}
@@ -115,13 +114,12 @@ Should open System page by link to not authorized user and redirect to homepage,
 Should open System page by link to not authorized user and show it, after owner logs in
     [Tags]    Threaded
     Go To    ${url}/systems/${AUTOTESTS OFFLINE SYSTEM ID}
-    Log In    ${EMAIL OWNER}   ${password}    None
+    Log In    ${EMAIL OWNER}   ${password}    button=None
     Verify In System    Auto Tests 2
 
 Should open System page by link to user without permission and show alert (System info is unavailable: You have no access to this system)
     [Tags]    C41572    Threaded
     Log In    ${EMAIL NOPERM}    ${password}
-    Validate Log In
     Go To    ${url}/systems/${AUTOTESTS OFFLINE SYSTEM ID}
     Wait Until Elements Are Visible    ${SYSTEM NO ACCESS}    ${AVAILABLE SYSTEMS LIST}
     Click Link    ${AVAILABLE SYSTEMS LIST}
@@ -133,7 +131,7 @@ Should open System page by link to user without permission and show alert (Syste
 Should open System page by link not authorized user, and show alert if logs in and has no permission
     [Tags]    Threaded
     Go To    ${url}/systems/${AUTOTESTS OFFLINE SYSTEM ID}
-    Log In    ${EMAIL NOPERM}   ${password}    None
+    Log In    ${EMAIL NOPERM}   ${password}    button=None
     Wait Until Element Is Visible    ${SYSTEM NO ACCESS}
 
 Rename button opens dialog and clicking cancel closes rename dialog without rename
