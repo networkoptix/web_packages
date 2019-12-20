@@ -5,6 +5,13 @@
     box-shadow   : none;
     border-color : $light4;
     
+    .sticky1rem {
+        box-shadow: 0 -1rem 0 1px $additional_light2;
+        position: sticky;
+        top: 1rem;
+        z-index: 999;
+    }
+    
     &--header {
         height           : rem(48px);
         display          : flex;

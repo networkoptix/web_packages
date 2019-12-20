@@ -31,14 +31,15 @@ import { Component, ElementRef, Input, OnInit, ViewChild, ViewEncapsulation } fr
 @Component({
     selector   : 'nx-block',
     templateUrl: 'content-block.component.html',
-    encapsulation: ViewEncapsulation.None,
     styleUrls  : [ 'content-block.component.scss' ],
+    encapsulation: ViewEncapsulation.None,
 })
 export class NxContentBlockComponent implements OnInit {
     @Input('type') type: string;
     @Input('fixed-height') fixedHeight: any;
     @Input('hoverable') hoverable: any;
     @Input('header-style') headerStyle: any;
+    @Input('header-class') headerClass: any;
 
     haveHeader: boolean;
     haveFooter: boolean;

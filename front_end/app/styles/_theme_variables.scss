@@ -199,7 +199,8 @@ $grid-breakpoints : (
         lg: 992px,
         xl: 1200px,
         xxl: 1440px,
-        xxxl: 1600px
+        xxxl: 1600px,
+        xxxxl: 1920px
 );
 $container-max-widths : (
         sm: 540px,
@@ -207,7 +208,8 @@ $container-max-widths : (
         lg: 960px,
         xl: 1140px,
         xxl: 1380px,
-        xxxl: 1540px
+        xxxl: 1540px,
+        xxxxl: 1900px
 );
 
 $fluid-container-max-width: 1440px;
@@ -219,3 +221,16 @@ $badge-font-size: rem(12px);
 $badge-border-radius: rem(2px);
 $badge-padding-x : rem(8px);
 $badge-padding-y : rem(3px);
+
+// CSS Grid layout
+$grid-menu-width: 25%;
+$grid-content-width: calc(75% - 1rem);
+$grid-wide-menu-width: 16%;
+$grid-wide-content-width: calc(84% - 1rem);
+
+$grid-table-width: 70%;
+$grid-panel-width: calc(30% - 1rem);
+$grid-narrow-table-width: 60%;
+$grid-narrow-panel-width: calc(40% - 1rem);
+$grid-super-wide-table-width: 80%;
+$grid-super-wide-panel-width: calc(20% - 1rem);

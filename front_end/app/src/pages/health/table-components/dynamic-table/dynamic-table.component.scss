@@ -15,8 +15,18 @@ nx-dynamic-table {
     height      : 2rem;
   }
   
+  .table-scroll-fixed {
+    position: fixed;
+    top: 48px + 16px; // header + padding
+  }
+  
   .nx-table-wrapper {
     max-width: 100%;
+    width: fit-content;
+  
+    @include media-breakpoint-down(lg) {
+      width: auto;
+    }
     
     ::-webkit-scrollbar {
       width  : initial;

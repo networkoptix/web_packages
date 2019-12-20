@@ -1,7 +1,53 @@
 @import '../../../../styles/theme_palette';
 @import '../../../../styles/theme_variables';
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/mixins/breakpoints';
 
 nx-system-metrics-component {
+    
+    .gridMetricContent {
+        display: grid;
+        grid-column-gap: 1rem;
+        grid-template-columns: fit-content(100%) $grid-panel-width; // <- if table is less than 70% of screen width
+        height: 100%;
+    
+        @include media-breakpoint-up(xxxxl) {
+            grid-template-columns: fit-content(100%) $grid-super-wide-panel-width;
+        }
+    
+        // if table is more than 70% of screen width
+        &.fixedLayout {
+            &--with-panel {
+                grid-template-columns: $grid-table-width $grid-panel-width;
+    
+                @include media-breakpoint-down(lg) {
+                    grid-template-columns: $grid-narrow-table-width $grid-narrow-panel-width;
+                }
+    
+                @include media-breakpoint-up(xxxxl) {
+                    grid-template-columns: $grid-super-wide-table-width $grid-super-wide-panel-width;
+                }
+            }
+            &--no-panel {
+                grid-template-columns: 100%;
+            }
+        }
+        
+        &Component {
+            &Wrapper {
+                position: sticky;
+                top: 1rem;
+            }
+        }
+        
+        &PanelComponent {
+            &Wrapper {
+            
+            }
+        }
+    }
+    
     .data-wrapper {
         @media (min-width: 1280px) {
             min-width: 700px !important;

@@ -12,6 +12,7 @@ import { DialogsModule }      from '../../dialogs/dialogs.module';
 import { PipesModule }        from '../../pipes/pipes.module';
 import { NxAccountComponent } from '../account/account.component';
 import { AuthGuard }          from '../../routeGuards/authGuard';
+import { NxGridLayoutModule } from "../layout/layout.module";
 
 const appRoutes: Routes = [
     {
@@ -31,6 +32,7 @@ const appRoutes: Routes = [
         PipesModule,
 
         RouterModule.forChild(appRoutes),
+        NxGridLayoutModule,
     ],
     providers      : [],
     declarations   : [
