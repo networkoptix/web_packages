@@ -188,5 +188,9 @@
     "IPVD TITLE TEXT": "Dispositivi supportati",
     "SYSTEMS TITLE TEXT": "Sistemi",
     "NO PERMISSION TO SHARE TEXT": "Non hai i permessi per condividere questo sistema",
-    "WELCOME TEXT": "Benvenuto in"
+    "WELCOME TEXT": "Benvenuto in",
+    "YOU ARE ALREADY LOGGED IN TEXT": "You are already logged in as",
+    "DISCONNECT FROM MY ACCOUNT TEXT": "Disconnettiti dal mio account",
+    "YOU TEXT": "tu",
+    "UNRESTRICTED ACCESS CONNECT TEXT": "Accesso illimitato che include la possibilità di condividere e connettere / disconnettere il sistema dal cloud"
 }

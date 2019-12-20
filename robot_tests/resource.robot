@@ -92,9 +92,9 @@ Check Langauge Logged In
 
 Check Language Logged In
     [Arguments]    ${email}    ${password}
-    Register Keyword To Run On Failure    NONE
     ${curr lang}=   Get Account Language   ${ENV}    ${email}    ${password}
     Run Keyword Unless    '${curr lang}' == '${LANGUAGE}'    Set Account Language    ${ENV}    ${email}    ${password}    ${LANGUAGE}
+    Run Keyword Unless    '${curr lang}' == '${LANGUAGE}'    Reload Page
 
 Set Language Anonymous
     [arguments]    ${lang}=${LANGUAGE}
@@ -140,15 +140,14 @@ Log In With Remember Me
 Validate Log In
     [arguments]    ${timeout}=${selenium_timeout}
     Wait Until Element is Visible    ${ACCOUNT DROPDOWN}    ${timeout}
-    Check Language Logged In    ${email}    ${password}
     Sleep    0.5    #this is a test to see if it eliminates a problem with the login dialog popping up on logout
 
 Check Log In
     [arguments]    ${button}=${LOG IN NAV BAR}
     ${random email}    Get Random Email    ${BASE EMAIL}
-    Log In    ${random email}    ${password}    ${button}
+    Log In    ${random email}    ${password}      validate=False     button=${button}
     Wait Until Element Is Visible    ${ACCOUNT NOT FOUND}
-    Log In    ${EMAIL OWNER}    ${password}    None
+    Log In    ${EMAIL OWNER}    ${password}    button=None
 
 Log Out
     Wait Until Page Does Not Contain Element    ${BACKDROP}
@@ -280,7 +279,7 @@ Share To
     Sleep    1
     Click Button    ${SHARE BUTTON MODAL}
     Check For Alert    ${NEW PERMISSIONS SAVED}
-    Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
+    #Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
 
 Edit User Permissions In Systems
     [arguments]    ${user email address}    ${permissions}
@@ -309,19 +308,19 @@ Check User Permissions
     ...    ${UNRESTRICTED ACCESS CONNECT TEXT}
     Run Keyword If    '${permissions}' == '${ADMIN TEXT}'
     ...    Element Text Should Be    ${HELP BLOCK}
-    ...    ${UNRESTRICTED ACCESS SHARE TEXT}
+    ...    ${SHARE PERMISSIONS HINT ADMINISTRATOR}
     Run Keyword If    '${permissions}' == '${ADV VIEWER TEXT}'
     ...    Element Text Should Be    ${HELP BLOCK}
-    ...    ${CAN VIEW BROWSE CONTROL PTZ TEXT}
+    ...    ${SHARE PERMISSIONS HINT ADVANCED VIEWER}
     Run Keyword If    '${permissions}' == '${VIEWER TEXT}'
     ...    Element Text Should Be    ${HELP BLOCK}
-    ...    ${CAN VIEW BROWSE TEXT}
+    ...    ${SHARE PERMISSIONS HINT VIEWER}
     Run Keyword If    '${permissions}' == '${LIVE VIEWER TEXT}'
     ...    Element Text Should Be    ${HELP BLOCK}
-    ...    ${CAN ONLY VIEW TEXT}
+    ...    ${SHARE PERMISSIONS HINT LIVE VIEWER}
     Run Keyword If    '${permissions}' == '${CUSTOM TEXT}'
     ...    Element Text Should Be    ${HELP BLOCK}
-    ...    ${USE CLIENT TO SET PERMISSIONS TEXT}
+    ...    ${SHARE PERMISSIONS HINT CUSTOM}
 
     Set Selenium Timeout    ${original timeout}
 
@@ -513,6 +512,7 @@ Make sure viewer is in the system
     Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
     ${email}    Wait For Email    recipient=${EMAIL VIEWER}    timeout=120    status=UNSEEN
     Delete Email    ${email}
+    Close Mailbox
     Close Browser
 
 Reset System Names

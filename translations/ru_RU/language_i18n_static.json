@@ -200,7 +200,7 @@
 		"okButton": "OK",
 		"cancelButton": "Отменить",
 		"createNewAccount": "Создать новую учетную запись",
-		"changeAccountLogged": "Вы уже вошли как {email}",
+		"changeAccountLogged": "You are already logged in as {email}",
 		"loggedFromOther": "Вы будете авторизованы под другой учетной записью",
 		"loginTitle": "Войти в %CLOUD_NAME%",
 		"loginButton": "Войти",
@@ -237,7 +237,7 @@
 			},
 			"subject": {
 				"sales_inquiry": "Запрос на продажу {{asset}}",
-				"technical_inquiry": "Technical inquiry for {{asset}}",
+				"technical_inquiry": "Технический запрос для {{asset}}",
 				"integration_feedback": "Отзыв об интеграции {{asset}}",
 				"ipvd_feedback_page": "Отзыв о странице камер",
 				"ipvd_feedback_device": "Отзыв о {{asset}}"
@@ -349,7 +349,7 @@
 				"minutes": "минуты"
 			},
 			"warningMessages": {
-				"videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+				"videoEncryption": "Шифрование видео трафика значительно увеличит нагрузку на процессор."
 			}
 		}
 	},
@@ -483,8 +483,8 @@
 	},
 	"systemAdministration": "Администрирование системы",
 	"users": "Пользователи",
-	"testedVersionLabel": "Tested with {{vmsName}} version:",
-	"testedVersionsLabel": "Tested with {{vmsName}} versions:",
+	"testedVersionLabel": "Проверено на версии {{vmsName}}:",
+	"testedVersionsLabel": "Проверено на версии {{vmsName}}:",
 	"About %CLOUD_NAME%": "О %CLOUD_NAME%",
 	"Download %VMS_NAME%": "Скачать %VMS_NAME%",
 	"Integrations": "Интеграции",

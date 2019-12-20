@@ -200,7 +200,7 @@
 		"okButton": "Oké",
 		"cancelButton": "Annuleren",
 		"createNewAccount": "Creëer een nieuw account",
-		"changeAccountLogged": "U bent al ingelogd met als {email}",
+		"changeAccountLogged": "You are already logged in as {email}",
 		"loggedFromOther": "U wordt met een ander account ingelogd",
 		"loginTitle": "Meld u aan bij %CLOUD_NAME%",
 		"loginButton": "Inloggen",
@@ -237,7 +237,7 @@
 			},
 			"subject": {
 				"sales_inquiry": "Verkoopaanvraag voor {{asset}}",
-				"technical_inquiry": "Technical inquiry for {{asset}}",
+				"technical_inquiry": "Technische aanvraag voor {{asset}}",
 				"integration_feedback": "Feedback voor integratie {{asset}}",
 				"ipvd_feedback_page": "Feedback voor camera's pagina",
 				"ipvd_feedback_device": "Feedback over {{asset}}"
@@ -349,7 +349,7 @@
 				"minutes": "minuten"
 			},
 			"warningMessages": {
-				"videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+				"videoEncryption": "Versleuteling van videoverkeer zal het CPU-gebruik aanzienlijk verhogen."
 			}
 		}
 	},
@@ -435,13 +435,13 @@
 			"copyActiveText": "gekopieerd naar het klembord"
 		},
 		"systemOffline": "Systeem Offline",
-		"systemOfflineMessage": "This system is offline and cannot be accessed right now.",
-		"systemNoAlerts": "No Alerts",
-		"systemNoAlertsMessage": "Your system must be doing well!",
+		"systemOfflineMessage": "Dit systeem is offline en is momenteel niet toegankelijk.",
+		"systemNoAlerts": "Geen meldingen",
+		"systemNoAlertsMessage": "Uw systeem moet het goed doen!",
 		"systemServerError": "Interne Server Fout",
-		"systemServerErrorMessage": "An error occurred, please, try again later. An error occurred, please try again later. If the problem continues, please contact your support team.",
-		"systemNewVersion": "Update your system",
-		"systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
+		"systemServerErrorMessage": "Er is een fout opgetreden. Probeer het later opnieuw. Er is een fout opgetreden, probeer het later opnieuw. Neem contact op met uw ondersteuningsteam als het probleem zich blijft voordoen.",
+		"systemNewVersion": "Uw systeem bijwerken",
+		"systemNewVersionMessage": "Uw huidige versie is niet compatibel met deze functie. Werk uw servers bij naar de nieuwste versie om deze functie te gebruiken.",
 		"systemHasNoCameras": "GEEN CAMERA'S",
 		"systemUnreachable": "SYSTEEM NIET BEREIKBAAR",
 		"cameraStates": {
@@ -483,8 +483,8 @@
 	},
 	"systemAdministration": "Systeem Administratie",
 	"users": "Gebruikers",
-	"testedVersionLabel": "Tested with {{vmsName}} version:",
-	"testedVersionsLabel": "Tested with {{vmsName}} versions:",
+	"testedVersionLabel": "Getest op {{vmsName}} versie:",
+	"testedVersionsLabel": "Getest op {{vmsName}} versies:",
 	"About %CLOUD_NAME%": "Over %CLOUD_NAME%",
 	"Download %VMS_NAME%": "Download %VMS_NAME%",
 	"Integrations": "Integraties",

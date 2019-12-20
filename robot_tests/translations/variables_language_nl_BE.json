@@ -188,5 +188,9 @@
     "IPVD TITLE TEXT": "Ondersteunde apparaten",
     "SYSTEMS TITLE TEXT": "Systemen",
     "NO PERMISSION TO SHARE TEXT": "U heeft geen toestemming om dit systeem te delen",
-    "WELCOME TEXT": "Welkom bij"
+    "WELCOME TEXT": "Welkom bij",
+    "YOU ARE ALREADY LOGGED IN TEXT": "U bent al ingelogd als",
+    "DISCONNECT FROM MY ACCOUNT TEXT": "Ontkoppel van mijn account",
+    "YOU TEXT": "u",
+    "UNRESTRICTED ACCESS CONNECT TEXT": "Onbeperkt toegang, inclusief de mogelijkheid om systeem te delen en te verbinden / te verbreken vanuit de cloud"
 }

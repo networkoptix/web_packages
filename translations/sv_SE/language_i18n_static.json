@@ -200,7 +200,7 @@
 		"okButton": "OK",
 		"cancelButton": "Avbryt",
 		"createNewAccount": "Skapa nytt konto",
-		"changeAccountLogged": "Du är redan inloggad som {email}",
+		"changeAccountLogged": "You are already logged in as {email}",
 		"loggedFromOther": "Du kommer att vara inloggad med ett annat konto",
 		"loginTitle": "Logga in på %CLOUD_NAME%",
 		"loginButton": "Logga in",
@@ -237,7 +237,7 @@
 			},
 			"subject": {
 				"sales_inquiry": "Försäljningsförfrågan för {{asset}}",
-				"technical_inquiry": "Technical inquiry for {{asset}}",
+				"technical_inquiry": "Teknisk fråga för {{asset}}",
 				"integration_feedback": "Feedback för integration {{asset}}",
 				"ipvd_feedback_page": "Feedback för kamerans sida",
 				"ipvd_feedback_device": "Feedback om {{asset}}"
@@ -349,7 +349,7 @@
 				"minutes": "minuter"
 			},
 			"warningMessages": {
-				"videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+				"videoEncryption": "Kryptering av videotrafik ökar väsentligt CPU-användningen."
 			}
 		}
 	},
@@ -435,13 +435,13 @@
 			"copyActiveText": "kopierat till Urklipp"
 		},
 		"systemOffline": "System Offline",
-		"systemOfflineMessage": "This system is offline and cannot be accessed right now.",
-		"systemNoAlerts": "No Alerts",
-		"systemNoAlertsMessage": "Your system must be doing well!",
+		"systemOfflineMessage": "Det här systemet är offline och kan inte nås just nu.",
+		"systemNoAlerts": "Inga varningar",
+		"systemNoAlertsMessage": "Ditt system måste gå bra!",
 		"systemServerError": "Internt serverfel",
-		"systemServerErrorMessage": "An error occurred, please, try again later. An error occurred, please try again later. If the problem continues, please contact your support team.",
-		"systemNewVersion": "Update your system",
-		"systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
+		"systemServerErrorMessage": "Ett fel har inträffat. Vänligen försök igen senare. Ett fel har inträffat. Vänligen försök igen senare. Om problemet fortsätter, kontakta ditt supportteam.",
+		"systemNewVersion": "Uppdatera ditt system",
+		"systemNewVersionMessage": "Din nuvarande version är inte kompatibel med den här funktionen. Uppdatera dina servrar till den senaste versionen för att använda den här funktionen.",
 		"systemHasNoCameras": "INGA KAMEROR",
 		"systemUnreachable": "SYSTEMET är inte tillgängligt",
 		"cameraStates": {

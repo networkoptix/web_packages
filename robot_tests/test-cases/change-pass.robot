@@ -67,7 +67,7 @@ Reset DB and Open New Browser On Failure
 Can be accessed via dropdown or direct link
     [tags]    C41576
     Go To    ${url}/account/password
-    Log In    ${email}    ${password}    ${False}    None
+    Log In    ${email}    ${password}    ${False}    button=None
     Validate Log In
     Wait Until Elements Are Visible    ${CURRENT PASSWORD INPUT}    ${NEW PASSWORD INPUT}
     Location Should Be    ${url}/account/password
@@ -97,7 +97,7 @@ password is actually changed, so login works with new password
     Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
     Log Out
     Go To    ${url}/account/password
-    Log In    ${email}    ${password}    None
+    Log In    ${email}    ${password}    button=None
     Wait Until Element Is Visible    ${WRONG PASSWORD MESSAGE}
     CloudPortalAPI.Log In    ${url}    ${email}    ${ALT PASSWORD}
     Reset user password to base    ${email}    ${ALT PASSWORD}
@@ -111,7 +111,7 @@ password with symbols pass!@#$%^&*()_-+=;:'"`~,./\|?[]{} is valid
     Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
     Log Out
     Go To    ${url}/account/password
-    Log In    ${email}    ${password}    None
+    Log In    ${email}    ${password}    button=None
     Wait Until Element Is Visible    ${WRONG PASSWORD MESSAGE}
     CloudPortalAPI.Log In    ${url}    ${email}    ${symbol password}
     Reset user password to base    ${email}    ${symbol password}
@@ -125,7 +125,7 @@ password with space in the middle is valid
     Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
     Log Out
     Go To    ${url}/account/password
-    Log In    ${email}    ${password}    None
+    Log In    ${email}    ${password}    button=None
     Wait Until Element Is Visible    ${WRONG PASSWORD MESSAGE}
     CloudPortalAPI.Log In    ${url}    ${email}    ${space password}
     Reset user password to base    ${email}    ${space password}
@@ -183,9 +183,9 @@ Password can't be changed if current password is not provided or incorrect
     Discard Changes and Log Out
     Go To  ${url}
     CloudPortalAPI.Log In    ${url}    ${email}    ${BASE PASSWORD}
-    
+
 should open change password page in anonymous state
     [tags]    anonymous
     Open page anonymously    ${url}/account/password    ${CHANGE PASSWORD TITLE TEXT} - ${PRODUCT_NAME}
-    Wait Until Element Is Visible    ${LOG IN MODAL} 
+    Wait Until Element Is Visible    ${LOG IN MODAL}
     Check Log In    button=None

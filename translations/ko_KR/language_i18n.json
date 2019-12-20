@@ -342,7 +342,7 @@
     "devices": "장치",
     "dialogs": {
         "cancelButton": "취소",
-        "changeAccountLogged": "이미 {email} 로 로그인 되어있습니다",
+        "changeAccountLogged": "You are already logged in as {email}",
         "createNewAccount": "새 계정 만들기",
         "download": "%VMS_NAME% 다운로드",
         "loggedFromOther": "다른 계정으로 로그인 하게 될것입니다",
@@ -673,7 +673,7 @@
                 "minutes": "분"
             },
             "warningMessages": {
-                "videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+                "videoEncryption": "비디오 트래픽을 암호화하면 CPU 사용량이 크게 증가합니다."
             }
         },
         "shareOffline": "오프라인 상태에서 시스템을 공유 할 수 없습니다",
@@ -697,6 +697,7 @@
     },
     "testedVersionLabel": "Tested with {{vmsName}} version:",
     "testedVersionsLabel": "Tested with {{vmsName}} versions:",
+    "topXByVolume": "Top {{value}} by volume:",
     "users": "사용자",
     "you": "당신"
 }

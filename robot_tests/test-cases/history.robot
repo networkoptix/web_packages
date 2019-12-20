@@ -69,6 +69,7 @@ History link is not in the downloads page for user without access
     Click Link    ${DOWNLOAD LINK}
     Register Keyword To Run On Failure    NONE
     Run Keyword And Expect Error    *    Wait Until Element Is Visible    ${RELEASE HISTORY BUTTON}
+    Register Keyword To Run On Failure    Failure Tasks
 
 History link is in the downloads page for user with access and takes you to /downloads/releases
     [tags]    Passing_19.2

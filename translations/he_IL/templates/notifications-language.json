@@ -12,7 +12,7 @@
     "emailSubject": "שאלת מכירות עבור {{message.asset}}"
   },
   "contact_support": {
-    "emailSubject": "Technical inquiry for {{message.asset}}"
+    "emailSubject": "בירור טכני עבור {{message.asset}}"
   },
   "integration_feedback": {
     "emailSubject": "משוב על {{message.asset}}"

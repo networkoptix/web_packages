@@ -188,5 +188,9 @@
     "IPVD TITLE TEXT": "Desteklenen cihazlar",
     "SYSTEMS TITLE TEXT": "Sistemler",
     "NO PERMISSION TO SHARE TEXT": "Bu sistemi paylaşma izniniz yok",
-    "WELCOME TEXT": "Hoş geldiniz"
+    "WELCOME TEXT": "Hoş geldiniz",
+    "YOU ARE ALREADY LOGGED IN TEXT": "You are already logged in as",
+    "DISCONNECT FROM MY ACCOUNT TEXT": "Hesabımdan çıkış yap",
+    "YOU TEXT": "sen",
+    "UNRESTRICTED ACCESS CONNECT TEXT": "Sistem'i buluttan paylaşma / bağlanma ve bağlantıyı kesme gibi sınırsız erişim"
 }

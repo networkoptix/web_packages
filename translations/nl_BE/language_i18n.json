@@ -22,7 +22,7 @@
     "All cloud users will be deleted.": "Alle cloud gebruikers zullen worden verwijderd.",
     "All results": "Alle resultaten",
     "Allow only secure connections": "Alleen beveiligde verbindingen toestaan",
-    "Allow system to optimize camera settings": "Allow system to optimize camera settings",
+    "Allow system to optimize camera settings": "Laat het systeem toe om de camera-instellingen te optimaliseren",
     "Analytics": "Analytics",
     "Analytics Event": "Analytics evenement",
     "Analytics Events": "Analytics gebeurtenissen",
@@ -39,7 +39,7 @@
     "Change Password": "Wachtwoord wijzigen",
     "Checking...": "Controleer...",
     "Choose which properties should be visible to customers:": "Kies welke eigenschappen zichtbaar moeten zijn voor klanten:",
-    "Clear filters": "Clear filters",
+    "Clear filters": "Filter wissen",
     "Close": "Sluiten",
     "Codec": "Codec",
     "Collapse": "Samenvouwen",
@@ -68,7 +68,7 @@
     "Email is required": "E-mail is verplicht",
     "Embed": "Insluiten",
     "Enable audit trail": "Audit trail inschakelen",
-    "Enable auto discovery of cameras and servers": "Enable auto discovery of cameras and servers",
+    "Enable auto discovery of cameras and servers": "Schakel automatische detectie van camera's en servers in",
     "Encrypt video traffic": "Versleutel videoverkeer",
     "Enter \"Public User\" credentials:": "Voer \"Publieke gebruiker\" referenties in:",
     "Enter password for your account to continue": "Voer het wachtwoord in voor uw account om door te gaan",
@@ -90,7 +90,7 @@
     "I/O": "I/O",
     "In Review": "In behandeling",
     "In-Client Upgrade:": "In-client-upgrade:",
-    "Includes information about the System, such as camera modules, \n                            firmware versions, number of servers, etc. \n                            Does not include any personal information and is completely anonymous.": "Includes information about the System, such as camera modules, \n                            firmware versions, number of servers, etc. \n                            Does not include any personal information and is completely anonymous.",
+    "Includes information about the System, such as camera modules, \n                            firmware versions, number of servers, etc. \n                            Does not include any personal information and is completely anonymous.": "Bevat informatie over het systeem, zoals cameramodules, \n                            firmwareversies, aantal servers, enz. \n                            Bevat geen persoonlijke informatie en is volledig anoniem.",
     "Information": "Informatie",
     "Integrations": "Integraties",
     "Language": "Taal",
@@ -98,7 +98,7 @@
     "Last name": "Achternaam",
     "Last name is required": "Achternaam is verplicht",
     "Latest version": "Meest recente versie",
-    "Limit session duration to": "Limit session duration to",
+    "Limit session duration to": "Beperk sessiegeduur",
     "Log In": "Aanmelden",
     "Log Out": "Uitloggen",
     "Log in to %CLOUD_NAME%": "Meld u aan bij %CLOUD_NAME%",
@@ -118,7 +118,7 @@
     "Nothing Found": "Niets gevonden",
     "OK": "Oké",
     "Ok": "Oké",
-    "Only client-server video traffic can be encrypted.": "Only client-server video traffic can be encrypted.",
+    "Only client-server video traffic can be encrypted.": "Alleen client-server videoverkeer kan worden gecodeerd.",
     "Other packages:": "Andere pakketten:",
     "Other releases, patches and beta versions": "Overige releases, patches en bètaversies",
     "Owner": "Eigenaar",
@@ -147,7 +147,7 @@
     "Secondary Stream": "Secundair stream",
     "Security": "Beveiliging",
     "Send": "Verzenden",
-    "Send anonymous usage and crash statistics to developers": "Send anonymous usage and crash statistics to developers",
+    "Send anonymous usage and crash statistics to developers": "Stuur anonieme gebruiks- en crashstatistieken naar onze softwareontwikkelaars",
     "Send feedback about this device": "Stuur feedback over dit apparaat",
     "Set New Password": "Stel nieuw wachtwoord in",
     "Settings": "Instellingen",
@@ -186,7 +186,7 @@
     "WHEN_MERGE_FINISHES": "Wanneer het samenvoegen is voltooid, worden alle gebruikers en camera's van dit systeem beschikbaar in systeem \"<strong>{{targetSystemName}}</strong>\" en zal het huidige systeem worden verwijderd.",
     "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.": "We raden u aan de nieuwste versies van Google Chrome of Mozilla Firefox te installeren, maar u kunt elke andere moderne webbrowser gebruiken.",
     "What's New?": "Wat is er nieuw?",
-    "When enabled, system will discover new cameras and servers. Also, \n                            it will automatically and persistently send discovery requests to \n                            cameras in order to get the camera's status update. \n                            Failover enabled on some servers ignore status check prohibition.": "When enabled, system will discover new cameras and servers. Also, \n                            it will automatically and persistently send discovery requests to \n                            cameras in order to get the camera's status update. \n                            Failover enabled on some servers ignore status check prohibition.",
+    "When enabled, system will discover new cameras and servers. Also, \n                            it will automatically and persistently send discovery requests to \n                            cameras in order to get the camera's status update. \n                            Failover enabled on some servers ignore status check prohibition.": "Indien ingeschakeld, zal het systeem nieuwe camera's en servers ontdekken. Ook,, zal het automatisch en aanhoudend detectieaanvragen naar \n                            camera's sturen om de statusupdate van de camera te krijgen. \n                            Failover ingeschakeld op sommige servers negeert status check verbod.",
     "Works with:": "Werkt met:",
     "Wrong password": "Wachtwoord onjuist",
     "You can only merge Systems where you are the owner.": "Je kunt alleen systemen samenvoegen waarvan je eigenaar bent.",
@@ -315,14 +315,14 @@
         },
         "searchCamPlaceholder": "Zoek",
         "systemHasNoCameras": "GEEN CAMERA'S",
-        "systemNewVersion": "Update your system",
-        "systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
-        "systemNoAlerts": "No Alerts",
-        "systemNoAlertsMessage": "Your system must be doing well!",
+        "systemNewVersion": "Uw systeem bijwerken",
+        "systemNewVersionMessage": "Uw huidige versie is niet compatibel met deze functie. Werk uw servers bij naar de nieuwste versie om deze functie te gebruiken.",
+        "systemNoAlerts": "Geen meldingen",
+        "systemNoAlertsMessage": "Uw systeem moet het goed doen!",
         "systemOffline": "Systeem Offline",
-        "systemOfflineMessage": "This system is offline and cannot be accessed right now.",
+        "systemOfflineMessage": "Dit systeem is offline en is momenteel niet toegankelijk.",
         "systemServerError": "Interne Server Fout",
-        "systemServerErrorMessage": "An error occurred, please, try again later. An error occurred, please try again later. If the problem continues, please contact your support team.",
+        "systemServerErrorMessage": "Er is een fout opgetreden. Probeer het later opnieuw. Er is een fout opgetreden, probeer het later opnieuw. Neem contact op met uw ondersteuningsteam als het probleem zich blijft voordoen.",
         "systemUnreachable": "SYSTEEM NIET BEREIKBAAR",
         "voiceCommands": {
             "clear search": "zoekopdracht wissen",
@@ -342,7 +342,7 @@
     "devices": "apparaten",
     "dialogs": {
         "cancelButton": "Annuleren",
-        "changeAccountLogged": "U bent al ingelogd met als {email}",
+        "changeAccountLogged": "You are already logged in as {email}",
         "createNewAccount": "Creëer een nieuw account",
         "download": "Download %VMS_NAME%",
         "loggedFromOther": "U wordt met een ander account ingelogd",
@@ -375,7 +375,7 @@
                 "ipvd_feedback_device": "Feedback over {{asset}}",
                 "ipvd_feedback_page": "Feedback voor camera's pagina",
                 "sales_inquiry": "Verkoopaanvraag voor {{asset}}",
-                "technical_inquiry": "Technical inquiry for {{asset}}"
+                "technical_inquiry": "Technische aanvraag voor {{asset}}"
             },
             "title": {
                 "integration": "Neem contact op met {{companyName}}",
@@ -673,7 +673,7 @@
                 "minutes": "minuten"
             },
             "warningMessages": {
-                "videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+                "videoEncryption": "Versleuteling van videoverkeer zal het CPU-gebruik aanzienlijk verhogen."
             }
         },
         "shareOffline": "Kan het systeem niet delen terwijl het offline is",
@@ -695,8 +695,9 @@
         "online": "online",
         "unavailable": "niet beschikbaar"
     },
-    "testedVersionLabel": "Tested with {{vmsName}} version:",
-    "testedVersionsLabel": "Tested with {{vmsName}} versions:",
+    "testedVersionLabel": "Getest op {{vmsName}} versie:",
+    "testedVersionsLabel": "Getest op {{vmsName}} versies:",
+    "topXByVolume": "Top {{value}} per volume:",
     "users": "Gebruikers",
     "you": "u"
 }

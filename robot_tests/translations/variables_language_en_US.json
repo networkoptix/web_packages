@@ -216,10 +216,5 @@
     "YOU ARE ALREADY LOGGED IN TEXT"	   :	"You are already logged in as",
     "DISCONNECT FROM MY ACCOUNT TEXT"	   :	"Disconnect from My Account",
     "YOU TEXT"							   :	"you",
-    "UNRESTRICTED ACCESS SHARE TEXT"	   :	"Unrestricted access including the ability to share",
-    "UNRESTRICTED ACCESS CONNECT TEXT"	   :	"Unrestricted access including the ability to share and connect/disconnect System from cloud",
-    "CAN VIEW BROWSE CONTROL PTZ TEXT"     : 	"Can view live video, browse the archive, control PTZ etc",
-    "CAN VIEW BROWSE TEXT"			   	   : 	"Can view live video and browse the archive",
-    "CAN ONLY VIEW TEXT"				   :	"Can only view live video",
-    "USE CLIENT TO SET PERMISSIONS TEXT"   :	"Use the %VMS_NAME% Client application to set up custom permissions"
+    "UNRESTRICTED ACCESS CONNECT TEXT"	   :	"Unrestricted access including the ability to share and connect/disconnect System from cloud"
 }

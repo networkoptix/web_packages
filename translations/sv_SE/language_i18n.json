@@ -22,7 +22,7 @@
     "All cloud users will be deleted.": "Alla molnanvändare kommer raderas.",
     "All results": "Alla resultat",
     "Allow only secure connections": "Tillåt endast säkra anslutningar",
-    "Allow system to optimize camera settings": "Allow system to optimize camera settings",
+    "Allow system to optimize camera settings": "Låt systemet optimera kamerainställningarna",
     "Analytics": "Analys",
     "Analytics Event": "Analyshändelse",
     "Analytics Events": "Analyshändelser",
@@ -39,7 +39,7 @@
     "Change Password": "Ändra lösenord",
     "Checking...": "Kontrollerar...",
     "Choose which properties should be visible to customers:": "Välj vilka egenskaper som ska vara synliga för kunderna:",
-    "Clear filters": "Clear filters",
+    "Clear filters": "Rensa filter",
     "Close": "Stäng",
     "Codec": "Kodek",
     "Collapse": "Komprimera",
@@ -68,7 +68,7 @@
     "Email is required": "E-postadress måste anges",
     "Embed": "Inbäddad",
     "Enable audit trail": "Aktivera audit trail",
-    "Enable auto discovery of cameras and servers": "Enable auto discovery of cameras and servers",
+    "Enable auto discovery of cameras and servers": "Aktivera automatisk upptäckt av kameror och servrar",
     "Encrypt video traffic": "Kryptera videotrafik",
     "Enter \"Public User\" credentials:": "Ange \"Public User\" -uppgifter:",
     "Enter password for your account to continue": "Ange lösenord för ditt konto för att fortsätta",
@@ -90,7 +90,7 @@
     "I/O": "I/O",
     "In Review": "Under granskning",
     "In-Client Upgrade:": "Uppgradering av klient:",
-    "Includes information about the System, such as camera modules, \n                            firmware versions, number of servers, etc. \n                            Does not include any personal information and is completely anonymous.": "Includes information about the System, such as camera modules, \n                            firmware versions, number of servers, etc. \n                            Does not include any personal information and is completely anonymous.",
+    "Includes information about the System, such as camera modules, \n                            firmware versions, number of servers, etc. \n                            Does not include any personal information and is completely anonymous.": "Inkluderar information om systemet, till exempel kameramoduler, \n                            firmwareversioner, antal servrar, etc. \n                            Innehåller ingen personlig information och är helt anonym.",
     "Information": "Information",
     "Integrations": "Integrationer",
     "Language": "Språk",
@@ -98,7 +98,7 @@
     "Last name": "Efternamn",
     "Last name is required": "Efternamn krävs",
     "Latest version": "Senaste version",
-    "Limit session duration to": "Limit session duration to",
+    "Limit session duration to": "Begränsa sessionens varaktighet till",
     "Log In": "Logga in",
     "Log Out": "Logga ut",
     "Log in to %CLOUD_NAME%": "Logga in på %CLOUD_NAME%",
@@ -118,7 +118,7 @@
     "Nothing Found": "Inget hittades",
     "OK": "OK",
     "Ok": "Ok",
-    "Only client-server video traffic can be encrypted.": "Only client-server video traffic can be encrypted.",
+    "Only client-server video traffic can be encrypted.": "Endast videotrafik för klient-server kan krypteras.",
     "Other packages:": "Andra nedladdningar:",
     "Other releases, patches and beta versions": "Andra utgåvor, patchar och betaversioner",
     "Owner": "Ägare",
@@ -147,7 +147,7 @@
     "Secondary Stream": "Sekundär ström",
     "Security": "Säkerhet",
     "Send": "Skicka",
-    "Send anonymous usage and crash statistics to developers": "Send anonymous usage and crash statistics to developers",
+    "Send anonymous usage and crash statistics to developers": "Skicka anonym användning och kraschstatistik till programutvecklare",
     "Send feedback about this device": "Skicka feedback om den här enheten",
     "Set New Password": "Ange nytt lösenord",
     "Settings": "Inställningar",
@@ -186,7 +186,7 @@
     "WHEN_MERGE_FINISHES": "När sammanslagningen är klar kommer alla användare och kameror från detta system att bli tillgängliga i <strong>{{targetSystemName}}</strong> System, och detta system kommer att raderas.",
     "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.": "Vi rekommenderar att du installerar de senaste versionerna av Google Chrome eller Mozilla Firefox, men du kan använda någon annan modern webbläsare.",
     "What's New?": "Vad är nytt?",
-    "When enabled, system will discover new cameras and servers. Also, \n                            it will automatically and persistently send discovery requests to \n                            cameras in order to get the camera's status update. \n                            Failover enabled on some servers ignore status check prohibition.": "When enabled, system will discover new cameras and servers. Also, \n                            it will automatically and persistently send discovery requests to \n                            cameras in order to get the camera's status update. \n                            Failover enabled on some servers ignore status check prohibition.",
+    "When enabled, system will discover new cameras and servers. Also, \n                            it will automatically and persistently send discovery requests to \n                            cameras in order to get the camera's status update. \n                            Failover enabled on some servers ignore status check prohibition.": "När det är aktiverat kommer systemet att upptäcka nya kameror och servrar. Också \n                            kommer det automatiskt och ihållande att skicka upptäcktsförfrågningar till \n                            kameror för att få kamerans statusuppdatering. \n                            Failover aktiverat på vissa servrar ignorerar förbud mot statuskontroll.",
     "Works with:": "Fungerar med:",
     "Wrong password": "Fel lösenord",
     "You can only merge Systems where you are the owner.": "Du kan slå samman cloud system där du är ägare.",
@@ -315,14 +315,14 @@
         },
         "searchCamPlaceholder": "Sök",
         "systemHasNoCameras": "INGA KAMEROR",
-        "systemNewVersion": "Update your system",
-        "systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
-        "systemNoAlerts": "No Alerts",
-        "systemNoAlertsMessage": "Your system must be doing well!",
+        "systemNewVersion": "Uppdatera ditt system",
+        "systemNewVersionMessage": "Din nuvarande version är inte kompatibel med den här funktionen. Uppdatera dina servrar till den senaste versionen för att använda den här funktionen.",
+        "systemNoAlerts": "Inga varningar",
+        "systemNoAlertsMessage": "Ditt system måste gå bra!",
         "systemOffline": "System Offline",
-        "systemOfflineMessage": "This system is offline and cannot be accessed right now.",
+        "systemOfflineMessage": "Det här systemet är offline och kan inte nås just nu.",
         "systemServerError": "Internt serverfel",
-        "systemServerErrorMessage": "An error occurred, please, try again later. An error occurred, please try again later. If the problem continues, please contact your support team.",
+        "systemServerErrorMessage": "Ett fel har inträffat. Vänligen försök igen senare. Ett fel har inträffat. Vänligen försök igen senare. Om problemet fortsätter, kontakta ditt supportteam.",
         "systemUnreachable": "SYSTEMET är inte tillgängligt",
         "voiceCommands": {
             "clear search": "rensa sökningen",
@@ -342,7 +342,7 @@
     "devices": "enheter",
     "dialogs": {
         "cancelButton": "Avbryt",
-        "changeAccountLogged": "Du är redan inloggad som {email}",
+        "changeAccountLogged": "You are already logged in as {email}",
         "createNewAccount": "Skapa nytt konto",
         "download": "Ladda ner %VMS_NAME%",
         "loggedFromOther": "Du kommer att vara inloggad med ett annat konto",
@@ -375,18 +375,7 @@
                 "ipvd_feedback_device": "Feedback om {{asset}}",
                 "ipvd_feedback_page": "Feedback för kamerans sida",
                 "sales_inquiry": "Försäljningsförfrågan för {{asset}}",
-                "technical_inquiry": "Technical inquiry for {{asset}}"
-            },
-            "title": {
-                "integration": "Kom i kontakt med {{companyName}}",
-                "ipvd_feedback_device": "Feedback om {{asset}}",
-                "ipvd_feedback_page": "Feedback för kamerans sida"
-            "subject": {
-                "contact_sales": "Kontakta försäljning för {{asset}}",
-                "contact_support": "Kontakta support för {{asset}}",
-                "integration_feedback": "Feedback för integration {{asset}}",
-                "ipvd_feedback_device": "Feedback om {{asset}}",
-                "ipvd_feedback_page": "Feedback för kamerans sida"
+                "technical_inquiry": "Teknisk fråga för {{asset}}"
             },
             "title": {
                 "integration": "Kom i kontakt med {{companyName}}",
@@ -684,7 +673,7 @@
                 "minutes": "minuter"
             },
             "warningMessages": {
-                "videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+                "videoEncryption": "Kryptering av videotrafik ökar väsentligt CPU-användningen."
             }
         },
         "shareOffline": "Kan inte dela systemet medan det är offline",
@@ -706,8 +695,9 @@
         "online": "uppkopplad",
         "unavailable": "inte tillgänglig"
     },
-    "testedVersionLabel": "Tested with {{vmsName}} version:",
-    "testedVersionsLabel": "Tested with {{vmsName}} versions:",
+    "testedVersionLabel": "Testat på {{vmsName}} version:",
+    "testedVersionsLabel": "Testat på {{vmsName}} version:",
+    "topXByVolume": "Topp {{value}} efter volym:",
     "users": "Användare",
     "you": "du"
 }

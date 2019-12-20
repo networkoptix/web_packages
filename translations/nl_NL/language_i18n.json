@@ -342,7 +342,7 @@
     "devices": "apparaten",
     "dialogs": {
         "cancelButton": "Annuleren",
-        "changeAccountLogged": "U bent al ingelogd met als {email}",
+        "changeAccountLogged": "You are already logged in as {email}",
         "createNewAccount": "Creëer een nieuw account",
         "download": "Download %VMS_NAME%",
         "loggedFromOther": "U wordt met een ander account ingelogd",
@@ -375,7 +375,7 @@
                 "ipvd_feedback_device": "Feedback over {{asset}}",
                 "ipvd_feedback_page": "Feedback voor de camerapagina",
                 "sales_inquiry": "Verkoopaanvraag voor {{asset}}",
-                "technical_inquiry": "Technical inquiry for {{asset}}"
+                "technical_inquiry": "Technische aanvraag voor {{asset}}"
             },
             "title": {
                 "integration": "Neem contact op met {{companyName}}",
@@ -673,7 +673,7 @@
                 "minutes": "minuut"
             },
             "warningMessages": {
-                "videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+                "videoEncryption": "De encryptie van het videoverkeer zal het CPU-gebruik aanzienlijk verhogen."
             }
         },
         "shareOffline": "Kan systeem niet delen terwijl het offline is",
@@ -695,8 +695,9 @@
         "online": "online",
         "unavailable": "niet beschikbaar"
     },
-    "testedVersionLabel": "Tested with {{vmsName}} version:",
-    "testedVersionsLabel": "Tested with {{vmsName}} versions:",
+    "testedVersionLabel": "Getest op {{vmsName}} versie:",
+    "testedVersionsLabel": "Getest op {{vmsName}} versie:",
+    "topXByVolume": "Top {{value}} by volume:",
     "users": "Gebruikers",
     "you": "u"
 }

@@ -188,5 +188,9 @@
     "IPVD TITLE TEXT": "อุปกรณ์ที่รองรับ",
     "SYSTEMS TITLE TEXT": "ระบบ",
     "NO PERMISSION TO SHARE TEXT": "You do not have permission to share this system",
-    "WELCOME TEXT": "ขอต้อนรับสู่:"
+    "WELCOME TEXT": "ขอต้อนรับสู่:",
+    "YOU ARE ALREADY LOGGED IN TEXT": "You are already logged in as",
+    "DISCONNECT FROM MY ACCOUNT TEXT": "Disconnect from My Account",
+    "YOU TEXT": "you",
+    "UNRESTRICTED ACCESS CONNECT TEXT": "การเข้าถึงที่ไม่ จำกัด รวมถึงความสามารถในการแชร์และเชื่อมต่อ / ตัดการเชื่อมต่อระบบจากระบบคลาวด์"
 }

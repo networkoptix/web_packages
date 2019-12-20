@@ -200,7 +200,7 @@
 		"okButton": "確定",
 		"cancelButton": "取消",
 		"createNewAccount": "新增帳戶",
-		"changeAccountLogged": "您已經以{email} 的帳號登入。",
+		"changeAccountLogged": "You are already logged in as {email}",
 		"loggedFromOther": "您將使用其他帳號登入",
 		"loginTitle": "登入到 %CLOUD_NAME%",
 		"loginButton": "登入",
@@ -237,7 +237,7 @@
 			},
 			"subject": {
 				"sales_inquiry": "{{asset}}的產品諮詢",
-				"technical_inquiry": "Technical inquiry for {{asset}}",
+				"technical_inquiry": "{{asset}} 的技術諮詢",
 				"integration_feedback": "整合 {{asset}} 的回饋意見",
 				"ipvd_feedback_page": "攝影機頁面的回饋意見",
 				"ipvd_feedback_device": "{{asset}} 的回饋意見"
@@ -342,14 +342,14 @@
 		"permissionsRemoved": "權限從 {{email}} 被移除",
 		"unknownName": "未知的系統名稱（由雲合併引起）",
 		"shareOffline": "離線時無法共用系統",
-		"shareUnauthorized": "You do not have permission to share this system",
+		"shareUnauthorized": "您沒有共享本系統的權限",
 		"settings": {
 			"sessionLimitDuration": {
 				"hours": "小時",
 				"minutes": "分"
 			},
 			"warningMessages": {
-				"videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+				"videoEncryption": "對影像串流通訊加密會大幅提高CPU使用率。"
 			}
 		}
 	},
@@ -435,13 +435,13 @@
 			"copyActiveText": "已複製到剪貼簿"
 		},
 		"systemOffline": "系統處於離線狀態",
-		"systemOfflineMessage": "This system is offline and cannot be accessed right now.",
-		"systemNoAlerts": "No Alerts",
-		"systemNoAlertsMessage": "Your system must be doing well!",
-		"systemServerError": "Internal server error",
-		"systemServerErrorMessage": "An error occurred, please, try again later. An error occurred, please try again later. If the problem continues, please contact your support team.",
-		"systemNewVersion": "Update your system",
-		"systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
+		"systemOfflineMessage": "該系統處於離線狀態，無法立即登入。",
+		"systemNoAlerts": "沒有警報",
+		"systemNoAlertsMessage": "您的系統必須運作良好！",
+		"systemServerError": "內部伺服器錯誤",
+		"systemServerErrorMessage": "發生錯誤。請稍後重試。發生錯誤。請稍後重試。如果問題仍然存在，請聯繫您的技術支援。",
+		"systemNewVersion": "更新您的系統",
+		"systemNewVersionMessage": "當前版本與此功能不相容。請更新您的伺服器到最新版本以使用此功能。",
 		"systemHasNoCameras": "無攝影機",
 		"systemUnreachable": "系統無法連接",
 		"cameraStates": {
@@ -483,8 +483,8 @@
 	},
 	"systemAdministration": "系統管理",
 	"users": "使用者",
-	"testedVersionLabel": "Tested with {{vmsName}} version:",
-	"testedVersionsLabel": "Tested with {{vmsName}} versions:",
+	"testedVersionLabel": "測試 {{vmsName}} 版本：",
+	"testedVersionsLabel": "測試 {{vmsName}} 版本：",
 	"About %CLOUD_NAME%": "關於 %CLOUD_NAME%",
 	"Download %VMS_NAME%": "下載 %VMS_NAME%",
 	"Integrations": "整合",

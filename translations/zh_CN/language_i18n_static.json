@@ -200,7 +200,7 @@
 		"okButton": "确定",
 		"cancelButton": "撤消",
 		"createNewAccount": "新增帐户",
-		"changeAccountLogged": "您已经以用户{email} 的身份登录。",
+		"changeAccountLogged": "You are already logged in as {email}",
 		"loggedFromOther": "您将使用其他帐户登录",
 		"loginTitle": "登录到 %CLOUD_NAME%",
 		"loginButton": "登录",
@@ -237,7 +237,7 @@
 			},
 			"subject": {
 				"sales_inquiry": "{{asset}} 的產品咨询",
-				"technical_inquiry": "Technical inquiry for {{asset}}",
+				"technical_inquiry": "{{asset}} 的技术咨询",
 				"integration_feedback": "集成{{asset}} 反馈",
 				"ipvd_feedback_page": "摄像机页面反馈",
 				"ipvd_feedback_device": "关于 {{asset}} 反馈"
@@ -342,14 +342,14 @@
 		"permissionsRemoved": "权限从 {{email}} 被刪除",
 		"unknownName": "未知的系统名称（由云合并引起）",
 		"shareOffline": "离线时无法共享系统",
-		"shareUnauthorized": "You do not have permission to share this system",
+		"shareUnauthorized": "您没有共享此系统的权限",
 		"settings": {
 			"sessionLimitDuration": {
 				"hours": "小时",
 				"minutes": "分"
 			},
 			"warningMessages": {
-				"videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+				"videoEncryption": "加密视频通信量将显著增加 CPU 使用率。"
 			}
 		}
 	},
@@ -421,7 +421,7 @@
 		}
 	},
 	"privacyPolicy": {
-		"integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a> which include instruction on how to withdraw your consent.",
+		"integration": "提交表单即表示您同意与{{INTEGRATION_COMPANY}} 和/或 %COMPANY_NAME%联系。\n您可在这里<a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">浏览{{INTEGRATION_COMPANY}} 隐私政策</a> 和%COMPANY_NAME%隐私政策<a href=\"%PRIVACY_LINK%\" target=\"_blank\">这里</a>可了解如何撤销您的同意。",
 		"ipvd": "提交表单即表示同意 %COMPANY_NAME%与您联系。\n您可在<a href=\"%PRIVACY_LINK%\" target=\"_blank\">浏览 %COMPANY_NAME% 隐私政策</a> ，其中包含如何撤回同意。"
 	},
 	"common": {
@@ -435,13 +435,13 @@
 			"copyActiveText": "已复制到剪贴板"
 		},
 		"systemOffline": "系统处于离线状态",
-		"systemOfflineMessage": "This system is offline and cannot be accessed right now.",
-		"systemNoAlerts": "No Alerts",
-		"systemNoAlertsMessage": "Your system must be doing well!",
-		"systemServerError": "Internal server error",
-		"systemServerErrorMessage": "An error occurred, please, try again later. An error occurred, please try again later. If the problem continues, please contact your support team.",
-		"systemNewVersion": "Update your system",
-		"systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
+		"systemOfflineMessage": "此系统处于离线状态，现在无法登录。",
+		"systemNoAlerts": "没有警报",
+		"systemNoAlertsMessage": "您的系统必须运行良好！",
+		"systemServerError": "内部服务器错误",
+		"systemServerErrorMessage": "发生错误。请稍后重试。发生错误。请稍后重试。如果问题仍然存在，请联系您的支持团队。",
+		"systemNewVersion": "更新您的系统",
+		"systemNewVersionMessage": "当前版本与此功能不兼容。请更新您的服务器到最新版本以使用此功能。",
 		"systemHasNoCameras": "无摄像机",
 		"systemUnreachable": "系统无法连接",
 		"cameraStates": {
@@ -483,8 +483,8 @@
 	},
 	"systemAdministration": "系统管理",
 	"users": "用户",
-	"testedVersionLabel": "Tested with {{vmsName}} version:",
-	"testedVersionsLabel": "Tested with {{vmsName}} versions:",
+	"testedVersionLabel": "测试 {{vmsName}} 版本：",
+	"testedVersionsLabel": "测试 {{vmsName}} 版本：",
 	"About %CLOUD_NAME%": "关于 %CLOUD_NAME%",
 	"Download %VMS_NAME%": "下载 %VMS_NAME%",
 	"Integrations": "集成",

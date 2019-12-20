@@ -188,5 +188,9 @@
     "IPVD TITLE TEXT": "Podporovaná zařízení",
     "SYSTEMS TITLE TEXT": "Systémy",
     "NO PERMISSION TO SHARE TEXT": "Nemáte oprávnění ke sdílení tohoto systému",
-    "WELCOME TEXT": "Vítejte v"
+    "WELCOME TEXT": "Vítejte v",
+    "YOU ARE ALREADY LOGGED IN TEXT": "You are already logged in as",
+    "DISCONNECT FROM MY ACCOUNT TEXT": "Odpojte se od svého účtu",
+    "YOU TEXT": "vy",
+    "UNRESTRICTED ACCESS CONNECT TEXT": "Neomezený přístup, včetně možnosti sdílení a připojení/odpojení systému z cloudu"
 }
