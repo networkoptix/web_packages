@@ -30,6 +30,7 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
     private sub: any;
     private build: any;
     private canViewRelease: boolean;
+    readonly releases = 'releases';
 
     CONFIG: any;
     LANG: any;
@@ -104,6 +105,10 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
                     this.linkbase = data.updatesPrefix;
                     if (!this.build) { // only one build
                         this.downloadsData = data;
+                        console.log(this.noteTypes)
+                        if (!(this.section in this.downloadsData)) {
+                            this.section = this.releases;
+                        }
                         this.activeBuilds = this.downloadsData[ this.section ];
                         this.getAvailableDownloadTypes(this.downloadsData);
                     } else {
@@ -144,7 +149,7 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
         this.sub = this.route.params.subscribe(params => {
             this.routeParam = params.type;
 
-            this.routeParam = this.routeParam || 'releases';
+            this.routeParam = this.routeParam || this.releases;
             if (isNumeric(this.routeParam)) {
                 this.build = this.routeParam;
             } else {
