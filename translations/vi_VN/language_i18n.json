@@ -371,7 +371,7 @@
             "sdk": {
                 "label": "SDK",
                 "shortLabel": "SDK",
-                "supported": "SDK đa nền tảng C ++"
+                "supported": "C++ cross platform SDK"
             },
             "windows": {
                 "label": "Windows"
