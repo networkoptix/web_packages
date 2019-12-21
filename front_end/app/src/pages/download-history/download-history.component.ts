@@ -105,7 +105,6 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
                     this.linkbase = data.updatesPrefix;
                     if (!this.build) { // only one build
                         this.downloadsData = data;
-                        console.log(this.noteTypes)
                         if (!(this.section in this.downloadsData)) {
                             this.section = this.releases;
                         }
