@@ -60,7 +60,7 @@ should open register page in anonymous state
     [tags]    C24211    anonymous
     Run keyword and continue on failure    Open page anonymously    ${url}/register    ${REGISTER TITLE TEXT} ${PRODUCT_NAME}
     Wait Until Element Is Visible    ${REGISTER FORM}
-    Check Log In    button=None
+    Check Log In 
 
 should register user with correct credentials
     ${email}    Get Random Email    ${BASE EMAIL}

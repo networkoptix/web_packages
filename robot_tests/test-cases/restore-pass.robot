@@ -105,6 +105,9 @@ should set new password, login with new password
     Wait Until Element Is Visible    ${WRONG PASSWORD MESSAGE}
     Log In    ${email}    ${ALT PASSWORD}    button=None
     Validate Log In
+    Log In    ${email}    ${password}    validate=False    button=None
+    Wait Until Element Is Visible    ${WRONG PASSWORD MESSAGE}
+    Log In    ${email}    ${ALT PASSWORD}    button=None
 
 displays password masked, shows password and changes eye icon when clicked
     [tags]    C26260    Threaded
