@@ -323,7 +323,7 @@ class NoptixImapLibrary(object):
         | Wait For Email | sender=noreply@domain.com |
         | Wait For Email | sender=noreply@domain.com | folder=OUTBOX
         """
-        poll_frequency = float(kwargs.pop('poll_frequency', 10))
+        poll_frequency = float(kwargs.pop('poll_frequency', 44))
         timeout = int(kwargs.pop('timeout', 60))
         end_time = time() + timeout
         while time() < end_time:

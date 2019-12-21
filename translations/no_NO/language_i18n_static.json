@@ -200,7 +200,7 @@
 		"okButton": "OK",
 		"cancelButton": "Avbryt",
 		"createNewAccount": "Create New Account",
-		"changeAccountLogged": "You are already logged in with as {email}",
+		"changeAccountLogged": "You are already logged in as {email}",
 		"loggedFromOther": "You will be logged in with a different account",
 		"loginTitle": "Logg inn på %CLOUD_NAME%",
 		"loginButton": "Logg Inn",
@@ -236,8 +236,8 @@
 				"ipvd_feedback_device": "Tilbakemelding for {{asset}}"
 			},
 			"subject": {
-				"contact_sales": "Kontakt salg for {{asset}}",
-				"contact_support": "Kontakt brukerstøtte for {{asset}}",
+				"sales_inquiry": "Salgsforespørsel for {{asset}}",
+				"technical_inquiry": "Technical inquiry for {{asset}}",
 				"integration_feedback": "Tilbakemelding for integrasjon {{asset}}",
 				"ipvd_feedback_page": "Tilbakemelding for kameraer-siden",
 				"ipvd_feedback_device": "Tilbakemelding for {{asset}}"
@@ -349,7 +349,7 @@
 				"minutes": "minutter"
 			},
 			"warningMessages": {
-				"videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+				"videoEncryption": "Kryptering av videotrafikk vil øke CPU-bruken betydelig."
 			}
 		}
 	},

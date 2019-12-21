@@ -342,7 +342,7 @@
     "devices": "enheter",
     "dialogs": {
         "cancelButton": "Avbryt",
-        "changeAccountLogged": "You are already logged in with as {email}",
+        "changeAccountLogged": "You are already logged in as {email}",
         "createNewAccount": "Create New Account",
         "download": "Last ned %VMS_NAME%",
         "loggedFromOther": "You will be logged in with a different account",
@@ -371,11 +371,11 @@
             "failedToSend": "Meldingen har ikke sendt.",
             "sent": "Meldingen er sendt.",
             "subject": {
-                "contact_sales": "Kontakt salg for {{asset}}",
-                "contact_support": "Kontakt brukerstøtte for {{asset}}",
                 "integration_feedback": "Tilbakemelding for integrasjon {{asset}}",
                 "ipvd_feedback_device": "Tilbakemelding for {{asset}}",
-                "ipvd_feedback_page": "Tilbakemelding for kameraer-siden"
+                "ipvd_feedback_page": "Tilbakemelding for kameraer-siden",
+                "sales_inquiry": "Salgsforespørsel for {{asset}}",
+                "technical_inquiry": "Technical inquiry for {{asset}}"
             },
             "title": {
                 "integration": "Kom i kontakt med {{companyName}}",
@@ -673,7 +673,7 @@
                 "minutes": "minutter"
             },
             "warningMessages": {
-                "videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+                "videoEncryption": "Kryptering av videotrafikk vil øke CPU-bruken betydelig."
             }
         },
         "shareOffline": "Cannot share system while it is offline",

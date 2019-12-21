@@ -342,7 +342,7 @@
     "devices": "zařízení",
     "dialogs": {
         "cancelButton": "Zrušit",
-        "changeAccountLogged": "You are already logged in with as {email}",
+        "changeAccountLogged": "You are already logged in as {email}",
         "createNewAccount": "Create New Account",
         "download": "Stáhnout %VMS_NAME%",
         "loggedFromOther": "You will be logged in with a different account",
@@ -371,11 +371,11 @@
             "failedToSend": "Zprávu se nepodařilo odeslat.",
             "sent": "Zpráva byla odeslána.",
             "subject": {
-                "contact_sales": "Kontaktovat obchod ohledně {{asset}}",
-                "contact_support": "Kontaktovat podporu ohledně{{asset}}",
                 "integration_feedback": "Zpětná vazba pro integraci {{asset}}",
                 "ipvd_feedback_device": "Zpětná vazba pro {{asset}}",
-                "ipvd_feedback_page": "Zpětná vazba pro kameru"
+                "ipvd_feedback_page": "Zpětná vazba pro kameru",
+                "sales_inquiry": "Dotaz na prodejce o {{asset}}",
+                "technical_inquiry": "Technical inquiry for {{asset}}"
             },
             "title": {
                 "integration": "Spojte se s {{companyName}}",
@@ -673,7 +673,7 @@
                 "minutes": "minuty"
             },
             "warningMessages": {
-                "videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+                "videoEncryption": "Šifrování přenosu videa výrazně zvýší zatížení procesoru."
             }
         },
         "shareOffline": "Cannot share system while it is offline",

@@ -179,7 +179,7 @@
     "INTEGRATION SUPPORT TEXT": "Support",
     "INTEGRATION SUPPORT URL TEXT": "Support URL",
     "INTEGRATION SUPPORT EMAIL TEXT": "Support Courriel",
-    "INTEGRATION GET IN TOUCH LEGAL TEXT": "By submitting this form you agree to be contacted by QA - Test Integration Company and/or Network Optix. You will find QA - Test Integration Company privacy policy here and Network Optix privacy policy here which include instruction on how to withdraw your consent.",
+    "INTEGRATION GET IN TOUCH LEGAL TEXT": "En soumettant ce formulaire, vous acceptez d'être contacté par QA - Test Integration Company et/ou Network Optix. Vous trouverez ici la politique de confidentialité QA - Test Integration Company et la politique de confidentialité Network Optix qui contient des instructions sur la façon de retirer votre consentement.",
     "INTEGRATION GET IN TOUCH MESSAGE SENT": "Message a été envoyé.",
     "REGISTER TITLE TEXT": "Créer compte dans",
     "DOWNLOAD TITLE TEXT": "Télécharger %VMS_NAME%",
@@ -188,5 +188,9 @@
     "IPVD TITLE TEXT": "Périphériques supportés",
     "SYSTEMS TITLE TEXT": "Systèmes",
     "NO PERMISSION TO SHARE TEXT": "Vous n'avez pas la permission de partager ce système",
-    "WELCOME TEXT": "Bienvenue sur"
+    "WELCOME TEXT": "Bienvenue sur",
+    "YOU ARE ALREADY LOGGED IN TEXT": "Vous êtes déjà connecté en tant que",
+    "DISCONNECT FROM MY ACCOUNT TEXT": "Déconnecter de mon compte",
+    "YOU TEXT": "toi",
+    "UNRESTRICTED ACCESS CONNECT TEXT": "Accès illimité, y compris la possibilité de partager et de connecter/déconnecter le système de nuage"
 }

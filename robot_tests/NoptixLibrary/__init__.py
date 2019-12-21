@@ -4,7 +4,7 @@
 import docker
 import email.header
 import imaplib
-import os.path
+import os
 import re
 import time
 from datetime import date
@@ -361,16 +361,16 @@ class NoptixLibrary(object):
             raise Exception("Button target was not 'blank'.")
 
     def build_image(self, env):
-        serverVersion = ""
+        version = ""
         if env == "https://cloud-test.hdw.mx":
-            serverVersion = "4.1.0.30149"
-        elif: env == "https://cloud-dev3/hdw.mx":
-            serverVersion = "4.1.0.30027"
+            version = "4.1.0.30149"
+        elif env == "https://cloud-dev3.hdw.mx":
+            version = "4.1.0.30027"
         client = docker.from_env()
-        return client.images.build(path="/home/kyle/develop/nx/cloud_portal/robot_tests/Docker",
+        return client.images.build(path=f"{os.getcwd()}/Docker",
                             tag="mediaserver",
-                            buildargs={"mediaserver_deb":"nxwitness-server-{}-linux64-beta-test.deb".format(serverVersion)})
-        
+                            buildargs={"mediaserver_deb":f"nxwitness-server-{version}-linux64-beta-test.deb"})
+
     def run_container(self, image, port, network):
         tmp = {'/run':'', '/run/lock':''}
         vol = {'/sys/fs/cgroup': {

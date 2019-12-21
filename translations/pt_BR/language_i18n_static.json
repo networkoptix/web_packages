@@ -200,7 +200,7 @@
 		"okButton": "OK",
 		"cancelButton": "Cancelar",
 		"createNewAccount": "Create New Account",
-		"changeAccountLogged": "You are already logged in with as {email}",
+		"changeAccountLogged": "You are already logged in as {email}",
 		"loggedFromOther": "You will be logged in with a different account",
 		"loginTitle": "Logar em %CLOUD_NAME%",
 		"loginButton": "Entrar",
@@ -236,8 +236,8 @@
 				"ipvd_feedback_device": "Comentários sobre {{asset}}"
 			},
 			"subject": {
-				"contact_sales": "Entre em contato com vendas para {{asset}}",
-				"contact_support": "Contate o suporte para {{asset}}",
+				"sales_inquiry": "Pesquisa de vendas para {{asset}}",
+				"technical_inquiry": "Technical inquiry for {{asset}}",
 				"integration_feedback": "Feedback para integração {{asset}}",
 				"ipvd_feedback_page": "Feedback para página de câmaras",
 				"ipvd_feedback_device": "Comentários sobre {{asset}}"
@@ -349,7 +349,7 @@
 				"minutes": "minuto"
 			},
 			"warningMessages": {
-				"videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+				"videoEncryption": "A encriptação do tráfego de vídeo irá aumentar significativamente o uso de CPU."
 			}
 		}
 	},

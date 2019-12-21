@@ -342,7 +342,7 @@
     "devices": "Geräte",
     "dialogs": {
         "cancelButton": "Abbrechen",
-        "changeAccountLogged": "Sie sind bereits angemeldet als {email}",
+        "changeAccountLogged": "You are already logged in as {email}",
         "createNewAccount": "Neues Konto anlegen",
         "download": "%VMS_NAME% herunterladen",
         "loggedFromOther": "Sie werden mit einem anderen Konto angemeldet",
@@ -371,11 +371,11 @@
             "failedToSend": "Nachricht konnte nicht gesendet werden.",
             "sent": "Die Nachricht wurde gesendet.",
             "subject": {
-                "contact_sales": "Kontaktiere Vertrieb für {{asset}}",
-                "contact_support": "Kontaktiere Support für {{asset}}",
                 "integration_feedback": "Feedback zur Integration {{asset}}",
                 "ipvd_feedback_device": "Feedback zu {{asset}}",
-                "ipvd_feedback_page": "Feedback zur Kameraseite"
+                "ipvd_feedback_page": "Feedback zur Kameraseite",
+                "sales_inquiry": "Verkaufsanfrage für {{asset}}",
+                "technical_inquiry": "Technische Anfrage für {{asset}}"
             },
             "title": {
                 "integration": "Kontaktieren Sie {{companyName}}",
@@ -673,7 +673,7 @@
                 "minutes": "minuten"
             },
             "warningMessages": {
-                "videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+                "videoEncryption": "Die Verschlüsselung des Videoverkehrs wird die CPU-Auslastung deutlich erhöhen."
             }
         },
         "shareOffline": "Das System kann nicht freigegeben werden, solange es offline ist",

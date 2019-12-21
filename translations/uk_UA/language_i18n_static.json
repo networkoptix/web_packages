@@ -200,7 +200,7 @@
 		"okButton": "ОК",
 		"cancelButton": "Відмінити",
 		"createNewAccount": "Створити новий обліковий запис",
-		"changeAccountLogged": "Ви вже ввійшли з {email}",
+		"changeAccountLogged": "You are already logged in as {email}",
 		"loggedFromOther": "Ви ввійдете в інший обліковий запис",
 		"loginTitle": "Увійти до %CLOUD_NAME%",
 		"loginButton": "Увійти",
@@ -236,8 +236,8 @@
 				"ipvd_feedback_device": "Відгук про {{asset}}"
 			},
 			"subject": {
-				"contact_sales": "Зв'яжіться з відділом продажів за {{asset}}",
-				"contact_support": "Зверніться до служби підтримки за {{asset}}",
+				"sales_inquiry": "Запит на продаж {{asset}}",
+				"technical_inquiry": "Технічний запит на {{asset}}",
 				"integration_feedback": "Зворотній зв'язок для інтеграції {{asset}}",
 				"ipvd_feedback_page": "Зворотній зв’язок для сторінки камер",
 				"ipvd_feedback_device": "Відгук про {{asset}}"
@@ -349,7 +349,7 @@
 				"minutes": "хвилини"
 			},
 			"warningMessages": {
-				"videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+				"videoEncryption": "Шифрування відео трафіку значно збільшить використання центрального процесора."
 			}
 		}
 	},
@@ -435,13 +435,13 @@
 			"copyActiveText": "скопійовано до буфера обміну"
 		},
 		"systemOffline": "Система знаходиться поза мережею",
-		"systemOfflineMessage": "This system is offline and cannot be accessed right now.",
-		"systemNoAlerts": "No Alerts",
-		"systemNoAlertsMessage": "Your system must be doing well!",
+		"systemOfflineMessage": "Ця система не доступна, тому її зараз не можна відкрити.",
+		"systemNoAlerts": "Немає попереджень",
+		"systemNoAlertsMessage": "Ваша система має добре працювати!",
 		"systemServerError": "Внутрішня помилка сервера",
-		"systemServerErrorMessage": "An error occurred, please, try again later. An error occurred, please try again later. If the problem continues, please contact your support team.",
-		"systemNewVersion": "Update your system",
-		"systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
+		"systemServerErrorMessage": "Сталася помилка, спробуйте ще раз пізніше. Сталася помилка, повторіть спробу пізніше. Якщо проблема не зникне, будь ласка, зверніться до вашої служби підтримки.",
+		"systemNewVersion": "Оновіть вашу систему",
+		"systemNewVersionMessage": "Ваша поточна версія несумісна з цією функцією. Будь ласка, оновіть ваші сервери до останньої версії, щоб використовувати цю функцію.",
 		"systemHasNoCameras": "НЕМАЄ КАМЕР",
 		"systemUnreachable": "СИСТЕМА НЕДОСТУПНА",
 		"cameraStates": {

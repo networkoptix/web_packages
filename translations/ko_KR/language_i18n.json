@@ -342,7 +342,7 @@
     "devices": "장치",
     "dialogs": {
         "cancelButton": "취소",
-        "changeAccountLogged": "이미 {email} 로 로그인 되어있습니다",
+        "changeAccountLogged": "You are already logged in as {email}",
         "createNewAccount": "새 계정 만들기",
         "download": "%VMS_NAME% 다운로드",
         "loggedFromOther": "다른 계정으로 로그인 하게 될것입니다",
@@ -371,11 +371,11 @@
             "failedToSend": "메시지 전송 실패",
             "sent": "메시지가 전송되었습니다.",
             "subject": {
-                "contact_sales": "{{asset}} 에 대해 영업팀에 문의",
-                "contact_support": "{{asset}} 대해 지원팀에 문의",
                 "integration_feedback": "{{asset}} 통합에 대한 피드백",
                 "ipvd_feedback_device": "{{asset}} 에 대한 피드백",
-                "ipvd_feedback_page": "카메라 페이지에 대한 피드백"
+                "ipvd_feedback_page": "카메라 페이지에 대한 피드백",
+                "sales_inquiry": "{{asset}}에 대한 판매 문의",
+                "technical_inquiry": "Technical inquiry for {{asset}}"
             },
             "title": {
                 "integration": "{{companyName}} 과 연락",
@@ -673,7 +673,7 @@
                 "minutes": "분"
             },
             "warningMessages": {
-                "videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+                "videoEncryption": "비디오 트래픽을 암호화하면 CPU 사용량이 크게 증가합니다."
             }
         },
         "shareOffline": "오프라인 상태에서 시스템을 공유 할 수 없습니다",

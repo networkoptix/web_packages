@@ -3,7 +3,7 @@ import {
     Component, Input, Output,
     EventEmitter, OnChanges, SimpleChanges,
     OnInit, ViewEncapsulation,
-    ViewChild, ElementRef,
+    ViewChild, ElementRef, AfterViewInit, HostListener, Renderer2,
 }                                   from '@angular/core';
 import { ActivatedRoute, Router }   from '@angular/router';
 import { NxConfigService }          from '../../../../services/nx-config';
@@ -26,10 +26,10 @@ const SORT_DIR = 2;
     styleUrls    : ['./dynamic-table.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class NxDynamicTableComponent implements OnChanges, OnInit {
-    @Input('tableHeader') tableHeader = '';
-    @Input('headers') _headers: any = [];
-    @Input('elements') elements: any = [];
+export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit {
+    @Input() tableHeader = '';
+    @Input() headers: any = [];
+    @Input() elements: any = [];
     @Input() dimensions;
     @Input() activeEntity;
     @Input() showGroups = true;
@@ -39,7 +39,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
     CONFIG: any;
 
     _elements: any = [];
-    headers: any = {};
+    _headers: any = {};
     params: any = {};
 
     public selectedEntity;
@@ -59,10 +59,19 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
     serviceParams;
     serviceHeaders;
 
-    windowSize: any;
+    windowSize: any = {};
+    windowScroll: any;
+    clientHeight: number;
+    offsetHeight: number;
+    scrollHeight: number;
+    tableScrollFixed: boolean;
+    elementWidth: any;
+    revert: any;
 
     @ViewChild('thead', { static: false }) thead: ElementRef;
     @ViewChild('tableHeaderElement', { static: false }) tableHeaderElement: ElementRef;
+    @ViewChild('nxTable', { static: false }) camerasTable: ElementRef;
+    @ViewChild('nxScrollWrapper', { static: false }) scrollWrapper: ElementRef;
     // CSS does not use CONFIG so this is here to avoid confusion if changing the value
     private static ROW_HEIGHT = 26;
 
@@ -73,6 +82,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
                 private route: ActivatedRoute,
                 private healthService: NxHealthService,
                 private scrollMechanicsService: NxScrollMechanicsService,
+                private renderer: Renderer2,
     ) {
         this.CONFIG = this.configService.getConfig();
         this.elements = this.elements || [];
@@ -99,12 +109,12 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
             this.selectedEntity = changes.activeEntity.currentValue;
         }
 
-        if (changes._headers) {
-            this.headers = changes._headers.currentValue;
+        if (changes.headers) {
+            this._headers = changes.headers.currentValue;
             this.selectedHeader = undefined;
 
-            if (changes._headers.previousValue !== undefined &&
-                    changes._headers.previousValue !== changes._headers.currentValue) {
+            if (changes.headers.previousValue !== undefined &&
+                    changes.headers.previousValue !== changes.headers.currentValue) {
                 const queryParams: Params = {};
                 queryParams.page = undefined;
                 queryParams.sortBy = undefined;
@@ -134,11 +144,13 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
 
     private setTableDimensions() {
         this.windowSize = this.scrollMechanicsService.windowSizeSubject.getValue();
+
         const ELEMENTS_HEIGHT = this.dimensions.reduce((prev, curr) => prev + curr, 0);
         const THEAD_HEIGHT = this.thead.nativeElement.offsetHeight;
         const PADDING = 16;
         const PAGINATION_HEIGHT = 64;
-        let availSpace = this.windowSize.height - PAGINATION_HEIGHT - ELEMENTS_HEIGHT - 4 * PADDING - THEAD_HEIGHT - 48;
+
+        let availSpace = this.windowSize.height - 4 * PADDING - ELEMENTS_HEIGHT - THEAD_HEIGHT - 48 - PAGINATION_HEIGHT;
 
         if (this.tableHeader) {
             availSpace -= this.tableHeaderElement.nativeElement.offsetHeight;
@@ -152,12 +164,6 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
         this.setPagedItems();
     }
 
-    ngAfterViewInit() {
-        if (this.dimensions.length) {
-            this.setTableDimensions();
-        }
-    }
-
     ngOnInit() {
         this.params = {...this.route.snapshot.queryParams};
         if (this.params.sortBy) {
@@ -169,6 +175,12 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
         }
 
         this.setPage(this.params.page || 1);
+    }
+
+    ngAfterViewInit(): void {
+        if (this.dimensions.length) {
+            this.setTableDimensions();
+        }
     }
 
     ngOnDestroy() {
@@ -255,6 +267,20 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
 
         if (updateURI || updateURI === undefined) {
             setTimeout(() => this.setPage(1));
+        }
+    }
+
+    // Element with position 'fixed' is loosing the focus when page bottom is reached and cursor is moved (not 'mousewheel')
+    // this ensures scroll wrapper will get the event... but content is not clickable during scroll. -- TT
+    @HostListener("mousewheel", ["$event"])
+    onMouseWheel(event) {
+        if (this.tableScrollFixed) {
+            this.renderer.setStyle(this.scrollWrapper.nativeElement, 'z-index', '-1');
+            clearTimeout(this.revert);
+            this.revert = setTimeout(() => {
+                this.renderer.setStyle(this.scrollWrapper.nativeElement, 'z-index', '1');
+                clearTimeout(this.revert);
+            }, 100);
         }
     }
 }

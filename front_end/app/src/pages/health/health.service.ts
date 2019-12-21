@@ -123,7 +123,7 @@ export class NxHealthService {
                 retValue = this.secondsToTime(retValue, format);
             } else if (['resource', 'thumbnail'].includes(format)) {
                 retValue = this.resourceNames[retValue] || retValue;
-            } else {
+            } else if (!['longText', 'shortText', 'text'].includes(format)) {
                 console.error(`Format not recognized: ${format}`);
                 retValue = roundInt(retValue);
                 retValue = `${retValue} ${format}`;

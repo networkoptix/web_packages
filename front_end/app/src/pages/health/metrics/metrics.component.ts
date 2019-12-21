@@ -1,16 +1,22 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { ActivatedRoute }                                                             from '@angular/router';
-
+import {
+    AfterViewInit,
+    Component,
+    ElementRef,
+    OnInit,
+    ViewChild,
+    ViewEncapsulation
+} from '@angular/core';
+import { ActivatedRoute }                      from '@angular/router';
 import { NxAccountService }                    from '../../../services/account.service';
 import { NxConfigService }                     from '../../../services/nx-config';
 import { NxSystem, NxSystemService }           from '../../../services/system.service';
 import { NxMenuService }                       from '../../../components/menu/menu.service';
 import { NxHealthService }                     from '../health.service';
 import { NxUriService }                        from '../../../services/uri.service';
-import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { NxLanguageProviderService }           from '../../../services/nx-language-provider';
 import { SubscriptionLike }                    from 'rxjs';
-import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
+import { AutoUnsubscribe }                     from 'ngx-auto-unsubscribe';
+import { NxScrollMechanicsService }            from "../../../services/scroll-mechanics.service";
 
 interface Params {
     [key: string]: any;
@@ -60,7 +66,13 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
     elementTableHeight: number;
     containerDimensions: any = [];
 
+    windowSizeSubscription: SubscriptionLike;
+
+    fixedLayoutClass: string;
+
     @ViewChild('search', { static: false }) elementSearch: ElementRef;
+    @ViewChild('tableContainer', { static: false }) tableContainer: ElementRef;
+    @ViewChild('area', { static: false }) area: ElementRef;
 
     constructor(private accountService: NxAccountService,
                 private configService: NxConfigService,
@@ -70,16 +82,25 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
                 private menuService: NxMenuService,
                 private healthService: NxHealthService,
                 private uri: NxUriService,
-                private breakpointObserver: BreakpointObserver,
+                private scrollMechanicsService: NxScrollMechanicsService,
     ) {
         this.CONFIG = this.configService.getConfig();
         this.LANG  = this.languageService.getTranslations();
-        this.breakpoint = '(max-width: 767px)';
         this.containerDimensions = [];
 
         this.filterModel = {
             query: ''
         };
+
+        // Breadcrumbs for making search bar same width as dynamic table
+        // this.tableWidthSubscription = this.scrollMechanicsService
+        //         .elementTableWidthSubject
+        //         .subscribe(() => {
+        //             setTimeout(() => {
+        //                 this.elementSearch.nativeElement.style.width = this.scrollMechanicsService.elementTableWidthSubject.getValue() + 'px';
+        //             });
+        //         });
+        // ***************************************************************
     }
 
     ngOnInit(): void {
@@ -94,8 +115,8 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
                 this.menuService.setSection(this.metricId);
                 this.selectedData = this.healthService.tableHeaders[this.metricId];
                 this.selectedPanelData = this.healthService.panelParams[this.metricId];
-                this.resetActiveEntity(false);
                 this.metricValuesLen = this.metricId in this.healthService.values ? Object.values(this.healthService.values[this.metricId]).length : 0;
+                this.resetActiveEntity(false);
 
                 if (!searchParam || !searchParam.length) {
                     this.filterModel.query = '';
@@ -108,14 +129,18 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
                 }
             });
 
-        this.breakpointSubscription = this.breakpointObserver
-            .observe([this.breakpoint])
-            .subscribe((state: BreakpointState) => {
-                this.mobileDetailMode = (state.matches && this.activeEntity);
-            });
+        this.windowSizeSubscription = this.scrollMechanicsService.windowSizeSubject.subscribe(({ width }) => {
+            if (this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.lg)) {
+                this.mobileDetailMode = (this.activeEntity !== undefined);
+            } else {
+                this.mobileDetailMode = false;
+            }
+            setTimeout(() => this.setLayout());
+        });
     }
 
     ngAfterViewInit() {
+        this.setLayout();
         if (this.elementSearch) {
             this.elementSearchHeight = this.elementSearch.nativeElement.offsetHeight;
 
@@ -160,10 +185,12 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
             queryParams.id = entity.id;
             this.uri.updateURI(undefined, queryParams);
 
-            if (this.breakpointObserver.isMatched(this.breakpoint)) {
+            if (this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.lg)) {
                 this.mobileDetailMode = true;
             }
         }
+
+        this.setLayout();
     }
 
     resetActiveEntity(updateURI = true) {
@@ -174,5 +201,32 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
             this.uri.updateURI(undefined, queryParams);
         }
         this.mobileDetailMode = false;
+        setTimeout(() => this.setLayout());
+    }
+
+    private setLayout() {
+        if (this.metricValuesLen === 1) {
+            this.fixedLayoutClass = 'fixedLayout--no-panel';
+        } else {
+            if (this.tableContainer) {
+                // measure table (not wrapper) width
+                const tableWidth = this.tableContainer.nativeElement.querySelectorAll('table')[0].offsetWidth;
+                // area available
+                const areaWidth = this.area.nativeElement.offsetWidth;
+                // area available to the table (2/3 + gutters
+                const availAreaWidth = areaWidth / 3 * 2 + 46;
+
+                const isTableFit = (availAreaWidth > tableWidth);
+                if (this.activeEntity) {
+                    this.fixedLayoutClass = (isTableFit) ? '' : 'fixedLayout--with-panel';
+                } else {
+                    this.fixedLayoutClass = (isTableFit) ? '' : 'fixedLayout--no-panel';
+                }
+            }
+
+            if (this.mobileDetailMode && this.activeEntity) {
+                this.fixedLayoutClass = 'fixedLayout--no-panel';
+            }
+        }
     }
 }

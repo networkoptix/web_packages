@@ -12,7 +12,7 @@
     "emailSubject": "Dotaz na prodejce o {{message.asset}}"
   },
   "contact_support": {
-    "emailSubject": "Žádost o podporu {{message.asset}}"
+    "emailSubject": "Technical inquiry for {{message.asset}}"
   },
   "integration_feedback": {
     "emailSubject": "Zpětná vazba pro {{message.asset}}"

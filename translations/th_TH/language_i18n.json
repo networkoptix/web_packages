@@ -342,7 +342,7 @@
     "devices": "อุุปกรณ์",
     "dialogs": {
         "cancelButton": "ยกเลิก",
-        "changeAccountLogged": "You are already logged in with as {email}",
+        "changeAccountLogged": "You are already logged in as {email}",
         "createNewAccount": "Create New Account",
         "download": "ดาวน์โหลด %VMS_NAME%",
         "loggedFromOther": "You will be logged in with a different account",
@@ -371,11 +371,11 @@
             "failedToSend": "ไม่สามารถส่งข้อความได้",
             "sent": "ส่งข้อความแล้ว",
             "subject": {
-                "contact_sales": "ติดต่อฝ่ายขายสำหรับ {{asset}}",
-                "contact_support": "ติดต่อฝ่ายสนับสนุนสำหรับ {{asset}}",
                 "integration_feedback": "ข้อเสนอแนะสำหรับการรวม {{asset}}",
                 "ipvd_feedback_device": "ข้อเสนอแนะเกี่ยวกับ {{asset}}",
-                "ipvd_feedback_page": "ข้อเสนอแนะสำหรับหน้ากล้อง"
+                "ipvd_feedback_page": "ข้อเสนอแนะสำหรับหน้ากล้อง",
+                "sales_inquiry": "สอบถามรายละเอียดการขายสำหรับ {{asset}}",
+                "technical_inquiry": "Technical inquiry for {{asset}}"
             },
             "title": {
                 "integration": "ติดต่อกับ {{companyName}}",
@@ -673,7 +673,7 @@
                 "minutes": "นาที"
             },
             "warningMessages": {
-                "videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+                "videoEncryption": "การเข้ารหัสวิดีโอจะช่วยเพิ่มการใช้งาน CPU ให้มากขึ้น"
             }
         },
         "shareOffline": "Cannot share system while it is offline",

@@ -12,7 +12,7 @@
     "emailSubject": "Zapytanie handlowe o {{message.asset}}"
   },
   "contact_support": {
-    "emailSubject": "Prośba o wsparcie do {{message.asset}}"
+    "emailSubject": "Zapytanie techniczne do {{message.asset}}"
   },
   "integration_feedback": {
     "emailSubject": "Opinie dotyczące {{message.asset}}"

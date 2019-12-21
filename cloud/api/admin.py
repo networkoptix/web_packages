@@ -221,7 +221,7 @@ class GroupAdmin(admin.ModelAdmin):
     list_permissions.short_description = 'Group of permissions'
 
     def assets(self, obj):
-        return [relation.asset.name for relation in obj.usergroupstoassetpermissions_set.all()]
+        return [relation.asset.name for relation in obj.usergroupstoassetpermissions_set.all() if relation.asset]
 
     def asset_types(self, obj):
         return [relation.asset_type.name or AssetType.ASSET_TYPES[relation.asset_type.type] for relation in obj.usergroupstoassettype_set.all()]

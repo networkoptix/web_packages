@@ -12,7 +12,7 @@
     "emailSubject": "{{message.asset}}에 대한 판매 문의"
   },
   "contact_support": {
-    "emailSubject": "{{message.asset}}대한 지원 요청"
+    "emailSubject": "{{message.asset}}에 대한 기술 문의"
   },
   "integration_feedback": {
     "emailSubject": "{{message.asset}}대한 피드백"

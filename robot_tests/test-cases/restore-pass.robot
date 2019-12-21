@@ -101,10 +101,13 @@ should set new password, login with new password
     Click Button    ${SAVE PASSWORD}
     Wait Until Elements Are Visible    ${RESET SUCCESS MESSAGE}    ${RESET SUCCESS LOG IN LINK}
     Click Link    ${RESET SUCCESS LOG IN LINK}
-    Log In    ${email}    ${password}    None
+    Log In    ${email}    ${password}    button=None    validate=${False}
     Wait Until Element Is Visible    ${WRONG PASSWORD MESSAGE}
-    Log In    ${email}    ${ALT PASSWORD}    None
+    Log In    ${email}    ${ALT PASSWORD}    button=None
     Validate Log In
+    Log In    ${email}    ${password}    validate=False    button=None
+    Wait Until Element Is Visible    ${WRONG PASSWORD MESSAGE}
+    Log In    ${email}    ${ALT PASSWORD}    button=None
 
 displays password masked, shows password and changes eye icon when clicked
     [tags]    C26260    Threaded
@@ -171,7 +174,7 @@ should make not-activated user active by restoring password
     Click Button    ${SAVE PASSWORD}
     Wait Until Elements Are Visible    ${RESET SUCCESS MESSAGE}    ${RESET SUCCESS LOG IN LINK}
     Click Link    ${RESET SUCCESS LOG IN LINK}
-    Log In    ${email}    ${ALT PASSWORD}    None
+    Log In    ${email}    ${ALT PASSWORD}    button=None
     Validate Log In
 
 should allow logged in user visit restore password page

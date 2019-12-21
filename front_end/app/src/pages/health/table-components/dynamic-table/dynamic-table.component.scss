@@ -15,8 +15,18 @@ nx-dynamic-table {
     height      : 2rem;
   }
   
+  .table-scroll-fixed {
+    position: fixed;
+    top: 48px + 16px; // header + padding
+  }
+  
   .nx-table-wrapper {
     max-width: 100%;
+    width: fit-content;
+  
+    @include media-breakpoint-down(lg) {
+      width: auto;
+    }
     
     ::-webkit-scrollbar {
       width  : initial;
@@ -125,7 +135,7 @@ nx-dynamic-table {
         }
         
         th {
-          padding:  0 24px 0 0;
+          padding:  0 16px 0 0;
           color          : $dark9;
           font-family    : $font-family-medium;
           font-weight    : 500 !important;
@@ -226,7 +236,7 @@ nx-dynamic-table {
           }
           
           td {
-            padding     : 0 24px 0 0;
+            padding     : 0 16px 0 0;
             font-family : $font-family-regular;
             font-size   : $font-size-sm;
             color       : $dark9;

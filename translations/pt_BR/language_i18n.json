@@ -342,7 +342,7 @@
     "devices": "dispositivos",
     "dialogs": {
         "cancelButton": "Cancelar",
-        "changeAccountLogged": "You are already logged in with as {email}",
+        "changeAccountLogged": "You are already logged in as {email}",
         "createNewAccount": "Create New Account",
         "download": "Baixar %VMS_NAME%",
         "loggedFromOther": "You will be logged in with a different account",
@@ -371,11 +371,11 @@
             "failedToSend": "Falha no envio da mensagem.",
             "sent": "A mensagem foi enviada.",
             "subject": {
-                "contact_sales": "Entre em contato com vendas para {{asset}}",
-                "contact_support": "Contate o suporte para {{asset}}",
                 "integration_feedback": "Feedback para integração {{asset}}",
                 "ipvd_feedback_device": "Comentários sobre {{asset}}",
-                "ipvd_feedback_page": "Feedback para página de câmaras"
+                "ipvd_feedback_page": "Feedback para página de câmaras",
+                "sales_inquiry": "Pesquisa de vendas para {{asset}}",
+                "technical_inquiry": "Technical inquiry for {{asset}}"
             },
             "title": {
                 "integration": "Entre em contato com {{companyName}}",
@@ -673,7 +673,7 @@
                 "minutes": "minuto"
             },
             "warningMessages": {
-                "videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+                "videoEncryption": "A encriptação do tráfego de vídeo irá aumentar significativamente o uso de CPU."
             }
         },
         "shareOffline": "Cannot share system while it is offline",

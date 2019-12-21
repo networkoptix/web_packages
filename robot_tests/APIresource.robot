@@ -78,3 +78,9 @@ Set Account Password
     ${resp}=    Post Request    set_new_password_session    /cdb/account/update    json=${params}
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()}
+
+Log Out via API
+    ${cookies}=   Get Cookies    as_dict = True
+    ${status}=   CloudPortalAPI.Log Out    ${ENV}    &{cookies}[sessionid]    &{cookies}[csrftoken]
+    Should Be Equal as Strings    ${status}    200
+    Reload Page

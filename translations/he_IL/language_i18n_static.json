@@ -200,7 +200,7 @@
 		"okButton": "אישור",
 		"cancelButton": "ביטול",
 		"createNewAccount": "Create New Account",
-		"changeAccountLogged": "אתה מחובר כבר כ- {email}",
+		"changeAccountLogged": "You are already logged in as {email}",
 		"loggedFromOther": "You will be logged in with a different account",
 		"loginTitle": "היכנס ל- %CLOUD_NAME%",
 		"loginButton": "התחברות",
@@ -236,8 +236,8 @@
 				"ipvd_feedback_device": "משוב על {{asset}}"
 			},
 			"subject": {
-				"contact_sales": "צור קשר עם מחלקת המכירות עבור {{asset}}",
-				"contact_support": "צור קשר עם התמיכה בנוגע ל- {{asset}}",
+				"sales_inquiry": "בירור מכירות עבור {{asset}}",
+				"technical_inquiry": "בירור טכני עבור {{asset}}",
 				"integration_feedback": "משוב לאינטגרציה {{asset}}",
 				"ipvd_feedback_page": "משוב עבור דף מצלמות",
 				"ipvd_feedback_device": "משוב על {{asset}}"
@@ -349,7 +349,7 @@
 				"minutes": "דקות"
 			},
 			"warningMessages": {
-				"videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+				"videoEncryption": "הצפנת תעבורת וידאו תגדיל באופן משמעותי את השימוש במעבד."
 			}
 		}
 	},

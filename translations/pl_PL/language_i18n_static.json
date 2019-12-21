@@ -200,7 +200,7 @@
 		"okButton": "OK",
 		"cancelButton": "Anuluj",
 		"createNewAccount": "Utwórz nowe konto",
-		"changeAccountLogged": "Jesteś już zalogowany jako {email}",
+		"changeAccountLogged": "You are already logged in as {email}",
 		"loggedFromOther": "Zostaniesz zalogowany przy użyciu innego konta",
 		"loginTitle": "Zaloguj do %CLOUD_NAME%",
 		"loginButton": "Zaloguj",
@@ -236,8 +236,8 @@
 				"ipvd_feedback_device": "Opinie dotyczące {{asset}}"
 			},
 			"subject": {
-				"contact_sales": "Kontakt do sprzedawcy {{asset}}",
-				"contact_support": "Kontakt do wsparcia technicznego {{asset}}",
+				"sales_inquiry": "Zapytanie handlowe o {{asset}}",
+				"technical_inquiry": "Zapytanie techniczne do {{asset}}",
 				"integration_feedback": "Opinia dotycząca integracji {{asset}}",
 				"ipvd_feedback_page": "Opinia dotycząca listy kamer",
 				"ipvd_feedback_device": "Opinie dotyczące {{asset}}"
@@ -349,7 +349,7 @@
 				"minutes": "minut"
 			},
 			"warningMessages": {
-				"videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+				"videoEncryption": "Szyfrowanie transmisji wideo znacząco zwiększy użycie procesora."
 			}
 		}
 	},
@@ -435,13 +435,13 @@
 			"copyActiveText": "skopiowano do schowka"
 		},
 		"systemOffline": "Serwer jest odłączony",
-		"systemOfflineMessage": "This system is offline and cannot be accessed right now.",
-		"systemNoAlerts": "No Alerts",
-		"systemNoAlertsMessage": "Your system must be doing well!",
+		"systemOfflineMessage": "Ten system jest w trybie offline i nie można teraz uzyskać do niego dostępu.",
+		"systemNoAlerts": "Brak alarmów",
+		"systemNoAlertsMessage": "Wygląda na to, że Twój system działa dobrze!",
 		"systemServerError": "Wewnętrzny błąd serwera",
-		"systemServerErrorMessage": "An error occurred, please, try again later. An error occurred, please try again later. If the problem continues, please contact your support team.",
-		"systemNewVersion": "Update your system",
-		"systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
+		"systemServerErrorMessage": "Wystąpił błąd. Proszę spróbować później. Jeśli problem będzie się powtarzał, skontaktuj się z zespołem pomocy technicznej.",
+		"systemNewVersion": "Zaktualizuj swój system",
+		"systemNewVersionMessage": "Twoja aktualna wersja jest niezgodna z tą funkcją. Zaktualizuj swoje serwery do najnowszej wersji, aby korzystać z tej funkcji.",
 		"systemHasNoCameras": "BRAK KAMER",
 		"systemUnreachable": "SYSTEM JEST NIEDOSTĘPNY",
 		"cameraStates": {

@@ -200,7 +200,7 @@
 		"okButton": "OK",
 		"cancelButton": "Annulla",
 		"createNewAccount": "Crea nuovo account",
-		"changeAccountLogged": "Hai già effettuato l'accesso con {email}",
+		"changeAccountLogged": "You are already logged in as {email}",
 		"loggedFromOther": "Verrà effettuato l'accesso con un altro account",
 		"loginTitle": "Accedi a %CLOUD_NAME%",
 		"loginButton": "Accesso",
@@ -236,8 +236,8 @@
 				"ipvd_feedback_device": "Feedback su {{asset}}"
 			},
 			"subject": {
-				"contact_sales": "Contatta le vendite per {{asset}}",
-				"contact_support": "Contatta l'assistenza per {{asset}}",
+				"sales_inquiry": "Richiesta informazioni di vendita per {{asset}}",
+				"technical_inquiry": "Richiesta tecnica per {{asset}}",
 				"integration_feedback": "Feedback per l'integrazione {{asset}}",
 				"ipvd_feedback_page": "Feedback per la pagina delle telecamere",
 				"ipvd_feedback_device": "Feedback su {{asset}}"
@@ -349,7 +349,7 @@
 				"minutes": "minuti"
 			},
 			"warningMessages": {
-				"videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+				"videoEncryption": "Crittografia del traffico video aumenterà in modo significativo l'utilizzo della CPU."
 			}
 		}
 	},
@@ -435,13 +435,13 @@
 			"copyActiveText": "copiato negli appunti"
 		},
 		"systemOffline": "Il sistema è offline",
-		"systemOfflineMessage": "This system is offline and cannot be accessed right now.",
-		"systemNoAlerts": "No Alerts",
-		"systemNoAlertsMessage": "Your system must be doing well!",
+		"systemOfflineMessage": "Questo sistema è offline e al momento non è accessibile.",
+		"systemNoAlerts": "Nessun avviso",
+		"systemNoAlertsMessage": "Il tuo sistema sta funzionando bene!",
 		"systemServerError": "Errore interno del server",
-		"systemServerErrorMessage": "An error occurred, please, try again later. An error occurred, please try again later. If the problem continues, please contact your support team.",
-		"systemNewVersion": "Update your system",
-		"systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
+		"systemServerErrorMessage": "Si è verificato un errore, riprova più tardi. Si è verificato un errore, riprova più tardi. Se il problema persiste, contattare il team di supporto.",
+		"systemNewVersion": "Aggiorna il tuo sistema",
+		"systemNewVersionMessage": "La tua versione attuale non è compatibile con questa funzione. Aggiorna i tuoi server all'ultima versione per utilizzare questa funzione.",
 		"systemHasNoCameras": "NON CI SONO TELECAMERE",
 		"systemUnreachable": "Il sistema è inaccessibile",
 		"cameraStates": {

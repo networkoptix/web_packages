@@ -342,7 +342,7 @@
     "devices": "thiết bị",
     "dialogs": {
         "cancelButton": "Hủy bỏ",
-        "changeAccountLogged": "You are already logged in with as {email}",
+        "changeAccountLogged": "You are already logged in as {email}",
         "createNewAccount": "Create New Account",
         "download": "Tải xuống %VMS_NAME%",
         "loggedFromOther": "You will be logged in with a different account",
@@ -371,11 +371,11 @@
             "failedToSend": "Tin nhắn đã không gửi được.",
             "sent": "Tin nhắn đã được gửi.",
             "subject": {
-                "contact_sales": "Liên hệ bán hàng cho {{asset}}",
-                "contact_support": "Liên hệ hỗ trợ cho {{asset}}",
                 "integration_feedback": "Phản hồi cho tích hợp {{asset}}",
                 "ipvd_feedback_device": "Phản hồi về {{asset}}",
-                "ipvd_feedback_page": "Phản hồi cho trang camera"
+                "ipvd_feedback_page": "Phản hồi cho trang camera",
+                "sales_inquiry": "Yêu cầu bán hàng cho {{asset}}",
+                "technical_inquiry": "Technical inquiry for {{asset}}"
             },
             "title": {
                 "integration": "Liên lạc với {{companyName}}",
@@ -673,7 +673,7 @@
                 "minutes": "phút"
             },
             "warningMessages": {
-                "videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+                "videoEncryption": "Mã hóa lưu lượng video sẽ tăng đáng kể việc sử dụng CPU."
             }
         },
         "shareOffline": "Cannot share system while it is offline",

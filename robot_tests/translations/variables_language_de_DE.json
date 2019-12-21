@@ -188,5 +188,9 @@
     "IPVD TITLE TEXT": "Unterstützte Geräte",
     "SYSTEMS TITLE TEXT": "Systeme",
     "NO PERMISSION TO SHARE TEXT": "Sie sind nicht berechtigt, dieses System freizugeben",
-    "WELCOME TEXT": "Willkommen bei"
+    "WELCOME TEXT": "Willkommen bei",
+    "YOU ARE ALREADY LOGGED IN TEXT": "You are already logged in as",
+    "DISCONNECT FROM MY ACCOUNT TEXT": "Von meinem Account trennen",
+    "YOU TEXT": "du",
+    "UNRESTRICTED ACCESS CONNECT TEXT": "Uneingeschränkter Zugriff inklusive der Fähigkeit zu teilen und Systeme von der Cloud zu verbinden/trennen"
 }

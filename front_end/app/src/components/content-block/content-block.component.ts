@@ -31,17 +31,19 @@ import { Component, ElementRef, Input, OnInit, ViewChild, ViewEncapsulation } fr
 @Component({
     selector   : 'nx-block',
     templateUrl: 'content-block.component.html',
-    encapsulation: ViewEncapsulation.None,
     styleUrls  : [ 'content-block.component.scss' ],
+    encapsulation: ViewEncapsulation.None,
 })
 export class NxContentBlockComponent implements OnInit {
     @Input('type') type: string;
     @Input('fixed-height') fixedHeight: any;
     @Input('hoverable') hoverable: any;
     @Input('header-style') headerStyle: any;
+    @Input('header-class') headerClass: any;
 
     haveHeader: boolean;
     haveFooter: boolean;
+    headerClasses: string;
 
     @ViewChild('headerWrapper', { static: true }) headerWrapper: ElementRef;
     @ViewChild('footerWrapper', { static: true }) footerWrapper: ElementRef;
@@ -59,5 +61,8 @@ export class NxContentBlockComponent implements OnInit {
         this.hoverable = (this.hoverable !== undefined);
 
         this.headerStyle = (this.headerStyle) ? this.headerStyle + '-header' : '';
+        this.headerClass = (this.headerClass) ? this.headerClass : '';
+
+        this.headerClasses = this.headerStyle + this.headerClass;
     }
 }

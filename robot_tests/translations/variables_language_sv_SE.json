@@ -188,5 +188,9 @@
     "IPVD TITLE TEXT": "Enheter som stöds",
     "SYSTEMS TITLE TEXT": "System",
     "NO PERMISSION TO SHARE TEXT": "Du har inte behörighet att dela detta system",
-    "WELCOME TEXT": "Välkommen till"
+    "WELCOME TEXT": "Välkommen till",
+    "YOU ARE ALREADY LOGGED IN TEXT": "Du är redan inloggad som",
+    "DISCONNECT FROM MY ACCOUNT TEXT": "Koppla bort från mitt konto",
+    "YOU TEXT": "du",
+    "UNRESTRICTED ACCESS CONNECT TEXT": "Obegränsad åtkomst, inklusive möjligheten att dela och ansluta/avregistrera systemet från molnet"
 }

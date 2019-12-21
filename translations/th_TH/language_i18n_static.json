@@ -200,7 +200,7 @@
 		"okButton": "ตกลง",
 		"cancelButton": "ยกเลิก",
 		"createNewAccount": "Create New Account",
-		"changeAccountLogged": "You are already logged in with as {email}",
+		"changeAccountLogged": "You are already logged in as {email}",
 		"loggedFromOther": "You will be logged in with a different account",
 		"loginTitle": "เข้าสู่ระบบ %CLOUD_NAME%",
 		"loginButton": "ลงชื่อเข้าสู่ระบบ",
@@ -236,8 +236,8 @@
 				"ipvd_feedback_device": "ข้อเสนอแนะเกี่ยวกับ {{asset}}"
 			},
 			"subject": {
-				"contact_sales": "ติดต่อฝ่ายขายสำหรับ {{asset}}",
-				"contact_support": "ติดต่อฝ่ายสนับสนุนสำหรับ {{asset}}",
+				"sales_inquiry": "สอบถามรายละเอียดการขายสำหรับ {{asset}}",
+				"technical_inquiry": "Technical inquiry for {{asset}}",
 				"integration_feedback": "ข้อเสนอแนะสำหรับการรวม {{asset}}",
 				"ipvd_feedback_page": "ข้อเสนอแนะสำหรับหน้ากล้อง",
 				"ipvd_feedback_device": "ข้อเสนอแนะเกี่ยวกับ {{asset}}"
@@ -349,7 +349,7 @@
 				"minutes": "นาที"
 			},
 			"warningMessages": {
-				"videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+				"videoEncryption": "การเข้ารหัสวิดีโอจะช่วยเพิ่มการใช้งาน CPU ให้มากขึ้น"
 			}
 		}
 	},

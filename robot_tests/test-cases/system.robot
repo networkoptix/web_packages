@@ -15,7 +15,7 @@ ${url}         ${ENV}
 Log in to Auto Tests System
     [arguments]    ${email}
     Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
-    Log In    ${email}    ${password}    None
+    Log In    ${email}    ${password}    button=None
     Validate Log In
     Run Keyword If    '${email}' == '${EMAIL OWNER}'    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
     Run Keyword If    '${email}' == '${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${RENAME SYSTEM}
@@ -221,7 +221,7 @@ should open System page by link to not authorized user and redirect to homepage,
 should open System page by link to not authorized user and show it, after owner logs in
     [tags]    Threaded
     Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
-    Log In    ${EMAIL OWNER}   ${password}    None
+    Log In    ${EMAIL OWNER}   ${password}    button=None
     Verify In System    Auto Tests
 
 should open System page by link to user without permission and show alert (System info is unavailable: You have no access to this system)
@@ -234,7 +234,7 @@ should open System page by link to user without permission and show alert (Syste
 should open System page by link not authorized user, and show alert if logs in and has no permission
     [tags]    Threaded
     Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
-    Log In    ${EMAIL NOPERM}    ${password}    None
+    Log In    ${EMAIL NOPERM}    ${password}    button=None
     Wait Until Element Is Visible    ${SYSTEM NO ACCESS}
 
 should display same user data as user provided during registration
@@ -283,7 +283,7 @@ should display same user data as shown in user account
     Log Out
 
     Go To    ${url}/account
-    Log In    ${random email}    ${password}    None
+    Log In    ${random email}    ${password}    button=None
     Validate Log In
     Wait Until Textfield Contains    ${ACCOUNT FIRST NAME}    mark
     Wait Until Textfield Contains    ${ACCOUNT LAST NAME}    hamill

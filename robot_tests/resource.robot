@@ -6,6 +6,7 @@ Library      NoptixImapLibrary/
 Library      NoptixLibrary/
 Library      NoptixLibrary/CloudPortalAPI.py
 Resource     variables.robot
+Resource     APIresource.robot
 Resource     ${variables_file}
 Variables    getIds.py    ${ENV}
 
@@ -75,6 +76,7 @@ Check Language Anonymous
     Register Keyword To Run On Failure    Failure Tasks
     Run Keyword Unless    "${lang}"=="${LANGUAGE}"   Set Language Anonymous
 
+# Replaced with "Check Language Logged In".
 Check Langauge Logged In
     # TODO Move checking language and validating loggin in to "Log in" keyword
     Register Keyword To Run On Failure    NONE
@@ -88,6 +90,12 @@ Check Langauge Logged In
     Sleep    5
     Go To    ${previous location}
 
+Check Language Logged In
+    [Arguments]    ${email}    ${password}
+    ${curr lang}=   Get Account Language   ${ENV}    ${email}    ${password}
+    Run Keyword Unless    '${curr lang}' == '${LANGUAGE}'    Set Account Language    ${ENV}    ${email}    ${password}    ${LANGUAGE}
+    Run Keyword Unless    '${curr lang}' == '${LANGUAGE}'    Reload Page
+
 Set Language Anonymous
     [arguments]    ${lang}=${LANGUAGE}
     Wait Until Element Is Visible    ${LANGUAGE DROPDOWN}
@@ -98,18 +106,20 @@ Set Language Anonymous
     Sleep    5    #to wait for language to fully change before continuing.  This caused issues with login.
 
 Log In
-    [arguments]    ${email}    ${password}    ${button}=${LOG IN NAV BAR}
+    [arguments]    ${email}    ${password}    ${validate}=${True}    ${button}=${LOG IN NAV BAR}
     Run Keyword Unless    '''${button}''' == "None"    Wait Until Element Is Visible    ${button}
     Run Keyword Unless    '''${button}''' == "None"    Click Link    ${button}
     Wait Until Elements Are Visible    ${EMAIL INPUT}    ${PASSWORD INPUT}    ${REMEMBER ME CHECKBOX VISIBLE}    ${FORGOT PASSWORD}    ${LOG IN CLOSE BUTTON}
     Sleep    1
-    Input Text    ${EMAIL INPUT}    ${email}
+    Wait Until Keyword Succeeds    4    0.5    Input Text    ${EMAIL INPUT}    ${email}
     Sleep    0.25
     Input Text    ${PASSWORD INPUT}    ${password}
     Sleep    0.25
     Wait Until Element Is Visible    ${LOG IN BUTTON}
     Click Button    ${LOG IN BUTTON}
-    Sleep    1
+    Run Keyword If    ${validate} == ${True}    Wait Until Element is Visible    ${ACCOUNT DROPDOWN}    ${selenium_timeout}
+    Run Keyword If    ${validate} == ${True}    Check Language Logged In    ${email}    ${password}
+    Sleep    0.5
 
 Log In With Remember Me
     [arguments]    ${email}    ${password}    ${button}=${LOG IN NAV BAR}    ${remember me}=True
@@ -122,7 +132,7 @@ Log In With Remember Me
     Input Text    ${PASSWORD INPUT}    ${password}
     Sleep    0.25
     Wait Until Element Is Visible    ${LOG IN BUTTON}
-    Run Keyword If    ${remember me}==True     Select Checkbox    ${REMEMBER ME CHECKBOX REAL} 
+    Run Keyword If    ${remember me}==True     Select Checkbox    ${REMEMBER ME CHECKBOX REAL}
     ...    ELSE    Unselect Checkbox    ${REMEMBER ME CHECKBOX REAL}
     Click Button    ${LOG IN BUTTON}
     Sleep    1
@@ -130,17 +140,14 @@ Log In With Remember Me
 Validate Log In
     [arguments]    ${timeout}=${selenium_timeout}
     Wait Until Element is Visible    ${ACCOUNT DROPDOWN}    ${timeout}
-    Sleep    1
-    Check Langauge Logged In
-    Sleep    1    #this is a test to see if it eliminates a problem with the login dialog popping up on logout
+    Sleep    0.5    #this is a test to see if it eliminates a problem with the login dialog popping up on logout
 
 Check Log In
     [arguments]    ${button}=${LOG IN NAV BAR}
     ${random email}    Get Random Email    ${BASE EMAIL}
-    Log In    ${random email}    ${password}    ${button}
+    Log In    ${random email}    ${password}      validate=False     button=${button}
     Wait Until Element Is Visible    ${ACCOUNT NOT FOUND}
-    Log In    ${EMAIL OWNER}    ${password}    None
-    Validate Log In
+    Log In    ${EMAIL OWNER}    ${password}    button=None
 
 Log Out
     Wait Until Page Does Not Contain Element    ${BACKDROP}
@@ -210,6 +217,7 @@ Activate
     Element Should Be Visible    ${ACTIVATION SUCCESS}
     Location Should Be    ${url}/activate/success
 
+# Replaced with "Restore password using API"
 Restore password
     [arguments]    ${email}
     #log in to user to make sure their language is set to the current
@@ -233,7 +241,6 @@ Restore password
     Wait Until Elements Are Visible    ${RESET SUCCESS MESSAGE}    ${RESET SUCCESS LOG IN LINK}
     Click Link    ${RESET SUCCESS LOG IN LINK}
     Log In    ${email}    ${BASE PASSWORD}    None
-    Validate Log In
     Close Browser
 
 Restore Password using API
@@ -257,9 +264,9 @@ Share To
     Wait Until Element Is Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
 #remove user first to force share email to be sent.
-    ${User In List}=   Set Variable    //nx-system-settings-component//nx-menu//nx-level-3-item//span[text()='${email}']/../../../a
-    ${user exists}    Run Keyword And Return Status    Page Should Contain Link    ${User In List}
-    Run Keyword If    ${user exists}    Remove User Permissions    ${email}
+    # ${User In List}=   Set Variable    //nx-system-settings-component//nx-menu//nx-level-3-item//span[text()='${email}']/../../../a
+    # ${user exists}    Run Keyword And Return Status    Page Should Contain Link    ${User In List}
+    # Run Keyword If    ${user exists}    Remove User Permissions    ${email}
     Wait Until Element Is Enabled    ${SHARE BUTTON SYSTEMS}
     Click Button    ${SHARE BUTTON SYSTEMS}
     Wait Until Elements Are Visible    ${SHARE EMAIL}    ${SHARE BUTTON MODAL}
@@ -272,7 +279,7 @@ Share To
     Sleep    1
     Click Button    ${SHARE BUTTON MODAL}
     Check For Alert    ${NEW PERMISSIONS SAVED}
-    Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
+    #Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
 
 Edit User Permissions In Systems
     [arguments]    ${user email address}    ${permissions}
@@ -298,22 +305,22 @@ Check User Permissions
 
     Run Keyword If    '${permissions}' == '${OWNER TEXT}'
     ...    Element Text Should Be    ${HELP BLOCK}
-    ...    Unrestricted access including the ability to share and connect/disconnect System from cloud
+    ...    ${UNRESTRICTED ACCESS CONNECT TEXT}
     Run Keyword If    '${permissions}' == '${ADMIN TEXT}'
     ...    Element Text Should Be    ${HELP BLOCK}
-    ...    Unrestricted access including the ability to share
+    ...    ${SHARE PERMISSIONS HINT ADMINISTRATOR}
     Run Keyword If    '${permissions}' == '${ADV VIEWER TEXT}'
     ...    Element Text Should Be    ${HELP BLOCK}
-    ...    Can view live video, browse the archive, control PTZ etc
+    ...    ${SHARE PERMISSIONS HINT ADVANCED VIEWER}
     Run Keyword If    '${permissions}' == '${VIEWER TEXT}'
     ...    Element Text Should Be    ${HELP BLOCK}
-    ...    Can view live video and browse the archive
+    ...    ${SHARE PERMISSIONS HINT VIEWER}
     Run Keyword If    '${permissions}' == '${LIVE VIEWER TEXT}'
     ...    Element Text Should Be    ${HELP BLOCK}
-    ...    Can only view live video
+    ...    ${SHARE PERMISSIONS HINT LIVE VIEWER}
     Run Keyword If    '${permissions}' == '${CUSTOM TEXT}'
     ...    Element Text Should Be    ${HELP BLOCK}
-    ...    Use the Nx Witness Client application to set up custom permissions
+    ...    ${SHARE PERMISSIONS HINT CUSTOM}
 
     Set Selenium Timeout    ${original timeout}
 
@@ -407,8 +414,7 @@ Wait Until Page Does Not Contain Elements
 Clean up email noperm
     Register Keyword To Run On Failure    None
     Open Browser and Go To URL    ${url}
-    Log In    ${EMAIL OWNER}    ${password}
-    Validate Log In
+    Log In    ${EMAIL OWNER}    ${password}    ${False}
     Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
     Verify In System    Auto Tests
     Go To Users List
@@ -441,8 +447,7 @@ Reset user noperm first/last name
     Register Keyword To Run On Failure    None
     Open Browser and go to URL    ${url}
     Go To    ${url}/account
-    Log In    ${EMAIL NOPERM}    ${password}    button=None
-    Validate Log In
+    Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
 
     Run Keyword And Ignore Error    Wait Until Textfield Contains    ${ACCOUNT FIRST NAME}    nameChanged
     Run Keyword And Ignore Error    Wait Until Textfield Contains    ${ACCOUNT LAST NAME}    nameChanged
@@ -461,8 +466,7 @@ Reset user noperm first/last name
 Reset user owner first/last name
     Register Keyword To Run On Failure    None
     Open Browser and go to URL    ${url}/account
-    Log In    ${EMAIL OWNER}    ${password}    button=None
-    Validate Log In
+    Log In    ${EMAIL OWNER}    ${password}    ${False}    button=None
 
     Run Keyword And Ignore Error    Wait Until Textfield Contains    ${ACCOUNT FIRST NAME}    newFirstName
     Run Keyword And Ignore Error    Wait Until Textfield Contains    ${ACCOUNT LAST NAME}    newLastName
@@ -489,8 +493,7 @@ Add notowner
 Make sure notowner is in the system
     Register Keyword To Run On Failure    None
     Open Browser and Go To URL    ${url}
-    Log In    ${EMAIL OWNER}    ${password}
-    Validate Log In
+    Log In    ${EMAIL OWNER}    ${password}    ${False}
     Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
     ${status}    Run Keyword And Return Status    Wait Until Element Is Visible    ${NOT OWNER IN SYSTEM}
     Run Keyword Unless    ${status}    Share To    ${EMAIL NOT OWNER}    ${VIEWER TEXT}
@@ -502,20 +505,19 @@ Make sure notowner is in the system
 Make sure viewer is in the system
     Register Keyword To Run On Failure    None
     Open Browser and Go To URL    ${url}
-    Log In    ${EMAIL OWNER}    ${password}
-    Validate Log In
+    Log In    ${EMAIL OWNER}    ${password}    ${False}
     Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
     ${status}    Run Keyword And Return Status    Wait Until Element Is Visible    ${VIEWER IN SYSTEM}
     Run Keyword Unless    ${status}    Share To    ${EMAIL VIEWER}    ${VIEWER TEXT}
     Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
     ${email}    Wait For Email    recipient=${EMAIL VIEWER}    timeout=120    status=UNSEEN
     Delete Email    ${email}
+    Close Mailbox
     Close Browser
 
 Reset System Names
     Open Browser and go to URL    ${url}/systems/${AUTOTESTS OFFLINE SYSTEM ID}
-    Log In    ${EMAIL OWNER}    ${BASE PASSWORD}    None
-    Validate Log In
+    Log In    ${EMAIL OWNER}    ${BASE PASSWORD}    ${False}    None
     Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}
     Click Button    ${RENAME SYSTEM}
     Wait Until Elements Are Visible    ${RENAME CANCEL}    ${RENAME SAVE}    ${RENAME INPUT}
@@ -585,11 +587,11 @@ Get All Descendant WebElements
     [Return]    ${descendants}
 
 Wait Until Number Of Tabs Are Open
-    [Arguments]    ${number}  
+    [Arguments]    ${number}
     @{tabs}=   Get Window Handles
     ${current tabs} =    Get length    ${tabs}
     Wait For Condition       return ${current tabs}==${number}
-    
+
 Save Cookies
     ${saved cookie1} =     Get Cookie    _ga
     ${saved cookie2} =     Get Cookie    _gat_UA-51046510-4
@@ -597,22 +599,22 @@ Save Cookies
     ${saved cookie4} =     Get Cookie    csrftoken
     ${saved cookie5} =     Get Cookie    language
     ${saved cookie6} =     Get Cookie    sessionid
-    ${cookies} =     Create List    ${saved cookie1}    ${saved cookie2}    ${saved cookie3}    ${saved cookie4}    ${saved cookie5}    ${saved cookie6} 
-    [return]     ${cookies}     
-    
+    ${cookies} =     Create List    ${saved cookie1}    ${saved cookie2}    ${saved cookie3}    ${saved cookie4}    ${saved cookie5}    ${saved cookie6}
+    [return]     ${cookies}
+
 Apply Saved Cookies
     [arguments]   ${cookies}
     Delete All Cookies
-    #Add Cookie    ${cookies[0].name}    ${cookies[0].value}     
-    Add Cookie    ${cookies[1].name}    ${cookies[1].value} 
-    Add Cookie    ${cookies[2].name}    ${cookies[2].value} 
-    Add Cookie    ${cookies[3].name}    ${cookies[3].value} 
-    Add Cookie    ${cookies[4].name}    ${cookies[4].value} 
-    ${session expiry} =    Convert To String    ${cookies[5].expiry}    
+    #Add Cookie    ${cookies[0].name}    ${cookies[0].value}
+    Add Cookie    ${cookies[1].name}    ${cookies[1].value}
+    Add Cookie    ${cookies[2].name}    ${cookies[2].value}
+    Add Cookie    ${cookies[3].name}    ${cookies[3].value}
+    Add Cookie    ${cookies[4].name}    ${cookies[4].value}
+    ${session expiry} =    Convert To String    ${cookies[5].expiry}
     Run Keyword Unless    "${session expiry}"=="None"
     ...    Add Cookie    ${cookies[5].name}    ${cookies[5].value}     expiry=${session expiry}
     Reload Page
-    
+
 Persist Current Login State
     [arguments]    ${url}
     ${cookies} =    Save Cookies
@@ -620,11 +622,11 @@ Persist Current Login State
     Open Browser and go to URL    ${url}
     Apply Saved Cookies    ${cookies}
     # Logs to inspect values of cookies before and after applying them for debugging
-    # Log Many     ${cookies[0].name} ${cookies[0].value}     
-    # ...   ${cookies[1].name} ${cookies[1].value}     
-    # ...   ${cookies[2].name} ${cookies[2].value}    
-    # ...   ${cookies[3].name} ${cookies[3].value}     
-    # ...   ${cookies[4].name} ${cookies[4].value}     
+    # Log Many     ${cookies[0].name} ${cookies[0].value}
+    # ...   ${cookies[1].name} ${cookies[1].value}
+    # ...   ${cookies[2].name} ${cookies[2].value}
+    # ...   ${cookies[3].name} ${cookies[3].value}
+    # ...   ${cookies[4].name} ${cookies[4].value}
     # ...   ${cookies[5].name} ${cookies[5].value}
     # ${current cookie4} =     Get Cookie    csrftoken
     # Log    ${current cookie4.name} ${current cookie4.value}

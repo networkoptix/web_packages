@@ -39,7 +39,7 @@
             <nx-section *ngIf="selectedUser.canBeDeleted && system.currentUser.isAdmin">
                 <div class="float-left mr-2">
                     <button class="btn btn-default"
-                            [disabled]="!systemAvailable || applyService.locked"
+                            [disabled]="!systemAvailable"
                             (click)="removeUser()" translate>Remove User</button>
                 </div>
             </nx-section>

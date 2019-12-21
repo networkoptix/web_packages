@@ -200,7 +200,7 @@
 		"okButton": "OK",
 		"cancelButton": "Peruuta",
 		"createNewAccount": "Create New Account",
-		"changeAccountLogged": "You are already logged in with as {email}",
+		"changeAccountLogged": "You are already logged in as {email}",
 		"loggedFromOther": "You will be logged in with a different account",
 		"loginTitle": "Kirjaudu sisään %CLOUD_NAME%",
 		"loginButton": "Kirjaudu sisään",
@@ -236,8 +236,8 @@
 				"ipvd_feedback_device": "Palaute{{asset}}"
 			},
 			"subject": {
-				"contact_sales": "Ota yhteyttä {{asset}} myyntiin",
-				"contact_support": "Pyydä tukea {{asset}}",
+				"sales_inquiry": "Myyntikysely {{asset}}",
+				"technical_inquiry": "Technical inquiry for {{asset}}",
 				"integration_feedback": "Palaute integraatiosta {{asset}}",
 				"ipvd_feedback_page": "Palaute kameran sivulle",
 				"ipvd_feedback_device": "Palaute{{asset}}"
@@ -349,7 +349,7 @@
 				"minutes": "minuuttia"
 			},
 			"warningMessages": {
-				"videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+				"videoEncryption": "Videoliikenteen salaaminen lisää merkittävästi suorittimen käyttöä."
 			}
 		}
 	},

@@ -342,7 +342,7 @@
     "devices": "デバイス",
     "dialogs": {
         "cancelButton": "キャンセル",
-        "changeAccountLogged": "You are already logged in with as {email}",
+        "changeAccountLogged": "You are already logged in as {email}",
         "createNewAccount": "Create New Account",
         "download": "%VMS_NAME% をダウンロード",
         "loggedFromOther": "You will be logged in with a different account",
@@ -371,11 +371,11 @@
             "failedToSend": "メッセージを送信できませんでした。",
             "sent": "メッセージが送信されました。",
             "subject": {
-                "contact_sales": "{{asset}} についてセールスに連絡する",
-                "contact_support": "{{asset}} についてサポートに連絡する",
                 "integration_feedback": "{{asset}} 統合のためのフィードバック",
                 "ipvd_feedback_device": "{{asset}} についてのフィードバック",
-                "ipvd_feedback_page": "カメラページへのフィードバック"
+                "ipvd_feedback_page": "カメラページへのフィードバック",
+                "sales_inquiry": "{{asset}}販売問い合わせ",
+                "technical_inquiry": "Technical inquiry for {{asset}}"
             },
             "title": {
                 "integration": "{{companyName}} と連絡を取る",
@@ -673,7 +673,7 @@
                 "minutes": "分"
             },
             "warningMessages": {
-                "videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+                "videoEncryption": "ビデオトラフィックを暗号化すると、CPU使用率が大幅に増加します。"
             }
         },
         "shareOffline": "Cannot share system while it is offline",

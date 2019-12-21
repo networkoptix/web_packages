@@ -179,14 +179,18 @@
     "INTEGRATION SUPPORT TEXT": "支援",
     "INTEGRATION SUPPORT URL TEXT": "支援URL",
     "INTEGRATION SUPPORT EMAIL TEXT": "支援電子郵件",
-    "INTEGRATION GET IN TOUCH LEGAL TEXT": "By submitting this form you agree to be contacted by QA - Test Integration Company and/or Network Optix. You will find QA - Test Integration Company privacy policy here and Network Optix privacy policy here which include instruction on how to withdraw your consent.",
+    "INTEGRATION GET IN TOUCH LEGAL TEXT": "提交此表格即表示您同意由QA - Test Integration公司和/或Network Optix與您聯繫。您可在此處瀏覽QA - Test Integration公司和Network Optix 的隱私權政策，其中包含如何撤回您的同意的說明。",
     "INTEGRATION GET IN TOUCH MESSAGE SENT": "訊息已發送",
     "REGISTER TITLE TEXT": "新建帳號",
     "DOWNLOAD TITLE TEXT": "下載 %VMS_NAME%",
     "DOWNLOADS HEADER TEXT": "下載",
-    "RELEASE HISTORY TITLE TEXT": "Release history",
+    "RELEASE HISTORY TITLE TEXT": "歷史版本",
     "IPVD TITLE TEXT": "支援設備",
     "SYSTEMS TITLE TEXT": "系統",
-    "NO PERMISSION TO SHARE TEXT": "You do not have permission to share this system",
-    "WELCOME TEXT": "歡迎來到"
+    "NO PERMISSION TO SHARE TEXT": "您沒有共享本系統的權限",
+    "WELCOME TEXT": "歡迎來到",
+    "YOU ARE ALREADY LOGGED IN TEXT": "You are already logged in as",
+    "DISCONNECT FROM MY ACCOUNT TEXT": "從我的帳號斷線",
+    "YOU TEXT": "您",
+    "UNRESTRICTED ACCESS CONNECT TEXT": "不受限權限包括共用及從雲端連接/斷開系統的能力"
 }

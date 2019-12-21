@@ -16,6 +16,7 @@ import { NxScrollMechanicsService }              from '../../services/scroll-mec
 import { AutoUnsubscribe }                       from 'ngx-auto-unsubscribe';
 import { NxSystemAPI, NxSystemAPIService } from '../../services/system-api.service';
 import { NxAppStateService } from '../../services/nx-app-state.service';
+import { BreakpointObserver, BreakpointState } from "@angular/cdk/layout";
 
 @AutoUnsubscribe()
 @Component({
@@ -44,6 +45,8 @@ export class NxHealthComponent implements OnInit, OnDestroy {
     hasServerError: boolean;
     outdatedVersion: boolean;
 
+    mediaLayoutClass: string;
+
     private resizeSubscription: Subscription;
 
     constructor(private accountService: NxAccountService,
@@ -59,6 +62,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                 private utilsService: NxUtilsService,
                 private ribbonService: NxRibbonService,
                 private scrollMechanicsService: NxScrollMechanicsService,
+                private breakpointObserver: BreakpointObserver,
                 @Inject(DOCUMENT) private document: any,
     ) {
         this.LANG = this.languageService.getTranslations();
@@ -141,6 +145,14 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         this.resizeSubscription = this.scrollMechanicsService.windowSizeSubject.subscribe(({width}) => {
             if (width >= 768 && this.appStateService.headerVisibleSubject.getValue()) {
                 this.setHeaderHeight();
+            }
+
+            if (this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.lg)) {
+                this.mediaLayoutClass = 'mobileLayout';
+            } else if (this.scrollMechanicsService.mediaQueryMin(NxScrollMechanicsService.MEDIA.xxl)) {
+                this.mediaLayoutClass = 'wideLayout';
+            } else {
+                this.mediaLayoutClass = '';
             }
         });
     }

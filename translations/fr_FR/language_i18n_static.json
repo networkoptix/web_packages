@@ -200,7 +200,7 @@
 		"okButton": "OK",
 		"cancelButton": "Annuler",
 		"createNewAccount": "Créer nouveau compte",
-		"changeAccountLogged": "Vous êtes déjà connecté avec {email}",
+		"changeAccountLogged": "You are already logged in as {email}",
 		"loggedFromOther": "Vous serez connecté avec un autre compte",
 		"loginTitle": "Connecter à %CLOUD_NAME%",
 		"loginButton": "Connexion",
@@ -236,8 +236,8 @@
 				"ipvd_feedback_device": "Commentaires sur {{asset}}"
 			},
 			"subject": {
-				"contact_sales": "Contacter les ventes pour {{asset}}",
-				"contact_support": "Contacter le support pour {{asset}}",
+				"sales_inquiry": "Demande de vente pour {{asset}}",
+				"technical_inquiry": "Demande technique pour {{asset}}",
 				"integration_feedback": "Commentaires pour l'intégration {{asset}}",
 				"ipvd_feedback_page": "Commentaires sur la page des caméras",
 				"ipvd_feedback_device": "Commentaires sur {{asset}}"
@@ -349,7 +349,7 @@
 				"minutes": "minute"
 			},
 			"warningMessages": {
-				"videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+				"videoEncryption": "Cryptage du trafic vidéo augmentera considérablement l'utilisation du processeur."
 			}
 		}
 	},
@@ -435,13 +435,13 @@
 			"copyActiveText": "copié dvers presse-papiers"
 		},
 		"systemOffline": "System Hors ligne",
-		"systemOfflineMessage": "This system is offline and cannot be accessed right now.",
-		"systemNoAlerts": "No Alerts",
-		"systemNoAlertsMessage": "Your system must be doing well!",
+		"systemOfflineMessage": "Ce système est hors ligne et n'est pas accessible pour le moment.",
+		"systemNoAlerts": "Aucune alerte",
+		"systemNoAlertsMessage": "Votre système doit bien fonctionner!",
 		"systemServerError": "Erreur Interne du Serveur",
-		"systemServerErrorMessage": "An error occurred, please, try again later. An error occurred, please try again later. If the problem continues, please contact your support team.",
-		"systemNewVersion": "Update your system",
-		"systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
+		"systemServerErrorMessage": "Une erreur est survenue, veuillez réessayer plus tard. Si le problème persiste, veuillez contacter votre équipe d'assistance.",
+		"systemNewVersion": "Mettre à jour votre système",
+		"systemNewVersionMessage": "Votre version actuelle est incompatible avec cette fonctionnalité. Veuillez mettre à jour vos serveurs vers la dernière version pour utiliser cette fonction.",
 		"systemHasNoCameras": "AUCUNE CAMÉRA",
 		"systemUnreachable": "SYSTÈME INACCESSIBLE",
 		"cameraStates": {
@@ -483,8 +483,8 @@
 	},
 	"systemAdministration": "Administration Système",
 	"users": "Usagers",
-	"testedVersionLabel": "Tested with {{vmsName}} version:",
-	"testedVersionsLabel": "Tested with {{vmsName}} versions:",
+	"testedVersionLabel": "Testé avec la version {{vmsName}}:",
+	"testedVersionsLabel": "Testé avec les versions {{vmsName}}:",
 	"About %CLOUD_NAME%": "À propos de %CLOUD_NAME%",
 	"Download %VMS_NAME%": "Télécharger %VMS_NAME%",
 	"Integrations": "Intégrations",

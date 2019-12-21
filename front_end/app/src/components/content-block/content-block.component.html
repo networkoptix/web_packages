@@ -3,7 +3,9 @@
         'hoverable' : hoverable,
         'fixed-height': fixedHeight}">
 
-    <div class="card--header" #headerWrapper [hidden]="!haveHeader">
+    <div class="card--header" #headerWrapper
+         [hidden]="!haveHeader"
+         [ngClass]="headerClasses">
         <h4>
             <ng-content select="header"></ng-content>
         </h4>

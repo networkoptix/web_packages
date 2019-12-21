@@ -5,6 +5,7 @@ Test Setup        Restart
 Test Teardown     Run Keyword If Test Failed    Reset DB and Open New Browser On Failure
 Suite Teardown    Close Browser
 force tags    account
+
 *** Variables ***
 ${password}    ${BASE PASSWORD}
 ${url}         ${ENV}
@@ -22,11 +23,20 @@ Verify in Account Page
     sleep    .5
 
 Restart
+    Open Browser and go to URL    ${url}
     Register Keyword To Run On Failure    NONE
-    ${status}    Run Keyword And Return Status    Validate Log In
+    ${status}=   Run Keyword and Return Status    Wait Until Element Is Visible    ${ACCOUNT DROPDOWN}
     Register Keyword To Run On Failure    Failure Tasks
-    Run Keyword If    ${status}    Log Out
+    Run Keyword If    ${status}    Log Out via API
     Go To    ${url}
+
+#Restart
+#    Open Browser and go to URL    ${url}
+#    Register Keyword To Run On Failure    NONE
+#    ${status}    Run Keyword And Return Status    Validate Log Out
+#    Register Keyword To Run On Failure    Failure Tasks
+#    Run Keyword Unless    ${status}    Log Out
+#    Go To    ${url}
 
 Reset DB and Open New Browser On Failure
     Close Browser
@@ -37,7 +47,6 @@ Reset DB and Open New Browser On Failure
 Can access the account page from dropdown
     [tags]    Threaded
     Log In    ${EMAIL NOPERM}    ${password}
-    Validate Log In
     Wait Until Element is Visible    ${ACCOUNT DROPDOWN}
     Click Button    ${ACCOUNT DROPDOWN}
     Wait Until Element is Visible    ${ACCOUNT SETTINGS BUTTON}
@@ -47,8 +56,7 @@ Can access the account page from dropdown
 
 Can access the account page from direct link while logged in
     [tags]    Threaded
-    Log In    ${EMAIL NOPERM}    ${password}
-    Validate Log In
+    Log In    ${EMAIL NOPERM}    ${password}    ${False}
     Go To    ${url}/account
     Verify in account page
 
@@ -63,16 +71,14 @@ Accessing the account page from a direct link while logged out asks for login, c
 Accessing the account page from a direct link while logged out asks for login, on valid login takes you to account page
     [tags]    Threaded
     Go To    ${url}/account
-    Log In    ${EMAIL NOPERM}    ${password}    button=None
-    Validate Log In
+    Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
     Go To    ${url}/account
     Verify in account page
 
 Changing first name and saving maintains that setting
     [tags]    C41573
     Go To    ${url}/account
-    Log In    ${EMAIL NOPERM}    ${password}    button=None
-    Validate Log In
+    Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
     Verify in Account Page
     Clear Element Text    ${ACCOUNT FIRST NAME}
     Input Text    ${ACCOUNT FIRST NAME}    nameChanged
@@ -80,8 +86,7 @@ Changing first name and saving maintains that setting
     Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
     Close Browser
     Open Browser and go to URL    ${url}/account
-    Log In    ${EMAIL NOPERM}    ${password}    button=None
-    Validate Log In
+    Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
     Verify in Account Page
     sleep    2
     Wait Until Textfield Contains    ${ACCOUNT FIRST NAME}    nameChanged
@@ -93,16 +98,14 @@ Changing first name and saving maintains that setting
 Changing last name and saving maintains that setting
     [tags]    C41573
     Go To    ${url}/account
-    Log In    ${EMAIL NOPERM}    ${password}    button=None
-    Validate Log In
+    Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
     Verify in Account Page
     Input Text    ${ACCOUNT LAST NAME}    nameChanged
     Click Button    ${ACCOUNT SAVE}
     Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
     Close Browser
     Open Browser and go to URL    ${url}/account
-    Log In    ${EMAIL NOPERM}    ${password}    button=None
-    Validate Log In
+    Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
     Verify in Account Page
     Wait Until Textfield Contains    ${ACCOUNT LAST NAME}    nameChanged
     Input Text    ${ACCOUNT LAST NAME}    ${TEST LAST NAME}
@@ -110,12 +113,12 @@ Changing last name and saving maintains that setting
     Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
 
 First name is required
-    [tags]    C41573    Threaded
+    [tags]    C41573    Threaded    curr
     Go To    ${url}/account
-    Log In    ${EMAIL NOPERM}    ${password}    button=None
-    Validate Log In
+    Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
     Verify in Account Page
-    Delete All Text    ${ACCOUNT FIRST NAME}
+    ${locator}=   Get WebElement    ${ACCOUNT FIRST NAME}
+    Delete All Text    ${locator}
     Click Element    ${ACCOUNT LAST NAME}
     Wait Until Element Has Style    ${ACCOUNT FIRST NAME}    border-color    ${ERROR COLOR}
     Wait Until Element Has Style   ${ACCOUNT FIRST NAME}    color    ${ERROR COLOR WITH OPACITY}
@@ -124,8 +127,7 @@ First name is required
 Last name is required
     [tags]    C41573    Threaded
     Go To    ${url}/account
-    Log In    ${EMAIL NOPERM}    ${password}    button=None
-    Validate Log In
+    Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
     Verify in Account Page
     ${locator}=   Get WebElement    ${ACCOUNT LAST NAME}
     Delete All Text    ${locator}
@@ -137,8 +139,7 @@ Last name is required
 SPACE for first name is not valid
     [tags]    C41573    Threaded
     Go To    ${url}/account
-    Log In    ${EMAIL NOPERM}    ${password}    button=None
-    Validate Log In
+    Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
     Verify in Account Page
     Input Text    ${ACCOUNT FIRST NAME}    ${SPACE}
     Click Element    ${ACCOUNT LAST NAME}
@@ -149,8 +150,7 @@ SPACE for first name is not valid
 SPACE for last name is not valid
     [tags]    C41573    Threaded
     Go To    ${url}/account
-    Log In    ${EMAIL NOPERM}    ${password}    button=None
-    Validate Log In
+    Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
     Verify in Account Page
     Input Text    ${ACCOUNT FIRST NAME}    Mark
     Input Text    ${ACCOUNT LAST NAME}    ${SPACE}
@@ -162,8 +162,7 @@ SPACE for last name is not valid
 Email field is un-editable
     [tags]    C41573    Threaded
     Go To    ${url}/account
-    Log In    ${EMAIL NOPERM}    ${password}    button=None
-    Validate Log In
+    Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
     Verify in Account Page
     ${read only}    Get Element Attribute    ${ACCOUNT EMAIL}    readOnly
     Should Be True    "${read only}"
@@ -171,8 +170,7 @@ Email field is un-editable
 Should respond to tab and go in the correct order
     [tags]    C41838
     Go To    ${url}/account
-    Log In    ${EMAIL NOPERM}    ${password}    button=None
-    Validate Log In
+    Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
     Verify in Account Page
     Element Should Be Focused    ${ACCOUNT FIRST NAME}
     Press Keys    ${ACCOUNT FIRST NAME}    TAB
@@ -191,8 +189,7 @@ Should respond to tab and go in the correct order
 Language is changeable on the account page
     [tags]    C41574
     Go To    ${url}/account
-    Log In    ${EMAIL NOPERM}    ${password}    button=None
-    Validate Log In
+    Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
     FOR    ${lang}    ${account}   IN ZIP    ${LANGUAGES LIST}    ${LANGUAGES ACCOUNT INFORMATION TEXT LIST}
         Sleep    1
         Verify in Account Page
@@ -222,8 +219,7 @@ Language change affects emails
     [tags]    C41575
     ${russian subject}    Set Variable    Восстановление пароля
     Go To    ${url}/account
-    Log In    ${EMAIL NOPERM}    ${password}    button=None
-    Validate Log In
+    Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
     Verify in Account Page
     Click Button    ${ACCOUNT LANGUAGE DROPDOWN}
     Wait Until Element is Visible
@@ -256,9 +252,9 @@ Language change affects emails
     ...    ${BASE PORT}
     Delete Email    ${email}
     Close Mailbox
-    Check Langauge Logged In
+    Check Language Logged In    ${EMAIL NOPERM}    ${password}
     
-should open account page in anonymous state
+Should open account page in anonymous state
     [tags]    anonymous
     Run keyword and continue on failure    Open page anonymously    ${url}/account    ${ACCOUNT SETTINGS TEXT} - ${PRODUCT_NAME}
     Wait Until Element Is Visible    ${LOG IN MODAL} 

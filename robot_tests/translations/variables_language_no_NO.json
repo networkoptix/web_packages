@@ -188,5 +188,9 @@
     "IPVD TITLE TEXT": "Støttede enheter",
     "SYSTEMS TITLE TEXT": "Systemer",
     "NO PERMISSION TO SHARE TEXT": "You do not have permission to share this system",
-    "WELCOME TEXT": "Velkommen til"
+    "WELCOME TEXT": "Velkommen til",
+    "YOU ARE ALREADY LOGGED IN TEXT": "You are already logged in as",
+    "DISCONNECT FROM MY ACCOUNT TEXT": "Disconnect from My Account",
+    "YOU TEXT": "you",
+    "UNRESTRICTED ACCESS CONNECT TEXT": "Ubegrenset tilgang, inkludert muligheten til å dele og koble til / koble systemet fra skyen"
 }

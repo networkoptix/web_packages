@@ -15,6 +15,7 @@ import { TranslateModule }       from '@ngx-translate/core';
 
 import { DownloadComponent }     from './download.component';
 import { ComponentsModule }      from '../../components/components.module';
+import { NxConfigService } from '../../services/nx-config';
 
 @Injectable()
 export class OsResolver implements Resolve<any> {
@@ -22,24 +23,19 @@ export class OsResolver implements Resolve<any> {
     deviceInfo: any;
     platform: string;
     platformMatch: {};
+    windows: string;
 
-    constructor(private router: Router,
+    constructor(private configService: NxConfigService,
+                private router: Router,
                 private deviceService: DeviceDetectorService) {
-
         this.deviceInfo = this.deviceService.getDeviceInfo();
-
-        this.platformMatch = {
-            unix: 'Linux',
-            linux: 'Linux',
-            mac: 'MacOS',
-            windows: 'Windows',
-            arm: 'ARM',
-            skd: 'SDK'
-        };
+        const configDownloads = this.configService.getConfig().downloads;
+        this.windows = configDownloads.groups.windows.name;
+        this.platformMatch = configDownloads.platformMatch;
     }
 
     resolve() {
-        this.platform = this.platformMatch[this.deviceInfo.os.toLowerCase()] || 'windows';
+        this.platform = this.platformMatch[this.deviceInfo.os.toLowerCase()] || this.windows;
         this.router.navigate(['/download/' + this.platform.toLowerCase()]);
         return empty;
     }
