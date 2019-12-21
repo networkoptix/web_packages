@@ -23,7 +23,7 @@ nx-system-alerts-component {
                     grid-template-columns: $grid-narrow-table-width $grid-narrow-panel-width;
                 }
     
-                @include media-breakpoint-up(xxxxl) {
+                @media (min-width: 1920px) {
                     grid-template-columns: $grid-super-wide-table-width $grid-super-wide-panel-width;
                 }
             }
@@ -42,7 +42,12 @@ nx-system-alerts-component {
         
         &PanelComponent {
             &Wrapper {
-            
+                .all-results-btn {
+                    position: sticky;
+                    top: -2rem;
+                    box-shadow: 0 1rem 0 2px $additional_light2;
+                    z-index: 99;
+                }
             }
         }
     }

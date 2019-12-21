@@ -43,9 +43,10 @@
 
     <div class="gridMetricContentPanelComponent">
         <div class="gridMetricContentPanelComponentWrapper pb-3" *ngIf="activeEntity">
-            <div class="pb-3"
+            <div class="mb-3 all-results-btn"
                  [style.display]="!mobileDetailMode ? 'none' : 'block'">
 
+                <hr class="pb-3 m-0">
                 <button class="btn btn-default btn-back" (click)="resetActiveEntity()">
                     <span class="back-arrow"></span>
                     <span translate>All results</span>
