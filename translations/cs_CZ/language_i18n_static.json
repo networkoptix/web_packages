@@ -69,7 +69,7 @@
 			"sdk": {
 				"label": "SDK",
 				"shortLabel": "SDK",
-				"supported": "C++ cross platform SDK"
+				"supported": "C ++ multiplatformová SDK"
 			}
 		},
 		"platforms": {
@@ -118,7 +118,7 @@
 		"isPtzSupported": "PTZ",
 		"isAptzSupported": "Pokročilé PTZ",
 		"isAptzSupportedShort": "Adv. PTZ",
-		"isFisheye": "Rybí oko",
+		"isFisheye": "Fisheye",
 		"isMdSupported": "Pohyb",
 		"isIoSupported": "I/O",
 		"isH265": "H.265",

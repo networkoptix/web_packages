@@ -17,7 +17,7 @@
 	"cameraFilters": {
 		"ptz": "PTZカメラ",
 		"aptz": "高度なPTZを搭載したカメラ",
-		"fisheye": "魚眼カメラ",
+		"fisheye": "魚眼レンズカメラ",
 		"H265": "H.265カメラ",
 		"IO": "I/Oモジュール",
 		"multiSensor": "マルチセンサーカメラ",
@@ -69,7 +69,7 @@
 			"sdk": {
 				"label": "SDK",
 				"shortLabel": "SDK",
-				"supported": "C++ cross platform SDK"
+				"supported": "C ++クロスプラットフォームSDK"
 			}
 		},
 		"platforms": {
@@ -145,13 +145,13 @@
 		"disclaimer": "このリストは、ユーザーが{{companyName}} へのデバイススペックの自動報告を許可した{{vmsName}} において検出されたデバイスに限定されています。個人情報は収集されず、各ユーザーは完全に匿名のままです。"
 	},
 	"integration": {
-		"previewRibbonText": "このページは最新の変更のプレビューです、一般的に利用可能なバージョンと一致しません",
+		"previewRibbonText": "このページは最新の変更のプレビューです、一般的に利用可能なバージョンと一致しません。",
 		"backToEditText": "編集インターフェースに戻る",
 		"Access Control": "アクセスコントロール",
-		"Connector": "コネクター",
-		"Data Analytics": "データ解析",
+		"Connector": "コネクタ",
+		"Data Analytics": "データ分析",
 		"Drone": "ドローン",
-		"Health Monitor": "ヘルスモニター",
+		"Health Monitor": "ヘルスモニタ",
 		"Storage": "ストレージ"
 	},
 	"messageDialogPlaceholders": {
@@ -164,10 +164,10 @@
 	"dialogs": {
 		"merge": {
 			"connectToCloud": "これと統合したいシステムを <strong>{{cloudName}}</strong> に接続するか、 <strong>{{vmsName}}</strong> クライアントを使用してローカルに統合します。",
-			"mergeConfirmation": "システム <strong>{{primarySystem}}</strong> と <strong>{{secondarySystem}}</strong>を統合しようとしています。設定と名前は <strong>{{primarySystem}}</strong>から取得されます。",
+			"mergeConfirmation": "<strong>{{primarySystem}}</strong> と <strong>{{secondarySystem}}</strong>を統合しようとしています。設定と名前は <strong>{{primarySystem}}</strong>から取得されます。",
 			"primaryCannotMerge": "システム{{targetSystem}} には、現在のシステムと互換性のない新しいソフトウェアバージョンがあります。現在のシステムを<a href=\"/download\" target=\"_blank\" translate>最新のビルド</a>に更新し、{{targetSystem}} システムと統合します。",
 			"primarySystemOffline": "システム {{primarySystem}} はオフラインのため、システム{{targetSystem}} と統合することはできません。",
-			"secondaryCannotMerge": "システム {{targetSystem}} には、現在のシステムと互換性のない古いソフトウェアバージョンがあります。 {{targetSystem}} を <a href=\"/download\" target=\"_blank\" translate>最新のビルド</a> に更新して、現在のものと統合します。",
+			"secondaryCannotMerge": "システム {{targetSystem}} には、現在のシステムと互換性のない古いソフトウェアバージョンがあります。{{targetSystem}} を <a href=\"/download\" target=\"_blank\" translate>最新のビルド</a> に更新して、現在のものと統合します。",
 			"systemOffline": "システム {{targetSystem}} はオフラインのため、現在のシステムと統合することはできません。",
 			"systemUnavailable": "システム {{targetSystem}} は現在到達不能です。数分後にもう一度試すか、連絡してください"
 		},

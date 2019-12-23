@@ -78,7 +78,7 @@
     "Password": "Mật khẩu",
     "Password is required": "Mật khẩu là bắt buộc",
     "Password:": "Mật khẩu:",
-    "Permissions": "Quyền truy nhập",
+    "Permissions": "Quyền",
     "Popularity": "Phổ biến",
     "Privacy": "Quyền riêng tư",
     "Release Notes": "Ghi chú Phát hành",
@@ -96,7 +96,7 @@
     "Share": "Chia sẻ",
     "Show All": "Hiển thị tất cả",
     "Some of your servers don't support cloud System merge because of outdated software version.": "Một số máy chủ của bạn không hỗ trợ Hợp nhất hệ thống đám mây vì dùng phiên bản phần mềm cũ.",
-    "Support": "Hỗ trợ",
+    "Support": "Ủng hộ",
     "Support E-mail": "Hỗ trợ Email",
     "Support URL": "URL Hỗ trợ",
     "Supported Devices": "Thiết bị hỗ trợ",
@@ -117,7 +117,7 @@
     "Topic": "Chủ đề",
     "Update them to the": "Cập nhật chúng lên",
     "Updated": "Được cập nhật",
-    "User": "Người dùng",
+    "User": "Người sử dụng",
     "View": "Xem",
     "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.": "Chúng tôi khuyên bạn nên cài đặt các phiên bản mới nhất của Google Chrome hoặc Mozilla Firefox, bạn cũng có thể sử dụng những trình duyệt web khác.",
     "What's New?": "Có gì mới?",
@@ -180,7 +180,7 @@
         "appTypes": {
             "bundle": "Máy chủ và Máy trạm",
             "camera_sdk": "SDK nguồn video",
-            "client": "Chỉ máy trạm",
+            "client": "Chỉ khách hàng",
             "metadata_sdk": "Metadata SDK",
             "package": "Gói",
             "server": "Chỉ máy chủ",
@@ -218,7 +218,7 @@
             "sdk": {
                 "label": "SDK",
                 "shortLabel": "SDK",
-                "supported": "C++ cross platform SDK"
+                "supported": "SDK đa nền tảng C ++"
             },
             "windows": {
                 "label": "Windows",

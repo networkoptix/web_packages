@@ -122,7 +122,7 @@
     "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.": "建议您安装最新版本的Google Chrome或Mozilla Firefox，或可以使用任何其他最新的网络浏览器。",
     "What's New?": "最新动态",
     "Works with:": "适用于：",
-    "Wrong password": "错误的密码。",
+    "Wrong password": "密码错误",
     "You can merge only those cloud Systems, where you have the \"Owner\" permissions.": "您只能合并那些拥有“所有者”权限的云系统。",
     "You can only merge Systems where you are the owner.": "当您的权限为拥有者时，就可以合并系统",
     "Your Email": "您的电邮",
@@ -181,7 +181,7 @@
             "bundle": "客户端和服务器",
             "camera_sdk": "视频源SDK",
             "client": "仅用于客户端",
-            "metadata_sdk": "Metadata SDK",
+            "metadata_sdk": "Meta数据SDK",
             "package": "数据包",
             "server": "仅限服务器",
             "servertool": "配置工具",
@@ -218,7 +218,7 @@
             "sdk": {
                 "label": "SDK",
                 "shortLabel": "SDK",
-                "supported": "C++ cross platform SDK"
+                "supported": "C ++跨平台SDK"
             },
             "windows": {
                 "label": "Windows",

@@ -60,8 +60,8 @@
     "In Review": "Im Review",
     "In-Client Upgrade:": "In-Client Upgrade:",
     "Integrations": "Integrationen",
-    "Latest version": "Neueste Version",
-    "Log In": "Einloggen",
+    "Latest version": "Aktuellste Version",
+    "Log In": "Anmelden",
     "Log Out": "Abmelden",
     "Log in to %CLOUD_NAME%": "Anmelden bei %CLOUD_NAME%",
     "Merge Systems": "Systeme zusammenführen",
@@ -141,7 +141,7 @@
         "multiSensor": "Multisensorkameras",
         "ptz": "PTZ-Kameras"
     },
-    "devices": "geräte",
+    "devices": "Geräte",
     "dialogs": {
         "merge": {
             "connectToCloud": "Verbinden Sie das System, mit dem Sie fusionieren möchten, mit <strong>{{cloudName}}</strong> oder fusionieren Sie lokal mit dem <strong>{{vmsName}}</strong>-Client.",
@@ -181,7 +181,7 @@
             "bundle": "Client und Server",
             "camera_sdk": "Video Source SDK",
             "client": "Nur Client",
-            "metadata_sdk": "Metadata SDK",
+            "metadata_sdk": "Metadaten-SDK",
             "package": "Paket",
             "server": "Nur Server",
             "servertool": "Konfigurationstool",
@@ -218,7 +218,7 @@
             "sdk": {
                 "label": "SDK",
                 "shortLabel": "SDK",
-                "supported": "C++ cross platform SDK"
+                "supported": "C++ plattformübergreifendes SDK"
             },
             "windows": {
                 "label": "Windows",

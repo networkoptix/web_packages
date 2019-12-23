@@ -69,7 +69,7 @@
 			"sdk": {
 				"label": "SDK",
 				"shortLabel": "SDK",
-				"supported": "C++ cross platform SDK"
+				"supported": "C ++ SDK ข้ามแพลตฟอร์ม"
 			}
 		},
 		"platforms": {
@@ -119,7 +119,7 @@
 		"isAptzSupported": "PTZ ขั้นสูง",
 		"isAptzSupportedShort": "Adv PTZ",
 		"isFisheye": "ฟิชอาย",
-		"isMdSupported": "โมชั่น",
+		"isMdSupported": "การเคลื่อนไหว",
 		"isIoSupported": "I / O",
 		"isH265": "H.265",
 		"isMultiSensor": "เซ็นเซอร์หลายตัว",
@@ -159,7 +159,7 @@
 	},
 	"pageTitles": {
 		"supportedDevices": "อุปกรณ์ที่รองรับ",
-		"integrations": "การรวบรวม"
+		"integrations": "Integration"
 	},
 	"dialogs": {
 		"merge": {

@@ -165,7 +165,7 @@
                 "contact_support": "Обратитесь в службу поддержки по поводу {{product}}",
                 "integration_feedback": "Отзыв об интеграции {{product}}",
                 "ipvd_feedback_device": "Отзыв о {{product}}",
-                "ipvd_feedback_page": "Отзыв по странице камер"
+                "ipvd_feedback_page": "Отзыв о странице камер"
             }
         }
     },
@@ -180,10 +180,10 @@
         "appTypes": {
             "bundle": "Клиент и сервер",
             "camera_sdk": "SDK источника видео",
-            "client": "Только клиент",
-            "metadata_sdk": "Metadata SDK",
+            "client": "Клиент",
+            "metadata_sdk": "Метаданные SDK",
             "package": "Пакет",
-            "server": "Только сервер",
+            "server": "Сервер",
             "servertool": "Инструмент настройки",
             "storage_sdk": "SDK для интеграции хранилищ",
             "video_source_sdk": "SDK источника видео"
@@ -218,7 +218,7 @@
             "sdk": {
                 "label": "SDK",
                 "shortLabel": "SDK",
-                "supported": "C++ cross platform SDK"
+                "supported": "Кроссплатформенный SDK C++"
             },
             "windows": {
                 "label": "Windows",
@@ -245,7 +245,7 @@
             "win64": "x64"
         },
         "releasesTypes": {
-            "beta": "Beta",
+            "beta": "Бета",
             "betas": "Бета",
             "patch": "Patch",
             "patches": "Патчи",

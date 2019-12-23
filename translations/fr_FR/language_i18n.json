@@ -181,7 +181,7 @@
             "bundle": "Client et serveur",
             "camera_sdk": "Source vidéo SDK",
             "client": "Client seulement",
-            "metadata_sdk": "Metadata SDK",
+            "metadata_sdk": "Métadonnées SDK",
             "package": "Paquet",
             "server": "Server seulement",
             "servertool": "Outil de configuration",
@@ -196,7 +196,7 @@
             "arm": {
                 "label": "ARM",
                 "shortLabel": "ARM",
-                "supported": "<a href='/content/arm'>ARM based servers support policy</a>"
+                "supported": "<a href='/content/arm'>Politique de support des serveurs basés sur ARM</a>"
             },
             "ios": {
                 "label": "iOS",

@@ -69,7 +69,7 @@
 			"sdk": {
 				"label": "SDK",
 				"shortLabel": "SDK",
-				"supported": "C++ cross platform SDK"
+				"supported": "C ++ cross-platform SDK"
 			}
 		},
 		"platforms": {
@@ -152,7 +152,7 @@
 		"Data Analytics": "Data Analyse",
 		"Drone": "Drone",
 		"Health Monitor": "Server monitor",
-		"Storage": "Opslag"
+		"Storage": "Opslagruimte"
 	},
 	"messageDialogPlaceholders": {
 		"feedback": "Zorg ervoor dat je uw camera model en fabrikant bij de hand hebt..."
@@ -183,7 +183,7 @@
 				"contact_sales": "Contacteer verkoop voor {{product}}",
 				"contact_support": "Contacteer support voor {{product}}",
 				"integration_feedback": "Feedback voor integratie {{product}}",
-				"ipvd_feedback_page": "Feedback voor pagina van de camera's",
+				"ipvd_feedback_page": "Feedback voor camera's pagina",
 				"ipvd_feedback_device": "Feedback over {{product}}"
 			}
 		}
@@ -198,7 +198,7 @@
 	"Download %VMS_NAME%": "Download %VMS_NAME%",
 	"Integrations": "Integraties",
 	"Privacy": "Privacy",
-	"Support": "Ondersteuning",
+	"Support": "Support",
 	"Supported Devices": "Ondersteunde apparaten",
 	"Terms": "Voorwaarden"
 }

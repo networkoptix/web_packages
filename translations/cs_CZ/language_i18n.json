@@ -23,7 +23,7 @@
     "Camera header": "Záhlaví kamery",
     "Cameras menu": "Kamerové menu",
     "Cancel": "Zrušit",
-    "Change Password": "Změnit heslo",
+    "Change Password": "Změna hesla",
     "Checking...": "Kontrolování...",
     "Choose which properties should be visible to customers:": "Vyberte, které vlastnosti mají být viditelné pro zákazníky:",
     "Close": "Zavřít",
@@ -51,7 +51,7 @@
     "Export all to CSV": "Export položek do CSV",
     "FPS(max)": "FPS (max.)",
     "Firmware version": "Verze firmwaru",
-    "Fisheye": "Rybí oko",
+    "Fisheye": "Fisheye",
     "Forgot password?": "Zapomněli jste heslo?",
     "Get in touch": "Buďte v kontaktu",
     "How it works": "Jak to funguje",
@@ -218,7 +218,7 @@
             "sdk": {
                 "label": "SDK",
                 "shortLabel": "SDK",
-                "supported": "C++ cross platform SDK"
+                "supported": "C ++ multiplatformová SDK"
             },
             "windows": {
                 "label": "Windows",
@@ -288,7 +288,7 @@
         "isAptzSupported": "Pokročilé PTZ",
         "isAptzSupportedShort": "Adv. PTZ",
         "isAudioSupported": "Zvuk",
-        "isFisheye": "Rybí oko",
+        "isFisheye": "Fisheye",
         "isH265": "H.265",
         "isIoSupported": "I/O",
         "isMdSupported": "Pohyb",

@@ -106,7 +106,7 @@
 	},
 	"ipvd": {
 		"resolutionArea": "Alan",
-		"count": "Sayı",
+		"count": "Sayım",
 		"vendor": "Üretici",
 		"model": "Model",
 		"hardwareType": "Tür",
@@ -114,11 +114,11 @@
 		"maxFps": "Maksimum FPS",
 		"primaryCodec": "Kodek",
 		"isAudioSupported": "Ses",
-		"isTwAudioSupported": "Çift Yönlü Ses",
+		"isTwAudioSupported": "çift Yönlü Ses",
 		"isPtzSupported": "PTZ",
 		"isAptzSupported": "Gelişmiş PTZ",
 		"isAptzSupportedShort": "Gelş. PTZ",
-		"isFisheye": "Fish-Eye",
+		"isFisheye": "Balıkgözü",
 		"isMdSupported": "Hareket",
 		"isIoSupported": "G/Ç",
 		"isH265": "H.265",
@@ -151,7 +151,7 @@
 		"Connector": "Konnektör",
 		"Data Analytics": "Veri Analizleri",
 		"Drone": "Drone",
-		"Health Monitor": "Performans İzleme",
+		"Health Monitor": "Durum İzleyici",
 		"Storage": "Depolama"
 	},
 	"messageDialogPlaceholders": {

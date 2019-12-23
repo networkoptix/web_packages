@@ -1,7 +1,7 @@
 {
     "2-Way Audio": "Audio a 2 vie",
     "About %CLOUD_NAME%": "Informazioni su %CLOUD_NAME%",
-    "Account Settings": "Impostazioni dell 'account",
+    "Account Settings": "Impostazioni dell'account",
     "Account not activated": "Account non attivato",
     "Account not found": "Account non trovato",
     "Actual number of events supported by this camera may be bigger.": "Il numero effettivo di eventi supportati da questa telecamera potrebbe essere maggiore.",
@@ -23,7 +23,7 @@
     "Camera header": "Intestazione di telecamera",
     "Cameras menu": "Menu delle telecamere",
     "Cancel": "Annulla",
-    "Change Password": "Cambia Password",
+    "Change Password": "Cambio Password",
     "Checking...": "Controllo...",
     "Choose which properties should be visible to customers:": "Scegli quali proprietà dovrebbero essere visibili ai clienti:",
     "Close": "Chiudere",
@@ -93,7 +93,7 @@
     "Send": "Invia",
     "Send feedback about this device": "Invia feedback sul dispositivo",
     "Settings": "Impostazioni",
-    "Share": "Condividere",
+    "Share": "Condividi",
     "Show All": "Mostra tutto",
     "Some of your servers don't support cloud System merge because of outdated software version.": "Alcuni dei tuoi server non supportano l'unione del sistema cloud a causa della versione obsoleta del software.",
     "Support": "Supporto",
@@ -218,11 +218,11 @@
             "sdk": {
                 "label": "SDK",
                 "shortLabel": "SDK",
-                "supported": "C++ cross platform SDK"
+                "supported": "SDK cross-platform C ++"
             },
             "windows": {
                 "label": "Windows",
-                "supported": "7, 8, 8.1, 10/Enterprise, 2008 R2, 2012, 2012 R2, 2016 v1607"
+                "supported": "7, 8, 8.1, 10 / Enterprise, 2008 R2, 2012, 2012 R2, 2016 v1607"
             }
         },
         "mobile": {

@@ -96,7 +96,7 @@
     "Share": "Delen",
     "Show All": "Toon alles",
     "Some of your servers don't support cloud System merge because of outdated software version.": "Sommige van uw servers bieden geen ondersteuning voor het samenvoegen van cloudsystemen vanwege een verouderde softwareversie.",
-    "Support": "Ondersteuning",
+    "Support": "Support",
     "Support E-mail": "Support Email",
     "Support URL": "Support URL",
     "Supported Devices": "Ondersteunde apparaten",
@@ -331,7 +331,7 @@
         "minResolution": "Minimum Resolutie",
         "search_ipvd": "Zoeken op model of fabrikant",
         "selected": "geselecteerd",
-        "vendor": "Fabrikanten",
+        "vendor": "Fabrikant",
         "vendors": "Fabrikanten"
     },
     "servers in the merged System.": "servers in het samengevoegde systeem.",

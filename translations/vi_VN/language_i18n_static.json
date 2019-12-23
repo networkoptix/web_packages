@@ -69,7 +69,7 @@
 			"sdk": {
 				"label": "SDK",
 				"shortLabel": "SDK",
-				"supported": "C++ cross platform SDK"
+				"supported": "SDK đa nền tảng C ++"
 			}
 		},
 		"platforms": {
@@ -86,7 +86,7 @@
 		"appTypes": {
 			"bundle": "Máy chủ và Máy trạm",
 			"camera_sdk": "SDK nguồn video",
-			"client": "Chỉ máy trạm",
+			"client": "Chỉ khách hàng",
 			"metadata_sdk": "Metadata SDK",
 			"package": "Gói",
 			"server": "Chỉ máy chủ",
@@ -198,7 +198,7 @@
 	"Download %VMS_NAME%": "Tải xuống %VMS_NAME%",
 	"Integrations": "Tích hợp",
 	"Privacy": "Quyền riêng tư",
-	"Support": "Hỗ trợ",
+	"Support": "Ủng hộ",
 	"Supported Devices": "Thiết bị hỗ trợ",
 	"Terms": "Điều khoản"
 }

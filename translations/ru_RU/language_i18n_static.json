@@ -5,7 +5,7 @@
 		"filter applied": "фильтр применен",
 		"filters applied": "фильтры применены",
 		"Any": "Любой",
-		"selected": "выбрано",
+		"selected": "выбраны",
 		"vendor": "Производитель",
 		"vendors": "Производители",
 		"hardwareType": "Тип",
@@ -69,7 +69,7 @@
 			"sdk": {
 				"label": "SDK",
 				"shortLabel": "SDK",
-				"supported": "C++ cross platform SDK"
+				"supported": "Кроссплатформенный SDK C++"
 			}
 		},
 		"platforms": {
@@ -86,10 +86,10 @@
 		"appTypes": {
 			"bundle": "Клиент и сервер",
 			"camera_sdk": "SDK источника видео",
-			"client": "Только клиент",
-			"metadata_sdk": "Metadata SDK",
+			"client": "Клиент",
+			"metadata_sdk": "Метаданные SDK",
 			"package": "Пакет",
-			"server": "Только сервер",
+			"server": "Сервер",
 			"servertool": "Инструмент настройки",
 			"storage_sdk": "SDK для интеграции хранилищ",
 			"video_source_sdk": "SDK источника видео"
@@ -135,7 +135,7 @@
 		"Cameras supporting H.265": "Камеры с поддержкой H.265",
 		"I / O modules": "Модули ввода/вывода",
 		"Multisensor Cameras": "Мультисенсорные камеры",
-		"Cameras with 2-way audio": "Камеры с 2х-сторонним звуком",
+		"Cameras with 2-way audio": "Камеры с двусторонним звуком",
 		"Extra high resolution cameras": "Камеры сверхвысокого разрешения",
 		"feedback": {
 			"a_Please": "Пожалуйста",

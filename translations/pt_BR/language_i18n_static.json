@@ -1,6 +1,6 @@
 {
 	"search": {
-		"Search": "Pesquisa",
+		"Search": "Pesquisar",
 		"search_ipvd": "Pesquisar por modelo ou fabricante",
 		"filter applied": "filtro aplicado",
 		"filters applied": "filtros aplicados",
@@ -69,7 +69,7 @@
 			"sdk": {
 				"label": "SDK",
 				"shortLabel": "SDK",
-				"supported": "C++ cross platform SDK"
+				"supported": "C++ cruzar plataforma SDK"
 			}
 		},
 		"platforms": {

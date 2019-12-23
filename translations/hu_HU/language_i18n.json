@@ -1,6 +1,6 @@
 {
     "2-Way Audio": "2-Way Audio",
-    "About %CLOUD_NAME%": "About %CLOUD_NAME%",
+    "About %CLOUD_NAME%": "%CLOUD_NAME% névjegye",
     "Account Settings": "Fiókbeállítások",
     "Account not activated": "Felhasználói fiók nincs aktiválva",
     "Account not found": "A fiók nem található",
@@ -13,7 +13,7 @@
     "All Systems": "Minden rendszer",
     "All cloud users will be deleted.": "Minden felhő felhasználó törlésre kerül.",
     "All results": "All results",
-    "Analytics": "Analytics",
+    "Analytics": "analitika",
     "Analytics Event": "Analitikai esemény",
     "Analytics Events": "Analytics Events",
     "Any": "Any",
@@ -81,7 +81,7 @@
     "Permissions": "Engedélyek",
     "Popularity": "Popularity",
     "Privacy": "Biztonság",
-    "Release Notes": "Verzóinfók",
+    "Release Notes": "Megjegyzések",
     "Release notes": "Megjegyzések",
     "Remember me": "Emlékezzen rám",
     "Requirements": "Requirements",
@@ -218,7 +218,7 @@
             "sdk": {
                 "label": "SDK",
                 "shortLabel": "SDK",
-                "supported": "C++ cross platform SDK"
+                "supported": "C ++ kereszt platform SDK"
             },
             "windows": {
                 "label": "Windows",
@@ -284,7 +284,7 @@
             "c_Info": "for additional questions/concerns regarding supported devices."
         },
         "hardwareType": "Típus",
-        "isAnalyticsSupported": "Analytics",
+        "isAnalyticsSupported": "analitika",
         "isAptzSupported": "Advanced PTZ",
         "isAptzSupportedShort": "Adv. PTZ",
         "isAudioSupported": "Audio",
@@ -322,8 +322,8 @@
     "search": {
         "Any": "Any",
         "Search": "Keresés",
-        "analytics": "Analytics",
-        "analyticsSelected": "analytics events",
+        "analytics": "analitika",
+        "analyticsSelected": "analitikai események",
         "filter applied": "filter applied",
         "filters applied": "filters applied",
         "hardwareType": "Típus",

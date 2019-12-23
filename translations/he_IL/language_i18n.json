@@ -14,7 +14,7 @@
     "All cloud users will be deleted.": "כל משתמשי הענן יימחקו.",
     "All results": "כל התוצאות",
     "Analytics": "אנליטיקה",
-    "Analytics Event": "אירוע אנליטיקה",
+    "Analytics Event": "ארוע אנליטיקה",
     "Analytics Events": "אירועי אנליטיקה",
     "Any": "כל",
     "Audio": "אודיו",
@@ -33,10 +33,10 @@
     "Create Account": "צור חשבון",
     "Create account": "צור חשבון",
     "Developer": "מפתח",
-    "Disconnect": "נתק",
+    "Disconnect": "התנתק",
     "Disconnect System from %CLOUD_NAME%?": "נתק את מערכת מ %CLOUD_NAME%?",
     "Download": "הורדה",
-    "Download %VMS_NAME%": "הורד את %VMS_NAME%",
+    "Download %VMS_NAME%": "הורד %VMS_NAME%",
     "Download Chrome": "הורד כרום",
     "Download Firefox": "הורד פיירפוקס",
     "Download Links:": "קישורים להורדה:",
@@ -47,7 +47,7 @@
     "Embed": "הטמע",
     "Enter \"Public User\" credentials:": "הזן אישורי \"משתמש ציבורי\":",
     "Enter password for your account to continue": "הזן את הסיסמה עבור החשבון שלך כדי להמשיך",
-    "Enter password to continue.": "הזן סיסמא כדי להמשיך.",
+    "Enter password to continue.": "הזן סיסמה כדי להמשיך.",
     "Export all to CSV": "ייצא נתונים לקובץ CSV",
     "FPS(max)": "FPS (מקסימום)",
     "Firmware version": "גרסת חומרה",
@@ -81,7 +81,7 @@
     "Permissions": "הרשאות",
     "Popularity": "פופולאריות",
     "Privacy": "פרטיות",
-    "Release Notes": "הערות שחרור",
+    "Release Notes": "הערות מוצר",
     "Release notes": "הערות מוצר",
     "Remember me": "זכור אותי",
     "Requirements": "דרישות",
@@ -196,7 +196,7 @@
             "arm": {
                 "label": "ARM",
                 "shortLabel": "ARM",
-                "supported": "<a href='/content/arm'>ARM based servers support policy</a>"
+                "supported": "<a href='/content/arm'>שרתים מבוססי ARM תומכים במדיניות</a>"
             },
             "ios": {
                 "label": "iOS",
@@ -218,7 +218,7 @@
             "sdk": {
                 "label": "SDK",
                 "shortLabel": "SDK",
-                "supported": "C++ cross platform SDK"
+                "supported": "C + + פלטפורמת SDK"
             },
             "windows": {
                 "label": "Windows",

@@ -11,8 +11,8 @@
 		"hardwareType": "Típus",
 		"hardwareTypes": "Types",
 		"minResolution": "Minimum Resolution",
-		"analytics": "Analytics",
-		"analyticsSelected": "analytics events"
+		"analytics": "analitika",
+		"analyticsSelected": "analitikai események"
 	},
 	"cameraFilters": {
 		"ptz": "PTZ cameras",
@@ -69,7 +69,7 @@
 			"sdk": {
 				"label": "SDK",
 				"shortLabel": "SDK",
-				"supported": "C++ cross platform SDK"
+				"supported": "C ++ kereszt platform SDK"
 			}
 		},
 		"platforms": {
@@ -123,7 +123,7 @@
 		"isIoSupported": "I/O",
 		"isH265": "H.265",
 		"isMultiSensor": "Multi Sensor",
-		"isAnalyticsSupported": "Analytics",
+		"isAnalyticsSupported": "analitika",
 		"camera": "Kamera",
 		"multiSensorCamera": "Multi-Sensor Camera",
 		"encoder": "Encoder",
@@ -194,7 +194,7 @@
 	},
 	"testedVersionLabel": "Tested on {{vmsName}} version:",
 	"testedVersionsLabel": "Tested on {{vmsName}} versions:",
-	"About %CLOUD_NAME%": "About %CLOUD_NAME%",
+	"About %CLOUD_NAME%": "%CLOUD_NAME% névjegye",
 	"Download %VMS_NAME%": "%VMS_NAME% letöltése",
 	"Integrations": "Integrations",
 	"Privacy": "Biztonság",

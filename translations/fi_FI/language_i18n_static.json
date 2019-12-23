@@ -41,7 +41,7 @@
 				"supported": "7, 8, 8.1, 10/Enterprise, 2008 R2, 2012, 2012 R2, 2016 v1607"
 			},
 			"mac": {
-				"label": "Mac OS",
+				"label": "Mac OSX",
 				"supported": "OS X 10.13: \"High Sierra\", 10.14: \"Mojave\", 10.15 \"Catalina\""
 			},
 			"linux": {
@@ -50,7 +50,7 @@
 				"supported": "Ubuntu LTS: 16.04, 18.04"
 			},
 			"macos": {
-				"label": "Mac OS",
+				"label": "Mac OSX",
 				"supported": "OS X 10.13: \"High Sierra\", 10.14: \"Mojave\", 10.15 \"Catalina\""
 			},
 			"ios": {
@@ -69,7 +69,7 @@
 			"sdk": {
 				"label": "SDK",
 				"shortLabel": "SDK",
-				"supported": "C++ cross platform SDK"
+				"supported": "C ++: n cross platform SDK"
 			}
 		},
 		"platforms": {
@@ -84,12 +84,12 @@
 			"win64": "x64"
 		},
 		"appTypes": {
-			"bundle": "Client ja palvelin",
+			"bundle": "Client-sovellus ja palvelin",
 			"camera_sdk": "Videolähteen SDK",
 			"client": "Vain Client-sovellus",
 			"metadata_sdk": "Metadata SDK",
 			"package": "Paketti",
-			"server": "Vain palvelin-sovellus",
+			"server": "Vain palvelin",
 			"servertool": "Konfigurointityökalu",
 			"storage_sdk": "Storage SDK",
 			"video_source_sdk": "Videolähteen SDK"
@@ -181,7 +181,7 @@
 			},
 			"topic": {
 				"contact_sales": "Ota yhteyttä {{product}} myyntiin",
-				"contact_support": "Pyydä tukea {{product}}",
+				"contact_support": "Ota yhteyttä tukeen {{product}}",
 				"integration_feedback": "Palaute integraatiosta {{product}}",
 				"ipvd_feedback_page": "Palaute kameran sivulle",
 				"ipvd_feedback_device": "Palaute{{product}}"

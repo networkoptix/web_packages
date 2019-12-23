@@ -1,17 +1,17 @@
 {
     "2-Way Audio": "2-Way Audio",
-    "About %CLOUD_NAME%": "About %CLOUD_NAME%",
-    "Account Settings": "Definições da Conta",
+    "About %CLOUD_NAME%": "Sobre o %CLOUD_NAME%",
+    "Account Settings": "Configurações da conta",
     "Account not activated": "Conta não activada",
     "Account not found": "Conta não encontrada",
     "Actual number of events supported by this camera may be bigger.": "O número real de eventos suportados por esta câmara pode ser maior.",
     "Additional Requirements": "Additional Requirements",
     "Administration": "Administration",
     "Advanced PTZ": "Advanced PTZ",
-    "Advanced Search": "Advanced Search",
+    "Advanced Search": "Pesquisa avançada",
     "All Integrations": "All Integrations",
     "All Systems": "Todos os sistemas",
-    "All cloud users will be deleted.": "Todos os utilizadores da \"Cloud\" serão apagados.",
+    "All cloud users will be deleted.": "All cloud users will be deleted.",
     "All results": "All results",
     "Analytics": "Analytics",
     "Analytics Event": "Evento de Analytics",
@@ -99,7 +99,7 @@
     "Support": "Suporte",
     "Support E-mail": "Support E-mail",
     "Support URL": "Support URL",
-    "Supported Devices": "Supported Devices",
+    "Supported Devices": "Dispositivos suportados",
     "System name": "Nome do Sistema",
     "System name is required": "O nome do sistema é obrigatório",
     "System will be accessible through local network with local administrator account.": "O sistema estará acessível através da rede local com conta de administrador local.",
@@ -180,7 +180,7 @@
         "appTypes": {
             "bundle": "Cliente e Servidor",
             "camera_sdk": "Video Source SDK",
-            "client": "Somente cliente",
+            "client": "Apenas cliente",
             "metadata_sdk": "Metadata SDK",
             "package": "Package",
             "server": "Somente servidor",
@@ -260,7 +260,7 @@
         "Data Analytics": "Data Analytics",
         "Drone": "Drone",
         "Health Monitor": "Monitor de Saúde",
-        "Storage": "Storage",
+        "Storage": "Armazenamento",
         "backToEditText": "Back to the editing interfaces",
         "previewRibbonText": "This page is a preview of the latest changes, and it doesn't match publicly available version."
     },
@@ -312,7 +312,7 @@
     },
     "pageTitles": {
         "integrations": "Integrations",
-        "supportedDevices": "Supported Devices"
+        "supportedDevices": "Dispositivos suportados"
     },
     "phoneNumberWithLabel": "Tel: {{number}}",
     "privacyPolicy": {
@@ -323,7 +323,7 @@
         "Any": "Any",
         "Search": "Pesquisar",
         "analytics": "Analytics",
-        "analyticsSelected": "analytics events",
+        "analyticsSelected": "evento de Analytics",
         "filter applied": "filter applied",
         "filters applied": "filters applied",
         "hardwareType": "Tipo",

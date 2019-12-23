@@ -83,7 +83,7 @@
     "Privacy": "Privacy",
     "Release Notes": "Release Notes",
     "Release notes": "Versiewijzigingen",
-    "Remember me": "Onthoud mij",
+    "Remember me": "Onthoud mijn gegevens",
     "Requirements": "Vereisten",
     "Resend activation email": "Stuur activeringsmail opnieuw",
     "Resolution(max)": "Resolutie(max)",
@@ -96,7 +96,7 @@
     "Share": "Delen",
     "Show All": "Toon alles",
     "Some of your servers don't support cloud System merge because of outdated software version.": "Sommige van uw servers ondersteunen geen cloud Systeem samenvoegen vanwege verouderde softwareversie.",
-    "Support": "Ondersteuning",
+    "Support": "Support",
     "Support E-mail": "Support Email",
     "Support URL": "Support URL",
     "Supported Devices": "Ondersteunde apparaten",
@@ -165,7 +165,7 @@
                 "contact_support": "Contacteer support voor {{product}}",
                 "integration_feedback": "Feedback voor integratie {{product}}",
                 "ipvd_feedback_device": "Feedback over {{product}}",
-                "ipvd_feedback_page": "Feedback voor pagina van de camera's"
+                "ipvd_feedback_page": "Feedback voor camera's pagina"
             }
         }
     },
@@ -218,7 +218,7 @@
             "sdk": {
                 "label": "SDK",
                 "shortLabel": "SDK",
-                "supported": "C++ cross platform SDK"
+                "supported": "C ++ cross-platform SDK"
             },
             "windows": {
                 "label": "Windows",
@@ -260,7 +260,7 @@
         "Data Analytics": "Data Analyse",
         "Drone": "Drone",
         "Health Monitor": "Server monitor",
-        "Storage": "Opslag",
+        "Storage": "Opslagruimte",
         "backToEditText": "Terug naar de bewerkingsinterfaces",
         "previewRibbonText": "Deze pagina is een voorbeeld van de nieuwste wijzigingen en komt niet overeen met de openbaar beschikbare versie."
     },

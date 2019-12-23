@@ -178,12 +178,12 @@
     "dialogs.merge.systemUnavailable": "Järjestelmä {{targetSystem}} ei ole tällä hetkellä tavoitettavissa. Yritä uudelleen muutamassa minuutissa tai ota yhteyttä",
     "downloads": {
         "appTypes": {
-            "bundle": "Client ja palvelin",
+            "bundle": "Client-sovellus ja palvelin",
             "camera_sdk": "Videolähteen SDK",
             "client": "Vain Client-sovellus",
             "metadata_sdk": "Metadata SDK",
             "package": "Paketti",
-            "server": "Vain palvelin-sovellus",
+            "server": "Vain palvelin",
             "servertool": "Konfigurointityökalu",
             "storage_sdk": "Storage SDK",
             "video_source_sdk": "Videolähteen SDK"
@@ -212,13 +212,13 @@
                 "supported": "OS X 10.13: \"High Sierra\", 10.14: \"Mojave\", 10.15 \"Catalina\""
             },
             "macos": {
-                "label": "Mac OS",
+                "label": "Mac OSX",
                 "supported": "OS X 10.13: \"High Sierra\", 10.14: \"Mojave\", 10.15 \"Catalina\""
             },
             "sdk": {
                 "label": "SDK",
                 "shortLabel": "SDK",
-                "supported": "C++ cross platform SDK"
+                "supported": "C ++: n cross platform SDK"
             },
             "windows": {
                 "label": "Windows",

@@ -69,7 +69,7 @@
 			"sdk": {
 				"label": "SDK",
 				"shortLabel": "SDK",
-				"supported": "C++ cross platform SDK"
+				"supported": "C ++ крос-платформенний SDK"
 			}
 		},
 		"platforms": {
@@ -87,7 +87,7 @@
 			"bundle": "Клієнт і сервер",
 			"camera_sdk": "SDK джерела відео",
 			"client": "Тільки клієнт",
-			"metadata_sdk": "Metadata SDK",
+			"metadata_sdk": "Метадані SDK",
 			"package": "Package",
 			"server": "Тільки сервер",
 			"servertool": "Інструмент налаштування",
@@ -118,7 +118,7 @@
 		"isPtzSupported": "PTZ",
 		"isAptzSupported": "Розширений PTZ",
 		"isAptzSupportedShort": "Розш. PTZ",
-		"isFisheye": "Риб'яче око",
+		"isFisheye": "Fisheye",
 		"isMdSupported": "Рух",
 		"isIoSupported": "Ввід/вивід",
 		"isH265": "H.265",
@@ -151,7 +151,7 @@
 		"Connector": "З'єднувач",
 		"Data Analytics": "Аналітика даних",
 		"Drone": "Дрон",
-		"Health Monitor": "Моніторинг ресурсів",
+		"Health Monitor": "Моніторинг Стану",
 		"Storage": "Сховище"
 	},
 	"messageDialogPlaceholders": {

@@ -8,7 +8,7 @@
 		"selected": "已選取",
 		"vendor": "製造商",
 		"vendors": "製造商",
-		"hardwareType": "型態",
+		"hardwareType": "類型",
 		"hardwareTypes": "類型",
 		"minResolution": "最低解析度",
 		"analytics": "分析",
@@ -69,7 +69,7 @@
 			"sdk": {
 				"label": "SDK",
 				"shortLabel": "SDK",
-				"supported": "C++ cross platform SDK"
+				"supported": "C ++跨平台SDK"
 			}
 		},
 		"platforms": {
@@ -87,7 +87,7 @@
 			"bundle": "用戶端和伺服器",
 			"camera_sdk": "影像來源SDK",
 			"client": "僅用戶端",
-			"metadata_sdk": "Metadata SDK",
+			"metadata_sdk": "Meta數據SDK",
 			"package": "套件",
 			"server": "僅伺服器",
 			"servertool": "設定工具",
@@ -109,7 +109,7 @@
 		"count": "總計",
 		"vendor": "製造商",
 		"model": "型號",
-		"hardwareType": "型態",
+		"hardwareType": "類型",
 		"maxResolution": "最大解析度",
 		"maxFps": "每秒最大幀數（FPS）",
 		"primaryCodec": "編碼器",
@@ -163,7 +163,7 @@
 	},
 	"dialogs": {
 		"merge": {
-			"connectToCloud": "請將要與此合併的系統連接到 <strong>{{cloudName}}</strong> 或使用 <strong>{{vmsName}}</strong> 客戶端進行本地合併。",
+			"connectToCloud": "請將要與此合併的系統連接到 <strong>{{cloudName}}</strong> 或使用 <strong>{{vmsName}}</strong> 客戶端進行本機合併。",
 			"mergeConfirmation": "您即將合併系統 <strong>{{primarySystem}}</strong> 和 <strong>{{secondarySystem}}</strong>。設定和名稱將取自 <strong>{{primarySystem}}</strong>。",
 			"primaryCannotMerge": "系統 {{targetSystem}} 具有較新的軟件版本，與當前系統不相容。將當前系統更新至<a href=\"/download\" target=\"_blank\" translate>最新版本</a>，以將其與 {{targetSystem}} 系統合併。",
 			"primarySystemOffline": "系統 {{primarySystem}} 處於離線狀態, 無法合併系統{{targetSystem}}。",

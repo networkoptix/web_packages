@@ -12,7 +12,7 @@
 		"hardwareTypes": "Types",
 		"minResolution": "Minimum Resolution",
 		"analytics": "Analytics",
-		"analyticsSelected": "analytics events"
+		"analyticsSelected": "evento de Analytics"
 	},
 	"cameraFilters": {
 		"ptz": "PTZ cameras",
@@ -86,7 +86,7 @@
 		"appTypes": {
 			"bundle": "Cliente e Servidor",
 			"camera_sdk": "Video Source SDK",
-			"client": "Somente cliente",
+			"client": "Apenas cliente",
 			"metadata_sdk": "Metadata SDK",
 			"package": "Package",
 			"server": "Somente servidor",
@@ -152,13 +152,13 @@
 		"Data Analytics": "Data Analytics",
 		"Drone": "Drone",
 		"Health Monitor": "Monitor de Saúde",
-		"Storage": "Storage"
+		"Storage": "Armazenamento"
 	},
 	"messageDialogPlaceholders": {
 		"feedback": "Make sure you include your camera model and manufacturer..."
 	},
 	"pageTitles": {
-		"supportedDevices": "Supported Devices",
+		"supportedDevices": "Dispositivos suportados",
 		"integrations": "Integrations"
 	},
 	"dialogs": {
@@ -194,11 +194,11 @@
 	},
 	"testedVersionLabel": "Tested on {{vmsName}} version:",
 	"testedVersionsLabel": "Tested on {{vmsName}} versions:",
-	"About %CLOUD_NAME%": "About %CLOUD_NAME%",
+	"About %CLOUD_NAME%": "Sobre o %CLOUD_NAME%",
 	"Download %VMS_NAME%": "Baixar %VMS_NAME%",
 	"Integrations": "Integrations",
 	"Privacy": "Privacidade",
 	"Support": "Suporte",
-	"Supported Devices": "Supported Devices",
+	"Supported Devices": "Dispositivos suportados",
 	"Terms": "Termos"
 }

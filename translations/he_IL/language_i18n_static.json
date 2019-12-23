@@ -64,12 +64,12 @@
 			"arm": {
 				"label": "ARM",
 				"shortLabel": "ARM",
-				"supported": "<a href='/content/arm'>ARM based servers support policy</a>"
+				"supported": "<a href='/content/arm'>שרתים מבוססי ARM תומכים במדיניות</a>"
 			},
 			"sdk": {
 				"label": "SDK",
 				"shortLabel": "SDK",
-				"supported": "C++ cross platform SDK"
+				"supported": "C + + פלטפורמת SDK"
 			}
 		},
 		"platforms": {
@@ -166,7 +166,7 @@
 			"connectToCloud": "חבר מערכת שברצונך למזג עם מערכת זו <strong>{{cloudName}}</strong> או מזג מקומי באמצעות <strong>{{vmsName}}</strong> לקוח.",
 			"mergeConfirmation": "אתה עומד למזג מערכות <strong>{{primarySystem}}</strong> ו - <strong>{{secondarySystem}}</strong>. ההגדרות והשם יילקחו מ <strong>{{primarySystem}}</strong>.",
 			"primaryCannotMerge": "למערכת {{targetSystem}} יש גרסת תוכנה חדשה יותר שאינה תואמת למערכת הנוכחית. עדכן את המערכת הנוכחית <a href=\"/download\" target=\"_blank\" translate>לגרסא המתאימה</a> כדי למזג אותו עם {{targetSystem}}.",
-			"primarySystemOffline": "המערכת {{primarySystem}} אינה זמינה ולא ניתן למזגה עם מערכת {{targetSystem}}.",
+			"primarySystemOffline": "מערכת {{primarySystem}} במצב לא מקוון ולא ניתן למזגה עם הנוכחית.",
 			"secondaryCannotMerge": "למערכת {{targetSystem}} יש גרסת תוכנה ישנה יותר שאינה תואמת למערכת הנוכחית. עדכן {{targetSystem}} ל <a href=\"/download\" target=\"_blank\" translate>לגרסא האחרונה</a> על מנת למזג אותו עם הנוכחי.",
 			"systemOffline": "מערכת {{targetSystem}} במצב לא מקוון ולא ניתן למזגה עם הנוכחית.",
 			"systemUnavailable": "לא ניתן להגיע למערכת {{targetSystem}}. נסה שוב בעוד מספר דקות או צור קשר"
@@ -195,7 +195,7 @@
 	"testedVersionLabel": "נבדק על {{vmsName}} בגרסאות הבאות:",
 	"testedVersionsLabel": "נבדק על {{vmsName}} בגרסאות הבאות:",
 	"About %CLOUD_NAME%": "אודות %CLOUD_NAME%",
-	"Download %VMS_NAME%": "הורד את %VMS_NAME%",
+	"Download %VMS_NAME%": "הורד %VMS_NAME%",
 	"Integrations": "אינטגרציות",
 	"Privacy": "פרטיות",
 	"Support": "תמיכה",

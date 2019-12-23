@@ -14,7 +14,7 @@
     "All cloud users will be deleted.": "Alle sky-brukere vil bli slettet.",
     "All results": "Alle Resultater",
     "Analytics": "Analyser",
-    "Analytics Event": "Analyse-hendelser",
+    "Analytics Event": "Videoanalyse-regel",
     "Analytics Events": "Analyse-hendelser",
     "Any": "Noen",
     "Audio": "Lyd",
@@ -218,7 +218,7 @@
             "sdk": {
                 "label": "SDK",
                 "shortLabel": "SDK",
-                "supported": "C++ cross platform SDK"
+                "supported": "C + + kryssplattform SDK"
             },
             "windows": {
                 "label": "Vindu",
@@ -283,7 +283,7 @@
             "b_Link": "send inn en forespørsel",
             "c_Info": "for ytterligere spørsmål / bekymringer angående støttede enheter."
         },
-        "hardwareType": "Type",
+        "hardwareType": "Skriv",
         "isAnalyticsSupported": "Analyser",
         "isAptzSupported": "Avansert PTZ",
         "isAptzSupportedShort": "Avs. PTZ",
@@ -291,7 +291,7 @@
         "isFisheye": "Fisheye",
         "isH265": "H.265",
         "isIoSupported": "I/O",
-        "isMdSupported": "Bevegelse",
+        "isMdSupported": "Motion",
         "isMultiSensor": "Multi Sensor",
         "isPtzSupported": "PTZ",
         "isTwAudioSupported": "2-veis lyd",
@@ -320,13 +320,13 @@
         "ipvd": "Ved å sende inn dette skjemaet samtykker du i å bli kontaktet av %COMPANY_NAME%.\nDu vil finne %COMPANY_NAME% personvernregler <a href=\"%PRIVACY_LINK%\" target=\"blank\">her</a> som inkluderer instruksjoner om hvordan du kan trekke tilbake ditt samtykke."
     },
     "search": {
-        "Any": "Valgfri",
+        "Any": "Noen",
         "Search": "Søk",
         "analytics": "Analyser",
         "analyticsSelected": "analysehendelser",
         "filter applied": "filter påført",
         "filters applied": "filtre påført",
-        "hardwareType": "Type",
+        "hardwareType": "Skriv",
         "hardwareTypes": "Typer",
         "minResolution": "Minimum oppløsning",
         "search_ipvd": "Søk etter modell eller produsent",

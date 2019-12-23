@@ -69,7 +69,7 @@
 			"sdk": {
 				"label": "SDK",
 				"shortLabel": "SDK",
-				"supported": "C++ cross platform SDK"
+				"supported": "C ++跨平台SDK"
 			}
 		},
 		"platforms": {
@@ -87,7 +87,7 @@
 			"bundle": "客户端和服务器",
 			"camera_sdk": "视频源SDK",
 			"client": "仅用于客户端",
-			"metadata_sdk": "Metadata SDK",
+			"metadata_sdk": "Meta数据SDK",
 			"package": "数据包",
 			"server": "仅限服务器",
 			"servertool": "配置工具",

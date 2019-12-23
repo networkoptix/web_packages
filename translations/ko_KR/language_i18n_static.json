@@ -8,7 +8,7 @@
 		"selected": "선택된",
 		"vendor": "제조사",
 		"vendors": "제조사들",
-		"hardwareType": "형식",
+		"hardwareType": "유형",
 		"hardwareTypes": "유형들",
 		"minResolution": "최소 해상도",
 		"analytics": "분석",
@@ -69,7 +69,7 @@
 			"sdk": {
 				"label": "SDK",
 				"shortLabel": "SDK",
-				"supported": "C++ cross platform SDK"
+				"supported": "C ++ 크로스 플랫폼 SDK"
 			}
 		},
 		"platforms": {
@@ -87,7 +87,7 @@
 			"bundle": "클라이언트와 서버",
 			"camera_sdk": "비디오 소스 SDK",
 			"client": "클라이언트만",
-			"metadata_sdk": "Metadata SDK",
+			"metadata_sdk": "메타 데이터 SDK",
 			"package": "패키지",
 			"server": "서버 만",
 			"servertool": "구성 도구",
@@ -109,7 +109,7 @@
 		"count": "개수",
 		"vendor": "제조사",
 		"model": "모델",
-		"hardwareType": "형식",
+		"hardwareType": "유형",
 		"maxResolution": "최대 해상도",
 		"maxFps": "최대 FPS",
 		"primaryCodec": "코덱",

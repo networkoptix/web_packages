@@ -15,14 +15,14 @@
 		"analyticsSelected": "evento de analiticas"
 	},
 	"cameraFilters": {
-		"ptz": "Camaras PTZ",
+		"ptz": "Cámaras PTZ",
 		"aptz": "Cámaras con PTZ avanzado",
 		"fisheye": "Camaras de ojo de pez",
 		"H265": "Cámaras H.265",
 		"IO": "Módulos de E / S",
-		"multiSensor": "Cámaras multisensor",
+		"multiSensor": "Cámaras multisensores",
 		"TwWayAudio": "Dispositivos de audio de 2 vías",
-		"audio": "Camaras con audio",
+		"audio": "Cámara con audio",
 		"encoder": "Codificador",
 		"highRes": "Cámaras de extra alta resolución"
 	},
@@ -69,7 +69,7 @@
 			"sdk": {
 				"label": "SDK",
 				"shortLabel": "SDK",
-				"supported": "C++ cross platform SDK"
+				"supported": "C ++ multiplataforma SDK"
 			}
 		},
 		"platforms": {
@@ -87,7 +87,7 @@
 			"bundle": "Cliente y Servidor",
 			"camera_sdk": "Fuente de video SDK",
 			"client": "Cliente solamente",
-			"metadata_sdk": "Metadata SDK",
+			"metadata_sdk": "SDK de metadatos",
 			"package": "Paquete",
 			"server": "Servidor solamente",
 			"servertool": "Herramienta de configuración",
@@ -105,7 +105,7 @@
 		}
 	},
 	"ipvd": {
-		"resolutionArea": "Área",
+		"resolutionArea": "Area",
 		"count": "Contar",
 		"vendor": "Fabricante",
 		"model": "Modelo",
@@ -114,25 +114,25 @@
 		"maxFps": "FPS máx",
 		"primaryCodec": "Codec",
 		"isAudioSupported": "Audio",
-		"isTwAudioSupported": "Audio bidireccional",
+		"isTwAudioSupported": "audio bidireccional",
 		"isPtzSupported": "PTZ",
 		"isAptzSupported": "PTZ Avanzado",
 		"isAptzSupportedShort": "PTZ Av.",
-		"isFisheye": "Ojo de pez",
+		"isFisheye": "Fisheye",
 		"isMdSupported": "Movimiento",
 		"isIoSupported": "E/S",
 		"isH265": "H.265",
 		"isMultiSensor": "Multi Sensor",
-		"isAnalyticsSupported": "Analíticas",
-		"camera": "Camara",
+		"isAnalyticsSupported": "Analítica",
+		"camera": "Cámara",
 		"multiSensorCamera": "Cámara multisensor",
 		"encoder": "Codificador",
 		"dvr": "DVR",
 		"other": "Otro",
-		"PTZ cameras": "Camaras PTZ",
-		"Advanced PTZ cameras": "Cámaras PTZ avanzadas",
+		"PTZ cameras": "Cámaras PTZ",
+		"Advanced PTZ cameras": "Cámaras PTZ Avanzado",
 		"Fisheye Cameras": "Cámaras de ojo de pez",
-		"Cameras supporting H.265": "Cámaras de soporte H.265",
+		"Cameras supporting H.265": "Cámaras que soportan H.265",
 		"I / O modules": "Módulos de E / S",
 		"Multisensor Cameras": "Camaras multisensor",
 		"Cameras with 2-way audio": "Cámaras con audio de 2 vías",
@@ -140,7 +140,7 @@
 		"feedback": {
 			"a_Please": "Por favor",
 			"b_Link": "enviar una solicitud",
-			"c_Info": "para preguntas / preocupaciones adicionales con respecto a los dispositivos compatibles."
+			"c_Info": "para preguntas adicionales relacionadas a dispositivos soportados."
 		},
 		"disclaimer": "Esta lista se limita a los dispositivos que se encuentran en {{vmsName}} donde los usuarios han permitido el informe automático de las especificaciones del dispositivo a {{companyName}}. No se recopila información personal y cada usuario permanece completamente anónimo."
 	},
@@ -151,7 +151,7 @@
 		"Connector": "Conector",
 		"Data Analytics": "Analítica de datos",
 		"Drone": "Drone",
-		"Health Monitor": "Monitor de salud",
+		"Health Monitor": "Monitor de Salud",
 		"Storage": "Almacenamiento"
 	},
 	"messageDialogPlaceholders": {
@@ -181,7 +181,7 @@
 			},
 			"topic": {
 				"contact_sales": "Póngase en contacto con ventas para {{product}}",
-				"contact_support": "Póngase en contacto con soporte para {{product}}",
+				"contact_support": "Contactar a soporte para {{product}}",
 				"integration_feedback": "Comentarios para la integración {{product}}",
 				"ipvd_feedback_page": "Comentarios sobre la página de cámaras",
 				"ipvd_feedback_device": "Comentarios sobre {{product}}"
@@ -200,5 +200,5 @@
 	"Privacy": "Privacidad",
 	"Support": "Asistencia",
 	"Supported Devices": "Dispositivos soportados",
-	"Terms": "Condiciones"
+	"Terms": "Términos"
 }

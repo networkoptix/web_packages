@@ -218,7 +218,7 @@
             "sdk": {
                 "label": "SDK",
                 "shortLabel": "SDK",
-                "supported": "C++ cross platform SDK"
+                "supported": "C ++ SDK ข้ามแพลตฟอร์ม"
             },
             "windows": {
                 "label": "วินโดวส์",
@@ -291,7 +291,7 @@
         "isFisheye": "ฟิชอาย",
         "isH265": "H.265",
         "isIoSupported": "I / O",
-        "isMdSupported": "โมชั่น",
+        "isMdSupported": "การเคลื่อนไหว",
         "isMultiSensor": "เซ็นเซอร์หลายตัว",
         "isPtzSupported": "PTZ",
         "isTwAudioSupported": "เสียงสองทาง",

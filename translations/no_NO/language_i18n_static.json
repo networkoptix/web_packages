@@ -2,13 +2,13 @@
 	"search": {
 		"Search": "Søk",
 		"search_ipvd": "Søk etter modell eller produsent",
-		"filter applied": "filtrert visning",
-		"filters applied": "filtrert visning",
-		"Any": "Enhver",
+		"filter applied": "filter påført",
+		"filters applied": "filtre påført",
+		"Any": "Noen",
 		"selected": "valgt",
 		"vendor": "Produsent",
 		"vendors": "Produsenter",
-		"hardwareType": "Type",
+		"hardwareType": "Skriv",
 		"hardwareTypes": "Typer",
 		"minResolution": "Minimum oppløsning",
 		"analytics": "Analyser",
@@ -23,7 +23,7 @@
 		"multiSensor": "Multisensor kameraer",
 		"TwWayAudio": "2-veis lydenheter",
 		"audio": "Kameraer med lyd",
-		"encoder": "Enkoder",
+		"encoder": "Enkodere",
 		"highRes": "Ekstra høyoppløselige kameraer"
 	},
 	"downloads": {
@@ -69,7 +69,7 @@
 			"sdk": {
 				"label": "SDK",
 				"shortLabel": "SDK",
-				"supported": "C++ cross platform SDK"
+				"supported": "C + + kryssplattform SDK"
 			}
 		},
 		"platforms": {
@@ -109,8 +109,8 @@
 		"count": "Antall",
 		"vendor": "Produsent",
 		"model": "Modell",
-		"hardwareType": "Type",
-		"maxResolution": "Oppløsning",
+		"hardwareType": "Skriv",
+		"maxResolution": "Maks oppløsning",
 		"maxFps": "Max FPS",
 		"primaryCodec": "Kodek",
 		"isAudioSupported": "Lyd",
@@ -164,15 +164,15 @@
 	"dialogs": {
 		"merge": {
 			"connectToCloud": "Koble System du vil slå sammen med denne til <strong>{{cloudName}}</strong> eller slå sammen lokalt ved hjelp av <strong>{{vmsName}}</strong> Klienten.",
-			"mergeConfirmation": "Du er i ferd med å slå sammen systemer <strong>{{primarySystem}}</strong> og <strong>{{secondarySystem}}</strong>. Innstillinger og navnet vil bli tatt fra <strong>{{primarySystem}}</strong>.",
+			"mergeConfirmation": "Du er i ferd med å slå sammen systemene <strong>{{primarySystem}}</strong> og <strong>{{secondarySystem}}</strong>. Innstillinger og navnet vil bli tatt fra <strong>{{primarySystem}}</strong>.",
 			"primaryCannotMerge": "System {{targetSystem}} har en nyere programvareversjon som ikke er kompatibel med gjeldende system. Oppdater det nåværende systemet til <a href=\"/download\" target=\"_blank\" translate>siste versjon</a> å slå det sammen med {{targetSystem}} systemet.",
-			"primarySystemOffline": "System {{primarySystem}} er offline og kan ikke slås sammen med System {{targetSystem}}.",
-			"secondaryCannotMerge": "System {{targetSystem}} har en eldre programvareversjon som ikke er kompatibel med gjeldende system. Oppdater {{targetSystem}} til <a href=\"/download\" target=\"_blank\" translate>siste build</a> å slå dert sammen med det nåværende.",
+			"primarySystemOffline": "System {{primarySystem}} er frakoblet og kan ikke slås sammen med System {{targetSystem}}.",
+			"secondaryCannotMerge": "System {{targetSystem}} har en eldre programvareversjon som ikke er kompatibel med gjeldende system. Oppdater {{targetSystem}} til <a href=\"/download\" target=\"_blank\" translate>siste bygg</a> å slå dert sammen med det nåværende.",
 			"systemOffline": "System {{targetSystem}} er frakoblet og kan ikke slås sammen med det nåværende.",
 			"systemUnavailable": "System {{targetSystem}} er for tiden ikke tilgjengelig. Prøv igjen om noen få minutter eller kontakt"
 		},
 		"message": {
-			"failedToSend": "Meldingen ble ikke sendt.",
+			"failedToSend": "Meldingen har ikke sendt.",
 			"sent": "Meldingen er sendt.",
 			"title": {
 				"integration": "Kom i kontakt med {{companyName}}",
@@ -180,11 +180,11 @@
 				"ipvd_feedback_device": "Tilbakemelding om {{product}}"
 			},
 			"topic": {
-				"contact_sales": "Kontakt salg for {{product}}",
+				"contact_sales": "Kontakt salgsavdelingen for {{product}}",
 				"contact_support": "Kontakt brukerstøtte for {{product}}",
 				"integration_feedback": "Tilbakemelding for integrasjon {{product}}",
 				"ipvd_feedback_page": "Tilbakemelding for kameraer-siden",
-				"ipvd_feedback_device": "Tilbakemelding for {{product}}"
+				"ipvd_feedback_device": "Tilbakemelding om {{product}}"
 			}
 		}
 	},

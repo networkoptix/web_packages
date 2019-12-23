@@ -218,7 +218,7 @@
             "sdk": {
                 "label": "SDK",
                 "shortLabel": "SDK",
-                "supported": "C++ cross platform SDK"
+                "supported": "C++ plattformsoberoende SDK"
             },
             "windows": {
                 "label": "Windows",

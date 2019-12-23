@@ -69,7 +69,7 @@
 			"sdk": {
 				"label": "SDK",
 				"shortLabel": "SDK",
-				"supported": "C++ cross platform SDK"
+				"supported": "C++ plattformübergreifendes SDK"
 			}
 		},
 		"platforms": {
@@ -87,7 +87,7 @@
 			"bundle": "Client und Server",
 			"camera_sdk": "Video Source SDK",
 			"client": "Nur Client",
-			"metadata_sdk": "Metadata SDK",
+			"metadata_sdk": "Metadaten-SDK",
 			"package": "Paket",
 			"server": "Nur Server",
 			"servertool": "Konfigurationstool",
@@ -114,7 +114,7 @@
 		"maxFps": "Max FPS",
 		"primaryCodec": "Codec",
 		"isAudioSupported": "Audio",
-		"isTwAudioSupported": "Zweiwege-Audio",
+		"isTwAudioSupported": "zweiwege-Audio",
 		"isPtzSupported": "PTZ",
 		"isAptzSupported": "Erweiterte PTZ",
 		"isAptzSupportedShort": "Erw. PTZ",
