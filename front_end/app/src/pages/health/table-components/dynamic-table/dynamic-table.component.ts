@@ -213,7 +213,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         this.uri.pageOffset = window.pageYOffset;
         this.setPagedItems();
 
-        if (this.params && this.params.page !== pageParam) { // this.params.page is string - no strict comparison
+        if (this.params && parseInt(this.params.page, 10) !== pageParam) { // this.params.page is string - no strict comparison
             const queryParams: Params = {};
             queryParams.page = (this.currentPage === 1) ? undefined : this.currentPage;
 
