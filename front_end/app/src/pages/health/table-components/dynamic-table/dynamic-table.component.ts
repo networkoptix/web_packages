@@ -52,7 +52,6 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
     offset: number;
     currentPage: number;
     pageSize: number;
-    totalItems: number;
     pager: any = {};
     pagedItems: any[];
     pagerMaxSize: number;
@@ -60,12 +59,10 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
     serviceHeaders;
 
     windowSize: any = {};
-    windowScroll: any;
     clientHeight: number;
     offsetHeight: number;
     scrollHeight: number;
     tableScrollFixed: boolean;
-    elementWidth: any;
     revert: any;
 
     @ViewChild('thead', { static: false }) thead: ElementRef;
@@ -216,7 +213,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         this.uri.pageOffset = window.pageYOffset;
         this.setPagedItems();
 
-        if (this.params && this.params.page != pageParam) { // this.params.page is string - no strict comparison
+        if (this.params && this.params.page !== pageParam) { // this.params.page is string - no strict comparison
             const queryParams: Params = {};
             queryParams.page = (this.currentPage === 1) ? undefined : this.currentPage;
 
@@ -272,7 +269,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
 
     // Element with position 'fixed' is loosing the focus when page bottom is reached and cursor is moved (not 'mousewheel')
     // this ensures scroll wrapper will get the event... but content is not clickable during scroll. -- TT
-    @HostListener("mousewheel", ["$event"])
+    @HostListener('mousewheel', ['$event'])
     onMouseWheel(event) {
         if (this.tableScrollFixed) {
             this.renderer.setStyle(this.scrollWrapper.nativeElement, 'z-index', '-1');

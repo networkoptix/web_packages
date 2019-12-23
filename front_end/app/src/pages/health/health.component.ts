@@ -421,6 +421,9 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                 });
             });
         });
+        this.healthService.alertsValues.sort((alarmA: any, alarmB: any) => {
+            return alarmA._type > alarmB._type ? 1 : -1;
+        });
     }
 
     filterManifestHeaders(displayFilter: string) {
