@@ -3,8 +3,8 @@ import {
     OnChanges, SimpleChanges,
     OnInit, ViewEncapsulation, Inject,
     PLATFORM_ID, OnDestroy, AfterViewInit,
-    ElementRef, ViewChild,
-}                                         from '@angular/core';
+    ElementRef, ViewChild, HostListener, Renderer2,
+} from '@angular/core';
 import { NxConfigService }                from '../../../../services/nx-config';
 import { NxUriService }                   from '../../../../services/uri.service';
 import { NxUtilsService }                 from '../../../../services/utils.service';
@@ -66,6 +66,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
     scrollHeight: number;
     tableScrollFixed: boolean;
     elementWidth: any;
+    revert: any;
 
     uriSubscription: SubscriptionLike;
 
@@ -84,6 +85,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
         removeNewLines  : true
     };
 
+    @ViewChild('nxScrollWrapper', { static: false }) scrollWrapper: ElementRef;
     @ViewChild('nxTable', { static: false }) camerasTable: ElementRef;
 
     constructor(private router: Router,
@@ -91,6 +93,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
                 private uri: NxUriService,
                 private config: NxConfigService,
                 private scrollMechanicsService: NxScrollMechanicsService,
+                private renderer: Renderer2,
                 @Inject(PLATFORM_ID) private platformId: object) {
 
         this.LANG = this.language.getTranslations();
@@ -467,5 +470,19 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
 
     isBoolean(x: any): boolean {
         return !(typeof x === 'string' || typeof x === 'number');
+    }
+
+    // Element with position 'fixed' is loosing the focus when page bottom is reached and cursor is moved (not 'mousewheel')
+    // this ensures scroll wrapper will get the event... but content is not clickable during scroll. -- TT
+    @HostListener("mousewheel", ["$event"])
+    onMouseWheel(event) {
+        if (this.tableScrollFixed) {
+            this.renderer.setStyle(this.scrollWrapper.nativeElement, 'z-index', '-1');
+            clearTimeout(this.revert);
+            this.revert = setTimeout(() => {
+                this.renderer.setStyle(this.scrollWrapper.nativeElement, 'z-index', '1');
+                clearTimeout(this.revert);
+            }, 100);
+        }
     }
 }
