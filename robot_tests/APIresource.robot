@@ -7,6 +7,7 @@ Library           NoptixLibrary/Encode.py
 *** variables ***
 ${default name}    API made system
 ${customization}    default
+@{sys auth}    admin    qweasd 123
 
 *** Keywords ***
 Bind System
@@ -84,3 +85,11 @@ Log Out via API
     ${status}=   CloudPortalAPI.Log Out    ${ENV}    &{cookies}[sessionid]    &{cookies}[csrftoken]
     Should Be Equal as Strings    ${status}    200
     Reload Page
+
+Evaluate Auto System Settings via API
+    [arguments]    ${setting}    ${selected}
+    Create Digest Session    returnedSetting    http://10.1.5.169:7001    ${sys auth}
+    ${systemSettings} =     Get Request    returnedSetting   /api/systemSettings?${setting}   timeout=10
+    ${string} =    Convert To String    ${systemSettings.json()}
+    Should Contain    ${string}    ${selected}
+    

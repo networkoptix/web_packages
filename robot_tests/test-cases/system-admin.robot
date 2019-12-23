@@ -174,7 +174,6 @@ should open System page by link to not authorized user and show it, after owner 
 should open System page by link to user without permission and show alert (System info is unavailable: You have no access to this system)
     [tags]    Threaded
     Log In    ${EMAIL NOPERM}    ${password}
-    Validate Log In
     Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
     Wait Until Element Is Visible    ${SYSTEM NO ACCESS}
 
@@ -200,3 +199,69 @@ should open a system page in anonymous state
     Wait Until Element Is Visible    ${LOG IN MODAL} 
     Check Log In    button=None
     
+should show system settings and security settings
+    Log in to Auto Tests System    ${EMAIL OWNER}
+    Wait Until Elements Are Visible    
+    ...    ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}     
+    ...    ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}      
+    ...    ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}
+    ...    ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}
+    ...    ${ALLOW ONLY SECURE CHECKBOX VISIBLE}
+    ...    ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}
+    ...    ${LIMIT SESSION DURATION CHECKBOX VISIBLE}
+    Element Text Should Be    //label[@for="autoDiscoveryEnabled"]//span    ${ENABLE AUTO DISCOVERY TEXT}
+    Element Text Should Be    //label[@id="autoDiscoveryEnabledHelpBlock"]    ${ENABLE AUTO DISCOVERY DESCRIPTION TEXT}
+    Element Text Should Be    //label[@for="statisticsAllowed"]//span    ${SEND ANONYMOUS USAGE TEXT}
+    Element Text Should Be    //label[@id="statisticsAllowedHelpBlock"]    ${SEND ANONYMOUS USAGE DESCRIPTION TEXT}
+    Element Text Should Be    //label[@for="cameraSettingsOptimization"]//span    ${ALLOW SYSTEM OPTIMIZE TEXT}
+    
+    Element Text Should Be    //label[@for="auditTrailEnabled"]//span    ${ENABLE AUDIT TRAIL TEXT}
+    Element Text Should Be    //label[@id="auditTrailEnabledHelpBlock"]    ${ENABLE AUDIT TRAIL DESCRIPTION TEXT}
+    Element Text Should Be    //label[@for="trafficEncryptionForced"]//span    ${ALLOW ONLY SECURE TEXT}
+    Element Text Should Be    //label[@for="videoTrafficEncryptionForced"]//span    ${ENCRYPT VIDEO TRAFFIC TEXT}
+    Element Text Should Be    //label[@id="videoTrafficEncryptionForcedHelpBlock"]    ${ENCRYPT VIDEO TRAFFIC DESCRIPTION TEXT}
+    Element Text Should Be    //label[@for="sessionLimitMinutes"]//span    ${LIMIT SESSION DURATION TEXT}
+    
+settings on page should match settings on server
+    Log in to Auto Tests System    ${EMAIL OWNER}
+    Wait Until Elements Are Visible    
+    ...    ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}     
+    ...    ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}      
+    ...    ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}
+    ...    ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}
+    ...    ${ALLOW ONLY SECURE CHECKBOX VISIBLE}
+    ...    ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}
+    ...    ${LIMIT SESSION DURATION CHECKBOX VISIBLE}
+    ${status} =    Run Keyword and Return Status    Checkbox Should Be Selected     ${ENABLE AUTO DISCOVERY CHECKBOX REAL}
+    ${string} =    Convert To String    ${status}
+    ${selected} =    Convert To Lowercase    ${string}    
+    Evaluate Auto System Settings via API     autoDiscoveryEnabled    ${selected}
+    
+    ${status} =    Run Keyword and Return Status    Checkbox Should Be Selected     ${SEND ANONYMOUS USAGE CHECKBOX REAL}
+    ${string} =    Convert To String    ${status}
+    ${selected} =    Convert To Lowercase    ${string}    
+    Evaluate Auto System Settings via API     statisticsAllowed    ${selected}
+    
+    ${status} =    Run Keyword and Return Status    Checkbox Should Be Selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX REAL}
+    ${string} =    Convert To String    ${status}
+    ${selected} =    Convert To Lowercase    ${string}    
+    Evaluate Auto System Settings via API     cameraSettingsOptimization    ${selected}
+    
+    ${status} =    Run Keyword and Return Status    Checkbox Should Be Selected     ${ENABLE AUDIT TRAIL CHECKBOX REAL}
+    ${string} =    Convert To String    ${status}
+    ${selected} =    Convert To Lowercase    ${string}    
+    Evaluate Auto System Settings via API     auditTrailEnabled    ${selected}
+    
+    ${status} =    Run Keyword and Return Status    Checkbox Should Be Selected     ${ALLOW ONLY SECURE CHECKBOX REAL}
+    ${string} =    Convert To String    ${status}
+    ${selected} =    Convert To Lowercase    ${string}    
+    Evaluate Auto System Settings via API     trafficEncryptionForced    ${selected}
+    
+    ${status} =    Run Keyword and Return Status    Checkbox Should Be Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX REAL}
+    ${string} =    Convert To String    ${status}
+    ${selected} =    Convert To Lowercase    ${string}    
+    Evaluate Auto System Settings via API     videoTrafficEncryptionForced    ${selected}
+    
+    ${status} =    Run Keyword and Return Status    Checkbox Should Be Selected     ${LIMIT SESSION DURATION CHECKBOX REAL}
+    Run Keyword If    ${status}==False    Evaluate Auto System Settings via API     sessionLimitMinutes    0
+ 
