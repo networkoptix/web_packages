@@ -1,0 +1,3 @@
+Buna ziua, {{ message.userFullName }}
+{{ message.sender_name}} ({{ message.sender_email }}) gave the following feedback{{#message.product}} for {{ message.product }}{{/message.product}}:
+<pre>{{ message.message }}</pre>
