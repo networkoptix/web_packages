@@ -48,6 +48,7 @@ Restart
     Register Keyword To Run On Failure    NONE
     ${status}    Run Keyword And Return Status    Validate Log In
     Register Keyword To Run On Failure    Failure Tasks
+    Press Keys    None    ESC
     Run Keyword If    ${status}    Log Out
     Go To    ${url}
 
@@ -55,6 +56,7 @@ Clean up
     Register Keyword To Run On Failure    NONE
     ${status}    Run Keyword And Return Status    Validate Log In
     Register Keyword To Run On Failure    Failure Tasks
+    Press Keys    None    ESC
     Run Keyword If    ${status}    Log Out
     Restore Password using API    ${email}
 
