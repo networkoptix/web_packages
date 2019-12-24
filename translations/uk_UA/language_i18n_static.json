@@ -118,7 +118,7 @@
 		"isPtzSupported": "PTZ",
 		"isAptzSupported": "Розширений PTZ",
 		"isAptzSupportedShort": "Розш. PTZ",
-		"isFisheye": "Fisheye",
+		"isFisheye": "Риб'яче око",
 		"isMdSupported": "Рух",
 		"isIoSupported": "Ввід/вивід",
 		"isH265": "H.265",
@@ -151,7 +151,7 @@
 		"Connector": "З'єднувач",
 		"Data Analytics": "Аналітика даних",
 		"Drone": "Дрон",
-		"Health Monitor": "Моніторинг Стану",
+		"Health Monitor": "Моніторинг ресурсів",
 		"Storage": "Сховище"
 	},
 	"messageDialogPlaceholders": {

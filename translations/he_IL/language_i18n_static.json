@@ -166,7 +166,7 @@
 			"connectToCloud": "חבר מערכת שברצונך למזג עם מערכת זו <strong>{{cloudName}}</strong> או מזג מקומי באמצעות <strong>{{vmsName}}</strong> לקוח.",
 			"mergeConfirmation": "אתה עומד למזג מערכות <strong>{{primarySystem}}</strong> ו - <strong>{{secondarySystem}}</strong>. ההגדרות והשם יילקחו מ <strong>{{primarySystem}}</strong>.",
 			"primaryCannotMerge": "למערכת {{targetSystem}} יש גרסת תוכנה חדשה יותר שאינה תואמת למערכת הנוכחית. עדכן את המערכת הנוכחית <a href=\"/download\" target=\"_blank\" translate>לגרסא המתאימה</a> כדי למזג אותו עם {{targetSystem}}.",
-			"primarySystemOffline": "מערכת {{primarySystem}} במצב לא מקוון ולא ניתן למזגה עם הנוכחית.",
+			"primarySystemOffline": "המערכת {{primarySystem}} אינה זמינה ולא ניתן למזגה עם מערכת {{targetSystem}}.",
 			"secondaryCannotMerge": "למערכת {{targetSystem}} יש גרסת תוכנה ישנה יותר שאינה תואמת למערכת הנוכחית. עדכן {{targetSystem}} ל <a href=\"/download\" target=\"_blank\" translate>לגרסא האחרונה</a> על מנת למזג אותו עם הנוכחי.",
 			"systemOffline": "מערכת {{targetSystem}} במצב לא מקוון ולא ניתן למזגה עם הנוכחית.",
 			"systemUnavailable": "לא ניתן להגיע למערכת {{targetSystem}}. נסה שוב בעוד מספר דקות או צור קשר"
@@ -199,6 +199,6 @@
 	"Integrations": "אינטגרציות",
 	"Privacy": "פרטיות",
 	"Support": "תמיכה",
-	"Supported Devices": "מכשירים נתמכים",
+	"Supported Devices": "התקנים נתמכים",
 	"Terms": "תנאי שימוש"
 }

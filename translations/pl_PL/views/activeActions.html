@@ -34,7 +34,7 @@
         <form name="reactivateAccount" class="form-horizontal" ng-if="!reactivate.success && !data.email" novalidate>
             <div class="form-group" validate-field>
                 <div class="col-md-4 justify-content-start justify-content-md-end">
-                    <label for="emailReactivate" class="control-label">E-mail</label>
+                    <label for="emailReactivate" class="control-label">Email</label>
                 </div>
                 <div class="col-sm-4">
                     <input type="email" class="form-control"
@@ -72,7 +72,7 @@
         <form name="restorePassword" class="form-horizontal" novalidate>
             <div class="form-group" validate-field>
                 <div class="col-md-4 justify-content-start justify-content-md-end">
-                    <label for="email" class="col-sm-4 control-label">E-mail</label>
+                    <label for="email" class="col-sm-4 control-label">Email</label>
                 </div>
                 <div class="col-sm-4">
                     <input type="email" class="form-control" validate-email
@@ -100,7 +100,7 @@
     <div ng-if="data.restoreCode || changeSuccess">
         <div ng-if="change.success || changeSuccess">
             <h1 class="process-success"  translate>
-                Hasło ustawione poprawnie
+                Hasło zostało pomyślnie zapisane
             </h1>
             <div class="process-success d-flex justify-content-center">
                 <a class="btn btn-default" href="/login" translate>Zaloguj się</a>

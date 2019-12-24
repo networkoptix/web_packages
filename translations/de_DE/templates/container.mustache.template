@@ -72,7 +72,7 @@
                             </td>
                         {{/system}}
                         <td class="left-border">
-                            <b>Unterstützung</b><br>
+                            <b>Support</b><br>
                             <a href="%SUPPORT_LINK%">%SUPPORT_LINK_TEXT%</a>
                         </td>
                     </tr>

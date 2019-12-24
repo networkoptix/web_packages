@@ -14,7 +14,7 @@
     "All cloud users will be deleted.": "Alle sky-brukere vil bli slettet.",
     "All results": "Alle Resultater",
     "Analytics": "Analyser",
-    "Analytics Event": "Videoanalyse-regel",
+    "Analytics Event": "Analyse-hendelser",
     "Analytics Events": "Analyse-hendelser",
     "Any": "Noen",
     "Audio": "Lyd",
@@ -85,14 +85,14 @@
     "Release notes": "Utgivelsesnotater",
     "Remember me": "Husk meg",
     "Requirements": "Krav",
-    "Resend activation email": "Send aktiverings e-post igjen",
+    "Resend activation email": "Send aktiverings e-post på nytt",
     "Resolution(max)": "Oppløsning (maks)",
     "Save": "Lagre",
     "Search in google": "Søk i google",
     "Secondary Stream": "Sekundær strøm",
     "Send": "Send",
     "Send feedback about this device": "Send tilbakemelding om denne enheten",
-    "Settings": "Innstillingar",
+    "Settings": "Innstillinger",
     "Share": "Del",
     "Show All": "Vis alle",
     "Some of your servers don't support cloud System merge because of outdated software version.": "Noen av serverne dine støtter ikke Cloud-systemfusjonen på grunn av utdatert programvareversjon.",
@@ -164,7 +164,7 @@
                 "contact_sales": "Kontakt salgsavdelingen for {{product}}",
                 "contact_support": "Kontakt brukerstøtte for {{product}}",
                 "integration_feedback": "Tilbakemelding for integrasjon {{product}}",
-                "ipvd_feedback_device": "Tilbakemelding om {{product}}",
+                "ipvd_feedback_device": "Tilbakemelding for {{product}}",
                 "ipvd_feedback_page": "Tilbakemelding for kameraer-siden"
             }
         }
@@ -320,7 +320,7 @@
         "ipvd": "Ved å sende inn dette skjemaet samtykker du i å bli kontaktet av %COMPANY_NAME%.\nDu vil finne %COMPANY_NAME% personvernregler <a href=\"%PRIVACY_LINK%\" target=\"blank\">her</a> som inkluderer instruksjoner om hvordan du kan trekke tilbake ditt samtykke."
     },
     "search": {
-        "Any": "Noen",
+        "Any": "Enhver",
         "Search": "Søk",
         "analytics": "Analyser",
         "analyticsSelected": "analysehendelser",

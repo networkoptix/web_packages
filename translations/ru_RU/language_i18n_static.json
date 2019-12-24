@@ -5,7 +5,7 @@
 		"filter applied": "фильтр применен",
 		"filters applied": "фильтры применены",
 		"Any": "Любой",
-		"selected": "выбраны",
+		"selected": "выбрано",
 		"vendor": "Производитель",
 		"vendors": "Производители",
 		"hardwareType": "Тип",
@@ -86,10 +86,10 @@
 		"appTypes": {
 			"bundle": "Клиент и сервер",
 			"camera_sdk": "SDK источника видео",
-			"client": "Клиент",
+			"client": "Только клиент",
 			"metadata_sdk": "Метаданные SDK",
 			"package": "Пакет",
-			"server": "Сервер",
+			"server": "Только сервер",
 			"servertool": "Инструмент настройки",
 			"storage_sdk": "SDK для интеграции хранилищ",
 			"video_source_sdk": "SDK источника видео"
@@ -135,7 +135,7 @@
 		"Cameras supporting H.265": "Камеры с поддержкой H.265",
 		"I / O modules": "Модули ввода/вывода",
 		"Multisensor Cameras": "Мультисенсорные камеры",
-		"Cameras with 2-way audio": "Камеры с двусторонним звуком",
+		"Cameras with 2-way audio": "Камеры с 2х-сторонним звуком",
 		"Extra high resolution cameras": "Камеры сверхвысокого разрешения",
 		"feedback": {
 			"a_Please": "Пожалуйста",
@@ -183,7 +183,7 @@
 				"contact_sales": "Связаться с отделом продаж по поводу {{product}}",
 				"contact_support": "Обратитесь в службу поддержки по поводу {{product}}",
 				"integration_feedback": "Отзыв об интеграции {{product}}",
-				"ipvd_feedback_page": "Отзыв о странице камер",
+				"ipvd_feedback_page": "Отзыв по странице камер",
 				"ipvd_feedback_device": "Отзыв о {{product}}"
 			}
 		}

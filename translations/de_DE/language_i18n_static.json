@@ -114,7 +114,7 @@
 		"maxFps": "Max FPS",
 		"primaryCodec": "Codec",
 		"isAudioSupported": "Audio",
-		"isTwAudioSupported": "zweiwege-Audio",
+		"isTwAudioSupported": "Zweiwege-Audio",
 		"isPtzSupported": "PTZ",
 		"isAptzSupported": "Erweiterte PTZ",
 		"isAptzSupportedShort": "Erw. PTZ",

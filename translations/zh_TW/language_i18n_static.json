@@ -8,7 +8,7 @@
 		"selected": "已選取",
 		"vendor": "製造商",
 		"vendors": "製造商",
-		"hardwareType": "類型",
+		"hardwareType": "型態",
 		"hardwareTypes": "類型",
 		"minResolution": "最低解析度",
 		"analytics": "分析",
@@ -109,7 +109,7 @@
 		"count": "總計",
 		"vendor": "製造商",
 		"model": "型號",
-		"hardwareType": "類型",
+		"hardwareType": "型態",
 		"maxResolution": "最大解析度",
 		"maxFps": "每秒最大幀數（FPS）",
 		"primaryCodec": "編碼器",
@@ -199,6 +199,6 @@
 	"Integrations": "整合",
 	"Privacy": "隱私政策",
 	"Support": "支援",
-	"Supported Devices": "支援設備",
+	"Supported Devices": "支持設備",
 	"Terms": "條款"
 }

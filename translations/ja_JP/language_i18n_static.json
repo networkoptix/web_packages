@@ -17,7 +17,7 @@
 	"cameraFilters": {
 		"ptz": "PTZカメラ",
 		"aptz": "高度なPTZを搭載したカメラ",
-		"fisheye": "魚眼レンズカメラ",
+		"fisheye": "魚眼カメラ",
 		"H265": "H.265カメラ",
 		"IO": "I/Oモジュール",
 		"multiSensor": "マルチセンサーカメラ",
@@ -123,7 +123,7 @@
 		"isIoSupported": "I/O",
 		"isH265": "H.265",
 		"isMultiSensor": "マルチセンサー",
-		"isAnalyticsSupported": "分析",
+		"isAnalyticsSupported": "解析",
 		"camera": "カメラ",
 		"multiSensorCamera": "マルチセンサーカメラ",
 		"encoder": "エンコーダー",
@@ -151,7 +151,7 @@
 		"Connector": "コネクタ",
 		"Data Analytics": "データ分析",
 		"Drone": "ドローン",
-		"Health Monitor": "ヘルスモニタ",
+		"Health Monitor": "ヘルスモニター",
 		"Storage": "ストレージ"
 	},
 	"messageDialogPlaceholders": {

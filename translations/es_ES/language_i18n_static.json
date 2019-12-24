@@ -20,9 +20,9 @@
 		"fisheye": "Camaras de ojo de pez",
 		"H265": "Cámaras H.265",
 		"IO": "Módulos de E / S",
-		"multiSensor": "Cámaras multisensores",
+		"multiSensor": "Cámaras multisensor",
 		"TwWayAudio": "Dispositivos de audio de 2 vías",
-		"audio": "Cámara con audio",
+		"audio": "Camaras con audio",
 		"encoder": "Codificador",
 		"highRes": "Cámaras de extra alta resolución"
 	},
@@ -105,7 +105,7 @@
 		}
 	},
 	"ipvd": {
-		"resolutionArea": "Area",
+		"resolutionArea": "Área",
 		"count": "Contar",
 		"vendor": "Fabricante",
 		"model": "Modelo",
@@ -114,33 +114,33 @@
 		"maxFps": "FPS máx",
 		"primaryCodec": "Codec",
 		"isAudioSupported": "Audio",
-		"isTwAudioSupported": "audio bidireccional",
+		"isTwAudioSupported": "Audio bidireccional",
 		"isPtzSupported": "PTZ",
 		"isAptzSupported": "PTZ Avanzado",
 		"isAptzSupportedShort": "PTZ Av.",
-		"isFisheye": "Fisheye",
+		"isFisheye": "Ojo de pez",
 		"isMdSupported": "Movimiento",
 		"isIoSupported": "E/S",
 		"isH265": "H.265",
 		"isMultiSensor": "Multi Sensor",
 		"isAnalyticsSupported": "Analítica",
-		"camera": "Cámara",
+		"camera": "Camara",
 		"multiSensorCamera": "Cámara multisensor",
 		"encoder": "Codificador",
 		"dvr": "DVR",
 		"other": "Otro",
-		"PTZ cameras": "Cámaras PTZ",
-		"Advanced PTZ cameras": "Cámaras PTZ Avanzado",
+		"PTZ cameras": "Camaras PTZ",
+		"Advanced PTZ cameras": "Cámaras PTZ avanzadas",
 		"Fisheye Cameras": "Cámaras de ojo de pez",
-		"Cameras supporting H.265": "Cámaras que soportan H.265",
+		"Cameras supporting H.265": "Cámaras de soporte H.265",
 		"I / O modules": "Módulos de E / S",
 		"Multisensor Cameras": "Camaras multisensor",
 		"Cameras with 2-way audio": "Cámaras con audio de 2 vías",
-		"Extra high resolution cameras": "Cámaras de extra alta resolución",
+		"Extra high resolution cameras": "Cámaras de alta resolución extra",
 		"feedback": {
 			"a_Please": "Por favor",
 			"b_Link": "enviar una solicitud",
-			"c_Info": "para preguntas adicionales relacionadas a dispositivos soportados."
+			"c_Info": "para preguntas / preocupaciones adicionales con respecto a los dispositivos compatibles."
 		},
 		"disclaimer": "Esta lista se limita a los dispositivos que se encuentran en {{vmsName}} donde los usuarios han permitido el informe automático de las especificaciones del dispositivo a {{companyName}}. No se recopila información personal y cada usuario permanece completamente anónimo."
 	},
@@ -151,7 +151,7 @@
 		"Connector": "Conector",
 		"Data Analytics": "Analítica de datos",
 		"Drone": "Drone",
-		"Health Monitor": "Monitor de Salud",
+		"Health Monitor": "Monitor de salud",
 		"Storage": "Almacenamiento"
 	},
 	"messageDialogPlaceholders": {
@@ -176,14 +176,14 @@
 			"sent": "El mensaje ha sido enviado.",
 			"title": {
 				"integration": "Ponte en contacto con {{companyName}}",
-				"ipvd_feedback_page": "Comentarios sobre la página de cámaras",
+				"ipvd_feedback_page": "Comentarios para la página de cámaras",
 				"ipvd_feedback_device": "Comentarios sobre {{product}}"
 			},
 			"topic": {
 				"contact_sales": "Póngase en contacto con ventas para {{product}}",
-				"contact_support": "Contactar a soporte para {{product}}",
+				"contact_support": "Póngase en contacto con soporte para {{product}}",
 				"integration_feedback": "Comentarios para la integración {{product}}",
-				"ipvd_feedback_page": "Comentarios sobre la página de cámaras",
+				"ipvd_feedback_page": "Comentarios para la página de cámaras",
 				"ipvd_feedback_device": "Comentarios sobre {{product}}"
 			}
 		}

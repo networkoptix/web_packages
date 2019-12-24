@@ -30,7 +30,7 @@
                             form="reactivateAccount"
                             button-text="$root.L.activeActions.sendConfirm"></process-button>
         </div>
-        <h1 ng-if="!data.email">Aktiváld a fiókod</h1>
+        <h1 ng-if="!data.email">Fiók aktiválása</h1>
         <form name="reactivateAccount" class="form-horizontal" ng-if="!reactivate.success && !data.email" novalidate>
             <div class="form-group" validate-field>
                 <div class="col-md-4 justify-content-start justify-content-md-end">
@@ -63,7 +63,7 @@
 
     <div ng-if="restoringSuccess">
         <h1 class="process-success">
-            Jelszó visszaállítási teendők megadását e-mailen megküldtük <br>{{data.email}}
+            Jelszóvisszaállítási teendők megadását e-mailen megküldtük <br>{{data.email}}
         </h1>
     </div>
 

@@ -35,7 +35,7 @@
     "Developer": "Développeur",
     "Disconnect": "Déconnecter",
     "Disconnect System from %CLOUD_NAME%?": "Déconnecter le système de %CLOUD_NAME% ?",
-    "Download": "Téléchargement",
+    "Download": "Télécharger",
     "Download %VMS_NAME%": "Télécharger %VMS_NAME%",
     "Download Chrome": "Télécharger Chrome",
     "Download Firefox": "Télécharger Firefox",
@@ -222,7 +222,7 @@
             },
             "windows": {
                 "label": "Windows",
-                "supported": "7, 8, 8.1, 10/Enterprise, 2008 R2, 2012, 2012 R2, 2016 v1607"
+                "supported": "7, 8, 8.1, 10 / Enterprise, 2008 R2, 2012, 2012 R2, 2016 v1607"
             }
         },
         "mobile": {

@@ -4,7 +4,7 @@ Klicka på länken för att se utkast {{ message.id }} för {{ message.product }
 
 Länk till granskning: {{ config.portal_url }}/ admin / cms / productcustomizationreview /{{ message.id }}/ change /
 
-På den här sidan kan du
+På denna sida kan du
 1) Skapa en förhandsgranskning för att se de senaste ändringarna.
 2) Publicera den här versionen som uppdaterar allt innehåll.
 3) Redigera sammanhang genom att klicka på redigera inspelningsknappen. För att se dessa ändringar måste du skapa en ny version.

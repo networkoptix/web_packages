@@ -32,7 +32,7 @@
                     class="nav navbar-nav auth-visible d-none d-md-flex">
 
                     <li ng-class="{ 'active' :active.view }">
-                        <a class="inset" ng-href="/systems/{{activeSystem.id}}/view">Вид</a>
+                        <a class="inset" ng-href="/systems/{{activeSystem.id}}/view">Просмотр</a>
                     </li>
                     <li ng-class="{ 'active' :active.settings}">
                         <a class="inset" ng-href="/systems/{{activeSystem.id}}">Настройки</a>
@@ -62,7 +62,7 @@
                     <li ng-if="singleSystem" class="no-hover collapse-second hidden-collapse">
                         <a href="" class="m-0 border-0">
                             <span class="glyphicon glyphicon-home"></span>
-                            <span class="ellipsis">{{activeSystem.name}}</span>
+                            <span class="ellipsis"> {{activeSystem.name}} </span>
                         </a>
                     </li>
 

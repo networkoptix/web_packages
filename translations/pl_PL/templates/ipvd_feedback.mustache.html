@@ -1,4 +1,4 @@
 <h1>Witaj {{ message.userFullName }}</h1>
 
-<a href="mailto:{{ message.sender_email }}">{{ message.sender_name }}</a>przesłał następującą opinię {{#message.product}} o {{ message.product }}{{/message.product}}:
+<a href="mailto:{{ message.sender_email }}">{{ message.sender_name }}</a> przesłał następującą opinię {{#message.product}} do {{ message.product }}{{/message.product}}:
 <div>{{ message.message }}</div>

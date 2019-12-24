@@ -114,11 +114,11 @@
 		"maxFps": "Maksimum FPS",
 		"primaryCodec": "Kodek",
 		"isAudioSupported": "Ses",
-		"isTwAudioSupported": "çift Yönlü Ses",
+		"isTwAudioSupported": "Çift Yönlü Ses",
 		"isPtzSupported": "PTZ",
 		"isAptzSupported": "Gelişmiş PTZ",
 		"isAptzSupportedShort": "Gelş. PTZ",
-		"isFisheye": "Balıkgözü",
+		"isFisheye": "Fish-Eye",
 		"isMdSupported": "Hareket",
 		"isIoSupported": "G/Ç",
 		"isH265": "H.265",
@@ -151,7 +151,7 @@
 		"Connector": "Konnektör",
 		"Data Analytics": "Veri Analizleri",
 		"Drone": "Drone",
-		"Health Monitor": "Durum İzleyici",
+		"Health Monitor": "Performans İzleme",
 		"Storage": "Depolama"
 	},
 	"messageDialogPlaceholders": {

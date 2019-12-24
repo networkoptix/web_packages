@@ -86,7 +86,7 @@
 		"appTypes": {
 			"bundle": "Cliente e Servidor",
 			"camera_sdk": "Video Source SDK",
-			"client": "Apenas cliente",
+			"client": "Somente cliente",
 			"metadata_sdk": "Metadata SDK",
 			"package": "Package",
 			"server": "Somente servidor",
@@ -152,7 +152,7 @@
 		"Data Analytics": "Data Analytics",
 		"Drone": "Drone",
 		"Health Monitor": "Monitor de Saúde",
-		"Storage": "Armazenamento"
+		"Storage": "Storage"
 	},
 	"messageDialogPlaceholders": {
 		"feedback": "Make sure you include your camera model and manufacturer..."

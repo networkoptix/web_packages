@@ -86,7 +86,7 @@
 		"appTypes": {
 			"bundle": "Máy chủ và Máy trạm",
 			"camera_sdk": "SDK nguồn video",
-			"client": "Chỉ khách hàng",
+			"client": "Chỉ máy trạm",
 			"metadata_sdk": "Metadata SDK",
 			"package": "Gói",
 			"server": "Chỉ máy chủ",
@@ -198,7 +198,7 @@
 	"Download %VMS_NAME%": "Tải xuống %VMS_NAME%",
 	"Integrations": "Tích hợp",
 	"Privacy": "Quyền riêng tư",
-	"Support": "Ủng hộ",
+	"Support": "Hỗ trợ",
 	"Supported Devices": "Thiết bị hỗ trợ",
 	"Terms": "Điều khoản"
 }

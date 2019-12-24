@@ -177,14 +177,14 @@
 			"title": {
 				"integration": "Skontaktuj się z {{companyName}}",
 				"ipvd_feedback_page": "Opinia dotycząca listy kamer",
-				"ipvd_feedback_device": "Opinia o {{product}}"
+				"ipvd_feedback_device": "Opinie dotyczące {{product}}"
 			},
 			"topic": {
 				"contact_sales": "Kontakt do sprzedawcy {{product}}",
 				"contact_support": "Kontakt do wsparcia technicznego {{product}}",
 				"integration_feedback": "Opinia dotycząca integracji {{product}}",
-				"ipvd_feedback_page": "Opinia dotycząca listy kamer",
-				"ipvd_feedback_device": "Opinia o {{product}}"
+				"ipvd_feedback_page": "Strona z opiniami dotyczącymi kamer",
+				"ipvd_feedback_device": "Opinie dotyczące {{product}}"
 			}
 		}
 	},

@@ -1,6 +1,6 @@
 <div class="card card-condensed" ng-if="system.isMine">
     <div class="card-body">
-        <h2 class="mb-3">Il suo sistema</h2>
+        <h2 class="mb-3">Il tuo sistema</h2>
         <p>
             <button class="btn btn-default mw-100"
                     ng-disabled="currentlyMerging && !isMaster"
@@ -50,7 +50,7 @@
         <div ng-if="mergeTargetSystem.name" >
             <div><strong>{{mergeTargetSystem.name}}</strong> è stato unito a questo sistema</div>
             <hr />
-            <div class="merge-info-text light-text">A seconda della dimensione del database può richiedere fino a diverse ore</div>
+            <div class="merge-info-text light-text">A seconda delle dimensioni del database possono essere necessarie diverse ore</div>
         </div>
         <div ng-if="!mergeTargetSystem.name">Termine unione sistemi</div>
     </div>

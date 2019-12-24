@@ -76,7 +76,7 @@
     "Other releases, patches and beta versions": "Muut julkaisut, korjaukset ja beta-versiot",
     "PTZ": "PTZ",
     "Password": "Salasana",
-    "Password is required": "Salasana tarvitaan",
+    "Password is required": "Salasana on pakollinen",
     "Password:": "Salasana:",
     "Permissions": "Käyttöoikeudet",
     "Popularity": "Suosio",
@@ -178,12 +178,12 @@
     "dialogs.merge.systemUnavailable": "Järjestelmä {{targetSystem}} ei ole tällä hetkellä tavoitettavissa. Yritä uudelleen muutamassa minuutissa tai ota yhteyttä",
     "downloads": {
         "appTypes": {
-            "bundle": "Client-sovellus ja palvelin",
+            "bundle": "Client ja palvelin",
             "camera_sdk": "Videolähteen SDK",
             "client": "Vain Client-sovellus",
             "metadata_sdk": "Metadata SDK",
             "package": "Paketti",
-            "server": "Vain palvelin",
+            "server": "Vain palvelin-sovellus",
             "servertool": "Konfigurointityökalu",
             "storage_sdk": "Storage SDK",
             "video_source_sdk": "Videolähteen SDK"
@@ -212,7 +212,7 @@
                 "supported": "OS X 10.13: \"High Sierra\", 10.14: \"Mojave\", 10.15 \"Catalina\""
             },
             "macos": {
-                "label": "Mac OSX",
+                "label": "Mac OS",
                 "supported": "OS X 10.13: \"High Sierra\", 10.14: \"Mojave\", 10.15 \"Catalina\""
             },
             "sdk": {

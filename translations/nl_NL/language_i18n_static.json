@@ -6,7 +6,7 @@
 		"filters applied": "filters toegepast",
 		"Any": "Elke",
 		"selected": "geselecteerd",
-		"vendor": "Fabrikant",
+		"vendor": "Fabrikanten",
 		"vendors": "Fabrikanten",
 		"hardwareType": "Type",
 		"hardwareTypes": "Types",
@@ -198,7 +198,7 @@
 	"Download %VMS_NAME%": "Download %VMS_NAME%",
 	"Integrations": "Integraties",
 	"Privacy": "Privacy",
-	"Support": "Support",
+	"Support": "Ondersteuning",
 	"Supported Devices": "Ondersteunde apparaten",
 	"Terms": "Voorwaarden"
 }
