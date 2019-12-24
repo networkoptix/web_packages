@@ -16,7 +16,7 @@ import { NxScrollMechanicsService }              from '../../services/scroll-mec
 import { AutoUnsubscribe }                       from 'ngx-auto-unsubscribe';
 import { NxSystemAPI, NxSystemAPIService } from '../../services/system-api.service';
 import { NxAppStateService } from '../../services/nx-app-state.service';
-import { BreakpointObserver, BreakpointState } from "@angular/cdk/layout";
+import { BreakpointObserver } from '@angular/cdk/layout';
 
 @AutoUnsubscribe()
 @Component({
@@ -29,7 +29,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
     LANG: any;
     CONFIG: any;
     account: any;
-    system: NxSystem;
+    system: NxSystem|any;
     server: NxSystemAPI;
 
     menu: any;
@@ -105,6 +105,8 @@ export class NxHealthComponent implements OnInit, OnDestroy {
 
         this.route.params.subscribe((params: any) => {
             const systemId = params.systemId;
+            // Promise holder so that if hm is in standalone mode its skips a systems getInfo call.
+            let infoPromise = Promise.resolve();
             this.accountService.get().then((account) => {
                 this.healthService.ready = false;
                 this.systemReady = false;
@@ -113,31 +115,25 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                     this.system = this.systemService.createSystem(account.email, systemId);
                     this.healthService.system = this.system;
                     this.menu.base = `${this.CONFIG.systemMenu.baseUrl}${this.system.id}${this.CONFIG.systemHealthMenu.baseUrl}`;
-
-                    this.system.getInfo().then(() => {
-                        this.systemReady = true;
-
-                        this.system.mediaserver.getAggregateHealthReport()
-                            .subscribe((result: any) => {
-                                this.setupReport(result);
-                            }, () => {
-                                this.healthService.ready = false;
-                            });
-                    });
+                    infoPromise = this.system.getInfo();
                 } else {
-                    this.systemReady = true;
-                    this.server = this.serverApi.createConnection(
+                    // Create a mock system. All we need is the mediaserver.
+                    this.system = {id: '', mediaserver: undefined};
+                    this.system.mediaserver = this.serverApi.createConnection(
                         undefined, undefined,
                         undefined, () => {}
                     );
                     this.menu.base = '/health';
-                    this.server.getAggregateHealthReport()
+                }
+                infoPromise.then(() => {
+                    this.systemReady = true;
+                    this.system.mediaserver.getAggregateHealthReport()
                         .subscribe((result: any) => {
                             this.setupReport(result);
                         }, () => {
                             this.healthService.ready = false;
                         });
-                }
+                });
             });
         });
 
@@ -494,14 +490,8 @@ export class NxHealthComponent implements OnInit, OnDestroy {
 
     updateValues() {
         this.healthService.ready = false;
-        if (this.system) {
-            this.system.mediaserver.getAggregateHealthReport().subscribe((data) => {
-                this.setupReport(data);
-            });
-        } else if (this.server) {
-            this.server.getAggregateHealthReport().subscribe((data) => {
-                this.setupReport(data);
-            });
-        }
+        this.system.mediaserver.getAggregateHealthReport().subscribe((data) => {
+            this.setupReport(data);
+        });
     }
 }

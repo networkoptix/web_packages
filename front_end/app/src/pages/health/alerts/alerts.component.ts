@@ -109,7 +109,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
                 this.mobileDetailMode = false;
             }
 
-            setTimeout(() => this.setLayout());
+            this.setLayout();
         });
     }
 
@@ -324,7 +324,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
                 this.mobileDetailMode = true;
             }
 
-            setTimeout(() => this.setLayout());
+            this.setLayout();
 
         } else {
             this.resetActiveEntity();
@@ -337,7 +337,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         this.activePanelParams = undefined;
         this.mobileDetailMode = false;
 
-        setTimeout(() => this.setLayout());
+        this.setLayout();
 
         if (updateURI) {
             const queryParams: Params = {};
@@ -348,21 +348,23 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
     }
 
     private setLayout() {
-        if (this.elementTable) {
-            // measure table (not wrapper) width
-            const tableWidth = this.elementTable.nativeElement.querySelectorAll('table')[0].offsetWidth;
-            // area available
-            const areaWidth = this.area.nativeElement.offsetWidth;
-            // area available to the table (2/3 + gutters
-            const availAreaWidth = areaWidth/3*2 + 46;
+        setTimeout(() => {
+            if (this.elementTable) {
+                // measure table (not wrapper) width
+                const tableWidth = this.elementTable.nativeElement.querySelectorAll('table')[0].offsetWidth;
+                // area available
+                const areaWidth = this.area.nativeElement.offsetWidth;
+                // area available to the table (2/3 + gutters
+                const availAreaWidth = areaWidth / 3 * 2 + 46;
 
-            const isTableFit = (availAreaWidth > tableWidth);
-            if (this.activeTableEntity) {
-                this.fixedLayoutClass = (isTableFit) ? '' : 'fixedLayout--with-panel';
-            } else {
-                this.fixedLayoutClass = (isTableFit) ? '' : 'fixedLayout--no-panel';
+                const isTableFit = (availAreaWidth > tableWidth);
+                if (this.activeTableEntity) {
+                    this.fixedLayoutClass = (isTableFit) ? '' : 'fixedLayout--with-panel';
+                } else {
+                    this.fixedLayoutClass = (isTableFit) ? '' : 'fixedLayout--no-panel';
+                }
             }
-        }
+        });
 
         if (this.mobileDetailMode && this.activePanelEntity) {
             this.fixedLayoutClass = 'fixedLayout--no-panel';

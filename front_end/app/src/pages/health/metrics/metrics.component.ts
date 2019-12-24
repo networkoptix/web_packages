@@ -91,6 +91,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
         this.filterModel = {
             query: ''
         };
+        this.fixedLayoutClass = '';
 
         // Breadcrumbs for making search bar same width as dynamic table
         // this.tableWidthSubscription = this.scrollMechanicsService
@@ -135,7 +136,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
             } else {
                 this.mobileDetailMode = false;
             }
-            setTimeout(() => this.setLayout());
+            this.setLayout();
         });
     }
 
@@ -201,32 +202,34 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
             this.uri.updateURI(undefined, queryParams);
         }
         this.mobileDetailMode = false;
-        setTimeout(() => this.setLayout());
+        this.setLayout();
     }
 
     private setLayout() {
-        if (this.metricValuesLen === 1) {
-            this.fixedLayoutClass = 'fixedLayout--no-panel';
-        } else {
-            if (this.tableContainer) {
-                // measure table (not wrapper) width
-                const tableWidth = this.tableContainer.nativeElement.querySelectorAll('table')[0].offsetWidth;
-                // area available
-                const areaWidth = this.area.nativeElement.offsetWidth;
-                // area available to the table (2/3 + gutters
-                const availAreaWidth = areaWidth / 3 * 2 + 46;
+        setTimeout(() => {
+            if (this.metricValuesLen === 1) {
+                this.fixedLayoutClass = 'fixedLayout--no-panel';
+            } else {
+                if (this.tableContainer) {
+                    // measure table (not wrapper) width
+                    const tableWidth = this.tableContainer.nativeElement.querySelectorAll('table')[0].offsetWidth;
+                    // area available
+                    const areaWidth = this.area.nativeElement.offsetWidth;
+                    // area available to the table (2/3 + gutters
+                    const availAreaWidth = areaWidth / 3 * 2 + 46;
 
-                const isTableFit = (availAreaWidth > tableWidth);
-                if (this.activeEntity) {
-                    this.fixedLayoutClass = (isTableFit) ? '' : 'fixedLayout--with-panel';
-                } else {
-                    this.fixedLayoutClass = (isTableFit) ? '' : 'fixedLayout--no-panel';
+                    const isTableFit = (availAreaWidth > tableWidth);
+                    if (this.activeEntity) {
+                        this.fixedLayoutClass = (isTableFit) ? '' : 'fixedLayout--with-panel';
+                    } else {
+                        this.fixedLayoutClass = (isTableFit) ? '' : 'fixedLayout--no-panel';
+                    }
+                }
+
+                if (this.mobileDetailMode && this.activeEntity) {
+                    this.fixedLayoutClass = 'fixedLayout--no-panel';
                 }
             }
-
-            if (this.mobileDetailMode && this.activeEntity) {
-                this.fixedLayoutClass = 'fixedLayout--no-panel';
-            }
-        }
+        });
     }
 }

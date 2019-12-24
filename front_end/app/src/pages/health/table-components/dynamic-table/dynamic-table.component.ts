@@ -176,7 +176,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
 
     ngAfterViewInit(): void {
         if (this.dimensions.length) {
-            this.setTableDimensions();
+            setTimeout(() => this.setTableDimensions());
         }
     }
 
