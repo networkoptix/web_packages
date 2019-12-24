@@ -7,7 +7,7 @@
     "Account Settings": "Accountinstellingen",
     "Account is already activated or confirmation code is incorrect": "Account is al geactiveerd of de bevestigingscode is onjuist",
     "Account is created.": "Account is aangemaakt.",
-    "Account is successfully created.": "Account is succesvol aangemaakt.",
+    "Account is successfully created.": "Het account is succesvol aangemaakt.",
     "Account not activated": "Account is niet geactiveerd",
     "Account not found": "Account niet gevonden",
     "Activate your account": "Account activeren",
@@ -43,7 +43,7 @@
     "Confirmation message is sent to": "Bevestigingsbericht wordt verzonden naar",
     "Contact": "Contact",
     "Create Account": "Account aanmaken",
-    "Create account": "Accounts aanmaken",
+    "Create account": "Account aanmaken",
     "Current Password": "Huidig ​​wachtwoord",
     "Current password is required": "Huidig wachtwoord (verplicht)",
     "Depending of the size of the database it may take up to several hours.": "Afhankelijk van de grootte van de database kan dit enkele uren duren.",
@@ -62,7 +62,7 @@
     "Draft": "Concept",
     "Dual Streaming": "Dual Streaming",
     "Email": "E-mailadres",
-    "Email is required": "E-mail is verplicht",
+    "Email is required": "E-mail is vereist",
     "Embed": "Insluiten",
     "Enter \"Public User\" credentials:": "Voer \"Publieke gebruiker\" referenties in:",
     "Enter password for your account to continue": "Voer het wachtwoord in voor uw account om door te gaan",
@@ -93,7 +93,7 @@
     "Log In": "Aanmelden",
     "Log Out": "Uitloggen",
     "Log in to %CLOUD_NAME%": "Meld u aan bij %CLOUD_NAME%",
-    "Merge Systems": "Systemen Samenvoegen",
+    "Merge Systems": "Systemen samenvoegen",
     "Merge current System with": "Huidig ​​systeem samenvoegen met",
     "Merge with Another System": "Samenvoegen met een ander systeem",
     "Message": "Bericht",
@@ -108,13 +108,13 @@
     "No unsaved changes": "Geen niet-opgeslagen wijzigingen",
     "Nothing Found": "Niets gevonden",
     "OK": "Oké",
-    "Ok": "Oké",
+    "Ok": "Ok",
     "Other packages:": "Andere pakketten:",
     "Other releases, patches and beta versions": "Overige releases, patches en bètaversies",
     "Owner": "Eigenaar",
     "PTZ": "PTZ",
     "Page not found": "Pagina niet gevonden",
-    "Password": "Password",
+    "Password": "Wachtwoord",
     "Password is required": "Wachtwoord is vereist",
     "Password reset instructions are sent to Email": "Wachtwoordherstelinstructies zijn verzonden naar het volgende emailadres",
     "Password successfully saved": "Wachtwoord succesvol opgeslagen",
@@ -125,7 +125,7 @@
     "Privacy": "Privacy",
     "Release Notes": "Release Notes",
     "Release notes": "Versiewijzigingen",
-    "Remember me": "Onthoud mij",
+    "Remember me": "Onthoud mijn gegevens",
     "Remove User": "Gebruiker verwijderen",
     "Rename": "Naam wijzigen",
     "Requirements": "Vereisten",
@@ -134,14 +134,14 @@
     "Resolution(max)": "Resolutie(max)",
     "Save": "Opslaan",
     "Search in google": "Zoeken in google",
-    "Secondary Stream": "Secundair stream",
+    "Secondary Stream": "Secundaire Stream",
     "Send": "Verzenden",
     "Send feedback about this device": "Stuur feedback over dit apparaat",
     "Set New Password": "Stel nieuw wachtwoord in",
     "Settings": "Instellingen",
     "Show All": "Toon alles",
     "Some of your servers don't support cloud System merge because of outdated software version.": "Sommige van uw servers ondersteunen geen cloud Systeem samenvoegen vanwege verouderde softwareversie.",
-    "Subject": "Subject",
+    "Subject": "Onderwerp",
     "Support": "Ondersteuning",
     "Support E-mail": "Support Email",
     "Support URL": "Support URL",
@@ -196,7 +196,7 @@
         },
         "Live Viewer": {
             "description": "Kan alleen live video bekijken",
-            "label": "Live kijker"
+            "label": "Live Viewer"
         },
         "Owner": {
             "description": "Onbeperkt toegang, inclusief de mogelijkheid om systeem te delen en te verbinden / te verbreken vanuit de cloud",
@@ -228,7 +228,7 @@
         },
         "liveViewer": {
             "description": "Kan alleen live video bekijken",
-            "label": "Live kijker"
+            "label": "Live Viewer"
         },
         "owner": {
             "description": "Onbeperkt toegang, inclusief de mogelijkheid om systeem te delen en te verbinden / te verbreken vanuit de cloud",
@@ -275,7 +275,7 @@
         "createNewAccount": "Creëer een nieuw account",
         "download": "Download %VMS_NAME%",
         "loggedFromOther": "U wordt met een ander account ingelogd",
-        "loginButton": "Inloggen",
+        "loginButton": "Log in",
         "loginTitle": "Meld u aan bij %CLOUD_NAME%",
         "logoutAuthorisedContinueButton": "Doorgaan",
         "logoutAuthorisedLogoutButton": "Uitloggen",
@@ -304,7 +304,7 @@
                 "ipvd_feedback_device": "Feedback over {{asset}}",
                 "ipvd_feedback_page": "Feedback voor camera's pagina",
                 "sales_inquiry": "Verkoopaanvraag voor {{asset}}",
-                "technical_inquiry": "Technical inquiry for {{asset}}"
+                "technical_inquiry": "Technische aanvraag voor {{asset}}"
             },
             "title": {
                 "integration": "Neem contact op met {{companyName}}",
@@ -351,8 +351,7 @@
             },
             "arm": {
                 "label": "ARM",
-                "shortLabel": "ARM",
-                "supported": "<a href='/content/arm'>ARM gebaseerde servers ondersteunen beleid</a>"
+                "shortLabel": "ARM"
             },
             "ios": {
                 "label": "iOS",
@@ -370,8 +369,7 @@
             },
             "sdk": {
                 "label": "SDK",
-                "shortLabel": "SDK",
-                "supported": "C++ cross platform SDK"
+                "shortLabel": "SDK"
             },
             "windows": {
                 "label": "Windows"
@@ -408,7 +406,7 @@
     },
     "errorCodes": {
         "DUPLICATE_MEDIASERVER_FOUND": "Sommige servers zijn aanwezig in beide systemen - in de geselecteerde en in de huidige. <br>Verwijder offline en incompatibele servers van elk systeem en probeer het opnieuw.",
-        "EmailAlreadyExists": "Dit e-mailadres is al geregistreerd",
+        "EmailAlreadyExists": "Dit Email is al geregistreerd",
         "FAIL": "Systeem <strong>{{failedSystem}}</strong> is momenteel niet bereikbaar.<br>Probeer het over een paar momenten opnieuw of neem contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">ondersteuning</a>.",
         "INCOMPATIBLE": "Systemen hebben verschillende softwareversies. Werk ze alstublieft bij naar de laatste <a href=\"/download\">build</a>.",
         "accountAlreadyActivated": "Deze account is al geactiveerd",
@@ -437,7 +435,7 @@
         "mergedSystemIsOffline": "Systeem <strong>{{failedSystem}}</strong> is offline.",
         "notAuthorized": "Wachtwoord onjuist",
         "notFound": "Niet gevonden",
-        "ok": "oke",
+        "ok": "ok",
         "oldPasswordMistmatch": "Dit wachtwoord is onjuist.",
         "oldSafariNotSupported": "Versies van Safari ouder dan versie 10 worden niet ondersteund",
         "passwordMismatch": "Wachtwoord onjuist",
@@ -455,7 +453,7 @@
         "Data Analytics": "Data Analyse",
         "Drone": "Drone",
         "Health Monitor": "Server monitor",
-        "Storage": "Opslagruimte",
+        "Storage": "Opslag",
         "backToEditText": "Terug naar de bewerkingsinterfaces",
         "myIntegrationsLabel": "Mijn",
         "previewRibbonText": "Deze pagina is een voorbeeld van de nieuwste wijzigingen en komt niet overeen met de openbaar beschikbare versie."
@@ -589,7 +587,7 @@
         "mergeFailed": "Het samenvoegen van systemen is mislukt",
         "mergeStart": "Systemen zijn begonnen met het samenvoegen",
         "mergeSuccess": "Systeem samenvoegen voltooid",
-        "mergeSystemTitle": "Systemen Samenvoegen",
+        "mergeSystemTitle": "Systemen samenvoegen",
         "mySystemSearch": "IMeMyMine",
         "offline": "Systeem is offline",
         "offlineAlertRibbon": "Systeem is offline. Sommige instellingen zijn mogelijk niet beschikbaar.",
@@ -615,8 +613,8 @@
         "online": "online",
         "unavailable": "niet beschikbaar"
     },
-    "testedVersionLabel": "Tested with {{vmsName}} version:",
-    "testedVersionsLabel": "Tested with {{vmsName}} versions:",
+    "testedVersionLabel": "Getest op {{vmsName}} versie:",
+    "testedVersionsLabel": "Getest op {{vmsName}} versies:",
     "users": "Gebruikers",
     "you": "u"
 }

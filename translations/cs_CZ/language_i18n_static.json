@@ -3,14 +3,14 @@
 		"accountSavedSuccess": "Váš účet byl úspěšně uložen",
 		"activationLinkSent": "Aktivní odkaz byl odeslán",
 		"passwordChangedSuccess": "Váš účet byl úspěšně uložen",
-		"changePassword": "Změnit heslo",
+		"changePassword": "Změna hesla",
 		"newPasswordLabel": "Nové heslo",
 		"saveChanges": "Uložit",
 		"accountSettings": "Nastavení účtu"
 	},
 	"activeActions": {
 		"sendConfirm": "Znovu poslat aktivační odkaz",
-		"resetPassword": "Obnovení hesla",
+		"resetPassword": "Obnovit heslo",
 		"setNewPassword": "Uložit heslo",
 		"setNewPasswordLabel": "Nové heslo"
 	},
@@ -75,13 +75,11 @@
 			},
 			"arm": {
 				"label": "ARM",
-				"shortLabel": "ARM",
-				"supported": "<a href='/content/arm'>ARM based servers support policy</a>"
+				"shortLabel": "ARM"
 			},
 			"sdk": {
 				"label": "SDK",
-				"shortLabel": "SDK",
-				"supported": "C++ cross platform SDK"
+				"shortLabel": "SDK"
 			}
 		},
 		"platforms": {
@@ -108,12 +106,12 @@
 		},
 		"releasesTypes": {
 			"beta": "Beta",
-			"betas": "Betas",
+			"betas": "Beta verze",
 			"rc": "Release Candidate",
 			"release": "Release",
-			"releases": "Releases",
+			"releases": "Vydání",
 			"patch": "Patch",
-			"patches": "Patches"
+			"patches": "Opravy"
 		}
 	},
 	"ipvd": {
@@ -130,7 +128,7 @@
 		"isPtzSupported": "PTZ",
 		"isAptzSupported": "Pokročilé PTZ",
 		"isAptzSupportedShort": "Adv. PTZ",
-		"isFisheye": "Fisheye",
+		"isFisheye": "Rybí oko",
 		"isMdSupported": "Pohyb",
 		"isIoSupported": "I/O",
 		"isH265": "H.265",
@@ -203,10 +201,10 @@
 		"changeAccountLogged": "You are already logged in with as {email}",
 		"loggedFromOther": "You will be logged in with a different account",
 		"loginTitle": "Přihlaste se k %CLOUD_NAME%",
-		"loginButton": "Přihlásit",
+		"loginButton": "Přihlásit se",
 		"logoutAuthorisedTitle": "Již jste přihlášen",
 		"logoutAuthorisedContinueButton": "Pokračovat",
-		"logoutAuthorisedLogoutButton": "Odhlásit se",
+		"logoutAuthorisedLogoutButton": "Odhlásit",
 		"noClientDetectedTitle": "Pro zobrazení Vašeho systému nainstalujte %VMS_NAME%",
 		"stayAs": "Stay logged as {email} ",
 		"stayLoggedIn": "Stay Logged In",
@@ -371,11 +369,11 @@
 			"description": "Můžete zobrazit pouze živé video"
 		},
 		"Advanced Viewer": {
-			"label": "Rozšířený prohlížeč",
+			"label": "Pokročilý prohlížeč",
 			"description": "Lze sledovat živé video, procházet archiv, ovládat PTZ atd"
 		},
 		"Administrator": {
-			"label": "Administrátor",
+			"label": "Administrator",
 			"description": "Neomezený přístup včetně možnosti sdílení"
 		},
 		"Custom": {

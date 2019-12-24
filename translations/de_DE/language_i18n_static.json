@@ -75,13 +75,11 @@
 			},
 			"arm": {
 				"label": "ARM",
-				"shortLabel": "ARM",
-				"supported": "<a href='/content/arm'>ARM-basierte Server unterstützen Richtlinie</a>"
+				"shortLabel": "ARM"
 			},
 			"sdk": {
 				"label": "SDK",
-				"shortLabel": "SDK",
-				"supported": "C++ cross platform SDK"
+				"shortLabel": "SDK"
 			}
 		},
 		"platforms": {
@@ -126,7 +124,7 @@
 		"maxFps": "<span>Max</span><br><span>FPS</span>",
 		"primaryCodec": "Codec",
 		"isAudioSupported": "Audio",
-		"isTwAudioSupported": "zweiwege-Audio",
+		"isTwAudioSupported": "Zweiwege-Audio",
 		"isPtzSupported": "PTZ",
 		"isAptzSupported": "Erweiterte PTZ",
 		"isAptzSupportedShort": "Erw. PTZ",
@@ -191,7 +189,7 @@
 		"debug": "Debug",
 		"login": "Anmelden -",
 		"download": "%VMS_NAME% herunterladen",
-		"downloadPlatform": "Download %VMS_NAME% für ",
+		"downloadPlatform": "Download %VMS_NAME% for ",
 		"pageNotFound": "Seite nicht gefunden",
 		"supportedDevices": "Unterstützte Geräte",
 		"integrations": "Integrationen"
@@ -207,7 +205,7 @@
 		"logoutAuthorisedTitle": "Sie sind bereits eingeloggt",
 		"logoutAuthorisedContinueButton": "Fortfahren",
 		"logoutAuthorisedLogoutButton": "Abmelden",
-		"noClientDetectedTitle": "Installieren Sie %VMS_NAME%, um Ihr System anzusehen",
+		"noClientDetectedTitle": "Install %VMS_NAME% to view your System",
 		"stayAs": "Bleiben Sie angemeldet als {email} ",
 		"stayLoggedIn": "Angemeldet bleiben",
 		"download": "%VMS_NAME% herunterladen",
@@ -237,7 +235,7 @@
 			},
 			"subject": {
 				"sales_inquiry": "Verkaufsanfrage für {{asset}}",
-				"technical_inquiry": "Technical inquiry for {{asset}}",
+				"technical_inquiry": "Technische Anfrage für {{asset}}",
 				"integration_feedback": "Feedback zur Integration {{asset}}",
 				"ipvd_feedback_page": "Feedback zur Kameraseite",
 				"ipvd_feedback_device": "Feedback zu {{asset}}"
@@ -300,7 +298,7 @@
 		"fair": "mittel",
 		"fairMessage": "Verwenden Sie Zahlen, Groß- und Kleinbuchstaben und Sonderzeichen, um Ihr Passwort sicherer machen",
 		"minLength": "zu kurz",
-		"minLengthMessage": "Passwort muss mindestens 8 Zeichen enthalten",
+		"minLengthMessage": "Das Passwort muss mindestens 8 Zeichen lang sein",
 		"required": "falsch",
 		"requiredMessage": "Verwenden Sie nur alphanumerische Zeichen und Tastatursymbole, vermeiden Sie führende und nachfolgende Leerzeichen",
 		"weak": "schlecht",
@@ -319,7 +317,7 @@
 		"unavailable": "System ist nicht erreichbar",
 		"offline": "System ist offline",
 		"offlineAlertRibbon": "Das System ist offline. Einige Einstellungen sind möglicherweise nicht verfügbar.",
-		"openClient": "In %VMS_NAME% öffnen",
+		"openClient": "Open in %VMS_NAME%",
 		"openClientNoSystem": "Öffnen Sie %VMS_NAME%",
 		"confirmMergeAction": "Zusammenführen",
 		"mergeSystemTitle": "Systeme zusammenführen",
@@ -415,10 +413,10 @@
 		"integration": "Mit dem Absenden dieses Formulars erklären Sie sich damit einverstanden, dass Sie von {{INTEGRATION_COMPANY}}} und/oder %COMPANY_NAME% kontaktiert werden.\nSie finden die {{INTEGRATION_COMPANY}}} Datenschutzerklärung <a href=\"{{INTEGRATION_PRIVACY_POLICY}}}\" target=\"_blank\">hier</a> und die %COMPANY_NAME% Datenschutzerklärung <a href=\"%PRIVACY_LINK%\" target=\"_blank\">hier</a>, die Anweisungen enthalten, wie Sie Ihre Zustimmung widerrufen können.",
 		"ipvd": "Mit dem Absenden dieses Formulars erklären Sie sich damit einverstanden, dass Sie von %COMPANY_NAME% kontaktiert werden.\nSie finden %COMPANY_NAME% Datenschutzerklärung <a href=\"%PRIVACY_LINK%\" target=\"_blank\">hier</a>, die Anweisungen zum Widerruf Ihrer Einwilligung enthält."
 	},
-	"systemAdministration": "Systemadministration",
+	"systemAdministration": "System-Administration",
 	"users": "Benutzer",
-	"testedVersionLabel": "Tested with {{vmsName}} version:",
-	"testedVersionsLabel": "Tested with {{vmsName}} versions:",
+	"testedVersionLabel": "Getestet auf {{vmsName}} Version:",
+	"testedVersionsLabel": "Getestet auf {{vmsName}} Versionen:",
 	"About %CLOUD_NAME%": "Über %CLOUD_NAME%",
 	"Download %VMS_NAME%": "%VMS_NAME% herunterladen",
 	"Integrations": "Integrationen",
@@ -430,7 +428,7 @@
 	"WHEN_MERGE_FINISHES": "Wenn der Zusammenschluss abgeschlossen ist, sind alle Benutzer und Kameras dieses Systems im System \"<strong>{{targetSystemName}}}</strong>\" verfügbar, und dieses System wird gelöscht.",
 	"FAILED_SYSTEM_DESCR": "Dieser Link ist kaputt,<br>System könnte von %CLOUD_NAME% getrennt werden,<br>Zugriff auf dieses System könnte widerrufen werden,<br>oder Sie könnten in einem anderen Account angemeldet sein.",
 	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "Es ist kein System mit %CLOUD_NAME% verbunden",
-	"NO_SYSTEMS_LOGIN": "Melden Sie sich in Ihrem System mit %VMS_NAME% an",
+	"NO_SYSTEMS_LOGIN": "Log in to your System using %VMS_NAME%",
 	"NO_SYSTEMS_GOTO_ADMINISTRATION": "Gehen Sie zum \"Cloud\"-Tab in der Systemadministration",
 	"NO_SYSTEMS_CONNECT_SYSTEM": "Wählen Sie \"Verbinde System mit %CLOUD_NAME%\""
 }

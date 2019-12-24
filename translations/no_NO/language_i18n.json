@@ -22,7 +22,7 @@
     "All cloud users will be deleted.": "Alle sky-brukere vil bli slettet.",
     "All results": "Alle Resultater",
     "Analytics": "Analyser",
-    "Analytics Event": "Videoanalyse-regel",
+    "Analytics Event": "Analyse-hendelser",
     "Analytics Events": "Analyse-hendelser",
     "Any": "Noen",
     "Apply": "Bruk",
@@ -71,7 +71,7 @@
     "FAILED_SYSTEM_DESCR": "This link is broken,<br>System may be disconnected from %CLOUD_NAME%,<br>Access to this System may be revoked, <br>or you may be logged into a different account.",
     "FPS(max)": "FPS (maks)",
     "Failed to access System": "Kunne ikke få tilgang til System",
-    "Finishing systems merge": "Ferdigstiller systemsammenslåing",
+    "Finishing systems merge": "Ferdigstiller sammenslåing",
     "Firmware version": "Fastvareversjon",
     "First Name": "First Name",
     "First name": "Fornavn",
@@ -129,7 +129,7 @@
     "Remove User": "Remove User",
     "Rename": "Endre navn",
     "Requirements": "Krav",
-    "Resend activation email": "Send aktiverings e-post igjen",
+    "Resend activation email": "Send aktiverings e-post på nytt",
     "Resend activation link": "Send aktiveringslink igjen",
     "Resolution(max)": "Oppløsning (maks)",
     "Save": "Lagre",
@@ -138,7 +138,7 @@
     "Send": "Send",
     "Send feedback about this device": "Send tilbakemelding om denne enheten",
     "Set New Password": "Angi et nytt passord",
-    "Settings": "Innstillingar",
+    "Settings": "Innstillinger",
     "Show All": "Vis alle",
     "Some of your servers don't support cloud System merge because of outdated software version.": "Noen av serverne dine støtter ikke Cloud-systemfusjonen på grunn av utdatert programvareversjon.",
     "Subject": "Subject",
@@ -351,8 +351,7 @@
             },
             "arm": {
                 "label": "ARM",
-                "shortLabel": "ARM",
-                "supported": "<a href='/content/arm'>ARM-baserte servere support policy</a>"
+                "shortLabel": "ARM"
             },
             "ios": {
                 "label": "iOS",
@@ -370,11 +369,10 @@
             },
             "sdk": {
                 "label": "SDK",
-                "shortLabel": "SDK",
-                "supported": "C++ cross platform SDK"
+                "shortLabel": "SDK"
             },
             "windows": {
-                "label": "Windows"
+                "label": "Vindu"
             }
         },
         "mobile": {
@@ -398,12 +396,12 @@
         },
         "releasesTypes": {
             "beta": "Beta",
-            "betas": "Betas",
-            "patch": "Patch",
-            "patches": "Patches",
-            "rc": "Release Candidate",
-            "release": "Release",
-            "releases": "Releases"
+            "betas": "Betaer",
+            "patch": "Fiks",
+            "patches": "Fikser",
+            "rc": "Utsendelseskandidater",
+            "release": "Utgivelse",
+            "releases": "Utgivelser"
         }
     },
     "errorCodes": {
@@ -558,7 +556,7 @@
     },
     "registration.agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>",
     "search": {
-        "Any": "Noen",
+        "Any": "Enhver",
         "Search": "Søk",
         "analytics": "Analyser",
         "analyticsSelected": "analysehendelser",

@@ -61,7 +61,7 @@
     "Downloads": "Downloads",
     "Draft": "Entwurf",
     "Dual Streaming": "Duales Streaming",
-    "Email": "Email",
+    "Email": "E-Mail",
     "Email is required": "Email ist erforderlich",
     "Embed": "Einbinden",
     "Enter \"Public User\" credentials:": "Geben Sie die Zugangsdaten für den \"Öffentlichen Benutzer\" ein:",
@@ -89,8 +89,8 @@
     "Last Name": "Nachname",
     "Last name": "Nachname",
     "Last name is required": "Nachname ist erforderlich",
-    "Latest version": "Neueste Version",
-    "Log In": "Einloggen",
+    "Latest version": "Aktuellste Version",
+    "Log In": "Anmelden",
     "Log Out": "Abmelden",
     "Log in to %CLOUD_NAME%": "Anmelden bei %CLOUD_NAME%",
     "Merge Systems": "Systeme zusammenführen",
@@ -102,7 +102,7 @@
     "Multi Sensor": "Multisensor",
     "NO_SYSTEMS_CONNECT_SYSTEM": "Wählen Sie \"Verbinde System mit %CLOUD_NAME%\"",
     "NO_SYSTEMS_GOTO_ADMINISTRATION": "Gehen Sie zum \"Cloud\"-Tab in der Systemadministration",
-    "NO_SYSTEMS_LOGIN": "Melden Sie sich in Ihrem System mit %VMS_NAME% an",
+    "NO_SYSTEMS_LOGIN": "Log in to your System using %VMS_NAME%",
     "NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "Es ist kein System mit %CLOUD_NAME% verbunden",
     "New Password": "Neues Passwort",
     "No unsaved changes": "Keine ungespeicherten Änderungen",
@@ -141,7 +141,7 @@
     "Settings": "Einstellungen",
     "Show All": "Alle anzeigen",
     "Some of your servers don't support cloud System merge because of outdated software version.": "Einige Ihrer Server unterstützen das Zusammenführen von Cloudsystemen aufgrund einer veralteten Softwareversion nicht.",
-    "Subject": "Subject",
+    "Subject": "Betreff",
     "Support": "Support",
     "Support E-mail": "Support Email",
     "Support URL": "Support-URL",
@@ -304,7 +304,7 @@
                 "ipvd_feedback_device": "Feedback zu {{asset}}",
                 "ipvd_feedback_page": "Feedback zur Kameraseite",
                 "sales_inquiry": "Verkaufsanfrage für {{asset}}",
-                "technical_inquiry": "Technical inquiry for {{asset}}"
+                "technical_inquiry": "Technische Anfrage für {{asset}}"
             },
             "title": {
                 "integration": "Kontaktieren Sie {{companyName}}",
@@ -312,7 +312,7 @@
                 "ipvd_feedback_page": "Feedback zur Kameraseite"
             }
         },
-        "noClientDetectedTitle": "Installieren Sie %VMS_NAME%, um Ihr System anzusehen",
+        "noClientDetectedTitle": "Install %VMS_NAME% to view your System",
         "okButton": "Ok",
         "sharing": {
             "confirmOwner": "Wenn Sie den Systembesitzer ändern, werden Sie das Eigentum vom aktuellen Account widerrufen. Diese Handlung ist unwiderruflich. Sind Sie sich sicher?",
@@ -351,8 +351,7 @@
             },
             "arm": {
                 "label": "ARM",
-                "shortLabel": "ARM",
-                "supported": "<a href='/content/arm'>ARM-basierte Server unterstützen Richtlinie</a>"
+                "shortLabel": "ARM"
             },
             "ios": {
                 "label": "iOS",
@@ -370,8 +369,7 @@
             },
             "sdk": {
                 "label": "SDK",
-                "shortLabel": "SDK",
-                "supported": "C++ cross platform SDK"
+                "shortLabel": "SDK"
             },
             "windows": {
                 "label": "Windows"
@@ -516,7 +514,7 @@
         "debug": "Debug",
         "default": "%CLOUD_NAME%",
         "download": "%VMS_NAME% herunterladen",
-        "downloadPlatform": "Download %VMS_NAME% für ",
+        "downloadPlatform": "Download %VMS_NAME% for ",
         "integrations": "Integrationen",
         "login": "Anmelden -",
         "pageNotFound": "Seite nicht gefunden",
@@ -539,7 +537,7 @@
         "fairMessage": "Verwenden Sie Zahlen, Groß- und Kleinbuchstaben und Sonderzeichen, um Ihr Passwort sicherer machen",
         "good": "gut",
         "minLength": "zu kurz",
-        "minLengthMessage": "Passwort muss mindestens 8 Zeichen enthalten",
+        "minLengthMessage": "Das Passwort muss mindestens 8 Zeichen lang sein",
         "missingMessage": "Passwort ist erforderlich",
         "required": "falsch",
         "requiredMessage": "Verwenden Sie nur alphanumerische Zeichen und Tastatursymbole, vermeiden Sie führende und nachfolgende Leerzeichen",
@@ -593,7 +591,7 @@
         "mySystemSearch": "IMeMyMine",
         "offline": "System ist offline",
         "offlineAlertRibbon": "Das System ist offline. Einige Einstellungen sind möglicherweise nicht verfügbar.",
-        "openClient": "In %VMS_NAME% öffnen",
+        "openClient": "Open in %VMS_NAME%",
         "openClientNoSystem": "Öffnen Sie %VMS_NAME%",
         "permissionsRemoved": "Berechtigungen wurden von {{email}} entfernt",
         "shareOffline": "Das System kann nicht freigegeben werden, solange es offline ist",
@@ -605,7 +603,7 @@
         "unknownName": "Unbekannter Name für das System (verursacht durch Cloud-Merge)",
         "yourSystem": "Ihr System"
     },
-    "systemAdministration": "Systemadministration",
+    "systemAdministration": "System-Administration",
     "systemStatuses": {
         "activated": "aktiviert",
         "incompatible": "inkompatibel",
@@ -615,8 +613,8 @@
         "online": "online",
         "unavailable": "nicht verfügbar"
     },
-    "testedVersionLabel": "Tested with {{vmsName}} version:",
-    "testedVersionsLabel": "Tested with {{vmsName}} versions:",
+    "testedVersionLabel": "Getestet auf {{vmsName}} Version:",
+    "testedVersionsLabel": "Getestet auf {{vmsName}} Versionen:",
     "users": "Benutzer",
     "you": "du"
 }

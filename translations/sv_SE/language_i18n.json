@@ -45,7 +45,7 @@
     "Create Account": "Skapa konto",
     "Create account": "Skapa konto",
     "Current Password": "Nuvarande Lösenord",
-    "Current password is required": "Lösenordet krävs",
+    "Current password is required": "Nuvarande lösenord krävs",
     "Depending of the size of the database it may take up to several hours.": "Beroende på databasens storlek kan det ta upp till flera timmar.",
     "Developer": "Utvecklare",
     "Discard": "Kasta",
@@ -119,7 +119,7 @@
     "Password reset instructions are sent to Email": "Instruktioner för återställning av lösenord skickas till e-post",
     "Password successfully saved": "Lösenordet har sparats",
     "Password:": "Lösenord:",
-    "Please enter a valid Email": "Ange en giltig e-postadress",
+    "Please enter a valid Email": "Vänligen ange en giltig e-postadress",
     "Please review and agree to the Terms and Conditions and Privacy policy in order to proceed": "Läs och godkänn användarvillkoren och sekretesspolicy för att fortsätta",
     "Popularity": "Popularitet",
     "Privacy": "Sekretess",
@@ -141,7 +141,7 @@
     "Settings": "Inställningar",
     "Show All": "Visa alla",
     "Some of your servers don't support cloud System merge because of outdated software version.": "Några av dina servrar stöder inte systemfusion i moln på grund av föråldrad programvaruversion.",
-    "Subject": "Subject",
+    "Subject": "Ämne",
     "Support": "Support",
     "Support E-mail": "Support Email",
     "Support URL": "Support URL",
@@ -204,7 +204,7 @@
         },
         "Viewer": {
             "description": "Kan visa live video och bläddra i arkivet",
-            "label": "Användare"
+            "label": "Tittare"
         },
         "advancedViewer": {
             "description": "Kan visa live video, bläddra i arkivet, konfigurera kameror, styra PTZ etc",
@@ -224,7 +224,7 @@
         },
         "disabled": {
             "description": "Användaren är inaktiverad och kan inte logga in på System",
-            "label": "Inaktiverad"
+            "label": "Avaktiverad"
         },
         "liveViewer": {
             "description": "Kan bara visa live video",
@@ -236,7 +236,7 @@
         },
         "viewer": {
             "description": "Kan visa live video och bläddra i arkivet",
-            "label": "Användare"
+            "label": "Tittare"
         }
     },
     "account": {
@@ -304,7 +304,7 @@
                 "ipvd_feedback_device": "Feedback om {{asset}}",
                 "ipvd_feedback_page": "Feedback för kamerans sida",
                 "sales_inquiry": "Försäljningsförfrågan för {{asset}}",
-                "technical_inquiry": "Technical inquiry for {{asset}}"
+                "technical_inquiry": "Teknisk fråga för {{asset}}"
             },
             "title": {
                 "integration": "Kom i kontakt med {{companyName}}",
@@ -351,8 +351,7 @@
             },
             "arm": {
                 "label": "ARM",
-                "shortLabel": "ARM",
-                "supported": "<a href='/content/arm'>ARM-baserade servrar stöd policy</a>"
+                "shortLabel": "ARM"
             },
             "ios": {
                 "label": "iOS",
@@ -370,8 +369,7 @@
             },
             "sdk": {
                 "label": "SDK",
-                "shortLabel": "SDK",
-                "supported": "C++ cross platform SDK"
+                "shortLabel": "SDK"
             },
             "windows": {
                 "label": "Windows"
@@ -398,12 +396,12 @@
         },
         "releasesTypes": {
             "beta": "Beta",
-            "betas": "Betas",
+            "betas": "Betor",
             "patch": "Patch",
-            "patches": "Patches",
-            "rc": "Release Candidate",
+            "patches": "Patchar",
+            "rc": "Releasekandidat",
             "release": "Release",
-            "releases": "Releases"
+            "releases": "Releaser"
         }
     },
     "errorCodes": {
@@ -611,12 +609,12 @@
         "incompatible": "oförenlig",
         "merging": "sammanslagning",
         "notActivated": "inte aktiverad",
-        "offline": "frånkopplade",
+        "offline": "frånkopplad",
         "online": "uppkopplad",
         "unavailable": "inte tillgänglig"
     },
-    "testedVersionLabel": "Tested with {{vmsName}} version:",
-    "testedVersionsLabel": "Tested with {{vmsName}} versions:",
+    "testedVersionLabel": "Testat på {{vmsName}} version:",
+    "testedVersionsLabel": "Testat på {{vmsName}} version:",
     "users": "Användare",
     "you": "du"
 }

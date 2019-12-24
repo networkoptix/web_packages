@@ -1,6 +1,6 @@
 {
     "2-Way Audio": "2-Way Audio",
-    "About %CLOUD_NAME%": "About %CLOUD_NAME%",
+    "About %CLOUD_NAME%": "%CLOUD_NAME% névjegye",
     "Access Level": "Hozzáférési szint",
     "Access level": "Hozzáférés szint",
     "Account Information": "Account Information",
@@ -10,7 +10,7 @@
     "Account is successfully created.": "A fiók sikeresen létrehozva.",
     "Account not activated": "Felhasználói fiók nincs aktiválva",
     "Account not found": "A fiók nem található",
-    "Activate your account": "Aktiváld a fiókod",
+    "Activate your account": "Fiók aktiválása",
     "Actual number of events supported by this camera may be bigger.": "Actual number of events supported by this camera may be bigger.",
     "Add User": "Felhasználó hozzáadása",
     "Additional Requirements": "Additional Requirements",
@@ -21,7 +21,7 @@
     "All Systems": "Minden rendszer",
     "All cloud users will be deleted.": "Minden felhő felhasználó törlésre kerül.",
     "All results": "All results",
-    "Analytics": "Analytics",
+    "Analytics": "analitika",
     "Analytics Event": "Analitikai esemény",
     "Analytics Events": "Analytics Events",
     "Any": "Any",
@@ -33,7 +33,7 @@
     "Camera controls": "Kamera vezérlők",
     "Camera header": "Kamera fejléc",
     "Cameras menu": "Kamera menü",
-    "Cancel": "Mégsem",
+    "Cancel": "Mégse",
     "Change Password": "Jelszómódosítás",
     "Checking...": "Ellenőrzés...",
     "Choose which properties should be visible to customers:": "Válassza ki, hogy mely tulajdonságok láthatók az ügyfelek számára:",
@@ -102,7 +102,7 @@
     "Multi Sensor": "Multi Sensor",
     "NO_SYSTEMS_CONNECT_SYSTEM": "Press \"Connect System to %CLOUD_NAME%\"",
     "NO_SYSTEMS_GOTO_ADMINISTRATION": "Kattintson a \"Felhő\" fülre \"Rendszer adminisztráció\" lapon",
-    "NO_SYSTEMS_LOGIN": "%VMS_NAME% használata a rendszerhez való csatlakozáshoz",
+    "NO_SYSTEMS_LOGIN": "Log in to your System using %VMS_NAME%",
     "NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "%CLOUD_NAME% nem kapcsolódik egy rendszeréhez sem",
     "New Password": "Új Jelszó",
     "No unsaved changes": "No unsaved changes",
@@ -162,7 +162,7 @@
     "This Email has been already registered in %CLOUD_NAME%": "Ez az e-mail már regisztrálva van %CLOUD_NAME%",
     "This device has reported to support some analytics events, but we don't have exact information about them.": "This device has reported to support some analytics events, but we don't have exact information about them.",
     "To": "To",
-    "Too many attempts. Try again in a minute.": "Túl sok próbálkozás. Próbálja újra később.",
+    "Too many attempts. Try again in a minute.": "Túl sok próbálkozás. Próbálkozzon újra egy perc múlva.",
     "Until merge is finished you can log in to this system and watch video, but cannot change any settings.": "Amíg az egyesítés befejeződik, be tud jelentkezni a rendszerbe és megtekinthet videókat, de közben nem módosíthatja a beállításokat.",
     "Update them to the": "Frissítse azokat a",
     "Updated": "Updated",
@@ -207,7 +207,7 @@
             "label": "Felhasználó"
         },
         "advancedViewer": {
-            "description": "Élőkép, rögzített kép, kamerák konfigurálása, PTZ vezérlés, stb",
+            "description": "Élőkép, rögzített kép, kamerák konfigurálása, PTZ vezérlés, stb...",
             "label": "Speciális felhasználó"
         },
         "cloudAdmin": {
@@ -270,7 +270,7 @@
     "clientProtocol": "%CLIENT_PROTOCOL%:",
     "devices": "eszközök",
     "dialogs": {
-        "cancelButton": "Mégsem",
+        "cancelButton": "Mégse",
         "changeAccountLogged": "You are already logged in with as {email}",
         "createNewAccount": "Create New Account",
         "download": "%VMS_NAME% letöltése",
@@ -312,7 +312,7 @@
                 "ipvd_feedback_page": "Feedback for cameras page"
             }
         },
-        "noClientDetectedTitle": "Telepítse a %VMS_NAME% alkalmazást a rendszer megtekintéshez",
+        "noClientDetectedTitle": "Install %VMS_NAME% to view your System",
         "okButton": "OK",
         "sharing": {
             "confirmOwner": "Ha megváltoztatja a rendszertulajdonost, érvényteleníti a tulajdonjogot ehhez a fiókhoz. Ez a művelet nem fordítható vissza. Folytatja?",
@@ -351,8 +351,7 @@
             },
             "arm": {
                 "label": "ARM",
-                "shortLabel": "ARM",
-                "supported": "<a href='/content/arm'>ARM based servers support policy</a>"
+                "shortLabel": "ARM"
             },
             "ios": {
                 "label": "iOS",
@@ -370,8 +369,7 @@
             },
             "sdk": {
                 "label": "SDK",
-                "shortLabel": "SDK",
-                "supported": "C++ cross platform SDK"
+                "shortLabel": "SDK"
             },
             "windows": {
                 "label": "Windows"
@@ -480,7 +478,7 @@
             "c_Info": "for additional questions/concerns regarding supported devices."
         },
         "hardwareType": "Típus",
-        "isAnalyticsSupported": "Analytics",
+        "isAnalyticsSupported": "analitika",
         "isAptzSupported": "Advanced PTZ",
         "isAptzSupportedShort": "Adv. PTZ",
         "isAudioSupported": "Audio",
@@ -516,7 +514,7 @@
         "debug": "Hibakeresés",
         "default": "%CLOUD_NAME%",
         "download": "%VMS_NAME% letöltése",
-        "downloadPlatform": "%VMS_NAME% letöltése ",
+        "downloadPlatform": "Download %VMS_NAME% for ",
         "integrations": "Integrations",
         "login": "Bejelentkezés -",
         "pageNotFound": "Az oldal nem található",
@@ -560,8 +558,8 @@
     "search": {
         "Any": "Any",
         "Search": "Keresés",
-        "analytics": "Analytics",
-        "analyticsSelected": "analytics events",
+        "analytics": "analitika",
+        "analyticsSelected": "analitikai események",
         "filter applied": "filter applied",
         "filters applied": "filters applied",
         "hardwareType": "Típus",

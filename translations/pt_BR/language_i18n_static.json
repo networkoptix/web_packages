@@ -16,7 +16,7 @@
 	},
 	"clientProtocol": "%CLIENT_PROTOCOL%:",
 	"search": {
-		"Search": "Pesquisar",
+		"Search": "Pesquisa",
 		"search_ipvd": "Pesquisar por modelo ou fabricante",
 		"filter applied": "filtro aplicado",
 		"filters applied": "filtros aplicados",
@@ -75,13 +75,11 @@
 			},
 			"arm": {
 				"label": "ARM",
-				"shortLabel": "ARM",
-				"supported": "<a href='/content/arm'>ARM based servers support policy</a>"
+				"shortLabel": "ARM"
 			},
 			"sdk": {
 				"label": "SDK",
-				"shortLabel": "SDK",
-				"supported": "C++ cross platform SDK"
+				"shortLabel": "SDK"
 			}
 		},
 		"platforms": {
@@ -109,9 +107,9 @@
 		"releasesTypes": {
 			"beta": "Beta",
 			"betas": "Betas",
-			"rc": "Release Candidate",
-			"release": "Release",
-			"releases": "Releases",
+			"rc": "Candidato a lançamento",
+			"release": "Lançamento",
+			"releases": "Versões",
 			"patch": "Patch",
 			"patches": "Patches"
 		}
@@ -203,7 +201,7 @@
 		"changeAccountLogged": "You are already logged in with as {email}",
 		"loggedFromOther": "You will be logged in with a different account",
 		"loginTitle": "Logar em %CLOUD_NAME%",
-		"loginButton": "Entrar",
+		"loginButton": "Log in",
 		"logoutAuthorisedTitle": "Já tem sessão iniciada",
 		"logoutAuthorisedContinueButton": "Continuar",
 		"logoutAuthorisedLogoutButton": "Terminar sessão",
@@ -299,16 +297,16 @@
 		"good": "boa",
 		"fair": "justo",
 		"fairMessage": "Use números, letras maiúsculas e minúsculas e caracteres especiais para tornar a sua senha mais forte",
-		"minLength": "curto demais",
+		"minLength": "demasiado curta",
 		"minLengthMessage": "A senha deve conter pelo menos 8 caracteres",
 		"required": "incorreta",
 		"requiredMessage": "Use apenas letras latinas, números e símbolos do teclado, evite espaços à esquerda e à direita",
 		"weak": "fraca",
 		"weakMessage": "Use números, letras maiúsculas e minúsculas e caracteres especiais para tornar a sua senha mais forte",
 		"strongMessage": "Senha forte!",
-		"common": "muito comum",
+		"common": "demasiado comum",
 		"commonMessage": "Esta senha está principais senhas mais populares no mundo",
-		"missingMessage": "A senha é obrigatória"
+		"missingMessage": "A senha é necessária"
 	},
 	"registration": {
 		"agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
@@ -372,7 +370,7 @@
 		},
 		"Advanced Viewer": {
 			"label": "Visualizador Avançado",
-			"description": "Pode ver vídeo ao vivo, navegar no arquivo, controle PTZ etc"
+			"description": "Pode visualizar vídeo ao vivo, pesquisar os arquivos, configurar câmaras, controlar PTZ etc"
 		},
 		"Administrator": {
 			"label": "Administrador",

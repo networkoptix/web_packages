@@ -53,7 +53,7 @@
     "Disconnect System from %CLOUD_NAME%?": "Odłączyć system od %CLOUD_NAME%?",
     "Disconnect from %CLOUD_NAME%": "Odłącz od %CLOUD_NAME%",
     "Disconnect from My Account": "Odłącz od mojego konta",
-    "Download": "Pobrane",
+    "Download": "Pobiera",
     "Download %VMS_NAME%": "Pobierz %VMS_NAME%",
     "Download Chrome": "Pobierz Chrome",
     "Download Firefox": "Pobierz Firefoxa",
@@ -61,7 +61,7 @@
     "Downloads": "Pobrane",
     "Draft": "Wersja robocza",
     "Dual Streaming": "Podwójne strumieniowanie",
-    "Email": "E-mail",
+    "Email": "Email",
     "Email is required": "E-mail jest wymagany",
     "Embed": "Osadź",
     "Enter \"Public User\" credentials:": "Wprowadź dane logowania \"Użytkownika publicznego\":",
@@ -96,7 +96,7 @@
     "Merge Systems": "Złącz systemy",
     "Merge current System with": " Złącz bieżący system z ",
     "Merge with Another System": "Złącz z innym systemem",
-    "Message": "Komunikat",
+    "Message": "Wiadomość",
     "Mine": "Moje",
     "Motion Detection": "Detekcja ruchu",
     "Multi Sensor": "Multi Sensor",
@@ -117,7 +117,7 @@
     "Password": "Hasło",
     "Password is required": "Hasło jest wymagane",
     "Password reset instructions are sent to Email": "Instrukcje resetowania hasła zostały wysłane na adres e-mail",
-    "Password successfully saved": "Hasło ustawione poprawnie",
+    "Password successfully saved": "Hasło zostało pomyślnie zapisane",
     "Password:": "Hasło:",
     "Please enter a valid Email": "Proszę wprowadzić prawidłowy e-mail",
     "Please review and agree to the Terms and Conditions and Privacy policy in order to proceed": "Proszę zapoznać się i wyrazić zgodę na zasady i warunki oraz politykę prywatności, aby kontynuować",
@@ -141,7 +141,7 @@
     "Settings": "Ustawienia",
     "Show All": "Pokaż wszystko",
     "Some of your servers don't support cloud System merge because of outdated software version.": "Niektóre serwery nie obsługują złączania w chmurze z powodu przestarzałej wersji oprogramowania.",
-    "Subject": "Subject",
+    "Subject": "Temat",
     "Support": "Wsparcie",
     "Support E-mail": "E-mail do wsparcia technicznego",
     "Support URL": "Adres WWW wsparcia technicznego",
@@ -187,7 +187,7 @@
             "label": "Administrator"
         },
         "Advanced Viewer": {
-            "description": "Może wyświetlać wideo na żywo, przeglądać archiwum, sterować PTZ itp.",
+            "description": "Podgląd wideo na żywo, przeglądanie archiwum, konfigurowanie kamer, sterowanie PTZ itp.",
             "label": "Zaawansowany użytkownik"
         },
         "Custom": {
@@ -304,7 +304,7 @@
                 "ipvd_feedback_device": "Opinie dotyczące {{asset}}",
                 "ipvd_feedback_page": "Opinia dotycząca listy kamer",
                 "sales_inquiry": "Zapytanie handlowe o {{asset}}",
-                "technical_inquiry": "Technical inquiry for {{asset}}"
+                "technical_inquiry": "Zapytanie techniczne do {{asset}}"
             },
             "title": {
                 "integration": "Skontaktuj się z {{companyName}}",
@@ -351,8 +351,7 @@
             },
             "arm": {
                 "label": "ARM",
-                "shortLabel": "ARM",
-                "supported": "<a href='/content/arm'>Zasady wsparcia serwerów ARM</a>"
+                "shortLabel": "ARM"
             },
             "ios": {
                 "label": "iOS",
@@ -370,8 +369,7 @@
             },
             "sdk": {
                 "label": "SDK",
-                "shortLabel": "SDK",
-                "supported": "C++ cross platform SDK"
+                "shortLabel": "SDK"
             },
             "windows": {
                 "label": "Windows"
@@ -537,7 +535,7 @@
         "commonMessage": "To hasło znajduje się na liście najczęściej stosowanych haseł na świecie",
         "fair": "średnie",
         "fairMessage": "Użyj liczb, wielkich i małych liter oraz znaków specjalnych, aby ustawić bezpieczniejsze hasło",
-        "good": "dobre",
+        "good": "dobry",
         "minLength": "za krótkie",
         "minLengthMessage": "Hasło musi zawierać co najmniej 8 znaków",
         "missingMessage": "Hasło jest wymagane",
@@ -550,7 +548,7 @@
     "phoneNumberWithLabel": "Tel: {{number}}",
     "pleaseSelect": "Proszę wybrać...",
     "privacyPolicy": {
-        "integration": "Przesyłając ten formularz, zgadzasz się na kontakt od %INTEGRATION_COMPANY% i/lub %COMPANY_NAME%.\nPolitykę prywatności firmy %INTEGRATION_COMPANY% znajdziesz <a href=\"%INTEGRATION_PRIVACY_POLICY%\" target=\"_blank\">tutaj</a>, a politykę prywatności firmy %COMPANY_NAME% <a href=\"%PRIVACY_LINK%\" target=\"_blank\">tutaj</a>. Zawierają one instrukcje dotyczące wycofania zgody.",
+        "integration": "Przesyłając ten formularz, zgadzasz się na kontakt od {{INTEGRATION_COMPANY}} i/lub %COMPANY_NAME%.\nPolitykę prywatności firmy {{INTEGRATION_COMPANY}} znajdziesz <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">tutaj</a>, a politykę prywatności firmy %COMPANY_NAME% <a href=\"%PRIVACY_LINK%\" target=\"_blank\">tutaj</a>. Zawierają one instrukcje dotyczące wycofania zgody.",
         "ipvd": "Przesyłając ten formularz zgadzasz się na kontakt przez %COMPANY_NAME%.\nPolitykę prywatności firmy %COMPANY_NAME% znajdziesz <a href=\"%PRIVACY_LINK%\" target=\"_blank\">tutaj</a>. Zawiera ona instrukcje dotyczące wycofania zgody."
     },
     "registration": {
@@ -615,8 +613,8 @@
         "online": "online",
         "unavailable": "niedostępny"
     },
-    "testedVersionLabel": "Tested with {{vmsName}} version:",
-    "testedVersionsLabel": "Tested with {{vmsName}} versions:",
+    "testedVersionLabel": "Testowane w {{vmsName}} w wersji:",
+    "testedVersionsLabel": "Testowane w {{vmsName}} w wersjach:",
     "users": "Użytkownicy",
     "you": "Ty"
 }

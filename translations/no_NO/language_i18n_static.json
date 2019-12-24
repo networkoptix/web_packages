@@ -18,9 +18,9 @@
 	"search": {
 		"Search": "Søk",
 		"search_ipvd": "Søk etter modell eller produsent",
-		"filter applied": "filter påført",
-		"filters applied": "filtre påført",
-		"Any": "Noen",
+		"filter applied": "filtrert visning",
+		"filters applied": "filtrert visning",
+		"Any": "Enhver",
 		"selected": "valgt",
 		"vendor": "Produsent",
 		"vendors": "Produsenter",
@@ -38,8 +38,8 @@
 		"IO": "I/O-moduler",
 		"multiSensor": "Multisensor kameraer",
 		"TwWayAudio": "2-veis lydenheter",
-		"audio": "Kameraer med lyd",
-		"encoder": "Enkodere",
+		"audio": "Kameraer med -veis lyd",
+		"encoder": "Enkoder",
 		"highRes": "Ekstra høyoppløselige kameraer"
 	},
 	"downloads": {
@@ -53,7 +53,7 @@
 		},
 		"groups": {
 			"windows": {
-				"label": "Windows"
+				"label": "Vindu"
 			},
 			"mac": {
 				"label": "Mac OS"
@@ -75,13 +75,11 @@
 			},
 			"arm": {
 				"label": "ARM",
-				"shortLabel": "ARM",
-				"supported": "<a href='/content/arm'>ARM-baserte servere support policy</a>"
+				"shortLabel": "ARM"
 			},
 			"sdk": {
 				"label": "SDK",
-				"shortLabel": "SDK",
-				"supported": "C++ cross platform SDK"
+				"shortLabel": "SDK"
 			}
 		},
 		"platforms": {
@@ -108,12 +106,12 @@
 		},
 		"releasesTypes": {
 			"beta": "Beta",
-			"betas": "Betas",
-			"rc": "Release Candidate",
-			"release": "Release",
-			"releases": "Releases",
-			"patch": "Patch",
-			"patches": "Patches"
+			"betas": "Betaer",
+			"rc": "Utsendelseskandidater",
+			"release": "Utgivelse",
+			"releases": "Utgivelser",
+			"patch": "Fiks",
+			"patches": "Fikser"
 		}
 	},
 	"ipvd": {
@@ -214,11 +212,11 @@
 		"merge": {
 			"commonText": "Kunne ikke slå sammen systemer <strong>{{primarySystem}}</strong> og <strong>{{secondarySystem}}</strong>.",
 			"connectToCloud": "Koble System du vil slå sammen med denne til <strong>{{cloudName}}</strong> eller slå sammen lokalt ved hjelp av <strong>{{vmsName}}</strong> Klienten.",
-			"mergeConfirmation": "Du er i ferd med å slå sammen systemene <strong>{{primarySystem}}</strong> og <strong>{{secondarySystem}}</strong>. Innstillinger og navnet vil bli tatt fra <strong>{{primarySystem}}</strong>.",
+			"mergeConfirmation": "Du er i ferd med å slå sammen systemer <strong>{{primarySystem}}</strong> og <strong>{{secondarySystem}}</strong>. Innstillinger og navnet vil bli tatt fra <strong>{{primarySystem}}</strong>.",
 			"mergeFailedTitle": "Systemsammenslåing mislyktes",
 			"primaryCannotMerge": "System {{targetSystem}} har en nyere programvareversjon som ikke er kompatibel med gjeldende system. Oppdater det nåværende systemet til <a href=\"/download\" target=\"_blank\" translate>siste versjon</a> å slå det sammen med {{targetSystem}} systemet.",
-			"primarySystemOffline": "System {{primarySystem}} er frakoblet og kan ikke slås sammen med System {{targetSystem}}.",
-			"secondaryCannotMerge": "System {{targetSystem}} har en eldre programvareversjon som ikke er kompatibel med gjeldende system. Oppdater {{targetSystem}} til <a href=\"/download\" target=\"_blank\" translate>siste bygg</a> å slå dert sammen med det nåværende.",
+			"primarySystemOffline": "System {{primarySystem}} er offline og kan ikke slås sammen med System {{targetSystem}}.",
+			"secondaryCannotMerge": "System {{targetSystem}} har en eldre programvareversjon som ikke er kompatibel med gjeldende system. Oppdater {{targetSystem}} til <a href=\"/download\" target=\"_blank\" translate>siste build</a> å slå dert sammen med det nåværende.",
 			"systemOffline": "System {{targetSystem}} er frakoblet og kan ikke slås sammen med det nåværende.",
 			"systemUnavailable": "System {{targetSystem}} er for tiden ikke tilgjengelig. Prøv igjen om noen få minutter eller kontakt",
 			"recommendSupport": {
@@ -228,7 +226,7 @@
 			}
 		},
 		"message": {
-			"failedToSend": "Meldingen har ikke sendt.",
+			"failedToSend": "Meldingen ble ikke sendt.",
 			"sent": "Meldingen er sendt.",
 			"title": {
 				"integration": "Kom i kontakt med {{companyName}}",

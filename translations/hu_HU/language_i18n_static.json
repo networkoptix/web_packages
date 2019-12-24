@@ -27,8 +27,8 @@
 		"hardwareType": "Típus",
 		"hardwareTypes": "Types",
 		"minResolution": "Minimum Resolution",
-		"analytics": "Analytics",
-		"analyticsSelected": "analytics events"
+		"analytics": "analitika",
+		"analyticsSelected": "analitikai események"
 	},
 	"cameraFilters": {
 		"ptz": "PTZ cameras",
@@ -75,13 +75,11 @@
 			},
 			"arm": {
 				"label": "ARM",
-				"shortLabel": "ARM",
-				"supported": "<a href='/content/arm'>ARM based servers support policy</a>"
+				"shortLabel": "ARM"
 			},
 			"sdk": {
 				"label": "SDK",
-				"shortLabel": "SDK",
-				"supported": "C++ cross platform SDK"
+				"shortLabel": "SDK"
 			}
 		},
 		"platforms": {
@@ -135,7 +133,7 @@
 		"isIoSupported": "I/O",
 		"isH265": "H.265",
 		"isMultiSensor": "Multi Sensor",
-		"isAnalyticsSupported": "Analytics",
+		"isAnalyticsSupported": "analitika",
 		"camera": "Kamera",
 		"multiSensorCamera": "Multi-Sensor Camera",
 		"encoder": "Encoder",
@@ -191,14 +189,14 @@
 		"debug": "Hibakeresés",
 		"login": "Bejelentkezés -",
 		"download": "%VMS_NAME% letöltése",
-		"downloadPlatform": "%VMS_NAME% letöltése ",
+		"downloadPlatform": "Download %VMS_NAME% for ",
 		"pageNotFound": "Az oldal nem található",
 		"supportedDevices": "Supported Devices",
 		"integrations": "Integrations"
 	},
 	"dialogs": {
 		"okButton": "OK",
-		"cancelButton": "Mégsem",
+		"cancelButton": "Mégse",
 		"createNewAccount": "Create New Account",
 		"changeAccountLogged": "You are already logged in with as {email}",
 		"loggedFromOther": "You will be logged in with a different account",
@@ -207,7 +205,7 @@
 		"logoutAuthorisedTitle": "Már bejelentkezett",
 		"logoutAuthorisedContinueButton": "Folyatatás",
 		"logoutAuthorisedLogoutButton": "Kijelentkezés",
-		"noClientDetectedTitle": "Telepítse a %VMS_NAME% alkalmazást a rendszer megtekintéshez",
+		"noClientDetectedTitle": "Install %VMS_NAME% to view your System",
 		"stayAs": "Stay logged as {email} ",
 		"stayLoggedIn": "Stay Logged In",
 		"download": "%VMS_NAME% letöltése",
@@ -404,7 +402,7 @@
 		},
 		"advancedViewer": {
 			"label": "Speciális felhasználó",
-			"description": "Élőkép, rögzített kép, kamerák konfigurálása, PTZ vezérlés, stb"
+			"description": "Élőkép, rögzített kép, kamerák konfigurálása, PTZ vezérlés, stb..."
 		},
 		"custom": {
 			"label": "Egyéni",
@@ -419,7 +417,7 @@
 	"users": "Felhasználók",
 	"testedVersionLabel": "Tested with {{vmsName}} version:",
 	"testedVersionsLabel": "Tested with {{vmsName}} versions:",
-	"About %CLOUD_NAME%": "About %CLOUD_NAME%",
+	"About %CLOUD_NAME%": "%CLOUD_NAME% névjegye",
 	"Download %VMS_NAME%": "%VMS_NAME% letöltése",
 	"Integrations": "Integrations",
 	"Privacy": "Biztonság",
@@ -430,7 +428,7 @@
 	"WHEN_MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{{targetSystemName}}</strong> System, and this system will be deleted.",
 	"FAILED_SYSTEM_DESCR": "This link is broken,<br>System may be disconnected from %CLOUD_NAME%,<br>Access to this System may be revoked, <br>or you may be logged into a different account.",
 	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "%CLOUD_NAME% nem kapcsolódik egy rendszeréhez sem",
-	"NO_SYSTEMS_LOGIN": "%VMS_NAME% használata a rendszerhez való csatlakozáshoz",
+	"NO_SYSTEMS_LOGIN": "Log in to your System using %VMS_NAME%",
 	"NO_SYSTEMS_GOTO_ADMINISTRATION": "Kattintson a \"Felhő\" fülre \"Rendszer adminisztráció\" lapon",
 	"NO_SYSTEMS_CONNECT_SYSTEM": "Press \"Connect System to %CLOUD_NAME%\""
 }

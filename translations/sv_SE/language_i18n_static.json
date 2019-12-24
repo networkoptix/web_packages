@@ -75,13 +75,11 @@
 			},
 			"arm": {
 				"label": "ARM",
-				"shortLabel": "ARM",
-				"supported": "<a href='/content/arm'>ARM-baserade servrar stöd policy</a>"
+				"shortLabel": "ARM"
 			},
 			"sdk": {
 				"label": "SDK",
-				"shortLabel": "SDK",
-				"supported": "C++ cross platform SDK"
+				"shortLabel": "SDK"
 			}
 		},
 		"platforms": {
@@ -108,12 +106,12 @@
 		},
 		"releasesTypes": {
 			"beta": "Beta",
-			"betas": "Betas",
-			"rc": "Release Candidate",
+			"betas": "Betor",
+			"rc": "Releasekandidat",
 			"release": "Release",
-			"releases": "Releases",
+			"releases": "Releaser",
 			"patch": "Patch",
-			"patches": "Patches"
+			"patches": "Patchar"
 		}
 	},
 	"ipvd": {
@@ -237,7 +235,7 @@
 			},
 			"subject": {
 				"sales_inquiry": "Försäljningsförfrågan för {{asset}}",
-				"technical_inquiry": "Technical inquiry for {{asset}}",
+				"technical_inquiry": "Teknisk fråga för {{asset}}",
 				"integration_feedback": "Feedback för integration {{asset}}",
 				"ipvd_feedback_page": "Feedback för kamerans sida",
 				"ipvd_feedback_device": "Feedback om {{asset}}"
@@ -350,12 +348,12 @@
 		"merging": "sammanslagning",
 		"notActivated": "inte aktiverad",
 		"online": "uppkopplad",
-		"offline": "frånkopplade",
+		"offline": "frånkopplad",
 		"unavailable": "inte tillgänglig"
 	},
 	"accessRoles": {
 		"disabled": {
-			"label": "Inaktiverad",
+			"label": "Avaktiverad",
 			"description": "Användaren är inaktiverad och kan inte logga in på System"
 		},
 		"Owner": {
@@ -363,7 +361,7 @@
 			"description": "Obegränsad åtkomst, inklusive möjligheten att dela och ansluta/avregistrera systemet från molnet"
 		},
 		"Viewer": {
-			"label": "Användare",
+			"label": "Tittare",
 			"description": "Kan visa live video och bläddra i arkivet"
 		},
 		"Live Viewer": {
@@ -395,7 +393,7 @@
 			"description": "Obegränsad åtkomst, inklusive möjligheten att dela och ansluta/avregistrera systemet från molnet"
 		},
 		"viewer": {
-			"label": "Användare",
+			"label": "Tittare",
 			"description": "Kan visa live video och bläddra i arkivet"
 		},
 		"liveViewer": {
@@ -417,8 +415,8 @@
 	},
 	"systemAdministration": "Systemadministration",
 	"users": "Användare",
-	"testedVersionLabel": "Tested with {{vmsName}} version:",
-	"testedVersionsLabel": "Tested with {{vmsName}} versions:",
+	"testedVersionLabel": "Testat på {{vmsName}} version:",
+	"testedVersionsLabel": "Testat på {{vmsName}} version:",
 	"About %CLOUD_NAME%": "Om %CLOUD_NAME%",
 	"Download %VMS_NAME%": "Ladda ner %VMS_NAME%",
 	"Integrations": "Integrationer",

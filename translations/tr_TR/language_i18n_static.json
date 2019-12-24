@@ -75,13 +75,11 @@
 			},
 			"arm": {
 				"label": "ARM",
-				"shortLabel": "ARM",
-				"supported": "<a href='/content/arm'>ARM tabanlı sunucular destek politikası</a>"
+				"shortLabel": "ARM"
 			},
 			"sdk": {
 				"label": "SDK",
-				"shortLabel": "SDK",
-				"supported": "C++ cross platform SDK"
+				"shortLabel": "SDK"
 			}
 		},
 		"platforms": {
@@ -126,11 +124,11 @@
 		"maxFps": "<span>Maksimum</span><br><span>FPS</span>",
 		"primaryCodec": "Kodek",
 		"isAudioSupported": "Ses",
-		"isTwAudioSupported": "çift Yönlü Ses",
+		"isTwAudioSupported": "Çift Yönlü Ses",
 		"isPtzSupported": "PTZ",
 		"isAptzSupported": "Gelişmiş PTZ",
 		"isAptzSupportedShort": "Gelş. PTZ",
-		"isFisheye": "Balıkgözü",
+		"isFisheye": "Fish-Eye",
 		"isMdSupported": "Hareket",
 		"isIoSupported": "G/Ç",
 		"isH265": "H.265",
@@ -164,7 +162,7 @@
 		"Connector": "Konnektör",
 		"Data Analytics": "Veri Analizleri",
 		"Drone": "Drone",
-		"Health Monitor": "Durum İzleyici",
+		"Health Monitor": "Performans İzleme",
 		"Storage": "Depolama"
 	},
 	"messageDialogPlaceholders": {
@@ -191,7 +189,7 @@
 		"debug": "Hata ayıklama",
 		"login": "Giriş yap -",
 		"download": "İndir %VMS_NAME%",
-		"downloadPlatform": "İndir %VMS_NAME% ",
+		"downloadPlatform": "Download %VMS_NAME% for ",
 		"pageNotFound": "Sayfa bulunamadı",
 		"supportedDevices": "Desteklenen cihazlar",
 		"integrations": "Entegrasyonlar"
@@ -207,7 +205,7 @@
 		"logoutAuthorisedTitle": "Zaten giriş yapılmış",
 		"logoutAuthorisedContinueButton": "Devam et",
 		"logoutAuthorisedLogoutButton": "Oturumu Kapat",
-		"noClientDetectedTitle": "Sisteminizi görüntülemek için %VMS_NAME%'i yükleyin",
+		"noClientDetectedTitle": "Install %VMS_NAME% to view your System",
 		"stayAs": "Bu email {email} ile bağlı kal ",
 		"stayLoggedIn": "Oturum açık kalsın",
 		"download": "İndir %VMS_NAME%",
@@ -281,7 +279,7 @@
 		"accountAlreadyActivated": "Bu hesap zaten etkinleştirildi",
 		"emailNotFound": "Hesap mevcut değil.",
 		"EmailAlreadyExists": "Bu e-posta adresi zaten kayıtlı",
-		"oldPasswordMistmatch": "Parola hatalı.",
+		"oldPasswordMistmatch": "Mevcut şifre hatalı.",
 		"passwordMismatch": "Hatalı parola",
 		"cantEditYourself": "Kendi izinlerini değiştirmeye izin verilmiyor",
 		"cantEditAdmin": "Bu kullanıcının yönetici izinleri var",
@@ -300,7 +298,7 @@
 		"fair": "idare eder",
 		"fairMessage": "Parolanın güçlü olması için \nküçük büyük harf ve özel karakterler kullanın",
 		"minLength": "çok kısa",
-		"minLengthMessage": "Şifre en az 8 karakter içermelidir",
+		"minLengthMessage": "Parola en az 8 karakterden oluşmalıdır",
 		"required": "yanlış",
 		"requiredMessage": "Sadece alfanümerik ve klavye karakterleri kullanın",
 		"weak": "zayıf",
@@ -319,8 +317,8 @@
 		"unavailable": "Sistem erişilebilir değil",
 		"offline": "Sistem çevrimdışı",
 		"offlineAlertRibbon": "Sistem çevrimdışı. Bazı ayarlara erişim olmayabilir.",
-		"openClient": "%VMS_NAME% içinde aç",
-		"openClientNoSystem": "Aç%VMS_NAME%",
+		"openClient": "Open in %VMS_NAME%",
+		"openClientNoSystem": "Aç %VMS_NAME%",
 		"confirmMergeAction": "Birleştir",
 		"mergeSystemTitle": "Sistemleri Birleştir",
 		"confirmRenameTitle": "Sistem Adı",
@@ -363,7 +361,7 @@
 			"description": "Sistem'i buluttan paylaşma / bağlanma ve bağlantıyı kesme gibi sınırsız erişim"
 		},
 		"Viewer": {
-			"label": "İzleyiciler",
+			"label": "İzleyici",
 			"description": "Canlı video görüntüleyebilir ve arşive gözatabilir"
 		},
 		"Live Viewer": {
@@ -372,7 +370,7 @@
 		},
 		"Advanced Viewer": {
 			"label": "Gelişmiş Görüntüleyici",
-			"description": "Canlı vidyo izleyebilir, arşive gözatabilir, kameraları ayarlayabilir, PTZ'yi kontrol edebilir vs"
+			"description": "Canlı vidyo izleyebilir, arşivi görüntüleyebilir, kameraları ayarlayabilir, PTZ'yi kontrol edebilir"
 		},
 		"Administrator": {
 			"label": "Yönetici",
@@ -395,7 +393,7 @@
 			"description": "Sistem'i buluttan paylaşma / bağlanma ve bağlantıyı kesme gibi sınırsız erişim"
 		},
 		"viewer": {
-			"label": "İzleyiciler",
+			"label": "İzleyici",
 			"description": "Canlı video görüntüleyebilir ve arşive gözatabilir"
 		},
 		"liveViewer": {
@@ -430,7 +428,7 @@
 	"WHEN_MERGE_FINISHES": "Birleştirme işlemi tamamlandığında, bu sistemdeki tüm kullanıcılar ve kameralar kullanılabilir hale gelir <strong>\" Sistem{{targetSystemName}}</strong> \" ve bu sistem silinecektir.",
 	"FAILED_SYSTEM_DESCR": "Bu bağlantı bozuk,<br>sistem bağlantısı kesilebilir %CLOUD_NAME% den kesilebilir,<br>sisteme erişim engellenmiş olabilir,<br>yada farklı bir hesapla sisteme girilmiş olabilir.",
 	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "%CLOUD_NAME% ile bağlı hiçbir Sisteminiz yok",
-	"NO_SYSTEMS_LOGIN": "%VMS_NAME% adresini kullanarak Sisteminize giriş yapın",
+	"NO_SYSTEMS_LOGIN": "Log in to your System using %VMS_NAME%",
 	"NO_SYSTEMS_GOTO_ADMINISTRATION": "\"Sistem Yönetimi\" iletişim kutusundaki \"Bulut\" sekmesine gidin",
 	"NO_SYSTEMS_CONNECT_SYSTEM": "Sistem %CLOUD_NAME% e bağlan\""
 }

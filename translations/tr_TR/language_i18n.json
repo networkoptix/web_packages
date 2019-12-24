@@ -19,7 +19,7 @@
     "Advanced Search": "Gelişmiş Arama",
     "All Integrations": "Tüm entegrasyonlar",
     "All Systems": "Tüm sistemler",
-    "All cloud users will be deleted.": "Tüm bulut kullanıcıları silindi.",
+    "All cloud users will be deleted.": "Tüm bulut kullanıcıları silinecek.",
     "All results": "Tüm sonuçlar",
     "Analytics": "Analiz",
     "Analytics Event": "Analiz Etkinliği",
@@ -45,7 +45,7 @@
     "Create Account": "Hesap oluştur",
     "Create account": "Hesap oluştur",
     "Current Password": "Geçerli şifre",
-    "Current password is required": "Geçerli şifre gerekiyor",
+    "Current password is required": "Şu anki şifre gerekiyor",
     "Depending of the size of the database it may take up to several hours.": "Veri tabanının boyutuna bağlı olarak birkaç saat sürebilir.",
     "Developer": "Geliştirici",
     "Discard": "Çıkar",
@@ -53,7 +53,7 @@
     "Disconnect System from %CLOUD_NAME%?": "%CLOUD_NAME% den bağlantıyı kesmek istiyor musunuz?",
     "Disconnect from %CLOUD_NAME%": "Bağlantıyı ile kes%CLOUD_NAME%",
     "Disconnect from My Account": "Hesabımdan çıkış yap",
-    "Download": "Karşıdan Yükle",
+    "Download": "İndir",
     "Download %VMS_NAME%": "İndir %VMS_NAME%",
     "Download Chrome": "Chrome'u indir",
     "Download Firefox": "Firefox'u indir",
@@ -61,7 +61,7 @@
     "Downloads": "İndirilenler",
     "Draft": "Taslak",
     "Dual Streaming": "Çift akış",
-    "Email": "Eposta",
+    "Email": "E-posta",
     "Email is required": "E-posta gerekiyor",
     "Embed": "Göm",
     "Enter \"Public User\" credentials:": "\"Genel Kullanıcı\" kimlik bilgilerini girin:",
@@ -76,7 +76,7 @@
     "First Name": "Adı",
     "First name": "Soyadı",
     "First name is required": "Ad girmek zorunludur",
-    "Fisheye": "Balıkgözü",
+    "Fisheye": "Fish-Eye",
     "Forgot password?": "Parolayı mı unuttunuz?",
     "Get in touch": "Temasa geçin",
     "How it works": "Nasıl çalışır",
@@ -102,7 +102,7 @@
     "Multi Sensor": "Çoklu sensör",
     "NO_SYSTEMS_CONNECT_SYSTEM": "Sistem %CLOUD_NAME% e bağlan\"",
     "NO_SYSTEMS_GOTO_ADMINISTRATION": "\"Sistem Yönetimi\" iletişim kutusundaki \"Bulut\" sekmesine gidin",
-    "NO_SYSTEMS_LOGIN": "%VMS_NAME% adresini kullanarak Sisteminize giriş yapın",
+    "NO_SYSTEMS_LOGIN": "Log in to your System using %VMS_NAME%",
     "NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "%CLOUD_NAME% ile bağlı hiçbir Sisteminiz yok",
     "New Password": "Yeni Parola",
     "No unsaved changes": "Kaydedilmemiş değişiklik yok",
@@ -149,7 +149,7 @@
     "Supported IP Video Devices": "Desteklenen IP Video Aygıları",
     "System name": "Sistem Adı",
     "System name is required": "Sistem adı zorunludur",
-    "System will be accessible through local network with local administrator account.": "Sisteme yerel ağda yerel yönetici hesabıyla erişilebilir.",
+    "System will be accessible through local network with local administrator account.": "Sisteme yerel yönetici hesabı ile yerel ağ üzerinden erişilebilir.",
     "Systems": "Sistemler",
     "Systems of such size may work but will be unstable and have troubles with updates and synchronisation.": "Bu büyüklükteki sistemler belki çalışabilir ancak kararsız olabilir ve güncelleme senkroniyle ile ilgili sorunlar yaşayabilir.",
     "Tags": "Etiketler",
@@ -162,7 +162,7 @@
     "This Email has been already registered in %CLOUD_NAME%": "Bu e-posta, %CLOUD_NAME% 'de zaten kayıtlı",
     "This device has reported to support some analytics events, but we don't have exact information about them.": "Bu cihaz bazı analitik etkinliklerini desteklediğini bildirdi, ancak bunlar hakkında kesin bir bilgimiz yok.",
     "To": "Kime",
-    "Too many attempts. Try again in a minute.": "Çok fazla deneme yapıldı. Daha sonra tekrar deneyin.",
+    "Too many attempts. Try again in a minute.": "Çok fazla deneme yapıldı. Bir dakika sonra tekrar deneyiniz.",
     "Until merge is finished you can log in to this system and watch video, but cannot change any settings.": "Birleştirme tamamlanana kadar bu sisteme giriş yapabilir ve video izleyebilir, ancak herhangi bir ayarı değiştiremezsiniz.",
     "Update them to the": "Onları güncelle",
     "Updated": "Güncellendi",
@@ -187,7 +187,7 @@
             "label": "Yönetici"
         },
         "Advanced Viewer": {
-            "description": "Canlı vidyo izleyebilir, arşive gözatabilir, kameraları ayarlayabilir, PTZ'yi kontrol edebilir vs",
+            "description": "Canlı vidyo izleyebilir, arşivi görüntüleyebilir, kameraları ayarlayabilir, PTZ'yi kontrol edebilir",
             "label": "Gelişmiş Görüntüleyici"
         },
         "Custom": {
@@ -204,7 +204,7 @@
         },
         "Viewer": {
             "description": "Canlı video görüntüleyebilir ve arşive gözatabilir",
-            "label": "İzleyiciler"
+            "label": "İzleyici"
         },
         "advancedViewer": {
             "description": "Canlı vidyo izleyebilir, arşivi görüntüleyebilir, kameraları ayarlayabilir, PTZ'yi kontrol edebilir",
@@ -236,7 +236,7 @@
         },
         "viewer": {
             "description": "Canlı video görüntüleyebilir ve arşive gözatabilir",
-            "label": "İzleyiciler"
+            "label": "İzleyici"
         }
     },
     "account": {
@@ -312,7 +312,7 @@
                 "ipvd_feedback_page": "Kameralar sayfası için geri bildirim"
             }
         },
-        "noClientDetectedTitle": "Sisteminizi görüntülemek için %VMS_NAME%'i yükleyin",
+        "noClientDetectedTitle": "Install %VMS_NAME% to view your System",
         "okButton": "Tamam",
         "sharing": {
             "confirmOwner": "Sistem sahibini değiştirirseniz, hesabınızdaki yetkileri iptal edersiniz. Bu eylem geri döndürülemez. Emin misiniz?",
@@ -326,7 +326,7 @@
         "stayLoggedIn": "Oturum açık kalsın"
     },
     "dialogs.merge.connectToCloud": "Birleştirmek istediğiniz <strong>{{cloudName}}</strong> sistemine bağlanın veya yerel sistemi <strong>{{vmsName}}</strong> kullanarak birleştirin.",
-    "dialogs.merge.mergeConfirmation": "<strong>{{primarySystem}}</strong> sistemi ile <strong>{{secondarySystem}}</strong> sistemini birleştirmek üzeresiniz. İsim ve ayarlar <strong>{{primarySystem}}</strong> sisteminden alınacaktır.",
+    "dialogs.merge.mergeConfirmation": "<strong>{{primarySystem}}</strong> ve <strong>{{secondarySystem}}</strong>sistemlerini birleştirmek üzeresiniz. Ayarlar ve isim <strong>{{primarySystem}}</strong>alınacaktır.",
     "dialogs.merge.primaryCannotMerge": "Sistem {{targetSystem}}, mevcut sistemle uyumlu olmayan daha yeni bir yazılım sürümüne sahip. Geçerli sistemi, {{targetSystem}} Sistemle birleştirmek için en son <a href=\"/download\" target=\"_blank\" translate>derleme</a> güncelleyin.",
     "dialogs.merge.primarySystemOffline": "dialogs.merge.primarySystemOffline",
     "dialogs.merge.secondaryCannotMerge": "Sistem {{targetSystem}}, mevcut sistemle uyumlu olmayan daha eski bir yazılım sürümüne sahip. Geçerli olanla birleştirmek için {{targetSystem}} en son <a href=\"/download\" target=\"_blank\" translate>derleme</a> güncelleyin.",
@@ -351,8 +351,7 @@
             },
             "arm": {
                 "label": "ARM",
-                "shortLabel": "ARM",
-                "supported": "<a href='/content/arm'>ARM tabanlı sunucular destek politikası</a>"
+                "shortLabel": "ARM"
             },
             "ios": {
                 "label": "iOS",
@@ -370,8 +369,7 @@
             },
             "sdk": {
                 "label": "SDK",
-                "shortLabel": "SDK",
-                "supported": "C++ cross platform SDK"
+                "shortLabel": "SDK"
             },
             "windows": {
                 "label": "Windows"
@@ -438,7 +436,7 @@
         "notAuthorized": "Hatalı parola",
         "notFound": "Bulunamadı",
         "ok": "tamam",
-        "oldPasswordMistmatch": "Parola hatalı.",
+        "oldPasswordMistmatch": "Mevcut şifre hatalı.",
         "oldSafariNotSupported": "Safari 10'dan büyük sürümleri desteklenmez",
         "passwordMismatch": "Hatalı parola",
         "thisSystem": "sistem",
@@ -454,7 +452,7 @@
         "Connector": "Konnektör",
         "Data Analytics": "Veri Analizleri",
         "Drone": "Drone",
-        "Health Monitor": "Durum İzleyici",
+        "Health Monitor": "Performans İzleme",
         "Storage": "Depolama",
         "backToEditText": "Düzeleme arayüzüne dön",
         "myIntegrationsLabel": "Benim",
@@ -484,7 +482,7 @@
         "isAptzSupported": "Gelişmiş PTZ",
         "isAptzSupportedShort": "Gelş. PTZ",
         "isAudioSupported": "Ses",
-        "isFisheye": "Balıkgözü",
+        "isFisheye": "Fish-Eye",
         "isH265": "H.265",
         "isIoSupported": "G/Ç",
         "isMdSupported": "Hareket",
@@ -516,7 +514,7 @@
         "debug": "Hata ayıklama",
         "default": "%CLOUD_NAME%",
         "download": "İndir %VMS_NAME%",
-        "downloadPlatform": "İndir %VMS_NAME% ",
+        "downloadPlatform": "Download %VMS_NAME% for ",
         "integrations": "Entegrasyonlar",
         "login": "Giriş yap -",
         "pageNotFound": "Sayfa bulunamadı",
@@ -539,7 +537,7 @@
         "fairMessage": "Parolanın güçlü olması için \nküçük büyük harf ve özel karakterler kullanın",
         "good": "iyi",
         "minLength": "çok kısa",
-        "minLengthMessage": "Şifre en az 8 karakter içermelidir",
+        "minLengthMessage": "Parola en az 8 karakterden oluşmalıdır",
         "missingMessage": "Parola gerekmektedir",
         "required": "yanlış",
         "requiredMessage": "Sadece alfanümerik ve klavye karakterleri kullanın",
@@ -593,8 +591,8 @@
         "mySystemSearch": "IMeMyMine",
         "offline": "Sistem çevrimdışı",
         "offlineAlertRibbon": "Sistem çevrimdışı. Bazı ayarlara erişim olmayabilir.",
-        "openClient": "%VMS_NAME% içinde aç",
-        "openClientNoSystem": "Aç%VMS_NAME%",
+        "openClient": "Open in %VMS_NAME%",
+        "openClientNoSystem": "Aç %VMS_NAME%",
         "permissionsRemoved": "İzinler {{email}}'den kaldırıldı",
         "shareOffline": "Çevrimdışıyken sistem paylaşılamıyor",
         "shareUnauthorized": "Bu sistemi paylaşma izniniz yok",

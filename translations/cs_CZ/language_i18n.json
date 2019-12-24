@@ -10,7 +10,7 @@
     "Account is successfully created.": "Účet byl úspěšně vytvořen.",
     "Account not activated": "Účet není aktivován",
     "Account not found": "Účet nebyl nalezen",
-    "Activate your account": "Prosím, aktivujte si váš účet",
+    "Activate your account": "Aktivujte svůj účet",
     "Actual number of events supported by this camera may be bigger.": "Skutečný počet událostí podporovaných touto kamerou může být větší.",
     "Add User": "Přidat uživatele",
     "Additional Requirements": "Další požadavky",
@@ -34,7 +34,7 @@
     "Camera header": "Záhlaví kamery",
     "Cameras menu": "Kamerové menu",
     "Cancel": "Zrušit",
-    "Change Password": "Změnit heslo",
+    "Change Password": "Změna hesla",
     "Checking...": "Kontrolování...",
     "Choose which properties should be visible to customers:": "Vyberte, které vlastnosti mají být viditelné pro zákazníky:",
     "Close": "Zavřít",
@@ -62,7 +62,7 @@
     "Draft": "Koncept",
     "Dual Streaming": "Dual Streaming",
     "Email": "Email",
-    "Email is required": "Email je povinný",
+    "Email is required": "Je vyžadován e-mail",
     "Embed": "Vložit",
     "Enter \"Public User\" credentials:": "Zadejte přihlašovací údaje veřejného uživatele:",
     "Enter password for your account to continue": "Chcete-li pokračovat, zadejte heslo",
@@ -76,7 +76,7 @@
     "First Name": "Křestní jméno",
     "First name": "Jméno",
     "First name is required": "Jméno je povinné",
-    "Fisheye": "Fisheye",
+    "Fisheye": "Rybí oko",
     "Forgot password?": "Zapomněli jste heslo?",
     "Get in touch": "Buďte v kontaktu",
     "How it works": "Jak to funguje",
@@ -91,7 +91,7 @@
     "Last name is required": "Příjmení je povinné",
     "Latest version": "Nejnovější verze",
     "Log In": "Přihlásit se",
-    "Log Out": "Odhlásit se",
+    "Log Out": "Odhlásit",
     "Log in to %CLOUD_NAME%": "Přihlaste se k %CLOUD_NAME%",
     "Merge Systems": "Sloučení systémů",
     "Merge current System with": "Sloučit stávající systém s",
@@ -119,7 +119,7 @@
     "Password reset instructions are sent to Email": "Pokyny pro obnovení hesla jsou odeslány na email",
     "Password successfully saved": "Heslo bylo úspěšně uloženo",
     "Password:": "Heslo:",
-    "Please enter a valid Email": "Prosím zadejte platný email",
+    "Please enter a valid Email": "Zadejte prosím platný e-mail",
     "Please review and agree to the Terms and Conditions and Privacy policy in order to proceed": "Chcete-li pokračovat, zkontrolujete a odsouhlaste obchodní podmínky a zásady ochrany osobních údajů",
     "Popularity": "Oblíbené",
     "Privacy": "Soukromí",
@@ -184,11 +184,11 @@
     "accessRoles": {
         "Administrator": {
             "description": "Neomezený přístup včetně možnosti sdílení",
-            "label": "Administrátor"
+            "label": "Administrator"
         },
         "Advanced Viewer": {
             "description": "Lze sledovat živé video, procházet archiv, ovládat PTZ atd",
-            "label": "Rozšířený prohlížeč"
+            "label": "Pokročilý prohlížeč"
         },
         "Custom": {
             "description": "Pro nastavení uživatelských oprávnění použijte aplikaci %VMS_NAME% Client",
@@ -243,13 +243,13 @@
         "accountSavedSuccess": "Váš účet byl úspěšně uložen",
         "accountSettings": "Nastavení účtu",
         "activationLinkSent": "Aktivní odkaz byl odeslán",
-        "changePassword": "Změnit heslo",
+        "changePassword": "Změna hesla",
         "newPasswordLabel": "Nové heslo",
         "passwordChangedSuccess": "Váš účet byl úspěšně uložen",
         "saveChanges": "Uložit"
     },
     "activeActions": {
-        "resetPassword": "Obnovení hesla",
+        "resetPassword": "Obnovit heslo",
         "sendConfirm": "Znovu poslat aktivační odkaz",
         "setNewPassword": "Uložit heslo",
         "setNewPasswordLabel": "Nové heslo"
@@ -275,10 +275,10 @@
         "createNewAccount": "Create New Account",
         "download": "Stáhnout %VMS_NAME%",
         "loggedFromOther": "You will be logged in with a different account",
-        "loginButton": "Přihlásit",
+        "loginButton": "Přihlásit se",
         "loginTitle": "Přihlaste se k %CLOUD_NAME%",
         "logoutAuthorisedContinueButton": "Pokračovat",
-        "logoutAuthorisedLogoutButton": "Odhlásit se",
+        "logoutAuthorisedLogoutButton": "Odhlásit",
         "logoutAuthorisedTitle": "Již jste přihlášen",
         "merge": {
             "commonText": "Nelze sloučit systémy <strong>{{primarySystem}}</strong> a <strong>{{secondarySystem}}</strong>.",
@@ -351,8 +351,7 @@
             },
             "arm": {
                 "label": "ARM",
-                "shortLabel": "ARM",
-                "supported": "<a href='/content/arm'>ARM based servers support policy</a>"
+                "shortLabel": "ARM"
             },
             "ios": {
                 "label": "iOS",
@@ -370,8 +369,7 @@
             },
             "sdk": {
                 "label": "SDK",
-                "shortLabel": "SDK",
-                "supported": "C++ cross platform SDK"
+                "shortLabel": "SDK"
             },
             "windows": {
                 "label": "Windows"
@@ -398,12 +396,12 @@
         },
         "releasesTypes": {
             "beta": "Beta",
-            "betas": "Betas",
+            "betas": "Beta verze",
             "patch": "Patch",
-            "patches": "Patches",
+            "patches": "Opravy",
             "rc": "Release Candidate",
             "release": "Release",
-            "releases": "Releases"
+            "releases": "Vydání"
         }
     },
     "errorCodes": {
@@ -484,7 +482,7 @@
         "isAptzSupported": "Pokročilé PTZ",
         "isAptzSupportedShort": "Adv. PTZ",
         "isAudioSupported": "Zvuk",
-        "isFisheye": "Fisheye",
+        "isFisheye": "Rybí oko",
         "isH265": "H.265",
         "isIoSupported": "I/O",
         "isMdSupported": "Pohyb",

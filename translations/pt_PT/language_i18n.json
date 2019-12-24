@@ -1,25 +1,25 @@
 {
     "2-Way Audio": "2-Way Audio",
-    "About %CLOUD_NAME%": "About %CLOUD_NAME%",
+    "About %CLOUD_NAME%": "Sobre o %CLOUD_NAME%",
     "Access Level": "Access Level",
     "Access level": "Access level",
     "Account Information": "Account Information",
-    "Account Settings": "Definições da Conta",
+    "Account Settings": "Configurações da conta",
     "Account is already activated or confirmation code is incorrect": "A conta já está activada ou o código de confirmação está incorreto",
     "Account is created.": "Conta foi criada.",
     "Account is successfully created.": "Conta criada com sucesso.",
     "Account not activated": "Conta não activada",
     "Account not found": "Conta não encontrada",
-    "Activate your account": "Ative sua conta",
+    "Activate your account": "Activar a sua conta",
     "Actual number of events supported by this camera may be bigger.": "O número real de eventos suportados por esta câmara pode ser maior.",
     "Add User": "Add User",
     "Additional Requirements": "Additional Requirements",
     "Administration": "Administration",
     "Advanced PTZ": "Advanced PTZ",
-    "Advanced Search": "Advanced Search",
+    "Advanced Search": "Pesquisa avançada",
     "All Integrations": "All Integrations",
     "All Systems": "Todos os sistemas",
-    "All cloud users will be deleted.": "Todos os utilizadores da \"Cloud\" serão apagados.",
+    "All cloud users will be deleted.": "All cloud users will be deleted.",
     "All results": "All results",
     "Analytics": "Analytics",
     "Analytics Event": "Evento de Analytics",
@@ -75,7 +75,7 @@
     "Firmware version": "Firmware version",
     "First Name": "First Name",
     "First name": "Primeiro Nome",
-    "First name is required": "O nome próprio é obrigatório",
+    "First name is required": "É necessário o primeiro nome",
     "Fisheye": "Fisheye",
     "Forgot password?": "Esqueceu a senha?",
     "Get in touch": "Get in touch",
@@ -88,7 +88,7 @@
     "Language": "Idioma",
     "Last Name": "Last Name",
     "Last name": "Último nome",
-    "Last name is required": "O apelido é obrigatório",
+    "Last name is required": "É necessário o último nome",
     "Latest version": "Versão mais recente",
     "Log In": "Iniciar sessão",
     "Log Out": "Terminar sessão",
@@ -115,7 +115,7 @@
     "PTZ": "PTZ",
     "Page not found": "Página não encontrada",
     "Password": "Password",
-    "Password is required": "A senha é obrigatória",
+    "Password is required": "A senha é necessária",
     "Password reset instructions are sent to Email": "As instruções de reset de senha são enviadas para o e-mail",
     "Password successfully saved": "Senha guardada com sucesso",
     "Password:": "Senha:",
@@ -145,10 +145,10 @@
     "Support": "Suporte",
     "Support E-mail": "Support E-mail",
     "Support URL": "Support URL",
-    "Supported Devices": "Supported Devices",
+    "Supported Devices": "Dispositivos suportados",
     "Supported IP Video Devices": "Dispositivos de Vídeo IP Suportados",
     "System name": "Nome do Sistema",
-    "System name is required": "O nome do sistema é obrigatório",
+    "System name is required": "É necessário o nome do Sistema",
     "System will be accessible through local network with local administrator account.": "O sistema estará acessível através da rede local com conta de administrador local.",
     "Systems": "Sistemas",
     "Systems of such size may work but will be unstable and have troubles with updates and synchronisation.": "Systems of such size may work but will be unstable and have troubles with updates and synchronisation.",
@@ -162,7 +162,7 @@
     "This Email has been already registered in %CLOUD_NAME%": "Este e-mail já foi registado em %CLOUD_NAME%",
     "This device has reported to support some analytics events, but we don't have exact information about them.": "Este dispositivo reportou que suporta alguns eventos de analytics, mas não temos informações exatas sobre eles.",
     "To": "To",
-    "Too many attempts. Try again in a minute.": "Demasiadas tentativas. Tente novamente dentro de um minuto.",
+    "Too many attempts. Try again in a minute.": "Demasiadas tentativas. Tente novamente mais tarde.",
     "Until merge is finished you can log in to this system and watch video, but cannot change any settings.": "Até que o \"Merge\" seja concluído, pode efectuar o login nesse sistema e reproduzir vídeo, mas não pode alterar as definições.",
     "Update them to the": "Update them to the",
     "Updated": "Updated",
@@ -179,7 +179,7 @@
     "Your Email": "Your Email",
     "Your Name": "Your Name",
     "Your access level": "Your access level",
-    "Your account is successfully activated": "A sua conta foi gravada com sucesso",
+    "Your account is successfully activated": "A sua conta foi activada com sucesso",
     "Your browser is not supported": "O seu browser não é suportado",
     "accessRoles": {
         "Administrator": {
@@ -187,7 +187,7 @@
             "label": "Administrador"
         },
         "Advanced Viewer": {
-            "description": "Pode ver vídeos ao vivo, pesquisar os arquivos, configurar câmaras, controlar PTZ etc",
+            "description": "Pode visualizar vídeo ao vivo, pesquisar os arquivos, configurar câmaras, controlar PTZ etc",
             "label": "Visualizador Avançado"
         },
         "Custom": {
@@ -241,7 +241,7 @@
     },
     "account": {
         "accountSavedSuccess": "A sua conta foi gravada com sucesso",
-        "accountSettings": "Definições da Conta",
+        "accountSettings": "Configurações da conta",
         "activationLinkSent": "Link de activação enviado",
         "changePassword": "Alterar senha",
         "newPasswordLabel": "Nova senha",
@@ -275,7 +275,7 @@
         "createNewAccount": "Create New Account",
         "download": "Baixar %VMS_NAME%",
         "loggedFromOther": "You will be logged in with a different account",
-        "loginButton": "Entrar",
+        "loginButton": "Log in",
         "loginTitle": "Logar em %CLOUD_NAME%",
         "logoutAuthorisedContinueButton": "Continuar",
         "logoutAuthorisedLogoutButton": "Terminar sessão",
@@ -351,8 +351,7 @@
             },
             "arm": {
                 "label": "ARM",
-                "shortLabel": "ARM",
-                "supported": "<a href='/content/arm'>ARM based servers support policy</a>"
+                "shortLabel": "ARM"
             },
             "ios": {
                 "label": "iOS",
@@ -370,8 +369,7 @@
             },
             "sdk": {
                 "label": "SDK",
-                "shortLabel": "SDK",
-                "supported": "C++ cross platform SDK"
+                "shortLabel": "SDK"
             },
             "windows": {
                 "label": "Windows"
@@ -403,7 +401,7 @@
             "patches": "Patches",
             "rc": "Release Candidate",
             "release": "Release",
-            "releases": "Releases"
+            "releases": "Versões"
         }
     },
     "errorCodes": {
@@ -428,7 +426,7 @@
         "cantOpenClient": "%VMS_NAME% application is not detected.",
         "cantRegisterPrefix": "Ocorreu um erro",
         "cantSendActivationPrefix": "Não é possível enviar um email de confirmação",
-        "cantSendConfirmationPrefix": "Não é possível enviar um email de confirmação",
+        "cantSendConfirmationPrefix": "Não é possível enviar o email de confirmação",
         "cantSharePrefix": "Não é possível partilhar o Sistema",
         "cantUnshareWithMeSystemPrefix": "Não é possível apagar o Sistema",
         "emailNotFound": "Conta não existe.",
@@ -455,7 +453,7 @@
         "Data Analytics": "Data Analytics",
         "Drone": "Drone",
         "Health Monitor": "Monitor de Saúde",
-        "Storage": "Armazenamento",
+        "Storage": "Storage",
         "backToEditText": "Back to the editing interfaces",
         "myIntegrationsLabel": "Mine",
         "previewRibbonText": "This page is a preview of the latest changes, and it doesn't match publicly available version."
@@ -525,7 +523,7 @@
         "restorePassword": "Reset de Senha -",
         "restorePasswordCode": "Reset de Senha -",
         "restorePasswordSuccess": "Senha guardada -",
-        "supportedDevices": "Supported Devices",
+        "supportedDevices": "Dispositivos suportados",
         "system": "Sistema -",
         "systemShare": "Partilha de Sistema -",
         "systems": "Sistemas -",
@@ -540,7 +538,7 @@
         "good": "bom",
         "minLength": "demasiado curta",
         "minLengthMessage": "A senha deve conter pelo menos 8 caracteres",
-        "missingMessage": "A senha é obrigatória",
+        "missingMessage": "A senha é necessária",
         "required": "incorreta",
         "requiredMessage": "Use apenas letras latinas, números e símbolos do teclado, evite espaços à esquerda e à direita",
         "strongMessage": "Senha forte!",
@@ -561,7 +559,7 @@
         "Any": "Any",
         "Search": "Pesquisar",
         "analytics": "Analytics",
-        "analyticsSelected": "analytics events",
+        "analyticsSelected": "evento de Analytics",
         "filter applied": "filter applied",
         "filters applied": "filters applied",
         "hardwareType": "Tipo",

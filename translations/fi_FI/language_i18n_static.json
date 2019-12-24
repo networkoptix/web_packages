@@ -75,13 +75,11 @@
 			},
 			"arm": {
 				"label": "ARM",
-				"shortLabel": "ARM",
-				"supported": "<a href='/content/arm'>ARM based servers support policy</a>"
+				"shortLabel": "ARM"
 			},
 			"sdk": {
 				"label": "SDK",
-				"shortLabel": "SDK",
-				"supported": "C++ cross platform SDK"
+				"shortLabel": "SDK"
 			}
 		},
 		"platforms": {
@@ -108,12 +106,12 @@
 		},
 		"releasesTypes": {
 			"beta": "Beta",
-			"betas": "Betas",
-			"rc": "Release Candidate",
-			"release": "Release",
-			"releases": "Releases",
-			"patch": "Patch",
-			"patches": "Patches"
+			"betas": "Beta-versioita",
+			"rc": "Julkaisuehdokkaat",
+			"release": "Julkaisu",
+			"releases": "Julkaisut",
+			"patch": "Korjaus",
+			"patches": "Korjaukset"
 		}
 	},
 	"ipvd": {
@@ -308,7 +306,7 @@
 		"strongMessage": "Vahva salasana!",
 		"common": "liian yleinen",
 		"commonMessage": "Tämä salasana on maailman suosituimpia salasanoja",
-		"missingMessage": "Salasana tarvitaan"
+		"missingMessage": "Salasana on pakollinen"
 	},
 	"registration": {
 		"agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
@@ -392,7 +390,7 @@
 		},
 		"owner": {
 			"label": "Omistaja",
-			"description": "Rajoittamaton pääsy, mukaan lukien kyky jakaa ja yhdistää / irroittaa järjestelmää pilvestä"
+			"description": "Rajoittamaton pääsy, mukaan lukien oikeus jakaa ja yhdistää / irrottaa järjestelmä pilvestä"
 		},
 		"viewer": {
 			"label": "Katsoja",
@@ -400,14 +398,14 @@
 		},
 		"liveViewer": {
 			"label": "Reaaliaikainen katselu",
-			"description": "Voit katsella vain reaaliaikaista videota"
+			"description": "Voi katsella vain reaaliaikaista videota"
 		},
 		"advancedViewer": {
 			"label": "Edistyneempi katselu",
 			"description": "Voi katsella reaaliaikasta videota, selata arkistoa, määrittää kameroita, ohjata PTZ: tä jne"
 		},
 		"custom": {
-			"label": "Asiakassuhde",
+			"label": "Muokattu",
 			"description": "Käytä %VMS_NAME% Client -sovellusta mukautettujen käyttöoikeuksien määrittämiseen"
 		}
 	},

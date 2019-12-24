@@ -4,7 +4,7 @@
     "Access Level": "Рівні доступу",
     "Access level": "Рівні доступу",
     "Account Information": "Інформація про обліковий запис",
-    "Account Settings": "Параметри облікового запису",
+    "Account Settings": "Параметри Облікового Запису",
     "Account is already activated or confirmation code is incorrect": "Обліковий запис вже активовано або код підтвердження невірний",
     "Account is created.": "Обліковий запис створено.",
     "Account is successfully created.": "Ваш обліковий запис успішно створено.",
@@ -33,7 +33,7 @@
     "Camera controls": "Керування камерою",
     "Camera header": "Заголовок камери",
     "Cameras menu": "Меню камер",
-    "Cancel": "Відмінити",
+    "Cancel": "Скасувати",
     "Change Password": "Змінити пароль",
     "Checking...": "Перевірка...",
     "Choose which properties should be visible to customers:": "Виберіть, які властивості мають бути видимі для клієнтів:",
@@ -61,7 +61,7 @@
     "Downloads": "Завантаження",
     "Draft": "Чернетка",
     "Dual Streaming": "Подвійне потокове передавання",
-    "Email": "Email",
+    "Email": "Адреса електронної пошти",
     "Email is required": "Електронна пошта обов'язкова",
     "Embed": "Вбудувати",
     "Enter \"Public User\" credentials:": "Введіть облікові дані для ролі «Публічний користувач»:",
@@ -75,8 +75,8 @@
     "Firmware version": "Версія прошивки",
     "First Name": "Ім'я",
     "First name": "Ім'я",
-    "First name is required": "Поле \"Ім'я\" обов'язково до заповнення",
-    "Fisheye": "Fisheye",
+    "First name is required": "Поле Ім'я обов'язкове до заповнення",
+    "Fisheye": "Риб'яче око",
     "Forgot password?": "Забули пароль?",
     "Get in touch": "Зв'язатися з нами",
     "How it works": "Як це працює",
@@ -88,7 +88,7 @@
     "Language": "Мова",
     "Last Name": "Прізвище",
     "Last name": "Прізвище",
-    "Last name is required": "Поле \"Прізвище\" обов'язкове до заповнення",
+    "Last name is required": "Поле Прізвище обов'язкове до заповнення",
     "Latest version": "Остання версія",
     "Log In": "Увійти",
     "Log Out": "Вийти",
@@ -98,7 +98,7 @@
     "Merge with Another System": "Об’єднати з іншою системою",
     "Message": "Повідомлення",
     "Mine": "Мій",
-    "Motion Detection": "Детекцiя Руху",
+    "Motion Detection": "Детектор руху",
     "Multi Sensor": "Мультисенсор",
     "NO_SYSTEMS_CONNECT_SYSTEM": "Натисніть \"Підключити систему до %CLOUD_NAME%\"",
     "NO_SYSTEMS_GOTO_ADMINISTRATION": "Перейдіть на вкладку \"Хмара\" у діалоговому вікні \"Системне адміністрування\"",
@@ -107,7 +107,7 @@
     "New Password": "Новий Пароль",
     "No unsaved changes": "Немає незбережених змін",
     "Nothing Found": "Нічого не знайдено",
-    "OK": "ОК",
+    "OK": "Добре",
     "Ok": "Ок",
     "Other packages:": "Інші пакети:",
     "Other releases, patches and beta versions": "Інші релізи, патчі і бета-версії",
@@ -119,7 +119,7 @@
     "Password reset instructions are sent to Email": "Інструкції щодо скидання пароля надсилаються на електронну адресу",
     "Password successfully saved": "Пароль змінено успішно",
     "Password:": "Пароль:",
-    "Please enter a valid Email": "Будь ласка, введіть дійсну адресу електронної пошти",
+    "Please enter a valid Email": "Будь ласка, введіть дійсну електронну скриню",
     "Please review and agree to the Terms and Conditions and Privacy policy in order to proceed": "Щоб продовжити, перегляньте та погодьтеся із загальними положеннями, умовами та політикою конфіденційності",
     "Popularity": "Популярність",
     "Privacy": "Приватність",
@@ -134,26 +134,26 @@
     "Resolution(max)": "Роздільна здатність(макс.)",
     "Save": "Зберегти",
     "Search in google": "Пошук у Google",
-    "Secondary Stream": "Другий Потік",
+    "Secondary Stream": "Вторинний потік",
     "Send": "Надіслати",
     "Send feedback about this device": "Надіслати відгук про цей пристрій",
     "Set New Password": "Встановити новий пароль",
     "Settings": "Налаштування",
-    "Show All": "Показати Всі",
+    "Show All": "Показати все",
     "Some of your servers don't support cloud System merge because of outdated software version.": "Деякі ваші сервери не підтримують злиття системної хмари через застарілу версію програмного забезпечення.",
-    "Subject": "Subject",
+    "Subject": "Тема",
     "Support": "Підтримка",
     "Support E-mail": "Email підтримки",
     "Support URL": "URL підтримки",
     "Supported Devices": "Пристрої, що підтримуються",
-    "Supported IP Video Devices": "Підтримувані ІР-пристрої",
+    "Supported IP Video Devices": "Підтримувані ІР відео-пристрої",
     "System name": "Назва системи",
     "System name is required": "Ім'я системи обов'язкове",
     "System will be accessible through local network with local administrator account.": "Система буде доступна через локальну мережу з локальним обліковим записом адміністратора.",
     "Systems": "Системи",
     "Systems of such size may work but will be unstable and have troubles with updates and synchronisation.": "Системи такого розміру можуть працювати, але будуть нестабільними і матимуть проблеми з оновленнями та синхронізацією.",
     "Tags": "Теги",
-    "Take me home": "Перейти на домашню сторінку",
+    "Take me home": "Відвези мене додому",
     "Take the name and settings from": "Візьміть ім’я та налаштування з",
     "Terms": "Умови",
     "Terms of Use": "Умови використання",
@@ -196,7 +196,7 @@
         },
         "Live Viewer": {
             "description": "Можна переглядати лише відео в реальному часі",
-            "label": "Відео в реальному часі"
+            "label": "Відео з камер"
         },
         "Owner": {
             "description": "Необмежений доступ, включаючи управління спільним доступом та підключенням/відключення системи до/від хмари",
@@ -224,7 +224,7 @@
         },
         "disabled": {
             "description": "Користувач вимкнений і не може ввійти в систему",
-            "label": "Вимкнено"
+            "label": "Вимкнений"
         },
         "liveViewer": {
             "description": "Можна переглядати лише відео в реальному часі",
@@ -241,7 +241,7 @@
     },
     "account": {
         "accountSavedSuccess": "Ваш обліковий запис успішно збережено",
-        "accountSettings": "Параметри облікового запису",
+        "accountSettings": "Параметри Облікового Запису",
         "activationLinkSent": "Посилання для активації відправлене",
         "changePassword": "Змінити пароль",
         "newPasswordLabel": "Новий пароль",
@@ -249,7 +249,7 @@
         "saveChanges": "Зберегти"
     },
     "activeActions": {
-        "resetPassword": "Відновити пароль",
+        "resetPassword": "Скидання пароля",
         "sendConfirm": "Відправити посилання активації ще раз",
         "setNewPassword": "Зберегти пароль",
         "setNewPasswordLabel": "Новий пароль"
@@ -268,14 +268,14 @@
         "ptz": "PTZ камери"
     },
     "clientProtocol": "%CLIENT_PROTOCOL%:",
-    "devices": "пристрої",
+    "devices": "пристроїв",
     "dialogs": {
-        "cancelButton": "Відмінити",
+        "cancelButton": "Скасувати",
         "changeAccountLogged": "Ви вже ввійшли з {email}",
         "createNewAccount": "Створити новий обліковий запис",
         "download": "Завантажити %VMS_NAME%",
         "loggedFromOther": "Ви ввійдете в інший обліковий запис",
-        "loginButton": "Увійти",
+        "loginButton": "Вхід",
         "loginTitle": "Увійти до %CLOUD_NAME%",
         "logoutAuthorisedContinueButton": "Продовжити",
         "logoutAuthorisedLogoutButton": "Вийти",
@@ -304,7 +304,7 @@
                 "ipvd_feedback_device": "Відгук про {{asset}}",
                 "ipvd_feedback_page": "Зворотній зв’язок для сторінки камер",
                 "sales_inquiry": "Запит на продаж {{asset}}",
-                "technical_inquiry": "Technical inquiry for {{asset}}"
+                "technical_inquiry": "Технічний запит на {{asset}}"
             },
             "title": {
                 "integration": "Зв’яжіться з {{companyName}}",
@@ -313,7 +313,7 @@
             }
         },
         "noClientDetectedTitle": "Встановіть %VMS_NAME% для роботи з системою",
-        "okButton": "ОК",
+        "okButton": "Добре",
         "sharing": {
             "confirmOwner": "Якщо змінити власника системи, вона більше не буде належати до поточного облікового запису. Ця дія є незворотньою. Ви впевнені?",
             "editShareConfirmButton": "Зберегти",
@@ -351,8 +351,7 @@
             },
             "arm": {
                 "label": "ARM",
-                "shortLabel": "ARM",
-                "supported": "<a href='/content/arm'>Політика підтримки серверів на основі ARM</a>"
+                "shortLabel": "ARM"
             },
             "ios": {
                 "label": "iOS",
@@ -370,8 +369,7 @@
             },
             "sdk": {
                 "label": "SDK",
-                "shortLabel": "SDK",
-                "supported": "C++ cross platform SDK"
+                "shortLabel": "SDK"
             },
             "windows": {
                 "label": "Windows"
@@ -397,13 +395,13 @@
             "win64": "x64"
         },
         "releasesTypes": {
-            "beta": "Beta",
-            "betas": "Betas",
-            "patch": "Patch",
-            "patches": "Patches",
-            "rc": "Release Candidate",
-            "release": "Release",
-            "releases": "Releases"
+            "beta": "Бета",
+            "betas": "Бета",
+            "patch": "Патч",
+            "patches": "Патчі",
+            "rc": "Реліз-кандидат",
+            "release": "Реліз",
+            "releases": "Релізи"
         }
     },
     "errorCodes": {
@@ -437,7 +435,7 @@
         "mergedSystemIsOffline": "Система<strong>{{failedSystem}}</strong>офлайн.",
         "notAuthorized": "Невірний пароль",
         "notFound": "Не знайдено",
-        "ok": "ок",
+        "ok": "гаразд",
         "oldPasswordMistmatch": "Введений пароль невірний.",
         "oldSafariNotSupported": "Версії Safari старше 10 не підтримуються",
         "passwordMismatch": "Невірний пароль",
@@ -454,7 +452,7 @@
         "Connector": "З'єднувач",
         "Data Analytics": "Аналітика даних",
         "Drone": "Дрон",
-        "Health Monitor": "Моніторинг Стану",
+        "Health Monitor": "Моніторинг ресурсів",
         "Storage": "Сховище",
         "backToEditText": "Повернутися до інтерфейсів редагування",
         "myIntegrationsLabel": "Мій",
@@ -484,7 +482,7 @@
         "isAptzSupported": "Розширений PTZ",
         "isAptzSupportedShort": "Розш. PTZ",
         "isAudioSupported": "Аудіо",
-        "isFisheye": "Fisheye",
+        "isFisheye": "Риб'яче око",
         "isH265": "H.265",
         "isIoSupported": "Ввід/вивід",
         "isMdSupported": "Рух",
@@ -510,7 +508,7 @@
         "account": "Параметри облікового запису",
         "activate": "Активувати обліковий запис -",
         "activateCode": "Активувати обліковий запис -",
-        "activateSent": "Активувати обліковий запис -",
+        "activateSent": "Активувати обліковий запис",
         "activateSuccess": "Обліковий запис активований",
         "changePassword": "Змінити пароль -",
         "debug": "Відладка",
@@ -518,15 +516,15 @@
         "download": "Завантажити %VMS_NAME%",
         "downloadPlatform": "Завантажити %VMS_NAME% для ",
         "integrations": "Інтеграції",
-        "login": "Вхід -",
+        "login": "Увійти -",
         "pageNotFound": "Сторінку не знайдено",
         "register": "Створити обліковий запис",
-        "registerSuccess": "Ласкаво просимо на",
+        "registerSuccess": "Вітаємо в",
         "restorePassword": "Відновити пароль -",
         "restorePasswordCode": "Відновити пароль -",
         "restorePasswordSuccess": "Пароль збережений -",
         "supportedDevices": "Пристрої, що підтримуються",
-        "system": "Система -",
+        "system": "Система",
         "systemShare": "Загальний доступ -",
         "systems": "Системи -",
         "template": "{{title}} %CLOUD_NAME%",
@@ -603,7 +601,7 @@
         "successRename": "Ім'я системи збережено",
         "unavailable": "Система недоступна",
         "unknownName": "Невідоме ім’я для системи (викликане злиттям хмари)",
-        "yourSystem": "Ваша система"
+        "yourSystem": "Ваша Система"
     },
     "systemAdministration": "Адміністрування системи",
     "systemStatuses": {
@@ -611,12 +609,12 @@
         "incompatible": "несумісно",
         "merging": "злиття",
         "notActivated": "не активовано",
-        "offline": "поза мережею",
+        "offline": "офлайн",
         "online": "oнлайн",
         "unavailable": "недоступний"
     },
-    "testedVersionLabel": "Tested with {{vmsName}} version:",
-    "testedVersionsLabel": "Tested with {{vmsName}} versions:",
+    "testedVersionLabel": "Протестовано за допомогою {{vmsName}} версії:",
+    "testedVersionsLabel": "Протестовано {{vmsName}} версій:",
     "users": "Користувачі",
     "you": "ти"
 }

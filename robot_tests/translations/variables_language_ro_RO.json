@@ -37,6 +37,7 @@
     "CANNOT SEND CONFIRMATION EMAIL": "Cannot send confirmation Email:",
     "ACCOUNT DOES NOT EXIST": "Account does not exist.",
     "CODE USED/INCORRECT": "Confirmation code is already used or incorrect",
+    "CHANGE PASSWORD TITLE TEXT": "Change password",
     "SHARE PERMISSIONS HINT ADMINISTRATOR": "Unrestricted access including the ability to share",
     "SHARE PERMISSIONS HINT ADVANCED VIEWER": "Can view live video, browse the archive, control PTZ etc",
     "SHARE PERMISSIONS HINT VIEWER": "Can view live video and browse the archive",
@@ -45,7 +46,8 @@
     "SYSTEM NAME IS REQUIRED TEXT": "System name is required",
     "ACCOUNT TEXT": "Account",
     "ACCOUNT INFORMATION": "Account Information",
-    "EDIT USER BUTTON TEXT": "Editați | ×",
+    "ACCOUNT SETTINGS TEXT": "Account settings",
+    "EDIT USER BUTTON TEXT": "Edit",
     "REMOVE USER BUTTON TEXT": "Remove User",
     "REMOVE BUTTON TEXT": "Remove",
     "CANCEL BUTTON TEXT": "Cancel",
@@ -95,7 +97,7 @@
     "PASSWORD IS FAIR BADGE TEXT": "fair",
     "PASSWORD IS GOOD BADGE TEXT": "good",
     "PASSWORD INCORRECT BADGE TEXT": "incorrect",
-    "IPVD TITLE TEXT": "Supported IP Video Devices",
+    "IPVD TITLE TEXT": "Supported Devices",
     "IPVD SEARCH PLACEHOLDER TEXT": "Search by model or manufacturer",
     "IPVD FILTERS APPLIED TEXT": "filters applied",
     "IPVD FILTERS ANALYTICS TEXT": "analytics events",
@@ -172,5 +174,9 @@
     "INTEGRATION TERMS OF USE TEXT": "Terms of Use",
     "INTEGRATION SUPPORT TEXT": "Support",
     "INTEGRATION SUPPORT URL TEXT": "Support URL",
-    "INTEGRATION SUPPORT EMAIL TEXT": "Support E-mail"
+    "INTEGRATION SUPPORT EMAIL TEXT": "Support E-mail",
+    "REGISTER TITLE TEXT": "Create account in",
+    "DOWNLOAD TITLE TEXT": "Download %VMS_NAME%",
+    "RELEASE HISTORY TITLE TEXT": "Release history",
+    "SYSTEMS TITLE TEXT": "Systems"
 }

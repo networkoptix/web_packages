@@ -75,13 +75,11 @@
 			},
 			"arm": {
 				"label": "ARM",
-				"shortLabel": "ARM",
-				"supported": "<a href='/content/arm'>Politique de support des serveurs basés sur ARM</a>"
+				"shortLabel": "ARM"
 			},
 			"sdk": {
 				"label": "SDK",
-				"shortLabel": "SDK",
-				"supported": "C++ cross platform SDK"
+				"shortLabel": "SDK"
 			}
 		},
 		"platforms": {
@@ -109,11 +107,11 @@
 		"releasesTypes": {
 			"beta": "Beta",
 			"betas": "Betas",
-			"rc": "Release Candidate",
-			"release": "Release",
-			"releases": "Releases",
+			"rc": "Version Candidate (RC)",
+			"release": "Version",
+			"releases": "Versions",
 			"patch": "Patch",
-			"patches": "Patches"
+			"patches": "Patchs"
 		}
 	},
 	"ipvd": {
@@ -191,7 +189,7 @@
 		"debug": "Débogage",
 		"login": "Connexion -",
 		"download": "Télécharger %VMS_NAME%",
-		"downloadPlatform": "Télécharger %VMS_NAME% pour ",
+		"downloadPlatform": "Download %VMS_NAME% for ",
 		"pageNotFound": "Page non trouvée",
 		"supportedDevices": "Périphériques supportés",
 		"integrations": "Intégrations"
@@ -207,7 +205,7 @@
 		"logoutAuthorisedTitle": "Vous êtes déjà connecté",
 		"logoutAuthorisedContinueButton": "Continuer",
 		"logoutAuthorisedLogoutButton": "Déconnecter",
-		"noClientDetectedTitle": "Installer %VMS_NAME% pour visionner votre Système",
+		"noClientDetectedTitle": "Install %VMS_NAME% to view your System",
 		"stayAs": "Rester connecté en tant que {email} ",
 		"stayLoggedIn": "Rester connecté",
 		"download": "Télécharger %VMS_NAME%",
@@ -237,7 +235,7 @@
 			},
 			"subject": {
 				"sales_inquiry": "Demande de vente pour {{asset}}",
-				"technical_inquiry": "Technical inquiry for {{asset}}",
+				"technical_inquiry": "Demande technique pour {{asset}}",
 				"integration_feedback": "Commentaires pour l'intégration {{asset}}",
 				"ipvd_feedback_page": "Commentaires sur la page des caméras",
 				"ipvd_feedback_device": "Commentaires sur {{asset}}"
@@ -319,7 +317,7 @@
 		"unavailable": "Le système est inaccessible",
 		"offline": "System Hors ligne",
 		"offlineAlertRibbon": "Système hors ligne. Certains paramètres ne sont peut-être pas disponibles.",
-		"openClient": "Ouvert à %VMS_NAME%",
+		"openClient": "Open in %VMS_NAME%",
 		"openClientNoSystem": "Ouvrir %VMS_NAME%",
 		"confirmMergeAction": "Fusionner",
 		"mergeSystemTitle": "Fusionner systèmes",
@@ -333,7 +331,7 @@
 		"confirmUnshareFromMeAction": "Déconnecter",
 		"confirmUnshare": "Cet usager ne sera pas en mesure d’accéder au système. Êtes-vous sûr?",
 		"confirmUnshareTitle": "Supprimer Usager?",
-		"confirmUnshareAction": "Supprimer",
+		"confirmUnshareAction": "Enlever",
 		"successDisconnected": "Système correctement déconnecté de %CLOUD_NAME%",
 		"successDeleted": "Système {{systemName}} a correctement été supprimé de votre compte",
 		"mergeFailed": "Fusion système a échoué",
@@ -417,8 +415,8 @@
 	},
 	"systemAdministration": "Administration Système",
 	"users": "Usagers",
-	"testedVersionLabel": "Tested with {{vmsName}} version:",
-	"testedVersionsLabel": "Tested with {{vmsName}} versions:",
+	"testedVersionLabel": "Testé avec la version {{vmsName}}:",
+	"testedVersionsLabel": "Testé avec les versions {{vmsName}}:",
 	"About %CLOUD_NAME%": "À propos de %CLOUD_NAME%",
 	"Download %VMS_NAME%": "Télécharger %VMS_NAME%",
 	"Integrations": "Intégrations",
@@ -430,7 +428,7 @@
 	"WHEN_MERGE_FINISHES": "Une fois la fusion terminée, tous les utilisateurs et caméras de ce système seront disponibles dans le système <strong>{{targetSystemName}}</strong> et ce système sera supprimé.",
 	"FAILED_SYSTEM_DESCR": "Ce lien est brisé,<br>Système est peut-être déconnecté de %CLOUD_NAME%,<br>Accès à ce système est peut-être révoqué <br>ou vous êtes connecté avec un autre compte.",
 	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "Vous n’avez pas de systèmes connectés à %CLOUD_NAME%",
-	"NO_SYSTEMS_LOGIN": "Connectez-vous à votre système à l’aide de %VMS_NAME%",
+	"NO_SYSTEMS_LOGIN": "Connectez-vous à votre système en utilisant %VMS_NAME%",
 	"NO_SYSTEMS_GOTO_ADMINISTRATION": "Allez dans l’onglet «Nuage» dans la boîte de dialogue «Administration système»",
 	"NO_SYSTEMS_CONNECT_SYSTEM": "Appuyez \"Connecter le système à %CLOUD_NAME%\""
 }

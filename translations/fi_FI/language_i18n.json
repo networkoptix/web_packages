@@ -115,7 +115,7 @@
     "PTZ": "PTZ",
     "Page not found": "Sivua ei löydy",
     "Password": "Salasana",
-    "Password is required": "Salasana tarvitaan",
+    "Password is required": "Salasana on pakollinen",
     "Password reset instructions are sent to Email": "Salasanan nollausohjeet lähetetään sähköpostitse",
     "Password successfully saved": "Salasana tallennettu onnistuneesti",
     "Password:": "Salasana:",
@@ -216,7 +216,7 @@
         },
         "custom": {
             "description": "Käytä %VMS_NAME% Client -sovellusta mukautettujen käyttöoikeuksien määrittämiseen",
-            "label": "Asiakassuhde"
+            "label": "Muokattu"
         },
         "customRole": {
             "description": "Mukautettu käyttäjärooli Järjestelmässä",
@@ -227,11 +227,11 @@
             "label": "Poissa käytöstä"
         },
         "liveViewer": {
-            "description": "Voit katsella vain reaaliaikaista videota",
+            "description": "Voi katsella vain reaaliaikaista videota",
             "label": "Reaaliaikainen katselu"
         },
         "owner": {
-            "description": "Rajoittamaton pääsy, mukaan lukien kyky jakaa ja yhdistää / irroittaa järjestelmää pilvestä",
+            "description": "Rajoittamaton pääsy, mukaan lukien oikeus jakaa ja yhdistää / irrottaa järjestelmä pilvestä",
             "label": "Omistaja"
         },
         "viewer": {
@@ -351,8 +351,7 @@
             },
             "arm": {
                 "label": "ARM",
-                "shortLabel": "ARM",
-                "supported": "<a href='/content/arm'>ARM based servers support policy</a>"
+                "shortLabel": "ARM"
             },
             "ios": {
                 "label": "iOS",
@@ -363,15 +362,14 @@
                 "shortLabel": "Ubuntu"
             },
             "mac": {
-                "label": "Mac OS"
+                "label": "Mac OSX"
             },
             "macos": {
                 "label": "Mac OS"
             },
             "sdk": {
                 "label": "SDK",
-                "shortLabel": "SDK",
-                "supported": "C++ cross platform SDK"
+                "shortLabel": "SDK"
             },
             "windows": {
                 "label": "Windows"
@@ -398,12 +396,12 @@
         },
         "releasesTypes": {
             "beta": "Beta",
-            "betas": "Betas",
-            "patch": "Patch",
-            "patches": "Patches",
-            "rc": "Release Candidate",
-            "release": "Release",
-            "releases": "Releases"
+            "betas": "Beta-versioita",
+            "patch": "Korjaus",
+            "patches": "Korjaukset",
+            "rc": "Julkaisuehdokkaat",
+            "release": "Julkaisu",
+            "releases": "Julkaisut"
         }
     },
     "errorCodes": {
@@ -540,7 +538,7 @@
         "good": "hyvä",
         "minLength": "liian lyhyt",
         "minLengthMessage": "Salasanan pitää olla vähintään 8 merkkiä pitkä",
-        "missingMessage": "Salasana tarvitaan",
+        "missingMessage": "Salasana on pakollinen",
         "required": "virheellinen",
         "requiredMessage": "Käytä vain latinankielisiä kirjaimia, numeroita ja näppäimistön symboleja",
         "strongMessage": "Vahva salasana!",

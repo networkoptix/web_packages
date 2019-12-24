@@ -22,7 +22,7 @@
 		"filters applied": "filters toegepast",
 		"Any": "Elke",
 		"selected": "geselecteerd",
-		"vendor": "Fabrikant",
+		"vendor": "Fabrikanten",
 		"vendors": "Fabrikanten",
 		"hardwareType": "Type",
 		"hardwareTypes": "Types",
@@ -75,13 +75,11 @@
 			},
 			"arm": {
 				"label": "ARM",
-				"shortLabel": "ARM",
-				"supported": "<a href='/content/arm'>Ondersteuningsbeleid voor ARM-based servers</a>"
+				"shortLabel": "ARM"
 			},
 			"sdk": {
 				"label": "SDK",
-				"shortLabel": "SDK",
-				"supported": "C++ cross platform SDK"
+				"shortLabel": "SDK"
 			}
 		},
 		"platforms": {
@@ -237,7 +235,7 @@
 			},
 			"subject": {
 				"sales_inquiry": "Verkoopaanvraag voor {{asset}}",
-				"technical_inquiry": "Technical inquiry for {{asset}}",
+				"technical_inquiry": "Technische aanvraag voor {{asset}}",
 				"integration_feedback": "Feedback voor integratie {{asset}}",
 				"ipvd_feedback_page": "Feedback voor de camerapagina",
 				"ipvd_feedback_device": "Feedback over {{asset}}"
@@ -347,7 +345,7 @@
 	"systemStatuses": {
 		"activated": "geactiveerd",
 		"incompatible": "incompatibel",
-		"merging": "samenvoegen",
+		"merging": "aan het samenvoegen",
 		"notActivated": "niet geactiveerd",
 		"online": "online",
 		"offline": "offline",
@@ -363,15 +361,15 @@
 			"description": "Onbeperkt toegang, inclusief de mogelijkheid om systeem te delen en te verbinden / te verbreken vanuit de cloud"
 		},
 		"Viewer": {
-			"label": "Gebruiker 'Basis'",
+			"label": "Kijker",
 			"description": "Kan live video bekijken en zoeken in het archief"
 		},
 		"Live Viewer": {
-			"label": "Gebruiker 'Live'",
+			"label": "Live kijker",
 			"description": "Kan alleen live video bekijken"
 		},
 		"Advanced Viewer": {
-			"label": "Gebruiker 'Geavanceerd'",
+			"label": "Geavanceerde Kijker",
 			"description": "Kan live video bekijken, bladeren in het archief, camera's configureren, PTZ, enz. bedienen"
 		},
 		"Administrator": {
@@ -395,15 +393,15 @@
 			"description": "Onbeperkt toegang, inclusief de mogelijkheid om systeem te delen en te verbinden / te verbreken vanuit de cloud"
 		},
 		"viewer": {
-			"label": "Gebruiker 'Basis'",
+			"label": "Kijker",
 			"description": "Kan live video bekijken en zoeken in het archief"
 		},
 		"liveViewer": {
-			"label": "Gebruiker 'Live'",
+			"label": "Live kijker",
 			"description": "Kan alleen live video bekijken"
 		},
 		"advancedViewer": {
-			"label": "Gebruiker 'Geavanceerd'",
+			"label": "Geavanceerde Kijker",
 			"description": "Kan live video bekijken, bladeren in het archief, camera configureren, PTZ, enz. bedienen"
 		},
 		"custom": {
@@ -417,8 +415,8 @@
 	},
 	"systemAdministration": "Systeembeheer",
 	"users": "Gebruikers",
-	"testedVersionLabel": "Tested with {{vmsName}} version:",
-	"testedVersionsLabel": "Tested with {{vmsName}} versions:",
+	"testedVersionLabel": "Getest op {{vmsName}} versie:",
+	"testedVersionsLabel": "Getest op {{vmsName}} versie:",
 	"About %CLOUD_NAME%": "Over %CLOUD_NAME%",
 	"Download %VMS_NAME%": "Download %VMS_NAME%",
 	"Integrations": "Integraties",

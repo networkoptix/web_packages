@@ -75,13 +75,11 @@
 			},
 			"arm": {
 				"label": "ARM",
-				"shortLabel": "ARM",
-				"supported": "<a href='/content/arm'>Zasady wsparcia serwerów ARM</a>"
+				"shortLabel": "ARM"
 			},
 			"sdk": {
 				"label": "SDK",
-				"shortLabel": "SDK",
-				"supported": "C++ cross platform SDK"
+				"shortLabel": "SDK"
 			}
 		},
 		"platforms": {
@@ -237,7 +235,7 @@
 			},
 			"subject": {
 				"sales_inquiry": "Zapytanie handlowe o {{asset}}",
-				"technical_inquiry": "Technical inquiry for {{asset}}",
+				"technical_inquiry": "Zapytanie techniczne do {{asset}}",
 				"integration_feedback": "Opinia dotycząca integracji {{asset}}",
 				"ipvd_feedback_page": "Opinia dotycząca listy kamer",
 				"ipvd_feedback_device": "Opinie dotyczące {{asset}}"
@@ -296,7 +294,7 @@
 		"unknownMergeError": "Nieznany błąd. Można odświeżyć stronę i spróbować ponownie. Jeśli problem będzie się powtarzał - proszę skontaktować się z <a href=\"%SUPPORT_LINK%\" target=\"_blank\">działem wsparcia technicznego</a>."
 	},
 	"passwordRequirements": {
-		"good": "dobre",
+		"good": "dobry",
 		"fair": "średnie",
 		"fairMessage": "Użyj liczb, wielkich i małych liter oraz znaków specjalnych, aby ustawić bezpieczniejsze hasło",
 		"minLength": "za krótkie",
@@ -372,7 +370,7 @@
 		},
 		"Advanced Viewer": {
 			"label": "Zaawansowany użytkownik",
-			"description": "Może wyświetlać wideo na żywo, przeglądać archiwum, sterować PTZ itp."
+			"description": "Podgląd wideo na żywo, przeglądanie archiwum, konfigurowanie kamer, sterowanie PTZ itp."
 		},
 		"Administrator": {
 			"label": "Administrator",
@@ -412,13 +410,13 @@
 		}
 	},
 	"privacyPolicy": {
-		"integration": "Przesyłając ten formularz, zgadzasz się na kontakt od %INTEGRATION_COMPANY% i/lub %COMPANY_NAME%.\nPolitykę prywatności firmy %INTEGRATION_COMPANY% znajdziesz <a href=\"%INTEGRATION_PRIVACY_POLICY%\" target=\"_blank\">tutaj</a>, a politykę prywatności firmy %COMPANY_NAME% <a href=\"%PRIVACY_LINK%\" target=\"_blank\">tutaj</a>. Zawierają one instrukcje dotyczące wycofania zgody.",
+		"integration": "Przesyłając ten formularz, zgadzasz się na kontakt od {{INTEGRATION_COMPANY}} i/lub %COMPANY_NAME%.\nPolitykę prywatności firmy {{INTEGRATION_COMPANY}} znajdziesz <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">tutaj</a>, a politykę prywatności firmy %COMPANY_NAME% <a href=\"%PRIVACY_LINK%\" target=\"_blank\">tutaj</a>. Zawierają one instrukcje dotyczące wycofania zgody.",
 		"ipvd": "Przesyłając ten formularz zgadzasz się na kontakt przez %COMPANY_NAME%.\nPolitykę prywatności firmy %COMPANY_NAME% znajdziesz <a href=\"%PRIVACY_LINK%\" target=\"_blank\">tutaj</a>. Zawiera ona instrukcje dotyczące wycofania zgody."
 	},
 	"systemAdministration": "Administracja systemem",
 	"users": "Użytkownicy",
-	"testedVersionLabel": "Tested with {{vmsName}} version:",
-	"testedVersionsLabel": "Tested with {{vmsName}} versions:",
+	"testedVersionLabel": "Testowane w {{vmsName}} w wersji:",
+	"testedVersionsLabel": "Testowane w {{vmsName}} w wersjach:",
 	"About %CLOUD_NAME%": "Informacje o %CLOUD_NAME%",
 	"Download %VMS_NAME%": "Pobierz %VMS_NAME%",
 	"Integrations": "Integracje",

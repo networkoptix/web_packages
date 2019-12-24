@@ -12,7 +12,7 @@
     "emailSubject": "Försäljningsförfrågan för {{message.asset}}"
   },
   "contact_support": {
-    "emailSubject": "Technical inquiry for {{message.asset}}"
+    "emailSubject": "Teknisk fråga för {{message.asset}}"
   },
   "integration_feedback": {
     "emailSubject": "Feedback för {{message.asset}}"

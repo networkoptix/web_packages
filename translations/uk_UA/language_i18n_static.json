@@ -6,11 +6,11 @@
 		"changePassword": "Змінити пароль",
 		"newPasswordLabel": "Новий пароль",
 		"saveChanges": "Зберегти",
-		"accountSettings": "Параметри облікового запису"
+		"accountSettings": "Параметри Облікового Запису"
 	},
 	"activeActions": {
 		"sendConfirm": "Відправити посилання активації ще раз",
-		"resetPassword": "Відновити пароль",
+		"resetPassword": "Скидання пароля",
 		"setNewPassword": "Зберегти пароль",
 		"setNewPasswordLabel": "Новий пароль"
 	},
@@ -75,13 +75,11 @@
 			},
 			"arm": {
 				"label": "ARM",
-				"shortLabel": "ARM",
-				"supported": "<a href='/content/arm'>Політика підтримки серверів на основі ARM</a>"
+				"shortLabel": "ARM"
 			},
 			"sdk": {
 				"label": "SDK",
-				"shortLabel": "SDK",
-				"supported": "C++ cross platform SDK"
+				"shortLabel": "SDK"
 			}
 		},
 		"platforms": {
@@ -107,13 +105,13 @@
 			"video_source_sdk": "SDK джерела відео"
 		},
 		"releasesTypes": {
-			"beta": "Beta",
-			"betas": "Betas",
-			"rc": "Release Candidate",
-			"release": "Release",
-			"releases": "Releases",
-			"patch": "Patch",
-			"patches": "Patches"
+			"beta": "Бета",
+			"betas": "Бета",
+			"rc": "Реліз-кандидат",
+			"release": "Реліз",
+			"releases": "Релізи",
+			"patch": "Патч",
+			"patches": "Патчі"
 		}
 	},
 	"ipvd": {
@@ -130,7 +128,7 @@
 		"isPtzSupported": "PTZ",
 		"isAptzSupported": "Розширений PTZ",
 		"isAptzSupportedShort": "Розш. PTZ",
-		"isFisheye": "Fisheye",
+		"isFisheye": "Риб'яче око",
 		"isMdSupported": "Рух",
 		"isIoSupported": "Ввід/вивід",
 		"isH265": "H.265",
@@ -164,7 +162,7 @@
 		"Connector": "З'єднувач",
 		"Data Analytics": "Аналітика даних",
 		"Drone": "Дрон",
-		"Health Monitor": "Моніторинг Стану",
+		"Health Monitor": "Моніторинг ресурсів",
 		"Storage": "Сховище"
 	},
 	"messageDialogPlaceholders": {
@@ -173,15 +171,15 @@
 	"pageTitles": {
 		"template": "{{title}} %CLOUD_NAME%",
 		"default": "%CLOUD_NAME%",
-		"registerSuccess": "Ласкаво просимо на",
+		"registerSuccess": "Вітаємо в",
 		"register": "Створити обліковий запис",
 		"changePassword": "Змінити пароль -",
 		"account": "Параметри облікового запису",
 		"systems": "Системи -",
-		"system": "Система -",
+		"system": "Система",
 		"systemShare": "Загальний доступ -",
 		"activate": "Активувати обліковий запис -",
-		"activateSent": "Активувати обліковий запис -",
+		"activateSent": "Активувати обліковий запис",
 		"activateSuccess": "Обліковий запис активований",
 		"activateCode": "Активувати обліковий запис -",
 		"restorePassword": "Відновити пароль -",
@@ -189,7 +187,7 @@
 		"restorePasswordCode": "Відновити пароль -",
 		"view": "Переглянути камери - ",
 		"debug": "Відладка",
-		"login": "Вхід -",
+		"login": "Увійти -",
 		"download": "Завантажити %VMS_NAME%",
 		"downloadPlatform": "Завантажити %VMS_NAME% для ",
 		"pageNotFound": "Сторінку не знайдено",
@@ -197,13 +195,13 @@
 		"integrations": "Інтеграції"
 	},
 	"dialogs": {
-		"okButton": "ОК",
-		"cancelButton": "Відмінити",
+		"okButton": "Добре",
+		"cancelButton": "Скасувати",
 		"createNewAccount": "Створити новий обліковий запис",
 		"changeAccountLogged": "Ви вже ввійшли з {email}",
 		"loggedFromOther": "Ви ввійдете в інший обліковий запис",
 		"loginTitle": "Увійти до %CLOUD_NAME%",
-		"loginButton": "Увійти",
+		"loginButton": "Вхід",
 		"logoutAuthorisedTitle": "Ви вже увійшли",
 		"logoutAuthorisedContinueButton": "Продовжити",
 		"logoutAuthorisedLogoutButton": "Вийти",
@@ -237,7 +235,7 @@
 			},
 			"subject": {
 				"sales_inquiry": "Запит на продаж {{asset}}",
-				"technical_inquiry": "Technical inquiry for {{asset}}",
+				"technical_inquiry": "Технічний запит на {{asset}}",
 				"integration_feedback": "Зворотній зв'язок для інтеграції {{asset}}",
 				"ipvd_feedback_page": "Зворотній зв’язок для сторінки камер",
 				"ipvd_feedback_device": "Відгук про {{asset}}"
@@ -253,7 +251,7 @@
 		}
 	},
 	"errorCodes": {
-		"ok": "ок",
+		"ok": "гаразд",
 		"cantSendActivationPrefix": "Не вдається надіслати підтвердження електронною поштою",
 		"cantDisconnectSystemPrefix": "Невдається видалити систему",
 		"cantUnshareWithMeSystemPrefix": "Невдається видалити систему",
@@ -314,7 +312,7 @@
 		"agreement": "Я згоден з <a href=\"/content/eula\" target=\"_blank\">Правилами і\nумовами,</a> і <a href=\"%PRIVACY_LINK%\" target=\"_blank\">політикою конфіденційності</a>"
 	},
 	"system": {
-		"yourSystem": "Ваша система",
+		"yourSystem": "Ваша Система",
 		"mySystemSearch": "ЯМійМоя",
 		"unavailable": "Система недоступна",
 		"offline": "Система знаходиться поза мережею",
@@ -350,12 +348,12 @@
 		"merging": "злиття",
 		"notActivated": "не активовано",
 		"online": "oнлайн",
-		"offline": "поза мережею",
+		"offline": "офлайн",
 		"unavailable": "недоступний"
 	},
 	"accessRoles": {
 		"disabled": {
-			"label": "Вимкнено",
+			"label": "Вимкнений",
 			"description": "Користувач вимкнений і не може ввійти в систему"
 		},
 		"Owner": {
@@ -367,7 +365,7 @@
 			"description": "Можна переглядати відео в реальному часі та переглядати архів"
 		},
 		"Live Viewer": {
-			"label": "Відео в реальному часі",
+			"label": "Відео з камер",
 			"description": "Можна переглядати лише відео в реальному часі"
 		},
 		"Advanced Viewer": {
@@ -417,8 +415,8 @@
 	},
 	"systemAdministration": "Адміністрування системи",
 	"users": "Користувачі",
-	"testedVersionLabel": "Tested with {{vmsName}} version:",
-	"testedVersionsLabel": "Tested with {{vmsName}} versions:",
+	"testedVersionLabel": "Протестовано за допомогою {{vmsName}} версії:",
+	"testedVersionsLabel": "Протестовано {{vmsName}} версій:",
 	"About %CLOUD_NAME%": "Про %CLOUD_NAME%",
 	"Download %VMS_NAME%": "Завантажити %VMS_NAME%",
 	"Integrations": "Інтеграції",
