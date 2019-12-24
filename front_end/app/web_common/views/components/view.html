@@ -140,10 +140,12 @@
                                           player="player" current-resolution="currentResolution"
                                           camera-links="cameraLinks"></camera-links>
 
-                            <camera-view-informer flags="{'status':activeCamera.status,
-                                                              'positionSelected': positionSelected,
-                                                              'iOSVideoTooLarge': iOSVideoTooLarge}"
-                                                  preview="preview">
+                            <camera-view-informer
+                                    ng-if="activeCamera.status != 'Unauthorized'"
+                                    flags="{'status':activeCamera.status,
+                                            'positionSelected': positionSelected,
+                                            'iOSVideoTooLarge': iOSVideoTooLarge}"
+                                    preview="preview">
                             </camera-view-informer>
 
                             <videowindow

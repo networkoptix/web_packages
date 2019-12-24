@@ -49,11 +49,12 @@
                 if (typeof(scope.flags.positionSelected) !== 'undefined' &&
                     scope.flags.positionSelected &&
                     scope.alertType === 'positionSelected') {
+                    
                     return;
                 }
                 
                 //if status is online dont show any message
-                if (scope.flags.status === 'Offline' ||
+                if (scope.flags.status === 'Unauthorized' || scope.flags.status === 'Offline' ||
                     !scope.alertType && typeof(scope.flags.status) !== 'undefined' &&
                     !(scope.flags.status === 'Online' || scope.flags.status === 'Recording')) {
                     
