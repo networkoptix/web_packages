@@ -75,13 +75,11 @@
 			},
 			"arm": {
 				"label": "ARM",
-				"shortLabel": "ARM",
-				"supported": "<a href='/content/arm'>ARM based servers support policy</a>"
+				"shortLabel": "ARM"
 			},
 			"sdk": {
 				"label": "SDK",
-				"shortLabel": "SDK",
-				"supported": "C++ cross platform SDK"
+				"shortLabel": "SDK"
 			}
 		},
 		"platforms": {

@@ -1,6 +1,6 @@
 {
   "activate_account": {
-    "emailSubject": "アカウントの有効化"
+    "emailSubject": "アカウントを有効にする"
   },
   "cloud_invite": {
     "emailSubject": "%CLOUD_NAME% に登録されました"

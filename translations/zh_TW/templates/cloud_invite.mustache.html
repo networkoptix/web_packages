@@ -6,9 +6,8 @@
 <p>{{ message.message }}</p>
 {{/message.message}}
 
-<p>請將帳號新增於
-    <a href="{{ config.portal_url }}">%CLOUD_NAME%</a>
-    並使用您當前的電子信箱並依照指示完成
+<p>請使用您當前的電子信箱並依指示在
+    <a href="{{ config.portal_url }}">%CLOUD_NAME%</a>上建立帳號
 </p>
 
 <a class="btn" href="{{ config.portal_url }}/register/{{ message.code }}">註冊帳號</a>

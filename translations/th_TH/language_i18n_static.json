@@ -53,7 +53,7 @@
 		},
 		"groups": {
 			"windows": {
-				"label": "Windows"
+				"label": "วินโดวส์"
 			},
 			"mac": {
 				"label": "Mac OS"
@@ -75,13 +75,11 @@
 			},
 			"arm": {
 				"label": "ARM",
-				"shortLabel": "ARM",
-				"supported": "<a href='/content/arm'>เซิร์ฟเวอร์ที่ใช้ ARM สนับสนุนนโยบาย</a>"
+				"shortLabel": "ARM"
 			},
 			"sdk": {
 				"label": "SDK",
-				"shortLabel": "SDK",
-				"supported": "C ++ SDK ข้ามแพลตฟอร์ม"
+				"shortLabel": "SDK"
 			}
 		},
 		"platforms": {
@@ -108,12 +106,12 @@
 		},
 		"releasesTypes": {
 			"beta": "Beta",
-			"betas": "Betas",
+			"betas": "เบต้า",
 			"rc": "Release Candidate",
 			"release": "Release",
-			"releases": "Releases",
+			"releases": "การเผยแพร่",
 			"patch": "Patch",
-			"patches": "Patches"
+			"patches": "โปรแกรมปรับปรุง"
 		}
 	},
 	"ipvd": {
@@ -131,7 +129,7 @@
 		"isAptzSupported": "PTZ ขั้นสูง",
 		"isAptzSupportedShort": "Adv PTZ",
 		"isFisheye": "ฟิชอาย",
-		"isMdSupported": "การเคลื่อนไหว",
+		"isMdSupported": "โมชั่น",
 		"isIoSupported": "I / O",
 		"isH265": "H.265",
 		"isMultiSensor": "เซ็นเซอร์หลายตัว",
@@ -191,7 +189,7 @@
 		"debug": "การ​แก้ไข​จุด​บกพร่อง",
 		"login": "ลงชื่อเข้าสู่ระบบ -",
 		"download": "ดาวน์โหลด %VMS_NAME%",
-		"downloadPlatform": "ดาวน์โหลด %VMS_NAME% สำหรับ ",
+		"downloadPlatform": "Download %VMS_NAME% for ",
 		"pageNotFound": "ไม่พบหน้านี้",
 		"supportedDevices": "อุปกรณ์ที่รองรับ",
 		"integrations": "Integration"
@@ -207,7 +205,7 @@
 		"logoutAuthorisedTitle": "คุณกำลังอยู่ในระบบ",
 		"logoutAuthorisedContinueButton": "ดำเนิน​การ",
 		"logoutAuthorisedLogoutButton": "ออกจากระบบ",
-		"noClientDetectedTitle": "ติดตั้ง %VMS_NAME% เพื่อดูระบบของคุณ",
+		"noClientDetectedTitle": "Install %VMS_NAME% to view your System",
 		"stayAs": "Stay logged as {email} ",
 		"stayLoggedIn": "Stay Logged In",
 		"download": "ดาวน์โหลด %VMS_NAME%",
@@ -319,8 +317,8 @@
 		"unavailable": "ระบบไม่สามารถเข้าถึงได้",
 		"offline": "ระบบออฟไลน์",
 		"offlineAlertRibbon": "System is offline. Some settings may not be available.",
-		"openClient": "เปิดใน %VMS_NAME%",
-		"openClientNoSystem": "เปิด %VMS_NAME%",
+		"openClient": "Open in %VMS_NAME%",
+		"openClientNoSystem": "เปิด {{VMS_NAME}}",
 		"confirmMergeAction": "ผสาน",
 		"mergeSystemTitle": "รวมระบบ",
 		"confirmRenameTitle": "ชื่อระบบ",
@@ -431,7 +429,7 @@
 			"transcoding": "การแปลงรหัส",
 			"unknown": "ม่รู้จัก",
 			"copyToClipboard": "คัดลอกไปยังคลิปบอร์ด",
-			"copyDefaultText": "คัดลอก",
+			"copyDefaultText": "สำเนา",
 			"copyActiveText": "คัดลอกไปยังคลิปบอร์ด"
 		},
 		"systemOffline": "ระบบออฟไลน์",
@@ -487,7 +485,7 @@
 	"testedVersionsLabel": "Tested with {{vmsName}} versions:",
 	"About %CLOUD_NAME%": "เกี่ยวกับ %CLOUD_NAME%",
 	"Download %VMS_NAME%": "ดาวน์โหลด %VMS_NAME%",
-	"Integrations": "Integration",
+	"Integrations": "การรวบรวม",
 	"Privacy": "ความเป็นส่วนตัว",
 	"Support": "ทีมช่วยเหลือ",
 	"Supported Devices": "อุปกรณ์ที่รองรับ",
@@ -496,7 +494,7 @@
 	"WHEN_MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{{targetSystemName}}</strong> System, and this system will be deleted.",
 	"FAILED_SYSTEM_DESCR": "This link is broken,<br>System may be disconnected from %CLOUD_NAME%,<br>Access to this System may be revoked, <br>or you may be logged into a different account.",
 	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "คุณไม่มีระบบเชื่อมต่อกับ %CLOUD_NAME%",
-	"NO_SYSTEMS_LOGIN": "เข้าสู่ระบบโดยใช้ %VMS_NAME%",
+	"NO_SYSTEMS_LOGIN": "Log in to your System using %VMS_NAME%",
 	"NO_SYSTEMS_GOTO_ADMINISTRATION": "ไปที่แท็บ \"Cloud\" ในกล่องโต้ตอบ \"การดูแลระบบ\"",
 	"NO_SYSTEMS_CONNECT_SYSTEM": "เชื่อมต่อระบบกับ %CLOUD_NAME%\""
 }

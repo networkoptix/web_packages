@@ -40,15 +40,15 @@
     "Checking...": "Controleer...",
     "Choose which properties should be visible to customers:": "Kies welke eigenschappen zichtbaar moeten zijn voor klanten:",
     "Clear filters": "Clear filters",
-    "Close": "Afsluiten",
+    "Close": "Sluiten",
     "Codec": "Codec",
     "Collapse": "Samenvouwen",
     "Confirmation message is sent to": "Een bevestigingsbericht wordt verzonden naar",
     "Contact": "Contact",
     "Create Account": "Account aanmaken",
-    "Create account": "Account aanmaken",
+    "Create account": "Accounts aanmaken",
     "Current Password": "Huidig ​​wachtwoord",
-    "Current password is required": "Huidig wachtwoord (verplicht).",
+    "Current password is required": "Huidig wachtwoord (verplicht)",
     "Depending of the size of the database it may take up to several hours.": "Afhankelijk van de grootte van de database kan dit enkele uren duren.",
     "Developer": "Ontwikkelaar",
     "Discard": "Weggooien",
@@ -124,7 +124,7 @@
     "Owner": "Eigenaar",
     "PTZ": "PTZ",
     "Page not found": "Pagina niet gevonden",
-    "Password": "Wachtwoord",
+    "Password": "Password",
     "Password is required": "Wachtwoord is vereist",
     "Password reset instructions are sent to Email": "Wachtwoordherstelinstructies zijn verzonden naar het volgende emailadres",
     "Password successfully saved": "Het wachtwoord is succesvol opgeslagen",
@@ -203,7 +203,7 @@
         },
         "Advanced Viewer": {
             "description": "Kan live video bekijken, bladeren in het archief, camera's configureren, PTZ, enz. bedienen",
-            "label": "Gebruiker 'Geavanceerd'"
+            "label": "Geavanceerde Kijker"
         },
         "Custom": {
             "description": "Gebruik de %VMS_NAME% client-applicatie om aangepaste rechten in te stellen",
@@ -211,7 +211,7 @@
         },
         "Live Viewer": {
             "description": "Kan alleen live video bekijken",
-            "label": "Gebruiker 'Live'"
+            "label": "Live kijker"
         },
         "Owner": {
             "description": "Onbeperkt toegang, inclusief de mogelijkheid om systeem te delen en te verbinden / te verbreken vanuit de cloud",
@@ -219,11 +219,11 @@
         },
         "Viewer": {
             "description": "Kan live video bekijken en zoeken in het archief",
-            "label": "Gebruiker 'Basis'"
+            "label": "Kijker"
         },
         "advancedViewer": {
             "description": "Kan live video bekijken, bladeren in het archief, camera configureren, PTZ, enz. bedienen",
-            "label": "Gebruiker 'Geavanceerd'"
+            "label": "Geavanceerde Kijker"
         },
         "cloudAdmin": {
             "description": "Kan systeem configureren en delen",
@@ -243,7 +243,7 @@
         },
         "liveViewer": {
             "description": "Kan alleen live video bekijken",
-            "label": "Gebruiker 'Live'"
+            "label": "Live kijker"
         },
         "owner": {
             "description": "Onbeperkt toegang, inclusief de mogelijkheid om systeem te delen en te verbinden / te verbreken vanuit de cloud",
@@ -251,7 +251,7 @@
         },
         "viewer": {
             "description": "Kan live video bekijken en zoeken in het archief",
-            "label": "Gebruiker 'Basis'"
+            "label": "Kijker"
         }
     },
     "account": {
@@ -293,25 +293,25 @@
             "unknown": "Unknown"
         },
         "cameraStates": {
-            "error": "Fout",
+            "error": "Error",
             "errorLoading": "Er is een fout opgetreden tijdens het laden van deze video.",
-            "flashOrWebmRequired": "<a href='https://get.adobe.com/flashplayer/' target='_blank'>installeer Adobe Flash</a> of<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> voor het afspelen van video in Internet Explorer.",
+            "flashOrWebmRequired": "Gelieve <a href='https://get.adobe.com/flashplayer/' target='_blank'> Adobe Flash</a> of <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> te installeren voor het afspelen van video's in Internet Explorer.",
             "flashRequired": "Gelieve <a href='https://get.adobe.com/flashplayer/' target='_blank'> Adobe Flash</a> te installeren voor het afspelen van video's.",
             "iOSVideoTooLarge": "iOS ondersteunt geen video die groter is dan FullHD (2MP: 1920x1080).",
-            "ieNoWebm": "Installeer alstublieft <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> voor Internet Explorer.",
+            "ieNoWebm": "Installeer alstublieft de <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> voor Internet Explorer.",
             "ieWin10": "Gebruik alsjeblieft de browsers Microsoft Edge of Google Chrome.",
             "noArmSupport": "Deze browser of dit apparaat ondersteunt geen videoweergave van ARM-gebaseerde servers.",
             "noData": "Geen data",
             "noFormat": "Deze browser ondersteunt het afspelen van de beelden van deze camera niet.",
             "offline": "Offline",
-            "ubuntuNX": "This browser does not support video from ARM-based servers. Please, use Chromium browser instead.",
+            "ubuntuNX": "Deze browser ondersteunt geen video van ARM-gebaseerde servers. Gebruik alsjeblieft de Chromium-browser.",
             "unauthorized": "Authenticatie vereist"
         },
         "chromeCastWarning": "Een Chromecast vraagt veel resources en kan tot prestatieproblemen lijden op uw server.",
         "resolution": {
             "auto": "Automatisch",
             "high": "Hoog",
-            "low": "Laag"
+            "low": "Lage"
         },
         "searchCamPlaceholder": "Zoeken",
         "systemHasNoCameras": "GEEN CAMERA'S",
@@ -325,8 +325,8 @@
         "systemServerErrorMessage": "An error occurred, please, try again later. An error occurred, please try again later. If the problem continues, please contact your support team.",
         "systemUnreachable": "SYSTEEM IS ONBEREIKBAAR",
         "voiceCommands": {
-            "clear search": "wis de zoekopdracht",
-            "collapse all servers": "verberg alle servers",
+            "clear search": "wis zoekopdracht",
+            "collapse all servers": "vouw alle servers samen",
             "collapse server": "collapse server + [server name]",
             "expand all servers": "toon alle servers",
             "expand server": "expand server + [server name]",
@@ -422,8 +422,7 @@
             },
             "arm": {
                 "label": "ARM",
-                "shortLabel": "ARM",
-                "supported": "<a href='/content/arm'>Ondersteuningsbeleid voor ARM-based servers</a>"
+                "shortLabel": "ARM"
             },
             "ios": {
                 "label": "iOS",
@@ -441,8 +440,7 @@
             },
             "sdk": {
                 "label": "SDK",
-                "shortLabel": "SDK",
-                "supported": "C++ cross platform SDK"
+                "shortLabel": "SDK"
             },
             "windows": {
                 "label": "Windows"
@@ -640,7 +638,7 @@
         "minResolution": "Minimum Resolutie",
         "search_ipvd": "Zoeken op model of fabrikant",
         "selected": "geselecteerd",
-        "vendor": "Fabrikant",
+        "vendor": "Fabrikanten",
         "vendors": "Fabrikanten"
     },
     "servers in the merged System.": "servers in het samengevoegde systeem.",
@@ -689,7 +687,7 @@
     "systemStatuses": {
         "activated": "geactiveerd",
         "incompatible": "incompatibel",
-        "merging": "samenvoegen",
+        "merging": "aan het samenvoegen",
         "notActivated": "niet geactiveerd",
         "offline": "offline",
         "online": "online",

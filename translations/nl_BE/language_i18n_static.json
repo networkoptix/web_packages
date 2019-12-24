@@ -75,13 +75,11 @@
 			},
 			"arm": {
 				"label": "ARM",
-				"shortLabel": "ARM",
-				"supported": "<a href='/content/arm'>ARM gebaseerde servers ondersteunen beleid</a>"
+				"shortLabel": "ARM"
 			},
 			"sdk": {
 				"label": "SDK",
-				"shortLabel": "SDK",
-				"supported": "C ++ cross-platform SDK"
+				"shortLabel": "SDK"
 			}
 		},
 		"platforms": {
@@ -165,7 +163,7 @@
 		"Data Analytics": "Data Analyse",
 		"Drone": "Drone",
 		"Health Monitor": "Server monitor",
-		"Storage": "Opslagruimte"
+		"Storage": "Opslag"
 	},
 	"messageDialogPlaceholders": {
 		"feedback": "Zorg ervoor dat je uw camera model en fabrikant bij de hand hebt..."
@@ -200,10 +198,10 @@
 		"okButton": "Oké",
 		"cancelButton": "Annuleren",
 		"createNewAccount": "Creëer een nieuw account",
-		"changeAccountLogged": "You are already logged in as {email}",
+		"changeAccountLogged": "U bent al ingelogd als {email}",
 		"loggedFromOther": "U wordt met een ander account ingelogd",
 		"loginTitle": "Meld u aan bij %CLOUD_NAME%",
-		"loginButton": "Inloggen",
+		"loginButton": "Log in",
 		"logoutAuthorisedTitle": "U bent reeds ingelogd",
 		"logoutAuthorisedContinueButton": "Doorgaan",
 		"logoutAuthorisedLogoutButton": "Uitloggen",
@@ -253,7 +251,7 @@
 		}
 	},
 	"errorCodes": {
-		"ok": "oke",
+		"ok": "ok",
 		"cantSendActivationPrefix": "Kan geen bevestigingsmail versturen",
 		"cantDisconnectSystemPrefix": "Kan het systeem niet verwijderen",
 		"cantUnshareWithMeSystemPrefix": "Kan het systeem niet verwijderen",
@@ -280,7 +278,7 @@
 		"unknownError": "Er is een onverwachte fout opgetreden",
 		"accountAlreadyActivated": "Deze account is al geactiveerd",
 		"emailNotFound": "Account bestaat niet.",
-		"EmailAlreadyExists": "Dit e-mailadres is al geregistreerd",
+		"EmailAlreadyExists": "Dit Email is al geregistreerd",
 		"oldPasswordMistmatch": "Dit wachtwoord is onjuist.",
 		"passwordMismatch": "Wachtwoord onjuist",
 		"cantEditYourself": "Het wijzigen van eigen machtigingen is niet toegestaan",
@@ -322,7 +320,7 @@
 		"openClient": "Open in %VMS_NAME%",
 		"openClientNoSystem": "Open %VMS_NAME%",
 		"confirmMergeAction": "Samenvoegen",
-		"mergeSystemTitle": "Systemen Samenvoegen",
+		"mergeSystemTitle": "Systemen samenvoegen",
 		"confirmRenameTitle": "Systeemnaam",
 		"confirmRenameAction": "Opslaan",
 		"successRename": "Systeemnaam opgeslagen",
@@ -376,7 +374,7 @@
 			"description": "Kan live video bekijken en zoeken in opgenomen beelden"
 		},
 		"Live Viewer": {
-			"label": "Live kijker",
+			"label": "Live Viewer",
 			"description": "Kan alleen live video bekijken"
 		},
 		"Advanced Viewer": {
@@ -408,7 +406,7 @@
 			"description": "Kan live video bekijken en zoeken in opgenomen beelden"
 		},
 		"liveViewer": {
-			"label": "Live kijker",
+			"label": "Live Viewer",
 			"description": "Kan alleen live video bekijken"
 		},
 		"advancedViewer": {
@@ -455,7 +453,7 @@
 			"flashOrWebmRequired": "Gelieve <a href='https://get.adobe.com/flashplayer/' target='_blank'> Adobe Flash</a> of <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> te installeren voor het afspelen van video's in Internet Explorer.",
 			"noArmSupport": "Deze browser of dit apparaat ondersteunt geen videoweergave van ARM-gebaseerde servers.",
 			"noFormat": "Deze browser ondersteunt het afspelen van videobeelden van deze camera niet.",
-			"ieNoWebm": "Installeer alstublieft <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> voor Internet Explorer.",
+			"ieNoWebm": "Installeer alstublieft de <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> voor Internet Explorer.",
 			"ieWin10": "Gebruik alsjeblieft de browsers Microsoft Edge of Google Chrome.",
 			"ubuntuNX": "Deze browser ondersteunt geen video van ARM-gebaseerde servers. Gebruik alsjeblieft de Chromium-browser."
 		},
@@ -463,22 +461,22 @@
 		"resolution": {
 			"auto": "Automatisch",
 			"high": "Hoog",
-			"low": "Laag"
+			"low": "Lage"
 		},
-		"chromeCastWarning": "Chromecast vraagt veel systeem resources en kan problemen veroorzaken op uw server.",
+		"chromeCastWarning": "Chromecast is arbeidsintensief en kan problemen veroorzaken op uw server.",
 		"voiceCommands": {
 			"play": "afspelen",
 			"pause": "pauze",
 			"live": "ga naar Live | live weergeven",
 			"view": "bekijk + [camera naam]",
-			"search": "vind + [tekst voor zoekbalk]",
+			"search": "vind + [text for searchbar]",
 			"clear search": "zoekopdracht wissen",
 			"expand server": "vouw server + [servernaam] uit",
 			"collapse server": "vouw server + [servernaam] samen",
 			"expand all servers": "vouw alle servers uit",
 			"collapse all servers": "vouw alle servers samen",
-			"stop listening": "stop met luisteren",
-			"help": "help | toon commando's"
+			"stop listening": "stoppen met luisteren",
+			"help": "help | show commands"
 		}
 	},
 	"systemAdministration": "Systeem Administratie",

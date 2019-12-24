@@ -48,7 +48,7 @@
     "Create Account": "Skapa konto",
     "Create account": "Skapa konto",
     "Current Password": "Nuvarande Lösenord",
-    "Current password is required": "Lösenordet krävs",
+    "Current password is required": "Nuvarande lösenord krävs",
     "Depending of the size of the database it may take up to several hours.": "Beroende på databasens storlek kan det ta upp till flera timmar.",
     "Developer": "Utvecklare",
     "Discard": "Kasta",
@@ -129,7 +129,7 @@
     "Password reset instructions are sent to Email": "Instruktioner för återställning av lösenord skickas till e-post",
     "Password successfully saved": "Lösenordet har sparats",
     "Password:": "Lösenord:",
-    "Please enter a valid Email": "Ange en giltig e-postadress",
+    "Please enter a valid Email": "Vänligen ange en giltig e-postadress",
     "Please review and agree to the Terms and Conditions and Privacy policy in order to proceed": "Läs och godkänn användarvillkoren och sekretesspolicy för att fortsätta",
     "Popularity": "Popularitet",
     "Privacy": "Sekretess",
@@ -219,7 +219,7 @@
         },
         "Viewer": {
             "description": "Kan visa live video och bläddra i arkivet",
-            "label": "Användare"
+            "label": "Tittare"
         },
         "advancedViewer": {
             "description": "Kan visa live video, bläddra i arkivet, konfigurera kameror, styra PTZ etc",
@@ -239,7 +239,7 @@
         },
         "disabled": {
             "description": "Användaren är inaktiverad och kan inte logga in på System",
-            "label": "Inaktiverad"
+            "label": "Avaktiverad"
         },
         "liveViewer": {
             "description": "Kan bara visa live video",
@@ -251,7 +251,7 @@
         },
         "viewer": {
             "description": "Kan visa live video och bläddra i arkivet",
-            "label": "Användare"
+            "label": "Tittare"
         }
     },
     "account": {
@@ -303,7 +303,7 @@
             "noArmSupport": "Denna webbläsare eller enhet stöder inte videouppspelning från ARM-baserade servrar.",
             "noData": "Data saknas",
             "noFormat": "Den här webbläsaren stöder inte videouppspelning från den här kameran.",
-            "offline": "Frånkopplade",
+            "offline": "Offline",
             "ubuntuNX": "Den här webbläsaren stöder inte video från ARM-baserade servrar. Vänligen använd Chrome-webbläsaren istället.",
             "unauthorized": "Autentisering krävs"
         },
@@ -327,22 +327,22 @@
         "voiceCommands": {
             "clear search": "rensa sökningen",
             "collapse all servers": "kollapsa alla servrar",
-            "collapse server": "collapse server + [server name]",
+            "collapse server": "kollapsera server + [servernamn]",
             "expand all servers": "expandera alla servrar",
-            "expand server": "expand server + [server name]",
-            "help": "help | show commands",
-            "live": "go to live | show me live",
+            "expand server": "expandera server + [server namn]",
+            "help": "hjälp | visa kommandon",
+            "live": "gå till live | visa mig live",
             "pause": "pausa",
             "play": "spela",
-            "search": "find + [text for searchbar]",
+            "search": "hitta + [text för sökbar]",
             "stop listening": "sluta lyssna",
-            "view": "view + [camera name]"
+            "view": "visa + [kamera namn]"
         }
     },
     "devices": "enheter",
     "dialogs": {
         "cancelButton": "Avbryt",
-        "changeAccountLogged": "You are already logged in as {email}",
+        "changeAccountLogged": "Du är redan inloggad som {email}",
         "createNewAccount": "Skapa nytt konto",
         "download": "Ladda ner %VMS_NAME%",
         "loggedFromOther": "Du kommer att vara inloggad med ett annat konto",
@@ -422,8 +422,7 @@
             },
             "arm": {
                 "label": "ARM",
-                "shortLabel": "ARM",
-                "supported": "<a href='/content/arm'>ARM-baserade servrar stöd policy</a>"
+                "shortLabel": "ARM"
             },
             "ios": {
                 "label": "iOS",
@@ -441,8 +440,7 @@
             },
             "sdk": {
                 "label": "SDK",
-                "shortLabel": "SDK",
-                "supported": "C++ plattformsoberoende SDK"
+                "shortLabel": "SDK"
             },
             "windows": {
                 "label": "Windows"
@@ -469,12 +467,12 @@
         },
         "releasesTypes": {
             "beta": "Beta",
-            "betas": "Betas",
+            "betas": "Betor",
             "patch": "Patch",
-            "patches": "Patches",
-            "rc": "Release Candidate",
+            "patches": "Patchar",
+            "rc": "Releasekandidat",
             "release": "Release",
-            "releases": "Releases"
+            "releases": "Releaser"
         }
     },
     "errorCodes": {
@@ -691,7 +689,7 @@
         "incompatible": "oförenlig",
         "merging": "sammanslagning",
         "notActivated": "inte aktiverad",
-        "offline": "frånkopplade",
+        "offline": "frånkopplad",
         "online": "uppkopplad",
         "unavailable": "inte tillgänglig"
     },

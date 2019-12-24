@@ -24,7 +24,7 @@
     "Allow only secure connections": "Tillat bare sikre tilkoblinger",
     "Allow system to optimize camera settings": "Allow system to optimize camera settings",
     "Analytics": "Analyser",
-    "Analytics Event": "Videoanalyse-regel",
+    "Analytics Event": "Analyse-hendelser",
     "Analytics Events": "Analyse-hendelser",
     "Any": "Noen",
     "Apply": "Bruk",
@@ -77,7 +77,7 @@
     "FAILED_SYSTEM_DESCR": "This link is broken,<br>System may be disconnected from %CLOUD_NAME%,<br>Access to this System may be revoked, <br>or you may be logged into a different account.",
     "FPS(max)": "FPS (maks)",
     "Failed to access System": "Kunne ikke få tilgang til System",
-    "Finishing systems merge": "Ferdigstiller systemsammenslåing",
+    "Finishing systems merge": "Ferdigstiller sammenslåing",
     "Firmware version": "Fastvareversjon",
     "First Name": "First Name",
     "First name": "Fornavn",
@@ -139,7 +139,7 @@
     "Remove User": "Remove User",
     "Rename": "Endre navn",
     "Requirements": "Krav",
-    "Resend activation email": "Send aktiverings e-post igjen",
+    "Resend activation email": "Send aktiverings e-post på nytt",
     "Resend activation link": "Send aktiveringslink igjen",
     "Resolution(max)": "Oppløsning (maks)",
     "Save": "Lagre",
@@ -150,7 +150,7 @@
     "Send anonymous usage and crash statistics to developers": "Send anonymous usage and crash statistics to developers",
     "Send feedback about this device": "Send tilbakemelding om denne enheten",
     "Set New Password": "Angi et nytt passord",
-    "Settings": "Innstillingar",
+    "Settings": "Innstillinger",
     "Show All": "Vis alle",
     "Some of your servers don't support cloud System merge because of outdated software version.": "Noen av serverne dine støtter ikke Cloud-systemfusjonen på grunn av utdatert programvareversjon.",
     "Subject": "Subject",
@@ -286,7 +286,7 @@
         "cameraLinks": {
             "copyActiveText": "kopiert til utklippstavlen",
             "copyDefaultText": "kopiere",
-            "copyToClipboard": "kopiere til utklippstavle",
+            "copyToClipboard": "kopier til utklippstavle",
             "highStream": "Høy kvalitet",
             "lowStream": "Lav kvalitet",
             "transcoding": "Transkoding",
@@ -301,11 +301,11 @@
             "ieNoWebm": "Vennligst installer <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> for Internet Explorer.",
             "ieWin10": "Vennligst bruk Microsoft Edge- eller Google Chrome-nettlesere.",
             "noArmSupport": "Denne nettleseren eller enheten støtter ikke videoavspilling fra ARM-baserte servere.",
-            "noData": "Ingen video/opptak",
+            "noData": "Ingen opptak",
             "noFormat": "Denne nettleseren støtter ikke videoavspilling fra dette kameraet.",
             "offline": "Frakoblet",
-            "ubuntuNX": "Denne nettleseren støtter ikke video fra ARM-baserte servere. Vennligst bruk Chrome-nettleseren i stedet.",
-            "unauthorized": "Krever innlogging"
+            "ubuntuNX": "Denne nettleseren støtter ikke video fra ARM-baserte servere. Vennligst bruk Chromium-nettleseren i stedet.",
+            "unauthorized": "Autentisering kreves"
         },
         "chromeCastWarning": "Chromecast er ressursintensiv og kan forårsake problemer på serveren.",
         "resolution": {
@@ -319,7 +319,7 @@
         "systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
         "systemNoAlerts": "No Alerts",
         "systemNoAlertsMessage": "Your system must be doing well!",
-        "systemOffline": "System Offline",
+        "systemOffline": "System frakoblet",
         "systemOfflineMessage": "This system is offline and cannot be accessed right now.",
         "systemServerError": "Intern server feil",
         "systemServerErrorMessage": "An error occurred, please, try again later. An error occurred, please try again later. If the problem continues, please contact your support team.",
@@ -329,14 +329,14 @@
             "collapse all servers": "kollapse alle servere",
             "collapse server": "collapse server + [server name]",
             "expand all servers": "utvide alle servere",
-            "expand server": "expand server + [server name]",
+            "expand server": "utvider server + [servernavn]",
             "help": "help | show commands",
             "live": "go to live | show me live",
             "pause": "pause",
             "play": "spill av",
             "search": "find + [text for searchbar]",
             "stop listening": "slutt å lytte",
-            "view": "view + [camera name]"
+            "view": "se + [kamera navn]"
         }
     },
     "devices": "enheter",
@@ -422,8 +422,7 @@
             },
             "arm": {
                 "label": "ARM",
-                "shortLabel": "ARM",
-                "supported": "<a href='/content/arm'>ARM-baserte servere support policy</a>"
+                "shortLabel": "ARM"
             },
             "ios": {
                 "label": "iOS",
@@ -441,11 +440,10 @@
             },
             "sdk": {
                 "label": "SDK",
-                "shortLabel": "SDK",
-                "supported": "C + + kryssplattform SDK"
+                "shortLabel": "SDK"
             },
             "windows": {
-                "label": "Windows"
+                "label": "Vindu"
             }
         },
         "mobile": {
@@ -469,12 +467,12 @@
         },
         "releasesTypes": {
             "beta": "Beta",
-            "betas": "Betas",
-            "patch": "Patch",
-            "patches": "Patches",
-            "rc": "Release Candidate",
-            "release": "Release",
-            "releases": "Releases"
+            "betas": "Betaer",
+            "patch": "Fiks",
+            "patches": "Fikser",
+            "rc": "Utsendelseskandidater",
+            "release": "Utgivelse",
+            "releases": "Utgivelser"
         }
     },
     "errorCodes": {
@@ -629,7 +627,7 @@
     },
     "registration.agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>",
     "search": {
-        "Any": "Noen",
+        "Any": "Enhver",
         "Search": "Søk",
         "analytics": "Analyser",
         "analyticsSelected": "analysehendelser",

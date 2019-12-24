@@ -14,7 +14,7 @@
 		"setNewPassword": "保存密码",
 		"setNewPasswordLabel": "新密码"
 	},
-	"clientProtocol": "%CLIENT_PROTOCOL%",
+	"clientProtocol": "%CLIENT_PROTOCOL%:",
 	"search": {
 		"Search": "搜索",
 		"search_ipvd": "按型号或制造商搜索",
@@ -75,13 +75,11 @@
 			},
 			"arm": {
 				"label": "ARM",
-				"shortLabel": "ARM",
-				"supported": "<a href='/content/arm'>ARM服务器支持政策</a>"
+				"shortLabel": "ARM"
 			},
 			"sdk": {
 				"label": "SDK",
-				"shortLabel": "SDK",
-				"supported": "C ++跨平台SDK"
+				"shortLabel": "SDK"
 			}
 		},
 		"platforms": {
@@ -108,12 +106,12 @@
 		},
 		"releasesTypes": {
 			"beta": "Beta",
-			"betas": "Betas",
+			"betas": "测试版本",
 			"rc": "Release Candidate",
 			"release": "Release",
-			"releases": "Releases",
+			"releases": "版本发布",
 			"patch": "Patch",
-			"patches": "Patches"
+			"patches": "补丁"
 		}
 	},
 	"ipvd": {
@@ -191,14 +189,14 @@
 		"debug": "调试",
 		"login": "登录-",
 		"download": "下载 %VMS_NAME%",
-		"downloadPlatform": "下载的 %VMS_NAME% ",
+		"downloadPlatform": "Download %VMS_NAME% for ",
 		"pageNotFound": "找不到页面",
 		"supportedDevices": "支持设备",
 		"integrations": "集成"
 	},
 	"dialogs": {
 		"okButton": "确定",
-		"cancelButton": "撤消",
+		"cancelButton": "取消",
 		"createNewAccount": "新增帐户",
 		"changeAccountLogged": "You are already logged in as {email}",
 		"loggedFromOther": "您将使用其他帐户登录",
@@ -207,7 +205,7 @@
 		"logoutAuthorisedTitle": "您已经登录",
 		"logoutAuthorisedContinueButton": "继续",
 		"logoutAuthorisedLogoutButton": "退出登录",
-		"noClientDetectedTitle": "安装 %VMS_NAME% 来查看您的系统",
+		"noClientDetectedTitle": "Install %VMS_NAME% to view your System",
 		"stayAs": "以{email} 保持登录 ",
 		"stayLoggedIn": "保持登录状态",
 		"download": "下载 %VMS_NAME%",
@@ -319,7 +317,7 @@
 		"unavailable": "系统无法访问",
 		"offline": "系统处于离线状态",
 		"offlineAlertRibbon": "系统离线。某些设置可能无法使用。",
-		"openClient": "在 %VMS_NAME% 中打开",
+		"openClient": "Open in %VMS_NAME%",
 		"openClientNoSystem": "打开 %VMS_NAME%",
 		"confirmMergeAction": "联网",
 		"mergeSystemTitle": "合并系统",
@@ -369,18 +367,18 @@
 		},
 		"Owner": {
 			"label": "所有者",
-			"description": "不受限制地的访问包括共享和从云连接或断开系统的能力"
+			"description": "不受限制地的访问包括共享和连接断开系统从云的能力"
 		},
 		"Viewer": {
-			"label": "浏览者",
+			"label": "操作员",
 			"description": "可以查看实时视频和浏览存档"
 		},
 		"Live Viewer": {
-			"label": "实时浏览者",
-			"description": "只能查看实时视频"
+			"label": "实时操作员",
+			"description": "只可以查看视频直播"
 		},
 		"Advanced Viewer": {
-			"label": "高级浏览者",
+			"label": "高级操作员",
 			"description": "可以查看实时视频，浏览存档，控制云台等"
 		},
 		"Administrator": {
@@ -401,18 +399,18 @@
 		},
 		"owner": {
 			"label": "所有者",
-			"description": "不受限制地的访问包括共享和从云连接或断开系统的能力"
+			"description": "不受限制地的访问包括共享和连接断开系统从云的能力"
 		},
 		"viewer": {
-			"label": "浏览者",
+			"label": "操作员",
 			"description": "可以查看实时视频和浏览存档"
 		},
 		"liveViewer": {
-			"label": "实时浏览者",
-			"description": "只能查看实时视频"
+			"label": "实时操作员",
+			"description": "只可以查看视频直播"
 		},
 		"advancedViewer": {
-			"label": "高级浏览者",
+			"label": "高级操作员",
 			"description": "可以查看实时视频，浏览存档，配置摄像头，控制云台等"
 		},
 		"custom": {
@@ -469,16 +467,16 @@
 		"voiceCommands": {
 			"play": "播放",
 			"pause": "暂停",
-			"live": "go to live | show me live",
-			"view": "view + [camera name]",
-			"search": "find + [text for searchbar]",
+			"live": "实时 | 显示实时",
+			"view": "查看+ [相机名称]",
+			"search": "搜寻+ [搜索栏的文字]",
 			"clear search": "清除搜索",
-			"expand server": "expand server + [server name]",
-			"collapse server": "collapse server + [server name]",
+			"expand server": "展开服务器+ [服务器名称]",
+			"collapse server": "崩溃服务器 + [服务器名称]",
 			"expand all servers": "展开所有服务器",
 			"collapse all servers": "隐藏所有服务器",
 			"stop listening": "停止监听",
-			"help": "help | show commands"
+			"help": "帮助|显示命令"
 		}
 	},
 	"systemAdministration": "系统管理",
@@ -496,7 +494,7 @@
 	"WHEN_MERGE_FINISHES": "合并完成后, 此系统中的所有用户和摄相机都将可用于<strong>{{targetSystemName}}</strong>, 同时此系统将被删除",
 	"FAILED_SYSTEM_DESCR": "此连结已损毁,<br> 系统可能会从 %CLOUD_NAME% 离线,<br>于此系统的权限可能被注销,<br>或请您用不同的帐戶登录.",
 	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "你有没有连接到 %CLOUD_NAME% 的系统",
-	"NO_SYSTEMS_LOGIN": "登录到您的系统使用 %VMS_NAME%",
+	"NO_SYSTEMS_LOGIN": "Log in to your System using %VMS_NAME%",
 	"NO_SYSTEMS_GOTO_ADMINISTRATION": "转到\"系统管理\"对话框中的\"云\"选项",
 	"NO_SYSTEMS_CONNECT_SYSTEM": "按“将系统连接到 %CLOUD_NAME%”"
 }

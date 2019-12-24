@@ -75,13 +75,11 @@
 			},
 			"arm": {
 				"label": "ARM",
-				"shortLabel": "ARM",
-				"supported": "<a href='/content/arm'>Zasady wsparcia serwerów ARM</a>"
+				"shortLabel": "ARM"
 			},
 			"sdk": {
 				"label": "SDK",
-				"shortLabel": "SDK",
-				"supported": "C++ cross platform SDK"
+				"shortLabel": "SDK"
 			}
 		},
 		"platforms": {
@@ -200,7 +198,7 @@
 		"okButton": "OK",
 		"cancelButton": "Anuluj",
 		"createNewAccount": "Utwórz nowe konto",
-		"changeAccountLogged": "You are already logged in as {email}",
+		"changeAccountLogged": "Jesteś już zalogowany jako {email}",
 		"loggedFromOther": "Zostaniesz zalogowany przy użyciu innego konta",
 		"loginTitle": "Zaloguj do %CLOUD_NAME%",
 		"loginButton": "Zaloguj",
@@ -296,7 +294,7 @@
 		"unknownMergeError": "Nieznany błąd. Można odświeżyć stronę i spróbować ponownie. Jeśli problem będzie się powtarzał - proszę skontaktować się z <a href=\"%SUPPORT_LINK%\" target=\"_blank\">działem wsparcia technicznego</a>."
 	},
 	"passwordRequirements": {
-		"good": "dobre",
+		"good": "dobry",
 		"fair": "średnie",
 		"fairMessage": "Użyj liczb, wielkich i małych liter oraz znaków specjalnych, aby ustawić bezpieczniejsze hasło",
 		"minLength": "za krótkie",
@@ -345,8 +343,8 @@
 		"shareUnauthorized": "Nie masz uprawnień do udostępniania tego systemu",
 		"settings": {
 			"sessionLimitDuration": {
-				"hours": "godzin",
-				"minutes": "minut"
+				"hours": "godziny",
+				"minutes": "minuta"
 			},
 			"warningMessages": {
 				"videoEncryption": "Szyfrowanie transmisji wideo znacząco zwiększy użycie procesora."
@@ -381,7 +379,7 @@
 		},
 		"Advanced Viewer": {
 			"label": "Zaawansowany użytkownik",
-			"description": "Może wyświetlać wideo na żywo, przeglądać archiwum, sterować PTZ itp."
+			"description": "Podgląd wideo na żywo, przeglądanie archiwum, konfigurowanie kamer, sterowanie PTZ itp."
 		},
 		"Administrator": {
 			"label": "Administrator",
@@ -462,8 +460,8 @@
 		"searchCamPlaceholder": "Szukaj",
 		"resolution": {
 			"auto": "Auto",
-			"high": "Wysoka",
-			"low": "Niska"
+			"high": "Wysoki",
+			"low": "Niski"
 		},
 		"chromeCastWarning": "Chromecast wymaga dużej ilości zasobów i może powodować problemy na serwerze.",
 		"voiceCommands": {
