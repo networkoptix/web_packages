@@ -23,10 +23,10 @@
                             </div>
 
                             <div class="col-md-8 order-1 order-md-1 p-0">
-                                <div class="row" *ngIf="activeTab != 'sdk'">
+                                <div class="row">
                                     <div class="col-md-12">
                                         <a class="media btn btn-default download-button"
-                                           *ngIf="platform.files.length"
+                                           *ngIf="activeTab != 'sdk' && platform.files.length"
                                            [href]="downloadButton && downloadButton.url">
                                             <div class="media-left">
                                                 <span class="download-link"></span>
