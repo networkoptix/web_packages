@@ -5,7 +5,7 @@ preserve_hierarchy: true
 
 files:
   -
-    source: '/front_end/app/language*.json'
+    source: '/front_end/app/lang*.json'
     translation: '/translations/%locale_with_underscore%/%original_file_name%'
     ignore:
       - '/front_end/app/languages.json'
