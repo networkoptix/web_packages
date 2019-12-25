@@ -1,6 +1,6 @@
 {
   "language": "zh_CN",
-  "language_name": "LANGUAGE_NAME",
+  "language_name": "简体中文",
   "cloudName": "%CLOUD_NAME%",
   "vmsName": "%VMS_NAME%",
   "clientProtocol": "%CLIENT_PROTOCOL%:",
