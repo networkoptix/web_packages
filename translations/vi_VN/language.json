@@ -1,0 +1,284 @@
+{
+  "language": "vi_VN",
+  "language_name": "TÊN NGÔN NGỮ",
+  "cloudName": "%CLOUD_NAME%",
+  "vmsName": "%VMS_NAME%",
+  "clientProtocol": "%CLIENT_PROTOCOL%:",
+  "dialogs": {
+    "okButton": "Xác nhận",
+    "cancelButton": "Hủy bỏ",
+    "loginTitle": "Đăng nhập vào %CLOUD_NAME%",
+    "loginButton": "Đăng nhập",
+    "logoutAuthorisedTitle": "Bạn đã đăng nhập",
+    "logoutAuthorisedContinueButton": "Tiếp tục",
+    "logoutAuthorisedLogoutButton": "Đăng xuất",
+    "noClientDetectedTitle": "Install %VMS_NAME% to view your System",
+    "download": "Tải xuống %VMS_NAME%"
+  },
+  "pageTitles": {
+    "template": "{{title}} %CLOUD_NAME%",
+    "default": "%CLOUD_NAME%",
+    "registerSuccess": "Chào mừng bạn đến",
+    "register": "Tạo tài khoản tại",
+    "changePassword": "Đổi mật khẩu -",
+    "account": "Cài đặt tài khoản -",
+    "systems": "Hệ thống -",
+    "system": "Hệ thống -",
+    "systemShare": "Chia sẻ Hệ thống -",
+    "activate": "Kích hoạt tài khoản -",
+    "activateSent": "Kích hoạt tài khoản -",
+    "activateSuccess": "Tài khoản đã kích hoạt -",
+    "activateCode": "Kích hoạt tài khoản -",
+    "restorePassword": "Đặt lại mật khẩu -",
+    "restorePasswordSuccess": "Đã lưu mật khẩu -",
+    "restorePasswordCode": "Đặt lại mật khẩu -",
+    "view": "Xem camera ",
+    "debug": "Gỡ rối",
+    "login": "Đăng nhập -",
+    "download": "Tải xuống %VMS_NAME%",
+    "downloadPlatform": "Download %VMS_NAME% for ",
+    "pageNotFound": "Không tìm thấy trang"
+  },
+  "systemStatuses": {
+    "activated": "đã kích hoạt",
+    "incompatible": "không tương thích",
+    "merging": "đang tích hợp",
+    "notActivated": "chưa kích hoạt",
+    "online": "trực tuyến",
+    "offline": "ngoại tuyến",
+    "unavailable": "không khả dụng"
+  },
+  "accessRoles": {
+    "disabled": {
+      "label": "Vô hiệu hóa",
+      "description": "Người dùng bị vô hiệu và không thể đăng nhập vào Hệ thống"
+    },
+    "Owner": {
+      "label": "Chủ nhân",
+      "description": "Truy cập không giới hạn bao gồm khả năng chia sẻ và kết nối / ngắt kết nối Hệ thống từ đám mây"
+    },
+    "Viewer": {
+      "label": "Người xem",
+      "description": "Có thể xem video trực tuyến và duyệt qua kho lưu trữ"
+    },
+    "Live Viewer": {
+      "label": "Xem trực tiếp",
+      "description": "Chỉ có thể xem video trực tiếp"
+    },
+    "Advanced Viewer": {
+      "label": "Trình xem nâng cao",
+      "description": "Có thể xem video trực tiếp, duyệt kho lưu trữ, kiểm soát PTZ"
+    },
+    "Administrator": {
+      "label": "Giám sát viên",
+      "description": "Truy cập không giới hạn bao gồm khả năng chia sẻ"
+    },
+    "Custom": {
+      "label": "Tùy chỉnh",
+      "description": "Sử dụng ứng dụng Khách hàng %VMS_NAME% để thiết lập quyền tùy chỉnh"
+    },
+    "cloudAdmin": {
+      "label": "Giám sát viên",
+      "description": "Có thể cấu hình Hệ thống và chia sẻ nó"
+    },
+    "customRole": {
+      "label": "Tùy chỉnh role",
+      "description": "Thiết lập người dùng được chỉ định trong Hệ thống"
+    },
+    "owner": {
+      "label": "Chủ nhân",
+      "description": "Truy cập không giới hạn bao gồm khả năng chia sẻ và kết nối / ngắt kết nối Hệ thống từ đám mây"
+    },
+    "viewer": {
+      "label": "Người xem",
+      "description": "Có thể xem video trực tuyến và duyệt qua kho lưu trữ"
+    },
+    "liveViewer": {
+      "label": "Xem trực tiếp",
+      "description": "Chỉ có thể xem video trực tiếp"
+    },
+    "advancedViewer": {
+      "label": "Trình xem nâng cao",
+      "description": "Có thể xem video trực tiếp, duyệt các kho lưu trữ, cấu hình camera, điều khiển PTZ vv"
+    },
+    "custom": {
+      "label": "Tùy chỉnh",
+      "description": "Sử dụng ứng dụng Khách hàng %VMS_NAME% để thiết lập quyền tùy chỉnh"
+    }
+  },
+  "errorCodes": {
+    "ok": "ok",
+    "cantSendActivationPrefix": "Không thể gửi Email xác nhận",
+    "cantDisconnectSystemPrefix": "Không thể xóa bỏ hệ thống",
+    "cantUnshareWithMeSystemPrefix": "Không thể xóa bỏ hệ thống",
+    "cantSharePrefix": "Không thể chia sẻ Hệ thống",
+    "cantGetUsersListPrefix": "Danh sách người dùng không khả dụng",
+    "cantGetSystemsListPrefix": "Danh sách hệ thống không khả dụng",
+    "cantRegisterPrefix": "Xảy ra lỗi",
+    "cantGetSystemInfoPrefix": "Thông tin hệ thống không khả dụng",
+    "cantChangeAccountPrefix": "Không thể lưu thay đổi",
+    "cantChangePasswordPrefix": "Không thể lưu mật khẩu",
+    "cantActivatePrefix": "Không thể kích hoạt tài khoản của bạn",
+    "cantSendConfirmationPrefix": "Không thể gửi Email xác nhận",
+    "notAuthorized": "Sai mật khẩu",
+    "brokenAccount": "Vấn đề không mong muốn với tài khoản. <a href=\"/restore_password\">Khôi phục tài khoản</a>",
+    "wrongParameters": "Một số thông số trên biểu mẫu không chính xác",
+    "wrongCode": "Tài khoản đã được kích hoạt hoặc mã xác nhận không chính xác",
+    "wrongCodeRestore": "Mã xác nhận đã được sử dụng hoặc không chính xác",
+    "wrongAuthCode": "Mã đã hết hạn hoặc không chính xác",
+    "forbidden": "Bạn không có quyền thực hiện công việc này",
+    "accountNotActivated": "Tài khoản này chưa được kích hoạt. <a href=\"/activate\">Gửi liên kết kích hoạt lại</a>",
+    "accountBlocked": "Tài khoản này tạm thời bị chặn, xin vui lòng thử lại sau vài phút.",
+    "notFound": "Không tìm thấy",
+    "alreadyExists": "Tài khoản này đã tồn tại",
+    "unknownError": "Đã xảy ra lỗi không mong muốn",
+    "accountAlreadyActivated": "Tài khoản này đã được kích hoạt",
+    "emailNotFound": "Tài khoản không tồn tại.",
+    "EmailAlreadyExists": "Email này đã được đăng ký",
+    "oldPasswordMistmatch": "Mật khẩu hiện tại không đúng.",
+    "passwordMismatch": "Sai mật khẩu",
+    "cantEditYourself": "Không cho phép thay đổi quyền riêng tư",
+    "cantEditAdmin": "Người dùng này có quyền quản trị viên",
+    "cantOpenClient": "%VMS_NAME% application is not detected. <a href=\"/download\">Download</a>",
+    "lostConnection": "Kết nối với {{systemName}} bị mất",
+    "thisSystem": "hệ thống",
+    "oldSafariNotSupported": "Không hỗ trợ các phiên bản cũ hơn Safari 10",
+    "DUPLICATE_MEDIASERVER_FOUND": "Một số máy chủ liệt kê tồn tại trong cả hệ thống được chọn và hệ thống hiện tại.<br>Xóa các máy chủ ngoại tuyến và không tương thích khỏi mỗi Hệ thống và thử lại.",
+    "mergedSystemIsOffline": "Hệ thống <strong>{{failedSystem}}</strong> đang ngoại tuyến.",
+    "INCOMPATIBLE": "Hệ thống đang có các phiên bản phần mềm khác nhau. Vui lòng cập nhật tất cả lên <a href=\"/download\">phiên bản mới nhất</a>.",
+    "FAIL": "Hệ thống <strong>{{failedSystem}}</strong> hiện không thể truy cập được.<br>Vu lòng thử lại sau vài phút hoặc liên hệ với <a href=\"%SUPPORT_LINK%\" target=\"_blank\"> để được hỗ trợ</a>.",
+    "unknownMergeError": "Lỗi không rõ. Bạn có thể thử làm mới trang và lặp lại thử. Nếu vấn đề vẫn còn - vui lòng liên hệ với <a href=\"%SUPPORT_LINK%\" target=\"_blank\">hỗ trợ</a>."
+  },
+  "merging": {
+    "mergeFailedTitle": "Hợp nhất hệ thống không thành công",
+    "commonText": "Không thể hợp nhất Hệ thống <strong>{{primarySystem}}</strong> và <strong>{{secondarySystem}}</strong>."
+  },
+  "passwordRequirements": {
+    "good": "tốt",
+    "fair": "công bằng",
+    "fairMessage": "Sử dụng số, chữ hoa và chữ thường và ký tự đặc biệt để làm cho mật khẩu của bạn mạnh mẽ hơn",
+    "minLength": "quá ngắn",
+    "minLengthMessage": "Mật khẩu phải chứa ít nhất 8 ký tự",
+    "required": "không chính xác",
+    "requiredMessage": "Chỉ sử dụng chữ cái Latin, số và ký hiệu bàn phím, tránh các khoảng trống đầu và cuối",
+    "weak": "yếu",
+    "weakMessage": "Sử dụng số, chữ hoa và chữ thường và ký tự đặc biệt để làm cho mật khẩu của bạn mạnh mẽ hơn",
+    "strongMessage": "Mật khẩu mạnh!",
+    "common": "quá phổ biến",
+    "commonMessage": "Mật khẩu này nằm trong mật khẩu phổ biến nhất trên thế giới",
+    "missingMessage": "Mật khẩu là bắt buộc"
+  },
+  "sharing": {
+    "confirmOwner": "Nếu bạn thay sở hữu hệ thống, bạn sẽ thu hồi quyền sở hữu hiện tại của mình. Không thể phục hồi sở hữu cũ. Bạn có chắc không?",
+    "shareTitle": "Chia sẻ",
+    "shareConfirmButton": "Chia sẻ",
+    "editShareTitle": "Quyền chỉnh sửa",
+    "editShareConfirmButton": "Lưu",
+    "permissionsSaved": "Cấp phép mới được lưu"
+  },
+  "system": {
+    "yourSystem": "Hệ thống của bạn",
+    "mySystemSearch": "IMeMyMine",
+    "unavailable": "Hệ thống không thể truy cập được",
+    "offline": "Hệ thống offline",
+    "openClient": "Open in %VMS_NAME%",
+    "openClientNoSystem": "Mở %VMS_NAME%",
+    "confirmMergeAction": "Gộp lại",
+    "mergeSystemTitle": "Hợp nhất hệ thống",
+    "confirmRenameTitle": "Tên hệ thống",
+    "confirmRenameAction": "Lưu",
+    "successRename": "Đã lưu tên hệ thống",
+    "confirmDisconnectTitle": "Hệ thống đã ngắt kết nối từ %CLOUD_NAME%?",
+    "confirmDisconnectAction": "Ngắt kết nối",
+    "confirmUnshareFromMe": "Bạn sẽ ngắt kết nối Hệ thống này khỏi tài khoản của bạn. Bạn sẽ không thể truy cập Hệ thống này nữa. Bạn có chắc không?",
+    "confirmUnshareFromMeTitle": "Ngắt kết nối hệ thống?",
+    "confirmUnshareFromMeAction": "Ngắt kết nối",
+    "confirmUnshare": "Người dùng này sẽ không thể truy cập vào Hệ thống. Bạn có chắc không?",
+    "confirmUnshareTitle": "Xóa người dùng?",
+    "confirmUnshareAction": "Xoá",
+    "successDisconnected": "Hệ thống được ngắt kết nối thành công từ %CLOUD_NAME%",
+    "successDeleted": "Tài khoản {{systemName}} đã xóa thành công từ hệ thống của bạn",
+    "mergeFailed": "Hợp nhất hệ thống không thành công",
+    "mergeStart": "Các hệ thống đã được hợp nhất",
+    "mergeSuccess": "Hoàn thành hợp nhất hệ thống",
+    "permissionsRemoved": "Các quyền đã bị xóa khỏi {{email}}",
+    "unknownName": "Tên không xác định cho hệ thống (do hợp nhất Cloud)"
+  },
+  "account": {
+    "accountSavedSuccess": "Tài khoản của bạn đã được lưu thành công",
+    "activationLinkSent": "Link kích hoạt đã được gửi",
+    "passwordChangedSuccess": "Tài khoản của bạn đã được lưu thành công",
+    "changePassword": "Đổi mật khẩu",
+    "newPasswordLabel": "Mật khẩu mới",
+    "saveChanges": "Lưu"
+  },
+  "activeActions": {
+    "sendConfirm": "Gửi lại link kích hoạt",
+    "resetPassword": "Đặt lại mật khẩu",
+    "setNewPassword": "Lưu mật khẩu",
+    "setNewPasswordLabel": "Mật khẩu mới"
+  },
+  "regActions": {
+    "passwordLabel": "Mật khẩu",
+    "createAccount": "Tạo tài khoản"
+  },
+  "header": {
+    "allSystems": "Tất cả Hệ thống",
+    "systems": "Hệ thống"
+  },
+  "common": {
+    "cameraLinks": {
+      "highStream": "Luồng tốc độ cao",
+      "lowStream": "Luồng tốc độ thấp",
+      "transcoding": "Đang chuyển mã",
+      "unknown": "Không xác định",
+      "copyToClipboard": "chép vào bảng nháp",
+      "copyDefaultText": "sao chép",
+      "copyActiveText": "sao chép vào clipboard"
+    },
+    "systemOffline": "Hệ thống offline",
+    "systemHasNoCameras": "KHÔNG CÓ CAMERA",
+    "systemUnreachable": "HỆ THỐNG KHÔNG GIỚI HẠN",
+    "cameraStates": {
+      "offline": "Ẩn",
+      "error": "Lỗi",
+      "errorLoading": "An error occurred while loading this video.",
+      "unauthorized": "Yêu cầu xác thực",
+      "noData": "Không có dữ liệu",
+      "iOSVideoTooLarge": "ios không hỗ trợ video lớn hơn fullHD (2MP: 1920x1080).",
+      "flashRequired": "Vui lòng <a href='https://get.adobe.com/flashplayer/' target='_blank'>cài đặt Adobe Flash</a> để phát video.",
+      "flashOrWebmRequired": "Vui lòng <a href='https://get.adobe.com/flashplayer/' target='_blank'>cài đặt Adobe Flash</a> hoặc<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> để phát video trong Internet Explorer.",
+      "noArmSupport": "Trình duyệt hoặc thiết bị này không hỗ trợ xem video từ máy chủ trên nền ARM.",
+      "noFormat": "Trình duyệt này không hỗ trợ phát lại video từ camera này.",
+      "ieNoWebm": "Hãy cài đặt <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> cho Internet Explorer.",
+      "ieWin10": "Vui lòng, sử dụng Microsoft Edge hoặc trình duyệt Google Chrome.",
+      "ubuntuNX": "Trình duyệt này không hỗ trợ video từ máy chủ dựa trên ARM. Vui lòng sử dụng trình duyệt Chromium để thay thế."
+    },
+    "searchCamPlaceholder": "Tìm kiếm",
+    "resolution": {
+      "auto": "tự động",
+      "high": "cao (H)",
+      "low": "Cao (H)"
+    },
+    "chromeCastWarning": "Chromecast tốn nhiều tài nguyên và có thể gây ra sự cố trên máy chủ của bạn.",
+    "voiceCommands": {
+      "play": "broadcast",
+      "pause": "giờ nghĩ giảo lao",
+      "live": "go to live | show me live",
+      "view": "view + [camera name]",
+      "search": "find + [text for searchbar]",
+      "clear search": "xóa tìm kiếm",
+      "expand server": "expand server + [server name]",
+      "collapse server": "collapse server + [server name]",
+      "expand all servers": "mở rộng tất cả các máy chủ",
+      "collapse all servers": "tất cả máy chủ mất ổn định",
+      "stop listening": "dừng nghe",
+      "help": "help | show commands"
+    }
+  },
+  "recommendSupport": {
+    "a_recommend": "Chúng tôi khuyên bạn nên tham khảo ý kiến với",
+    "b_support": "hỗ trợ",
+    "c_proceeding": "trước khi tiến hành."
+  }
+}

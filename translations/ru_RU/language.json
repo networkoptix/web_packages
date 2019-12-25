@@ -1,0 +1,284 @@
+{
+  "language": "ru_RU",
+  "language_name": "Русский",
+  "cloudName": "%CLOUD_NAME%",
+  "vmsName": "%VMS_NAME%",
+  "clientProtocol": "%CLIENT_PROTOCOL%:",
+  "dialogs": {
+    "okButton": "OK",
+    "cancelButton": "Отмена",
+    "loginTitle": "Войти в %CLOUD_NAME%",
+    "loginButton": "Войти",
+    "logoutAuthorisedTitle": "Вы уже выполнили вход",
+    "logoutAuthorisedContinueButton": "Продолжить",
+    "logoutAuthorisedLogoutButton": "Выход",
+    "noClientDetectedTitle": "Install %VMS_NAME% to view your System",
+    "download": "Скачать %VMS_NAME%"
+  },
+  "pageTitles": {
+    "template": "{{title}} %CLOUD_NAME%",
+    "default": "%CLOUD_NAME%",
+    "registerSuccess": "Добро пожаловать в",
+    "register": "Зарегистрироваться в",
+    "changePassword": "Изменить пароль -",
+    "account": "Настройки учетной записи -",
+    "systems": "Системы -",
+    "system": "Система -",
+    "systemShare": "Общий доступ -",
+    "activate": "Активировать учетную запись -",
+    "activateSent": "Активировать учетную запись -",
+    "activateSuccess": "Учетная запись активирована -",
+    "activateCode": "Активировать учетную запись -",
+    "restorePassword": "Сброс пароля -",
+    "restorePasswordSuccess": "Пароль сохранен -",
+    "restorePasswordCode": "Сброс пароля -",
+    "view": "Просмотр камер - ",
+    "debug": "Отладка",
+    "login": "Войти -",
+    "download": "Скачать %VMS_NAME%",
+    "downloadPlatform": "Download %VMS_NAME% for ",
+    "pageNotFound": "Страница не найдена"
+  },
+  "systemStatuses": {
+    "activated": "активирован",
+    "incompatible": "несовместима",
+    "merging": "объединяется",
+    "notActivated": "не активирован",
+    "online": "в сети",
+    "offline": "не в сети",
+    "unavailable": "недоступен"
+  },
+  "accessRoles": {
+    "disabled": {
+      "label": "Отключен",
+      "description": "Пользователь отключен и не может войти в систему"
+    },
+    "Owner": {
+      "label": "Владелец",
+      "description": "Неограниченный доступ, включая управление общим доступом и подключением системы к облаку"
+    },
+    "Viewer": {
+      "label": "Видео с камер и архив",
+      "description": "Может смотреть живое видео и архив"
+    },
+    "Live Viewer": {
+      "label": "Только видео с камер",
+      "description": "Может смотреть только живое видео"
+    },
+    "Advanced Viewer": {
+      "label": "Просмотр и настройка",
+      "description": "Может смотреть живое видео, архив, управлять PTZ и т. д"
+    },
+    "Administrator": {
+      "label": "Администратор",
+      "description": "Неограниченный доступ, включая управление общим доступом"
+    },
+    "Custom": {
+      "label": "Особые",
+      "description": "Используйте клиентское приложение %VMS_NAME% для настройки особых полномочий"
+    },
+    "cloudAdmin": {
+      "label": "Администратор",
+      "description": "Может настраивать систему и общий доступ"
+    },
+    "customRole": {
+      "label": "Особая роль",
+      "description": "Особая роль, настроенная в Системе"
+    },
+    "owner": {
+      "label": "Владелец",
+      "description": "Неограниченный доступ, включая управление общим доступом и подключением системы к облаку"
+    },
+    "viewer": {
+      "label": "Видео с камер и архив",
+      "description": "Может смотреть живое видео и архив"
+    },
+    "liveViewer": {
+      "label": "Только видео с камер",
+      "description": "Может смотреть только живое видео"
+    },
+    "advancedViewer": {
+      "label": "Просмотр и настройка",
+      "description": "Может смотреть живое видео, архив, изменять настройки камер, управлять PTZ и т. д"
+    },
+    "custom": {
+      "label": "Особые",
+      "description": "Используйте клиентское приложение %VMS_NAME% для настройки особых полномочий"
+    }
+  },
+  "errorCodes": {
+    "ok": "ок",
+    "cantSendActivationPrefix": "Не удается отправить подтверждение по Email",
+    "cantDisconnectSystemPrefix": "Не удается удалить систему",
+    "cantUnshareWithMeSystemPrefix": "Не удается удалить систему",
+    "cantSharePrefix": "Невозможно объединить систему",
+    "cantGetUsersListPrefix": "Список пользователей недоступен",
+    "cantGetSystemsListPrefix": "Список систем недоступен",
+    "cantRegisterPrefix": "Произошла ошибка",
+    "cantGetSystemInfoPrefix": "Информация о системе недоступна",
+    "cantChangeAccountPrefix": "Не удается сохранить изменения",
+    "cantChangePasswordPrefix": "Не удается сохранить пароль",
+    "cantActivatePrefix": "Не удается активировать вашу учетную запись",
+    "cantSendConfirmationPrefix": "Не удается отправить подтверждение по Email",
+    "notAuthorized": "Неправильный пароль",
+    "brokenAccount": "Неожиданная проблема с учетной записью. <a href=\"/restore_password\">Восстановить учетную запись</a>",
+    "wrongParameters": "Некоторые параметры в форме неверны",
+    "wrongCode": "Учетная запись уже активирована или неверный код подтверждения",
+    "wrongCodeRestore": "Код подтверждения уже используется или неверен",
+    "wrongAuthCode": "Код устарел или неверен",
+    "forbidden": "Отсутствуют полномочия на выполнение этого действия",
+    "accountNotActivated": "Эта учетная запись еще не активирована. <a href=\"/activate\">Отправить ссылку активации снова</a>",
+    "accountBlocked": "Эта учетная запись заблокирована. Пожалуйста, повторите попытку через несколько минут.",
+    "notFound": "Не найдено",
+    "alreadyExists": "Эта учетная запись уже существует",
+    "unknownError": "Произошла непредвиденная ошибка",
+    "accountAlreadyActivated": "Эта учетная запись уже активирована",
+    "emailNotFound": "Учетная запись не существует.",
+    "EmailAlreadyExists": "Этот Email уже зарегистрирован",
+    "oldPasswordMistmatch": "Текущий пароль указан неверно.",
+    "passwordMismatch": "Неправильный пароль",
+    "cantEditYourself": "Не допускается изменение собственных полномочий",
+    "cantEditAdmin": "Этот пользователь имеет полномочия администратора",
+    "cantOpenClient": "%VMS_NAME% application is not detected. <a href=\"/download\">Download</a>",
+    "lostConnection": "Подключение к {{systemName}} потеряно",
+    "thisSystem": "система",
+    "oldSafariNotSupported": "Версии Safari старше 10 не поддерживаются",
+    "DUPLICATE_MEDIASERVER_FOUND": "Некоторые серверы перечислены как существующие в обеих системах - как в выбранной, так и в текущей.<br>Удалите серверы, которые находятся не в сети, и несовместимые серверы из каждой системы и повторите попытку.",
+    "mergedSystemIsOffline": "Система <strong>{{failedSystem}}</strong> не в сети.",
+    "INCOMPATIBLE": "Системы имеют разные версии программного обеспечения. Пожалуйста, обновите их на <a href=\"/download\">последнюю версию</a>.",
+    "FAIL": "Система <strong>{{failedSystem}}</strong> в настоящее время недоступна.<br>Повторите попытку через несколько минут или обратитесь в <a href=\"%SUPPORT_LINK%\" target=\"_blank\">поддержку</a>.",
+    "unknownMergeError": "Неизвестная ошибка. Вы можете попробовать обновить страницу и повторить попытку. Если проблема не устранена, обратитесь в <a href=\"%SUPPORT_LINK%\" target=\"_blank\">службу поддержки</a>."
+  },
+  "merging": {
+    "mergeFailedTitle": "Объединение систем не удалось",
+    "commonText": "Не удалось объединить системы <strong>{{primarySystem}}</strong> и <strong>{{secondarySystem}}</strong>."
+  },
+  "passwordRequirements": {
+    "good": "хорошее",
+    "fair": "средний",
+    "fairMessage": "Для надежности пароля используйте цифры, буквы верхнего и нижнего регистра и специальные символы",
+    "minLength": "короткий",
+    "minLengthMessage": "Пароль должен содержать по крайней мере 8 символов",
+    "required": "некорректный",
+    "requiredMessage": "Используйте только латинские буквы, цифры и символы клавиатуры, избегайте начальных и конечных пробелов",
+    "weak": "слабый",
+    "weakMessage": "Для надежности пароля используйте цифры, буквы верхнего и нижнего регистра и специальные символы",
+    "strongMessage": "Надежный пароль!",
+    "common": "часто встречающийся",
+    "commonMessage": "Этот пароль входит в список самых популярных паролей в мире",
+    "missingMessage": "Пароль обязателен для заполнения"
+  },
+  "sharing": {
+    "confirmOwner": "Если изменить владельца системы, она больше не будет принадлежать текущей учетной записи. Это действие необратимо. Вы уверены?",
+    "shareTitle": "Общий доступ",
+    "shareConfirmButton": "Общий доступ",
+    "editShareTitle": "Изменить полномочия",
+    "editShareConfirmButton": "Сохранить",
+    "permissionsSaved": "Новые полномочия сохранены"
+  },
+  "system": {
+    "yourSystem": "Ваша система",
+    "mySystemSearch": "ЯМойМоя",
+    "unavailable": "Система недоступна",
+    "offline": "Система не в сети",
+    "openClient": "Open in %VMS_NAME%",
+    "openClientNoSystem": "Открыть %VMS_NAME%",
+    "confirmMergeAction": "Объединить",
+    "mergeSystemTitle": "Объединить системы",
+    "confirmRenameTitle": "Имя системы",
+    "confirmRenameAction": "Сохранить",
+    "successRename": "Имя системы сохранено",
+    "confirmDisconnectTitle": "Отключить систему от %CLOUD_NAME%?",
+    "confirmDisconnectAction": "Отключить",
+    "confirmUnshareFromMe": "Вы собираетесь отключить эту систему от учетной записи. Вы не сможете больше иметь доступ к этой системе. Вы уверены?",
+    "confirmUnshareFromMeTitle": "Отключить систему?",
+    "confirmUnshareFromMeAction": "Отключить",
+    "confirmUnshare": "Этот пользователь не сможет получить доступ к системе. Вы уверены?",
+    "confirmUnshareTitle": "Удалить пользователя?",
+    "confirmUnshareAction": "Удалить",
+    "successDisconnected": "Система успешно отключена от %CLOUD_NAME%",
+    "successDeleted": "Система {{systemName}} успешно удалена из вашей учетной записи",
+    "mergeFailed": "Объединение систем не удалось",
+    "mergeStart": "Объединение систем началось",
+    "mergeSuccess": "Слияние системы завершено",
+    "permissionsRemoved": "{{email}} был лишен полномочий",
+    "unknownName": "Неизвестное имя для системы (вызвано облачным объединением систем)"
+  },
+  "account": {
+    "accountSavedSuccess": "Ваша учетная запись успешно сохранена",
+    "activationLinkSent": "Ссылка для активации отправлена",
+    "passwordChangedSuccess": "Ваша учетная запись успешно сохранена",
+    "changePassword": "Изменить пароль",
+    "newPasswordLabel": "Новый пароль",
+    "saveChanges": "Сохранить"
+  },
+  "activeActions": {
+    "sendConfirm": "Отправить ссылку еще раз",
+    "resetPassword": "Сброс пароля",
+    "setNewPassword": "Сохранить пароль",
+    "setNewPasswordLabel": "Новый пароль"
+  },
+  "regActions": {
+    "passwordLabel": "Пароль",
+    "createAccount": "Зарегистрироваться"
+  },
+  "header": {
+    "allSystems": "Все системы",
+    "systems": "Системы"
+  },
+  "common": {
+    "cameraLinks": {
+      "highStream": "Выс. кач-во",
+      "lowStream": "Низ. кач-во",
+      "transcoding": "Перекодирование",
+      "unknown": "Неизвестный",
+      "copyToClipboard": "скопировать в буфер обмена",
+      "copyDefaultText": "копировать",
+      "copyActiveText": "скопировано в буфер обмена"
+    },
+    "systemOffline": "Система не в сети",
+    "systemHasNoCameras": "НЕТ КАМЕР",
+    "systemUnreachable": "СИСТЕМА НЕДОСТУПНА",
+    "cameraStates": {
+      "offline": "Не в сети",
+      "error": "Ошибка",
+      "errorLoading": "При загрузке этого видео произошла ошибка.",
+      "unauthorized": "Требуется аутентификация",
+      "noData": "Нет данных",
+      "iOSVideoTooLarge": "iOS не поддерживает видео с разрешением больше чем fullHD (2MP: 1920x1080).",
+      "flashRequired": "Пожалуйста, <a href='https://get.adobe.com/flashplayer/' target='_blank'>установите Adobe Flash</a> для воспроизведения видео.",
+      "flashOrWebmRequired": "Видео не может быть воспроизведено. Возможно, требуется <a href='https://get.adobe.com/flashplayer/' target='_blank'>установить Adobe Flash</a> или <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>кодек WebM</a> для воспроизведения видео с серверов в Internet Explorer.",
+      "noArmSupport": "Этот браузер или устройство не поддерживает воспроизведение видео с серверов на базе ARM.",
+      "noFormat": "Этот браузер не поддерживает воспроизведение видео с этой камеры.",
+      "ieNoWebm": "Видео не может быть воспроизведено. Возможно, требуется <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>кодек WebM</a> для Internet Explorer.",
+      "ieWin10": "Пожалуйста, используйте браузеры Microsoft Edge или Google Chrome.",
+      "ubuntuNX": "Этот обозреватель не поддерживает воспроизведение видео с серверов на базе ARM. Требуется обозреватель Chromium."
+    },
+    "searchCamPlaceholder": "Поиск",
+    "resolution": {
+      "auto": "Авто",
+      "high": "Высокая",
+      "low": "Низкая"
+    },
+    "chromeCastWarning": "Chromecast является ресурсоемким и может вызывать проблемы на вашем сервере.",
+    "voiceCommands": {
+      "play": "воспроизвести",
+      "pause": "пауза",
+      "live": "go to live | show me live",
+      "view": "view + [camera name]",
+      "search": "find + [text for searchbar]",
+      "clear search": "очистить поиск",
+      "expand server": "expand server + [server name]",
+      "collapse server": "collapse server + [server name]",
+      "expand all servers": "развернуть все серверы",
+      "collapse all servers": "свернуть все серверы",
+      "stop listening": "прекратить прослушивание",
+      "help": "help | show commands"
+    }
+  },
+  "recommendSupport": {
+    "a_recommend": "Мы рекомендуем проконсультироваться с",
+    "b_support": "техническая поддержка",
+    "c_proceeding": "прежде чем продолжить."
+  }
+}
