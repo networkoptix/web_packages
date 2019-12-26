@@ -8,7 +8,8 @@
 <div class="scroll-wrapper" #nxScrollWrapper>
 
     <div class="nx-table-wrapper" id="nx-table" #nxTable
-         *ngIf="pagedItems.length" #dynamicTable>
+         *ngIf="pagedItems.length" #dynamicTable
+         [ngStyle]="{'margin-left': tableReady ? undefined : '-9999px'}">
 
         <div *ngIf="tableHeader" class="table-header" [innerText]="tableHeader" #tableHeaderElement></div>
         <div class="table-wrapper">

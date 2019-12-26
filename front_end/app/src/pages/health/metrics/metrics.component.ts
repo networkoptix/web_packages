@@ -128,6 +128,8 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
                     searchParam = undefined;
                     this.search();
                 }
+
+                setTimeout(() => this.getContainerDimmensions());
             });
 
         this.windowSizeSubscription = this.scrollMechanicsService.windowSizeSubject.subscribe(({ width }) => {
@@ -142,11 +144,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
 
     ngAfterViewInit() {
         this.setLayout();
-        if (this.elementSearch) {
-            this.elementSearchHeight = this.elementSearch.nativeElement.offsetHeight;
-
-            setTimeout(() => this.containerDimensions = [this.elementSearchHeight + 16]);
-        }
+        this.getContainerDimmensions();
     }
 
     ngOnDestroy() {}
@@ -155,6 +153,14 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
         if (this.initialId) {
             this.setActiveEntity(this.initialId);
             this.initialId = undefined;
+        }
+    }
+
+    getContainerDimmensions() {
+        if (this.elementSearch) {
+            this.elementSearchHeight = this.elementSearch.nativeElement.offsetHeight;
+
+            setTimeout(() => this.containerDimensions = [this.elementSearchHeight + 16]);
         }
     }
 

@@ -64,7 +64,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
     scrollHeight: number;
     tableScrollFixed: boolean;
     elementWidth: any;
-    // revert: any;
+    tableReady: boolean;
 
     @ViewChild('thead', { static: false }) thead: ElementRef;
     @ViewChild('tableHeaderElement', { static: false }) tableHeaderElement: ElementRef;
@@ -88,6 +88,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         this.pagerMaxSize = this.CONFIG.ipvd.pagerMaxSize;
         this.currentPage = 1;
         this.pageSize = this.CONFIG.layout.tableLarge.rows;
+        this.tableReady = false;
     }
 
     trackItem(index, item) {
@@ -159,6 +160,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         }
 
         this.setPagedItems();
+        this.tableReady = true;
     }
 
     ngOnInit() {
