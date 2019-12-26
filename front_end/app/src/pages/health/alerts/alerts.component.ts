@@ -290,12 +290,14 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
                     {
                         display: 'table',
                         name: 'Type',
-                        id: 'type'
+                        id: 'type',
+                        formatClass: 'text'
                     },
                     {
                         display: 'table',
                         name: 'Server',
-                        id: 'server'
+                        id: 'server',
+                        formatClass: 'long-text'
                     },
                     {
                         display: 'table',

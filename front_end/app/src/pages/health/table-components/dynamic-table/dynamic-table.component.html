@@ -28,7 +28,7 @@
                         <ng-container *ngFor="let headerGroup of headers.values; trackBy: trackItem">
                             <th *ngFor="let header of headerGroup.values; trackBy: trackItem" class="align-bottom"
                                 (click)="toggleSort(headerGroup.id, header.id, true)">
-                                <div class="caption d-flex align-items-end"
+                                <div class="caption d-flex align-items-end" [ngClass]="header.formatClass"
                                      [title]="header.description || header.name">
                                     <div class="text-container ellipsis" [innerHTML]="header.name.replace(':', ':<br>')"></div>
                                     <div class="sort-dir nav-arrow"
@@ -60,7 +60,7 @@
                                     <td class="ellipsis"
                                         [title]="item && item[headerGroup.id] && item[headerGroup.id][header.id] &&
                                                  (item[headerGroup.id][header.id].tooltip || item[headerGroup.id][header.id].text || '')"
-                                        [ngClass]="item && item[headerGroup.id] && item[headerGroup.id][header.id] && item[headerGroup.id][header.id].formatClass || ''">
+                                        [ngClass]="item && item[headerGroup.id] && item[headerGroup.id][header.id] && item[headerGroup.id][header.id].formatClass">
                                         <span [innerText]="item && item[headerGroup.id] && item[headerGroup.id][header.id] && item[headerGroup.id][header.id].text || '-'"
                                               [ngClass]="item && item[headerGroup.id] && item[headerGroup.id][header.id] && item[headerGroup.id][header.id].class || ''">
                                         </span>

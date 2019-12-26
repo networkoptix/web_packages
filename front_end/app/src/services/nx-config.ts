@@ -375,6 +375,7 @@ export class NxConfigService {
                     'Tr/s': {multiplier: 1},
                 },
                 classFormats: {
+                    'resource': 'long-text',
                     'longText': 'long-text',
                     'shortText': 'short-text',
                     'text': 'text',

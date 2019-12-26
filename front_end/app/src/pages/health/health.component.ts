@@ -429,6 +429,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
             headers[metric.id] = metric;
             headers[metric.id].values.forEach((headerGroup, index) => {
                 headers[metric.id].values[index].values = headerGroup.values.filter(header => {
+                    header.formatClass = this.CONFIG.healthMonitoring.classFormats[header.format] || '';
                     return header.display.includes(displayFilter);
                 });
             });

@@ -253,25 +253,6 @@ nx-dynamic-table {
               align-items     : center;
             }
           }
-
-          .long-text {
-            width: 170px !important;
-          }
-          .percent {
-            max-width: 74px !important;
-          }
-          .short-text {
-            width: 74px !important;
-          }
-          .text {
-            width: 100px !important;
-          }
-          .volume {
-            max-width: 74px !important;
-          }
-          .no-max-width {
-            max-width: unset !important;
-          }
         }
       }
       
@@ -376,5 +357,24 @@ nx-dynamic-table {
   
   .test * {
     fill : limegreen;
+  }
+
+  .long-text {
+    width: 170px !important;
+  }
+  .percent {
+    max-width: 74px !important;
+  }
+  .short-text {
+    width: 74px !important;
+  }
+  .text {
+    width: 100px !important;
+  }
+  .volume {
+    max-width: 74px !important;
+  }
+  .no-max-width {
+    max-width: unset !important;
   }
 }
