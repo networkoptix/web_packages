@@ -145,7 +145,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
 
             if (this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.lg)) {
                 this.mediaLayoutClass = 'mobileLayout';
-            } else if (this.scrollMechanicsService.mediaQueryMin(NxScrollMechanicsService.MEDIA.xxl)) {
+            } else if (this.scrollMechanicsService.mediaQueryMin(NxScrollMechanicsService.MEDIA.xl)) {
                 this.mediaLayoutClass = 'wideLayout';
             } else {
                 this.mediaLayoutClass = '';
