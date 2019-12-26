@@ -188,7 +188,7 @@ def set_subscriptions_from_targets(notification_object, request_data):
     process_push_response(device_check_response, notification_object, dry_run=True)
 
     devices_without_sub = PushDevice.objects.filter(user__in=target_accounts, user__is_active=True).exclude(
-        pushsubscription__system_id=system_id).select_related('user')
+        subscriptions__system_id=system_id).select_related('user')
     for device in devices_without_sub:
         active = system['ownerAccountEmail'] == device.user.email or auto_active
         PushSubscription.objects.create(system_id=system_id, account=device.user, active=active, device=device)

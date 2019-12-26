@@ -97,9 +97,37 @@ class SubscriptionModelSerializer(serializers.ModelSerializer):
 
 
 class DeviceSubscriptionsSerializer(serializers.ModelSerializer):
-    subscriptions = SubscriptionModelSerializer(many=True, read_only=True, source='pushsubscription_set')
+    subscriptions = SubscriptionModelSerializer(many=True)
     deviceToken = serializers.CharField(source='registration_id', read_only=True)
+    name = serializers.CharField(required=False)
+    model = serializers.CharField(required=False)
 
     class Meta:
         model = PushDevice
         fields = ['name', 'model', 'deviceToken', 'subscriptions']
+
+    def update(self, instance, validated_data):
+        instance.subscriptions.all().delete()
+        request_data = self.context['request'].data
+        try:
+            systems = System.list(email=request_data['username'], password=request_data['password'])
+            systems = [system['id'] for system in systems['systems']]
+        except Exception as exception:
+            if isinstance(exception, APINotAuthorisedException):
+                raise serializers.ValidationError('Invalid credentials')
+            elif isinstance(exception, APILogicException):
+                raise serializers.ValidationError(f'APILogicException: {str(exception)}')
+            else:
+                raise serializers.ValidationError('Cannot authenticate at this time')
+
+        for subscription in validated_data['subscriptions']:
+            if str(subscription['system_id']) in systems:
+                sub = PushSubscription.objects.get_or_create(system_id=subscription['system_id'], device=instance)[
+                    0]
+                sub.active = subscription['active']
+                sub.account = self.context['request'].user
+                sub.save()
+        return instance
+
+
+

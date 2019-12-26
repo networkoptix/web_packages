@@ -197,7 +197,7 @@ class PushSubscription(models.Model):
 
     system_id = models.UUIDField()
     active = models.BooleanField(default=True)
-    device = models.ForeignKey(PushDevice, blank=True, null=True, on_delete=models.CASCADE)
+    device = models.ForeignKey(PushDevice, blank=True, null=True, on_delete=models.CASCADE, related_name='subscriptions')
 
     account = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.CASCADE)
     subscription_id = models.UUIDField(blank=True, null=True)
@@ -233,7 +233,7 @@ class PushNotification(models.Model):
             devices = PushDevice.objects.filter(registration_id__in=device_tokens)
         else:
             active_subs = self.subscriptions.filter(active=True)
-            devices = PushDevice.objects.filter(pushsubscription__in=active_subs).distinct()
+            devices = PushDevice.objects.filter(subscriptions__in=active_subs).distinct()
 
         payload = json.loads(self.payload) if self.payload else {}
         options = json.loads(self.options) if self.options else {}

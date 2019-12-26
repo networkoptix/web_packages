@@ -1,4 +1,5 @@
 from django.http import Http404
+from django.shortcuts import get_object_or_404
 from rest_framework import exceptions, status
 from rest_framework.authentication import BasicAuthentication, SessionAuthentication
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
@@ -140,7 +141,7 @@ def register_device(request):
             device.model = data['model']
             device.name = data['name']
             if device.user != request.user:
-                device.pushsubscription_set.all().delete()
+                device.subscriptions.all().delete()
                 device.user = request.user
             device.save()
 
@@ -169,8 +170,7 @@ def unregister_device(request):
         raise ValidationError(error_data)
 
 
-
-class DeviceSubscriptionListView(ListAPIView):
+class DeviceSubscriptionListView(UpdateModelMixin, ListAPIView):
     serializer_class = DeviceSubscriptionsSerializer
     authentication_classes = (CloudAccountBasicAuthentication, CloudSessionAuthentication)
     permission_classes = (IsAuthenticated,)
@@ -181,6 +181,16 @@ class DeviceSubscriptionListView(ListAPIView):
         if device_token is not None:
             queryset = queryset.filter(registration_id=device_token)
         return queryset
+
+    def get_object(self):
+        device_token = self.request.query_params.get('deviceToken', None)
+        if device_token:
+            return get_object_or_404(PushDevice, user=self.request.user, registration_id=device_token)
+        else:
+            raise Http404
+
+    def post(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
 
 
 class Subscribe(UpdateModelMixin, CreateModelMixin, RetrieveModelMixin, GenericAPIView):
