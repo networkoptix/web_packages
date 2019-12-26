@@ -10,7 +10,7 @@
         box-shadow: 0 -50px 0 2px $additional_light2;
         position: sticky;
         top: 1rem;
-        z-index: 999;
+        z-index: 99;
         margin-top: -2px; // box-shadow eats 2 px at top
     
         @include media-breakpoint-down(lg) {
