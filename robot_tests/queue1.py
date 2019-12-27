@@ -1,5 +1,5 @@
-# This will only run properly on Ubuntu for now due to Docker.
-# You can run it on Windows or Mac but the Cloud-Merge tests will fail.
+''' This will only run properly on Ubuntu for now due to Docker.
+# You can run it on Windows or Mac but the Cloud-Merge tests will fail.'''
 
 import datetime
 import time
@@ -10,14 +10,18 @@ from os import system, path
 from get_names import get_threaded_names
 
 
-ENVIRONMENT = "https://cloud-test.hdw.mx"
+ENVIRONMENT = "https://cloud-dev3.hdw.mx"
+CUSTOMIZATION = "dev3"
+LANGUAGE = "en_US"
+OUTPUT_LOCATION = "outputs"
 
 CMD_LIST = []
 # list of files that are going to be run as a whole file, but threaded
-THREADABLE_FILE_LIST = ("activate", "cloud-merge", "register-form-validation", "login-form-validation",
-                        "change-pass-form-validation", "restore-pass-form-validation-email",
-                        "restore-pass-form-validation-password", "share-form-validation", 
-                        "ipvd-form-feedback-validation", "ipvd-form-request-validation")
+THREADABLE_FILE_LIST = (
+    "activate", "cloud-merge", "register-form-validation", "login-form-validation",
+    "change-pass-form-validation", "restore-pass-form-validation-email",
+    "restore-pass-form-validation-password", "share-form-validation", 
+    "ipvd-form-feedback-validation", "ipvd-form-request-validation")
 
 TEST_LIST = list(set((test[0] for test in get_threaded_names("Threaded"))))
 
@@ -28,17 +32,21 @@ TEST_LIST = list(set((test[0] for test in get_threaded_names("Threaded"))))
 SERIAL_LIST = list(set((test[0] for test in get_threaded_names("Unthreaded"))))
 
 
-q = queue.Queue(maxsize=0)
+Q = queue.Queue(maxsize=0)
 NUM_THREADS = 6
 
-# actually runs the commands in the queue
-def do_stuff(q):
-    while True:
-        system(q.get())
-        q.task_done()
 
-# a simple decorator to print out actual run time. Robot prints the total run time of each case which isn't real time spent running
+def do_stuff(cue):
+    '''# actually runs the commands in the queue'''
+    while True:
+        system(cue.get())
+        cue.task_done()
+
+
+
 def timer(func):
+    ''' a simple decorator to print out actual run time.  
+    Robot prints the total run time of each case which isn't real time spent running'''
     @functools.wraps(func)
     def wrapper_timer(*args, **kwargs):
         start_time = datetime.datetime.now()
@@ -47,16 +55,17 @@ def timer(func):
         print(run_time)
     return wrapper_timer
 
+
 @timer
 def threaded_test_run(loc, lang):
 
-    # loop through the threadable tests and add a command to run each
+    ''' loop through the threadable tests and add a command to run each'''
     for idx, file in enumerate(TEST_LIST):
         output_name = f"{file}multi{str(idx)}"
         CMD_LIST.append(
             "robot "
             "--loglevel trace "
-            "-i threaded"
+            "-i threaded "
             "-e 'Threaded File' "
             f"-v ENV:{ENVIRONMENT} "
             f"-v SCREENSHOTDIRECTORY:{path.join(loc, 'combined-results')} "
@@ -95,18 +104,18 @@ def threaded_test_run(loc, lang):
 
     # fill the queue with all the commands
     for cmd in CMD_LIST:
-        q.put(cmd)
+        Q.put(cmd)
 
     # run and manage the threads
     for _ in range(NUM_THREADS):
-        worker = Thread(target=do_stuff, args=(q,))
+        worker = Thread(target=do_stuff, args=(Q,))
         worker.setDaemon(True)
         worker.start()
         #due to a post request sent by a variable file,
         #we wait a second so we don't get bad responses from the server
         time.sleep(1)
 
-    q.join()
+    Q.join()
 
     # get the list of all file names
     # merge outputs with the same names to single outputs per file
@@ -114,8 +123,17 @@ def threaded_test_run(loc, lang):
     file_list = (test[0] for test in get_threaded_names(""))
     file_list = list(set(file_list))
     for idx, file in enumerate(file_list):
-        system('rebot -o {}.xml -R {}.xml'.format(path.join(loc, "threadedRun"+str(idx)), path.join(loc, file+"multi*")))
-    system('rebot --loglevel info -o queuedRun.xml -N {} {}.xml'.format(lang, path.join(loc, "threadedRun*")))
+        system(
+            'rebot ' 
+            f"-o {path.join(loc, 'threadedRun'+str(idx))}.xml "
+            f"-R {path.join(loc, file+'multi*')}.xml)"
+        )
+
+    system(
+        "rebot --loglevel info -o queuedRun.xml "
+        f"-N {lang} "
+        f"{path.join(loc, 'threadedRun*')}.xml"
+    )
 
 if __name__ == '__main__':
-    threaded_test_run("outputs", "en_US")
+    threaded_test_run(OUTPUT_LOCATION, LANGUAGE)
