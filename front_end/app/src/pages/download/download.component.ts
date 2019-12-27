@@ -3,7 +3,6 @@ import {
     ViewChild, Inject, Input, PLATFORM_ID
 }                                                from '@angular/core';
 import { ActivatedRoute, ActivationEnd, Router } from '@angular/router';
-import { Title }                                 from '@angular/platform-browser';
 import { isPlatformBrowser, Location }           from '@angular/common';
 import { filter }                                from 'rxjs/operators';
 import { NgbTabChangeEvent, NgbTabset } from '@ng-bootstrap/ng-bootstrap';
@@ -15,6 +14,7 @@ import { NxCloudApiService }            from '../../services/nx-cloud-api';
 import { NxUriService }                 from '../../services/uri.service';
 import { Subscription }                 from 'rxjs';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
+import { NxPageService } from '../../services/page.service';
 
 @AutoUnsubscribe()
 @Component({
@@ -72,7 +72,7 @@ export class DownloadComponent implements OnInit, OnDestroy {
                 private deviceService: DeviceDetectorService,
                 private route: ActivatedRoute,
                 private router: Router,
-                private titleService: Title,
+                private pageService: NxPageService,
                 private language: NxLanguageProviderService,
                 private uriService: NxUriService,
                 private location: Location,
@@ -195,7 +195,7 @@ export class DownloadComponent implements OnInit, OnDestroy {
         } else {
             title = this.LANG.pageTitles.download;
         }
-        this.titleService.setTitle(title);
+        this.pageService.setPageTitle(title);
     }
 
     ngOnInit(): void {

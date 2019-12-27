@@ -4,10 +4,10 @@ import { IntegrationService } from './integration.service';
 import { NxUriService }       from '../../services/uri.service';
 import { NxConfigService }    from '../../services/nx-config';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { Title }              from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import { NxAccountService } from '../../services/account.service';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
+import { NxPageService } from '../../services/page.service';
 
 @AutoUnsubscribe()
 @Component({
@@ -55,7 +55,7 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
                 private integrations: IntegrationService,
                 private config: NxConfigService,
                 private language: NxLanguageProviderService,
-                private title: Title,
+                private pageService: NxPageService,
                 private accountService: NxAccountService,
                 location: Location) {
         this.location = location;
@@ -66,7 +66,7 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.CONFIG = this.config.getConfig();
         this.LANG = this.language.getTranslations();
-        this.title.setTitle(this.LANG.pageTitles.integrations);
+        this.pageService.setPageTitle(this.LANG.pageTitles.integrations);
 
         // Example URI
         // /integrations?search=node
