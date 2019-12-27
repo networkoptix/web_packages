@@ -36,7 +36,7 @@ def allLanguages():
 def runTest(key, langList):
 
     while True:
-        print datetime.now(), 'Server status:', ping().status_code
+        print(datetime.now(), 'Server status:', ping().status_code)
         # ping the server at the start to make sure it's ready
         if ping().ok:
             # If the server is up, delete screenshots from previous run and
