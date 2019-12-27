@@ -11,7 +11,7 @@ import { NxCloudApiService }           from '../../services/nx-cloud-api';
 })
 export class DetachServerModalContent {
     // @Input() serverId;
-    // @Input() serverName;
+    @Input() serverName;
     @Input() closable;
 
     LANG: any;

@@ -230,39 +230,42 @@ export class NxDialogsService {
         return this.createModal(RenameServerModalContent, options, params);
     }
 
-    restartServer() {
+    restartServer(serverName) {
         const options: any = {
             windowClass: 'modal-holder',
             backdrop   : 'static'
         };
 
         const params: any = {
+            serverName,
             closable: true,
         };
 
         return this.createModal(RestartServerModalContent, options, params);
     }
 
-    detachServer() {
+    detachServer(serverName) {
         const options: any = {
             windowClass: 'modal-holder',
             backdrop   : 'static'
         };
 
         const params: any = {
+            serverName,
             closable: true,
         };
 
         return this.createModal(DetachServerModalContent, options, params);
     }
 
-    resetServer() {
+    resetServer(serverName) {
         const options: any = {
             windowClass: 'modal-holder',
             backdrop   : 'static'
         };
 
         const params: any = {
+            serverName,
             closable: true,
         };
 

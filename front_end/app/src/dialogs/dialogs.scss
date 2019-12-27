@@ -69,6 +69,13 @@
         box-shadow    : 0 1rem 2rem 0 transparentize($dark15, 0.8);
     }
 
+    &-paragraph {
+        padding-bottom: 15px;
+        p {
+            line-height: 10px;
+        }
+    }
+
     &-header {
         background-color : $additional_light1;
         border-top       : 1px solid transparent;

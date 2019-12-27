@@ -50,6 +50,7 @@
     "Current Password": "Current Password",
     "Current password is required": "Current password is required",
     "Depending of the size of the database it may take up to several hours.": "Depending of the size of the database it may take up to several hours.",
+    "Detach": "Detach",
     "Detach from the System": "Detach from the System",
     "Developer": "Developer",
     "Discard": "Discard",
@@ -143,6 +144,7 @@
     "Requirements": "Requirements",
     "Resend activation email": "Resend activation email",
     "Resend activation link": "Resend activation link",
+    "Reset": "Reset",
     "Reset to Defaults": "Reset to Defaults",
     "Resolution(max)": "Resolution(max)",
     "Restart": "Restart",
@@ -650,11 +652,26 @@
         "vendors": "Manufacturers"
     },
     "servers": {
+        "detachServerBody": {
+            "line1": "The server will be detached to a separate system.",
+            "line2": "Database, local users, configuration, and video archive will remain intact.",
+            "line3": "Cloud users will not be transferred to the new system.",
+            "line4": "Enter password for your account to continue."
+        },
         "portWarning": "Port numbers less than 1024 are restricted. Server may become unaccesssible.",
+        "resetServerBody": {
+            "line1": "All settings for this server will be reverted to defaults.",
+            "line2": "The server will be detached to a separate system.",
+            "line3": "Video archive will remain intact.",
+            "line4": "Enter password for your account to continue."
+        },
         "servers": "Servers",
         "successRename": "Server name renamed."
     },
     "servers in the merged System.": "servers in the merged System.",
+    "serversDetachTitle": "Detach server \"{{ title }}\" from current system?",
+    "serversResetTitle": "Reset server \"{{ title }}\" to defaults?",
+    "serversRestartTitle": "Restart server \"{{ title }}\"",
     "support": "support",
     "system": {
         "confirmDisconnectAction": "Disconnect",

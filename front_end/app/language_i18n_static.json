@@ -486,8 +486,23 @@
 	"servers": {
         "servers": "Servers",
         "portWarning": "Port numbers less than 1024 are restricted. Server may become unaccesssible.",
-        "successRename": "Server name renamed."
-    },
+		"successRename": "Server name renamed.",
+		"detachServerBody": {
+			"line1": "The server will be detached to a separate system.",
+			"line2": "Database, local users, configuration, and video archive will remain intact.",
+			"line3": "Cloud users will not be transferred to the new system.",
+			"line4": "Enter password for your account to continue."
+		},
+		"resetServerBody": {
+			"line1": "All settings for this server will be reverted to defaults.",
+			"line2": "The server will be detached to a separate system.",
+			"line3": "Video archive will remain intact.",
+			"line4": "Enter password for your account to continue."
+		}
+	},
+	"serversRestartTitle": "Restart server \"{{ title }}\"",
+	"serversResetTitle": "Reset server \"{{ title }}\" to defaults?",
+	"serversDetachTitle": "Detach server \"{{ title }}\" from current system?",
 	"testedVersionLabel": "Tested with {{vmsName}} version:",
 	"testedVersionsLabel": "Tested with {{vmsName}} versions:",
 	"About %CLOUD_NAME%": "About %CLOUD_NAME%",

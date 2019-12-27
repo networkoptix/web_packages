@@ -262,7 +262,7 @@ export class NxSystemServersComponent implements OnInit {
 
     restartServer() {
         return this.dialogs
-            .restartServer()
+            .restartServer(this.selectedServer.name)
             .then(server => {
                 console.log('returned server', server);
                 // selectedServer.status = 'offline';
@@ -271,7 +271,7 @@ export class NxSystemServersComponent implements OnInit {
 
     detachServer() {
         return this.dialogs
-            .detachServer()
+            .detachServer(this.selectedServer.name)
             .then(detach => {
                 console.log('returned in detach', detach);
                 // server should probably get removed from the menu?
@@ -280,7 +280,7 @@ export class NxSystemServersComponent implements OnInit {
 
     resetServer() {
         return this.dialogs
-            .resetServer()
+            .resetServer(this.selectedServer.name)
             .then(reset => {
                 console.log('returned in reset', reset);
                 // will take some time to reset and then restart the server
