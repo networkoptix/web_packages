@@ -40,7 +40,8 @@ export class NxSystemServersComponent implements OnInit {
     viewContainerRef: ViewContainerRef;
     serverIdFromParams: any;
     selectedServer: any;
-    
+    mediaserverConnectionsReady: boolean;
+
     private serverSubscription: Subscription;
     private systemSubscription: Subscription;
     private routeParamsSubscription: Subscription;
@@ -128,6 +129,10 @@ export class NxSystemServersComponent implements OnInit {
                 }
                 this.serverSubscription = this.system.infoSubject.subscribe(() => {
                     console.log('serverSubscription called');
+                    if (this.system && this.system.servers && this.system.servers.length) {
+                        this.system.initSystemMediaServers()
+                            .then(() => this.mediaserverConnectionsReady = true);
+                    }
                     // this.systemAvailable = this.system.isAvailable && this.system.mergeInfo === undefined;
                     if (!this.applyService.locked) {
                         this.setServer();
@@ -162,6 +167,7 @@ export class NxSystemServersComponent implements OnInit {
         }
 
         if (server) {
+            this.applyService.hardReset();
             const { url } = server;
             const [ip, port] = url.slice(url.indexOf('//') + 2).split(':');
             server.ip = ip;
@@ -170,6 +176,7 @@ export class NxSystemServersComponent implements OnInit {
             this.selectedServer = server;
             console.log('selectedServer', this.selectedServer);
             console.log('ipWatcher on set', this.ipPortWatcher);
+            this.applyService.reset();
             this.applyService.setVisible(true);
         }
 
@@ -191,11 +198,12 @@ export class NxSystemServersComponent implements OnInit {
     initForApplyService(): void {
         this.saveSettings = this.processService.createProcess(() => {
             const port = this.ipPortWatcher;
+            const serverId = this.selectedServer.id;
             if (!port.value) {
                 port.value = port.originalValue;
                 this.applyService.reset();
             } else if (port.value !== port.originalValue) {
-                this.system.changeServerPort(port.value)
+                return this.system.changeServerPort(port.value, serverId)
                     .then(() => {
                         port.originalValue = port.value;
                         this.applyService.reset();
@@ -205,46 +213,44 @@ export class NxSystemServersComponent implements OnInit {
     }
 
     init(): void {
-        this.settingsService
-            .systemSubject
-            .subscribe((system) => {
-                this.system = system;
-                if (system) {
-                    console.log('this.system', this.system);
-                    // this.system.systemSubject.subscribe(() => {
-                    //     this.settingsService.footerSubject.next(true);
-                    //     // this.userRole = system.accessRole;
-                    //     // if (system.accessRole in this.LANG.accessRoles) {
-                    //     //     this.userRole = this.LANG.accessRoles[system.accessRole].label;
-                    //     // }
-                    //     // this.updateSettings(this.currentlyMerging);
-                    // });
-                    // if (!this.applyService.locked) {
-                    //     this.system.updateOrGetSystemSettings()
-                    //         .then(res => {
-                    //             const { settings } = res.reply;
-                    //             this.applyService.setVisible(false);
-                    //             this.applyService.hardReset();
-                    //             this.ipPortWatcher.value = settings.port === 'true';
-                    //             this.applyService.reset();
-                    //             this.applyService.setVisible(true);
-                    //         });
-                    // }
-
-                    // this.deletingSystem = this.processService.createProcess(() => {
-                    //     return this.system.deleteFromCurrentAccount();
-                    // }, {
-                    //     successMessage: this.LANG.system.successDeleted.replace('{{systemName}}', this.system.info.name),
-                    //     errorPrefix   : this.LANG.errorCodes.cantUnshareWithMeSystemPrefix
-                    // })
-                    //     .then(() => {
-                    //         this.updateAndGoToSystems();
-                    //     }, (error) => {
-                    //         return error;
-                    //     });
-                }
-            });
-
+        // this.settingsService
+        //     .systemSubject
+        //     .subscribe((system) => {
+        //         this.system = system;
+        //         if (system) {
+        //             console.log('this.system', this.system);
+        //             this.system.systemSubject.subscribe(() => {
+        //                 this.settingsService.footerSubject.next(true);
+        //                 // this.userRole = system.accessRole;
+        //                 // if (system.accessRole in this.LANG.accessRoles) {
+        //                 //     this.userRole = this.LANG.accessRoles[system.accessRole].label;
+        //                 // }
+        //                 // this.updateSettings(this.currentlyMerging);
+        //             });
+        //             if (!this.applyService.locked) {
+        //                 this.system.updateOrGetSystemSettings()
+        //                     .then(res => {
+        //                         const { settings } = res.reply;
+        //                         this.applyService.setVisible(false);
+        //                         this.applyService.hardReset();
+        //                         this.ipPortWatcher.value = settings.port === 'true';
+        //                         this.applyService.reset();
+        //                         this.applyService.setVisible(true);
+        //                     });
+        //             }
+        //             this.deletingSystem = this.processService.createProcess(() => {
+        //                 return this.system.deleteFromCurrentAccount();
+        //             }, {
+        //                 successMessage: this.LANG.system.successDeleted.replace('{{systemName}}', this.system.info.name),
+        //                 errorPrefix   : this.LANG.errorCodes.cantUnshareWithMeSystemPrefix
+        //             })
+        //                 .then(() => {
+        //                     this.updateAndGoToSystems();
+        //                 }, (error) => {
+        //                     return error;
+        //                 });
+        //         }
+        //     });
     }
 
     renameServer() {

@@ -133,6 +133,7 @@ export class NxSystem extends System implements OnDestroy {
     currentUserEmail: string;
     currentUser: NxSystemUser;
     mediaserver: any;
+    mediaserverConnections: any;
 
     infoPromise: any;
     usersPromise: any;
@@ -213,6 +214,23 @@ export class NxSystem extends System implements OnDestroy {
         this.updateSystemAuth(true).then(() => {});
         this.updateSystemState();
         this.systemPoll = this.pollService.createPoll(this.update(), this.CONFIG.updateInterval);
+    }
+
+    initSystemMediaServers() {
+        if (this.servers.length) {
+            this.mediaserverConnections = this.servers.reduce((mediaserverConnections, server) => {
+                mediaserverConnections[server.id] = this.systemApiService.createConnection(
+                    this.currentUserEmail,
+                    this.id,
+                    server.id,
+                    () => this.updateSystemAuth(true));
+                const { authGet, authPost, authPlay } = this.mediaserver;
+                mediaserverConnections[server.id].setAuthKeys(authGet, authPost, authPlay);
+                return mediaserverConnections;
+            }, {});
+            return Promise.resolve();
+        }
+        return Promise.reject();
     }
 
     updateSystemAuth(force?) {
@@ -560,8 +578,15 @@ export class NxSystem extends System implements OnDestroy {
         return this.mediaserver.updateOrGetSettings(updateParams);
     }
 
-    changeServerPort(port) {
-        return this.mediaserver.changePort(port);
+    changeServerPort(port, serverId) {
+        return this.mediaserverConnections[serverId].changePort(port)
+            .catch(err => {
+                if (err.status === 503) {
+                    this.mediaserver.changePort(port);
+                } else {
+                    Promise.reject(err);
+                }
+            });
     }
 
     renameServer(serverId, serverName) {

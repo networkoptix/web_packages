@@ -83,7 +83,7 @@ export class NxSystemAPI {
         }
         urlBase += '/web';
         if (this.serverId) {
-            urlBase += '/proxy/' + this.serverId;
+            urlBase += '/proxy/http/' + this.serverId;
         }
         return urlBase;
     }
@@ -134,7 +134,7 @@ export class NxSystemAPI {
                 if (error.status === 401 || error.status === 403 || error.resultCode === 'forbidden') {
                     return from(this.unauthorizedCallback(error));
                 } else if (error.status === 503) { // Repeat the request once again for 503 error
-                    return of();
+                    return of('');
                 }
             }
             return throwError(error);
@@ -231,7 +231,8 @@ export class NxSystemAPI {
     }
 
     changePort(port) {
-        return this.post('/api/configure', { port }).toPromise();
+        return this.post('/api/configure', { port }).toPromise()
+            .catch(err => Promise.reject(err));
     }
 
     renameServer(serverId, serverName) {
