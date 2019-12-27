@@ -13,7 +13,7 @@
         z-index: 99;
         margin-top: -2px; // box-shadow eats 2 px at top
     
-        @include media-breakpoint-down(lg) {
+        @include media-breakpoint-down(md) {
             // HM specific code ...
             box-shadow: none;
         }
