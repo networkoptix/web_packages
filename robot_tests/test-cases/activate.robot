@@ -207,7 +207,7 @@ Logging in before activation shows resend email link and email can be sent again
     ${random email}    get random email    ${BASE EMAIL}
     Register    'mark'    'hamill'    ${random email}    ${BASE PASSWORD}
     Wait Until Element Is Visible    //h1[contains(@class,'process-success')]
-    Log In    ${random email}    ${BASE PASSWORD}
+    Log In    ${random email}    ${BASE PASSWORD}    validate=${False}
     Wait Until Element Is Visible    ${RESEND ACTIVATION LINK BUTTON}
     Validate Register Email Received    ${random email}
     Click Link    ${RESEND ACTIVATION LINK BUTTON}
