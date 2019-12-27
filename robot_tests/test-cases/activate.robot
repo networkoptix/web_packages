@@ -189,7 +189,6 @@ link works and suggests to log out user, if he was logged in, buttons operate co
     Wait Until Page Contains Element    ${ACTIVATION SUCCESS}
     Wait Until Element Is Visible    ${LOGGED IN STAY LOGGED IN BUTTON}
     Click Button    ${LOGGED IN STAY LOGGED IN BUTTON}
-    Validate Log In
     Log Out
     Log In    ${email1}    ${password}
     Go To    ${link2}
