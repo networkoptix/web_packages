@@ -168,40 +168,6 @@ class NoptixLibrary(object):
             time.sleep(.2)
         raise AssertionError(found)
 
-    def wait_until_location_is(self, url, timeout=10):
-        seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
-        timeout = timeout + time.time()
-        found = None
-        
-        while time.time() < timeout:
-            try:
-                currentUrl = seleniumlib.get_location()
-                print(currentUrl)
-                if url == currentUrl:
-                    return
-            except Exception as e:
-                print(e)
-                found = "url was not {} but was {}".format(url, currentUrl)
-            time.sleep(.2)
-        raise AssertionError(found)
-
-    def wait_until_location_contains(self, url, timeout=10):
-        seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
-        timeout = timeout + time.time()
-        found = None
-        
-        while time.time() < timeout:
-            try:
-                currentUrl = seleniumlib.get_location()
-                print(currentUrl)
-                if url in currentUrl:
-                    return
-            except Exception as e:
-                print(e)
-                found = "url was not {} but was {}".format(url, currentUrl)
-            time.sleep(.2)
-        raise AssertionError(found)
-
     def colors_are_same(self, color1, color2):
         return (Color.from_string(color1).rgba == Color.from_string(color2).rgba)
 
