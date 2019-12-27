@@ -41,6 +41,7 @@ export class DownloadComponent implements OnInit, OnDestroy {
     tabsVisible: boolean;
     activeTab: string;
     sortedPlatforms: any;
+    otherPackages: any;
     private routerSubscription: Subscription;
 
     @ViewChild('tabs', { static: false })
@@ -96,13 +97,21 @@ export class DownloadComponent implements OnInit, OnDestroy {
     public beforeChange($event: NgbTabChangeEvent) {
         this.setTitle($event.nextId);
         this.activeTab = $event.nextId;
-        this.calcDownloadButton(this.activeTab);
+        this.calcDisplayedPackages(this.activeTab);
         this.uriService.updateURI('/download/' + $event.nextId, {});
     }
 
-    private calcDownloadButton(platformName) {
+    private calcDisplayedPackages(platformName) {
         const platform = this.sortedPlatforms.find(platform => platform.name === platformName);
-        this.downloadButton = platform && platform.files[0] || '';
+        this.downloadButton = undefined;
+        this.otherPackages = [];
+        if (platform === 'undefined') {
+        } else if (platform.name === 'sdk') {
+            this.otherPackages = platform.files;
+        } else {
+            this.downloadButton = platform.files[0];
+            this.otherPackages = platform.files.slice(1);
+        }
     }
 
     private getDownloads() {
@@ -160,7 +169,7 @@ export class DownloadComponent implements OnInit, OnDestroy {
                     const detectedOS = this.deviceService.getDeviceInfo().os.toLowerCase();
                     this.platform = configDownloads.platformMatch[detectedOS] || configDownloads.groups.windows.name;
                 }
-                this.calcDownloadButton(this.platform);
+                this.calcDisplayedPackages(this.platform);
                 this.setTitle(this.platform);
 
                 setTimeout(() => {
