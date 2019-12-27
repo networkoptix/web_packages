@@ -116,6 +116,7 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
                 'smtp_tls': asset.read_global_value('%SMTP_TLS%')
             },
             'config': {
+                'app_types_for_platform': asset.read_global_value('%APP_TYPES_FOR_PLATFORM%'),
                 'available_downloads_platform': asset.read_global_value('%AVAILABLE_DOWNLOADS_PLATFORM%'),
                 'cloud_merge': asset.read_global_value("%CLOUD_MERGE%"),
                 'copyright_year': asset.read_global_value("%COPYRIGHT_YEAR%"),

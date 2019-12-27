@@ -132,12 +132,7 @@ export class DownloadComponent implements OnInit, OnDestroy {
                     });
                     if (platform) {
                         platform.files = platform.files.filter((installer) => {
-                            switch (platform.name) {
-                                case 'sdk':
-                                    return this.downloads.groups[platform.name].appTypes.includes(installer.platform);
-                                default:
-                                    return this.downloads.groups[platform.name].appTypes.includes(installer.appType);
-                            }
+                            return this.downloads.groups[platform.name].appTypes.includes(installer.appType);
                         }).map((installer) => {
                             if (!installer.niceName) {
                                 const translatedPlatform = this.LANG.downloads.platforms[installer.platform];

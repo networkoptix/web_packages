@@ -163,6 +163,15 @@ export class AppComponent {
         // @ts-ignore
         this.CONFIG.testedOperatingSystems = window.SETTINGS.testedOperatingSystems;
         // @ts-ignore
+        if (window.SETTINGS.appTypesForPlatform) {
+            // @ts-ignore
+            Object.entries(window.SETTINGS.appTypesForPlatform).forEach(([platform, appTypes]: [string, any]) => {
+                if (platform in this.CONFIG.downloads.groups && appTypes) {
+                    this.CONFIG.downloads.groups[platform].appTypes = appTypes;
+                }
+            });
+        }
+        // @ts-ignore
         this.CONFIG.ipvd.vendorsShown = parseInt(window.SETTINGS.vendorsShown);
         // @ts-ignore
         this.CONFIG.pushConfig = window.SETTINGS.pushConfig;

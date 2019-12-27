@@ -672,6 +672,20 @@
             }
           },
           {
+            "label": "AppTypes per platform",
+            "name": "%APP_TYPES_FOR_PLATFORM%",
+            "description": "App Types for platforms.",
+            "advanced": true,
+            "type": "object",
+            "value": {
+              "arm": ["client", "server"],
+              "linux": ["bundle", "client", "server"],
+              "macos": ["client"],
+              "sdk": ["metadata_sdk", "storage_sdk", "video_source_sdk"],
+              "windows": ["bundle", "client", "server"]
+            }
+          },
+          {
             "label": "Reveal cloud merge",
             "name": "%CLOUD_MERGE%",
             "description": "Shows the cloud merge button for all systems.",
