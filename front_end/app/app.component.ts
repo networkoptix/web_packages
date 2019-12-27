@@ -48,7 +48,6 @@ export class AppComponent {
     constructor(private cookieService: CookieService,
                 private deviceService: DeviceDetectorService,
                 private location: Location,
-                private titleService: Title,
                 private config: NxConfigService,
                 private language: NxLanguageProviderService,
                 private applyService: NxApplyService,
@@ -223,9 +222,5 @@ export class AppComponent {
             window.history.go(1);
             this.applyService.showDialog().catch(() => {});
         }
-    }
-
-    public setTitle(newTitle: string) {
-        this.titleService.setTitle(newTitle);
     }
 }

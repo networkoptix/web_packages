@@ -12,7 +12,6 @@ import { MessageParams }             from '../../dialogs/message/message.compone
 import { NxConfigService }           from '../../services/nx-config';
 import { NxUriService }              from '../../services/uri.service';
 import { NxUtilsService }            from '../../services/utils.service';
-import { Title }                     from '@angular/platform-browser';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxDialogsService }          from '../../dialogs/dialogs.service';
 import { NxAccountService }          from '../../services/account.service';
@@ -20,6 +19,7 @@ import { SubscriptionLike }          from 'rxjs';
 import { isArray }                   from 'rxjs/internal-compatibility';
 import { NxScrollMechanicsService }  from '../../services/scroll-mechanics.service';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
+import { NxPageService } from '../../services/page.service';
 
 interface Params {
     [key: string]: any;
@@ -123,7 +123,7 @@ export class NxIpvdComponent implements OnInit {
                 private location: Location,
                 private breakpointObserver: BreakpointObserver,
                 private router: Router,
-                private title: Title,
+                private pageService: NxPageService,
                 private accountService: NxAccountService,
                 private scrollMechanicsService: NxScrollMechanicsService,
                 @Inject(PLATFORM_ID) private platformId: object,
@@ -177,7 +177,7 @@ export class NxIpvdComponent implements OnInit {
         }
 
         this.LANG = this.language.getTranslations();
-        this.title.setTitle(this.LANG.pageTitles.supportedDevices);
+        this.pageService.setPageTitle(this.LANG.pageTitles.supportedDevices);
 
         this.company = this.CONFIG.companyName;
         this.vmsName = this.CONFIG.vmsName;

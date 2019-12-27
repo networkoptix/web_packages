@@ -383,4 +383,3 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         return permissions.split('|').sort().join('|');
     }
 }
-
