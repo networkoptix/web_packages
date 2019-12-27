@@ -124,7 +124,6 @@ Log In
 Validate Log In
     [Arguments]    ${timeout}=${selenium_timeout}
     Wait Until Element is Visible    ${ACCOUNT DROPDOWN}    ${timeout}
-    Check Language Logged In    ${email}    ${password}
     Sleep    0.5    #this is a test to see if it eliminates a problem with the login dialog popping up on logout
 
 Check Log In
@@ -132,7 +131,7 @@ Check Log In
     ${random email}    Get Random Email    ${BASE EMAIL}
     Log In    ${random email}    ${password}    ${button}
     Wait Until Element Is Visible    ${ACCOUNT NOT FOUND}
-    Log In    ${EMAIL OWNER}    ${password}    None
+    Log In    ${EMAIL OWNER}    ${password}    button=None
 
 Log Out
     Wait Until Page Does Not Contain Element    ${BACKDROP}
@@ -225,7 +224,7 @@ Restore password
     Click Button    ${SAVE PASSWORD}
     Wait Until Elements Are Visible    ${RESET SUCCESS MESSAGE}    ${RESET SUCCESS LOG IN LINK}
     Click Link    ${RESET SUCCESS LOG IN LINK}
-    Log In    ${email}    ${BASE PASSWORD}    None
+    Log In    ${email}    ${BASE PASSWORD}    button=None
     Close Browser
 
 Restore Password using API

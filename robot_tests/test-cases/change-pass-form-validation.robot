@@ -64,8 +64,7 @@ Restart
 
 Open Change Password Dialog
     Open Browser and go to URL    ${url}/account/password
-    Log In    ${EMAIL OWNER}    ${BASE PASSWORD}    None
-    Validate Log In
+    Log In    ${EMAIL OWNER}    ${BASE PASSWORD}    button=None
     Wait Until Element Is Not Visible    ${LOG IN MODAL}
     Wait Until Elements Are Visible
     ...    ${CURRENT PASSWORD INPUT}
