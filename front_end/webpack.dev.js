@@ -22,13 +22,13 @@ module.exports = merge(common, {
         port              : port,
         proxy             : [
             // Uncomment to test local translation strings
-            // {
-            //     context: ['/api/utils/language'],
-            //     target: localStatic,
-            //     pathRewrite: {'^/api/utils/language': 'language_compiled.json'},
-            //     changeOrigin: true,
-            //     secure: false
-            // },
+            {
+                context: ['/api/utils/language'],
+                target: localStatic,
+                pathRewrite: {'^/api/utils/language': 'language_compiled.json'},
+                changeOrigin: true,
+                secure: false
+            },
             {
                 context: [ '/api/', '/gateway/' ],
                 target : cloudInstance,

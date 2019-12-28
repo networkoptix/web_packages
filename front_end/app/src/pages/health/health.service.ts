@@ -135,7 +135,7 @@ export class NxHealthService {
         return {
             text: retValue,
             format: header.format || '',
-            formatClass: this.CONFIG.healthMonitoring.classFormats[header.format] || '',
+            formatClass: this.CONFIG.healthMonitoring.classFormats[header.format] || 'no-format',
             value
         };
     }

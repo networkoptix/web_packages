@@ -234,8 +234,8 @@ export class NxHealthComponent implements OnInit, OnDestroy {
     }
 
     initializeHeaders() {
-        this.healthService.tableHeaders = this.filterManifestHeaders('table');
-        this.healthService.panelParams = this.filterManifestHeaders('panel');
+        this.healthService.tableHeaders = this.processManifestHeaders('table');
+        this.healthService.panelParams = this.processManifestHeaders('panel');
         this.addAlarmToTableHeaders();
     }
 
@@ -398,7 +398,11 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                             } else {
                                 alert._.server = {text: '', id: ''};
                             }
-                            alert._.type = {text: this.healthService.manifest[metric].resource || this.healthService.manifest[metric].name};
+                            alert._.server.formatClass = 'long-text';
+                            alert._.type = {
+                                text: this.healthService.manifest[metric].resource || this.healthService.manifest[metric].name,
+                                formatClass: 'text'
+                            };
                             alert._.message = {text: alarm.text, formatClass: unset};
                             alert._.alarm = {icon: alarm.level};
 
@@ -422,14 +426,14 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         });
     }
 
-    filterManifestHeaders(displayFilter: string) {
+    processManifestHeaders(displayFilter: string) {
         const headers = {};
         Object.values(this.healthService.manifest).forEach((metricValue) => {
             const metric = JSON.parse(JSON.stringify(metricValue));
             headers[metric.id] = metric;
             headers[metric.id].values.forEach((headerGroup, index) => {
                 headers[metric.id].values[index].values = headerGroup.values.filter(header => {
-                    header.formatClass = this.CONFIG.healthMonitoring.classFormats[header.format] || '';
+                    header.formatClass = this.CONFIG.healthMonitoring.classFormats[header.format] || 'no-format';
                     return header.display.includes(displayFilter);
                 });
             });

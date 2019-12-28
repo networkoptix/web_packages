@@ -243,7 +243,6 @@ nx-dynamic-table {
             line-height : 1rem;
             border      : none;
             height      : 26px;
-            max-width   : 108px;
             
             &:first-of-type {
               padding         : 0;
@@ -371,10 +370,14 @@ nx-dynamic-table {
   .text {
     width: 100px !important;
   }
-  .volume {
+  .volume-metric {
     max-width: 74px !important;
   }
   .no-max-width {
     max-width: unset !important;
+  }
+  .no-format {
+    width: 108px;
+    max-width: 108px;
   }
 }
