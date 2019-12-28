@@ -105,12 +105,13 @@ export class DownloadComponent implements OnInit, OnDestroy {
         const platform = this.sortedPlatforms.find(platform => platform.name === platformName);
         this.downloadButton = undefined;
         this.otherPackages = [];
-        if (platform === 'undefined') {
-        } else if (platform.name === 'sdk') {
-            this.otherPackages = platform.files;
-        } else {
-            this.downloadButton = platform.files[0];
-            this.otherPackages = platform.files.slice(1);
+        if (platform !== 'undefined') {
+            if (platform.name === 'sdk') {
+                this.otherPackages = platform.files;
+            } else {
+                this.downloadButton = platform.files[0];
+                this.otherPackages = platform.files.slice(1);
+            }
         }
     }
 
