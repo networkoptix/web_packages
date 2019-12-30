@@ -111,21 +111,29 @@ def log_push_result(notification_object, message, level=logging.INFO, device_tok
 
 
 def get_system(notification_object, request_data):
-    try:
-        system = cloud_api.System.get(
-            request_data['username'], request_data['password'], notification_object.raw_system_id
-        )
-        return system['systems'][0]
-    except Exception as exception:
-        if isinstance(exception, exceptions.APINotAuthorisedException):
-            log_push_result(notification_object, 'Invalid cloud credentials for system')
-        elif isinstance(exception, exceptions.APILogicException):
-            log_push_result(
-                notification_object, f'APILogicException: ' +
-                                     'likely invalid system_id or cloud account not authorized for the system'
-            )
+    # If system credentials used, system should be in request_data
+    if 'system' in request_data:
+        if request_data['system']['id'] == notification_object.raw_system_id:
+            return request_data['system']
         else:
-            raise exception
+            log_push_result(notification_object, 'System credentials do not match target system')
+            return None
+    else:
+        try:
+            system = cloud_api.System.get(
+                request_data['username'], request_data['password'], notification_object.raw_system_id
+            )
+            return system['systems'][0]
+        except Exception as exception:
+            if isinstance(exception, exceptions.APINotAuthorisedException):
+                log_push_result(notification_object, 'Invalid cloud credentials for system')
+            elif isinstance(exception, exceptions.APILogicException):
+                log_push_result(
+                    notification_object, f'APILogicException: ' +
+                                         'likely invalid system_id or cloud account not authorized for the system'
+                )
+            else:
+                raise exception
 
 
 def process_push_response(response, notification_object, dry_run=False):
@@ -180,7 +188,7 @@ def set_subscriptions_from_targets(notification_object, request_data):
     process_push_response(device_check_response, notification_object, dry_run=True)
 
     devices_without_sub = PushDevice.objects.filter(user__in=target_accounts, user__is_active=True).exclude(
-        pushsubscription__system_id=system_id).select_related('user')
+        subscriptions__system_id=system_id).select_related('user')
     for device in devices_without_sub:
         active = system['ownerAccountEmail'] == device.user.email or auto_active
         PushSubscription.objects.create(system_id=system_id, account=device.user, active=active, device=device)
