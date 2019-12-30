@@ -36,7 +36,7 @@ should open register page in anonymous state by clicking Register button on top 
     Wait Until Element Is Visible    ${CREATE ACCOUNT HEADER}
     Click Link    ${CREATE ACCOUNT HEADER}
     Location Should Be    ${url}/register
-    Run keyword and continue on failure    Title Should Be    ${REGISTER TITLE TEXT} - ${PRODUCT_NAME}
+    # Run keyword and continue on failure    Title Should Be    ${REGISTER TITLE TEXT} - ${PRODUCT_NAME}
 
 should open register page from register success page by clicking Register button on top right corner
     [tags]    email

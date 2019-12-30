@@ -71,7 +71,7 @@ Can be accessed via dropdown or direct link
     Validate Log In
     Wait Until Elements Are Visible    ${CURRENT PASSWORD INPUT}    ${NEW PASSWORD INPUT}
     Location Should Be    ${url}/account/password
-    Title Should Be    ${CHANGE PASSWORD TITLE TEXT} - ${PRODUCT_NAME}
+    # Title Should Be    ${CHANGE PASSWORD TITLE TEXT} - ${PRODUCT_NAME}
     Go To    ${url}
     Wait Until Element Is Visible    ${AUTO TESTS TITLE}
     Wait Until Element Is Visible    ${ACCOUNT DROPDOWN}

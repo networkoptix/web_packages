@@ -51,7 +51,7 @@ Open page anonymously
     [Arguments]    ${url}    ${title}
     Go To    ${url}
     Location should be    ${url}
-    Title should be    ${title}
+    # Title should be    ${title}
 
 Set Chrome Options
     [Documentation]    Set Chrome options for headless mode
@@ -150,7 +150,7 @@ Validate Log Out
 
 Validate on Register Page
     Wait Until Elements Are Visible    ${REGISTER FIRST NAME INPUT}    ${REGISTER LAST NAME INPUT}    ${REGISTER PASSWORD INPUT}    ${CREATE ACCOUNT BUTTON}
-    Run keyword and continue on failure    Title should be    Create account in ${PRODUCT_NAME}
+    # Run keyword and continue on failure    Title should be    Create account in ${PRODUCT_NAME}
 
 Register
     [arguments]    ${first name}    ${last name}    ${email}    ${password}    ${checked}=false
@@ -167,7 +167,7 @@ Validate Register Success
     [arguments]    ${location}=${url}/register/success
     Wait Until Element Is Visible    ${ACCOUNT CREATION SUCCESS}
     Location Should Be    ${location}
-    Run keyword and continue on failure    Title should be    Welcome to ${PRODUCT_NAME}
+    # Run keyword and continue on failure    Title should be    Welcome to ${PRODUCT_NAME}
 
 Validate Register Email Received
     [arguments]    ${recipient}
