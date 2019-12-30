@@ -56,7 +56,7 @@
     "Disconnect System from %CLOUD_NAME%?": "Odłączyć system od %CLOUD_NAME%?",
     "Disconnect from %CLOUD_NAME%": "Odłącz od %CLOUD_NAME%",
     "Disconnect from My Account": "Odłącz od mojego konta",
-    "Download": "Pobrane",
+    "Download": "Pobiera",
     "Download %VMS_NAME%": "Pobierz %VMS_NAME%",
     "Download Chrome": "Pobierz Chrome",
     "Download Firefox": "Pobierz Firefoxa",
@@ -64,7 +64,7 @@
     "Downloads": "Pobrane",
     "Draft": "Wersja robocza",
     "Dual Streaming": "Podwójne strumieniowanie",
-    "Email": "E-mail",
+    "Email": "Email",
     "Email is required": "E-mail jest wymagany",
     "Embed": "Osadź",
     "Enable audit trail": "Zapisuj dziennik dostępu",
@@ -91,7 +91,7 @@
     "In Review": "W trakcie przeglądu",
     "In-Client Upgrade:": "Aktualizacja klienta:",
     "Includes information about the System, such as camera modules, \n                            firmware versions, number of servers, etc. \n                            Does not include any personal information and is completely anonymous.": "Obejmuje informacje o systemie, takie jak moduły kamer, \n                            wersji firmware, liczbę serwerów itp. \n                            Nie zawiera żadnych danych osobowych i jest całkowicie anonimowe.",
-    "Information": "Informacja",
+    "Information": "Informacje",
     "Integrations": "Integracje",
     "Language": "Język",
     "Last Name": "Nazwisko",
@@ -105,7 +105,7 @@
     "Merge Systems": "Złącz systemy",
     "Merge current System with": " Złącz bieżący system z ",
     "Merge with Another System": "Złącz z innym systemem",
-    "Message": "Komunikat",
+    "Message": "Wiadomość",
     "Mine": "Moje",
     "Motion Detection": "Detekcja ruchu",
     "Multi Sensor": "Multi Sensor",
@@ -127,7 +127,7 @@
     "Password": "Hasło",
     "Password is required": "Hasło jest wymagane",
     "Password reset instructions are sent to Email": "Instrukcje resetowania hasła zostały wysłane na adres e-mail",
-    "Password successfully saved": "Hasło ustawione poprawnie",
+    "Password successfully saved": "Hasło zostało pomyślnie zapisane",
     "Password:": "Hasło:",
     "Please enter a valid Email": "Proszę wprowadzić prawidłowy e-mail",
     "Please review and agree to the Terms and Conditions and Privacy policy in order to proceed": "Proszę zapoznać się i wyrazić zgodę na zasady i warunki oraz politykę prywatności, aby kontynuować",
@@ -202,7 +202,7 @@
             "label": "Administrator"
         },
         "Advanced Viewer": {
-            "description": "Może wyświetlać wideo na żywo, przeglądać archiwum, sterować PTZ itp.",
+            "description": "Podgląd wideo na żywo, przeglądanie archiwum, konfigurowanie kamer, sterowanie PTZ itp.",
             "label": "Zaawansowany użytkownik"
         },
         "Custom": {
@@ -310,8 +310,8 @@
         "chromeCastWarning": "Chromecast wymaga dużej ilości zasobów i może powodować problemy na serwerze.",
         "resolution": {
             "auto": "Auto",
-            "high": "Wysoka",
-            "low": "Niska"
+            "high": "Wysoki",
+            "low": "Niski"
         },
         "searchCamPlaceholder": "Szukaj",
         "systemHasNoCameras": "BRAK KAMER",
@@ -342,7 +342,7 @@
     "devices": "urządzenia",
     "dialogs": {
         "cancelButton": "Anuluj",
-        "changeAccountLogged": "You are already logged in as {email}",
+        "changeAccountLogged": "Jesteś już zalogowany jako {email}",
         "createNewAccount": "Utwórz nowe konto",
         "download": "Pobierz %VMS_NAME%",
         "loggedFromOther": "Zostaniesz zalogowany przy użyciu innego konta",
@@ -422,8 +422,7 @@
             },
             "arm": {
                 "label": "ARM",
-                "shortLabel": "ARM",
-                "supported": "<a href='/content/arm'>Zasady wsparcia serwerów ARM</a>"
+                "shortLabel": "ARM"
             },
             "ios": {
                 "label": "iOS",
@@ -441,8 +440,7 @@
             },
             "sdk": {
                 "label": "SDK",
-                "shortLabel": "SDK",
-                "supported": "C++ cross platform SDK"
+                "shortLabel": "SDK"
             },
             "windows": {
                 "label": "Windows"
@@ -608,7 +606,7 @@
         "commonMessage": "To hasło znajduje się na liście najczęściej stosowanych haseł na świecie",
         "fair": "średnie",
         "fairMessage": "Użyj liczb, wielkich i małych liter oraz znaków specjalnych, aby ustawić bezpieczniejsze hasło",
-        "good": "dobre",
+        "good": "dobry",
         "minLength": "za krótkie",
         "minLengthMessage": "Hasło musi zawierać co najmniej 8 znaków",
         "missingMessage": "Hasło jest wymagane",
@@ -669,8 +667,8 @@
         "permissionsRemoved": "Uprawnienia zostały usunięte z {{email}}",
         "settings": {
             "sessionLimitDuration": {
-                "hours": "godzin",
-                "minutes": "minut"
+                "hours": "godziny",
+                "minutes": "minuta"
             },
             "warningMessages": {
                 "videoEncryption": "Szyfrowanie transmisji wideo znacząco zwiększy użycie procesora."

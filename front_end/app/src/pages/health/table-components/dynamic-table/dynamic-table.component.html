@@ -8,7 +8,8 @@
 <div class="scroll-wrapper" #nxScrollWrapper>
 
     <div class="nx-table-wrapper" id="nx-table" #nxTable
-         *ngIf="pagedItems.length" #dynamicTable>
+         *ngIf="pagedItems.length" #dynamicTable
+         [ngStyle]="{'margin-left': tableReady ? undefined : '-9999px'}">
 
         <div *ngIf="tableHeader" class="table-header" [innerText]="tableHeader" #tableHeaderElement></div>
         <div class="table-wrapper">
@@ -28,9 +29,9 @@
                         <ng-container *ngFor="let headerGroup of headers.values; trackBy: trackItem">
                             <th *ngFor="let header of headerGroup.values; trackBy: trackItem" class="align-bottom"
                                 (click)="toggleSort(headerGroup.id, header.id, true)">
-                                <div class="caption d-flex align-items-end"
+                                <div class="caption d-flex align-items-end" [ngClass]="header.formatClass"
                                      [title]="header.description || header.name">
-                                    <div class="text-container ellipsis" [innerHTML]="header.name.replace(':', ':<br>')"></div>
+                                    <div class="text-container ellipsis" [innerHTML]="header.name"></div>
                                     <div class="sort-dir nav-arrow"
                                          [style.visibility]="(headerGroup.id == selectedGroup && header.id == selectedHeader) ? 'visible' : 'hidden'"
                                          [ngClass]="{'up': !sortOrderASC}">
@@ -58,8 +59,9 @@
                                 </td>
                                 <ng-template #showValue>
                                     <td class="ellipsis"
-                                        [title]="item && item[headerGroup.id] && item[headerGroup.id][header.id] && item[headerGroup.id][header.id].tooltip || ''"
-                                        [ngClass]="item && item[headerGroup.id] && item[headerGroup.id][header.id] && item[headerGroup.id][header.id].formatClass || ''">
+                                        [title]="item && item[headerGroup.id] && item[headerGroup.id][header.id] &&
+                                                 (item[headerGroup.id][header.id].tooltip || item[headerGroup.id][header.id].text || '')"
+                                        [ngClass]="item && item[headerGroup.id] && item[headerGroup.id][header.id] && item[headerGroup.id][header.id].formatClass">
                                         <span [innerText]="item && item[headerGroup.id] && item[headerGroup.id][header.id] && item[headerGroup.id][header.id].text || '-'"
                                               [ngClass]="item && item[headerGroup.id] && item[headerGroup.id][header.id] && item[headerGroup.id][header.id].class || ''">
                                         </span>

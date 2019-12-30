@@ -1,7 +1,20 @@
 {
   "language": "tr_TR",
-  "language_name": "Türk",
+  "language_name": "DİL ADI",
   "cloudName": "%CLOUD_NAME%",
+  "vmsName": "%VMS_NAME%",
+  "clientProtocol": "%CLIENT_PROTOCOL%:",
+  "dialogs": {
+    "okButton": "Tamam",
+    "cancelButton": "İptal",
+    "loginTitle": "%CLOUD_NAME% e giriş yapın",
+    "loginButton": "Giriş yap",
+    "logoutAuthorisedTitle": "Zaten giriş yapılmış",
+    "logoutAuthorisedContinueButton": "Devam et",
+    "logoutAuthorisedLogoutButton": "Oturumu Kapat",
+    "noClientDetectedTitle": "Install %VMS_NAME% to view your System",
+    "download": "İndir %VMS_NAME%"
+  },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
     "default": "%CLOUD_NAME%",
@@ -23,8 +36,75 @@
     "debug": "Hata ayıklama",
     "login": "Giriş yap -",
     "download": "İndir %VMS_NAME%",
-    "downloadPlatform": "İndir %VMS_NAME% ",
+    "downloadPlatform": "Download %VMS_NAME% for ",
     "pageNotFound": "Sayfa bulunamadı"
+  },
+  "systemStatuses": {
+    "activated": "aktif edildi",
+    "incompatible": "uyumsuz",
+    "merging": "birleştirme",
+    "notActivated": "aktif edilmemiş",
+    "online": "çevrimiçi",
+    "offline": "çevrimdışı",
+    "unavailable": "kullanılamaz"
+  },
+  "accessRoles": {
+    "disabled": {
+      "label": "Devre Dışı Bırak",
+      "description": "Kullanıcı devre dışı bırakılmış, sisteme giriş yapamaz"
+    },
+    "Owner": {
+      "label": "Sahip",
+      "description": "Sistem'i buluttan paylaşma / bağlanma ve bağlantıyı kesme gibi sınırsız erişim"
+    },
+    "Viewer": {
+      "label": "İzleyici",
+      "description": "Canlı video görüntüleyebilir ve arşive gözatabilir"
+    },
+    "Live Viewer": {
+      "label": "Canlı İzleyici",
+      "description": "Sadece canlı vidyo izleyebilir"
+    },
+    "Advanced Viewer": {
+      "label": "Gelişmiş Görüntüleyici",
+      "description": "Canlı vidyo izleyebilir, arşivi görüntüleyebilir, kameraları ayarlayabilir, PTZ'yi kontrol edebilir"
+    },
+    "Administrator": {
+      "label": "Yönetici",
+      "description": "Sınırsız erişim, paylaşma imkanı dahil"
+    },
+    "Custom": {
+      "label": "Özel Ayarlar",
+      "description": "Özel izinler ayarlamak için %VMS_NAME% İstemci uygulamasını kullanın"
+    },
+    "cloudAdmin": {
+      "label": "Yönetici",
+      "description": "Sistemi yapılandırabilir ve paylaşabilir"
+    },
+    "customRole": {
+      "label": "Özel rol",
+      "description": "Sisteminde belirtilen özel kullanıcı rolü"
+    },
+    "owner": {
+      "label": "Sahip",
+      "description": "Sistem'i buluttan paylaşma / bağlanma ve bağlantıyı kesme gibi sınırsız erişim"
+    },
+    "viewer": {
+      "label": "İzleyici",
+      "description": "Canlı video görüntüleyebilir ve arşive gözatabilir"
+    },
+    "liveViewer": {
+      "label": "Canlı İzleyici",
+      "description": "Sadece canlı vidyo izleyebilir"
+    },
+    "advancedViewer": {
+      "label": "Gelişmiş Görüntüleyici",
+      "description": "Canlı vidyo izleyebilir, arşivi görüntüleyebilir, kameraları ayarlayabilir, PTZ'yi kontrol edebilir"
+    },
+    "custom": {
+      "label": "Özel Ayarlar",
+      "description": "Özel izinler ayarlamak için %VMS_NAME% İstemci uygulamasını kullanın"
+    }
   },
   "errorCodes": {
     "ok": "tamam",
@@ -55,11 +135,11 @@
     "accountAlreadyActivated": "Bu hesap zaten etkinleştirildi",
     "emailNotFound": "Hesap mevcut değil.",
     "EmailAlreadyExists": "Bu e-posta adresi zaten kayıtlı",
-    "oldPasswordMistmatch": "Parola hatalı.",
+    "oldPasswordMistmatch": "Mevcut şifre hatalı.",
     "passwordMismatch": "Hatalı parola",
     "cantEditYourself": "Kendi izinlerini değiştirmeye izin verilmiyor",
     "cantEditAdmin": "Bu kullanıcının yönetici izinleri var",
-    "cantOpenClient": "%VMS_NAME% uygulama algılanmadı. <a href=\"/download\">İndir</a>",
+    "cantOpenClient": "%VMS_NAME% application is not detected. <a href=\"/download\">Download</a>",
     "lostConnection": "{{systemName}} ile bağlantı kayboldu",
     "thisSystem": "sistem",
     "oldSafariNotSupported": "Safari 10'dan büyük sürümleri desteklenmez",
@@ -69,12 +149,89 @@
     "FAIL": "Sistem <strong>{{failedSystem}}</strong> şu anda erişilemiyor.<br>Birkaç dakika sonra tekrar deneyin veya iletişim <a href=\"%SUPPORT_LINK%\" target=\"_blank\">destek</a>.",
     "unknownMergeError": "Bilinmeyen hata. Sayfayı yenilemeyi deneyebilir ve denemeyi tekrarlayabilirsiniz. Sorun devam ederse, lütfen <a href=\"%SUPPORT_LINK%\" target=\"_blank\">destek</a>iletişim kurun."
   },
+  "merging": {
+    "mergeFailedTitle": "Sistem birleştirme işlemi başarısız oldu",
+    "commonText": "Sistem <strong>{{primarySystem}}</strong> ve <strong>{{secondarySystem}}</strong> birleştirilemedi."
+  },
+  "passwordRequirements": {
+    "good": "iyi",
+    "fair": "idare eder",
+    "fairMessage": "Parolanın güçlü olması için \nküçük büyük harf ve özel karakterler kullanın",
+    "minLength": "çok kısa",
+    "minLengthMessage": "Parola en az 8 karakterden oluşmalıdır",
+    "required": "yanlış",
+    "requiredMessage": "Sadece alfanümerik ve klavye karakterleri kullanın",
+    "weak": "zayıf",
+    "weakMessage": "Parolanın güçlü olması için \nküçük büyük harf ve özel karakterler kullanın",
+    "strongMessage": "Güçlü parola!",
+    "common": "çok yaygın",
+    "commonMessage": "Dünyada en çok kullanılan parolayı seçtiniz",
+    "missingMessage": "Parola gerekmektedir"
+  },
+  "sharing": {
+    "confirmOwner": "Sistem sahibini değiştirirseniz, hesabınızdaki yetkileri iptal edersiniz. Bu eylem geri döndürülemez. Emin misiniz?",
+    "shareTitle": "Paylaş",
+    "shareConfirmButton": "Paylaş",
+    "editShareTitle": "İzinleri düzenle",
+    "editShareConfirmButton": "Kaydet",
+    "permissionsSaved": "Yeni izin kaydedildi"
+  },
+  "system": {
+    "yourSystem": "Sistem",
+    "mySystemSearch": "IMeMyMine",
+    "unavailable": "Sistem erişilebilir değil",
+    "offline": "Sistem çevrimdışı",
+    "openClient": "Open in %VMS_NAME%",
+    "openClientNoSystem": "Aç %VMS_NAME%",
+    "confirmMergeAction": "Birleştir",
+    "mergeSystemTitle": "Sistemleri Birleştir",
+    "confirmRenameTitle": "Sistem Adı",
+    "confirmRenameAction": "Kaydet",
+    "successRename": "Sistem ismi kaydedildi",
+    "confirmDisconnectTitle": "%CLOUD_NAME% den bağlantıyı kesmek istiyor musunuz?",
+    "confirmDisconnectAction": "Bağlantıyı kes",
+    "confirmUnshareFromMe": "Hesabınızın bu sistemle bağlantısını kesmek üzeresiniz. Bundan sonra bu sisteme erişim sağlayamayacaksınız. Emin misiniz?",
+    "confirmUnshareFromMeTitle": "Sistemle bağlantıyı kes?",
+    "confirmUnshareFromMeAction": "Bağlantıyı kes",
+    "confirmUnshare": "Bu kullanıcı Sistem'e erişemez. Emin misiniz?",
+    "confirmUnshareTitle": "Kullanıcıyı sil?",
+    "confirmUnshareAction": "Sil",
+    "successDisconnected": "Sistem %CLOUD_NAME%'den başarıyla çıkarıldı",
+    "successDeleted": "{{systemName}} sistemi hesabınızdan başarıyla silindi",
+    "mergeFailed": "Sistem birleştirme işlemi başarısız oldu",
+    "mergeStart": "Sistemler birleştirilmeye başlandı",
+    "mergeSuccess": "Sistem birleştirme tamamlandı",
+    "permissionsRemoved": "İzinler {{email}}'den kaldırıldı",
+    "unknownName": "Sistem için Bilinmeyen Ad (Bulut birleştirme yüzünden)"
+  },
+  "account": {
+    "accountSavedSuccess": "Hesabınız başarıyla kaydedildi",
+    "activationLinkSent": "Aktivasyon linki gönderildi",
+    "passwordChangedSuccess": "Hesabınız başarıyla kaydedildi",
+    "changePassword": "Parola Değiştir",
+    "newPasswordLabel": "Yeni Parola",
+    "saveChanges": "Kaydet"
+  },
+  "activeActions": {
+    "sendConfirm": "Aktivasyon linki gönder",
+    "resetPassword": "Parolayı sıfırla",
+    "setNewPassword": "Parolayı kaydet",
+    "setNewPasswordLabel": "Yeni Parola"
+  },
+  "regActions": {
+    "passwordLabel": "Parola",
+    "createAccount": "Hesap oluştur"
+  },
+  "header": {
+    "allSystems": "Tüm sistemler",
+    "systems": "Sistemler"
+  },
   "common": {
     "cameraLinks": {
       "highStream": "Yüksek çözünürlük",
       "lowStream": "Düşük çözünürlük",
       "transcoding": "Dönüştürme",
-      "unknown": "Bilinmeyen",
+      "unknown": "Belirtilmemiş",
       "copyToClipboard": "panoya yapıştır",
       "copyDefaultText": "kopyala",
       "copyActiveText": "panoya kopyalandı"
@@ -92,9 +249,9 @@
       "flashRequired": "Videoları oynatmak için lütfen <a href='https://get.adobe.com/flashplayer/' target='_blank'>Adobe Flash</a>'i yükleyin.",
       "flashOrWebmRequired": "Internet Explorer'da video oynatmak için lütfen <a href='https://get.adobe.com/flashplayer/' target='_blank'> Adobe Flash</a> veya<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec'i</a> yükleyin.",
       "noArmSupport": "Bu tarayıcı veya aygıt, ARM tabanlı sunuculardan video oynatmayı desteklemez.",
-      "noFormat": "Bu tarayıcı veya cihaz bu kameradan video oynatmayı desteklemez.",
+      "noFormat": "Bu tarayıcı bu kameradan video oynatmayı desteklemiyor.",
       "ieNoWebm": "Internet Explorer için <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> yükleyin.",
-      "ieWin10": "Lütfen, Microsoft Edge veya Google Chrome tarayıcılarını kullanın.",
+      "ieWin10": "Lütfen Microsoft Edge veya Google Chrome tarayıcılarını kullanın.",
       "ubuntuNX": "Bu tarayıcı, ARM tabanlı sunuculardan gelen videoyu desteklemez. Bunun yerine, Chromium tarayıcıyı kullanın."
     },
     "searchCamPlaceholder": "Arama",
@@ -103,12 +260,12 @@
       "high": "Yüksek",
       "low": "Düşük"
     },
-    "chromeCastWarning": "Chromecast kaynak yoğunluğudur ve sunucunuzda sorunlara neden olabilir.",
+    "chromeCastWarning": "Chromecast kaynak kullanımını arttırabilir ve sunucunuzda sorunlara neden olabilir.",
     "voiceCommands": {
       "play": "oynat",
       "pause": "duraklat",
       "live": "go to live | show me live",
-      "view": "view + [camera name]",
+      "view": "görüntüle + [kamera adı]",
       "search": "find + [text for searchbar]",
       "clear search": "aramayı temizle",
       "expand server": "expand server + [server name]",
@@ -119,8 +276,9 @@
       "help": "help | show commands"
     }
   },
-  "system": {
-    "offline": "Sistem çevrimdışı",
-    "unavailable": "Sistem erişilebilir değil"
+  "recommendSupport": {
+    "a_recommend": "Danışmanızı tavsiye ederiz",
+    "b_support": "destek",
+    "c_proceeding": "işlemden önce."
   }
 }

@@ -6,7 +6,7 @@
 		"changePassword": "Alterar senha",
 		"newPasswordLabel": "Nova senha",
 		"saveChanges": "Gravar",
-		"accountSettings": "Definições da Conta"
+		"accountSettings": "Configurações da conta"
 	},
 	"activeActions": {
 		"sendConfirm": "Reenviar Link de Activação",
@@ -28,7 +28,7 @@
 		"hardwareTypes": "Types",
 		"minResolution": "Minimum Resolution",
 		"analytics": "Analytics",
-		"analyticsSelected": "analytics events"
+		"analyticsSelected": "evento de Analytics"
 	},
 	"cameraFilters": {
 		"ptz": "PTZ cameras",
@@ -75,13 +75,11 @@
 			},
 			"arm": {
 				"label": "ARM",
-				"shortLabel": "ARM",
-				"supported": "<a href='/content/arm'>ARM based servers support policy</a>"
+				"shortLabel": "ARM"
 			},
 			"sdk": {
 				"label": "SDK",
-				"shortLabel": "SDK",
-				"supported": "C++ cross platform SDK"
+				"shortLabel": "SDK"
 			}
 		},
 		"platforms": {
@@ -111,7 +109,7 @@
 			"betas": "Betas",
 			"rc": "Release Candidate",
 			"release": "Release",
-			"releases": "Releases",
+			"releases": "Versões",
 			"patch": "Patch",
 			"patches": "Patches"
 		}
@@ -165,7 +163,7 @@
 		"Data Analytics": "Data Analytics",
 		"Drone": "Drone",
 		"Health Monitor": "Monitor de Saúde",
-		"Storage": "Armazenamento"
+		"Storage": "Storage"
 	},
 	"messageDialogPlaceholders": {
 		"feedback": "Make sure you include your camera model and manufacturer..."
@@ -193,7 +191,7 @@
 		"download": "Baixar %VMS_NAME%",
 		"downloadPlatform": "Baixar %VMS_NAME% para ",
 		"pageNotFound": "Página não encontrada",
-		"supportedDevices": "Supported Devices",
+		"supportedDevices": "Dispositivos suportados",
 		"integrations": "Integrations"
 	},
 	"dialogs": {
@@ -203,7 +201,7 @@
 		"changeAccountLogged": "You are already logged in as {email}",
 		"loggedFromOther": "You will be logged in with a different account",
 		"loginTitle": "Logar em %CLOUD_NAME%",
-		"loginButton": "Entrar",
+		"loginButton": "Log in",
 		"logoutAuthorisedTitle": "Já tem sessão iniciada",
 		"logoutAuthorisedContinueButton": "Continuar",
 		"logoutAuthorisedLogoutButton": "Terminar sessão",
@@ -265,7 +263,7 @@
 		"cantChangeAccountPrefix": "Não é possível guardar as alterações",
 		"cantChangePasswordPrefix": "Não é possível guardar a senha",
 		"cantActivatePrefix": "Não é possível activar a sua conta",
-		"cantSendConfirmationPrefix": "Não é possível enviar um email de confirmação",
+		"cantSendConfirmationPrefix": "Não é possível enviar o email de confirmação",
 		"notAuthorized": "Senha incorrecta",
 		"brokenAccount": "Problema inesperado com a conta. <a href=\"/restore_password\">Restaurar conta</a>",
 		"wrongParameters": "Alguns parâmetros no formulário estão incorretos",
@@ -308,7 +306,7 @@
 		"strongMessage": "Senha forte!",
 		"common": "demasiado comum",
 		"commonMessage": "Esta senha está principais senhas mais populares no mundo",
-		"missingMessage": "A senha é obrigatória"
+		"missingMessage": "A senha é necessária"
 	},
 	"registration": {
 		"agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
@@ -381,7 +379,7 @@
 		},
 		"Advanced Viewer": {
 			"label": "Visualizador Avançado",
-			"description": "Pode ver vídeos ao vivo, pesquisar os arquivos, configurar câmaras, controlar PTZ etc"
+			"description": "Pode visualizar vídeo ao vivo, pesquisar os arquivos, configurar câmaras, controlar PTZ etc"
 		},
 		"Administrator": {
 			"label": "Administrador",
@@ -445,7 +443,7 @@
 		"systemHasNoCameras": "SEM CÂMARAS",
 		"systemUnreachable": "SYSTEM IS UNREACHABLE",
 		"cameraStates": {
-			"offline": "Desligado",
+			"offline": "Offline",
 			"error": "Erro",
 			"errorLoading": "An error occurred while loading this video.",
 			"unauthorized": "Necessária autenticação",
@@ -457,7 +455,7 @@
 			"noFormat": "Este browser não suporta a reprodução de vídeo desta câmara.",
 			"ieNoWebm": "Por favor, instale <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>codec WebM</a> para o Internet Explorer.",
 			"ieWin10": "Por favor, utilize browsers Microsoft Edge ou Google Chrome.",
-			"ubuntuNX": "Este browser não suporta vídeo a partir de servidores baseados em ARM. Por favor, use o browser Chromium."
+			"ubuntuNX": "Este navegador não suporta vídeo de servidores baseados em ARM. Por favor, use o navegador Chromium."
 		},
 		"searchCamPlaceholder": "Pesquisar",
 		"resolution": {
@@ -485,12 +483,12 @@
 	"users": "Utilizadores",
 	"testedVersionLabel": "Tested with {{vmsName}} version:",
 	"testedVersionsLabel": "Tested with {{vmsName}} versions:",
-	"About %CLOUD_NAME%": "About %CLOUD_NAME%",
+	"About %CLOUD_NAME%": "Sobre o %CLOUD_NAME%",
 	"Download %VMS_NAME%": "Baixar %VMS_NAME%",
 	"Integrations": "Integrations",
 	"Privacy": "Privacidade",
 	"Support": "Suporte",
-	"Supported Devices": "Supported Devices",
+	"Supported Devices": "Dispositivos suportados",
 	"Terms": "Termos",
 	"pleaseSelect": "Please select...",
 	"WHEN_MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{{targetSystemName}}</strong> System, and this system will be deleted.",

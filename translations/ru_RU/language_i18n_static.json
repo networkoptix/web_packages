@@ -6,7 +6,7 @@
 		"changePassword": "Изменить пароль",
 		"newPasswordLabel": "Новый пароль",
 		"saveChanges": "Сохранить",
-		"accountSettings": "Настройки учётной записи"
+		"accountSettings": "Настройки учетной записи"
 	},
 	"activeActions": {
 		"sendConfirm": "Отправить ссылку еще раз",
@@ -21,7 +21,7 @@
 		"filter applied": "фильтр применен",
 		"filters applied": "фильтры применены",
 		"Any": "Любой",
-		"selected": "выбраны",
+		"selected": "выбрано",
 		"vendor": "Производитель",
 		"vendors": "Производители",
 		"hardwareType": "Тип",
@@ -75,13 +75,11 @@
 			},
 			"arm": {
 				"label": "ARM",
-				"shortLabel": "ARM",
-				"supported": "<a href='/content/arm'>Политика поддержки серверов на базе ARM</a>"
+				"shortLabel": "ARM"
 			},
 			"sdk": {
 				"label": "SDK",
-				"shortLabel": "SDK",
-				"supported": "Кроссплатформенный SDK C++"
+				"shortLabel": "SDK"
 			}
 		},
 		"platforms": {
@@ -107,13 +105,13 @@
 			"video_source_sdk": "SDK источника видео"
 		},
 		"releasesTypes": {
-			"beta": "Beta",
-			"betas": "Betas",
-			"rc": "Release Candidate",
-			"release": "Release",
-			"releases": "Releases",
+			"beta": "Бета",
+			"betas": "Бета",
+			"rc": "Релиз-кандидат",
+			"release": "Релиз",
+			"releases": "Релизы",
 			"patch": "Patch",
-			"patches": "Patches"
+			"patches": "Патчи"
 		}
 	},
 	"ipvd": {
@@ -147,7 +145,7 @@
 		"Cameras supporting H.265": "Камеры с поддержкой H.265",
 		"I / O modules": "Модули ввода/вывода",
 		"Multisensor Cameras": "Мультисенсорные камеры",
-		"Cameras with 2-way audio": "Камеры с двусторонним звуком",
+		"Cameras with 2-way audio": "Камеры с 2х-сторонним звуком",
 		"Extra high resolution cameras": "Камеры сверхвысокого разрешения",
 		"feedback": {
 			"a_Please": "Пожалуйста",
@@ -191,14 +189,14 @@
 		"debug": "Отладка",
 		"login": "Войти -",
 		"download": "Скачать %VMS_NAME%",
-		"downloadPlatform": "Скачать %VMS_NAME% для ",
+		"downloadPlatform": "Download %VMS_NAME% for ",
 		"pageNotFound": "Страница не найдена",
 		"supportedDevices": "Поддерживаемые устройства",
 		"integrations": "Интеграции"
 	},
 	"dialogs": {
 		"okButton": "OK",
-		"cancelButton": "Отменить",
+		"cancelButton": "Отмена",
 		"createNewAccount": "Создать новую учетную запись",
 		"changeAccountLogged": "You are already logged in as {email}",
 		"loggedFromOther": "Вы будете авторизованы под другой учетной записью",
@@ -207,7 +205,7 @@
 		"logoutAuthorisedTitle": "Вы уже выполнили вход",
 		"logoutAuthorisedContinueButton": "Продолжить",
 		"logoutAuthorisedLogoutButton": "Выход",
-		"noClientDetectedTitle": "Установите %VMS_NAME% для работы с системой",
+		"noClientDetectedTitle": "Install %VMS_NAME% to view your System",
 		"stayAs": "Оставаться зарегистрированным как {email} ",
 		"stayLoggedIn": "Оставаться в системе",
 		"download": "Скачать %VMS_NAME%",
@@ -300,7 +298,7 @@
 		"fair": "средний",
 		"fairMessage": "Для надежности пароля используйте цифры, буквы верхнего и нижнего регистра и специальные символы",
 		"minLength": "короткий",
-		"minLengthMessage": "Пароль должен содержать не менее 8 символов",
+		"minLengthMessage": "Пароль должен содержать по крайней мере 8 символов",
 		"required": "некорректный",
 		"requiredMessage": "Используйте только латинские буквы, цифры и символы клавиатуры, избегайте начальных и конечных пробелов",
 		"weak": "слабый",
@@ -319,7 +317,7 @@
 		"unavailable": "Система недоступна",
 		"offline": "Система не в сети",
 		"offlineAlertRibbon": "Система не в сети. Некоторые настройки могут быть недоступны.",
-		"openClient": "Открыть в %VMS_NAME%",
+		"openClient": "Open in %VMS_NAME%",
 		"openClientNoSystem": "Открыть %VMS_NAME%",
 		"confirmMergeAction": "Объединить",
 		"mergeSystemTitle": "Объединить системы",
@@ -373,11 +371,11 @@
 		},
 		"Viewer": {
 			"label": "Видео с камер и архив",
-			"description": "Может смотреть видео в реальном времени и архив"
+			"description": "Может смотреть живое видео и архив"
 		},
 		"Live Viewer": {
-			"label": "Только видео в реальном времени",
-			"description": "Может смотреть только видео в реальном времени"
+			"label": "Только видео с камер",
+			"description": "Может смотреть только живое видео"
 		},
 		"Advanced Viewer": {
 			"label": "Просмотр и настройка",
@@ -405,15 +403,15 @@
 		},
 		"viewer": {
 			"label": "Видео с камер и архив",
-			"description": "Может смотреть видео в реальном времени и архив"
+			"description": "Может смотреть живое видео и архив"
 		},
 		"liveViewer": {
-			"label": "Только видео в реальном времени",
-			"description": "Может смотреть только видео в реальном времени"
+			"label": "Только видео с камер",
+			"description": "Может смотреть только живое видео"
 		},
 		"advancedViewer": {
 			"label": "Просмотр и настройка",
-			"description": "Может смотреть видео в реальном времени, архив, изменять настройки камер, управлять PTZ и т. д"
+			"description": "Может смотреть живое видео, архив, изменять настройки камер, управлять PTZ и т. д"
 		},
 		"custom": {
 			"label": "Особые",
@@ -462,8 +460,8 @@
 		"searchCamPlaceholder": "Поиск",
 		"resolution": {
 			"auto": "Авто",
-			"high": "Выс",
-			"low": "Низ"
+			"high": "Высокая",
+			"low": "Низкая"
 		},
 		"chromeCastWarning": "Chromecast является ресурсоемким и может вызывать проблемы на вашем сервере.",
 		"voiceCommands": {
@@ -496,7 +494,7 @@
 	"WHEN_MERGE_FINISHES": "После завершения объединения все пользователи и камеры из этой системы станут доступны в <strong>{{targetSystemName}}</strong>, а эта система будет удалена.",
 	"FAILED_SYSTEM_DESCR": "Эта ссылка не работает,<br>Система могла быть отключена от %CLOUD_NAME%,<br>доступ к этой системе мог быть отозван, <br>или вы вошли под другой учетной записью.",
 	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "У вас нет систем, подключенных к %CLOUD_NAME%",
-	"NO_SYSTEMS_LOGIN": "Войдите в систему с помощью %VMS_NAME%",
+	"NO_SYSTEMS_LOGIN": "Log in to your System using %VMS_NAME%",
 	"NO_SYSTEMS_GOTO_ADMINISTRATION": "Перейдите на вкладку \"Облако\" в окне \"Системное администрирование\"",
 	"NO_SYSTEMS_CONNECT_SYSTEM": "Нажмите «Подключить систему к %CLOUD_NAME%"
 }

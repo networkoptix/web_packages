@@ -125,7 +125,7 @@
     "PTZ": "PTZ",
     "Page not found": "Sivua ei löydy",
     "Password": "Salasana",
-    "Password is required": "Salasana tarvitaan",
+    "Password is required": "Salasana on pakollinen",
     "Password reset instructions are sent to Email": "Salasanan nollausohjeet lähetetään sähköpostitse",
     "Password successfully saved": "Salasana tallennettu onnistuneesti",
     "Password:": "Salasana:",
@@ -231,7 +231,7 @@
         },
         "custom": {
             "description": "Käytä %VMS_NAME% Client -sovellusta mukautettujen käyttöoikeuksien määrittämiseen",
-            "label": "Asiakassuhde"
+            "label": "Muokattu"
         },
         "customRole": {
             "description": "Mukautettu käyttäjärooli Järjestelmässä",
@@ -242,11 +242,11 @@
             "label": "Poissa käytöstä"
         },
         "liveViewer": {
-            "description": "Voit katsella vain reaaliaikaista videota",
+            "description": "Voi katsella vain reaaliaikaista videota",
             "label": "Reaaliaikainen katselu"
         },
         "owner": {
-            "description": "Rajoittamaton pääsy, mukaan lukien kyky jakaa ja yhdistää / irroittaa järjestelmää pilvestä",
+            "description": "Rajoittamaton pääsy, mukaan lukien oikeus jakaa ja yhdistää / irrottaa järjestelmä pilvestä",
             "label": "Omistaja"
         },
         "viewer": {
@@ -285,17 +285,17 @@
     "common": {
         "cameraLinks": {
             "copyActiveText": "kopioitu leikepöydälle",
-            "copyDefaultText": "kopioi",
+            "copyDefaultText": "kopio",
             "copyToClipboard": "kopioi leikepöydälle",
-            "highStream": "High stream",
-            "lowStream": "Low stream",
+            "highStream": "Korkea streami",
+            "lowStream": "Matala streami",
             "transcoding": "Transkoodaus",
             "unknown": "Tuntematon"
         },
         "cameraStates": {
             "error": "Virhe",
             "errorLoading": "An error occurred while loading this video.",
-            "flashOrWebmRequired": "Ota <a href='https://get.adobe.com/flashplayer/' target='_blank'>Asenna Adobe Flash</a> tai<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM koodekin</a> videon toistamiseen Internet Explorer.",
+            "flashOrWebmRequired": "Siirry <a href='https://get.adobe.com/flashplayer/' target='_blank'>Asenna Adobe Flash</a> tai<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM koodekin</a> videon toistamiseen Internet Explorer:ssa.",
             "flashRequired": "Siirry<a href='https://get.adobe.com/flashplayer/' target='_blank'>Asenna Adobe Flash</a> videoiden toistamiseen.",
             "iOSVideoTooLarge": "iOS ei tue videota, joka on suurempi kuin fullHD (2MP: 1920x1080).",
             "ieNoWebm": "Asenna <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM-koodekki</a> Internet Exploreriin.",
@@ -319,7 +319,7 @@
         "systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
         "systemNoAlerts": "No Alerts",
         "systemNoAlertsMessage": "Your system must be doing well!",
-        "systemOffline": "Järjestelmään ei saada yhteyttä",
+        "systemOffline": "Järjestelmä offline-tilassa",
         "systemOfflineMessage": "This system is offline and cannot be accessed right now.",
         "systemServerError": "Sisäinen palvelinvirhe",
         "systemServerErrorMessage": "An error occurred, please, try again later. An error occurred, please try again later. If the problem continues, please contact your support team.",
@@ -327,16 +327,16 @@
         "voiceCommands": {
             "clear search": "tyhjennä haku",
             "collapse all servers": "kokoa kaikki palvelimet",
-            "collapse server": "collapse server + [server name]",
+            "collapse server": "pienennä palvelin + [palvelimen nimi]",
             "expand all servers": "laajenna kaikki palvelimet",
-            "expand server": "expand server + [server name]",
-            "help": "help | show commands",
-            "live": "go to live | show me live",
+            "expand server": "laajenna palvelin + [palvelimen nimi]",
+            "help": "apua | näytä komennot",
+            "live": "siirry reaaliaikaiseen | näytä minulle reaaliaikainen kuva",
             "pause": "tauko",
             "play": "toista",
-            "search": "find + [text for searchbar]",
+            "search": "etsi + [hakupalkin teksti]",
             "stop listening": "lopeta kuuntelu",
-            "view": "view + [camera name]"
+            "view": "näkymä + [kameran nimi]"
         }
     },
     "devices": "laitteet",
@@ -422,8 +422,7 @@
             },
             "arm": {
                 "label": "ARM",
-                "shortLabel": "ARM",
-                "supported": "<a href='/content/arm'>ARM based servers support policy</a>"
+                "shortLabel": "ARM"
             },
             "ios": {
                 "label": "iOS",
@@ -434,15 +433,14 @@
                 "shortLabel": "Ubuntu"
             },
             "mac": {
-                "label": "Mac OS"
+                "label": "Mac OSX"
             },
             "macos": {
                 "label": "Mac OS"
             },
             "sdk": {
                 "label": "SDK",
-                "shortLabel": "SDK",
-                "supported": "C ++: n cross platform SDK"
+                "shortLabel": "SDK"
             },
             "windows": {
                 "label": "Windows"
@@ -469,12 +467,12 @@
         },
         "releasesTypes": {
             "beta": "Beta",
-            "betas": "Betas",
-            "patch": "Patch",
-            "patches": "Patches",
-            "rc": "Release Candidate",
-            "release": "Release",
-            "releases": "Releases"
+            "betas": "Beta-versioita",
+            "patch": "Korjaus",
+            "patches": "Korjaukset",
+            "rc": "Julkaisuehdokkaat",
+            "release": "Julkaisu",
+            "releases": "Julkaisut"
         }
     },
     "errorCodes": {
@@ -611,7 +609,7 @@
         "good": "hyvä",
         "minLength": "liian lyhyt",
         "minLengthMessage": "Salasanan pitää olla vähintään 8 merkkiä pitkä",
-        "missingMessage": "Salasana tarvitaan",
+        "missingMessage": "Salasana on pakollinen",
         "required": "virheellinen",
         "requiredMessage": "Käytä vain latinankielisiä kirjaimia, numeroita ja näppäimistön symboleja",
         "strongMessage": "Vahva salasana!",

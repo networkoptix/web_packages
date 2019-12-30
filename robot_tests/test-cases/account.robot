@@ -47,7 +47,6 @@ Reset DB and Open New Browser On Failure
 Can access the account page from dropdown
     [tags]    Threaded
     Log In    ${EMAIL NOPERM}    ${password}
-    Wait Until Element is Visible    ${ACCOUNT DROPDOWN}
     Click Button    ${ACCOUNT DROPDOWN}
     Wait Until Element is Visible    ${ACCOUNT SETTINGS BUTTON}
     Click Link    ${ACCOUNT SETTINGS BUTTON}

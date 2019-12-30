@@ -5,10 +5,10 @@
     "Access level": "アクセスレベル",
     "Account Information": "アカウント情報",
     "Account Settings": "アカウント設定",
-    "Account is already activated or confirmation code is incorrect": "アカウントは既に有効化されているか、確認コードが正しくありません",
+    "Account is already activated or confirmation code is incorrect": "アカウントは既にアクティブ済か確認コードが正しくありません",
     "Account is created.": "アカウントが作成されました。",
     "Account is successfully created.": "アカウントが正常に作成されました。",
-    "Account not activated": "アカウントがアクティベートされていません",
+    "Account not activated": "アカウントがまだ有効化されていません",
     "Account not found": "アカウントが見つかりません",
     "Activate your account": "アカウントの有効化",
     "Actual number of events supported by this camera may be bigger.": "このカメラでサポートされている実際のイベント数はもっと大きい可能性があります。",
@@ -24,7 +24,7 @@
     "Allow only secure connections": "安全な接続のみを許可する",
     "Allow system to optimize camera settings": "カメラ設定の最適化有効",
     "Analytics": "分析",
-    "Analytics Event": "分析イベント",
+    "Analytics Event": "解析イベント",
     "Analytics Events": "分析イベント",
     "Any": "全て",
     "Apply": "適用",
@@ -46,9 +46,9 @@
     "Confirmation message is sent to": "確認メッセージが送信されます",
     "Contact": "お問い合わせ",
     "Create Account": "アカウント作成",
-    "Create account": "アカウント作成",
+    "Create account": "アカウントを作成",
     "Current Password": "現在のパスワード",
-    "Current password is required": "現在のパスワードを入力してください",
+    "Current password is required": "現在のパスワードが必要です",
     "Depending of the size of the database it may take up to several hours.": "データベースのサイズによっては、数時間かかる場合があります。",
     "Developer": "開発者",
     "Discard": "変更を破棄",
@@ -65,18 +65,18 @@
     "Draft": "下書き",
     "Dual Streaming": "デュアルストリーミング",
     "Email": "Email",
-    "Email is required": "Emailが必要です",
+    "Email is required": "メールアドレスが必要です",
     "Embed": "埋め込み",
     "Enable audit trail": "操作履歴有効",
     "Enable auto discovery of cameras and servers": "Enable auto discovery of cameras and servers",
     "Encrypt video traffic": "ビデオトラフィックを暗号化する",
     "Enter \"Public User\" credentials:": "「パブリックユーザー」資格情報を入力:",
     "Enter password for your account to continue": "アカウントのパスワードを入力して続行してください",
-    "Enter password to continue.": "パスワードを入力して続行",
+    "Enter password to continue.": "続行するにはパスワードを入力してください",
     "Export all to CSV": "CSV にすべてエクスポート",
     "FAILED_SYSTEM_DESCR": "このリンクは壊れています。<br>システムは %CLOUD_NAME%から切断される可能性があります。<br>このシステムへのアクセスが取り消される可能性があります。<br>または別のアカウントにログインしている可能性があります。",
     "FPS(max)": "FPS（最大）",
-    "Failed to access System": "システムにアクセスできませんでした",
+    "Failed to access System": "システムへのアクセスに失敗しました",
     "Finishing systems merge": "システム統合が完了しました",
     "Firmware version": "ファームウェアバージョン",
     "First Name": "名",
@@ -111,7 +111,7 @@
     "Multi Sensor": "マルチセンサー",
     "NO_SYSTEMS_CONNECT_SYSTEM": "「システムを %CLOUD_NAME% に接続」を押します",
     "NO_SYSTEMS_GOTO_ADMINISTRATION": "システムアドミニストレーションのクラウドタブに移動",
-    "NO_SYSTEMS_LOGIN": "%VMS_NAME% を使用してシステムにログインします",
+    "NO_SYSTEMS_LOGIN": "Log in to your System using %VMS_NAME%",
     "NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "%CLOUD_NAME% に接続されたシステムがありません",
     "New Password": "新規パスワード",
     "No unsaved changes": "No unsaved changes",
@@ -119,23 +119,23 @@
     "OK": "OK",
     "Ok": "Ok",
     "Only client-server video traffic can be encrypted.": "Only client-server video traffic can be encrypted.",
-    "Other packages:": "他のパッケージ:",
+    "Other packages:": "その他のパッケージ:",
     "Other releases, patches and beta versions": "その他のリリース、パッチ、ベータ版",
     "Owner": "オーナー",
     "PTZ": "PTZ",
     "Page not found": "ページが見つかりません",
     "Password": "パスワード",
-    "Password is required": "パスワードが必要です",
+    "Password is required": "パスワードが必要",
     "Password reset instructions are sent to Email": "パスワードリセットの指示がメールで送信されます",
     "Password successfully saved": "パスワードを更新しました",
     "Password:": "パスワード:",
-    "Please enter a valid Email": "有効なEmailを入力してください",
+    "Please enter a valid Email": "有効なEメールアドレスを入力して下さい。",
     "Please review and agree to the Terms and Conditions and Privacy policy in order to proceed": "続行するには、利用規約とプライバシーポリシーを確認して同意してください",
     "Popularity": "知名度",
     "Privacy": "プライバシー",
     "Release Notes": "更新履歴",
     "Release notes": "更新履歴",
-    "Remember me": "ログイン状態を保持する",
+    "Remember me": "記憶する",
     "Remove User": "Remove User",
     "Rename": "名前の変更",
     "Requirements": "条件",
@@ -175,7 +175,7 @@
     "This Email has been already registered in %CLOUD_NAME%": "このメールは既に %CLOUD_NAME%に登録されています",
     "This device has reported to support some analytics events, but we don't have exact information about them.": "このデバイスはいくつかの分析イベントをサポートすることが報告されていますが、正確な情報はありません。",
     "To": "宛先",
-    "Too many attempts. Try again in a minute.": "試行回数が多すぎます。暫くしてからもう一度お試しください。",
+    "Too many attempts. Try again in a minute.": "試行回数が多すぎます 暫くしてからもう一度お試しください",
     "Tracks and logs all user actions.": "すべてのユーザーアクションを追跡して記録する",
     "Until merge is finished you can log in to this system and watch video, but cannot change any settings.": "システムにログインして映像を表示する事はできますが、統合が完了するまで設定を変更することはできません。",
     "Update them to the": "更新",
@@ -188,7 +188,7 @@
     "What's New?": "新着情報",
     "When enabled, system will discover new cameras and servers. Also, \n                            it will automatically and persistently send discovery requests to \n                            cameras in order to get the camera's status update. \n                            Failover enabled on some servers ignore status check prohibition.": "When enabled, system will discover new cameras and servers. Also, \n                            it will automatically and persistently send discovery requests to \n                            cameras in order to get the camera's status update. \n                            Failover enabled on some servers ignore status check prohibition.",
     "Works with:": "で動作します：",
-    "Wrong password": "パスワードが違います",
+    "Wrong password": "間違ったパスワード",
     "You can only merge Systems where you are the owner.": "オーナーであるシステムのみを統合できます。",
     "You have registered in %CLOUD_NAME%": "%CLOUD_NAME% に登録されました",
     "Your Email": "あなたのEメール",
@@ -210,23 +210,23 @@
             "label": "カスタム"
         },
         "Live Viewer": {
-            "description": "ライブビデオのみ閲覧可能",
+            "description": "ライブ表示のみ可能",
             "label": "ライブビューアー"
         },
         "Owner": {
-            "description": "クラウドからの共有とシステムの接続/切断を含む無制限のアクセス",
+            "description": "クラウドから、共有とシステムの接続/切断を含む無制限のアクセス",
             "label": "オーナー"
         },
         "Viewer": {
-            "description": "ライブ ビデオとアーカイブを閲覧できます",
+            "description": "ライブ ビデオとアーカイブを参照できます",
             "label": "ビューアー"
         },
         "advancedViewer": {
-            "description": "ライブ表示、アーカイブ表示、カメラ設定、PTZコントロール 等ができます",
+            "description": "ライブ表示、アーカイブ表示、カメラ設定、PTZコントロール 等",
             "label": "拡張ビューアー"
         },
         "cloudAdmin": {
-            "description": "システムを設定して共有することができます",
+            "description": "システムを構成し共有することができます",
             "label": "アドミニストレーター"
         },
         "custom": {
@@ -242,15 +242,15 @@
             "label": "無効"
         },
         "liveViewer": {
-            "description": "ライブビデオのみ閲覧可能",
+            "description": "ライブ表示のみ可能",
             "label": "ライブビューアー"
         },
         "owner": {
-            "description": "クラウドからの共有とシステムの接続/切断を含む無制限のアクセス",
+            "description": "クラウドから、共有とシステムの接続/切断を含む無制限のアクセス",
             "label": "オーナー"
         },
         "viewer": {
-            "description": "ライブ ビデオとアーカイブを閲覧できます",
+            "description": "ライブ ビデオとアーカイブを参照できます",
             "label": "ビューアー"
         }
     },
@@ -266,7 +266,7 @@
     "activeActions": {
         "resetPassword": "パスワードを再設定する",
         "sendConfirm": "アクティベーションリンクを再送信",
-        "setNewPassword": "パスワードを保存する",
+        "setNewPassword": "パスワードを保存",
         "setNewPasswordLabel": "新規パスワード"
     },
     "cameraFilters": {
@@ -290,24 +290,24 @@
             "highStream": "高解像度ストリーム",
             "lowStream": "低解像度ストリーム",
             "transcoding": "トランスコーディング",
-            "unknown": "不明"
+            "unknown": "未知の値"
         },
         "cameraStates": {
             "error": "エラー",
             "errorLoading": "ビデオの読み込み中にエラーが発生しました",
-            "flashOrWebmRequired": "ビデオを再生することはできません<br>\nIeで再生するには<a href='https://get.adobe.com/flashplayer/' target='_blank'>Adobe Flash</a> or<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a>をインストールして下さい",
-            "flashRequired": "動画を再生するには <a href='https://get.adobe.com/flashplayer/' target='_blank'> Adobe Flash をインストール</a> をしてください。",
+            "flashOrWebmRequired": "ビデオを再生することはできません <a href='https://get.adobe.com/flashplayer/' target='_blank'>Adobe Flash</a> または <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a>をインストールして下さい",
+            "flashRequired": "動画を再生するには <a href='https://get.adobe.com/flashplayer/' target='_blank'> Adobe Flash をインストール</a> してください。",
             "iOSVideoTooLarge": "iOSはfullHD(2MP：1920x1080)より大きいビデオをサポートしていません",
-            "ieNoWebm": "ビデオを再生することはできません<br>\nIeに <a href=\"https://tools.google.com/dlpage/webmmf/\" target=\"_blank\">WebM codec</a>をインストールして下さい",
+            "ieNoWebm": "ビデオを再生することはできません <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a>をインストールして下さい",
             "ieWin10": "Microsoft EdgeまたはGoogle Chromeブラウザを使用してください。",
             "noArmSupport": "このブラウザまたはデバイスは、ARMベースのサーバーからのビデオ再生をサポートしていません。",
             "noData": "データがありません",
-            "noFormat": "このブラウザは、このカメラのビデオ再生をサポートしていません",
+            "noFormat": "このブラウザは、このカメラのビデオ再生をサポートしていません。",
             "offline": "オフライン",
             "ubuntuNX": "このブラウザは、ARMベースのサーバーのビデオをサポートしていません。代わりにChromiumブラウザを使用してください。",
-            "unauthorized": "認証が必要です"
+            "unauthorized": "認証が必要です。"
         },
-        "chromeCastWarning": "Chromecast リソース集中型の為、サーバーで問題が発生する可能性があります",
+        "chromeCastWarning": "Chromecastはリソースを大量に消費するため、サーバーに問題を引き起こす可能性があります。",
         "resolution": {
             "auto": "自動",
             "high": "高い",
@@ -383,13 +383,13 @@
                 "ipvd_feedback_page": "カメラページへのフィードバック"
             }
         },
-        "noClientDetectedTitle": "システムを表示するには %VMS_NAME% をインストールします",
+        "noClientDetectedTitle": "Install %VMS_NAME% to view your System",
         "okButton": "OK",
         "sharing": {
-            "confirmOwner": "システムのオーナーを変更すると、現在のアカウントから所有権を取り消します。この動作は元に戻せません。よろしいですか？",
+            "confirmOwner": "システムオーナーを変更すると現在のアカウントから所有権を失効します　この操作は元に戻せません　宜しいですか？",
             "editShareConfirmButton": "保存",
             "editShareTitle": "権限を編集",
-            "permissionsSaved": "新しい権限が保存されました",
+            "permissionsSaved": "新しい権限の保存",
             "shareConfirmButton": "追加",
             "shareTitle": "追加"
         },
@@ -397,10 +397,10 @@
         "stayLoggedIn": "Stay Logged In"
     },
     "dialogs.merge.connectToCloud": "これと統合したいシステムを <strong>{{cloudName}}</strong> に接続するか、 <strong>{{vmsName}}</strong> クライアントを使用してローカルに統合します。",
-    "dialogs.merge.mergeConfirmation": "<strong>{{primarySystem}}</strong> と <strong>{{secondarySystem}}</strong>を統合しようとしています。設定と名前は <strong>{{primarySystem}}</strong>から取得されます。",
+    "dialogs.merge.mergeConfirmation": "システム <strong>{{primarySystem}}</strong> と <strong>{{secondarySystem}}</strong>を統合しようとしています。設定と名前は <strong>{{primarySystem}}</strong>から取得されます。",
     "dialogs.merge.primaryCannotMerge": "システム{{targetSystem}} には、現在のシステムと互換性のない新しいソフトウェアバージョンがあります。現在のシステムを<a href=\"/download\" target=\"_blank\" translate>最新のビルド</a>に更新し、{{targetSystem}} システムと統合します。",
     "dialogs.merge.primarySystemOffline": "dialogs.merge.primarySystemOffline",
-    "dialogs.merge.secondaryCannotMerge": "システム {{targetSystem}} には、現在のシステムと互換性のない古いソフトウェアバージョンがあります。{{targetSystem}} を <a href=\"/download\" target=\"_blank\" translate>最新のビルド</a> に更新して、現在のものと統合します。",
+    "dialogs.merge.secondaryCannotMerge": "システム {{targetSystem}} には、現在のシステムと互換性のない古いソフトウェアバージョンがあります。 {{targetSystem}} を <a href=\"/download\" target=\"_blank\" translate>最新のビルド</a> に更新して、現在のものと統合します。",
     "dialogs.merge.systemOffline": "dialogs.merge.systemOffline",
     "dialogs.merge.systemUnavailable": "システム {{targetSystem}} は現在到達不能です。数分後にもう一度試すか、連絡してください",
     "downloads": {
@@ -411,19 +411,18 @@
             "metadata_sdk": "Metadata SDK",
             "package": "パッケージ",
             "server": "サーバーのみ",
-            "servertool": "設定ツール",
+            "servertool": "構成ツール",
             "storage_sdk": "ストレージ SDK",
             "video_source_sdk": "ビデオソースSDK"
         },
         "groups": {
             "android": {
-                "label": "Android",
-                "shortLabel": "Android"
+                "label": "アンドロイド",
+                "shortLabel": "アンドロイド"
             },
             "arm": {
                 "label": "ARM",
-                "shortLabel": "ARM",
-                "supported": "<a href='/content/arm'>ARMに基づくサーバーのサポートポリシー</a>"
+                "shortLabel": "ARM"
             },
             "ios": {
                 "label": "iOS",
@@ -441,11 +440,10 @@
             },
             "sdk": {
                 "label": "SDK",
-                "shortLabel": "SDK",
-                "supported": "C ++クロスプラットフォームSDK"
+                "shortLabel": "SDK"
             },
             "windows": {
-                "label": "Windows"
+                "label": "ウィンドウズ"
             }
         },
         "mobile": {
@@ -468,13 +466,13 @@
             "win64": "x64"
         },
         "releasesTypes": {
-            "beta": "Beta",
-            "betas": "Betas",
-            "patch": "Patch",
-            "patches": "Patches",
-            "rc": "Release Candidate",
-            "release": "Release",
-            "releases": "Releases"
+            "beta": "ベータ",
+            "betas": "ベータ",
+            "patch": "パッチ",
+            "patches": "パッチ",
+            "rc": "リリース候補版",
+            "release": "リリース",
+            "releases": "リリース"
         }
     },
     "errorCodes": {
@@ -487,37 +485,37 @@
         "accountNotActivated": "このアカウントはまだアクティベートされていません <a href=\"/activate\"> 再度アクティベートリンクを送信</a>",
         "alreadyExists": "このアカウントは既に存在します",
         "brokenAccount": "次のアカウントで予期しない問題 <a href=\"/restore_password\"> アカウントの復元</a>",
-        "cantActivatePrefix": "アカウントを有効にできません",
+        "cantActivatePrefix": "アカウントをアクティベートできません",
         "cantChangeAccountPrefix": "変更を保存できません",
         "cantChangePasswordPrefix": "パスワードを保存できません",
         "cantDisconnectSystemPrefix": "システムを削除できません",
         "cantEditAdmin": "このユーザーは管理者権限を持っています",
-        "cantEditYourself": "自分の権限を変更することはできません",
-        "cantGetSystemInfoPrefix": "システム情報は利用できません",
-        "cantGetSystemsListPrefix": "システムリストは使用できません",
-        "cantGetUsersListPrefix": "ユーザーリストは使用できません",
+        "cantEditYourself": "自分のアクセス権限を変更することはできません",
+        "cantGetSystemInfoPrefix": "システム情報はありません",
+        "cantGetSystemsListPrefix": "システム リストは使用できません",
+        "cantGetUsersListPrefix": "ユーザーのリストは使用できません",
         "cantOpenClient": "%VMS_NAME% application is not detected.",
         "cantRegisterPrefix": "エラーが発生しました",
         "cantSendActivationPrefix": "確認メールを送信できません",
         "cantSendConfirmationPrefix": "確認メールを送信できません",
         "cantSharePrefix": "システムを共有できません",
         "cantUnshareWithMeSystemPrefix": "システムを削除できません",
-        "emailNotFound": "アカウントが存在しません.",
-        "forbidden": "この操作を実行する権限がありません",
+        "emailNotFound": "アカウントが存在しません",
+        "forbidden": "この操作を実行するアクセス権限がありません",
         "lostConnection": "{{systemName}} への接続が失われました",
         "mergedSystemIsOffline": "システム <strong>{{failedSystem}}</strong> はオフラインです。",
-        "notAuthorized": "パスワードが違います",
+        "notAuthorized": "間違ったパスワード",
         "notFound": "見つかりません",
         "ok": "ok",
         "oldPasswordMistmatch": "パスワードが違います。",
         "oldSafariNotSupported": "バージョン10以前のSafariはサポートされません",
-        "passwordMismatch": "パスワードが違います",
+        "passwordMismatch": "間違ったパスワード",
         "thisSystem": "システム",
         "unknownError": "予期しないエラーが発生しました",
         "unknownMergeError": "不明なエラー。ページを更新して試行を繰り返すことができます。問題が解決しない場合は <a href=\"%SUPPORT_LINK%\" target=\"_blank\">サポート</a>に連絡してください。",
         "wrongAuthCode": "期限切れまたは不正なコードです",
-        "wrongCode": "アカウントは既に有効化されているか、確認コードが正しくありません",
-        "wrongCodeRestore": "確認コードは既に使用されているか間違っています",
+        "wrongCode": "アカウントは既にアクティブ済か確認コードが正しくありません",
+        "wrongCodeRestore": "確認コードは既に使用されているかまたは不正です",
         "wrongParameters": "フォーム上のいくつかのパラメーターが正しくありません"
     },
     "integration": {
@@ -525,7 +523,7 @@
         "Connector": "コネクタ",
         "Data Analytics": "データ分析",
         "Drone": "ドローン",
-        "Health Monitor": "ヘルスモニタ",
+        "Health Monitor": "ヘルスモニター",
         "Storage": "ストレージ",
         "backToEditText": "編集インターフェースに戻る",
         "myIntegrationsLabel": "自分",
@@ -551,7 +549,7 @@
             "c_Info": "サポートされているデバイスに関するその他の質問/懸念事項については"
         },
         "hardwareType": "タイプ",
-        "isAnalyticsSupported": "分析",
+        "isAnalyticsSupported": "解析",
         "isAptzSupported": "高度なPTZ",
         "isAptzSupportedShort": "高度なPTZ",
         "isAudioSupported": "オーディオ",
@@ -579,23 +577,23 @@
     },
     "pageTitles": {
         "account": "アカウント設定 -",
-        "activate": "アカウントを有効にする -",
-        "activateCode": "アカウントを有効にする -",
-        "activateSent": "アカウントを有効にする -",
-        "activateSuccess": "アカウントを有効にしました -",
+        "activate": "アクティベート アカウント -",
+        "activateCode": "アクティベート アカウント -",
+        "activateSent": "アクティベート アカウント -",
+        "activateSuccess": "アカウント アクティベート -",
         "changePassword": "パスワードを変更 -",
         "debug": "デバッグ",
         "default": "%CLOUD_NAME%",
         "download": "%VMS_NAME% をダウンロード",
-        "downloadPlatform": "%VMS_NAME% をダウンロード ",
+        "downloadPlatform": "Download %VMS_NAME% for ",
         "integrations": "統合",
         "login": "ログイン -",
         "pageNotFound": "ページが見つかりません",
         "register": "アカウントを作成",
         "registerSuccess": "ようこそ",
-        "restorePassword": "パスワードを再設定する -",
-        "restorePasswordCode": "パスワードを再設定する -",
-        "restorePasswordSuccess": "パスワードを保存しました -",
+        "restorePassword": "パスワードリセット -",
+        "restorePasswordCode": "パスワードリセット -",
+        "restorePasswordSuccess": "パスワードを保存 -",
         "supportedDevices": "サポートされているデバイス",
         "system": "システム -",
         "systemShare": "共有システム -",
@@ -605,18 +603,18 @@
     },
     "passwordRequirements": {
         "common": "あまりにも一般的",
-        "commonMessage": "このパスワードは、世界で最も人気のあるパスワードです",
+        "commonMessage": "このパスワードは、世界で最も人気のあるパスワード",
         "fair": "可",
-        "fairMessage": "パスワードをより強力にするために、数字、大文字と小文字、特殊文字を使用してください",
+        "fairMessage": "大文字と小文字の文字、特殊記号を使用して、強固なパスワードを作る",
         "good": "良い",
         "minLength": "短すぎます",
         "minLengthMessage": "パスワードは8文字以上必要です",
-        "missingMessage": "パスワードが必要です",
+        "missingMessage": "パスワードが必要",
         "required": "無効",
-        "requiredMessage": "英数字、キーボード記号のみを使用し、前後のスペースを避けてください。",
-        "strongMessage": "強力なパスワードです",
+        "requiredMessage": "英数字とキーボードの記号のみを使用して、先頭と末尾の空白を避けます",
+        "strongMessage": "強力なパスワード!",
         "weak": "弱",
-        "weakMessage": "パスワードをより強力にするために、数字、大文字と小文字、特殊文字を使用してください"
+        "weakMessage": "大文字と小文字の文字、特殊記号を使用して、強固なパスワードを作る"
     },
     "phoneNumberWithLabel": "電話： {{number}}",
     "pleaseSelect": "選択してください",
@@ -651,9 +649,9 @@
         "confirmMergeAction": "統合",
         "confirmRenameAction": "保存",
         "confirmRenameTitle": "システム名",
-        "confirmUnshare": "このユーザはシステムにアクセスすることができません。よろしいですか？",
+        "confirmUnshare": "このユーザはシステムにアクセスすることができません　宜しいですか？",
         "confirmUnshareAction": "削除",
-        "confirmUnshareFromMe": "あなたのアカウントからこのシステムを切断しようとしています　もうこのシステムにアクセスすることはできません。切断しますか？",
+        "confirmUnshareFromMe": "あなたのアカウントからこのシステムを切断しようとしています　もうこのシステムにアクセスすることはできません\n切断しますか？",
         "confirmUnshareFromMeAction": "切断",
         "confirmUnshareFromMeTitle": "システムを切断しますか？",
         "confirmUnshareTitle": "ユーザーを削除しますか?",
@@ -662,11 +660,11 @@
         "mergeSuccess": "システムが統合されました",
         "mergeSystemTitle": "システム統合",
         "mySystemSearch": "IMeMyMine",
-        "offline": "システムはオフラインです",
+        "offline": "システムはオフライン",
         "offlineAlertRibbon": "System is offline. Some settings may not be available.",
-        "openClient": "%VMS_NAME% で開く",
+        "openClient": "Open in %VMS_NAME%",
         "openClientNoSystem": "%VMS_NAME% を開く",
-        "permissionsRemoved": "{{email}} から権限が削除されました",
+        "permissionsRemoved": "{{email}} からアクセス権限が削除されました",
         "settings": {
             "sessionLimitDuration": {
                 "hours": "時",
@@ -683,7 +681,7 @@
         "successRename": "システム名は保存されました",
         "unavailable": "システムに到達できません",
         "unknownName": "システムの名前が不明です（クラウド統合が原因）",
-        "yourSystem": "お使いのシステム"
+        "yourSystem": "ご利用のシステム"
     },
     "systemAdministration": "システムアドミニストレーション",
     "systemStatuses": {

@@ -111,7 +111,7 @@
     "Multi Sensor": "เซ็นเซอร์หลายตัว",
     "NO_SYSTEMS_CONNECT_SYSTEM": "เชื่อมต่อระบบกับ %CLOUD_NAME%\"",
     "NO_SYSTEMS_GOTO_ADMINISTRATION": "ไปที่แท็บ \"Cloud\" ในกล่องโต้ตอบ \"การดูแลระบบ\"",
-    "NO_SYSTEMS_LOGIN": "เข้าสู่ระบบโดยใช้ %VMS_NAME%",
+    "NO_SYSTEMS_LOGIN": "Log in to your System using %VMS_NAME%",
     "NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "คุณไม่มีระบบเชื่อมต่อกับ %CLOUD_NAME%",
     "New Password": "สร้างรหัสผ่านใหม่",
     "No unsaved changes": "No unsaved changes",
@@ -285,7 +285,7 @@
     "common": {
         "cameraLinks": {
             "copyActiveText": "คัดลอกไปยังคลิปบอร์ด",
-            "copyDefaultText": "คัดลอก",
+            "copyDefaultText": "สำเนา",
             "copyToClipboard": "คัดลอกไปยังคลิปบอร์ด",
             "highStream": "สตรีมสูง",
             "lowStream": "สตรีมต่ำ",
@@ -383,7 +383,7 @@
                 "ipvd_feedback_page": "ข้อเสนอแนะสำหรับหน้ากล้อง"
             }
         },
-        "noClientDetectedTitle": "ติดตั้ง %VMS_NAME% เพื่อดูระบบของคุณ",
+        "noClientDetectedTitle": "Install %VMS_NAME% to view your System",
         "okButton": "ตกลง",
         "sharing": {
             "confirmOwner": "หากคุณเปลี่ยนเจ้าของระบบคุณจะยกเลิกการเป็นเจ้าของจากบัญชีปัจจุบัน การกระทำนี้ไม่สามารถย้อนกลับได้ คุณแน่ใจไหม?",
@@ -422,8 +422,7 @@
             },
             "arm": {
                 "label": "ARM",
-                "shortLabel": "ARM",
-                "supported": "<a href='/content/arm'>เซิร์ฟเวอร์ที่ใช้ ARM สนับสนุนนโยบาย</a>"
+                "shortLabel": "ARM"
             },
             "ios": {
                 "label": "iOS",
@@ -441,11 +440,10 @@
             },
             "sdk": {
                 "label": "SDK",
-                "shortLabel": "SDK",
-                "supported": "C ++ SDK ข้ามแพลตฟอร์ม"
+                "shortLabel": "SDK"
             },
             "windows": {
-                "label": "Windows"
+                "label": "วินโดวส์"
             }
         },
         "mobile": {
@@ -469,12 +467,12 @@
         },
         "releasesTypes": {
             "beta": "Beta",
-            "betas": "Betas",
+            "betas": "เบต้า",
             "patch": "Patch",
-            "patches": "Patches",
+            "patches": "โปรแกรมปรับปรุง",
             "rc": "Release Candidate",
             "release": "Release",
-            "releases": "Releases"
+            "releases": "การเผยแพร่"
         }
     },
     "errorCodes": {
@@ -558,7 +556,7 @@
         "isFisheye": "ฟิชอาย",
         "isH265": "H.265",
         "isIoSupported": "I / O",
-        "isMdSupported": "การเคลื่อนไหว",
+        "isMdSupported": "โมชั่น",
         "isMultiSensor": "เซ็นเซอร์หลายตัว",
         "isPtzSupported": "PTZ",
         "isTwAudioSupported": "เสียงสองทาง",
@@ -587,7 +585,7 @@
         "debug": "การ​แก้ไข​จุด​บกพร่อง",
         "default": "%CLOUD_NAME%",
         "download": "ดาวน์โหลด %VMS_NAME%",
-        "downloadPlatform": "ดาวน์โหลด %VMS_NAME% สำหรับ ",
+        "downloadPlatform": "Download %VMS_NAME% for ",
         "integrations": "Integration",
         "login": "ลงชื่อเข้าสู่ระบบ -",
         "pageNotFound": "ไม่พบหน้านี้",
@@ -664,8 +662,8 @@
         "mySystemSearch": "IMeMyMine",
         "offline": "ระบบออฟไลน์",
         "offlineAlertRibbon": "System is offline. Some settings may not be available.",
-        "openClient": "เปิดใน %VMS_NAME%",
-        "openClientNoSystem": "เปิด %VMS_NAME%",
+        "openClient": "Open in %VMS_NAME%",
+        "openClientNoSystem": "เปิด {{VMS_NAME}}",
         "permissionsRemoved": "สิทธิ์ถูกนำออกจาก {{email}}",
         "settings": {
             "sessionLimitDuration": {

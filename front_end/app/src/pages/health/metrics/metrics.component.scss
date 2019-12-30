@@ -5,14 +5,17 @@
 @import '~bootstrap/scss/mixins/breakpoints';
 
 nx-system-metrics-component {
-    
     .gridMetricContent {
         display: grid;
         grid-column-gap: 1rem;
         grid-template-columns: fit-content(100%) $grid-panel-width; // <- if table is less than 70% of screen width
         height: 100%;
     
-        @include media-breakpoint-up(xxxxl) {
+        @include media-breakpoint-down(xl) {
+            grid-template-columns: $grid-narrow-table-width $grid-narrow-panel-width;
+        }
+    
+        @media (min-width: 1920px) {
             grid-template-columns: fit-content(100%) $grid-super-wide-panel-width;
         }
     
@@ -21,11 +24,11 @@ nx-system-metrics-component {
             &--with-panel {
                 grid-template-columns: $grid-table-width $grid-panel-width;
     
-                @include media-breakpoint-down(lg) {
+                @include media-breakpoint-down(xl) {
                     grid-template-columns: $grid-narrow-table-width $grid-narrow-panel-width;
                 }
     
-                @include media-breakpoint-up(xxxxl) {
+                @media (min-width: 1920px) {
                     grid-template-columns: $grid-super-wide-table-width $grid-super-wide-panel-width;
                 }
             }
@@ -43,7 +46,12 @@ nx-system-metrics-component {
         
         &PanelComponent {
             &Wrapper {
-            
+                .all-results-btn {
+                    position: sticky;
+                    top: calc(-3rem - 1px); // button + hr(padding, neight)
+                    box-shadow: 0 1rem 0 2px $additional_light2;
+                    z-index: 99;
+                }
             }
         }
     }

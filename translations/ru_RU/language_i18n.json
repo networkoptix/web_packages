@@ -4,7 +4,7 @@
     "Access Level": "Уровень доступа",
     "Access level": "Уровень доступа",
     "Account Information": "Информация об учетной записи",
-    "Account Settings": "Настройки учётной записи",
+    "Account Settings": "Настройки учетной записи",
     "Account is already activated or confirmation code is incorrect": "Учетная запись уже активирована или неверный код подтверждения",
     "Account is created.": "Учетная запись создана.",
     "Account is successfully created.": "Учетная запись успешно создана.",
@@ -35,7 +35,7 @@
     "Camera controls": "Управление камерой",
     "Camera header": "Заголовок камеры",
     "Cameras menu": "Меню камер",
-    "Cancel": "Отменить",
+    "Cancel": "Отмена",
     "Change Password": "Изменить пароль",
     "Checking...": "Проверка...",
     "Choose which properties should be visible to customers:": "Выберите, какие свойства должны быть видны клиентам:",
@@ -56,7 +56,7 @@
     "Disconnect System from %CLOUD_NAME%?": "Отключить систему от %CLOUD_NAME%?",
     "Disconnect from %CLOUD_NAME%": "Отключиться от %CLOUD_NAME%",
     "Disconnect from My Account": "Отвязать от моей учетной записи",
-    "Download": "Загрузить",
+    "Download": "Загрузка",
     "Download %VMS_NAME%": "Скачать %VMS_NAME%",
     "Download Chrome": "Скачать Chrome",
     "Download Firefox": "Скачать Firefox",
@@ -91,7 +91,7 @@
     "In Review": "На рассмотрении",
     "In-Client Upgrade:": "Обновления из клиента:",
     "Includes information about the System, such as camera modules, \n                            firmware versions, number of servers, etc. \n                            Does not include any personal information and is completely anonymous.": "Includes information about the System, such as camera modules, \n                            firmware versions, number of servers, etc. \n                            Does not include any personal information and is completely anonymous.",
-    "Information": "Информация",
+    "Information": "Информация о продукте",
     "Integrations": "Интеграции",
     "Language": "Язык",
     "Last Name": "Фамилия",
@@ -111,7 +111,7 @@
     "Multi Sensor": "Мультисенсор",
     "NO_SYSTEMS_CONNECT_SYSTEM": "Нажмите «Подключить систему к %CLOUD_NAME%",
     "NO_SYSTEMS_GOTO_ADMINISTRATION": "Перейдите на вкладку \"Облако\" в окне \"Системное администрирование\"",
-    "NO_SYSTEMS_LOGIN": "Войдите в систему с помощью %VMS_NAME%",
+    "NO_SYSTEMS_LOGIN": "Log in to your System using %VMS_NAME%",
     "NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "У вас нет систем, подключенных к %CLOUD_NAME%",
     "New Password": "Новый пароль",
     "No unsaved changes": "Нет несохраненных изменений",
@@ -129,7 +129,7 @@
     "Password reset instructions are sent to Email": "Инструкции по сбросу пароля были высланы на Email",
     "Password successfully saved": "Пароль успешно сохранен",
     "Password:": "Пароль:",
-    "Please enter a valid Email": "Пожалуйста, введите действительный Email",
+    "Please enter a valid Email": "Пожалуйста введите действительный адрес электронной почты",
     "Please review and agree to the Terms and Conditions and Privacy policy in order to proceed": "Пожалуйста, просмотрите и согласитесь с условиями использования и политикой конфиденциальности для того, чтобы продолжить",
     "Popularity": "Популярность",
     "Privacy": "Политика конфиденциальности",
@@ -182,7 +182,7 @@
     "Updated": "Обновлено",
     "User": "Пользователь",
     "User disabled": "Пользователь отключен",
-    "View": "Вид",
+    "View": "Просмотр",
     "WHEN_MERGE_FINISHES": "После завершения объединения все пользователи и камеры из этой системы станут доступны в <strong>{{targetSystemName}}</strong>, а эта система будет удалена.",
     "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.": "Мы рекомендуем устанавливать последние версии Google Chrome или Mozilla Firefox, но вы можете использовать любой другой современный веб-браузер.",
     "What's New?": "﻿Что нового?",
@@ -210,19 +210,19 @@
             "label": "Особые"
         },
         "Live Viewer": {
-            "description": "Может смотреть только видео в реальном времени",
-            "label": "Только видео в реальном времени"
+            "description": "Может смотреть только живое видео",
+            "label": "Только видео с камер"
         },
         "Owner": {
             "description": "Неограниченный доступ, включая управление общим доступом и подключением системы к облаку",
             "label": "Владелец"
         },
         "Viewer": {
-            "description": "Может смотреть видео в реальном времени и архив",
+            "description": "Может смотреть живое видео и архив",
             "label": "Видео с камер и архив"
         },
         "advancedViewer": {
-            "description": "Может смотреть видео в реальном времени, архив, изменять настройки камер, управлять PTZ и т. д",
+            "description": "Может смотреть живое видео, архив, изменять настройки камер, управлять PTZ и т. д",
             "label": "Просмотр и настройка"
         },
         "cloudAdmin": {
@@ -242,21 +242,21 @@
             "label": "Отключен"
         },
         "liveViewer": {
-            "description": "Может смотреть только видео в реальном времени",
-            "label": "Только видео в реальном времени"
+            "description": "Может смотреть только живое видео",
+            "label": "Только видео с камер"
         },
         "owner": {
             "description": "Неограниченный доступ, включая управление общим доступом и подключением системы к облаку",
             "label": "Владелец"
         },
         "viewer": {
-            "description": "Может смотреть видео в реальном времени и архив",
+            "description": "Может смотреть живое видео и архив",
             "label": "Видео с камер и архив"
         }
     },
     "account": {
         "accountSavedSuccess": "Ваша учетная запись успешно сохранена",
-        "accountSettings": "Настройки учётной записи",
+        "accountSettings": "Настройки учетной записи",
         "activationLinkSent": "Ссылка для активации отправлена",
         "changePassword": "Изменить пароль",
         "newPasswordLabel": "Новый пароль",
@@ -310,8 +310,8 @@
         "chromeCastWarning": "Chromecast является ресурсоемким и может вызывать проблемы на вашем сервере.",
         "resolution": {
             "auto": "Авто",
-            "high": "Выс",
-            "low": "Низ"
+            "high": "Высокая",
+            "low": "Низкая"
         },
         "searchCamPlaceholder": "Поиск",
         "systemHasNoCameras": "НЕТ КАМЕР",
@@ -341,7 +341,7 @@
     },
     "devices": "устройства",
     "dialogs": {
-        "cancelButton": "Отменить",
+        "cancelButton": "Отмена",
         "changeAccountLogged": "You are already logged in as {email}",
         "createNewAccount": "Создать новую учетную запись",
         "download": "Скачать %VMS_NAME%",
@@ -383,7 +383,7 @@
                 "ipvd_feedback_page": "Отзыв о странице камер"
             }
         },
-        "noClientDetectedTitle": "Установите %VMS_NAME% для работы с системой",
+        "noClientDetectedTitle": "Install %VMS_NAME% to view your System",
         "okButton": "OK",
         "sharing": {
             "confirmOwner": "Если изменить владельца системы, она больше не будет принадлежать текущей учетной записи. Это действие необратимо. Вы уверены?",
@@ -422,8 +422,7 @@
             },
             "arm": {
                 "label": "ARM",
-                "shortLabel": "ARM",
-                "supported": "<a href='/content/arm'>Политика поддержки серверов на базе ARM</a>"
+                "shortLabel": "ARM"
             },
             "ios": {
                 "label": "iOS",
@@ -441,8 +440,7 @@
             },
             "sdk": {
                 "label": "SDK",
-                "shortLabel": "SDK",
-                "supported": "Кроссплатформенный SDK C++"
+                "shortLabel": "SDK"
             },
             "windows": {
                 "label": "Windows"
@@ -468,13 +466,13 @@
             "win64": "x64"
         },
         "releasesTypes": {
-            "beta": "Beta",
-            "betas": "Betas",
+            "beta": "Бета",
+            "betas": "Бета",
             "patch": "Patch",
-            "patches": "Patches",
-            "rc": "Release Candidate",
-            "release": "Release",
-            "releases": "Releases"
+            "patches": "Патчи",
+            "rc": "Релиз-кандидат",
+            "release": "Релиз",
+            "releases": "Релизы"
         }
     },
     "errorCodes": {
@@ -587,7 +585,7 @@
         "debug": "Отладка",
         "default": "%CLOUD_NAME%",
         "download": "Скачать %VMS_NAME%",
-        "downloadPlatform": "Скачать %VMS_NAME% для ",
+        "downloadPlatform": "Download %VMS_NAME% for ",
         "integrations": "Интеграции",
         "login": "Войти -",
         "pageNotFound": "Страница не найдена",
@@ -610,7 +608,7 @@
         "fairMessage": "Для надежности пароля используйте цифры, буквы верхнего и нижнего регистра и специальные символы",
         "good": "хорошее",
         "minLength": "короткий",
-        "minLengthMessage": "Пароль должен содержать не менее 8 символов",
+        "minLengthMessage": "Пароль должен содержать по крайней мере 8 символов",
         "missingMessage": "Пароль обязателен для заполнения",
         "required": "некорректный",
         "requiredMessage": "Используйте только латинские буквы, цифры и символы клавиатуры, избегайте начальных и конечных пробелов",
@@ -664,7 +662,7 @@
         "mySystemSearch": "ЯМойМоя",
         "offline": "Система не в сети",
         "offlineAlertRibbon": "Система не в сети. Некоторые настройки могут быть недоступны.",
-        "openClient": "Открыть в %VMS_NAME%",
+        "openClient": "Open in %VMS_NAME%",
         "openClientNoSystem": "Открыть %VMS_NAME%",
         "permissionsRemoved": "{{email}} был лишен полномочий",
         "settings": {

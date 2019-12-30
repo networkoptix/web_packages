@@ -97,7 +97,7 @@ password is actually changed, so login works with new password
     Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
     Log Out
     Go To    ${url}/account/password
-    Log In    ${email}    ${password}    button=None
+    Log In    ${email}    ${password}    button=None    validate=${False}
     Wait Until Element Is Visible    ${WRONG PASSWORD MESSAGE}
     CloudPortalAPI.Log In    ${url}    ${email}    ${ALT PASSWORD}
     Reset user password to base    ${email}    ${ALT PASSWORD}
@@ -111,7 +111,7 @@ password with symbols pass!@#$%^&*()_-+=;:'"`~,./\|?[]{} is valid
     Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
     Log Out
     Go To    ${url}/account/password
-    Log In    ${email}    ${password}    button=None
+    Log In    ${email}    ${password}    button=None    validate=${False}
     Wait Until Element Is Visible    ${WRONG PASSWORD MESSAGE}
     CloudPortalAPI.Log In    ${url}    ${email}    ${symbol password}
     Reset user password to base    ${email}    ${symbol password}
@@ -125,7 +125,7 @@ password with space in the middle is valid
     Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
     Log Out
     Go To    ${url}/account/password
-    Log In    ${email}    ${password}    button=None
+    Log In    ${email}    ${password}    button=None    validate=${False}
     Wait Until Element Is Visible    ${WRONG PASSWORD MESSAGE}
     CloudPortalAPI.Log In    ${url}    ${email}    ${space password}
     Reset user password to base    ${email}    ${space password}
@@ -137,6 +137,7 @@ more than 255 symbols can be entered in new password field and then are cut to 2
     Input Text    ${NEW PASSWORD INPUT}    ${300CHARS}
     Textfield Should Contain    ${CURRENT PASSWORD INPUT}    ${255CHARS}
     Textfield Should Contain    ${NEW PASSWORD INPUT}    ${255CHARS}
+    Click Button    ${CANCEL CHANGES BUTTON}
 
 pressing Enter key saves data
     Log In To Change Password Page
@@ -154,6 +155,7 @@ pressing Tab key moves focus to the next element
     Input Text    ${NEW PASSWORD INPUT}    ${password}
     Press Keys    ${NEW PASSWORD INPUT}    TAB
     Element Should Be Focused    ${CHANGE PASSWORD BUTTON}
+    Click Button    ${CANCEL CHANGES BUTTON}
 
 displays password masked, shows password and changes eye icon when clicked
     [tags]    C41576

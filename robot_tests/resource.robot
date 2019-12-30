@@ -92,6 +92,7 @@ Check Langauge Logged In
 
 Check Language Logged In
     [Arguments]    ${email}    ${password}
+    Register Keyword To Run On Failure    NONE
     ${curr lang}=   Get Account Language   ${ENV}    ${email}    ${password}
     Run Keyword Unless    '${curr lang}' == '${LANGUAGE}'    Set Account Language    ${ENV}    ${email}    ${password}    ${LANGUAGE}
     Run Keyword Unless    '${curr lang}' == '${LANGUAGE}'    Reload Page
@@ -129,16 +130,11 @@ Log In With Remember Me
     Sleep    1
     Input Text    ${EMAIL INPUT}    ${email}
     Sleep    0.25
-    Input Text    ${PASSWORD INPUT}    ${password}
-    Sleep    0.25
-    Wait Until Element Is Visible    ${LOG IN BUTTON}
     Run Keyword If    ${remember me}==True     Select Checkbox    ${REMEMBER ME CHECKBOX REAL}
     ...    ELSE    Unselect Checkbox    ${REMEMBER ME CHECKBOX REAL}
-    Click Button    ${LOG IN BUTTON}
-    Sleep    1
 
 Validate Log In
-    [arguments]    ${timeout}=${selenium_timeout}
+    [Arguments]    ${timeout}=${selenium_timeout}
     Wait Until Element is Visible    ${ACCOUNT DROPDOWN}    ${timeout}
     Sleep    0.5    #this is a test to see if it eliminates a problem with the login dialog popping up on logout
 
@@ -427,8 +423,7 @@ Clean up email noperm
 Clean up random emails
     Register Keyword To Run On Failure    None
     Open Browser and Go To URL    ${url}
-    Log In    ${EMAIL OWNER}    ${password}
-    Validate Log In
+    Log In    ${EMAIL OWNER}    ${password}    ${False}
     Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
     Go To Users List
     ${status}    Run Keyword And Return Status    Wait Until Page Contains Element

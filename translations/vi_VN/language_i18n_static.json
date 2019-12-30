@@ -5,7 +5,7 @@
 		"passwordChangedSuccess": "Tài khoản của bạn đã được lưu thành công",
 		"changePassword": "Đổi mật khẩu",
 		"newPasswordLabel": "Mật khẩu mới",
-		"saveChanges": "Tiết kiệm",
+		"saveChanges": "Lưu",
 		"accountSettings": "Cài đặt tài khoản"
 	},
 	"activeActions": {
@@ -75,13 +75,11 @@
 			},
 			"arm": {
 				"label": "ARM",
-				"shortLabel": "ARM",
-				"supported": "<a href='/content/arm'>ARM based servers support policy</a>"
+				"shortLabel": "ARM"
 			},
 			"sdk": {
 				"label": "SDK",
-				"shortLabel": "SDK",
-				"supported": "SDK đa nền tảng C ++"
+				"shortLabel": "SDK"
 			}
 		},
 		"platforms": {
@@ -111,9 +109,9 @@
 			"betas": "Betas",
 			"rc": "Release Candidate",
 			"release": "Release",
-			"releases": "Releases",
+			"releases": "Phát hành",
 			"patch": "Patch",
-			"patches": "Patches"
+			"patches": "Bản vá lỗi"
 		}
 	},
 	"ipvd": {
@@ -191,13 +189,13 @@
 		"debug": "Gỡ rối",
 		"login": "Đăng nhập -",
 		"download": "Tải xuống %VMS_NAME%",
-		"downloadPlatform": "Tải xuống %VMS_NAME% cho ",
+		"downloadPlatform": "Download %VMS_NAME% for ",
 		"pageNotFound": "Không tìm thấy trang",
 		"supportedDevices": "Thiết bị hỗ trợ",
 		"integrations": "Tích hợp"
 	},
 	"dialogs": {
-		"okButton": "Xác định",
+		"okButton": "Xác nhận",
 		"cancelButton": "Hủy bỏ",
 		"createNewAccount": "Create New Account",
 		"changeAccountLogged": "You are already logged in as {email}",
@@ -207,7 +205,7 @@
 		"logoutAuthorisedTitle": "Bạn đã đăng nhập",
 		"logoutAuthorisedContinueButton": "Tiếp tục",
 		"logoutAuthorisedLogoutButton": "Đăng xuất",
-		"noClientDetectedTitle": "Cài đặt %VMS_NAME% để xem Hệ thống của bạn",
+		"noClientDetectedTitle": "Install %VMS_NAME% to view your System",
 		"stayAs": "Stay logged as {email} ",
 		"stayLoggedIn": "Stay Logged In",
 		"download": "Tải xuống %VMS_NAME%",
@@ -248,7 +246,7 @@
 			"shareTitle": "Thêm",
 			"shareConfirmButton": "Thêm",
 			"editShareTitle": "Quyền chỉnh sửa",
-			"editShareConfirmButton": "Tiết kiệm",
+			"editShareConfirmButton": "Lưu",
 			"permissionsSaved": "Cấp phép mới được lưu"
 		}
 	},
@@ -319,12 +317,12 @@
 		"unavailable": "Hệ thống không thể truy cập được",
 		"offline": "Hệ thống offline",
 		"offlineAlertRibbon": "System is offline. Some settings may not be available.",
-		"openClient": "Mở trong %VMS_NAME%",
+		"openClient": "Open in %VMS_NAME%",
 		"openClientNoSystem": "Mở %VMS_NAME%",
 		"confirmMergeAction": "Gộp lại",
 		"mergeSystemTitle": "Hợp nhất hệ thống",
 		"confirmRenameTitle": "Tên hệ thống",
-		"confirmRenameAction": "Tiết kiệm",
+		"confirmRenameAction": "Lưu",
 		"successRename": "Đã lưu tên hệ thống",
 		"confirmDisconnectTitle": "Hệ thống đã ngắt kết nối từ %CLOUD_NAME%?",
 		"confirmDisconnectAction": "Ngắt kết nối",
@@ -429,7 +427,7 @@
 			"highStream": "Luồng tốc độ cao",
 			"lowStream": "Luồng tốc độ thấp",
 			"transcoding": "Đang chuyển mã",
-			"unknown": "Không biết",
+			"unknown": "Không xác định",
 			"copyToClipboard": "chép vào bảng nháp",
 			"copyDefaultText": "sao chép",
 			"copyActiveText": "sao chép vào clipboard"
@@ -461,9 +459,9 @@
 		},
 		"searchCamPlaceholder": "Tìm kiếm",
 		"resolution": {
-			"auto": "Tự động",
-			"high": "Cao (H)",
-			"low": "Thấp (L)"
+			"auto": "tự động",
+			"high": "cao (H)",
+			"low": "Cao (H)"
 		},
 		"chromeCastWarning": "Chromecast tốn nhiều tài nguyên và có thể gây ra sự cố trên máy chủ của bạn.",
 		"voiceCommands": {
@@ -496,7 +494,7 @@
 	"WHEN_MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{{targetSystemName}}</strong> System, and this system will be deleted.",
 	"FAILED_SYSTEM_DESCR": "This link is broken,<br>System may be disconnected from %CLOUD_NAME%,<br>Access to this System may be revoked, <br>or you may be logged into a different account.",
 	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "Hệ thống được kết nối với %CLOUD_NAME%",
-	"NO_SYSTEMS_LOGIN": "Đăng nhập vào Hệ thống của bạn bằng cách sử dụng %VMS_NAME%",
+	"NO_SYSTEMS_LOGIN": "Log in to your System using %VMS_NAME%",
 	"NO_SYSTEMS_GOTO_ADMINISTRATION": "Đi tới tab \"Cloud\" trong hộp thoại \"Quản trị Hệ thống\"",
 	"NO_SYSTEMS_CONNECT_SYSTEM": "Nhấn \"Kết nối hệ thống với %CLOUD_NAME%\""
 }

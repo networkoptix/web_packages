@@ -75,13 +75,11 @@
 			},
 			"arm": {
 				"label": "ARM",
-				"shortLabel": "ARM",
-				"supported": "<a href='/content/arm'>ARM based servers support policy</a>"
+				"shortLabel": "ARM"
 			},
 			"sdk": {
 				"label": "SDK",
-				"shortLabel": "SDK",
-				"supported": "C ++: n cross platform SDK"
+				"shortLabel": "SDK"
 			}
 		},
 		"platforms": {
@@ -108,12 +106,12 @@
 		},
 		"releasesTypes": {
 			"beta": "Beta",
-			"betas": "Betas",
-			"rc": "Release Candidate",
-			"release": "Release",
-			"releases": "Releases",
-			"patch": "Patch",
-			"patches": "Patches"
+			"betas": "Beta-versioita",
+			"rc": "Julkaisuehdokkaat",
+			"release": "Julkaisu",
+			"releases": "Julkaisut",
+			"patch": "Korjaus",
+			"patches": "Korjaukset"
 		}
 	},
 	"ipvd": {
@@ -308,7 +306,7 @@
 		"strongMessage": "Vahva salasana!",
 		"common": "liian yleinen",
 		"commonMessage": "Tämä salasana on maailman suosituimpia salasanoja",
-		"missingMessage": "Salasana tarvitaan"
+		"missingMessage": "Salasana on pakollinen"
 	},
 	"registration": {
 		"agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
@@ -401,7 +399,7 @@
 		},
 		"owner": {
 			"label": "Omistaja",
-			"description": "Rajoittamaton pääsy, mukaan lukien kyky jakaa ja yhdistää / irroittaa järjestelmää pilvestä"
+			"description": "Rajoittamaton pääsy, mukaan lukien oikeus jakaa ja yhdistää / irrottaa järjestelmä pilvestä"
 		},
 		"viewer": {
 			"label": "Katsoja",
@@ -409,14 +407,14 @@
 		},
 		"liveViewer": {
 			"label": "Reaaliaikainen katselu",
-			"description": "Voit katsella vain reaaliaikaista videota"
+			"description": "Voi katsella vain reaaliaikaista videota"
 		},
 		"advancedViewer": {
 			"label": "Edistyneempi katselu",
 			"description": "Voi katsella reaaliaikasta videota, selata arkistoa, määrittää kameroita, ohjata PTZ: tä jne"
 		},
 		"custom": {
-			"label": "Asiakassuhde",
+			"label": "Muokattu",
 			"description": "Käytä %VMS_NAME% Client -sovellusta mukautettujen käyttöoikeuksien määrittämiseen"
 		}
 	},
@@ -426,15 +424,15 @@
 	},
 	"common": {
 		"cameraLinks": {
-			"highStream": "High stream",
-			"lowStream": "Low stream",
+			"highStream": "Korkea streami",
+			"lowStream": "Matala streami",
 			"transcoding": "Transkoodaus",
 			"unknown": "Tuntematon",
 			"copyToClipboard": "kopioi leikepöydälle",
-			"copyDefaultText": "kopioi",
+			"copyDefaultText": "kopio",
 			"copyActiveText": "kopioitu leikepöydälle"
 		},
-		"systemOffline": "Järjestelmään ei saada yhteyttä",
+		"systemOffline": "Järjestelmä offline-tilassa",
 		"systemOfflineMessage": "This system is offline and cannot be accessed right now.",
 		"systemNoAlerts": "No Alerts",
 		"systemNoAlertsMessage": "Your system must be doing well!",
@@ -452,7 +450,7 @@
 			"noData": "Ei dataa",
 			"iOSVideoTooLarge": "iOS ei tue videota, joka on suurempi kuin fullHD (2MP: 1920x1080).",
 			"flashRequired": "Siirry<a href='https://get.adobe.com/flashplayer/' target='_blank'>Asenna Adobe Flash</a> videoiden toistamiseen.",
-			"flashOrWebmRequired": "Ota <a href='https://get.adobe.com/flashplayer/' target='_blank'>Asenna Adobe Flash</a> tai<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM koodekin</a> videon toistamiseen Internet Explorer.",
+			"flashOrWebmRequired": "Siirry <a href='https://get.adobe.com/flashplayer/' target='_blank'>Asenna Adobe Flash</a> tai<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM koodekin</a> videon toistamiseen Internet Explorer:ssa.",
 			"noArmSupport": "Tämä selain tai laite ei tue videotoistoa ARM-pohjaisista palvelimista.",
 			"noFormat": "Tämä selain ei tue videon toistoa tästä kamerasta.",
 			"ieNoWebm": "Asenna <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM-koodekki</a> Internet Exploreriin.",
@@ -469,16 +467,16 @@
 		"voiceCommands": {
 			"play": "toista",
 			"pause": "tauko",
-			"live": "go to live | show me live",
-			"view": "view + [camera name]",
-			"search": "find + [text for searchbar]",
+			"live": "siirry reaaliaikaiseen | näytä minulle reaaliaikainen kuva",
+			"view": "näkymä + [kameran nimi]",
+			"search": "etsi + [hakupalkin teksti]",
 			"clear search": "tyhjennä haku",
-			"expand server": "expand server + [server name]",
-			"collapse server": "collapse server + [server name]",
+			"expand server": "laajenna palvelin + [palvelimen nimi]",
+			"collapse server": "pienennä palvelin + [palvelimen nimi]",
 			"expand all servers": "laajenna kaikki palvelimet",
 			"collapse all servers": "kokoa kaikki palvelimet",
 			"stop listening": "lopeta kuuntelu",
-			"help": "help | show commands"
+			"help": "apua | näytä komennot"
 		}
 	},
 	"systemAdministration": "Järjestelmän hallinta",

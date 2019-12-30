@@ -48,7 +48,7 @@ export class NxPagePlaceholderComponent implements OnInit {
                 case 'OFFLINE' :
                     this.placeholderTitle = this.LANG.common.systemOffline;
                     this.message = this.LANG.common.systemOfflineMessage;
-                    this.iconClass = 'server-offline';
+                    this.iconName = 'Offline';
                     break;
                 case 'NO_ALERTS' :
                     this.placeholderTitle = this.LANG.common.systemNoAlerts;

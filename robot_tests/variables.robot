@@ -179,6 +179,23 @@ ${AVAILABLE SYSTEMS LIST}             //a[@href='/systems']
 ${SYSTEMS SEARCH INPUT}               //nx-systems-list-component//div[contains(@class,'search-block')]//input
 ${SYSTEM SEARCH X BUTTON}             ${SYSTEMS SEARCH INPUT}//preceding::a[contains(@class,'input-overlay-right')]
 
+${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}    //nx-checkbox[@name="autoDiscoveryEnabled"]
+${ENABLE AUTO DISCOVERY CHECKBOX REAL}     //*[@id="autoDiscoveryEnabled"]
+${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}      //nx-checkbox[@name="statisticsAllowed"]
+${SEND ANONYMOUS USAGE CHECKBOX REAL}      //*[@id="statisticsAllowed"]
+${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}     //nx-checkbox[@name="cameraSettingsOptimization"]
+${ALLOW SYSTEM OPTIMIZE CHECKBOX REAL}     //*[@id="cameraSettingsOptimization"]
+
+${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}        //nx-checkbox[@name='auditTrailEnabled']
+${ENABLE AUDIT TRAIL CHECKBOX REAL}        //*[@id='auditTrailEnabled']
+${ALLOW ONLY SECURE CHECKBOX VISIBLE}         //nx-checkbox[@name='trafficEncryptionForced']
+${ALLOW ONLY SECURE CHECKBOX REAL}         //*[@id='trafficEncryptionForced']
+${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}     //nx-checkbox[@name='videoTrafficEncryptionForced']
+${ENCRYPT VIDEO TRAFFIC CHECKBOX REAL}     //*[@id='videoTrafficEncryptionForced']
+${LIMIT SESSION DURATION CHECKBOX VISIBLE}    //nx-checkbox[@name='sessionLimitMinutes']
+${LIMIT SESSION DURATION CHECKBOX REAL}    //*[@id='sessionLimitMinutes']
+${TIME NUMBER INPUT}                  //*[@type='number']
+
 #Merge
 ${MERGE BUTTON SYSTEM}                //button/span[text()="${MERGE SYSTEM BUTTON TEXT}"]/..
 ${MERGE BUTTON SYSTEM DISABLED}       //button[@disabled]/span[text()="${MERGE SYSTEM BUTTON TEXT}"]

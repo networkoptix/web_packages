@@ -243,7 +243,6 @@ nx-dynamic-table {
             line-height : 1rem;
             border      : none;
             height      : 26px;
-            max-width   : 108px;
             
             &:first-of-type {
               padding         : 0;
@@ -252,25 +251,6 @@ nx-dynamic-table {
               justify-content : center;
               align-items     : center;
             }
-          }
-
-          .long-text {
-            width: 170px !important;
-          }
-          .percent {
-            max-width: 74px !important;
-          }
-          .short-text {
-            width: 74px !important;
-          }
-          .text {
-            width: 100px !important;
-          }
-          .volume {
-            max-width: 74px !important;
-          }
-          .no-max-width {
-            max-width: unset !important;
           }
         }
       }
@@ -376,5 +356,28 @@ nx-dynamic-table {
   
   .test * {
     fill : limegreen;
+  }
+
+  .long-text {
+    width: 170px !important;
+  }
+  .percent {
+    max-width: 74px !important;
+  }
+  .short-text {
+    width: 74px !important;
+  }
+  .text {
+    width: 100px !important;
+  }
+  .volume-metric {
+    max-width: 74px !important;
+  }
+  .no-max-width {
+    max-width: unset !important;
+  }
+  .no-format {
+    width: 108px;
+    max-width: 108px;
   }
 }

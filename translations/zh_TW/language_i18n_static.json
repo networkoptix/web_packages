@@ -24,7 +24,7 @@
 		"selected": "已選取",
 		"vendor": "製造商",
 		"vendors": "製造商",
-		"hardwareType": "類型",
+		"hardwareType": "型態",
 		"hardwareTypes": "類型",
 		"minResolution": "最低解析度",
 		"analytics": "分析",
@@ -75,13 +75,11 @@
 			},
 			"arm": {
 				"label": "ARM",
-				"shortLabel": "ARM",
-				"supported": "<a href='/content/arm'>ARM伺服器支援政策</a>"
+				"shortLabel": "ARM"
 			},
 			"sdk": {
 				"label": "SDK",
-				"shortLabel": "SDK",
-				"supported": "C ++跨平台SDK"
+				"shortLabel": "SDK"
 			}
 		},
 		"platforms": {
@@ -108,12 +106,12 @@
 		},
 		"releasesTypes": {
 			"beta": "Beta",
-			"betas": "Betas",
+			"betas": "測試版本",
 			"rc": "Release Candidate",
 			"release": "Release",
-			"releases": "Releases",
+			"releases": "版本發佈",
 			"patch": "Patch",
-			"patches": "Patches"
+			"patches": "補丁"
 		}
 	},
 	"ipvd": {
@@ -121,7 +119,7 @@
 		"count": "總計",
 		"vendor": "製造商",
 		"model": "型號",
-		"hardwareType": "類型",
+		"hardwareType": "型態",
 		"maxResolution": "<span>最大</span><br><span>解析度</span>",
 		"maxFps": "<span>最大</span><br><span>帪數</span>",
 		"primaryCodec": "編碼器",
@@ -174,7 +172,7 @@
 		"template": "{{title}} %CLOUD_NAME%",
 		"default": "%CLOUD_NAME%",
 		"registerSuccess": "歡迎來到",
-		"register": "新建帳號",
+		"register": "新建帳戶",
 		"changePassword": "更改密碼 -",
 		"account": "帳號設定 -",
 		"systems": "系統 -",
@@ -191,7 +189,7 @@
 		"debug": "除錯",
 		"login": "登入 -",
 		"download": "下載 %VMS_NAME%",
-		"downloadPlatform": "下載 %VMS_NAME% ",
+		"downloadPlatform": "Download %VMS_NAME% for ",
 		"pageNotFound": "找不到頁面",
 		"supportedDevices": "支援設備",
 		"integrations": "整合"
@@ -207,7 +205,7 @@
 		"logoutAuthorisedTitle": "您已經登入",
 		"logoutAuthorisedContinueButton": "繼續",
 		"logoutAuthorisedLogoutButton": "登出",
-		"noClientDetectedTitle": "安裝 %VMS_NAME% 來查看您的系統",
+		"noClientDetectedTitle": "Install %VMS_NAME% to view your System",
 		"stayAs": "以{email} 保持登入 ",
 		"stayLoggedIn": "保持登入",
 		"download": "下載 %VMS_NAME%",
@@ -319,7 +317,7 @@
 		"unavailable": "無法連接至系統",
 		"offline": "系統處於離線狀態",
 		"offlineAlertRibbon": "系統離線。某些設定可能無法使用。",
-		"openClient": "在 %VMS_NAME% 中打開",
+		"openClient": "Open in %VMS_NAME%",
 		"openClientNoSystem": "開啟 %VMS_NAME%",
 		"confirmMergeAction": "合併",
 		"mergeSystemTitle": "合併系統",
@@ -335,7 +333,7 @@
 		"confirmUnshareTitle": "是否要移除使用者？",
 		"confirmUnshareAction": "移除",
 		"successDisconnected": "系統已成功從 %CLOUD_NAME%斷線",
-		"successDeleted": "從您的帳號成功刪除系統 {{systemName}}",
+		"successDeleted": "從您的帳戶成功刪除系統 {{systemName}}",
 		"mergeFailed": "系統合併失敗",
 		"mergeStart": "系統開始合併中",
 		"mergeSuccess": "系統合併完成",
@@ -372,15 +370,15 @@
 			"description": "不受限權限包括共用及從雲端連接/斷開系統的能力"
 		},
 		"Viewer": {
-			"label": "瀏覽者",
+			"label": "瀏覽",
 			"description": "可以瀏覽即時影像和回放錄影資料"
 		},
 		"Live Viewer": {
-			"label": "即時影像瀏覽者",
+			"label": "即時影像瀏覽",
 			"description": "只能瀏覽即時影像"
 		},
 		"Advanced Viewer": {
-			"label": "進階瀏覽者",
+			"label": "進階瀏覽",
 			"description": "可以瀏覽即時影像, 回放錄影資料, 控制 PTZ 等"
 		},
 		"Administrator": {
@@ -404,15 +402,15 @@
 			"description": "不受限權限包括共用及從雲端連接/斷開系統的能力"
 		},
 		"viewer": {
-			"label": "瀏覽者",
+			"label": "瀏覽",
 			"description": "可以瀏覽即時影像和回放錄影資料"
 		},
 		"liveViewer": {
-			"label": "即時影像瀏覽者",
+			"label": "即時影像瀏覽",
 			"description": "只能瀏覽即時影像"
 		},
 		"advancedViewer": {
-			"label": "進階瀏覽者",
+			"label": "進階瀏覽",
 			"description": "可以瀏覽即時影像, 回放錄影資料, 設定攝影機, 控制 PTZ 等"
 		},
 		"custom": {
@@ -469,16 +467,16 @@
 		"voiceCommands": {
 			"play": "播放",
 			"pause": "暫停",
-			"live": "go to live | show me live",
-			"view": "view + [camera name]",
-			"search": "find + [text for searchbar]",
+			"live": "即時|顯示即時",
+			"view": "瀏覽 + [攝影機名稱]",
+			"search": "搜尋+ [搜索欄的文字]",
 			"clear search": "清除搜尋",
-			"expand server": "expand server + [server name]",
-			"collapse server": "collapse server + [server name]",
+			"expand server": "展開伺服器+ [伺服器名稱]",
+			"collapse server": "崩潰伺服器+ [伺服器名稱]",
 			"expand all servers": "展開所有伺服器",
 			"collapse all servers": "隱藏所有伺服器",
 			"stop listening": "停止聽取",
-			"help": "help | show commands"
+			"help": "幫助|顯示命令"
 		}
 	},
 	"systemAdministration": "系統管理",
@@ -490,13 +488,13 @@
 	"Integrations": "整合",
 	"Privacy": "隱私政策",
 	"Support": "支援",
-	"Supported Devices": "支援設備",
+	"Supported Devices": "支持設備",
 	"Terms": "條款",
 	"pleaseSelect": "請選擇...",
 	"WHEN_MERGE_FINISHES": "合併完成後, 此系統中的所有用戶和攝影機都將可用於<strong>{{targetSystemName}}</strong>, 同時此系統將被刪除",
 	"FAILED_SYSTEM_DESCR": "此連結已損毀,<br> 系統可能會從 %CLOUD_NAME% 離線,<br>於此系統的權限可能被註銷,<br>或請您用不同的帳號登錄.",
 	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "您沒有任何系統連接到 %CLOUD_NAME%",
-	"NO_SYSTEMS_LOGIN": "使用 %VMS_NAME% 登入到您的系統",
+	"NO_SYSTEMS_LOGIN": "Log in to your System using %VMS_NAME%",
 	"NO_SYSTEMS_GOTO_ADMINISTRATION": "到 \"系統管理\" 對話框中的 \"雲端\" 頁面",
 	"NO_SYSTEMS_CONNECT_SYSTEM": "點擊 \"連接系統到 %CLOUD_NAME%\""
 }

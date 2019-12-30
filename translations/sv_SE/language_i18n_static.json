@@ -75,13 +75,11 @@
 			},
 			"arm": {
 				"label": "ARM",
-				"shortLabel": "ARM",
-				"supported": "<a href='/content/arm'>ARM-baserade servrar stöd policy</a>"
+				"shortLabel": "ARM"
 			},
 			"sdk": {
 				"label": "SDK",
-				"shortLabel": "SDK",
-				"supported": "C++ plattformsoberoende SDK"
+				"shortLabel": "SDK"
 			}
 		},
 		"platforms": {
@@ -108,12 +106,12 @@
 		},
 		"releasesTypes": {
 			"beta": "Beta",
-			"betas": "Betas",
-			"rc": "Release Candidate",
+			"betas": "Betor",
+			"rc": "Releasekandidat",
 			"release": "Release",
-			"releases": "Releases",
+			"releases": "Releaser",
 			"patch": "Patch",
-			"patches": "Patches"
+			"patches": "Patchar"
 		}
 	},
 	"ipvd": {
@@ -200,7 +198,7 @@
 		"okButton": "OK",
 		"cancelButton": "Avbryt",
 		"createNewAccount": "Skapa nytt konto",
-		"changeAccountLogged": "You are already logged in as {email}",
+		"changeAccountLogged": "Du är redan inloggad som {email}",
 		"loggedFromOther": "Du kommer att vara inloggad med ett annat konto",
 		"loginTitle": "Logga in på %CLOUD_NAME%",
 		"loginButton": "Logga in",
@@ -359,12 +357,12 @@
 		"merging": "sammanslagning",
 		"notActivated": "inte aktiverad",
 		"online": "uppkopplad",
-		"offline": "frånkopplade",
+		"offline": "frånkopplad",
 		"unavailable": "inte tillgänglig"
 	},
 	"accessRoles": {
 		"disabled": {
-			"label": "Inaktiverad",
+			"label": "Avaktiverad",
 			"description": "Användaren är inaktiverad och kan inte logga in på System"
 		},
 		"Owner": {
@@ -372,7 +370,7 @@
 			"description": "Obegränsad åtkomst, inklusive möjligheten att dela och ansluta/avregistrera systemet från molnet"
 		},
 		"Viewer": {
-			"label": "Användare",
+			"label": "Tittare",
 			"description": "Kan visa live video och bläddra i arkivet"
 		},
 		"Live Viewer": {
@@ -404,7 +402,7 @@
 			"description": "Obegränsad åtkomst, inklusive möjligheten att dela och ansluta/avregistrera systemet från molnet"
 		},
 		"viewer": {
-			"label": "Användare",
+			"label": "Tittare",
 			"description": "Kan visa live video och bläddra i arkivet"
 		},
 		"liveViewer": {
@@ -445,7 +443,7 @@
 		"systemHasNoCameras": "INGA KAMEROR",
 		"systemUnreachable": "SYSTEMET är inte tillgängligt",
 		"cameraStates": {
-			"offline": "Frånkopplade",
+			"offline": "Offline",
 			"error": "Fel",
 			"errorLoading": "Ett fel uppstod vid laddning av den här videon.",
 			"unauthorized": "Autentisering krävs",
@@ -469,16 +467,16 @@
 		"voiceCommands": {
 			"play": "spela",
 			"pause": "pausa",
-			"live": "go to live | show me live",
-			"view": "view + [camera name]",
-			"search": "find + [text for searchbar]",
+			"live": "gå till live | visa mig live",
+			"view": "visa + [kamera namn]",
+			"search": "hitta + [text för sökbar]",
 			"clear search": "rensa sökningen",
-			"expand server": "expand server + [server name]",
-			"collapse server": "collapse server + [server name]",
+			"expand server": "expandera server + [server namn]",
+			"collapse server": "kollapsera server + [servernamn]",
 			"expand all servers": "expandera alla servrar",
 			"collapse all servers": "kollapsa alla servrar",
 			"stop listening": "sluta lyssna",
-			"help": "help | show commands"
+			"help": "hjälp | visa kommandon"
 		}
 	},
 	"systemAdministration": "Systemadministration",

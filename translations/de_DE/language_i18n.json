@@ -64,7 +64,7 @@
     "Downloads": "Downloads",
     "Draft": "Entwurf",
     "Dual Streaming": "Duales Streaming",
-    "Email": "Email",
+    "Email": "E-Mail",
     "Email is required": "Email ist erforderlich",
     "Embed": "Einbinden",
     "Enable audit trail": "Aktiviere Überwachungsprotokoll",
@@ -97,9 +97,9 @@
     "Last Name": "Nachname",
     "Last name": "Nachname",
     "Last name is required": "Nachname ist erforderlich",
-    "Latest version": "Neueste Version",
+    "Latest version": "Aktuellste Version",
     "Limit session duration to": "Limit session duration to",
-    "Log In": "Einloggen",
+    "Log In": "Anmelden",
     "Log Out": "Abmelden",
     "Log in to %CLOUD_NAME%": "Anmelden bei %CLOUD_NAME%",
     "Merge Systems": "Systeme zusammenführen",
@@ -111,7 +111,7 @@
     "Multi Sensor": "Multisensor",
     "NO_SYSTEMS_CONNECT_SYSTEM": "Wählen Sie \"Verbinde System mit %CLOUD_NAME%\"",
     "NO_SYSTEMS_GOTO_ADMINISTRATION": "Gehen Sie zum \"Cloud\"-Tab in der Systemadministration",
-    "NO_SYSTEMS_LOGIN": "Melden Sie sich in Ihrem System mit %VMS_NAME% an",
+    "NO_SYSTEMS_LOGIN": "Log in to your System using %VMS_NAME%",
     "NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "Es ist kein System mit %CLOUD_NAME% verbunden",
     "New Password": "Neues Passwort",
     "No unsaved changes": "Keine ungespeicherten Änderungen",
@@ -285,7 +285,7 @@
     "common": {
         "cameraLinks": {
             "copyActiveText": "in die zwischenablage kopiert",
-            "copyDefaultText": "kopieren",
+            "copyDefaultText": "copieren",
             "copyToClipboard": "in zwischenablage kopieren",
             "highStream": "Hoher Stream",
             "lowStream": "Niedriger Stream",
@@ -325,18 +325,18 @@
         "systemServerErrorMessage": "An error occurred, please, try again later. An error occurred, please try again later. If the problem continues, please contact your support team.",
         "systemUnreachable": "SYSTEM IST NICHT ERREICHBAR",
         "voiceCommands": {
-            "clear search": "Suche zurücksetzen",
-            "collapse all servers": "Alle Server zusammenklappen",
-            "collapse server": "Server zusammenklappen + [Servername]",
-            "expand all servers": "Alle Server erweitern",
-            "expand server": "Server erweitern + [Servername]",
-            "help": "Hilfe | Befehle anzeigen",
-            "live": "Live gehen | Live anzeigen",
+            "clear search": "suche zurücksetzen",
+            "collapse all servers": "alle server zusammenklappen",
+            "collapse server": "server zusammenklappen + [Servername]",
+            "expand all servers": "alle Server erweitern",
+            "expand server": "server erweitern + [Servername]",
+            "help": "hilfe | befehle anzeigen",
+            "live": "live gehen | live anzeigen",
             "pause": "Pause",
             "play": "Abspielen",
-            "search": "Finden + [Text für Suchleiste]",
-            "stop listening": "Abhören stoppen",
-            "view": "Ansicht + [Kameraname]"
+            "search": "finden + [text für suchleiste]",
+            "stop listening": "abhören stoppen",
+            "view": "ansicht + [kameraname]"
         }
     },
     "devices": "Geräte",
@@ -383,7 +383,7 @@
                 "ipvd_feedback_page": "Feedback zur Kameraseite"
             }
         },
-        "noClientDetectedTitle": "Installieren Sie %VMS_NAME%, um Ihr System anzusehen",
+        "noClientDetectedTitle": "Install %VMS_NAME% to view your System",
         "okButton": "Ok",
         "sharing": {
             "confirmOwner": "Wenn Sie den Systembesitzer ändern, werden Sie das Eigentum vom aktuellen Account widerrufen. Diese Handlung ist unwiderruflich. Sind Sie sich sicher?",
@@ -422,8 +422,7 @@
             },
             "arm": {
                 "label": "ARM",
-                "shortLabel": "ARM",
-                "supported": "<a href='/content/arm'>ARM-basierte Server unterstützen Richtlinie</a>"
+                "shortLabel": "ARM"
             },
             "ios": {
                 "label": "iOS",
@@ -441,8 +440,7 @@
             },
             "sdk": {
                 "label": "SDK",
-                "shortLabel": "SDK",
-                "supported": "C++ plattformübergreifendes SDK"
+                "shortLabel": "SDK"
             },
             "windows": {
                 "label": "Windows"
@@ -587,7 +585,7 @@
         "debug": "Debug",
         "default": "%CLOUD_NAME%",
         "download": "%VMS_NAME% herunterladen",
-        "downloadPlatform": "Download %VMS_NAME% für ",
+        "downloadPlatform": "Download %VMS_NAME% for ",
         "integrations": "Integrationen",
         "login": "Anmelden -",
         "pageNotFound": "Seite nicht gefunden",
@@ -610,7 +608,7 @@
         "fairMessage": "Verwenden Sie Zahlen, Groß- und Kleinbuchstaben und Sonderzeichen, um Ihr Passwort sicherer machen",
         "good": "gut",
         "minLength": "zu kurz",
-        "minLengthMessage": "Passwort muss mindestens 8 Zeichen enthalten",
+        "minLengthMessage": "Das Passwort muss mindestens 8 Zeichen lang sein",
         "missingMessage": "Passwort ist erforderlich",
         "required": "falsch",
         "requiredMessage": "Verwenden Sie nur alphanumerische Zeichen und Tastatursymbole, vermeiden Sie führende und nachfolgende Leerzeichen",
@@ -664,7 +662,7 @@
         "mySystemSearch": "IMeMyMine",
         "offline": "System ist offline",
         "offlineAlertRibbon": "Das System ist offline. Einige Einstellungen sind möglicherweise nicht verfügbar.",
-        "openClient": "In %VMS_NAME% öffnen",
+        "openClient": "Open in %VMS_NAME%",
         "openClientNoSystem": "Öffnen Sie %VMS_NAME%",
         "permissionsRemoved": "Berechtigungen wurden von {{email}} entfernt",
         "settings": {
@@ -685,7 +683,7 @@
         "unknownName": "Unbekannter Name für das System (verursacht durch Cloud-Merge)",
         "yourSystem": "Ihr System"
     },
-    "systemAdministration": "Systemadministration",
+    "systemAdministration": "System-Administration",
     "systemStatuses": {
         "activated": "aktiviert",
         "incompatible": "inkompatibel",

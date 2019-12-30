@@ -4,7 +4,7 @@
     "Access Level": "Livello di accesso",
     "Access level": "Livello di accesso",
     "Account Information": "Informazioni account",
-    "Account Settings": "Impostazioni dell 'account",
+    "Account Settings": "Impostazioni dell'account",
     "Account is already activated or confirmation code is incorrect": "L'account è già attivato o il codice di conferma non è corretto",
     "Account is created.": "Account creato.",
     "Account is successfully created.": "Account creato con successo.",
@@ -36,7 +36,7 @@
     "Camera header": "Intestazione di telecamera",
     "Cameras menu": "Menu delle telecamere",
     "Cancel": "Annulla",
-    "Change Password": "Cambia Password",
+    "Change Password": "Cambio Password",
     "Checking...": "Controllo...",
     "Choose which properties should be visible to customers:": "Scegli quali proprietà dovrebbero essere visibili ai clienti:",
     "Clear filters": "Cancella filtri",
@@ -56,7 +56,7 @@
     "Disconnect System from %CLOUD_NAME%?": "Scollegare il sistema da %CLOUD_NAME%?",
     "Disconnect from %CLOUD_NAME%": " Disconnetti da %CLOUD_NAME%",
     "Disconnect from My Account": "Disconnettiti dal mio account",
-    "Download": "Scarica",
+    "Download": "Scaricare",
     "Download %VMS_NAME%": "Scarica %VMS_NAME%",
     "Download Chrome": "Scarica Chrome",
     "Download Firefox": "Scarica Firefox",
@@ -112,11 +112,11 @@
     "NO_SYSTEMS_CONNECT_SYSTEM": "Premere \"Collegare il sistema a %CLOUD_NAME%\"",
     "NO_SYSTEMS_GOTO_ADMINISTRATION": "Vai alla scheda \"Cloud\" nella finestra di dialogo \"System Administration\"",
     "NO_SYSTEMS_LOGIN": "Accedere al sistema utilizzando %VMS_NAME%",
-    "NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "Non hai Sistemi collegati a %CLOUD_NAME%",
+    "NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "Non hai sistemi collegati a %CLOUD_NAME%",
     "New Password": "Nuova password",
     "No unsaved changes": "Modifiche non salvate",
     "Nothing Found": "Non è stato trovato nulla",
-    "OK": "OK",
+    "OK": "Ok",
     "Ok": "Ok",
     "Only client-server video traffic can be encrypted.": "Solo il traffico video client-server può essere crittografato.",
     "Other packages:": "Altri pacchetti:",
@@ -129,7 +129,7 @@
     "Password reset instructions are sent to Email": "Le istruzioni per il ripristino della password sono inviate all' e-mail",
     "Password successfully saved": "Password salvata correttamente",
     "Password:": "Password:",
-    "Please enter a valid Email": "Inserisca un'e-mail valida",
+    "Please enter a valid Email": "Immetti un'indirizzo Email valido",
     "Please review and agree to the Terms and Conditions and Privacy policy in order to proceed": "Si prega di rivedere e accettare i Termini e condizioni e l'informativa sulla privacy per poter procedere",
     "Popularity": "Popolarità",
     "Privacy": "Privacy",
@@ -142,7 +142,7 @@
     "Resend activation email": "Invia nuovamente l'email di attivazione",
     "Resend activation link": "Rinvia il link di attivazione",
     "Resolution(max)": "Risoluzione (max)",
-    "Save": "Salvare",
+    "Save": "Salva",
     "Search in google": "Cerca su Google",
     "Secondary Stream": "Stream secondario",
     "Security": "Sicurezza",
@@ -207,7 +207,7 @@
         },
         "Custom": {
             "description": "Utilizzare l'applicazione client %VMS_NAME% per impostare le autorizzazioni personalizzate",
-            "label": "Personalizzato"
+            "label": "Personalizza"
         },
         "Live Viewer": {
             "description": "Possibilita' di visualizzare solo video Live",
@@ -235,7 +235,7 @@
         },
         "customRole": {
             "description": "Ruolo utente personalizzato specificato nel Sistema",
-            "label": "Ruoli personalizzati"
+            "label": "Ruolo personalizzato"
         },
         "disabled": {
             "description": "L'utente è disabilitato e non può accedere al sistema",
@@ -255,13 +255,13 @@
         }
     },
     "account": {
-        "accountSavedSuccess": "Il suo account è stato salvato con successo",
-        "accountSettings": "Impostazioni dell 'account",
+        "accountSavedSuccess": "Il tuo account è stato aggiornato correttamente",
+        "accountSettings": "Impostazioni dell'account",
         "activationLinkSent": "Link di attivazione inviato",
-        "changePassword": "Cambia Password",
+        "changePassword": "Cambio Password",
         "newPasswordLabel": "Nuova password",
         "passwordChangedSuccess": "Il suo account è stato salvato con successo",
-        "saveChanges": "Salvare"
+        "saveChanges": "Salva"
     },
     "activeActions": {
         "resetPassword": "Reimpostare la password",
@@ -327,22 +327,22 @@
         "voiceCommands": {
             "clear search": "cancella ricerca",
             "collapse all servers": "comprimi tutti i server",
-            "collapse server": "collapse server + [server name]",
+            "collapse server": "comprimi server + [nome server]",
             "expand all servers": "espandere tutti i server",
-            "expand server": "expand server + [server name]",
-            "help": "help | show commands",
-            "live": "go to live | show me live",
+            "expand server": "espandi server + [nome server]",
+            "help": "aiuto | mostra comandi",
+            "live": "vai in live | mostra live",
             "pause": "pausa",
             "play": "riproduci",
-            "search": "find + [text for searchbar]",
+            "search": "trova + [testo per la barra di ricerca]",
             "stop listening": "interrompere l'ascolto",
-            "view": "view + [camera name]"
+            "view": "visualizza + [nome telecamera]"
         }
     },
     "devices": "dispositivi",
     "dialogs": {
         "cancelButton": "Annulla",
-        "changeAccountLogged": "You are already logged in as {email}",
+        "changeAccountLogged": "Hai già effettuato l'accesso come {email}",
         "createNewAccount": "Crea nuovo account",
         "download": "Scarica %VMS_NAME%",
         "loggedFromOther": "Verrà effettuato l'accesso con un altro account",
@@ -350,7 +350,7 @@
         "loginTitle": "Accedi a %CLOUD_NAME%",
         "logoutAuthorisedContinueButton": "Continua",
         "logoutAuthorisedLogoutButton": "Disconnetti",
-        "logoutAuthorisedTitle": "Ha già effettuato l'accesso",
+        "logoutAuthorisedTitle": "Hai già effettuato l'accesso",
         "merge": {
             "commonText": "Impossibile unire i sistemi <strong>{{primarySystem}}</strong> e <strong>{{secondarySystem}}</strong>.",
             "connectToCloud": "Connetti il Sistema che vuoi unire con questo <strong>{{cloudName}}</strong> o unisci localmente usando <strong>{{vmsName}}</strong> il Client.",
@@ -374,7 +374,7 @@
                 "integration_feedback": "Feedback per l'integrazione {{asset}}",
                 "ipvd_feedback_device": "Feedback su {{asset}}",
                 "ipvd_feedback_page": "Feedback per la pagina delle telecamere",
-                "sales_inquiry": "Richiesta informazioni di vendita per {{asset}}",
+                "sales_inquiry": "Richiesta commerciale per {{asset}}",
                 "technical_inquiry": "Richiesta tecnica per {{asset}}"
             },
             "title": {
@@ -383,15 +383,15 @@
                 "ipvd_feedback_page": "Feedback per la pagina delle telecamere"
             }
         },
-        "noClientDetectedTitle": "Installa %VMS_NAME% per visualizzare il suo sistema",
-        "okButton": "OK",
+        "noClientDetectedTitle": "Installa %VMS_NAME% per visualizzare il tuo sistema",
+        "okButton": "Ok",
         "sharing": {
-            "confirmOwner": "Se cambi proprietario del sistema, revocherai la proprietà dall'account corrente. Questa azione è irreversibile. E' sicuro?",
-            "editShareConfirmButton": "Salvare",
+            "confirmOwner": "Se cambi il proprietario del sistema, revocherai la proprietà dall'account corrente. Questa azione è irreversibile. Sei sicuro?",
+            "editShareConfirmButton": "Salva",
             "editShareTitle": "Modifica Permessi",
             "permissionsSaved": "Nuove autorizzazioni salvate",
-            "shareConfirmButton": "Inserisci",
-            "shareTitle": "Inserisci"
+            "shareConfirmButton": "Aggiungi",
+            "shareTitle": "Aggiungi"
         },
         "stayAs": "Rimani collegato come {email} ",
         "stayLoggedIn": "Rimani collegato"
@@ -422,8 +422,7 @@
             },
             "arm": {
                 "label": "ARM",
-                "shortLabel": "ARM",
-                "supported": "<a href='/content/arm'>Politica di supporto per server basati su ARM</a>"
+                "shortLabel": "ARM"
             },
             "ios": {
                 "label": "iOS",
@@ -441,8 +440,7 @@
             },
             "sdk": {
                 "label": "SDK",
-                "shortLabel": "SDK",
-                "supported": "SDK cross-platform C ++"
+                "shortLabel": "SDK"
             },
             "windows": {
                 "label": "Windows"
@@ -469,12 +467,12 @@
         },
         "releasesTypes": {
             "beta": "Beta",
-            "betas": "Betas",
+            "betas": "Versioni beta",
             "patch": "Patch",
-            "patches": "Patches",
-            "rc": "Release Candidate",
-            "release": "Release",
-            "releases": "Releases"
+            "patches": "Patch",
+            "rc": "Versione Candidate",
+            "release": "Rilascio",
+            "releases": "Versioni"
         }
     },
     "errorCodes": {
@@ -582,32 +580,32 @@
         "activate": "Attivazione Account -",
         "activateCode": "Attivazione Account -",
         "activateSent": "Attivazione Account -",
-        "activateSuccess": "Attivazione dell'account",
+        "activateSuccess": "Account attivato -",
         "changePassword": "Cambia Password -",
         "debug": "Debug",
         "default": "%CLOUD_NAME%",
         "download": "Scarica %VMS_NAME%",
-        "downloadPlatform": "Scarica %VMS_NAME% ",
+        "downloadPlatform": "Scarica %VMS_NAME% per ",
         "integrations": "Integrazioni",
-        "login": "Accesso -",
+        "login": "Log in -",
         "pageNotFound": "Pagina non trovata",
         "register": "Creare un account",
         "registerSuccess": "Benvenuto in",
         "restorePassword": "Reimpostare la Password -",
         "restorePasswordCode": "Reimpostare la Password -",
-        "restorePasswordSuccess": "Password salvata",
+        "restorePasswordSuccess": "Password salvata -",
         "supportedDevices": "Dispositivi supportati",
         "system": "Sistema -",
-        "systemShare": "Condivisione Sistema -",
-        "systems": "Sistemi -",
+        "systemShare": "Condivisione sistema -",
+        "systems": "Sistema -",
         "template": "{{title}} %CLOUD_NAME%",
-        "view": "Visualizzazione delle telecamere - "
+        "view": "Visualizza telecamere - "
     },
     "passwordRequirements": {
         "common": "troppo comune",
-        "commonMessage": "Questa password è nelle migliori e più popolari password utilizzate nel mondo",
+        "commonMessage": "Questa password è tra le password più popolari al mondo",
         "fair": "giusta",
-        "fairMessage": "Utilizzare numeri, lettere maiuscole e minuscole e caratteri speciali per rendere più sicura la password",
+        "fairMessage": "Usa numeri, lettere maiuscole e minuscole e caratteri speciali per rafforzare la tua password",
         "good": "buono",
         "minLength": "troppo corto",
         "minLengthMessage": "La password deve contenere almeno 8 caratteri",
@@ -648,14 +646,14 @@
     "system": {
         "confirmDisconnectAction": "Scollegamento",
         "confirmDisconnectTitle": "Scollegare il sistema da %CLOUD_NAME%?",
-        "confirmMergeAction": "Unisci",
-        "confirmRenameAction": "Salvare",
+        "confirmMergeAction": "Unione",
+        "confirmRenameAction": "Salva",
         "confirmRenameTitle": "Nome del sistema",
-        "confirmUnshare": "Questo utente non sarà in grado di accedere al sistema. E' sicuro?",
+        "confirmUnshare": "Questo utente non sarà in grado di accedere al sistema. Sei sicuro?",
         "confirmUnshareAction": "Rimuovere",
-        "confirmUnshareFromMe": "Sta per disconnettere questo Sistema dal suo account. Non sara' in più in grado di accedere a questo Sistema. E' sicuro?",
+        "confirmUnshareFromMe": "Stai per disconnettere questo sistema dal tuo account. Non sarai più in grado di accedere a questo sistema. Sei sicuro?",
         "confirmUnshareFromMeAction": "Scollegamento",
-        "confirmUnshareFromMeTitle": "Scollegare il sistema da?",
+        "confirmUnshareFromMeTitle": "Scollegare il sistema?",
         "confirmUnshareTitle": "Rimuovere l'utente?",
         "mergeFailed": "Unione di sistemi fallita",
         "mergeStart": "I sistemi hanno iniziato ad unirsi",
@@ -665,7 +663,7 @@
         "offline": "Il sistema è offline",
         "offlineAlertRibbon": "Il sistema non è in linea. Alcune impostazioni potrebbero non essere disponibili.",
         "openClient": "Apri in %VMS_NAME%",
-        "openClientNoSystem": "Apri in %VMS_NAME%",
+        "openClientNoSystem": "Apri %VMS_NAME%",
         "permissionsRemoved": "Le autorizzazioni sono state rimosse da {{email}}",
         "settings": {
             "sessionLimitDuration": {
@@ -691,7 +689,7 @@
         "incompatible": "non compatibile",
         "merging": "unione",
         "notActivated": "non attivato",
-        "offline": "offiline",
+        "offline": "non in linea",
         "online": "online",
         "unavailable": "non disponibile"
     },

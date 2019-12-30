@@ -1,6 +1,6 @@
 {
   "activate_account": {
-    "emailSubject": "Ative sua conta"
+    "emailSubject": "Activar a sua conta"
   },
   "cloud_invite": {
     "emailSubject": "You have been invited to %CLOUD_NAME%"

@@ -3,7 +3,7 @@ import {
     Component, Input, Output,
     EventEmitter, OnChanges, SimpleChanges,
     OnInit, ViewEncapsulation,
-    ViewChild, ElementRef, AfterViewInit, HostListener, Renderer2,
+    ViewChild, ElementRef, AfterViewInit,
 }                                   from '@angular/core';
 import { ActivatedRoute, Router }   from '@angular/router';
 import { NxConfigService }          from '../../../../services/nx-config';
@@ -52,7 +52,6 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
     offset: number;
     currentPage: number;
     pageSize: number;
-    totalItems: number;
     pager: any = {};
     pagedItems: any[];
     pagerMaxSize: number;
@@ -60,18 +59,17 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
     serviceHeaders;
 
     windowSize: any = {};
-    windowScroll: any;
     clientHeight: number;
     offsetHeight: number;
     scrollHeight: number;
     tableScrollFixed: boolean;
     elementWidth: any;
-    revert: any;
+    tableReady: boolean;
 
     @ViewChild('thead', { static: false }) thead: ElementRef;
     @ViewChild('tableHeaderElement', { static: false }) tableHeaderElement: ElementRef;
     @ViewChild('nxTable', { static: false }) camerasTable: ElementRef;
-    @ViewChild('nxScrollWrapper', { static: false }) scrollWrapper: ElementRef;
+
     // CSS does not use CONFIG so this is here to avoid confusion if changing the value
     private static ROW_HEIGHT = 26;
 
@@ -82,7 +80,6 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
                 private route: ActivatedRoute,
                 private healthService: NxHealthService,
                 private scrollMechanicsService: NxScrollMechanicsService,
-                private renderer: Renderer2,
     ) {
         this.CONFIG = this.configService.getConfig();
         this.elements = this.elements || [];
@@ -91,6 +88,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         this.pagerMaxSize = this.CONFIG.ipvd.pagerMaxSize;
         this.currentPage = 1;
         this.pageSize = this.CONFIG.layout.tableLarge.rows;
+        this.tableReady = false;
     }
 
     trackItem(index, item) {
@@ -162,6 +160,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         }
 
         this.setPagedItems();
+        this.tableReady = true;
     }
 
     ngOnInit() {
@@ -179,7 +178,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
 
     ngAfterViewInit(): void {
         if (this.dimensions.length) {
-            this.setTableDimensions();
+            setTimeout(() => this.setTableDimensions());
         }
     }
 
@@ -216,7 +215,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         this.uri.pageOffset = window.pageYOffset;
         this.setPagedItems();
 
-        if (this.params && this.params.page != pageParam) { // this.params.page is string - no strict comparison
+        if (this.params && parseInt(this.params.page, 10) !== pageParam) { // this.params.page is string - no strict comparison
             const queryParams: Params = {};
             queryParams.page = (this.currentPage === 1) ? undefined : this.currentPage;
 
@@ -267,20 +266,6 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
 
         if (updateURI || updateURI === undefined) {
             setTimeout(() => this.setPage(1));
-        }
-    }
-
-    // Element with position 'fixed' is loosing the focus when page bottom is reached and cursor is moved (not 'mousewheel')
-    // this ensures scroll wrapper will get the event... but content is not clickable during scroll. -- TT
-    @HostListener("mousewheel", ["$event"])
-    onMouseWheel(event) {
-        if (this.tableScrollFixed) {
-            this.renderer.setStyle(this.scrollWrapper.nativeElement, 'z-index', '-1');
-            clearTimeout(this.revert);
-            this.revert = setTimeout(() => {
-                this.renderer.setStyle(this.scrollWrapper.nativeElement, 'z-index', '1');
-                clearTimeout(this.revert);
-            }, 100);
         }
     }
 }
