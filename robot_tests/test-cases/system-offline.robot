@@ -43,7 +43,7 @@ The page is opened and shows the user list to owner
     [Tags]    C41881    Threaded
     Log in to Autotests 2 System    ${EMAIL OWNER}
     Location Should Be    ${url}/systems/${AUTOTESTS OFFLINE SYSTEM ID}
-    Title Should Be    Systems - ${PRODUCT_NAME}
+    # Title Should Be    Systems - ${PRODUCT_NAME}
     Wait Until Elements Are Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
     Wait Until Element Is Visible    ${USERS LIST}
