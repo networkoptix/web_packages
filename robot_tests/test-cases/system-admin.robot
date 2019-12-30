@@ -42,6 +42,58 @@ Restart
     Run Keyword If    ${status}    Log Out
     Go To    ${url}
 
+settings on page should match settings on server
+    Wait Until Elements Are Visible    
+    ...    ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}     
+    ...    ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}      
+    ...    ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}
+    ...    ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}
+    ...    ${ALLOW ONLY SECURE CHECKBOX VISIBLE}
+    ...    ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}
+    ...    ${LIMIT SESSION DURATION CHECKBOX VISIBLE}
+    Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    ${status} =    Run Keyword and Return Status    Checkbox Should Be Selected     ${ENABLE AUTO DISCOVERY CHECKBOX REAL}
+    ${string} =    Convert To String    ${status}
+    ${selected} =    Convert To Lowercase    ${string}    
+    Run Keyword And Continue On Failure    Evaluate Auto System Settings via API     autoDiscoveryEnabled    ${selected}
+    
+    ${status} =    Run Keyword and Return Status    Checkbox Should Be Selected     ${SEND ANONYMOUS USAGE CHECKBOX REAL}
+    ${string} =    Convert To String    ${status}
+    ${selected} =    Convert To Lowercase    ${string}    
+    Run Keyword And Continue On Failure    Evaluate Auto System Settings via API     statisticsAllowed    ${selected}
+    
+    ${status} =    Run Keyword and Return Status    Checkbox Should Be Selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX REAL}
+    ${string} =    Convert To String    ${status}
+    ${selected} =    Convert To Lowercase    ${string}    
+    Run Keyword And Continue On Failure    Evaluate Auto System Settings via API     cameraSettingsOptimization    ${selected}
+    
+    ${status} =    Run Keyword and Return Status    Checkbox Should Be Selected     ${ENABLE AUDIT TRAIL CHECKBOX REAL}
+    ${string} =    Convert To String    ${status}
+    ${selected} =    Convert To Lowercase    ${string}    
+    Run Keyword And Continue On Failure    Evaluate Auto System Settings via API     auditTrailEnabled    ${selected}
+    
+    ${status} =    Run Keyword and Return Status    Checkbox Should Be Selected     ${ALLOW ONLY SECURE CHECKBOX REAL}
+    ${string} =    Convert To String    ${status}
+    ${selected} =    Convert To Lowercase    ${string}    
+    Run Keyword And Continue On Failure    Evaluate Auto System Settings via API     trafficEncryptionForced    ${selected}
+    
+    ${status} =    Run Keyword and Return Status    Checkbox Should Be Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX REAL}
+    ${string} =    Convert To String    ${status}
+    ${selected} =    Convert To Lowercase    ${string}    
+    Run Keyword And Continue On Failure    Evaluate Auto System Settings via API     videoTrafficEncryptionForced    ${selected}
+    
+    ${status} =    Run Keyword and Return Status    Checkbox Should Be Selected     ${LIMIT SESSION DURATION CHECKBOX REAL}
+    Run Keyword If    ${status}==False    Evaluate Auto System Settings via API    sessionLimitMinutes    0
+    ...    ELSE     Evaluate Session Limit 
+       
+Evaluate Session Limit
+    ${value} =    Get Value    ${TIME NUMBER INPUT}     
+    ${interval} =     Get Text    ${TIME DURATION INTERVAL}    
+    ${multiplier} =     Set Variable If    "${interval}"=="hours"    60  
+    ...    "${interval}"=="minutes"    1
+    ${number} =   Evaluate      ${multiplier}*${value}       
+    Evaluate Auto System Settings via API    sessionLimitMinutes      ${number}
+
 *** Test Cases ***
 systems dropdown should allow you to go back to the systems page
     [tags]    Threaded
@@ -209,6 +261,7 @@ should show system settings and security settings
     ...    ${ALLOW ONLY SECURE CHECKBOX VISIBLE}
     ...    ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}
     ...    ${LIMIT SESSION DURATION CHECKBOX VISIBLE}
+    Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}    
     Element Text Should Be    //label[@for="autoDiscoveryEnabled"]//span    ${ENABLE AUTO DISCOVERY TEXT}
     Element Text Should Be    //label[@id="autoDiscoveryEnabledHelpBlock"]    ${ENABLE AUTO DISCOVERY DESCRIPTION TEXT}
     Element Text Should Be    //label[@for="statisticsAllowed"]//span    ${SEND ANONYMOUS USAGE TEXT}
@@ -221,47 +274,82 @@ should show system settings and security settings
     Element Text Should Be    //label[@for="videoTrafficEncryptionForced"]//span    ${ENCRYPT VIDEO TRAFFIC TEXT}
     Element Text Should Be    //label[@id="videoTrafficEncryptionForcedHelpBlock"]    ${ENCRYPT VIDEO TRAFFIC DESCRIPTION TEXT}
     Element Text Should Be    //label[@for="sessionLimitMinutes"]//span    ${LIMIT SESSION DURATION TEXT}
-    
-settings on page should match settings on server
+        
+changing settings on page should change settings on server
     Log in to Auto Tests System    ${EMAIL OWNER}
-    Wait Until Elements Are Visible    
-    ...    ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}     
-    ...    ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}      
-    ...    ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}
-    ...    ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}
-    ...    ${ALLOW ONLY SECURE CHECKBOX VISIBLE}
-    ...    ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}
-    ...    ${LIMIT SESSION DURATION CHECKBOX VISIBLE}
+    settings on page should match settings on server
+    Log    Basic Testing each setting one at a time
+    
     ${status} =    Run Keyword and Return Status    Checkbox Should Be Selected     ${ENABLE AUTO DISCOVERY CHECKBOX REAL}
-    ${string} =    Convert To String    ${status}
-    ${selected} =    Convert To Lowercase    ${string}    
-    Evaluate Auto System Settings via API     autoDiscoveryEnabled    ${selected}
-    
+    ${selected} =    Set Variable If    ${status}==True    false
+    ...    ${status}==False    true   
+    Set Checkbox Value    ${ENABLE AUTO DISCOVERY CHECKBOX REAL}    ${selected}
+    Wait Until Elements Are Visible     ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Click Button    ${SYSTEM SAVE}
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
+    Run Keyword And Continue On Failure    Evaluate Auto System Settings via API     autoDiscoveryEnabled    ${selected}    
+
     ${status} =    Run Keyword and Return Status    Checkbox Should Be Selected     ${SEND ANONYMOUS USAGE CHECKBOX REAL}
-    ${string} =    Convert To String    ${status}
-    ${selected} =    Convert To Lowercase    ${string}    
-    Evaluate Auto System Settings via API     statisticsAllowed    ${selected}
-    
+    ${selected} =    Set Variable If    ${status}==True    false
+    ...    ${status}==False    true 
+    Set Checkbox Value    ${SEND ANONYMOUS USAGE CHECKBOX REAL}    ${selected}
+    Wait Until Elements Are Visible     ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Click Button    ${SYSTEM SAVE}
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
+    Run Keyword And Continue On Failure    Evaluate Auto System Settings via API     statisticsAllowed    ${selected}    
+
     ${status} =    Run Keyword and Return Status    Checkbox Should Be Selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX REAL}
-    ${string} =    Convert To String    ${status}
-    ${selected} =    Convert To Lowercase    ${string}    
-    Evaluate Auto System Settings via API     cameraSettingsOptimization    ${selected}
+    ${selected} =    Set Variable If    ${status}==True    false
+    ...    ${status}==False    true 
+    Set Checkbox Value    ${ALLOW SYSTEM OPTIMIZE CHECKBOX REAL}    ${selected}
+    Wait Until Elements Are Visible     ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Click Button    ${SYSTEM SAVE}
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
+    Run Keyword And Continue On Failure    Evaluate Auto System Settings via API     cameraSettingsOptimization    ${selected}    
+
     
     ${status} =    Run Keyword and Return Status    Checkbox Should Be Selected     ${ENABLE AUDIT TRAIL CHECKBOX REAL}
-    ${string} =    Convert To String    ${status}
-    ${selected} =    Convert To Lowercase    ${string}    
-    Evaluate Auto System Settings via API     auditTrailEnabled    ${selected}
+    ${selected} =    Set Variable If    ${status}==True    false
+    ...    ${status}==False    true 
+    Set Checkbox Value    ${ENABLE AUDIT TRAIL CHECKBOX REAL}    ${selected}
+    Wait Until Elements Are Visible     ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Click Button    ${SYSTEM SAVE}
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
+    Run Keyword And Continue On Failure    Evaluate Auto System Settings via API     auditTrailEnabled    ${selected}    
+
     
     ${status} =    Run Keyword and Return Status    Checkbox Should Be Selected     ${ALLOW ONLY SECURE CHECKBOX REAL}
-    ${string} =    Convert To String    ${status}
-    ${selected} =    Convert To Lowercase    ${string}    
-    Evaluate Auto System Settings via API     trafficEncryptionForced    ${selected}
+    ${selected} =    Set Variable If    ${status}==True    false
+    ...    ${status}==False    true 
+    Set Checkbox Value    ${ALLOW ONLY SECURE CHECKBOX REAL}    ${selected}
+    Wait Until Elements Are Visible     ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Click Button    ${SYSTEM SAVE}
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
+    Run Keyword And Continue On Failure    Evaluate Auto System Settings via API     trafficEncryptionForced    ${selected}    
+
     
-    ${status} =    Run Keyword and Return Status    Checkbox Should Be Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX REAL}
-    ${string} =    Convert To String    ${status}
-    ${selected} =    Convert To Lowercase    ${string}    
-    Evaluate Auto System Settings via API     videoTrafficEncryptionForced    ${selected}
-    
-    ${status} =    Run Keyword and Return Status    Checkbox Should Be Selected     ${LIMIT SESSION DURATION CHECKBOX REAL}
-    Run Keyword If    ${status}==False    Evaluate Auto System Settings via API     sessionLimitMinutes    0
+    ${status} =    Run Keyword and Return Status    Checkbox Should Be Selected     ${ALLOW ONLY SECURE CHECKBOX REAL}
+    ${status2} =    Run Keyword and Return Status    Checkbox Should Be Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX REAL} 
+    ${selected} =    Set Variable If    ${status}==False or ${status2}==False    true 
+    ...    ${status}==True and ${status2}==True     false   
+    Run Keyword If    ${status}==True and ${status2}==False   Set Checkbox Value    ${ENCRYPT VIDEO TRAFFIC CHECKBOX REAL}    true
+    ...    ELSE IF     ${status}==True and ${status2}==True    Set Checkbox Value    ${ENCRYPT VIDEO TRAFFIC CHECKBOX REAL}    false
+    ...    ELSE    Run Keywords    
+        ...    Set Checkbox Value    ${ALLOW SYSTEM OPTIMIZE CHECKBOX REAL}    true    AND
+        ...    Set Checkbox Value    ${ENCRYPT VIDEO TRAFFIC CHECKBOX REAL}    true 
+    Wait Until Elements Are Visible     ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Click Button    ${SYSTEM SAVE}
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
+    Run Keyword And Continue On Failure    Evaluate Auto System Settings via API     videoTrafficEncryptionForced    ${selected}    
+
  
+    ${status} =    Run Keyword and Return Status    Checkbox Should Be Selected     ${LIMIT SESSION DURATION CHECKBOX REAL}
+    Run Keyword If    ${status}==True    Set Checkbox Value    ${LIMIT SESSION DURATION CHECKBOX REAL}    false
+    ...    ELSE    Set Checkbox Value    ${LIMIT SESSION DURATION CHECKBOX REAL}    true
+    Wait Until Elements Are Visible     ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Click Button    ${SYSTEM SAVE}
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
+    ${status} =    Run Keyword and Return Status    Checkbox Should Be Selected     ${LIMIT SESSION DURATION CHECKBOX REAL}
+    Run Keyword If    ${status}==False    Evaluate Auto System Settings via API    sessionLimitMinutes    0
+    ...    ELSE     Evaluate Session Limit
+    

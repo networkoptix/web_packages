@@ -88,8 +88,18 @@ Log Out via API
 
 Evaluate Auto System Settings via API
     [arguments]    ${setting}    ${selected}
-    Create Digest Session    returnedSetting    http://10.1.5.169:7001    ${sys auth}
-    ${systemSettings} =     Get Request    returnedSetting   /api/systemSettings?${setting}   timeout=10
+    Create Digest Session    returnedSetting    ${AUTO SYS API}    ${AUTO SYS API AUTH}     disable_warnings=1
+    ${systemSettings} =     Get Request    returnedSetting   /api/systemSettings   timeout=10
     ${string} =    Convert To String    ${systemSettings.json()}
-    Should Contain    ${string}    ${selected}
+    Should Contain    ${string}    ${setting}': '${selected}
+    
+    #&{bind json}=    bind system    ${auth}    ${ENV}    name=${system name}
+    #&{Setup Cloud System json}=    Setup Cloud System
+    #...    ${default auth}
+    #...    https://localhost:${port}
+    #...    ${bind json["authKey"]}
+    #...    ${bind json["name"]}
+    #...    ${bind json["id"]}
+    #...    ${bind json["ownerAccountEmail"]}
+    #[return]    ${bind json["id"]}
     

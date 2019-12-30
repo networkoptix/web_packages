@@ -148,6 +148,9 @@ ${SYSTEM NAME IS REQUIRED}            //form[@name='renameForm']//span[@class='i
 
 ${SYSTEM USER DETAILS}                //nx-system-settings-component//nx-block/..
 
+${SYSTEM SAVE}                        //nx-apply//nx-process-button//button
+${SYSTEM CANCEL}                      //nx-apply/div/div/button
+
 ${USER EMAIL}                         ${SYSTEM USER DETAILS}//header//h2[contains(@class,'user-email')]
 ${USER NAME}                          ${USER EMAIL}/following-sibling::span[contains(@class,'user-name')]
 ${OWNER LABEL}                        ${SYSTEM USER DETAILS}//header//h2/following-sibling::span[contains(@class,'system-owner')]/span[contains(text(),'${OWNER TEXT}')]
@@ -195,6 +198,7 @@ ${ENCRYPT VIDEO TRAFFIC CHECKBOX REAL}     //*[@id='videoTrafficEncryptionForced
 ${LIMIT SESSION DURATION CHECKBOX VISIBLE}    //nx-checkbox[@name='sessionLimitMinutes']
 ${LIMIT SESSION DURATION CHECKBOX REAL}    //*[@id='sessionLimitMinutes']
 ${TIME NUMBER INPUT}                  //*[@type='number']
+${TIME DURATION INTERVAL}            //*[@id='genericSelect']/span
 
 #Merge
 ${MERGE BUTTON SYSTEM}                //button/span[text()="${MERGE SYSTEM BUTTON TEXT}"]/..
