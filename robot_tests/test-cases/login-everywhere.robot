@@ -16,9 +16,9 @@ ${url}         ${ENV}
 *** Keywords ***
 Check Log In
     ${random email}    Get Random Email    ${BASE EMAIL}
-    Log In    ${random email}    ${password}
+    Log In    ${random email}    ${password}    ${False}
     Wait Until Element Is Visible    ${ACCOUNT NOT FOUND}
-    Log In    ${email}    ${password}    None
+    Log In    ${email}    ${password}    button=None
     Validate Log In
 
 Open New Browser On Failure

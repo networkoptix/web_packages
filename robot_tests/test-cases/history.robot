@@ -124,7 +124,7 @@ Make sure expandable sections show options
     Click Link    ${BETAS TAB}
     Wait Until Element Is Visible    ${PATCHES TAB}
     loop expanders
-    
+
 should open downloads releases page in anonymous state
     [tags]    anonymous
     Open page anonymously    ${url}/downloads/releases    ${RELEASE HISTORY TITLE TEXT} - ${PRODUCT_NAME}

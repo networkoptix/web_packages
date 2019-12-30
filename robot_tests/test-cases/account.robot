@@ -254,9 +254,9 @@ Language change affects emails
     Delete Email    ${email}
     Close Mailbox
     Check Language Logged In    ${EMAIL NOPERM}    ${password}
-    
+
 Should open account page in anonymous state
     [tags]    anonymous
     Run keyword and continue on failure    Open page anonymously    ${url}/account    ${ACCOUNT SETTINGS TEXT} - ${PRODUCT_NAME}
-    Wait Until Element Is Visible    ${LOG IN MODAL} 
+    Wait Until Element Is Visible    ${LOG IN MODAL}
     Check Log In    button=None

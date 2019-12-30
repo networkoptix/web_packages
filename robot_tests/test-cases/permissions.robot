@@ -15,7 +15,7 @@ ${url}             ${ENV}
 Log in to Auto Tests System
     [arguments]    ${email}
     Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
-    Log In    ${email}    ${password}    None
+    Log In    ${email}    ${password}    button=None
     Validate Log In
     Run Keyword If    '${email}' == '${EMAIL OWNER}'    Wait Until Elements are Visible
     ...    ${DISCONNECT FROM NX}
@@ -43,7 +43,7 @@ Share with Adminstrator
 Check Log In
     Log In    ${EMAIL UNREGISTERED}    ${password}
     Check For Alert    ${ACCOUNT DOES NOT EXIST}
-    Log In    ${email}    ${password}    None
+    Log In    ${email}    ${password}    button=None
     Validate Log In
 
 Check Special Hint

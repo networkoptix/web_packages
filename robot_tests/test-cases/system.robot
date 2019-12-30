@@ -324,11 +324,10 @@ should show (your system) for owner and (owner's name) for non-owners
     FOR    ${user}    IN    @{EMAILS LIST}
         Run Keyword Unless    "${user}"=="${EMAIL OWNER}"    Check System Text    ${user}
     END
-    
+
 should open a system page in anonymous state
     [tags]    anonymous
     Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
     Location should be    ${url}/systems/${AUTO TESTS SYSTEM ID}
-    Wait Until Element Is Visible    ${LOG IN MODAL} 
+    Wait Until Element Is Visible    ${LOG IN MODAL}
     Check Log In    button=None
-    
