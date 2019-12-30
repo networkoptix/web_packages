@@ -17,7 +17,9 @@
                         [entity]="objectValues(selectedValues)[0]">
                 </nx-single-entity>
             </div>
-            <div *ngIf="metricValuesLen > 1" class="p-0" #tableContainer>
+            <div *ngIf="metricValuesLen > 1" class="p-0" #tableContainer
+                 [ngClass]="{'data-wrapper' : !activeEntity}">
+
                 <div class="mb-3 p-0" #search
                      *ngIf="!mobileDetailMode && metricValuesLen > 1">
 
