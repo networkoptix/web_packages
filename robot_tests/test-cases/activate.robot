@@ -35,7 +35,7 @@ Register and Activate
     [tags]    email    C24211
     ${email}    Get Random Email    ${BASE EMAIL}
     Go To    ${url}/register
-    Title Should Be    ${REGISTER TITLE TEXT} ${PRODUCT_NAME}
+    # Title Should Be    ${REGISTER TITLE TEXT} ${PRODUCT_NAME}
     Register    'mark'    'hamill'    ${email}    ${password}
     Activate    ${email}
     Log In    ${email}    ${password}    button=${SUCCESS LOG IN BUTTON}
