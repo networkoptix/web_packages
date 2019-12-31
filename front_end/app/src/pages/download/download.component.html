@@ -33,7 +33,7 @@
                                             <div class="media-body text-left">
                                                 <h3 translate>Download %VMS_NAME%</h3>
                                                 <div class="h7 installer-name">
-                                                    <span>
+                                                    <span *ngIf="!downloadButton.niceName">
                                                         {{LANG.downloads.groups[platform.name].shortLabel || LANG.downloads.groups[platform.name].label}}
                                                     </span>
                                                     {{downloadButton.niceName}}
