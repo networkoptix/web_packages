@@ -110,8 +110,13 @@ export class NxContentComponent implements OnInit {
         this._compiler.compileModuleAndAllComponentsAsync(TemplateModule).then((mod) => {
             const factory = mod.componentFactories.find((comp) => comp.componentType === TemplateComponent);
 
-            this.dynamicTemplate.createComponent(factory);
+            const component = this.dynamicTemplate.createComponent(factory);
             this.loaded = true;
+
+            const title = component.location.nativeElement.querySelector('[set-title]');
+            if (title) {
+                this.pageService.setPageTitle(title.innerText);
+            }
 
             /* If content was successfully compiled from static files,
                 add to staticContent so we don't do an API call each time we switch pages */
