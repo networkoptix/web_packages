@@ -217,6 +217,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
                 {
                     id      : 'server',
                     label   : '',
+                    css     : 'large',
                     items   : serverItems,
                     selected: selected || serverItems[0]
                 });

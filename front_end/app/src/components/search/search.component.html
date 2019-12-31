@@ -52,8 +52,9 @@
                  [ngStyle]="{'max-width': layout == 'selectors' ? '100%': '992px'}"
                  *ngIf="localFilter.selects && localFilter.selects.length || localFilter.multiselects && localFilter.multiselects.length">
 
-                <div class="drop" *ngFor="let select of localFilter.selects"
+                <div class="drop {{select.css || ''}}" *ngFor="let select of localFilter.selects"
                      [ngClass]="{'mb-2' : layout == 'selectors', 'mb-3' : layout != 'selectors'}">
+
                     <label style="text-transform: capitalize" *ngIf="select.label != ''">{{ select.label }}</label>
                     <nx-select [name]="select.label"
                                [items]="select.items"
@@ -74,10 +75,10 @@
                     </nx-multi-select>
                 </div>
 
-                <div class="drop mb-2" *ngIf="numberFilters && layout == 'selectors'">
+                <div class="drop mb-2" style="min-width: auto" *ngIf="numberFilters && layout == 'selectors'">
                     <button class="float-right float-md-left btn btn-text has-icon" (click)="resetFilters()">
                         <span class="close"></span>
-                        <span translate>Clear filters</span>
+                        <span translate>Clear</span>
                     </button>
                 </div>
             </div>
