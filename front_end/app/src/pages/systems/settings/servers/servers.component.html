@@ -2,7 +2,10 @@
     <div class="col-12 server-info" *ngIf="selectedServer">
         <nx-block header-style="extended">
             <header>
-                <h2>{{ selectedServer.name }}</h2>
+                <div>
+                    <h2>{{ selectedServer.name }}</h2>
+                    <span *ngIf="serverHasRestarted">Restarting...</span>
+                </div>
                 <div>
                     <span>IP</span>
                     <span>{{ selectedServer.ip }}</span>
@@ -22,12 +25,14 @@
                         <button 
                             class="btn btn-default mr-2"
                             (click)="renameServer()"
+                            [disabled]="renameDisabled"
                         >
                             <span class="ellipsis" translate>Rename</span>
                         </button>
                         <button 
                             class="btn btn-default"
-                            (click)="restartServer()"    
+                            (click)="restartServer()"
+                            [disabled]="restartDisabled"
                         >
                             <span class="ellipsis" translate>Restart</span>
                         </button>
@@ -64,7 +69,7 @@
                         [(ngModel)]="ipPortWatcher.value"
                         (keydown)="storePreviousValue($event)"
                         (keyup)="validationCheckForInput()"
-                        [disabled]="!system.permissions.editAdmins"
+                        [disabled]="portChangeDisabled"
                         (change)="onPortChange()"
                     >
                 </div>

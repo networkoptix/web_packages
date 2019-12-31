@@ -228,7 +228,7 @@ export class NxSystem extends System implements OnDestroy {
                 mediaserverConnections[server.id].setAuthKeys(authGet, authPost, authPlay);
                 return mediaserverConnections;
             }, {});
-            return Promise.resolve();
+            return Promise.resolve(this.mediaserverConnections);
         }
         return Promise.reject();
     }
@@ -590,8 +590,39 @@ export class NxSystem extends System implements OnDestroy {
     }
 
     renameServer(serverId, serverName) {
-        return this.mediaserver.renameServer(serverId, serverName)
-            .then(() => this.update().toPromise());
+        const cleanServerId = serverId.replace(/[{}]/, '');
+        return this.mediaserverConnections[serverId].renameServer(cleanServerId, serverName)
+            .then(() => this.update().toPromise())
+            .catch(err => {
+                if (err.status === 503) {
+                    this.mediaserver.renameServer(cleanServerId, serverName)
+                        .then(() => this.update().toPromise());
+                } else {
+                    Promise.reject(err);
+                }
+            });
+    }
+
+    getServerStats(serverId) {
+        return this.mediaserverConnections[serverId].getServerStats()
+            .catch(err => {
+                if (err.status === 503 || err.status === 502) {
+                    return this.mediaserver.getServerStats();
+                } else {
+                    Promise.reject(err);
+                }
+            });
+    }
+
+    restartServer(serverId) {
+        return this.mediaserverConnections[serverId].restartServer()
+            .catch(err => {
+                if (err.status === 503) {
+                    this.mediaserver.restartServer();
+                } else {
+                    Promise.reject(err);
+                }
+            });
     }
 }
 

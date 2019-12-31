@@ -230,14 +230,15 @@ export class NxDialogsService {
         return this.createModal(RenameServerModalContent, options, params);
     }
 
-    restartServer(serverName) {
+    restartServer(system, serverId) {
         const options: any = {
             windowClass: 'modal-holder',
             backdrop   : 'static'
         };
 
         const params: any = {
-            serverName,
+            system,
+            serverId,
             closable: true,
         };
 

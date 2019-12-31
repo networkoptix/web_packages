@@ -238,6 +238,18 @@ export class NxSystemAPI {
     renameServer(serverId, serverName) {
         return this.post('/ec2/saveMediaServerUserAttributes', { serverId, serverName }).toPromise();
     }
+
+    getServerStats() {
+        console.log('urlBase in getServerStats', this.urlBase);
+        return this.get('/api/statistics').toPromise()
+            .catch(err => Promise.reject(err));
+    }
+
+    restartServer() {
+        console.log('restartServer called', this.serverId)
+        return this.post('/api/restart').toPromise()
+            .catch(err => Promise.reject(err));
+    }
     /* End of Server settings */
 
     /* Working with users*/
@@ -444,11 +456,17 @@ export class NxSystemAPIService {
     }
 
     createConnection(user, systemId, serverId, unauthorizedCallback) {
-        if (systemId in this.systemConnections) {
-            return this.systemConnections[systemId];
-        } else if (serverId in this.systemConnections) {
-            return this.systemConnections[serverId];
-        }
+        // const sysServe = `${systemId}+${serverId}`;
+        // if (systemId && serverId && sysServe in this.systemConnections) {
+        //     return this.systemConnections[sysServe];
+        // } else if (systemId in this.systemConnections) {
+        //     return this.systemConnections[systemId];
+        // } else if (serverId in this.systemConnections) {
+        //     return this.systemConnections[serverId];
+        // } else {
+        //     const mediaserverConnection = new NxSystemAPI(this.http, this.CONFIG, this.location, user, systemId, serverId, unauthorizedCallback);
+        //     this.systemConnections[sysServe]
+        // }
         return new NxSystemAPI(this.http, this.CONFIG, this.location, user, systemId, serverId, unauthorizedCallback);
     }
 }

@@ -40,6 +40,8 @@ export class NxSystemServersComponent implements OnInit {
     viewContainerRef: ViewContainerRef;
     serverIdFromParams: any;
     selectedServer: any;
+    mediaserverConnections: any;
+    selectedServerConnection: any;
     mediaserverConnectionsReady: boolean;
 
     private serverSubscription: Subscription;
@@ -49,6 +51,11 @@ export class NxSystemServersComponent implements OnInit {
     saveSettings: any;
     ipPortWatcher: any = new Watcher<number>();
     previousInputValue: number;
+    serverHasRestarted: boolean;
+
+    renameDisabled: boolean;
+    restartDisabled: boolean;
+    portChangeDisabled: boolean;
 
     private setupDefaults() {
         this.CONFIG = this.configService.getConfig();
@@ -91,6 +98,9 @@ export class NxSystemServersComponent implements OnInit {
 
     ngOnInit(): void {
         this.LANG = this.language.getTranslations();
+        this.renameDisabled = true;
+        this.restartDisabled = true;
+        this.portChangeDisabled = true;
         // this.pageService.setPageTitle(this.LANG.pageTitles.systems);
         // this.settings = {
         //     disconnectDisabled: false,
@@ -103,7 +113,6 @@ export class NxSystemServersComponent implements OnInit {
         this.routeParamsSubscription = this.route
             .params
             .subscribe(params => {
-                console.log('params returned', params);
                 if (params.serverId) {
                     this.menuService.setDetailsSection(params.serverId);
                     this.serverIdFromParams = params.serverId;
@@ -131,7 +140,11 @@ export class NxSystemServersComponent implements OnInit {
                     console.log('serverSubscription called');
                     if (this.system && this.system.servers && this.system.servers.length) {
                         this.system.initSystemMediaServers()
-                            .then(() => this.mediaserverConnectionsReady = true);
+                            .then(res => {
+                                this.mediaserverConnections = res;
+                                this.selectedServerConnection = this.mediaserverConnections[this.selectedServer.id];
+                                this.mediaserverConnectionsReady = true;
+                            });
                     }
                     // this.systemAvailable = this.system.isAvailable && this.system.mergeInfo === undefined;
                     if (!this.applyService.locked) {
@@ -159,7 +172,6 @@ export class NxSystemServersComponent implements OnInit {
             });
         }
         if (typeof(server) === 'undefined') {
-            console.log('this.system pre-set', this.system);
             server = this.system.servers[0];
             // server = this.system.servers[0];
             // console.log('server in setServer', server);
@@ -174,8 +186,11 @@ export class NxSystemServersComponent implements OnInit {
             server.osName = JSON.parse(server.osInfo).platform;
             this.ipPortWatcher.value = port;
             this.selectedServer = server;
+            console.log('mediaserverconnections', this.mediaserverConnections);
+            this.renameDisabled = !this.system.permissions.editAdmins;
+            this.restartDisabled = !this.system.permissions.isAdmin;
+            this.portChangeDisabled = !this.system.permissions.editAdmins;
             console.log('selectedServer', this.selectedServer);
-            console.log('ipWatcher on set', this.ipPortWatcher);
             this.applyService.reset();
             this.applyService.setVisible(true);
         }
@@ -254,18 +269,18 @@ export class NxSystemServersComponent implements OnInit {
     }
 
     renameServer() {
-        const serverId = this.selectedServer.id.slice(1, -1);
+        const serverId = this.selectedServer.id;
         const serverName = this.selectedServer.name;
         return this.dialogs
             .renameServer(this.system, serverId, serverName);
     }
 
     restartServer() {
+        this.serverHasRestarted = false;
         return this.dialogs
-            .restartServer(this.selectedServer.name)
-            .then(server => {
-                console.log('returned server', server);
-                // selectedServer.status = 'offline';
+            .restartServer(this.system, this.selectedServer.id)
+            .then(status => {
+                if (status === 'restarting') this.serverHasRestarted = true;
             });
     }
 
