@@ -16,6 +16,12 @@ interface Params {
     [key: string]: any;
 }
 
+const ALARM_ORDER = {
+    'error': 2,
+    'warning': 1,
+    '': 0
+};
+
 const GROUP_ID = 0;
 const PARAM_ID = 1;
 const SORT_DIR = 2;
@@ -252,7 +258,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         function sortFunc() {
             if (paramId === 'alarm') {
                 return (elm) => {
-                    return elm[groupId] && elm[groupId][paramId] && elm[groupId][paramId].icon || '';
+                    return elm[groupId] && elm[groupId][paramId] && ALARM_ORDER[elm[groupId][paramId].icon] || '';
                 };
             } else {
                 return (elm) => {
