@@ -464,6 +464,7 @@ ${NOTHING FOUND PLACEHOLDER}          //div[contains(@class,'text-placeholder') 
 #Footer
 ${FOOTER ABOUT LINK}                  //footer//a[contains(text(),"${ABOUT} ${PRODUCT_NAME}")]
 ${FOOTER KNOWN LIMITS LINK}           //footer//a[contains(text(),"${KNOWN LIMITATIONS}")]
+${FOOTER INTEGRATIONS LINK}           //footer//a[contains(text(),"${INTEGRATIONS TITLE TEXT}")]
 ${FOOTER SUPPORT LINK}                //footer//a[contains(text(),"${SUPPORT}")]
 ${FOOTER TERMS LINK}                  //footer//a[contains(text(),"${TERMS}")]
 ${FOOTER PRIVACY LINK}                //footer//a[contains(text(),"${PRIVACY}")]

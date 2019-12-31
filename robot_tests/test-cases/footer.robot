@@ -16,7 +16,7 @@ Restart
 
 *** Test Cases ***
 About page is correctly displayed
-    [tags]    C41541    Threaded
+    [tags]    C41541    Threaded    C30820    smoke
     Wait Until Elements are Visible
     ...    ${FOOTER ABOUT LINK}
     ...    ${CREATE ACCOUNT BODY}
@@ -36,8 +36,16 @@ About page is correctly displayed
     ...    background-color
     ...    ${THEME COLOR RGB}
 
+
+Integrations leads to the proper support site
+    [tags]    Threaded    C57508    smoke
+    Wait Until Element is Visible    ${FOOTER INTEGRATIONS LINK}
+    Click Link    ${FOOTER INTEGRATIONS LINK}
+    Location Should Contain    integrations
+
+
 Support leads to the proper support site
-    [tags]    C41544    Threaded
+    [tags]    C41544    Threaded    C30823    smoke
     Wait Until Element is Visible    ${FOOTER SUPPORT LINK}
     Sleep    1
     Click Link    ${FOOTER SUPPORT LINK}
@@ -47,7 +55,7 @@ Support leads to the proper support site
     Location Should Contain    ${SUPPORT URL}
 
 Terms leads to the proper EULA site
-    [tags]    C41545    Threaded
+    [tags]    C41545    Threaded    C30824    smoke
     Wait Until Element is Visible    ${FOOTER TERMS LINK}
     Sleep    1
     Click Link    ${FOOTER TERMS LINK}
