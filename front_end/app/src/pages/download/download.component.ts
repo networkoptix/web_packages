@@ -30,6 +30,7 @@ export class DownloadComponent implements OnInit, OnDestroy {
     private platform: any;
     private activeOs: string;
     private canViewDownloads: boolean;
+    private paramPlatform: string;
 
     CONFIG: any;
     LANG: any;
@@ -87,8 +88,9 @@ export class DownloadComponent implements OnInit, OnDestroy {
                     filter(event => event instanceof ActivationEnd)
                 )
                 .subscribe((event: ActivationEnd) => {
-                    if (this.tabs && event.snapshot.params.platform) {
-                        this.tabs.select(event.snapshot.params.platform);
+                    this.paramPlatform = event.snapshot.params.platform;
+                    if (this.tabs && this.paramPlatform) {
+                        this.tabs.select(this.paramPlatform);
                     }
                 });
         }
@@ -205,6 +207,8 @@ export class DownloadComponent implements OnInit, OnDestroy {
             });
 
         if (!this.CONFIG.publicDownloads) {
+            this.setTitle(this.paramPlatform);
+
             this.accountService
                 .requireLogin()
                 .then(result => {
