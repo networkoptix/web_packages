@@ -102,7 +102,9 @@ export class NxContentComponent implements OnInit {
 
     compileStaticArticle(templateUrl) {
         @Component({templateUrl})
-        class TemplateComponent {}
+        class TemplateComponent {
+            @ViewChild('title', { static: true }) title;
+        }
 
         @NgModule({declarations: [TemplateComponent], imports: [ComponentsModule]})
         class TemplateModule {}
@@ -113,7 +115,7 @@ export class NxContentComponent implements OnInit {
             const component = this.dynamicTemplate.createComponent(factory);
             this.loaded = true;
 
-            const title = component.location.nativeElement.querySelector('[set-title]');
+            const title = component.instance.title.nativeElement;
             if (title) {
                 this.pageService.setPageTitle(title.innerText);
             }
