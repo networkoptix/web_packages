@@ -151,12 +151,9 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         this.locked[user.email] = true;
         this.calcNextUserId();
 
-        this.selectedUser.isEnabled = this.userEnabled.originalValue;
-        this.selectedUser.role = this.system.accessRoles.find(role => role.name === this.userRole.originalValue);
-        this.applyService.reset();
-
         this.dialogs.removeUser(this.system, user).then((result) => {
             if (result) {
+                this.applyService.reset();
                 delete this.locked[user.email];
                 this.uriService.updateURI(`systems/${this.system.id}/users/${this.nextUserId}`);
                 this.menuService.setDetailsSection(this.nextUserId);
