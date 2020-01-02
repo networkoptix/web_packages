@@ -149,7 +149,7 @@ ${SYSTEM NAME IS REQUIRED}            //form[@name='renameForm']//span[@class='i
 ${SYSTEM USER DETAILS}                //nx-system-settings-component//nx-block/..
 
 ${SYSTEM SAVE}                        //nx-apply//nx-process-button//button
-${SYSTEM CANCEL}                      //nx-apply/div/div/button
+${SYSTEM CANCEL}                      //nx-apply//button[@type='button']
 
 ${USER EMAIL}                         ${SYSTEM USER DETAILS}//header//h2[contains(@class,'user-email')]
 ${USER NAME}                          ${USER EMAIL}/following-sibling::span[contains(@class,'user-name')]

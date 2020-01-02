@@ -113,9 +113,9 @@ Log In
     Wait Until Elements Are Visible    ${EMAIL INPUT}    ${PASSWORD INPUT}    ${REMEMBER ME CHECKBOX VISIBLE}    ${FORGOT PASSWORD}    ${LOG IN CLOSE BUTTON}
     Sleep    1
     Wait Until Keyword Succeeds    4    0.5    Input Text    ${EMAIL INPUT}    ${email}
-    Sleep    0.25
-    Input Text    ${PASSWORD INPUT}    ${password}
-    Sleep    0.25
+    Sleep    1
+     Wait Until Keyword Succeeds    4    0.5   Input Text     ${PASSWORD INPUT}    ${password}
+    Sleep    1
     Wait Until Element Is Visible    ${LOG IN BUTTON}
     Click Button    ${LOG IN BUTTON}
     Run Keyword If    ${validate} == ${True}    Wait Until Element is Visible    ${ACCOUNT DROPDOWN}    ${selenium_timeout}
@@ -554,6 +554,7 @@ Set Checkbox Value
     [arguments]    ${CHECKBOX ELEMENT}    ${Desired Bool Value}
     ${Desired Bool Value}    Convert To Boolean    ${Desired Bool Value}    #input standardization
     ${id}    Get Element Attribute    ${CHECKBOX ELEMENT}    id
+    Log    ${id}
     Should Not Be Empty    ${id}    'The specified checkbox element "${CHECKBOX ELEMENT}" does not have an id attribute and cannot be used with the Set Checkbox Value Keyword.'
     ${checked}    Get Checkbox Value    ${CHECKBOX ELEMENT}
     Run Keyword If    ${checked} != ${Desired Bool Value}    Execute Javascript    window.document.getElementById('${id}').click()
