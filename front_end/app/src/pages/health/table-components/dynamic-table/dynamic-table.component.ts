@@ -22,6 +22,7 @@ const ALARM_ORDER = {
     '': 0
 };
 
+const TEXT_FORMATS = ['longText', 'shortText', 'text'];
 const GROUP_ID = 0;
 const PARAM_ID = 1;
 const SORT_DIR = 2;
@@ -45,7 +46,6 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
     CONFIG: any;
 
     _elements: any = [];
-    _headers: any = {};
     params: any = {};
 
     public selectedEntity;
@@ -114,7 +114,6 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         }
 
         if (changes.headers) {
-            this._headers = changes.headers.currentValue;
             this.selectedHeader = undefined;
 
             if (changes.headers.previousValue !== undefined &&
@@ -238,9 +237,9 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         return !(typeof x === 'string' || typeof x === 'number');
     }
 
-    toggleSort(groupId, paramId, updateURI?) {
+    toggleSort(groupId, paramId, updateURI?, format?) {
         if (this.selectedGroup !== groupId || this.selectedHeader !== paramId) {
-            this.sortOrderASC = true;
+            this.sortOrderASC = TEXT_FORMATS.includes(format);
         }
         this.selectedGroup = groupId;
         this.selectedHeader = paramId;

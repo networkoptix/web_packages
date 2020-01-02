@@ -28,7 +28,7 @@
                     <tr>
                         <ng-container *ngFor="let headerGroup of headers.values; trackBy: trackItem">
                             <th *ngFor="let header of headerGroup.values; trackBy: trackItem" class="align-bottom"
-                                (click)="toggleSort(headerGroup.id, header.id, true)">
+                                (click)="toggleSort(headerGroup.id, header.id, true, header.format)">
                                 <div class="caption d-flex align-items-end" [ngClass]="header.formatClass"
                                      [title]="header.description || header.name">
                                     <div class="text-container ellipsis" [innerHTML]="header.name"></div>
