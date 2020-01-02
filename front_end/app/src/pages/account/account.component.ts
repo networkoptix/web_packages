@@ -12,6 +12,7 @@ import { NxSystemsService }          from '../../services/systems.service';
 import { NxMenuService }             from '../../components/menu/menu.service';
 import { Subscription } from 'rxjs';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
+import {NxPageService} from "../../services/page.service";
 
 @AutoUnsubscribe()
 @Component({
@@ -55,7 +56,8 @@ export class NxAccountComponent implements OnInit, OnDestroy {
                 private accountService: NxAccountService,
                 private dialogs: NxDialogsService,
                 private uriService: NxUriService,
-                private menuService: NxMenuService
+                private menuService: NxMenuService,
+                private pageService: NxPageService,
     ) {
         this.setupDefaults();
     }

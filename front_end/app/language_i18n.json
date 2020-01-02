@@ -576,6 +576,7 @@
         "feedback": "Make sure you include your camera model and manufacturer..."
     },
     "pageTitles": {
+        "about": "About",
         "account": "Account settings",
         "activate": "Activate account",
         "activateCode": "Activate account",
@@ -596,6 +597,7 @@
         "restorePasswordSuccess": "Password saved",
         "supportedDevices": "Supported Devices",
         "system": "System",
+        "systemName": "{{systemName}}",
         "systemShare": "Share System",
         "systems": "Systems",
         "template": "{{title}} - %CLOUD_NAME%",

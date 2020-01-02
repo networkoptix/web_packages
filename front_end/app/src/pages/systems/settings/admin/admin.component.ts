@@ -116,7 +116,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.LANG = this.language.getTranslations();
-        this.pageService.setPageTitle(this.LANG.pageTitles.systems);
+
         this.currentlyMerging = false;
         this.settings = {
             disconnectDisabled: false,
@@ -209,6 +209,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             .subscribe((system) => {
                 if (system) {
                     this.system = system;
+                    this.pageService.setPageTitle(this.LANG.pageTitles.systemName.replace('{{systemName}}', this.system.info.name));
                     this.systemSubscription = system.infoSubject.subscribe(() => {
                         this.settingsService.footerSubject.next(true);
                         this.updateSettings(this.currentlyMerging);

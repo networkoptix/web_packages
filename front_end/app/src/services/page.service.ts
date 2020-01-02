@@ -16,12 +16,16 @@ export class NxPageService {
                 private meta: Meta) {
 
         this.CONFIG = this.config.getConfig();
-        this.LANG = this.language.getTranslations();
+    }
+
+    // called from app component
+    setLanguage(lang) {
+        this.LANG = lang;
     }
 
     setPageTitle(value: string) {
         let title = value;
-        if (title !== this.LANG.pageTitles.default) {
+        if (this.LANG && title !== this.LANG.pageTitles.default) {
             title = this.LANG.pageTitles.template.replace('{{title}}', value);
         }
         this.title.setTitle(title);
