@@ -130,8 +130,11 @@ Log In With Remember Me
     Sleep    1
     Input Text    ${EMAIL INPUT}    ${email}
     Sleep    0.25
+    Input Text    ${PASSWORD INPUT}    ${password}
     Run Keyword If    ${remember me}==True     Select Checkbox    ${REMEMBER ME CHECKBOX REAL}
     ...    ELSE    Unselect Checkbox    ${REMEMBER ME CHECKBOX REAL}
+    Click Button    ${LOG IN BUTTON}
+    Validate Log In
 
 Validate Log In
     [Arguments]    ${timeout}=${selenium_timeout}

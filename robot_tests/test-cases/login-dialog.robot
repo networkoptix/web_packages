@@ -318,7 +318,6 @@ Remember Me Checkbox
     [Tags]    C41567
     Log    Step 1
     Log In With Remember Me    ${email}    ${password}
-    Validate Log In
     Log    Step 2
     Persist Current Login State    ${url}
     Validate Log In
