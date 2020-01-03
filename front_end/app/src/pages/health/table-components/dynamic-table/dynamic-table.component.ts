@@ -11,6 +11,8 @@ import { NxUtilsService }           from '../../../../services/utils.service';
 import { NxUriService }             from '../../../../services/uri.service';
 import { NxHealthService }          from '../../health.service';
 import { NxScrollMechanicsService } from '../../../../services/scroll-mechanics.service';
+import { SubscriptionLike }         from 'rxjs';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 
 interface Params {
     [key: string]: any;
@@ -27,6 +29,7 @@ const GROUP_ID = 0;
 const PARAM_ID = 1;
 const SORT_DIR = 2;
 
+@AutoUnsubscribe()
 @Component({
     selector     : 'nx-dynamic-table',
     templateUrl  : './dynamic-table.component.html',
@@ -72,9 +75,11 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
     elementWidth: any;
     tableReady: boolean;
 
+    resizeSubscription: SubscriptionLike;
+
     @ViewChild('thead', { static: false }) thead: ElementRef;
     @ViewChild('tableHeaderElement', { static: false }) tableHeaderElement: ElementRef;
-    @ViewChild('nxTable', { static: false }) camerasTable: ElementRef;
+    @ViewChild('nxTable', { static: false }) dataTable: ElementRef;
 
     // CSS does not use CONFIG so this is here to avoid confusion if changing the value
     private static ROW_HEIGHT = 26;
@@ -95,6 +100,12 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         this.currentPage = 1;
         this.pageSize = this.CONFIG.layout.tableLarge.rows;
         this.tableReady = false;
+
+        this.resizeSubscription = this.scrollMechanicsService.windowSizeSubject.subscribe(() => {
+            if (this.dataTable) {
+                setTimeout(() => this.scrollMechanicsService.setElementTableWidth(this.dataTable.nativeElement.offsetWidth));
+            }
+        });
     }
 
     trackItem(index, item) {
@@ -111,6 +122,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
 
         if (changes.activeEntity) {
             this.selectedEntity = changes.activeEntity.currentValue;
+            setTimeout(() => this.scrollMechanicsService.setElementTableWidth(this.dataTable.nativeElement.offsetWidth));
         }
 
         if (changes.headers) {
@@ -166,6 +178,8 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
 
         this.setPagedItems();
         this.tableReady = true;
+
+        this.scrollMechanicsService.setElementTableWidth(this.dataTable.nativeElement.offsetWidth);
     }
 
     ngOnInit() {

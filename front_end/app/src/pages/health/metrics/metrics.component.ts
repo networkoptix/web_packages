@@ -16,7 +16,7 @@ import { NxUriService }                        from '../../../services/uri.servi
 import { NxLanguageProviderService }           from '../../../services/nx-language-provider';
 import { SubscriptionLike }                    from 'rxjs';
 import { AutoUnsubscribe }                     from 'ngx-auto-unsubscribe';
-import { NxScrollMechanicsService }            from "../../../services/scroll-mechanics.service";
+import { NxScrollMechanicsService }            from '../../../services/scroll-mechanics.service';
 
 interface Params {
     [key: string]: any;
@@ -67,6 +67,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
     containerDimensions: any = [];
 
     windowSizeSubscription: SubscriptionLike;
+    tableWidthSubscription: SubscriptionLike;
 
     fixedLayoutClass: string;
 
@@ -93,15 +94,13 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
         };
         this.fixedLayoutClass = '';
 
-        // Breadcrumbs for making search bar same width as dynamic table
-        // this.tableWidthSubscription = this.scrollMechanicsService
-        //         .elementTableWidthSubject
-        //         .subscribe(() => {
-        //             setTimeout(() => {
-        //                 this.elementSearch.nativeElement.style.width = this.scrollMechanicsService.elementTableWidthSubject.getValue() + 'px';
-        //             });
-        //         });
-        // ***************************************************************
+        this.tableWidthSubscription = this.scrollMechanicsService
+                .elementTableWidthSubject
+                .subscribe(() => {
+                    if (this.elementSearch) {
+                        this.elementSearch.nativeElement.style.width = this.scrollMechanicsService.elementTableWidthSubject.getValue() + 'px';
+                    }
+                });
     }
 
     ngOnInit(): void {
