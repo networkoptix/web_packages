@@ -244,7 +244,7 @@ Searching for owner email should only show systems with that owner
     Log In    ${EMAIL OWNER}    ${password}
     Wait Until Elements Are Visible    ${SYSTEMS SEARCH INPUT}    ${AUTO TESTS TITLE}    ${AUTO TESTS USER}    ${AUTO TESTS OPEN NX}
     Input Text    ${SYSTEMS SEARCH INPUT}    ${EMAIL OWNER}
-    Run Keyword And Expect Error    *    Element Should Be Visible    ${DIFFERENT OWNER TITLE}
+    Wait Until Element Is Not Visible    ${DIFFERENT OWNER TITLE}
 
 Search should only be visible with 9 or more systems
     [tags]    C41890
