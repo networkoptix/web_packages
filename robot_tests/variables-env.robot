@@ -9,8 +9,8 @@ ${CLOUD DEV3 AUTO SYSTEM}             http://10.1.5.160:7001
 ${CLOUD TEST REGISTER}                https://cloud-test.hdw.mx/register
 ${CLOUD STAGE}                        https://cloud-stage.hdw.mx
 ${DOWNLOADS DOMAIN}                   updates.networkoptix.com
-${ENV}                                ${CLOUD DEV3}
-${AUTO SYS API}                       ${CLOUD DEV3 AUTO SYSTEM}
+${ENV}                                ${CLOUD TEST}
+${AUTO SYS API}                       ${CLOUD TEST AUTO SYSTEM}
 @{AUTO SYS API AUTH}                  admin    qweasd 123
 ${SCREENSHOTDIRECTORY}                \Screenshots
 
