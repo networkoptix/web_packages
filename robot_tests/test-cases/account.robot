@@ -180,7 +180,7 @@ Should respond to tab and go in the correct order
     Press Keys    ${ACCOUNT LANGUAGE DROPDOWN}    TAB
     Element Should Be Focused    //nx-language-select//a//span[1]/..
     Press Keys    //nx-language-select//a//span[1]/..    ENTER
-    Element Should Be Visible    ${ACCOUNT LANGUAGE DROPDOWN}/span[@lang="cz_CZ"]
+    Element Should Be Visible    ${ACCOUNT LANGUAGE DROPDOWN}/span[@lang="cs_CZ"]
     Press Keys    ${ACCOUNT LANGUAGE DROPDOWN}    TAB
     Element Should Be Focused    ${ACCOUNT SAVE}
     Press Keys   ${ACCOUNT SAVE}    ENTER
