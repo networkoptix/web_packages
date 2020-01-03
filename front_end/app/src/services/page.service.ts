@@ -23,10 +23,13 @@ export class NxPageService {
         this.LANG = lang;
     }
 
-    setPageTitle(value: string) {
+    setPageTitle(value: string, useAltTemplate?: boolean) {
         let title = value;
         if (this.LANG && title !== this.LANG.pageTitles.default) {
             title = this.LANG.pageTitles.template.replace('{{title}}', value);
+            if (useAltTemplate) {
+                title = title.replace('- ', '');
+            }
         }
         this.title.setTitle(title);
     }
