@@ -182,20 +182,24 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                         obj.originalValue = obj.value;
                     }
                 } else if (sw.sessionLimitToggle.value === true) {
-                    const minutesMatch = obj.value === obj.originalValue;
-                    const unitMatch = sw.sessionLimitUnit.value === sw.sessionLimitUnit.originalValue;
+                    this.updateTimeUnitWatcher();
+                    const minutesMatch = (obj.value === obj.originalValue);
+                    const unitMatch = (sw.sessionLimitUnit.value === sw.sessionLimitUnit.originalValue);
                     if (!minutesMatch || !unitMatch) {
-                        const hourMultiplier = sw.sessionLimitUnit.value === this.hours ? 60 : 1;
+                        const hourMultiplier = (sw.sessionLimitUnit.value === this.hours) ? 60 : 1;
                         changes[setting] = this.timeUnitCount * hourMultiplier;
                         obj.originalValue = obj.value;
                         if (!unitMatch) {
                             sw.sessionLimitUnit.originalValue = sw.sessionLimitUnit.value;
                         }
+
+                        sw.sessionLimitToggle.originalValue = true;
                     }
                 } else if (obj.originalValue !== 0) {
                     changes[setting] = 0;
                     obj.originalValue = 0;
                     obj.value = 0;
+                    sw.sessionLimitToggle.originalValue = false;
                 }
             }
             return this.system.updateOrGetSystemSettings(changes)
@@ -241,7 +245,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                                             } else {
                                                 sw.sessionLimitUnit.value = this.minutes;
                                             }
-                                            sw[setting].value = this.timeUnitCount;
+                                            sw[setting].value = this.timeUnitCount || 0;
                                             this.timeUnitCount = this.timeUnitCount || 24;
                                             this.selectedTimeUnit = this.limitSessionTimeUnits
                                                                         .find(e => e.name === sw.sessionLimitUnit.value);
