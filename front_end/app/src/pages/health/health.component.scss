@@ -104,15 +104,20 @@ nx-system-health-component {
   }
 
   .importZone {
-    border: 2px dashed $light13;
-    border-radius: 4px;
-    min-height: 50px;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10000;
   }
 
-  .contentZone, .importInfo p {
+  .pointer-ignore {
+    pointer-events: none;
+  }
+
+  .contentZone {
+    text-align: center;
     font-size: $font-size-lg;
     color: $light16;
     font-family: $font-family-medium;

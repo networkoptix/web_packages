@@ -9,7 +9,7 @@ import { NxHealthService }                       from './health.service';
 import { NxLanguageProviderService }             from '../../services/nx-language-provider';
 import { NxUtilsService }                        from '../../services/utils.service';
 import { FileSystemFileEntry, NgxFileDropEntry } from 'ngx-file-drop';
-import { DOCUMENT }                              from '@angular/common';
+import { WINDOW }                                from '../../services/window-provider';
 import { NxRibbonService }                       from '../../components/ribbon/ribbon.service';
 import { Subscription }               from 'rxjs';
 import { NxScrollMechanicsService }              from '../../services/scroll-mechanics.service';
@@ -37,7 +37,6 @@ export class NxHealthComponent implements OnInit, OnDestroy {
 
     reportSnapshot: any;
 
-    dragCount = 0;
     importShow: boolean;
     importedData: any = {};
     headerHeight: number;
@@ -63,7 +62,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                 private ribbonService: NxRibbonService,
                 private scrollMechanicsService: NxScrollMechanicsService,
                 private breakpointObserver: BreakpointObserver,
-                @Inject(DOCUMENT) private document: any,
+                @Inject(WINDOW) private window: any,
     ) {
         this.LANG = this.languageService.getTranslations();
         this.CONFIG = this.configService.getConfig();
@@ -72,14 +71,9 @@ export class NxHealthComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.document.addEventListener('dragenter', event => {
-            if (++this.dragCount > 0 && event.dataTransfer.types[0] === 'Files') {
+        this.window.addEventListener('dragenter', event => {
+            if (event.dataTransfer.types[0] === 'Files') {
                 this.importShow = true;
-            }
-        });
-        this.document.addEventListener('dragleave', event => {
-            if (--this.dragCount < 1 && event.dataTransfer.types[0] === 'Files') {
-                this.importShow = false;
             }
         });
 
@@ -459,7 +453,6 @@ export class NxHealthComponent implements OnInit, OnDestroy {
     }
 
     fileDropped(files: NgxFileDropEntry[]) {
-        this.dragCount = 0;
         this.importShow = false;
         this.healthService.importedData = true;
         const fileEntry = files[0].fileEntry as FileSystemFileEntry;
@@ -490,7 +483,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
     }
 
     fileLeave() {
-        this.dragCount = 1;
+        this.importShow = false;
     }
 
     updateValues() {
