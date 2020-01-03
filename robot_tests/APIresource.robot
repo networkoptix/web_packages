@@ -84,6 +84,7 @@ Log Out via API
     ${status}=   CloudPortalAPI.Log Out    ${ENV}    &{cookies}[sessionid]    &{cookies}[csrftoken]
     Should Be Equal as Strings    ${status}    200
     Reload Page
+    Validate Log Out
 
 Evaluate Auto System Settings via API
     [arguments]    ${setting}    ${selected}
