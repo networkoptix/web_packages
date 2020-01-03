@@ -604,11 +604,9 @@ Save Cookies
 Apply Saved Cookies
     [arguments]   ${cookies}
     Delete All Cookies
-    #Add Cookie    ${cookies[0].name}    ${cookies[0].value}
-    Add Cookie    ${cookies[1].name}    ${cookies[1].value}
-    Add Cookie    ${cookies[2].name}    ${cookies[2].value}
-    Add Cookie    ${cookies[3].name}    ${cookies[3].value}
-    Add Cookie    ${cookies[4].name}    ${cookies[4].value}
+    FOR    ${i}     IN RANGE    1    4
+        Add Cookie    ${cookies[${i}].name}    ${cookies[${i}].value}
+    END
     ${session expiry} =    Convert To String    ${cookies[5].expiry}
     Run Keyword Unless    "${session expiry}"=="None"
     ...    Add Cookie    ${cookies[5].name}    ${cookies[5].value}     expiry=${session expiry}
