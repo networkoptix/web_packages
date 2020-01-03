@@ -7,7 +7,6 @@ Library           NoptixLibrary/Encode.py
 *** variables ***
 ${default name}    API made system
 ${customization}    default
-@{sys auth}    admin    qweasd 123
 
 *** Keywords ***
 Bind System
@@ -92,14 +91,4 @@ Evaluate Auto System Settings via API
     ${systemSettings} =     Get Request    returnedSetting   /api/systemSettings   timeout=10
     ${string} =    Convert To String    ${systemSettings.json()}
     Should Contain    ${string}    ${setting}': '${selected}
-    
-    #&{bind json}=    bind system    ${auth}    ${ENV}    name=${system name}
-    #&{Setup Cloud System json}=    Setup Cloud System
-    #...    ${default auth}
-    #...    https://localhost:${port}
-    #...    ${bind json["authKey"]}
-    #...    ${bind json["name"]}
-    #...    ${bind json["id"]}
-    #...    ${bind json["ownerAccountEmail"]}
-    #[return]    ${bind json["id"]}
     
