@@ -145,19 +145,20 @@ should respond to Tab key
     Wait Until Page Contains Element    ${TERMS AND CONDITIONS CHECKBOX VISIBLE}/../../span[contains(@class,"unchecked")]
 
     Press Keys    ${TERMS AND CONDITIONS CHECKBOX REAL}    TAB
+    get locations
     Press Keys    ${TERMS AND CONDITIONS LINK}    ENTER
     Element Should Be Focused    ${TERMS AND CONDITIONS LINK}
     ${tabs}    Get Window Handles
-    Select Window    @{tabs}[1]
-    Location Should Be    ${url}/content/eula
-    Select Window    @{tabs}[0]
+    Switch Window    @{tabs}[1]
+    Location Should Be    ${url}${TERMS URL}
+    Switch Window    @{tabs}[0]
     Press Keys    ${TERMS AND CONDITIONS LINK}    TAB
     Element Should Be Focused    ${PRIVACY POLICY LINK}
-    Press Keys    ${PRIVACY POLICY LINK}    ENTER
+    Press Keys    ${PRIVACY POLICY LINK}    SPACEBAR
     ${tabs}    Get Window Handles
-    Select Window    @{tabs}[1]
+    Switch Window    @{tabs}[3]
     Location Should Be    ${PRIVACY POLICY URL FULL}
-    Select Window    @{tabs}[0]
+    Switch Window    @{tabs}[0]
 
     Clear Register Fields
     Press Keys    ${PRIVACY POLICY LINK}    TAB
@@ -173,7 +174,7 @@ should open Terms and conditions in a new page
     Click Link    ${TERMS AND CONDITIONS LINK}
     Sleep    2    #This is specifically for Firefox
     ${tabs}    Get Window Handles
-    Select Window    @{tabs}[1]
+    Switch Window    @{tabs}[1]
     Location Should Be    ${url}/content/eula
 
 should open Privacy Policy in a new page
@@ -183,7 +184,7 @@ should open Privacy Policy in a new page
     Click Link    ${PRIVACY POLICY LINK}
     Sleep    2    #This is specifically for Firefox
     ${windows}    Get Window Handles
-    Select Window    @{windows}[1]
+    Switch Window    @{windows}[1]
     Location Should Be    ${PRIVACY POLICY URL FULL}
 
 should suggest user to create new account, if he was logged in and goes to registration link
