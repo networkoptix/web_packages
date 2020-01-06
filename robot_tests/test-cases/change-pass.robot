@@ -168,7 +168,7 @@ Password can't be changed if current password is not provided or incorrect
     Input Text    ${NEW PASSWORD INPUT}    ${password}
     Click Button    ${CHANGE PASSWORD BUTTON}
     Input Text    ${CURRENT PASSWORD INPUT}    ${password}
-    Input Text    ${NEW PASSWORD INPUT}    ${EMPTY}
+    Delete All Text    ${NEW PASSWORD INPUT}
     Click Button    ${CHANGE PASSWORD BUTTON}
     Discard Changes and Log Out
     Go To  ${url}
