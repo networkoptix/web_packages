@@ -267,10 +267,13 @@ Share To
     # ${user exists}    Run Keyword And Return Status    Page Should Contain Link    ${User In List}
     # Run Keyword If    ${user exists}    Remove User Permissions    ${email}
     Wait Until Element Is Enabled    ${SHARE BUTTON SYSTEMS}
+    Sleep    1
     Click Button    ${SHARE BUTTON SYSTEMS}
     Wait Until Elements Are Visible    ${SHARE EMAIL}    ${SHARE BUTTON MODAL}
+    Sleep    1
     Input Text    ${SHARE EMAIL}    ${email}
     Wait Until Element Is Visible    ${SHARE PERMISSIONS DROPDOWN}
+    Sleep    1
     Click Button    ${SHARE PERMISSIONS DROPDOWN}
     Wait Until Element Is Visible    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${permissions}']
     Sleep    1
