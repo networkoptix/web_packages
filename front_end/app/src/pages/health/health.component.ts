@@ -154,15 +154,15 @@ export class NxHealthComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {}
 
     setupReport(data) {
-        // Handle server error
-        if (!data.reply) {
-            this.hasServerError = true;
+        // Handle outdated version
+        if (!this.system.info.capabilities.mediaserver_metrics) {
+            this.outdatedVersion = true;
             return;
         }
 
-        // TODO: Handle outdated version -- adjust param name once server team provide this feature
-        if (data.outdatedVersion) {
-            this.outdatedVersion = true;
+        // Handle server not responding for "ec2/metrics/manifest"
+        if (!data.reply) {
+            this.hasServerError = true;
             return;
         }
 
