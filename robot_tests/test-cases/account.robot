@@ -23,7 +23,6 @@ Verify in Account Page
     sleep    .5
 
 Restart
-    Open Browser and go to URL    ${url}
     Common Restart Logout    ${url}
 
 Reset DB and Open New Browser On Failure
@@ -160,18 +159,18 @@ Should respond to tab and go in the correct order
     Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
     Verify in Account Page
     Element Should Be Focused    ${ACCOUNT FIRST NAME}
-    Press Keys    ${ACCOUNT FIRST NAME}    TAB
+    Press Keys    None    TAB
     Element Should Be Focused    ${ACCOUNT LAST NAME}
-    Press Keys    ${ACCOUNT LAST NAME}    TAB
+    Press Keys    None    TAB
     Element Should Be Focused    ${ACCOUNT LANGUAGE DROPDOWN}
-    Press Keys    ${ACCOUNT LANGUAGE DROPDOWN}    ENTER
-    Press Keys    ${ACCOUNT LANGUAGE DROPDOWN}    TAB
+    Press Keys    None    ENTER
+    Press Keys    None    TAB
     Element Should Be Focused    //nx-language-select//a//span[1]/..
     Press Keys    //nx-language-select//a//span[1]/..    ENTER
     Element Should Be Visible    ${ACCOUNT LANGUAGE DROPDOWN}/span[@lang="cs_CZ"]
-    Press Keys    ${ACCOUNT LANGUAGE DROPDOWN}    TAB
+    Press Keys    None    TAB
     Element Should Be Focused    ${ACCOUNT SAVE}
-    Press Keys   ${ACCOUNT SAVE}    ENTER
+    Press Keys   None    ENTER
 
 Language is changeable on the account page
     [tags]    C41574
@@ -240,9 +239,9 @@ Language change affects emails
     Delete Email    ${email}
     Close Mailbox
     Check Language Logged In    ${EMAIL NOPERM}    ${password}
-    
+
 Should open account page in anonymous state
     [tags]    anonymous
     Run keyword and continue on failure    Open page anonymously    ${url}/account    ${ACCOUNT SETTINGS TEXT} - ${PRODUCT_NAME}
-    Wait Until Element Is Visible    ${LOG IN MODAL} 
+    Wait Until Element Is Visible    ${LOG IN MODAL}
     Check Log In    button=None
