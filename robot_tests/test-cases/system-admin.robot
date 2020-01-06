@@ -16,7 +16,7 @@ ${url}         ${ENV}
 ...    ${ALLOW SYSTEM OPTIMIZE CHECKBOX REAL}
 ...    ${ENABLE AUDIT TRAIL CHECKBOX REAL} 
 ...    ${ALLOW ONLY SECURE CHECKBOX REAL} 
-#...    ${LIMIT SESSION DURATION CHECKBOX REAL}
+...    ${LIMIT SESSION DURATION CHECKBOX REAL}
 
 *** Keywords ***
 Log in to Auto Tests System
@@ -129,7 +129,7 @@ Change Setting Encrypt video traffic
     
 Changing Several Settings at Random
     [arguments]     ${action} 
-    ${random} =    Evaluate    random.randint(2, 5)    modules=random    #need to uncomment and set to 6 max when bug fixed
+    ${random} =    Evaluate    random.randint(2, 6)    modules=random    #need to uncomment and set to 6 max when bug fixed
     FOR    ${idx}    IN RANGE   ${random}
         ${checkbox} =    Evaluate    random.choice(@{checkboxes})    modules=random
         Log    ${checkbox}
@@ -370,13 +370,13 @@ Changing the Setting "Encrypt video traffic" changes it on the server
     ${selected} =    Change Setting Encrypt video traffic
     Evaluate Auto System Settings via API     videoTrafficEncryptionForced    ${selected}    
 
-#Changing the Setting "Limit session duration to" changes it on the server 
-    # This is currently broken - "CLOUD-4193"
-    #[tags]    checkbox settings testing
-    #Change Setting and Save    ${LIMIT SESSION DURATION CHECKBOX REAL}
-    #${status} =    Run Keyword and Return Status    Checkbox Should Be Selected     ${LIMIT SESSION DURATION CHECKBOX REAL}
-    #Run Keyword If    ${status}==False    Evaluate Auto System Settings via API    sessionLimitMinutes    0
-    #...    ELSE     Evaluate Session Limit
+Changing the Setting "Limit session duration to" changes it on the server 
+    [tags]    checkbox settings testing
+    Log in to Auto Tests System    ${EMAIL OWNER}
+    Change Setting and Save    ${LIMIT SESSION DURATION CHECKBOX REAL}
+    ${status} =    Run Keyword and Return Status    Checkbox Should Be Selected     ${LIMIT SESSION DURATION CHECKBOX REAL}
+    Run Keyword If    ${status}==False    Evaluate Auto System Settings via API    sessionLimitMinutes    0
+    ...    ELSE     Evaluate Session Limit
     
 Changing Several Random Checkboxes Works
     [tags]    checkbox settings testing  
