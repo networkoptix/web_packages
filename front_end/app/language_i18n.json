@@ -128,7 +128,6 @@
     "Remember me": "Remember me",
     "Remove User": "Remove User",
     "Rename": "Rename",
-    "Requirements": "Requirements",
     "Resend activation email": "Resend activation email",
     "Resend activation link": "Resend activation link",
     "Resolution(max)": "Resolution(max)",
@@ -147,6 +146,7 @@
     "Support URL": "Support URL",
     "Supported Devices": "Supported Devices",
     "Supported IP Video Devices": "Supported IP Video Devices",
+    "Supported Platforms": "Supported Platforms",
     "System name": "System name",
     "System name is required": "System name is required",
     "System will be accessible through local network with local administrator account.": "System will be accessible through local network with local administrator account.",
@@ -456,8 +456,10 @@
         "Storage": "Storage",
         "backToEditText": "Back to the editing interfaces",
         "myIntegrationsLabel": "Mine",
-        "previewRibbonText": "This page is a preview of the latest changes, and it doesn't match publicly available version."
+        "previewRibbonText": "This page is a preview of the latest changes, and it doesn't match publicly available version.",
+        "requirements": "{{name}} Requirements"
     },
+    "integration.requirements": "{{name}} Requirements",
     "ipvd": {
         "Advanced PTZ cameras": "Advanced PTZ cameras",
         "Cameras supporting H.265": "Cameras supporting H.265",
