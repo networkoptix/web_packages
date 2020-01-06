@@ -49,6 +49,7 @@ export class NxImageSectionComponent implements OnChanges, AfterViewInit, OnDest
         if (!cameraInfo) {
             return;
         }
+
         this.ready = false;
         this.cameraId = cameraInfo.id;
         this.state = cameraInfo.availability.status.text;
@@ -73,6 +74,6 @@ export class NxImageSectionComponent implements OnChanges, AfterViewInit, OnDest
 
 
     showPreloader() {
-        this.ready = this.thumbnails.every((thumbnail) => thumbnail.loaded);
+        setTimeout(() => this.ready = this.thumbnails.every((thumbnail) => thumbnail.loaded));
     }
 }

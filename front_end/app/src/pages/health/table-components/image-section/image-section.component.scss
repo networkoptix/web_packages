@@ -8,3 +8,8 @@
     padding: 8px 16px 16px 16px;
     border-bottom: 1px solid $light6;
 }
+
+// prevent image section resize
+nx-pre-loader {
+    height: 120px !important;
+}

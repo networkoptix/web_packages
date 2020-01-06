@@ -16,7 +16,7 @@ export class NxImageComponent implements OnChanges {
         if (this.state === undefined) {
             this.state = '';
         }
-        if (this.state !== 'Online') {
+        if (this.state !== 'Online' && this.state !== 'Recording') {
             this.url = '';
             this.loaded.emit(true);
         }
