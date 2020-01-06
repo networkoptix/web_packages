@@ -62,10 +62,7 @@ Check Special Hint
     ...    ${SHARE PERMISSIONS HINT}    ${SHARE PERMISSIONS HINT CUSTOM}
 
 Restart
-    Register Keyword To Run On Failure    NONE
-    ${status}    Run Keyword And Return Status    Validate Log In
-    Register Keyword To Run On Failure    Failure Tasks
-    Run Keyword If    ${status}    Log Out
+    Common Restart Logout    ${url}
 
 Reset DB and Open New Browser on Failure
     Close Browser

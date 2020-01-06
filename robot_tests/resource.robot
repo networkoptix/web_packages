@@ -629,3 +629,13 @@ Persist Current Login State
     # Log    ${current cookie4.name} ${current cookie4.value}
     # ${current cookie6} =     Get Cookie    sessionid
     # Log    ${current cookie6.name} ${current cookie6.value} ${current cookie6.expiry}
+
+Common Restart Logout
+    [documentation]    This is common restart code many test cases use.
+    ...        It checks if user is logged in and logs him out via API.
+    [arguments]    ${url}
+    Register Keyword To Run On Failure    NONE
+    ${status}=   Run Keyword and Return Status    Wait Until Element Is Visible    ${ACCOUNT DROPDOWN}    5
+    Register Keyword To Run On Failure    Failure Tasks
+    Run Keyword If    ${status}    Log Out via API
+    Go To    ${url}

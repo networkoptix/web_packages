@@ -16,12 +16,7 @@ ${FULL}            False
 *** Keywords ***
 Restart
     Go To    ${url}
-    Register Keyword To Run On Failure    NONE
-    ${status}    Run Keyword And Return Status    Validate Log In
-    Register Keyword To Run On Failure    Failure Tasks
-    Run Keyword If    ${status}    Log Out
-    Go To    ${url}
-    Validate Log Out
+    Common Restart Logout    ${url}
 
 Open New Browser On Failure
     Close Browser

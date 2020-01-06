@@ -28,11 +28,7 @@ Reset DB and Open New Browser On Failure
     Open Browser and go to URL    ${url}
 
 Restart
-    Register Keyword To Run On Failure    NONE
-    ${status}    Run Keyword And Return Status    Validate Log In    timeout=5
-    Register Keyword To Run On Failure    Failure Tasks
-    Run Keyword If    ${status}    Log Out
-    Go To    ${url}
+    Common Restart Logout    ${url}
 
 *** Test Cases ***
 should show list of Systems

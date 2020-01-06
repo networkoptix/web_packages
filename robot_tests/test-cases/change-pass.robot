@@ -32,24 +32,12 @@ Discard Changes and Log Out
     Click Button    ${DISCARD CHANGES BUTTON}
     Validate Log Out
 
-#Reset user password to base
-#    [arguments]    ${email}    ${current password}
-#    Wait Until Elements Are Visible    ${CURRENT PASSWORD INPUT}    ${NEW PASSWORD INPUT}
-#    Input Text    ${CURRENT PASSWORD INPUT}    ${current password}
-#    Input Text    ${NEW PASSWORD INPUT}    ${BASE PASSWORD}
-#    Click Button    ${CHANGE PASSWORD BUTTON}
-#    Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
-
 Reset user password to base
     [Arguments]    ${email}    ${current password}
     CLoudPortalAPI.Change Password    ${url}    ${email}    ${current password}    ${BASE PASSWORD}
 
 Restart
-    Register Keyword To Run On Failure    NONE
-    ${status}    Run Keyword And Return Status    Validate Log In
-    Register Keyword To Run On Failure    Failure Tasks
-    Run Keyword If    ${status}    Log Out
-    Go To    ${url}
+    Common Restart Logout    ${url}
 
 Clean up
     Register Keyword To Run On Failure    NONE

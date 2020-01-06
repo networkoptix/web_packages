@@ -24,19 +24,7 @@ Verify in Account Page
 
 Restart
     Open Browser and go to URL    ${url}
-    Register Keyword To Run On Failure    NONE
-    ${status}=   Run Keyword and Return Status    Wait Until Element Is Visible    ${ACCOUNT DROPDOWN}
-    Register Keyword To Run On Failure    Failure Tasks
-    Run Keyword If    ${status}    Log Out via API
-    Go To    ${url}
-
-#Restart
-#    Open Browser and go to URL    ${url}
-#    Register Keyword To Run On Failure    NONE
-#    ${status}    Run Keyword And Return Status    Validate Log Out
-#    Register Keyword To Run On Failure    Failure Tasks
-#    Run Keyword Unless    ${status}    Log Out
-#    Go To    ${url}
+    Common Restart Logout    ${url}
 
 Reset DB and Open New Browser On Failure
     Close Browser

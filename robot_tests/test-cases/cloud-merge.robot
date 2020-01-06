@@ -165,11 +165,7 @@ Startup
 Restart
     Stop containers
     Prune Containers
-    Register Keyword To Run On Failure    NONE
-    ${status}    Run Keyword And Return Status    Validate Log In
-    Register Keyword To Run On Failure    Failure Tasks
-    Run Keyword If    ${status}    Log Out
-    Go To    ${url}
+    Common Restart Logout    ${url}
     Validate Log Out
 
 Reset state

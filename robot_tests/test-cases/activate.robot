@@ -20,11 +20,7 @@ Clear emails
 
 Restart
     Open Browser and go to URL    ${url}
-    Register Keyword To Run On Failure    NONE
-    ${status}    Run Keyword And Return Status    Validate Log Out
-    Register Keyword To Run On Failure    Failure Tasks
-    Run Keyword Unless    ${status}    Log Out
-    Go To    ${url}
+    Common Restart Logout    ${url}
 
 Open New Browser On Failure
     Close Browser

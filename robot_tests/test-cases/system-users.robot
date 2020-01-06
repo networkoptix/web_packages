@@ -36,11 +36,7 @@ Reset DB and Open New Browser On Failure
     Open Browser and go to URL    ${url}
 
 Restart
-    Register Keyword To Run On Failure    NONE
-    ${status}    Run Keyword And Return Status    Validate Log In
-    Register Keyword To Run On Failure    Failure Tasks
-    Run Keyword If    ${status}    Log Out
-    Go To    ${url}
+    Common Restart Logout    ${url}
 
 *** Test Cases ***
 Cancel should cancel disconnection and disconnect should remove it when not owner

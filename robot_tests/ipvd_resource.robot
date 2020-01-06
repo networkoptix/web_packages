@@ -263,10 +263,7 @@ Open New Browser on Failure
     Go To IPVD page
 
 Restart
-    Register Keyword To Run On Failure    NONE
-    ${status}=   Run Keyword And Return Status    Validate Log In
-    Register Keyword To Run On Failure    Failure Tasks
-    Run Keyword If    ${status}    Log Out
+    Common Restart Logout    ${url}
     # Go To    ${url}/ipvd
 
 Validate Request Form Initial State
