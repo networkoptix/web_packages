@@ -90,7 +90,7 @@
     "I/O": "I/O",
     "In Review": "In Review",
     "In-Client Upgrade:": "In-Client Upgrade:",
-    "Includes information about the System, such as camera modules, \n                            firmware versions, number of servers, etc. \n                            Does not include any personal information and is completely anonymous.": "Includes information about the System, such as camera modules, \n                            firmware versions, number of servers, etc. \n                            Does not include any personal information and is completely anonymous.",
+    "Includes information about the System, such as camera modules,\n                            firmware versions, number of servers, etc.\n                            Does not include any personal information and is completely anonymous.": "Includes information about the System, such as camera modules,\n                            firmware versions, number of servers, etc.\n                            Does not include any personal information and is completely anonymous.",
     "Information": "Information",
     "Integrations": "Integrations",
     "Language": "Language",
@@ -171,14 +171,13 @@
     "Terms": "Terms",
     "Terms of Use": "Terms of Use",
     "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.": "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.",
-    "There will be more than": "There will be more than",
     "This Email has been already registered in %CLOUD_NAME%": "This Email has been already registered in %CLOUD_NAME%",
     "This device has reported to support some analytics events, but we don't have exact information about them.": "This device has reported to support some analytics events, but we don't have exact information about them.",
     "To": "To",
     "Too many attempts. Try again in a minute.": "Too many attempts. Try again in a minute.",
     "Tracks and logs all user actions.": "Tracks and logs all user actions.",
     "Until merge is finished you can log in to this system and watch video, but cannot change any settings.": "Until merge is finished you can log in to this system and watch video, but cannot change any settings.",
-    "Update them to the": "Update them to the",
+    "Update them to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>": "Update them to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>",
     "Updated": "Updated",
     "User": "User",
     "User disabled": "User disabled",
@@ -186,14 +185,14 @@
     "WHEN_MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{{targetSystemName}}</strong> System, and this system will be deleted.",
     "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.": "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.",
     "What's New?": "What's New?",
-    "When enabled, system will discover new cameras and servers. Also, \n                            it will automatically and persistently send discovery requests to \n                            cameras in order to get the camera's status update. \n                            Failover enabled on some servers ignore status check prohibition.": "When enabled, system will discover new cameras and servers. Also, \n                            it will automatically and persistently send discovery requests to \n                            cameras in order to get the camera's status update. \n                            Failover enabled on some servers ignore status check prohibition.",
+    "When enabled, system will discover new cameras and servers. Also,\n                            it will automatically and persistently send discovery requests to\n                            cameras in order to get the camera's status update.\n                            Failover enabled on some servers ignore status check prohibition.": "When enabled, system will discover new cameras and servers. Also,\n                            it will automatically and persistently send discovery requests to\n                            cameras in order to get the camera's status update.\n                            Failover enabled on some servers ignore status check prohibition.",
     "Works with:": "Works with:",
     "Wrong password": "Wrong password",
     "You can only merge Systems where you are the owner.": "You can only merge Systems where you are the owner.",
     "You have registered in %CLOUD_NAME%": "You have registered in %CLOUD_NAME%",
     "Your Email": "Your Email",
     "Your Name": "Your Name",
-    "Your access level": "Your access level",
+    "Your access level<span>&nbsp;\u2013 </span>\n                    <span class=\"name\" [innerHTML]=\"updateUserRole()\"></span>": "Your access level<span>&nbsp;\u2013 </span>\n                    <span class=\"name\" [innerHTML]=\"updateUserRole()\"></span>",
     "Your account is successfully activated": "Your account is successfully activated",
     "Your browser is not supported": "Your browser is not supported",
     "accessRoles": {
@@ -365,7 +364,8 @@
             },
             "secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
             "systemOffline": "System {{targetSystem}} is offline and cannot be merged with the current one.",
-            "systemUnavailable": "System {{targetSystem}} is currently unreachable. Try again in a few minutes or contact"
+            "systemUnavailable": "System {{targetSystem}} is currently unreachable. Try again in a few minutes or contact",
+            "warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged System."
         },
         "message": {
             "failedToSend": "Message has failed to send.",
@@ -396,13 +396,6 @@
         "stayAs": "Stay logged as {email} ",
         "stayLoggedIn": "Stay Logged In"
     },
-    "dialogs.merge.connectToCloud": "Connect System you want to merge with this one to <strong>{{cloudName}}</strong> or merge locally using <strong>{{vmsName}}</strong> Client.",
-    "dialogs.merge.mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from the <strong>{{primarySystem}}</strong>.",
-    "dialogs.merge.primaryCannotMerge": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} System.",
-    "dialogs.merge.primarySystemOffline": "dialogs.merge.primarySystemOffline",
-    "dialogs.merge.secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
-    "dialogs.merge.systemOffline": "dialogs.merge.systemOffline",
-    "dialogs.merge.systemUnavailable": "System {{targetSystem}} is currently unreachable. Try again in a few minutes or contact",
     "downloads": {
         "appTypes": {
             "bundle": "Client and Server",
@@ -569,8 +562,6 @@
         "resolutionArea": "Area",
         "vendor": "Manufacturer"
     },
-    "ipvd.disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous.",
-    "latest build": "latest build",
     "manufacturers": "manufacturers",
     "messageDialogPlaceholders": {
         "feedback": "Make sure you include your camera model and manufacturer..."
@@ -627,7 +618,6 @@
     "registration": {
         "agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
     },
-    "registration.agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>",
     "search": {
         "Any": "Any",
         "Search": "Search",
@@ -643,7 +633,6 @@
         "vendor": "Manufacturer",
         "vendors": "Manufacturers"
     },
-    "servers in the merged System.": "servers in the merged System.",
     "support": "support",
     "system": {
         "confirmDisconnectAction": "Disconnect",

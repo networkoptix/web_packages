@@ -225,7 +225,8 @@
 				"a_recommend": "We'd recommend consulting with",
 				"b_support": "support",
 				"c_proceeding": "before proceeding."
-			}
+			},
+			"warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged System."
 		},
 		"message": {
 			"failedToSend": "Message has failed to send.",
@@ -498,5 +499,7 @@
 	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "You have no Systems connected to %CLOUD_NAME%",
 	"NO_SYSTEMS_LOGIN": "Log in to your System using %VMS_NAME%",
 	"NO_SYSTEMS_GOTO_ADMINISTRATION": "Go to the \"Cloud\" tab in the \"System Administration\" dialog",
-	"NO_SYSTEMS_CONNECT_SYSTEM": "Press \"Connect System to %CLOUD_NAME%\""
+	"NO_SYSTEMS_CONNECT_SYSTEM": "Press \"Connect System to %CLOUD_NAME%\"",
+	"topXByVolume": "Top {{value}} by volume:",
+	"phoneNumberWithLabel": "Tel: {{number}}"
 }

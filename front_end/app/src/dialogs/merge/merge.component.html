@@ -113,9 +113,7 @@
         </div>
         <div *ngIf="state == 'warning'">
             <div class="modal-body">
-                <p translate>
-                    There will be more than <strong>{{ CONFIG.maxServers }}</strong> servers in the merged System.
-                </p>
+                <p [innerHTML]="'merge.warning'| translate: {maxServers: CONFIG.maxServers}"></p>
                 <p translate>Systems of such size may work but will be unstable and have troubles with updates and synchronisation.</p>
                 <p>{{LANG.dialogs.merge.recommendSupport.a_recommend}} <a [href]="CONFIG.supportLink" target="_blank">{{LANG.dialogs.merge.recommendSupport.b_support}}</a> {{LANG.dialogs.merge.recommendSupport.c_proceeding}}</p>
             </div>
