@@ -227,7 +227,7 @@ export class NxIpvdComponent implements OnInit {
                 .selects
                 .find((select) => {
                     if (this.params[select.id]) {
-                        select.selected = select.items.find((item) => item.name === this.params[select.id]);
+                        select.selected = select.items.find((item) => item.value === this.params[select.id]);
                     } else {
                         if (!select.selected) {
                             select.selected = { value: '0', name: 'All' };
@@ -416,7 +416,7 @@ export class NxIpvdComponent implements OnInit {
         let singleselect = false;
         if (this.filterModel.selects) {
             this.filterModel.selects.forEach(select => {
-                singleselect = singleselect || (select.selected.value > 0); // 0 is default choice
+                singleselect = singleselect || (select.selected && select.selected.value > 0); // 0 is default choice
             });
         }
 
