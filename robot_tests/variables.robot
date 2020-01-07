@@ -198,7 +198,9 @@ ${ENCRYPT VIDEO TRAFFIC CHECKBOX REAL}     //*[@id='videoTrafficEncryptionForced
 ${LIMIT SESSION DURATION CHECKBOX VISIBLE}    //nx-checkbox[@name='sessionLimitMinutes']
 ${LIMIT SESSION DURATION CHECKBOX REAL}    //*[@id='sessionLimitMinutes']
 ${TIME NUMBER INPUT}                  //*[@type='number']
-${TIME DURATION INTERVAL}            //*[@id='genericSelect']/span
+${TIME DURATION INTERVAL BUTTON}        //*[@id='genericSelect']
+${TIME DURATION INTERVAL TEXT}            //*[@id='genericSelect']/span
+${TIME DURATION NEW SELECTION}            //*[@aria-labelledby='genericSelect']//a[@class="dropdown-item inset"]
 
 #Merge
 ${MERGE BUTTON SYSTEM}                //button/span[text()="${MERGE SYSTEM BUTTON TEXT}"]/..

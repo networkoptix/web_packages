@@ -72,7 +72,7 @@ Setting on page matches server
     
 Evaluate Session Limit
     ${value} =    Get Value    ${TIME NUMBER INPUT}     
-    ${interval} =     Get Text    ${TIME DURATION INTERVAL}    
+    ${interval} =     Get Text    ${TIME DURATION INTERVAL TEXT}    
     ${multiplier} =     Set Variable If    "${interval}"=="hours"    60  
     ...    "${interval}"=="minutes"    1
     ${number} =   Evaluate      ${multiplier}*${value}       
@@ -153,6 +153,46 @@ Changing All Settings
     Sleep    2
     settings on page should match settings on server
     
+Change Duration Time Interval
+    [arguments]    ${action}
+    ${interval} =    Get Text    ${TIME DURATION INTERVAL TEXT} 
+    Capture Page Screenshot
+    ${random} =    Evaluate    random.randint(1, 59)    modules=random
+    Input Text    ${TIME NUMBER INPUT}    ${random}
+    Sleep    1
+    Capture Page Screenshot
+    FOR    ${i}    IN RANGE    99999
+           ${status} =    Run Keyword And Return Status    Textfield Value Should Be    ${TIME NUMBER INPUT}    ${random}
+           Capture Page Screenshot
+           Exit For Loop If    ${i} == 2
+           Run Keyword If    ${status}==False    Input Text    ${TIME NUMBER INPUT}    ${random}
+           ...    ELSE    Exit For Loop
+    END
+    FOR    ${i}    IN RANGE    99999
+           ${status} =    Run Keyword And Return Status    Element Text Should Be    ${TIME DURATION INTERVAL TEXT}    ${interval}
+           Capture Page Screenshot
+           Exit For Loop If    ${i} == 9
+           Run Keyword If    ${status}==False    Run Keywords    
+           ...    Click Button    ${TIME DURATION INTERVAL BUTTON}    AND
+           ...    Wait Until Element Is Visible    ${TIME DURATION NEW SELECTION}    AND
+           ...    Sleep    1    AND
+           ...    Capture Page Screenshot    AND
+           ...    Click Link    ${TIME DURATION NEW SELECTION}
+           ...    ELSE    Exit For Loop 
+    END
+    
+    Click Button    ${TIME DURATION INTERVAL BUTTON}    
+    Wait Until Element Is Visible    ${TIME DURATION NEW SELECTION}
+    Sleep    1
+    Capture Page Screenshot
+    Click Link    ${TIME DURATION NEW SELECTION}
+    Sleep    1
+    Capture Page Screenshot
+    Wait Until Elements Are Visible     ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Click Button    ${action}
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
+    Capture Page Screenshot
+     
 *** Test Cases ***
 systems dropdown should allow you to go back to the systems page
     [tags]    Threaded
@@ -378,6 +418,24 @@ Changing the Setting "Limit session duration to" changes it on the server
     Run Keyword If    ${status}==False    Evaluate Auto System Settings via API    sessionLimitMinutes    0
     ...    ELSE     Evaluate Session Limit
     
+Change Time Interval And Verify on Server
+    [tags]    checkbox settings testing
+    Log in to Auto Tests System    ${EMAIL OWNER}
+    Wait Until Elements Are Visible    
+    ...    ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}     
+    ...    ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}
+    Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL} 
+    ${status} =    Run Keyword and Return Status    Checkbox Should Be Selected     ${LIMIT SESSION DURATION CHECKBOX REAL}
+    Run Keyword If    ${status}==False    Just Change Setting    ${LIMIT SESSION DURATION CHECKBOX REAL}
+    Change Duration Time Interval    ${SYSTEM SAVE}
+    Evaluate Session Limit
+    Reload Page
+    Wait Until Elements Are Visible    
+    ...    ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}     
+    ...    ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}
+    Change Duration Time Interval    ${SYSTEM SAVE}
+    Evaluate Session Limit
+
 Changing Several Random Checkboxes Works
     [tags]    checkbox settings testing  
     Log in to Auto Tests System    ${EMAIL OWNER}
