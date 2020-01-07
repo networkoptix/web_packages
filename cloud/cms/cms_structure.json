@@ -741,6 +741,15 @@
             "value": "false",
             "optional": false,
             "advanced": true
+          },
+          {
+            "label": "Google Tag Manager ID",
+            "name": "%GOOGLE_TAG_MANAGER_ID%",
+            "description": "ID used for Google Analytics",
+            "type": "text",
+            "value": "",
+            "optional": true,
+            "advanced": true
           }
         ]
       },

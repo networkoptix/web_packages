@@ -142,7 +142,8 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
                 'cloud_name': asset.read_global_value("%CLOUD_NAME%"),
                 'vms_name': asset.read_global_value("%VMS_NAME%"),
                 'push_subscription_auto_active': asset.read_global_value("%PUSH_SUB_ACTIVE%"),
-                'push_config': getattr(settings, 'PUSH_NOTIFICATIONS_SETTINGS', {}).get('PUBLIC')
+                'push_config': getattr(settings, 'PUSH_NOTIFICATIONS_SETTINGS', {}).get('PUBLIC'),
+                'google_tag_manager_id': asset.read_global_value('%GOOGLE_TAG_MANAGER_ID%')
             },
             'cloud_capabilities': {
                 'integration_store_enabled': integration_store_enabled

@@ -17,7 +17,6 @@ export class NxConfigService {
 
         this.config = {
             gatewayUrl    : '/gateway',
-            googleTagsCode: 'GTM-5MRNWP',
             apiBase       : '/api',
             realm         : 'VMS',
             cacamerasUrl  : 'https://cameras.networkoptix.com/api/v1/cacameras/',
@@ -411,6 +410,7 @@ export class NxConfigService {
             cloudName                     : '',
             vmsName                       : '',
             pushConfig                    : '',
+            googleTagManagerId            : '',
         };
     }
 

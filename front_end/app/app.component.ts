@@ -170,6 +170,8 @@ export class AppComponent {
         // @ts-ignore
         this.CONFIG.testedOperatingSystems = window.SETTINGS.testedOperatingSystems;
         // @ts-ignore
+        this.CONFIG.googleTagManagerId = window.SETTINGS.googleTagManagerId;
+        // @ts-ignore
         if (window.SETTINGS.appTypesForPlatform) {
             // @ts-ignore
             Object.entries(window.SETTINGS.appTypesForPlatform).forEach(([platform, appTypes]: [string, any]) => {
