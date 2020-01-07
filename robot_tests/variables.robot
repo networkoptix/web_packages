@@ -304,16 +304,16 @@ ${INTEGRATIONS SEARCH FILTER ITEM}    ${INTEGRATIONS SEARCH FILTER}/li
 ${INTEGRATIONS CATALOG}               ${INTEGRATIONS COMPONENT}//integrations-list-component/div[1]
 
 #Integration Tile
-${INTEGRATION TILE}                   ${INTEGRATIONS COMPONENT}//integrations-list-component//nx-block/div[contains(@class, "card")]
-${INTEGRATION TEST INEGRATION LINK}   ${INTEGRATIONS COMPONENT}//a[contains(@href, "39")]
+${INTEGRATION TILE}                   ${INTEGRATIONS COMPONENT}//integrations-list-component//nx-block/div[contains(@class, "card")]/../../..
+${INTEGRATION TEST INTEGRATION LINK}   ${INTEGRATIONS COMPONENT}//a[contains(@href, "39")]
 ${INTEGRATION TILE LOGO}              ${INTEGRATION TILE}//div[contains(@class, "card--header-logo")]
 ${INTEGRATION TILE INFO}              ${INTEGRATION TILE}//div[contains(@class, "card--header-info")]
 ${INTEGRATION TILE NAME}              ${INTEGRATION TILE}//div[contains(@class, "card--body-name")]
 ${INTEGRATION TILE TEXT}              ${INTEGRATION TILE}//div[contains(@class, "card--body-descr")]
-${INTEGRATION TILE HEADER}            ${INTEGRATION TILE}//div[@class="card--header"]
+${INTEGRATION TILE HEADER}            ${INTEGRATION TILE}//div[@class="card--header extended-header"]
 #${INTEGRATION TILE BODY}              ${INTEGRATION TILE}//nx-section/child::div[@class="card--body"]
 ${INTEGRATION TILE FOOTER}            ${INTEGRATION TILE}//div[@class="card--footer"]
-@{INTEGRATION TILE ELEMENTS}          ${INTEGRATION TILE HEADER}    ${INTEGRATION TILE FOOTER}    ${INTEGRATION TILE LOGO}    ${INTEGRATION TILE INFO}    ${INTEGRATION TILE NAME}    ${INTEGRATION TILE TEXT}
+@{INTEGRATION TILE ELEMENTS}          //div[contains(@class, "card--header-logo")]    //div[contains(@class, "card--header-info")]    //div[contains(@class, "card--body-name")]    //div[contains(@class, "card--body-descr")]    //div[@class="card--header extended-header"]    //div[@class="card--footer"]
 
 #Integration Details Page
 ${INTEGRATION DETAILS COMPONENT}          //nx-app//integration-detail-component/div[contains(@class, "integration-details")]
@@ -342,7 +342,7 @@ ${INTEGRATION TAGS SECTION}                     ${INTEGRATION DETAILS COMPONENT}
 ${INTEGRATION GET IN TOUCH LABEL}               ${INTEGRATION DETAILS COMPONENT}//label[contains(text(), "${INTEGRATION CONTACT TEXT}")]
 ${INTEGRATION GET IN TOUCH BUTTON}              ${INTEGRATION DETAILS COMPONENT}//button[contains(@class, "btn btn-primary")]
 ${INTEGRATION DEVELOPER LABEL}                  ${INTEGRATION DETAILS COMPONENT}//label[contains(text(), "${INTEGRATION DEVELOPER TEXT}")]
-#${INTEGRATION DEVELOPER COMPANY LINK}           ${INTEGRATION DETAILS COMPONENT}
+${INTEGRATION DEVELOPER COMPANY LINK}           ${INTEGRATION DETAILS COMPONENT}//label[text()="${INTEGRATION DEVELOPER TEXT}"]/../following-sibling::div/a
 ${INTEGRATION DEVELOPER TERMS OF USE LINK}      ${INTEGRATION DETAILS COMPONENT}//a[contains(text(), "${INTEGRATION TERMS OF USE TEXT}")]
 ${INTEGRATION SUPPORT LABEL}                    ${INTEGRATION DETAILS COMPONENT}//label[contains(text(), "${INTEGRATION SUPPORT TEXT}")]
 ${INTEGRATION SUPPORT LINK}                     ${INTEGRATION DETAILS COMPONENT}//a[contains(text(), "${INTEGRATION SUPPORT URL TEXT}")]
@@ -469,7 +469,7 @@ ${FOOTER SUPPORT LINK}                //footer//a[contains(text(),"${SUPPORT}")]
 ${FOOTER TERMS LINK}                  //footer//a[contains(text(),"${TERMS}")]
 ${FOOTER PRIVACY LINK}                //footer//a[contains(text(),"${PRIVACY}")]
 ${FOOTER COPYRIGHT LINK}              //footer//a[contains(text(),"${COPYRIGHT SYMBOL}") and contains(text(),"${YEAR}") and contains(text(),"${COMPANY}")]
-${FOOTER SUPPORTED DEVICES LINK}      //footer//a[contains(text(),"${SUPPORTED DEVICES}"]
+${FOOTER SUPPORTED DEVICES LINK}      //footer//a[contains(text(),"${SUPPORTED DEVICES}")]
 
 #Misc
 ${PAGE NOT FOUND}                     //h1[contains(text(),'${PAGE NOT FOUND TEXT}')]

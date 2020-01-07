@@ -374,7 +374,7 @@ Failure Tasks
 Wait Until Elements Are Visible
     [arguments]    @{elements}    ${timeout}=${selenium_timeout}
     FOR     ${element}  IN  @{elements}
-        Wait Until Element Is Visible    ${element}    ${timeout}
+        Run Keyword And Continue On Failure    Wait Until Element Is Visible    ${element}    ${timeout}
     END
 
 Elements Should Not Be Visible
