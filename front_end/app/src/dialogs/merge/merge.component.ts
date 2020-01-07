@@ -271,7 +271,7 @@ export class MergeModalContent {
 
     makeSelectorList(systems) {
         return systems.map(system => {
-            return { id: system.id, name: this.addStatus(system) };
+            return { value: system.id, name: this.addStatus(system) };
         });
     }
 
@@ -285,7 +285,9 @@ export class MergeModalContent {
                 return {...this.systems[i]};
             }
         }
-        return {...this.systems[0]};
+        const system = {...this.systems[0]};
+        system.value = system.id;
+        return system;
     }
 
     setSystems() {
@@ -295,7 +297,8 @@ export class MergeModalContent {
 
     setTargetSystem(targetSystem) {
         this.systemMergeable = '';
-        this.targetSystem = {... this.systems.find(system => system.id === targetSystem.id)};
+        this.targetSystem = {... this.systems.find(system => system.id === targetSystem.value)};
+        this.targetSystem.value = this.targetSystem.id;
         this.setSystems();
     }
 

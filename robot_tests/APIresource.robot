@@ -78,3 +78,18 @@ Set Account Password
     ${resp}=    Post Request    set_new_password_session    /cdb/account/update    json=${params}
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()}
+
+Log Out via API
+    ${cookies}=   Get Cookies    as_dict = True
+    ${status}=   CloudPortalAPI.Log Out    ${ENV}    &{cookies}[sessionid]    &{cookies}[csrftoken]
+    Should Be Equal as Strings    ${status}    200
+    Reload Page
+    Validate Log Out
+
+Evaluate Auto System Settings via API
+    [arguments]    ${setting}    ${selected}
+    Create Digest Session    returnedSetting    ${AUTO SYS API}    ${AUTO SYS API AUTH}     disable_warnings=1
+    ${systemSettings} =     Get Request    returnedSetting   /api/systemSettings   timeout=10
+    ${string} =    Convert To String    ${systemSettings.json()}
+    Should Contain    ${string}    ${setting}': '${selected}
+    

@@ -4,7 +4,7 @@ Suite Setup       Open Browser and go to URL    ${url}/integrations/39
 Test Template     Test Get In Touch Invalid
 Test Teardown     Restart
 Suite Teardown    Close Browser
-Force Tags        form    Threaded File
+Force Tags        form
 
 *** Variables ***
 ${url}    ${ENV}

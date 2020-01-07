@@ -18,11 +18,7 @@ Open New Browser On Failure
 
 Restart
     Go To    ${url}
-    Register Keyword To Run On Failure    NONE
-    ${status}    Run Keyword And Return Status    Validate Log Out
-    Register Keyword To Run On Failure    Failure Tasks
-    Run Keyword Unless    ${status}    Log Out
-    Go To    ${url}
+    Common Restart Logout    ${url}
 
 *** Test Cases ***
 Can be opened in anonymous state
@@ -82,12 +78,11 @@ Allows log in with 'Remember Me checkmark' switched off
     ...    ${LOG IN BUTTON}
     Click Element    ${REMEMBER ME CHECKBOX VISIBLE}
     Checkbox Should Not Be Selected    ${REMEMBER ME CHECKBOX REAL}
-    Log In    ${email}    ${password}    None
-    Validate Log In
+    Log In    ${email}    ${password}    button=None
 
 Contains 'I forgot password' link that leads to Restore Password page with pre-filled email from log In form
     [Tags]    Threaded
-    Log In    ${email}    'aderhgadehf'
+    Log In    ${email}    'aderhgadehf'    validate=${False}
     Wait Until Elements are Visible
     ...    ${REMEMBER ME CHECKBOX VISIBLE}
     ...    ${EMAIL INPUT}
@@ -118,7 +113,7 @@ Shows non-activated user message when not activated at login; Resend activation 
     ${random email}    get random email    ${BASE EMAIL}
     Register    'mark'    'hamill'    ${random email}    ${password}
     Wait Until Element is Visible    //h1[contains(@class,'process-success')]
-    Log In    ${random email}    ${BASE PASSWORD}
+    Log In    ${random email}    ${BASE PASSWORD}    validate=${False}
     Wait Until Element is Visible    ${RESEND ACTIVATION LINK BUTTON}
     Validate Register Email Received    ${random email}
     Click Link    ${RESEND ACTIVATION LINK BUTTON}
@@ -161,6 +156,7 @@ Logout refreshes page
 # We don't actually allow copy of the password field at log in.
 Allows copy-paste in input fields
     [tags]    Threaded
+    ${system} =    Evaluate    platform.system()    platform
     Wait Until Element is Visible    ${LOG IN NAV BAR}
     Click Link    ${LOG IN NAV BAR}
     Wait Until Element is Visible    ${EMAIL INPUT}
@@ -304,7 +300,6 @@ User is logged out of browser after a password change in another browser
     Sleep    1
 
     Log In    ${email}    ${ALT PASSWORD}
-    Validate Log In
     Go To    ${url}/account/password
     Sleep    1
     Wait Until Elements are Visible
@@ -314,3 +309,21 @@ User is logged out of browser after a password change in another browser
     Input Text    ${NEW PASSWORD INPUT}    ${password}
     Click Button    ${CHANGE PASSWORD BUTTON}
     Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
+
+Remember Me Checkbox
+    [Tags]    C41567
+    Log    Step 1
+    Log In With Remember Me    ${email}    ${password}
+    Log    Step 2
+    Persist Current Login State    ${url}
+    Validate Log In
+    Log    Step 3
+    Log Out
+    Persist Current Login State    ${url}
+    Validate Log Out
+    Log In With Remember Me    ${email}    ${password}     remember me=False
+    Log    Step 4
+    Validate Log In
+    Persist Current Login State    ${url}
+    Validate Log Out
+    

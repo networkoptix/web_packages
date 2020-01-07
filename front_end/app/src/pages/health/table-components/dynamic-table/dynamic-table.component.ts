@@ -3,7 +3,7 @@ import {
     Component, Input, Output,
     EventEmitter, OnChanges, SimpleChanges,
     OnInit, ViewEncapsulation,
-    ViewChild, ElementRef,
+    ViewChild, ElementRef, AfterViewInit,
 }                                   from '@angular/core';
 import { ActivatedRoute, Router }   from '@angular/router';
 import { NxConfigService }          from '../../../../services/nx-config';
@@ -11,25 +11,35 @@ import { NxUtilsService }           from '../../../../services/utils.service';
 import { NxUriService }             from '../../../../services/uri.service';
 import { NxHealthService }          from '../../health.service';
 import { NxScrollMechanicsService } from '../../../../services/scroll-mechanics.service';
+import { SubscriptionLike }         from 'rxjs';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 
 interface Params {
     [key: string]: any;
 }
 
+const ALARM_ORDER = {
+    'error': 2,
+    'warning': 1,
+    '': 0
+};
+
+const TEXT_FORMATS = ['longText', 'shortText', 'text'];
 const GROUP_ID = 0;
 const PARAM_ID = 1;
 const SORT_DIR = 2;
 
+@AutoUnsubscribe()
 @Component({
     selector     : 'nx-dynamic-table',
     templateUrl  : './dynamic-table.component.html',
     styleUrls    : ['./dynamic-table.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class NxDynamicTableComponent implements OnChanges, OnInit {
-    @Input('tableHeader') tableHeader = '';
-    @Input('headers') _headers: any = [];
-    @Input('elements') elements: any = [];
+export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit {
+    @Input() tableHeader = '';
+    @Input() headers: any = [];
+    @Input() elements: any = [];
     @Input() dimensions;
     @Input() activeEntity;
     @Input() showGroups = true;
@@ -39,7 +49,6 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
     CONFIG: any;
 
     _elements: any = [];
-    headers: any = {};
     params: any = {};
 
     public selectedEntity;
@@ -52,17 +61,26 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
     offset: number;
     currentPage: number;
     pageSize: number;
-    totalItems: number;
     pager: any = {};
     pagedItems: any[];
     pagerMaxSize: number;
     serviceParams;
     serviceHeaders;
 
-    windowSize: any;
+    windowSize: any = {};
+    clientHeight: number;
+    offsetHeight: number;
+    scrollHeight: number;
+    tableScrollFixed: boolean;
+    elementWidth: any;
+    tableReady: boolean;
+
+    resizeSubscription: SubscriptionLike;
 
     @ViewChild('thead', { static: false }) thead: ElementRef;
     @ViewChild('tableHeaderElement', { static: false }) tableHeaderElement: ElementRef;
+    @ViewChild('nxTable', { static: false }) dataTable: ElementRef;
+
     // CSS does not use CONFIG so this is here to avoid confusion if changing the value
     private static ROW_HEIGHT = 26;
 
@@ -81,6 +99,13 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
         this.pagerMaxSize = this.CONFIG.ipvd.pagerMaxSize;
         this.currentPage = 1;
         this.pageSize = this.CONFIG.layout.tableLarge.rows;
+        this.tableReady = false;
+
+        this.resizeSubscription = this.scrollMechanicsService.windowSizeSubject.subscribe(() => {
+            if (this.dataTable) {
+                setTimeout(() => this.scrollMechanicsService.setElementTableWidth(this.dataTable.nativeElement.offsetWidth));
+            }
+        });
     }
 
     trackItem(index, item) {
@@ -91,41 +116,20 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes.dimensions && changes.dimensions.currentValue.length) {
-            /*
-                ngOnChanges may trigger while not all elements are rendered
-                and will report wrong dimensions.
-                ... this is why some hard coded stuff and math
-             */
-            this.windowSize = this.scrollMechanicsService.windowSizeSubject.getValue();
-            const ELEMENTS_HEIGHT = changes.dimensions.currentValue.reduce((prev, curr) => prev + curr, 0);
-            const THEAD_HEIGHT = this.thead.nativeElement.offsetHeight;
-            const PADDING = 16;
-            const PAGINATION_HEIGHT = 64;
-            let availSpace = this.windowSize.height - PAGINATION_HEIGHT - ELEMENTS_HEIGHT - 4 * PADDING - THEAD_HEIGHT - 48;
-
-            if (this.tableHeader) {
-                availSpace -= this.tableHeaderElement.nativeElement.offsetHeight;
-            }
-
-            this.pageSize = Math.ceil(availSpace / NxDynamicTableComponent.ROW_HEIGHT);
-            if (this.pageSize < 5) {
-                this.pageSize = 5;
-            }
-
-            this.setPagedItems();
+        if (changes.dimensions && !changes.dimensions.firstChange && changes.dimensions.currentValue.length) {
+            this.setTableDimensions();
         }
 
         if (changes.activeEntity) {
             this.selectedEntity = changes.activeEntity.currentValue;
+            setTimeout(() => this.scrollMechanicsService.setElementTableWidth(this.dataTable.nativeElement.offsetWidth));
         }
 
-        if (changes._headers) {
-            this.headers = changes._headers.currentValue;
+        if (changes.headers) {
             this.selectedHeader = undefined;
 
-            if (changes._headers.previousValue !== undefined &&
-                    changes._headers.previousValue !== changes._headers.currentValue) {
+            if (changes.headers.previousValue !== undefined &&
+                    changes.headers.previousValue !== changes.headers.currentValue) {
                 const queryParams: Params = {};
                 queryParams.page = undefined;
                 queryParams.sortBy = undefined;
@@ -153,6 +157,31 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
         }
     }
 
+    private setTableDimensions() {
+        this.windowSize = this.scrollMechanicsService.windowSizeSubject.getValue();
+
+        const ELEMENTS_HEIGHT = this.dimensions.reduce((prev, curr) => prev + curr, 0);
+        const THEAD_HEIGHT = this.thead.nativeElement.offsetHeight;
+        const PADDING = 16;
+        const PAGINATION_HEIGHT = 64;
+
+        let availSpace = this.windowSize.height - 4 * PADDING - ELEMENTS_HEIGHT - THEAD_HEIGHT - 48 - PAGINATION_HEIGHT;
+
+        if (this.tableHeader) {
+            availSpace -= this.tableHeaderElement.nativeElement.offsetHeight;
+        }
+
+        this.pageSize = Math.ceil(availSpace / NxDynamicTableComponent.ROW_HEIGHT);
+        if (this.pageSize < 5) {
+            this.pageSize = 5;
+        }
+
+        this.setPagedItems();
+        this.tableReady = true;
+
+        this.scrollMechanicsService.setElementTableWidth(this.dataTable.nativeElement.offsetWidth);
+    }
+
     ngOnInit() {
         this.params = {...this.route.snapshot.queryParams};
         if (this.params.sortBy) {
@@ -164,6 +193,12 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
         }
 
         this.setPage(this.params.page || 1);
+    }
+
+    ngAfterViewInit(): void {
+        if (this.dimensions.length) {
+            setTimeout(() => this.setTableDimensions());
+        }
     }
 
     ngOnDestroy() {
@@ -199,7 +234,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
         this.uri.pageOffset = window.pageYOffset;
         this.setPagedItems();
 
-        if (this.params && this.params.page != pageParam) { // this.params.page is string - no strict comparison
+        if (this.params && parseInt(this.params.page, 10) !== pageParam) { // this.params.page is string - no strict comparison
             const queryParams: Params = {};
             queryParams.page = (this.currentPage === 1) ? undefined : this.currentPage;
 
@@ -216,9 +251,9 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
         return !(typeof x === 'string' || typeof x === 'number');
     }
 
-    toggleSort(groupId, paramId, updateURI?) {
+    toggleSort(groupId, paramId, updateURI?, format?) {
         if (this.selectedGroup !== groupId || this.selectedHeader !== paramId) {
-            this.sortOrderASC = true;
+            this.sortOrderASC = TEXT_FORMATS.includes(format);
         }
         this.selectedGroup = groupId;
         this.selectedHeader = paramId;
@@ -236,7 +271,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit {
         function sortFunc() {
             if (paramId === 'alarm') {
                 return (elm) => {
-                    return elm[groupId] && elm[groupId][paramId] && elm[groupId][paramId].icon || '';
+                    return elm[groupId] && elm[groupId][paramId] && ALARM_ORDER[elm[groupId][paramId].icon] || '';
                 };
             } else {
                 return (elm) => {

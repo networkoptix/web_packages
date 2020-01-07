@@ -1,14 +1,15 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { NxConfigService }                                                    from '../../../services/nx-config';
-import { NxSystem }                                                           from '../../../services/system.service';
-import { NxMenuService }                                                      from '../../../components/menu/menu.service';
+import {
+    AfterViewInit, Component, ElementRef,
+    OnDestroy, OnInit, ViewChild,
+    ViewEncapsulation
+}                                              from '@angular/core';
+import { NxConfigService }                     from '../../../services/nx-config';
+import { NxMenuService }                       from '../../../components/menu/menu.service';
 import { NxHealthService }                     from '../health.service';
-import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
-import { Observable, of, SubscriptionLike }    from 'rxjs';
+import { SubscriptionLike }                    from 'rxjs';
 import { NxUriService }                        from '../../../services/uri.service';
 import { ActivatedRoute }                      from '@angular/router';
 import { AutoUnsubscribe }                     from 'ngx-auto-unsubscribe';
-import deepEqual = require('deep-equal');
 import { NxScrollMechanicsService }            from '../../../services/scroll-mechanics.service';
 
 interface Params {
@@ -19,7 +20,8 @@ interface Params {
 @Component({
     selector   : 'nx-system-alerts-component',
     templateUrl: 'alerts.component.html',
-    styleUrls  : ['alerts.component.scss']
+    styleUrls  : ['alerts.component.scss'],
+    encapsulation: ViewEncapsulation.None,
 })
 export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy {
 
@@ -52,20 +54,24 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
     elementTableHeight: number;
     containerDimensions: any = [];
 
+    windowSizeSubscription: any;
+
+    fixedLayoutClass: string;
+
     @ViewChild('tiles', { static: false }) elementTiles: ElementRef;
     @ViewChild('search', { static: false }) elementSearch: ElementRef;
     @ViewChild('table', { static: false }) elementTable: ElementRef;
+    @ViewChild('area', { static: false }) area: ElementRef;
+    // @ViewChild('tableContainer', { static: false }) tableContainer: ElementRef;
 
     constructor(private route: ActivatedRoute,
                 private menuService: NxMenuService,
                 private configService: NxConfigService,
                 private healthService: NxHealthService,
                 private uriService: NxUriService,
-                private breakpointObserver: BreakpointObserver,
                 private scrollMechanicsService: NxScrollMechanicsService,
     ) {
         this.CONFIG = this.configService.getConfig();
-        this.breakpoint = '(max-width: 767px)';
         this.filterModel = {
             selects : []
         };
@@ -96,19 +102,25 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
             this.setActiveEntity(alarm, false);
         }
 
-        this.breakpointSubscription = this.breakpointObserver
-            .observe([this.breakpoint])
-            .subscribe((state: BreakpointState) => {
-                this.mobileDetailMode = (state.matches && this.activePanelEntity);
-            });
+        this.windowSizeSubscription = this.scrollMechanicsService.windowSizeSubject.subscribe(({ width }) => {
+            if (this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.lg)) {
+                this.mobileDetailMode = (this.activePanelEntity !== undefined);
+            } else {
+                this.mobileDetailMode = false;
+            }
+
+            this.setLayout();
+        });
     }
 
     ngAfterViewInit() {
+        this.setLayout();
         if (this.elementSearch && this.elementTiles) {
-            this.elementSearchHeight = this.elementSearch.nativeElement.offsetHeight;
-            this.elementTilesHeight = this.elementTiles.nativeElement.offsetHeight;
-
-            setTimeout(() => this.containerDimensions = [this.elementTilesHeight, 40]);
+            setTimeout(() => {
+                this.elementSearchHeight = this.elementSearch.nativeElement.offsetHeight;
+                this.elementTilesHeight = this.elementTiles.nativeElement.offsetHeight;
+                this.containerDimensions = [this.elementTilesHeight, this.elementSearchHeight + 8 /*margin*/, 17 /*separator = 1px + padding*/];
+            });
         }
     }
 
@@ -205,6 +217,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
                 {
                     id      : 'server',
                     label   : '',
+                    css     : 'large',
                     items   : serverItems,
                     selected: selected || serverItems[0]
                 });
@@ -278,12 +291,14 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
                     {
                         display: 'table',
                         name: 'Type',
-                        id: 'type'
+                        id: 'type',
+                        formatClass: 'text'
                     },
                     {
                         display: 'table',
                         name: 'Server',
-                        id: 'server'
+                        id: 'server',
+                        formatClass: 'long-text'
                     },
                     {
                         display: 'table',
@@ -308,9 +323,12 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
                 this.uriService.updateURI(undefined, queryParams);
             }
 
-            if (this.breakpointObserver.isMatched(this.breakpoint)) {
+            if (this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.lg)) {
                 this.mobileDetailMode = true;
             }
+
+            this.setLayout();
+
         } else {
             this.resetActiveEntity();
         }
@@ -322,11 +340,37 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         this.activePanelParams = undefined;
         this.mobileDetailMode = false;
 
+        this.setLayout();
+
         if (updateURI) {
             const queryParams: Params = {};
             queryParams.id = undefined;
             queryParams.metric = undefined;
             this.uriService.updateURI(undefined, queryParams);
+        }
+    }
+
+    private setLayout() {
+        setTimeout(() => {
+            if (this.elementTable) {
+                // measure table (not wrapper) width
+                const tableWidth = this.elementTable.nativeElement.querySelectorAll('table')[0].offsetWidth;
+                // area available
+                const areaWidth = this.area.nativeElement.offsetWidth;
+                // area available to the table (2/3 + gutters
+                const availAreaWidth = areaWidth / 3 * 2 + 46;
+
+                const isTableFit = (availAreaWidth > tableWidth);
+                if (this.activeTableEntity) {
+                    this.fixedLayoutClass = (isTableFit) ? '' : 'fixedLayout--with-panel';
+                } else {
+                    this.fixedLayoutClass = (isTableFit) ? '' : 'fixedLayout--no-panel';
+                }
+            }
+        });
+
+        if (this.mobileDetailMode && this.activePanelEntity) {
+            this.fixedLayoutClass = 'fixedLayout--no-panel';
         }
     }
 }

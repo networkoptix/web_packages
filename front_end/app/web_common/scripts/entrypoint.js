@@ -40,7 +40,6 @@ require('./services/cameraRecords.js');
 require('./services/camerasProvider.js');
 require('./services/chromecast.js');
 require('./services/nativeClient.js');
-require('./services/page.js');
 require('./services/poll.js');
 require('./services/systemAPI.js');
 require('./services/timelineActions.js');

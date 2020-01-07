@@ -1,6 +1,6 @@
 {
   "activate_account": {
-    "emailSubject": "アカウントの有効化"
+    "emailSubject": "アカウントを有効にする"
   },
   "cloud_invite": {
     "emailSubject": "%CLOUD_NAME% に登録されました"
@@ -12,7 +12,7 @@
     "emailSubject": "{{message.asset}}販売問い合わせ"
   },
   "contact_support": {
-    "emailSubject": "{{message.asset}}サポート依頼"
+    "emailSubject": "Technical inquiry for {{message.asset}}"
   },
   "integration_feedback": {
     "emailSubject": "{{message.asset}} についてのフィードバック"

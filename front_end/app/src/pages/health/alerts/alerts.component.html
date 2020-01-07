@@ -3,33 +3,36 @@
                      class="section-placeholder">
 </nx-page-placeholder>
 
-<div class="row px-0" *ngIf="healthService.alertsValues.length">
-    <div class="w-100" #tiles>
-        <div class="d-flex flex-wrap p-0" >
-            <div *ngFor="let alert of alertCards; trackBy: trackItem" class="mb-2 mx-2 card-container">
-                <nx-system-alert-card-component [data]="alert"></nx-system-alert-card-component>
-            </div>
-            <ng-container *ngIf="alertCardCount % 2">
-                <div class="mb-2 mx-2 card-container"></div>
-            </ng-container>
-        </div>
-        <hr class="px-2 mx-2">
-    </div>
 
-    <div class="d-flex w-100">
-        <div *ngIf="tableHeaders && healthService.alertsValues && !mobileDetailMode" #table
-             class="px-2 overflow-auto">
+<div class="gridMetricContent" #area
+     [ngClass]="fixedLayoutClass"
+     *ngIf="healthService.alertsValues.length">
 
-            <div class="col-12 p-0" *ngIf="!mobileDetailMode" #search>
-                <nx-search
-                        name="filterModel"
-                        [ngModel]="filterModel"
-                        (ngModelChange)="modelChanged($event)"
-                        layout="selectors"
-                        ngDefaultControl>
-                </nx-search>
+    <div class="gridMetricContentComponent">
+        <div class="gridMetricContentComponentWrapper" >
+            <div class="d-flex flex-wrap p-0" *ngIf="!mobileDetailMode" #tiles>
+                <div *ngFor="let alert of alertCards; trackBy: trackItem" class="mb-3 mr-3 card-container">
+                    <nx-system-alert-card-component [data]="alert"></nx-system-alert-card-component>
+                </div>
+                <ng-container *ngIf="alertCardCount % 2">
+                    <div class="mb-3 mr-3 card-container"></div>
+                </ng-container>
             </div>
-            <nx-dynamic-table
+            <hr class="pb-3 m-0">
+
+            <div *ngIf="tableHeaders && healthService.alertsValues && !mobileDetailMode" #table
+                 [ngClass]="{'data-wrapper' : !activeTableEntity}">
+
+                <div class="" *ngIf="!mobileDetailMode" #search>
+                    <nx-search
+                            name="filterModel"
+                            [ngModel]="filterModel"
+                            (ngModelChange)="modelChanged($event)"
+                            layout="selectors"
+                            ngDefaultControl>
+                    </nx-search>
+                </div>
+                <nx-dynamic-table
                         [dimensions]="containerDimensions"
                         [tableHeader]="alertsCount + ' alerts'"
                         [headers]="tableHeaders"
@@ -37,13 +40,14 @@
                         [elements]="alerts"
                         (onRowClick)="setActiveEntity($event)"
                         [activeEntity]="activeTableEntity">
-            </nx-dynamic-table>
+                </nx-dynamic-table>
+            </div>
         </div>
+    </div>
 
-        <div class="col-12 col-md-5 col-xl-4 col-xxl-3 pb-3"
-             *ngIf="activePanelEntity">
-
-            <div class="row pl-3 pb-3"
+    <div class="gridMetricContentPanelComponent">
+        <div class="gridMetricContentPanelComponentWrapper pb-3" *ngIf="activePanelEntity">
+            <div class="mb-3 all-results-btn"
                  [style.display]="!mobileDetailMode ? 'none' : 'block'">
 
                 <button class="btn btn-default btn-back" (click)="resetActiveEntity()">
@@ -59,4 +63,5 @@
             </nx-dynamic-table-panel-component>
         </div>
     </div>
+
 </div>

@@ -80,13 +80,13 @@
                                 <span translate>Enable auto discovery of cameras and servers</span>
                             </label>
                         </div>
-                        <label id="autoDiscoveryEnabledHelpBlock" 
-                            class="form-text helper-block col-11 col-lg-9 col-xl-8 p-0" 
+                        <label id="autoDiscoveryEnabledHelpBlock"
+                            class="form-text helper-block col-11 col-lg-9 col-xl-8 p-0"
                             for="autoDiscoveryEnabled"
                             translate>
-                            When enabled, system will discover new cameras and servers. Also, 
-                            it will automatically and persistently send discovery requests to 
-                            cameras in order to get the camera's status update. 
+                            When enabled, system will discover new cameras and servers. Also,
+                            it will automatically and persistently send discovery requests to
+                            cameras in order to get the camera's status update.
                             Failover enabled on some servers ignore status check prohibition.
                         </label>
                         <div class="d-flex checkbox-block align-items-center mt-1">
@@ -102,12 +102,12 @@
                                 <span translate>Send anonymous usage and crash statistics to developers</span>
                             </label>
                         </div>
-                        <label id="statisticsAllowedHelpBlock" 
+                        <label id="statisticsAllowedHelpBlock"
                             class="form-text helper-block col-11 col-lg-9 col-xl-8 p-0"
-                            for="statisticsAllowed" 
+                            for="statisticsAllowed"
                             translate>
-                            Includes information about the System, such as camera modules, 
-                            firmware versions, number of servers, etc. 
+                            Includes information about the System, such as camera modules,
+                            firmware versions, number of servers, etc.
                             Does not include any personal information and is completely anonymous.
                         </label>
                         <div class="d-flex checkbox-block align-items-center mt-1">
@@ -133,7 +133,7 @@
             </header>
             <nx-pre-loader *ngIf="!settingsWatchersSet"></nx-pre-loader>
             <nx-section *ngIf="settingsWatchersSet">
-                <form id="systemSettingsForm" class="form-horizontal" novalidate autocomplete="off">
+                <form id="securitySettingsForm" class="form-horizontal" novalidate autocomplete="off">
                     <div class="form-check p-0 mr-4">
                         <div class="d-flex checkbox-block align-items-center">
                             <nx-checkbox
@@ -148,8 +148,8 @@
                                 <span translate>Enable audit trail</span>
                             </label>
                         </div>
-                        <label id="auditTrailEnabledHelpBlock" 
-                            class="form-text helper-block col-11 col-lg-9 col-xl-8 p-0" 
+                        <label id="auditTrailEnabledHelpBlock"
+                            class="form-text helper-block col-11 col-lg-9 col-xl-8 p-0"
                             for="auditTrailEnabled"
                             translate>
                             Tracks and logs all user actions.
@@ -177,14 +177,14 @@
                                 #videoTrafficEncryptionForced="ngModel">
                             </nx-checkbox>
 
-                            <label class="control-label mb-0" 
-                                [ngClass]="!settingsWatchers.trafficEncryptionForced.value ? 'disabled-label' : ''" 
+                            <label class="control-label mb-0"
+                                [ngClass]="!settingsWatchers.trafficEncryptionForced.value ? 'disabled-label' : ''"
                                 for="videoTrafficEncryptionForced">
                                 <span translate>Encrypt video traffic</span>
                             </label>
                         </div>
-                        <label id="videoTrafficEncryptionForcedHelpBlock" 
-                            class="form-text helper-block col-11 col-lg-9 col-xl-8 p-0" 
+                        <label id="videoTrafficEncryptionForcedHelpBlock"
+                            class="form-text helper-block col-11 col-lg-9 col-xl-8 p-0"
                             [ngClass]="!settingsWatchers.trafficEncryptionForced.value ? 'disabled-helper-block' : ''"
                             for="videoTrafficEncryptionForced"
                             translate>
@@ -209,11 +209,11 @@
                                     [ngModelOptions]="{standalone: true}"
                                     (keydown)="storePreviousValue()"
                                     (keyup)="validationCheckForInput($event)"
-                                    type="number" 
-                                    min="1" 
+                                    type="number"
+                                    min="1"
                                     class="form-control text-center time-unit-input">
                             <nx-select class="time-unit-select"
-                                       [items]="limitSessionTimeUnits" 
+                                       [items]="limitSessionTimeUnits"
                                        [selected]="selectedTimeUnit"
                                        (onSelected)="updateTimeUnitInput($event)"></nx-select>
                         </div>

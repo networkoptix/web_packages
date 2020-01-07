@@ -77,6 +77,8 @@ export class NxAccountPasswordComponent implements OnInit, AfterViewInit {
             errorPrefix       : this.LANG.errorCodes.cantChangePasswordPrefix,
             ignoreUnauthorized: true
         }).then(() => {
+            this.form.reset();
+            this.setOriginal();
             this.applyService.reset();
         });
 
@@ -103,8 +105,8 @@ export class NxAccountPasswordComponent implements OnInit, AfterViewInit {
     }
 
     setOriginal() {
-        this.watchers.password.value = '';
-        this.watchers.newPassword.value = '';
+        this.setPassword('');
+        this.setNewPassword('');
     }
 
     setPassword(password) {

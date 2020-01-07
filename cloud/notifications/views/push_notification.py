@@ -1,4 +1,5 @@
 from django.http import Http404
+from django.shortcuts import get_object_or_404
 from rest_framework import exceptions, status
 from rest_framework.authentication import BasicAuthentication, SessionAuthentication
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
@@ -8,35 +9,56 @@ from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, UpdateMo
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
-from api.controllers.cloud_api import Account as Clouddb_Account
+from api.controllers.cloud_api import Account as Clouddb_Account, System as Clouddb_System
 from api.helpers.exceptions import handle_exceptions, APIRequestException, APIServiceException,\
-    api_success, get_client_ip, APINotAuthorisedException, ErrorCodes
+    api_success, get_client_ip, APINotAuthorisedException, ErrorCodes, APILogicException
 from api.models import Account
 from notifications.tasks import send_push_notification
 from notifications.models import PushNotification, PushDevice, PushSubscription
 from notifications.serializers import NotificationSerializer, RegisterDeviceSerializer, SubscriptionSerializer, \
-    DeviceSubscriptionsSerializer
+    DeviceSubscriptionsSerializer, UnregisterDeviceSerializer
 
 import json
 from django.conf import settings
 
 
-class CloudBasicAuthentication(BasicAuthentication):
+class CloudSystemBasicAuthentication(BasicAuthentication):
+    def authenticate_credentials(self, user, password, request=None):
+        try:
+            ip = get_client_ip(request)
+            # System credentials should fail account.get and raise an exception
+            Clouddb_Account.get(user, password, ip)
+            raise exceptions.AuthenticationFailed('Must use system credentials, not account credentials')
+        except (APINotAuthorisedException, APILogicException):
+            try:
+                system_response = Clouddb_System.get(user, password, user)
+                if 'systems' in system_response and system_response['systems'][0]:
+                    request.data['system'] = system_response['systems'][0]
+                else:
+                    raise exceptions.AuthenticationFailed('Invalid system credentials')
+            except APINotAuthorisedException:
+                raise exceptions.AuthenticationFailed('Invalid system credentials')
+
+        request.data['username'] = user
+        request.data['password'] = password
+
+        return None, None
+
+
+class CloudAccountBasicAuthentication(BasicAuthentication):
     def authenticate_credentials(self, user, password, request=None):
         try:
             ip = get_client_ip(request)
             clouddb_account = Clouddb_Account.get(user, password, ip)
-        except APINotAuthorisedException:
-            raise exceptions.AuthenticationFailed('Invalid email/password.')
+        except (APINotAuthorisedException, APILogicException):
+            raise exceptions.AuthenticationFailed('Invalid email/password')
 
-        if 'email' in clouddb_account:
-            account = Account.objects.filter(email=clouddb_account['email']).first()
+        account = Account.objects.filter(email=clouddb_account['email']).first()
 
-        request.data['clouddb_account'] = clouddb_account
         request.data['username'] = user
         request.data['password'] = password
 
-        return (account, None)
+        return account, None
 
 
 class CloudSessionAuthentication(SessionAuthentication):
@@ -60,7 +82,7 @@ class CloudSessionAuthentication(SessionAuthentication):
 
 @api_view(['POST'])
 @permission_classes((AllowAny,))
-@authentication_classes((CloudBasicAuthentication, CloudSessionAuthentication))
+@authentication_classes((CloudSystemBasicAuthentication, CloudSessionAuthentication))
 def push_notification(request):
     serializer = NotificationSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
@@ -87,7 +109,7 @@ def push_notification(request):
 
 @api_view(['GET', 'POST'])
 @permission_classes((IsAuthenticated,))
-@authentication_classes((CloudBasicAuthentication, CloudSessionAuthentication))
+@authentication_classes((CloudAccountBasicAuthentication, CloudSessionAuthentication))
 def register_device(request):
     if request.method == 'GET':
         serializer = RegisterDeviceSerializer(data=request.GET)
@@ -103,8 +125,9 @@ def register_device(request):
         data = serializer.validated_data
 
         error_data = dict()
+        device = PushDevice.objects.filter(registration_id=data['deviceToken']).first()
 
-        if not PushDevice.objects.filter(registration_id=data['deviceToken']).exists():
+        if not device:
             device = PushDevice(
                 registration_id=data['deviceToken'], model=data['model'], name=data['name'], cloud_message_type='FCM',
                 user=request.user
@@ -115,7 +138,12 @@ def register_device(request):
             else:
                 error_data['deviceToken'] = "Token could not be validated"
         else:
-            error_data['deviceToken'] = "Device with this deviceToken already exists"
+            device.model = data['model']
+            device.name = data['name']
+            if device.user != request.user:
+                device.subscriptions.all().delete()
+                device.user = request.user
+            device.save()
 
         if error_data:
             raise ValidationError(error_data)
@@ -123,9 +151,28 @@ def register_device(request):
         return api_success()
 
 
-class DeviceSubscriptionListView(ListAPIView):
+@api_view(['POST'])
+@permission_classes((IsAuthenticated,))
+@authentication_classes((CloudAccountBasicAuthentication, CloudSessionAuthentication))
+def unregister_device(request):
+    serializer = UnregisterDeviceSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    data = serializer.validated_data
+
+    device = PushDevice.objects.filter(registration_id=data['deviceToken']).first()
+    error_data = dict()
+
+    if device:
+        device.delete()
+        return api_success()
+    else:
+        error_data['deviceToken'] = 'Device does not exist'
+        raise ValidationError(error_data)
+
+
+class DeviceSubscriptionListView(UpdateModelMixin, ListAPIView):
     serializer_class = DeviceSubscriptionsSerializer
-    authentication_classes = (CloudBasicAuthentication, CloudSessionAuthentication)
+    authentication_classes = (CloudAccountBasicAuthentication, CloudSessionAuthentication)
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
@@ -135,9 +182,19 @@ class DeviceSubscriptionListView(ListAPIView):
             queryset = queryset.filter(registration_id=device_token)
         return queryset
 
+    def get_object(self):
+        device_token = self.request.query_params.get('deviceToken', None)
+        if device_token:
+            return get_object_or_404(PushDevice, user=self.request.user, registration_id=device_token)
+        else:
+            raise Http404
+
+    def post(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
 
 class Subscribe(UpdateModelMixin, CreateModelMixin, RetrieveModelMixin, GenericAPIView):
-    authentication_classes = (CloudBasicAuthentication, CloudSessionAuthentication)
+    authentication_classes = (CloudAccountBasicAuthentication, CloudSessionAuthentication)
     permission_classes = (IsAuthenticated, )
     serializer_class = SubscriptionSerializer
     lookup_fields = ('deviceToken', 'systemId')

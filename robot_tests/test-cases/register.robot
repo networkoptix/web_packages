@@ -12,11 +12,7 @@ ${url}         ${ENV}
 
 *** Keywords ***
 Restart
-    Register Keyword To Run On Failure    NONE
-    ${status}    Run Keyword And Return Status    Validate Log In    timeout=5
-    Register Keyword To Run On Failure    Failure Tasks
-    Run Keyword If    ${status}    Log Out
-    Go To    ${url}
+    Common Restart Logout    ${url}
 
 Open New Browser and Reset DB On Failure
     Close Browser
@@ -36,7 +32,7 @@ should open register page in anonymous state by clicking Register button on top 
     Wait Until Element Is Visible    ${CREATE ACCOUNT HEADER}
     Click Link    ${CREATE ACCOUNT HEADER}
     Location Should Be    ${url}/register
-    Run keyword and continue on failure    Title Should Be    ${REGISTER TITLE TEXT} - ${PRODUCT_NAME}
+    Run keyword and continue on failure    Title Should Be    ${REGISTER TITLE TEXT} ${PRODUCT_NAME}
 
 should open register page from register success page by clicking Register button on top right corner
     [tags]    email
@@ -58,9 +54,9 @@ should open register page in anonymous state by clicking Register button on home
 #I am assuming this means directly going to the /register url and not clicking a button
 should open register page in anonymous state
     [tags]    C24211    anonymous
-    Run keyword and continue on failure    Open page anonymously    ${url}/register    ${REGISTER TITLE TEXT} - ${PRODUCT_NAME}
+    Run keyword and continue on failure    Open page anonymously    ${url}/register    ${REGISTER TITLE TEXT} ${PRODUCT_NAME}
     Wait Until Element Is Visible    ${REGISTER FORM}
-    Check Log In    button=None
+    Check Log In
 
 should register user with correct credentials
     ${email}    Get Random Email    ${BASE EMAIL}
@@ -145,19 +141,20 @@ should respond to Tab key
     Wait Until Page Contains Element    ${TERMS AND CONDITIONS CHECKBOX VISIBLE}/../../span[contains(@class,"unchecked")]
 
     Press Keys    ${TERMS AND CONDITIONS CHECKBOX REAL}    TAB
+    get locations
     Press Keys    ${TERMS AND CONDITIONS LINK}    ENTER
     Element Should Be Focused    ${TERMS AND CONDITIONS LINK}
     ${tabs}    Get Window Handles
-    Select Window    @{tabs}[1]
-    Location Should Be    ${url}/content/eula
-    Select Window    @{tabs}[0]
+    Switch Window    @{tabs}[1]
+    Location Should Be    ${url}${TERMS URL}
+    Switch Window    @{tabs}[0]
     Press Keys    ${TERMS AND CONDITIONS LINK}    TAB
     Element Should Be Focused    ${PRIVACY POLICY LINK}
-    Press Keys    ${PRIVACY POLICY LINK}    ENTER
+    Press Keys    ${PRIVACY POLICY LINK}    SPACEBAR
     ${tabs}    Get Window Handles
-    Select Window    @{tabs}[2]
+    Switch Window    @{tabs}[3]
     Location Should Be    ${PRIVACY POLICY URL FULL}
-    Select Window    @{tabs}[0]
+    Switch Window    @{tabs}[0]
 
     Clear Register Fields
     Press Keys    ${PRIVACY POLICY LINK}    TAB
@@ -173,7 +170,7 @@ should open Terms and conditions in a new page
     Click Link    ${TERMS AND CONDITIONS LINK}
     Sleep    2    #This is specifically for Firefox
     ${tabs}    Get Window Handles
-    Select Window    @{tabs}[1]
+    Switch Window    @{tabs}[1]
     Location Should Be    ${url}/content/eula
 
 should open Privacy Policy in a new page
@@ -183,7 +180,7 @@ should open Privacy Policy in a new page
     Click Link    ${PRIVACY POLICY LINK}
     Sleep    2    #This is specifically for Firefox
     ${windows}    Get Window Handles
-    Select Window    @{windows}[1]
+    Switch Window    @{windows}[1]
     Location Should Be    ${PRIVACY POLICY URL FULL}
 
 should suggest user to create new account, if he was logged in and goes to registration link
@@ -260,7 +257,7 @@ Check registration email links, colors, cloud name, and user name
     Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
     ${email}    Wait For Email    recipient=${random email}    timeout=120    status=UNSEEN
     ${email text}    Get Email Body    ${email}
-    ${email text}    Decode Bytes To String    ${email text}    UTF-8
+    ${email text}    Decode Bytes To String    ${email text}    UTF-8    errors=ignore
 
     Check Email Button    ${email text}    ${ENV}    ${THEME COLOR}
     Check Email User Names    ${email text}    ${TEST FIRST NAME}    ${TEST LAST NAME}
@@ -275,24 +272,24 @@ Check registration email links, colors, cloud name, and user name
     \    check in list    ${expected links}    ${link}
     Delete Email    ${email}
     Close Mailbox
-    
+
 Check automatic loggout when registering new account while logged in
     [tags]    C63393
     Log In    ${EMAIL VIEWER}     ${BASE PASSWORD}
     Validate Log In
     Go To    ${ENV}/register
     Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${LOGGED IN NEW ACCOUNT BUTTON}
-    Element Text Should Be    ${MODAL DIALOG}//h1/span[contains(text(),'${EMAIL VIEWER}')]    You are already logged in with as ${EMAIL VIEWER}  
+    Element Text Should Be    ${MODAL DIALOG}//h1/span[contains(text(),'${EMAIL VIEWER}')]    ${YOU ARE ALREADY LOGGED IN TEXT} ${EMAIL VIEWER}
     Click Button     ${MODAL DIALOG}//button[@class="close ng-star-inserted"]
     Location Should Be    ${ENV}/systems
     Go To    ${ENV}/register
     Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${LOGGED IN NEW ACCOUNT BUTTON}
-    Element Text Should Be    ${MODAL DIALOG}//h1/span[contains(text(),'${EMAIL VIEWER}')]    You are already logged in with as ${EMAIL VIEWER}  
+    Element Text Should Be    ${MODAL DIALOG}//h1/span[contains(text(),'${EMAIL VIEWER}')]    ${YOU ARE ALREADY LOGGED IN TEXT} ${EMAIL VIEWER}
     Click Button     ${LOGGED IN STAY LOGGED IN BUTTON}
     Location Should Be    ${ENV}/systems
     Go To    ${ENV}/register
     Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${LOGGED IN NEW ACCOUNT BUTTON}
-    Element Text Should Be    ${MODAL DIALOG}//h1/span[contains(text(),'${EMAIL VIEWER}')]    You are already logged in with as ${EMAIL VIEWER}  
+    Element Text Should Be    ${MODAL DIALOG}//h1/span[contains(text(),'${EMAIL VIEWER}')]    ${YOU ARE ALREADY LOGGED IN TEXT} ${EMAIL VIEWER}
     Click Button     ${LOGGED IN NEW ACCOUNT BUTTON}
     Wait Until Location Is    ${ENV}/register
-    Wait Until Elements Are Visible    ${REGISTER FORM} 
+    Wait Until Elements Are Visible    ${REGISTER FORM}

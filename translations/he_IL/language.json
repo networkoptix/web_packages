@@ -2,12 +2,25 @@
   "language": "he_IL",
   "language_name": "עברית",
   "cloudName": "%CLOUD_NAME%",
+  "vmsName": "%VMS_NAME%",
+  "clientProtocol": "%CLIENT_PROTOCOL%:",
+  "dialogs": {
+    "okButton": "אישור",
+    "cancelButton": "ביטול",
+    "loginTitle": "היכנס ל- %CLOUD_NAME%",
+    "loginButton": "התחבר",
+    "logoutAuthorisedTitle": "אתה כבר מחובר",
+    "logoutAuthorisedContinueButton": "המשך",
+    "logoutAuthorisedLogoutButton": "יציאה",
+    "noClientDetectedTitle": "התקן %VMS_NAME% כדי להציג את המערכת שלך",
+    "download": "הורד %VMS_NAME%"
+  },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
     "default": "%CLOUD_NAME%",
     "registerSuccess": "ברוכים הבאים ל",
     "register": "צור חשבון ב-",
-    "changePassword": "שנה סיסמה -",
+    "changePassword": "שנה סיסמא -",
     "account": "הגדרות חשבון -",
     "systems": "מערכות -",
     "system": "מערכת -",
@@ -16,15 +29,82 @@
     "activateSent": "הפעל חשבון -",
     "activateSuccess": "החשבון הופעל -",
     "activateCode": "הפעל חשבון -",
-    "restorePassword": "איפוס סיסמה -",
-    "restorePasswordSuccess": "הסיסמה נשמרה -",
-    "restorePasswordCode": "איפוס סיסמה -",
+    "restorePassword": "איפוס סיסמא -",
+    "restorePasswordSuccess": "הסיסמא נשמרה -",
+    "restorePasswordCode": "איפוס סיסמא -",
     "view": "הצג מצלמות - ",
     "debug": "איתור באגים",
     "login": "התחבר -",
-    "download": "הורד את %VMS_NAME%",
+    "download": "הורד %VMS_NAME%",
     "downloadPlatform": "הורד %VMS_NAME% עבור ",
     "pageNotFound": "דף לא נמצא"
+  },
+  "systemStatuses": {
+    "activated": "הופעל",
+    "incompatible": "אינו תואם",
+    "merging": "מיזוג",
+    "notActivated": "לא הופעל",
+    "online": "מקוון",
+    "offline": "לא מקוון",
+    "unavailable": "לא זמין"
+  },
+  "accessRoles": {
+    "disabled": {
+      "label": "כבוי",
+      "description": "המשתמש מושבת ואינו יכול להיכנס למערכת"
+    },
+    "Owner": {
+      "label": "בעלים",
+      "description": "גישה בלתי מוגבלת כולל היכולת לשתף ולחבר / לנתק את המערכת מהענן"
+    },
+    "Viewer": {
+      "label": "צופה",
+      "description": "ניתן להציג וידאו חי ולעיין בארכיון"
+    },
+    "Live Viewer": {
+      "label": "צופה בשידור חי",
+      "description": "יכול לצפות רק בוידאו חי"
+    },
+    "Advanced Viewer": {
+      "label": "צופה מתקדם",
+      "description": "יכול לצפות בוידאו חי, לצפות בארכיון, להגדיר מצלמות, לשלוט PTZ וכו '"
+    },
+    "Administrator": {
+      "label": "מנהל",
+      "description": "גישה בלתי מוגבלת כולל את היכולת לשתף"
+    },
+    "Custom": {
+      "label": "התאמה אישית",
+      "description": "השתמש ב %VMS_NAME% כדי להגדיר הרשאות מותאמות אישית"
+    },
+    "cloudAdmin": {
+      "label": "מנהל",
+      "description": "יכול להגדיר מערכת ולשתף"
+    },
+    "customRole": {
+      "label": "תפקיד מותאם אישית",
+      "description": "תפקיד משתמש מותאם אישית שצוין במערכת"
+    },
+    "owner": {
+      "label": "בעלים",
+      "description": "גישה בלתי מוגבלת כולל היכולת לשתף ולחבר / לנתק את המערכת מהענן"
+    },
+    "viewer": {
+      "label": "צופה",
+      "description": "ניתן להציג וידאו חי ולעיין בארכיון"
+    },
+    "liveViewer": {
+      "label": "צופה בשידור חי",
+      "description": "יכול לצפות רק בוידאו חי"
+    },
+    "advancedViewer": {
+      "label": "צופה מתקדם",
+      "description": "יכול לצפות בוידאו חי, לצפות בארכיון, להגדיר מצלמות, לשלוט PTZ וכו '"
+    },
+    "custom": {
+      "label": "התאמה אישית",
+      "description": "השתמש ב %VMS_NAME% כדי להגדיר הרשאות מותאמות אישית"
+    }
   },
   "errorCodes": {
     "ok": "אישור",
@@ -37,10 +117,10 @@
     "cantRegisterPrefix": "אירעה שגיאה",
     "cantGetSystemInfoPrefix": "מידע מערכת לא זמין",
     "cantChangeAccountPrefix": "לא ניתן לשמור שינויים",
-    "cantChangePasswordPrefix": "לא ניתן לשמור סיסמה",
+    "cantChangePasswordPrefix": "לא ניתן לשמור סיסמא",
     "cantActivatePrefix": "לא ניתן להפעיל את החשבון שלך",
     "cantSendConfirmationPrefix": "אין אפשרות לשלוח מייל אישור",
-    "notAuthorized": "סיסמה שגויה",
+    "notAuthorized": "סיסמא שגויה",
     "brokenAccount": "בעיה לא צפויה עם החשבון. <a href=\"/restore_password\">שחזר את החשבון</a>",
     "wrongParameters": "פרמטרים מסוימים בטופס אינם נכונים",
     "wrongCode": "החשבון כבר הופעל או שקוד האישור שגוי",
@@ -56,10 +136,10 @@
     "emailNotFound": "החשבון לא קיים.",
     "EmailAlreadyExists": "האימייל הזה כבר רשום",
     "oldPasswordMistmatch": "הסיסמא הנוכחית אינה נכונה.",
-    "passwordMismatch": "סיסמה שגויה",
+    "passwordMismatch": "סיסמא שגויה",
     "cantEditYourself": "שינוי הרשאות של המשתמש אינו מאופשר",
     "cantEditAdmin": "למשתמש זה יש הרשאות מנהל",
-    "cantOpenClient": "%VMS_NAME% יישום לא אותר. <a href=\"/download\"> הורדה</a>",
+    "cantOpenClient": "%VMS_NAME% application is not detected. <a href=\"/download\">Download</a>",
     "lostConnection": "החיבור ל- {{systemName}} אבד",
     "thisSystem": "המערכת",
     "oldSafariNotSupported": "גרסאות של Safari מתחת ל 10 אינן נתמכות",
@@ -68,6 +148,83 @@
     "INCOMPATIBLE": "למערכות יש גרסאות תוכנה שונות. אנא עדכן את שניהם ל <a href=\"/download\">לגרסא האחרונה</a>.",
     "FAIL": "המערכת <strong>{{failedSystem}}</strong> אינה זמינה כעת.<br>נסה שוב בעוד מספר דקות או צור קשר עם <a href=\"%SUPPORT_LINK%\" target=\"_blank\">תמיכה</a>.",
     "unknownMergeError": "שגיאה לא ידועה, באפשרותך לנסות לרענן את הדף ולנסות שוב. אם הבעיה נמשכת, צור קשר עם <a href=\"%SUPPORT_LINK%\" target=\"_blank\">התמיכה</a>."
+  },
+  "merging": {
+    "mergeFailedTitle": "מיזוג המערכות נכשל",
+    "commonText": "מיזוג מערכות נכשל<strong>{{primarySystem}}</strong> ו - <strong>{{secondarySystem}}</strong>."
+  },
+  "passwordRequirements": {
+    "good": "טוב",
+    "fair": "הוגן",
+    "fairMessage": "השתמש במספרים, אותיות גדולות וקטנות ותווים מיוחדים כדי להפוך את הסיסמא שלך חזקה יותר",
+    "minLength": "קצר מדי",
+    "minLengthMessage": "הסיסמא חייבת להכיל 8 תווים לפחות",
+    "required": "שגוי",
+    "requiredMessage": "השתמש רק באותיות לטיניות, מספרים וסמלים במקלדת, הימנע מרווחים בהתחלה ובסוף",
+    "weak": "חלש",
+    "weakMessage": "השתמש במספרים, אותיות גדולות וקטנות ותווים מיוחדים כדי להפוך את הסיסמא שלך חזקה יותר",
+    "strongMessage": "סיסמה חזקה!",
+    "common": "נפוץ מדי",
+    "commonMessage": "סיסמה זו חלשה מאחר והיא מהסיסמאות הפופולריות ביותר בעולם",
+    "missingMessage": "נדרשת סיסמא"
+  },
+  "sharing": {
+    "confirmOwner": "אם תשנה את 'בעל המערכת', תשלול את הבעלות מהחשבון הנוכחי. פעולה זו היא בלתי הפיכה. האם להמשיך?",
+    "shareTitle": "שתף",
+    "shareConfirmButton": "שתף",
+    "editShareTitle": "ערוך הרשאות",
+    "editShareConfirmButton": "שמור",
+    "permissionsSaved": "הרשאות חדשות נשמרו"
+  },
+  "system": {
+    "yourSystem": "המערכת שלך",
+    "mySystemSearch": "IMeMyMine",
+    "unavailable": "המערכת אינה זמינה",
+    "offline": "המערכת אינה מקוונת",
+    "openClient": "פתח ב %VMS_NAME%",
+    "openClientNoSystem": "פתח את %VMS_NAME%",
+    "confirmMergeAction": "לְמַזֵג",
+    "mergeSystemTitle": "מיזוג מערכות",
+    "confirmRenameTitle": "שם מערכת",
+    "confirmRenameAction": "שמור",
+    "successRename": "שם המערכת נשמר",
+    "confirmDisconnectTitle": "נתק את מערכת מ %CLOUD_NAME%?",
+    "confirmDisconnectAction": "נתק",
+    "confirmUnshareFromMe": "אתה עומד לנתק את המערכת מהחשבון שלך. לא תוכל עוד לגשת למערכת זו. האם להמשיך?",
+    "confirmUnshareFromMeTitle": "נתק מערכת?",
+    "confirmUnshareFromMeAction": "נתק",
+    "confirmUnshare": "משתמש זה לא יוכל לגשת למערכת. האם אתה בטוח?",
+    "confirmUnshareTitle": "מחק משתמש?",
+    "confirmUnshareAction": "מחק",
+    "successDisconnected": "המערכת התנתקה בהצלחה מ %CLOUD_NAME%",
+    "successDeleted": "המערכת {{systemName}} נמחקה בהצלחה מהחשבון שלך",
+    "mergeFailed": "מיזוג המערכת נכשל",
+    "mergeStart": "מיזוג מערכות החל",
+    "mergeSuccess": "מיזוג המערכת הושלם",
+    "permissionsRemoved": "ההרשאות הוסרו מ- {{email}}",
+    "unknownName": "שם לא ידוע עבור מערכת (נגרמה על ידי מיזוג ענן)"
+  },
+  "account": {
+    "accountSavedSuccess": "החשבון שלך נשמר בהצלחה",
+    "activationLinkSent": "קישור הפעלה נשלח",
+    "passwordChangedSuccess": "החשבון שלך נשמר בהצלחה",
+    "changePassword": "שנה סיסמא",
+    "newPasswordLabel": "סיסמא חדשה",
+    "saveChanges": "שמור"
+  },
+  "activeActions": {
+    "sendConfirm": "שלח את קישור ההפעלה שוב",
+    "resetPassword": "איפוס סיסמא",
+    "setNewPassword": "שמור סיסמה",
+    "setNewPasswordLabel": "סיסמא חדשה"
+  },
+  "regActions": {
+    "passwordLabel": "סיסמא",
+    "createAccount": "צור חשבון"
+  },
+  "header": {
+    "allSystems": "כל המערכות",
+    "systems": "מערכות"
   },
   "common": {
     "cameraLinks": {
@@ -85,14 +242,14 @@
     "cameraStates": {
       "offline": "לא מקוון",
       "error": "שגיאה",
-      "errorLoading": "An error occurred while loading this video.",
+      "errorLoading": "אירעה שגיאה בעת טעינת סרטון הזה.",
       "unauthorized": "נדרש אימות",
       "noData": "אין נתונים",
       "iOSVideoTooLarge": "iOS אינה תומכת בוידאו גדול מ fullHD (2MP: 1920 x 1080).",
       "flashRequired": "אנא התקן <a href='https://get.adobe.com/flashplayer/' target='_blank'> את Adobe Flash</a> להפעלת וידאו משרתים מבוססי Arm.",
       "flashOrWebmRequired": "יש <a href='https://get.adobe.com/flashplayer/' target='_blank'> להתקין Adobe Flash</a> או <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'> WebM codec</a> עבור הצגת וידאו ב- Internet Explorer.",
       "noArmSupport": "דפדפן או התקן זה אינו תומך בהפעלת וידאו משרתים מבוססי ARM.",
-      "noFormat": "דפדפן זה אינו תומך בשיחזור וידאו ממצלמה זו.",
+      "noFormat": "דפדפן זה אינו תומך בשחזור וידאו ממצלמה זו.",
       "ieNoWebm": "התקן את <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> עבור Internet Explorer.",
       "ieWin10": "השתמש ב- Microsoft Edge או בדפדפן Google Chrome.",
       "ubuntuNX": "דפדפן זה אינו תומך בווידאו משרתים מבוססי ARM. בבקשה, השתמש בדפדפן Chromium במקום זאת."
@@ -107,20 +264,21 @@
     "voiceCommands": {
       "play": "נגן",
       "pause": "השהה",
-      "live": "go to live | show me live",
-      "view": "view + [camera name]",
-      "search": "find + [text for searchbar]",
+      "live": "עבור שידור חי | הצג לי שידור חי",
+      "view": "הצג + [שם המצלמה]",
+      "search": "מצא + [טקסט עבור סרגל חיפוש]",
       "clear search": "נקה את החיפוש",
-      "expand server": "expand server + [server name]",
-      "collapse server": "collapse server + [server name]",
+      "expand server": "הרחב שרת + [שם שרת]",
+      "collapse server": "כווץ שרת + [שם שרת]",
       "expand all servers": "הרחב את כל השרתים",
       "collapse all servers": "כווץ את כל השרתים",
       "stop listening": "עצור האזנה",
-      "help": "help | show commands"
+      "help": "עזרה | הצג פקודות"
     }
   },
-  "system": {
-    "offline": "השרת אינו זמין",
-    "unavailable": "המערכת אינה זמינה"
+  "recommendSupport": {
+    "a_recommend": "אנו ממליצים להתייעץ עם",
+    "b_support": "תמיכה",
+    "c_proceeding": "לפני המשך עיבוד."
   }
 }

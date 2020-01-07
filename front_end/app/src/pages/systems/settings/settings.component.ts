@@ -246,6 +246,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                         .getInfo(true)
                         .then(() => {
                             this.settingsService.system = this.system;
+                            this.checkShare();
                         })
                         .catch((response) => {
                             this.system.forbidden = true;
@@ -259,7 +260,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                         .subscribe(_ => {
                             this.updateAlert();
                             this.updateMenu();
-                            this.checkShare();
                             this.menuVisible = true;
                         });
 
@@ -279,7 +279,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         if (this.settingsService.share) {
             if (this.system.isOnline) {
                 if (this.system.permissions.editUsers) {
-                    this.settingsService.addUser();
+                    this.settingsService.addUser().catch();
                 } else {
                     this.toastService.show(this.LANG.system.shareUnauthorized, {classname: 'danger', delay: this.CONFIG.alertTimeout, autohide: true});
                 }
@@ -405,4 +405,3 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         return permissions.split('|').sort().join('|');
     }
 }
-

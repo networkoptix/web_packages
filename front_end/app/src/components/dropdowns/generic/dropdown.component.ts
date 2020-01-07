@@ -12,6 +12,8 @@ const noop = () => {
            [items]="accessRoles"
            label="optionLabel"          <- which property should be shown
            [(ngModel)]="user.role.name"
+           (ngModelChange)="onModelChange($event)"
+           [selected]="user.role.name ? user.role.name : null"
            required>
 </nx-select>
 */

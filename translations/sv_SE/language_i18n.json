@@ -21,6 +21,8 @@
     "All Systems": "Alla system",
     "All cloud users will be deleted.": "Alla molnanvändare kommer raderas.",
     "All results": "Alla resultat",
+    "Allow only secure connections": "Tillåt endast säkra anslutningar",
+    "Allow system to optimize camera settings": "Låt systemet optimera kamerainställningarna",
     "Analytics": "Analys",
     "Analytics Event": "Analyshändelse",
     "Analytics Events": "Analyshändelser",
@@ -37,6 +39,7 @@
     "Change Password": "Ändra lösenord",
     "Checking...": "Kontrollerar...",
     "Choose which properties should be visible to customers:": "Välj vilka egenskaper som ska vara synliga för kunderna:",
+    "Clear filters": "Rensa filter",
     "Close": "Stäng",
     "Codec": "Kodek",
     "Collapse": "Komprimera",
@@ -45,7 +48,7 @@
     "Create Account": "Skapa konto",
     "Create account": "Skapa konto",
     "Current Password": "Nuvarande Lösenord",
-    "Current password is required": "Lösenordet krävs",
+    "Current password is required": "Nuvarande lösenord krävs",
     "Depending of the size of the database it may take up to several hours.": "Beroende på databasens storlek kan det ta upp till flera timmar.",
     "Developer": "Utvecklare",
     "Discard": "Kasta",
@@ -64,6 +67,9 @@
     "Email": "E-post",
     "Email is required": "E-postadress måste anges",
     "Embed": "Inbäddad",
+    "Enable audit trail": "Aktivera audit trail",
+    "Enable auto discovery of cameras and servers": "Aktivera automatisk upptäckt av kameror och servrar",
+    "Encrypt video traffic": "Kryptera videotrafik",
     "Enter \"Public User\" credentials:": "Ange \"Public User\" -uppgifter:",
     "Enter password for your account to continue": "Ange lösenord för ditt konto för att fortsätta",
     "Enter password to continue.": "Ange lösenord för att fortsätta.",
@@ -84,12 +90,15 @@
     "I/O": "I/O",
     "In Review": "Under granskning",
     "In-Client Upgrade:": "Uppgradering av klient:",
+    "Includes information about the System, such as camera modules, \n                            firmware versions, number of servers, etc. \n                            Does not include any personal information and is completely anonymous.": "Inkluderar information om systemet, till exempel kameramoduler, \n                            firmwareversioner, antal servrar, etc. \n                            Innehåller ingen personlig information och är helt anonym.",
+    "Information": "Information",
     "Integrations": "Integrationer",
     "Language": "Språk",
     "Last Name": "Efternamn",
     "Last name": "Efternamn",
     "Last name is required": "Efternamn krävs",
     "Latest version": "Senaste version",
+    "Limit session duration to": "Begränsa sessionens varaktighet till",
     "Log In": "Logga in",
     "Log Out": "Logga ut",
     "Log in to %CLOUD_NAME%": "Logga in på %CLOUD_NAME%",
@@ -109,6 +118,7 @@
     "Nothing Found": "Inget hittades",
     "OK": "OK",
     "Ok": "Ok",
+    "Only client-server video traffic can be encrypted.": "Endast videotrafik för klient-server kan krypteras.",
     "Other packages:": "Andra nedladdningar:",
     "Other releases, patches and beta versions": "Andra utgåvor, patchar och betaversioner",
     "Owner": "Ägare",
@@ -119,7 +129,7 @@
     "Password reset instructions are sent to Email": "Instruktioner för återställning av lösenord skickas till e-post",
     "Password successfully saved": "Lösenordet har sparats",
     "Password:": "Lösenord:",
-    "Please enter a valid Email": "Ange en giltig e-postadress",
+    "Please enter a valid Email": "Vänligen ange en giltig e-postadress",
     "Please review and agree to the Terms and Conditions and Privacy policy in order to proceed": "Läs och godkänn användarvillkoren och sekretesspolicy för att fortsätta",
     "Popularity": "Popularitet",
     "Privacy": "Sekretess",
@@ -135,17 +145,21 @@
     "Save": "Spara",
     "Search in google": "Sök på Google",
     "Secondary Stream": "Sekundär ström",
+    "Security": "Säkerhet",
     "Send": "Skicka",
+    "Send anonymous usage and crash statistics to developers": "Skicka anonym användning och kraschstatistik till programutvecklare",
     "Send feedback about this device": "Skicka feedback om den här enheten",
     "Set New Password": "Ange nytt lösenord",
     "Settings": "Inställningar",
     "Show All": "Visa alla",
     "Some of your servers don't support cloud System merge because of outdated software version.": "Några av dina servrar stöder inte systemfusion i moln på grund av föråldrad programvaruversion.",
+    "Subject": "Ämne",
     "Support": "Support",
     "Support E-mail": "Support Email",
     "Support URL": "Support URL",
     "Supported Devices": "Enheter som stöds",
     "Supported IP Video Devices": "IP-videoenheter som stöds",
+    "System Settings": "Systeminställningar",
     "System name": "Systemets namn",
     "System name is required": "Systemnamn krävs",
     "System will be accessible through local network with local administrator account.": "Systemet kommer att vara tillgängligt via lokalt nätverk med lokalt administratörskonto.",
@@ -162,7 +176,7 @@
     "This device has reported to support some analytics events, but we don't have exact information about them.": "Den här enheten har rapporterat stödja vissa analyshändelser, men vi har inte exakt information om dem.",
     "To": "Till",
     "Too many attempts. Try again in a minute.": "Alltför många försök. Försök igen om någon minut.",
-    "Topic": "Ämne",
+    "Tracks and logs all user actions.": "Spårar och loggar alla användaråtgärder.",
     "Until merge is finished you can log in to this system and watch video, but cannot change any settings.": "Innan sammanslagningen är klar kan du logga in på det här systemet och titta på video, men kan inte ändra några inställningar.",
     "Update them to the": "Uppdatera dem till",
     "Updated": "Uppdaterad",
@@ -172,9 +186,9 @@
     "WHEN_MERGE_FINISHES": "När sammanslagningen är klar kommer alla användare och kameror från detta system att bli tillgängliga i <strong>{{targetSystemName}}</strong> System, och detta system kommer att raderas.",
     "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.": "Vi rekommenderar att du installerar de senaste versionerna av Google Chrome eller Mozilla Firefox, men du kan använda någon annan modern webbläsare.",
     "What's New?": "Vad är nytt?",
+    "When enabled, system will discover new cameras and servers. Also, \n                            it will automatically and persistently send discovery requests to \n                            cameras in order to get the camera's status update. \n                            Failover enabled on some servers ignore status check prohibition.": "När det är aktiverat kommer systemet att upptäcka nya kameror och servrar. Också \n                            kommer det automatiskt och ihållande att skicka upptäcktsförfrågningar till \n                            kameror för att få kamerans statusuppdatering. \n                            Failover aktiverat på vissa servrar ignorerar förbud mot statuskontroll.",
     "Works with:": "Fungerar med:",
     "Wrong password": "Fel lösenord",
-    "You can merge only those cloud Systems, where you have the \"Owner\" permissions.": "Du kan sammanfoga endast de Cloud Systems, där du har behörigheterna \"Ägare\".",
     "You can only merge Systems where you are the owner.": "Du kan slå samman cloud system där du är ägare.",
     "You have registered in %CLOUD_NAME%": "Du har registrerat dig i %CLOUD_NAME%",
     "Your Email": "Din E-postadress",
@@ -205,7 +219,7 @@
         },
         "Viewer": {
             "description": "Kan visa live video och bläddra i arkivet",
-            "label": "Användare"
+            "label": "Tittare"
         },
         "advancedViewer": {
             "description": "Kan visa live video, bläddra i arkivet, konfigurera kameror, styra PTZ etc",
@@ -225,7 +239,7 @@
         },
         "disabled": {
             "description": "Användaren är inaktiverad och kan inte logga in på System",
-            "label": "Inaktiverad"
+            "label": "Avaktiverad"
         },
         "liveViewer": {
             "description": "Kan bara visa live video",
@@ -237,7 +251,7 @@
         },
         "viewer": {
             "description": "Kan visa live video och bläddra i arkivet",
-            "label": "Användare"
+            "label": "Tittare"
         }
     },
     "account": {
@@ -255,7 +269,6 @@
         "setNewPassword": "Spara lösenord",
         "setNewPasswordLabel": "Nytt lösenord"
     },
-    "andXMore": "... och {{value}} mer",
     "cameraFilters": {
         "H265": "H.265 kameror",
         "IO": "I/O-moduler",
@@ -269,6 +282,63 @@
         "ptz": "PTZ-kameror"
     },
     "clientProtocol": "%CLIENT_PROTOCOL%:",
+    "common": {
+        "cameraLinks": {
+            "copyActiveText": "kopierat till Urklipp",
+            "copyDefaultText": "kopiera",
+            "copyToClipboard": "kopiera till urklipp",
+            "highStream": "Högupplöst ström",
+            "lowStream": "Lågupplöst ström",
+            "transcoding": "Omkodning",
+            "unknown": "Okänd"
+        },
+        "cameraStates": {
+            "error": "Fel",
+            "errorLoading": "Ett fel uppstod vid laddning av den här videon.",
+            "flashOrWebmRequired": "Var god <a href='https://get.adobe.com/flashplayer/' target='_blank'>installera Adobe Flash</a> eller<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> för att spela video i Internet Explorer.",
+            "flashRequired": "Var god <a href='https://get.adobe.com/flashplayer/' target='_blank'>installera Adobe Flash</a> för att spela upp videor.",
+            "iOSVideoTooLarge": "ios stöder inte video större än fullHD (2MP: 1920x1080).",
+            "ieNoWebm": "Var god installera <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> för Internet Explorer.",
+            "ieWin10": "Vänligen använd Microsoft Edge eller Google Chrome-webbläsare.",
+            "noArmSupport": "Denna webbläsare eller enhet stöder inte videouppspelning från ARM-baserade servrar.",
+            "noData": "Data saknas",
+            "noFormat": "Den här webbläsaren stöder inte videouppspelning från den här kameran.",
+            "offline": "Offline",
+            "ubuntuNX": "Den här webbläsaren stöder inte video från ARM-baserade servrar. Vänligen använd Chrome-webbläsaren istället.",
+            "unauthorized": "Autentisering krävs"
+        },
+        "chromeCastWarning": "Chromecast är resursintensiv och kan orsaka problem på din server.",
+        "resolution": {
+            "auto": "Auto",
+            "high": "Hög",
+            "low": "Låg"
+        },
+        "searchCamPlaceholder": "Sök",
+        "systemHasNoCameras": "INGA KAMEROR",
+        "systemNewVersion": "Uppdatera ditt system",
+        "systemNewVersionMessage": "Din nuvarande version är inte kompatibel med den här funktionen. Uppdatera dina servrar till den senaste versionen för att använda den här funktionen.",
+        "systemNoAlerts": "Inga varningar",
+        "systemNoAlertsMessage": "Ditt system måste gå bra!",
+        "systemOffline": "System Offline",
+        "systemOfflineMessage": "Det här systemet är offline och kan inte nås just nu.",
+        "systemServerError": "Internt serverfel",
+        "systemServerErrorMessage": "Ett fel har inträffat. Vänligen försök igen senare. Ett fel har inträffat. Vänligen försök igen senare. Om problemet fortsätter, kontakta ditt supportteam.",
+        "systemUnreachable": "SYSTEMET är inte tillgängligt",
+        "voiceCommands": {
+            "clear search": "rensa sökningen",
+            "collapse all servers": "kollapsa alla servrar",
+            "collapse server": "kollapsera server + [servernamn]",
+            "expand all servers": "expandera alla servrar",
+            "expand server": "expandera server + [server namn]",
+            "help": "hjälp | visa kommandon",
+            "live": "gå till live | visa mig live",
+            "pause": "pausa",
+            "play": "spela",
+            "search": "hitta + [text för sökbar]",
+            "stop listening": "sluta lyssna",
+            "view": "visa + [kamera namn]"
+        }
+    },
     "devices": "enheter",
     "dialogs": {
         "cancelButton": "Avbryt",
@@ -300,15 +370,15 @@
         "message": {
             "failedToSend": "Meddelandet gick inte att skicka.",
             "sent": "Meddelandet har skickats.",
+            "subject": {
+                "integration_feedback": "Feedback för integration {{asset}}",
+                "ipvd_feedback_device": "Feedback om {{asset}}",
+                "ipvd_feedback_page": "Feedback för kamerans sida",
+                "sales_inquiry": "Försäljningsförfrågan för {{asset}}",
+                "technical_inquiry": "Teknisk fråga för {{asset}}"
+            },
             "title": {
                 "integration": "Kom i kontakt med {{companyName}}",
-                "ipvd_feedback_device": "Feedback om {{asset}}",
-                "ipvd_feedback_page": "Feedback för kamerans sida"
-            },
-            "topic": {
-                "contact_sales": "Kontakta försäljning för {{asset}}",
-                "contact_support": "Kontakta support för {{asset}}",
-                "integration_feedback": "Feedback för integration {{asset}}",
                 "ipvd_feedback_device": "Feedback om {{asset}}",
                 "ipvd_feedback_page": "Feedback för kamerans sida"
             }
@@ -352,8 +422,7 @@
             },
             "arm": {
                 "label": "ARM",
-                "shortLabel": "ARM",
-                "supported": "<a href='/content/arm'>ARM-baserade servrar stöd policy</a>"
+                "shortLabel": "ARM"
             },
             "ios": {
                 "label": "iOS",
@@ -361,25 +430,20 @@
             },
             "linux": {
                 "label": "Ubuntu Linux",
-                "shortLabel": "Ubuntu",
-                "supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+                "shortLabel": "Ubuntu"
             },
             "mac": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "macos": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "sdk": {
                 "label": "SDK",
-                "shortLabel": "SDK",
-                "supported": "C++ plattformsoberoende SDK"
+                "shortLabel": "SDK"
             },
             "windows": {
-                "label": "Windows",
-                "supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+                "label": "Windows"
             }
         },
         "mobile": {
@@ -403,12 +467,12 @@
         },
         "releasesTypes": {
             "beta": "Beta",
-            "betas": "Betas",
+            "betas": "Betor",
             "patch": "Patch",
-            "patches": "Patches",
-            "rc": "Release Candidate",
+            "patches": "Patchar",
+            "rc": "Releasekandidat",
             "release": "Release",
-            "releases": "Releases"
+            "releases": "Releaser"
         }
     },
     "errorCodes": {
@@ -555,8 +619,8 @@
     "phoneNumberWithLabel": "Tel: {{number}}",
     "pleaseSelect": "Vänligen välj...",
     "privacyPolicy": {
-        "integration": "Genom att skicka in denna blankett accepterar du att du kontaktas av {{INTEGRATION_COMPANY}} och / eller %COMPANY_NAME%.\nDu hittar {{INTEGRATION_COMPANY}} sekretesspolicy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">här</a> och %COMPANY_NAME% sekretesspolicy <a href=\"%PRIVACY_LINK%\" target=\"blank\">här</a> som innehåller anvisningar om hur du återkallar ditt samtycke.",
-        "ipvd": "Genom att skicka in denna blankett accepterar du att du kontaktas av %COMPANY_NAME%.\nDu hittar %COMPANY_NAME% sekretesspolicy <a href=\"%PRIVACY_LINK%\" target=\"blank\">här</a> som innehåller instruktioner om hur du återkallar ditt samtycke."
+        "integration": "Genom att skicka in denna blankett accepterar du att du kontaktas av {{INTEGRATION_COMPANY}} och / eller %COMPANY_NAME%.\nDu hittar {{INTEGRATION_COMPANY}} sekretesspolicy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">här</a> och %COMPANY_NAME% sekretesspolicy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">här</a> som innehåller anvisningar om hur du återkallar ditt samtycke.",
+        "ipvd": "Genom att skicka in denna blankett accepterar du att du kontaktas av %COMPANY_NAME%.\nDu hittar %COMPANY_NAME% sekretesspolicy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">här</a> som innehåller instruktioner om hur du återkallar ditt samtycke."
     },
     "registration": {
         "agreement": "Jag godkänner <a href=\"/content/eula\" target=\"_blank\">Villkor &\nVillkor</a> och <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Sekretesspolicy</a>"
@@ -601,8 +665,17 @@
         "openClient": "Öppet i %VMS_NAME%",
         "openClientNoSystem": "Öppna %VMS_NAME%",
         "permissionsRemoved": "Rättigheterna togs bort från {{email}}",
+        "settings": {
+            "sessionLimitDuration": {
+                "hours": "timmar",
+                "minutes": "minuter"
+            },
+            "warningMessages": {
+                "videoEncryption": "Kryptering av videotrafik ökar väsentligt CPU-användningen."
+            }
+        },
         "shareOffline": "Kan inte dela systemet medan det är offline",
-        "shareUnauthorized": "You do not have permission to share this system",
+        "shareUnauthorized": "Du har inte behörighet att dela detta system",
         "successDeleted": "System {{systemName}} har tagits bort från ditt konto",
         "successDisconnected": "Systemet har kopplats bort från %CLOUD_NAME%",
         "successRename": "Systemnamnet sparat",
@@ -616,12 +689,13 @@
         "incompatible": "oförenlig",
         "merging": "sammanslagning",
         "notActivated": "inte aktiverad",
-        "offline": "frånkopplade",
+        "offline": "frånkopplad",
         "online": "uppkopplad",
         "unavailable": "inte tillgänglig"
     },
     "testedVersionLabel": "Testat på {{vmsName}} version:",
-    "testedVersionsLabel": "Testat på {{vmsName}} versioner:",
+    "testedVersionsLabel": "Testat på {{vmsName}} version:",
+    "topXByVolume": "Topp {{value}} efter volym:",
     "users": "Användare",
     "you": "du"
 }

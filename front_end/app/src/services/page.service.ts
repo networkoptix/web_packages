@@ -1,22 +1,36 @@
 import { Injectable } from '@angular/core';
 import { NxConfigService }    from './nx-config';
 import { Title, Meta }              from '@angular/platform-browser';
+import { NxLanguageProviderService } from './nx-language-provider';
 
 @Injectable({
     providedIn: 'root'
 })
 export class NxPageService {
     CONFIG: any;
+    LANG: any;
 
     constructor(private config: NxConfigService,
                 private title: Title,
+                private language: NxLanguageProviderService,
                 private meta: Meta) {
 
         this.CONFIG = this.config.getConfig();
     }
 
-    setPageTitle(value: string) {
-        const title = (this.CONFIG.cloudName) ? value + ' ' + this.CONFIG.cloudName : value;
+    // called from app component
+    setLanguage(lang) {
+        this.LANG = lang;
+    }
+
+    setPageTitle(value: string, useAltTemplate?: boolean) {
+        let title = value;
+        if (this.LANG && title !== this.LANG.pageTitles.default) {
+            title = this.LANG.pageTitles.template.replace('{{title}}', value);
+            if (useAltTemplate) {
+                title = title.replace('- ', '');
+            }
+        }
         this.title.setTitle(title);
     }
 

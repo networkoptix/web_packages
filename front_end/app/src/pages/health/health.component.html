@@ -15,40 +15,59 @@
                      class="page-placeholder">
 </nx-page-placeholder>
 
-<div *ngIf="healthService.ready" class="py-0 px-3 mw-100 mt-3">
-    <div class="row">
-        <div class="fixed-sidebar col-12 d-flex flex-column ml-lg-2 fill-screen-height"
-             [ngStyle]="{'height': 'calc(100% - ('+ headerHeight + 'px + 32px))'}">
-            <nx-menu [content]="menu"></nx-menu>
-            <hr/>
-            <div class="menuLinks px-2">
-                <nx-health-update *ngIf="!importedData.imported" (updateHealth)="updateValues()"></nx-health-update>
-                <div *ngIf="importedData.imported" class="importInfo pb-2">
-                    <p>System: {{importedData.system}}</p>
-                    <p>Generated: {{importedData.time}}</p>
-                </div>
-                <div>
-                    <svg-icon [src]="CONFIG.icons.dir + 'download.svg'"
-                              [svgStyle]="{'width.px': '20'}"></svg-icon>
-                    <a href="#" class="pl-1" (click)="exportReport()">Download Full Report</a>
-                </div>
-            </div>
-            <div class="mt-3 px-2">
-                <ngx-file-drop *ngIf="importShow" dropZoneLabel="Drop report here to import"
-                               dropZoneClassName="importZone"
-                               contentClassName="contentZone"
-                               accept="json"
-                               [directory]="false"
-                               [multiple]="false"
-                               [showBrowseBtn]="false"
-                               (onFileLeave)="fileLeave()"
-                               (onFileDrop)="fileDropped($event)">
-                </ngx-file-drop>
-            </div>
+<ng-template #healthLinks>
+    <hr class="mt-1"/>
+    <div class="menuLinks px-2">
+        <nx-health-update *ngIf="!importedData.imported" (updateHealth)="updateValues()"></nx-health-update>
+        <div *ngIf="importedData.imported" class="importInfo pb-2">
+            <p>System: {{importedData.system}}</p>
+            <p>Generated: {{importedData.time}}</p>
         </div>
+        <div>
+            <a href="#" class="btn-text pl-1" (click)="exportReport()">
+                <svg-icon [src]="CONFIG.icons.dir + 'download.svg'"
+                          [svgStyle]="{'width.px': '20'}"></svg-icon>
+                Download Full Report</a>
+        </div>
+    </div>
+    <div class="mt-3 px-2">
+        <p *ngIf="importShow" class="contentZone">Drop report anywhere to import</p>
+    </div>
+</ng-template>
 
-        <div class="col-12 col-lg-9 offset-lg-3 col-xl-10 offset-xl-2 pt-3 pt-lg-0">
+
+<div class="mainGrid"
+     [ngClass]="mediaLayoutClass"
+     *ngIf="healthService.ready">
+
+    <div class="gridMenu">
+        <div class="gridMenuComponent">
+            <nx-menu [content]="menu" class="pb-2 d-block"></nx-menu>
+
+            <ng-template
+                    [ngTemplateOutlet]="healthLinks"
+                    *ngIf="mediaLayoutClass != 'mobileLayout'"
+            ></ng-template>
+        </div>
+    </div>
+    <div class="gridContent">
+        <div class="gridContentComponent">
             <router-outlet></router-outlet>
+
+            <ng-template
+                    [ngTemplateOutlet]="healthLinks"
+                    *ngIf="mediaLayoutClass == 'mobileLayout'">
+            </ng-template>
         </div>
     </div>
 </div>
+
+<ngx-file-drop dropZoneClassName="importZone"
+               accept="json"
+               [directory]="false"
+               [multiple]="false"
+               [showBrowseBtn]="false"
+               (onFileLeave)="fileLeave()"
+               [ngClass]="!importShow ? 'pointer-ignore' : ''"
+               (onFileDrop)="fileDropped($event)">
+</ngx-file-drop>

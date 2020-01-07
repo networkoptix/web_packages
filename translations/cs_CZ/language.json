@@ -2,6 +2,19 @@
   "language": "cs_CZ",
   "language_name": "Čeština",
   "cloudName": "%CLOUD_NAME%",
+  "vmsName": "%VMS_NAME%",
+  "clientProtocol": "%CLIENT_PROTOCOL%:",
+  "dialogs": {
+    "okButton": "OK",
+    "cancelButton": "Zrušit",
+    "loginTitle": "Přihlaste se k %CLOUD_NAME%",
+    "loginButton": "Přihlásit se",
+    "logoutAuthorisedTitle": "Již jste přihlášen",
+    "logoutAuthorisedContinueButton": "Pokračovat",
+    "logoutAuthorisedLogoutButton": "Odhlásit",
+    "noClientDetectedTitle": "Pro zobrazení Vašeho systému nainstalujte %VMS_NAME%",
+    "download": "Stáhnout %VMS_NAME%"
+  },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
     "default": "%CLOUD_NAME%",
@@ -25,6 +38,73 @@
     "download": "Stáhnout %VMS_NAME%",
     "downloadPlatform": "Stáhnout %VMS_NAME% pro ",
     "pageNotFound": "Stránka nenalezna"
+  },
+  "systemStatuses": {
+    "activated": "aktivováno",
+    "incompatible": "nekompatibilní",
+    "merging": "#merging",
+    "notActivated": "neaktivováno",
+    "online": "online",
+    "offline": "offline",
+    "unavailable": "nedostupný"
+  },
+  "accessRoles": {
+    "disabled": {
+      "label": "Zakázáno",
+      "description": "Uživatel je zakázán a nemůže se přihlásit do systému"
+    },
+    "Owner": {
+      "label": "Vlastník",
+      "description": "Neomezený přístup, včetně možnosti sdílení a připojení/odpojení systému z cloudu"
+    },
+    "Viewer": {
+      "label": "Prohlížeč",
+      "description": "Můžete zobrazit živé video a procházet archiv"
+    },
+    "Live Viewer": {
+      "label": "Živé video",
+      "description": "Můžete zobrazit pouze živé video"
+    },
+    "Advanced Viewer": {
+      "label": "Pokročilý prohlížeč",
+      "description": "Lze sledovat živé video, procházet archiv, ovládat PTZ atd"
+    },
+    "Administrator": {
+      "label": "Administrator",
+      "description": "Neomezený přístup včetně možnosti sdílení"
+    },
+    "Custom": {
+      "label": "Vlastní",
+      "description": "Pro nastavení uživatelských oprávnění použijte aplikaci %VMS_NAME% Client"
+    },
+    "cloudAdmin": {
+      "label": "Administrátor",
+      "description": "Můžete nastavit systém a sdílet jej"
+    },
+    "customRole": {
+      "label": "Vlastní role",
+      "description": "Vlastní role uživatele zadaná v systému"
+    },
+    "owner": {
+      "label": "Vlastník",
+      "description": "Neomezený přístup, včetně možnosti sdílení a připojení/odpojení systému z cloudu"
+    },
+    "viewer": {
+      "label": "Prohlížeč",
+      "description": "Můžete zobrazit živé video a procházet archiv"
+    },
+    "liveViewer": {
+      "label": "Živé video",
+      "description": "Můžete zobrazit pouze živé video"
+    },
+    "advancedViewer": {
+      "label": "Rozšířený prohlížeč",
+      "description": "Můžete sledovat živé video, prohlížet archiv, konfigurovat kamery, ovládat PTZ atd"
+    },
+    "custom": {
+      "label": "Vlastní",
+      "description": "Pro nastavení uživatelských oprávnění použijte aplikaci %VMS_NAME% Client"
+    }
   },
   "errorCodes": {
     "ok": "ok",
@@ -69,6 +149,83 @@
     "FAIL": "Systém <strong>{{failedSystem}}</strong> je momentálně nedostupný.<br>zkuste to znovu za okamžik nebo se obraťte na podporu <a href=\"%SUPPORT_LINK%\" target=\"_blank\"></a>.",
     "unknownMergeError": "Neznámá chyba. POkuste se stránku obnovit a zopakovat pokus. Pokud problém přetrvává - kontaktujte <a href=\"%SUPPORT_LINK%\" target=\"_blank\">podporu</a>."
   },
+  "merging": {
+    "mergeFailedTitle": "Spojení systémů selhalo",
+    "commonText": "Nelze sloučit systémy <strong>{{primarySystem}}</strong> a <strong>{{secondarySystem}}</strong>."
+  },
+  "passwordRequirements": {
+    "good": "dobré",
+    "fair": "dostatečné",
+    "fairMessage": "Aby bylo vaše heslo silnější, použijte čísla, velká a malá písmena a speciální znaky",
+    "minLength": "příliš krátké",
+    "minLengthMessage": "Heslo musí obsahovat nejméně 8 znaků",
+    "required": "nesprávné",
+    "requiredMessage": "Používejte pouze latinskou abecedu, číslice a symboly na klávesnici, vyhněte se použití mezery na počátku a konci",
+    "weak": "slabé",
+    "weakMessage": "Aby bylo vaše heslo silnější, použijte čísla, velká a malá písmena a speciální znaky",
+    "strongMessage": "Silné heslo!",
+    "common": "příliš časté",
+    "commonMessage": "Toto heslo je v seznamu nejoblíbenějších heslech na světě",
+    "missingMessage": "Heslo je vyžadováno"
+  },
+  "sharing": {
+    "confirmOwner": "Pokud změníte vlastníka systému, zrušíte vlastnictví aktuálního účtu. Tato akce je nevratná. Přejete si pokračovat?",
+    "shareTitle": "Sdílet",
+    "shareConfirmButton": "Sdílet",
+    "editShareTitle": "Upravit oprávnění",
+    "editShareConfirmButton": "Uložit",
+    "permissionsSaved": "Nová oprávnění byla uložena"
+  },
+  "system": {
+    "yourSystem": "Váš systém",
+    "mySystemSearch": "IMeMyMine",
+    "unavailable": "Systém je nedostupný",
+    "offline": "Systém je offline",
+    "openClient": "Otevřít v %VMS_NAME%",
+    "openClientNoSystem": "Otevřít %VMS_NAME%",
+    "confirmMergeAction": "Sloučit",
+    "mergeSystemTitle": "Sloučení systémů",
+    "confirmRenameTitle": "Název systému",
+    "confirmRenameAction": "Uložit",
+    "successRename": "Název systému byl uložen",
+    "confirmDisconnectTitle": "Odpojit systém od %CLOUD_NAME%?",
+    "confirmDisconnectAction": "Odpojit",
+    "confirmUnshareFromMe": "Chystáte se odpojit systém od Vašeho účtu. K tomuto systému již nebudete mít přístup. Přejete si pokračovat?",
+    "confirmUnshareFromMeTitle": "Odpojit systém?",
+    "confirmUnshareFromMeAction": "Odpojit",
+    "confirmUnshare": "Tento uživatel nebude mít přístup k systému. Přejete si pokračovat?",
+    "confirmUnshareTitle": "Smazat uživatele?",
+    "confirmUnshareAction": "Smazat",
+    "successDisconnected": "Systém byl úspěšně odpojen od %CLOUD_NAME%",
+    "successDeleted": "Systém {{systemName}} byl úspěšně odstraněna z Vašeho účtu",
+    "mergeFailed": "Spojení systémů selhalo",
+    "mergeStart": "Systémy se spojují",
+    "mergeSuccess": "Sloučení systému bylo dokončeno",
+    "permissionsRemoved": "Oprávnění byla odstraněna z adresy {{email}}",
+    "unknownName": "Neznámý název systému (problém s cloudovým spojením)"
+  },
+  "account": {
+    "accountSavedSuccess": "Váš účet byl úspěšně uložen",
+    "activationLinkSent": "Aktivní odkaz byl odeslán",
+    "passwordChangedSuccess": "Váš účet byl úspěšně uložen",
+    "changePassword": "Změna hesla",
+    "newPasswordLabel": "Nové heslo",
+    "saveChanges": "Uložit"
+  },
+  "activeActions": {
+    "sendConfirm": "Znovu poslat aktivační odkaz",
+    "resetPassword": "Obnovit heslo",
+    "setNewPassword": "Uložit heslo",
+    "setNewPasswordLabel": "Nové heslo"
+  },
+  "regActions": {
+    "passwordLabel": "Heslo",
+    "createAccount": "Vytvořit účet"
+  },
+  "header": {
+    "allSystems": "Všechny systémy",
+    "systems": "Systémy"
+  },
   "common": {
     "cameraLinks": {
       "highStream": "Hlavní stream",
@@ -86,7 +243,7 @@
       "offline": "Offline",
       "error": "Chyba",
       "errorLoading": "An error occurred while loading this video.",
-      "unauthorized": "Autentifikace je vyžadována",
+      "unauthorized": "Ověření je vyžadováno",
       "noData": "Žádná data",
       "iOSVideoTooLarge": "iOS nepodporuje video větší než fullHD (2MP: 1920 × 1080).",
       "flashRequired": "Pro přehrání videa si prosím <a href='https://get.adobe.com/flashplayer/' target='_blank'>nainstalujte Adobe Flash</a>.",
@@ -101,12 +258,12 @@
     "resolution": {
       "auto": "Auto",
       "high": "Vysoká",
-      "low": "Nízký"
+      "low": "Nízká"
     },
     "chromeCastWarning": "Chromecast je náročný na systémové zdroje a může způsobit problémy na vašem serveru.",
     "voiceCommands": {
       "play": "přehrát",
-      "pause": "pozastavit",
+      "pause": "pauza",
       "live": "go to live | show me live",
       "view": "view + [camera name]",
       "search": "find + [text for searchbar]",
@@ -119,8 +276,9 @@
       "help": "help | show commands"
     }
   },
-  "system": {
-    "offline": "Systém je offline",
-    "unavailable": "Systém je nedostupný"
+  "recommendSupport": {
+    "a_recommend": "Doporučujeme konzultaci s",
+    "b_support": "podpora",
+    "c_proceeding": "než budete pokračovat."
   }
 }

@@ -14,8 +14,7 @@ ${url}         ${ENV}
 Log in to Autotests 2 System
     [arguments]    ${email}
     Go To    ${url}/systems/${AUTOTESTS OFFLINE SYSTEM ID}
-    Log In    ${email}    ${password}    None
-    Validate Log In
+    Log In    ${email}    ${password}    button=None
     Wait Until Elements Are Visible    ${SYSTEM NAME OFFLINE}    ${SYSTEM ADMINISTRATION LINK}
     Run Keyword If    '${email}' == '${EMAIL OWNER}'    Wait Until Elements Are Visible
     ...    ${DISCONNECT FROM NX}
@@ -24,11 +23,7 @@ Log in to Autotests 2 System
     Run Keyword Unless    '${email}' == '${EMAIL OWNER}'    Wait Until Element Is Visible    ${DISCONNECT FROM MY ACCOUNT}
 
 Restart
-    Register Keyword To Run On Failure    NONE
-    ${status}    Run Keyword And Return Status    Validate Log In
-    Register Keyword To Run On Failure    Failure Tasks
-    Run Keyword If    ${status}    Log Out
-    Go To    ${url}
+    Common Restart Logout    ${url}
 
 Open New Browser On Failure
     Close Browser
@@ -44,7 +39,7 @@ The page is opened and shows the user list to owner
     [Tags]    C41881    Threaded
     Log in to Autotests 2 System    ${EMAIL OWNER}
     Location Should Be    ${url}/systems/${AUTOTESTS OFFLINE SYSTEM ID}
-    Title Should Be    Systems - ${PRODUCT_NAME}
+    # Title Should Be    Systems - ${PRODUCT_NAME}
     Wait Until Elements Are Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
     Wait Until Element Is Visible    ${USERS LIST}
@@ -115,13 +110,12 @@ Should open System page by link to not authorized user and redirect to homepage,
 Should open System page by link to not authorized user and show it, after owner logs in
     [Tags]    Threaded
     Go To    ${url}/systems/${AUTOTESTS OFFLINE SYSTEM ID}
-    Log In    ${EMAIL OWNER}   ${password}    None
+    Log In    ${EMAIL OWNER}   ${password}    button=None
     Verify In System    Auto Tests 2
 
 Should open System page by link to user without permission and show alert (System info is unavailable: You have no access to this system)
     [Tags]    C41572    Threaded
     Log In    ${EMAIL NOPERM}    ${password}
-    Validate Log In
     Go To    ${url}/systems/${AUTOTESTS OFFLINE SYSTEM ID}
     Wait Until Elements Are Visible    ${SYSTEM NO ACCESS}    ${AVAILABLE SYSTEMS LIST}
     Click Link    ${AVAILABLE SYSTEMS LIST}
@@ -133,7 +127,7 @@ Should open System page by link to user without permission and show alert (Syste
 Should open System page by link not authorized user, and show alert if logs in and has no permission
     [Tags]    Threaded
     Go To    ${url}/systems/${AUTOTESTS OFFLINE SYSTEM ID}
-    Log In    ${EMAIL NOPERM}   ${password}    None
+    Log In    ${EMAIL NOPERM}   ${password}    button=None
     Wait Until Element Is Visible    ${SYSTEM NO ACCESS}
 
 Rename button opens dialog and clicking cancel closes rename dialog without rename
@@ -213,7 +207,7 @@ Your permissions is shown for non-owners
 Should show (you) for owner and (owner's name & email) for non-owners
     [Tags]    C41881    Threaded
     Log in to AutoTests 2 System    ${EMAIL OWNER}
-    ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    you
+    ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    ${YOU TEXT}
     Wait Until Element Is Visible    ${current owner name}
     Log Out
     Log in to Autotests 2 System    ${EMAIL VIEWER}

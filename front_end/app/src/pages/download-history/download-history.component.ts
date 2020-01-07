@@ -1,9 +1,8 @@
 import {
     Component, OnInit, OnDestroy,
-    Input, ViewChild, Inject, PLATFORM_ID
+    ViewChild, Inject, PLATFORM_ID
 } from '@angular/core';
 import { ActivatedRoute, ActivationEnd, Router }                from '@angular/router';
-import { Title }                                                from '@angular/platform-browser';
 import { DOCUMENT, isPlatformBrowser, Location, TitleCasePipe } from '@angular/common';
 import { isNumeric }                                            from 'rxjs/util/isNumeric';
 import { NgbTabChangeEvent, NgbTabset }                         from '@ng-bootstrap/ng-bootstrap';
@@ -18,6 +17,7 @@ import { NxUriService }                                         from '../../serv
 import { filter }                                               from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
+import { NxPageService } from '../../services/page.service';
 
 @AutoUnsubscribe()
 @Component({
@@ -30,6 +30,7 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
     private sub: any;
     private build: any;
     private canViewRelease: boolean;
+    readonly releases = 'releases';
 
     CONFIG: any;
     LANG: any;
@@ -62,7 +63,7 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
                 private configService: NxConfigService,
                 private route: ActivatedRoute,
                 private router: Router,
-                private titleService: Title,
+                private pageService: NxPageService,
                 private language: NxLanguageProviderService,
                 private uriService: NxUriService,
                 private location: Location,
@@ -104,6 +105,9 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
                     this.linkbase = data.updatesPrefix;
                     if (!this.build) { // only one build
                         this.downloadsData = data;
+                        if (!(this.section in this.downloadsData)) {
+                            this.section = this.releases;
+                        }
                         this.activeBuilds = this.downloadsData[ this.section ];
                         this.getAvailableDownloadTypes(this.downloadsData);
                     } else {
@@ -113,7 +117,7 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
                         this.downloadsData[ data.type ] = this.activeBuilds;
                     }
 
-                    this.titleService.setTitle(new TitleCasePipe().transform(this.noteTypes[ 0 ])); // this.downloadTypes[ 0 ][ 0 ].toUpperCase() + this.downloadTypes[ 0 ].substr(1).toLowerCase());
+                    this.pageService.setPageTitle(new TitleCasePipe().transform(this.noteTypes[ 0 ])); // this.downloadTypes[ 0 ][ 0 ].toUpperCase() + this.downloadTypes[ 0 ].substr(1).toLowerCase());
 
                     setTimeout(() => {
                         this.tabsVisible = true;
@@ -136,7 +140,7 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
 
     public beforeChange($event: NgbTabChangeEvent) {
         this.activeBuilds = this.downloadsData[ $event.nextId ];
-        this.titleService.setTitle(new TitleCasePipe().transform($event.nextId));
+        this.pageService.setPageTitle(new TitleCasePipe().transform($event.nextId));
         this.uriService.updateURI('/downloads/' + $event.nextId, {});
     }
 
@@ -144,7 +148,7 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
         this.sub = this.route.params.subscribe(params => {
             this.routeParam = params.type;
 
-            this.routeParam = this.routeParam || 'releases';
+            this.routeParam = this.routeParam || this.releases;
             if (isNumeric(this.routeParam)) {
                 this.build = this.routeParam;
             } else {

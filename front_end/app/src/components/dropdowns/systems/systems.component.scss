@@ -47,10 +47,11 @@
             }
 
             & .glyphicon-home {
-                background-position : -27px -58px !important;
+                background-position : -27px -59px !important;
                 margin-right        : .5rem;
                 width               : 18px;
                 height              : 18px;
+                float : left;
             }
 
             &.selected {

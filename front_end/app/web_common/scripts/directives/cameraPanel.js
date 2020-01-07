@@ -99,6 +99,15 @@
                     searchCameras();
                 }
 
+                function ipReducer(result, currentValue) {
+                    if (currentValue[0] === '[') {
+                        result.ipv6.push(currentValue);
+                    } else {
+                        result.ipv4.push(currentValue);
+                    }
+                    return result;
+                }
+
                 scope.toggleInfoFn = function () {
                     scope.toggleInfo = !scope.toggleInfo;
                     scope.storage.infoStatus = scope.toggleInfo;
@@ -113,19 +122,22 @@
                     server.expanded = !server.expanded;
                     scope.storage.serverStates[ server.id ] = server.expanded;
                 };
-                
-                scope.formatURL = function(addresses) {
-                    var addr = addresses.split(';');
-                    var mainAddr = addr[0];
-                    // IPv6 literal support
-                    var offset = mainAddr[0] === '['
-                        ? mainAddr.indexOf(']') + 1
-                        : 0;
-                    var index = mainAddr.indexOf(':', offset);
-    
-                    return index !== -1
-                        ? mainAddr.substring(0, index)
-                        : mainAddr;
+
+                scope.formatURL = function(rawAddresses) {
+                    var addr = rawAddresses.split(';');
+                    var addresses = addr.reduce(ipReducer, {ipv4:[], ipv6: []});
+                    var mainAddr = '';
+
+                    if (addresses.ipv4.length > 0) {
+                        mainAddr = addresses.ipv4[0];
+                    } else if(addresses.ipv6.length > 0) {
+                        mainAddr = addresses.ipv6[0];
+                    }
+
+                    var index = mainAddr.lastIndexOf(':');
+                    return index !== -1 ?
+                        mainAddr.substring(0, index) :
+                        mainAddr;
                 };
 
                 function updateMediaServers () {

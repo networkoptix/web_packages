@@ -35,6 +35,9 @@ export class NxImageSectionComponent implements OnChanges, AfterViewInit, OnDest
     ngOnDestroy() {}
 
     ngAfterViewInit() {
+        if (typeof this.imageSize === 'undefined') {
+            return;
+        }
         this.changeRow = this.imageSize.nativeElement.offsetWidth < 360;
         this.fromEventSubscription = fromEvent(window, 'resize').pipe(debounceTime(10)).subscribe((e) => {
             this.changeRow = this.imageSize.nativeElement.offsetWidth < 360;
@@ -46,10 +49,11 @@ export class NxImageSectionComponent implements OnChanges, AfterViewInit, OnDest
         if (!cameraInfo) {
             return;
         }
+
         this.ready = false;
         this.cameraId = cameraInfo.id;
         this.state = cameraInfo.availability.status.text;
-        this.thumbnails = Object.values(this.cameraInfo)
+        this.thumbnails = Object.values(cameraInfo)
             .filter((cameraProd: any) => cameraProd.thumbnail)
             .map((cameraProp: any) => {
                 const time = cameraProp.thumbnail.text;
@@ -70,6 +74,6 @@ export class NxImageSectionComponent implements OnChanges, AfterViewInit, OnDest
 
 
     showPreloader() {
-        this.ready = this.thumbnails.every((thumbnail) => thumbnail.loaded);
+        setTimeout(() => this.ready = this.thumbnails.every((thumbnail) => thumbnail.loaded));
     }
 }

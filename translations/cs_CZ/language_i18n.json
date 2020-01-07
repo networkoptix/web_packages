@@ -1,18 +1,18 @@
 {
     "2-Way Audio": "2-Way Audio",
     "About %CLOUD_NAME%": "O aplikaci %CLOUD_NAME%",
-    "Access Level": "Access Level",
-    "Access level": "Access level",
-    "Account Information": "Account Information",
+    "Access Level": "Úroveň přístupu",
+    "Access level": "Úroveň přístupu",
+    "Account Information": "Informace o účtu",
     "Account Settings": "Nastavení účtu",
     "Account is already activated or confirmation code is incorrect": "Účet je již aktivován, nebo potvrzovací kód je nesprávný",
     "Account is created.": "Účet je vytvořen.",
     "Account is successfully created.": "Účet byl úspěšně vytvořen.",
     "Account not activated": "Účet není aktivován",
     "Account not found": "Účet nebyl nalezen",
-    "Activate your account": "Prosím, aktivujte si váš účet",
+    "Activate your account": "Aktivujte svůj účet",
     "Actual number of events supported by this camera may be bigger.": "Skutečný počet událostí podporovaných touto kamerou může být větší.",
-    "Add User": "Add User",
+    "Add User": "Přidat uživatele",
     "Additional Requirements": "Další požadavky",
     "Administration": "Správa",
     "Advanced PTZ": "Pokročilé PTZ",
@@ -21,12 +21,14 @@
     "All Systems": "Všechny systémy",
     "All cloud users will be deleted.": "Všichni uživatelé cloudu budou smazáni.",
     "All results": "Všechny výsledky",
+    "Allow only secure connections": "Povolit pouze bezpečná připojení",
+    "Allow system to optimize camera settings": "Allow system to optimize camera settings",
     "Analytics": "Analýzy",
     "Analytics Event": "Analytická událost",
     "Analytics Events": "Analytická událost",
     "Any": "Libovolný",
     "Apply": "Použít",
-    "Apply changes before leaving this page?": "Apply changes before leaving this page?",
+    "Apply changes before leaving this page?": "Použít změny před opuštěním této stránky?",
     "Audio": "Zvuk",
     "Available Systems list": "Seznam dostupných systémů",
     "Build Number:": "Číslo sestavení:",
@@ -34,9 +36,10 @@
     "Camera header": "Záhlaví kamery",
     "Cameras menu": "Kamerové menu",
     "Cancel": "Zrušit",
-    "Change Password": "Změnit heslo",
+    "Change Password": "Změna hesla",
     "Checking...": "Kontrolování...",
     "Choose which properties should be visible to customers:": "Vyberte, které vlastnosti mají být viditelné pro zákazníky:",
+    "Clear filters": "Clear filters",
     "Close": "Zavřít",
     "Codec": "Kodek",
     "Collapse": "Sbalit",
@@ -51,8 +54,8 @@
     "Discard": "Zrušit",
     "Disconnect": "Odpojit",
     "Disconnect System from %CLOUD_NAME%?": "Odpojit systém od %CLOUD_NAME%?",
-    "Disconnect from %CLOUD_NAME%": "Disconnect from %CLOUD_NAME%",
-    "Disconnect from My Account": "Disconnect from My Account",
+    "Disconnect from %CLOUD_NAME%": "Odpojte od %CLOUD_NAME%",
+    "Disconnect from My Account": "Odpojte se od svého účtu",
     "Download": "Stáhnout",
     "Download %VMS_NAME%": "Stáhnout %VMS_NAME%",
     "Download Chrome": "Stáhnout Chrome",
@@ -62,21 +65,24 @@
     "Draft": "Koncept",
     "Dual Streaming": "Dual Streaming",
     "Email": "Email",
-    "Email is required": "Email je povinný",
+    "Email is required": "Je vyžadován e-mail",
     "Embed": "Vložit",
+    "Enable audit trail": "Povolit revizi činnosti",
+    "Enable auto discovery of cameras and servers": "Enable auto discovery of cameras and servers",
+    "Encrypt video traffic": "Šifrovat přenos videa",
     "Enter \"Public User\" credentials:": "Zadejte přihlašovací údaje veřejného uživatele:",
     "Enter password for your account to continue": "Chcete-li pokračovat, zadejte heslo",
     "Enter password to continue.": "Zadejte heslo pro pokračování.",
     "Export all to CSV": "Export položek do CSV",
-    "FAILED_SYSTEM_DESCR": "This link is broken,<br>System may be disconnected from %CLOUD_NAME%,<br>Access to this System may be revoked, <br>or you may be logged into a different account.",
+    "FAILED_SYSTEM_DESCR": "Tento odkaz je nefunkční,<br>Systém může být odpojen od %CLOUD_NAME%,<br>Přístup k tomuto systému může být zrušen, <br>nebo můžete být přihlášen k jinému účtu.",
     "FPS(max)": "FPS (max.)",
     "Failed to access System": "Přístup k systému se nezdařil",
     "Finishing systems merge": "Dokončování sloučení systémů",
     "Firmware version": "Verze firmwaru",
-    "First Name": "First Name",
+    "First Name": "Křestní jméno",
     "First name": "Jméno",
     "First name is required": "Jméno je povinné",
-    "Fisheye": "Fisheye",
+    "Fisheye": "Rybí oko",
     "Forgot password?": "Zapomněli jste heslo?",
     "Get in touch": "Buďte v kontaktu",
     "How it works": "Jak to funguje",
@@ -84,20 +90,23 @@
     "I/O": "I/O",
     "In Review": "V revizi",
     "In-Client Upgrade:": "Změny v klientovy:",
+    "Includes information about the System, such as camera modules, \n                            firmware versions, number of servers, etc. \n                            Does not include any personal information and is completely anonymous.": "Includes information about the System, such as camera modules, \n                            firmware versions, number of servers, etc. \n                            Does not include any personal information and is completely anonymous.",
+    "Information": "Informace",
     "Integrations": "Integrace",
     "Language": "Jazyk",
-    "Last Name": "Last Name",
+    "Last Name": "Příjmení",
     "Last name": "Příjmení",
     "Last name is required": "Příjmení je povinné",
     "Latest version": "Nejnovější verze",
+    "Limit session duration to": "Limit session duration to",
     "Log In": "Přihlásit se",
-    "Log Out": "Odhlásit se",
+    "Log Out": "Odhlásit",
     "Log in to %CLOUD_NAME%": "Přihlaste se k %CLOUD_NAME%",
     "Merge Systems": "Sloučení systémů",
     "Merge current System with": "Sloučit stávající systém s",
     "Merge with Another System": "Sloučit s jiným systémem",
     "Message": "Zpráva",
-    "Mine": "Mine",
+    "Mine": "Těžit",
     "Motion Detection": "Detekce pohybu",
     "Multi Sensor": "Multi Sensor",
     "NO_SYSTEMS_CONNECT_SYSTEM": "Stiskněte tlačítko \"Připojit systém k %CLOUD_NAME%\"",
@@ -105,10 +114,11 @@
     "NO_SYSTEMS_LOGIN": "Přihlaste se k Vašemu systému pomocí %VMS_NAME%",
     "NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "Nemáte žádné systémy připojené k %CLOUD_NAME%",
     "New Password": "Nové heslo",
-    "No unsaved changes": "No unsaved changes",
+    "No unsaved changes": "Žádné neuložené změny",
     "Nothing Found": "Nenalezeno",
     "OK": "OK",
     "Ok": "Ok",
+    "Only client-server video traffic can be encrypted.": "Only client-server video traffic can be encrypted.",
     "Other packages:": "Další balíčky:",
     "Other releases, patches and beta versions": "Další vydání, patche a beta verze",
     "Owner": "Vlastník",
@@ -116,17 +126,17 @@
     "Page not found": "Stránka nenalezna",
     "Password": "Heslo",
     "Password is required": "Heslo je vyžadováno",
-    "Password reset instructions are sent to Email": "Password reset instructions are sent to Email",
+    "Password reset instructions are sent to Email": "Pokyny pro obnovení hesla jsou odeslány na email",
     "Password successfully saved": "Heslo bylo úspěšně uloženo",
     "Password:": "Heslo:",
-    "Please enter a valid Email": "Prosím zadejte platný email",
+    "Please enter a valid Email": "Zadejte prosím platný e-mail",
     "Please review and agree to the Terms and Conditions and Privacy policy in order to proceed": "Chcete-li pokračovat, zkontrolujete a odsouhlaste obchodní podmínky a zásady ochrany osobních údajů",
     "Popularity": "Oblíbené",
     "Privacy": "Soukromí",
     "Release Notes": "Poznámky k vydání",
     "Release notes": "Poznámky k verzi",
     "Remember me": "Pamatovat si mě",
-    "Remove User": "Remove User",
+    "Remove User": "Odebrat uživatele",
     "Rename": "Přejmenovat",
     "Requirements": "Požadavky",
     "Resend activation email": "Znovu poslat aktivační email",
@@ -135,17 +145,21 @@
     "Save": "Uložit",
     "Search in google": "Hledejte v google",
     "Secondary Stream": "Sekundární stream",
+    "Security": "Zabezpečení",
     "Send": "Odeslat",
+    "Send anonymous usage and crash statistics to developers": "Send anonymous usage and crash statistics to developers",
     "Send feedback about this device": "Odeslat zpětnou vazbu o tomto zařízení",
     "Set New Password": "Nastavit nové heslo",
     "Settings": "Nastavení",
     "Show All": "Zobrazit vše",
     "Some of your servers don't support cloud System merge because of outdated software version.": "Některé z vašich serverů nepodporují sloučení cloudového systému kvůli zastaralé verzi softwaru.",
+    "Subject": "Subject",
     "Support": "Podpora",
     "Support E-mail": "Email podpory",
     "Support URL": "URL podpory",
     "Supported Devices": "Podporovaná zařízení",
     "Supported IP Video Devices": "Podporovaná IP video zařízení",
+    "System Settings": "Konfigurace systému",
     "System name": "Název systému",
     "System name is required": "Název systému je povinný",
     "System will be accessible through local network with local administrator account.": "Systém bude přístupný prostřednictvím místní sítě s účtem místního správce.",
@@ -162,19 +176,19 @@
     "This device has reported to support some analytics events, but we don't have exact information about them.": "Toto zařízení uvádí, že podporuje některé analytické události, ale nemáme o nich přesné informace.",
     "To": "Komu",
     "Too many attempts. Try again in a minute.": "Příliš mnoho pokusů. Zkuste to znovu za chvíli.",
-    "Topic": "Téma",
+    "Tracks and logs all user actions.": "Sledovat a zaznamenávat všechny akce uživatele.",
     "Until merge is finished you can log in to this system and watch video, but cannot change any settings.": "Dokud nebude sloučení dokončeno, můžete se k tomuto systému přihlásit a sledovat živé video, ale nemůžete měnit žádné nastavení.",
     "Update them to the": "Aktualizujte je na",
     "Updated": "Aktualizováno",
     "User": "Uživatel",
-    "User disabled": "User disabled",
+    "User disabled": "Uživatel zakázán",
     "View": "Zobrazení",
     "WHEN_MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{{targetSystemName}}</strong> System, and this system will be deleted.",
     "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.": "Doporučujeme nainstalovat nejnovější verze prohlížeče Google Chrome nebo Mozilla Firefox, ale můžete použít jakýkoli jiný moderní webový prohlížeč.",
     "What's New?": "Co je nového?",
+    "When enabled, system will discover new cameras and servers. Also, \n                            it will automatically and persistently send discovery requests to \n                            cameras in order to get the camera's status update. \n                            Failover enabled on some servers ignore status check prohibition.": "When enabled, system will discover new cameras and servers. Also, \n                            it will automatically and persistently send discovery requests to \n                            cameras in order to get the camera's status update. \n                            Failover enabled on some servers ignore status check prohibition.",
     "Works with:": "Spolupracuje s:",
     "Wrong password": "Chybné heslo",
-    "You can merge only those cloud Systems, where you have the \"Owner\" permissions.": "Můžete sloučit pouze ty cloud systémy, kde máte oprávnění \"Vlastník\".",
     "You can only merge Systems where you are the owner.": "Systémy můžete sloučit pouze tam, kde jste vlastníkem.",
     "You have registered in %CLOUD_NAME%": "Zaregistrovali jste se v %CLOUD_NAME%",
     "Your Email": "Váš e-mail",
@@ -185,11 +199,11 @@
     "accessRoles": {
         "Administrator": {
             "description": "Neomezený přístup včetně možnosti sdílení",
-            "label": "Administrátor"
+            "label": "Administrator"
         },
         "Advanced Viewer": {
             "description": "Lze sledovat živé video, procházet archiv, ovládat PTZ atd",
-            "label": "Rozšířený prohlížeč"
+            "label": "Pokročilý prohlížeč"
         },
         "Custom": {
             "description": "Pro nastavení uživatelských oprávnění použijte aplikaci %VMS_NAME% Client",
@@ -244,18 +258,17 @@
         "accountSavedSuccess": "Váš účet byl úspěšně uložen",
         "accountSettings": "Nastavení účtu",
         "activationLinkSent": "Aktivní odkaz byl odeslán",
-        "changePassword": "Změnit heslo",
+        "changePassword": "Změna hesla",
         "newPasswordLabel": "Nové heslo",
         "passwordChangedSuccess": "Váš účet byl úspěšně uložen",
         "saveChanges": "Uložit"
     },
     "activeActions": {
-        "resetPassword": "Obnovení hesla",
+        "resetPassword": "Obnovit heslo",
         "sendConfirm": "Znovu poslat aktivační odkaz",
         "setNewPassword": "Uložit heslo",
         "setNewPasswordLabel": "Nové heslo"
     },
-    "andXMore": "... a {{value}} dalších",
     "cameraFilters": {
         "H265": "H.265 Kamery",
         "IO": "I/O moduly",
@@ -269,17 +282,74 @@
         "ptz": "PTZ kamery"
     },
     "clientProtocol": "%CLIENT_PROTOCOL%:",
+    "common": {
+        "cameraLinks": {
+            "copyActiveText": "zkopírováno do schránky",
+            "copyDefaultText": "kopírovat",
+            "copyToClipboard": "kopírovat do schránky",
+            "highStream": "Hlavní stream",
+            "lowStream": "Vedlejší stream",
+            "transcoding": "Překódování",
+            "unknown": "Neznámý"
+        },
+        "cameraStates": {
+            "error": "Chyba",
+            "errorLoading": "An error occurred while loading this video.",
+            "flashOrWebmRequired": "Pro přehrávání videa v aplikaci Internet Explorer si prosím <a href='https://get.adobe.com/flashplayer/' target='_blank'>nainstalujte Adobe Flash</a> nebo<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM kodek</a>.",
+            "flashRequired": "Pro přehrání videa si prosím <a href='https://get.adobe.com/flashplayer/' target='_blank'>nainstalujte Adobe Flash</a>.",
+            "iOSVideoTooLarge": "iOS nepodporuje video větší než fullHD (2MP: 1920 × 1080).",
+            "ieNoWebm": "Pro aplikaci Internet Explorer si prosím nainstalujte <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>kodeku WebM</a>.",
+            "ieWin10": "Prosím použijte prohlížeč Microsoft Edge nebo Google Chrome.",
+            "noArmSupport": "Tento prohlížeč nebo zařízení nepodporuje přehrávání videa ze serverů se systémem ARM.",
+            "noData": "Žádná data",
+            "noFormat": "Tento prohlížeč nepodporuje přehrávání videa z této kamery.",
+            "offline": "Offline",
+            "ubuntuNX": "Tento prohlížeč nepodporuje video ze serverů se systémem ARM. Použijte místo toho prohlížeč Chromium.",
+            "unauthorized": "Ověření je vyžadováno"
+        },
+        "chromeCastWarning": "Chromecast je náročný na systémové zdroje a může způsobit problémy na vašem serveru.",
+        "resolution": {
+            "auto": "Auto",
+            "high": "Vysoká",
+            "low": "Nízká"
+        },
+        "searchCamPlaceholder": "Hledat",
+        "systemHasNoCameras": "ŽÁDNÉ KAMERY",
+        "systemNewVersion": "Update your system",
+        "systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
+        "systemNoAlerts": "No Alerts",
+        "systemNoAlertsMessage": "Your system must be doing well!",
+        "systemOffline": "Systém je offline",
+        "systemOfflineMessage": "This system is offline and cannot be accessed right now.",
+        "systemServerError": "Interní chyba serveru",
+        "systemServerErrorMessage": "An error occurred, please, try again later. An error occurred, please try again later. If the problem continues, please contact your support team.",
+        "systemUnreachable": "SYSTÉM JE NEDOSTUPNÝ",
+        "voiceCommands": {
+            "clear search": "smazat hledání",
+            "collapse all servers": "sbalit všechny servery",
+            "collapse server": "collapse server + [server name]",
+            "expand all servers": "rozbalit všechny servery",
+            "expand server": "expand server + [server name]",
+            "help": "help | show commands",
+            "live": "go to live | show me live",
+            "pause": "pauza",
+            "play": "přehrát",
+            "search": "find + [text for searchbar]",
+            "stop listening": "zastavení poslech",
+            "view": "view + [camera name]"
+        }
+    },
     "devices": "zařízení",
     "dialogs": {
         "cancelButton": "Zrušit",
-        "changeAccountLogged": "You are already logged in with as {email}",
+        "changeAccountLogged": "You are already logged in as {email}",
         "createNewAccount": "Create New Account",
         "download": "Stáhnout %VMS_NAME%",
         "loggedFromOther": "You will be logged in with a different account",
-        "loginButton": "Přihlásit",
+        "loginButton": "Přihlásit se",
         "loginTitle": "Přihlaste se k %CLOUD_NAME%",
         "logoutAuthorisedContinueButton": "Pokračovat",
-        "logoutAuthorisedLogoutButton": "Odhlásit se",
+        "logoutAuthorisedLogoutButton": "Odhlásit",
         "logoutAuthorisedTitle": "Již jste přihlášen",
         "merge": {
             "commonText": "Nelze sloučit systémy <strong>{{primarySystem}}</strong> a <strong>{{secondarySystem}}</strong>.",
@@ -300,15 +370,15 @@
         "message": {
             "failedToSend": "Zprávu se nepodařilo odeslat.",
             "sent": "Zpráva byla odeslána.",
+            "subject": {
+                "integration_feedback": "Zpětná vazba pro integraci {{asset}}",
+                "ipvd_feedback_device": "Zpětná vazba pro {{asset}}",
+                "ipvd_feedback_page": "Zpětná vazba pro kameru",
+                "sales_inquiry": "Dotaz na prodejce o {{asset}}",
+                "technical_inquiry": "Technical inquiry for {{asset}}"
+            },
             "title": {
                 "integration": "Spojte se s {{companyName}}",
-                "ipvd_feedback_device": "Zpětná vazba pro {{asset}}",
-                "ipvd_feedback_page": "Zpětná vazba pro kameru"
-            },
-            "topic": {
-                "contact_sales": "Kontaktovat obchod ohledně {{asset}}",
-                "contact_support": "Kontaktovat podporu ohledně{{asset}}",
-                "integration_feedback": "Zpětná vazba pro integraci {{asset}}",
                 "ipvd_feedback_device": "Zpětná vazba pro {{asset}}",
                 "ipvd_feedback_page": "Zpětná vazba pro kameru"
             }
@@ -352,8 +422,7 @@
             },
             "arm": {
                 "label": "ARM",
-                "shortLabel": "ARM",
-                "supported": "<a href='/content/arm'>ARM based servers support policy</a>"
+                "shortLabel": "ARM"
             },
             "ios": {
                 "label": "iOS",
@@ -361,25 +430,20 @@
             },
             "linux": {
                 "label": "Ubuntu Linux",
-                "shortLabel": "Ubuntu",
-                "supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+                "shortLabel": "Ubuntu"
             },
             "mac": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "macos": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "sdk": {
                 "label": "SDK",
-                "shortLabel": "SDK",
-                "supported": "C ++ multiplatformová SDK"
+                "shortLabel": "SDK"
             },
             "windows": {
-                "label": "Windows",
-                "supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+                "label": "Windows"
             }
         },
         "mobile": {
@@ -403,12 +467,12 @@
         },
         "releasesTypes": {
             "beta": "Beta",
-            "betas": "Betas",
+            "betas": "Beta verze",
             "patch": "Patch",
-            "patches": "Patches",
+            "patches": "Opravy",
             "rc": "Release Candidate",
             "release": "Release",
-            "releases": "Releases"
+            "releases": "Vydání"
         }
     },
     "errorCodes": {
@@ -430,7 +494,7 @@
         "cantGetSystemInfoPrefix": "Informace o systému jsou nedostupné",
         "cantGetSystemsListPrefix": "Seznam systému není dostupný",
         "cantGetUsersListPrefix": "Seznam uživatelů není dostupný",
-        "cantOpenClient": "%VMS_NAME% application is not detected.",
+        "cantOpenClient": "Aplikace %VMS_NAME% není nalezena.",
         "cantRegisterPrefix": "Došlo k chybě",
         "cantSendActivationPrefix": "Nelze odeslat potvrzovací email",
         "cantSendConfirmationPrefix": "Nelze odeslat potvrzovací email",
@@ -462,7 +526,7 @@
         "Health Monitor": "Monitor stavu",
         "Storage": "Úložiště",
         "backToEditText": "Zpět na editační rozhraní",
-        "myIntegrationsLabel": "Mine",
+        "myIntegrationsLabel": "Těžit",
         "previewRibbonText": "Tato stránka je náhled nejnovějších změn a neodpovídá veřejně dostupné verzi."
     },
     "ipvd": {
@@ -489,7 +553,7 @@
         "isAptzSupported": "Pokročilé PTZ",
         "isAptzSupportedShort": "Adv. PTZ",
         "isAudioSupported": "Zvuk",
-        "isFisheye": "Fisheye",
+        "isFisheye": "Rybí oko",
         "isH265": "H.265",
         "isIoSupported": "I/O",
         "isMdSupported": "Pohyb",
@@ -555,8 +619,8 @@
     "phoneNumberWithLabel": "Tel: {{number}}",
     "pleaseSelect": "Please select...",
     "privacyPolicy": {
-        "integration": "Odesláním tohoto formuláře souhlasíte s tím, že budete kontaktováni {{INTEGRATION_COMPANY}} a / nebo %COMPANY_NAME%.\nZde najdete {{INTEGRATION_COMPANY}} zásady ochrany osobních údajů <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">zde</a> a %COMPANY_NAME% zásady ochrany osobních údajů <a href=\"%PRIVACY_LINK%\" target=\"blank\">zde</a> které obsahují pokyny, jak svůj souhlas odvolat.",
-        "ipvd": "Odesláním tohoto formuláře souhlasíte, že budete kontaktováni %COMPANY_NAME%.\nZde najdete %COMPANY_NAME% zásady ochrany <a href=\"%PRIVACY_LINK%\" target=\"blank\">zde</a>, které zahrnují instrukce o tom, jak se odvolat svůj souhlas."
+        "integration": "Odesláním tohoto formuláře souhlasíte s tím, že budete kontaktováni {{INTEGRATION_COMPANY}} a / nebo %COMPANY_NAME%.\nZde najdete {{INTEGRATION_COMPANY}} zásady ochrany osobních údajů <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">zde</a> a %COMPANY_NAME% zásady ochrany osobních údajů <a href=\"%PRIVACY_LINK%\" target=\"_blank\">zde</a> které obsahují pokyny, jak svůj souhlas odvolat.",
+        "ipvd": "Odesláním tohoto formuláře souhlasíte, že budete kontaktováni %COMPANY_NAME%.\nZde najdete %COMPANY_NAME% zásady ochrany <a href=\"%PRIVACY_LINK%\" target=\"_blank\">zde</a>, které zahrnují instrukce o tom, jak se odvolat svůj souhlas."
     },
     "registration": {
         "agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
@@ -601,8 +665,17 @@
         "openClient": "Otevřít v %VMS_NAME%",
         "openClientNoSystem": "Otevřít %VMS_NAME%",
         "permissionsRemoved": "Oprávnění byla odstraněna z adresy {{email}}",
+        "settings": {
+            "sessionLimitDuration": {
+                "hours": "hodin",
+                "minutes": "minuty"
+            },
+            "warningMessages": {
+                "videoEncryption": "Šifrování přenosu videa výrazně zvýší zatížení procesoru."
+            }
+        },
         "shareOffline": "Cannot share system while it is offline",
-        "shareUnauthorized": "You do not have permission to share this system",
+        "shareUnauthorized": "Nemáte oprávnění ke sdílení tohoto systému",
         "successDeleted": "Systém {{systemName}} byl úspěšně odstraněna z Vašeho účtu",
         "successDisconnected": "Systém byl úspěšně odpojen od %CLOUD_NAME%",
         "successRename": "Název systému byl uložen",
@@ -620,8 +693,9 @@
         "online": "online",
         "unavailable": "nedostupný"
     },
-    "testedVersionLabel": "Testováno na {{vmsName}} verzi:",
-    "testedVersionsLabel": "Testováno na {{vmsName}} verzích:",
+    "testedVersionLabel": "Tested with {{vmsName}} version:",
+    "testedVersionsLabel": "Tested with {{vmsName}} versions:",
+    "topXByVolume": "Top {{value}} by volume:",
     "users": "Uživatelé",
-    "you": "you"
+    "you": "vy"
 }

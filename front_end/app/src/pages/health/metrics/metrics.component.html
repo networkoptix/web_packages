@@ -4,31 +4,34 @@
         class="section-placeholder">
 </nx-page-placeholder>
 
-<div class="row">
-    <div class="d-flex align-items-start w-100" #table>
-        <div *ngIf="selectedData && selectedValues && !mobileDetailMode"
-             class="px-2 overflow-auto"
-             [ngClass]="metricValuesLen === 1 ? 'row col-12' : ''">
 
-        <div class="col-12 mb-3 p-0" #search
-                 *ngIf="!mobileDetailMode && metricValuesLen > 1">
-                <nx-search
-                        name="filterModel"
-                        [ngModel]="filterModel"
-                        (ngModelChange)="modelChanged($event)"
-                        layout="compact"
-                        [placeholder]="LANG.search.Search"
-                        ngDefaultControl>
-                </nx-search>
-            </div>
+<div class="gridMetricContent" #area
+     [ngClass]="fixedLayoutClass"
+     *ngIf="healthService.alertsValues.length">
 
-            <div *ngIf="metricValuesLen === 1" class="col-12 col-xl-7 col-xxxl-5 px-2">
+    <div class="gridMetricContentComponent" *ngIf="selectedData && selectedValues && !mobileDetailMode">
+        <div class="gridMetricContentComponentWrapper">
+            <div *ngIf="metricValuesLen === 1" class="col-12 col-xl-7 col-xxxl-5 p-0">
                 <nx-single-entity
                         [params]="selectedPanelData"
                         [entity]="objectValues(selectedValues)[0]">
                 </nx-single-entity>
             </div>
-            <div *ngIf="metricValuesLen > 1" class="col-12 p-0">
+            <div *ngIf="metricValuesLen > 1" class="p-0" #tableContainer
+                 [ngClass]="{'data-wrapper' : !activeEntity}">
+
+                <div class="mb-3 p-0" #search
+                     *ngIf="!mobileDetailMode && metricValuesLen > 1">
+
+                    <nx-search
+                            name="filterModel"
+                            [ngModel]="filterModel"
+                            (ngModelChange)="modelChanged($event)"
+                            layout="compact"
+                            [placeholder]="LANG.search.Search"
+                            ngDefaultControl>
+                    </nx-search>
+                </div>
                 <nx-dynamic-table
                         [dimensions]="containerDimensions"
                         [headers]="selectedData"
@@ -38,13 +41,14 @@
                 </nx-dynamic-table>
             </div>
         </div>
+    </div>
 
-        <div class="col-12 col-md-5 col-xl-4 col-xxl-3 pb-3"
-             *ngIf="activeEntity">
-
-            <div class="row pl-3 pb-3"
+    <div class="gridMetricContentPanelComponent">
+        <div class="gridMetricContentPanelComponentWrapper pb-3" *ngIf="activeEntity">
+            <div class="mb-3 all-results-btn"
                  [style.display]="!mobileDetailMode ? 'none' : 'block'">
 
+                <hr class="pb-3 m-0">
                 <button class="btn btn-default btn-back" (click)="resetActiveEntity()">
                     <span class="back-arrow"></span>
                     <span translate>All results</span>

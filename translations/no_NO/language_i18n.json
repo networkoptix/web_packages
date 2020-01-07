@@ -21,8 +21,10 @@
     "All Systems": "Alle systemer",
     "All cloud users will be deleted.": "Alle sky-brukere vil bli slettet.",
     "All results": "Alle Resultater",
+    "Allow only secure connections": "Tillat bare sikre tilkoblinger",
+    "Allow system to optimize camera settings": "Allow system to optimize camera settings",
     "Analytics": "Analyser",
-    "Analytics Event": "Videoanalyse-regel",
+    "Analytics Event": "Analyse-hendelser",
     "Analytics Events": "Analyse-hendelser",
     "Any": "Noen",
     "Apply": "Bruk",
@@ -37,6 +39,7 @@
     "Change Password": "Bytt passord",
     "Checking...": "Kontrollerer...",
     "Choose which properties should be visible to customers:": "Velg hvilke egenskaper som skal være synlige for kundene:",
+    "Clear filters": "Clear filters",
     "Close": "Lukk",
     "Codec": "Kodek",
     "Collapse": "Fold sammen",
@@ -64,6 +67,9 @@
     "Email": "E-post",
     "Email is required": "E-post er påkrevd",
     "Embed": "Bygg inn",
+    "Enable audit trail": "Aktiver revisjonslogg",
+    "Enable auto discovery of cameras and servers": "Enable auto discovery of cameras and servers",
+    "Encrypt video traffic": "Krypter videotrafikk",
     "Enter \"Public User\" credentials:": "Skriv inn påloggingsdelajer for \"Offentlig bruker\":",
     "Enter password for your account to continue": "Skriv inn passord for kontoen din for å fortsette",
     "Enter password to continue.": "Skriv inn passord for å fortsette.",
@@ -71,7 +77,7 @@
     "FAILED_SYSTEM_DESCR": "This link is broken,<br>System may be disconnected from %CLOUD_NAME%,<br>Access to this System may be revoked, <br>or you may be logged into a different account.",
     "FPS(max)": "FPS (maks)",
     "Failed to access System": "Kunne ikke få tilgang til System",
-    "Finishing systems merge": "Ferdigstiller systemsammenslåing",
+    "Finishing systems merge": "Ferdigstiller sammenslåing",
     "Firmware version": "Fastvareversjon",
     "First Name": "First Name",
     "First name": "Fornavn",
@@ -84,12 +90,15 @@
     "I/O": "I/O",
     "In Review": "Kontrolleres",
     "In-Client Upgrade:": "Oppgradering fra klient:",
+    "Includes information about the System, such as camera modules, \n                            firmware versions, number of servers, etc. \n                            Does not include any personal information and is completely anonymous.": "Includes information about the System, such as camera modules, \n                            firmware versions, number of servers, etc. \n                            Does not include any personal information and is completely anonymous.",
+    "Information": "Informasjon",
     "Integrations": "Integrasjoner",
     "Language": "Språk",
     "Last Name": "Last Name",
     "Last name": "Etternavn",
     "Last name is required": "Etternavn er påkrevd",
     "Latest version": "Siste versjon",
+    "Limit session duration to": "Limit session duration to",
     "Log In": "Logg inn",
     "Log Out": "Logg ut",
     "Log in to %CLOUD_NAME%": "Logg inn på %CLOUD_NAME%",
@@ -109,6 +118,7 @@
     "Nothing Found": "Ingenting funnet",
     "OK": "OK",
     "Ok": "Ok",
+    "Only client-server video traffic can be encrypted.": "Only client-server video traffic can be encrypted.",
     "Other packages:": "Andre pakker:",
     "Other releases, patches and beta versions": "Andre utgivelser, oppdateringer og betaversjoner",
     "Owner": "Eier",
@@ -116,7 +126,7 @@
     "Page not found": "Siden ble ikke funnet",
     "Password": "Passord",
     "Password is required": "Passord er påkrevd",
-    "Password reset instructions are sent to Email": "Password reset instructions are sent to Email",
+    "Password reset instructions are sent to Email": "Instruksjoner for tilbakestilling av passord sendes til E-post",
     "Password successfully saved": "Passordet ble lagret",
     "Password:": "Passord:",
     "Please enter a valid Email": "Vennligst skriv inn en gyldig e-post",
@@ -129,23 +139,27 @@
     "Remove User": "Remove User",
     "Rename": "Endre navn",
     "Requirements": "Krav",
-    "Resend activation email": "Send aktiverings e-post igjen",
+    "Resend activation email": "Send aktiverings e-post på nytt",
     "Resend activation link": "Send aktiveringslink igjen",
     "Resolution(max)": "Oppløsning (maks)",
     "Save": "Lagre",
     "Search in google": "Søk i google",
     "Secondary Stream": "Sekundær strøm",
+    "Security": "Sikkerhet",
     "Send": "Send",
+    "Send anonymous usage and crash statistics to developers": "Send anonymous usage and crash statistics to developers",
     "Send feedback about this device": "Send tilbakemelding om denne enheten",
     "Set New Password": "Angi et nytt passord",
-    "Settings": "Innstillingar",
+    "Settings": "Innstillinger",
     "Show All": "Vis alle",
     "Some of your servers don't support cloud System merge because of outdated software version.": "Noen av serverne dine støtter ikke Cloud-systemfusjonen på grunn av utdatert programvareversjon.",
+    "Subject": "Subject",
     "Support": "Brukerstøtte",
     "Support E-mail": "Brukerstøtte E-post",
     "Support URL": "Brukerstøtte URL",
     "Supported Devices": "Støttede enheter",
     "Supported IP Video Devices": "Støttede IP-videoenheter",
+    "System Settings": "Systeminnstillinger",
     "System name": "Systemnavn",
     "System name is required": "Systemnavn må fylles ut",
     "System will be accessible through local network with local administrator account.": "Systemet vil være tilgjengelig via lokalt nettverk med lokal administratorkonto.",
@@ -162,7 +176,7 @@
     "This device has reported to support some analytics events, but we don't have exact information about them.": "Denne enheten har rapportert å støtte noen analysehendelser, men vi har ikke nøyaktig informasjon om dem.",
     "To": "Til",
     "Too many attempts. Try again in a minute.": "For mange forsøk. Prøv igjen om et minutt.",
-    "Topic": "Emne",
+    "Tracks and logs all user actions.": "Sporer og logger alle brukerhandlinger.",
     "Until merge is finished you can log in to this system and watch video, but cannot change any settings.": "Inntil fusjonen er ferdig kan du logge inn på dette systemet og se på video, men kan ikke endre noen innstillinger.",
     "Update them to the": "Oppdater dem til",
     "Updated": "Oppdatert",
@@ -172,9 +186,9 @@
     "WHEN_MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{{targetSystemName}}</strong> System, and this system will be deleted.",
     "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.": "Vi anbefaler at du installerer de nyeste versjonene av Google Chrome eller Mozilla Firefox, men du kan bruke alle andre moderne nettlesere.",
     "What's New?": "Hva er nytt?",
+    "When enabled, system will discover new cameras and servers. Also, \n                            it will automatically and persistently send discovery requests to \n                            cameras in order to get the camera's status update. \n                            Failover enabled on some servers ignore status check prohibition.": "When enabled, system will discover new cameras and servers. Also, \n                            it will automatically and persistently send discovery requests to \n                            cameras in order to get the camera's status update. \n                            Failover enabled on some servers ignore status check prohibition.",
     "Works with:": "Fungerer med:",
     "Wrong password": "Feil passord",
-    "You can merge only those cloud Systems, where you have the \"Owner\" permissions.": "Du kan bare slå sammen de Cloud Systemene, hvor du har \"Eier\" -tillatelsene.",
     "You can only merge Systems where you are the owner.": "Du kan bare slå sammen systemer der du er eieren.",
     "You have registered in %CLOUD_NAME%": "Du har registrert deg i %CLOUD_NAME%",
     "Your Email": "Din e-post",
@@ -255,7 +269,6 @@
         "setNewPassword": "Lagre passord",
         "setNewPasswordLabel": "Nytt passord"
     },
-    "andXMore": "... og {{value}} mer",
     "cameraFilters": {
         "H265": "H.265 kameraer",
         "IO": "I/O-moduler",
@@ -269,10 +282,67 @@
         "ptz": "PTZ kameraer"
     },
     "clientProtocol": "%CLIENT_PROTOCOL%:",
+    "common": {
+        "cameraLinks": {
+            "copyActiveText": "kopiert til utklippstavlen",
+            "copyDefaultText": "kopiere",
+            "copyToClipboard": "kopier til utklippstavle",
+            "highStream": "Høy kvalitet",
+            "lowStream": "Lav kvalitet",
+            "transcoding": "Transkoding",
+            "unknown": "Ukjent"
+        },
+        "cameraStates": {
+            "error": "Feil",
+            "errorLoading": "En feil oppstod under lasting av videoen.",
+            "flashOrWebmRequired": "Vennligst <a href='https://get.adobe.com/flashplayer/' target='_blank'>installer Adobe Flash</a> eller<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> for å spille av video i Internet Explorer.",
+            "flashRequired": "Vennligst <a href='https://get.adobe.com/flashplayer/' target='_blank'>installer Adobe Flash</a> for å spille av videoer.",
+            "iOSVideoTooLarge": "iOS støtter ikke video som er større enn fullHD (2MP: 1920x1080).",
+            "ieNoWebm": "Vennligst installer <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> for Internet Explorer.",
+            "ieWin10": "Vennligst bruk Microsoft Edge- eller Google Chrome-nettlesere.",
+            "noArmSupport": "Denne nettleseren eller enheten støtter ikke videoavspilling fra ARM-baserte servere.",
+            "noData": "Ingen opptak",
+            "noFormat": "Denne nettleseren støtter ikke videoavspilling fra dette kameraet.",
+            "offline": "Frakoblet",
+            "ubuntuNX": "Denne nettleseren støtter ikke video fra ARM-baserte servere. Vennligst bruk Chromium-nettleseren i stedet.",
+            "unauthorized": "Autentisering kreves"
+        },
+        "chromeCastWarning": "Chromecast er ressursintensiv og kan forårsake problemer på serveren.",
+        "resolution": {
+            "auto": "Auto",
+            "high": "Høy",
+            "low": "Lav"
+        },
+        "searchCamPlaceholder": "Søk",
+        "systemHasNoCameras": "INGEN KAMERAER",
+        "systemNewVersion": "Update your system",
+        "systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
+        "systemNoAlerts": "No Alerts",
+        "systemNoAlertsMessage": "Your system must be doing well!",
+        "systemOffline": "System frakoblet",
+        "systemOfflineMessage": "This system is offline and cannot be accessed right now.",
+        "systemServerError": "Intern server feil",
+        "systemServerErrorMessage": "An error occurred, please, try again later. An error occurred, please try again later. If the problem continues, please contact your support team.",
+        "systemUnreachable": "SYSTEMET ER UTILGJENGELIG",
+        "voiceCommands": {
+            "clear search": "nullstill søk",
+            "collapse all servers": "kollapse alle servere",
+            "collapse server": "collapse server + [server name]",
+            "expand all servers": "utvide alle servere",
+            "expand server": "utvider server + [servernavn]",
+            "help": "help | show commands",
+            "live": "go to live | show me live",
+            "pause": "pause",
+            "play": "spill av",
+            "search": "find + [text for searchbar]",
+            "stop listening": "slutt å lytte",
+            "view": "se + [kamera navn]"
+        }
+    },
     "devices": "enheter",
     "dialogs": {
         "cancelButton": "Avbryt",
-        "changeAccountLogged": "You are already logged in with as {email}",
+        "changeAccountLogged": "You are already logged in as {email}",
         "createNewAccount": "Create New Account",
         "download": "Last ned %VMS_NAME%",
         "loggedFromOther": "You will be logged in with a different account",
@@ -300,15 +370,15 @@
         "message": {
             "failedToSend": "Meldingen har ikke sendt.",
             "sent": "Meldingen er sendt.",
+            "subject": {
+                "integration_feedback": "Tilbakemelding for integrasjon {{asset}}",
+                "ipvd_feedback_device": "Tilbakemelding for {{asset}}",
+                "ipvd_feedback_page": "Tilbakemelding for kameraer-siden",
+                "sales_inquiry": "Salgsforespørsel for {{asset}}",
+                "technical_inquiry": "Technical inquiry for {{asset}}"
+            },
             "title": {
                 "integration": "Kom i kontakt med {{companyName}}",
-                "ipvd_feedback_device": "Tilbakemelding for {{asset}}",
-                "ipvd_feedback_page": "Tilbakemelding for kameraer-siden"
-            },
-            "topic": {
-                "contact_sales": "Kontakt salg for {{asset}}",
-                "contact_support": "Kontakt brukerstøtte for {{asset}}",
-                "integration_feedback": "Tilbakemelding for integrasjon {{asset}}",
                 "ipvd_feedback_device": "Tilbakemelding for {{asset}}",
                 "ipvd_feedback_page": "Tilbakemelding for kameraer-siden"
             }
@@ -352,8 +422,7 @@
             },
             "arm": {
                 "label": "ARM",
-                "shortLabel": "ARM",
-                "supported": "<a href='/content/arm'>ARM-baserte servere support policy</a>"
+                "shortLabel": "ARM"
             },
             "ios": {
                 "label": "iOS",
@@ -361,25 +430,20 @@
             },
             "linux": {
                 "label": "Ubuntu Linux",
-                "shortLabel": "Ubuntu",
-                "supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+                "shortLabel": "Ubuntu"
             },
             "mac": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "macos": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "sdk": {
                 "label": "SDK",
-                "shortLabel": "SDK",
-                "supported": "C + + kryssplattform SDK"
+                "shortLabel": "SDK"
             },
             "windows": {
-                "label": "Windows",
-                "supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+                "label": "Vindu"
             }
         },
         "mobile": {
@@ -403,12 +467,12 @@
         },
         "releasesTypes": {
             "beta": "Beta",
-            "betas": "Betas",
-            "patch": "Patch",
-            "patches": "Patches",
-            "rc": "Release Candidate",
-            "release": "Release",
-            "releases": "Releases"
+            "betas": "Betaer",
+            "patch": "Fiks",
+            "patches": "Fikser",
+            "rc": "Utsendelseskandidater",
+            "release": "Utgivelse",
+            "releases": "Utgivelser"
         }
     },
     "errorCodes": {
@@ -555,15 +619,15 @@
     "phoneNumberWithLabel": "Tlf: {{number}}",
     "pleaseSelect": "Please select...",
     "privacyPolicy": {
-        "integration": "Ved å sende inn dette skjemaet samtykker du til å bli kontaktet av {{INTEGRATION_COMPANY}} og / eller %COMPANY_NAME%.\nDu vil finne {{INTEGRATION_COMPANY}} personvernregler <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">her</a> og %COMPANY_NAME% personvernregler <a href=\"%PRIVACY_LINK%\" target=\"blank\">her</a> som inkluderer instruksjoner om hvordan du kan trekke tilbake ditt samtykke.",
-        "ipvd": "Ved å sende inn dette skjemaet samtykker du i å bli kontaktet av %COMPANY_NAME%.\nDu vil finne %COMPANY_NAME% personvernregler <a href=\"%PRIVACY_LINK%\" target=\"blank\">her</a> som inkluderer instruksjoner om hvordan du kan trekke tilbake ditt samtykke."
+        "integration": "Ved å sende inn dette skjemaet samtykker du til å bli kontaktet av {{INTEGRATION_COMPANY}} og / eller %COMPANY_NAME%.\nDu vil finne {{INTEGRATION_COMPANY}} personvernregler <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">her</a> og %COMPANY_NAME% personvernregler <a href=\"%PRIVACY_LINK%\" target=\"_blank\">her</a> som inkluderer instruksjoner om hvordan du kan trekke tilbake ditt samtykke.",
+        "ipvd": "Ved å sende inn dette skjemaet samtykker du i å bli kontaktet av %COMPANY_NAME%.\nDu vil finne %COMPANY_NAME% personvernregler <a href=\"%PRIVACY_LINK%\" target=\"_blank\">her</a> som inkluderer instruksjoner om hvordan du kan trekke tilbake ditt samtykke."
     },
     "registration": {
         "agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
     },
     "registration.agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>",
     "search": {
-        "Any": "Noen",
+        "Any": "Enhver",
         "Search": "Søk",
         "analytics": "Analyser",
         "analyticsSelected": "analysehendelser",
@@ -601,6 +665,15 @@
         "openClient": "Åpent i %VMS_NAME%",
         "openClientNoSystem": "Åpne %VMS_NAME%",
         "permissionsRemoved": "Tillatelser ble fjernet fra {{email}}",
+        "settings": {
+            "sessionLimitDuration": {
+                "hours": "timer",
+                "minutes": "minutter"
+            },
+            "warningMessages": {
+                "videoEncryption": "Kryptering av videotrafikk vil øke CPU-bruken betydelig."
+            }
+        },
         "shareOffline": "Cannot share system while it is offline",
         "shareUnauthorized": "You do not have permission to share this system",
         "successDeleted": "System {{systemName}} er slettet fra kontoen din",
@@ -620,8 +693,9 @@
         "online": "online",
         "unavailable": "utilgjengelig"
     },
-    "testedVersionLabel": "Testet på {{vmsName}} versjon:",
-    "testedVersionsLabel": "Testet på {{vmsName}} versjoner:",
+    "testedVersionLabel": "Tested with {{vmsName}} version:",
+    "testedVersionsLabel": "Tested with {{vmsName}} versions:",
+    "topXByVolume": "Top {{value}} by volume:",
     "users": "Brukere",
     "you": "you"
 }

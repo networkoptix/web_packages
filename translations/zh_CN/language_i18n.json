@@ -21,6 +21,8 @@
     "All Systems": "所有系统",
     "All cloud users will be deleted.": "所有云用户将被删除。",
     "All results": "所有结果",
+    "Allow only secure connections": "仅允许安全连接",
+    "Allow system to optimize camera settings": "允许系统优化摄像机设置",
     "Analytics": "分析",
     "Analytics Event": "分析事件",
     "Analytics Events": "分析事件",
@@ -33,10 +35,11 @@
     "Camera controls": "摄像机控制",
     "Camera header": "摄像机标题",
     "Cameras menu": "摄像机功能菜单",
-    "Cancel": "撤消",
+    "Cancel": "取消",
     "Change Password": "更改密码",
     "Checking...": "检查中...",
     "Choose which properties should be visible to customers:": "请选择客户可享有哪些权限：",
+    "Clear filters": "清除筛选条件",
     "Close": "关闭",
     "Codec": "编码器",
     "Collapse": "收起",
@@ -64,6 +67,9 @@
     "Email": "邮箱",
     "Email is required": "电子邮件是必填栏位",
     "Embed": "内嵌",
+    "Enable audit trail": "启用使用者行为记录",
+    "Enable auto discovery of cameras and servers": "启用摄影机和伺服器的自动搜寻",
+    "Encrypt video traffic": "加密视频通信量",
     "Enter \"Public User\" credentials:": "请输入“公共用户”凭据：",
     "Enter password for your account to continue": "输入您帐户的密码以继续",
     "Enter password to continue.": "输入您的密码以继续",
@@ -84,12 +90,15 @@
     "I/O": "I/O",
     "In Review": "审核中",
     "In-Client Upgrade:": "客户端升级：",
+    "Includes information about the System, such as camera modules, \n                            firmware versions, number of servers, etc. \n                            Does not include any personal information and is completely anonymous.": "包括有关系统资讯，例如摄像机模组，\n                            固件版本，服务器数量等。\n                            不包含任何个人信息并采完全匿名的方式。",
+    "Information": "信息",
     "Integrations": "集成",
     "Language": "语言:",
     "Last Name": "姓",
     "Last name": "姓氏",
     "Last name is required": "姓氏是必填项",
     "Latest version": "最新版本",
+    "Limit session duration to": "限制登入时间为",
     "Log In": "登录",
     "Log Out": "退出登录",
     "Log in to %CLOUD_NAME%": "登录到 %CLOUD_NAME%",
@@ -102,13 +111,14 @@
     "Multi Sensor": "多传感器",
     "NO_SYSTEMS_CONNECT_SYSTEM": "按“将系统连接到 %CLOUD_NAME%”",
     "NO_SYSTEMS_GOTO_ADMINISTRATION": "转到\"系统管理\"对话框中的\"云\"选项",
-    "NO_SYSTEMS_LOGIN": "登录到您的系统使用 %VMS_NAME%",
+    "NO_SYSTEMS_LOGIN": "Log in to your System using %VMS_NAME%",
     "NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "你有没有连接到 %CLOUD_NAME% 的系统",
     "New Password": "新密码",
     "No unsaved changes": "没有未保存的更改",
     "Nothing Found": "无搜寻结果",
     "OK": "确定",
     "Ok": "确定",
+    "Only client-server video traffic can be encrypted.": "仅能加密在客户端-服务器的视频传输。",
     "Other packages:": "其他软件包︰",
     "Other releases, patches and beta versions": "其他正式版，补丁和测试版本",
     "Owner": "所有者",
@@ -135,17 +145,21 @@
     "Save": "保存",
     "Search in google": "用谷歌（Google）搜索",
     "Secondary Stream": "副码流",
+    "Security": "安全性",
     "Send": "发送",
+    "Send anonymous usage and crash statistics to developers": "以匿名方式发送使用情况和故障统计报告至开发人员",
     "Send feedback about this device": "留下您对于此设备的意见",
     "Set New Password": "设置新密码",
     "Settings": "设置",
     "Show All": "全部显示",
     "Some of your servers don't support cloud System merge because of outdated software version.": "由于软件版本过时, 您的某些服务器不支持云系统合并。",
+    "Subject": "主题",
     "Support": "技术支持",
     "Support E-mail": "支持电子邮件",
     "Support URL": "支持 URL",
     "Supported Devices": "支持设备",
     "Supported IP Video Devices": "支持的IP视频设备",
+    "System Settings": "系统设置",
     "System name": "系统名称",
     "System name is required": "系统名称是必需的",
     "System will be accessible through local network with local administrator account.": "系统将可通过本地网络的本地管理员帐户。",
@@ -162,7 +176,7 @@
     "This device has reported to support some analytics events, but we don't have exact information about them.": "据传此设备支援某些分析事件，但我们并没有关于它们的确切信息。",
     "To": "发送至",
     "Too many attempts. Try again in a minute.": "尝试次数过多，请稍后重试。",
-    "Topic": "主题",
+    "Tracks and logs all user actions.": "跟踪和记录所有用户操作",
     "Until merge is finished you can log in to this system and watch video, but cannot change any settings.": "在合并完成前，您可以登录到此系统并观看视频，但无法更改任何配置",
     "Update them to the": "更新到",
     "Updated": "更新",
@@ -172,9 +186,9 @@
     "WHEN_MERGE_FINISHES": "合并完成后, 此系统中的所有用户和摄相机都将可用于<strong>{{targetSystemName}}</strong>, 同时此系统将被删除",
     "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.": "建议您安装最新版本的Google Chrome或Mozilla Firefox，或可以使用任何其他最新的网络浏览器。",
     "What's New?": "最新动态",
+    "When enabled, system will discover new cameras and servers. Also, \n                            it will automatically and persistently send discovery requests to \n                            cameras in order to get the camera's status update. \n                            Failover enabled on some servers ignore status check prohibition.": "启用后，系统将发现新的摄像机和服务器。 而且， \n                            它将自动和持续地向 \n                            摄像机发送搜寻请求，以便获取摄像机状态更新。 \n                            在某些服务器上启用的故障转移功能将忽略状态检查禁令。",
     "Works with:": "适用于：",
     "Wrong password": "错误的密码。",
-    "You can merge only those cloud Systems, where you have the \"Owner\" permissions.": "您只能合并那些拥有“所有者”权限的云系统。",
     "You can only merge Systems where you are the owner.": "当您的权限为拥有者时，就可以合并系统",
     "You have registered in %CLOUD_NAME%": "您已在 %CLOUD_NAME% 中注册",
     "Your Email": "您的电邮",
@@ -189,27 +203,27 @@
         },
         "Advanced Viewer": {
             "description": "可以查看实时视频，浏览存档，控制云台等",
-            "label": "高级浏览者"
+            "label": "高级操作员"
         },
         "Custom": {
             "description": "使用 %VMS_NAME% 客户端应用程序可以设置自定义权限",
             "label": "自定义"
         },
         "Live Viewer": {
-            "description": "只能查看实时视频",
-            "label": "实时浏览者"
+            "description": "只可以查看视频直播",
+            "label": "实时操作员"
         },
         "Owner": {
-            "description": "不受限制地的访问包括共享和从云连接或断开系统的能力",
+            "description": "不受限制地的访问包括共享和连接断开系统从云的能力",
             "label": "所有者"
         },
         "Viewer": {
             "description": "可以查看实时视频和浏览存档",
-            "label": "浏览者"
+            "label": "操作员"
         },
         "advancedViewer": {
             "description": "可以查看实时视频，浏览存档，配置摄像头，控制云台等",
-            "label": "高级浏览者"
+            "label": "高级操作员"
         },
         "cloudAdmin": {
             "description": "可以配置系统和共享它",
@@ -228,16 +242,16 @@
             "label": "禁用"
         },
         "liveViewer": {
-            "description": "只能查看实时视频",
-            "label": "实时浏览者"
+            "description": "只可以查看视频直播",
+            "label": "实时操作员"
         },
         "owner": {
-            "description": "不受限制地的访问包括共享和从云连接或断开系统的能力",
+            "description": "不受限制地的访问包括共享和连接断开系统从云的能力",
             "label": "所有者"
         },
         "viewer": {
             "description": "可以查看实时视频和浏览存档",
-            "label": "浏览者"
+            "label": "操作员"
         }
     },
     "account": {
@@ -255,7 +269,6 @@
         "setNewPassword": "保存密码",
         "setNewPasswordLabel": "新密码"
     },
-    "andXMore": "...... 还有 {{value}} 个",
     "cameraFilters": {
         "H265": "H.265 摄像机",
         "IO": "I/O 模块",
@@ -268,11 +281,68 @@
         "multiSensor": "多传感器摄像机",
         "ptz": "PTZ摄像机"
     },
-    "clientProtocol": "%CLIENT_PROTOCOL%",
+    "clientProtocol": "%CLIENT_PROTOCOL%:",
+    "common": {
+        "cameraLinks": {
+            "copyActiveText": "已复制到剪贴板",
+            "copyDefaultText": "复制",
+            "copyToClipboard": "复制到剪贴板",
+            "highStream": "高流",
+            "lowStream": "低流",
+            "transcoding": "转码",
+            "unknown": "未知的"
+        },
+        "cameraStates": {
+            "error": "错误",
+            "errorLoading": "载入影片时发生错误",
+            "flashOrWebmRequired": "请 <a href=\"https://get.adobe.com/flashplayer/\" target=\"_blank\">安装 Adobe Flash</a> 或 <a href=\"https://tools.google.com/dlpage/webmmf/\" target=\"_blank\">WebM 编解码器</a> 以在 Ie 中播放视频。",
+            "flashRequired": "请 <a href=\"https://get.adobe.com/flashplayer/\" target=\"_blank\">安装 Adobe Flash</a> 播放视频。",
+            "iOSVideoTooLarge": "iOS不支持大于fullHD (2MP：1920x1080) 的视频。",
+            "ieNoWebm": "请为 Ie 安装 <a href=\"https://tools.google.com/dlpage/webmmf/\" target=\"_blank\">WebM 编解码器</a>。",
+            "ieWin10": "请使用Microsoft Edge或Google Chrome浏览器。",
+            "noArmSupport": "此浏览器或设备不支持基于ARM的服务器的视频播放。",
+            "noData": "无数据",
+            "noFormat": "此浏览器不支持本相机的视频播放。",
+            "offline": "离线",
+            "ubuntuNX": "此浏览器不支持从基于 ARM 服务器的视频。请改为使用 Chromium 浏览器。",
+            "unauthorized": "需要身份验证"
+        },
+        "chromeCastWarning": "Chromecast是资源密集型的，可能会导致您的服务器出现问题。",
+        "resolution": {
+            "auto": "自动",
+            "high": "高",
+            "low": "低"
+        },
+        "searchCamPlaceholder": "搜索",
+        "systemHasNoCameras": "无摄像机",
+        "systemNewVersion": "更新您的系统",
+        "systemNewVersionMessage": "当前版本与此功能不兼容。请更新您的服务器到最新版本以使用此功能。",
+        "systemNoAlerts": "没有警报",
+        "systemNoAlertsMessage": "您的系统必须运行良好！",
+        "systemOffline": "系统处于离线状态",
+        "systemOfflineMessage": "此系统处于离线状态，现在无法登录。",
+        "systemServerError": "内部服务器错误",
+        "systemServerErrorMessage": "发生错误。请稍后重试。发生错误。请稍后重试。如果问题仍然存在，请联系您的支持团队。",
+        "systemUnreachable": "系统无法连接",
+        "voiceCommands": {
+            "clear search": "清除搜索",
+            "collapse all servers": "隐藏所有服务器",
+            "collapse server": "崩溃服务器 + [服务器名称]",
+            "expand all servers": "展开所有服务器",
+            "expand server": "展开服务器+ [服务器名称]",
+            "help": "帮助|显示命令",
+            "live": "实时 | 显示实时",
+            "pause": "暂停",
+            "play": "播放",
+            "search": "搜寻+ [搜索栏的文字]",
+            "stop listening": "停止监听",
+            "view": "查看+ [相机名称]"
+        }
+    },
     "devices": "设备",
     "dialogs": {
-        "cancelButton": "撤消",
-        "changeAccountLogged": "您已经以用户{email} 的身份登录。",
+        "cancelButton": "取消",
+        "changeAccountLogged": "You are already logged in as {email}",
         "createNewAccount": "新增帐户",
         "download": "下载 %VMS_NAME%",
         "loggedFromOther": "您将使用其他帐户登录",
@@ -300,20 +370,20 @@
         "message": {
             "failedToSend": "訊息无法发送。",
             "sent": "訊息已傳送。",
+            "subject": {
+                "integration_feedback": "集成{{asset}} 反馈",
+                "ipvd_feedback_device": "关于 {{asset}} 反馈",
+                "ipvd_feedback_page": "摄像机页面反馈",
+                "sales_inquiry": "{{asset}} 的產品咨询",
+                "technical_inquiry": "{{asset}} 的技术咨询"
+            },
             "title": {
                 "integration": "与 {{companyName}} 联系",
                 "ipvd_feedback_device": "关于 {{asset}} 反馈",
                 "ipvd_feedback_page": "摄像机页面反馈"
-            },
-            "topic": {
-                "contact_sales": "联系{{asset}} 销售人员",
-                "contact_support": "联系{{asset}} 技术支持",
-                "integration_feedback": "集成{{asset}} 反馈",
-                "ipvd_feedback_device": "关于 {{asset}} 反馈",
-                "ipvd_feedback_page": "摄像机页面反馈"
             }
         },
-        "noClientDetectedTitle": "安装 %VMS_NAME% 来查看您的系统",
+        "noClientDetectedTitle": "Install %VMS_NAME% to view your System",
         "okButton": "确定",
         "sharing": {
             "confirmOwner": "如果您更改系统所有者，将撤消从当前帐户的所有权。此操作是不可逆的。是否确定？",
@@ -352,8 +422,7 @@
             },
             "arm": {
                 "label": "ARM",
-                "shortLabel": "ARM",
-                "supported": "<a href='/content/arm'>ARM服务器支持政策</a>"
+                "shortLabel": "ARM"
             },
             "ios": {
                 "label": "iOS",
@@ -361,25 +430,20 @@
             },
             "linux": {
                 "label": "Ubuntu Linux",
-                "shortLabel": "Ubuntu",
-                "supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+                "shortLabel": "Ubuntu"
             },
             "mac": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "macos": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "sdk": {
                 "label": "SDK",
-                "shortLabel": "SDK",
-                "supported": "C ++跨平台SDK"
+                "shortLabel": "SDK"
             },
             "windows": {
-                "label": "Windows",
-                "supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+                "label": "Windows"
             }
         },
         "mobile": {
@@ -403,12 +467,12 @@
         },
         "releasesTypes": {
             "beta": "Beta",
-            "betas": "Betas",
+            "betas": "测试版本",
             "patch": "Patch",
-            "patches": "Patches",
+            "patches": "补丁",
             "rc": "Release Candidate",
             "release": "Release",
-            "releases": "Releases"
+            "releases": "版本发布"
         }
     },
     "errorCodes": {
@@ -521,7 +585,7 @@
         "debug": "调试",
         "default": "%CLOUD_NAME%",
         "download": "下载 %VMS_NAME%",
-        "downloadPlatform": "下载的 %VMS_NAME% ",
+        "downloadPlatform": "Download %VMS_NAME% for ",
         "integrations": "集成",
         "login": "登录-",
         "pageNotFound": "找不到页面",
@@ -555,8 +619,8 @@
     "phoneNumberWithLabel": "电话： {{number}}",
     "pleaseSelect": "请选择...",
     "privacyPolicy": {
-        "integration": "提交表单即表示您同意与{{INTEGRATION_COMPANY}} 和/或 %COMPANY_NAME%联系。\n您可在<a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">浏览{{INTEGRATION_COMPANY}} 隐私政策</a> 和%COMPANY_NAME% 隐私政策<a href=\"%PRIVACY_LINK%\" target=\" blank\">这里</a> 可了解如何撤销您的同意。",
-        "ipvd": "提交表单即表示同意 %COMPANY_NAME%与您联系。\n您可在<a href=\"%PRIVACY_LINK%\" target=\"blank\">浏览 %COMPANY_NAME% 隐私政策</a> ，其中包含如何撤回同意。"
+        "integration": "提交表单即表示您同意与{{INTEGRATION_COMPANY}} 和/或 %COMPANY_NAME%联系。\n您可在这里<a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">浏览{{INTEGRATION_COMPANY}} 隐私政策</a> 和%COMPANY_NAME%隐私政策<a href=\"%PRIVACY_LINK%\" target=\"_blank\">这里</a>可了解如何撤销您的同意。",
+        "ipvd": "提交表单即表示同意 %COMPANY_NAME%与您联系。\n您可在<a href=\"%PRIVACY_LINK%\" target=\"_blank\">浏览 %COMPANY_NAME% 隐私政策</a> ，其中包含如何撤回同意。"
     },
     "registration": {
         "agreement": "我同意<a href=\"/content/eula\" target=\"_blank\">合约条款</a>和<a href=\"%PRIVACY_LINK%\" target=\"_blank\">隐私政策</a>"
@@ -598,11 +662,20 @@
         "mySystemSearch": "我的",
         "offline": "系统处于离线状态",
         "offlineAlertRibbon": "系统离线。某些设置可能无法使用。",
-        "openClient": "在 %VMS_NAME% 中打开",
+        "openClient": "Open in %VMS_NAME%",
         "openClientNoSystem": "打开 %VMS_NAME%",
         "permissionsRemoved": "权限从 {{email}} 被刪除",
+        "settings": {
+            "sessionLimitDuration": {
+                "hours": "小时",
+                "minutes": "分"
+            },
+            "warningMessages": {
+                "videoEncryption": "加密视频通信量将显著增加 CPU 使用率。"
+            }
+        },
         "shareOffline": "离线时无法共享系统",
-        "shareUnauthorized": "You do not have permission to share this system",
+        "shareUnauthorized": "您没有共享此系统的权限",
         "successDeleted": "从您的帐户成功删除系统 {{systemName}}",
         "successDisconnected": "系统已成功从 %CLOUD_NAME%断线",
         "successRename": "保存的系统名称",
@@ -622,6 +695,7 @@
     },
     "testedVersionLabel": "测试 {{vmsName}} 版本：",
     "testedVersionsLabel": "测试 {{vmsName}} 版本：",
+    "topXByVolume": "以量排名 {{value}}：",
     "users": "用户",
     "you": "您"
 }

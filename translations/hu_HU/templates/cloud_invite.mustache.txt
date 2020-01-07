@@ -1,4 +1,4 @@
-Üdvözöljük
+Üdvözöljük!
 
 Meghívást kapott a %CLOUD_NAME%.
 {{#message.message}}

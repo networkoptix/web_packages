@@ -85,7 +85,7 @@ export class NxHealthService {
         }
 
         if (format === 'durationDh') {
-            time += `${timeValues.d}h`;
+            time += `${timeValues.h}h`;
         } else if (format === 'updateTime') {
             if (timeValues.h) {
                 time += `${timeValues.h}h `;
@@ -123,7 +123,7 @@ export class NxHealthService {
                 retValue = this.secondsToTime(retValue, format);
             } else if (['resource', 'thumbnail'].includes(format)) {
                 retValue = this.resourceNames[retValue] || retValue;
-            } else {
+            } else if (!['longText', 'shortText', 'text'].includes(format)) {
                 console.error(`Format not recognized: ${format}`);
                 retValue = roundInt(retValue);
                 retValue = `${retValue} ${format}`;
@@ -132,7 +132,12 @@ export class NxHealthService {
             retValue = roundInt(retValue);
         }
 
-        return {text: retValue, format: header.format || '', value};
+        return {
+            text: retValue,
+            format: header.format || '',
+            formatClass: this.CONFIG.healthMonitoring.classFormats[header.format] || 'no-format',
+            value
+        };
     }
 
     itemsSearch(values, filter) {

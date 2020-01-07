@@ -188,9 +188,8 @@ header {
                 }
     
                 & > span:first-child {
+                    @include ellipsis;
                     padding      : 0 rem(10px);
-                    display      : flex;
-                    align-items  : center;
                 }
             }
             

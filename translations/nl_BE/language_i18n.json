@@ -7,7 +7,7 @@
     "Account Settings": "Accountinstellingen",
     "Account is already activated or confirmation code is incorrect": "Account is al geactiveerd of de bevestigingscode is onjuist",
     "Account is created.": "Account is aangemaakt.",
-    "Account is successfully created.": "Account is succesvol aangemaakt.",
+    "Account is successfully created.": "Het account is succesvol aangemaakt.",
     "Account not activated": "Account is niet geactiveerd",
     "Account not found": "Account niet gevonden",
     "Activate your account": "Account activeren",
@@ -21,6 +21,8 @@
     "All Systems": "Alle systemen",
     "All cloud users will be deleted.": "Alle cloud gebruikers zullen worden verwijderd.",
     "All results": "Alle resultaten",
+    "Allow only secure connections": "Alleen beveiligde verbindingen toestaan",
+    "Allow system to optimize camera settings": "Laat het systeem toe om de camera-instellingen te optimaliseren",
     "Analytics": "Analytics",
     "Analytics Event": "Analytics evenement",
     "Analytics Events": "Analytics gebeurtenissen",
@@ -37,13 +39,14 @@
     "Change Password": "Wachtwoord wijzigen",
     "Checking...": "Controleer...",
     "Choose which properties should be visible to customers:": "Kies welke eigenschappen zichtbaar moeten zijn voor klanten:",
+    "Clear filters": "Filter wissen",
     "Close": "Sluiten",
     "Codec": "Codec",
     "Collapse": "Samenvouwen",
     "Confirmation message is sent to": "Bevestigingsbericht wordt verzonden naar",
     "Contact": "Contact",
     "Create Account": "Account aanmaken",
-    "Create account": "Accounts aanmaken",
+    "Create account": "Account aanmaken",
     "Current Password": "Huidig ​​wachtwoord",
     "Current password is required": "Huidig wachtwoord (verplicht)",
     "Depending of the size of the database it may take up to several hours.": "Afhankelijk van de grootte van de database kan dit enkele uren duren.",
@@ -62,8 +65,11 @@
     "Draft": "Concept",
     "Dual Streaming": "Dual Streaming",
     "Email": "E-mailadres",
-    "Email is required": "E-mail is verplicht",
+    "Email is required": "E-mail is vereist",
     "Embed": "Insluiten",
+    "Enable audit trail": "Audit trail inschakelen",
+    "Enable auto discovery of cameras and servers": "Schakel automatische detectie van camera's en servers in",
+    "Encrypt video traffic": "Versleutel videoverkeer",
     "Enter \"Public User\" credentials:": "Voer \"Publieke gebruiker\" referenties in:",
     "Enter password for your account to continue": "Voer het wachtwoord in voor uw account om door te gaan",
     "Enter password to continue.": "Voer uw wachtwoord in om door te gaan.",
@@ -84,16 +90,19 @@
     "I/O": "I/O",
     "In Review": "In behandeling",
     "In-Client Upgrade:": "In-client-upgrade:",
+    "Includes information about the System, such as camera modules, \n                            firmware versions, number of servers, etc. \n                            Does not include any personal information and is completely anonymous.": "Bevat informatie over het systeem, zoals cameramodules, \n                            firmwareversies, aantal servers, enz. \n                            Bevat geen persoonlijke informatie en is volledig anoniem.",
+    "Information": "Informatie",
     "Integrations": "Integraties",
     "Language": "Taal",
     "Last Name": "Achternaam",
     "Last name": "Achternaam",
     "Last name is required": "Achternaam is verplicht",
     "Latest version": "Meest recente versie",
+    "Limit session duration to": "Beperk sessiegeduur",
     "Log In": "Aanmelden",
     "Log Out": "Uitloggen",
     "Log in to %CLOUD_NAME%": "Meld u aan bij %CLOUD_NAME%",
-    "Merge Systems": "Systemen Samenvoegen",
+    "Merge Systems": "Systemen samenvoegen",
     "Merge current System with": "Huidig ​​systeem samenvoegen met",
     "Merge with Another System": "Samenvoegen met een ander systeem",
     "Message": "Bericht",
@@ -108,13 +117,14 @@
     "No unsaved changes": "Geen niet-opgeslagen wijzigingen",
     "Nothing Found": "Niets gevonden",
     "OK": "Oké",
-    "Ok": "Oké",
+    "Ok": "Ok",
+    "Only client-server video traffic can be encrypted.": "Alleen client-server videoverkeer kan worden gecodeerd.",
     "Other packages:": "Andere pakketten:",
     "Other releases, patches and beta versions": "Overige releases, patches en bètaversies",
     "Owner": "Eigenaar",
     "PTZ": "PTZ",
     "Page not found": "Pagina niet gevonden",
-    "Password": "Password",
+    "Password": "Wachtwoord",
     "Password is required": "Wachtwoord is vereist",
     "Password reset instructions are sent to Email": "Wachtwoordherstelinstructies zijn verzonden naar het volgende emailadres",
     "Password successfully saved": "Wachtwoord succesvol opgeslagen",
@@ -125,7 +135,7 @@
     "Privacy": "Privacy",
     "Release Notes": "Release Notes",
     "Release notes": "Versiewijzigingen",
-    "Remember me": "Onthoud mij",
+    "Remember me": "Onthoud mijn gegevens",
     "Remove User": "Gebruiker verwijderen",
     "Rename": "Naam wijzigen",
     "Requirements": "Vereisten",
@@ -134,18 +144,22 @@
     "Resolution(max)": "Resolutie(max)",
     "Save": "Opslaan",
     "Search in google": "Zoeken in google",
-    "Secondary Stream": "Secundair stream",
+    "Secondary Stream": "Secundaire Stream",
+    "Security": "Beveiliging",
     "Send": "Verzenden",
+    "Send anonymous usage and crash statistics to developers": "Stuur anonieme gebruiks- en crashstatistieken naar onze softwareontwikkelaars",
     "Send feedback about this device": "Stuur feedback over dit apparaat",
     "Set New Password": "Stel nieuw wachtwoord in",
     "Settings": "Instellingen",
     "Show All": "Toon alles",
     "Some of your servers don't support cloud System merge because of outdated software version.": "Sommige van uw servers ondersteunen geen cloud Systeem samenvoegen vanwege verouderde softwareversie.",
+    "Subject": "Onderwerp",
     "Support": "Ondersteuning",
     "Support E-mail": "Support Email",
     "Support URL": "Support URL",
     "Supported Devices": "Ondersteunde apparaten",
     "Supported IP Video Devices": "Ondersteunde IP-videoapparaten",
+    "System Settings": "Systeeminstellingen",
     "System name": "Systeemnaam",
     "System name is required": "Systeemnaam is vereist",
     "System will be accessible through local network with local administrator account.": "Systeem is toegankelijk via lokaal netwerk met het lokale beheerdersaccount.",
@@ -162,7 +176,7 @@
     "This device has reported to support some analytics events, but we don't have exact information about them.": "Dit apparaat heeft gemeld sommige analyse-evenementen te ondersteunen, maar we hebben geen exacte informatie daarover.",
     "To": "Aan",
     "Too many attempts. Try again in a minute.": "Te veel pogingen. Probeer het over een minuut nog eens.",
-    "Topic": "Onderwerp",
+    "Tracks and logs all user actions.": "Traceert en logt alle gebruikersacties.",
     "Until merge is finished you can log in to this system and watch video, but cannot change any settings.": "Tot het samenvoegen is voltooid, kunt u zich aanmelden bij dit systeem en video bekijken, maar kunt u geen instellingen wijzigen.",
     "Update them to the": "Bijwerken naar de",
     "Updated": "Bijgewerkt",
@@ -172,9 +186,9 @@
     "WHEN_MERGE_FINISHES": "Wanneer het samenvoegen is voltooid, worden alle gebruikers en camera's van dit systeem beschikbaar in systeem \"<strong>{{targetSystemName}}</strong>\" en zal het huidige systeem worden verwijderd.",
     "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.": "We raden u aan de nieuwste versies van Google Chrome of Mozilla Firefox te installeren, maar u kunt elke andere moderne webbrowser gebruiken.",
     "What's New?": "Wat is er nieuw?",
+    "When enabled, system will discover new cameras and servers. Also, \n                            it will automatically and persistently send discovery requests to \n                            cameras in order to get the camera's status update. \n                            Failover enabled on some servers ignore status check prohibition.": "Indien ingeschakeld, zal het systeem nieuwe camera's en servers ontdekken. Ook,, zal het automatisch en aanhoudend detectieaanvragen naar \n                            camera's sturen om de statusupdate van de camera te krijgen. \n                            Failover ingeschakeld op sommige servers negeert status check verbod.",
     "Works with:": "Werkt met:",
     "Wrong password": "Wachtwoord onjuist",
-    "You can merge only those cloud Systems, where you have the \"Owner\" permissions.": "U kunt alleen die cloudsystemen samenvoegen, waarbij u de machtigingen \"Eigenaar\" hebt.",
     "You can only merge Systems where you are the owner.": "Je kunt alleen systemen samenvoegen waarvan je eigenaar bent.",
     "You have registered in %CLOUD_NAME%": "U heeft zich geregistreerd voor %CLOUD_NAME%",
     "Your Email": "Uw e-mailadres",
@@ -197,7 +211,7 @@
         },
         "Live Viewer": {
             "description": "Kan alleen live video bekijken",
-            "label": "Live kijker"
+            "label": "Live Viewer"
         },
         "Owner": {
             "description": "Onbeperkt toegang, inclusief de mogelijkheid om systeem te delen en te verbinden / te verbreken vanuit de cloud",
@@ -229,7 +243,7 @@
         },
         "liveViewer": {
             "description": "Kan alleen live video bekijken",
-            "label": "Live kijker"
+            "label": "Live Viewer"
         },
         "owner": {
             "description": "Onbeperkt toegang, inclusief de mogelijkheid om systeem te delen en te verbinden / te verbreken vanuit de cloud",
@@ -255,7 +269,6 @@
         "setNewPassword": "Wachtwoord opslaan",
         "setNewPasswordLabel": "Nieuw wachtwoord"
     },
-    "andXMore": "... en nog {{value}} meer",
     "cameraFilters": {
         "H265": "H.265 Cameras",
         "IO": "I/O modules",
@@ -269,14 +282,71 @@
         "ptz": "PTZ camera's"
     },
     "clientProtocol": "%CLIENT_PROTOCOL%:",
+    "common": {
+        "cameraLinks": {
+            "copyActiveText": "gekopieerd naar het klembord",
+            "copyDefaultText": "kopiëren",
+            "copyToClipboard": "kopiëren naar klembord",
+            "highStream": "Hoge stroom",
+            "lowStream": "Lage stroom",
+            "transcoding": "Transcoding",
+            "unknown": "Onbekend"
+        },
+        "cameraStates": {
+            "error": "Fout",
+            "errorLoading": "Er is een fout opgetreden bij het laden van deze video.",
+            "flashOrWebmRequired": "Gelieve <a href='https://get.adobe.com/flashplayer/' target='_blank'> Adobe Flash</a> of <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> te installeren voor het afspelen van video's in Internet Explorer.",
+            "flashRequired": "Gelieve <a href='https://get.adobe.com/flashplayer/' target='_blank'> Adobe Flash</a> te installeren voor het afspelen van video's.",
+            "iOSVideoTooLarge": "iOS ondersteunt geen video die groter is dan FullHD (2MP: 1920x1080).",
+            "ieNoWebm": "Installeer alstublieft de <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> voor Internet Explorer.",
+            "ieWin10": "Gebruik alsjeblieft de browsers Microsoft Edge of Google Chrome.",
+            "noArmSupport": "Deze browser of dit apparaat ondersteunt geen videoweergave van ARM-gebaseerde servers.",
+            "noData": "Geen data",
+            "noFormat": "Deze browser ondersteunt het afspelen van videobeelden van deze camera niet.",
+            "offline": "Offline",
+            "ubuntuNX": "Deze browser ondersteunt geen video van ARM-gebaseerde servers. Gebruik alsjeblieft de Chromium-browser.",
+            "unauthorized": "Authentication required"
+        },
+        "chromeCastWarning": "Chromecast is arbeidsintensief en kan problemen veroorzaken op uw server.",
+        "resolution": {
+            "auto": "Automatisch",
+            "high": "Hoog",
+            "low": "Lage"
+        },
+        "searchCamPlaceholder": "Zoek",
+        "systemHasNoCameras": "GEEN CAMERA'S",
+        "systemNewVersion": "Uw systeem bijwerken",
+        "systemNewVersionMessage": "Uw huidige versie is niet compatibel met deze functie. Werk uw servers bij naar de nieuwste versie om deze functie te gebruiken.",
+        "systemNoAlerts": "Geen meldingen",
+        "systemNoAlertsMessage": "Uw systeem moet het goed doen!",
+        "systemOffline": "Systeem Offline",
+        "systemOfflineMessage": "Dit systeem is offline en is momenteel niet toegankelijk.",
+        "systemServerError": "Interne Server Fout",
+        "systemServerErrorMessage": "Er is een fout opgetreden. Probeer het later opnieuw. Er is een fout opgetreden, probeer het later opnieuw. Neem contact op met uw ondersteuningsteam als het probleem zich blijft voordoen.",
+        "systemUnreachable": "SYSTEEM NIET BEREIKBAAR",
+        "voiceCommands": {
+            "clear search": "zoekopdracht wissen",
+            "collapse all servers": "vouw alle servers samen",
+            "collapse server": "vouw server + [servernaam] samen",
+            "expand all servers": "vouw alle servers uit",
+            "expand server": "vouw server + [servernaam] uit",
+            "help": "help | show commands",
+            "live": "ga naar Live | live weergeven",
+            "pause": "pauze",
+            "play": "afspelen",
+            "search": "vind + [text for searchbar]",
+            "stop listening": "stoppen met luisteren",
+            "view": "bekijk + [camera naam]"
+        }
+    },
     "devices": "apparaten",
     "dialogs": {
         "cancelButton": "Annuleren",
-        "changeAccountLogged": "U bent al ingelogd met als {email}",
+        "changeAccountLogged": "U bent al ingelogd als {email}",
         "createNewAccount": "Creëer een nieuw account",
         "download": "Download %VMS_NAME%",
         "loggedFromOther": "U wordt met een ander account ingelogd",
-        "loginButton": "Inloggen",
+        "loginButton": "Log in",
         "loginTitle": "Meld u aan bij %CLOUD_NAME%",
         "logoutAuthorisedContinueButton": "Doorgaan",
         "logoutAuthorisedLogoutButton": "Uitloggen",
@@ -300,15 +370,15 @@
         "message": {
             "failedToSend": "Bericht kan niet worden verzonden.",
             "sent": "Bericht is verzonden.",
+            "subject": {
+                "integration_feedback": "Feedback voor integratie {{asset}}",
+                "ipvd_feedback_device": "Feedback over {{asset}}",
+                "ipvd_feedback_page": "Feedback voor camera's pagina",
+                "sales_inquiry": "Verkoopaanvraag voor {{asset}}",
+                "technical_inquiry": "Technische aanvraag voor {{asset}}"
+            },
             "title": {
                 "integration": "Neem contact op met {{companyName}}",
-                "ipvd_feedback_device": "Feedback over {{asset}}",
-                "ipvd_feedback_page": "Feedback voor camera's pagina"
-            },
-            "topic": {
-                "contact_sales": "Contacteer verkoop voor {{asset}}",
-                "contact_support": "Contacteer support voor {{asset}}",
-                "integration_feedback": "Feedback voor integratie {{asset}}",
                 "ipvd_feedback_device": "Feedback over {{asset}}",
                 "ipvd_feedback_page": "Feedback voor camera's pagina"
             }
@@ -352,8 +422,7 @@
             },
             "arm": {
                 "label": "ARM",
-                "shortLabel": "ARM",
-                "supported": "<a href='/content/arm'>ARM gebaseerde servers ondersteunen beleid</a>"
+                "shortLabel": "ARM"
             },
             "ios": {
                 "label": "iOS",
@@ -361,25 +430,20 @@
             },
             "linux": {
                 "label": "Ubuntu Linux",
-                "shortLabel": "Ubuntu",
-                "supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+                "shortLabel": "Ubuntu"
             },
             "mac": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "macos": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "sdk": {
                 "label": "SDK",
-                "shortLabel": "SDK",
-                "supported": "C ++ cross-platform SDK"
+                "shortLabel": "SDK"
             },
             "windows": {
-                "label": "Windows",
-                "supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+                "label": "Windows"
             }
         },
         "mobile": {
@@ -413,7 +477,7 @@
     },
     "errorCodes": {
         "DUPLICATE_MEDIASERVER_FOUND": "Sommige servers zijn aanwezig in beide systemen - in de geselecteerde en in de huidige. <br>Verwijder offline en incompatibele servers van elk systeem en probeer het opnieuw.",
-        "EmailAlreadyExists": "Dit e-mailadres is al geregistreerd",
+        "EmailAlreadyExists": "Dit Email is al geregistreerd",
         "FAIL": "Systeem <strong>{{failedSystem}}</strong> is momenteel niet bereikbaar.<br>Probeer het over een paar momenten opnieuw of neem contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">ondersteuning</a>.",
         "INCOMPATIBLE": "Systemen hebben verschillende softwareversies. Werk ze alstublieft bij naar de laatste <a href=\"/download\">build</a>.",
         "accountAlreadyActivated": "Deze account is al geactiveerd",
@@ -442,7 +506,7 @@
         "mergedSystemIsOffline": "Systeem <strong>{{failedSystem}}</strong> is offline.",
         "notAuthorized": "Wachtwoord onjuist",
         "notFound": "Niet gevonden",
-        "ok": "oke",
+        "ok": "ok",
         "oldPasswordMistmatch": "Dit wachtwoord is onjuist.",
         "oldSafariNotSupported": "Versies van Safari ouder dan versie 10 worden niet ondersteund",
         "passwordMismatch": "Wachtwoord onjuist",
@@ -460,7 +524,7 @@
         "Data Analytics": "Data Analyse",
         "Drone": "Drone",
         "Health Monitor": "Server monitor",
-        "Storage": "Opslagruimte",
+        "Storage": "Opslag",
         "backToEditText": "Terug naar de bewerkingsinterfaces",
         "myIntegrationsLabel": "Mijn",
         "previewRibbonText": "Deze pagina is een voorbeeld van de nieuwste wijzigingen en komt niet overeen met de openbaar beschikbare versie."
@@ -555,8 +619,8 @@
     "phoneNumberWithLabel": "Tel: {{number}}",
     "pleaseSelect": "Selecteer...",
     "privacyPolicy": {
-        "integration": "Door dit formulier in te dienen, ga je akkoord met contactering door {{INTEGRATION_COMPANY}} en/of %COMPANY_NAME%.\nJe vindt {{INTEGRATION_COMPANY}} privacybeleid <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">hier</a> en %COMPANY_NAME% privacybeleid <a href=\"%PRIVACY_LINK%\" target=\"blank\">hier</a> welke instructies bevat over hoe je toestemming kan intrekken.",
-        "ipvd": "Door dit formulier in te dienen, ga je akkoord met contactering door %COMPANY_NAME%.\nJe vindt %COMPANY_NAME% privacy beleid <a href=\"%PRIVACY_LINK%\" target=\"blank\">hier</a> welke instructies bevat over hoe je toestemming moet intrekken."
+        "integration": "Door dit formulier in te dienen, ga je akkoord met contactering door {{INTEGRATION_COMPANY}} en/of %COMPANY_NAME%.\nJe vindt {{INTEGRATION_COMPANY}} privacybeleid <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">hier</a> en %COMPANY_NAME% privacybeleid <a href=\"%PRIVACY_LINK%\" target=\"_blank\">hier</a> welke instructies bevat over hoe je toestemming kan intrekken.",
+        "ipvd": "Door dit formulier in te dienen, ga je akkoord met contactering door %COMPANY_NAME%.\nJe vindt %COMPANY_NAME% privacy beleid <a href=\"%PRIVACY_LINK%\" target=\"_blank\">hier</a> welke instructies bevat over hoe je toestemming moet intrekken."
     },
     "registration": {
         "agreement": "Ik ga akkoord met de <a href=\"/content/eula\" target=\"_blank\">algemene voorwaarden</a> en het<a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy beleid</a>"
@@ -594,15 +658,24 @@
         "mergeFailed": "Het samenvoegen van systemen is mislukt",
         "mergeStart": "Systemen zijn begonnen met het samenvoegen",
         "mergeSuccess": "Systeem samenvoegen voltooid",
-        "mergeSystemTitle": "Systemen Samenvoegen",
+        "mergeSystemTitle": "Systemen samenvoegen",
         "mySystemSearch": "IMeMyMine",
         "offline": "Systeem is offline",
         "offlineAlertRibbon": "Systeem is offline. Sommige instellingen zijn mogelijk niet beschikbaar.",
         "openClient": "Open in %VMS_NAME%",
         "openClientNoSystem": "Open %VMS_NAME%",
         "permissionsRemoved": "Machtigingen zijn verwijderd uit {{email}}",
+        "settings": {
+            "sessionLimitDuration": {
+                "hours": "uren",
+                "minutes": "minuten"
+            },
+            "warningMessages": {
+                "videoEncryption": "Versleuteling van videoverkeer zal het CPU-gebruik aanzienlijk verhogen."
+            }
+        },
         "shareOffline": "Kan het systeem niet delen terwijl het offline is",
-        "shareUnauthorized": "You do not have permission to share this system",
+        "shareUnauthorized": "U heeft geen toestemming om dit systeem te delen",
         "successDeleted": "Systeem {{systemName}} is succesvol verwijderd van uw account",
         "successDisconnected": "Systeem is met succes ontkoppeld van %CLOUD_NAME%",
         "successRename": "Systeemnaam opgeslagen",
@@ -622,6 +695,7 @@
     },
     "testedVersionLabel": "Getest op {{vmsName}} versie:",
     "testedVersionsLabel": "Getest op {{vmsName}} versies:",
+    "topXByVolume": "Top {{value}} per volume:",
     "users": "Gebruikers",
     "you": "u"
 }

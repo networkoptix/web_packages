@@ -18,9 +18,9 @@
 	"search": {
 		"Search": "Søk",
 		"search_ipvd": "Søk etter modell eller produsent",
-		"filter applied": "filter påført",
-		"filters applied": "filtre påført",
-		"Any": "Noen",
+		"filter applied": "filtrert visning",
+		"filters applied": "filtrert visning",
+		"Any": "Enhver",
 		"selected": "valgt",
 		"vendor": "Produsent",
 		"vendors": "Produsenter",
@@ -38,8 +38,8 @@
 		"IO": "I/O-moduler",
 		"multiSensor": "Multisensor kameraer",
 		"TwWayAudio": "2-veis lydenheter",
-		"audio": "Kameraer med lyd",
-		"encoder": "Enkodere",
+		"audio": "Kameraer med -veis lyd",
+		"encoder": "Enkoder",
 		"highRes": "Ekstra høyoppløselige kameraer"
 	},
 	"downloads": {
@@ -53,21 +53,17 @@
 		},
 		"groups": {
 			"windows": {
-				"label": "Windows",
-				"supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+				"label": "Vindu"
 			},
 			"mac": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"linux": {
 				"label": "Ubuntu Linux",
-				"shortLabel": "Ubuntu",
-				"supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+				"shortLabel": "Ubuntu"
 			},
 			"macos": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"ios": {
 				"label": "iOS",
@@ -79,13 +75,11 @@
 			},
 			"arm": {
 				"label": "ARM",
-				"shortLabel": "ARM",
-				"supported": "<a href='/content/arm'>ARM-baserte servere support policy</a>"
+				"shortLabel": "ARM"
 			},
 			"sdk": {
 				"label": "SDK",
-				"shortLabel": "SDK",
-				"supported": "C + + kryssplattform SDK"
+				"shortLabel": "SDK"
 			}
 		},
 		"platforms": {
@@ -112,12 +106,12 @@
 		},
 		"releasesTypes": {
 			"beta": "Beta",
-			"betas": "Betas",
-			"rc": "Release Candidate",
-			"release": "Release",
-			"releases": "Releases",
-			"patch": "Patch",
-			"patches": "Patches"
+			"betas": "Betaer",
+			"rc": "Utsendelseskandidater",
+			"release": "Utgivelse",
+			"releases": "Utgivelser",
+			"patch": "Fiks",
+			"patches": "Fikser"
 		}
 	},
 	"ipvd": {
@@ -204,7 +198,7 @@
 		"okButton": "OK",
 		"cancelButton": "Avbryt",
 		"createNewAccount": "Create New Account",
-		"changeAccountLogged": "You are already logged in with as {email}",
+		"changeAccountLogged": "You are already logged in as {email}",
 		"loggedFromOther": "You will be logged in with a different account",
 		"loginTitle": "Logg inn på %CLOUD_NAME%",
 		"loginButton": "Logg Inn",
@@ -218,11 +212,11 @@
 		"merge": {
 			"commonText": "Kunne ikke slå sammen systemer <strong>{{primarySystem}}</strong> og <strong>{{secondarySystem}}</strong>.",
 			"connectToCloud": "Koble System du vil slå sammen med denne til <strong>{{cloudName}}</strong> eller slå sammen lokalt ved hjelp av <strong>{{vmsName}}</strong> Klienten.",
-			"mergeConfirmation": "Du er i ferd med å slå sammen systemene <strong>{{primarySystem}}</strong> og <strong>{{secondarySystem}}</strong>. Innstillinger og navnet vil bli tatt fra <strong>{{primarySystem}}</strong>.",
+			"mergeConfirmation": "Du er i ferd med å slå sammen systemer <strong>{{primarySystem}}</strong> og <strong>{{secondarySystem}}</strong>. Innstillinger og navnet vil bli tatt fra <strong>{{primarySystem}}</strong>.",
 			"mergeFailedTitle": "Systemsammenslåing mislyktes",
 			"primaryCannotMerge": "System {{targetSystem}} har en nyere programvareversjon som ikke er kompatibel med gjeldende system. Oppdater det nåværende systemet til <a href=\"/download\" target=\"_blank\" translate>siste versjon</a> å slå det sammen med {{targetSystem}} systemet.",
-			"primarySystemOffline": "System {{primarySystem}} er frakoblet og kan ikke slås sammen med System {{targetSystem}}.",
-			"secondaryCannotMerge": "System {{targetSystem}} har en eldre programvareversjon som ikke er kompatibel med gjeldende system. Oppdater {{targetSystem}} til <a href=\"/download\" target=\"_blank\" translate>siste bygg</a> å slå dert sammen med det nåværende.",
+			"primarySystemOffline": "System {{primarySystem}} er offline og kan ikke slås sammen med System {{targetSystem}}.",
+			"secondaryCannotMerge": "System {{targetSystem}} har en eldre programvareversjon som ikke er kompatibel med gjeldende system. Oppdater {{targetSystem}} til <a href=\"/download\" target=\"_blank\" translate>siste build</a> å slå dert sammen med det nåværende.",
 			"systemOffline": "System {{targetSystem}} er frakoblet og kan ikke slås sammen med det nåværende.",
 			"systemUnavailable": "System {{targetSystem}} er for tiden ikke tilgjengelig. Prøv igjen om noen få minutter eller kontakt",
 			"recommendSupport": {
@@ -232,16 +226,16 @@
 			}
 		},
 		"message": {
-			"failedToSend": "Meldingen har ikke sendt.",
+			"failedToSend": "Meldingen ble ikke sendt.",
 			"sent": "Meldingen er sendt.",
 			"title": {
 				"integration": "Kom i kontakt med {{companyName}}",
 				"ipvd_feedback_page": "Tilbakemelding for kameraer-siden",
 				"ipvd_feedback_device": "Tilbakemelding for {{asset}}"
 			},
-			"topic": {
-				"contact_sales": "Kontakt salg for {{asset}}",
-				"contact_support": "Kontakt brukerstøtte for {{asset}}",
+			"subject": {
+				"sales_inquiry": "Salgsforespørsel for {{asset}}",
+				"technical_inquiry": "Technical inquiry for {{asset}}",
 				"integration_feedback": "Tilbakemelding for integrasjon {{asset}}",
 				"ipvd_feedback_page": "Tilbakemelding for kameraer-siden",
 				"ipvd_feedback_device": "Tilbakemelding for {{asset}}"
@@ -346,7 +340,16 @@
 		"permissionsRemoved": "Tillatelser ble fjernet fra {{email}}",
 		"unknownName": "Ukjent navn for system (forårsaket av cloud-sammenslåing)",
 		"shareOffline": "Cannot share system while it is offline",
-		"shareUnauthorized": "You do not have permission to share this system"
+		"shareUnauthorized": "You do not have permission to share this system",
+		"settings": {
+			"sessionLimitDuration": {
+				"hours": "timer",
+				"minutes": "minutter"
+			},
+			"warningMessages": {
+				"videoEncryption": "Kryptering av videotrafikk vil øke CPU-bruken betydelig."
+			}
+		}
 	},
 	"systemStatuses": {
 		"activated": "aktivert",
@@ -416,13 +419,70 @@
 		}
 	},
 	"privacyPolicy": {
-		"integration": "Ved å sende inn dette skjemaet samtykker du til å bli kontaktet av {{INTEGRATION_COMPANY}} og / eller %COMPANY_NAME%.\nDu vil finne {{INTEGRATION_COMPANY}} personvernregler <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">her</a> og %COMPANY_NAME% personvernregler <a href=\"%PRIVACY_LINK%\" target=\"blank\">her</a> som inkluderer instruksjoner om hvordan du kan trekke tilbake ditt samtykke.",
-		"ipvd": "Ved å sende inn dette skjemaet samtykker du i å bli kontaktet av %COMPANY_NAME%.\nDu vil finne %COMPANY_NAME% personvernregler <a href=\"%PRIVACY_LINK%\" target=\"blank\">her</a> som inkluderer instruksjoner om hvordan du kan trekke tilbake ditt samtykke."
+		"integration": "Ved å sende inn dette skjemaet samtykker du til å bli kontaktet av {{INTEGRATION_COMPANY}} og / eller %COMPANY_NAME%.\nDu vil finne {{INTEGRATION_COMPANY}} personvernregler <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">her</a> og %COMPANY_NAME% personvernregler <a href=\"%PRIVACY_LINK%\" target=\"_blank\">her</a> som inkluderer instruksjoner om hvordan du kan trekke tilbake ditt samtykke.",
+		"ipvd": "Ved å sende inn dette skjemaet samtykker du i å bli kontaktet av %COMPANY_NAME%.\nDu vil finne %COMPANY_NAME% personvernregler <a href=\"%PRIVACY_LINK%\" target=\"_blank\">her</a> som inkluderer instruksjoner om hvordan du kan trekke tilbake ditt samtykke."
+	},
+	"common": {
+		"cameraLinks": {
+			"highStream": "Høy kvalitet",
+			"lowStream": "Lav kvalitet",
+			"transcoding": "Transkoding",
+			"unknown": "Ukjent",
+			"copyToClipboard": "kopier til utklippstavle",
+			"copyDefaultText": "kopiere",
+			"copyActiveText": "kopiert til utklippstavlen"
+		},
+		"systemOffline": "System frakoblet",
+		"systemOfflineMessage": "This system is offline and cannot be accessed right now.",
+		"systemNoAlerts": "No Alerts",
+		"systemNoAlertsMessage": "Your system must be doing well!",
+		"systemServerError": "Intern server feil",
+		"systemServerErrorMessage": "An error occurred, please, try again later. An error occurred, please try again later. If the problem continues, please contact your support team.",
+		"systemNewVersion": "Update your system",
+		"systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
+		"systemHasNoCameras": "INGEN KAMERAER",
+		"systemUnreachable": "SYSTEMET ER UTILGJENGELIG",
+		"cameraStates": {
+			"offline": "Frakoblet",
+			"error": "Feil",
+			"errorLoading": "En feil oppstod under lasting av videoen.",
+			"unauthorized": "Autentisering kreves",
+			"noData": "Ingen opptak",
+			"iOSVideoTooLarge": "iOS støtter ikke video som er større enn fullHD (2MP: 1920x1080).",
+			"flashRequired": "Vennligst <a href='https://get.adobe.com/flashplayer/' target='_blank'>installer Adobe Flash</a> for å spille av videoer.",
+			"flashOrWebmRequired": "Vennligst <a href='https://get.adobe.com/flashplayer/' target='_blank'>installer Adobe Flash</a> eller<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> for å spille av video i Internet Explorer.",
+			"noArmSupport": "Denne nettleseren eller enheten støtter ikke videoavspilling fra ARM-baserte servere.",
+			"noFormat": "Denne nettleseren støtter ikke videoavspilling fra dette kameraet.",
+			"ieNoWebm": "Vennligst installer <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> for Internet Explorer.",
+			"ieWin10": "Vennligst bruk Microsoft Edge- eller Google Chrome-nettlesere.",
+			"ubuntuNX": "Denne nettleseren støtter ikke video fra ARM-baserte servere. Vennligst bruk Chromium-nettleseren i stedet."
+		},
+		"searchCamPlaceholder": "Søk",
+		"resolution": {
+			"auto": "Auto",
+			"high": "Høy",
+			"low": "Lav"
+		},
+		"chromeCastWarning": "Chromecast er ressursintensiv og kan forårsake problemer på serveren.",
+		"voiceCommands": {
+			"play": "spill av",
+			"pause": "pause",
+			"live": "go to live | show me live",
+			"view": "se + [kamera navn]",
+			"search": "find + [text for searchbar]",
+			"clear search": "nullstill søk",
+			"expand server": "utvider server + [servernavn]",
+			"collapse server": "collapse server + [server name]",
+			"expand all servers": "utvide alle servere",
+			"collapse all servers": "kollapse alle servere",
+			"stop listening": "slutt å lytte",
+			"help": "help | show commands"
+		}
 	},
 	"systemAdministration": "Systemadministrasjon",
 	"users": "Brukere",
-	"testedVersionLabel": "Testet på {{vmsName}} versjon:",
-	"testedVersionsLabel": "Testet på {{vmsName}} versjoner:",
+	"testedVersionLabel": "Tested with {{vmsName}} version:",
+	"testedVersionsLabel": "Tested with {{vmsName}} versions:",
 	"About %CLOUD_NAME%": "Om %CLOUD_NAME%",
 	"Download %VMS_NAME%": "Last ned %VMS_NAME%",
 	"Integrations": "Integrasjoner",

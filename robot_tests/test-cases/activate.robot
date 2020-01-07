@@ -20,11 +20,7 @@ Clear emails
 
 Restart
     Open Browser and go to URL    ${url}
-    Register Keyword To Run On Failure    NONE
-    ${status}    Run Keyword And Return Status    Validate Log Out
-    Register Keyword To Run On Failure    Failure Tasks
-    Run Keyword Unless    ${status}    Log Out
-    Go To    ${url}
+    Common Restart Logout    ${url}
 
 Open New Browser On Failure
     Close Browser
@@ -35,11 +31,10 @@ Register and Activate
     [tags]    email    C24211
     ${email}    Get Random Email    ${BASE EMAIL}
     Go To    ${url}/register
-    Title Should Be    ${REGISTER TITLE TEXT} ${PRODUCT_NAME}
+    # Title Should Be    ${REGISTER TITLE TEXT} ${PRODUCT_NAME}
     Register    'mark'    'hamill'    ${email}    ${password}
     Activate    ${email}
     Log In    ${email}    ${password}    button=${SUCCESS LOG IN BUTTON}
-    Validate Log In
 
 allows register, activate, login with user with cyrillic First and Last names and correct credentials
     [tags]    C41863
@@ -48,7 +43,6 @@ allows register, activate, login with user with cyrillic First and Last names an
     Register    ${CYRILLIC TEXT}    ${CYRILLIC TEXT}    ${email}    ${password}
     Activate    ${email}
     Log In    ${email}    ${password}    button=${SUCCESS LOG IN BUTTON}
-    Validate Log In
 
 allows register, activate, login with user with smiley First and Last names and correct credentials
     [tags]    C41863
@@ -57,7 +51,6 @@ allows register, activate, login with user with smiley First and Last names and 
     Register    ${SMILEY TEXT}    ${SMILEY TEXT}    ${email}    ${password}
     Activate    ${email}
     Log In    ${email}    ${password}    button=${SUCCESS LOG IN BUTTON}
-    Validate Log In
 
 allows register, activate, login with user with glyph First and Last names and correct credentials
     [tags]    C41863
@@ -66,7 +59,6 @@ allows register, activate, login with user with glyph First and Last names and c
     Register    ${GLYPH TEXT}    ${GLYPH TEXT}    ${email}    ${password}
     Activate    ${email}
     Log In    ${email}    ${password}    button=${SUCCESS LOG IN BUTTON}
-    Validate Log In
 
 allows register, activate, login with `~!@#$%^&*()_:\";\'{}[]+<>?,./ in First and Last name fields
     [tags]    C41863
@@ -75,7 +67,6 @@ allows register, activate, login with `~!@#$%^&*()_:\";\'{}[]+<>?,./ in First an
     Register    ${SYMBOL TEXT}    ${SYMBOL TEXT}    ${email}    ${password}
     Activate    ${email}
     Log In    ${email}    ${password}    button=${SUCCESS LOG IN BUTTON}
-    Validate Log In
 
 allows register, activate, login with +!#$%'*-/=?^_`{|}~ in email field
 #ampersand was removed from this test because imaplib could not handle it
@@ -84,7 +75,6 @@ allows register, activate, login with +!#$%'*-/=?^_`{|}~ in email field
     Register    mark    hamill    ${email}    ${password}
     Activate    ${email}
     Log In    ${email}    ${password}    button=${SUCCESS LOG IN BUTTON}
-    Validate Log In
 
 allows register, activate, login with with leading space in email
     [tags]    C41864
@@ -93,7 +83,6 @@ allows register, activate, login with with leading space in email
     Register    mark    hamill    ${SPACE}${email}    ${password}
     Activate    ${email}
     Log In    ${email}    ${password}    button=${SUCCESS LOG IN BUTTON}
-    Validate Log In
 
 allows register, activate, login with with trailing space in email
     [tags]    C41864
@@ -102,7 +91,6 @@ allows register, activate, login with with trailing space in email
     Register    mark    hamill    ${email}${SPACE}    ${password}
     Activate    ${email}
     Log In    ${email}    ${password}    button=${SUCCESS LOG IN BUTTON}
-    Validate Log In
 
 allows register, activate, login with pass!@#$%^&*()_-+=;:'"`~,./\|?[]{} password
     [tags]    C41861
@@ -111,7 +99,6 @@ allows register, activate, login with pass!@#$%^&*()_-+=;:'"`~,./\|?[]{} passwor
     Register    mark    hamill    ${email}    ${symbol password}
     Activate    ${email}
     Log In    ${email}    ${symbol password}    button=${SUCCESS LOG IN BUTTON}
-    Validate Log In
 
 allows register, activate, login with qweasd 123
     [tags]    C41862
@@ -120,7 +107,6 @@ allows register, activate, login with qweasd 123
     Register    mark    hamill    ${email}    ${BASE PASSWORD}
     Activate    ${email}
     Log In    ${email}    ${BASE PASSWORD}    button=${SUCCESS LOG IN BUTTON}
-    Validate Log In
 
 should show error if same link is used twice
     [tags]    email    C41566
@@ -140,7 +126,6 @@ should save user data to user account correctly
     Register    mark    hamill    ${email}    ${password}
     Activate    ${email}
     Log In    ${email}    ${password}    button=${SUCCESS LOG IN BUTTON}
-    Validate Log In
     Go To    ${url}/account
     Wait Until Textfield Contains    ${ACCOUNT FIRST NAME}    mark
     Wait Until Textfield Contains    ${ACCOUNT LAST NAME}    hamill
@@ -152,7 +137,6 @@ should allow to enter more than 255 symbols in First and Last names and cut it t
     Register    ${300CHARS}    ${300CHARS}    ${email}    ${password}
     Activate    ${email}
     Log In    ${email}    ${password}    button=${SUCCESS LOG IN BUTTON}
-    Validate Log In
     Go To    ${url}/account
     Wait Until Textfield Contains    ${ACCOUNT FIRST NAME}    ${255CHARS}
     Wait Until Textfield Contains    ${ACCOUNT LAST NAME}    ${255CHARS}
@@ -164,7 +148,6 @@ should trim leading and trailing spaces
     Register    ${SPACE}mark${SPACE}    ${SPACE}hamill${SPACE}    ${email}    ${password}
     Activate    ${email}
     Log In    ${email}    ${password}    button=${SUCCESS LOG IN BUTTON}
-    Validate Log In
     Go To    ${url}/account
     Wait Until Textfield Contains    ${ACCOUNT FIRST NAME}    mark
     Wait Until Textfield Contains    ${ACCOUNT LAST NAME}    hamill
@@ -176,7 +159,6 @@ should allow activation, if user is registered by link /register/?from=client
     Register    ${SPACE}mark${SPACE}    ${SPACE}hamill${SPACE}    ${email}    ${password}
     Activate    ${email}
     Log In    ${email}    ${password}    button=${SUCCESS LOG IN BUTTON}
-    Validate Log In
 
 should allow activation, if user is registered by link /register/?from=mobile
     [tags]    email
@@ -185,7 +167,6 @@ should allow activation, if user is registered by link /register/?from=mobile
     Register    ${SPACE}mark${SPACE}    ${SPACE}hamill${SPACE}    ${email}    ${password}
     Activate    ${email}
     Log In    ${email}    ${password}    button=${SUCCESS LOG IN BUTTON}
-    Validate Log In
 
 link works and suggests to log out user, if he was logged in, buttons operate correctly
     [tags]    email    C41564
@@ -200,22 +181,18 @@ link works and suggests to log out user, if he was logged in, buttons operate co
     Register    mark    hamill    ${email2}    ${password}
     ${link2}    Get Email Link    ${email2}    activate
     Log In    ${EMAIL OWNER}    ${password}
-    Validate Log In
     Go To    ${link1}
     Wait Until Page Contains Element    ${ACTIVATION SUCCESS}
     Wait Until Element Is Visible    ${LOGGED IN STAY LOGGED IN BUTTON}
     Click Button    ${LOGGED IN STAY LOGGED IN BUTTON}
-    Validate Log In
     Log Out
     Log In    ${email1}    ${password}
-    Validate Log In
     Go To    ${link2}
     Wait Until Page Contains Element    ${ACTIVATION SUCCESS}
     Wait Until Element Is Visible    ${LOGGED IN CANCEL BUTTON}
     Click Button    ${LOGGED IN CANCEL BUTTON}
     Validate Log Out
     Log In    ${email2}    ${password}
-    Validate Log In
 
 #This is identical to "redirects to /activate and shows non-activated
 #user message when not activated; Resend activation button sends email"
@@ -226,7 +203,7 @@ Logging in before activation shows resend email link and email can be sent again
     ${random email}    get random email    ${BASE EMAIL}
     Register    'mark'    'hamill'    ${random email}    ${BASE PASSWORD}
     Wait Until Element Is Visible    //h1[contains(@class,'process-success')]
-    Log In    ${random email}    ${BASE PASSWORD}
+    Log In    ${random email}    ${BASE PASSWORD}    validate=${False}
     Wait Until Element Is Visible    ${RESEND ACTIVATION LINK BUTTON}
     Validate Register Email Received    ${random email}
     Click Link    ${RESEND ACTIVATION LINK BUTTON}

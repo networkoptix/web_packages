@@ -1,6 +1,6 @@
 <div class="header">{{time}}</div>
 <div class="thumbnail-preview" [ngClass]="{mini: !isPrimary}">
-    <img *ngIf="state === 'Online' && url; else noLivePreview" [src]="url"
+    <img *ngIf="(state === 'Online' || state === 'Recording') && url; else noLivePreview" [src]="url"
          (load)="loaded.emit(true)" (error)="url=''; loaded.emit(true)"/>
     <ng-template #noLivePreview>
         <div *ngIf="isPrimary; else noMiniPreview" [ngSwitch]="state" class="hm-camera-preview">

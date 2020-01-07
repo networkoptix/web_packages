@@ -1,6 +1,6 @@
 <nx-pre-loader type="page" *ngIf="!pagedItems.length"></nx-pre-loader>
 
-<div class="scroll-wrapper"
+<div class="scroll-wrapper" #nxScrollWrapper
      [ngClass]="{'table-scroll-fixed':tableScrollFixed}"
      [style.width]="elementWidth">
 

@@ -1,6 +1,5 @@
 <div>
-    <svg-icon (click)="updateHealth.emit(true)"
+    <a class="btn-text pl-1" href="#" (click)="updateHealth.emit(true)"><svg-icon (click)="updateHealth.emit(true)"
               [src]="CONFIG.icons.dir + 'reload.svg'"
-              [svgStyle]="{'width.px': '20'}"></svg-icon>
-    <a class="pl-1" href="#" (click)="updateHealth.emit(true)">{{lastUpdate}}</a>
+              [svgStyle]="{'width.px': '20'}"></svg-icon>{{lastUpdate}}</a>
 </div>

@@ -2,7 +2,6 @@
 Resource          ../resource.robot
 Suite Setup       Open Browser and go to URL    ${url}
 Test Setup        Restart
-#Test Teardown     Run Keyword If Test Failed    Reset DB and Open New Browser On Failure
 Suite Teardown    Close All Browsers
 Force Tags        Threaded
 
@@ -14,12 +13,7 @@ ${other packages}    //div[contains(@class,"card-body")]//div[contains(@class, "
 
 *** Keywords ***
 Restart
-    Register Keyword To Run On Failure    NONE
-    ${status}    Run Keyword And Return Status    Validate Log In
-    Register Keyword To Run On Failure    Failure Tasks
-    Run Keyword If    ${status}    Log Out
-    Go To    ${url}
-    Validate Log Out
+    Common Restart Logout    ${url}
 
 Open New Browser On Failure
     Close Browser
@@ -59,14 +53,14 @@ Download link takes you to the /downloads page
     ${os}=   Get OS
     ${os}    Convert To Lowercase    ${os}
     Wait Until Location Is    ${url}/download/${os}
-    Run keyword and continue on failure    Title Should Be    ${DOWNLOAD TITLE TEXT} - ${PRODUCT_NAME}
+    # Run keyword and continue on failure    Title Should Be    ${DOWNLOAD TITLE TEXT} - ${PRODUCT_NAME}
 #    Wait Until Element Is Visible    ${LOG IN MODAL}
 
 Going to the downloads page anonymous asks for login and closing takes you back to home
     [tags]    C42069
     Wait Until Element Is Visible    ${DOWNLOAD LINK}
     Click Link    ${DOWNLOAD LINK}
-    Run keyword and continue on failure    Title Should Be    ${DOWNLOAD TITLE TEXT} - ${PRODUCT_NAME}
+    # Run keyword and continue on failure    Title Should Be    ${DOWNLOAD TITLE TEXT} - ${PRODUCT_NAME}
     Wait Until Element Is Visible    ${LOG IN CLOSE BUTTON}
     Click Button    ${LOG IN CLOSE BUTTON}
     Wait Until Location Is    ${url}/

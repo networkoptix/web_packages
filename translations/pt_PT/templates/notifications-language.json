@@ -1,6 +1,6 @@
 {
   "activate_account": {
-    "emailSubject": "Ative sua conta"
+    "emailSubject": "Activar a sua conta"
   },
   "cloud_invite": {
     "emailSubject": "You have been invited to %CLOUD_NAME%"
@@ -12,7 +12,7 @@
     "emailSubject": "Sales inquiry for {{message.asset}}"
   },
   "contact_support": {
-    "emailSubject": "Support request for {{message.asset}}"
+    "emailSubject": "Technical inquiry for {{message.asset}}"
   },
   "integration_feedback": {
     "emailSubject": "Feedback for {{message.asset}}"

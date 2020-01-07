@@ -124,7 +124,7 @@ export class NxActivateComponent implements OnInit {
         this.reactivating = (this.uriParam === 'reactivating');
         this.activationSuccess = (this.uriParam === 'activationSuccess');
 
-        if (!this.sessionStorage.get(this.uriParam)) {
+        if (this.uriParam !== 'activating' && !this.sessionStorage.get(this.uriParam)) {
             this.activationSuccess = false;
             this.accountService.redirectToHome();
 

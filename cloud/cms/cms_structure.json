@@ -664,9 +664,25 @@
             "advanced": true,
             "type": "object",
             "value": {
+              "arm": "<a href='/content/arm'>ARM based servers support policy</a>",
               "linux": "Ubuntu LTS: 16.04, 18.04",
               "macos": "OS X 10.13: \"High Sierra\", 10.14: “Mojave”, 10.15 “Catalina”.",
+              "sdk": "C++ cross platform SDK",
               "windows": "Windows 7, 8, 8.1, 10/Enterprise, 2008 R2, 2012, 2012 R2, 2016 v1607"
+            }
+          },
+          {
+            "label": "AppTypes per platform",
+            "name": "%APP_TYPES_FOR_PLATFORM%",
+            "description": "App Types for platforms.",
+            "advanced": true,
+            "type": "object",
+            "value": {
+              "arm": ["client", "server"],
+              "linux": ["bundle", "client", "server"],
+              "macos": ["client"],
+              "sdk": ["metadata_sdk", "storage_sdk", "video_source_sdk"],
+              "windows": ["bundle", "client", "server"]
             }
           },
           {
@@ -724,6 +740,15 @@
             "type": "check_box",
             "value": "false",
             "optional": false,
+            "advanced": true
+          },
+          {
+            "label": "Google Tag Manager ID",
+            "name": "%GOOGLE_TAG_MANAGER_ID%",
+            "description": "ID used for Google Analytics",
+            "type": "text",
+            "value": "",
+            "optional": true,
             "advanced": true
           }
         ]
@@ -1133,6 +1158,15 @@
                 }, {
                   "id": "storage",
                   "label": "Storage"
+                }, {
+                  "id": "free",
+                  "label": "Free"
+                }, {
+                  "id": "paid",
+                  "label": "Paid"
+                }, {
+                  "id": "trial",
+                  "label": "Trial"
                 }, {
                   "id": "other",
                   "label": "Other"

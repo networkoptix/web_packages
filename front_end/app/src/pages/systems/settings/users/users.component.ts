@@ -76,7 +76,6 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.LANG = this.language.getTranslations();
-        this.pageService.setPageTitle(this.LANG.pageTitles.systems);
 
         this.settingsService.share = this.route.snapshot.routeConfig.path === 'share';
 
@@ -94,6 +93,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             .pipe(filter(data => data !== undefined))
             .subscribe((system) => {
                 this.system = system;
+                this.pageService.setPageTitle(this.LANG.pageTitles.systemName.replace('{{systemName}}', this.system.info.name));
                 // Route guard did not worked :( ... so doing it the old way
                 if (!this.system.permissions || !this.system.permissions.editUsers) {
                     this.uriService.updateURI('systems/' + this.system.id, {});
@@ -153,6 +153,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
 
         this.dialogs.removeUser(this.system, user).then((result) => {
             if (result) {
+                this.applyService.reset();
                 delete this.locked[user.email];
                 this.uriService.updateURI(`systems/${this.system.id}/users/${this.nextUserId}`);
                 this.menuService.setDetailsSection(this.nextUserId);

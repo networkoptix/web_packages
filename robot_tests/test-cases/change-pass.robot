@@ -16,7 +16,6 @@ ${url}                 ${ENV}
 Open browser and set user language to current
     Open Browser and go to URL    ${url}
     Log In    ${email}    ${password}
-    Validate Log In
     sleep    3
     Log Out
 
@@ -33,24 +32,12 @@ Discard Changes and Log Out
     Click Button    ${DISCARD CHANGES BUTTON}
     Validate Log Out
 
-#Reset user password to base
-#    [arguments]    ${email}    ${current password}
-#    Wait Until Elements Are Visible    ${CURRENT PASSWORD INPUT}    ${NEW PASSWORD INPUT}
-#    Input Text    ${CURRENT PASSWORD INPUT}    ${current password}
-#    Input Text    ${NEW PASSWORD INPUT}    ${BASE PASSWORD}
-#    Click Button    ${CHANGE PASSWORD BUTTON}
-#    Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
-
 Reset user password to base
     [Arguments]    ${email}    ${current password}
     CLoudPortalAPI.Change Password    ${url}    ${email}    ${current password}    ${BASE PASSWORD}
 
 Restart
-    Register Keyword To Run On Failure    NONE
-    ${status}    Run Keyword And Return Status    Validate Log In
-    Register Keyword To Run On Failure    Failure Tasks
-    Run Keyword If    ${status}    Log Out
-    Go To    ${url}
+    Common Restart Logout    ${url}
 
 Clean up
     Register Keyword To Run On Failure    NONE
@@ -68,7 +55,7 @@ Reset DB and Open New Browser On Failure
 Can be accessed via dropdown or direct link
     [tags]    C41576
     Go To    ${url}/account/password
-    Log In    ${email}    ${password}    None
+    Log In    ${email}    ${password}    ${False}    button=None
     Validate Log In
     Wait Until Elements Are Visible    ${CURRENT PASSWORD INPUT}    ${NEW PASSWORD INPUT}
     Location Should Be    ${url}/account/password
@@ -98,7 +85,7 @@ password is actually changed, so login works with new password
     Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
     Log Out
     Go To    ${url}/account/password
-    Log In    ${email}    ${password}    None
+    Log In    ${email}    ${password}    button=None    validate=${False}
     Wait Until Element Is Visible    ${WRONG PASSWORD MESSAGE}
     CloudPortalAPI.Log In    ${url}    ${email}    ${ALT PASSWORD}
     Reset user password to base    ${email}    ${ALT PASSWORD}
@@ -112,7 +99,7 @@ password with symbols pass!@#$%^&*()_-+=;:'"`~,./\|?[]{} is valid
     Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
     Log Out
     Go To    ${url}/account/password
-    Log In    ${email}    ${password}    None
+    Log In    ${email}    ${password}    button=None    validate=${False}
     Wait Until Element Is Visible    ${WRONG PASSWORD MESSAGE}
     CloudPortalAPI.Log In    ${url}    ${email}    ${symbol password}
     Reset user password to base    ${email}    ${symbol password}
@@ -126,7 +113,7 @@ password with space in the middle is valid
     Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
     Log Out
     Go To    ${url}/account/password
-    Log In    ${email}    ${password}    None
+    Log In    ${email}    ${password}    button=None    validate=${False}
     Wait Until Element Is Visible    ${WRONG PASSWORD MESSAGE}
     CloudPortalAPI.Log In    ${url}    ${email}    ${space password}
     Reset user password to base    ${email}    ${space password}
@@ -138,6 +125,7 @@ more than 255 symbols can be entered in new password field and then are cut to 2
     Input Text    ${NEW PASSWORD INPUT}    ${300CHARS}
     Textfield Should Contain    ${CURRENT PASSWORD INPUT}    ${255CHARS}
     Textfield Should Contain    ${NEW PASSWORD INPUT}    ${255CHARS}
+    Click Button    ${CANCEL CHANGES BUTTON}
 
 pressing Enter key saves data
     Log In To Change Password Page
@@ -155,6 +143,7 @@ pressing Tab key moves focus to the next element
     Input Text    ${NEW PASSWORD INPUT}    ${password}
     Press Keys    ${NEW PASSWORD INPUT}    TAB
     Element Should Be Focused    ${CHANGE PASSWORD BUTTON}
+    Click Button    ${CANCEL CHANGES BUTTON}
 
 displays password masked, shows password and changes eye icon when clicked
     [tags]    C41576
@@ -179,14 +168,14 @@ Password can't be changed if current password is not provided or incorrect
     Input Text    ${NEW PASSWORD INPUT}    ${password}
     Click Button    ${CHANGE PASSWORD BUTTON}
     Input Text    ${CURRENT PASSWORD INPUT}    ${password}
-    Input Text    ${NEW PASSWORD INPUT}    ${EMPTY}
+    Delete All Text    ${NEW PASSWORD INPUT}
     Click Button    ${CHANGE PASSWORD BUTTON}
     Discard Changes and Log Out
     Go To  ${url}
     CloudPortalAPI.Log In    ${url}    ${email}    ${BASE PASSWORD}
-    
+
 should open change password page in anonymous state
     [tags]    anonymous
     Open page anonymously    ${url}/account/password    ${CHANGE PASSWORD TITLE TEXT} - ${PRODUCT_NAME}
-    Wait Until Element Is Visible    ${LOG IN MODAL} 
+    Wait Until Element Is Visible    ${LOG IN MODAL}
     Check Log In    button=None

@@ -53,21 +53,17 @@
 		},
 		"groups": {
 			"windows": {
-				"label": "Windows",
-				"supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+				"label": "Windows"
 			},
 			"mac": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"linux": {
 				"label": "Ubuntu Linux",
-				"shortLabel": "Ubuntu",
-				"supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+				"shortLabel": "Ubuntu"
 			},
 			"macos": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"ios": {
 				"label": "iOS",
@@ -79,13 +75,11 @@
 			},
 			"arm": {
 				"label": "ARM",
-				"shortLabel": "ARM",
-				"supported": "<a href='/content/arm'>ARM based servers support policy</a>"
+				"shortLabel": "ARM"
 			},
 			"sdk": {
 				"label": "SDK",
-				"shortLabel": "SDK",
-				"supported": "C ++: n cross platform SDK"
+				"shortLabel": "SDK"
 			}
 		},
 		"platforms": {
@@ -112,12 +106,12 @@
 		},
 		"releasesTypes": {
 			"beta": "Beta",
-			"betas": "Betas",
-			"rc": "Release Candidate",
-			"release": "Release",
-			"releases": "Releases",
-			"patch": "Patch",
-			"patches": "Patches"
+			"betas": "Beta-versioita",
+			"rc": "Julkaisuehdokkaat",
+			"release": "Julkaisu",
+			"releases": "Julkaisut",
+			"patch": "Korjaus",
+			"patches": "Korjaukset"
 		}
 	},
 	"ipvd": {
@@ -204,7 +198,7 @@
 		"okButton": "OK",
 		"cancelButton": "Peruuta",
 		"createNewAccount": "Create New Account",
-		"changeAccountLogged": "You are already logged in with as {email}",
+		"changeAccountLogged": "You are already logged in as {email}",
 		"loggedFromOther": "You will be logged in with a different account",
 		"loginTitle": "Kirjaudu sisään %CLOUD_NAME%",
 		"loginButton": "Kirjaudu sisään",
@@ -239,9 +233,9 @@
 				"ipvd_feedback_page": "Palaute kameran sivulle",
 				"ipvd_feedback_device": "Palaute{{asset}}"
 			},
-			"topic": {
-				"contact_sales": "Ota yhteyttä {{asset}} myyntiin",
-				"contact_support": "Pyydä tukea {{asset}}",
+			"subject": {
+				"sales_inquiry": "Myyntikysely {{asset}}",
+				"technical_inquiry": "Technical inquiry for {{asset}}",
 				"integration_feedback": "Palaute integraatiosta {{asset}}",
 				"ipvd_feedback_page": "Palaute kameran sivulle",
 				"ipvd_feedback_device": "Palaute{{asset}}"
@@ -312,7 +306,7 @@
 		"strongMessage": "Vahva salasana!",
 		"common": "liian yleinen",
 		"commonMessage": "Tämä salasana on maailman suosituimpia salasanoja",
-		"missingMessage": "Salasana tarvitaan"
+		"missingMessage": "Salasana on pakollinen"
 	},
 	"registration": {
 		"agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
@@ -346,7 +340,16 @@
 		"permissionsRemoved": "Käyttöoikeudet poistettiin {{email}}",
 		"unknownName": "Järjestelmän tuntematon nimi (pilviliitoksen aiheuttama)",
 		"shareOffline": "Cannot share system while it is offline",
-		"shareUnauthorized": "You do not have permission to share this system"
+		"shareUnauthorized": "You do not have permission to share this system",
+		"settings": {
+			"sessionLimitDuration": {
+				"hours": "tuntia",
+				"minutes": "minuuttia"
+			},
+			"warningMessages": {
+				"videoEncryption": "Videoliikenteen salaaminen lisää merkittävästi suorittimen käyttöä."
+			}
+		}
 	},
 	"systemStatuses": {
 		"activated": "aktivoitu",
@@ -396,7 +399,7 @@
 		},
 		"owner": {
 			"label": "Omistaja",
-			"description": "Rajoittamaton pääsy, mukaan lukien kyky jakaa ja yhdistää / irroittaa järjestelmää pilvestä"
+			"description": "Rajoittamaton pääsy, mukaan lukien oikeus jakaa ja yhdistää / irrottaa järjestelmä pilvestä"
 		},
 		"viewer": {
 			"label": "Katsoja",
@@ -404,25 +407,82 @@
 		},
 		"liveViewer": {
 			"label": "Reaaliaikainen katselu",
-			"description": "Voit katsella vain reaaliaikaista videota"
+			"description": "Voi katsella vain reaaliaikaista videota"
 		},
 		"advancedViewer": {
 			"label": "Edistyneempi katselu",
 			"description": "Voi katsella reaaliaikasta videota, selata arkistoa, määrittää kameroita, ohjata PTZ: tä jne"
 		},
 		"custom": {
-			"label": "Asiakassuhde",
+			"label": "Muokattu",
 			"description": "Käytä %VMS_NAME% Client -sovellusta mukautettujen käyttöoikeuksien määrittämiseen"
 		}
 	},
 	"privacyPolicy": {
-		"integration": "Lähettämällä tämän lomakkeen hyväksyt, että sinuun otetaan yhteyttä {{INTEGRATION_COMPANY}} ja / tai %COMPANY_NAME%.\nLöydät {{INTEGRATION_COMPANY}} tietosuojakäytäntöä <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">täältä</a> ja %COMPANY_NAME% tietosuojakäytäntöä <a href=\"%PRIVACY_LINK%\" target=\"blank\">täältä</a> jotka sisältävät ohjeet suostumuksen peruuttamiselle.",
-		"ipvd": "Lähettämällä tämän lomakkeen hyväksyt %COMPANY_NAME%.\nLöydät %COMPANY_NAME% tietosuojakäytäntö <a href=\"%PRIVACY_LINK%\" target=\"blank\">täällä</a>, joka sisältää ohjeita siitä, miten peruuttaa suostumuksesi."
+		"integration": "Lähettämällä tämän lomakkeen hyväksyt, että sinuun otetaan yhteyttä {{INTEGRATION_COMPANY}} ja / tai %COMPANY_NAME%.\nLöydät {{INTEGRATION_COMPANY}} tietosuojakäytäntöä <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">täältä</a> ja %COMPANY_NAME% tietosuojakäytäntöä <a href=\"%PRIVACY_LINK%\" target=\"_blank\">täältä</a> jotka sisältävät ohjeet suostumuksen peruuttamiselle.",
+		"ipvd": "Lähettämällä tämän lomakkeen hyväksyt %COMPANY_NAME%.\nLöydät %COMPANY_NAME% tietosuojakäytäntö <a href=\"%PRIVACY_LINK%\" target=\"_blank\">täällä</a>, joka sisältää ohjeita siitä, miten peruuttaa suostumuksesi."
+	},
+	"common": {
+		"cameraLinks": {
+			"highStream": "Korkea streami",
+			"lowStream": "Matala streami",
+			"transcoding": "Transkoodaus",
+			"unknown": "Tuntematon",
+			"copyToClipboard": "kopioi leikepöydälle",
+			"copyDefaultText": "kopio",
+			"copyActiveText": "kopioitu leikepöydälle"
+		},
+		"systemOffline": "Järjestelmä offline-tilassa",
+		"systemOfflineMessage": "This system is offline and cannot be accessed right now.",
+		"systemNoAlerts": "No Alerts",
+		"systemNoAlertsMessage": "Your system must be doing well!",
+		"systemServerError": "Sisäinen palvelinvirhe",
+		"systemServerErrorMessage": "An error occurred, please, try again later. An error occurred, please try again later. If the problem continues, please contact your support team.",
+		"systemNewVersion": "Update your system",
+		"systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
+		"systemHasNoCameras": "Ei kameroita",
+		"systemUnreachable": "JÄRJESTELMÄÄN EI SAADA YHTEYTTÄ",
+		"cameraStates": {
+			"offline": "Offline-tilassa",
+			"error": "Virhe",
+			"errorLoading": "An error occurred while loading this video.",
+			"unauthorized": "Tunnistus vaaditaan",
+			"noData": "Ei dataa",
+			"iOSVideoTooLarge": "iOS ei tue videota, joka on suurempi kuin fullHD (2MP: 1920x1080).",
+			"flashRequired": "Siirry<a href='https://get.adobe.com/flashplayer/' target='_blank'>Asenna Adobe Flash</a> videoiden toistamiseen.",
+			"flashOrWebmRequired": "Siirry <a href='https://get.adobe.com/flashplayer/' target='_blank'>Asenna Adobe Flash</a> tai<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM koodekin</a> videon toistamiseen Internet Explorer:ssa.",
+			"noArmSupport": "Tämä selain tai laite ei tue videotoistoa ARM-pohjaisista palvelimista.",
+			"noFormat": "Tämä selain ei tue videon toistoa tästä kamerasta.",
+			"ieNoWebm": "Asenna <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM-koodekki</a> Internet Exploreriin.",
+			"ieWin10": "Käytä Microsoft Edgen tai Google Chromen selaimia.",
+			"ubuntuNX": "Tämä selain ei tue ARM-pohjaisia palvelimia. Käytä sen sijaan Chromium-selainta."
+		},
+		"searchCamPlaceholder": "Etsi",
+		"resolution": {
+			"auto": "Automaattinen",
+			"high": "Korkea",
+			"low": "Matala"
+		},
+		"chromeCastWarning": "Chromecast on resursseja kuormittava ja saattaa aiheuttaa ongelmia palvelimellasi.",
+		"voiceCommands": {
+			"play": "toista",
+			"pause": "tauko",
+			"live": "siirry reaaliaikaiseen | näytä minulle reaaliaikainen kuva",
+			"view": "näkymä + [kameran nimi]",
+			"search": "etsi + [hakupalkin teksti]",
+			"clear search": "tyhjennä haku",
+			"expand server": "laajenna palvelin + [palvelimen nimi]",
+			"collapse server": "pienennä palvelin + [palvelimen nimi]",
+			"expand all servers": "laajenna kaikki palvelimet",
+			"collapse all servers": "kokoa kaikki palvelimet",
+			"stop listening": "lopeta kuuntelu",
+			"help": "apua | näytä komennot"
+		}
 	},
 	"systemAdministration": "Järjestelmän hallinta",
 	"users": "Käyttäjät",
-	"testedVersionLabel": "Testattu {{vmsName}} versiolla:",
-	"testedVersionsLabel": "Testattu {{vmsName}} versiolla:",
+	"testedVersionLabel": "Tested with {{vmsName}} version:",
+	"testedVersionsLabel": "Tested with {{vmsName}} versions:",
 	"About %CLOUD_NAME%": "Tietoja %CLOUD_NAME%",
 	"Download %VMS_NAME%": "Lataa %VMS_NAME%",
 	"Integrations": "Integraatiot",

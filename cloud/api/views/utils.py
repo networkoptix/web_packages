@@ -30,6 +30,7 @@ def get_cloud_capabilities_from_cache():
 def get_settings_from_cache():
     customization_cache = cloud_portal_customization_cache(settings.CUSTOMIZATION, 'config')
     return {
+        'appTypesForPlatform': customization_cache['app_types_for_platform'],
         'availableDownloadsPlatform': customization_cache['available_downloads_platform'],
         'cloudName': customization_cache['cloud_name'],
         'vmsName': customization_cache['vms_name'],
@@ -54,7 +55,8 @@ def get_settings_from_cache():
         'supportedHardwareTypes': customization_cache['supported_hardware_types'],
         'searchTags': customization_cache['search_tags'],
         'vendorsShown': customization_cache['vendors_shown'],
-        'pushConfig': customization_cache['push_config']
+        'pushConfig': customization_cache['push_config'],
+        'googleTagManagerId': customization_cache['google_tag_manager_id']
     }
 
 

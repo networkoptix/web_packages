@@ -64,7 +64,7 @@ Restart
 
 Open Change Password Dialog
     Open Browser and go to URL    ${url}/account/password
-    Log In    ${EMAIL OWNER}    ${BASE PASSWORD}    None
+    Log In    ${EMAIL OWNER}    ${BASE PASSWORD}    button=None
     Validate Log In
     Wait Until Element Is Not Visible    ${LOG IN MODAL}
     Wait Until Elements Are Visible
@@ -97,7 +97,7 @@ Check Old Password Outline
 #    ...    ${CURRENT PASSWORD INPUT}/parent::div/parent::div[contains(@class,'has-error')]
     ${class_attribute_value}=   Get Element Attribute     ${CURRENT PASSWORD INPUT}    class
     Should Contain    ${class_attribute_value}    invalid   touched
-    Page Should Contain    Current password is required
+    Page Should Contain    ${CURRENT PASSWORD IS REQUIRED TEXT}
     Element Should Be Visible    ${CURRENT PASSWORD IS REQUIRED}
 
 Check Old Password Alert

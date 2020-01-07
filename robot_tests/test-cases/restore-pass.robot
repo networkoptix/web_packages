@@ -12,11 +12,7 @@ ${url}         ${ENV}
 
 *** Keywords ***
 Restart
-    Register Keyword To Run On Failure    NONE
-    ${status}    Run Keyword And Return Status    Validate Log In
-    Register Keyword To Run On Failure    Failure Tasks
-    Run Keyword If    ${status}    Log Out
-    Go To    ${url}
+    Common Restart Logout    ${url}
 
 Open New Browser On Failure
     Close Browser
@@ -101,9 +97,9 @@ should set new password, login with new password
     Click Button    ${SAVE PASSWORD}
     Wait Until Elements Are Visible    ${RESET SUCCESS MESSAGE}    ${RESET SUCCESS LOG IN LINK}
     Click Link    ${RESET SUCCESS LOG IN LINK}
-    Log In    ${email}    ${password}    None
+    Log In    ${email}    ${password}    button=None    validate=${False}
     Wait Until Element Is Visible    ${WRONG PASSWORD MESSAGE}
-    Log In    ${email}    ${ALT PASSWORD}    None
+    Log In    ${email}    ${ALT PASSWORD}    button=None
     Validate Log In
 
 displays password masked, shows password and changes eye icon when clicked
@@ -171,7 +167,7 @@ should make not-activated user active by restoring password
     Click Button    ${SAVE PASSWORD}
     Wait Until Elements Are Visible    ${RESET SUCCESS MESSAGE}    ${RESET SUCCESS LOG IN LINK}
     Click Link    ${RESET SUCCESS LOG IN LINK}
-    Log In    ${email}    ${ALT PASSWORD}    None
+    Log In    ${email}    ${ALT PASSWORD}    button=None
     Validate Log In
 
 should allow logged in user visit restore password page
@@ -237,7 +233,7 @@ Check restore password email links, colors, cloud name, and open link in new tab
     Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
     ${email}    Wait For Email    recipient=${random email}    timeout=120    status=UNSEEN
     ${email text}    Get Email Body    ${email}
-    ${email text}    Decode Bytes To String    ${email text}    UTF-8
+    ${email text}    Decode Bytes To String    ${email text}    UTF-8    errors=ignore
     Check Email Button    ${email text}    ${ENV}    ${THEME COLOR}
     Check Email Cloud Name    ${email text}    ${PRODUCT NAME}
     Check Email Subject    ${email}    ${RESET PASSWORD EMAIL SUBJECT}    ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}

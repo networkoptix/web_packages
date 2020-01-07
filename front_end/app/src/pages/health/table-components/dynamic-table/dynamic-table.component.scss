@@ -15,9 +15,18 @@ nx-dynamic-table {
     height      : 2rem;
   }
   
+  .table-scroll-fixed {
+    position: fixed;
+    top: 48px + 16px; // header + padding
+  }
+  
   .nx-table-wrapper {
-    width: min-content;
     max-width: 100%;
+    width: fit-content;
+  
+    @include media-breakpoint-down(lg) {
+      width: auto;
+    }
     
     ::-webkit-scrollbar {
       width  : initial;
@@ -126,7 +135,7 @@ nx-dynamic-table {
         }
         
         th {
-          padding:  0 24px 0 0;
+          padding:  0 16px 0 0;
           color          : $dark9;
           font-family    : $font-family-medium;
           font-weight    : 500 !important;
@@ -172,6 +181,7 @@ nx-dynamic-table {
               right    : auto;
               position : relative;
               bottom   : 0;
+              min-width: 18px;
               width    : 18px;
               height   : 18px;
               margin-bottom: 8px;
@@ -227,7 +237,7 @@ nx-dynamic-table {
           }
           
           td {
-            padding     : 0 24px 0 0;
+            padding     : 0 16px 0 0;
             font-family : $font-family-regular;
             font-size   : $font-size-sm;
             color       : $dark9;
@@ -347,5 +357,28 @@ nx-dynamic-table {
   
   .test * {
     fill : limegreen;
+  }
+
+  .long-text {
+    width: 170px !important;
+  }
+  .percent {
+    max-width: 74px !important;
+  }
+  .short-text {
+    width: 74px !important;
+  }
+  .text {
+    width: 100px !important;
+  }
+  .volume-metric {
+    max-width: 74px !important;
+  }
+  .no-max-width {
+    max-width: unset !important;
+  }
+  .no-format {
+    width: 108px;
+    max-width: 108px;
   }
 }

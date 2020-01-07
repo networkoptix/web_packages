@@ -75,13 +75,11 @@
 			},
 			"arm": {
 				"label": "ARM",
-				"shortLabel": "ARM",
-				"supported": "<a href='/content/arm'>ARM based servers support policy</a>"
+				"shortLabel": "ARM"
 			},
 			"sdk": {
 				"label": "SDK",
-				"shortLabel": "SDK",
-				"supported": "C++ cross platform SDK"
+				"shortLabel": "SDK"
 			}
 		},
 		"platforms": {
@@ -171,25 +169,27 @@
 		"feedback": "Make sure you include your camera model and manufacturer..."
 	},
 	"pageTitles": {
-		"template": "{{title}} %CLOUD_NAME%",
+		"template": "{{title}} - %CLOUD_NAME%",
 		"default": "%CLOUD_NAME%",
+		"about": "About",
 		"registerSuccess": "Welcome to",
 		"register": "Create account in",
-		"changePassword": "Change password -",
-		"account": "Account settings -",
-		"systems": "Systems -",
-		"system": "System -",
-		"systemShare": "Share System -",
-		"activate": "Activate account -",
-		"activateSent": "Activate account -",
-		"activateSuccess": "Account activated -",
-		"activateCode": "Activate account -",
-		"restorePassword": "Reset password -",
-		"restorePasswordSuccess": "Password saved -",
-		"restorePasswordCode": "Reset password -",
-		"view": "View cameras - ",
+		"changePassword": "Change password",
+		"account": "Account settings",
+		"systems": "Systems",
+		"system": "System",
+		"systemName": "{{systemName}}",
+		"systemShare": "Share System",
+		"activate": "Activate account",
+		"activateSent": "Activate account",
+		"activateSuccess": "Account activated",
+		"activateCode": "Activate account",
+		"restorePassword": "Reset password",
+		"restorePasswordSuccess": "Password saved",
+		"restorePasswordCode": "Reset password",
+		"view": "View cameras",
 		"debug": "Debug",
-		"login": "Log in -",
+		"login": "Log in",
 		"download": "Download %VMS_NAME%",
 		"downloadPlatform": "Download %VMS_NAME% for ",
 		"pageNotFound": "Page not found",
@@ -200,7 +200,7 @@
 		"okButton": "OK",
 		"cancelButton": "Cancel",
 		"createNewAccount": "Create New Account",
-		"changeAccountLogged": "You are already logged in with as {email}",
+		"changeAccountLogged": "You are already logged in as {email}",
 		"loggedFromOther": "You will be logged in with a different account",
 		"loginTitle": "Log in to %CLOUD_NAME%",
 		"loginButton": "Log in",
@@ -225,7 +225,8 @@
 				"a_recommend": "We'd recommend consulting with",
 				"b_support": "support",
 				"c_proceeding": "before proceeding."
-			}
+			},
+			"warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged System."
 		},
 		"message": {
 			"failedToSend": "Message has failed to send.",
@@ -236,8 +237,8 @@
 				"ipvd_feedback_device": "Feedback about {{asset}}"
 			},
 			"subject": {
-				"contact_sales": "Contact sales for {{asset}}",
-				"contact_support": "Contact support for {{asset}}",
+				"sales_inquiry": "Sales inquiry for {{asset}}",
+				"technical_inquiry": "Technical inquiry for {{asset}}",
 				"integration_feedback": "Feedback for integration {{asset}}",
 				"ipvd_feedback_page": "Feedback for cameras page",
 				"ipvd_feedback_device": "Feedback about {{asset}}"
@@ -349,7 +350,7 @@
 				"minutes": "minutes"
 			},
 			"warningMessages": {
-				"videoEncryption": "Encrypting video traffic will significantly increase SPU usage."
+				"videoEncryption": "Encrypting video traffic will significantly increase CPU usage."
 			}
 		}
 	},
@@ -518,5 +519,7 @@
 	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "You have no Systems connected to %CLOUD_NAME%",
 	"NO_SYSTEMS_LOGIN": "Log in to your System using %VMS_NAME%",
 	"NO_SYSTEMS_GOTO_ADMINISTRATION": "Go to the \"Cloud\" tab in the \"System Administration\" dialog",
-	"NO_SYSTEMS_CONNECT_SYSTEM": "Press \"Connect System to %CLOUD_NAME%\""
+	"NO_SYSTEMS_CONNECT_SYSTEM": "Press \"Connect System to %CLOUD_NAME%\"",
+	"topXByVolume": "Top {{value}} by volume:",
+	"phoneNumberWithLabel": "Tel: {{number}}"
 }

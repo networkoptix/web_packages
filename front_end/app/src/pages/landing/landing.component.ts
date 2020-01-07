@@ -6,7 +6,6 @@ import { NxDialogsService }          from '../../dialogs/dialogs.service';
 import { NxAccountService }          from '../../services/account.service';
 import { NxPageService }             from '../../services/page.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxSessionService }          from '../../services/session.service';
 import { LocalStorageService }       from 'ngx-store';
 
 @Component({
@@ -43,8 +42,10 @@ export class NxLandingComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        this.pageService.setPageTitle(this.LANG.pageTitles.default);
         if (this.router.url === '/content/about') {
             this.loaded = true;
+            this.pageService.setPageTitle(this.LANG.pageTitles.about, true);
         } else {
             this.accountService
                 .get()
@@ -61,7 +62,6 @@ export class NxLandingComponent implements OnInit, OnDestroy {
                             this.pageService.setPageTitle(this.LANG.pageTitles.login);
                         } else {
                             this.loaded = true;
-                            this.pageService.setPageTitle(this.LANG.pageTitles.default);
                         }
                     }
                 }).catch(() => {

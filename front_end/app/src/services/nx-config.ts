@@ -17,7 +17,6 @@ export class NxConfigService {
 
         this.config = {
             gatewayUrl    : '/gateway',
-            googleTagsCode: 'GTM-5MRNWP',
             apiBase       : '/api',
             realm         : 'VMS',
             cacamerasUrl  : 'https://cameras.networkoptix.com/api/v1/cacameras/',
@@ -186,8 +185,16 @@ export class NxConfigService {
                     sdk    : {
                         name    : 'sdk',
                         os      : '',
-                        appTypes: []
+                        appTypes: ['universal']
                     }
+                },
+                platformMatch: {
+                    unix: 'Linux',
+                    linux: 'Linux',
+                    mac: 'MacOS',
+                    windows: 'Windows',
+                    arm: 'ARM',
+                    skd: 'SDK'
                 }
             },
             icons                         : {
@@ -228,7 +235,7 @@ export class NxConfigService {
                 skipFramesRenderingTimeline: true
             },
             messageSubjects                : {
-                integration         : ['contact_sales', 'contact_support', 'integration_feedback'],
+                integration         : ['sales_inquiry', 'technical_inquiry', 'integration_feedback'],
                 ipvd_feedback_page  : ['ipvd_feedback_page'],
                 ipvd_feedback_device: ['ipvd_feedback_device']
             },
@@ -370,6 +377,25 @@ export class NxConfigService {
                     'MPix/s': {multiplier: 1 / 1000 ** 2},
                     'KPix/s': {multiplier: 1 / 1000},
                     'Tr/s': {multiplier: 1},
+                },
+                classFormats: {
+                    'resource': 'long-text',
+                    'longText': 'long-text',
+                    'shortText': 'short-text',
+                    'text': 'text',
+                    'number': '',
+                    'GB': 'volume-metric',
+                    'KB': 'volume-metric',
+                    'MB': 'volume-metric',
+                    'TB': 'volume-metric',
+                    '%': 'percent',
+                    'Mpix/s': '',
+                    'MB/s': '',
+                    'Mbit/s': '',
+                    'KB/s': '',
+                    'Kbit/s': '',
+                    'Tr/s': '',
+                    'unset': 'no-max-width'
                 }
             },
             myIntegrationTagId            : 'mine',

@@ -1,4 +1,4 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Location }                             from '@angular/common';
 import { ActivatedRoute, Router }               from '@angular/router';
 import { NxConfigService }                      from '../../../services/nx-config';
@@ -31,7 +31,6 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
     openClient: any;
     systems: any;
     filteredSystems: any;
-    systemSelected: any;
     userEmail: string;
     searchChanged = new Subject();
     private searchSubscription: Subscription;

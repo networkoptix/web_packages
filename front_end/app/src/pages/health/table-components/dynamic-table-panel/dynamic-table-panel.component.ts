@@ -1,9 +1,9 @@
 import {
-    Component, EventEmitter, Input, OnChanges,
-    Output, SimpleChanges
-}                          from '@angular/core';
-import { NxConfigService } from '../../../../services/nx-config';
-import { NxHealthService } from '../../health.service';
+    Component, ElementRef, EventEmitter, Input, OnChanges,
+    Output, SimpleChanges, ViewChild
+}                                   from '@angular/core';
+import { NxConfigService }          from '../../../../services/nx-config';
+import { NxHealthService }          from '../../health.service';
 
 @Component({
     selector   : 'nx-dynamic-table-panel-component',
@@ -20,8 +20,20 @@ export class NxDynamicTablePanelComponent implements OnChanges {
     CONFIG: any = {};
     name: string;
 
+    windowSize: any = {};
+    windowScroll: any;
+    clientHeight: number;
+    offsetHeight: number;
+    scrollHeight: number;
+    viewScrollFixedTop: boolean;
+    viewScrollFixedBottom: boolean;
+    elementWidth: any;
+
+    @ViewChild('nxPanelView', { static: false }) nxPanelView: ElementRef;
+
     constructor(private configService: NxConfigService,
-                private healthService: NxHealthService) {
+                private healthService: NxHealthService,
+    ) {
         this.CONFIG = this.configService.getConfig();
     }
 

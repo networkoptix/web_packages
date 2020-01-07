@@ -14,8 +14,9 @@ import { NxRibbonService }           from './src/components/ribbon/ribbon.servic
 import { NxAppStateService }         from './src/services/nx-app-state.service';
 import { fromEvent, Subscription } from 'rxjs';
 import 'rxjs-compat/add/observable/fromEvent';
-import { NxScrollMechanicsService }  from './src/services/scroll-mechanics.service';
+import { NxScrollMechanicsService } from './src/services/scroll-mechanics.service';
 import { NxUriService } from './src/services/uri.service';
+import { NxPageService } from './src/services/page.service';
 
 @Component({
     selector: 'nx-app',
@@ -38,6 +39,7 @@ import { NxUriService } from './src/services/uri.service';
 
 export class AppComponent {
     CONFIG: any;
+    LANG: any;
     deviceInfo: any;
     allowedDevices: {};
     hlsIsSupported: boolean;
@@ -48,7 +50,6 @@ export class AppComponent {
     constructor(private cookieService: CookieService,
                 private deviceService: DeviceDetectorService,
                 private location: Location,
-                private titleService: Title,
                 private config: NxConfigService,
                 private language: NxLanguageProviderService,
                 private applyService: NxApplyService,
@@ -58,7 +59,9 @@ export class AppComponent {
                 private router: Router,
                 private ribbonService: NxRibbonService,
                 private uriService: NxUriService,
-                @Inject(WINDOW) private window: Window) {
+                private pageService: NxPageService,
+                @Inject(WINDOW) private window: Window,
+    ) {
 
         this.CONFIG = this.config.getConfig();
 
@@ -120,6 +123,10 @@ export class AppComponent {
 
         // @ts-ignore
         this.language.setTranslations(window.LANG.ajs.language, window.LANG.i18n);
+        this.LANG = this.language.getTranslations();
+        this.pageService.setLanguage(this.LANG); // during the init of the service LANG is undefined
+        // @ts-ignore
+        this.pageService.setPageTitle(this.LANG.pageTitles.default);
 
         // extend CONFIG ... arghhh ugly // @ts-ignore ... no implementation for // @ts-ignore-start/end
         // @ts-ignore
@@ -162,6 +169,17 @@ export class AppComponent {
         this.CONFIG.ipvd.searchTags = window.SETTINGS.searchTags;
         // @ts-ignore
         this.CONFIG.testedOperatingSystems = window.SETTINGS.testedOperatingSystems;
+        // @ts-ignore
+        this.CONFIG.googleTagManagerId = window.SETTINGS.googleTagManagerId;
+        // @ts-ignore
+        if (window.SETTINGS.appTypesForPlatform) {
+            // @ts-ignore
+            Object.entries(window.SETTINGS.appTypesForPlatform).forEach(([platform, appTypes]: [string, any]) => {
+                if (platform in this.CONFIG.downloads.groups && appTypes) {
+                    this.CONFIG.downloads.groups[platform].appTypes = appTypes;
+                }
+            });
+        }
         // @ts-ignore
         this.CONFIG.ipvd.vendorsShown = parseInt(window.SETTINGS.vendorsShown);
         // @ts-ignore
@@ -214,9 +232,5 @@ export class AppComponent {
             window.history.go(1);
             this.applyService.showDialog().catch(() => {});
         }
-    }
-
-    public setTitle(newTitle: string) {
-        this.titleService.setTitle(newTitle);
     }
 }
