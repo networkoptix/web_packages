@@ -107,18 +107,26 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                 if (typeof account !== 'undefined') {
                     this.account = account;
                     this.system = this.systemService.createSystem(account.email, systemId);
-                    this.healthService.system = this.system;
                     this.menu.base = `${this.CONFIG.systemMenu.baseUrl}${this.system.id}${this.CONFIG.systemHealthMenu.baseUrl}`;
                     infoPromise = this.system.getInfo();
                 } else {
                     // Create a mock system. All we need is the mediaserver.
-                    this.system = {id: '', mediaserver: undefined};
+                    this.system = {
+                        id: '',
+                        info: {
+                            capabilities: {
+                                mediaserver_metrics: true
+                            }
+                        },
+                        mediaserver: undefined
+                    };
                     this.system.mediaserver = this.serverApi.createConnection(
                         undefined, undefined,
                         undefined, () => {}
                     );
                     this.menu.base = '/health';
                 }
+                this.healthService.system = this.system;
                 infoPromise.then(() => {
                     this.systemReady = true;
                     this.system.mediaserver.getAggregateHealthReport()
