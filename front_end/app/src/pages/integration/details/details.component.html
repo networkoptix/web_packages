@@ -12,10 +12,10 @@
                 <header>
                     <div *ngIf="plugin.information" class="title">{{plugin.information.name}}</div>
                     <div class="minor-text d-flex justify-content-between">
-                        <div *ngIf="plugin.versionDetails"
+                        <div *ngIf="plugin.versionDetails" name="version"
                              [innerHTML]="plugin.versionDetails.version">
                         </div>
-                        <div *ngIf="plugin.lastModified">
+                        <div *ngIf="plugin.lastModified" name="updateDate">
                             <span translate>Updated</span>&nbsp;<span>{{plugin.lastModified}}</span>
                         </div>
                     </div>
@@ -28,19 +28,19 @@
 
             <div *ngIf="plugin.information" class="mt-3 clearfix">
                 <div>
-                    <label class="group-label mb-1" translate>Tags</label>
+                    <label class="group-label mb-1" name="tag" translate>Tags</label>
                 </div>
                 <h3 class="float-left m-0 mt-1 mr-1" *ngIf="plugin.pending">
-                    <nx-tag type="danger" size="large" translate>In Review</nx-tag>
+                    <nx-tag type="danger" size="large" name="tag" translate>In Review</nx-tag>
                 </h3>
                 <h3 class="float-left m-0 mt-1 mr-1" *ngIf="plugin.draft">
-                    <nx-tag type="danger" size="large" translate>Draft</nx-tag>
+                    <nx-tag type="danger" size="large" name="tag" translate>Draft</nx-tag>
                 </h3>
                 <h3 class="float-left m-0 mt-1 mr-1" *ngFor="let type of plugin.information.type">
-                    <nx-tag size="large" *ngIf="type.id != 'mine'">{{type.label}}</nx-tag>
+                    <nx-tag size="large" name="tag" *ngIf="type.id != 'mine'">{{type.label}}</nx-tag>
                 </h3>
                 <h3 class="float-left m-0 mt-1 mr-1" *ngIf="plugin.mine">
-                    <nx-tag type="brand" size="large" translate>Mine</nx-tag>
+                    <nx-tag type="brand" size="large" name="tag" translate>Mine</nx-tag>
                 </h3>
             </div>
 
@@ -53,16 +53,16 @@
                 </div>
             </div>
 
-            <div class="mt-3 clearfix" *ngIf="plugin.information">
+            <div class="mt-3 clearfix" *ngIf="plugin.information" name="information">
                 <div>
                     <label class="group-label" translate>Developer</label>
                 </div>
                 <div *ngIf="plugin.information.companyName && plugin.information.companyWeb">
-                    <a [href]="plugin.information.companyWeb"
+                    <a [href]="plugin.information.companyWeb" name="companyName"
                        target="_blank">{{plugin.information.companyName}}</a>
                 </div>
                 <div *ngIf="plugin.information.termsOfUseLink">
-                    <a [href]="plugin.information.termsOfUseLink"
+                    <a [href]="plugin.information.termsOfUseLink" name="termsOfUseLink"
                        target="_blank" translate>Terms of Use</a>
                 </div>
             </div>
