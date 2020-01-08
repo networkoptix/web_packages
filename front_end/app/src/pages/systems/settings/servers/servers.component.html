@@ -38,14 +38,14 @@
                         <button 
                             class="btn btn-default mr-2"
                             (click)="renameServer()"
-                            [disabled]="renameDisabled"
+                            [disabled]="renameDisabled || !system.currentServerNotBusy"
                         >
                             <span class="ellipsis" translate>Rename</span>
                         </button>
                         <button 
                             class="btn btn-default"
                             (click)="restartServer()"
-                            [disabled]="restartDisabled"
+                            [disabled]="restartDisabled || !system.currentServerNotBusy"
                         >
                             <span class="ellipsis" translate>Restart</span>
                         </button>
@@ -82,7 +82,7 @@
                         [(ngModel)]="ipPortWatcher.value"
                         (keydown)="storePreviousValue($event)"
                         (keyup)="validationCheckForInput()"
-                        [disabled]="portChangeDisabled"
+                        [disabled]="portChangeDisabled || !system.currentServerNotBusy"
                         (change)="onPortChange()"
                     >
                 </div>
