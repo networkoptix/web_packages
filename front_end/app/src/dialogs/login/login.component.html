@@ -23,7 +23,7 @@
             </div>
             <div *ngIf="login_email.invalid && login_email.errors.not_activated" class="clearfix">
                 <div class="input-error float-left" translate>Account not activated</div>
-                <a class="float-right" href (click)="resendActivation(login_email.value)" translate>Resend activation email</a>
+                <a class="float-right" href (click)="resendActivation(login_email.value); false;" translate>Resend activation email</a>
             </div>
         </div>
         <div class="form-group">
@@ -64,6 +64,6 @@
                            [process]="login">
         </nx-process-button>
 
-        <a href="/restore_password" (click)="activeModal.close()" translate>Forgot password?</a>
+        <a routerLink="/restore_password" (click)="activeModal.close()" translate>Forgot password?</a>
     </div>
 </form>

@@ -1,13 +1,13 @@
-import { Component, OnDestroy, OnInit }  from '@angular/core';
-import { Location }           from '@angular/common';
-import { IntegrationService } from './integration.service';
-import { NxUriService }       from '../../services/uri.service';
-import { NxConfigService }    from '../../services/nx-config';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { Subscription } from 'rxjs';
-import { NxAccountService } from '../../services/account.service';
-import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
-import { NxPageService } from '../../services/page.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router }                       from '@angular/router';
+import { Subscription }                 from 'rxjs';
+import { AutoUnsubscribe }              from 'ngx-auto-unsubscribe';
+import { IntegrationService }           from './integration.service';
+import { NxUriService }                 from '../../services/uri.service';
+import { NxConfigService }              from '../../services/nx-config';
+import { NxLanguageProviderService }    from '../../services/nx-language-provider';
+import { NxAccountService }             from '../../services/account.service';
+import { NxPageService }                from '../../services/page.service';
 
 @AutoUnsubscribe()
 @Component({
@@ -27,7 +27,6 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
 
     private integrationSubscription: Subscription;
     private uriSubscription: Subscription;
-    location: any;
     params: any;
     account: any;
 
@@ -57,8 +56,8 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
                 private language: NxLanguageProviderService,
                 private pageService: NxPageService,
                 private accountService: NxAccountService,
-                location: Location) {
-        this.location = location;
+                private router: Router,
+    ) {
         this.setupDefaults();
     }
     ngOnDestroy() {}
@@ -84,7 +83,7 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
                     .subscribe((result: any) => {
                         if (result) {
                             if (!this.CONFIG.integrationStoreEnabled && !(account && account.is_staff)) {
-                                this.location.go('404');
+                                this.router.navigate([this.CONFIG.redirect404]);
                             } else {
                                 this.allElements = result;
                                 this.setTags();
@@ -95,7 +94,7 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
                         }
                     }, error => {
                         console.error('Integration plugins error -> ', error);
-                        this.location.go('404');
+                        this.router.navigate([this.CONFIG.redirect404]);
                     });
             });
     }

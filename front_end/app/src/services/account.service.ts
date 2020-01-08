@@ -187,7 +187,7 @@ export class NxAccountService implements OnDestroy {
                             });
                         })
                         .catch(() => {
-                            this.location.path(this.CONFIG.redirectUnauthorised);
+                            this.router.navigate([this.CONFIG.redirectUnauthorised]);
                         }).finally(() => {
                             this.loginDialogActive = false;
                         });
@@ -281,7 +281,7 @@ export class NxAccountService implements OnDestroy {
                 return this.dialogs
                     .login(this, true, true)
                     .catch(() => {
-                        this.location.path(this.CONFIG.redirectUnauthorised);
+                        this.router.navigate([this.CONFIG.redirectUnauthorised]);
                     });
             });
     }

@@ -16,20 +16,20 @@
                 </ul>
 
                 <div class="navbar-header">
-                    <a class="inset navbar-brand asset-name add-version ml-sm-0 d-block" href="/">
+                    <a class="inset navbar-brand asset-name add-version ml-sm-0 d-block" routerLink="/">
                         <img src="{{CONFIG.previewPath}}/static/images/logo.png">
                     </a>
                 </div>
 
                 <ul *ngIf="active.integrations" class="nav navbar-nav d-none d-md-flex">
                     <li class="active">
-                        <a class="inset" href="" translate>Integrations</a>
+                        <a class="inset" href translate>Integrations</a>
                     </li>
                 </ul>
 
                 <ul *ngIf="active.ipvd" class="nav navbar-nav d-none d-md-flex">
                     <li class="active">
-                        <a class="inset" href="" translate>Supported IP Video Devices</a>
+                        <a class="inset" href translate>Supported IP Video Devices</a>
                     </li>
                 </ul>
 
@@ -37,14 +37,14 @@
                     class="nav navbar-nav auth-visible d-none d-md-flex">
 
                     <li [ngClass]="{ 'active' :active.view }">
-                        <a class="inset" href="/systems/{{activeSystem.id}}/view" translate>View</a>
+                        <a class="inset" [routerLink]="['/systems', activeSystem.id, 'view']" translate>View</a>
                     </li>
                     <li [ngClass]="{ 'active' :active.settings}">
-                        <a class="inset" href="/systems/{{activeSystem.id}}" translate>Settings</a>
+                        <a class="inset" [routerLink]="['/systems', activeSystem.id]" translate>Settings</a>
                     </li>
                     <li [ngClass]="{ 'active' :active.information}"
                         *ngIf="canSeeInfo">
-                        <a class="inset" href="/systems/{{activeSystem.id}}/health" translate>Information</a>
+                        <a class="inset" [routerLink]="['/systems', activeSystem.id, 'health']" translate>Information</a>
                     </li>
                 </ul>
             </div>
@@ -53,13 +53,13 @@
                 <ul class="nav navbar-nav navbar-right auth-hidden">
                     <li>
                         <span>
-                            <a href="/register" class="btn btn-primary btn-collapse">
+                            <a routerLink="/register" class="btn btn-primary btn-collapse">
                                 <span class="glyphicon glyphicon-create-user"></span>
                                 <span class="btn-caption" translate>Create Account</span>
                             </a>
                         </span>
                         <span>
-                            <a href="" class="btn btn-default btn-collapse" (click)="login()">
+                            <a href class="btn btn-default btn-collapse" (click)="login()">
                                 <span class="glyphicon glyphicon-login"></span>
                                 <span class="btn-caption" translate>Log In</span>
                             </a>

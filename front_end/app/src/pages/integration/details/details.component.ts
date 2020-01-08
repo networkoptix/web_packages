@@ -1,20 +1,18 @@
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { Location }                                        from '@angular/common';
-import { ActivatedRoute }                                  from '@angular/router';
-import { IntegrationService }                              from '../integration.service';
-import { DomSanitizer }                                    from '@angular/platform-browser';
-import { NxRibbonService }                                 from '../../../components/ribbon/ribbon.service';
-import { NxConfigService }                                 from '../../../services/nx-config';
-import { MessageParams }          from '../../../dialogs/message/message.component';
-import { NxLanguageProviderService } from '../../../services/nx-language-provider';
-
-import { map }              from 'rxjs/operators';
-import { combineLatest, Subscription } from 'rxjs';
-import { NxMenuService }    from '../../../components/menu/menu.service';
-import { NxDialogsService } from '../../../dialogs/dialogs.service';
-import { NxAccountService } from '../../../services/account.service';
-import { NxPageService }    from '../../../services/page.service';
-import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router }       from '@angular/router';
+import { map }                          from 'rxjs/operators';
+import { combineLatest, Subscription }  from 'rxjs';
+import { DomSanitizer }                 from '@angular/platform-browser';
+import { AutoUnsubscribe }              from 'ngx-auto-unsubscribe';
+import { IntegrationService }           from '../integration.service';
+import { NxRibbonService }              from '../../../components/ribbon/ribbon.service';
+import { NxConfigService }              from '../../../services/nx-config';
+import { MessageParams }                from '../../../dialogs/message/message.component';
+import { NxLanguageProviderService }    from '../../../services/nx-language-provider';
+import { NxMenuService }                from '../../../components/menu/menu.service';
+import { NxDialogsService }             from '../../../dialogs/dialogs.service';
+import { NxAccountService }             from '../../../services/account.service';
+import { NxPageService }                from '../../../services/page.service';
 
 @AutoUnsubscribe()
 @Component({
@@ -29,7 +27,6 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
     LANG: any = {};
     plugin: any;
     content: any = {};
-    location: any;
 
     private integrationSubscription: Subscription;
     private menuDetailsSubscription: Subscription;
@@ -41,6 +38,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
     }
 
     constructor(public sanitizer: DomSanitizer,
+                private router: Router,
                 private route: ActivatedRoute,
                 private integrationService: IntegrationService,
                 private ribbonService: NxRibbonService,
@@ -51,9 +49,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                 private menuService: NxMenuService,
                 private accountService: NxAccountService,
                 private pageService: NxPageService,
-                location: Location,
     ) {
-        this.location = location;
         this.setupDefaults();
     }
 
@@ -124,7 +120,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                                 }
                             }).add(() => {
                                 if (!this.plugin) {
-                                    this.location.go('404');
+                                    this.router.navigate([this.CONFIG.redirect404]);
                                 }
                             });
                     }

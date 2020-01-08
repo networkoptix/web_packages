@@ -1,12 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Location } from '@angular/common';
-import { AngularFireMessaging } from '@angular/fire/messaging';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { timer } from 'rxjs/observable/timer';
-import { NxSystemsService } from '../../services/systems.service';
-import { NxAccountService } from '../../services/account.service';
-import { Subscription } from 'rxjs';
-import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
+import { Location }                     from '@angular/common';
+import { AngularFireMessaging }         from '@angular/fire/messaging';
+import { HttpClient, HttpHeaders }      from '@angular/common/http';
+import { timer }                        from 'rxjs/observable/timer';
+import { NxSystemsService }             from '../../services/systems.service';
+import { NxAccountService }             from '../../services/account.service';
+import { Subscription }                 from 'rxjs';
+import { AutoUnsubscribe }              from 'ngx-auto-unsubscribe';
+import { Router }                       from '@angular/router';
 
 @AutoUnsubscribe()
 @Component({
@@ -30,7 +31,6 @@ export class PushComponent implements OnInit, OnDestroy {
     private subChanges: boolean;
     private account: any;
     private timeSubscription: Subscription;
-    location: Location;
 
     private setupDefaults() {
         this.notification = {
@@ -56,10 +56,10 @@ export class PushComponent implements OnInit, OnDestroy {
     constructor(private accountService: NxAccountService,
                 private systemsService: NxSystemsService,
                 private afMessaging: AngularFireMessaging,
-                location: Location,
-                private http: HttpClient) {
+                private http: HttpClient,
+                private router: Router,
+    ) {
         this.setupDefaults();
-        this.location = location;
     }
 
     ngOnDestroy() {}
@@ -67,7 +67,7 @@ export class PushComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.accountService.requireLogin().then(account => {
             if (!(account && account.email.endsWith('@networkoptix.com'))) {
-                this.location.go('/');
+                this.router.navigate(['/']);
                 return;
             } else {
                 this.account = account;

@@ -2,8 +2,7 @@ import {
     Component, OnDestroy, OnInit, Inject, ViewChildren,
     QueryList, ElementRef, ViewContainerRef,
 }                                    from '@angular/core';
-import { Location }                  from '@angular/common';
-import { ActivatedRoute }            from '@angular/router';
+import { ActivatedRoute, Router }    from '@angular/router';
 import { NxConfigService }           from '../../../../services/nx-config';
 import { NxPageService }             from '../../../../services/page.service';
 import { NxDialogsService }          from '../../../../dialogs/dialogs.service';
@@ -14,8 +13,8 @@ import { NxSystemsService }          from '../../../../services/systems.service'
 import { NxAccountService }          from '../../../../services/account.service';
 import { NxProcessService }          from '../../../../services/process.service';
 import { NxSystem }                  from '../../../../services/system.service';
-import { Subscription } from 'rxjs';
-import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
+import { Subscription }              from 'rxjs';
+import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 import { NxApplyService, Watcher }   from '../../../../services/apply.service';
 
 interface Settings {
@@ -37,7 +36,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     LANG: any = {};
     system: NxSystem;
     systems: any;
-    location: any;
 
     userDisconnectSystem: any;
     deletingSystem: any;
@@ -106,10 +104,9 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                 private systemsService: NxSystemsService,
                 private settingsService: NxSettingsService,
                 private menuService: NxMenuService,
-                location: Location,
+                private router: Router,
     ) {
         this.viewContainerRef = viewContainerRef;
-        this.location = location;
         this.setupDefaults();
     }
 
@@ -293,7 +290,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             .forceUpdateSystems(this.accountService.getEmail())
             .subscribe(() => {
                 setTimeout(() => {
-                    window.location.href = '/systems';
+                    this.router.navigate([this.CONFIG.redirectAuthorised]);
                 });
             });
     }

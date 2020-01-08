@@ -6,7 +6,7 @@
             Your account is successfully activated
         </h1>
         <h1 class="process-success" *ngIf="activate.success">
-            <a class="btn btn-default" href="" (click)="login()" translate>Log In</a>
+            <a class="btn btn-default" href (click)="login()" translate>Log In</a>
         </h1>
 
         <h1 class="process-success" *ngIf="!activate.success" translate>
@@ -19,7 +19,7 @@
             Your account is successfully activated
         </h1>
         <h1 class="process-success">
-            <a class="btn btn-default" href="" (click)="login()">Log In</a>
+            <a class="btn btn-default" href (click)="login()">Log In</a>
         </h1>
     </div>
 

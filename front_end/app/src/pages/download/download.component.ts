@@ -213,7 +213,7 @@ export class DownloadComponent implements OnInit, OnDestroy {
                 .requireLogin()
                 .then(result => {
                     if (!result) {
-                        document.location.href = this.CONFIG.redirectUnauthorised;
+                        this.router.navigate([this.CONFIG.redirectUnauthorised]);
                         return;
                     }
 

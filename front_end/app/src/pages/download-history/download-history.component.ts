@@ -127,10 +127,7 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
                     });
 
                 }, () => {
-                    // TODO: Repace this once this page is moved to A5
-                    // AJS and A5 routers freak out about route change *****
-                    // this.router.navigate(['404']); // Can't find downloads.json in specific build
-                    this.document.location.href = this.CONFIG.redirect404;
+                    this.router.navigate([this.CONFIG.redirect404]);
                 }
             )
             .finally(() => {
@@ -164,7 +161,7 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
                         if (this.canViewRelease) {
                             this.getData();
                         } else {
-                            this.document.location.href = this.CONFIG.redirect404;
+                            this.router.navigate([this.CONFIG.redirect404]);
                             return;
                         }
                     });

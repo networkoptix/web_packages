@@ -1,10 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Location }          from '@angular/common';
-import { NxConfigService }   from '../../../services/nx-config';
-import { NxAccountService }  from '../../../services/account.service';
-import { NxSessionService }  from '../../../services/session.service';
-import { Subscription } from 'rxjs';
-import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
+import { Router }                       from '@angular/router';
+import { Subscription }                 from 'rxjs';
+import { AutoUnsubscribe }              from 'ngx-auto-unsubscribe';
+import { NxConfigService }              from '../../../services/nx-config';
+import { NxAccountService }             from '../../../services/account.service';
+import { NxSessionService }             from '../../../services/session.service';
 
 @AutoUnsubscribe()
 @Component({
@@ -26,7 +26,8 @@ export class NxAccountSettingsDropdown implements OnInit, OnDestroy {
     constructor(private accountService: NxAccountService,
                 private _config: NxConfigService,
                 private sessionService: NxSessionService,
-                private location: Location) {
+                private router: Router,
+    ) {
         this.config = this._config.getConfig();
         this.show = false;
     }
@@ -54,7 +55,7 @@ export class NxAccountSettingsDropdown implements OnInit, OnDestroy {
     }
 
     logout(): void {
-        const url = this.location.path();
+        const url = this.router.url;
         const stay = url.startsWith('/systems') ||
                      url.startsWith('/account') ||
                      url.startsWith('/push-notifications') ||

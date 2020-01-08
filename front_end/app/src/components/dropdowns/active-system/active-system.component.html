@@ -16,14 +16,14 @@
         <li class="dropdown-item-container">
             <a class="dropdown-item inset"
                [ngClass]="{ 'selected': active.settings}"
-               [href]="'/systems/' + activeSystem.id"
+               [routerLink]="['/systems', activeSystem.id]"
                (click)="updateActive(); return;">
                <span translate>Settings</span></a>
         </li>
         <li class="dropdown-item-container">
             <a class="dropdown-item inset"
                [ngClass]="{ 'selected': active.view }"
-               [href]="'/systems/' + activeSystem.id + '/view'"
+               [routerLink]="['/systems', activeSystem.id, 'view']"
                (click)="updateActive(); return;">
                <span translate>View</span>
             </a>
@@ -31,7 +31,7 @@
         <li *ngIf="canViewInfo" class="dropdown-item-container">
             <a class="dropdown-item inset"
                [ngClass]="{ 'selected': active.health }"
-               [href]="'/systems/' + activeSystem.id + '/health'"
+               [routerLink]="['/systems', activeSystem.id, 'health']"
                (click)="updateActive(); return;">
                <span translate>Information</span>
             </a>

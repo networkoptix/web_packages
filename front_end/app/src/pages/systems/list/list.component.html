@@ -7,7 +7,7 @@
     <div class="search-block row border-bottom" *ngIf="showSearch && systems.length">
         <div class="col-sm-9 col-md-8 col-lg-6 input-overlay">
             <span class="form-control-static input-overlay-left"><span class="glyphicon glyphicon-search"></span></span>
-            <a href="" *ngIf="search.value" (click)="search.value=''"
+            <a href *ngIf="search.value" (click)="search.value=''"
                class="form-control-static input-overlay-right"><span class="glyphicon glyphicon-remove"></span></a>
             <input type="text"
                    class="form-control"

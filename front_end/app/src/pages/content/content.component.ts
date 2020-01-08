@@ -1,4 +1,4 @@
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Location } from '@angular/common';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
@@ -39,12 +39,13 @@ export class NxContentComponent implements OnInit {
     constructor(@Inject(WINDOW) private window: Window,
                 private route: ActivatedRoute,
                 private http: HttpClient,
-                private location: Location,
+                private router: Router,
                 private language: NxLanguageProviderService,
                 private config: NxConfigService,
                 private pageService: NxPageService,
                 private _compiler: Compiler,
-                private sessionStorage: SessionStorageService) {
+                private sessionStorage: SessionStorageService,
+    ) {
         this.setupDefaults();
         this.langCode = this.language.getLang();
         this.CONFIG = config.getConfig();
@@ -124,7 +125,7 @@ export class NxContentComponent implements OnInit {
                 add to staticContent so we don't do an API call each time we switch pages */
             this.staticContent[this.articleParam] = true;
             this.sessionStorage.set('staticContent', JSON.stringify(this.staticContent));
-        }).catch(() => this.location.go('404'));
+        }).catch(() => this.router.navigate([this.CONFIG.redirect404]));
     }
 }
 

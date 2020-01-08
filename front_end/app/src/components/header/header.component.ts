@@ -54,8 +54,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     private systemSubscription: Subscription;
     private systemIdSubscription: Subscription;
 
-    constructor(@Inject(WINDOW) private window: Window,
-                private renderer: Renderer2,
+    constructor(private renderer: Renderer2,
                 private _config: NxConfigService,
                 private appState: NxAppStateService,
                 private route: ActivatedRoute,
@@ -74,7 +73,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     }
 
     private isActive(val) {
-        return this.window.location.pathname.indexOf(val) >= 0;
+        return this.router.url.indexOf(val) >= 0;
     }
 
     private systemIdUpdate(id) {
@@ -97,8 +96,8 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     private startTimerSystemIdUpdate() {
         this.untilHaveID = timer(200, 200);
         this.getUrlSystemId = this.untilHaveID.subscribe(() => {
-            if (window.location.pathname.indexOf('/systems/') === 0) {
-                const uriSystemId = window.location.pathname.split('/')[2];
+            if (this.router.url.indexOf('/systems/') === 0) {
+                const uriSystemId = this.router.url.split('/')[2];
 
                 if (uriSystemId === this.systemId) {
                     this.getUrlSystemId.unsubscribe();
@@ -113,11 +112,9 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     ngOnDestroy() {}
 
     ngOnInit() {
-        // TODO: root route is maintained by AJS - replace this once we get rid of it.
-        this.inline = this.window.location.search.indexOf('inline') > 0;
-        // this.route.queryParams.subscribe(params => {
-        //     this.inline = params['inline'] !== 'undefined';
-        // });
+        this.route.queryParams.subscribe(params => {
+            this.inline = params.inline !== 'undefined';
+        });
 
         // TODO: (Only for display purpose) Temporary solution until we move View to A8
         // View is still under AJS and it doesn't trigger route change
@@ -218,7 +215,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     }
 
     login () {
-        const url = this.window.location.pathname;
+        const url = this.router.url;
         const redirect = this.CONFIG.redirectPaths.some((path) => url.indexOf(path) > -1);
         // Handling promise to satisfy the linter.
         this.dialogs.login(this.accountService, !redirect).then(() => {});

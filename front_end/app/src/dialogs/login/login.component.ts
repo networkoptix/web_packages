@@ -159,10 +159,13 @@ export class LoginModalContent implements OnInit {
         }).then((result) => {
             this.activeModal.close();
             if (this.keepPage) {
-                if (this.location.path() === '') {
-                    this.location.go(this.CONFIG.redirectAuthorised);
-                    // ensure language reload as translations are loaded on page load
-                    window.location.reload();
+                if (this.router.url === '/') {
+                    this.router
+                        .navigate([this.CONFIG.redirectAuthorised])
+                        .then(() => {
+                            // ensure language reload as translations are loaded on page load
+                            window.location.reload();
+                        });
                 } else {
                     // TODO: remove window reload once we separate session state from account service
                     window.location.reload();
@@ -170,12 +173,20 @@ export class LoginModalContent implements OnInit {
             } else if (this.next) {
                 // sanitize this.next
                 this.next = NxUtilsService.getRelativeLocation(this.next);
-                this.location.go(this.next);
-                window.location.reload(); // ensure language reload
+                this.router
+                    .navigate([this.next])
+                    .then(() => {
+                        // ensure language reload as translations are loaded on page load
+                        window.location.reload();
+                    });
             } else {
                 setTimeout(() => {
-                    this.location.go(this.CONFIG.redirectAuthorised);
-                    window.location.reload(); // ensure language reload
+                    this.router
+                       .navigate([this.CONFIG.redirectAuthorised])
+                       .then(() => {
+                           // ensure language reload as translations are loaded on page load
+                           window.location.reload();
+                       });
                 });
             }
         }, (error) => {
