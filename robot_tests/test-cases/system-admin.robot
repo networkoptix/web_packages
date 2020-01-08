@@ -155,28 +155,21 @@ Changing All Settings
     
 Change Duration Time Interval
     [arguments]    ${action}
-    ${interval} =    Get Text    ${TIME DURATION INTERVAL TEXT} 
-    Capture Page Screenshot
+    ${interval} =    Get Text    ${TIME DURATION INTERVAL TEXT}
     ${random} =    Evaluate    random.randint(1, 59)    modules=random
     Input Text    ${TIME NUMBER INPUT}    ${random}
     Sleep    1
-    Capture Page Screenshot
-    FOR    ${i}    IN RANGE    99999
+    FOR    ${i}    IN RANGE    2
            ${status} =    Run Keyword And Return Status    Textfield Value Should Be    ${TIME NUMBER INPUT}    ${random}
-           Capture Page Screenshot
-           Exit For Loop If    ${i} == 2
            Run Keyword If    ${status}==False    Input Text    ${TIME NUMBER INPUT}    ${random}
            ...    ELSE    Exit For Loop
     END
-    FOR    ${i}    IN RANGE    99999
+    FOR    ${i}    IN RANGE    9
            ${status} =    Run Keyword And Return Status    Element Text Should Be    ${TIME DURATION INTERVAL TEXT}    ${interval}
-           Capture Page Screenshot
-           Exit For Loop If    ${i} == 9
            Run Keyword If    ${status}==False    Run Keywords    
            ...    Click Button    ${TIME DURATION INTERVAL BUTTON}    AND
            ...    Wait Until Element Is Visible    ${TIME DURATION NEW SELECTION}    AND
            ...    Sleep    1    AND
-           ...    Capture Page Screenshot    AND
            ...    Click Link    ${TIME DURATION NEW SELECTION}
            ...    ELSE    Exit For Loop 
     END
@@ -184,14 +177,11 @@ Change Duration Time Interval
     Click Button    ${TIME DURATION INTERVAL BUTTON}    
     Wait Until Element Is Visible    ${TIME DURATION NEW SELECTION}
     Sleep    1
-    Capture Page Screenshot
     Click Link    ${TIME DURATION NEW SELECTION}
     Sleep    1
-    Capture Page Screenshot
     Wait Until Elements Are Visible     ${SYSTEM SAVE}    ${SYSTEM CANCEL}
     Click Button    ${action}
     Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
-    Capture Page Screenshot
      
 *** Test Cases ***
 systems dropdown should allow you to go back to the systems page
