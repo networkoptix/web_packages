@@ -169,16 +169,13 @@ Change Duration Time Interval
            Run Keyword If    ${status}==False    Run Keywords    
            ...    Click Button    ${TIME DURATION INTERVAL BUTTON}    AND
            ...    Wait Until Element Is Visible    ${TIME DURATION NEW SELECTION}    AND
-           ...    Sleep    1    AND
            ...    Click Link    ${TIME DURATION NEW SELECTION}
            ...    ELSE    Exit For Loop 
     END
     
     Click Button    ${TIME DURATION INTERVAL BUTTON}    
     Wait Until Element Is Visible    ${TIME DURATION NEW SELECTION}
-    Sleep    1
     Click Link    ${TIME DURATION NEW SELECTION}
-    Sleep    1
     Wait Until Elements Are Visible     ${SYSTEM SAVE}    ${SYSTEM CANCEL}
     Click Button    ${action}
     Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
