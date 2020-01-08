@@ -241,14 +241,18 @@ export class NxSystemAPI {
 
     getServerStats() {
         console.log('urlBase in getServerStats', this.urlBase);
-        return this.get('/api/statistics').toPromise()
-            .catch(err => Promise.reject(err));
+        return this.get('/api/statistics');
     }
 
     restartServer() {
-        console.log('restartServer called', this.serverId)
+        console.log('restartServer called');
         return this.post('/api/restart').toPromise()
             .catch(err => Promise.reject(err));
+    }
+
+    getModuleInfo() {
+        console.log('getModule called in system-api service');
+        return this.get('/api/moduleInformation');
     }
     /* End of Server settings */
 

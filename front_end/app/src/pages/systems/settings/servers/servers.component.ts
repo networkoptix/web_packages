@@ -1,6 +1,5 @@
 import {
-    Component, OnInit, Inject, ViewChildren,
-    QueryList, ElementRef, ViewContainerRef,
+    Component, OnInit, Inject, ViewContainerRef
 }                                    from '@angular/core';
 import { Location }                  from '@angular/common';
 import { ActivatedRoute }            from '@angular/router';
@@ -20,13 +19,6 @@ import { Subscription }              from 'rxjs';
 import { filter }                    from 'rxjs/operators';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
-interface Settings {
-    // disconnectDisabled: boolean;
-    // mergeDisabled: boolean;
-    // renameDisabled: boolean;
-    // showMerge: boolean;
-}
-
 @Component({
     selector   : 'nx-server-component',
     templateUrl: 'servers.component.html',
@@ -41,8 +33,7 @@ export class NxSystemServersComponent implements OnInit {
     serverIdFromParams: any;
     selectedServer: any;
     mediaserverConnections: any;
-    selectedServerConnection: any;
-    mediaserverConnectionsReady: boolean;
+    checking: boolean;
 
     private serverSubscription: Subscription;
     private systemSubscription: Subscription;
@@ -51,7 +42,6 @@ export class NxSystemServersComponent implements OnInit {
     saveSettings: any;
     ipPortWatcher: any = new Watcher<number>();
     previousInputValue: number;
-    serverHasRestarted: boolean;
 
     renameDisabled: boolean;
     restartDisabled: boolean;
@@ -63,17 +53,6 @@ export class NxSystemServersComponent implements OnInit {
         // this.debugMode = this.CONFIG.allowDebugMode;
         // this.betaMode = this.CONFIG.allowBetaMode;
         this.menuService.setSection('servers');
-    }
-
-    private updateSettings(forceMergeState?: boolean) {
-        // const merging = typeof(this.system.mergeInfo) !== 'undefined' || forceMergeState;
-        // const available = !this.system.isOnline || !this.system.isAvailable;
-        // this.settings = {
-        //     disconnectDisabled: merging,
-        //     mergeDisabled: (merging || available) && !(this.debugMode || this.betaMode),
-        //     renameDisabled: merging && this.system.mergeInfo && this.system.mergeInfo.role !== 'master',
-        //     showMerge: this.system.isMine && this.systemsService.systems.length > 1
-        // };
     }
 
     constructor(@Inject(ViewContainerRef) viewContainerRef,
@@ -95,12 +74,14 @@ export class NxSystemServersComponent implements OnInit {
         this.setupDefaults();
     }
 
+    init(): void {}
 
     ngOnInit(): void {
         this.LANG = this.language.getTranslations();
         this.renameDisabled = true;
         this.restartDisabled = true;
         this.portChangeDisabled = true;
+        this.checking = false;
         // this.pageService.setPageTitle(this.LANG.pageTitles.systems);
         // this.settings = {
         //     disconnectDisabled: false,
@@ -137,18 +118,21 @@ export class NxSystemServersComponent implements OnInit {
                     this.serverSubscription.unsubscribe();
                 }
                 this.serverSubscription = this.system.infoSubject.subscribe(() => {
-                    console.log('serverSubscription called');
-                    if (this.system && this.system.servers && this.system.servers.length) {
-                        this.system.initSystemMediaServers()
-                            .then(res => {
-                                this.mediaserverConnections = res;
-                                this.selectedServerConnection = this.mediaserverConnections[this.selectedServer.id];
-                                this.mediaserverConnectionsReady = true;
-                            });
-                    }
-                    // this.systemAvailable = this.system.isAvailable && this.system.mergeInfo === undefined;
-                    if (!this.applyService.locked) {
-                        this.setServer();
+                    if (this.system.currentServerNotBusy && !this.checking) {
+                        this.checking = false;
+                        if (this.system && this.system.servers && this.system.servers.length) {
+                            this.system.initSystemMediaServers()
+                                .then(res => {
+                                    this.mediaserverConnections = res;
+                                });
+                        }
+                        // this.systemAvailable = this.system.isAvailable && this.system.mergeInfo === undefined;
+                        if (!this.applyService.locked) {
+                            if (this.selectedServer) {
+                                this.selectedServer.internalStatus = this.LANG.servers.status.checking;
+                            }
+                            this.setServer();
+                        }
                     }
                 });
             });
@@ -167,14 +151,13 @@ export class NxSystemServersComponent implements OnInit {
     setServer(): void {
         let server;
         if (this.serverIdFromParams) {
+            console.log('serverIdfromParams', this.serverIdFromParams);
             server = this.system.servers.find((server: any) => {
                 return server.id === this.serverIdFromParams;
             });
         }
         if (typeof(server) === 'undefined') {
             server = this.system.servers[0];
-            // server = this.system.servers[0];
-            // console.log('server in setServer', server);
             // this.uriService.updateURI(`systems/${this.system.id}/servers/${server.id}`);
         }
 
@@ -184,30 +167,25 @@ export class NxSystemServersComponent implements OnInit {
             const [ip, port] = url.slice(url.indexOf('//') + 2).split(':');
             server.ip = ip;
             server.osName = JSON.parse(server.osInfo).platform;
-            this.ipPortWatcher.value = port;
             this.selectedServer = server;
-            console.log('mediaserverconnections', this.mediaserverConnections);
+            if (!this.selectedServer.internalStatus) {
+                this.selectedServer.internalStatus = this.LANG.servers.status.checking;
+            }
+            this.checkIfOnline(server.id);
+            this.ipPortWatcher.value = port;
+            console.log('selectedServer post set', this.selectedServer);
+
             this.renameDisabled = !this.system.permissions.editAdmins;
             this.restartDisabled = !this.system.permissions.isAdmin;
             this.portChangeDisabled = !this.system.permissions.editAdmins;
-            console.log('selectedServer', this.selectedServer);
             this.applyService.reset();
             this.applyService.setVisible(true);
         }
 
-        // // If there's no users skip setting section and permissions
-        // if (typeof(user) === 'undefined') {
-        //     return;
-        // }
-        // this.applyService.hardReset();
-        // this.selectedUser = {... user};
         // this.menuService.setDetailsSection(this.selectedUser.id.replace(/{|}/g, ''));
         // this.setPermission(this.selectedUser.role);
-        // this.userEnabled.value = this.selectedUser.isEnabled;
-        // this.applyService.reset();
 
         // this.settingsService.footerSubject.next(true);
-        // setTimeout(() => this.applyService.setVisible(this.selectedUser.canBeEdited));
     }
 
     initForApplyService(): void {
@@ -227,61 +205,27 @@ export class NxSystemServersComponent implements OnInit {
         });
     }
 
-    init(): void {
-        // this.settingsService
-        //     .systemSubject
-        //     .subscribe((system) => {
-        //         this.system = system;
-        //         if (system) {
-        //             console.log('this.system', this.system);
-        //             this.system.systemSubject.subscribe(() => {
-        //                 this.settingsService.footerSubject.next(true);
-        //                 // this.userRole = system.accessRole;
-        //                 // if (system.accessRole in this.LANG.accessRoles) {
-        //                 //     this.userRole = this.LANG.accessRoles[system.accessRole].label;
-        //                 // }
-        //                 // this.updateSettings(this.currentlyMerging);
-        //             });
-        //             if (!this.applyService.locked) {
-        //                 this.system.updateOrGetSystemSettings()
-        //                     .then(res => {
-        //                         const { settings } = res.reply;
-        //                         this.applyService.setVisible(false);
-        //                         this.applyService.hardReset();
-        //                         this.ipPortWatcher.value = settings.port === 'true';
-        //                         this.applyService.reset();
-        //                         this.applyService.setVisible(true);
-        //                     });
-        //             }
-        //             this.deletingSystem = this.processService.createProcess(() => {
-        //                 return this.system.deleteFromCurrentAccount();
-        //             }, {
-        //                 successMessage: this.LANG.system.successDeleted.replace('{{systemName}}', this.system.info.name),
-        //                 errorPrefix   : this.LANG.errorCodes.cantUnshareWithMeSystemPrefix
-        //             })
-        //                 .then(() => {
-        //                     this.updateAndGoToSystems();
-        //                 }, (error) => {
-        //                     return error;
-        //                 });
-        //         }
-        //     });
+    checkIfOnline(serverId) {
+        if (!this.checking) {
+            this.checking = true;
+            setTimeout(() => this.checking = false, 5000);
+            return this.system.getModuleInfo(serverId).toPromise()
+                .then(() => this.selectedServer.internalStatus = this.LANG.servers.status.online)
+                .catch(() => this.selectedServer.internalStatus = this.LANG.servers.status.offline);
+        }
     }
 
     renameServer() {
-        const serverId = this.selectedServer.id;
-        const serverName = this.selectedServer.name;
+        const { id, name } = this.selectedServer;
         return this.dialogs
-            .renameServer(this.system, serverId, serverName);
+            .renameServer(this.system, id, name);
     }
 
     restartServer() {
-        this.serverHasRestarted = false;
+        const { id, name } = this.selectedServer;
         return this.dialogs
-            .restartServer(this.system, this.selectedServer.id)
-            .then(status => {
-                if (status === 'restarting') this.serverHasRestarted = true;
-            });
+            .restartServer(this.system, id, name)
+                .then(() => this.selectedServer.internalStatus = this.LANG.servers.status.restarting);
     }
 
     detachServer() {
@@ -300,19 +244,6 @@ export class NxSystemServersComponent implements OnInit {
                 console.log('returned in reset', reset);
                 // will take some time to reset and then restart the server
             });
-    }
-
-    disconnect() {
-        // if (this.system.isMine) {
-        //     // User is the owner. Deleting system means unbinding it and disconnecting all accounts
-        //     // dialogs.confirm(this.LANG.system.confirmDisconnect, this.LANG.system.confirmDisconnectTitle, this.LANG.system.confirmDisconnectAction, 'danger').
-        //     this.dialogs.disconnect(this.system.id)
-        //         .then((result) => {
-        //             if (result) {
-        //                 this.updateAndGoToSystems();
-        //             }
-        //         });
-        // }
     }
 
     updateAndGoToSystems() {

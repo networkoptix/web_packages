@@ -1,10 +1,23 @@
 <div class="row auth-visible">
+    <div class="col-12 loader-div" *ngIf="!selectedServer">
+        <nx-pre-loader type="wrapper"></nx-pre-loader>
+    </div>
     <div class="col-12 server-info" *ngIf="selectedServer">
         <nx-block header-style="extended">
             <header>
-                <div>
+                <div class="header-title">
                     <h2>{{ selectedServer.name }}</h2>
-                    <span *ngIf="serverHasRestarted">Restarting...</span>
+                    <span *ngIf="selectedServer.internalStatus"
+                        [ngClass]="{
+                            tag: true,
+                            offline: selectedServer.internalStatus === LANG.servers.status.offline,
+                            online: selectedServer.internalStatus === LANG.servers.status.online 
+                                || selectedServer.internalStatus === LANG.servers.status.restarting,
+                            checking: selectedServer.internalStatus === LANG.servers.status.checking
+                        }"
+                    >
+                        {{ selectedServer.internalStatus }}
+                    </span>
                 </div>
                 <div>
                     <span>IP</span>

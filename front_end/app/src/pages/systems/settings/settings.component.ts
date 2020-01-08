@@ -398,7 +398,9 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     connectionLost() {
         this.dialogs.notify(this.LANG.errorCodes.lostConnection.replace('{{systemName}}',
             this.system.info.name || this.LANG.errorCodes.thisSystem), 'warning');
-        setTimeout(() => this.router.navigate(['/systems']), this.CONFIG.alertTimeout);
+        if (this.system.currentServerNotBusy) {
+            setTimeout(() => this.router.navigate(['/systems']), this.CONFIG.alertTimeout);
+        }
     }
 
     normalizePermissionString(permissions) {

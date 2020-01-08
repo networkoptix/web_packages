@@ -134,6 +134,7 @@ export class NxSystem extends System implements OnDestroy {
     currentUser: NxSystemUser;
     mediaserver: any;
     mediaserverConnections: any;
+    currentServerNotBusy: boolean;
 
     infoPromise: any;
     usersPromise: any;
@@ -192,6 +193,7 @@ export class NxSystem extends System implements OnDestroy {
         this.isAvailable = false;
         this.isOnline = false;
         this.isMine = false;
+        this.currentServerNotBusy = true;
         this.info = { name: '' };
         this.permissions = {};
         this.accessRole = '';
@@ -201,13 +203,13 @@ export class NxSystem extends System implements OnDestroy {
         this.currentUserEmail = currentUserEmail;
         this.mediaserver = this.systemApiService.createConnection(currentUserEmail, systemId, serverId, () => {
             /* Unauthorised request handler
-               Some options here:
-                   - Access was revoked
-                   - System was disconnected from cloud\Password was changed
-                   - Nonce expired
-               We try to update nonce and auth on the server again
-               Other cases are not distinguishable
-             */
+                Some options here:
+                    - Access was revoked
+                    - System was disconnected from cloud\Password was changed
+                    - Nonce expired
+                We try to update nonce and auth on the server again
+                Other cases are not distinguishable
+            */
             return this.updateSystemAuth(true);
         });
         // Handling promise to satisfy the linter.
@@ -221,8 +223,8 @@ export class NxSystem extends System implements OnDestroy {
             this.mediaserverConnections = this.servers.reduce((mediaserverConnections, server) => {
                 mediaserverConnections[server.id] = this.systemApiService.createConnection(
                     this.currentUserEmail,
-                    this.id,
-                    server.id,
+                    `${server.id.replace(/[{}]/g, '')}.${this.id}`,
+                    undefined,
                     () => this.updateSystemAuth(true));
                 const { authGet, authPost, authPlay } = this.mediaserver;
                 mediaserverConnections[server.id].setAuthKeys(authGet, authPost, authPlay);
@@ -567,6 +569,7 @@ export class NxSystem extends System implements OnDestroy {
 
     update() {
         return of('').pipe(flatMap(_ => {
+            console.log('update in system service called');
             return this.getInfo(true, false)
                 .then(_ => this.getServers())
                 .then(_ => from(this.getUsers(true)))
@@ -578,51 +581,30 @@ export class NxSystem extends System implements OnDestroy {
         return this.mediaserver.updateOrGetSettings(updateParams);
     }
 
+    getModuleInfo(serverId) {
+        return this.mediaserverConnections[serverId].getModuleInfo();
+    }
+
     changeServerPort(port, serverId) {
         return this.mediaserverConnections[serverId].changePort(port)
-            .catch(err => {
-                if (err.status === 503) {
-                    this.mediaserver.changePort(port);
-                } else {
-                    Promise.reject(err);
-                }
-            });
+            .catch(err => Promise.reject(err));
     }
 
     renameServer(serverId, serverName) {
-        const cleanServerId = serverId.replace(/[{}]/, '');
+        const cleanServerId = serverId.replace(/[{}]/g, '');
         return this.mediaserverConnections[serverId].renameServer(cleanServerId, serverName)
             .then(() => this.update().toPromise())
-            .catch(err => {
-                if (err.status === 503) {
-                    this.mediaserver.renameServer(cleanServerId, serverName)
-                        .then(() => this.update().toPromise());
-                } else {
-                    Promise.reject(err);
-                }
-            });
+            .catch(err => Promise.reject(err));
     }
 
     getServerStats(serverId) {
-        return this.mediaserverConnections[serverId].getServerStats()
-            .catch(err => {
-                if (err.status === 503 || err.status === 502) {
-                    return this.mediaserver.getServerStats();
-                } else {
-                    Promise.reject(err);
-                }
-            });
+        return this.mediaserverConnections[serverId].getServerStats();
     }
 
     restartServer(serverId) {
+        this.currentServerNotBusy = false;
         return this.mediaserverConnections[serverId].restartServer()
-            .catch(err => {
-                if (err.status === 503) {
-                    this.mediaserver.restartServer();
-                } else {
-                    Promise.reject(err);
-                }
-            });
+            .catch(err => Promise.reject(err));
     }
 }
 
