@@ -10,17 +10,17 @@ Force Tags        form
 ${url}    ${ENV}
 ${existing email}       ${EMAIL OWNER}
 ${valid email}          noptixqa+valid@gmail.com
-${contact sales}        Contact sales for vis - QA - face_recognition
-${contact support}      Contact support for vis - QA - face_recognition
+${sales inquiry}        Sales inquiry for vis - QA - face_recognition
+${technical inquiry}    Technical inquiry for vis - QA - face_recognition
 ${feedback}             Feedback for integration vis - QA - face_recognition
 ${valid name}           ${TEST FIRST NAME} ${TEST LAST NAME}
 
 *** Test Cases ***                    EXPECTED    NAME             EMAIL                     SUBJECT             BUTTON                                      MESSAGE
-Invalid Email 1 noptixqagmail.com     failure     ${valid name}    noptixqagmail.com         ${contact sales}    ${INTEGRATION GET IN TOUCH SEND BUTTON}     Sample message
+Invalid Email 1 noptixqagmail.com     failure     ${valid name}    noptixqagmail.com         ${sales inquiry}    ${INTEGRATION GET IN TOUCH SEND BUTTON}     Sample message
     [tags]    C54681
-Valid Contact Sales valid email       success     ${valid name}    ${valid email}            ${contact sales}    ${INTEGRATION GET IN TOUCH SEND BUTTON}     Sample message
+Valid sales inquiry valid email       success     ${valid name}    ${valid email}            ${sales inquiry}    ${INTEGRATION GET IN TOUCH SEND BUTTON}     Sample message
     [tags]    C54681
-Valid Contact Support valid email     success     ${valid name}    ${valid email}            ${contact support}  ${INTEGRATION GET IN TOUCH SEND BUTTON}     Sample message
+Valid technical inquiry valid email     success     ${valid name}    ${valid email}            ${technical inquiry}  ${INTEGRATION GET IN TOUCH SEND BUTTON}     Sample message
     [tags]    C54681
 Valid Feedback valid email            success     ${valid name}    ${valid email}            ${feedback}         ${INTEGRATION GET IN TOUCH SEND BUTTON}     Sample message
     [tags]    C54681
@@ -28,12 +28,12 @@ Close button no submit                failure     ${valid name}    ${valid email
     [tags]    C54681
 Cancel button no submit               failure     ${valid name}    ${valid email}            ${feedback}         ${INTEGRATION GET IN TOUCH CANCEL BUTTON}   Sample message
     [tags]    C54681
-# Using ${SPACE} below for now due to selenium shortcomings. but really want to be testing for ${EMPTY}     
-Empty name                            failure     ${SPACE}         ${valid email}            ${contact sales}    ${INTEGRATION GET IN TOUCH SEND BUTTON}     Sample message
+# Using ${SPACE} below for now due to selenium shortcomings. but really want to be testing for ${EMPTY}
+Empty name                            failure     ${SPACE}         ${valid email}            ${sales inquiry}    ${INTEGRATION GET IN TOUCH SEND BUTTON}     Sample message
     [tags]    C54681
-Invalid Email 2 noptixq@gmail         failure     ${valid name}    noptixqa@gmail            ${contact sales}    ${INTEGRATION GET IN TOUCH SEND BUTTON}     Sample message
+Invalid Email 2 noptixq@gmail         failure     ${valid name}    noptixqa@gmail            ${sales inquiry}    ${INTEGRATION GET IN TOUCH SEND BUTTON}     Sample message
     [tags]    C54681
-Empty message                         failure     ${valid name}    ${valid email}            ${contact sales}    ${INTEGRATION GET IN TOUCH SEND BUTTON}     ${EMPTY}
+Empty message                         failure     ${valid name}    ${valid email}            ${sales inquiry}    ${INTEGRATION GET IN TOUCH SEND BUTTON}     ${EMPTY}
     [tags]    C54681
 
 
@@ -83,19 +83,19 @@ Test Get In Touch Invalid
 
 Get In Touch Form Validation
     [arguments]    ${name}    ${email}    ${subject}    ${button}     ${message}
-    Delete All Text    ${INTEGRATION GET IN TOUCH NAME INPUT} 
+    Delete All Text    ${INTEGRATION GET IN TOUCH NAME INPUT}
     Input Text    ${INTEGRATION GET IN TOUCH NAME INPUT}     ${name}
-    Clear Element Text    ${INTEGRATION GET IN TOUCH EMAIL INPUT} 
+    Clear Element Text    ${INTEGRATION GET IN TOUCH EMAIL INPUT}
     Input Text    ${INTEGRATION GET IN TOUCH EMAIL INPUT}     ${email}
     Input Text    ${INTEGRATION GET IN TOUCH MESSAGE INPUT}     ${message}
-     
+
     Click Element    ${INTEGRATION GET IN TOUCH DROPDOWN ICON}
-    
+
     Wait Until Element Is Visible    //*[@id="subject"]//ul[@class="dropdown-menu--list"]/li[1]/a
     Sleep   .5
-    Run Keyword If     "${subject}"=="${contact sales}"    
+    Run Keyword If     "${subject}"=="${sales inquiry}"
     ...    Click Link   //*[@id="subject"]//ul[@class="dropdown-menu--list"]/li[1]/a
-    ...    ELSE IF     "${subject}"=="${contact support}"
+    ...    ELSE IF     "${subject}"=="${technical inquiry}"
     ...    Click Link   //*[@id="subject"]//ul[@class="dropdown-menu--list"]/li[2]/a
     ...    ELSE IF     "${subject}"=="${feedback}"
     ...    Click Link   //*[@id="subject"]//ul[@class="dropdown-menu--list"]/li[3]/a
