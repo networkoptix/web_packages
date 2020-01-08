@@ -126,8 +126,7 @@ Fill in "Get in Touch" Form and Submit
 Integration Store title and URL are correct
     [Tags]    C54622
     Location Should Be    ${url}
-    Run keyword and expect error    Title should have been 'Integrations - Nx Cloud' but was 'Integrations'.
-    ...    Title Should Be    ${title}
+    Title Should Be    ${title}
     Validate Integrations Landing Page
 
 Integration Store catalog
