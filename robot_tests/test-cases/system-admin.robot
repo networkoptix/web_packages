@@ -158,7 +158,6 @@ Change Duration Time Interval
     ${interval} =    Get Text    ${TIME DURATION INTERVAL TEXT}
     ${random} =    Evaluate    random.randint(1, 59)    modules=random
     Input Text    ${TIME NUMBER INPUT}    ${random}
-    Sleep    1
     FOR    ${i}    IN RANGE    2
            ${status} =    Run Keyword And Return Status    Textfield Value Should Be    ${TIME NUMBER INPUT}    ${random}
            Run Keyword If    ${status}==False    Input Text    ${TIME NUMBER INPUT}    ${random}
