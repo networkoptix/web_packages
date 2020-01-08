@@ -48,39 +48,3 @@ export class RemoveUserModalContent {
         this.activeModal.close();
     }
 }
-
-@Component({
-    selector     : 'nx-modal-remove-user',
-    template     : '',
-    encapsulation: ViewEncapsulation.None,
-    styleUrls    : []
-})
-export class NxModalRemoveUserComponent implements OnInit {
-    modalRef: NgbModalRef;
-
-    constructor(private modalService: NgbModal) {
-    }
-
-    private dialog(system?, user?) {
-        // TODO: Refactor dialog to use generic dialog
-        // TODO: retire loading ModalContent (CLOUD-2493)
-        this.modalRef = this.modalService.open(RemoveUserModalContent,
-                {
-                            windowClass: 'modal-holder',
-                            backdrop: 'static'
-                        });
-
-        this.modalRef.componentInstance.system = system;
-        this.modalRef.componentInstance.user = user;
-        this.modalRef.componentInstance.closable = true;
-
-        return this.modalRef;
-    }
-
-    open(system?, user?) {
-        return this.dialog(system, user).result;
-    }
-
-    ngOnInit() {
-    }
-}

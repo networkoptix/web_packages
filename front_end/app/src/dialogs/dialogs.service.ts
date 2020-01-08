@@ -7,8 +7,11 @@ import { Router }             from '@angular/router';
 import './../dialogs/dialogs.scss';
 
 import { NxToastService }            from './toast.service';
-import { LoginModalContent }         from './login/login.component';
+import { NxConfigService }           from '../services/nx-config';
 import { NxLanguageProviderService } from '../services/nx-language-provider';
+import { NxAccountService }          from '../services/account.service';
+
+import { LoginModalContent }         from './login/login.component';
 import { GenericModalContent }       from './generic/generic.component';
 import { AddUserModalContent }       from './add-user/add-user.component';
 import { DisconnectModalContent }    from './disconnect/disconnect.component';
@@ -16,8 +19,6 @@ import { RenameModalContent }        from './rename/rename.component';
 import { MessageModalContent }       from './message/message.component';
 import { EmbedModalContent }         from './embed/embed.component';
 import { MergeModalContent }         from './merge/merge.component';
-import { NxConfigService }           from '../services/nx-config';
-import { NxAccountService }          from '../services/account.service';
 import { ApplyModalContent }         from './apply/apply.component';
 import { RemoveUserModalContent }    from './remove-user/remove-user.component';
 import { RenameServerModalContent }  from './rename-server/rename-server.component';
@@ -40,7 +41,7 @@ export class NxDialogsService {
                 private domSanitizer: DomSanitizer,
                 location: Location,
                 private configService: NxConfigService,
-                private router: Router
+                private router: Router,
     ) {
         this.LANG = this.language.getTranslations();
         this.CONFIG = this.configService.getConfig();

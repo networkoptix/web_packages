@@ -6,8 +6,8 @@ import { DirectivesModule } from '../directives/directives.module';
 import { LoginModalContent }                            from './login/login.component';
 import { DisconnectModalContent }                       from './disconnect/disconnect.component';
 import { RenameModalContent }                           from './rename/rename.component';
-import { AddUserModalContent, NxModalAddUserComponent } from './add-user/add-user.component';
-import { RemoveUserModalContent, NxModalRemoveUserComponent } from './remove-user/remove-user.component';
+import { AddUserModalContent } from './add-user/add-user.component';
+import { RemoveUserModalContent } from './remove-user/remove-user.component';
 import { MergeModalContent }                            from './merge/merge.component';
 import { MessageModalContent }                          from './message/message.component';
 import { EmbedModalContent }                            from './embed/embed.component';
@@ -45,15 +45,13 @@ import { RouterModule }                                 from '@angular/router';
         RemoveUserModalContent,
         EmbedModalContent,
         GenericModalContent,
-        NxModalGenericComponent,
-        NxModalAddUserComponent,
-        NxModalRemoveUserComponent,
         ApplyModalContent,
         NxModalApplyComponent,
         RenameServerModalContent,
         RestartServerModalContent,
         DetachServerModalContent,
         ResetServerModalContent,
+        NxModalGenericComponent,
     ],
     entryComponents: [
         LoginModalContent,
@@ -65,21 +63,16 @@ import { RouterModule }                                 from '@angular/router';
         RemoveUserModalContent,
         EmbedModalContent,
         GenericModalContent,
-        NxModalGenericComponent,
-        NxModalAddUserComponent,
-        NxModalRemoveUserComponent,
         ApplyModalContent,
         NxModalApplyComponent,
         RenameServerModalContent,
         RestartServerModalContent,
         DetachServerModalContent,
         ResetServerModalContent,
+        NxModalGenericComponent,
     ],
     providers      : [
         NxDialogsService,
-        NxModalGenericComponent,
-        NxModalAddUserComponent,
-        NxModalRemoveUserComponent,
         NxModalApplyComponent,
     ],
     exports        : []
