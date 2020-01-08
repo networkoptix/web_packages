@@ -1,0 +1,66 @@
+import { Injectable, OnInit }        from '@angular/core';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { ControlValueAccessor }      from '@angular/forms';
+import { NxConfigService }           from '../../services/nx-config';
+
+const noop = () => {};
+
+@Injectable()
+export abstract class BaseDropdown implements OnInit, ControlValueAccessor {
+    CONFIG: any = {};
+    LANG: any = {};
+    message: string;
+    show: boolean;
+
+    // internal value
+    _selected: any;
+
+    // Placeholders for the callbacks which are later provided
+    // by the Control Value Accessor
+    public onTouchedCallback: () => void      = noop;
+    public onChangeCallback: (_: any) => void = noop;
+
+    constructor(languageService: NxLanguageProviderService,
+                configService: NxConfigService,
+    ) {
+        this.CONFIG  = configService.getConfig();
+        this.LANG    = languageService.getTranslations();
+        this.message = this.LANG.pleaseSelect;
+        this.show    = false;
+    }
+
+    ngOnInit() {
+    }
+
+    trackItem(index, item) {
+        if (!item) {
+            return undefined;
+        }
+        return item.value;
+    }
+
+    /**
+     * Write a new (model) value to the element.
+     */
+    writeValue(value: any) {
+        if (value !== null && typeof value !== 'undefined') {
+            this._selected = value;
+        }
+    }
+
+    /**
+     * Set the function to be called
+     * when the control receives a change event.
+     */
+    registerOnChange(fn) {
+        this.onChangeCallback = fn;
+    }
+
+    /**
+     * Set the function to be called
+     * when the control receives a touch event.
+     */
+    registerOnTouched(fn: any): void {
+        this.onTouchedCallback = fn;
+    }
+}

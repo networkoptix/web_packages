@@ -1,10 +1,12 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router }                       from '@angular/router';
-import { Subscription }                 from 'rxjs';
-import { AutoUnsubscribe }              from 'ngx-auto-unsubscribe';
-import { NxConfigService }              from '../../../services/nx-config';
-import { NxAccountService }             from '../../../services/account.service';
-import { NxSessionService }             from '../../../services/session.service';
+import { Component }                 from '@angular/core';
+import { Router }                    from '@angular/router';
+import { Subscription }              from 'rxjs';
+import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
+import { NxConfigService }           from '../../../services/nx-config';
+import { NxAccountService }          from '../../../services/account.service';
+import { NxSessionService }          from '../../../services/session.service';
+import { BaseDropdown }              from '../injDropdown';
+import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 
 @AutoUnsubscribe()
 @Component({
@@ -13,26 +15,24 @@ import { NxSessionService }             from '../../../services/session.service'
     styleUrls: ['account-settings.component.scss']
 })
 
-export class NxAccountSettingsDropdown implements OnInit, OnDestroy {
-    config: any;
+export class NxAccountSettingsDropdown extends BaseDropdown {
     settings = {
         email: '',
         is_staff: false,
         is_superuser: false
     };
-    show: boolean;
+
     private loginSubscription: Subscription;
 
     constructor(private accountService: NxAccountService,
-                private _config: NxConfigService,
+                private languageService: NxLanguageProviderService,
+                private configService: NxConfigService,
                 private sessionService: NxSessionService,
                 private router: Router,
-    ) {
-        this.config = this._config.getConfig();
-        this.show = false;
-    }
 
-    ngOnDestroy() {}
+    ) {
+        super(languageService, configService);
+    }
 
     ngOnInit()  {
         this.getAccount();
@@ -59,8 +59,8 @@ export class NxAccountSettingsDropdown implements OnInit, OnDestroy {
         const stay = url.startsWith('/systems') ||
                      url.startsWith('/account') ||
                      url.startsWith('/push-notifications') ||
-                     url.startsWith('/download') && !this.config.publicDownloads  ||
-                     url.startsWith('/downloads') && !this.config.publicReleases;
+                     url.startsWith('/download') && !this.CONFIG.publicDownloads  ||
+                     url.startsWith('/downloads') && !this.CONFIG.publicReleases;
         this.accountService.logout(!stay);
     }
 }

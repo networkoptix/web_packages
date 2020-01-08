@@ -6,7 +6,7 @@
             (click)="show = !show"
             type="button" id="genericSelect" data-toggle="dropdown">
 
-        <span [innerHtml]="selected.name"></span>
+        <span [innerHtml]="_selected.name"></span>
         <div class="nav-arrow">
             <span></span>
             <span></span>
@@ -19,7 +19,7 @@
         <ul class="dropdown-menu--list">
             <li class="dropdown-item-container" *ngFor="let item of items; trackBy: trackItem">
                 <a class="dropdown-item inset"
-                   [ngClass]="{ 'selected': selected.value === item.value }"
+                   [ngClass]="{ 'selected': _selected.value === item.value }"
                    (click)="show = false; change(item)">
                     <span [innerHTML]="item.name"></span>
                 </a>
