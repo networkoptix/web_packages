@@ -2,54 +2,57 @@
 @import '../../styles/theme_palette';
 @import '../../styles/theme_variables';
 
+@mixin font-source($fontfamily: $font-family-regular, $size: false, $colour: false, $weight: false,  $lh: false) {
+    font-family: $fontfamily;
+    @if $size {
+        font-size: $size;
+    }
+    @if $colour {
+        color: $colour;
+    }
+    @if $weight {
+        font-weight: $weight;
+    }
+    @if $lh {
+        line-height: $lh;
+    }
+}
+
 h1, h2 {
+    @include font-source($font-family-medium, $h1-font-size, $font-color-medium);
     margin-top    : $line-height-computed;
     margin-bottom : $line-height-computed;
     padding       : 0;
-    font-size     : $h1-font-size;
     display       : flex;
     align-items   : center;
-    font-family   : $font-family-light;
-    color         : $dark9;
 }
 
 h2 {
+    @include font-source($font-family-medium, $h2-font-size, $font-color-medium);
     margin      : 0;
     padding     : 0;
-    font-size   : $h2-font-size;
-    font-family : $font-family-light;
-    color       : $dark9;
 }
 
 h3 {
+    @include font-source($font-family-regular, $h3-font-size, $font-color-regular);
     margin-top    : ($line-height-computed / 2);
     margin-bottom : ($line-height-computed / 4);
-    font-size     : $h3-font-size;
-    font-family   : $font-family-regular;
-    color         : $dark9;
 }
 
 h4 {
-    font-size   : $h4-font-size;
-    font-family : $font-family-medium;
-    color       : $dark9;
+    @include font-source($font-family-medium, $h4-font-size, $font-color-medium);
 }
 
 h5 {
-    font-size   : $h5-font-size;
-    font-family : $font-family-medium;
-    color       : $dark9;
+    @include font-source($font-family-medium, $h5-font-size, $font-color-medium);
 }
 
 h6 {
-    font-size   : $h6-font-size;
-    font-family : $font-family-medium;
-    color       : $dark9;
+    @include font-source($font-family-medium, $h6-font-size, $font-color-medium);
 }
 
 .h7 {
-    @extend h6;
-    font-family : $font-family-regular;
+    @include font-source($font-family-regular, $h6-font-size, $font-color-regular);
 }
 
 h1 > .label {
@@ -58,8 +61,23 @@ h1 > .label {
 }
 
 .regular14 {
-    @extend h5;
-    font-family : $font-family-regular;
+    @include font-source($font-family-regular, $h6-font-size, $font-color-regular);
+}
+
+.medium13 {
+    @include font-source($font-family-medium, $font-family-base, $font-color-medium);
+}
+
+.regular13 {
+    @include font-source($font-family-regular, $font-family-base, $font-color-regular);
+}
+
+.light13 {
+    @include font-source($font-family-light, $font-family-base, $font-color-light);
+}
+
+.light12 {
+    @include font-source($font-family-light, $font-size-sm, $font-color-light);
 }
 
 p {
