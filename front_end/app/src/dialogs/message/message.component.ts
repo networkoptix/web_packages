@@ -73,7 +73,7 @@ export class MessageModalContent implements OnInit {
         this.initForm();
         this.sendMessage = this.processService.createProcess(() => {
             const asset = this.data.assetId || this.data.asset;
-            debugger;
+
             return this.cloudApiService.sendMessage(this.subject, asset, this.message, this.userName, this.userEmail).toPromise();
         }, {
             successMessage: this.LANG.dialogs.message.sent
