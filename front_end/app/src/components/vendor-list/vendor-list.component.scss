@@ -1,10 +1,11 @@
 @import '../../../styles/custom/custom_palette';
 @import '../../../styles/theme_palette';
 @import '../../../styles/theme_variables';
+@import '../../styles/typography';
 
 nx-vendor-list {
     width : 100%;
-    
+
     .ipvd-info {
         span {
             margin      : 0;
@@ -13,23 +14,22 @@ nx-vendor-list {
             font-size   : rem(20px);
         }
     }
-    
+
     li {
         height : 24px;
-        
+
         a {
+            @extend #regular15;
             color           : $light16;
             height          : 24px;
-            font-family     : $font-family-regular;
-            font-size       : 15px;
             text-decoration : none;
-            
+
             &:hover {
                 color : $dark15;
             }
         }
     }
-    
+
     .manufacture-info {
         width      : 100%;
         display    : inline-block;

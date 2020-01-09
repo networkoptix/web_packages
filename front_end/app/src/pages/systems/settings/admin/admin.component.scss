@@ -3,14 +3,13 @@
 
 .system-settings {
     .system-owner {
-        font-family : $font-family-regular;
-        font-size   : $font-size-base;
-        
+        @extend #regular13;
+
         &-bold {
             font-family: $font-family-bold;
         }
     }
-    
+
     .system-name {
         font-family : $font-family-medium;
         line-height: 1.2;
@@ -27,11 +26,10 @@
     }
 
     .helper-block {
-        color: $light16;
-        font-family: $font-family-regular;
-        font-size: 12px;
-        margin: 2px 0 8px 22px;
-        line-height: 16px;
+        @extend #regular12;
+        color       : $light16;
+        margin      : 2px 0 8px 22px;
+        line-height : 16px;
     }
 
     .disabled-helper-block, .disabled-label {

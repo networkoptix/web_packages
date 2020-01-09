@@ -7,6 +7,7 @@
 @import '../../../styles/theme_palette';
 @import '../../../styles/custom/custom_palette';
 @import '../../../styles/theme_variables';
+@import '../../styles/typography';
 
 $logo-height               : 32px;
 $line-height               : 44px;
@@ -32,76 +33,74 @@ $header-collapsing-width-1 : 1px;
     border-radius : 0;
     border-bottom : 1px solid $light4;
     padding-right : 1rem !important;
-    
+
     &.navbar-default {
         background-color : #fff;
         padding          : 0;
     }
-    
+
     .dropdown .dropdown-toggle {
         height : 32px !important;
         border : none;
     }
-    
+
     .app-header-right {
         margin-top : -1px;
     }
-    
+
     .navbar-nav {
         flex-direction : row;
         align-items    : center;
         height         : $navbar-height;
         line-height    : $line-height;
     }
-    
+
     .navbar-brand {
         font-size : $h3-font-size;
         margin    : 0 $horizontal-spacing !important;
         padding   : 0;
-        
+
         & > img {
             height  : $logo-height;
             display : inline-block;
             margin  : (($navbar-height - $logo-height)/2) 0;
         }
     }
-    
-    
+
+
     .margin-right {
         margin-right : $horizontal-spacing !important;
     }
-    
+
     .nav > li {
         margin      : 0;
         padding     : 0;
         font-size   : $font-size-lg;
         display     : flex;
         align-items : center;
-        
+
         &.vertical-bar {
             border-right : 1px solid $light4;
             height       : 25px;
-            
+
         }
-        
+
         & > span {
             // display: inline-block;
             margin-left : .5rem;
         }
-        
+
         & > a {
-            color           : $dark9;
+            @extend #medium14;
             margin          : 0;
             padding         : 0 $horizontal-spacing;
             line-height     : 46px;
-            font-size       : rem(14px);
-            font-family     : $font-family-medium;
             display         : flex;
             flex-direction  : row;
             align-items     : center;
             position        : relative;
             text-decoration : none;
-            
+
             & > span.ellipsis {
                 @include ellipsis;
                 white-space    : nowrap;
@@ -110,31 +109,31 @@ $header-collapsing-width-1 : 1px;
                 line-height    : $line-height;
                 max-width      : $max-header-item-width;
             }
-            
+
             &:hover {
                 background-color : $light2;
                 text-decoration  : none;
             }
         }
-        
+
         &.no-hover > a:hover {
             cursor           : default;
             background-color : transparent !important;
         }
-        
+
         &.open {
             border-bottom : 1px solid $navbar-default-bg;
             margin-bottom : -1px;
-            
+
             & > a {
                 color         : $navbar-default-link-color !important;
-                
+
                 margin-left   : -1px;
                 border-left   : 1px solid $dropdown-border;
-                
+
                 margin-right  : -1px;
                 border-right  : 1px solid $dropdown-border;
-                
+
                 height        : 58px;
                 margin-bottom : -2px;
 
@@ -148,17 +147,17 @@ $header-collapsing-width-1 : 1px;
                 }
             }
         }
-        
+
         &.active {
             background-color : white !important;
-            
+
             & > a {
                 color : $brand_core;
-                
+
                 &:hover {
                     background-color : transparent !important;
                 }
-                
+
                 &::after {
                     content          : "";
                     position         : absolute;
@@ -170,13 +169,13 @@ $header-collapsing-width-1 : 1px;
                 }
             }
         }
-        
+
         & > a > span {
             &.glyphicon {
                 margin-left  : -2px;
                 margin-right : 14px;
             }
-            
+
             &.icon-caret {
                 margin-left   : 14px;
                 margin-right  : -2px;
@@ -184,21 +183,21 @@ $header-collapsing-width-1 : 1px;
             }
         }
     }
-    
+
     /* This is to prevent top menu from collapsing */
     & > div > .navbar-nav > li {
         float : left;
     }
-    
+
     .navbar-header {
         float : left;
     }
-    
+
     .navbar-right {
         float        : right !important;
         margin-right : 0;
     }
-    
+
     @media (max-width : $grid-float-breakpoint-max) {
         .open {
             position : static; /* It was relative, but we remove it to allow dropdown to take the whole width of the screen*/
@@ -210,20 +209,20 @@ $header-collapsing-width-1 : 1px;
             }
         }
     }
-    
+
     .navbar-left {
         float : left !important;
     }
-    
+
     /* / End of This is to prevent top menu from collapsing*/
-    
+
     @media (max-width : $collapse-first-width-max) {
         .dropdown-menu-left {
             right : 0;
             left  : auto;
         }
     }
-    
+
     @media (max-width : $grid-float-breakpoint-max) {
         .vertical-bar,
         .hidden-collapsed,
@@ -232,7 +231,7 @@ $header-collapsing-width-1 : 1px;
             display : none !important;
         }
     }
-    
+
     .collapse-first {
         @media (min-width : $collapse-first-width) {
             .hidden-expanded {
@@ -243,20 +242,20 @@ $header-collapsing-width-1 : 1px;
             .hidden-expanded {
                 display : block;
             }
-            
+
             .hidden-collapsed,
             .icon-caret,
             .ellipsis {
                 display : none !important;
             }
-            
+
             .glyphicon {
                 margin-right : 0 !important;
             }
-            
+
         }
     }
-    
+
     .collapse-second {
         @media (min-width : $collapse-second-width) {
             .hidden-expanded {
@@ -267,7 +266,7 @@ $header-collapsing-width-1 : 1px;
             .hidden-expanded {
                 display : block;
             }
-            
+
             .hidden-collapsed,
             .icon-caret,
             .ellipsis {

@@ -1,6 +1,7 @@
 @import '../../../styles/theme_palette';
 @import '../../../styles/theme_variables';
 @import '../../styles/_mixins';
+@import '../../styles/typography';
 @import '~bootstrap/scss/functions';
 @import '~bootstrap/scss/variables';
 @import '~bootstrap/scss/mixins/breakpoints';
@@ -43,12 +44,11 @@
         }
 
         .search-input {
+            @extend #regular15;
+            color         : $light16;
             height        : 40px;
             padding-left  : 48px;
             padding-right : 40px;
-            font-size     : 15px;
-            font-family   : $font-family-regular;
-            color         : $light16;
             border-radius : 2px;
             border        : 1px solid $light6;
             background    : transparent;

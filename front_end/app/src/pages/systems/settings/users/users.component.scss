@@ -1,11 +1,11 @@
 @import '../../../../styles/mixins';
+@import '../../../../styles/typography';
 
 .user-name {
     @include ellipsis;
     //width     : 20%;
     // max-width : 175px;
-    font-family : $font-family-regular;
-    font-size : $font-size-base;
+    @extend #regular13;
 }
 
 .user-email {

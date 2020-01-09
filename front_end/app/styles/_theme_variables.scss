@@ -61,8 +61,12 @@ $panel-default-heading-bg:    transparent;
 $rem-baseline: 16px;
 
 $font-size-base : rem(13px); // Assumes the browser default, typically `16px`
+
+$font-size-xxlg : rem(32px);
+$font-size-xlg : rem(24px);
 $font-size-lg : $font-size-base * 1.25;
 $font-size-sm : rem(12px); //$font-size-base * .785;
+
 
 $h1-font-size : rem(22px); // $font-size-base * 1.4;
 $h2-font-size : rem(22px); // $font-size-base * 1.3;
@@ -72,6 +76,8 @@ $h5-font-size : rem(14px); // $font-size-base;
 $h6-font-size : rem(14px); // $font-size-base * .875;
 
 $font-size-ssm : rem(11px);
+$font-size-20 : rem(20px);
+
 $line-height-ssm : rem(13px);
 
 // Font colors

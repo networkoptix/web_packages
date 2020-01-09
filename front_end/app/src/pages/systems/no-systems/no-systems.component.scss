@@ -1,6 +1,7 @@
 @import '../../../../styles/custom/custom_palette';
 @import '../../../../styles/theme_palette';
 @import '../../../../styles/theme_variables';
+@import '../../../styles/typography';
 @import '~bootstrap/scss/functions';
 @import '~bootstrap/scss/variables';
 @import '~bootstrap/scss/mixins/breakpoints';
@@ -12,13 +13,12 @@ nx-no-systems {
         text-align       : center;
         background-color : $body-bg;
         padding          : 2rem 0;
-        
+
         &-body {
-            font-size   : $h3-font-size;
-            font-family : $font-family-light;
+            @extend #light18;
         }
     }
-    
+
     .right-arrow {
         display             : inline-block;
         width               : 40px;
@@ -28,12 +28,12 @@ nx-no-systems {
         background-repeat   : no-repeat;
         background-size     : 40px 40px;
         background-position : right 0 center;
-        
+
         @media only screen and (-webkit-min-device-pixel-ratio : 2), only screen and (min-device-pixel-ratio : 2) {
             background-image : url('/static/images/tutorial_arrow@2x.png') !important;
         }
     }
-    
+
     @include media-breakpoint-down(sm) {
         .no-data-panel .right-arrow {
             transform : rotate(90deg);

@@ -10,8 +10,7 @@ nx-block {
 
   .user-name,
   .system-owner {
-    font-family: $font-family-regular;
-    font-size: $font-size-base;
+    @extend #regular13;
   }
 
   .name {
