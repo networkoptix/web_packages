@@ -73,6 +73,7 @@ import { RouterModule }                                 from '@angular/router';
     ],
     providers      : [
         NxDialogsService,
+        NxModalGenericComponent,
         NxModalApplyComponent,
     ],
     exports        : []

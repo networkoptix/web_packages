@@ -1,5 +1,8 @@
-import { Component, OnInit, Input, SimpleChanges, OnChanges } from '@angular/core';
-import { NxConfigService }                                    from '../../../services/nx-config';
+import {
+    Component,
+    Input, SimpleChanges
+}                       from '@angular/core';
+import { BaseDropdown } from '../injDropdown';
 
 @Component({
     selector: 'nx-systems',
@@ -7,12 +10,11 @@ import { NxConfigService }                                    from '../../../ser
     styleUrls: ['systems.component.scss']
 })
 
-export class NxSystemsDropdown implements OnInit, OnChanges {
+export class NxSystemsDropdown extends BaseDropdown {
     @Input() endpoint: any;
     @Input() systems: any;
     @Input() activeSystem: any;
 
-    config: any;
     systemCounter: number;
     active = {
         health: false,
@@ -21,20 +23,6 @@ export class NxSystemsDropdown implements OnInit, OnChanges {
         view: false,
     };
     params: any;
-    show: boolean;
-
-    constructor(private configService: NxConfigService) {
-
-        this.show = false;
-        this.config = configService.getConfig();
-    }
-
-    trackItem(index, item) {
-        if (!item) {
-            return undefined;
-        }
-        return item.id;
-    }
 
     getUrlFor(sid) {
         let url = '/systems/' + sid;

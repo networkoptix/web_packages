@@ -1,12 +1,10 @@
 import {
-    Component, OnInit, ViewEncapsulation, Input,
-    forwardRef, EventEmitter, Output, OnChanges, SimpleChanges } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR }               from '@angular/forms';
-import { NxLanguageProviderService }                             from '../../../services/nx-language-provider';
-import { BaseDropdown }                                          from '../injDropdown';
-
-// const noop = () => {
-// };
+    Component, ViewEncapsulation,
+    Input, forwardRef, EventEmitter,
+    Output, SimpleChanges
+}                            from '@angular/core';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { BaseDropdown }      from '../injDropdown';
 
 /* Usage
 <nx-select name="permissions"

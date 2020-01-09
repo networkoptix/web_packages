@@ -1,6 +1,8 @@
-import { Component, OnInit, Input, OnDestroy, SimpleChanges, OnChanges } from '@angular/core';
-import { Location }                                                      from '@angular/common';
-import { NxConfigService } from '../../../services/nx-config';
+import { Component, Input, SimpleChanges } from '@angular/core';
+import { Location }                        from '@angular/common';
+import { NxConfigService }                 from '../../../services/nx-config';
+import { BaseDropdown }                    from '../injDropdown';
+import { NxLanguageProviderService }       from '../../../services/nx-language-provider';
 
 
 @Component({
@@ -9,9 +11,8 @@ import { NxConfigService } from '../../../services/nx-config';
     styleUrls: ['active-system.component.scss']
 })
 
-export class NxActiveSystemDropdown implements OnInit, OnDestroy, OnChanges {
+export class NxActiveSystemDropdown extends BaseDropdown{
     @Input() activeSystem: any;
-    CONFIG: any;
 
     active = {
         health: false,
@@ -20,12 +21,12 @@ export class NxActiveSystemDropdown implements OnInit, OnDestroy, OnChanges {
     };
     canViewInfo: boolean;
     params: any;
-    show: boolean;
 
-    constructor(private config: NxConfigService,
-                private location: Location) {
-        this.CONFIG = this.config.getConfig();
-        this.show = false;
+    constructor(private languageService: NxLanguageProviderService,
+                private configService: NxConfigService,
+                private location: Location,
+    ) {
+        super(languageService, configService);
     }
 
     private isActive(val) {

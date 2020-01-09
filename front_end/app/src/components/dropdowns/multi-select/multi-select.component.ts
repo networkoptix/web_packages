@@ -1,13 +1,11 @@
 import {
-    Component, OnInit, ViewEncapsulation,
-    Input, forwardRef, OnChanges, SimpleChanges,
-    ViewChild, ElementRef, Output, EventEmitter
-}                                                  from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { NxLanguageProviderService }               from '../../../services/nx-language-provider';
-
-const noop = () => {
-};
+    Component, ViewEncapsulation,
+    Input, forwardRef, SimpleChanges,
+}                                    from '@angular/core';
+import { NG_VALUE_ACCESSOR }         from '@angular/forms';
+import { NxLanguageProviderService } from '../../../services/nx-language-provider';
+import { NxConfigService }           from '../../../services/nx-config';
+import { BaseDropdown }              from '../injDropdown';
 
 /* Usage
  <nx-multi-select
@@ -35,32 +33,24 @@ const noop = () => {
     ]
 })
 
-export class NxMultiSelectDropdown implements OnInit, ControlValueAccessor, OnChanges {
+export class NxMultiSelectDropdown extends BaseDropdown{
     @Input('items') itemsOrig: any;
     @Input() canSelectAll: any;
     @Input() canSearch: any;
 
     public items: any = {};
     public filter: string;
-    public show: boolean;
     public textSelected: any = {};
-
-    LANG: any = {};
 
     private innerValue: any;
 
-    // Placeholders for the callbacks which are later provided
-    // by the Control Value Accessor
-    private onTouchedCallback: () => void = noop;
-    private onChangeCallback: (_: any) => void = noop;
+    constructor(private languageService: NxLanguageProviderService,
+                private configService: NxConfigService,
+    ) {
+        super(languageService, configService);
 
-    constructor(private language: NxLanguageProviderService) {
-        this.LANG = this.language.getTranslations();
-        this.show = false;
         this.filter = '';
     }
-
-    // TODO: Bind ngModel to the component and eliminate EventEmitter
 
     ngOnInit(): void {
         this.canSelectAll = (this.canSelectAll !== undefined);
@@ -105,13 +95,6 @@ export class NxMultiSelectDropdown implements OnInit, ControlValueAccessor, OnCh
         this.items = this.itemsOrig.filter((item) => {
             return item.id.toLowerCase().includes(value.toLowerCase());
         });
-    }
-
-    trackItem(index, item) {
-        if (!item) {
-            return undefined;
-        }
-        return item.id;
     }
 
     updateItems() {
@@ -159,7 +142,7 @@ export class NxMultiSelectDropdown implements OnInit, ControlValueAccessor, OnCh
     }
 
     /**
-     * Write a new (model) value to the element.
+     * Overwrite
      */
     writeValue(value: any) {
         if (value !== null) {
@@ -167,22 +150,6 @@ export class NxMultiSelectDropdown implements OnInit, ControlValueAccessor, OnCh
             this.updateLabel();
             this.updateItems();
         }
-    }
-
-    /**
-     * Set the function to be called
-     * when the control receives a change event.
-     */
-    registerOnChange(fn) {
-        this.onChangeCallback = fn;
-    }
-
-    /**
-     * Set the function to be called
-     * when the control receives a touch event.
-     */
-    registerOnTouched(fn: any): void {
-        this.onTouchedCallback = fn;
     }
 }
 

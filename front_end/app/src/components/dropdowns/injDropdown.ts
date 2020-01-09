@@ -1,12 +1,15 @@
-import { Injectable, OnDestroy, OnInit } from '@angular/core';
-import { NxLanguageProviderService }     from '../../services/nx-language-provider';
-import { ControlValueAccessor }          from '@angular/forms';
-import { NxConfigService }               from '../../services/nx-config';
+import {
+    Injectable, OnChanges,
+    SimpleChanges, OnDestroy, OnInit
+}                                    from '@angular/core';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { ControlValueAccessor }      from '@angular/forms';
+import { NxConfigService }           from '../../services/nx-config';
 
 const noop = () => {};
 
 @Injectable()
-export abstract class BaseDropdown implements OnInit, OnDestroy, ControlValueAccessor {
+export abstract class BaseDropdown implements OnInit, OnChanges, OnDestroy, ControlValueAccessor {
     CONFIG: any = {};
     LANG: any = {};
     message: string;
@@ -35,6 +38,10 @@ export abstract class BaseDropdown implements OnInit, OnDestroy, ControlValueAcc
     // needed for @AutoUnsubscribe
     ngOnDestroy(): void {
     }
+
+    ngOnChanges(changes: SimpleChanges) {
+    }
+
 
     trackItem(index, item) {
         if (!item) {

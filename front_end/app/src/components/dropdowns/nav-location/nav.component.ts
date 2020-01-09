@@ -1,7 +1,5 @@
-import {
-    Component, OnInit, Input, OnDestroy,
-    SimpleChanges, OnChanges
-} from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { BaseDropdown }     from '../injDropdown';
 
 @Component({
     selector: 'nx-nav-location',
@@ -9,22 +7,6 @@ import {
     styleUrls: ['nav.component.scss']
 })
 
-export class NxNavLocationDropdown implements OnInit, OnDestroy, OnChanges {
+export class NxNavLocationDropdown extends BaseDropdown {
     @Input() location: any;
-
-    show: boolean;
-
-    constructor() {
-
-        this.show = false;
-    }
-
-    ngOnInit(): void {
-    }
-
-    ngOnDestroy() {
-    }
-
-    ngOnChanges(changes: SimpleChanges) {
-    }
 }

@@ -1,8 +1,13 @@
-import { Component, OnInit, Inject, ViewEncapsulation, Input, Output, EventEmitter, forwardRef } from '@angular/core';
-import { NxUtilsService }                                                            from '../../../services/utils.service';
-import { NxLanguageProviderService }                                                 from '../../../services/nx-language-provider';
-import { NxCloudApiService }                                                         from '../../../services/nx-cloud-api';
-import { NG_VALUE_ACCESSOR, ControlValueAccessor }                                   from '@angular/forms';
+import {
+    Component, ViewEncapsulation,
+    Input, forwardRef
+}                                    from '@angular/core';
+import { NxUtilsService }            from '../../../services/utils.service';
+import { NxLanguageProviderService } from '../../../services/nx-language-provider';
+import { NxCloudApiService }         from '../../../services/nx-cloud-api';
+import { NG_VALUE_ACCESSOR }         from '@angular/forms';
+import { NxConfigService }           from '../../../services/nx-config';
+import { BaseDropdown }              from '../injDropdown';
 
 @Component({
     selector: 'nx-language-select',
@@ -18,7 +23,7 @@ import { NG_VALUE_ACCESSOR, ControlValueAccessor }                              
     ]
 })
 
-export class NxLanguageDropdown implements OnInit {
+export class NxLanguageDropdown extends BaseDropdown {
     @Input() instantReload: any;
     @Input() instantApply: any;
     @Input() dropup: any;
@@ -37,19 +42,14 @@ export class NxLanguageDropdown implements OnInit {
     languagesCol1 = [];
     languagesCol2 = [];
 
-    // Placeholders for the callbacks which are later provided
-    // by the Control Value Accessor
-    private onTouchedCallback = () => {};
-    private onChangeCallback = (_: any) => {};
-
     constructor(private cloudApi: NxCloudApiService,
-                private language: NxLanguageProviderService,
+                private languageService: NxLanguageProviderService,
+                private configService: NxConfigService,
     ) {
-        this.currentLang = this.language.getLang();
-        this.show = false;
-    }
+        super(languageService, configService);
 
-    // TODO: Bind ngModel to the component and eliminate EventEmitter
+        this.currentLang = this.languageService.getLang();
+    }
 
     private splitLanguages() {
         if (this.languages.length > 12) {
@@ -111,19 +111,14 @@ export class NxLanguageDropdown implements OnInit {
             });
     }
 
+    /**
+     * Overwrite
+     */
     writeValue(langCode: any) {
         this.langCode = langCode;
         if (langCode) {
             this.setLanguage();
         }
-    }
-
-    registerOnChange(fn) {
-        this.onChangeCallback = fn;
-    }
-
-    registerOnTouched(fn: any): void {
-        this.onTouchedCallback = fn;
     }
 
     onBlur() {

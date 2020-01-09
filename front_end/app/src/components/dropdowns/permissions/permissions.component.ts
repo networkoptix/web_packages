@@ -1,8 +1,11 @@
 import {
-    Component, OnInit, Inject, ViewEncapsulation,
-    Input, Output, EventEmitter, SimpleChanges
+    Component, ViewEncapsulation,
+    Input, Output, EventEmitter,
+    SimpleChanges
 }                                    from '@angular/core';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
+import { BaseDropdown }              from '../injDropdown';
+import { NxConfigService }           from '../../../services/nx-config';
 
 @Component({
     selector     : 'nx-permissions-select',
@@ -11,7 +14,7 @@ import { NxLanguageProviderService } from '../../../services/nx-language-provide
     encapsulation: ViewEncapsulation.None,
 })
 
-export class NxPermissionsDropdown implements OnInit {
+export class NxPermissionsDropdown extends BaseDropdown {
     @Input() disabled: any;
     @Input() user: any;
     @Input() roles: any;
@@ -19,25 +22,18 @@ export class NxPermissionsDropdown implements OnInit {
     @Input() selected: any;
     @Output() onSelected = new EventEmitter<string>();
 
-    LANG: any;
-
     selection: string;
     message: string;
-    show: boolean;
     accessRoles: any;
     differ: any;
 
-    constructor(private language: NxLanguageProviderService,
+    constructor(private languageService: NxLanguageProviderService,
+                private configService: NxConfigService,
     ) {
-        this.LANG = this.language.getTranslations();
+        super(languageService, configService);
+
         this.accessRoles = [];
-        this.show = false;
         this.message = this.LANG.pleaseSelect;
-    }
-
-    // TODO: Bind ngModel to the component and eliminate EventEmitter
-
-    ngOnInit(): void {
     }
 
     processAccessRoles() {
@@ -55,17 +51,6 @@ export class NxPermissionsDropdown implements OnInit {
             });
         }
     }
-
-    // Keeping this just for reference ... ngDoCheck runs often so it's unnecessary overhead
-    // ngDoCheck() {
-    //     const changes = this.differ.diff(this.system);
-    //
-    //     if (changes) {
-    //         this.processAccessRoles();
-    //         const role = this.roles.filter(x => x.name === this.selected.name)[ 0 ];
-    //         this.selection = (role) ? role.optionLabel || this.message : '';
-    //     }
-    // }
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes.roles && changes.roles.currentValue) {

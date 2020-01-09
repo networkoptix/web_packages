@@ -44,13 +44,11 @@ export class GenericModalContent implements OnInit {
     encapsulation: ViewEncapsulation.None,
     styleUrls: []
 })
-
 export class NxModalGenericComponent implements OnInit {
     modalRef: NgbModalRef;
     LANG: any;
 
     constructor(private domSanitizer: DomSanitizer,
-                private location: Location,
                 private modalService: NgbModal,
                 private language: NxLanguageProviderService,
     ) {
