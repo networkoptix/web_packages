@@ -23,6 +23,13 @@ import logging
 logger = logging.getLogger(__name__)
 
 
+# TODO: use new type of temporary credentials.
+def set_session_credentials(request, email, password):
+    tempCredentials = Account.create_temporary_credentials(email, password, 'long')
+    request.session['login'] = tempCredentials['login']
+    request.session['password'] = tempCredentials['password']
+
+
 @api_view(['POST'])
 @permission_classes((AllowAny, ))
 @handle_exceptions
@@ -90,8 +97,7 @@ def login(request):
         user.activated_date = timezone.now()
         user.save()
 
-    request.session['login'] = email
-    request.session['password'] = password
+    set_session_credentials(request, email, password)
     request.session['time'] = time.time()
     if 'timezone' in request.data:
         request.session['timezone'] = request.data['timezone']
@@ -165,7 +171,7 @@ def change_password(request):
         raise APIRequestException('Wrong old password', ErrorCodes.wrong_old_password,
                                   error_data={'old_password': error.error_data})
 
-    request.session['password'] = new_password
+    set_session_credentials(request, request.user.email, new_password)
     return api_success()
 
 
