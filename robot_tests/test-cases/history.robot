@@ -123,6 +123,6 @@ Make sure expandable sections show options
 
 should open downloads releases page in anonymous state
     [tags]    anonymous
-    Open page anonymously    ${url}/downloads/releases    ${RELEASE HISTORY TITLE TEXT} - ${PRODUCT_NAME}
+    Open page anonymously    ${url}/downloads/releases    ${PRODUCT_NAME}
     Wait Until Element Is Visible    ${LOG IN MODAL}
     Check Log In    button=None

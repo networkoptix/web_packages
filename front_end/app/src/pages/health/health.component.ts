@@ -163,7 +163,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
 
     setupReport(data) {
         // Handle outdated version
-        if (!this.system.info.capabilities.mediaserver_metrics) {
+        if (!this.system.info.capabilities.vms_metrics) {
             this.outdatedVersion = true;
             return;
         }

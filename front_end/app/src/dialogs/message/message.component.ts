@@ -73,6 +73,7 @@ export class MessageModalContent implements OnInit {
         this.initForm();
         this.sendMessage = this.processService.createProcess(() => {
             const asset = this.data.assetId || this.data.asset;
+            debugger;
             return this.cloudApiService.sendMessage(this.subject, asset, this.message, this.userName, this.userEmail).toPromise();
         }, {
             successMessage: this.LANG.dialogs.message.sent
@@ -99,7 +100,7 @@ export class MessageModalContent implements OnInit {
         }
         this.subjects = this.config.messageSubjects[this.messageType].map((subject) => {
             return {
-                id: subject,
+                value: subject,
                 name: this.LANG.dialogs.message.subject[subject].replace('{{asset}}', this.data.asset)
             };
         });
@@ -117,7 +118,7 @@ export class MessageModalContent implements OnInit {
     }
 
     setSubject(subject: any) {
-        this.subject = subject.id;
+        this.subject = subject.value;
         this.subjectMessage = subject.name;
     }
 }

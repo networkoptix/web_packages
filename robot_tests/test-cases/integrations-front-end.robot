@@ -42,15 +42,15 @@ Validate changes when input text into search field
     ${initial number of tiles}=   Get Number of Integration Tiles
     Input Text    ${INTEGRATIONS SEARCH INPUT}    ${text}
     Wait Until Element Is Visible    ${INTEGRATIONS SEARCH CLOSE BUTTON}
-    ${current url}=   Get Location
-    Should Contain    ${current url}    ?search=${text}
+    Wait Until Location Contains    ?search=${text}
     ${new number of tiles}=    Get Number of Integration Tiles
     Should Be True    ${new number of tiles} < ${initial number of tiles}
 
 Validate Integration Details Page
     Run keyword and continue on failure    Wait Until Elements Are Visible
     ...    ${INTEGRATION ALL INTEGRATIONS}
-    ...    ${INTEGRATION VERSION}
+    # Removed temporarily as there isn't a good way to target it
+    # ...    ${INTEGRATION VERSION}
     ...    ${INTEGRATION HOW IT WORKS LINK}
     ...    ${INTEGRATION HOW TO SETUP LINK}
     ...    ${INTEGRATION TAGS SECTION}
@@ -72,26 +72,24 @@ Validate Integration Details Page
     ...    ${INTEGRATION HOW IT WORKS HEADER}
 
 Validate Integration Tile
-    [Arguments]    ${index}    ${integration tile element}
-    @{integration tile contents}=   Get All Descendant WebElements    ${integration tile element}
+    [Arguments]    ${tile number}
     FOR    ${tile element}    IN    @{INTEGRATION TILE ELEMENTS}
-        ${webelement}=   Convert Locator To WebElement    (${tile element})[${index}+1]
-        Run keyword and continue on failure    Should Contain    ${integration tile contents}    ${webelement}
+        Run keyword and continue on failure    Element Should Be Visible    ${INTEGRATION TILE}/../div\[${tile number}\]${tile element}
     END
 
 # If a number of integrations is too big, it's better to validate couple of random integration tiles.
 # To do so just replace a FOR loop in "Integration Store catalog" test with "Validate Random Tile N times" keyword call
 # with list of tiles and desired number of random checks as parameters
-Validate Random Tile N times
-    [Arguments]    ${integration tiles}    ${N}
-    ${number of tiles}=   Get Length   ${integration tiles}
-    FOR    ${index}    IN    1  ${N}
-        ${random index}= 	Evaluate	random.randint(0, ${number of tiles})	modules=random
-        Validate Integration Tile    ${random index}    @{integration tiles}[${random index}]
-    END
+# Validate Random Tile N times
+#     [Arguments]    ${integration tiles}    ${N}
+#     ${number of tiles}=   Get Length   ${integration tiles}
+#     FOR    ${index}    IN    1  ${N}
+#         ${random index}= 	Evaluate	random.randint(0, ${number of tiles})	modules=random
+#         Validate Integration Tile    ${random index}    @{integration tiles}[${random index}]
+#     END
 
 Validate "Get in Touch" Form
-    Run keyword and continue on failure    Wait Until Elements Are Visible
+    Wait Until Elements Are Visible
     ...    ${INTEGRATION GET IN TOUCH FORM}
     ...    ${INTEGRATION GET IN TOUCH HEADER}
     ...    ${INTEGRATION GET IN TOUCH TITLE}
@@ -105,7 +103,7 @@ Validate "Get in Touch" Form
     ...    ${INTEGRATION GET IN TOUCH NAME INPUT}
     ...    ${INTEGRATION GET IN TOUCH EMAIL LABEL}
     ...    ${INTEGRATION GET IN TOUCH EMAIL INPUT}
-    ...    ${INTEGRATION GET IN TOUCH TOPIC LABEL}
+    ...    ${INTEGRATION GET IN TOUCH SUBJECT LABEL}
     ...    ${INTEGRATION GET IN TOUCH DROPDOWN BUTTON}
     ...    ${INTEGRATION GET IN TOUCH DROPDOWN ICON}
     ...    ${INTEGRATION GET IN TOUCH MESSAGE LABEL}
@@ -128,16 +126,16 @@ Fill in "Get in Touch" Form and Submit
 Integration Store title and URL are correct
     [Tags]    C54622
     Location Should Be    ${url}
-    Run keyword and expect error    Title should have been 'Integrations - Nx Cloud' but was 'Integrations'.
-    ...    Title Should Be    ${title}
+    Title Should Be    ${title}
     Validate Integrations Landing Page
 
 Integration Store catalog
     [Tags]    C54622
     @{integration tiles}=   Get WebElements    ${INTEGRATION TILE}
     ${number of tiles}=   Get Length    ${integration tiles}
-    FOR    ${index}    IN RANGE    0    ${number of tiles}
-        Validate Integration Tile    ${index}    @{integration tiles}[${index}]
+    FOR    ${index}    IN RANGE    ${number of tiles}
+        ${tile number}=   Evaluate    ${index}+1
+        Validate Integration Tile    ${tile number}
     END
 #    Validate Random Tile N times    ${integration tiles}    3
 
@@ -163,26 +161,27 @@ Integration Store Search
     Should be equal as strings    ${actual url}    ${url}
 
     Input Text     ${INTEGRATIONS SEARCH INPUT}    vis
+    Wait Until Location is    ${url}?search=vis
     Click Element    ${INTEGRATIONS SEARCH FILTER}/li[5]
-    Location Should Be    ${url}?search=vis&tags=faceRecognition
+    Wait Until Location Is    ${url}?search=vis&tags=faceRecognition
     Click Element    ${INTEGRATIONS SEARCH FILTER}/li[8]
-    Location Should Be    ${url}?search=vis&tags=faceRecognition,storage
+    Wait Until Location Is    ${url}?search=vis&tags=faceRecognition,storage
     Click Element    ${INTEGRATIONS SEARCH FILTER}/li[8]//span[contains(@class, "tag-close-icon")]
-    Location Should Be    ${url}?search=vis&tags=faceRecognition
+    Wait Until Location Is    ${url}?search=vis&tags=faceRecognition
     Go Back
-    Location Should Be    ${url}?search=vis&tags=faceRecognition,storage
+    Wait Until Location Is    ${url}?search=vis&tags=faceRecognition,storage
     Go Back
-    Location Should Be    ${url}?search=vis&tags=faceRecognition
+    Wait Until Location Is    ${url}?search=vis&tags=faceRecognition
     Go Back
-    Location Should Be    ${url}?search=vis
+    Wait Until Location Is    ${url}?search=vis
     Go Forward
-    Location Should Be    ${url}?search=vis&tags=faceRecognition
+    Wait Until Location Is    ${url}?search=vis&tags=faceRecognition
 
 
 Integration Store Integration Details
     [Tags]    C54623
     Wait Until Element Is Visible    ${INTEGRATION TILE}
-    CLick Link    ${INTEGRATION TEST INEGRATION LINK}
+    CLick Link    ${INTEGRATION TEST INTEGRATION LINK}
     Validate Integration Details Page
 
 Send messages using Integration Contact "Get in touch" form

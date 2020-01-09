@@ -47,32 +47,32 @@ Restart
 
 settings on page should match settings on server
     Log    Enable auto discovery of cameras and servers
-    Setting on page matches server    ${ENABLE AUTO DISCOVERY CHECKBOX REAL}     autoDiscoveryEnabled     
+    Setting on page matches server    ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}     autoDiscoveryEnabled     
     Log    Send anonymous usage and crash statistics to developers
-    Setting on page matches server     ${SEND ANONYMOUS USAGE CHECKBOX REAL}    statisticsAllowed    
+    Setting on page matches server     ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}    statisticsAllowed    
     Log    Allow system to optimize camera settings
-    Setting on page matches server    ${ALLOW SYSTEM OPTIMIZE CHECKBOX REAL}    cameraSettingsOptimization   
+    Setting on page matches server    ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}    cameraSettingsOptimization   
     Log    Enable audit trail
-    Setting on page matches server    ${ENABLE AUDIT TRAIL CHECKBOX REAL}    auditTrailEnabled   
+    Setting on page matches server    ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}    auditTrailEnabled   
     Log    Allow only secure connections
-    Setting on page matches server    ${ALLOW ONLY SECURE CHECKBOX REAL}    trafficEncryptionForced   
+    Setting on page matches server    ${ALLOW ONLY SECURE CHECKBOX VISIBLE}    trafficEncryptionForced   
     Log    Encrypt video traffic
-    Setting on page matches server    ${ENCRYPT VIDEO TRAFFIC CHECKBOX REAL}     videoTrafficEncryptionForced  
+    Setting on page matches server    ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}     videoTrafficEncryptionForced  
     Log    Limit session duration to
-    ${status} =    Run Keyword and Return Status    Checkbox Should Be Selected     ${LIMIT SESSION DURATION CHECKBOX REAL}
+    ${status} =    Run Keyword and Return Status    Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick checked
     Run Keyword If    ${status}==False    Evaluate Auto System Settings via API    sessionLimitMinutes    0
     ...    ELSE     Evaluate Session Limit 
        
 Setting on page matches server
     [arguments]    ${setting}    ${id}
-    ${status} =    Run Keyword and Return Status    Checkbox Should Be Selected     ${setting}
+    ${status} =    Run Keyword and Return Status    Element Attribute Value Should Be     ${setting}//span    class    tick checked
     ${string} =    Convert To String    ${status}
     ${selected} =    Convert To Lowercase    ${string}    
     Run Keyword And Continue On Failure    Evaluate Auto System Settings via API     ${id}    ${selected}
     
 Evaluate Session Limit
     ${value} =    Get Value    ${TIME NUMBER INPUT}     
-    ${interval} =     Get Text    ${TIME DURATION INTERVAL}    
+    ${interval} =     Get Text    ${TIME DURATION INTERVAL TEXT}    
     ${multiplier} =     Set Variable If    "${interval}"=="hours"    60  
     ...    "${interval}"=="minutes"    1
     ${number} =   Evaluate      ${multiplier}*${value}       
@@ -153,6 +153,32 @@ Changing All Settings
     Sleep    2
     settings on page should match settings on server
     
+Change Duration Time Interval
+    [arguments]    ${action}
+    ${interval} =    Get Text    ${TIME DURATION INTERVAL TEXT}
+    ${random} =    Evaluate    random.randint(1, 59)    modules=random
+    Input Text    ${TIME NUMBER INPUT}    ${random}
+    FOR    ${i}    IN RANGE    2
+           ${status} =    Run Keyword And Return Status    Textfield Value Should Be    ${TIME NUMBER INPUT}    ${random}
+           Run Keyword If    ${status}==False    Input Text    ${TIME NUMBER INPUT}    ${random}
+           ...    ELSE    Exit For Loop
+    END
+    FOR    ${i}    IN RANGE    9
+           ${status} =    Run Keyword And Return Status    Element Text Should Be    ${TIME DURATION INTERVAL TEXT}    ${interval}
+           Run Keyword If    ${status}==False    Run Keywords    
+           ...    Click Button    ${TIME DURATION INTERVAL BUTTON}    AND
+           ...    Wait Until Element Is Visible    ${TIME DURATION NEW SELECTION}    AND
+           ...    Click Link    ${TIME DURATION NEW SELECTION}
+           ...    ELSE    Exit For Loop 
+    END
+    
+    Click Button    ${TIME DURATION INTERVAL BUTTON}    
+    Wait Until Element Is Visible    ${TIME DURATION NEW SELECTION}
+    Click Link    ${TIME DURATION NEW SELECTION}
+    Wait Until Elements Are Visible     ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Click Button    ${action}
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
+     
 *** Test Cases ***
 systems dropdown should allow you to go back to the systems page
     [tags]    Threaded
@@ -378,6 +404,24 @@ Changing the Setting "Limit session duration to" changes it on the server
     Run Keyword If    ${status}==False    Evaluate Auto System Settings via API    sessionLimitMinutes    0
     ...    ELSE     Evaluate Session Limit
     
+Change Time Interval And Verify on Server
+    [tags]    checkbox settings testing
+    Log in to Auto Tests System    ${EMAIL OWNER}
+    Wait Until Elements Are Visible    
+    ...    ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}     
+    ...    ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}
+    Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL} 
+    ${status} =    Run Keyword and Return Status    Checkbox Should Be Selected     ${LIMIT SESSION DURATION CHECKBOX REAL}
+    Run Keyword If    ${status}==False    Just Change Setting    ${LIMIT SESSION DURATION CHECKBOX REAL}
+    Change Duration Time Interval    ${SYSTEM SAVE}
+    Evaluate Session Limit
+    Reload Page
+    Wait Until Elements Are Visible    
+    ...    ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}     
+    ...    ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}
+    Change Duration Time Interval    ${SYSTEM SAVE}
+    Evaluate Session Limit
+
 Changing Several Random Checkboxes Works
     [tags]    checkbox settings testing  
     Log in to Auto Tests System    ${EMAIL OWNER}
@@ -386,7 +430,7 @@ Changing Several Random Checkboxes Works
     ...    ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}
     Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL} 
     Changing Several Settings at Random    ${SYSTEM SAVE}
-    #Changing Several Settings at Random    ${SYSTEM CANCEL}    #commented out due to bug 4195
+    Changing Several Settings at Random    ${SYSTEM CANCEL}    #commented out due to bug 4195
     
 Changing All Checkboxes Works    
     [tags]    checkbox settings testing  
@@ -396,7 +440,7 @@ Changing All Checkboxes Works
     ...    ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}
     Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL} 
     Changing All Settings    ${SYSTEM SAVE}
-    #Changing All Settings    ${SYSTEM CANCEL}    #commented out due to bug 4195
+    Changing All Settings    ${SYSTEM CANCEL}    #commented out due to bug 4195
     
     
 
