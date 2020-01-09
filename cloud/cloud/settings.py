@@ -512,10 +512,10 @@ NOTIFICATIONS_CONFIG = {
         'engine': 'email',
         'queue': 'broadcast-notifications'
     },
-    'contact_sales': {
+    'sales_inquiry': {
         'engine': 'email'
     },
-    'contact_support': {
+    'technical_inquiry': {
         'engine': 'email'
     },
     'integration_feedback': {
