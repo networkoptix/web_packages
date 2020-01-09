@@ -6,10 +6,17 @@
     font-family : $font-family-regular;
     font-size   : $font-size-base;
     color: $dark9;
-
+    
     .header-title {
         display: flex;
         align-items: center;
+        margin-bottom: 16px;
+        h2 {
+            font-family : $font-family-regular;
+            height: 32px;
+            font-weight: bold;
+            font-size: 24px;
+        }
         .tag {
             margin-left: 8px;
             color: $light1;
@@ -26,6 +33,48 @@
         }
         .checking {
             background-color: $dark16;
+        }
+    }
+
+    .header-table {
+        font-size: $font-size-base;
+        padding-left: 0;
+        .header-table-cell {
+            display: flex;
+            height: 20px;
+            align-items: flex-end;
+            .cell-title {
+                font-family : $font-family-light;
+                font-weight: 600;
+            }
+            .cell-ellipsis {
+                margin-bottom: 2px;
+                border-bottom: 1px dotted $light6;
+                flex-grow: 1;
+            }
+        }
+    }
+
+    .server-setting-buttons {
+        display: flex;
+        justify-content: space-between;
+        .setting-buttons {
+            display: flex;
+        }
+    }
+
+    @media (max-width: 870px) {
+        .server-setting-buttons {
+            flex-direction: column;
+            .left button:not(:first-child) {
+                margin-top: 16px;
+            }
+            .right button {
+                margin-top: 16px;
+            }
+            .setting-buttons {
+                flex-direction: column;
+            }
         }
     }
 
