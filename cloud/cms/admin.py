@@ -110,6 +110,7 @@ class CustomizationFilter(SimpleListFilter):
 
     def choices(self, cl):
         for lookup, title in self.lookup_choices:
+            lookup = str(lookup)
             yield {
                 'selected': self.value() == lookup if self.value() else lookup == self.default_customization,
                 'query_string': cl.get_query_string({self.parameter_name: lookup}, []),
