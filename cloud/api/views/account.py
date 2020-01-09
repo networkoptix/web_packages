@@ -23,9 +23,21 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-# TODO: use new type of temporary credentials.
 def set_session_credentials(request, email, password):
-    tempCredentials = Account.create_temporary_credentials(email, password, 'long')
+    """
+        The user will have temporary credentials that lasts for 2 weeks without usage.
+        During the two weeks the user will have to use the credentials at least once during
+        the second week. This will keep the credentials valid for another week. If the user
+        keeps using it at least once per week the credentials will continue to remain valid.
+        Otherwise the credentials will become invalid and the user will have to login again.
+    """
+    ONE_WEEK = 60 * 60 * 24 * 7  # One week in seconds
+    TWO_WEEKS = ONE_WEEK * 2  # Two weeks in seconds
+    tempCredentials = Account.create_temporary_credentials(email, password,
+                                                           expiration_period=TWO_WEEKS,
+                                                           auto_prolongation_enabled=True,
+                                                           prolongation_period=ONE_WEEK)
+    print(tempCredentials)
     request.session['login'] = tempCredentials['login']
     request.session['password'] = tempCredentials['password']
 
