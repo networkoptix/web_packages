@@ -147,6 +147,9 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         this.resetVideoEncryptionIfDisabled = () => {
             const encryptTraffic = this.settingsWatchers.trafficEncryptionForced.value;
             const encryptVideo = this.settingsWatchers.videoTrafficEncryptionForced.value;
+            if (encryptVideo === true) {
+                this.applyService.setWarn('');
+            }
             if (!encryptTraffic && encryptVideo) {
                 this.settingsWatchers.videoTrafficEncryptionForced.value = false;
             }
