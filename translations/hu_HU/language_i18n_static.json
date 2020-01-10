@@ -169,25 +169,27 @@
 		"feedback": "Make sure you include your camera model and manufacturer..."
 	},
 	"pageTitles": {
-		"template": "{{title}} %CLOUD_NAME%",
+		"template": "{{title}} - %CLOUD_NAME%",
 		"default": "%CLOUD_NAME%",
+		"about": "About",
 		"registerSuccess": "Üdvözöljük",
 		"register": "Fiók létrehozása itt",
-		"changePassword": "Jelszó módosítása -",
-		"account": "Fiókbeállítások -",
-		"systems": "Rendszerek -",
-		"system": "Rendszer -",
-		"systemShare": "Rendszer megosztása -",
-		"activate": "Fiók aktiválása -",
-		"activateSent": "Fiók aktiválása -",
-		"activateSuccess": "Fiók aktiválva -",
-		"activateCode": "Fiók aktiválása -",
-		"restorePassword": "Jelszó visszaállítása -",
-		"restorePasswordSuccess": "Jelszó elmentve -",
-		"restorePasswordCode": "Jelszó visszaállítása -",
-		"view": "Kamerák megtekintése - ",
+		"changePassword": "Change password",
+		"account": "Account settings",
+		"systems": "Systems",
+		"system": "System",
+		"systemName": "{{systemName}}",
+		"systemShare": "Share System",
+		"activate": "Activate account",
+		"activateSent": "Activate account",
+		"activateSuccess": "Account activated",
+		"activateCode": "Activate account",
+		"restorePassword": "Reset password",
+		"restorePasswordSuccess": "Password saved",
+		"restorePasswordCode": "Reset password",
+		"view": "View cameras",
 		"debug": "Hibakeresés",
-		"login": "Bejelentkezés -",
+		"login": "Log in",
 		"download": "%VMS_NAME% letöltése",
 		"downloadPlatform": "Download %VMS_NAME% for ",
 		"pageNotFound": "Az oldal nem található",
@@ -223,7 +225,8 @@
 				"a_recommend": "Javasoljuk, hogy konzultáljon erről",
 				"b_support": "támogatás",
 				"c_proceeding": "mielőtt folytatná."
-			}
+			},
+			"warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged System."
 		},
 		"message": {
 			"failedToSend": "Message has failed to send.",
@@ -496,5 +499,7 @@
 	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "%CLOUD_NAME% nem kapcsolódik egy rendszeréhez sem",
 	"NO_SYSTEMS_LOGIN": "Log in to your System using %VMS_NAME%",
 	"NO_SYSTEMS_GOTO_ADMINISTRATION": "Kattintson a \"Felhő\" fülre \"Rendszer adminisztráció\" lapon",
-	"NO_SYSTEMS_CONNECT_SYSTEM": "Press \"Connect System to %CLOUD_NAME%\""
+	"NO_SYSTEMS_CONNECT_SYSTEM": "Press \"Connect System to %CLOUD_NAME%\"",
+	"topXByVolume": "Top {{value}} by volume:",
+	"phoneNumberWithLabel": "Tel: {{number}}"
 }

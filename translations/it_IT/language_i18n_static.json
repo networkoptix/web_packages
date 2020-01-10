@@ -169,25 +169,27 @@
 		"feedback": "Assicurati di includere il modello della telecamera e il produttore..."
 	},
 	"pageTitles": {
-		"template": "{{title}} %CLOUD_NAME%",
+		"template": "{{title}} - %CLOUD_NAME%",
 		"default": "%CLOUD_NAME%",
+		"about": "About",
 		"registerSuccess": "Benvenuto in",
 		"register": "Creare un account",
-		"changePassword": "Cambia Password -",
-		"account": "Impostazioni dell'account -",
-		"systems": "Sistema -",
-		"system": "Sistema -",
-		"systemShare": "Condivisione sistema -",
-		"activate": "Attivazione Account -",
-		"activateSent": "Attivazione Account -",
-		"activateSuccess": "Account attivato -",
-		"activateCode": "Attivazione Account -",
-		"restorePassword": "Reimpostare la Password -",
-		"restorePasswordSuccess": "Password salvata -",
-		"restorePasswordCode": "Reimpostare la Password -",
-		"view": "Visualizza telecamere - ",
+		"changePassword": "Change password",
+		"account": "Account settings",
+		"systems": "Systems",
+		"system": "System",
+		"systemName": "{{systemName}}",
+		"systemShare": "Share System",
+		"activate": "Activate account",
+		"activateSent": "Activate account",
+		"activateSuccess": "Account activated",
+		"activateCode": "Activate account",
+		"restorePassword": "Reset password",
+		"restorePasswordSuccess": "Password saved",
+		"restorePasswordCode": "Reset password",
+		"view": "View cameras",
 		"debug": "Debug",
-		"login": "Log in -",
+		"login": "Log in",
 		"download": "Scarica %VMS_NAME%",
 		"downloadPlatform": "Scarica %VMS_NAME% per ",
 		"pageNotFound": "Pagina non trovata",
@@ -223,7 +225,8 @@
 				"a_recommend": "Raccomandiamo di consultarsi con",
 				"b_support": "supporto",
 				"c_proceeding": "prima di procedere."
-			}
+			},
+			"warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged System."
 		},
 		"message": {
 			"failedToSend": "Impossibile inviare il messaggio.",
@@ -496,5 +499,7 @@
 	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "Non hai sistemi collegati a %CLOUD_NAME%",
 	"NO_SYSTEMS_LOGIN": "Accedere al sistema utilizzando %VMS_NAME%",
 	"NO_SYSTEMS_GOTO_ADMINISTRATION": "Vai alla scheda \"Cloud\" nella finestra di dialogo \"System Administration\"",
-	"NO_SYSTEMS_CONNECT_SYSTEM": "Premere \"Collegare il sistema a %CLOUD_NAME%\""
+	"NO_SYSTEMS_CONNECT_SYSTEM": "Premere \"Collegare il sistema a %CLOUD_NAME%\"",
+	"topXByVolume": "Top {{value}} by volume:",
+	"phoneNumberWithLabel": "Tel: {{number}}"
 }

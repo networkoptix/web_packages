@@ -2,110 +2,6 @@
   "language": "ja_JP",
   "language_name": "日本語",
   "cloudName": "%CLOUD_NAME%",
-  "vmsName": "%VMS_NAME%",
-  "clientProtocol": "%CLIENT_PROTOCOL%:",
-  "dialogs": {
-    "okButton": "OK",
-    "cancelButton": "キャンセル",
-    "loginTitle": "%CLOUD_NAME% にログイン",
-    "loginButton": "ログイン",
-    "logoutAuthorisedTitle": "すでにログインしています",
-    "logoutAuthorisedContinueButton": "続行",
-    "logoutAuthorisedLogoutButton": "ログアウト",
-    "noClientDetectedTitle": "Install %VMS_NAME% to view your System",
-    "download": "%VMS_NAME% をダウンロード"
-  },
-  "pageTitles": {
-    "template": "{{title}} %CLOUD_NAME%",
-    "default": "%CLOUD_NAME%",
-    "registerSuccess": "ようこそ",
-    "register": "アカウントを作成",
-    "changePassword": "パスワードを変更 -",
-    "account": "アカウント設定 -",
-    "systems": "システム -",
-    "system": "システム -",
-    "systemShare": "共有システム -",
-    "activate": "アクティベート アカウント -",
-    "activateSent": "アクティベート アカウント -",
-    "activateSuccess": "アカウント アクティベート -",
-    "activateCode": "アクティベート アカウント -",
-    "restorePassword": "パスワードリセット -",
-    "restorePasswordSuccess": "パスワードを保存 -",
-    "restorePasswordCode": "パスワードリセット -",
-    "view": "カメラを表示 - ",
-    "debug": "デバッグ",
-    "login": "ログイン -",
-    "download": "%VMS_NAME% をダウンロード",
-    "downloadPlatform": "Download %VMS_NAME% for ",
-    "pageNotFound": "ページが見つかりません"
-  },
-  "systemStatuses": {
-    "activated": "アクティベート済",
-    "incompatible": "互換性なし",
-    "merging": "統合中",
-    "notActivated": "アクティベートされていません",
-    "online": "オンライン",
-    "offline": "オフライン",
-    "unavailable": "利用できません"
-  },
-  "accessRoles": {
-    "disabled": {
-      "label": "無効",
-      "description": "ユーザーが無効の為にシステムにログインできません"
-    },
-    "Owner": {
-      "label": "オーナー",
-      "description": "クラウドから、共有とシステムの接続/切断を含む無制限のアクセス"
-    },
-    "Viewer": {
-      "label": "ビューアー",
-      "description": "ライブ ビデオとアーカイブを参照できます"
-    },
-    "Live Viewer": {
-      "label": "ライブビューアー",
-      "description": "ライブ表示のみ可能"
-    },
-    "Advanced Viewer": {
-      "label": "拡張ビューアー",
-      "description": "ライブ表示、アーカイブ表示、PTZコントロール 等"
-    },
-    "Administrator": {
-      "label": "アドミニストレーター",
-      "description": "共有する機能を含む無制限のアクセス"
-    },
-    "Custom": {
-      "label": "カスタム",
-      "description": "%VMS_NAME% クライアント アプリケーションを使用してカスタム権限を設定する"
-    },
-    "cloudAdmin": {
-      "label": "アドミニストレーター",
-      "description": "システムを構成し共有することができます"
-    },
-    "customRole": {
-      "label": "カスタムの役割",
-      "description": "システムで指定されたカスタムのユーザーの役割"
-    },
-    "owner": {
-      "label": "オーナー",
-      "description": "クラウドから、共有とシステムの接続/切断を含む無制限のアクセス"
-    },
-    "viewer": {
-      "label": "ビューアー",
-      "description": "ライブ ビデオとアーカイブを参照できます"
-    },
-    "liveViewer": {
-      "label": "ライブビューアー",
-      "description": "ライブ表示のみ可能"
-    },
-    "advancedViewer": {
-      "label": "拡張ビューアー",
-      "description": "ライブ表示、アーカイブ表示、カメラ設定、PTZコントロール 等"
-    },
-    "custom": {
-      "label": "カスタム",
-      "description": "%VMS_NAME% クライアント アプリケーションを使用してカスタム権限を設定する"
-    }
-  },
   "errorCodes": {
     "ok": "ok",
     "cantSendActivationPrefix": "確認メールを送信できません",
@@ -148,83 +44,6 @@
     "INCOMPATIBLE": "システムには異なるソフトウェアバージョンがあります。両方とも <a href=\"/download\">最新のビルド</a>を更新してください。",
     "FAIL": "システム <strong>{{failedSystem}}</strong> は現在到達不能です。<br>しばらくしてからもう一度試すか、<a href=\"%SUPPORT_LINK%\" target=\"_blank\">サポート</a>に連絡してください。",
     "unknownMergeError": "不明なエラー。ページを更新して試行を繰り返すことができます。問題が解決しない場合は <a href=\"%SUPPORT_LINK%\" target=\"_blank\">サポート</a>に連絡してください。"
-  },
-  "merging": {
-    "mergeFailedTitle": "システムの統合に失敗しました",
-    "commonText": "システム <strong>{{primarySystem}}</strong> および <strong>{{secondarySystem}}</strong>を統合できませんでした。"
-  },
-  "passwordRequirements": {
-    "good": "良い",
-    "fair": "可",
-    "fairMessage": "大文字と小文字の文字、特殊記号を使用して、強固なパスワードを作る",
-    "minLength": "短すぎます",
-    "minLengthMessage": "パスワードは8文字以上必要です",
-    "required": "無効",
-    "requiredMessage": "英数字とキーボードの記号のみを使用して、先頭と末尾の空白を避けます",
-    "weak": "弱",
-    "weakMessage": "大文字と小文字の文字、特殊記号を使用して、強固なパスワードを作る",
-    "strongMessage": "強力なパスワード!",
-    "common": "あまりにも一般的",
-    "commonMessage": "このパスワードは、世界で最も人気のあるパスワード",
-    "missingMessage": "パスワードが必要"
-  },
-  "sharing": {
-    "confirmOwner": "システムオーナーを変更すると現在のアカウントから所有権を失効します　この操作は元に戻せません　宜しいですか？",
-    "shareTitle": "共有",
-    "shareConfirmButton": "共有",
-    "editShareTitle": "権限を編集",
-    "editShareConfirmButton": "保存",
-    "permissionsSaved": "新しい権限の保存"
-  },
-  "system": {
-    "yourSystem": "ご利用のシステム",
-    "mySystemSearch": "IMeMyMine",
-    "unavailable": "システムに到達できません",
-    "offline": "システムはオフライン",
-    "openClient": "Open in %VMS_NAME%",
-    "openClientNoSystem": "%VMS_NAME% を開く",
-    "confirmMergeAction": "統合",
-    "mergeSystemTitle": "システム統合",
-    "confirmRenameTitle": "システム名",
-    "confirmRenameAction": "保存",
-    "successRename": "システム名は保存されました",
-    "confirmDisconnectTitle": "%CLOUD_NAME% からシステムを切断しますか？",
-    "confirmDisconnectAction": "切断",
-    "confirmUnshareFromMe": "あなたのアカウントからこのシステムを切断しようとしています　もうこのシステムにアクセスすることはできません\n切断しますか？",
-    "confirmUnshareFromMeTitle": "システムを切断しますか？",
-    "confirmUnshareFromMeAction": "切断",
-    "confirmUnshare": "このユーザはシステムにアクセスすることができません　宜しいですか？",
-    "confirmUnshareTitle": "ユーザーを削除しますか？",
-    "confirmUnshareAction": "削除",
-    "successDisconnected": "システムは %CLOUD_NAME% から正常に切断されました",
-    "successDeleted": "システム {{systemName}} はあなたのアカウントから正常に削除されました",
-    "mergeFailed": "システム統合が失敗しました",
-    "mergeStart": "システムが統合を開始しました",
-    "mergeSuccess": "システムが統合されました",
-    "permissionsRemoved": "{{email}} からアクセス権限が削除されました",
-    "unknownName": "システムの名前が不明です（クラウド統合が原因）"
-  },
-  "account": {
-    "accountSavedSuccess": "あなたのアカウントは正常に保存されました",
-    "activationLinkSent": "アクティベーションリンクが送信されました",
-    "passwordChangedSuccess": "あなたのアカウントは正常に保存されました",
-    "changePassword": "パスワードを変更",
-    "newPasswordLabel": "新規パスワード",
-    "saveChanges": "保存"
-  },
-  "activeActions": {
-    "sendConfirm": "アクティベーションリンクを再送信",
-    "resetPassword": "パスワードを再設定する",
-    "setNewPassword": "パスワードを保存",
-    "setNewPasswordLabel": "新規パスワード"
-  },
-  "regActions": {
-    "passwordLabel": "パスワード",
-    "createAccount": "アカウント作成"
-  },
-  "header": {
-    "allSystems": "すべてのシステム",
-    "systems": "システム"
   },
   "common": {
     "cameraLinks": {
@@ -276,9 +95,8 @@
       "help": "ヘルプ| 表示コマンド"
     }
   },
-  "recommendSupport": {
-    "a_recommend": "相談を推奨",
-    "b_support": "サポート",
-    "c_proceeding": "続行する前に"
+  "system": {
+    "offline": "システムはオフライン",
+    "unavailable": "システムに到達できません"
   }
 }

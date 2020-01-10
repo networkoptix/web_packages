@@ -169,25 +169,27 @@
 		"feedback": "请确保已包含您的摄像机型号和制造商..."
 	},
 	"pageTitles": {
-		"template": "{{title}} %CLOUD_NAME%",
+		"template": "{{title}} - %CLOUD_NAME%",
 		"default": "%CLOUD_NAME%",
+		"about": "About",
 		"registerSuccess": "欢迎来到",
 		"register": "创建帐户中",
-		"changePassword": "更改密码-",
-		"account": "帐户设置-",
-		"systems": "系统.",
-		"system": "系统-",
-		"systemShare": "共享系统-",
-		"activate": "激活帐户-",
-		"activateSent": "激活帐户-",
-		"activateSuccess": "帐户激活 -",
-		"activateCode": "激活帐户-",
-		"restorePassword": "重置密码-",
-		"restorePasswordSuccess": "保存的密码-",
-		"restorePasswordCode": "重置密码-",
-		"view": "查看相机 - ",
+		"changePassword": "Change password",
+		"account": "Account settings",
+		"systems": "Systems",
+		"system": "System",
+		"systemName": "{{systemName}}",
+		"systemShare": "Share System",
+		"activate": "Activate account",
+		"activateSent": "Activate account",
+		"activateSuccess": "Account activated",
+		"activateCode": "Activate account",
+		"restorePassword": "Reset password",
+		"restorePasswordSuccess": "Password saved",
+		"restorePasswordCode": "Reset password",
+		"view": "View cameras",
 		"debug": "调试",
-		"login": "登录-",
+		"login": "Log in",
 		"download": "下载 %VMS_NAME%",
 		"downloadPlatform": "Download %VMS_NAME% for ",
 		"pageNotFound": "找不到页面",
@@ -223,7 +225,8 @@
 				"a_recommend": "建议您进行咨询",
 				"b_support": "技术支持",
 				"c_proceeding": "在继续执行之前："
-			}
+			},
+			"warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged System."
 		},
 		"message": {
 			"failedToSend": "訊息无法发送。",
@@ -496,5 +499,7 @@
 	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "你有没有连接到 %CLOUD_NAME% 的系统",
 	"NO_SYSTEMS_LOGIN": "Log in to your System using %VMS_NAME%",
 	"NO_SYSTEMS_GOTO_ADMINISTRATION": "转到\"系统管理\"对话框中的\"云\"选项",
-	"NO_SYSTEMS_CONNECT_SYSTEM": "按“将系统连接到 %CLOUD_NAME%”"
+	"NO_SYSTEMS_CONNECT_SYSTEM": "按“将系统连接到 %CLOUD_NAME%”",
+	"topXByVolume": "Top {{value}} by volume:",
+	"phoneNumberWithLabel": "Tel: {{number}}"
 }

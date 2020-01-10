@@ -1,6 +1,5 @@
 {
     "2-Way Audio": "Çift Yönlü Ses",
-    "About %CLOUD_NAME%": "%CLOUD_NAME% Hakkında",
     "Access Level": "Erişim Seviyesi",
     "Access level": "Erişim Seviyesi",
     "Account Information": "Hesap Bilgileri",
@@ -39,7 +38,7 @@
     "Change Password": "Parola Değiştir",
     "Checking...": "Kontrol Ediliyor...",
     "Choose which properties should be visible to customers:": "Müşterilere hangi özelliklerin görünmesi gerektiğini seçin:",
-    "Clear filters": "Filtreleri temizle",
+    "Clear": "Clear",
     "Close": "Kapat",
     "Codec": "Kodek",
     "Collapse": "Daralt",
@@ -74,7 +73,6 @@
     "Enter password for your account to continue": "Devam etmek için hesabınızın şifresini girin",
     "Enter password to continue.": "Devam etmek için parola girin.",
     "Export all to CSV": "Tamamını CSV olarak dışarıya aktar",
-    "FAILED_SYSTEM_DESCR": "Bu bağlantı bozuk,<br>sistem bağlantısı kesilebilir %CLOUD_NAME% den kesilebilir,<br>sisteme erişim engellenmiş olabilir,<br>yada farklı bir hesapla sisteme girilmiş olabilir.",
     "FPS(max)": "FPS(maks)",
     "Failed to access System": "Sisteme erişim sağlanılamadı",
     "Finishing systems merge": "Sistem birleştirme bitiriliyor",
@@ -90,7 +88,7 @@
     "I/O": "G/Ç",
     "In Review": "İncelenmede",
     "In-Client Upgrade:": "İstemci Yükseltmesi:",
-    "Includes information about the System, such as camera modules, \n                            firmware versions, number of servers, etc. \n                            Does not include any personal information and is completely anonymous.": "Kamera modülleri, \n                            üretici yazılımı sürümleri, sunucu sayısı vb. Gibi Sistem hakkında bilgiler içerir. \n                            Herhangi bir kişisel bilgi içermez ve tamamen adsızdır.",
+    "Includes information about the System, such as camera modules,\n                            firmware versions, number of servers, etc.\n                            Does not include any personal information and is completely anonymous.": "Includes information about the System, such as camera modules,\n                            firmware versions, number of servers, etc.\n                            Does not include any personal information and is completely anonymous.",
     "Information": "Bilgi",
     "Integrations": "Entegrasyonlar",
     "Language": "Dil",
@@ -109,10 +107,6 @@
     "Mine": "Benim",
     "Motion Detection": "Hareket Algılama",
     "Multi Sensor": "Çoklu sensör",
-    "NO_SYSTEMS_CONNECT_SYSTEM": "Sistem %CLOUD_NAME% e bağlan\"",
-    "NO_SYSTEMS_GOTO_ADMINISTRATION": "\"Sistem Yönetimi\" iletişim kutusundaki \"Bulut\" sekmesine gidin",
-    "NO_SYSTEMS_LOGIN": "Log in to your System using %VMS_NAME%",
-    "NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "%CLOUD_NAME% ile bağlı hiçbir Sisteminiz yok",
     "New Password": "Yeni Parola",
     "No unsaved changes": "Kaydedilmemiş değişiklik yok",
     "Nothing Found": "Hiçbir şey Bulunamadı",
@@ -132,7 +126,6 @@
     "Please enter a valid Email": "Lütfen geçerli bir E-posta girin",
     "Please review and agree to the Terms and Conditions and Privacy policy in order to proceed": "Devam etmek için lütfen Şartlar ve Koşullar ve Gizlilik politikasını inceleyin ve kabul edin",
     "Popularity": "Popülarite",
-    "Privacy": "Gizlilik",
     "Release Notes": "Sürüm Notları",
     "Release notes": "Yayıncı Notları",
     "Remember me": "Beni Hatırla",
@@ -157,7 +150,6 @@
     "Support": "Destek",
     "Support E-mail": "Destek maili",
     "Support URL": "Destek URL'si",
-    "Supported Devices": "Desteklenen cihazlar",
     "Supported IP Video Devices": "Desteklenen IP Video Aygıları",
     "System Settings": "Sistem Ayarları",
     "System name": "Sistem Adı",
@@ -168,534 +160,33 @@
     "Tags": "Etiketler",
     "Take me home": "Geri Dön",
     "Take the name and settings from": "Sistem adını ve ayarlarını al",
-    "Terms": "Şartlar",
     "Terms of Use": "Kullanım Şartları",
     "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.": "Bu kullanıcının kimlik bilgileri açıkta kalacak! Genel kullanım için seçilen kameralara yalnızca\n            erişimi olan ve yalnızca gerekli minimum görüntüleme izinleri atanan özel bir \"Genel Kullanıcı\" rolü oluşturmanız gerekir. Bu\n            \"Genel Kullanıcı\", sistem genelinde herhangi bir türde erişime sahip olmamalıdır.",
-    "There will be more than": "Daha fazla olacak",
     "This Email has been already registered in %CLOUD_NAME%": "Bu e-posta, %CLOUD_NAME% 'de zaten kayıtlı",
     "This device has reported to support some analytics events, but we don't have exact information about them.": "Bu cihaz bazı analitik etkinliklerini desteklediğini bildirdi, ancak bunlar hakkında kesin bir bilgimiz yok.",
     "To": "Kime",
     "Too many attempts. Try again in a minute.": "Çok fazla deneme yapıldı. Bir dakika sonra tekrar deneyiniz.",
     "Tracks and logs all user actions.": "Tüm kullanıcı haraket ve işlemlerini kaydet.",
     "Until merge is finished you can log in to this system and watch video, but cannot change any settings.": "Birleştirme tamamlanana kadar bu sisteme giriş yapabilir ve video izleyebilir, ancak herhangi bir ayarı değiştiremezsiniz.",
-    "Update them to the": "Onları güncelle",
+    "Update them to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>": "Update them to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>",
     "Updated": "Güncellendi",
     "User": "Kullanıcı",
     "User disabled": "Kullanıcı Devre Dışı",
     "View": "Görünüm",
-    "WHEN_MERGE_FINISHES": "Birleştirme işlemi tamamlandığında, bu sistemdeki tüm kullanıcılar ve kameralar kullanılabilir hale gelir <strong>\" Sistem{{targetSystemName}}</strong> \" ve bu sistem silinecektir.",
     "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.": "Google Chrome veya Mozilla Firefox'un en son sürümlerini yüklemenizi öneririz ancak başka herhangi bir modern web tarayıcısını kullanabilirsiniz.",
     "What's New?": "Ne Yenilikler Var?",
-    "When enabled, system will discover new cameras and servers. Also, \n                            it will automatically and persistently send discovery requests to \n                            cameras in order to get the camera's status update. \n                            Failover enabled on some servers ignore status check prohibition.": "Etkinleştirildiğinde, sistem yeni kameralar ve sunucular keşfedecektir. Ayrıca, kameranın durum güncellemesini almak için \n                            otomatik ve sürekli olarak keşif isteklerini \n                            kameraya gönderir. Bazı sunucularda etkin olan \n                            Yük Devretme, durum kontrolü yasağını göz ardı eder.",
+    "When enabled, system will discover new cameras and servers. Also,\n                            it will automatically and persistently send discovery requests to\n                            cameras in order to get the camera's status update.\n                            Failover enabled on some servers ignore status check prohibition.": "When enabled, system will discover new cameras and servers. Also,\n                            it will automatically and persistently send discovery requests to\n                            cameras in order to get the camera's status update.\n                            Failover enabled on some servers ignore status check prohibition.",
     "Works with:": "İle çalışır:",
     "Wrong password": "Hatalı parola",
     "You can only merge Systems where you are the owner.": "Yalnızca sahip olduğunuz Sistemleri birleştirebilirsiniz.",
     "You have registered in %CLOUD_NAME%": "%CLOUD_NAME% içinde kayıtlı",
     "Your Email": "E-posta Adresiniz",
     "Your Name": "Adınız",
-    "Your access level": "Erişim seviyesi",
+    "Your access level<span>&nbsp;– </span>\n                    <span class=\"name\" [innerHTML]=\"updateUserRole()\"></span>": "Your access level<span>&nbsp;– </span>\n                    <span class=\"name\" [innerHTML]=\"updateUserRole()\"></span>",
     "Your account is successfully activated": "Hesabın başarıyla aktif edildi",
     "Your browser is not supported": "Tarayıcınız desteklenmiyor",
-    "accessRoles": {
-        "Administrator": {
-            "description": "Sınırsız erişim, paylaşma imkanı dahil",
-            "label": "Yönetici"
-        },
-        "Advanced Viewer": {
-            "description": "Canlı vidyo izleyebilir, arşivi görüntüleyebilir, kameraları ayarlayabilir, PTZ'yi kontrol edebilir",
-            "label": "Gelişmiş Görüntüleyici"
-        },
-        "Custom": {
-            "description": "Özel izinler ayarlamak için %VMS_NAME% İstemci uygulamasını kullanın",
-            "label": "Özel Ayarlar"
-        },
-        "Live Viewer": {
-            "description": "Sadece canlı vidyo izleyebilir",
-            "label": "Canlı İzleyici"
-        },
-        "Owner": {
-            "description": "Sistem'i buluttan paylaşma / bağlanma ve bağlantıyı kesme gibi sınırsız erişim",
-            "label": "Sahip"
-        },
-        "Viewer": {
-            "description": "Canlı video görüntüleyebilir ve arşive gözatabilir",
-            "label": "İzleyici"
-        },
-        "advancedViewer": {
-            "description": "Canlı vidyo izleyebilir, arşivi görüntüleyebilir, kameraları ayarlayabilir, PTZ'yi kontrol edebilir",
-            "label": "Gelişmiş Görüntüleyici"
-        },
-        "cloudAdmin": {
-            "description": "Sistemi yapılandırabilir ve paylaşabilir",
-            "label": "Yönetici"
-        },
-        "custom": {
-            "description": "Özel izinler ayarlamak için %VMS_NAME% İstemci uygulamasını kullanın",
-            "label": "Özel Ayarlar"
-        },
-        "customRole": {
-            "description": "Sisteminde belirtilen özel kullanıcı rolü",
-            "label": "Özel rol"
-        },
-        "disabled": {
-            "description": "Kullanıcı devre dışı bırakılmış, sisteme giriş yapamaz",
-            "label": "Devre Dışı Bırak"
-        },
-        "liveViewer": {
-            "description": "Sadece canlı vidyo izleyebilir",
-            "label": "Canlı İzleyici"
-        },
-        "owner": {
-            "description": "Sistem'i buluttan paylaşma / bağlanma ve bağlantıyı kesme gibi sınırsız erişim",
-            "label": "Sahip"
-        },
-        "viewer": {
-            "description": "Canlı video görüntüleyebilir ve arşive gözatabilir",
-            "label": "İzleyici"
-        }
-    },
-    "account": {
-        "accountSavedSuccess": "Hesabınız başarıyla kaydedildi",
-        "accountSettings": "Hesap Ayarları",
-        "activationLinkSent": "Aktivasyon linki gönderildi",
-        "changePassword": "Parola Değiştir",
-        "newPasswordLabel": "Yeni Parola",
-        "passwordChangedSuccess": "Hesabınız başarıyla kaydedildi",
-        "saveChanges": "Kaydet"
-    },
-    "activeActions": {
-        "resetPassword": "Parolayı sıfırla",
-        "sendConfirm": "Aktivasyon linki gönder",
-        "setNewPassword": "Parolayı kaydet",
-        "setNewPasswordLabel": "Yeni Parola"
-    },
-    "cameraFilters": {
-        "H265": "H.265 Kameralar",
-        "IO": "G / Ç modülleri",
-        "TwWayAudio": "Çift yönlü ses cihazları",
-        "aptz": "Gelişmiş PTZ'li kameralar",
-        "audio": "Sesli kameralar",
-        "encoder": "Çeviriciler",
-        "fisheye": "Balıkgözü kameralar",
-        "highRes": "Eksta yüksek çözünürlüklü kameralar",
-        "multiSensor": "Çok sensörlü kameralar",
-        "ptz": "PTZ kameralar"
-    },
-    "clientProtocol": "%CLIENT_PROTOCOL%:",
-    "common": {
-        "cameraLinks": {
-            "copyActiveText": "panoya kopyalandı",
-            "copyDefaultText": "kopyala",
-            "copyToClipboard": "panoya yapıştır",
-            "highStream": "Yüksek çözünürlük",
-            "lowStream": "Düşük çözünürlük",
-            "transcoding": "Dönüştürme",
-            "unknown": "Belirtilmemiş"
-        },
-        "cameraStates": {
-            "error": "Hata",
-            "errorLoading": "Video yüklenirken bir sorun oluştu.",
-            "flashOrWebmRequired": "Internet Explorer'da video oynatmak için lütfen <a href='https://get.adobe.com/flashplayer/' target='_blank'> Adobe Flash</a> veya<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec'i</a> yükleyin.",
-            "flashRequired": "Videoları oynatmak için lütfen <a href='https://get.adobe.com/flashplayer/' target='_blank'>Adobe Flash</a>'i yükleyin.",
-            "iOSVideoTooLarge": "iOS, fullHD'den daha büyük videoyu desteklemez (2MP: 1920x1080).",
-            "ieNoWebm": "Internet Explorer için <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> yükleyin.",
-            "ieWin10": "Lütfen Microsoft Edge veya Google Chrome tarayıcılarını kullanın.",
-            "noArmSupport": "Bu tarayıcı veya aygıt, ARM tabanlı sunuculardan video oynatmayı desteklemez.",
-            "noData": "Veri bulunamadı",
-            "noFormat": "Bu tarayıcı bu kameradan video oynatmayı desteklemiyor.",
-            "offline": "Çevrimdışı",
-            "ubuntuNX": "Bu tarayıcı, ARM tabanlı sunuculardan gelen videoyu desteklemez. Bunun yerine, Chromium tarayıcıyı kullanın.",
-            "unauthorized": "Kimlik doğrulaması gerekli"
-        },
-        "chromeCastWarning": "Chromecast kaynak kullanımını arttırabilir ve sunucunuzda sorunlara neden olabilir.",
-        "resolution": {
-            "auto": "Oto",
-            "high": "Yüksek",
-            "low": "Düşük"
-        },
-        "searchCamPlaceholder": "Arama",
-        "systemHasNoCameras": "KAMERA YOK",
-        "systemNewVersion": "Sisteminizi güncelleyin",
-        "systemNewVersionMessage": "Mevcut sürümünüz bu özellik ile uyumlu değil. Lütfen bu özelliği kullanmak için sunucularınızı en son sürüme güncelleyin.",
-        "systemNoAlerts": "Uyarı Yok",
-        "systemNoAlertsMessage": "Sisteminiz iyi çalışıyor olmalı!",
-        "systemOffline": "Sistem çevrimdışı",
-        "systemOfflineMessage": "Bu sistem çevrimdışı ve şu anda erişilemiyor.",
-        "systemServerError": "Yerel sunucu hatası",
-        "systemServerErrorMessage": "Bir hata oluştu, daha sonra tekrar deneyin. Bir hata oluştu, daha sonra tekrar deneyin. Sorun devam ederse, lütfen destek ekibinize başvurun.",
-        "systemUnreachable": "SİSTEM KULLANILAMAZ",
-        "voiceCommands": {
-            "clear search": "aramayı temizle",
-            "collapse all servers": "tüm sunucuları daralt",
-            "collapse server": "collapse server + [server name]",
-            "expand all servers": "tüm sunucuları genişlet",
-            "expand server": "expand server + [server name]",
-            "help": "help | show commands",
-            "live": "go to live | show me live",
-            "pause": "duraklat",
-            "play": "oynat",
-            "search": "find + [text for searchbar]",
-            "stop listening": "dinlemeyi durdur",
-            "view": "görüntüle + [kamera adı]"
-        }
-    },
     "devices": "aygıtlar",
-    "dialogs": {
-        "cancelButton": "İptal",
-        "changeAccountLogged": "Bu mail {email} ile zaten giriş yapmışsınız",
-        "createNewAccount": "Yeni Hesap Oluştur",
-        "download": "İndir %VMS_NAME%",
-        "loggedFromOther": "Farklı bir hesapla giriş yapacaksınız",
-        "loginButton": "Giriş yap",
-        "loginTitle": "%CLOUD_NAME% e giriş yapın",
-        "logoutAuthorisedContinueButton": "Devam et",
-        "logoutAuthorisedLogoutButton": "Oturumu Kapat",
-        "logoutAuthorisedTitle": "Zaten giriş yapılmış",
-        "merge": {
-            "commonText": "Sistem <strong>{{primarySystem}}</strong> ve <strong>{{secondarySystem}}</strong> birleştirilemedi.",
-            "connectToCloud": "Birleştirmek istediğiniz <strong>{{cloudName}}</strong> sistemine bağlanın veya yerel sistemi <strong>{{vmsName}}</strong> kullanarak birleştirin.",
-            "mergeConfirmation": "<strong>{{primarySystem}}</strong> sistemi ile <strong>{{secondarySystem}}</strong> sistemini birleştirmek üzeresiniz. İsim ve ayarlar <strong>{{primarySystem}}</strong> sisteminden alınacaktır.",
-            "mergeFailedTitle": "Sistem birleştirme işlemi başarısız oldu",
-            "primaryCannotMerge": "Sistem {{targetSystem}}, mevcut sistemle uyumlu olmayan daha yeni bir yazılım sürümüne sahip. Geçerli sistemi, {{targetSystem}} Sistemle birleştirmek için en son <a href=\"/download\" target=\"_blank\" translate>derleme</a> güncelleyin.",
-            "primarySystemOffline": "Sistem {{primarySystem}} çevrimdışıdır ve Sistem {{targetSystem}} ile birleştirilemez.",
-            "recommendSupport": {
-                "a_recommend": "Danışmanızı tavsiye ederiz",
-                "b_support": "destek",
-                "c_proceeding": "işlemden önce."
-            },
-            "secondaryCannotMerge": "Sistem {{targetSystem}}, mevcut sistemle uyumlu olmayan daha eski bir yazılım sürümüne sahip. Geçerli olanla birleştirmek için {{targetSystem}} en son <a href=\"/download\" target=\"_blank\" translate>derleme</a> güncelleyin.",
-            "systemOffline": "Sistem {{targetSystem}} çevrimdışı ve güncel sistemle birleştirilemez.",
-            "systemUnavailable": "{{targetSystem}} sistemi erişilebilir değil. Birkaç dakika sonra tekrar deneyin"
-        },
-        "message": {
-            "failedToSend": "Mesaj gönderilemedi.",
-            "sent": "Mesaj gönderildi.",
-            "subject": {
-                "integration_feedback": "Entegrasyon için geri bildirim {{asset}}",
-                "ipvd_feedback_device": "{{asset}} hakkında geri bildirim",
-                "ipvd_feedback_page": "Kameralar sayfası için geri bildirim",
-                "sales_inquiry": "{{asset}} için satış talebi",
-                "technical_inquiry": "Technical inquiry for {{asset}}"
-            },
-            "title": {
-                "integration": "{{companyName}} ile iletişime geçin",
-                "ipvd_feedback_device": "{{asset}} hakkında geri bildirim",
-                "ipvd_feedback_page": "Kameralar sayfası için geri bildirim"
-            }
-        },
-        "noClientDetectedTitle": "Install %VMS_NAME% to view your System",
-        "okButton": "Tamam",
-        "sharing": {
-            "confirmOwner": "Sistem sahibini değiştirirseniz, hesabınızdaki yetkileri iptal edersiniz. Bu eylem geri döndürülemez. Emin misiniz?",
-            "editShareConfirmButton": "Kaydet",
-            "editShareTitle": "İzinleri düzenle",
-            "permissionsSaved": "Yeni izin kaydedildi",
-            "shareConfirmButton": "Ekle",
-            "shareTitle": "Ekle"
-        },
-        "stayAs": "Bu email {email} ile bağlı kal ",
-        "stayLoggedIn": "Oturum açık kalsın"
-    },
-    "dialogs.merge.connectToCloud": "Birleştirmek istediğiniz <strong>{{cloudName}}</strong> sistemine bağlanın veya yerel sistemi <strong>{{vmsName}}</strong> kullanarak birleştirin.",
-    "dialogs.merge.mergeConfirmation": "<strong>{{primarySystem}}</strong> ve <strong>{{secondarySystem}}</strong>sistemlerini birleştirmek üzeresiniz. Ayarlar ve isim <strong>{{primarySystem}}</strong>alınacaktır.",
-    "dialogs.merge.primaryCannotMerge": "Sistem {{targetSystem}}, mevcut sistemle uyumlu olmayan daha yeni bir yazılım sürümüne sahip. Geçerli sistemi, {{targetSystem}} Sistemle birleştirmek için en son <a href=\"/download\" target=\"_blank\" translate>derleme</a> güncelleyin.",
-    "dialogs.merge.primarySystemOffline": "dialogs.merge.primarySystemOffline",
-    "dialogs.merge.secondaryCannotMerge": "Sistem {{targetSystem}}, mevcut sistemle uyumlu olmayan daha eski bir yazılım sürümüne sahip. Geçerli olanla birleştirmek için {{targetSystem}} en son <a href=\"/download\" target=\"_blank\" translate>derleme</a> güncelleyin.",
-    "dialogs.merge.systemOffline": "dialogs.merge.systemOffline",
-    "dialogs.merge.systemUnavailable": "{{targetSystem}} sistemi erişilebilir değil. Birkaç dakika sonra tekrar deneyin",
-    "downloads": {
-        "appTypes": {
-            "bundle": "İstemci ve sunucu",
-            "camera_sdk": "Video Source SDK",
-            "client": "Yalnızca istemci",
-            "metadata_sdk": "Metadata SDK",
-            "package": "Paket",
-            "server": "Yalnızca sunucu",
-            "servertool": "Konfigürasyon aracı",
-            "storage_sdk": "Depolama için SDK",
-            "video_source_sdk": "Video Source SDK"
-        },
-        "groups": {
-            "android": {
-                "label": "Android",
-                "shortLabel": "Android"
-            },
-            "arm": {
-                "label": "ARM",
-                "shortLabel": "ARM"
-            },
-            "ios": {
-                "label": "iOS",
-                "shortLabel": "iOS"
-            },
-            "linux": {
-                "label": "Ubuntu Linux",
-                "shortLabel": "Ubuntu"
-            },
-            "mac": {
-                "label": "Mac OS"
-            },
-            "macos": {
-                "label": "Mac OS"
-            },
-            "sdk": {
-                "label": "SDK",
-                "shortLabel": "SDK"
-            },
-            "windows": {
-                "label": "Windows"
-            }
-        },
-        "mobile": {
-            "android": {
-                "link": "%ANDROID_APPLICATION_LINK%"
-            },
-            "ios": {
-                "link": "%IOS_APPLICATION_LINK%"
-            }
-        },
-        "platforms": {
-            "bananapi": "Banana Pi",
-            "bpi": "Nx1",
-            "linux64": "x64",
-            "linux_arm32": "x32",
-            "linux_arm64": "x64",
-            "mac": "X",
-            "rpi": " Raspberry Pi",
-            "universal": "SDK",
-            "win64": "x64"
-        },
-        "releasesTypes": {
-            "beta": "Beta",
-            "betas": "Beta Sürümleri",
-            "patch": "Düzeltme",
-            "patches": "Düzeltmeler",
-            "rc": "Sürüm Adayı",
-            "release": "Sürüm",
-            "releases": "Sürümler"
-        }
-    },
-    "errorCodes": {
-        "DUPLICATE_MEDIASERVER_FOUND": "Bazı sunucular, her iki sistemde de mevcut olanları - seçilenleri ve geçerli olanları listeler.<br>Çevrimdışı ve uyumsuz sunucuları her bir Sistemden kaldırın ve tekrar deneyin.",
-        "EmailAlreadyExists": "Bu e-posta adresi zaten kayıtlı",
-        "FAIL": "Sistem <strong>{{failedSystem}}</strong> şu anda erişilemiyor.<br>Birkaç dakika sonra tekrar deneyin veya iletişim <a href=\"%SUPPORT_LINK%\" target=\"_blank\">destek</a>.",
-        "INCOMPATIBLE": "Sistemler farklı yazılım sürümlerine sahiptir. Lütfen her ikisini de en son <a href=\"/download\">sürümüne</a>.",
-        "accountAlreadyActivated": "Bu hesap zaten etkinleştirildi",
-        "accountBlocked": "Bu hesap geçici olarak kilitlendi. Lütfen bir süre sonra tekrar deneyin.",
-        "accountNotActivated": "Bu hesap henüz etkinleştirilmedi. <a href=\"/activate\">Yalnızca etkinleştirme bağlantısını gönder</a>",
-        "alreadyExists": "Bu hesap zaten mevcut",
-        "brokenAccount": "Hesapla beklenmeyen bir problem. <a href=\"/restore_password\">Hesabı geri yükle</a>",
-        "cantActivatePrefix": "Hesabınız etkinleştirilemedi",
-        "cantChangeAccountPrefix": "Değişiklikler kaydedilemiyor",
-        "cantChangePasswordPrefix": "Parola kaydedilemiyor",
-        "cantDisconnectSystemPrefix": "Sistem silinemiyor",
-        "cantEditAdmin": "Bu kullanıcının yönetici izinleri var",
-        "cantEditYourself": "Kendi izinlerini değiştirmeye izin verilmiyor",
-        "cantGetSystemInfoPrefix": "Kullanıcı listesi kullanılamıyor",
-        "cantGetSystemsListPrefix": "Kullanıcı listesi kullanılamıyor",
-        "cantGetUsersListPrefix": "Kullanıcı listesi kullanılamıyor",
-        "cantOpenClient": "%VMS_NAME% uygulama algılanmadı.",
-        "cantRegisterPrefix": "Hata oluştu",
-        "cantSendActivationPrefix": "Onay e-posta gönderemezsiniz",
-        "cantSendConfirmationPrefix": "Onay e-posta gönderemezsiniz",
-        "cantSharePrefix": "Sistem paylaşılamıyor",
-        "cantUnshareWithMeSystemPrefix": "Sistem silinemiyor",
-        "emailNotFound": "Hesap mevcut değil.",
-        "forbidden": "Bu işlemi gerçekleştirecek izinlere sahip değilsiniz",
-        "lostConnection": "{{systemName}} ile bağlantı kayboldu",
-        "mergedSystemIsOffline": "Sistem <strong>{{failedSystem}}</strong> çevrimdışı.",
-        "notAuthorized": "Hatalı parola",
-        "notFound": "Bulunamadı",
-        "ok": "tamam",
-        "oldPasswordMistmatch": "Mevcut şifre hatalı.",
-        "oldSafariNotSupported": "Safari 10'dan büyük sürümleri desteklenmez",
-        "passwordMismatch": "Hatalı parola",
-        "thisSystem": "sistem",
-        "unknownError": "Beklenmedik bir hata oluştu",
-        "unknownMergeError": "Bilinmeyen hata. Sayfayı yenilemeyi deneyebilir ve denemeyi tekrarlayabilirsiniz. Sorun devam ederse, lütfen <a href=\"%SUPPORT_LINK%\" target=\"_blank\">destek</a>iletişim kurun.",
-        "wrongAuthCode": "Kodun süresi dolmuş veya yanlış",
-        "wrongCode": "Hesap zaten etkinleştirildi veya onay kodu yanlış",
-        "wrongCodeRestore": "Onay kodu zaten kullanılmış veya yanlış",
-        "wrongParameters": "Formdaki bazı parametreler yanlış"
-    },
-    "integration": {
-        "Access Control": "Erişim Kontrolü",
-        "Connector": "Konnektör",
-        "Data Analytics": "Veri Analizleri",
-        "Drone": "Drone",
-        "Health Monitor": "Performans İzleme",
-        "Storage": "Depolama",
-        "backToEditText": "Düzeleme arayüzüne dön",
-        "myIntegrationsLabel": "Benim",
-        "previewRibbonText": "Bu sayfa en son değişikliklerin önizlemesidir ve herkese açık kullanılabilir sürümle eşleşmiyor."
-    },
-    "ipvd": {
-        "Advanced PTZ cameras": "Gelişmiş PTZ kameralar",
-        "Cameras supporting H.265": "H.265'i destekleyen kameralar",
-        "Cameras with 2-way audio": "Çift yönlü sesli kameralar",
-        "Extra high resolution cameras": "Eksta yüksek çözünürlüklü kameralar",
-        "Fisheye Cameras": "Balıkgözü kameralar",
-        "I / O modules": "G / Ç modülleri",
-        "Multisensor Cameras": "Çok Sensörlü Kameralar",
-        "PTZ cameras": "PTZ kameralar",
-        "camera": "Kamera",
-        "count": "Sayım",
-        "disclaimer": "Bu liste, {{vmsName}} bulunan, kullanıcıların cihaz özelliklerinin {{companyName}} otomatik raporlanmasına izin verdiği yerlerdedir. Hiçbir kişisel bilgi toplanmaz ve her kullanıcı tamamen adsız kalır.",
-        "dvr": "DVR",
-        "encoder": "Kodlayıcı",
-        "feedback": {
-            "a_Please": "Lütfen",
-            "b_Link": "destek talebi gönder",
-            "c_Info": "desteklenen cihazlarla ilgili ek sorularınız için."
-        },
-        "hardwareType": "Tür",
-        "isAnalyticsSupported": "Analiz",
-        "isAptzSupported": "Gelişmiş PTZ",
-        "isAptzSupportedShort": "Gelş. PTZ",
-        "isAudioSupported": "Ses",
-        "isFisheye": "Fish-Eye",
-        "isH265": "H.265",
-        "isIoSupported": "G/Ç",
-        "isMdSupported": "Hareket",
-        "isMultiSensor": "Çoklu sensör",
-        "isPtzSupported": "PTZ",
-        "isTwAudioSupported": "çift Yönlü Ses",
-        "maxFps": "<span>Maksimum</span><br><span>FPS</span>",
-        "maxResolution": "<span>Max</span><br><span>Çözünürlük</span>",
-        "model": "Model",
-        "multiSensorCamera": "Çok Sensörlü Kamera",
-        "other": "Diğer",
-        "primaryCodec": "Kodek",
-        "resolutionArea": "Alan",
-        "vendor": "Üretici"
-    },
-    "ipvd.disclaimer": "Bu liste, {{vmsName}} bulunan, kullanıcıların cihaz özelliklerinin {{companyName}} otomatik raporlanmasına izin verdiği yerlerdedir. Hiçbir kişisel bilgi toplanmaz ve her kullanıcı tamamen adsız kalır.",
-    "latest build": "son yapı",
     "manufacturers": "ureticiler",
-    "messageDialogPlaceholders": {
-        "feedback": "Kamera üreticisi ve modelinin olduğundan emin olun..."
-    },
-    "pageTitles": {
-        "account": "Hesap ayarları -",
-        "activate": "Hesabı aktif et -",
-        "activateCode": "Hesabı aktif et -",
-        "activateSent": "Hesabı aktif et -",
-        "activateSuccess": "Hesap aktif edildi -",
-        "changePassword": "Parola değiştir -",
-        "debug": "Hata ayıklama",
-        "default": "%CLOUD_NAME%",
-        "download": "İndir %VMS_NAME%",
-        "downloadPlatform": "Download %VMS_NAME% for ",
-        "integrations": "Entegrasyonlar",
-        "login": "Giriş yap -",
-        "pageNotFound": "Sayfa bulunamadı",
-        "register": "Hesap Oluştur",
-        "registerSuccess": "Hoş geldiniz",
-        "restorePassword": "Parolayı sıfırla -",
-        "restorePasswordCode": "Parolayı sıfırla -",
-        "restorePasswordSuccess": "Parola kaydedildi -",
-        "supportedDevices": "Desteklenen cihazlar",
-        "system": "Sistem -",
-        "systemShare": "Sistemi Paylaş -",
-        "systems": "Sistemler -",
-        "template": "{{title}} %CLOUD_NAME%",
-        "view": "Kameraları görüntüle - "
-    },
-    "passwordRequirements": {
-        "common": "çok yaygın",
-        "commonMessage": "Dünyada en çok kullanılan parolayı seçtiniz",
-        "fair": "idare eder",
-        "fairMessage": "Parolanın güçlü olması için \nküçük büyük harf ve özel karakterler kullanın",
-        "good": "iyi",
-        "minLength": "çok kısa",
-        "minLengthMessage": "Parola en az 8 karakterden oluşmalıdır",
-        "missingMessage": "Parola gerekmektedir",
-        "required": "yanlış",
-        "requiredMessage": "Sadece alfanümerik ve klavye karakterleri kullanın",
-        "strongMessage": "Güçlü parola!",
-        "weak": "zayıf",
-        "weakMessage": "Parolanın güçlü olması için \nküçük büyük harf ve özel karakterler kullanın"
-    },
-    "phoneNumberWithLabel": "Tel: {{number}}",
-    "pleaseSelect": "Lütfen seçiniz...",
-    "privacyPolicy": {
-        "integration": "Bu formu göndererek, {{INTEGRATION_COMPANY}} ve / veya %COMPANY_NAME%ile irtibata geçmeyi kabul edersiniz.\nSen bulacaksınız {{INTEGRATION_COMPANY}} gizlilik politikasını <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">burada</a> ve %COMPANY_NAME% gizlilik politikasını <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Burada</a> onayınızı geri çekmek konusunda talimat içerir.",
-        "ipvd": "Bu formu göndererek, %COMPANY_NAME%ile iletişime geçmeyi kabul edersiniz.\nBurada, onayınızı nasıl geri çekeceğinizle ilgili talimatları içeren %COMPANY_NAME% gizlilik politikasını <a href=\"%PRIVACY_LINK%\" target=\"_blank\">burada</a> bulacaksınız."
-    },
-    "registration": {
-        "agreement": "Kabul et <a href=\"/content/eula\" target=\"_blank\">Şartlar ve Koşullar</a>ve<a href=\"%PRIVACY_LINK%\" target=\"_blank\">Gizlilik Politikası</a>"
-    },
-    "registration.agreement": "Kabul et <a href=\"/content/eula\" target=\"_blank\">Şartlar ve Koşullar</a>ve<a href=\"%PRIVACY_LINK%\" target=\"_blank\">Gizlilik Politikası</a>",
-    "search": {
-        "Any": "Herhangi",
-        "Search": "Arama",
-        "analytics": "Analiz",
-        "analyticsSelected": "analiz Etkinliği",
-        "filter applied": "filtre uygulandı",
-        "filters applied": "filtreler uygulandı",
-        "hardwareType": "Tür",
-        "hardwareTypes": "Türler",
-        "minResolution": "Minimum Çözünürlük",
-        "search_ipvd": "Belirli bir üretici veya modele göre arama",
-        "selected": "seçildi",
-        "vendor": "Üretici",
-        "vendors": "Üreticiler"
-    },
-    "servers in the merged System.": "birleştirilmiş sistemdeki sunucular.",
     "support": "destek",
-    "system": {
-        "confirmDisconnectAction": "Bağlantıyı kes",
-        "confirmDisconnectTitle": "%CLOUD_NAME% den bağlantıyı kesmek istiyor musunuz?",
-        "confirmMergeAction": "Birleştir",
-        "confirmRenameAction": "Kaydet",
-        "confirmRenameTitle": "Sistem Adı",
-        "confirmUnshare": "Bu kullanıcı Sistem'e erişemez. Emin misiniz?",
-        "confirmUnshareAction": "Kaldır",
-        "confirmUnshareFromMe": "Hesabınızın bu sistemle bağlantısını kesmek üzeresiniz. Bundan sonra bu sisteme erişim sağlayamayacaksınız. Emin misiniz?",
-        "confirmUnshareFromMeAction": "Bağlantıyı kes",
-        "confirmUnshareFromMeTitle": "Sistemle bağlantıyı kes?",
-        "confirmUnshareTitle": "Kullanıcı kaldırılsın mı?",
-        "mergeFailed": "Sistem birleştirme işlemi başarısız oldu",
-        "mergeStart": "Sistemler birleştirilmeye başlandı",
-        "mergeSuccess": "Sistem birleştirme tamamlandı",
-        "mergeSystemTitle": "Sistemleri Birleştir",
-        "mySystemSearch": "IMeMyMine",
-        "offline": "Sistem çevrimdışı",
-        "offlineAlertRibbon": "Sistem çevrimdışı. Bazı ayarlara erişim olmayabilir.",
-        "openClient": "Open in %VMS_NAME%",
-        "openClientNoSystem": "Aç %VMS_NAME%",
-        "permissionsRemoved": "İzinler {{email}}'den kaldırıldı",
-        "settings": {
-            "sessionLimitDuration": {
-                "hours": "saat",
-                "minutes": "dakika"
-            },
-            "warningMessages": {
-                "videoEncryption": "Video trafiğini şifrelemek, CPU kullanımını önemli ölçüde artıracaktır."
-            }
-        },
-        "shareOffline": "Çevrimdışıyken sistem paylaşılamıyor",
-        "shareUnauthorized": "Bu sistemi paylaşma izniniz yok",
-        "successDeleted": "{{systemName}} sistemi hesabınızdan başarıyla silindi",
-        "successDisconnected": "Sistem %CLOUD_NAME%'den başarıyla çıkarıldı",
-        "successRename": "Sistem ismi kaydedildi",
-        "unavailable": "Sistem erişilebilir değil",
-        "unknownName": "Sistem için Bilinmeyen Ad (Bulut birleştirme yüzünden)",
-        "yourSystem": "Sistem"
-    },
-    "systemAdministration": "Sistem Yönetimi",
-    "systemStatuses": {
-        "activated": "aktif edildi",
-        "incompatible": "uyumsuz",
-        "merging": "birleştirme",
-        "notActivated": "aktif edilmemiş",
-        "offline": "çevrimdışı",
-        "online": "çevrimiçi",
-        "unavailable": "kullanılamaz"
-    },
-    "testedVersionLabel": "Tested with {{vmsName}} version:",
-    "testedVersionsLabel": "Tested with {{vmsName}} versions:",
-    "topXByVolume": "Hacime göre ilk {{value}}:",
-    "users": "Kullanıcılar",
     "you": "sen"
 }

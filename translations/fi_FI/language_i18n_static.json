@@ -169,25 +169,27 @@
 		"feedback": "Varmista, että määrität kameramallin ja valmistajan..."
 	},
 	"pageTitles": {
-		"template": "{{title}} %CLOUD_NAME%",
+		"template": "{{title}} - %CLOUD_NAME%",
 		"default": "%CLOUD_NAME%",
+		"about": "About",
 		"registerSuccess": "Tervetuloa",
 		"register": "Luo tili",
-		"changePassword": "Vaihda salasana -",
-		"account": "Tilin asetukset -",
-		"systems": "Järjestelmät",
-		"system": "Järjestelmä",
-		"systemShare": "Jaa järjestelmä -",
-		"activate": "Aktivoi tili",
-		"activateSent": "Aktivoi tili",
-		"activateSuccess": "Tili aktivoitu",
-		"activateCode": "Aktivoi tili",
-		"restorePassword": "Vaihda salasana -",
-		"restorePasswordSuccess": "Salasana tallennettu",
-		"restorePasswordCode": "Vaihda salasana -",
-		"view": "Näytä kamerat - ",
+		"changePassword": "Change password",
+		"account": "Account settings",
+		"systems": "Systems",
+		"system": "System",
+		"systemName": "{{systemName}}",
+		"systemShare": "Share System",
+		"activate": "Activate account",
+		"activateSent": "Activate account",
+		"activateSuccess": "Account activated",
+		"activateCode": "Activate account",
+		"restorePassword": "Reset password",
+		"restorePasswordSuccess": "Password saved",
+		"restorePasswordCode": "Reset password",
+		"view": "View cameras",
 		"debug": "Vianetsintä",
-		"login": "Kirjaudu sisään -",
+		"login": "Log in",
 		"download": "Lataa %VMS_NAME%",
 		"downloadPlatform": "Lataa %VMS_NAME% ",
 		"pageNotFound": "Sivua ei löydy",
@@ -223,7 +225,8 @@
 				"a_recommend": "Suosittelemme konsultointia",
 				"b_support": "tuki",
 				"c_proceeding": "ennen etenemistä."
-			}
+			},
+			"warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged System."
 		},
 		"message": {
 			"failedToSend": "Viestin lähetys epäonnistui.",
@@ -496,5 +499,7 @@
 	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "Sinulla ei ole järjestelmiä, jotka on kytketty %CLOUD_NAME%",
 	"NO_SYSTEMS_LOGIN": "Kirjaudu järjestelmään käyttämällä %VMS_NAME%",
 	"NO_SYSTEMS_GOTO_ADMINISTRATION": "Siirry \"Cloud\" -välilehdelle \"System Administration\" -valintaikkunassa",
-	"NO_SYSTEMS_CONNECT_SYSTEM": "Paina \"Yhdistä järjestelmä %CLOUD_NAME%\""
+	"NO_SYSTEMS_CONNECT_SYSTEM": "Paina \"Yhdistä järjestelmä %CLOUD_NAME%\"",
+	"topXByVolume": "Top {{value}} by volume:",
+	"phoneNumberWithLabel": "Tel: {{number}}"
 }

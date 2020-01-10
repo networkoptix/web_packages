@@ -1,6 +1,5 @@
 {
     "2-Way Audio": "양방향 오디오",
-    "About %CLOUD_NAME%": "%CLOUD_NAME% 정보",
     "Access Level": "접근 권한",
     "Access level": "접근 권한",
     "Account Information": "계정 정보",
@@ -39,7 +38,7 @@
     "Change Password": "패스워드 변경",
     "Checking...": "확인...",
     "Choose which properties should be visible to customers:": "고객이 볼 수 있는 속성 선택:",
-    "Clear filters": "Clear filters",
+    "Clear": "Clear",
     "Close": "닫기",
     "Codec": "코덱",
     "Collapse": "축소",
@@ -74,7 +73,6 @@
     "Enter password for your account to continue": "계속 하려면 귀하의 계정에 대 한 패스워드를 입력하십시요",
     "Enter password to continue.": "계속 하려면 패스워드를 입력하세요",
     "Export all to CSV": "모두 CSV로 내보내기",
-    "FAILED_SYSTEM_DESCR": "이 링크가 끊어졌습니다.<br>시스템이 %CLOUD_NAME%에서 연결이 끊어졌을 수 있습니다.<br>이 시스템에 대한 액세스가 취소되었거나 <br>또는 다른 계정으로 로그인했을 수 있습니다.",
     "FPS(max)": "FPS (최대)",
     "Failed to access System": "시스템에 액세스하지 못했습니다.",
     "Finishing systems merge": "시스템 머지를 마무리중입니다",
@@ -90,7 +88,7 @@
     "I/O": "I/O",
     "In Review": "검토중",
     "In-Client Upgrade:": "클라이언트에서 업그레이드:",
-    "Includes information about the System, such as camera modules, \n                            firmware versions, number of servers, etc. \n                            Does not include any personal information and is completely anonymous.": "Includes information about the System, such as camera modules, \n                            firmware versions, number of servers, etc. \n                            Does not include any personal information and is completely anonymous.",
+    "Includes information about the System, such as camera modules,\n                            firmware versions, number of servers, etc.\n                            Does not include any personal information and is completely anonymous.": "Includes information about the System, such as camera modules,\n                            firmware versions, number of servers, etc.\n                            Does not include any personal information and is completely anonymous.",
     "Information": "정보",
     "Integrations": "연동",
     "Language": "언어",
@@ -109,10 +107,6 @@
     "Mine": "나의",
     "Motion Detection": "움직임 감지:",
     "Multi Sensor": "다중 센서",
-    "NO_SYSTEMS_CONNECT_SYSTEM": "\"시스템을 %CLOUD_NAME%연결\"을 누르십시오.",
-    "NO_SYSTEMS_GOTO_ADMINISTRATION": "\"시스템 관리\"관리에서 \"클라우드\"탭으로 이동하십시오.",
-    "NO_SYSTEMS_LOGIN": "Log in to your System using %VMS_NAME%",
-    "NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "%CLOUD_NAME%에 연결된 시스템이 없습니다",
     "New Password": "신규 사용자",
     "No unsaved changes": "저장되지 않은 변경 사항이 없습니다.",
     "Nothing Found": "결과 없음",
@@ -132,7 +126,6 @@
     "Please enter a valid Email": "유효한 이메일을 입력하십시오",
     "Please review and agree to the Terms and Conditions and Privacy policy in order to proceed": "다음으로 진행하려면 이용 약관과 개인 정보 정책을 읽고 동의해야 합니다.",
     "Popularity": "인기도",
-    "Privacy": "개인 정보 보호 정책",
     "Release Notes": "업데이트 내용",
     "Release notes": "업데이트 내용",
     "Remember me": "기억하기",
@@ -157,7 +150,6 @@
     "Support": "지원",
     "Support E-mail": "지원 이메일",
     "Support URL": "지원 URL",
-    "Supported Devices": "지원되는 기기들",
     "Supported IP Video Devices": "지원되는 IP 비디오 장치들",
     "System Settings": "시스템설정",
     "System name": "시스템 이름",
@@ -168,534 +160,33 @@
     "Tags": "태그",
     "Take me home": "홈으로 이동",
     "Take the name and settings from": "에서 이름과 설정 가져 오기",
-    "Terms": "이용 약관",
     "Terms of Use": "이용 약관",
     "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.": "이 사용자의 인증정보가 노출 될 것입니다! 지정한 공공 카메라들만 접근할 수 있는 사용자지정 공공사용자 역할계정을 만들고 보기만 할 수 있는 가장 촤소한의 권한을 주십시요. \n             이 \"공공 사용자\" 는 어떠한 시스템 기능을 액세스 하면 안됩니다.",
-    "There will be more than": "이상이있을 것입니다.",
     "This Email has been already registered in %CLOUD_NAME%": "상기 이메일은 이미 %CLOUD_NAME%에 등록되었습니다",
     "This device has reported to support some analytics events, but we don't have exact information about them.": "이 기기는 일부 분석 이벤트를 지원하는 것으로보고되었지만 정확한 정보는 없습니다.",
     "To": "받는 사람",
     "Too many attempts. Try again in a minute.": "시도 횟수가 너무 많습니다. 1 분 후에 다시 시도하십시오.",
     "Tracks and logs all user actions.": "모든 사용자 작업을 추적하고 기록합니다.",
     "Until merge is finished you can log in to this system and watch video, but cannot change any settings.": "병합이 완료 될 때까지 현재 시스템에 접속하여 비디오를 볼 수는 있지만 설정을 변경할 수는 없습니다.",
-    "Update them to the": "로 업데이트",
+    "Update them to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>": "Update them to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>",
     "Updated": "업데이트됨",
     "User": "사용자:",
     "User disabled": "사용자 비활성화 됨",
     "View": "보기",
-    "WHEN_MERGE_FINISHES": "병합이 완료되면이 시스템의 모든 사용자와 카메라가 <strong>{{targetSystemName}}</strong> 시스템에서 사용 가능해지며이 시스템이 삭제됩니다.",
     "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.": "Google 크롬 또는 Mozilla Firefox의 최신 버전을 설치하는 것을 권장하지만 다른 최신 웹 브라우저를 사용할 수 있습니다.",
     "What's New?": "무엇이 새로운가?",
-    "When enabled, system will discover new cameras and servers. Also, \n                            it will automatically and persistently send discovery requests to \n                            cameras in order to get the camera's status update. \n                            Failover enabled on some servers ignore status check prohibition.": "When enabled, system will discover new cameras and servers. Also, \n                            it will automatically and persistently send discovery requests to \n                            cameras in order to get the camera's status update. \n                            Failover enabled on some servers ignore status check prohibition.",
+    "When enabled, system will discover new cameras and servers. Also,\n                            it will automatically and persistently send discovery requests to\n                            cameras in order to get the camera's status update.\n                            Failover enabled on some servers ignore status check prohibition.": "When enabled, system will discover new cameras and servers. Also,\n                            it will automatically and persistently send discovery requests to\n                            cameras in order to get the camera's status update.\n                            Failover enabled on some servers ignore status check prohibition.",
     "Works with:": "와 연동되다:",
     "Wrong password": "패스워드가 틀립니다.",
     "You can only merge Systems where you are the owner.": "소유자 인 시스템 만 머지 할 수 있습니다.",
     "You have registered in %CLOUD_NAME%": "%CLOUD_NAME% 에 등록했습니다.",
     "Your Email": "당신의 이메일",
     "Your Name": "당신의 이름",
-    "Your access level": "당신의 접근 권한",
+    "Your access level<span>&nbsp;– </span>\n                    <span class=\"name\" [innerHTML]=\"updateUserRole()\"></span>": "Your access level<span>&nbsp;– </span>\n                    <span class=\"name\" [innerHTML]=\"updateUserRole()\"></span>",
     "Your account is successfully activated": "당신의 계정이 성공적으로 활성화 되었습니다",
     "Your browser is not supported": "브라우저가 지원되지 않습니다.",
-    "accessRoles": {
-        "Administrator": {
-            "description": "공유 기능을 포함한 무제한 액세스",
-            "label": "관리자"
-        },
-        "Advanced Viewer": {
-            "description": "라이브 비디오를보고, 아카이브를 검색하고, PTZ 등을 제어 할 수 있습니다.",
-            "label": "고급 뷰어"
-        },
-        "Custom": {
-            "description": "%VMS_NAME% 클라이언트 프로그램을 사용하여 사용자 정의 권한 설정",
-            "label": "사용자 정의"
-        },
-        "Live Viewer": {
-            "description": "라이브 비디오 만 볼 수 있음",
-            "label": "라이브 뷰어"
-        },
-        "Owner": {
-            "description": "클라우드에서 시스템을 공유하고 연결 / 연결 해제하는 기능을 포함한 무제한 액세스",
-            "label": "소유자"
-        },
-        "Viewer": {
-            "description": "라이브 비디오를보고 아카이브를 열람 할 수 있습니다.",
-            "label": "뷰어"
-        },
-        "advancedViewer": {
-            "description": "라이브 비디오를보고, 아카이브를 검색하고, 카메라를 구성하고, PTZ 등을 제어 할 수 있습니다.",
-            "label": "고급 뷰어"
-        },
-        "cloudAdmin": {
-            "description": "시스템을 구성하고 공유 할 수 있습니다.",
-            "label": "관리자"
-        },
-        "custom": {
-            "description": "%VMS_NAME% 클라이언트 프로그램을 사용하여 사용자 정의 권한 설정",
-            "label": "사용자 정의"
-        },
-        "customRole": {
-            "description": "시스템에 지정된 사용자 지정 사용자 역할",
-            "label": "사용자 지정 역할"
-        },
-        "disabled": {
-            "description": "사용자가 비활성화 되어있어 시스템에 로그인 할 수 없습니다.",
-            "label": "비활성화"
-        },
-        "liveViewer": {
-            "description": "라이브 비디오 만 볼 수 있음",
-            "label": "라이브 뷰어"
-        },
-        "owner": {
-            "description": "클라우드에서 시스템을 공유하고 연결 / 연결 해제하는 기능을 포함한 무제한 액세스",
-            "label": "소유자"
-        },
-        "viewer": {
-            "description": "라이브 비디오를보고 아카이브를 열람 할 수 있습니다.",
-            "label": "뷰어"
-        }
-    },
-    "account": {
-        "accountSavedSuccess": "계정이 성공적으로 저장되었습니다.",
-        "accountSettings": "계정 설정",
-        "activationLinkSent": "활성화 링크 전송",
-        "changePassword": "패스워드 변경",
-        "newPasswordLabel": "새 패스워드",
-        "passwordChangedSuccess": "계정이 성공적으로 저장되었습니다.",
-        "saveChanges": "저장"
-    },
-    "activeActions": {
-        "resetPassword": "패스워드 재설정",
-        "sendConfirm": "활성화 링크 재전송",
-        "setNewPassword": "패스워드 저장",
-        "setNewPasswordLabel": "새 패스워드"
-    },
-    "cameraFilters": {
-        "H265": "H.265 카메라들",
-        "IO": "I / O 모듈들",
-        "TwWayAudio": "양방향 오디오 기기들",
-        "aptz": "고급 PTZ가 장착 된 카메라들",
-        "audio": "오디오내장 카메라들",
-        "encoder": "인코더들",
-        "fisheye": "어안렌즈 카메라들",
-        "highRes": "초고해상도 카메라들",
-        "multiSensor": "다중 센서 카메라들",
-        "ptz": "PTZ 카메라들"
-    },
-    "clientProtocol": "%CLIENT_PROTOCOL%:",
-    "common": {
-        "cameraLinks": {
-            "copyActiveText": "클립보드에 복사됨",
-            "copyDefaultText": "복사",
-            "copyToClipboard": "클립보드에 복사",
-            "highStream": "고해상도 스트림",
-            "lowStream": "낮은 스트림",
-            "transcoding": "트랜스코딩",
-            "unknown": "알 수 없음"
-        },
-        "cameraStates": {
-            "error": "오류",
-            "errorLoading": "이 영상을로드하는 중에 오류가 발생했습니다.",
-            "flashOrWebmRequired": "Internet Explorer에서 비디오를 재생하려면 <a href='https://get.adobe.com/flashplayer/' target='_blank'> Adobe Flash</a> 또는 <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a>을 설치하십시오.",
-            "flashRequired": "동영상을 재생하기 위하여 <a href='https://get.adobe.com/flashplayer/' target='_blank'>Adobe Flash</a>설치하세요.",
-            "iOSVideoTooLarge": "iOS는 fullHD (2MP: 1920x1080) 보다 큰 비디오를 지원하지 않습니다.",
-            "ieNoWebm": "Internet Explorer에 <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'> WebM 코덱</a>를 설치 하십시요.",
-            "ieWin10": "Microsoft Edge 또는 Google 크롬 브라우저를 사용하십시오.",
-            "noArmSupport": "이 브라우저 또는 장치는 ARM 기반 서버의 비디오 재생을 지원하지 않습니다.",
-            "noData": "데이터 없음",
-            "noFormat": "상기 브라우저는 현 카메라의 비디오 재생을 지원하지 않습니다.",
-            "offline": "오프라인",
-            "ubuntuNX": "이 브라우저는 ARM 기반 서버의 비디오를 지원하지 않습니다. 대신 Chromium 브라우저를 사용하십시오.",
-            "unauthorized": "인증이 필요합니다"
-        },
-        "chromeCastWarning": "크롬캐스트는 많은 리소스가 요구되어 서버에 문제가 발생할 수 있습니다.",
-        "resolution": {
-            "auto": "자동",
-            "high": "높은",
-            "low": "낮은"
-        },
-        "searchCamPlaceholder": "검색",
-        "systemHasNoCameras": "카메라 없음",
-        "systemNewVersion": "Update your system",
-        "systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
-        "systemNoAlerts": "No Alerts",
-        "systemNoAlertsMessage": "Your system must be doing well!",
-        "systemOffline": "시스템 오프라인",
-        "systemOfflineMessage": "This system is offline and cannot be accessed right now.",
-        "systemServerError": "인터넷 서버 오류",
-        "systemServerErrorMessage": "An error occurred, please, try again later. An error occurred, please try again later. If the problem continues, please contact your support team.",
-        "systemUnreachable": "시스템이 연결이 않됩니다",
-        "voiceCommands": {
-            "clear search": "검색기록 지우기",
-            "collapse all servers": "모든 서버 축소",
-            "collapse server": "서버축소 + [server name]",
-            "expand all servers": "모든 서버 확장",
-            "expand server": "서버확장 + [server name]",
-            "help": "도움말 | 명령 표시",
-            "live": "go to live | show me live",
-            "pause": "일시정지",
-            "play": "재생",
-            "search": "찾기 + [text for searchbar]",
-            "stop listening": "듣기 중지",
-            "view": "view + [카메라 명]"
-        }
-    },
     "devices": "기기들",
-    "dialogs": {
-        "cancelButton": "취소",
-        "changeAccountLogged": "You are already logged in as {email}",
-        "createNewAccount": "새 계정 만들기",
-        "download": "%VMS_NAME% 다운로드",
-        "loggedFromOther": "다른 계정으로 로그인 하게 될것입니다",
-        "loginButton": "로그인",
-        "loginTitle": "%CLOUD_NAME%에 로그인",
-        "logoutAuthorisedContinueButton": "계속",
-        "logoutAuthorisedLogoutButton": "로그 아웃",
-        "logoutAuthorisedTitle": "이미 로그인 되어 있습니다",
-        "merge": {
-            "commonText": "시스템 <strong>{{primarySystem}}</strong> 및 <strong>{{secondarySystem}}</strong>를 머지 하는데 실패 했습니다.",
-            "connectToCloud": "이 시스템과 머지하려는 시스템을 <strong>{{cloudName}}</strong> 에 연결하거나 <strong>{{vmsName}}</strong> 클라이언트를 사용하여 로컬로 머지하십시오.",
-            "mergeConfirmation": "시스템 <strong>{{primarySystem}}</strong> 과 <strong>{{secondarySystem}}</strong>를 머지하려고합니다. 설정과 이름은 <strong>{{primarySystem}}</strong>에서 가져옵니다.",
-            "mergeFailedTitle": "시스템 머지에 실패했습니다.",
-            "primaryCannotMerge": "시스템 {{targetSystem}} 은 현재 시스템과 호환 되지 않는 최근 소프트웨어 버전이 있습니다. 현재 시스템을 {{targetSystem}} 시스템으로 머지하려면 <a href=\"/download\" target=\"_blank\" translate>최신 빌드</a> 로 업데이트 하십시요.",
-            "primarySystemOffline": "{{primarySystem}} 시스템이 오프라인 상태이며 {{targetSystem}} 시스템과 병합 할 수 없습니다.",
-            "recommendSupport": {
-                "a_recommend": "와 상담 하는 것을 제안 합니다.",
-                "b_support": "지원",
-                "c_proceeding": "계속하기 전에."
-            },
-            "secondaryCannotMerge": "시스템 {{targetSystem}} 에 현재 시스템과 호환되지 않는 이전 소프트웨어 버전이 있습니다. 병합하기 위해 {{targetSystem}} 를 받는 사람 <a href=\"/download\" target=\"_blank\" translate>최신 빌드</a> 로 업데이트 하십시요.",
-            "systemOffline": "시스템 {{targetSystem}} 은 오프라인이며 현재 시스템과 머지 할 수 없습니다.",
-            "systemUnavailable": "시스템 {{targetSystem}} 에 현재 연결할 수 없습니다. 몇 분 후에 다시 시도하거나 문의하십시오."
-        },
-        "message": {
-            "failedToSend": "메시지 전송 실패",
-            "sent": "메시지가 전송되었습니다.",
-            "subject": {
-                "integration_feedback": "{{asset}} 통합에 대한 피드백",
-                "ipvd_feedback_device": "{{asset}} 에 대한 피드백",
-                "ipvd_feedback_page": "카메라 페이지에 대한 피드백",
-                "sales_inquiry": "{{asset}}에 대한 판매 문의",
-                "technical_inquiry": "{{asset}}에 대한 기술 문의"
-            },
-            "title": {
-                "integration": "{{companyName}} 과 연락",
-                "ipvd_feedback_device": "{{asset}} 에 대한 피드백",
-                "ipvd_feedback_page": "카메라 페이지에 대한 피드백"
-            }
-        },
-        "noClientDetectedTitle": "Install %VMS_NAME% to view your System",
-        "okButton": "확인",
-        "sharing": {
-            "confirmOwner": "시스템 소유자를 변경하면 현재 계정에서 소유권이 박탈 됩니다. 이 작업은 되돌릴 수 없습니다. 확실합니까?",
-            "editShareConfirmButton": "저장",
-            "editShareTitle": "권한 수정",
-            "permissionsSaved": "새 권한이 저장되었습니다.",
-            "shareConfirmButton": "추가",
-            "shareTitle": "추가"
-        },
-        "stayAs": "{email} 로 로그인 상태 유지 ",
-        "stayLoggedIn": "로그인 상태 유지"
-    },
-    "dialogs.merge.connectToCloud": "이 시스템과 머지하려는 시스템을 <strong>{{cloudName}}</strong> 에 연결하거나 <strong>{{vmsName}}</strong> 클라이언트를 사용하여 로컬로 머지하십시오.",
-    "dialogs.merge.mergeConfirmation": "시스템 <strong>{{primarySystem}}</strong> 과 <strong>{{secondarySystem}}</strong>를 머지하려고합니다. 설정과 이름은 <strong>{{primarySystem}}</strong>에서 가져옵니다.",
-    "dialogs.merge.primaryCannotMerge": "시스템 {{targetSystem}} 은 현재 시스템과 호환 되지 않는 최근 소프트웨어 버전이 있습니다. 현재 시스템을 {{targetSystem}} 시스템으로 머지하려면 <a href=\"/download\" target=\"_blank\" translate>최신 빌드</a> 로 업데이트 하십시요.",
-    "dialogs.merge.primarySystemOffline": "dialogs.merge.primarySystemOffline",
-    "dialogs.merge.secondaryCannotMerge": "시스템 {{targetSystem}} 에 현재 시스템과 호환되지 않는 이전 소프트웨어 버전이 있습니다. 병합하기 위해 {{targetSystem}} 를 받는 사람 <a href=\"/download\" target=\"_blank\" translate>최신 빌드</a> 로 업데이트 하십시요.",
-    "dialogs.merge.systemOffline": "dialogs.merge.systemOffline",
-    "dialogs.merge.systemUnavailable": "시스템 {{targetSystem}} 에 현재 연결할 수 없습니다. 몇 분 후에 다시 시도하거나 문의하십시오.",
-    "downloads": {
-        "appTypes": {
-            "bundle": "클라이언트와 서버",
-            "camera_sdk": "비디오 소스 SDK",
-            "client": "클라이언트만",
-            "metadata_sdk": "메타 데이터 SDK",
-            "package": "패키지",
-            "server": "서버 만",
-            "servertool": "구성 도구",
-            "storage_sdk": "저장소 관련 SDK",
-            "video_source_sdk": "비디오 소스 SDK"
-        },
-        "groups": {
-            "android": {
-                "label": "안드로이드",
-                "shortLabel": "안드로이드"
-            },
-            "arm": {
-                "label": "ARM",
-                "shortLabel": "ARM"
-            },
-            "ios": {
-                "label": "iOS",
-                "shortLabel": "iOS"
-            },
-            "linux": {
-                "label": "우분투 리눅스",
-                "shortLabel": "우분투"
-            },
-            "mac": {
-                "label": "Mac OS"
-            },
-            "macos": {
-                "label": "Mac OS"
-            },
-            "sdk": {
-                "label": "SDK",
-                "shortLabel": "SDK"
-            },
-            "windows": {
-                "label": "윈도우즈"
-            }
-        },
-        "mobile": {
-            "android": {
-                "link": "%ANDROID_APPLICATION_LINK%"
-            },
-            "ios": {
-                "link": "%IOS_APPLICATION_LINK%"
-            }
-        },
-        "platforms": {
-            "bananapi": "Banana Pi",
-            "bpi": "Nx1",
-            "linux64": "x64",
-            "linux_arm32": "x32",
-            "linux_arm64": "x64",
-            "mac": "X",
-            "rpi": "Raspberry Pi",
-            "universal": "SDK",
-            "win64": "x64"
-        },
-        "releasesTypes": {
-            "beta": "베타",
-            "betas": "베타들",
-            "patch": "패치",
-            "patches": "패치들",
-            "rc": "릴리스 후보",
-            "release": "릴리스",
-            "releases": "릴리스"
-        }
-    },
-    "errorCodes": {
-        "DUPLICATE_MEDIASERVER_FOUND": "일부 서버 목록은 두 시스템 모두에 존재하는 것으로 - 선택된 서버와 현재 서버의 목록에 있습니다.<br>각 시스템에서 오프라인 및 호환되지 않는 서버를 제거하고 다시 시도하십시오.",
-        "EmailAlreadyExists": "이 전자 메일은 이미 등록되었습니다.",
-        "FAIL": "시스템 <strong>{{failedSystem}}</strong>에 현재 연결할 수 없습니다.<br> 조금 있다 다시 시도 하거나 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">지원</a> 에 문의하십시요.",
-        "INCOMPATIBLE": "시스템들는 다른 소프트웨어 버전이 입니다. 둘다 <a href=\"/download\">최신 빌드</a> 로 업데이트 하십시요.",
-        "accountAlreadyActivated": "이 계정은 이미 활성화되었습니다.",
-        "accountBlocked": "계정은 차단되었습니다. 몇 분 후에 다시 시도하십시오.",
-        "accountNotActivated": "이 계정은 아직 활성화되지 않았습니다. <a href=\"/activate\"> 활성화 링크 다시 보내기 </a>",
-        "alreadyExists": "이 계정이 이미 존재합니다.",
-        "brokenAccount": "계정에 예기치 않은 문제가 있습니다. <a href=\"/restore_password\">계정 복원</a>",
-        "cantActivatePrefix": "계정을 활성화 할 수 없습니다.",
-        "cantChangeAccountPrefix": "변경 사항을 저장할 수 없습니다.",
-        "cantChangePasswordPrefix": "패스워드를 저장할 수 없습니다.",
-        "cantDisconnectSystemPrefix": "시스템을 삭제할 수 없습니다.",
-        "cantEditAdmin": "이 사용자는 관리자 권한이 있습니다.",
-        "cantEditYourself": "자신의 사용 권한 변경은 허용 되지 않습니다.",
-        "cantGetSystemInfoPrefix": "시스템 정보가 없습니다.",
-        "cantGetSystemsListPrefix": "시스템 목록이 없습니다.",
-        "cantGetUsersListPrefix": "사용자 목록이 없습니다.",
-        "cantOpenClient": "%VMS_NAME% 응용 프로그램이 감지되지 않습니다.",
-        "cantRegisterPrefix": "오류가 발생했습니다.",
-        "cantSendActivationPrefix": "확인 이메일을 보낼 수 없습니다.",
-        "cantSendConfirmationPrefix": "확인 이메일을 보낼 수 없습니다.",
-        "cantSharePrefix": "시스템을 공유 할 수 없습니다.",
-        "cantUnshareWithMeSystemPrefix": "시스템을 삭제할 수 없습니다.",
-        "emailNotFound": "계정이 존재하지 않습니다.",
-        "forbidden": "이 작업을 수행 할 수있는 권한이 없습니다.",
-        "lostConnection": "{{systemName}} 연결이 끊어졌습니다.",
-        "mergedSystemIsOffline": "시스템 <strong>{{failedSystem}}</strong> 가 오프라인입니다.",
-        "notAuthorized": "패스워드가 틀립니다.",
-        "notFound": "찾을 수 없습니다",
-        "ok": "ok",
-        "oldPasswordMistmatch": "현재 패스워드가 잘못되었습니다.",
-        "oldSafariNotSupported": "10 이전의 Safari 버전은 지원되지 않습니다.",
-        "passwordMismatch": "패스워드가 틀립니다.",
-        "thisSystem": "시스템",
-        "unknownError": "예기치 않은 오류가 발생했습니다.",
-        "unknownMergeError": "알수없는 오류. 페이지를 새로 고치고 시도를 반복 할 수 있습니다. 문제가 지속되면 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">지원</a>문의하십시오.",
-        "wrongAuthCode": "코드가 만료되었거나 잘못되었습니다",
-        "wrongCode": "계정이 이미 활성화되었거나 확인 코드가 잘못되었습니다.",
-        "wrongCodeRestore": "확인 코드가 이미 사용되었거나 잘못되었습니다.",
-        "wrongParameters": "양식의 일부 매개 변수가 잘못되었습니다."
-    },
-    "integration": {
-        "Access Control": "접근 제어",
-        "Connector": "커넥터",
-        "Data Analytics": "데이터 분석",
-        "Drone": "드론",
-        "Health Monitor": "상태 모니터",
-        "Storage": "저장공간",
-        "backToEditText": "편집 인터페이스로 돌아 가기",
-        "myIntegrationsLabel": "나의",
-        "previewRibbonText": "이 페이지는 최신 변경 사항의 미리보기이며 공개적으로 사용 가능한 버전과 일치하지 않습니다."
-    },
-    "ipvd": {
-        "Advanced PTZ cameras": "고급 PTZ 카메라",
-        "Cameras supporting H.265": "H.265를 지원하는 카메라들",
-        "Cameras with 2-way audio": "양방향 오디오가있는 카메라들",
-        "Extra high resolution cameras": "초고해상도 카메라들",
-        "Fisheye Cameras": "어안렌즈 카메라들",
-        "I / O modules": "I / O 모듈들",
-        "Multisensor Cameras": "다중 센서 카메라들",
-        "PTZ cameras": "PTZ 카메라들",
-        "camera": "카메라",
-        "count": "개수",
-        "disclaimer": "이 목록은 사용자가 {{companyName}} 에 자동보고 되도록 허용 하였을 경우 {{vmsName}} 에 있는 기기들에 제한됩니다. 개인 정보는 수집되지 않으며 각 사용자는 완전히 익명으로 처리됩니다.",
-        "dvr": "DVR",
-        "encoder": "인코더",
-        "feedback": {
-            "a_Please": "부디",
-            "b_Link": "요청하기",
-            "c_Info": "지원되는 장치에 관한 추가 질문 / 문제"
-        },
-        "hardwareType": "형식",
-        "isAnalyticsSupported": "분석",
-        "isAptzSupported": "고급 PTZ",
-        "isAptzSupportedShort": "Adv. PTZ",
-        "isAudioSupported": "오디오",
-        "isFisheye": "Fisheye",
-        "isH265": "H.265",
-        "isIoSupported": "I/O",
-        "isMdSupported": "움직임",
-        "isMultiSensor": "다중 센서",
-        "isPtzSupported": "PTZ",
-        "isTwAudioSupported": "양방향 오디오",
-        "maxFps": "<span>최대</span><br><span>FPS</span>",
-        "maxResolution": "<span>최대</span><br><span>해상도</span>",
-        "model": "모델",
-        "multiSensorCamera": "다중 센서 카메라들",
-        "other": "기타",
-        "primaryCodec": "코덱",
-        "resolutionArea": "영역",
-        "vendor": "제조사"
-    },
-    "ipvd.disclaimer": "이 목록은 사용자가 {{companyName}} 에 자동보고 되도록 허용 하였을 경우 {{vmsName}} 에 있는 기기들에 제한됩니다. 개인 정보는 수집되지 않으며 각 사용자는 완전히 익명으로 처리됩니다.",
-    "latest build": "최신 빌드",
     "manufacturers": "제조사들",
-    "messageDialogPlaceholders": {
-        "feedback": "카메라 모델과 제조업체를 포함시켜야합니다."
-    },
-    "pageTitles": {
-        "account": "계정 설정-",
-        "activate": "계정 활성화 -",
-        "activateCode": "계정 활성화 -",
-        "activateSent": "계정 활성화 -",
-        "activateSuccess": "계정 활성화 됨 -",
-        "changePassword": "패스워드 변경 -",
-        "debug": "디버그",
-        "default": "%CLOUD_NAME%",
-        "download": "%VMS_NAME% 다운로드",
-        "downloadPlatform": "Download %VMS_NAME% for ",
-        "integrations": "연동",
-        "login": "로그인 -",
-        "pageNotFound": "페이지를 찾을 수 없음",
-        "register": "에 계정 만들기",
-        "registerSuccess": "에 오신 것을 환영합니다",
-        "restorePassword": "패스워드 재설정",
-        "restorePasswordCode": "패스워드 재설정",
-        "restorePasswordSuccess": "패스워드 저장됨-",
-        "supportedDevices": "지원되는 기기들",
-        "system": "시스템-",
-        "systemShare": "시스템 공유 -",
-        "systems": "시스템-",
-        "template": "{{title}} %CLOUD_NAME%",
-        "view": "카메라 보기 - "
-    },
-    "passwordRequirements": {
-        "common": "너무 평범",
-        "commonMessage": "현재 암호는 가능 많이 사용되는 암호입니다.",
-        "fair": "보통",
-        "fairMessage": "숫자, 대 / 소문자 및 특수 문자를 사용하여 패스워드를 더 강하게 만듭니다.",
-        "good": "좋음",
-        "minLength": "너무 짧음",
-        "minLengthMessage": "패스워드는 8 자 이상이어야합니다.",
-        "missingMessage": "패스워드가 필요합니다.",
-        "required": "부적합",
-        "requiredMessage": "라틴 문자, 숫자 및 키보드 기호 만 사용하고 앞뒤 공백은 피하십시오.",
-        "strongMessage": "강력한 패스워드!",
-        "weak": "약함",
-        "weakMessage": "숫자, 대 / 소문자 및 특수 문자를 사용하여 패스워드를 더 강하게 만듭니다."
-    },
-    "phoneNumberWithLabel": "전화: {{number}}",
-    "pleaseSelect": "선택하십시오",
-    "privacyPolicy": {
-        "integration": "이 양식을 제출하면 {{INTEGRATION_COMPANY}} 및 / 또는 %COMPANY_NAME%로 연락하는 것에 동의하게됩니다.\n{{INTEGRATION_COMPANY}} 개인 정보 보호 정책 <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">여기에</a> 과 %COMPANY_NAME% 개인 정보 보호 정책 <a href=\"%PRIVACY_LINK%\" target=\"_blank\">여기에</a> 에서 동의를 철회하는 방법에 대한 지침을 찾을 수 있습니다.",
-        "ipvd": "이 양식을 제출하면 %COMPANY_NAME%으로 연락하는 데 동의하는 것입니다.\n%COMPANY_NAME% 개인 정보 보호 정책 <a href=\"%PRIVACY_LINK%\" target=\"_blank\">여기에</a> 에서 동의를 철회하는 방법에 대한 지침을 찾을 수 있습니다."
-    },
-    "registration": {
-        "agreement": "나는 <a href=\"/content/eula\" target=\"_blank\">약관 &\n조건</a> 및 <a href=\"%PRIVACY_LINK%\" target=\"_blank\">개인 정보 취급 방침</a> 에 동의합니다"
-    },
-    "registration.agreement": "나는 <a href=\"/content/eula\" target=\"_blank\">약관 &\n조건</a> 및 <a href=\"%PRIVACY_LINK%\" target=\"_blank\">개인 정보 취급 방침</a> 에 동의합니다",
-    "search": {
-        "Any": "아무거나",
-        "Search": "검색",
-        "analytics": "분석",
-        "analyticsSelected": "분석 이벤트",
-        "filter applied": "필터 적용되었음",
-        "filters applied": "필터들이 적용되었음",
-        "hardwareType": "형식",
-        "hardwareTypes": "유형들",
-        "minResolution": "최소 해상도",
-        "search_ipvd": "모델 또는 제조업체로 검색",
-        "selected": "선택된",
-        "vendor": "제조사",
-        "vendors": "제조사들"
-    },
-    "servers in the merged System.": "머지된 시스템에 있는 서버들입니다.",
     "support": "지원",
-    "system": {
-        "confirmDisconnectAction": "연결 끊기",
-        "confirmDisconnectTitle": "%CLOUD_NAME%에서 시스템을 분리하실래요?",
-        "confirmMergeAction": "병합",
-        "confirmRenameAction": "저장",
-        "confirmRenameTitle": "시스템 이름",
-        "confirmUnshare": "이 사용자는 시스템에 액세스 할 수 없게 됩니다. 확실합니까?",
-        "confirmUnshareAction": "삭제",
-        "confirmUnshareFromMe": "이 시스템을 당신의 계정과의 연결을 해제하려고합니다. 더 이상이 시스템에 액세스 할 수 없습니다. 확실합니까?",
-        "confirmUnshareFromMeAction": "연결 끊기",
-        "confirmUnshareFromMeTitle": "시스템 연결을 끊으시겠습니까?",
-        "confirmUnshareTitle": "사용자를 삭제 하시겠습니까?",
-        "mergeFailed": "시스템 머지에 실패했습니다.",
-        "mergeStart": "시스템이 머지를 시작했습니다.",
-        "mergeSuccess": "시스템 머지가 완료되었습니다.",
-        "mergeSystemTitle": "시스템 병합",
-        "mySystemSearch": "IMeMyMine",
-        "offline": "시스템이 오프라인 상태입니다.",
-        "offlineAlertRibbon": "시스템이 오프라인 상태입니다. 일부 설정을 사용하지 못할 수 있습니다.",
-        "openClient": "Open in %VMS_NAME%",
-        "openClientNoSystem": "%VMS_NAME% 열기",
-        "permissionsRemoved": "권한이 {{email}}에서 제거 되었습니다.",
-        "settings": {
-            "sessionLimitDuration": {
-                "hours": "시간",
-                "minutes": "분"
-            },
-            "warningMessages": {
-                "videoEncryption": "비디오 트래픽을 암호화하면 CPU 사용량이 크게 증가합니다."
-            }
-        },
-        "shareOffline": "오프라인 상태에서 시스템을 공유 할 수 없습니다",
-        "shareUnauthorized": "이 시스템을 공유 할 권한이 없습니다",
-        "successDeleted": "시스템 {{systemName}}이 (가) 귀하의 계정에서 성공적으로 삭제되었습니다.",
-        "successDisconnected": "시스템이 %CLOUD_NAME%에서 성공적으로 연결 해제되었습니다.",
-        "successRename": "시스템 이름 저장",
-        "unavailable": "시스템에 연결할 수 없습니다.",
-        "unknownName": "시스템의 알 수없는 이름 (클라우드 머지로 인해 발생)",
-        "yourSystem": "귀하의 시스템"
-    },
-    "systemAdministration": "시스템 관리자",
-    "systemStatuses": {
-        "activated": "활성화 됨",
-        "incompatible": "호환 되지 않음",
-        "merging": "합치기",
-        "notActivated": "활성화되지 않음",
-        "offline": "오프라인",
-        "online": "온라인",
-        "unavailable": "사용할 수 없음"
-    },
-    "testedVersionLabel": "Tested with {{vmsName}} version:",
-    "testedVersionsLabel": "Tested with {{vmsName}} versions:",
-    "topXByVolume": "Top {{value}} by volume:",
-    "users": "사용자",
     "you": "당신"
 }

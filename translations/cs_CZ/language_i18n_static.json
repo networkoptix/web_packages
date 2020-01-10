@@ -169,25 +169,27 @@
 		"feedback": "Nezapomeňte uvést model kamery a výrobce..."
 	},
 	"pageTitles": {
-		"template": "{{title}} %CLOUD_NAME%",
+		"template": "{{title}} - %CLOUD_NAME%",
 		"default": "%CLOUD_NAME%",
+		"about": "About",
 		"registerSuccess": "Vítejte v",
 		"register": "Vytvořit účet v",
-		"changePassword": "Změnit heslo -",
-		"account": "Nastavení účtu -",
-		"systems": "Systémy -",
-		"system": "Systém -",
-		"systemShare": "Sdílet systém -",
-		"activate": "Aktivovat účet -",
-		"activateSent": "Aktivovat účet -",
-		"activateSuccess": "Účet aktivován -",
-		"activateCode": "Aktivovat účet -",
-		"restorePassword": "Obnovit heslo -",
-		"restorePasswordSuccess": "Heslo uloženo -",
-		"restorePasswordCode": "Obnovit heslo -",
-		"view": "Zobrazit kamery - ",
+		"changePassword": "Change password",
+		"account": "Account settings",
+		"systems": "Systems",
+		"system": "System",
+		"systemName": "{{systemName}}",
+		"systemShare": "Share System",
+		"activate": "Activate account",
+		"activateSent": "Activate account",
+		"activateSuccess": "Account activated",
+		"activateCode": "Activate account",
+		"restorePassword": "Reset password",
+		"restorePasswordSuccess": "Password saved",
+		"restorePasswordCode": "Reset password",
+		"view": "View cameras",
 		"debug": "Ladění",
-		"login": "Přihlásit -",
+		"login": "Log in",
 		"download": "Stáhnout %VMS_NAME%",
 		"downloadPlatform": "Stáhnout %VMS_NAME% pro ",
 		"pageNotFound": "Stránka nenalezna",
@@ -223,7 +225,8 @@
 				"a_recommend": "Doporučujeme konzultaci s",
 				"b_support": "podpora",
 				"c_proceeding": "než budete pokračovat."
-			}
+			},
+			"warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged System."
 		},
 		"message": {
 			"failedToSend": "Zprávu se nepodařilo odeslat.",
@@ -496,5 +499,7 @@
 	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "Nemáte žádné systémy připojené k %CLOUD_NAME%",
 	"NO_SYSTEMS_LOGIN": "Přihlaste se k Vašemu systému pomocí %VMS_NAME%",
 	"NO_SYSTEMS_GOTO_ADMINISTRATION": "Přejděte na záložku \"Cloud\" v dialogovém okně \"Správa systému\"",
-	"NO_SYSTEMS_CONNECT_SYSTEM": "Stiskněte tlačítko \"Připojit systém k %CLOUD_NAME%\""
+	"NO_SYSTEMS_CONNECT_SYSTEM": "Stiskněte tlačítko \"Připojit systém k %CLOUD_NAME%\"",
+	"topXByVolume": "Top {{value}} by volume:",
+	"phoneNumberWithLabel": "Tel: {{number}}"
 }

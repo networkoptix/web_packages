@@ -169,25 +169,27 @@
 		"feedback": "Zorg ervoor dat je uw camera model en fabrikant bij de hand hebt..."
 	},
 	"pageTitles": {
-		"template": "{{title}} %CLOUD_NAME%",
+		"template": "{{title}} - %CLOUD_NAME%",
 		"default": "%CLOUD_NAME%",
+		"about": "About",
 		"registerSuccess": "Welkom bij",
 		"register": "Maak een account aan in",
-		"changePassword": "Wachtwoord wijzigen -",
-		"account": "Account instellingen -",
-		"systems": "Systemen -",
-		"system": "Systeem -",
-		"systemShare": "Deel Systeem -",
-		"activate": "Activeer account -",
-		"activateSent": "Activeer account -",
-		"activateSuccess": "Account geactiveerd -",
-		"activateCode": "Activeer account -",
-		"restorePassword": "Reset wachtwoord -",
-		"restorePasswordSuccess": "Wachtwoord opgeslagen -",
-		"restorePasswordCode": "Reset wachtwoord -",
-		"view": "Bekijk camera's - ",
+		"changePassword": "Change password",
+		"account": "Account settings",
+		"systems": "Systems",
+		"system": "System",
+		"systemName": "{{systemName}}",
+		"systemShare": "Share System",
+		"activate": "Activate account",
+		"activateSent": "Activate account",
+		"activateSuccess": "Account activated",
+		"activateCode": "Activate account",
+		"restorePassword": "Reset password",
+		"restorePasswordSuccess": "Password saved",
+		"restorePasswordCode": "Reset password",
+		"view": "View cameras",
 		"debug": "Debug",
-		"login": "Log in -",
+		"login": "Log in",
 		"download": "Download %VMS_NAME%",
 		"downloadPlatform": "Download %VMS_NAME% voor ",
 		"pageNotFound": "Pagina niet gevonden",
@@ -223,7 +225,8 @@
 				"a_recommend": "We raden aan om te overleggen met",
 				"b_support": "ondersteuning",
 				"c_proceeding": "voordat u verder gaat."
-			}
+			},
+			"warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged System."
 		},
 		"message": {
 			"failedToSend": "Bericht kan niet worden verzonden.",
@@ -496,5 +499,7 @@
 	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "U heeft geen systemen verbonden met %CLOUD_NAME%",
 	"NO_SYSTEMS_LOGIN": "Log in op uw systeem met %VMS_NAME%",
 	"NO_SYSTEMS_GOTO_ADMINISTRATION": "Ga naar het tabblad 'Cloud' in het dialoogvenster 'Systeembeheer'",
-	"NO_SYSTEMS_CONNECT_SYSTEM": "Druk op \"Systeem verbinden met %CLOUD_NAME%\""
+	"NO_SYSTEMS_CONNECT_SYSTEM": "Druk op \"Systeem verbinden met %CLOUD_NAME%\"",
+	"topXByVolume": "Top {{value}} by volume:",
+	"phoneNumberWithLabel": "Tel: {{number}}"
 }

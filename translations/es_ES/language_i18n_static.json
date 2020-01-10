@@ -169,25 +169,27 @@
 		"feedback": "Asegúrate de incluir el modelo y el fabricante de tu cámara..."
 	},
 	"pageTitles": {
-		"template": "{{title}} %CLOUD_NAME%",
+		"template": "{{title}} - %CLOUD_NAME%",
 		"default": "%CLOUD_NAME%",
+		"about": "About",
 		"registerSuccess": "Bienvenido a",
 		"register": "Crear cuenta en",
-		"changePassword": "Cambiar contraseña -",
-		"account": "Ajustes de cuenta",
-		"systems": "Sistemas -",
-		"system": "Sistema -",
-		"systemShare": "Compartir Sistema -",
-		"activate": "Activar cuenta -",
-		"activateSent": "Activar cuenta -",
-		"activateSuccess": "Cuenta Activada -",
-		"activateCode": "Activar cuenta -",
-		"restorePassword": "Restablecer contraseña -",
-		"restorePasswordSuccess": "Contraseña aguardada -",
-		"restorePasswordCode": "Restablecer contraseña -",
-		"view": "Ver cámaras - ",
+		"changePassword": "Change password",
+		"account": "Account settings",
+		"systems": "Systems",
+		"system": "System",
+		"systemName": "{{systemName}}",
+		"systemShare": "Share System",
+		"activate": "Activate account",
+		"activateSent": "Activate account",
+		"activateSuccess": "Account activated",
+		"activateCode": "Activate account",
+		"restorePassword": "Reset password",
+		"restorePasswordSuccess": "Password saved",
+		"restorePasswordCode": "Reset password",
+		"view": "View cameras",
 		"debug": "Depurar",
-		"login": "Iniciar sesión -",
+		"login": "Log in",
 		"download": "Descargar %VMS_NAME%",
 		"downloadPlatform": "Download %VMS_NAME% for ",
 		"pageNotFound": "Página no encontrada",
@@ -223,7 +225,8 @@
 				"a_recommend": "Recomendamos consultar con",
 				"b_support": "asistencia",
 				"c_proceeding": "antes de continuar."
-			}
+			},
+			"warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged System."
 		},
 		"message": {
 			"failedToSend": "El mensaje no se ha podido enviar.",
@@ -496,5 +499,7 @@
 	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "No tienes sistemas conectados a %CLOUD_NAME%",
 	"NO_SYSTEMS_LOGIN": "Log in to your System using %VMS_NAME%",
 	"NO_SYSTEMS_GOTO_ADMINISTRATION": "Vaya a la etiqueta \"Nube\" en el diálogo de la \"Administración del sistema\"",
-	"NO_SYSTEMS_CONNECT_SYSTEM": "Presiona \"Conectar el sistema a %CLOUD_NAME%\""
+	"NO_SYSTEMS_CONNECT_SYSTEM": "Presiona \"Conectar el sistema a %CLOUD_NAME%\"",
+	"topXByVolume": "Top {{value}} by volume:",
+	"phoneNumberWithLabel": "Tel: {{number}}"
 }

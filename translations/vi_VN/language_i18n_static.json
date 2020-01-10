@@ -169,25 +169,27 @@
 		"feedback": "Đảm bảo bạn bao gồm kiểu máy ảnh và nhà sản xuất..."
 	},
 	"pageTitles": {
-		"template": "{{title}} %CLOUD_NAME%",
+		"template": "{{title}} - %CLOUD_NAME%",
 		"default": "%CLOUD_NAME%",
+		"about": "About",
 		"registerSuccess": "Chào mừng bạn đến",
 		"register": "Tạo tài khoản tại",
-		"changePassword": "Đổi mật khẩu -",
-		"account": "Cài đặt tài khoản -",
-		"systems": "Hệ thống -",
-		"system": "Hệ thống -",
-		"systemShare": "Chia sẻ Hệ thống -",
-		"activate": "Kích hoạt tài khoản -",
-		"activateSent": "Kích hoạt tài khoản -",
-		"activateSuccess": "Tài khoản đã kích hoạt -",
-		"activateCode": "Kích hoạt tài khoản -",
-		"restorePassword": "Đặt lại mật khẩu -",
-		"restorePasswordSuccess": "Đã lưu mật khẩu -",
-		"restorePasswordCode": "Đặt lại mật khẩu -",
-		"view": "Xem camera ",
+		"changePassword": "Change password",
+		"account": "Account settings",
+		"systems": "Systems",
+		"system": "System",
+		"systemName": "{{systemName}}",
+		"systemShare": "Share System",
+		"activate": "Activate account",
+		"activateSent": "Activate account",
+		"activateSuccess": "Account activated",
+		"activateCode": "Activate account",
+		"restorePassword": "Reset password",
+		"restorePasswordSuccess": "Password saved",
+		"restorePasswordCode": "Reset password",
+		"view": "View cameras",
 		"debug": "Gỡ rối",
-		"login": "Đăng nhập -",
+		"login": "Log in",
 		"download": "Tải xuống %VMS_NAME%",
 		"downloadPlatform": "Download %VMS_NAME% for ",
 		"pageNotFound": "Không tìm thấy trang",
@@ -223,7 +225,8 @@
 				"a_recommend": "Chúng tôi khuyên bạn nên tham khảo ý kiến với",
 				"b_support": "hỗ trợ",
 				"c_proceeding": "trước khi tiến hành."
-			}
+			},
+			"warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged System."
 		},
 		"message": {
 			"failedToSend": "Tin nhắn đã không gửi được.",
@@ -496,5 +499,7 @@
 	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "Hệ thống được kết nối với %CLOUD_NAME%",
 	"NO_SYSTEMS_LOGIN": "Log in to your System using %VMS_NAME%",
 	"NO_SYSTEMS_GOTO_ADMINISTRATION": "Đi tới tab \"Cloud\" trong hộp thoại \"Quản trị Hệ thống\"",
-	"NO_SYSTEMS_CONNECT_SYSTEM": "Nhấn \"Kết nối hệ thống với %CLOUD_NAME%\""
+	"NO_SYSTEMS_CONNECT_SYSTEM": "Nhấn \"Kết nối hệ thống với %CLOUD_NAME%\"",
+	"topXByVolume": "Top {{value}} by volume:",
+	"phoneNumberWithLabel": "Tel: {{number}}"
 }

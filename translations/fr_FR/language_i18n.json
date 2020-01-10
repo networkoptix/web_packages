@@ -1,6 +1,5 @@
 {
     "2-Way Audio": "Audio bidirectionnel",
-    "About %CLOUD_NAME%": "À propos de %CLOUD_NAME%",
     "Access Level": "Niveau d'accès",
     "Access level": "Niveau d'accès",
     "Account Information": "Compte Information",
@@ -39,7 +38,7 @@
     "Change Password": "Changer mot de passe",
     "Checking...": "Vérification...",
     "Choose which properties should be visible to customers:": "Choisir les propriétés qui doivent être visibles par les clients:",
-    "Clear filters": "Effacer filtres",
+    "Clear": "Clear",
     "Close": "Fermer",
     "Codec": "Codec",
     "Collapse": "Réduire",
@@ -74,7 +73,6 @@
     "Enter password for your account to continue": "Entrez mot de passe de votre compte pour continuer",
     "Enter password to continue.": "Entrez mot de passe pour continuer.",
     "Export all to CSV": "Exporter tout en CSV",
-    "FAILED_SYSTEM_DESCR": "Ce lien est brisé,<br>Système est peut-être déconnecté de %CLOUD_NAME%,<br>Accès à ce système est peut-être révoqué <br>ou vous êtes connecté avec un autre compte.",
     "FPS(max)": "FPS(max)",
     "Failed to access System": "Impossible d’accéder au système",
     "Finishing systems merge": "Terminer la fusion des systèmes",
@@ -90,7 +88,7 @@
     "I/O": "E/S",
     "In Review": "En revue",
     "In-Client Upgrade:": "Mise à niveau dans le client:",
-    "Includes information about the System, such as camera modules, \n                            firmware versions, number of servers, etc. \n                            Does not include any personal information and is completely anonymous.": "Inclut des informations sur le système, telles que les modules de caméra, \n                            versions du firmware, nombre de serveurs, etc. \n                            N'inclut aucune information personnelle et est complètement anonyme.",
+    "Includes information about the System, such as camera modules,\n                            firmware versions, number of servers, etc.\n                            Does not include any personal information and is completely anonymous.": "Includes information about the System, such as camera modules,\n                            firmware versions, number of servers, etc.\n                            Does not include any personal information and is completely anonymous.",
     "Information": "Information",
     "Integrations": "Intégrations",
     "Language": "Langue",
@@ -109,10 +107,6 @@
     "Mine": "Mien",
     "Motion Detection": "Détection de mouvement",
     "Multi Sensor": "Multi capteur",
-    "NO_SYSTEMS_CONNECT_SYSTEM": "Appuyez \"Connecter le système à %CLOUD_NAME%\"",
-    "NO_SYSTEMS_GOTO_ADMINISTRATION": "Allez dans l’onglet «Nuage» dans la boîte de dialogue «Administration système»",
-    "NO_SYSTEMS_LOGIN": "Connectez-vous à votre système en utilisant %VMS_NAME%",
-    "NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "Vous n’avez pas de systèmes connectés à %CLOUD_NAME%",
     "New Password": "Nouveau mot de passe",
     "No unsaved changes": "Aucun changement non enregistrée",
     "Nothing Found": "Rien trouvé",
@@ -132,7 +126,6 @@
     "Please enter a valid Email": "S.V.P entrer un courriel valide",
     "Please review and agree to the Terms and Conditions and Privacy policy in order to proceed": "S.V.P. examiner et accepter les termes, conditions et la politique de confidentialité afin de procéder",
     "Popularity": "Popularité",
-    "Privacy": "Confidentialité",
     "Release Notes": "Notes de Version",
     "Release notes": "Notes de Version",
     "Remember me": "Se souvenir de moi",
@@ -157,7 +150,6 @@
     "Support": "Support",
     "Support E-mail": "Support Courriel",
     "Support URL": "Support URL",
-    "Supported Devices": "Périphériques supportés",
     "Supported IP Video Devices": "Périphériques vidéo IP supportés",
     "System Settings": "Paramètres Système",
     "System name": "Nom système",
@@ -168,534 +160,33 @@
     "Tags": "Mots clés",
     "Take me home": "Me ramener à l'accueil",
     "Take the name and settings from": "Prendre nom et paramètres de",
-    "Terms": "Conditions",
     "Terms of Use": "Conditions d'utilisation",
     "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.": "Les informations de cet usager seront exposées! Vous devez créer un rôle personnalisé \"Usager public\" avec un accès uniquement\n            aux caméras sélectionnées pour une utilisation publique et en affectant uniquement les autorisations d'affichage minimales requises.             Cet \"usager public\" ne devrait avoir aucun accès au système.",
-    "There will be more than": "Il y aura plus que",
     "This Email has been already registered in %CLOUD_NAME%": "Ce courriel a déjà été enregistré dans %CLOUD_NAME%",
     "This device has reported to support some analytics events, but we don't have exact information about them.": "Cet appareil a signalé qu'il supporte certains événements d'analyse, mais nous n'avons pas d'informations exactes à leur sujet.",
     "To": "À",
     "Too many attempts. Try again in a minute.": "Trop de tentatives. Réessayez dans une minute.",
     "Tracks and logs all user actions.": "Suit et log toutes les actions de l'utilisateur.",
     "Until merge is finished you can log in to this system and watch video, but cannot change any settings.": "Tant que la fusion n'est pas terminée, vous pouvez vous connecter à ce système et regarder le vidéo, mais vous ne pouvez modifier aucun paramètre.",
-    "Update them to the": "Mettre à jour à la",
+    "Update them to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>": "Update them to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>",
     "Updated": "Mis à jour",
     "User": "Usager",
     "User disabled": "Usager désactivé",
     "View": "Afficher",
-    "WHEN_MERGE_FINISHES": "Une fois la fusion terminée, tous les utilisateurs et caméras de ce système seront disponibles dans le système <strong>{{targetSystemName}}</strong> et ce système sera supprimé.",
     "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.": "Nous vous recommandons d'installer les dernières versions de Google Chrome ou de Mozilla Firefox, mais vous pouvez utiliser tout autre navigateur Web moderne.",
     "What's New?": "Quoi de neuf?",
-    "When enabled, system will discover new cameras and servers. Also, \n                            it will automatically and persistently send discovery requests to \n                            cameras in order to get the camera's status update. \n                            Failover enabled on some servers ignore status check prohibition.": "Une fois activé, le système découvrira de nouvelles caméras et de nouveaux serveurs. Aussi, \n                            il enverra automatiquement et de manière persistante des demandes de découverte à \n                            caméras afin d'obtenir la mise à jour de l'état de la caméra. \n                            basculement activé sur certains serveurs ignore l'interdiction de vérification d'état.",
+    "When enabled, system will discover new cameras and servers. Also,\n                            it will automatically and persistently send discovery requests to\n                            cameras in order to get the camera's status update.\n                            Failover enabled on some servers ignore status check prohibition.": "When enabled, system will discover new cameras and servers. Also,\n                            it will automatically and persistently send discovery requests to\n                            cameras in order to get the camera's status update.\n                            Failover enabled on some servers ignore status check prohibition.",
     "Works with:": "Fonctionne avec :",
     "Wrong password": "Mot de passe incorrect",
     "You can only merge Systems where you are the owner.": "Vous ne pouvez fusionner que les systèmes où vous êtes le propriétaire.",
     "You have registered in %CLOUD_NAME%": "Vous avez enregistré dans%CLOUD_NAME%",
     "Your Email": "Votre Courriel",
     "Your Name": "Votre Nom",
-    "Your access level": "Votre niveau d'accès",
+    "Your access level<span>&nbsp;– </span>\n                    <span class=\"name\" [innerHTML]=\"updateUserRole()\"></span>": "Your access level<span>&nbsp;– </span>\n                    <span class=\"name\" [innerHTML]=\"updateUserRole()\"></span>",
     "Your account is successfully activated": "Votre compte est activé avec succès",
     "Your browser is not supported": "Votre navigateur n'est pas supporté",
-    "accessRoles": {
-        "Administrator": {
-            "description": "Accès illimité, y compris la possibilité de partager",
-            "label": "Administrateur"
-        },
-        "Advanced Viewer": {
-            "description": "Peut visionner vidéo en direct, parcourir les archives, contrôler le PTZ, etc",
-            "label": "Visualisateur avancé"
-        },
-        "Custom": {
-            "description": "Utiliser l'application client %VMS_NAME% pour configurer des autorisations personnalisées",
-            "label": "Personnalisé"
-        },
-        "Live Viewer": {
-            "description": "Peut seulement voir vidéo en direct",
-            "label": "Visualiseur en direct"
-        },
-        "Owner": {
-            "description": "Accès illimité, y compris la possibilité de partager et de connecter/déconnecter le système de nuage",
-            "label": "Propriétaire"
-        },
-        "Viewer": {
-            "description": "Peut afficher la vidéo en direct et parcourir les archives",
-            "label": "Visualisateur"
-        },
-        "advancedViewer": {
-            "description": "Peut voir la vidéo en direct, parcourir l’archive, configurer les caméras, contrôle PTZ etc",
-            "label": "Visualisateur avancé"
-        },
-        "cloudAdmin": {
-            "description": "Peut configurer le système et le partager",
-            "label": "Administrateur"
-        },
-        "custom": {
-            "description": "Utiliser l'application client %VMS_NAME% pour configurer des autorisations personnalisées",
-            "label": "Personnalisé"
-        },
-        "customRole": {
-            "description": "Rôle d’usager personnalisé spécifié dans le système",
-            "label": "Rôle personnalisé"
-        },
-        "disabled": {
-            "description": "L’utilisateur est désactivé et ne peut pas connecter au système",
-            "label": "Désactivé"
-        },
-        "liveViewer": {
-            "description": "Peut seulement voir vidéo en direct",
-            "label": "Visualiseur en direct"
-        },
-        "owner": {
-            "description": "Accès illimité, y compris la possibilité de partager et de connecter/déconnecter le système de nuage",
-            "label": "Propriétaire"
-        },
-        "viewer": {
-            "description": "Peut afficher la vidéo en direct et parcourir les archives",
-            "label": "Visualisateur"
-        }
-    },
-    "account": {
-        "accountSavedSuccess": "Votre compte est enregistré avec succès",
-        "accountSettings": "Paramètres compte",
-        "activationLinkSent": "Lien d'activation envoyé",
-        "changePassword": "Changer mot de passe",
-        "newPasswordLabel": "Nouveau mot de passe",
-        "passwordChangedSuccess": "Votre compte est enregistré avec succès",
-        "saveChanges": "Enregistrer"
-    },
-    "activeActions": {
-        "resetPassword": "Réinitialiser mot de passe",
-        "sendConfirm": "Renvoyer lien d'activation",
-        "setNewPassword": "Sauvergarder mot de passe",
-        "setNewPasswordLabel": "Nouveau mot de passe"
-    },
-    "cameraFilters": {
-        "H265": "Caméras H.265",
-        "IO": "Modules d'E / S",
-        "TwWayAudio": "Périphériques audio bidirectionnels",
-        "aptz": "Caméras avec PTZ avancé",
-        "audio": "Caméras avec audio",
-        "encoder": "Encodeurs",
-        "fisheye": "Caméras Fisheye",
-        "highRes": "Caméras extra haute résolution",
-        "multiSensor": "Caméras multi-capteur",
-        "ptz": "Caméras PTZ"
-    },
-    "clientProtocol": "%CLIENT_PROTOCOL%:",
-    "common": {
-        "cameraLinks": {
-            "copyActiveText": "copié dvers presse-papiers",
-            "copyDefaultText": "copier",
-            "copyToClipboard": "copier vers presse-papier",
-            "highStream": "Flux Haut",
-            "lowStream": "Flux Bas",
-            "transcoding": "Transcodage",
-            "unknown": "Inconnu"
-        },
-        "cameraStates": {
-            "error": "Erreur",
-            "errorLoading": "Une erreur s'est produite lors du chargement de cette vidéo.",
-            "flashOrWebmRequired": "S.V.P. <a href='https://get.adobe.com/flashplayer/' target='_blank'> installer Adobe Flash</a> ou le <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'> codec WebM</a> pour la lecture vidéo dans Internet Explorer.",
-            "flashRequired": "S.V.P.<a href='https://get.adobe.com/flashplayer/' target='_blank'> installer Adobe Flash</a> pour la lecture vidéo.",
-            "iOSVideoTooLarge": "iOS ne supporte pas une vidéo supérieure à fullHD (2MP : 1920 x 1080).",
-            "ieNoWebm": "Veuillez installer <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> pour Internet Explorer.",
-            "ieWin10": "S.V.P utilisez les navigateurs Edge Microsoft ou Google Chrome.",
-            "noArmSupport": "Ce navigateur ou ce périphérique ne supporte pas la lecture vidéo à partir de serveurs basés sur ARM.",
-            "noData": "Aucune donnée",
-            "noFormat": "Ce navigateur ne supporte pas la lecture vidéo de cette caméra.",
-            "offline": "Hors ligne",
-            "ubuntuNX": "Ce navigateur ne supporte pas la vidéo à partir de serveurs ARM. S.V.P, utilisez un navigateur Chromium.",
-            "unauthorized": "Authentification requise"
-        },
-        "chromeCastWarning": "Chromecast consommer beaucoup de ressources et peut provoquer des problèmes avec votre serveur.",
-        "resolution": {
-            "auto": "Auto",
-            "high": "Élevée",
-            "low": "Basse"
-        },
-        "searchCamPlaceholder": "Recherche",
-        "systemHasNoCameras": "AUCUNE CAMÉRA",
-        "systemNewVersion": "Mettre à jour votre système",
-        "systemNewVersionMessage": "Votre version actuelle est incompatible avec cette fonctionnalité. Veuillez mettre à jour vos serveurs vers la dernière version pour utiliser cette fonction.",
-        "systemNoAlerts": "Aucune alerte",
-        "systemNoAlertsMessage": "Votre système doit bien fonctionner!",
-        "systemOffline": "System Hors ligne",
-        "systemOfflineMessage": "Ce système est hors ligne et n'est pas accessible pour le moment.",
-        "systemServerError": "Erreur Interne du Serveur",
-        "systemServerErrorMessage": "Une erreur est survenue, veuillez réessayer plus tard. Si le problème persiste, veuillez contacter votre équipe d'assistance.",
-        "systemUnreachable": "SYSTÈME INACCESSIBLE",
-        "voiceCommands": {
-            "clear search": "effacer la recherche",
-            "collapse all servers": "réduire tous les serveurs",
-            "collapse server": "réduire serveur + [nom serveur]",
-            "expand all servers": "développer tous les serveurs",
-            "expand server": "étendre le serveur + [nom du serveur]",
-            "help": "aide | afficher commandes",
-            "live": "aller en direct | M'afficher le direct",
-            "pause": "pause",
-            "play": "lecture",
-            "search": "trouver + [texte barre de recherche]",
-            "stop listening": "arrêter l’écoute",
-            "view": "vue + [nom de la caméra]"
-        }
-    },
     "devices": "périphériques",
-    "dialogs": {
-        "cancelButton": "Annuler",
-        "changeAccountLogged": "You are already logged in as {email}",
-        "createNewAccount": "Créer nouveau compte",
-        "download": "Télécharger %VMS_NAME%",
-        "loggedFromOther": "Vous serez connecté avec un autre compte",
-        "loginButton": "Connexion",
-        "loginTitle": "Connecter à %CLOUD_NAME%",
-        "logoutAuthorisedContinueButton": "Continuer",
-        "logoutAuthorisedLogoutButton": "Déconnecter",
-        "logoutAuthorisedTitle": "Vous êtes déjà connecté",
-        "merge": {
-            "commonText": "Échec de la fusion des systèmes <strong>{{primarySystem}}</strong> et <strong>{{secondarySystem}}</strong>.",
-            "connectToCloud": "Connectez le système que vous souhaitez fusionner avec celui-ci à <strong>{{cloudName}}</strong> ou fusionner localement à l'aide de <strong>{{vmsName}}</strong> Client.",
-            "mergeConfirmation": "Vous êtes sur le point de fusionner les systèmes <strong>{{primarySystem}}</strong> et <strong>{{secondarySystem}}</strong>. Les réglages et le nom seront pris à partir du <strong>{{primarySystem}}</strong>.",
-            "mergeFailedTitle": "Fusion système a échoué",
-            "primaryCannotMerge": "Système {{targetSystem}} a une version logicielle plus récente incompatible avec le système actuel. Mettre à jour le système actuel a la <a href=\"/download\" target=\"_blank\" translate>dernière version</a> pour fusionner avec le {{targetSystem}} système.",
-            "primarySystemOffline": "Le système {{primarySystem}} est hors ligne et ne peut pas être fusionné avec le système {{targetSystem}}.",
-            "recommendSupport": {
-                "a_recommend": "Nous recommandons de consulter avec",
-                "b_support": "support",
-                "c_proceeding": "avant de procéder."
-            },
-            "secondaryCannotMerge": "Système {{targetSystem}} a une version de logiciel plus ancienne incompatible avec le système actuel. Mettre à jour {{targetSystem}} à <a href=\"/download\" target=\"_blank\" translate>dernière version</a> pour fusionner avec l'actuel.",
-            "systemOffline": "Système {{targetSystem}} est hors ligne et ne peut pas être fusionné avec le système actuel.",
-            "systemUnavailable": "Système {{targetSystem}} est actuellement inaccessible. Réessayez dans quelques minutes ou contactez"
-        },
-        "message": {
-            "failedToSend": "Échec d’envoi du message.",
-            "sent": "Message a été envoyé.",
-            "subject": {
-                "integration_feedback": "Commentaires pour l'intégration {{asset}}",
-                "ipvd_feedback_device": "Commentaires sur {{asset}}",
-                "ipvd_feedback_page": "Commentaires sur la page des caméras",
-                "sales_inquiry": "Demande de vente pour {{asset}}",
-                "technical_inquiry": "Demande technique pour {{asset}}"
-            },
-            "title": {
-                "integration": "Entrez en contact avec {{companyName}}",
-                "ipvd_feedback_device": "Commentaires sur {{asset}}",
-                "ipvd_feedback_page": "Commentaires sur la page des caméras"
-            }
-        },
-        "noClientDetectedTitle": "Install %VMS_NAME% to view your System",
-        "okButton": "OK",
-        "sharing": {
-            "confirmOwner": "Si vous modifiez le propriétaire du système, vous révoquez la propriété sur le compte courant. Cette action est irréversible. Êtes-vous sûr ?",
-            "editShareConfirmButton": "Enregistrer",
-            "editShareTitle": "Modifier autorisations",
-            "permissionsSaved": "Nouvelles autorisations enregistrées",
-            "shareConfirmButton": "Ajouter",
-            "shareTitle": "Ajouter"
-        },
-        "stayAs": "Rester connecté en tant que {email} ",
-        "stayLoggedIn": "Rester connecté"
-    },
-    "dialogs.merge.connectToCloud": "Connectez le système que vous souhaitez fusionner avec celui-ci à <strong>{{cloudName}}</strong> ou fusionner localement à l'aide de <strong>{{vmsName}}</strong> Client.",
-    "dialogs.merge.mergeConfirmation": "Vous êtes sur le point de fusionner les systèmes <strong>{{primarySystem}}</strong> et <strong>{{secondarySystem}}</strong>. Les réglages et le nom seront pris à partir du <strong>{{primarySystem}}</strong>.",
-    "dialogs.merge.primaryCannotMerge": "Système {{targetSystem}} a une version logicielle plus récente incompatible avec le système actuel. Mettre à jour le système actuel a la <a href=\"/download\" target=\"_blank\" translate>dernière version</a> pour fusionner avec le {{targetSystem}} système.",
-    "dialogs.merge.primarySystemOffline": "dialogs.merge.primarySystemOffline",
-    "dialogs.merge.secondaryCannotMerge": "Système {{targetSystem}} a une version de logiciel plus ancienne incompatible avec le système actuel. Mettre à jour {{targetSystem}} à <a href=\"/download\" target=\"_blank\" translate>dernière version</a> pour fusionner avec l'actuel.",
-    "dialogs.merge.systemOffline": "dialogs.merge.systemOffline",
-    "dialogs.merge.systemUnavailable": "Système {{targetSystem}} est actuellement inaccessible. Réessayez dans quelques minutes ou contactez",
-    "downloads": {
-        "appTypes": {
-            "bundle": "Client et serveur",
-            "camera_sdk": "Source vidéo SDK",
-            "client": "Client seulement",
-            "metadata_sdk": "Métadonnées SDK",
-            "package": "Paquet",
-            "server": "Server seulement",
-            "servertool": "Outil de configuration",
-            "storage_sdk": "Stockage SDK",
-            "video_source_sdk": "Source vidéo SDK"
-        },
-        "groups": {
-            "android": {
-                "label": "Android",
-                "shortLabel": "Android"
-            },
-            "arm": {
-                "label": "ARM",
-                "shortLabel": "ARM"
-            },
-            "ios": {
-                "label": "iOS",
-                "shortLabel": "iOS"
-            },
-            "linux": {
-                "label": "Ubuntu Linux",
-                "shortLabel": "Ubuntu"
-            },
-            "mac": {
-                "label": "Mac OS"
-            },
-            "macos": {
-                "label": "Mac OS"
-            },
-            "sdk": {
-                "label": "SDK",
-                "shortLabel": "SDK"
-            },
-            "windows": {
-                "label": "Windows"
-            }
-        },
-        "mobile": {
-            "android": {
-                "link": "%ANDROID_APPLICATION_LINK%"
-            },
-            "ios": {
-                "link": "%IOS_APPLICATION_LINK%"
-            }
-        },
-        "platforms": {
-            "bananapi": "Banana Pi",
-            "bpi": "Nx1",
-            "linux64": "x64",
-            "linux_arm32": "x32",
-            "linux_arm64": "x64",
-            "mac": "X",
-            "rpi": " Raspberry Pi",
-            "universal": "SDK",
-            "win64": "x64"
-        },
-        "releasesTypes": {
-            "beta": "Beta",
-            "betas": "Betas",
-            "patch": "Patch",
-            "patches": "Patchs",
-            "rc": "Version Candidate (RC)",
-            "release": "Version",
-            "releases": "Versions"
-        }
-    },
-    "errorCodes": {
-        "DUPLICATE_MEDIASERVER_FOUND": "Certaines listes serveurs existent dans les deux systèmes - dans le système sélectionné et dans le système actuel. <br>Supprimez les serveurs hors ligne et incompatibles de chaque système, puis réessayez.",
-        "EmailAlreadyExists": "Courriel déjà enregistré",
-        "FAIL": "Le système <strong>{{failedSystem}}</strong> est actuellement inaccessible. <br>Essayez à nouveau dans quelques instants ou contactez <a href=\"%SUPPORT_LINK%\" target=\"_blank\"> support</a>.",
-        "INCOMPATIBLE": "Les systèmes ont des versions de logiciel différentes. Veuillez mettre à jour les deux versions vers <a href=\"/download\">la dernière version</a>.",
-        "accountAlreadyActivated": "Ce compte est déjà activé",
-        "accountBlocked": "Ce compte est bloqué. Veuillez réessayer dans quelques minutes.",
-        "accountNotActivated": "Ce compte n’est pas encore activé. <a href=\"/activate\"> Envoyer à nouveau le lien d’activation</a>",
-        "alreadyExists": "Ce compte existe déjà",
-        "brokenAccount": "Problème inattendu avec le compte. <a href=\"/restore_password\">Restaurer le compte</a>",
-        "cantActivatePrefix": "Impossible d'activer votre compte",
-        "cantChangeAccountPrefix": "Impossible d'enregistrer les changements",
-        "cantChangePasswordPrefix": "Ne peut pas enregistrer le mot de passe",
-        "cantDisconnectSystemPrefix": "Impossible de supprimer le système",
-        "cantEditAdmin": "Cet usager dispose d’autorisations administrateur",
-        "cantEditYourself": "Modification des propres autorisations n’est pas autorisée",
-        "cantGetSystemInfoPrefix": "Information système non disponible",
-        "cantGetSystemsListPrefix": "Liste système non disponible",
-        "cantGetUsersListPrefix": "Liste des usagers non disponible",
-        "cantOpenClient": "L'application %VMS_NAME% n'est pas détectée.",
-        "cantRegisterPrefix": "Erreur survenue",
-        "cantSendActivationPrefix": "Impossible d’envoyer courriel de confirmation",
-        "cantSendConfirmationPrefix": "Impossible d’envoyer courriel de confirmation",
-        "cantSharePrefix": "Impossible de partager le système",
-        "cantUnshareWithMeSystemPrefix": "Impossible de supprimer le système",
-        "emailNotFound": "Compte n’existe pas.",
-        "forbidden": "Vous n’avez pas l'autorisation nécessaire pour effectuer cette action",
-        "lostConnection": "Connexion à {{systemName}} perdu",
-        "mergedSystemIsOffline": "Système <strong>{{failedSystem}}</strong> hors ligne.",
-        "notAuthorized": "Mot de passe incorrect",
-        "notFound": "Introuvable",
-        "ok": "ok",
-        "oldPasswordMistmatch": "Mot de passe actuel incorrect.",
-        "oldSafariNotSupported": "Les versions de Safari antérieures à 10 ne sont pas supportées",
-        "passwordMismatch": "Mot de passe incorrect",
-        "thisSystem": "le système",
-        "unknownError": "Erreur inattendue survenue",
-        "unknownMergeError": "Erreur inconnue. Vous pouvez essayer de rafraîchir la page et répéter la tentative. Si le problème persiste – veuillez contacter <a href=\"%SUPPORT_LINK%\" target=\"_blank\">le support</a>.",
-        "wrongAuthCode": "Code expiré ou incorrect",
-        "wrongCode": "Compte déjà activé ou le code de confirmation est incorrect",
-        "wrongCodeRestore": "Code de confirmation est déjà utilisé ou incorrecte",
-        "wrongParameters": "Certains paramètres dans le formulaire sont incorrects"
-    },
-    "integration": {
-        "Access Control": "Contrôle d'accès",
-        "Connector": "Connecteur",
-        "Data Analytics": "Analyse de données",
-        "Drone": "Drone",
-        "Health Monitor": "Moniteur de santé",
-        "Storage": "Stockage",
-        "backToEditText": "Retour aux interfaces d'édition",
-        "myIntegrationsLabel": "Mien",
-        "previewRibbonText": "Cette page est un aperçu des dernières modifications et ne correspond pas à la version publique."
-    },
-    "ipvd": {
-        "Advanced PTZ cameras": "Caméras PTZ avancées",
-        "Cameras supporting H.265": "Caméras supportant H.265",
-        "Cameras with 2-way audio": "Caméras avec audio bidirectionnel",
-        "Extra high resolution cameras": "Caméras extra haute résolution",
-        "Fisheye Cameras": "Caméras Fisheye",
-        "I / O modules": "Modules d'E / S",
-        "Multisensor Cameras": "Caméras multicapteurs",
-        "PTZ cameras": "Caméras PTZ",
-        "camera": "Caméra",
-        "count": "Nombre",
-        "disclaimer": "Cette liste est limitée aux périphériques trouvés sur {{vmsName}} où les utilisateurs ont autorisé la création automatique de rapports sur les spécifications du périphérique sur {{companyName}}. Aucune information personnelle n'est collectée et chaque utilisateur reste totalement anonyme.",
-        "dvr": "DVR",
-        "encoder": "Encodeur",
-        "feedback": {
-            "a_Please": "S.V.P.",
-            "b_Link": "soumettre une requête",
-            "c_Info": "pour questions/préoccupations supplémentaires concernant les périphériques pris en charge."
-        },
-        "hardwareType": "Type",
-        "isAnalyticsSupported": "Analytiques",
-        "isAptzSupported": "PTZ avancé",
-        "isAptzSupportedShort": "Adv. PTZ",
-        "isAudioSupported": "Audio",
-        "isFisheye": "Fisheye",
-        "isH265": "H.265",
-        "isIoSupported": "E/S",
-        "isMdSupported": "Mouvement",
-        "isMultiSensor": "Multi capteur",
-        "isPtzSupported": "PTZ",
-        "isTwAudioSupported": "Audio bidirectionnel",
-        "maxFps": "<span>Max</span><br><span>IPS</span>",
-        "maxResolution": "<span>Max</span><br><span>Résolution</span>",
-        "model": "Modèle",
-        "multiSensorCamera": "Caméra multi-capteur",
-        "other": "Autre",
-        "primaryCodec": "Codec",
-        "resolutionArea": "Zone",
-        "vendor": "Fabricant"
-    },
-    "ipvd.disclaimer": "Cette liste est limitée aux périphériques trouvés sur {{vmsName}} où les utilisateurs ont autorisé la création automatique de rapports sur les spécifications du périphérique sur {{companyName}}. Aucune information personnelle n'est collectée et chaque utilisateur reste totalement anonyme.",
-    "latest build": "dernière version",
     "manufacturers": "fabricants",
-    "messageDialogPlaceholders": {
-        "feedback": "Assurez-vous d'inclure le modèle et le fabricant de votre caméra..."
-    },
-    "pageTitles": {
-        "account": "Paramètres compte -",
-        "activate": "Activer compte -",
-        "activateCode": "Activer compte -",
-        "activateSent": "Activer compte -",
-        "activateSuccess": "Compte activé -",
-        "changePassword": "Changer mot de passe -",
-        "debug": "Débogage",
-        "default": "%CLOUD_NAME%",
-        "download": "Télécharger %VMS_NAME%",
-        "downloadPlatform": "Download %VMS_NAME% for ",
-        "integrations": "Intégrations",
-        "login": "Connexion -",
-        "pageNotFound": "Page non trouvée",
-        "register": "Créer compte dans",
-        "registerSuccess": "Bienvenue sur",
-        "restorePassword": "Réinitialiser mot de passe -",
-        "restorePasswordCode": "Réinitialiser mot de passe -",
-        "restorePasswordSuccess": "Mot de passe sauvé -",
-        "supportedDevices": "Périphériques supportés",
-        "system": "Système -",
-        "systemShare": "Système de partage -",
-        "systems": "Systèmes -",
-        "template": "{{title}} %CLOUD_NAME%",
-        "view": "Voir les caméras - "
-    },
-    "passwordRequirements": {
-        "common": "trop commun",
-        "commonMessage": "Ce mot de passe est en haut de la liste des plus populaires dans le monde",
-        "fair": "juste",
-        "fairMessage": "Utiliser des nombres, majuscules et minuscules et caractères spéciaux pour rendre votre mot de passe plus fort",
-        "good": "bon",
-        "minLength": "trop court",
-        "minLengthMessage": "Mot de passe doit contenir au moins 8 caractères",
-        "missingMessage": "Mot de passe requis",
-        "required": "incorrect",
-        "requiredMessage": "Utilisez uniquement les lettres latines, les chiffres et les symboles du clavier, éviter les espaces de début et de fin",
-        "strongMessage": "Mot de passe fort!",
-        "weak": "faible",
-        "weakMessage": "Utiliser des nombres, majuscules et minuscules et caractères spéciaux pour rendre votre mot de passe plus fort"
-    },
-    "phoneNumberWithLabel": "Tel: {{number}}",
-    "pleaseSelect": "Veuillez sélectionner...",
-    "privacyPolicy": {
-        "integration": "En soumettant ce formulaire, vous acceptez d'être contacté par {{INTEGRATION_COMPANY}} et / ou %COMPANY_NAME%.\nVous trouverez la politique de confidentialité {{INTEGRATION_COMPANY}} <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">ici</a> et %COMPANY_NAME% politique de confidentialité <a href=\"%PRIVACY_LINK%\" target=\"_blank\">ici</a> qui incluent des instructions sur la procédure à suivre pour retirer votre consentement.",
-        "ipvd": "En soumettant ce formulaire, vous acceptez d'être contacté par %COMPANY_NAME%.\nVous trouverez la politique de confidentialité %COMPANY_NAME% <a href=\"%PRIVACY_LINK%\" target=\"_blank\">ici</a> qui comprend des instructions sur la procédure à suivre pour retirer votre consentement."
-    },
-    "registration": {
-        "agreement": "J'accepte les <a href=\"/content/eula\" target=\"_blank\">Termes et\nConditions</a> et <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Politique de confidentialité</a>"
-    },
-    "registration.agreement": "J'accepte les <a href=\"/content/eula\" target=\"_blank\">Termes et\nConditions</a> et <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Politique de confidentialité</a>",
-    "search": {
-        "Any": "Tout",
-        "Search": "Recherche",
-        "analytics": "Analytiques",
-        "analyticsSelected": "événements analytiques",
-        "filter applied": "filtre appliqué",
-        "filters applied": "filtres appliqués",
-        "hardwareType": "Type",
-        "hardwareTypes": "Types",
-        "minResolution": "Résolution minimale",
-        "search_ipvd": "Recherche par modèle ou fabricant",
-        "selected": "sélectionné",
-        "vendor": "Fabricant",
-        "vendors": "Fabricants"
-    },
-    "servers in the merged System.": "serveurs dans le système fusionné.",
     "support": "support",
-    "system": {
-        "confirmDisconnectAction": "Déconnecter",
-        "confirmDisconnectTitle": "Déconnecter le système de %CLOUD_NAME% ?",
-        "confirmMergeAction": "Fusionner",
-        "confirmRenameAction": "Enregistrer",
-        "confirmRenameTitle": "Nom système",
-        "confirmUnshare": "Cet usager ne sera pas en mesure d’accéder au système. Êtes-vous sûr?",
-        "confirmUnshareAction": "Enlever",
-        "confirmUnshareFromMe": "Vous êtes sur le point de déconnecter ce système de votre compte. Vous ne serez plus en mesure d’accéder à ce système. Êtes-Vous sûr ?",
-        "confirmUnshareFromMeAction": "Déconnecter",
-        "confirmUnshareFromMeTitle": "Déconnecter système?",
-        "confirmUnshareTitle": "Supprimer Usager?",
-        "mergeFailed": "Fusion système a échoué",
-        "mergeStart": "Les systèmes ont commencé à fusionner",
-        "mergeSuccess": "Fusion du système terminée",
-        "mergeSystemTitle": "Fusionner systèmes",
-        "mySystemSearch": "IMeMyMine",
-        "offline": "System Hors ligne",
-        "offlineAlertRibbon": "Système hors ligne. Certains paramètres ne sont peut-être pas disponibles.",
-        "openClient": "Open in %VMS_NAME%",
-        "openClientNoSystem": "Ouvrir %VMS_NAME%",
-        "permissionsRemoved": "Autorisations retirées de {{email}}",
-        "settings": {
-            "sessionLimitDuration": {
-                "hours": "heure",
-                "minutes": "minute"
-            },
-            "warningMessages": {
-                "videoEncryption": "Cryptage du trafic vidéo augmentera considérablement l'utilisation du processeur."
-            }
-        },
-        "shareOffline": "Impossible de partager le système lorsqu'il est hors ligne",
-        "shareUnauthorized": "Vous n'avez pas la permission de partager ce système",
-        "successDeleted": "Système {{systemName}} a correctement été supprimé de votre compte",
-        "successDisconnected": "Système correctement déconnecté de %CLOUD_NAME%",
-        "successRename": "Nom du système sauvegardé",
-        "unavailable": "Le système est inaccessible",
-        "unknownName": "Nom inconnu pour le système (causé par la fusion nuage)",
-        "yourSystem": "Votre système"
-    },
-    "systemAdministration": "Administration Système",
-    "systemStatuses": {
-        "activated": "activé",
-        "incompatible": "incompatible",
-        "merging": "fusion",
-        "notActivated": "non activé",
-        "offline": "hors ligne",
-        "online": "en ligne",
-        "unavailable": "non disponible"
-    },
-    "testedVersionLabel": "Testé avec la version {{vmsName}}:",
-    "testedVersionsLabel": "Testé avec les versions {{vmsName}}:",
-    "topXByVolume": "Top {{value}} par volume:",
-    "users": "Usagers",
     "you": "toi"
 }

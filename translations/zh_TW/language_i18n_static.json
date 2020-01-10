@@ -169,25 +169,27 @@
 		"feedback": "請確認已包含您的攝影機型號和製造商......"
 	},
 	"pageTitles": {
-		"template": "{{title}} %CLOUD_NAME%",
+		"template": "{{title}} - %CLOUD_NAME%",
 		"default": "%CLOUD_NAME%",
+		"about": "About",
 		"registerSuccess": "歡迎來到",
 		"register": "新建帳戶",
-		"changePassword": "更改密碼 -",
-		"account": "帳號設定 -",
-		"systems": "系統 -",
-		"system": "系統 -",
-		"systemShare": "共用系統 -",
-		"activate": "啟動帳號 -",
-		"activateSent": "啟動帳號 -",
-		"activateSuccess": "帳號啟動 -",
-		"activateCode": "啟動帳號 -",
-		"restorePassword": "重置密碼 -",
-		"restorePasswordSuccess": "密碼已儲存 -",
-		"restorePasswordCode": "重置密碼 -",
-		"view": "查看攝影機 - ",
+		"changePassword": "Change password",
+		"account": "Account settings",
+		"systems": "Systems",
+		"system": "System",
+		"systemName": "{{systemName}}",
+		"systemShare": "Share System",
+		"activate": "Activate account",
+		"activateSent": "Activate account",
+		"activateSuccess": "Account activated",
+		"activateCode": "Activate account",
+		"restorePassword": "Reset password",
+		"restorePasswordSuccess": "Password saved",
+		"restorePasswordCode": "Reset password",
+		"view": "View cameras",
 		"debug": "除錯",
-		"login": "登入 -",
+		"login": "Log in",
 		"download": "下載 %VMS_NAME%",
 		"downloadPlatform": "Download %VMS_NAME% for ",
 		"pageNotFound": "找不到頁面",
@@ -223,7 +225,8 @@
 				"a_recommend": "建議您進行諮詢",
 				"b_support": "支援",
 				"c_proceeding": "在繼續執行之前。"
-			}
+			},
+			"warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged System."
 		},
 		"message": {
 			"failedToSend": "訊息發送失敗",
@@ -496,5 +499,7 @@
 	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "您沒有任何系統連接到 %CLOUD_NAME%",
 	"NO_SYSTEMS_LOGIN": "Log in to your System using %VMS_NAME%",
 	"NO_SYSTEMS_GOTO_ADMINISTRATION": "到 \"系統管理\" 對話框中的 \"雲端\" 頁面",
-	"NO_SYSTEMS_CONNECT_SYSTEM": "點擊 \"連接系統到 %CLOUD_NAME%\""
+	"NO_SYSTEMS_CONNECT_SYSTEM": "點擊 \"連接系統到 %CLOUD_NAME%\"",
+	"topXByVolume": "Top {{value}} by volume:",
+	"phoneNumberWithLabel": "Tel: {{number}}"
 }

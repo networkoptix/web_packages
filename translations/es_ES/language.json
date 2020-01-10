@@ -2,110 +2,6 @@
   "language": "es_ES",
   "language_name": "Español",
   "cloudName": "%CLOUD_NAME%",
-  "vmsName": "%VMS_NAME%",
-  "clientProtocol": "%CLIENT_PROTOCOL%:",
-  "dialogs": {
-    "okButton": "Aceptar",
-    "cancelButton": "Cancelar",
-    "loginTitle": "Inicie sesión en %CLOUD_NAME%",
-    "loginButton": "Inicia sesión",
-    "logoutAuthorisedTitle": "Ya se ha conectado",
-    "logoutAuthorisedContinueButton": "Continuar",
-    "logoutAuthorisedLogoutButton": "Cerrar Sessión",
-    "noClientDetectedTitle": "Install %VMS_NAME% to view your System",
-    "download": "Descargar %VMS_NAME%"
-  },
-  "pageTitles": {
-    "template": "{{title}} %CLOUD_NAME%",
-    "default": "%CLOUD_NAME%",
-    "registerSuccess": "Bienvenido a",
-    "register": "Crear cuenta en",
-    "changePassword": "Cambiar contraseña -",
-    "account": "Ajustes de cuenta",
-    "systems": "Sistemas -",
-    "system": "Sistema -",
-    "systemShare": "Compartir Sistema -",
-    "activate": "Activar cuenta -",
-    "activateSent": "Activar cuenta -",
-    "activateSuccess": "Cuenta Activada -",
-    "activateCode": "Activar cuenta -",
-    "restorePassword": "Restablecer contraseña -",
-    "restorePasswordSuccess": "Contraseña aguardada -",
-    "restorePasswordCode": "Restablecer contraseña -",
-    "view": "Ver cámaras - ",
-    "debug": "Depurar",
-    "login": "Iniciar sesión -",
-    "download": "Descargar %VMS_NAME%",
-    "downloadPlatform": "Download %VMS_NAME% for ",
-    "pageNotFound": "Página no encontrada"
-  },
-  "systemStatuses": {
-    "activated": "activado",
-    "incompatible": "incompatible",
-    "merging": "fusionando",
-    "notActivated": "no activado",
-    "online": "en línea",
-    "offline": "desconectado",
-    "unavailable": "no disponible"
-  },
-  "accessRoles": {
-    "disabled": {
-      "label": "Desactivado",
-      "description": "El usuario está deshabilitado y no puedo acceder al sistema"
-    },
-    "Owner": {
-      "label": "Dueño",
-      "description": "Acceso sin restricciones, incluyendo la capacidad para compartir y conectar/desconectar el sistema de la nube"
-    },
-    "Viewer": {
-      "label": "Espectador",
-      "description": "Puede ver video en vivo y ver el archivo"
-    },
-    "Live Viewer": {
-      "label": "Visor en vivo",
-      "description": "Sólo puede ver vídeo en vivo"
-    },
-    "Advanced Viewer": {
-      "label": "Visor avanzado",
-      "description": "Puede ver video en vivo, navegar por el archivo, controlar PTZ, etc"
-    },
-    "Administrator": {
-      "label": "Administrador",
-      "description": "Acceso sin restricciones, incluyendo la habilidad de compartir"
-    },
-    "Custom": {
-      "label": "Personalizado",
-      "description": "Use la aplicación de cliente %VMS_NAME% para configurar permisos personalizados"
-    },
-    "cloudAdmin": {
-      "label": "Administrador",
-      "description": "Puede configurar el Sistema y compartirlo"
-    },
-    "customRole": {
-      "label": "Función personalizada",
-      "description": "Función personalizada de usuario especificado en el sistema"
-    },
-    "owner": {
-      "label": "Dueño",
-      "description": "Acceso sin restricciones, incluyendo la capacidad para compartir y conectar/desconectar el sistema de la nube"
-    },
-    "viewer": {
-      "label": "Espectador",
-      "description": "Puede ver video en vivo y ver el archivo"
-    },
-    "liveViewer": {
-      "label": "Visor en vivo",
-      "description": "Sólo puede ver vídeo en vivo"
-    },
-    "advancedViewer": {
-      "label": "Visor avanzado",
-      "description": "Puede ver el vídeo vivo, hojear el archivo, configurar cámaras, controlar PTZ etc"
-    },
-    "custom": {
-      "label": "Personalizado",
-      "description": "Use la aplicación de cliente %VMS_NAME% para configurar permisos personalizados"
-    }
-  },
   "errorCodes": {
     "ok": "ok",
     "cantSendActivationPrefix": "No se puede enviar el correo electrónico de confirmación",
@@ -148,83 +44,6 @@
     "INCOMPATIBLE": "Los sistemas tienen diferentes versiones de software. Por favor, actualice ambos a la <a href=\"/download\">última versión</a>.",
     "FAIL": "El sistema <strong>{{failedSystem}}</strong> es actualmente inalcanzable.<br>Vuelva a intentarlo en unos momentos o póngase en contacto con <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
     "unknownMergeError": "Error desconocido. Puede intentar actualizar la página y repetir el intento. Si el problema persiste, por favor contacte con el soporte <a href=\"%SUPPORT_LINK%\" target=\"_blank\"></a>."
-  },
-  "merging": {
-    "mergeFailedTitle": "La fusión de sistemas falló",
-    "commonText": "Error al fusionar los sistemas <strong>{{primarySystem}}</strong> y <strong>{{secondarySystem}}</strong>."
-  },
-  "passwordRequirements": {
-    "good": "bueno",
-    "fair": "regular",
-    "fairMessage": "Uso de números, letras mayúsculas y minúsculas y caracteres especiales para hacer su contraseña más fuerte",
-    "minLength": "demasiado corto",
-    "minLengthMessage": "La contraseña debe tener al menos 8 caracteres",
-    "required": "incorrecto",
-    "requiredMessage": "Utilice sólo letras, números y símbolos de teclado, evite los espacios iniciales y finales",
-    "weak": "débil",
-    "weakMessage": "Uso de números, letras mayúsculas y minúsculas y caracteres especiales para hacer su contraseña más fuerte",
-    "strongMessage": "¡Contraseña segura!",
-    "common": "muy común",
-    "commonMessage": "Esta contraseña se encuentra en la parte superior más populares de contraseñas en el mundo",
-    "missingMessage": "Se requiere contraseña"
-  },
-  "sharing": {
-    "confirmOwner": "Si se cambia el propietario del sistema, podrá revocar la titularidad de la cuenta corriente. Esta acción es irreversible. ¿Está seguro?",
-    "shareTitle": "Compartir",
-    "shareConfirmButton": "Compartir",
-    "editShareTitle": "Corrija permisos",
-    "editShareConfirmButton": "Guardar",
-    "permissionsSaved": "Nuevos permisos guardados"
-  },
-  "system": {
-    "yourSystem": "Su Sistema",
-    "mySystemSearch": "IMeMyMine",
-    "unavailable": "El sistema es inalcanzable",
-    "offline": "Sistema está desconectado",
-    "openClient": "Open in %VMS_NAME%",
-    "openClientNoSystem": "Abrir %VMS_NAME%",
-    "confirmMergeAction": "Combinar",
-    "mergeSystemTitle": "Unir Sistemas",
-    "confirmRenameTitle": "Nombre del sistema",
-    "confirmRenameAction": "Guardar",
-    "successRename": "Nombre del sistema guardado",
-    "confirmDisconnectTitle": "¿Desconectar el Sistema de %CLOUD_NAME%?",
-    "confirmDisconnectAction": "Desconectar",
-    "confirmUnshareFromMe": "Está a punto de desconectar este sistema de su cuenta. Usted no podrá acceder a este sistema ya. ¿Está seguro?",
-    "confirmUnshareFromMeTitle": "Desconectar el Sistema?",
-    "confirmUnshareFromMeAction": "Desconectar",
-    "confirmUnshare": "Este usuario no podrá acceder el sistema. ¿Está seguro?",
-    "confirmUnshareTitle": "¿Eliminar el usuario?",
-    "confirmUnshareAction": "Borrar",
-    "successDisconnected": "El sistema se desconecta con éxito de %CLOUD_NAME%",
-    "successDeleted": "Sistema {{systemName}} se ha eliminado de su cuenta",
-    "mergeFailed": "La fusión de sistemas falló",
-    "mergeStart": "Los sistemas han comenzado a fusionarse",
-    "mergeSuccess": "Fusión del sistema completada",
-    "permissionsRemoved": "Los permisos fueron removidos de {{email}}",
-    "unknownName": "Nombre desconocido para el sistema (causado por la fusión en la nube)"
-  },
-  "account": {
-    "accountSavedSuccess": "Su cuenta se ha guardado",
-    "activationLinkSent": "Enlace de activación",
-    "passwordChangedSuccess": "Su cuenta se ha guardado",
-    "changePassword": "Cambiar contraseña",
-    "newPasswordLabel": "Nueva contraseña",
-    "saveChanges": "Guardar"
-  },
-  "activeActions": {
-    "sendConfirm": "Reenviar enlace de activación",
-    "resetPassword": "Restablecer contraseña",
-    "setNewPassword": "Guardar contraseña",
-    "setNewPasswordLabel": "Nueva contraseña"
-  },
-  "regActions": {
-    "passwordLabel": "Contraseña",
-    "createAccount": "Crear Cuenta"
-  },
-  "header": {
-    "allSystems": "Todos los Sistemas",
-    "systems": "Sistemas"
   },
   "common": {
     "cameraLinks": {
@@ -276,9 +95,8 @@
       "help": "ayuda | mostrar comandos"
     }
   },
-  "recommendSupport": {
-    "a_recommend": "Recomendamos consultar con",
-    "b_support": "asistencia",
-    "c_proceeding": "antes de continuar."
+  "system": {
+    "offline": "Sistema está desconectado",
+    "unavailable": "El sistema es inalcanzable"
   }
 }
