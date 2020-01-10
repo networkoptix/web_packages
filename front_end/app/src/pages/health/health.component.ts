@@ -9,14 +9,16 @@ import { NxHealthService }                       from './health.service';
 import { NxLanguageProviderService }             from '../../services/nx-language-provider';
 import { NxUtilsService }                        from '../../services/utils.service';
 import { FileSystemFileEntry, NgxFileDropEntry } from 'ngx-file-drop';
-import { WINDOW }                                from '../../services/window-provider';
 import { NxRibbonService }                       from '../../components/ribbon/ribbon.service';
-import { Subscription }               from 'rxjs';
+import { Subscription }                          from 'rxjs';
 import { NxScrollMechanicsService }              from '../../services/scroll-mechanics.service';
 import { AutoUnsubscribe }                       from 'ngx-auto-unsubscribe';
-import { NxSystemAPI, NxSystemAPIService } from '../../services/system-api.service';
-import { NxAppStateService } from '../../services/nx-app-state.service';
-import { BreakpointObserver } from '@angular/cdk/layout';
+import { NxSystemAPI, NxSystemAPIService }       from '../../services/system-api.service';
+import { NxAppStateService }                     from '../../services/nx-app-state.service';
+import { BreakpointObserver }                    from '@angular/cdk/layout';
+import { WINDOW }                                from '../../services/window-provider';
+import { DOCUMENT }                              from '@angular/common';
+import { DomSanitizer }                          from '@angular/platform-browser';
 
 @AutoUnsubscribe()
 @Component({
@@ -62,7 +64,9 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                 private ribbonService: NxRibbonService,
                 private scrollMechanicsService: NxScrollMechanicsService,
                 private breakpointObserver: BreakpointObserver,
+                private domSanitizer: DomSanitizer,
                 @Inject(WINDOW) private window: any,
+                @Inject(DOCUMENT) private document: any
     ) {
         this.LANG = this.languageService.getTranslations();
         this.CONFIG = this.configService.getConfig();
@@ -457,7 +461,16 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         } else {
             filename = `report-${this.reportSnapshot.time}.json`;
         }
-        this.utilsService.saveAsBlob(JSON.stringify(this.reportSnapshot), filename, 'application/json');
+
+        const uri = 'data:text/json;charset=UTF-8,"' + encodeURIComponent(JSON.stringify(this.reportSnapshot));
+
+        const a: HTMLAnchorElement = this.document.createElement('a') as HTMLAnchorElement;
+        a.href     = uri.toString();
+        a.download = filename;
+        this.document.body.appendChild(a);
+        a.click();
+
+        this.document.body.removeChild(a);
     }
 
     fileDropped(files: NgxFileDropEntry[]) {

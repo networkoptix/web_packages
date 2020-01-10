@@ -1,7 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { NxConfigService } from './nx-config';
 import { DOCUMENT }        from '@angular/common';
-import { WINDOW }          from './window-provider';
 
 @Injectable({
     providedIn: 'root'
@@ -13,8 +12,7 @@ export class NxUtilsService {
     public static sortDESC = false;
 
     constructor(private config: NxConfigService,
-                @Inject(WINDOW) private window: Window,
-                @Inject(DOCUMENT) private document: any) {
+    ) {
         this.CONFIG = this.config.getConfig();
     }
 
@@ -77,19 +75,5 @@ export class NxUtilsService {
             // href not recognized as valid url
             return href;
         }
-    }
-
-    public saveAsBlob(data, filename, type) {
-        const blob: Blob = new Blob([data], {type});
-        const objectUrl = URL.createObjectURL(blob);
-        const a: HTMLAnchorElement = this.document.createElement('a') as HTMLAnchorElement;
-
-        a.href = objectUrl;
-        a.download = filename;
-        this.document.body.appendChild(a);
-        a.click();
-
-        this.document.body.removeChild(a);
-        URL.revokeObjectURL(objectUrl);
     }
 }
