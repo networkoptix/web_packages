@@ -2,7 +2,7 @@
 
 לחץ על הקישור כדי לבדוק את הטיוטה {{ message.id }} עבור {{ message.asset }}
 
-Link to review: {{ config.portal_url }}/admin/cms/assetcustomizationreview/{{ message.id }}/change/
+קישור לסקירה: {{ config.portal_url }}/admin/cms/version/{{ message.id }}/
 
 בדף זה אתה יכול
 1) ליצור תצוגה מקדימה כדי לראות את השינויים האחרונים.

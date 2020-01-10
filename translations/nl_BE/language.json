@@ -2,19 +2,6 @@
   "language": "nl_BE",
   "language_name": "Vlaams",
   "cloudName": "%CLOUD_NAME%",
-  "vmsName": "%VMS_NAME%",
-  "clientProtocol": "%CLIENT_PROTOCOL%:",
-  "dialogs": {
-    "okButton": "Oké",
-    "cancelButton": "Annuleren",
-    "loginTitle": "Meld u aan bij %CLOUD_NAME%",
-    "loginButton": "Log in",
-    "logoutAuthorisedTitle": "U bent reeds ingelogd",
-    "logoutAuthorisedContinueButton": "Doorgaan",
-    "logoutAuthorisedLogoutButton": "Uitloggen",
-    "noClientDetectedTitle": "Installeer %VMS_NAME% om uw systeem te bekijken",
-    "download": "Download %VMS_NAME%"
-  },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
     "default": "%CLOUD_NAME%",
@@ -38,73 +25,6 @@
     "download": "Download %VMS_NAME%",
     "downloadPlatform": "Download %VMS_NAME% voor ",
     "pageNotFound": "Pagina niet gevonden"
-  },
-  "systemStatuses": {
-    "activated": "geactiveerd",
-    "incompatible": "niet compatibel",
-    "merging": "samenvoegen",
-    "notActivated": "niet geactiveerd",
-    "online": "online",
-    "offline": "offline",
-    "unavailable": "niet beschikbaar"
-  },
-  "accessRoles": {
-    "disabled": {
-      "label": "Uitgeschakeld",
-      "description": "Gebruiker is uitgeschakeld en kan niet aanmelden in het systeem"
-    },
-    "Owner": {
-      "label": "Eigenaar",
-      "description": "Onbeperkt toegang, inclusief de mogelijkheid om systeem te delen en te verbinden / te verbreken vanuit de cloud"
-    },
-    "Viewer": {
-      "label": "Viewer",
-      "description": "Kan live video bekijken en zoeken in opgenomen beelden"
-    },
-    "Live Viewer": {
-      "label": "Live Viewer",
-      "description": "Kan alleen live video bekijken"
-    },
-    "Advanced Viewer": {
-      "label": "Geavanceerde Viewer",
-      "description": "Kan live video bekijken, bladeren in het archief, PTZ bedienen, enz"
-    },
-    "Administrator": {
-      "label": "Administrator",
-      "description": "Onbeperkt toegang inclusief de mogelijkheid om te delen"
-    },
-    "Custom": {
-      "label": "Aangepast",
-      "description": "Gebruik de %VMS_NAME% client-applicatie om aangepaste rechten in te stellen"
-    },
-    "cloudAdmin": {
-      "label": "Administrator",
-      "description": "Kan systeem configureren en delen"
-    },
-    "customRole": {
-      "label": "Aangepaste rollen",
-      "description": "Aangepaste gebruikersrol die is opgegeven in systeem"
-    },
-    "owner": {
-      "label": "Eigenaar",
-      "description": "Onbeperkt toegang, inclusief de mogelijkheid om systeem te delen en te verbinden / te verbreken vanuit de cloud"
-    },
-    "viewer": {
-      "label": "Viewer",
-      "description": "Kan live video bekijken en zoeken in opgenomen beelden"
-    },
-    "liveViewer": {
-      "label": "Live Viewer",
-      "description": "Kan alleen live video bekijken"
-    },
-    "advancedViewer": {
-      "label": "Geavanceerde Viewer",
-      "description": "Kan live video bekijken, zoeken in opgenomen beelden, camera configureren, PTZ, enz. bedienen"
-    },
-    "custom": {
-      "label": "Aangepast",
-      "description": "Gebruik de %VMS_NAME% client-applicatie om aangepaste rechten in te stellen"
-    }
   },
   "errorCodes": {
     "ok": "ok",
@@ -148,83 +68,6 @@
     "INCOMPATIBLE": "Systemen hebben verschillende softwareversies. Werk ze alstublieft bij naar de laatste <a href=\"/download\">build</a>.",
     "FAIL": "Systeem <strong>{{failedSystem}}</strong> is momenteel niet bereikbaar.<br>Probeer het over een paar momenten opnieuw of neem contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">ondersteuning</a>.",
     "unknownMergeError": "Onbekende fout. U kunt proberen de pagina te vernieuwen en de poging herhalen. Als het probleem zich blijft voordoen, neem dan contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>."
-  },
-  "merging": {
-    "mergeFailedTitle": "Het samenvoegen van systemen is mislukt",
-    "commonText": "Fouten bij het samenvoegen van systemen <strong>{{primarySystem}}</strong> en <strong>{{secondarySystem}}</strong>."
-  },
-  "passwordRequirements": {
-    "good": "goed",
-    "fair": "redelijk",
-    "fairMessage": "Gebruik cijfers, hoofdletters, kleine letters en speciale tekens om uw wachtwoord sterker te maken",
-    "minLength": "te kort",
-    "minLengthMessage": "Het wachtwoord moet minstens 8 karakters bevatten",
-    "required": "onjuist",
-    "requiredMessage": "Gebruik alleen alfanumerieke tekens en symbolen van het toetsenbord, Vermijd spaties voor en na het wachtwoord",
-    "weak": "zwak",
-    "weakMessage": "Gebruik cijfers, hoofdletters, kleine letters en speciale tekens om uw wachtwoord sterker te maken",
-    "strongMessage": "Sterk wachtwoord!",
-    "common": "te algemeen",
-    "commonMessage": "Dit wachtwoord bevind zich in de top van de meest populaire wachtwoorden in de wereld",
-    "missingMessage": "Wachtwoord is vereist"
-  },
-  "sharing": {
-    "confirmOwner": "Als u de eigenaar van het systeem wijzigt, trekt u het eigendom in van het uw account voor dit systeem. Deze actie is onomkeerbaar. Weet je het zeker?",
-    "shareTitle": "Delen",
-    "shareConfirmButton": "Delen",
-    "editShareTitle": "Wijzig machtigingen",
-    "editShareConfirmButton": "Opslaan",
-    "permissionsSaved": "Nieuwe machtigingen opgeslagen"
-  },
-  "system": {
-    "yourSystem": "Uw systeem",
-    "mySystemSearch": "IMeMyMine",
-    "unavailable": "Systeem is onbereikbaar",
-    "offline": "Systeem is offline",
-    "openClient": "Open in %VMS_NAME%",
-    "openClientNoSystem": "Open %VMS_NAME%",
-    "confirmMergeAction": "Samenvoegen",
-    "mergeSystemTitle": "Systemen samenvoegen",
-    "confirmRenameTitle": "Systeemnaam",
-    "confirmRenameAction": "Opslaan",
-    "successRename": "Systeemnaam opgeslagen",
-    "confirmDisconnectTitle": "Ontkoppel het systeem van %CLOUD_NAME%?",
-    "confirmDisconnectAction": "Verbinding verbreken",
-    "confirmUnshareFromMe": "U staat op het punt om dit systeem uit uw account te verbreken. U kunt dit systeem niet meer gebruiken. Weet u het zeker?",
-    "confirmUnshareFromMeTitle": "Systeem loskoppelen?",
-    "confirmUnshareFromMeAction": "Verbinding verbreken",
-    "confirmUnshare": "Deze gebruiker heeft geen toegang tot het systeem. Weet je het zeker?",
-    "confirmUnshareTitle": "Gebruiker verwijderen?",
-    "confirmUnshareAction": "Verwijder",
-    "successDisconnected": "Systeem is met succes ontkoppeld van %CLOUD_NAME%",
-    "successDeleted": "Systeem {{systemName}} is succesvol verwijderd van uw account",
-    "mergeFailed": "Het samenvoegen van systemen is mislukt",
-    "mergeStart": "Systemen zijn begonnen met het samenvoegen",
-    "mergeSuccess": "Systeem samenvoegen voltooid",
-    "permissionsRemoved": "Machtigingen zijn verwijderd uit {{email}}",
-    "unknownName": "Onbekende naam voor systeem (veroorzaakt door samenvoeging in de cloud)"
-  },
-  "account": {
-    "accountSavedSuccess": "Uw account is succesvol opgeslagen",
-    "activationLinkSent": "Activatielink verzonden",
-    "passwordChangedSuccess": "Uw account is succesvol opgeslagen",
-    "changePassword": "Wachtwoord wijzigen",
-    "newPasswordLabel": "Nieuw wachtwoord",
-    "saveChanges": "Opslaan"
-  },
-  "activeActions": {
-    "sendConfirm": "Activatielink opnieuw verzenden",
-    "resetPassword": "Reset wachtwoord",
-    "setNewPassword": "Wachtwoord opslaan",
-    "setNewPasswordLabel": "Nieuw wachtwoord"
-  },
-  "regActions": {
-    "passwordLabel": "Wachtwoord",
-    "createAccount": "Account aanmaken"
-  },
-  "header": {
-    "allSystems": "Alle systemen",
-    "systems": "Systemen"
   },
   "common": {
     "cameraLinks": {
@@ -276,9 +119,8 @@
       "help": "help | show commands"
     }
   },
-  "recommendSupport": {
-    "a_recommend": "We raden aan om te overleggen met",
-    "b_support": "ondersteuning",
-    "c_proceeding": "voordat u verder gaat."
+  "system": {
+    "offline": "Systeem is offline",
+    "unavailable": "Systeem is onbereikbaar"
   }
 }

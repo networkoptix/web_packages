@@ -2,19 +2,6 @@
   "language": "th_TH",
   "language_name": "ภาษาไทย",
   "cloudName": "%CLOUD_NAME%",
-  "vmsName": "%VMS_NAME%",
-  "clientProtocol": "%CLIENT_PROTOCOL%:",
-  "dialogs": {
-    "okButton": "ตกลง",
-    "cancelButton": "ยกเลิก",
-    "loginTitle": "เข้าสู่ระบบ %CLOUD_NAME%",
-    "loginButton": "ลงชื่อเข้าสู่ระบบ",
-    "logoutAuthorisedTitle": "คุณกำลังอยู่ในระบบ",
-    "logoutAuthorisedContinueButton": "ดำเนิน​การ",
-    "logoutAuthorisedLogoutButton": "ออกจากระบบ",
-    "noClientDetectedTitle": "Install %VMS_NAME% to view your System",
-    "download": "ดาวน์โหลด %VMS_NAME%"
-  },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
     "default": "%CLOUD_NAME%",
@@ -38,73 +25,6 @@
     "download": "ดาวน์โหลด %VMS_NAME%",
     "downloadPlatform": "Download %VMS_NAME% for ",
     "pageNotFound": "ไม่พบหน้านี้"
-  },
-  "systemStatuses": {
-    "activated": "เปิดใช้งาน",
-    "incompatible": "เข้ากันไม่ได้",
-    "merging": "การผสม",
-    "notActivated": "ยังไม่ถูกเปิดใช้งาน",
-    "online": "ออนไลน์",
-    "offline": "ออฟไลน์",
-    "unavailable": "ไม่พร้อมใช้งาน"
-  },
-  "accessRoles": {
-    "disabled": {
-      "label": "ปิดใช้งาน",
-      "description": "ผู้ใช้ถูกปิดใช้งานและไม่สามารถเข้าสู่ระบบได้"
-    },
-    "Owner": {
-      "label": "เจ้าของ",
-      "description": "การเข้าถึงที่ไม่ จำกัด รวมถึงความสามารถในการแชร์และเชื่อมต่อ / ตัดการเชื่อมต่อระบบจากระบบคลาวด์"
-    },
-    "Viewer": {
-      "label": "ผู้ชม",
-      "description": "สามารถดูวิดีโอสดและเรียกดูไฟล์ที่เก็บได้"
-    },
-    "Live Viewer": {
-      "label": "แสดงสด",
-      "description": "สามารถดูวิดีโอสดได้เท่านั้น"
-    },
-    "Advanced Viewer": {
-      "label": "แสดงขั้นสูง",
-      "description": "สามารถดูวิดีโอสดเรียกดูไฟล์จัดเก็บกำหนดค่ากล้องควบคุม PTZ ฯลฯ"
-    },
-    "Administrator": {
-      "label": "ผู้ดูแลระบบ",
-      "description": "การเข้าถึงที่ไม่ จำกัด รวมถึงความสามารถในการแบ่งปัน"
-    },
-    "Custom": {
-      "label": "แบบกำหนดเอง",
-      "description": "ใช้แอ็พพลิเคชันไคลเอ็นต์ %VMS_NAME% เพื่อตั้งค่าสิทธิ์ที่กำหนดเอง"
-    },
-    "cloudAdmin": {
-      "label": "ผู้ดูแลระบบ",
-      "description": "สามารถกำหนดค่าระบบและแชร์ได้"
-    },
-    "customRole": {
-      "label": "บทบาทที่กำหนดเอง",
-      "description": "บทบาทผู้ใช้แบบกำหนดเองที่ระบุในระบบ"
-    },
-    "owner": {
-      "label": "เจ้าของ",
-      "description": "การเข้าถึงที่ไม่ จำกัด รวมถึงความสามารถในการแชร์และเชื่อมต่อ / ตัดการเชื่อมต่อระบบจากระบบคลาวด์"
-    },
-    "viewer": {
-      "label": "ผู้ชม",
-      "description": "สามารถดูวิดีโอสดและเรียกดูไฟล์ที่เก็บได้"
-    },
-    "liveViewer": {
-      "label": "แสดงสด",
-      "description": "สามารถดูวิดีโอสดได้เท่านั้น"
-    },
-    "advancedViewer": {
-      "label": "แสดงขั้นสูง",
-      "description": "สามารถดูวิดีโอสดเรียกดูไฟล์จัดเก็บกำหนดค่ากล้องควบคุม PTZ ฯลฯ"
-    },
-    "custom": {
-      "label": "แบบกำหนดเอง",
-      "description": "ใช้แอ็พพลิเคชันไคลเอ็นต์ %VMS_NAME% เพื่อตั้งค่าสิทธิ์ที่กำหนดเอง"
-    }
   },
   "errorCodes": {
     "ok": "ตกลง",
@@ -148,83 +68,6 @@
     "INCOMPATIBLE": "ระบบมีเวอร์ชั่นซอฟต์แวร์ที่ต่างกัน โปรดอัปเดตไปที่ <a href=\"/download\">รุ่นล่าสุด</a>",
     "FAIL": "ระบบ <strong>{{failedSystem}}</strong> ไม่สามารถเข้าถึงได้ในขณะนี้<br>ลองอีกครั้งในภายหลังหรือติดต่อฝ่ายสนับสนุน <a href=\"%SUPPORT_LINK%\" target=\"_blank\"></a>",
     "unknownMergeError": "ข้อผิดพลาดที่ไม่รู้จัก. คุณสามารถลองรีเฟรชหน้าและพยายามซ้ำ หากปัญหายังคงมีอยู่ - กรุณาติดต่อ <a href=\"%SUPPORT_LINK%\" target=\"_blank\">สนับสนุน</a>"
-  },
-  "merging": {
-    "mergeFailedTitle": "การรวมระบบล้มเหลว",
-    "commonText": "ไม่สามารถรวมระบบ <strong>{{primarySystem}}</strong> และ <strong>{{secondarySystem}}</strong>"
-  },
-  "passwordRequirements": {
-    "good": "ดี",
-    "fair": "ยุติธรรม",
-    "fairMessage": "ใช้ตัวเลขตัวพิมพ์ใหญ่และตัวพิมพ์เล็กและตัวอักษรพิเศษเพื่อทำให้รหัสผ่านของคุณแข็งแกร่งขึ้น",
-    "minLength": "สั้นเกินไป",
-    "minLengthMessage": "รหัสผ่านต้องมีอักขระอย่างน้อย 8 ตัว",
-    "required": "ไม่ถูกต้อง",
-    "requiredMessage": "ใช้อักษรละตินตัวเลขและสัญลักษณ์แป้นพิมพ์เท่านั้นหลีกเลี่ยงช่องว่างด้านบนและด้านหลัง",
-    "weak": "อ่อนแอ",
-    "weakMessage": "ใช้ตัวเลขตัวพิมพ์ใหญ่และตัวพิมพ์เล็กและตัวอักษรพิเศษเพื่อทำให้รหัสผ่านของคุณแข็งแกร่งขึ้น",
-    "strongMessage": "รหัสผ่านที่แข็งแกร่ง!",
-    "common": "บ่อยเกินไป",
-    "commonMessage": "รหัสผ่านนี้อยู่ในรหัสผ่านที่ได้รับความนิยมมากที่สุดในโลก",
-    "missingMessage": "จำเป็นต้องใช้รหัสผ่าน"
-  },
-  "sharing": {
-    "confirmOwner": "หากคุณเปลี่ยนเจ้าของระบบคุณจะยกเลิกการเป็นเจ้าของจากบัญชีปัจจุบัน การกระทำนี้ไม่สามารถย้อนกลับได้ คุณแน่ใจไหม?",
-    "shareTitle": "แชร์",
-    "shareConfirmButton": "แชร์",
-    "editShareTitle": "แก้ไขสิทธิ์",
-    "editShareConfirmButton": "บันทึก",
-    "permissionsSaved": "อนุญาตสิทธิ์ใหม่แล้ว"
-  },
-  "system": {
-    "yourSystem": "ระบบของคุณ",
-    "mySystemSearch": "IMeMyMine",
-    "unavailable": "ระบบไม่สามารถเข้าถึงได้",
-    "offline": "ระบบออฟไลน์",
-    "openClient": "Open in %VMS_NAME%",
-    "openClientNoSystem": "เปิด {{VMS_NAME}}",
-    "confirmMergeAction": "ผสาน",
-    "mergeSystemTitle": "รวมระบบ",
-    "confirmRenameTitle": "ชื่อระบบ",
-    "confirmRenameAction": "บันทึก",
-    "successRename": "ระบบเปลี่ยนชื่อ",
-    "confirmDisconnectTitle": "ยกเลิกการเชื่อมต่อระบบจาก %CLOUD_NAME%?",
-    "confirmDisconnectAction": "ตัดการเชื่อมต่อ",
-    "confirmUnshareFromMe": "คุณกำลังจะยกเลิกการเชื่อมต่อระบบนี้จากบัญชีของคุณ คุณจะไม่สามารถเข้าถึงระบบนี้ได้อีกต่อไป คุณแน่ใจไหม?",
-    "confirmUnshareFromMeTitle": "ยกเลิกการเชื่อมต่อระบบหรือไม่?",
-    "confirmUnshareFromMeAction": "ตัดการเชื่อมต่อ",
-    "confirmUnshare": "ผู้ใช้รายนี้จะไม่สามารถเข้าใช้งานระบบได้ คุณแน่ใจไหม?",
-    "confirmUnshareTitle": "ลบผู้ใช้หรือไม่?",
-    "confirmUnshareAction": "ลบ",
-    "successDisconnected": "ระบบถูกตัดการเชื่อมต่อเรียบร้อยแล้วจาก %CLOUD_NAME%",
-    "successDeleted": "ระบบ {{systemName}} จะถูกลบออกจากบัญชีของคุณเรียบร้อยแล้ว",
-    "mergeFailed": "การผสานระบบล้มเหลว",
-    "mergeStart": "ระบบได้รวมเข้าด้วยกันเรียบร้อยแล้ว",
-    "mergeSuccess": "ผสานระบบเสร็จสมบูรณ์",
-    "permissionsRemoved": "สิทธิ์ถูกนำออกจาก {{email}}",
-    "unknownName": "ชื่อที่ไม่รู้จักสำหรับระบบ (เกิดจากการผสานคลาวด์)"
-  },
-  "account": {
-    "accountSavedSuccess": "บันทึกบัญชีของคุณเรียบร้อยแล้ว",
-    "activationLinkSent": "ส่งการเปิดใช้งานแล้ว",
-    "passwordChangedSuccess": "บันทึกบัญชีของคุณเรียบร้อยแล้ว",
-    "changePassword": "เปลี่ยนรหัสผ่าน",
-    "newPasswordLabel": "สร้างรหัสผ่านใหม่",
-    "saveChanges": "บันทึก"
-  },
-  "activeActions": {
-    "sendConfirm": "ส่งการเชื่อมโยงการเปิดใช้งานอีกครั้ง",
-    "resetPassword": "รีเซ็ตรหัสผ่าน",
-    "setNewPassword": "บันทึกรหัสผ่าน",
-    "setNewPasswordLabel": "สร้างรหัสผ่านใหม่"
-  },
-  "regActions": {
-    "passwordLabel": "รหัสผ่าน",
-    "createAccount": "สร้างบัญชี"
-  },
-  "header": {
-    "allSystems": "ระบบทั้งหมด",
-    "systems": "ระบบ"
   },
   "common": {
     "cameraLinks": {
@@ -276,9 +119,8 @@
       "help": "help | show commands"
     }
   },
-  "recommendSupport": {
-    "a_recommend": "เราขอแนะนำให้ปรึกษากับ",
-    "b_support": "ทีมช่วยเหลือ",
-    "c_proceeding": "ก่อนดำเนินการต่อ"
+  "system": {
+    "offline": "ระบบออฟไลน์",
+    "unavailable": "ระบบไม่สามารถเข้าถึงได้"
   }
 }

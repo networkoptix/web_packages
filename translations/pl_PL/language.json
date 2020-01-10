@@ -2,19 +2,6 @@
   "language": "pl_PL",
   "language_name": "Polski",
   "cloudName": "%CLOUD_NAME%",
-  "vmsName": "%VMS_NAME%",
-  "clientProtocol": "%CLIENT_PROTOCOL%:",
-  "dialogs": {
-    "okButton": "OK",
-    "cancelButton": "Anuluj",
-    "loginTitle": "Zaloguj do %CLOUD_NAME%",
-    "loginButton": "Zaloguj",
-    "logoutAuthorisedTitle": "Jesteś już zalogowany",
-    "logoutAuthorisedContinueButton": "Kontynuuj",
-    "logoutAuthorisedLogoutButton": "Wyloguj",
-    "noClientDetectedTitle": "Zainstaluj %VMS_NAME%, aby przejrzeć swój system",
-    "download": "Pobierz %VMS_NAME%"
-  },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
     "default": "%CLOUD_NAME%",
@@ -38,73 +25,6 @@
     "download": "Pobierz %VMS_NAME%",
     "downloadPlatform": "Pobierz %VMS_NAME% dla",
     "pageNotFound": "Nie znaleziono strony"
-  },
-  "systemStatuses": {
-    "activated": "aktywny",
-    "incompatible": "niekompatybilny",
-    "merging": "łączenie",
-    "notActivated": "nieaktywny",
-    "online": "online",
-    "offline": "offline",
-    "unavailable": "niedostępny"
-  },
-  "accessRoles": {
-    "disabled": {
-      "label": "Wyłączone",
-      "description": "Użytkownik jest zablokowany i nie może zalogować się do systemu"
-    },
-    "Owner": {
-      "label": "Właściciel",
-      "description": "Nieograniczony dostęp, w tym możliwość udostępniania i łączenia systemu z chmurą"
-    },
-    "Viewer": {
-      "label": "Użytkownik",
-      "description": "Podgląd wideo na żywo i przeglądanie archiwum"
-    },
-    "Live Viewer": {
-      "label": "Użytkownik podglądu na żywo",
-      "description": "Tylko podgląd wideo na żywo"
-    },
-    "Advanced Viewer": {
-      "label": "Zaawansowany użytkownik",
-      "description": "Podgląd wideo na żywo, przeglądanie archiwum, konfigurowanie kamer, sterowanie PTZ itp."
-    },
-    "Administrator": {
-      "label": "Administrator",
-      "description": "Nieograniczony dostęp, w tym możliwość udostępniania"
-    },
-    "Custom": {
-      "label": "Niestandardowa",
-      "description": "Użyj aplikacji klienckiej %VMS_NAME% , aby skonfigurować niestandardowe uprawnienia"
-    },
-    "cloudAdmin": {
-      "label": "Administrator",
-      "description": "Konfiguracja i udostępnianie systemu"
-    },
-    "customRole": {
-      "label": "Grupa niestandardowa",
-      "description": "Niestandardowa grupa określona w systemie"
-    },
-    "owner": {
-      "label": "Właściciel",
-      "description": "Nieograniczony dostęp, w tym możliwość udostępniania i łączenia systemu z chmurą"
-    },
-    "viewer": {
-      "label": "Użytkownik",
-      "description": "Podgląd wideo na żywo i przeglądanie archiwum"
-    },
-    "liveViewer": {
-      "label": "Użytkownik podglądu na żywo",
-      "description": "Tylko podgląd wideo na żywo"
-    },
-    "advancedViewer": {
-      "label": "Zaawansowany użytkownik",
-      "description": "Podgląd wideo na żywo, przeglądanie archiwum, konfigurowanie kamer, sterowanie PTZ itp."
-    },
-    "custom": {
-      "label": "Niestandardowa",
-      "description": "Użyj aplikacji klienckiej %VMS_NAME% , aby skonfigurować niestandardowe uprawnienia"
-    }
   },
   "errorCodes": {
     "ok": "ok",
@@ -148,83 +68,6 @@
     "INCOMPATIBLE": "Systemy mają różne wersje oprogramowania. Zaktualizuj oba z nich do <a href=\"/download\">najnowszej wersji</a>.",
     "FAIL": "System <strong>{{failedSystem}}</strong> jest obecnie niedostępny.<br>Spróbuj ponownie za kilka minut lub skontaktuj się z <a href=\"%SUPPORT_LINK%\" target=\"_blank\">działem wsparcia technicznego</a>.",
     "unknownMergeError": "Nieznany błąd. Można odświeżyć stronę i spróbować ponownie. Jeśli problem będzie się powtarzał - proszę skontaktować się z <a href=\"%SUPPORT_LINK%\" target=\"_blank\">działem wsparcia technicznego</a>."
-  },
-  "merging": {
-    "mergeFailedTitle": "Łączenie systemów nie powiodło się",
-    "commonText": "Nie udało się złączyć systemów <strong>{{primarySystem}}</strong> i <strong>{{secondarySystem}}</strong>."
-  },
-  "passwordRequirements": {
-    "good": "dobry",
-    "fair": "średnie",
-    "fairMessage": "Użyj liczb, wielkich i małych liter oraz znaków specjalnych, aby ustawić bezpieczniejsze hasło",
-    "minLength": "za krótkie",
-    "minLengthMessage": "Hasło musi zawierać co najmniej 8 znaków",
-    "required": "nieprawidłowe",
-    "requiredMessage": "Używaj tylko liter łacińskich, cyfr i symboli z klawiatury, unikając spacji na początku i na końcu",
-    "weak": "słabe",
-    "weakMessage": "Użyj liczb, wielkich i małych liter oraz znaków specjalnych, aby ustawić bezpieczniejsze hasło",
-    "strongMessage": "Bezpieczne hasło!",
-    "common": "zbyt popularne",
-    "commonMessage": "To hasło znajduje się na liście najczęściej stosowanych haseł na świecie",
-    "missingMessage": "Hasło jest wymagane"
-  },
-  "sharing": {
-    "confirmOwner": "Jeśli zmienisz właściciela systemu, odbierzesz mu kontrolę nad bieżącym kontem. Ta operacja jest nieodwracalna. Czy na pewno kontynuować?",
-    "shareTitle": "Udostępnij",
-    "shareConfirmButton": "Udostępnij",
-    "editShareTitle": "Edytuj uprawnienia",
-    "editShareConfirmButton": "Zachowaj",
-    "permissionsSaved": "Zapisano nowe uprawnienia"
-  },
-  "system": {
-    "yourSystem": "Twój system",
-    "mySystemSearch": "IMeMyMine",
-    "unavailable": "System jest niedostępny",
-    "offline": "Serwer jest odłączony",
-    "openClient": "Otwórz w %VMS_NAME%",
-    "openClientNoSystem": "Otwórz %VMS_NAME%",
-    "confirmMergeAction": "Złącz",
-    "mergeSystemTitle": "Złącz systemy",
-    "confirmRenameTitle": "Nazwa systemu",
-    "confirmRenameAction": "Zachowaj",
-    "successRename": "Zapisana nazwa systemu",
-    "confirmDisconnectTitle": "Odłączyć system od %CLOUD_NAME%?",
-    "confirmDisconnectAction": "Rozłącz",
-    "confirmUnshareFromMe": "Zamierzasz odłączyć ten system od swojego konta. Nie będziesz już mieć dostępu do tego systemu. Czy na pewno kontynuować?",
-    "confirmUnshareFromMeTitle": "Odłączyć system?",
-    "confirmUnshareFromMeAction": "Rozłącz",
-    "confirmUnshare": "Ten użytkownik nie będzie mógł uzyskać dostępu do systemu. Czy na pewno kontynuować?",
-    "confirmUnshareTitle": "Usunąć użytkownika?",
-    "confirmUnshareAction": "Usuń",
-    "successDisconnected": "System został pomyślnie odłączony od %CLOUD_NAME%",
-    "successDeleted": "System {{systemName}} został pomyślnie usunięty z Twojego konta",
-    "mergeFailed": "Łączenie systemu nie powiodło się",
-    "mergeStart": "Rozpoczęto złączanie systemów",
-    "mergeSuccess": "Zakończono łączenie systemu",
-    "permissionsRemoved": "Uprawnienia zostały usunięte z {{email}}",
-    "unknownName": "Nieznana nazwa systemu (złączenie w chmurze)"
-  },
-  "account": {
-    "accountSavedSuccess": "Twoje konto zostało pomyślnie zapisane",
-    "activationLinkSent": "Wysłano link aktywacyjny",
-    "passwordChangedSuccess": "Twoje konto zostało pomyślnie zapisane",
-    "changePassword": "Zmień hasło",
-    "newPasswordLabel": "Nowe hasło",
-    "saveChanges": "Zachowaj"
-  },
-  "activeActions": {
-    "sendConfirm": "Wyślij ponownie link aktywacyjny",
-    "resetPassword": "Resetuj hasło",
-    "setNewPassword": "Zapisz hasło",
-    "setNewPasswordLabel": "Nowe hasło"
-  },
-  "regActions": {
-    "passwordLabel": "Hasło",
-    "createAccount": "Utwórz konto"
-  },
-  "header": {
-    "allSystems": "Wszystkie systemy",
-    "systems": "Systemy"
   },
   "common": {
     "cameraLinks": {
@@ -276,9 +119,8 @@
       "help": "pomoc | pokaż polecenia"
     }
   },
-  "recommendSupport": {
-    "a_recommend": "Zalecamy skonsultowanie się z",
-    "b_support": "wsparcie",
-    "c_proceeding": "przed kontynuowaniem."
+  "system": {
+    "offline": "Serwer jest odłączony",
+    "unavailable": "System jest niedostępny"
   }
 }
