@@ -57,6 +57,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
     windowSizeSubscription: any;
 
     fixedLayoutClass: string;
+    layoutReady: boolean;
 
     @ViewChild('tiles', { static: false }) elementTiles: ElementRef;
     @ViewChild('search', { static: false }) elementSearch: ElementRef;
@@ -312,6 +313,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
 
     setActiveEntity(alarm, updateURI = true) {
         if (alarm.entity) {
+            this.layoutReady = false;
             this.activeTableEntity = alarm;
             this.activePanelEntity = this.values[alarm.metric][alarm.entity];
             this.activePanelParams = this.healthService.panelParams[alarm.metric];
@@ -366,6 +368,8 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
                 } else {
                     this.fixedLayoutClass = (isTableFit) ? '' : 'fixedLayout--no-panel';
                 }
+
+                this.layoutReady = true;
             }
         });
 
