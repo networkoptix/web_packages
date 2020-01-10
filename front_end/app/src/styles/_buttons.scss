@@ -247,6 +247,10 @@ button, .btn {
     }
 }
 
+.btn.btn-danger {
+    color : $light1 !important;
+}
+
 .btn.btn-arrow {
     position      : relative;
     padding-left  : 40px !important;
