@@ -252,6 +252,10 @@ export class NxSystemAPI {
         // needs to add the proper owner somehow
         return this.post('/api/detachFromSystem', { currentPassword });
     }
+    
+    restoreFactorySettings(currentPassword) {
+        return this.post('/api/restoreState', { currentPassword });
+    }
     /* End of Server settings */
 
     /* Working with users*/

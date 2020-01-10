@@ -12,7 +12,8 @@
                             tag: true,
                             offline: selectedServer.internalStatus === LANG.servers.status.offline,
                             online: selectedServer.internalStatus === LANG.servers.status.online 
-                                || selectedServer.internalStatus === LANG.servers.status.restarting,
+                                || selectedServer.internalStatus === LANG.servers.status.restarting
+                                || selectedServer.internalStatus === LANG.servers.status.reseting,
                             checking: selectedServer.internalStatus === LANG.servers.status.checking
                         }"
                     >
@@ -68,6 +69,7 @@
                             <button 
                                 class="btn btn-default"
                                 (click)="resetServer()"
+                                [disabled]="resetDisabled || !system.currentServerNotBusy"
                             >
                                 <span class="ellipsis" translate>Reset to Defaults</span>
                             </button>

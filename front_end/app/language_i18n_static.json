@@ -489,21 +489,25 @@
         "portWarning": "Port numbers less than 1024 are restricted. Server may become unaccesssible.",
 		"successRename": "Server name renamed.",
 		"beginRestart": "Server is now restarting.",
+		"beginReset": "Server is now reseting.",
         "restartSuccessful": "Server has successfully restarted.",
 		"restartFailed": "There was a problem restarting the server.",
+		"resetFailed": "Failed to reset server. Please check if password you entered is correct and server is online and try again.",
+		"resetSuccessful": "Server {{ serverName }} has been reset to defaults.",
 		"getModuleFailed": "There was a problem getting server information.",
 		"beginDetach": "Server is now detaching",
 		"detachSystemSuccess": "Server was successfully detached from the system.",
 		"detachSystemFailed": "Failed to detach server from system. Please check if password you entered is correct and server is online and try again.",
 		"detachServerBody": {
-			"line1": "The server will be detached to a separate system.",
-			"line2": "Database, local users, configuration, and video archive will remain intact.",
-			"line3": "Cloud users will not be transferred to the new system.",
-			"line4": "Enter password for your account to continue."
+			"line1": "The server will be detached from this system into a new one.",
+			"line2": "Database, local users, configuration, and video archive will remain",
+			"line3": "intact.",
+			"line4": "Cloud users will not be transferred to the new system.",
+			"line5": "Enter password for your account to continue."
 		},
 		"resetServerBody": {
-			"line1": "All settings for this server will be reverted to defaults.",
-			"line2": "The server will be detached to a separate system.",
+			"line1": "All settings for this server will be reverted to factory default",
+			"line2": "settings, and it will be detached from this system into a new one.",
 			"line3": "Video archive will remain intact.",
 			"line4": "Enter password for your account to continue."
 		},
@@ -512,7 +516,8 @@
 			"offline": "offline",
 			"restarting": "restarting...",
 			"checking": "checking status...",
-			"detaching": "detaching..."
+			"detaching": "detaching...",
+			"reseting": "reseting..."
 		}
 	},
 	"serversRestartTitle": "Restart server \"{{ title }}\"",

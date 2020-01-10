@@ -1,16 +1,12 @@
 import {
     Component, OnInit, Inject, ViewContainerRef
 }                                    from '@angular/core';
-import { Location }                  from '@angular/common';
 import { ActivatedRoute }            from '@angular/router';
 import { NxConfigService }           from '../../../../services/nx-config';
-import { NxPageService }             from '../../../../services/page.service';
 import { NxDialogsService }          from '../../../../dialogs/dialogs.service';
 import { NxSettingsService }         from '../settings.service';
 import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
 import { NxMenuService }             from '../../../../components/menu/menu.service';
-import { NxSystemsService }          from '../../../../services/systems.service';
-import { NxAccountService }          from '../../../../services/account.service';
 import { NxProcessService }          from '../../../../services/process.service';
 import { NxSystem }                  from '../../../../services/system.service';
 import { NxApplyService, Watcher }   from '../../../../services/apply.service';
@@ -46,6 +42,7 @@ export class NxSystemServersComponent implements OnInit {
     renameDisabled: boolean;
     restartDisabled: boolean;
     detachDisabled: boolean;
+    resetDisabled: boolean;
     portChangeDisabled: boolean;
 
     private setupDefaults() {
@@ -77,6 +74,7 @@ export class NxSystemServersComponent implements OnInit {
         this.renameDisabled = true;
         this.restartDisabled = true;
         this.detachDisabled = true;
+        this.resetDisabled = true;
         this.portChangeDisabled = true;
         this.checking = false;
 
@@ -95,7 +93,7 @@ export class NxSystemServersComponent implements OnInit {
             .subscribe((system) => {
                 this.settingsService.footerSubject.next(true);
                 this.system = system;
-                // Route guard did not worked :( ... so doing it the old way ...did was done in users.component, so replicating
+                // Route guard did not worked :( ... so doing it the old way ...was done in users.component, so replicating
                 if (!this.system.permissions || !this.system.permissions.editUsers) {
                     this.uriService.updateURI('systems/' + this.system.id, {});
                     return;
@@ -160,6 +158,7 @@ export class NxSystemServersComponent implements OnInit {
             this.renameDisabled = !this.system.permissions.editAdmins;
             this.restartDisabled = !this.system.permissions.isAdmin;
             this.detachDisabled = !this.system.permissions.editAdmins;
+            this.resetDisabled = !this.system.permissions.editAdmins;
             this.portChangeDisabled = !this.system.permissions.editAdmins;
             this.applyService.reset();
             this.applyService.setVisible(true);
@@ -217,11 +216,11 @@ export class NxSystemServersComponent implements OnInit {
     }
 
     resetServer() {
+        const { id, name } = this.selectedServer;
         return this.dialogs
-            .resetServer(this.selectedServer.name)
-            .then(reset => {
+            .resetServer(this.system, id, name)
                 // will take some time to reset and then restart the server
-            });
+                .then(() => this.selectedServer.internalStatus = this.LANG.servers.status.reseting);
     }
 
     storePreviousValue(e) {

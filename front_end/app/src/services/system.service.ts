@@ -223,7 +223,7 @@ export class NxSystem extends System implements OnDestroy {
             this.mediaserverConnections = this.servers.reduce((mediaserverConnections, server) => {
                 mediaserverConnections[server.id] = this.systemApiService.createConnection(
                     this.currentUserEmail,
-                    `${server.id.replace(/[{}]/g, '')}.${this.id}`,
+                    `${server.id.replace(/[{}]/g, '')}.${this.id}`, // a different way of proxying: serverId.systemId
                     undefined,
                     () => this.updateSystemAuth(true));
                 const { authGet, authPost, authPlay } = this.mediaserver;
@@ -604,6 +604,11 @@ export class NxSystem extends System implements OnDestroy {
     detachFromSystem(serverId, currentPassword) {
         this.currentServerNotBusy = false;
         return this.mediaserverConnections[serverId].detachFromSystem(currentPassword);
+    }
+    
+    restoreFactorySettings(serverId, currentPassword) {
+        this.currentServerNotBusy = false;
+        return this.mediaserverConnections[serverId].restoreFactorySettings(currentPassword);
     }
 }
 
