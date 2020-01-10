@@ -492,6 +492,9 @@
         "restartSuccessful": "Server has successfully restarted.",
 		"restartFailed": "There was a problem restarting the server.",
 		"getModuleFailed": "There was a problem getting server information.",
+		"beginDetach": "Server is now detaching",
+		"detachSystemSuccess": "Server was successfully detached from the system.",
+		"detachSystemFailed": "Failed to detach server from system. Please check if password you entered is correct and server is online and try again.",
 		"detachServerBody": {
 			"line1": "The server will be detached to a separate system.",
 			"line2": "Database, local users, configuration, and video archive will remain intact.",
@@ -508,7 +511,8 @@
 			"online": "online",
 			"offline": "offline",
 			"restarting": "restarting...",
-			"checking": "checking status..."
+			"checking": "checking status...",
+			"detaching": "detaching..."
 		}
 	},
 	"serversRestartTitle": "Restart server \"{{ title }}\"",

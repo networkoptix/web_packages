@@ -540,7 +540,6 @@ export class NxSystem extends System implements OnDestroy {
                     return Promise.reject(`Request to server has failed ${result}`);
                 }
                 this.servers = result;
-                // consider implementing this.updateSystemState();
             });
     }
 
@@ -569,7 +568,6 @@ export class NxSystem extends System implements OnDestroy {
 
     update() {
         return of('').pipe(flatMap(_ => {
-            console.log('update in system service called');
             return this.getInfo(true, false)
                 .then(_ => this.getServers())
                 .then(_ => from(this.getUsers(true)))
@@ -597,14 +595,15 @@ export class NxSystem extends System implements OnDestroy {
             .catch(err => Promise.reject(err));
     }
 
-    getServerStats(serverId) {
-        return this.mediaserverConnections[serverId].getServerStats();
-    }
-
     restartServer(serverId) {
         this.currentServerNotBusy = false;
         return this.mediaserverConnections[serverId].restartServer()
             .catch(err => Promise.reject(err));
+    }
+
+    detachFromSystem(serverId, currentPassword) {
+        this.currentServerNotBusy = false;
+        return this.mediaserverConnections[serverId].detachFromSystem(currentPassword);
     }
 }
 

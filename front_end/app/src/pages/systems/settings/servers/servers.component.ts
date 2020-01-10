@@ -45,30 +45,26 @@ export class NxSystemServersComponent implements OnInit {
 
     renameDisabled: boolean;
     restartDisabled: boolean;
+    detachDisabled: boolean;
     portChangeDisabled: boolean;
 
     private setupDefaults() {
         this.CONFIG = this.configService.getConfig();
 
         // this.debugMode = this.CONFIG.allowDebugMode;
-        // this.betaMode = this.CONFIG.allowBetaMode;
         this.menuService.setSection('servers');
     }
 
     constructor(@Inject(ViewContainerRef) viewContainerRef,
-                private accountService: NxAccountService,
                 private applyService: NxApplyService,
                 private processService: NxProcessService,
                 private route: ActivatedRoute,
                 private configService: NxConfigService,
                 private language: NxLanguageProviderService,
-                private pageService: NxPageService,
                 private dialogs: NxDialogsService,
-                private systemsService: NxSystemsService,
                 private settingsService: NxSettingsService,
                 private menuService: NxMenuService,
                 private uriService: NxUriService,
-                location: Location,
     ) {
         this.viewContainerRef = viewContainerRef;
         this.setupDefaults();
@@ -80,15 +76,9 @@ export class NxSystemServersComponent implements OnInit {
         this.LANG = this.language.getTranslations();
         this.renameDisabled = true;
         this.restartDisabled = true;
+        this.detachDisabled = true;
         this.portChangeDisabled = true;
         this.checking = false;
-        // this.pageService.setPageTitle(this.LANG.pageTitles.systems);
-        // this.settings = {
-        //     disconnectDisabled: false,
-        //     mergeDisabled: false,
-        //     renameDisabled: false,
-        //     showMerge: true
-        // };
 
 
         this.routeParamsSubscription = this.route
@@ -97,9 +87,6 @@ export class NxSystemServersComponent implements OnInit {
                 if (params.serverId) {
                     this.menuService.setDetailsSection(params.serverId);
                     this.serverIdFromParams = params.serverId;
-                    console.log('serverId returned', this.serverIdFromParams);
-                    // this.paramUser = params.userId;
-                    // this.setUser();
                 }
             });
 
@@ -107,9 +94,8 @@ export class NxSystemServersComponent implements OnInit {
             .pipe(filter(data => data !== undefined))
             .subscribe((system) => {
                 this.settingsService.footerSubject.next(true);
-                console.log('system subscription', system);
                 this.system = system;
-                // Route guard did not worked :( ... so doing it the old way
+                // Route guard did not worked :( ... so doing it the old way ...did was done in users.component, so replicating
                 if (!this.system.permissions || !this.system.permissions.editUsers) {
                     this.uriService.updateURI('systems/' + this.system.id, {});
                     return;
@@ -126,7 +112,6 @@ export class NxSystemServersComponent implements OnInit {
                                     this.mediaserverConnections = res;
                                 });
                         }
-                        // this.systemAvailable = this.system.isAvailable && this.system.mergeInfo === undefined;
                         if (!this.applyService.locked) {
                             if (this.selectedServer) {
                                 this.selectedServer.internalStatus = this.LANG.servers.status.checking;
@@ -151,14 +136,12 @@ export class NxSystemServersComponent implements OnInit {
     setServer(): void {
         let server;
         if (this.serverIdFromParams) {
-            console.log('serverIdfromParams', this.serverIdFromParams);
             server = this.system.servers.find((server: any) => {
                 return server.id === this.serverIdFromParams;
             });
         }
         if (typeof(server) === 'undefined') {
             server = this.system.servers[0];
-            // this.uriService.updateURI(`systems/${this.system.id}/servers/${server.id}`);
         }
 
         if (server) {
@@ -173,19 +156,14 @@ export class NxSystemServersComponent implements OnInit {
             }
             this.checkIfOnline(server.id);
             this.ipPortWatcher.value = port;
-            console.log('selectedServer post set', this.selectedServer);
 
             this.renameDisabled = !this.system.permissions.editAdmins;
             this.restartDisabled = !this.system.permissions.isAdmin;
+            this.detachDisabled = !this.system.permissions.editAdmins;
             this.portChangeDisabled = !this.system.permissions.editAdmins;
             this.applyService.reset();
             this.applyService.setVisible(true);
         }
-
-        // this.menuService.setDetailsSection(this.selectedUser.id.replace(/{|}/g, ''));
-        // this.setPermission(this.selectedUser.role);
-
-        // this.settingsService.footerSubject.next(true);
     }
 
     initForApplyService(): void {
@@ -229,11 +207,12 @@ export class NxSystemServersComponent implements OnInit {
     }
 
     detachServer() {
+        const { id, name } = this.selectedServer;
         return this.dialogs
-            .detachServer(this.selectedServer.name)
+            .detachServer(this.system, id, name)
             .then(detach => {
-                console.log('returned in detach', detach);
-                // server should probably get removed from the menu?
+                this.selectedServer.internalStatus = this.LANG.servers.status.detaching;
+                // make sure that server gets removed from the menu
             });
     }
 
@@ -241,35 +220,9 @@ export class NxSystemServersComponent implements OnInit {
         return this.dialogs
             .resetServer(this.selectedServer.name)
             .then(reset => {
-                console.log('returned in reset', reset);
                 // will take some time to reset and then restart the server
             });
     }
-
-    updateAndGoToSystems() {
-        // // this.userDisconnectSystem = true;
-        // this.systemsService
-        //     .forceUpdateSystems(this.accountService.getEmail())
-        //     .subscribe(() => {
-        //         setTimeout(() => {
-        //             window.location.href = '/systems';
-        //         });
-        //     });
-    }
-
-    delete() {
-        // if (!this.system.isMine) {
-        //     // User is not owner. Deleting means he'll lose access to it
-        //     this.dialogs.confirm(this.LANG.system.confirmUnshareFromMe, this.LANG.system.confirmUnshareFromMeTitle, this.LANG.system.confirmUnshareFromMeAction, 'btn-danger', 'Cancel')
-        //         .then((result) => {
-        //             if (result === true) {
-        //                 return this.deletingSystem.run();
-        //             }
-        //         });
-        // }
-    }
-
-    // this.pageService.setPageTitle(this.system.info.name + ' -');
 
     storePreviousValue(e) {
         // prevents [.+-e] from being inputed

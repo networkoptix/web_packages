@@ -33,51 +33,55 @@ export class RestartServerModalContent {
     }
 
     ngOnInit() {
+        let initialRuntimeId;
+        const options = {
+            classname: 'success',
+            autohide: true,
+            delay: this.CONFIG.alertTimeout
+        };
         this.restartServer = this.processService
             .createProcess(() => {
-                const options = {
-                    classname: 'success',
-                    autohide: true,
-                    delay: this.CONFIG.alertTimeout
-                };
-                let initialRuntimeId;
                 return this.system.getModuleInfo(this.serverId).toPromise().then(res => {
                     initialRuntimeId = res.reply.runtimeId;
-                    this.activeModal.close('restarting');
-                    this.system.restartServer(this.serverId).then(() => {
-                        const serverSubscription = this.system.getModuleInfo(this.serverId)
-                            .pipe(
-                                map((res: any) => {
-                                    if (res.reply.id !== this.serverId) {
-                                        throw Error('server id should be the same');
-                                    }
-                                    if (res.reply.runtimeId === initialRuntimeId) {
-                                        throw Error('runtime id should be different after restart');
-                                    }
-                                }),
-                                retryWhen(errors =>
-                                    errors.pipe(delayWhen(() =>
-                                        timer(4000)
-                                    ))
-                                )
-                            )
-                            .subscribe(() => {
-                                this.system.currentServerNotBusy = true;
-                                this.system.systemInfo = this.system;
-                                this.toastService.show(this.LANG.servers.restartSuccessful, options);
-                                serverSubscription.unsubscribe();
-                            });
-                        })
+                    return this.system.restartServer(this.serverId)
                         .catch(() => {
+                            this.system.currentServerNotBusy = true;
                             options.classname = 'warning';
                             this.toastService.show(this.LANG.servers.restartFailed, options);
                         });
                     })
                     .catch(() => {
+                        this.system.currentServerNotBusy = true;
                         options.classname = 'warning';
                         this.toastService.show(this.LANG.servers.getModuleFailed, options);
                     });
-            }, { successMessage: this.LANG.servers.beginRestart });
+            }, { successMessage: this.LANG.servers.beginRestart })
+            .then(() => {
+                this.activeModal.close('restarting');
+                const serverSubscription = this.system.getModuleInfo(this.serverId)
+                    .pipe(
+                        map((res: any) => {
+                            if (res.reply.id !== this.serverId) {
+                                throw Error('server id should be the same');
+                            }
+                            if (res.reply.runtimeId === initialRuntimeId) {
+                                throw Error('runtime id should be different after restart');
+                            }
+                        }),
+                        retryWhen(errors =>
+                            errors.pipe(delayWhen(() =>
+                                timer(4000)
+                            ))
+                        )
+                    )
+                    .subscribe(() => {
+                        this.system.currentServerNotBusy = true;
+                        this.system.systemInfo = this.system;
+                        this.toastService.show(this.LANG.servers.restartSuccessful, options);
+                        serverSubscription.unsubscribe();
+                    });
+                return true;
+                });
     }
 
     close() {

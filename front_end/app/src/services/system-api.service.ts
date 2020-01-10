@@ -239,20 +239,18 @@ export class NxSystemAPI {
         return this.post('/ec2/saveMediaServerUserAttributes', { serverId, serverName }).toPromise();
     }
 
-    getServerStats() {
-        console.log('urlBase in getServerStats', this.urlBase);
-        return this.get('/api/statistics');
-    }
-
     restartServer() {
-        console.log('restartServer called');
         return this.post('/api/restart').toPromise()
             .catch(err => Promise.reject(err));
     }
 
     getModuleInfo() {
-        console.log('getModule called in system-api service');
         return this.get('/api/moduleInformation');
+    }
+
+    detachFromSystem(currentPassword) {
+        // needs to add the proper owner somehow
+        return this.post('/api/detachFromSystem', { currentPassword });
     }
     /* End of Server settings */
 

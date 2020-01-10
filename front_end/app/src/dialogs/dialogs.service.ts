@@ -247,13 +247,15 @@ export class NxDialogsService {
         return this.createModal(RestartServerModalContent, options, params);
     }
 
-    detachServer(serverName) {
+    detachServer(system, serverId, serverName) {
         const options: any = {
             windowClass: 'modal-holder',
             backdrop   : 'static'
         };
 
         const params: any = {
+            system,
+            serverId,
             serverName,
             closable: true,
         };
