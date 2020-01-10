@@ -199,7 +199,7 @@ Language is changeable on the account page
     Click Button    ${ACCOUNT SAVE}
     Sleep    1
     Verify in Account Page
-    Wait Until Element is Visible    //header/span[text()='${account}']
+    Wait Until Element is Visible    //header/span[text()='${ACCOUNT INFORMATION}']
 
 Language change affects emails
     [tags]    C41575
@@ -242,6 +242,6 @@ Language change affects emails
 
 Should open account page in anonymous state
     [tags]    anonymous
-    Run keyword and continue on failure    Open page anonymously    ${url}/account    ${ACCOUNT SETTINGS TEXT} - ${PRODUCT_NAME}
+    Run keyword and continue on failure    Open page anonymously    ${url}/account    ${PRODUCT_NAME}
     Wait Until Element Is Visible    ${LOG IN MODAL}
     Check Log In    button=None
