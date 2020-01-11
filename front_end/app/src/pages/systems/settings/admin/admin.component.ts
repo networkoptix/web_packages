@@ -220,47 +220,47 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                     this.systemSubscription = system.infoSubject.subscribe(() => {
                         this.settingsService.footerSubject.next(true);
                         this.updateSettings(this.currentlyMerging);
-                    });
-                    if (!this.applyService.locked) {
-                        this.system.updateOrGetSystemSettings()
-                            .then(res => {
-                                const { settings } = res.reply;
-                                this.applyService.setVisible(false);
-                                this.applyService.hardReset();
-                                const sw = this.settingsWatchers;
-                                Object.keys(sw).forEach(setting => {
-                                    if (setting in settings) {
-                                        let curr = settings[setting];
-                                        /**
-                                         * sets initial values for system & security settings
-                                         * limitSessionDuration is the only one that's a number & not a boolean,
-                                         * so it needs custom code to handle
-                                         */
-                                        if (isNaN(curr)) {
-                                            sw[setting].value = curr === 'true';
-                                        } else {
-                                            curr = parseInt(curr);
-                                            sw.sessionLimitToggle.value = Boolean(curr);
-                                            this.timeUnitCount = curr;
-                                            if (curr % 60 === 0) {
-                                                this.timeUnitCount /= 60;
-                                                sw.sessionLimitUnit.value = this.hours;
+                        if (!this.applyService.locked) {
+                            this.system.updateOrGetSystemSettings()
+                                .then(res => {
+                                    const { settings } = res.reply;
+                                    this.applyService.setVisible(false);
+                                    this.applyService.hardReset();
+                                    const sw = this.settingsWatchers;
+                                    Object.keys(sw).forEach(setting => {
+                                        if (setting in settings) {
+                                            let curr = settings[setting];
+                                            /**
+                                             * sets initial values for system & security settings
+                                             * limitSessionDuration is the only one that's a number & not a boolean,
+                                             * so it needs custom code to handle
+                                             */
+                                            if (isNaN(curr)) {
+                                                sw[setting].value = curr === 'true';
                                             } else {
-                                                sw.sessionLimitUnit.value = this.minutes;
+                                                curr = parseInt(curr);
+                                                sw.sessionLimitToggle.value = Boolean(curr);
+                                                this.timeUnitCount = curr;
+                                                if (curr % 60 === 0) {
+                                                    this.timeUnitCount /= 60;
+                                                    sw.sessionLimitUnit.value = this.hours;
+                                                } else {
+                                                    sw.sessionLimitUnit.value = this.minutes;
+                                                }
+                                                sw[setting].value = this.timeUnitCount || 0;
+                                                this.timeUnitCount = this.timeUnitCount || 24;
+                                                this.selectedTimeUnit = this.limitSessionTimeUnits
+                                                                            .find(e => e.name === sw.sessionLimitUnit.value);
+                                                this.updateTimeUnitInput(this.selectedTimeUnit);
                                             }
-                                            sw[setting].value = this.timeUnitCount || 0;
-                                            this.timeUnitCount = this.timeUnitCount || 24;
-                                            this.selectedTimeUnit = this.limitSessionTimeUnits
-                                                                        .find(e => e.name === sw.sessionLimitUnit.value);
-                                            this.updateTimeUnitInput(this.selectedTimeUnit);
                                         }
-                                    }
+                                    });
+                                    this.settingsWatchersSet = true;
+                                    this.applyService.reset();
+                                    this.applyService.setVisible(true);
                                 });
-                                this.settingsWatchersSet = true;
-                                this.applyService.reset();
-                                this.applyService.setVisible(true);
-                            });
-                    }
+                        }
+                    });
 
                     this.deletingSystem = this.processService.createProcess(() => {
                         return this.system.deleteFromCurrentAccount();
