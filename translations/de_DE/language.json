@@ -23,7 +23,7 @@
     "debug": "Debug",
     "login": "Anmelden -",
     "download": "%VMS_NAME% herunterladen",
-    "downloadPlatform": "Download %VMS_NAME% for ",
+    "downloadPlatform": "Download %VMS_NAME% für ",
     "pageNotFound": "Seite nicht gefunden"
   },
   "errorCodes": {
@@ -59,7 +59,7 @@
     "passwordMismatch": "Falsches Passwort",
     "cantEditYourself": "Eigene Berechtigungen zu ändern ist nicht erlaubt",
     "cantEditAdmin": "Dieser Benutzer hat Administratorberechtigungen",
-    "cantOpenClient": "%VMS_NAME% application is not detected. <a href=\"/download\">Download</a>",
+    "cantOpenClient": "%VMS_NAME% wurde nicht gefunden. <a href=\"/download\">Download</a>",
     "lostConnection": "Verbindung zu {{systemName}} verloren",
     "thisSystem": "das System",
     "oldSafariNotSupported": "Versionen von Safari älter als 10 werden nicht unterstützt",
