@@ -1,5 +1,6 @@
 import {
-    Component, OnInit, Inject, ViewContainerRef
+    Component, OnInit, Inject,
+    ViewContainerRef, OnDestroy
 }                                    from '@angular/core';
 import { ActivatedRoute }            from '@angular/router';
 import { NxConfigService }           from '../../../../services/nx-config';
@@ -13,15 +14,16 @@ import { NxApplyService, Watcher }   from '../../../../services/apply.service';
 import { NxUriService }              from '../../../../services/uri.service';
 import { Subscription }              from 'rxjs';
 import { filter }                    from 'rxjs/operators';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 
+@AutoUnsubscribe()
 @Component({
     selector   : 'nx-server-component',
     templateUrl: 'servers.component.html',
     styleUrls  : ['servers.component.scss']
 })
 
-export class NxSystemServersComponent implements OnInit {
+export class NxSystemServersComponent implements OnInit, OnDestroy {
     CONFIG: any = {};
     LANG: any = {};
     system: NxSystem;
@@ -47,7 +49,13 @@ export class NxSystemServersComponent implements OnInit {
 
     private setupDefaults() {
         this.CONFIG = this.configService.getConfig();
-
+        this.LANG = this.language.getTranslations();
+        this.renameDisabled = true;
+        this.restartDisabled = true;
+        this.detachDisabled = true;
+        this.resetDisabled = true;
+        this.portChangeDisabled = true;
+        this.checking = false;
         // this.debugMode = this.CONFIG.allowDebugMode;
         this.menuService.setSection('servers');
     }
@@ -67,24 +75,14 @@ export class NxSystemServersComponent implements OnInit {
         this.setupDefaults();
     }
 
-    init(): void {}
-
     ngOnInit(): void {
-        this.LANG = this.language.getTranslations();
-        this.renameDisabled = true;
-        this.restartDisabled = true;
-        this.detachDisabled = true;
-        this.resetDisabled = true;
-        this.portChangeDisabled = true;
-        this.checking = false;
-
-
         this.routeParamsSubscription = this.route
             .params
             .subscribe(params => {
                 if (params.serverId) {
                     this.menuService.setDetailsSection(params.serverId);
                     this.serverIdFromParams = params.serverId;
+                    this.setServer();
                 }
             });
 
@@ -127,25 +125,31 @@ export class NxSystemServersComponent implements OnInit {
             this.saveSettings,
             () => this.applyService.reset(),
             [this.ipPortWatcher]);
-
-        this.init();
     }
 
-    setServer(): void {
-        let server;
-        if (this.serverIdFromParams) {
-            server = this.system.servers.find((server: any) => {
-                return server.id === this.serverIdFromParams;
-            });
-        }
-        if (typeof(server) === 'undefined') {
-            server = this.system.servers[0];
-        }
+    ngOnDestroy(): void {}
 
-        if (server) {
+    setServer(): void {
+        if (this.system && this.system.servers.length > 0) {
+            let server;
+            if (this.serverIdFromParams) {
+                server = this.system.servers.find((server: any) => {
+                    return server.id === this.serverIdFromParams;
+                });
+            }
+            if (typeof(server) === 'undefined') {
+                if (this.system.servers.length > 0) {
+                    server = this.system.servers[0];
+                    this.uriService.updateURI(`systems/${this.system.id}/servers/${server.id}`);
+                } else {
+                    return;
+                }
+            }
+
             this.applyService.hardReset();
             const { url } = server;
             const [ip, port] = url.slice(url.indexOf('//') + 2).split(':');
+            this.ipPortWatcher.value = port;
             server.ip = ip;
             server.osName = JSON.parse(server.osInfo).platform;
             this.selectedServer = server;
@@ -153,7 +157,7 @@ export class NxSystemServersComponent implements OnInit {
                 this.selectedServer.internalStatus = this.LANG.servers.status.checking;
             }
             this.checkIfOnline(server.id);
-            this.ipPortWatcher.value = port;
+            this.menuService.setDetailsSection(this.selectedServer.id);
 
             this.renameDisabled = !this.system.permissions.editAdmins;
             this.restartDisabled = !this.system.permissions.isAdmin;

@@ -42,7 +42,7 @@
                 <div class="server-setting-buttons">
                     <div class="left setting-buttons">
                         <button 
-                            class="btn btn-default mr-2"
+                            class="btn btn-default"
                             (click)="renameServer()"
                             [disabled]="renameDisabled || !system.currentServerNotBusy"
                         >
@@ -59,7 +59,7 @@
                     <ng-container *ngIf="CONFIG.isWebAdmin || CONFIG.debugMode">
                         <div class="right setting-buttons">
                             <button 
-                                class="btn btn-default mr-2"
+                                class="btn btn-default"
                                 (click)="detachServer()"
                                 [disabled]="detachDisabled || !system.currentServerNotBusy"
                                 *ngIf="system.servers.length > 1"

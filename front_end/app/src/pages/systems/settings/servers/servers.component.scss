@@ -60,6 +60,9 @@
         justify-content: space-between;
         .setting-buttons {
             display: flex;
+            button:first-child {
+                margin-right: 8px;
+            }
         }
     }
 
@@ -74,6 +77,12 @@
             }
             .setting-buttons {
                 flex-direction: column;
+                button {
+                    max-width: 100%;
+                }
+                button:first-child {
+                    margin-right: 0;
+                }
             }
         }
     }

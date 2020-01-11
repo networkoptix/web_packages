@@ -303,9 +303,9 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
     updateMenu() {
         this.systemNoAccess = false;
+        this.content.system = this.system;
 
         if (this.system.permissions.editUsers) {
-            this.content.system = this.system;
             let usersNode = this.content.level1.filter((node) => node.id === this.CONFIG.systemMenu.users.id)[0];
 
             if (!usersNode) {
@@ -331,17 +331,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 this.content.level1.push(usersNode);
             }
 
-            let serversNode = this.content.level1.filter((node) => node.id === this.CONFIG.systemMenu.servers.id)[0];
-            if (!serversNode) {
-                serversNode = {
-                    id: this.CONFIG.systemMenu.servers.id,
-                    icon: this.CONFIG.systemMenu.servers.icon,
-                    label: this.LANG.servers.servers,
-                    path: this.CONFIG.systemMenu.servers.path,
-                };
-                this.content.level1.push(serversNode);
-            }
-
             // Retain buttons
             if (usersNode.level2.length && usersNode.level2[0].id === 'buttons') {
                 // usersNode.level2 = [usersNode.level2[0]];
@@ -350,15 +339,12 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 usersNode.level2 = [];
             }
 
-            usersNode.level3 = [];
-            serversNode.level3 = [];
-
             const byParam = NxUtilsService.byParam((user) => {
                 return user.email;
             }, NxUtilsService.sortASC);
-
             this.system.users.sort(byParam);
 
+            usersNode.level3 = [];
             this.system.users.forEach((user) => {
                 const id = user.id.replace(/{|}/g, '');
                 usersNode.level3.push({
@@ -370,7 +356,28 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     isEnabled: user.isEnabled,
                 });
             });
+        } else { // remove Users
+            this.content.level1 = this.content.level1.filter(node => node.id !== this.CONFIG.systemMenu.users.id);
+        }
 
+        if (this.system.permissions.isAdmin) {
+            let serversNode = this.content.level1.find((node) => node.id === this.CONFIG.systemMenu.servers.id);
+            if (!serversNode) {
+                serversNode = {
+                    id: this.CONFIG.systemMenu.servers.id,
+                    icon: this.CONFIG.systemMenu.servers.icon,
+                    label: this.LANG.servers.servers,
+                    path: this.CONFIG.systemMenu.servers.path,
+                };
+                this.content.level1.push(serversNode);
+            }
+
+            const byParam = NxUtilsService.byParam((server) => {
+                return server.name;
+            }, NxUtilsService.sortASC);
+            this.system.servers.sort(byParam);
+
+            serversNode.level3 = [];
             this.system.servers.forEach(server => {
                 serversNode.level3.push({
                     id: server.id,
@@ -381,11 +388,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 });
             });
         } else {
-            // remove Users
-            const index = this.content.level1.findIndex(x => x.id === this.CONFIG.systemMenu.users.id);
-            if (index !== -1) {
-                this.content.level1.splice(index, 1);
-            }
+            this.content.level1 = this.content.level1.filter((node: any) => node.id !== this.CONFIG.systemMenu.servers.id);
         }
 
         this.content = {...this.content};

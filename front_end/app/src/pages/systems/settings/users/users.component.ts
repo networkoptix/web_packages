@@ -175,7 +175,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         if (this.system && this.system.users.length > 0) {
             let user;
             if (this.paramUser) {
-                 user = this.system.users.find((user: any) => {
+                user = this.system.users.find((user: any) => {
                     return user.id.replace(/{|}/g, '') === this.paramUser;
                 });
             }
