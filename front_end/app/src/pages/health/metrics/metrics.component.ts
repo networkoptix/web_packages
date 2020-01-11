@@ -70,6 +70,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
     tableWidthSubscription: SubscriptionLike;
 
     fixedLayoutClass: string;
+    layoutReady: boolean;
 
     @ViewChild('search', { static: false }) elementSearch: ElementRef;
     @ViewChild('tableContainer', { static: false }) tableContainer: ElementRef;
@@ -180,6 +181,8 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
 
     setActiveEntity(entity) {
         const queryParams: Params = {};
+        this.layoutReady = false;
+
         if (typeof entity === 'string') {
             this.activeEntity = this.selectedValues[entity];
             if (!this.activeEntity) {
@@ -229,10 +232,13 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
                     } else {
                         this.fixedLayoutClass = (isTableFit) ? '' : 'fixedLayout--no-panel';
                     }
+
+                    this.layoutReady = true;
                 }
 
                 if (this.mobileDetailMode && this.activeEntity) {
                     this.fixedLayoutClass = 'fixedLayout--no-panel';
+                    this.layoutReady = true;
                 }
             }
         });

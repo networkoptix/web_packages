@@ -375,6 +375,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
 
         if (this.mobileDetailMode && this.activePanelEntity) {
             this.fixedLayoutClass = 'fixedLayout--no-panel';
+            this.layoutReady = true;
         }
     }
 }
