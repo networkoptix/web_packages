@@ -62,7 +62,11 @@
             <header>
                 <h4 translate>System Settings</h4>
             </header>
-            <nx-pre-loader *ngIf="!settingsWatchersSet"></nx-pre-loader>
+            <div class="placeholder" *ngIf="system && !system.isOnline">
+                <span class="glyphicon glyphicon-remove icon"></span>
+                <span translate>Can't load system settings</span>
+            </div>
+            <nx-pre-loader *ngIf="!settingsWatchersSet && (system && system.isOnline)"></nx-pre-loader>
             <nx-section *ngIf="settingsWatchersSet">
                 <div class="m-0">
                 <form id="systemSettingsForm" class="form-horizontal" #systemSettingsForm="ngForm"
@@ -131,7 +135,11 @@
             <header>
                 <h4 translate>Security</h4>
             </header>
-            <nx-pre-loader *ngIf="!settingsWatchersSet"></nx-pre-loader>
+            <div class="placeholder" *ngIf="system && !system.isOnline">
+                <span class="glyphicon glyphicon-remove icon"></span>
+                <span translate>Can't load security settings</span>
+            </div>
+            <nx-pre-loader *ngIf="!settingsWatchersSet && (system && system.isOnline)"></nx-pre-loader>
             <nx-section *ngIf="settingsWatchersSet">
                 <form id="securitySettingsForm" class="form-horizontal" novalidate autocomplete="off">
                     <div class="form-check p-0 mr-4">
