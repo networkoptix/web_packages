@@ -401,9 +401,6 @@ export class NxSystem extends System implements OnDestroy {
         const processData = (users, predefinedRoles, userDefinedRoles) => {
             this.updateAccessRoles(predefinedRoles, userDefinedRoles);
 
-            users = users.filter((user) => {
-                return user.isCloud;
-            });
             // const accessRightsAssoc = _.indexBy(accessRights,'userId'); // Leave commented out
             users.forEach((user) => {
                 user.permissions = this.normalizePermissionString(user.permissions);

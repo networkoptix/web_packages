@@ -50,7 +50,6 @@
         justify-content     : center;
         width               : 18px;
         height              : 26px;
-        background-position : -99px -135px;
     }
 
     &.selected {
@@ -60,10 +59,6 @@
             min-height: auto;
         }
     
-        .menu-level-3-icon {
-            background-position : -123px -135px;
-        }
-        
         .menu-level-3-additional {
             font-family : $font-family-regular;
         }
@@ -77,10 +72,6 @@
         @include ellipsis;
         line-height : inherit;
     }
-
-    //span {
-    //    color : $light16;
-    //}
 }
 
 .menu-level-3-additional {
@@ -88,7 +79,6 @@
     font-family: $font-family-regular;
 }
 
-//.menu-level-3 {
-//    color        : blue;
-//    padding-left : 20px;
-//}
+.menu-level-3.selected .menu-level-3-icon.glyphicon-cloud {
+    background-position : -123px -135px;
+}

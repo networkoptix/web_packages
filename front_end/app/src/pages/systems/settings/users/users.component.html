@@ -13,7 +13,7 @@
                                (ngModelChange)="updateEnabled($event);"
                     ></nx-switch>
                 </div>
-                <h2 class="user-email mb-2">{{selectedUser.email}}</h2>
+                <h2 class="user-email mb-2">{{selectedUser.email || selectedUser.name}}</h2>
                 <span class="user-name">{{selectedUser.fullName}}</span>
             </header>
 

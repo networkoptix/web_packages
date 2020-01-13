@@ -349,8 +349,8 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 const id = user.id.replace(/{|}/g, '');
                 usersNode.level3.push({
                     id,
-                    icon : user.isCloud ? 'glyphicon-cloud' : '',
-                    label: user.email,
+                    icon : user.isCloud ? 'glyphicon-cloud' : 'glyphicon-user-settings',
+                    label: user.email || user.name,
                     additionalLabel:  this.LANG.accessRoles[user.role.name] && this.LANG.accessRoles[user.role.name].label || user.role.name,
                     path : 'users/' + id,
                     isEnabled: user.isEnabled,
