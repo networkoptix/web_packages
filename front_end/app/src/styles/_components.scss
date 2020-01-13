@@ -81,6 +81,15 @@
         padding-bottom : 1px;
     }
 
+    // IE11
+    @media all and (-ms-high-contrast : none), (-ms-high-contrast : active) {
+        .promo-block {
+            @include media-breakpoint-up(sm) {
+                flex : 0 0 31.4% !important;
+            }
+        }
+    }
+
     .promo-block {
         @extend .card;
         text-align : center;

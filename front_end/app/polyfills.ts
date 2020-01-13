@@ -1,5 +1,7 @@
 import 'core-js/es6';
 import 'core-js/es7/reflect';
+import 'core-js/es7/object';   // IE 11 needs Object.entries
+
 require('zone.js/dist/zone');
 
 if (!Element.prototype.matches) {
