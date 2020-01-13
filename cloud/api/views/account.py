@@ -31,13 +31,10 @@ def set_session_credentials(request, email, password):
         keeps using it at least once per week the credentials will continue to remain valid.
         Otherwise the credentials will become invalid and the user will have to login again.
     """
-    ONE_WEEK = 60 * 60 * 24 * 7  # One week in seconds
-    TWO_WEEKS = ONE_WEEK * 2  # Two weeks in seconds
     tempCredentials = Account.create_temporary_credentials(email, password,
-                                                           expiration_period=TWO_WEEKS,
+                                                           expiration_period=settings.AUTHENTICATED_SESSION_COOKIE_AGE,
                                                            auto_prolongation_enabled=True,
-                                                           prolongation_period=ONE_WEEK)
-    print(tempCredentials)
+                                                           prolongation_period=settings.AUTHENTICATED_SESSION_COOKIE_AGE)
     request.session['login'] = tempCredentials['login']
     request.session['password'] = tempCredentials['password']
 
