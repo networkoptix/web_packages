@@ -17,7 +17,7 @@ ${variables_file}    variables-env.robot
 ${options}    true
 ${headless}    true
 @{chrome_arguments}    --disable-gpu    --no-sandbox    --log-level=3    --start-maximized
-@{chrome_arguments_headless}    --disable-infobars    --headless    --disable-gpu    --no-sandbox    --log-level=3
+@{chrome_arguments_headless}    --disable-infobars    --disable-gpu    --no-sandbox    --log-level=3    --headless    
 ${speed}    0
 ${selenium_timeout}    30
 
@@ -255,7 +255,7 @@ Share To
     Wait Until Element Is Visible    ${SHARE PERMISSIONS DROPDOWN}
     Sleep    1
     Click Button    ${SHARE PERMISSIONS DROPDOWN}
-    Wait Until Element Is Visible    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${permissions}']
+    Wait Until Elements Are Visible    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${permissions}']    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${permissions}']/..
     Click Link    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${permissions}']/..
     Click Button    ${SHARE BUTTON MODAL}
     Check For Alert    ${NEW PERMISSIONS SAVED}

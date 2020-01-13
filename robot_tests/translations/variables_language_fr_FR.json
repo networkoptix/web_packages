@@ -65,7 +65,7 @@
     "YOUR ACCESS LEVEL TEXT": "Votre niveau d'accès",
     "USER DISABLED TEXT": "Usager désactivé",
     "NO UNSAVED CHANGES TEXT": "Aucun changement non enregistrée",
-    "ABOUT": "À Propos",
+    "ABOUT": "À propos de",
     "KNOWN LIMITATIONS": "Limitations connues",
     "SUPPORT": "Support",
     "REMOTE CONNECTIVITY": "Connectivité à distance",
@@ -203,5 +203,8 @@
     "ALLOW ONLY SECURE TEXT": "Autoriser uniquement les connexions sécurisées",
     "ENCRYPT VIDEO TRAFFIC TEXT": "Crypter le trafic vidéo",
     "ENCRYPT VIDEO TRAFFIC DESCRIPTION TEXT": "Seul le trafic vidéo client-serveur peut être chiffré.",
-    "LIMIT SESSION DURATION TEXT": "Limiter la durée de session à"
+    "LIMIT SESSION DURATION TEXT": "Limiter la durée de session à",
+    "RELEASES TAB TEXT"					   :	"Releases",
+    "PATCHES TAB TEXT"					   :	"Patches",
+    "BETAS TAB TEXT"					   : 	"Betas"
 }

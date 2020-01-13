@@ -176,6 +176,6 @@ Password can't be changed if current password is not provided or incorrect
 
 should open change password page in anonymous state
     [tags]    anonymous
-    Open page anonymously    ${url}/account/password    ${CHANGE PASSWORD TITLE TEXT} - ${PRODUCT_NAME}
+    Open page anonymously    ${url}/account/password    ${PRODUCT_NAME}
     Wait Until Element Is Visible    ${LOG IN MODAL}
     Check Log In    button=None
