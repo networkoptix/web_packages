@@ -462,7 +462,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
             filename = `report-${this.reportSnapshot.time}.json`;
         }
 
-        const uri = 'data:text/json;charset=UTF-8,"' + encodeURIComponent(JSON.stringify(this.reportSnapshot));
+        const uri = 'data:text/json;charset=UTF-8,' + encodeURIComponent(JSON.stringify(this.reportSnapshot));
 
         const a: HTMLAnchorElement = this.document.createElement('a') as HTMLAnchorElement;
         a.href     = uri.toString();
