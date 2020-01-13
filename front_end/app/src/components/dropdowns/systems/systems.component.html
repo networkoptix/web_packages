@@ -35,8 +35,8 @@
                 <li class="dropdown-item-container" *ngFor="let system of systems; trackBy: trackItem">
                     <a class="dropdown-item inset"
                        [ngClass]="{ 'selected': system == activeSystem }"
-                       [href]="getUrlFor(system.id)"
-                       (click)="show = false; return;">
+                       (click)="updateURI(system.id)"
+                    >
                     <span>
                         <span class="glyphicon glyphicon-home"></span>
                         <span class="system-name">{{system.name}}</span>

@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, SimpleChanges, OnChanges } from '@angular/core';
 import { NxConfigService }                                    from '../../../services/nx-config';
+import { NxUriService } from '../../../services/uri.service';
 
 @Component({
     selector: 'nx-systems',
@@ -23,7 +24,10 @@ export class NxSystemsDropdown implements OnInit, OnChanges {
     params: any;
     show: boolean;
 
-    constructor(private configService: NxConfigService) {
+    constructor(
+        private configService: NxConfigService,
+        private uriService: NxUriService
+    ) {
 
         this.show = false;
         this.config = configService.getConfig();
@@ -36,7 +40,8 @@ export class NxSystemsDropdown implements OnInit, OnChanges {
         return item.id;
     }
 
-    getUrlFor(sid) {
+    updateURI(sid) {
+        this.show = false;
         let url = '/systems/' + sid;
 
         if (this.endpoint.view) {
@@ -47,7 +52,7 @@ export class NxSystemsDropdown implements OnInit, OnChanges {
             url += '/health/';
         }
 
-        return url;
+        this.uriService.updateURI(url);
     }
 
 

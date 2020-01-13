@@ -17,15 +17,7 @@
 
     
     .placeholder {
-        @include font-source($font-family-regular, $font-size-base, $light17);
-        height: 200px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        .icon {
-            margin: 0 auto 8px;
-        }
+        @extend #placeholder
     }
 
     label {
