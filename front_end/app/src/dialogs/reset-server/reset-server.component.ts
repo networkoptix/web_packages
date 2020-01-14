@@ -38,7 +38,7 @@ export class ResetServerModalContent {
         this.resetServer = this.processService
             .createProcess(() => {
                 const options = {
-                    classname: 'success',
+                    classname: 'warning',
                     autohide: true,
                     delay: this.CONFIG.alertTimeout
                 };
@@ -69,24 +69,16 @@ export class ResetServerModalContent {
                                     this.system.currentServerNotBusy = true;
                                     this.system.systemInfo = this.system;
                                     const successMessage = this.LANG.servers.resetSuccessful.replace('{{ serverName }}', this.serverName);
+                                    options.classname = 'success';
                                     this.toastService.show(successMessage, options);
                                     serverSubscription.unsubscribe();
                                 });
                         })
-                        .catch(() => {
-                            options.classname = 'warning';
-                            this.toastService.show(this.LANG.servers.restartFailed, options);
-                        });
+                        .catch(() => this.toastService.show(this.LANG.servers.restartFailed, options));
                     })
-                    .catch(() => {
-                        options.classname = 'warning';
-                        this.toastService.show(this.LANG.servers.getModuleFailed, options);
-                    });
+                    .catch(() => this.toastService.show(this.LANG.servers.getModuleFailed, options));
                 })
-                .catch(() => {
-                    options.classname = 'warning';
-                    this.toastService.show(this.LANG.servers.resetFailed, options);
-                });
+                .catch(() => this.toastService.show(this.LANG.servers.resetFailed, options));
             }, { successMessage: this.LANG.servers.beginReset });
     }
 
