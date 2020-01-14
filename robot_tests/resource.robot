@@ -84,6 +84,7 @@ Check Language Logged In
 
 Set Language Anonymous
     [arguments]    ${lang}=${LANGUAGE}
+    Sleep     1
     Wait Until Element Is Visible    ${LANGUAGE DROPDOWN}
     Click Button    ${LANGUAGE DROPDOWN}
     Wait Until Element Is Visible    ${LANGUAGE TO SELECT}
@@ -572,24 +573,24 @@ Wait Until Number Of Tabs Are Open
     Wait For Condition       return ${current tabs}==${number}
 
 Save Cookies
-    ${saved cookie1} =     Get Cookie    _ga
-    ${saved cookie2} =     Get Cookie    _gat_UA-51046510-4
-    ${saved cookie3} =     Get Cookie    _gid
+    #${saved cookie1} =     Get Cookie    _ga
+    #${saved cookie2} =     Get Cookie    _gat_UA-51046510-4
+    #${saved cookie3} =     Get Cookie    _gid
     ${saved cookie4} =     Get Cookie    csrftoken
     ${saved cookie5} =     Get Cookie    language
     ${saved cookie6} =     Get Cookie    sessionid
-    ${cookies} =     Create List    ${saved cookie1}    ${saved cookie2}    ${saved cookie3}    ${saved cookie4}    ${saved cookie5}    ${saved cookie6}
+    ${cookies} =     Create List    ${saved cookie4}    ${saved cookie5}    ${saved cookie6}
     [return]     ${cookies}
 
 Apply Saved Cookies
     [arguments]   ${cookies}
     Delete All Cookies
-    FOR    ${i}     IN RANGE    1    4
+    FOR    ${i}     IN RANGE    2
         Add Cookie    ${cookies[${i}].name}    ${cookies[${i}].value}
     END
-    ${session expiry} =    Convert To String    ${cookies[5].expiry}
+    ${session expiry} =    Convert To String    ${cookies[2].expiry}
     Run Keyword Unless    "${session expiry}"=="None"
-    ...    Add Cookie    ${cookies[5].name}    ${cookies[5].value}     expiry=${session expiry}
+    ...    Add Cookie    ${cookies[2].name}    ${cookies[2].value}     expiry=${session expiry}
     Reload Page
 
 Persist Current Login State
