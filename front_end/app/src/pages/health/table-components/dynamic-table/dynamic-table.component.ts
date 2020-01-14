@@ -61,6 +61,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
     offset: number;
     currentPage: number;
     pageSize: number;
+    startIndex: number;
     pager: any = {};
     pagedItems: any[];
     pagerMaxSize: number;
@@ -73,7 +74,6 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
     scrollHeight: number;
     tableScrollFixed: boolean;
     elementWidth: any;
-    tableReady: boolean;
 
     resizeSubscription: SubscriptionLike;
 
@@ -99,7 +99,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         this.pagerMaxSize = this.CONFIG.ipvd.pagerMaxSize;
         this.currentPage = 1;
         this.pageSize = this.CONFIG.layout.tableLarge.rows;
-        this.tableReady = false;
+        this.healthService.tableReady = false;
 
         this.resizeSubscription = this.scrollMechanicsService.windowSizeSubject.subscribe(() => {
             if (this.dataTable) {
@@ -116,9 +116,9 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes.dimensions && !changes.dimensions.firstChange && changes.dimensions.currentValue.length) {
-            this.setTableDimensions();
-        }
+        let setPage;
+        let setIndex;
+        let resetURI;
 
         if (changes.activeEntity) {
             this.selectedEntity = changes.activeEntity.currentValue;
@@ -130,30 +130,39 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
 
             if (changes.headers.previousValue !== undefined &&
                     changes.headers.previousValue !== changes.headers.currentValue) {
-                const queryParams: Params = {};
-                queryParams.page = undefined;
-                queryParams.sortBy = undefined;
-                this.uri.updateURI(undefined, queryParams);
+                resetURI = true;
             }
         }
 
         if (changes.elements) {
-            if (!deepEqual(changes.elements.currentValue, changes.elements.previousValue)) {
-                this._elements = Object.values(changes.elements.currentValue);
-                this.setPage(1);
-
-                setTimeout(() => {
-                    const queryParams: Params = {};
-                    queryParams.sortBy = undefined;
-                    queryParams.page = undefined;
-                    this.uri
-                        .updateURI(undefined, queryParams)
-                        .then(() => {
-                            this.sortOrderASC = true;
-                            this.selectedHeader = undefined;
-                        });
-                });
+            this._elements = Object.values(changes.elements.currentValue);
+            if (!changes.elements.firstChange) {
+                setPage = 1;
+                resetURI = true;
             }
+        }
+
+        if (changes.dimensions && !changes.dimensions.firstChange && changes.dimensions.currentValue.length) {
+            this.setTableDimensions();
+            setIndex = this.startIndex;
+        }
+
+        if (setPage !== undefined || setIndex !== undefined) {
+            this.setPage(setPage, setIndex);
+        }
+
+        if (resetURI) {
+            setTimeout(() => {
+                const queryParams: Params = {};
+                queryParams.sortBy = undefined;
+                queryParams.page = undefined;
+                this.uri
+                    .updateURI(undefined, queryParams)
+                    .then(() => {
+                        this.sortOrderASC = true;
+                        this.selectedHeader = undefined;
+                    });
+            });
         }
     }
 
@@ -176,8 +185,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
             this.pageSize = 5;
         }
 
-        this.setPagedItems();
-        this.tableReady = true;
+        this.healthService.tableReady = true;
 
         this.scrollMechanicsService.setElementTableWidth(this.dataTable.nativeElement.offsetWidth);
     }
@@ -192,7 +200,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
             this.selectedHeader = undefined;
         }
 
-        this.setPage(this.params.page || 1);
+        this.startIndex = parseInt(this.params.index) || 0;
     }
 
     ngAfterViewInit(): void {
@@ -218,25 +226,39 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         this.selectedEntity = element;
     }
 
-    setPagedItems() {
-        const startIndex = (this.currentPage - 1) * this.pageSize;
-        const endIndex = startIndex + this.pageSize;
-        this.pagedItems = this._elements.slice(startIndex, endIndex);
+    setPagedItems(startIndex?) {
+        if (!startIndex) {
+            this.startIndex = (this.currentPage - 1) * this.pageSize;
+        } else {
+            const page = Math.floor(this.startIndex / this.pageSize) + 1;
+            this.startIndex = (page - 1) * this.pageSize;
+            if (page !== this.currentPage) {
+                this.currentPage = page;
+            }
+        }
+        const endIndex = this.startIndex + this.pageSize;
+        this.pagedItems = this._elements.slice(this.startIndex, endIndex);
     }
 
-    setPage(page: number) {
+    setPage(page: number, startIndex?) {
         // TODO: possible optimization - we may not need snapshot params here
         this.params = { ...this.route.snapshot.queryParams };
-        this.currentPage = page;
+        if (page) {
+            this.currentPage = page;
+        }
 
-        const pageParam = (this.currentPage === 1) ? undefined : this.currentPage;
+        if (startIndex) {
+            this.startIndex = startIndex;
+        }
+
         // preserve window offset
         this.uri.pageOffset = window.pageYOffset;
-        this.setPagedItems();
+        this.setPagedItems(startIndex);
+        const index = (this.startIndex === 0) ? undefined : this.startIndex;
 
-        if (this.params && parseInt(this.params.page, 10) !== pageParam) { // this.params.page is string - no strict comparison
+        if (this.params && parseInt(this.params.index, 10) !== index) { // this.params.page is string - no strict comparison
             const queryParams: Params = {};
-            queryParams.page = (this.currentPage === 1) ? undefined : this.currentPage;
+            queryParams.index = (this.currentPage === 1) ? undefined : this.startIndex;
 
             this.uri.updateURI(this.uri.getURL(), queryParams);
         }

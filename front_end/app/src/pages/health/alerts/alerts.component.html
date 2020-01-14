@@ -20,7 +20,8 @@
             </div>
             <hr class="pb-3 m-0">
 
-            <div *ngIf="tableHeaders && healthService.alertsValues && !mobileDetailMode" #table
+            <div *ngIf="tableHeaders && healthService.alertsValues" #table
+                 [hidden]="mobileDetailMode"
                  [ngClass]="{'data-wrapper' : !activeTableEntity}">
 
                 <div class="" *ngIf="!mobileDetailMode" #search>

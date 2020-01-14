@@ -112,6 +112,12 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
 
             this.setLayout();
         });
+
+        this.healthService.tableReadySubject.subscribe(ready => {
+            if (ready) {
+                this.setLayout();
+            }
+        });
     }
 
     ngAfterViewInit() {
@@ -362,8 +368,8 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
                 // area available to the table (2/3 + gutters
                 const availAreaWidth = areaWidth / 3 * 2 + 46;
 
-                const isTableFit = (availAreaWidth > tableWidth);
-                if (this.activeTableEntity) {
+                const isTableFit = (availAreaWidth > tableWidth) && !this.mobileDetailMode;
+                if (this.activeTableEntity && !this.mobileDetailMode) {
                     this.fixedLayoutClass = (isTableFit) ? '' : 'fixedLayout--with-panel';
                 } else {
                     this.fixedLayoutClass = (isTableFit) ? '' : 'fixedLayout--no-panel';

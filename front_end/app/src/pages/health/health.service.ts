@@ -14,6 +14,7 @@ export class NxHealthService {
     valuesSubject = new BehaviorSubject(undefined);
     alarmsSubject = new BehaviorSubject(undefined);
     systemSubject = new BehaviorSubject(undefined);
+    tableReadySubject = new BehaviorSubject(undefined);
 
     importedData: boolean;
     tableHeaders: any;
@@ -66,6 +67,14 @@ export class NxHealthService {
 
     set system(system) {
         this.systemSubject.next(system);
+    }
+
+    get tableReady() {
+        return this.tableReadySubject.getValue();
+    }
+
+    set tableReady(tableReady) {
+        this.tableReadySubject.next(tableReady);
     }
 
     secondsToTime(seconds, format = 'duration') {

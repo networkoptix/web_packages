@@ -2,14 +2,14 @@
 <div class="row p-0 m-0 d-flex">
 
     <div class="text-placeholder order-1 order-md-0 m-0 p-0 pr-2"
-         *ngIf="!pagedItems.length" translate>Nothing Found</div>
+         *ngIf="!_elements.length" translate>Nothing Found</div>
 </div>
 
 <div class="scroll-wrapper" #nxScrollWrapper>
 
     <div class="nx-table-wrapper" id="nx-table" #nxTable
-         *ngIf="pagedItems.length" #dynamicTable
-         [ngStyle]="{'margin-left': tableReady ? undefined : '-9999px'}">
+         *ngIf="_elements.length" #dynamicTable
+         [ngStyle]="{'margin-left': healthService.tableReady ? undefined : '-9999px'}">
 
         <div *ngIf="tableHeader" class="table-header" [innerText]="tableHeader" #tableHeaderElement></div>
         <div class="table-wrapper">
@@ -78,6 +78,7 @@
         <div class="vertical-align ml-0 clearfix">
             <nav aria-label="Cameras table navigation" class="pagination-nav pt-3 pb-3">
                 <ngb-pagination
+                        *ngIf="healthService.tableReady"
                         [collectionSize]="_elements.length"
                         [maxSize]="pagerMaxSize"
                         [pageSize]="pageSize"
