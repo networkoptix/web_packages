@@ -77,6 +77,10 @@ export class NxHealthService {
         this.tableReadySubject.next(tableReady);
     }
 
+    pad(n) {
+        return n < 10 ? '0' + n : n;
+    }
+
     secondsToTime(seconds, format = 'duration') {
         const timeUnits = ['d', 'h', 'm', 's'];
         const timeDivisors = {d: 60 * 60 * 24, h: 60 * 60, m: 60, s: 1};
@@ -101,7 +105,7 @@ export class NxHealthService {
             }
             time += `${timeValues.m}m`;
         } else {
-            time += `${timeValues.h.toString().padStart(2, '0')}:${timeValues.m.toString().padStart(2, '0')}:${timeValues.s.toString().padStart(2, '0')}`;
+            time += `${this.pad(timeValues.h)}:${this.pad(timeValues.m)}:${this.pad(timeValues.s)}`;
         }
 
         return time;

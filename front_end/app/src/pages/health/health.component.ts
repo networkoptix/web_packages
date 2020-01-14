@@ -19,6 +19,7 @@ import { BreakpointObserver }                    from '@angular/cdk/layout';
 import { WINDOW }                                from '../../services/window-provider';
 import { DOCUMENT }                              from '@angular/common';
 import { DomSanitizer }                          from '@angular/platform-browser';
+import { DeviceDetectorService }                 from 'ngx-device-detector';
 
 @AutoUnsubscribe()
 @Component({
@@ -64,7 +65,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                 private ribbonService: NxRibbonService,
                 private scrollMechanicsService: NxScrollMechanicsService,
                 private breakpointObserver: BreakpointObserver,
-                private domSanitizer: DomSanitizer,
+                private deviceService: DeviceDetectorService,
                 @Inject(WINDOW) private window: any,
                 @Inject(DOCUMENT) private document: any
     ) {
@@ -462,15 +463,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
             filename = `report-${this.reportSnapshot.time}.json`;
         }
 
-        const uri = 'data:text/json;charset=UTF-8,' + encodeURIComponent(JSON.stringify(this.reportSnapshot));
-
-        const a: HTMLAnchorElement = this.document.createElement('a') as HTMLAnchorElement;
-        a.href     = uri.toString();
-        a.download = filename;
-        this.document.body.appendChild(a);
-        a.click();
-
-        this.document.body.removeChild(a);
+        this.utilsService.saveAs(this.reportSnapshot, filename, 'text/json');
     }
 
     fileDropped(files: NgxFileDropEntry[]) {
