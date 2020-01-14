@@ -60,6 +60,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
 
     routeSubscription: SubscriptionLike;
     breakpointSubscription: SubscriptionLike;
+    tableReadySubscription: SubscriptionLike;
 
     elementTilesHeight: number;
     elementSearchHeight: number;
@@ -141,7 +142,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
             this.setLayout();
         });
 
-        this.healthService.tableReadySubject.subscribe(ready => {
+        this.tableReadySubscription = this.healthService.tableReadySubject.subscribe(ready => {
             if (ready) {
                 this.setLayout();
             }

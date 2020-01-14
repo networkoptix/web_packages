@@ -32,6 +32,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
     params: any = {};
 
     breakpointSubscription: SubscriptionLike;
+    tableReadySubscription: SubscriptionLike;
     mobileDetailMode: boolean;
     breakpoint: string;
 
@@ -113,7 +114,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
             this.setLayout();
         });
 
-        this.healthService.tableReadySubject.subscribe(ready => {
+        this.tableReadySubscription = this.healthService.tableReadySubject.subscribe(ready => {
             if (ready) {
                 this.setLayout();
             }
