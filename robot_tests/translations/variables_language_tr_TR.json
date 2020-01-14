@@ -203,5 +203,8 @@
     "ALLOW ONLY SECURE TEXT": "Sadece güvenli bağlantılara izin ver",
     "ENCRYPT VIDEO TRAFFIC TEXT": "Video trafiğini şifrele",
     "ENCRYPT VIDEO TRAFFIC DESCRIPTION TEXT": "Yalnızca istemci-sunucu video trafiği şifrelenebilir.",
-    "LIMIT SESSION DURATION TEXT": "Oturum süresini sınırla"
+    "LIMIT SESSION DURATION TEXT": "Oturum süresini sınırla",
+    "RELEASES TAB TEXT": "Releases",
+    "PATCHES TAB TEXT": "Patches",
+    "BETAS TAB TEXT": "Betas"
 }

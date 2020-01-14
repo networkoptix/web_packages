@@ -203,5 +203,8 @@
     "ALLOW ONLY SECURE TEXT": "Alleen beveiligde verbindingen toestaan",
     "ENCRYPT VIDEO TRAFFIC TEXT": "Versleutel videoverkeer",
     "ENCRYPT VIDEO TRAFFIC DESCRIPTION TEXT": "Alleen client-server videoverkeer kan worden gecodeerd.",
-    "LIMIT SESSION DURATION TEXT": "Beperk sessiegeduur"
+    "LIMIT SESSION DURATION TEXT": "Beperk sessiegeduur",
+    "RELEASES TAB TEXT": "Releases",
+    "PATCHES TAB TEXT": "Patches",
+    "BETAS TAB TEXT": "Betas"
 }

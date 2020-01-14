@@ -203,5 +203,8 @@
     "ALLOW ONLY SECURE TEXT": "Tillat bare sikre tilkoblinger",
     "ENCRYPT VIDEO TRAFFIC TEXT": "Krypter videotrafikk",
     "ENCRYPT VIDEO TRAFFIC DESCRIPTION TEXT": "Only client-server video traffic can be encrypted.",
-    "LIMIT SESSION DURATION TEXT": "Limit session duration to"
+    "LIMIT SESSION DURATION TEXT": "Limit session duration to",
+    "RELEASES TAB TEXT": "Releases",
+    "PATCHES TAB TEXT": "Patches",
+    "BETAS TAB TEXT": "Betas"
 }

@@ -203,5 +203,8 @@
     "ALLOW ONLY SECURE TEXT": "อนุญาตเฉพาะการเชื่อมต่อที่ปลอดภัย",
     "ENCRYPT VIDEO TRAFFIC TEXT": "เข้ารหัสการเข้าชมวิดีโอ",
     "ENCRYPT VIDEO TRAFFIC DESCRIPTION TEXT": "Only client-server video traffic can be encrypted.",
-    "LIMIT SESSION DURATION TEXT": "Limit session duration to"
+    "LIMIT SESSION DURATION TEXT": "Limit session duration to",
+    "RELEASES TAB TEXT": "Releases",
+    "PATCHES TAB TEXT": "Patches",
+    "BETAS TAB TEXT": "Betas"
 }

@@ -203,5 +203,8 @@
     "ALLOW ONLY SECURE TEXT": "אפשר חיבורים מאובטחים בלבד",
     "ENCRYPT VIDEO TRAFFIC TEXT": "הצפן תעבורת וידאו",
     "ENCRYPT VIDEO TRAFFIC DESCRIPTION TEXT": "ניתן להצפין רק תנועת וידאו של שרת לקוח.",
-    "LIMIT SESSION DURATION TEXT": "הגבל את משך ההפעלה ל"
+    "LIMIT SESSION DURATION TEXT": "הגבל את משך ההפעלה ל",
+    "RELEASES TAB TEXT": "Releases",
+    "PATCHES TAB TEXT": "Patches",
+    "BETAS TAB TEXT": "Betas"
 }

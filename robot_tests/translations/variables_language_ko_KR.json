@@ -203,5 +203,8 @@
     "ALLOW ONLY SECURE TEXT": "보안 연결 만 허용",
     "ENCRYPT VIDEO TRAFFIC TEXT": "비디오 트래픽 암호화",
     "ENCRYPT VIDEO TRAFFIC DESCRIPTION TEXT": "Only client-server video traffic can be encrypted.",
-    "LIMIT SESSION DURATION TEXT": "Limit session duration to"
+    "LIMIT SESSION DURATION TEXT": "Limit session duration to",
+    "RELEASES TAB TEXT": "Releases",
+    "PATCHES TAB TEXT": "Patches",
+    "BETAS TAB TEXT": "Betas"
 }

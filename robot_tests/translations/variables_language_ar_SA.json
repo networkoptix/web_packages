@@ -203,5 +203,8 @@
     "ALLOW ONLY SECURE TEXT": "السماح فقط بالاتصالات الآمنة",
     "ENCRYPT VIDEO TRAFFIC TEXT": "تشفير حركة الفيديو",
     "ENCRYPT VIDEO TRAFFIC DESCRIPTION TEXT": "يمكن تشفير حركة مرور فيديو العميل - الخادم فقط.",
-    "LIMIT SESSION DURATION TEXT": "قصر مدة الجلسة على"
+    "LIMIT SESSION DURATION TEXT": "قصر مدة الجلسة على",
+    "RELEASES TAB TEXT": "Releases",
+    "PATCHES TAB TEXT": "Patches",
+    "BETAS TAB TEXT": "Betas"
 }

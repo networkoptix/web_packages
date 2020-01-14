@@ -203,5 +203,8 @@
     "ALLOW ONLY SECURE TEXT": "僅允許安全連線",
     "ENCRYPT VIDEO TRAFFIC TEXT": "對影像串流通訊加密",
     "ENCRYPT VIDEO TRAFFIC DESCRIPTION TEXT": "僅能加密在客戶端-伺服器的影片傳輸。",
-    "LIMIT SESSION DURATION TEXT": "限制登入時間為"
+    "LIMIT SESSION DURATION TEXT": "限制登入時間為",
+    "RELEASES TAB TEXT": "Releases",
+    "PATCHES TAB TEXT": "Patches",
+    "BETAS TAB TEXT": "Betas"
 }

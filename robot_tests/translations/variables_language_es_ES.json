@@ -203,5 +203,8 @@
     "ALLOW ONLY SECURE TEXT": "Permitir solo conexiones seguras",
     "ENCRYPT VIDEO TRAFFIC TEXT": "Encriptar el tráfico de video",
     "ENCRYPT VIDEO TRAFFIC DESCRIPTION TEXT": "Solo se puede cifrar el tráfico de video cliente-servidor.",
-    "LIMIT SESSION DURATION TEXT": "Limite la duración de la sesión a"
+    "LIMIT SESSION DURATION TEXT": "Limite la duración de la sesión a",
+    "RELEASES TAB TEXT": "Releases",
+    "PATCHES TAB TEXT": "Patches",
+    "BETAS TAB TEXT": "Betas"
 }

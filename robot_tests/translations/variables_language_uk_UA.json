@@ -203,5 +203,8 @@
     "ALLOW ONLY SECURE TEXT": "Дозволити лише безпечні з'єднання",
     "ENCRYPT VIDEO TRAFFIC TEXT": "Шифрувати відео трафік",
     "ENCRYPT VIDEO TRAFFIC DESCRIPTION TEXT": "Лише відео трафік клієнт-серверу може бути зашифрованим.",
-    "LIMIT SESSION DURATION TEXT": "Обмежте тривалість сеансу до"
+    "LIMIT SESSION DURATION TEXT": "Обмежте тривалість сеансу до",
+    "RELEASES TAB TEXT": "Releases",
+    "PATCHES TAB TEXT": "Patches",
+    "BETAS TAB TEXT": "Betas"
 }
