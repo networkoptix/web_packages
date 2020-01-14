@@ -164,36 +164,6 @@ nx-dynamic-table {
             overflow      : hidden;
             text-overflow : ellipsis;
 
-            &.long-text {
-              width : 170px !important;
-            }
-
-            &.percent {
-              max-width :82px;
-              width : 82px;
-            }
-
-            &.short-text {
-              width : 81px !important;
-            }
-
-            &.text {
-              width : 100px !important;
-            }
-
-            &.volume-metric {
-              max-width : 74px !important;
-            }
-
-            &.no-max-width {
-              max-width : unset !important;
-            }
-
-            &.no-format {
-              width     : 118px;
-              max-width : 118px;
-            }
-
             .text-container {
               line-height: 16px;
               padding: 8px 0 8px 0;
@@ -374,4 +344,37 @@ nx-dynamic-table {
   .test * {
     fill : limegreen;
   }
+  .long-text {
+    max-width : 170px !important;
+    width : 170px !important;
+  }
+
+  .percent {
+    max-width :82px !important;
+    width : 82px !important;
+  }
+
+  .short-text {
+    max-width : 81px !important;
+    width : 81px !important;
+  }
+
+  .text {
+    max-width : 100px !important;
+    width : 100px !important;
+  }
+
+  .volume-metric {
+    max-width : 74px !important;
+  }
+
+  .no-max-width {
+    max-width : unset !important;
+  }
+
+  .no-format {
+    max-width : 118px !important;
+    width     : 118px !important;
+  }
+
 }
