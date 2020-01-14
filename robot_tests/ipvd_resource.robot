@@ -132,6 +132,7 @@ Validate IPVD Device Table Column contains Desired Value in all Rows on all Page
 Validate IPVD Device Table Column contains Desired Value in all Rows
     [Arguments]    ${column}    ${SearchString}
     ${rowCount}=   Validate IPVD Device Table Not Empty
+    Sleep    1
     Table Column should Contain    ${IPVD TABLE}    ${column}    ${SearchString}
     :FOR    ${rowNumber}    IN RANGE    1    ${rowCount}+1
     \    Wait Until Element is Visible    ${IPVD TABLE ROWS}\[${rowNumber}]/td\[${column}]//div[contains(text(),'${SearchString}')]
