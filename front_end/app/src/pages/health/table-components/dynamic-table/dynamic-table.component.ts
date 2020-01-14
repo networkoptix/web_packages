@@ -200,7 +200,14 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
             this.selectedHeader = undefined;
         }
 
-        this.startIndex = parseInt(this.params.index) || 0;
+        if (this.activeEntity) {
+            this.startIndex = this._elements.findIndex(elem => {
+                return this.activeEntity === elem;
+            });
+        }
+        if ([undefined, -1].includes(this.startIndex)) {
+            this.startIndex = parseInt(this.params.index) || 0;
+        }
     }
 
     ngAfterViewInit(): void {
