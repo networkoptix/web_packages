@@ -218,8 +218,8 @@
                                         [(ngModel)]="timeUnitCount"
                                         (change)="updateTimeUnitWatcher()"
                                         [ngModelOptions]="{standalone: true}"
-                                        (keydown)="storePreviousValue()"
-                                        (keyup)="validationCheckForInput($event)"
+                                        (keydown)="storePreviousValue($event)"
+                                        (keyup)="validationCheckForInput()"
                                         type="number"
                                         min="1"
                                         class="form-control time-unit-input">
