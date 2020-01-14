@@ -110,7 +110,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                         }
                         if (!this.applyService.locked) {
                             if (this.selectedServer) {
-                                this.selectedServer.internalStatus = this.LANG.servers.status.checking;
+                                this.setStatus('checking');
                             }
                             this.setServer();
                         }
@@ -154,7 +154,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
             server.osName = JSON.parse(server.osInfo).platform;
             this.selectedServer = server;
             if (!this.selectedServer.internalStatus) {
-                this.selectedServer.internalStatus = this.LANG.servers.status.checking;
+                this.setStatus('checking');
             }
             this.checkIfOnline(server.id);
             this.menuService.setDetailsSection(this.selectedServer.id);
@@ -186,13 +186,18 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
         });
     }
 
+    setStatus(status) {
+        this.selectedServer.internalStatus = this.CONFIG.serverStatus[status];
+        this.selectedServer.shownStatus = this.LANG.servers.status[status];
+    }
+
     checkIfOnline(serverId) {
         if (!this.checking) {
             this.checking = true;
             setTimeout(() => this.checking = false, 5000);
             return this.system.getModuleInfo(serverId).toPromise()
-                .then(() => this.selectedServer.internalStatus = this.LANG.servers.status.online)
-                .catch(() => this.selectedServer.internalStatus = this.LANG.servers.status.offline);
+                .then(() => this.setStatus('online'))
+                .catch(() => this.setStatus('offline'));
         }
     }
 
@@ -206,7 +211,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
         const { id, name } = this.selectedServer;
         return this.dialogs
             .restartServer(this.system, id, name)
-                .then(() => this.selectedServer.internalStatus = this.LANG.servers.status.restarting);
+                .then(() => this.setStatus('restarting'));
     }
 
     detachServer() {
@@ -214,7 +219,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
         return this.dialogs
             .detachServer(this.system, id, name)
             .then(detach => {
-                this.selectedServer.internalStatus = this.LANG.servers.status.detaching;
+                this.setStatus('detaching');
                 // make sure that server gets removed from the menu
             });
     }
@@ -224,7 +229,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
         return this.dialogs
             .resetServer(this.system, id, name)
                 // will take some time to reset and then restart the server
-                .then(() => this.selectedServer.internalStatus = this.LANG.servers.status.reseting);
+                .then(() => this.setStatus('reseting'));
     }
 
     storePreviousValue(e) {

@@ -421,6 +421,14 @@ export class NxConfigService {
                     min: 1,
                     restrictedMax: 1024,
                 },
+            },
+            serverStatus: {
+                online: 'online',
+                offline: 'offline',
+                restarting: 'restarting',
+                reseting: 'reseting',
+                checking: 'checking',
+                detaching: 'detaching'
             }
         };
     }

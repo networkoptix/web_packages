@@ -10,14 +10,14 @@
                     <span *ngIf="selectedServer.internalStatus"
                         [ngClass]="{
                             tag: true,
-                            offline: selectedServer.internalStatus === LANG.servers.status.offline,
-                            online: selectedServer.internalStatus === LANG.servers.status.online 
-                                || selectedServer.internalStatus === LANG.servers.status.restarting
-                                || selectedServer.internalStatus === LANG.servers.status.reseting,
-                            checking: selectedServer.internalStatus === LANG.servers.status.checking
+                            offline: selectedServer.internalStatus === CONFIG.serverStatus.offline,
+                            online: selectedServer.internalStatus === CONFIG.serverStatus.online 
+                                || selectedServer.internalStatus === CONFIG.serverStatus.restarting
+                                || selectedServer.internalStatus === CONFIG.serverStatus.reseting,
+                            checking: selectedServer.internalStatus === CONFIG.serverStatus.checking
                         }"
                     >
-                        {{ selectedServer.internalStatus }}
+                        {{ selectedServer.shownStatus }}
                     </span>
                 </div>
                 <div class="header-table col-7">
