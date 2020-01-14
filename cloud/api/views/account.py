@@ -26,10 +26,9 @@ logger = logging.getLogger(__name__)
 def set_session_credentials(request, email, password):
     """
         The user will have temporary credentials that lasts for 2 weeks without usage.
-        During the two weeks the user will have to use the credentials at least once during
-        the second week. This will keep the credentials valid for another week. If the user
-        keeps using it at least once per week the credentials will continue to remain valid.
-        Otherwise the credentials will become invalid and the user will have to login again.
+        During that time the user has to use the credentials at least once to keep the
+        credentials valid for another two weeks. Otherwise the credentials will become
+        invalid and the user will have to login again.
     """
     tempCredentials = Account.create_temporary_credentials(email, password,
                                                            expiration_period=settings.AUTHENTICATED_SESSION_COOKIE_AGE,
