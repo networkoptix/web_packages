@@ -65,7 +65,7 @@
     "YOUR ACCESS LEVEL TEXT": "רמת הגישה שלך",
     "USER DISABLED TEXT": "המשתמש מושבת",
     "NO UNSAVED CHANGES TEXT": "אין שינויים שלא נשמרו",
-    "ABOUT": "שירותים",
+    "ABOUT": "About %PRODUCT_NAME%",
     "KNOWN LIMITATIONS": "מגבלות ידועות",
     "SUPPORT": "תמיכה",
     "REMOTE CONNECTIVITY": "חיבור מרחוק",
@@ -204,7 +204,10 @@
     "ENCRYPT VIDEO TRAFFIC TEXT": "הצפן תעבורת וידאו",
     "ENCRYPT VIDEO TRAFFIC DESCRIPTION TEXT": "ניתן להצפין רק תנועת וידאו של שרת לקוח.",
     "LIMIT SESSION DURATION TEXT": "הגבל את משך ההפעלה ל",
-    "RELEASES TAB TEXT": "Releases",
-    "PATCHES TAB TEXT": "Patches",
-    "BETAS TAB TEXT": "Betas"
+    "RELEASES TAB TEXT": "מהדורות",
+    "PATCHES TAB TEXT": "תיקונים",
+    "BETAS TAB TEXT": "בטא",
+    "SALES INQUIRY TEXT": "Sales inquiry for vis - QA - face_recognition",
+    "TECHNICAL INQUIRY TEXT": "Technical inquiry for vis - QA - face_recognition",
+    "FEEDBACK TEXT": "Feedback for integration vis - QA - face_recognition"
 }

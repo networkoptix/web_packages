@@ -65,7 +65,7 @@
     "YOUR ACCESS LEVEL TEXT": "Ваш рівень доступу",
     "USER DISABLED TEXT": "Користувач вимкнений",
     "NO UNSAVED CHANGES TEXT": "Немає незбережених змін",
-    "ABOUT": "Про",
+    "ABOUT": "About %PRODUCT_NAME%",
     "KNOWN LIMITATIONS": "Відомі обмеження",
     "SUPPORT": "Підтримка",
     "REMOTE CONNECTIVITY": "Віддалений зв'язок",
@@ -204,7 +204,10 @@
     "ENCRYPT VIDEO TRAFFIC TEXT": "Шифрувати відео трафік",
     "ENCRYPT VIDEO TRAFFIC DESCRIPTION TEXT": "Лише відео трафік клієнт-серверу може бути зашифрованим.",
     "LIMIT SESSION DURATION TEXT": "Обмежте тривалість сеансу до",
-    "RELEASES TAB TEXT": "Releases",
-    "PATCHES TAB TEXT": "Patches",
-    "BETAS TAB TEXT": "Betas"
+    "RELEASES TAB TEXT": "Релізи",
+    "PATCHES TAB TEXT": "Патчі",
+    "BETAS TAB TEXT": "Бета",
+    "SALES INQUIRY TEXT": "Sales inquiry for vis - QA - face_recognition",
+    "TECHNICAL INQUIRY TEXT": "Technical inquiry for vis - QA - face_recognition",
+    "FEEDBACK TEXT": "Feedback for integration vis - QA - face_recognition"
 }

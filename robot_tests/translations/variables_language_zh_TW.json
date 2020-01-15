@@ -65,7 +65,7 @@
     "YOUR ACCESS LEVEL TEXT": "您的權限等級",
     "USER DISABLED TEXT": "使用者已被停用",
     "NO UNSAVED CHANGES TEXT": "沒有未保存之變更",
-    "ABOUT": "關於",
+    "ABOUT": "About %PRODUCT_NAME%",
     "KNOWN LIMITATIONS": "已知的限制",
     "SUPPORT": "支援",
     "REMOTE CONNECTIVITY": "遠端連線",
@@ -206,5 +206,8 @@
     "LIMIT SESSION DURATION TEXT": "限制登入時間為",
     "RELEASES TAB TEXT": "Releases",
     "PATCHES TAB TEXT": "Patches",
-    "BETAS TAB TEXT": "Betas"
+    "BETAS TAB TEXT": "Betas",
+    "SALES INQUIRY TEXT": "Sales inquiry for vis - QA - face_recognition",
+    "TECHNICAL INQUIRY TEXT": "Technical inquiry for vis - QA - face_recognition",
+    "FEEDBACK TEXT": "Feedback for integration vis - QA - face_recognition"
 }

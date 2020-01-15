@@ -65,7 +65,7 @@
     "YOUR ACCESS LEVEL TEXT": "Uw toegangsniveau",
     "USER DISABLED TEXT": "Gebruiker Uitgeschakeld",
     "NO UNSAVED CHANGES TEXT": "Geen niet-opgeslagen wijzigingen",
-    "ABOUT": "Over",
+    "ABOUT": "About %PRODUCT_NAME%",
     "KNOWN LIMITATIONS": "Bekende beperkingen",
     "SUPPORT": "Ondersteuning",
     "REMOTE CONNECTIVITY": "Externe verbindingen",
@@ -206,5 +206,8 @@
     "LIMIT SESSION DURATION TEXT": "Limit session duration to",
     "RELEASES TAB TEXT": "Releases",
     "PATCHES TAB TEXT": "Patches",
-    "BETAS TAB TEXT": "Betas"
+    "BETAS TAB TEXT": "Betas",
+    "SALES INQUIRY TEXT": "Sales inquiry for vis - QA - face_recognition",
+    "TECHNICAL INQUIRY TEXT": "Technical inquiry for vis - QA - face_recognition",
+    "FEEDBACK TEXT": "Feedback for integration vis - QA - face_recognition"
 }

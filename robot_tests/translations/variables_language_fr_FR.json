@@ -65,7 +65,7 @@
     "YOUR ACCESS LEVEL TEXT": "Votre niveau d'accès",
     "USER DISABLED TEXT": "Usager désactivé",
     "NO UNSAVED CHANGES TEXT": "Aucun changement non enregistrée",
-    "ABOUT": "À Propos",
+    "ABOUT": "About %PRODUCT_NAME%",
     "KNOWN LIMITATIONS": "Limitations connues",
     "SUPPORT": "Support",
     "REMOTE CONNECTIVITY": "Connectivité à distance",
@@ -189,7 +189,7 @@
     "SYSTEMS TITLE TEXT": "Systèmes",
     "NO PERMISSION TO SHARE TEXT": "Vous n'avez pas la permission de partager ce système",
     "WELCOME TEXT": "Bienvenue sur",
-    "YOU ARE ALREADY LOGGED IN TEXT": "Vous êtes déjà connecté en tant que",
+    "YOU ARE ALREADY LOGGED IN TEXT": "Vous êtes déjà connecté avec",
     "DISCONNECT FROM MY ACCOUNT TEXT": "Déconnecter de mon compte",
     "YOU TEXT": "toi",
     "UNRESTRICTED ACCESS CONNECT TEXT": "Accès illimité, y compris la possibilité de partager et de connecter/déconnecter le système de nuage",
@@ -204,7 +204,10 @@
     "ENCRYPT VIDEO TRAFFIC TEXT": "Crypter le trafic vidéo",
     "ENCRYPT VIDEO TRAFFIC DESCRIPTION TEXT": "Seul le trafic vidéo client-serveur peut être chiffré.",
     "LIMIT SESSION DURATION TEXT": "Limiter la durée de session à",
-    "RELEASES TAB TEXT": "Releases",
-    "PATCHES TAB TEXT": "Patches",
-    "BETAS TAB TEXT": "Betas"
+    "RELEASES TAB TEXT": "Communiqués",
+    "PATCHES TAB TEXT": "Patchs",
+    "BETAS TAB TEXT": "Betas",
+    "SALES INQUIRY TEXT": "Sales inquiry for vis - QA - face_recognition",
+    "TECHNICAL INQUIRY TEXT": "Technical inquiry for vis - QA - face_recognition",
+    "FEEDBACK TEXT": "Feedback for integration vis - QA - face_recognition"
 }

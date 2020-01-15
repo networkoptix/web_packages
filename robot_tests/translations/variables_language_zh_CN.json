@@ -65,7 +65,7 @@
     "YOUR ACCESS LEVEL TEXT": "您的访问级别",
     "USER DISABLED TEXT": "用户已被禁用",
     "NO UNSAVED CHANGES TEXT": "没有未保存的更改",
-    "ABOUT": "关于",
+    "ABOUT": "About %PRODUCT_NAME%",
     "KNOWN LIMITATIONS": "已知的限制",
     "SUPPORT": "技术支持",
     "REMOTE CONNECTIVITY": "远程连接",
@@ -206,5 +206,8 @@
     "LIMIT SESSION DURATION TEXT": "限制登入时间为",
     "RELEASES TAB TEXT": "Releases",
     "PATCHES TAB TEXT": "Patches",
-    "BETAS TAB TEXT": "Betas"
+    "BETAS TAB TEXT": "Betas",
+    "SALES INQUIRY TEXT": "Sales inquiry for vis - QA - face_recognition",
+    "TECHNICAL INQUIRY TEXT": "Technical inquiry for vis - QA - face_recognition",
+    "FEEDBACK TEXT": "Feedback for integration vis - QA - face_recognition"
 }

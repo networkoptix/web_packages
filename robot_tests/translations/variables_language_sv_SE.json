@@ -65,7 +65,7 @@
     "YOUR ACCESS LEVEL TEXT": "Din åtkomstnivå",
     "USER DISABLED TEXT": "Användaren har inaktiverats",
     "NO UNSAVED CHANGES TEXT": "Inga osparade ändringar",
-    "ABOUT": "Om",
+    "ABOUT": "Om %PRODUCT_NAME%",
     "KNOWN LIMITATIONS": "Kända begränsningar",
     "SUPPORT": "Support",
     "REMOTE CONNECTIVITY": "Fjärranslutning",
@@ -204,7 +204,10 @@
     "ENCRYPT VIDEO TRAFFIC TEXT": "Kryptera videotrafik",
     "ENCRYPT VIDEO TRAFFIC DESCRIPTION TEXT": "Endast videotrafik för klient-server kan krypteras.",
     "LIMIT SESSION DURATION TEXT": "Begränsa sessionens varaktighet till",
-    "RELEASES TAB TEXT": "Releases",
-    "PATCHES TAB TEXT": "Patches",
-    "BETAS TAB TEXT": "Betas"
+    "RELEASES TAB TEXT": "Releaser",
+    "PATCHES TAB TEXT": "Patchar",
+    "BETAS TAB TEXT": "Betaversioner",
+    "SALES INQUIRY TEXT": "Försäljningsförfrågan för vis - QA - face_recognition",
+    "TECHNICAL INQUIRY TEXT": "Teknisk förfrågan för vis - QA - face_recognition",
+    "FEEDBACK TEXT": "Feedback för integration vis - QA - face_recognition"
 }

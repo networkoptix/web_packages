@@ -463,7 +463,7 @@ ${IPVD FEEDBACK CLOSE BUTTON}         ${IPVD FEEDBACK}//button[contains(@class,'
 ${NOTHING FOUND PLACEHOLDER}          //div[contains(@class,'text-placeholder') and contains(text(),"${NOTHING FOUND}")]
 
 #Footer
-${FOOTER ABOUT LINK}                  //footer//a[contains(text(),"${ABOUT} ${PRODUCT_NAME}")]
+${FOOTER ABOUT LINK}                  //footer//a[contains(text(),"${ABOUT}")]
 ${FOOTER KNOWN LIMITS LINK}           //footer//a[contains(text(),"${KNOWN LIMITATIONS}")]
 ${FOOTER INTEGRATIONS LINK}           //footer//a[contains(text(),"${INTEGRATIONS TITLE TEXT}")]
 ${FOOTER SUPPORT LINK}                //footer//a[contains(text(),"${SUPPORT}")]

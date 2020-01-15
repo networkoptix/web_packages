@@ -39,8 +39,11 @@ Test Submit Feedback Message
     Wait Until Element Is Visible    ${IPVD SEND DEVICE FEEDBACK}
     Click Element    ${IPVD SEND DEVICE FEEDBACK}
     Wait Until Element Is Visible    ${IPVD FEEDBACK}
-    ${model}=   Get Text    ${IPVD DEVICE MODEL}
-    Element Should Contain    ${IPVD FEEDBACK TITLE}    ${IPVD FEEDBACK ABOUT} ${model}
+    ${model} =   Get Text    ${IPVD DEVICE MODEL}
+    ${west} =    Run Keyword And Return Status    Element Should Contain    ${IPVD FEEDBACK TITLE}    ${IPVD FEEDBACK ABOUT} ${model}
+    ${east} =    Run Keyword And Return Status    Element Should Contain    ${IPVD FEEDBACK TITLE}    ${model} ${IPVD FEEDBACK ABOUT}
+    # Western languages will have one order, and eastern the opposite. Never should both be true, and if both false then there is a bug.
+    Run Keyword If    ${west}==${east}    Fail 
     Submit Feedback/Request Form    ${Your Name}    ${Email}    ${Message}
     Run Keyword If    ${Expect Success}==True    On Success    ${Email}
     ...    ELSE IF    ${Expect Success}==False   Validate Message Not Sent

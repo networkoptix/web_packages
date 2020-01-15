@@ -65,7 +65,7 @@
     "YOUR ACCESS LEVEL TEXT": "Ihr Zugriffslevel",
     "USER DISABLED TEXT": "Benutzer deaktiviert",
     "NO UNSAVED CHANGES TEXT": "Keine ungespeicherten Änderungen",
-    "ABOUT": "Über",
+    "ABOUT": "About %PRODUCT_NAME%",
     "KNOWN LIMITATIONS": "Bekannte Einschränkungen",
     "SUPPORT": "Support",
     "REMOTE CONNECTIVITY": "Remoteverbindungen",
@@ -206,5 +206,8 @@
     "LIMIT SESSION DURATION TEXT": "Dauer der Sitzung begrenzen auf",
     "RELEASES TAB TEXT": "Releases",
     "PATCHES TAB TEXT": "Patches",
-    "BETAS TAB TEXT": "Betas"
+    "BETAS TAB TEXT": "Betas",
+    "SALES INQUIRY TEXT": "Sales inquiry for vis - QA - face_recognition",
+    "TECHNICAL INQUIRY TEXT": "Technical inquiry for vis - QA - face_recognition",
+    "FEEDBACK TEXT": "Feedback for integration vis - QA - face_recognition"
 }

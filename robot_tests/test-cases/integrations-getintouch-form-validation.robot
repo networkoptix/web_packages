@@ -10,9 +10,9 @@ Force Tags        form    Threaded File
 ${url}    ${ENV}
 ${existing email}       ${EMAIL OWNER}
 ${valid email}          noptixqa+valid@gmail.com
-${sales inquiry}        Sales inquiry for vis - QA - face_recognition
-${technical inquiry}    Technical inquiry for vis - QA - face_recognition
-${feedback}             Feedback for integration vis - QA - face_recognition
+${sales inquiry}        ${SALES INQUIRY TEXT}
+${technical inquiry}    ${TECHNICAL INQUIRY TEXT}
+${feedback}             ${FEEDBACK TEXT}
 ${valid name}           ${TEST FIRST NAME} ${TEST LAST NAME}
 
 *** Test Cases ***                    EXPECTED    NAME             EMAIL                     SUBJECT             BUTTON                                      MESSAGE
