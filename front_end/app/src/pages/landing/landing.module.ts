@@ -38,8 +38,3 @@ const appRoutes: Routes = [
 })
 export class LandingModule {
 }
-
-declare var angular: angular.IAngularStatic;
-angular
-        .module('cloudApp.directives')
-        .directive('landingComponent', downgradeComponent({ component: NxLandingComponent }) as angular.IDirectiveFactory);
