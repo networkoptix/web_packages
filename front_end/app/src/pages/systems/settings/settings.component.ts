@@ -349,18 +349,36 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             }, NxUtilsService.sortASC);
             this.system.users.sort(byParam);
 
+            const localUsers = [];
+            const cloudUsers = [];
             usersNode.level3 = [];
-            this.system.users.forEach((user) => {
-                const id = user.id.replace(/{|}/g, '');
-                usersNode.level3.push({
-                    id,
-                    icon : user.isCloud ? 'glyphicon-cloud' : 'glyphicon-user-settings',
-                    label: user.email || user.name,
-                    additionalLabel:  this.LANG.accessRoles[user.role.name] && this.LANG.accessRoles[user.role.name].label || user.role.name,
-                    path : 'users/' + id,
-                    isEnabled: user.isEnabled,
+            this.system.users
+                .forEach(user => {
+                    const id = user.id.replace(/{|}/g, '');
+                    user.node = {
+                        id,
+                        additionalLabel:  this.LANG.accessRoles[user.role.name] && this.LANG.accessRoles[user.role.name].label || user.role.name,
+                        path : 'users/' + id,
+                        isEnabled: user.isEnabled,
+                    }
+                    if (user.isCloud === true) {
+                        user.node.icon = 'glyphicon-cloud';
+                        user.node.label = user.email;
+                        cloudUsers.push(user);
+                    } else {
+                        user.node.icon = 'glyphicon-user-settings';
+                        user.node.label = user.name || user.email;
+                        localUsers.push(user);
+                    }
                 });
-            });
+
+            localUsers
+                .forEach((user) => usersNode.level3.push(user.node));
+            if (localUsers.length > 0) {
+                usersNode.level3.push({ horizontal: true });
+            }
+            cloudUsers
+                .forEach((user) => usersNode.level3.push(user.node));
         } else { // remove Users
             this.content.level1 = this.content.level1.filter(node => node.id !== this.CONFIG.systemMenu.users.id);
         }

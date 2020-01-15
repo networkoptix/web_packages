@@ -67,6 +67,16 @@
         .scroll-area {
             position: relative;
         }
+
+        .horizontal {
+            padding: 0.9rem 0.8rem;
+            background-color : $light5;
+            height: 2rem;
+            hr {
+                margin: 0;
+                border: 1px solid $light8;
+            }
+        }
     }
 
     nx-level-3-item {

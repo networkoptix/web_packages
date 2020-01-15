@@ -37,7 +37,11 @@
             <div class="top-shadow"></div>
             <div class="scroll-area">
                 <div *ngFor="let details of item.level3; last as isLast; first as isFirst; trackBy: trackItem">
-                    <nx-level-3-item [item]="details"
+                    <div class="horizontal" *ngIf="details.horizontal">
+                        <hr >
+                    </div>
+                    <nx-level-3-item *ngIf="!details.horizontal"
+                                     [item]="details"
                                      [ngClass]="{ 'last-level-3': isLast }"
                                      [base]="content.base"
                                      [first]="isFirst"
