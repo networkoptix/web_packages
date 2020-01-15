@@ -28,10 +28,6 @@ nx-system-metrics-component {
                 @include media-breakpoint-down(xl) {
                     grid-template-columns: $grid-narrow-table-width $grid-narrow-panel-width;
                 }
-
-                @media (min-width: 1920px) {
-                    grid-template-columns: $grid-super-wide-table-width $grid-super-wide-panel-width;
-                }
             }
             &--no-panel {
                 grid-template-columns: 100%;
