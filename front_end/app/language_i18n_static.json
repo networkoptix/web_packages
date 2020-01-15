@@ -435,6 +435,7 @@
 			"copyDefaultText": "copy",
 			"copyActiveText": "copied to clipboard"
 		},
+		"unknown": "Unknown",
 		"systemOffline": "System Offline",
 		"systemOfflineMessage": "This system is offline and cannot be accessed right now.",
 		"systemNoAlerts": "No Alerts",

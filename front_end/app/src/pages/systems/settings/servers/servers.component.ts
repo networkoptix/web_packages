@@ -151,7 +151,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
             const [ip, port] = url.slice(url.indexOf('//') + 2).split(':');
             this.ipPortWatcher.value = port;
             server.ip = ip;
-            server.osName = JSON.parse(server.osInfo).platform;
+            server.osName = server.osInfo !== '' ? JSON.parse(server.osInfo).platform : this.LANG.common.unknown;
             this.selectedServer = server;
             if (!this.selectedServer.internalStatus) {
                 this.setStatus('checking');
