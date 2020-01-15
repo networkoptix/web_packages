@@ -24,7 +24,7 @@
                  [hidden]="mobileDetailMode"
                  [ngClass]="{'data-wrapper' : !activeTableEntity}">
 
-                <div class="" *ngIf="!mobileDetailMode" #search>
+                <div class="" *ngIf="!mobileDetailMode" #search [ngStyle]="{'width': tableWrapper + 'px'}">
                     <nx-search
                             name="filterModel"
                             [ngModel]="filterModel"

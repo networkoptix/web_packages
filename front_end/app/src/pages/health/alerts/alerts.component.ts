@@ -5,9 +5,9 @@ import {
 }                                              from '@angular/core';
 import { NxConfigService }                     from '../../../services/nx-config';
 import { NxMenuService }                       from '../../../components/menu/menu.service';
-import { NxHealthService }                     from '../health.service';
-import { SubscriptionLike }                    from 'rxjs';
-import { NxUriService }                        from '../../../services/uri.service';
+import { NxHealthService }                   from '../health.service';
+import { BehaviorSubject, SubscriptionLike } from 'rxjs';
+import { NxUriService }                      from '../../../services/uri.service';
 import { ActivatedRoute }                      from '@angular/router';
 import { AutoUnsubscribe }                     from 'ngx-auto-unsubscribe';
 import { NxScrollMechanicsService }            from '../../../services/scroll-mechanics.service';
@@ -31,8 +31,11 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
     filterModel: any;
     params: any = {};
 
+    layoutReady = new BehaviorSubject(false);
+
     breakpointSubscription: SubscriptionLike;
     tableReadySubscription: SubscriptionLike;
+    layoutReadySubscription: SubscriptionLike;
     mobileDetailMode: boolean;
     breakpoint: string;
 
@@ -58,7 +61,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
     windowSizeSubscription: any;
 
     fixedLayoutClass: string;
-    layoutReady: boolean;
+    tableWrapper: number;
 
     @ViewChild('tiles', { static: false }) elementTiles: ElementRef;
     @ViewChild('search', { static: false }) elementSearch: ElementRef;
@@ -103,6 +106,14 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
             });
             this.setActiveEntity(alarm, false);
         }
+
+        this.layoutReadySubscription = this.layoutReady.subscribe(() => {
+            setTimeout(() => {
+                if (this.elementTable) {
+                    this.tableWrapper = this.elementTable.nativeElement.querySelectorAll('.table-wrapper')[0].offsetWidth;
+                }
+            });
+        })
 
         this.windowSizeSubscription = this.scrollMechanicsService.windowSizeSubject.subscribe(({ width }) => {
             if (this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.lg)) {
@@ -320,7 +331,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
 
     setActiveEntity(alarm, updateURI = true) {
         if (alarm.entity) {
-            this.layoutReady = false;
+            this.layoutReady.next(false);
             this.activeTableEntity = alarm;
             this.activePanelEntity = this.values[alarm.metric][alarm.entity];
             this.activePanelParams = this.healthService.panelParams[alarm.metric];
@@ -362,7 +373,6 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
     private setLayout() {
         setTimeout(() => {
             if (this.elementTable) {
-                // measure table (not wrapper) width
                 const tableWidth = this.elementTable.nativeElement.querySelectorAll('table')[0].offsetWidth;
                 // area available
                 const areaWidth = this.area.nativeElement.offsetWidth;
@@ -376,13 +386,13 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
                     this.fixedLayoutClass = (isTableFit) ? '' : 'fixedLayout--no-panel';
                 }
 
-                this.layoutReady = true;
+                this.layoutReady.next(true);
             }
         });
 
         if (this.mobileDetailMode && this.activePanelEntity) {
             this.fixedLayoutClass = 'fixedLayout--no-panel';
-            this.layoutReady = true;
+            this.layoutReady.next(true);
         }
     }
 }
