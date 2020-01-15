@@ -366,7 +366,8 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                         user.node.label = user.email;
                         cloudUsers.push(user);
                     } else {
-                        user.node.icon = 'glyphicon-user-settings';
+                        user.node.svgIcon = 'user';
+                        // user.node.icon = 'glyphicon-user-settings';
                         user.node.label = user.name || user.email;
                         localUsers.push(user);
                     }

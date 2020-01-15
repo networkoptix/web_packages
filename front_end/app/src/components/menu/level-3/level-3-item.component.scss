@@ -52,9 +52,18 @@
         height              : 26px;
     }
 
+    &-svg-icon {
+        float: left;
+        margin-right: 0.25rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
     &.selected {
         &, * {
             color: $light1 !important;
+            fill: $light1 !important;
             background-color: $light16 !important;
             min-height: auto;
         }

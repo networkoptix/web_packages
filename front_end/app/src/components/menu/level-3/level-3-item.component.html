@@ -6,6 +6,11 @@
     <div *ngIf="first" class="top-shadow-cover"></div>
     <div class="ellipsis">
         <span *ngIf="item.icon" class="menu-level-3-icon glyphicon" [ngClass]="item.icon"></span>
+        <svg-icon *ngIf="item.svgIcon"
+                [src]="CONFIG.icons.dir + item.svgIcon + '.svg'"
+                [applyCss]="true"
+                [svgStyle]="{'width.px': '26', 'height.px': '26', 'pointer-events': 'none'}"
+                class=" ml-n1 menu-level-3-svg-icon"></svg-icon>
         <span [innerHTML]="item.label" class="user"></span>
         <span class="menu-level-3-additional"
               *ngIf="item.additionalLabel"

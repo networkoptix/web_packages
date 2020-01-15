@@ -1,4 +1,5 @@
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { NxConfigService }          from '../../../services/nx-config';
 
 /* Usage
 */
@@ -16,8 +17,10 @@ export class NxLevel3ItemComponent implements OnInit {
 
     itemPath: string;
     isEnabled: boolean;
+    CONFIG: any;
 
-    constructor() {
+    constructor(private configService: NxConfigService) {
+        this.CONFIG = this.configService.getConfig();
     }
 
     ngOnInit() {

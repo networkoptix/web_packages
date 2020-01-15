@@ -52,13 +52,6 @@
     background-position : 0 -32px;
 }
 
-.glyphicon-user-settings {
-    @include kill-glyphicon;
-    width: 24px;
-    height: 24px;
-    background-position: -3px -32px;
-}
-
 .glyphicon-users {
     @include kill-glyphicon;
     width               : 24px;
