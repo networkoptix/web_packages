@@ -41,7 +41,7 @@ export class NxSystemsService implements OnDestroy {
             this.mergingSystems.delete(systemId);
             const options = {
                     autoHide: true,
-                    classname: 'success',
+                    classname: this.CONFIG.toast.success,
                     delay: this.CONFIG.alertTimeout
                 };
             this.toastService.show(this.LANG.system.mergeSuccess, options);

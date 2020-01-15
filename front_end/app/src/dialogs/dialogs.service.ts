@@ -53,7 +53,7 @@ export class NxDialogsService {
     }
 
     notify(message, type, hold?) {
-        type = type || 'info';
+        type = type || this.CONFIG.toast.info;
         hold = hold || false;
 
         const options = {

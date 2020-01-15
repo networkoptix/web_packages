@@ -38,7 +38,7 @@ export class ResetServerModalContent {
         this.resetServer = this.processService
             .createProcess(() => {
                 const options = {
-                    classname: 'warning',
+                    classname: this.CONFIG.toast.warning,
                     autohide: true,
                     delay: this.CONFIG.alertTimeout
                 };
@@ -69,7 +69,7 @@ export class ResetServerModalContent {
                                     this.system.currentServerNotBusy = true;
                                     this.system.systemInfo = this.system;
                                     const successMessage = this.LANG.servers.resetSuccessful.replace('{{ serverName }}', this.serverName);
-                                    options.classname = 'success';
+                                    options.classname = this.CONFIG.toast.success;
                                     this.toastService.show(successMessage, options);
                                     serverSubscription.unsubscribe();
                                 });

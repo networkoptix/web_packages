@@ -121,7 +121,7 @@ export class AddUserModalContent {
 
                             const options = {
                                 autohide : true,
-                                classname: 'error',
+                                classname: this.CONFIG.toast.danger,
                                 delay    : this.CONFIG.alertTimeout
                             };
 

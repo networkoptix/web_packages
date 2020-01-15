@@ -100,10 +100,10 @@ class Process {
             } else {
                 this.success = true;
                 if (this.settings.successMessage && data !== false) {
-                    // nxDialogsService.notify(successMessage, 'success', holdAlerts);
+                    // nxDialogsService.notify(successMessage, this.CONFIG.toast.success, holdAlerts);
                     // Circular dependencies ... keep ngToast for no -- TT
                     const options = {
-                        classname: 'success',
+                        classname: this.CONFIG.toast.success,
                         autohide: !this.settings.holdAlerts,
                         delay: this.CONFIG.alertTimeout
                     };
@@ -185,7 +185,7 @@ class Process {
             const message = `${this.settings.errorPrefix} ${this.settings.errorMessage}`;
             const options = {
                 autohide: !this.settings.holdAlerts,
-                classname: 'danger',
+                classname: this.CONFIG.toast.danger,
                 delay: this.CONFIG.alertTimeout
             };
             this.toastService.show(message, options);

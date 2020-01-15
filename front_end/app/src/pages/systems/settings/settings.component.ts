@@ -277,14 +277,19 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
     checkShare() {
         if (this.settingsService.share) {
+            const options = {
+                classname: this.CONFIG.toast.danger,
+                delay: this.CONFIG.alertTimeout,
+                autohide: true,
+            };
             if (this.system.isOnline) {
                 if (this.system.permissions.editUsers) {
                     this.settingsService.addUser().catch();
                 } else {
-                    this.toastService.show(this.LANG.system.shareUnauthorized, {classname: 'danger', delay: this.CONFIG.alertTimeout, autohide: true});
+                    this.toastService.show(this.LANG.system.shareUnauthorized, options);
                 }
             } else {
-                this.toastService.show(this.LANG.system.shareOffline, {classname: 'danger', delay: this.CONFIG.alertTimeout, autohide: true});
+                this.toastService.show(this.LANG.system.shareOffline, options);
             }
             this.settingsService.share = false;
         }

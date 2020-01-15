@@ -429,7 +429,13 @@ export class NxConfigService {
                 reseting: 'reseting',
                 checking: 'checking',
                 detaching: 'detaching'
-            }
+            },
+            toast: {
+                success: 'success',
+                warning: 'warning',
+                danger: 'danger',
+                info: 'info',
+            },
         };
     }
 

@@ -10,6 +10,7 @@ import { NxPageService } from '../../services/page.service';
 import { NxProcessService } from '../../services/process.service';
 import { NxSystemsService } from '../../services/systems.service';
 import { NxUrlProtocolService } from '../../services/url-protocol.service';
+import { NxConfigService } from '../../services/nx-config';
 import { Watcher } from '../../services/apply.service';
 import { NxSystem } from '../../services/system.service';
 import { WINDOW } from '../../services/window-provider';
@@ -20,6 +21,7 @@ import { WINDOW } from '../../services/window-provider';
 })
 export class NxDebugComponent {
     LANG: any;
+    CONFIG: any;
     actionParameters = '{\n	"example": true\n}';
     actionParametersError = false;
     debugProcess: any;
@@ -68,8 +70,10 @@ export class NxDebugComponent {
                 private processService: NxProcessService,
                 private systemsService: NxSystemsService,
                 private urlProtocol: NxUrlProtocolService,
+                private configService: NxConfigService,
     ) {
         this.LANG = this.languageService.getTranslations();
+        this.CONFIG = this.configService.getConfig();
         this.pageService.setPageTitle(this.LANG.pageTitles.debug);
         this.accountService.get().then((acc) => {
             this.init();
@@ -206,7 +210,7 @@ export class NxDebugComponent {
     }
 
     notify() {
-        const states = ['warning', 'info', 'success', 'danger'];
+        const states = Object.values(this.CONFIG.toast);
         const type = states[Math.floor(Math.random() * states.length)];
         const hold = Math.random() > 0.9;
         this.dialogsService.notify(`${this.notifyCounter++}: ${type}: ${hold}`, type, hold);

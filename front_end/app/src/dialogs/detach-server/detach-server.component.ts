@@ -35,7 +35,7 @@ export class DetachServerModalContent {
         this.detachServer = this.processService
             .createProcess(() => {
                 const options = {
-                    classname: 'warning',
+                    classname: this.CONFIG.toast.warning,
                     autohide: true,
                     delay: this.CONFIG.alertTimeout
                 };
@@ -49,7 +49,7 @@ export class DetachServerModalContent {
                         this.system.currentServerNotBusy = true;
                         // may need to also delete the server using /ec2/removeMediaserver
                         // need to update system subscribe, so that it looks for servers and finds that this server is no longer there
-                        options.classname = 'success';
+                        options.classname = this.CONFIG.toast.success;
                         this.toastService.show(this.LANG.servers.detachSystemSuccess, options);
                     })
                     .catch(() => {

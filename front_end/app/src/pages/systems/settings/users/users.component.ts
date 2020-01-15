@@ -18,7 +18,6 @@ import { NxSystem, NxSystemRole, NxSystemUser } from '../../../../services/syste
 import { NxApplyService, Watcher }              from '../../../../services/apply.service';
 import { NxUriService }                         from '../../../../services/uri.service';
 import { Subscription }                         from 'rxjs';
-import { NxToastService }                       from '../../../../dialogs/toast.service';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 
 @AutoUnsubscribe()
@@ -67,7 +66,6 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 private menuService: NxMenuService,
                 private processService: NxProcessService,
                 private uriService: NxUriService,
-                private toastService: NxToastService,
                 location: Location) {
         this.location = location;
         this.viewContainerRef = viewContainerRef;

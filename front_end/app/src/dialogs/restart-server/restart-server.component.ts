@@ -35,7 +35,7 @@ export class RestartServerModalContent {
     ngOnInit() {
         let initialRuntimeId;
         const options = {
-            classname: 'success',
+            classname: this.CONFIG.toast.warning,
             autohide: true,
             delay: this.CONFIG.alertTimeout
         };
@@ -46,13 +46,11 @@ export class RestartServerModalContent {
                     return this.system.restartServer(this.serverId)
                         .catch(() => {
                             this.system.currentServerNotBusy = true;
-                            options.classname = 'warning';
                             this.toastService.show(this.LANG.servers.restartFailed, options);
                         });
                     })
                     .catch(() => {
                         this.system.currentServerNotBusy = true;
-                        options.classname = 'warning';
                         this.toastService.show(this.LANG.servers.getModuleFailed, options);
                     });
             }, { successMessage: this.LANG.servers.beginRestart })
@@ -77,6 +75,7 @@ export class RestartServerModalContent {
                     .subscribe(() => {
                         this.system.currentServerNotBusy = true;
                         this.system.systemInfo = this.system;
+                        options.classname = this.CONFIG.toast.success;
                         this.toastService.show(this.LANG.servers.restartSuccessful, options);
                         serverSubscription.unsubscribe();
                     });
