@@ -98,13 +98,14 @@ Log In
     Run Keyword Unless    '''${button}''' == "None"    Click Link    ${button}
     Wait Until Elements Are Visible    ${EMAIL INPUT}    ${PASSWORD INPUT}    ${REMEMBER ME CHECKBOX VISIBLE}    ${FORGOT PASSWORD}    ${LOG IN CLOSE BUTTON}
     Sleep    1
-    Wait Until Keyword Succeeds    4    0.5    Input Text    ${EMAIL INPUT}    ${email}
+    Wait Until Keyword Succeeds    10    0.5    Input Text    ${EMAIL INPUT}    ${email}
     Sleep    1
-     Wait Until Keyword Succeeds    4    0.5   Input Text     ${PASSWORD INPUT}    ${password}
+     Wait Until Keyword Succeeds    10    0.5   Input Text     ${PASSWORD INPUT}    ${password}
     Sleep    1
     Wait Until Element Is Visible    ${LOG IN BUTTON}
     Click Button    ${LOG IN BUTTON}
     Run Keyword If    ${validate} == ${True}    Wait Until Element is Visible    ${ACCOUNT DROPDOWN}    ${selenium_timeout}
+    Run Keyword If    ${validate} == ${True}    Wait Until Element is Not Visible    //div[@class="placeholder"]    ${selenium_timeout}
     Run Keyword If    ${validate} == ${True}    Check Language Logged In    ${email}    ${password}
     Sleep    0.5
 

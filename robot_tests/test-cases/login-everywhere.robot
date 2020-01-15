@@ -83,6 +83,9 @@ works at restore password page with email input - after submit success
     ${replaced}    Replace String    ${text}    \n    ${SPACE}
     Should Match    ${replaced}    ${RESET EMAIL SENT MESSAGE TEXT}
     Check Log In
+    Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
+    ${emailID}    Wait For Email    recipient=${email}    timeout=120    status=UNSEEN
+    Delete Email    ${emailID}
 
 works at restore password page with password input - before submit
     [tags]    email

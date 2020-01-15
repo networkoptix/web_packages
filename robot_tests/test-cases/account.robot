@@ -42,7 +42,7 @@ Can access the account page from dropdown
 
 Can access the account page from direct link while logged in
     [tags]    Threaded
-    Log In    ${EMAIL NOPERM}    ${password}    ${False}
+    Log In    ${EMAIL NOPERM}    ${password}
     Go To    ${url}/account
     Verify in account page
 

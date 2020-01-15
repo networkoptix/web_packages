@@ -154,9 +154,9 @@ should display same user data as user provided during registration
     Validate Log Out
     Log in to Auto Tests System    ${EMAIL OWNER}
     Remove User Permissions    ${random email}
-    Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
-    Delete All Emails
-    Close Mailbox
+    # Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
+    # Delete All Emails
+    # Close Mailbox
 
 should display same user data as shown in user account
     [tags]    email    C41573    C41842    Threaded
@@ -199,10 +199,10 @@ should display same user data as shown in user account
     Log Out
     Log in to Auto Tests System    ${EMAIL OWNER}
     Remove User Permissions    ${random email}
-    Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
-    Delete All Emails
-    Close Mailbox
-    
+    # Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
+    # Delete All Emails
+    # Close Mailbox
+
 Share button - opens dialog
     [tags]    C41888    Threaded
     Log in to Auto Tests System    ${email}
@@ -470,10 +470,11 @@ Sharing system with a user who is already in the list updates their permissions
     ...    is_secure=True
   # TOOD Fix the next line intermittently failing.
     Run Keyword And Expect Error    *    Wait For Email    recipient=${EMAIL ADMIN}    timeout=30
-    Delete All Emails
+    # Delete All Emails
     Check User Permissions    ${random email}    ${ADMIN TEXT}
     Share To    ${random email}    ${VIEWER TEXT}
-    Delete All Emails
+    ${email}=   Wait For Email    recipient=${random email}    timeout=120
+    Delete Email    ${email}
     Close Mailbox
     Check User Permissions    ${random email}    ${VIEWER TEXT}
     Remove User Permissions    ${random email}
@@ -520,7 +521,7 @@ Check share email for registered user
     FOR    ${link}  IN  @{links}
         check in list    ${expected links}    ${link}
     END
-    Delete All Emails
+    Delete Email    ${email}
     Close Mailbox
     Remove User Permissions    ${EMAIL NOPERM}
 
@@ -534,12 +535,13 @@ User can be invited with client custom permissions
     Log in to Auto Tests System    ${EMAIL OWNER}
     ${random email}    Get Random Email    ${BASE EMAIL}
     Share To    ${random email}    Client Custom
+    ${email}=   Wait For Email    recipient=${random email}    timeout=120
     Check User Permissions    ${random email}    Client Custom
     Sleep    2
     Remove User Permissions    ${random email}
-    Delete All Emails
+    Delete Email    ${email}
     Close Mailbox
-    
+
 Disable enable User on Cloud Portal correctly affects the User on Cloud Portal
     [tags]    C63390
     # Step 1
