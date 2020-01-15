@@ -63,7 +63,9 @@
                 <h4 translate>System Settings</h4>
             </header>
             <div class="placeholder" *ngIf="system && !system.isOnline; else systemSettings">
-                <span class="glyphicon glyphicon-remove icon"></span>
+                <svg-icon 
+                    [svgStyle]="{ 'width.px': '80', 'pointer-events': 'none' }"
+                    [src]="CONFIG.icons.dir + 'system_settings_placeholder.svg'"></svg-icon>
                 <span translate>Can't load system settings</span>
             </div>
             <ng-template #systemSettings>
@@ -138,7 +140,9 @@
                 <h4 translate>Security</h4>
             </header>
             <div class="placeholder" *ngIf="system && !system.isOnline; else securitySettings">
-                <span class="glyphicon glyphicon-remove icon"></span>
+                <svg-icon 
+                    [svgStyle]="{ 'width.px': '80', 'pointer-events': 'none' }"
+                    [src]="CONFIG.icons.dir + 'system_settings_placeholder.svg'"></svg-icon>
                 <span translate>Can't load security settings</span>
             </div>
             <ng-template #securitySettings>

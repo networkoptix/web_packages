@@ -2,6 +2,7 @@ import { NgModule }                          from '@angular/core';
 import { CommonModule }                      from '@angular/common';
 import { BrowserModule }                     from '@angular/platform-browser';
 import { downgradeComponent, UpgradeModule } from '@angular/upgrade/static';
+import { AngularSvgIconModule }              from 'angular-svg-icon';
 import { RouterModule, Routes }              from '@angular/router';
 import { FormsModule }                       from '@angular/forms';
 import { NgbModule }                         from '@ng-bootstrap/ng-bootstrap';
@@ -23,6 +24,7 @@ import { ComponentsModule }    from '../../../../components/components.module';
         TranslateModule,
         ComponentsModule,
         DirectivesModule,
+        AngularSvgIconModule,
     ],
     providers      : [],
     declarations   : [
