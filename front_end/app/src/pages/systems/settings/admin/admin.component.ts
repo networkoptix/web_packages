@@ -14,8 +14,9 @@ import { NxSystemsService }          from '../../../../services/systems.service'
 import { NxAccountService }          from '../../../../services/account.service';
 import { NxProcessService }          from '../../../../services/process.service';
 import { NxSystem }                  from '../../../../services/system.service';
-import { Subscription } from 'rxjs';
-import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
+import { Subscription }              from 'rxjs';
+import { throttleTime }              from 'rxjs/operators';
+import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 import { NxApplyService, Watcher }   from '../../../../services/apply.service';
 
 interface Settings {
@@ -214,7 +215,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                     sw.sessionLimitToggle.originalValue = false;
                 }
             }
-            return this.system.updateOrGetSystemSettings(changes)
+            return this.system.updateOrGetSystemSettings(changes).toPromise()
                 .then(() => this.applyService.reset());
         });
     }
@@ -226,12 +227,13 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                 if (system) {
                     this.system = system;
                     this.pageService.setPageTitle(this.LANG.pageTitles.systemName.replace('{{systemName}}', this.system.info.name));
-                    this.systemSubscription = system.infoSubject.subscribe(() => {
-                        this.settingsService.footerSubject.next(true);
-                        this.updateSettings(this.currentlyMerging);
-                        if (!this.applyService.locked) {
-                            this.system.updateOrGetSystemSettings()
-                                .then(res => {
+                    this.systemSubscription = system.infoSubject
+                        .pipe(throttleTime(5000))
+                        .subscribe(() => {
+                            this.settingsService.footerSubject.next(true);
+                            this.updateSettings(this.currentlyMerging);
+                            if (!this.applyService.locked) {
+                                this.system.updateOrGetSystemSettings().subscribe((res: any) => {
                                     const { settings } = res.reply;
                                     this.applyService.setVisible(false);
                                     this.applyService.hardReset();
@@ -267,9 +269,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                                     this.applyService.reset();
                                     this.applyService.setVisible(true);
                                 });
-                        }
-                    });
-
+                            }
+                        });
                     this.deletingSystem = this.processService.createProcess(() => {
                         return this.system.deleteFromCurrentAccount();
                     }, {
