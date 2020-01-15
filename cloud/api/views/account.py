@@ -268,6 +268,8 @@ def check_auth_code(request):
     code = request.data['code']
     (email, temp_password) = Account.extract_temp_credentials(code)
     user = django.contrib.auth.authenticate(request=request, username=email, password=temp_password)
+    if user is None:
+        raise APINotAuthorisedException("Auth code has expired.", ErrorCodes.not_authorized)
     return api_success({'email': user.email})
 
 
