@@ -408,7 +408,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
     storePreviousValue(e) {
         // prevents [.+-e] from being inputed
-        if (e.key === '.' || e.key === '+' || e.key === '-' || e.key === 'e') {
+        if (['.', '+', '-', 'e'].indexOf(e.key) > -1) {
             e.preventDefault();
         }
         this.previousInputValue = this.timeUnitCount;
