@@ -1,5 +1,6 @@
 @import '../../../../styles/theme_palette';
 @import '../../../../styles/theme_variables';
+@import '../../../styles/typography';
 @import '~bootstrap/scss/mixins/breakpoints';
 
 nx-system-alerts-component {
@@ -117,6 +118,44 @@ nx-system-alerts-component {
 
         @media (min-width: 1920px) {
             min-width: 900px !important;
+        }
+    }
+
+    .nx-search .drop-container {
+        @include media-breakpoint-down(lg) {
+            flex-direction: column !important;
+        }
+
+        .drop {
+            max-width : none;
+            flex-grow : 1;
+
+            @include media-breakpoint-down(lg) {
+                min-width : 100px;
+                padding-right: 0;
+            }
+
+            @include media-breakpoint-down(xl) {
+                min-width     : 100px;
+            }
+
+            // "Clear" button
+            &:last-of-type {
+                .btn-text {
+                    @extend #light15;
+                    float         : right !important;
+                    padding-right : 2px; // align visually - table border create a illusion that button text is not aligned
+                }
+            }
+
+            &.large {
+                min-width : 300px;
+                flex-grow : 2;
+
+                @include media-breakpoint-down(xl) {
+                    min-width : 160px;
+                }
+            }
         }
     }
 }
