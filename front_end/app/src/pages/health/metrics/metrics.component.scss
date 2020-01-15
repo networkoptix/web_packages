@@ -57,6 +57,47 @@ nx-system-metrics-component {
         }
     }
 
+    @media screen and (-ms-high-contrast : active), screen and (-ms-high-contrast : none) {
+        .gridMetricContent {
+            display : flex;
+
+            &.fixedLayout {
+                &--with-panel {
+                    .gridMetricContentComponent {
+                        width         : 70%;
+                        padding-right : 1rem;
+
+                        @include media-breakpoint-down(xxl) {
+                            width : 55%;
+                        }
+
+                        @media (min-width : 1920px) {
+                            //grid-template-columns : $grid-super-wide-table-width $grid-super-wide-panel-width;
+                        }
+                    }
+
+                    .gridMetricContentPanelComponent {
+                        width : 30%;
+
+                        @include media-breakpoint-down(lg) {
+                            width : 100%;
+                        }
+                    }
+                }
+
+                &--no-panel {
+                    .gridMetricContentComponent {
+                        width : 100%;
+                    }
+
+                    .gridMetricContentPanelComponent {
+                        width : 100%;
+                    }
+                }
+            }
+        }
+    }
+
     .data-wrapper {
         @media (min-width: 1280px) {
             min-width: 700px !important;

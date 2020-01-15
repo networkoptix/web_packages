@@ -43,6 +43,34 @@ nx-system-health-component {
     }
   }
 
+  @media screen and (-ms-high-contrast : active), screen and (-ms-high-contrast : none) {
+    .mainGrid {
+      display : flex;
+
+      &.mobileLayout {
+        flex-direction : column;
+
+        .gridMenu {
+          width   : 100%;
+          padding : 0;
+        }
+
+        .gridContent {
+          width : 100%;
+        }
+      }
+
+      .gridMenu {
+        width         : 25%;
+        padding-right : 1rem;
+      }
+
+      .gridContent {
+        width : 75%;
+      }
+    }
+  }
+
 
 
   .error {
@@ -78,6 +106,11 @@ nx-system-health-component {
   }
 
   .menuLinks {
+    div {
+      height: 20px;
+      display: block;
+    }
+
     a {
       svg-icon {
         padding-right: 2px;

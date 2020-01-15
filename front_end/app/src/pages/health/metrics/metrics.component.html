@@ -9,7 +9,10 @@
      [ngClass]="fixedLayoutClass"
      *ngIf="healthService.alertsValues.length">
 
-    <div class="gridMetricContentComponent" *ngIf="selectedData && selectedValues">
+    <div class="gridMetricContentComponent"
+         *ngIf="selectedData && selectedValues"
+         [hidden]="mobileDetailMode && activeEntity">
+
         <div class="gridMetricContentComponentWrapper">
             <div *ngIf="metricValuesLen === 1" class="col-12 col-xl-7 col-xxxl-5 p-0">
                 <nx-single-entity
@@ -18,7 +21,6 @@
                 </nx-single-entity>
             </div>
             <div *ngIf="metricValuesLen > 1" class="p-0" #tableContainer
-                 [hidden]="mobileDetailMode"
                  [ngClass]="{'data-wrapper' : !activeEntity}">
 
                 <div class="mb-3 p-0" #search
@@ -44,8 +46,8 @@
         </div>
     </div>
 
-    <div class="gridMetricContentPanelComponent">
-        <div class="gridMetricContentPanelComponentWrapper pb-3" *ngIf="activeEntity && layoutReady">
+    <div class="gridMetricContentPanelComponent" *ngIf="activeEntity && layoutReady">
+        <div class="gridMetricContentPanelComponentWrapper pb-3">
             <div class="mb-3 all-results-btn"
                  [style.display]="!mobileDetailMode ? 'none' : 'block'">
 
