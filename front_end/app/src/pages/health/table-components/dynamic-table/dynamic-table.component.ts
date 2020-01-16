@@ -251,6 +251,9 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         // TODO: possible optimization - we may not need snapshot params here
         this.params = { ...this.route.snapshot.queryParams };
         if (page) {
+            if (this.currentPage !== page) {
+                this.setClickedRow(undefined);
+            }
             this.currentPage = page;
         }
 

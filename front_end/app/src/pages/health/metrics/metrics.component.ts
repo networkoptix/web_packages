@@ -190,20 +190,24 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
         const queryParams: Params = {};
         this.layoutReady = false;
 
-        if (typeof entity === 'string') {
-            this.activeEntity = this.selectedValues[entity];
-            if (!this.activeEntity) {
-                queryParams.id = undefined;
+        if (entity) {
+            if (typeof entity === 'string') {
+                this.activeEntity = this.selectedValues[entity];
+                if (!this.activeEntity) {
+                    queryParams.id = undefined;
+                    this.uri.updateURI(undefined, queryParams);
+                }
+            } else {
+                this.activeEntity = entity;
+                queryParams.id = entity.id;
                 this.uri.updateURI(undefined, queryParams);
+
+                if (this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.lg)) {
+                    this.mobileDetailMode = true;
+                }
             }
         } else {
-            this.activeEntity = entity;
-            queryParams.id = entity.id;
-            this.uri.updateURI(undefined, queryParams);
-
-            if (this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.lg)) {
-                this.mobileDetailMode = true;
-            }
+            this.resetActiveEntity();
         }
 
         this.setLayout();

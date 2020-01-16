@@ -41,11 +41,19 @@ export class NxUriService {
         }
         replace = replace ? replace : false;
         // changes the route without moving from the current view
-        return this.router.navigate([navigateTo], {
-            queryParams,
-            relativeTo: this.route,
-            replaceUrl: replace,
-            queryParamsHandling: 'merge'
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                return this.router.navigate([navigateTo], {
+                    queryParams,
+                    relativeTo: this.route,
+                    replaceUrl: replace,
+                    queryParamsHandling: 'merge'
+                }).then(success => {
+                    resolve(success);
+                }, error => {
+                    reject(error);
+                });
+            });
         });
     }
 
