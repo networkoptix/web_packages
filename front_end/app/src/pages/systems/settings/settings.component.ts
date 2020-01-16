@@ -163,14 +163,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 this.content = {...this.content}; // trigger onChange
             });
 
-        if (this.CONFIG.accessRoles.options) {
-            this.CONFIG.accessRoles.options.forEach((option) => {
-                if (option.permissions) {
-                    option.permissions = this.normalizePermissionString(option.permissions);
-                }
-            });
-        }
-
         // TODO: add processes back
         // Retrieve users list
         this.gettingSystemUsers = this.processService.createProcess(() => {
@@ -303,7 +295,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
     updateMenu() {
         this.systemNoAccess = false;
-
         if (this.system.permissions.editUsers) {
             this.content.system = this.system;
             let usersNode = this.content.level1.filter((node) => node.id === this.CONFIG.systemMenu.users.id)[0];
@@ -377,9 +368,5 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.dialogs.notify(this.LANG.errorCodes.lostConnection.replace('{{systemName}}',
             this.system.info.name || this.LANG.errorCodes.thisSystem), 'warning');
         setTimeout(() => this.router.navigate(['/systems']), this.CONFIG.alertTimeout);
-    }
-
-    normalizePermissionString(permissions) {
-        return permissions.split('|').sort().join('|');
     }
 }

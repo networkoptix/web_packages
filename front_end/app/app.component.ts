@@ -17,6 +17,7 @@ import 'rxjs-compat/add/observable/fromEvent';
 import { NxScrollMechanicsService } from './src/services/scroll-mechanics.service';
 import { NxUriService } from './src/services/uri.service';
 import { NxPageService } from './src/services/page.service';
+import { NxSystemRole } from './src/services/system.service';
 
 @Component({
     selector: 'nx-app',
@@ -129,6 +130,12 @@ export class AppComponent {
         this.pageService.setPageTitle(this.LANG.pageTitles.default);
 
         // extend CONFIG ... arghhh ugly // @ts-ignore ... no implementation for // @ts-ignore-start/end
+        // This was done every time a system is created. Its only need once
+        this.CONFIG.accessRoles.predefinedRoles.forEach((option: NxSystemRole) => {
+            if (option.permissions) {
+                option.permissions = option.permissions.split('|').sort().join('|');
+            }
+        });
         // @ts-ignore
         this.CONFIG.companyLink = window.SETTINGS.companyLink;
         // @ts-ignore

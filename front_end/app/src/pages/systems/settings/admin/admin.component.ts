@@ -46,6 +46,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     debugMode: boolean;
     betaMode: boolean;
     settings: Settings;
+    settingsSubscription: Subscription;
+    settingsServiceSubscription: Subscription;
     systemSubscription: Subscription;
     viewContainerRef: ViewContainerRef;
     limitSessionTimeUnits: any;
@@ -221,19 +223,28 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     }
 
     init(): void {
-        this.settingsService
+        if (this.settingsServiceSubscription) {
+            this.settingsServiceSubscription.unsubscribe();
+        }
+        this.settingsServiceSubscription = this.settingsService
             .systemSubject
             .subscribe((system) => {
                 if (system) {
                     this.system = system;
                     this.pageService.setPageTitle(this.LANG.pageTitles.systemName.replace('{{systemName}}', this.system.info.name));
+                    if (this.systemSubscription) {
+                        this.systemSubscription.unsubscribe();
+                    }
                     this.systemSubscription = system.infoSubject
                         .pipe(throttleTime(5000))
                         .subscribe(() => {
                             this.settingsService.footerSubject.next(true);
                             this.updateSettings(this.currentlyMerging);
                             if (!this.applyService.locked) {
-                                this.system.updateOrGetSystemSettings().subscribe((res: any) => {
+                                if (this.settingsSubscription) {
+                                    this.settingsSubscription.unsubscribe();
+                                }
+                                this.settingsSubscription = this.system.updateOrGetSystemSettings().subscribe((res: any) => {
                                     const { settings } = res.reply;
                                     this.applyService.setVisible(false);
                                     this.applyService.hardReset();
