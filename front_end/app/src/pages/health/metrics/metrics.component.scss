@@ -61,6 +61,11 @@ nx-system-metrics-component {
         .gridMetricContent {
             display : flex;
 
+            .gridMetricContentPanelComponent {
+                width : 30%;
+                padding-left : 1rem;
+            }
+
             &.fixedLayout {
                 &--with-panel {
                     .gridMetricContentComponent {
@@ -77,7 +82,7 @@ nx-system-metrics-component {
                     }
 
                     .gridMetricContentPanelComponent {
-                        width : 30%;
+                        padding-left : 0;
 
                         @include media-breakpoint-down(lg) {
                             width : 100%;
