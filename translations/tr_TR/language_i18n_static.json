@@ -235,7 +235,7 @@
 			},
 			"subject": {
 				"sales_inquiry": "{{asset}} için satış talebi",
-				"technical_inquiry": "Technical inquiry for {{asset}}",
+				"technical_inquiry": "{{asset}} için teknik sorgulama",
 				"integration_feedback": "Entegrasyon için geri bildirim {{asset}}",
 				"ipvd_feedback_page": "Kameralar sayfası için geri bildirim",
 				"ipvd_feedback_device": "{{asset}} hakkında geri bildirim"
@@ -415,8 +415,8 @@
 	},
 	"systemAdministration": "Sistem Yönetimi",
 	"users": "Kullanıcılar",
-	"testedVersionLabel": "Tested with {{vmsName}} version:",
-	"testedVersionsLabel": "Tested with {{vmsName}} versions:",
+	"testedVersionLabel": "{{vmsName}} versiyonda test edildi:",
+	"testedVersionsLabel": "{{vmsName}} versiyonda test edildi:",
 	"About %CLOUD_NAME%": "%CLOUD_NAME% Hakkında",
 	"Download %VMS_NAME%": "İndir %VMS_NAME%",
 	"Integrations": "Entegrasyonlar",
@@ -428,7 +428,7 @@
 	"WHEN_MERGE_FINISHES": "Birleştirme işlemi tamamlandığında, bu sistemdeki tüm kullanıcılar ve kameralar kullanılabilir hale gelir <strong>\" Sistem{{targetSystemName}}</strong> \" ve bu sistem silinecektir.",
 	"FAILED_SYSTEM_DESCR": "Bu bağlantı bozuk,<br>sistem bağlantısı kesilebilir %CLOUD_NAME% den kesilebilir,<br>sisteme erişim engellenmiş olabilir,<br>yada farklı bir hesapla sisteme girilmiş olabilir.",
 	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "%CLOUD_NAME% ile bağlı hiçbir Sisteminiz yok",
-	"NO_SYSTEMS_LOGIN": "Log in to your System using %VMS_NAME%",
+	"NO_SYSTEMS_LOGIN": "%VMS_NAME%kullanarak sisteminize giriş yapın",
 	"NO_SYSTEMS_GOTO_ADMINISTRATION": "\"Sistem Yönetimi\" iletişim kutusundaki \"Bulut\" sekmesine gidin",
 	"NO_SYSTEMS_CONNECT_SYSTEM": "Sistem %CLOUD_NAME% e bağlan\""
 }

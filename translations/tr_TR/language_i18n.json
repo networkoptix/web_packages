@@ -102,7 +102,7 @@
     "Multi Sensor": "Çoklu sensör",
     "NO_SYSTEMS_CONNECT_SYSTEM": "Sistem %CLOUD_NAME% e bağlan\"",
     "NO_SYSTEMS_GOTO_ADMINISTRATION": "\"Sistem Yönetimi\" iletişim kutusundaki \"Bulut\" sekmesine gidin",
-    "NO_SYSTEMS_LOGIN": "Log in to your System using %VMS_NAME%",
+    "NO_SYSTEMS_LOGIN": "%VMS_NAME%kullanarak sisteminize giriş yapın",
     "NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "%CLOUD_NAME% ile bağlı hiçbir Sisteminiz yok",
     "New Password": "Yeni Parola",
     "No unsaved changes": "Kaydedilmemiş değişiklik yok",
@@ -141,7 +141,7 @@
     "Settings": "Ayarlar",
     "Show All": "Tümünü Göster",
     "Some of your servers don't support cloud System merge because of outdated software version.": "Sunucularınızın bazıları, eski yazılım sürümleri nedeniyle bulut sistem birleştirme özelliğini desteklemiyor.",
-    "Subject": "Subject",
+    "Subject": "Konu",
     "Support": "Destek",
     "Support E-mail": "Destek maili",
     "Support URL": "Destek URL'si",
@@ -304,7 +304,7 @@
                 "ipvd_feedback_device": "{{asset}} hakkında geri bildirim",
                 "ipvd_feedback_page": "Kameralar sayfası için geri bildirim",
                 "sales_inquiry": "{{asset}} için satış talebi",
-                "technical_inquiry": "Technical inquiry for {{asset}}"
+                "technical_inquiry": "{{asset}} için teknik sorgulama"
             },
             "title": {
                 "integration": "{{companyName}} ile iletişime geçin",
@@ -613,8 +613,8 @@
         "online": "çevrimiçi",
         "unavailable": "kullanılamaz"
     },
-    "testedVersionLabel": "Tested with {{vmsName}} version:",
-    "testedVersionsLabel": "Tested with {{vmsName}} versions:",
+    "testedVersionLabel": "{{vmsName}} versiyonda test edildi:",
+    "testedVersionsLabel": "{{vmsName}} versiyonda test edildi:",
     "users": "Kullanıcılar",
     "you": "sen"
 }
