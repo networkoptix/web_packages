@@ -158,6 +158,7 @@
 		"myIntegrationsLabel": "Мой",
 		"previewRibbonText": "Эта страница является предварительным просмотром последних изменений и не соответствует общедоступной версии.",
 		"backToEditText": "Вернуться к интерфейсам редактирования",
+		"requirements": "{{name}} Requirements",
 		"Access Control": "Контроль доступа",
 		"Connector": "Коннектор",
 		"Data Analytics": "Аналитика данных",

@@ -158,6 +158,7 @@
 		"myIntegrationsLabel": "שלי",
 		"previewRibbonText": "דף זה הוא תצוגה מקדימה של השינויים האחרונים, והוא אינו תואם לגרסה הזמינה לציבור.",
 		"backToEditText": "חזרה לממשקי העריכה",
+		"requirements": "{{name}} דרישות",
 		"Access Control": "בקרת כניסה",
 		"Connector": "מחבר",
 		"Data Analytics": "ניתוח נתונים",

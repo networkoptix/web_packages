@@ -158,6 +158,7 @@
 		"myIntegrationsLabel": "الخاص بي",
 		"previewRibbonText": "This page is a preview of the latest changes, and it doesn't match publicly available version.",
 		"backToEditText": "Back to the editing interfaces",
+		"requirements": "{{name}} Requirements",
 		"Access Control": "Access Control",
 		"Connector": "Connector",
 		"Data Analytics": "Data Analytics",

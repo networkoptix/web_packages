@@ -158,6 +158,7 @@
 		"myIntegrationsLabel": "Mine",
 		"previewRibbonText": "Denne siden er en forhåndsvisning av de siste endringene, og den stemmer ikke overens med offentlig tilgjengelig versjon.",
 		"backToEditText": "Tilbake til redigeringsgrensesnittene",
+		"requirements": "{{name}} Requirements",
 		"Access Control": "Adgangskontroll",
 		"Connector": "Tilkobler",
 		"Data Analytics": "Data Analytics",

@@ -158,6 +158,7 @@
 		"myIntegrationsLabel": "自分",
 		"previewRibbonText": "このページは最新の変更のプレビューです、一般的に利用可能なバージョンと一致しません。",
 		"backToEditText": "編集インターフェースに戻る",
+		"requirements": "{{name}} Requirements",
 		"Access Control": "アクセスコントロール",
 		"Connector": "コネクタ",
 		"Data Analytics": "データ分析",

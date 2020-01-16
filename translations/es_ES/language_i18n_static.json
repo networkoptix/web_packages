@@ -158,6 +158,7 @@
 		"myIntegrationsLabel": "Mío",
 		"previewRibbonText": "Esta página es una vista previa de los últimos cambios y no coincide con la versión de acceso público.",
 		"backToEditText": "Volver a las interfaces de edición",
+		"requirements": "{{name}} Requirements",
 		"Access Control": "Control de Acceso",
 		"Connector": "Conector",
 		"Data Analytics": "Analítica de datos",

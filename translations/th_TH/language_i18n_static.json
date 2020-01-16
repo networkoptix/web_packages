@@ -158,6 +158,7 @@
 		"myIntegrationsLabel": "Mine",
 		"previewRibbonText": "หน้านี้เป็นหน้าตัวอย่างของการเปลี่ยนแปลงล่าสุดและไม่ตรงกับรุ่นที่เผยแพร่สู่สาธารณะ",
 		"backToEditText": "กลับไปที่อินเทอร์เฟซการแก้ไข",
+		"requirements": "{{name}} Requirements",
 		"Access Control": "การควบคุมการเข้าถึง",
 		"Connector": "เชื่อมต่อ",
 		"Data Analytics": "การวิเคราะห์ข้อมูล",

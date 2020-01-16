@@ -158,6 +158,7 @@
 		"myIntegrationsLabel": "我的",
 		"previewRibbonText": "此页面是最新更改的预览，不与公开版本相符。",
 		"backToEditText": "返回编辑界面",
+		"requirements": "{{name}} Requirements",
 		"Access Control": "门禁管理",
 		"Connector": "连接器",
 		"Data Analytics": "数据分析",

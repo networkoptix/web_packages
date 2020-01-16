@@ -158,6 +158,7 @@
 		"myIntegrationsLabel": "Mina",
 		"previewRibbonText": "Den här sidan är en förhandsvisning av de senaste ändringarna, och den matchar inte den offentligt tillgängliga versionen.",
 		"backToEditText": "Tillbaka till redigeringsgränssnittet",
+		"requirements": "{{name}} Krav",
 		"Access Control": "Åtkomstkontroll",
 		"Connector": "Anslutare",
 		"Data Analytics": "Dataanalys",

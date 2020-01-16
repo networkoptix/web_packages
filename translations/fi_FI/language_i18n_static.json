@@ -158,6 +158,7 @@
 		"myIntegrationsLabel": "Mine",
 		"previewRibbonText": "Tällä sivulla on esikatselu viimeisimmistä muutoksista, ja se ei kata yleisesti saatavilla olevia versioita.",
 		"backToEditText": "Takaisin muokkausliittymiin",
+		"requirements": "{{name}} Requirements",
 		"Access Control": "Kulunvalvonta",
 		"Connector": "Connector",
 		"Data Analytics": "Data Analytiikka",
