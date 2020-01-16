@@ -115,6 +115,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         if (this.infoSubscription && !this.infoSubscription.closed) {
             this.infoSubscription.unsubscribe();
             this.system.stopPoll();
+            this.system = undefined;
         }
     }
 
@@ -268,7 +269,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                 if (account) {
                     this.user = account;
                     if (this.activeSystem) {
-                        if (!this.system || this.activeSystem.id !== this.systemId) {
+                        if (!this.system || this.system.id !== this.systemId) {
                             this.stopActiveSubscription();
                             this.system = this.systemService.createSystem(this.user.email, this.activeSystem.id);
 
