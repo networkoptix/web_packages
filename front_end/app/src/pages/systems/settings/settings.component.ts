@@ -317,7 +317,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 usersNode = {
                     id: this.CONFIG.systemMenu.users.id,
                     icon: this.CONFIG.systemMenu.users.icon,
-                    label: this.LANG.users,
+                    label: this.LANG.users.userMenuTitle,
                     path: this.CONFIG.systemMenu.users.path,
                     level2: [
                         {

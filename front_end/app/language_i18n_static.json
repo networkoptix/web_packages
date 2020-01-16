@@ -484,7 +484,11 @@
 		}
 	},
 	"systemAdministration": "System Administration",
-	"users": "Users",
+	"users": {
+		"userMenuTitle": "Users",
+		"cloudDeleteMessage": "Remove User",
+		"localDeleteMessage": "Delete User"
+	},
 	"servers": {
         "servers": "Servers",
         "portWarning": "Port numbers less than 1024 are restricted. Server may become unaccesssible.",

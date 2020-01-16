@@ -36,11 +36,25 @@
                     <span class="help-block pt-0" [innerHtml]="accessDescription"></span>
                 </div>
             </nx-section>
-            <nx-section *ngIf="selectedUser.canBeDeleted && system.currentUser.isAdmin">
-                <div class="float-left mr-2">
+            <nx-section >
+                <div *ngIf="system && selectedUser && !selectedUser.isCloud && selectedUser.email === system.currentUserEmail">
+                    <button class="btn btn-default"
+                            (click)="routeToAccountSettings()"
+                            translate>         
+                        Account Settings
+                    </button>
+                </div>
+                <div class="float-right"
+                    *ngIf="selectedUser.canBeDeleted && system.currentUser.isAdmin">
                     <button class="btn btn-default"
                             [disabled]="!systemAvailable"
-                            (click)="removeUser()" translate>Remove User</button>
+                            (click)="removeUser()">
+                        <svg-icon [src]="CONFIG.icons.dir + 'delete.svg'"
+                            [applyCss]="true"
+                            [svgStyle]="{'width.px': '24', 'height.px': '24', 'pointer-events': 'none'}"
+                            class="ml-n2 mr-1"></svg-icon>            
+                        {{deleteMessage}}
+                    </button>
                 </div>
             </nx-section>
         </nx-block>

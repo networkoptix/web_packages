@@ -40,6 +40,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
     systemAvailable: boolean;
     system: NxSystem;
     viewContainerRef: ViewContainerRef;
+    deleteMessage: string;
 
     userEnabled = new Watcher<boolean>();
     userRole = new Watcher<string>();
@@ -189,6 +190,8 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             }
             this.applyService.hardReset();
             this.selectedUser = {... user};
+            this.deleteMessage = this.selectedUser.isCloud ?
+                this.LANG.users.cloudDeleteMessage : this.LANG.users.localDeleteMessage;
             this.menuService.setDetailsSection(this.selectedUser.id.replace(/{|}/g, ''));
             this.setPermission(this.selectedUser.role);
             this.userEnabled.value = this.selectedUser.isEnabled;
@@ -211,6 +214,10 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
     updateEnabled(state) {
         this.selectedUser.isEnabled = state;
         this.userEnabled.value = state;
+    }
+
+    routeToAccountSettings() {
+        this.uriService.updateURI('/account');
     }
 }
 

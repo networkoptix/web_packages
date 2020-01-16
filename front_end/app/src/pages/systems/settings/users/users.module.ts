@@ -12,6 +12,8 @@ import { NxSystemUsersComponent } from './users.component';
 import { TranslateModule }     from '@ngx-translate/core';
 import { ComponentsModule }    from '../../../../components/components.module';
 
+import { AngularSvgIconModule }      from 'angular-svg-icon';
+
 @NgModule({
     imports        : [
         CommonModule,
@@ -23,6 +25,7 @@ import { ComponentsModule }    from '../../../../components/components.module';
         TranslateModule,
         ComponentsModule,
         DirectivesModule,
+        AngularSvgIconModule,
     ],
     providers      : [],
     declarations   : [
