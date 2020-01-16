@@ -265,5 +265,13 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                     }
                 }
             });
-        }
+    }
+
+    canShowNav() {
+        return this.navVisible &&
+            this.activeSystem &&
+            !this.active.integrations &&
+            !this.active.ipvd;
+    }
+
 }

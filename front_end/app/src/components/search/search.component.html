@@ -45,12 +45,12 @@
         <div class="row col-12 m-0 p-0"
              [ngClass]="{'mt-3' : layout != 'selectors'}"
              [hidden]="!showAdvancedOptions && layout != 'selectors'"
-              *ngIf="localFilter.tags && localFilter.tags.length || localFilter.selects && localFilter.selects.length || localFilter.multiselects && localFilter.multiselects.length">
+              *ngIf="canShowSelectorsAndTags()">
 
             <div class="drop-container row col-12 m-0 p-0 d-flex flex-wrap flex-column flex-md-row"
                  [ngClass]="{'mt-3' : layout != 'selectors'}"
                  [ngStyle]="{'max-width': layout == 'selectors' ? '100%': '992px'}"
-                 *ngIf="localFilter.selects && localFilter.selects.length || localFilter.multiselects && localFilter.multiselects.length">
+                 *ngIf="canShowSelectors()">
 
                 <div class="drop {{select.css || ''}}" *ngFor="let select of localFilter.selects"
                      [ngClass]="{'mb-2' : layout == 'selectors', 'mb-3' : layout != 'selectors'}">

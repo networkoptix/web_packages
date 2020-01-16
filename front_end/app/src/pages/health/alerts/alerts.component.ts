@@ -350,6 +350,10 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         }
     }
 
+    canSeeTable() {
+        return this.tableHeaders && this.healthService.alertsValues && !this.mobileDetailMode;
+    }
+
     private setLayout() {
         setTimeout(() => {
             if (this.elementTable) {

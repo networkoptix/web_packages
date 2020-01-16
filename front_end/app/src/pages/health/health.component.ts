@@ -500,4 +500,8 @@ export class NxHealthComponent implements OnInit, OnDestroy {
             this.setupReport(data);
         });
     }
+
+    canShowOffline() {
+        return !this.healthService.ready && !this.hasServerError && !this.outdatedVersion;
+    }
 }

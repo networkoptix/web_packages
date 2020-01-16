@@ -146,6 +146,14 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
         this.router.navigate(['/systems/' + system.id]);
     }
 
+    canShowTag(system) {
+        return system.stateOfHealth !== this.CONFIG.systemStatuses.onlineStatus && this.LANG.systemStatuses;
+    }
+
+    canShowButton(system) {
+        return this.LANG.system && system.stateOfHealth === this.CONFIG.systemStatuses.onlineStatus;
+    }
+
     ngOnDestroy(): void {}
 
 }

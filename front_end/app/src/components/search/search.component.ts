@@ -416,4 +416,15 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
                 this.onChangeCallback(this.localFilter);
             });
     }
+
+    canShowSelectors() {
+        return this.localFilter.selects && this.localFilter.selects.length ||
+            this.localFilter.multiselects && this.localFilter.multiselects.length;
+    }
+
+    canShowSelectorsAndTags() {
+        return this.localFilter.tags && this.localFilter.tags.length ||
+            this.localFilter.selects && this.localFilter.selects.length ||
+            this.localFilter.multiselects && this.localFilter.multiselects.length;
+    }
 }

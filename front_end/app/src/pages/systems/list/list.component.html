@@ -31,12 +31,13 @@
 
                         <nx-tag style="display: block; margin-top: 24px;"
                               type="{{CONFIG.systemStatuses[system.stateOfHealth].style || CONFIG.systemStatuses.default.style}}"
-                              *ngIf="system.stateOfHealth != CONFIG.systemStatuses.onlineStatus && LANG.systemStatuses">
+                              *ngIf="canShowTag(system)">
                             {{LANG.systemStatuses[system.stateOfHealth] || system.stateOfHealth | highlight:search.value}}
                         </nx-tag>
                         <nx-client-button [system]="system"
                                           [actionType]="(system) ? 'default' : 'primary'"
-                                          *ngIf="LANG.system && system.stateOfHealth == CONFIG.systemStatuses.onlineStatus"></nx-client-button>
+                                          *ngIf="canShowButton(system)">
+                        </nx-client-button>
 
                     </div>
                 </div>
