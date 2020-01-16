@@ -57,7 +57,11 @@ Restart
     Open Restore Password Dialog With Link
 
 Open Restore Password Dialog With Link
-    Open Browser and go to URL    ${url}/restore_password
+    Open Browser and go to URL    ${url}
+    Log In    ${EMAIL OWNER}    ${password}
+    Log Out
+    Validate Log Out
+    Go To    ${url}/restore_password
     Wait Until Elements Are Visible    ${RESTORE PASSWORD EMAIL INPUT}    ${RESET PASSWORD BUTTON}
     Input Text    ${RESTORE PASSWORD EMAIL INPUT}    ${EMAIL OWNER}
     Click Button    ${RESET PASSWORD BUTTON}
