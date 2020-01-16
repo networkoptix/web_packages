@@ -1,18 +1,17 @@
 @import '../../../../styles/theme_palette';
 @import '../../../../styles/theme_variables';
+@import '../../../styles/typography';
 
 .card {
     height: 100%;
 }
 
 .card-header {
-    padding: 12px 16px;
-    background-color: $additional_light1;
-    border-bottom: 1px solid $light4;
-    color: $dark9;
-    font-size: 15px;
-    font-family: $font-family-medium;
-    line-height: 24px;
+    @extend #medium15;
+    padding          : 12px 16px;
+    background-color : $additional_light1;
+    border-bottom    : 1px solid $light4;
+    line-height      : 24px;
 }
 
 .card-body {

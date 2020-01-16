@@ -4,11 +4,11 @@
 .section-placeholder {
     position: relative;
     display: flex;
-    
+
     .page-placeholder {
         .placeholder-content {
             transform: none !important;
-    
+
             .placeholder-icon {
                 margin: 80px 0 40px;
             }
@@ -23,22 +23,22 @@
     height: calc(100% - 48px);
     /*If the system is offline this should cover everything.
                      Must always be the highest z-index*/
-    
+
     & > .placeholder {
         opacity : 1;
     }
-    
+
     .placeholder > .placeholder-content {
         top : 40%;
     }
-    
+
     &.offline {
         @media (max-width : 991px) {
             & > .placeholder {
                 height   : auto !important;
                 position : relative;
                 margin   : 50px 0;
-                
+
                 & > .placeholder-content {
                     top       : 0;
                     transform : none;
@@ -51,12 +51,12 @@
 .card {
     &.hoverable {
         margin-bottom : 10px;
-        
+
         &:hover {
             box-shadow : 0 2px 5px 0 transparentize($dark15, 0.8);
         }
     }
-    
+
     table {
         margin : 0;
     }
@@ -64,7 +64,7 @@
 
 .jumbotron {
     padding : 80px 0 0 0;
-    
+
     .welcome-caption {
         font-size       : 64px;
         font-family     : $font-family-light;
@@ -74,54 +74,60 @@
         margin-top      : 0;
         margin-bottom   : 16px;
     }
-    
+
     .lead {
+        @extend #regular18;
         margin-bottom  : 48px;
         padding-bottom : 1px;
-        font-size      : 18px;
-        font-family    : $font-family-regular;
     }
-    
+
+    // IE11
+    @media all and (-ms-high-contrast : none), (-ms-high-contrast : active) {
+        .promo-block {
+            @include media-breakpoint-up(sm) {
+                flex : 0 0 31.4% !important;
+            }
+        }
+    }
+
     .promo-block {
         @extend .card;
         text-align : center;
         padding    : 0;
         margin     : 0 8px 16px;
-        
+
         @include media-breakpoint-up(sm) {
             flex : 0 0 calc(100% / 3 - 16px);
         }
-        
+
         h2 {
             @extend .card--header;
-            font-family     : $font-family-medium;
-            font-size       : 18px;
+            @extend #medium18;
             line-height     : unset;
             padding-top     : 103px;
             padding-bottom  : 35px;
             background      : $additional_light1 no-repeat 50% 20px;
             background-size : auto 64px;
         }
-        
+
         &:nth-of-type(1) h2 {
             background-image : url('/static/images/promo/landing_promo_1.png');
         }
-        
+
         &:nth-of-type(2) h2 {
             background-image : url('/static/images/promo/landing_promo_2.png');
         }
-        
+
         &:nth-of-type(3) h2 {
             background-image : url('/static/images/promo/landing_promo_3.png');
         }
-        
+
         h2, h4 {
             justify-content : center;
         }
-        
+
         h4 {
-            font-family : $font-family-regular;
-            font-size   : 14px;
+            @extend #regular14;
             margin      : 20px 16px;
             line-height : 1.4;
         }

@@ -38,5 +38,12 @@ Test Submit Request Message
     Wait Until Element Is Visible    ${IPVD FEEDBACK}
     Element Text Should Be    ${IPVD FEEDBACK TITLE}    ${IPVD FEEDBACK FOR CAMERAS PAGE}
     Submit Feedback/Request Form    ${Your Name}    ${Email}    ${Message}
-    Run Keyword If    ${Expect Success}==True    Validate Message Sent
+    Run Keyword If    ${Expect Success}==True    On Success    ${Email}
     ...    ELSE IF    ${Expect Success}==False   Validate Message Not Sent
+
+On Success
+    [arguments]    ${email}
+    Validate Message Sent
+    Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
+    ${email}    Wait For Email    recipient=${email}    timeout=120    status=UNSEEN
+    Delete Email    ${email}

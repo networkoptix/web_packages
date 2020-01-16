@@ -1,6 +1,7 @@
 @import '../../../../styles/native-theme/theme_palette';
 @import '../../../../styles/custom/custom_palette';
 @import '../../../../styles/theme_variables';
+@import '../../../styles/typography';
 
 .plugin {
     text-decoration : none;
@@ -18,18 +19,17 @@
             flex-direction  : column-reverse;
             align-items     : flex-end;
             justify-content : space-between;
-            
+
             > div {
+                @extend #regular12;
                 color       : $light12;
-                font-size   : $font-size-sm;
                 line-height : 1rem;
-                font-family : $font-family-regular;
             }
-            
+
             .platforms {
                 display         : flex;
                 justify-content : flex-end;
-                
+
                 img {
                     height      : 1rem;
                     width       : 1rem;
@@ -38,7 +38,7 @@
             }
         }
     }
-    
+
     &--body {
         &-name {
             h3 {
@@ -46,25 +46,23 @@
                 line-height : 24px;
             }
         }
-        
+
         &-by {
             color     : $light16;
             font-size : $font-size-ssm;
         }
-        
+
         &-descr {
-            font-family : $font-family-regular;
-            font-size   : $font-size-base;
+            @extend #regular13;
             margin-top  : .5rem;
         }
     }
 }
 
 .text-placeholder {
-    color       : $light16;
-    font-family : $font-family-regular;
-    font-size   : 20px;
-    height      : 32px;
+    @extend #regular20;
+    color  : $light16;
+    height : 32px;
 }
 
 .row {

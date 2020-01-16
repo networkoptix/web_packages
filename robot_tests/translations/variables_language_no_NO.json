@@ -65,7 +65,7 @@
     "YOUR ACCESS LEVEL TEXT": "Your access level",
     "USER DISABLED TEXT": "User disabled",
     "NO UNSAVED CHANGES TEXT": "No unsaved changes",
-    "ABOUT": "Om",
+    "ABOUT": "About %PRODUCT_NAME%",
     "KNOWN LIMITATIONS": "Kjente begrensninger",
     "SUPPORT": "Brukerstøtte",
     "REMOTE CONNECTIVITY": "Fjerntilkobling",
@@ -203,5 +203,11 @@
     "ALLOW ONLY SECURE TEXT": "Tillat bare sikre tilkoblinger",
     "ENCRYPT VIDEO TRAFFIC TEXT": "Krypter videotrafikk",
     "ENCRYPT VIDEO TRAFFIC DESCRIPTION TEXT": "Only client-server video traffic can be encrypted.",
-    "LIMIT SESSION DURATION TEXT": "Limit session duration to"
+    "LIMIT SESSION DURATION TEXT": "Limit session duration to",
+    "RELEASES TAB TEXT": "Releases",
+    "PATCHES TAB TEXT": "Patches",
+    "BETAS TAB TEXT": "Betas",
+    "SALES INQUIRY TEXT": "Sales inquiry for vis - QA - face_recognition",
+    "TECHNICAL INQUIRY TEXT": "Technical inquiry for vis - QA - face_recognition",
+    "FEEDBACK TEXT": "Feedback for integration vis - QA - face_recognition"
 }

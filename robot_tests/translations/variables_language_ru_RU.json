@@ -65,7 +65,7 @@
     "YOUR ACCESS LEVEL TEXT": "Ваш уровень доступа",
     "USER DISABLED TEXT": "Пользователь отключен",
     "NO UNSAVED CHANGES TEXT": "Нет несохраненных изменений",
-    "ABOUT": "О",
+    "ABOUT": "About %PRODUCT_NAME%",
     "KNOWN LIMITATIONS": "Известные ограничения",
     "SUPPORT": "Техническая поддержка",
     "REMOTE CONNECTIVITY": "Удаленное подключение",
@@ -203,5 +203,11 @@
     "ALLOW ONLY SECURE TEXT": "Разрешать только безопасные соединения",
     "ENCRYPT VIDEO TRAFFIC TEXT": "Шифровать видео трафик",
     "ENCRYPT VIDEO TRAFFIC DESCRIPTION TEXT": "Only client-server video traffic can be encrypted.",
-    "LIMIT SESSION DURATION TEXT": "Limit session duration to"
+    "LIMIT SESSION DURATION TEXT": "Limit session duration to",
+    "RELEASES TAB TEXT": "Releases",
+    "PATCHES TAB TEXT": "Patches",
+    "BETAS TAB TEXT": "Betas",
+    "SALES INQUIRY TEXT": "Sales inquiry for vis - QA - face_recognition",
+    "TECHNICAL INQUIRY TEXT": "Technical inquiry for vis - QA - face_recognition",
+    "FEEDBACK TEXT": "Feedback for integration vis - QA - face_recognition"
 }

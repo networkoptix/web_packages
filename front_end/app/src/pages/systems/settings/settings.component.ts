@@ -163,14 +163,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 this.content = {...this.content}; // trigger onChange
             });
 
-        if (this.CONFIG.accessRoles.options) {
-            this.CONFIG.accessRoles.options.forEach((option) => {
-                if (option.permissions) {
-                    option.permissions = this.normalizePermissionString(option.permissions);
-                }
-            });
-        }
-
         // TODO: add processes back
         // Retrieve users list
         this.gettingSystemUsers = this.processService.createProcess(() => {
@@ -427,9 +419,5 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         if (this.system.currentServerNotBusy) {
             setTimeout(() => this.router.navigate(['/systems']), this.CONFIG.alertTimeout);
         }
-    }
-
-    normalizePermissionString(permissions) {
-        return permissions.split('|').sort().join('|');
     }
 }

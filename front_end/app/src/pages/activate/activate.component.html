@@ -19,15 +19,17 @@
             Your account is successfully activated
         </h1>
         <h1 class="process-success">
-            <a class="btn btn-default" href (click)="login()">Log In</a>
+            <a class="btn btn-default" href (click)="login()" translate>Log In</a>
         </h1>
     </div>
 
     <div *ngIf="reactivating" class="text-center">
         <div *ngIf='accountInfo.email'>
-            <h1 translate>You have registered in %CLOUD_NAME%</h1>
-            <p>We've sent you a letter with activation link to {{accountInfo.email}}.<br>
-                Please activate your account by visiting this link.</p>
+            <h1><span translate>You have registered in</span> {{CONFIG.cloudName}}</h1>
+            <p>
+                <span translate>We've sent you a letter with activation link to</span> {{accountInfo.email}}.<br>
+                <span translate>Please activate your account by visiting this link.</span>
+            </p>
         </div>
         <h1 *ngIf="!accountInfo.email" translate>Activate your account</h1>
         <form name="reactivateAccount"

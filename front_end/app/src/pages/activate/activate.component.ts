@@ -11,6 +11,7 @@ import { NxUrlProtocolService }      from '../../services/url-protocol.service';
 import { SessionStorageService }     from 'ngx-store';
 import { NxAccountService }          from '../../services/account.service';
 import { NxCloudApiService }         from '../../services/nx-cloud-api';
+import { NxConfigService }           from '../../services/nx-config';
 
 @Component({
     selector   : 'nx-activate-component',
@@ -24,6 +25,7 @@ export class NxActivateComponent implements OnInit {
     @Input() uriParamCode;
 
     location: any;
+    CONFIG: any;
     LANG: any = {};
     accountInfo: any = {};
     activate: any;
@@ -41,7 +43,8 @@ export class NxActivateComponent implements OnInit {
             process: ''
         };
 
-        this.LANG = this.language.getTranslations();
+        this.CONFIG = this.configService.getConfig();
+        this.LANG = this.languageService.getTranslations();
         this.pageService.setPageTitle(this.LANG.pageTitles.activate);
 
         this.activate = this.processService.createProcess(() => {
@@ -102,7 +105,8 @@ export class NxActivateComponent implements OnInit {
                 private dialogs: NxDialogsService,
                 private route: ActivatedRoute,
                 private router: Router,
-                private language: NxLanguageProviderService,
+                private languageService: NxLanguageProviderService,
+                private configService: NxConfigService,
                 private pageService: NxPageService,
     ) {
 

@@ -10,7 +10,7 @@
          [ngClass]="fixedLayoutClass"
          *ngSwitchDefault>
 
-        <div class="gridMetricContentComponent">
+        <div class="gridMetricContentComponent" [hidden]="mobileDetailMode && activeTableEntity">
             <div class="gridMetricContentComponentWrapper" >
                 <div class="d-flex flex-wrap p-0" *ngIf="!mobileDetailMode" #tiles>
                     <div *ngFor="let alert of alertCards; trackBy: trackItem" class="mb-3 mr-3 card-container">
@@ -23,9 +23,10 @@
                 <hr class="pb-3 m-0">
 
                 <div *ngIf="canSeeTable()" #table
+                     [hidden]="mobileDetailMode"
                      [ngClass]="{'data-wrapper' : !activeTableEntity}">
 
-                    <div class="" *ngIf="!mobileDetailMode" #search>
+                    <div class="" *ngIf="!mobileDetailMode" #search [ngStyle]="{'width': tableWrapper + 'px'}">
                         <nx-search
                                 name="filterModel"
                                 [ngModel]="filterModel"
@@ -47,8 +48,8 @@
             </div>
         </div>
 
-        <div class="gridMetricContentPanelComponent">
-            <div class="gridMetricContentPanelComponentWrapper pb-3" *ngIf="activePanelEntity">
+        <div class="gridMetricContentPanelComponent" *ngIf="activePanelEntity && layoutReady">
+            <div class="gridMetricContentPanelComponentWrapper pb-3">
                 <div class="mb-3 all-results-btn"
                      [style.display]="!mobileDetailMode ? 'none' : 'block'">
 

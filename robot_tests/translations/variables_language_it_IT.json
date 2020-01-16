@@ -65,7 +65,7 @@
     "YOUR ACCESS LEVEL TEXT": "Il tuo livello di accesso",
     "USER DISABLED TEXT": "Utente disabilitato",
     "NO UNSAVED CHANGES TEXT": "Modifiche non salvate",
-    "ABOUT": "Informazioni su",
+    "ABOUT": "About %PRODUCT_NAME%",
     "KNOWN LIMITATIONS": "Limitazioni conosciute",
     "SUPPORT": "Supporto",
     "REMOTE CONNECTIVITY": "Connettività remota",
@@ -203,5 +203,11 @@
     "ALLOW ONLY SECURE TEXT": "Consenti solo connessioni protette",
     "ENCRYPT VIDEO TRAFFIC TEXT": "Cripta il traffico video",
     "ENCRYPT VIDEO TRAFFIC DESCRIPTION TEXT": "Solo il traffico video client-server può essere crittografato.",
-    "LIMIT SESSION DURATION TEXT": "Limita la durata della sessione"
+    "LIMIT SESSION DURATION TEXT": "Limita la durata della sessione",
+    "RELEASES TAB TEXT": "Releases",
+    "PATCHES TAB TEXT": "Patches",
+    "BETAS TAB TEXT": "Betas",
+    "SALES INQUIRY TEXT": "Sales inquiry for vis - QA - face_recognition",
+    "TECHNICAL INQUIRY TEXT": "Technical inquiry for vis - QA - face_recognition",
+    "FEEDBACK TEXT": "Feedback for integration vis - QA - face_recognition"
 }

@@ -53,7 +53,7 @@ class FilterErrorMiddleware(object):
                 template_name = response.template_name[0]
             else:
                 template_name = response.template_name
-            if 'invalid_setup' in template_name:
+            if template_name and 'invalid_setup' in template_name:
                 return redirect(request.path_info + '?e=1')
 
         return response

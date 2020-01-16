@@ -1,7 +1,8 @@
 @import '../../styles/custom/custom_palette';
 @import '../../styles/theme_palette';
 @import '../../styles/theme_variables';
-@import '_mixins';
+@import 'mixins';
+@import 'typography';
 
 .form-control {
     display          : block;
@@ -37,7 +38,7 @@
         border-color : $brand_core;
         box-shadow   : none;
     }
-    
+
     &[class*="ng-invalid"]:not(.ng-untouched) {
         border-color : $error;
         color        : $error;
@@ -54,14 +55,14 @@
         input {
             border-color : $error;
             color        : $error;
-    
+
             + .input-group-addon {
                 border-color     : transparent;
                 background-color : transparent;
             }
         }
     }
-    
+
     &.ng-untouched {
         input {
             border-color : $light6 !important;
@@ -71,10 +72,9 @@
 }
 
 .input-error {
-    font-family : $font-family-regular;
-    font-size   : rem(13px);
-    line-height : 1rem;
+    @extend #regular13;
     color       : $error !important;
+    line-height : 1rem;
 
     @include media-breakpoint-down(sm) {
         margin-top : .5rem;

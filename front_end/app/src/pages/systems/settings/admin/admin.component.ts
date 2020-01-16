@@ -1,6 +1,6 @@
 import {
-    Component, OnDestroy, OnInit, Inject, ViewChildren,
-    QueryList, ElementRef, ViewContainerRef,
+    Component, OnDestroy, OnInit, Inject,
+    ViewChild, ElementRef, ViewContainerRef,
 }                                    from '@angular/core';
 import { ActivatedRoute, Router }    from '@angular/router';
 import { NxConfigService }           from '../../../../services/nx-config';
@@ -14,6 +14,7 @@ import { NxAccountService }          from '../../../../services/account.service'
 import { NxProcessService }          from '../../../../services/process.service';
 import { NxSystem }                  from '../../../../services/system.service';
 import { Subscription }              from 'rxjs';
+import { throttleTime }              from 'rxjs/operators';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 import { NxApplyService, Watcher }   from '../../../../services/apply.service';
 
@@ -43,18 +44,21 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     debugMode: boolean;
     betaMode: boolean;
     settings: Settings;
+    settingsSubscription: Subscription;
+    settingsServiceSubscription: Subscription;
     systemSubscription: Subscription;
     viewContainerRef: ViewContainerRef;
     limitSessionTimeUnits: any;
     selectedTimeUnit: any;
     timeUnitCount: number;
     currentMaxTimeUnit: number;
-    previousInputValue: string;
+    previousInputValue: number;
 
     saveSettings: any;
     resetVideoEncryptionIfDisabled: any;
     setWarningMessageThroughApplyService: any;
     settingsWatchersSet: boolean;
+    timeUnitTracker: any;
 
     settingsWatchers: any = {
         autoDiscoveryEnabled: new Watcher<boolean>(),
@@ -71,7 +75,12 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     readonly minutes: string = 'minutes';
     readonly hours: string = 'hours';
 
-    @ViewChildren('timeUnitTracker') timeUnitTracker: QueryList<ElementRef>;
+    @ViewChild('timeUnitTracker', { static: false }) set el(el: ElementRef) {
+        if (el) {
+            this.timeUnitTracker = el;
+            this.updateTimeUnitInput(this.selectedTimeUnit);
+        }
+    }
 
     private setupDefaults() {
         this.CONFIG = this.configService.getConfig();
@@ -134,7 +143,10 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         this.applyService.initPageWatcher(
             this.viewContainerRef,
             this.saveSettings,
-            () => this.applyService.reset(),
+            () => {
+                this.applyService.reset();
+                this.timeUnitCount = this.settingsWatchers.sessionLimitMinutes.originalValue;
+            },
             Object.values(this.settingsWatchers));
 
         this.init();
@@ -144,6 +156,9 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         this.resetVideoEncryptionIfDisabled = () => {
             const encryptTraffic = this.settingsWatchers.trafficEncryptionForced.value;
             const encryptVideo = this.settingsWatchers.videoTrafficEncryptionForced.value;
+            if (encryptVideo === true) {
+                this.applyService.setWarn('');
+            }
             if (!encryptTraffic && encryptVideo) {
                 this.settingsWatchers.videoTrafficEncryptionForced.value = false;
             }
@@ -178,7 +193,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                         changes[setting] = obj.value;
                         obj.originalValue = obj.value;
                     }
-                } else if (sw.sessionLimitToggle.value === true) {
+                } else if (sw.sessionLimitToggle.value === true && sw.sessionLimitMinutes.value) {
                     this.updateTimeUnitWatcher();
                     const minutesMatch = (obj.value === obj.originalValue);
                     const unitMatch = (sw.sessionLimitUnit.value === sw.sessionLimitUnit.originalValue);
@@ -199,63 +214,71 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                     sw.sessionLimitToggle.originalValue = false;
                 }
             }
-            return this.system.updateOrGetSystemSettings(changes)
+            return this.system.updateOrGetSystemSettings(changes).toPromise()
                 .then(() => this.applyService.reset());
         });
     }
 
     init(): void {
-        this.settingsService
+        if (this.settingsServiceSubscription) {
+            this.settingsServiceSubscription.unsubscribe();
+        }
+        this.settingsServiceSubscription = this.settingsService
             .systemSubject
             .subscribe((system) => {
                 if (system) {
                     this.system = system;
                     this.pageService.setPageTitle(this.LANG.pageTitles.systemName.replace('{{systemName}}', this.system.info.name));
-                    this.systemSubscription = system.infoSubject.subscribe(() => {
-                        this.settingsService.footerSubject.next(true);
-                        this.updateSettings(this.currentlyMerging);
-                    });
-                    if (!this.applyService.locked) {
-                        this.system.updateOrGetSystemSettings()
-                            .then(res => {
-                                const { settings } = res.reply;
-                                this.applyService.setVisible(false);
-                                this.applyService.hardReset();
-                                const sw = this.settingsWatchers;
-                                Object.keys(sw).forEach(setting => {
-                                    if (setting in settings) {
-                                        let curr = settings[setting];
-                                        /**
-                                         * sets initial values for system & security settings
-                                         * limitSessionDuration is the only one that's a number & not a boolean,
-                                         * so it needs custom code to handle
-                                         */
-                                        if (isNaN(curr)) {
-                                            sw[setting].value = curr === 'true';
-                                        } else {
-                                            curr = parseInt(curr);
-                                            sw.sessionLimitToggle.value = Boolean(curr);
-                                            this.timeUnitCount = curr;
-                                            if (curr % 60 === 0) {
-                                                this.timeUnitCount /= 60;
-                                                sw.sessionLimitUnit.value = this.hours;
-                                            } else {
-                                                sw.sessionLimitUnit.value = this.minutes;
-                                            }
-                                            sw[setting].value = this.timeUnitCount || 0;
-                                            this.timeUnitCount = this.timeUnitCount || 24;
-                                            this.selectedTimeUnit = this.limitSessionTimeUnits
-                                                                        .find(e => e.name === sw.sessionLimitUnit.value);
-                                            this.updateTimeUnitInput(this.selectedTimeUnit);
-                                        }
-                                    }
-                                });
-                                this.settingsWatchersSet = true;
-                                this.applyService.reset();
-                                this.applyService.setVisible(true);
-                            });
+                    if (this.systemSubscription) {
+                        this.systemSubscription.unsubscribe();
                     }
-
+                    this.systemSubscription = system.infoSubject
+                        .pipe(throttleTime(5000))
+                        .subscribe(() => {
+                            this.settingsService.footerSubject.next(true);
+                            this.updateSettings(this.currentlyMerging);
+                            if (!this.applyService.locked) {
+                                if (this.settingsSubscription) {
+                                    this.settingsSubscription.unsubscribe();
+                                }
+                                this.settingsSubscription = this.system.updateOrGetSystemSettings().subscribe((res: any) => {
+                                    const { settings } = res.reply;
+                                    this.applyService.setVisible(false);
+                                    this.applyService.hardReset();
+                                    const sw = this.settingsWatchers;
+                                    Object.keys(sw).forEach(setting => {
+                                        if (setting in settings) {
+                                            let curr = settings[setting];
+                                            /**
+                                             * sets initial values for system & security settings
+                                             * limitSessionDuration is the only one that's a number & not a boolean,
+                                             * so it needs custom code to handle
+                                             */
+                                            if (isNaN(curr)) {
+                                                sw[setting].value = curr === 'true';
+                                            } else {
+                                                curr = parseInt(curr);
+                                                sw.sessionLimitToggle.value = Boolean(curr);
+                                                this.timeUnitCount = curr;
+                                                if (curr % 60 === 0) {
+                                                    this.timeUnitCount /= 60;
+                                                    sw.sessionLimitUnit.value = this.hours;
+                                                } else {
+                                                    sw.sessionLimitUnit.value = this.minutes;
+                                                }
+                                                sw[setting].value = this.timeUnitCount || 0;
+                                                this.timeUnitCount = this.timeUnitCount || 24;
+                                                this.selectedTimeUnit = this.limitSessionTimeUnits
+                                                                            .find(e => e.name === sw.sessionLimitUnit.value);
+                                            }
+                                        }
+                                    });
+                                    this.settingsWatchersSet = true;
+                                    this.applyService.reset();
+                                    this.applyService.setVisible(true);
+                                });
+                            }
+                        });
                     this.deletingSystem = this.processService.createProcess(() => {
                         return this.system.deleteFromCurrentAccount();
                     }, {
@@ -298,7 +321,11 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     delete() {
         if (!this.system.isMine) {
             // User is not owner. Deleting means he'll lose access to it
-            this.dialogs.confirm(this.LANG.system.confirmUnshareFromMe, this.LANG.system.confirmUnshareFromMeTitle, this.LANG.system.confirmUnshareFromMeAction, 'btn-danger', 'Cancel')
+            this.dialogs.confirm(this.LANG.system.confirmUnshareFromMe,
+                                 this.LANG.system.confirmUnshareFromMeTitle,
+                                 this.LANG.system.confirmUnshareFromMeAction,
+                                 'btn-danger',
+                                 this.LANG.dialogs.cancelButton)
                 .then((result) => {
                     if (result === true) {
                         return this.deletingSystem.run();
@@ -375,13 +402,12 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
     updateTimeUnitInput(timeUnit) {
         this.currentMaxTimeUnit = timeUnit.max;
-        const el = this.timeUnitTracker.first;
+        const el = this.timeUnitTracker;
         if (el) {
             if (el.nativeElement.value > this.currentMaxTimeUnit) {
                 el.nativeElement.value = this.currentMaxTimeUnit;
             }
             el.nativeElement.setAttribute('max', this.currentMaxTimeUnit);
-
             if (this.selectedTimeUnit !== timeUnit.name) {
                 this.settingsWatchers.sessionLimitUnit.value = timeUnit.name;
                 this.selectedTimeUnit = timeUnit;
@@ -389,20 +415,17 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         }
     }
 
-    storePreviousValue() {
-        this.previousInputValue = this.timeUnitCount + this.settingsWatchers.sessionLimitUnit.value;
+    storePreviousValue(e) {
+        // prevents [.+-e] from being inputed
+        if (['.', '+', '-', 'e'].indexOf(e.key) > -1) {
+            e.preventDefault();
+        }
+        this.previousInputValue = this.timeUnitCount;
     }
 
-    validationCheckForInput(e) {
-        if ((e.key === 'Backspace' || e.key === 'Delete') && this.timeUnitCount === null) {
-            this.timeUnitCount = undefined;
-        // checks if entering a value NaN (+-.), less than min, or greater than max
-        } else if (
-            !this.timeUnitCount
-            || this.timeUnitCount < 1
-            || this.timeUnitCount > this.currentMaxTimeUnit
-        ) {
-            this.timeUnitCount = parseInt(this.previousInputValue);
+    validationCheckForInput() {
+        if (this.timeUnitCount > this.currentMaxTimeUnit) {
+            this.timeUnitCount = this.previousInputValue;
         }
 
         this.updateTimeUnitWatcher();
@@ -416,13 +439,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                                         .find(e => e.name === sw.sessionLimitUnit.value);
             this.timeUnitCount /= 60;
         }
-        if (this.timeUnitCount === undefined) {
-            sw.sessionLimitMinutes.value = 0;
-        } else {
-            sw.sessionLimitMinutes.value = this.timeUnitCount;
-        }
+        sw.sessionLimitMinutes.value = this.timeUnitCount;
     }
 
-    ngOnDestroy() {
-    }
+    ngOnDestroy() {}
 }

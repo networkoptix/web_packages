@@ -1,18 +1,18 @@
 @import '../../../styles/custom/custom_palette';
 @import '../../../styles/theme_palette';
 @import '../../../styles/theme_variables';
+@import '../../styles/typography';
 
 .ribbon {
-    background-color : $brand_d1;
+    @extend #regular13;
     color            : $light1;
+    background-color : $brand_d1;
     line-height      : 1rem;
-    font-family      : $font-family-regular;
-    font-size        : $font-size-base;
-    border-top    : 1px solid $brand_d2;
-    border-bottom : 1px solid $brand_d2;
-    padding       : .5rem 1rem;
-    display       : flex;
-    align-items   : center;
+    border-top       : 1px solid $brand_d2;
+    border-bottom    : 1px solid $brand_d2;
+    padding          : .5rem 1rem;
+    display          : flex;
+    align-items      : center;
 
     .message {
         flex : 70%;
@@ -23,9 +23,8 @@
         text-align : right;
 
         a {
+            @extend #regular13;
             color           : $light1;
-            font-family     : $font-family-regular;
-            font-size       : $font-size-base;
             text-decoration : underline;
 
             &:hover {

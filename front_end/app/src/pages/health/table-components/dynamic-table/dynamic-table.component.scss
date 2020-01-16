@@ -1,5 +1,6 @@
 @import '../../../../../styles/theme_palette';
 @import '../../../../../styles/theme_variables';
+@import '../../../../styles/typography';
 @import '../../../../components/tag/tag.component';
 @import '~bootstrap/scss/functions';
 @import '~bootstrap/scss/variables';
@@ -9,30 +10,28 @@ nx-dynamic-table {
   cursor: default;
 
   .text-placeholder {
-    color       : $light16;
-    font-family : $font-family-regular;
-    font-size   : rem(20px);
-    height      : 2rem;
+    @extend #regular20;
+    height : 2rem;
   }
-  
+
   .table-scroll-fixed {
     position: fixed;
     top: 48px + 16px; // header + padding
   }
-  
+
   .nx-table-wrapper {
     max-width: 100%;
     width: fit-content;
-  
+
     @include media-breakpoint-down(lg) {
       width: auto;
     }
-    
+
     ::-webkit-scrollbar {
       width  : initial;
       height : 8px;
     }
-    
+
     ::-webkit-scrollbar-thumb {
       -webkit-border-radius : initial;
       border-radius         : 6px;
@@ -40,111 +39,106 @@ nx-dynamic-table {
       height                : 8px;
       border                : 2px solid $light4;
     }
-    
+
     ::-webkit-scrollbar-track {
       -webkit-box-shadow    : initial;
       -webkit-border-radius : initial;
       border-radius         : initial;
     }
-    
+
     .csv {
       float      : right;
       margin-top : 24px;
-      
+
       @include media-breakpoint-down(md) {
         width         : 100%;
         margin-top    : 0;
         margin-bottom : 1rem;
       }
     }
-    
+
     .table-header {
+      @extend #medium15;
+      font-weight      : 500 !important;
       background-color : $additional_light1;
       padding          : 1rem;
-      color            : $dark9;
-      font-family      : $font-family-medium;
-      font-weight      : 500 !important;
-      font-size        : rem(15px);
       line-height      : rem(15px);
       height           : 3rem;
       border           : 1px solid $light3;
       border-bottom    : none;
     }
-    
+
     .nx-table {
       @media (min-width: 1280px) {
         min-width: 700px !important;
       }
-  
+
       @media (min-width: 1440px) {
         min-width: 800px !important;
       }
-  
+
       @media (min-width: 1920px) {
         min-width: 900px !important;
       }
-      
+
       .table-row-spacer {
         height : .5rem;
       }
-      
+
       thead {
         .header-groups {
           th {
             padding-bottom : 0;
             padding-top    : 8px;
             white-space    : nowrap;
-            
+
             div {
-              font-family    : $font-family-regular;
-              line-height    : 16px;
+              @extend #regular15;
               border-bottom  : 1px solid;
               padding-bottom : 4px;
             }
-            
+
             .group-1 {
               color        : $light10;
               border-color : $light10;
             }
-            
+
             .group-2 {
               color        : $blue500;
               border-color : $blue500;
             }
-            
+
             .group-3 {
               color        : $pink500;
               border-color : $pink500;
             }
-            
+
             .group-4 {
               color        : $purple500;
               border-color : $purple500;
             }
-            
+
             .group-5 {
               color        : $cyan500;
               border-color : $cyan500;
             }
-            
+
             .group-6 {
               color        : $green500;
               border-color : $green500;
             }
           }
         }
-        
+
         th {
-          padding:  0 16px 0 0;
-          color          : $dark9;
-          font-family    : $font-family-medium;
+          @extend #medium13;
           font-weight    : 500 !important;
-          font-size      : $line-height-ssm;
+          padding        : 0 16px 0 0;
           text-transform : none;
           overflow-wrap  : break-word;
           cursor         : pointer;
           border         : none;
-          
+
           &:first-of-type {
             padding-right: 0;
             width   : 48px;
@@ -153,20 +147,19 @@ nx-dynamic-table {
               margin-left: 13px;
             }
           }
-          
+
           &.table-title {
-            font-family : $font-family-regular;
-            line-height : rem(24px);
-            
+            @extend #regular24;
+
             .text-placeholder {
               font-size : 1.25rem;
               color     : $light16;
             }
           }
-          
+
           .caption {
             position      : relative;
-            height        : fit-content;
+            height        : 48px;
             overflow-wrap : initial;
             overflow      : hidden;
             text-overflow : ellipsis;
@@ -175,7 +168,7 @@ nx-dynamic-table {
               line-height: 16px;
               padding: 8px 0 8px 0;
             }
-            
+
             .sort-dir {
               //top: 0;
               right    : auto;
@@ -185,11 +178,11 @@ nx-dynamic-table {
               width    : 18px;
               height   : 18px;
               margin-bottom: 8px;
-              
+
               &:after {
                 content : ' ';
               }
-              
+
               &.asc {
                 &:after {
                   content : '+';
@@ -199,52 +192,50 @@ nx-dynamic-table {
           }
         }
       }
-      
+
       tbody {
         //padding : .5rem 0;
         //display : table-cell;
-        
+
         tr {
           height : rem(24px);
-          
+
           &:hover {
             color      : $dark9;
             background : transparentize($brand_core, 0.9);
           }
-          
+
           &.selected, &:active, &:focus {
             background : $light16;
-            
+
             td {
               &, span {
                 color : $light1 !important;
               }
-              
+
               svg {
                 path {
                   fill : $light1 !important;
                 }
-                
+
                 rect, polygon {
                   fill : $light16 !important;
                 }
               }
-              
+
               .icon-negative {
                 color : $light1;
               }
             }
           }
-          
+
           td {
+            @extend #regular12;
             padding     : 0 16px 0 0;
-            font-family : $font-family-regular;
-            font-size   : $font-size-sm;
-            color       : $dark9;
             line-height : 1rem;
             border      : none;
             height      : 26px;
-            
+
             &:first-of-type {
               padding         : 0;
               width           : 48px;
@@ -255,48 +246,43 @@ nx-dynamic-table {
           }
         }
       }
-      
+
       &-header {
+        @extend #regular13;
         padding          : 0.5rem 1rem;
         background-color : $additional_light1;
         border           : 1px solid $light3;
         border-bottom    : none;
-        color            : $dark9;
-        font-family      : $font-family-regular;
-        font-size        : 0.8125rem;
         line-height      : 16px;
         text-transform   : none;
         overflow-wrap    : break-word;
-        
+
         .results {
-          color       : $dark9;
-          font-family : $font-family-medium;
+          @extend #medium13;
           font-weight : 500 !important;
-          font-size   : $line-height-ssm;
           line-height : 16px;
         }
       }
     }
-    
+
     .pagination-nav {
       display : inline-flex;
-      
+
       /*** overwrite bootstrap pagination style ***/
       .pagination {
         margin : 0;
-        
+
         .page-item {
           cursor : pointer;
           margin : 0 3px;
           height : auto;
-          
+
           &:first-of-type {
             margin-left : 0;
           }
-          
+
           .page-link {
-            font-family      : $font-family-regular;
-            font-size        : 13px;
+            @extend #regular13;
             color            : $light16 !important;
             background-color : $light4;
             border-radius    : 2px;
@@ -307,38 +293,38 @@ nx-dynamic-table {
             align-items      : center;
             justify-content  : center;
             border           : none;
-            
+
             &:hover {
               background-color : $light5;
             }
-            
+
             &[aria-label="Previous"] {
               span {
                 display : none;
               }
-              
+
               &:after {
                 content : "Previous";
               }
             }
-            
+
             &[aria-label="Next"] {
               span {
                 display : none;
               }
-              
+
               &:after {
                 content : "Next";
               }
             }
           }
-          
+
           &.active .page-link {
             color            : $light1 !important;
             background-color : $light16;
             border-color     : $light16;
           }
-          
+
           &.disabled .page-link {
             cursor           : default;
             background-color : transparentize($light6, 0.8);
@@ -348,37 +334,47 @@ nx-dynamic-table {
       }
     }
   }
-  
+
   .vendor {
     @include media-breakpoint-down(md) {
       background-color : $light4;
     }
   }
-  
+
   .test * {
     fill : limegreen;
   }
-
   .long-text {
-    width: 170px !important;
+    max-width : 170px !important;
+    width : 170px !important;
   }
+
   .percent {
-    max-width: 74px !important;
+    max-width :82px !important;
+    width : 82px !important;
   }
+
   .short-text {
-    width: 74px !important;
+    max-width : 81px !important;
+    width : 81px !important;
   }
+
   .text {
-    width: 100px !important;
+    max-width : 100px !important;
+    width : 100px !important;
   }
+
   .volume-metric {
-    max-width: 74px !important;
+    max-width : 74px !important;
   }
+
   .no-max-width {
-    max-width: unset !important;
+    max-width : unset !important;
   }
+
   .no-format {
-    width: 108px;
-    max-width: 108px;
+    max-width : 118px !important;
+    width     : 118px !important;
   }
+
 }

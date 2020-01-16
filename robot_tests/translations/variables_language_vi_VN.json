@@ -65,7 +65,7 @@
     "YOUR ACCESS LEVEL TEXT": "Your access level",
     "USER DISABLED TEXT": "User disabled",
     "NO UNSAVED CHANGES TEXT": "No unsaved changes",
-    "ABOUT": "Giới thiệu về",
+    "ABOUT": "About %PRODUCT_NAME%",
     "KNOWN LIMITATIONS": "Những hạn chế đã biết",
     "SUPPORT": "Hỗ trợ",
     "REMOTE CONNECTIVITY": "Kết nối từ xa",
@@ -203,5 +203,11 @@
     "ALLOW ONLY SECURE TEXT": "Chỉ cho phép kết nối an toàn",
     "ENCRYPT VIDEO TRAFFIC TEXT": "Mã hóa lưu lượng video",
     "ENCRYPT VIDEO TRAFFIC DESCRIPTION TEXT": "Only client-server video traffic can be encrypted.",
-    "LIMIT SESSION DURATION TEXT": "Limit session duration to"
+    "LIMIT SESSION DURATION TEXT": "Limit session duration to",
+    "RELEASES TAB TEXT": "Phát hành",
+    "PATCHES TAB TEXT": "Bản vá lỗi",
+    "BETAS TAB TEXT": "Betas",
+    "SALES INQUIRY TEXT": "Sales inquiry for vis - QA - face_recognition",
+    "TECHNICAL INQUIRY TEXT": "Technical inquiry for vis - QA - face_recognition",
+    "FEEDBACK TEXT": "Feedback for integration vis - QA - face_recognition"
 }

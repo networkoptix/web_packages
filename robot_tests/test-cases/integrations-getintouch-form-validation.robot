@@ -4,15 +4,15 @@ Suite Setup       Open Browser and go to URL    ${url}/integrations/39
 Test Template     Test Get In Touch Invalid
 Test Teardown     Restart
 Suite Teardown    Close Browser
-Force Tags        form
+Force Tags        form    Threaded File
 
 *** Variables ***
 ${url}    ${ENV}
 ${existing email}       ${EMAIL OWNER}
 ${valid email}          noptixqa+valid@gmail.com
-${sales inquiry}        Sales inquiry for vis - QA - face_recognition
-${technical inquiry}    Technical inquiry for vis - QA - face_recognition
-${feedback}             Feedback for integration vis - QA - face_recognition
+${sales inquiry}        ${SALES INQUIRY TEXT}
+${technical inquiry}    ${TECHNICAL INQUIRY TEXT}
+${feedback}             ${FEEDBACK TEXT}
 ${valid name}           ${TEST FIRST NAME} ${TEST LAST NAME}
 
 *** Test Cases ***                    EXPECTED    NAME             EMAIL                     SUBJECT             BUTTON                                      MESSAGE
@@ -58,20 +58,20 @@ Test Get In Touch Invalid
     Run Keyword If    "${LANGUAGE}"=="he_IL"    Set Suite Variable    ${EMAIL IS REQUIRED}
     ...    //span[contains(@class,'input-error') and contains(text(),'${EMAIL IS REQUIRED TEXT}')]
     Wait Until Elements Are Visible
-    ...    ${INTEGRATION GET IN TOUCH NAME INPUT} 
+    ...    ${INTEGRATION GET IN TOUCH NAME INPUT}
     ...    ${INTEGRATION GET IN TOUCH EMAIL INPUT}
     ...    ${INTEGRATION GET IN TOUCH DROPDOWN BUTTON}
     ...    ${INTEGRATION GET IN TOUCH DROPDOWN LIST}
-    ...    ${INTEGRATION GET IN TOUCH MESSAGE INPUT} 
+    ...    ${INTEGRATION GET IN TOUCH MESSAGE INPUT}
     ...    ${INTEGRATION GET IN TOUCH SEND BUTTON}
     ...    ${INTEGRATION GET IN TOUCH CANCEL BUTTON}
     ${returned name} =    Get Value    ${INTEGRATION GET IN TOUCH NAME INPUT}
     ${returned email} =   Get Value    ${INTEGRATION GET IN TOUCH EMAIL INPUT}
     Should Be Equal    ${returned name}    ${valid name}
-    Should Be Equal    ${returned email}    ${existing email}   
-    Element Text Should Be    ${INTEGRATION GET IN TOUCH DROPDOWN BUTTON}//span    ${contact sales}    
-    Element Text Should Be    ${INTEGRATION GET IN TOUCH LEGAL}    ${INTEGRATION GET IN TOUCH LEGAL TEXT} 
-    
+    Should Be Equal    ${returned email}    ${existing email}
+    Element Text Should Be    ${INTEGRATION GET IN TOUCH DROPDOWN BUTTON}//span    ${sales inquiry}
+    Element Text Should Be    ${INTEGRATION GET IN TOUCH LEGAL}    ${INTEGRATION GET IN TOUCH LEGAL TEXT}
+
     Get In Touch Form Validation    ${name}    ${email}    ${subject}    ${button}     ${message}
     # Run Keyword Unless    '''${pass}'''=='''${BASE PASSWORD}''' or '''${pass}'''=='''${symbol password}'''
     # ...    Check Password Outline    ${pass}

@@ -1,7 +1,7 @@
-import { Inject, Injectable } from '@angular/core';
-import { NxConfigService } from './nx-config';
-import { DOCUMENT }        from '@angular/common';
-import { WINDOW }          from './window-provider';
+import { Inject, Injectable }    from '@angular/core';
+import { NxConfigService }       from './nx-config';
+import { DOCUMENT }              from '@angular/common';
+import { DeviceDetectorService } from 'ngx-device-detector';
 
 @Injectable({
     providedIn: 'root'
@@ -13,8 +13,9 @@ export class NxUtilsService {
     public static sortDESC = false;
 
     constructor(private config: NxConfigService,
-                @Inject(WINDOW) private window: Window,
-                @Inject(DOCUMENT) private document: any) {
+                private deviceService: DeviceDetectorService,
+                @Inject(DOCUMENT) private document: any
+    ) {
         this.CONFIG = this.config.getConfig();
     }
 
@@ -79,17 +80,34 @@ export class NxUtilsService {
         }
     }
 
-    public saveAsBlob(data, filename, type) {
-        const blob: Blob = new Blob([data], {type});
-        const objectUrl = URL.createObjectURL(blob);
+    public saveAs(data, filename, type) {
         const a: HTMLAnchorElement = this.document.createElement('a') as HTMLAnchorElement;
+        let objectUrl;
+        let blob: Blob;
 
-        a.href = objectUrl;
+        data = JSON.stringify(data);
+
+        if (this.deviceService.isDesktop()) {
+            blob = new Blob([data], {type});
+            objectUrl  = URL.createObjectURL(blob);
+            a.href = objectUrl;
+            a.addEventListener('onclick', () => {
+                if (navigator.msSaveOrOpenBlob) {
+                    navigator.msSaveOrOpenBlob(blob, filename);
+                    return false;
+                }
+            });
+        } else {
+            a.href = 'data:' + type + ';charset=UTF-8,' + encodeURIComponent(data);
+        }
+
         a.download = filename;
+
         this.document.body.appendChild(a);
         a.click();
-
         this.document.body.removeChild(a);
-        URL.revokeObjectURL(objectUrl);
+
+        // revokeObjectURL breaks download on MSEdge and Firefox
+        // URL.revokeObjectURL(objectUrl);
     }
 }

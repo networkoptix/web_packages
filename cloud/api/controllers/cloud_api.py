@@ -251,10 +251,21 @@ class Account(object):
     @staticmethod
     @validate_response
     @lower_case_email
-    def create_temporary_credentials(email, password, credential_type):
-        params = {
-            'type': credential_type
-        }
+    def create_temporary_credentials(email, password,
+                                     credential_type=None, expiration_period=None,
+                                     auto_prolongation_enabled=None, prolongation_period=None):
+        params = {}
+        if credential_type:
+            params['type'] = credential_type
+        else:
+            params['timeouts'] = {}
+            if expiration_period:
+                params['timeouts']['expirationPeriod'] = str(expiration_period)
+            if auto_prolongation_enabled:
+                params['timeouts']['autoProlongationEnabled'] = auto_prolongation_enabled
+            if prolongation_period:
+                params['timeouts']['prolongationPeriod'] = str(prolongation_period)
+
         request = CLOUD_DB_URL + '/account/createTemporaryCredentials'
         return post_wrapper(request, json=params, auth=HTTPDigestAuth(email, password))
 

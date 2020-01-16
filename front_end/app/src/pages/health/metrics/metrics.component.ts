@@ -60,6 +60,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
 
     routeSubscription: SubscriptionLike;
     breakpointSubscription: SubscriptionLike;
+    tableReadySubscription: SubscriptionLike;
 
     elementTilesHeight: number;
     elementSearchHeight: number;
@@ -70,6 +71,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
     tableWidthSubscription: SubscriptionLike;
 
     fixedLayoutClass: string;
+    layoutReady: boolean;
 
     @ViewChild('search', { static: false }) elementSearch: ElementRef;
     @ViewChild('tableContainer', { static: false }) tableContainer: ElementRef;
@@ -139,6 +141,12 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
             }
             this.setLayout();
         });
+
+        this.tableReadySubscription = this.healthService.tableReadySubject.subscribe(ready => {
+            if (ready) {
+                this.setLayout();
+            }
+        });
     }
 
     ngAfterViewInit() {
@@ -180,20 +188,26 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
 
     setActiveEntity(entity) {
         const queryParams: Params = {};
-        if (typeof entity === 'string') {
-            this.activeEntity = this.selectedValues[entity];
-            if (!this.activeEntity) {
-                queryParams.id = undefined;
+        this.layoutReady = false;
+
+        if (entity) {
+            if (typeof entity === 'string') {
+                this.activeEntity = this.selectedValues[entity];
+                if (!this.activeEntity) {
+                    queryParams.id = undefined;
+                    this.uri.updateURI(undefined, queryParams);
+                }
+            } else {
+                this.activeEntity = entity;
+                queryParams.id = entity.id;
                 this.uri.updateURI(undefined, queryParams);
+
+                if (this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.lg)) {
+                    this.mobileDetailMode = true;
+                }
             }
         } else {
-            this.activeEntity = entity;
-            queryParams.id = entity.id;
-            this.uri.updateURI(undefined, queryParams);
-
-            if (this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.lg)) {
-                this.mobileDetailMode = true;
-            }
+            this.resetActiveEntity();
         }
 
         this.setLayout();
@@ -223,16 +237,19 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
                     // area available to the table (2/3 + gutters
                     const availAreaWidth = areaWidth / 3 * 2 + 46;
 
-                    const isTableFit = (availAreaWidth > tableWidth);
-                    if (this.activeEntity) {
+                    const isTableFit = (availAreaWidth > tableWidth) && !this.mobileDetailMode;
+                    if (this.activeEntity && !this.mobileDetailMode) {
                         this.fixedLayoutClass = (isTableFit) ? '' : 'fixedLayout--with-panel';
                     } else {
                         this.fixedLayoutClass = (isTableFit) ? '' : 'fixedLayout--no-panel';
                     }
+
+                    this.layoutReady = true;
                 }
 
                 if (this.mobileDetailMode && this.activeEntity) {
                     this.fixedLayoutClass = 'fixedLayout--no-panel';
+                    this.layoutReady = true;
                 }
             }
         });

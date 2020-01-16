@@ -2,13 +2,13 @@
 @import '../../styles/theme_palette';
 @import '../../styles/theme_variables';
 @import '../styles/mixins';
+@import '../styles/typography';
 @import '~bootstrap/scss/mixins';
 
 #button {
+    @extend #medium14;
     height        : 2rem;
     border-radius : $border-radius-base;
-    font-family   : $font-family-medium;
-    font-size     : 14px;
     font-weight   : inherit;
     padding       : 0 1rem;
     border        : none;
@@ -29,10 +29,10 @@
     &.focus {
         box-shadow : none;
     }
-    
+
     &:disabled {
         opacity : 0.3;
-        
+
         & * {
             pointer-events : none;
         }
@@ -53,12 +53,12 @@ button, .btn {
     background-color : $light4 !important;
     box-shadow       : inset 0 -1px 0 0 $light7;
     font-family      : $font-family-medium;
-    
+
     &:hover:not([disabled]):not(.disabled) {
         background-color : $light5 !important;
         box-shadow       : inset 0 -1px 0 0 $light8;
     }
-    
+
     &:active,
     &.active {
         background-color : $light6 !important;
@@ -71,17 +71,17 @@ button, .btn {
     background-color : $brand_core !important;
     border-color     : transparent !important;
     box-shadow       : inset 0 -1px 0 0 $brand_d2;
-    
+
     &:hover:not([disabled]):not(.disabled) {
         background-color : $brand_d1 !important;
         box-shadow       : inset 0 -1px 0 0 $brand_d3;
     }
-    
+
     &:focus,
     &.focus {
-    
+
     }
-    
+
     &:active,
     &.active {
         background-color : $brand_d2 !important;
@@ -103,21 +103,21 @@ button, .btn {
     display          : flex;
     align-content    : center;
     justify-content  : center;
-    
+
     input {
         position : absolute;
         opacity  : 0;
     }
-    
+
     &:hover:not([disabled]):not(.disabled) {
         background-color : $light5;
     }
-    
+
     &:active,
     &.active {
         background-color : $light6 !important;
     }
-    
+
     &.selected {
         color            : $light1;
         background-color : $light16 !important;
@@ -144,20 +144,20 @@ button, .btn {
     align-content    : center;
     justify-content  : center;
     border-radius    : $border-radius-base !important;
-    
+
     input {
         position : absolute;
         opacity  : 0;
     }
-    
+
     .glyphicon-close {
         opacity: 1 !important;
     }
-    
+
     &:hover:not([disabled]):not(.disabled) {
         background-color : rgba($light16, .1);
     }
-    
+
     &:active,
     &.active {
         background-color : rgba($light16, .15) !important;
@@ -168,7 +168,7 @@ button, .btn {
 
 .btn-back {
     padding-left : 0;
-    
+
     .back-arrow {
         width               : 20px;
         height              : 20px;
@@ -180,7 +180,7 @@ button, .btn {
         float               : left;
         margin-left         : .5rem;
         margin-right        : .5rem;
-        
+
         @media only screen and (-webkit-min-device-pixel-ratio : 2), only screen and (min-device-pixel-ratio : 2) {
             background-image : url('/static/images/tutorial_arrow@2x.png') !important;
         }
@@ -192,37 +192,35 @@ button, .btn {
 }
 
 .btn-tag {
-    font-family      : $font-family-regular;
-    font-size        : rem(13px);
+    @extend #regular13;
+    color            : $light16;
     font-weight      : 400;
     white-space      : nowrap;
-    color            : $light16;
     background-color : $light4;
     max-width        : none;
-    
+
     &:hover {
         background-color : $light5;
     }
-    
+
     &:active {
         background-color : $light6;
     }
 }
 
 .btn-tag-selected {
+    @extend #regular13;
     @include badge-selected($light16, $light17, $light18);
     padding   : 0 40px 0 12px !important;
     position  : relative;
     max-width : none;
     cursor    : default !important;
-    font-family : $font-family-regular;
-    font-size : rem(13px);
-    
+
     & > span {
         margin  : 0;
         padding : 0;
     }
-    
+
     &:hover {
         color: $light1;
     }
@@ -238,15 +236,19 @@ button, .btn {
         height          : 40px;
         width           : 40px;
         cursor          : pointer;
-        
+
         &:hover {
-        
+
         }
-        
+
         .tag-close-icon {
             margin : 0 !important;
         }
     }
+}
+
+.btn.btn-danger {
+    color : $light1 !important;
 }
 
 .btn.btn-arrow {
@@ -254,31 +256,31 @@ button, .btn {
     padding-left  : 40px !important;
     padding-right : 12px !important;
     max-width     : none;
-    
+
     .nav-arrow {
         height : 20px;
         float  : left;
         right  : auto;
         left   : 8px;
         bottom : 10px;
-        
+
         span {
             background-color : $light16;
         }
     }
-    
+
     &.has-icon {
         padding-left : 20px;
     }
-    
+
     & > span {
         margin : 0;
         padding : 0 1px; // flex messes up caption width
     }
-    
+
     &.selected {
         @include badge-selected($light16, $light17, $light18);
-    
+
         .nav-arrow {
             span {
                 background-color : $light1;
@@ -291,47 +293,47 @@ button, .btn {
     font-size       : 13px;
     color           : $light16;
     text-decoration : none;
-    
+
     .nav-arrow {
         height       : 20px;
         float        : left;
         right        : 0;
         margin-right : 2px;
-        
+
         span {
             background-color : $light16;
         }
     }
-    
+
     &.has-icon {
         padding-left : 25px;
         position: relative;
     }
-    
+
     span {
-        
+
         &.close {
             left : 0;
             width  : 16px;
             height : 16px;
-    
+
             &:before, &:after {
                 background-color: $light16;
             }
         }
     }
-    
+
     &:hover {
         color           : $dark15;
         text-decoration : none;
-    
+
         span.close {
             &:before, &:after {
                 background-color : $dark15;
             }
         }
     }
-    
+
     &:active, &:focus {
         color : $light16;
     }

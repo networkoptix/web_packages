@@ -2,110 +2,6 @@
   "language": "fr_FR",
   "language_name": "Français",
   "cloudName": "%CLOUD_NAME%",
-  "vmsName": "%VMS_NAME%",
-  "clientProtocol": "%CLIENT_PROTOCOL%:",
-  "dialogs": {
-    "okButton": "OK",
-    "cancelButton": "Annuler",
-    "loginTitle": "Connecter à %CLOUD_NAME%",
-    "loginButton": "Connexion",
-    "logoutAuthorisedTitle": "Vous êtes déjà connecté",
-    "logoutAuthorisedContinueButton": "Continuer",
-    "logoutAuthorisedLogoutButton": "Déconnecter",
-    "noClientDetectedTitle": "Installez %VMS_NAME% pour visionner votre système",
-    "download": "Télécharger %VMS_NAME%"
-  },
-  "pageTitles": {
-    "template": "{{title}} %CLOUD_NAME%",
-    "default": "%CLOUD_NAME%",
-    "registerSuccess": "Bienvenue sur",
-    "register": "Créer compte dans",
-    "changePassword": "Changer mot de passe -",
-    "account": "Paramètres compte -",
-    "systems": "Systèmes -",
-    "system": "Système -",
-    "systemShare": "Système de partage -",
-    "activate": "Activer compte -",
-    "activateSent": "Activer compte -",
-    "activateSuccess": "Compte activé -",
-    "activateCode": "Activer compte -",
-    "restorePassword": "Réinitialiser mot de passe -",
-    "restorePasswordSuccess": "Mot de passe sauvé -",
-    "restorePasswordCode": "Réinitialiser mot de passe -",
-    "view": "Voir les caméras - ",
-    "debug": "Débogage",
-    "login": "Connexion -",
-    "download": "Télécharger %VMS_NAME%",
-    "downloadPlatform": "Télécharger %VMS_NAME% pour ",
-    "pageNotFound": "Page non trouvée"
-  },
-  "systemStatuses": {
-    "activated": "activé",
-    "incompatible": "incompatible",
-    "merging": "fusion",
-    "notActivated": "non activé",
-    "online": "en ligne",
-    "offline": "hors ligne",
-    "unavailable": "non disponible"
-  },
-  "accessRoles": {
-    "disabled": {
-      "label": "Désactivé",
-      "description": "L’utilisateur est désactivé et ne peut pas connecter au système"
-    },
-    "Owner": {
-      "label": "Propriétaire",
-      "description": "Accès illimité, y compris la possibilité de partager et de connecter/déconnecter le système de nuage"
-    },
-    "Viewer": {
-      "label": "Visualisateur",
-      "description": "Peut afficher la vidéo en direct et parcourir les archives"
-    },
-    "Live Viewer": {
-      "label": "Visualiseur en direct",
-      "description": "Peut seulement voir vidéo en direct"
-    },
-    "Advanced Viewer": {
-      "label": "Visualisateur avancé",
-      "description": "Peut visionner vidéo en direct, parcourir les archives, contrôler le PTZ, etc"
-    },
-    "Administrator": {
-      "label": "Administrateur",
-      "description": "Accès illimité, y compris la possibilité de partager"
-    },
-    "Custom": {
-      "label": "Personnalisé",
-      "description": "Utiliser l'application client %VMS_NAME% pour configurer des autorisations personnalisées"
-    },
-    "cloudAdmin": {
-      "label": "Administrateur",
-      "description": "Peut configurer le système et le partager"
-    },
-    "customRole": {
-      "label": "Rôle personnalisé",
-      "description": "Rôle d’usager personnalisé spécifié dans le système"
-    },
-    "owner": {
-      "label": "Propriétaire",
-      "description": "Accès illimité, y compris la possibilité de partager et de connecter/déconnecter le système de nuage"
-    },
-    "viewer": {
-      "label": "Visualisateur",
-      "description": "Peut afficher la vidéo en direct et parcourir les archives"
-    },
-    "liveViewer": {
-      "label": "Visualiseur en direct",
-      "description": "Peut seulement voir vidéo en direct"
-    },
-    "advancedViewer": {
-      "label": "Visualisateur avancé",
-      "description": "Peut voir la vidéo en direct, parcourir l’archive, configurer les caméras, contrôle PTZ etc"
-    },
-    "custom": {
-      "label": "Personnalisé",
-      "description": "Utiliser l'application client %VMS_NAME% pour configurer des autorisations personnalisées"
-    }
-  },
   "errorCodes": {
     "ok": "ok",
     "cantSendActivationPrefix": "Impossible d’envoyer courriel de confirmation",
@@ -139,7 +35,7 @@
     "passwordMismatch": "Mot de passe incorrect",
     "cantEditYourself": "Modification des propres autorisations n’est pas autorisée",
     "cantEditAdmin": "Cet usager dispose d’autorisations administrateur",
-    "cantOpenClient": "%VMS_NAME% application is not detected. <a href=\"/download\">Download</a>",
+    "cantOpenClient": "%VMS_NAME% application non détectée. <a href=\"/download\"> Télécharger</a>",
     "lostConnection": "Connexion à {{systemName}} perdu",
     "thisSystem": "le système",
     "oldSafariNotSupported": "Les versions de Safari antérieures à 10 ne sont pas supportées",
@@ -148,83 +44,6 @@
     "INCOMPATIBLE": "Les systèmes ont des versions de logiciel différentes. Veuillez mettre à jour les deux versions vers <a href=\"/download\">la dernière version</a>.",
     "FAIL": "Le système <strong>{{failedSystem}}</strong> est actuellement inaccessible. <br>Essayez à nouveau dans quelques instants ou contactez <a href=\"%SUPPORT_LINK%\" target=\"_blank\"> support</a>.",
     "unknownMergeError": "Erreur inconnue. Vous pouvez essayer de rafraîchir la page et répéter la tentative. Si le problème persiste – veuillez contacter <a href=\"%SUPPORT_LINK%\" target=\"_blank\">le support</a>."
-  },
-  "merging": {
-    "mergeFailedTitle": "Fusion des systèmes a échoué",
-    "commonText": "Échec de la fusion des systèmes <strong>{{primarySystem}}</strong> et <strong>{{secondarySystem}}</strong>."
-  },
-  "passwordRequirements": {
-    "good": "bon",
-    "fair": "juste",
-    "fairMessage": "Utiliser des nombres, majuscules et minuscules et caractères spéciaux pour rendre votre mot de passe plus fort",
-    "minLength": "trop court",
-    "minLengthMessage": "Mot de passe doit contenir au moins 8 caractères",
-    "required": "incorrect",
-    "requiredMessage": "Utilisez uniquement les lettres latines, les chiffres et les symboles du clavier, éviter les espaces de début et de fin",
-    "weak": "faible",
-    "weakMessage": "Utiliser des nombres, majuscules et minuscules et caractères spéciaux pour rendre votre mot de passe plus fort",
-    "strongMessage": "Mot de passe fort!",
-    "common": "trop commun",
-    "commonMessage": "Ce mot de passe est en haut de la liste des plus populaires dans le monde",
-    "missingMessage": "Mot de passe requis"
-  },
-  "sharing": {
-    "confirmOwner": "Si vous modifiez le propriétaire du système, vous révoquez la propriété sur le compte courant. Cette action est irréversible. Êtes-vous sûr ?",
-    "shareTitle": "Partager",
-    "shareConfirmButton": "Partager",
-    "editShareTitle": "Modifier autorisations",
-    "editShareConfirmButton": "Enregistrer",
-    "permissionsSaved": "Nouvelles autorisations enregistrées"
-  },
-  "system": {
-    "yourSystem": "Votre système",
-    "mySystemSearch": "IMeMyMine",
-    "unavailable": "Le système est inaccessible",
-    "offline": "System Hors ligne",
-    "openClient": "Ouvrir dans %VMS_NAME%",
-    "openClientNoSystem": "Ouvrir %VMS_NAME%",
-    "confirmMergeAction": "Fusionner",
-    "mergeSystemTitle": "Fusionner systèmes",
-    "confirmRenameTitle": "Nom système",
-    "confirmRenameAction": "Enregistrer",
-    "successRename": "Nom du système sauvegardé",
-    "confirmDisconnectTitle": "Déconnecter le système de %CLOUD_NAME% ?",
-    "confirmDisconnectAction": "Déconnecter",
-    "confirmUnshareFromMe": "Vous êtes sur le point de déconnecter ce système de votre compte. Vous ne serez plus en mesure d’accéder à ce système. Êtes-Vous sûr ?",
-    "confirmUnshareFromMeTitle": "Déconnecter système?",
-    "confirmUnshareFromMeAction": "Déconnecter",
-    "confirmUnshare": "Cet usager ne sera pas en mesure d’accéder au système. Êtes-vous sûr?",
-    "confirmUnshareTitle": "Supprimer usager?",
-    "confirmUnshareAction": "Supprimer",
-    "successDisconnected": "Système correctement déconnecté de %CLOUD_NAME%",
-    "successDeleted": "Système {{systemName}} a correctement été supprimé de votre compte",
-    "mergeFailed": "Fusion système a échoué",
-    "mergeStart": "Les systèmes ont commencé à fusionner",
-    "mergeSuccess": "Fusion du système terminée",
-    "permissionsRemoved": "Autorisations retirées de {{email}}",
-    "unknownName": "Nom inconnu pour le système (causé par la fusion nuage)"
-  },
-  "account": {
-    "accountSavedSuccess": "Votre compte est enregistré avec succès",
-    "activationLinkSent": "Lien d'activation envoyé",
-    "passwordChangedSuccess": "Votre compte est enregistré avec succès",
-    "changePassword": "Changer mot de passe",
-    "newPasswordLabel": "Nouveau mot de passe",
-    "saveChanges": "Enregistrer"
-  },
-  "activeActions": {
-    "sendConfirm": "Renvoyer lien d'activation",
-    "resetPassword": "Réinitialiser mot de passe",
-    "setNewPassword": "Sauvergarder mot de passe",
-    "setNewPasswordLabel": "Nouveau mot de passe"
-  },
-  "regActions": {
-    "passwordLabel": "Mot de passe",
-    "createAccount": "Créer compte"
-  },
-  "header": {
-    "allSystems": "Tous les systèmes",
-    "systems": "Systèmes"
   },
   "common": {
     "cameraLinks": {
@@ -276,9 +95,8 @@
       "help": "aide | afficher commandes"
     }
   },
-  "recommendSupport": {
-    "a_recommend": "Nous recommandons de consulter avec",
-    "b_support": "support",
-    "c_proceeding": "avant de procéder."
+  "system": {
+    "offline": "System Hors ligne",
+    "unavailable": "Le système est inaccessible"
   }
 }

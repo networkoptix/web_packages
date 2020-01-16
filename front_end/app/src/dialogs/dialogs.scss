@@ -1,6 +1,7 @@
 @import '../../../app/styles/native-theme/theme_palette';
 @import '../../../app/styles/custom/custom_palette';
 @import '../../../app/styles/theme_variables';
+@import '../styles/typography';
 
 
 @keyframes slide-down-fade-in {
@@ -53,7 +54,7 @@
     &.fade {
         transition: none !important;
     }
-    
+
     &-holder {
         animation : slide-up-fade-in ease .1s;
 
@@ -84,10 +85,8 @@
         border-radius    : 2px 2px 0 0;
 
         .modal-title {
-            font-family : $font-family-medium;
-            font-size   : $h5-font-size;
+            @extend #medium14;
             font-weight : $modal-title-font-weight;
-            color       : $dark9;
             line-height : $modal-title-line-height;
             margin      : 0;
             padding     : 0;

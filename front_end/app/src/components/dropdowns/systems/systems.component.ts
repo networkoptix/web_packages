@@ -1,8 +1,11 @@
 import {
     Component,
     Input, SimpleChanges
-}                       from '@angular/core';
-import { BaseDropdown } from '../injDropdown';
+}                                    from '@angular/core';
+import { BaseDropdown }              from '../injDropdown';
+import { NxUriService }              from '../../../services/uri.service';
+import { NxConfigService }           from '../../../services/nx-config';
+import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 
 @Component({
     selector: 'nx-systems',
@@ -23,8 +26,25 @@ export class NxSystemsDropdown extends BaseDropdown {
         view: false,
     };
     params: any;
+    show: boolean;
 
-    getUrlFor(sid) {
+    constructor(
+        private languageService: NxLanguageProviderService,
+        private configService: NxConfigService,
+        private uriService: NxUriService,
+    ) {
+        super(languageService, configService);
+    }
+
+    trackItem(index, item) {
+        if (!item) {
+            return undefined;
+        }
+        return item.id;
+    }
+
+    updateURI(sid) {
+        this.show = false;
         let url = '/systems/' + sid;
 
         if (this.endpoint.view) {
@@ -35,7 +55,7 @@ export class NxSystemsDropdown extends BaseDropdown {
             url += '/health/';
         }
 
-        return url;
+        this.uriService.updateURI(url);
     }
 
 

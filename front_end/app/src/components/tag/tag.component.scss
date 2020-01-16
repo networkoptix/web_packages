@@ -2,6 +2,7 @@
 @import '../../../styles/theme_palette';
 @import '../../../styles/theme_variables';
 @import '../../styles/mixins';
+@import '../../styles/typography';
 
 .close-button {
     border-radius: 2px;
@@ -11,28 +12,25 @@
     height          : 32px;
     width           : 32px;
     cursor          : pointer;
-    
+
     .tag-close-icon {
         margin : 0 !important;
     }
 }
 
 .badge {
-    font-family : $font-family-regular;
-    font-weight: 400;
-    font-size : rem(12px);
-    color : $light16;
-    background-color: $light4;
-    line-height: 18px;
-    height: 20px;
-    padding : 0 8px;
-    border-radius : 2px;
-    
+    @extend #regular12;
+    color            : $light16;
+    font-weight      : 400;
+    background-color : $light4;
+    line-height      : 18px;
+    height           : 20px;
+    padding          : 0 8px;
+    border-radius    : 2px;
+
     &.large {
+        @extend #regular13;
         height      : 2rem !important;
-        font-family : $font-family-regular !important;
-        font-weight : 400 !important;
-        font-size   : rem(13px);
         line-height : 2rem !important;
         padding     : 0 12px;
     }
@@ -41,11 +39,11 @@
 .badge {
     &.btn {
         cursor : pointer !important;
-        
+
         &:hover {
             background-color : $light5;
         }
-    
+
         &:active {
             background-color : $light6;
         }
@@ -53,17 +51,15 @@
 }
 
 .badge-selected {
+    @extend #regular13;
     @include badge-selected($light16, $light17, $light18);
     cursor : default !important;
-    font-family : $font-family-regular;
-    font-size : rem(13px);
 }
 
 .badge-brand-selected {
+    @extend #regular13;
     @include badge-selected($brand_core, $brand_d1, $brand_d2);
     cursor : default !important;
-    font-family : $font-family-regular;
-    font-size : rem(13px);
 }
 
 $nx-theme-colors :

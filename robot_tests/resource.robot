@@ -17,7 +17,7 @@ ${variables_file}    variables-env.robot
 ${options}    true
 ${headless}    true
 @{chrome_arguments}    --disable-gpu    --no-sandbox    --log-level=3    --start-maximized
-@{chrome_arguments_headless}    --disable-infobars    --headless    --disable-gpu    --no-sandbox    --log-level=3
+@{chrome_arguments_headless}    --disable-infobars    --disable-gpu    --no-sandbox    --log-level=3    --headless    
 ${speed}    0
 ${selenium_timeout}    30
 
@@ -84,6 +84,7 @@ Check Language Logged In
 
 Set Language Anonymous
     [arguments]    ${lang}=${LANGUAGE}
+    Sleep     1
     Wait Until Element Is Visible    ${LANGUAGE DROPDOWN}
     Click Button    ${LANGUAGE DROPDOWN}
     Wait Until Element Is Visible    ${LANGUAGE TO SELECT}
@@ -97,13 +98,14 @@ Log In
     Run Keyword Unless    '''${button}''' == "None"    Click Link    ${button}
     Wait Until Elements Are Visible    ${EMAIL INPUT}    ${PASSWORD INPUT}    ${REMEMBER ME CHECKBOX VISIBLE}    ${FORGOT PASSWORD}    ${LOG IN CLOSE BUTTON}
     Sleep    1
-    Wait Until Keyword Succeeds    4    0.5    Input Text    ${EMAIL INPUT}    ${email}
+    Wait Until Keyword Succeeds    10    0.5    Input Text    ${EMAIL INPUT}    ${email}
     Sleep    1
-     Wait Until Keyword Succeeds    4    0.5   Input Text     ${PASSWORD INPUT}    ${password}
+     Wait Until Keyword Succeeds    10    0.5   Input Text     ${PASSWORD INPUT}    ${password}
     Sleep    1
     Wait Until Element Is Visible    ${LOG IN BUTTON}
     Click Button    ${LOG IN BUTTON}
     Run Keyword If    ${validate} == ${True}    Wait Until Element is Visible    ${ACCOUNT DROPDOWN}    ${selenium_timeout}
+    Run Keyword If    ${validate} == ${True}    Wait Until Element is Not Visible    //div[@class="placeholder"]    ${selenium_timeout}
     Run Keyword If    ${validate} == ${True}    Check Language Logged In    ${email}    ${password}
     Sleep    0.5
 
@@ -255,7 +257,7 @@ Share To
     Wait Until Element Is Visible    ${SHARE PERMISSIONS DROPDOWN}
     Sleep    1
     Click Button    ${SHARE PERMISSIONS DROPDOWN}
-    Wait Until Element Is Visible    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${permissions}']
+    Wait Until Elements Are Visible    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${permissions}']    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${permissions}']/..
     Click Link    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${permissions}']/..
     Click Button    ${SHARE BUTTON MODAL}
     Check For Alert    ${NEW PERMISSIONS SAVED}
@@ -572,24 +574,24 @@ Wait Until Number Of Tabs Are Open
     Wait For Condition       return ${current tabs}==${number}
 
 Save Cookies
-    ${saved cookie1} =     Get Cookie    _ga
-    ${saved cookie2} =     Get Cookie    _gat_UA-51046510-4
-    ${saved cookie3} =     Get Cookie    _gid
+    #${saved cookie1} =     Get Cookie    _ga
+    #${saved cookie2} =     Get Cookie    _gat_UA-51046510-4
+    #${saved cookie3} =     Get Cookie    _gid
     ${saved cookie4} =     Get Cookie    csrftoken
     ${saved cookie5} =     Get Cookie    language
     ${saved cookie6} =     Get Cookie    sessionid
-    ${cookies} =     Create List    ${saved cookie1}    ${saved cookie2}    ${saved cookie3}    ${saved cookie4}    ${saved cookie5}    ${saved cookie6}
+    ${cookies} =     Create List    ${saved cookie4}    ${saved cookie5}    ${saved cookie6}
     [return]     ${cookies}
 
 Apply Saved Cookies
     [arguments]   ${cookies}
     Delete All Cookies
-    FOR    ${i}     IN RANGE    1    4
+    FOR    ${i}     IN RANGE    2
         Add Cookie    ${cookies[${i}].name}    ${cookies[${i}].value}
     END
-    ${session expiry} =    Convert To String    ${cookies[5].expiry}
+    ${session expiry} =    Convert To String    ${cookies[2].expiry}
     Run Keyword Unless    "${session expiry}"=="None"
-    ...    Add Cookie    ${cookies[5].name}    ${cookies[5].value}     expiry=${session expiry}
+    ...    Add Cookie    ${cookies[2].name}    ${cookies[2].value}     expiry=${session expiry}
     Reload Page
 
 Persist Current Login State

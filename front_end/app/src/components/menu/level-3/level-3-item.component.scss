@@ -1,13 +1,12 @@
 @import '../../../../styles/theme_palette';
 @import '../../../../styles/theme_variables';
 @import '../../../styles/mixins';
+@import '../../../styles/typography';
 
 .menu-level-3 {
+    @extend #medium13;
     position         : relative;
     background-color : $light5;
-    font-family      : $font-family-medium;
-    font-size        : $font-size-base;
-    color            : $dark9;
     border-radius    : 0;
     text-decoration  : none;
     padding-left     : .75rem;
@@ -41,7 +40,7 @@
         height: 4px;
         z-index: 2;
     }
-    
+
     &-icon {
         float               : left;
         margin-right        : .5rem;
@@ -67,7 +66,11 @@
             background-color: $light16 !important;
             min-height: auto;
         }
-    
+
+        .menu-level-3-icon {
+            background-position : -123px -135px;
+        }
+
         .menu-level-3-additional {
             font-family : $font-family-regular;
         }
@@ -76,7 +79,7 @@
     &.item-disabled {
         color : $light13;
     }
-    
+
     .ellipsis {
         @include ellipsis;
         line-height : inherit;
