@@ -114,6 +114,10 @@ class UserManager {
         return this._accessRole;
     }
 
+    set accessRole(accessRole) {
+        this._accessRole = accessRole;
+    }
+
     set ownerEmail(email) {
         this._ownerEmail = email;
         this.isMine = this.currentUserEmail === email;
@@ -474,6 +478,7 @@ export class NxSystem extends System implements OnDestroy {
                 this.canMerge = this.userManager.isMine && (this.info.capabilities && this.info.capabilities.cloudMerge);
                 this.mergeInfo = response.mergeInfo;
                 this.systemInfo = this;
+                this.userManager.accessRole = this.info.accessRole;
                 return Promise.resolve(this);
             });
     }
