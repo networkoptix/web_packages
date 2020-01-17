@@ -186,7 +186,7 @@
     "You have registered in": "You have registered in",
     "Your Email": "Sähköpostiosoitteesi",
     "Your Name": "Nimesi",
-    "Your access level<span>&nbsp;– </span>\n                    <span class=\"name\" [innerHTML]=\"updateUserRole()\"></span>": "Your access level<span>&nbsp;– </span>\n                    <span class=\"name\" [innerHTML]=\"updateUserRole()\"></span>",
+    "Your access level": "Your access level",
     "Your account is successfully activated": "Käyttäjätili aktivoitu onnistuneesti",
     "Your browser is not supported": "Selaimesi ei ole tuettu",
     "devices": "laitteet",

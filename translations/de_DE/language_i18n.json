@@ -186,7 +186,7 @@
     "You have registered in": "You have registered in",
     "Your Email": "Ihre Email",
     "Your Name": "Ihr Name",
-    "Your access level<span>&nbsp;– </span>\n                    <span class=\"name\" [innerHTML]=\"updateUserRole()\"></span>": "Ihr Zugriffslevel<span>&nbsp;- </span>\n                    <span class=\"name\" [innerHTML]=\"updateUserRole()\"></span>",
+    "Your access level": "Ihr Zugriffslevel",
     "Your account is successfully activated": "Ihr Konto wurde erfolgreich aktiviert",
     "Your browser is not supported": "Ihr Browser wird nicht unterstützt",
     "devices": "Geräte",

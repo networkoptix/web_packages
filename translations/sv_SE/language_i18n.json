@@ -186,7 +186,7 @@
     "You have registered in": "Du har registrerat dig i",
     "Your Email": "Din E-postadress",
     "Your Name": "Ditt namn",
-    "Your access level<span>&nbsp;– </span>\n                    <span class=\"name\" [innerHTML]=\"updateUserRole()\"></span>": "Din åtkomstnivå<span>&nbsp;- </span>\n                    <span class=\"name\" [innerHTML]=\"updateUserRole()\"></span>",
+    "Your access level": "Din åtkomstnivå",
     "Your account is successfully activated": "Ditt konto har aktiverats",
     "Your browser is not supported": "Din webbläsare stöds inte",
     "devices": "enheter",

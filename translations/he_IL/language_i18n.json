@@ -186,7 +186,7 @@
     "You have registered in": "You have registered in",
     "Your Email": "כתובת הדוא\"ל שלך",
     "Your Name": "השם שלך",
-    "Your access level<span>&nbsp;– </span>\n                    <span class=\"name\" [innerHTML]=\"updateUserRole()\"></span>": "Your access level<span>&nbsp;– </span>\n                    <span class=\"name\" [innerHTML]=\"updateUserRole()\"></span>",
+    "Your access level": "רמת הגישה שלך",
     "Your account is successfully activated": "החשבון שלך נשמר בהצלחה",
     "Your browser is not supported": "הדפדפן שלך אינו נתמך",
     "devices": "מכשירים",

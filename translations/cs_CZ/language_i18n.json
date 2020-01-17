@@ -186,7 +186,7 @@
     "You have registered in": "You have registered in",
     "Your Email": "Váš e-mail",
     "Your Name": "Vaše jméno",
-    "Your access level<span>&nbsp;– </span>\n                    <span class=\"name\" [innerHTML]=\"updateUserRole()\"></span>": "Your access level<span>&nbsp;– </span>\n                    <span class=\"name\" [innerHTML]=\"updateUserRole()\"></span>",
+    "Your access level": "Your access level",
     "Your account is successfully activated": "Váš účet byl úspěšně aktivován",
     "Your browser is not supported": "Verze vašeho prohlížeče není podporována",
     "devices": "zařízení",

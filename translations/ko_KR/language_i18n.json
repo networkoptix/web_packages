@@ -186,7 +186,7 @@
     "You have registered in": "You have registered in",
     "Your Email": "당신의 이메일",
     "Your Name": "당신의 이름",
-    "Your access level<span>&nbsp;– </span>\n                    <span class=\"name\" [innerHTML]=\"updateUserRole()\"></span>": "Your access level<span>&nbsp;– </span>\n                    <span class=\"name\" [innerHTML]=\"updateUserRole()\"></span>",
+    "Your access level": "당신의 접근 권한",
     "Your account is successfully activated": "당신의 계정이 성공적으로 활성화 되었습니다",
     "Your browser is not supported": "브라우저가 지원되지 않습니다.",
     "devices": "기기들",

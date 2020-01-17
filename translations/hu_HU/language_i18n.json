@@ -186,7 +186,7 @@
     "You have registered in": "You have registered in",
     "Your Email": "Your Email",
     "Your Name": "Your Name",
-    "Your access level<span>&nbsp;– </span>\n                    <span class=\"name\" [innerHTML]=\"updateUserRole()\"></span>": "Your access level<span>&nbsp;– </span>\n                    <span class=\"name\" [innerHTML]=\"updateUserRole()\"></span>",
+    "Your access level": "Your access level",
     "Your account is successfully activated": "A felhasználói fiókot sikeresen aktiválta",
     "Your browser is not supported": "Ez a böngésző nem támogatott",
     "devices": "eszközök",

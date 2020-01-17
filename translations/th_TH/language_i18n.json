@@ -186,7 +186,7 @@
     "You have registered in": "You have registered in",
     "Your Email": "อีเมล์ของคุณ",
     "Your Name": "ชื่อของคุณ",
-    "Your access level<span>&nbsp;– </span>\n                    <span class=\"name\" [innerHTML]=\"updateUserRole()\"></span>": "Your access level<span>&nbsp;– </span>\n                    <span class=\"name\" [innerHTML]=\"updateUserRole()\"></span>",
+    "Your access level": "Your access level",
     "Your account is successfully activated": "เปิดใช้งานบัญชีของคุณเรียบร้อยแล้ว",
     "Your browser is not supported": "เบราว์เซอร์ของคุณไม่สนับสนุนการทำงานของระบบ",
     "devices": "อุุปกรณ์",
