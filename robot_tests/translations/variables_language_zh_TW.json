@@ -143,7 +143,7 @@
     "IPVD EXPORT ALL TO CSV": "匯出為 CSV 格式",
     "IPVD SUBMIT A REQUEST TEXT": "提交申請",
     "IPVD SEND DEVICE FEEDBACK TEXT": "留下您對於此設備的意見",
-    "IPVD FEEDBACK ABOUT": "相關建議",
+    "IPVD FEEDBACK ABOUT": "Feedback {{model}} about",
     "IPVD FEEDBACK FOR CAMERAS PAGE": "攝影機頁面的回饋意見",
     "IPVD FEEDBACK MESSAGE SENT": "訊息已發送",
     "PRIVACY POLICY LINK TEXT": "此處",

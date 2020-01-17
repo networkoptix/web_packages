@@ -143,7 +143,7 @@
     "IPVD EXPORT ALL TO CSV": "ייצא נתונים לקובץ CSV",
     "IPVD SUBMIT A REQUEST TEXT": "הגש בקשה",
     "IPVD SEND DEVICE FEEDBACK TEXT": "שלח משוב על המכשיר הזה",
-    "IPVD FEEDBACK ABOUT": "משוב על",
+    "IPVD FEEDBACK ABOUT": "Feedback {{model}} about",
     "IPVD FEEDBACK FOR CAMERAS PAGE": "משוב עבור דף מצלמות",
     "IPVD FEEDBACK MESSAGE SENT": "ההודעה נשלחה.",
     "PRIVACY POLICY LINK TEXT": "כאן",

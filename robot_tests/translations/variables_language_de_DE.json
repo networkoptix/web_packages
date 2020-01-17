@@ -143,7 +143,7 @@
     "IPVD EXPORT ALL TO CSV": "Alles in CSV exportieren",
     "IPVD SUBMIT A REQUEST TEXT": "anfrage abschicken",
     "IPVD SEND DEVICE FEEDBACK TEXT": "Feedback zu diesem Gerät senden",
-    "IPVD FEEDBACK ABOUT": "Feedback zu",
+    "IPVD FEEDBACK ABOUT": "Feedback {{model}} about",
     "IPVD FEEDBACK FOR CAMERAS PAGE": "Feedback zur Kameraseite",
     "IPVD FEEDBACK MESSAGE SENT": "Die Nachricht wurde gesendet.",
     "PRIVACY POLICY LINK TEXT": "hier",
@@ -179,7 +179,7 @@
     "INTEGRATION SUPPORT TEXT": "Support",
     "INTEGRATION SUPPORT URL TEXT": "Support-URL",
     "INTEGRATION SUPPORT EMAIL TEXT": "Support Email",
-    "INTEGRATION GET IN TOUCH LEGAL TEXT": "Mit dem Absenden dieses Formulars erklären Sie sich damit einverstanden, von QA - Test Integration Company und/oder Network Optix kontaktiert zu werden. Sie finden die Datenschutzerklärung des QA - Test Integration Company hier und die Datenschutzerklärung von Network Optix hier, die Anweisungen zum Widerruf Ihrer Zustimmung enthält.",
+    "INTEGRATION GET IN TOUCH LEGAL TEXT": "Mit dem Absenden dieses Formulars erklären Sie sich damit einverstanden, dass Sie von QA - Test Integration Company} und/oder Network Optix kontaktiert werden. Sie finden die QA - Test Integration Company} Datenschutzerklärung hier und die Network Optix Datenschutzerklärung hier, die Anweisungen enthalten, wie Sie Ihre Zustimmung widerrufen können.",
     "INTEGRATION GET IN TOUCH MESSAGE SENT": "Die Nachricht wurde gesendet.",
     "REGISTER TITLE TEXT": "Account erstellen bei",
     "DOWNLOAD TITLE TEXT": "%VMS_NAME% herunterladen",
@@ -209,5 +209,5 @@
     "BETAS TAB TEXT": "Betas",
     "SALES INQUIRY TEXT": "Verkaufsanfrage für vis - QA - face_recognition",
     "TECHNICAL INQUIRY TEXT": "Technische Anfrage für vis - QA - face_recognition",
-    "FEEDBACK TEXT": "Feedback zur Integration für vis - QA - face_recognition"
+    "FEEDBACK TEXT": "Feedback zur Integration vis - QA - face_recognition"
 }

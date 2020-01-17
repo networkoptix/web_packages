@@ -143,7 +143,7 @@
     "IPVD EXPORT ALL TO CSV": "Tamamını CSV olarak dışarıya aktar",
     "IPVD SUBMIT A REQUEST TEXT": "destek talebi gönder",
     "IPVD SEND DEVICE FEEDBACK TEXT": "Bu cihazla ilgili geri bildirim gönder",
-    "IPVD FEEDBACK ABOUT": "Hakkında geribildirim",
+    "IPVD FEEDBACK ABOUT": "Feedback {{model}} about",
     "IPVD FEEDBACK FOR CAMERAS PAGE": "Kameralar sayfası için geri bildirim",
     "IPVD FEEDBACK MESSAGE SENT": "Mesaj gönderildi.",
     "PRIVACY POLICY LINK TEXT": "buraya",
