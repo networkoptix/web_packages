@@ -619,7 +619,7 @@
         "label": "Settings",
         "is_global": true,
         "description": "Settings for asset",
-        "hidden": true,
+        "hidden": false,
         "translatable": false,
         "values": [
           {
@@ -758,7 +758,7 @@
         "label": "Camera page",
         "is_global": true,
         "description": "Settings for camera page",
-        "hidden": true,
+        "hidden": false,
         "translatable": false,
         "values": [
           {
