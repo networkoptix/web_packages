@@ -134,7 +134,6 @@ class UserManager {
         this.accessRoles = this.CONFIG.accessRoles.predefinedRoles;
         this.isMine = false;
         this.permissions = new SystemPermissions();
-        this.servers = [];
     }
 
     get accessRole() {
@@ -213,15 +212,11 @@ class UserManager {
                 return Promise.reject(`Aggregated request to server has failed ${result}`);
             }
             const data = result.reply;
-            let users = data['ec2/getUsers'];
+            const users = data['ec2/getUsers'];
             const userRoles = data['ec2/getUserRoles'];
             const predefinedRoles = data['ec2/getPredefinedRoles'];
             return new Promise((resolve) => {
                 this.updateAccessRoles(predefinedRoles, userRoles);
-                // Filter out local users.
-                users = users.filter((user) => {
-                    return user.isCloud;
-                });
                 return resolve(this.processUsers(users));
             });
         }, (error) => {
@@ -423,6 +418,7 @@ export class NxSystem extends System implements OnDestroy {
         this.systemApiService = systemApiService;
         this.pollService = pollService;
         this.systemsService = systemsService;
+        this.servers = [];
         this.lostConnection = false;
         this.initSystem(currentUserEmail, systemId, serverId);
         // this._subscribersCount.subscribe((subscribers) => {

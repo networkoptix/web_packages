@@ -327,36 +327,34 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             }, NxUtilsService.sortASC);
             this.system.users.sort(byParam);
 
-            const localUsers = [];
-            const cloudUsers = [];
             usersNode.level3 = [];
-            this.system.users
-                .forEach(user => {
-                    const id = user.id.replace(/{|}/g, '');
-                    user.node = {
-                        id,
-                        additionalLabel:  this.LANG.accessRoles[user.role.name] && this.LANG.accessRoles[user.role.name].label || user.role.name,
-                        path : 'users/' + id,
-                        isEnabled: user.isEnabled,
-                    }
-                    if (user.isCloud === true) {
-                        user.node.icon = 'glyphicon-cloud';
-                        user.node.label = user.email;
-                        cloudUsers.push(user);
-                    } else {
-                        user.node.svgIcon = 'user';
-                        user.node.label = user.name || user.email;
-                        localUsers.push(user);
-                    }
-                });
 
-            localUsers
-                .forEach((user) => usersNode.level3.push(user.node));
+            const {cloudUsers, localUsers} = this.system.users.reduce((result, user) => {
+                const id = user.id.replace(/{|}/g, '');
+                const node: any = {
+                    additionalLabel:  this.LANG.accessRoles[user.role.name] && this.LANG.accessRoles[user.role.name].label || user.role.name,
+                    id,
+                    isEnabled: user.isEnabled,
+                    label: user.name || user.email,
+                    path : 'users/' + id,
+                    svgIcon: 'user',
+                };
+                if (user.isCloud === true) {
+                    node.svgIcon = '';
+                    node.icon = 'glyphicon-cloud';
+                    node.label = user.email;
+                    result.cloudUsers.push(node);
+                } else {
+                    result.localUsers.push(node);
+                }
+                return result;
+            }, {cloudUsers: [], localUsers: []});
+
+            usersNode.level3 = [...localUsers];
             if (localUsers.length > 0) {
                 usersNode.level3.push({ horizontal: true });
             }
-            cloudUsers
-                .forEach((user) => usersNode.level3.push(user.node));
+            usersNode.level3 = [...usersNode.level3, ...cloudUsers];
         } else { // remove Users
             this.content.level1 = this.content.level1.filter(node => node.id !== this.CONFIG.systemMenu.users.id);
         }
