@@ -238,7 +238,7 @@
 				"ipvd_feedback_device": "{{asset}} についてのフィードバック"
 			},
 			"subject": {
-				"sales_inquiry": "{{asset}}販売問い合わせ",
+				"sales_inquiry": "{{asset}} 販売問い合わせ",
 				"technical_inquiry": "Technical inquiry for {{asset}}",
 				"integration_feedback": "{{asset}} 統合のためのフィードバック",
 				"ipvd_feedback_page": "カメラページへのフィードバック",

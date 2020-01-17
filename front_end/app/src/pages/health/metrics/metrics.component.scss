@@ -61,6 +61,11 @@ nx-system-metrics-component {
         .gridMetricContent {
             display : flex;
 
+            .gridMetricContentPanelComponent {
+                width : 30%;
+                padding-left : 1rem;
+            }
+
             &.fixedLayout {
                 &--with-panel {
                     .gridMetricContentComponent {
@@ -70,14 +75,10 @@ nx-system-metrics-component {
                         @include media-breakpoint-down(xxl) {
                             width : 55%;
                         }
-
-                        @media (min-width : 1920px) {
-                            //grid-template-columns : $grid-super-wide-table-width $grid-super-wide-panel-width;
-                        }
                     }
 
                     .gridMetricContentPanelComponent {
-                        width : 30%;
+                        padding-left : 0;
 
                         @include media-breakpoint-down(lg) {
                             width : 100%;
@@ -86,11 +87,7 @@ nx-system-metrics-component {
                 }
 
                 &--no-panel {
-                    .gridMetricContentComponent {
-                        width : 100%;
-                    }
-
-                    .gridMetricContentPanelComponent {
+                    .gridMetricContentComponent, .gridMetricContentPanelComponent {
                         width : 100%;
                     }
                 }

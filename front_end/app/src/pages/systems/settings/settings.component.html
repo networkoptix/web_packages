@@ -1,7 +1,7 @@
 <nx-pre-loader type="page" *ngIf="!system"></nx-pre-loader>
 
-<ng-container *ngIf="system">
-    <div *ngIf="!system.forbidden" class="block-container mt-3">
+<ng-container *ngIf="system && !systemNoAccess">
+    <div class="block-container mt-3">
         <div class="row">
             <!-- Calculate height of menu, offset by height of header div and 16px on top and bottom -->
             <div class="fixed-sidebar col-12 d-flex flex-column ml-md-2 fill-screen-height"
@@ -18,12 +18,11 @@
             </div>
         </div>
     </div>
-
-    <div *ngIf="system.forbidden" class="text-center pt-3">
+</ng-container>
+<div *ngIf="systemNoAccess" class="text-center pt-3">
         <h1 class="d-flex justify-content-center" translate>Failed to access System</h1>
         <h3 class="d-flex justify-content-center" [innerHTML]="'FAILED_SYSTEM_DESCR' | translate"></h3>
         <p class="mt-4 d-flex justify-content-center">
             <a routerLink="/systems" class="btn btn-primary" translate>Available Systems list</a>
         </p>
     </div>
-</ng-container>

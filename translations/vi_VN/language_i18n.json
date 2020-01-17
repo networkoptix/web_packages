@@ -186,7 +186,7 @@
     "You have registered in": "You have registered in",
     "Your Email": "Email của bạn",
     "Your Name": "Tên của bạn",
-    "Your access level<span>&nbsp;– </span>\n                    <span class=\"name\" [innerHTML]=\"updateUserRole()\"></span>": "Your access level<span>&nbsp;– </span>\n                    <span class=\"name\" [innerHTML]=\"updateUserRole()\"></span>",
+    "Your access level": "Your access level",
     "Your account is successfully activated": "Tài khoản của bạn đã được kích hoạt thành công",
     "Your browser is not supported": "Trình duyệt của bạn không được hỗ trợ",
     "devices": "thiết bị",

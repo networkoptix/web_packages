@@ -60,15 +60,15 @@
             <hr class="mt-1"/>
             <div class="menuLinks px-2">
                 <nx-health-update *ngIf="!importedData.imported" (updateHealth)="updateValues()"></nx-health-update>
-                <div *ngIf="importedData.imported" class="importInfo pb-2">
-                    <p>System: {{importedData.system}}</p>
-                    <p>Generated: {{importedData.time}}</p>
-                </div>
                 <div>
                     <a href class="btn-text pl-1" (click)="exportReport(); false;">
                         <svg-icon [src]="CONFIG.icons.dir + 'download.svg'"
                                   [svgStyle]="{'width.px': '20'}"></svg-icon>
                         Download Full Report</a>
+                </div>
+                <div *ngIf="importedData.imported" class="importInfo pb-2">
+                    <p>System: {{importedData.system}}</p>
+                    <p>Generated: {{importedData.time}}</p>
                 </div>
             </div>
             <div class="mt-3 px-2">

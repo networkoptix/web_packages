@@ -217,7 +217,7 @@ correct items are shown for owner
     [tags]    C41560    Threaded
     Log in to Auto Tests System    ${EMAIL OWNER}
     Wait Until Element Is Visible    ${USERS LIST LINK}
-    ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    you
+    ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    ${YOU TEXT}
     Wait Until Elements Are Visible    ${RENAME SYSTEM}    ${DISCONNECT FROM NX}    ${current owner name}
 
 correct items are shown for admin

@@ -186,7 +186,7 @@
     "You have registered in": "You have registered in",
     "Your Email": "Uw e-mail",
     "Your Name": "Uw naam",
-    "Your access level<span>&nbsp;– </span>\n                    <span class=\"name\" [innerHTML]=\"updateUserRole()\"></span>": "Your access level<span>&nbsp;– </span>\n                    <span class=\"name\" [innerHTML]=\"updateUserRole()\"></span>",
+    "Your access level": "Uw toegangsniveau",
     "Your account is successfully activated": "Uw account is succesvol geactiveerd",
     "Your browser is not supported": "Uw browser wordt niet ondersteund",
     "devices": "apparaten",

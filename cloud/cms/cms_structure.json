@@ -619,7 +619,7 @@
         "label": "Settings",
         "is_global": true,
         "description": "Settings for asset",
-        "hidden": true,
+        "hidden": false,
         "translatable": false,
         "values": [
           {
@@ -745,10 +745,10 @@
           {
             "label": "Google Tag Manager ID",
             "name": "%GOOGLE_TAG_MANAGER_ID%",
-            "description": "ID used for Google Analytics",
+            "description": "ID used for Google Analytics. If not used, enter <b>N/A</b>",
             "type": "text",
-            "value": "",
-            "optional": true,
+            "value": "GTM-5MRNWP",
+            "optional": false,
             "advanced": true
           }
         ]
@@ -758,7 +758,7 @@
         "label": "Camera page",
         "is_global": true,
         "description": "Settings for camera page",
-        "hidden": true,
+        "hidden": false,
         "translatable": false,
         "values": [
           {

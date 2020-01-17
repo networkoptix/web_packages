@@ -186,7 +186,7 @@
     "You have registered in": "Kaydoldunuz",
     "Your Email": "E-posta Adresiniz",
     "Your Name": "Adınız",
-    "Your access level<span>&nbsp;– </span>\n                    <span class=\"name\" [innerHTML]=\"updateUserRole()\"></span>": "Erişim seviyeniz<span>&nbsp;- </span>\n                    <span class=\"name\" [innerHTML]=\"updateUserRole()\"></span>",
+    "Your access level": "Erişim seviyesi",
     "Your account is successfully activated": "Hesabın başarıyla aktif edildi",
     "Your browser is not supported": "Tarayıcınız desteklenmiyor",
     "devices": "aygıtlar",

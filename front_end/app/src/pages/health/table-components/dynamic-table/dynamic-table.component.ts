@@ -139,6 +139,10 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
             if (!changes.elements.firstChange) {
                 setPage = 1;
                 resetURI = true;
+                if (this.dataTable) {
+                    const tableWrapper = this.dataTable.nativeElement.querySelectorAll('.table-wrapper')[0];
+                    tableWrapper.scrollLeft = 0;
+                }
             }
         }
 

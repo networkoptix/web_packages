@@ -186,7 +186,7 @@
     "You have registered in": "Ви зареєстровані в",
     "Your Email": "Ваш E-Mail",
     "Your Name": "Ваше ім'я",
-    "Your access level<span>&nbsp;– </span>\n                    <span class=\"name\" [innerHTML]=\"updateUserRole()\"></span>": "Ваш рівень доступу<span>&nbsp;– </span>\n                    <span class=\"name\" [innerHTML]=\"updateUserRole()\"></span>",
+    "Your access level": "Ваш рівень доступу",
     "Your account is successfully activated": "Ваш обліковий запис успішно активовано",
     "Your browser is not supported": "Ваш браузер не підтримується",
     "devices": "пристроїв",

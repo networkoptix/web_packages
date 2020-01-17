@@ -186,7 +186,7 @@
     "You have registered in": "You have registered in",
     "Your Email": "您的电邮",
     "Your Name": "您的姓名",
-    "Your access level<span>&nbsp;– </span>\n                    <span class=\"name\" [innerHTML]=\"updateUserRole()\"></span>": "Your access level<span>&nbsp;– </span>\n                    <span class=\"name\" [innerHTML]=\"updateUserRole()\"></span>",
+    "Your access level": "您的访问级别",
     "Your account is successfully activated": "已成功激活您的帐户",
     "Your browser is not supported": "系统不支持您的浏览器",
     "devices": "设备",

@@ -89,14 +89,12 @@ export class NxUtilsService {
 
         if (this.deviceService.isDesktop()) {
             blob = new Blob([data], {type});
+            if (navigator.msSaveOrOpenBlob) {
+                navigator.msSaveOrOpenBlob(blob, filename);
+                return false;
+            }
             objectUrl  = URL.createObjectURL(blob);
             a.href = objectUrl;
-            a.addEventListener('onclick', () => {
-                if (navigator.msSaveOrOpenBlob) {
-                    navigator.msSaveOrOpenBlob(blob, filename);
-                    return false;
-                }
-            });
         } else {
             a.href = 'data:' + type + ';charset=UTF-8,' + encodeURIComponent(data);
         }

@@ -7,7 +7,7 @@ import { NxPageService }     from '../../../services/page.service';
 import { NxDialogsService }  from '../../../dialogs/dialogs.service';
 import { NxSettingsService } from './settings.service';
 import { NxMenuService }     from '../../../components/menu/menu.service';
-import { NxSystemService }         from '../../../services/system.service';
+import { NxSystem, NxSystemService } from '../../../services/system.service';
 import { NxSystemsService }        from '../../../services/systems.service';
 import { NxAccountService }        from '../../../services/account.service';
 import { NxProcessService }        from '../../../services/process.service';
@@ -36,7 +36,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     content: any = {};
 
     account: any;
-    system: any;
+    system: NxSystem;
     gettingSystem: any;
     systems: any;
     deletingSystem: any;
@@ -113,9 +113,11 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 this.content = {...this.content}; // trigger onChange
                 if (this.system) {
                     this.system.stopPoll();
+                    this.system = undefined;
+                    this.settingsService.system = undefined;
                 }
-                this.system = undefined;
                 this.ribbonService.hide();
+                this.systemNoAccess = false;
                 this.menuVisible = false;
                 this.getSystemInfo();
             }
@@ -166,17 +168,30 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         // TODO: add processes back
         // Retrieve users list
         this.gettingSystemUsers = this.processService.createProcess(() => {
-            return this.system
-                .getUsers()
-                .then(() => {
-                    if (this.callShare) {
-                        this.settingsService
-                            .addUser()
-                            .finally(this.cleanUrl);
-                    }
-                });
+            return this.system.getUsers(true);
         }, {
             errorPrefix: this.LANG.errorCodes.cantGetUsersListPrefix
+        }).then(() => {
+            const toastOptions = {
+                classname: this.CONFIG.toast.danger,
+                delay: this.CONFIG.alertTimeout,
+                autohide: true
+            };
+            this.settingsService.system = this.system;
+            this.menuVisible = true;
+            if (!this.settingsService.share) {
+                return;
+            }
+
+            if (!this.system.isOnline) {
+                return this.toastService.show(this.LANG.system.shareOffline, toastOptions);
+            }
+
+            if (this.system.permissions.editUsers) {
+                this.settingsService.addUser().finally(() => this.cleanUrl());
+            } else {
+                this.toastService.show(this.LANG.system.shareUnauthorized, toastOptions);
+            }
         });
 
         // Retrieve system info
@@ -197,7 +212,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             },
             errorPrefix: this.LANG.errorCodes.cantGetSystemInfoPrefix
         }).then(() => {
-            this.gettingSystemUsers.run();
+            return this.gettingSystemUsers.run();
         });
 
         // var cancelSubscription = this.$on("unauthorized_" + $routeParams.systemId, connectionLost);
@@ -232,17 +247,9 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     }
                     this.account = account;
                     this.system = this.systemService.createSystem(this.account.email, this.systemId);
-                    this.gettingSystem.run().catch();
-
-                    this.system
-                        .getInfo(true)
-                        .then(() => {
-                            this.settingsService.system = this.system;
-                            this.checkShare();
-                        })
-                        .catch((response) => {
-                            this.system.forbidden = true;
-                        });
+                    this.gettingSystem.run().catch(() => {
+                        this.systemNoAccess = true;
+                    });
 
                     if (this.systemSubscription) {
                         this.systemSubscription.unsubscribe();
@@ -252,7 +259,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                         .subscribe(_ => {
                             this.updateAlert();
                             this.updateMenu();
-                            this.menuVisible = true;
                         });
 
                     if (this.connectionSubscription) {
@@ -265,26 +271,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                         });
                 }
             });
-    }
-
-    checkShare() {
-        if (this.settingsService.share) {
-            const options = {
-                classname: this.CONFIG.toast.danger,
-                delay: this.CONFIG.alertTimeout,
-                autohide: true,
-            };
-            if (this.system.isOnline) {
-                if (this.system.permissions.editUsers) {
-                    this.settingsService.addUser().catch();
-                } else {
-                    this.toastService.show(this.LANG.system.shareUnauthorized, options);
-                }
-            } else {
-                this.toastService.show(this.LANG.system.shareOffline, options);
-            }
-            this.settingsService.share = false;
-        }
     }
 
     updateAlert() {
