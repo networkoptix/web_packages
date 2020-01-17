@@ -75,10 +75,6 @@ nx-system-metrics-component {
                         @include media-breakpoint-down(xxl) {
                             width : 55%;
                         }
-
-                        @media (min-width : 1920px) {
-                            //grid-template-columns : $grid-super-wide-table-width $grid-super-wide-panel-width;
-                        }
                     }
 
                     .gridMetricContentPanelComponent {
@@ -91,11 +87,7 @@ nx-system-metrics-component {
                 }
 
                 &--no-panel {
-                    .gridMetricContentComponent {
-                        width : 100%;
-                    }
-
-                    .gridMetricContentPanelComponent {
+                    .gridMetricContentComponent, .gridMetricContentPanelComponent {
                         width : 100%;
                     }
                 }
