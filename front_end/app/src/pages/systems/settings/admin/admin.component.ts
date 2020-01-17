@@ -230,6 +230,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             .systemSubject
             .subscribe((system) => {
                 this.system = system;
+                this.applyService.setVisible(false);
                 if (system) {
                     this.pageService.setPageTitle(this.LANG.pageTitles.systemName.replace('{{systemName}}', this.system.info.name));
                     if (this.systemSubscription) {
