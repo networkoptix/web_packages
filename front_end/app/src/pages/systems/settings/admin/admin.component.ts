@@ -93,13 +93,13 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     }
 
     private updateSettings(forceMergeState?: boolean) {
-        const merging = typeof(this.system.mergeInfo) !== 'undefined' || forceMergeState;
-        const available = !this.system.isOnline || !this.system.isAvailable;
+        const merging = this.system && typeof(this.system.mergeInfo) !== 'undefined' || forceMergeState;
+        const available = this.system && (!this.system.isOnline || !this.system.isAvailable);
         this.settings = {
             disconnectDisabled: merging,
             mergeDisabled: (merging || available) && !(this.debugMode || this.betaMode),
             renameDisabled: merging && this.system.mergeInfo && this.system.mergeInfo.role !== 'master',
-            showMerge: this.system.isMine && this.systemsService.systems.length > 1
+            showMerge: this.system && this.system.isMine && this.systemsService.systems.length > 1
         };
     }
 
@@ -229,8 +229,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         this.settingsServiceSubscription = this.settingsService
             .systemSubject
             .subscribe((system) => {
+                this.system = system;
                 if (system) {
-                    this.system = system;
                     this.pageService.setPageTitle(this.LANG.pageTitles.systemName.replace('{{systemName}}', this.system.info.name));
                     if (this.systemSubscription) {
                         this.systemSubscription.unsubscribe();
