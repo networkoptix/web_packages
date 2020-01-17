@@ -9,7 +9,7 @@ Resource          ../variables-env.robot
 Suite Setup       Open Browser and Go To Integrations Page Anonymous
 Test Teardown     Run Keyword If Test Failed   Go To Integrations Page
 Suite Teardown    Close All Browsers
-Force Tags        integrations
+Force Tags        integrations    Threaded File
 
 *** Variables ***
 ${url}        ${ENV}/integrations
