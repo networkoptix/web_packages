@@ -1,0 +1,3 @@
+Hello, {{ message.userFullName }}
+{{ message.sender_name}} ({{ message.sender_email }}) has the following support question for the {{ message.asset }}:
+<pre>{{ message.message }}</pre>
