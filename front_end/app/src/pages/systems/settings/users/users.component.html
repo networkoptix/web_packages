@@ -14,11 +14,11 @@
                     ></nx-switch>
                 </div>
                 <h2 class="user-email mb-2">{{selectedUser.email || selectedUser.name}}</h2>
-                <span class="user-name">{{selectedUser.fullName}}</span>
+                <span *ngIf="selectedUser.fullName" class="user-name">{{selectedUser.fullName}}</span>
             </header>
 
             <nx-section>
-                <div *ngIf="selectedUser.canBeEdited && system.currentUser.isAdmin"
+                <div *ngIf="selectedUser.canBeEdited && system.currentUser.isAdmin; else roleName;"
                      class="mr-2 my-2" style="width: 200px">
 
                     <label for="permissionsSelect" translate>Access level</label>
@@ -32,27 +32,83 @@
                             (onSelected)="setPermission($event);">
                     </nx-permissions-select>
                 </div>
+                <ng-template #roleName>
+                    <h4 #roleName>{{ selectedUser.role.name }}</h4>
+                </ng-template>
                 <div>
                     <span class="help-block pt-0" [innerHtml]="accessDescription"></span>
                 </div>
             </nx-section>
-            <nx-section >
-                <div *ngIf="system && selectedUser && !selectedUser.isCloud && selectedUser.email === system.currentUserEmail">
+            <section *ngIf="!selectedUser.isCloud" class="px-3 py-1 user-settings-section">
+                <form #userSettingsForm="ngForm"
+                    name="userSettingsForm"
+                    class="d-table user-settings-form form inputs w-100 mw-100 col-lg-7 col-m-8"
+                    novalidate>
+                    <div class="form-group d-md-table-row d-flex flex-column user-setting-group margin-bottom">
+                        <label for="name"
+                            class="control-label d-md-table-cell text-nowrap user-form-labels text-right"
+                            translate>Login</label>
+                        <input type="text" class="form-control mx-0 w-100 mx-md-2 d-md-table-cell col-md-7"
+                            [(ngModel)]="name.value"
+                            (change)="updateForm($event)"
+                            name="name" id="name" #login="ngModel"
+                            [disabled]="!(selectedUser.canBeEdited && system.currentUser.isAdmin)"
+                            pattern="\S+.*"
+                            maxlength="255"
+                            required
+                            nxFocusMe>
+                        <span class="input-error" *ngIf="login.invalid && login.touched"
+                                translate>Login is required</span>
+                    </div>
+                    <div class="form-group d-md-table-row d-flex flex-column user-setting-group margin-bottom">
+                        <label for="fullName"
+                            class="control-label d-md-table-cell text-nowrap user-form-labels text-right"
+                            translate>Name</label>
+                        <input type="text" class="form-control mx-0 w-100 mx-md-2 d-md-table-cell col-md-7"
+                            [(ngModel)]="fullName.value"
+                            (ngModelChange)="updateForm($event)"
+                            name="fullName" id="fullName"
+                            [disabled]="!(selectedUser.canBeEdited && system.currentUser.isAdmin)"
+                            maxlength="255">
+                    </div>
+                    <div class="form-group d-md-table-row d-flex flex-column user-setting-group">
+                        <label for="email"
+                            class="control-label d-md-table-cell text-nowrap user-form-labels text-right"
+                            translate>Email</label>
+                        <input type="email" class="form-control mx-0 w-100 mx-md-2 d-md-table-cell col-md-7"
+                            [(ngModel)]="email.value"
+                            (ngModelChange)="updateForm($event)"
+                            name="email" id="email" #emailInput="ngModel"
+                            pattern="{{ CONFIG.emailRegex }}"
+                            [disabled]="!(selectedUser.canBeEdited && system.currentUser.isAdmin)"
+                            maxlength="255">
+                        <span class="input-error" *ngIf="emailInput.invalid && emailInput.touched"
+                            translate>Email format incorrect</span>
+                    </div>
+                </form>
+            </section>
+            <nx-section *ngIf="(selectedUser.isCloud && selectedUser.isMe)
+                || (selectedUser.canBeEdited && system.currentUser.isAdmin)">
+                <div *ngIf="selectedUser.isCloud && selectedUser.isMe" class="float-left">
                     <button class="btn btn-default"
                             (click)="routeToAccountSettings()"
-                            translate>         
+                            translate>
                         Account Settings
                     </button>
                 </div>
+                <div *ngIf="!selectedUser.isCloud && selectedUser.canBeEdited && system.currentUser.isAdmin" 
+                    class="float-left">
+                    <button class="btn btn-default" translate>Change Password</button>
+                </div>
                 <div class="float-right"
-                    *ngIf="selectedUser.canBeDeleted && system.currentUser.isAdmin">
+                    *ngIf="selectedUser.canBeEdited && system.currentUser.isAdmin">
                     <button class="btn btn-default"
                             [disabled]="!systemAvailable"
                             (click)="removeUser()">
                         <svg-icon [src]="CONFIG.icons.dir + 'delete.svg'"
                             [applyCss]="true"
                             [svgStyle]="{'width.px': '24', 'height.px': '24', 'pointer-events': 'none'}"
-                            class="ml-n2 mr-1"></svg-icon>            
+                            class="ml-n2 mr-1"></svg-icon>
                         {{deleteMessage}}
                     </button>
                 </div>

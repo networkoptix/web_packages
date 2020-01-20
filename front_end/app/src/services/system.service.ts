@@ -34,6 +34,8 @@ export interface NxSystemUser {
     isCloud: boolean;
     isEnabled: boolean;
     isLdap: boolean;
+    isLocalAdmin: boolean;
+    isMe: boolean;
     name: string;
     parentId: string;
     permissions: string;
@@ -232,12 +234,8 @@ class UserManager {
         if (!Array.isArray(users)) {
             return false;
         }
-
         // const accessRightsAssoc = _.indexBy(accessRights,'userId'); // Leave commented out
         this.users = users.map((user) => {
-            const isMe = user.email === this.currentUserEmail;
-            const isOwner = this.isOwner(user);
-            const isAdmin = this.isAdmin(user);
             if (user.accountFullName && !user.fullName) {
                 user.fullName = user.accountFullName;
             }
@@ -245,22 +243,40 @@ class UserManager {
             user.role = this.findAccessRole(user);
             user.accessRole = user.role.name;
             user.id = user.id || user.accountId;
-            user.canBeDeleted = !isOwner && !isMe && (!isAdmin || this.isMine);
-            user.canBeEdited = !isOwner && !isMe && (!isAdmin || this.isMine);
-            user.isAdmin = isAdmin;
 
-            if (user.email === this.currentUserEmail) {
+            const isAdmin = this.isAdmin(user);
+            const isCloudOwner = this.isOwner(user);
+            const isMe = user.email === this.currentUserEmail;
+            if (isMe) {
                 this.currentUser = user;
                 this._accessRole = user.accessRole;
                 this.checkPermissions();
             }
+            user.isMe = isMe;
+            user.isAdmin = isAdmin;
+            user.isLocalOwner = !user.isCloud && user.name === 'admin';
+
+            /**
+             * User can not be edited if:
+             * - this user is the current user
+             * - this user is the local owner (local 'admin')
+             * - this user is the cloud owner
+             *
+             * Furthermore, if the current user is not the system owner, but
+             *   the current user is an admin, they can not edit other admins
+             */
+            user.canBeEdited = !(isMe || user.isLocalOwner || isCloudOwner);
+            if (user.canBeEdited && !this.isMine && this.permissions.isAdmin) {
+                user.canBeEdited = !isAdmin;
+            }
+
             return user;
         }).sort((userA, userB) => {
             const userARole = -this.CONFIG.accessRoles.order.indexOf(userA.accessRole);
             const userBRole = -this.CONFIG.accessRoles.order.indexOf(userB.accessRole);
             return userARole < userBRole ? -1 : 1;
         });
-        // If system is reported to be online - try to get actual users list
+
         return this.users;
     }
 
@@ -575,6 +591,7 @@ export class NxSystem extends System implements OnDestroy {
 
             this.usersPromise = usersPromise.then(() => {
                 this.userManager.checkPermissions();
+                // If system is reported to be online - try to get actual users list
                 this.systemInfo = this;
                 return;
             }); // Handling promise to satisfy the linter.

@@ -44,6 +44,9 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
 
     userEnabled = new Watcher<boolean>();
     userRole = new Watcher<string>();
+    name = new Watcher<string>();
+    fullName = new Watcher<string>();
+    email = new Watcher<string>();
 
     private routeParamsSubscription: Subscription;
     private systemSubscription: Subscription;
@@ -115,22 +118,30 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             this.selectedUser.isEnabled = this.userEnabled.originalValue;
             this.selectedUser.role = this.system.accessRoles.find(role => role.name === this.userRole.originalValue);
             this.applyService.reset();
-        }, [this.userEnabled, this.userRole]);
+        },
+            [
+                this.userEnabled,
+                this.userRole,
+                this.name,
+                this.fullName,
+                this.email
+            ]
+        );
     }
 
     ngOnDestroy(): void {}
 
     initProcesses(): void {
         this.editUser = this.processService.createProcess(() => {
-            const selectedUser = this.selectedUser;
-            if (this.locked[selectedUser.email]) {
+            const user = this.selectedUser;
+            if (this.locked[user.email]) {
                 return;
             }
-            this.locked[selectedUser.email] = true;
-            return this.system.saveUser(selectedUser, selectedUser.role).then(() => {
+            this.locked[user.email] = true;
+            return this.system.saveUser(user, user.role).then(() => {
                 return this.system.getUsers(true);
             }).then(() => {
-                this.locked[selectedUser.email] = false;
+                this.locked[user.email] = false;
                 return;
             });
         }, {}).then(() => {
@@ -193,8 +204,13 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             this.deleteMessage = this.selectedUser.isCloud ?
                 this.LANG.users.cloudDeleteMessage : this.LANG.users.localDeleteMessage;
             this.menuService.setDetailsSection(this.selectedUser.id.replace(/{|}/g, ''));
+            // watchers set
             this.setPermission(this.selectedUser.role);
             this.userEnabled.value = this.selectedUser.isEnabled;
+            this.name.value = this.selectedUser.name;
+            this.fullName.value = this.selectedUser.fullName;
+            this.email.value = this.selectedUser.email;
+
             this.applyService.reset();
 
             this.settingsService.footerSubject.next(true);
@@ -218,6 +234,10 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
 
     routeToAccountSettings() {
         this.uriService.updateURI('/account');
+    }
+
+    updateForm(e) {
+        this[e.target.name].value = e.target.value;
     }
 }
 
