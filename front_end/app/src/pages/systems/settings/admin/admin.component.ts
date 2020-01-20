@@ -135,8 +135,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         };
 
         this.limitSessionTimeUnits = [
-            { value: this.minutes, name: this.LANG.system.settings.sessionLimitDuration.minutes, id: 1, max: 600 },
-            { value: this.hours, name: this.LANG.system.settings.sessionLimitDuration.hours, id: 2, max: 600 },
+            { value: this.minutes, name: this.LANG.system.settings.sessionLimitDuration.minutes, id: 1, max: 600 , default: 60},
+            { value: this.hours, name: this.LANG.system.settings.sessionLimitDuration.hours, id: 2, max: 600, default: 24 },
         ];
 
         this.settingsWatchersSet = false;
@@ -270,10 +270,13 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                                                 } else {
                                                     sw.sessionLimitUnit.value = this.minutes;
                                                 }
+
                                                 sw[setting].value = this.timeUnitCount || 0;
-                                                this.timeUnitCount = this.timeUnitCount || 24;
+                                                this.timeUnitCount = this.timeUnitCount || this.limitSessionTimeUnits.default;
                                                 this.selectedTimeUnit = this.limitSessionTimeUnits
-                                                                            .find(e => e.name === sw.sessionLimitUnit.value);
+                                                                            .find(e => {
+                                                                                return e.value === sw.sessionLimitUnit.value;
+                                                                            });
                                             }
                                         }
                                     });
@@ -412,8 +415,12 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                 el.nativeElement.value = this.currentMaxTimeUnit;
             }
             el.nativeElement.setAttribute('max', this.currentMaxTimeUnit);
-            if (this.selectedTimeUnit !== timeUnit.name) {
-                this.settingsWatchers.sessionLimitUnit.value = timeUnit.name;
+
+            // Avoid JS error "Expression already changed" :( -- TT
+            setTimeout(() => this.timeUnitCount = timeUnit.default);
+
+            if (this.selectedTimeUnit.value !== timeUnit.value) {
+                this.settingsWatchers.sessionLimitUnit.value = timeUnit.value;
                 this.selectedTimeUnit = timeUnit;
             }
         }
@@ -440,7 +447,9 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         if (sw.sessionLimitUnit.value === this.minutes && this.timeUnitCount % 60 === 0) {
             sw.sessionLimitUnit.value = this.hours;
             this.selectedTimeUnit = this.limitSessionTimeUnits
-                                        .find(e => e.name === sw.sessionLimitUnit.value);
+                                        .find(e => {
+                                            return e.value === sw.sessionLimitUnit.value;
+                                        });
             this.timeUnitCount /= 60;
         }
         sw.sessionLimitMinutes.value = this.timeUnitCount;
