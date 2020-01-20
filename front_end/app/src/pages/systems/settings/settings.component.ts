@@ -182,16 +182,13 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             if (!this.settingsService.share) {
                 return;
             }
-
             if (!this.system.isOnline) {
                 return this.toastService.show(this.LANG.system.shareOffline, toastOptions);
             }
-
-            if (this.system.permissions.editUsers) {
-                this.settingsService.addUser().finally(() => this.cleanUrl());
-            } else {
-                this.toastService.show(this.LANG.system.shareUnauthorized, toastOptions);
+            if (!this.system.permissions.editUsers) {
+                return this.toastService.show(this.LANG.system.shareUnauthorized, toastOptions);
             }
+            this.settingsService.addUser().finally(() => this.cleanUrl());
         });
 
         // Retrieve system info
