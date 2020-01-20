@@ -683,9 +683,8 @@ class DataStructure(models.Model):
         if isinstance(value, str):
             return value
 
-        if data_structure.type in [DataStructure.DATA_TYPES.array, DataStructure.DATA_TYPES.multiselect]:
-            value = json.dumps(value)
-        elif data_structure.type is DataStructure.DATA_TYPES.object:
+        if data_structure.type in [DataStructure.DATA_TYPES.array, DataStructure.DATA_TYPES.multiselect,
+                                   DataStructure.DATA_TYPES.object]:
             value = json.dumps(value)
         else:
             value = str(value)
