@@ -237,7 +237,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                         this.systemSubscription.unsubscribe();
                     }
                     this.systemSubscription = system.infoSubject
-                        .pipe(throttleTime(5000))
+                        .pipe(throttleTime(this.CONFIG.systemThrottleTime))
                         .subscribe(() => {
                             this.settingsService.footerSubject.next(true);
                             this.updateSettings(this.currentlyMerging);

@@ -411,6 +411,7 @@ export class NxConfigService {
             vmsName                       : '',
             pushConfig                    : '',
             googleTagManagerId            : '',
+            systemThrottleTime            : 5000,
         };
     }
 
