@@ -24,7 +24,7 @@ create Owner, Admin, Adv Viewer, Viewer, Live Viewer, noperm, notowner
     FOR    ${user}    IN    @{emails}
         Set Selenium Speed    .25
         Register Keyword To Run On Failure    Capture Page Screenshot
-        Log In    ${user}    ${password}
+        Log In    ${user}    ${password}    validate=${False}
         Register Keyword To Run On Failure    NONE
         ${present}    Run Keyword And Return Status    Wait Until Element Is Visible    ${ACCOUNT NOT FOUND}
         Register Keyword To Run On Failure    Capture Page Screenshot
