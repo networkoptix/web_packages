@@ -5,14 +5,16 @@
          *ngIf="!_elements.length" translate>Nothing Found</div>
 </div>
 
-<div class="scroll-wrapper" #nxScrollWrapper>
+<div class="scroll-wrapper" #nxScrollWrapper >
 
     <div class="nx-table-wrapper" id="nx-table" #nxTable
          *ngIf="_elements.length" #dynamicTable
          [ngStyle]="{'margin-left': healthService.tableReady ? undefined : '-9999px'}">
 
         <div *ngIf="tableHeader" class="table-header" [innerText]="tableHeader" #tableHeaderElement></div>
-        <div class="table-wrapper">
+        <div class="table-wrapper" (scroll)="showTooltip($event)">
+            <div [ngStyle]="{'opacity' : showHorizontalTooltip ? '1' : '0'}"
+                 class="horizontalTooltip" translate>Use Shift + Wheel for horizontal scrolling.</div>
             <table class="table table-hover nx-table" >
                 <thead #thead>
                 <tr class="header-groups" *ngIf="showGroups">

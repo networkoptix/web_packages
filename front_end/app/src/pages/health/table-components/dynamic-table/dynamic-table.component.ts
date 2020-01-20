@@ -6,13 +6,14 @@ import {
     ViewChild, ElementRef, AfterViewInit,
 }                                   from '@angular/core';
 import { ActivatedRoute, Router }   from '@angular/router';
+import { DeviceDetectorService }    from 'ngx-device-detector';
 import { NxConfigService }          from '../../../../services/nx-config';
 import { NxUtilsService }           from '../../../../services/utils.service';
 import { NxUriService }             from '../../../../services/uri.service';
 import { NxHealthService }          from '../../health.service';
 import { NxScrollMechanicsService } from '../../../../services/scroll-mechanics.service';
 import { SubscriptionLike }         from 'rxjs';
-import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
+import { AutoUnsubscribe }          from 'ngx-auto-unsubscribe';
 
 interface Params {
     [key: string]: any;
@@ -74,12 +75,15 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
     scrollHeight: number;
     tableScrollFixed: boolean;
     elementWidth: any;
+    showHorizontalTooltip: boolean;
+    hideTooltip: any;
 
     resizeSubscription: SubscriptionLike;
 
     @ViewChild('thead', { static: false }) thead: ElementRef;
     @ViewChild('tableHeaderElement', { static: false }) tableHeaderElement: ElementRef;
     @ViewChild('nxTable', { static: false }) dataTable: ElementRef;
+    @ViewChild('tooltip', { static: false }) tableTooltip: ElementRef;
 
     // CSS does not use CONFIG so this is here to avoid confusion if changing the value
     private static ROW_HEIGHT = 26;
@@ -91,6 +95,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
                 private route: ActivatedRoute,
                 private healthService: NxHealthService,
                 private scrollMechanicsService: NxScrollMechanicsService,
+                private deviceDetectorService: DeviceDetectorService,
     ) {
         this.CONFIG = this.configService.getConfig();
         this.elements = this.elements || [];
@@ -100,6 +105,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         this.currentPage = 1;
         this.pageSize = this.CONFIG.layout.tableLarge.rows;
         this.healthService.tableReady = false;
+        this.showHorizontalTooltip = false;
 
         this.resizeSubscription = this.scrollMechanicsService.windowSizeSubject.subscribe(() => {
             if (this.dataTable) {
@@ -221,6 +227,19 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
     }
 
     ngOnDestroy() {
+    }
+
+    showTooltip (event) {
+        if (this.deviceDetectorService.browser.toLowerCase() !== 'ie') {
+            this.showHorizontalTooltip = true;
+            if (this.hideTooltip) {
+                clearTimeout(this.hideTooltip);
+            }
+            this.hideTooltip = setTimeout(() => {
+                this.showHorizontalTooltip = false;
+                this.hideTooltip           = undefined;
+            }, 1000);
+        }
     }
 
     sortBy(param) {

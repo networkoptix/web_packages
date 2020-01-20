@@ -46,6 +46,18 @@ nx-dynamic-table {
       border-radius         : initial;
     }
 
+    .horizontalTooltip {
+      position         : absolute;
+      left             : 50%;
+      transform        : translateX(-50%);
+      border           : 1px solid $light14;
+      padding          : 4px 8px;
+      bottom           : 35px;
+      z-index          : 9;
+      background-color : $light1;
+      transition       : opacity, .2s linear;
+    }
+
     .csv {
       float      : right;
       margin-top : 24px;
