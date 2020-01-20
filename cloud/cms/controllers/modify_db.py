@@ -306,10 +306,6 @@ def save_unrevisioned_records(asset, context, language, data_structures,
         if delete_file:
             new_record_value = ""
 
-        # Temporary until CLOUD-3362 is done
-        if type(new_record_value) in [list, dict]:
-            new_record_value = json.dumps(new_record_value)
-
         record = DataRecord(asset=asset,
                             data_structure=data_structure,
                             language=ds_language,

@@ -679,6 +679,20 @@ class DataStructure(models.Model):
         return value
 
     @staticmethod
+    def to_string(data_structure, value):
+        if isinstance(value, str):
+            return value
+
+        if data_structure.type in [DataStructure.DATA_TYPES.array, DataStructure.DATA_TYPES.multiselect]:
+            value = json.dumps(value)
+        elif data_structure.type is DataStructure.DATA_TYPES.object:
+            value = json.dumps(value)
+        else:
+            value = str(value)
+
+        return value
+
+    @staticmethod
     def get_type_by_name(name):
         if name[0].islower():
             return getattr(DataStructure.DATA_TYPES, name, DataStructure.DATA_TYPES.text)
@@ -960,5 +974,8 @@ class DataRecord(models.Model):
     def save(self, *args, **kwargs):
         if not self.data_structure.translatable:
             self.language = None
+
+        if self.data_structure:
+            self.value = self.data_structure.to_string(self.data_structure, self.value)
 
         super(DataRecord, self).save(*args, **kwargs)
