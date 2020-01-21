@@ -156,7 +156,7 @@ ${USER NAME}                          ${USER EMAIL}/following-sibling::span[cont
 ${OWNER LABEL}                        ${SYSTEM USER DETAILS}//header//h2/following-sibling::span[contains(@class,'system-owner')]/span[contains(text(),'${OWNER TEXT}')]
 ${OWNER NAME}                         ${OWNER LABEL}//following-sibling::span//span[contains(text(),'%OWNER_NAME%')]
 ${OWNER EMAIL}                        ${OWNER LABEL}/following-sibling::span/span[contains(text(),"${EMAIL OWNER}")]
-${YOUR ACCESS LEVEL}                  ${SYSTEM USER DETAILS}//nx-section//span[contains(@class,'system-owner') and contains(text(),"${YOUR ACCESS LEVEL TEXT}")]
+${YOUR ACCESS LEVEL}                  ${SYSTEM USER DETAILS}//nx-section//span[contains(@class,'system-owner')]/span[contains(text(),"${YOUR ACCESS LEVEL TEXT}")]
 
 ${DISCONNECT FROM MY ACCOUNT}         //button[contains(text(),'${DISCONNECT FROM MY ACCOUNT TEXT}')]
 

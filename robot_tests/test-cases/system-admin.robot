@@ -34,7 +34,8 @@ Check System Text
     Log in to Auto Tests System    ${user}
     ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    testFirstName testLastName
     Wait Until Elements Are Visible    ${current owner name}    ${OWNER EMAIL}    ${YOUR ACCESS LEVEL}
-    Run Keyword Unless    "${user}"=="${EMAIL ADMIN}"    Wait Until Element Is Not Visible    ${YOUR ACCESS LEVEL}/span[contains(text(),'${ADMIN TEXT}')]
+    Run Keyword Unless    "${user}"=="${EMAIL ADMIN}"    Wait Until Element Is Not Visible    ${YOUR ACCESS LEVEL}/following-sibling::span[contains(text(),'${ADMIN TEXT}')]
+
 
 Reset DB and Open New Browser On Failure
     Close Browser
@@ -225,7 +226,7 @@ correct items are shown for admin
     Log in to Auto Tests System    ${EMAIL ADMIN}
     Wait Until Element Is Visible    ${USERS LIST LINK}
     ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    testFirstName testLastName
-    Wait Until Elements Are Visible    ${RENAME SYSTEM}    ${DISCONNECT FROM MY ACCOUNT}    ${OWNER LABEL}    ${current owner name}    ${OWNER EMAIL}    ${YOUR ACCESS LEVEL}    ${YOUR ACCESS LEVEL}/span[contains(text(),'${ADMIN TEXT}')]
+    Wait Until Elements Are Visible    ${RENAME SYSTEM}    ${DISCONNECT FROM MY ACCOUNT}    ${OWNER LABEL}    ${current owner name}    ${OWNER EMAIL}    ${YOUR ACCESS LEVEL}    ${YOUR ACCESS LEVEL}/following-sibling::span[contains(text(),'${ADMIN TEXT}')]
 
 correct items are shown for advanced viewer and below
     [tags]    C41562    Threaded
@@ -234,7 +235,8 @@ correct items are shown for advanced viewer and below
     ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    testFirstName testLastName
     FOR    ${user}  ${text}  IN ZIP  ${users}  ${users text}
         Log in to Auto Tests System    ${user}
-        Wait Until Elements Are Visible    ${current owner name}    ${OWNER LABEL}    ${OWNER EMAIL}    ${YOUR ACCESS LEVEL}    ${YOUR ACCESS LEVEL}/span[contains(text(),"${text}")]
+        Wait Until Elements Are Visible    ${current owner name}    ${OWNER LABEL}    ${OWNER EMAIL}    ${YOUR ACCESS LEVEL}    ${YOUR ACCESS LEVEL}/following-sibling::span[contains(text(),'${text}')]
+
         Element Should Be Enabled    ${DISCONNECT FROM MY ACCOUNT}
         Element Should Not Be Visible    ${RENAME SYSTEM}
         Element Should Not Be Visible    ${SHARE BUTTON SYSTEMS}
