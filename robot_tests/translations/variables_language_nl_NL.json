@@ -143,7 +143,7 @@
     "IPVD EXPORT ALL TO CSV": "Alles exporteren naar CSV",
     "IPVD SUBMIT A REQUEST TEXT": "een aanvraag indienen",
     "IPVD SEND DEVICE FEEDBACK TEXT": "Feedback over dit apparaat verzenden",
-    "IPVD FEEDBACK ABOUT": "Feedback {{model}} about",
+    "IPVD FEEDBACK ABOUT": "Terugkoppeling {{model}} over",
     "IPVD FEEDBACK FOR CAMERAS PAGE": "Feedback voor de camerapagina",
     "IPVD FEEDBACK MESSAGE SENT": "Het Bericht werd verstuurd.",
     "PRIVACY POLICY LINK TEXT": "hier",
