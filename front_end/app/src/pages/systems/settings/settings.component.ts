@@ -78,6 +78,11 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.selectedUser = {email: ''};
     }
 
+    private systemReady() {
+        this.settingsService.system = this.system;
+        this.menuVisible = true;
+    }
+
     constructor(private route: ActivatedRoute,
                 private accountService: NxAccountService,
                 private configService: NxConfigService,
@@ -177,8 +182,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 delay: this.CONFIG.alertTimeout,
                 autohide: true
             };
-            this.settingsService.system = this.system;
-            this.menuVisible = true;
+            this.systemReady();
             if (!this.settingsService.share) {
                 return;
             }
@@ -211,6 +215,8 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         }).then(() => {
             if (this.system.permissions.editUsers) {
                 this.gettingSystemUsers.run();
+            } else {
+                this.systemReady();
             }
         });
 
