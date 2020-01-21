@@ -15,7 +15,6 @@ export class NxHealthService {
     alarmsSubject = new BehaviorSubject(undefined);
     systemSubject = new BehaviorSubject(undefined);
     tableReadySubject = new BehaviorSubject(undefined);
-    dimensionsSetSubject = new BehaviorSubject(undefined);
 
     importedData: boolean;
     tableHeaders: any;
@@ -76,14 +75,6 @@ export class NxHealthService {
 
     set tableReady(tableReady) {
         this.tableReadySubject.next(tableReady);
-    }
-
-    get dimensionsSet() {
-        return this.dimensionsSetSubject.getValue();
-    }
-
-    set dimensionsSet(dimensionsSet) {
-        this.dimensionsSetSubject.next(dimensionsSet);
     }
 
     pad(n) {
