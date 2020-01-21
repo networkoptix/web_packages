@@ -81,6 +81,7 @@ History link is in the downloads page for user with access and takes you to /dow
     Wait Until Elements Are Visible    ${DOWNLOAD WINDOWS VMS LINK}    ${RELEASE HISTORY BUTTON}
     Click Link    ${RELEASE HISTORY BUTTON}
     Location Should Be    ${url}/downloads/releases
+    # Run keyword and continue on failure    Title Should Be    ${RELEASE HISTORY TITLE TEXT} - ${PRODUCT_NAME}
 
 Going to the history page anonymous asks for login and closing takes you to 404
     Go To    ${url}/downloads/releases
@@ -123,3 +124,10 @@ Make sure expandable sections show options
     Click Link    ${BETAS TAB}
     Wait Until Element Is Visible    ${PATCHES TAB}
     loop expanders
+
+
+should open downloads releases page in anonymous state
+    [tags]    anonymous
+    Open page anonymously    ${url}/downloads/releases    ${RELEASE HISTORY TITLE TEXT} - ${PRODUCT_NAME}
+    Wait Until Element Is Visible    ${LOG IN MODAL}
+    Check Log In    button=None

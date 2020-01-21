@@ -208,6 +208,8 @@ def read_customized_file(filename, asset, language_code=None,
     if data_structure:
         # success -> return actual value
         value = data_structure.find_actual_value(asset, language, version_id, draft=preview)
+        if not value:
+            value = data_structure.placeholder
         return base64.b64decode(value)
 
     # fail - try to read file from drive

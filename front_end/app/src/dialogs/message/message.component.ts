@@ -19,7 +19,7 @@ export interface MessageParams {
     to?: string;
 }
 
-interface Topic {
+interface Subject {
     id: string;
     name: string;
 }
@@ -45,9 +45,9 @@ export class MessageModalContent implements OnInit {
     message: string;
     agree: boolean;
     title: string;
-    topic: string;
-    topicMessage: string;
-    topics: Topic[];
+    subject: string;
+    subjectMessage: string;
+    subjects: Subject[];
     url: string;
 
     @ViewChild('feedbackForm', { static: true }) public feedbackForm: NgForm;
@@ -61,8 +61,8 @@ export class MessageModalContent implements OnInit {
                 @Inject(WINDOW) private window: Window,
     ) {
         this.placeholder = '';
-        this.topic = '';
-        this.topicMessage = '';
+        this.subject = '';
+        this.subjectMessage = '';
         this.url = this.window.location.href;
         this.config = configService.getConfig();
     }
@@ -73,7 +73,7 @@ export class MessageModalContent implements OnInit {
         this.initForm();
         this.sendMessage = this.processService.createProcess(() => {
             const asset = this.data.assetId || this.data.asset;
-            return this.cloudApiService.sendMessage(this.topic, asset, this.message, this.userName, this.userEmail).toPromise();
+            return this.cloudApiService.sendMessage(this.subject, asset, this.message, this.userName, this.userEmail).toPromise();
         }, {
             successMessage: this.LANG.dialogs.message.sent
         }).then(() => {
@@ -86,12 +86,9 @@ export class MessageModalContent implements OnInit {
     }
 
     initForm() {
-        switch (this.messageType) {
-            case this.config.messageType.ipvd_page :
-                this.placeholder = this.LANG.messageDialogPlaceholders.feedback;
-                break;
-            default :
-                this.placeholder = '';
+        this.placeholder = '';
+        if (this.messageType === this.config.messageType.ipvd_page) {
+            this.placeholder = this.LANG.messageDialogPlaceholders.feedback;
         }
 
         const title = this.LANG.dialogs.message.title[this.messageType];
@@ -100,14 +97,14 @@ export class MessageModalContent implements OnInit {
         } else {
             this.title = title.replace('{{companyName}}', this.data.to);
         }
-        this.topics = this.config.messageTopics[this.messageType].map((topic) => {
+        this.subjects = this.config.messageSubjects[this.messageType].map((subject) => {
             return {
-                id: topic,
-                name: this.LANG.dialogs.message.topic[topic].replace('{{asset}}', this.data.asset)
+                id: subject,
+                name: this.LANG.dialogs.message.subject[subject].replace('{{asset}}', this.data.asset)
             };
         });
 
-        this.setTopic(this.topics[0]);
+        this.setSubject(this.subjects[0]);
 
         this.account
             .get()
@@ -119,8 +116,8 @@ export class MessageModalContent implements OnInit {
             });
     }
 
-    setTopic(topic: any) {
-        this.topic = topic.id;
-        this.topicMessage = topic.name;
+    setSubject(subject: any) {
+        this.subject = subject.id;
+        this.subjectMessage = subject.name;
     }
 }

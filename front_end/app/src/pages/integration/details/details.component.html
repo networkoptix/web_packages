@@ -11,9 +11,12 @@
             <nx-block header-style="slim" type="menu top">
                 <header>
                     <div *ngIf="plugin.information" class="title">{{plugin.information.name}}</div>
-                    <div class="second-row">
-                        <div *ngIf="plugin.versionDetails" class="version"
+                    <div class="minor-text d-flex justify-content-between">
+                        <div *ngIf="plugin.versionDetails"
                              [innerHTML]="plugin.versionDetails.version">
+                        </div>
+                        <div *ngIf="plugin.lastModified">
+                            <span translate>Updated</span>&nbsp;<span>{{plugin.lastModified}}</span>
                         </div>
                     </div>
                 </header>
@@ -54,11 +57,11 @@
                 <div>
                     <label class="group-label" translate>Developer</label>
                 </div>
-                <div *ngIf="plugin.information.companyName">
+                <div *ngIf="plugin.information.companyName && plugin.information.companyWeb">
                     <a [href]="plugin.information.companyWeb"
                        target="_blank">{{plugin.information.companyName}}</a>
                 </div>
-                <div *ngIf="plugin.information.companyWeb">
+                <div *ngIf="plugin.information.termsOfUseLink">
                     <a [href]="plugin.information.termsOfUseLink"
                        target="_blank" translate>Terms of Use</a>
                 </div>

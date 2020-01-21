@@ -101,9 +101,9 @@ should set new password, login with new password
     Click Button    ${SAVE PASSWORD}
     Wait Until Elements Are Visible    ${RESET SUCCESS MESSAGE}    ${RESET SUCCESS LOG IN LINK}
     Click Link    ${RESET SUCCESS LOG IN LINK}
-    Log In    ${email}    ${password}    None
+    Log In    ${email}    ${password}    button=None   validate=${False}
     Wait Until Element Is Visible    ${WRONG PASSWORD MESSAGE}
-    Log In    ${email}    ${ALT PASSWORD}    None
+    Log In    ${email}    ${ALT PASSWORD}    button=None
     Validate Log In
 
 displays password masked, shows password and changes eye icon when clicked
@@ -152,7 +152,7 @@ should not allow to use one restore link twice
     Wait Until Elements Are Visible    ${RESET PASSWORD INPUT}    ${SAVE PASSWORD}
     Input Text    ${RESET PASSWORD INPUT}    ${ALT PASSWORD}
     Click Button    ${SAVE PASSWORD}
-    Check For Alert Dismissable    ${CANNOT SAVE PASSWORD} ${CODE USED/INCORRECT}
+    Check For Alert Dismissable    ${CANNOT SAVE PASSWORD}${SPACE}${SPACE}${CODE USED/INCORRECT}
 
 should make not-activated user active by restoring password
     [tags]    email    C41871    Threaded
@@ -171,7 +171,7 @@ should make not-activated user active by restoring password
     Click Button    ${SAVE PASSWORD}
     Wait Until Elements Are Visible    ${RESET SUCCESS MESSAGE}    ${RESET SUCCESS LOG IN LINK}
     Click Link    ${RESET SUCCESS LOG IN LINK}
-    Log In    ${email}    ${ALT PASSWORD}    None
+    Log In    ${email}    ${ALT PASSWORD}    button=None
     Validate Log In
 
 should allow logged in user visit restore password page
@@ -204,12 +204,12 @@ should prompt log user out if he visits restore password link from email
     Should Match    ${replaced}    ${RESET EMAIL SENT MESSAGE TEXT}
     ${link}    Get Email Link    ${email}    restore_password
     Go To    ${link}
-    Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${LOGGED IN CANCEL BUTTON}
+    Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${LOGGED IN LOG OUT BUTTON}
     Click Button    ${LOGGED IN STAY LOGGED IN BUTTON}
     Validate Log In
     Go To    ${link}
-    Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${LOGGED IN CANCEL BUTTON}
-    Click Button    ${LOGGED IN CANCEL BUTTON}
+    Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${LOGGED IN LOG OUT BUTTON}
+    Click Button    ${LOGGED IN LOG OUT BUTTON}
     Validate Log Out
     Wait Until Elements Are Visible    ${RESET PASSWORD INPUT}    ${SAVE PASSWORD}
 

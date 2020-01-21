@@ -13,6 +13,7 @@ from cloud.debug import timer
 from cms.controllers import structure
 from cms.models import *
 from django.core.management.base import BaseCommand
+from django.core.cache import caches
 import logging
 logger = logging.getLogger(__name__)
 
@@ -221,17 +222,6 @@ class Command(BaseCommand):
 
     @timer
     def handle(self, *args, **options):
-        read_structure_lock, created = DeploymentStatus.objects.get_or_create(name='ReadStructureLock')
-        if read_structure_lock.ready:
-            logger.info("Read structure is locked. Going to health check")
-            return
-        read_structure_lock.ready = True
-        read_structure_lock.save()
-
-        read_structure_finished, created = DeploymentStatus.objects.get_or_create(name='ReadStructureFinished')
-        read_structure_finished.ready = False
-        read_structure_finished.save()
-
         migrate_18_3_to_18_4(self)
         asset_type = AssetType.get_type_by_name(options['asset_type'])
         read_languages(settings.DEFAULT_SKIN)
@@ -247,8 +237,4 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS(
             'Successfully initiated data structure for CMS'))
 
-        read_structure_lock.ready = False
-        read_structure_lock.save()
-
-        read_structure_finished.ready = True
-        read_structure_finished.save()
+        caches['deployment'].set(settings.DEPLOYMENT_READY, True)

@@ -4,15 +4,15 @@
 		"activationLinkSent": "קישור הפעלה נשלח",
 		"passwordChangedSuccess": "החשבון שלך נשמר בהצלחה",
 		"changePassword": "שנה סיסמא",
-		"newPasswordLabel": "סיסמה חדשה",
+		"newPasswordLabel": "סיסמא חדשה",
 		"saveChanges": "שמור",
-		"accountSettings": "הגדרות החשבון"
+		"accountSettings": "הגדרות חשבון"
 	},
 	"activeActions": {
 		"sendConfirm": "שלח את קישור ההפעלה שוב",
-		"resetPassword": "איפוס סיסמה",
+		"resetPassword": "איפוס סיסמא",
 		"setNewPassword": "שמור סיסמה",
-		"setNewPasswordLabel": "סיסמה חדשה"
+		"setNewPasswordLabel": "סיסמא חדשה"
 	},
 	"clientProtocol": "%CLIENT_PROTOCOL%:",
 	"search": {
@@ -53,21 +53,17 @@
 		},
 		"groups": {
 			"windows": {
-				"label": "Windows",
-				"supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+				"label": "Windows"
 			},
 			"mac": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"linux": {
 				"label": "Ubuntu Linux",
-				"shortLabel": "Ubuntu",
-				"supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+				"shortLabel": "Ubuntu"
 			},
 			"macos": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"ios": {
 				"label": "iOS",
@@ -79,13 +75,11 @@
 			},
 			"arm": {
 				"label": "ARM",
-				"shortLabel": "ARM",
-				"supported": "<a href='/content/arm'>ARM based servers support policy</a>"
+				"shortLabel": "ARM"
 			},
 			"sdk": {
 				"label": "SDK",
-				"shortLabel": "SDK",
-				"supported": "C + + פלטפורמת SDK"
+				"shortLabel": "SDK"
 			}
 		},
 		"platforms": {
@@ -111,13 +105,13 @@
 			"video_source_sdk": "מקור וידאו SDK"
 		},
 		"releasesTypes": {
-			"beta": "Beta",
-			"betas": "Betas",
-			"rc": "Release Candidate",
-			"release": "Release",
-			"releases": "Releases",
-			"patch": "Patch",
-			"patches": "Patches"
+			"beta": "בטא",
+			"betas": "ביתא",
+			"rc": "גירסא לא סופית",
+			"release": "מהדורה",
+			"releases": "גרסאות",
+			"patch": "תיקון",
+			"patches": "תיקונים"
 		}
 	},
 	"ipvd": {
@@ -126,8 +120,8 @@
 		"vendor": "יצרן",
 		"model": "מודל",
 		"hardwareType": "סוג",
-		"maxResolution": "<span>Max</span><br><span>Resolution</span>",
-		"maxFps": "<span>Max</span><br><span>FPS</span>",
+		"maxResolution": "<span>מקסימום</span><br><span>רזולוציה</span>",
+		"maxFps": "<span>מקסימום</span><br><span>FPS</span>",
 		"primaryCodec": "מקודד",
 		"isAudioSupported": "אודיו",
 		"isTwAudioSupported": "אודיו דו כיווני",
@@ -161,7 +155,7 @@
 		"disclaimer": "רשימה זו מוגבלת למכשירים שנמצאים ב- {{vmsName}} בהם המשתמשים התירו דיווח אוטומטי של מפרט המכשירים ל {{companyName}}. לא נאסף מידע אישי וכל משתמש נשאר אנונימי לחלוטין."
 	},
 	"integration": {
-		"myIntegrationsLabel": "Mine",
+		"myIntegrationsLabel": "שלי",
 		"previewRibbonText": "דף זה הוא תצוגה מקדימה של השינויים האחרונים, והוא אינו תואם לגרסה הזמינה לציבור.",
 		"backToEditText": "חזרה לממשקי העריכה",
 		"Access Control": "בקרת כניסה",
@@ -175,26 +169,26 @@
 		"feedback": "הקפד לכלול את דגם המצלמה והיצרן שלך..."
 	},
 	"pageTitles": {
-		"template": "{{title}} %CLOUD_NAME%",
+		"template": "{{title}} - %CLOUD_NAME%",
 		"default": "%CLOUD_NAME%",
 		"registerSuccess": "ברוכים הבאים ל",
 		"register": "צור חשבון ב-",
-		"changePassword": "שנה סיסמה -",
-		"account": "הגדרות חשבון -",
-		"systems": "מערכות -",
-		"system": "מערכת -",
-		"systemShare": "שתף מערכת -",
-		"activate": "הפעל חשבון -",
-		"activateSent": "הפעל חשבון -",
-		"activateSuccess": "החשבון הופעל -",
-		"activateCode": "הפעל חשבון -",
-		"restorePassword": "איפוס סיסמה -",
-		"restorePasswordSuccess": "הסיסמה נשמרה -",
-		"restorePasswordCode": "איפוס סיסמה -",
-		"view": "הצג מצלמות - ",
+		"changePassword": "Change password",
+		"account": "Account settings",
+		"systems": "Systems",
+		"system": "System",
+		"systemShare": "Share System",
+		"activate": "Activate account",
+		"activateSent": "Activate account",
+		"activateSuccess": "Account activated",
+		"activateCode": "Activate account",
+		"restorePassword": "Reset password",
+		"restorePasswordSuccess": "Password saved",
+		"restorePasswordCode": "Reset password",
+		"view": "View cameras",
 		"debug": "איתור באגים",
-		"login": "התחבר -",
-		"download": "הורד את %VMS_NAME%",
+		"login": "Log in",
+		"download": "הורד %VMS_NAME%",
 		"downloadPlatform": "הורד %VMS_NAME% עבור ",
 		"pageNotFound": "דף לא נמצא",
 		"supportedDevices": "מכשירים נתמכים",
@@ -203,28 +197,33 @@
 	"dialogs": {
 		"okButton": "אישור",
 		"cancelButton": "ביטול",
-		"createNewAccount": "Create New Account",
-		"changeAccountLogged": "You are already logged in with as {email}",
-		"loggedFromOther": "You will be logged in with a different account",
+		"createNewAccount": "צור חשבון חדש",
+		"changeAccountLogged": "אתה מחובר כבר כ- {email}",
+		"loggedFromOther": "אתה עומד להיכנס בחשבון אחר",
 		"loginTitle": "היכנס ל- %CLOUD_NAME%",
-		"loginButton": "התחברות",
+		"loginButton": "התחבר",
 		"logoutAuthorisedTitle": "אתה כבר מחובר",
 		"logoutAuthorisedContinueButton": "המשך",
 		"logoutAuthorisedLogoutButton": "יציאה",
-		"noClientDetectedTitle": "התקן את %VMS_NAME% כדי לצפות במערכת שלך",
-		"stayAs": "Stay logged as {email} ",
-		"stayLoggedIn": "Stay Logged In",
-		"download": "הורד את %VMS_NAME%",
+		"noClientDetectedTitle": "התקן %VMS_NAME% כדי להציג את המערכת שלך",
+		"stayAs": "הישאר מחובר כ- {email} ",
+		"stayLoggedIn": "הישאר מחובר",
+		"download": "הורד %VMS_NAME%",
 		"merge": {
 			"commonText": "מיזוג מערכות נכשל<strong>{{primarySystem}}</strong> ו - <strong>{{secondarySystem}}</strong>.",
 			"connectToCloud": "חבר מערכת שברצונך למזג עם מערכת זו <strong>{{cloudName}}</strong> או מזג מקומי באמצעות <strong>{{vmsName}}</strong> לקוח.",
 			"mergeConfirmation": "אתה עומד למזג מערכות <strong>{{primarySystem}}</strong> ו - <strong>{{secondarySystem}}</strong>. ההגדרות והשם יילקחו מ <strong>{{primarySystem}}</strong>.",
 			"mergeFailedTitle": "מיזוג המערכת נכשל",
 			"primaryCannotMerge": "למערכת {{targetSystem}} יש גרסת תוכנה חדשה יותר שאינה תואמת למערכת הנוכחית. עדכן את המערכת הנוכחית <a href=\"/download\" target=\"_blank\" translate>לגרסא המתאימה</a> כדי למזג אותו עם {{targetSystem}}.",
-			"primarySystemOffline": "מערכת {{primarySystem}} במצב לא מקוון ולא ניתן למזגה עם הנוכחית.",
+			"primarySystemOffline": "המערכת {{primarySystem}} אינה זמינה ולא ניתן למזגה עם מערכת {{targetSystem}}.",
 			"secondaryCannotMerge": "למערכת {{targetSystem}} יש גרסת תוכנה ישנה יותר שאינה תואמת למערכת הנוכחית. עדכן {{targetSystem}} ל <a href=\"/download\" target=\"_blank\" translate>לגרסא האחרונה</a> על מנת למזג אותו עם הנוכחי.",
 			"systemOffline": "מערכת {{targetSystem}} במצב לא מקוון ולא ניתן למזגה עם הנוכחית.",
-			"systemUnavailable": "לא ניתן להגיע למערכת {{targetSystem}}. נסה שוב בעוד מספר דקות או צור קשר"
+			"systemUnavailable": "לא ניתן להגיע למערכת {{targetSystem}}. נסה שוב בעוד מספר דקות או צור קשר",
+			"recommendSupport": {
+				"a_recommend": "אנו ממליצים להתייעץ עם",
+				"b_support": "תמיכה",
+				"c_proceeding": "לפני המשך עיבוד."
+			}
 		},
 		"message": {
 			"failedToSend": "שליחת ההודעה נכשלה.",
@@ -234,9 +233,9 @@
 				"ipvd_feedback_page": "משוב עבור דף מצלמות",
 				"ipvd_feedback_device": "משוב על {{asset}}"
 			},
-			"topic": {
-				"contact_sales": "צור קשר עם מחלקת המכירות עבור {{asset}}",
-				"contact_support": "צור קשר עם התמיכה בנוגע ל- {{asset}}",
+			"subject": {
+				"sales_inquiry": "בירור מכירות עבור {{asset}}",
+				"technical_inquiry": "בירור טכני עבור {{asset}}",
 				"integration_feedback": "משוב לאינטגרציה {{asset}}",
 				"ipvd_feedback_page": "משוב עבור דף מצלמות",
 				"ipvd_feedback_device": "משוב על {{asset}}"
@@ -262,10 +261,10 @@
 		"cantRegisterPrefix": "אירעה שגיאה",
 		"cantGetSystemInfoPrefix": "מידע מערכת לא זמין",
 		"cantChangeAccountPrefix": "לא ניתן לשמור שינויים",
-		"cantChangePasswordPrefix": "לא ניתן לשמור סיסמה",
+		"cantChangePasswordPrefix": "לא ניתן לשמור סיסמא",
 		"cantActivatePrefix": "לא ניתן להפעיל את החשבון שלך",
 		"cantSendConfirmationPrefix": "אין אפשרות לשלוח מייל אישור",
-		"notAuthorized": "סיסמה שגויה",
+		"notAuthorized": "סיסמא שגויה",
 		"brokenAccount": "בעיה לא צפויה עם החשבון. <a href=\"/restore_password\">שחזר את החשבון</a>",
 		"wrongParameters": "פרמטרים מסוימים בטופס אינם נכונים",
 		"wrongCode": "החשבון כבר הופעל או שקוד האישור שגוי",
@@ -281,10 +280,10 @@
 		"emailNotFound": "החשבון לא קיים.",
 		"EmailAlreadyExists": "האימייל הזה כבר רשום",
 		"oldPasswordMistmatch": "הסיסמא הנוכחית אינה נכונה.",
-		"passwordMismatch": "סיסמה שגויה",
+		"passwordMismatch": "סיסמא שגויה",
 		"cantEditYourself": "שינוי הרשאות של המשתמש אינו מאופשר",
 		"cantEditAdmin": "למשתמש זה יש הרשאות מנהל",
-		"cantOpenClient": "%VMS_NAME% application is not detected.",
+		"cantOpenClient": "יישום %VMS_NAME% לא מזוהה.",
 		"lostConnection": "החיבור ל- {{systemName}} אבד",
 		"thisSystem": "המערכת",
 		"oldSafariNotSupported": "גרסאות של Safari מתחת ל 10 אינן נתמכות",
@@ -297,29 +296,29 @@
 	"passwordRequirements": {
 		"good": "טוב",
 		"fair": "הוגן",
-		"fairMessage": "השתמש במספרים, אותיות גדולות וקטנות ותווים מיוחדים כדי להפוך את הסיסמה שלך חזקה יותר",
+		"fairMessage": "השתמש במספרים, אותיות גדולות וקטנות ותווים מיוחדים כדי להפוך את הסיסמא שלך חזקה יותר",
 		"minLength": "קצר מדי",
-		"minLengthMessage": "הסיסמה חייבת להכיל 8 תווים לפחות",
+		"minLengthMessage": "הסיסמא חייבת להכיל 8 תווים לפחות",
 		"required": "שגוי",
 		"requiredMessage": "השתמש רק באותיות לטיניות, מספרים וסמלים במקלדת, הימנע מרווחים בהתחלה ובסוף",
 		"weak": "חלש",
-		"weakMessage": "השתמש במספרים, אותיות גדולות וקטנות ותווים מיוחדים כדי להפוך את הסיסמה שלך חזקה יותר",
-		"strongMessage": "סיסמא חזקה!",
+		"weakMessage": "השתמש במספרים, אותיות גדולות וקטנות ותווים מיוחדים כדי להפוך את הסיסמא שלך חזקה יותר",
+		"strongMessage": "סיסמה חזקה!",
 		"common": "נפוץ מדי",
 		"commonMessage": "סיסמה זו חלשה מאחר והיא מהסיסמאות הפופולריות ביותר בעולם",
 		"missingMessage": "נדרשת סיסמא"
 	},
 	"registration": {
-		"agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
+		"agreement": "<span class=\"text\"> אני מסכים ל <a href=\"/content/eula\" target=\"_blank\"> תנאים וההגבלות </a> ו <a href=\"%PRIVACY_LINK%\" target=\"_blank\"> מדיניות פרטיות </a></span>"
 	},
 	"system": {
 		"yourSystem": "המערכת שלך",
 		"mySystemSearch": "IMeMyMine",
 		"unavailable": "המערכת אינה זמינה",
-		"offline": "השרת אינו זמין",
-		"offlineAlertRibbon": "System is offline. Some settings may not be available.",
+		"offline": "המערכת אינה מקוונת",
+		"offlineAlertRibbon": "המערכת אינה מקוונת. ייתכן שהגדרות מסוימות אינן זמינות.",
 		"openClient": "פתח ב %VMS_NAME%",
-		"openClientNoSystem": "פתח %VMS_NAME%",
+		"openClientNoSystem": "פתח את %VMS_NAME%",
 		"confirmMergeAction": "לְמַזֵג",
 		"mergeSystemTitle": "מיזוג מערכות",
 		"confirmRenameTitle": "שם מערכת",
@@ -331,7 +330,7 @@
 		"confirmUnshareFromMeTitle": "נתק מערכת?",
 		"confirmUnshareFromMeAction": "נתק",
 		"confirmUnshare": "משתמש זה לא יוכל לגשת למערכת. האם אתה בטוח?",
-		"confirmUnshareTitle": "Remove user?",
+		"confirmUnshareTitle": "האם להסיר משתמש?",
 		"confirmUnshareAction": "הסר",
 		"successDisconnected": "המערכת התנתקה בהצלחה מ %CLOUD_NAME%",
 		"successDeleted": "המערכת {{systemName}} נמחקה בהצלחה מהחשבון שלך",
@@ -340,7 +339,8 @@
 		"mergeSuccess": "מיזוג המערכת הושלם",
 		"permissionsRemoved": "ההרשאות הוסרו מ- {{email}}",
 		"unknownName": "שם לא ידוע עבור מערכת (נגרמה על ידי מיזוג ענן)",
-		"shareOffline": "Cannot share system while it is offline"
+		"shareOffline": "לא ניתן לשתף מערכת בזמן שהיא במצב לא מקוון",
+		"shareUnauthorized": "אין לך הרשאה לשתף מערכת זו"
 	},
 	"systemStatuses": {
 		"activated": "הופעל",
@@ -354,7 +354,7 @@
 	"accessRoles": {
 		"disabled": {
 			"label": "כבוי",
-			"description": "המשתמש מושבת ולא מצליח להיכנס למערכת"
+			"description": "המשתמש מושבת ואינו יכול להיכנס למערכת"
 		},
 		"Owner": {
 			"label": "בעלים",
@@ -410,25 +410,25 @@
 		}
 	},
 	"privacyPolicy": {
-		"integration": "על ידי שליחת טופס זה אתה מסכים ליצור קשר עם {{INTEGRATION_COMPANY}} ו / או %COMPANY_NAME%.\nתקרא את מדיניות הפרטיות של {{INTEGRATION_COMPANY}} <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">כאן</a> ומדיניות הפרטיות של %COMPANY_NAME% <a href=\"%PRIVACY_LINK%\" target=\"blank\">כאן</a> הכוללים הדרכה על איך למשוך את הסכמתך לתנאים בה.",
-		"ipvd": "על ידי שליחת טופס זה אתה מסכים ליצור קשר עם %COMPANY_NAME%.\nתוכלו למצוא את מדיניות פרטיות של %COMPANY_NAME% <a href=\"%PRIVACY_LINK%\" target=\"blank\">כאן</a> הכוללים הדרכה על איך למשוך את הסכמתך לתנאים."
+		"integration": "על ידי שליחת טופס זה אתה מסכים ליצור קשר עם {{INTEGRATION_COMPANY}} ו / או %COMPANY_NAME%.\nתקרא את מדיניות הפרטיות של {{INTEGRATION_COMPANY}} <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">כאן</a> ומדיניות הפרטיות של %COMPANY_NAME% <a href=\"%PRIVACY_LINK%\" target=\"_blank\">כאן</a> הכוללים הדרכה על איך למשוך את הסכמתך לתנאים בה.",
+		"ipvd": "על ידי שליחת טופס זה אתה מסכים ליצור קשר עם %COMPANY_NAME%.\nתוכלו למצוא את מדיניות פרטיות של %COMPANY_NAME% <a href=\"%PRIVACY_LINK%\" target=\"_blank\">כאן</a> הכוללים הדרכה על איך למשוך את הסכמתך לתנאים."
 	},
 	"systemAdministration": "ניהול המערכת",
 	"users": "משתמשים",
-	"testedVersionLabel": "נבדק על {{vmsName}} בגרסאות הבאות:",
-	"testedVersionsLabel": "נבדק על {{vmsName}} בגרסאות הבאות:",
+	"testedVersionLabel": "נבדק עם {{vmsName}} גרסה:",
+	"testedVersionsLabel": "נבדק עם {{vmsName}} בגרסאות:",
 	"About %CLOUD_NAME%": "אודות %CLOUD_NAME%",
-	"Download %VMS_NAME%": "הורד את %VMS_NAME%",
+	"Download %VMS_NAME%": "הורד %VMS_NAME%",
 	"Integrations": "אינטגרציות",
 	"Privacy": "פרטיות",
 	"Support": "תמיכה",
-	"Supported Devices": "מכשירים נתמכים",
+	"Supported Devices": "התקנים נתמכים",
 	"Terms": "תנאי שימוש",
-	"pleaseSelect": "Please select...",
-	"WHEN_MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{{targetSystemName}}</strong> System, and this system will be deleted.",
-	"FAILED_SYSTEM_DESCR": "This link is broken,<br>System may be disconnected from %CLOUD_NAME%,<br>Access to this System may be revoked, <br>or you may be logged into a different account.",
+	"pleaseSelect": "נא לבחור...",
+	"WHEN_MERGE_FINISHES": "כאשר המיזוג יסתיים, כל המשתמשים והמצלמות ממערכת זו יהפכו לזמינים                במערכת \"<strong>{{targetSystemName}}</strong> \", ומערכת זו תימחק.",
+	"FAILED_SYSTEM_DESCR": "קישור זה אינו תקין,<br>            המערכת עלולה להתנתק מ %CLOUD_NAME%,<br>            יתכן והגישה למערכת תישלל, <br>            או שתחובר לחשבון אחר.",
 	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "אין לך מערכות המחוברות ל- %CLOUD_NAME%",
-	"NO_SYSTEMS_LOGIN": "היכנס למערכת באמצעות %VMS_NAME%",
+	"NO_SYSTEMS_LOGIN": "היכנס למערכת שלך באמצעות %VMS_NAME%",
 	"NO_SYSTEMS_GOTO_ADMINISTRATION": "עבור אל הכרטיסייה \"ענן\" בחלון \"ניהול מערכת\"",
 	"NO_SYSTEMS_CONNECT_SYSTEM": "לחץ על \"התחבר למערכת ב %CLOUD_NAME% \""
 }

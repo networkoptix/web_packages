@@ -5,10 +5,10 @@
     "Access level": "アクセスレベル",
     "Account Information": "アカウント情報",
     "Account Settings": "アカウント設定",
-    "Account is already activated or confirmation code is incorrect": "アカウントは既に有効化されているか、確認コードが正しくありません",
+    "Account is already activated or confirmation code is incorrect": "アカウントは既にアクティブ済か確認コードが正しくありません",
     "Account is created.": "アカウントが作成されました。",
     "Account is successfully created.": "アカウントが正常に作成されました。",
-    "Account not activated": "アカウントがアクティベートされていません",
+    "Account not activated": "アカウントがまだ有効化されていません",
     "Account not found": "アカウントが見つかりません",
     "Activate your account": "アカウントの有効化",
     "Actual number of events supported by this camera may be bigger.": "このカメラでサポートされている実際のイベント数はもっと大きい可能性があります。",
@@ -22,7 +22,7 @@
     "All cloud users will be deleted.": "クラウドのすべてのユーザーが削除されます",
     "All results": "全ての結果",
     "Analytics": "分析",
-    "Analytics Event": "分析イベント",
+    "Analytics Event": "解析イベント",
     "Analytics Events": "分析イベント",
     "Any": "全て",
     "Apply": "適用",
@@ -43,9 +43,9 @@
     "Confirmation message is sent to": "確認メッセージが送信されます",
     "Contact": "お問い合わせ",
     "Create Account": "アカウント作成",
-    "Create account": "アカウント作成",
+    "Create account": "アカウントを作成",
     "Current Password": "現在のパスワード",
-    "Current password is required": "現在のパスワードを入力してください",
+    "Current password is required": "現在のパスワードが必要です",
     "Depending of the size of the database it may take up to several hours.": "データベースのサイズによっては、数時間かかる場合があります。",
     "Developer": "開発者",
     "Discard": "変更を破棄",
@@ -62,15 +62,15 @@
     "Draft": "下書き",
     "Dual Streaming": "デュアルストリーミング",
     "Email": "Email",
-    "Email is required": "Emailが必要です",
+    "Email is required": "メールアドレスが必要です",
     "Embed": "埋め込み",
     "Enter \"Public User\" credentials:": "「パブリックユーザー」資格情報を入力:",
     "Enter password for your account to continue": "アカウントのパスワードを入力して続行してください",
-    "Enter password to continue.": "パスワードを入力して続行",
+    "Enter password to continue.": "続行するにはパスワードを入力してください",
     "Export all to CSV": "CSV にすべてエクスポート",
     "FAILED_SYSTEM_DESCR": "このリンクは壊れています。<br>システムは %CLOUD_NAME%から切断される可能性があります。<br>このシステムへのアクセスが取り消される可能性があります。<br>または別のアカウントにログインしている可能性があります。",
     "FPS(max)": "FPS（最大）",
-    "Failed to access System": "システムにアクセスできませんでした",
+    "Failed to access System": "システムへのアクセスに失敗しました",
     "Finishing systems merge": "システム統合が完了しました",
     "Firmware version": "ファームウェアバージョン",
     "First Name": "名",
@@ -102,30 +102,30 @@
     "Multi Sensor": "マルチセンサー",
     "NO_SYSTEMS_CONNECT_SYSTEM": "「システムを %CLOUD_NAME% に接続」を押します",
     "NO_SYSTEMS_GOTO_ADMINISTRATION": "システムアドミニストレーションのクラウドタブに移動",
-    "NO_SYSTEMS_LOGIN": "%VMS_NAME% を使用してシステムにログインします",
+    "NO_SYSTEMS_LOGIN": "Log in to your System using %VMS_NAME%",
     "NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "%CLOUD_NAME% に接続されたシステムがありません",
     "New Password": "新規パスワード",
     "No unsaved changes": "No unsaved changes",
     "Nothing Found": "見つかりませんでした",
     "OK": "OK",
     "Ok": "Ok",
-    "Other packages:": "他のパッケージ:",
+    "Other packages:": "その他のパッケージ:",
     "Other releases, patches and beta versions": "その他のリリース、パッチ、ベータ版",
     "Owner": "オーナー",
     "PTZ": "PTZ",
     "Page not found": "ページが見つかりません",
     "Password": "パスワード",
-    "Password is required": "パスワードが必要です",
-    "Password reset instructions are sent to Email": "Password reset instructions are sent to Email",
+    "Password is required": "パスワードが必要",
+    "Password reset instructions are sent to Email": "パスワードリセットの指示がメールで送信されます",
     "Password successfully saved": "パスワードを更新しました",
     "Password:": "パスワード:",
-    "Please enter a valid Email": "有効なEmailを入力してください",
+    "Please enter a valid Email": "有効なEメールアドレスを入力して下さい。",
     "Please review and agree to the Terms and Conditions and Privacy policy in order to proceed": "続行するには、利用規約とプライバシーポリシーを確認して同意してください",
     "Popularity": "知名度",
     "Privacy": "プライバシー",
     "Release Notes": "更新履歴",
     "Release notes": "更新履歴",
-    "Remember me": "ログイン状態を保持する",
+    "Remember me": "記憶する",
     "Remove User": "Remove User",
     "Rename": "名前の変更",
     "Requirements": "条件",
@@ -141,6 +141,7 @@
     "Settings": "設定",
     "Show All": "すべて表示",
     "Some of your servers don't support cloud System merge because of outdated software version.": "ソフトウェアのバージョンが古いため、一部のサーバーはクラウドシステムの統合がサポートされません",
+    "Subject": "Subject",
     "Support": "サポート",
     "Support E-mail": "サポート Eメール",
     "Support URL": "サポートURL",
@@ -161,8 +162,7 @@
     "This Email has been already registered in %CLOUD_NAME%": "このメールは既に %CLOUD_NAME%に登録されています",
     "This device has reported to support some analytics events, but we don't have exact information about them.": "このデバイスはいくつかの分析イベントをサポートすることが報告されていますが、正確な情報はありません。",
     "To": "宛先",
-    "Too many attempts. Try again in a minute.": "試行回数が多すぎます。暫くしてからもう一度お試しください。",
-    "Topic": "トピック",
+    "Too many attempts. Try again in a minute.": "試行回数が多すぎます 暫くしてからもう一度お試しください",
     "Until merge is finished you can log in to this system and watch video, but cannot change any settings.": "システムにログインして映像を表示する事はできますが、統合が完了するまで設定を変更することはできません。",
     "Update them to the": "更新",
     "Updated": "更新",
@@ -173,8 +173,7 @@
     "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.": "Google ChromeやMozilla Firefoxの最新バージョンをインストールすることを推奨しますが、他の最新のWebブラウザを使用することもできます",
     "What's New?": "新着情報",
     "Works with:": "で動作します：",
-    "Wrong password": "パスワードが違います",
-    "You can merge only those cloud Systems, where you have the \"Owner\" permissions.": "オーナー権限のあるクラウドシステムのみを統合することができます。",
+    "Wrong password": "間違ったパスワード",
     "You can only merge Systems where you are the owner.": "オーナーであるシステムのみを統合できます。",
     "You have registered in %CLOUD_NAME%": "%CLOUD_NAME% に登録されました",
     "Your Email": "あなたのEメール",
@@ -196,23 +195,23 @@
             "label": "カスタム"
         },
         "Live Viewer": {
-            "description": "ライブビデオのみ閲覧可能",
+            "description": "ライブ表示のみ可能",
             "label": "ライブビューアー"
         },
         "Owner": {
-            "description": "クラウドからの共有とシステムの接続/切断を含む無制限のアクセス",
+            "description": "クラウドから、共有とシステムの接続/切断を含む無制限のアクセス",
             "label": "オーナー"
         },
         "Viewer": {
-            "description": "ライブ ビデオとアーカイブを閲覧できます",
+            "description": "ライブ ビデオとアーカイブを参照できます",
             "label": "ビューアー"
         },
         "advancedViewer": {
-            "description": "ライブ表示、アーカイブ表示、カメラ設定、PTZコントロール 等ができます",
+            "description": "ライブ表示、アーカイブ表示、カメラ設定、PTZコントロール 等",
             "label": "拡張ビューアー"
         },
         "cloudAdmin": {
-            "description": "システムを設定して共有することができます",
+            "description": "システムを構成し共有することができます",
             "label": "アドミニストレーター"
         },
         "custom": {
@@ -228,15 +227,15 @@
             "label": "無効"
         },
         "liveViewer": {
-            "description": "ライブビデオのみ閲覧可能",
+            "description": "ライブ表示のみ可能",
             "label": "ライブビューアー"
         },
         "owner": {
-            "description": "クラウドからの共有とシステムの接続/切断を含む無制限のアクセス",
+            "description": "クラウドから、共有とシステムの接続/切断を含む無制限のアクセス",
             "label": "オーナー"
         },
         "viewer": {
-            "description": "ライブ ビデオとアーカイブを閲覧できます",
+            "description": "ライブ ビデオとアーカイブを参照できます",
             "label": "ビューアー"
         }
     },
@@ -252,7 +251,7 @@
     "activeActions": {
         "resetPassword": "パスワードを再設定する",
         "sendConfirm": "アクティベーションリンクを再送信",
-        "setNewPassword": "パスワードを保存する",
+        "setNewPassword": "パスワードを保存",
         "setNewPasswordLabel": "新規パスワード"
     },
     "andXMore": "... さらに {{value}}",
@@ -288,6 +287,11 @@
             "mergeFailedTitle": "システム統合が失敗しました",
             "primaryCannotMerge": "システム{{targetSystem}} には、現在のシステムと互換性のない新しいソフトウェアバージョンがあります。現在のシステムを<a href=\"/download\" target=\"_blank\" translate>最新のビルド</a>に更新し、{{targetSystem}} システムと統合します。",
             "primarySystemOffline": "システム {{primarySystem}} はオフラインのため、システム{{targetSystem}} と統合することはできません。",
+            "recommendSupport": {
+                "a_recommend": "相談を推奨",
+                "b_support": "サポート",
+                "c_proceeding": "続行する前に"
+            },
             "secondaryCannotMerge": "システム {{targetSystem}} には、現在のシステムと互換性のない古いソフトウェアバージョンがあります。{{targetSystem}} を <a href=\"/download\" target=\"_blank\" translate>最新のビルド</a> に更新して、現在のものと統合します。",
             "systemOffline": "システム {{targetSystem}} はオフラインのため、現在のシステムと統合することはできません。",
             "systemUnavailable": "システム {{targetSystem}} は現在到達不能です。数分後にもう一度試すか、連絡してください"
@@ -295,26 +299,26 @@
         "message": {
             "failedToSend": "メッセージを送信できませんでした。",
             "sent": "メッセージが送信されました。",
+            "subject": {
+                "integration_feedback": "{{asset}} 統合のためのフィードバック",
+                "ipvd_feedback_device": "{{asset}} についてのフィードバック",
+                "ipvd_feedback_page": "カメラページへのフィードバック",
+                "sales_inquiry": "{{asset}}販売問い合わせ",
+                "technical_inquiry": "Technical inquiry for {{asset}}"
+            },
             "title": {
                 "integration": "{{companyName}} と連絡を取る",
                 "ipvd_feedback_device": "{{asset}} についてのフィードバック",
                 "ipvd_feedback_page": "カメラページへのフィードバック"
-            },
-            "topic": {
-                "contact_sales": "{{asset}} についてセールスに連絡する",
-                "contact_support": "{{asset}} についてサポートに連絡する",
-                "integration_feedback": "{{asset}} 統合のためのフィードバック",
-                "ipvd_feedback_device": "{{asset}} についてのフィードバック",
-                "ipvd_feedback_page": "カメラページへのフィードバック"
             }
         },
-        "noClientDetectedTitle": "システムを表示するには %VMS_NAME% をインストールします",
+        "noClientDetectedTitle": "Install %VMS_NAME% to view your System",
         "okButton": "OK",
         "sharing": {
-            "confirmOwner": "システムのオーナーを変更すると、現在のアカウントから所有権を取り消します。この動作は元に戻せません。よろしいですか？",
+            "confirmOwner": "システムオーナーを変更すると現在のアカウントから所有権を失効します　この操作は元に戻せません　宜しいですか？",
             "editShareConfirmButton": "保存",
             "editShareTitle": "権限を編集",
-            "permissionsSaved": "新しい権限が保存されました",
+            "permissionsSaved": "新しい権限の保存",
             "shareConfirmButton": "追加",
             "shareTitle": "追加"
         },
@@ -322,10 +326,10 @@
         "stayLoggedIn": "Stay Logged In"
     },
     "dialogs.merge.connectToCloud": "これと統合したいシステムを <strong>{{cloudName}}</strong> に接続するか、 <strong>{{vmsName}}</strong> クライアントを使用してローカルに統合します。",
-    "dialogs.merge.mergeConfirmation": "<strong>{{primarySystem}}</strong> と <strong>{{secondarySystem}}</strong>を統合しようとしています。設定と名前は <strong>{{primarySystem}}</strong>から取得されます。",
+    "dialogs.merge.mergeConfirmation": "システム <strong>{{primarySystem}}</strong> と <strong>{{secondarySystem}}</strong>を統合しようとしています。設定と名前は <strong>{{primarySystem}}</strong>から取得されます。",
     "dialogs.merge.primaryCannotMerge": "システム{{targetSystem}} には、現在のシステムと互換性のない新しいソフトウェアバージョンがあります。現在のシステムを<a href=\"/download\" target=\"_blank\" translate>最新のビルド</a>に更新し、{{targetSystem}} システムと統合します。",
     "dialogs.merge.primarySystemOffline": "dialogs.merge.primarySystemOffline",
-    "dialogs.merge.secondaryCannotMerge": "システム {{targetSystem}} には、現在のシステムと互換性のない古いソフトウェアバージョンがあります。{{targetSystem}} を <a href=\"/download\" target=\"_blank\" translate>最新のビルド</a> に更新して、現在のものと統合します。",
+    "dialogs.merge.secondaryCannotMerge": "システム {{targetSystem}} には、現在のシステムと互換性のない古いソフトウェアバージョンがあります。 {{targetSystem}} を <a href=\"/download\" target=\"_blank\" translate>最新のビルド</a> に更新して、現在のものと統合します。",
     "dialogs.merge.systemOffline": "dialogs.merge.systemOffline",
     "dialogs.merge.systemUnavailable": "システム {{targetSystem}} は現在到達不能です。数分後にもう一度試すか、連絡してください",
     "downloads": {
@@ -336,19 +340,18 @@
             "metadata_sdk": "Metadata SDK",
             "package": "パッケージ",
             "server": "サーバーのみ",
-            "servertool": "設定ツール",
+            "servertool": "構成ツール",
             "storage_sdk": "ストレージ SDK",
             "video_source_sdk": "ビデオソースSDK"
         },
         "groups": {
             "android": {
-                "label": "Android",
-                "shortLabel": "Android"
+                "label": "アンドロイド",
+                "shortLabel": "アンドロイド"
             },
             "arm": {
                 "label": "ARM",
-                "shortLabel": "ARM",
-                "supported": "<a href='/content/arm'>ARMに基づくサーバーのサポートポリシー</a>"
+                "shortLabel": "ARM"
             },
             "ios": {
                 "label": "iOS",
@@ -356,25 +359,20 @@
             },
             "linux": {
                 "label": "Ubuntu Linux",
-                "shortLabel": "Ubuntu",
-                "supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+                "shortLabel": "Ubuntu"
             },
             "mac": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "macos": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "sdk": {
                 "label": "SDK",
-                "shortLabel": "SDK",
-                "supported": "C ++クロスプラットフォームSDK"
+                "shortLabel": "SDK"
             },
             "windows": {
-                "label": "Windows",
-                "supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+                "label": "ウィンドウズ"
             }
         },
         "mobile": {
@@ -397,13 +395,13 @@
             "win64": "x64"
         },
         "releasesTypes": {
-            "beta": "Beta",
-            "betas": "Betas",
-            "patch": "Patch",
-            "patches": "Patches",
-            "rc": "Release Candidate",
-            "release": "Release",
-            "releases": "Releases"
+            "beta": "ベータ",
+            "betas": "ベータ",
+            "patch": "パッチ",
+            "patches": "パッチ",
+            "rc": "リリース候補版",
+            "release": "リリース",
+            "releases": "リリース"
         }
     },
     "errorCodes": {
@@ -416,37 +414,37 @@
         "accountNotActivated": "このアカウントはまだアクティベートされていません <a href=\"/activate\"> 再度アクティベートリンクを送信</a>",
         "alreadyExists": "このアカウントは既に存在します",
         "brokenAccount": "次のアカウントで予期しない問題 <a href=\"/restore_password\"> アカウントの復元</a>",
-        "cantActivatePrefix": "アカウントを有効にできません",
+        "cantActivatePrefix": "アカウントをアクティベートできません",
         "cantChangeAccountPrefix": "変更を保存できません",
         "cantChangePasswordPrefix": "パスワードを保存できません",
         "cantDisconnectSystemPrefix": "システムを削除できません",
         "cantEditAdmin": "このユーザーは管理者権限を持っています",
-        "cantEditYourself": "自分の権限を変更することはできません",
-        "cantGetSystemInfoPrefix": "システム情報は利用できません",
-        "cantGetSystemsListPrefix": "システムリストは使用できません",
-        "cantGetUsersListPrefix": "ユーザーリストは使用できません",
+        "cantEditYourself": "自分のアクセス権限を変更することはできません",
+        "cantGetSystemInfoPrefix": "システム情報はありません",
+        "cantGetSystemsListPrefix": "システム リストは使用できません",
+        "cantGetUsersListPrefix": "ユーザーのリストは使用できません",
         "cantOpenClient": "%VMS_NAME% application is not detected.",
         "cantRegisterPrefix": "エラーが発生しました",
         "cantSendActivationPrefix": "確認メールを送信できません",
         "cantSendConfirmationPrefix": "確認メールを送信できません",
         "cantSharePrefix": "システムを共有できません",
         "cantUnshareWithMeSystemPrefix": "システムを削除できません",
-        "emailNotFound": "アカウントが存在しません.",
-        "forbidden": "この操作を実行する権限がありません",
+        "emailNotFound": "アカウントが存在しません",
+        "forbidden": "この操作を実行するアクセス権限がありません",
         "lostConnection": "{{systemName}} への接続が失われました",
         "mergedSystemIsOffline": "システム <strong>{{failedSystem}}</strong> はオフラインです。",
-        "notAuthorized": "パスワードが違います",
+        "notAuthorized": "間違ったパスワード",
         "notFound": "見つかりません",
         "ok": "ok",
         "oldPasswordMistmatch": "パスワードが違います。",
         "oldSafariNotSupported": "バージョン10以前のSafariはサポートされません",
-        "passwordMismatch": "パスワードが違います",
+        "passwordMismatch": "間違ったパスワード",
         "thisSystem": "システム",
         "unknownError": "予期しないエラーが発生しました",
         "unknownMergeError": "不明なエラー。ページを更新して試行を繰り返すことができます。問題が解決しない場合は <a href=\"%SUPPORT_LINK%\" target=\"_blank\">サポート</a>に連絡してください。",
         "wrongAuthCode": "期限切れまたは不正なコードです",
-        "wrongCode": "アカウントは既に有効化されているか、確認コードが正しくありません",
-        "wrongCodeRestore": "確認コードは既に使用されているか間違っています",
+        "wrongCode": "アカウントは既にアクティブ済か確認コードが正しくありません",
+        "wrongCodeRestore": "確認コードは既に使用されているかまたは不正です",
         "wrongParameters": "フォーム上のいくつかのパラメーターが正しくありません"
     },
     "integration": {
@@ -454,7 +452,7 @@
         "Connector": "コネクタ",
         "Data Analytics": "データ分析",
         "Drone": "ドローン",
-        "Health Monitor": "ヘルスモニタ",
+        "Health Monitor": "ヘルスモニター",
         "Storage": "ストレージ",
         "backToEditText": "編集インターフェースに戻る",
         "myIntegrationsLabel": "自分",
@@ -480,7 +478,7 @@
             "c_Info": "サポートされているデバイスに関するその他の質問/懸念事項については"
         },
         "hardwareType": "タイプ",
-        "isAnalyticsSupported": "分析",
+        "isAnalyticsSupported": "解析",
         "isAptzSupported": "高度なPTZ",
         "isAptzSupportedShort": "高度なPTZ",
         "isAudioSupported": "オーディオ",
@@ -507,51 +505,51 @@
         "feedback": "カメラのモデルと製造元を必ず含めてください。"
     },
     "pageTitles": {
-        "account": "アカウント設定 -",
-        "activate": "アカウントを有効にする -",
-        "activateCode": "アカウントを有効にする -",
-        "activateSent": "アカウントを有効にする -",
-        "activateSuccess": "アカウントを有効にしました -",
-        "changePassword": "パスワードを変更 -",
+        "account": "Account settings",
+        "activate": "Activate account",
+        "activateCode": "Activate account",
+        "activateSent": "Activate account",
+        "activateSuccess": "Account activated",
+        "changePassword": "Change password",
         "debug": "デバッグ",
         "default": "%CLOUD_NAME%",
         "download": "%VMS_NAME% をダウンロード",
-        "downloadPlatform": "%VMS_NAME% をダウンロード ",
+        "downloadPlatform": "Download %VMS_NAME% for ",
         "integrations": "統合",
-        "login": "ログイン -",
+        "login": "Log in",
         "pageNotFound": "ページが見つかりません",
         "register": "アカウントを作成",
         "registerSuccess": "ようこそ",
-        "restorePassword": "パスワードを再設定する -",
-        "restorePasswordCode": "パスワードを再設定する -",
-        "restorePasswordSuccess": "パスワードを保存しました -",
+        "restorePassword": "Reset password",
+        "restorePasswordCode": "Reset password",
+        "restorePasswordSuccess": "Password saved",
         "supportedDevices": "サポートされているデバイス",
-        "system": "システム -",
-        "systemShare": "共有システム -",
-        "systems": "システム -",
-        "template": "{{title}} %CLOUD_NAME%",
-        "view": "カメラを表示 - "
+        "system": "System",
+        "systemShare": "Share System",
+        "systems": "システム",
+        "template": "{{title}} - %CLOUD_NAME%",
+        "view": "View cameras"
     },
     "passwordRequirements": {
         "common": "あまりにも一般的",
-        "commonMessage": "このパスワードは、世界で最も人気のあるパスワードです",
+        "commonMessage": "このパスワードは、世界で最も人気のあるパスワード",
         "fair": "可",
-        "fairMessage": "パスワードをより強力にするために、数字、大文字と小文字、特殊文字を使用してください",
+        "fairMessage": "大文字と小文字の文字、特殊記号を使用して、強固なパスワードを作る",
         "good": "良い",
         "minLength": "短すぎます",
         "minLengthMessage": "パスワードは8文字以上必要です",
-        "missingMessage": "パスワードが必要です",
+        "missingMessage": "パスワードが必要",
         "required": "無効",
-        "requiredMessage": "英数字、キーボード記号のみを使用し、前後のスペースを避けてください。",
-        "strongMessage": "強力なパスワードです",
+        "requiredMessage": "英数字とキーボードの記号のみを使用して、先頭と末尾の空白を避けます",
+        "strongMessage": "強力なパスワード!",
         "weak": "弱",
-        "weakMessage": "パスワードをより強力にするために、数字、大文字と小文字、特殊文字を使用してください"
+        "weakMessage": "大文字と小文字の文字、特殊記号を使用して、強固なパスワードを作る"
     },
     "phoneNumberWithLabel": "電話： {{number}}",
     "pleaseSelect": "選択してください",
     "privacyPolicy": {
-        "integration": "このフォームを送信することにより、あなたは {{INTEGRATION_COMPANY}} または %COMPANY_NAME%、あるいはその両方から連絡を受けることに同意します。\n{{INTEGRATION_COMPANY}} プライバシーポリシー <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">ここ</a> と %COMPANY_NAME% プライバシーポリシー <a href=\"%PRIVACY_LINK%\" target=\"blank\">ここ</a> には同意を撤回する方法に関する指示が含まれています。",
-        "ipvd": "このフォームを送信することにより、あなたは %COMPANY_NAME%から連絡を受けることに同意します。\n %COMPANY_NAME% プライバシーポリシー <a href=\"%PRIVACY_LINK%\" target=\"blank\">ここ</a>には同意を撤回する方法についての指示が含まれています。"
+        "integration": "このフォームを送信することにより、あなたは {{INTEGRATION_COMPANY}} または %COMPANY_NAME%、あるいはその両方から連絡を受けることに同意します。\n{{INTEGRATION_COMPANY}} プライバシーポリシー <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">ここ</a> と %COMPANY_NAME% プライバシーポリシー <a href=\"%PRIVACY_LINK%\" target=\"_blank\">ここ</a> には同意を撤回する方法に関する指示が含まれています。",
+        "ipvd": "このフォームを送信することにより、あなたは %COMPANY_NAME%から連絡を受けることに同意します。\n %COMPANY_NAME% プライバシーポリシー <a href=\"%PRIVACY_LINK%\" target=\"_blank\">ここ</a>には同意を撤回する方法についての指示が含まれています。"
     },
     "registration": {
         "agreement": "<a href=\"/content/eula\" target=\"_blank\">利用規約、条件</a>および<a href=\"%PRIVACY_LINK%\" target=\"_blank\">プライバシーポリシー</a>に同意します"
@@ -580,9 +578,9 @@
         "confirmMergeAction": "統合",
         "confirmRenameAction": "保存",
         "confirmRenameTitle": "システム名",
-        "confirmUnshare": "このユーザはシステムにアクセスすることができません。よろしいですか？",
+        "confirmUnshare": "このユーザはシステムにアクセスすることができません　宜しいですか？",
         "confirmUnshareAction": "削除",
-        "confirmUnshareFromMe": "あなたのアカウントからこのシステムを切断しようとしています　もうこのシステムにアクセスすることはできません。切断しますか？",
+        "confirmUnshareFromMe": "あなたのアカウントからこのシステムを切断しようとしています　もうこのシステムにアクセスすることはできません\n切断しますか？",
         "confirmUnshareFromMeAction": "切断",
         "confirmUnshareFromMeTitle": "システムを切断しますか？",
         "confirmUnshareTitle": "ユーザーを削除しますか?",
@@ -591,18 +589,19 @@
         "mergeSuccess": "システムが統合されました",
         "mergeSystemTitle": "システム統合",
         "mySystemSearch": "IMeMyMine",
-        "offline": "システムはオフラインです",
+        "offline": "システムはオフライン",
         "offlineAlertRibbon": "System is offline. Some settings may not be available.",
-        "openClient": "%VMS_NAME% で開く",
+        "openClient": "Open in %VMS_NAME%",
         "openClientNoSystem": "%VMS_NAME% を開く",
-        "permissionsRemoved": "{{email}} から権限が削除されました",
+        "permissionsRemoved": "{{email}} からアクセス権限が削除されました",
         "shareOffline": "Cannot share system while it is offline",
+        "shareUnauthorized": "You do not have permission to share this system",
         "successDeleted": "システム {{systemName}} はあなたのアカウントから正常に削除されました",
         "successDisconnected": "システムは %CLOUD_NAME% から正常に切断されました",
         "successRename": "システム名は保存されました",
         "unavailable": "システムに到達できません",
         "unknownName": "システムの名前が不明です（クラウド統合が原因）",
-        "yourSystem": "お使いのシステム"
+        "yourSystem": "ご利用のシステム"
     },
     "systemAdministration": "システムアドミニストレーション",
     "systemStatuses": {
@@ -614,8 +613,8 @@
         "online": "オンライン",
         "unavailable": "利用できません"
     },
-    "testedVersionLabel": "{{vmsName}} バージョンでテスト済み：",
-    "testedVersionsLabel": "{{vmsName}} バージョンでテスト済み：",
+    "testedVersionLabel": "Tested with {{vmsName}} version:",
+    "testedVersionsLabel": "Tested with {{vmsName}} versions:",
     "users": "ユーザー",
     "you": "あなた"
 }

@@ -100,6 +100,7 @@ class NoptixImapLibrary(object):
         Examples:
         | Delete All Emails |
         """
+        self._mails = self._check_emails()
         for mail in self._mails:
             self.delete_email(mail)
         self._imap.expunge()

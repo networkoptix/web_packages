@@ -15,7 +15,6 @@ Check Systems Text
     [arguments]    ${user}
     Sleep    1
     Log Out
-    Validate Log Out
     Log In    ${user}    ${password}
     Validate Log In
     Wait Until Page Contains Element    ${AUTO TESTS USER}
@@ -26,6 +25,7 @@ Reset DB and Open New Browser On Failure
     Close Browser
     Reset user owner first/last name
     Make sure viewer is in the system
+    Clean up email noperm
     Open Browser and go to URL    ${url}
 
 Restart
@@ -81,10 +81,10 @@ should show system name in header dropdown with "Open in Nx Witness" button if u
     Share To    ${EMAIL NOPERM}    ${VIEWER TEXT}
     Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
     ${email}    Wait For Email    recipient=${EMAIL NOPERM}    timeout=120    status=UNSEEN
-    Delete All Emails
+    Delete Email    ${email}
     Close Mailbox
     Log Out
-    Log In    ${EMAIL NOPERM}    ${password}    None
+    Log In    ${EMAIL NOPERM}    ${password}
     Validate Log In
     Wait Until Element Is Visible    ${SYSTEMS DROPDOWN}
     Click Button    ${SYSTEMS DROPDOWN}
@@ -134,6 +134,7 @@ User have several systems linked to his account
     ${l}=   Set Variable    ${SYSTEMS DROPDOWN}${DROPDOWN MENU ITEMS}\[${r1}]
     ${h}=   Get Element Attribute    ${l}/a    href
     ${n}=   Get Text    ${l}//span[@class='system-name']
+    Wait Until Element Is Visible    ${x}
     Scroll Element Into View    ${x}
     Click Element    ${x}
     # Expected Result
@@ -181,10 +182,10 @@ should show the system page instead of all systems when user only has one
     Share To    ${EMAIL NOPERM}    ${VIEWER TEXT}
     Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
     ${email}    Wait For Email    recipient=${EMAIL NOPERM}    timeout=120    status=UNSEEN
-    Delete All Emails
+    Delete Email    ${email}
     Close Mailbox
     Log Out
-    Log In    ${EMAIL NOPERM}    ${password}    None
+    Log In    ${EMAIL NOPERM}    ${password}
     Validate Log In
     Wait Until Element Is Visible    ${SYSTEM NAME}
     Log Out
@@ -213,6 +214,7 @@ Should show your system for owner and owner name for non-owners
     :FOR    ${user}    IN    @{EMAILS LIST}
     \  Run Keyword Unless    "${user}"=="${EMAIL OWNER}"    Check Systems Text    ${user}
 
+# should be removed and updated for what the dropdown should show with other systems
 Should not show systems dropdown with no systems
     [tags]    C41568    Threaded
     Log In    ${EMAIL NOPERM}    ${password}
@@ -269,15 +271,15 @@ Search should only be visible with 9 or more systems
     Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
     Wait Until Elements Are Visible    ${RENAME SYSTEM}    ${DISCONNECT FROM NX}    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
-    Wait Until Elements Are Visible    ${REMOVE USER BUTTON}    ${SHARE BUTTON SYSTEMS}
+    Wait Until Element Is Visible    ${SHARE BUTTON SYSTEMS}
     Share To    ${EMAIL VIEWER}    ${VIEWER TEXT}
     Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
-    ${email}    Wait For Email    recipient=${EMAIL VIEWER}    timeout=120    status=UNSEEN
-    Delete All Emails
+    ${email}    Wait For Email    recipient=${EMAIL VIEWER}    timeout=180    status=UNSEEN
+    Delete Email    ${email}
     Close Mailbox
     Log Out
 
-    Log In    ${EMAIL VIEWER}    ${password}    None
+    Log In    ${EMAIL VIEWER}    ${password}
     Validate Log In
     Wait Until Element Is Visible    ${SYSTEMS DROPDOWN}
     Click Button    ${SYSTEMS DROPDOWN}
@@ -290,12 +292,12 @@ Search should only be visible with 9 or more systems
     Validate Log In
     Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
     Wait Until Elements Are Visible    ${RENAME SYSTEM}    ${DISCONNECT FROM NX}    ${USERS LIST LINK}
-    Click Link    ${USERS LIST LINK}
-    Wait Until Elements Are Visible    ${REMOVE USER BUTTON}    ${SHARE BUTTON SYSTEMS}
+    Go to Users List
+    Wait Until Elements Are Visible    ${USERS LIST}    ${SHARE BUTTON SYSTEMS}
     Remove User Permissions    ${EMAIL VIEWER}
     Log Out
 
-    Log In    ${EMAIL VIEWER}    ${password}    None
+    Log In    ${EMAIL VIEWER}    ${password}
     Validate Log In
     Wait Until Element Is Visible    ${SYSTEMS DROPDOWN}
     Click Button    ${SYSTEMS DROPDOWN}
@@ -309,15 +311,15 @@ Search should only be visible with 9 or more systems
     Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
     Wait Until Elements Are Visible    ${RENAME SYSTEM}    ${DISCONNECT FROM NX}    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
-    Wait Until Elements Are Visible    ${REMOVE USER BUTTON}    ${SHARE BUTTON SYSTEMS}
+    Wait Until Elements Are Visible    ${USERS LIST}    ${SHARE BUTTON SYSTEMS}
     Share To    ${EMAIL VIEWER}    ${VIEWER TEXT}
     Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
     ${email}    Wait For Email    recipient=${EMAIL VIEWER}    timeout=120    status=UNSEEN
-    Delete All Emails
+    Delete Email    ${email}
     Close Mailbox
     Log Out
 
-    Log In    ${EMAIL VIEWER}    ${password}    None
+    Log In    ${EMAIL VIEWER}    ${password}
     Validate Log In
     Wait Until Element Is Visible    ${SYSTEMS DROPDOWN}
     Click Button    ${SYSTEMS DROPDOWN}
@@ -343,9 +345,17 @@ should update owner name in systems list, if it's changed
     Click Button    ${ACCOUNT SAVE}
     Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
     Log Out
-    Log In    ${EMAIL ADMIN}    ${password}    None
+    Log In    ${EMAIL ADMIN}    ${password}
     Validate Log In
     Go To    ${url}/systems
     Wait Until Elements Are Visible    ${AUTO TESTS TITLE}    ${AUTO TESTS USER}    ${AUTO TESTS OPEN NX}
     Wait Until Element Contains    ${AUTO TESTS USER}    newFirstName newLastName
     Reset user owner first/last name
+
+
+should open systems page in anonymous state
+    [tags]    anonymous
+    Go To    ${url}/systems
+    Location should be    ${url}/systems
+    Wait Until Element Is Visible    ${LOG IN MODAL}
+    Check Log In    button=None

@@ -115,8 +115,8 @@
     "PTZ": "PTZ",
     "Page not found": "Sivua ei löydy",
     "Password": "Salasana",
-    "Password is required": "Salasana tarvitaan",
-    "Password reset instructions are sent to Email": "Password reset instructions are sent to Email",
+    "Password is required": "Salasana on pakollinen",
+    "Password reset instructions are sent to Email": "Salasanan nollausohjeet lähetetään sähköpostitse",
     "Password successfully saved": "Salasana tallennettu onnistuneesti",
     "Password:": "Salasana:",
     "Please enter a valid Email": "Anna voimassa oleva sähköpostiosoite",
@@ -141,6 +141,7 @@
     "Settings": "Asetukset",
     "Show All": "Näytä kaikki",
     "Some of your servers don't support cloud System merge because of outdated software version.": "Jotkin palvelimet eivät tue pilvijärjestelmän yhdistämistä vanhentuneiden ohjelmistoversioiden vuoksi.",
+    "Subject": "Subject",
     "Support": "Tuki",
     "Support E-mail": "Tuen sähköposti",
     "Support URL": "Tueni-URL-osoite",
@@ -162,7 +163,6 @@
     "This device has reported to support some analytics events, but we don't have exact information about them.": "Tämän laitteen on ilmoitettu tukevan joitain analytiikkatapahtumia, mutta meillä ei ole tarkkaa tietoa niistä.",
     "To": "Jotta",
     "Too many attempts. Try again in a minute.": "Liian monta yritystä. Yritä myöhemmin uudelleen.",
-    "Topic": "Aihe",
     "Until merge is finished you can log in to this system and watch video, but cannot change any settings.": "Ennen yhdistämistä voit kirjautua tähän järjestelmään ja katsoa videota, mutta et voi muuttaa asetuksia.",
     "Update them to the": "Päivitä ne",
     "Updated": "Päivitetty",
@@ -174,7 +174,6 @@
     "What's New?": "Mitä uutta?",
     "Works with:": "Toimii:",
     "Wrong password": "Väärä salasana",
-    "You can merge only those cloud Systems, where you have the \"Owner\" permissions.": "Voit yhdistää vain niitä pilvijärjestelmiä, joissa sinulla on \"Omistaja\" -oikeudet.",
     "You can only merge Systems where you are the owner.": "Voit yhdistää pilvijärjestelmät, joissa olet omistajana.",
     "You have registered in %CLOUD_NAME%": "Olet rekisteröitynyt %CLOUD_NAME%",
     "Your Email": "Sähköpostiosoitteesi",
@@ -217,7 +216,7 @@
         },
         "custom": {
             "description": "Käytä %VMS_NAME% Client -sovellusta mukautettujen käyttöoikeuksien määrittämiseen",
-            "label": "Asiakassuhde"
+            "label": "Muokattu"
         },
         "customRole": {
             "description": "Mukautettu käyttäjärooli Järjestelmässä",
@@ -228,11 +227,11 @@
             "label": "Poissa käytöstä"
         },
         "liveViewer": {
-            "description": "Voit katsella vain reaaliaikaista videota",
+            "description": "Voi katsella vain reaaliaikaista videota",
             "label": "Reaaliaikainen katselu"
         },
         "owner": {
-            "description": "Rajoittamaton pääsy, mukaan lukien kyky jakaa ja yhdistää / irroittaa järjestelmää pilvestä",
+            "description": "Rajoittamaton pääsy, mukaan lukien oikeus jakaa ja yhdistää / irrottaa järjestelmä pilvestä",
             "label": "Omistaja"
         },
         "viewer": {
@@ -288,6 +287,11 @@
             "mergeFailedTitle": "Järjestelmien yhdistäminen epäonnistui",
             "primaryCannotMerge": "Järjestelmässä {{targetSystem}} on uudempi ohjelmistoversio, joka ei ole yhteensopiva nykyisen järjestelmän kanssa. Päivitä nykyinen järjestelmä <a href=\"/download\" target=\"_blank\" translate>uusimpaan</a>: een yhdistääksesi se {{targetSystem}} järjestelmään.",
             "primarySystemOffline": "Järjestelmä {{primarySystem}} on offline-tilassa eikä sitä voi yhdistää järjestelmään {{targetSystem}}.",
+            "recommendSupport": {
+                "a_recommend": "Suosittelemme konsultointia",
+                "b_support": "tuki",
+                "c_proceeding": "ennen etenemistä."
+            },
             "secondaryCannotMerge": "Järjestelmässä {{targetSystem}} on vanhempi ohjelmistoversio, joka ei ole yhteensopiva nykyisen järjestelmän kanssa. Päivitä nykyinen järjestelmä <a href=\"/download\" target=\"_blank\" translate>uusimpaan</a>: een yhdistääksesi se {{targetSystem}} järjestelmään.",
             "systemOffline": "Järjestelmä {{targetSystem}} on offline-tilassa eikä sitä voi yhdistää nykyiseen.",
             "systemUnavailable": "Järjestelmä {{targetSystem}} ei ole tällä hetkellä tavoitettavissa. Yritä uudelleen muutamassa minuutissa tai ota yhteyttä"
@@ -295,15 +299,15 @@
         "message": {
             "failedToSend": "Viestin lähetys epäonnistui.",
             "sent": "Viesti on lähetetty.",
+            "subject": {
+                "integration_feedback": "Palaute integraatiosta {{asset}}",
+                "ipvd_feedback_device": "Palaute{{asset}}",
+                "ipvd_feedback_page": "Palaute kameran sivulle",
+                "sales_inquiry": "Myyntikysely {{asset}}",
+                "technical_inquiry": "Technical inquiry for {{asset}}"
+            },
             "title": {
                 "integration": "Ota yhteyttä {{companyName}}",
-                "ipvd_feedback_device": "Palaute{{asset}}",
-                "ipvd_feedback_page": "Palaute kameran sivulle"
-            },
-            "topic": {
-                "contact_sales": "Ota yhteyttä {{asset}} myyntiin",
-                "contact_support": "Pyydä tukea {{asset}}",
-                "integration_feedback": "Palaute integraatiosta {{asset}}",
                 "ipvd_feedback_device": "Palaute{{asset}}",
                 "ipvd_feedback_page": "Palaute kameran sivulle"
             }
@@ -347,8 +351,7 @@
             },
             "arm": {
                 "label": "ARM",
-                "shortLabel": "ARM",
-                "supported": "<a href='/content/arm'>ARM based servers support policy</a>"
+                "shortLabel": "ARM"
             },
             "ios": {
                 "label": "iOS",
@@ -356,25 +359,20 @@
             },
             "linux": {
                 "label": "Ubuntu Linux",
-                "shortLabel": "Ubuntu",
-                "supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+                "shortLabel": "Ubuntu"
             },
             "mac": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OSX"
             },
             "macos": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "sdk": {
                 "label": "SDK",
-                "shortLabel": "SDK",
-                "supported": "C ++: n cross platform SDK"
+                "shortLabel": "SDK"
             },
             "windows": {
-                "label": "Windows",
-                "supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+                "label": "Windows"
             }
         },
         "mobile": {
@@ -398,12 +396,12 @@
         },
         "releasesTypes": {
             "beta": "Beta",
-            "betas": "Betas",
-            "patch": "Patch",
-            "patches": "Patches",
-            "rc": "Release Candidate",
-            "release": "Release",
-            "releases": "Releases"
+            "betas": "Beta-versioita",
+            "patch": "Korjaus",
+            "patches": "Korjaukset",
+            "rc": "Julkaisuehdokkaat",
+            "release": "Julkaisu",
+            "releases": "Julkaisut"
         }
     },
     "errorCodes": {
@@ -507,30 +505,30 @@
         "feedback": "Varmista, että määrität kameramallin ja valmistajan..."
     },
     "pageTitles": {
-        "account": "Tilin asetukset -",
-        "activate": "Aktivoi tili",
-        "activateCode": "Aktivoi tili",
-        "activateSent": "Aktivoi tili",
-        "activateSuccess": "Tili aktivoitu",
-        "changePassword": "Vaihda salasana -",
+        "account": "Account settings",
+        "activate": "Activate account",
+        "activateCode": "Activate account",
+        "activateSent": "Activate account",
+        "activateSuccess": "Account activated",
+        "changePassword": "Change password",
         "debug": "Vianetsintä",
         "default": "%CLOUD_NAME%",
         "download": "Lataa %VMS_NAME%",
         "downloadPlatform": "Lataa %VMS_NAME% ",
         "integrations": "Integraatiot",
-        "login": "Kirjaudu sisään -",
+        "login": "Log in",
         "pageNotFound": "Sivua ei löydy",
         "register": "Luo tili",
         "registerSuccess": "Tervetuloa",
-        "restorePassword": "Vaihda salasana -",
-        "restorePasswordCode": "Vaihda salasana -",
-        "restorePasswordSuccess": "Salasana tallennettu",
+        "restorePassword": "Reset password",
+        "restorePasswordCode": "Reset password",
+        "restorePasswordSuccess": "Password saved",
         "supportedDevices": "Tuetut laitteet",
-        "system": "Järjestelmä",
-        "systemShare": "Jaa järjestelmä -",
+        "system": "System",
+        "systemShare": "Share System",
         "systems": "Järjestelmät",
-        "template": "{{title}} %CLOUD_NAME%",
-        "view": "Näytä kamerat - "
+        "template": "{{title}} - %CLOUD_NAME%",
+        "view": "View cameras"
     },
     "passwordRequirements": {
         "common": "liian yleinen",
@@ -540,7 +538,7 @@
         "good": "hyvä",
         "minLength": "liian lyhyt",
         "minLengthMessage": "Salasanan pitää olla vähintään 8 merkkiä pitkä",
-        "missingMessage": "Salasana tarvitaan",
+        "missingMessage": "Salasana on pakollinen",
         "required": "virheellinen",
         "requiredMessage": "Käytä vain latinankielisiä kirjaimia, numeroita ja näppäimistön symboleja",
         "strongMessage": "Vahva salasana!",
@@ -550,8 +548,8 @@
     "phoneNumberWithLabel": "Puh: {{number}}",
     "pleaseSelect": "Please select...",
     "privacyPolicy": {
-        "integration": "Lähettämällä tämän lomakkeen hyväksyt, että sinuun otetaan yhteyttä {{INTEGRATION_COMPANY}} ja / tai %COMPANY_NAME%.\nLöydät {{INTEGRATION_COMPANY}} tietosuojakäytäntöä <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">täältä</a> ja %COMPANY_NAME% tietosuojakäytäntöä <a href=\"%PRIVACY_LINK%\" target=\"blank\">täältä</a> jotka sisältävät ohjeet suostumuksen peruuttamiselle.",
-        "ipvd": "Lähettämällä tämän lomakkeen hyväksyt %COMPANY_NAME%.\nLöydät %COMPANY_NAME% tietosuojakäytäntö <a href=\"%PRIVACY_LINK%\" target=\"blank\">täällä</a>, joka sisältää ohjeita siitä, miten peruuttaa suostumuksesi."
+        "integration": "Lähettämällä tämän lomakkeen hyväksyt, että sinuun otetaan yhteyttä {{INTEGRATION_COMPANY}} ja / tai %COMPANY_NAME%.\nLöydät {{INTEGRATION_COMPANY}} tietosuojakäytäntöä <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">täältä</a> ja %COMPANY_NAME% tietosuojakäytäntöä <a href=\"%PRIVACY_LINK%\" target=\"_blank\">täältä</a> jotka sisältävät ohjeet suostumuksen peruuttamiselle.",
+        "ipvd": "Lähettämällä tämän lomakkeen hyväksyt %COMPANY_NAME%.\nLöydät %COMPANY_NAME% tietosuojakäytäntö <a href=\"%PRIVACY_LINK%\" target=\"_blank\">täällä</a>, joka sisältää ohjeita siitä, miten peruuttaa suostumuksesi."
     },
     "registration": {
         "agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
@@ -597,6 +595,7 @@
         "openClientNoSystem": "Avaa %VMS_NAME%",
         "permissionsRemoved": "Käyttöoikeudet poistettiin {{email}}",
         "shareOffline": "Cannot share system while it is offline",
+        "shareUnauthorized": "You do not have permission to share this system",
         "successDeleted": "Järjestelmä {{systemName}} poistetaan onnistuneesti tililtäsi",
         "successDisconnected": "Järjestelmä irrotetaan onnistuneesti %CLOUD_NAME%",
         "successRename": "Järjestelmän nimi on tallennettu",
@@ -614,8 +613,8 @@
         "online": "yhteys muodostettu",
         "unavailable": "ei saatavilla"
     },
-    "testedVersionLabel": "Testattu {{vmsName}} versiolla:",
-    "testedVersionsLabel": "Testattu {{vmsName}} versiolla:",
+    "testedVersionLabel": "Tested with {{vmsName}} version:",
+    "testedVersionsLabel": "Tested with {{vmsName}} versions:",
     "users": "Käyttäjät",
     "you": "you"
 }

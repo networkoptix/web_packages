@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { NxConfigService } from './nx-config';
-import { from, Observable, of, throwError } from 'rxjs';
-import { finalize, mergeMap, retryWhen } from 'rxjs/operators';
+import { from, of, throwError } from 'rxjs';
+import { mergeMap, retryWhen } from 'rxjs/operators';
 import { Location } from '@angular/common';
 
 
@@ -153,39 +153,32 @@ class NxSystemAPI {
     }
 
     /* Authentication */
-    getCurrentUser (forceReload?: boolean): Observable<any> {
+    getCurrentUser (forceReload?: boolean): Promise<any> {
         if (forceReload) { // Clean cache to
             this.currentUser = undefined;
             this.userRequest = undefined;
         }
         if (this.currentUser) { // We have user - return him right away
-            return of(this.currentUser);
+            return Promise.resolve(this.currentUser);
         }
         if (this.userRequest) { // Currently requesting user
             return this.userRequest;
         }
         if (this.userEmail) { // Cloud portal mode - getCurrentUser is not working
-            this.userRequest = this.get('/ec2/getUsers').pipe(
-                finalize(() => {
-                    this.userRequest = undefined;
-                })
-            ).subscribe((result: any) => {
-                this.currentUser = result.find((user) => {
-                    return user.name.toLowerCase() === this.userEmail.toLowerCase();
+            this.userRequest = this.get('/ec2/getUsers').toPromise()
+                .then((result: any) => {
+                    this.currentUser = result.find((user) => {
+                        return user.name.toLowerCase() === this.userEmail.toLowerCase();
+                    });
+                    return this.currentUser;
                 });
-                return this.currentUser;
-            });
         } else { // Local system mode ???
-            this.userRequest = this.get('/api/getCurrentUser').pipe(
-                finalize(() => {
-                    this.userRequest = undefined;
-                })
-            ).subscribe((result) => {
-                this.currentUser = result;
-                return this.currentUser;
-            });
+            this.userRequest = this.get('/api/getCurrentUser').toPromise()
+                .then((result) => {
+                    this.currentUser = result;
+                    return this.currentUser;
+                });
         }
-
         this.userRequest.finally(() => {
             this.userRequest = undefined; // Clear cache in case of errors
         });
@@ -198,7 +191,7 @@ class NxSystemAPI {
 
     checkPermissions(flag) {
         // TODO: getCurrentUser will not work on portal for 3.0 systems, think of something
-        return this.getCurrentUser().subscribe((user: any) => {
+        return this.getCurrentUser().then((user: any) => {
             if (!user.isAdmin && this.isEmptyId(user.userRoleId)) {
                 return this.getRolePermissions(user.userRoleId).subscribe((role: any) => {
                     return role.permissions.indexOf(flag) > -1;

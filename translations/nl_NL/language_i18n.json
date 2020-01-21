@@ -37,15 +37,15 @@
     "Change Password": "Wijzig wachtwoord",
     "Checking...": "Controleer...",
     "Choose which properties should be visible to customers:": "Kies welke eigenschappen zichtbaar moeten zijn voor klanten:",
-    "Close": "Afsluiten",
+    "Close": "Sluiten",
     "Codec": "Codec",
     "Collapse": "Samenvouwen",
     "Confirmation message is sent to": "Een bevestigingsbericht wordt verzonden naar",
     "Contact": "Contact",
     "Create Account": "Account aanmaken",
-    "Create account": "Account aanmaken",
+    "Create account": "Accounts aanmaken",
     "Current Password": "Huidig ​​wachtwoord",
-    "Current password is required": "Huidig wachtwoord (verplicht).",
+    "Current password is required": "Huidig wachtwoord (verplicht)",
     "Depending of the size of the database it may take up to several hours.": "Afhankelijk van de grootte van de database kan dit enkele uren duren.",
     "Developer": "Ontwikkelaar",
     "Discard": "Weggooien",
@@ -114,7 +114,7 @@
     "Owner": "Eigenaar",
     "PTZ": "PTZ",
     "Page not found": "Pagina niet gevonden",
-    "Password": "Wachtwoord",
+    "Password": "Password",
     "Password is required": "Wachtwoord is vereist",
     "Password reset instructions are sent to Email": "Wachtwoordherstelinstructies zijn verzonden naar het volgende emailadres",
     "Password successfully saved": "Het wachtwoord is succesvol opgeslagen",
@@ -141,6 +141,7 @@
     "Settings": "Instellingen",
     "Show All": "Toon alles",
     "Some of your servers don't support cloud System merge because of outdated software version.": "Sommige van uw servers bieden geen ondersteuning voor het samenvoegen van cloudsystemen vanwege een verouderde softwareversie.",
+    "Subject": "Onderwerp",
     "Support": "Ondersteuning",
     "Support E-mail": "Support Email",
     "Support URL": "Support URL",
@@ -162,7 +163,6 @@
     "This device has reported to support some analytics events, but we don't have exact information about them.": "Dit apparaat heeft gemeld sommige analyse-evenementen te ondersteunen, maar we hebben geen exacte informatie daarover.",
     "To": "Aan",
     "Too many attempts. Try again in a minute.": "Te veel pogingen. Probeer het later opnieuw.",
-    "Topic": "Onderwerp",
     "Until merge is finished you can log in to this system and watch video, but cannot change any settings.": "Tot het samenvoegen is voltooid, kunt u zich aanmelden bij dit systeem en video bekijken, maar kunt u geen instellingen wijzigen.",
     "Update them to the": "Werk ze bij naar de",
     "Updated": "Geupdate",
@@ -174,7 +174,6 @@
     "What's New?": "Wat is nieuw?",
     "Works with:": "Werkt met:",
     "Wrong password": "Wachtwoord onjuist",
-    "You can merge only those cloud Systems, where you have the \"Owner\" permissions.": "U kunt alleen die cloudsystemen samenvoegen, waarbij u de machtigingen \"Eigenaar\" hebt.",
     "You can only merge Systems where you are the owner.": "U kunt alleen cloud systemen samenvoegen, waarvan u de eigenaar bent.",
     "You have registered in %CLOUD_NAME%": "U heeft zich geregistreerd voor %CLOUD_NAME%",
     "Your Email": "Uw e-mail",
@@ -189,7 +188,7 @@
         },
         "Advanced Viewer": {
             "description": "Kan live video bekijken, bladeren in het archief, camera's configureren, PTZ, enz. bedienen",
-            "label": "Gebruiker 'Geavanceerd'"
+            "label": "Geavanceerde Kijker"
         },
         "Custom": {
             "description": "Gebruik de %VMS_NAME% client-applicatie om aangepaste rechten in te stellen",
@@ -197,7 +196,7 @@
         },
         "Live Viewer": {
             "description": "Kan alleen live video bekijken",
-            "label": "Gebruiker 'Live'"
+            "label": "Live kijker"
         },
         "Owner": {
             "description": "Onbeperkt toegang, inclusief de mogelijkheid om systeem te delen en te verbinden / te verbreken vanuit de cloud",
@@ -205,11 +204,11 @@
         },
         "Viewer": {
             "description": "Kan live video bekijken en zoeken in het archief",
-            "label": "Gebruiker 'Basis'"
+            "label": "Kijker"
         },
         "advancedViewer": {
             "description": "Kan live video bekijken, bladeren in het archief, camera configureren, PTZ, enz. bedienen",
-            "label": "Gebruiker 'Geavanceerd'"
+            "label": "Geavanceerde Kijker"
         },
         "cloudAdmin": {
             "description": "Kan systeem configureren en delen",
@@ -229,7 +228,7 @@
         },
         "liveViewer": {
             "description": "Kan alleen live video bekijken",
-            "label": "Gebruiker 'Live'"
+            "label": "Live kijker"
         },
         "owner": {
             "description": "Onbeperkt toegang, inclusief de mogelijkheid om systeem te delen en te verbinden / te verbreken vanuit de cloud",
@@ -237,7 +236,7 @@
         },
         "viewer": {
             "description": "Kan live video bekijken en zoeken in het archief",
-            "label": "Gebruiker 'Basis'"
+            "label": "Kijker"
         }
     },
     "account": {
@@ -288,6 +287,11 @@
             "mergeFailedTitle": "Het samenvoegen van systemen is mislukt",
             "primaryCannotMerge": "Systeem {{targetSystem}} heeft een nieuwere softwareversie die niet compatibel is met het huidige systeem. Werk het huidige systeem bij naar de laatste <a href=\"/download\" target=\"_blank\" translate>build</a> om het samen te voegen met het {{targetSystem}} systeem.",
             "primarySystemOffline": "Systeem {{primarySystem}} is offline en kan niet worden samengevoegd met systeem {{targetSystem}}.",
+            "recommendSupport": {
+                "a_recommend": "We raden aan om te overleggen met",
+                "b_support": "ondersteuning",
+                "c_proceeding": ", alvorens verder te gaan."
+            },
             "secondaryCannotMerge": "Systeem {{targetSystem}} heeft een oudere softwareversie die niet compatibel is met het huidige systeem. Update {{targetSystem}} naar de <a href=\"/download\" target=\"_blank\" translate>laatste build</a> om deze samen te voegen met de huidige.",
             "systemOffline": "Systeem {{targetSystem}} is offline en kan niet worden samengevoegd met het huidige exemplaar.",
             "systemUnavailable": "Systeem {{targetSystem}} is momenteel niet bereikbaar. Probeer het over een paar minuten opnieuw of neem contact op met"
@@ -295,15 +299,15 @@
         "message": {
             "failedToSend": "Bericht versturen mislukt.",
             "sent": "Het Bericht werd verstuurd.",
+            "subject": {
+                "integration_feedback": "Feedback voor integratie {{asset}}",
+                "ipvd_feedback_device": "Feedback over {{asset}}",
+                "ipvd_feedback_page": "Feedback voor de camerapagina",
+                "sales_inquiry": "Verkoopaanvraag voor {{asset}}",
+                "technical_inquiry": "Technische aanvraag voor {{asset}}"
+            },
             "title": {
                 "integration": "Neem contact op met {{companyName}}",
-                "ipvd_feedback_device": "Feedback over {{asset}}",
-                "ipvd_feedback_page": "Feedback voor de camerapagina"
-            },
-            "topic": {
-                "contact_sales": "Neem contact op met sales voor {{asset}}",
-                "contact_support": "Neem contact op met ondersteuning voor {{asset}}",
-                "integration_feedback": "Feedback voor integratie {{asset}}",
                 "ipvd_feedback_device": "Feedback over {{asset}}",
                 "ipvd_feedback_page": "Feedback voor de camerapagina"
             }
@@ -347,8 +351,7 @@
             },
             "arm": {
                 "label": "ARM",
-                "shortLabel": "ARM",
-                "supported": "<a href='/content/arm'>Ondersteuningsbeleid voor ARM-based servers</a>"
+                "shortLabel": "ARM"
             },
             "ios": {
                 "label": "iOS",
@@ -356,25 +359,20 @@
             },
             "linux": {
                 "label": "Ubuntu Linux",
-                "shortLabel": "Ubuntu",
-                "supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+                "shortLabel": "Ubuntu"
             },
             "mac": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "macos": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "sdk": {
                 "label": "SDK",
-                "shortLabel": "SDK",
-                "supported": "C++ cross platform SDK"
+                "shortLabel": "SDK"
             },
             "windows": {
-                "label": "Windows",
-                "supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+                "label": "Windows"
             }
         },
         "mobile": {
@@ -507,30 +505,30 @@
         "feedback": "Zorg ervoor dat u uw het cameramodel en de fabrikant vermeldt..."
     },
     "pageTitles": {
-        "account": "Account instellingen -",
-        "activate": "Activeer account -",
-        "activateCode": "Activeer account -",
-        "activateSent": "Activeer account -",
-        "activateSuccess": "Account geactiveerd -",
-        "changePassword": "Wachtwoord wijzigen -",
+        "account": "Account settings",
+        "activate": "Activate account",
+        "activateCode": "Activate account",
+        "activateSent": "Activate account",
+        "activateSuccess": "Account activated",
+        "changePassword": "Change password",
         "debug": "Debug",
         "default": "%CLOUD_NAME%",
         "download": "Download %VMS_NAME%",
         "downloadPlatform": "Download %VMS_NAME% voor ",
         "integrations": "Integraties",
-        "login": "Log in -",
+        "login": "Log in",
         "pageNotFound": "Pagina niet gevonden",
         "register": "Maak een account aan in",
         "registerSuccess": "Welkom bij",
-        "restorePassword": "Reset wachtwoord -",
-        "restorePasswordCode": "Reset wachtwoord -",
-        "restorePasswordSuccess": "Wachtwoord opgeslagen -",
+        "restorePassword": "Reset password",
+        "restorePasswordCode": "Reset password",
+        "restorePasswordSuccess": "Password saved",
         "supportedDevices": "Ondersteunde apparaten",
-        "system": "Systeem -",
-        "systemShare": "Deel Systeem -",
-        "systems": "Systemen -",
-        "template": "{{title}} %CLOUD_NAME%",
-        "view": "Bekijk camera's - "
+        "system": "System",
+        "systemShare": "Share System",
+        "systems": "Systemen",
+        "template": "{{title}} - %CLOUD_NAME%",
+        "view": "View cameras"
     },
     "passwordRequirements": {
         "common": "te algemeen",
@@ -550,8 +548,8 @@
     "phoneNumberWithLabel": "Tel: {{number}}",
     "pleaseSelect": "Selecteer...",
     "privacyPolicy": {
-        "integration": "Door dit formulier in te dienen, ga je akkoord met contactering door {{INTEGRATION_COMPANY}} en/of %COMPANY_NAME%.\nJe vindt {{INTEGRATION_COMPANY}} privacybeleid <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">hier</a> en %COMPANY_NAME% privacybeleid <a href=\"%PRIVACY_LINK%\" target=\"blank\">hier</a> welke instructies bevat over hoe je toestemming kan intrekken.",
-        "ipvd": "Door dit formulier in te dienen, ga je akkoord met contactering door %COMPANY_NAME%.\nJe vindt %COMPANY_NAME% privacy beleid <a href=\"%PRIVACY_LINK%\" target=\"blank\">hier</a> welke instructies bevat over hoe je toestemming moet intrekken."
+        "integration": "Door dit formulier in te dienen, ga je akkoord met contactering door {{INTEGRATION_COMPANY}} en/of %COMPANY_NAME%.\nJe vindt {{INTEGRATION_COMPANY}} privacybeleid <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">hier</a> en %COMPANY_NAME% privacybeleid <a href=\"%PRIVACY_LINK%\" target=\"_blank\">hier</a> welke instructies bevat over hoe je toestemming kan intrekken.",
+        "ipvd": "Door dit formulier in te dienen, ga je akkoord met contactering door %COMPANY_NAME%.\nJe vindt %COMPANY_NAME% privacy beleid <a href=\"%PRIVACY_LINK%\" target=\"_blank\">hier</a> welke instructies bevat over hoe je toestemming moet intrekken."
     },
     "registration": {
         "agreement": "Ik ga akkoord met de <a href=\"/content/eula\" target=\"_blank\">algemene voorwaarden</a> en het<a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy beleid</a>"
@@ -569,7 +567,7 @@
         "minResolution": "Minimum Resolutie",
         "search_ipvd": "Zoeken op model of fabrikant",
         "selected": "geselecteerd",
-        "vendor": "Fabrikant",
+        "vendor": "Fabrikanten",
         "vendors": "Fabrikanten"
     },
     "servers in the merged System.": "servers in het samengevoegde systeem.",
@@ -597,6 +595,7 @@
         "openClientNoSystem": "Open %VMS_NAME%",
         "permissionsRemoved": "Toestemmingen zijn verwijderd voor {{email}}",
         "shareOffline": "Kan systeem niet delen terwijl het offline is",
+        "shareUnauthorized": "U bent niet gerechtigd om dit systeem te delen",
         "successDeleted": "Systeem {{systemName}} is succesvol verwijderd van uw account",
         "successDisconnected": "Systeem is met succes losgekoppeld van %CLOUD_NAME%",
         "successRename": "Systeemnaam opgeslagen",
@@ -608,14 +607,14 @@
     "systemStatuses": {
         "activated": "geactiveerd",
         "incompatible": "incompatibel",
-        "merging": "samenvoegen",
+        "merging": "aan het samenvoegen",
         "notActivated": "niet geactiveerd",
         "offline": "offline",
         "online": "online",
         "unavailable": "niet beschikbaar"
     },
     "testedVersionLabel": "Getest op {{vmsName}} versie:",
-    "testedVersionsLabel": "Getest op {{vmsName}} versies:",
+    "testedVersionsLabel": "Getest op {{vmsName}} versie:",
     "users": "Gebruikers",
     "you": "u"
 }

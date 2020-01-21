@@ -19,12 +19,18 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
 from SeleniumLibrary.utils import (is_falsy, is_truthy, secs_to_timestr,
-                                   timestr_to_secs, SELENIUM_VERSION)
+                                   timestr_to_secs)
 from selenium.webdriver.support.color import Color
 from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.remote.webdriver import WebDriver
 
 
 class NoptixLibrary(object):
+
+    def go_forward(self):
+        """Simulates the user clicking the forward button on their browser."""
+        seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
+        seleniumlib.driver.forward()
 
     def convert_locator_to_webelement(self, locator):
         seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
@@ -72,6 +78,10 @@ class NoptixLibrary(object):
         email = email[:index] + \
             "+!#$%'*-/=?^_`{|}~" + str(time.time()) + email[index:]
         return email
+
+    def get_code_from_email_link(self, url):
+        url_parts = url.split('/')
+        return url_parts[-1]
 
     def get_random_system_name(self):
         return "System: " + date.today().strftime("%m-%d-%y") + " " + str(randint(1, 100))
@@ -343,7 +353,7 @@ class NoptixLibrary(object):
         client = docker.from_env()
         return client.images.build(path="/home/kyle/develop/nx_vms/cloud_portal/robot_tests/Docker",
                             tag="mediaserver",
-                            buildargs={"mediaserver_deb":"nxwitness-server-4.0.0.28541-linux64-beta-test.deb"})
+                            buildargs={"mediaserver_deb":"nxwitness-server-4.0.0.29698-linux64-beta-test.deb"})
 
     def run_container(self, image, port, network):
         tmp = {'/run':'', '/run/lock':''}

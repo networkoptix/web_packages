@@ -53,21 +53,17 @@
 		},
 		"groups": {
 			"windows": {
-				"label": "Windows",
-				"supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+				"label": "Windows"
 			},
 			"mac": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"linux": {
 				"label": "Ubuntu Linux",
-				"shortLabel": "Ubuntu",
-				"supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+				"shortLabel": "Ubuntu"
 			},
 			"macos": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"ios": {
 				"label": "iOS",
@@ -79,13 +75,11 @@
 			},
 			"arm": {
 				"label": "ARM",
-				"shortLabel": "ARM",
-				"supported": "<a href='/content/arm'>ARM-baserade servrar stöd policy</a>"
+				"shortLabel": "ARM"
 			},
 			"sdk": {
 				"label": "SDK",
-				"shortLabel": "SDK",
-				"supported": "C++ plattformsoberoende SDK"
+				"shortLabel": "SDK"
 			}
 		},
 		"platforms": {
@@ -112,12 +106,12 @@
 		},
 		"releasesTypes": {
 			"beta": "Beta",
-			"betas": "Betas",
-			"rc": "Release Candidate",
+			"betas": "Betor",
+			"rc": "Releasekandidat",
 			"release": "Release",
-			"releases": "Releases",
+			"releases": "Releaser",
 			"patch": "Patch",
-			"patches": "Patches"
+			"patches": "Patchar"
 		}
 	},
 	"ipvd": {
@@ -179,21 +173,21 @@
 		"default": "%CLOUD_NAME%",
 		"registerSuccess": "Välkommen till",
 		"register": "Skapa konto i",
-		"changePassword": "Ändra lösenord -",
-		"account": "Kontoinställningar -",
-		"systems": "System -",
-		"system": "Systemet -",
-		"systemShare": "Dela system -",
-		"activate": "Aktivera konto -",
-		"activateSent": "Aktivera konto -",
-		"activateSuccess": "Kontot aktiverat -",
-		"activateCode": "Aktivera konto -",
-		"restorePassword": "Återställ lösenord -",
-		"restorePasswordSuccess": "Lösenordet sparat -",
-		"restorePasswordCode": "Återställ lösenord -",
-		"view": "Visa kameror - ",
+		"changePassword": "Ändra lösenord",
+		"account": "Kontoinställningar",
+		"systems": "System",
+		"system": "System",
+		"systemShare": "Dela system",
+		"activate": "Aktivera konto",
+		"activateSent": "Aktivera konto",
+		"activateSuccess": "Kontot aktiverat",
+		"activateCode": "Aktivera konto",
+		"restorePassword": "Återställ lösenord",
+		"restorePasswordSuccess": "Lösenordet sparat",
+		"restorePasswordCode": "Återställ lösenord",
+		"view": "Visa kameror",
 		"debug": "Debugläge",
-		"login": "Logga in -",
+		"login": "Logga in",
 		"download": "Ladda ner %VMS_NAME%",
 		"downloadPlatform": "Hämta %VMS_NAME% för ",
 		"pageNotFound": "Det gick inte att hitta sidan",
@@ -224,7 +218,12 @@
 			"primarySystemOffline": "System {{primarySystem}} är offline och kan inte slås samman med System {{targetSystem}}.",
 			"secondaryCannotMerge": "System {{targetSystem}} har en äldre programversion som inte är kompatibel med det aktuella systemet. Uppdatera {{targetSystem}} till <a href=\"/download\" target=\"_blank\" translate>senaste version</a> att slå samman den med den nuvarande.",
 			"systemOffline": "System {{targetSystem}} är offline och kan inte slås samman med det nuvarande.",
-			"systemUnavailable": "System {{targetSystem}} är för närvarande inte tillgängligt. Försök igen om några minuter eller kontakta"
+			"systemUnavailable": "System {{targetSystem}} är för närvarande inte tillgängligt. Försök igen om några minuter eller kontakta",
+			"recommendSupport": {
+				"a_recommend": "Vi rekommenderar att vi konsulterar med",
+				"b_support": "support",
+				"c_proceeding": "innan fortsättning."
+			}
 		},
 		"message": {
 			"failedToSend": "Meddelandet gick inte att skicka.",
@@ -234,9 +233,9 @@
 				"ipvd_feedback_page": "Feedback för kamerans sida",
 				"ipvd_feedback_device": "Feedback om {{asset}}"
 			},
-			"topic": {
-				"contact_sales": "Kontakta försäljning för {{asset}}",
-				"contact_support": "Kontakta support för {{asset}}",
+			"subject": {
+				"sales_inquiry": "Försäljningsförfrågan för {{asset}}",
+				"technical_inquiry": "Teknisk fråga för {{asset}}",
 				"integration_feedback": "Feedback för integration {{asset}}",
 				"ipvd_feedback_page": "Feedback för kamerans sida",
 				"ipvd_feedback_device": "Feedback om {{asset}}"
@@ -340,7 +339,8 @@
 		"mergeSuccess": "Systemsammanslagning slutförd",
 		"permissionsRemoved": "Rättigheterna togs bort från {{email}}",
 		"unknownName": "Okänt namn för system (orsakad av molnsammanslagning)",
-		"shareOffline": "Kan inte dela systemet medan det är offline"
+		"shareOffline": "Kan inte dela systemet medan det är offline",
+		"shareUnauthorized": "Du har inte behörighet att dela detta system"
 	},
 	"systemStatuses": {
 		"activated": "aktiverad",
@@ -348,12 +348,12 @@
 		"merging": "sammanslagning",
 		"notActivated": "inte aktiverad",
 		"online": "uppkopplad",
-		"offline": "frånkopplade",
+		"offline": "frånkopplad",
 		"unavailable": "inte tillgänglig"
 	},
 	"accessRoles": {
 		"disabled": {
-			"label": "Inaktiverad",
+			"label": "Avaktiverad",
 			"description": "Användaren är inaktiverad och kan inte logga in på System"
 		},
 		"Owner": {
@@ -361,7 +361,7 @@
 			"description": "Obegränsad åtkomst, inklusive möjligheten att dela och ansluta/avregistrera systemet från molnet"
 		},
 		"Viewer": {
-			"label": "Användare",
+			"label": "Tittare",
 			"description": "Kan visa live video och bläddra i arkivet"
 		},
 		"Live Viewer": {
@@ -393,7 +393,7 @@
 			"description": "Obegränsad åtkomst, inklusive möjligheten att dela och ansluta/avregistrera systemet från molnet"
 		},
 		"viewer": {
-			"label": "Användare",
+			"label": "Tittare",
 			"description": "Kan visa live video och bläddra i arkivet"
 		},
 		"liveViewer": {
@@ -410,13 +410,13 @@
 		}
 	},
 	"privacyPolicy": {
-		"integration": "Genom att skicka in denna blankett accepterar du att du kontaktas av {{INTEGRATION_COMPANY}} och / eller %COMPANY_NAME%.\nDu hittar {{INTEGRATION_COMPANY}} sekretesspolicy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">här</a> och %COMPANY_NAME% sekretesspolicy <a href=\"%PRIVACY_LINK%\" target=\"blank\">här</a> som innehåller anvisningar om hur du återkallar ditt samtycke.",
-		"ipvd": "Genom att skicka in denna blankett accepterar du att du kontaktas av %COMPANY_NAME%.\nDu hittar %COMPANY_NAME% sekretesspolicy <a href=\"%PRIVACY_LINK%\" target=\"blank\">här</a> som innehåller instruktioner om hur du återkallar ditt samtycke."
+		"integration": "Genom att skicka in denna blankett accepterar du att du kontaktas av {{INTEGRATION_COMPANY}} och / eller %COMPANY_NAME%.\nDu hittar {{INTEGRATION_COMPANY}} sekretesspolicy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">här</a> och %COMPANY_NAME% sekretesspolicy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">här</a> som innehåller anvisningar om hur du återkallar ditt samtycke.",
+		"ipvd": "Genom att skicka in denna blankett accepterar du att du kontaktas av %COMPANY_NAME%.\nDu hittar %COMPANY_NAME% sekretesspolicy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">här</a> som innehåller instruktioner om hur du återkallar ditt samtycke."
 	},
 	"systemAdministration": "Systemadministration",
 	"users": "Användare",
 	"testedVersionLabel": "Testat på {{vmsName}} version:",
-	"testedVersionsLabel": "Testat på {{vmsName}} versioner:",
+	"testedVersionsLabel": "Testat på {{vmsName}} version:",
 	"About %CLOUD_NAME%": "Om %CLOUD_NAME%",
 	"Download %VMS_NAME%": "Ladda ner %VMS_NAME%",
 	"Integrations": "Integrationer",

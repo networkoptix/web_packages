@@ -27,8 +27,8 @@
 		"hardwareType": "Típus",
 		"hardwareTypes": "Types",
 		"minResolution": "Minimum Resolution",
-		"analytics": "Analytics",
-		"analyticsSelected": "analytics events"
+		"analytics": "analitika",
+		"analyticsSelected": "analitikai események"
 	},
 	"cameraFilters": {
 		"ptz": "PTZ cameras",
@@ -53,21 +53,17 @@
 		},
 		"groups": {
 			"windows": {
-				"label": "Windows",
-				"supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+				"label": "Windows"
 			},
 			"mac": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"linux": {
 				"label": "Ubuntu Linux",
-				"shortLabel": "Ubuntu",
-				"supported": "Ubuntu 14.04 LTS, 16.04 LTS, LTS"
+				"shortLabel": "Ubuntu"
 			},
 			"macos": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"ios": {
 				"label": "iOS",
@@ -79,13 +75,11 @@
 			},
 			"arm": {
 				"label": "ARM",
-				"shortLabel": "ARM",
-				"supported": "<a href='/content/arm'>ARM based servers support policy</a>"
+				"shortLabel": "ARM"
 			},
 			"sdk": {
 				"label": "SDK",
-				"shortLabel": "SDK",
-				"supported": "C ++ kereszt platform SDK"
+				"shortLabel": "SDK"
 			}
 		},
 		"platforms": {
@@ -139,7 +133,7 @@
 		"isIoSupported": "I/O",
 		"isH265": "H.265",
 		"isMultiSensor": "Multi Sensor",
-		"isAnalyticsSupported": "Analytics",
+		"isAnalyticsSupported": "analitika",
 		"camera": "Kamera",
 		"multiSensorCamera": "Multi-Sensor Camera",
 		"encoder": "Encoder",
@@ -175,34 +169,34 @@
 		"feedback": "Make sure you include your camera model and manufacturer..."
 	},
 	"pageTitles": {
-		"template": "{{title}} %CLOUD_NAME%",
+		"template": "{{title}} - %CLOUD_NAME%",
 		"default": "%CLOUD_NAME%",
 		"registerSuccess": "Üdvözöljük",
 		"register": "Fiók létrehozása itt",
-		"changePassword": "Jelszó módosítása -",
-		"account": "Fiókbeállítások -",
-		"systems": "Rendszerek -",
-		"system": "Rendszer -",
-		"systemShare": "Rendszer megosztása -",
-		"activate": "Fiók aktiválása -",
-		"activateSent": "Fiók aktiválása -",
-		"activateSuccess": "Fiók aktiválva -",
-		"activateCode": "Fiók aktiválása -",
-		"restorePassword": "Jelszó visszaállítása -",
-		"restorePasswordSuccess": "Jelszó elmentve -",
-		"restorePasswordCode": "Jelszó visszaállítása -",
-		"view": "Kamerák megtekintése - ",
+		"changePassword": "Change password",
+		"account": "Account settings",
+		"systems": "Systems",
+		"system": "System",
+		"systemShare": "Share System",
+		"activate": "Activate account",
+		"activateSent": "Activate account",
+		"activateSuccess": "Account activated",
+		"activateCode": "Activate account",
+		"restorePassword": "Reset password",
+		"restorePasswordSuccess": "Password saved",
+		"restorePasswordCode": "Reset password",
+		"view": "View cameras",
 		"debug": "Hibakeresés",
-		"login": "Bejelentkezés -",
+		"login": "Log in",
 		"download": "%VMS_NAME% letöltése",
-		"downloadPlatform": "%VMS_NAME% letöltése ",
+		"downloadPlatform": "Download %VMS_NAME% for ",
 		"pageNotFound": "Az oldal nem található",
 		"supportedDevices": "Supported Devices",
 		"integrations": "Integrations"
 	},
 	"dialogs": {
 		"okButton": "OK",
-		"cancelButton": "Mégsem",
+		"cancelButton": "Mégse",
 		"createNewAccount": "Create New Account",
 		"changeAccountLogged": "You are already logged in with as {email}",
 		"loggedFromOther": "You will be logged in with a different account",
@@ -211,7 +205,7 @@
 		"logoutAuthorisedTitle": "Már bejelentkezett",
 		"logoutAuthorisedContinueButton": "Folyatatás",
 		"logoutAuthorisedLogoutButton": "Kijelentkezés",
-		"noClientDetectedTitle": "Telepítse a %VMS_NAME% alkalmazást a rendszer megtekintéshez",
+		"noClientDetectedTitle": "Install %VMS_NAME% to view your System",
 		"stayAs": "Stay logged as {email} ",
 		"stayLoggedIn": "Stay Logged In",
 		"download": "%VMS_NAME% letöltése",
@@ -224,7 +218,12 @@
 			"primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}.",
 			"secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
 			"systemOffline": "A {{targetSystem}} rendszer offline állapotban van, emiatt nem lehet egyesíteni a meglévővel.",
-			"systemUnavailable": "A {{targetSystem}} rendszer jelenleg nem érhető el. Néhány perc múlva próbálkozzon újra"
+			"systemUnavailable": "A {{targetSystem}} rendszer jelenleg nem érhető el. Néhány perc múlva próbálkozzon újra",
+			"recommendSupport": {
+				"a_recommend": "Javasoljuk, hogy konzultáljon erről",
+				"b_support": "támogatás",
+				"c_proceeding": "mielőtt folytatná."
+			}
 		},
 		"message": {
 			"failedToSend": "Message has failed to send.",
@@ -234,9 +233,9 @@
 				"ipvd_feedback_page": "Feedback for cameras page",
 				"ipvd_feedback_device": "Feedback about {{asset}}"
 			},
-			"topic": {
-				"contact_sales": "Contact sales for {{asset}}",
-				"contact_support": "Contact support for {{asset}}",
+			"subject": {
+				"sales_inquiry": "Sales inquiry for {{asset}}",
+				"technical_inquiry": "Technical inquiry for {{asset}}",
 				"integration_feedback": "Feedback for integration {{asset}}",
 				"ipvd_feedback_page": "Feedback for cameras page",
 				"ipvd_feedback_device": "Feedback about {{asset}}"
@@ -340,7 +339,8 @@
 		"mergeSuccess": "A rendszer egyesítése befejeződött",
 		"permissionsRemoved": "{{email}} engedélyei vissavonva",
 		"unknownName": "Ismeretlen név a rendszerhez (felhő egyesítése okozta)",
-		"shareOffline": "Cannot share system while it is offline"
+		"shareOffline": "Cannot share system while it is offline",
+		"shareUnauthorized": "You do not have permission to share this system"
 	},
 	"systemStatuses": {
 		"activated": "aktiválva",
@@ -402,7 +402,7 @@
 		},
 		"advancedViewer": {
 			"label": "Speciális felhasználó",
-			"description": "Élőkép, rögzített kép, kamerák konfigurálása, PTZ vezérlés, stb"
+			"description": "Élőkép, rögzített kép, kamerák konfigurálása, PTZ vezérlés, stb..."
 		},
 		"custom": {
 			"label": "Egyéni",
@@ -410,14 +410,14 @@
 		}
 	},
 	"privacyPolicy": {
-		"integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent.",
-		"ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent."
+		"integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a> which include instruction on how to withdraw your consent.",
+		"ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a> which include instruction on how to withdraw your consent."
 	},
 	"systemAdministration": "Rendszer Adminisztrátor",
 	"users": "Felhasználók",
-	"testedVersionLabel": "Tested on {{vmsName}} version:",
-	"testedVersionsLabel": "Tested on {{vmsName}} versions:",
-	"About %CLOUD_NAME%": "About %CLOUD_NAME%",
+	"testedVersionLabel": "Tested with {{vmsName}} version:",
+	"testedVersionsLabel": "Tested with {{vmsName}} versions:",
+	"About %CLOUD_NAME%": "%CLOUD_NAME% névjegye",
 	"Download %VMS_NAME%": "%VMS_NAME% letöltése",
 	"Integrations": "Integrations",
 	"Privacy": "Biztonság",
@@ -428,7 +428,7 @@
 	"WHEN_MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{{targetSystemName}}</strong> System, and this system will be deleted.",
 	"FAILED_SYSTEM_DESCR": "This link is broken,<br>System may be disconnected from %CLOUD_NAME%,<br>Access to this System may be revoked, <br>or you may be logged into a different account.",
 	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "%CLOUD_NAME% nem kapcsolódik egy rendszeréhez sem",
-	"NO_SYSTEMS_LOGIN": "%VMS_NAME% használata a rendszerhez való csatlakozáshoz",
+	"NO_SYSTEMS_LOGIN": "Log in to your System using %VMS_NAME%",
 	"NO_SYSTEMS_GOTO_ADMINISTRATION": "Kattintson a \"Felhő\" fülre \"Rendszer adminisztráció\" lapon",
 	"NO_SYSTEMS_CONNECT_SYSTEM": "Press \"Connect System to %CLOUD_NAME%\""
 }

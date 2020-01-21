@@ -1,23 +1,27 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NxSettingsService } from '../settings.service';
 import { NxConfigService } from '../../../../services/nx-config';
 import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
 import { NxSystemsService } from '../../../../services/systems.service';
+import { Subscription } from 'rxjs';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 
-
+@AutoUnsubscribe()
 @Component({
     selector   : 'nx-system-merge',
     templateUrl: 'merge-status.component.html',
     styleUrls  : ['merge-status.component.scss']
 })
 
-export class NxSystemMergeStatusComponent implements OnInit {
+export class NxSystemMergeStatusComponent implements OnInit, OnDestroy {
     config: any;
     currentlyMerging: boolean;
     isMaster: boolean;
     LANG: any;
     mergeTargetSystem: any;
     system: any;
+
+    private systemSubscription: Subscription;
 
     constructor(private _config: NxConfigService,
                 private language: NxLanguageProviderService,
@@ -26,9 +30,11 @@ export class NxSystemMergeStatusComponent implements OnInit {
         this.config = this._config.getConfig();
     }
 
+    ngOnDestroy() {}
+
     ngOnInit(): void {
         this.LANG = this.language.getTranslations();
-        this.settingsService.systemSubject.subscribe((system) => {
+        this.systemSubscription = this.settingsService.systemSubject.subscribe((system) => {
             if (system === undefined) {
                 return;
             }

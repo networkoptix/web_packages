@@ -53,21 +53,17 @@
 		},
 		"groups": {
 			"windows": {
-				"label": "Windows",
-				"supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+				"label": "Windows"
 			},
 			"mac": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"linux": {
 				"label": "Ubuntu Linux",
-				"shortLabel": "Ubuntu",
-				"supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+				"shortLabel": "Ubuntu"
 			},
 			"macos": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"ios": {
 				"label": "iOS",
@@ -79,13 +75,11 @@
 			},
 			"arm": {
 				"label": "ARM",
-				"shortLabel": "ARM",
-				"supported": "<a href='/content/arm'>Zasady wsparcia serwerów ARM</a>"
+				"shortLabel": "ARM"
 			},
 			"sdk": {
 				"label": "SDK",
-				"shortLabel": "SDK",
-				"supported": "C++ cross platform SDK"
+				"shortLabel": "SDK"
 			}
 		},
 		"platforms": {
@@ -175,25 +169,25 @@
 		"feedback": "Proszę podać model kamery i producenta..."
 	},
 	"pageTitles": {
-		"template": "{{title}} %CLOUD_NAME%",
+		"template": "{{title}} - %CLOUD_NAME%",
 		"default": "%CLOUD_NAME%",
 		"registerSuccess": "Witamy w",
 		"register": "Utwórz konto w",
-		"changePassword": "Zmień hasło -",
-		"account": "Ustawienia konta -",
-		"systems": "Systemy -",
-		"system": "System -",
-		"systemShare": "Udostępnij system -",
-		"activate": "Aktywuj konto -",
-		"activateSent": "Aktywuj konto -",
-		"activateSuccess": "Konto aktywne -",
-		"activateCode": "Aktywuj konto -",
-		"restorePassword": "Resetuj hasło -",
-		"restorePasswordSuccess": "Hasło zapisane -",
-		"restorePasswordCode": "Resetuj hasło -",
-		"view": "Podgląd kamer -",
+		"changePassword": "Change password",
+		"account": "Account settings",
+		"systems": "Systems",
+		"system": "System",
+		"systemShare": "Share System",
+		"activate": "Activate account",
+		"activateSent": "Activate account",
+		"activateSuccess": "Account activated",
+		"activateCode": "Activate account",
+		"restorePassword": "Reset password",
+		"restorePasswordSuccess": "Password saved",
+		"restorePasswordCode": "Reset password",
+		"view": "View cameras",
 		"debug": "Debugowanie",
-		"login": "Zaloguj się -",
+		"login": "Log in",
 		"download": "Pobierz %VMS_NAME%",
 		"downloadPlatform": "Pobierz %VMS_NAME% dla",
 		"pageNotFound": "Nie znaleziono strony",
@@ -224,7 +218,12 @@
 			"primarySystemOffline": "System {{primarySystem}} jest w trybie offline i nie można go złączyć z systemem {{targetSystem}}.",
 			"secondaryCannotMerge": "System {{targetSystem}} ma starszą wersję oprogramowania, która jest niezgodna z bieżącym systemem. Zaktualizuj system {{targetSystem}} do <a href=\"/download\" target=\"_blank\" translate>najnowszej kompilacji</a>, aby złączyć go z bieżącym systemem.",
 			"systemOffline": "System {{targetSystem}} jest w trybie offline i nie można go złączyć z bieżącym systemem.",
-			"systemUnavailable": "System {{targetSystem}} jest obecnie niedostępny. Spróbuj ponownie za kilka minut lub skontaktuj się"
+			"systemUnavailable": "System {{targetSystem}} jest obecnie niedostępny. Spróbuj ponownie za kilka minut lub skontaktuj się",
+			"recommendSupport": {
+				"a_recommend": "Zalecamy skonsultowanie się z",
+				"b_support": "wsparcie",
+				"c_proceeding": "przed kontynuowaniem."
+			}
 		},
 		"message": {
 			"failedToSend": "Wysyłanie wiadomości nie powiodło się.",
@@ -234,9 +233,9 @@
 				"ipvd_feedback_page": "Opinia dotycząca listy kamer",
 				"ipvd_feedback_device": "Opinie dotyczące {{asset}}"
 			},
-			"topic": {
-				"contact_sales": "Kontakt do sprzedawcy {{asset}}",
-				"contact_support": "Kontakt do wsparcia technicznego {{asset}}",
+			"subject": {
+				"sales_inquiry": "Zapytanie handlowe o {{asset}}",
+				"technical_inquiry": "Zapytanie techniczne do {{asset}}",
 				"integration_feedback": "Opinia dotycząca integracji {{asset}}",
 				"ipvd_feedback_page": "Opinia dotycząca listy kamer",
 				"ipvd_feedback_device": "Opinie dotyczące {{asset}}"
@@ -295,7 +294,7 @@
 		"unknownMergeError": "Nieznany błąd. Można odświeżyć stronę i spróbować ponownie. Jeśli problem będzie się powtarzał - proszę skontaktować się z <a href=\"%SUPPORT_LINK%\" target=\"_blank\">działem wsparcia technicznego</a>."
 	},
 	"passwordRequirements": {
-		"good": "dobre",
+		"good": "dobry",
 		"fair": "średnie",
 		"fairMessage": "Użyj liczb, wielkich i małych liter oraz znaków specjalnych, aby ustawić bezpieczniejsze hasło",
 		"minLength": "za krótkie",
@@ -317,7 +316,7 @@
 		"mySystemSearch": "IMeMyMine",
 		"unavailable": "System jest niedostępny",
 		"offline": "Serwer jest odłączony",
-		"offlineAlertRibbon": "System is offline. Some settings may not be available.",
+		"offlineAlertRibbon": "System jest offline. Niektóre ustawienia mogą być niedostępne.",
 		"openClient": "Otwórz w %VMS_NAME%",
 		"openClientNoSystem": "Otwórz %VMS_NAME%",
 		"confirmMergeAction": "Złącz",
@@ -340,7 +339,8 @@
 		"mergeSuccess": "Zakończono łączenie systemu",
 		"permissionsRemoved": "Uprawnienia zostały usunięte z {{email}}",
 		"unknownName": "Nieznana nazwa systemu (złączenie w chmurze)",
-		"shareOffline": "Cannot share system while it is offline"
+		"shareOffline": "Nie można udostępnić systemu, gdy jest on offline",
+		"shareUnauthorized": "Nie masz uprawnień do udostępniania tego systemu"
 	},
 	"systemStatuses": {
 		"activated": "aktywny",
@@ -370,7 +370,7 @@
 		},
 		"Advanced Viewer": {
 			"label": "Zaawansowany użytkownik",
-			"description": "Może wyświetlać wideo na żywo, przeglądać archiwum, sterować PTZ itp."
+			"description": "Podgląd wideo na żywo, przeglądanie archiwum, konfigurowanie kamer, sterowanie PTZ itp."
 		},
 		"Administrator": {
 			"label": "Administrator",
@@ -410,13 +410,13 @@
 		}
 	},
 	"privacyPolicy": {
-		"integration": "Przesyłając ten formularz, zgadzasz się na kontakt od %INTEGRATION_COMPANY% i/lub %COMPANY_NAME%.\nPolitykę prywatności firmy %INTEGRATION_COMPANY% znajdziesz <a href=\"%INTEGRATION_PRIVACY_POLICY%\" target=\"blank\">tutaj</a>, a politykę prywatności firmy %COMPANY_NAME% <a href=\"%PRIVACY_LINK%\" target=\"blank\">tutaj</a>. Zawierają one instrukcje dotyczące wycofania zgody.",
-		"ipvd": "Przesyłając ten formularz zgadzasz się na kontakt przez %COMPANY_NAME%.\nPolitykę prywatności firmy %COMPANY_NAME% znajdziesz <a href=\"%PRIVACY_LINK%\" target=\"blank\">tutaj</a>. Zawiera ona instrukcje dotyczące wycofania zgody."
+		"integration": "Przesyłając ten formularz, zgadzasz się na kontakt od {{INTEGRATION_COMPANY}} i/lub %COMPANY_NAME%.\nPolitykę prywatności firmy {{INTEGRATION_COMPANY}} znajdziesz <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">tutaj</a>, a politykę prywatności firmy %COMPANY_NAME% <a href=\"%PRIVACY_LINK%\" target=\"_blank\">tutaj</a>. Zawierają one instrukcje dotyczące wycofania zgody.",
+		"ipvd": "Przesyłając ten formularz zgadzasz się na kontakt przez %COMPANY_NAME%.\nPolitykę prywatności firmy %COMPANY_NAME% znajdziesz <a href=\"%PRIVACY_LINK%\" target=\"_blank\">tutaj</a>. Zawiera ona instrukcje dotyczące wycofania zgody."
 	},
 	"systemAdministration": "Administracja systemem",
 	"users": "Użytkownicy",
-	"testedVersionLabel": "Testowane na {{vmsName}} w wersji:",
-	"testedVersionsLabel": "Testowane na {{vmsName}} w wersjach:",
+	"testedVersionLabel": "Testowane w {{vmsName}} w wersji:",
+	"testedVersionsLabel": "Testowane w {{vmsName}} w wersjach:",
 	"About %CLOUD_NAME%": "Informacje o %CLOUD_NAME%",
 	"Download %VMS_NAME%": "Pobierz %VMS_NAME%",
 	"Integrations": "Integracje",

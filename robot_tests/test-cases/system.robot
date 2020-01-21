@@ -51,6 +51,8 @@ systems dropdown should allow you to go back to the systems page
     Wait Until Element Is Visible    ${ALL SYSTEMS}
     Click Link    ${ALL SYSTEMS}
     Location Should Be    ${url}/systems
+    # Run keyword and continue on failure    Title Should Be    ${SYSTEMS TITLE TEXT} - ${PRODUCT_NAME}
+
 
 should confirm, if owner deletes system (You are going to disconnect your system from cloud)
     [tags]    Threaded
@@ -82,6 +84,7 @@ Cancel should cancel disconnection and disconnect should remove it when not owne
     Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
     Wait Until Elements Are Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
+    Sleep    .5
     Wait Until Element Is Visible    ${SHARE BUTTON SYSTEMS}
     Click Button    ${SHARE BUTTON SYSTEMS}
     Wait Until Elements Are Visible    ${SHARE EMAIL}    ${SHARE BUTTON MODAL}
@@ -245,19 +248,22 @@ should display same user data as user provided during registration
     Log in to Auto Tests System    ${EMAIL OWNER}
     Share To    ${random email}    ${ADMIN TEXT}
     Log Out
+    Validate Log Out
 
 #verify user was added with appropriate name
-    Log In    ${random email}    ${password}    None
+    Log In    ${random email}    ${password}
     Wait Until Elements Are Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
 #click link containing user's email
     ${User In List}=   Set Variable    //nx-system-settings-component//nx-menu//nx-level-3-item//span[text()='${random email}']/../../../a
+    Wait Until Element Is Visible    ${User In List}
     Click Link    ${User In List}
 #verify name displayed
     Wait Until Element Is Visible    //nx-system-user-component//nx-block//header/span[contains(text(),'${COMBO TEXT} ${COMBO TEXT}')]
 
 #remove new user from system
     Log Out
+    Validate Log Out
     Log in to Auto Tests System    ${EMAIL OWNER}
     Remove User Permissions    ${random email}
     Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
@@ -294,10 +300,10 @@ should display same user data as shown in user account
     Log Out
 
     Log in to Auto Tests System    ${email}
-    Wait Until Elements Are Visible    ${USERS LIST LINK}
-    Click Link    ${USERS LIST LINK}
+    Go to Users List
 #click link containing user's email
     ${User In List}=   Set Variable    //nx-system-settings-component//nx-menu//nx-level-3-item//span[text()='${random email}']/../../../a
+    Wait Until Element Is Visible    ${User In List}
     Click Link    ${User In List}
 #verify name displayed
     Wait Until Element Is Visible    //nx-system-user-component//nx-block//header/span[contains(text(),'${COMBO TEXT} ${COMBO TEXT}')]
@@ -318,3 +324,11 @@ should show (your system) for owner and (owner's name) for non-owners
     FOR    ${user}    IN    @{EMAILS LIST}
         Run Keyword Unless    "${user}"=="${EMAIL OWNER}"    Check System Text    ${user}
     END
+
+
+should open a system page in anonymous state
+    [tags]    anonymous
+    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
+    Location should be    ${url}/systems/${AUTO TESTS SYSTEM ID}
+    Wait Until Element Is Visible    ${LOG IN MODAL}
+    Check Log In    button=None

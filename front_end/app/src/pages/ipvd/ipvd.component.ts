@@ -12,15 +12,18 @@ import { MessageParams }             from '../../dialogs/message/message.compone
 import { NxConfigService }           from '../../services/nx-config';
 import { NxUriService }              from '../../services/uri.service';
 import { NxUtilsService }            from '../../services/utils.service';
-import { Title }                     from '@angular/platform-browser';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxDialogsService }          from '../../dialogs/dialogs.service';
 import { NxAccountService }          from '../../services/account.service';
+import { SubscriptionLike }          from 'rxjs';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
+import { NxPageService } from '../../services/page.service';
 
 interface Params {
     [key: string]: any;
 }
 
+@AutoUnsubscribe()
 @Component({
     selector     : 'ipvd',
     templateUrl  : 'ipvd.component.html',
@@ -60,6 +63,12 @@ export class NxIpvdComponent implements OnInit {
     breakpoint: string;
     showAnalytics: boolean;
 
+    breakpointSubscription: SubscriptionLike;
+    routerSubscription: SubscriptionLike;
+    locationSubscription: SubscriptionLike;
+    uriSubscription: SubscriptionLike;
+    cameraReloadSubscription: SubscriptionLike;
+    cameraGetSubscription: SubscriptionLike;
 
     private setupDefaults() {
         this.allowedParameters = [
@@ -109,19 +118,19 @@ export class NxIpvdComponent implements OnInit {
                 private location: Location,
                 private breakpointObserver: BreakpointObserver,
                 private router: Router,
-                private title: Title,
+                private pageService: NxPageService,
                 private accountService: NxAccountService,
                 @Inject(PLATFORM_ID) private platformId: object,
     ) {
         this.setupDefaults();
 
         if (isPlatformBrowser(this.platformId)) {
-            this.router.events.subscribe((event: NavigationEnd) => {
+            this.routerSubscription = this.router.events.subscribe((event: NavigationEnd) => {
                 window.scroll(0, this.uri.pageOffset);
             });
         }
 
-        this.location.subscribe((event: PopStateEvent) => {
+        this.locationSubscription = this.location.subscribe((event: PopStateEvent) => {
             // force view component update without URI update
             setTimeout(() => {
                 if (!this.params.camera && this.activeCamera) {
@@ -136,7 +145,7 @@ export class NxIpvdComponent implements OnInit {
     ngOnInit() {
         // Example URI
         // /ipvd?vendors=30X&camera=IPPTZ-ELS2IRL30X-ATI
-        this.uri
+        this.uriSubscription = this.uri
             .getURI()
             .subscribe(params => {
                 this.params = params;
@@ -154,7 +163,7 @@ export class NxIpvdComponent implements OnInit {
 
 
         this.LANG = this.language.getTranslations();
-        this.title.setTitle(this.LANG.pageTitles.supportedDevices);
+        this.pageService.setPageTitle(this.LANG.pageTitles.supportedDevices);
 
         this.company = this.CONFIG.companyName;
         this.vmsName = this.CONFIG.vmsName;
@@ -167,12 +176,14 @@ export class NxIpvdComponent implements OnInit {
 
         this.activate();
 
-        this.breakpointObserver
+        this.breakpointSubscription = this.breakpointObserver
             .observe([this.breakpoint])
             .subscribe((state: BreakpointState) => {
                 this.mobileDetailMode = (state.matches && this.activeCamera);
             });
     }
+
+    ngOnDestroy() {}
 
     resetFilterModel() {
         this.filterModel.search = '';
@@ -267,13 +278,13 @@ export class NxIpvdComponent implements OnInit {
     }
 
     reset() {
-        this.cameraService
+        this.cameraReloadSubscription = this.cameraService
             .reloadIPVD()
             .subscribe();
     }
 
     activate() {
-        this.cameraService
+        this.cameraGetSubscription = this.cameraService
             .getIPVD()
             .subscribe(data => {
                 this.cameras = data.cameras;

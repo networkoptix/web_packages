@@ -16,14 +16,12 @@ ${url}                 ${ENV}
 Open browser and set user language to current
     Open Browser and go to URL    ${url}
     Log In    ${email}    ${password}
-    Validate Log In
     sleep    3
     Log Out
 
 Log In To Change Password Page
+    Log In    ${email}    ${BASE PASSWORD}
     Go To    ${url}/account/password
-    Log In    ${email}    ${password}    None
-    Validate Log In
     Wait Until Elements Are Visible    ${CURRENT PASSWORD INPUT}    ${NEW PASSWORD INPUT}
 
 Discard Changes and Log Out
@@ -34,40 +32,46 @@ Discard Changes and Log Out
     Click Button    ${DISCARD CHANGES BUTTON}
     Validate Log Out
 
+#Reset user password to base
+#    [arguments]    ${email}    ${current password}
+#    Wait Until Elements Are Visible    ${CURRENT PASSWORD INPUT}    ${NEW PASSWORD INPUT}
+#    Input Text    ${CURRENT PASSWORD INPUT}    ${current password}
+#    Input Text    ${NEW PASSWORD INPUT}    ${BASE PASSWORD}
+#    Click Button    ${CHANGE PASSWORD BUTTON}
+#    Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
+
 Reset user password to base
-    [arguments]    ${email}    ${current password}
-    Wait Until Elements Are Visible    ${CURRENT PASSWORD INPUT}    ${NEW PASSWORD INPUT}
-    Input Text    ${CURRENT PASSWORD INPUT}    ${current password}
-    Input Text    ${NEW PASSWORD INPUT}    ${BASE PASSWORD}
-    Click Button    ${CHANGE PASSWORD BUTTON}
-    Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
+    [Arguments]    ${email}    ${current password}
+    CLoudPortalAPI.Change Password    ${url}    ${email}    ${current password}    ${BASE PASSWORD}
 
 Restart
     Register Keyword To Run On Failure    NONE
     ${status}    Run Keyword And Return Status    Validate Log In
     Register Keyword To Run On Failure    Failure Tasks
     Run Keyword If    ${status}    Log Out
-    Validate Log Out
     Go To    ${url}
 
 Clean up
-    Close Browser
-    Restore Password    ${email}
+    Register Keyword To Run On Failure    NONE
+    ${status}    Run Keyword And Return Status    Validate Log In
+    Register Keyword To Run On Failure    Failure Tasks
+    Run Keyword If    ${status}    Log Out
+    Restore Password using API    ${email}
 
 Reset DB and Open New Browser On Failure
+    Restore Password using API    ${email}
     Close Browser
-    Restore Password    ${email}
     Open Browser and go to URL    ${url}
 
 *** Test Cases ***
 Can be accessed via dropdown or direct link
     [tags]    C41576
     Go To    ${url}/account/password
-    Log In    ${email}    ${password}    None
+    Log In    ${email}    ${password}    ${False}    None
     Validate Log In
     Wait Until Elements Are Visible    ${CURRENT PASSWORD INPUT}    ${NEW PASSWORD INPUT}
     Location Should Be    ${url}/account/password
-    Title Should Be    Change password - ${PRODUCT_NAME}
+    # Title Should Be    ${CHANGE PASSWORD TITLE TEXT} - ${PRODUCT_NAME}
     Go To    ${url}
     Wait Until Element Is Visible    ${AUTO TESTS TITLE}
     Wait Until Element Is Visible    ${ACCOUNT DROPDOWN}
@@ -93,10 +97,9 @@ password is actually changed, so login works with new password
     Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
     Log Out
     Go To    ${url}/account/password
-    Log In    ${email}    ${password}    None
+    Log In    ${email}    ${password}    ${False}    None
     Wait Until Element Is Visible    ${WRONG PASSWORD MESSAGE}
-    Log In    ${email}    ${ALT PASSWORD}    None
-    Validate Log In
+    CloudPortalAPI.Log In    ${url}    ${email}    ${ALT PASSWORD}
     Reset user password to base    ${email}    ${ALT PASSWORD}
 
 password with symbols pass!@#$%^&*()_-+=;:'"`~,./\|?[]{} is valid
@@ -108,10 +111,9 @@ password with symbols pass!@#$%^&*()_-+=;:'"`~,./\|?[]{} is valid
     Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
     Log Out
     Go To    ${url}/account/password
-    Log In    ${email}    ${password}    None
+    Log In    ${email}    ${password}    ${False}    None
     Wait Until Element Is Visible    ${WRONG PASSWORD MESSAGE}
-    Log In    ${email}    ${symbol password}    None
-    Validate Log In
+    CloudPortalAPI.Log In    ${url}    ${email}    ${symbol password}
     Reset user password to base    ${email}    ${symbol password}
 
 password with space in the middle is valid
@@ -123,10 +125,9 @@ password with space in the middle is valid
     Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
     Log Out
     Go To    ${url}/account/password
-    Log In    ${email}    ${password}    None
+    Log In    ${email}    ${password}    ${False}    None
     Wait Until Element Is Visible    ${WRONG PASSWORD MESSAGE}
-    Log In    ${email}    ${space password}    None
-    Validate Log In
+    CloudPortalAPI.Log In    ${url}    ${email}    ${space password}
     Reset user password to base    ${email}    ${space password}
 
 more than 255 symbols can be entered in new password field and then are cut to 255
@@ -181,5 +182,10 @@ Password can't be changed if current password is not provided or incorrect
     Click Button    ${CHANGE PASSWORD BUTTON}
     Discard Changes and Log Out
     Go To  ${url}
-    Log In    ${email}    ${password}
-    Validate Log In
+    CloudPortalAPI.Log In    ${url}    ${email}    ${BASE PASSWORD}
+
+should open change password page in anonymous state
+    [tags]    anonymous
+    Open page anonymously    ${url}/account/password    ${CHANGE PASSWORD TITLE TEXT} - ${PRODUCT_NAME}
+    Wait Until Element Is Visible    ${LOG IN MODAL}
+    Check Log In    button=None

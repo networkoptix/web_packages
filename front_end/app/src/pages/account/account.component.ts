@@ -1,4 +1,4 @@
-import { Component, OnInit }         from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NxConfigService }           from '../../services/nx-config';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxAccountService }          from '../../services/account.service';
@@ -10,14 +10,17 @@ import { NxProcessService }          from '../../services/process.service';
 import { NxCloudApiService }         from '../../services/nx-cloud-api';
 import { NxSystemsService }          from '../../services/systems.service';
 import { NxMenuService }             from '../../components/menu/menu.service';
+import { Subscription } from 'rxjs';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 
+@AutoUnsubscribe()
 @Component({
     selector   : 'account',
     templateUrl: 'account.component.html',
     styleUrls  : ['account.component.scss']
 })
 
-export class NxAccountComponent implements OnInit {
+export class NxAccountComponent implements OnInit, OnDestroy {
 
     CONFIG: any;
     LANG: any;
@@ -30,6 +33,7 @@ export class NxAccountComponent implements OnInit {
 
     save: any;
     changePassword: any;
+    private menuDetailSubscription: Subscription;
 
     private setupDefaults() {
         this.CONFIG = this.config.getConfig();
@@ -55,6 +59,8 @@ export class NxAccountComponent implements OnInit {
     ) {
         this.setupDefaults();
     }
+
+    ngOnDestroy() {}
 
     ngOnInit(): void {
         this.accountService.get()
@@ -94,7 +100,7 @@ export class NxAccountComponent implements OnInit {
             ]
         };
 
-        this.menuService
+        this.menuDetailSubscription = this.menuService
             .selectedDetailsSection
             .subscribe(selection => {
                 this.content.selectedDetailsSection = selection;

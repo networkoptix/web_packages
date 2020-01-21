@@ -15,7 +15,7 @@ ${url}             ${ENV}
 Log in to Auto Tests System
     [arguments]    ${email}
     Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
-    Log In    ${email}    ${password}    None
+    Log In    ${email}    ${password}    button=None
     Validate Log In
     Run Keyword If    '${email}' == '${EMAIL OWNER}'    Wait Until Elements are Visible
     ...    ${DISCONNECT FROM NX}
@@ -43,7 +43,7 @@ Share with Adminstrator
 Check Log In
     Log In    ${EMAIL UNREGISTERED}    ${password}
     Check For Alert    ${ACCOUNT DOES NOT EXIST}
-    Log In    ${email}    ${password}    None
+    Log In    ${email}    ${password}    button=None
     Validate Log In
 
 Check Special Hint
@@ -113,22 +113,21 @@ Sharing link for anonymous - first ask login, then show share dialog
 After closing dialog, called by link - clear link
     [tags]    C41888    Threaded    CLOUD-3733
     Log in to Auto Tests System    ${email}
-    ${location}    Get Location
 
 #Check Cancel Button
-    Go To    ${location}/share
+    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}/share
     Wait Until Elements are Visible    ${SHARE MODAL}    ${SHARE CANCEL}
     Click Button    ${SHARE CANCEL}
     Wait Until Element is Not Visible    ${SHARE MODAL}
-    ${location2}    Get Location
+    Wait Until Location contains    ${url}/systems/${AUTO TESTS SYSTEM ID}/users
 
 #Check 'X' Button
-    Go To    ${location}/share
+    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}/share
     Wait Until Elements are Visible    ${SHARE MODAL}    ${SHARE CLOSE}
     Wait Until Element is Visible    ${SHARE CLOSE}
     Click Button    ${SHARE CLOSE}
     Wait Until Element is Not Visible    ${SHARE MODAL}
-    Location Should Be    ${location2}
+    Wait Until Location Contains    ${url}/systems/${AUTO TESTS SYSTEM ID}/users
 
 Sharing roles are ordered: more access is on top of the list with options
     [tags]    Threaded
@@ -186,7 +185,7 @@ Admin cannot edit self via share
     Click Link
     ...    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${VIEWER TEXT}']/..
     Click Button    ${SHARE BUTTON MODAL}
-    Check For Alert    ${CANNOT SHARE SYSTEM}${CHANGING OWN PERMISSIONS IS NOT ALLOWED}
+    Check For Alert    ${CANNOT SHARE SYSTEM}${SPACE}${SPACE}${CHANGING OWN PERMISSIONS IS NOT ALLOWED}
     Wait Until Element is Visible    ${SHARE CANCEL}
     Click Button    ${SHARE CANCEL}
 
@@ -207,7 +206,7 @@ Owner cannot edit self via share
     ...    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${VIEWER TEXT}']/..
     Click Button    ${SHARE BUTTON MODAL}
     Click Button    ${SHARE CLOSE}
-    Check For Alert    ${CANNOT SHARE SYSTEM}${CHANGING OWN PERMISSIONS IS NOT ALLOWED}
+    Check For Alert    ${CANNOT SHARE SYSTEM}${SPACE}${SPACE}${CHANGING OWN PERMISSIONS IS NOT ALLOWED}
 
 Admin cannot delete or edit other admins
     [tags]    C41905
@@ -309,7 +308,7 @@ Share with registered user works and sends him notification
     ...    ${BASE EMAIL PASSWORD}
     ...    ${BASE HOST}
     ...    ${BASE PORT}
-    Delete All Emails
+    Delete Email    ${emailID}
     Close Mailbox
     Log Out
     Log in to Auto Tests System    ${EMAIL NOPERM}

@@ -6,11 +6,11 @@
 		"changePassword": "Змінити пароль",
 		"newPasswordLabel": "Новий пароль",
 		"saveChanges": "Зберегти",
-		"accountSettings": "Параметри облікового запису"
+		"accountSettings": "Параметри Облікового Запису"
 	},
 	"activeActions": {
 		"sendConfirm": "Відправити посилання активації ще раз",
-		"resetPassword": "Відновити пароль",
+		"resetPassword": "Скидання пароля",
 		"setNewPassword": "Зберегти пароль",
 		"setNewPasswordLabel": "Новий пароль"
 	},
@@ -53,21 +53,17 @@
 		},
 		"groups": {
 			"windows": {
-				"label": "Windows",
-				"supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+				"label": "Windows"
 			},
 			"mac": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"linux": {
 				"label": "Ubuntu Linux",
-				"shortLabel": "Ubuntu",
-				"supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+				"shortLabel": "Ubuntu"
 			},
 			"macos": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"ios": {
 				"label": "iOS",
@@ -79,13 +75,11 @@
 			},
 			"arm": {
 				"label": "ARM",
-				"shortLabel": "ARM",
-				"supported": "<a href='/content/arm'>Політика підтримки серверів на основі ARM</a>"
+				"shortLabel": "ARM"
 			},
 			"sdk": {
 				"label": "SDK",
-				"shortLabel": "SDK",
-				"supported": "C ++ крос-платформенний SDK"
+				"shortLabel": "SDK"
 			}
 		},
 		"platforms": {
@@ -103,7 +97,7 @@
 			"bundle": "Клієнт і сервер",
 			"camera_sdk": "SDK джерела відео",
 			"client": "Тільки клієнт",
-			"metadata_sdk": "Metadata SDK",
+			"metadata_sdk": "Метадані SDK",
 			"package": "Package",
 			"server": "Тільки сервер",
 			"servertool": "Інструмент налаштування",
@@ -111,13 +105,13 @@
 			"video_source_sdk": "SDK джерела відео"
 		},
 		"releasesTypes": {
-			"beta": "Beta",
-			"betas": "Betas",
-			"rc": "Release Candidate",
-			"release": "Release",
-			"releases": "Releases",
-			"patch": "Patch",
-			"patches": "Patches"
+			"beta": "Бета",
+			"betas": "Бета",
+			"rc": "Реліз-кандидат",
+			"release": "Реліз",
+			"releases": "Релізи",
+			"patch": "Патч",
+			"patches": "Патчі"
 		}
 	},
 	"ipvd": {
@@ -134,7 +128,7 @@
 		"isPtzSupported": "PTZ",
 		"isAptzSupported": "Розширений PTZ",
 		"isAptzSupportedShort": "Розш. PTZ",
-		"isFisheye": "Fisheye",
+		"isFisheye": "Риб'яче око",
 		"isMdSupported": "Рух",
 		"isIoSupported": "Ввід/вивід",
 		"isH265": "H.265",
@@ -168,32 +162,32 @@
 		"Connector": "З'єднувач",
 		"Data Analytics": "Аналітика даних",
 		"Drone": "Дрон",
-		"Health Monitor": "Моніторинг Стану",
+		"Health Monitor": "Моніторинг ресурсів",
 		"Storage": "Сховище"
 	},
 	"messageDialogPlaceholders": {
 		"feedback": "Укажіть камеру та модель виробника..."
 	},
 	"pageTitles": {
-		"template": "{{title}} %CLOUD_NAME%",
+		"template": "{{title}} - %CLOUD_NAME%",
 		"default": "%CLOUD_NAME%",
-		"registerSuccess": "Ласкаво просимо на",
+		"registerSuccess": "Вітаємо в",
 		"register": "Створити обліковий запис",
-		"changePassword": "Змінити пароль -",
+		"changePassword": "Змінити пароль",
 		"account": "Параметри облікового запису",
-		"systems": "Системи -",
-		"system": "Система -",
-		"systemShare": "Загальний доступ -",
-		"activate": "Активувати обліковий запис -",
-		"activateSent": "Активувати обліковий запис -",
+		"systems": "Системи",
+		"system": "Система",
+		"systemShare": "Спільна система",
+		"activate": "Активувати обліковий запис",
+		"activateSent": "Активувати обліковий запис",
 		"activateSuccess": "Обліковий запис активований",
-		"activateCode": "Активувати обліковий запис -",
-		"restorePassword": "Відновити пароль -",
-		"restorePasswordSuccess": "Пароль збережений -",
-		"restorePasswordCode": "Відновити пароль -",
-		"view": "Переглянути камери - ",
+		"activateCode": "Активувати обліковий запис",
+		"restorePassword": "Відновити пароль",
+		"restorePasswordSuccess": "Пароль збережений",
+		"restorePasswordCode": "Відновити пароль",
+		"view": "Подивитися камери",
 		"debug": "Відладка",
-		"login": "Вхід -",
+		"login": "Вхід",
 		"download": "Завантажити %VMS_NAME%",
 		"downloadPlatform": "Завантажити %VMS_NAME% для ",
 		"pageNotFound": "Сторінку не знайдено",
@@ -201,13 +195,13 @@
 		"integrations": "Інтеграції"
 	},
 	"dialogs": {
-		"okButton": "ОК",
-		"cancelButton": "Відмінити",
+		"okButton": "Добре",
+		"cancelButton": "Скасувати",
 		"createNewAccount": "Створити новий обліковий запис",
 		"changeAccountLogged": "Ви вже ввійшли з {email}",
 		"loggedFromOther": "Ви ввійдете в інший обліковий запис",
 		"loginTitle": "Увійти до %CLOUD_NAME%",
-		"loginButton": "Увійти",
+		"loginButton": "Вхід",
 		"logoutAuthorisedTitle": "Ви вже увійшли",
 		"logoutAuthorisedContinueButton": "Продовжити",
 		"logoutAuthorisedLogoutButton": "Вийти",
@@ -224,7 +218,12 @@
 			"primarySystemOffline": "Система {{primarySystem}} офлайн і не може бути об'єднана з Системою {{targetSystem}}.",
 			"secondaryCannotMerge": "Система {{targetSystem}} має стару версію Пз, несумісну з поточною системою. Оновіть {{targetSystem}} до <a href=\"/download\" target=\"_blank\" translate>останньої збірки</a> для об’єднання з поточною системою.",
 			"systemOffline": "Система {{targetSystem}} офлайн і не може бути об'єднана.",
-			"systemUnavailable": "Система {{targetSystem}} наразі недоступна. Повторіть спробу через декілька хвилин або зв'яжіться з нами"
+			"systemUnavailable": "Система {{targetSystem}} наразі недоступна. Повторіть спробу через декілька хвилин або зв'яжіться з нами",
+			"recommendSupport": {
+				"a_recommend": "Ми рекомендуємо проконсультуватися з",
+				"b_support": "підтримка",
+				"c_proceeding": "перед тим, як продовжити."
+			}
 		},
 		"message": {
 			"failedToSend": "Не вдалося надіслати повідомлення.",
@@ -234,9 +233,9 @@
 				"ipvd_feedback_page": "Зворотній зв’язок для сторінки камер",
 				"ipvd_feedback_device": "Відгук про {{asset}}"
 			},
-			"topic": {
-				"contact_sales": "Зв'яжіться з відділом продажів за {{asset}}",
-				"contact_support": "Зверніться до служби підтримки за {{asset}}",
+			"subject": {
+				"sales_inquiry": "Запит на продаж {{asset}}",
+				"technical_inquiry": "Технічний запит на {{asset}}",
 				"integration_feedback": "Зворотній зв'язок для інтеграції {{asset}}",
 				"ipvd_feedback_page": "Зворотній зв’язок для сторінки камер",
 				"ipvd_feedback_device": "Відгук про {{asset}}"
@@ -252,7 +251,7 @@
 		}
 	},
 	"errorCodes": {
-		"ok": "ок",
+		"ok": "гаразд",
 		"cantSendActivationPrefix": "Не вдається надіслати підтвердження електронною поштою",
 		"cantDisconnectSystemPrefix": "Невдається видалити систему",
 		"cantUnshareWithMeSystemPrefix": "Невдається видалити систему",
@@ -313,11 +312,11 @@
 		"agreement": "Я згоден з <a href=\"/content/eula\" target=\"_blank\">Правилами і\nумовами,</a> і <a href=\"%PRIVACY_LINK%\" target=\"_blank\">політикою конфіденційності</a>"
 	},
 	"system": {
-		"yourSystem": "Ваша система",
+		"yourSystem": "Ваша Система",
 		"mySystemSearch": "ЯМійМоя",
 		"unavailable": "Система недоступна",
 		"offline": "Система знаходиться поза мережею",
-		"offlineAlertRibbon": "System is offline. Some settings may not be available.",
+		"offlineAlertRibbon": "Система відключена. Деякі налаштування можуть бути недоступні.",
 		"openClient": "Відкрити в %VMS_NAME%",
 		"openClientNoSystem": "Відкрити %VMS_NAME%",
 		"confirmMergeAction": "Об'єднати",
@@ -340,7 +339,8 @@
 		"mergeSuccess": "Злиття системи завершено",
 		"permissionsRemoved": "{{email}} був позбавлений повноважень",
 		"unknownName": "Невідоме ім’я для системи (викликане злиттям хмари)",
-		"shareOffline": "Cannot share system while it is offline"
+		"shareOffline": "Не можна поділитись системою, поки вона не підключена в режимі офлайн",
+		"shareUnauthorized": "Ви не маєте прав для створення цього клієнта"
 	},
 	"systemStatuses": {
 		"activated": "активовано",
@@ -348,12 +348,12 @@
 		"merging": "злиття",
 		"notActivated": "не активовано",
 		"online": "oнлайн",
-		"offline": "поза мережею",
+		"offline": "офлайн",
 		"unavailable": "недоступний"
 	},
 	"accessRoles": {
 		"disabled": {
-			"label": "Вимкнено",
+			"label": "Вимкнений",
 			"description": "Користувач вимкнений і не може ввійти в систему"
 		},
 		"Owner": {
@@ -365,7 +365,7 @@
 			"description": "Можна переглядати відео в реальному часі та переглядати архів"
 		},
 		"Live Viewer": {
-			"label": "Відео в реальному часі",
+			"label": "Відео з камер",
 			"description": "Можна переглядати лише відео в реальному часі"
 		},
 		"Advanced Viewer": {
@@ -410,13 +410,13 @@
 		}
 	},
 	"privacyPolicy": {
-		"integration": "Надіславши цю форму, ви погоджуєтеся зв'язатися з {{INTEGRATION_COMPANY}} та / або %COMPANY_NAME%.\nВи знайдете {{INTEGRATION_COMPANY}} Політику конфіденційності <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">тут</a> і %COMPANY_NAME% Політика конфіденційності <a href=\"%PRIVACY_LINK%\" target=\"blank\">тут</a> які містять інструкцію про те, як зняти вашу згоду.",
-		"ipvd": "Надсилаючи цю форму, ви погоджуєтесь зв'язатися з нами %COMPANY_NAME%.\nВи знайдете %COMPANY_NAME% політику конфіденційності <a href=\"%PRIVACY_LINK%\" target=\"blank\">тут</a> яка містить інструкцію про те, як скасувати вашу згоду."
+		"integration": "Надіславши цю форму, ви погоджуєтеся зв'язатися з {{INTEGRATION_COMPANY}} та / або %COMPANY_NAME%.\nВи знайдете {{INTEGRATION_COMPANY}} Політику конфіденційності <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">тут</a> і %COMPANY_NAME% Політика конфіденційності <a href=\"%PRIVACY_LINK%\" target=\"_blank\">тут</a> які містять інструкцію про те, як зняти вашу згоду.",
+		"ipvd": "Надсилаючи цю форму, ви погоджуєтесь зв'язатися з нами %COMPANY_NAME%.\nВи знайдете %COMPANY_NAME% політику конфіденційності <a href=\"%PRIVACY_LINK%\" target=\"_blank\">тут</a> яка містить інструкцію про те, як скасувати вашу згоду."
 	},
 	"systemAdministration": "Адміністрування системи",
 	"users": "Користувачі",
-	"testedVersionLabel": "Протестовано за {{vmsName}} версій:",
-	"testedVersionsLabel": "Протестовано за {{vmsName}} версій:",
+	"testedVersionLabel": "Протестовано за допомогою {{vmsName}} версії:",
+	"testedVersionsLabel": "Протестовано {{vmsName}} версій:",
 	"About %CLOUD_NAME%": "Про %CLOUD_NAME%",
 	"Download %VMS_NAME%": "Завантажити %VMS_NAME%",
 	"Integrations": "Інтеграції",

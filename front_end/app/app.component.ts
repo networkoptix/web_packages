@@ -2,8 +2,7 @@ import { Location }                                               from '@angular
 import { Component, HostListener, Inject }                        from '@angular/core';
 import { CookieService }                                          from 'ngx-cookie-service';
 import { DeviceDetectorService }                                  from 'ngx-device-detector';
-import { Title }                                                  from '@angular/platform-browser';
-import { ActivatedRoute, ActivationStart, Event, Router } from '@angular/router';
+import { ActivationStart, Event, Router } from '@angular/router';
 import { filter }                                                 from 'rxjs/operators';
 import { WINDOW }                                                 from './src/services/window-provider';
 import { NxLanguageProviderService }                              from './src/services/nx-language-provider';
@@ -41,7 +40,6 @@ export class AppComponent {
     constructor(private cookieService: CookieService,
                 private deviceService: DeviceDetectorService,
                 private location: Location,
-                private titleService: Title,
                 private config: NxConfigService,
                 private language: NxLanguageProviderService,
                 private applyService: NxApplyService,
@@ -138,6 +136,8 @@ export class AppComponent {
         // @ts-ignore
         this.CONFIG.ipvd.searchTags = window.SETTINGS.searchTags;
         // @ts-ignore
+        this.CONFIG.testedOperatingSystems = window.SETTINGS.testedOperatingSystems;
+        // @ts-ignore
         this.CONFIG.ipvd.vendorsShown = parseInt(window.SETTINGS.vendorsShown);
         // @ts-ignore
         this.CONFIG.pushConfig = window.SETTINGS.pushConfig;
@@ -185,9 +185,5 @@ export class AppComponent {
             window.history.go(1);
             this.applyService.showDialog().catch(() => {});
         }
-    }
-
-    public setTitle(newTitle: string) {
-        this.titleService.setTitle(newTitle);
     }
 }

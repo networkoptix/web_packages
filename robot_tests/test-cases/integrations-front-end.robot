@@ -1,35 +1,51 @@
 *** Settings ***
 Library    Collections
+Library    SeleniumLibrary
 Resource          ../resource.robot
 Resource          ../APIresource.robot
 Resource          ../variables.robot
 Resource          ../variables-env.robot
 
-Suite Setup       Open Browser and Go To Integrations Page Anonimous
-#Test Setup        Go To Integrations Page
+Suite Setup       Open Browser and Go To Integrations Page Anonymous
 Test Teardown     Run Keyword If Test Failed   Go To Integrations Page
 Suite Teardown    Close All Browsers
+Force Tags        integrations
 
 *** Variables ***
 ${url}        ${ENV}/integrations
-${title}      Integrations - ${PRODUCT_NAME}
+${title}      ${INTEGRATIONS TITLE TEXT} - ${PRODUCT_NAME}
 @{auth}       ${BASE EMAIL}    ${BASE EMAIL PASSWORD}
 
 *** Keywords ***
-Open Browser and Go To Integrations Page Anonimous
+Open Browser and Go To Integrations Page Anonymous
     ${is enabled}=   Integration Store is Enabled    ${auth}
-    Run keyword If    ${is enabled} == ${True}    Open browser    ${url}    ${BROWSER}
+    Run keyword If    ${is enabled} == ${True}    Open Browser and go to URL    ${url}
     ...    ELSE    Fatal Error    Tests cannot be executed. Please enable Integration Store in CMS.
 
 Go To Integrations Page
-    Go To    ${url}
-    Validate Landing Page
+    Open Browser and go to URL    ${url}
+    Validate Integrations Landing Page
 
 Validate Integrations Landing Page
     Wait Until Elements Are Visible
     ...    ${INTEGRATIONS SEARCH}
     ...    ${INTEGRATIONS SEARCH FILTER}
     ...    ${INTEGRATIONS CATALOG}
+
+Get Number of Integration Tiles
+    @{integration tiles}=   Get WebElements    ${INTEGRATION TILE}
+    ${number of integrations}=   Get Length    ${integration tiles}
+    [Return]    ${number of integrations}
+
+Validate changes when input text into search field
+    [Arguments]    ${text}
+    ${initial number of tiles}=   Get Number of Integration Tiles
+    Input Text    ${INTEGRATIONS SEARCH INPUT}    ${text}
+    Wait Until Element Is Visible    ${INTEGRATIONS SEARCH CLOSE BUTTON}
+    ${current url}=   Get Location
+    Should Contain    ${current url}    ?search=${text}
+    ${new number of tiles}=    Get Number of Integration Tiles
+    Should Be True    ${new number of tiles} < ${initial number of tiles}
 
 Validate Integration Details Page
     Run keyword and continue on failure    Wait Until Elements Are Visible
@@ -41,7 +57,7 @@ Validate Integration Details Page
     ...    ${INTEGRATION GET IN TOUCH LABEL}
     ...    ${INTEGRATION GET IN TOUCH BUTTON}
     ...    ${INTEGRATION DEVELOPER LABEL}
-#    ...    ${INTEGRATION DEVELOPER COMPANY LINK}
+    ...    ${INTEGRATION DEVELOPER COMPANY LINK}
     ...    ${INTEGRATION DEVELOPER TERMS OF USE LINK}
     ...    ${INTEGRATION SUPPORT LABEL}
     ...    ${INTEGRATION SUPPORT LINK}
@@ -55,19 +71,26 @@ Validate Integration Details Page
     ...    ${INTEGRATION REQUIREMENTS SECTION}
     ...    ${INTEGRATION HOW IT WORKS HEADER}
 
-#Validate Integration Tile
-#    [Arguments]    ${integration tile}
-#    @{integration tile contents}=   Get Child WebElements    ${integration tile}
-#    Log List    ${integration tile contents}
-#    Should Contain    ${integration tile contents}    ${INTEGRATION TILE HEADER}
-#    Should Contain    ${integration tile contents}    ${INTEGRATION TILE BODY}
-#    Should Contain    ${integration tile contents}    ${INTEGRATION TILE FOOTER}
-#    Should Contain    ${integration tile contents}    ${INTEGRATION TILE LOGO}
-#    Should Contain    ${integration tile contents}    ${INTEGRATION TILE INFO}
-#    Should Contain    ${integration tile contents}    ${INTEGRATION TILE NAME}
-#    Should Contain    ${integration tile contents}    ${INTEGRATION TILE TEXT}
+Validate Integration Tile
+    [Arguments]    ${index}    ${integration tile element}
+    @{integration tile contents}=   Get All Descendant WebElements    ${integration tile element}
+    FOR    ${tile element}    IN    @{INTEGRATION TILE ELEMENTS}
+        ${webelement}=   Convert Locator To WebElement    (${tile element})[${index}+1]
+        Run keyword and continue on failure    Should Contain    ${integration tile contents}    ${webelement}
+    END
 
-Validate Get in Touch Form
+# If a number of integrations is too big, it's better to validate couple of random integration tiles.
+# To do so just replace a FOR loop in "Integration Store catalog" test with "Validate Random Tile N times" keyword call
+# with list of tiles and desired number of random checks as parameters
+Validate Random Tile N times
+    [Arguments]    ${integration tiles}    ${N}
+    ${number of tiles}=   Get Length   ${integration tiles}
+    FOR    ${index}    IN    1  ${N}
+        ${random index}= 	Evaluate	random.randint(0, ${number of tiles})	modules=random
+        Validate Integration Tile    ${random index}    @{integration tiles}[${random index}]
+    END
+
+Validate "Get in Touch" Form
     Run keyword and continue on failure    Wait Until Elements Are Visible
     ...    ${INTEGRATION GET IN TOUCH FORM}
     ...    ${INTEGRATION GET IN TOUCH HEADER}
@@ -87,29 +110,74 @@ Validate Get in Touch Form
     ...    ${INTEGRATION GET IN TOUCH DROPDOWN ICON}
     ...    ${INTEGRATION GET IN TOUCH MESSAGE LABEL}
     ...    ${INTEGRATION GET IN TOUCH MESSAGE INPUT}
-    ...    ${INTEGRATION GET IN TOUCH BOTTOM TEXT}
+    ...    ${INTEGRATION GET IN TOUCH PRIVACY LINKS}
     ...    ${INTEGRATION GET IN TOUCH SEND BUTTON}
     ...    ${INTEGRATION GET IN TOUCH CANCEL BUTTON}
 
+Fill in "Get in Touch" Form and Submit
+    [Arguments]
+    ...    ${name}=${TEST FIRST NAME}${SPACE}${TEST LAST NAME}
+    ...    ${email}=${ALT BASE EMAIL}
+    ...    ${message}=Test Get in Touch Form
+    Input Text    ${INTEGRATION GET IN TOUCH NAME INPUT}    ${name}
+    Input Text    ${INTEGRATION GET IN TOUCH EMAIL INPUT}    ${email}
+    Input Text    ${INTEGRATION GET IN TOUCH MESSAGE INPUT}    ${message}
+    Click Button    ${INTEGRATION GET IN TOUCH SEND BUTTON}
 
 *** Test Cases ***
 Integration Store title and URL are correct
+    [Tags]    C54622
     Location Should Be    ${url}
     Run keyword and expect error    Title should have been 'Integrations - Nx Cloud' but was 'Integrations'.
     ...    Title Should Be    ${title}
     Validate Integrations Landing Page
 
-#Integration Store catalog
-#    [Tags]    C54622
-#    @{integration tiles}=   Get WebElements   ${INTEGRATION TILE}
-#    Log List    ${integration tiles}
-#    FOR    ${integration tile}    IN    @{integration tiles}
-#        Validate Integration Tile    ${integration tile}
-#    END
+Integration Store catalog
+    [Tags]    C54622
+    @{integration tiles}=   Get WebElements    ${INTEGRATION TILE}
+    ${number of tiles}=   Get Length    ${integration tiles}
+    FOR    ${index}    IN RANGE    0    ${number of tiles}
+        Validate Integration Tile    ${index}    @{integration tiles}[${index}]
+    END
+#    Validate Random Tile N times    ${integration tiles}    3
 
-#Integration Store Search
-#    [Tags]    	C54620
-#
+Integration Store Search
+    [Tags]    	C54620
+    Wait Until Elements Are Visible
+    ...  ${INTEGRATIONS SEARCH INPUT}
+    ...  ${INTEGRATIONS SEARCH ICON}
+    ...  ${INTEGRATIONS SEARCH FILTER}
+
+    ${initial number of tiles}=   Get Number of Integration Tiles
+    ${number of filters}=    Get Element Count    ${INTEGRATIONS SEARCH FILTER ITEM}
+    Should be equal as numbers    ${number of filters}    9
+
+    Validate changes when input text into search field    v
+    Validate changes when input text into search field    vi
+    Validate changes when input text into search field    vis
+
+    Click Element    ${INTEGRATIONS SEARCH CLOSE BUTTON}
+    ${number of tiles}=   Get Number of Integration Tiles
+    Should be equal as numbers    ${initial number of tiles}   ${number of tiles}
+    ${actual url}=   Get Location
+    Should be equal as strings    ${actual url}    ${url}
+
+    Input Text     ${INTEGRATIONS SEARCH INPUT}    vis
+    Click Element    ${INTEGRATIONS SEARCH FILTER}/li[5]
+    Location Should Be    ${url}?search=vis&tags=faceRecognition
+    Click Element    ${INTEGRATIONS SEARCH FILTER}/li[8]
+    Location Should Be    ${url}?search=vis&tags=faceRecognition,storage
+    Click Element    ${INTEGRATIONS SEARCH FILTER}/li[8]//span[contains(@class, "tag-close-icon")]
+    Location Should Be    ${url}?search=vis&tags=faceRecognition
+    Go Back
+    Location Should Be    ${url}?search=vis&tags=faceRecognition,storage
+    Go Back
+    Location Should Be    ${url}?search=vis&tags=faceRecognition
+    Go Back
+    Location Should Be    ${url}?search=vis
+    Go Forward
+    Location Should Be    ${url}?search=vis&tags=faceRecognition
+
 
 Integration Store Integration Details
     [Tags]    C54623
@@ -117,7 +185,32 @@ Integration Store Integration Details
     CLick Link    ${INTEGRATION TEST INEGRATION LINK}
     Validate Integration Details Page
 
-Send messages using Integration Contact Get in touch form
+Send messages using Integration Contact "Get in touch" form
     [Tags]    C54681
-    Click Element   ${INTEGRATION GET IN TOUCH BUTTON}
-    Validate Get in Touch Form
+    Click Element    ${INTEGRATION GET IN TOUCH BUTTON}
+    Validate "Get in Touch" Form
+
+    Log    Validating close buttons
+    Click Element    ${INTEGRATION GET IN TOUCH CLOSE BUTTON}
+    Element Should Not Be Visible    ${INTEGRATION GET IN TOUCH FORM}
+    Click Element    ${INTEGRATION GET IN TOUCH BUTTON}
+    Click Element    ${INTEGRATION GET IN TOUCH CANCEL BUTTON}
+    Element Should Not Be Visible    ${INTEGRATION GET IN TOUCH FORM}
+    Click Element    ${INTEGRATION GET IN TOUCH BUTTON}
+
+    Log    Validating privacy links
+    @{privacy links}=   Get WebElements    ${INTEGRATION GET IN TOUCH PRIVACY LINKS}
+    ${num of privacy links}=   Get length    ${privacy links}
+    Should be equal as numbers    ${num of privacy links}    2
+    ${privacy link href}=   Get Element Attribute    @{privacy links}[1]    href
+    Should Contain    ${privacy link href}    ${PRIVACY POLICY URL HREF}
+
+    Log    Send messages - positive
+    Fill in "Get in Touch" Form and Submit
+    Wait Until Element Is Not Visible    ${INTEGRATION GET IN TOUCH FORM}
+
+
+
+
+
+

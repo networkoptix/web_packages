@@ -10,9 +10,13 @@ import { NxSandboxComponent } from './sandbox.component';
 import { ComponentsModule }   from '../../components/components.module';
 import { DialogsModule }      from '../../dialogs/dialogs.module';
 import { PipesModule }        from '../../pipes/pipes.module';
+import { NxAccountComponent } from '../account/account.component';
+import { AuthGuard }          from '../../routeGuards/authGuard';
 
 const appRoutes: Routes = [
-    { path: 'sandbox', component: NxSandboxComponent }
+    {
+        path: 'sandbox', component: NxSandboxComponent, canActivate: [AuthGuard],
+    }
 ];
 
 @NgModule({

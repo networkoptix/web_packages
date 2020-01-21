@@ -26,7 +26,7 @@ Open New Browser On Failure
     Open Browser and go to URL    ${url}
 
 Go to download page
-    Wait Until Element Is Visible    ${DOWNLOAD LINK}
+    Wait Until Elements Are Visible    ${DOWNLOAD LINK}    //h2[@class\="text-center"]
     Click Link    ${DOWNLOAD LINK}
     Wait Until Element Is Visible    ${LOG IN CLOSE BUTTON}
     Log In    ${email}    ${password}    button=None
@@ -56,16 +56,20 @@ Download link is in the footer
 Download link takes you to the /downloads page
     Wait Until Element Is Visible    ${DOWNLOAD LINK}
     Click Link    ${DOWNLOAD LINK}
-    Location Should Contain    ${url}/download
+    ${os}=   Get OS
+    ${os}    Convert To Lowercase    ${os}
+    Wait Until Location Is    ${url}/download/${os}
+    # Run keyword and continue on failure    Title Should Be    ${DOWNLOAD TITLE TEXT} - ${PRODUCT_NAME}
 #    Wait Until Element Is Visible    ${LOG IN MODAL}
 
 Going to the downloads page anonymous asks for login and closing takes you back to home
     [tags]    C42069
     Wait Until Element Is Visible    ${DOWNLOAD LINK}
     Click Link    ${DOWNLOAD LINK}
+    # Run keyword and continue on failure    Title Should Be    ${DOWNLOAD TITLE TEXT} - ${PRODUCT_NAME}
     Wait Until Element Is Visible    ${LOG IN CLOSE BUTTON}
     Click Button    ${LOG IN CLOSE BUTTON}
-    Location Should Be    ${url}/
+    Wait Until Location Is    ${url}/
 
 Going to the downloads page anonymous asks for login and login shows downloads page
     [tags]    C42069
@@ -90,10 +94,10 @@ Make sure each tab changes the text to show the corresponding OS and url
     Click Link    ${WINDOWS TAB}
     Wait Until Element Is Visible    ${UBUNTU TAB}
     Click Link    ${UBUNTU TAB}
-    Location Should Be    ${url}/download/linux
+    Wait Until Location Is    ${url}/download/linux
     Wait Until Elements Are Visible    ${DOWNLOAD UBUNTU VMS LINK}    ${MAC OS TAB}
     Click Link    ${MAC OS TAB}
-    Location Should Be    ${url}/download/macos
+    Wait Until Location Is    ${url}/download/macos
     Wait Until Elements Are Visible    ${DOWNLOAD MAC OS VMS LINK}    ${MAC OS TAB}
 
 Validate the windows download links

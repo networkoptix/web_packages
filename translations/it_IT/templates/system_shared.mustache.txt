@@ -1,11 +1,11 @@
 Buongiorno, {{message.userFullName}}
 
 {{#message.sharer_name}}
-{{message.sharer_name}} ({{message.sharer_email}}) ha condiviso l'accesso al sistema di gestione video "{{message.system_name}}" con lei.
+{{message.sharer_name}} ({{message.sharer_email}}) ha condiviso l'accesso al sistema di gestione video "{{message.system_name}}" con te.
 {{/message.sharer_name}}
 
 {{^message.sharer_name}}
-Le è stato concesso l'accesso al sistema di gestione video "{{message.system_name}}".
+Ti è stato concesso l'accesso al sistema di gestione video "{{message.system_name}}".
 {{/message.sharer_name}}
 
-Visualizzi nel %CLOUD_NAME% Portale: {{config.portal_url}}/systems/{{message.system_id}}
+Visualizza in %CLOUD_NAME% Portal: {{config.portal_url}}/ systems /{{message.system_id}}

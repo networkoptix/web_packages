@@ -64,8 +64,7 @@ Restart
 
 Open Change Password Dialog
     Open Browser and go to URL    ${url}/account/password
-    Log In    ${EMAIL OWNER}    ${BASE PASSWORD}    None
-    Validate Log In
+    Log In    ${EMAIL OWNER}    ${BASE PASSWORD}    button=None
     Wait Until Element Is Not Visible    ${LOG IN MODAL}
     Wait Until Elements Are Visible
     ...    ${CURRENT PASSWORD INPUT}
@@ -101,7 +100,7 @@ Check Old Password Outline
     Element Should Be Visible    ${CURRENT PASSWORD IS REQUIRED}
 
 Check Old Password Alert
-    Check For Alert    ${CANNOT SAVE PASSWORD} ${PASSWORD INCORRECT}
+    Check For Alert    ${CANNOT SAVE PASSWORD}${SPACE}${SPACE}${PASSWORD INCORRECT}
 
 Check New Password Outline
     [Arguments]    ${new pw}

@@ -1,4 +1,4 @@
-import { Inject, Injectable }        from '@angular/core';
+import { Inject, Injectable, OnDestroy } from '@angular/core';
 import { DOCUMENT, Location }        from '@angular/common';
 import { LocalStorageService }       from 'ngx-store';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -12,13 +12,13 @@ import { NxQueryParamService }       from './query-param.service';
 import { NxApplyService }            from './apply.service';
 
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { ReplaySubject, timer }               from 'rxjs';
+import { ReplaySubject, Subscription, timer } from 'rxjs';
 import { WINDOW }                             from './window-provider';
 
 @Injectable({
     providedIn: 'root'
 })
-export class NxAccountService {
+export class NxAccountService implements OnDestroy {
     CONFIG: any;
     LANG: any;
     location: any;
@@ -27,6 +27,9 @@ export class NxAccountService {
     account: any;
     loginStateSubject = new ReplaySubject(1);
     loginDialogActive: boolean;
+
+    private loginSubscription: Subscription;
+    private queryParamSubscription: Subscription;
 
     constructor(@Inject(DOCUMENT) private document: any,
                 @Inject(WINDOW) private window: Window,
@@ -49,24 +52,27 @@ export class NxAccountService {
         this.loginDialogActive = false;
 
         // Distinct until changed is used to prevent the logout function from looping.
-        this.sessionService.loginStateSubject.pipe(distinctUntilChanged()).subscribe((loginState) => {
-            if (loginState === null) {
-                this.logout();
-            } else if (loginState !== '') {
-                this.get()
-                    .then((account) => {
-                        // prevent stale loginState
-                        if (account) {
-                            this.loginStateSubject.next(loginState);
-                        } else {
-                            this.clearLoginState();
-                        }
-                    });
-            }
-        });
+        this.loginSubscription = this.sessionService.loginStateSubject
+            .debounceTime(500)
+            .pipe(distinctUntilChanged())
+            .subscribe((loginState) => {
+                if (loginState === null) {
+                    this.logout();
+                } else if (loginState !== '') {
+                    this.get()
+                        .then((account) => {
+                            // prevent stale loginState
+                            if (account) {
+                                this.loginStateSubject.next(loginState);
+                            } else {
+                                this.clearLoginState();
+                            }
+                        });
+                }
+            });
 
         // Handles login with auth param everywhere.
-        this.queryParamService.queryParamsSubject.pipe(
+        this.queryParamSubscription = this.queryParamService.queryParamsSubject.pipe(
             debounceTime(100), distinctUntilChanged()
         ).subscribe((params: any) => {
             if (params.auth) {
@@ -75,18 +81,13 @@ export class NxAccountService {
         });
     }
 
-    clearLoginState() {
-        this.sessionService.invalidateSession();
+    ngOnDestroy() {
+        this.loginSubscription.unsubscribe();
+        this.queryParamSubscription.unsubscribe();
     }
 
-    checkLoginState(): Promise<boolean> {
-            return new Promise<boolean>((resolve, reject) => {
-                if (this.sessionService.loginState) {
-                    resolve(true);
-                }
-
-                reject(false);
-            });
+    clearLoginState() {
+        this.sessionService.invalidateSession();
     }
 
     setupAccount(account) {
@@ -238,7 +239,7 @@ export class NxAccountService {
                                    this.logoutAuthorised();
                                }
 
-                               return Promise.resolve({ data: { resultCode: this.CONFIG.responseOk } });
+                               return Promise.resolve({ data: { account: result, resultCode: this.CONFIG.responseOk } });
                            }
 
                            if (result.email) { // (result.data.resultCode === L.errorCodes.ok)
@@ -246,7 +247,7 @@ export class NxAccountService {
                                this.sessionService.loginState = result.email; // Forcing changing loginState to reload interface
                            }
 
-                           return Promise.resolve({ data: { resultCode: this.CONFIG.responseOk } });
+                           return Promise.resolve({ data: { account: result, resultCode: this.CONFIG.responseOk } });
                        }
                        return Promise.reject({ error: { resultCode: result.resultCode }});
 
@@ -257,6 +258,11 @@ export class NxAccountService {
                        }
                    });
         return this.requestingLogin;
+    }
+
+    // Temporary aid for AJS
+    getCredentialsFromAuth(authKey: string) {
+        return atob(authKey).split(':');
     }
 
     loginWithAuthKey(authKey: string) {
@@ -316,6 +322,7 @@ export class NxAccountService {
             if (account) {
                 const isRegister = this.router.url.includes('/register');
                 const isRestore = this.router.url.includes('/restore_password');
+                const isActivate = this.router.url.includes('/activate');
 
                 let cancelLabel = '';
                 if (isRegister) {
@@ -332,7 +339,7 @@ export class NxAccountService {
                         cancelLabel,
                     ''
                 ).then((result) => {
-                    if ((isRestore || isRegister) && result === cancelLabel) {
+                    if ((isRestore || isRegister || isActivate) && result === cancelLabel) {
                         return this.logout(true);
                     } else {
                         return this.redirectAuthorised();
@@ -350,6 +357,8 @@ export class NxAccountService {
         }
         return true;
     }
+
+
 
     private handleAuthKeyLogin(auth) {
         this.get()

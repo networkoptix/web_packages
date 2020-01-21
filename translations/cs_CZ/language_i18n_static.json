@@ -3,14 +3,14 @@
 		"accountSavedSuccess": "Váš účet byl úspěšně uložen",
 		"activationLinkSent": "Aktivní odkaz byl odeslán",
 		"passwordChangedSuccess": "Váš účet byl úspěšně uložen",
-		"changePassword": "Změnit heslo",
+		"changePassword": "Změna hesla",
 		"newPasswordLabel": "Nové heslo",
 		"saveChanges": "Uložit",
 		"accountSettings": "Nastavení účtu"
 	},
 	"activeActions": {
 		"sendConfirm": "Znovu poslat aktivační odkaz",
-		"resetPassword": "Obnovení hesla",
+		"resetPassword": "Obnovit heslo",
 		"setNewPassword": "Uložit heslo",
 		"setNewPasswordLabel": "Nové heslo"
 	},
@@ -53,21 +53,17 @@
 		},
 		"groups": {
 			"windows": {
-				"label": "Windows",
-				"supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+				"label": "Windows"
 			},
 			"mac": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"linux": {
 				"label": "Ubuntu Linux",
-				"shortLabel": "Ubuntu",
-				"supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+				"shortLabel": "Ubuntu"
 			},
 			"macos": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"ios": {
 				"label": "iOS",
@@ -79,13 +75,11 @@
 			},
 			"arm": {
 				"label": "ARM",
-				"shortLabel": "ARM",
-				"supported": "<a href='/content/arm'>ARM based servers support policy</a>"
+				"shortLabel": "ARM"
 			},
 			"sdk": {
 				"label": "SDK",
-				"shortLabel": "SDK",
-				"supported": "C ++ multiplatformová SDK"
+				"shortLabel": "SDK"
 			}
 		},
 		"platforms": {
@@ -112,12 +106,12 @@
 		},
 		"releasesTypes": {
 			"beta": "Beta",
-			"betas": "Betas",
+			"betas": "Beta verze",
 			"rc": "Release Candidate",
 			"release": "Release",
-			"releases": "Releases",
+			"releases": "Vydání",
 			"patch": "Patch",
-			"patches": "Patches"
+			"patches": "Opravy"
 		}
 	},
 	"ipvd": {
@@ -134,7 +128,7 @@
 		"isPtzSupported": "PTZ",
 		"isAptzSupported": "Pokročilé PTZ",
 		"isAptzSupportedShort": "Adv. PTZ",
-		"isFisheye": "Fisheye",
+		"isFisheye": "Rybí oko",
 		"isMdSupported": "Pohyb",
 		"isIoSupported": "I/O",
 		"isH265": "H.265",
@@ -161,7 +155,7 @@
 		"disclaimer": "Tento seznam je omezen na zařízení nalezená na {{vmsName}} kde uživatelé povolili automatické hlášení specifikací zařízení na {{companyName}}. Nejsou shromažďovány žádné osobní údaje a každý uživatel zůstává zcela anonymní."
 	},
 	"integration": {
-		"myIntegrationsLabel": "Mine",
+		"myIntegrationsLabel": "Těžit",
 		"previewRibbonText": "Tato stránka je náhled nejnovějších změn a neodpovídá veřejně dostupné verzi.",
 		"backToEditText": "Zpět na editační rozhraní",
 		"Access Control": "Kontrola Přístupu",
@@ -175,25 +169,25 @@
 		"feedback": "Nezapomeňte uvést model kamery a výrobce..."
 	},
 	"pageTitles": {
-		"template": "{{title}} %CLOUD_NAME%",
+		"template": "{{title}} - %CLOUD_NAME%",
 		"default": "%CLOUD_NAME%",
 		"registerSuccess": "Vítejte v",
 		"register": "Vytvořit účet v",
-		"changePassword": "Změnit heslo -",
-		"account": "Nastavení účtu -",
-		"systems": "Systémy -",
-		"system": "Systém -",
-		"systemShare": "Sdílet systém -",
-		"activate": "Aktivovat účet -",
-		"activateSent": "Aktivovat účet -",
-		"activateSuccess": "Účet aktivován -",
-		"activateCode": "Aktivovat účet -",
-		"restorePassword": "Obnovit heslo -",
-		"restorePasswordSuccess": "Heslo uloženo -",
-		"restorePasswordCode": "Obnovit heslo -",
-		"view": "Zobrazit kamery - ",
+		"changePassword": "Change password",
+		"account": "Account settings",
+		"systems": "Systems",
+		"system": "System",
+		"systemShare": "Share System",
+		"activate": "Activate account",
+		"activateSent": "Activate account",
+		"activateSuccess": "Account activated",
+		"activateCode": "Activate account",
+		"restorePassword": "Reset password",
+		"restorePasswordSuccess": "Password saved",
+		"restorePasswordCode": "Reset password",
+		"view": "View cameras",
 		"debug": "Ladění",
-		"login": "Přihlásit -",
+		"login": "Log in",
 		"download": "Stáhnout %VMS_NAME%",
 		"downloadPlatform": "Stáhnout %VMS_NAME% pro ",
 		"pageNotFound": "Stránka nenalezna",
@@ -207,10 +201,10 @@
 		"changeAccountLogged": "You are already logged in with as {email}",
 		"loggedFromOther": "You will be logged in with a different account",
 		"loginTitle": "Přihlaste se k %CLOUD_NAME%",
-		"loginButton": "Přihlásit",
+		"loginButton": "Přihlásit se",
 		"logoutAuthorisedTitle": "Již jste přihlášen",
 		"logoutAuthorisedContinueButton": "Pokračovat",
-		"logoutAuthorisedLogoutButton": "Odhlásit se",
+		"logoutAuthorisedLogoutButton": "Odhlásit",
 		"noClientDetectedTitle": "Pro zobrazení Vašeho systému nainstalujte %VMS_NAME%",
 		"stayAs": "Stay logged as {email} ",
 		"stayLoggedIn": "Stay Logged In",
@@ -224,7 +218,12 @@
 			"primarySystemOffline": "Systém {{primarySystem}} je offline a nelze jej sloučit se systémem {{targetSystem}}.",
 			"secondaryCannotMerge": "Systém {{targetSystem}} má starší verzi softwaru, která není kompatibilní s aktuálním systémem. Aktualizujte {{targetSystem}} <a href=\"/download\" target=\"_blank\" translate> na nejnovější verzi </a> pro sloučení se systémem.",
 			"systemOffline": "Systém {{targetSystem}} je offline a nelze jej sloučit se stávajícím systémem.",
-			"systemUnavailable": "Systém {{targetSystem}} je v současné době nedostupný. Opakujte akci za několik minut nebo kontaktujte"
+			"systemUnavailable": "Systém {{targetSystem}} je v současné době nedostupný. Opakujte akci za několik minut nebo kontaktujte",
+			"recommendSupport": {
+				"a_recommend": "Doporučujeme konzultaci s",
+				"b_support": "podpora",
+				"c_proceeding": "než budete pokračovat."
+			}
 		},
 		"message": {
 			"failedToSend": "Zprávu se nepodařilo odeslat.",
@@ -234,9 +233,9 @@
 				"ipvd_feedback_page": "Zpětná vazba pro kameru",
 				"ipvd_feedback_device": "Zpětná vazba pro {{asset}}"
 			},
-			"topic": {
-				"contact_sales": "Kontaktovat obchod ohledně {{asset}}",
-				"contact_support": "Kontaktovat podporu ohledně{{asset}}",
+			"subject": {
+				"sales_inquiry": "Dotaz na prodejce o {{asset}}",
+				"technical_inquiry": "Technical inquiry for {{asset}}",
 				"integration_feedback": "Zpětná vazba pro integraci {{asset}}",
 				"ipvd_feedback_page": "Zpětná vazba pro kameru",
 				"ipvd_feedback_device": "Zpětná vazba pro {{asset}}"
@@ -284,7 +283,7 @@
 		"passwordMismatch": "Chybné heslo",
 		"cantEditYourself": "Změna vlastních oprávnění není povolena",
 		"cantEditAdmin": "Tento uživatel má oprávnění správce",
-		"cantOpenClient": "%VMS_NAME% application is not detected.",
+		"cantOpenClient": "Aplikace %VMS_NAME% není nalezena.",
 		"lostConnection": "Připojení k {{systemName}} se ztratilo",
 		"thisSystem": "systém",
 		"oldSafariNotSupported": "Verze Safari starší než 10 není podporována",
@@ -340,7 +339,8 @@
 		"mergeSuccess": "Sloučení systému bylo dokončeno",
 		"permissionsRemoved": "Oprávnění byla odstraněna z adresy {{email}}",
 		"unknownName": "Neznámý název systému (problém s cloudovým spojením)",
-		"shareOffline": "Cannot share system while it is offline"
+		"shareOffline": "Cannot share system while it is offline",
+		"shareUnauthorized": "Nemáte oprávnění ke sdílení tohoto systému"
 	},
 	"systemStatuses": {
 		"activated": "aktivováno",
@@ -369,11 +369,11 @@
 			"description": "Můžete zobrazit pouze živé video"
 		},
 		"Advanced Viewer": {
-			"label": "Rozšířený prohlížeč",
+			"label": "Pokročilý prohlížeč",
 			"description": "Lze sledovat živé video, procházet archiv, ovládat PTZ atd"
 		},
 		"Administrator": {
-			"label": "Administrátor",
+			"label": "Administrator",
 			"description": "Neomezený přístup včetně možnosti sdílení"
 		},
 		"Custom": {
@@ -410,13 +410,13 @@
 		}
 	},
 	"privacyPolicy": {
-		"integration": "Odesláním tohoto formuláře souhlasíte s tím, že budete kontaktováni {{INTEGRATION_COMPANY}} a / nebo %COMPANY_NAME%.\nZde najdete {{INTEGRATION_COMPANY}} zásady ochrany osobních údajů <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">zde</a> a %COMPANY_NAME% zásady ochrany osobních údajů <a href=\"%PRIVACY_LINK%\" target=\"blank\">zde</a> které obsahují pokyny, jak svůj souhlas odvolat.",
-		"ipvd": "Odesláním tohoto formuláře souhlasíte, že budete kontaktováni %COMPANY_NAME%.\nZde najdete %COMPANY_NAME% zásady ochrany <a href=\"%PRIVACY_LINK%\" target=\"blank\">zde</a>, které zahrnují instrukce o tom, jak se odvolat svůj souhlas."
+		"integration": "Odesláním tohoto formuláře souhlasíte s tím, že budete kontaktováni {{INTEGRATION_COMPANY}} a / nebo %COMPANY_NAME%.\nZde najdete {{INTEGRATION_COMPANY}} zásady ochrany osobních údajů <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">zde</a> a %COMPANY_NAME% zásady ochrany osobních údajů <a href=\"%PRIVACY_LINK%\" target=\"_blank\">zde</a> které obsahují pokyny, jak svůj souhlas odvolat.",
+		"ipvd": "Odesláním tohoto formuláře souhlasíte, že budete kontaktováni %COMPANY_NAME%.\nZde najdete %COMPANY_NAME% zásady ochrany <a href=\"%PRIVACY_LINK%\" target=\"_blank\">zde</a>, které zahrnují instrukce o tom, jak se odvolat svůj souhlas."
 	},
 	"systemAdministration": "Správce systému",
 	"users": "Uživatelé",
-	"testedVersionLabel": "Testováno na {{vmsName}} verzi:",
-	"testedVersionsLabel": "Testováno na {{vmsName}} verzích:",
+	"testedVersionLabel": "Tested with {{vmsName}} version:",
+	"testedVersionsLabel": "Tested with {{vmsName}} versions:",
 	"About %CLOUD_NAME%": "O aplikaci %CLOUD_NAME%",
 	"Download %VMS_NAME%": "Stáhnout %VMS_NAME%",
 	"Integrations": "Integrace",
@@ -426,7 +426,7 @@
 	"Terms": "Podmínky",
 	"pleaseSelect": "Please select...",
 	"WHEN_MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{{targetSystemName}}</strong> System, and this system will be deleted.",
-	"FAILED_SYSTEM_DESCR": "This link is broken,<br>System may be disconnected from %CLOUD_NAME%,<br>Access to this System may be revoked, <br>or you may be logged into a different account.",
+	"FAILED_SYSTEM_DESCR": "Tento odkaz je nefunkční,<br>Systém může být odpojen od %CLOUD_NAME%,<br>Přístup k tomuto systému může být zrušen, <br>nebo můžete být přihlášen k jinému účtu.",
 	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "Nemáte žádné systémy připojené k %CLOUD_NAME%",
 	"NO_SYSTEMS_LOGIN": "Přihlaste se k Vašemu systému pomocí %VMS_NAME%",
 	"NO_SYSTEMS_GOTO_ADMINISTRATION": "Přejděte na záložku \"Cloud\" v dialogovém okně \"Správa systému\"",

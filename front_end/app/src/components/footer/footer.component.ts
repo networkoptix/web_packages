@@ -1,16 +1,19 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { DomSanitizer }      from '@angular/platform-browser';
 import { NxConfigService }   from '../../services/nx-config';
 import { NxAppStateService } from '../../services/nx-app-state.service';
 import { ActivatedRoute }            from '@angular/router';
 import { NxSettingsService } from '../../pages/systems/settings/settings.service';
+import { Subscription } from 'rxjs';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 
+@AutoUnsubscribe()
 @Component({
     selector: 'nx-footer',
     templateUrl: 'footer.component.html',
     styleUrls: [ 'footer.component.scss' ]
 })
- export class NxFooterComponent implements OnInit {
+ export class NxFooterComponent implements OnInit, OnDestroy {
     companyLink: string;
     companyName: string;
     copyrightYear: string;
@@ -21,6 +24,7 @@ import { NxSettingsService } from '../../pages/systems/settings/settings.service
     // options
     @Input() center: boolean;
     classes: string[] = [];
+    private footerSubscription: Subscription;
 
     constructor(private sanitizer: DomSanitizer,
                 private _config: NxConfigService,
@@ -30,13 +34,15 @@ import { NxSettingsService } from '../../pages/systems/settings/settings.service
         this.config = this._config.getConfig();
     }
 
+    ngOnDestroy() {}
+
     ngOnInit() {
         this.companyLink = this.config.companyLink;
         this.companyName = this.config.companyName;
         this.copyrightYear = this.config.copyrightYear;
         this.footerItems = this.config.footerItems;
 
-        this.appState.footerVisibleSubject.subscribe((visible) => {
+        this.footerSubscription = this.appState.footerVisibleSubject.subscribe((visible) => {
             this.viewFooter = visible;
         });
     }

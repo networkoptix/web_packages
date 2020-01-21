@@ -6,7 +6,7 @@
 		"changePassword": "Alterar senha",
 		"newPasswordLabel": "Nova senha",
 		"saveChanges": "Gravar",
-		"accountSettings": "Definições da Conta"
+		"accountSettings": "Configurações da conta"
 	},
 	"activeActions": {
 		"sendConfirm": "Reenviar Link de Activação",
@@ -28,7 +28,7 @@
 		"hardwareTypes": "Types",
 		"minResolution": "Minimum Resolution",
 		"analytics": "Analytics",
-		"analyticsSelected": "analytics events"
+		"analyticsSelected": "evento de Analytics"
 	},
 	"cameraFilters": {
 		"ptz": "PTZ cameras",
@@ -53,21 +53,17 @@
 		},
 		"groups": {
 			"windows": {
-				"label": "Windows",
-				"supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+				"label": "Windows"
 			},
 			"mac": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"linux": {
 				"label": "Ubuntu Linux",
-				"shortLabel": "Ubuntu",
-				"supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+				"shortLabel": "Ubuntu"
 			},
 			"macos": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"ios": {
 				"label": "iOS",
@@ -79,13 +75,11 @@
 			},
 			"arm": {
 				"label": "ARM",
-				"shortLabel": "ARM",
-				"supported": "<a href='/content/arm'>ARM based servers support policy</a>"
+				"shortLabel": "ARM"
 			},
 			"sdk": {
 				"label": "SDK",
-				"shortLabel": "SDK",
-				"supported": "C++ cross platform SDK"
+				"shortLabel": "SDK"
 			}
 		},
 		"platforms": {
@@ -115,7 +109,7 @@
 			"betas": "Betas",
 			"rc": "Release Candidate",
 			"release": "Release",
-			"releases": "Releases",
+			"releases": "Versões",
 			"patch": "Patch",
 			"patches": "Patches"
 		}
@@ -169,35 +163,35 @@
 		"Data Analytics": "Data Analytics",
 		"Drone": "Drone",
 		"Health Monitor": "Monitor de Saúde",
-		"Storage": "Armazenamento"
+		"Storage": "Storage"
 	},
 	"messageDialogPlaceholders": {
 		"feedback": "Make sure you include your camera model and manufacturer..."
 	},
 	"pageTitles": {
-		"template": "{{title}} %CLOUD_NAME%",
+		"template": "{{title}} - %CLOUD_NAME%",
 		"default": "%CLOUD_NAME%",
 		"registerSuccess": "Bem-vindo a",
 		"register": "Create account",
-		"changePassword": "Alterar senha -",
-		"account": "Definições da conta -",
-		"systems": "Sistemas -",
-		"system": "Sistema -",
-		"systemShare": "Partilha de Sistema -",
-		"activate": "Activar conta -",
-		"activateSent": "Activar conta -",
-		"activateSuccess": "Conta activada -",
-		"activateCode": "Activar conta -",
-		"restorePassword": "Reset de Senha -",
-		"restorePasswordSuccess": "Senha guardada -",
-		"restorePasswordCode": "Reset de Senha -",
-		"view": "Visualizar câmaras - ",
+		"changePassword": "Change password",
+		"account": "Account settings",
+		"systems": "Systems",
+		"system": "System",
+		"systemShare": "Share System",
+		"activate": "Activate account",
+		"activateSent": "Activate account",
+		"activateSuccess": "Account activated",
+		"activateCode": "Activate account",
+		"restorePassword": "Reset password",
+		"restorePasswordSuccess": "Password saved",
+		"restorePasswordCode": "Reset password",
+		"view": "View cameras",
 		"debug": "Depurar/Debug",
-		"login": "Entrar -",
+		"login": "Log in",
 		"download": "Baixar %VMS_NAME%",
 		"downloadPlatform": "Baixar %VMS_NAME% para ",
 		"pageNotFound": "Página não encontrada",
-		"supportedDevices": "Supported Devices",
+		"supportedDevices": "Dispositivos suportados",
 		"integrations": "Integrations"
 	},
 	"dialogs": {
@@ -207,7 +201,7 @@
 		"changeAccountLogged": "You are already logged in with as {email}",
 		"loggedFromOther": "You will be logged in with a different account",
 		"loginTitle": "Logar em %CLOUD_NAME%",
-		"loginButton": "Entrar",
+		"loginButton": "Log in",
 		"logoutAuthorisedTitle": "Já tem sessão iniciada",
 		"logoutAuthorisedContinueButton": "Continuar",
 		"logoutAuthorisedLogoutButton": "Terminar sessão",
@@ -224,7 +218,12 @@
 			"primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}.",
 			"secondaryCannotMerge": "O sistema {{targetSystem}} tem uma versão de software mais antiga que é incompatível com o sistema atual. Atualize o sistema {{targetSystem}} para o <a href=\"/download\" target=\"_blank\" translate>build</a> mais recente para efectuar a fusão com este Sistema.",
 			"systemOffline": "O sistema {{targetSystem}} está offline e não pode ser fundido com o atual.",
-			"systemUnavailable": "O sistema {{targetSystem}} está atualmente inacessível. Tente novamente em alguns minutos ou entre em contato"
+			"systemUnavailable": "O sistema {{targetSystem}} está atualmente inacessível. Tente novamente em alguns minutos ou entre em contato",
+			"recommendSupport": {
+				"a_recommend": "Recomendamos consultar com",
+				"b_support": "suporte",
+				"c_proceeding": "antes de proceder."
+			}
 		},
 		"message": {
 			"failedToSend": "Message has failed to send.",
@@ -234,9 +233,9 @@
 				"ipvd_feedback_page": "Feedback for cameras page",
 				"ipvd_feedback_device": "Feedback about {{asset}}"
 			},
-			"topic": {
-				"contact_sales": "Contact sales for {{asset}}",
-				"contact_support": "Contact support for {{asset}}",
+			"subject": {
+				"sales_inquiry": "Sales inquiry for {{asset}}",
+				"technical_inquiry": "Technical inquiry for {{asset}}",
 				"integration_feedback": "Feedback for integration {{asset}}",
 				"ipvd_feedback_page": "Feedback for cameras page",
 				"ipvd_feedback_device": "Feedback about {{asset}}"
@@ -264,7 +263,7 @@
 		"cantChangeAccountPrefix": "Não é possível guardar as alterações",
 		"cantChangePasswordPrefix": "Não é possível guardar a senha",
 		"cantActivatePrefix": "Não é possível activar a sua conta",
-		"cantSendConfirmationPrefix": "Não é possível enviar um email de confirmação",
+		"cantSendConfirmationPrefix": "Não é possível enviar o email de confirmação",
 		"notAuthorized": "Senha incorrecta",
 		"brokenAccount": "Problema inesperado com a conta. <a href=\"/restore_password\">Restaurar conta</a>",
 		"wrongParameters": "Alguns parâmetros no formulário estão incorretos",
@@ -307,7 +306,7 @@
 		"strongMessage": "Senha forte!",
 		"common": "demasiado comum",
 		"commonMessage": "Esta senha está principais senhas mais populares no mundo",
-		"missingMessage": "A senha é obrigatória"
+		"missingMessage": "A senha é necessária"
 	},
 	"registration": {
 		"agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
@@ -340,7 +339,8 @@
 		"mergeSuccess": "Fusão do sistema concluída",
 		"permissionsRemoved": "As permissões foram removidas de {{email}}",
 		"unknownName": "Nome do Sistema desconhecido (causado pela fusão pela cloud)",
-		"shareOffline": "Cannot share system while it is offline"
+		"shareOffline": "Cannot share system while it is offline",
+		"shareUnauthorized": "You do not have permission to share this system"
 	},
 	"systemStatuses": {
 		"activated": "activado",
@@ -370,7 +370,7 @@
 		},
 		"Advanced Viewer": {
 			"label": "Visualizador Avançado",
-			"description": "Pode ver vídeos ao vivo, pesquisar os arquivos, configurar câmaras, controlar PTZ etc"
+			"description": "Pode visualizar vídeo ao vivo, pesquisar os arquivos, configurar câmaras, controlar PTZ etc"
 		},
 		"Administrator": {
 			"label": "Administrador",
@@ -410,19 +410,19 @@
 		}
 	},
 	"privacyPolicy": {
-		"integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent.",
-		"ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"blank\">here</a> which include instruction on how to withdraw your consent."
+		"integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a> which include instruction on how to withdraw your consent.",
+		"ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a> which include instruction on how to withdraw your consent."
 	},
 	"systemAdministration": "Administração do Sistema",
 	"users": "Utilizadores",
-	"testedVersionLabel": "Tested on {{vmsName}} version:",
-	"testedVersionsLabel": "Tested on {{vmsName}} versions:",
-	"About %CLOUD_NAME%": "About %CLOUD_NAME%",
+	"testedVersionLabel": "Tested with {{vmsName}} version:",
+	"testedVersionsLabel": "Tested with {{vmsName}} versions:",
+	"About %CLOUD_NAME%": "Sobre o %CLOUD_NAME%",
 	"Download %VMS_NAME%": "Baixar %VMS_NAME%",
 	"Integrations": "Integrations",
 	"Privacy": "Privacidade",
 	"Support": "Suporte",
-	"Supported Devices": "Supported Devices",
+	"Supported Devices": "Dispositivos suportados",
 	"Terms": "Termos",
 	"pleaseSelect": "Please select...",
 	"WHEN_MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{{targetSystemName}}</strong> System, and this system will be deleted.",

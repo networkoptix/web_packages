@@ -2,8 +2,6 @@
   "language": "fr_FR",
   "language_name": "Français",
   "cloudName": "%CLOUD_NAME%",
-  "vmsName": "%VMS_NAME%",
-  "clientProtocol": "%CLIENT_PROTOCOL%:",
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
     "default": "%CLOUD_NAME%",
@@ -27,73 +25,6 @@
     "download": "Télécharger %VMS_NAME%",
     "downloadPlatform": "Télécharger %VMS_NAME% pour ",
     "pageNotFound": "Page non trouvée"
-  },
-  "systemStatuses": {
-    "activated": "activé",
-    "incompatible": "incompatible",
-    "merging": "fusion",
-    "notActivated": "non activé",
-    "online": "en ligne",
-    "offline": "hors ligne",
-    "unavailable": "non disponible"
-  },
-  "accessRoles": {
-    "disabled": {
-      "label": "Désactivé",
-      "description": "L’utilisateur est désactivé et ne peut pas connecter au système"
-    },
-    "Owner": {
-      "label": "Propriétaire",
-      "description": "Accès illimité, y compris la possibilité de partager et de connecter/déconnecter le système de nuage"
-    },
-    "Viewer": {
-      "label": "Visualisateur",
-      "description": "Peut afficher la vidéo en direct et parcourir les archives"
-    },
-    "Live Viewer": {
-      "label": "Visualiseur en direct",
-      "description": "Peut seulement voir vidéo en direct"
-    },
-    "Advanced Viewer": {
-      "label": "Visualisateur avancé",
-      "description": "Peut visionner vidéo en direct, parcourir les archives, contrôler le PTZ, etc"
-    },
-    "Administrator": {
-      "label": "Administrateur",
-      "description": "Accès illimité, y compris la possibilité de partager"
-    },
-    "Custom": {
-      "label": "Personnalisé",
-      "description": "Utiliser l'application client %VMS_NAME% pour configurer des autorisations personnalisées"
-    },
-    "cloudAdmin": {
-      "label": "Administrateur",
-      "description": "Peut configurer le système et le partager"
-    },
-    "customRole": {
-      "label": "Rôle personnalisé",
-      "description": "Rôle d’usager personnalisé spécifié dans le système"
-    },
-    "owner": {
-      "label": "Propriétaire",
-      "description": "Accès illimité, y compris la possibilité de partager et de connecter/déconnecter le système de nuage"
-    },
-    "viewer": {
-      "label": "Visualisateur",
-      "description": "Peut afficher la vidéo en direct et parcourir les archives"
-    },
-    "liveViewer": {
-      "label": "Visualiseur en direct",
-      "description": "Peut seulement voir vidéo en direct"
-    },
-    "advancedViewer": {
-      "label": "Visualisateur avancé",
-      "description": "Peut voir la vidéo en direct, parcourir l’archive, configurer les caméras, contrôle PTZ etc"
-    },
-    "custom": {
-      "label": "Personnalisé",
-      "description": "Utiliser l'application client %VMS_NAME% pour configurer des autorisations personnalisées"
-    }
   },
   "errorCodes": {
     "ok": "ok",
@@ -138,41 +69,6 @@
     "FAIL": "Le système <strong>{{failedSystem}}</strong> est actuellement inaccessible. <br>Essayez à nouveau dans quelques instants ou contactez <a href=\"%SUPPORT_LINK%\" target=\"_blank\"> support</a>.",
     "unknownMergeError": "Erreur inconnue. Vous pouvez essayer de rafraîchir la page et répéter la tentative. Si le problème persiste – veuillez contacter <a href=\"%SUPPORT_LINK%\" target=\"_blank\">le support</a>."
   },
-  "system": {
-    "yourSystem": "Votre système",
-    "mySystemSearch": "IMeMyMine",
-    "unavailable": "Le système est inaccessible",
-    "offline": "System Hors ligne",
-    "openClient": "Ouvert à %VMS_NAME%",
-    "openClientNoSystem": "Ouvrir %VMS_NAME%",
-    "confirmMergeAction": "Fusionner",
-    "mergeSystemTitle": "Fusionner systèmes",
-    "confirmRenameTitle": "Nom système",
-    "confirmRenameAction": "Enregistrer",
-    "successRename": "Nom du système sauvegardé",
-    "confirmDisconnectTitle": "Déconnecter le système de %CLOUD_NAME% ?",
-    "confirmDisconnectAction": "Déconnecter",
-    "confirmUnshareFromMe": "You will not be able to lgo into this System anymore.",
-    "confirmUnshareFromMeTitle": "Disconnect System from your Account?",
-    "confirmUnshareFromMeAction": "Déconnecter",
-    "confirmUnshareTitle": "Remove user?",
-    "confirmUnshareAction": "Supprimer",
-    "successDisconnected": "Système correctement déconnecté de %CLOUD_NAME%",
-    "successDeleted": "Système {{systemName}} a correctement été supprimé de votre compte",
-    "mergeFailed": "Fusion système a échoué",
-    "mergeStart": "Les systèmes ont commencé à fusionner",
-    "mergeSuccess": "Fusion du système terminée",
-    "permissionsRemoved": "Autorisations retirées de {{email}}",
-    "unknownName": "Nom inconnu pour le système (causé par la fusion nuage)"
-  },
-  "regActions": {
-    "passwordLabel": "Mot de passe",
-    "createAccount": "Créer compte"
-  },
-  "header": {
-    "allSystems": "Tous les systèmes",
-    "systems": "Systèmes"
-  },
   "common": {
     "cameraLinks": {
       "highStream": "Flux Haut",
@@ -189,7 +85,7 @@
     "cameraStates": {
       "offline": "Hors ligne",
       "error": "Erreur",
-      "errorLoading": "An error occurred while loading this video.",
+      "errorLoading": "Une erreur s'est produite lors du chargement de cette vidéo.",
       "unauthorized": "Authentification requise",
       "noData": "Aucune donnée",
       "iOSVideoTooLarge": "iOS ne supporte pas une vidéo supérieure à fullHD (2MP : 1920 x 1080).",
@@ -198,8 +94,8 @@
       "noArmSupport": "Ce navigateur ou ce périphérique ne supporte pas la lecture vidéo à partir de serveurs basés sur ARM.",
       "noFormat": "Ce navigateur ne supporte pas la lecture vidéo de cette caméra.",
       "ieNoWebm": "Veuillez installer <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> pour Internet Explorer.",
-      "ieWin10": "S.V.P, utilisez les navigateurs Edge Microsoft ou Google Chrome.",
-      "ubuntuNX": "Ce navigateur ne supporte pas la vidéo à partir de serveurs ARM. S.V.P. utilisez un navigateur Chromium."
+      "ieWin10": "S.V.P utilisez les navigateurs Edge Microsoft ou Google Chrome.",
+      "ubuntuNX": "Ce navigateur ne supporte pas la vidéo à partir de serveurs ARM. S.V.P, utilisez un navigateur Chromium."
     },
     "searchCamPlaceholder": "Recherche",
     "resolution": {
@@ -211,21 +107,20 @@
     "voiceCommands": {
       "play": "lecture",
       "pause": "pause",
-      "live": "go to live | show me live",
+      "live": "aller en direct | M'afficher le direct",
       "view": "vue + [nom de la caméra]",
-      "search": "find + [text for searchbar]",
+      "search": "trouver + [texte barre de recherche]",
       "clear search": "effacer la recherche",
-      "expand server": "expand server + [server name]",
-      "collapse server": "collapse server + [server name]",
+      "expand server": "étendre le serveur + [nom du serveur]",
+      "collapse server": "réduire serveur + [nom serveur]",
       "expand all servers": "développer tous les serveurs",
       "collapse all servers": "réduire tous les serveurs",
       "stop listening": "arrêter l’écoute",
-      "help": "help | show commands"
+      "help": "aide | afficher commandes"
     }
   },
-  "recommendSupport": {
-    "a_recommend": "Nous recommandons de consulter avec",
-    "b_support": "support",
-    "c_proceeding": "avant de procéder."
+  "system": {
+    "offline": "System Hors ligne",
+    "unavailable": "Le système est inaccessible"
   }
 }

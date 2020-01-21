@@ -68,7 +68,6 @@ export class NxActivateComponent implements OnInit {
             errorPrefix: this.LANG.errorCodes.cantActivatePrefix
         }).then(() => {
             this.pageService.setPageTitle(this.LANG.pageTitles.activateSuccess);
-            this.setContext('activateSuccess');
             this.activationSuccess = true;
             this.loading = false;
             this.dialogs.dismiss();
@@ -109,15 +108,8 @@ export class NxActivateComponent implements OnInit {
 
     ngOnInit(): void {
         // Process service trigger route reload (maybe AJS? ) ... revise this after we remove AJS
-        this.context.process = this.localStorage.get('activateProcess');
-
         this.uriParam = this.route.snapshot.data.uriParam;
         this.uriParamCode = this.route.snapshot.params.code;
-
-        // Check session context
-        if (this.checkContext('activateSuccess', this.uriParam)) {
-            this.setContext(undefined);
-        }
 
         this.accountInfo = {
             newPassword : '',
@@ -142,25 +134,9 @@ export class NxActivateComponent implements OnInit {
         }
     }
 
-    private setContext(name) {
-        this.context.process = name;
-        this.localStorage.set('activateProcess', name);
-    }
-
-    private checkContext(name, flag) {
-        if (!flag) {
-            return false;
-        }
-        if (this.context.process !== name) {
-            this.accountService.redirectToHome();
-        }
-        return true;
-    }
-
     private checkActivate() {
         if (this.accountInfo.activateCode) {
             this.pageService.setPageTitle(this.LANG.pageTitles.activateCode);
-            this.setContext(undefined);
             this.activate.run();
         }
     }

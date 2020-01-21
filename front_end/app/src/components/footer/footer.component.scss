@@ -9,6 +9,9 @@
 
 :host {
     width: 100%;
+    & > .row {
+        padding-bottom: 16px;
+    }
 }
 
 footer {

@@ -233,7 +233,7 @@ export class NxSystem extends System implements OnDestroy {
                 }
                 this.isOnline = this.info.stateOfHealth === this.CONFIG.systemStatuses.onlineStatus;
                 this.isMine = this.info.ownerAccountEmail === this.currentUserEmail;
-                this.canMerge = this.isMine && (this.info.capabilities && this.info.capabilities.indexOf(this.CONFIG.systemCapabilities.cloudMerge) > -1);
+                this.canMerge = this.isMine && (this.info.capabilities && this.info.capabilities.cloudMerge);
                 this.mergeInfo = response.mergeInfo;
 
                 this.checkPermissions();
@@ -414,11 +414,11 @@ export class NxSystem extends System implements OnDestroy {
         user.email = user.email.toLowerCase();
         let userCreated = false;
 
-        if (!user.userId) {
-            if (user.email === this.currentUserEmail) {
-                return Promise.reject({ resultCode: 'cantEditYourself' });
-            }
+        if (user.email === this.currentUserEmail) {
+            return Promise.reject({ resultCode: 'cantEditYourself' });
+        }
 
+        if (!user.userId) {
             let existingUser = this.users.find((u) => {
                 return user.email === u.email;
             });
@@ -490,11 +490,8 @@ export class NxSystem extends System implements OnDestroy {
     update() {
         return of('').pipe(flatMap(_ => {
             return this.getInfo(true, false).then(_ => {
-                if (this.permissions.editUsers) {
-                    return from(this.getUsers(true));
-                }
-                return of(true);
-            }).catch(() => {
+                return from(this.getUsers(true));
+            }).catch(_ => {
                 this.lostConnection = true;
             });
         }));
@@ -534,6 +531,7 @@ export class NxSystemService {
             );
             this.systemsCache[systemId] = system;
         }
+        system.lostConnection = false;
         system.startPoll();
         return system;
     }

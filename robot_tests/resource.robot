@@ -6,6 +6,7 @@ Library      NoptixImapLibrary/
 Library      NoptixLibrary/
 Library      NoptixLibrary/CloudPortalAPI.py
 Resource     variables.robot
+Resource     APIresource.robot
 Resource     ${variables_file}
 Variables    getIds.py    ${ENV}
 
@@ -46,6 +47,12 @@ Open Browser With Options
     Set Window Size    1920    1080
     Go to    ${ENV}
 
+Open page anonymously
+    [Arguments]    ${url}    ${title}
+    Go To    ${url}
+    Location should be    ${url}
+    # Title should be    ${title}
+
 Set Chrome Options
     [Documentation]    Set Chrome options for headless mode
     ${options}=    Evaluate    sys.modules['selenium.webdriver'].ChromeOptions()    sys, selenium.webdriver
@@ -62,25 +69,34 @@ Set Chrome Options Headless
     END
     [Return]    ${options}
 
-Check Language Anonymous
-#    Wait Until Page Contains Element    ${LANGUAGE DROPDOWN}/span[@lang='en_US']
-    Register Keyword To Run On Failure    NONE
-    ${status}=    Run Keyword And Return Status    Wait Until Element Is Visible    ${LANGUAGE DROPDOWN}/span[@lang='${LANGUAGE}']    5
-    Register Keyword To Run On Failure    Failure Tasks
-    Run Keyword If    "${status}"=="False"    Set Language
 
+Check Language Anonymous
+    Register Keyword To Run On Failure    NONE
+    ${lang}=   Get Language Anonymous    ${ENV}
+    Register Keyword To Run On Failure    Failure Tasks
+    Run Keyword Unless    "${lang}"=="${LANGUAGE}"   Set Language Anonymous
+
+# Replaced with "Check Language Logged In".
 Check Langauge Logged In
+    # TODO Move checking language and validating loggin in to "Log in" keyword
     Register Keyword To Run On Failure    NONE
     # this is a temorary fix.  Future update will use API calls
     ${previous location}=   Get Location
     Go To    ${ENV}/account
-    ${status}=    Run Keyword And Return Status    Wait Until Element Is Visible    ${ACCOUNT LANGUAGE DROPDOWN}/span[@lang='${LANGUAGE}']    5
+    ${status}=    Run Keyword And Return Status    Wait Until Element Is Visible    ${ACCOUNT LANGUAGE DROPDOWN}/span[@lang='${LANGUAGE}']    15
     Register Keyword To Run On Failure    Failure Tasks
-    Run Keyword If    "${status}"=="False"    Set Language
+    Run Keyword If    "${status}"=="False"    Set Language Anonymous
     Run Keyword If    "${status}"=="False"    Click Button    ${ACCOUNT SAVE}
+    Sleep    5
     Go To    ${previous location}
 
-Set Language
+Check Language Logged In
+    [Arguments]    ${email}    ${password}
+    Register Keyword To Run On Failure    NONE
+    ${curr lang}=   Get Account Language   ${ENV}    ${email}    ${password}
+    Run Keyword Unless    '${curr lang}' == '${LANGUAGE}'    Set Account Language    ${ENV}    ${email}    ${password}    ${LANGUAGE}
+
+Set Language Anonymous
     [arguments]    ${lang}=${LANGUAGE}
     Wait Until Element Is Visible    ${LANGUAGE DROPDOWN}
     Click Button    ${LANGUAGE DROPDOWN}
@@ -90,24 +106,32 @@ Set Language
     Sleep    5    #to wait for language to fully change before continuing.  This caused issues with login.
 
 Log In
-    [arguments]    ${email}    ${password}    ${button}=${LOG IN NAV BAR}
+    [arguments]    ${email}    ${password}    ${validate}=${True}    ${button}=${LOG IN NAV BAR}
     Run Keyword Unless    '''${button}''' == "None"    Wait Until Element Is Visible    ${button}
     Run Keyword Unless    '''${button}''' == "None"    Click Link    ${button}
     Wait Until Elements Are Visible    ${EMAIL INPUT}    ${PASSWORD INPUT}    ${REMEMBER ME CHECKBOX VISIBLE}    ${FORGOT PASSWORD}    ${LOG IN CLOSE BUTTON}
     Sleep    1
-    Input Text    ${EMAIL INPUT}    ${email}
+    Wait Until Keyword Succeeds    4    0.5    Input Text    ${EMAIL INPUT}    ${email}
     Sleep    0.25
     Input Text    ${PASSWORD INPUT}    ${password}
     Sleep    0.25
     Wait Until Element Is Visible    ${LOG IN BUTTON}
     Click Button    ${LOG IN BUTTON}
+    Run Keyword If    ${validate} == ${True}    Wait Until Element is Visible    ${ACCOUNT DROPDOWN}    ${selenium_timeout}
+    Run Keyword If    ${validate} == ${True}    Check Language Logged In    ${email}    ${password}
+    Sleep    0.5
 
 Validate Log In
-    [arguments]    ${timeout}=${selenium_timeout}
+    [Arguments]    ${timeout}=${selenium_timeout}
     Wait Until Element is Visible    ${ACCOUNT DROPDOWN}    ${timeout}
-    Sleep    1
-    Check Langauge Logged In
-    Sleep    1    #this is a test to see if it eliminates a problem with the login dialog popping up on logout
+    Sleep    0.5    #this is a test to see if it eliminates a problem with the login dialog popping up on logout
+
+Check Log In
+    [arguments]    ${button}=${LOG IN NAV BAR}
+    ${random email}    Get Random Email    ${BASE EMAIL}
+    Log In    ${random email}    ${password}    ${button}
+    Wait Until Element Is Visible    ${ACCOUNT NOT FOUND}
+    Log In    ${EMAIL OWNER}    ${password}    button=None
 
 Log Out
     Wait Until Page Does Not Contain Element    ${BACKDROP}
@@ -126,7 +150,7 @@ Validate Log Out
 
 Validate on Register Page
     Wait Until Elements Are Visible    ${REGISTER FIRST NAME INPUT}    ${REGISTER LAST NAME INPUT}    ${REGISTER PASSWORD INPUT}    ${CREATE ACCOUNT BUTTON}
-    Run keyword and continue on failure    Title should be    Create account in ${PRODUCT_NAME}
+    # Run keyword and continue on failure    Title should be    Create account in ${PRODUCT_NAME}
 
 Register
     [arguments]    ${first name}    ${last name}    ${email}    ${password}    ${checked}=false
@@ -143,7 +167,7 @@ Validate Register Success
     [arguments]    ${location}=${url}/register/success
     Wait Until Element Is Visible    ${ACCOUNT CREATION SUCCESS}
     Location Should Be    ${location}
-    Run keyword and continue on failure    Title should be    Welcome to ${PRODUCT_NAME}
+    # Run keyword and continue on failure    Title should be    Welcome to ${PRODUCT_NAME}
 
 Validate Register Email Received
     [arguments]    ${recipient}
@@ -151,7 +175,7 @@ Validate Register Email Received
     ${email}    Wait For Email    recipient=${recipient}    timeout=120    status=UNSEEN
     Check Email Subject    ${email}    ${ACTIVATE YOUR ACCOUNT EMAIL SUBJECT}    ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}
     Should Not Be Equal    ${email}    ${EMPTY}
-    Delete All Emails
+    Delete Email    ${email}
     Close Mailbox
 
 Get Email Link
@@ -165,7 +189,7 @@ Get Email Link
     Run Keyword If    "${link type}"=="register"    Check Email Subject    ${email}    ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}
     ${links}    Get NX Links From Email    ${email}    ${link type}
     log    ${links}
-    Delete All Emails
+    Delete Email    ${email}
     Close Mailbox
     Return From Keyword    ${links}
 
@@ -177,11 +201,12 @@ Activate
     Element Should Be Visible    ${ACTIVATION SUCCESS}
     Location Should Be    ${url}/activate/success
 
+# Replaced with "Restore password using API"
 Restore password
     [arguments]    ${email}
     #log in to user to make sure their language is set to the current
-    Open Browser and go to URL    ${url}
     Log    Kyle disabled checking the user's langauge before sending. If it's not working blame him
+    # Open Browser and go to URL    ${url}
     # Log In    ${email}    ${password}
     # Validate Log In
     # Log Out
@@ -199,13 +224,20 @@ Restore password
     Click Button    ${SAVE PASSWORD}
     Wait Until Elements Are Visible    ${RESET SUCCESS MESSAGE}    ${RESET SUCCESS LOG IN LINK}
     Click Link    ${RESET SUCCESS LOG IN LINK}
-    Log In    ${email}    ${BASE PASSWORD}    None
-    Validate Log In
+    Log In    ${email}    ${BASE PASSWORD}    button=None
     Close Browser
 
+Restore Password using API
+    [Arguments]    ${email}
+    CloudPortalAPI.Restore Password    ${ENV}    ${email}    None    None
+    ${link}=   Get Email Link    ${email}    restore_password
+    ${code}=   Get Code From Email Link    ${link}
+    CloudPortalAPI.Restore Password    ${ENV}    ${email}    ${code}   ${BASE PASSWORD}
+    CloudPortalAPI.Log In    ${ENV}    ${email}    ${BASE PASSWORD}
+
 Go to Users List
-    Wait Until Elements Are Visible    ${USERS LIST LINK}
-    Click Link    ${USERS LIST LINK}
+    ${location}=   Get Location
+    Go To    ${location}/users
 
 Go to System Administration
     Wait Until Elements Are Visible    ${SYSTEM ADMINISTRATION LINK}
@@ -300,6 +332,7 @@ Select user in Users List
     Wait Until Elements Are Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
     ${User In List}=   Set Variable    //nx-system-settings-component//nx-menu//nx-level-3-item//span[text()='${user email address}']/../../../a
+    Wait Until Element Is Visible    ${User In List}
     Click Link    ${User In List}
     Wait Until Elements Are Visible    ${USER EMAIL}
     Element Text Should Be    ${USER EMAIL}    ${user email address}
@@ -307,16 +340,14 @@ Select user in Users List
 
 Check For Alert
     [arguments]    ${alert text}    ${timeout}=${selenium_timeout}
-    Wait Until Element Is Visible    ${ALERT}    ${timeout}
-    Element Text Should Be    ${ALERT}    ${alert text}
-    Wait Until Page Does Not Contain Element    ${ALERT}
+    Wait Until Element Is Visible    ${ALERT}/../span[contains(text(),"${alert text}")]    ${timeout}
+    Wait Until Page Does Not Contain Element    ${ALERT}/../span[contains(text(),"${alert text}")]    ${timeout}
 
 Check For Alert Dismissable
-    [arguments]    ${alert text}
-    Wait Until Elements Are Visible    ${ALERT}    ${ALERT CLOSE}
-    Element Text Should Be    ${ALERT}    ${alert text}
+    [arguments]    ${alert text}    ${timeout}=${selenium_timeout}
+    Wait Until Elements Are Visible    ${ALERT CLOSE}    ${ALERT}/../span[contains(text(),"${alert text}")]    timeout=${timeout}
     Click Button    ${ALERT CLOSE}
-    Wait Until Page Does Not Contain Element    ${ALERT}
+    Wait Until Page Does Not Contain Element    ${ALERT}/../span[contains(text(),"${alert text}")]
 
 Verify In System
     [arguments]    ${system name}
@@ -330,16 +361,17 @@ Disconnect from cloud
     Wait Until Elements Are Visible    ${DISCONNECT FORM CANCEL}    ${DISCONNECT FORM DISCONNECT BUTTON}    ${DISCONNECT PASSWORD INPUT}
     Input Text    ${DISCONNECT PASSWORD INPUT}    ${BASE PASSWORD}
     Click Button    ${DISCONNECT FORM DISCONNECT BUTTON}
-    Check For Alert    ${SUCCESSFULLY DISCONNECTED}
+#    Check For Alert    ${SUCCESSFULLY DISCONNECTED}
+    Sleep    5
 
 Failure Tasks
     [timeout]    5 minutes
     ${console}    Get Browser Log
     Log    ${console}
     Capture Page Screenshot    selenium-screenshot-${LANGUAGE}{index}.png
-    Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True    folder=[Gmail]/All Mail
-    Delete All Emails
-    Close Mailbox
+    # Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True    folder=[Gmail]/All Mail
+    # Delete All Emails
+    # Close Mailbox
 
 Wait Until Elements Are Visible
     [arguments]    @{elements}    ${timeout}=${selenium_timeout}
@@ -363,12 +395,12 @@ Wait Until Page Does Not Contain Elements
 Clean up email noperm
     Register Keyword To Run On Failure    None
     Open Browser and Go To URL    ${url}
-    Log In    ${EMAIL OWNER}    ${password}
-    Validate Log In
+    Log In    ${EMAIL OWNER}    ${password}    ${False}
     Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
     Verify In System    Auto Tests
+    Go To Users List
     Register Keyword To Run On Failure    NONE
-    ${status}=   Run Keyword And Return Status    Wait Until Element Is Visible    //nx-system-settings-component//nx-menu//nx-level-3-item//span[text()='${EMAIL NOPERM}']/../../../a    5
+    ${status}=   Run Keyword And Return Status    Wait Until Element Is Visible    //nx-system-settings-component//nx-menu//nx-level-3-item//span[text()='${EMAIL NOPERM}']    5
     Run Keyword If    ${status}    Run Keyword And Ignore Error    Remove User Permissions    ${EMAIL NOPERM}
     Register Keyword To Run On Failure    Failure Tasks
     Close Browser
@@ -376,11 +408,8 @@ Clean up email noperm
 Clean up random emails
     Register Keyword To Run On Failure    None
     Open Browser and Go To URL    ${url}
-    Log In    ${EMAIL OWNER}    ${password}
-    Validate Log In
-    Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
-    Wait Until Elements Are Visible    ${USERS LIST LINK}
-    Click Link    ${USERS LIST LINK}
+    Log In    ${EMAIL OWNER}    ${password}    ${False}
+    Go To Users List
     ${status}    Run Keyword And Return Status    Wait Until Element Is Visible
     ...    ${USERS LIST}//nx-level-3-item//span[contains(text(),'noptixautoqa+15')]/../../../a
     Run Keyword If    ${status}    Find and remove emails
@@ -389,7 +418,7 @@ Clean up random emails
 Find and remove emails
     ${random emails}    Get WebElements    ${USERS LIST}//nx-level-3-item//span[contains(text(),'noptixautoqa+15')]/../../../a
     FOR    ${element}    IN    @{random emails}
-        ${email}    Get Text    ${USERS LIST}//nx-level-3-item//span[contains(text(),'noptixautoqa+15')]/../../../a
+        ${email}    Get Text    ${USERS LIST}//nx-level-3-item//span[contains(text(),'noptixautoqa+15')]
         Remove User Permissions    ${email}
     END
 
@@ -397,8 +426,7 @@ Reset user noperm first/last name
     Register Keyword To Run On Failure    None
     Open Browser and go to URL    ${url}
     Go To    ${url}/account
-    Log In    ${EMAIL NOPERM}    ${password}    button=None
-    Validate Log In
+    Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
 
     Run Keyword And Ignore Error    Wait Until Textfield Contains    ${ACCOUNT FIRST NAME}    nameChanged
     Run Keyword And Ignore Error    Wait Until Textfield Contains    ${ACCOUNT LAST NAME}    nameChanged
@@ -417,8 +445,7 @@ Reset user noperm first/last name
 Reset user owner first/last name
     Register Keyword To Run On Failure    None
     Open Browser and go to URL    ${url}/account
-    Log In    ${EMAIL OWNER}    ${password}    button=None
-    Validate Log In
+    Log In    ${EMAIL OWNER}    ${password}    ${False}    button=None
 
     Run Keyword And Ignore Error    Wait Until Textfield Contains    ${ACCOUNT FIRST NAME}    newFirstName
     Run Keyword And Ignore Error    Wait Until Textfield Contains    ${ACCOUNT LAST NAME}    newLastName
@@ -445,33 +472,30 @@ Add notowner
 Make sure notowner is in the system
     Register Keyword To Run On Failure    None
     Open Browser and Go To URL    ${url}
-    Log In    ${EMAIL OWNER}    ${password}
-    Validate Log In
+    Log In    ${EMAIL OWNER}    ${password}    ${False}
     Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
     ${status}    Run Keyword And Return Status    Wait Until Element Is Visible    ${NOT OWNER IN SYSTEM}
     Run Keyword Unless    ${status}    Share To    ${EMAIL NOT OWNER}    ${VIEWER TEXT}
     Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
     ${email}    Wait For Email    recipient=${EMAIL NOT OWNER}    timeout=120    status=UNSEEN
-    Delete All Emails
+    Delete Email    ${email}
     Close Browser
 
 Make sure viewer is in the system
     Register Keyword To Run On Failure    None
     Open Browser and Go To URL    ${url}
-    Log In    ${EMAIL OWNER}    ${password}
-    Validate Log In
+    Log In    ${EMAIL OWNER}    ${password}    ${False}
     Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
     ${status}    Run Keyword And Return Status    Wait Until Element Is Visible    ${VIEWER IN SYSTEM}
     Run Keyword Unless    ${status}    Share To    ${EMAIL VIEWER}    ${VIEWER TEXT}
     Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
     ${email}    Wait For Email    recipient=${EMAIL VIEWER}    timeout=120    status=UNSEEN
-    Delete All Emails
+    Delete Email    ${email}
     Close Browser
 
 Reset System Names
     Open Browser and go to URL    ${url}/systems/${AUTOTESTS OFFLINE SYSTEM ID}
-    Log In    ${EMAIL OWNER}    ${BASE PASSWORD}    None
-    Validate Log In
+    Log In    ${EMAIL OWNER}    ${BASE PASSWORD}    ${False}    None
     Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}
     Click Button    ${RENAME SYSTEM}
     Wait Until Elements Are Visible    ${RENAME CANCEL}    ${RENAME SAVE}    ${RENAME INPUT}
@@ -531,3 +555,11 @@ Get Parent WebElement
     ...    find_element
     ...    by=xpath    value=parent::*
     [return]    ${parent}
+
+Get All Descendant WebElements
+    [Arguments]    ${element}
+    ${descendants}=   Call Method
+    ...    ${element}
+    ...    find_elements
+    ...    by=xpath    value=.//*
+    [Return]    ${descendants}

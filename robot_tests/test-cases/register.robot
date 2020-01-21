@@ -36,6 +36,7 @@ should open register page in anonymous state by clicking Register button on top 
     Wait Until Element Is Visible    ${CREATE ACCOUNT HEADER}
     Click Link    ${CREATE ACCOUNT HEADER}
     Location Should Be    ${url}/register
+    # Run keyword and continue on failure    Title Should Be    ${REGISTER TITLE TEXT} - ${PRODUCT_NAME}
 
 should open register page from register success page by clicking Register button on top right corner
     [tags]    email
@@ -56,10 +57,10 @@ should open register page in anonymous state by clicking Register button on home
 
 #I am assuming this means directly going to the /register url and not clicking a button
 should open register page in anonymous state
-    [tags]    C24211
-    Go To    ${url}/register
-    Location should be    ${url}/register
+    [tags]    C24211    anonymous
+    Run keyword and continue on failure    Open page anonymously    ${url}/register    ${REGISTER TITLE TEXT} - ${PRODUCT_NAME}
     Wait Until Element Is Visible    ${REGISTER FORM}
+    Check Log In    button=None
 
 should register user with correct credentials
     ${email}    Get Random Email    ${BASE EMAIL}
@@ -274,24 +275,24 @@ Check registration email links, colors, cloud name, and user name
     \    check in list    ${expected links}    ${link}
     Delete Email    ${email}
     Close Mailbox
-    
+
 Check automatic loggout when registering new account while logged in
     [tags]    C63393
     Log In    ${EMAIL VIEWER}     ${BASE PASSWORD}
     Validate Log In
     Go To    ${ENV}/register
     Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${LOGGED IN NEW ACCOUNT BUTTON}
-    Element Text Should Be    ${MODAL DIALOG}//h1/span[contains(text(),'${EMAIL VIEWER}')]    You are already logged in with as ${EMAIL VIEWER}  
+    Element Text Should Be    ${MODAL DIALOG}//h1/span[contains(text(),'${EMAIL VIEWER}')]    You are already logged in with as ${EMAIL VIEWER}
     Click Button     ${MODAL DIALOG}//button[@class="close ng-star-inserted"]
     Location Should Be    ${ENV}/systems
     Go To    ${ENV}/register
     Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${LOGGED IN NEW ACCOUNT BUTTON}
-    Element Text Should Be    ${MODAL DIALOG}//h1/span[contains(text(),'${EMAIL VIEWER}')]    You are already logged in with as ${EMAIL VIEWER}  
+    Element Text Should Be    ${MODAL DIALOG}//h1/span[contains(text(),'${EMAIL VIEWER}')]    You are already logged in with as ${EMAIL VIEWER}
     Click Button     ${LOGGED IN STAY LOGGED IN BUTTON}
     Location Should Be    ${ENV}/systems
     Go To    ${ENV}/register
     Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${LOGGED IN NEW ACCOUNT BUTTON}
-    Element Text Should Be    ${MODAL DIALOG}//h1/span[contains(text(),'${EMAIL VIEWER}')]    You are already logged in with as ${EMAIL VIEWER}  
+    Element Text Should Be    ${MODAL DIALOG}//h1/span[contains(text(),'${EMAIL VIEWER}')]    You are already logged in with as ${EMAIL VIEWER}
     Click Button     ${LOGGED IN NEW ACCOUNT BUTTON}
     Wait Until Location Is    ${ENV}/register
-    Wait Until Elements Are Visible    ${REGISTER FORM} 
+    Wait Until Elements Are Visible    ${REGISTER FORM}

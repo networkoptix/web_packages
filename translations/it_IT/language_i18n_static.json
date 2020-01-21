@@ -1,12 +1,12 @@
 {
 	"account": {
-		"accountSavedSuccess": "Il suo account è stato salvato con successo",
+		"accountSavedSuccess": "Il tuo account è stato aggiornato correttamente",
 		"activationLinkSent": "Link di attivazione inviato",
 		"passwordChangedSuccess": "Il suo account è stato salvato con successo",
-		"changePassword": "Cambia Password",
+		"changePassword": "Cambio Password",
 		"newPasswordLabel": "Nuova password",
-		"saveChanges": "Salvare",
-		"accountSettings": "Impostazioni dell 'account"
+		"saveChanges": "Salva",
+		"accountSettings": "Impostazioni dell'account"
 	},
 	"activeActions": {
 		"sendConfirm": "Rinvia il link di attivazione",
@@ -53,21 +53,17 @@
 		},
 		"groups": {
 			"windows": {
-				"label": "Windows",
-				"supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+				"label": "Windows"
 			},
 			"mac": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"linux": {
 				"label": "Ubuntu Linux",
-				"shortLabel": "Ubuntu",
-				"supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+				"shortLabel": "Ubuntu"
 			},
 			"macos": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"ios": {
 				"label": "iOS",
@@ -79,13 +75,11 @@
 			},
 			"arm": {
 				"label": "ARM",
-				"shortLabel": "ARM",
-				"supported": "<a href='/content/arm'>Politica di supporto per server basati su ARM</a>"
+				"shortLabel": "ARM"
 			},
 			"sdk": {
 				"label": "SDK",
-				"shortLabel": "SDK",
-				"supported": "SDK cross-platform C ++"
+				"shortLabel": "SDK"
 			}
 		},
 		"platforms": {
@@ -112,12 +106,12 @@
 		},
 		"releasesTypes": {
 			"beta": "Beta",
-			"betas": "Betas",
-			"rc": "Release Candidate",
-			"release": "Release",
-			"releases": "Releases",
+			"betas": "Versioni beta",
+			"rc": "Versione Candidate",
+			"release": "Rilascio",
+			"releases": "Versioni",
 			"patch": "Patch",
-			"patches": "Patches"
+			"patches": "Patch"
 		}
 	},
 	"ipvd": {
@@ -175,43 +169,43 @@
 		"feedback": "Assicurati di includere il modello della telecamera e il produttore..."
 	},
 	"pageTitles": {
-		"template": "{{title}} %CLOUD_NAME%",
+		"template": "{{title}} - %CLOUD_NAME%",
 		"default": "%CLOUD_NAME%",
 		"registerSuccess": "Benvenuto in",
 		"register": "Creare un account",
-		"changePassword": "Cambia Password -",
-		"account": "Impostazioni dell'account -",
-		"systems": "Sistemi -",
-		"system": "Sistema -",
-		"systemShare": "Condivisione Sistema -",
-		"activate": "Attivazione Account -",
-		"activateSent": "Attivazione Account -",
-		"activateSuccess": "Attivazione dell'account",
-		"activateCode": "Attivazione Account -",
-		"restorePassword": "Reimpostare la Password -",
-		"restorePasswordSuccess": "Password salvata",
-		"restorePasswordCode": "Reimpostare la Password -",
-		"view": "Visualizzazione delle telecamere - ",
+		"changePassword": "Change password",
+		"account": "Account settings",
+		"systems": "Systems",
+		"system": "System",
+		"systemShare": "Share System",
+		"activate": "Activate account",
+		"activateSent": "Activate account",
+		"activateSuccess": "Account activated",
+		"activateCode": "Activate account",
+		"restorePassword": "Reset password",
+		"restorePasswordSuccess": "Password saved",
+		"restorePasswordCode": "Reset password",
+		"view": "View cameras",
 		"debug": "Debug",
-		"login": "Accesso -",
+		"login": "Log in",
 		"download": "Scarica %VMS_NAME%",
-		"downloadPlatform": "Scarica %VMS_NAME% ",
+		"downloadPlatform": "Scarica %VMS_NAME% per ",
 		"pageNotFound": "Pagina non trovata",
 		"supportedDevices": "Dispositivi supportati",
 		"integrations": "Integrazioni"
 	},
 	"dialogs": {
-		"okButton": "OK",
+		"okButton": "Ok",
 		"cancelButton": "Annulla",
 		"createNewAccount": "Crea nuovo account",
 		"changeAccountLogged": "Hai già effettuato l'accesso con {email}",
 		"loggedFromOther": "Verrà effettuato l'accesso con un altro account",
 		"loginTitle": "Accedi a %CLOUD_NAME%",
 		"loginButton": "Accesso",
-		"logoutAuthorisedTitle": "Ha già effettuato l'accesso",
+		"logoutAuthorisedTitle": "Hai già effettuato l'accesso",
 		"logoutAuthorisedContinueButton": "Continua",
 		"logoutAuthorisedLogoutButton": "Disconnetti",
-		"noClientDetectedTitle": "Installa %VMS_NAME% per visualizzare il suo sistema",
+		"noClientDetectedTitle": "Installa %VMS_NAME% per visualizzare il tuo sistema",
 		"stayAs": "Rimani collegato come {email} ",
 		"stayLoggedIn": "Rimani collegato",
 		"download": "Scarica %VMS_NAME%",
@@ -224,7 +218,12 @@
 			"primarySystemOffline": "Il sistema {{primarySystem}} è offline e non può essere unito al sistema {{targetSystem}}.",
 			"secondaryCannotMerge": "Il sistema {{targetSystem}} ha una versione più recente del software che è incompatibile con il sistema corrente. Aggiornare il sistema attuale alla <a href=\"/download\" target=\"_blank\" translate>versione più recente</a> per unirsi con il {{targetSystem}} sistema corrente.",
 			"systemOffline": "Il sistema {{targetSystem}} è offline e non può essere unito a quello corrente.",
-			"systemUnavailable": "Il sistema {{targetSystem}} è attualmente irraggiungibile. Riprova tra qualche minuto o contatta"
+			"systemUnavailable": "Il sistema {{targetSystem}} è attualmente irraggiungibile. Riprova tra qualche minuto o contatta",
+			"recommendSupport": {
+				"a_recommend": "Raccomandiamo di consultarsi con",
+				"b_support": "supporto",
+				"c_proceeding": "prima di procedere."
+			}
 		},
 		"message": {
 			"failedToSend": "Impossibile inviare il messaggio.",
@@ -234,20 +233,20 @@
 				"ipvd_feedback_page": "Feedback per la pagina delle telecamere",
 				"ipvd_feedback_device": "Feedback su {{asset}}"
 			},
-			"topic": {
-				"contact_sales": "Contatta le vendite per {{asset}}",
-				"contact_support": "Contatta l'assistenza per {{asset}}",
+			"subject": {
+				"sales_inquiry": "Richiesta commerciale per {{asset}}",
+				"technical_inquiry": "Richiesta tecnica per {{asset}}",
 				"integration_feedback": "Feedback per l'integrazione {{asset}}",
 				"ipvd_feedback_page": "Feedback per la pagina delle telecamere",
 				"ipvd_feedback_device": "Feedback su {{asset}}"
 			}
 		},
 		"sharing": {
-			"confirmOwner": "Se cambi proprietario del sistema, revocherai la proprietà dall'account corrente. Questa azione è irreversibile. E' sicuro?",
-			"shareTitle": "Inserisci",
-			"shareConfirmButton": "Inserisci",
+			"confirmOwner": "Se cambi il proprietario del sistema, revocherai la proprietà dall'account corrente. Questa azione è irreversibile. Sei sicuro?",
+			"shareTitle": "Aggiungi",
+			"shareConfirmButton": "Aggiungi",
 			"editShareTitle": "Modifica Permessi",
-			"editShareConfirmButton": "Salvare",
+			"editShareConfirmButton": "Salva",
 			"permissionsSaved": "Nuove autorizzazioni salvate"
 		}
 	},
@@ -297,7 +296,7 @@
 	"passwordRequirements": {
 		"good": "buono",
 		"fair": "giusta",
-		"fairMessage": "Utilizzare numeri, lettere maiuscole e minuscole e caratteri speciali per rendere più sicura la password",
+		"fairMessage": "Usa numeri, lettere maiuscole e minuscole e caratteri speciali per rafforzare la tua password",
 		"minLength": "troppo corto",
 		"minLengthMessage": "La password deve contenere almeno 8 caratteri",
 		"required": "errato",
@@ -306,7 +305,7 @@
 		"weakMessage": "Utilizzare numeri, lettere maiuscole e minuscole e caratteri speciali per rendere più sicura la password",
 		"strongMessage": "Password sicura!",
 		"common": "troppo comune",
-		"commonMessage": "Questa password è nelle migliori e più popolari password utilizzate nel mondo",
+		"commonMessage": "Questa password è tra le password più popolari al mondo",
 		"missingMessage": "È richiesta la password"
 	},
 	"registration": {
@@ -317,20 +316,20 @@
 		"mySystemSearch": "IMeMyMine",
 		"unavailable": "Il server è irraggiungibile",
 		"offline": "Il sistema è offline",
-		"offlineAlertRibbon": "System is offline. Some settings may not be available.",
+		"offlineAlertRibbon": "Il sistema non è in linea. Alcune impostazioni potrebbero non essere disponibili.",
 		"openClient": "Apri in %VMS_NAME%",
-		"openClientNoSystem": "Apri in %VMS_NAME%",
-		"confirmMergeAction": "Unisci",
+		"openClientNoSystem": "Apri %VMS_NAME%",
+		"confirmMergeAction": "Unione",
 		"mergeSystemTitle": "Unione dei sistemi",
 		"confirmRenameTitle": "Nome del sistema",
-		"confirmRenameAction": "Salvare",
+		"confirmRenameAction": "Salva",
 		"successRename": "Nome del sistema salvato",
 		"confirmDisconnectTitle": "Scollegare il sistema da %CLOUD_NAME%?",
 		"confirmDisconnectAction": "Scollegamento",
-		"confirmUnshareFromMe": "Sta per disconnettere questo Sistema dal suo account. Non sara' in più in grado di accedere a questo Sistema. E' sicuro?",
-		"confirmUnshareFromMeTitle": "Scollegare il sistema da?",
+		"confirmUnshareFromMe": "Stai per disconnettere questo sistema dal tuo account. Non sarai più in grado di accedere a questo sistema. Sei sicuro?",
+		"confirmUnshareFromMeTitle": "Scollegare il sistema?",
 		"confirmUnshareFromMeAction": "Scollegamento",
-		"confirmUnshare": "Questo utente non sarà in grado di accedere al sistema. E' sicuro?",
+		"confirmUnshare": "Questo utente non sarà in grado di accedere al sistema. Sei sicuro?",
 		"confirmUnshareTitle": "Rimuovere l'utente?",
 		"confirmUnshareAction": "Rimuovere",
 		"successDisconnected": "Il sistema è stato scollegato correttamente da %CLOUD_NAME%",
@@ -340,7 +339,8 @@
 		"mergeSuccess": "Unione del sistema completata",
 		"permissionsRemoved": "Le autorizzazioni sono state rimosse da {{email}}",
 		"unknownName": "Nome sconosciuto per il sistema (causato da cloud merge)",
-		"shareOffline": "Cannot share system while it is offline"
+		"shareOffline": "Impossibile condividere il sistema mentre è offline",
+		"shareUnauthorized": "Non hai i permessi per condividere questo sistema"
 	},
 	"systemStatuses": {
 		"activated": "attivato",
@@ -348,7 +348,7 @@
 		"merging": "unione",
 		"notActivated": "non attivato",
 		"online": "online",
-		"offline": "offiline",
+		"offline": "non in linea",
 		"unavailable": "non disponibile"
 	},
 	"accessRoles": {
@@ -377,7 +377,7 @@
 			"description": "Accesso illimitato inclusa la possibilità di condividere"
 		},
 		"Custom": {
-			"label": "Personalizzato",
+			"label": "Personalizza",
 			"description": "Utilizzare l'applicazione client %VMS_NAME% per impostare le autorizzazioni personalizzate"
 		},
 		"cloudAdmin": {
@@ -385,7 +385,7 @@
 			"description": "Può configurare il sistema e condividerlo"
 		},
 		"customRole": {
-			"label": "Ruoli personalizzati",
+			"label": "Ruolo personalizzato",
 			"description": "Ruolo utente personalizzato specificato nel Sistema"
 		},
 		"owner": {
@@ -410,13 +410,13 @@
 		}
 	},
 	"privacyPolicy": {
-		"integration": "Inviando questo modulo accetti di essere contattato da {{INTEGRATION_COMPANY}} e / o %COMPANY_NAME%.\nTroverai l'informativa sulla privacy dal {{INTEGRATION_COMPANY}} <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">qui</a> e %COMPANY_NAME% informativa sulla privacy <a href=\"%PRIVACY_LINK%\" target=\"blank\">qui</a> che includono istruzioni su come revocare il tuo consenso.",
-		"ipvd": "Inviando questo modulo accetti di essere contattato da %COMPANY_NAME%.\nTroverai l'informativa sulla privacy %COMPANY_NAME%<a href=\"%PRIVACY_LINK%\" target=\"blank\">qui</a> che includono istruzioni su come revocare il tuo consenso."
+		"integration": "Inviando questo modulo accetti di essere contattato da {{INTEGRATION_COMPANY}} e / o %COMPANY_NAME%.\nTroverai l'informativa sulla privacy {{INTEGRATION_COMPANY}} <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">qui</a> e %COMPANY_NAME% informativa sulla privacy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">qui</a> che includono istruzioni su come revocare il tuo consenso.",
+		"ipvd": "Inviando questo modulo accetti di essere contattato da %COMPANY_NAME%.\nTroverai l'informativa sulla privacy %COMPANY_NAME%<a href=\"%PRIVACY_LINK%\" target=\"_blank\">qui</a> che includono istruzioni su come revocare il tuo consenso."
 	},
 	"systemAdministration": "Amministratore di sistema",
 	"users": "Utenti",
 	"testedVersionLabel": "Verificato sulla versione {{vmsName}}:",
-	"testedVersionsLabel": "Verificato sulle versioni {{vmsName}}:",
+	"testedVersionsLabel": "Verificato sulla versione {{vmsName}}:",
 	"About %CLOUD_NAME%": "Informazioni su %CLOUD_NAME%",
 	"Download %VMS_NAME%": "Scarica %VMS_NAME%",
 	"Integrations": "Integrazioni",
@@ -427,7 +427,7 @@
 	"pleaseSelect": "Selezionare...",
 	"WHEN_MERGE_FINISHES": "Una volta completata l'unione, tutti gli utenti e le telecamere di questo sistema diventeranno disponibili nel sistema \"<strong>{{targetSystemName}}</strong> \"e questo sistema sarà cancellato.",
 	"FAILED_SYSTEM_DESCR": "Questo collegamento è interrotto, <br> Il sistema potrebbe essere disconnesso da %CLOUD_NAME%, <br> L'accesso a questo sistema potrebbe essere revocato, <br> o potrebbe aver effettuato l'accesso ad un altro account.",
-	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "Non hai Sistemi collegati a %CLOUD_NAME%",
+	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "Non hai sistemi collegati a %CLOUD_NAME%",
 	"NO_SYSTEMS_LOGIN": "Accedere al sistema utilizzando %VMS_NAME%",
 	"NO_SYSTEMS_GOTO_ADMINISTRATION": "Vai alla scheda \"Cloud\" nella finestra di dialogo \"System Administration\"",
 	"NO_SYSTEMS_CONNECT_SYSTEM": "Premere \"Collegare il sistema a %CLOUD_NAME%\""

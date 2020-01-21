@@ -16,9 +16,9 @@ ${url}         ${ENV}
 *** Keywords ***
 Check Log In
     ${random email}    Get Random Email    ${BASE EMAIL}
-    Log In    ${random email}    ${password}
+    Log In    ${random email}    ${password}    ${False}
     Wait Until Element Is Visible    ${ACCOUNT NOT FOUND}
-    Log In    ${email}    ${password}    None
+    Log In    ${email}    ${password}    button=None
     Validate Log In
 
 Open New Browser On Failure
@@ -80,7 +80,7 @@ works at restore password page with email input - after submit error
     Wait Until Elements Are Visible    ${RESTORE PASSWORD EMAIL INPUT}    ${RESET PASSWORD BUTTON}
     Input Text    ${RESTORE PASSWORD EMAIL INPUT}    ${EMAIL UNREGISTERED}
     Click Button    ${RESET PASSWORD BUTTON}
-    Check For Alert Dismissable    ${CANNOT SEND CONFIRMATION EMAIL}${SPACE}${ACCOUNT DOES NOT EXIST}
+    Check For Alert Dismissable    ${CANNOT SEND CONFIRMATION EMAIL}${SPACE}${SPACE}${ACCOUNT DOES NOT EXIST}
     Check Log In
 
 works at restore password page with email input - after submit success

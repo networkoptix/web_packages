@@ -18,3 +18,6 @@ def get_variables(cloud_url):
 
     #return the dictionary as variables into robot
     return systemIds
+
+if __name__ == '__main__':
+    get_variables("https://cloud-test.hdw.mx")

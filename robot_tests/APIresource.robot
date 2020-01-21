@@ -1,6 +1,8 @@
 *** Settings ***
 Resource          resource.robot
 Library           RequestsLibrary
+Library           NoptixLibrary/Encode.py
+
 
 *** variables ***
 ${default name}    API made system
@@ -61,3 +63,24 @@ Integration Store is Enabled
     ${resp}=    Get Request    Get Integration Store status    /api/utils/cloudCapabilities/
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()['integrationStoreEnabled']}
+
+# Alternative way to reset Account password - via cdb directly.
+# "Change Account Password" keyword is preferred.
+Set Account Password
+    [Arguments]    ${email}    ${old_password}    ${new_password}
+    ${passwordHa1}=   Encode.Get Ha1 Password    ${email}    ${new_password}
+    ${passwordHa1Sha256}=   Encode.Get Ha1 Sha256 Password     ${email}    ${new_password}
+
+    &{params}=    Create Dictionary    passwordHa1=${passwordHa1}    passwordHa1Sha256=${passwordHa1Sha256}
+    Log dictionary    ${params}
+    @{auth}=   Create Dictionary    ${email}    ${old_password}
+    Create Digest Session    set_new_password_session   ${ENV}    auth=${auth}    disable_warnings=1
+    ${resp}=    Post Request    set_new_password_session    /cdb/account/update    json=${params}
+    Should Be Equal As Strings    ${resp.status_code}    200
+    Return From Keyword    ${resp.json()}
+
+Log Out via API
+    ${cookies}=   Get Cookies    as_dict = True
+    ${status}=   CloudPortalAPI.Log Out    ${ENV}    &{cookies}[sessionid]    &{cookies}[csrftoken]
+    Should Be Equal as Strings    ${status}    200
+    Reload Page

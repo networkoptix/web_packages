@@ -53,21 +53,17 @@
 		},
 		"groups": {
 			"windows": {
-				"label": "Windows",
-				"supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+				"label": "วินโดวส์"
 			},
 			"mac": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"linux": {
 				"label": "Ubuntu Linux",
-				"shortLabel": "Ubuntu",
-				"supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+				"shortLabel": "Ubuntu"
 			},
 			"macos": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"ios": {
 				"label": "iOS",
@@ -79,13 +75,11 @@
 			},
 			"arm": {
 				"label": "ARM",
-				"shortLabel": "ARM",
-				"supported": "<a href='/content/arm'>เซิร์ฟเวอร์ที่ใช้ ARM สนับสนุนนโยบาย</a>"
+				"shortLabel": "ARM"
 			},
 			"sdk": {
 				"label": "SDK",
-				"shortLabel": "SDK",
-				"supported": "C ++ SDK ข้ามแพลตฟอร์ม"
+				"shortLabel": "SDK"
 			}
 		},
 		"platforms": {
@@ -112,12 +106,12 @@
 		},
 		"releasesTypes": {
 			"beta": "Beta",
-			"betas": "Betas",
+			"betas": "เบต้า",
 			"rc": "Release Candidate",
 			"release": "Release",
-			"releases": "Releases",
+			"releases": "การเผยแพร่",
 			"patch": "Patch",
-			"patches": "Patches"
+			"patches": "โปรแกรมปรับปรุง"
 		}
 	},
 	"ipvd": {
@@ -135,7 +129,7 @@
 		"isAptzSupported": "PTZ ขั้นสูง",
 		"isAptzSupportedShort": "Adv PTZ",
 		"isFisheye": "ฟิชอาย",
-		"isMdSupported": "การเคลื่อนไหว",
+		"isMdSupported": "โมชั่น",
 		"isIoSupported": "I / O",
 		"isH265": "H.265",
 		"isMultiSensor": "เซ็นเซอร์หลายตัว",
@@ -175,27 +169,27 @@
 		"feedback": "ตรวจสอบให้แน่ใจว่าคุณได้รวมรุ่นกล้องและผู้ผลิตของคุณ..."
 	},
 	"pageTitles": {
-		"template": "{{title}} %CLOUD_NAME%",
+		"template": "{{title}} - %CLOUD_NAME%",
 		"default": "%CLOUD_NAME%",
 		"registerSuccess": "ขอต้อนรับสู่:",
 		"register": "สร้างบัญชี",
-		"changePassword": "เปลี่ยนรหัสผ่าน -",
-		"account": "การตั้งค่าบัญชี -",
-		"systems": "ระบบ -",
-		"system": "ระบบ -",
-		"systemShare": "ระบบใช้ร่วมกัน-",
-		"activate": "บัญชีที่ใช้งานได้ -",
-		"activateSent": "บัญชีที่ใช้งานได้ -",
-		"activateSuccess": "บัญชีที่เปิดใช้งาน-",
-		"activateCode": "บัญชีที่ใช้งานได้ -",
-		"restorePassword": "กำหนดรหัสผ่านใหม่ -",
-		"restorePasswordSuccess": "บันทึกรหัสผ่านแล้ว -",
-		"restorePasswordCode": "กำหนดรหัสผ่านใหม่ -",
-		"view": "ดูกล้อง - ",
+		"changePassword": "Change password",
+		"account": "Account settings",
+		"systems": "Systems",
+		"system": "System",
+		"systemShare": "Share System",
+		"activate": "Activate account",
+		"activateSent": "Activate account",
+		"activateSuccess": "Account activated",
+		"activateCode": "Activate account",
+		"restorePassword": "Reset password",
+		"restorePasswordSuccess": "Password saved",
+		"restorePasswordCode": "Reset password",
+		"view": "View cameras",
 		"debug": "การ​แก้ไข​จุด​บกพร่อง",
-		"login": "ลงชื่อเข้าสู่ระบบ -",
+		"login": "Log in",
 		"download": "ดาวน์โหลด %VMS_NAME%",
-		"downloadPlatform": "ดาวน์โหลด %VMS_NAME% สำหรับ ",
+		"downloadPlatform": "Download %VMS_NAME% for ",
 		"pageNotFound": "ไม่พบหน้านี้",
 		"supportedDevices": "อุปกรณ์ที่รองรับ",
 		"integrations": "Integration"
@@ -211,7 +205,7 @@
 		"logoutAuthorisedTitle": "คุณกำลังอยู่ในระบบ",
 		"logoutAuthorisedContinueButton": "ดำเนิน​การ",
 		"logoutAuthorisedLogoutButton": "ออกจากระบบ",
-		"noClientDetectedTitle": "ติดตั้ง %VMS_NAME% เพื่อดูระบบของคุณ",
+		"noClientDetectedTitle": "Install %VMS_NAME% to view your System",
 		"stayAs": "Stay logged as {email} ",
 		"stayLoggedIn": "Stay Logged In",
 		"download": "ดาวน์โหลด %VMS_NAME%",
@@ -224,7 +218,12 @@
 			"primarySystemOffline": "ระบบ {{primarySystem}} เป็นออฟไลน์และไม่สามารถผสานกับระบบปัจจุบันได้ {{targetSystem}}",
 			"secondaryCannotMerge": "ระบบ {{targetSystem}} มีซอฟต์แวร์รุ่นเก่าที่เข้ากันไม่ได้กับระบบปัจจุบัน อัปเดต {{targetSystem}} เป็น <a href=\"/download\" target=\"_blank\" translate>บิลด์ล่าสุด</a> เพื่อรวมเข้ากับบิลด์ปัจจุบัน",
 			"systemOffline": "ระบบ {{targetSystem}} เป็นแบบออฟไลน์และไม่สามารถผสานกับระบบปัจจุบันได้",
-			"systemUnavailable": "ระบบ {{targetSystem}} ไม่สามารถเข้าถึงได้ในขณะนี้ ลองอีกครั้งในไม่กี่นาทีหรือติดต่อ"
+			"systemUnavailable": "ระบบ {{targetSystem}} ไม่สามารถเข้าถึงได้ในขณะนี้ ลองอีกครั้งในไม่กี่นาทีหรือติดต่อ",
+			"recommendSupport": {
+				"a_recommend": "เราขอแนะนำให้ปรึกษากับ",
+				"b_support": "ทีมช่วยเหลือ",
+				"c_proceeding": "ก่อนดำเนินการต่อ"
+			}
 		},
 		"message": {
 			"failedToSend": "ไม่สามารถส่งข้อความได้",
@@ -234,9 +233,9 @@
 				"ipvd_feedback_page": "ข้อเสนอแนะสำหรับหน้ากล้อง",
 				"ipvd_feedback_device": "ข้อเสนอแนะเกี่ยวกับ {{asset}}"
 			},
-			"topic": {
-				"contact_sales": "ติดต่อฝ่ายขายสำหรับ {{asset}}",
-				"contact_support": "ติดต่อฝ่ายสนับสนุนสำหรับ {{asset}}",
+			"subject": {
+				"sales_inquiry": "สอบถามรายละเอียดการขายสำหรับ {{asset}}",
+				"technical_inquiry": "Technical inquiry for {{asset}}",
 				"integration_feedback": "ข้อเสนอแนะสำหรับการรวม {{asset}}",
 				"ipvd_feedback_page": "ข้อเสนอแนะสำหรับหน้ากล้อง",
 				"ipvd_feedback_device": "ข้อเสนอแนะเกี่ยวกับ {{asset}}"
@@ -318,8 +317,8 @@
 		"unavailable": "ระบบไม่สามารถเข้าถึงได้",
 		"offline": "ระบบออฟไลน์",
 		"offlineAlertRibbon": "System is offline. Some settings may not be available.",
-		"openClient": "เปิดใน %VMS_NAME%",
-		"openClientNoSystem": "เปิด %VMS_NAME%",
+		"openClient": "Open in %VMS_NAME%",
+		"openClientNoSystem": "เปิด {{VMS_NAME}}",
 		"confirmMergeAction": "ผสาน",
 		"mergeSystemTitle": "รวมระบบ",
 		"confirmRenameTitle": "ชื่อระบบ",
@@ -340,7 +339,8 @@
 		"mergeSuccess": "ผสานระบบเสร็จสมบูรณ์",
 		"permissionsRemoved": "สิทธิ์ถูกนำออกจาก {{email}}",
 		"unknownName": "ชื่อที่ไม่รู้จักสำหรับระบบ (เกิดจากการผสานคลาวด์)",
-		"shareOffline": "Cannot share system while it is offline"
+		"shareOffline": "Cannot share system while it is offline",
+		"shareUnauthorized": "You do not have permission to share this system"
 	},
 	"systemStatuses": {
 		"activated": "เปิดใช้งาน",
@@ -410,16 +410,16 @@
 		}
 	},
 	"privacyPolicy": {
-		"integration": "โดยการส่งแบบฟอร์มนี้คุณตกลงที่จะได้รับการติดต่อจาก {{INTEGRATION_COMPANY}} และ / หรือ %COMPANY_NAME%\nคุณจะพบ {{INTEGRATION_COMPANY}} นโยบายความเป็นส่วนตัว <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">ที่นี่</a> และ %COMPANY_NAME% นโยบายความเป็นส่วนตัว <a href=\"%PRIVACY_LINK%\" target=\"blank\">ที่นี่</a> ซึ่งรวมถึงคำแนะนำเกี่ยวกับวิธีการถอนการยินยอมของคุณ",
-		"ipvd": "โดยการส่งแบบฟอร์มนี้คุณตกลงที่จะได้รับการติดต่อจาก %COMPANY_NAME%\nคุณจะได้พบกับ %COMPANY_NAME% นโยบายความเป็นส่วนตัว <a href=\"%PRIVACY_LINK%\" target=\"blank\">ที่นี่</a> ซึ่งรวมถึงคำแนะนำเกี่ยวกับวิธีการถอนความยินยอมของคุณ"
+		"integration": "โดยการส่งแบบฟอร์มนี้คุณตกลงที่จะได้รับการติดต่อจาก {{INTEGRATION_COMPANY}} และ / หรือ %COMPANY_NAME%\nคุณจะพบ {{INTEGRATION_COMPANY}} นโยบายความเป็นส่วนตัว <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">ที่นี่</a> และ %COMPANY_NAME% นโยบายความเป็นส่วนตัว <a href=\"%PRIVACY_LINK%\" target=\"_blank\">ที่นี่</a> ซึ่งรวมถึงคำแนะนำเกี่ยวกับวิธีการถอนการยินยอมของคุณ",
+		"ipvd": "โดยการส่งแบบฟอร์มนี้คุณตกลงที่จะได้รับการติดต่อจาก %COMPANY_NAME%\nคุณจะได้พบกับ %COMPANY_NAME% นโยบายความเป็นส่วนตัว <a href=\"%PRIVACY_LINK%\" target=\"_blank\">ที่นี่</a> ซึ่งรวมถึงคำแนะนำเกี่ยวกับวิธีการถอนความยินยอมของคุณ"
 	},
 	"systemAdministration": "ผู้ดูแลระบบ",
 	"users": "ผู้ใช้งาน",
-	"testedVersionLabel": "ทดสอบกับรุ่น {{vmsName}}:",
-	"testedVersionsLabel": "ทดสอบกับรุ่น {{vmsName}}:",
+	"testedVersionLabel": "Tested with {{vmsName}} version:",
+	"testedVersionsLabel": "Tested with {{vmsName}} versions:",
 	"About %CLOUD_NAME%": "เกี่ยวกับ %CLOUD_NAME%",
 	"Download %VMS_NAME%": "ดาวน์โหลด %VMS_NAME%",
-	"Integrations": "Integration",
+	"Integrations": "การรวบรวม",
 	"Privacy": "ความเป็นส่วนตัว",
 	"Support": "ทีมช่วยเหลือ",
 	"Supported Devices": "อุปกรณ์ที่รองรับ",
@@ -428,7 +428,7 @@
 	"WHEN_MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{{targetSystemName}}</strong> System, and this system will be deleted.",
 	"FAILED_SYSTEM_DESCR": "This link is broken,<br>System may be disconnected from %CLOUD_NAME%,<br>Access to this System may be revoked, <br>or you may be logged into a different account.",
 	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "คุณไม่มีระบบเชื่อมต่อกับ %CLOUD_NAME%",
-	"NO_SYSTEMS_LOGIN": "เข้าสู่ระบบโดยใช้ %VMS_NAME%",
+	"NO_SYSTEMS_LOGIN": "Log in to your System using %VMS_NAME%",
 	"NO_SYSTEMS_GOTO_ADMINISTRATION": "ไปที่แท็บ \"Cloud\" ในกล่องโต้ตอบ \"การดูแลระบบ\"",
 	"NO_SYSTEMS_CONNECT_SYSTEM": "เชื่อมต่อระบบกับ %CLOUD_NAME%\""
 }

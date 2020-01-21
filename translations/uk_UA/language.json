@@ -2,20 +2,18 @@
   "language": "uk_UA",
   "language_name": "Українська",
   "cloudName": "%CLOUD_NAME%",
-  "vmsName": "%VMS_NAME%",
-  "clientProtocol": "%CLIENT_PROTOCOL%:",
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
     "default": "%CLOUD_NAME%",
-    "registerSuccess": "Ласкаво просимо на",
+    "registerSuccess": "Вітаємо в",
     "register": "Створити обліковий запис",
     "changePassword": "Змінити пароль -",
     "account": "Параметри облікового запису",
     "systems": "Системи -",
-    "system": "Система -",
+    "system": "Система",
     "systemShare": "Загальний доступ -",
     "activate": "Активувати обліковий запис -",
-    "activateSent": "Активувати обліковий запис -",
+    "activateSent": "Активувати обліковий запис",
     "activateSuccess": "Обліковий запис активований",
     "activateCode": "Активувати обліковий запис -",
     "restorePassword": "Відновити пароль -",
@@ -23,80 +21,13 @@
     "restorePasswordCode": "Відновити пароль -",
     "view": "Переглянути камери - ",
     "debug": "Відладка",
-    "login": "Вхід -",
+    "login": "Увійти -",
     "download": "Завантажити %VMS_NAME%",
     "downloadPlatform": "Завантажити %VMS_NAME% для ",
     "pageNotFound": "Сторінку не знайдено"
   },
-  "systemStatuses": {
-    "activated": "активовано",
-    "incompatible": "несумісно",
-    "merging": "злиття",
-    "notActivated": "не активовано",
-    "online": "oнлайн",
-    "offline": "поза мережею",
-    "unavailable": "недоступний"
-  },
-  "accessRoles": {
-    "disabled": {
-      "label": "Вимкнено",
-      "description": "Користувач вимкнений і не може ввійти в систему"
-    },
-    "Owner": {
-      "label": "Власник",
-      "description": "Необмежений доступ, включаючи управління спільним доступом та підключенням/відключення системи до/від хмари"
-    },
-    "Viewer": {
-      "label": "Відео з камер і архів",
-      "description": "Можна переглядати відео в реальному часі та переглядати архів"
-    },
-    "Live Viewer": {
-      "label": "Відео в реальному часі",
-      "description": "Можна переглядати лише відео в реальному часі"
-    },
-    "Advanced Viewer": {
-      "label": "Перегляд і налаштування",
-      "description": "Може дивитися живе відео, архів, управляти PTZ і т. Д"
-    },
-    "Administrator": {
-      "label": "Адміністратор",
-      "description": "Необмежений доступ, включаючи можливість керування спільним доступом"
-    },
-    "Custom": {
-      "label": "Особливі",
-      "description": "Використовуйте додаток %VMS_NAME% для налаштування особливих повноважень"
-    },
-    "cloudAdmin": {
-      "label": "Адміністратор",
-      "description": "Може налаштувати систему та загальний доступ"
-    },
-    "customRole": {
-      "label": "Особлива роль",
-      "description": "Особлива роль, налаштована в системі"
-    },
-    "owner": {
-      "label": "Власник",
-      "description": "Необмежений доступ, включаючи управління спільним доступом та підключенням/відключення системи до/від хмари"
-    },
-    "viewer": {
-      "label": "Відео з камер і архів",
-      "description": "Можна переглядати відео в реальному часі та переглядати архів"
-    },
-    "liveViewer": {
-      "label": "Відео в реальному часі",
-      "description": "Можна переглядати лише відео в реальному часі"
-    },
-    "advancedViewer": {
-      "label": "Перегляд і налаштування",
-      "description": "Може дивитися відео в реальному часі, архів, змінювати налаштування камер, керувари RTZ і т. д"
-    },
-    "custom": {
-      "label": "Особливі",
-      "description": "Використовуйте додаток %VMS_NAME% для налаштування особливих повноважень"
-    }
-  },
   "errorCodes": {
-    "ok": "ок",
+    "ok": "гаразд",
     "cantSendActivationPrefix": "Не вдається надіслати підтвердження електронною поштою",
     "cantDisconnectSystemPrefix": "Невдається видалити систему",
     "cantUnshareWithMeSystemPrefix": "Невдається видалити систему",
@@ -138,47 +69,12 @@
     "FAIL": "Система<strong>{{failedSystem}}</strong>в даний час недоступна.<br>Повторіть спробу через кілька хвилин або зверніться до <a href=\"%SUPPORT_LINK%\" target=\"_blank\">підтримки</a>.",
     "unknownMergeError": "Невідома помилка. Спробуйте оновити сторінку та повторити спробу. Якщо проблема не вирішена - зверніть в службу <a href=\"%SUPPORT_LINK%\" target=\"_blank\">підтримка</a>."
   },
-  "system": {
-    "yourSystem": "Ваша система",
-    "mySystemSearch": "ЯМійМоя",
-    "unavailable": "Система недоступна",
-    "offline": "Система знаходиться поза мережею",
-    "openClient": "Відкрити в %VMS_NAME%",
-    "openClientNoSystem": "Відкрити %VMS_NAME%",
-    "confirmMergeAction": "Об'єднати",
-    "mergeSystemTitle": "Об'єднати системи",
-    "confirmRenameTitle": "Назва системи",
-    "confirmRenameAction": "Зберегти",
-    "successRename": "Ім'я системи збережено",
-    "confirmDisconnectTitle": "Відключити систему від %CLOUD_NAME%?",
-    "confirmDisconnectAction": "Відключити",
-    "confirmUnshareFromMe": "Ви більше не зможете увійти в цю Систему.",
-    "confirmUnshareFromMeTitle": "Відключити систему від облікового запису?",
-    "confirmUnshareFromMeAction": "Відключити",
-    "confirmUnshareTitle": "Видалити користувача?",
-    "confirmUnshareAction": "Видалити",
-    "successDisconnected": "Система успішно відключена від %CLOUD_NAME%",
-    "successDeleted": "Система {{systemName}} успішно видалена з вашого облікового запису",
-    "mergeFailed": "Не вдалося об’єднати систему",
-    "mergeStart": "Злиття систем почалося",
-    "mergeSuccess": "Злиття системи завершено",
-    "permissionsRemoved": "{{email}} був позбавлений повноважень",
-    "unknownName": "Невідоме ім’я для системи (викликане злиттям хмари)"
-  },
-  "regActions": {
-    "passwordLabel": "Пароль",
-    "createAccount": "Створити обліковий запис"
-  },
-  "header": {
-    "allSystems": "Всі системи",
-    "systems": "Системи"
-  },
   "common": {
     "cameraLinks": {
       "highStream": "Висока якість",
       "lowStream": "Низька якість",
       "transcoding": "Перекодування",
-      "unknown": "Невідомий",
+      "unknown": "Невідомо",
       "copyToClipboard": "копіювати в буфер обміну",
       "copyDefaultText": "копіювати",
       "copyActiveText": "скопійовано до буфера обміну"
@@ -190,7 +86,7 @@
       "offline": "Поза мережею",
       "error": "Помилка",
       "errorLoading": "Під час завантаження цього відео сталася помилка.",
-      "unauthorized": "Потрібна аутентифікація",
+      "unauthorized": "Потрібна авторизація",
       "noData": "Немає даних",
       "iOSVideoTooLarge": "iOS не підтримує відео з розшиненням більшим за fullHD (2MP: 1920x1080).",
       "flashRequired": "Будь ласка, <a href='https://get.adobe.com/flashplayer/' target='_blank'>встановіть Adobe Flash</a> для відтворення відео.",
@@ -209,23 +105,22 @@
     },
     "chromeCastWarning": "Chromecast ресурсоємний і може спричинити проблеми на вашому сервері.",
     "voiceCommands": {
-      "play": "відтворення",
+      "play": "відтворити",
       "pause": "пауза",
-      "live": "go to live | show me live",
-      "view": "view + [camera name]",
-      "search": "find + [text for searchbar]",
+      "live": "live | show me live",
+      "view": "перегляд + [назва камери]",
+      "search": "знайти + [текст для панелі пошуку]",
       "clear search": "очистити вікно пошуку",
-      "expand server": "expand server + [server name]",
-      "collapse server": "collapse server + [server name]",
+      "expand server": "розширити сервер + [назва сервера]",
+      "collapse server": "сховати сервер + [назва сервера]",
       "expand all servers": "розгорнути всі сервери",
       "collapse all servers": "згорнути всі сервери",
       "stop listening": "припинити прослуховування",
-      "help": "help | show commands"
+      "help": "допомога | показати команди"
     }
   },
-  "recommendSupport": {
-    "a_recommend": "Ми рекомендуємо проконсультуватися з",
-    "b_support": "підтримка",
-    "c_proceeding": "перед тим, як продовжити."
+  "system": {
+    "offline": "Система знаходиться поза мережею",
+    "unavailable": "Система недоступна"
   }
 }

@@ -191,9 +191,9 @@ ${MERGE PASSWORD INPUT}               ${MERGE DIALOG}//input[@id="mergePassword"
 ${CURRENTLY MERGING CARD}             //div[contains(@class,"card-body")]
 ${CURRENTLY MERGING DOTS}             ${CURRENTLY MERGING CARD}//div[contains(@class, "circleG circleG_")]
 ${MERGE NOT OWNER MESSAGE 2}          ${MERGE DIALOG}//p[@class='help-block-no-height'][2]
-${MERGE FAILED DIALOG HEADER}         //nx-modal-generic-content//h1[contains(text(),"${SYSTEMS MERGE FAILED TEXT}")]
+${MERGE FAILED DIALOG HEADER}         //nx-modal-generic-content//h1/span[contains(text(),"${SYSTEMS MERGE FAILED TEXT}")]
 ${MERGE FAILED OK BUTTON}             //nx-modal-generic-content//button[contains(text(),"${OK TEXT}")]
-${MERGE FAILED X BUTTON}              //nx-modal-generic-content//button[@class="close"]
+${MERGE FAILED X BUTTON}              //nx-modal-generic-content//button[contains(@class,"close")]
 ${MERGE CURRENT SYSTEM WITH}          ${MERGE DIALOG}//label[contains(text(),"${MERGE CURRENT SYSTEM WITH TEXT}")]
 ${MERGE ONLY AS OWNER}                ${MERGE DIALOG}//p[contains(text(),"${YOU CAN ONLY MERGE AS OWNER TEXT}")]
 ${MERGE CHECKING HINT}                ${MERGE DIALOG}//p[contains(text(),"${CHECKING TEXT}")]
@@ -272,11 +272,11 @@ ${RELEASE NUMBER}                     //div[contains(@class,"active")]//h1
 #Integration Landing Page
 ${INTEGRATIONS COMPONENT}             //nx-app//integrations-component/div[@class="intergations"]
 ${INTEGRATIONS SEARCH}                ${INTEGRATIONS COMPONENT}//nx-search[@name="filterModel"]/div[@class="nx-search"]
-${INTEGRATIONS SEARCH INPUT}          ${INTEGRATIONS SEARCH}//input[contains(@class, "search-input") and @placeholder="Search")]
+${INTEGRATIONS SEARCH INPUT}          ${INTEGRATIONS SEARCH}//input[contains(@class, "search-input") and contains(@placeholder, "Search")]
 ${INTEGRATIONS SEARCH CLOSE BUTTON}   ${INTEGRATIONS SEARCH}//button[contains(@class, "search-clear")]
 ${INTEGRATIONS SEARCH ICON}           ${INTEGRATIONS SEARCH}//span[contains(@class, "icon-search")]
 ${INTEGRATIONS SEARCH FILTER}         ${INTEGRATIONS SEARCH}//div[contains(@class, "search-tags")]//nav[contains(@aria-label, "table")]/ul[contains(@class, "pagination")]
-${INTEGRATIONS SEARCH FILTER ITEM}    ${INTEGRATIONS SEARCH FILTER}/li/div
+${INTEGRATIONS SEARCH FILTER ITEM}    ${INTEGRATIONS SEARCH FILTER}/li
 ${INTEGRATIONS CATALOG}               ${INTEGRATIONS COMPONENT}//integrations-list-component/div[1]
 
 #Integration Tile
@@ -287,8 +287,9 @@ ${INTEGRATION TILE INFO}              ${INTEGRATION TILE}//div[contains(@class, 
 ${INTEGRATION TILE NAME}              ${INTEGRATION TILE}//div[contains(@class, "card--body-name")]
 ${INTEGRATION TILE TEXT}              ${INTEGRATION TILE}//div[contains(@class, "card--body-descr")]
 ${INTEGRATION TILE HEADER}            ${INTEGRATION TILE}//div[@class="card--header"]
-${INTEGRATION TILE BODY}              ${INTEGRATION TILE}//nx-section/child::div[@class="card--body"]
-${INTEGRATION TILE FOOTER}            ${INTEGRATION TILE}//div[@class="card--footer")]
+#${INTEGRATION TILE BODY}              ${INTEGRATION TILE}//nx-section/child::div[@class="card--body"]
+${INTEGRATION TILE FOOTER}            ${INTEGRATION TILE}//div[@class="card--footer"]
+@{INTEGRATION TILE ELEMENTS}          ${INTEGRATION TILE HEADER}    ${INTEGRATION TILE FOOTER}    ${INTEGRATION TILE LOGO}    ${INTEGRATION TILE INFO}    ${INTEGRATION TILE NAME}    ${INTEGRATION TILE TEXT}
 
 #Integration Details Page
 ${INTEGRATION DETAILS COMPONENT}          //nx-app//integration-detail-component/div[contains(@class, "integration-details")]
@@ -342,7 +343,7 @@ ${INTEGRATION GET IN TOUCH DROPDOWN BUTTON}     ${INTEGRATION GET IN TOUCH BODY}
 ${INTEGRATION GET IN TOUCH DROPDOWN ICON}       ${INTEGRATION GET IN TOUCH BODY}//div[@class="dropdown"]//div[@class="nav-arrow"]
 ${INTEGRATION GET IN TOUCH MESSAGE LABEL}       ${INTEGRATION GET IN TOUCH BODY}//label[@for="message"]
 ${INTEGRATION GET IN TOUCH MESSAGE INPUT}       ${INTEGRATION GET IN TOUCH BODY}//textarea[@id="message"]
-${INTEGRATION GET IN TOUCH BOTTOM TEXT}         ${INTEGRATION GET IN TOUCH BODY}//div[contains(@class, "form-group")]/child::a
+${INTEGRATION GET IN TOUCH PRIVACY LINKS}       ${INTEGRATION GET IN TOUCH BODY}//div[contains(@class, "form-group")]//a[text()="${PRIVACY POLICY LINK TEXT}"]
 ${INTEGRATION GET IN TOUCH SEND BUTTON}         ${INTEGRATION GET IN TOUCH FOOTER}//nx-process-button/div/button
 ${INTEGRATION GET IN TOUCH CANCEL BUTTON}       ${INTEGRATION GET IN TOUCH FOOTER}//button[contains(@type, "button")]
 
@@ -467,6 +468,7 @@ ${PASSWORD INCORRECT BADGE}           //span[contains(@class,"badge") and contai
 #Already logged in modal
 ${LOGGED IN STAY LOGGED IN BUTTON}    ${MODAL DIALOG}//button[contains(text(),'${STAY LOGGED IN BUTTON TEXT}')]
 ${LOGGED IN OK BUTTON}                ${MODAL DIALOG}//button[contains(text(),'${OK TEXT}')]
+${LOGGED IN LOG OUT BUTTON}           ${MODAL DIALOG}//button/span[contains(text(),'${LOG OUT BUTTON TEXT}')]/..
 ${LOGGED IN NEW ACCOUNT BUTTON}       ${MODAL DIALOG}//button/span[contains(text(),'${CREATE NEW ACCOUNT BUTTON TEXT}')]/..
 ${LOGGED IN CANCEL BUTTON}           ${MODAL DIALOG}//button/span[contains(text(),'${CANCEL BUTTON TEXT}')]/..
 

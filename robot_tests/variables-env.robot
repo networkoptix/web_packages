@@ -30,6 +30,15 @@ ${EMAIL MERGE OWNER 1}                noptixautoqa+mergeowner1@gmail.com
 ${EMAIL MERGE OWNER 2}                noptixautoqa+mergeowner2@gmail.com
 ${EMAIL MERGE OWNER 3.0}              noptixautoqa+mergeowner3.0@gmail.com
 @{EMAILS LIST}                        ${EMAIL VIEWER}    ${EMAIL ADV VIEWER}    ${EMAIL LIVE VIEWER}    ${EMAIL OWNER}    ${EMAIL ADMIN}    ${EMAIL CUSTOM}    ${EMAIL CLIENT CUSTOM}
+${ALT BASE EMAIL}                     qaburbank@gmail.com
+${ALT EMAIL VIEWER}                   qaburbank+viewer@gmail.com
+${ALT EMAIL ADV VIEWER}               qaburbank+advviewer@gmail.com
+${ALT EMAIL LIVE VIEWER}              qaburbank+liveviewer@gmail.com
+${ALT EMAIL OWNER}                    qaburbank+owner@gmail.com
+${ALT EMAIL NOT OWNER}                qaburbank+notowner@gmail.com
+${ALT EMAIL ADMIN}                    qaburbank+admin@gmail.com
+${ALT EMAIL CUSTOM}                   qaburbank+custom@gmail.com
+${ALT EMAIL CLIENT CUSTOM}            qaburbank+clientcustom@gmail.com
 ${ADMIN FIRST NAME}                   mark
 ${ADMIN LAST NAME}                    hamil
 ${EMAIL UNREGISTERED}                 noptixautoqa+unregistered1@gmail.com

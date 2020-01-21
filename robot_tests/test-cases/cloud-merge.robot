@@ -72,8 +72,7 @@ Validate Merge
 Validate system available
     [arguments]    ${system name}
     Verify In System    ${system name}
-    Wait Until Elements Are Visible    ${USERS LIST LINK}
-    Click Link    ${USERS LIST LINK}
+    Go to Users List
     Wait Until Element Is Visible    ${SHARE BUTTON SYSTEMS}
     ${elements}    Set Variable    ${SHARE BUTTON SYSTEMS}
     Wait Until Element Is Enabled    ${SHARE BUTTON SYSTEMS}    180
@@ -189,7 +188,6 @@ Reset state
     END
     Run Keyword Unless    "${state[0]}"=="PASS"    Disconnect from cloud
     Log Out
-    Validate Log Out
     Log In    ${EMAIL MERGE OWNER 2}    ${password}
     Validate Log In
     ${state}    Run Keyword And Ignore Error    Element Should Be Visible    ${YOU HAVE NO SYSTEMS}
@@ -282,6 +280,8 @@ Only one system connected to Cloud Account
     Go to Users List
     Wait Until Element Is Enabled    ${SHARE BUTTON SYSTEMS}    180
     Share To    ${EMAIL MERGE OWNER 2}    ${ADMIN TEXT}
+    ${email}    Wait For Email    recipient=${EMAIL MERGE OWNER 2}    timeout=120    status=UNSEEN
+    Delete Email    ${email}
     Log Out
     Log In    ${EMAIL MERGE OWNER 2}    ${password}
     Validate Log In
@@ -452,6 +452,7 @@ Merge with 3.0
     ...    7003
     ...    API made system 2
     Go To    ${url}/systems
+    Validate Log In
     Wait Until Element Is Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
     Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
     Verify In System    API made system 2
@@ -526,11 +527,9 @@ From secondary system merge to primary with no other systems
     Merge    API made system 1    API made system 1    API made system 1
     Validate Merge
 
-    ${alert message}    Replace String
-    ...    ${CONNECTION TO SYSTEM LOST}
-    ...    %SYSTEM NAME%
-    ...    API made system 2
-    Check for alert    ${alert message}    timeout=${merge timeout}
+    Check For Alert Dismissable    ${SYSTEM MERGE COMPLETED TEXT}    timeout=${merge timeout}
+    Sleep    5
+    Go to Users List
     Wait Until Element Is Visible    ${USERS LIST}
     Wait Until Element Is Not Visible    ${CURRENTLY MERGING CARD}    120
     Validate system available    API made system 1
@@ -575,14 +574,10 @@ From secondary system merge to primary with other systems
     Merge    API made system 1    API made system 1    API made system 1
     Validate Merge
 
-    ${alert message}    Replace String
-    ...    ${CONNECTION TO SYSTEM LOST}
-    ...    %SYSTEM NAME%
-    ...    API made system 3
-    Check for alert    ${alert message}    timeout=${merge timeout}
     Wait Until Elements Are Visible
     ...    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
     ...    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
+    Wait Until Element Is Not Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 3")]
     Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
     Validate system available    API made system 1
     Disconnect from cloud
@@ -618,10 +613,10 @@ From primary system
     Merge    API made system 1    API made system 2    API made system 2
     Validate Merge
 
+    Check For Alert Dismissable    ${SYSTEM MERGE COMPLETED TEXT}    timeout=${merge timeout}
     Go to Users List
     Wait Until Element Is Visible    ${USERS LIST}
     Wait Until Element Is Not Visible    ${CURRENTLY MERGING CARD}    120
-    Check For Alert Dismissable    ${SYSTEM MERGE COMPLETED TEXT}
     Validate system available    API made system 1
     Disconnect from cloud
 
@@ -660,29 +655,16 @@ Merge with different types of users
     Merge    API made system 1    API made system 1    API made system 1
     Validate Merge
 
-    ${alert message}    Replace String
-    ...    ${CONNECTION TO SYSTEM LOST}
-    ...    %SYSTEM NAME%
-    ...    API made system 2
-    Check for alert    ${alert message}    timeout=${merge timeout}
+    Check For Alert Dismissable    ${SYSTEM MERGE COMPLETED TEXT}    timeout=${merge timeout}
+
     Validate system available    API made system 1
     FOR     ${idx}    IN RANGE    90
         ${result}    Run Keyword And Ignore Error    Wait Until Element Is Visible
-        ...    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${email admin no reg}')]
-        Reload Page
+        ...    //nx-menu//a[@class='menu-level-3']//span[@class='user' and text()='${email admin no reg}']
+        Run Keyword Unless    '${result[0]}'=='PASS'    Reload Page
         Exit For Loop If    '${result[0]}'=='PASS'
     END
     FOR    ${key}    IN    @{all users dict.keys()}
-        Check User Permissions    ${all users dict["${key}"]}    ${key}    timeout=120
+        Check User Permissions    ${all users dict["${key}"]}    ${key}    timeout=10
     END
-    ${user row}=    Set Variable
-    ...    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${email admin no reg}')]
-    ${delete user button}=    Set Variable
-    ...    /following-sibling::td/a[@ng-click='unshare(user)']/span[contains(text(),'${DELETE USER BUTTON TEXT}')]
-    ${edit user button}=    Set Variable
-    ...    /following-sibling::td/a[@ng-click='editShare(user)']/span[contains(text(),'${EDIT USER BUTTON TEXT}')]/..
-    Mouse Over    ${user row}
-    Wait Until Elements are Visible
-    ...    ${user row}${delete user button}
-    ...    ${user row}${edit user button}
     Disconnect from cloud

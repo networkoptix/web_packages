@@ -12,7 +12,7 @@
     "emailSubject": "Yêu cầu bán hàng cho {{message.asset}}"
   },
   "contact_support": {
-    "emailSubject": "Yêu cầu hỗ trợ cho {{message.asset}}"
+    "emailSubject": "Technical inquiry for {{message.asset}}"
   },
   "integration_feedback": {
     "emailSubject": "Phản hồi cho {{message.asset}}"

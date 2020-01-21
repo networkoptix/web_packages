@@ -1,4 +1,4 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Location }                             from '@angular/common';
 import { ActivatedRoute, Router }               from '@angular/router';
 import { NxConfigService }                      from '../../../services/nx-config';
@@ -11,8 +11,10 @@ import { NxAccountService }     from '../../../services/account.service';
 import { NxUrlProtocolService } from '../../../services/url-protocol.service';
 import { NxProcessService }     from '../../../services/process.service';
 import { debounceTime }         from 'rxjs/operators';
-import { Subject }              from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 
+@AutoUnsubscribe()
 @Component({
     selector   : 'nx-systems-list-component',
     templateUrl: 'list.component.html',
@@ -29,9 +31,10 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
     openClient: any;
     systems: any;
     filteredSystems: any;
-    systemSelected: any;
     userEmail: string;
     searchChanged = new Subject();
+    private searchSubscription: Subscription;
+    private systemSubscription: Subscription;
 
     private setupDefaults() {
         this.CONFIG = this.configService.getConfig();
@@ -70,7 +73,7 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
                 }
             });
 
-        this.systemsService.systemsSubject.subscribe((systems) => {
+        this.systemSubscription = this.systemsService.systemsSubject.subscribe((systems) => {
             this.systems = systems;
             if (this.systems === undefined) {
                 return;
@@ -96,7 +99,7 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
             logoutForbidden: true
         });
 
-        this.searchChanged
+        this.searchSubscription = this.searchChanged
             .pipe(debounceTime(this.CONFIG.search.debounceTime))
             .subscribe(() => {
                 this.searchSystems();
@@ -136,8 +139,7 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
         this.router.navigate(['/systems/' + system.id]);
     }
 
-    ngOnDestroy(): void {
-    }
+    ngOnDestroy(): void {}
 
 }
 

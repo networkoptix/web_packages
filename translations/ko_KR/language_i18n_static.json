@@ -24,7 +24,7 @@
 		"selected": "선택된",
 		"vendor": "제조사",
 		"vendors": "제조사들",
-		"hardwareType": "유형",
+		"hardwareType": "형식",
 		"hardwareTypes": "유형들",
 		"minResolution": "최소 해상도",
 		"analytics": "분석",
@@ -53,21 +53,17 @@
 		},
 		"groups": {
 			"windows": {
-				"label": "Windows",
-				"supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+				"label": "윈도우즈"
 			},
 			"mac": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"linux": {
-				"label": "Ubuntu Linux",
-				"shortLabel": "Ubuntu",
-				"supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+				"label": "우분투 리눅스",
+				"shortLabel": "우분투"
 			},
 			"macos": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"ios": {
 				"label": "iOS",
@@ -79,13 +75,11 @@
 			},
 			"arm": {
 				"label": "ARM",
-				"shortLabel": "ARM",
-				"supported": "<a href='/content/arm'>ARM 기반 서버 지원 정책</a>"
+				"shortLabel": "ARM"
 			},
 			"sdk": {
 				"label": "SDK",
-				"shortLabel": "SDK",
-				"supported": "C ++ 크로스 플랫폼 SDK"
+				"shortLabel": "SDK"
 			}
 		},
 		"platforms": {
@@ -95,7 +89,7 @@
 			"linux_arm32": "x32",
 			"linux_arm64": "x64",
 			"mac": "X",
-			"rpi": "Raspberry Pi",
+			"rpi": " Raspberry Pi",
 			"universal": "SDK",
 			"win64": "x64"
 		},
@@ -103,7 +97,7 @@
 			"bundle": "클라이언트와 서버",
 			"camera_sdk": "비디오 소스 SDK",
 			"client": "클라이언트만",
-			"metadata_sdk": "Metadata SDK",
+			"metadata_sdk": "메타 데이터 SDK",
 			"package": "패키지",
 			"server": "서버 만",
 			"servertool": "구성 도구",
@@ -125,7 +119,7 @@
 		"count": "개수",
 		"vendor": "제조사",
 		"model": "모델",
-		"hardwareType": "유형",
+		"hardwareType": "형식",
 		"maxResolution": "<span>최대</span><br><span>해상도</span>",
 		"maxFps": "<span>최대</span><br><span>FPS</span>",
 		"primaryCodec": "코덱",
@@ -175,27 +169,27 @@
 		"feedback": "카메라 모델과 제조업체를 포함시켜야합니다."
 	},
 	"pageTitles": {
-		"template": "{{title}} %CLOUD_NAME%",
+		"template": "{{title}} - %CLOUD_NAME%",
 		"default": "%CLOUD_NAME%",
 		"registerSuccess": "에 오신 것을 환영합니다",
 		"register": "에 계정 만들기",
-		"changePassword": "패스워드 변경 -",
-		"account": "계정 설정-",
-		"systems": "시스템-",
-		"system": "시스템-",
-		"systemShare": "시스템 공유 -",
-		"activate": "계정 활성화 -",
-		"activateSent": "계정 활성화 -",
-		"activateSuccess": "계정 활성화 됨 -",
-		"activateCode": "계정 활성화 -",
-		"restorePassword": "패스워드 재설정",
-		"restorePasswordSuccess": "패스워드 저장됨-",
-		"restorePasswordCode": "패스워드 재설정",
-		"view": "카메라 보기 - ",
+		"changePassword": "Change password",
+		"account": "Account settings",
+		"systems": "Systems",
+		"system": "System",
+		"systemShare": "Share System",
+		"activate": "Activate account",
+		"activateSent": "Activate account",
+		"activateSuccess": "Account activated",
+		"activateCode": "Activate account",
+		"restorePassword": "Reset password",
+		"restorePasswordSuccess": "Password saved",
+		"restorePasswordCode": "Reset password",
+		"view": "View cameras",
 		"debug": "디버그",
-		"login": "로그인 -",
+		"login": "Log in",
 		"download": "%VMS_NAME% 다운로드",
-		"downloadPlatform": "에 대한 %VMS_NAME% 다운로드 ",
+		"downloadPlatform": "Download %VMS_NAME% for ",
 		"pageNotFound": "페이지를 찾을 수 없음",
 		"supportedDevices": "지원되는 기기들",
 		"integrations": "연동"
@@ -211,7 +205,7 @@
 		"logoutAuthorisedTitle": "이미 로그인 되어 있습니다",
 		"logoutAuthorisedContinueButton": "계속",
 		"logoutAuthorisedLogoutButton": "로그 아웃",
-		"noClientDetectedTitle": "시스템이 성공적으로 %VMS_NAME% 에서 분리 되었습니다",
+		"noClientDetectedTitle": "Install %VMS_NAME% to view your System",
 		"stayAs": "{email} 로 로그인 상태 유지 ",
 		"stayLoggedIn": "로그인 상태 유지",
 		"download": "%VMS_NAME% 다운로드",
@@ -224,7 +218,12 @@
 			"primarySystemOffline": "{{primarySystem}} 시스템이 오프라인 상태이며 {{targetSystem}} 시스템과 병합 할 수 없습니다.",
 			"secondaryCannotMerge": "시스템 {{targetSystem}} 에 현재 시스템과 호환되지 않는 이전 소프트웨어 버전이 있습니다. 병합하기 위해 {{targetSystem}} 를 받는 사람 <a href=\"/download\" target=\"_blank\" translate>최신 빌드</a> 로 업데이트 하십시요.",
 			"systemOffline": "시스템 {{targetSystem}} 은 오프라인이며 현재 시스템과 머지 할 수 없습니다.",
-			"systemUnavailable": "시스템 {{targetSystem}} 에 현재 연결할 수 없습니다. 몇 분 후에 다시 시도하거나 문의하십시오."
+			"systemUnavailable": "시스템 {{targetSystem}} 에 현재 연결할 수 없습니다. 몇 분 후에 다시 시도하거나 문의하십시오.",
+			"recommendSupport": {
+				"a_recommend": "와 상담 하는 것을 제안 합니다.",
+				"b_support": "지원",
+				"c_proceeding": "계속하기 전에."
+			}
 		},
 		"message": {
 			"failedToSend": "메시지 전송 실패",
@@ -234,9 +233,9 @@
 				"ipvd_feedback_page": "카메라 페이지에 대한 피드백",
 				"ipvd_feedback_device": "{{asset}} 에 대한 피드백"
 			},
-			"topic": {
-				"contact_sales": "{{asset}} 에 대해 영업팀에 문의",
-				"contact_support": "{{asset}} 대해 지원팀에 문의",
+			"subject": {
+				"sales_inquiry": "{{asset}}에 대한 판매 문의",
+				"technical_inquiry": "{{asset}}에 대한 기술 문의",
 				"integration_feedback": "{{asset}} 통합에 대한 피드백",
 				"ipvd_feedback_page": "카메라 페이지에 대한 피드백",
 				"ipvd_feedback_device": "{{asset}} 에 대한 피드백"
@@ -265,7 +264,7 @@
 		"cantChangePasswordPrefix": "패스워드를 저장할 수 없습니다.",
 		"cantActivatePrefix": "계정을 활성화 할 수 없습니다.",
 		"cantSendConfirmationPrefix": "확인 이메일을 보낼 수 없습니다.",
-		"notAuthorized": "패스워드가 틀립니다.",
+		"notAuthorized": "잘못된 암호",
 		"brokenAccount": "계정에 예기치 않은 문제가 있습니다. <a href=\"/restore_password\">계정 복원</a>",
 		"wrongParameters": "양식의 일부 매개 변수가 잘못되었습니다.",
 		"wrongCode": "계정이 이미 활성화되었거나 확인 코드가 잘못되었습니다.",
@@ -299,15 +298,15 @@
 		"fair": "보통",
 		"fairMessage": "숫자, 대 / 소문자 및 특수 문자를 사용하여 패스워드를 더 강하게 만듭니다.",
 		"minLength": "너무 짧음",
-		"minLengthMessage": "비밀번호는 최소 8자 이상 포함되어야 합니다.",
+		"minLengthMessage": "패스워드는 8 자 이상이어야합니다.",
 		"required": "부적합",
 		"requiredMessage": "라틴 문자, 숫자 및 키보드 기호 만 사용하고 앞뒤 공백은 피하십시오.",
 		"weak": "약함",
 		"weakMessage": "숫자, 대 / 소문자 및 특수 문자를 사용하여 패스워드를 더 강하게 만듭니다.",
-		"strongMessage": "강력한 암호!",
+		"strongMessage": "강력한 패스워드!",
 		"common": "너무 평범",
 		"commonMessage": "현재 암호는 가능 많이 사용되는 암호입니다.",
-		"missingMessage": "패스워드가 필요합니다."
+		"missingMessage": "암호가 필요 합니다"
 	},
 	"registration": {
 		"agreement": "나는 <a href=\"/content/eula\" target=\"_blank\">약관 &\n조건</a> 및 <a href=\"%PRIVACY_LINK%\" target=\"_blank\">개인 정보 취급 방침</a> 에 동의합니다"
@@ -317,11 +316,11 @@
 		"mySystemSearch": "IMeMyMine",
 		"unavailable": "시스템에 연결할 수 없습니다.",
 		"offline": "시스템이 오프라인 상태입니다.",
-		"offlineAlertRibbon": "System is offline. Some settings may not be available.",
-		"openClient": "%VMS_NAME%에서 열기",
+		"offlineAlertRibbon": "시스템이 오프라인 상태입니다. 일부 설정을 사용하지 못할 수 있습니다.",
+		"openClient": "Open in %VMS_NAME%",
 		"openClientNoSystem": "%VMS_NAME% 열기",
 		"confirmMergeAction": "병합",
-		"mergeSystemTitle": "병합 시스템",
+		"mergeSystemTitle": "시스템 병합",
 		"confirmRenameTitle": "시스템 이름",
 		"confirmRenameAction": "저장",
 		"successRename": "시스템 이름 저장",
@@ -334,13 +333,14 @@
 		"confirmUnshareTitle": "사용자를 삭제 하시겠습니까?",
 		"confirmUnshareAction": "삭제",
 		"successDisconnected": "시스템이 %CLOUD_NAME%에서 성공적으로 연결 해제되었습니다.",
-		"successDeleted": "시스템 {{systemName}} 이 (가) 귀하의 계정에서 성공적으로 삭제되었습니다.",
+		"successDeleted": "시스템 {{systemName}}이 (가) 귀하의 계정에서 성공적으로 삭제되었습니다.",
 		"mergeFailed": "시스템 머지에 실패했습니다.",
 		"mergeStart": "시스템이 머지를 시작했습니다.",
 		"mergeSuccess": "시스템 머지가 완료되었습니다.",
-		"permissionsRemoved": "권한이 {{email}} 에서 제거 되었습니다.",
+		"permissionsRemoved": "권한이 {{email}}에서 제거 되었습니다.",
 		"unknownName": "시스템의 알 수없는 이름 (클라우드 머지로 인해 발생)",
-		"shareOffline": "Cannot share system while it is offline"
+		"shareOffline": "오프라인 상태에서 시스템을 공유 할 수 없습니다",
+		"shareUnauthorized": "이 시스템을 공유 할 권한이 없습니다"
 	},
 	"systemStatuses": {
 		"activated": "활성화 됨",
@@ -410,13 +410,13 @@
 		}
 	},
 	"privacyPolicy": {
-		"integration": "이 양식을 제출하면 {{INTEGRATION_COMPANY}} 및 / 또는 %COMPANY_NAME%로 연락하는 것에 동의하게됩니다.\n{{INTEGRATION_COMPANY}} 개인 정보 보호 정책 <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">여기에</a> 과 %COMPANY_NAME% 개인 정보 보호 정책 <a href=\"%PRIVACY_LINK%\" target=\"blank\">여기에</a> 에서 동의를 철회하는 방법에 대한 지침을 찾을 수 있습니다.",
-		"ipvd": "이 양식을 제출하면 %COMPANY_NAME%으로 연락하는 데 동의하는 것입니다.\n%COMPANY_NAME% 개인 정보 보호 정책 <a href=\"%PRIVACY_LINK%\" target=\"blank\">여기에</a> 에서 동의를 철회하는 방법에 대한 지침을 찾을 수 있습니다."
+		"integration": "이 양식을 제출하면 {{INTEGRATION_COMPANY}} 및 / 또는 %COMPANY_NAME%로 연락하는 것에 동의하게됩니다.\n{{INTEGRATION_COMPANY}} 개인 정보 보호 정책 <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">여기에</a> 과 %COMPANY_NAME% 개인 정보 보호 정책 <a href=\"%PRIVACY_LINK%\" target=\"_blank\">여기에</a> 에서 동의를 철회하는 방법에 대한 지침을 찾을 수 있습니다.",
+		"ipvd": "이 양식을 제출하면 %COMPANY_NAME%으로 연락하는 데 동의하는 것입니다.\n%COMPANY_NAME% 개인 정보 보호 정책 <a href=\"%PRIVACY_LINK%\" target=\"_blank\">여기에</a> 에서 동의를 철회하는 방법에 대한 지침을 찾을 수 있습니다."
 	},
-	"systemAdministration": "관리자",
+	"systemAdministration": "시스템 관리자",
 	"users": "사용자",
-	"testedVersionLabel": "{{vmsName}} 버전에서 테스트되었습니다.",
-	"testedVersionsLabel": "테스트된 {{vmsName}} 버전:",
+	"testedVersionLabel": "Tested with {{vmsName}} version:",
+	"testedVersionsLabel": "Tested with {{vmsName}} versions:",
 	"About %CLOUD_NAME%": "%CLOUD_NAME% 정보",
 	"Download %VMS_NAME%": "%VMS_NAME% 다운로드",
 	"Integrations": "연동",
@@ -428,7 +428,7 @@
 	"WHEN_MERGE_FINISHES": "병합이 완료되면이 시스템의 모든 사용자와 카메라가 <strong>{{targetSystemName}}</strong> 시스템에서 사용 가능해지며이 시스템이 삭제됩니다.",
 	"FAILED_SYSTEM_DESCR": "이 링크가 끊어졌습니다.<br>시스템이 %CLOUD_NAME%에서 연결이 끊어졌을 수 있습니다.<br>이 시스템에 대한 액세스가 취소되었거나 <br>또는 다른 계정으로 로그인했을 수 있습니다.",
 	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "%CLOUD_NAME%에 연결된 시스템이 없습니다",
-	"NO_SYSTEMS_LOGIN": "%VMS_NAME%을 사용하여 시스템에 로그인하십시오.",
+	"NO_SYSTEMS_LOGIN": "Log in to your System using %VMS_NAME%",
 	"NO_SYSTEMS_GOTO_ADMINISTRATION": "\"시스템 관리\"관리에서 \"클라우드\"탭으로 이동하십시오.",
 	"NO_SYSTEMS_CONNECT_SYSTEM": "\"시스템을 %CLOUD_NAME%연결\"을 누르십시오."
 }

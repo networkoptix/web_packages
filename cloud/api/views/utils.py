@@ -47,6 +47,7 @@ def get_settings_from_cache():
         'publicReleases': customization_cache['public_releases'],
         'showAnalyticsEvents': customization_cache['show_analytics_events'],
         'sortSupportedDevicesByPopularity': customization_cache['sort_supported_devices_by_popularity'],
+        'testedOperatingSystems': customization_cache['tested_operating_systems'],
         'supportLink': customization_cache['support_link'],
         'privacyLink': customization_cache['privacy_link'],
         'supportedResolutions': customization_cache['supported_resolutions'],

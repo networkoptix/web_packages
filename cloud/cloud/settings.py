@@ -83,6 +83,7 @@ INSTALLED_APPS = (
 
 
 MIDDLEWARE = (
+    'cloud.middleware.HeaderMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -90,7 +91,7 @@ MIDDLEWARE = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'cloud.logger.CatchExceptionMiddleware',
+    'cloud.middleware.CatchExceptionMiddleware'
 )
 
 ROOT_URLCONF = 'cloud.urls'
@@ -123,7 +124,6 @@ ADMIN_DASHBOARD = ('cms.models.ContentVersion',
                    'cms.models.AssetType',
                    'cms.models.UserGroupsToAssetPermissions',
                    'cms.models.UserGroupsToAssetType',
-                   'cms.models.DeploymentStatus',
                    '*.auth.models.Permission',
                    'django_celery_beat.*',
                    'django_celery_results.*',
@@ -189,11 +189,29 @@ if cloud_db and cloud_db['host'] != '$DB_HOST':
 if not LOCAL_ENVIRONMENT:
     CACHES = {
         "default": {
-            "BACKEND": "django.core.cache.backends.locmem.LocMemCache"
+            "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+            "TIMEOUT": None
+        },
+        "deployment": {
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": "redis://redis:6379/1",
+            "TIMEOUT": None,
+            "OPTIONS": {
+                "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            }
         },
         "global": {
             "BACKEND": "django_redis.cache.RedisCache",
             "LOCATION": "redis://redis:6379/1",
+            "TIMEOUT": None,
+            "OPTIONS": {
+                "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            }
+        },
+        "integrations": {
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": "redis://redis:6379/1",
+            "TIMEOUT": None,
             "OPTIONS": {
                 "CLIENT_CLASS": "django_redis.client.DefaultClient",
             }
@@ -202,16 +220,36 @@ if not LOCAL_ENVIRONMENT:
 else:
     CACHES = {
         "default": {
-            "BACKEND": "django.core.cache.backends.locmem.LocMemCache"
+            "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+            "TIMEOUT": None
+        },
+        "deployment": {
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": "redis://localhost:6379/1",
+            "TIMEOUT": None,
+            "OPTIONS": {
+                "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            }
         },
         "global": {
             "BACKEND": "django_redis.cache.RedisCache",
             "LOCATION": "redis://localhost:6379/1",
+            "TIMEOUT": None,
+            "OPTIONS": {
+                "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            }
+        },
+        "integrations": {
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": "redis://localhost:6379/1",
+            "TIMEOUT": None,
             "OPTIONS": {
                 "CLIENT_CLASS": "django_redis.client.DefaultClient",
             }
         }
     }
+
+DEPLOYMENT_READY = 'ready'
 
 
 if LOCAL_ENVIRONMENT:
@@ -431,8 +469,8 @@ CORS_URLS_REGEX = r'^/api/(?:login|ping|systems/(?:dis)?connect)'
 
 SESSION_COOKIE_SECURE = not LOCAL_ENVIRONMENT
 CSRF_COOKIE_SECURE = not LOCAL_ENVIRONMENT
-SESSION_COOKIE_AGE = 60 * 60 * 24 # 1 day
-AUTHENTICATED_SESSION_COOKIE_AGE = 60 * 60 * 24 * 14 # 2 weeks
+SESSION_COOKIE_AGE = 60 * 60 * 24  # 1 day
+AUTHENTICATED_SESSION_COOKIE_AGE = 60 * 60 * 24 * 14  # 2 weeks
 
 USE_ASYNC_QUEUE = True
 
@@ -510,7 +548,8 @@ NOTIFICATIONS_CONFIG = {
 }
 
 CONFIG_ERROR = "Customization Configuration Error. Please Notify Release Engineers."
-BROADCAST_NOTIFICATIONS_SUPERUSERS_ONLY = DEBUG
+# Can not trust DEBUG because it is automatically set False for celery workers to prevent memory leak
+BROADCAST_NOTIFICATIONS_SUPERUSERS_ONLY = 'debug' in conf and conf['debug']
 NOTIFICATIONS_AUTO_SUBSCRIBE = False
 
 IPVD_CONNECT = 'https://cameras.networkoptix.com/api/v1/cacameras/'

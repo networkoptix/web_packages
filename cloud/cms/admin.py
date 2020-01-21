@@ -13,6 +13,8 @@ from cms.forms import *
 from cms.controllers.modify_db import get_records_for_version
 from cms.views.asset import page_editor, review
 
+admin.site.disable_action('delete_selected')  # Remove delete action from all models in admin
+
 
 def clone_asset(request, asset_id):
     asset = Asset.objects.get(id=asset_id)
@@ -271,7 +273,7 @@ admin.site.register(AssetType, AssetTypeAdmin)
 
 
 class AssetAdmin(CMSAdmin):
-    list_display = ('asset_settings', 'edit_asset_button', 'name', 'asset_type', 'customizations_list', )
+    list_display = ('asset_settings', 'edit_asset_button', 'name', 'asset_type', 'customizations_list', 'last_modified', )
     list_display_links = ('name',)
     list_filter = ('asset_type', CustomizationFilter,)
     search_fields = ('name', 'created_by__email',)
@@ -332,6 +334,8 @@ class AssetAdmin(CMSAdmin):
 
     def get_fields(self, request, obj=None):
         fields = [field for field in self.form.base_fields]
+        if not request.user.is_superuser:
+            fields.remove('protected')
         if obj:
             fields.remove('publish_all_customizations')
             if not request.user.is_superuser and not obj.asset_type.single_customization:
@@ -636,6 +640,8 @@ class AssetCustomizationReviewAdmin(CMSAdmin):
         return qs
 
     def get_readonly_fields(self, request, obj=None):
+        if obj is None:
+            return self.readonly_fields
         if request.user != obj.version.asset.created_by and\
                 obj.state != AssetCustomizationReview.REVIEW_STATES.rejected:
             return self.readonly_fields
@@ -648,6 +654,9 @@ class AssetCustomizationReviewAdmin(CMSAdmin):
             return True
         elif obj:
             return request.user == obj.version.asset.created_by
+        return False
+
+    def has_add_permission(self, request):
         return False
 
     @staticmethod
@@ -758,10 +767,3 @@ class ExternalFileAdmin(CMSAdmin):
 
 
 admin.site.register(ExternalFile, ExternalFileAdmin)
-
-
-class DeploymentStatusAdmin(CMSAdmin):
-    list_display = ["id", "ready"]
-
-
-admin.site.register(DeploymentStatus, DeploymentStatusAdmin)

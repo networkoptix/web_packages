@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.admin.widgets import FilteredSelectMultiple
 
 from .models import CloudNotification, PushSubscription
-from cms.models import Customization, UserGroupsToAssetPermissions
+from cms.models import AssetType, Customization, UserGroupsToAssetPermissions
 
 from dal import autocomplete
 
@@ -25,8 +25,17 @@ class CloudNotificationAdminForm(forms.ModelForm):
 
         if self.instance.pk and not self.instance.sent_date:
             groups = self.user.groups.filter(permissions__codename__contains="send_cloud_notification")
-            self.fields['customizations'].queryset = UserGroupsToAssetPermissions.objects.filter(
-                group__in=groups).values_list('customization__name', flat=True).distinct()
+            asset_groups = UserGroupsToAssetPermissions.objects.\
+                filter(group__in=groups, asset__asset_type__type=AssetType.ASSET_TYPES.cloud_portal).distinct()
+
+            customizations = []
+            for asset_group in asset_groups:
+                asset_customizations = asset_group.asset.customizations
+                if len(asset_customizations.all()) > 0:
+                    customizations.append(asset_customizations.first().name)
+
+            self.fields['customizations'].queryset = Customization.objects.filter(name__in=customizations)\
+                .values_list('name', flat=True)
             self.initial['customizations'] = self.instance.customizations.values_list('name', flat=True)
 
 

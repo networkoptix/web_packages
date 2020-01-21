@@ -53,21 +53,17 @@
 		},
 		"groups": {
 			"windows": {
-				"label": "Windows",
-				"supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+				"label": "Windows"
 			},
 			"mac": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"linux": {
 				"label": "Ubuntu Linux",
-				"shortLabel": "Ubuntu",
-				"supported": "Ubuntu 14.04 LTS, 16.04 LTS, LTS"
+				"shortLabel": "Ubuntu"
 			},
 			"macos": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"ios": {
 				"label": "iOS",
@@ -79,13 +75,11 @@
 			},
 			"arm": {
 				"label": "ARM",
-				"shortLabel": "ARM",
-				"supported": "<a href='/content/arm'>ARM tabanlı sunucular destek politikası</a>"
+				"shortLabel": "ARM"
 			},
 			"sdk": {
 				"label": "SDK",
-				"shortLabel": "SDK",
-				"supported": "C++ cross platform SDK"
+				"shortLabel": "SDK"
 			}
 		},
 		"platforms": {
@@ -130,11 +124,11 @@
 		"maxFps": "<span>Maksimum</span><br><span>FPS</span>",
 		"primaryCodec": "Kodek",
 		"isAudioSupported": "Ses",
-		"isTwAudioSupported": "çift Yönlü Ses",
+		"isTwAudioSupported": "Çift Yönlü Ses",
 		"isPtzSupported": "PTZ",
 		"isAptzSupported": "Gelişmiş PTZ",
 		"isAptzSupportedShort": "Gelş. PTZ",
-		"isFisheye": "Balıkgözü",
+		"isFisheye": "Fish-Eye",
 		"isMdSupported": "Hareket",
 		"isIoSupported": "G/Ç",
 		"isH265": "H.265",
@@ -168,7 +162,7 @@
 		"Connector": "Konnektör",
 		"Data Analytics": "Veri Analizleri",
 		"Drone": "Drone",
-		"Health Monitor": "Durum İzleyici",
+		"Health Monitor": "Performans İzleme",
 		"Storage": "Depolama"
 	},
 	"messageDialogPlaceholders": {
@@ -179,23 +173,23 @@
 		"default": "%CLOUD_NAME%",
 		"registerSuccess": "Hoş geldiniz",
 		"register": "Hesap Oluştur",
-		"changePassword": "Parola değiştir -",
-		"account": "Hesap ayarları -",
-		"systems": "Sistemler -",
-		"system": "Sistem -",
-		"systemShare": "Sistemi Paylaş -",
-		"activate": "Hesabı aktif et -",
-		"activateSent": "Hesabı aktif et -",
-		"activateSuccess": "Hesap aktif edildi -",
-		"activateCode": "Hesabı aktif et -",
+		"changePassword": "Şifre değiştir",
+		"account": "Hesap ayarları",
+		"systems": "Sistemler",
+		"system": "Sistem",
+		"systemShare": "Sistemi Paylaş",
+		"activate": "Hesabı aktif et",
+		"activateSent": "Hesabı aktif et",
+		"activateSuccess": "Hesap aktif edildi",
+		"activateCode": "Hesabı aktif et",
 		"restorePassword": "Parolayı sıfırla -",
-		"restorePasswordSuccess": "Parola kaydedildi -",
+		"restorePasswordSuccess": "Parola kaydedildi",
 		"restorePasswordCode": "Parolayı sıfırla -",
-		"view": "Kameraları görüntüle - ",
+		"view": "Kameraları görüntüle",
 		"debug": "Hata ayıklama",
-		"login": "Giriş yap -",
+		"login": "Giriş yap",
 		"download": "İndir %VMS_NAME%",
-		"downloadPlatform": "İndir %VMS_NAME% ",
+		"downloadPlatform": "İçin %VMS_NAME% indir ",
 		"pageNotFound": "Sayfa bulunamadı",
 		"supportedDevices": "Desteklenen cihazlar",
 		"integrations": "Entegrasyonlar"
@@ -211,7 +205,7 @@
 		"logoutAuthorisedTitle": "Zaten giriş yapılmış",
 		"logoutAuthorisedContinueButton": "Devam et",
 		"logoutAuthorisedLogoutButton": "Oturumu Kapat",
-		"noClientDetectedTitle": "Sisteminizi görüntülemek için %VMS_NAME%'i yükleyin",
+		"noClientDetectedTitle": "Sisteminizi görüntülemek için %VMS_NAME% yükleyin",
 		"stayAs": "Bu email {email} ile bağlı kal ",
 		"stayLoggedIn": "Oturum açık kalsın",
 		"download": "İndir %VMS_NAME%",
@@ -224,7 +218,12 @@
 			"primarySystemOffline": "Sistem {{primarySystem}} çevrimdışıdır ve Sistem {{targetSystem}} ile birleştirilemez.",
 			"secondaryCannotMerge": "Sistem {{targetSystem}}, mevcut sistemle uyumlu olmayan daha eski bir yazılım sürümüne sahip. Geçerli olanla birleştirmek için {{targetSystem}} en son <a href=\"/download\" target=\"_blank\" translate>derleme</a> güncelleyin.",
 			"systemOffline": "Sistem {{targetSystem}} çevrimdışı ve güncel sistemle birleştirilemez.",
-			"systemUnavailable": "{{targetSystem}} sistemi erişilebilir değil. Birkaç dakika sonra tekrar deneyin"
+			"systemUnavailable": "{{targetSystem}} sistemi erişilebilir değil. Birkaç dakika sonra tekrar deneyin",
+			"recommendSupport": {
+				"a_recommend": "Danışmanızı tavsiye ederiz",
+				"b_support": "destek",
+				"c_proceeding": "işlemden önce."
+			}
 		},
 		"message": {
 			"failedToSend": "Mesaj gönderilemedi.",
@@ -234,9 +233,9 @@
 				"ipvd_feedback_page": "Kameralar sayfası için geri bildirim",
 				"ipvd_feedback_device": "{{asset}} hakkında geri bildirim"
 			},
-			"topic": {
-				"contact_sales": "Satış için {{asset}} iletişime geçin",
-				"contact_support": "{{asset}} için Destek İste",
+			"subject": {
+				"sales_inquiry": "{{asset}} için satış talebi",
+				"technical_inquiry": "{{asset}} için teknik sorgulama",
 				"integration_feedback": "Entegrasyon için geri bildirim {{asset}}",
 				"ipvd_feedback_page": "Kameralar sayfası için geri bildirim",
 				"ipvd_feedback_device": "{{asset}} hakkında geri bildirim"
@@ -280,7 +279,7 @@
 		"accountAlreadyActivated": "Bu hesap zaten etkinleştirildi",
 		"emailNotFound": "Hesap mevcut değil.",
 		"EmailAlreadyExists": "Bu e-posta adresi zaten kayıtlı",
-		"oldPasswordMistmatch": "Parola hatalı.",
+		"oldPasswordMistmatch": "Mevcut şifre hatalı.",
 		"passwordMismatch": "Hatalı parola",
 		"cantEditYourself": "Kendi izinlerini değiştirmeye izin verilmiyor",
 		"cantEditAdmin": "Bu kullanıcının yönetici izinleri var",
@@ -299,7 +298,7 @@
 		"fair": "idare eder",
 		"fairMessage": "Parolanın güçlü olması için \nküçük büyük harf ve özel karakterler kullanın",
 		"minLength": "çok kısa",
-		"minLengthMessage": "Şifre en az 8 karakter içermelidir",
+		"minLengthMessage": "Parola en az 8 karakterden oluşmalıdır",
 		"required": "yanlış",
 		"requiredMessage": "Sadece alfanümerik ve klavye karakterleri kullanın",
 		"weak": "zayıf",
@@ -318,8 +317,8 @@
 		"unavailable": "Sistem erişilebilir değil",
 		"offline": "Sistem çevrimdışı",
 		"offlineAlertRibbon": "Sistem çevrimdışı. Bazı ayarlara erişim olmayabilir.",
-		"openClient": "%VMS_NAME% içinde aç",
-		"openClientNoSystem": "Aç%VMS_NAME%",
+		"openClient": "Aç %VMS_NAME%",
+		"openClientNoSystem": "Aç %VMS_NAME%",
 		"confirmMergeAction": "Birleştir",
 		"mergeSystemTitle": "Sistemleri Birleştir",
 		"confirmRenameTitle": "Sistem Adı",
@@ -340,7 +339,8 @@
 		"mergeSuccess": "Sistem birleştirme tamamlandı",
 		"permissionsRemoved": "İzinler {{email}}'den kaldırıldı",
 		"unknownName": "Sistem için Bilinmeyen Ad (Bulut birleştirme yüzünden)",
-		"shareOffline": "Çevrimdışıyken sistem paylaşılamıyor"
+		"shareOffline": "Çevrimdışıyken sistem paylaşılamıyor",
+		"shareUnauthorized": "Bu sistemi paylaşma izniniz yok"
 	},
 	"systemStatuses": {
 		"activated": "aktif edildi",
@@ -361,7 +361,7 @@
 			"description": "Sistem'i buluttan paylaşma / bağlanma ve bağlantıyı kesme gibi sınırsız erişim"
 		},
 		"Viewer": {
-			"label": "İzleyiciler",
+			"label": "İzleyici",
 			"description": "Canlı video görüntüleyebilir ve arşive gözatabilir"
 		},
 		"Live Viewer": {
@@ -370,7 +370,7 @@
 		},
 		"Advanced Viewer": {
 			"label": "Gelişmiş Görüntüleyici",
-			"description": "Canlı vidyo izleyebilir, arşive gözatabilir, kameraları ayarlayabilir, PTZ'yi kontrol edebilir vs"
+			"description": "Canlı vidyo izleyebilir, arşivi görüntüleyebilir, kameraları ayarlayabilir, PTZ'yi kontrol edebilir"
 		},
 		"Administrator": {
 			"label": "Yönetici",
@@ -393,7 +393,7 @@
 			"description": "Sistem'i buluttan paylaşma / bağlanma ve bağlantıyı kesme gibi sınırsız erişim"
 		},
 		"viewer": {
-			"label": "İzleyiciler",
+			"label": "İzleyici",
 			"description": "Canlı video görüntüleyebilir ve arşive gözatabilir"
 		},
 		"liveViewer": {
@@ -410,8 +410,8 @@
 		}
 	},
 	"privacyPolicy": {
-		"integration": "Bu formu göndererek, {{INTEGRATION_COMPANY}} ve / veya %COMPANY_NAME%ile irtibata geçmeyi kabul edersiniz.\nSen bulacaksınız {{INTEGRATION_COMPANY}} gizlilik politikasını <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">burada</a> ve %COMPANY_NAME% gizlilik politikasını <a href=\"%PRIVACY_LINK%\" target=\"blank\">Burada</a> onayınızı geri çekmek konusunda talimat içerir.",
-		"ipvd": "Bu formu göndererek, %COMPANY_NAME%ile iletişime geçmeyi kabul edersiniz.\nBurada, onayınızı nasıl geri çekeceğinizle ilgili talimatları içeren %COMPANY_NAME% gizlilik politikasını <a href=\"%PRIVACY_LINK%\" target=\"blank\">burada</a> bulacaksınız."
+		"integration": "Bu formu göndererek, {{INTEGRATION_COMPANY}} ve / veya %COMPANY_NAME%ile irtibata geçmeyi kabul edersiniz.\nSen bulacaksınız {{INTEGRATION_COMPANY}} gizlilik politikasını <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">burada</a> ve %COMPANY_NAME% gizlilik politikasını <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Burada</a> onayınızı geri çekmek konusunda talimat içerir.",
+		"ipvd": "Bu formu göndererek, %COMPANY_NAME%ile iletişime geçmeyi kabul edersiniz.\nBurada, onayınızı nasıl geri çekeceğinizle ilgili talimatları içeren %COMPANY_NAME% gizlilik politikasını <a href=\"%PRIVACY_LINK%\" target=\"_blank\">burada</a> bulacaksınız."
 	},
 	"systemAdministration": "Sistem Yönetimi",
 	"users": "Kullanıcılar",
@@ -428,7 +428,7 @@
 	"WHEN_MERGE_FINISHES": "Birleştirme işlemi tamamlandığında, bu sistemdeki tüm kullanıcılar ve kameralar kullanılabilir hale gelir <strong>\" Sistem{{targetSystemName}}</strong> \" ve bu sistem silinecektir.",
 	"FAILED_SYSTEM_DESCR": "Bu bağlantı bozuk,<br>sistem bağlantısı kesilebilir %CLOUD_NAME% den kesilebilir,<br>sisteme erişim engellenmiş olabilir,<br>yada farklı bir hesapla sisteme girilmiş olabilir.",
 	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "%CLOUD_NAME% ile bağlı hiçbir Sisteminiz yok",
-	"NO_SYSTEMS_LOGIN": "%VMS_NAME% adresini kullanarak Sisteminize giriş yapın",
+	"NO_SYSTEMS_LOGIN": "%VMS_NAME%kullanarak sisteminize giriş yapın",
 	"NO_SYSTEMS_GOTO_ADMINISTRATION": "\"Sistem Yönetimi\" iletişim kutusundaki \"Bulut\" sekmesine gidin",
 	"NO_SYSTEMS_CONNECT_SYSTEM": "Sistem %CLOUD_NAME% e bağlan\""
 }

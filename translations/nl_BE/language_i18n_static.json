@@ -53,21 +53,17 @@
 		},
 		"groups": {
 			"windows": {
-				"label": "Windows",
-				"supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+				"label": "Windows"
 			},
 			"mac": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"linux": {
 				"label": "Ubuntu Linux",
-				"shortLabel": "Ubuntu",
-				"supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+				"shortLabel": "Ubuntu"
 			},
 			"macos": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"ios": {
 				"label": "iOS",
@@ -79,13 +75,11 @@
 			},
 			"arm": {
 				"label": "ARM",
-				"shortLabel": "ARM",
-				"supported": "<a href='/content/arm'>ARM gebaseerde servers ondersteunen beleid</a>"
+				"shortLabel": "ARM"
 			},
 			"sdk": {
 				"label": "SDK",
-				"shortLabel": "SDK",
-				"supported": "C ++ cross-platform SDK"
+				"shortLabel": "SDK"
 			}
 		},
 		"platforms": {
@@ -169,7 +163,7 @@
 		"Data Analytics": "Data Analyse",
 		"Drone": "Drone",
 		"Health Monitor": "Server monitor",
-		"Storage": "Opslagruimte"
+		"Storage": "Opslag"
 	},
 	"messageDialogPlaceholders": {
 		"feedback": "Zorg ervoor dat je uw camera model en fabrikant bij de hand hebt..."
@@ -179,21 +173,21 @@
 		"default": "%CLOUD_NAME%",
 		"registerSuccess": "Welkom bij",
 		"register": "Maak een account aan in",
-		"changePassword": "Wachtwoord wijzigen -",
-		"account": "Account instellingen -",
-		"systems": "Systemen -",
-		"system": "Systeem -",
-		"systemShare": "Deel Systeem -",
-		"activate": "Activeer account -",
-		"activateSent": "Activeer account -",
-		"activateSuccess": "Account geactiveerd -",
-		"activateCode": "Activeer account -",
-		"restorePassword": "Reset wachtwoord -",
-		"restorePasswordSuccess": "Wachtwoord opgeslagen -",
-		"restorePasswordCode": "Reset wachtwoord -",
-		"view": "Bekijk camera's - ",
+		"changePassword": "Wachtwoord wijzigen",
+		"account": "Account instellingen",
+		"systems": "Systemen",
+		"system": "Systeem",
+		"systemShare": "Deel Systeem",
+		"activate": "Activeer account",
+		"activateSent": "Activeer account",
+		"activateSuccess": "Account geactiveerd",
+		"activateCode": "Activeer account",
+		"restorePassword": "Reset wachtwoord",
+		"restorePasswordSuccess": "Wachtwoord opgeslagen",
+		"restorePasswordCode": "Reset wachtwoord",
+		"view": "Bekijk camera's",
 		"debug": "Debug",
-		"login": "Log in -",
+		"login": "Inloggen",
 		"download": "Download %VMS_NAME%",
 		"downloadPlatform": "Download %VMS_NAME% voor ",
 		"pageNotFound": "Pagina niet gevonden",
@@ -207,7 +201,7 @@
 		"changeAccountLogged": "U bent al ingelogd met als {email}",
 		"loggedFromOther": "U wordt met een ander account ingelogd",
 		"loginTitle": "Meld u aan bij %CLOUD_NAME%",
-		"loginButton": "Inloggen",
+		"loginButton": "Log in",
 		"logoutAuthorisedTitle": "U bent reeds ingelogd",
 		"logoutAuthorisedContinueButton": "Doorgaan",
 		"logoutAuthorisedLogoutButton": "Uitloggen",
@@ -224,7 +218,12 @@
 			"primarySystemOffline": "Systeem {{primarySystem}} is offline en kan niet worden samengevoegd met {{targetSystem}}.",
 			"secondaryCannotMerge": "Systeem {{targetSystem}} heeft een oudere softwareversie die niet compatibel is met het huidige systeem. Update {{targetSystem}} naar de <a href=\"/download\" target=\"_blank\" translate>nieuwste versie</a> om deze samen te voegen met de huidige versie.",
 			"systemOffline": "Systeem {{targetSystem}} is offline en kan niet worden samengevoegd met de huidige.",
-			"systemUnavailable": "Systeem {{targetSystem}} is momenteel niet bereikbaar. Probeer het over een paar minuten opnieuw of neem contact op met"
+			"systemUnavailable": "Systeem {{targetSystem}} is momenteel niet bereikbaar. Probeer het over een paar minuten opnieuw of neem contact op met",
+			"recommendSupport": {
+				"a_recommend": "We raden aan om te overleggen met",
+				"b_support": "ondersteuning",
+				"c_proceeding": "voordat u verder gaat."
+			}
 		},
 		"message": {
 			"failedToSend": "Bericht kan niet worden verzonden.",
@@ -234,9 +233,9 @@
 				"ipvd_feedback_page": "Feedback voor camera's pagina",
 				"ipvd_feedback_device": "Feedback over {{asset}}"
 			},
-			"topic": {
-				"contact_sales": "Contacteer verkoop voor {{asset}}",
-				"contact_support": "Contacteer support voor {{asset}}",
+			"subject": {
+				"sales_inquiry": "Verkoopaanvraag voor {{asset}}",
+				"technical_inquiry": "Technische aanvraag voor {{asset}}",
 				"integration_feedback": "Feedback voor integratie {{asset}}",
 				"ipvd_feedback_page": "Feedback voor camera's pagina",
 				"ipvd_feedback_device": "Feedback over {{asset}}"
@@ -252,7 +251,7 @@
 		}
 	},
 	"errorCodes": {
-		"ok": "oke",
+		"ok": "ok",
 		"cantSendActivationPrefix": "Kan geen bevestigingsmail versturen",
 		"cantDisconnectSystemPrefix": "Kan het systeem niet verwijderen",
 		"cantUnshareWithMeSystemPrefix": "Kan het systeem niet verwijderen",
@@ -279,7 +278,7 @@
 		"unknownError": "Er is een onverwachte fout opgetreden",
 		"accountAlreadyActivated": "Deze account is al geactiveerd",
 		"emailNotFound": "Account bestaat niet.",
-		"EmailAlreadyExists": "Dit e-mailadres is al geregistreerd",
+		"EmailAlreadyExists": "Dit Email is al geregistreerd",
 		"oldPasswordMistmatch": "Dit wachtwoord is onjuist.",
 		"passwordMismatch": "Wachtwoord onjuist",
 		"cantEditYourself": "Het wijzigen van eigen machtigingen is niet toegestaan",
@@ -321,7 +320,7 @@
 		"openClient": "Open in %VMS_NAME%",
 		"openClientNoSystem": "Open %VMS_NAME%",
 		"confirmMergeAction": "Samenvoegen",
-		"mergeSystemTitle": "Systemen Samenvoegen",
+		"mergeSystemTitle": "Systemen samenvoegen",
 		"confirmRenameTitle": "Systeemnaam",
 		"confirmRenameAction": "Opslaan",
 		"successRename": "Systeemnaam opgeslagen",
@@ -340,7 +339,8 @@
 		"mergeSuccess": "Systeem samenvoegen voltooid",
 		"permissionsRemoved": "Machtigingen zijn verwijderd uit {{email}}",
 		"unknownName": "Onbekende naam voor systeem (veroorzaakt door samenvoeging in de cloud)",
-		"shareOffline": "Kan het systeem niet delen terwijl het offline is"
+		"shareOffline": "Kan het systeem niet delen terwijl het offline is",
+		"shareUnauthorized": "U heeft geen toestemming om dit systeem te delen"
 	},
 	"systemStatuses": {
 		"activated": "geactiveerd",
@@ -365,7 +365,7 @@
 			"description": "Kan live video bekijken en zoeken in opgenomen beelden"
 		},
 		"Live Viewer": {
-			"label": "Live kijker",
+			"label": "Live Viewer",
 			"description": "Kan alleen live video bekijken"
 		},
 		"Advanced Viewer": {
@@ -397,7 +397,7 @@
 			"description": "Kan live video bekijken en zoeken in opgenomen beelden"
 		},
 		"liveViewer": {
-			"label": "Live kijker",
+			"label": "Live Viewer",
 			"description": "Kan alleen live video bekijken"
 		},
 		"advancedViewer": {
@@ -410,8 +410,8 @@
 		}
 	},
 	"privacyPolicy": {
-		"integration": "Door dit formulier in te dienen, ga je akkoord met contactering door {{INTEGRATION_COMPANY}} en/of %COMPANY_NAME%.\nJe vindt {{INTEGRATION_COMPANY}} privacybeleid <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">hier</a> en %COMPANY_NAME% privacybeleid <a href=\"%PRIVACY_LINK%\" target=\"blank\">hier</a> welke instructies bevat over hoe je toestemming kan intrekken.",
-		"ipvd": "Door dit formulier in te dienen, ga je akkoord met contactering door %COMPANY_NAME%.\nJe vindt %COMPANY_NAME% privacy beleid <a href=\"%PRIVACY_LINK%\" target=\"blank\">hier</a> welke instructies bevat over hoe je toestemming moet intrekken."
+		"integration": "Door dit formulier in te dienen, ga je akkoord met contactering door {{INTEGRATION_COMPANY}} en/of %COMPANY_NAME%.\nJe vindt {{INTEGRATION_COMPANY}} privacybeleid <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">hier</a> en %COMPANY_NAME% privacybeleid <a href=\"%PRIVACY_LINK%\" target=\"_blank\">hier</a> welke instructies bevat over hoe je toestemming kan intrekken.",
+		"ipvd": "Door dit formulier in te dienen, ga je akkoord met contactering door %COMPANY_NAME%.\nJe vindt %COMPANY_NAME% privacy beleid <a href=\"%PRIVACY_LINK%\" target=\"_blank\">hier</a> welke instructies bevat over hoe je toestemming moet intrekken."
 	},
 	"systemAdministration": "Systeem Administratie",
 	"users": "Gebruikers",

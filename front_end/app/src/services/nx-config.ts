@@ -25,6 +25,7 @@ export class NxConfigService {
             cacheTimeout     : 20 * 1000, // Cache lives for 30 seconds
             updateInterval   : 30 * 1000, // Update content on pages every 30 seconds
             openClientTimeout: 20 * 1000, // 20 seconds we wait for client to open
+            openClientError: 'notVisited',
 
             openMobileClientTimeout  : 300, // 300ms for mobile browsers
             timelineMouseEventTimeout: 300, // milliseconds
@@ -84,9 +85,6 @@ export class NxConfigService {
                 },
                 master      : 'master',
                 slave       : 'slave'
-            },
-            systemCapabilities            : {
-                cloudMerge: 'cloudMerge'
             },
             accessRoles                   : {
                 unshare                  : 'none',
@@ -187,8 +185,16 @@ export class NxConfigService {
                     sdk    : {
                         name    : 'sdk',
                         os      : '',
-                        appTypes: []
+                        appTypes: ['universal']
                     }
+                },
+                platformMatch: {
+                    unix: 'Linux',
+                    linux: 'Linux',
+                    mac: 'MacOS',
+                    windows: 'Windows',
+                    arm: 'ARM',
+                    skd: 'SDK'
                 }
             },
             icons                         : {
@@ -227,8 +233,8 @@ export class NxConfigService {
                 chunksToCheckFatal         : 30, // This is used in short cache when requesting chunks for jumpToPosition in timeline directive
                 skipFramesRenderingTimeline: true
             },
-            messageTopics                 : {
-                integration         : ['contact_sales', 'contact_support', 'integration_feedback'],
+            messageSubjects                : {
+                integration         : ['sales_inquiry', 'technical_inquiry', 'integration_feedback'],
                 ipvd_feedback_page  : ['ipvd_feedback_page'],
                 ipvd_feedback_device: ['ipvd_feedback_device']
             },

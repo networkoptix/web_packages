@@ -94,9 +94,6 @@ class Process {
             return resolve(this.caller());
         });
         return wrapper.then((data) => {
-            this.processing = false;
-            this.finished = true;
-
             const error = this.cloudApiService.checkResponseHasError(data);
             if (error) {
                 this.handleError(error);
@@ -120,6 +117,9 @@ class Process {
                 error = error.error;
             }
             this.handleError(error);
+        }).finally(() => {
+            this.processing = false;
+            this.finished = true;
         });
     }
 
@@ -166,8 +166,6 @@ class Process {
     }
 
     private handleError(data) {
-        this.processing = false;
-        this.finished = true;
         this.error = true;
         this.errorData = data;
         if (!this.settings.ignoreUnauthorized && data &&

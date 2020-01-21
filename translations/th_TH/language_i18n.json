@@ -102,7 +102,7 @@
     "Multi Sensor": "เซ็นเซอร์หลายตัว",
     "NO_SYSTEMS_CONNECT_SYSTEM": "เชื่อมต่อระบบกับ %CLOUD_NAME%\"",
     "NO_SYSTEMS_GOTO_ADMINISTRATION": "ไปที่แท็บ \"Cloud\" ในกล่องโต้ตอบ \"การดูแลระบบ\"",
-    "NO_SYSTEMS_LOGIN": "เข้าสู่ระบบโดยใช้ %VMS_NAME%",
+    "NO_SYSTEMS_LOGIN": "Log in to your System using %VMS_NAME%",
     "NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "คุณไม่มีระบบเชื่อมต่อกับ %CLOUD_NAME%",
     "New Password": "สร้างรหัสผ่านใหม่",
     "No unsaved changes": "No unsaved changes",
@@ -116,7 +116,7 @@
     "Page not found": "ไม่พบหน้านี้",
     "Password": "รหัสผ่าน",
     "Password is required": "จำเป็นต้องใช้รหัสผ่าน",
-    "Password reset instructions are sent to Email": "Password reset instructions are sent to Email",
+    "Password reset instructions are sent to Email": "คำแนะนำในการรีเซ็ตรหัสผ่านจะถูกส่งไปที่ Email",
     "Password successfully saved": "บันทึกรหัสผ่านเรียบร้อยแล้ว",
     "Password:": "รหัสผ่าน:",
     "Please enter a valid Email": "โปรดป้อนอีเมลที่ถูกต้อง",
@@ -141,6 +141,7 @@
     "Settings": "การตั้งค่า",
     "Show All": "แสดงทั้งหมด",
     "Some of your servers don't support cloud System merge because of outdated software version.": "เซิร์ฟเวอร์บางตัวของคุณไม่รองรับการรวมระบบคลาวด์เนื่องจากรุ่นซอฟต์แวร์ที่ล้าสมัย",
+    "Subject": "Subject",
     "Support": "ทีมช่วยเหลือ",
     "Support E-mail": "รองรับ E-mail",
     "Support URL": "URL สนับสนุน",
@@ -162,7 +163,6 @@
     "This device has reported to support some analytics events, but we don't have exact information about them.": "อุปกรณ์นี้ได้รายงานว่าสนับสนุนเหตุการณ์การวิเคราะห์บางอย่าง แต่เราไม่มีข้อมูลที่แน่นอนเกี่ยวกับพวกเขา",
     "To": "ถึง",
     "Too many attempts. Try again in a minute.": "คุณพยายามเข้าระบบมากเกินไป กรุณารออีกสักพักแล้วเข้าใหม่",
-    "Topic": "หัวข้อ",
     "Until merge is finished you can log in to this system and watch video, but cannot change any settings.": "จนกว่าการผสานจะเสร็จสิ้นคุณสามารถเข้าสู่ระบบนี้และชมวิดีโอ แต่ไม่สามารถเปลี่ยนการตั้งค่าใด ๆ ได้",
     "Update them to the": "อัปเดตเป็น",
     "Updated": "อัพเดต",
@@ -174,7 +174,6 @@
     "What's New?": "มีอะไรใหม่ๆ?",
     "Works with:": "ทำงานร่วมกับ:",
     "Wrong password": "รหัสผ่านผิด",
-    "You can merge only those cloud Systems, where you have the \"Owner\" permissions.": "คุณสามารถรวมเฉพาะระบบคลาวด์เหล่านี้ซึ่งคุณมีสิทธิ์ \"เจ้าของ\" เท่านั้น",
     "You can only merge Systems where you are the owner.": "คุณสามารถผสานระบบคลาวด์ที่คุณเป็นเจ้าของได้",
     "You have registered in %CLOUD_NAME%": "คุณได้ลงทะเบียนไว้ใน %CLOUD_NAME%",
     "Your Email": "อีเมล์ของคุณ",
@@ -288,6 +287,11 @@
             "mergeFailedTitle": "การผสานระบบล้มเหลว",
             "primaryCannotMerge": "ระบบ {{targetSystem}} มีซอฟต์แวร์เวอร์ชันใหม่กว่าที่ไม่สามารถใช้กับระบบปัจจุบันได้ อัพเดตระบบปัจจุบันเป็น <a href=\"/download\" target=\"_blank\" translate>บิลด์ล่าสุด</a> เพื่อรวมเข้ากับ {{targetSystem}} ระบบ",
             "primarySystemOffline": "ระบบ {{primarySystem}} เป็นออฟไลน์และไม่สามารถผสานกับระบบปัจจุบันได้ {{targetSystem}}",
+            "recommendSupport": {
+                "a_recommend": "เราขอแนะนำให้ปรึกษากับ",
+                "b_support": "ทีมช่วยเหลือ",
+                "c_proceeding": "ก่อนดำเนินการต่อ"
+            },
             "secondaryCannotMerge": "ระบบ {{targetSystem}} มีซอฟต์แวร์รุ่นเก่าที่เข้ากันไม่ได้กับระบบปัจจุบัน อัปเดต {{targetSystem}} เป็น <a href=\"/download\" target=\"_blank\" translate>บิลด์ล่าสุด</a> เพื่อรวมเข้ากับบิลด์ปัจจุบัน",
             "systemOffline": "ระบบ {{targetSystem}} เป็นแบบออฟไลน์และไม่สามารถผสานกับระบบปัจจุบันได้",
             "systemUnavailable": "ระบบ {{targetSystem}} ไม่สามารถเข้าถึงได้ในขณะนี้ ลองอีกครั้งในไม่กี่นาทีหรือติดต่อ"
@@ -295,20 +299,20 @@
         "message": {
             "failedToSend": "ไม่สามารถส่งข้อความได้",
             "sent": "ส่งข้อความแล้ว",
+            "subject": {
+                "integration_feedback": "ข้อเสนอแนะสำหรับการรวม {{asset}}",
+                "ipvd_feedback_device": "ข้อเสนอแนะเกี่ยวกับ {{asset}}",
+                "ipvd_feedback_page": "ข้อเสนอแนะสำหรับหน้ากล้อง",
+                "sales_inquiry": "สอบถามรายละเอียดการขายสำหรับ {{asset}}",
+                "technical_inquiry": "Technical inquiry for {{asset}}"
+            },
             "title": {
                 "integration": "ติดต่อกับ {{companyName}}",
                 "ipvd_feedback_device": "ข้อเสนอแนะเกี่ยวกับ {{asset}}",
                 "ipvd_feedback_page": "ข้อเสนอแนะสำหรับหน้ากล้อง"
-            },
-            "topic": {
-                "contact_sales": "ติดต่อฝ่ายขายสำหรับ {{asset}}",
-                "contact_support": "ติดต่อฝ่ายสนับสนุนสำหรับ {{asset}}",
-                "integration_feedback": "ข้อเสนอแนะสำหรับการรวม {{asset}}",
-                "ipvd_feedback_device": "ข้อเสนอแนะเกี่ยวกับ {{asset}}",
-                "ipvd_feedback_page": "ข้อเสนอแนะสำหรับหน้ากล้อง"
             }
         },
-        "noClientDetectedTitle": "ติดตั้ง %VMS_NAME% เพื่อดูระบบของคุณ",
+        "noClientDetectedTitle": "Install %VMS_NAME% to view your System",
         "okButton": "ตกลง",
         "sharing": {
             "confirmOwner": "หากคุณเปลี่ยนเจ้าของระบบคุณจะยกเลิกการเป็นเจ้าของจากบัญชีปัจจุบัน การกระทำนี้ไม่สามารถย้อนกลับได้ คุณแน่ใจไหม?",
@@ -347,8 +351,7 @@
             },
             "arm": {
                 "label": "ARM",
-                "shortLabel": "ARM",
-                "supported": "<a href='/content/arm'>เซิร์ฟเวอร์ที่ใช้ ARM สนับสนุนนโยบาย</a>"
+                "shortLabel": "ARM"
             },
             "ios": {
                 "label": "iOS",
@@ -356,25 +359,20 @@
             },
             "linux": {
                 "label": "Ubuntu Linux",
-                "shortLabel": "Ubuntu",
-                "supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+                "shortLabel": "Ubuntu"
             },
             "mac": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "macos": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "sdk": {
                 "label": "SDK",
-                "shortLabel": "SDK",
-                "supported": "C ++ SDK ข้ามแพลตฟอร์ม"
+                "shortLabel": "SDK"
             },
             "windows": {
-                "label": "Windows",
-                "supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+                "label": "วินโดวส์"
             }
         },
         "mobile": {
@@ -398,12 +396,12 @@
         },
         "releasesTypes": {
             "beta": "Beta",
-            "betas": "Betas",
+            "betas": "เบต้า",
             "patch": "Patch",
-            "patches": "Patches",
+            "patches": "โปรแกรมปรับปรุง",
             "rc": "Release Candidate",
             "release": "Release",
-            "releases": "Releases"
+            "releases": "การเผยแพร่"
         }
     },
     "errorCodes": {
@@ -487,7 +485,7 @@
         "isFisheye": "ฟิชอาย",
         "isH265": "H.265",
         "isIoSupported": "I / O",
-        "isMdSupported": "การเคลื่อนไหว",
+        "isMdSupported": "โมชั่น",
         "isMultiSensor": "เซ็นเซอร์หลายตัว",
         "isPtzSupported": "PTZ",
         "isTwAudioSupported": "เสียงสองทาง",
@@ -507,30 +505,30 @@
         "feedback": "ตรวจสอบให้แน่ใจว่าคุณได้รวมรุ่นกล้องและผู้ผลิตของคุณ..."
     },
     "pageTitles": {
-        "account": "การตั้งค่าบัญชี -",
-        "activate": "บัญชีที่ใช้งานได้ -",
-        "activateCode": "บัญชีที่ใช้งานได้ -",
-        "activateSent": "บัญชีที่ใช้งานได้ -",
-        "activateSuccess": "บัญชีที่เปิดใช้งาน-",
-        "changePassword": "เปลี่ยนรหัสผ่าน -",
+        "account": "Account settings",
+        "activate": "Activate account",
+        "activateCode": "Activate account",
+        "activateSent": "Activate account",
+        "activateSuccess": "Account activated",
+        "changePassword": "Change password",
         "debug": "การ​แก้ไข​จุด​บกพร่อง",
         "default": "%CLOUD_NAME%",
         "download": "ดาวน์โหลด %VMS_NAME%",
-        "downloadPlatform": "ดาวน์โหลด %VMS_NAME% สำหรับ ",
+        "downloadPlatform": "Download %VMS_NAME% for ",
         "integrations": "Integration",
-        "login": "ลงชื่อเข้าสู่ระบบ -",
+        "login": "Log in",
         "pageNotFound": "ไม่พบหน้านี้",
         "register": "สร้างบัญชี",
         "registerSuccess": "ขอต้อนรับสู่:",
-        "restorePassword": "กำหนดรหัสผ่านใหม่ -",
-        "restorePasswordCode": "กำหนดรหัสผ่านใหม่ -",
-        "restorePasswordSuccess": "บันทึกรหัสผ่านแล้ว -",
+        "restorePassword": "Reset password",
+        "restorePasswordCode": "Reset password",
+        "restorePasswordSuccess": "Password saved",
         "supportedDevices": "อุปกรณ์ที่รองรับ",
-        "system": "ระบบ -",
-        "systemShare": "ระบบใช้ร่วมกัน-",
-        "systems": "ระบบ -",
-        "template": "{{title}} %CLOUD_NAME%",
-        "view": "ดูกล้อง - "
+        "system": "System",
+        "systemShare": "Share System",
+        "systems": "ระบบ",
+        "template": "{{title}} - %CLOUD_NAME%",
+        "view": "View cameras"
     },
     "passwordRequirements": {
         "common": "บ่อยเกินไป",
@@ -550,8 +548,8 @@
     "phoneNumberWithLabel": "โทร: {{number}}",
     "pleaseSelect": "Please select...",
     "privacyPolicy": {
-        "integration": "โดยการส่งแบบฟอร์มนี้คุณตกลงที่จะได้รับการติดต่อจาก {{INTEGRATION_COMPANY}} และ / หรือ %COMPANY_NAME%\nคุณจะพบ {{INTEGRATION_COMPANY}} นโยบายความเป็นส่วนตัว <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">ที่นี่</a> และ %COMPANY_NAME% นโยบายความเป็นส่วนตัว <a href=\"%PRIVACY_LINK%\" target=\"blank\">ที่นี่</a> ซึ่งรวมถึงคำแนะนำเกี่ยวกับวิธีการถอนการยินยอมของคุณ",
-        "ipvd": "โดยการส่งแบบฟอร์มนี้คุณตกลงที่จะได้รับการติดต่อจาก %COMPANY_NAME%\nคุณจะได้พบกับ %COMPANY_NAME% นโยบายความเป็นส่วนตัว <a href=\"%PRIVACY_LINK%\" target=\"blank\">ที่นี่</a> ซึ่งรวมถึงคำแนะนำเกี่ยวกับวิธีการถอนความยินยอมของคุณ"
+        "integration": "โดยการส่งแบบฟอร์มนี้คุณตกลงที่จะได้รับการติดต่อจาก {{INTEGRATION_COMPANY}} และ / หรือ %COMPANY_NAME%\nคุณจะพบ {{INTEGRATION_COMPANY}} นโยบายความเป็นส่วนตัว <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">ที่นี่</a> และ %COMPANY_NAME% นโยบายความเป็นส่วนตัว <a href=\"%PRIVACY_LINK%\" target=\"_blank\">ที่นี่</a> ซึ่งรวมถึงคำแนะนำเกี่ยวกับวิธีการถอนการยินยอมของคุณ",
+        "ipvd": "โดยการส่งแบบฟอร์มนี้คุณตกลงที่จะได้รับการติดต่อจาก %COMPANY_NAME%\nคุณจะได้พบกับ %COMPANY_NAME% นโยบายความเป็นส่วนตัว <a href=\"%PRIVACY_LINK%\" target=\"_blank\">ที่นี่</a> ซึ่งรวมถึงคำแนะนำเกี่ยวกับวิธีการถอนความยินยอมของคุณ"
     },
     "registration": {
         "agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
@@ -593,10 +591,11 @@
         "mySystemSearch": "IMeMyMine",
         "offline": "ระบบออฟไลน์",
         "offlineAlertRibbon": "System is offline. Some settings may not be available.",
-        "openClient": "เปิดใน %VMS_NAME%",
-        "openClientNoSystem": "เปิด %VMS_NAME%",
+        "openClient": "Open in %VMS_NAME%",
+        "openClientNoSystem": "เปิด {{VMS_NAME}}",
         "permissionsRemoved": "สิทธิ์ถูกนำออกจาก {{email}}",
         "shareOffline": "Cannot share system while it is offline",
+        "shareUnauthorized": "You do not have permission to share this system",
         "successDeleted": "ระบบ {{systemName}} จะถูกลบออกจากบัญชีของคุณเรียบร้อยแล้ว",
         "successDisconnected": "ระบบถูกตัดการเชื่อมต่อเรียบร้อยแล้วจาก %CLOUD_NAME%",
         "successRename": "ระบบเปลี่ยนชื่อ",
@@ -614,8 +613,8 @@
         "online": "ออนไลน์",
         "unavailable": "ไม่พร้อมใช้งาน"
     },
-    "testedVersionLabel": "ทดสอบกับรุ่น {{vmsName}}:",
-    "testedVersionsLabel": "ทดสอบกับรุ่น {{vmsName}}:",
+    "testedVersionLabel": "Tested with {{vmsName}} version:",
+    "testedVersionsLabel": "Tested with {{vmsName}} versions:",
     "users": "ผู้ใช้งาน",
     "you": "you"
 }

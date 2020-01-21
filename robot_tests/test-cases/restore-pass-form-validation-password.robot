@@ -57,16 +57,11 @@ Restart
     Open Restore Password Dialog With Link
 
 Open Restore Password Dialog With Link
-    ${email}    Get Random Email    ${BASE EMAIL}
-    Open Browser and go to URL    ${url}/register
-    Register    mark    hamill    ${email}    ${password}
-    ${link}    Get Email Link    ${email}    activate
-    Go To    ${link}
-    Go To    ${url}/restore_password
+    Open Browser and go to URL    ${url}/restore_password
     Wait Until Elements Are Visible    ${RESTORE PASSWORD EMAIL INPUT}    ${RESET PASSWORD BUTTON}
-    Input Text    ${RESTORE PASSWORD EMAIL INPUT}    ${email}
+    Input Text    ${RESTORE PASSWORD EMAIL INPUT}    ${EMAIL OWNER}
     Click Button    ${RESET PASSWORD BUTTON}
-    ${link}    Get Email Link    ${email}    restore_password
+    ${link}    Get Email Link    ${EMAIL OWNER}    restore_password    timeout=300
     Go To    ${link}
     Wait Until Elements Are Visible    ${RESET PASSWORD INPUT}    ${SAVE PASSWORD}
 
@@ -80,19 +75,19 @@ Test Password Invalid
 
 Check New Password Badge
     [arguments]    ${pass}
-    Run Keyword Unless    '''${pass}'''=='''${EMPTY}'''    Wait Until Element Is Visible    ${PASSWORD BADGE}
-    Run Keyword If    '''${pass}'''=='''${7char password}'''    Element Should Be Visible    ${PASSWORD TOO SHORT BADGE}
-    ...    ELSE IF    '''${pass}'''=='''${weak password}'''    Element Should Be Visible    ${PASSWORD IS WEAK BADGE}
+    Run Keyword Unless    '''${pass}'''=='''${EMPTY}'''              Wait Until Element Is Visible    ${PASSWORD BADGE}
+    Run Keyword If    '''${pass}'''=='''${7char password}'''     Element Should Be Visible    ${PASSWORD TOO SHORT BADGE}
+    ...    ELSE IF    '''${pass}'''=='''${weak password}'''      Element Should Be Visible    ${PASSWORD IS WEAK BADGE}
     ...    ELSE IF    '''${pass}'''=='''${common password}'''    Element Should Be Visible    ${PASSWORD TOO COMMON BADGE}
     ...    ELSE IF    '''${pass}'''=='''${CYRILLIC TEXT}''' or '''${pass}'''=='''${SMILEY TEXT}''' or '''${pass}'''=='''${GLYPH TEXT}''' or '''${pass}'''=='''${TM TEXT}''' or '''${pass}'''=='''${SPACE}${BASE PASSWORD}''' or '''${pass}'''=='''${BASE PASSWORD}${SPACE}'''    Element Should Be Visible    ${PASSWORD INCORRECT BADGE}
-    ...    ELSE IF    '''${pass}'''=='''${fair password}'''    Element Should Be Visible    ${PASSWORD IS FAIR BADGE}
-    ...    ELSE IF    '''${pass}'''=='''${BASE PASSWORD}'''    Element Should Be Visible    ${PASSWORD IS GOOD BADGE}
+    ...    ELSE IF    '''${pass}'''=='''${fair password}'''      Element Should Be Visible    ${PASSWORD IS FAIR BADGE}
+    ...    ELSE IF    '''${pass}'''=='''${BASE PASSWORD}'''      Element Should Be Visible    ${PASSWORD IS GOOD BADGE}
 
 Check New Password Outline
     [Arguments]   ${new pw}
     Wait Until Element Is Visible    ${FORM WITH ERROR}
     Run Keyword If    '''${new pw}'''=='''${EMPTY}''' or '''${new pw}'''=='''${SPACE}'''    Element Should Be Visible    ${PASSWORD IS REQUIRED}
-    Run Keyword If    '''${new pw}'''=='''${7char password}'''    Element Should Be Visible    ${PASSWORD TOO SHORT}
-    Run Keyword If    '''${new pw}'''=='''${CYRILLIC TEXT}''' or '''${new pw}'''=='''${SMILEY TEXT}''' or '''${new pw}'''=='''${GLYPH TEXT}''' or '''${new pw}'''=='''${TM TEXT}''' or '''${new pw}'''=='''${SPACE}${BASE PASSWORD}''' or '''${new pw}'''=='''${BASE PASSWORD}${SPACE}'''    Element Should Be Visible    ${PASSWORD SPECIAL CHARS}
-    Run Keyword If    '''${new pw}'''=='''${common password}'''    Element Should Be Visible    ${PASSWORD TOO COMMON}
-    Run Keyword If    '''${new pw}'''=='''${weak password}'''    Element Should Be Visible    ${PASSWORD IS WEAK}
+    ...    ELSE IF    '''${new pw}'''=='''${7char password}'''    Element Should Be Visible    ${PASSWORD TOO SHORT}
+    ...    ELSE IF    '''${new pw}'''=='''${CYRILLIC TEXT}''' or '''${new pw}'''=='''${SMILEY TEXT}''' or '''${new pw}'''=='''${GLYPH TEXT}''' or '''${new pw}'''=='''${TM TEXT}''' or '''${new pw}'''=='''${SPACE}${BASE PASSWORD}''' or '''${new pw}'''=='''${BASE PASSWORD}${SPACE}'''    Element Should Be Visible    ${PASSWORD SPECIAL CHARS}
+    ...    ELSE IF    '''${new pw}'''=='''${common password}'''    Element Should Be Visible    ${PASSWORD TOO COMMON}
+    ...    ELSE IF    '''${new pw}'''=='''${weak password}'''    Element Should Be Visible    ${PASSWORD IS WEAK}

@@ -17,7 +17,10 @@ import { NxRibbonService }         from '../../../components/ribbon/ribbon.servi
 import { fromEvent } from 'rxjs/observable/fromEvent';
 import { debounceTime } from 'rxjs/operators';
 import { NxToastService }          from '../../../dialogs/toast.service';
+import { Subscription } from 'rxjs';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 
+@AutoUnsubscribe()
 @Component({
     selector: 'nx-system-settings-component',
     templateUrl: 'settings.component.html',
@@ -55,6 +58,14 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     selectedUser: any;
 
     headerHeight: number;
+
+    private footerSubscription: Subscription;
+    private menuSectionSubscription: Subscription;
+    private menuSubSectionSubscription: Subscription;
+    private menuSelectedDetailsSubscription: Subscription;
+    private resizeSubscription: Subscription;
+    private routerParamsSubscription: Subscription;
+    private systemSubscription: Subscription;
 
     private setupDefaults() {
         this.CONFIG = this.configService.getConfig();
@@ -95,7 +106,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
     init(): void {
         // this.systemId = this.uriParamSystemId;
-        this.route.params.subscribe(params => {
+        this.routerParamsSubscription = this.route.params.subscribe(params => {
             if (params.systemId) {
                 this.systemId = params.systemId;
                 this.content.base = this.CONFIG.systemMenu.baseUrl + this.systemId;
@@ -110,7 +121,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             }
         });
 
-        this.settingsService
+        this.footerSubscription = this.settingsService
             .footerSubject
             .subscribe((value) => {
                 this.footerVisible = value;
@@ -131,21 +142,21 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             ]
         };
 
-        this.menuService
+        this.menuSectionSubscription = this.menuService
             .selectedSectionSubject
             .subscribe(selection => {
                 this.content.selectedSection = selection;
                 this.content = {...this.content}; // trigger onChange
             });
 
-        this.menuService
+        this.menuSubSectionSubscription = this.menuService
             .selectedSubSectionSubject
             .subscribe(selection => {
                 this.content.selectedSubSection = selection;
                 this.content = {...this.content}; // trigger onChange
             });
 
-        this.menuService
+        this.menuSelectedDetailsSubscription = this.menuService
             .selectedDetailsSection
             .subscribe(selection => {
                 this.content.selectedDetailsSection = selection;
@@ -200,7 +211,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         // var cancelSubscription = this.$on("unauthorized_" + $routeParams.systemId, connectionLost);
 
         // We listen to window resize and measure header height to know how much to offset the fixed menu by
-        fromEvent(window, 'resize').pipe(debounceTime(500)).subscribe((event: any) => {
+        this.resizeSubscription = fromEvent(window, 'resize').pipe(debounceTime(500)).subscribe((event: any) => {
             if (event.target.innerWidth >= 768) {
                 this.setHeaderHeight();
             }
@@ -240,8 +251,10 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                             this.system.forbidden = true;
                         });
 
-
-                    this.system.systemSubject.subscribe((system) => {
+                    if (this.systemSubscription) {
+                        this.systemSubscription.unsubscribe();
+                    }
+                    this.systemSubscription = this.system.systemSubject.subscribe((system) => {
                         if (system !== undefined) {
                             this.settingsService.system = system;
                             this.updateAlert();
@@ -259,8 +272,12 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
     checkShare() {
         if (this.settingsService.share) {
-            if (this.system.isAvailable) {
-                this.settingsService.addUser();
+            if (this.system.isOnline) {
+                if (this.system.permissions.editUsers) {
+                    this.settingsService.addUser();
+                } else {
+                    this.toastService.show(this.LANG.system.shareUnauthorized, {classname: 'danger', delay: this.CONFIG.alertTimeout, autohide: true});
+                }
             } else {
                 this.toastService.show(this.LANG.system.shareOffline, {classname: 'danger', delay: this.CONFIG.alertTimeout, autohide: true});
             }
@@ -361,4 +378,3 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         return permissions.split('|').sort().join('|');
     }
 }
-

@@ -4,7 +4,7 @@
     "Access Level": "Уровень доступа",
     "Access level": "Уровень доступа",
     "Account Information": "Информация об учетной записи",
-    "Account Settings": "Настройки учётной записи",
+    "Account Settings": "Настройки учетной записи",
     "Account is already activated or confirmation code is incorrect": "Учетная запись уже активирована или неверный код подтверждения",
     "Account is created.": "Учетная запись создана.",
     "Account is successfully created.": "Учетная запись успешно создана.",
@@ -33,7 +33,7 @@
     "Camera controls": "Управление камерой",
     "Camera header": "Заголовок камеры",
     "Cameras menu": "Меню камер",
-    "Cancel": "Отменить",
+    "Cancel": "Отмена",
     "Change Password": "Изменить пароль",
     "Checking...": "Проверка...",
     "Choose which properties should be visible to customers:": "Выберите, какие свойства должны быть видны клиентам:",
@@ -53,7 +53,7 @@
     "Disconnect System from %CLOUD_NAME%?": "Отключить систему от %CLOUD_NAME%?",
     "Disconnect from %CLOUD_NAME%": "Отключиться от %CLOUD_NAME%",
     "Disconnect from My Account": "Отвязать от моей учетной записи",
-    "Download": "Загрузить",
+    "Download": "Загрузка",
     "Download %VMS_NAME%": "Скачать %VMS_NAME%",
     "Download Chrome": "Скачать Chrome",
     "Download Firefox": "Скачать Firefox",
@@ -68,7 +68,7 @@
     "Enter password for your account to continue": "Введите пароль для своей учетной записи, чтобы продолжить",
     "Enter password to continue.": "Введите пароль для продолжения.",
     "Export all to CSV": "Экспортировать все в CSV",
-    "FAILED_SYSTEM_DESCR": "Эта ссылка не работает,<br>Система могла быть отключена от %CLOUD_NAME%,<br>доступ к этой системе мог быть отозван<br>или вы вошли под другой учетной записью.",
+    "FAILED_SYSTEM_DESCR": "Эта ссылка не работает,<br>Система могла быть отключена от %CLOUD_NAME%,<br>доступ к этой системе мог быть отозван, <br>или вы вошли под другой учетной записью.",
     "FPS(max)": "FPS(макс)",
     "Failed to access System": "Не удалось получить доступ к системе",
     "Finishing systems merge": "Объединение систем заканчивается",
@@ -102,10 +102,10 @@
     "Multi Sensor": "Мультисенсор",
     "NO_SYSTEMS_CONNECT_SYSTEM": "Нажмите «Подключить систему к %CLOUD_NAME%",
     "NO_SYSTEMS_GOTO_ADMINISTRATION": "Перейдите на вкладку \"Облако\" в окне \"Системное администрирование\"",
-    "NO_SYSTEMS_LOGIN": "Войдите в систему с помощью %VMS_NAME%",
+    "NO_SYSTEMS_LOGIN": "Log in to your System using %VMS_NAME%",
     "NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "У вас нет систем, подключенных к %CLOUD_NAME%",
     "New Password": "Новый пароль",
-    "No unsaved changes": "No unsaved changes",
+    "No unsaved changes": "Нет несохраненных изменений",
     "Nothing Found": "Ничего не найдено",
     "OK": "OK",
     "Ok": "Ok",
@@ -116,17 +116,17 @@
     "Page not found": "Страница не найдена",
     "Password": "Пароль",
     "Password is required": "Пароль обязателен для заполнения",
-    "Password reset instructions are sent to Email": "Password reset instructions are sent to Email",
+    "Password reset instructions are sent to Email": "Инструкции по сбросу пароля были высланы на Email",
     "Password successfully saved": "Пароль успешно сохранен",
     "Password:": "Пароль:",
-    "Please enter a valid Email": "Пожалуйста, введите действительный Email",
+    "Please enter a valid Email": "Пожалуйста введите действительный адрес электронной почты",
     "Please review and agree to the Terms and Conditions and Privacy policy in order to proceed": "Пожалуйста, просмотрите и согласитесь с условиями использования и политикой конфиденциальности для того, чтобы продолжить",
     "Popularity": "Популярность",
     "Privacy": "Политика конфиденциальности",
     "Release Notes": "Заметки к релизу",
     "Release notes": "Что нового",
     "Remember me": "Запомнить",
-    "Remove User": "Remove User",
+    "Remove User": "Удалить пользователя",
     "Rename": "Переименовать",
     "Requirements": "Требования",
     "Resend activation email": "Повторно выслать письмо с активацией",
@@ -141,6 +141,7 @@
     "Settings": "Настройки",
     "Show All": "Показать всё",
     "Some of your servers don't support cloud System merge because of outdated software version.": "Некоторые из ваших серверов не поддерживают слияние облачных систем из-за устаревшей версии программного обеспечения.",
+    "Subject": "Тема",
     "Support": "Техническая поддержка",
     "Support E-mail": "Электронная почта поддержки",
     "Support URL": "Страница поддержки",
@@ -162,19 +163,17 @@
     "This device has reported to support some analytics events, but we don't have exact information about them.": "Это устройство сообщило о поддержке некоторых событий аналитики, но у нас нет точной информации о них.",
     "To": "Куда",
     "Too many attempts. Try again in a minute.": "Слишком много попыток. Повторите позже.",
-    "Topic": "Тема",
     "Until merge is finished you can log in to this system and watch video, but cannot change any settings.": "До окончания объединения вы можете войти в эту систему и посмотреть видео, но не можете изменить какие-либо настройки.",
     "Update them to the": "Обновите их до",
     "Updated": "Обновлено",
     "User": "Пользователь",
     "User disabled": "Пользователь отключен",
-    "View": "Вид",
+    "View": "Просмотр",
     "WHEN_MERGE_FINISHES": "После завершения объединения все пользователи и камеры из этой системы станут доступны в <strong>{{targetSystemName}}</strong>, а эта система будет удалена.",
     "We'd recommend to install the latest versions of Google Chrome or Mozilla Firefox, but you can use any other modern web-browser.": "Мы рекомендуем устанавливать последние версии Google Chrome или Mozilla Firefox, но вы можете использовать любой другой современный веб-браузер.",
     "What's New?": "﻿Что нового?",
     "Works with:": "Работает с:",
     "Wrong password": "Неправильный пароль",
-    "You can merge only those cloud Systems, where you have the \"Owner\" permissions.": "Вы можете объединить только те облачные системы, где у вас есть полномочия «Владелец».",
     "You can only merge Systems where you are the owner.": "Вы можете объединять только те облачные системы, где вы являетесь владельцем.",
     "You have registered in %CLOUD_NAME%": "Вы зарегистрировались в %CLOUD_NAME%",
     "Your Email": "Ваш Email",
@@ -196,19 +195,19 @@
             "label": "Особые"
         },
         "Live Viewer": {
-            "description": "Может смотреть только видео в реальном времени",
-            "label": "Только видео в реальном времени"
+            "description": "Может смотреть только живое видео",
+            "label": "Только видео с камер"
         },
         "Owner": {
             "description": "Неограниченный доступ, включая управление общим доступом и подключением системы к облаку",
             "label": "Владелец"
         },
         "Viewer": {
-            "description": "Может смотреть видео в реальном времени и архив",
+            "description": "Может смотреть живое видео и архив",
             "label": "Видео с камер и архив"
         },
         "advancedViewer": {
-            "description": "Может смотреть видео в реальном времени, архив, изменять настройки камер, управлять PTZ и т. д",
+            "description": "Может смотреть живое видео, архив, изменять настройки камер, управлять PTZ и т. д",
             "label": "Просмотр и настройка"
         },
         "cloudAdmin": {
@@ -228,21 +227,21 @@
             "label": "Отключен"
         },
         "liveViewer": {
-            "description": "Может смотреть только видео в реальном времени",
-            "label": "Только видео в реальном времени"
+            "description": "Может смотреть только живое видео",
+            "label": "Только видео с камер"
         },
         "owner": {
             "description": "Неограниченный доступ, включая управление общим доступом и подключением системы к облаку",
             "label": "Владелец"
         },
         "viewer": {
-            "description": "Может смотреть видео в реальном времени и архив",
+            "description": "Может смотреть живое видео и архив",
             "label": "Видео с камер и архив"
         }
     },
     "account": {
         "accountSavedSuccess": "Ваша учетная запись успешно сохранена",
-        "accountSettings": "Настройки учётной записи",
+        "accountSettings": "Настройки учетной записи",
         "activationLinkSent": "Ссылка для активации отправлена",
         "changePassword": "Изменить пароль",
         "newPasswordLabel": "Новый пароль",
@@ -271,11 +270,11 @@
     "clientProtocol": "%CLIENT_PROTOCOL%:",
     "devices": "устройства",
     "dialogs": {
-        "cancelButton": "Отменить",
-        "changeAccountLogged": "You are already logged in with as {email}",
-        "createNewAccount": "Create New Account",
+        "cancelButton": "Отмена",
+        "changeAccountLogged": "Вы уже вошли как {email}",
+        "createNewAccount": "Создать новую учетную запись",
         "download": "Скачать %VMS_NAME%",
-        "loggedFromOther": "You will be logged in with a different account",
+        "loggedFromOther": "Вы будете авторизованы под другой учетной записью",
         "loginButton": "Войти",
         "loginTitle": "Войти в %CLOUD_NAME%",
         "logoutAuthorisedContinueButton": "Продолжить",
@@ -288,6 +287,11 @@
             "mergeFailedTitle": "Объединение систем не удалось",
             "primaryCannotMerge": "Система {{targetSystem}} имеет более новую версию программного обеспечения, несовместимую с текущей Системой. Обновите текущую Систему до <a href=\"/download\" target=\"_blank\" translate>последней сборки</a> чтобы объединить ее с Системой {{targetSystem}}.",
             "primarySystemOffline": "Система {{primarySystem}} не находится в сети и не может быть объединена с системой {{targetSystem}}.",
+            "recommendSupport": {
+                "a_recommend": "Мы рекомендуем проконсультироваться с",
+                "b_support": "техническая поддержка",
+                "c_proceeding": "прежде чем продолжить."
+            },
             "secondaryCannotMerge": "Система {{targetSystem}} имеет более старую версию программного обеспечения, несовместимую с текущей Системой. Обновите {{targetSystem}} до <a href=\"/download\" target=\"_blank\" translate>последней сборки</a> чтобы объединить ее с текущей.",
             "systemOffline": "Система {{targetSystem}} не находится в сети и не может быть объединена с текущей.",
             "systemUnavailable": "Система {{targetSystem}} в данный момент недоступна. Повторите попытку через несколько минут или свяжитесь с"
@@ -295,20 +299,20 @@
         "message": {
             "failedToSend": "Не удалось отправить сообщение.",
             "sent": "Сообщение отправлено.",
+            "subject": {
+                "integration_feedback": "Отзыв об интеграции {{asset}}",
+                "ipvd_feedback_device": "Отзыв о {{asset}}",
+                "ipvd_feedback_page": "Отзыв о странице камер",
+                "sales_inquiry": "Запрос на продажу {{asset}}",
+                "technical_inquiry": "Технический запрос для {{asset}}"
+            },
             "title": {
                 "integration": "Связаться с {{companyName}}",
                 "ipvd_feedback_device": "Отзыв о {{asset}}",
                 "ipvd_feedback_page": "Отзыв о странице камер"
-            },
-            "topic": {
-                "contact_sales": "Связаться с отделом продаж по поводу {{asset}}",
-                "contact_support": "Обратитесь в службу поддержки по поводу {{asset}}",
-                "integration_feedback": "Отзыв об интеграции {{asset}}",
-                "ipvd_feedback_device": "Отзыв о {{asset}}",
-                "ipvd_feedback_page": "Отзыв о странице камер"
             }
         },
-        "noClientDetectedTitle": "Установите %VMS_NAME% для работы с системой",
+        "noClientDetectedTitle": "Install %VMS_NAME% to view your System",
         "okButton": "OK",
         "sharing": {
             "confirmOwner": "Если изменить владельца системы, она больше не будет принадлежать текущей учетной записи. Это действие необратимо. Вы уверены?",
@@ -318,8 +322,8 @@
             "shareConfirmButton": "Добавить",
             "shareTitle": "Добавить"
         },
-        "stayAs": "Stay logged as {email} ",
-        "stayLoggedIn": "Stay Logged In"
+        "stayAs": "Оставаться зарегистрированным как {email} ",
+        "stayLoggedIn": "Оставаться в системе"
     },
     "dialogs.merge.connectToCloud": "Подключите систему, которую вы хотите объединить с этой, к <strong>{{cloudName}}</strong> или выполните объединение локально, используя <strong>{{vmsName}}</strong> Client.",
     "dialogs.merge.mergeConfirmation": "Вы собираетесь объединить системы <strong>{{primarySystem}}</strong> и <strong>{{secondarySystem}}</strong>. Настройки и название будут взяты из <strong>{{primarySystem}}</strong>.",
@@ -333,7 +337,7 @@
             "bundle": "Клиент и сервер",
             "camera_sdk": "SDK источника видео",
             "client": "Только клиент",
-            "metadata_sdk": "Metadata SDK",
+            "metadata_sdk": "Метаданные SDK",
             "package": "Пакет",
             "server": "Только сервер",
             "servertool": "Инструмент настройки",
@@ -347,8 +351,7 @@
             },
             "arm": {
                 "label": "ARM",
-                "shortLabel": "ARM",
-                "supported": "<a href='/content/arm'>Политика поддержки серверов на базе ARM</a>"
+                "shortLabel": "ARM"
             },
             "ios": {
                 "label": "iOS",
@@ -356,25 +359,20 @@
             },
             "linux": {
                 "label": "Ubuntu Linux",
-                "shortLabel": "Ubuntu",
-                "supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+                "shortLabel": "Ubuntu"
             },
             "mac": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "macos": {
-                "label": "Mac OS",
-                "supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+                "label": "Mac OS"
             },
             "sdk": {
                 "label": "SDK",
-                "shortLabel": "SDK",
-                "supported": "Кроссплатформенный SDK C++"
+                "shortLabel": "SDK"
             },
             "windows": {
-                "label": "Windows",
-                "supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+                "label": "Windows"
             }
         },
         "mobile": {
@@ -397,13 +395,13 @@
             "win64": "x64"
         },
         "releasesTypes": {
-            "beta": "Beta",
-            "betas": "Betas",
+            "beta": "Бета",
+            "betas": "Бета",
             "patch": "Patch",
-            "patches": "Patches",
-            "rc": "Release Candidate",
-            "release": "Release",
-            "releases": "Releases"
+            "patches": "Патчи",
+            "rc": "Релиз-кандидат",
+            "release": "Релиз",
+            "releases": "Релизы"
         }
     },
     "errorCodes": {
@@ -425,7 +423,7 @@
         "cantGetSystemInfoPrefix": "Информация о системе недоступна",
         "cantGetSystemsListPrefix": "Список систем недоступен",
         "cantGetUsersListPrefix": "Список пользователей недоступен",
-        "cantOpenClient": "%VMS_NAME% application is not detected.",
+        "cantOpenClient": "Приложение %VMS_NAME% не обнаружено.",
         "cantRegisterPrefix": "Произошла ошибка",
         "cantSendActivationPrefix": "Не удается отправить подтверждение по Email",
         "cantSendConfirmationPrefix": "Не удается отправить подтверждение по Email",
@@ -507,30 +505,30 @@
         "feedback": "Убедитесь, что вы указали модель и производителя вашей камеры..."
     },
     "pageTitles": {
-        "account": "Настройки учетной записи -",
-        "activate": "Активировать учетную запись -",
-        "activateCode": "Активировать учетную запись -",
-        "activateSent": "Активировать учетную запись -",
-        "activateSuccess": "Учетная запись активирована -",
-        "changePassword": "Изменить пароль -",
+        "account": "Account settings",
+        "activate": "Activate account",
+        "activateCode": "Activate account",
+        "activateSent": "Activate account",
+        "activateSuccess": "Account activated",
+        "changePassword": "Change password",
         "debug": "Отладка",
         "default": "%CLOUD_NAME%",
         "download": "Скачать %VMS_NAME%",
-        "downloadPlatform": "Скачать %VMS_NAME% для ",
+        "downloadPlatform": "Download %VMS_NAME% for ",
         "integrations": "Интеграции",
-        "login": "Войти -",
+        "login": "Log in",
         "pageNotFound": "Страница не найдена",
         "register": "Зарегистрироваться в",
         "registerSuccess": "Добро пожаловать в",
-        "restorePassword": "Сброс пароля -",
-        "restorePasswordCode": "Сброс пароля -",
-        "restorePasswordSuccess": "Пароль сохранен -",
+        "restorePassword": "Reset password",
+        "restorePasswordCode": "Reset password",
+        "restorePasswordSuccess": "Password saved",
         "supportedDevices": "Поддерживаемые устройства",
-        "system": "Система -",
-        "systemShare": "Общий доступ -",
-        "systems": "Системы -",
-        "template": "{{title}} %CLOUD_NAME%",
-        "view": "Просмотр камер - "
+        "system": "System",
+        "systemShare": "Share System",
+        "systems": "Системы",
+        "template": "{{title}} - %CLOUD_NAME%",
+        "view": "View cameras"
     },
     "passwordRequirements": {
         "common": "часто встречающийся",
@@ -539,7 +537,7 @@
         "fairMessage": "Для надежности пароля используйте цифры, буквы верхнего и нижнего регистра и специальные символы",
         "good": "хорошее",
         "minLength": "короткий",
-        "minLengthMessage": "Пароль должен содержать не менее 8 символов",
+        "minLengthMessage": "Пароль должен содержать по крайней мере 8 символов",
         "missingMessage": "Пароль обязателен для заполнения",
         "required": "некорректный",
         "requiredMessage": "Используйте только латинские буквы, цифры и символы клавиатуры, избегайте начальных и конечных пробелов",
@@ -550,8 +548,8 @@
     "phoneNumberWithLabel": "Тел: {{number}}",
     "pleaseSelect": "Пожалуйста, выберите...",
     "privacyPolicy": {
-        "integration": "Отправляя эту форму, вы соглашаетесь на получение информации от {{INTEGRATION_COMPANY}} и/или %COMPANY_NAME%.\nПолитика конфиденциальности {{INTEGRATION_COMPANY}} с инструкциями о том, как отозвать ваше согласие, доступна <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">здесь</a>, а %COMPANY_NAME% - <a href=\"%PRIVACY_LINK%\" target=\"blank\">здесь</a>.",
-        "ipvd": "Отправляя эту форму, вы соглашаетесь на получение информации от %COMPANY_NAME%.\nПолитика конфиденциальности %COMPANY_NAME% с инструкциями о том, как отозвать ваше согласие, доступна <a href=\"%PRIVACY_LINK%\" target=\"blank\">здесь</a>."
+        "integration": "Отправляя эту форму, вы соглашаетесь на получение информации от {{INTEGRATION_COMPANY}} и/или %COMPANY_NAME%.\nПолитика конфиденциальности {{INTEGRATION_COMPANY}} с инструкциями о том, как отозвать ваше согласие, доступна <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">здесь</a>, а %COMPANY_NAME% - <a href=\"%PRIVACY_LINK%\" target=\"_blank\">здесь</a>.",
+        "ipvd": "Отправляя эту форму, вы соглашаетесь на получение информации от %COMPANY_NAME%.\nПолитика конфиденциальности %COMPANY_NAME% с инструкциями о том, как отозвать ваше согласие, доступна <a href=\"%PRIVACY_LINK%\" target=\"_blank\">здесь</a>."
     },
     "registration": {
         "agreement": "Я согласен с <a href=\"/content/eula\" target=\"_blank\">условиями</a> и <a href=\"%PRIVACY_LINK%\" target=\"_blank\">правилами конфиденциальности</a>"
@@ -592,11 +590,12 @@
         "mergeSystemTitle": "Объединить системы",
         "mySystemSearch": "ЯМойМоя",
         "offline": "Система не в сети",
-        "offlineAlertRibbon": "System is offline. Some settings may not be available.",
-        "openClient": "Открыть в %VMS_NAME%",
+        "offlineAlertRibbon": "Система не в сети. Некоторые настройки могут быть недоступны.",
+        "openClient": "Open in %VMS_NAME%",
         "openClientNoSystem": "Открыть %VMS_NAME%",
         "permissionsRemoved": "{{email}} был лишен полномочий",
-        "shareOffline": "Cannot share system while it is offline",
+        "shareOffline": "Невозможно поделиться системой, пока она не в сети",
+        "shareUnauthorized": "У вас нет разрешения на объединение этой системы",
         "successDeleted": "Система {{systemName}} успешно удалена из вашей учетной записи",
         "successDisconnected": "Система успешно отключена от %CLOUD_NAME%",
         "successRename": "Имя системы сохранено",
@@ -615,7 +614,7 @@
         "unavailable": "недоступен"
     },
     "testedVersionLabel": "Проверено на версии {{vmsName}}:",
-    "testedVersionsLabel": "Проверено на версиях {{vmsName}}:",
+    "testedVersionsLabel": "Проверено на версии {{vmsName}}:",
     "users": "Пользователи",
     "you": "вы"
 }

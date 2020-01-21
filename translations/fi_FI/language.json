@@ -1,9 +1,7 @@
 {
   "language": "fi_FI",
-  "language_name": "Suomi",
+  "language_name": "Finnish",
   "cloudName": "%CLOUD_NAME%",
-  "vmsName": "%VMS_NAME%",
-  "clientProtocol": "%CLIENT_PROTOCOL%:",
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
     "default": "%CLOUD_NAME%",
@@ -27,73 +25,6 @@
     "download": "Lataa %VMS_NAME%",
     "downloadPlatform": "Lataa %VMS_NAME% ",
     "pageNotFound": "Sivua ei löydy"
-  },
-  "systemStatuses": {
-    "activated": "aktivoitu",
-    "incompatible": "yhteensopimaton",
-    "merging": "liitetään",
-    "notActivated": "ei aktivoitu",
-    "online": "yhteys muodostettu",
-    "offline": "ei yhteyttä",
-    "unavailable": "ei saatavilla"
-  },
-  "accessRoles": {
-    "disabled": {
-      "label": "Poissa käytöstä",
-      "description": "Käyttäjä on poistettu käytöstä ja ei voi kirjautua järjestelmään"
-    },
-    "Owner": {
-      "label": "Omistaja",
-      "description": "Rajoittamaton pääsy, mukaan lukien kyky jakaa ja yhdistää / irroittaa järjestelmää pilvestä"
-    },
-    "Viewer": {
-      "label": "Katsoja",
-      "description": "Voi katsella reaaliaikaista videota ja selata arkistoa"
-    },
-    "Live Viewer": {
-      "label": "Reaaliaikainen katselu",
-      "description": "Voit katsella vain reaaliaikaista videota"
-    },
-    "Advanced Viewer": {
-      "label": "Edistyneempi katselu",
-      "description": "Voi katsella reaaliaikasta videota, selata arkistoa, määrittää kameroita, ohjata PTZ: tä jne"
-    },
-    "Administrator": {
-      "label": "Järjestelmänvalvoja",
-      "description": "Rajoittamaton pääsy mukaan lukien kyky jakaa"
-    },
-    "Custom": {
-      "label": "Asiakassuhde",
-      "description": "Käytä %VMS_NAME% Client -sovellusta mukautettujen käyttöoikeuksien määrittämiseen"
-    },
-    "cloudAdmin": {
-      "label": "Järjestelmänvalvoja",
-      "description": "Voi konfiguroida järjestelmää ja jakaa sen"
-    },
-    "customRole": {
-      "label": "Mukautettu rooli",
-      "description": "Mukautettu käyttäjärooli Järjestelmässä"
-    },
-    "owner": {
-      "label": "Omistaja",
-      "description": "Rajoittamaton pääsy, mukaan lukien kyky jakaa ja yhdistää / irroittaa järjestelmää pilvestä"
-    },
-    "viewer": {
-      "label": "Katsoja",
-      "description": "Voi katsella reaaliaikaista videota ja selata arkistoa"
-    },
-    "liveViewer": {
-      "label": "Reaaliaikainen katselu",
-      "description": "Voit katsella vain reaaliaikaista videota"
-    },
-    "advancedViewer": {
-      "label": "Edistyneempi katselu",
-      "description": "Voi katsella reaaliaikasta videota, selata arkistoa, määrittää kameroita, ohjata PTZ: tä jne"
-    },
-    "custom": {
-      "label": "Asiakassuhde",
-      "description": "Käytä %VMS_NAME% Client -sovellusta mukautettujen käyttöoikeuksien määrittämiseen"
-    }
   },
   "errorCodes": {
     "ok": "ok",
@@ -138,52 +69,17 @@
     "FAIL": "Järjestelmä <strong>{{failedSystem}}</strong> ei ole tällä hetkellä saavutettavissa.<br>Yritä uudelleen hetken kuluttua tai ota yhteys <a href=\"%SUPPORT_LINK%\" target=\"_blank\">tukeen</a>.",
     "unknownMergeError": "Tuntematon virhe. Voit yrittää päivittää sivua ja toistaa yrityksen. Jos ongelma jatkuu - ota yhteyttä <a href=\"%SUPPORT_LINK%\" target=\"_blank\">tukeen</a>."
   },
-  "system": {
-    "yourSystem": "Järjestelmäsi",
-    "mySystemSearch": "IMeMyMine",
-    "unavailable": "Järjestelmä ei ole tavoitettavissa",
-    "offline": "Järjestelmään ei saada yhteyttä",
-    "openClient": "Avaa %VMS_NAME%",
-    "openClientNoSystem": "Avaa %VMS_NAME%",
-    "confirmMergeAction": "Yhdistä",
-    "mergeSystemTitle": "Yhdistä järjestelmät",
-    "confirmRenameTitle": "Järjestelmänimi",
-    "confirmRenameAction": "Tallenna",
-    "successRename": "Järjestelmän nimi on tallennettu",
-    "confirmDisconnectTitle": "Irrota järjestelmä %CLOUD_NAME%?",
-    "confirmDisconnectAction": "Katkaise yhteys",
-    "confirmUnshareFromMe": "You will not be able to lgo into this System anymore.",
-    "confirmUnshareFromMeTitle": "Disconnect System from your Account?",
-    "confirmUnshareFromMeAction": "Katkaise yhteys",
-    "confirmUnshareTitle": "Remove user?",
-    "confirmUnshareAction": "Poista",
-    "successDisconnected": "Järjestelmä irrotetaan onnistuneesti %CLOUD_NAME%",
-    "successDeleted": "Järjestelmä {{systemName}} poistetaan onnistuneesti tililtäsi",
-    "mergeFailed": "Järjestelmien yhdistäminen epäonnistui",
-    "mergeStart": "Järjestelmät ovat alkaneet yhdistyä",
-    "mergeSuccess": "Järjestelmän yhdistäminen on valmis",
-    "permissionsRemoved": "Käyttöoikeudet poistettiin {{email}}",
-    "unknownName": "Järjestelmän tuntematon nimi (pilviliitoksen aiheuttama)"
-  },
-  "regActions": {
-    "passwordLabel": "Salasana",
-    "createAccount": "Luo tili"
-  },
-  "header": {
-    "allSystems": "Kaikki järjestelmät",
-    "systems": "Järjestelmät"
-  },
   "common": {
     "cameraLinks": {
-      "highStream": "High stream",
-      "lowStream": "Low stream",
+      "highStream": "Korkea streami",
+      "lowStream": "Matala streami",
       "transcoding": "Transkoodaus",
       "unknown": "Tuntematon",
       "copyToClipboard": "kopioi leikepöydälle",
-      "copyDefaultText": "kopioi",
+      "copyDefaultText": "kopio",
       "copyActiveText": "kopioitu leikepöydälle"
     },
-    "systemOffline": "Järjestelmään ei saada yhteyttä",
+    "systemOffline": "Järjestelmä offline-tilassa",
     "systemHasNoCameras": "Ei kameroita",
     "systemUnreachable": "JÄRJESTELMÄÄN EI SAADA YHTEYTTÄ",
     "cameraStates": {
@@ -194,7 +90,7 @@
       "noData": "Ei dataa",
       "iOSVideoTooLarge": "iOS ei tue videota, joka on suurempi kuin fullHD (2MP: 1920x1080).",
       "flashRequired": "Siirry<a href='https://get.adobe.com/flashplayer/' target='_blank'>Asenna Adobe Flash</a> videoiden toistamiseen.",
-      "flashOrWebmRequired": "Ota <a href='https://get.adobe.com/flashplayer/' target='_blank'>Asenna Adobe Flash</a> tai<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM koodekin</a> videon toistamiseen Internet Explorer.",
+      "flashOrWebmRequired": "Siirry <a href='https://get.adobe.com/flashplayer/' target='_blank'>Asenna Adobe Flash</a> tai<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM koodekin</a> videon toistamiseen Internet Explorer:ssa.",
       "noArmSupport": "Tämä selain tai laite ei tue videotoistoa ARM-pohjaisista palvelimista.",
       "noFormat": "Tämä selain ei tue videon toistoa tästä kamerasta.",
       "ieNoWebm": "Asenna <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM-koodekki</a> Internet Exploreriin.",
@@ -211,21 +107,20 @@
     "voiceCommands": {
       "play": "toista",
       "pause": "tauko",
-      "live": "go to live | show me live",
-      "view": "view + [camera name]",
-      "search": "find + [text for searchbar]",
+      "live": "siirry reaaliaikaiseen | näytä minulle reaaliaikainen kuva",
+      "view": "näkymä + [kameran nimi]",
+      "search": "etsi + [hakupalkin teksti]",
       "clear search": "tyhjennä haku",
-      "expand server": "expand server + [server name]",
-      "collapse server": "collapse server + [server name]",
+      "expand server": "laajenna palvelin + [palvelimen nimi]",
+      "collapse server": "pienennä palvelin + [palvelimen nimi]",
       "expand all servers": "laajenna kaikki palvelimet",
       "collapse all servers": "kokoa kaikki palvelimet",
       "stop listening": "lopeta kuuntelu",
-      "help": "help | show commands"
+      "help": "apua | näytä komennot"
     }
   },
-  "recommendSupport": {
-    "a_recommend": "Suosittelemme konsultointia",
-    "b_support": "tuki",
-    "c_proceeding": "ennen etenemistä."
+  "system": {
+    "offline": "Järjestelmään ei saada yhteyttä",
+    "unavailable": "Järjestelmä ei ole tavoitettavissa"
   }
 }

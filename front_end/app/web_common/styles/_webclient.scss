@@ -985,6 +985,10 @@ table.webclient-window>tbody>tr>td{
     &.no-archive{
       padding-bottom: 60px !important;
     }
+  
+    &.no-controls {
+      padding-bottom : 0 !important;
+    }
   }
   div.text-center{
     margin: 0 !important;

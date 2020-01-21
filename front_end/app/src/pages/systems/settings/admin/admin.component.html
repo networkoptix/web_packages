@@ -51,7 +51,7 @@
         <nx-block>
             <nx-section>
                 <span class="system-owner" translate>Your access level<span>&nbsp;– </span>
-                    <span class="name">{{ userRole }}</span>
+                    <span class="name" [innerHTML]="updateUserRole()"></span>
                 </span>
                 <div class="mt-2">
                     <button [disabled]="settings.disconnectDisabled"
