@@ -237,7 +237,9 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
     }
 
     updateForm(e) {
-        this[e.target.name].value = e.target.value;
+        const { name, value } = e.target;
+        this[name].value = value;
+        this.selectedUser[name] = value;
     }
 }
 

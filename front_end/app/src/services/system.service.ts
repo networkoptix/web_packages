@@ -262,13 +262,11 @@ class UserManager {
              * - this user is the local owner (local 'admin')
              * - this user is the cloud owner
              *
-             * Furthermore, if the current user is not the system owner, but
-             *   the current user is an admin, they can not edit other admins
+             * Furthermore, if the system is not mine and the user is an admin,
+             *   they also can not be edited
              */
-            user.canBeEdited = !(isMe || user.isLocalOwner || isCloudOwner);
-            if (user.canBeEdited && !this.isMine && this.permissions.isAdmin) {
-                user.canBeEdited = !isAdmin;
-            }
+            const isNotMeOrOwner = !(isMe || user.isLocalOwner || isCloudOwner);
+            user.canBeEdited = isNotMeOrOwner && (this.isMine || !isAdmin);
 
             return user;
         }).sort((userA, userB) => {
@@ -283,12 +281,16 @@ class UserManager {
     saveUser(user: NxSystemUser, role: NxSystemRole) {
         user.email = user.email.toLowerCase();
         let userCreated = false;
-
         if (user.email === this.currentUserEmail) {
-            return Promise.reject({ resultCode: 'cantEditYourself' });
+            if (user.isCloud) {
+                return Promise.reject({ resultCode: 'cantEditYourself' });
+            } else {
+                console.log('cant add own email');
+                return Promise.reject({ resultCode: 'cantAddYourOwnEmail' });
+            }
         }
 
-        if (!user.userId) {
+        if (!user.id) {
             let existingUser = this.users.find((u) => {
                 return user.email === u.email;
             });
@@ -297,10 +299,10 @@ class UserManager {
                 existingUser = this.mediaserver.userObject(user.fullName, user.email);
             }
             user = {...existingUser, ...user};
+        }
 
-            if (!user.canBeEdited && !this.isMine) {
-                return Promise.reject({ resultCode: 'cantEditAdmin' });
-            }
+        if (!user.canBeEdited && !this.isMine) {
+            return Promise.reject({ resultCode: 'cantEditAdmin' });
         }
 
         user.userRoleId = role.id || '';

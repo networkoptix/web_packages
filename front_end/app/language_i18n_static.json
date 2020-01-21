@@ -286,6 +286,7 @@
 		"oldPasswordMistmatch": "Current password is incorrect.",
 		"passwordMismatch": "Wrong password",
 		"cantEditYourself": "Changing own permissions is not allowed",
+		"cantAddYourOwnEmail": "Adding your own email is not allowed",
 		"cantEditAdmin": "This user has administrator permissions",
 		"cantOpenClient": "%VMS_NAME% application is not detected.",
 		"lostConnection": "Connection to {{systemName}} lost",
