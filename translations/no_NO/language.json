@@ -2,19 +2,6 @@
   "language": "no_NO",
   "language_name": "Norsk",
   "cloudName": "%CLOUD_NAME%",
-  "vmsName": "%VMS_NAME%",
-  "clientProtocol": "%CLIENT_PROTOCOL%:",
-  "dialogs": {
-    "okButton": "OK",
-    "cancelButton": "Avbryt",
-    "loginTitle": "Logg inn på %CLOUD_NAME%",
-    "loginButton": "Logg Inn",
-    "logoutAuthorisedTitle": "Du er allerede innlogget",
-    "logoutAuthorisedContinueButton": "Fortsette",
-    "logoutAuthorisedLogoutButton": "Logg ut",
-    "noClientDetectedTitle": "Installer %VMS_NAME% for å koble til ditt System",
-    "download": "Last ned %VMS_NAME%"
-  },
   "pageTitles": {
     "template": "{{title}} %CLOUD_NAME%",
     "default": "%CLOUD_NAME%",
@@ -38,73 +25,6 @@
     "download": "Last ned %VMS_NAME%",
     "downloadPlatform": "Last ned %VMS_NAME% for ",
     "pageNotFound": "Siden ble ikke funnet"
-  },
-  "systemStatuses": {
-    "activated": "aktivert",
-    "incompatible": "uforenlig",
-    "merging": "slår sammen",
-    "notActivated": "ikke aktivert",
-    "online": "online",
-    "offline": "offline",
-    "unavailable": "utilgjengelig"
-  },
-  "accessRoles": {
-    "disabled": {
-      "label": "Deaktivert",
-      "description": "Brukeren er deaktivert og kan ikke logge på System"
-    },
-    "Owner": {
-      "label": "Eier",
-      "description": "Ubegrenset tilgang, inkludert muligheten til å dele og koble til / koble systemet fra skyen"
-    },
-    "Viewer": {
-      "label": "Bruker",
-      "description": "Kan se live video og bla gjennom arkivet"
-    },
-    "Live Viewer": {
-      "label": "Live Bruker",
-      "description": "Kan bare vise live video"
-    },
-    "Advanced Viewer": {
-      "label": "Avansert Bruker",
-      "description": "Kan se live video, bla gjennom arkivet, kontrollere PTZ osv"
-    },
-    "Administrator": {
-      "label": "Administrator",
-      "description": "Ubegrenset tilgang, inkludert evnen til å dele"
-    },
-    "Custom": {
-      "label": "Tilpasset",
-      "description": "Bruk %VMS_NAME% klientprogrammet til å konfigurere egendefinerte tillatelser"
-    },
-    "cloudAdmin": {
-      "label": "Administrator",
-      "description": "Kan konfigurere System og dele det"
-    },
-    "customRole": {
-      "label": "Egendefinerte roller",
-      "description": "Tilpasset brukerrolle spesifisert i System"
-    },
-    "owner": {
-      "label": "Eier",
-      "description": "Ubegrenset tilgang, inkludert muligheten til å dele og koble til / koble systemet fra skyen"
-    },
-    "viewer": {
-      "label": "Bruker",
-      "description": "Kan se live video og bla gjennom arkivet"
-    },
-    "liveViewer": {
-      "label": "Live Bruker",
-      "description": "Kan bare vise live video"
-    },
-    "advancedViewer": {
-      "label": "Avansert Bruker",
-      "description": "Kan se live video, bla gjennom arkivet, konfigurere kameraer, styre PTZ osv"
-    },
-    "custom": {
-      "label": "Tilpasset",
-      "description": "Bruk %VMS_NAME% klientprogrammet til å konfigurere egendefinerte tillatelser"
-    }
   },
   "errorCodes": {
     "ok": "ok",
@@ -148,83 +68,6 @@
     "INCOMPATIBLE": "Systemer har forskjellige programvareversjoner. Vennligst oppdatere dem begge til <a href=\"/download\">siste build</a>.",
     "FAIL": "System <strong>{{failedSystem}}</strong> er for tiden ikke tilgjengelig.<br>Prøv igjen om noen få minutter eller kontakt <a href=\"%SUPPORT_LINK%\" target=\"_blank\">brukerstøtte</a>.",
     "unknownMergeError": "Ukjent feil. Du kan prøve å oppdatere siden og gjenta forsøk. Hvis problemet vedvarer, vennligst kontakt <a href=\"%SUPPORT_LINK%\" target=\"_blank\">brukerstøtte</a>."
-  },
-  "merging": {
-    "mergeFailedTitle": "Systemsammenslåing mislyktes",
-    "commonText": "Kunne ikke slå sammen systemer <strong>{{primarySystem}}</strong> og <strong>{{secondarySystem}}</strong>."
-  },
-  "passwordRequirements": {
-    "good": "sterkt",
-    "fair": "tilfredstillende",
-    "fairMessage": "Bruk tall, store og små bokstaver og spesialtegn for å gjøre passordet ditt sterkere. Unngå æøå",
-    "minLength": "for kort",
-    "minLengthMessage": "Passordet må inneholde minst 8 tegn",
-    "required": "stemmer ikke",
-    "requiredMessage": "Bruk bare latinske bokstaver, tall og tastatur symboler, unngå ledende og etterfølgende mellomrom",
-    "weak": "svakt",
-    "weakMessage": "Bruk tall, store og små bokstaver og spesialtegn for å gjøre passordet ditt sterkere. Unngå æøå",
-    "strongMessage": "Sterkt passord!",
-    "common": "for vanlig",
-    "commonMessage": "Dette passordet er blant de mest brukte passordene i verden",
-    "missingMessage": "Passord er påkrevd"
-  },
-  "sharing": {
-    "confirmOwner": "Hvis du endrer System-eier, vil du tilbakekalle eierskapet fra gjeldende konto. Denne handlingen er irreversibel. Er du sikker?",
-    "shareTitle": "Del",
-    "shareConfirmButton": "Del",
-    "editShareTitle": "Endre tillatelser",
-    "editShareConfirmButton": "Lagre",
-    "permissionsSaved": "Nye tillatelser lagret"
-  },
-  "system": {
-    "yourSystem": "Ditt system",
-    "mySystemSearch": "IMeMyMine",
-    "unavailable": "Systemet er ikke tilgjengelig",
-    "offline": "Systemet er offline",
-    "openClient": "Åpent i %VMS_NAME%",
-    "openClientNoSystem": "Åpne %VMS_NAME%",
-    "confirmMergeAction": "Slå sammen",
-    "mergeSystemTitle": "Slå sammen systemer",
-    "confirmRenameTitle": "Systemnavn",
-    "confirmRenameAction": "Lagre",
-    "successRename": "Systemnavn lagret",
-    "confirmDisconnectTitle": "Koble fra systemet fra %CLOUD_NAME%?",
-    "confirmDisconnectAction": "Koble fra",
-    "confirmUnshareFromMe": "Du er i ferd med å koble fra dette systemet fra kontoen din. Du vil ikke kunne få tilgang til dette systemet lenger. Er du sikker?",
-    "confirmUnshareFromMeTitle": "Koble fra systemet?",
-    "confirmUnshareFromMeAction": "Koble fra",
-    "confirmUnshare": "Denne brukeren kan ikke ha tilgang til System. Er du sikker?",
-    "confirmUnshareTitle": "Slett bruker?",
-    "confirmUnshareAction": "Slett",
-    "successDisconnected": "Systemet er frakoblet fra %CLOUD_NAME%",
-    "successDeleted": "System {{systemName}} er slettet fra kontoen din",
-    "mergeFailed": "Systemsammenslåing mislyktes",
-    "mergeStart": "Systemene blir slått sammen",
-    "mergeSuccess": "Systemsammenslåing fullført",
-    "permissionsRemoved": "Tillatelser ble fjernet fra {{email}}",
-    "unknownName": "Ukjent navn for system (forårsaket av cloud-sammenslåing)"
-  },
-  "account": {
-    "accountSavedSuccess": "Din konto er lagret",
-    "activationLinkSent": "Aktiveringslink sendt",
-    "passwordChangedSuccess": "Din konto er lagret",
-    "changePassword": "Bytt passord",
-    "newPasswordLabel": "Nytt passord",
-    "saveChanges": "Lagre"
-  },
-  "activeActions": {
-    "sendConfirm": "Send aktiveringslink igjen",
-    "resetPassword": "Tilbakestille passord",
-    "setNewPassword": "Lagre passord",
-    "setNewPasswordLabel": "Nytt passord"
-  },
-  "regActions": {
-    "passwordLabel": "Passord",
-    "createAccount": "Opprett konto"
-  },
-  "header": {
-    "allSystems": "Alle systemer",
-    "systems": "Systemer"
   },
   "common": {
     "cameraLinks": {
@@ -276,9 +119,8 @@
       "help": "help | show commands"
     }
   },
-  "recommendSupport": {
-    "a_recommend": "Vi anbefaler å konsultere med",
-    "b_support": "brukerstøtte",
-    "c_proceeding": "før du fortsetter."
+  "system": {
+    "offline": "Systemet er offline",
+    "unavailable": "Systemet er ikke tilgjengelig"
   }
 }

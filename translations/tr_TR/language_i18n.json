@@ -102,7 +102,7 @@
     "Multi Sensor": "Çoklu sensör",
     "NO_SYSTEMS_CONNECT_SYSTEM": "Sistem %CLOUD_NAME% e bağlan\"",
     "NO_SYSTEMS_GOTO_ADMINISTRATION": "\"Sistem Yönetimi\" iletişim kutusundaki \"Bulut\" sekmesine gidin",
-    "NO_SYSTEMS_LOGIN": "Log in to your System using %VMS_NAME%",
+    "NO_SYSTEMS_LOGIN": "%VMS_NAME%kullanarak sisteminize giriş yapın",
     "NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "%CLOUD_NAME% ile bağlı hiçbir Sisteminiz yok",
     "New Password": "Yeni Parola",
     "No unsaved changes": "Kaydedilmemiş değişiklik yok",
@@ -141,7 +141,7 @@
     "Settings": "Ayarlar",
     "Show All": "Tümünü Göster",
     "Some of your servers don't support cloud System merge because of outdated software version.": "Sunucularınızın bazıları, eski yazılım sürümleri nedeniyle bulut sistem birleştirme özelliğini desteklemiyor.",
-    "Subject": "Subject",
+    "Subject": "Konu",
     "Support": "Destek",
     "Support E-mail": "Destek maili",
     "Support URL": "Destek URL'si",
@@ -304,7 +304,7 @@
                 "ipvd_feedback_device": "{{asset}} hakkında geri bildirim",
                 "ipvd_feedback_page": "Kameralar sayfası için geri bildirim",
                 "sales_inquiry": "{{asset}} için satış talebi",
-                "technical_inquiry": "Technical inquiry for {{asset}}"
+                "technical_inquiry": "{{asset}} için teknik sorgulama"
             },
             "title": {
                 "integration": "{{companyName}} ile iletişime geçin",
@@ -312,7 +312,7 @@
                 "ipvd_feedback_page": "Kameralar sayfası için geri bildirim"
             }
         },
-        "noClientDetectedTitle": "Install %VMS_NAME% to view your System",
+        "noClientDetectedTitle": "Sisteminizi görüntülemek için %VMS_NAME% yükleyin",
         "okButton": "Tamam",
         "sharing": {
             "confirmOwner": "Sistem sahibini değiştirirseniz, hesabınızdaki yetkileri iptal edersiniz. Bu eylem geri döndürülemez. Emin misiniz?",
@@ -505,30 +505,30 @@
         "feedback": "Kamera üreticisi ve modelinin olduğundan emin olun..."
     },
     "pageTitles": {
-        "account": "Hesap ayarları -",
-        "activate": "Hesabı aktif et -",
-        "activateCode": "Hesabı aktif et -",
-        "activateSent": "Hesabı aktif et -",
-        "activateSuccess": "Hesap aktif edildi -",
-        "changePassword": "Parola değiştir -",
+        "account": "Hesap ayarları",
+        "activate": "Hesabı aktif et",
+        "activateCode": "Hesabı aktif et",
+        "activateSent": "Hesabı aktif et",
+        "activateSuccess": "Hesap aktif edildi",
+        "changePassword": "Şifre değiştir",
         "debug": "Hata ayıklama",
         "default": "%CLOUD_NAME%",
         "download": "İndir %VMS_NAME%",
-        "downloadPlatform": "Download %VMS_NAME% for ",
+        "downloadPlatform": "İçin %VMS_NAME% indir ",
         "integrations": "Entegrasyonlar",
-        "login": "Giriş yap -",
+        "login": "Giriş yap",
         "pageNotFound": "Sayfa bulunamadı",
         "register": "Hesap Oluştur",
         "registerSuccess": "Hoş geldiniz",
         "restorePassword": "Parolayı sıfırla -",
         "restorePasswordCode": "Parolayı sıfırla -",
-        "restorePasswordSuccess": "Parola kaydedildi -",
+        "restorePasswordSuccess": "Parola kaydedildi",
         "supportedDevices": "Desteklenen cihazlar",
-        "system": "Sistem -",
-        "systemShare": "Sistemi Paylaş -",
-        "systems": "Sistemler -",
+        "system": "Sistem",
+        "systemShare": "Sistemi Paylaş",
+        "systems": "Sistemler",
         "template": "{{title}} %CLOUD_NAME%",
-        "view": "Kameraları görüntüle - "
+        "view": "Kameraları görüntüle"
     },
     "passwordRequirements": {
         "common": "çok yaygın",
@@ -591,7 +591,7 @@
         "mySystemSearch": "IMeMyMine",
         "offline": "Sistem çevrimdışı",
         "offlineAlertRibbon": "Sistem çevrimdışı. Bazı ayarlara erişim olmayabilir.",
-        "openClient": "Open in %VMS_NAME%",
+        "openClient": "Aç %VMS_NAME%",
         "openClientNoSystem": "Aç %VMS_NAME%",
         "permissionsRemoved": "İzinler {{email}}'den kaldırıldı",
         "shareOffline": "Çevrimdışıyken sistem paylaşılamıyor",
@@ -613,8 +613,8 @@
         "online": "çevrimiçi",
         "unavailable": "kullanılamaz"
     },
-    "testedVersionLabel": "Tested with {{vmsName}} version:",
-    "testedVersionsLabel": "Tested with {{vmsName}} versions:",
+    "testedVersionLabel": "{{vmsName}} versiyonda test edildi:",
+    "testedVersionsLabel": "{{vmsName}} versiyonda test edildi:",
     "users": "Kullanıcılar",
     "you": "sen"
 }
