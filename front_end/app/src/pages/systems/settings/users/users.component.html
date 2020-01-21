@@ -19,7 +19,7 @@
 
             <nx-section>
                 <div *ngIf="selectedUser.canBeEdited && system.currentUser.isAdmin; else roleName;"
-                     class="mr-2 my-2" style="width: 200px">
+                     class="mr-2 my-2" style="width: 300px">
 
                     <label for="permissionsSelect" translate>Access level</label>
                     <nx-permissions-select
@@ -96,7 +96,7 @@
                         Account Settings
                     </button>
                 </div>
-                <div *ngIf="!selectedUser.isCloud && selectedUser.canBeEdited && system.currentUser.isAdmin" 
+                <div *ngIf="!selectedUser.isCloud && selectedUser.canBeEdited && system.currentUser.isAdmin"
                     class="float-left">
                     <button class="btn btn-default" translate>Change Password</button>
                 </div>

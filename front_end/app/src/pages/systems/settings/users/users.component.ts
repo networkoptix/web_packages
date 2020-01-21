@@ -201,8 +201,10 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             }
             this.applyService.hardReset();
             this.selectedUser = {... user};
+
             this.deleteMessage = this.selectedUser.isCloud ?
                 this.LANG.users.cloudDeleteMessage : this.LANG.users.localDeleteMessage;
+
             this.menuService.setDetailsSection(this.selectedUser.id.replace(/{|}/g, ''));
             // watchers set
             this.setPermission(this.selectedUser.role);
