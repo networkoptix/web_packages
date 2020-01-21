@@ -135,8 +135,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         };
 
         this.limitSessionTimeUnits = [
-            { value: this.minutes, name: this.LANG.system.settings.sessionLimitDuration.minutes, id: 1, max: 600 , default: 60},
             { value: this.hours, name: this.LANG.system.settings.sessionLimitDuration.hours, id: 2, max: 600, default: 24 },
+            { value: this.minutes, name: this.LANG.system.settings.sessionLimitDuration.minutes, id: 1, max: 600 , default: 60},
         ];
 
         this.settingsWatchersSet = false;
@@ -272,7 +272,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                                                 }
 
                                                 sw[setting].value = this.timeUnitCount || 0;
-                                                this.timeUnitCount = this.timeUnitCount || this.limitSessionTimeUnits.default;
+                                                this.timeUnitCount = this.timeUnitCount || this.limitSessionTimeUnits[0].default;
                                                 this.selectedTimeUnit = this.limitSessionTimeUnits
                                                                             .find(e => {
                                                                                 return e.value === sw.sessionLimitUnit.value;
@@ -416,8 +416,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             }
             el.nativeElement.setAttribute('max', this.currentMaxTimeUnit);
 
-            // Avoid JS error "Expression already changed" :( -- TT
-            setTimeout(() => this.timeUnitCount = timeUnit.default);
+            this.timeUnitCount = timeUnit.default;
 
             if (this.selectedTimeUnit.value !== timeUnit.value) {
                 this.settingsWatchers.sessionLimitUnit.value = timeUnit.value;
