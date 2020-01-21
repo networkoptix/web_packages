@@ -116,6 +116,7 @@ class UserManager {
 
     set accessRole(accessRole) {
         this._accessRole = accessRole;
+        this.checkPermissions();
     }
 
     set ownerEmail(email) {
@@ -595,7 +596,7 @@ export class NxSystem extends System implements OnDestroy {
                 if (this.permissions.editUsers) {
                     return from(this.getUsers(true));
                 }
-                return of('')
+                return of('');
             }).catch(() => {
                 this.isAvailable = false;
                 this.lostConnection = true;
