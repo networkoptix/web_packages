@@ -158,13 +158,13 @@
     "Terms": "Terms",
     "Terms of Use": "Terms of Use",
     "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.": "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.",
-    "There will be more than": "There will be more than",
+    "There will be more than <strong>{{ CONFIG.maxServers }}</strong> servers in the merged System.": "",
     "This Email has been already registered in %CLOUD_NAME%": "This Email has been already registered in %CLOUD_NAME%",
     "This device has reported to support some analytics events, but we don't have exact information about them.": "This device has reported to support some analytics events, but we don't have exact information about them.",
     "To": "To",
     "Too many attempts. Try again in a minute.": "Too many attempts. Try again in a minute.",
     "Until merge is finished you can log in to this system and watch video, but cannot change any settings.": "Until merge is finished you can log in to this system and watch video, but cannot change any settings.",
-    "Update them to the": "Update them to the",
+    "Update them to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>": "",
     "Updated": "Updated",
     "User": "User",
     "User disabled": "User disabled",
@@ -178,7 +178,7 @@
     "You have registered in %CLOUD_NAME%": "You have registered in %CLOUD_NAME%",
     "Your Email": "Your Email",
     "Your Name": "Your Name",
-    "Your access level": "Your access level",
+    "Your access level<span>&nbsp;\u2013 </span>\n                    <span class=\"name\" [innerHTML]=\"updateUserRole()\"></span>": "",
     "Your account is successfully activated": "Your account is successfully activated",
     "Your browser is not supported": "Your browser is not supported",
     "accessRoles": {
@@ -254,7 +254,6 @@
         "setNewPassword": "Save password",
         "setNewPasswordLabel": "New password"
     },
-    "andXMore": "... and {{value}} more",
     "cameraFilters": {
         "H265": "H.265 Cameras",
         "IO": "I / O modules",
@@ -459,7 +458,6 @@
         "previewRibbonText": "This page is a preview of the latest changes, and it doesn't match publicly available version.",
         "requirements": "{{name}} Requirements"
     },
-    "integration.requirements": "{{name}} Requirements",
     "ipvd": {
         "Advanced PTZ cameras": "Advanced PTZ cameras",
         "Cameras supporting H.265": "Cameras supporting H.265",
@@ -500,8 +498,6 @@
         "resolutionArea": "Area",
         "vendor": "Manufacturer"
     },
-    "ipvd.disclaimer": "This list is limited to devices found on {{vmsName}} where users have allowed auto-reporting of device specs to {{companyName}}. No personal information is collected and each user remains completely anonymous.",
-    "latest build": "latest build",
     "manufacturers": "manufacturers",
     "messageDialogPlaceholders": {
         "feedback": "Make sure you include your camera model and manufacturer..."
@@ -547,7 +543,6 @@
         "weak": "weak",
         "weakMessage": "Use numbers, upper and lower case letters and special characters to make your password stronger"
     },
-    "phoneNumberWithLabel": "Tel: {{number}}",
     "pleaseSelect": "Please select...",
     "privacyPolicy": {
         "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">here</a> and %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a> which include instruction on how to withdraw your consent.",
@@ -572,7 +567,6 @@
         "vendor": "Manufacturer",
         "vendors": "Manufacturers"
     },
-    "servers in the merged System.": "servers in the merged System.",
     "support": "support",
     "system": {
         "confirmDisconnectAction": "Disconnect",

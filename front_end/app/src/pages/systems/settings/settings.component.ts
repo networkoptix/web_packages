@@ -205,7 +205,9 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             },
             errorPrefix: this.LANG.errorCodes.cantGetSystemInfoPrefix
         }).then(() => {
-            this.gettingSystemUsers.run();
+            if (this.system.permissions.editUsers) {
+                this.gettingSystemUsers.run();
+            }
         });
 
         // var cancelSubscription = this.$on("unauthorized_" + $routeParams.systemId, connectionLost);
@@ -371,7 +373,9 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     connectionLost() {
         this.dialogs.notify(this.LANG.errorCodes.lostConnection.replace('{{systemName}}',
             this.system.info.name || this.LANG.errorCodes.thisSystem), 'warning');
-        setTimeout(() => this.router.navigate(['/systems']), this.CONFIG.alertTimeout);
+        if (this.systemsService.systems.length > 1) {
+            setTimeout(() => this.router.navigate(['/systems']), this.CONFIG.alertTimeout);
+        }
     }
 
     normalizePermissionString(permissions) {

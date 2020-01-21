@@ -490,7 +490,10 @@ export class NxSystem extends System implements OnDestroy {
     update() {
         return of('').pipe(flatMap(_ => {
             return this.getInfo(true, false).then(_ => {
-                return from(this.getUsers(true));
+                if (this.permissions.editUsers) {
+                    return from(this.getUsers(true));
+                }
+                return of('');
             }).catch(_ => {
                 this.lostConnection = true;
             });

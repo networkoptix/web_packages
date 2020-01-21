@@ -13,7 +13,7 @@ angular.module('cloudApp')
                             $rootScope.pageTitle = L.pageTitles.template.replace('{{title}}',title);
                         }
                     }else{
-                        $rootScope.pageTitle = L.pageTitles.default;
+                        $rootScope.pageTitle = L.pageTitles && L.pageTitles.default || '';
                     }
                 });
             }
