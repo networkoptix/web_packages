@@ -2,15 +2,16 @@ import {
     AfterViewInit, Component, ElementRef,
     OnDestroy, OnInit, ViewChild,
     ViewEncapsulation
-}                                              from '@angular/core';
-import { NxConfigService }                     from '../../../services/nx-config';
-import { NxMenuService }                       from '../../../components/menu/menu.service';
+}                                            from '@angular/core';
+import { NxConfigService }                   from '../../../services/nx-config';
+import { NxMenuService }                     from '../../../components/menu/menu.service';
 import { NxHealthService }                   from '../health.service';
 import { BehaviorSubject, SubscriptionLike } from 'rxjs';
 import { NxUriService }                      from '../../../services/uri.service';
-import { ActivatedRoute }                      from '@angular/router';
-import { AutoUnsubscribe }                     from 'ngx-auto-unsubscribe';
-import { NxScrollMechanicsService }            from '../../../services/scroll-mechanics.service';
+import { ActivatedRoute }                    from '@angular/router';
+import { AutoUnsubscribe }                   from 'ngx-auto-unsubscribe';
+import { NxScrollMechanicsService }          from '../../../services/scroll-mechanics.service';
+import { NxUtilsService }                    from '../../../services/utils.service';
 
 interface Params {
     [key: string]: any;
@@ -82,6 +83,28 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         };
     }
 
+    private sortAlertsFunc() {
+        return (elm) => {
+            const isError = (elm._.alarm.icon === 'error');
+            switch (elm.metric) {
+                // We can adjust sorting here
+                // currently errors are shown first then warnings
+                // in a pattern "servers->cameras->storages->networks"
+                case 'servers':
+                    return isError ? 1 : 5;
+                case 'cameras':
+                    return isError ? 2 : 6;
+                case 'storages':
+                    return isError ? 3 : 7;
+                case 'networks':
+                    return isError ? 4 : 8;
+
+                default:
+                    return 9;
+            }
+        };
+    }
+
     ngOnInit(): void {
         this.params = this.route.snapshot.queryParams;
         this.menuService.setSection('alerts');
@@ -98,6 +121,9 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
 
         this.alerts = this.healthService
                           .alertsSearch(this.healthService.alertsValues, this.filterModel);
+
+        this.alerts.sort(NxUtilsService.byParam(this.sortAlertsFunc(), true /* sort defined in func() */));
+
         this.countAlerts();
 
         if (this.params.id && this.params.metric) {
