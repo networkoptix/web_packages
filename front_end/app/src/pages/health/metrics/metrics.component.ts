@@ -98,9 +98,9 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
 
         this.tableWidthSubscription = this.scrollMechanicsService
                 .elementTableWidthSubject
-                .subscribe(() => {
+                .subscribe(width => {
                     if (this.elementSearch) {
-                        this.elementSearch.nativeElement.style.width = this.scrollMechanicsService.elementTableWidthSubject.getValue() + 'px';
+                        this.elementSearch.nativeElement.style.width = width + 'px';
                     }
                 });
     }
@@ -229,7 +229,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
             if (this.metricValuesLen === 1) {
                 this.fixedLayoutClass = 'fixedLayout--no-panel';
             } else {
-                if (this.tableContainer) {
+                if (this.tableContainer && this.healthService.tableReady) {
                     // measure table (not wrapper) width
                     const tableWidth = this.tableContainer.nativeElement.querySelectorAll('table')[0].offsetWidth;
                     // area available

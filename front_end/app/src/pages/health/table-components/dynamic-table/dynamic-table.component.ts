@@ -1,4 +1,3 @@
-import deepEqual = require('deep-equal');
 import {
     Component, Input, Output,
     EventEmitter, OnChanges, SimpleChanges,
@@ -125,10 +124,21 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         let setPage;
         let setIndex;
         let resetURI;
+        let setDimensions;
 
         if (changes.activeEntity) {
             this.selectedEntity = changes.activeEntity.currentValue;
-            setTimeout(() => this.scrollMechanicsService.setElementTableWidth(this.dataTable.nativeElement.offsetWidth));
+            // TODO: Try to remove timeout in CLOUD-4233
+            setTimeout(() => {
+                if (this.dataTable) {
+                    this.scrollMechanicsService.setElementTableWidth(this.dataTable.nativeElement.offsetWidth);
+                }
+            });
+
+            if (!changes.activeEntity.firstChange && !this.healthService.tableReady) {
+                setDimensions = true;
+                setIndex = this.startIndex || 0;
+            }
         }
 
         if (changes.headers) {
@@ -149,12 +159,25 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
                     const tableWrapper = this.dataTable.nativeElement.querySelectorAll('.table-wrapper')[0];
                     tableWrapper.scrollLeft = 0;
                 }
+
+                if (!this.healthService.tableReady) {
+                    setDimensions = true;
+                }
             }
         }
 
         if (changes.dimensions && !changes.dimensions.firstChange && changes.dimensions.currentValue.length) {
-            this.setTableDimensions();
+            setDimensions = true;
             setIndex = this.startIndex;
+        }
+
+        if (setDimensions) {
+            // TODO: Try to remove timeout in CLOUD-4233
+            setTimeout(() => {
+                if (this.dataTable) {
+                    this.setTableDimensions();
+                }
+            });
         }
 
         if (setPage !== undefined || setIndex !== undefined) {
@@ -195,9 +218,9 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
             this.pageSize = 5;
         }
 
+        // TODO: Remove in CLOUD-4233
+        setTimeout(() => this.scrollMechanicsService.setElementTableWidth(this.dataTable.nativeElement.offsetWidth), 100);
         this.healthService.tableReady = true;
-
-        this.scrollMechanicsService.setElementTableWidth(this.dataTable.nativeElement.offsetWidth);
     }
 
     ngOnInit() {
@@ -218,6 +241,13 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         if ([undefined, -1].includes(this.startIndex)) {
             this.startIndex = parseInt(this.params.index) || 0;
         }
+
+        // TODO: Remove if table dimensions timeout can be removed in CLOUD-4233
+        this.healthService.tableReadySubject.subscribe(ready => {
+            if (ready) {
+                this.setPage(undefined, this.startIndex);
+            }
+        });
     }
 
     ngAfterViewInit(): void {
@@ -258,16 +288,21 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
 
     setPagedItems(startIndex?) {
         if (!startIndex) {
-            this.startIndex = (this.currentPage - 1) * this.pageSize;
+            startIndex = (this.currentPage - 1) * this.pageSize;
         } else {
             const page = Math.floor(this.startIndex / this.pageSize) + 1;
-            this.startIndex = (page - 1) * this.pageSize;
+            startIndex = (page - 1) * this.pageSize;
             if (page !== this.currentPage) {
                 this.currentPage = page;
             }
         }
-        const endIndex = this.startIndex + this.pageSize;
-        this.pagedItems = this._elements.slice(this.startIndex, endIndex);
+        const endIndex = startIndex + this.pageSize;
+        this.pagedItems = this._elements.slice(startIndex, endIndex);
+
+        // TODO: Remove if table dimensions timeout can be removed in CLOUD-4233
+        if (this.healthService.tableReady) {
+            this.startIndex = startIndex;
+        }
     }
 
     setPage(page: number, startIndex?) {

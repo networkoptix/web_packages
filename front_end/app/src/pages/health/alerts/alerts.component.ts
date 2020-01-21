@@ -372,7 +372,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
 
     private setLayout() {
         setTimeout(() => {
-            if (this.elementTable) {
+            if (this.elementTable && this.healthService.tableReady) {
                 const tableWidth = this.elementTable.nativeElement.querySelectorAll('table')[0].offsetWidth;
                 // area available
                 const areaWidth = this.area.nativeElement.offsetWidth;
