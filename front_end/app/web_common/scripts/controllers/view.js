@@ -48,7 +48,7 @@
                 $scope.voiceControls = {enabled: false, showCommands: false};
 
                 if (!ROUTE_CAMERA_ID && $scope.storage.cameraId) {
-                    systemAPI.setCameraPath($scope.storage.cameraId);
+                    systemAPI.setCameraPath($scope.storage.cameraId, true /* replace URL */);
                 }
 
                 $scope.isEmbeded = ($location.path().indexOf('/embed') === 0);

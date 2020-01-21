@@ -1,6 +1,7 @@
-import { Component, OnInit, Input, SimpleChanges, OnChanges } from '@angular/core';
-import { NxConfigService }                                    from '../../../services/nx-config';
-import { NxUriService } from '../../../services/uri.service';
+import { Component, OnInit, Input, SimpleChanges, OnChanges, Inject } from '@angular/core';
+import { NxConfigService }                                            from '../../../services/nx-config';
+import { NxUriService }                                               from '../../../services/uri.service';
+import { DOCUMENT }                                                   from '@angular/common';
 
 @Component({
     selector: 'nx-systems',
@@ -26,7 +27,7 @@ export class NxSystemsDropdown implements OnInit, OnChanges {
 
     constructor(
         private configService: NxConfigService,
-        private uriService: NxUriService
+        private uriService: NxUriService,
     ) {
 
         this.show = false;
@@ -52,7 +53,14 @@ export class NxSystemsDropdown implements OnInit, OnChanges {
             url += '/health/';
         }
 
-        this.uriService.updateURI(url);
+        this.uriService
+            .updateURI(url)
+            .then(() => {
+                // TODO: Remove this once we retire "VIEW" from AJS
+                if (this.endpoint.view) {
+                    window.location.href = url;
+                }
+            });
     }
 
 
