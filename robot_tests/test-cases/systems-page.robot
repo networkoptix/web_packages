@@ -118,13 +118,14 @@ User have several systems linked to his account
     Log    r1: ${r1}
     ${x}=   Get From List    ${elements}    ${r}
     ${l}=   Set Variable    ${SYSTEMS DROPDOWN}${DROPDOWN MENU ITEMS}\[${r1}]
-    ${h}=   Get Element Attribute    ${l}/a    href
+    # Removed becuse the element no longer has an href attribute
+    # ${h}=   Get Element Attribute    ${l}/a    href
     ${n}=   Get Text    ${l}//span[@class='system-name']
     Wait Until Element Is Visible    ${x}
     Scroll Element Into View    ${x}
     Click Element    ${x}
     # Expected Result
-    Location Should Contain    ${h}
+    # Location Should Contain    ${h}
     Wait Until Element Contains    ${SYSTEM NAME}    ${n}
     ${system}=   Get Text    ${SYSTEMS DROPDOWN}/span[contains(@class,'ellipsis')]
     Should Be Equal As Strings    ${n}    ${system}

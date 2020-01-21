@@ -377,7 +377,7 @@ if not BROKER_URL:
 
 BROKER_TRANSPORT_OPTIONS = {
     'queue_name_prefix': conf['queue_name'] + '-',
-    'region': 'us-east-1'
+    'region': os.getenv('AWS_REGION', 'us-east-1')
 }
 
 RESULT_PERSISTENT = True

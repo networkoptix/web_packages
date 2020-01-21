@@ -292,9 +292,6 @@ def process_zip(file_descriptor, user, asset, update_structure, update_content):
 
                     records_created += 1
 
-                    if structure.type == structure.DATA_TYPES.multiselect:
-                        value = json.dumps(value)
-
                     # save if needed
                     record = DataRecord(asset=asset,
                                         data_structure=structure,

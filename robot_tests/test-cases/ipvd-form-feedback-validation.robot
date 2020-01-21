@@ -30,6 +30,10 @@ Invalid email with all required data 6    False         ${name}         myemail@
 
 
 *** Keywords ***
+Language Support
+    ${IPVD FEEDBACK ABOUT}    Replace String    ${IPVD FEEDBACK ABOUT}     {{model}}    ${model}
+    Element Should Contain    ${IPVD FEEDBACK TITLE}    ${IPVD FEEDBACK ABOUT}
+    
 Test Submit Feedback Message
     [Arguments]    ${Expect Success}    ${Your Name}    ${Email}    ${Message}
     Go To IPVD page
@@ -40,10 +44,12 @@ Test Submit Feedback Message
     Click Element    ${IPVD SEND DEVICE FEEDBACK}
     Wait Until Element Is Visible    ${IPVD FEEDBACK}
     ${model} =   Get Text    ${IPVD DEVICE MODEL}
-    ${west} =    Run Keyword And Return Status    Element Should Contain    ${IPVD FEEDBACK TITLE}    ${IPVD FEEDBACK ABOUT} ${model}
-    ${east} =    Run Keyword And Return Status    Element Should Contain    ${IPVD FEEDBACK TITLE}    ${model} ${IPVD FEEDBACK ABOUT}
+    Run Keyword If    "${LANGUAGE}"=="zh_CN"    Language Support
+    ...    ELSE    Run Keywords
+    ...    ${west} =    Run Keyword And Return Status    Element Should Contain    ${IPVD FEEDBACK TITLE}    ${IPVD FEEDBACK ABOUT} ${model}
+    ...    ${east} =    Run Keyword And Return Status    Element Should Contain    ${IPVD FEEDBACK TITLE}    ${model} ${IPVD FEEDBACK ABOUT}
     # Western languages will have one order, and eastern the opposite. Never should both be true, and if both false then there is a bug.
-    Run Keyword If    ${west}==${east}    Fail 
+    ...    Run Keyword If    ${west}==${east}    Fail 
     Submit Feedback/Request Form    ${Your Name}    ${Email}    ${Message}
     Run Keyword If    ${Expect Success}==True    On Success    ${Email}
     ...    ELSE IF    ${Expect Success}==False   Validate Message Not Sent

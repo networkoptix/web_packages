@@ -144,6 +144,7 @@ class UserManager {
 
     set accessRole(accessRole) {
         this._accessRole = accessRole;
+        this.checkPermissions();
     }
 
     set ownerEmail(email) {
@@ -177,6 +178,9 @@ class UserManager {
         if (!isMine && this.currentUser) {
             permissions.editUsers = this.currentUser.permissions.indexOf(this.CONFIG.accessRoles.editUserPermissionFlag) >= 0;
             permissions.isAdmin = this.isAdmin(this.currentUser);
+        } else if (this.CONFIG.accessRoles.adminAccess.indexOf(this._accessRole) > -1) {
+            permissions.editUsers = true;
+            permissions.isAdmin = true;
         }
         this.permissions = permissions;
     }
@@ -666,7 +670,12 @@ export class NxSystem extends System implements OnDestroy {
         return of('').pipe(flatMap(() => {
             return this.getInfo(true, false)
                 .then(() => this.getServers())
-                .then(() => from(this.getUsers(true)))
+                .then(() => {
+                    if (this.permissions.editUsers) {
+                        return from(this.getUsers(true))
+                    }
+                    return of('');
+                })
                 .catch(() => {
                     this.isAvailable = false;
                     this.lostConnection = true;

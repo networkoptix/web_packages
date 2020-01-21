@@ -8,10 +8,10 @@
   "cloud_notification": {
     "emailSubject": "{{message.subject}}"
   },
-  "contact_sales": {
+  "sales_inquiry": {
     "emailSubject": "{{message.asset}} için satış talebi"
   },
-  "contact_support": {
+  "technical_inquiry": {
     "emailSubject": "{{message.asset}}için teknik sorgulama"
   },
   "integration_feedback": {

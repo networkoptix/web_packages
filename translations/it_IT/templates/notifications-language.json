@@ -8,10 +8,10 @@
   "cloud_notification": {
     "emailSubject": "{{message.subject}}"
   },
-  "contact_sales": {
+  "sales_inquiry": {
     "emailSubject": "Richiesta commerciale per {{message.asset}}"
   },
-  "contact_support": {
+  "technical_inquiry": {
     "emailSubject": "Richiesta tecnica per {{message.asset}}"
   },
   "integration_feedback": {

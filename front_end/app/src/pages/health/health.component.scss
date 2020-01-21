@@ -23,6 +23,10 @@ nx-system-health-component {
 
     &.wideLayout {
       grid-template-columns: $grid-wide-menu-width $grid-wide-content-width;
+
+      @media (min-width : 1920px) {
+        grid-template-columns : $grid-super-wide-menu-width $grid-super-wide-content-width;
+      }
     }
 
     .gridMenu {

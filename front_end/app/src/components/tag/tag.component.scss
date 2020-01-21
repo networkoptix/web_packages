@@ -73,11 +73,11 @@ $nx-theme-colors :
 @each $name, $bg-color, $fg-color in $nx-theme-colors {
     .badge-#{$name} {
         @extend .badge;
-        background-color : $bg-color;
-        color: $fg-color;
+        background-color : $bg-color !important;
+        color: $fg-color !important;
     }
     .badge-#{$name}-selected {
-        color: $light1;
+        color: $light1 !important;
         @include badge-selected($bg-color, darken($bg-color, 10%), darken($bg-color, 15%));
     }
 }

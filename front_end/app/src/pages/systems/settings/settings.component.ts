@@ -78,6 +78,11 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.selectedUser = {email: ''};
     }
 
+    private systemReady() {
+        this.settingsService.system = this.system;
+        this.menuVisible = true;
+    }
+
     constructor(private route: ActivatedRoute,
                 private accountService: NxAccountService,
                 private configService: NxConfigService,
@@ -177,21 +182,17 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 delay: this.CONFIG.alertTimeout,
                 autohide: true
             };
-            this.settingsService.system = this.system;
-            this.menuVisible = true;
+            this.systemReady();
             if (!this.settingsService.share) {
                 return;
             }
-
             if (!this.system.isOnline) {
                 return this.toastService.show(this.LANG.system.shareOffline, toastOptions);
             }
-
-            if (this.system.permissions.editUsers) {
-                this.settingsService.addUser().finally(() => this.cleanUrl());
-            } else {
-                this.toastService.show(this.LANG.system.shareUnauthorized, toastOptions);
+            if (!this.system.permissions.editUsers) {
+                return this.toastService.show(this.LANG.system.shareUnauthorized, toastOptions);
             }
+            this.settingsService.addUser().finally(() => this.cleanUrl());
         });
 
         // Retrieve system info
@@ -212,7 +213,11 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             },
             errorPrefix: this.LANG.errorCodes.cantGetSystemInfoPrefix
         }).then(() => {
-            return this.gettingSystemUsers.run();
+            if (this.system.permissions.editUsers) {
+                this.gettingSystemUsers.run();
+            } else {
+                this.systemReady();
+            }
         });
 
         // var cancelSubscription = this.$on("unauthorized_" + $routeParams.systemId, connectionLost);
@@ -258,7 +263,9 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                         .pipe(filter((system: any) => system !== undefined))
                         .subscribe(_ => {
                             this.updateAlert();
-                            this.updateMenu();
+                            if (this.system.users) {
+                                this.updateMenu();
+                            }
                         });
 
                     if (this.connectionSubscription) {
@@ -400,7 +407,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     connectionLost() {
         this.dialogs.notify(this.LANG.errorCodes.lostConnection.replace('{{systemName}}',
             this.system.info.name || this.LANG.errorCodes.thisSystem), 'warning');
-        if (this.system.currentServerNotBusy) {
+        if (this.system.currentServerNotBusy && this.systemsService.systems.length > 1) {
             setTimeout(() => this.router.navigate(['/systems']), this.CONFIG.alertTimeout);
         }
     }

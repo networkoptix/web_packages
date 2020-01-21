@@ -55,7 +55,14 @@ export class NxSystemsDropdown extends BaseDropdown {
             url += '/health/';
         }
 
-        this.uriService.updateURI(url);
+        this.uriService
+            .updateURI(url)
+            .then(() => {
+                // TODO: Remove this once we retire "VIEW" from AJS
+                if (this.endpoint.view) {
+                    window.location.href = url;
+                }
+            });
     }
 
 
