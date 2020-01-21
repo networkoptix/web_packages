@@ -86,7 +86,7 @@ export class NxConfigService {
                 slave       : 'slave'
             },
             accessRoles                   : {
-                adminAccess              : ['cloudadmin', 'owner', 'administrator'],
+                adminAccess              : ['cloudAdmin', 'owner', 'administrator'],
                 unshare                  : 'none',
                 default                  : 'Viewer',
                 disabled                 : 'disabled',
