@@ -1,7 +1,9 @@
-import { Component, OnInit, Input, OnDestroy, SimpleChanges, OnChanges } from '@angular/core';
-import { Location }                                                      from '@angular/common';
+import {
+    Component, OnInit, Input,
+    SimpleChanges, OnChanges
+}                          from '@angular/core';
 import { NxConfigService } from '../../../services/nx-config';
-
+import { Router }          from '@angular/router';
 
 @Component({
     selector: 'nx-active-system',
@@ -9,45 +11,39 @@ import { NxConfigService } from '../../../services/nx-config';
     styleUrls: ['active-system.component.scss']
 })
 
-export class NxActiveSystemDropdown implements OnInit, OnDestroy, OnChanges {
+export class NxActiveSystemDropdown implements OnInit, OnChanges {
     @Input() activeSystem: any;
     CONFIG: any;
 
+    canViewInfo: boolean;
+    params: any;
+    show: boolean;
     active = {
         health: false,
         settings: false,
         view: false,
     };
-    canViewInfo: boolean;
-    params: any;
-    show: boolean;
 
     constructor(private config: NxConfigService,
-                private location: Location) {
+                private router: Router,
+    ) {
         this.CONFIG = this.config.getConfig();
         this.show = false;
     }
 
-    private isActive(val) {
-        return (this.location.path().indexOf(val) >= 0);
-    }
-
-    private updateActive() {
-        this.active.health = this.isActive('/health');
-        this.active.view = this.isActive('/view');
-        this.active.settings = !(this.active.view || this.active.health);
+    private updateActive(endpoint = 'settings') {
+        this.active.health = (endpoint === 'health');
+        this.active.view = (endpoint === 'view');
+        this.active.settings = (endpoint === 'settings');
         this.show = false;
     }
 
     ngOnInit(): void {
-        this.updateActive();
-    }
-
-    ngOnDestroy() {
+        this.updateActive(this.router.url.split('/')[2]);
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        this.updateActive();
+        // this.updateActive();
         if (changes.activeSystem) {
             if (!('id' in changes.activeSystem.currentValue)) {
                 this.activeSystem = {id: '0'}; // Avoid JS timing error (in console)
