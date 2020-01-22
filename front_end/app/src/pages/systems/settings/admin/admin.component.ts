@@ -422,6 +422,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                 this.settingsWatchers.sessionLimitUnit.value = timeUnit.value;
                 this.selectedTimeUnit = timeUnit;
             }
+
+            this.updateTimeUnitWatcher();
         }
     }
 
