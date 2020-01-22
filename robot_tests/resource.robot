@@ -2,8 +2,8 @@
 Library      SeleniumLibrary    run_on_failure=Failure Tasks
 Library      String
 Library      Collections
-Library      NoptixImapLibrary/
-Library      NoptixLibrary/
+Library      NoptixImapLibrary
+Library      NoptixLibrary
 Library      NoptixLibrary/CloudPortalAPI.py
 Resource     variables.robot
 Resource     APIresource.robot
