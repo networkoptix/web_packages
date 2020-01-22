@@ -65,7 +65,7 @@
     "YOUR ACCESS LEVEL TEXT": "Erişim seviyesi",
     "USER DISABLED TEXT": "Kullanıcı Devre Dışı",
     "NO UNSAVED CHANGES TEXT": "Kaydedilmemiş değişiklik yok",
-    "ABOUT": "About %PRODUCT_NAME%",
+    "ABOUT": "%PRODUCT_NAME% Hakkında",
     "KNOWN LIMITATIONS": "Bilinen sınırlamalar",
     "SUPPORT": "Destek",
     "REMOTE CONNECTIVITY": "Uzaktan bağlantı",
@@ -143,7 +143,7 @@
     "IPVD EXPORT ALL TO CSV": "Tamamını CSV olarak dışarıya aktar",
     "IPVD SUBMIT A REQUEST TEXT": "destek talebi gönder",
     "IPVD SEND DEVICE FEEDBACK TEXT": "Bu cihazla ilgili geri bildirim gönder",
-    "IPVD FEEDBACK ABOUT": "Feedback {{model}} about",
+    "IPVD FEEDBACK ABOUT": "Hakkında {{model}}",
     "IPVD FEEDBACK FOR CAMERAS PAGE": "Kameralar sayfası için geri bildirim",
     "IPVD FEEDBACK MESSAGE SENT": "Mesaj gönderildi.",
     "PRIVACY POLICY LINK TEXT": "buraya",
@@ -207,7 +207,7 @@
     "RELEASES TAB TEXT": "Sürümler",
     "PATCHES TAB TEXT": "Yamalar",
     "BETAS TAB TEXT": "Beta Sürümleri",
-    "SALES INQUIRY TEXT": "Sales inquiry for vis - QA - face_recognition",
-    "TECHNICAL INQUIRY TEXT": "Technical inquiry for vis - QA - face_recognition",
-    "FEEDBACK TEXT": "Feedback for integration vis - QA - face_recognition"
+    "SALES INQUIRY TEXT": "Vis - QA için satış sorgusu - face_recognition",
+    "TECHNICAL INQUIRY TEXT": "Vis - QA - face_recognition için teknik sorgulama",
+    "FEEDBACK TEXT": "Vis - QA - face_recognition için geri bildirim"
 }
