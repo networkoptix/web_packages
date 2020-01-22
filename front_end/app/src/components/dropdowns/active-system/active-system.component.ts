@@ -1,9 +1,11 @@
-import { Component, Input, SimpleChanges } from '@angular/core';
-import { Location }                        from '@angular/common';
-import { NxConfigService }                 from '../../../services/nx-config';
-import { BaseDropdown }                    from '../injDropdown';
-import { NxLanguageProviderService }       from '../../../services/nx-language-provider';
-
+import {
+    Component, Input,
+    SimpleChanges
+}                                    from '@angular/core';
+import { BaseDropdown }              from '../injDropdown';
+import { NxConfigService }           from '../../../services/nx-config';
+import { Router }                    from '@angular/router';
+import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 
 @Component({
     selector: 'nx-active-system',
@@ -14,41 +16,35 @@ import { NxLanguageProviderService }       from '../../../services/nx-language-p
 export class NxActiveSystemDropdown extends BaseDropdown{
     @Input() activeSystem: any;
 
+    canViewInfo: boolean;
+    params: any;
+    show: boolean;
     active = {
         health: false,
         settings: false,
         view: false,
     };
-    canViewInfo: boolean;
-    params: any;
 
     constructor(private languageService: NxLanguageProviderService,
                 private configService: NxConfigService,
-                private location: Location,
+                private router: Router,
     ) {
-        super(languageService, configService);
+            super(languageService, configService);
     }
 
-    private isActive(val) {
-        return (this.location.path().indexOf(val) >= 0);
-    }
-
-    private updateActive() {
-        this.active.health = this.isActive('/health');
-        this.active.view = this.isActive('/view');
-        this.active.settings = !(this.active.view || this.active.health);
+    private updateActive(endpoint = 'settings') {
+        this.active.health = (endpoint === 'health');
+        this.active.view = (endpoint === 'view');
+        this.active.settings = (endpoint === 'settings');
         this.show = false;
     }
 
     ngOnInit(): void {
-        this.updateActive();
-    }
-
-    ngOnDestroy() {
+        this.updateActive(this.router.url.split('/')[2]);
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        this.updateActive();
+        // this.updateActive();
         if (changes.activeSystem) {
             if (!('id' in changes.activeSystem.currentValue)) {
                 this.activeSystem = {id: '0'}; // Avoid JS timing error (in console)

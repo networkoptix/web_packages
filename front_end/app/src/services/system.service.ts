@@ -178,7 +178,7 @@ class UserManager {
         if (!isMine && this.currentUser) {
             permissions.editUsers = this.currentUser.permissions.indexOf(this.CONFIG.accessRoles.editUserPermissionFlag) >= 0;
             permissions.isAdmin = this.isAdmin(this.currentUser);
-        } else if (this.CONFIG.accessRoles.adminAccess.indexOf(this._accessRole) > -1) {
+        } else if (this.CONFIG.accessRoles.adminAccess.indexOf(this._accessRole.toLowerCase()) > -1) {
             permissions.editUsers = true;
             permissions.isAdmin = true;
         }
