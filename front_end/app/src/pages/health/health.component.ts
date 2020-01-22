@@ -20,6 +20,7 @@ import { WINDOW }                                from '../../services/window-pro
 import { DOCUMENT }                              from '@angular/common';
 import { DomSanitizer }                          from '@angular/platform-browser';
 import { DeviceDetectorService }                 from 'ngx-device-detector';
+import { NxUriService }                          from '../../services/uri.service';
 
 @AutoUnsubscribe()
 @Component({
@@ -58,6 +59,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                 private serverApi: NxSystemAPIService,
                 private route: ActivatedRoute,
                 private router: Router,
+                private uriService: NxUriService,
                 private menuservice: NxMenuService,
                 private healthService: NxHealthService,
                 private languageService: NxLanguageProviderService,
@@ -101,6 +103,12 @@ export class NxHealthComponent implements OnInit, OnDestroy {
             this.menu.selectedSection = selection;
             this.menu = {...this.menu}; // trigger onChange
         });
+
+        const currentRoute = this.router.url;
+        if (currentRoute.endsWith('health')) {
+            this.uriService.updateURI(`${currentRoute}/alerts`, {}, true)
+                .catch(_ => {});
+        }
 
         this.route.params.subscribe((params: any) => {
             const systemId = params.systemId;
