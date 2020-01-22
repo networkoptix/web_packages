@@ -234,8 +234,8 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
                     const tableWidth = this.tableContainer.nativeElement.querySelectorAll('table')[0].offsetWidth;
                     // area available
                     const areaWidth = this.area.nativeElement.offsetWidth;
-                    // area available to the table (2/3 + gutters
-                    const availAreaWidth = areaWidth / 3 * 2 + 46;
+                    // area available to the table (~80% + gutters
+                    const availAreaWidth = areaWidth * .78 + 46;
 
                     const isTableFit = (availAreaWidth > tableWidth) && !this.mobileDetailMode;
                     if (this.activeEntity && !this.mobileDetailMode) {
