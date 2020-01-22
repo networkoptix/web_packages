@@ -220,6 +220,11 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         }
     }
 
+    changePassword() {
+        return this.dialogs
+            .changePassword(this.system, this.selectedUser);
+    }
+
     setPermission(role: NxSystemRole|any) {
         const userRole = role && role.name ? role.name : this.selectedUser.accessRole;
         this.accessDescription = this.LANG.accessRoles[userRole] ?

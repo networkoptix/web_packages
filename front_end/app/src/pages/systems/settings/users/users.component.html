@@ -98,7 +98,9 @@
                 </div>
                 <div *ngIf="!selectedUser.isCloud && selectedUser.canBeEdited && system.currentUser.isAdmin"
                     class="float-left">
-                    <button class="btn btn-default" translate>Change Password</button>
+                    <button class="btn btn-default" (click)="changePassword()" translate>
+                        Change Password
+                    </button>
                 </div>
                 <div class="float-right"
                     *ngIf="selectedUser.canBeEdited && system.currentUser.isAdmin">

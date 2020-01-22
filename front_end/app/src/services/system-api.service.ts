@@ -252,7 +252,7 @@ export class NxSystemAPI {
         // needs to add the proper owner somehow
         return this.post('/api/detachFromSystem', { currentPassword });
     }
-    
+
     restoreFactorySettings(currentPassword) {
         return this.post('/api/restoreState', { currentPassword });
     }
@@ -280,7 +280,7 @@ export class NxSystemAPI {
         if (user.id) {
             cleanedUser.id = user.id;
         }
-        const supportedFields = ['email', 'name', 'fullName', 'userId', 'userRoleId', 'permissions', 'isCloud', 'isEnabled'];
+        const supportedFields = ['email', 'name', 'fullName', 'userId', 'userRoleId', 'permissions', 'isCloud', 'isEnabled', 'password'];
         supportedFields.forEach((field: string) => {
             if (field in user) {
                 cleanedUser[field] = user[field];

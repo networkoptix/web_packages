@@ -6,25 +6,26 @@ import { Router }             from '@angular/router';
 
 import './../dialogs/dialogs.scss';
 
-import { NxToastService }            from './toast.service';
-import { NxConfigService }           from '../services/nx-config';
-import { NxLanguageProviderService } from '../services/nx-language-provider';
-import { NxAccountService }          from '../services/account.service';
+import { NxToastService }             from './toast.service';
+import { NxConfigService }            from '../services/nx-config';
+import { NxLanguageProviderService }  from '../services/nx-language-provider';
+import { NxAccountService }           from '../services/account.service';
 
-import { LoginModalContent }         from './login/login.component';
-import { GenericModalContent }       from './generic/generic.component';
-import { AddUserModalContent }       from './add-user/add-user.component';
-import { DisconnectModalContent }    from './disconnect/disconnect.component';
-import { RenameModalContent }        from './rename/rename.component';
-import { MessageModalContent }       from './message/message.component';
-import { EmbedModalContent }         from './embed/embed.component';
-import { MergeModalContent }         from './merge/merge.component';
-import { ApplyModalContent }         from './apply/apply.component';
-import { RemoveUserModalContent }    from './remove-user/remove-user.component';
-import { RenameServerModalContent }  from './rename-server/rename-server.component';
-import { RestartServerModalContent } from './restart-server/restart-server.component';
-import { DetachServerModalContent }  from './detach-server/detach-server.component';
-import { ResetServerModalContent }   from './reset-server/reset-server.component';
+import { LoginModalContent }          from './login/login.component';
+import { GenericModalContent }        from './generic/generic.component';
+import { AddUserModalContent }        from './add-user/add-user.component';
+import { DisconnectModalContent }     from './disconnect/disconnect.component';
+import { RenameModalContent }         from './rename/rename.component';
+import { MessageModalContent }        from './message/message.component';
+import { EmbedModalContent }          from './embed/embed.component';
+import { MergeModalContent }          from './merge/merge.component';
+import { ApplyModalContent }          from './apply/apply.component';
+import { RemoveUserModalContent }     from './remove-user/remove-user.component';
+import { RenameServerModalContent }   from './rename-server/rename-server.component';
+import { RestartServerModalContent }  from './restart-server/restart-server.component';
+import { DetachServerModalContent }   from './detach-server/detach-server.component';
+import { ResetServerModalContent }    from './reset-server/reset-server.component';
+import { ChangePasswordModalContent } from './change-password/change-password.component';
 
 @Injectable({ providedIn: 'root' })
 export class NxDialogsService {
@@ -277,6 +278,21 @@ export class NxDialogsService {
         };
 
         return this.createModal(ResetServerModalContent, options, params);
+    }
+
+    changePassword(system, user) {
+        const options: any = {
+            windowClass: 'modal-holder',
+            backdrop   : 'static'
+        };
+
+        const params: any = {
+            system,
+            user,
+            closable: true,
+        };
+
+        return this.createModal(ChangePasswordModalContent, options, params);
     }
 
     merge(system, systems, user) {

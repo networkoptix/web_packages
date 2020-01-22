@@ -289,7 +289,6 @@ class UserManager {
             if (user.isCloud) {
                 return Promise.reject({ resultCode: 'cantEditYourself' });
             } else {
-                console.log('cant add own email');
                 return Promise.reject({ resultCode: 'cantAddYourOwnEmail' });
             }
         }
@@ -687,8 +686,12 @@ export class NxSystem extends System implements OnDestroy {
         return this.mediaserver.updateOrGetSettings(updateParams);
     }
 
-    getModuleInfo(serverId) {
-        return this.mediaserverConnections[serverId].getModuleInfo();
+    getModuleInfo(serverId?) {
+        if (serverId) {
+            return this.mediaserverConnections[serverId].getModuleInfo();
+        } else {
+            return this.mediaserver.getModuleInfo();
+        }
     }
 
     changeServerPort(port, serverId) {

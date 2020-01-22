@@ -328,40 +328,41 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             } else {
                 usersNode.level2 = [];
             }
+            if (this.system && this.system.users.length > 0) {
+                const byParam = NxUtilsService.byParam((user) => {
+                    return user.email;
+                }, NxUtilsService.sortASC);
+                this.system.users.sort(byParam);
 
-            const byParam = NxUtilsService.byParam((user) => {
-                return user.email;
-            }, NxUtilsService.sortASC);
-            this.system.users.sort(byParam);
+                usersNode.level3 = [];
 
-            usersNode.level3 = [];
+                const {cloudUsers, localUsers} = this.system.users.reduce((result, user) => {
+                    const id = user.id.replace(/{|}/g, '');
+                    const node: any = {
+                        additionalLabel:  this.LANG.accessRoles[user.role.name] && this.LANG.accessRoles[user.role.name].label || user.role.name,
+                        id,
+                        isEnabled: user.isEnabled,
+                        label: user.name || user.email,
+                        path : 'users/' + id,
+                        svgIcon: 'user',
+                    };
+                    if (user.isCloud === true) {
+                        node.svgIcon = '';
+                        node.icon = 'glyphicon-cloud';
+                        node.label = user.email;
+                        result.cloudUsers.push(node);
+                    } else {
+                        result.localUsers.push(node);
+                    }
+                    return result;
+                }, {cloudUsers: [], localUsers: []});
 
-            const {cloudUsers, localUsers} = this.system.users.reduce((result, user) => {
-                const id = user.id.replace(/{|}/g, '');
-                const node: any = {
-                    additionalLabel:  this.LANG.accessRoles[user.role.name] && this.LANG.accessRoles[user.role.name].label || user.role.name,
-                    id,
-                    isEnabled: user.isEnabled,
-                    label: user.name || user.email,
-                    path : 'users/' + id,
-                    svgIcon: 'user',
-                };
-                if (user.isCloud === true) {
-                    node.svgIcon = '';
-                    node.icon = 'glyphicon-cloud';
-                    node.label = user.email;
-                    result.cloudUsers.push(node);
-                } else {
-                    result.localUsers.push(node);
+                usersNode.level3 = [...localUsers];
+                if (localUsers.length > 0) {
+                    usersNode.level3.push({ horizontal: true });
                 }
-                return result;
-            }, {cloudUsers: [], localUsers: []});
-
-            usersNode.level3 = [...localUsers];
-            if (localUsers.length > 0) {
-                usersNode.level3.push({ horizontal: true });
+                usersNode.level3 = [...usersNode.level3, ...cloudUsers];
             }
-            usersNode.level3 = [...usersNode.level3, ...cloudUsers];
         } else { // remove Users
             this.content.level1 = this.content.level1.filter(node => node.id !== this.CONFIG.systemMenu.users.id);
         }
