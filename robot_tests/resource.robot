@@ -2,8 +2,8 @@
 Library      SeleniumLibrary    run_on_failure=Failure Tasks
 Library      String
 Library      Collections
-Library      NoptixImapLibrary/
-Library      NoptixLibrary/
+Library      NoptixImapLibrary
+Library      NoptixLibrary
 Library      NoptixLibrary/CloudPortalAPI.py
 Resource     variables.robot
 Resource     APIresource.robot
@@ -17,7 +17,7 @@ ${variables_file}    variables-env.robot
 ${options}    true
 ${headless}    true
 @{chrome_arguments}    --disable-gpu    --no-sandbox    --log-level=3    --start-maximized
-@{chrome_arguments_headless}    --disable-infobars    --disable-gpu    --no-sandbox    --log-level=3    --headless    
+@{chrome_arguments_headless}    --disable-infobars    --disable-gpu    --no-sandbox    --log-level=3    --headless
 ${speed}    0
 ${selenium_timeout}    30
 
