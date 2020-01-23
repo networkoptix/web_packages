@@ -29,7 +29,7 @@
                             <span class="row-value"
                                   [ngClass]="activeEntity[paramGroup.id][param.id].class"
                                   [innerText]="[undefined, ''].indexOf(activeEntity[paramGroup.id][param.id].text) === -1
-                                  ? activeEntity[paramGroup.id][param.id].text : '–'"></span>
+                                  ? activeEntity[paramGroup.id][param.id].text : '−'"></span>
                             <svg-icon *ngIf="activeEntity[paramGroup.id][param.id].icon"
                                       [src]="CONFIG.icons.dir + activeEntity[paramGroup.id][param.id].icon + '.svg'"
                                       [svgStyle]="{'width.px': '20', 'margin-top': '-4px', 'pointer-events': 'none'}"
@@ -38,7 +38,7 @@
                         </div>
                         <ng-template #noValue>
                             <div class="col-5 pl-0 d-flex align-items-end">
-                                <span class="row-value">–</span>
+                                <span class="row-value">−</span>
                             </div>
                         </ng-template>
                     </div>

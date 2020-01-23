@@ -230,7 +230,7 @@ export class NxHealthService {
         } else if (entity.info && entity.info.name) {
             return entity.info.name.text;
         } else {
-            return '–';
+            return '−';
         }
     }
 }

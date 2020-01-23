@@ -386,7 +386,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
     getAlertText(metric, entity, message) {
         const resourceName = this.healthService.manifest[metric].resource;
         const entityName = this.healthService.findEntityName(this.healthService.values[metric][entity]);
-        if (resourceName && entityName !== '–') {
+        if (resourceName && entityName !== '−') {
             return `${resourceName} ${entityName} ${message}`;
         } else {
             return message;
@@ -426,7 +426,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
 
                             const resourceName = this.healthService.manifest[metric].resource;
                             const entityName = this.healthService.findEntityName(this.healthService.values[metric][entity]);
-                            if (resourceName && entityName !== '–') {
+                            if (resourceName && entityName !== '−') {
                                 alert._.message.text = this.getAlertText(metric, entity, alert._.message.text);
                             }
                             this.healthService.alertsValues.push(alert);
