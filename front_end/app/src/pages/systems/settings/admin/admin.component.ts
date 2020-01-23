@@ -241,7 +241,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                         .subscribe(() => {
                             this.settingsService.footerSubject.next(true);
                             this.updateSettings(this.currentlyMerging);
-                            if (!this.applyService.locked) {
+                            if (!this.applyService.locked && this.system.permissions.isAdmin) {
                                 if (this.settingsSubscription) {
                                     this.settingsSubscription.unsubscribe();
                                 }
