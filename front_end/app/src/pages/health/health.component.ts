@@ -106,8 +106,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
 
         const currentRoute = this.router.url;
         if (currentRoute.endsWith('health')) {
-            this.uriService.updateURI(`${currentRoute}/alerts`, {}, true)
-                .catch(_ => {});
+            this.uriService.updateURI(`${currentRoute}/alerts`, {}, true).then(() => {});
         }
 
         this.route.params.subscribe((params: any) => {
