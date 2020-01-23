@@ -39,6 +39,7 @@ import { NxHeaderComponent }              from './header/header.component';
 import { NxNavLocationDropdown }          from './dropdowns/nav-location/nav.component';
 import { NxApplyComponent }               from './apply/apply.component';
 import { NxPagePlaceholderComponent }     from './placeholders/page/page-placeholder.component';
+import { NxSectionPlaceholderComponent }  from './placeholders/section/section-placeholder.component';
 import { AngularSvgIconModule }           from 'angular-svg-icon';
 
 @NgModule({
@@ -85,6 +86,7 @@ import { AngularSvgIconModule }           from 'angular-svg-icon';
         NxSwitchComponent,
         NxApplyComponent,
         NxPagePlaceholderComponent,
+        NxSectionPlaceholderComponent,
         ToastsContainer,
     ],
     entryComponents: [
@@ -119,6 +121,7 @@ import { AngularSvgIconModule }           from 'angular-svg-icon';
         NxSwitchComponent,
         NxApplyComponent,
         NxPagePlaceholderComponent,
+        NxSectionPlaceholderComponent,
         ToastsContainer,
     ],
     providers      : [
@@ -144,6 +147,7 @@ import { AngularSvgIconModule }           from 'angular-svg-icon';
         NxSwitchComponent,
         NxApplyComponent,
         NxPagePlaceholderComponent,
+        NxSectionPlaceholderComponent,
         ToastsContainer,
 
         NxRibbonService,
@@ -180,6 +184,7 @@ import { AngularSvgIconModule }           from 'angular-svg-icon';
         NxSwitchComponent,
         NxApplyComponent,
         NxPagePlaceholderComponent,
+        NxSectionPlaceholderComponent,
         ToastsContainer,
 
         MenuModule,

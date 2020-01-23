@@ -15,16 +15,6 @@
         line-height: 1.2;
     }
 
-    
-    .placeholder {
-        @extend #placeholder;
-        height: 200px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    }
-
     label {
         cursor: pointer;
         &.control-label {

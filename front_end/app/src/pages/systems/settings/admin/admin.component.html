@@ -62,12 +62,12 @@
             <header>
                 <h4 translate>System Settings</h4>
             </header>
-            <div class="placeholder" *ngIf="system && !system.isOnline; else systemSettings">
-                <svg-icon
-                    [svgStyle]="{ 'width.px': '64', 'pointer-events': 'none' }"
-                    [src]="CONFIG.icons.dir + 'system_settings_placeholder.svg'"></svg-icon>
-                <span translate>Can't load system settings</span>
-            </div>
+            <nx-section-placeholder
+                *ngIf="system && !system.isOnline; else systemSettings"
+                svgFileName="system_settings_placeholder"
+                width="64"
+                translatedMessage="{{ LANG.system.settings.notAbleToLoadSystem }}">
+            </nx-section-placeholder>
             <ng-template #systemSettings>
                 <nx-pre-loader *ngIf="!settingsWatchersSet"></nx-pre-loader>
                 <nx-section *ngIf="settingsWatchersSet">
@@ -139,12 +139,12 @@
             <header>
                 <h4 translate>Security</h4>
             </header>
-            <div class="placeholder" *ngIf="system && !system.isOnline; else securitySettings">
-                <svg-icon
-                    [svgStyle]="{ 'width.px': '64', 'pointer-events': 'none' }"
-                    [src]="CONFIG.icons.dir + 'system_settings_placeholder.svg'"></svg-icon>
-                <span translate>Can't load security settings</span>
-            </div>
+            <nx-section-placeholder
+                *ngIf="system && !system.isOnline; else securitySettings"
+                svgFileName="system_settings_placeholder"
+                width="64"
+                translatedMessage="{{ LANG.system.settings.notAbleToLoadSecurity }}">
+            </nx-section-placeholder>
             <ng-template #securitySettings>
                 <nx-pre-loader *ngIf="!settingsWatchersSet"></nx-pre-loader>
                 <nx-section *ngIf="settingsWatchersSet">
