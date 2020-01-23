@@ -84,6 +84,14 @@
         @include ellipsis;
         line-height : inherit;
     }
+
+    .menu-level-3-svg-icon {
+        svg {
+            width: 26px;
+            height: 26px;
+            pointer-events: none;
+        }
+    }
 }
 
 .menu-level-3-additional {
