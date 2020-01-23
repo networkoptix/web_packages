@@ -143,7 +143,7 @@
     "IPVD EXPORT ALL TO CSV": "CSV にすべてエクスポート",
     "IPVD SUBMIT A REQUEST TEXT": "リクエストを送信する",
     "IPVD SEND DEVICE FEEDBACK TEXT": "この端末についてフィードバックを送信",
-    "IPVD FEEDBACK ABOUT": "Feedback {{model}} about",
+    "IPVD FEEDBACK ABOUT": "Feedback about {{model}}",
     "IPVD FEEDBACK FOR CAMERAS PAGE": "カメラページへのフィードバック",
     "IPVD FEEDBACK MESSAGE SENT": "メッセージが送信されました",
     "PRIVACY POLICY LINK TEXT": "ここ",

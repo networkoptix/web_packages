@@ -143,7 +143,7 @@
     "IPVD EXPORT ALL TO CSV": "모두 CSV로 내보내기",
     "IPVD SUBMIT A REQUEST TEXT": "요청하기",
     "IPVD SEND DEVICE FEEDBACK TEXT": "이 기기에 대한 의견 보내기",
-    "IPVD FEEDBACK ABOUT": "Feedback {{model}} about",
+    "IPVD FEEDBACK ABOUT": "Feedback about {{model}}",
     "IPVD FEEDBACK FOR CAMERAS PAGE": "카메라 페이지에 대한 피드백",
     "IPVD FEEDBACK MESSAGE SENT": "메시지가 전송되었습니다.",
     "PRIVACY POLICY LINK TEXT": "여기에",

@@ -143,7 +143,7 @@
     "IPVD EXPORT ALL TO CSV": "Экспортировать все в CSV",
     "IPVD SUBMIT A REQUEST TEXT": "отправить запрос",
     "IPVD SEND DEVICE FEEDBACK TEXT": "Отправить отзыв об этом устройстве",
-    "IPVD FEEDBACK ABOUT": "Feedback {{model}} about",
+    "IPVD FEEDBACK ABOUT": "Feedback about {{model}}",
     "IPVD FEEDBACK FOR CAMERAS PAGE": "Отзыв о странице камер",
     "IPVD FEEDBACK MESSAGE SENT": "Сообщение отправлено.",
     "PRIVACY POLICY LINK TEXT": "здесь",

@@ -14,3 +14,4 @@ org.eclipse.core.resources.prefs
 Screenshots
 __pycache__
 pabot_results
+/libspecs/
