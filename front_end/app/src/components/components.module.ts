@@ -31,6 +31,7 @@ import { NxPermissionsDropdown }          from './dropdowns/permissions/permissi
 import { NxMultiSelectDropdown }          from './dropdowns/multi-select/multi-select.component';
 import { NxLandingDisplayComponent }      from './landing-display/landing-display.component';
 import { NxPasswordComponent }            from './password-input/password.component';
+import { NxPasswordValidationComponent }  from './password-input-validation/password-validation.component';
 import { NxEmailComponent }               from './email-input/email.component';
 import { NxClientButtonComponent }        from './open-client-button/client-button.component';
 import { NxSwitchComponent }              from './switch/switch.component';
@@ -81,6 +82,7 @@ import { AngularSvgIconModule }           from 'angular-svg-icon';
         NxFooterComponent,
         NxLandingDisplayComponent,
         NxPasswordComponent,
+        NxPasswordValidationComponent,
         NxEmailComponent,
         NxClientButtonComponent,
         NxSwitchComponent,
@@ -116,6 +118,7 @@ import { AngularSvgIconModule }           from 'angular-svg-icon';
         NxFooterComponent,
         NxLandingDisplayComponent,
         NxPasswordComponent,
+        NxPasswordValidationComponent,
         NxEmailComponent,
         NxClientButtonComponent,
         NxSwitchComponent,
@@ -142,6 +145,7 @@ import { AngularSvgIconModule }           from 'angular-svg-icon';
         NxFooterComponent,
         NxLandingDisplayComponent,
         NxPasswordComponent,
+        NxPasswordValidationComponent,
         NxEmailComponent,
         NxClientButtonComponent,
         NxSwitchComponent,
@@ -179,6 +183,7 @@ import { AngularSvgIconModule }           from 'angular-svg-icon';
         NxFooterComponent,
         NxLandingDisplayComponent,
         NxPasswordComponent,
+        NxPasswordValidationComponent,
         NxEmailComponent,
         NxClientButtonComponent,
         NxSwitchComponent,
