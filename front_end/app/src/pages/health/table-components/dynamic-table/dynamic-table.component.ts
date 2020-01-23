@@ -166,7 +166,11 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
             }
         }
 
-        if (changes.dimensions && !changes.dimensions.firstChange && changes.dimensions.currentValue.length) {
+        if (changes.dimensions &&
+            !changes.dimensions.firstChange &&
+            changes.dimensions.currentValue.length &&
+            JSON.stringify(changes.dimensions.currentValue) !== JSON.stringify(changes.dimensions.previousValue)) { // break circular dep
+
             setDimensions = true;
             setIndex = this.startIndex;
         }
@@ -219,8 +223,11 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         }
 
         // TODO: Remove in CLOUD-4233
-        setTimeout(() => this.scrollMechanicsService.setElementTableWidth(this.dataTable.nativeElement.offsetWidth), 100);
-        this.healthService.tableReady = true;
+        setTimeout(() => {
+            this.scrollMechanicsService.setElementTableWidth(this.dataTable.nativeElement.offsetWidth);
+            this.healthService.tableReady = true;
+        }, 100);
+
     }
 
     ngOnInit() {

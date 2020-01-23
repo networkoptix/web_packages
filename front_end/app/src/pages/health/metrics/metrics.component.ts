@@ -130,7 +130,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
                     this.search();
                 }
 
-                setTimeout(() => this.getContainerDimmensions());
+                this.setLayout();
             });
 
         this.windowSizeSubscription = this.scrollMechanicsService.windowSizeSubject.subscribe(({ width }) => {
@@ -151,7 +151,6 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
 
     ngAfterViewInit() {
         this.setLayout();
-        this.getContainerDimmensions();
     }
 
     ngOnDestroy() {}
@@ -160,14 +159,6 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
         if (this.initialId) {
             this.setActiveEntity(this.initialId);
             this.initialId = undefined;
-        }
-    }
-
-    getContainerDimmensions() {
-        if (this.elementSearch) {
-            this.elementSearchHeight = this.elementSearch.nativeElement.offsetHeight;
-
-            setTimeout(() => this.containerDimensions = [this.elementSearchHeight + 16]);
         }
     }
 
@@ -229,6 +220,10 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
             if (this.metricValuesLen === 1) {
                 this.fixedLayoutClass = 'fixedLayout--no-panel';
             } else {
+
+                this.elementSearchHeight = this.elementSearch ? this.elementSearch.nativeElement.offsetHeight : 0;
+                this.containerDimensions = [this.elementSearchHeight + 16];
+
                 if (this.tableContainer && this.healthService.tableReady) {
                     // measure table (not wrapper) width
                     const tableWidth = this.tableContainer.nativeElement.querySelectorAll('table')[0].offsetWidth;

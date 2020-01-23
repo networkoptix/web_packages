@@ -134,13 +134,6 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
 
     ngAfterViewInit() {
         this.setLayout();
-        if (this.elementSearch && this.elementTiles) {
-            setTimeout(() => {
-                this.elementSearchHeight = this.elementSearch.nativeElement.offsetHeight;
-                this.elementTilesHeight = this.elementTiles.nativeElement.offsetHeight;
-                this.containerDimensions = [this.elementTilesHeight, this.elementSearchHeight + 8 /*margin*/, 17 /*separator = 1px + padding*/];
-            });
-        }
     }
 
     trackItem(index, item) {
@@ -370,8 +363,16 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         }
     }
 
+    canSeeTable() {
+        return this.tableHeaders && this.healthService.alertsValues && !this.mobileDetailMode;
+    }
+
     private setLayout() {
         setTimeout(() => {
+            this.elementSearchHeight = this.elementSearch ? this.elementSearch.nativeElement.offsetHeight : 0;
+            this.elementTilesHeight = this.elementTiles ? this.elementTiles.nativeElement.offsetHeight : 0;
+            this.containerDimensions = [this.elementTilesHeight, this.elementSearchHeight, 17 /*separator = 1px + padding*/];
+
             if (this.elementTable && this.healthService.tableReady) {
                 const tableWidth = this.elementTable.nativeElement.querySelectorAll('table')[0].offsetWidth;
                 // area available
