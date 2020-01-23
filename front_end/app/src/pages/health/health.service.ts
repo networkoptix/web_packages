@@ -156,8 +156,20 @@ export class NxHealthService {
     itemsSearch(values, filter) {
         let items: any = {};
 
-        function filterItem(c, queryTerm) {
-            return (c.searchTags.includes(queryTerm));
+        function filterItem(c, queryTerms) {
+            let result;
+
+            queryTerms.forEach(queryTerm => {
+                if (queryTerm.indexOf('-') > -1) {
+                    // If dash in query -> perform exact match
+                    result = (c.searchTags.includes(queryTerm));
+                } else {
+                    // If no dash in query -> include results with and without dash
+                    result = (c.searchTags.replace(/-/g, '').includes(queryTerm));
+                }
+            });
+
+            return result;
         }
 
         if (filter.query === '') {
@@ -168,17 +180,12 @@ export class NxHealthService {
                                     .split(/[\s,\|]+/)
                                     .filter((elm) => {
                                         return elm !== '';
-                                    })
-                                    .map(term => {
-                                        return term.replace(/-/g, '').toLowerCase();
                                     });
 
             Object.entries(values).forEach(([metric, value]) => {
-                queryTerms.every(queryTerm => {
-                    if (filterItem(value, queryTerm)) {
-                        items[metric] = value;
-                    }
-                });
+                if (filterItem(value, queryTerms)) {
+                    items[metric] = value;
+                }
             });
         }
 
@@ -205,7 +212,7 @@ export class NxHealthService {
             servers = typeServers.selected;
         }
 
-        const alerts = values.filter(alert => {
+        return values.filter(alert => {
             if (servers && servers.value !== '0' && alert._.server.id !== servers.value) {
                 return false;
             }
@@ -214,14 +221,8 @@ export class NxHealthService {
                 return false;
             }
 
-            if (alarms && alarms.value !== '0' && alert._.alarm.icon !== alarms.value) {
-                return false;
-            }
-
-            return true;
+            return !(alarms && alarms.value !== '0' && alert._.alarm.icon !== alarms.value);
         });
-
-        return alerts;
     }
 
     findEntityName(entity) {

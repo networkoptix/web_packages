@@ -339,7 +339,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                                 };
 
                                 if (typeof formattedVal.text === 'string') { // Should numbers should be searchable?
-                                    this.healthService.values[metric][entity].searchTags += formattedVal.text.replace(/-/g, '').toLowerCase() + ' ';
+                                    this.healthService.values[metric][entity].searchTags += formattedVal.text.toLowerCase() + ' ';
                                 }
                             }
                         });

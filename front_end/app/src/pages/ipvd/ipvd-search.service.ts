@@ -39,12 +39,21 @@ export class IpvdSearchService {
                 return str.replace(/-/g, '').toLowerCase();
             }
 
-            const queryLowerNoDashes = lowerNoDashes(query);
+            let result;
 
-            return (query.length === 0
-                    || lowerNoDashes(c.vendor).includes(queryLowerNoDashes)
-                    || lowerNoDashes(c.model).includes(queryLowerNoDashes)
-                    || c.maxResolution.includes(query));
+            if (query.indexOf('-') > -1) {
+                // If dash in query -> perform exact match
+                result = (c.vendor.toLowerCase().indexOf(query) > -1 ||
+                    c.model.toLowerCase().indexOf(query) > -1);
+
+            } else {
+                // If no dash in query -> include results with and without dash
+                const queryLowerNoDashes = lowerNoDashes(query);
+                result = (lowerNoDashes(c.vendor).indexOf(queryLowerNoDashes) > -1 ||
+                    lowerNoDashes(c.model).indexOf(queryLowerNoDashes) > -1);
+            }
+
+            return (query.length === 0 || result || c.maxResolution.indexOf(query) > 0);
         }
 
         let resolution;
