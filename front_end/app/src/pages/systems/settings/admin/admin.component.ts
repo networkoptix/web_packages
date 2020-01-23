@@ -255,7 +255,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                                             let curr = settings[setting];
                                             /**
                                              * sets initial values for system & security settings
-                                             * limitSessionDuration is the only one that's a number & not a boolean,
+                                             * sessionLimitMinutes is the only one that's a number & not a boolean,
                                              * so it needs custom code to handle
                                              */
                                             if (isNaN(curr)) {
