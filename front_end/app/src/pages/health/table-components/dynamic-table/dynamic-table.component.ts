@@ -386,7 +386,10 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
     }
 
     private getTitle(item, headerGroupId, headerId) {
-        let title = item && item[headerGroupId] && item[headerGroupId][headerId] && (item[headerGroupId][headerId].tooltip || item[headerGroupId][headerId].text);
+        let title;
+        if (item && item[headerGroupId] && item[headerGroupId][headerId]) {
+            title = item[headerGroupId][headerId].tooltip || item[headerGroupId][headerId].text;
+        }
         if (title === undefined) {
             title = '';
         }
