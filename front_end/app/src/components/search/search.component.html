@@ -75,8 +75,13 @@
                     </nx-multi-select>
                 </div>
 
-                <div class="drop col-12 col-lg-1 mb-2" style="min-width: auto;" *ngIf="layout == 'selectors'">
-                    <button class="float-right float-md-left btn btn-text has-icon" (click)="resetFilters()">
+                <div class="drop col-12 col-lg-1"
+                     style="min-width: auto;"
+                     [ngClass]="{'mb-2': numberFilters}"
+                     *ngIf="layout == 'selectors'">
+                    <button class="float-right float-md-left btn btn-text has-icon"
+                            *ngIf="numberFilters"
+                            (click)="resetFilters()">
                         <span class="close"></span>
                         <span translate>Clear</span>
                     </button>
