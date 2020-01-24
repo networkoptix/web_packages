@@ -39,7 +39,7 @@
                     <span class="help-block pt-0" [innerHtml]="accessDescription"></span>
                 </div>
             </nx-section>
-            <section *ngIf="!selectedUser.isCloud" class="px-3 py-1 user-settings-section">
+            <nx-section *ngIf="!selectedUser.isCloud" [shouldNotHaveSpacing]="true">
                 <form #userSettingsForm="ngForm"
                     name="userSettingsForm"
                     class="d-table user-settings-form form inputs w-100 mw-100 col-lg-7 col-m-8"
@@ -86,7 +86,7 @@
                             translate>Email format incorrect</span>
                     </div>
                 </form>
-            </section>
+            </nx-section>
             <nx-section *ngIf="(selectedUser.isCloud && selectedUser.isMe)
                 || (selectedUser.canBeEdited && system.currentUser.isAdmin)">
                 <div *ngIf="selectedUser.isCloud && selectedUser.isMe" class="float-left">

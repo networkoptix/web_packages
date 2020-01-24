@@ -22,6 +22,8 @@ import {
     styleUrls    : [ 'section.component.scss' ],
 })
 export class NxContentBlockSectionComponent implements OnInit {
+    // gets rid of card--body-spacer and padding-bottom on card--body
+    @Input() shouldNotHaveSpacing: boolean;
 
     haveSubheader: boolean;
 

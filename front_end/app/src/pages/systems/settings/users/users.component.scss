@@ -35,15 +35,12 @@
     padding          : .5rem 0 0;
 }
 
-.user-settings-section {
-    border-top: 1px solid $light3;
-    .user-settings-form {
-        border-collapse: separate;
-        border-spacing: 0 1rem;
-        .user-form-labels {
-            width: 1px;
-            margin-right: 8px;
-            color: $dark9;
-        }
+.user-settings-form {
+    border-collapse: separate;
+    border-spacing: 0 1rem;
+    .user-form-labels {
+        width: 1px;
+        margin-right: 0.5rem;
+        color: $dark9;
     }
 }
