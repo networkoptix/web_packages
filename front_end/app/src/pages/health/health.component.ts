@@ -127,7 +127,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                         id: '',
                         info: {
                             capabilities: {
-                                mediaserver_metrics: true
+                                vms_metrics: true
                             }
                         },
                         mediaserver: undefined
