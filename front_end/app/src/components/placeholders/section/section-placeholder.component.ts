@@ -5,8 +5,8 @@ import { NxConfigService }             from '../../../services/nx-config';
 /* Usage
 <nx-section-placeholder
     svgFileName='filename minus the .svg'
-    width?='#' // desired width (in px's) of icon
     height?='#' // desired height (in px's) of icon
+    width?='#' // desired width (in px's) of icon
     translatedMessage?='{{ LANG.whateverYouWantFromHere }}'>
 </nx-section-placeholder>
 */
@@ -18,8 +18,8 @@ import { NxConfigService }             from '../../../services/nx-config';
 })
 export class NxSectionPlaceholderComponent implements OnInit {
     @Input() svgFileName: string;
-    @Input() width: string;
     @Input() height: string;
+    @Input() width: string;
     @Input() translatedMessage: string;
 
     LANG: any;
@@ -34,7 +34,7 @@ export class NxSectionPlaceholderComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.width = this.width || '64';
+        this.height = this.height || '64';
         this.svgFileName = this.svgFileName || 'system_settings_placeholder';
     }
 }
