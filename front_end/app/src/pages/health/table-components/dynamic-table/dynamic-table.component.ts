@@ -384,4 +384,12 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
             setTimeout(() => this.setPage(1));
         }
     }
+
+    private getTitle(item, headerGroupId, headerId) {
+        let title = item && item[headerGroupId] && item[headerGroupId][headerId] && (item[headerGroupId][headerId].tooltip || item[headerGroupId][headerId].text);
+        if (title === undefined) {
+            title = '';
+        }
+        return title;
+    }
 }
