@@ -122,10 +122,6 @@ nx-system-alerts-component {
     }
 
     .nx-search .drop-container {
-        @include media-breakpoint-down(lg) {
-            flex-direction: column !important;
-        }
-
         .drop {
             max-width : none;
             flex-grow : 1;

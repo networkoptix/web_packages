@@ -1,5 +1,4 @@
 <div class="nx-search">
-
     <div class="row m-0" [ngClass]="{'mb-2' : layout == 'selectors'}">
         <div class="col-12 p-0" *ngIf="layout != 'selectors'">
             <div class="d-block d-md-inline-flex flex-md-row w-100">
@@ -47,13 +46,14 @@
              [hidden]="!showAdvancedOptions && layout != 'selectors'"
               *ngIf="localFilter.tags && localFilter.tags.length || localFilter.selects && localFilter.selects.length || localFilter.multiselects && localFilter.multiselects.length">
 
-            <div class="drop-container row col-12 m-0 p-0 d-flex flex-wrap flex-column flex-md-row"
-                 [ngClass]="{'mt-3' : layout != 'selectors'}"
+            <div class="drop-container row col-12 m-0 p-0"
+                 [ngClass]="{'mt-3 flex-row' : layout != 'selectors'}"
                  [ngStyle]="{'max-width': layout == 'selectors' ? '100%': '992px'}"
                  *ngIf="localFilter.selects && localFilter.selects.length || localFilter.multiselects && localFilter.multiselects.length">
 
-                <div class="drop {{select.css || ''}}" *ngFor="let select of localFilter.selects"
-                     [ngClass]="{'mb-2' : layout == 'selectors', 'mb-3' : layout != 'selectors'}">
+                <div class="drop {{select.css || ''}}"
+                     *ngFor="let select of localFilter.selects"
+                     [ngClass]="{'mb-2' : layout == 'selectors', 'mb-3' : layout != 'selectors', 'col-lg-12': layoutMod}">
 
                     <label style="text-transform: capitalize" *ngIf="select.label != ''">{{ select.label }}</label>
                     <nx-select [name]="select.label"
@@ -75,7 +75,7 @@
                     </nx-multi-select>
                 </div>
 
-                <div class="drop mb-2" style="min-width: auto;" *ngIf="layout == 'selectors'">
+                <div class="drop col-12 col-lg-1 mb-2" style="min-width: auto;" *ngIf="layout == 'selectors'">
                     <button class="float-right float-md-left btn btn-text has-icon" (click)="resetFilters()">
                         <span class="close"></span>
                         <span translate>Clear</span>
