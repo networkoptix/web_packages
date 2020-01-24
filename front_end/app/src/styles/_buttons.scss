@@ -323,7 +323,7 @@ button, .btn {
 
     &:hover {
         span {
-            color           : $dark15 !important;;
+            color           : $dark15 !important;
             text-decoration : none;
 
             &.close {
@@ -334,8 +334,16 @@ button, .btn {
         }
     }
 
-    &:active, &:focus {
-        color : $light16;
+    &:active {
+        span {
+            color : $light16 !important;
+
+            &.close {
+                &:before, &:after {
+                    color : $light16 !important;
+                }
+            }
+        }
     }
 }
 
