@@ -348,7 +348,7 @@
 		"shareUnauthorized": "You do not have permission to share this system",
 		"settings": {
 			"notAbleToLoadSystem": "Not able to load system settings.",
-			"notAbleToLoadSecurity": "Not Able to load security settings",
+			"notAbleToLoadSecurity": "Not able to load security settings.",
 			"sessionLimitDuration": {
 				"hours": "hours",
 				"minutes": "minutes"
