@@ -19,11 +19,10 @@
     <hr class="mt-1"/>
     <div class="menuLinks px-2">
         <nx-health-update *ngIf="!importedData.imported" (updateHealth)="updateValues()"></nx-health-update>
-        <div *ngIf="deviceService.isDesktop()" class="mb-3">
-            <a href="#" class="btn-text pl-1" (click)="exportReport()">
+        <div *ngIf="deviceService.isDesktop()" class="mb-3 mt-2">
+            <a href="#" class="btn-text" (click)="exportReport()">
                 <svg-icon [src]="CONFIG.icons.dir + 'download.svg'"
-                          [svgStyle]="{'width.px': '20'}"></svg-icon>
-                Download Full Report</a>
+                          [svgStyle]="{'width.px': '20'}"></svg-icon>Download Full Report</a>
         </div>
         <div *ngIf="importedData.imported" class="importInfo">
             <p>System: {{importedData.system}}</p>
