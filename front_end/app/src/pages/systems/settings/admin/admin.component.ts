@@ -272,8 +272,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
     cleanUpWatchers(settings) {
         // removes watcher(s) if setting does not exist
-        delete settings.trafficEncryptionForced;
-        delete settings.videoTrafficEncryptionForced;
         Object.keys(this.settingsWatchers).forEach(sw => {
             if (!(sw in settings) && !(sw === 'sessionLimitToggle' || sw === 'sessionLimitUnit')) {
                 delete this.settingsWatchers[sw];
