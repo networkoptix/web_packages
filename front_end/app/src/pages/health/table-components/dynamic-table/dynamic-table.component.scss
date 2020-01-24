@@ -105,7 +105,7 @@ nx-dynamic-table {
             white-space    : nowrap;
 
             div {
-              @extend #regular15;
+              @extend #regular13;
               border-bottom  : 1px solid;
               padding-bottom : 4px;
             }
@@ -121,8 +121,8 @@ nx-dynamic-table {
             }
 
             .group-3 {
-              color        : $pink500;
-              border-color : $pink500;
+              color        : $purple500;
+              border-color : $purple500;
             }
 
             .group-4 {

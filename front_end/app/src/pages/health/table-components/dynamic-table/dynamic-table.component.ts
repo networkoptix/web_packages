@@ -126,7 +126,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         let resetURI;
         let setDimensions;
 
-        if (changes.activeEntity) {
+        if (changes.activeEntity && !changes.activeEntity.firstChange) {
             this.selectedEntity = changes.activeEntity.currentValue;
             // TODO: Try to remove timeout in CLOUD-4233
             setTimeout(() => {

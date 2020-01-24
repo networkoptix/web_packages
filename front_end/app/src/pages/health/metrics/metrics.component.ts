@@ -62,9 +62,6 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
     breakpointSubscription: SubscriptionLike;
     tableReadySubscription: SubscriptionLike;
 
-    elementTilesHeight: number;
-    elementSearchHeight: number;
-    elementTableHeight: number;
     containerDimensions: any = [];
 
     windowSizeSubscription: SubscriptionLike;
@@ -221,12 +218,14 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
                 this.fixedLayoutClass = 'fixedLayout--no-panel';
             } else {
 
-                this.elementSearchHeight = this.elementSearch ? this.elementSearch.nativeElement.offsetHeight : 0;
-                this.containerDimensions = [this.elementSearchHeight + 16];
+                const elementSearchHeight = this.elementSearch ? this.elementSearch.nativeElement.offsetHeight : 0;
+                this.containerDimensions = [elementSearchHeight + 16];
 
                 if (this.tableContainer && this.healthService.tableReady) {
+
                     // measure table (not wrapper) width
                     const tableWidth = this.tableContainer.nativeElement.querySelectorAll('table')[0].offsetWidth;
+                    this.containerDimensions = [elementSearchHeight + 16, 0]; // trick table's onChanges will pick new dimensions
                     // area available
                     const areaWidth = this.area.nativeElement.offsetWidth;
                     // area available to the table (~80% + gutters
