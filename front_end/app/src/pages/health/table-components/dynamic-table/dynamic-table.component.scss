@@ -171,7 +171,8 @@ nx-dynamic-table {
 
           .caption {
             position      : relative;
-            height        : 48px;
+            height        : auto;
+            max-height    : 48px;
             overflow-wrap : initial;
             overflow      : hidden;
             text-overflow : ellipsis;
