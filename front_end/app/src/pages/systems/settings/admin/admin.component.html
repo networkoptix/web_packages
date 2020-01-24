@@ -75,7 +75,7 @@
                     <form id="systemSettingsForm" class="form-horizontal" #systemSettingsForm="ngForm"
                         novalidate autocomplete="off">
                         <div class="form-check pl-0">
-                            <ng-container *ngIf="settingsWatchers.autoDiscoveryEnabled.value !== undefined">
+                            <ng-container *ngIf="settingsWatchers.autoDiscoveryEnabled !== undefined">
                                 <div class="d-flex checkbox-block align-items-center">
                                     <nx-checkbox
                                         name="autoDiscoveryEnabled"
@@ -98,7 +98,7 @@
                                     Failover enabled on some servers ignore status check prohibition.
                                 </label>
                             </ng-container>
-                            <ng-container *ngIf="settingsWatchers.statisticsAllowed.value !== undefined">
+                            <ng-container *ngIf="settingsWatchers.statisticsAllowed !== undefined">
                                 <div class="d-flex checkbox-block align-items-center mt-1">
                                     <nx-checkbox
                                         name="statisticsAllowed"
@@ -122,7 +122,7 @@
                                 </label>
                             </ng-container>
                             <div class="d-flex checkbox-block align-items-center mt-1" 
-                                *ngIf="settingsWatchers.cameraSettingsOptimization.value !== undefined">
+                                *ngIf="settingsWatchers.cameraSettingsOptimization !== undefined">
                                 <nx-checkbox
                                     name="cameraSettingsOptimization"
                                     componentId="cameraSettingsOptimization"
@@ -155,7 +155,7 @@
                 <nx-section *ngIf="settingsWatchersSet">
                     <form id="securitySettingsForm" class="form-horizontal" novalidate autocomplete="off">
                         <div class="form-check p-0 mr-4">
-                            <ng-container *ngIf="settingsWatchers.auditTrailEnabled.value !== undefined">
+                            <ng-container *ngIf="settingsWatchers.auditTrailEnabled !== undefined">
                                 <div class="d-flex checkbox-block align-items-center">
                                     <nx-checkbox
                                         name="auditTrailEnabled"
@@ -177,7 +177,7 @@
                                 </label>
                             </ng-container>
                             <div class="d-flex checkbox-block align-items-center mt-1" 
-                                *ngIf="settingsWatchers.trafficEncryptionForced.value !== undefined">
+                                *ngIf="settingsWatchers.trafficEncryptionForced !== undefined">
                                 <nx-checkbox
                                     name="trafficEncryptionForced"
                                     componentId="trafficEncryptionForced"
@@ -190,7 +190,7 @@
                                     <span translate>Allow only secure connections</span>
                                 </label>
                             </div>
-                            <ng-container *ngIf="settingsWatchers.videoTrafficEncryptionForced.value !== undefined">
+                            <ng-container *ngIf="settingsWatchers.videoTrafficEncryptionForced !== undefined">
                                 <div class="d-flex checkbox-block align-items-center mt-1">
                                     <nx-checkbox
                                         name="videoTrafficEncryptionForced"
@@ -216,7 +216,7 @@
                                 </label>
                             </ng-container>
                             <div class="d-flex checkbox-block align-items-center mt-1" 
-                                *ngIf="settingsWatchers.sessionLimitMinutes.value !== undefined">
+                                *ngIf="settingsWatchers.sessionLimitMinutes !== undefined">
                                 <nx-checkbox
                                     name="sessionLimitMinutes"
                                     componentId="sessionLimitMinutes"

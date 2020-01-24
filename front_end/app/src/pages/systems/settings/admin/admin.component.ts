@@ -141,17 +141,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
         this.settingsWatchersSet = false;
 
-        this.initForApplyService();
-
-        this.applyService.initPageWatcher(
-            this.viewContainerRef,
-            this.saveSettings,
-            () => {
-                this.applyService.reset();
-                this.timeUnitCount = this.settingsWatchers.sessionLimitMinutes.originalValue;
-            },
-            Object.values(this.settingsWatchers));
-
         this.init();
     }
 
@@ -230,28 +219,48 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             .systemSubject
             .subscribe((system) => {
                 this.system = system;
-                this.applyService.setVisible(false);
                 if (system) {
                     this.pageService.setPageTitle(this.LANG.pageTitles.systemName.replace('{{systemName}}', this.system.info.name));
-                    if (this.systemSubscription) {
-                        this.systemSubscription.unsubscribe();
-                    }
-                    this.systemSubscription = system.infoSubject
-                        .pipe(throttleTime(this.CONFIG.systemThrottleTime))
-                        .subscribe(() => {
-                            this.settingsService.footerSubject.next(true);
-                            this.updateSettings(this.currentlyMerging);
-                            if (!this.applyService.locked && this.system.permissions.isAdmin) {
-                                if (this.settingsSubscription) {
-                                    this.settingsSubscription.unsubscribe();
-                                }
-                                this.settingsSubscription = this.system.updateOrGetSystemSettings().subscribe((res: any) => {
-                                    const { settings } = res.reply;
-                                    this.applyService.setVisible(false);
-                                    this.applyService.hardReset();
-                                    const sw = this.settingsWatchers;
-                                    Object.keys(sw).forEach(setting => {
-                                        if (setting in settings) {
+                    this.system.updateOrGetSystemSettings().toPromise().then((res: any) => {
+                        const { settings } = res.reply;
+                        // removes watcher(s) if setting does not exist
+                        Object.keys(this.settingsWatchers).forEach(sw => {
+                            if (!(sw in settings) && !(sw === 'sessionLimitToggle' || sw === 'sessionLimitUnit')) {
+                                delete this.settingsWatchers[sw];
+                            }
+                        });
+
+                        this.initForApplyService();
+
+                        this.applyService.initPageWatcher(
+                            this.viewContainerRef,
+                            this.saveSettings,
+                            () => {
+                                this.applyService.reset();
+                                this.timeUnitCount = this.settingsWatchers.sessionLimitMinutes.originalValue;
+                            },
+                            Object.values(this.settingsWatchers));
+
+                        this.applyService.setVisible(false);
+
+                        if (this.systemSubscription) {
+                            this.systemSubscription.unsubscribe();
+                        }
+                        this.systemSubscription = system.infoSubject
+                            .pipe(throttleTime(this.CONFIG.systemThrottleTime))
+                            .subscribe(() => {
+                                this.settingsService.footerSubject.next(true);
+                                this.updateSettings(this.currentlyMerging);
+                                if (!this.applyService.locked && this.system.permissions.isAdmin) {
+                                    if (this.settingsSubscription) {
+                                        this.settingsSubscription.unsubscribe();
+                                    }
+                                    this.settingsSubscription = this.system.updateOrGetSystemSettings().subscribe((res: any) => {
+                                        const { settings } = res.reply;
+                                        this.applyService.setVisible(false);
+                                        this.applyService.hardReset();
+                                        const sw = this.settingsWatchers;
+                                        Object.keys(sw).forEach(setting => {
                                             let curr = settings[setting];
                                             /**
                                              * sets initial values for system & security settings
@@ -278,14 +287,14 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                                                                                 return e.value === sw.sessionLimitUnit.value;
                                                                             });
                                             }
-                                        }
+                                        });
+                                        this.settingsWatchersSet = true;
+                                        this.applyService.reset();
+                                        this.applyService.setVisible(true);
                                     });
-                                    this.settingsWatchersSet = true;
-                                    this.applyService.reset();
-                                    this.applyService.setVisible(true);
-                                });
-                            }
-                        });
+                                }
+                            });
+                    });
                     this.deletingSystem = this.processService.createProcess(() => {
                         return this.system.deleteFromCurrentAccount();
                     }, {
