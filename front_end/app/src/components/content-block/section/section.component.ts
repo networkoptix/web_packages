@@ -22,8 +22,7 @@ import {
     styleUrls    : [ 'section.component.scss' ],
 })
 export class NxContentBlockSectionComponent implements OnInit {
-    // gets rid of card--body-spacer and padding-bottom on card--body
-    @Input() shouldNotHaveSpacing: boolean;
+    @Input() type: string;
 
     haveSubheader: boolean;
 
@@ -34,6 +33,9 @@ export class NxContentBlockSectionComponent implements OnInit {
     }
 
     ngOnInit() {
+        if (!this.type) {
+            this.type = '';
+        }
         this.haveSubheader = (this.subHeaderWrapper.nativeElement.childNodes[ 0 ].childNodes.length > 0);
     }
 }

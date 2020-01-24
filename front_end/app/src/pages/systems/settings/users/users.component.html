@@ -39,7 +39,7 @@
                     <span class="help-block pt-0" [innerHtml]="accessDescription"></span>
                 </div>
             </nx-section>
-            <nx-section *ngIf="!selectedUser.isCloud" [shouldNotHaveSpacing]="true">
+            <nx-section *ngIf="!selectedUser.isCloud" type="no-spacing">
                 <form #userSettingsForm="ngForm"
                     name="userSettingsForm"
                     class="d-table user-settings-form form inputs w-100 mw-100 col-lg-7 col-m-8"
