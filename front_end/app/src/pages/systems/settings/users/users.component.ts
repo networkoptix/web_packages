@@ -222,7 +222,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
 
     changePassword() {
         return this.dialogs
-                   .changePassword(this.system, this.selectedUser);
+                .changePassword(this.system, this.selectedUser);
     }
 
     setPermission(role: NxSystemRole|any) {

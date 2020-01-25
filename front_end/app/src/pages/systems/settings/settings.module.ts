@@ -19,8 +19,10 @@ import { NxSystemAdminComponent }    from './admin/admin.component';
 import { NxSystemUsersComponent }    from './users/users.component';
 import { NxSystemServersComponent }  from './servers/servers.component';
 import { NxNoSystemsComponent }      from '../no-systems/no-systems.component';
+import { AdminGuard }                from '../../../routeGuards/adminGuard';
 import { ApplyGuard }                from '../../../routeGuards/applyGuard';
 import { AuthGuard }                 from '../../../routeGuards/authGuard';
+import { UserGuard }                 from '../../../routeGuards/userGuard';
 
 const appRoutes: Routes = [
     // root path is handles by AJS for now
@@ -41,22 +43,26 @@ const appRoutes: Routes = [
             {
                 path: 'users',
                 component: NxSystemUsersComponent,
-                canDeactivate: [ApplyGuard]
+                canDeactivate: [ApplyGuard],
+                canActivate: [UserGuard],
             },
             {
                 path: 'users/:userId',
                 component: NxSystemUsersComponent,
-                canDeactivate: [ApplyGuard]
+                canDeactivate: [ApplyGuard],
+                canActivate: [UserGuard],
             },
             {
                 path: 'servers',
                 component: NxSystemServersComponent,
-                canDeactivate: [ApplyGuard]
+                canDeactivate: [ApplyGuard],
+                canActivate: [AdminGuard],
             },
             {
                 path: 'servers/:serverId',
                 component: NxSystemServersComponent,
-                canDeactivate: [ApplyGuard]
+                canDeactivate: [ApplyGuard],
+                canActivate: [AdminGuard],
             }
         ]
     }
