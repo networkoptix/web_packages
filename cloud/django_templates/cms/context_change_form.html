@@ -98,9 +98,9 @@
                         {% endif %}
                     </div>
                 {% endif %}
-                {% if not field.field.disabled %}
+                {% if not field.field.disabled or data_structure_type != HTML%}
                     {{ field }}
-                {% elif not field|is_FileField and not field|is_ImageField %}
+                {% elif data_structure_type == HTML %}
                     <div class="show-html">{{ field.value|safe }}</div>
                 {% endif %}
 

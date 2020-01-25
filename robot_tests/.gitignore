@@ -3,6 +3,8 @@
 /*.html
 /*.tar
 /*.deb
+/*.exe
+/*.pabotsuitenames
 syntax: glob
 Docker/Video
 Docker/Data
@@ -12,3 +14,4 @@ org.eclipse.core.resources.prefs
 Screenshots
 __pycache__
 pabot_results
+/libspecs/

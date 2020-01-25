@@ -61,10 +61,10 @@
                                 </td>
                                 <ng-template #showValue>
                                     <td class="ellipsis"
-                                        [title]="item && item[headerGroup.id] && item[headerGroup.id][header.id] &&
-                                                 (item[headerGroup.id][header.id].tooltip || item[headerGroup.id][header.id].text || '')"
+                                        [title]="getTitle(item, headerGroup.id, header.id)"
                                         [ngClass]="item && item[headerGroup.id] && item[headerGroup.id][header.id] && item[headerGroup.id][header.id].formatClass">
-                                        <span [innerText]="item && item[headerGroup.id] && item[headerGroup.id][header.id] && item[headerGroup.id][header.id].text || '-'"
+                                        <span [innerText]="item && item[headerGroup.id] && item[headerGroup.id][header.id] && [undefined, ''].indexOf(item[headerGroup.id][header.id].text) === -1
+                                                ? item[headerGroup.id][header.id].text : '−'"
                                               [ngClass]="item && item[headerGroup.id] && item[headerGroup.id][header.id] && item[headerGroup.id][header.id].class || ''">
                                         </span>
                                     </td>
@@ -78,7 +78,7 @@
         </div>
 
         <div class="vertical-align ml-0 clearfix">
-            <nav aria-label="Cameras table navigation" class="pagination-nav pt-3 pb-3">
+            <nav aria-label="Cameras table navigation" class="pagination-nav pt-3">
                 <ngb-pagination
                         *ngIf="healthService.tableReady"
                         [collectionSize]="_elements.length"

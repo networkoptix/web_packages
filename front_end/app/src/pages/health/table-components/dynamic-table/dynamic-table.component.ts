@@ -126,7 +126,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         let resetURI;
         let setDimensions;
 
-        if (changes.activeEntity) {
+        if (changes.activeEntity && !changes.activeEntity.firstChange) {
             this.selectedEntity = changes.activeEntity.currentValue;
             // TODO: Try to remove timeout in CLOUD-4233
             setTimeout(() => {
@@ -166,7 +166,11 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
             }
         }
 
-        if (changes.dimensions && !changes.dimensions.firstChange && changes.dimensions.currentValue.length) {
+        if (changes.dimensions &&
+            !changes.dimensions.firstChange &&
+            changes.dimensions.currentValue.length &&
+            JSON.stringify(changes.dimensions.currentValue) !== JSON.stringify(changes.dimensions.previousValue)) { // break circular dep
+
             setDimensions = true;
             setIndex = this.startIndex;
         }
@@ -219,8 +223,11 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         }
 
         // TODO: Remove in CLOUD-4233
-        setTimeout(() => this.scrollMechanicsService.setElementTableWidth(this.dataTable.nativeElement.offsetWidth), 100);
-        this.healthService.tableReady = true;
+        setTimeout(() => {
+            this.scrollMechanicsService.setElementTableWidth(this.dataTable.nativeElement.offsetWidth);
+            this.healthService.tableReady = true;
+        }, 100);
+
     }
 
     ngOnInit() {
@@ -376,5 +383,16 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         if (updateURI || updateURI === undefined) {
             setTimeout(() => this.setPage(1));
         }
+    }
+
+    private getTitle(item, headerGroupId, headerId) {
+        let title;
+        if (item && item[headerGroupId] && item[headerGroupId][headerId]) {
+            title = item[headerGroupId][headerId].tooltip || item[headerGroupId][headerId].text;
+        }
+        if (title === undefined) {
+            title = '';
+        }
+        return title;
     }
 }

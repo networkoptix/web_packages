@@ -151,10 +151,10 @@
     "scripts": {
         "lang": "npm run update-lang; npm run fill-lang; npm run compile-lang;",
         "serve": "npm run lang; webpack-dev-server --config webpack.dev.js --open --hot --inline",
-        "serve-health-monitor": "npm run lang; webpack-dev-server --config webpack.health_monitor-dev.js --open --hot --inline",
+        "serve-health-monitor": "webpack-dev-server --config webpack.health_monitor-dev.js --open --hot --inline",
         "serve-ipvd": "npm run lang; webpack-dev-server --config webpack.ipvd-dev.js --open --hot --inline",
         "build": "npm run lang; webpack --config webpack.prod.js --progress --profile --bail",
-        "build-health-monitor": "npm run lang; webpack --config webpack.health_monitor-prod.js --progress --profile --bail",
+        "build-health-monitor": "webpack --config webpack.health_monitor-prod.js --progress --profile --bail",
         "build-ipvd": "npm run lang; webpack --config webpack.ipvd-prod.js --progress --profile --bail",
         "setSkin": "node setSkin.js --skin",
         "compile-lang": "python compile-lang.py",

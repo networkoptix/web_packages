@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { DeviceDetectorModule } from 'ngx-device-detector';
 
 import { TranslateModule } from '@ngx-translate/core';
 import { WebStorageModule } from 'ngx-store';
@@ -41,6 +42,7 @@ import { NxSystemMetricsComponent } from '../app/src/pages/health/metrics/metric
         HttpClientModule,
         NgbModule,
         WebStorageModule,
+        DeviceDetectorModule.forRoot(),
         TranslateModule.forRoot(),
         RouterModule.forRoot([
             { path: 'health', component: NxHealthComponent,

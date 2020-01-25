@@ -200,7 +200,7 @@ Your permissions is shown for non-owners
     ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    testFirstName testLastName
     FOR    ${user}  ${text}  IN ZIP  ${users}  ${users text}
         Log in to Auto Tests 2 System    ${user}
-        Wait Until Elements Are Visible    ${current owner name}    ${OWNER EMAIL}    ${YOUR ACCESS LEVEL}    ${YOUR ACCESS LEVEL}/span[contains(text(),"${text}")]
+        Wait Until Elements Are Visible    ${current owner name}    ${OWNER EMAIL}    ${YOUR ACCESS LEVEL}    ${YOUR ACCESS LEVEL}/following-sibling::span[contains(text(),"${text}")]
         Log Out
     END
 

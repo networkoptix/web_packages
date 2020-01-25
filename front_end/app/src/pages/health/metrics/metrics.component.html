@@ -1,9 +1,10 @@
 <div [ngSwitch]="metricValuesLen" class="h-100">
 
     <nx-page-placeholder
-        *ngSwitchCase="0"
-        placeholderTitle="No {{metricName}}"
-        class="section-placeholder">
+            *ngSwitchCase="0"
+            placeholderTitle="No {{metricName}}"
+
+            class="section-placeholder">
     </nx-page-placeholder>
 
 
@@ -45,6 +46,8 @@
                             [activeEntity]="activeEntity">
                     </nx-dynamic-table>
                 </div>
+
+
             </div>
         </div>
 

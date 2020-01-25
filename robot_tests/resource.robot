@@ -2,8 +2,8 @@
 Library      SeleniumLibrary    run_on_failure=Failure Tasks
 Library      String
 Library      Collections
-Library      NoptixImapLibrary/
-Library      NoptixLibrary/
+Library      NoptixImapLibrary
+Library      NoptixLibrary
 Library      NoptixLibrary/CloudPortalAPI.py
 Resource     variables.robot
 Resource     APIresource.robot
@@ -17,7 +17,7 @@ ${variables_file}    variables-env.robot
 ${options}    true
 ${headless}    true
 @{chrome_arguments}    --disable-gpu    --no-sandbox    --log-level=3    --start-maximized
-@{chrome_arguments_headless}    --disable-infobars    --disable-gpu    --no-sandbox    --log-level=3    --headless    
+@{chrome_arguments_headless}    --disable-infobars    --disable-gpu    --no-sandbox    --log-level=3    --headless
 ${speed}    0
 ${selenium_timeout}    30
 
@@ -95,9 +95,9 @@ Set Language Anonymous
 
 Log In
     [arguments]    ${email}    ${password}    ${validate}=${True}    ${button}=${LOG IN NAV BAR}
+    Sleep    2
     Run Keyword Unless    '''${button}''' == "None"    Wait Until Element Is Visible    ${button}
     Run Keyword Unless    '''${button}''' == "None"    Click Link    ${button}
-    Sleep    2
     Wait Until Elements Are Visible    ${EMAIL INPUT}    ${PASSWORD INPUT}    ${REMEMBER ME CHECKBOX VISIBLE}    ${FORGOT PASSWORD}    ${LOG IN CLOSE BUTTON}
     Sleep    1
     Wait Until Keyword Succeeds    10    0.5    Input Text    ${EMAIL INPUT}    ${email}
@@ -623,3 +623,4 @@ Common Restart Logout
     Register Keyword To Run On Failure    Failure Tasks
     Run Keyword If    ${status}    Log Out via API
     Go To    ${url}
+    Sleep    2

@@ -105,7 +105,7 @@ nx-dynamic-table {
             white-space    : nowrap;
 
             div {
-              @extend #regular15;
+              @extend #regular13;
               border-bottom  : 1px solid;
               padding-bottom : 4px;
             }
@@ -121,8 +121,8 @@ nx-dynamic-table {
             }
 
             .group-3 {
-              color        : $pink500;
-              border-color : $pink500;
+              color        : $purple500;
+              border-color : $purple500;
             }
 
             .group-4 {
@@ -171,7 +171,8 @@ nx-dynamic-table {
 
           .caption {
             position      : relative;
-            height        : 48px;
+            height        : auto;
+            max-height    : 48px;
             overflow-wrap : initial;
             overflow      : hidden;
             text-overflow : ellipsis;
@@ -367,8 +368,8 @@ nx-dynamic-table {
   }
 
   .short-text {
-    max-width : 81px !important;
-    width : 81px !important;
+    max-width : 74px !important;
+    width : 74px !important;
   }
 
   .text {

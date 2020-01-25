@@ -62,9 +62,6 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
     breakpointSubscription: SubscriptionLike;
     tableReadySubscription: SubscriptionLike;
 
-    elementTilesHeight: number;
-    elementSearchHeight: number;
-    elementTableHeight: number;
     containerDimensions: any = [];
 
     windowSizeSubscription: SubscriptionLike;
@@ -130,7 +127,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
                     this.search();
                 }
 
-                setTimeout(() => this.getContainerDimmensions());
+                this.setLayout();
             });
 
         this.windowSizeSubscription = this.scrollMechanicsService.windowSizeSubject.subscribe(({ width }) => {
@@ -151,7 +148,6 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
 
     ngAfterViewInit() {
         this.setLayout();
-        this.getContainerDimmensions();
     }
 
     ngOnDestroy() {}
@@ -160,14 +156,6 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
         if (this.initialId) {
             this.setActiveEntity(this.initialId);
             this.initialId = undefined;
-        }
-    }
-
-    getContainerDimmensions() {
-        if (this.elementSearch) {
-            this.elementSearchHeight = this.elementSearch.nativeElement.offsetHeight;
-
-            setTimeout(() => this.containerDimensions = [this.elementSearchHeight + 16]);
         }
     }
 
@@ -229,13 +217,19 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
             if (this.metricValuesLen === 1) {
                 this.fixedLayoutClass = 'fixedLayout--no-panel';
             } else {
+
+                const elementSearchHeight = this.elementSearch ? this.elementSearch.nativeElement.offsetHeight : 0;
+                this.containerDimensions = [elementSearchHeight + 16];
+
                 if (this.tableContainer && this.healthService.tableReady) {
+
                     // measure table (not wrapper) width
                     const tableWidth = this.tableContainer.nativeElement.querySelectorAll('table')[0].offsetWidth;
+                    this.containerDimensions = [elementSearchHeight + 16, 0]; // trick table's onChanges will pick new dimensions
                     // area available
                     const areaWidth = this.area.nativeElement.offsetWidth;
-                    // area available to the table (2/3 + gutters
-                    const availAreaWidth = areaWidth / 3 * 2 + 46;
+                    // area available to the table (~80% + gutters
+                    const availAreaWidth = areaWidth * .78 + 46;
 
                     const isTableFit = (availAreaWidth > tableWidth) && !this.mobileDetailMode;
                     if (this.activeEntity && !this.mobileDetailMode) {

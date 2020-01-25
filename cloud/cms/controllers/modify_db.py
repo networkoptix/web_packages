@@ -119,6 +119,7 @@ def is_datarecord_unique(asset, data_structure, value, customizations=None):
 
 def save_unrevisioned_records(asset, context, language, data_structures,
                               request_data, request_files, user, version_id=None):
+    can_edit_advanced = user.is_superuser or user.has_perm('cms.edit_advanced')
     upload_errors = []
     for data_structure in data_structures:
         data_structure_name = data_structure.name
@@ -166,7 +167,7 @@ def save_unrevisioned_records(asset, context, language, data_structures,
 
         elif data_structure.type == DataStructure.DATA_TYPES.guid:
             # if the guid is valid it will go to the next set of checks
-            new_record_value = request_data[data_structure_name]
+            new_record_value = request_data.get(data_structure_name, "")
 
             # if its option and not a valid guid set error message and go to next DataStructure
             if new_record_value and not re.match(GUID_REGEXP, new_record_value):
@@ -220,10 +221,12 @@ def save_unrevisioned_records(asset, context, language, data_structures,
 
         elif data_structure.type == DataStructure.DATA_TYPES.check_box:
             new_record_value = data_structure_name in request_data
+            if data_structure.advanced and not can_edit_advanced:
+                continue
 
         elif data_structure.type == DataStructure.DATA_TYPES.integer:
             try:
-                new_record_value = int(request_data[data_structure_name])
+                new_record_value = int(request_data.get(data_structure_name, ""))
             except ValueError:
                 upload_errors.append((data_structure_name, "This field has can only be integers."))
                 continue
@@ -241,7 +244,7 @@ def save_unrevisioned_records(asset, context, language, data_structures,
 
         elif data_structure.type in [DataStructure.DATA_TYPES.object, DataStructure.DATA_TYPES.array]:
             try:
-                new_record_value = DataStructure.cast_value(data_structure, request_data[data_structure_name])
+                new_record_value = DataStructure.cast_value(data_structure, request_data.get(data_structure_name, ""))
                 if data_structure.type == DataStructure.DATA_TYPES.array and type(new_record_value) != list:
                     raise ValueError
                 elif data_structure.type == DataStructure.DATA_TYPES.object and type(new_record_value) != dict:
@@ -252,7 +255,7 @@ def save_unrevisioned_records(asset, context, language, data_structures,
                 continue
 
         else:
-            new_record_value = request_data[data_structure_name]
+            new_record_value = request_data.get(data_structure_name, "")
             if 'regex' in data_structure.meta_settings:
                 pattern = data_structure.meta_settings['regex']
                 if pattern == '':
@@ -277,6 +280,8 @@ def save_unrevisioned_records(asset, context, language, data_structures,
 
         # If the data structure is not optional and has no value use the default.
         if new_record_value in ["", {}, []] and not data_structure.optional:
+            if data_structure.advanced and not can_edit_advanced:
+                continue
             # If there is a default value use it. Otherwise don't fill it prevent it.
             if data_structure.default != "" and not records_exist:
                 # Gets the default value and will cast the default value
@@ -294,7 +299,7 @@ def save_unrevisioned_records(asset, context, language, data_structures,
                 latest_value == DataStructure.cast_value(data_structure, json.dumps(new_record_value)):
             continue
 
-        if data_structure.advanced and not (user.is_superuser or user.has_perm('cms.edit_advanced')):
+        if data_structure.advanced and not can_edit_advanced:
             upload_errors.append((data_structure_name, "You do not have permission to edit this field"))
             continue
 

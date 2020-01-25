@@ -31,6 +31,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
     localfilter: any = {};
     filterModel: any;
     params: any = {};
+    numFilters: number;
 
     layoutReady = new BehaviorSubject(false);
 
@@ -38,6 +39,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
     tableReadySubscription: SubscriptionLike;
     layoutReadySubscription: SubscriptionLike;
     mobileDetailMode: boolean;
+    desktopDetailMode: boolean;
     breakpoint: string;
 
     manifest: any;
@@ -106,6 +108,8 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
     }
 
     ngOnInit(): void {
+        this.numFilters = 4;
+
         this.params = this.route.snapshot.queryParams;
         this.menuService.setSection('alerts');
 
@@ -148,6 +152,8 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
                 this.mobileDetailMode = false;
             }
 
+            this.desktopDetailMode = this.activePanelEntity && this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.xl);
+
             this.setLayout();
         });
 
@@ -160,13 +166,6 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
 
     ngAfterViewInit() {
         this.setLayout();
-        if (this.elementSearch && this.elementTiles) {
-            setTimeout(() => {
-                this.elementSearchHeight = this.elementSearch.nativeElement.offsetHeight;
-                this.elementTilesHeight = this.elementTiles.nativeElement.offsetHeight;
-                this.containerDimensions = [this.elementTilesHeight, this.elementSearchHeight + 8 /*margin*/, 17 /*separator = 1px + padding*/];
-            });
-        }
     }
 
     trackItem(index, item) {
@@ -210,6 +209,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
                 {
                     id      : 'alertType',
                     label   : '',
+                    css     : 'col-12 col-lg-3 mr-0 mr-lg-2 p-0',
                     items   : alertItems,
                     selected: selected || alertItems[0]
                 });
@@ -237,6 +237,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
                 {
                     id      : 'deviceType',
                     label   : '',
+                    css     : 'col-12 col-lg-3 mr-0 mr-lg-2 p-0',
                     items   : typesItems,
                     selected: selected || typesItems[0]
                 });
@@ -262,7 +263,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
                 {
                     id      : 'server',
                     label   : '',
-                    css     : 'large',
+                    css     : 'col-12 col-lg-4 mr-0 mr-lg-2 p-0',
                     items   : serverItems,
                     selected: selected || serverItems[0]
                 });
@@ -373,6 +374,10 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
                 this.mobileDetailMode = true;
             }
 
+            if (this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.xl)) {
+                this.desktopDetailMode = true;
+            }
+
             this.setLayout();
 
         } else {
@@ -385,6 +390,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         this.activePanelEntity = undefined;
         this.activePanelParams = undefined;
         this.mobileDetailMode = false;
+        this.desktopDetailMode = false;
 
         this.setLayout();
 
@@ -402,6 +408,10 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
 
     private setLayout() {
         setTimeout(() => {
+            this.elementSearchHeight = this.elementSearch ? this.elementSearch.nativeElement.offsetHeight : 0;
+            this.elementTilesHeight = this.elementTiles ? this.elementTiles.nativeElement.offsetHeight : 0;
+            this.containerDimensions = [this.elementTilesHeight, this.elementSearchHeight, 17 /*separator = 1px + padding*/];
+
             if (this.elementTable && this.healthService.tableReady) {
                 const tableWidth = this.elementTable.nativeElement.querySelectorAll('table')[0].offsetWidth;
                 // area available

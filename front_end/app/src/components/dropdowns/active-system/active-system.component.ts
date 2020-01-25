@@ -44,7 +44,6 @@ export class NxActiveSystemDropdown extends BaseDropdown{
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        // this.updateActive();
         if (changes.activeSystem) {
             if (!('id' in changes.activeSystem.currentValue)) {
                 this.activeSystem = {id: '0'}; // Avoid JS timing error (in console)

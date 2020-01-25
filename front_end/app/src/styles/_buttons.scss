@@ -290,10 +290,6 @@ button, .btn {
 }
 
 .btn-text {
-    font-size       : 13px;
-    color           : $light16;
-    text-decoration : none;
-
     .nav-arrow {
         height       : 20px;
         float        : left;
@@ -311,6 +307,8 @@ button, .btn {
     }
 
     span {
+        @extend #regular13;
+        color : $light16 !important;
 
         &.close {
             left : 0;
@@ -324,18 +322,28 @@ button, .btn {
     }
 
     &:hover {
-        color           : $dark15;
-        text-decoration : none;
+        span {
+            color           : $dark15 !important;
+            text-decoration : none;
 
-        span.close {
-            &:before, &:after {
-                background-color : $dark15;
+            &.close {
+                &:before, &:after {
+                    background-color : $dark15;
+                }
             }
         }
     }
 
-    &:active, &:focus {
-        color : $light16;
+    &:active {
+        span {
+            color : $light16 !important;
+
+            &.close {
+                &:before, &:after {
+                    color : $light16 !important;
+                }
+            }
+        }
     }
 }
 

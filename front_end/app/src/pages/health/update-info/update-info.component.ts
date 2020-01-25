@@ -10,7 +10,6 @@ import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
     selector: 'nx-health-update',
     templateUrl: './update-info.component.html',
     styleUrls: ['update-info.component.scss'],
-    encapsulation: ViewEncapsulation.None
 })
 export class NxUpdateInfoComponent implements OnInit, OnDestroy {
     @Output() updateHealth = new EventEmitter();

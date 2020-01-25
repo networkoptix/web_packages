@@ -57,6 +57,7 @@ interface Params {
 
 export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccessor {
     @Input() layout: any;
+    @Input() layoutMod: any;    // mod for 'selectors' layout (HM is using 100% width width Bootstrap) ... at some point we should unify this BS
     @Input() placeholder: any;
     @Input() dataLoaded: boolean;
 

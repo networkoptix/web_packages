@@ -20,6 +20,7 @@ import { WINDOW }                                from '../../services/window-pro
 import { DOCUMENT }                              from '@angular/common';
 import { DomSanitizer }                          from '@angular/platform-browser';
 import { DeviceDetectorService }                 from 'ngx-device-detector';
+import { NxUriService }                          from '../../services/uri.service';
 
 @AutoUnsubscribe()
 @Component({
@@ -58,6 +59,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                 private serverApi: NxSystemAPIService,
                 private route: ActivatedRoute,
                 private router: Router,
+                private uriService: NxUriService,
                 private menuservice: NxMenuService,
                 private healthService: NxHealthService,
                 private languageService: NxLanguageProviderService,
@@ -102,6 +104,11 @@ export class NxHealthComponent implements OnInit, OnDestroy {
             this.menu = {...this.menu}; // trigger onChange
         });
 
+        const currentRoute = this.router.url;
+        if (currentRoute.endsWith('health')) {
+            this.uriService.updateURI(`${currentRoute}/alerts`, {}, true).then(() => {});
+        }
+
         this.route.params.subscribe((params: any) => {
             const systemId = params.systemId;
             // Promise holder so that if hm is in standalone mode its skips a systems getInfo call.
@@ -120,7 +127,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                         id: '',
                         info: {
                             capabilities: {
-                                mediaserver_metrics: true
+                                vms_metrics: true
                             }
                         },
                         mediaserver: undefined
@@ -332,7 +339,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                                 };
 
                                 if (typeof formattedVal.text === 'string') { // Should numbers should be searchable?
-                                    this.healthService.values[metric][entity].searchTags += formattedVal.text.replace(/-/g, '').toLowerCase() + ' ';
+                                    this.healthService.values[metric][entity].searchTags += formattedVal.text.toLowerCase() + ' ';
                                 }
                             }
                         });
@@ -378,7 +385,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
     getAlertText(metric, entity, message) {
         const resourceName = this.healthService.manifest[metric].resource;
         const entityName = this.healthService.findEntityName(this.healthService.values[metric][entity]);
-        if (resourceName && entityName !== '–') {
+        if (resourceName && entityName !== '−') {
             return `${resourceName} ${entityName} ${message}`;
         } else {
             return message;
@@ -418,7 +425,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
 
                             const resourceName = this.healthService.manifest[metric].resource;
                             const entityName = this.healthService.findEntityName(this.healthService.values[metric][entity]);
-                            if (resourceName && entityName !== '–') {
+                            if (resourceName && entityName !== '−') {
                                 alert._.message.text = this.getAlertText(metric, entity, alert._.message.text);
                             }
                             this.healthService.alertsValues.push(alert);

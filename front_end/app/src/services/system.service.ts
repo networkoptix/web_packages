@@ -165,7 +165,7 @@ class UserManager {
     }
 
     isOwner(user) {
-        return user.email === this.ownerEmail;
+        return user.email === this._ownerEmail;
     }
 
     checkPermissions() {

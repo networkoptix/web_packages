@@ -105,18 +105,17 @@ def context_editor_action(request, asset, context_id, language_code):
                                                             request_data, request_files, request.user)
 
         if 'SendReview' in request_data:
+            saved_msg = ""
             if upload_errors:
                 warning_no_error_msg = "Cannot have any errors when sending for review."
                 messages.warning(request, "{} - {}".format(asset.name, warning_no_error_msg))
+            elif not asset.is_dirty:
+                error_msg = "Cannot send for review no value was changed for this asset."
+                messages.warning(request, f"{asset.name} - {error_msg}")
             else:
-                # Asset errors only applies to assets with type integration
-                if not asset.is_dirty:
-                    error_msg = "Cannot send for review no value was changed for this asset."
-                    messages.warning(request, f"{asset.name} - {error_msg}")
-                else:
-                    asset_errors = modify_db.send_version_for_review(asset, request.user)
-                    asset.change_preview_status(asset.PREVIEW_STATUS.review)
-                    saved_msg += " A new version has been created."
+                asset_errors = modify_db.send_version_for_review(asset, request.user)
+                asset.change_preview_status(asset.PREVIEW_STATUS.review)
+                saved_msg += " A new version has been created."
 
         if upload_errors or asset_errors:
             add_upload_error_messages(request, "Upload error for {}. {}", upload_errors)
@@ -129,6 +128,7 @@ def context_editor_action(request, asset, context_id, language_code):
                         asset.change_preview_status(asset.PREVIEW_STATUS.draft)
                         preview_link = modify_db.generate_preview_link(context, asset, state=DRAFT)
                     else:
+                        saved_msg = ""
                         add_upload_error_messages(request, "{}", [
                             ("Cannot create preview for this asset no value was changed.", "")
                         ])
@@ -136,8 +136,8 @@ def context_editor_action(request, asset, context_id, language_code):
                     add_upload_error_messages(request, "{}", [
                         ("Cannot create preview for this asset on this portal.", "")
                     ])
-
-            messages.success(request, saved_msg)
+            if saved_msg:
+                messages.success(request, saved_msg)
 
     return preview_link, upload_errors, asset_errors
 
@@ -157,7 +157,8 @@ def page_editor(request):
 
     if 'SendReview' in request.POST and not context_errors and not asset_errors:
         customization_review = AssetCustomizationReview.objects.\
-            filter(version_id=ContentVersion.objects.filter(asset=asset).latest('created_date'))
+            filter(state=AssetCustomizationReview.REVIEW_STATES.pending,
+                   version_id=ContentVersion.objects.filter(asset=asset).latest('created_date'))
 
         # If the current customization is in the list of reviews go to that one.
         # Otherwise go to the first customization in the list of reviews.
@@ -166,8 +167,9 @@ def page_editor(request):
         else:
             customization_review = customization_review.first()
 
-        redirect_url = reverse('admin:cms_assetcustomizationreview_change', args=(customization_review.id,))
-        return redirect(redirect_url), []
+        if customization_review:
+            redirect_url = reverse('admin:cms_assetcustomizationreview_change', args=(customization_review.id,))
+            return redirect(redirect_url), []
 
     return preview_link, context_errors
 

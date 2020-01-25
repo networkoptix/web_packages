@@ -1,8 +1,8 @@
-import { NgModule }                          from '@angular/core';
+import { NgModule } from '@angular/core';
 import { CommonModule }                      from '@angular/common';
 import { BrowserModule }                     from '@angular/platform-browser';
 import { UpgradeModule } from '@angular/upgrade/static';
-import { RouterModule, Routes }              from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
@@ -32,7 +32,7 @@ const appRoutes: Routes = [
         path    : 'systems/:systemId/health', component: NxHealthComponent, canActivate: [AuthGuard, HMGuard],
         children : [
             {
-                path: '', redirectTo: 'alerts',
+                path: '', component: NxSystemAlertsComponent,
                 pathMatch: 'full'
             },
             {
