@@ -274,6 +274,7 @@ Log in more than 5 times
     Click Button    ${LOG IN BUTTON}
     Validate Log In
 
+
 User is logged out of browser after a password change in another browser
     [tags]    C41837
     Log In    ${email}    ${password}
@@ -326,4 +327,4 @@ Remember Me Checkbox
     Validate Log In
     Persist Current Login State    ${url}
     Validate Log Out
-    
+

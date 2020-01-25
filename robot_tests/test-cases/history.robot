@@ -121,6 +121,7 @@ Make sure expandable sections show options
     Wait Until Element Is Visible    ${PATCHES TAB}
     loop expanders
 
+
 should open downloads releases page in anonymous state
     [tags]    anonymous
     Open page anonymously    ${url}/downloads/releases    ${PRODUCT_NAME}

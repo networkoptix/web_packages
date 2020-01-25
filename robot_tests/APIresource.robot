@@ -92,4 +92,3 @@ Evaluate Auto System Settings via API
     ${systemSettings} =     Get Request    returnedSetting   /api/systemSettings   timeout=10
     ${string} =    Convert To String    ${systemSettings.json()}
     Should Contain    ${string}    ${setting}': '${selected}
-    

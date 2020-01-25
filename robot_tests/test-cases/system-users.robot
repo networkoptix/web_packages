@@ -37,7 +37,7 @@ Reset DB and Open New Browser On Failure
 
 Restart
     Common Restart Logout    ${url}
-    
+
 Share with Adminstrator
     [arguments]    ${random email}
     Wait Until Element is Visible    ${SHARE BUTTON SYSTEMS}
@@ -551,9 +551,9 @@ Disable enable User on Cloud Portal correctly affects the User on Cloud Portal
     # Step 2
     Log    Step 2
     Set Checkbox Value   ${DISABLE USER SWITCH}    false
-    Wait Until Elements Are Visible    ${ACCOUNT SAVE}   
+    Wait Until Elements Are Visible    ${ACCOUNT SAVE}
     Click Button    ${ACCOUNT SAVE}
-    Wait Until Element Is Visible    ${NO UNSAVED CHANGES}  
+    Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
     Check User Permissions    ${EMAIL NOT OWNER}    ${VIEWER TEXT}
     Element Text Should Be    ${USER DISABLED MSG}    ${USER DISABLED TEXT}
     # Step 3
@@ -562,24 +562,24 @@ Disable enable User on Cloud Portal correctly affects the User on Cloud Portal
     Go To    ${ENV}/systems
     Log In   ${EMAIL NOT OWNER}    ${BASE PASSWORD}    button=None
     Wait Until Location Is    ${ENV}/systems
-    Wait Until Element is Visible    ${YOU HAVE NO SYSTEMS} 
+    Wait Until Element is Visible    ${YOU HAVE NO SYSTEMS}
     # Step 4
     Log    Step 4
     Log Out
     Log in to Auto Tests System    ${email}
     Check User Permissions    ${EMAIL NOT OWNER}    ${VIEWER TEXT}
     Set Checkbox Value   ${DISABLE USER SWITCH}    true
-    Wait Until Elements Are Visible    ${ACCOUNT SAVE}  
-    Click Button    ${ACCOUNT SAVE} 
-    Wait Until Element Is Visible    ${NO UNSAVED CHANGES}  
+    Wait Until Elements Are Visible    ${ACCOUNT SAVE}
+    Click Button    ${ACCOUNT SAVE}
+    Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
     Check User Permissions    ${EMAIL NOT OWNER}    ${VIEWER TEXT}
     Page Should Not Contain Element   ${USER DISABLED MSG}
     # Step 5
     Log    Step 5
     Log Out
     Log in to Auto Tests System    ${EMAIL NOT OWNER}
-    Page Should Not Contain Element    ${YOU HAVE NO SYSTEMS}  
- 
+    Page Should Not Contain Element    ${YOU HAVE NO SYSTEMS}
+
 Administrator can add, disable and enable Viewer
     [tags]    C63391
     # Prep - create new user to be added to autotest system
@@ -591,7 +591,7 @@ Administrator can add, disable and enable Viewer
     # Step 1 & 2
     Log    Steps 1 & 2
     Log in to Auto Tests System    ${EMAIL ADMIN}
-    Share To    ${random email}   ${VIEWER TEXT} 
+    Share To    ${random email}   ${VIEWER TEXT}
     Select user in Users List    ${random email}
     # Step 3
     Log    Step 3
@@ -600,16 +600,16 @@ Administrator can add, disable and enable Viewer
     Log In    ${random email}    ${BASE PASSWORD}    button=None
     Validate Log In
     Page Should Not Contain Element    ${YOU HAVE NO SYSTEMS}
-    Wait Until Element Is Visible    ${YOUR ACCESS LEVEL}/span[contains(text(),'${VIEWER TEXT}')]  
+    Wait Until Element Is Visible    ${YOUR ACCESS LEVEL}/span[contains(text(),'${VIEWER TEXT}')]
     # Step 4
     Log     Step 4
     Log Out
     Log in to Auto Tests System    ${EMAIL ADMIN}
     Check User Permissions    ${random email}    ${VIEWER TEXT}
     Set Checkbox Value   ${DISABLE USER SWITCH}    false
-    Wait Until Elements Are Visible    ${ACCOUNT SAVE}   
+    Wait Until Elements Are Visible    ${ACCOUNT SAVE}
     Click Button    ${ACCOUNT SAVE}
-    Wait Until Element Is Visible    ${NO UNSAVED CHANGES} 
+    Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
     Check User Permissions    ${random email}    ${VIEWER TEXT}
     Element Text Should Be    ${USER DISABLED MSG}    ${USER DISABLED TEXT}
     # Step 5
@@ -619,16 +619,16 @@ Administrator can add, disable and enable Viewer
     Log In   ${random email}    ${BASE PASSWORD}    button=None
     Validate Log In
     Wait Until Location Is    ${ENV}/systems
-    Wait Until Element is Visible    ${YOU HAVE NO SYSTEMS} 
+    Wait Until Element is Visible    ${YOU HAVE NO SYSTEMS}
     # Step 6
     Log    Step 6
     Log Out
     Log in to Auto Tests System    ${EMAIL ADMIN}
     Check User Permissions    ${random email}    ${VIEWER TEXT}
     Set Checkbox Value   ${DISABLE USER SWITCH}    true
-    Wait Until Elements Are Visible    ${ACCOUNT SAVE}  
-    Click Button    ${ACCOUNT SAVE} 
-    Wait Until Element Is Visible    ${NO UNSAVED CHANGES}  
+    Wait Until Elements Are Visible    ${ACCOUNT SAVE}
+    Click Button    ${ACCOUNT SAVE}
+    Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
     Check User Permissions    ${random email}    ${VIEWER TEXT}
     Page Should Not Contain Element   ${USER DISABLED MSG}
     # Step 7
@@ -639,7 +639,7 @@ Administrator can add, disable and enable Viewer
     Validate Log In
     Page Should Not Contain Element    ${YOU HAVE NO SYSTEMS}
     Wait Until Element Is Visible    ${YOUR ACCESS LEVEL}/span[contains(text(),'${VIEWER TEXT}')]
-    
+
 Only Admin and Owner can access the share URL
     Log     Owner test
     Log in to Auto Tests System    ${EMAIL OWNER}
@@ -647,43 +647,42 @@ Only Admin and Owner can access the share URL
     Wait Until Elements are Visible    ${SHARE EMAIL}    ${SHARE BUTTON MODAL}
     Click Button    ${SHARE CANCEL}
     Log Out
-    
+
     Log     Admin test
     Log in to Auto Tests System    ${EMAIL ADMIN}
     Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}/share
     Wait Until Elements are Visible    ${SHARE EMAIL}    ${SHARE BUTTON MODAL}
     Click Button    ${SHARE CANCEL}
     Log Out
-    
+
     Log     Viewer test
     Log in to Auto Tests System    ${EMAIL VIEWER}
     Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}/share
     Check For Alert    ${NO PERMISSION TO SHARE TEXT}
     Log Out
-    
+
     Log     Custom test
     Log in to Auto Tests System    ${EMAIL CUSTOM}
     Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}/share
     Check For Alert    ${NO PERMISSION TO SHARE TEXT}
     Log Out
-    
+
     Log     Client Custom test
     Log in to Auto Tests System    ${EMAIL CLIENT CUSTOM}
     Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}/share
     Check For Alert    ${NO PERMISSION TO SHARE TEXT}
     Log Out
-    
+
     Log     Advanced Viewer test
-    Log in to Auto Tests System    ${EMAIL ADV VIEWER} 
+    Log in to Auto Tests System    ${EMAIL ADV VIEWER}
     Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}/share
     Check For Alert    ${NO PERMISSION TO SHARE TEXT}
     Log Out
-    
+
     Log     Live Viewer test
     Log in to Auto Tests System    ${EMAIL LIVE VIEWER}
     Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}/share
     Check For Alert    ${NO PERMISSION TO SHARE TEXT}
     Log Out
-    
 
-    
+
