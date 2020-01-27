@@ -74,6 +74,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         sessionLimitUnit: new Watcher<string>(),
     };
 
+    readonly watchersToNotSave: string[] = ['sessionLimitToggle', 'sessionLimitUnit'];
     readonly minutes: string = 'minutes';
     readonly hours: string = 'hours';
 
@@ -174,7 +175,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             const sw = this.settingsWatchers;
             const settings = Object.keys(sw);
             for (const setting of settings) {
-                if (setting === 'sessionLimitToggle' || setting === 'sessionLimitUnit') {
+                if (this.watchersToNotSave.includes(setting)) {
                     continue;
                 }
 
@@ -270,10 +271,10 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             });
     }
 
+    // removes watcher(s) if setting does not exist
     cleanUpWatchers(settings) {
-        // removes watcher(s) if setting does not exist
         Object.keys(this.settingsWatchers).forEach(sw => {
-            if (!(sw in settings) && !(sw === 'sessionLimitToggle' || sw === 'sessionLimitUnit')) {
+            if (!(sw in settings) && !this.watchersToNotSave.includes(sw)) {
                 delete this.settingsWatchers[sw];
             }
         });
@@ -284,31 +285,33 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         this.applyService.hardReset();
         const sw = this.settingsWatchers;
         Object.keys(sw).forEach(setting => {
-            let curr = settings[setting];
-            /**
-             * sets initial values for system & security settings
-             * sessionLimitMinutes is the only one that's a number & not a boolean,
-             * so it needs custom code to handle
-             */
-            if (isNaN(curr)) {
-                sw[setting].value = curr === 'true';
-            } else {
-                curr = parseInt(curr);
-                sw.sessionLimitToggle.value = Boolean(curr);
-                this.timeUnitCount = curr;
-                if (curr % 60 === 0) {
-                    this.timeUnitCount /= 60;
-                    sw.sessionLimitUnit.value = this.hours;
+            if (setting in settings) {
+                let curr = settings[setting];
+                /**
+                 * sets initial values for system & security settings
+                 * sessionLimitMinutes is the only one that's a number & not a boolean,
+                 * so it needs custom code to handle
+                 */
+                if (isNaN(curr)) {
+                    sw[setting].value = curr === 'true';
                 } else {
-                    sw.sessionLimitUnit.value = this.minutes;
-                }
+                    curr = parseInt(curr);
+                    sw.sessionLimitToggle.value = Boolean(curr);
+                    this.timeUnitCount = curr;
+                    if (curr % 60 === 0) {
+                        this.timeUnitCount /= 60;
+                        sw.sessionLimitUnit.value = this.hours;
+                    } else {
+                        sw.sessionLimitUnit.value = this.minutes;
+                    }
 
-                sw[setting].value = this.timeUnitCount || 0;
-                this.timeUnitCount = this.timeUnitCount || this.limitSessionTimeUnits[0].default;
-                this.selectedTimeUnit = this.limitSessionTimeUnits
-                                            .find(e => {
-                                                return e.value === sw.sessionLimitUnit.value;
-                                            });
+                    sw[setting].value = this.timeUnitCount || 0;
+                    this.timeUnitCount = this.timeUnitCount || this.limitSessionTimeUnits[0].default;
+                    this.selectedTimeUnit = this.limitSessionTimeUnits
+                                                .find(e => {
+                                                    return e.value === sw.sessionLimitUnit.value;
+                                                });
+                }
             }
         });
         this.settingsWatchersSet = true;
