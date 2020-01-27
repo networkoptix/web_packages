@@ -31,7 +31,7 @@ export class IpvdSearchService {
 
     ipvdSearch(camerasData, filter) {
         const query = filter.query.toLowerCase();
-        const queryTerms = query.trim().split(' ');
+        const queryTerms = query.trim().split(/[\s,\|]+/);
         const preferredVendors = '';
 
         function filterCamera(c, query) {

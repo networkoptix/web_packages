@@ -157,19 +157,15 @@ export class NxHealthService {
         let items: any = {};
 
         function filterItem(c, queryTerms) {
-            let result;
-
-            queryTerms.forEach(queryTerm => {
+            return queryTerms.every(queryTerm => {
                 if (queryTerm.indexOf('-') > -1) {
                     // If dash in query -> perform exact match
-                    result = (c.searchTags.includes(queryTerm));
+                    return (c.searchTags.includes(queryTerm));
                 } else {
                     // If no dash in query -> include results with and without dash
-                    result = (c.searchTags.replace(/-/g, '').includes(queryTerm));
+                    return (c.searchTags.replace(/-/g, '').includes(queryTerm));
                 }
             });
-
-            return result;
         }
 
         if (filter.query === '') {
