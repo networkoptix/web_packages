@@ -55,6 +55,7 @@
                 //white-space: normal;
 
                 .caption {
+                    @extend #medium13;
                     line-height : 1rem;
                     align-items : flex-end;
 
