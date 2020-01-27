@@ -345,6 +345,88 @@ class UserManager {
 }
 
 
+class ServerManager {
+    private mediaserver: any;
+    private systemApiService: any;
+    private currentUserEmail: string;
+    private systemId: string;
+    private cloudApi: any;
+    mediaserverConnections: any;
+    servers: NxSystemServer[];
+
+    constructor(mediaserver, systemApiService, currentUserEmail, systemId, cloudApi) {
+        this.mediaserver = mediaserver;
+        this.systemApiService = systemApiService;
+        this.currentUserEmail = currentUserEmail;
+        this.systemId = systemId;
+        this.cloudApi = cloudApi;
+    }
+
+    initSystemMediaServers() {
+        if (this.servers.length) {
+            this.mediaserverConnections = this.servers.reduce((mediaserverConnections, server) => {
+                mediaserverConnections[server.id] = this.systemApiService
+                    .createConnection(
+                        this.currentUserEmail,
+                        `${server.id.replace(/[{}]/g, '')}.${this.systemId}`, // a different way of proxying: serverId.systemId, 
+                        undefined,
+                        () => this.cloudApi.getSystemAuth(this.systemId).toPromise().then((authKeys: any) => {
+                            this.mediaserver.setAuthKeys(authKeys.authGet, authKeys.authPost, authKeys.authPlay);
+                            return Promise.resolve(true);
+                        }));
+                const { authGet, authPost, authPlay } = this.mediaserver;
+                mediaserverConnections[server.id].setAuthKeys(authGet, authPost, authPlay);
+                return mediaserverConnections;
+            }, {});
+            return Promise.resolve(this.mediaserverConnections);
+        }
+        return Promise.reject();
+    }
+
+    getServers() {
+        return this.mediaserver.getMediaServers().toPromise()
+            .then((result: any) => {
+                if (!result) {
+                    return Promise.reject(`Request to server has failed ${result}`);
+                }
+                this.servers = result;
+                return this.servers;
+            });
+    }
+
+    getModuleInfo(serverId) {
+        if (serverId) {
+            return this.mediaserverConnections[serverId].getModuleInfo();
+        } else {
+            return this.mediaserver.getModuleInfo();
+        }
+    }
+
+    changeServerPort(port, serverId) {
+        return this.mediaserverConnections[serverId].changePort(port)
+            .catch(err => Promise.reject(err));
+    }
+
+    renameServer(serverId, serverName) {
+        const cleanServerId = serverId.replace(/[{}]/g, '');
+        return this.mediaserverConnections[serverId].renameServer(cleanServerId, serverName);
+    }
+
+    restartServer(serverId) {
+        return this.mediaserverConnections[serverId].restartServer()
+            .catch(err => Promise.reject(err));
+    }
+
+    detachFromSystem(serverId, currentPassword) {
+        return this.mediaserverConnections[serverId].detachFromSystem(currentPassword);
+    }
+
+    restoreFactorySettings(serverId, currentPassword) {
+        return this.mediaserverConnections[serverId].restoreFactorySettings(currentPassword);
+    }
+}
+
+
 export class NxSystem extends System implements OnDestroy {
     private CONFIG: any;
     private LANG: any;
@@ -353,6 +435,7 @@ export class NxSystem extends System implements OnDestroy {
     private pollService: any;
     private systemsService: any;
     private userManager: UserManager;
+    private serverManager: ServerManager;
     private _subscribersCount = new BehaviorSubject<number>(0);
 
     activeSubscription: any;
@@ -431,6 +514,12 @@ export class NxSystem extends System implements OnDestroy {
     }
     // End of userManager get functions
 
+    // Start of serverManager functions
+    get servers() {
+        return this.serverManager.servers;
+    }
+    // End of serverManager functions
+
     constructor(CONFIG, LANG, cloudApi, systemApiService, pollService, systemsService, currentUserEmail, systemId?, serverId?) {
         super();
         this.CONFIG = CONFIG;
@@ -439,7 +528,6 @@ export class NxSystem extends System implements OnDestroy {
         this.systemApiService = systemApiService;
         this.pollService = pollService;
         this.systemsService = systemsService;
-        this.servers = [];
         this.lostConnection = false;
         this.initSystem(currentUserEmail, systemId, serverId);
         // this._subscribersCount.subscribe((subscribers) => {
@@ -465,7 +553,6 @@ export class NxSystem extends System implements OnDestroy {
 
     initSystem(currentUserEmail, systemId?, serverId?) {
         this.id = systemId || serverId;
-        this.servers = [];
         this.isAvailable = false;
         this.isOnline = false;
         this.currentServerNotBusy = true;
@@ -488,23 +575,13 @@ export class NxSystem extends System implements OnDestroy {
         this.updateSystemAuth(true).then(() => {});
         this.systemPoll = this.pollService.createPoll(this.update(), this.CONFIG.updateInterval);
         this.userManager = new UserManager(this.CONFIG, this.LANG, this.mediaserver, currentUserEmail);
-    }
-
-    initSystemMediaServers() {
-        if (this.servers.length) {
-            this.mediaserverConnections = this.servers.reduce((mediaserverConnections, server) => {
-                mediaserverConnections[server.id] = this.systemApiService.createConnection(
-                    this.currentUserEmail,
-                    `${server.id.replace(/[{}]/g, '')}.${this.id}`, // a different way of proxying: serverId.systemId
-                    undefined,
-                    () => this.updateSystemAuth(true));
-                const { authGet, authPost, authPlay } = this.mediaserver;
-                mediaserverConnections[server.id].setAuthKeys(authGet, authPost, authPlay);
-                return mediaserverConnections;
-            }, {});
-            return Promise.resolve(this.mediaserverConnections);
-        }
-        return Promise.reject();
+        this.serverManager = new ServerManager(
+            this.mediaserver,
+            this.systemApiService,
+            this.currentUserEmail,
+            this.id,
+            this.cloudApi,
+        );
     }
 
     updateSystemAuth(force?) {
@@ -622,16 +699,6 @@ export class NxSystem extends System implements OnDestroy {
         return this.cloudApi.unshare(this.id, this.currentUserEmail).toPromise();
     }
 
-    getServers() {
-        return this.mediaserver.getMediaServers().toPromise()
-            .then((result: any) => {
-                if (!result) {
-                    return Promise.reject(`Request to server has failed ${result}`);
-                }
-                this.servers = result;
-            });
-    }
-
     startPoll() {
         if (this.subscriberCount === 0) {
             if (this.mediaserver.authGet) {
@@ -671,7 +738,7 @@ export class NxSystem extends System implements OnDestroy {
                 .then(() => this.getServers())
                 .then(() => {
                     if (this.permissions.editUsers) {
-                        return from(this.getUsers(true))
+                        return from(this.getUsers(true));
                     }
                     return of('');
                 })
@@ -686,40 +753,41 @@ export class NxSystem extends System implements OnDestroy {
         return this.mediaserver.updateOrGetSettings(updateParams);
     }
 
+    initSystemMediaServers() {
+        return this.serverManager.initSystemMediaServers();
+    }
+
+    getServers() {
+        return this.serverManager.getServers();
+    }
+
     getModuleInfo(serverId?) {
-        if (serverId) {
-            return this.mediaserverConnections[serverId].getModuleInfo();
-        } else {
-            return this.mediaserver.getModuleInfo();
-        }
+        return this.serverManager.getModuleInfo(serverId);
     }
 
     changeServerPort(port, serverId) {
-        return this.mediaserverConnections[serverId].changePort(port)
-            .catch(err => Promise.reject(err));
+        return this.serverManager.changeServerPort(port, serverId);
     }
 
     renameServer(serverId, serverName) {
-        const cleanServerId = serverId.replace(/[{}]/g, '');
-        return this.mediaserverConnections[serverId].renameServer(cleanServerId, serverName)
+        return this.serverManager.renameServer(serverId, serverName)
             .then(() => this.update().toPromise())
             .catch(err => Promise.reject(err));
     }
 
     restartServer(serverId) {
         this.currentServerNotBusy = false;
-        return this.mediaserverConnections[serverId].restartServer()
-            .catch(err => Promise.reject(err));
+        return this.serverManager.restartServer(serverId);
     }
 
     detachFromSystem(serverId, currentPassword) {
         this.currentServerNotBusy = false;
-        return this.mediaserverConnections[serverId].detachFromSystem(currentPassword);
+        return this.serverManager.detachFromSystem(serverId, currentPassword);
     }
 
     restoreFactorySettings(serverId, currentPassword) {
         this.currentServerNotBusy = false;
-        return this.mediaserverConnections[serverId].restoreFactorySettings(currentPassword);
+        return this.serverManager.restoreFactorySettings(serverId, currentPassword);
     }
 }
 

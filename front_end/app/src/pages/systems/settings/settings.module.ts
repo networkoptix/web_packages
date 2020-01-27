@@ -19,7 +19,6 @@ import { NxSystemAdminComponent }    from './admin/admin.component';
 import { NxSystemUsersComponent }    from './users/users.component';
 import { NxSystemServersComponent }  from './servers/servers.component';
 import { NxNoSystemsComponent }      from '../no-systems/no-systems.component';
-import { AdminGuard }                from '../../../routeGuards/adminGuard';
 import { ApplyGuard }                from '../../../routeGuards/applyGuard';
 import { AuthGuard }                 from '../../../routeGuards/authGuard';
 import { UserGuard }                 from '../../../routeGuards/userGuard';
@@ -56,13 +55,11 @@ const appRoutes: Routes = [
                 path: 'servers',
                 component: NxSystemServersComponent,
                 canDeactivate: [ApplyGuard],
-                canActivate: [AdminGuard],
             },
             {
                 path: 'servers/:serverId',
                 component: NxSystemServersComponent,
                 canDeactivate: [ApplyGuard],
-                canActivate: [AdminGuard],
             }
         ]
     }

@@ -379,21 +379,23 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 this.content.level1.push(serversNode);
             }
 
-            const byParam = NxUtilsService.byParam((server) => {
-                return server.name;
-            }, NxUtilsService.sortASC);
-            this.system.servers.sort(byParam);
+            if (this.system.servers) {
+                const byParam = NxUtilsService.byParam((server) => {
+                    return server.name;
+                }, NxUtilsService.sortASC);
+                this.system.servers.sort(byParam);
 
-            serversNode.level3 = [];
-            this.system.servers.forEach(server => {
-                serversNode.level3.push({
-                    id: server.id,
-                    icon: '',
-                    label: server.name,
-                    path: `servers/${server.id}`,
-                    additionalLabel: server.url.split(':')[1].slice(2),
+                serversNode.level3 = [];
+                this.system.servers.forEach(server => {
+                    serversNode.level3.push({
+                        id: server.id,
+                        icon: '',
+                        label: server.name,
+                        path: `servers/${server.id}`,
+                        additionalLabel: server.url.split(':')[1].slice(2),
+                    });
                 });
-            });
+            }
         } else {
             this.content.level1 = this.content.level1.filter((node: any) => node.id !== this.CONFIG.systemMenu.servers.id);
         }

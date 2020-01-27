@@ -27,7 +27,6 @@ import { ServiceModule }     from './src/services/services.module';
 import { LayoutModule }      from '@angular/cdk/layout';
 import { WINDOWS_PROVIDERS } from './src/services/window-provider';
 import { initializeApp }     from './src/pages/push-notifications/push-notifications.module';
-import { AdminGuard }        from './src/routeGuards/adminGuard';
 import { AuthGuard }         from './src/routeGuards/authGuard';
 import { HMGuard }           from './src/routeGuards/hmGuard';
 import { UserGuard }         from './src/routeGuards/userGuard';
@@ -97,7 +96,6 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
             deps      : [NxConfigService],
             useFactory: initializeApp
         },
-        AdminGuard,
         AuthGuard,
         HMGuard,
         UserGuard,

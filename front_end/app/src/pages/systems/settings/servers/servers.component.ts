@@ -13,7 +13,8 @@ import { NxSystem }                  from '../../../../services/system.service';
 import { NxApplyService, Watcher }   from '../../../../services/apply.service';
 import { NxUriService }              from '../../../../services/uri.service';
 import { Subscription }              from 'rxjs';
-import { filter }                    from 'rxjs/operators';
+import { filter, throttleTime, map,
+    retryWhen, delay }               from 'rxjs/operators';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 
 @AutoUnsubscribe()
@@ -30,8 +31,6 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
     viewContainerRef: ViewContainerRef;
     serverIdFromParams: any;
     selectedServer: any;
-    mediaserverConnections: any;
-    checking: boolean;
 
     private serverSubscription: Subscription;
     private systemSubscription: Subscription;
@@ -55,7 +54,6 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
         this.detachDisabled = true;
         this.resetDisabled = true;
         this.portChangeDisabled = true;
-        this.checking = false;
         // this.debugMode = this.CONFIG.allowDebugMode;
         this.menuService.setSection('servers');
     }
@@ -99,23 +97,29 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                 if (this.serverSubscription) {
                     this.serverSubscription.unsubscribe();
                 }
-                this.serverSubscription = this.system.infoSubject.subscribe(() => {
-                    if (this.system.currentServerNotBusy && !this.checking) {
-                        this.checking = false;
-                        if (this.system && this.system.servers && this.system.servers.length) {
-                            this.system.initSystemMediaServers()
-                                .then(res => {
-                                    this.mediaserverConnections = res;
-                                });
-                        }
-                        if (!this.applyService.locked) {
-                            if (this.selectedServer) {
-                                this.setStatus('checking');
+                this.serverSubscription = this.system.infoSubject
+                    .pipe(
+                        map(system => {
+                            if (!system.servers || system.servers.length === 0) {
+                                throw system;
                             }
-                            this.setServer();
+                        }),
+                        retryWhen(err => err.pipe(delay(1000))),
+                        throttleTime(5000)
+                    )
+                    .subscribe(() => {
+                        if (this.system.currentServerNotBusy) {
+                            if (this.system && this.system.servers && this.system.servers.length) {
+                                this.system.initSystemMediaServers();
+                            }
+                            if (!this.applyService.locked) {
+                                if (this.selectedServer) {
+                                    this.setStatus('checking');
+                                }
+                                this.setServer();
+                            }
                         }
-                    }
-                });
+                    });
             });
 
         this.initForApplyService();
@@ -130,7 +134,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {}
 
     setServer(): void {
-        if (this.system && this.system.servers.length > 0) {
+        if (this.system && this.system.servers && this.system.servers.length > 0) {
             let server;
             if (this.serverIdFromParams) {
                 server = this.system.servers.find((server: any) => {
@@ -192,13 +196,9 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
     }
 
     checkIfOnline(serverId) {
-        if (!this.checking) {
-            this.checking = true;
-            setTimeout(() => this.checking = false, 5000);
-            return this.system.getModuleInfo(serverId).toPromise()
-                .then(() => this.setStatus('online'))
-                .catch(() => this.setStatus('offline'));
-        }
+        return this.system.getModuleInfo(serverId).toPromise()
+            .then(() => this.setStatus('online'))
+            .catch(() => this.setStatus('offline'));
     }
 
     renameServer() {
