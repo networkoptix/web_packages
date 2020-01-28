@@ -232,12 +232,12 @@ Restore password
     Close Browser
 
 Restore Password using API
-    [Arguments]    ${email}
+    [Arguments]    ${email}    ${new password}
     CloudPortalAPI.Restore Password    ${ENV}    ${email}    None    None
-    ${link}=   Get Email Link    ${email}    restore_password
-    ${code}=   Get Code From Email Link    ${link}
-    CloudPortalAPI.Restore Password    ${ENV}    ${email}    ${code}   ${BASE PASSWORD}
-    CloudPortalAPI.Log In    ${ENV}    ${email}    ${BASE PASSWORD}
+    @{auth}=   Create List   ${EMAIL OWNER}    ${BASE PASSWORD}
+    ${code}=   Get Code From Email    ${ENV}    ${auth}    ${email}    restore_password
+    ${resp}=   CloudPortalAPI.Restore Password    ${ENV}    ${email}    ${code}   ${new password}
+    CloudPortalAPI.Log In    ${ENV}    ${email}    ${new password}
 
 Go to Users List
     ${location}=   Get Location
