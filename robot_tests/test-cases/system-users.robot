@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 *** Settings ***
 Resource          ../resource.robot
 Suite Setup       Open Browser and go to URL    ${url}
@@ -687,7 +686,6 @@ Only Admin and Owner can access the share URL
     Log Out
 
 
-=======
 *** Settings ***
 Resource          ../resource.robot
 Suite Setup       Open Browser and go to URL    ${url}
@@ -1374,4 +1372,3 @@ Only Admin and Owner can access the share URL
     Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}/share
     Check For Alert    ${NO PERMISSION TO SHARE TEXT}
     Log Out
->>>>>>> Stashed changes
