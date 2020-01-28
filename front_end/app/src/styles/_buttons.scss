@@ -292,6 +292,8 @@ button, .btn {
 }
 
 .btn-text {
+    text-decoration: none;
+
     .nav-arrow {
         height       : 20px;
         float        : left;
@@ -324,6 +326,8 @@ button, .btn {
     }
 
     &:hover {
+        text-decoration : none;
+
         span {
             color           : $dark15 !important;
             text-decoration : none;
