@@ -3,13 +3,13 @@
     'use strict';
 
     angular.module('nxCommon').controller('ViewCtrl',
-        ['$scope', '$rootScope', '$location', '$routeParams', 'cameraRecords', 'chromeCast', '$q',
+        ['$scope', '$rootScope', '$location', '$routeParams', 'cameraRecords', '$q',
             'camerasProvider', '$sessionStorage', '$localStorage', '$timeout', 'systemAPI', 'voiceControl',
-            'nxDialogsService', 'nxConfigService', 'nxLanguageService', 'nxHeaderService',
+            'nxDialogsService', 'nxConfigService', 'nxLanguageService',
 
-            function ($scope, $rootScope, $location, $routeParams, cameraRecords, chromeCast, $q,
+            function ($scope, $rootScope, $location, $routeParams, cameraRecords, $q,
                       camerasProvider, $sessionStorage, $localStorage, $timeout, systemAPI, voiceControl,
-                      nxDialogsService, nxConfigService, nxLanguageService, nxHeaderService) {
+                      nxDialogsService, nxConfigService, nxLanguageService) { // chromeCast
 
                 const CONFIG = nxConfigService.getConfig();
                 const LANG = nxLanguageService.getTranslations();
@@ -65,13 +65,14 @@
 
                 setCameraComponentsVisibility();
 
-                var castAlert = false;
-                $scope.showWarning = function () {
-                    if (!castAlert) {
-                        alert(LANG.common.chromeCastWarning);
-                        castAlert = true;
-                    }
-                };
+                // CLOUD-4344 **********************************
+                // var castAlert = false;
+                // $scope.showWarning = function () {
+                //     if (!castAlert) {
+                //         alert(LANG.common.chromeCastWarning);
+                //         castAlert = true;
+                //     }
+                // };
 
                 $scope.positionProvider = null;
                 $scope.activeVideoRecords = null;
@@ -286,13 +287,14 @@
                             : systemAPI.hlsUrl(cameraId, !live && playingPositionServer, resolutionHls);
                         streamInfo.title = $scope.activeCamera.name;
 
-                        if (cameraSupports(streamType) || $scope.debugMode) {
-                            $scope.showCastButton = true;
-                            chromeCast.load(streamInfo, streamType);
-                        }
-                        else {
-                            $scope.showCastButton = false;
-                        }
+                        // CLOUD-4344 ********************************************
+                        // if (cameraSupports(streamType) || $scope.debugMode) {
+                        //     $scope.showCastButton = true;
+                        //     chromeCast.load(streamInfo, streamType);
+                        // }
+                        // else {
+                        //     $scope.showCastButton = false;
+                        // }
                     }
                 }
 
@@ -438,13 +440,7 @@
                 };
 
                 var fullElement = document.getElementById('fullscreen-area');
-
-                angular.element(fullElement).on('dblclick', function (event) {
-                    screenfull.toggle(fullElement);
-                });
-
-                $scope.enableFullScreen = screenfull.enabled;
-                var fullElement = $('.fullscreen-area').get(0);
+                $scope.enableFullScreen = screenfull.isEnabled;
 
                 angular.element(fullElement).on('dblclick', function (event) {
                     screenfull.toggle(fullElement);
@@ -452,7 +448,7 @@
 
                 $scope.fullScreen = function () {
                     $scope.showSettings = false;
-                    if (screenfull.enabled) {
+                    if (screenfull.isEnabled) {
                         screenfull.request(fullElement);
                     }
                 };
