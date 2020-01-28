@@ -1,8 +1,5 @@
 import requests
-from selenium import webdriver
 
-
-env = 'https://cloud-test.hdw.mx'
 
 class CloudPortalAPI(object):
 
@@ -14,7 +11,6 @@ class CloudPortalAPI(object):
             }
             login_session.post(env + '/api/account/login', login_data)
             return login_session
-
 
     # TODO implement logging out using API where appropriate
     def log_out(self, env, session_id, csrftoken):
@@ -82,10 +78,13 @@ class CloudPortalAPI(object):
             disconnect_session.close()
             return resp.status_code
 
-# main() is here only for testing the methods of the class and does not affect keywords usage
-if __name__ == "__main__":
-    cp = CloudPortalAPI()
-    print(cp.get_language_anonymous(env))
-    s = cp.log_in(env, 'qaburbank@gmail.com', 'QWEasd!@#')
-    print(s)
-    print(cp.log_out(env, s.cookies['sessionid']))
+    def get_code_from_email(self, auth, email, message_type):
+        with requests.Session() as s:
+            resp = s.post(f'{ENV}/api/account/login', json={'email': auth[0], 'password': auth[1]})
+            assert resp.status_code == 200, 'Cannot Log In'
+
+            s.headers.update({'X-CSRFToken': s.cookies['csrftoken']})
+            resp = s.post(f'{ENV}/api/robot/get_code', json={'email': email, 'type': message_type})
+
+            s.close()
+            return resp.json()['code']
