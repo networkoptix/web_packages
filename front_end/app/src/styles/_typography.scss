@@ -8,7 +8,7 @@
         font-size: $size;
     }
     @if $colour {
-        color: $colour;
+        color: $colour default;
     }
     @if $weight {
         font-weight: $weight;

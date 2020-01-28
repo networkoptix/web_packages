@@ -200,10 +200,12 @@ button, .btn {
     max-width        : none;
 
     &:hover {
+        color            : $light16;
         background-color : $light5;
     }
 
     &:active {
+        color            : $light16;
         background-color : $light6;
     }
 }
