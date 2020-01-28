@@ -17,6 +17,14 @@ Bind System
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()}
 
+Unbind System
+    [Arguments]    ${auth}    ${cloud url}    ${system id}
+    &{data}=    Create Dictionary    systemId=${system id}
+    Create Digest Session    unbind session    ${cloud url}    auth=${auth}    disable_warnings=1
+    ${resp}=    Post Request    unbind session    /cdb/system/unbind    json=${data}
+    Should Be Equal As Strings    ${resp.status_code}    200
+    Return From Keyword    ${resp.json()}
+
 Setup Cloud System
     [Arguments]    ${auth}    ${server url}    ${auth key}    ${name}    ${id}    ${owner email}
     &{data}=    Create Dictionary    cloudAuthKey=${auth key}    systemName=${name}    cloudSystemID=${id}    cloudAccountName=${owner email}

@@ -1,6 +1,8 @@
 *** Settings ***
 Resource          ../resource.robot
 Resource          ../APIresource.robot
+Library           ../NoptixLibrary/
+
 Suite Setup       Startup
 Test Setup        Restart
 Test Teardown     Run Keyword If Test Failed    reset state
@@ -173,6 +175,7 @@ Reset state
     Prune Containers
     Close Browser
     Open Browser and go to URL    ${url}
+    @{auth}=   Create List    ${EMAIL MERGE OWNER 1}    ${password}
     Log In    ${EMAIL MERGE OWNER 1}    ${password}
     Validate Log In
     ${state}    Run Keyword And Ignore Error    Element Should Be Visible    ${YOU HAVE NO SYSTEMS}
@@ -206,9 +209,9 @@ Reset state
 Wrong and empty password
     [tags]    C54685
     ${user}    Set Variable    ${EMAIL MERGE OWNER 2}
-    ${auth}=    Create List    ${user}    ${password}
-    Create system and attach to cloud    ${user}    ${image}    7001    API made system 1
-    Create system and attach to cloud    ${user}    ${image}    7003    API made system 2
+    @{auth}=    Create List    ${user}    ${password}
+    ${api made system 1 id}=   Create system and attach to cloud    ${user}    ${image}    7001    API made system 1
+    ${api made system 2 id}=   Create system and attach to cloud    ${user}    ${image}    7003    API made system 2
     log in    ${user}    ${password}
     Validate Log in
     Wait Until Element Is Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
@@ -241,8 +244,11 @@ Wrong and empty password
     Click Button    ${MERGE BUTTON MODAL}
     Wait Until Element Is Visible    ${MERGE PASSWORD INCORRECT}
     Press Keys    ${MERGE BUTTON MODAL}    ESCAPE
-    Disconnect from cloud
-    Disconnect from cloud
+#    Disconnect from cloud
+#    Disconnect from cloud
+    Unbind System    ${auth}   ${url}    ${api made system 1 id}
+    Unbind System    ${auth}   ${url}    ${api made system 2 id}
+
 
 Only one system connected to Cloud Account
     ${user}    Set Variable    ${EMAIL MERGE OWNER 1}
