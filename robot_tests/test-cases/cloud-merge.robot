@@ -282,8 +282,10 @@ Only one system connected to Cloud Account
     Go to Users List
     Wait Until Element Is Enabled    ${SHARE BUTTON SYSTEMS}    180
     Share To    ${EMAIL MERGE OWNER 2}    ${ADMIN TEXT}
+    Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
     ${email}    Wait For Email    recipient=${EMAIL MERGE OWNER 2}    timeout=120    status=UNSEEN
     Delete Email    ${email}
+    Close Mailbox
     Log Out
     Log In    ${EMAIL MERGE OWNER 2}    ${password}
     Validate Log In
