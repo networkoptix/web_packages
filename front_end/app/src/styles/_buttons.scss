@@ -193,7 +193,7 @@ button, .btn {
 
 .btn-tag {
     @extend #regular13;
-    color            : $light16;
+    color            : $light16 !important;
     font-weight      : 400;
     white-space      : nowrap;
     background-color : $light4;
