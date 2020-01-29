@@ -18,13 +18,13 @@
         </div>
         <br>
         <div *ngIf="mergeTargetSystem.name">
-            <div>This system is being merged to
+            <div><span translate>This system is being merged to</span>&nbsp;
                 <strong>{{mergeTargetSystem.name}}</strong></div>
             <hr />
             <div class="merge-info-text light-text">
                 <p translate>Depending of the size of the database it may take up to several hours.</p>
                 <p translate>Until merge is finished you can log in to this system and watch video, but cannot change any settings.</p>
-                <p [innerHTML]=" 'WHEN_MERGE_FINISHES' | translate: { targetSystemName: mergeTargetSystem.name }"></p>
+                <p [innerHTML]="'system.MERGE_FINISHES' | translate: { targetSystemName: mergeTargetSystem.name }"></p>
             </div>
         </div>
         <div *ngIf="!mergeTargetSystem.name" translate="">Finishing systems merge</div>

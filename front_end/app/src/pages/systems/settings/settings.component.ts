@@ -143,7 +143,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 {
                     id: this.CONFIG.systemMenu.admin.id,
                     icon: this.CONFIG.systemMenu.admin.icon,
-                    label: this.LANG.systemAdministration,
+                    label: this.LANG.menu.titles.systemAdministration,
                     path: this.CONFIG.systemMenu.admin.path,
                 }
             ]
@@ -187,10 +187,10 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 return;
             }
             if (!this.system.isOnline) {
-                return this.toastService.show(this.LANG.system.shareOffline, toastOptions);
+                return this.toastService.show(this.LANG.toastMessage.system.share.offline, toastOptions);
             }
             if (!this.system.permissions.editUsers) {
-                return this.toastService.show(this.LANG.system.shareUnauthorized, toastOptions);
+                return this.toastService.show(this.LANG.toastMessage.system.share.unauthorized, toastOptions);
             }
             this.settingsService.addUser().finally(() => this.cleanUrl());
         });
@@ -282,7 +282,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
     updateAlert() {
         if (!this.system.isOnline) {
-            this.ribbonService.show(this.LANG.system.offlineAlertRibbon, '', '', 'alert');
+            this.ribbonService.show(this.LANG.ribbon.systemOffline, '', '', 'alert');
         } else {
             this.ribbonService.hide();
         }
@@ -302,7 +302,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 usersNode = {
                     id: this.CONFIG.systemMenu.users.id,
                     icon: this.CONFIG.systemMenu.users.icon,
-                    label: this.LANG.users.userMenuTitle,
+                    label: this.LANG.menu.titles.users,
                     path: this.CONFIG.systemMenu.users.path,
                     level2: [
                         {

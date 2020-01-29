@@ -89,7 +89,7 @@ export class MessageModalContent implements OnInit {
     initForm() {
         this.placeholder = '';
         if (this.messageType === this.config.messageType.ipvd_page) {
-            this.placeholder = this.LANG.messageDialogPlaceholders.feedback;
+            this.placeholder = this.LANG.dialogs.message.placeholders.feedback;
         }
 
         const title = this.LANG.dialogs.message.title[this.messageType];

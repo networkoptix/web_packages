@@ -538,10 +538,10 @@ export class NxSystem extends System implements OnDestroy {
     private updateSystemState() {
         this.stateMessage = '';
         if (!this.isAvailable) {
-            this.stateMessage = this.LANG.system.unavailable;
+            this.stateMessage = this.LANG.system.status.unavailable;
         }
         if (!this.isOnline) {
-            this.stateMessage = this.LANG.system.offline;
+            this.stateMessage = this.LANG.system.status.offline;
         }
     }
 

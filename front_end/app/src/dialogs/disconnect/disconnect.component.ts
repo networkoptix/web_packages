@@ -53,7 +53,7 @@ export class DisconnectModalContent {
                     this.renderer.selectRootElement('#password').focus();
                 },
             },
-            successMessage: this.LANG.system.successDisconnected,
+            successMessage: this.LANG.toastMessage.system.disconnected.success,
             errorPrefix: this.LANG.errorCodes.cantDisconnectSystemPrefix
         }).then(() => {
             this.activeModal.close(true);

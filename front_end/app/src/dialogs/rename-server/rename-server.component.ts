@@ -27,7 +27,7 @@ export class RenameServerModalContent {
     ngOnInit() {
         this.renameServer = this.processService
             .createProcess(() => this.system.renameServer(this.serverId, this.serverName),
-                { successMessage: this.LANG.servers.successRename })
+                { successMessage: this.LANG.toastMessage.system.rename.success })
             .then(() => this.activeModal.close());
     }
 

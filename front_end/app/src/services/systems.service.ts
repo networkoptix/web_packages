@@ -44,7 +44,7 @@ export class NxSystemsService implements OnDestroy {
                     classname: this.CONFIG.toast.success,
                     delay: this.CONFIG.alertTimeout
                 };
-            this.toastService.show(this.LANG.system.mergeSuccess, options);
+            this.toastService.show(this.LANG.toastMessage.system.merge.success, options);
         }
     }
 

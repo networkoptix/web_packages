@@ -256,7 +256,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                     this.deletingSystem = this.processService.createProcess(() => {
                         return this.system.deleteFromCurrentAccount();
                     }, {
-                        successMessage: this.LANG.system.successDeleted.replace('{{systemName}}', this.system.info.name),
+                        successMessage: this.LANG.toastMessage.system.deleted.success.replace('{{systemName}}', this.system.info.name),
                         errorPrefix   : this.LANG.errorCodes.cantUnshareWithMeSystemPrefix
                     }).then(() => {
                         this.updateAndGoToSystems();
@@ -340,11 +340,11 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     delete() {
         if (!this.system.isMine) {
             // User is not owner. Deleting means he'll lose access to it
-            this.dialogs.confirm(this.LANG.system.confirmUnshareFromMe,
-                                 this.LANG.system.confirmUnshareFromMeTitle,
-                                 this.LANG.system.confirmUnshareFromMeAction,
+            this.dialogs.confirm(this.LANG.dialogs.removeSystem.message,
+                                 this.LANG.dialogs.removeSystem.title,
+                                 this.LANG.dialogs.removeSystem.action,
                                  'btn-danger',
-                                 this.LANG.dialogs.cancelButton)
+                                 this.LANG.dialogs.buttons.cancel)
                 .then((result) => {
                     if (result === true) {
                         return this.deletingSystem.run();
@@ -401,7 +401,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                        this.dialogs.confirm(
                                dialogBody,
                                this.LANG.dialogs.merge.mergeFailedTitle,
-                               this.LANG.dialogs.okButton,
+                               this.LANG.dialogs.buttons.ok,
                                'btn-primary',
                                undefined).then(() => {});
                    }).finally(() => {

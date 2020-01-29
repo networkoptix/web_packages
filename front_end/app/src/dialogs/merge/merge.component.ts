@@ -91,10 +91,10 @@ export class MergeModalContent {
         }, {
             errorCodes: {
                 mergedSystemIsOffline: () => {
-                    return this.LANG.system.mergeFailed;
+                    return this.LANG.toastMessages.system.merge.failed;
                 },
                 vmsRequestFailure: () => {
-                    return this.LANG.system.mergeFailed;
+                    return this.LANG.toastMessages.system.merge.failed;
                 },
                 missingPassword: () => {
                     this.mergeForm.controls.mergePassword.setErrors({ required: true });
@@ -108,7 +108,7 @@ export class MergeModalContent {
                     this.renderer.selectRootElement('#mergePassword').focus();
                 },
             },
-            successMessage: this.LANG.system.mergeStart
+            successMessage: this.LANG.toastMessage.system.merge.start
         }).then(() => {
             this.systemsService.forceUpdateSystems();
             this.activeModal.close({

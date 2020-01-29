@@ -328,15 +328,15 @@ export class NxAccountService implements OnDestroy {
 
                 let cancelLabel = '';
                 if (isRegister) {
-                    cancelLabel = this.LANG.dialogs.createNewAccount;
+                    cancelLabel = this.LANG.dialogs.buttons.createAccount;
                 } else if (isRestore) {
-                    cancelLabel = this.LANG.dialogs.logoutAuthorisedLogoutButton;
+                    cancelLabel = this.LANG.dialogs.buttons.logoutAuthorised;
                 } else {
-                    cancelLabel = this.LANG.dialogs.cancelButton;
+                    cancelLabel = this.LANG.dialogs.buttons.cancel;
                 }
                 return this.dialogs.confirm('',
-                        this.LANG.dialogs.changeAccountLogged.replace('{email}', account.email),
-                        this.LANG.dialogs.stayLoggedIn,
+                        this.LANG.dialogs.titles.changeAccount.replace('{email}', account.email),
+                        this.LANG.dialogs.buttons.stayLoggedIn,
                         undefined,
                         cancelLabel,
                     ''
@@ -380,10 +380,10 @@ export class NxAccountService implements OnDestroy {
 
                     const response = await this.dialogs
                                                .confirm('',
-                                                       this.LANG.dialogs.loggedFromOther,
-                                                       this.LANG.dialogs.okButton,
+                                                       this.LANG.dialogs.title.loggedFromOtherAccount,
+                                                       this.LANG.dialogs.buttons.ok,
                                                        undefined,
-                                                       this.LANG.dialogs.stayAs.replace('{email}', account.email),
+                                                       this.LANG.dialogs.buttons.stayAs.replace('{email}', account.email),
                                                        'long-cancel-button');
                     if (response === true) {
                         return this.cloudApi

@@ -1,7 +1,6 @@
 <form #resetServerForm="ngForm" name="resetServerForm" novalidate>
     <div class="modal-header">
-        <h1 class="modal-title" 
-            [translate]="'serversResetTitle'"
+        <h1 class="modal-title" [translate]="'dialogs.titles.serversReset'"
             [translateParams]="{ title: serverName }"></h1>
         <button type="button" class="close"
                 data-dismiss="modal" aria-label="Close"
@@ -13,11 +12,12 @@
     <div class="modal-body">
         <div class="form-group">
             <div class="modal-paragraph">
-                <p>{{LANG.servers.resetServerBody.line1}}</p>
-                <p>{{LANG.servers.resetServerBody.line2}}</p>
-                <p>{{LANG.servers.resetServerBody.line3}}</p>
-                <br>
-                <p>{{LANG.servers.resetServerBody.line4}}</p>
+                <span translate>All settings for this server will be reverted to factory default settings,
+                    and it will be detached from this system into a new one.
+                    <br>
+                    Video archive will remain intact.
+                    <br><br>
+                    Enter password for your account to continue.</span>
             </div>
             <input class="form-control"
                    [(ngModel)]="password"

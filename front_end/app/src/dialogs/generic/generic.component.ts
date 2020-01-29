@@ -91,9 +91,9 @@ export class NxModalGenericComponent implements OnInit {
 
     openAlert(message, title, footerClass?) {
         return this.dialog(message, title,
-            this.LANG.dialogs.okButton,
+            this.LANG.dialogs.buttons.ok,
             null,
-            this.LANG.dialogs.cancelButton,
+            this.LANG.dialogs.buttons.cancel,
             footerClass,
             true,
             true,

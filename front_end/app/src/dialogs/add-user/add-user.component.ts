@@ -142,7 +142,7 @@ export class AddUserModalContent {
                         this.LANG.dialogs.sharing.shareTitle,
                         this.LANG.dialogs.sharing.shareConfirmButton,
                         undefined,
-                        this.LANG.dialogs.cancelButton)
+                        this.LANG.dialogs.buttons.cancel)
                     .then((result) => {
                         if (result) {
                             return this.doShare();

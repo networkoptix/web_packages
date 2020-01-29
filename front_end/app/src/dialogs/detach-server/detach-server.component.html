@@ -1,7 +1,6 @@
 <form #detachServerForm="ngForm" name="detachServerForm" novalidate>
     <div class="modal-header">
-        <h1 class="modal-title" 
-            [translate]="'serversDetachTitle'"
+        <h1 class="modal-title" [translate]="'dialogs.titles.serversDetach'"
             [translateParams]="{ title: serverName }"
         ></h1>
         <button type="button" class="close"
@@ -14,12 +13,12 @@
     <div class="modal-body">
         <div class="form-group">
             <div class="modal-paragraph">
-                <p>{{LANG.servers.detachServerBody.line1}}</p>
-                <p>{{LANG.servers.detachServerBody.line2}}</p>
-                <p>{{LANG.servers.detachServerBody.line3}}</p>
-                <p>{{LANG.servers.detachServerBody.line4}}</p>
-                <br>
-                <p>{{LANG.servers.detachServerBody.line5}}</p>
+                <span translate>The server will be detached from this system into a new one.
+                    Database, local users, configuration, and video archive will remain intact
+                    <br>
+                    Cloud users will not be transferred to the new system.
+                    <br><br>
+                    Enter password for your account to continue.</span>
             </div>
             <input class="form-control"
                    [(ngModel)]="password"

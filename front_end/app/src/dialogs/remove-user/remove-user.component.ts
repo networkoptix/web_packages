@@ -37,7 +37,7 @@ export class RemoveUserModalContent {
                 return this.system.getUsers(true);
             });
         }, {
-            successMessage: this.LANG.system.permissionsRemoved.replace('{{email}}', this.user ? this.user.email : ''),
+            successMessage: this.LANG.toastMessage.system.permissionsRemoved.replace('{{email}}', this.user ? this.user.email : ''),
             errorPrefix   : this.LANG.errorCodes.cantSharePrefix
         }).then(() => {
             this.activeModal.close(true);

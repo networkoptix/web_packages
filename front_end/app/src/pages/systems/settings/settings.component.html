@@ -21,7 +21,7 @@
 </ng-container>
 <div *ngIf="systemNoAccess" class="text-center pt-3">
         <h1 class="d-flex justify-content-center" translate>Failed to access System</h1>
-        <h3 class="d-flex justify-content-center" [innerHTML]="'FAILED_SYSTEM_DESCR' | translate"></h3>
+        <h3 class="d-flex justify-content-center" translate>This link is broken,<br>System may be disconnected from %CLOUD_NAME%,<br>Access to this System may be revoked, <br>or you may be logged into a different account.</h3>
         <p class="mt-4 d-flex justify-content-center">
             <a routerLink="/systems" class="btn btn-primary" translate>Available Systems list</a>
         </p>

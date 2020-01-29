@@ -8,7 +8,7 @@
     <nx-section>
         <div class="mb-2"
              *ngIf="vendors.length !== allVendors.length"
-             [translate]="'topXByVolume'"
+             [translate]="'ipvd.topXByVolume'"
              [translateParams]="{value: CONFIG.ipvd.vendorsShown}">
         </div>
         <div class="float-left mr-1 mb-1" *ngFor="let vendor of vendors; trackBy: trackItem">

@@ -203,7 +203,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             this.selectedUser = {... user};
 
             this.deleteMessage = this.selectedUser.isCloud ?
-                this.LANG.users.cloudDeleteMessage : this.LANG.users.localDeleteMessage;
+                this.LANG.system.users.cloudDelete : this.LANG.system.users.localDelete;
 
             this.menuService.setDetailsSection(this.selectedUser.id.replace(/{|}/g, ''));
             // watchers set
