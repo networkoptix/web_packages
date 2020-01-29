@@ -13,8 +13,8 @@
                                (ngModelChange)="updateEnabled($event);"
                     ></nx-switch>
                 </div>
-                <h2 class="user-email" [ngClass]="{'mb-2': selectedUser.fullName }">{{selectedUser.email || selectedUser.name}}</h2>
-                <span *ngIf="selectedUser.fullName" class="user-name">{{selectedUser.fullName}}</span>
+                <h2 class="user-email" [ngClass]="{'mb-2': selectedUser.isCloud }">{{ selectedUser.isCloud ? selectedUser.email : selectedUser.name }}</h2>
+                <span *ngIf="selectedUser.isCloud" class="user-name">{{selectedUser.fullName}}</span>
             </header>
 
             <nx-section>
