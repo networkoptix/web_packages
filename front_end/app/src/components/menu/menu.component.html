@@ -34,10 +34,7 @@
         </div>
 
         <div class="level-3-items" *ngIf="selectedLevel1 == item.id && item.level3" 
-            [ngClass]="{
-                'min-height-level-3': item.level3 && item.level3.length > 4,
-                'sub-level-level-3': subLevelButtonsFor(item).length
-            }">
+            [ngClass]="{ 'min-height-level-3': item.level3 && item.level3.length > 4 }">
             <div class="top-shadow"></div>
             <div class="scroll-area">
                 <div *ngFor="let details of item.level3; last as isLast; first as isFirst; trackBy: trackItem">

@@ -32,14 +32,8 @@
         min-height: 120px !important;
     }
 
-    // adjusts for if the user button (or 1 button) exists in the menu
-    .sub-level-level-3 {
-        max-height: calc(100vh - 225px) !important;
-    }
-
     .level-3-items {
         min-height: fit-content;
-        max-height: calc(100vh - 200px);
         overflow-y: auto;
 
         .top-shadow {
