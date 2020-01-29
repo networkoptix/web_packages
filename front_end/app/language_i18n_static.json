@@ -153,9 +153,11 @@
         "buttons": {
             "cancel": "Cancel",
             "createAccount": "Create New Account",
+            "delete": "Delete",
             "download": "Download %VMS_NAME%",
             "logoutAuthorised": "Log Out",
             "ok": "OK",
+            "remove": "Remove",
             "stayAs": "Stay logged as {email} ",
             "stayLoggedIn": "Stay Logged In"
         },
@@ -210,8 +212,10 @@
         },
         "titles": {
             "changeAccount": "You are already logged in as {email}",
+            "deleteUser": "Delete user?",
             "loggedFromOtherAccount": "You will be logged in with a different account",
             "noClientDetected": "Install %VMS_NAME% to view your System",
+            "removeUser": "Remove user?",
             "serversDetach": "Detach server \"{{ title }}\" from current system?",
             "serversReset": "Reset server \"{{ title }}\" to defaults?",
             "serversRestart": "Restart server \"{{ title }}\""

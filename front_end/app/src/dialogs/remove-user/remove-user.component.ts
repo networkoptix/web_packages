@@ -20,6 +20,8 @@ export class RemoveUserModalContent {
     CONFIG: any;
 
     removeUserProcess: any;
+    dialogTitle: string;
+    dialogButtonText: string;
 
     constructor(public activeModal: NgbActiveModal,
                 private renderer: Renderer2,
@@ -32,6 +34,10 @@ export class RemoveUserModalContent {
     }
 
     ngOnInit() {
+        const msg = this.user.isCloud ? 'remove' : 'delete';
+        this.dialogTitle = this.LANG.dialogs.titles[`${msg}User`];
+        this.dialogButtonText = this.LANG.dialogs.buttons[msg];
+
         this.removeUserProcess = this.processService.createProcess(() => {
             return this.system.deleteUser(this.user).then(() => {
                 return this.system.getUsers(true);
