@@ -160,9 +160,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
                     tableWrapper.scrollLeft = 0;
                 }
 
-                if (!this.healthService.tableReady) {
-                    setDimensions = true;
-                }
+                setDimensions = true;
             }
         }
 
@@ -224,7 +222,9 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
 
         // TODO: Remove in CLOUD-4233
         setTimeout(() => {
-            this.scrollMechanicsService.setElementTableWidth(this.dataTable.nativeElement.offsetWidth);
+            if (this.dataTable.nativeElement.offsetWidth !== 0) {
+                this.scrollMechanicsService.setElementTableWidth(this.dataTable.nativeElement.offsetWidth);
+            }
             this.healthService.tableReady = true;
         }, 100);
 

@@ -10,6 +10,8 @@ export class NxHealthService {
     private static TYPES = 'deviceType';
     private static SERVERS = 'server';
 
+    static PANEL_WIDTH = 350;
+
     manifestSubject = new BehaviorSubject(undefined);
     valuesSubject = new BehaviorSubject(undefined);
     alarmsSubject = new BehaviorSubject(undefined);

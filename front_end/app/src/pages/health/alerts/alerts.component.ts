@@ -390,8 +390,8 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
                 const tableWidth = this.elementTable.nativeElement.querySelectorAll('table')[0].offsetWidth;
                 // area available
                 const areaWidth = this.area.nativeElement.offsetWidth;
-                // area available to the table (2/3 + gutters
-                const availAreaWidth = areaWidth / 3 * 2 + 46;
+                // area available to the table (- gutter)
+                const availAreaWidth = areaWidth - NxHealthService.PANEL_WIDTH - 16;
 
                 const isTableFit = (availAreaWidth > tableWidth) && !this.mobileDetailMode;
                 if (this.activeTableEntity && !this.mobileDetailMode) {

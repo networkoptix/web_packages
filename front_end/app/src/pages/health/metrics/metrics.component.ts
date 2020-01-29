@@ -66,6 +66,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
 
     windowSizeSubscription: SubscriptionLike;
     tableWidthSubscription: SubscriptionLike;
+    panelSubscription: SubscriptionLike;
 
     fixedLayoutClass: string;
     layoutReady: boolean;
@@ -100,6 +101,12 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
                         this.elementSearch.nativeElement.style.width = width + 'px';
                     }
                 });
+
+        this.panelSubscription = this.scrollMechanicsService
+                                     .panelSubject
+                                     .subscribe(() => {
+                                         this.setLayout();
+                                     });
     }
 
     ngOnInit(): void {
@@ -176,7 +183,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
 
     setActiveEntity(entity) {
         const queryParams: Params = {};
-        this.layoutReady = false;
+        this.layoutReady = this.activeEntity ? true : false;
 
         if (entity) {
             if (typeof entity === 'string') {
@@ -198,7 +205,8 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
             this.resetActiveEntity();
         }
 
-        this.setLayout();
+        // Layout will be set when panel is rendered
+        // this.setLayout();
     }
 
     resetActiveEntity(updateURI = true) {
@@ -222,20 +230,20 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
                 this.containerDimensions = [elementSearchHeight + 16];
 
                 if (this.tableContainer && this.healthService.tableReady) {
-
                     // measure table (not wrapper) width
                     const tableWidth = this.tableContainer.nativeElement.querySelectorAll('table')[0].offsetWidth;
                     this.containerDimensions = [elementSearchHeight + 16, 0]; // trick table's onChanges will pick new dimensions
                     // area available
                     const areaWidth = this.area.nativeElement.offsetWidth;
-                    // area available to the table (~80% + gutters
-                    const availAreaWidth = areaWidth * .78 + 46;
+                    // area available to the table (- gutter)
+                    const availAreaWidth = areaWidth - NxHealthService.PANEL_WIDTH - 16;
 
                     const isTableFit = (availAreaWidth > tableWidth) && !this.mobileDetailMode;
                     if (this.activeEntity && !this.mobileDetailMode) {
+                        this.elementSearch.nativeElement.style.width = 'auto';
                         this.fixedLayoutClass = (isTableFit) ? '' : 'fixedLayout--with-panel';
                     } else {
-                        this.fixedLayoutClass = (isTableFit) ? '' : 'fixedLayout--no-panel';
+                        this.fixedLayoutClass = 'fixedLayout--no-panel';
                     }
 
                     this.layoutReady = true;
