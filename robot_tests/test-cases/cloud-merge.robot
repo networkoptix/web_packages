@@ -577,14 +577,14 @@ From secondary system merge to primary with other systems
     Go to System Administration
     Merge    API made system 1    API made system 1    API made system 1
     Validate Merge
-
+    Sleep    35 
+    Validate system available    API made system 1   
+    Go to    ${url}/systems
     Wait Until Elements Are Visible
     ...    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
     ...    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
     Wait Until Element Is Not Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 3")]
     Sleep    1
-    Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
-    Validate system available    API made system 1
     Disconnect from cloud
     Disconnect from cloud
 
