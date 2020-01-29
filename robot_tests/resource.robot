@@ -167,6 +167,10 @@ Register
     Run Keyword If    "${checked}"=="false"    Click Element    ${TERMS AND CONDITIONS CHECKBOX VISIBLE}
     Click Button    ${CREATE ACCOUNT BUTTON}
 
+#Register via API
+#    [Arguments]    ${email}    ${first_name}    ${last_name}
+
+
 Validate Register Success
     [arguments]    ${location}=${url}/register/success
     Wait Until Element Is Visible    ${ACCOUNT CREATION SUCCESS}
@@ -199,10 +203,10 @@ Get Email Link
 
 Activate
     [arguments]    ${email}
-    ${link}    Get Email Link    ${email}    activate
-    Go To    ${link}
+    @{auth}=   Create List    ${ALT BASE EMAIL}    ${BASE PASSWORD}
+    ${code}=   Get Code From Email   ${url}    ${auth}    ${email}    activate_account
+    Go To    ${url}/activate/${code}
     Wait Until Element Is Visible    ${ACTIVATION SUCCESS}
-    Element Should Be Visible    ${ACTIVATION SUCCESS}
     Location Should Be    ${url}/activate/success
 
 # Replaced with "Restore password using API"

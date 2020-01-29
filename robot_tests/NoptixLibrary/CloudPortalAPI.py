@@ -87,6 +87,5 @@ class CloudPortalAPI(object):
 
             s.headers.update({'X-CSRFToken': s.cookies['csrftoken']})
             resp = s.post(f'{env}/api/robot/get_code', json={'email': email, 'type': message_type})
-
             s.close()
-            return resp.json()['code'].replace('%3D', '=')
+            return resp.json()['code']

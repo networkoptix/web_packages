@@ -1,10 +1,10 @@
 *** Settings ***
 Resource          ../resource.robot
+
 Suite Setup       Open Browser and go to URL    ${url}
 Test Setup        Restart
 Test Teardown     Run Keyword If Test Failed    Open New Browser On Failure
 Suite Teardown    Close All Browsers
-
 
 *** Variables ***
 ${password}    ${BASE PASSWORD}
@@ -18,104 +18,79 @@ Open New Browser On Failure
     Close Browser
     Open Browser and go to URL    ${url}
 
-*** Test Cases ***
-restores password
-    [tags]    email    C26260
-    ${email}    Get Random Email    ${BASE EMAIL}
-    Go To    ${url}/register
-    Register    mark    hamill    ${email}    ${password}
-    ${link}    Get Email Link    ${email}    activate
-    Go To    ${link}
-    Go To    ${url}/restore_password
-    Wait Until Elements Are Visible    ${RESTORE PASSWORD EMAIL INPUT}    ${RESET PASSWORD BUTTON}
-    Input Text    ${RESTORE PASSWORD EMAIL INPUT}    ${email}
-    Click Button    ${RESET PASSWORD BUTTON}
-    Wait Until Element Is Visible    ${RESET EMAIL SENT MESSAGE}
-    Location Should Be    ${url}/restore_password/sent
-
-can still log in if you don't finish the process
-    [tags]    C41873
-    ${email}    Get Random Email    ${BASE EMAIL}
+Register Random User
+    ${email}=   Get Random Email    ${BASE EMAIL}
     Go To    ${url}/register
     Register    mark    hamill    ${email}    ${password}
     Activate    ${email}
+    [Return]    ${email}
+
+Send "Restore Password" Email
+    [Arguments]    ${email}
     Go To    ${url}/restore_password
     Wait Until Elements Are Visible    ${RESTORE PASSWORD EMAIL INPUT}    ${RESET PASSWORD BUTTON}
     Input Text    ${RESTORE PASSWORD EMAIL INPUT}    ${email}
     Click Button    ${RESET PASSWORD BUTTON}
-    Log In    ${email}    ${password}
-    Validate Log In
-    Log Out
-    ${link}    Get Email Link    ${email}    restore_password
-    Go To    ${link}
-    Wait Until Elements Are Visible    ${RESET PASSWORD INPUT}    ${SAVE PASSWORD}
-    Log In    ${email}    ${password}
-    Validate Log In
 
-should not allow to access /restore_password/sent /restore_password/success by direct input
-    [tags]    Threaded
-    Close Browser
-    Open Browser and go to URL    ${url}
+Get Restore Code and Open the Link
+    [Arguments]    ${email}    ${restore}=${False}    ${new password}=${EMPTY}
+    @{auth}=   Create List   ${ALT BASE EMAIL}    ${password}
+    ${code}=   Get Code From Email    ${url}    ${auth}    ${email}    restore_password
+    Go To    ${url}/restore_password/${code}
+    Wait Until Elements Are Visible    ${RESET PASSWORD INPUT}    ${SAVE PASSWORD}
+    Run Keyword If    ${restore} == ${True} and '${new password}' != '${EMPTY}'  Run Keywords
+    ...    Input Text    ${RESET PASSWORD INPUT}    ${new password}
+    ...    AND    Click Button    ${SAVE PASSWORD}
+    ...    AND    Wait Until Elements Are Visible    ${RESET SUCCESS MESSAGE}    ${RESET SUCCESS LOG IN LINK}
+    [Return]    ${code}
+
+*** Test Cases ***
+Restores password
+    [Tags]    email    C26260
+    ${email}=   Register Random User
+    Send "Restore Password" Email    ${email}
+    Wait Until Element Is Visible    ${RESET EMAIL SENT MESSAGE}
+    Location Should Be    ${url}/restore_password/sent
+
+Can still log in if you don't finish the process
+    [Tags]    C41873
+    ${email}=   Register Random User
+    Send "Restore Password" Email    ${email}
+    Log In    ${email}    ${password}
+    Log Out
+    Get Restore Code and Open the Link    ${email}
+    Log In    ${email}    ${password}
+
+Should not allow to access /restore_password/sent /restore_password/success by direct input
+    [Tags]    Threaded
     Go To    ${url}/restore_password/sent
     Wait Until Element Is Visible    ${JUMBOTRON}
     Go To    ${url}/restore_password/success
     Wait Until Element Is Visible    ${JUMBOTRON}
 
-should be able to set new password (which is same as old), redirect
-    [tags]    email    C26260
-    ${email}    Get Random Email    ${BASE EMAIL}
-    Go To    ${url}/register
-    Register    mark    hamill    ${email}    ${password}
-    ${link}    Get Email Link    ${email}    activate
-    Go To    ${link}
-    Go To    ${url}/restore_password
-    Wait Until Elements Are Visible    ${RESTORE PASSWORD EMAIL INPUT}    ${RESET PASSWORD BUTTON}
-    Input Text    ${RESTORE PASSWORD EMAIL INPUT}    ${email}
-    Click Button    ${RESET PASSWORD BUTTON}
-    ${link}    Get Email Link    ${email}    restore_password
-    Go To    ${link}
-    Wait Until Elements Are Visible    ${RESET PASSWORD INPUT}    ${SAVE PASSWORD}
-    Input Text    ${RESET PASSWORD INPUT}    ${password}
-    Click Button    ${SAVE PASSWORD}
-    Wait Until Elements Are Visible    ${RESET SUCCESS MESSAGE}    ${RESET SUCCESS LOG IN LINK}
+Should be able to set new password (which is same as old), redirect
+    [Tags]    email    C26260
+    ${email}=   Register Random User
+    Send "Restore Password" Email    ${email}
+    Get Restore Code and Open the Link    ${email}    restore=${True}    new password=${password}
 
-should set new password, login with new password
-    [tags]    email    C26260
-    ${email}    Get Random Email    ${BASE EMAIL}
-    Go To    ${url}/register
-    Register    mark    hamill    ${email}    ${password}
-    ${link}    Get Email Link    ${email}    activate
-    Go To    ${link}
-    Go To    ${url}/restore_password
-    Wait Until Elements Are Visible    ${RESTORE PASSWORD EMAIL INPUT}    ${RESET PASSWORD BUTTON}
-    Input Text    ${RESTORE PASSWORD EMAIL INPUT}    ${email}
-    Click Button    ${RESET PASSWORD BUTTON}
-    ${link}    Get Email Link    ${email}    restore_password
-    Go To    ${link}
-    Wait Until Elements Are Visible    ${RESET PASSWORD INPUT}    ${SAVE PASSWORD}
-    Input Text    ${RESET PASSWORD INPUT}    ${ALT PASSWORD}
-    Click Button    ${SAVE PASSWORD}
-    Wait Until Elements Are Visible    ${RESET SUCCESS MESSAGE}    ${RESET SUCCESS LOG IN LINK}
+Should set new password, login with new password
+    [Tags]    email    C26260
+    ${email}=   Register Random User
+    Send "Restore Password" Email    ${email}
+    Get Restore Code and Open the Link    ${email}    restore=${True}    new password=${ALT PASSWORD}
+
     Click Link    ${RESET SUCCESS LOG IN LINK}
-    Log In    ${email}    ${password}    button=None    validate=${False}
+    Log In    ${email}    ${password}    validate=${False}    button=None
     Wait Until Element Is Visible    ${WRONG PASSWORD MESSAGE}
     Log In    ${email}    ${ALT PASSWORD}    button=None
-    Validate Log In
 
-displays password masked, shows password and changes eye icon when clicked
-    [tags]    C26260    Threaded
-    ${email}    Get Random Email    ${BASE EMAIL}
-    Go To    ${url}/register
-    Register    mark    hamill    ${email}    ${password}
-    ${link}    Get Email Link    ${email}    activate
-    Go To    ${link}
-    Go To    ${url}/restore_password
-    Wait Until Elements Are Visible    ${RESTORE PASSWORD EMAIL INPUT}    ${RESET PASSWORD BUTTON}
-    Input Text    ${RESTORE PASSWORD EMAIL INPUT}    ${email}
-    Click Button    ${RESET PASSWORD BUTTON}
-    ${link}    Get Email Link    ${email}    restore_password
-    Go To    ${link}
-    Wait Until Elements Are Visible    ${RESET PASSWORD INPUT}    ${SAVE PASSWORD}
+Displays password masked, shows password and changes eye icon when clicked
+    [Tags]    C26260    Threaded
+    ${email}=   Register Random User
+    Send "Restore Password" Email    ${email}
+    Get Restore Code and Open the Link    ${email}
+
     ${input type}    Get Element Attribute    ${RESET PASSWORD INPUT}    type
     Should Be Equal    '${input type}'    'password'
     Click Element    ${RESET EYE ICON CLOSED}
@@ -127,90 +102,62 @@ displays password masked, shows password and changes eye icon when clicked
     ${input type}    Get Element Attribute    ${RESET PASSWORD INPUT}    type
     Should Be Equal    '${input type}'    'password'
 
-should not allow to use one restore link twice
-    [tags]    email    C42079
-    ${email}    Get Random Email    ${BASE EMAIL}
-    Go To    ${url}/register
-    Register    mark    hamill    ${email}    ${password}
-    ${link}    Get Email Link    ${email}    activate
-    Go To    ${link}
-    Go To    ${url}/restore_password
-    Wait Until Elements Are Visible    ${RESTORE PASSWORD EMAIL INPUT}    ${RESET PASSWORD BUTTON}
-    Input Text    ${RESTORE PASSWORD EMAIL INPUT}    ${email}
-    Click Button    ${RESET PASSWORD BUTTON}
-    ${link}    Get Email Link    ${email}    restore_password
-    Go To    ${link}
-    Wait Until Elements Are Visible    ${RESET PASSWORD INPUT}    ${SAVE PASSWORD}
-    Input Text    ${RESET PASSWORD INPUT}    ${ALT PASSWORD}
-    Click Button    ${SAVE PASSWORD}
-    Wait Until Elements Are Visible    ${RESET SUCCESS MESSAGE}    ${RESET SUCCESS LOG IN LINK}
-    Go To    ${link}
+Should not allow to use one restore link twice
+    [Tags]    email    C42079
+    ${email}=   Register Random User
+    Send "Restore Password" Email    ${email}
+    ${code}=   Get Restore Code and Open the Link    ${email}    restore=${True}    new password=${ALT PASSWORD}
+
+    Go To    ${url}/restore_password/${code}
     Wait Until Elements Are Visible    ${RESET PASSWORD INPUT}    ${SAVE PASSWORD}
     Input Text    ${RESET PASSWORD INPUT}    ${ALT PASSWORD}
     Click Button    ${SAVE PASSWORD}
     Check For Alert Dismissable    ${CANNOT SAVE PASSWORD}${SPACE}${SPACE}${CODE USED/INCORRECT}
 
-should make not-activated user active by restoring password
-    [tags]    email    C41871    Threaded
+Should make not-activated user active by restoring password
+    [Tags]    email    C41871    Threaded
     ${email}    Get Random Email    ${BASE EMAIL}
     Go To    ${url}/register
     Register    mark    hamill    ${email}    ${password}
     Validate Register Email Received    ${email}
-    Go To    ${url}/restore_password
-    Wait Until Elements Are Visible    ${RESTORE PASSWORD EMAIL INPUT}    ${RESET PASSWORD BUTTON}
-    Input Text    ${RESTORE PASSWORD EMAIL INPUT}    ${email}
-    Click Button    ${RESET PASSWORD BUTTON}
-    ${link}    Get Email Link    ${email}    restore_password
-    Go To    ${link}
-    Wait Until Elements Are Visible    ${RESET PASSWORD INPUT}    ${SAVE PASSWORD}
-    Input Text    ${RESET PASSWORD INPUT}    ${ALT PASSWORD}
-    Click Button    ${SAVE PASSWORD}
-    Wait Until Elements Are Visible    ${RESET SUCCESS MESSAGE}    ${RESET SUCCESS LOG IN LINK}
+    Send "Restore Password" Email    ${email}
+    Get Restore Code and Open the Link    ${email}    restore=${True}    new password=${ALT PASSWORD}
     Click Link    ${RESET SUCCESS LOG IN LINK}
     Log In    ${email}    ${ALT PASSWORD}    button=None
-    Validate Log In
 
-should allow logged in user visit restore password page
-    [tags]    email
+Should allow logged in user visit restore password page
+    [Tags]    email
     ${email}    Get Random Email    ${BASE EMAIL}
     Go To    ${url}/register
     Register    mark    hamill    ${email}    ${password}
     Activate    ${email}
     Log In    ${email}    ${password}
-    Validate Log In
     Go To    ${url}/restore_password
     Wait Until Elements Are Visible    ${RESTORE PASSWORD EMAIL INPUT}    ${RESET PASSWORD BUTTON}
 
-should prompt log user out if he visits restore password link from email
-    [tags]    email    Threaded    C63394
-    ${email}    Get Random Email    ${BASE EMAIL}
-    Go To    ${url}/register
-    Register    mark    hamill    ${email}    ${password}
-    Activate    ${email}
+Should prompt log user out if he visits restore password link from email
+    [Tags]    email    Threaded    C63394
+    ${email}=   Register Random User
     Log In    ${email}    ${password}
-    Validate Log In
-    Go To    ${url}/restore_password
-    Wait Until Elements Are Visible    ${RESTORE PASSWORD EMAIL INPUT}    ${RESET PASSWORD BUTTON}
-    Input Text    ${RESTORE PASSWORD EMAIL INPUT}    ${email}
-    Click Button    ${RESET PASSWORD BUTTON}
+    Send "Restore Password" Email    ${email}
+
     ${RESET EMAIL SENT MESSAGE TEXT}    Replace String    ${RESET EMAIL SENT MESSAGE TEXT}    %email%    ${email}
     Wait Until Element Is Visible    ${RESET EMAIL SENT MESSAGE}
     ${text}    Get Text    ${RESET EMAIL SENT MESSAGE}
     ${replaced}    Replace String    ${text}    \n    ${SPACE}
     Should Match    ${replaced}    ${RESET EMAIL SENT MESSAGE TEXT}
-    ${link}    Get Email Link    ${email}    restore_password
-    Go To    ${link}
-    Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${LOGGED IN LOG OUT BUTTON}
+
+    ${code}=   Get Restore Code and Open the Link    ${email}
     Click Button    ${LOGGED IN STAY LOGGED IN BUTTON}
-    Validate Log In
-    Go To    ${link}
+
+    Go To    ${url}/restore_password/${code}
     Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${LOGGED IN LOG OUT BUTTON}
     Click Button    ${LOGGED IN LOG OUT BUTTON}
     Validate Log Out
     Wait Until Elements Are Visible    ${RESET PASSWORD INPUT}    ${SAVE PASSWORD}
 
-should handle click I forgot my password link at restore password page
-    [tags]    Threaded
+Should handle click I forgot my password link at restore password page
+    [Tags]    Threaded
     Go To    ${url}/restore_password
     Wait Until Elements Are Visible    ${RESTORE PASSWORD EMAIL INPUT}    ${RESET PASSWORD BUTTON}    ${LOG IN NAV BAR}
     Click Link    ${LOG IN NAV BAR}
@@ -219,19 +166,12 @@ should handle click I forgot my password link at restore password page
     Wait Until Elements Are Visible    ${RESTORE PASSWORD EMAIL INPUT}    ${RESET PASSWORD BUTTON}
 
 Check restore password email links, colors, cloud name, and open link in new tab
-    [tags]    C26260    Threaded
-    ${random email}    Get Random Email    ${BASE EMAIL}
-    Go To    ${url}/register
-    Register    mark    hamill    ${random email}    ${password}
-    ${link}    Get Email Link    ${random email}    activate
-    Go To    ${link}
-    Go To    ${url}/restore_password
-    Wait Until Elements Are Visible    ${RESTORE PASSWORD EMAIL INPUT}    ${RESET PASSWORD BUTTON}
-    Input Text    ${RESTORE PASSWORD EMAIL INPUT}    ${random email}
-    Click Button    ${RESET PASSWORD BUTTON}
-    Wait Until Element Is Visible    ${RESET EMAIL SENT MESSAGE}
+    [Tags]    C26260    Threaded
+    ${email}=   Register Random User
+    Send "Restore Password" Email    ${email}
+
     Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
-    ${email}    Wait For Email    recipient=${random email}    timeout=120    status=UNSEEN
+    ${email}    Wait For Email    recipient=${email}    subject=${RESET PASSWORD EMAIL SUBJECT}    timeout=120    status=UNSEEN
     ${email text}    Get Email Body    ${email}
     ${email text}    Decode Bytes To String    ${email text}    UTF-8    errors=ignore
     Check Email Button    ${email text}    ${ENV}    ${THEME COLOR}
