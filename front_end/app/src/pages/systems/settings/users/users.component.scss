@@ -37,10 +37,15 @@
 
 .user-settings-form {
     border-collapse: separate;
-    border-spacing: 0 1rem;
+    border-spacing: 0 0.5rem;
+    padding: 6px 0 6px 8px;
     .user-form-labels {
         width: 1px;
         margin-right: 0.5rem;
         color: $dark9;
+    }
+    input:disabled {
+        background-color: $light2;
+        border: 1px solid $light4;
     }
 }
