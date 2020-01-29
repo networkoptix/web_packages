@@ -118,6 +118,7 @@ Create system and attach to cloud
     ${auth}=    Create List    ${user}    ${password}
     ${default auth}=    Create List    admin    admin
     &{bind json}=    bind system    ${auth}    ${ENV}    name=${system name}
+    sleep    5
     &{Setup Cloud System json}=    Setup Cloud System
     ...    ${default auth}
     ...    https://localhost:${port}
@@ -509,7 +510,6 @@ From secondary system merge to primary with no other systems
     ...    ${image}
     ...    7001
     ...    API made system 1
-    ...    network=host
     Create system and attach to cloud
     ...    ${user}
     ...    ${image}
@@ -532,7 +532,7 @@ From secondary system merge to primary with no other systems
     Validate Merge
 
     Check For Alert Dismissable    ${SYSTEM MERGE COMPLETED TEXT}    timeout=${merge timeout}
-    Sleep    5
+    Sleep    35
     Go to Users List
     Wait Until Element Is Visible    ${USERS LIST}
     Wait Until Element Is Not Visible    ${CURRENTLY MERGING CARD}    120
