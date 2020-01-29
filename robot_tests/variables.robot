@@ -307,7 +307,7 @@ ${INTEGRATIONS CATALOG}               ${INTEGRATIONS COMPONENT}//integrations-li
 
 #Integration Tile
 ${INTEGRATION TILE}                   ${INTEGRATIONS COMPONENT}//integrations-list-component//nx-block/div[contains(@class, "card")]/../../..
-${INTEGRATION TEST INTEGRATION LINK}   ${INTEGRATIONS COMPONENT}//a[contains(@href, "39")]
+${INTEGRATION TEST INTEGRATION LINK}   ${INTEGRATION TILE}/a
 ${INTEGRATION TILE LOGO}              ${INTEGRATION TILE}//div[contains(@class, "card--header-logo")]
 ${INTEGRATION TILE INFO}              ${INTEGRATION TILE}//div[contains(@class, "card--header-info")]
 ${INTEGRATION TILE NAME}              ${INTEGRATION TILE}//div[contains(@class, "card--body-name")]
