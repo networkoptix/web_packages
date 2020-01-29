@@ -329,13 +329,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 usersNode.level2 = [];
             }
             if (this.system && this.system.users.length > 0) {
-                const byParam = NxUtilsService.byParam((user) => {
-                    return user.email;
-                }, NxUtilsService.sortASC);
-                this.system.users.sort(byParam);
-
                 usersNode.level3 = [];
-
                 const {cloudUsers, localUsers} = this.system.users.reduce((result, user) => {
                     const id = user.id.replace(/{|}/g, '');
                     const node: any = {
@@ -357,8 +351,14 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     return result;
                 }, {cloudUsers: [], localUsers: []});
 
-                usersNode.level3 = [...localUsers];
+                const byLabelParam = NxUtilsService.byParam((user) => {
+                    return user.label;
+                }, NxUtilsService.sortASC);
+                cloudUsers.sort(byLabelParam);
+
                 if (localUsers.length > 0) {
+                    localUsers.sort(byLabelParam);
+                    usersNode.level3 = [...localUsers];
                     usersNode.level3.push({ horizontal: true });
                 }
                 usersNode.level3 = [...usersNode.level3, ...cloudUsers];
