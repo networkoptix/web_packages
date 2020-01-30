@@ -320,7 +320,11 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
 
         this.params = { ...this.route.snapshot.queryParams };
         if (page) {
-            if (this.currentPage !== page) {
+            const numPages = Math.ceil(this._elements.length / this.pageSize);
+            // outsmarting pagination component which fire (pageChange) if currentPage > numPages
+            // which causes panel to be disposed on window resize if table resize and we're on last page -- TT
+            // for more details -> ask me no later than 3 hours after I commit the code
+            if (this.currentPage !== page && this.currentPage <= numPages) {
                 this.setClickedRow(undefined);
             }
             this.currentPage = page;

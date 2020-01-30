@@ -51,7 +51,10 @@
                 </div>
             </div>
 
-            <div class="gridMetricContentPanelComponent" *ngIf="activePanelEntity && layoutReady">
+            <div class="gridMetricContentPanelComponent"
+                 *ngIf="activePanelEntity && layoutReady"
+                 [ngStyle]="{'visibility': layoutReady ? undefined : 'hidden'}">
+
                 <div class="gridMetricContentPanelComponentWrapper pb-3">
                     <div class="mb-3 all-results-btn"
                          [style.display]="!mobileDetailMode ? 'none' : 'block'">
