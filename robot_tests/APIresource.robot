@@ -72,6 +72,31 @@ Integration Store is Enabled
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()['integrationStoreEnabled']}
 
+Register Account
+    [Arguments]    ${email}   ${password}    ${first name}    ${last name}
+    &{data}=    Create Dictionary
+    ...    email=${email}
+    ...    password=${password}
+    ...    first_name=${first name}
+    ...    last_name=${last name}
+    @{auth}=   Create List    ${ALT BASE EMAIL}    ${BASE PASSWORD}
+    Create Digest Session    Register Account session    ${ENV}    auth=${auth}    disable_warnings=1
+    ${resp}=    Post Request    Register Account session    /api/account/register    json=${data}
+    Should Be Equal As Strings    ${resp.status_code}    200
+    Return From Keyword    ${resp.json()}
+
+Activate Account
+    [Arguments]    ${email}    ${password}
+    @{auth}=   Create List    ${ALT BASE EMAIL}    ${BASE PASSWORD}
+    @{new user auth}=   Create List    ${email}    ${password}
+    ${code}=   Get Code From Email   ${ENV}    ${auth}    ${email}    activate_account
+#    ${code}=   Replace String Using Regexp    ${code}    %3D    ${EMPTY}
+    &{data}=   Create Dictionary    code=${code}
+    Create Digest Session    Activate Account session    ${ENV}    auth=${new user auth}    disable_warnings=1
+    ${resp}=    Post Request    Activate Account session    /api/account/activate    json=${data}
+    Should Be Equal As Strings    ${resp.status_code}    200
+    Return From Keyword    ${resp.json()}
+
 # Alternative way to reset Account password - via cdb directly.
 # "Change Account Password" keyword is preferred.
 Set Account Password
@@ -80,7 +105,6 @@ Set Account Password
     ${passwordHa1Sha256}=   Encode.Get Ha1 Sha256 Password     ${email}    ${new_password}
 
     &{params}=    Create Dictionary    passwordHa1=${passwordHa1}    passwordHa1Sha256=${passwordHa1Sha256}
-    Log dictionary    ${params}
     @{auth}=   Create Dictionary    ${email}    ${old_password}
     Create Digest Session    set_new_password_session   ${ENV}    auth=${auth}    disable_warnings=1
     ${resp}=    Post Request    set_new_password_session    /cdb/account/update    json=${params}
@@ -94,9 +118,17 @@ Log Out via API
     Go To    ${ENV}
     Validate Log Out
 
+Register New User and Activate the Account
+    [Arguments]    ${email}    ${password}    ${first_name}    ${last_name}
+    @{auth}=   Create List    ${BASE EMAIL}    ${BASE EMAIL PASSWORD}
+    Register    ${ENV}    ${auth}    ${email}    ${password}    ${first_name}    ${last_name}
+    Create Digest Session    Register Session    ${AUTO SYS API}    ${AUTO SYS API AUTH}     disable_warnings=1
+    ${resp}=   Post Request    Register Session   /api/systemSettings   timeout=10
+    Should Be Equal As Strings    ${resp.status_code}    200
+
 Evaluate Auto System Settings via API
     [arguments]    ${setting}    ${selected}
     Create Digest Session    returnedSetting    ${AUTO SYS API}    ${AUTO SYS API AUTH}     disable_warnings=1
     ${systemSettings} =     Get Request    returnedSetting   /api/systemSettings   timeout=10
     ${string} =    Convert To String    ${systemSettings.json()}
-    Should Contain    ${string}    ${setting}': '${selected}
+    Should Contain    ${string}    ${setting}': '${selected}git add

@@ -1,3 +1,4 @@
+import re
 import requests
 
 
@@ -11,7 +12,6 @@ class CloudPortalAPI(object):
             }
             resp = login_session.post(env + '/api/account/login', login_data)
             assert resp.status_code == 200, "Log In Failed"
-
             return login_session
 
     # TODO implement logging out using API where appropriate
@@ -83,9 +83,9 @@ class CloudPortalAPI(object):
     def get_code_from_email(self, env, auth, email, message_type):
         with requests.Session() as s:
             resp = s.post(f'{env}/api/account/login', json={'email': auth[0], 'password': auth[1]})
-            assert resp.status_code == 200, 'Cannot Log In'
+            assert resp.status_code == 200, 'Log In Failed'
 
             s.headers.update({'X-CSRFToken': s.cookies['csrftoken']})
             resp = s.post(f'{env}/api/robot/get_code', json={'email': email, 'type': message_type})
             s.close()
-            return resp.json()['code']
+            return resp.json()['code'].replace('%3D', '=')

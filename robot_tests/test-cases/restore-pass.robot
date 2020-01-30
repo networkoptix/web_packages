@@ -20,9 +20,8 @@ Open New Browser On Failure
 
 Register Random User
     ${email}=   Get Random Email    ${BASE EMAIL}
-    Go To    ${url}/register
-    Register    mark    hamill    ${email}    ${password}
-    Activate    ${email}
+    Register Account   ${email}    ${password}    mark    hamill
+    Activate Account   ${email}    ${password}
     [Return]    ${email}
 
 Send "Restore Password" Email
@@ -46,7 +45,7 @@ Get Restore Code and Open the Link
 
 *** Test Cases ***
 Restores password
-    [Tags]    email    C26260
+    [Tags]    email    C26260    qwe
     ${email}=   Register Random User
     Send "Restore Password" Email    ${email}
     Wait Until Element Is Visible    ${RESET EMAIL SENT MESSAGE}
@@ -130,7 +129,7 @@ Should allow logged in user visit restore password page
     ${email}    Get Random Email    ${BASE EMAIL}
     Go To    ${url}/register
     Register    mark    hamill    ${email}    ${password}
-    Activate    ${email}
+    Activate Account    ${email}    ${password}
     Log In    ${email}    ${password}
     Go To    ${url}/restore_password
     Wait Until Elements Are Visible    ${RESTORE PASSWORD EMAIL INPUT}    ${RESET PASSWORD BUTTON}
