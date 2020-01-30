@@ -18,12 +18,12 @@
             font-size: 24px;
         }
         .tag {
+            @extend #medium11;
             margin-left: 8px;
             color: $light1;
             padding: 4px 8px;
             text-transform: uppercase;
-            border-radius: 3px;
-            font-size: $font-size-sm;
+            border-radius: 2px;
         }
         .online {
             background-color: $brand_core;
@@ -44,8 +44,7 @@
             height: 20px;
             align-items: flex-end;
             .cell-title {
-                font-family : $font-family-light;
-                font-weight: 600;
+                @extend #regular13;
             }
             .cell-ellipsis {
                 margin-bottom: 2px;
@@ -88,8 +87,14 @@
     }
 
     .port-input {
-        height: 28px;
+        height: 32px;
         width: 80px;
+        border-radius: 2px;
+        border: 1px solid $light6;
+        &:disabled {
+            background-color: $light2;
+            border: 1px solid $light4;
+        }
     }
 }
 

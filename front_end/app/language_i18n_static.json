@@ -218,7 +218,7 @@
             "removeUser": "Remove user?",
             "serversDetach": "Detach server \"{{ title }}\" from current system?",
             "serversReset": "Reset server \"{{ title }}\" to defaults?",
-            "serversRestart": "Restart server \"{{ title }}\""
+            "serversRestart": "Restart server \"{{ title }}\"?"
         }
     },
     "downloads": {
@@ -485,7 +485,6 @@
             "checking": "checking status...",
             "detaching": "detaching...",
             "offline": "offline",
-            "online": "online",
             "reseting": "reseting...",
             "restarting": "restarting..."
         },

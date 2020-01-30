@@ -197,7 +197,6 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
 
     checkIfOnline(serverId) {
         return this.system.getModuleInfo(serverId).toPromise()
-            .then(() => this.setStatus('online'))
             .catch(() => this.setStatus('offline'));
     }
 
