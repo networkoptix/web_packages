@@ -26,7 +26,7 @@
                      [ngClass]="{'data-wrapper' : !activeEntity}">
 
                     <div class="mb-3 p-0" #search
-                         *ngIf="!mobileDetailMode && metricValuesLen > 1">
+                         *ngIf="metricValuesLen > 1">
 
                         <nx-search
                                 name="filterModel"

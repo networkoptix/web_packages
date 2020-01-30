@@ -90,7 +90,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         this.params = this.route.snapshot.queryParams;
         this.menuService.setSection('alerts');
 
-        if (this.healthService.alertsValues) {
+        if (!this.healthService.alertsValues) {
             return;
         }
 

@@ -227,13 +227,21 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
             } else {
 
                 const elementSearchHeight = this.elementSearch ? this.elementSearch.nativeElement.offsetHeight : 0;
-                this.containerDimensions = [elementSearchHeight + 16];
+                // Don't ask why this segment is duplicated ... it's important and it's working -- TT
+                if (!this.mobileDetailMode) {
+                    this.containerDimensions = [elementSearchHeight + 16];
+                }
 
                 if (this.tableContainer && this.healthService.tableReady) {
                     // measure table (not wrapper) width
                     const tableWidth = this.tableContainer.nativeElement.querySelectorAll('table')[0].offsetWidth;
-                    this.containerDimensions = [elementSearchHeight + 16, 0]; // trick table's onChanges will pick new dimensions
-                    // area available
+
+                    if (!this.mobileDetailMode) {
+                        this.containerDimensions = [elementSearchHeight + 16, 0]; // trick table's onChanges will pick new dimensions
+                        // }
+                        // area available
+                    }
+
                     const areaWidth = this.area.nativeElement.offsetWidth;
                     // area available to the table (- gutter)
                     const availAreaWidth = areaWidth - NxHealthService.PANEL_WIDTH - 16;
