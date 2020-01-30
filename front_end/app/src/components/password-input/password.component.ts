@@ -45,6 +45,7 @@ export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAcces
     LANG: any = {};
     fairPassword: boolean;
     passwordToggle: boolean;
+    clicked: boolean = false;
 
     private value: string;
     private passwordSubscription: Subscription;
@@ -200,5 +201,15 @@ export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAcces
 
     onBlur() {
         this.onTouchedCallback();
+    }
+
+    inputClicked() {
+        this.clicked = true;
+    }
+
+    onMouseLeave() {
+        if (this.clicked) {
+            this.onTouchedCallback();
+        }
     }
 }
