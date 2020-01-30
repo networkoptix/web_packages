@@ -191,12 +191,13 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
     }
 
     setStatus(status) {
-        this.selectedServer.internalStatus = this.CONFIG.serverStatus[status];
-        this.selectedServer.shownStatus = this.LANG.servers.status[status];
+        this.selectedServer.internalStatus = status ? this.CONFIG.serverStatus[status] : '';
+        this.selectedServer.shownStatus = status ? this.LANG.servers.status[status] : '';
     }
 
     checkIfOnline(serverId) {
         return this.system.getModuleInfo(serverId).toPromise()
+            .then(() => this.setStatus(''))
             .catch(() => this.setStatus('offline'));
     }
 
