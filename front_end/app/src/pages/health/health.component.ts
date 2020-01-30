@@ -18,7 +18,6 @@ import { NxAppStateService }                     from '../../services/nx-app-sta
 import { BreakpointObserver }                    from '@angular/cdk/layout';
 import { WINDOW }                                from '../../services/window-provider';
 import { DOCUMENT }                              from '@angular/common';
-import { DomSanitizer }                          from '@angular/platform-browser';
 import { DeviceDetectorService }                 from 'ngx-device-detector';
 import { NxUriService }                          from '../../services/uri.service';
 
@@ -145,7 +144,8 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                         .subscribe((result: any) => {
                             this.setupReport(result);
                         }, () => {
-                            this.healthService.ready = false;
+                            this.hasServerError = true;
+                            this.healthService.ready = true;
                         });
                 });
             });

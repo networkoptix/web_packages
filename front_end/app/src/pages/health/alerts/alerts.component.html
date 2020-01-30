@@ -1,4 +1,4 @@
-<div [ngSwitch]="healthService.alertsValues.length">
+<div [ngSwitch]="healthService.alertsValues ? healthService.alertsValues.length : 0">
 
     <nx-page-placeholder
             *ngSwitchCase="0"
