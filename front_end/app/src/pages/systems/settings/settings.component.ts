@@ -365,10 +365,11 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     connectionLost() {
         this.dialogs.notify(this.LANG.errorCodes.lostConnection.replace('{{systemName}}',
             this.system.info.name || this.LANG.errorCodes.thisSystem), 'warning');
-        if (this.systemsService.systems.length > 1) {
+        if (this.systemsService.systems.length > 1 || this.settingsService.mergeTarget) {
             let route = this.CONFIG.redirectAuthorised;
             if (this.settingsService.mergeTarget) {
                 route = `${route}/${this.settingsService.mergeTarget}`;
+                this.settingsService.mergeTarget = '';
             }
             setTimeout(() => this.router.navigate([route]), this.CONFIG.alertTimeout);
         }
