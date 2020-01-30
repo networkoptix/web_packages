@@ -165,6 +165,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             if (result) {
                 this.applyService.reset();
                 delete this.locked[user.email];
+                this.paramUser = this.nextUserId;
                 this.uriService.updateURI(`systems/${this.system.id}/users/${this.nextUserId}`);
                 this.menuService.setDetailsSection(this.nextUserId);
             } else {

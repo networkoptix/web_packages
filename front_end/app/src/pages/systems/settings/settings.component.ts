@@ -323,14 +323,12 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
             // Retain buttons
             if (usersNode.level2.length && usersNode.level2[0].id === 'buttons') {
-                // usersNode.level2 = [usersNode.level2[0]];
                 usersNode.level2[0].items[0].disabled = !this.system.isAvailable;
             } else {
                 usersNode.level2 = [];
             }
             if (this.system && this.system.users.length > 0) {
-                usersNode.level3 = [];
-                const {cloudUsers, localUsers} = this.system.users.reduce((result, user) => {
+                const { cloudUsers, localUsers } = this.system.users.reduce((result, user) => {
                     const id = user.id.replace(/{|}/g, '');
                     const node: any = {
                         additionalLabel:  this.LANG.accessRoles[user.role.name] && this.LANG.accessRoles[user.role.name].label || user.role.name,
@@ -349,19 +347,14 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                         result.localUsers.push(node);
                     }
                     return result;
-                }, {cloudUsers: [], localUsers: []});
+                }, { cloudUsers: [], localUsers: [] });
 
-                const byLabelParam = NxUtilsService.byParam((user) => {
-                    return user.label;
-                }, NxUtilsService.sortASC);
-                cloudUsers.sort(byLabelParam);
-
+                usersNode.level3 = [];
                 if (localUsers.length > 0) {
-                    localUsers.sort(byLabelParam);
                     usersNode.level3 = [...localUsers];
                     usersNode.level3.push({ horizontal: true });
                 }
-                usersNode.level3 = [...usersNode.level3, ...cloudUsers];
+                usersNode.level3.push(...cloudUsers);
             }
         } else { // remove Users
             this.content.level1 = this.content.level1.filter(node => node.id !== this.CONFIG.systemMenu.users.id);

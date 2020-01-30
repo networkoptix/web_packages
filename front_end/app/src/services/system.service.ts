@@ -274,9 +274,15 @@ class UserManager {
 
             return user;
         }).sort((userA, userB) => {
-            const userARole = -this.CONFIG.accessRoles.order.indexOf(userA.accessRole);
-            const userBRole = -this.CONFIG.accessRoles.order.indexOf(userB.accessRole);
-            return userARole < userBRole ? -1 : 1;
+            // sorts local before cloud users --> then by email for cloud & name for local
+            if (userA.isCloud === userB.isCloud) {
+                if (userA.isCloud === true) {
+                    return userA.email < userB.email ? -1 : 1;
+                } else {
+                    return userA.name < userB.name ? -1 : 1;
+                }
+            }
+            return userA.isCloud === true ? 1 : -1;
         });
 
         return this.users;
