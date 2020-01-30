@@ -6,7 +6,7 @@
         ></h1>
         <button type="button" class="close"
                 data-dismiss="modal" aria-label="Close"
-                (click)="activeModal.close()" *ngIf="closable">
+                (click)="close('')" *ngIf="closable">
             <div class="close-content"><span class="close-icon"></span></div>
         </button>
     </div>
@@ -16,6 +16,6 @@
                            [actionType]="'primary'"
                            buttonText="{{ 'Restart' | translate }}"></nx-process-button>
 
-        <button type="button" class="btn btn-default" (click)="close()" translate>Cancel</button>
+        <button type="button" class="btn btn-default" (click)="close('')" translate>Cancel</button>
     </div>
 </form>

@@ -211,7 +211,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
         const { id, name } = this.selectedServer;
         return this.dialogs
             .restartServer(this.system, id, name)
-                .then(() => this.setStatus('restarting'));
+                .then(res => this.setStatus(res));
     }
 
     detachServer() {
