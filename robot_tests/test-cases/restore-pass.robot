@@ -45,7 +45,7 @@ Get Restore Code and Open the Link
 
 *** Test Cases ***
 Restores password
-    [Tags]    email    C26260    qwe
+    [Tags]    email    C26260
     ${email}=   Register Random User
     Send "Restore Password" Email    ${email}
     Wait Until Element Is Visible    ${RESET EMAIL SENT MESSAGE}
