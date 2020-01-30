@@ -181,12 +181,6 @@ def set_subscriptions_from_targets(notification_object, request_data):
         settings.CUSTOMIZATION, 'config'
     )['push_subscription_auto_active']
 
-    # Check all related devices for valid tokens
-    device_check_response = PushDevice.objects.filter(user__in=target_accounts).send_message(
-        'Token check', title='Token check', dry_run=True
-    )
-    process_push_response(device_check_response, notification_object, dry_run=True)
-
     devices_without_sub = PushDevice.objects.filter(user__in=target_accounts, user__is_active=True).exclude(
         subscriptions__system_id=system_id).select_related('user')
     for device in devices_without_sub:

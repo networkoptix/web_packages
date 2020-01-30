@@ -101,6 +101,9 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
                                                    False, global_contexts, {"%CLOUD_NAME%": "%CLOUD_NAME%",
                                                                             "%VMS_NAME%": "%VMS_NAME%"})
 
+        public_push_config = asset.read_global_value("%PUSH_CONFIG_WEB%") or \
+            getattr(settings, 'PUSH_NOTIFICATIONS_SETTINGS', {}).get('PUBLIC')
+
         data = {
             'version_id': asset.version_id(),
             'languages': customization.languages_list,
@@ -142,7 +145,7 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
                 'cloud_name': asset.read_global_value("%CLOUD_NAME%"),
                 'vms_name': asset.read_global_value("%VMS_NAME%"),
                 'push_subscription_auto_active': asset.read_global_value("%PUSH_SUB_ACTIVE%"),
-                'push_config': getattr(settings, 'PUSH_NOTIFICATIONS_SETTINGS', {}).get('PUBLIC'),
+                'push_config': public_push_config,
                 'google_tag_manager_id': asset.read_global_value('%GOOGLE_TAG_MANAGER_ID%')
             },
             'cloud_capabilities': {
@@ -642,7 +645,8 @@ class DataStructure(models.Model):
                                                                     DataStructure.DATA_TYPES.external_file,
                                                                     DataStructure.DATA_TYPES.external_image,
                                                                     DataStructure.DATA_TYPES.check_box,
-                                                                    DataStructure.DATA_TYPES.multiselect]):
+                                                                    DataStructure.DATA_TYPES.multiselect,
+                                                                    DataStructure.DATA_TYPES.object]):
             content_value = DataStructure.cast_value(self, self.default)
 
         return content_value

@@ -743,6 +743,24 @@
             "advanced": true
           },
           {
+            "label": "Push Notifications Configuration",
+            "name": "%PUSH_CONFIG%",
+            "description": "Backend API Settings for push notifications",
+            "advanced": true,
+            "optional": true,
+            "type": "object",
+            "value": {}
+          },
+          {
+            "label": "Push Notifications Web Configuration",
+            "name": "%PUSH_CONFIG_WEB%",
+            "description": "Web app config for push notifications",
+            "advanced": true,
+            "optional": true,
+            "type": "object",
+            "value": {}
+          },
+          {
             "label": "Google Tag Manager ID",
             "name": "%GOOGLE_TAG_MANAGER_ID%",
             "description": "ID used for Google Analytics. If not used, enter <b>N/A</b>",

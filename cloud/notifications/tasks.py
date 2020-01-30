@@ -134,6 +134,8 @@ def send_push_notification(notification_id, request_data, device_tokens=None, co
         else:
             log_push_result(notification_object, f'{type(exception)}: {exception}', logging.ERROR)
 
+        raise exception
+
 
 # For testing we dont want to send emails to everyone so we need to set
 # "BROADCAST_NOTIFICATIONS_SUPERUSERS_ONLY = true" in cloud.settings
