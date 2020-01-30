@@ -130,7 +130,9 @@ export class NxHealthService {
         if (header.format) {
             const format = header.format;
             const valueFormats = this.CONFIG.healthMonitoring.valueFormats;
-            if (valueFormats[format]) {
+            if (Array.isArray(retValue)) {
+                retValue = retValue.join(',\n');
+            } else if (valueFormats[format]) {
                 retValue = roundInt(retValue * valueFormats[format].multiplier);
                 formatDisplay = valueFormats[format].display || header.format;
                 retValue = `${retValue} ${formatDisplay}`;
