@@ -127,6 +127,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                                 vms_metrics: true
                             }
                         },
+                        isOnline: true,
                         mediaserver: undefined
                     };
                     this.system.mediaserver = this.serverApi.createConnection(
