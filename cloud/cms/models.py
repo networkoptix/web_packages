@@ -130,6 +130,7 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
                 'integration_filter_items': asset.read_global_value("%INTEGRATION_FILTER_ITEMS%"),
                 'integration_filter_limitation': asset.read_global_value("%INTEGRATION_SHOW_FILTER_LIMITATION%"),
                 'integration_store_enabled': integration_store_enabled,
+                'health_monitoring_enabled': asset.read_global_value('%HM_ENABLED%'),
                 'public_downloads': asset.read_global_value("%PUBLIC_DOWNLOADS%"),
                 'public_releases': asset.read_global_value("%PUBLIC_RELEASE_HISTORY%"),
                 'show_analytics_events': asset.read_global_value("%SHOW_ANALYTICS_EVENTS%"),
@@ -362,7 +363,7 @@ class Asset(models.Model):
         return self.asset_type.type == asset_type
 
     def version_id(self, customization=settings.CUSTOMIZATION):
-        if self.asset_type.single_customization:
+        if self.asset_type and self.asset_type.single_customization:
             actual_customization = self.customizations.first()
             if actual_customization:
                 customization = actual_customization.name
