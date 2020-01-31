@@ -165,11 +165,14 @@ Should handle click I forgot my password link at restore password page
 
 Check restore password email links, colors, cloud name, and open link in new tab
     [Tags]    C26260    Threaded
-    ${email}=   Register Random User
-    Send "Restore Password" Email    ${email}
-
     Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
-    ${email}    Wait For Email    recipient=${email}    subject=${RESET PASSWORD EMAIL SUBJECT}    timeout=120    status=UNSEEN
+    ${user}=   Register Random User
+    ${email}    Wait For Email    recipient=${user}    timeout=120    status=UNSEEN
+    Check Email Subject    ${email}    ${ACTIVATE YOUR ACCOUNT EMAIL SUBJECT}    ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}
+    delete email    ${email}
+    Send "Restore Password" Email    ${user}
+    ${email}    Wait For Email    recipient=${user}    timeout=120    status=UNSEEN
+    Check Email Subject    ${email}    ${RESET PASSWORD EMAIL SUBJECT}    ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}
     ${email text}    Get Email Body    ${email}
     ${email text}    Decode Bytes To String    ${email text}    UTF-8    errors=ignore
     Check Email Button    ${email text}    ${ENV}    ${THEME COLOR}
