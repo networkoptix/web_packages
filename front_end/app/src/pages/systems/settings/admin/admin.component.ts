@@ -216,7 +216,9 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             this.saveSettings,
             () => {
                 this.applyService.reset();
-                this.timeUnitCount = this.settingsWatchers.sessionLimitMinutes.originalValue;
+                if (this.settingsWatchers.sessionLimitMinutes) {
+                    this.timeUnitCount = this.settingsWatchers.sessionLimitMinutes.originalValue;
+                }
             },
             Object.values(this.settingsWatchers));
 
@@ -278,6 +280,11 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                 delete this.settingsWatchers[sw];
             }
         });
+
+        if (!this.settingsWatchers.sessionLimitMinutes) {
+            delete this.settingsWatchers.sessionLimitToggle;
+            delete this.settingsWatchers.sessionLimitUnit;
+        }
     }
 
     setWatcherValues(settings) {

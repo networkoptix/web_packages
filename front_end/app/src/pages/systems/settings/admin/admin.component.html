@@ -228,7 +228,8 @@
                                     <span translate>Limit session duration to</span>
                                 </label>
                             </div>
-                            <div *ngIf="settingsWatchers.sessionLimitToggle.value" class="row ml-4 mt-2">
+                            <div *ngIf="settingsWatchers.sessionLimitToggle && settingsWatchers.sessionLimitToggle.value" 
+                                class="row ml-4 mt-2">
                                 <input #timeUnitTracker
                                         [(ngModel)]="timeUnitCount"
                                         (change)="updateTimeUnitWatcher()"
