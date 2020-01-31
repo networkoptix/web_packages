@@ -47,6 +47,7 @@ Allows register, activate, login with curly text in First and Last name fields
 
 Allows register, activate, login with +!#$%'*-/=?^_`{|}~ in email field
 #ampersand was removed from this test because imaplib could not handle it
+    [Tags]    curly_email
     ${email}=   Get Random Symbol Email    ${BASE EMAIL}
     Register And Activate Account    mark    hamill    ${email}    ${password}
 
@@ -102,15 +103,13 @@ Should trim leading and trailing spaces
 Should allow activation, if user is registered by link /register/?from=client
     [Tags]    email
     ${email}=   Get Random Email    ${BASE EMAIL}
-    Go To    ${url}/register?from=client
-    Register    ${SPACE}mark${SPACE}    ${SPACE}hamill${SPACE}    ${email}    ${password}
+    Register    ${SPACE}mark${SPACE}    ${SPACE}hamill${SPACE}    ${email}    ${password}    from=client
     Activate Account    ${email}    ${password}
 
 Should allow activation, if user is registered by link /register/?from=mobile
     [Tags]    email
     ${email}=   Get Random Email    ${BASE EMAIL}
-    Go To    ${url}/register?from=mobile
-    Register    ${SPACE}mark${SPACE}    ${SPACE}hamill${SPACE}    ${email}    ${password}
+    Register    ${SPACE}mark${SPACE}    ${SPACE}hamill${SPACE}    ${email}    ${password}    from=mobile
     Activate Account    ${email}    ${password}
 
 Link works and suggests to log out user, if he was logged in, buttons operate correctly
@@ -143,7 +142,6 @@ Link works and suggests to log out user, if he was logged in, buttons operate co
 #in login-dialog
 Logging in before activation shows resend email link and email can be sent again
     [Tags]    email
-    Go To    ${url}/register
     ${email}=    Get Random Email    ${BASE EMAIL}
     Register Account   mark    hamill    ${email}    ${password}
     ${code}=   Get Code From Email   ${url}    ${auth}    ${email}    activate_account
@@ -153,4 +151,3 @@ Logging in before activation shows resend email link and email can be sent again
     Click Link    ${RESEND ACTIVATION LINK BUTTON}
     ${code}=   Get Code From Email   ${url}    ${auth}    ${email}    activate_account
     Should not be equal as strings    ${code}    Does not exist
-

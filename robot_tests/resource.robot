@@ -156,8 +156,10 @@ Validate on Register Page
     Run keyword and continue on failure    Title should be    ${REGISTER TITLE TEXT} ${PRODUCT_NAME}
 
 Register
-    [arguments]    ${first name}    ${last name}    ${email}    ${password}    ${checked}=false
-    Go To    ${ENV}/register
+    [arguments]    ${first name}    ${last name}    ${email}    ${password}    ${checked}=false    ${from}=desktop
+    Run Keyword If    '${from}'=='desktop'    Go To    ${ENV}/register
+    Run Keyword If    '${from}'=='mobile'     Go To    ${ENV}/register/?from=mobile
+    Run Keyword If    '${from}'=='client'     Go To    ${ENV}/register/?from=client
     Validate on Register Page
     Input Text    ${REGISTER FIRST NAME INPUT}    ${first name}
     Input Text    ${REGISTER LAST NAME INPUT}    ${last name}
@@ -171,7 +173,7 @@ Register
 Validate Register Success
     [arguments]    ${location}=${url}/register/success
     Wait Until Element Is Visible    ${ACCOUNT CREATION SUCCESS}
-    Location Should Be    ${location}
+    Wait Until Location Is    ${location}
     Run keyword and continue on failure    Title should be    ${WELCOME TEXT} ${PRODUCT_NAME}
 
 Validate Register Email Received
@@ -213,6 +215,12 @@ Register And Activate Account
     Run Keyword If    '${act}'=='api'    Activate Account   ${email}    ${password}
     Run Keyword If    '${act}'=='ui'     Activate    ${email}
     Run Keyword If    '${act}'=='ui'     CloudPortalAPI.Log In    ${ENV}    ${email}    ${password}
+
+Register and activate account with random email
+    [Arguments]    ${first name}    ${last name}    ${password}
+    ${email}=    Get Random Email    ${BASE EMAIL}
+    Register And Activate Account    ${first name}    ${last name}    ${email}    ${password}
+    [Return]    ${email}
 
 # Replaced with "Restore password using API"
 Restore password
