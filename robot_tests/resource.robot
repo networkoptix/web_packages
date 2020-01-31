@@ -11,7 +11,7 @@ Resource     ${variables_file}
 Variables    getIds.py    ${ENV}    ${TEST EMAIL}
 
 
-*** variables ***
+*** Variables ***
 ${directory}    ${SCREENSHOTDIRECTORY}
 ${variables_file}    variables-env.robot
 ${options}    true
@@ -68,7 +68,6 @@ Set Chrome Options Headless
         Call Method    ${options}    add_argument    ${option}
     END
     [Return]    ${options}
-
 
 Check Language Anonymous
     Register Keyword To Run On Failure    NONE
@@ -158,6 +157,7 @@ Validate on Register Page
 
 Register
     [arguments]    ${first name}    ${last name}    ${email}    ${password}    ${checked}=false
+    Go To    ${ENV}/register
     Validate on Register Page
     Input Text    ${REGISTER FIRST NAME INPUT}    ${first name}
     Input Text    ${REGISTER LAST NAME INPUT}    ${last name}
@@ -166,9 +166,6 @@ Register
     Input Text    ${REGISTER PASSWORD INPUT}    ${password}
     Run Keyword If    "${checked}"=="false"    Click Element    ${TERMS AND CONDITIONS CHECKBOX VISIBLE}
     Click Button    ${CREATE ACCOUNT BUTTON}
-
-#Register via API
-#    [Arguments]    ${email}    ${first_name}    ${last_name}
 
 
 Validate Register Success
@@ -204,10 +201,18 @@ Get Email Link
 Activate
     [arguments]    ${email}
     @{auth}=   Create List    ${ALT BASE EMAIL}    ${BASE PASSWORD}
-    ${code}=   Get Code From Email   ${url}    ${auth}    ${email}    activate_account
-    Go To    ${url}/activate/${code}
+    ${code}=   Get Code From Email   ${ENV}    ${auth}    ${email}    activate_account
+    Go To    ${ENV}/activate/${code}
     Wait Until Element Is Visible    ${ACTIVATION SUCCESS}
-    Location Should Be    ${url}/activate/success
+    Location Should Be    ${ENV}/activate/success
+
+Register And Activate Account
+    [Arguments]    ${first name}    ${last name}    ${email}    ${password}    ${reg}=api    ${act}=api
+    Run Keyword If    '${reg}'=='api'    Register Account    ${first name}    ${last name}    ${email}    ${password}
+    Run Keyword If    '${reg}'=='ui'     Register    ${first name}    ${last name}    ${email}    ${password}
+    Run Keyword If    '${act}'=='api'    Activate Account   ${email}    ${password}
+    Run Keyword If    '${act}'=='ui'     Activate    ${email}
+    Run Keyword If    '${act}'=='ui'     CloudPortalAPI.Log In    ${ENV}    ${email}    ${password}
 
 # Replaced with "Restore password using API"
 Restore password
@@ -237,10 +242,13 @@ Restore password
 
 Restore Password using API
     [Arguments]    ${email}    ${new password}
-    CloudPortalAPI.Restore Password    ${ENV}    ${email}    None    None
+    ${resp}=   CloudPortalAPI.Restore Password    ${ENV}    ${email}    None    None
+    Should Be Equal as Strings    ${resp}    200
     @{auth}=   Create List   ${EMAIL OWNER}    ${BASE PASSWORD}
     ${code}=   Get Code From Email    ${ENV}    ${auth}    ${email}    restore_password
+    ${code}=   Convert Code    ${code}
     ${resp}=   CloudPortalAPI.Restore Password    ${ENV}    ${email}    ${code}   ${new password}
+    Should Be Equal As Strings    ${resp}    200
     CloudPortalAPI.Log In    ${ENV}    ${email}    ${new password}
 
 Go to Users List
@@ -290,22 +298,22 @@ Check User Permissions
     ${s}=   Run Keyword And Return Status    Wait Until Element is Visible    ${ACCESS LEVEL DROPDOWN}    10
     Run Keyword If    ${s} == True    Element Text Should Be    ${ACCESS LEVEL DROPDOWN}    ${permissions}
 
-    Run Keyword If    '${permissions}' == '${OWNER TEXT}'
+    Run Keyword If    '${permissions}'=='${OWNER TEXT}'
     ...    Element Text Should Be    ${HELP BLOCK}
     ...    ${UNRESTRICTED ACCESS CONNECT TEXT}
-    Run Keyword If    '${permissions}' == '${ADMIN TEXT}'
+    Run Keyword If    '${permissions}'=='${ADMIN TEXT}'
     ...    Element Text Should Be    ${HELP BLOCK}
     ...    ${SHARE PERMISSIONS HINT ADMINISTRATOR}
-    Run Keyword If    '${permissions}' == '${ADV VIEWER TEXT}'
+    Run Keyword If    '${permissions}'=='${ADV VIEWER TEXT}'
     ...    Element Text Should Be    ${HELP BLOCK}
     ...    ${SHARE PERMISSIONS HINT ADVANCED VIEWER}
-    Run Keyword If    '${permissions}' == '${VIEWER TEXT}'
+    Run Keyword If    '${permissions}'=='${VIEWER TEXT}'
     ...    Element Text Should Be    ${HELP BLOCK}
     ...    ${SHARE PERMISSIONS HINT VIEWER}
-    Run Keyword If    '${permissions}' == '${LIVE VIEWER TEXT}'
+    Run Keyword If    '${permissions}'=='${LIVE VIEWER TEXT}'
     ...    Element Text Should Be    ${HELP BLOCK}
     ...    ${SHARE PERMISSIONS HINT LIVE VIEWER}
-    Run Keyword If    '${permissions}' == '${CUSTOM TEXT}'
+    Run Keyword If    '${permissions}'=='${CUSTOM TEXT}'
     ...    Element Text Should Be    ${HELP BLOCK}
     ...    ${SHARE PERMISSIONS HINT CUSTOM}
 
@@ -576,18 +584,18 @@ Get All Descendant WebElements
 Wait Until Number Of Tabs Are Open
     [Arguments]    ${number}
     @{tabs}=   Get Window Handles
-    ${current tabs} =    Get length    ${tabs}
+    ${current tabs}=   Get length    ${tabs}
     Wait For Condition       return ${current tabs}==${number}
 
 Save Cookies
     #${saved cookie1} =     Get Cookie    _ga
     #${saved cookie2} =     Get Cookie    _gat_UA-51046510-4
     #${saved cookie3} =     Get Cookie    _gid
-    ${saved cookie4} =     Get Cookie    csrftoken
-    ${saved cookie5} =     Get Cookie    language
-    ${saved cookie6} =     Get Cookie    sessionid
-    ${cookies} =     Create List    ${saved cookie4}    ${saved cookie5}    ${saved cookie6}
-    [return]     ${cookies}
+    ${saved cookie4}=   Get Cookie    csrftoken
+    ${saved cookie5}=   Get Cookie    language
+    ${saved cookie6}=   Get Cookie    sessionid
+    ${cookies}=   Create List    ${saved cookie4}    ${saved cookie5}    ${saved cookie6}
+    [return]    ${cookies}
 
 Apply Saved Cookies
     [arguments]   ${cookies}
@@ -628,3 +636,8 @@ Common Restart Logout
     Run Keyword If    ${status}    Log Out via API
     Go To    ${url}
     Sleep    2
+
+Convert Code
+    [Arguments]    ${code}
+    ${code}=   Replace String Using Regexp    ${code}    %3D    =
+    [Return]    ${code}

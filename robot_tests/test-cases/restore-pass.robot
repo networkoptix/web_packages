@@ -20,8 +20,7 @@ Open New Browser On Failure
 
 Register Random User
     ${email}=   Get Random Email    ${BASE EMAIL}
-    Register Account   ${email}    ${password}    mark    hamill
-    Activate Account   ${email}    ${password}
+    Register And Activate Account    mark    hamill    ${email}    ${password}
     [Return]    ${email}
 
 Send "Restore Password" Email
@@ -45,7 +44,7 @@ Get Restore Code and Open the Link
 
 *** Test Cases ***
 Restores password
-    [Tags]    email    C26260
+    [Tags]    email    C26260    qwe
     ${email}=   Register Random User
     Send "Restore Password" Email    ${email}
     Wait Until Element Is Visible    ${RESET EMAIL SENT MESSAGE}
@@ -102,7 +101,7 @@ Displays password masked, shows password and changes eye icon when clicked
     Should Be Equal    '${input type}'    'password'
 
 Should not allow to use one restore link twice
-    [Tags]    email    C42079
+    [Tags]    email    C42079    qwe
     ${email}=   Register Random User
     Send "Restore Password" Email    ${email}
     ${code}=   Get Restore Code and Open the Link    ${email}    restore=${True}    new password=${ALT PASSWORD}

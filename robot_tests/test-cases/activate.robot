@@ -10,6 +10,7 @@ Force Tags        Threaded File    activate
 ${password}    ${BASE PASSWORD}
 ${url}         ${ENV}
 ${symbol password}    pass!@#$%^&*()_-+=;:'"`~,./\|?[]{}
+@{auth}        ${ALT BASE EMAIL}    ${BASE PASSWORD}
 
 *** Keywords ***
 Clear emails
@@ -24,170 +25,113 @@ Restart
 
 Open New Browser On Failure
     Close Browser
-    Open Browser and go to URL    ${url}
+
+Register and activate account with random email
+    [Arguments]    ${first name}    ${last name}    ${password}
+    ${email}=    Get Random Email    ${BASE EMAIL}
+    Register And Activate Account    ${first name}    ${last name}    ${email}    ${password}
+    [Return]    ${email}
 
 *** Test Cases ***
 Register and Activate
-    [tags]    email    C24211
+    [Tags]    email    C24211    C41862
     ${email}    Get Random Email    ${BASE EMAIL}
-    Go To    ${url}/register
-    # Title Should Be    ${REGISTER TITLE TEXT} ${PRODUCT_NAME}
-    Register    'mark'    'hamill'    ${email}    ${password}
-    Activate    ${email}
-    Log In    ${email}    ${password}    button=${SUCCESS LOG IN BUTTON}
+    Register And Activate Account    mark    hamill    ${email}    ${password}    act=ui
 
-allows register, activate, login with user with cyrillic First and Last names and correct credentials
-    [tags]    C41863
-    ${email}    Get Random Email    ${BASE EMAIL}
-    Go To    ${url}/register
-    Register    ${CYRILLIC TEXT}    ${CYRILLIC TEXT}    ${email}    ${password}
-    Activate    ${email}
-    Log In    ${email}    ${password}    button=${SUCCESS LOG IN BUTTON}
+Allows register, activate, login with curly text in First and Last name fields
+    [Tags]    C41863
+    @{curly names}=   Create List    ${CYRILLIC TEXT}    ${SMILEY TEXT}    ${GLYPH TEXT}     ${SYMBOL TEXT}
+    FOR    ${name}    IN    @{curly names}
+        Register and activate account with random email    ${name}    ${name}    ${password}
+    END
 
-allows register, activate, login with user with smiley First and Last names and correct credentials
-    [tags]    C41863
-    ${email}    Get Random Email    ${BASE EMAIL}
-    Go To    ${url}/register
-    Register    ${SMILEY TEXT}    ${SMILEY TEXT}    ${email}    ${password}
-    Activate    ${email}
-    Log In    ${email}    ${password}    button=${SUCCESS LOG IN BUTTON}
-
-allows register, activate, login with user with glyph First and Last names and correct credentials
-    [tags]    C41863
-    ${email}    Get Random Email    ${BASE EMAIL}
-    Go To    ${url}/register
-    Register    ${GLYPH TEXT}    ${GLYPH TEXT}    ${email}    ${password}
-    Activate    ${email}
-    Log In    ${email}    ${password}    button=${SUCCESS LOG IN BUTTON}
-
-allows register, activate, login with `~!@#$%^&*()_:\";\'{}[]+<>?,./ in First and Last name fields
-    [tags]    C41863
-    ${email}    Get Random Email    ${BASE EMAIL}
-    Go To    ${url}/register
-    Register    ${SYMBOL TEXT}    ${SYMBOL TEXT}    ${email}    ${password}
-    Activate    ${email}
-    Log In    ${email}    ${password}    button=${SUCCESS LOG IN BUTTON}
-
-allows register, activate, login with +!#$%'*-/=?^_`{|}~ in email field
+Allows register, activate, login with +!#$%'*-/=?^_`{|}~ in email field
 #ampersand was removed from this test because imaplib could not handle it
-    ${email}    Get Random Symbol Email    ${BASE EMAIL}
-    Go To    ${url}/register
-    Register    mark    hamill    ${email}    ${password}
-    Activate    ${email}
-    Log In    ${email}    ${password}    button=${SUCCESS LOG IN BUTTON}
+    ${email}=   Get Random Symbol Email    ${BASE EMAIL}
+    Register And Activate Account    mark    hamill    ${email}    ${password}
 
-allows register, activate, login with with leading space in email
-    [tags]    C41864
-    ${email}    Get Random Email    ${BASE EMAIL}
-    Go To    ${url}/register
+Allows register, activate, login with with leading space in email
+    [Tags]    C41864
+    ${email}=   Get Random Email    ${BASE EMAIL}
     Register    mark    hamill    ${SPACE}${email}    ${password}
-    Activate    ${email}
-    Log In    ${email}    ${password}    button=${SUCCESS LOG IN BUTTON}
+    Activate Account    ${email}    ${password}
 
-allows register, activate, login with with trailing space in email
-    [tags]    C41864
-    ${email}    Get Random Email    ${BASE EMAIL}
-    Go To    ${url}/register
+Allows register, activate, login with with trailing space in email
+    [Tags]    C41864
+    ${email}=   Get Random Email    ${BASE EMAIL}
     Register    mark    hamill    ${email}${SPACE}    ${password}
-    Activate    ${email}
-    Log In    ${email}    ${password}    button=${SUCCESS LOG IN BUTTON}
+    Activate Account    ${email}    ${password}
 
-allows register, activate, login with pass!@#$%^&*()_-+=;:'"`~,./\|?[]{} password
-    [tags]    C41861
-    ${email}    Get Random Email    ${BASE EMAIL}
-    Go To    ${url}/register
-    Register    mark    hamill    ${email}    ${symbol password}
-    Activate    ${email}
-    Log In    ${email}    ${symbol password}    button=${SUCCESS LOG IN BUTTON}
+Allows register, activate, login with pass!@#$%^&*()_-+=;:'"`~,./\|?[]{} password
+    [Tags]    C41861
+    Register and activate account with random email    mark    hamill    ${symbol password}
 
-allows register, activate, login with qweasd 123
-    [tags]    C41862
-    ${email}    Get Random Email    ${BASE EMAIL}
-    Go To    ${url}/register
-    Register    mark    hamill    ${email}    ${BASE PASSWORD}
-    Activate    ${email}
-    Log In    ${email}    ${BASE PASSWORD}    button=${SUCCESS LOG IN BUTTON}
-
-should show error if same link is used twice
-    [tags]    email    C41566
-    ${email}    Get Random Email    ${BASE EMAIL}
-    Go To    ${url}/register
-    Register    'mark'    'hamill'    ${email}    ${password}
-    ${link}    Get Email Link    ${email}    activate
-    Go To    ${link}
+Should show error if same link is used twice
+    [Tags]    email    C41566
+    ${email}=   Get Random Email    ${BASE EMAIL}
+    Register Account    mark    hamill    ${email}    ${password}
+    ${code}=   Get Code From Email    ${url}    ${auth}    ${email}    activate_account
+    Go To    ${url}/activate/${code}
     Wait Until Element Is Visible    ${ACTIVATION SUCCESS}
-    Go To    ${link}
+    Go To    ${url}/activate/${code}
     Wait Until Element Is Visible    ${ALREADY ACTIVATED}
 
-should save user data to user account correctly
-    [tags]    email
-    ${email}    Get Random Email    ${BASE EMAIL}
-    Go To    ${url}/register
-    Register    mark    hamill    ${email}    ${password}
-    Activate    ${email}
-    Log In    ${email}    ${password}    button=${SUCCESS LOG IN BUTTON}
-    Go To    ${url}/account
-    Wait Until Textfield Contains    ${ACCOUNT FIRST NAME}    mark
-    Wait Until Textfield Contains    ${ACCOUNT LAST NAME}    hamill
+Should save user data to user account correctly
+    [Tags]    email
+    ${email}=   Register and activate account with random email    mark    hamill    ${password}
+    ${user data}=   Get Account Data    ${url}    ${email}    ${password}
+    Should be equal as strings    &{user data}[first_name]    mark
+    Should be equal as strings    &{user data}[last_name]    hamill
 
-should allow to enter more than 255 symbols in First and Last names and cut it to 255
-    [tags]    email
-    ${email}    Get Random Email    ${BASE EMAIL}
-    Go To    ${url}/register
-    Register    ${300CHARS}    ${300CHARS}    ${email}    ${password}
-    Activate    ${email}
-    Log In    ${email}    ${password}    button=${SUCCESS LOG IN BUTTON}
-    Go To    ${url}/account
-    Wait Until Textfield Contains    ${ACCOUNT FIRST NAME}    ${255CHARS}
-    Wait Until Textfield Contains    ${ACCOUNT LAST NAME}    ${255CHARS}
+Should allow to enter more than 255 symbols in First and Last names and cut it to 255
+    [Tags]    email
+    ${email}=   Get Random Email    ${BASE EMAIL}
+    Register and activate account    ${300CHARS}    ${300CHARS}    ${email}    ${password}    reg=ui
+    ${user data}=   Get Account Data    ${url}    ${email}    ${password}
+    Should be equal as strings    &{user data}[first_name]    ${255CHARS}
+    Should be equal as strings    &{user data}[last_name]    ${255CHARS}
 
-should trim leading and trailing spaces
-    [tags]    email
-    ${email}    Get Random Email    ${BASE EMAIL}
-    Go To    ${url}/register
-    Register    ${SPACE}mark${SPACE}    ${SPACE}hamill${SPACE}    ${email}    ${password}
-    Activate    ${email}
-    Log In    ${email}    ${password}    button=${SUCCESS LOG IN BUTTON}
-    Go To    ${url}/account
-    Wait Until Textfield Contains    ${ACCOUNT FIRST NAME}    mark
-    Wait Until Textfield Contains    ${ACCOUNT LAST NAME}    hamill
+Should trim leading and trailing spaces
+    [Tags]    email
+    ${email}=  Get Random Email    ${BASE EMAIL}
+    Register and activate account    ${SPACE}mark${SPACE}    ${SPACE}hamill${SPACE}    ${email}    ${password}    reg=ui
+    ${user data}=   Get Account Data    ${url}    ${email}    ${password}
+    Should be equal as strings    &{user data}[first_name]    mark
+    Should be equal as strings    &{user data}[last_name]    hamill
 
-should allow activation, if user is registered by link /register/?from=client
-    [tags]    email
-    ${email}    Get Random Email    ${BASE EMAIL}
+Should allow activation, if user is registered by link /register/?from=client
+    [Tags]    email
+    ${email}=   Get Random Email    ${BASE EMAIL}
     Go To    ${url}/register?from=client
     Register    ${SPACE}mark${SPACE}    ${SPACE}hamill${SPACE}    ${email}    ${password}
-    Activate    ${email}
-    Log In    ${email}    ${password}    button=${SUCCESS LOG IN BUTTON}
+    Activate Account    ${email}    ${password}
 
-should allow activation, if user is registered by link /register/?from=mobile
-    [tags]    email
-    ${email}    Get Random Email    ${BASE EMAIL}
+Should allow activation, if user is registered by link /register/?from=mobile
+    [Tags]    email
+    ${email}=   Get Random Email    ${BASE EMAIL}
     Go To    ${url}/register?from=mobile
     Register    ${SPACE}mark${SPACE}    ${SPACE}hamill${SPACE}    ${email}    ${password}
-    Activate    ${email}
-    Log In    ${email}    ${password}    button=${SUCCESS LOG IN BUTTON}
+    Activate Account    ${email}    ${password}
 
-link works and suggests to log out user, if he was logged in, buttons operate correctly
-    [tags]    email    C41564
-    ${email1}    Get Random Email    ${BASE EMAIL}
-    # This sleep is so that the emails don't get the same timestamp
-    Sleep    .01
-    ${email2}    Get Random Email    ${BASE EMAIL}
-    Go To    ${url}/register
-    Register    mark    hamill    ${email1}    ${password}
-   ${link1}    Get Email Link    ${email1}    activate
-    Go To    ${url}/register
-    Register    mark    hamill    ${email2}    ${password}
-    ${link2}    Get Email Link    ${email2}    activate
+Link works and suggests to log out user, if he was logged in, buttons operate correctly
+    [Tags]    email    C41564
+    ${email1}=   Get Random Email    ${BASE EMAIL}
+    Register Account    mark    hamill    ${email1}    ${password}
+    ${code1}=   Get Code From Email    ${url}    ${auth}    ${email1}    activate_account
+
+    ${email2}=   Get Random Email    ${BASE EMAIL}
+    Register Account   mark    hamill    ${email2}    ${password}
+    ${code2}=   Get Code From Email    ${url}    ${auth}    ${email2}    activate_account
+
     Log In    ${EMAIL OWNER}    ${password}
-    Go To    ${link1}
+    Go To    ${url}/activate/${code1}
     Wait Until Page Contains Element    ${ACTIVATION SUCCESS}
     Wait Until Element Is Visible    ${LOGGED IN STAY LOGGED IN BUTTON}
     Click Button    ${LOGGED IN STAY LOGGED IN BUTTON}
     Log Out
+
     Log In    ${email1}    ${password}
-    Go To    ${link2}
+    Go To    ${url}/activate/${code2}
     Wait Until Page Contains Element    ${ACTIVATION SUCCESS}
     Wait Until Element Is Visible    ${LOGGED IN CANCEL BUTTON}
     Click Button    ${LOGGED IN CANCEL BUTTON}
@@ -198,13 +142,15 @@ link works and suggests to log out user, if he was logged in, buttons operate co
 #user message when not activated; Resend activation button sends email"
 #in login-dialog
 Logging in before activation shows resend email link and email can be sent again
-    [tags]    email
+    [Tags]    email
     Go To    ${url}/register
-    ${random email}    get random email    ${BASE EMAIL}
-    Register    'mark'    'hamill'    ${random email}    ${BASE PASSWORD}
-    Wait Until Element Is Visible    //h1[contains(@class,'process-success')]
-    Log In    ${random email}    ${BASE PASSWORD}    validate=${False}
+    ${email}=    Get Random Email    ${BASE EMAIL}
+    Register Account   mark    hamill    ${email}    ${password}
+    ${code}=   Get Code From Email   ${url}    ${auth}    ${email}    activate_account
+    Should not be equal as strings    ${code}    Does not exist
+    Log In    ${email}    ${password}    validate=${False}
     Wait Until Element Is Visible    ${RESEND ACTIVATION LINK BUTTON}
-    Validate Register Email Received    ${random email}
     Click Link    ${RESEND ACTIVATION LINK BUTTON}
-    Validate Register Email Received    ${random email}
+    ${code}=   Get Code From Email   ${url}    ${auth}    ${email}    activate_account
+    Should not be equal as strings    ${code}    Does not exist
+

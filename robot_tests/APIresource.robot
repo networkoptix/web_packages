@@ -3,8 +3,7 @@ Resource          resource.robot
 Library           RequestsLibrary
 Library           NoptixLibrary/Encode.py
 
-
-*** variables ***
+*** Variables ***
 ${default name}    API made system
 ${customization}    default
 
@@ -73,7 +72,7 @@ Integration Store is Enabled
     Return From Keyword    ${resp.json()['integrationStoreEnabled']}
 
 Register Account
-    [Arguments]    ${email}   ${password}    ${first name}    ${last name}
+    [Arguments]    ${first name}    ${last name}    ${email}   ${password}
     &{data}=    Create Dictionary
     ...    email=${email}
     ...    password=${password}
@@ -90,11 +89,12 @@ Activate Account
     @{auth}=   Create List    ${ALT BASE EMAIL}    ${BASE PASSWORD}
     @{new user auth}=   Create List    ${email}    ${password}
     ${code}=   Get Code From Email   ${ENV}    ${auth}    ${email}    activate_account
-#    ${code}=   Replace String Using Regexp    ${code}    %3D    ${EMPTY}
+    ${code}=   Convert Code    ${code}
     &{data}=   Create Dictionary    code=${code}
     Create Digest Session    Activate Account session    ${ENV}    auth=${new user auth}    disable_warnings=1
     ${resp}=    Post Request    Activate Account session    /api/account/activate    json=${data}
     Should Be Equal As Strings    ${resp.status_code}    200
+    CloudPortalAPI.Log In    ${ENV}    ${email}    ${password}
     Return From Keyword    ${resp.json()}
 
 # Alternative way to reset Account password - via cdb directly.
@@ -104,8 +104,8 @@ Set Account Password
     ${passwordHa1}=   Encode.Get Ha1 Password    ${email}    ${new_password}
     ${passwordHa1Sha256}=   Encode.Get Ha1 Sha256 Password     ${email}    ${new_password}
 
-    &{params}=    Create Dictionary    passwordHa1=${passwordHa1}    passwordHa1Sha256=${passwordHa1Sha256}
-    @{auth}=   Create Dictionary    ${email}    ${old_password}
+    &{params}=   Create Dictionary    passwordHa1=${passwordHa1}    passwordHa1Sha256=${passwordHa1Sha256}
+    @{auth}=   Create List    ${email}    ${old_password}
     Create Digest Session    set_new_password_session   ${ENV}    auth=${auth}    disable_warnings=1
     ${resp}=    Post Request    set_new_password_session    /cdb/account/update    json=${params}
     Should Be Equal As Strings    ${resp.status_code}    200
@@ -131,4 +131,4 @@ Evaluate Auto System Settings via API
     Create Digest Session    returnedSetting    ${AUTO SYS API}    ${AUTO SYS API AUTH}     disable_warnings=1
     ${systemSettings} =     Get Request    returnedSetting   /api/systemSettings   timeout=10
     ${string} =    Convert To String    ${systemSettings.json()}
-    Should Contain    ${string}    ${setting}': '${selected}git add
+    Should Contain    ${string}    ${setting}': '${selected}

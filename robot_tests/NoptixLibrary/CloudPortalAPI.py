@@ -1,4 +1,3 @@
-import re
 import requests
 
 
@@ -57,6 +56,15 @@ class CloudPortalAPI(object):
             get_acc_lang_session.close()
             return resp.json()['ajs']['language']
 
+    def get_account_data(self, env, email, password):
+        with requests.Session() as s:
+            resp = s.post(f'{env}/api/account/login', json={'email': email, 'password': password})
+            assert resp.status_code == 200, "Log In Failed"
+            s.headers.update({'X-CSRFToken': s.cookies['csrftoken']})
+            resp = s.get(env + '/api/account/')
+            s.close()
+            return resp.json()
+
     def set_account_language(self, env, email, password, new_language='en_US'):
         set_acc_lang_session = self.log_in(env, email, password)
         with set_acc_lang_session:
@@ -88,4 +96,4 @@ class CloudPortalAPI(object):
             s.headers.update({'X-CSRFToken': s.cookies['csrftoken']})
             resp = s.post(f'{env}/api/robot/get_code', json={'email': email, 'type': message_type})
             s.close()
-            return resp.json()['code'].replace('%3D', '=')
+            return resp.json()['code']
