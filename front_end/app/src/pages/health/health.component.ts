@@ -138,14 +138,17 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                 }
                 this.healthService.system = this.system;
                 infoPromise.then(() => {
-                    this.system.mediaserver.getAggregateHealthReport()
-                        .subscribe((result: any) => {
-                            this.setupReport(result);
-                        }, () => {
-                            this.hasServerError = this.system.isOnline;
-                        }, () => {
-                            this.outdatedVersion = !this.system.info.capabilities.vms_metrics;
-                        });
+                    if (this.system.isOnline) {
+                        this.outdatedVersion = !this.system.info.capabilities.vms_metrics;
+                    }
+                    if (!this.outdatedVersion) {
+                        this.system.mediaserver.getAggregateHealthReport()
+                            .subscribe((result: any) => {
+                                this.setupReport(result);
+                            }, () => {
+                                this.hasServerError = this.system.isOnline;
+                            });
+                    }
                 });
             });
         });
