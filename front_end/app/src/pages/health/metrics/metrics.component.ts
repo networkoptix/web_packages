@@ -59,6 +59,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
     objectValues = Object.values;
 
     routeSubscription: SubscriptionLike;
+    queryParamSubscription: SubscriptionLike;
     breakpointSubscription: SubscriptionLike;
     tableReadySubscription: SubscriptionLike;
 
@@ -112,6 +113,13 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
     ngOnInit(): void {
         this.initialId = this.route.snapshot.queryParamMap.get('id');
         let searchParam = this.route.snapshot.queryParamMap.get('search');
+
+        this.queryParamSubscription = this.route.queryParamMap.subscribe(params => {
+            if (params.keys.length === 0 && this.route.snapshot.params.metric === this.metricId) {
+                this.selectedValues = {...this.healthService.values[this.metricId] || {}};
+                this.resetActiveEntity();
+            }
+        });
 
         this.routeSubscription = this.route
             .params

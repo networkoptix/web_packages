@@ -34,6 +34,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
 
     layoutReady = new BehaviorSubject(false);
 
+    queryParamSubscription: SubscriptionLike;
     breakpointSubscription: SubscriptionLike;
     tableReadySubscription: SubscriptionLike;
     layoutReadySubscription: SubscriptionLike;
@@ -121,7 +122,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
                     this.tableWrapper = this.elementTable.nativeElement.querySelectorAll('.table-wrapper')[0].offsetWidth;
                 }
             });
-        })
+        });
 
         this.windowSizeSubscription = this.scrollMechanicsService.windowSizeSubject.subscribe(({ width }) => {
             if (this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.lg)) {
@@ -138,6 +139,14 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         this.tableReadySubscription = this.healthService.tableReadySubject.subscribe(ready => {
             if (ready) {
                 this.setLayout();
+            }
+        });
+
+        this.queryParamSubscription = this.route.queryParamMap.subscribe(params => {
+            if (params.keys.length === 0) {
+                this.alerts = {...this.healthService.alertsValues || {}};
+                this.resetActiveEntity();
+                this.resetFilterModel();
             }
         });
     }
@@ -169,6 +178,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         }
 
         this.filterModel = { ...this.filterModel };
+        this.countAlerts();
     }
 
     addFilterAlarms() {
