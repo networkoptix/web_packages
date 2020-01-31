@@ -12,7 +12,7 @@
                             *ngIf="selectedServer.internalStatus"
                             [ngClass]="{
                                 tag: true,
-                                offline: selectedServer.internalStatus === CONFIG.serverStatus.offline,
+                                offline: serverOffline,
                                 online: selectedServer.internalStatus === CONFIG.serverStatus.restarting
                                     || selectedServer.internalStatus === CONFIG.serverStatus.reseting
                             }"
@@ -21,7 +21,7 @@
                         </span>
                     </div>
                     <button class="check-status"
-                        *ngIf="selectedServer.internalStatus === CONFIG.serverStatus.offline"
+                        *ngIf="serverOffline"
                         (click)="checkStatus()">
                         <span [ngClass]="{ 'animate-rotation': checking }">
                             <svg-icon src="static/icons/reload.svg"
@@ -54,14 +54,14 @@
                         <button 
                             class="btn btn-default"
                             (click)="renameServer()"
-                            [disabled]="renameDisabled || !system.currentServerNotBusy"
+                            [disabled]="renameDisabled || !system.currentServerNotBusy || serverOffline"
                         >
                             <span class="ellipsis" translate>Rename</span>
                         </button>
                         <button 
                             class="btn btn-default"
                             (click)="restartServer()"
-                            [disabled]="restartDisabled || !system.currentServerNotBusy"
+                            [disabled]="restartDisabled || !system.currentServerNotBusy || serverOffline"
                         >
                             <span class="ellipsis" translate>Restart</span>
                         </button>
@@ -71,7 +71,7 @@
                             <button 
                                 class="btn btn-default"
                                 (click)="detachServer()"
-                                [disabled]="detachDisabled || !system.currentServerNotBusy"
+                                [disabled]="detachDisabled || !system.currentServerNotBusy || serverOffline"
                                 *ngIf="system.servers.length > 1"
                             >
                                 <span class="ellipsis" translate>Detach from the System</span>
@@ -79,7 +79,7 @@
                             <button 
                                 class="btn btn-default"
                                 (click)="resetServer()"
-                                [disabled]="resetDisabled || !system.currentServerNotBusy"
+                                [disabled]="resetDisabled || !system.currentServerNotBusy || serverOffline"
                             >
                                 <span class="ellipsis" translate>Reset to Defaults</span>
                             </button>
@@ -103,7 +103,7 @@
                         [(ngModel)]="ipPortWatcher.value"
                         (keydown)="storePreviousValue($event)"
                         (keyup)="validationCheckForInput()"
-                        [disabled]="portChangeDisabled || !system.currentServerNotBusy"
+                        [disabled]="portChangeDisabled || !system.currentServerNotBusy || serverOffline"
                         (change)="onPortChange()"
                     >
                 </div>

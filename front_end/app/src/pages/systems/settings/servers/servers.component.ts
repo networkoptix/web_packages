@@ -47,11 +47,13 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
     detachDisabled: boolean;
     resetDisabled: boolean;
     portChangeDisabled: boolean;
+    serverOffline: boolean;
 
     private setupDefaults() {
         this.CONFIG = this.configService.getConfig();
         this.LANG = this.language.getTranslations();
         this.checking = false;
+        this.serverOffline = false;
         this.renameDisabled = true;
         this.restartDisabled = true;
         this.detachDisabled = true;
@@ -190,6 +192,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
     setStatus(status) {
         this.selectedServer.internalStatus = status ? this.CONFIG.serverStatus[status] : '';
         this.selectedServer.shownStatus = status ? this.LANG.servers.status[status] : '';
+        this.serverOffline = this.selectedServer.internalStatus === this.CONFIG.serverStatus.offline;
     }
 
     checkIfOnline(serverId) {
