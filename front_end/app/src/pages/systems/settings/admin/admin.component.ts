@@ -217,7 +217,11 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             () => {
                 this.applyService.reset();
                 if (this.settingsWatchers.sessionLimitMinutes) {
-                    this.timeUnitCount = this.settingsWatchers.sessionLimitMinutes.originalValue;
+                    this.timeUnitCount = this.settingsWatchers.sessionLimitMinutes.originalValue
+                        || this.limitSessionTimeUnits[0].default;
+                    this.selectedTimeUnit = this.limitSessionTimeUnits.find((e: any) => {
+                        return e.value === this.settingsWatchers.sessionLimitUnit.originalValue;
+                    });
                 }
             },
             Object.values(this.settingsWatchers));
@@ -314,10 +318,9 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
                     sw[setting].value = this.timeUnitCount || 0;
                     this.timeUnitCount = this.timeUnitCount || this.limitSessionTimeUnits[0].default;
-                    this.selectedTimeUnit = this.limitSessionTimeUnits
-                                                .find(e => {
-                                                    return e.value === sw.sessionLimitUnit.value;
-                                                });
+                    this.selectedTimeUnit = this.limitSessionTimeUnits.find(e => {
+                                                return e.value === sw.sessionLimitUnit.value;
+                                            });
                 }
             }
         });
@@ -441,14 +444,10 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             }
             el.nativeElement.setAttribute('max', this.currentMaxTimeUnit);
 
-            this.timeUnitCount = timeUnit.default;
-
             if (this.selectedTimeUnit.value !== timeUnit.value) {
                 this.settingsWatchers.sessionLimitUnit.value = timeUnit.value;
                 this.selectedTimeUnit = timeUnit;
             }
-
-            this.updateTimeUnitWatcher();
         }
     }
 
@@ -472,10 +471,9 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         const sw = this.settingsWatchers;
         if (sw.sessionLimitUnit.value === this.minutes && this.timeUnitCount % 60 === 0) {
             sw.sessionLimitUnit.value = this.hours;
-            this.selectedTimeUnit = this.limitSessionTimeUnits
-                                        .find(e => {
-                                            return e.value === sw.sessionLimitUnit.value;
-                                        });
+            this.selectedTimeUnit = this.limitSessionTimeUnits.find(e => {
+                                        return e.value === sw.sessionLimitUnit.value;
+                                    });
             this.timeUnitCount /= 60;
         }
         sw.sessionLimitMinutes.value = this.timeUnitCount;
