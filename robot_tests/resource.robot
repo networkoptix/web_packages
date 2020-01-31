@@ -640,4 +640,5 @@ Common Restart Logout
 Convert Code
     [Arguments]    ${code}
     ${code}=   Replace String Using Regexp    ${code}    %3D    =
+    ${code}=   Replace String Using Regexp    ${code}    %2B    +
     [Return]    ${code}
