@@ -14,7 +14,7 @@ import { NxApplyService, Watcher }     from '../../../../services/apply.service'
 import { NxUriService }                from '../../../../services/uri.service';
 import { Subscription, of, interval }  from 'rxjs';
 import {
-    filter, throttleTime, map, delay,
+    filter, auditTime, map, delay,
     retryWhen, delayWhen, catchError } from 'rxjs/operators';
 import { AutoUnsubscribe }             from 'ngx-auto-unsubscribe';
 
@@ -108,7 +108,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                             }
                         }),
                         retryWhen(err => err.pipe(delay(1000))),
-                        throttleTime(5000)
+                        auditTime(2000)
                     )
                     .subscribe(() => {
                         if (this.system.currentServerNotBusy) {
