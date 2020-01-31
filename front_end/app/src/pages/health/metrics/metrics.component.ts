@@ -246,10 +246,8 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
 
                     if (!this.mobileDetailMode) {
                         this.containerDimensions = [elementSearchHeight + 16, 0]; // trick table's onChanges will pick new dimensions
-                        // }
-                        // area available
                     }
-
+                    // area available
                     const areaWidth = this.area.nativeElement.offsetWidth;
                     // area available to the table (- gutter)
                     const availAreaWidth = areaWidth - NxHealthService.PANEL_WIDTH - 16;
