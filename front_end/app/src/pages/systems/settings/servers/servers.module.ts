@@ -5,6 +5,7 @@ import { downgradeComponent, UpgradeModule } from '@angular/upgrade/static';
 import { RouterModule, Routes }              from '@angular/router';
 import { FormsModule }                       from '@angular/forms';
 import { NgbModule }                         from '@ng-bootstrap/ng-bootstrap';
+import { AngularSvgIconModule }              from 'angular-svg-icon';
 
 import { DirectivesModule }       from '../../../../directives/directives.module';
 import { NxSystemServersComponent } from './servers.component';
@@ -23,6 +24,7 @@ import { ComponentsModule }    from '../../../../components/components.module';
         TranslateModule,
         ComponentsModule,
         DirectivesModule,
+        AngularSvgIconModule,
     ],
     providers      : [],
     declarations   : [

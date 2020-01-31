@@ -482,7 +482,6 @@
         "restartSuccessful": "Server has successfully restarted.",
         "servers": "Servers",
         "status": {
-            "checking": "checking status...",
             "detaching": "detaching...",
             "offline": "offline",
             "reseting": "reseting...",

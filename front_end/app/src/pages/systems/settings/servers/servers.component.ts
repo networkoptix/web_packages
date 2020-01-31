@@ -1,21 +1,22 @@
 import {
     Component, OnInit, Inject,
     ViewContainerRef, OnDestroy
-}                                    from '@angular/core';
-import { ActivatedRoute }            from '@angular/router';
-import { NxConfigService }           from '../../../../services/nx-config';
-import { NxDialogsService }          from '../../../../dialogs/dialogs.service';
-import { NxSettingsService }         from '../settings.service';
-import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
-import { NxMenuService }             from '../../../../components/menu/menu.service';
-import { NxProcessService }          from '../../../../services/process.service';
-import { NxSystem }                  from '../../../../services/system.service';
-import { NxApplyService, Watcher }   from '../../../../services/apply.service';
-import { NxUriService }              from '../../../../services/uri.service';
-import { Subscription }              from 'rxjs';
-import { filter, throttleTime, map,
-    retryWhen, delay }               from 'rxjs/operators';
-import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
+}                                      from '@angular/core';
+import { ActivatedRoute }              from '@angular/router';
+import { NxConfigService }             from '../../../../services/nx-config';
+import { NxDialogsService }            from '../../../../dialogs/dialogs.service';
+import { NxSettingsService }           from '../settings.service';
+import { NxLanguageProviderService }   from '../../../../services/nx-language-provider';
+import { NxMenuService }               from '../../../../components/menu/menu.service';
+import { NxProcessService }            from '../../../../services/process.service';
+import { NxSystem }                    from '../../../../services/system.service';
+import { NxApplyService, Watcher }     from '../../../../services/apply.service';
+import { NxUriService }                from '../../../../services/uri.service';
+import { Subscription, of, interval }  from 'rxjs';
+import {
+    filter, throttleTime, map, delay,
+    retryWhen, delayWhen, catchError } from 'rxjs/operators';
+import { AutoUnsubscribe }             from 'ngx-auto-unsubscribe';
 
 @AutoUnsubscribe()
 @Component({
@@ -39,6 +40,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
     saveSettings: any;
     ipPortWatcher: any = new Watcher<number>();
     previousInputValue: number;
+    checking: boolean;
 
     renameDisabled: boolean;
     restartDisabled: boolean;
@@ -49,6 +51,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
     private setupDefaults() {
         this.CONFIG = this.configService.getConfig();
         this.LANG = this.language.getTranslations();
+        this.checking = false;
         this.renameDisabled = true;
         this.restartDisabled = true;
         this.detachDisabled = true;
@@ -113,9 +116,6 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                                 this.system.initSystemMediaServers();
                             }
                             if (!this.applyService.locked) {
-                                if (this.selectedServer) {
-                                    this.setStatus('checking');
-                                }
                                 this.setServer();
                             }
                         }
@@ -157,10 +157,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
             server.ip = ip;
             server.osName = server.osInfo !== '' ? JSON.parse(server.osInfo).platform : this.LANG.common.unknown;
             this.selectedServer = server;
-            if (!this.selectedServer.internalStatus) {
-                this.setStatus('checking');
-            }
-            this.checkIfOnline(server.id);
+            this.checkIfOnline(this.selectedServer.id);
             this.menuService.setDetailsSection(this.selectedServer.id);
 
             this.renameDisabled = !this.system.permissions.editAdmins;
@@ -198,7 +195,23 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
     checkIfOnline(serverId) {
         return this.system.getModuleInfo(serverId).toPromise()
             .then(() => this.setStatus(''))
-            .catch(() => this.setStatus('offline'));
+            .catch(() => this.setStatus(this.CONFIG.serverStatus.offline));
+    }
+
+    checkStatus() {
+        this.checking = true;
+        const now = new Date().getTime();
+        this.system.getModuleInfo(this.selectedServer.id)
+            .pipe(
+                catchError(() => of('error')),
+                delayWhen(() => interval(3400 - ((new Date().getTime()) - now))),
+            )
+            .subscribe(res => {
+                if (res !== 'error') {
+                    this.setStatus('');
+                }
+                this.checking = false;
+            });
     }
 
     renameServer() {

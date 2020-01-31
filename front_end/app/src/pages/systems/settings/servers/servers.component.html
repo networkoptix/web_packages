@@ -5,35 +5,46 @@
     <div class="col-12 server-info" *ngIf="selectedServer">
         <nx-block header-style="extended">
             <header>
-                <div class="header-title">
-                    <h2>{{ selectedServer.name }}</h2>
-                    <span *ngIf="selectedServer.internalStatus"
-                        [ngClass]="{
-                            tag: true,
-                            offline: selectedServer.internalStatus === CONFIG.serverStatus.offline,
-                            online: selectedServer.internalStatus === CONFIG.serverStatus.restarting
-                                || selectedServer.internalStatus === CONFIG.serverStatus.reseting,
-                            checking: selectedServer.internalStatus === CONFIG.serverStatus.checking
-                        }"
-                    >
-                        {{ selectedServer.shownStatus }}
-                    </span>
+                <div class="header-top-bar d-flex justify-content-between">
+                    <div class="header-title">
+                        <h2>{{ selectedServer.name }}</h2>
+                        <span 
+                            *ngIf="selectedServer.internalStatus"
+                            [ngClass]="{
+                                tag: true,
+                                offline: selectedServer.internalStatus === CONFIG.serverStatus.offline,
+                                online: selectedServer.internalStatus === CONFIG.serverStatus.restarting
+                                    || selectedServer.internalStatus === CONFIG.serverStatus.reseting
+                            }"
+                        >
+                            {{ selectedServer.shownStatus }}
+                        </span>
+                    </div>
+                    <button class="check-status"
+                        *ngIf="selectedServer.internalStatus === CONFIG.serverStatus.offline"
+                        (click)="checkStatus()">
+                        <span [ngClass]="{ 'animate-rotation': checking }">
+                            <svg-icon src="static/icons/reload.svg"
+                                [applyCss]="true"></svg-icon>
+                        </span>
+                        <span class="ml-1" translate>Check Status</span>
+                    </button>
                 </div>
                 <div class="header-table col-7">
                     <div class="header-table-cell">
                         <span class="mr-2 cell-title" translate>IP</span>
                         <span class="cell-ellipsis"></span>
-                        <span class="col-9">{{ selectedServer.ip }}</span>
+                        <span class="col-9">{{ selectedServer.ip || '-' }}</span>
                     </div>
                     <div class="header-table-cell">
                         <span class="mr-2 cell-title" translate>OS</span>
                         <span class="cell-ellipsis"></span>
-                        <span class="col-9">{{ selectedServer.osName }}</span>
+                        <span class="col-9">{{ selectedServer.osName || '-' }}</span>
                     </div>
                     <div class="header-table-cell">
                         <span class="mr-2 cell-title" translate>Version</span>
                         <span class="cell-ellipsis"></span>
-                        <span class="col-9">{{ selectedServer.version }}</span>
+                        <span class="col-9">{{ selectedServer.version || '-' }}</span>
                     </div>
                 </div>
             </header>
