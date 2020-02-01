@@ -207,7 +207,7 @@
     "RELEASES TAB TEXT": "Releaser",
     "PATCHES TAB TEXT": "Patchar",
     "BETAS TAB TEXT": "Betaversioner",
-    "SALES INQUIRY TEXT": "Försäljningsförfrågan för vis - QA - face_recognition",
-    "TECHNICAL INQUIRY TEXT": "Teknisk förfrågan för vis - QA - face_recognition",
-    "FEEDBACK TEXT": "Feedback för integration vis - QA - face_recognition"
+    "SALES INQUIRY TEXT": "Sales inquiry for {{integration}}",
+    "TECHNICAL INQUIRY TEXT": "Technical inquiry for {{integration}}",
+    "FEEDBACK TEXT": "Feedback for integration {{integration}}"
 }

@@ -207,7 +207,7 @@
     "RELEASES TAB TEXT": "Communiqués",
     "PATCHES TAB TEXT": "Patchs",
     "BETAS TAB TEXT": "Betas",
-    "SALES INQUIRY TEXT": "Demande de vente pour vis - QA - face_recognition",
-    "TECHNICAL INQUIRY TEXT": "Demande de vente pour vis - QA - face_recognition",
-    "FEEDBACK TEXT": "Commentaires pour l'intégration vis - QA - face_recognition"
+    "SALES INQUIRY TEXT": "Sales inquiry for {{integration}}",
+    "TECHNICAL INQUIRY TEXT": "Technical inquiry for {{integration}}",
+    "FEEDBACK TEXT": "Feedback for integration {{integration}}"
 }

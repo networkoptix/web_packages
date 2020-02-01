@@ -207,7 +207,7 @@
     "RELEASES TAB TEXT": "Sürümler",
     "PATCHES TAB TEXT": "Yamalar",
     "BETAS TAB TEXT": "Beta Sürümleri",
-    "SALES INQUIRY TEXT": "Vis - QA için satış sorgusu - face_recognition",
-    "TECHNICAL INQUIRY TEXT": "Vis - QA - face_recognition için teknik sorgulama",
-    "FEEDBACK TEXT": "Vis - QA - face_recognition için geri bildirim"
+    "SALES INQUIRY TEXT": "Sales inquiry for {{integration}}",
+    "TECHNICAL INQUIRY TEXT": "Technical inquiry for {{integration}}",
+    "FEEDBACK TEXT": "Feedback for integration {{integration}}"
 }

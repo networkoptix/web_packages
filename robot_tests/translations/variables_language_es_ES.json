@@ -207,7 +207,7 @@
     "RELEASES TAB TEXT": "Ediciones",
     "PATCHES TAB TEXT": "Parches",
     "BETAS TAB TEXT": "Betas",
-    "SALES INQUIRY TEXT": "Consulta de ventas para vis - QA - face_recognition",
-    "TECHNICAL INQUIRY TEXT": "Consulta técnica para vis - QA - face_recognition",
-    "FEEDBACK TEXT": "Comentarios para la integración vis - QA - face_recognition"
+    "SALES INQUIRY TEXT": "Consulta de ventas para {{integration}}",
+    "TECHNICAL INQUIRY TEXT": "Consulta técnica para {{integration}}",
+    "FEEDBACK TEXT": "Comentarios para la integración {{integration}}"
 }
