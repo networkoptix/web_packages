@@ -28,9 +28,10 @@ class PushConfig(LegacyConfig):
         if not cached_settings:
             cached_settings = {}
             for asset in Asset.objects.filter(asset_type__type=AssetType.ASSET_TYPES.cloud_portal):
-                customization_name = asset.customizations.first().name
-                asset_push_settings = asset.read_global_value('%PUSH_CONFIG%') or {}
-                cached_settings[customization_name] = asset_push_settings
+                customization = asset.customizations.first()
+                if customization:
+                    asset_push_settings = asset.read_global_value('%PUSH_CONFIG%') or {}
+                    cached_settings[customization.name] = asset_push_settings
 
             if cached_settings:
                 self.PUSH_CONFIG_CACHE.set('settings', cached_settings)
