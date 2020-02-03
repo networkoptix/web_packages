@@ -207,7 +207,7 @@
     "RELEASES TAB TEXT": "מהדורות",
     "PATCHES TAB TEXT": "תיקונים",
     "BETAS TAB TEXT": "בטא",
-    "SALES INQUIRY TEXT": "Sales inquiry for {{integration}}",
-    "TECHNICAL INQUIRY TEXT": "Technical inquiry for {{integration}}",
-    "FEEDBACK TEXT": "Feedback for integration {{integration}}"
+    "SALES INQUIRY TEXT": "בירור מכירות עבור {{integration}}",
+    "TECHNICAL INQUIRY TEXT": "בירור טכני עבור {{integration}}",
+    "FEEDBACK TEXT": "משוב לאינטגרציה {{integration}}"
 }
