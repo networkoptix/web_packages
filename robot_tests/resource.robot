@@ -202,7 +202,7 @@ Get Email Link
 
 Activate
     [arguments]    ${email}
-    @{auth}=   Create List    ${ALT BASE EMAIL}    ${BASE PASSWORD}
+    @{auth}=   Create List    ${BASE EMAIL}    ${BASE PASSWORD}
     ${code}=   Get Code From Email   ${ENV}    ${auth}    ${email}    activate_account
     Go To    ${ENV}/activate/${code}
     Wait Until Element Is Visible    ${ACTIVATION SUCCESS}
@@ -463,23 +463,6 @@ Reset user noperm first/last name
     Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
     # In case Kyle forgets about this it's a test to see if it fixes a problem with not changing the name back in some cases
     Sleep    2
-    Close Browser
-
-Reset user owner first/last name
-    Register Keyword To Run On Failure    None
-    Open Browser and go to URL    ${url}/account
-    Log In    ${EMAIL OWNER}    ${password}    ${False}    button=None
-
-    Run Keyword And Ignore Error    Wait Until Textfield Contains    ${ACCOUNT FIRST NAME}    newFirstName
-    Run Keyword And Ignore Error    Wait Until Textfield Contains    ${ACCOUNT LAST NAME}    newLastName
-    Register Keyword To Run On Failure    Failure Tasks
-    Sleep    1
-    Clear Element Text    ${ACCOUNT FIRST NAME}
-    Input Text    ${ACCOUNT FIRST NAME}    ${TEST FIRST NAME}
-    Clear Element Text    ${ACCOUNT LAST NAME}
-    Input Text    ${ACCOUNT LAST NAME}    ${TEST LAST NAME}
-    Click Button    ${ACCOUNT SAVE}
-    Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
     Close Browser
 
 Add notowner

@@ -10,7 +10,7 @@ Force Tags        Threaded File    activate
 ${password}    ${BASE PASSWORD}
 ${url}         ${ENV}
 ${symbol password}    pass!@#$%^&*()_-+=;:'"`~,./\|?[]{}
-@{auth}        ${ALT BASE EMAIL}    ${BASE PASSWORD}
+@{auth}        ${BASE EMAIL}    ${BASE PASSWORD}
 
 *** Keywords ***
 Clear emails
@@ -25,12 +25,6 @@ Restart
 
 Open New Browser On Failure
     Close Browser
-
-Register and activate account with random email
-    [Arguments]    ${first name}    ${last name}    ${password}
-    ${email}=    Get Random Email    ${BASE EMAIL}
-    Register And Activate Account    ${first name}    ${last name}    ${email}    ${password}
-    [Return]    ${email}
 
 *** Test Cases ***
 Register and Activate

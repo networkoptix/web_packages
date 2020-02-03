@@ -32,7 +32,7 @@ Send "Restore Password" Email
 
 Get Restore Code and Open the Link
     [Arguments]    ${email}    ${restore}=${False}    ${new password}=${EMPTY}
-    @{auth}=   Create List   ${ALT BASE EMAIL}    ${password}
+    @{auth}=   Create List   ${BASE EMAIL}    ${password}
     ${code}=   Get Code From Email    ${url}    ${auth}    ${email}    restore_password
     Go To    ${url}/restore_password/${code}
     Wait Until Elements Are Visible    ${RESET PASSWORD INPUT}    ${SAVE PASSWORD}
@@ -184,3 +184,4 @@ Check restore password email links, colors, cloud name, and open link in new tab
     \    check in list    ${expected links}    ${link}
     Delete Email    ${email}
     Close Mailbox
+
