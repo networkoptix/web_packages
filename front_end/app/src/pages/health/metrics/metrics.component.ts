@@ -221,14 +221,16 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
     }
 
     resetActiveEntity(updateURI = true) {
-        this.activeEntity = undefined;
-        if (updateURI) {
-            const queryParams: Params = {};
-            queryParams.id = undefined;
-            this.uri.updateURI(undefined, queryParams);
+        if (this.activeEntity) {
+            this.activeEntity = undefined;
+            if (updateURI) {
+                const queryParams: Params = {};
+                queryParams.id            = undefined;
+                this.uri.updateURI(undefined, queryParams);
+            }
+            this.mobileDetailMode = false;
+            this.setLayout();
         }
-        this.mobileDetailMode = false;
-        this.setLayout();
     }
 
     private setLayout() {

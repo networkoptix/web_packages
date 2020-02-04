@@ -81,6 +81,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
 
     resizeSubscription: SubscriptionLike;
     locationSubscription: SubscriptionLike;
+    queryParamSubscription: SubscriptionLike;
 
     @ViewChild('thead', { static: false }) thead: ElementRef;
     @ViewChild('tableHeaderElement', { static: false }) tableHeaderElement: ElementRef;
@@ -136,6 +137,11 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
                 this.setPage(undefined, this.startIndex);
 
             });
+        });
+
+        this.queryParamSubscription = this.route.queryParamMap.subscribe((paramsMap: any) => {
+            this.startIndex = paramsMap.params.index || 0;
+            this.setPage(undefined, this.startIndex);
         });
     }
 
