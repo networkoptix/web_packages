@@ -501,27 +501,9 @@ Make sure viewer is in the system
     Close Browser
 
 Reset System Names
-    Open Browser and go to URL    ${url}/systems/${AUTOTESTS OFFLINE SYSTEM ID}
-    Log In    ${EMAIL OWNER}    ${BASE PASSWORD}    ${False}    None
-    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}
-    Click Button    ${RENAME SYSTEM}
-    Wait Until Elements Are Visible    ${RENAME CANCEL}    ${RENAME SAVE}    ${RENAME INPUT}
-    Clear Element Text    ${RENAME INPUT}
-    Input Text    ${RENAME INPUT}    Auto Tests 2
-    Click Button    ${RENAME SAVE}
-    Check For Alert    ${SYSTEM NAME SAVED}
-    Verify In System    Auto Tests 2
-
-    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
-    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}
-    Click Button    ${RENAME SYSTEM}
-    Wait Until Elements Are Visible    ${RENAME CANCEL}    ${RENAME SAVE}    ${RENAME INPUT}
-    Clear Element Text    ${RENAME INPUT}
-    Input Text    ${RENAME INPUT}    Auto Tests
-    Click Button    ${RENAME SAVE}
-    Check For Alert    ${SYSTEM NAME SAVED}
-    Verify In System    Auto Tests
-    Close Browser
+    @{auth}=   Create List    ${EMAIL OWNER}    ${BASE PASSWORD}
+    Rename System    ${auth}    ${AUTOTESTS OFFLINE SYSTEM ID}    Auto Tests 2
+    Rename System    ${auth}    ${AUTO TESTS SYSTEM ID}    Auto Tests
 
 Validate Input Field State
     [arguments]    ${FIELD LOCATOR}    ${Valid True or False}

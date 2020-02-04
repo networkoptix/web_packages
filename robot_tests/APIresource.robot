@@ -24,6 +24,14 @@ Unbind System
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()}
 
+Rename System
+    [Arguments]    ${auth}    ${system id}    ${new name}
+    &{data}=    Create Dictionary    systemId=${system id}    name=${new name}
+    Create Digest Session    Rename System session    ${ENV}    auth=${auth}    disable_warnings=1
+    ${resp}=    Post Request    Rename System session    /cdb/system/rename    json=${data}
+    Should Be Equal As Strings    ${resp.status_code}    200
+    Return From Keyword    ${resp.json()}
+
 Setup Cloud System
     [Arguments]    ${auth}    ${server url}    ${auth key}    ${name}    ${id}    ${owner email}
     &{data}=    Create Dictionary    cloudAuthKey=${auth key}    systemName=${name}    cloudSystemID=${id}    cloudAccountName=${owner email}
@@ -78,7 +86,7 @@ Register Account
     ...    password=${password}
     ...    first_name=${first name}
     ...    last_name=${last name}
-    @{auth}=   Create List    ${ALT BASE EMAIL}    ${BASE PASSWORD}
+    @{auth}=   Create List    ${BASE EMAIL}    ${BASE PASSWORD}
     Create Digest Session    Register Account session    ${ENV}    auth=${auth}    disable_warnings=1
     ${resp}=    Post Request    Register Account session    /api/account/register    json=${data}
     Should Be Equal As Strings    ${resp.status_code}    200
@@ -86,7 +94,7 @@ Register Account
 
 Activate Account
     [Arguments]    ${email}    ${password}
-    @{auth}=   Create List    ${ALT BASE EMAIL}    ${BASE PASSWORD}
+    @{auth}=   Create List    ${BASE EMAIL}    ${BASE PASSWORD}
     @{new user auth}=   Create List    ${email}    ${password}
     ${code}=   Get Code From Email   ${ENV}    ${auth}    ${email}    activate_account
     ${code}=   Convert Code    ${code}
@@ -127,8 +135,8 @@ Register New User and Activate the Account
     Should Be Equal As Strings    ${resp.status_code}    200
 
 Evaluate Auto System Settings via API
-    [arguments]    ${setting}    ${selected}
+    [Arguments]    ${setting}    ${selected}
     Create Digest Session    returnedSetting    ${AUTO SYS API}    ${AUTO SYS API AUTH}     disable_warnings=1
-    ${systemSettings} =     Get Request    returnedSetting   /api/systemSettings   timeout=10
-    ${string} =    Convert To String    ${systemSettings.json()}
+    ${systemSettings}=   Get Request    returnedSetting   /api/systemSettings   timeout=10
+    ${string}=   Convert To String    ${systemSettings.json()}
     Should Contain    ${string}    ${setting}': '${selected}
