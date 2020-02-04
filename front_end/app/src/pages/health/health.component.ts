@@ -75,7 +75,12 @@ export class NxHealthComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.window.addEventListener('dragenter', event => {
-            if (event.dataTransfer.types[0] === 'Files') {
+            let types = event.dataTransfer.types;
+            // IE returns a DOMStringList instead of an array
+            if (types instanceof DOMStringList) {
+                types = Array.from(types);
+            }
+            if (types.includes('Files')) {
                 this.importShow = true;
             }
         });
