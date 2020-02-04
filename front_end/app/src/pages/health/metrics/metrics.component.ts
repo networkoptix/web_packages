@@ -1,22 +1,19 @@
 import {
-    AfterViewInit,
-    Component,
-    ElementRef,
-    OnInit,
-    ViewChild,
+    AfterViewInit, Component,
+    ElementRef, OnInit, ViewChild,
     ViewEncapsulation
-} from '@angular/core';
-import { ActivatedRoute }                      from '@angular/router';
-import { NxAccountService }                    from '../../../services/account.service';
-import { NxConfigService }                     from '../../../services/nx-config';
-import { NxSystem, NxSystemService }           from '../../../services/system.service';
-import { NxMenuService }                       from '../../../components/menu/menu.service';
-import { NxHealthService }                     from '../health.service';
-import { NxUriService }                        from '../../../services/uri.service';
-import { NxLanguageProviderService }           from '../../../services/nx-language-provider';
-import { SubscriptionLike }                    from 'rxjs';
-import { AutoUnsubscribe }                     from 'ngx-auto-unsubscribe';
-import { NxScrollMechanicsService }            from '../../../services/scroll-mechanics.service';
+}                                    from '@angular/core';
+import { ActivatedRoute }            from '@angular/router';
+import { NxAccountService }          from '../../../services/account.service';
+import { NxConfigService }           from '../../../services/nx-config';
+import { NxSystem, NxSystemService } from '../../../services/system.service';
+import { NxMenuService }             from '../../../components/menu/menu.service';
+import { NxHealthService }           from '../health.service';
+import { NxUriService }              from '../../../services/uri.service';
+import { NxLanguageProviderService } from '../../../services/nx-language-provider';
+import { SubscriptionLike }          from 'rxjs';
+import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
+import { NxScrollMechanicsService }  from '../../../services/scroll-mechanics.service';
 
 interface Params {
     [key: string]: any;
@@ -62,12 +59,11 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
     queryParamSubscription: SubscriptionLike;
     breakpointSubscription: SubscriptionLike;
     tableReadySubscription: SubscriptionLike;
-
-    containerDimensions: any = [];
-
     windowSizeSubscription: SubscriptionLike;
     tableWidthSubscription: SubscriptionLike;
     panelSubscription: SubscriptionLike;
+
+    containerDimensions: any = [];
 
     fixedLayoutClass: string;
     layoutReady: boolean;
@@ -114,10 +110,15 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
         this.initialId = this.route.snapshot.queryParamMap.get('id');
         let searchParam = this.route.snapshot.queryParamMap.get('search');
 
-        this.queryParamSubscription = this.route.queryParamMap.subscribe(params => {
-            if (params.keys.length === 0 && this.route.snapshot.params.metric === this.metricId) {
-                this.selectedValues = {...this.healthService.values[this.metricId] || {}};
+        this.queryParamSubscription = this.route.queryParamMap.subscribe((paramsMap: any) => {
+            if (paramsMap.keys.length === 0 && this.route.snapshot.params.metric === this.metricId) {
                 this.resetActiveEntity();
+            } else {
+                if (paramsMap.params.id) {
+                    this.setActiveEntity(paramsMap.params.id, false);
+                } else {
+                    this.resetActiveEntity(false);
+                }
             }
         });
 
@@ -175,8 +176,10 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
     }
 
     modelChanged(model) {
-        this.filterModel.query = model.query;
-        this.search();
+        if (this.filterModel.query !== model.query) {
+            this.filterModel.query = model.query;
+            this.search();
+        }
     }
 
     search() {
@@ -189,7 +192,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
         }
     }
 
-    setActiveEntity(entity) {
+    setActiveEntity(entity, updateURI = true) {
         const queryParams: Params = {};
         this.layoutReady = this.activeEntity ? true : false;
 

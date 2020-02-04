@@ -4,6 +4,7 @@ import {
     OnInit, ViewEncapsulation,
     ViewChild, ElementRef, AfterViewInit,
 }                                   from '@angular/core';
+import { Location }                 from '@angular/common';
 import { ActivatedRoute, Router }   from '@angular/router';
 import { DeviceDetectorService }    from 'ngx-device-detector';
 import { NxConfigService }          from '../../../../services/nx-config';
@@ -79,6 +80,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
     mobileDetailMode: boolean;
 
     resizeSubscription: SubscriptionLike;
+    locationSubscription: SubscriptionLike;
 
     @ViewChild('thead', { static: false }) thead: ElementRef;
     @ViewChild('tableHeaderElement', { static: false }) tableHeaderElement: ElementRef;
@@ -93,6 +95,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
                 private utilsService: NxUtilsService,
                 private router: Router,
                 private route: ActivatedRoute,
+                private location: Location,
                 private healthService: NxHealthService,
                 private scrollMechanicsService: NxScrollMechanicsService,
                 private deviceDetectorService: DeviceDetectorService,
@@ -113,6 +116,26 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
             if (this.dataTable) {
                 setTimeout(() => this.scrollMechanicsService.setElementTableWidth(this.dataTable.nativeElement.offsetWidth));
             }
+        });
+
+        this.locationSubscription = this.location.subscribe((event: PopStateEvent) => {
+            // force view component update without URI update
+            setTimeout(() => {
+                this.params = {...this.route.snapshot.queryParams};
+
+                this.startIndex = this.params.index || 0;
+
+                if (this.params.sortBy) {
+                    this.sortBy(this.params.sortBy);
+                } else {
+                    this.sortOrderASC   = true;
+                    this.selectedGroup  = undefined;
+                    this.selectedHeader = undefined;
+                }
+
+                this.setPage(undefined, this.startIndex);
+
+            });
         });
     }
 
@@ -235,8 +258,8 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         if (this.params.sortBy) {
             this.sortBy(this.params.sortBy);
         } else {
-            this.sortOrderASC = true;
-            this.selectedGroup = undefined;
+            this.sortOrderASC   = true;
+            this.selectedGroup  = undefined;
             this.selectedHeader = undefined;
         }
 
@@ -294,7 +317,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
     }
 
     setPagedItems(startIndex?) {
-        if (!startIndex) {
+        if (startIndex === undefined) {
             startIndex = (this.currentPage - 1) * this.pageSize;
         } else {
             const page = Math.floor(this.startIndex / this.pageSize) + 1;
@@ -328,10 +351,8 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
                 this.setClickedRow(undefined);
             }
             this.currentPage = page;
-        }
-
-        if (startIndex) {
-            this.startIndex = startIndex;
+        } else {
+            this.startIndex = startIndex || 0;
         }
 
         // preserve window offset

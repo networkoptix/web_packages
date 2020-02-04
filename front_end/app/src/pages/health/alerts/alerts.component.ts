@@ -2,15 +2,15 @@ import {
     AfterViewInit, Component, ElementRef,
     OnDestroy, OnInit, ViewChild,
     ViewEncapsulation
-}                                              from '@angular/core';
-import { NxConfigService }                     from '../../../services/nx-config';
-import { NxMenuService }                       from '../../../components/menu/menu.service';
+}                                            from '@angular/core';
+import { ActivatedRoute }                    from '@angular/router';
+import { NxConfigService }                   from '../../../services/nx-config';
+import { NxMenuService }                     from '../../../components/menu/menu.service';
 import { NxHealthService }                   from '../health.service';
 import { BehaviorSubject, SubscriptionLike } from 'rxjs';
 import { NxUriService }                      from '../../../services/uri.service';
-import { ActivatedRoute }                      from '@angular/router';
-import { AutoUnsubscribe }                     from 'ngx-auto-unsubscribe';
-import { NxScrollMechanicsService }            from '../../../services/scroll-mechanics.service';
+import { AutoUnsubscribe }                   from 'ngx-auto-unsubscribe';
+import { NxScrollMechanicsService }          from '../../../services/scroll-mechanics.service';
 
 interface Params {
     [key: string]: any;
@@ -38,6 +38,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
     breakpointSubscription: SubscriptionLike;
     tableReadySubscription: SubscriptionLike;
     layoutReadySubscription: SubscriptionLike;
+
     mobileDetailMode: boolean;
     desktopDetailMode: boolean;
     breakpoint: string;
@@ -142,11 +143,21 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
             }
         });
 
-        this.queryParamSubscription = this.route.queryParamMap.subscribe(params => {
-            if (params.keys.length === 0) {
-                this.alerts = {...this.healthService.alertsValues || {}};
+        this.queryParamSubscription = this.route.queryParamMap.subscribe((paramsMap: any) => {
+            if (paramsMap.keys.length === 0) {
                 this.resetActiveEntity();
                 this.resetFilterModel();
+            } else {
+                if (paramsMap.params.id) {
+                    const alarm = this.healthService.alertsValues.find((alert) => {
+                        return (alert.metric === paramsMap.params.metric && alert.entity === paramsMap.params.id);
+                    });
+                    this.setActiveEntity(alarm, false);
+                } else {
+                    if (this.activeTableEntity) {
+                        this.resetActiveEntity(false);
+                    }
+                }
             }
         });
     }
@@ -165,9 +176,11 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
     ngOnDestroy() {}
 
     modelChanged(model) {
-        this.alerts = this.healthService
-                          .alertsSearch(this.healthService.alertsValues, model);
-        this.countAlerts();
+        if (JSON.stringify(this.filterModel) !== JSON.stringify(model)) { // avoid unnecessary trips
+            this.alerts = this.healthService
+                              .alertsSearch(this.healthService.alertsValues, model);
+            this.countAlerts();
+        }
     }
 
     resetFilterModel() {
@@ -369,7 +382,9 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
             this.setLayout();
 
         } else {
-            this.resetActiveEntity();
+            if (this.activeTableEntity) {
+                this.resetActiveEntity();
+            }
         }
     }
 
