@@ -10,7 +10,7 @@ import { NxLanguageProviderService }             from '../../services/nx-languag
 import { NxUtilsService }                        from '../../services/utils.service';
 import { FileSystemFileEntry, NgxFileDropEntry } from 'ngx-file-drop';
 import { NxRibbonService }                       from '../../components/ribbon/ribbon.service';
-import { Subscription, throwError } from 'rxjs';
+import { of, Subscription, throwError } from 'rxjs';
 import { NxScrollMechanicsService }              from '../../services/scroll-mechanics.service';
 import { AutoUnsubscribe }                       from 'ngx-auto-unsubscribe';
 import { NxSystemAPI, NxSystemAPIService }       from '../../services/system-api.service';
@@ -20,6 +20,7 @@ import { WINDOW }                                from '../../services/window-pro
 import { DOCUMENT }                              from '@angular/common';
 import { DeviceDetectorService }                 from 'ngx-device-detector';
 import { NxUriService }                          from '../../services/uri.service';
+import { flatMap } from 'rxjs/operators';
 
 @AutoUnsubscribe()
 @Component({
@@ -147,12 +148,12 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                         this.outdatedVersion = !this.system.info.capabilities.vms_metrics;
                     }
                     if (!this.outdatedVersion) {
-                        this.system.mediaserver.getAggregateHealthReport()
-                            .subscribe((result: any) => {
-                                this.setupReport(result);
-                            }, () => {
-                                this.hasServerError = this.system.isOnline;
-                            });
+                        this.system.mediaserver.getAggregateHealthReport().pipe(
+                            flatMap((result: any) => this.setupReport(result))
+                        ).subscribe(() => {
+                        }, () => {
+                            this.hasServerError = this.system.isOnline;
+                        });
                     }
                 });
             });
@@ -226,6 +227,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         setTimeout(() => {
             this.healthService.ready = true;
         }, 200);
+        return of(true);
     }
 
     colorHeaderGroups(metric) {
