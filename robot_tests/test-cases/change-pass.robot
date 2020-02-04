@@ -44,7 +44,7 @@ Clean up
     ${status}    Run Keyword And Return Status    Validate Log In
     Register Keyword To Run On Failure    Failure Tasks
     Run Keyword If    ${status}    Log Out
-    Restore Password using API    ${email}
+    Restore Password using API    ${email}    ${password}
 
 Reset DB and Open New Browser On Failure
     Restore Password using API    ${email}
