@@ -12,7 +12,7 @@ ${url}         ${ENV}
 
 *** Keywords ***
 Check Systems Text
-    [arguments]    ${user}
+    [Arguments]    ${user}
     Sleep    1
     Log Out
     Log In    ${user}    ${password}
@@ -22,7 +22,7 @@ Check Systems Text
 
 Reset DB and Open New Browser On Failure
     Close Browser
-    Reset user owner first/last name
+    Set Account Name    ${url}    ${EMAIL OWNER}    ${password}    ${TEST FIRST NAME}    ${TEST LAST NAME}
     Make sure viewer is in the system
     Clean up email noperm
     Open Browser and go to URL    ${url}
@@ -31,40 +31,40 @@ Restart
     Common Restart Logout    ${url}
 
 *** Test Cases ***
-should show list of Systems
-    [tags]    C41893    Threaded
+Should show list of Systems
+    [Tags]    C41893    Threaded
     Log In    ${EMAIL OWNER}    ${password}
     Wait Until Elements Are Visible    ${SYSTEMS SEARCH INPUT}    ${ACCOUNT DROPDOWN}    ${SYSTEMS TILE}
 
-has system name, owner and OpenInNx button visible on systems page
-    [tags]    C41893    Threaded
+Has system name, owner and OpenInNx button visible on systems page
+    [Tags]    C41893    Threaded
     Log In    ${EMAIL OWNER}    ${password}
     Wait Until Elements Are Visible    ${SYSTEMS SEARCH INPUT}    ${AUTO TESTS TITLE}    ${AUTO TESTS USER}    ${AUTO TESTS OPEN NX}
 
-should show Open in NX client button for online system
-    [tags]    C41893    Threaded
+Should show Open in NX client button for online system
+    [Tags]    C41893    Threaded
     Log In    ${EMAIL OWNER}    ${password}
     Wait Until Elements Are Visible    ${SYSTEMS SEARCH INPUT}    ${AUTO TESTS TITLE}    ${AUTO TESTS USER}    ${AUTO TESTS OPEN NX}
 
-should not show Open in NX client button for offline system
-    [tags]    C41893    Threaded
+Should not show Open in NX client button for offline system
+    [Tags]    C41893    Threaded
     Log In    ${EMAIL OWNER}    ${password}
     Wait Until Elements Are Visible    ${SYSTEMS SEARCH INPUT}    ${AUTOTESTS OFFLINE}
 
-should show system's state for systems if they are offline. Otherwise - button Open in Nx
-    [tags]    C41893    Threaded
+Should show system's state for systems if they are offline. Otherwise - button Open in Nx
+    [Tags]    C41893    Threaded
     Log In    ${EMAIL OWNER}    ${password}
     Wait Until Elements Are Visible    ${SYSTEMS SEARCH INPUT}    ${AUTO TESTS TITLE}    ${AUTO TESTS USER}    ${AUTO TESTS OPEN NX}
     ${systems}    Get WebElements    //div[@ng-repeat='system in systems | filter:searchSystems as filtered track by system.id']
     Check Online Or Offline    ${systems}    ${AUTOTESTS OFFLINE TEXT}
 
-should show the no systems connected message when you have no systems
-    [tags]    C41866    Threaded
+Should show the no systems connected message when you have no systems
+    [Tags]    C41866    Threaded
     Log In    ${EMAIL NOPERM}    ${password}
     Wait Until Element Is Visible    ${YOU HAVE NO SYSTEMS}
 
-should show system name in header dropdown with "Open in Nx Witness" button if user has only one system
-    [tags]    C41569    Threaded    123
+Should show system name in header dropdown with "Open in Nx Witness" button if user has only one system
+    [Tags]    C41569    Threaded    123
     Log In    ${EMAIL OWNER}    ${password}
     Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
     Share To    ${EMAIL NOPERM}    ${VIEWER TEXT}
@@ -84,7 +84,7 @@ should show system name in header dropdown with "Open in Nx Witness" button if u
     Remove User Permissions    ${EMAIL NOPERM}
 
 User have several systems linked to his account
-    [tags]    C41570    Threaded
+    [Tags]    C41570    Threaded
     Log    Step 1
     Log In    ${EMAIL OWNER}    ${password}
     # Expected Result
@@ -161,8 +161,8 @@ User have several systems linked to his account
     ...    The Systems count was expected to be more than 12, but is ${count3}.
     Should Be Equal As Integers    ${count1}    ${count3}
 
-should show the system page instead of all systems when user only has one
-    [tags]    C41878
+Should show the system page instead of all systems when user only has one
+    [Tags]    C41878
     Log In    ${EMAIL OWNER}    ${password}
     Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
     Share To    ${EMAIL NOPERM}    ${VIEWER TEXT}
@@ -178,8 +178,8 @@ should show the system page instead of all systems when user only has one
     Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
     Remove User Permissions    ${EMAIL NOPERM}
 
-should open system page when clicked on system
-    [tags]    C41893    Threaded
+Should open system page when clicked on system
+    [Tags]    C41893    Threaded
     Log In    ${EMAIL OWNER}    ${password}
     Wait Until Elements Are Visible    ${SYSTEMS SEARCH INPUT}    ${AUTO TESTS TITLE}    ${AUTO TESTS USER}    ${AUTO TESTS OPEN NX}
     # Sometimes the name fields refill if you empty them too fast
@@ -189,7 +189,7 @@ should open system page when clicked on system
     Verify In System    Auto Tests
 
 Should show your system for owner and owner name for non-owners
-    [tags]    C41893    Threaded
+    [Tags]    C41893    Threaded
     Log In    ${EMAIL OWNER}    ${password}
     Validate Log In
     Wait Until Elements Are Visible    ${SYSTEMS SEARCH INPUT}    ${AUTO TESTS TITLE}    ${AUTO TESTS USER}    ${AUTO TESTS OPEN NX}
@@ -199,12 +199,12 @@ Should show your system for owner and owner name for non-owners
 
 # should be removed and updated for what the dropdown should show with other systems
 Should not show systems dropdown with no systems
-    [tags]    C41568    Threaded
+    [Tags]    C41568    Threaded
     Log In    ${EMAIL NOPERM}    ${password}
     Element Should Not Be Visible    ${SYSTEMS DROPDOWN}
 
 Search should highlight system name
-    [tags]    C41891    Threaded
+    [Tags]    C41891    Threaded
     Log In    ${EMAIL VIEWER}    ${password}
     Validate Log In
     Wait Until Elements Are Visible    ${SYSTEMS SEARCH INPUT}    ${AUTO TESTS TITLE}    ${AUTO TESTS USER}    ${AUTO TESTS OPEN NX}
@@ -212,14 +212,14 @@ Search should highlight system name
     Wait Until Element Is Visible    //span[@class="highlighted" and text()="${AUTO TESTS}"]
 
 Search should highlight owner name
-    [tags]    C41891    Threaded
+    [Tags]    C41891    Threaded
     Log In    ${EMAIL VIEWER}    ${password}
     Wait Until Elements Are Visible    ${SYSTEMS SEARCH INPUT}    ${AUTO TESTS TITLE}    ${AUTO TESTS USER}    ${AUTO TESTS OPEN NX}
     Input Text    ${SYSTEMS SEARCH INPUT}    ${TEST FIRST NAME}
     Wait Until Element Is Visible    //span[@class="highlighted" and text()="${TEST FIRST NAME}"]
 
 Search can be cleared by x button
-    [tags]    C41891    Threaded
+    [Tags]    C41891    Threaded
     Log In    ${EMAIL VIEWER}    ${password}
     Wait Until Elements Are Visible    ${SYSTEMS SEARCH INPUT}    ${AUTO TESTS TITLE}    ${AUTO TESTS USER}    ${AUTO TESTS OPEN NX}
     ${tiles}    Get WebElements    //div[contains(@class,"card ")]
@@ -237,14 +237,14 @@ Search can be cleared by x button
     Should Be Equal    ${len}    ${len2}
 
 Searching for owner email should only show systems with that owner
-    [tags]    C41891    Threaded
+    [Tags]    C41891    Threaded
     Log In    ${EMAIL OWNER}    ${password}
     Wait Until Elements Are Visible    ${SYSTEMS SEARCH INPUT}    ${AUTO TESTS TITLE}    ${AUTO TESTS USER}    ${AUTO TESTS OPEN NX}
     Input Text    ${SYSTEMS SEARCH INPUT}    ${EMAIL OWNER}
     Wait Until Element Is Not Visible    ${DIFFERENT OWNER TITLE}
 
 Search should only be visible with 9 or more systems
-    [tags]    C41890
+    [Tags]    C41890
     Log In    ${EMAIL OWNER}    ${password}
     Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
     Wait Until Elements Are Visible    ${RENAME SYSTEM}    ${DISCONNECT FROM NX}    ${USERS LIST LINK}
@@ -306,14 +306,14 @@ Search should only be visible with 9 or more systems
     Log Out
 
 should open systems page in anonymous state
-    [tags]    anonymous
+    [Tags]    anonymous
     Go To    ${url}/systems
     Location should be    ${url}/systems
     Wait Until Element Is Visible    ${LOG IN MODAL}
     Check Log In    button=None
 
 should update owner name in systems list, if it's changed
-    [tags]
+    [Tags]
     Go To    ${url}/account
     Log In    ${EMAIL OWNER}    ${password}    button=None
     Wait Until Elements Are Visible    ${ACCOUNT EMAIL}    ${ACCOUNT FIRST NAME}    ${ACCOUNT LAST NAME}
@@ -325,6 +325,7 @@ should update owner name in systems list, if it's changed
     Input Text    ${ACCOUNT FIRST NAME}    newFirstName
     Clear Element Text    ${ACCOUNT LAST NAME}
     Input Text    ${ACCOUNT LAST NAME}    newLastName
+    Wait Until Element Is Visible    ${ACCOUNT SAVE}
     Click Button    ${ACCOUNT SAVE}
     Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
     Log Out
@@ -332,4 +333,4 @@ should update owner name in systems list, if it's changed
     Go To    ${url}/systems
     Wait Until Elements Are Visible    ${AUTO TESTS TITLE}    ${AUTO TESTS USER}    ${AUTO TESTS OPEN NX}
     Wait Until Element Contains    ${AUTO TESTS USER}    newFirstName newLastName
-    Reset user owner first/last name
+    Set Account Name    ${url}    ${EMAIL OWNER}    ${password}    ${TEST FIRST NAME}    ${TEST LAST NAME}
