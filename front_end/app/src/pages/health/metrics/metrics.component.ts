@@ -4,6 +4,7 @@ import {
     ViewEncapsulation
 }                                    from '@angular/core';
 import { ActivatedRoute }            from '@angular/router';
+import { Location }                  from '@angular/common';
 import { NxAccountService }          from '../../../services/account.service';
 import { NxConfigService }           from '../../../services/nx-config';
 import { NxSystem, NxSystemService } from '../../../services/system.service';
@@ -62,6 +63,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
     windowSizeSubscription: SubscriptionLike;
     tableWidthSubscription: SubscriptionLike;
     panelSubscription: SubscriptionLike;
+    locationSubscription: SubscriptionLike;
 
     containerDimensions: any = [];
 
@@ -77,6 +79,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
                 private languageService: NxLanguageProviderService,
                 private systemService: NxSystemService,
                 private route: ActivatedRoute,
+                private location: Location,
                 private menuService: NxMenuService,
                 private healthService: NxHealthService,
                 private uri: NxUriService,
@@ -110,15 +113,25 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
         this.initialId = this.route.snapshot.queryParamMap.get('id');
         let searchParam = this.route.snapshot.queryParamMap.get('search');
 
-        this.queryParamSubscription = this.route.queryParamMap.subscribe((paramsMap: any) => {
-            if (paramsMap.keys.length === 0 && this.route.snapshot.params.metric === this.metricId) {
-                this.resetActiveEntity();
-            } else {
-                if (paramsMap.params.id) {
-                    this.setActiveEntity(paramsMap.params.id, false);
+        this.locationSubscription = this.location.subscribe((event: PopStateEvent) => {
+            // force view component update without URI update
+            setTimeout(() => {
+                const params = {...this.route.snapshot.queryParams};
+
+                if (params.id) {
+                    this.setActiveEntity(params.id, false);
                 } else {
                     this.resetActiveEntity(false);
                 }
+            });
+        });
+
+        this.menuService.selectedSectionSubject.subscribe(selection => {
+            // when user click same section in the menu - we need to reset table and entity
+            if (this.metricId === selection) {
+                this.filterModel.query = '';
+                this.resetActiveEntity();
+                this.search();
             }
         });
 
@@ -183,8 +196,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
     }
 
     search() {
-        this.selectedValues = this.healthService
-                                  .itemsSearch(this.healthService.values[this.metricId], this.filterModel) || {};
+        this.selectedValues = {...this.healthService.itemsSearch(this.healthService.values[this.metricId], this.filterModel)} || {};
 
         this.handleInitialId();
         if (this.activeEntity && !this.selectedValues[this.activeEntity.id]) {

@@ -4,6 +4,7 @@ import {
     ViewEncapsulation
 }                                            from '@angular/core';
 import { ActivatedRoute }                    from '@angular/router';
+import { Location }                          from '@angular/common';
 import { NxConfigService }                   from '../../../services/nx-config';
 import { NxMenuService }                     from '../../../components/menu/menu.service';
 import { NxHealthService }                   from '../health.service';
@@ -11,6 +12,7 @@ import { BehaviorSubject, SubscriptionLike } from 'rxjs';
 import { NxUriService }                      from '../../../services/uri.service';
 import { AutoUnsubscribe }                   from 'ngx-auto-unsubscribe';
 import { NxScrollMechanicsService }          from '../../../services/scroll-mechanics.service';
+import { NxUtilsService }                    from '../../../services/utils.service';
 
 interface Params {
     [key: string]: any;
@@ -27,10 +29,10 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
 
     CONFIG: any;
 
-    localfilter: any = {};
     filterModel: any;
     params: any = {};
     numFilters: number;
+    metricId: any;
 
     layoutReady = new BehaviorSubject(false);
 
@@ -38,6 +40,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
     breakpointSubscription: SubscriptionLike;
     tableReadySubscription: SubscriptionLike;
     layoutReadySubscription: SubscriptionLike;
+    locationSubscription: SubscriptionLike;
 
     mobileDetailMode: boolean;
     desktopDetailMode: boolean;
@@ -74,6 +77,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
     // @ViewChild('tableContainer', { static: false }) tableContainer: ElementRef;
 
     constructor(private route: ActivatedRoute,
+                private location: Location,
                 private menuService: NxMenuService,
                 private configService: NxConfigService,
                 private healthService: NxHealthService,
@@ -82,7 +86,8 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
     ) {
         this.CONFIG = this.configService.getConfig();
         this.filterModel = {
-            selects : []
+            selects : [],
+            query: ''
         };
     }
 
@@ -106,8 +111,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         this.initializeHeader();
         this.processAlerts();
 
-        this.alerts = this.healthService
-                          .alertsSearch(this.healthService.alertsValues, this.filterModel);
+        this.alerts = this.healthService.alertsSearch(this.healthService.alertsValues, this.filterModel);
         this.countAlerts();
 
         if (this.params.id && this.params.metric) {
@@ -143,21 +147,31 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
             }
         });
 
-        this.queryParamSubscription = this.route.queryParamMap.subscribe((paramsMap: any) => {
-            if (paramsMap.keys.length === 0) {
-                this.resetActiveEntity();
-                this.resetFilterModel();
-            } else {
-                if (paramsMap.params.id) {
+        this.locationSubscription = this.location.subscribe((event: PopStateEvent) => {
+            // force view component update without URI update
+            setTimeout(() => {
+                const params = {...this.route.snapshot.queryParams};
+
+                if (params.id) {
                     const alarm = this.healthService.alertsValues.find((alert) => {
-                        return (alert.metric === paramsMap.params.metric && alert.entity === paramsMap.params.id);
+                        return (alert.metric === params.metric && alert.entity === params.id);
                     });
                     this.setActiveEntity(alarm, false);
                 } else {
-                    if (this.activeTableEntity) {
-                        this.resetActiveEntity(false);
-                    }
+                    this.resetActiveEntity(false);
                 }
+            });
+        });
+
+        this.menuService.selectedSectionSubject.subscribe(selection => {
+            // when user click same section in the menu - we need to reset table and entity
+            if (this.metricId === selection) {
+                this.resetActiveEntity();
+                this.resetFilterModel();
+                this.alerts = {...this.healthService.alertsSearch(this.healthService.alertsValues, this.filterModel)};
+            } else {
+                // short circuit first subscription
+                this.metricId = 'alerts';
             }
         });
     }
@@ -177,8 +191,8 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
 
     modelChanged(model) {
         if (JSON.stringify(this.filterModel) !== JSON.stringify(model)) { // avoid unnecessary trips
-            this.alerts = this.healthService
-                              .alertsSearch(this.healthService.alertsValues, model);
+            this.filterModel = NxUtilsService.deepCopy(model);
+            this.alerts = this.healthService.alertsSearch(this.healthService.alertsValues, model);
             this.countAlerts();
         }
     }

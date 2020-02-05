@@ -2,6 +2,7 @@
 <a class="menu-level-1 ellipsis"
    [ngClass]="{'selected': selected }"
    [id]="item.id"
+   (click)="menuClick(item.id)"
    [routerLink]="[itemPath]"
    [queryParams]="item.query">
     <div class="menu-level-1-icon" *ngIf="item.icon">

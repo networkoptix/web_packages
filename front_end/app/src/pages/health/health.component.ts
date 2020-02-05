@@ -445,7 +445,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
     processManifestHeaders(displayFilter: string) {
         const headers = {};
         Object.values(this.healthService.manifest).forEach((metricValue) => {
-            const metric = JSON.parse(JSON.stringify(metricValue));
+            const metric: any = NxUtilsService.deepCopy(metricValue);
             headers[metric.id] = metric;
             headers[metric.id].values.forEach((headerGroup, index) => {
                 headers[metric.id].values[index].values = headerGroup.values.filter(header => {
@@ -459,7 +459,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
 
     createSnapshot(data) {
         const systems: any = Object.values(this.healthService.values.systems);
-        this.reportSnapshot = JSON.parse(JSON.stringify(data));
+        this.reportSnapshot = NxUtilsService.deepCopy(data);
         this.reportSnapshot.time = new Date().toJSON();
         this.reportSnapshot.system = systems[0].info.name;
     }

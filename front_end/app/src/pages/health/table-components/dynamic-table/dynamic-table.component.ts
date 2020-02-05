@@ -138,11 +138,6 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
 
             });
         });
-
-        this.queryParamSubscription = this.route.queryParamMap.subscribe((paramsMap: any) => {
-            this.startIndex = paramsMap.params.index || 0;
-            this.setPage(undefined, this.startIndex);
-        });
     }
 
     trackItem(index, item) {
@@ -357,9 +352,9 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
                 this.setClickedRow(undefined);
             }
             this.currentPage = page;
-        } else {
-            this.startIndex = startIndex || 0;
         }
+
+        this.startIndex = startIndex || 0;
 
         // preserve window offset
         this.uri.pageOffset = window.pageYOffset;
