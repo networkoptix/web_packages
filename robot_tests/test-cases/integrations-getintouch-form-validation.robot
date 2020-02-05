@@ -44,7 +44,7 @@ Restart
     Form Validation
 
 Form Validation
-    Open Browser and go to URL    ${url}/integrations/39
+    Open Browser and go to URL    ${url}/integrations
     Log In    ${existing email}    ${BASE PASSWORD}
     Wait Until Elements are Visible    ${INTEGRATION TEST INTEGRATION LINK}
     Click Link    ${INTEGRATION TEST INTEGRATION LINK}
