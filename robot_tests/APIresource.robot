@@ -159,3 +159,4 @@ Save User Role
     ${resp}=    Post Request    Save User Role session    /ec2/saveUserRole    json=${data}
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()}
+
