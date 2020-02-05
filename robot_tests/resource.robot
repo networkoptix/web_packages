@@ -21,6 +21,8 @@ ${headless}    true
 ${speed}    0
 ${selenium_timeout}    30
 
+@{auth}    ${EMAIL OWNER}    ${BASE PASSWORD}
+
 *** Keywords ***
 Open Browser and go to URL
     [Arguments]    ${url}
@@ -202,7 +204,6 @@ Get Email Link
 
 Activate
     [arguments]    ${email}
-    @{auth}=   Create List    ${BASE EMAIL}    ${BASE PASSWORD}
     ${code}=   Get Code From Email   ${ENV}    ${auth}    ${email}    activate_account
     Go To    ${ENV}/activate/${code}
     Wait Until Element Is Visible    ${ACTIVATION SUCCESS}
@@ -252,7 +253,6 @@ Restore Password using API
     [Arguments]    ${email}    ${new password}
     ${resp}=   CloudPortalAPI.Restore Password    ${ENV}    ${email}    None    None
     Should Be Equal as Strings    ${resp}    200
-    @{auth}=   Create List   ${EMAIL OWNER}    ${BASE PASSWORD}
     ${code}=   Get Code From Email    ${ENV}    ${auth}    ${email}    restore_password
     ${code}=   Convert Code    ${code}
     ${resp}=   CloudPortalAPI.Restore Password    ${ENV}    ${email}    ${code}   ${new password}
@@ -500,8 +500,21 @@ Make sure viewer is in the system
     Close Mailbox
     Close Browser
 
+User is in cloud system
+    [Arguments]    ${user email}    ${system id}
+    @{users}=   Get Cloud System Users    ${auth}    ${system id}
+    FOR    ${user}    IN    @{users}
+        ${status}=   Run keyword and return status    Should be equal as strings   '&{user}[accountEmail]'    '${user email}'
+        Run Keyword If   ${status}    Exit For Loop
+    END
+    [Return]    ${status}
+
+Add user to cloud system if not there
+    [Arguments]    ${system id}    ${access role}    ${email}
+    ${is there}=   User is in cloud system    ${email}    ${system id}
+    Run Keyword If    ${is there}==False    Run Keyword    Share   ${auth}    ${system id}    ${access role}    ${email}
+
 Reset System Names
-    @{auth}=   Create List    ${EMAIL OWNER}    ${BASE PASSWORD}
     Rename System    ${auth}    ${AUTOTESTS OFFLINE SYSTEM ID}    Auto Tests 2
     Rename System    ${auth}    ${AUTO TESTS SYSTEM ID}    Auto Tests
 

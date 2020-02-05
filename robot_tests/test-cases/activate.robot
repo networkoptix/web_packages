@@ -41,7 +41,7 @@ Allows register, activate, login with curly text in First and Last name fields
 
 Allows register, activate, login with +!#$%'*-/=?^_`{|}~ in email field
 #ampersand was removed from this test because imaplib could not handle it
-    [Tags]    curly_email
+    [Tags]
     ${email}=   Get Random Symbol Email    ${BASE EMAIL}
     Register And Activate Account    mark    hamill    ${email}    ${password}
 

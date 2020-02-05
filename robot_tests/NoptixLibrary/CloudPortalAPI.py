@@ -1,4 +1,5 @@
 import requests
+from requests.auth import HTTPDigestAuth
 
 
 class CloudPortalAPI(object):
@@ -69,3 +70,6 @@ class CloudPortalAPI(object):
             s.headers.update({'X-CSRFToken': s.cookies['csrftoken']})
             r = s.post(f'{env}/api/robot/get_code', json={'email': email, 'type': message_type})
             return r.json()['code']
+
+
+

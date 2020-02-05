@@ -12,7 +12,7 @@ ${url}         ${ENV}
 
 *** Keywords ***
 Log in to Autotests 2 System
-    [arguments]    ${email}
+    [Arguments]    ${email}
     Go To    ${url}/systems/${AUTOTESTS OFFLINE SYSTEM ID}
     Log In    ${email}    ${password}    button=None
     Wait Until Elements Are Visible    ${SYSTEM NAME OFFLINE}    ${SYSTEM ADMINISTRATION LINK}
@@ -166,7 +166,6 @@ Owner is able to rename offline system via Cloud
     Input Text    ${RENAME INPUT}    ${new name}
     Click button    ${RENAME SAVE}
     Log Out
-    Validate Log Out
 
     # Make sure new name is saved
     Log in to Autotests 2 System    ${EMAIL OWNER}
@@ -177,7 +176,6 @@ Owner is able to rename offline system via Cloud
     Input Text    ${RENAME INPUT}    ${current name}
     Click Button    ${RENAME SAVE}
     Log Out
-    Validate Log Out
 
     # Make sure old name is saved
     Log in to Autotests 2 System    ${EMAIL VIEWER}

@@ -65,7 +65,6 @@ Open Restore Password Dialog With Link
     delete email    ${email}
     Log In    ${user}    ${password}
     Log Out
-    Validate Log Out
     Go To    ${url}/restore_password
     Wait Until Elements Are Visible    ${RESTORE PASSWORD EMAIL INPUT}    ${RESET PASSWORD BUTTON}
     Input Text    ${RESTORE PASSWORD EMAIL INPUT}    ${user}

@@ -8,12 +8,12 @@ Force Tags        form    Threaded File
 
 *** Variables ***
 ${url}    ${ENV}
-${existing email}       ${EMAIL VIEWER}
+${existing email}       ${EMAIL OWNER}
 ${valid email}          noptixqa+valid@gmail.com
 ${sales inquiry}        ${SALES INQUIRY TEXT}
 ${technical inquiry}    ${TECHNICAL INQUIRY TEXT}
 ${feedback}             ${FEEDBACK TEXT}
-${valid name}           mark hamil
+${valid name}           ${TEST FIRST NAME} ${TEST LAST NAME}
 
 *** Test Cases ***                    EXPECTED    NAME             EMAIL                     SUBJECT             BUTTON                                      MESSAGE
 Invalid Email 1 noptixqagmail.com     failure     ${valid name}    noptixqagmail.com         ${sales inquiry}    ${INTEGRATION GET IN TOUCH SEND BUTTON}     Sample message
@@ -42,15 +42,11 @@ Cancel button no submit               failure     ${valid name}    ${valid email
 Restart
     Close Browser
     Form Validation
-
+    
 Form Validation
-    Open Browser and go to URL    ${url}/integrations/
+    Open Browser and go to URL    ${url}/integrations/39
     Log In    ${existing email}    ${BASE PASSWORD}
-    Wait Until Elements are Visible    ${INTEGRATION TEST INTEGRATION LINK}
-    Click Link    ${INTEGRATION TEST INTEGRATION LINK}
-    Wait Until Elements are Visible    ${INTEGRATION GET IN TOUCH BUTTON}    ${INTEGRATION TITLE}
-    ${name}=   Get Text    ${INTEGRATION TITLE}
-    ${subbed subject}=    Replace String    ${sales inquiry}    {{integration}}    ${name}
+    Wait Until Element is Visible    ${INTEGRATION GET IN TOUCH BUTTON}
     Click Button    ${INTEGRATION GET IN TOUCH BUTTON}
     # These two lines are because Hebrew has double quotes in its text.
     # This makes for issues with strings in xpaths.  These lines convert to single quotes if the language is Hebrew
@@ -70,10 +66,8 @@ Form Validation
     ${returned email} =   Get Value    ${INTEGRATION GET IN TOUCH EMAIL INPUT}
     Should Be Equal    ${returned name}    ${valid name}
     Should Be Equal    ${returned email}    ${existing email}
-    Element Text Should Be    ${INTEGRATION GET IN TOUCH DROPDOWN BUTTON}//span    ${subbed subject}
-    ${name}=   Get Text    //a[@name="companyName"]
-    ${subbed legal}=    Replace String    ${INTEGRATION GET IN TOUCH LEGAL TEXT}    {{developer}}    ${name}
-    Element Text Should Be    ${INTEGRATION GET IN TOUCH LEGAL}    ${subbed legal}
+    Element Text Should Be    ${INTEGRATION GET IN TOUCH DROPDOWN BUTTON}//span    ${sales inquiry}
+    Element Text Should Be    ${INTEGRATION GET IN TOUCH LEGAL}    ${INTEGRATION GET IN TOUCH LEGAL TEXT}
 
 Test Get In Touch Invalid
     [Arguments]    ${expected}    ${name}    ${email}    ${subject}    ${button}     ${message}
@@ -110,11 +104,8 @@ Get In Touch Form Validation
     ...    Click Link   //*[@id="subject"]//ul[@class="dropdown-menu--list"]/li[2]/a
     ...    ELSE IF     "${subject}"=="${feedback}"
     ...    Click Link   //*[@id="subject"]//ul[@class="dropdown-menu--list"]/li[3]/a
-    # Sleep     .5
-    Wait Until Element is Visible    ${INTEGRATION GET IN TOUCH DROPDOWN BUTTON}//span
-    ${name}=   Get Text    ${INTEGRATION TITLE}
-    ${subbed subject}=    Replace String    ${subject}    {{integration}}    ${name}
-    Element Text Should Be    ${INTEGRATION GET IN TOUCH DROPDOWN BUTTON}//span    ${subbed subject}
+    Sleep     .5
+    Element Text Should Be    ${INTEGRATION GET IN TOUCH DROPDOWN BUTTON}//span    ${subject}
     click button    ${button}
 
 Check Email Outline
@@ -143,9 +134,9 @@ Check Message Outline
 
 Validate Integration Message Sent
     Check For Alert    ${INTEGRATION GET IN TOUCH MESSAGE SENT}
-
+    
 Validate Integration Message Not Sent
-    ${passed} =    Run Keyword And Return Status    Check For Alert    ${INTEGRATION GET IN TOUCH MESSAGE SENT}    timeout=10
-    Run Keyword if    ${passed}==True    Fail    Message was sent
+    ${passed} =    Run Keyword And Return Status    Check For Alert    ${INTEGRATION GET IN TOUCH MESSAGE SENT}
+    Run Keyword if    ${passed}==True    Fail    Message was sent   
 
-
+     

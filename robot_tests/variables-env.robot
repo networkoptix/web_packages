@@ -10,8 +10,8 @@ ${CLOUD TEST REGISTER}                https://cloud-test.hdw.mx/register
 ${CLOUD STAGE}                        https://cloud-stage.hdw.mx
 ${DOWNLOADS DOMAIN}                   updates.networkoptix.com
 ${ENV}                                ${CLOUD TEST}
-${AUTO SYS API}                       ${CLOUD TEST AUTO SYSTEM}
-@{AUTO SYS API AUTH}                  admin    qweasd 123
+${AUTO SYS IP}                        ${CLOUD TEST AUTO SYSTEM}
+@{AUTO SYS AUTH}                      admin    qweasd 123
 ${SCREENSHOTDIRECTORY}                \Screenshots
 
 ${BROWSER}                            Chrome

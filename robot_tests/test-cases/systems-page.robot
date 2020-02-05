@@ -23,7 +23,7 @@ Check Systems Text
 Reset DB and Open New Browser On Failure
     Close Browser
     Set Account Name    ${url}    ${EMAIL OWNER}    ${password}    ${TEST FIRST NAME}    ${TEST LAST NAME}
-    Make sure viewer is in the system
+    Add user to cloud system if not there    ${AUTO_TESTS SYSTEM ID}    ${VIEWER TEXT}    ${EMAIL VIEWER}
     Clean up email noperm
     Open Browser and go to URL    ${url}
 
@@ -305,14 +305,14 @@ Search should only be visible with 9 or more systems
     Wait Until Element Is Visible    ${SYSTEMS SEARCH INPUT}
     Log Out
 
-should open systems page in anonymous state
+Should open systems page in anonymous state
     [Tags]    anonymous
     Go To    ${url}/systems
     Location should be    ${url}/systems
     Wait Until Element Is Visible    ${LOG IN MODAL}
     Check Log In    button=None
 
-should update owner name in systems list, if it's changed
+Should update owner name in systems list, if it's changed
     [Tags]
     Go To    ${url}/account
     Log In    ${EMAIL OWNER}    ${password}    button=None
