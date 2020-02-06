@@ -107,7 +107,7 @@ class NoptixLibrary(object):
             print('style: ' + styleAttribute + ', value: ' + value)
             return value
         except:
-            not_found = "No element found with style attribute " + styleAttribute
+            not_found = f"No element found with style attribute {styleAttribute}"
             raise AssertionError(not_found)
 
     def element_style_should_be(self, locator, styleAttribute, expectedValue):
@@ -366,6 +366,8 @@ class NoptixLibrary(object):
             version = "4.1.0.30149"
         elif env == "https://cloud-dev3.hdw.mx":
             version = "4.1.0.30027"
+        elif env == "https://test4.cloud.hdw.mx":
+            version = "4.1.0.30298"
         client = docker.from_env()
         return client.images.build(path=f"{os.getcwd()}/Docker",
                             tag="mediaserver",

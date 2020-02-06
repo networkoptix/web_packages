@@ -323,7 +323,7 @@ Advanced search
     Go To IPVD Page
     Verify IPVD Advanced Search is Closed
     Click Element    ${IPVD ADV SEARCH BUTTON}
-    Wait Until Element Has Style    ${IPVD ADV SEARCH BUTTON}    color    rgb(255, 255, 255)
+    Wait Until Element Has Style    ${IPVD ADV SEARCH BUTTON}    color    rgba(255, 255, 255, 1)
     Verify IPVD Advanced Search is Open
 
     Log    Step 2
@@ -335,7 +335,7 @@ Advanced search
     Wait Until Element Has Style
     ...    ${IPVD ADV FEATURES PTZ}/div
     ...    color
-    ...    rgb(255, 255, 255)
+    ...    rgba(255, 255, 255, 1)
     Wait until Element is Visible    ${IPVD ADV FEATURES PTZ}${IPVD ADV FEATURES CLOSE BUTTON}
     Wait until Element has Class    ${IPVD ADV FEATURES PTZ}/div    badge-selected
 
