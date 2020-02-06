@@ -179,7 +179,7 @@
     "INTEGRATION SUPPORT TEXT": "Destek",
     "INTEGRATION SUPPORT URL TEXT": "Destek URL'si",
     "INTEGRATION SUPPORT EMAIL TEXT": "Destek maili",
-    "INTEGRATION GET IN TOUCH LEGAL TEXT": "Bu formu göndererek KG - Test Integration Company ve / veya Network Optix'i ile iletişime geçmeyi kabul etmiş sayılırsınız. Burada QA - Test Integration Company gizlilik politikasını ve burada onayınızı nasıl geri çekeceğinize ilişkin talimatları içeren Network Optix gizlilik politikasını bulacaksınız.",
+    "INTEGRATION GET IN TOUCH LEGAL TEXT": "By submitting this form you agree to be contacted by {{developer}} and/or Network Optix. You will find {{developer}} privacy policy here and Network Optix privacy policy here which include instruction on how to withdraw your consent.",
     "INTEGRATION GET IN TOUCH MESSAGE SENT": "Mesaj gönderildi.",
     "REGISTER TITLE TEXT": "Hesap Oluştur",
     "DOWNLOAD TITLE TEXT": "İndir %VMS_NAME%",

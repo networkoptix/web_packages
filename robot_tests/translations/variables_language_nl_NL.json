@@ -179,7 +179,7 @@
     "INTEGRATION SUPPORT TEXT": "Ondersteuning",
     "INTEGRATION SUPPORT URL TEXT": "Support URL",
     "INTEGRATION SUPPORT EMAIL TEXT": "Support Email",
-    "INTEGRATION GET IN TOUCH LEGAL TEXT": "Door dit formulier in te dienen, stemt u ermee in dat QA - Test Integration Company en / of Network Optix contact met u mag opnemen. U vindt hier het QA - Test Integration Company privacybeleid en het Network Optix privacybeleid met instructies voor het intrekken van uw toestemming.",
+    "INTEGRATION GET IN TOUCH LEGAL TEXT": "By submitting this form you agree to be contacted by {{developer}} and/or Network Optix. You will find {{developer}} privacy policy here and Network Optix privacy policy here which include instruction on how to withdraw your consent.",
     "INTEGRATION GET IN TOUCH MESSAGE SENT": "Het Bericht werd verstuurd.",
     "REGISTER TITLE TEXT": "Maak een account aan in",
     "DOWNLOAD TITLE TEXT": "Download %VMS_NAME%",

@@ -179,7 +179,7 @@
     "INTEGRATION SUPPORT TEXT": "Suporte",
     "INTEGRATION SUPPORT URL TEXT": "Support URL",
     "INTEGRATION SUPPORT EMAIL TEXT": "Support E-mail",
-    "INTEGRATION GET IN TOUCH LEGAL TEXT": "By submitting this form you agree to be contacted by QA - Test Integration Company and/or Network Optix. You will find QA - Test Integration Company privacy policy here and Network Optix privacy policy here which include instruction on how to withdraw your consent.",
+    "INTEGRATION GET IN TOUCH LEGAL TEXT": "By submitting this form you agree to be contacted by {{developer}} and/or Network Optix. You will find {{developer}} privacy policy here and Network Optix privacy policy here which include instruction on how to withdraw your consent.",
     "INTEGRATION GET IN TOUCH MESSAGE SENT": "Message has been sent.",
     "REGISTER TITLE TEXT": "Create account",
     "DOWNLOAD TITLE TEXT": "Baixar %VMS_NAME%",

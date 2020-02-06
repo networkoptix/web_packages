@@ -179,7 +179,7 @@
     "INTEGRATION SUPPORT TEXT": "Техническая поддержка",
     "INTEGRATION SUPPORT URL TEXT": "Страница поддержки",
     "INTEGRATION SUPPORT EMAIL TEXT": "Электронная почта поддержки",
-    "INTEGRATION GET IN TOUCH LEGAL TEXT": "Отправляя эту форму, вы соглашаетесь с тем, чтобы с вами связались QA - Test Integration Company и/или Network Optix. Политику конфиденциальности QA - Test Integration Company находится здесь а политику конфиденциальности Network Optix - здесь. Документы содержат инструкции, как отозвать ваше согласие.",
+    "INTEGRATION GET IN TOUCH LEGAL TEXT": "By submitting this form you agree to be contacted by {{developer}} and/or Network Optix. You will find {{developer}} privacy policy here and Network Optix privacy policy here which include instruction on how to withdraw your consent.",
     "INTEGRATION GET IN TOUCH MESSAGE SENT": "Сообщение отправлено.",
     "REGISTER TITLE TEXT": "Зарегистрироваться в",
     "DOWNLOAD TITLE TEXT": "Скачать %VMS_NAME%",
