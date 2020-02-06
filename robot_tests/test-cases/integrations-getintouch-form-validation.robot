@@ -74,7 +74,6 @@ Form Validation
     ${name}=   Get Text    //a[@name="companyName"]
     ${subbed legal}=    Replace String    ${INTEGRATION GET IN TOUCH LEGAL TEXT}    {{developer}}    ${name}
     Element Text Should Be    ${INTEGRATION GET IN TOUCH LEGAL}    ${subbed legal}
-    Element Text Should Be    ${INTEGRATION GET IN TOUCH LEGAL}    ${INTEGRATION GET IN TOUCH LEGAL TEXT}
 
 Test Get In Touch Invalid
     [Arguments]    ${expected}    ${name}    ${email}    ${subject}    ${button}     ${message}
