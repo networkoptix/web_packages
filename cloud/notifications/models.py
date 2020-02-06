@@ -7,7 +7,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MaxLengthValidator
 from django.db.models import Q
 from model_utils import Choices
-from push_notifications.gcm import FCM_NOTIFICATIONS_PAYLOAD_KEYS
+from push_notifications.gcm import FCM_NOTIFICATIONS_PAYLOAD_KEYS, FCM_OPTIONS_KEYS
 from push_notifications.models import GCMDevice
 from rest_framework import serializers
 from cms.models import Customization, Asset, DataStructure
@@ -15,6 +15,7 @@ from api.models import Account
 
 # Monkey patch to add extra keys to be used in the "notification" object in the request to fcm
 FCM_NOTIFICATIONS_PAYLOAD_KEYS.extend(['image', 'apns'])
+FCM_OPTIONS_KEYS.append('mutable_content')
 
 # When cloudportal is ran locally it uses amqp by default. BROKER_TRANSPORT_OPTIONS is related to sqs.
 # This allows cloud notifications to run locally without changing settings to use sqs.
