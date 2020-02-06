@@ -32,7 +32,7 @@ export class IpvdSearchService {
     ipvdSearch(camerasData, filter) {
         const query = filter.query.toLowerCase();
         const queryTerms = query.trim()
-                                .split(/[\s,\|]+/)
+                                .split(/[\s\+]+/)
                                 .filter((elm) => {
                                     return elm !== '';
                                 });
