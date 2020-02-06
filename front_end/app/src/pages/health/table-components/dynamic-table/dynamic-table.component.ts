@@ -366,31 +366,27 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
     }
 
     toggleSort(groupId, paramId, updateURI?, format?) {
+        debugger;
         if (this.selectedGroup !== groupId || this.selectedHeader !== paramId) {
             this.sortOrderASC = TEXT_FORMATS.includes(format);
         }
         this.selectedGroup = groupId;
         this.selectedHeader = paramId;
 
-        if (updateURI || updateURI === undefined) {
-            const queryParams: Params = {};
-
-            queryParams.page = undefined;
-            queryParams.sortBy = groupId + ',' + paramId;
-            queryParams.sortBy += (this.sortOrderASC) ? ',ASC' : ',DESC';
-            this.params.sortBy = queryParams.sortBy;
-            this.uri.updateURI(undefined, queryParams);
-        }
-
         function sortFunc() {
-            if (paramId === 'alarm') {
-                return (elm) => {
-                    return elm[groupId] && elm[groupId][paramId] && ALARM_ORDER[elm[groupId][paramId].icon] || '';
-                };
-            } else {
-                return (elm) => {
-                    return elm[groupId] && elm[groupId][paramId] && elm[groupId][paramId].text || '';
-                };
+            switch (paramId) {
+                case 'alarm':
+                    return (elm) => {
+                        return elm[groupId] && elm[groupId][paramId] && ALARM_ORDER[elm[groupId][paramId].icon] || '';
+                    };
+                case 'totalSpaceB':
+                    return (elm) => {
+                        return elm[groupId] && elm[groupId][paramId] && parseFloat(elm[groupId][paramId].text) || '';
+                    };
+                default:
+                    return (elm) => {
+                        return elm[groupId] && elm[groupId][paramId] && elm[groupId][paramId].text || '';
+                    };
             }
         }
 
@@ -398,6 +394,14 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         this.sortOrderASC = !this.sortOrderASC;
 
         if (updateURI || updateURI === undefined) {
+            const queryParams: Params = {};
+
+            queryParams.page   = undefined;
+            queryParams.sortBy = groupId + ',' + paramId;
+            queryParams.sortBy += (this.sortOrderASC) ? ',ASC' : ',DESC';
+            this.params.sortBy = queryParams.sortBy;
+            this.uri.updateURI(undefined, queryParams);
+
             setTimeout(() => this.setPage(1));
         }
     }
