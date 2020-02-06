@@ -16,6 +16,7 @@ import { SubscriptionLike }          from 'rxjs';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 import { NxScrollMechanicsService }  from '../../../services/scroll-mechanics.service';
 import { throttleTime }              from 'rxjs/operators';
+import { NxHealthLayoutService } from '../health-layout.service';
 
 interface Params {
     [key: string]: any;
@@ -85,6 +86,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
                 private healthService: NxHealthService,
                 private uri: NxUriService,
                 private scrollMechanicsService: NxScrollMechanicsService,
+                private healthLayoutService: NxHealthLayoutService
     ) {
         this.CONFIG = this.configService.getConfig();
         this.LANG  = this.languageService.getTranslations();
@@ -95,13 +97,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
         };
         this.fixedLayoutClass = '';
 
-        this.tableWidthSubscription = this.scrollMechanicsService
-                .elementTableWidthSubject
-                .subscribe(width => {
-                    if (this.elementSearch) {
-                        this.elementSearch.nativeElement.style.width = width + 'px';
-                    }
-                });
+        this.healthLayoutService.searchElement = this.elementSearch;
 
         this.panelSubscription = this.scrollMechanicsService
                                      .panelSubject
@@ -243,9 +239,9 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
                 const queryParams: Params = {};
                 queryParams.id            = undefined;
                 this.uri.updateURI(undefined, queryParams);
+                this.setLayout();
             }
             this.mobileDetailMode = false;
-            this.setLayout();
         }
     }
 

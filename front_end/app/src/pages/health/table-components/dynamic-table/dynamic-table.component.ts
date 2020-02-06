@@ -1,4 +1,3 @@
-import deepEqual = require('deep-equal');
 import {
     Component, Input, Output,
     EventEmitter, OnChanges, SimpleChanges,
@@ -15,7 +14,7 @@ import { NxHealthService }          from '../../health.service';
 import { NxScrollMechanicsService } from '../../../../services/scroll-mechanics.service';
 import { SubscriptionLike }         from 'rxjs';
 import { AutoUnsubscribe }          from 'ngx-auto-unsubscribe';
-import { deepStrictEqual }          from 'assert';
+import { NxHealthLayoutService } from '../../health-layout.service';
 
 interface Params {
     [key: string]: any;
@@ -75,8 +74,6 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
     clientHeight: number;
     offsetHeight: number;
     scrollHeight: number;
-    tableScrollFixed: boolean;
-    elementWidth: any;
     showHorizontalTooltip: boolean;
     hideTooltip: any;
     mobileDetailMode: boolean;
@@ -85,8 +82,8 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
     locationSubscription: SubscriptionLike;
     queryParamSubscription: SubscriptionLike;
 
-    @ViewChild('thead', { static: false }) thead: ElementRef;
-    @ViewChild('tableHeaderElement', { static: false }) tableHeaderElement: ElementRef;
+    @ViewChild('tableHead', { static: false }) tableHeadElement: ElementRef;
+    @ViewChild('tableTitle', { static: false }) tableTitleElement: ElementRef;
     @ViewChild('nxTable', { static: false }) dataTable: ElementRef;
     @ViewChild('tooltip', { static: false }) tableTooltip: ElementRef;
 
@@ -102,6 +99,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
                 private healthService: NxHealthService,
                 private scrollMechanicsService: NxScrollMechanicsService,
                 private deviceDetectorService: DeviceDetectorService,
+                private healthLayoutService: NxHealthLayoutService,
     ) {
         this.CONFIG = this.configService.getConfig();
         this.elements = this.elements || [];
@@ -114,9 +112,8 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
 
         this.resizeSubscription = this.scrollMechanicsService.windowSizeSubject.subscribe(() => {
             this.mobileDetailMode = this.activeEntity && this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.lg);
-
             if (this.dataTable) {
-                setTimeout(() => this.scrollMechanicsService.setElementTableWidth(this.dataTable.nativeElement.offsetWidth));
+                this.healthLayoutService.tableWidth = this.dataTable.nativeElement.offsetWidth;
             }
 
             this.setPagerSize();
@@ -147,8 +144,8 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         if (this.params.sortBy) {
             this.sortBy(this.params.sortBy);
         } else {
-            this.sortOrderASC   = true;
-            this.selectedGroup  = undefined;
+            this.sortOrderASC = true;
+            this.selectedGroup = undefined;
             this.selectedHeader = undefined;
         }
 
@@ -161,6 +158,17 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         if ([undefined, -1].includes(this.startIndex)) {
             this.startIndex = parseInt(this.params.index) || 0;
         }
+        this.healthService.tableReady = true;
+    }
+    initLayoutService() {
+        this.healthLayoutService.tableHeaderElement = this.tableHeadElement;
+        this.healthLayoutService.tableTitleElement = this.tableTitleElement;
+        this.healthLayoutService.tableElement = this.dataTable;
+
+        this.healthLayoutService.pageSizeSubject.subscribe(pageSize => {
+            this.pageSize = pageSize;
+            this.setPage(1);
+        });
     }
 
     private setPagerSize() {
@@ -227,6 +235,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
             JSON.stringify(changes.dimensions.currentValue) !== JSON.stringify(changes.dimensions.previousValue)) { // break circular dep
 
             setDimensions = true;
+            this.healthLayoutService.dimensions = changes.dimensions.currentValue;
         }
 
         if (setDimensions) {
@@ -256,32 +265,12 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
     }
 
     private setTableDimensions() {
-        this.windowSize = this.scrollMechanicsService.windowSizeSubject.getValue();
-
-        const ELEMENTS_HEIGHT = this.dimensions.reduce((prev, curr) => prev + curr, 0);
-        const THEAD_HEIGHT = this.thead.nativeElement.offsetHeight;
-        const PADDING = 16;
-        const PAGINATION_HEIGHT = 64;
-
-        let availSpace = this.windowSize.height - 4 * PADDING - ELEMENTS_HEIGHT - THEAD_HEIGHT - 48 - PAGINATION_HEIGHT;
-
-        if (this.tableHeader) {
-            availSpace -= this.tableHeaderElement.nativeElement.offsetHeight;
-        }
-
-        this.pageSize = Math.ceil(availSpace / NxDynamicTableComponent.ROW_HEIGHT);
-        if (this.pageSize < 5) {
-            this.pageSize = 5;
-        }
-
-        if (this.dataTable.nativeElement.offsetWidth !== 0) {
-            this.scrollMechanicsService.setElementTableWidth(this.dataTable.nativeElement.offsetWidth);
-        }
-        this.healthService.tableReady = true;
+        return this.healthLayoutService.setTableDimensions();
     }
 
     ngAfterViewInit(): void {
-        if (this.dimensions.length) {
+        this.initLayoutService();
+        if (this.dimensions && this.dimensions.length) {
             setTimeout(() => this.setTableDimensions());
         }
     }
@@ -355,7 +344,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
 
         // preserve window offset
         this.uri.pageOffset = window.pageYOffset;
-        this.setPagedItems(this.startIndex);
+        setTimeout(() => this.setPagedItems(this.startIndex));
         const index = (this.startIndex === 0) ? undefined : this.startIndex;
         const pageParam = this.params && parseInt(this.params.index, 10) || undefined;
 
