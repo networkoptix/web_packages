@@ -13,6 +13,7 @@ import { NxUriService }                      from '../../../services/uri.service
 import { AutoUnsubscribe }                   from 'ngx-auto-unsubscribe';
 import { NxScrollMechanicsService }          from '../../../services/scroll-mechanics.service';
 import { NxUtilsService }                    from '../../../services/utils.service';
+import { throttleTime }                      from 'rxjs/operators';
 
 interface Params {
     [key: string]: any;
@@ -163,12 +164,15 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
             });
         });
 
-        this.menuService.selectedSectionSubject.subscribe(selection => {
+        this.menuService
+            .selectedSectionSubject
+            .pipe(throttleTime(1000))
+            .subscribe(selection => {
             // when user click same section in the menu - we need to reset table and entity
             if (this.metricId === selection) {
                 this.resetActiveEntity();
                 this.resetFilterModel();
-                this.alerts = {...this.healthService.alertsSearch(this.healthService.alertsValues, this.filterModel)};
+                this.alerts = this.healthService.alertsSearch(this.healthService.alertsValues, this.filterModel);
             } else {
                 // short circuit first subscription
                 this.metricId = 'alerts';
@@ -403,19 +407,21 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
     }
 
     resetActiveEntity(updateURI = true) {
-        this.activeTableEntity = undefined;
-        this.activePanelEntity = undefined;
-        this.activePanelParams = undefined;
-        this.mobileDetailMode = false;
-        this.desktopDetailMode = false;
+        if (this.activeTableEntity) {
+            this.activeTableEntity = undefined;
+            this.activePanelEntity = undefined;
+            this.activePanelParams = undefined;
+            this.mobileDetailMode  = false;
+            this.desktopDetailMode = false;
 
-        this.setLayout();
+            this.setLayout();
 
-        if (updateURI) {
-            const queryParams: Params = {};
-            queryParams.id = undefined;
-            queryParams.metric = undefined;
-            this.uriService.updateURI(undefined, queryParams);
+            if (updateURI) {
+                const queryParams: Params = {};
+                queryParams.id            = undefined;
+                queryParams.metric        = undefined;
+                this.uriService.updateURI(undefined, queryParams);
+            }
         }
     }
 

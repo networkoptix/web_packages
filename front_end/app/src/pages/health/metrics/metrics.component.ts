@@ -15,6 +15,7 @@ import { NxLanguageProviderService } from '../../../services/nx-language-provide
 import { SubscriptionLike }          from 'rxjs';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 import { NxScrollMechanicsService }  from '../../../services/scroll-mechanics.service';
+import { throttleTime }              from 'rxjs/operators';
 
 interface Params {
     [key: string]: any;
@@ -126,7 +127,10 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
             });
         });
 
-        this.menuService.selectedSectionSubject.subscribe(selection => {
+        this.menuService
+            .selectedSectionSubject
+            .pipe(throttleTime(1000))
+            .subscribe(selection => {
             // when user click same section in the menu - we need to reset table and entity
             if (this.metricId === selection) {
                 this.filterModel.query = '';
@@ -196,7 +200,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
     }
 
     search() {
-        this.selectedValues = {...this.healthService.itemsSearch(this.healthService.values[this.metricId], this.filterModel)} || {};
+        this.selectedValues = this.healthService.itemsSearch(this.healthService.values[this.metricId], this.filterModel) || {};
 
         this.handleInitialId();
         if (this.activeEntity && !this.selectedValues[this.activeEntity.id]) {

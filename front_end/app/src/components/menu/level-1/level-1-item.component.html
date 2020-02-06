@@ -15,7 +15,7 @@
     {{item.label}}
     <div *ngIf="item.alerts" class="menu-level-1-alerts">
         <div *ngFor="let alert of item.alerts" class="pr-2">
-            <nx-alert-counter *ngIf="alert.count !== undefined &&alert.count > 0"
+            <nx-alert-counter *ngIf="alert.count !== undefined && alert.count > 0"
                               [count]="alert.count" [type]="alert.type"></nx-alert-counter>
         </div>
     </div>

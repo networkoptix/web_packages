@@ -102,8 +102,10 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         };
 
         this.menuservice.selectedSectionSubject.subscribe(selection => {
-            this.menu.selectedSection = selection;
-            this.menu = {...this.menu}; // trigger onChange
+            if (this.menu.selectedSection !== selection) {
+                this.menu.selectedSection = selection;
+                this.menu                 = {...this.menu}; // trigger onChang
+            }
         });
 
         const currentRoute = this.router.url;
