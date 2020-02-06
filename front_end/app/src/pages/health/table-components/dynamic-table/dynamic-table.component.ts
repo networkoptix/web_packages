@@ -366,7 +366,6 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
     }
 
     toggleSort(groupId, paramId, updateURI?, format?) {
-        debugger;
         if (this.selectedGroup !== groupId || this.selectedHeader !== paramId) {
             this.sortOrderASC = TEXT_FORMATS.includes(format);
         }
