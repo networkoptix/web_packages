@@ -2,6 +2,7 @@
     "PRODUCT_NAME"               :    "VMS Demo Cloud",
     "VMS_NAME"                   :    "VMS Demonstration",
     "TEST EMAIL"                 :    "noptixautoqat4",
+    "AUTO SYS IP"                :    "https://10.1.5.158:7004",
     "PRIVACY POLICY URL HREF"    :    "/content/privacy",
     "PRIVACY POLICY URL FULL"    :    "https://test4.cloud.hdw.mx/content/privacy",
     "SUPPORT URL"                :    "https://test4.cloud.hdw.mx/content/support",

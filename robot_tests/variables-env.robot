@@ -2,7 +2,6 @@
 
 ${LOCAL}                              https://localhost:9000/
 ${CLOUD TEST}                         https://cloud-test.hdw.mx
-${CLOUD TEST AUTO SYSTEM}             http://10.1.5.169:7001
 ${CLOUD DEV}                          https://dev2.cloud.hdw.mx
 ${CLOUD DEV3}                         https://dev3.cloud.hdw.mx
 ${CLOUD DEV3 AUTO SYSTEM}             http://10.1.5.160:7001
@@ -10,7 +9,6 @@ ${CLOUD TEST REGISTER}                https://cloud-test.hdw.mx/register
 ${CLOUD STAGE}                        https://cloud-stage.hdw.mx
 ${DOWNLOADS DOMAIN}                   updates.networkoptix.com
 ${ENV}                                ${CLOUD TEST}
-${AUTO SYS IP}                        ${CLOUD TEST AUTO SYSTEM}
 @{AUTO SYS AUTH}                      admin    qweasd 123
 ${SCREENSHOTDIRECTORY}                \Screenshots
 
