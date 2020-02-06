@@ -107,7 +107,6 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         this.elements = this.elements || [];
 
         this.pagedItems = [];
-        this.pagerMaxSize = this.CONFIG.ipvd.pagerMaxSize;
         this.currentPage = 1;
         this.pageSize = this.CONFIG.layout.tableLarge.rows;
         this.healthService.tableReady = false;
@@ -119,6 +118,8 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
             if (this.dataTable) {
                 setTimeout(() => this.scrollMechanicsService.setElementTableWidth(this.dataTable.nativeElement.offsetWidth));
             }
+
+            this.setPagerSize();
         });
 
         this.locationSubscription = this.location.subscribe((event: PopStateEvent) => {
@@ -152,12 +153,21 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         }
 
         if (this.activeEntity) {
+            this.setPagerSize();
             this.startIndex = this._elements.findIndex(elem => {
                 return this.activeEntity === elem;
             });
         }
         if ([undefined, -1].includes(this.startIndex)) {
             this.startIndex = parseInt(this.params.index) || 0;
+        }
+    }
+
+    private setPagerSize() {
+        if (this.activeEntity && this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.xl)) {
+            this.pagerMaxSize = this.CONFIG.ipvd.pagerMaxSizeSmall;
+        } else {
+            this.pagerMaxSize = this.CONFIG.ipvd.pagerMaxSize;
         }
     }
 
