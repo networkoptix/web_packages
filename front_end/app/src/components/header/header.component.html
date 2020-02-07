@@ -44,7 +44,7 @@
                     </li>
                     <li [ngClass]="{ 'active' :active.information}"
                         *ngIf="canSeeInfo">
-                        <a class="inset" href="/systems/{{activeSystem.id}}/health" translate>Information</a>
+                        <a class="inset" [routerLink]="active.information ? currentPath : ['/systems', activeSystem.id, 'health']" translate>Information</a>
                     </li>
                 </ul>
             </div>
