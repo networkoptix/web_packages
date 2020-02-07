@@ -181,7 +181,9 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         this.headerHeight = document.getElementsByClassName('headerContainer')[0].scrollHeight;
     }
 
-    ngOnDestroy(): void {}
+    ngOnDestroy(): void {
+        this.ribbonService.hide();
+    }
 
     setupReport(data) {
         // Handle server not responding for "ec2/metrics/manifest"
