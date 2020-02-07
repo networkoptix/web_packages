@@ -167,7 +167,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                   }
 
                   if (event instanceof NavigationEnd) {
-                      this.currentPath = event.urlAfterRedirects;
+                      this.currentPath = this.active.information ? event.urlAfterRedirects : `/systems/${this.activeSystem.id}/health`;
                       // You only receive NavigationEnd events
                       if (this.systemId && !this.systems) {
                           this.systemsService
