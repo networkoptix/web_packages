@@ -342,7 +342,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                                     icon: alarm ? alarm.level : '',
                                 };
 
-                                if (typeof formattedVal.text === 'string') { // Should numbers should be searchable?
+                                if (typeof formattedVal.text === 'string' && header.display) { // Should numbers should be searchable?
                                     this.healthService.values[metric][entity].searchTags += formattedVal.text.toLowerCase() + ' ';
                                 }
                             }
