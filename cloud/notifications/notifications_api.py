@@ -110,30 +110,37 @@ def log_push_result(notification_object, message, level=logging.INFO, device_tok
     _write_push_result(notification_object, result_data)
 
 
-def get_system(notification_object, request_data):
+def get_system_with_users(notification_object, request_data):
     # If system credentials used, system should be in request_data
-    if 'system' in request_data:
-        if request_data['system']['id'] == notification_object.raw_system_id:
-            return request_data['system']
+    system = None
+    try:
+        if 'system' in request_data:
+            if request_data['system']['id'] == notification_object.raw_system_id:
+                system = request_data['system']
+            else:
+                log_push_result(notification_object, 'System credentials do not match target system')
+                return None
         else:
-            log_push_result(notification_object, 'System credentials do not match target system')
-            return None
-    else:
-        try:
             system = cloud_api.System.get(
                 request_data['username'], request_data['password'], notification_object.raw_system_id
             )
-            return system['systems'][0]
-        except Exception as exception:
-            if isinstance(exception, exceptions.APINotAuthorisedException):
-                log_push_result(notification_object, 'Invalid cloud credentials for system')
-            elif isinstance(exception, exceptions.APILogicException):
-                log_push_result(
-                    notification_object, f'APILogicException: ' +
-                                         'likely invalid system_id or cloud account not authorized for the system'
-                )
-            else:
-                raise exception
+            system = system['systems'][0]
+
+        if system:
+            users = cloud_api.System.users(request_data['username'], request_data['password'], system['id'])
+            system['users'] = {user.get('accountEmail', None) for user in users['sharing']}
+    except Exception as exception:
+        if isinstance(exception, exceptions.APINotAuthorisedException):
+            log_push_result(notification_object, 'Invalid cloud credentials for system')
+        elif isinstance(exception, exceptions.APILogicException):
+            log_push_result(
+                notification_object, f'APILogicException: ' +
+                                     'likely invalid system_id or cloud account not authorized for the system'
+            )
+        else:
+            raise exception
+
+    return system
 
 
 def process_push_response(response, notification_object, dry_run=False):
@@ -161,11 +168,12 @@ def process_push_response(response, notification_object, dry_run=False):
 def set_subscriptions_from_targets(notification_object, request_data):
     targets = set(json.loads(notification_object.raw_targets))
     system_id = notification_object.raw_system_id
-    system = get_system(notification_object, request_data)
+    system = get_system_with_users(notification_object, request_data)
 
     if not system:
         return False
 
+    targets = targets.intersection(system['users'])
     target_accounts = Account.objects.filter(email__in=targets).distinct()
 
     for account in target_accounts:
